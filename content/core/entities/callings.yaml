@@ -1,0 +1,85 @@
+# Callings: where a new Weaver starts. Starting points, never cages.
+kind: callings
+entries:
+  - id: holdfast
+    name: Holdfast
+    description: Those who stand. Stone and Bloom. Shields, taunts and the patience to outlast a Knot.
+    threads: [stone, bloom]
+    color: "#9c8b72"
+    look: holdfast
+    attributes: { might: 14, grace: 8, will: 6, vigor: 14 }
+    weaves: [strike, cleave, rallying_shout, lumen_ward]
+    items: [ { item: short_sword }, { item: buckler }, { item: iron_cuirass }, { item: thread_floss, count: 5 } ]
+    start_node: start_holdfast
+    modifiers:
+      - { attribute: armor, form: increased, value: 0.15 }
+      - { attribute: block.chance, form: flat, value: 0.05 }
+
+  - id: kindler
+    name: Kindler
+    description: Those who burn. Ember and Storm. Bolts, novas and a short temper.
+    threads: [ember, storm]
+    color: "#e8622a"
+    look: kindler
+    attributes: { might: 6, grace: 8, will: 16, vigor: 10 }
+    weaves: [ember_bolt, storm_nova, lumen_ward, quick_dash]
+    items: [ { item: wand }, { item: woven_robe }, { item: thread_floss, count: 5 } ]
+    start_node: start_kindler
+    modifiers:
+      - { attribute: damage, form: increased, value: 0.15, scope: [spell] }
+
+  - id: sower
+    name: Sower
+    description: Those who tend. Bloom and Tide. Mending, growth and small green things that bite.
+    threads: [bloom, tide]
+    color: "#5fbf5a"
+    look: sower
+    attributes: { might: 8, grace: 8, will: 14, vigor: 12 }
+    weaves: [bloom_mend, call_sprig, tide_bolt, quick_dash]
+    items: [ { item: staff }, { item: woven_robe }, { item: thread_floss, count: 5 } ]
+    start_node: start_sower
+    modifiers:
+      - { attribute: healing, form: increased, value: 0.2 }
+      - { attribute: summon.max, form: flat, value: 1 }
+
+  - id: shade
+    name: Shade
+    description: Those who are not seen. Umbra and Mind. Knives, lashes and the space between heartbeats.
+    threads: [umbra, mind]
+    color: "#5a4a7a"
+    look: shade
+    attributes: { might: 10, grace: 16, will: 8, vigor: 8 }
+    weaves: [strike, mind_lash, quick_dash, call_remnant]
+    items: [ { item: dagger }, { item: dagger }, { item: leather_jerkin }, { item: thread_floss, count: 5 } ]
+    start_node: start_shade
+    modifiers:
+      - { attribute: crit.chance, form: flat, value: 0.05 }
+      - { attribute: move.speed, form: increased, value: 0.08 }
+
+  - id: harrier
+    name: Harrier
+    description: Those who range. Storm and Stone. Bows, distance and the long patience of the hunt.
+    threads: [storm, stone]
+    color: "#b58cff"
+    look: harrier
+    attributes: { might: 10, grace: 15, will: 7, vigor: 10 }
+    weaves: [storm_bolt, quick_dash, strike, stone_blast]
+    items: [ { item: bow }, { item: leather_jerkin }, { item: walking_boots }, { item: thread_floss, count: 5 } ]
+    start_node: start_harrier
+    modifiers:
+      - { attribute: accuracy, form: increased, value: 0.2 }
+      - { attribute: projectile.speed, form: increased, value: 0.15 }
+
+  - id: binder
+    name: Binder
+    description: Those who hold the seam. Lumen and Void. Wards, fields and the rites that bind a Fount.
+    threads: [lumen, void]
+    color: "#f5e27a"
+    look: binder
+    attributes: { might: 6, grace: 9, will: 15, vigor: 10 }
+    weaves: [lumen_ward, void_lash, umbra_field, bloom_mend]
+    items: [ { item: staff }, { item: tome }, { item: woven_robe }, { item: thread_floss, count: 5 } ]
+    start_node: start_binder
+    modifiers:
+      - { attribute: ward.max, form: flat, value: 20 }
+      - { attribute: effect.duration, form: increased, value: 0.15 }

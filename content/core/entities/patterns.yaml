@@ -1,0 +1,289 @@
+# Patterns: everything that can exist in the world as a bag of components.
+kind: patterns
+entries:
+  # ---- base templates
+  - id: creature
+    name: Creature
+    tags: [creature]
+    components:
+      stats: { attributes: { might: 8, grace: 8, will: 4, vigor: 8 } }
+      motion: {}
+      statuses: {}
+
+  - id: monster
+    name: Monster
+    extends: creature
+    tags: [monster]
+    components:
+      drops: { table: world_common, xp: "8 + level * 5", chance: 0.6 }
+      behavior: { id: aggressive_melee }
+
+  # ---- beasts of the Hallows
+  - id: hob
+    name: Hob
+    extends: monster
+    tags: [beast, hob]
+    faction: wilds
+    level: 1
+    radius: 0.45
+    height: 1.1
+    components:
+      stats: { attributes: { might: 7, grace: 9, vigor: 7, move.speed: 5.5, weapon.damage.min: 3, weapon.damage.max: 6, weapon.attack.time: 0.9 } }
+      weaves: { list: [bite] }
+      drops: { table: beast_drops, xp: "10 + level * 6", chance: 0.7 }
+
+  - id: hob_howler
+    name: Hob Howler
+    extends: hob
+    tags: [howler]
+    level: 2
+    components:
+      stats: { attributes: { will: 8 } }
+      weaves: { list: [bite, howl] }
+      behavior: { id: aggressive_ranged }
+
+  - id: wolf
+    name: Grey Wolf
+    extends: monster
+    tags: [beast, wolf]
+    faction: wilds
+    level: 2
+    radius: 0.5
+    components:
+      stats: { attributes: { might: 10, grace: 12, vigor: 9, move.speed: 6.5, weapon.damage.min: 4, weapon.damage.max: 8, weapon.attack.time: 0.85 } }
+      weaves: { list: [bite] }
+      drops: { table: beast_drops, xp: "14 + level * 6", chance: 0.7 }
+
+  - id: grove_stag
+    name: Grove Stag
+    extends: creature
+    tags: [beast, stag, prey]
+    faction: wilds
+    level: 1
+    radius: 0.6
+    height: 1.6
+    components:
+      stats: { attributes: { might: 9, grace: 11, vigor: 10, move.speed: 7, weapon.damage.min: 3, weapon.damage.max: 7 } }
+      weaves: { list: [gore] }
+      behavior: { id: skittish }
+      drops: { table: beast_drops, xp: "6 + level * 4", chance: 0.8 }
+
+  - id: boar
+    name: Bristle Boar
+    extends: monster
+    tags: [beast, boar]
+    faction: wilds
+    level: 3
+    radius: 0.55
+    components:
+      stats: { attributes: { might: 13, grace: 7, vigor: 12, move.speed: 5, armor: 20, weapon.damage.min: 6, weapon.damage.max: 11, weapon.attack.time: 1.2 } }
+      weaves: { list: [gore] }
+      drops: { table: beast_drops, xp: "18 + level * 6", chance: 0.7 }
+
+  # ---- remnants and barrows
+  - id: barrow_wight
+    name: Barrow Wight
+    extends: monster
+    tags: [undead, remnant, wight]
+    faction: remnant
+    level: 3
+    components:
+      stats: { attributes: { might: 10, grace: 6, will: 9, vigor: 11, move.speed: 3.8, resist.umbra: 0.5, resist.bloom: -0.3, weapon.damage.min: 5, weapon.damage.max: 9, weapon.attack.time: 1.1 } }
+      weaves: { list: [grave_touch] }
+      drops: { table: undead_drops, xp: "16 + level * 6", chance: 0.75 }
+
+  - id: remnant_shade
+    name: Remnant Shade
+    extends: creature
+    tags: [undead, remnant, shade, summonable]
+    faction: remnant
+    level: 2
+    radius: 0.4
+    components:
+      stats: { attributes: { might: 7, grace: 9, will: 8, vigor: 6, move.speed: 5.5, resist.umbra: 0.5, weapon.damage.min: 3, weapon.damage.max: 7, weapon.attack.time: 0.9 } }
+      weaves: { list: [grave_touch] }
+      behavior: { id: aggressive_melee }
+      drops: { table: undead_drops, xp: "8 + level * 4", chance: 0.4 }
+
+  - id: sprig
+    name: Sprig
+    extends: creature
+    tags: [bloom, construct, summonable]
+    faction: players
+    level: 1
+    radius: 0.3
+    height: 0.8
+    components:
+      stats: { attributes: { might: 6, grace: 10, will: 6, vigor: 5, move.speed: 6, weapon.damage.min: 2, weapon.damage.max: 5, weapon.attack.time: 0.8 } }
+      weaves: { list: [bite] }
+      behavior: { id: aggressive_melee }
+
+  # ---- the Loosed
+  - id: loosed_brigand
+    name: Loosed Brigand
+    extends: monster
+    tags: [humanoid, loosed, brigand]
+    faction: the_loosed
+    level: 3
+    components:
+      stats: { attributes: { might: 11, grace: 10, will: 6, vigor: 10, move.speed: 5, armor: 15, weapon.damage.min: 5, weapon.damage.max: 10, weapon.attack.time: 1.0 } }
+      weaves: { list: [strike, cleave] }
+      drops: { table: world_common, xp: "18 + level * 6", chance: 0.8 }
+      equipment: { grants: [ { item: short_sword }, { item: leather_jerkin } ] }
+
+  - id: loosed_kindler
+    name: Loosed Kindler
+    extends: monster
+    tags: [humanoid, loosed, caster]
+    faction: the_loosed
+    level: 4
+    components:
+      stats: { attributes: { might: 6, grace: 9, will: 14, vigor: 8, move.speed: 4.8 } }
+      weaves: { list: [cinder_spit, lumen_ward] }
+      behavior: { id: aggressive_ranged }
+      drops: { table: world_common, xp: "22 + level * 6", chance: 0.8 }
+
+  # ---- knots and the Tangled
+  - id: cinder_imp
+    name: Cinder Imp
+    extends: monster
+    tags: [tangled, ember, imp]
+    faction: tangled
+    level: 4
+    radius: 0.35
+    height: 0.9
+    components:
+      stats: { attributes: { might: 6, grace: 13, will: 10, vigor: 6, move.speed: 6.5, resist.ember: 0.75, resist.tide: -0.5 } }
+      weaves: { list: [cinder_spit] }
+      behavior: { id: aggressive_ranged }
+      drops: { table: tangled_drops, xp: "20 + level * 7", chance: 0.8 }
+
+  - id: tide_crawler
+    name: Tide Crawler
+    extends: monster
+    tags: [tangled, tide, crawler]
+    faction: tangled
+    level: 4
+    radius: 0.55
+    height: 0.7
+    components:
+      stats: { attributes: { might: 11, grace: 6, will: 8, vigor: 13, move.speed: 3.5, armor: 40, resist.tide: 0.75, resist.storm: -0.5, weapon.damage.min: 6, weapon.damage.max: 12, weapon.attack.time: 1.3 } }
+      weaves: { list: [claw, brine_bolt] }
+      drops: { table: tangled_drops, xp: "22 + level * 7", chance: 0.8 }
+
+  - id: tangle
+    name: Tangle
+    extends: monster
+    tags: [tangled, void, tangle, elite]
+    faction: tangled
+    level: 6
+    radius: 0.9
+    height: 2.4
+    components:
+      stats: { attributes: { might: 16, grace: 8, will: 14, vigor: 20, move.speed: 3.2, armor: 30, resist.void: 0.75, resist.lumen: -0.4, weapon.damage.min: 10, weapon.damage.max: 18, weapon.attack.time: 1.4, life.max: 420 } }
+      weaves: { list: [claw, tangle_lash, unmaking_pulse] }
+      behavior: { id: guard }
+      drops: { table: boss_gear, xp: "120 + level * 20", chance: 1 }
+
+  # ---- people of the Hallows
+  - id: villager
+    name: Marcher
+    extends: creature
+    tags: [npc, humanoid, villager]
+    faction: weftmarch_compact
+    level: 1
+    components:
+      behavior: { id: passive }
+      interactable: { kind: talk, range: 2.5 }
+
+  - id: quartermaster
+    name: Quartermaster
+    extends: creature
+    tags: [npc, humanoid, quest_giver]
+    faction: weftmarch_compact
+    level: 5
+    components:
+      stats: { attributes: { might: 12, vigor: 14, armor: 40 } }
+      behavior: { id: guard }
+      weaves: { list: [strike] }
+      interactable: { kind: quest_giver, range: 3 }
+
+  - id: loom_warden
+    name: Loom Warden
+    extends: creature
+    tags: [npc, humanoid, quest_giver, warden]
+    faction: lantern_chancery
+    level: 6
+    components:
+      stats: { attributes: { will: 16, vigor: 12 } }
+      behavior: { id: guard }
+      weaves: { list: [lumen_ward, mind_lash] }
+      interactable: { kind: quest_giver, range: 3 }
+
+  - id: spindlewatch_guard
+    name: Spindlewatch Guard
+    extends: creature
+    tags: [npc, humanoid, guard]
+    faction: weftmarch_compact
+    level: 5
+    components:
+      stats: { attributes: { might: 13, grace: 10, vigor: 14, armor: 50, weapon.damage.min: 6, weapon.damage.max: 11 } }
+      behavior: { id: guard }
+      weaves: { list: [strike, cleave, rallying_shout] }
+      drops: { xp: "0" }
+
+  # ---- stations and props
+  - id: anvil
+    name: Smith's Anvil
+    tags: [prop, station]
+    radius: 0.6
+    height: 1.0
+    components:
+      prop: { blocking: true }
+      interactable: { kind: station, tags: [smithing], range: 2.5 }
+
+  - id: loom
+    name: Reweaving Loom
+    tags: [prop, station]
+    radius: 0.8
+    height: 1.6
+    components:
+      prop: { blocking: true }
+      interactable: { kind: station, tags: [reweaving], range: 2.5 }
+
+  - id: shrine_stone
+    name: Shrine Stone
+    tags: [prop, landmark]
+    radius: 0.7
+    height: 2.2
+    components:
+      prop: { blocking: true }
+      interactable: { kind: marker, range: 3 }
+
+  - id: ruin_chest
+    name: Barrow Chest
+    tags: [prop, chest]
+    radius: 0.5
+    height: 0.7
+    components:
+      prop: { blocking: true }
+      interactable: { kind: chest, ref: ruin_chest, range: 2.5 }
+
+  # ---- flora and resource nodes
+  - { id: oak, name: Oak, tags: [flora, tree], radius: 0.7, height: 7, components: { prop: { blocking: true } } }
+  - { id: pine, name: Pine, tags: [flora, tree], radius: 0.5, height: 9, components: { prop: { blocking: true } } }
+  - { id: birch, name: Birch, tags: [flora, tree], radius: 0.4, height: 6, components: { prop: { blocking: true } } }
+  - { id: ashen_tree, name: Ashen Tree, tags: [flora, tree, ember], radius: 0.6, height: 6, components: { prop: { blocking: true } } }
+  - { id: shrub, name: Shrub, tags: [flora, bush], radius: 0.6, height: 1, components: { prop: {} } }
+  - { id: fern, name: Fern, tags: [flora, ground], radius: 0.4, height: 0.6, components: { prop: {} } }
+  - { id: reed, name: Reed, tags: [flora, ground, wet], radius: 0.3, height: 1.4, components: { prop: {} } }
+  - { id: boulder, name: Boulder, tags: [flora, rock], radius: 0.9, height: 1.3, components: { prop: { blocking: true } } }
+  - { id: cairn_stone, name: Standing Stone, tags: [flora, rock, landmark], radius: 0.6, height: 2.6, components: { prop: { blocking: true } } }
+  - { id: ember_bloom_plant, name: Ember Bloom, tags: [flora, herb, node, ember], radius: 0.4, height: 0.6,
+      components: { prop: {}, interactable: { kind: resource, ref: herb_node, range: 2 } } }
+  - { id: iron_vein, name: Iron Vein, tags: [flora, rock, node, ore], radius: 0.8, height: 1.2,
+      components: { prop: { blocking: true }, interactable: { kind: resource, ref: ore_node, range: 2.5 } } }
+  - { id: fallen_ash, name: Fallen Ash, tags: [flora, wood, node], radius: 0.9, height: 0.8,
+      components: { prop: { blocking: true }, interactable: { kind: resource, ref: wood_node, range: 2.5 } } }
+  - { id: floss_knot, name: Floss Knot, tags: [flora, node, floss, thread], radius: 0.4, height: 1.0,
+      components: { prop: {}, interactable: { kind: resource, ref: floss_node, range: 2 } } }

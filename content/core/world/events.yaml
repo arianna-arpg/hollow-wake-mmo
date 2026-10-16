@@ -1,0 +1,76 @@
+# World events: overlays the server schedules or play triggers. Scope is a region or zone set.
+kind: world_events
+entries:
+  - id: unraveling_surge
+    name: Unraveling Surge
+    description: The Loom frays across the region. Knots thicken and the Unmade walk.
+    weight: 2
+    duration: 1800
+    scope: region
+    generation: { thread.void: 0.3, poi_bonus: 1 }
+    spawns:
+      - { pattern: remnant_shade, density: 2, pack_size: [2, 4], respawn: 120 }
+    modifiers:
+      - { attribute: resist.void, form: flat, value: -0.1 }
+    quests: [clear_knot]
+  - id: bloom_tide
+    name: Bloom Tide
+    description: Green things grow fast and strange.
+    weight: 3
+    duration: 1200
+    scope: region
+    generation: { thread.bloom: 0.3, moisture_offset: 0.15 }
+    modifiers:
+      - { attribute: life.regen, form: increased, value: 0.5 }
+  - id: ember_wind
+    name: Ember Wind
+    description: A hot wind off the Emberfells. Everything burns a little easier.
+    weight: 2
+    duration: 900
+    scope: region
+    generation: { thread.ember: 0.25, temperature_offset: 0.2 }
+    modifiers:
+      - { attribute: ailment.chance, form: flat, value: 0.15, scope: [ember] }
+  - id: high_water
+    name: High Water
+    description: The Tide rises; low places drown and the shore moves inland.
+    weight: 1.5
+    duration: 1500
+    scope: region
+    generation: { water_level: 1.5 }
+  - id: warfront
+    name: Warfront
+    description: The Loosed push into the region. Their camps multiply and their banners stand.
+    weight: 1.5
+    duration: 2400
+    scope: region
+    faction: the_loosed
+    generation: { poi_bonus: 1 }
+    spawns:
+      - { pattern: loosed_brigand, density: 2, pack_size: [2, 3], respawn: 180 }
+    quests: [cull_beasts]
+---
+kind: tags
+entries:
+  - { id: attack, name: Attack, category: weave, description: Weapon-driven; can be evaded; scales with attack power. }
+  - { id: spell, name: Spell, category: weave, description: Thread-driven; always hits; scales with weave power. }
+  - { id: melee, name: Melee, category: weave }
+  - { id: projectile, name: Projectile, category: weave }
+  - { id: area, name: Area, category: weave }
+  - { id: movement, name: Movement, category: weave }
+  - { id: mobile, name: Mobile, category: weave, description: Can be used while moving. }
+  - { id: dot, name: Damage over Time, category: combat }
+  - { id: monster, name: Monster, category: entity }
+  - { id: beast, name: Beast, category: entity }
+  - { id: undead, name: Undead, category: entity }
+  - { id: tangled, name: Tangled, category: entity, description: Things the Knots made. }
+  - { id: npc, name: Non-player, category: entity }
+  - { id: flora, name: Flora, category: entity }
+  - { id: node, name: Resource Node, category: entity }
+  - { id: hub, name: Hub, category: world }
+  - { id: knot, name: Knot, category: world }
+  - { id: ruin, name: Ruin, category: world }
+  - { id: ground, name: Ground, category: terrain }
+  - { id: water, name: Water, category: terrain }
+  - { id: road, name: Road, category: terrain }
+  - { id: bridge, name: Bridge, category: terrain, description: A surface above the ground. }

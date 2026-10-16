@@ -1,0 +1,142 @@
+# Game rules: every formula and tunable the engine reads by path.
+# Code never hard-codes a number it could read from here. Expressions are text; numbers are numbers.
+kind: rules
+entries:
+  - id: world
+    values:
+      seed: aureth
+      chunk_size: 32
+      zone_chunks: 8
+      region_zones: 8
+      sea_level: 0
+      resource_respawn_seconds: 180
+      gen:
+        continent_scale: 2400
+        continent_amplitude: 28
+        ridge_amplitude: 40
+        detail_scale: 40
+        detail_amplitude: 3
+        temperature_scale: 2200
+        moisture_scale: 1600
+        thread_scale: 900
+        lapse_rate: 0.006
+        level_per_region: 4
+        poi_cell: 64
+        poi_margin: 20
+        poi_target: 4
+        flatten_falloff: 6
+        max_walkable_slope: 1.1
+        shallow_depth: 0.6
+        flora_jitter: 0.4
+
+  - id: server
+    values:
+      tick_rate: 20
+      zone_chunk_padding: 1
+      max_intents_per_tick: 8
+      interest_radius: 48
+      snapshot_rate: 10
+
+  - id: combat
+    values:
+      hit_chance: "clamp(accuracy / max(1, accuracy + evasion * 0.25), 0.05, 1)"
+      armor_reduction: "armor / (armor + 10 * raw)"
+      resist_cap: 0.75
+      resist_floor: -2
+      pools: [ward, life]
+      evadable_tags: [attack]
+      default_thread: stone
+      cooldown_at: complete
+      global_cooldown: 0
+      corpse_seconds: 12
+      respawn_seconds: 5
+      respawn_life_fraction: 1
+      auto_respawn: true
+      crit_ailment_bonus: 0.5
+      propagate_radius: 4
+      ailment_magnitude:
+        burning: "amount * 0.3"
+        bleeding: "amount * 0.25"
+        chilled: "1"
+        shocked: "1"
+        withered: "amount * 0.15"
+        dazzled: "1"
+        unraveling: "1"
+        addled: "1"
+        sapped: "amount * 0.2"
+
+  - id: move
+    values:
+      gravity: 24
+      jump_velocity: 7.5
+      step_up: 0.6
+      max_drop: 3
+      default_speed: 4.5
+      path_max_nodes: 4000
+      fall_damage_per_unit: 2
+      fall_damage_threshold: 6
+
+  - id: items
+    values:
+      tier_breaks: ["1", "8", "16", "26", "38", "52"]
+      tier_names: ["", "Fine", "Grand", "Exalted", "Mythic", "Primeval"]
+      implicit_tier_scale: 0.1
+      unique_tier_scale: 0.12
+      local_tier_scale: 0.12
+      quality_bonus: 0.2
+      defense_budget: "(16 + 5 * item_level) * (1 + 0.3 * (tier - 1)) * slot_budget * (0.9 + 0.2 * base_roll)"
+      slot_budget:
+        chest: 1.0
+        head: 0.65
+        hands: 0.5
+        feet: 0.5
+        belt: 0.4
+        off_hand: 0.6
+      affix:
+        tier_bias_low: 0.85
+        tier_bias_high: 0.5
+      rare_names:
+        first: [Storm, Grim, Ember, Dusk, Iron, Blood, Gale, Hollow, Raven, Frost, Dread, Sun, Ash, Viper, Oath, Thorn, Wolf, Doom, Star, Bone, Rune, Shade, Brine, Loom]
+        second: [song, " Ward", " Grasp", " Veil", " Coil", " Mark", " Bite", " Crest", " Shroud", " Pledge", " Snare", " Brand", " Knell", " Husk", " Gyre", " Fang", " Weave", " Keep", " Whorl", " Call"]
+      loot:
+        max_depth: 8
+        owner_seconds: 60
+        expire_seconds: 600
+        pickup_range: 2.5
+
+  - id: progression
+    values:
+      xp_to_next: "round(80 * level ^ 1.6)"
+      passive_points: "level - 1"
+      max_level: 60
+      heal_on_level: true
+
+  - id: quests
+    values:
+      max_active: 20
+      level_slack: 3
+
+  - id: crafting
+    values:
+      grace_seconds: 5
+      rarity_by_quality:
+        common: 0
+        magic: 0.55
+        rare: 0.85
+
+  - id: territory
+    values:
+      min_level: 5
+      bind_time: "30 + 15 * holding_founts"
+      contestable: true
+      damage_interrupts: true
+      max_founts_per_character: 3
+      yield_interval: 300
+
+  - id: effects
+    values:
+      max_depth: 12
+
+  - id: weaves
+    values:
+      max_slots: 8

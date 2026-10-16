@@ -1,0 +1,10 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- Wire contract between client and server: messages, snapshots, serialization. -->
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <RootNamespace>Skein.Protocol</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Skein.Core\Skein.Core.csproj" />
+  </ItemGroup>
+</Project>

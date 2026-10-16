@@ -1,0 +1,7 @@
+# Resources: current/maximum pairs with regeneration. Damage pools are ordered by combat.pools in rules.
+kind: resources
+entries:
+  - { id: life, name: Life, max: life.max, regen: life.regen, lethal: true, color: "#c0392b", order: 0 }
+  - { id: mana, name: Mana, max: mana.max, regen: mana.regen, color: "#2e86de", order: 1 }
+  - { id: stamina, name: Stamina, max: stamina.max, regen: stamina.regen, color: "#27ae60", order: 2 }
+  - { id: ward, name: Ward, max: ward.max, regen: ward.regen, start_fraction: 1, color: "#f1c40f", order: 3 }

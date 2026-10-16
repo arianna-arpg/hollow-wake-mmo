@@ -1,0 +1,242 @@
+# Forms: the deliveries a weave can take. A weave is a form, one or two threads, and up to four glyphs.
+# Effect graphs read the chosen threads through $threads and their numbers through weave.* names.
+kind: forms
+entries:
+  - id: strike
+    name: Strike
+    description: A weapon blow against one foe.
+    targeting: enemy
+    cast_mode: cast
+    cast_time: "weapon.attack.time"
+    costs: { stamina: 4 }
+    attributes: { range: 1.9, damage.effectiveness: 1.0 }
+    mechanisms: [hit, melee, attack]
+    tags: [attack, melee]
+    min_threads: 0
+    max_threads: 1
+    max_glyphs: 3
+    ai: { role: damage, preferred_range: 1.6, weight: 1 }
+    effects:
+      - type: damage
+        amount: "lerp(weapon.damage.min, weapon.damage.max, rand()) * weave.damage.effectiveness * attack.power"
+        threads: $threads
+        tags: [hit]
+
+  - id: cleave
+    name: Cleave
+    description: A sweeping blow that strikes everything in an arc.
+    targeting: direction
+    cast_mode: cast
+    cast_time: "weapon.attack.time * 1.2"
+    costs: { stamina: 9 }
+    attributes: { range: 2.8, area.radius: 2.8, damage.effectiveness: 0.8 }
+    mechanisms: [hit, melee, attack, area]
+    tags: [attack, melee, area]
+    min_threads: 0
+    max_threads: 1
+    ai: { role: damage, preferred_range: 2.2, weight: 0.8 }
+    effects:
+      - type: area
+        shape: cone
+        angle: 110
+        radius: "weave.area.radius"
+        center: source
+        filter: enemy
+        effects:
+          - type: damage
+            amount: "lerp(weapon.damage.min, weapon.damage.max, rand()) * weave.damage.effectiveness * attack.power"
+            threads: $threads
+
+  - id: bolt
+    name: Bolt
+    description: A thread-wrought missile.
+    targeting: enemy
+    cast_mode: cast
+    cast_time: 0.6
+    costs: { mana: 8 }
+    attributes: { range: 14, base_damage: 14, projectile.count: 1, projectile.speed: 16, projectile.pierce: 0 }
+    mechanisms: [projectile, spell, hit, chain]
+    tags: [spell, projectile]
+    ai: { role: damage, preferred_range: 9, weight: 1 }
+    effects:
+      - type: projectile
+        on_hit:
+          - type: damage
+            amount: "weave.base_damage * spell.power * (1 + 0.08 * (weave.level - 1))"
+            threads: $threads
+          - { type: apply_status, status: $thread_status, chance: 0.25, threads: $threads }
+          - type: chain
+            count: "weave.chain.count"
+            range: 6
+            effects:
+              - type: damage
+                amount: "weave.base_damage * spell.power * 0.7"
+                threads: $threads
+
+  - id: nova
+    name: Nova
+    description: A burst around the weaver.
+    targeting: self
+    cast_mode: cast
+    cast_time: 0.8
+    costs: { mana: 14 }
+    attributes: { range: 0, area.radius: 3.5, base_damage: 18 }
+    mechanisms: [area, spell, hit]
+    tags: [spell, area]
+    ai: { role: damage, preferred_range: 2.5, weight: 0.9, when: "nearest_enemy_distance < 3.5" }
+    effects:
+      - type: area
+        shape: circle
+        radius: "weave.area.radius"
+        center: source
+        filter: enemy
+        effects:
+          - { type: damage, amount: "weave.base_damage * spell.power", threads: $threads }
+          - { type: apply_status, status: $thread_status, chance: 0.35, threads: $threads }
+
+  - id: blast
+    name: Blast
+    description: A detonation at a chosen point.
+    targeting: ground
+    cast_mode: cast
+    cast_time: 0.9
+    costs: { mana: 12 }
+    attributes: { range: 12, area.radius: 2.5, base_damage: 16 }
+    mechanisms: [area, spell, hit]
+    tags: [spell, area]
+    ai: { role: damage, preferred_range: 8, weight: 0.9 }
+    effects:
+      - type: area
+        shape: circle
+        radius: "weave.area.radius"
+        center: point
+        filter: enemy
+        effects:
+          - { type: damage, amount: "weave.base_damage * spell.power", threads: $threads }
+          - { type: apply_status, status: $thread_status, chance: 0.3, threads: $threads }
+
+  - id: beam
+    name: Beam
+    description: A line of thread from the weaver's hand.
+    targeting: direction
+    cast_mode: cast
+    cast_time: 0.5
+    costs: { mana: 10 }
+    attributes: { range: 9, area.radius: 9, base_damage: 12 }
+    mechanisms: [spell, hit, line]
+    tags: [spell, line]
+    ai: { role: damage, preferred_range: 6, weight: 0.8 }
+    effects:
+      - type: area
+        shape: line
+        radius: "weave.range"
+        center: source
+        filter: enemy
+        effects:
+          - { type: damage, amount: "weave.base_damage * spell.power", threads: $threads }
+
+  - id: field
+    name: Field
+    description: A lingering ground that pulses with thread.
+    targeting: ground
+    cast_mode: cast
+    cast_time: 1.0
+    costs: { mana: 18 }
+    cooldown: 6
+    attributes: { range: 10, area.radius: 3, duration: 5, base_damage: 6 }
+    mechanisms: [area, spell, duration, field, cooldown]
+    tags: [spell, area, field]
+    ai: { role: damage, preferred_range: 7, weight: 0.6 }
+    effects:
+      - type: field
+        radius: "weave.area.radius"
+        duration: "weave.duration"
+        interval: 0.5
+        filter: enemy
+        pulse:
+          - { type: damage, amount: "weave.base_damage * spell.power", threads: $threads, can_crit: false }
+
+  - id: ward
+    name: Ward
+    description: Bind thread into a shield around the weaver.
+    targeting: self
+    cast_mode: instant
+    costs: { mana: 16 }
+    cooldown: 8
+    attributes: { range: 0, duration: 6 }
+    mechanisms: [buff, spell, duration, cooldown]
+    tags: [spell, buff, mobile]
+    ai: { role: defense, preferred_range: 0, weight: 0.5, when: "life_pct < 0.5" }
+    effects:
+      - { type: resource, resource: ward, amount: "15 + level * 3 + will * 0.8", self: true }
+      - { type: apply_status, status: fortified, duration: "weave.duration", self: true }
+
+  - id: mend
+    name: Mend
+    description: Reweave a wound.
+    targeting: ally
+    cast_mode: cast
+    cast_time: 1.0
+    costs: { mana: 12 }
+    attributes: { range: 12, base_heal: 18, duration: 8 }
+    mechanisms: [spell, heal, duration]
+    tags: [spell, heal]
+    ai: { role: heal, preferred_range: 8, weight: 0.7, when: "life_pct < 0.6" }
+    effects:
+      - { type: heal, amount: "weave.base_heal * spell.power * (1 + 0.1 * (weave.level - 1))", resource: life }
+      - { type: apply_status, status: regrowth, duration: "weave.duration", magnitude: "weave.base_heal * 0.15 * spell.power" }
+
+  - id: dash
+    name: Dash
+    description: A burst of movement.
+    targeting: direction
+    cast_mode: instant
+    costs: { stamina: 15 }
+    cooldown: 4
+    attributes: { range: 5 }
+    mechanisms: [movement, cooldown]
+    tags: [movement, mobile]
+    min_threads: 0
+    max_threads: 1
+    max_glyphs: 2
+    ai: { role: movement, preferred_range: 6, weight: 0.4, when: "target_distance > 5" }
+    effects:
+      - { type: move, kind: dash, distance: "weave.range" }
+
+  - id: summon
+    name: Summon
+    description: Call a pattern from the Loom to fight beside you.
+    targeting: self
+    cast_mode: cast
+    cast_time: 1.2
+    costs: { mana: 25 }
+    cooldown: 3
+    attributes: { range: 0, summon.count: 1, summon.max: 3, duration: 30 }
+    mechanisms: [summon, spell, duration, cooldown]
+    tags: [spell, summon]
+    max_glyphs: 3
+    ai: { role: summon, preferred_range: 6, weight: 0.5 }
+    effects: []
+
+  - id: shout
+    name: Shout
+    description: A cry that moves those who hear it.
+    targeting: self
+    cast_mode: instant
+    costs: { stamina: 20 }
+    cooldown: 10
+    attributes: { range: 0, area.radius: 6, duration: 4 }
+    mechanisms: [area, buff, duration, cooldown]
+    tags: [shout, area, mobile]
+    min_threads: 0
+    max_threads: 1
+    max_glyphs: 2
+    ai: { role: control, preferred_range: 3, weight: 0.4, when: "nearest_enemy_distance < 5" }
+    effects:
+      - type: area
+        shape: circle
+        radius: "weave.area.radius"
+        center: source
+        filter: enemy
+        effects:
+          - { type: taunt, duration: "weave.duration" }

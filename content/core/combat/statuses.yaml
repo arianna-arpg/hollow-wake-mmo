@@ -1,0 +1,189 @@
+# Statuses: ailments the Threads leave, crowd control, buffs. Modifiers apply to the bearer while worn.
+kind: statuses
+entries:
+  - id: burning
+    name: Burning
+    tags: [ailment, ember, dot]
+    duration: 4
+    stack_policy: strongest
+    color: "#e8622a"
+    tick:
+      interval: 0.5
+      effects:
+        - { type: damage, amount: amount, threads: [ember], tags: [dot], can_crit: false }
+
+  - id: bleeding
+    name: Bleeding
+    tags: [ailment, stone, dot]
+    duration: 5
+    stack_policy: stack
+    max_stacks: 5
+    color: "#c0392b"
+    tick:
+      interval: 0.5
+      effects:
+        - { type: damage, amount: "amount * stacks", threads: [stone], tags: [dot], can_crit: false }
+
+  - id: chilled
+    name: Chilled
+    tags: [ailment, tide]
+    duration: 4
+    stack_policy: stack
+    max_stacks: 4
+    buildup_into: frozen
+    modifiers_per_stack: true
+    color: "#3aa6d8"
+    modifiers:
+      - { attribute: move.speed, form: increased, value: -0.08 }
+      - { attribute: attack.speed, form: increased, value: -0.06 }
+      - { attribute: cast.speed, form: increased, value: -0.06 }
+
+  - id: frozen
+    name: Frozen
+    tags: [ailment, tide, control]
+    duration: 2
+    stack_policy: strongest
+    flags: [stunned, frozen]
+    scales_with_potency: false
+    color: "#a8e0ff"
+
+  - id: shocked
+    name: Shocked
+    tags: [ailment, storm]
+    duration: 4
+    stack_policy: strongest
+    color: "#b58cff"
+    modifiers:
+      - { attribute: damage.taken, form: increased, value: 0.15 }
+
+  - id: sapped
+    name: Sapped
+    tags: [ailment, bloom, dot]
+    duration: 6
+    stack_policy: strongest
+    color: "#5fbf5a"
+    tick:
+      interval: 1
+      effects:
+        - { type: damage, amount: amount, threads: [bloom], tags: [dot], can_crit: false }
+        - { type: heal, amount: "amount * 0.5", resource: life, self: true }
+
+  - id: withered
+    name: Withered
+    tags: [ailment, umbra]
+    duration: 6
+    stack_policy: strongest
+    color: "#5a4a7a"
+    modifiers:
+      - { attribute: healing, form: increased, value: -0.4 }
+      - { attribute: life.regen, form: increased, value: -0.5 }
+
+  - id: dazzled
+    name: Dazzled
+    tags: [ailment, lumen]
+    duration: 3
+    stack_policy: refresh
+    color: "#f5e27a"
+    modifiers:
+      - { attribute: accuracy, form: increased, value: -0.35 }
+      - { attribute: crit.chance, form: increased, value: -0.5 }
+
+  - id: unraveling
+    name: Unraveling
+    tags: [ailment, void]
+    duration: 5
+    stack_policy: refresh
+    color: "#2b2033"
+    modifiers:
+      - { attribute: resist.ember, form: flat, value: -0.15 }
+      - { attribute: resist.tide, form: flat, value: -0.15 }
+      - { attribute: resist.storm, form: flat, value: -0.15 }
+      - { attribute: resist.bloom, form: flat, value: -0.15 }
+      - { attribute: resist.umbra, form: flat, value: -0.15 }
+      - { attribute: resist.lumen, form: flat, value: -0.15 }
+      - { attribute: resist.mind, form: flat, value: -0.15 }
+      - { attribute: armor, form: increased, value: -0.25 }
+
+  - id: addled
+    name: Addled
+    tags: [ailment, mind]
+    duration: 4
+    stack_policy: refresh
+    color: "#d470c0"
+    modifiers:
+      - { attribute: cast.speed, form: increased, value: -0.25 }
+      - { attribute: mana.regen, form: increased, value: -0.5 }
+
+  - id: stunned
+    name: Stunned
+    tags: [control]
+    duration: 1.5
+    stack_policy: strongest
+    flags: [stunned]
+    scales_with_potency: false
+    color: "#ffffff"
+
+  - id: rooted
+    name: Rooted
+    tags: [control, bloom]
+    duration: 2.5
+    stack_policy: refresh
+    flags: [rooted]
+    forbids_tags: [movement]
+    scales_with_potency: false
+    color: "#3b7a33"
+
+  - id: silenced
+    name: Silenced
+    tags: [control, mind]
+    duration: 3
+    stack_policy: refresh
+    flags: [silenced]
+    forbids_tags: [spell]
+    scales_with_potency: false
+    color: "#8a4a8a"
+
+  - id: hasted
+    name: Hasted
+    tags: [buff, storm]
+    beneficial: true
+    duration: 6
+    stack_policy: refresh
+    color: "#b58cff"
+    modifiers:
+      - { attribute: move.speed, form: increased, value: 0.3 }
+      - { attribute: attack.speed, form: increased, value: 0.15 }
+
+  - id: fortified
+    name: Fortified
+    tags: [buff, lumen]
+    beneficial: true
+    duration: 6
+    stack_policy: refresh
+    color: "#f5e27a"
+    modifiers:
+      - { attribute: damage.taken, form: more, value: -0.2 }
+
+  - id: regrowth
+    name: Regrowth
+    tags: [buff, bloom, hot]
+    beneficial: true
+    duration: 8
+    stack_policy: refresh
+    color: "#5fbf5a"
+    tick:
+      interval: 1
+      effects:
+        - { type: heal, amount: magnitude, resource: life }
+
+  - id: hidden
+    name: Hidden
+    tags: [buff, umbra]
+    beneficial: true
+    duration: 5
+    stack_policy: refresh
+    flags: [hidden]
+    scales_with_potency: false
+    color: "#5a4a7a"
+    modifiers:
+      - { attribute: crit.chance, form: flat, value: 0.25 }

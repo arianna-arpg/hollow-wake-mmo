@@ -1,0 +1,27 @@
+# Monster rarity tiers and the affixes that make magic and rare packs distinct.
+kind: monster_rarities
+entries:
+  - { id: normal, name: "", weight: 100, rank: 0, affix_count: 0, color: "#ffffff" }
+  - { id: magic, name: Magic, weight: 12, rank: 1, affix_count: 1, size_scale: 1.08, xp_multiplier: 2, color: "#6c9cff",
+      modifiers: [ { attribute: life.max, form: more, value: 0.7 }, { attribute: damage, form: more, value: 0.2 } ] }
+  - { id: rare, name: Rare, weight: 5, rank: 2, affix_count: 3, size_scale: 1.16, xp_multiplier: 4, bonus_loot_rolls: 1, color: "#ffd34d",
+      modifiers: [ { attribute: life.max, form: more, value: 1.8 }, { attribute: damage, form: more, value: 0.45 } ] }
+  - { id: champion, name: Champion, weight: 1.5, rank: 3, affix_count: 4, size_scale: 1.28, xp_multiplier: 8, bonus_loot_rolls: 1, color: "#ff8a3d",
+      modifiers: [ { attribute: life.max, form: more, value: 3.6 }, { attribute: damage, form: more, value: 0.7 } ] }
+  - { id: crowned, name: Crowned, weight: 0, rank: 4, affix_count: 5, size_scale: 1.42, xp_multiplier: 14, bonus_loot_rolls: 2, color: "#e64db4",
+      modifiers: [ { attribute: life.max, form: more, value: 6.5 }, { attribute: damage, form: more, value: 1.0 } ] }
+---
+kind: monster_affixes
+entries:
+  - { id: vigorous, name: Vigorous, weight: 10, modifiers: [ { attribute: life.max, form: increased, value: 0.6 } ] }
+  - { id: savage, name: Savage, weight: 10, modifiers: [ { attribute: damage, form: increased, value: 0.45 } ] }
+  - { id: swift, name: Swift, weight: 8, modifiers: [ { attribute: move.speed, form: increased, value: 0.35 } ] }
+  - { id: frenzied, name: Frenzied, weight: 8, modifiers: [ { attribute: attack.speed, form: increased, value: 0.4 }, { attribute: cast.speed, form: increased, value: 0.4 } ] }
+  - { id: ironhide, name: Ironhide, weight: 8, modifiers: [ { attribute: armor, form: flat, value: 80 } ] }
+  - { id: evasive, name: Evasive, weight: 6, modifiers: [ { attribute: evasion, form: increased, value: 1.2 } ] }
+  - { id: deadeye, name: Deadeye, weight: 6, modifiers: [ { attribute: accuracy, form: increased, value: 0.6 }, { attribute: crit.chance, form: flat, value: 0.08 } ] }
+  - { id: brutal, name: Brutal, weight: 6, modifiers: [ { attribute: crit.multiplier, form: flat, value: 0.5 } ] }
+  - { id: warded, name: Warded, weight: 6, modifiers: [ { attribute: resist.ember, form: flat, value: 0.4 }, { attribute: resist.tide, form: flat, value: 0.4 }, { attribute: resist.storm, form: flat, value: 0.4 }, { attribute: resist.umbra, form: flat, value: 0.4 } ] }
+  - { id: emberclad, name: Emberclad, weight: 5, modifiers: [ { attribute: convert.stone.ember, form: flat, value: 0.5 }, { attribute: ailment.chance, form: flat, value: 0.3 } ] }
+  - { id: lingering, name: Lingering, weight: 5, modifiers: [ { attribute: effect.duration, form: increased, value: 0.6 } ] }
+  - { id: hungering, name: Hungering, weight: 4, weaves: [grave_touch], modifiers: [ { attribute: ailment.chance, form: flat, value: 0.2 } ] }

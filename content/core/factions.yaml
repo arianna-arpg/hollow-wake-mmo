@@ -1,0 +1,21 @@
+# Factions of the Weftmarches and the wild things that have no banner.
+kind: factions
+entries:
+  - { id: players, name: The Marchers, playable: true, default: neutral, color: "#f0f0f0",
+      relations: { the_loosed: hostile, wilds: hostile, tangled: hostile, remnant: hostile, lantern_chancery: friendly, weftmarch_compact: friendly, longwake_company: neutral, mended_thread: friendly } }
+  - { id: lantern_chancery, name: The Lantern Chancery, territorial: true, color: "#f5e27a", default: neutral,
+      relations: { players: friendly, the_loosed: hostile, tangled: hostile, remnant: hostile } }
+  - { id: weftmarch_compact, name: The Weftmarch Compact, territorial: true, color: "#5fbf5a", default: neutral,
+      relations: { players: friendly, the_loosed: hostile, tangled: hostile, remnant: hostile, longwake_company: neutral } }
+  - { id: longwake_company, name: The Longwake Company, territorial: true, color: "#3aa6d8", default: neutral,
+      relations: { the_loosed: hostile, tangled: hostile, remnant: hostile } }
+  - { id: mended_thread, name: The Order of the Mended Thread, color: "#d8d0ff", default: neutral,
+      relations: { players: friendly, the_loosed: hostile, tangled: hostile, remnant: hostile } }
+  - { id: the_loosed, name: The Loosed, territorial: true, color: "#9c3f3f", default: hostile,
+      relations: { the_loosed: allied, tangled: neutral } }
+  - { id: wilds, name: Wild Beasts, color: "#8a6d3b", default: hostile,
+      relations: { wilds: allied, tangled: hostile } }
+  - { id: tangled, name: The Tangled, color: "#2b2033", default: hostile,
+      relations: { tangled: allied } }
+  - { id: remnant, name: Remnants, color: "#5a4a7a", default: hostile,
+      relations: { remnant: allied, tangled: neutral } }

@@ -1,0 +1,100 @@
+# Attributes: every number an entity, weave, item or holding can carry.
+# Formulas read other attributes and `level`. Undeclared attributes still work as channels; declaring
+# them gives names, defaults, bounds and tool support.
+kind: attributes
+entries:
+  # ---- core
+  - { id: might, name: Might, category: core, base: 10, min: 0, description: Physical force. Scales attacks and armor. }
+  - { id: grace, name: Grace, category: core, base: 10, min: 0, description: "Speed and precision. Scales accuracy, evasion and critical strikes." }
+  - { id: will, name: Will, category: core, base: 10, min: 0, description: Command over the Loom. Scales weaves and mana. }
+  - { id: vigor, name: Vigor, category: core, base: 10, min: 0, description: Endurance. Scales life and recovery. }
+
+  # ---- resources
+  - { id: life.max, name: Maximum Life, category: resource, formula: "40 + level * 10 + vigor * 4", min: 1, decimals: 0 }
+  - { id: life.regen, name: Life Regeneration, category: resource, formula: "0.5 + vigor * 0.05", decimals: 2 }
+  - { id: mana.max, name: Maximum Mana, category: resource, formula: "30 + level * 5 + will * 3", min: 0, decimals: 0 }
+  - { id: mana.regen, name: Mana Regeneration, category: resource, formula: "1 + will * 0.08", decimals: 2 }
+  - { id: stamina.max, name: Maximum Stamina, category: resource, base: 100, min: 0, decimals: 0 }
+  - { id: stamina.regen, name: Stamina Regeneration, category: resource, base: 12, decimals: 2 }
+  - { id: ward.max, name: Maximum Ward, category: resource, base: 0, min: 0, decimals: 0, description: A shield of bound Thread that absorbs damage before life. }
+  - { id: ward.regen, name: Ward Regeneration, category: resource, base: 0, decimals: 2 }
+
+  # ---- movement and tempo
+  - { id: move.speed, name: Movement Speed, category: tempo, base: 5, min: 0.5, max: 16, decimals: 2 }
+  - { id: jump.height, name: Jump Height, category: tempo, base: 1, min: 0, max: 4 }
+  - { id: attack.speed, name: Attack Speed, category: tempo, base: 1, min: 0.1, percent: true }
+  - { id: cast.speed, name: Cast Speed, category: tempo, base: 1, min: 0.1, percent: true }
+  - { id: cooldown.recovery, name: Cooldown Recovery, category: tempo, base: 1, min: 0.1, percent: true }
+  - { id: effect.duration, name: Effect Duration, category: tempo, base: 1, min: 0.1, percent: true }
+
+  # ---- offense
+  - { id: damage, name: Damage, category: offense, base: 0, description: The damage channel. Scope by thread and weave tags. }
+  - { id: attack.power, name: Attack Power, category: offense, formula: "1 + might * 0.02 + level * 0.01", percent: true }
+  - { id: spell.power, name: Weave Power, category: offense, formula: "1 + will * 0.025 + level * 0.015", percent: true }
+  - { id: accuracy, name: Accuracy, category: offense, formula: "80 + level * 5 + grace * 3", min: 0, decimals: 0 }
+  - { id: crit.chance, name: Critical Chance, category: offense, base: 0.05, min: 0, max: 1, percent: true }
+  - { id: crit.multiplier, name: Critical Multiplier, category: offense, base: 1.5, min: 1, percent: true }
+  - { id: ailment.chance, name: Ailment Chance, category: offense, base: 0, min: 0, percent: true }
+  - { id: ailment.potency, name: Ailment Potency, category: offense, base: 0, percent: true }
+  - { id: cull.threshold, name: Culling Threshold, category: offense, base: 0, min: 0, max: 1, percent: true }
+  - { id: healing, name: Healing, category: offense, base: 0, description: The healing channel. }
+  - { id: pen.ember, name: Ember Penetration, category: offense, base: 0, percent: true }
+  - { id: pen.tide, name: Tide Penetration, category: offense, base: 0, percent: true }
+  - { id: pen.storm, name: Storm Penetration, category: offense, base: 0, percent: true }
+  - { id: pen.bloom, name: Bloom Penetration, category: offense, base: 0, percent: true }
+  - { id: pen.umbra, name: Umbra Penetration, category: offense, base: 0, percent: true }
+  - { id: pen.lumen, name: Lumen Penetration, category: offense, base: 0, percent: true }
+  - { id: pen.void, name: Void Penetration, category: offense, base: 0, percent: true }
+  - { id: pen.mind, name: Mind Penetration, category: offense, base: 0, percent: true }
+  - { id: convert.stone.ember, name: Stone to Ember Conversion, category: offense, base: 0, min: 0, max: 1, percent: true }
+  - { id: extra.ember, name: Extra Ember Damage, category: offense, base: 0, min: 0, percent: true }
+
+  # ---- weapon (set by equipment, read by attack forms)
+  - { id: weapon.damage.min, name: Weapon Damage Minimum, category: weapon, base: 2, min: 0 }
+  - { id: weapon.damage.max, name: Weapon Damage Maximum, category: weapon, base: 4, min: 0 }
+  - { id: weapon.attack.time, name: Weapon Attack Time, category: weapon, base: 1.0, min: 0.2 }
+  - { id: weapon.range, name: Weapon Range, category: weapon, base: 1.8, min: 0.5 }
+
+  # ---- defense
+  - { id: armor, name: Armor, category: defense, base: 0, min: 0, decimals: 0 }
+  - { id: evasion, name: Evasion, category: defense, formula: "20 + level * 3 + grace * 2", min: 0, decimals: 0 }
+  - { id: block.chance, name: Block Chance, category: defense, base: 0, min: 0, max: 0.75, percent: true }
+  - { id: block.amount, name: Block Amount, category: defense, base: 1, min: 0, max: 1, percent: true }
+  - { id: damage.taken, name: Damage Taken, category: defense, base: 0, description: Multiplier channel on incoming damage. }
+  - { id: status.resistance, name: Status Resistance, category: defense, base: 0, max: 0.9, percent: true }
+  - { id: resist.ember, name: Ember Resistance, category: defense, base: 0, min: -2, percent: true }
+  - { id: resist.tide, name: Tide Resistance, category: defense, base: 0, min: -2, percent: true }
+  - { id: resist.storm, name: Storm Resistance, category: defense, base: 0, min: -2, percent: true }
+  - { id: resist.bloom, name: Bloom Resistance, category: defense, base: 0, min: -2, percent: true }
+  - { id: resist.umbra, name: Umbra Resistance, category: defense, base: 0, min: -2, percent: true }
+  - { id: resist.lumen, name: Lumen Resistance, category: defense, base: 0, min: -2, percent: true }
+  - { id: resist.void, name: Void Resistance, category: defense, base: 0, min: -2, percent: true }
+  - { id: resist.mind, name: Mind Resistance, category: defense, base: 0, min: -2, percent: true }
+  - { id: resist.ember.max, name: Maximum Ember Resistance, category: defense, base: 0.75, max: 0.9, percent: true }
+  - { id: resist.tide.max, name: Maximum Tide Resistance, category: defense, base: 0.75, max: 0.9, percent: true }
+  - { id: resist.storm.max, name: Maximum Storm Resistance, category: defense, base: 0.75, max: 0.9, percent: true }
+  - { id: resist.bloom.max, name: Maximum Bloom Resistance, category: defense, base: 0.75, max: 0.9, percent: true }
+  - { id: resist.umbra.max, name: Maximum Umbra Resistance, category: defense, base: 0.75, max: 0.9, percent: true }
+  - { id: resist.lumen.max, name: Maximum Lumen Resistance, category: defense, base: 0.75, max: 0.9, percent: true }
+  - { id: resist.void.max, name: Maximum Void Resistance, category: defense, base: 0.75, max: 0.9, percent: true }
+  - { id: resist.mind.max, name: Maximum Mind Resistance, category: defense, base: 0.75, max: 0.9, percent: true }
+
+  # ---- weave channels (forms set bases; glyphs and passives modify)
+  - { id: base_damage, name: Base Damage, category: weave, base: 10, min: 0 }
+  - { id: base_heal, name: Base Heal, category: weave, base: 15, min: 0 }
+  - { id: damage.effectiveness, name: Damage Effectiveness, category: weave, base: 1, min: 0, percent: true }
+  - { id: range, name: Range, category: weave, base: 10, min: 0 }
+  - { id: area.radius, name: Area Radius, category: weave, base: 2, min: 0.25 }
+  - { id: projectile.count, name: Projectile Count, category: weave, base: 1, min: 1, max: 20, decimals: 0 }
+  - { id: projectile.speed, name: Projectile Speed, category: weave, base: 14, min: 1 }
+  - { id: projectile.pierce, name: Projectile Pierce, category: weave, base: 0, min: 0, decimals: 0 }
+  - { id: chain.count, name: Chain Count, category: weave, base: 0, min: 0, decimals: 0 }
+  - { id: duration, name: Duration, category: weave, base: 4, min: 0.1 }
+  - { id: summon.count, name: Summon Count, category: weave, base: 1, min: 1, decimals: 0 }
+  - { id: summon.max, name: Summon Maximum, category: weave, base: 3, min: 1, decimals: 0 }
+  - { id: cost, name: Cost, category: weave, base: 0, description: The cost channel. Scope by resource and weave tags. }
+
+  # ---- misc
+  - { id: xp.gain, name: Experience Gain, category: misc, base: 0, percent: true }
+  - { id: crafting.quality, name: Crafting Quality, category: misc, base: 0, percent: true }
+  - { id: light.radius, name: Light Radius, category: misc, base: 8, min: 1 }

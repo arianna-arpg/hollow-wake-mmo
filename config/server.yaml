@@ -1,0 +1,23 @@
+# Skein server settings. Copy to server.local.yaml for machine-specific overrides (ignored by git).
+name: Skein Dev
+motd: A quiet corner of the Weftmarches.
+port: 7777
+bind: 0.0.0.0
+transport: tcp
+tick_rate: 20
+snapshot_rate: 10
+interest_radius: 48
+content_layers:
+  - content/core
+strict_content: true
+data_dir: data
+# seed: aureth          # overrides world.seed from the rules
+auth: dev               # dev: any account name; token: require the shared token below
+# token: change-me
+max_players: 64
+autosave_seconds: 60
+zone_unload_seconds: 300
+world_events: true
+world_event_interval_seconds: 900
+max_active_world_events: 3
+log_intents: false

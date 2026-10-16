@@ -1,0 +1,13 @@
+# The nine Threads: the world's element and damage vocabulary. Each has a resistance, a penetration,
+# a mitigation rule (armor for Stone, resistance for the rest) and the ailment it tends to leave.
+kind: threads
+entries:
+  - { id: ember, name: Ember, color: "#e8622a", opposes: tide, mitigation: resist, status: burning, tags: [elemental, heat], description: Fire and the will to change. }
+  - { id: tide, name: Tide, color: "#3aa6d8", opposes: ember, mitigation: resist, status: chilled, tags: [elemental, cold, water], description: "Cold, water and patience." }
+  - { id: storm, name: Storm, color: "#b58cff", opposes: stone, mitigation: resist, status: shocked, tags: [elemental, lightning, wind], description: "Lightning and wind, the sudden Thread." }
+  - { id: stone, name: Stone, color: "#9c8b72", opposes: storm, mitigation: armor, status: bleeding, tags: [physical, earth], description: "Earth and the body. Blunt, cutting, enduring." }
+  - { id: bloom, name: Bloom, color: "#5fbf5a", opposes: umbra, mitigation: resist, status: sapped, tags: [life, growth], description: "Life, growth and mending." }
+  - { id: umbra, name: Umbra, color: "#5a4a7a", opposes: bloom, mitigation: resist, status: withered, tags: [shadow, decay], description: Shadow and decay. What is taken back. }
+  - { id: lumen, name: Lumen, color: "#f5e27a", opposes: void, mitigation: resist, status: dazzled, tags: [light, order], description: Light and order. The visible rule. }
+  - { id: void, name: Void, color: "#2b2033", opposes: lumen, mitigation: resist, status: unraveling, tags: [chaos, unmaking], description: Chaos and unmaking. The loose end. }
+  - { id: mind, name: Mind, color: "#d470c0", mitigation: resist, status: addled, tags: [arcane, thought], description: "Thought, will and the arcane." }

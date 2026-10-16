@@ -1,0 +1,239 @@
+# Landmarks: hand-authored stamps. Rows read top to bottom as north to south; '.' keeps natural terrain.
+# Digits in a legend are half-step heights (1 = 0.5, 2 = 1.0 ...) so stairs climb within the step limit.
+# A layer cell adds a surface above the ground instead of replacing it, which is how bridges and floors work.
+kind: landmarks
+entries:
+  - id: hamlet_ring
+    name: Hamlet
+    anchor_x: 10
+    anchor_y: 10
+    rows:
+      - "......###########......"
+      - "....##...........##...."
+      - "...#...HH.....HH...#..."
+      - "..#....HH.....HH....#.."
+      - "..#.................#.."
+      - ".#....=============..#."
+      - ".#....=...........=..#."
+      - ".#....=..W.....A..=..#."
+      - ".#....=...........=..#."
+      - ".#....=.....Q.....=..#."
+      - ".#....=...........=..#."
+      - ".#....=..L.....G..=..#."
+      - ".#....=...........=..#."
+      - ".#....=============..#."
+      - "..#.................#.."
+      - "..#....HH.....HH....#.."
+      - "...#...HH.....HH...#..."
+      - "....##.....=.....##...."
+      - "......#####=#####......"
+      - "...........=..........."
+    legend:
+      "#": { height: 1.6, walkable: false, tags: [wall, structure] }
+      "H": { height: 2.4, walkable: false, tags: [house, roof] }
+      "=": { height: 0, walkable: true, tags: [road, paved] }
+      "W": { height: 0.4, walkable: false, tags: [well], spawn: null }
+      "A": { height: 0, walkable: true, tags: [paved], spawn: anvil }
+      "L": { height: 0, walkable: true, tags: [paved], spawn: loom }
+      "Q": { height: 0, walkable: true, tags: [paved], spawn: quartermaster }
+      "G": { height: 0, walkable: true, tags: [paved], spawn: spindlewatch_guard }
+
+  - id: ninewells
+    name: Ninewells
+    anchor_x: 13
+    anchor_y: 13
+    rows:
+      - "........#############........"
+      - "......##.............##......"
+      - ".....#...HH.......HH...#....."
+      - "....#....HH.......HH....#...."
+      - "...#.....................#..."
+      - "...#...===============...#..."
+      - "..#....=.............=....#.."
+      - "..#....=..W...W...W..=....#.."
+      - "..#....=.............=....#.."
+      - "..#....=..W...A...W..=....#.."
+      - "..#....=.............=....#.."
+      - "..#....=..W...Q...W..=....#.."
+      - "..#....=.............=....#.."
+      - "..#....=..L...G...G..=....#.."
+      - "..#....=.............=....#.."
+      - "...#...===============...#..."
+      - "...#.....................#..."
+      - "....#....HH.......HH....#...."
+      - ".....#...HH.......HH...#....."
+      - "......##......=......##......"
+      - "........######=######........"
+      - "..............=.............."
+      - "..............=.............."
+    legend:
+      "#": { height: 1.8, walkable: false, tags: [wall, structure, hedge] }
+      "H": { height: 2.6, walkable: false, tags: [house, roof] }
+      "=": { height: 0, walkable: true, tags: [road, paved] }
+      "W": { height: 0.4, walkable: false, tags: [well] }
+      "A": { height: 0, walkable: true, tags: [paved], spawn: anvil }
+      "L": { height: 0, walkable: true, tags: [paved], spawn: loom }
+      "Q": { height: 0, walkable: true, tags: [paved], spawn: quartermaster }
+      "G": { height: 0, walkable: true, tags: [paved], spawn: spindlewatch_guard }
+
+  - id: shrine_ring
+    name: Shrine
+    rows:
+      - "...P...P..."
+      - "..11111...."
+      - ".P12222.P.."
+      - "..12S21...."
+      - "..12222...."
+      - ".P.11111P.."
+      - "...P...P..."
+    legend:
+      "1": { height: 0.5, walkable: true, tags: [stone, paved, shrine] }
+      "2": { height: 1.0, walkable: true, tags: [stone, paved, shrine] }
+      "S": { height: 1.0, walkable: true, tags: [stone, paved, shrine], spawn: shrine_stone }
+      "P": { height: 2.5, walkable: false, tags: [pillar, stone] }
+
+  - id: fount_ring
+    name: Fount Ring
+    rows:
+      - "....1111...."
+      - "..11222211.."
+      - ".1223333221."
+      - ".1233..3321."
+      - ".123....321."
+      - ".123....321."
+      - ".1233..3321."
+      - ".1223333221."
+      - "..11222211.."
+      - "....1111...."
+    legend:
+      "1": { height: 0.5, walkable: true, tags: [stone, paved, fount] }
+      "2": { height: 1.0, walkable: true, tags: [stone, paved, fount] }
+      "3": { height: 1.5, walkable: true, tags: [stone, paved, fount] }
+
+  - id: ruin_walls
+    name: Fallen Hall
+    rows:
+      - "##..####.##"
+      - "#.........#"
+      - "#..C......."
+      - "...........#"
+      - "#.....11..#"
+      - "#....1221.#"
+      - "##.....1..#"
+      - ".#........#"
+      - "###.#..####"
+    legend:
+      "#": { height: 1.4, walkable: false, tags: [wall, ruin, stone] }
+      "1": { height: 0.5, walkable: true, tags: [rubble, ruin] }
+      "2": { height: 1.0, walkable: true, tags: [rubble, ruin] }
+      "C": { height: 0, walkable: true, tags: [ruin], spawn: ruin_chest }
+
+  - id: barrow
+    name: Barrow
+    rows:
+      - "...111..."
+      - "..12221.."
+      - ".1233321."
+      - ".123..21."
+      - ".1233321."
+      - "..12221.."
+      - "...1C1..."
+    legend:
+      "1": { height: 0.5, walkable: true, tags: [barrow, earth] }
+      "2": { height: 1.0, walkable: true, tags: [barrow, earth] }
+      "3": { height: 1.5, walkable: true, tags: [barrow, earth, stone] }
+      "C": { height: 0, walkable: true, tags: [barrow], spawn: ruin_chest }
+
+  - id: watch_tower
+    name: Watch Tower
+    rows:
+      - ".#####."
+      - ".#TTT#."
+      - ".#TTT#."
+      - ".#TTT#."
+      - ".##6##."
+      - "..5...."
+      - "..4...."
+      - "..3...."
+      - "..2...."
+      - "..1...."
+    legend:
+      "#": { height: 3.2, walkable: false, tags: [wall, tower, stone] }
+      "T": { height: 3.0, walkable: true, layer: true, tags: [floor, tower, stone, bridge] }
+      "6": { height: 3.0, walkable: true, tags: [stair, stone] }
+      "5": { height: 2.5, walkable: true, tags: [stair, stone] }
+      "4": { height: 2.0, walkable: true, tags: [stair, stone] }
+      "3": { height: 1.5, walkable: true, tags: [stair, stone] }
+      "2": { height: 1.0, walkable: true, tags: [stair, stone] }
+      "1": { height: 0.5, walkable: true, tags: [stair, stone] }
+
+  - id: knot_stones
+    name: Knot Stones
+    flatten: false
+    rows:
+      - "K.....K"
+      - "......."
+      - "...K..."
+      - "..K.K.."
+      - "......."
+      - "K.....K"
+    legend:
+      "K": { height: 0, walkable: true, surface: false, spawn: cairn_stone }
+
+  - id: grove_ring
+    name: Grove Ring
+    flatten: false
+    rows:
+      - "..O.O.."
+      - ".O...O."
+      - "O..S..O"
+      - ".O...O."
+      - "..O.O.."
+    legend:
+      "O": { height: 0, walkable: true, surface: false, spawn: oak }
+      "S": { height: 0, walkable: true, surface: false, spawn: shrine_stone }
+
+  - id: camp_ring
+    name: Camp
+    rows:
+      - "..#####.."
+      - ".#.....#."
+      - "#..T.T..#"
+      - "#...F...#"
+      - "#..T.T..#"
+      - ".#.....#."
+      - "..##.##.."
+    legend:
+      "#": { height: 1.2, walkable: false, tags: [palisade, wood] }
+      "T": { height: 1.6, walkable: false, tags: [tent] }
+      "F": { height: 0.3, walkable: false, tags: [fire] }
+
+  - id: kiln_ring
+    name: Kiln
+    rows:
+      - "..11111.."
+      - ".1222221."
+      - ".12#####1"
+      - ".12#...#1"
+      - ".12#...#1"
+      - ".12##.##1"
+      - ".1222221."
+      - "..11111.."
+    legend:
+      "1": { height: 0.5, walkable: true, tags: [ash, stone, kiln] }
+      "2": { height: 1.0, walkable: true, tags: [ash, stone, kiln] }
+      "#": { height: 3.0, walkable: false, tags: [wall, kiln, stone] }
+
+  - id: wreck_hull
+    name: Wreck
+    rows:
+      - "...##...."
+      - "..#..#..."
+      - ".#.DD.#.."
+      - ".#.DD.#.."
+      - ".#.DD..#."
+      - "..#..#..."
+      - "...##...."
+    legend:
+      "#": { height: 2.2, walkable: false, tags: [hull, wood] }
+      "D": { height: 1.2, walkable: true, layer: true, tags: [deck, wood, bridge] }

@@ -1,0 +1,126 @@
+# Behaviors: data-driven state machines. Transitions are expressions over perception.
+# Perception names: has_target, target_distance, target_life_pct, nearest_enemy_distance, home_distance,
+# state_time, aggro_range, leash_range, preferred_range, taunted, life_pct, plus memory.* values.
+kind: behaviors
+entries:
+  - id: aggressive_melee
+    initial: idle
+    tick_interval: 0.25
+    aggro_range: 10
+    leash_range: 40
+    states:
+      idle:
+        tick:
+          - { type: wander, radius: 5, chance: 0.15 }
+          - { type: acquire_target, filter: enemy }
+        transitions:
+          - { to: chase, when: "has_target", priority: 10 }
+      chase:
+        tick:
+          - { type: chase }
+          - { type: attack }
+        transitions:
+          - { to: return, when: "!has_target || home_distance > leash_range", priority: 10 }
+          - { to: idle, when: "target_distance > aggro_range * 1.8 && !taunted", priority: 5 }
+      return:
+        enter:
+          - { type: drop_target }
+          - { type: return_home }
+        tick:
+          - { type: return_home }
+        transitions:
+          - { to: idle, when: "home_distance < 1.5", priority: 10 }
+
+  - id: aggressive_ranged
+    initial: idle
+    tick_interval: 0.25
+    aggro_range: 12
+    leash_range: 45
+    states:
+      idle:
+        tick:
+          - { type: wander, radius: 4, chance: 0.12 }
+          - { type: acquire_target, filter: enemy }
+        transitions:
+          - { to: engage, when: "has_target", priority: 10 }
+      engage:
+        tick:
+          - { type: attack }
+          - { type: chase, stop: "preferred_range" }
+        transitions:
+          - { to: kite, when: "target_distance < 2.5", priority: 20 }
+          - { to: return, when: "!has_target || home_distance > leash_range", priority: 10 }
+      kite:
+        tick:
+          - { type: flee, distance: 5 }
+          - { type: attack }
+        transitions:
+          - { to: engage, when: "target_distance > 5 || state_time > 2", priority: 10 }
+          - { to: return, when: "!has_target", priority: 20 }
+      return:
+        enter:
+          - { type: drop_target }
+        tick:
+          - { type: return_home }
+        transitions:
+          - { to: idle, when: "home_distance < 1.5", priority: 10 }
+
+  - id: skittish
+    initial: graze
+    tick_interval: 0.3
+    aggro_range: 7
+    leash_range: 60
+    states:
+      graze:
+        tick:
+          - { type: wander, radius: 8, chance: 0.1 }
+          - { type: acquire_target, filter: enemy, range: 7 }
+        transitions:
+          - { to: flee, when: "has_target && target_distance < 7", priority: 10 }
+      flee:
+        tick:
+          - { type: flee, distance: 10 }
+        transitions:
+          - { to: fight, when: "target_distance < 1.5 && life_pct < 0.5", priority: 20 }
+          - { to: graze, when: "!has_target || target_distance > 16 || state_time > 8", priority: 10 }
+      fight:
+        tick:
+          - { type: attack }
+          - { type: chase }
+        transitions:
+          - { to: flee, when: "state_time > 4", priority: 10 }
+          - { to: graze, when: "!has_target", priority: 20 }
+
+  - id: guard
+    initial: watch
+    tick_interval: 0.25
+    aggro_range: 9
+    leash_range: 14
+    states:
+      watch:
+        tick:
+          - { type: acquire_target, filter: enemy }
+        transitions:
+          - { to: fight, when: "has_target", priority: 10 }
+      fight:
+        tick:
+          - { type: chase }
+          - { type: attack }
+        transitions:
+          - { to: return, when: "!has_target || home_distance > leash_range", priority: 10 }
+      return:
+        enter:
+          - { type: drop_target }
+        tick:
+          - { type: return_home }
+        transitions:
+          - { to: watch, when: "home_distance < 1", priority: 10 }
+
+  - id: passive
+    initial: idle
+    tick_interval: 0.5
+    states:
+      idle:
+        tick:
+          - { type: wander, radius: 4, chance: 0.08 }
+        transitions: []

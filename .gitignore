@@ -1,0 +1,29 @@
+# .NET
+bin/
+obj/
+*.user
+*.suo
+.vs/
+*.swp
+TestResults/
+artifacts/
+
+# Godot
+.godot/
+*.import
+.mono/
+mono_crash.*.json
+
+# Server runtime data
+data/
+logs/
+*.log
+config/server.local.yaml
+
+# OS / editors
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/*
+!.vscode/launch.json
+!.vscode/tasks.json

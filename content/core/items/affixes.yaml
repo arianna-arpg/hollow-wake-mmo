@@ -1,0 +1,299 @@
+# Affix families. Tiers are best first; each tier lists one [min, max] range per line.
+kind: affixes
+entries:
+  # ---- prefixes
+  - id: vigorous
+    name: Vigorous
+    kind: prefix
+    group: life
+    names: [Stalwart, Hearty, Vigorous]
+    weight: 10
+    lines: [ { attribute: life.max, form: flat } ]
+    tiers:
+      - { level: 24, ranges: [[40, 60]], weight: 1 }
+      - { level: 12, ranges: [[22, 38]], weight: 2 }
+      - { level: 1, ranges: [[8, 20]], weight: 4 }
+  - id: sturdy
+    name: Sturdy
+    kind: prefix
+    group: defense
+    names: [Bulwark, Reinforced, Sturdy]
+    weight: 8
+    requires: [armor, shield]
+    lines: [ { attribute: armor, form: increased, local: true }, { attribute: evasion, form: increased, local: true } ]
+    tiers:
+      - { level: 24, ranges: [[0.5, 0.8], [0.5, 0.8]], weight: 1 }
+      - { level: 12, ranges: [[0.3, 0.5], [0.3, 0.5]], weight: 2 }
+      - { level: 1, ranges: [[0.12, 0.3], [0.12, 0.3]], weight: 4 }
+  - id: keen
+    name: Keen
+    kind: prefix
+    group: attack_damage
+    names: [Savage, Honed, Keen]
+    weight: 9
+    requires: [weapon]
+    excludes: [caster]
+    themes: [martial]
+    lines: [ { attribute: damage, form: increased, scope: [attack] } ]
+    tiers:
+      - { level: 20, ranges: [[0.35, 0.5]], weight: 1 }
+      - { level: 10, ranges: [[0.2, 0.35]], weight: 2 }
+      - { level: 1, ranges: [[0.08, 0.2]], weight: 4 }
+  - id: arcane
+    name: Arcane
+    kind: prefix
+    group: spell_damage
+    names: [Loomwrought, Runed, Arcane]
+    weight: 9
+    requires: [caster, jewelry]
+    themes: [caster]
+    lines: [ { attribute: damage, form: increased, scope: [spell] } ]
+    tiers:
+      - { level: 20, ranges: [[0.35, 0.5]], weight: 1 }
+      - { level: 10, ranges: [[0.2, 0.35]], weight: 2 }
+      - { level: 1, ranges: [[0.08, 0.2]], weight: 4 }
+  - id: embertongued
+    name: Embertongued
+    kind: prefix
+    group: ember_damage
+    names: [Pyric, Smouldering, Embertongued]
+    weight: 6
+    requires: [weapon, jewelry]
+    lines: [ { attribute: damage, form: flat, scope: [ember] } ]
+    tiers:
+      - { level: 22, ranges: [[9, 14]], weight: 1 }
+      - { level: 10, ranges: [[4, 8]], weight: 2 }
+      - { level: 1, ranges: [[1, 3]], weight: 4 }
+  - id: swift
+    name: Swift
+    kind: prefix
+    group: speed
+    names: [Blurring, Quick, Swift]
+    weight: 6
+    requires: [weapon]
+    lines: [ { attribute: attack.speed, form: increased }, { attribute: cast.speed, form: increased } ]
+    tiers:
+      - { level: 22, ranges: [[0.15, 0.22], [0.15, 0.22]], weight: 1 }
+      - { level: 8, ranges: [[0.06, 0.14], [0.06, 0.14]], weight: 3 }
+  - id: warded
+    name: Warded
+    kind: prefix
+    group: ward
+    names: [Sanctified, Shielded, Warded]
+    weight: 6
+    requires: [armor, focus, jewelry]
+    themes: [caster]
+    lines: [ { attribute: ward.max, form: flat } ]
+    tiers:
+      - { level: 20, ranges: [[30, 50]], weight: 1 }
+      - { level: 8, ranges: [[12, 28]], weight: 3 }
+  - id: brutal
+    name: Brutal
+    kind: prefix
+    group: crit_multi
+    names: [Merciless, Cruel, Brutal]
+    weight: 5
+    requires: [weapon, jewelry]
+    lines: [ { attribute: crit.multiplier, form: flat } ]
+    tiers:
+      - { level: 18, ranges: [[0.3, 0.45]], weight: 1 }
+      - { level: 6, ranges: [[0.12, 0.28]], weight: 3 }
+
+  # ---- suffixes
+  - id: of_might
+    name: of Might
+    kind: suffix
+    group: might
+    names: [of the Titan, of the Ox, of Might]
+    weight: 8
+    lines: [ { attribute: might, form: flat } ]
+    tiers:
+      - { level: 24, ranges: [[9, 13]], weight: 1 }
+      - { level: 12, ranges: [[5, 8]], weight: 2 }
+      - { level: 1, ranges: [[2, 4]], weight: 4 }
+  - id: of_grace
+    name: of Grace
+    kind: suffix
+    group: grace
+    names: [of the Falcon, of the Hare, of Grace]
+    weight: 8
+    lines: [ { attribute: grace, form: flat } ]
+    tiers:
+      - { level: 24, ranges: [[9, 13]], weight: 1 }
+      - { level: 12, ranges: [[5, 8]], weight: 2 }
+      - { level: 1, ranges: [[2, 4]], weight: 4 }
+  - id: of_will
+    name: of Will
+    kind: suffix
+    group: will
+    names: [of the Loom, of the Weaver, of Will]
+    weight: 8
+    lines: [ { attribute: will, form: flat } ]
+    tiers:
+      - { level: 24, ranges: [[9, 13]], weight: 1 }
+      - { level: 12, ranges: [[5, 8]], weight: 2 }
+      - { level: 1, ranges: [[2, 4]], weight: 4 }
+  - id: of_vigor
+    name: of Vigor
+    kind: suffix
+    group: vigor
+    names: [of the Mountain, of the Oak, of Vigor]
+    weight: 8
+    lines: [ { attribute: vigor, form: flat } ]
+    tiers:
+      - { level: 24, ranges: [[9, 13]], weight: 1 }
+      - { level: 12, ranges: [[5, 8]], weight: 2 }
+      - { level: 1, ranges: [[2, 4]], weight: 4 }
+  - id: of_the_ember
+    name: of the Ember
+    kind: suffix
+    group: resist_ember
+    names: [of the Kiln, of the Hearth, of the Ember]
+    weight: 7
+    lines: [ { attribute: resist.ember, form: flat } ]
+    tiers:
+      - { level: 18, ranges: [[0.26, 0.36]], weight: 1 }
+      - { level: 6, ranges: [[0.12, 0.25]], weight: 3 }
+  - id: of_the_tide
+    name: of the Tide
+    kind: suffix
+    group: resist_tide
+    names: [of the Deep, of the Shoal, of the Tide]
+    weight: 7
+    lines: [ { attribute: resist.tide, form: flat } ]
+    tiers:
+      - { level: 18, ranges: [[0.26, 0.36]], weight: 1 }
+      - { level: 6, ranges: [[0.12, 0.25]], weight: 3 }
+  - id: of_the_storm
+    name: of the Storm
+    kind: suffix
+    group: resist_storm
+    names: [of the Gale, of the Squall, of the Storm]
+    weight: 7
+    lines: [ { attribute: resist.storm, form: flat } ]
+    tiers:
+      - { level: 18, ranges: [[0.26, 0.36]], weight: 1 }
+      - { level: 6, ranges: [[0.12, 0.25]], weight: 3 }
+  - id: of_the_umbra
+    name: of the Umbra
+    kind: suffix
+    group: resist_umbra
+    names: [of the Barrow, of Dusk, of the Umbra]
+    weight: 6
+    lines: [ { attribute: resist.umbra, form: flat } ]
+    tiers:
+      - { level: 18, ranges: [[0.26, 0.36]], weight: 1 }
+      - { level: 6, ranges: [[0.12, 0.25]], weight: 3 }
+  - id: of_haste
+    name: of Haste
+    kind: suffix
+    group: move_speed
+    names: [of the Wind, of the Courier, of Haste]
+    weight: 5
+    requires: [armor.feet]
+    lines: [ { attribute: move.speed, form: increased } ]
+    tiers:
+      - { level: 20, ranges: [[0.18, 0.25]], weight: 1 }
+      - { level: 5, ranges: [[0.08, 0.16]], weight: 3 }
+  - id: of_the_hunter
+    name: of the Hunter
+    kind: suffix
+    group: accuracy
+    names: [of the Hawk, of the Marksman, of the Hunter]
+    weight: 6
+    requires: [weapon, jewelry, armor.hands]
+    lines: [ { attribute: accuracy, form: flat } ]
+    tiers:
+      - { level: 20, ranges: [[60, 90]], weight: 1 }
+      - { level: 1, ranges: [[15, 45]], weight: 3 }
+  - id: of_recovery
+    name: of Recovery
+    kind: suffix
+    group: life_regen
+    names: [of the Spring, of Mending, of Recovery]
+    weight: 6
+    requires: [armor, jewelry]
+    lines: [ { attribute: life.regen, form: flat } ]
+    tiers:
+      - { level: 20, ranges: [[4, 7]], weight: 1 }
+      - { level: 1, ranges: [[1, 3]], weight: 3 }
+  - id: of_mana
+    name: of Mana
+    kind: suffix
+    group: mana
+    names: [of the Wellspring, of the Pool, of Mana]
+    weight: 7
+    lines: [ { attribute: mana.max, form: flat } ]
+    tiers:
+      - { level: 20, ranges: [[35, 55]], weight: 1 }
+      - { level: 1, ranges: [[10, 30]], weight: 3 }
+  - id: of_precision
+    name: of Precision
+    kind: suffix
+    group: crit_chance
+    names: [of the Needle, of the Eye, of Precision]
+    weight: 5
+    requires: [weapon, jewelry, armor.hands]
+    lines: [ { attribute: crit.chance, form: flat } ]
+    tiers:
+      - { level: 20, ranges: [[0.06, 0.09]], weight: 1 }
+      - { level: 4, ranges: [[0.02, 0.05]], weight: 3 }
+  - id: of_binding
+    name: of Binding
+    kind: suffix
+    group: ailment
+    names: [of the Snare, of the Burr, of Binding]
+    weight: 5
+    requires: [weapon, jewelry]
+    lines: [ { attribute: ailment.chance, form: flat } ]
+    tiers:
+      - { level: 16, ranges: [[0.2, 0.3]], weight: 1 }
+      - { level: 1, ranges: [[0.08, 0.18]], weight: 3 }
+---
+kind: uniques
+entries:
+  - id: the_last_stitch
+    name: The Last Stitch
+    base: staff
+    weight: 1
+    min_level: 8
+    flavor: The Mender who carried it never finished the seam. Neither will you.
+    lines:
+      - { attribute: damage, form: increased, range: [0.4, 0.6], scope: [spell] }
+      - { attribute: effect.duration, form: increased, range: [0.3, 0.5] }
+      - { attribute: ailment.chance, form: flat, range: [0.3, 0.4] }
+      - { attribute: life.max, form: increased, range: [-0.15, -0.1] }
+  - id: greyheron_mantle
+    name: Greyheron Mantle
+    base: leather_jerkin
+    weight: 1
+    min_level: 6
+    flavor: Cut from a sail that outran the Wake.
+    lines:
+      - { attribute: evasion, form: increased, range: [0.6, 0.9], local: true }
+      - { attribute: move.speed, form: increased, range: [0.1, 0.15] }
+      - { attribute: damage, form: more, range: [0.2, 0.3], condition: 'has("moving")' }
+  - id: hedgecrow_band
+    name: Hedgecrow Band
+    base: ring
+    weight: 1
+    min_level: 4
+    flavor: Hedgecrows wear them to remember whose door they were turned from.
+    lines:
+      - { attribute: crit.chance, form: flat, range: [0.05, 0.08] }
+      - { attribute: damage, form: increased, range: [0.25, 0.4], scope: [vs.full_life] }
+---
+kind: item_rarities
+entries:
+  - { id: common, name: Common, weight: 58, rank: 0, prefixes: 0, suffixes: 0, color: "#d0d0d0", base_roll_window: 0.5 }
+  - { id: magic, name: Magic, weight: 33, rank: 1, prefixes: 1, suffixes: 1, color: "#6c9cff", base_roll_window: 0.15,
+      count_weights: [ { count: 1, weight: 70 }, { count: 2, weight: 30 } ] }
+  - { id: rare, name: Rare, weight: 8, rank: 2, prefixes: 3, suffixes: 3, color: "#ffd34d", base_roll_window: 0.15,
+      count_weights: [ { count: 3, weight: 55 }, { count: 4, weight: 28 }, { count: 5, weight: 12 }, { count: 6, weight: 5 } ] }
+  - { id: unique, name: Unique, weight: 0.5, rank: 3, prefixes: 0, suffixes: 0, color: "#e8622a", base_roll_window: 0.2 }
+---
+kind: currencies
+entries:
+  - { id: shards, name: Shards, color: "#f5e27a", order: 0, description: Chips of bound Thread. The coin of the Marches. }
+  - { id: floss, name: Floss, color: "#d8d0ff", order: 1, description: Spun thread for Reweaving. }
+  - { id: residue, name: Knot Residue, color: "#2b2033", order: 2, description: What a cleared Knot leaves behind. }

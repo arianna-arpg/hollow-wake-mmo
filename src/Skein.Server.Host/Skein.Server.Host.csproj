@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- Pure .NET host: TCP transport, thread-pool scheduler. Runs anywhere .NET 8 runs. -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <RootNamespace>Skein.Server.Host</RootNamespace>
+    <InvariantGlobalization>true</InvariantGlobalization>
+    <AssemblyName>skein-server</AssemblyName>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Skein.Server\Skein.Server.csproj" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="10.0.0" />
+  </ItemGroup>
+</Project>

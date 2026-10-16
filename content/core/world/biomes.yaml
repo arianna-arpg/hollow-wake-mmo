@@ -1,0 +1,177 @@
+# Biomes and sub-biomes. The most specific matching biome wins. Elevation is relative to water level.
+kind: biomes
+entries:
+  - id: wilds
+    name: The Wilds
+    priority: -100
+    surface: [grass]
+    color: "#5b8c3a"
+    flora:
+      - { pattern: shrub, density: 1.5, clumping: 0.08 }
+      - { pattern: floss_knot, density: 0.15 }
+    spawns:
+      - { pattern: hob, density: 1.2, pack_size: [2, 4], respawn: 120 }
+    yields: { shards: 4, floss: 2 }
+
+  - id: shore
+    name: Shore
+    parent: wilds
+    priority: 5
+    elevation: { min: -0.5, max: 1.3 }
+    surface: [sand]
+    color: "#d8c89a"
+    flora:
+      - { pattern: reed, density: 2.5, clumping: 0.1 }
+    spawns:
+      - { pattern: tide_crawler, density: 0.6, pack_size: [1, 2], respawn: 180, level: { min: 3 } }
+    yields: { shards: 3, floss: 1 }
+
+  - id: meadow
+    name: Meadow
+    parent: wilds
+    elevation: { min: 1, max: 14 }
+    temperature: { min: 0.3, max: 0.75 }
+    moisture: { min: 0.3, max: 0.62 }
+    surface: [grass, meadow]
+    color: "#79b84a"
+    flora:
+      - { pattern: shrub, density: 1.2, clumping: 0.08 }
+      - { pattern: birch, density: 0.4, clumping: 0.05 }
+      - { pattern: ember_bloom_plant, density: 0.2, clumping: 0.12 }
+      - { pattern: boulder, density: 0.15 }
+    spawns:
+      - { pattern: grove_stag, density: 0.8, pack_size: [2, 3], respawn: 200 }
+      - { pattern: hob, density: 1.0, pack_size: [2, 4], respawn: 120 }
+      - { pattern: boar, density: 0.4, pack_size: [1, 2], respawn: 180, level: { min: 2 } }
+    yields: { shards: 5, floss: 2 }
+
+  - id: forest
+    name: Forest
+    parent: wilds
+    elevation: { min: 1, max: 20 }
+    moisture: { min: 0.5 }
+    temperature: { min: 0.25, max: 0.8 }
+    surface: [grass, forest_floor]
+    color: "#2f6b2f"
+    flora:
+      - { pattern: oak, density: 2.2, clumping: 0.06 }
+      - { pattern: pine, density: 1.2, clumping: 0.07 }
+      - { pattern: fern, density: 2.5, clumping: 0.12 }
+      - { pattern: fallen_ash, density: 0.25 }
+    spawns:
+      - { pattern: wolf, density: 0.9, pack_size: [2, 4], respawn: 150, level: { min: 2 } }
+      - { pattern: grove_stag, density: 0.5, pack_size: [1, 3], respawn: 200 }
+    yields: { shards: 4, floss: 3 }
+
+  - id: deep_forest
+    name: Deep Forest
+    parent: forest
+    priority: 2
+    moisture: { min: 0.72 }
+    surface: [grass, forest_floor, deep]
+    color: "#1f4d22"
+    flora:
+      - { pattern: oak, density: 1.5, clumping: 0.05 }
+      - { pattern: pine, density: 2.5, clumping: 0.05 }
+    spawns:
+      - { pattern: barrow_wight, density: 0.4, pack_size: [1, 2], respawn: 240, level: { min: 3 } }
+
+  - id: marsh
+    name: Marsh
+    parent: wilds
+    priority: 3
+    elevation: { min: -0.5, max: 2.5 }
+    moisture: { min: 0.7 }
+    surface: [bog]
+    color: "#4f6b3a"
+    flora:
+      - { pattern: reed, density: 4, clumping: 0.1 }
+      - { pattern: floss_knot, density: 0.4 }
+    spawns:
+      - { pattern: tide_crawler, density: 0.7, pack_size: [1, 3], respawn: 180, level: { min: 3 } }
+      - { pattern: barrow_wight, density: 0.5, pack_size: [1, 3], respawn: 240, level: { min: 3 } }
+    yields: { floss: 4, residue: 1 }
+
+  - id: heath
+    name: Heath
+    parent: wilds
+    elevation: { min: 1, max: 24 }
+    moisture: { max: 0.32 }
+    surface: [grass, heath]
+    color: "#9aa05a"
+    flora:
+      - { pattern: shrub, density: 2.5, clumping: 0.1 }
+      - { pattern: boulder, density: 0.4 }
+      - { pattern: iron_vein, density: 0.2 }
+    spawns:
+      - { pattern: hob, density: 1.4, pack_size: [3, 5], respawn: 120 }
+      - { pattern: hob_howler, density: 0.5, pack_size: [1, 1], respawn: 160, level: { min: 2 } }
+      - { pattern: loosed_brigand, density: 0.3, pack_size: [2, 3], respawn: 240, level: { min: 3 } }
+    yields: { shards: 5 }
+
+  - id: scrub
+    name: Scrub
+    parent: heath
+    priority: 2
+    temperature: { min: 0.72 }
+    surface: [grass, scrub, dry]
+    color: "#b8a35a"
+
+  - id: cinderwaste
+    name: Cinderwaste
+    parent: wilds
+    priority: 8
+    threads: { ember: { min: 0.72 } }
+    surface: [ash, scorched]
+    color: "#6b4a3a"
+    flora:
+      - { pattern: ashen_tree, density: 0.6, clumping: 0.08 }
+      - { pattern: ember_bloom_plant, density: 0.8, clumping: 0.1 }
+      - { pattern: boulder, density: 0.4 }
+    spawns:
+      - { pattern: cinder_imp, density: 1.0, pack_size: [2, 4], respawn: 150, level: { min: 3 } }
+    yields: { shards: 6, residue: 2 }
+
+  - id: hollowed
+    name: The Hollowed
+    parent: wilds
+    priority: 9
+    threads: { void: { min: 0.7 } }
+    surface: [grey, still]
+    color: "#4a4452"
+    flora:
+      - { pattern: cairn_stone, density: 0.3 }
+      - { pattern: floss_knot, density: 0.6 }
+    spawns:
+      - { pattern: remnant_shade, density: 1.2, pack_size: [2, 5], respawn: 150, level: { min: 4 } }
+      - { pattern: tangle, density: 0.12, pack_size: [1, 1], respawn: 600, level: { min: 6 } }
+    yields: { residue: 4 }
+
+  - id: highland
+    name: Highland
+    parent: wilds
+    priority: 10
+    elevation: { min: 16 }
+    surface: [rock, grass]
+    terrace: 1.0
+    color: "#8c8a7a"
+    flora:
+      - { pattern: boulder, density: 1.2 }
+      - { pattern: pine, density: 0.5, clumping: 0.08 }
+      - { pattern: iron_vein, density: 0.5 }
+    spawns:
+      - { pattern: wolf, density: 0.6, pack_size: [2, 3], respawn: 150, level: { min: 2 } }
+      - { pattern: loosed_kindler, density: 0.3, pack_size: [1, 2], respawn: 240, level: { min: 4 } }
+    yields: { shards: 7 }
+
+  - id: alpine
+    name: Alpine
+    parent: highland
+    priority: 12
+    elevation: { min: 30 }
+    surface: [rock, snow]
+    terrace: 1.0
+    color: "#e8ecf0"
+    flora:
+      - { pattern: boulder, density: 1.5 }
+    spawns: []

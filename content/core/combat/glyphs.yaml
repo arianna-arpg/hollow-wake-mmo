@@ -1,0 +1,134 @@
+# Glyphs: bound shapes that change how a weave behaves. Gated by tags and mechanisms, never by lists of weaves.
+kind: glyphs
+entries:
+  - id: fork
+    name: Fork
+    description: Two more projectiles. Less damage per projectile.
+    requires_mechanisms: [projectile]
+    color: "#b58cff"
+    modifiers:
+      - { attribute: projectile.count, form: flat, value: 2 }
+      - { attribute: damage, form: more, value: -0.25 }
+    per_level:
+      - { attribute: damage, form: more, value: 0.02 }
+
+  - id: ring
+    name: Ring
+    description: Wider areas. Slightly less damage.
+    requires_mechanisms: [area]
+    color: "#f5e27a"
+    modifiers:
+      - { attribute: area.radius, form: increased, value: 0.5 }
+      - { attribute: damage, form: more, value: -0.12 }
+
+  - id: anchor
+    name: Anchor
+    description: Heavier and slower. Much more damage.
+    requires: [spell, attack]
+    color: "#9c8b72"
+    modifiers:
+      - { attribute: damage, form: more, value: 0.3 }
+      - { attribute: cost, form: increased, value: 0.25 }
+      - { attribute: cast.speed, form: increased, value: -0.2 }
+      - { attribute: attack.speed, form: increased, value: -0.2 }
+
+  - id: echo
+    name: Echo
+    description: Hits leap to nearby foes.
+    requires_mechanisms: [chain]
+    color: "#d470c0"
+    modifiers:
+      - { attribute: chain.count, form: flat, value: 2 }
+      - { attribute: damage, form: more, value: -0.1 }
+
+  - id: needle
+    name: Needle
+    description: Projectiles pierce. Sharper strikes.
+    requires_mechanisms: [projectile]
+    color: "#e0e0e0"
+    modifiers:
+      - { attribute: projectile.pierce, form: flat, value: 2 }
+      - { attribute: crit.chance, form: flat, value: 0.08 }
+
+  - id: burr
+    name: Burr
+    description: Hits cling. Ailments land far more often and bite harder.
+    requires: [spell, attack]
+    color: "#5fbf5a"
+    modifiers:
+      - { attribute: ailment.chance, form: flat, value: 0.4 }
+      - { attribute: ailment.potency, form: flat, value: 0.25 }
+
+  - id: emberbind
+    name: Emberbind
+    description: Half of a weapon blow burns as Ember.
+    requires: [attack]
+    adds_tags: [ember]
+    color: "#e8622a"
+    modifiers:
+      - { attribute: convert.stone.ember, form: flat, value: 0.5 }
+
+  - id: lingering
+    name: Lingering
+    description: Durations last longer.
+    requires_mechanisms: [duration]
+    color: "#5a4a7a"
+    modifiers:
+      - { attribute: duration, form: increased, value: 0.5 }
+      - { attribute: effect.duration, form: increased, value: 0.3 }
+
+  - id: swift
+    name: Swift
+    description: Faster hands.
+    requires: [spell, attack]
+    color: "#3aa6d8"
+    modifiers:
+      - { attribute: cast.speed, form: increased, value: 0.25 }
+      - { attribute: attack.speed, form: increased, value: 0.25 }
+      - { attribute: damage, form: more, value: -0.08 }
+
+  - id: tempered
+    name: Tempered
+    description: Cheaper, a little weaker.
+    requires: [spell, attack]
+    color: "#9c8b72"
+    modifiers:
+      - { attribute: cost, form: increased, value: -0.35 }
+      - { attribute: damage, form: more, value: -0.1 }
+
+  - id: brood
+    name: Brood
+    description: Summon more, keep more.
+    requires_mechanisms: [summon]
+    color: "#5a4a7a"
+    modifiers:
+      - { attribute: summon.count, form: flat, value: 1 }
+      - { attribute: summon.max, form: flat, value: 2 }
+      - { attribute: cost, form: increased, value: 0.4 }
+
+  - id: whetted
+    name: Whetted
+    description: Critical blows cut deeper.
+    requires: [attack]
+    color: "#e0e0e0"
+    modifiers:
+      - { attribute: crit.multiplier, form: flat, value: 0.5 }
+
+  - id: stillness
+    name: Stillness
+    description: Far stronger while standing still.
+    requires: [spell, attack]
+    color: "#f5e27a"
+    modifiers:
+      - { attribute: damage, form: more, value: 0.35, condition: 'has("stationary")' }
+      - { attribute: damage, form: more, value: -0.15, condition: 'has("moving")' }
+
+  - id: reach
+    name: Reach
+    description: Farther.
+    requires: [spell, attack]
+    excludes: [melee]
+    color: "#3aa6d8"
+    modifiers:
+      - { attribute: range, form: increased, value: 0.4 }
+      - { attribute: projectile.speed, form: increased, value: 0.2 }

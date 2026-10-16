@@ -1,0 +1,123 @@
+# Hand-authored quests and the templates the world generator instantiates around its points of interest.
+kind: quests
+entries:
+  - id: first_threads
+    name: First Threads
+    description: The Quartermaster of Ninewells has hobs in the hedgerows and no one to thin them.
+    level: 1
+    giver: quartermaster
+    tags: [starter]
+    objectives:
+      - { id: hobs, type: kill, target: hob, count: 5, text: Thin the hobs around Ninewells }
+    rewards:
+      xp: "60"
+      items: [ { item: ring, rarity: magic, level: 2 } ]
+      currency: { shards: 25 }
+      reputation: { weftmarch_compact: 10 }
+    text:
+      offer: Hobs again. Five fewer and the hedge will hold another season.
+      progress: Fewer hobs would be better.
+      complete: That will do. Take this, and the Compact's thanks.
+
+  - id: the_wellmother
+    name: The Wellmother
+    description: Walk out to the Wellmother and lay a hand on her. Every Marcher does it once.
+    level: 1
+    giver: quartermaster
+    tags: [starter]
+    prerequisites: 'has("quest.completed.first_threads")'
+    objectives:
+      - { id: touch, type: interact, target: fount, count: 1, text: Touch the Wellmother }
+    rewards:
+      xp: "40"
+      currency: { floss: 5 }
+    text:
+      offer: You have not touched the Wellmother yet. Go on. She does not bite the new ones.
+      complete: There. Now you are of the Hallows, for whatever that is worth.
+---
+kind: quest_templates
+entries:
+  - id: clear_knot
+    name: "The $knot"
+    description: "A Knot has tangled near $giver. Walk into it and unmake what crawled out."
+    weight: 3
+    tags: [knot, combat]
+    slots:
+      knot: { poi_tags: [knot], within: 320 }
+      foe: { pattern_tags: [tangled] }
+    objectives:
+      - { id: reach, type: reach, poi: $knot, count: 1, text: "Find $knot" }
+      - { id: cull, type: kill, target: $foe, count: 6, text: "Unmake six $foe" }
+    rewards:
+      xp: "90 + 15 * quest_level"
+      loot: world_gear
+      currency: { residue: 3, shards: 30 }
+    text:
+      offer: "Something is tangled at $knot. Go and see what it has made."
+      complete: "The Knot will come back. They always do. But not tonight."
+
+  - id: gather_floss
+    name: Loose Threads
+    description: "The weavers of $giver want floss and the hedgerows are full of it."
+    weight: 3
+    tags: [gather]
+    slots:
+      stuff: { item_tags: [floss] }
+    objectives:
+      - { id: gather, type: collect, target: $stuff, count: 5, text: "Gather five $stuff" }
+    rewards:
+      xp: "50 + 8 * quest_level"
+      currency: { shards: 15, floss: 3 }
+    text:
+      offer: "Bring me five $stuff and I will show you the loom."
+      complete: "Good thread. Someone will wear this."
+
+  - id: cull_beasts
+    name: Teeth in the Hedge
+    description: "Beasts press on $giver."
+    weight: 3
+    tags: [combat]
+    slots:
+      beast: { pattern_tags: [beast] }
+    objectives:
+      - { id: cull, type: kill, target: $beast, count: 8, text: "Cull eight $beast" }
+    rewards:
+      xp: "70 + 10 * quest_level"
+      loot: world_common
+      currency: { shards: 20 }
+    text:
+      offer: "The $beast are bold this season. Thin them."
+      complete: "Quieter already."
+
+  - id: scout_ruin
+    name: "What Stands at $ruin"
+    description: "No one from $giver has walked to $ruin in years."
+    weight: 2
+    tags: [explore]
+    slots:
+      ruin: { poi_tags: [ruin], within: 400 }
+    objectives:
+      - { id: find, type: discover, poi: $ruin, count: 1, text: "Find $ruin" }
+    rewards:
+      xp: "60 + 10 * quest_level"
+      currency: { shards: 18 }
+    text:
+      offer: "Go and look at $ruin. Come back and tell me it is still there."
+      complete: "Still there, then. Good. Or not. I never know with ruins."
+
+  - id: relight_shrine
+    name: "The Lantern at $shrine"
+    description: "The shrine at $shrine has gone dark."
+    weight: 2
+    tags: [explore, lumen]
+    slots:
+      shrine: { poi_tags: [shrine], within: 300 }
+    objectives:
+      - { id: find, type: reach, poi: $shrine, count: 1, text: "Reach $shrine" }
+      - { id: light, type: interact, target: marker, count: 1, text: "Stand at the shrine stone" }
+    rewards:
+      xp: "60 + 10 * quest_level"
+      items: [ { item: wisp_essence, count: 2 } ]
+    text:
+      offer: "Walk to $shrine and stand at the stone until it remembers you."
+      complete: "The lantern holds. For now."

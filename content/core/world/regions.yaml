@@ -1,0 +1,119 @@
+# Region archetypes: the macro shapes of the land, and the hand-placed overrides that pin the Weftmarches.
+kind: region_archetypes
+entries:
+  - id: hallows
+    name: Hallows
+    tags: [lowland, settled, bloom, stone]
+    weight: 3
+    elevation_lift: 2
+    elevation_scale: 0.8
+    moisture_bias: 0.05
+    threads: { bloom: 0.15, stone: 0.1 }
+    poi_budget: { hamlet: 0.7, shrine: 0.8, ruin: 0.8, knot: 0.6, grove: 0.6, camp: 0.3 }
+    factions: [weftmarch_compact, lantern_chancery]
+    max_distance: 2
+    names: [the Hallows, the Low Hallows, the Hallow Reach]
+
+  - id: sallows
+    name: Sallows
+    tags: [marshland, bloom, umbra]
+    weight: 2
+    elevation_lift: -1
+    elevation_scale: 0.5
+    moisture_bias: 0.3
+    threads: { bloom: 0.1, umbra: 0.2 }
+    poi_budget: { ruin: 1.0, knot: 0.8, shrine: 0.4, camp: 0.4, hamlet: 0.3 }
+    factions: [weftmarch_compact]
+    max_distance: 3
+    names: [the Sallows, the Reedmire, the Drowned Walk]
+
+  - id: emberfells
+    name: Emberfells
+    tags: [upland, ember, stone]
+    weight: 2
+    elevation_lift: 10
+    elevation_scale: 1.4
+    temperature_bias: 0.15
+    moisture_bias: -0.2
+    threads: { ember: 0.3, stone: 0.15 }
+    level_offset: 2
+    poi_budget: { kiln: 0.8, knot: 0.8, ruin: 0.6, camp: 0.5, hamlet: 0.3 }
+    factions: [longwake_company, the_loosed]
+    min_distance: 1
+    max_distance: 4
+    names: [the Emberfells, the Cinderstair, the Scorched Steps]
+
+  - id: saltwrack
+    name: Saltwrack
+    tags: [coast, tide, storm]
+    weight: 2
+    elevation_lift: -4
+    elevation_scale: 0.7
+    moisture_bias: 0.15
+    threads: { tide: 0.3, storm: 0.15 }
+    poi_budget: { wreck: 0.8, hamlet: 0.5, shrine: 0.5, knot: 0.6, camp: 0.3 }
+    factions: [longwake_company]
+    max_distance: 3
+    names: [the Saltwrack, the Longwake Shore, Greyheron Reach]
+
+  - id: hush
+    name: Hush
+    tags: [still, void, mind]
+    weight: 1.5
+    elevation_lift: 6
+    elevation_scale: 1.1
+    temperature_bias: -0.1
+    threads: { void: 0.35, mind: 0.25 }
+    level_offset: 4
+    poi_budget: { knot: 1.4, ruin: 0.8, shrine: 0.6, camp: 0.2 }
+    factions: [mended_thread]
+    min_distance: 1
+    names: [the Hush, the Stillwater Marches, the Echo Fields]
+
+  - id: girdle
+    name: Girdle
+    tags: [mountain, stone, storm]
+    weight: 1.5
+    elevation_lift: 30
+    elevation_scale: 2.0
+    temperature_bias: -0.2
+    threads: { stone: 0.3, storm: 0.2 }
+    level_offset: 8
+    poi_budget: { knot: 1.0, ruin: 0.6, shrine: 0.5 }
+    min_distance: 3
+    names: [the Girdle, the High Girdle, the Stormwall]
+
+  - id: fray
+    name: Fray
+    tags: [torn, void]
+    weight: 1
+    elevation_lift: 4
+    elevation_scale: 1.6
+    threads: { void: 0.6, umbra: 0.2 }
+    level_offset: 14
+    poi_budget: { knot: 2.0, ruin: 0.8 }
+    min_distance: 5
+    names: [the Fray, the Torn Weft, the Unmade Lands]
+---
+kind: region_overrides
+entries:
+  - { id: hallows_home, name: the Hallows, x: 0, y: 0, archetype: hallows, faction: weftmarch_compact, level: 1 }
+  - { id: sallows_east, name: the Sallows, x: 1, y: 0, archetype: sallows, faction: weftmarch_compact, level: 4 }
+  - { id: emberfells_west, name: the Emberfells, x: -1, y: 0, archetype: emberfells, faction: longwake_company, level: 6 }
+  - { id: hush_north, name: the Hush, x: 0, y: 1, archetype: hush, faction: mended_thread, level: 8 }
+  - { id: saltwrack_south, name: the Saltwrack, x: 0, y: -1, archetype: saltwrack, faction: longwake_company, level: 5 }
+---
+kind: zone_overrides
+entries:
+  - id: ninewells
+    name: Ninewells
+    x: 0
+    y: 0
+    player_start: true
+    safe: false
+    pois:
+      - { poi: hamlet, x: 128, y: 128, name: Ninewells, landmark: ninewells }
+      - { poi: fount, x: 150, y: 134, name: The Wellmother }
+      - { poi: shrine, x: 90, y: 170, name: The Hedge Shrine }
+      - { poi: knot, x: 200, y: 60, name: Hob's Hollow }
+    quests: [first_threads, the_wellmother]

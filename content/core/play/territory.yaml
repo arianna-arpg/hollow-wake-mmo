@@ -1,0 +1,92 @@
+# Holdings: decrees a Holder may enact and structures a Holder may raise around a bound Fount.
+kind: decrees
+entries:
+  - id: hearthlight
+    name: Hearthlight
+    description: Marchers within the Reach recover faster.
+    cost: { shards: 40 }
+    upkeep: { shards: 2 }
+    modifiers:
+      - { attribute: life.regen, form: flat, value: 2, condition: 'has("player")' }
+      - { attribute: mana.regen, form: flat, value: 1, condition: 'has("player")' }
+  - id: martial_writ
+    name: Martial Writ
+    description: Those who fight for the Reach fight harder.
+    cost: { shards: 60 }
+    upkeep: { shards: 3 }
+    excludes: [decree.quiet_loom]
+    modifiers:
+      - { attribute: damage, form: increased, value: 0.1, condition: 'has("player")' }
+      - { attribute: accuracy, form: increased, value: 0.1, condition: 'has("player")' }
+  - id: bountiful_harvest
+    name: Bountiful Harvest
+    description: Bloom gathers over the Reach; the land greens and the Fount yields more.
+    cost: { shards: 50, floss: 10 }
+    upkeep: { shards: 2 }
+    generation: { thread.bloom: 0.2, moisture_offset: 0.1 }
+    modifiers:
+      - { attribute: healing, form: increased, value: 0.1, condition: 'has("player")' }
+  - id: quiet_loom
+    name: Quiet Loom
+    description: The Reach resists what frays it.
+    cost: { shards: 50, residue: 5 }
+    upkeep: { shards: 2 }
+    excludes: [decree.martial_writ]
+    generation: { thread.void: -0.15 }
+    modifiers:
+      - { attribute: status.resistance, form: flat, value: 0.2, condition: 'has("player")' }
+  - id: open_hearth
+    name: Open Hearth
+    description: Travelers are welcome; the Reach draws more of them.
+    cost: { shards: 30 }
+    requires: [structure.wellhouse]
+    generation: { poi_bonus: 1 }
+---
+kind: structures
+entries:
+  - id: wellhouse
+    name: Wellhouse
+    description: A roof over the Fount and a steady yield of shards.
+    cost: { shards: 80, floss: 10 }
+    landmark: shrine_ring
+    yield: { shards: 6 }
+    grants: [station.rest]
+    build_time: 60
+  - id: watchtower
+    name: Watchtower
+    description: A tower with a floor you can stand on and see the Reach from.
+    cost: { shards: 120, floss: 5 }
+    landmark: watch_tower
+    grants: [tower]
+    modifiers:
+      - { attribute: accuracy, form: flat, value: 20, condition: 'has("player")' }
+    max_per_holding: 2
+  - id: hedge
+    name: Hedge
+    description: A ring of thorn that turns beasts away.
+    cost: { shards: 60, floss: 20 }
+    landmark: camp_ring
+    grants: [hedge]
+    modifiers:
+      - { attribute: armor, form: flat, value: 15, condition: 'has("player")' }
+  - id: loom_shed
+    name: Loom Shed
+    description: A shed with a loom in it. Reweave without walking home.
+    cost: { shards: 100, floss: 25 }
+    landmark: loom_shed
+    grants: [station.reweaving]
+    build_time: 90
+---
+kind: landmarks
+entries:
+  - id: loom_shed
+    name: Loom Shed
+    rows:
+      - "#####"
+      - "#...#"
+      - "#.L.#"
+      - "#...#"
+      - "##.##"
+    legend:
+      "#": { height: 2.0, walkable: false, tags: [wall, wood, structure] }
+      "L": { height: 0, walkable: true, tags: [floor, wood], spawn: loom }

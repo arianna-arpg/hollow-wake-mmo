@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- Authoritative server library: sessions, zones, persistence, transport abstractions.
+       Hosted by Skein.Server.Host (.NET 8, pure) or Skein.Server.Host.Brutal (.NET 10 + BRUTAL). -->
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <RootNamespace>Skein.Server</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Skein.Core\Skein.Core.csproj" />
+    <ProjectReference Include="..\Skein.Protocol\Skein.Protocol.csproj" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.0" />
+  </ItemGroup>
+</Project>

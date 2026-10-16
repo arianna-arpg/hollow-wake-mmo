@@ -1,0 +1,61 @@
+# The passive constellation. Six start nodes on a ring, spokes outward to notables and keystones,
+# and an inner ring linking the starts so every build can reach every spoke.
+kind: passives
+entries:
+  # ---- starts (one per Calling)
+  - { id: start_holdfast, name: Holdfast Start, kind: start, calling: holdfast, x: 0, y: 10, links: [hf1, inner_a, inner_f] }
+  - { id: start_kindler, name: Kindler Start, kind: start, calling: kindler, x: 8.7, y: 5, links: [kd1, inner_a, inner_b] }
+  - { id: start_sower, name: Sower Start, kind: start, calling: sower, x: 8.7, y: -5, links: [sw1, inner_b, inner_c] }
+  - { id: start_shade, name: Shade Start, kind: start, calling: shade, x: 0, y: -10, links: [sh1, inner_c, inner_d] }
+  - { id: start_harrier, name: Harrier Start, kind: start, calling: harrier, x: -8.7, y: -5, links: [hr1, inner_d, inner_e] }
+  - { id: start_binder, name: Binder Start, kind: start, calling: binder, x: -8.7, y: 5, links: [bd1, inner_e, inner_f] }
+
+  # ---- inner ring (attribute nodes between starts)
+  - { id: inner_a, name: Fortitude, kind: attribute, x: 4.3, y: 7.5, links: [start_holdfast, start_kindler], modifiers: [ { attribute: vigor, form: flat, value: 4 } ] }
+  - { id: inner_b, name: Insight, kind: attribute, x: 8.7, y: 0, links: [start_kindler, start_sower], modifiers: [ { attribute: will, form: flat, value: 4 } ] }
+  - { id: inner_c, name: Poise, kind: attribute, x: 4.3, y: -7.5, links: [start_sower, start_shade], modifiers: [ { attribute: grace, form: flat, value: 4 } ] }
+  - { id: inner_d, name: Quickness, kind: attribute, x: -4.3, y: -7.5, links: [start_shade, start_harrier], modifiers: [ { attribute: grace, form: flat, value: 4 } ] }
+  - { id: inner_e, name: Brawn, kind: attribute, x: -8.7, y: 0, links: [start_harrier, start_binder], modifiers: [ { attribute: might, form: flat, value: 4 } ] }
+  - { id: inner_f, name: Resolve, kind: attribute, x: -4.3, y: 7.5, links: [start_binder, start_holdfast], modifiers: [ { attribute: vigor, form: flat, value: 2 }, { attribute: will, form: flat, value: 2 } ] }
+
+  # ---- Holdfast spoke: the wall
+  - { id: hf1, name: Thick Hide, kind: small, x: 0, y: 14, links: [start_holdfast, hf2], modifiers: [ { attribute: armor, form: increased, value: 0.1 }, { attribute: life.max, form: flat, value: 10 } ] }
+  - { id: hf2, name: Set Feet, kind: small, x: 0, y: 18, links: [hf1, hf3], modifiers: [ { attribute: block.chance, form: flat, value: 0.03 }, { attribute: life.max, form: increased, value: 0.05 } ] }
+  - { id: hf3, name: Bulwark, kind: notable, x: 0, y: 22, links: [hf2, hf4], modifiers: [ { attribute: armor, form: increased, value: 0.25 }, { attribute: damage.taken, form: more, value: -0.08 }, { attribute: block.chance, form: flat, value: 0.05 } ] }
+  - { id: hf4, name: Deep Roots, kind: small, x: 0, y: 26, links: [hf3, hf5], modifiers: [ { attribute: life.regen, form: flat, value: 2 }, { attribute: status.resistance, form: flat, value: 0.1 } ] }
+  - { id: hf5, name: Unmoved, kind: keystone, x: 0, y: 30, links: [hf4], modifiers: [ { attribute: damage.taken, form: more, value: -0.25, condition: 'has("stationary")' }, { attribute: damage, form: more, value: 0.2, condition: 'has("stationary")' }, { attribute: move.speed, form: increased, value: -0.15 } ] }
+
+  # ---- Kindler spoke: the fire
+  - { id: kd1, name: Spark, kind: small, x: 12.1, y: 7, links: [start_kindler, kd2], modifiers: [ { attribute: damage, form: increased, value: 0.1, scope: [ember] }, { attribute: mana.max, form: flat, value: 10 } ] }
+  - { id: kd2, name: Kindling, kind: small, x: 15.6, y: 9, links: [kd1, kd3], modifiers: [ { attribute: ailment.chance, form: flat, value: 0.1, scope: [ember] }, { attribute: damage, form: increased, value: 0.1, scope: [spell] } ] }
+  - { id: kd3, name: Ember Heart, kind: notable, x: 19, y: 11, links: [kd2, kd4], modifiers: [ { attribute: damage, form: increased, value: 0.25, scope: [ember] }, { attribute: ailment.potency, form: flat, value: 0.2, scope: [ember] }, { attribute: resist.ember, form: flat, value: 0.15 } ] }
+  - { id: kd4, name: Crackle, kind: small, x: 22.5, y: 13, links: [kd3, kd5], modifiers: [ { attribute: damage, form: increased, value: 0.12, scope: [storm] }, { attribute: cast.speed, form: increased, value: 0.05 } ] }
+  - { id: kd5, name: Wildfire, kind: keystone, x: 26, y: 15, links: [kd4], modifiers: [ { attribute: area.radius, form: increased, value: 0.3 }, { attribute: damage, form: more, value: 0.3, scope: [vs.burning] }, { attribute: mana.max, form: increased, value: -0.2 } ] }
+
+  # ---- Sower spoke: the green
+  - { id: sw1, name: Green Thumb, kind: small, x: 12.1, y: -7, links: [start_sower, sw2], modifiers: [ { attribute: healing, form: increased, value: 0.1 }, { attribute: life.regen, form: flat, value: 1 } ] }
+  - { id: sw2, name: Mending Hands, kind: small, x: 15.6, y: -9, links: [sw1, sw3], modifiers: [ { attribute: healing, form: increased, value: 0.12 }, { attribute: effect.duration, form: increased, value: 0.1 } ] }
+  - { id: sw3, name: Verdant, kind: notable, x: 19, y: -11, links: [sw2, sw4], modifiers: [ { attribute: summon.max, form: flat, value: 1 }, { attribute: healing, form: increased, value: 0.2 }, { attribute: damage, form: increased, value: 0.2, scope: [bloom] } ] }
+  - { id: sw4, name: Tide Pool, kind: small, x: 22.5, y: -13, links: [sw3, sw5], modifiers: [ { attribute: mana.regen, form: increased, value: 0.2 }, { attribute: damage, form: increased, value: 0.12, scope: [tide] } ] }
+  - { id: sw5, name: Overgrowth, kind: keystone, x: 26, y: -15, links: [sw4], modifiers: [ { attribute: summon.count, form: flat, value: 1 }, { attribute: summon.max, form: flat, value: 2 }, { attribute: damage, form: more, value: -0.3, scope: [spell] } ] }
+
+  # ---- Shade spoke: the knife
+  - { id: sh1, name: Soft Step, kind: small, x: 0, y: -14, links: [start_shade, sh2], modifiers: [ { attribute: move.speed, form: increased, value: 0.05 }, { attribute: crit.chance, form: flat, value: 0.02 } ] }
+  - { id: sh2, name: Opening, kind: small, x: 0, y: -18, links: [sh1, sh3], modifiers: [ { attribute: crit.chance, form: flat, value: 0.03 }, { attribute: damage, form: increased, value: 0.1, scope: [attack] } ] }
+  - { id: sh3, name: Throatcutter, kind: notable, x: 0, y: -22, links: [sh2, sh4], modifiers: [ { attribute: crit.multiplier, form: flat, value: 0.3 }, { attribute: damage, form: increased, value: 0.25, scope: [vs.full_life] }, { attribute: attack.speed, form: increased, value: 0.08 } ] }
+  - { id: sh4, name: Dusk Thought, kind: small, x: 0, y: -26, links: [sh3, sh5], modifiers: [ { attribute: damage, form: increased, value: 0.12, scope: [umbra] }, { attribute: damage, form: increased, value: 0.12, scope: [mind] } ] }
+  - { id: sh5, name: Unseen, kind: keystone, x: 0, y: -30, links: [sh4], modifiers: [ { attribute: crit.chance, form: more, value: 0.5 }, { attribute: evasion, form: increased, value: 0.3 }, { attribute: life.max, form: more, value: -0.2 } ] }
+
+  # ---- Harrier spoke: the bow
+  - { id: hr1, name: Steady Eye, kind: small, x: -12.1, y: -7, links: [start_harrier, hr2], modifiers: [ { attribute: accuracy, form: increased, value: 0.1 }, { attribute: damage, form: increased, value: 0.08, scope: [projectile] } ] }
+  - { id: hr2, name: Fletching, kind: small, x: -15.6, y: -9, links: [hr1, hr3], modifiers: [ { attribute: projectile.speed, form: increased, value: 0.15 }, { attribute: damage, form: increased, value: 0.1, scope: [projectile] } ] }
+  - { id: hr3, name: Far Shot, kind: notable, x: -19, y: -11, links: [hr2, hr4], modifiers: [ { attribute: range, form: increased, value: 0.25 }, { attribute: damage, form: increased, value: 0.2, scope: [projectile] }, { attribute: crit.chance, form: flat, value: 0.05, scope: [projectile] } ] }
+  - { id: hr4, name: Stormfeather, kind: small, x: -22.5, y: -13, links: [hr3, hr5], modifiers: [ { attribute: damage, form: increased, value: 0.12, scope: [storm] }, { attribute: move.speed, form: increased, value: 0.05 } ] }
+  - { id: hr5, name: Volley, kind: keystone, x: -26, y: -15, links: [hr4], modifiers: [ { attribute: projectile.count, form: flat, value: 1 }, { attribute: damage, form: more, value: -0.2, scope: [projectile] }, { attribute: attack.speed, form: increased, value: 0.1 } ] }
+
+  # ---- Binder spoke: the seam
+  - { id: bd1, name: Thread Sense, kind: small, x: -12.1, y: 7, links: [start_binder, bd2], modifiers: [ { attribute: ward.max, form: flat, value: 15 }, { attribute: mana.max, form: flat, value: 10 } ] }
+  - { id: bd2, name: Tight Weave, kind: small, x: -15.6, y: 9, links: [bd1, bd3], modifiers: [ { attribute: effect.duration, form: increased, value: 0.15 }, { attribute: ward.max, form: increased, value: 0.1 } ] }
+  - { id: bd3, name: Seamkeeper, kind: notable, x: -19, y: 11, links: [bd2, bd4], modifiers: [ { attribute: ward.max, form: increased, value: 0.3 }, { attribute: damage, form: increased, value: 0.2, scope: [lumen] }, { attribute: damage, form: increased, value: 0.2, scope: [void] } ] }
+  - { id: bd4, name: Loose End, kind: small, x: -22.5, y: 13, links: [bd3, bd5], modifiers: [ { attribute: ailment.chance, form: flat, value: 0.15, scope: [void] }, { attribute: cooldown.recovery, form: increased, value: 0.1 } ] }
+  - { id: bd5, name: Selvage, kind: keystone, x: -26, y: 15, links: [bd4], modifiers: [ { attribute: ward.max, form: more, value: 0.5 }, { attribute: ward.regen, form: flat, value: 5 }, { attribute: life.regen, form: more, value: -1 } ] }

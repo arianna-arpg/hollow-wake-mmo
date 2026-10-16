@@ -1,0 +1,12 @@
+# Equipment slots. Items name their slot; a slot can restrict what it accepts by item tags or classes.
+kind: slots
+entries:
+  - { id: main_hand, name: Main Hand, accepts: [weapon], order: 0 }
+  - { id: off_hand, name: Off Hand, accepts: [weapon, shield, focus], order: 1 }
+  - { id: head, name: Head, accepts: [armor.head], order: 2 }
+  - { id: chest, name: Chest, accepts: [armor.chest], order: 3 }
+  - { id: hands, name: Hands, accepts: [armor.hands], order: 4 }
+  - { id: feet, name: Feet, accepts: [armor.feet], order: 5 }
+  - { id: belt, name: Belt, accepts: [armor.belt], order: 6 }
+  - { id: ring, name: Ring, accepts: [jewelry.ring], order: 7 }
+  - { id: amulet, name: Amulet, accepts: [jewelry.amulet], order: 8 }

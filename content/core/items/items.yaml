@@ -1,0 +1,59 @@
+# Base item families. Tier resolves from item level at mint; local values roll in their windows.
+kind: items
+entries:
+  # ---- weapons
+  - { id: short_sword, name: Short Sword, class: weapon.sword, slot: main_hand, tags: [melee, blade, one_hand], drop_weight: 10,
+      local: { weapon.damage.min: [4, 6], weapon.damage.max: [8, 12], weapon.attack.time: [1.0], weapon.range: [1.9] } }
+  - { id: hand_axe, name: Hand Axe, class: weapon.axe, slot: main_hand, tags: [melee, blade, one_hand], drop_weight: 8,
+      local: { weapon.damage.min: [5, 8], weapon.damage.max: [10, 14], weapon.attack.time: [1.15], weapon.range: [1.9] },
+      implicits: [ { attribute: crit.multiplier, form: flat, range: [0.1, 0.2] } ] }
+  - { id: dagger, name: Dagger, class: weapon.dagger, slot: main_hand, tags: [melee, blade, one_hand, finesse], drop_weight: 7, affinity: { shade: 2 },
+      local: { weapon.damage.min: [3, 4], weapon.damage.max: [6, 8], weapon.attack.time: [0.7], weapon.range: [1.6] },
+      implicits: [ { attribute: crit.chance, form: flat, range: [0.04, 0.08] } ] }
+  - { id: spear, name: Spear, class: weapon.spear, slot: main_hand, occupies: [off_hand], tags: [melee, two_hand, reach], drop_weight: 6,
+      local: { weapon.damage.min: [8, 11], weapon.damage.max: [16, 22], weapon.attack.time: [1.25], weapon.range: [2.8] } }
+  - { id: maul, name: Maul, class: weapon.maul, slot: main_hand, occupies: [off_hand], tags: [melee, two_hand, blunt], drop_weight: 5,
+      local: { weapon.damage.min: [12, 16], weapon.damage.max: [24, 32], weapon.attack.time: [1.6], weapon.range: [2.2] } }
+  - { id: bow, name: Hunting Bow, class: weapon.bow, slot: main_hand, occupies: [off_hand], tags: [ranged, two_hand, bow], drop_weight: 7, affinity: { harrier: 2 },
+      local: { weapon.damage.min: [5, 7], weapon.damage.max: [12, 16], weapon.attack.time: [1.1], weapon.range: [12] } }
+  - { id: wand, name: Wand, class: weapon.wand, slot: main_hand, tags: [caster, one_hand, focus_weapon], drop_weight: 7, affinity: { caster: 2.5 },
+      local: { weapon.damage.min: [2, 3], weapon.damage.max: [4, 6], weapon.attack.time: [0.8], weapon.range: [8] },
+      implicits: [ { attribute: damage, form: increased, range: [0.1, 0.2], scope: [spell] } ] }
+  - { id: staff, name: Staff, class: weapon.staff, slot: main_hand, occupies: [off_hand], tags: [caster, two_hand, blunt], drop_weight: 6, affinity: { caster: 2.5 },
+      local: { weapon.damage.min: [6, 8], weapon.damage.max: [12, 16], weapon.attack.time: [1.3], weapon.range: [2.2] },
+      implicits: [ { attribute: damage, form: increased, range: [0.18, 0.3], scope: [spell] }, { attribute: mana.max, form: flat, range: [10, 20] } ] }
+
+  # ---- off hands
+  - { id: buckler, name: Buckler, class: shield.buckler, slot: off_hand, tags: [shield], drop_weight: 7, defense: { armor: 1, evasion: 1 },
+      implicits: [ { attribute: block.chance, form: flat, range: [0.12, 0.18] } ] }
+  - { id: tome, name: Tome, class: focus.tome, slot: off_hand, tags: [focus, caster], drop_weight: 6, affinity: { caster: 2 },
+      implicits: [ { attribute: mana.regen, form: increased, range: [0.15, 0.3] } ] }
+
+  # ---- armor
+  - { id: leather_jerkin, name: Leather Jerkin, class: armor.chest, slot: chest, tags: [light], drop_weight: 10, defense: { evasion: 1 } }
+  - { id: iron_cuirass, name: Iron Cuirass, class: armor.chest, slot: chest, tags: [heavy], drop_weight: 8, defense: { armor: 1 }, requirements: { might: 14 } }
+  - { id: woven_robe, name: Woven Robe, class: armor.chest, slot: chest, tags: [cloth, caster], drop_weight: 8, defense: { ward: 1 }, affinity: { caster: 2 } }
+  - { id: scale_hauberk, name: Scale Hauberk, class: armor.chest, slot: chest, tags: [medium], drop_weight: 7, defense: { armor: 1, evasion: 1 } }
+  - { id: leather_cap, name: Leather Cap, class: armor.head, slot: head, tags: [light], drop_weight: 9, defense: { evasion: 1 } }
+  - { id: iron_helm, name: Iron Helm, class: armor.head, slot: head, tags: [heavy], drop_weight: 7, defense: { armor: 1 } }
+  - { id: weaver_hood, name: Weaver Hood, class: armor.head, slot: head, tags: [cloth, caster], drop_weight: 7, defense: { ward: 1 } }
+  - { id: hide_gloves, name: Hide Gloves, class: armor.hands, slot: hands, tags: [light], drop_weight: 9, defense: { evasion: 1 } }
+  - { id: iron_gauntlets, name: Iron Gauntlets, class: armor.hands, slot: hands, tags: [heavy], drop_weight: 7, defense: { armor: 1 } }
+  - { id: walking_boots, name: Walking Boots, class: armor.feet, slot: feet, tags: [light], drop_weight: 9, defense: { evasion: 1 } }
+  - { id: iron_greaves, name: Iron Greaves, class: armor.feet, slot: feet, tags: [heavy], drop_weight: 7, defense: { armor: 1 } }
+  - { id: cord_belt, name: Cord Belt, class: armor.belt, slot: belt, tags: [light], drop_weight: 8, defense: { armor: 1 } }
+
+  # ---- jewelry
+  - { id: ring, name: Ring, class: jewelry.ring, slot: ring, tags: [jewelry], drop_weight: 5,
+      implicits: [ { attribute: life.max, form: flat, range: [8, 16] } ] }
+  - { id: amulet, name: Amulet, class: jewelry.amulet, slot: amulet, tags: [jewelry], drop_weight: 4,
+      implicits: [ { attribute: will, form: flat, range: [2, 5] } ] }
+
+  # ---- materials
+  - { id: thread_floss, name: Thread Floss, class: material.floss, tags: [material, floss], stack: 99, drop_weight: 0, value: 2, description: Loose thread gathered from frayed places. }
+  - { id: iron_ore, name: Iron Ore, class: material.ore, tags: [material, ore, stone], stack: 99, drop_weight: 0, value: 3 }
+  - { id: ash_wood, name: Ash Wood, class: material.wood, tags: [material, wood], stack: 99, drop_weight: 0, value: 1 }
+  - { id: ember_bloom, name: Ember Bloom, class: material.herb, tags: [material, herb, ember], stack: 99, drop_weight: 0, value: 4 }
+  - { id: wisp_essence, name: Wisp Essence, class: material.essence, tags: [material, essence, lumen], stack: 99, drop_weight: 0, value: 6 }
+  - { id: remnant_dust, name: Remnant Dust, class: material.essence, tags: [material, essence, umbra], stack: 99, drop_weight: 0, value: 6 }
+  - { id: hob_hide, name: Hob Hide, class: material.hide, tags: [material, hide], stack: 99, drop_weight: 0, value: 2 }

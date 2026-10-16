@@ -1,0 +1,54 @@
+# Reweaving: recipes and the minigame procedures that decide quality.
+kind: procedures
+entries:
+  - { id: smith_rhythm, name: Smith's Rhythm, spec: { type: timing, windows: 4, gap_min: 0.8, gap_max: 1.5, width: 0.2 } }
+  - { id: weave_pattern, name: Weave Pattern, spec: { type: sequence, length: 6, symbols: 4, time_limit: 14 } }
+  - { id: align_threads, name: Align the Threads, spec: { type: alignment, dials: 3, tolerance: 14, time_limit: 20 } }
+---
+kind: recipes
+entries:
+  - id: reweave_blade
+    name: Reweave a Blade
+    station: [smithing]
+    level: 1
+    inputs: [ { item: iron_ore, count: 3 }, { item: ash_wood, count: 1 } ]
+    output: { item: short_sword, count: 1 }
+    procedure: { type: ref, id: smith_rhythm }
+    quality: "score"
+    xp: "25"
+    time: 3
+  - id: floss_robe
+    name: Floss Robe
+    station: [reweaving]
+    level: 1
+    inputs: [ { tags: [floss], count: 5 } ]
+    output: { item: woven_robe, count: 1 }
+    procedure: { type: ref, id: weave_pattern }
+    quality: "score"
+    xp: "25"
+  - id: ember_dagger
+    name: Ember Dagger
+    station: [smithing]
+    level: 4
+    inputs: [ { item: iron_ore, count: 2 }, { item: ember_bloom, count: 2 } ]
+    output: { item: dagger, count: 1 }
+    procedure: { type: ref, id: align_threads }
+    quality: "min(1, score * 1.1)"
+    xp: "40"
+    currency: { shards: 10 }
+  - id: hide_jerkin
+    name: Hide Jerkin
+    station: [reweaving]
+    level: 2
+    inputs: [ { item: hob_hide, count: 4 }, { tags: [floss], count: 2 } ]
+    output: { item: leather_jerkin, count: 1 }
+    procedure: { type: timing, windows: 3, width: 0.25 }
+    xp: "30"
+  - id: shard_from_dust
+    name: Render Residue
+    station: [reweaving]
+    level: 3
+    inputs: [ { item: remnant_dust, count: 3 } ]
+    output: { item: wisp_essence, count: 1 }
+    procedure: none
+    xp: "10"

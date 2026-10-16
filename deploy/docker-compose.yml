@@ -1,0 +1,49 @@
+# One-box deployment: the Skein server with its data on a named volume.
+# Postgres is included, stopped by default, for the day the JSON stores are swapped for a database.
+#   docker compose -f deploy/docker-compose.yml up -d --build
+services:
+  skein:
+    build:
+      context: ..
+      dockerfile: deploy/Dockerfile
+      args:
+        HOST: tcp            # or brutal for the RakNet UDP host
+    image: skein-server:local
+    container_name: skein
+    restart: unless-stopped
+    ports:
+      - "7777:7777/tcp"
+      - "7777:7777/udp"
+    volumes:
+      - skein-data:/app/data
+      - ../config/server.yaml:/app/config/server.yaml:ro
+    environment:
+      - DOTNET_CLI_TELEMETRY_OPTOUT=1
+    logging:
+      driver: json-file
+      options:
+        max-size: "20m"
+        max-file: "5"
+    healthcheck:
+      test: ["CMD-SHELL", "ss -ltn | grep -q ':7777' || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+  postgres:
+    image: postgres:17-alpine
+    container_name: skein-postgres
+    profiles: ["db"]
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: skein
+      POSTGRES_PASSWORD: change-me
+      POSTGRES_DB: skein
+    volumes:
+      - skein-postgres:/var/lib/postgresql/data
+    ports:
+      - "127.0.0.1:5432:5432"
+
+volumes:
+  skein-data:
+  skein-postgres:

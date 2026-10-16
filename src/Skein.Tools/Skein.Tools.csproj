@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- skein command line: validate content, roll items, simulate fights, generate zones, evaluate expressions. -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <RootNamespace>Skein.Tools</RootNamespace>
+    <AssemblyName>skein</AssemblyName>
+    <InvariantGlobalization>true</InvariantGlobalization>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Skein.Core\Skein.Core.csproj" />
+    <ProjectReference Include="..\Skein.Protocol\Skein.Protocol.csproj" />
+  </ItemGroup>
+</Project>

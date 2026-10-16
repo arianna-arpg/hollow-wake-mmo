@@ -1,0 +1,79 @@
+# Loot tables. Entries nest tables; rarity weights override the global rarity table per entry.
+kind: loot
+entries:
+  - id: world_gear
+    rolls:
+      - count: 1
+        entries:
+          - { weight: 32, kind: item, class: weapon }
+          - { weight: 48, kind: item, class: armor }
+          - { weight: 12, kind: item, class: jewelry }
+          - { weight: 8, kind: nothing }
+  - id: world_common
+    rolls:
+      - count: 1
+        entries:
+          - { weight: 55, kind: currency, currency: shards, amount: [2, 8] }
+          - { weight: 14, kind: table, table: world_gear }
+          - { weight: 18, kind: item, item: thread_floss, amount: [1, 3] }
+          - { weight: 13, kind: nothing }
+  - id: beast_drops
+    rolls:
+      - count: 1
+        entries:
+          - { weight: 50, kind: item, item: hob_hide, amount: [1, 2] }
+          - { weight: 30, kind: table, table: world_common }
+          - { weight: 20, kind: nothing }
+  - id: undead_drops
+    rolls:
+      - count: 1
+        entries:
+          - { weight: 45, kind: item, item: remnant_dust, amount: [1, 2] }
+          - { weight: 35, kind: table, table: world_common }
+          - { weight: 20, kind: nothing }
+  - id: tangled_drops
+    rolls:
+      - count: 1
+        entries:
+          - { weight: 40, kind: currency, currency: residue, amount: [1, 3] }
+          - { weight: 30, kind: table, table: world_gear, rarity_weights: { common: 30, magic: 50, rare: 18, unique: 2 } }
+          - { weight: 30, kind: table, table: world_common }
+  - id: boss_gear
+    rolls:
+      - count: 2
+        entries:
+          - { weight: 70, kind: table, table: world_gear, rarity_weights: { common: 5, magic: 45, rare: 45, unique: 5 }, level_bonus: 2 }
+          - { weight: 30, kind: unique }
+      - count: 1
+        entries:
+          - { weight: 100, kind: currency, currency: shards, amount: [30, 60] }
+  - id: ruin_chest
+    rolls:
+      - count: 1
+        entries:
+          - { weight: 60, kind: table, table: world_gear, rarity_weights: { common: 20, magic: 55, rare: 24, unique: 1 } }
+          - { weight: 40, kind: currency, currency: shards, amount: [12, 30] }
+      - count: 1
+        entries:
+          - { weight: 50, kind: item, item: wisp_essence, amount: [1, 2] }
+          - { weight: 50, kind: item, item: thread_floss, amount: [2, 5] }
+  - id: herb_node
+    rolls:
+      - count: 1
+        entries:
+          - { weight: 100, kind: item, item: ember_bloom, amount: [1, 3] }
+  - id: ore_node
+    rolls:
+      - count: 1
+        entries:
+          - { weight: 100, kind: item, item: iron_ore, amount: [1, 3] }
+  - id: wood_node
+    rolls:
+      - count: 1
+        entries:
+          - { weight: 100, kind: item, item: ash_wood, amount: [1, 3] }
+  - id: floss_node
+    rolls:
+      - count: 1
+        entries:
+          - { weight: 100, kind: item, item: thread_floss, amount: [2, 4] }
