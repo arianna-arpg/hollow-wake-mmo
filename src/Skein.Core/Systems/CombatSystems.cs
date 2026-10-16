@@ -360,11 +360,8 @@ public sealed class SpawnerSystem : SimSystem
             }
             if (double.IsNegativeInfinity(s.RespawnAt))
             {
-                s.RespawnAt = s.Alive.Count == 0 && s.RespawnSeconds > 0 && !s.Group.Equals("initial") ? now + (s.Alive.Count == 0 && sim.Clock.Tick <= 1 ? 0 : s.RespawnSeconds) : now;
-                if (sim.Clock.Tick <= 1)
-                {
-                    s.RespawnAt = now;
-                }
+                // The pack thinned since the last check: schedule a respawn. Zone loading sets RespawnAt to now for the first spawn.
+                s.RespawnAt = now + Math.Max(0, s.RespawnSeconds);
                 continue;
             }
             if (now < s.RespawnAt)

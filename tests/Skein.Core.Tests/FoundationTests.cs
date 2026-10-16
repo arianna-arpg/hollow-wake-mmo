@@ -78,7 +78,7 @@ public class TagTests
         Assert.False(tags.HasAll(TagSet.Of("weapon", "spell")));
         Assert.Equal(TagSet.Of("attack", "melee", "weapon.sword"), tags);
         Assert.Equal(3, tags.Count);
-        Assert.Equal(tags.Union(TagSet.Of("fire")).Count, 4);
+        Assert.Equal(4, tags.Union(TagSet.Of("fire")).Count);
     }
 }
 
