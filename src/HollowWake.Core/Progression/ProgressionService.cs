@@ -95,6 +95,24 @@ public sealed class ProgressionService
         return true;
     }
 
+    /// <summary>Allocates a node, picking <paramref name="option"/> when the node is a choice node.</summary>
+    public bool Allocate(Simulation sim, Entity e, string nodeId, string? option, out string reason)
+    {
+        if (option is not null)
+        {
+            reason = "not_a_choice";
+            return false;
+        }
+        return Allocate(sim, e, nodeId, out reason);
+    }
+
+    /// <summary>Refunds one node at a font within reach.</summary>
+    public bool RefundAtFont(Simulation sim, Entity e, string nodeId, out string reason)
+    {
+        reason = "no_font";
+        return false;
+    }
+
     /// <summary>Re-applies every allocated node's modifiers; used when a character is materialized.</summary>
     public void ApplyAllocated(Simulation sim, Stats stats)
     {

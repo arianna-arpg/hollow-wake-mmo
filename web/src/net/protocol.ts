@@ -6,6 +6,8 @@
 export const PROTOCOL_VERSION = 1;
 /** ProtocolInfo.EntityDeltaFeature */
 export const ENTITY_DELTA_FEATURE = "entity_delta";
+/** ProtocolInfo.InterfaceFeature */
+export const INTERFACE_FEATURE = "interface";
 
 /**
  * A 64-bit integer from C# (entity keys, item uids, nonces, the world seed): a number when it is a safe
@@ -108,6 +110,7 @@ export interface DropItemMsg {
 export interface AllocatePassiveMsg {
   t: "allocate_passive";
   node: string;
+  option?: string;
 }
 
 export interface SetWeaveMsg {
@@ -183,6 +186,126 @@ export interface RequestChunkMsg {
   t: "request_chunk";
   x: number;
   y: number;
+}
+
+export interface ReleaseWeaveMsg {
+  t: "release_weave";
+  slot: number;
+}
+
+export interface PressWeaveMsg {
+  t: "press_weave";
+  slot: number;
+}
+
+export interface AimMsg {
+  t: "aim";
+  x: number;
+  y: number;
+  z: number;
+  dir_x: number;
+  dir_y: number;
+}
+
+export interface UseMetaMsg {
+  t: "use_meta";
+  slot: number;
+}
+
+export interface SwapWeaveSlotsMsg {
+  t: "swap_weave_slots";
+  a: number;
+  b: number;
+}
+
+export interface CommandMinionsMsg {
+  t: "command_minions";
+  command: string;
+  target: Int64;
+  x: number;
+  y: number;
+  z: number;
+  group?: string;
+}
+
+export interface MoveItemMsg {
+  t: "move_item";
+  item: Int64;
+  container: string;
+  x: number;
+  y: number;
+  slot?: string;
+}
+
+export interface SocketStoneMsg {
+  t: "socket_stone";
+  stone: Int64;
+  slot: number;
+  socket: number;
+}
+
+export interface UnsocketStoneMsg {
+  t: "unsocket_stone";
+  slot: number;
+  socket: number;
+  x?: number;
+  y?: number;
+}
+
+export interface LearnFormMsg {
+  t: "learn_form";
+  item: Int64;
+  slot: number;
+}
+
+export interface UnlearnFormMsg {
+  t: "unlearn_form";
+  slot: number;
+  x?: number;
+  y?: number;
+}
+
+export interface RefundPassiveMsg {
+  t: "refund_passive";
+  node: string;
+}
+
+export interface ChooseDialogueMsg {
+  t: "choose_dialogue";
+  conversation: string;
+  choice: string;
+  node?: string;
+}
+
+export interface CloseDialogueMsg {
+  t: "close_dialogue";
+  conversation: string;
+}
+
+export interface ClosePaneMsg {
+  t: "close_pane";
+  pane: string;
+  source: Int64;
+}
+
+export interface BuyMsg {
+  t: "buy";
+  vendor: Int64;
+  stock: string;
+  count: number;
+}
+
+export interface SellMsg {
+  t: "sell";
+  vendor: Int64;
+  item: Int64;
+  count?: number;
+}
+
+export interface BuyBackMsg {
+  t: "buy_back";
+  vendor: Int64;
+  item: Int64;
 }
 
 export interface WelcomeMsg {
@@ -275,6 +398,12 @@ export interface SelfStateMsg {
   quests: QuestInfo[];
   reputation: Record<string, number>;
   holdings: string[];
+  reserved?: Record<string, number>;
+  pools?: PoolInfo[];
+  statuses?: StatusInfo[];
+  cast?: CastInfo;
+  charges?: ChargeInfo[];
+  stamps?: Record<string, number>;
 }
 
 export interface CombatEventMsg {
@@ -356,6 +485,70 @@ export interface PongMsg {
 export interface DisconnectMsg {
   t: "disconnect";
   reason: string;
+}
+
+export interface InventoryStateMsg {
+  t: "inventory_state";
+  bag: BoardInfo;
+  slots: EquipSlotInfo[];
+  equipment: Record<string, ItemInfo>;
+  wallet: CurrencyInfo[];
+  containers: ContainerInfo[];
+}
+
+export interface WeaveSlotsMsg {
+  t: "weave_slots";
+  seats: WeaveSeatInfo[];
+}
+
+export interface PassiveStateMsg {
+  t: "passive_state";
+  allocated: string[];
+  picks: Record<string, string[]>;
+  points: Record<string, number>;
+  realms: string[];
+  refund: boolean;
+  refund_cost?: string;
+  font?: Int64;
+}
+
+export interface PageStateMsg {
+  t: "page_state";
+  pages: PageInfo[];
+}
+
+export interface DialogueStateMsg {
+  t: "dialogue_state";
+  source: Int64;
+  conversation: string;
+  speaker: string;
+  line: string;
+  choices: DialogueChoiceInfo[];
+  ended: boolean;
+  node?: string;
+  reach?: number;
+}
+
+export interface VendorStateMsg {
+  t: "vendor_state";
+  source: Int64;
+  vendor: string;
+  name: string;
+  stock: VendorStockInfo[];
+  buy_back: VendorBuyBackInfo[];
+  sell_prices: VendorQuoteInfo[];
+  closed: boolean;
+  reach?: number;
+}
+
+export interface StationStateMsg {
+  t: "station_state";
+  source: Int64;
+  name: string;
+  recipes: RecipeInfo[];
+  closed: boolean;
+  tags?: string[];
+  reach?: number;
 }
 
 // ---------------------------------------------------------------- records inside messages
@@ -456,6 +649,20 @@ export interface ItemInfo {
   slot?: string;
   lines: string[];
   local: Record<string, number>;
+  x?: number;
+  y?: number;
+  w?: number;
+  h?: number;
+  class?: string;
+  icon?: string;
+  quality?: number;
+  flavor?: string;
+  locked?: boolean;
+  sockets?: SocketInfo[];
+  requirements?: RequirementInfo[];
+  glyph?: ItemGlyphInfo;
+  form?: ItemFormInfo;
+  fits?: StoneFitInfo[];
 }
 
 export interface QuestInfo {
@@ -469,11 +676,147 @@ export interface QuestInfo {
   level: number;
 }
 
+export interface PoolInfo {
+  id: string;
+  state: string;
+  since?: number;
+  until?: number;
+}
+
+export interface StatusInfo {
+  id: string;
+  stacks: number;
+  remaining: number;
+  duration: number;
+}
+
+export interface CastInfo {
+  slot: number;
+  mode: string;
+  progress: number;
+  stage: number;
+  stages: number;
+  name?: string;
+  brim?: number;
+  held?: number;
+  duration?: number;
+}
+
+export interface ChargeInfo {
+  id: string;
+  count: number;
+  max: number;
+}
+
 export interface LayerInfo {
   index: number;
   height: number;
   walkable: boolean;
   tags: string;
+}
+
+export interface BoardInfo {
+  width: number;
+  height: number;
+  items: ItemInfo[];
+  mask?: string[];
+  rungs?: RungInfo[];
+}
+
+export interface EquipSlotInfo {
+  id: string;
+  name: string;
+  order: number;
+  occupied_by?: string;
+}
+
+export interface CurrencyInfo {
+  id: string;
+  name: string;
+  amount: number;
+}
+
+export interface ContainerInfo {
+  id: string;
+  name: string;
+  kind: string;
+  board: BoardInfo;
+  reachable: boolean;
+  reason?: string;
+  owner?: string;
+  active?: boolean;
+  of?: string;
+  page?: number;
+  locked?: boolean;
+  price?: Record<string, number>;
+}
+
+export interface WeaveSeatInfo {
+  slot: number;
+  key?: string;
+  form?: string;
+  name: string;
+  level: number;
+  sockets: number;
+  glyphs: SeatGlyphInfo[];
+  ready_in: number;
+  cooldown: number;
+  preview: PreviewLineInfo[];
+  icon?: string;
+  dormant?: string;
+  item?: Int64;
+  threads?: string[];
+  cast_mode?: string;
+  targeting?: string;
+  costs?: Record<string, number>;
+  uses?: number;
+  uses_max?: number;
+  converted?: FaceInfo;
+  meta?: FaceInfo;
+}
+
+export interface PageInfo {
+  id: string;
+  sealed: boolean;
+  pips: number;
+  reason?: string;
+  container?: string;
+}
+
+export interface DialogueChoiceInfo {
+  id: string;
+  text: string;
+  enabled: boolean;
+  reason?: string;
+}
+
+export interface VendorStockInfo {
+  id: string;
+  item: ItemInfo;
+  price: Record<string, number>;
+  count?: number;
+  enabled?: boolean;
+  reason?: string;
+}
+
+export interface VendorBuyBackInfo {
+  item: ItemInfo;
+  price: Record<string, number>;
+}
+
+export interface VendorQuoteInfo {
+  item: Int64;
+  price: Record<string, number>;
+}
+
+export interface RecipeInfo {
+  id: string;
+  name: string;
+  inputs: RecipeInputInfo[];
+  output: ItemInfo;
+  craftable: boolean;
+  reason?: string;
+  cost?: Record<string, number>;
 }
 
 export interface OverlayInfo {
@@ -484,6 +827,68 @@ export interface OverlayInfo {
   circle?: number[];
   params: Record<string, number>;
   priority: number;
+}
+
+export interface SocketInfo {
+  index: number;
+  stone?: ItemInfo;
+}
+
+export interface RequirementInfo {
+  text: string;
+  met: boolean;
+}
+
+export interface ItemGlyphInfo {
+  id: string;
+  name: string;
+  level: number;
+  rows?: string[];
+}
+
+export interface ItemFormInfo {
+  id: string;
+  name: string;
+  level: number;
+  sockets: number;
+}
+
+export interface StoneFitInfo {
+  slot: number;
+  fit: string;
+  reason?: string;
+}
+
+export interface RungInfo {
+  index: number;
+  unlocked: boolean;
+  cells: string[];
+  requirement?: string;
+}
+
+export interface SeatGlyphInfo {
+  socket: number;
+  id: string;
+  name: string;
+  level: number;
+  dormant?: string;
+  item?: Int64;
+}
+
+export interface PreviewLineInfo {
+  label: string;
+  text: string;
+}
+
+export interface FaceInfo {
+  label: string;
+  icon?: string;
+}
+
+export interface RecipeInputInfo {
+  text: string;
+  have: number;
+  need: number;
 }
 
 /** Every message, discriminated by t. */
@@ -517,6 +922,24 @@ export type Message =
   | RespawnMsg
   | PingMsg
   | RequestChunkMsg
+  | ReleaseWeaveMsg
+  | PressWeaveMsg
+  | AimMsg
+  | UseMetaMsg
+  | SwapWeaveSlotsMsg
+  | CommandMinionsMsg
+  | MoveItemMsg
+  | SocketStoneMsg
+  | UnsocketStoneMsg
+  | LearnFormMsg
+  | UnlearnFormMsg
+  | RefundPassiveMsg
+  | ChooseDialogueMsg
+  | CloseDialogueMsg
+  | ClosePaneMsg
+  | BuyMsg
+  | SellMsg
+  | BuyBackMsg
   | WelcomeMsg
   | LoginResultMsg
   | CharacterListMsg
@@ -537,7 +960,14 @@ export type Message =
   | ChunkDataMsg
   | IntentRejectedMsg
   | PongMsg
-  | DisconnectMsg;
+  | DisconnectMsg
+  | InventoryStateMsg
+  | WeaveSlotsMsg
+  | PassiveStateMsg
+  | PageStateMsg
+  | DialogueStateMsg
+  | VendorStateMsg
+  | StationStateMsg;
 
 export type MessageType = Message["t"];
 
@@ -575,6 +1005,24 @@ export const MESSAGE_TYPES: readonly MessageType[] = [
   "respawn",
   "ping",
   "request_chunk",
+  "release_weave",
+  "press_weave",
+  "aim",
+  "use_meta",
+  "swap_weave_slots",
+  "command_minions",
+  "move_item",
+  "socket_stone",
+  "unsocket_stone",
+  "learn_form",
+  "unlearn_form",
+  "refund_passive",
+  "choose_dialogue",
+  "close_dialogue",
+  "close_pane",
+  "buy",
+  "sell",
+  "buy_back",
   "welcome",
   "login_result",
   "character_list",
@@ -596,4 +1044,11 @@ export const MESSAGE_TYPES: readonly MessageType[] = [
   "intent_rejected",
   "pong",
   "disconnect",
+  "inventory_state",
+  "weave_slots",
+  "passive_state",
+  "page_state",
+  "dialogue_state",
+  "vendor_state",
+  "station_state",
 ];
