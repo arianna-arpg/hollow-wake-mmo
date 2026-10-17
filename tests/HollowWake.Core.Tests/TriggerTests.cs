@@ -269,6 +269,26 @@ public class TriggerTests
         Assert.Contains(weave.Glyphs, g => g.Id == "t_repeat");
     }
 
+    [Fact]
+    public void GraftsFromOutsideTheBookReachTheirSeatOnTheNextTick()
+    {
+        var arena = CastingArena.Create();
+        var slot = arena.Slot("t_free");
+        arena.Sim.Tick();
+        var seat = arena.SlotIndex(slot) + 1;
+
+        // A modifier from anywhere (here, as a ring would grant it) grafts the glyph; nothing tells the book.
+        arena.Stats.Attributes.Add(new Modifier { Attribute = $"glyph.slot{seat}.t_repeat", Form = ModifierForm.Flat, Value = 1, Source = "ring" });
+        arena.Sim.Tick();
+        var weave = arena.Runtime.Resolve(arena.Sim, arena.Book.Slots[seat - 1], out _)!;
+        Assert.Equal("t_repeat", Assert.Single(weave.Grafts).Id);
+
+        // Losing it is noticed too.
+        arena.Stats.Attributes.RemoveSource("ring");
+        arena.Sim.Tick();
+        Assert.Empty(arena.Runtime.Resolve(arena.Sim, arena.Book.Slots[seat - 1], out _)!.Grafts);
+    }
+
     // ------------------------------------------------------------ effects of the casting family
 
     [Fact]

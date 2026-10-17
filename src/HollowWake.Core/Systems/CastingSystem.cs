@@ -7,9 +7,10 @@ namespace HollowWake.Core.Systems;
 /// <summary>
 /// Advances casts: timed bars resolve when their time comes, channels beat and ramp, charge-ups fill,
 /// overcharges climb their stages, guards hold, and every hold ends by release, by its own limit, by
-/// running dry or by interruption. Books whose slots changed are armed first (triggers subscribed, worn
-/// modifiers on). Books are visited in the world's order, so casts resolving on the same tick resolve in
-/// a stable order. Beyond the world's query, nothing here allocates in a tick where nothing resolves.
+/// running dry or by interruption. Books whose slots changed, or whose bearer's grafted glyphs did, are
+/// armed first (triggers subscribed, worn modifiers on). Books are visited in the world's order, so casts
+/// resolving on the same tick resolve in a stable order. Beyond the world's query, nothing here allocates
+/// in a tick where nothing resolves.
 /// </summary>
 public sealed class CastingSystem : SimSystem
 {
@@ -21,7 +22,7 @@ public sealed class CastingSystem : SimSystem
         var runtime = sim.Service<WeaveRuntime>();
         foreach (var (e, book) in sim.World.Query<WeaveBook>())
         {
-            if (book.ArmedVersion != book.Version || book.ArmedCount != book.Slots.Count)
+            if (book.ArmedVersion != book.Version || book.ArmedCount != book.Slots.Count || (book.ArmedStats is { } armed && armed.Attributes.Version != book.GraftVersion))
             {
                 runtime.EnsureArmed(sim, e, book);
             }

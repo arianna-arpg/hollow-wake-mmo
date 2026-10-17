@@ -5,6 +5,7 @@ using HollowWake.Core.Definitions;
 using HollowWake.Core.Ecs;
 using HollowWake.Core.Expressions;
 using HollowWake.Core.Maths;
+using HollowWake.Core.Sim;
 using HollowWake.Core.Tags;
 using HollowWake.Core.Weaves;
 
@@ -13,7 +14,8 @@ namespace HollowWake.Core.Effects.Handlers;
 /// <summary>
 /// Effects about casting: casting another weave from inside an effect graph (<c>cast</c>), running a list
 /// later (<c>delay</c>), banking a list behind a fuse that resolves at live stats (<c>fuse</c>), shaving
-/// running cooldowns (<c>cooldown</c>) and putting use charges back into banks (<c>restore_uses</c>).
+/// running cooldowns (<c>cooldown</c>), putting use charges back into banks (<c>restore_uses</c>) and
+/// surging a raised guard's pool (<c>guard</c>).
 /// </summary>
 public static class CastHandlers
 {
@@ -24,6 +26,50 @@ public static class CastHandlers
         r.Register(new FuseHandler());
         r.Register(new CooldownHandler());
         r.Register(new RestoreUsesHandler());
+        r.Register(new GuardSurgeHandler());
+    }
+}
+
+/// <summary>
+/// <c>guard {amount, self}</c>: surges a raised guard, adding <c>amount</c> to its pool, past the pool it was
+/// raised with if need be (row C18: mana poured into a guard). It acts on the target's guard, or on the
+/// source's with <c>self</c> or without a target. A body holding no guard, or a broken one, is untouched.
+/// </summary>
+internal sealed class GuardSurgeHandler : IEffectHandler
+{
+    public string Type => "guard";
+
+    public EffectSignature Signature { get; } = EffectSignature.Of("amount", "self");
+
+    public CompiledEffect Compile(JsonObject p, EffectCompileContext ctx) => new Effect
+    {
+        Type = Type,
+        Amount = ctx.ExprOf(p["amount"]) ?? throw new InvalidOperationException($"guard needs 'amount' in {ctx.Owner}."),
+        Self = ctx.BoolOf(p["self"], false),
+    };
+
+    private sealed class Effect : CompiledEffect
+    {
+        public required Expr Amount;
+        public bool Self;
+
+        public override void Execute(EffectContext ctx)
+        {
+            var world = ctx.Sim.World;
+            var bearer = Self || ctx.Target.IsNone ? ctx.Source : ctx.Target;
+            if (!world.TryGet<Guard>(bearer, out var guard) || guard.Broken
+                || !world.TryGet<WeaveBook>(bearer, out var book) || !ReferenceEquals(book.Casting, guard.Cast))
+            {
+                return;
+            }
+            var amount = Math.Max(0, ctx.Eval(Amount) * ctx.Potency);
+            if (amount <= 0)
+            {
+                return;
+            }
+            guard.Pool += amount;
+            ctx.Sim.Events.Publish(new GuardSurged(bearer, guard.Cast.Weave?.Key ?? guard.Slot.Key, amount, guard.Pool) { Tick = ctx.Sim.Clock.Tick });
+        }
     }
 }
 

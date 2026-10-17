@@ -600,6 +600,87 @@ public class CastModeTests
         Assert.Equal(a.Key, arena.Book.Recent(1));
     }
 
+    // ------------------------------------------------------------ AI hints
+
+    [Fact]
+    public void AiHintsHoldASoftMinimumAndReadTheirRangeFromAnAttribute()
+    {
+        var arena = CastingArena.Create();
+        var sim = arena.Sim;
+        var runtime = arena.Runtime;
+        var me = arena.Spawn("t_blank", new Vector3(14, 22, 0), "red");
+        var book = sim.World.GetOrAdd<WeaveBook>(me);
+        var far = book.Add(new WeaveSpec { Form = "t_far_hint" });
+        var near = book.Add(new WeaveSpec { Form = "t_near_hint" });
+
+        // Far off, the heavy hint wins; inside its soft minimum, without a near weight, it waits for room.
+        Assert.Same(far, runtime.ChooseForAi(sim, me, arena.Enemy)!.Value.Slot);
+        sim.World.Get<Transform>(me)!.Position = new Vector3(14, 11, 0);
+        Assert.Same(near, runtime.ChooseForAi(sim, me, arena.Enemy)!.Value.Slot);
+
+        // With a near weight it still casts up close when nothing else is ready.
+        var other = arena.Spawn("t_blank", new Vector3(14, 11, 0), "red");
+        var soft = sim.World.GetOrAdd<WeaveBook>(other).Add(new WeaveSpec { Form = "t_soft_hint" });
+        Assert.Same(soft, runtime.ChooseForAi(sim, other, arena.Enemy)!.Value.Slot);
+
+        // A range attribute replaces the preferred range and scales with the caster.
+        Assert.Equal(30, runtime.PreferredRange(sim, me), 6);
+        sim.World.Get<Stats>(me)!.Attributes.Add(new Modifier { Attribute = "range", Form = ModifierForm.Flat, Value = 6, Source = "test" });
+        Assert.Equal(36, runtime.PreferredRange(sim, me), 6);
+    }
+
+    // ------------------------------------------------------------ guard surges
+
+    [Fact]
+    public void ABraceSurgesTheRaisedGuardsPool()
+    {
+        var arena = CastingArena.Create();
+        var guard = arena.Slot("t_guard");
+        var brace = arena.Slot("t_brace");
+
+        // Without a raised guard the brace's gate refuses it.
+        Assert.False(arena.Begin(brace, out var refused));
+        Assert.StartsWith("gate:", refused);
+
+        arena.Begin(guard);
+        arena.RunSeconds(0.3);
+        arena.Hit(arena.Enemy, arena.Caster, 20);
+        var held = arena.Sim.World.Get<Guard>(arena.Caster)!;
+        var pool = held.Pool;
+
+        // A reflex lands while the guard is held, and the pool takes the surge, past its start if need be.
+        arena.Begin(brace);
+        Assert.Same(guard, arena.Book.Casting!.Slot);
+        Assert.Equal(pool + 25, held.Pool, 6);
+        var surge = Assert.Single(arena.Of<GuardSurged>());
+        Assert.Equal(25, surge.Amount, 6);
+        Assert.Equal(held.Pool, surge.Pool, 6);
+    }
+
+    // ------------------------------------------------------------ reads that change nothing
+
+    [Fact]
+    public void ReadingABankAFaceOrAChainChangesNoSlotState()
+    {
+        var arena = CastingArena.Create();
+        var bank = arena.Slot("t_reloading");
+        arena.Begin(bank);
+        arena.RunSeconds(1);
+        var before = new Dictionary<string, double>(bank.State);
+        Assert.Equal(0, arena.Runtime.Uses(arena.Sim, arena.Caster, bank, out var max));
+        Assert.Equal(1, max);
+        Assert.Equal("quiver_restring", arena.Runtime.FaceOf(arena.Sim, arena.Caster, bank)!.Key);
+        Assert.Equal(before, bank.State);
+
+        // A chain whose window lapsed shows its first face again, without the read resetting it.
+        var chain = arena.Slot(new WeaveSpec { Form = "t_free", Glyphs = { "t_chain" } });
+        arena.Begin(chain);
+        arena.RunSeconds(1.5);
+        var walked = new Dictionary<string, double>(chain.State);
+        Assert.Equal(chain.Key, arena.Runtime.FaceOf(arena.Sim, arena.Caster, chain)!.Key);
+        Assert.Equal(walked, chain.State);
+    }
+
     // ------------------------------------------------------------ brims
 
     [Fact]

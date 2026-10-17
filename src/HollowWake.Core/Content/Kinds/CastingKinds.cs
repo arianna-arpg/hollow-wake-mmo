@@ -26,12 +26,42 @@ internal static class CastingKinds
         CastingTriggers.Register();
         ContentKinds.AddValidator<FormDef>(Form);
         ContentKinds.AddValidator<GlyphDef>(Glyph);
-        ContentKinds.AddValidator<WeaveDef>((d, c) => CooldownAt(d.CooldownAt, c));
+        ContentKinds.AddValidator<WeaveDef>((d, c) =>
+        {
+            CooldownAt(d.CooldownAt, c);
+            Hint(d.Ai, c);
+        });
+    }
+
+    /// <summary>An AI hint's soft minimum and its range attribute (row A23).</summary>
+    private static void Hint(AiHint? hint, ValidationContext c)
+    {
+        if (hint is null)
+        {
+            return;
+        }
+        if (hint.MinRange is < 0)
+        {
+            c.Error("ai.min_range must be at least 0.");
+        }
+        if (hint.NearWeight is < 0)
+        {
+            c.Error("ai.near_weight must be at least 0.");
+        }
+        if (hint.NearWeight is not null && hint.MinRange is null)
+        {
+            c.Warn("ai.near_weight has no min_range to apply below.");
+        }
+        if (hint.RangeAttribute is { } attribute)
+        {
+            Declared(attribute, c, "ai.range_attribute");
+        }
     }
 
     private static void Form(FormDef d, ValidationContext c)
     {
         c.Expression(d.CastMove, "cast_move");
+        Hint(d.Ai, c);
         CooldownAt(d.CooldownAt, c);
         if (d.Channel is { } channel)
         {

@@ -126,6 +126,10 @@ entries:
   - { id: t_shave, targeting: self, cast_mode: instant, min_threads: 0, effects: [ { type: cooldown, seconds: 2, fraction: 0.5 } ] }
   - { id: t_fused, targeting: enemy, cast_mode: instant, attributes: { range: 30 }, min_threads: 0, effects: [ { type: fuse, delay: 0.5, power: 1, effects: [ { type: damage, amount: 10, threads: [mind], can_crit: false } ] } ] }
   - { id: t_corpse_only, targeting: enemy, cast_mode: instant, costs: { mana: 7 }, attributes: { range: 30 }, min_threads: 0, target: { kind: t_marked }, effects: [ { type: event, name: t_corpse_only } ] }
+  - { id: t_far_hint, targeting: enemy, cast_mode: instant, attributes: { range: 30 }, min_threads: 0, ai: { weight: 100, min_range: 3, range_attribute: range }, effects: [ { type: event, name: t_far_hint } ] }
+  - { id: t_soft_hint, targeting: enemy, cast_mode: instant, attributes: { range: 30 }, min_threads: 0, ai: { weight: 100, min_range: 3, near_weight: 0.01 }, effects: [ { type: event, name: t_soft_hint } ] }
+  - { id: t_near_hint, targeting: enemy, cast_mode: instant, attributes: { range: 30 }, min_threads: 0, ai: { weight: 1 }, effects: [ { type: event, name: t_near_hint } ] }
+  - { id: t_brace, targeting: self, cast_mode: instant, reflex: true, min_threads: 0, gates: [ 'has("guarding")' ], effects: [ { type: guard, amount: 25, self: true } ] }
 
 ---
 kind: glyphs
@@ -156,6 +160,11 @@ entries:
   - { id: t_step_b, form: t_marker }
   - { id: t_spark_a, form: t_shot, glyphs: [ t_on_hit ] }
   - { id: t_spark_b, form: t_shot, glyphs: [ t_on_hit ] }
+
+---
+kind: patterns
+entries:
+  - { id: t_blank, name: Blank, extends: monster, level: 1, components: { weaves: { list: [] } } }
 """;
 
     private static readonly Lazy<ContentRegistry> Loaded = new(() =>
