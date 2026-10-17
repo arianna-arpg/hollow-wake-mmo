@@ -40,6 +40,9 @@ public abstract class Shape
     /// <summary>The fraction of the radius left empty when content names none.</summary>
     public virtual float DefaultInner => 0f;
 
+    /// <summary>For shapes that bow (arcs, waves): how far behind the anchor their circle centers, in radii; zero for the rest.</summary>
+    public virtual float Curvature => 0f;
+
     /// <summary>The width the shape takes when content names none: lines take the weave's area width.</summary>
     public virtual float DefaultWidth(float radius, float areaWidth) => areaWidth;
 
@@ -308,6 +311,8 @@ public static class Shapes
         public override bool HasWidth => true;
 
         public override float DefaultAngle => _angle;
+
+        public override float Curvature => _curvature;
 
         public override float DefaultWidth(float radius, float areaWidth) => areaWidth * 0.25f;
 
