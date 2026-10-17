@@ -50,7 +50,7 @@ Godot renders what the server says. On entering the world it receives the seed, 
 
 The web client in `web/` does the same in a browser, over WebSocket. It cannot run the C# generator, so it asks the server for every chunk it shows (`request_chunk`, answered by `chunk_data`); its message types are generated from `HollowWake.Protocol`. It is served by the game server itself or from GitHub Pages ([web-client.md](design/web-client.md), [ADR 0006](adr/0006-browser-client.md)).
 
-Players get the client through the launcher (`launcher/`, Electron): it installs and updates exported builds from GitHub Releases, verifying each against the release manifest, and starts the client with the server address. Tags and a nightly schedule produce those releases (`.github/workflows/release.yml`, `nightly.yml`). The launcher has no game logic and never speaks the protocol. See [design/launcher.md](design/launcher.md).
+Players get the desktop client through the launcher (`launcher/`, Electron): it installs and updates exported builds from GitHub Releases, verifying each against the release manifest, and starts the client with the server address. Tags and a nightly schedule produce those releases (`.github/workflows/release.yml`, `nightly.yml`). The launcher has no game logic and never speaks the protocol. See [design/launcher.md](design/launcher.md).
 
 ## Scaling path
 
