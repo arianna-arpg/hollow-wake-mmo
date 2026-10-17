@@ -149,6 +149,9 @@ public sealed class CompiledWeave
 
     internal WeaveProbe? Probe { get; init; }
 
+    /// <summary>What the weave runtime keeps for this weave: its cost entries and their tag contexts, built on first use.</summary>
+    internal WeavePlan? Plan;
+
     /// <summary>For a view with cast-local modifiers, the weave it was made from; null for a compiled weave.</summary>
     internal CompiledWeave? Origin { get; init; }
 

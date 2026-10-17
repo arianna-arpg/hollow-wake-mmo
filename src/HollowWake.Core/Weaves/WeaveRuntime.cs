@@ -83,14 +83,14 @@ public sealed partial class WeaveRuntime
     public Dictionary<string, double> Costs(CompiledWeave weave, Stats caster)
     {
         var result = new Dictionary<string, double>(StringComparer.Ordinal);
-        var plan = PlanFor(weave.Root);
+        var plan = PlanFor(weave);
         if (plan.Costs.Length == 0)
         {
             return result;
         }
         var scope = new CasterWeaveScope(weave, caster);
         Span<double> amounts = stackalloc double[plan.Resources.Length];
-        ComputeCosts(plan, plan.Costs, caster, scope, weave.Modifiers, amounts, 1);
+        ComputeCosts(plan, plan.Costs, caster, scope, weave.Modifiers, amounts, 1, FamiliesTouched(plan, caster, null));
         foreach (var entry in plan.Costs)
         {
             if (!entry.Implicit)
@@ -108,16 +108,16 @@ public sealed partial class WeaveRuntime
         return result;
     }
 
-    public bool CanAfford(CompiledWeave weave, Stats caster, out string? missing) => CanAfford(weave, caster, null, out missing);
+    public bool CanAfford(CompiledWeave weave, Stats caster, out string? missing) => CanAfford(weave, caster, null, null, out missing);
 
     /// <summary>
     /// <see cref="CanAfford(CompiledWeave, Stats, out string?)"/> without allocating: every cost is computed
     /// first, in the weave's cost order, then each is checked in the same order, exactly as reading
     /// <see cref="Costs"/> would.
     /// </summary>
-    private bool CanAfford(CompiledWeave weave, Stats caster, IExprScope? scope, out string? missing)
+    private bool CanAfford(CompiledWeave weave, Stats caster, IExprScope? scope, WeaveSlotCache? cache, out string? missing)
     {
-        var plan = PlanFor(weave.Root);
+        var plan = PlanFor(weave);
         if (plan.Costs.Length == 0)
         {
             missing = null;
@@ -125,7 +125,7 @@ public sealed partial class WeaveRuntime
         }
         scope ??= new CasterWeaveScope(weave, caster);
         Span<double> amounts = stackalloc double[plan.Resources.Length];
-        ComputeCosts(plan, plan.Costs, caster, scope, weave.Modifiers, amounts, 1);
+        ComputeCosts(plan, plan.Costs, caster, scope, weave.Modifiers, amounts, 1, FamiliesTouched(plan, caster, cache));
         return Affords(plan, plan.Costs, caster, amounts, out missing);
     }
 
@@ -137,9 +137,9 @@ public sealed partial class WeaveRuntime
             missing = null;
             return true;
         }
-        var plan = PlanFor(weave.Root);
+        var plan = PlanFor(weave);
         Span<double> amounts = stackalloc double[plan.Resources.Length];
-        ComputeCosts(plan, entries, caster, scope, weave.Modifiers, amounts, scale);
+        ComputeCosts(plan, entries, caster, scope, weave.Modifiers, amounts, scale, FamiliesTouched(plan, caster, null));
         if (!Affords(plan, entries, caster, amounts, out missing))
         {
             return false;
@@ -148,7 +148,7 @@ public sealed partial class WeaveRuntime
         return true;
     }
 
-    private static bool Affords(WeavePlan plan, CostEntry[] entries, Stats caster, Span<double> amounts, out string? missing)
+    private static bool Affords(WeavePlan plan, CostEntry[] entries, Stats caster, ReadOnlySpan<double> amounts, out string? missing)
     {
         foreach (var entry in entries)
         {
@@ -171,7 +171,7 @@ public sealed partial class WeaveRuntime
         return true;
     }
 
-    private void Pay(Simulation sim, WeavePlan plan, CostEntry[] entries, Stats caster, Span<double> amounts)
+    private void Pay(Simulation sim, WeavePlan plan, CostEntry[] entries, Stats caster, ReadOnlySpan<double> amounts)
     {
         foreach (var entry in entries)
         {
@@ -197,17 +197,50 @@ public sealed partial class WeaveRuntime
     }
 
     /// <summary>
+    /// Whether anything touches the cost families a plan reads (<c>cost.added.{resource}</c>,
+    /// <c>cost.convert.{from}.{to}</c>): the weave's own modifiers, or the caster's stack. The caster's answer is
+    /// kept on the slot's cache until the caster's attributes change, so most cost checks read no family.
+    /// </summary>
+    private static bool FamiliesTouched(WeavePlan plan, Stats caster, WeaveSlotCache? cache)
+    {
+        if (plan.FamiliesInWeave)
+        {
+            return true;
+        }
+        var attributes = caster.Attributes;
+        var version = attributes.Version;
+        if (cache is not null && cache.FamilyVersion == version && ReferenceEquals(cache.FamilyPlan, plan))
+        {
+            return cache.FamilyTouched;
+        }
+        var touched = false;
+        var names = plan.FamilyAttributes;
+        for (var i = 0; i < names.Length && !touched; i++)
+        {
+            touched = attributes.HasModifiers(names[i]);
+        }
+        if (cache is not null)
+        {
+            cache.FamilyVersion = version;
+            cache.FamilyPlan = plan;
+            cache.FamilyTouched = touched;
+        }
+        return touched;
+    }
+
+    /// <summary>
     /// Each entry's cost: its formula plus <c>cost.added.{resource}</c>, through the caster's <c>cost</c> fold
     /// scoped by the resource and the weave's tags, then moved in part to other resources by
-    /// <c>cost.convert.{from}.{to}</c>. Families nothing modifies are not read.
+    /// <c>cost.convert.{from}.{to}</c>. Without <paramref name="families"/> nothing touches a family, so only
+    /// the formulas and the cost fold run.
     /// </summary>
-    private static void ComputeCosts(WeavePlan plan, CostEntry[] entries, Stats caster, IExprScope scope, IReadOnlyList<Modifier> extras, Span<double> amounts, double scale)
+    private static void ComputeCosts(WeavePlan plan, CostEntry[] entries, Stats caster, IExprScope scope, IReadOnlyList<Modifier> extras, Span<double> amounts, double scale, bool families)
     {
         amounts.Clear();
         var attributes = caster.Attributes;
         foreach (var entry in entries)
         {
-            var added = entry.AddedInWeave || attributes.HasModifiers(entry.Added);
+            var added = families && (entry.AddedInWeave || attributes.HasModifiers(entry.Added));
             if (entry.Implicit && !added)
             {
                 continue;
@@ -219,32 +252,36 @@ public sealed partial class WeaveRuntime
             }
             var cost = Math.Max(0, attributes.Apply("cost", Math.Max(0, baseCost), caster, entry.Tags, extras));
             var remaining = cost;
-            var converts = entry.Converts;
-            for (var t = 0; t < converts.Length; t++)
+            if (families)
             {
-                var attr = converts[t];
-                if (attr is null || !(entry.ConvertInWeave[t] || attributes.HasModifiers(attr)))
+                var converts = entry.Converts;
+                for (var t = 0; t < converts.Length; t++)
                 {
-                    continue;
-                }
-                var fraction = Math.Clamp(attributes.Get(attr, caster, entry.Tags, extras), 0, 1);
-                var moved = Math.Min(remaining, cost * fraction);
-                if (moved > 0)
-                {
-                    amounts[t] += moved;
-                    remaining -= moved;
+                    var attr = converts[t];
+                    if (attr is null || !(entry.ConvertInWeave[t] || attributes.HasModifiers(attr)))
+                    {
+                        continue;
+                    }
+                    var fraction = Math.Clamp(attributes.Get(attr, caster, entry.Tags, extras), 0, 1);
+                    var moved = Math.Min(remaining, cost * fraction);
+                    if (moved > 0)
+                    {
+                        amounts[t] += moved;
+                        remaining -= moved;
+                    }
                 }
             }
             amounts[entry.Index] += remaining;
         }
     }
 
-    // A compiled weave never changes, so its cost entries and their tag contexts are built once.
-    private readonly ConditionalWeakTable<CompiledWeave, WeavePlan> _plans = new();
-    private ConditionalWeakTable<CompiledWeave, WeavePlan>.CreateValueCallback? _newPlan;
-
-    internal WeavePlan PlanFor(CompiledWeave weave) =>
-        _plans.TryGetValue(weave, out var plan) ? plan : _plans.GetValue(weave, _newPlan ??= w => new WeavePlan(w, _compiler.Content));
+    // A compiled weave never changes, so its cost entries and their tag contexts are built once; the plan
+    // lives on the compiled weave it was built for, and a view uses its origin's.
+    internal WeavePlan PlanFor(CompiledWeave weave)
+    {
+        var root = weave.Root;
+        return root.Plan ??= new WeavePlan(root, _compiler.Content);
+    }
 
     // ------------------------------------------------------------ timing
 
@@ -364,21 +401,13 @@ public sealed partial class WeaveRuntime
         }
         // The face: a convert or a combo step may put another weave on the slot for this press.
         var face = FaceOf(sim, book, slot, weave, stats, now);
-        var forbid = face.ForbidFlags;
-        for (var i = 0; i < forbid.Count; i++)
+        if (ForbiddenTag(stats, face) is { } forbidden)
         {
-            if (stats.HasFlag(forbid[i]))
-            {
-                reason = "forbidden:" + face.Tags.Items[i];
-                return Fail(sim, caster, slot, reason);
-            }
+            reason = "forbidden:" + forbidden;
+            return Fail(sim, caster, slot, reason);
         }
-        var cache = CacheFor(slot, weave, stats);
-        var faceScope = ReferenceEquals(face, weave) ? cache.Scope : new CasterWeaveScope(face, stats);
-        var duration = CastDuration(face, stats, faceScope);
-        var resolvesNow = face.CastMode == CastMode.Instant || (duration <= 0 && face.CastMode == CastMode.Cast);
-        var reflex = book.Casting is not null && resolvesNow && (face.Form.Reflex || face.AttrOrZero(stats, "reflex") > 0);
-        if (book.Casting is not null && !reflex)
+        // Only an instant reflex resolves past the caster's running cast.
+        if (book.Casting is not null && !(IsInstant(face.Form) && (face.Form.Reflex || face.AttrOrZero(stats, "reflex") > 0)))
         {
             reason = "busy";
             return false;
@@ -388,6 +417,10 @@ public sealed partial class WeaveRuntime
             reason = "cooldown";
             return false;
         }
+        var cache = CacheFor(slot, weave, stats);
+        var faceScope = ReferenceEquals(face, weave) ? cache.Scope : new CasterWeaveScope(face, stats);
+        var duration = CastDuration(face, stats, faceScope);
+        var resolvesNow = face.CastMode == CastMode.Instant || (duration <= 0 && face.CastMode == CastMode.Cast);
         var casting = face.Casting;
         if (casting.Uses is { } usesSpec && casting.Uses.Empower.Count == 0 && UsesNow(sim, slot, face, usesSpec, stats, now) < 1)
         {
@@ -407,7 +440,11 @@ public sealed partial class WeaveRuntime
             reason = "charges:" + spend.Charge;
             return Fail(sim, caster, slot, reason);
         }
-        if (!CanAfford(face, stats, faceScope, out var missing))
+        // The costs are computed once: checked here, paid once the target holds.
+        var plan = PlanFor(face);
+        Span<double> costs = stackalloc double[plan.Resources.Length];
+        ComputeCosts(plan, plan.Costs, stats, faceScope, face.Modifiers, costs, 1, FamiliesTouched(plan, stats, ReferenceEquals(face, weave) ? cache : null));
+        if (!Affords(plan, plan.Costs, stats, costs, out var missing))
         {
             reason = "cost:" + missing;
             return Fail(sim, caster, slot, reason);
@@ -422,7 +459,7 @@ public sealed partial class WeaveRuntime
         var fizzle = face.AttrOrZero(stats, "cast.fizzle_chance");
         if (fizzle > 0 && RngStreams.For(sim, caster, "fizzle:", face.Key, 0).Chance(Math.Clamp(fizzle, 0, 1)))
         {
-            TryPay(sim, face, stats, faceScope, PlanFor(face.Root).Costs, 1, out _);
+            Pay(sim, plan, plan.Costs, stats, costs);
             if (rules.FizzleDuration > 0 && sim.TryService<StatusService>(out var statuses) && sim.Content.Has<StatusDef>(rules.FizzleStatus))
             {
                 statuses.Apply(sim, caster, rules.FizzleStatus, caster, new StatusApplication { Duration = rules.FizzleDuration, SourceKey = "fizzle" });
@@ -431,7 +468,7 @@ public sealed partial class WeaveRuntime
             return Fail(sim, caster, slot, reason);
         }
 
-        TryPay(sim, face, stats, faceScope, PlanFor(face.Root).Costs, 1, out _);
+        Pay(sim, plan, plan.Costs, stats, costs);
         var usesSpent = 0;
         if (casting.Uses is { } bank)
         {
@@ -485,6 +522,56 @@ public sealed partial class WeaveRuntime
         sim.Events.Publish(new WeaveStarted(caster, face.Key, target, point, state.Duration) { Tick = sim.Clock.Tick });
         return true;
     }
+
+    /// <summary>
+    /// The first of a weave's tags its caster is forbidden (a <c>forbid:{tag}</c> flag, set by silences and
+    /// roots), or null. Bodies carrying no such flag, nearly all of them, are answered without a lookup per tag.
+    /// </summary>
+    internal static string? ForbiddenTag(Stats stats, CompiledWeave weave)
+    {
+        if (!MayForbid(stats))
+        {
+            return null;
+        }
+        var forbid = weave.ForbidFlags;
+        for (var i = 0; i < forbid.Count; i++)
+        {
+            if (stats.HasFlag(forbid[i]))
+            {
+                return weave.Tags.Items[i];
+            }
+        }
+        return null;
+    }
+
+    /// <summary>Whether a body could answer a <c>forbid:</c> flag: it carries one as a flag or a tag, or mounts another scope.</summary>
+    private static bool MayForbid(Stats stats)
+    {
+        if (stats.Mounted is not null)
+        {
+            return true;
+        }
+        foreach (var flag in stats.Flags)
+        {
+            if (flag.StartsWith("forbid:", StringComparison.Ordinal))
+            {
+                return true;
+            }
+        }
+        var tags = stats.Tags.Items;
+        for (var i = 0; i < tags.Count; i++)
+        {
+            if (tags[i].StartsWith("forbid:", StringComparison.Ordinal))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /// <summary>A form that resolves at once: instant, or a cast with no base cast time.</summary>
+    private static bool IsInstant(FormDef form) =>
+        form.CastMode == CastMode.Instant || (form.CastMode == CastMode.Cast && (form.CastTime is null || (form.CastTime.IsConstant && form.CastTime.ConstantValue <= 0)));
 
     /// <summary>Sets up a cast that does not resolve at once: its bar, or how its hold starts.</summary>
     private void BeginHeld(Simulation sim, Entity caster, WeaveBook book, Stats stats, CastState state, CompiledWeave weave, IExprScope scope, CastingRules rules)
@@ -953,14 +1040,10 @@ public sealed partial class WeaveRuntime
             return;
         }
         // A forbidden tag (silence forbids spells) interrupts a running weave that carries it.
-        var forbid = weave.ForbidFlags;
-        for (var i = 0; i < forbid.Count; i++)
+        if (ForbiddenTag(stats, weave) is not null)
         {
-            if (stats.HasFlag(forbid[i]))
-            {
-                Interrupt(sim, caster);
-                return;
-            }
+            Interrupt(sim, caster);
+            return;
         }
         var now = sim.Clock.Time;
         cast.AimPoint = book.AimPoint;
@@ -1597,7 +1680,7 @@ public sealed partial class WeaveRuntime
             {
                 continue;
             }
-            if (!GatesHold(weave, cache.Scope) || !CanAfford(weave, stats, cache.Scope, out _))
+            if (!GatesHold(weave, cache.Scope) || !CanAfford(weave, stats, cache.Scope, cache, out _))
             {
                 continue;
             }
@@ -1911,7 +1994,34 @@ internal sealed class WeavePlan
             }
         }
         MentionsRepeat |= weave.Bases.ContainsKey("repeat.count") || weave.Bases.ContainsKey("repeat.seals");
+        var families = new List<string>();
+        foreach (var list in new[] { Costs, StageCosts, Upkeep })
+        {
+            foreach (var entry in list)
+            {
+                FamiliesInWeave |= entry.AddedInWeave;
+                if (!families.Contains(entry.Added))
+                {
+                    families.Add(entry.Added);
+                }
+                for (var t = 0; t < entry.Converts.Length; t++)
+                {
+                    FamiliesInWeave |= entry.ConvertInWeave[t];
+                    if (entry.Converts[t] is { } convert && !families.Contains(convert))
+                    {
+                        families.Add(convert);
+                    }
+                }
+            }
+        }
+        FamilyAttributes = families.ToArray();
     }
+
+    /// <summary>The cost family attributes any of the weave's cost lists reads.</summary>
+    public string[] FamilyAttributes { get; }
+
+    /// <summary>True when the weave's own modifiers touch one of its cost families.</summary>
+    public bool FamiliesInWeave { get; }
 
     public string[] Resources { get; }
     public string[] LastCostGauges { get; }
@@ -2014,6 +2124,11 @@ internal sealed class WeaveSlotCache
     public readonly CasterWeaveScope Scope;
     public readonly PerceptionWeaveScope Hint;
     private SlotScope? _slotScope;
+
+    // Whether the caster's stack touches the weave's cost families, as of an attribute version.
+    public int FamilyVersion = -1;
+    public WeavePlan? FamilyPlan;
+    public bool FamilyTouched;
     private Dictionary<string, CompiledWeave>? _faces;
 
     public WeaveSlotCache(CompiledWeave weave, Stats caster, CasterWeaveScope scope, PerceptionWeaveScope hint)

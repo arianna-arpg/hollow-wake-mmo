@@ -229,13 +229,9 @@ public sealed partial class WeaveRuntime
         {
             return false;
         }
-        var forbid = weave.ForbidFlags;
-        for (var i = 0; i < forbid.Count; i++)
+        if (ForbiddenTag(stats, weave) is not null)
         {
-            if (stats.HasFlag(forbid[i]))
-            {
-                return false;
-            }
+            return false;
         }
         var cache = CacheFor(slot, weave, stats);
         // The cast-time gate: only quick weaves trigger, unless a permit rides along.
@@ -252,7 +248,7 @@ public sealed partial class WeaveRuntime
         {
             return false;
         }
-        if (!GatesHold(weave, cache.Scope) || !CanAfford(weave, stats, cache.Scope, out _))
+        if (!GatesHold(weave, cache.Scope) || !CanAfford(weave, stats, cache.Scope, cache, out _))
         {
             return false;
         }
