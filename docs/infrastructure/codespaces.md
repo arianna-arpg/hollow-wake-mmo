@@ -2,6 +2,8 @@
 
 A codespace runs the server and serves the web client from GitHub's machines, so the game can be tried with nothing installed but a browser. The repository's dev container (`.devcontainer/devcontainer.json`) prepares the web client and server, then starts them on creation and resume through `node scripts/play-local.mjs --browser --no-open`. Unchanged builds are reused.
 
+The helper is verified locally. Automatic cloud provisioning, detached-process survival after the hooks, and forwarded-port opening remain unverified in a live Codespace; use the manual command below if those hooks do not complete.
+
 ## Play
 
 1. Use **Play a branch** on the Pages login screen, or the repository's **Code**, **Codespaces** menu. The link offers an existing Codespace for that branch when available. First setup takes a few minutes.

@@ -8,14 +8,15 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..')
 const require = createRequire(path.join(root, 'web/package.json'));
 const { _electron: electron } = require('playwright-core');
 const { serve, json } = require(path.join(root, 'launcher/dist/test/helpers.js'));
-const feed = path.join(root, 'artifacts/quick-play/feed');
+const arg = name => { const at = process.argv.indexOf(name); return at < 0 ? null : process.argv[at + 1]; };
+const feed = path.resolve(root, arg('--feed') ?? 'artifacts/quick-play/feed');
 const manifest = JSON.parse(readFileSync(path.join(feed, 'manifest.json'), 'utf8'));
 const build = manifest.platforms['windows-x64'];
 const archive = readFileSync(path.join(feed, build.file));
 const output = path.join(root, 'experiments/launcher-quick-play/output');
 const data = path.join(output, `install-${Date.now()}`);
 mkdirSync(path.join(data, 'launcher'), { recursive: true });
-writeFileSync(path.join(data, 'launcher/settings.json'), JSON.stringify({ autoUpdate: false }));
+writeFileSync(path.join(data, 'launcher/settings.json'), JSON.stringify({ autoUpdate: false, address: arg('--server') ?? '127.0.0.1:7777' }));
 let holdFeed = false;
 let slowDownload = false;
 const versions = ['0.1.1', '0.1.0'];
@@ -42,7 +43,22 @@ const packaged = process.argv.includes('--packaged');
 const exe = path.join(root, packaged ? 'launcher/release/win-unpacked/Hollow Wake MMO.exe' : 'launcher/node_modules/electron/dist/electron.exe');
 let app;
 let gamePid;
-const result = {};
+const result = { feed: manifest.version };
+const verifyEntry = async name => {
+  if (!process.argv.includes('--entry')) return;
+  const logFile = path.join(data, 'launcher/logs/client.log');
+  const deadline = Date.now() + 60000;
+  let log = '';
+  while (Date.now() < deadline) {
+    if (existsSync(logFile)) log = readFileSync(logFile, 'utf8');
+    if (log.includes('QUICKPLAY READY: entered the world; Crossing complete')) break;
+    await new Promise(resolve => setTimeout(resolve, 150));
+  }
+  writeFileSync(path.join(output, 'launcher-' + name + '-client.log'), log);
+  assert.match(log, /QUICKPLAY READY: entered the world; Crossing complete/);
+  assert.equal(log.match(/QUICKPLAY CROSSING/g)?.length, 1, 'one real character entry per Play');
+  result[name] = 'Installed combined client resumed its character through the Crossing and reached real world readiness';
+};
 const launch = async extra => {
   app = await electron.launch({ executablePath: exe, args: [...(packaged ? [] : [path.join(root, 'launcher')]), '--disable-gpu', ...extra], env });
   return app.firstWindow();
@@ -90,6 +106,7 @@ try {
   await page.waitForFunction(async () => (await window.launcher.getState()).installed?.version === '0.1.1', null, { timeout: 60000 });
   assert.ok(existsSync(path.join(data, 'client/0.1.0', build.executable)));
   result.concurrentPlay = 'Play works during download, duplicate Play spawns once, running build survives install';
+  await verifyEntry('play');
   killGame();
   await app.close();
   app = null;
@@ -102,7 +119,8 @@ try {
   assert.equal(state.feed.status, 'checking');
   result.shortcutMilliseconds = Math.round(performance.now() - started);
   result.shortcut = 'Installed game starts before the deliberately stalled feed answers';
-  writeFileSync(path.join(output, 'launcher-results.json'), JSON.stringify(result, null, 2));
+  await verifyEntry('shortcutEntry');
+  writeFileSync(path.join(output, packaged ? 'packaged-launcher-results.json' : 'launcher-results.json'), JSON.stringify(result, null, 2));
   console.log(JSON.stringify(result, null, 2));
 } finally {
   killGame();

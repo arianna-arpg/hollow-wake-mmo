@@ -45,35 +45,58 @@ using var logs = LoggerFactory.Create(b => b
     }));
 
 using var cts = new CancellationTokenSource();
-Console.CancelKeyPress += (_, e) =>
+void RequestStop()
+{
+    // ProcessExit may already be in flight while normal shutdown unhooks the handler.
+    try { if (!cts.IsCancellationRequested) cts.Cancel(); }
+    catch (ObjectDisposedException) { }
+}
+ConsoleCancelEventHandler interrupt = (_, e) =>
 {
     e.Cancel = true;
-    cts.Cancel();
+    RequestStop();
 };
-AppDomain.CurrentDomain.ProcessExit += (_, _) => cts.Cancel();
+EventHandler exiting = (_, _) => RequestStop();
+Console.CancelKeyPress += interrupt;
+AppDomain.CurrentDomain.ProcessExit += exiting;
+Task leaseMonitor = Task.CompletedTask;
 
 // A local playtest owns a unique lease file. Removing it requests the usual save and shutdown;
 // no PID killing, console window or game-protocol control endpoint is needed.
 if (ArgValue(args, "--lifetime-file") is { } lifetimeFile)
 {
-    _ = Task.Run(async () =>
+    leaseMonitor = Task.Run(async () =>
     {
-        while (!cts.IsCancellationRequested && File.Exists(lifetimeFile))
+        try
         {
-            try { File.SetLastWriteTimeUtc(lifetimeFile, DateTime.UtcNow); }
-            catch (IOException) { break; }
-            await Task.Delay(250);
+            while (!cts.IsCancellationRequested && File.Exists(lifetimeFile))
+            {
+                try { File.SetLastWriteTimeUtc(lifetimeFile, DateTime.UtcNow); }
+                catch (IOException) { break; }
+                await Task.Delay(250, cts.Token);
+            }
+            RequestStop();
         }
-        await cts.CancelAsync();
+        catch (OperationCanceledException) when (cts.IsCancellationRequested) { }
     });
 }
 
-var tcp = new TcpTransport(logs.CreateLogger<TcpTransport>());
-ITransport transport = config.WebsocketEnabled
-    ? new CompositeTransport(tcp, new WebSocketTransport(logs.CreateLogger<WebSocketTransport>()))
-    : tcp;
-await using var server = new GameServer(config, logs, transport);
-await server.RunAsync(cts.Token);
+try
+{
+    var tcp = new TcpTransport(logs.CreateLogger<TcpTransport>());
+    ITransport transport = config.WebsocketEnabled
+        ? new CompositeTransport(tcp, new WebSocketTransport(logs.CreateLogger<WebSocketTransport>()))
+        : tcp;
+    await using var server = new GameServer(config, logs, transport);
+    await server.RunAsync(cts.Token);
+}
+finally
+{
+    Console.CancelKeyPress -= interrupt;
+    AppDomain.CurrentDomain.ProcessExit -= exiting;
+    await cts.CancelAsync();
+    await leaseMonitor;
+}
 return 0;
 
 static string? ArgValue(string[] args, string name)

@@ -130,14 +130,19 @@ export async function main(args = process.argv.slice(2)) {
     }
     const serverInputs = ['src/HollowWake.Core/', 'src/HollowWake.Protocol/', 'src/HollowWake.Server/', 'src/HollowWake.Server.Host/', 'Directory.Build.props', 'global.json'];
     const config = existsSync(path.join(root, 'config/server.local.yaml')) ? 'config/server.local.yaml' : 'config/server.yaml';
-    const sessionHash = fingerprint(root, [...serverInputs, 'content/', config, 'config/playtest.json']);
+    const sessionHash = fingerprint(root, [...serverInputs, 'content/', config, 'config/playtest.json', 'scripts/play-local.mjs']);
     let state = readJson(path.join(runtime, 'server.json'));
     const reusable = state && Number.isInteger(state.pid) && state.pid > 0 && alive(state.pid)
       && /^lease-[0-9a-f-]+$/.test(state.lease) && existsSync(path.join(runtime, state.lease))
       && Date.now() - statSync(path.join(runtime, state.lease)).mtimeMs < 5000 && state.hash === sessionHash;
     if (!reusable) await stopServer();
-    const serverDll = 'src/HollowWake.Server.Host/bin/Debug/net10.0/hollowwake-server.dll';
-    if (!reusable) await ensureBuild('server', serverInputs, serverDll, () => run('dotnet', ['build', 'src/HollowWake.Server.Host', '--nologo', '-v', 'quiet']));
+    const serverDll = 'artifacts/playtest/server/hollowwake-server.dll';
+    if (!reusable) await ensureBuild('server', [...serverInputs, 'scripts/play-local.mjs'], serverDll, async () => {
+      // The previous owned process has stopped. Replace only our private runtime, so a running
+      // playtest never locks the solution's normal build outputs (particularly on Windows).
+      rmSync(path.join(runtime, 'server'), { recursive: true, force: true });
+      await run('dotnet', ['publish', 'src/HollowWake.Server.Host', '-c', 'Debug', '--no-self-contained', '--nologo', '-v', 'quiet', '-o', path.join(runtime, 'server')]);
+    });
     if (desktop) {
       await ensureBuild('desktop client', [...serverInputs, 'src/HollowWake.Client/'], 'src/HollowWake.Client/.godot/mono/temp/bin/Debug/HollowWake.Client.dll', async () => {
         await run(godot, ['--headless', '--path', 'src/HollowWake.Client', '--editor', '--import']);

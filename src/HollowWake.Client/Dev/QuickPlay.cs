@@ -20,6 +20,7 @@ public partial class QuickPlay(Main main, string[] args) : Node
         _saved.Load(File);
         main.Login.EnterRequested += id =>
         {
+            if (main.Loading.Active) GD.Print("QUICKPLAY CROSSING: preparing character entry");
             _saved.SetValue("characters", _key, id);
             _saved.Save(File);
         };

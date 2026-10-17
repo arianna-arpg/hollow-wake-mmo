@@ -1,5 +1,7 @@
 # Quick-play launcher identity parity
 
+Follow-up: [combined startup verification](2026-10-17-combined-startup.md) integrates the completed loading branch and supersedes the integration-pending notes below.
+
 The owner requested alignment with the in-flight `Unify Hollow Wake branding` chat. Its worktree is `codex/brand-and-wisp-loading`, with identity and loading ownership recorded in `2026-10-17-brand-and-loading.md` there. This follow-up on PR #10 imports its identity foundation into the quick-play branch so the launcher and installer can be tried with the same artwork now.
 
 ## Ownership and integration

@@ -40,6 +40,8 @@ The cover clears movement, blocks gameplay input and owns focus. Browser sibling
 
 `scripts/loading-reference.mjs <prototype-checkout>` extracts and runs the original model from the pinned commit to regenerate `tests/fixtures/loading-reference.json`. The C# and TypeScript tests compare their full courses against these independent reference traces, including gate geometry. Do not generate the baseline from either port.
 
+Automatic quick play uses the same entry handlers and leases as manual selection. It starts after content initialization, and reports readiness only after the hero and nearby terrain are available and the Crossing closes. A first or ambiguous account still stops at character creation/selection.
+
 The normal client and browser smoke courses verify world entry and gameplay after the cover. Additional checks:
 
 ```sh
@@ -52,5 +54,7 @@ node scripts/loading-entry-smoke.mjs --url http://127.0.0.1:17880 --server ws://
 ```
 
 The browser loading course exercises every direction and input family, stale leases, progress, retry, held-input release, focus restoration, portrait layout and reduced motion. The entry course delays actual server frames, cancels them, reconnects, times out, retries, and completes when terrain arrives. The native loading course captures every direction and exercises lease failure/retry/cancel through the real cover. `--loading-preview down|left|right` and `?loadingPreview=down|left|right` allow manual inspection without slowing ordinary loads.
+
+The combined startup checks under `experiments/launcher-quick-play/` exercise quick play against delayed real server traffic. `verify-crossing-startup.mjs` covers browser boot, first-character creation, remembered resume, cancellation and input release. `verify-native-startup.mjs --godot PATH` (or `--executable PATH`) invokes `--quick-play-smoke` to observe real character selection, loading, terrain readiness and subsequent movement. `verify-launcher.mjs --packaged --feed FEED_DIRECTORY --server HOST:PORT --entry` checks the installed archive through the normal Play and immediate-launch paths; seed a sole character for the development account on an isolated test server first.
 
 Packaging uses `--boot-check` and requires both successful exit and `BOOT PASS`, after validated content and client initialization. The PR release dry run verifies exported assets, bootstrap JSON, and launcher packaging.
