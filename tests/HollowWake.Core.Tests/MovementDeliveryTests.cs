@@ -110,4 +110,46 @@ public class PlacedBlockerPlanningTests
         Assert.Equal(0, GC.GetAllocatedBytesForCurrentThread() - before);
         Assert.False(Touches(into, blocked));
     }
+
+    [Fact]
+    public void AZonePlannerKnowsThePlacedProps()
+    {
+        var sim = ZoneBuilder.CreateArena(CoreContent.Registry, 5);
+        var factory = sim.Service<PatternFactory>();
+        for (var y = 4; y <= 16; y++)
+        {
+            factory.Spawn(sim, "oak", new Vector3(12.5f, y + 0.5f, 0));
+        }
+        var blocked = sim.Service<BlockedCells>();
+        Assert.True(blocked.IsBlocked(new CellCoord(12, 10)));
+        var into = new List<Vector3>();
+        Assert.Equal(PathResult.Complete, sim.Service<Pathfinder>().FindPath(new Vector3(8.5f, 10.5f, 0), new Vector3(16.5f, 10.5f, 0), into, 4000));
+        Assert.False(Touches(into, blocked), string.Join(" ", into));
+    }
+
+    [Fact]
+    public void AChaserReachesItsPreyAroundARowOfTreesWithoutEnteringOne()
+    {
+        var sim = ZoneBuilder.CreateArena(CoreContent.Registry, 3);
+        var factory = sim.Service<PatternFactory>();
+        for (var y = 3; y <= 17; y++)
+        {
+            factory.Spawn(sim, "oak", new Vector3(14.5f, y + 0.5f, 0));
+        }
+        var wolf = factory.Spawn(sim, "wolf", new Vector3(10.5f, 10.5f, 0), new SpawnOptions { Faction = "red" });
+        var boar = factory.Spawn(sim, "boar", new Vector3(18.5f, 10.5f, 0), new SpawnOptions { Faction = "blue" });
+        sim.World.Remove<Behavior>(boar);
+        var blocked = sim.Service<BlockedCells>();
+        var hit = false;
+        sim.Events.Subscribe<DamageDealt>(d => hit |= d.Source == wolf && d.Target == boar);
+        var t = sim.World.Get<Transform>(wolf)!;
+        var entered = false;
+        for (var i = 0; i < 20 * 15 && !hit; i++)
+        {
+            sim.Tick();
+            entered |= blocked.IsBlocked(CellCoord.Of(t.Position.X, t.Position.Y));
+        }
+        Assert.True(hit, "the wolf never got around the trees");
+        Assert.False(entered, "the wolf stood inside a tree");
+    }
 }
