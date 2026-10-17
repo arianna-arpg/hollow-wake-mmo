@@ -1,11 +1,15 @@
 using Microsoft.Extensions.Logging.Abstractions;
 using HollowWake.Core.Characters;
+using HollowWake.Core.Components;
 using HollowWake.Protocol;
 using HollowWake.Server;
 using HollowWake.Server.Config;
 using HollowWake.Server.Net;
 using HollowWake.Server.Persistence;
+using HollowWake.Server.Sessions;
+using HollowWake.Server.World;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace HollowWake.Server.Tests;
 
@@ -30,6 +34,13 @@ internal sealed class MemoryStores : IAccountStore, ICharacterStore, IWorldStore
 
 public class LoopbackTests
 {
+    private readonly ITestOutputHelper _output;
+
+    public LoopbackTests(ITestOutputHelper output)
+    {
+        _output = output;
+    }
+
     private static string ContentDir()
     {
         var dir = AppContext.BaseDirectory;
@@ -146,5 +157,247 @@ public class LoopbackTests
         Assert.False(reader.TryRead(out _));
         Assert.IsType<PingMsg>(MessageSerializer.Decode(first));
         Assert.Equal("hi", Assert.IsType<ChatMsg>(MessageSerializer.Decode(second)).Text);
+    }
+
+    // ------------------------------------------------------------ interest and deltas
+
+    /// <summary>Logs in a new account, creates a character and enters the world; returns what arrived on entering.</summary>
+    private static (LoopbackClient Client, EnterWorldMsg Enter, Session Session, List<Message> Replies) Enter(GameServer server, LoopbackTransport transport, string account, string name)
+    {
+        var client = transport.Connect();
+        client.Send(new HelloMsg("test", ProtocolInfo.Version));
+        client.Send(new LoginMsg(account, ""));
+        Pump(server, client);
+        client.Send(new CreateCharacterMsg(name, "kindler"));
+        var list = Assert.Single(Pump(server, client).OfType<CharacterListMsg>());
+        client.Send(new SelectCharacterMsg(Assert.Single(list.Characters).Id));
+        var replies = Pump(server, client, 3);
+        var enter = Assert.Single(replies.OfType<EnterWorldMsg>());
+        var session = server.Sessions.Sessions.Single(s => s.Character?.Name == name);
+        return (client, enter, session, replies);
+    }
+
+    private static void Step(GameServer server, int ticks, params (LoopbackClient Client, List<Message> Inbox)[] clients)
+    {
+        for (var i = 0; i < ticks; i++)
+        {
+            server.Step();
+            foreach (var (client, inbox) in clients)
+            {
+                inbox.AddRange(client.Drain());
+            }
+        }
+    }
+
+    [Fact]
+    public void StaticEntitiesSpawnOnceAndNeverUpdate()
+    {
+        var (server, transport) = Create();
+        var (client, enter, session, replies) = Enter(server, transport, "flora", "Fern");
+        var zone = session.Zone!;
+        var spawns = replies.OfType<EntitySpawnMsg>().Select(s => s.State).ToList();
+        Assert.NotEmpty(spawns);
+        foreach (var s in spawns)
+        {
+            var e = zone.Sim.World.Resolve(s.Key);
+            if (!e.IsNone)
+            {
+                Assert.Equal(Snapshots.IsStatic(zone.Sim, e), s.Static);
+            }
+        }
+        var flora = spawns.Where(s => zone.Sim.World.Has<Prop>(zone.Sim.World.Resolve(s.Key))).ToList();
+        Assert.NotEmpty(flora);
+        Assert.All(flora, s => Assert.True(s.Static, $"{s.Name} ({s.Pattern}) arrived without the static flag"));
+        Assert.Contains(spawns, s => s.Key == enter.EntityKey && !s.Static && s.IsPlayer);
+        var statics = spawns.Where(s => s.Static).Select(s => s.Key).ToHashSet();
+
+        // Walk out and back so interest changes and plenty of updates flow; no static entity may appear in one.
+        var inbox = new List<Message>();
+        client.Send(new MoveDirMsg(1, 0));
+        Step(server, 40, (client, inbox));
+        client.Send(new MoveDirMsg(-1, 0));
+        Step(server, 40, (client, inbox));
+        client.Send(new StopMsg());
+        Step(server, 10, (client, inbox));
+        var updated = inbox.OfType<EntityUpdateMsg>().SelectMany(u => u.States).ToList();
+        Assert.Contains(updated, s => s.Key == enter.EntityKey);
+        var allStatics = statics.Concat(inbox.OfType<EntitySpawnMsg>().Where(s => s.State.Static).Select(s => s.State.Key)).ToHashSet();
+        Assert.True(allStatics.Count > statics.Count, "walking brought no new static entities into interest");
+        Assert.DoesNotContain(updated, s => s.Static || allStatics.Contains(s.Key));
+        // A static entity is spawned again only after it left interest (a despawn in between) or changed.
+        var despawned = inbox.OfType<EntityDespawnMsg>().Select(d => d.Key).ToHashSet();
+        var respawned = inbox.OfType<EntitySpawnMsg>().Where(s => statics.Contains(s.State.Key)).ToList();
+        Assert.All(respawned, s => Assert.Contains(s.State.Key, despawned));
+        _output.WriteLine($"{spawns.Count} spawns on entering ({statics.Count} static, {flora.Count} flora or props); {updated.Count} updated states while walking; {session.SnapshotsBuilt} snapshots, {session.SnapshotBytesPerSnapshot:0} snapshot bytes per snapshot");
+    }
+
+    [Fact]
+    public void StandingPlayerGetsNoUpdatesForItselfWhileAMovingOneKeepsGettingThem()
+    {
+        var (server, transport) = Create();
+        var (still, stillEnter, stillSession, _) = Enter(server, transport, "still", "Wren");
+        var (mover, moverEnter, moverSession, _) = Enter(server, transport, "mover", "Ash");
+        var stillInbox = new List<Message>();
+        var moverInbox = new List<Message>();
+
+        // The mover walks off; the standing player settles, and any refresh owed after settling goes out.
+        mover.Send(new MoveDirMsg(1, 0));
+        Step(server, 20, (still, stillInbox), (mover, moverInbox));
+        mover.Send(new MoveDirMsg(0, 1));
+        Step(server, 40, (still, stillInbox), (mover, moverInbox));
+        stillInbox.Clear();
+        moverInbox.Clear();
+        var stillBytes = stillSession.SnapshotBytes;
+        var stillSnapshots = stillSession.SnapshotsBuilt;
+
+        // The window: the mover keeps walking (back the way it came, which is clear), the other stands still.
+        mover.Send(new MoveDirMsg(0, -1));
+        Step(server, 30, (still, stillInbox), (mover, moverInbox));
+        var snapshots = stillSession.SnapshotsBuilt - stillSnapshots;
+        var stillSelf = stillInbox.OfType<EntityUpdateMsg>().SelectMany(u => u.States).Count(s => s.Key == stillEnter.EntityKey);
+        var stillSawMover = stillInbox.OfType<EntityUpdateMsg>().SelectMany(u => u.States).Count(s => s.Key == moverEnter.EntityKey);
+        var moverSelf = moverInbox.OfType<EntityUpdateMsg>().SelectMany(u => u.States).Where(s => s.Key == moverEnter.EntityKey).ToList();
+        var windowBytes = (stillSession.SnapshotBytes - stillBytes) / (double)Math.Max(1, snapshots);
+        _output.WriteLine($"window of {snapshots} snapshots: standing player got {stillSelf} updates for itself and {stillSawMover} for the mover; the mover got {moverSelf.Count} for itself");
+        _output.WriteLine($"standing player: {windowBytes:0} snapshot bytes per snapshot in the window, {stillSession.SnapshotBytesPerSnapshot:0} overall; mover: {moverSession.SnapshotBytesPerSnapshot:0} overall; self states {stillSession.View.SelfStates} sent, {stillSession.View.SelfStatesSkipped} skipped as unchanged");
+
+        Assert.True(snapshots >= 25, $"only {snapshots} snapshots in the window");
+        Assert.True(stillSelf <= 1, $"a standing player got {stillSelf} updates for itself");
+        Assert.True(moverSelf.Count >= snapshots / 2, $"a moving player got only {moverSelf.Count} updates for itself in {snapshots} snapshots");
+        Assert.True(moverSelf.Last().Y < moverSelf.First().Y, "the mover did not walk south in the window");
+        Assert.True(stillSawMover >= snapshots / 2, $"the standing player saw the mover only {stillSawMover} times");
+        Assert.True(stillSession.View.SelfStatesSkipped > 0, "the standing player's unchanged self state was never skipped");
+        Assert.True(windowBytes < 25 * 1024, $"{windowBytes:0} snapshot bytes per snapshot is over the budget");
+    }
+
+    [Fact]
+    public void DeltasCarryOnlyWhatChanged()
+    {
+        var (server, transport) = Create();
+        var (client, enter, session, replies) = Enter(server, transport, "delta", "Sorrel");
+        session.View.SendDeltas = true;
+        var mirror = new Dictionary<long, EntityState>();
+        var inbox = new List<Message>();
+        client.Send(new MoveDirMsg(1, 0));
+        Step(server, 30, (client, inbox));
+        client.Send(new StopMsg());
+        Step(server, 50, (client, inbox));
+
+        var deltas = inbox.OfType<EntityDeltaMsg>().SelectMany(d => d.Deltas).ToList();
+        var mine = deltas.Where(d => d.Key == enter.EntityKey).ToList();
+        Assert.NotEmpty(mine);
+        Assert.All(mine, d => Assert.Null(d.Name));
+        Assert.Contains(mine, d => d.X is not null);
+
+        // Applying spawns, full updates and deltas in order reproduces the state the server would send now.
+        foreach (var m in replies.Concat(inbox))
+        {
+            switch (m)
+            {
+                case EntitySpawnMsg s:
+                    mirror[s.State.Key] = s.State;
+                    break;
+                case EntityUpdateMsg u:
+                    foreach (var s in u.States)
+                    {
+                        mirror[s.Key] = s;
+                    }
+                    break;
+                case EntityDeltaMsg d:
+                    foreach (var delta in d.Deltas)
+                    {
+                        if (mirror.TryGetValue(delta.Key, out var before))
+                        {
+                            mirror[delta.Key] = Apply(before, delta);
+                        }
+                    }
+                    break;
+                case EntityDespawnMsg gone:
+                    mirror.Remove(gone.Key);
+                    break;
+            }
+        }
+        var sim = session.Zone!.Sim;
+        var now = Snapshots.Capture(sim, session.Entity);
+        var seen = mirror[enter.EntityKey];
+        Assert.Equal(now.X, seen.X);
+        Assert.Equal(now.Y, seen.Y);
+        Assert.Equal(now.VX, seen.VX);
+        Assert.Equal(now.Flags.OrderBy(f => f).ToList(), seen.Flags.OrderBy(f => f).ToList());
+        Assert.Equal(session.Known.OrderBy(k => k).ToList(), mirror.Keys.OrderBy(k => k).ToList());
+        var deltaBytes = deltas.Count == 0 ? 0 : inbox.OfType<EntityDeltaMsg>().Sum(d => MessageSerializer.Encode(d).Length) / (double)deltas.Count;
+        var fullBytes = inbox.OfType<EntityUpdateMsg>().SelectMany(u => u.States).Select(s => MessageSerializer.Encode(new EntityUpdateMsg(new List<EntityState> { s }, 0)).Length).DefaultIfEmpty(0).Average();
+        _output.WriteLine($"{deltas.Count} deltas ({mine.Count} for itself), about {deltaBytes:0} bytes each against {fullBytes:0} for a full state; {session.SnapshotBytesPerSnapshot:0} snapshot bytes per snapshot");
+    }
+
+    [Fact]
+    public void DeltaOfIdenticalStatesIsEmptyAndApplyingADeltaRoundTrips()
+    {
+        var a = new EntityState { Key = 7, Name = "Hob", X = 1, Y = 2, Casting = "Strike", CastProgress = 0.3f, Flags = { "moving" }, Resources = { ["life"] = 10, ["mana"] = 5 }, ResourceMax = { ["life"] = 20, ["mana"] = 5 } };
+        Assert.NotNull(Snapshots.Delta(a, a with { }, out var empty));
+        Assert.True(empty);
+        var b = a with { X = 1.5f, Casting = null, CastProgress = 0, Flags = new List<string> { "stationary" }, Resources = new Dictionary<string, float> { ["life"] = 7, ["mana"] = 5 }, Dead = true };
+        var delta = Snapshots.Delta(a, b, out empty)!;
+        Assert.False(empty);
+        Assert.Null(delta.Name);
+        Assert.Null(delta.Y);
+        Assert.Equal(1.5f, delta.X);
+        Assert.Equal("", delta.Casting);
+        Assert.Equal(new Dictionary<string, float> { ["life"] = 7 }, delta.Resources);
+        Assert.Null(delta.ResourceMax);
+        Assert.True(delta.Dead);
+        var applied = Apply(a, delta);
+        Assert.Equal(MessageSerializer.ToJson(new EntitySpawnMsg(b)), MessageSerializer.ToJson(new EntitySpawnMsg(applied)));
+        // A changed resource set cannot be expressed as a delta: the full state must go.
+        Assert.Null(Snapshots.Delta(a, a with { Resources = new Dictionary<string, float> { ["life"] = 10 } }, out _));
+        // Round trip through the wire format keeps absent fields absent.
+        var wire = MessageSerializer.ToJson(new EntityDeltaMsg(new List<EntityDelta> { delta }, 1));
+        Assert.DoesNotContain("\"name\"", wire);
+        var back = Assert.IsType<EntityDeltaMsg>(MessageSerializer.Decode(MessageSerializer.Encode(new EntityDeltaMsg(new List<EntityDelta> { delta }, 1))));
+        Assert.Equal(delta.X, back.Deltas[0].X);
+        Assert.Null(back.Deltas[0].Y);
+    }
+
+    /// <summary>What a client does with a delta: every present field replaces the known one.</summary>
+    private static EntityState Apply(EntityState s, EntityDelta d)
+    {
+        static string? Clear(string? value) => value == "" ? null : value;
+        var resources = new Dictionary<string, float>(s.Resources);
+        foreach (var (k, v) in d.Resources ?? new Dictionary<string, float>())
+        {
+            resources[k] = v;
+        }
+        var maxes = new Dictionary<string, float>(s.ResourceMax);
+        foreach (var (k, v) in d.ResourceMax ?? new Dictionary<string, float>())
+        {
+            maxes[k] = v;
+        }
+        return s with
+        {
+            Name = d.Name ?? s.Name,
+            Pattern = d.Pattern is null ? s.Pattern : Clear(d.Pattern),
+            Look = d.Look is null ? s.Look : Clear(d.Look),
+            X = d.X ?? s.X,
+            Y = d.Y ?? s.Y,
+            Z = d.Z ?? s.Z,
+            Yaw = d.Yaw ?? s.Yaw,
+            Radius = d.Radius ?? s.Radius,
+            Height = d.Height ?? s.Height,
+            Faction = d.Faction is null ? s.Faction : Clear(d.Faction),
+            Rarity = d.Rarity is null ? s.Rarity : Clear(d.Rarity),
+            Level = d.Level ?? s.Level,
+            Resources = resources,
+            ResourceMax = maxes,
+            Flags = d.Flags ?? s.Flags,
+            Statuses = d.Statuses ?? s.Statuses,
+            Interactable = d.Interactable is null ? s.Interactable : Clear(d.Interactable),
+            Dead = d.Dead ?? s.Dead,
+            Casting = d.Casting is null ? s.Casting : Clear(d.Casting),
+            CastProgress = d.CastProgress ?? s.CastProgress,
+            Grounded = d.Grounded ?? s.Grounded,
+            VX = d.VX ?? s.VX,
+            VY = d.VY ?? s.VY,
+            VZ = d.VZ ?? s.VZ,
+        };
     }
 }

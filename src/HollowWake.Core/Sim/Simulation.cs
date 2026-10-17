@@ -100,9 +100,32 @@ public sealed class Simulation
 
     // ------------------------------------------------------------ ticking
 
-    /// <summary>Advances one fixed step. Exceptions in a system are logged and do not stop the tick.</summary>
+    /// <summary>Per-system cost for the last tick, when <see cref="Profile"/> is on.</summary>
+    public sealed class SystemCost
+    {
+        public string Name = "";
+        public double Milliseconds;
+        public long AllocatedBytes;
+        public double TotalMilliseconds;
+        public long TotalAllocatedBytes;
+        public long Ticks;
+    }
+
+    /// <summary>Turn on to measure every system's time and allocations each tick (tools and benchmarks).</summary>
+    public bool Profile { get; set; }
+
+    public IReadOnlyDictionary<string, SystemCost> Costs => _costs;
+
+    private readonly Dictionary<string, SystemCost> _costs = new(StringComparer.Ordinal);
+
+    /// <summary>
+    /// Advances one fixed step. The event log holds the previous tick's events until this call clears it,
+    /// so readers see "what happened last tick" and the log never grows. Exceptions in a system are
+    /// logged and do not stop the tick.
+    /// </summary>
     public void Tick()
     {
+        Events.Drain();
         Clock.Advance();
         EnsureSorted();
         try
@@ -115,6 +138,13 @@ public sealed class Simulation
         }
         foreach (var system in _systems)
         {
+            long allocBefore = 0;
+            long started = 0;
+            if (Profile)
+            {
+                allocBefore = GC.GetAllocatedBytesForCurrentThread();
+                started = System.Diagnostics.Stopwatch.GetTimestamp();
+            }
             try
             {
                 system.Update(this);
@@ -122,6 +152,21 @@ public sealed class Simulation
             catch (Exception ex)
             {
                 Log.Error($"system {system.Name} failed at tick {Clock.Tick}", ex);
+            }
+            if (Profile)
+            {
+                var ms = System.Diagnostics.Stopwatch.GetElapsedTime(started).TotalMilliseconds;
+                var bytes = GC.GetAllocatedBytesForCurrentThread() - allocBefore;
+                if (!_costs.TryGetValue(system.Name, out var cost))
+                {
+                    cost = new SystemCost { Name = system.Name };
+                    _costs[system.Name] = cost;
+                }
+                cost.Milliseconds = ms;
+                cost.AllocatedBytes = bytes;
+                cost.TotalMilliseconds += ms;
+                cost.TotalAllocatedBytes += bytes;
+                cost.Ticks++;
             }
         }
         World.Flush();

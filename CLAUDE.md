@@ -8,7 +8,7 @@ Hollow Wake MMO is an MMOARPG foundation: an engine-agnostic C# simulation core,
 
 ## Repository map
 
-- `src/HollowWake.Core` — simulation. Namespaces mirror systems: `Attributes`, `Expressions`, `Content`, `Definitions`, `Ecs`, `Sim`, `Components`, `Effects`, `Weaves`, `Combat`, `StatusEffects`, `Items`, `Loot`, `Patterns`, `Ai`, `Movement`, `World`, `WorldGen`, `Quests`, `Crafting`, `Territory`, `Progression`, `Characters`, `Interaction`, `Intents`, `Systems`.
+- `src/HollowWake.Core` — simulation. Namespaces mirror systems: `Attributes`, `Expressions`, `Content`, `Definitions`, `Ecs`, `Sim`, `Components`, `Effects` (handlers by family under `Effects/Handlers/`), `Weaves`, `Combat`, `StatusEffects`, `Items`, `Loot`, `Patterns`, `Ai`, `Movement`, `World`, `WorldGen`, `Quests`, `Crafting`, `Territory`, `Progression`, `Characters`, `Interaction`, `Intents`, `Systems`.
 - `src/HollowWake.Protocol` — `Messages.cs` (every wire message), `MessageSerializer.cs` (JSON + length framing) and `TypeScriptContract.cs` (generates the web client's message types).
 - `src/HollowWake.Server` — `GameServer` (composition root and loop), `Sessions/`, `World/` (`ZoneHost`, `ZoneInstance`, `Snapshots`), `Net/` (`ITransport`, TCP, WebSocket with the static web root, composite, loopback), `Persistence/` (JSON stores), `Config/`.
 - `src/HollowWake.Server.Host` — pure .NET entry point (TCP and WebSocket). `src/HollowWake.Server.Host.Brutal` — .NET 10 + BRUTAL RakNet entry point (compiles to a stub without the .NET 10 SDK).
@@ -17,7 +17,7 @@ Hollow Wake MMO is an MMOARPG foundation: an engine-agnostic C# simulation core,
 - `src/HollowWake.Tools` — the `hollowwake` CLI (`Program.cs`, `Probe.cs`).
 - `content/core` — the base content layer, one YAML file per area. `rules.yaml` holds every formula and tunable.
 - `tests/` — xunit. `HollowWake.Core.Tests` (foundations and gameplay against the real content), `HollowWake.Server.Tests` (loopback and WebSocket end to end, the generated protocol module). Web client unit tests are vitest files beside the code in `web/src`.
-- `docs/` — `VISION.md`, `ARCHITECTURE.md`, `ROADMAP.md`, `modding.md`, `design/` (one contract per system), `lore/`, `infrastructure/`, `adr/`.
+- `docs/` — `VISION.md`, `ARCHITECTURE.md`, `ROADMAP.md`, `modding.md`, `design/` (one contract per system; `design/parity/` holds gap analyses against the earlier prototype), `lore/`, `infrastructure/`, `adr/`.
 - `deploy/` — Dockerfile, Compose, VPS bootstrap. `config/server.yaml` — server settings.
 - `.devcontainer/` — the Codespaces container. `scripts/codespace-play.sh` — builds the web client and runs the server. `.github/workflows/` — CI and the GitHub Pages build of the web client.
 
@@ -31,6 +31,7 @@ dotnet run --project src/HollowWake.Tools -- load --x 0 --y 0  # headless zone s
 dotnet run --project src/HollowWake.Tools -- fight a b         # headless duel with event trace
 dotnet run --project src/HollowWake.Server.Host                # run the server (TCP 7777; WebSocket and the web client on 7778)
 dotnet run --project src/HollowWake.Tools -- probe             # connect to a running server over TCP and exercise it
+dotnet run --project src/HollowWake.Tools -c Release -- bench   # performance baseline against docs/design/performance.md budgets
 godot --path src/HollowWake.Client -- --smoke --shots DIR      # scripted client play-through against a running server (Godot 4.7 .NET)
 dotnet run --project src/HollowWake.Tools -- protocol-ts       # regenerate web/src/net/protocol.ts after changing a message
 npm --prefix web ci && npm --prefix web run build              # build the web client into web/dist (Node 22)
@@ -57,6 +58,7 @@ Before calling work done:
 - **Registries for open sets.** Effect types, AI actions, objective types, interactable kinds, component binders, content kinds, procedures, generator passes: register, never switch on strings inside systems.
 - **Events, not calls.** Systems publish `GameEvent`s; quests, loot, networking and tests subscribe.
 - **Determinism.** Every roll uses an `Rng` derived from a seed. Never `System.Random` or wall-clock time in gameplay code.
+- **Spatial queries are live views.** `Spatial.Within` iterates the grid in place: copy the results before spawning, destroying or moving entities inside the loop, because mutating the grid during iteration throws.
 - **Server authority.** The client sends intents and renders state. Validation happens in the simulation.
 - **Coordinates.** Core is X east, Y north, Z up. Godot conversion only in `Coords.cs`; three.js conversion only in `web/src/world/coords.ts`.
 - **Numbers from JSON nodes** go through `JsonNum` (nodes hold ints, longs or doubles depending on origin).

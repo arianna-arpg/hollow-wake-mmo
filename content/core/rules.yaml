@@ -73,6 +73,11 @@ entries:
       max_drop: 3
       default_speed: 4.5
       path_max_nodes: 4000
+      # AI movers: a smaller search budget, and plans kept until they run out, the goal moves this
+      # many cells away from the planned goal, or they reach this age.
+      ai_path_max_nodes: 500
+      ai_repath_distance: 2
+      ai_repath_seconds: 1.5
       fall_damage_per_unit: 2
       fall_damage_threshold: 6
 

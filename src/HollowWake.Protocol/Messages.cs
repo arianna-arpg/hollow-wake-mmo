@@ -48,6 +48,7 @@ namespace HollowWake.Protocol;
 [JsonDerivedType(typeof(ZoneChangedMsg), "zone_changed")]
 [JsonDerivedType(typeof(EntitySpawnMsg), "entity_spawn")]
 [JsonDerivedType(typeof(EntityUpdateMsg), "entity_update")]
+[JsonDerivedType(typeof(EntityDeltaMsg), "entity_delta")]
 [JsonDerivedType(typeof(EntityDespawnMsg), "entity_despawn")]
 [JsonDerivedType(typeof(SelfStateMsg), "self_state")]
 [JsonDerivedType(typeof(CombatEventMsg), "combat_event")]
@@ -137,11 +138,60 @@ public sealed record EntityState
     public float VX { get; init; }
     public float VY { get; init; }
     public float VZ { get; init; }
+
+    /// <summary>
+    /// Set on spawns of things that never move or change on their own (flora, props, markers, founts,
+    /// drops). Static entities never appear in updates: a later spawn for the same key replaces the
+    /// state, and a despawn removes it. Omitted from the wire when false.
+    /// </summary>
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+    public bool Static { get; init; }
 }
 
 public sealed record EntitySpawnMsg(EntityState State) : Message;
 public sealed record EntityUpdateMsg(List<EntityState> States, double ServerTime) : Message;
 public sealed record EntityDespawnMsg(long Key) : Message;
+
+/// <summary>
+/// Changes to known dynamic entities since the last state this client was sent, for clients that asked
+/// for deltas (they get these instead of the changed-entity part of entity updates; refreshes and
+/// changes a delta cannot express still arrive as full states in an entity update).
+/// </summary>
+public sealed record EntityDeltaMsg(List<EntityDelta> Deltas, double ServerTime) : Message;
+
+/// <summary>
+/// The fields of one entity that changed; absent (null) means unchanged. Strings that can become empty
+/// (pattern, look, faction, rarity, interactable, casting) arrive as "" when they do. Flags and statuses
+/// arrive whole when they change; resources and resource maxima carry only the entries that changed.
+/// </summary>
+public sealed record EntityDelta
+{
+    public long Key { get; init; }
+    public string? Name { get; init; }
+    public string? Pattern { get; init; }
+    public string? Look { get; init; }
+    public float? X { get; init; }
+    public float? Y { get; init; }
+    public float? Z { get; init; }
+    public float? Yaw { get; init; }
+    public float? Radius { get; init; }
+    public float? Height { get; init; }
+    public string? Faction { get; init; }
+    public string? Rarity { get; init; }
+    public int? Level { get; init; }
+    public Dictionary<string, float>? Resources { get; init; }
+    public Dictionary<string, float>? ResourceMax { get; init; }
+    public List<string>? Flags { get; init; }
+    public List<string>? Statuses { get; init; }
+    public string? Interactable { get; init; }
+    public bool? Dead { get; init; }
+    public string? Casting { get; init; }
+    public float? CastProgress { get; init; }
+    public bool? Grounded { get; init; }
+    public float? VX { get; init; }
+    public float? VY { get; init; }
+    public float? VZ { get; init; }
+}
 
 public sealed record WeaveSlotInfo(int Slot, string Key, string Name, string? Look, double ReadyIn, Dictionary<string, double> Costs, string Targeting, double Range);
 public sealed record ItemInfo(long Uid, string Base, string Name, string Rarity, int Count, int Level, string? Slot, List<string> Lines, Dictionary<string, double> Local);
