@@ -70,9 +70,10 @@ describe('the book rule', () => {
 });
 
 const pages: UiPage[] = [
-  { id: 'inventory', name: 'Inventory', key: 'I', icon: 'bag', order: 0, place: 'core', description: '' },
-  { id: 'weaves', name: 'Weaves', key: 'K', icon: 'weave', order: 1, place: 'ribbon', description: '' },
-  { id: 'passives', name: 'Passives', key: 'P', icon: 'star', order: 2, place: 'ribbon', description: '' },
+  { id: 'inventory', name: 'Inventory', action: 'page_inventory', icon: 'bag', order: 0, place: 'core', description: '', container: null },
+  { id: 'weaves', name: 'Weaves', action: 'page_weaves', icon: 'weave', order: 1, place: 'ribbon', description: '', container: null },
+  { id: 'passives', name: 'Passives', action: 'page_passives', icon: 'star', order: 2, place: 'ribbon', description: '', container: null },
+  { id: 'options', name: 'Options', action: 'page_options', icon: 'rune', order: 9, place: 'menu', description: '', container: null },
 ];
 const ranks: Record<string, number> = { page: 0, vendor: 1, dialogue: 1, quest_offer: 1, choice: 2 };
 const make = () => new Workspace((id) => pages.find((p) => p.id === id), (k) => ranks[k] ?? 0);
@@ -135,5 +136,20 @@ describe('the workspace', () => {
     w.depart(() => null, 6);
     expect(closed).toEqual(['dialogue:6', 'vendor:5']);
     expect(w.coreOpen).toBe(true);
+  });
+
+  it('lets a menu page stand alone and outlive the core pane', () => {
+    const w = make();
+    w.requestPage('options', 'key');
+    expect(w.coreOpen).toBe(false);
+    expect(w.book.isDrawn('options')).toBe(true);
+    expect(w.anythingOpen).toBe(true);
+    w.requestPage('weaves', 'key');
+    w.closeCore();
+    expect(w.book.has('options')).toBe(true);
+    w.requestPage('options', 'key');
+    expect(w.book.has('options')).toBe(false);
+    expect(w.escape()).toBe('nothing');
+    expect(w.anythingOpen).toBe(false);
   });
 });

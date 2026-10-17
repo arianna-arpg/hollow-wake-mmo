@@ -138,6 +138,15 @@ export function clusterLayout(layout: UiLayout, viewWidth: number, viewHeight: n
   };
 }
 
+/** A pane standing alone (Options with the core pane closed): centred above the cluster, inside the viewport. */
+export function centered(viewport: Box, cluster: Box, width: number, height: number, edge: number): Box {
+  const floor = Math.max(viewport.y + edge * 4, isEmpty(cluster) ? bottom(viewport) - edge : cluster.y - edge);
+  const area: Box = { x: viewport.x + edge, y: viewport.y + edge, w: Math.max(0, viewport.w - edge * 2), h: Math.max(0, floor - viewport.y - edge) };
+  const w = Math.min(width, area.w);
+  const h = Math.min(height, area.h);
+  return { x: area.x + (area.w - w) / 2, y: area.y + (area.h - h) / 2, w, h };
+}
+
 /** A seat remembered as fractions of the viewport, so it survives a resize. */
 export interface Seat {
   fx: number;

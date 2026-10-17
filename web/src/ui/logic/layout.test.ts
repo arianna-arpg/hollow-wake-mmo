@@ -11,7 +11,6 @@ const layout: UiLayout = {
   ranks: ['page', 'station', 'decision'],
   panes: {},
   doll: {},
-  keys: {},
   metrics: { orb: 124, rim: 7, ring: 6, ring_gap: 3, slot: 52, slot_gap: 6, slots: 8, bar_pad: 10, cluster_margin: 10, cast_bar: 14, status_icon: 28, menu_button: 46, edge: 14 },
 };
 

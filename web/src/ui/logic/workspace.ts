@@ -1,6 +1,6 @@
 import type { Int64 } from '../../net/protocol';
 import { BookRule, type Ask, type Leaf } from './book';
-import { isCore, type UiPage } from './content';
+import { inMenuOnly, isCore, type UiPage } from './content';
 
 /** How a page was requested: its key, a menu row, its ribbon on the rail, or a show from within a page. */
 export type Via = 'key' | 'menu' | 'ribbon' | 'show';
@@ -43,6 +43,15 @@ export class Workspace {
   requestPage(pageId: string, via: Via): void {
     const page = this.pages(pageId);
     if (page === undefined) {
+      return;
+    }
+    if (inMenuOnly(page)) {
+      // A menu page (Options) is a pane of its own: its key or row toggles it, the core pane untouched.
+      if (this.book.has(page.id) && (via === 'key' || via === 'menu') && this.book.isDrawn(page.id)) {
+        this.closeWorld(page.id);
+        return;
+      }
+      this.openWorld(page.id, page.id, page.name, 0, 0, 'front', true);
       return;
     }
     if (isCore(page)) {
@@ -94,7 +103,7 @@ export class Workspace {
     for (const leaf of this.book.within('page')) {
       this.book.close(leaf.id);
     }
-    for (const leaf of this.book.within('world')) {
+    for (const leaf of this.book.within('world').filter((l) => !l.standalone)) {
       this.closeWorld(leaf.id);
     }
     this.coreOpen = false;
@@ -105,9 +114,19 @@ export class Workspace {
     this.book.close(pageId);
   }
 
-  openWorld(id: string, kind: string, title: string, source: Int64 = 0, reach = 0, ask: Ask = 'auto'): Leaf {
-    this.openCore();
-    return this.book.bind(id, 'world', kind, this.rankOf(kind), title, ask, source, reach);
+  /** A pane the world opened (a dialogue, a vendor, a station): opens the core pane beside it. A standalone pane (Options) stands without it. */
+  openWorld(id: string, kind: string, title: string, source: Int64 = 0, reach = 0, ask: Ask = 'auto', standalone = false): Leaf {
+    if (!standalone) {
+      this.openCore();
+    }
+    const leaf = this.book.bind(id, 'world', kind, this.rankOf(kind), title, ask, source, reach);
+    leaf.standalone = standalone;
+    return leaf;
+  }
+
+  /** Whether anything at all is open: the core pane or a standalone pane. */
+  get anythingOpen(): boolean {
+    return this.coreOpen || this.book.leaves.length > 0;
   }
 
   hasWorld(id: string): boolean {

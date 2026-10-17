@@ -131,6 +131,7 @@ export class Skin {
     set('--size-title', `${this.fontSize('title')}px`);
     set('--size-num', `${this.fontSize('numerals')}px`);
     set('--weight-title', String(this.fontWeight('title')));
+    set('--etch-strength', String(this.mat('etch', 0.5)));
     set('--bevel', `${this.mat('bevel', 3)}px`);
     set('--corner', `${this.mat('corner', 3)}px`);
     set('--shadow-strength', String(this.mat('shadow', 0.5)));

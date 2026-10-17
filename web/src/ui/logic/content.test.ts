@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { bundledKinds, loadNames, loadUi, rankOf, weaveIcon } from './content';
-import { badgeText, foldTray, keyLabelOf, keyMatches, parseKeyName, trayBadge, webCode, type PageStatus } from './menu';
+import { badgeText, foldTray, keyLabelOf, keyMatches, parseKeyName, servedPages, trayBadge, webCode } from './menu';
 import { buildSheet, formatValue } from './sheet';
 
 describe('the interface content', () => {
@@ -51,17 +51,33 @@ describe('the menu tray', () => {
   const ui = loadUi(bundledKinds());
 
   it('folds the page state into hidden, sealed and open rows and sums the open pips', () => {
-    const served = new Map<string, PageStatus>([
-      ['inventory', { exists: true, sealed: null, pips: 0 }],
-      ['weaves', { exists: true, sealed: 'Not while fighting', pips: 2 }],
-      ['passives', { exists: true, sealed: null, pips: 3 }],
-      ['reliquary', { exists: false, sealed: null, pips: 0 }],
-      ['character', { exists: true, sealed: null, pips: 0 }],
+    // The stash lists itself once per stash: open when any of them is in reach. Options is the client's own.
+    const served = servedPages(ui.pages.map((p) => p.id), [
+      { id: 'inventory', sealed: false, pips: 0 },
+      { id: 'weaves', sealed: true, reason: 'Not while fighting', pips: 2 },
+      { id: 'passives', sealed: false, pips: 3 },
+      { id: 'stash', sealed: true, reason: 'Stand at a stash chest.', pips: 0 },
+      { id: 'stash', sealed: false, pips: 0 },
+      { id: 'character', sealed: false, pips: 0 },
     ]);
-    const rows = foldTray(ui.pages, served, () => 0, (id) => id === 'passives');
-    expect(rows.map((r) => r.state)).toEqual(['open', 'sealed', 'open', 'hidden', 'open']);
+    const rows = foldTray(ui.pages, served, () => 0, (id) => id === 'passives', (p) => keyLabelOf(p.action === 'page_weaves' ? 'K' : ''));
+    expect(rows.map((r) => [r.page.id, r.state])).toEqual([
+      ['inventory', 'open'],
+      ['weaves', 'sealed'],
+      ['passives', 'open'],
+      ['reliquary', 'hidden'],
+      ['stash', 'open'],
+      ['character', 'open'],
+      ['options', 'open'],
+    ]);
+    expect(rows[1].keyLabel).toBe('K');
     expect(trayBadge(rows)).toBe(3);
     expect(badgeText(12)).toBe('9+');
+    const far = servedPages(['stash'], [
+      { id: 'stash', sealed: true, reason: 'Stand at a stash chest.', pips: 0 },
+      { id: 'stash', sealed: true, reason: 'Stand at the account chest.', pips: 1 },
+    ]);
+    expect(far.get('stash')).toEqual({ exists: true, sealed: 'Stand at a stash chest.', pips: 1 });
   });
 
   it('reads key names into labels and browser codes', () => {

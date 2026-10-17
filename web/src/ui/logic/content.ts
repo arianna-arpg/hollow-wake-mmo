@@ -129,15 +129,20 @@ export interface UiIconSet {
 export interface UiPage {
   id: string;
   name: string;
-  key: string;
+  /** The input action whose bindings request the page (page_<id> unless content names another). */
+  action: string;
   icon: string;
   order: number;
   place: string;
   description: string;
+  /** The kind of container the page shows (reliquary, stash), or null for a page of its own. */
+  container: string | null;
 }
 
 export const isCore = (p: UiPage): boolean => p.place === 'core';
 export const onRibbon = (p: UiPage): boolean => p.place === 'ribbon' || p.place === 'popout';
+/** A client page reached from the menu alone (Options); the page state never hides it. */
+export const inMenuOnly = (p: UiPage): boolean => p.place === 'menu';
 
 export interface UiOrb {
   side: string;
@@ -153,7 +158,6 @@ export interface UiLayout {
   ranks: string[];
   panes: Record<string, string>;
   doll: Record<string, [number, number]>;
-  keys: Record<string, string>;
   metrics: Record<string, number>;
 }
 
@@ -172,10 +176,24 @@ export interface UiContent {
   theme: UiTheme;
   themes: UiTheme[];
   icons: UiIconSet;
+  iconSets: Map<string, UiIconSet>;
   pages: UiPage[];
   layout: UiLayout;
   sheet: UiSheetSection[];
 }
+
+/**
+ * The same content drawn with a theme and an icon set the player picked: the theme by id (else this one), the
+ * icon set by id, else the one the theme names, else this one. The desktop's UiContent.WithLook.
+ */
+export function withLook(ui: UiContent, themeId?: string | null, iconSetId?: string | null): UiContent {
+  const theme = ui.themes.find((t) => t.id === themeId) ?? ui.theme;
+  const icons = (iconSetId ? ui.iconSets.get(iconSetId) : undefined) ?? ui.iconSets.get(theme.iconSet) ?? ui.icons;
+  return { ...ui, theme, icons };
+}
+
+export const pageById = (ui: UiContent, id: string): UiPage | undefined => ui.pages.find((p) => p.id === id);
+export const corePage = (ui: UiContent): UiPage | undefined => ui.pages.find(isCore);
 
 export const metric = (layout: UiLayout, name: string, fallback: number): number => layout.metrics[name] ?? fallback;
 
@@ -260,7 +278,6 @@ function layoutFrom(o: Obj): UiLayout {
     ranks: ranks.length > 0 ? ranks : ['page', 'station', 'decision'],
     panes: strMap(o.panes),
     doll,
-    keys: strMap(o.keys),
     metrics: numMap(o.metrics),
   };
 }
@@ -274,15 +291,17 @@ export function loadUi(kinds: Map<string, Obj[]>, themeId?: string | null): UiCo
   const theme = themes.find((t) => t.id === themeId) ?? themes.find((t) => t.default) ?? themes[0];
   const sets = (kinds.get('ui_icon_sets') ?? []).map(iconSetFrom);
   const icons = sets.find((s) => s.id === theme.iconSet) ?? sets[0] ?? iconSetFrom({ id: 'none' });
+  const iconSets = new Map(sets.map((s) => [s.id, s]));
   const pages = (kinds.get('ui_pages') ?? [])
     .map((p) => ({
       id: str(p.id),
       name: str(p.name, str(p.id)),
-      key: str(p.key),
+      action: str(p.action, `page_${str(p.id)}`),
       icon: str(p.icon),
       order: num(p.order),
       place: str(p.place, 'ribbon'),
       description: str(p.description),
+      container: typeof p.container === 'string' && p.container.length > 0 ? p.container : null,
     }))
     .sort((a, b) => a.order - b.order || a.id.localeCompare(b.id));
   const layouts = (kinds.get('ui_layouts') ?? []).map(layoutFrom);
@@ -299,7 +318,7 @@ export function loadUi(kinds: Map<string, Obj[]>, themeId?: string | null): UiCo
     pattern: typeof s.pattern === 'string' ? s.pattern : undefined,
     cap: typeof s.cap === 'string' ? s.cap : undefined,
   }));
-  return { theme, themes, icons, pages, layout, sheet };
+  return { theme, themes, icons, iconSets, pages, layout, sheet };
 }
 
 /** The icon id the set draws for an icon (the fallback when the set lacks it). */

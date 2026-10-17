@@ -21,6 +21,8 @@ export interface Leaf {
   boundAt: number;
   frontedAt: number;
   fresh: boolean;
+  /** Stands without the core pane (Options): opening it does not open the core pane, closing the core pane keeps it. */
+  standalone: boolean;
 }
 
 /**
@@ -109,7 +111,7 @@ export class BookRule {
       return existing;
     }
     const front = this.front(group);
-    const leaf: Leaf = { id, group, kind, rank, title, source, reach, boundAt: ++this.clock, frontedAt: 0, fresh: false };
+    const leaf: Leaf = { id, group, kind, rank, title, source, reach, boundAt: ++this.clock, frontedAt: 0, fresh: false, standalone: false };
     this.bound.push(leaf);
     const fronts = ask === 'front' ? true : ask === 'behind' ? false : front === undefined || rank > front.rank;
     if (fronts) {
