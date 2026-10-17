@@ -197,6 +197,37 @@ public sealed class Stats : IComponent, IExprScope
     /// <summary>The modifier version the proc service last looked at this body with.</summary>
     internal int ProcVersion = -1;
 
+    // The status system's view of which regenerating resources and stated pools this body can hold, as bits by
+    // their index in its lists, kept for one modifier version.
+    internal int ProfileVersion = -1;
+    internal ulong RegenMask;
+    internal ulong PoolMask;
+
+    /// <summary>
+    /// Regenerates a resource by its definition: <see cref="AddResource(string, double)"/> without looking the
+    /// definition up again. Returns what changed.
+    /// </summary>
+    internal double Regenerate(ResourceDef def, double delta)
+    {
+        var before = Resource(def.Id);
+        var max = Attributes.Get(def.Max, this);
+        if (AnyReserved())
+        {
+            var reserved = ResourceNames.ReservedOf(def.Id);
+            if (Attributes.Carries(reserved))
+            {
+                max = Math.Max(0, max - Attributes.Get(reserved, this));
+            }
+        }
+        if (max <= 0 && !def.Lethal && !Resources.ContainsKey(def.Id))
+        {
+            return 0;
+        }
+        var after = Math.Clamp(before + delta, 0, Math.Max(0, max));
+        Resources[def.Id] = after;
+        return after - before;
+    }
+
     // ------------------------------------------------------------ flags & gauges
 
     public void Stamp(string key, double time) => Recent[key] = time;

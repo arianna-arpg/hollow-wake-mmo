@@ -69,6 +69,7 @@ public sealed class AttributeSet
         var entry = EntryFor(attribute);
         entry.HasBase = true;
         entry.Base = value;
+        Recount(entry);
         Touch();
     }
 
@@ -80,6 +81,7 @@ public sealed class AttributeSet
             if (_entries.TryGetValue(attribute, out var entry))
             {
                 entry.HasBase = false;
+                Recount(entry);
             }
             Touch();
         }
@@ -99,6 +101,7 @@ public sealed class AttributeSet
             entry.Listed = true;
             _modified.Add(entry);
         }
+        Recount(entry);
         Touch();
     }
 
@@ -116,7 +119,12 @@ public sealed class AttributeSet
         var removed = 0;
         foreach (var entry in _modified)
         {
-            removed += entry.RemoveSource(source);
+            var n = entry.RemoveSource(source);
+            if (n > 0)
+            {
+                removed += n;
+                Recount(entry);
+            }
         }
         if (removed > 0)
         {
@@ -145,6 +153,7 @@ public sealed class AttributeSet
     {
         if (_entries.TryGetValue(modifier.Attribute, out var entry) && entry.RemoveFirst(modifier))
         {
+            Recount(entry);
             Touch();
             return true;
         }
@@ -157,6 +166,7 @@ public sealed class AttributeSet
         {
             entry.ClearModifiers();
             entry.Listed = false;
+            Recount(entry);
         }
         _modified.Clear();
         foreach (var attribute in _baseOverrides.Keys)
@@ -164,10 +174,38 @@ public sealed class AttributeSet
             if (_entries.TryGetValue(attribute, out var entry))
             {
                 entry.HasBase = false;
+                Recount(entry);
             }
         }
         _baseOverrides.Clear();
         Touch();
+    }
+
+    // How many members of each attribute family the owner carries (has modifiers on or a base of its own).
+    private Dictionary<string, int>? _families;
+
+    /// <summary>
+    /// Whether the owner carries any member of an attribute family: modifiers on it or a base of its own. Hot
+    /// paths ask before walking a family member by member (added damage per Thread, a chance per status, leech
+    /// per resource), so an owner that touches none of it costs one lookup.
+    /// </summary>
+    public bool CarriesFamily(string family) => _families is not null && _families.TryGetValue(family, out var n) && n > 0;
+
+    /// <summary>Keeps the family counts in step with whether an entry carries anything.</summary>
+    private void Recount(Entry entry)
+    {
+        var carrying = entry.Count > 0 || entry.HasBase;
+        if (carrying == entry.Carrying)
+        {
+            return;
+        }
+        entry.Carrying = carrying;
+        if (entry.Def?.Family is not { } family)
+        {
+            return;
+        }
+        _families ??= new Dictionary<string, int>(StringComparer.Ordinal);
+        _families[family] = (_families.TryGetValue(family, out var n) ? n : 0) + (carrying ? 1 : -1);
     }
 
     /// <summary>Call when something outside the set that formulas read (level, flags, gauges) has changed.</summary>
@@ -650,6 +688,9 @@ public sealed class AttributeSet
 
         public bool HasBase;
         public double Base;
+
+        /// <summary>Counted in its family as carried: it has modifiers or a base of its own.</summary>
+        public bool Carrying;
 
         public bool Resolving;
 

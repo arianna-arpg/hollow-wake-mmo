@@ -2,7 +2,8 @@
 # A pattern's placeholders range over a content kind (or a list); each member gets the family's category,
 # base and bounds, and its name and description with the placeholder replaced by the member's name.
 # Attributes declared one by one in attributes files win over family members with the same id.
-# Families declared ahead of the mechanics that read them stay hidden until then.
+# Families declared ahead of the mechanics that read them stay hidden until then, and so do detail families
+# with a member per status or per pair of Threads, which would crowd the character sheet.
 kind: attribute_families
 entries:
   # ---- statuses
@@ -33,6 +34,7 @@ entries:
     category: status
     bounds: { min: 0, max: 1 }
     percent: true
+    hidden: true
 
   - id: status_pop
     pattern: "status.{status}.pop"
@@ -41,6 +43,7 @@ entries:
     description: "Power added to {status}'s pop when you apply it over a live instance."
     category: status
     percent: true
+    hidden: true
 
   # ---- damage
   - id: added_damage
@@ -58,6 +61,7 @@ entries:
     category: defense
     bounds: { min: 0, max: 1 }
     percent: true
+    hidden: true
 
   # ---- reservation: contracts and toggles add flat modifiers here; the usable maximum drops by it and the
   # interface reads it through the gauge reserved.<resource>

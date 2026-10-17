@@ -13,6 +13,10 @@ internal sealed class TakenAsStage : IHitStage
     {
         var ts = hit.Target!;
         var names = CombatNames.For(hit.Sim.Content);
+        if (!CombatNames.MayCarry(ts.Attributes, null, names.TakenAsFamily))
+        {
+            return HitFlow.Continue;
+        }
         var threads = names.Threads;
         var tags = hit.Tags;
         var count = hit.ThreadCount;

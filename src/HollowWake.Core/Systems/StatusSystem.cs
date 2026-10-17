@@ -27,7 +27,7 @@ public sealed class StatusSystem : SimSystem
     // The resources that regenerate and the pools that keep state flags, read once per content set rather than every tick.
     private ContentRegistry? _content;
     private ResourceDef[] _regenerating = Array.Empty<ResourceDef>();
-    private (PoolRule Rule, string? Regen)[] _stated = Array.Empty<(PoolRule, string?)>();
+    private (PoolRule Rule, string? Regen, string? Max)[] _stated = Array.Empty<(PoolRule, string?, string?)>();
 
     public override void Update(Simulation sim)
     {
@@ -39,10 +39,11 @@ public sealed class StatusSystem : SimSystem
         if (!ReferenceEquals(_content, sim.Content))
         {
             _content = sim.Content;
-            _regenerating = sim.Content.Each<ResourceDef>().Where(r => r.Regen is not null).ToArray();
+            _regenerating = sim.Content.Each<ResourceDef>().Where(r => r.Regen is not null).Take(64).ToArray();
             _stated = HitPlan.For(sim.Content.Rules).PoolRules
                 .Where(r => r.States)
-                .Select(r => (r, sim.Content.Get<ResourceDef>(r.Resource)?.Regen))
+                .Select(r => (r, sim.Content.Get<ResourceDef>(r.Resource)?.Regen, sim.Content.Get<ResourceDef>(r.Resource)?.Max))
+                .Take(64)
                 .ToArray();
         }
         // The loop stays small and the per-body work lives in its own method, so the runtime can optimize a
@@ -75,25 +76,34 @@ public sealed class StatusSystem : SimSystem
             chargeService.Tick(sim, e, charges, dt);
         }
         stats.SyncReserved();
+        if (stats.ProfileVersion != stats.Attributes.Version)
+        {
+            Profile(stats);
+        }
         var regenerating = _regenerating;
+        var regenMask = stats.RegenMask;
         for (var i = 0; i < regenerating.Length; i++)
         {
-            var r = regenerating[i];
-            // A pool the body neither holds nor has anything granting a maximum for costs a lookup, not a fold.
-            if (!stats.Resources.ContainsKey(r.Id) && !stats.Attributes.Carries(r.Max))
+            // A pool the body neither holds nor has anything granting a maximum for is skipped.
+            if ((regenMask & (1UL << i)) == 0)
             {
                 continue;
             }
+            var r = regenerating[i];
             var regen = stats.Get(r.Regen!);
             if (regen != 0)
             {
-                stats.AddResource(r.Id, regen * dt);
+                stats.Regenerate(r, regen * dt);
             }
         }
         var stated = _stated;
+        var poolMask = stats.PoolMask;
         for (var i = 0; i < stated.Length; i++)
         {
-            PoolState(sim, e, stats, statuses, stated[i].Rule, stated[i].Regen, now);
+            if ((poolMask & (1UL << i)) != 0)
+            {
+                PoolState(sim, e, stats, statuses, stated[i].Rule, stated[i].Regen, now);
+            }
         }
         if (sim.World.TryGet<Motion>(e, out var m))
         {
@@ -103,6 +113,33 @@ public sealed class StatusSystem : SimSystem
             Set(stats, "stationary", stationary);
             Set(stats, "airborne", !m.Grounded && !m.Flying);
         }
+    }
+
+    /// <summary>Which regenerating resources and stated pools a body can hold, worked out again when its modifiers change.</summary>
+    private void Profile(Stats stats)
+    {
+        var regen = 0UL;
+        var regenerating = _regenerating;
+        for (var i = 0; i < regenerating.Length && i < 64; i++)
+        {
+            if (stats.Resources.ContainsKey(regenerating[i].Id) || stats.Attributes.Carries(regenerating[i].Max))
+            {
+                regen |= 1UL << i;
+            }
+        }
+        var pools = 0UL;
+        var stated = _stated;
+        for (var i = 0; i < stated.Length; i++)
+        {
+            var (rule, _, max) = stated[i];
+            if (stats.Resources.ContainsKey(rule.Resource) || (max is not null && stats.Attributes.Carries(max)))
+            {
+                pools |= 1UL << i;
+            }
+        }
+        stats.RegenMask = regen;
+        stats.PoolMask = pools;
+        stats.ProfileVersion = stats.Attributes.Version;
     }
 
     /// <summary>Keeps one pool's state flag on a body that holds the pool.</summary>

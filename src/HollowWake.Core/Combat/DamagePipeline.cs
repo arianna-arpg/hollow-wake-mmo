@@ -167,6 +167,10 @@ public static class DamagePipeline
     private static void AddFlat(EffectContext ctx, Components.Stats source, DamagePacket packet, HitScope hit, IReadOnlyList<Attributes.Modifier>? extra, double? effectiveness)
     {
         var names = CombatNames.For(ctx.Sim.Content);
+        if (!CombatNames.MayCarry(source.Attributes, extra, names.AddedFamily))
+        {
+            return;
+        }
         var effective = double.NaN;
         for (var j = 0; j < names.Threads.Length; j++)
         {
@@ -429,6 +433,7 @@ public static class DamagePipeline
         }
         var names = CombatNames.For(sim.Content);
         var extra = ctx.Weave?.Modifiers;
+        var chances = CombatNames.MayCarry(source.Attributes, extra, names.ChanceFamily);
         foreach (var (thread, dealt) in result.Received)
         {
             if (dealt <= 0)
@@ -445,7 +450,7 @@ public static class DamagePipeline
             {
                 chance += ce!.Evaluate(ctx.Scope);
             }
-            var own = names.StatusChance(def.Status);
+            var own = chances ? names.StatusChance(def.Status) : null;
             if (own is not null && (source.Attributes.Carries(own) || Mentions(extra, own)))
             {
                 chance += source.Attributes.Get(own, source, packet.Tags.With(thread), extra);
@@ -470,7 +475,7 @@ public static class DamagePipeline
                 Depth = ctx.Depth,
             });
         }
-        if (result.Total <= 0 || sim.World.Has<Dead>(ctx.Target))
+        if (!chances || result.Total <= 0 || sim.World.Has<Dead>(ctx.Target))
         {
             return;
         }
@@ -587,6 +592,49 @@ internal sealed class CombatNames
         OnHit = Resources.Select(r => $"on_hit.{r}").ToArray();
         OnKill = Resources.Select(r => $"on_kill.{r}").ToArray();
         LifeIndex = Array.IndexOf(Resources, "life");
+        var catalog = content.Attributes;
+        string? FamilyOf(string[] members) => members.Length == 0 ? null : catalog.Get(members[0])?.Family;
+        AddedFamily = FamilyOf(Added);
+        ChanceFamily = FamilyOf(Chances);
+        LeechFamily = FamilyOf(Leech);
+        OnHitFamily = FamilyOf(OnHit);
+        OnKillFamily = FamilyOf(OnKill);
+        TakenAsFamily = Threads.Length == 0 ? null : catalog.Get(TakenAs(Threads[0], 0))?.Family;
+        StatusLeechFamily = Statuses.Length == 0 ? null : catalog.Get($"status.{Statuses[0]}.leech")?.Family;
+    }
+
+    // The attribute families the members above belong to, when content declares them as families. A family lets
+    // a hit skip all of its members with one lookup; without one, members are checked one by one.
+    public string? AddedFamily { get; }
+    public string? ChanceFamily { get; }
+    public string? LeechFamily { get; }
+    public string? OnHitFamily { get; }
+    public string? OnKillFamily { get; }
+    public string? TakenAsFamily { get; }
+    public string? StatusLeechFamily { get; }
+
+    /// <summary>
+    /// Whether an owner (with a weave's modifiers joining) might carry any member of a family, so its members are
+    /// worth checking one by one. True when there is no family to ask.
+    /// </summary>
+    public static bool MayCarry(Attributes.AttributeSet set, IReadOnlyList<Attributes.Modifier>? extra, string? family)
+    {
+        if (family is null || set.CarriesFamily(family))
+        {
+            return true;
+        }
+        if (extra is null)
+        {
+            return false;
+        }
+        for (var i = 0; i < extra.Count; i++)
+        {
+            if (set.Catalog.Get(extra[i].Attribute)?.Family == family)
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
     public string[] Threads { get; }

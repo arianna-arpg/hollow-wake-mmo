@@ -39,9 +39,12 @@ internal static class Sustain
         var extra = hit.Extra;
         var tags = hit.Tags;
         var dealt = hit.Total;
+        var attributes = source.Attributes;
+        var leech = CombatNames.MayCarry(attributes, extra, names.LeechFamily);
+        var onHit = CombatNames.MayCarry(attributes, extra, names.OnHitFamily);
         // Damage over time leeches by its status's own family: the tick carries the status.{id} tag.
         var statusLeech = 0.0;
-        if (tags.Has("dot"))
+        if (tags.Has("dot") && CombatNames.MayCarry(attributes, extra, names.StatusLeechFamily))
         {
             foreach (var tag in tags.Items)
             {
@@ -51,16 +54,21 @@ internal static class Sustain
                 }
             }
         }
+        var own = hit.Packet.Leech + statusLeech;
+        if (!leech && !onHit && own <= 0)
+        {
+            return;
+        }
         for (var r = 0; r < names.Resources.Length; r++)
         {
             var leechAttr = names.Leech[r];
-            var fraction = source.Attributes.Carries(leechAttr) || DamagePipeline.Mentions(extra, leechAttr) ? source.Attributes.Get(leechAttr, source, tags, extra) : 0;
+            var fraction = leech && (attributes.Carries(leechAttr) || DamagePipeline.Mentions(extra, leechAttr)) ? attributes.Get(leechAttr, source, tags, extra) : 0;
             if (r == names.LifeIndex)
             {
-                fraction += hit.Packet.Leech + statusLeech;
+                fraction += own;
             }
             var onHitAttr = names.OnHit[r];
-            var flat = source.Attributes.Carries(onHitAttr) || DamagePipeline.Mentions(extra, onHitAttr) ? source.Attributes.Get(onHitAttr, source, tags, extra) : 0;
+            var flat = onHit && (attributes.Carries(onHitAttr) || DamagePipeline.Mentions(extra, onHitAttr)) ? attributes.Get(onHitAttr, source, tags, extra) : 0;
             if (fraction > 0)
             {
                 Pay(sim, ctx, source, names.Resources[r], dealt * fraction, "leech");
@@ -82,6 +90,10 @@ internal static class Sustain
         }
         var names = CombatNames.For(sim.Content);
         var extra = ctx.Weave?.Modifiers;
+        if (!CombatNames.MayCarry(source.Attributes, extra, names.OnKillFamily))
+        {
+            return;
+        }
         for (var r = 0; r < names.Resources.Length; r++)
         {
             var attr = names.OnKill[r];
