@@ -263,4 +263,3 @@ public class CastForecastTests
         Assert.True(unavailable > 0); // Unknown coverage is explicit, never a generic circle.
     }
 }
-
