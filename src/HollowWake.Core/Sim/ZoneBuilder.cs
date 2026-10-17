@@ -68,6 +68,7 @@ public static class ZoneBuilder
         sim.AddService(new StatusService(effects));
         sim.AddService(new TriggerHub(sim));
         sim.AddService(new ChargeService());
+        sim.AddService(new ProcService(sim));
         sim.AddService(IntentHandlers.CreateDefault());
         sim.AddService(new PatternFactory(content));
         sim.AddService(new BlockedCells());
