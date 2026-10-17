@@ -15,6 +15,9 @@ Hollow Wake MMO is an MMOARPG foundation: an engine-agnostic C# simulation core,
 - `src/HollowWake.Client` — Godot 4.7 C#. `Main.cs` orchestrates; `World/` generates terrain locally and renders entities; `Camera/CameraRig.cs` has both camera modes; `UI/` is placeholder UI.
 - `web/` — browser client: Vite, TypeScript, three.js. `src/app.ts` orchestrates; `net/protocol.ts` is generated; `world/` builds terrain from server chunks and renders entities; `view/camera.ts` has both camera modes; `public/config.json` holds every client setting; `scripts/smoke.mjs` is the scripted browser play-through.
 - `src/HollowWake.Tools` — the `hollowwake` CLI (`Program.cs`, `Probe.cs`).
+- `launcher/`: the desktop launcher (Electron + TypeScript, pinned versions, electron-builder). `src/main/` holds the release feed, the verified download, safe extraction, installs, self-update and game start; `src/renderer/` is the page; `src/test/` the node:test suite; `news.json` is the news panel's source. It holds no game logic. Contract: `docs/design/launcher.md`.
+- `scripts/package-client.sh`: exports the client per platform with `src/HollowWake.Client/export_presets.cfg`, bundles `content/core`, zips, and writes the release `manifest.json`.
+- `.github/workflows/`: `ci.yml` (every push and pull request), `release.yml` (v* tags; dry runs on dispatch and on pipeline pull requests), `nightly.yml` (nightly pre-releases), `package.yml` (the jobs both release workflows share).
 - `content/core` — the base content layer, one YAML file per area. `rules.yaml` holds every formula and tunable.
 - `tests/` — xunit. `HollowWake.Core.Tests` (foundations and gameplay against the real content), `HollowWake.Server.Tests` (loopback and WebSocket end to end, the generated protocol module). Web client unit tests are vitest files beside the code in `web/src`.
 - `docs/` — `VISION.md`, `ARCHITECTURE.md`, `ROADMAP.md`, `modding.md`, `design/` (one contract per system; `design/parity/` holds gap analyses against the earlier prototype), `lore/`, `infrastructure/`, `adr/`.
@@ -40,6 +43,21 @@ npm --prefix web run smoke -- --shots DIR                      # scripted browse
 scripts/codespace-play.sh                                      # build the web client and run the server (Codespaces, Linux, macOS)
 ```
 
+Launcher and releases (from `launcher/` unless noted):
+
+```bash
+npm ci                                                        # install the pinned dependencies
+npm run build                                                 # compile main, preload, page and tests into dist/
+npm test                                                      # unit tests: feed, verified download, extraction, install, manifest
+npm start                                                     # run the launcher from source
+npm run smoke                                                 # headless boot check; add -- --offline to keep the network out
+npm run dist:win                                              # NSIS installer in release/ (dist:linux for the AppImage)
+npx electron . --screenshot shot.png                          # save the window once the feed and news settle
+node scripts/serve-feed.mjs DIR                               # serve a feed folder; then HOLLOWWAKE_FEED=http://127.0.0.1:8787/manifest.json npm start
+bash scripts/package-client.sh --godot GODOT --version 0.1.0 --out DIR --check   # from the repository root: client archives + manifest.json
+git tag -a v0.2.0 -m "notes" && git push origin v0.2.0       # cut a stable release (release.yml); nightly.yml cuts pre-releases
+```
+
 ## Verification gates
 
 Before calling work done:
@@ -49,6 +67,7 @@ Before calling work done:
 4. If the change touches generation, movement, combat or networking: `hollowwake load`, `hollowwake fight`, and the loopback server tests still pass; for networking also run the server and `hollowwake probe`.
 5. If the change touches the client: `dotnet build src/HollowWake.Client` compiles, and when Godot is available, the smoke play-through above passes against a local server (it saves screenshots to look at).
 6. If the change touches the web client or a message: `npm --prefix web test` and `npm --prefix web run build` pass, `web/src/net/protocol.ts` is regenerated (the server tests fail otherwise), and the browser smoke passes against a local server.
+7. If the change touches the launcher, the release workflows, `scripts/package-client.sh` or the export presets: in `launcher/`, `npm run build` and `npm test` pass and `npm run smoke -- --offline` prints `SMOKE launcher PASS`; the release dry run on the pull request is green. For the update flow itself, build a feed folder with `scripts/package-client.sh`, serve it, and install from it with `HOLLOWWAKE_FEED` and a throwaway `HOLLOWWAKE_DATA_DIR`.
 
 ## Conventions
 
@@ -60,6 +79,7 @@ Before calling work done:
 - **Determinism.** Every roll uses an `Rng` derived from a seed. Never `System.Random` or wall-clock time in gameplay code.
 - **Spatial queries are live views.** `Spatial.Within` iterates the grid in place: copy the results before spawning, destroying or moving entities inside the loop, because mutating the grid during iteration throws.
 - **Server authority.** The client sends intents and renders state. Validation happens in the simulation.
+- **The launcher only delivers.** It installs verified builds and starts the client with the server address; it holds no game logic and never speaks the protocol. What it installs is described by each release's `manifest.json`, never hard-coded.
 - **Coordinates.** Core is X east, Y north, Z up. Godot conversion only in `Coords.cs`; three.js conversion only in `web/src/world/coords.ts`.
 - **Numbers from JSON nodes** go through `JsonNum` (nodes hold ints, longs or doubles depending on origin).
 - **Docs are durable.** No counts, rosters or version strings that go stale. Each system has one contract in `docs/design/`; update it with the system.

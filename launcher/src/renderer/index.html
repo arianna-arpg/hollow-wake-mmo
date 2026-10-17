@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Hollow Wake MMO</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app" id="app">
+    <header class="masthead">
+      <div class="brand">
+        <svg class="mark" viewBox="0 0 128 128" aria-hidden="true"><rect width="128" height="128" rx="20" fill="#1c1a24"/><path d="M24 40c20-18 60-18 80 0M24 64c20-18 60-18 80 0M24 88c20-18 60-18 80 0" fill="none" stroke="#e8c76a" stroke-width="7" stroke-linecap="round"/><path d="M40 24c-18 20-18 60 0 80M64 24c-18 20-18 60 0 80M88 24c-18 20-18 60 0 80" fill="none" stroke="#7aa6d8" stroke-width="5" stroke-linecap="round" opacity=".85"/></svg>
+        <div>
+          <h1>Hollow Wake <span class="mmo">MMO</span></h1>
+          <p class="tagline">The Weftmarches await</p>
+        </div>
+      </div>
+      <div class="masthead-meta">
+        <span id="launcher-version" class="meta-line">Launcher</span>
+        <span id="self-update" class="meta-line muted"></span>
+        <button id="self-update-apply" type="button" class="pill-button" hidden>Restart to update the launcher</button>
+      </div>
+    </header>
+
+    <div id="overrides" class="overrides" hidden></div>
+
+    <main class="grid">
+      <div class="left">
+        <section class="panel news" aria-labelledby="news-heading">
+          <div class="panel-head">
+            <h2 id="news-heading">News</h2>
+            <span id="news-note" class="note"></span>
+          </div>
+          <p id="motd" class="motd" hidden></p>
+          <ol id="news-list" class="news-list"></ol>
+        </section>
+
+        <section id="log-panel" class="log-panel" hidden aria-label="Log">
+          <pre id="log" class="log"></pre>
+        </section>
+      </div>
+
+      <aside class="panel play" aria-label="Play">
+        <label class="field" for="address">
+          <span class="label">Server</span>
+          <input id="address" type="text" spellcheck="false" autocomplete="off" value="127.0.0.1:7777">
+          <span id="address-error" class="field-error" role="alert"></span>
+        </label>
+
+        <div class="field">
+          <span class="label" id="channel-label">Channel</span>
+          <div class="segmented" role="radiogroup" aria-labelledby="channel-label">
+            <button type="button" role="radio" data-channel="stable" aria-checked="true">Stable</button>
+            <button type="button" role="radio" data-channel="nightly" aria-checked="false">Nightly</button>
+          </div>
+          <span id="channel-blurb" class="hint"></span>
+        </div>
+
+        <div class="status" id="status">
+          <dl class="versions">
+            <dt class="label">Installed</dt><dd id="installed-version" class="version">none</dd>
+            <dt class="label">Available</dt><dd id="remote-version" class="version">...</dd>
+          </dl>
+          <p id="status-title" class="status-title">Starting...</p>
+          <p id="status-detail" class="status-detail"></p>
+          <p id="status-hint" class="status-hint"></p>
+          <div id="progress" class="progress" hidden>
+            <div class="bar"><div id="progress-fill" class="fill"></div></div>
+            <span id="progress-text" class="progress-text"></span>
+          </div>
+        </div>
+
+        <div class="actions">
+          <button id="primary" class="primary" type="button">Play</button>
+          <div class="secondary-actions">
+            <button id="secondary" type="button" class="link" hidden></button>
+            <button id="check" type="button" class="link">Check for updates</button>
+          </div>
+          <p id="play-error" class="field-error" role="alert"></p>
+        </div>
+      </aside>
+    </main>
+
+    <footer class="footer">
+      <label class="switch" for="developer">
+        <input id="developer" type="checkbox">
+        <span class="track" aria-hidden="true"></span>
+        <span>Developer mode</span>
+      </label>
+      <details id="settings" class="settings">
+        <summary>Settings</summary>
+        <div class="settings-body">
+          <label class="check" for="auto-update"><input id="auto-update" type="checkbox"> Install updates automatically</label>
+          <div class="token">
+            <label class="label" for="token">GitHub token</label>
+            <div class="token-row">
+              <input id="token" type="password" autocomplete="off" spellcheck="false" placeholder="Only needed while the repository is private">
+              <button id="token-save" type="button">Save</button>
+              <button id="token-clear" type="button" class="link">Remove</button>
+            </div>
+            <span id="token-note" class="hint"></span>
+          </div>
+          <div class="data">
+            <button id="open-data" type="button" class="link">Open the data folder</button>
+            <span id="data-dir" class="hint mono"></span>
+          </div>
+        </div>
+      </details>
+      <span class="spacer"></span>
+      <span id="platform" class="muted"></span>
+      <button id="quit" type="button" class="link">Quit</button>
+    </footer>
+  </div>
+  <script src="renderer.js"></script>
+</body>
+</html>

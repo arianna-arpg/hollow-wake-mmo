@@ -1,0 +1,53 @@
+# Packaging: npm run dist:win (NSIS installer) and npm run dist:linux (AppImage). Output lands in
+# release/ (ignored). The repository named in package.json is the publish target, which is what
+# electron-updater reads at run time through the app-update.yml written into resources/. The release
+# workflow builds with --publish never and attaches the files itself, so asset names must not change
+# on upload: artifact names carry no spaces.
+
+appId: com.hollowwake.mmo
+productName: Hollow Wake MMO
+copyright: Copyright Arianna
+
+directories:
+  buildResources: build
+  output: release
+
+files:
+  - package.json
+  - dist/**/*
+  - "!dist/test{,/**/*}"
+
+asar: true
+npmRebuild: false
+
+publish:
+  - provider: github
+    releaseType: release
+
+win:
+  icon: build/icon.png
+  target:
+    - target: nsis
+      arch: [x64]
+
+nsis:
+  oneClick: true
+  perMachine: false
+  createDesktopShortcut: true
+  createStartMenuShortcut: true
+  shortcutName: Hollow Wake MMO
+  deleteAppDataOnUninstall: false
+  artifactName: HollowWakeMMO-Launcher-Setup-${version}.${ext}
+
+linux:
+  icon: build/icon.png
+  category: Game
+  executableName: hollow-wake-mmo
+  synopsis: Launcher for Hollow Wake MMO
+  description: Installs, updates and starts the Hollow Wake MMO client.
+  target:
+    - target: AppImage
+      arch: [x64]
+
+appImage:
+  artifactName: HollowWakeMMO-Launcher-${version}-${arch}.${ext}
