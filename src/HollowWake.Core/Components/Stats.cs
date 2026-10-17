@@ -228,6 +228,10 @@ public sealed class Stats : IComponent, IExprScope
     internal ulong RegenMask;
     internal ulong PoolMask;
 
+    // The status system's last word on the combo conditions, so the flags change only when the answer does.
+    internal bool ComboVaried;
+    internal bool ComboRepeated;
+
     /// <summary>
     /// Regenerates a resource by its definition: <see cref="AddResource(string, double)"/> without looking the
     /// definition up again. Returns what changed.

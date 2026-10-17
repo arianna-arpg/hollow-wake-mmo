@@ -543,4 +543,24 @@ public class StatusTests
         Assert.All(heals, h => Assert.Equal(bench.Attacker, h.Target));
         Assert.NotEmpty(bench.HitsOn(bench.Victim));
     }
+
+    [Fact]
+    public void VariedAndRepeatedCastingAreConditions()
+    {
+        var arena = CastingArena.Create();
+        var free = arena.Slot("t_free");
+        for (var i = 0; i < 3; i++)
+        {
+            arena.Begin(free);
+        }
+        arena.Sim.Tick();
+        Assert.True(arena.Stats.HasFlag("combo_repeated"));
+        Assert.False(arena.Stats.HasFlag("combo_varied"));
+        // Three different weaves in a row (rule combat.combo_casts) vary.
+        arena.Begin(arena.Slot("t_marker"));
+        arena.Begin(arena.Slot("t_hit"));
+        arena.Sim.Tick();
+        Assert.True(arena.Stats.HasFlag("combo_varied"));
+        Assert.False(arena.Stats.HasFlag("combo_repeated"));
+    }
 }

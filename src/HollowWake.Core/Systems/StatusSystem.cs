@@ -10,7 +10,9 @@ namespace HollowWake.Core.Systems;
 
 /// <summary>
 /// Ticks statuses, decays and drains charges, regenerates resources, keeps the pools' state flags, maintains
-/// condition flags.
+/// condition flags: motion (<c>moving</c>, <c>stationary</c>, <c>airborne</c>) and casting rhythm
+/// (<c>combo_varied</c> while the last rule <c>combat.combo_casts</c> casts were all different weaves,
+/// <c>combo_repeated</c> while they were all the same one, read from the weave book's recent-cast ring).
 /// </summary>
 /// <remarks>
 /// Pools whose rule (<c>combat.pool_rules.{id}.states</c>) asks for it carry the flag the interface reads for
@@ -28,6 +30,7 @@ public sealed class StatusSystem : SimSystem
     private ContentRegistry? _content;
     private ResourceDef[] _regenerating = Array.Empty<ResourceDef>();
     private (PoolRule Rule, string? Regen, string? Max)[] _stated = Array.Empty<(PoolRule, string?, string?)>();
+    private int _comboCasts;
 
     public override void Update(Simulation sim)
     {
@@ -45,6 +48,7 @@ public sealed class StatusSystem : SimSystem
                 .Select(r => (r, sim.Content.Get<ResourceDef>(r.Resource)?.Regen, sim.Content.Get<ResourceDef>(r.Resource)?.Max))
                 .Take(64)
                 .ToArray();
+            _comboCasts = (int)sim.Content.Rules.Number("combat.combo_casts", 3);
         }
         // The loop stays small and the per-body work lives in its own method, so the runtime can optimize a
         // long-running update without recompiling the whole body in the middle of a tick.
@@ -112,6 +116,24 @@ public sealed class StatusSystem : SimSystem
             Set(stats, "moving", moving);
             Set(stats, "stationary", stationary);
             Set(stats, "airborne", !m.Grounded && !m.Flying);
+        }
+        if (_comboCasts >= 2 && sim.World.TryGet<WeaveBook>(e, out var book) && book.RecentCount > 0)
+        {
+            Combo(stats, book.RecentlyVaried(_comboCasts), book.RecentlyRepeated(_comboCasts));
+        }
+    }
+
+    private static void Combo(Stats stats, bool varied, bool repeated)
+    {
+        if (varied != stats.ComboVaried)
+        {
+            stats.ComboVaried = varied;
+            Set(stats, "combo_varied", varied);
+        }
+        if (repeated != stats.ComboRepeated)
+        {
+            stats.ComboRepeated = repeated;
+            Set(stats, "combo_repeated", repeated);
         }
     }
 

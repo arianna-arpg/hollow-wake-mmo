@@ -96,6 +96,9 @@ entries:
         low_life: "target.life_pct <= target.low_life.line"
         full_life: "target.life_pct >= target.full_life.line"
         behind: "angle > 120"
+      # How many of a body's latest casts has("combo_varied") (all different weaves) and has("combo_repeated") (all
+      # the same weave) look back over.
+      combo_casts: 3
       ailment_magnitude:
         burning: "amount * 0.3"
         bleeding: "amount * 0.25"
