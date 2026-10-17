@@ -109,6 +109,37 @@ public sealed class Stats : IComponent, IExprScope
         return Recent.TryGetValue(key, out var t) && Now - t <= RecentWindow;
     }
 
+    // ------------------------------------------------------------ leases
+
+    private Dictionary<string, long>? _leases;
+
+    /// <summary>
+    /// Starts a new lease on a key and returns its number. Work scheduled to undo something (a temporary
+    /// modifier's removal) remembers the lease it was given and acts only if <see cref="HoldsLease"/> still
+    /// says so, so a refresh that took a newer lease is not undone by the older timer.
+    /// </summary>
+    public long Lease(string key)
+    {
+        _leases ??= new Dictionary<string, long>(StringComparer.Ordinal);
+        var next = (_leases.TryGetValue(key, out var current) ? current : 0) + 1;
+        _leases[key] = next;
+        return next;
+    }
+
+    /// <summary>Whether <paramref name="lease"/> is still the latest lease taken on the key.</summary>
+    public bool HoldsLease(string key, long lease) => _leases is not null && _leases.TryGetValue(key, out var current) && current == lease;
+
+    /// <summary>Ends the lease on a key, if <paramref name="lease"/> is still the latest one; true when it was.</summary>
+    public bool EndLease(string key, long lease)
+    {
+        if (!HoldsLease(key, lease))
+        {
+            return false;
+        }
+        _leases!.Remove(key);
+        return true;
+    }
+
     public double Gauge(string key) => Gauges.TryGetValue(key, out var v) ? v : 0;
 
     public void SetGauge(string key, double value)

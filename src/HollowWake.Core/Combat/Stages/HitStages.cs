@@ -46,6 +46,7 @@ public static class HitStages
         Register(new PoolsStage());
         Register(new CullStage());
         DeclareStep("crit");
+        DeclareStep("armor");
     }
 
     public static void Register(IHitStage stage) => Stages[stage.Name] = stage;

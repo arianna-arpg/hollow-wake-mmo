@@ -23,6 +23,8 @@ internal sealed class MitigateStage : IHitStage
         var extra = hit.Extra;
         var resistCap = hit.Plan.ResistCap;
         var resistFloor = hit.Plan.ResistFloor;
+        // The armor step can be skipped by hit tag (damage over time ignores armor) while resistances still apply.
+        var skipArmor = hit.Plan.Skips(tags, "armor");
         for (var i = 0; i < hit.ThreadCount; i++)
         {
             if (!hit.Live[i])
@@ -35,6 +37,10 @@ internal sealed class MitigateStage : IHitStage
             var mitigation = def?.Mitigation ?? "resist";
             if (mitigation == "armor")
             {
+                if (skipArmor)
+                {
+                    continue;
+                }
                 var armor = ts.Get("armor");
                 var scope = new DictScope(ctx.Rng).Set("armor", armor).Set("raw", amount).Set("level", ts.Level);
                 var reduction = Math.Clamp(rules.Eval("combat.armor_reduction", "armor / (armor + 10 * raw)", scope), 0, 0.9);

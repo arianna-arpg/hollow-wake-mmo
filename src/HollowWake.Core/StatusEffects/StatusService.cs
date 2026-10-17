@@ -207,6 +207,11 @@ public sealed class StatusService
             {
                 flags.Add(f);
             }
+            // Forbidden weave tags become forbid:<tag> flags, the ones WeaveRuntime.TryBegin refuses on.
+            foreach (var f in ForbidFlags(def))
+            {
+                flags.Add(f);
+            }
             gauges["status." + s.Id + ".stacks"] = gauges.GetValueOrDefault("status." + s.Id + ".stacks") + s.Stacks;
             gauges["status." + s.Id] = 1;
         }
@@ -241,6 +246,23 @@ public sealed class StatusService
     }
 
     private readonly HashSet<string> _knownStatusFlags = new(StringComparer.Ordinal);
+    private readonly Dictionary<string, string[]> _forbidFlags = new(StringComparer.Ordinal);
+
+    /// <summary>The flags a status's forbidden weave tags set, <c>forbid:{tag}</c>, built once per status.</summary>
+    private string[] ForbidFlags(StatusDef def)
+    {
+        if (!_forbidFlags.TryGetValue(def.Id, out var flags))
+        {
+            var tags = def.ForbidsTags.Items;
+            flags = new string[tags.Count];
+            for (var i = 0; i < tags.Count; i++)
+            {
+                flags[i] = "forbid:" + tags[i];
+            }
+            _forbidFlags[def.Id] = flags;
+        }
+        return flags;
+    }
 
     private bool IsStatusFlag(Simulation sim, string flag)
     {
@@ -249,6 +271,10 @@ public sealed class StatusService
             foreach (var d in sim.Content.Each<StatusDef>())
             {
                 foreach (var f in d.Flags)
+                {
+                    _knownStatusFlags.Add(f);
+                }
+                foreach (var f in ForbidFlags(d))
                 {
                     _knownStatusFlags.Add(f);
                 }

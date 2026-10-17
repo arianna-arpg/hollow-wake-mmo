@@ -1,9 +1,7 @@
-using System.Numerics;
-using HollowWake.Core.Combat;
 using HollowWake.Core.Components;
+using HollowWake.Core.Content;
 using HollowWake.Core.Definitions;
 using HollowWake.Core.Ecs;
-using HollowWake.Core.Effects;
 using HollowWake.Core.Sim;
 using HollowWake.Core.StatusEffects;
 
@@ -15,12 +13,22 @@ public sealed class StatusSystem : SimSystem
     public override string Name => "statuses";
     public override SimPhase Phase => SimPhase.Status;
 
+    // The resources that regenerate, read once per content set rather than every tick.
+    private ContentRegistry? _content;
+    private ResourceDef[] _regenerating = Array.Empty<ResourceDef>();
+
     public override void Update(Simulation sim)
     {
         var dt = sim.Clock.Dt;
         var now = sim.Clock.Time;
         var service = sim.Service<StatusService>();
-        var resources = sim.Content.Each<ResourceDef>().ToList();
+        if (!ReferenceEquals(_content, sim.Content))
+        {
+            _content = sim.Content;
+            _regenerating = sim.Content.Each<ResourceDef>().Where(r => r.Regen is not null).ToArray();
+        }
+        // The loop stays small and the per-body work lives in its own method, so the runtime can optimize a
+        // long-running update without recompiling the whole body in the middle of a tick.
         foreach (var (e, stats) in sim.World.Query<Stats>())
         {
             stats.Now = now;
@@ -28,34 +36,37 @@ public sealed class StatusSystem : SimSystem
             {
                 continue;
             }
-            if (sim.World.TryGet<Statuses>(e, out var statuses))
+            Advance(sim, service, e, stats, now, dt);
+        }
+    }
+
+    private void Advance(Simulation sim, StatusService service, Entity e, Stats stats, double now, double dt)
+    {
+        if (sim.World.TryGet<Statuses>(e, out var statuses))
+        {
+            service.Tick(sim, e, stats, statuses, dt);
+            if (!sim.World.IsAlive(e) || sim.World.Has<Dead>(e))
             {
-                service.Tick(sim, e, stats, statuses, dt);
-                if (!sim.World.IsAlive(e) || sim.World.Has<Dead>(e))
-                {
-                    continue;
-                }
+                return;
             }
-            foreach (var r in resources)
+        }
+        var regenerating = _regenerating;
+        for (var i = 0; i < regenerating.Length; i++)
+        {
+            var r = regenerating[i];
+            var regen = stats.Get(r.Regen!);
+            if (regen != 0)
             {
-                if (r.Regen is null)
-                {
-                    continue;
-                }
-                var regen = stats.Get(r.Regen);
-                if (regen != 0)
-                {
-                    stats.AddResource(r.Id, regen * dt);
-                }
+                stats.AddResource(r.Id, regen * dt);
             }
-            if (sim.World.TryGet<Motion>(e, out var m))
-            {
-                var moving = now - m.LastMoveTime <= 0.15;
-                var stationary = now - m.LastMoveTime >= 0.6;
-                Set(stats, "moving", moving);
-                Set(stats, "stationary", stationary);
-                Set(stats, "airborne", !m.Grounded && !m.Flying);
-            }
+        }
+        if (sim.World.TryGet<Motion>(e, out var m))
+        {
+            var moving = now - m.LastMoveTime <= 0.15;
+            var stationary = now - m.LastMoveTime >= 0.6;
+            Set(stats, "moving", moving);
+            Set(stats, "stationary", stationary);
+            Set(stats, "airborne", !m.Grounded && !m.Flying);
         }
     }
 

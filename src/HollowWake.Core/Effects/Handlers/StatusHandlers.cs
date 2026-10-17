@@ -165,15 +165,17 @@ internal sealed class ModifyHandler : IEffectHandler
             stats.Attributes.RemoveSource(source);
             stats.Attributes.Add(new Attributes.Modifier { Attribute = Attribute, Form = Form, Value = ctx.Eval(Value) * ctx.Potency, Scope = Scope, Source = source });
             var duration = ctx.Eval(Duration, 5);
-            var version = stats.Attributes.Version;
-            ctx.Sim.Scheduler.After(duration, () =>
+            // Each application takes a new lease on the source; a timer removes the modifier only while its
+            // own lease is the latest, so refreshing a temporary modifier gives it its full time again.
+            var lease = stats.Lease(source);
+            var sim = ctx.Sim;
+            sim.Scheduler.After(duration, () =>
             {
-                if (ctx.Sim.World.IsAlive(target))
+                if (sim.World.IsAlive(target) && stats.EndLease(source, lease))
                 {
                     stats.Attributes.RemoveSource(source);
                 }
             });
-            _ = version;
         }
     }
 }
