@@ -12,7 +12,7 @@
       "date": "2026-10-16",
       "title": "Running your own server",
       "body": "Point the Server field at any Hollow Wake MMO server. The default, 127.0.0.1:7777, is a server running on this computer: start one from a checkout with dotnet run --project src/HollowWake.Server.Host.",
-      "url": "https://github.com/arianna-arpg/hollow-wake-mmo#run-it"
+      "url": "https://github.com/arianna-arpg/hollow-wake-mmo#run-it-from-source"
     },
     {
       "date": "2026-10-16",

@@ -46,6 +46,8 @@ The core is the product. It compiles for .NET 8 so both the Godot client and the
 
 Godot renders what the server says. On entering the world it receives the seed, layout and overlays and generates terrain locally with the same `WorldGenerator`; modified chunks arrive on the wire. Entities are placeholder bodies interpolated between snapshots. The camera rig is the only place that knows whether the view is isometric or third person. Input becomes intents; nothing is resolved on the client.
 
+Players get the client through the launcher (`launcher/`, Electron): it installs and updates exported builds from GitHub Releases, verifying each against the release manifest, and starts the client with the server address. Tags and a nightly schedule produce those releases (`.github/workflows/release.yml`, `nightly.yml`). The launcher has no game logic and never speaks the protocol. See [design/launcher.md](design/launcher.md).
+
 ## Scaling path
 
 1. Today: one process, many zones, one world thread, a handful of players.

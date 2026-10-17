@@ -4,6 +4,7 @@
 
 - .NET 10 SDK. It builds the .NET 8 projects too by fetching the targeting pack.
 - Godot 4.7 .NET edition for the client. The client assembly compiles without Godot installed; running it needs the editor or an export.
+- Node.js 24 for the launcher in `launcher/`; Godot export templates (the editor's Export dialog installs them) to export the client locally.
 - Docker, optionally, for the container build.
 - Windows, Linux or macOS for the pure .NET host. The BRUTAL host ships natives for linux-x64, win-x64 and osx-arm64.
 
@@ -19,6 +20,16 @@ dotnet run --project src/HollowWake.Server.Host        # TCP on 7777, data under
 Then open `src/HollowWake.Client/project.godot` in Godot and press play. Connect to `127.0.0.1:7777` with any account name (development auth creates accounts on first use).
 
 Without the client, `hollowwake probe` connects over TCP, logs in, creates a character, enters the world, walks and reports what it saw.
+
+## The launcher
+
+```bash
+cd launcher
+npm ci
+npm start          # the launcher from source; npm test for its unit tests
+```
+
+It installs into the per-user data folder from GitHub Releases. To try an install or an update without publishing anything, build a feed folder with `scripts/package-client.sh`, serve it with `node launcher/scripts/serve-feed.mjs`, and start the launcher with `HOLLOWWAKE_FEED` pointing at the served `manifest.json` and `HOLLOWWAKE_DATA_DIR` at a scratch folder. [design/launcher.md](../design/launcher.md) lists every override and flag.
 
 ## Server configuration
 

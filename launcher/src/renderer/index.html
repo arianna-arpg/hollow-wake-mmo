@@ -27,14 +27,20 @@
     <div id="overrides" class="overrides" hidden></div>
 
     <main class="grid">
-      <section class="panel news" aria-labelledby="news-heading">
-        <div class="panel-head">
-          <h2 id="news-heading">News</h2>
-          <span id="news-note" class="note"></span>
-        </div>
-        <p id="motd" class="motd" hidden></p>
-        <ol id="news-list" class="news-list"></ol>
-      </section>
+      <div class="left">
+        <section class="panel news" aria-labelledby="news-heading">
+          <div class="panel-head">
+            <h2 id="news-heading">News</h2>
+            <span id="news-note" class="note"></span>
+          </div>
+          <p id="motd" class="motd" hidden></p>
+          <ol id="news-list" class="news-list"></ol>
+        </section>
+
+        <section id="log-panel" class="log-panel" hidden aria-label="Log">
+          <pre id="log" class="log"></pre>
+        </section>
+      </div>
 
       <aside class="panel play" aria-label="Play">
         <label class="field" for="address">
@@ -53,10 +59,10 @@
         </div>
 
         <div class="status" id="status">
-          <div class="versions">
-            <div><span class="label">Installed</span><span id="installed-version" class="version">none</span></div>
-            <div><span class="label">Available</span><span id="remote-version" class="version">...</span></div>
-          </div>
+          <dl class="versions">
+            <dt class="label">Installed</dt><dd id="installed-version" class="version">none</dd>
+            <dt class="label">Available</dt><dd id="remote-version" class="version">...</dd>
+          </dl>
           <p id="status-title" class="status-title">Starting...</p>
           <p id="status-detail" class="status-detail"></p>
           <p id="status-hint" class="status-hint"></p>
@@ -76,10 +82,6 @@
         </div>
       </aside>
     </main>
-
-    <section id="log-panel" class="log-panel" hidden aria-label="Log">
-      <pre id="log" class="log"></pre>
-    </section>
 
     <footer class="footer">
       <label class="switch" for="developer">
