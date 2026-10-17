@@ -1,6 +1,6 @@
 # Client
 
-The Godot client is presentation. It never resolves gameplay.
+The Godot client is presentation. It never resolves gameplay. The browser client in `web/` follows the same rules with server-sent terrain; its contract is [web-client.md](web-client.md).
 
 ## World
 

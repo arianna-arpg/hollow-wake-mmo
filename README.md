@@ -16,14 +16,16 @@ This repository is the foundation: the engine-agnostic simulation core, the auth
 | `src/HollowWake.Protocol` | The messages between client and server. |
 | `src/HollowWake.Server` | Sessions, zones, interest management, persistence, world events. Hosted by `HollowWake.Server.Host` (pure .NET, TCP) or `HollowWake.Server.Host.Brutal` (.NET 10 + BRUTAL RakNet UDP). |
 | `src/HollowWake.Client` | Godot 4 client: generates the same terrain locally from the server's seed, renders placeholder bodies, offers an isometric and a third-person camera over one fully 3D world. |
+| `web/` | Browser client in TypeScript and three.js: the same views, cameras and controls over WebSocket, with terrain sent by the server. Served by the game server itself or from GitHub Pages; playable from a Codespace with nothing installed. |
 | `src/HollowWake.Tools` | The `hollowwake` command line: validate content, roll items, simulate fights, describe generated regions and zones, run a zone headless, probe a live server. |
 | `content/core` | The first content layer. Everything the engine runs comes from here. |
 | `docs/` | The vision, the architecture, one design contract per system, the lore bible, hosting research, decision records. |
 | `deploy/` | Dockerfile, Compose file, a VPS bootstrap script. |
+| `.devcontainer/`, `scripts/` | The Codespaces dev container and `codespace-play.sh`, which builds the web client and starts the server. |
 
 ## Run it
 
-Requires the .NET 10 SDK (the .NET 8 targeting pack is fetched automatically) and, for the client, Godot 4.7 .NET edition.
+Requires the .NET 10 SDK (the .NET 8 targeting pack is fetched automatically) and, for the desktop client, Godot 4.7 .NET edition, or Node 22 for the web client.
 
 ```bash
 dotnet build HollowWake.sln
@@ -33,6 +35,8 @@ dotnet run --project src/HollowWake.Server.Host
 ```
 
 Open `src/HollowWake.Client/project.godot` in Godot, press play, connect to `127.0.0.1:7777`, make a character and walk out of Ninewells.
+
+Or play in a browser: build the web client once with `npm --prefix web ci && npm --prefix web run build` (Node 22), start the server, and open `http://localhost:7778/`. Without installing anything, open a Codespace on the repository and follow [docs/infrastructure/codespaces.md](docs/infrastructure/codespaces.md).
 
 Useful tools:
 
