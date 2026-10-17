@@ -285,5 +285,9 @@ public static class WeaveValidation
         {
             c.Warn($"'{field}' glyph '{dormant.Ref}' is dormant: {dormant.Reason}");
         }
+        foreach (var node in weave.DormantNodes)
+        {
+            c.Warn($"'{field}' tree node '{node.Id}' does not count: {node.Reason}");
+        }
     }
 }

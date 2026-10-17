@@ -29,6 +29,12 @@ public enum GlyphFit
 /// <summary>A socketed glyph that contributes nothing, not even costs, because its gate fails; and why.</summary>
 public sealed record DormantGlyph(GlyphRef Ref, GlyphDef Glyph, string Reason);
 
+/// <summary>A tree node that counts on a weave, and the ranks bought in it.</summary>
+public sealed record TreeRank(TreeNodeSpec Node, int Ranks);
+
+/// <summary>A spent tree node that contributes nothing, and why: unknown, unlinked, excluded, out of ranks or points.</summary>
+public sealed record DormantNode(string Id, string Reason);
+
 /// <summary>The cast-scope tags the compiler adds from a form's cast mode and base cast time.</summary>
 public static class CastScopes
 {
@@ -128,6 +134,16 @@ public sealed class CompiledWeave
 
     /// <summary>Glyphs a slot graft added beyond the sockets (attribute family <c>glyph.slot{n}.{glyph}</c>).</summary>
     public IReadOnlyList<GlyphRef> Grafts { get; init; } = Array.Empty<GlyphRef>();
+
+    /// <summary>The tree nodes that count, each with the ranks bought, in the order they were first bought.</summary>
+    public IReadOnlyList<TreeRank> Tree { get; init; } = Array.Empty<TreeRank>();
+
+    /// <summary>Spent tree nodes that do not count (unknown, unlinked, excluded, past the points), each with why.</summary>
+    public IReadOnlyList<DormantNode> DormantNodes { get; init; } = Array.Empty<DormantNode>();
+
+    /// <summary>The points the weave's level grants its tree (rule <c>casting.tree_points</c>), and how many count.</summary>
+    public int TreePoints { get; init; }
+    public int TreeSpent { get; init; }
 
     /// <summary>The mechanisms the form and the active glyphs declare, before probes.</summary>
     public TagSet DeclaredMechanisms { get; init; } = TagSet.Empty;
@@ -284,6 +300,10 @@ public sealed class CompiledWeave
         GlyphRefs = GlyphRefs,
         Dormant = Dormant,
         Grafts = Grafts,
+        Tree = Tree,
+        DormantNodes = DormantNodes,
+        TreePoints = TreePoints,
+        TreeSpent = TreeSpent,
         DeclaredMechanisms = DeclaredMechanisms,
         CastScope = CastScope,
         LevelBonus = LevelBonus,
@@ -299,7 +319,9 @@ public sealed class CompiledWeave
 
 /// <summary>
 /// Turns specs into compiled weaves. In order: the preset, form and Threads resolve; glyphs resolve at
-/// their levels with their rolled rows, slot grafts joining after the sockets; then, to a fixpoint, the
+/// their levels with their rolled rows, slot grafts joining after the sockets; the form's tree folds the
+/// spec's spent nodes in the order bought (their glyphs join as grafts do, their modifiers and patches
+/// after the glyphs'); then, to a fixpoint, the
 /// active glyphs' tags, mechanisms, modifiers, patches and hooks build the weave, the mechanism probes run
 /// on it, and the last active glyph in socket order whose gate fails goes dormant (in strict mode the first
 /// misfit fails the compile). Glyphs that enable each other through tags, mechanisms or what their patches
@@ -367,7 +389,132 @@ public sealed class WeaveCompiler
     private static string CacheKey(WeaveSpec spec, GlyphFit fit, IReadOnlyList<GlyphRef>? grafts)
     {
         var key = $"{spec.Preset}|{spec.Form}|{string.Join(",", spec.Threads)}|{string.Join(",", spec.Glyphs)}|{spec.Level}|{spec.Name}|{(int)fit}";
+        if (spec.Tree.Count > 0)
+        {
+            key += "|t:" + string.Join(",", spec.Tree);
+        }
         return grafts is { Count: > 0 } ? key + "|g:" + string.Join(",", grafts) : key;
+    }
+
+    /// <summary>The points a weave of a level has for its form's tree: rule <c>casting.tree_points</c>, an expression of <c>level</c>.</summary>
+    public int TreePointsAt(int level)
+    {
+        var points = _content.Rules.Eval("casting.tree_points", "max(0, level - 1)", new DictScope().Set("level", Math.Max(1, level)));
+        return Math.Max(0, (int)Math.Floor(points + 1e-9));
+    }
+
+    /// <summary>A spec's spent tree nodes folded in the order they were bought: what counts, and what does not with why.</summary>
+    private sealed class TreeFold
+    {
+        public readonly List<TreeRank> Ranks = new();
+        public readonly List<DormantNode> Dormant = new();
+        public readonly List<GlyphRef> Glyphs = new();
+        public int Points;
+        public int Spent;
+    }
+
+    /// <summary>
+    /// Walks the spec's spent nodes in the order bought. A node counts when the form has a tree open at the
+    /// weave's level, the node is in it with a rank left, one of its links (if it has any) was bought before
+    /// it, nothing bought excludes it either way round, and a point is left. Strict mode fails on the first
+    /// node that does not count; otherwise it stays spent but dormant, with its reason.
+    /// </summary>
+    private TreeFold FoldTree(FormDef form, WeaveSpec spec, GlyphFit fit)
+    {
+        var fold = new TreeFold();
+        var tree = form.Tree;
+        if (tree is not null)
+        {
+            fold.Points = TreePointsAt(spec.Level);
+        }
+        if (spec.Tree.Count == 0)
+        {
+            return fold;
+        }
+        var bought = new Dictionary<string, int>(StringComparer.Ordinal);
+        foreach (var id in spec.Tree)
+        {
+            var node = tree?.Nodes.Find(n => n.Id == id);
+            string? why;
+            if (tree is null)
+            {
+                why = $"Form '{form.Id}' has no tree.";
+            }
+            else if (spec.Level < tree.OpensAt)
+            {
+                why = $"The tree of '{form.Id}' opens at weave level {tree.OpensAt}.";
+            }
+            else if (node is null)
+            {
+                why = $"'{id}' is not a node of the tree of '{form.Id}'.";
+            }
+            else if (bought.GetValueOrDefault(id) >= Math.Max(1, node.Ranks))
+            {
+                why = $"Tree node '{id}' has no rank left to buy.";
+            }
+            else if (node.Links.Count > 0 && !node.Links.Exists(bought.ContainsKey))
+            {
+                why = $"Tree node '{id}' links to none of the nodes bought before it.";
+            }
+            else if (ExcludedBy(node, bought, tree) is { } other)
+            {
+                why = $"Tree node '{id}' cannot be held with '{other}'.";
+            }
+            else if (fold.Spent >= fold.Points)
+            {
+                why = $"Tree node '{id}' needs a point the weave's level does not grant.";
+            }
+            else
+            {
+                why = null;
+            }
+            if (why is not null)
+            {
+                if (fit == GlyphFit.Strict)
+                {
+                    throw new WeaveCompileException(why);
+                }
+                fold.Dormant.Add(new DormantNode(id, why));
+                continue;
+            }
+            fold.Spent++;
+            if (bought.TryGetValue(id, out var rank))
+            {
+                bought[id] = rank + 1;
+                var at = fold.Ranks.FindIndex(r => r.Node.Id == id);
+                fold.Ranks[at] = fold.Ranks[at] with { Ranks = rank + 1 };
+            }
+            else
+            {
+                bought[id] = 1;
+                fold.Ranks.Add(new TreeRank(node!, 1));
+                if (node!.Glyph is { } glyph)
+                {
+                    fold.Glyphs.Add(glyph);
+                }
+            }
+        }
+        return fold;
+    }
+
+    /// <summary>The bought node that excludes <paramref name="node"/>, or that it excludes; null when none.</summary>
+    private static string? ExcludedBy(TreeNodeSpec node, Dictionary<string, int> bought, TreeSpec tree)
+    {
+        foreach (var other in node.Excludes)
+        {
+            if (bought.ContainsKey(other))
+            {
+                return other;
+            }
+        }
+        foreach (var held in tree.Nodes)
+        {
+            if (held.Id != node.Id && bought.ContainsKey(held.Id) && held.Excludes.Contains(node.Id))
+            {
+                return held.Id;
+            }
+        }
+        return null;
     }
 
     /// <summary>A glyph as socketed: its reference, definition, level and the rows it rolled.</summary>
@@ -491,6 +638,16 @@ public sealed class WeaveCompiler
                 grafted.Add(gref);
             }
         }
+        // The form's tree: nodes bought with the weave's points; their glyphs join as grafts do.
+        var tree = FoldTree(form, spec, fit);
+        foreach (var gref in tree.Glyphs)
+        {
+            if (glyphs.Exists(s => s.Ref.Id == gref.Id) || _content.Get<GlyphDef>(gref.Id) is not { } g)
+            {
+                continue;
+            }
+            glyphs.Add(new Socketed(gref, g, Math.Clamp(gref.Level ?? g.Level, 1, maxLevel), RowsOf(gref, g), Graft: true));
+        }
 
         // Every glyph starts active. While some active glyph's gate fails, the last such glyph in socket order
         // goes dormant (so where glyphs exclude each other the earlier socket keeps its place) and the weave is
@@ -502,7 +659,7 @@ public sealed class WeaveCompiler
         Evaluation state;
         while (true)
         {
-            state = Evaluate(preset, form, threads, baseTags, bases, glyphs, active);
+            state = Evaluate(preset, form, threads, baseTags, bases, glyphs, active, tree.Ranks);
             var failing = -1;
             string? reason = null;
             for (var i = 0; i < glyphs.Count; i++)
@@ -593,6 +750,10 @@ public sealed class WeaveCompiler
             GlyphRefs = activeRefs,
             Dormant = dormant,
             Grafts = grafted,
+            Tree = tree.Ranks,
+            DormantNodes = tree.Dormant,
+            TreePoints = tree.Points,
+            TreeSpent = tree.Spent,
             DeclaredMechanisms = state.Declared,
             CastScope = castScope,
             LevelBonus = state.LevelBonus,
@@ -687,7 +848,7 @@ public sealed class WeaveCompiler
         TriggerKinds.TryGet(trigger.On, out var kind) ? kind : throw new WeaveCompileException($"'{owner}' triggers on unknown kind '{trigger.On}'.");
 
     /// <summary>The weave with the active glyphs: tags, declared and probed mechanisms, modifiers, and the patched, hooked graph.</summary>
-    private Evaluation Evaluate(WeaveDef? preset, FormDef form, List<ThreadDef> threads, TagSet baseTags, Dictionary<string, double> bases, List<Socketed> glyphs, bool[] active)
+    private Evaluation Evaluate(WeaveDef? preset, FormDef form, List<ThreadDef> threads, TagSet baseTags, Dictionary<string, double> bases, List<Socketed> glyphs, bool[] active, List<TreeRank> tree)
     {
         var tags = baseTags;
         var declared = form.Mechanisms;
@@ -728,6 +889,12 @@ public sealed class WeaveCompiler
                 modifiers.AddRange(g.PerLevel.Select(m => m.Scaled(levelsAbove).WithSource(source)));
             }
             levelBonus += g.LevelBonus + (int)Math.Floor(g.LevelBonusPerLevel * levelsAbove);
+        }
+        // Tree nodes: each rank bought adds the node's modifiers once more.
+        foreach (var (node, ranks) in tree)
+        {
+            var source = "tree:" + node.Id;
+            modifiers.AddRange(node.Modifiers.Select(m => m.Scaled(ranks).WithSource(source)));
         }
 
         // The graph: the form's and preset's effects take patches in glyph order, and so do the form's
@@ -787,6 +954,21 @@ public sealed class WeaveCompiler
                 try
                 {
                     patcher.Apply(patch, glyphs[i].Def.Id);
+                }
+                catch (InvalidOperationException ex)
+                {
+                    throw new WeaveCompileException(ex.Message);
+                }
+            }
+        }
+        // Tree nodes patch after the glyphs, so a socketed glyph's choice wins over the weave's own tree.
+        foreach (var (node, _) in tree)
+        {
+            foreach (var patch in node.Patches)
+            {
+                try
+                {
+                    patcher.Apply(patch, "tree:" + node.Id);
                 }
                 catch (InvalidOperationException ex)
                 {

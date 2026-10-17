@@ -525,6 +525,50 @@ public sealed partial class WeaveRuntime
         return true;
     }
 
+    // ------------------------------------------------------------ trees
+
+    /// <summary>
+    /// The points a seat's weave has for its form's tree (rule <c>casting.tree_points</c> of its level) and how
+    /// many of those it spent on nodes that count: what a reset gives back, and what the slot shows. (0, 0)
+    /// for a weave whose form has no tree. A pure read.
+    /// </summary>
+    public (int Spent, int Points) TreePoints(Simulation sim, WeaveSlot slot)
+    {
+        var weave = Resolve(sim, slot, out _);
+        return weave?.Form.Tree is null ? (0, 0) : (weave.TreeSpent, weave.TreePoints);
+    }
+
+    /// <summary>
+    /// Clears a seat's tree, giving back every point spent in it: what a station's reset service calls. The
+    /// seat keeps its weave, glyphs, cooldown and state and recompiles without its nodes; a cast running from
+    /// it is interrupted. False with a reason when the seat is empty or nothing was spent in its tree.
+    /// </summary>
+    public bool ResetTree(Simulation sim, Entity caster, int slotIndex, out string reason)
+    {
+        reason = "";
+        if (!sim.World.TryGet<WeaveBook>(caster, out var book) || slotIndex < 0 || slotIndex >= book.Slots.Count)
+        {
+            reason = "no_slot";
+            return false;
+        }
+        var slot = book.Slots[slotIndex];
+        if (slot.Spec.Tree.Count == 0)
+        {
+            reason = "no_tree";
+            return false;
+        }
+        var refunded = Resolve(sim, slot, out _)?.TreeSpent ?? 0;
+        if (book.Casting is { } cast && ReferenceEquals(cast.Slot, slot))
+        {
+            Interrupt(sim, caster);
+        }
+        slot.Spec = slot.Spec with { Tree = new List<string>() };
+        slot.Compiled = null;
+        book.Changed();
+        sim.Events.Publish(new WeaveTreeReset(caster, slotIndex, slot.Key, refunded) { Tick = sim.Clock.Tick });
+        return true;
+    }
+
     /// <summary>
     /// Whether the caster may change its loadout now: rule <c>casting.swap_requires</c> (an expression over the
     /// caster, such as no recent hits), waived where the ground carries the tag rule <c>casting.swap_waived_by</c>

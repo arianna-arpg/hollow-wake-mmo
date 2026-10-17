@@ -43,6 +43,9 @@ public sealed record GuardBroken(Entity Bearer, string Weave, double Absorbed) :
 /// <summary>An effect surged a raised guard: how much it added and the pool it left.</summary>
 public sealed record GuardSurged(Entity Bearer, string Weave, double Amount, double Pool) : GameEvent;
 
+/// <summary>A seat's tree was cleared (a station's reset): the points it gave back.</summary>
+public sealed record WeaveTreeReset(Entity Caster, int Slot, string Weave, int Refunded) : GameEvent;
+
 /// <summary>A press during a cast bar: whether a timed press landed (flawless), or a multitude strike.</summary>
 public sealed record WeavePressed(Entity Caster, string Weave, int Presses, bool Flawless) : GameEvent;
 

@@ -14,6 +14,14 @@ entries:
     tags: [spell, area, channel]
     max_glyphs: 3
     ai: { role: damage, preferred_range: 4.5, weight: 1 }
+    # Points from the weave's level (rule casting.tree_points), one per rank.
+    tree:
+      opens_at: 2
+      nodes:
+        - { id: swelling, name: Swelling, description: The stream runs wider., ranks: 3, modifiers: [ { attribute: area.radius, form: increased, value: 0.08 } ] }
+        - { id: quick_pour, name: Quick Pour, description: The beats come sooner., links: [ swelling ], ranks: 2, modifiers: [ { attribute: cast.speed, form: increased, value: 0.06 } ] }
+        - { id: broad_stream, name: Broad Stream, description: The stream fans out to a wide arc., links: [ swelling ], excludes: [ quick_pour ], patches: [ { type: area, where: first, set: { angle: 90 } } ] }
+        - { id: still_water, name: Still Water, description: Pouring steadies the one who pours., links: [ quick_pour, broad_stream ], glyph: bastion }
     channel:
       interval: 0.5
       windup: 0.3
