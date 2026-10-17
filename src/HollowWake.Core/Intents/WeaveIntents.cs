@@ -17,3 +17,9 @@ public sealed record PressWeaveIntent(int Slot) : IIntent;
 
 /// <summary>The live aim while a held or tracking cast runs: a point on the ground and a facing.</summary>
 public sealed record AimIntent(Vector3 Point, Vector2 Direction) : IIntent;
+
+/// <summary>The second ability on a slot: the form's meta first, then each glyph's in socket order, one beat apart.</summary>
+public sealed record UseMetaIntent(int Slot) : IIntent;
+
+/// <summary>Swaps two rack seats; the rack order is the weave bar order.</summary>
+public sealed record SwapWeaveSlotsIntent(int A, int B) : IIntent;
