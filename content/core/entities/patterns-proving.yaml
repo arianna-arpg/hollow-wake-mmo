@@ -1,0 +1,33 @@
+# Proving duelists: two bodies built to exercise the defensive ladder and the trigger economy in a seeded duel
+# (`hollowwake fight proving_reaver proving_bulwark`). Nothing in the world spawns them.
+kind: patterns
+entries:
+  - id: proving_reaver
+    name: Proving Reaver
+    description: Bleeds what it strikes, tears the bleeding open, drinks from every blow, and its blows echo.
+    extends: monster
+    tags: [humanoid, proving, reaver]
+    level: 6
+    radius: 0.5
+    components:
+      stats:
+        attributes: { might: 12, grace: 10, vigor: 12, move.speed: 5, weapon.damage.min: 6, weapon.damage.max: 10, weapon.attack.time: 1.8 }
+        modifiers:
+          - { attribute: leech.life, form: flat, value: 0.12 }
+          - { attribute: proc.echoing_blow, form: flat, value: 1 }
+          - { attribute: status.bleeding.chance, form: flat, value: 0.6 }
+      weaves: { list: [ { form: strike, threads: [stone], glyphs: [rending] } ] }
+      behavior: { id: aggressive_melee }
+
+  - id: proving_bulwark
+    name: Proving Bulwark
+    description: A shield that recharges between blows and poise that breaks and re-arms.
+    extends: monster
+    tags: [humanoid, proving, bulwark]
+    level: 6
+    radius: 0.55
+    components:
+      stats:
+        attributes: { might: 12, grace: 8, vigor: 30, move.speed: 4.5, armor: 20, shield.max: 40, shield.recharge_delay: 1, shield.recharge_rate: 0.5, poise.max: 30, weapon.damage.min: 6, weapon.damage.max: 10, weapon.attack.time: 1.2 }
+      weaves: { list: [bite] }
+      behavior: { id: aggressive_melee }

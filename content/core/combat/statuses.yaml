@@ -1,4 +1,5 @@
-# Statuses: ailments the Threads leave, crowd control, buffs. Modifiers apply to the bearer while worn.
+# Statuses: ailments the Threads leave, crowd control, buffs, and the states the pools before life pass through.
+# Modifiers apply to the bearer while worn. More statuses, ported from the earlier roster, are in statuses-extra.yaml.
 kind: statuses
 entries:
   - id: burning
@@ -187,3 +188,78 @@ entries:
     color: "#5a4a7a"
     modifiers:
       - { attribute: crit.chance, form: flat, value: 0.25 }
+
+  # ---- the pools before life (rule combat.pool_rules names these); meta.hidden asks interfaces to show no icon
+  - id: shield_delay
+    name: Shield Delay
+    description: A blow landed; the shield waits before it recharges.
+    tags: [pool, shield]
+    duration: "shield.recharge_delay"
+    stack_policy: refresh
+    dispellable: false
+    scales_with_potency: false
+    color: "#8fd3ff"
+    meta: { hidden: true }
+    modifiers:
+      - { attribute: shield.recharge, form: more, value: -1 }
+
+  - id: poise_broken
+    name: Poise Broken
+    description: Off balance and open; poise re-arms when it ends.
+    tags: [pool, poise, control]
+    duration: 2
+    stack_policy: strongest
+    dispellable: false
+    scales_with_potency: false
+    flags: [off_balance]
+    color: "#d9b25a"
+    modifiers:
+      - { attribute: poise.regen, form: more, value: -1 }
+      - { attribute: poise.damage.taken, form: more, value: -1 }
+      - { attribute: damage.taken, form: increased, value: 0.15 }
+      - { attribute: move.speed, form: increased, value: -0.3 }
+    on_expire:
+      - { type: apply_status, status: poise_rearming, fixed_duration: 4 }
+
+  - id: poise_rearming
+    name: Poise Re-arming
+    description: Poise refills fast and cannot break again until it is whole.
+    tags: [pool, poise]
+    duration: 4
+    stack_policy: refresh
+    dispellable: false
+    scales_with_potency: false
+    color: "#d9b25a"
+    meta: { hidden: true }
+    modifiers:
+      - { attribute: poise.regen, form: more, value: 2 }
+      - { attribute: poise.damage.taken, form: more, value: -1 }
+    tick:
+      interval: 0.25
+      effects:
+        - { type: condition, if: "target.poise >= target.poise.max", then: [ { type: remove_status, status: poise_rearming } ] }
+
+  - id: stagger
+    name: Stagger
+    description: Part of each blow lands over the next seconds instead of at once.
+    tags: [pool, deferred]
+    duration: 3
+    stack_policy: refresh
+    dispellable: false
+    scales_with_potency: false
+    color: "#9c8b72"
+    bank: { from: applications }
+    tick:
+      interval: 0.5
+      effects:
+        - { type: damage, amount: amount, tags: [deferred], can_crit: false }
+
+  - id: death_cheated
+    name: Death Cheated
+    description: Survived a killing blow; it will not happen again for a while.
+    tags: [pool]
+    beneficial: true
+    dispellable: false
+    duration: 30
+    scales_with_potency: false
+    color: "#f5e27a"

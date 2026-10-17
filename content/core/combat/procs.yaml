@@ -1,0 +1,51 @@
+# Procs: chances to run an effect graph when a trigger kind fires for the owner. The chance is the owner's
+# attribute proc.<id> (or the one `chance` names), granted by any modifier source: an item, a passive, a status.
+# `tags` must all be on the triggering event and `excludes` none of them (damage over time by default);
+# `when` reads the owner and `victim` the other body. Rates: a chance, an internal cooldown (icd, seconds), or
+# procs per minute (ppm). Payloads run one effect depth deeper than the event; rules procs.* limit chains.
+kind: procs
+entries:
+  - id: brutal_strike
+    name: Brutal Strike
+    description: A critical melee blow lands again for half its damage.
+    on: crit
+    tags: [melee]
+    icd: 0.5
+    effects:
+      - { type: damage, amount: "last_damage * 0.5", threads: [stone], tags: [proc] }
+
+  - id: retaliation
+    name: Retaliation
+    description: Struck in melee, strike back.
+    on: hurt
+    tags: [melee]
+    icd: 1
+    no_crit: true
+    effects:
+      - { type: damage, amount: "4 + level * 1.5", threads: [stone] }
+
+  - id: second_wind
+    name: Second Wind
+    description: A kill restores a breath of life.
+    on: kill
+    target: owner
+    ppm: 10
+    effects:
+      - { type: heal, amount: "life.max * 0.06" }
+
+  - id: kindle
+    name: Kindle
+    description: Ember hits may set the target alight without a hit of their own to take strength from.
+    on: hit
+    tags: [ember]
+    victim: "life_pct > 0"
+    effects:
+      - { type: apply_status, status: burning, magnitude: "2 + level * 0.4", duration: 3 }
+
+  - id: echoing_blow
+    name: Echoing Blow
+    description: Each blow echoes for a fraction of what it dealt, and each echo may echo again, as deep as procs may go.
+    on: hit
+    falloff: 1
+    effects:
+      - { type: damage, amount: "last_damage * 0.3", threads: [stone], can_crit: false }

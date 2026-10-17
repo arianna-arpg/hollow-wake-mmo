@@ -210,6 +210,7 @@ switch (command)
         sim.Events.Subscribe<WeaveTriggered>(t => events.Add($"t={sim.Clock.Time:0.00} {sim.World.Get<Identity>(t.Caster)} triggered {t.Weave} on {t.Kind} at {sim.World.Get<Identity>(t.Target)}"));
         sim.Events.Subscribe<EntitySpawned>(s => events.Add($"t={sim.Clock.Time:0.00} spawned {s.Pattern} at {s.Position}"));
         sim.Events.Subscribe<EntityDespawned>(s => events.Add($"t={sim.Clock.Time:0.00} despawned {s.Pattern}"));
+        sim.Events.Subscribe<CombatNote>(n => events.Add($"t={sim.Clock.Time:0.00} {n.Describe(e => sim.World.Get<Identity>(e)?.ToString() ?? "?")}"));
         sim.RunSeconds(seconds);
         foreach (var line in events.Take(int.Parse(Opt("lines", "40"))))
         {
