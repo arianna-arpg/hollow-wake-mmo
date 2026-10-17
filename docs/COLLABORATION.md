@@ -17,7 +17,7 @@ A branch is a place to work, not a place to keep work. Uncommitted or unmerged w
 - **Open a draft pull request early**, as soon as the branch has a shape, so the claim is visible and the gates run on every push. Mark it ready when the gates and the evidence are in.
 - **A branch lives days, not weeks.** Slice the work so a branch merges within days; a long piece becomes a chain of small pull requests, not one branch kept open.
 - **Delete it when it merges.** GitHub deletes the remote branch on merge; the engineer removes the local branch and its worktree the same day (`git worktree remove <folder>`, `git branch -d <branch>`). `scripts/branches.sh` shows what is entirely on main and can go, and what is not.
-- **Stacked requests are retargeted before their base goes.** A request based on another branch is retargeted to main before that base merges, because deleting the base on merge closes the stack; or the stack is merged bottom-up and its base branches are kept until the top lands.
+- **Stacked requests are retargeted before their base goes.** A request based on another branch is retargeted to main before that base merges, because deleting the base on merge closes the stacked request, and a closed request cannot be reopened or retargeted; or the stack is merged bottom-up and its base branches are deleted only after the top lands.
 - **The weekly report names what lingers.** The `branches` workflow lists every branch with commits not on main, with its age, in its job summary and in one issue it keeps current (Branch report: work not on main). Each engineer answers for its own branches there: merge, split or delete, not leave.
 
 ## How we talk
