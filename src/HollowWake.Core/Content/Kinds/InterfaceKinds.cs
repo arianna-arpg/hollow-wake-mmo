@@ -227,6 +227,17 @@ internal static class InterfaceKinds
                 StatusMeta(status, c);
             }
         }
+        // A status the rows show wears a glyph: its meta names one, or this set maps it.
+        foreach (var status in c.Registry.Each<StatusDef>())
+        {
+            var meta = status.Meta;
+            var hidden = meta?["hidden"] is System.Text.Json.Nodes.JsonValue h && h.TryGetValue<bool>(out var isHidden) && isHidden;
+            var named = meta?["icon"] is System.Text.Json.Nodes.JsonValue v && v.TryGetValue<string>(out var icon) && d.Icons.ContainsKey(icon);
+            if (!hidden && !named && !d.Statuses.ContainsKey(status.Id))
+            {
+                c.Warn($"status '{status.Id}' has no glyph in this set: map it under statuses, or name one in the status's meta.icon.");
+            }
+        }
     }
 
     /// <summary>What a status's meta block may say to the interface.</summary>

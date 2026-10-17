@@ -24,8 +24,9 @@ public readonly record struct Seat(float FX, float FY)
 /// the right, just above the cluster), always above the cluster's drawn rectangle and inside the viewport.
 /// Pages dock beside it on the side with more room, share its height and move with it. The world's panes
 /// stand on the other side when that side has room; otherwise they share the page side and the two bind into
-/// one book. On a narrow screen books clamp inside the viewport, and the rail drops its count badges before
-/// its wallet chips when the core pane is too short for both.
+/// one book. On a narrow screen a book takes the room beside the core pane down to its minimum width rather
+/// than stand over it, and clamps inside the viewport below that; the rail drops its count badges before its
+/// wallet chips when the core pane is too short for both.
 /// </summary>
 public static class PaneLayout
 {
@@ -45,7 +46,8 @@ public static class PaneLayout
         float BadgeHeight,
         int Chips,
         float ChipHeight,
-        float RailTop);
+        float RailTop,
+        float MinWidth = 0);
 
     /// <summary>A pane standing alone (Options with the core pane closed): centred above the cluster, inside the viewport.</summary>
     public static Box Centered(Box viewport, Box cluster, float width, float height, float edge)
@@ -83,6 +85,12 @@ public static class PaneLayout
         Box Beside(bool left, float width)
         {
             var w = MathF.Min(width, area.W);
+            // Narrower than it would like still beats laid over the core pane: down to the minimum width.
+            var room = (left ? roomLeft : roomRight) - gap;
+            if (i.MinWidth > 0 && room < w && room >= i.MinWidth)
+            {
+                w = room;
+            }
             var x = left ? core.X - gap - w : core.Right + gap;
             return new Box(x, core.Y, w, core.H).ClampedInto(area);
         }

@@ -63,5 +63,11 @@ public class ShapeOutlineTests
         var wave = Region("wave", 2, width: 0.5f);
         Assert.True(ShapeOutline.Inside(wave, 0, 0));
         Assert.True(ShapeOutline.Reach(wave) > 2);
+        // The server's curvature (in radii) places the circle the blade bows along.
+        Assert.Equal(2, ShapeOutline.SpecOf("wave", 2, null, null, null, 1).Curvature);
+        Assert.Equal(3, ShapeOutline.SpecOf("arc", 2, null, null, null, 1, 3).Curvature);
+        var flat = ShapeOutline.RegionOf(ShapeOutline.SpecOf("arc", 2, 0.5f, 0.4f, null, 1, 3));
+        Assert.True(ShapeOutline.Inside(flat, 0, 0));
+        Assert.False(ShapeOutline.Inside(flat, -0.5f, 0));
     }
 }

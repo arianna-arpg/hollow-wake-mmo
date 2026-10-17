@@ -1,7 +1,10 @@
 namespace HollowWake.Client.UI.Logic;
 
-/// <summary>A shape's full proportions: radius, full angle in radians, full width, and the distance from the anchor left empty.</summary>
-public readonly record struct ShapeSpec(string Name, float Radius, float Angle, float Width, float Inner);
+/// <summary>
+/// A shape's full proportions: radius, full angle in radians, full width, the distance from the anchor left empty,
+/// and for arcs and waves how far behind the anchor (in radii) the circle they bow along centers.
+/// </summary>
+public readonly record struct ShapeSpec(string Name, float Radius, float Angle, float Width, float Inner, float Curvature = 0);
 
 /// <summary>A filled region in a shape's own frame: its outer loop and any holes, each counter-clockwise.</summary>
 public sealed record ShapeRegion(IReadOnlyList<(float X, float Y)> Outer, IReadOnlyList<IReadOnlyList<(float X, float Y)>> Holes);
@@ -22,7 +25,7 @@ public static class ShapeOutline
     public static readonly IReadOnlyList<string> Names = new[] { "circle", "square", "triangle", "sector", "cone", "crescent", "line", "band", "bar", "arc", "wave" };
 
     /// <summary>A shape's specification from what the wire sent, with the shape's defaults for what it left out.</summary>
-    public static ShapeSpec SpecOf(string name, float? radius, float? angle, float? width, float? inner, float fallbackRadius)
+    public static ShapeSpec SpecOf(string name, float? radius, float? angle, float? width, float? inner, float fallbackRadius, float? curvature = null)
     {
         var known = Names.Contains(name) ? name : "circle";
         var r = MathF.Max(0.05f, radius ?? fallbackRadius);
@@ -38,12 +41,14 @@ public static class ShapeOutline
             "wave" => (120 * Deg, thin, 0f),
             _ => (0f, 0f, 0f),
         };
+        var bow = known == "wave" ? 2f : known == "arc" ? 1f : 0f;
         return new ShapeSpec(
             known,
             r,
             Math.Clamp(angle ?? da, 0.01f, MathF.PI * 2),
             MathF.Max(0.02f, width ?? dw),
-            Math.Clamp(inner ?? di, 0, r * 0.98f));
+            Math.Clamp(inner ?? di, 0, r * 0.98f),
+            curvature is > 0 ? curvature.Value : bow);
     }
 
     private static List<(float X, float Y)> Circle(float r, int segments, float cx = 0)
@@ -123,7 +128,7 @@ public static class ShapeOutline
             case "wave":
             {
                 // A blade bowed forward: part of a circle whose center lies behind the anchor by curvature times the radius.
-                var bend = r * (spec.Name == "wave" ? 2 : 1);
+                var bend = r * MathF.Max(0.1f, spec.Curvature);
                 var half = spec.Angle / 2;
                 return new ShapeRegion(Annulus(-bend, MathF.Max(0.01f, bend - spec.Width / 2), bend + spec.Width / 2, -half, half, segments), none);
             }

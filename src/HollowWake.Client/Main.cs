@@ -89,6 +89,8 @@ public partial class Main : Node3D
         _hud.DistanceTo = DistanceTo;
         _hud.Casting = () => _world.Self?.State.Casting is { Length: > 0 } || _hud.Hero.Cast is not null;
         _hud.OptionsClosed += OnOptionsClosed;
+        // Marks that end at a server time (a telegraph's until) read the server clock the snapshots teach.
+        EntityView.ServerNow = () => _hud.Hero.HasServerClock ? _hud.Hero.ServerNow(LocalNow) : null;
         AddChild(_hud);
         var launch = LaunchOptions.FromCommandLine();
         if (launch.ServerGiven)

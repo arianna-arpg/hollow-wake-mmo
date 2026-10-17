@@ -152,6 +152,13 @@ public partial class Hud : CanvasLayer, IItemHost
         _overlay.AddThemeConstantOverride("outline_size", 4);
         _root.AddChild(_overlay);
 
+        _core = new CorePane(Skin, this, Ui.CorePage?.Name ?? "Inventory") { Visible = false };
+        _core.CloseRequested += () => Workspace.CloseCore();
+        _core.RibbonPressed += id => Workspace.RequestPage(id, Via.Ribbon);
+        _core.DragMoved += delta => MoveSeat(delta);
+        _core.DragEnded += SaveSeat;
+        _root.AddChild(_core);
+        // The books draw over the core pane: on a screen too narrow for both, the leaf the player is reading is on top.
         _pageBook = new BookView(Skin, "PageBook");
         _worldBook = new BookView(Skin, "WorldBook");
         foreach (var book in new[] { _pageBook, _worldBook })
@@ -161,12 +168,6 @@ public partial class Hud : CanvasLayer, IItemHost
             _root.AddChild(book);
             book.Visible = false;
         }
-        _core = new CorePane(Skin, this, Ui.CorePage?.Name ?? "Inventory") { Visible = false };
-        _core.CloseRequested += () => Workspace.CloseCore();
-        _core.RibbonPressed += id => Workspace.RequestPage(id, Via.Ribbon);
-        _core.DragMoved += delta => MoveSeat(delta);
-        _core.DragEnded += SaveSeat;
-        _root.AddChild(_core);
 
         _card = new ItemCard(Skin) { Name = "ItemCard" };
         _root.AddChild(_card);
@@ -623,7 +624,8 @@ public partial class Hud : CanvasLayer, IItemHost
             RailView.BadgeHeight,
             wallet.Count,
             RailView.ChipHeight,
-            RailView.Top));
+            RailView.Top,
+            Skin.Metric("pane_min_width", 340)));
         _rects = rects;
         book.Merged = rects.Merged;
         _core.Visible = true;

@@ -148,6 +148,19 @@ public class LayoutTests
     }
 
     [Fact]
+    public void ABookTakesTheRoomBesideTheCorePaneRatherThanStandOverIt()
+    {
+        // 1024 wide: 996 of room less a 430 core leaves 566 beside it, less the 7 gap; a 760 pane would overlap.
+        var r = PaneLayout.Compute(Input(viewW: 1024, pages: true) with { PageWidth = 760, MinWidth = 340 });
+        Assert.True(r.PageBook.Right <= r.Core.X + 0.01f);
+        Assert.Equal(1024 - 14 - 430 - 14 - 7, r.PageBook.W, 2);
+        // Below the minimum it clamps inside the viewport over the core pane, as before.
+        var narrow = PaneLayout.Compute(Input(viewW: 700, pages: true) with { MinWidth = 340 });
+        Assert.True(narrow.PageBook.X >= 14);
+        Assert.Equal(460, narrow.PageBook.W, 2);
+    }
+
+    [Fact]
     public void TheRailDropsBadgesBeforeChips()
     {
         var roomy = PaneLayout.Compute(Input());

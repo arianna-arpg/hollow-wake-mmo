@@ -127,6 +127,7 @@ entries:
       shell_glow: shield
       iron_ward: tower
       battle_trance: spiral
+      ember_primed: flame
     looks:
       strike: blade
       cleave: arc

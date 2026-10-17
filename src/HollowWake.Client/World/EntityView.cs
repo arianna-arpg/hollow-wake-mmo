@@ -19,9 +19,15 @@ public partial class EntityView : Node3D
 
     private bool _shaped;
     private StandardMaterial3D? _fade;
+    private StandardMaterial3D? _fillMaterial;
+    private MeshInstance3D _fill = null!;
     private float _fadeAlpha;
     private double _bornAt;
+    private double _bornServer;
     private double? _dyingAt;
+
+    /// <summary>The server's clock now as the client estimates it, or null before it knows; marks that end at a server time read it.</summary>
+    public static Func<double?>? ServerNow { get; set; }
 
     private MeshInstance3D _mesh = null!;
     private MeshInstance3D _canopy = null!;
@@ -50,6 +56,8 @@ public partial class EntityView : Node3D
     {
         _mesh = new MeshInstance3D { Name = "body" };
         AddChild(_mesh);
+        _fill = new MeshInstance3D { Name = "fill", Visible = false, CastShadow = GeometryInstance3D.ShadowCastingSetting.Off };
+        AddChild(_fill);
         _canopy = new MeshInstance3D { Name = "canopy", Visible = false };
         AddChild(_canopy);
         _label = new Label3D
@@ -99,8 +107,15 @@ public partial class EntityView : Node3D
     /// <summary>Whether the body is a telegraph mark, which lingers to fade out when it goes.</summary>
     public bool IsTelegraph => _fade is not null;
 
-    /// <summary>The telegraph's strike landed: the mark fades out and then frees itself.</summary>
-    public void Dying() => _dyingAt ??= Time.GetTicksMsec() / 1000.0;
+    /// <summary>The telegraph's strike landed (the world let it go): the mark fades out and then frees itself.</summary>
+    public void Dying()
+    {
+        _released = true;
+        _dyingAt ??= Time.GetTicksMsec() / 1000.0;
+    }
+
+    /// <summary>The world no longer holds this view; it frees itself once faded.</summary>
+    private bool _released;
 
     /// <summary>The body's turn about the vertical: a shape faces its heading (else the yaw) plus its spin; a body its yaw.</summary>
     private float Facing(EntityState s) => _shaped ? (s.Heading ?? s.Yaw) + (s.Spin ?? 0) : -s.Yaw + Mathf.Pi / 2;
@@ -109,7 +124,7 @@ public partial class EntityView : Node3D
     private void BuildShape(EntityState s, string look)
     {
         var size = s.ShapeSize;
-        var spec = UI.Logic.ShapeOutline.SpecOf(s.Shape ?? "circle", size?.Radius, size?.Angle, size?.Width, size?.Inner, Mathf.Max(0.1f, s.Radius));
+        var spec = UI.Logic.ShapeOutline.SpecOf(s.Shape ?? "circle", size?.Radius, size?.Angle, size?.Width, size?.Inner, Mathf.Max(0.1f, s.Radius), size?.Curvature);
         var telegraph = look == "telegraph";
         var projectile = !telegraph && (look == "projectile" || s.Pattern == "projectile");
         var thickness = projectile ? Mathf.Clamp(s.Height * 0.4f, 0.12f, 0.4f) : 0f;
@@ -129,6 +144,26 @@ public partial class EntityView : Node3D
         _fade = telegraph ? material : null;
         _fadeAlpha = alpha;
         _mesh.Position = new Vector3(0, projectile ? Mathf.Max(0.1f, s.Height * 0.5f) - thickness / 2 : telegraph ? 0.07f : 0.05f, 0);
+        // A telegraph's fill grows from its anchor to the whole mark as the strike nears.
+        _fill.Visible = telegraph;
+        if (telegraph)
+        {
+            _fillMaterial = new StandardMaterial3D
+            {
+                AlbedoColor = new Color(color, 0),
+                Transparency = BaseMaterial3D.TransparencyEnum.Alpha,
+                CullMode = BaseMaterial3D.CullModeEnum.Disabled,
+                ShadingMode = BaseMaterial3D.ShadingModeEnum.Unshaded,
+                RenderPriority = 1,
+            };
+            _fill.Mesh = _mesh.Mesh;
+            _fill.MaterialOverride = _fillMaterial;
+            _fill.Position = _mesh.Position + new Vector3(0, 0.01f, 0);
+        }
+        else
+        {
+            _fillMaterial = null;
+        }
         _canopy.Visible = false;
         _label.Position = new Vector3(0, s.Height + 0.5f, 0);
         _overlay.Visible = false;
@@ -284,6 +319,7 @@ public partial class EntityView : Node3D
         if (snap)
         {
             _bornAt = _lastUpdate;
+            _bornServer = ServerNow?.Invoke() ?? 0;
         }
         if (IsNodeReady() && rebuild)
         {
@@ -338,13 +374,30 @@ public partial class EntityView : Node3D
         var now = Time.GetTicksMsec() / 1000.0;
         if (_fade is not null)
         {
-            // A telegraph fades in, breathes while its strike is coming, and fades out once it lands.
+            // A telegraph fades in, breathes while its strike is coming, its fill growing from the anchor to the
+            // whole mark as the server time nears its until, and fades out once it lands or its time is up.
             var life = (float)(now - _bornAt);
             var pulse = UI.Motion.Reduced ? 1f : 0.78f + 0.22f * Mathf.Sin(life * 6f);
             var fadeIn = Mathf.Min(1f, life / 0.35f);
+            var serverNow = ServerNow?.Invoke();
+            var progress = 1f;
+            if (State.Until is { } until && serverNow is { } sn && until - _bornServer > 0.01)
+            {
+                progress = (float)Math.Clamp((sn - _bornServer) / (until - _bornServer), 0, 1);
+                if (_dyingAt is null && sn > until + 0.1)
+                {
+                    _dyingAt = now;
+                }
+            }
             var fadeOut = _dyingAt is { } dying ? Mathf.Max(0f, 1f - (float)(now - dying) / FadeSeconds) : 1f;
-            _fade.AlbedoColor = _fade.AlbedoColor with { A = _fadeAlpha * fadeIn * fadeOut * pulse };
-            if (_dyingAt is { } gone && now - gone > FadeSeconds)
+            _fade.AlbedoColor = _fade.AlbedoColor with { A = _fadeAlpha * 0.55f * fadeIn * fadeOut * pulse };
+            if (_fillMaterial is not null)
+            {
+                var grown = Mathf.Max(0.02f, progress);
+                _fill.Scale = new Vector3(grown, 1, grown);
+                _fillMaterial.AlbedoColor = _fillMaterial.AlbedoColor with { A = _fadeAlpha * (0.45f + 0.4f * progress) * fadeIn * fadeOut };
+            }
+            if (_released && _dyingAt is { } gone && now - gone > FadeSeconds)
             {
                 QueueFree();
                 return;

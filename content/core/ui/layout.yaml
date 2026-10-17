@@ -58,6 +58,11 @@ entries:
       bag_columns: 10
       rail: 46
       page_width: 460
+      # a book narrower than it would like takes the room beside the core pane down to this before it stands over it
+      pane_min_width: 340
+      # the Options pane's size where there is room for it
+      options_width: 760
+      options_height: 640
       edge: 14
       tab_height: 30
       drag_threshold: 6
