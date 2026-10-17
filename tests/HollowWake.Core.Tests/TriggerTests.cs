@@ -355,18 +355,21 @@ public class TriggerTests
 
     // ------------------------------------------------------------ the acceptance duel
 
-    private static List<string> Duel(ulong seed)
+    private static List<string> Duel(ulong seed, bool stationaryChanneler = false)
     {
         var registry = CastingTestContent.Registry;
         var sim = ZoneBuilder.CreateArena(registry, seed);
         var factory = sim.Service<PatternFactory>();
         var channeler = factory.Spawn(sim, "tide_channeler", new Vector3(10, 10, 0), new SpawnOptions { Faction = "red" });
         var duelist = factory.Spawn(sim, "spark_duelist", new Vector3(14, 10, 0), new SpawnOptions { Faction = "blue" });
+        if (stationaryChanneler) sim.World.Remove<Motion>(channeler);
         var trace = new List<string>();
         sim.Events.Subscribe<ChannelPulsed>(p => trace.Add($"{p.Tick} beat {p.Pulse}"));
         sim.Events.Subscribe<WeaveReleased>(r => trace.Add($"{r.Tick} release {r.Weave} {r.Reason} {r.Fired}"));
         sim.Events.Subscribe<WeaveTriggered>(t => trace.Add($"{t.Tick} trigger {t.Weave} {t.Kind}"));
         sim.Events.Subscribe<DamageDealt>(d => trace.Add($"{d.Tick} damage {d.Total:0.###}"));
+        sim.Events.Subscribe<WeaveMissed>(m => trace.Add($"{m.Tick} miss {m.Weave} {m.Reason}"));
+        sim.Events.Subscribe<EntityDied>(d => trace.Add($"{d.Tick} death {d.Entity}"));
         sim.RunSeconds(15);
         _ = channeler;
         _ = duelist;
@@ -380,6 +383,19 @@ public class TriggerTests
         Assert.Equal(first, Duel(41));
         Assert.Contains(first, l => l.Contains(" beat "));
         Assert.Contains(first, l => l.Contains(" release tide_torrent ") && l.EndsWith("True"));
+        // The channeler kites out of the committed swing. The old direct-target strike hit it
+        // anyway, so its guaranteed trigger count was evidence of the positional bug.
+        Assert.Contains(first, l => l.Contains(" miss strike out_of_reach"));
+        Assert.Contains(first, l => l.Contains(" death "));
+        Assert.DoesNotContain(first, l => l.Contains(" trigger "));
+    }
+
+    [Fact]
+    public void MeleePursuitClosesOnAStationaryChannelerAndLandedHitsStillAlternateTriggers()
+    {
+        var first = Duel(41, stationaryChanneler: true);
+        Assert.Equal(first, Duel(41, stationaryChanneler: true));
+        Assert.Contains(first, l => l.Contains(" death "));
         // The duelist's two spurred sparks take turns, one per landed melee blow.
         var sparks = first.Where(l => l.Contains(" trigger ")).Select(l => l.Split(' ')[2]).ToList();
         Assert.True(sparks.Count >= 2, string.Join("\n", first));
