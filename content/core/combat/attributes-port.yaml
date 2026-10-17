@@ -1,0 +1,18 @@
+# Attributes the port of the prototype's content adds: the conversion family across every pair of Threads
+# (convert.stone.ember was the one declared so far) and the charge banks that hold more than the family's three.
+kind: attribute_families
+entries:
+  - id: convert
+    pattern: "convert.{from}.{to}"
+    over: { from: threads, to: threads }
+    name: "{from} converted to {to}"
+    description: "The fraction of {from} damage dealt as {to} instead."
+    category: offense
+    bounds: { min: 0, max: 1 }
+    percent: true
+    hidden: true
+---
+kind: attributes
+entries:
+  - { id: charge.wisp.max, name: Maximum Wisps, category: charge, base: 5, min: 0, decimals: 0, hidden: true }
+  - { id: charge.wakeflame.max, name: Maximum Wakeflame, category: charge, base: 5, min: 0, decimals: 0, hidden: true }

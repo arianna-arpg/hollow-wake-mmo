@@ -1513,116 +1513,116 @@ Every slice lands with a seeded duel the fight tool runs twice to the same trace
 
 ## Statuses (152: ported (difference) 38, ported 54, not ported 59, blocked 1)
 
-| Prototype | Ours | Mechanism | Status | Note | Proof |
+| Prototype | Ours | Mechanism | Status | Note | PortedStatusTests; fight proving_hexer proving_plaguer |
 |---|---|---|---|---|---|
-| burn | burning | tick | ported (difference) | roster:burning | status duel |
-| flamewreathed | flamewreathed | tick | ported |  | status duel |
-| starfire | starfire | tick | ported |  | status duel |
-| stonelashed | stonelashed | tick, modifiers | ported |  | status duel |
+| burn | burning | tick | ported (difference) | roster:burning | PortedStatusTests; fight proving_hexer proving_plaguer |
+| flamewreathed | flamewreathed | tick | ported |  | PortedStatusTests; fight proving_hexer proving_plaguer |
+| starfire | starfire | tick | ported |  | PortedStatusTests; fight proving_hexer proving_plaguer |
+| stonelashed | stonelashed | tick, modifiers | ported |  | PortedStatusTests; fight proving_hexer proving_plaguer |
 | moonlit |  |  | not ported | fabric |  |
 | companion_recovery |  |  | not ported | fabric |  |
-| poison | poison | tick | ported (difference) | roster:poison | status duel |
-| bleed | bleeding | tick | ported (difference) | roster:bleeding | status duel |
-| impaled_physical | impaled | bank, consume_on, on_bearer_struck | ported (difference) | roster:impaled; discharges on any hit, not only its own type | status duel |
-| impaled_fire | impaled | bank, consume_on, on_bearer_struck | ported (difference) | roster:impaled; discharges on any hit, not only its own type | status duel |
-| impaled_cold | impaled | bank, consume_on, on_bearer_struck | ported (difference) | roster:impaled; discharges on any hit, not only its own type | status duel |
-| impaled_lightning | impaled | bank, consume_on, on_bearer_struck | ported (difference) | roster:impaled; discharges on any hit, not only its own type | status duel |
-| impaled_chaos | impaled | bank, consume_on, on_bearer_struck | ported (difference) | roster:impaled; discharges on any hit, not only its own type | status duel |
-| impaled | impaled | bank, consume_on, on_bearer_struck | ported (difference) | roster:impaled | status duel |
-| hemorrhage | hemorrhage | tick, pop | ported (difference) | roster:hemorrhage | status duel |
+| poison | poison | tick | ported (difference) | roster:poison | PortedStatusTests; fight proving_hexer proving_plaguer |
+| bleed | bleeding | tick | ported (difference) | roster:bleeding | PortedStatusTests; fight proving_hexer proving_plaguer |
+| impaled_physical | impaled | bank, consume_on, on_bearer_struck | ported (difference) | roster:impaled; discharges on any hit, not only its own type | PortedStatusTests; fight proving_hexer proving_plaguer |
+| impaled_fire | impaled | bank, consume_on, on_bearer_struck | ported (difference) | roster:impaled; discharges on any hit, not only its own type | PortedStatusTests; fight proving_hexer proving_plaguer |
+| impaled_cold | impaled | bank, consume_on, on_bearer_struck | ported (difference) | roster:impaled; discharges on any hit, not only its own type | PortedStatusTests; fight proving_hexer proving_plaguer |
+| impaled_lightning | impaled | bank, consume_on, on_bearer_struck | ported (difference) | roster:impaled; discharges on any hit, not only its own type | PortedStatusTests; fight proving_hexer proving_plaguer |
+| impaled_chaos | impaled | bank, consume_on, on_bearer_struck | ported (difference) | roster:impaled; discharges on any hit, not only its own type | PortedStatusTests; fight proving_hexer proving_plaguer |
+| impaled | impaled | bank, consume_on, on_bearer_struck | ported (difference) | roster:impaled | PortedStatusTests; fight proving_hexer proving_plaguer |
+| hemorrhage | hemorrhage | tick, pop | ported (difference) | roster:hemorrhage | PortedStatusTests; fight proving_hexer proving_plaguer |
 | fogveiled |  |  | not ported | fabric |  |
 | mistfed |  |  | not ported | fabric |  |
 | canopied |  |  | not ported | fabric |  |
-| sunscorched | sunscorched | buildup, modifiers | ported |  | status duel |
-| heatstroke | heatstroke | modifiers | ported |  | status duel |
-| faintness | faintness | buildup, modifiers | ported |  | status duel |
-| swoon | swoon | modifiers | ported |  | status duel |
-| queasy | queasy | buildup, modifiers | ported |  | status duel |
-| retching | retching | modifiers | ported |  | status duel |
+| sunscorched | sunscorched | buildup, modifiers | ported |  | PortedStatusTests; fight proving_hexer proving_plaguer |
+| heatstroke | heatstroke | modifiers | ported |  | PortedStatusTests; fight proving_hexer proving_plaguer |
+| faintness | faintness | buildup, modifiers | ported |  | PortedStatusTests; fight proving_hexer proving_plaguer |
+| swoon | swoon | modifiers | ported |  | PortedStatusTests; fight proving_hexer proving_plaguer |
+| queasy | queasy | buildup, modifiers | ported |  | PortedStatusTests; fight proving_hexer proving_plaguer |
+| retching | retching | modifiers | ported |  | PortedStatusTests; fight proving_hexer proving_plaguer |
 | beheld |  |  | not ported | fabric |  |
 | seen |  |  | not ported | fabric |  |
-| blind | blinded | modifiers | ported (difference) | roster:blinded; drop:detectionRange | status duel |
-| chill | chilled | buildup, modifiers | ported (difference) | roster:chilled; drop:insightSap | status duel |
-| frozen | frozen | flags stunned, modifiers | ported (difference) | roster:frozen; drop:insightSap | status duel |
-| shock | shocked | modifiers | ported (difference) | roster:shocked | status duel |
-| stun | stunned | flags stunned | ported (difference) | roster:stunned; drop:insightSap | status duel |
+| blind | blinded | modifiers | ported (difference) | roster:blinded; drop:detectionRange | PortedStatusTests; fight proving_hexer proving_plaguer |
+| chill | chilled | buildup, modifiers | ported (difference) | roster:chilled; drop:insightSap | PortedStatusTests; fight proving_hexer proving_plaguer |
+| frozen | frozen | flags stunned, modifiers | ported (difference) | roster:frozen; drop:insightSap | PortedStatusTests; fight proving_hexer proving_plaguer |
+| shock | shocked | modifiers | ported (difference) | roster:shocked | PortedStatusTests; fight proving_hexer proving_plaguer |
+| stun | stunned | flags stunned | ported (difference) | roster:stunned; drop:insightSap | PortedStatusTests; fight proving_hexer proving_plaguer |
 | unhorsed |  |  | not ported | fabric |  |
 | winded_gasp |  |  | not ported | fabric |  |
 | guttered |  |  | not ported | fabric |  |
 | sap_starved |  |  | not ported | fabric |  |
 | wilted |  |  | not ported | fabric |  |
 | sporemired |  |  | not ported | fabric |  |
-| entranced | entranced | flags stunned | ported (difference) | drop:insightSap | status duel |
+| entranced | entranced | flags stunned | ported (difference) | drop:insightSap | PortedStatusTests; fight proving_hexer proving_plaguer |
 | stasis |  |  | not ported | fabric |  |
 | temporal_drag |  |  | not ported | fabric |  |
-| petrifying | petrifying | buildup, modifiers | ported |  | status duel |
+| petrifying | petrifying | buildup, modifiers | ported |  | PortedStatusTests; fight proving_hexer proving_plaguer |
 | petrified | petrified | flags stunned, modifiers | not ported | drop:insightSap; later: personal time scales (row E14, later) | status duel |
-| harrowing | harrowing | buildup, modifiers | ported |  | status duel |
-| horrified | horrified | flags panicked, modifiers | ported |  | status duel |
-| silence | silenced | forbids | ported (difference) | roster:silenced | status duel |
-| disarm | disarmed | forbids | ported (difference) | roster:disarmed | status duel |
-| rooted | rooted | forbids, modifiers | ported (difference) | roster:rooted | status duel |
-| sundered | sundered | modifiers | ported |  | status duel |
-| weaken | weakened | modifiers | ported (difference) | roster:weakened | status duel |
-| vulnerable | vulnerable | modifiers | ported (difference) | roster:vulnerable | status duel |
-| brittle | brittle | modifiers | ported (difference) | roster:brittle | status duel |
-| melting | melting | modifiers | ported |  | status duel |
-| waxlight | waxlight | status | ported (difference) | drop:detectability | status duel |
-| doom | doom | bank | ported (difference) | roster:doom | status duel |
-| scorch | scorch | tick | ported |  | status duel |
-| wither_agony | wither_agony | tick | ported |  | status duel |
-| unravelling | unraveling | tick, buildup, modifiers | ported (difference) | roster:unraveling | status duel |
-| unmade | unmade | modifiers | ported |  | status duel |
-| jinxed | jinxed | status | ported (difference) | drop:unluckyChance | status duel |
-| maddened | maddened | tick | ported (difference) | drop:detectionRange | status duel |
-| reeling | reeling | status | ported (difference) | drop:insightRegenPct | status duel |
-| voided | voided | modifiers | ported |  | status duel |
-| taunted | taunted | status | ported (difference) | roster:taunted | status duel |
-| prey_marked | prey_marked | flags prey, modifiers | ported |  | status duel |
-| bolted | bolted | flags panicked, modifiers | ported |  | status duel |
-| exposed | exposed | status | blocked | roster:exposed; blocked: weak spots (row E15, open) | status duel |
-| sear | seared | status | ported (difference) | drop:healTaken | status duel |
-| decay | decay | tick | ported |  | status duel |
-| torment | torment | tick, modifiers | ported |  | status duel |
-| contagion | contagion | tick | ported |  | status duel |
-| despair | despair | modifiers | ported |  | status duel |
-| agony | agony | modifiers | ported |  | status duel |
-| indecision | indecision | modifiers | ported |  | status duel |
-| befuddlement | befuddled | modifiers | ported |  | status duel |
-| bewilder | bewildered | status | ported (difference) | drop:aiAimJitter, modifier aiAimLead | status duel |
-| disoriented | disoriented | buildup | ported |  | status duel |
+| harrowing | harrowing | buildup, modifiers | ported |  | PortedStatusTests; fight proving_hexer proving_plaguer |
+| horrified | horrified | flags panicked, modifiers | ported |  | PortedStatusTests; fight proving_hexer proving_plaguer |
+| silence | silenced | forbids | ported (difference) | roster:silenced | PortedStatusTests; fight proving_hexer proving_plaguer |
+| disarm | disarmed | forbids | ported (difference) | roster:disarmed | PortedStatusTests; fight proving_hexer proving_plaguer |
+| rooted | rooted | forbids, modifiers | ported (difference) | roster:rooted | PortedStatusTests; fight proving_hexer proving_plaguer |
+| sundered | sundered | modifiers | ported |  | PortedStatusTests; fight proving_hexer proving_plaguer |
+| weaken | weakened | modifiers | ported (difference) | roster:weakened | PortedStatusTests; fight proving_hexer proving_plaguer |
+| vulnerable | vulnerable | modifiers | ported (difference) | roster:vulnerable | PortedStatusTests; fight proving_hexer proving_plaguer |
+| brittle | brittle | modifiers | ported (difference) | roster:brittle | PortedStatusTests; fight proving_hexer proving_plaguer |
+| melting | melting | modifiers | ported |  | PortedStatusTests; fight proving_hexer proving_plaguer |
+| waxlight | waxlight | status | ported (difference) | drop:detectability; lit for all to see: less evasion and the flag lit | PortedStatusTests; fight proving_hexer proving_plaguer |
+| doom | doom | bank | ported (difference) | roster:doom | PortedStatusTests; fight proving_hexer proving_plaguer |
+| scorch | scorch | tick | ported |  | PortedStatusTests; fight proving_hexer proving_plaguer |
+| wither_agony | wither_agony | tick | ported |  | PortedStatusTests; fight proving_hexer proving_plaguer |
+| unravelling | unraveling | tick, buildup, modifiers | ported (difference) | roster:unraveling | PortedStatusTests; fight proving_hexer proving_plaguer |
+| unmade | unmade | modifiers | ported |  | PortedStatusTests; fight proving_hexer proving_plaguer |
+| jinxed | jinxed | status | ported (difference) | drop:unluckyChance; luck is open (row G17): the jinx dulls aim and edge | PortedStatusTests; fight proving_hexer proving_plaguer |
+| maddened | maddened | tick | ported (difference) | drop:detectionRange | PortedStatusTests; fight proving_hexer proving_plaguer |
+| reeling | reeling | status | ported (difference) | drop:insightRegenPct; slower insight regeneration and feet | PortedStatusTests; fight proving_hexer proving_plaguer |
+| voided | voided | modifiers | ported |  | PortedStatusTests; fight proving_hexer proving_plaguer |
+| taunted | taunted | status | ported (difference) | roster:taunted | PortedStatusTests; fight proving_hexer proving_plaguer |
+| prey_marked | prey_marked | flags prey, modifiers | ported |  | PortedStatusTests; fight proving_hexer proving_plaguer |
+| bolted | bolted | flags panicked, modifiers | ported |  | PortedStatusTests; fight proving_hexer proving_plaguer |
+| exposed | exposed | status | blocked | roster:exposed; blocked: weak spots (row E15, open) | PortedStatusTests; fight proving_hexer proving_plaguer |
+| sear | seared | status | ported (difference) | drop:healTaken; halved life regeneration (healing taken has no attribute) | PortedStatusTests; fight proving_hexer proving_plaguer |
+| decay | decay | tick | ported |  | PortedStatusTests; fight proving_hexer proving_plaguer |
+| torment | torment | tick, modifiers | ported |  | PortedStatusTests; fight proving_hexer proving_plaguer |
+| contagion | contagion | tick | ported |  | PortedStatusTests; fight proving_hexer proving_plaguer |
+| despair | despair | modifiers | ported |  | PortedStatusTests; fight proving_hexer proving_plaguer |
+| agony | agony | modifiers | ported |  | PortedStatusTests; fight proving_hexer proving_plaguer |
+| indecision | indecision | modifiers | ported |  | PortedStatusTests; fight proving_hexer proving_plaguer |
+| befuddlement | befuddled | modifiers | ported |  | PortedStatusTests; fight proving_hexer proving_plaguer |
+| bewilder | bewildered | status | ported (difference) | drop:aiAimJitter, modifier aiAimLead | PortedStatusTests; fight proving_hexer proving_plaguer |
+| disoriented | disoriented | buildup | ported (difference) | builds into bewildered: widdershins (inverted movement, row E14) is not ported | PortedStatusTests; fight proving_hexer proving_plaguer |
 | widdershins |  |  | not ported | fabric |  |
 | addled | addled | status | not ported | roster:addled; later: scrambled casts (row A21, later) | status duel |
-| hedonism | hedonism | modifiers | ported |  | status duel |
-| belligerence | belligerence | status | ported (difference) | drop:detectionRange | status duel |
-| furor | furor | modifiers | ported |  | status duel |
-| rally | rallied | modifiers | ported |  | status duel |
-| verdant_communion | verdant_communion | modifiers | ported |  | status duel |
-| stone_communion | stone_communion | modifiers | ported |  | status duel |
-| attuned_physical | attuned_stone | modifiers | ported |  | status duel |
-| attuned_fire | attuned_ember | modifiers | ported |  | status duel |
-| attuned_cold | attuned_tide | modifiers | ported |  | status duel |
-| attuned_lightning | attuned_storm | modifiers | ported |  | status duel |
-| attuned_chaos | attuned_void | modifiers | ported |  | status duel |
-| kindled | kindled | status | ported |  | status duel |
-| consecrated | consecrated | modifiers | ported |  | status duel |
-| phasing | phasing | modifiers | ported |  | status duel |
+| hedonism | hedonism | modifiers | ported |  | PortedStatusTests; fight proving_hexer proving_plaguer |
+| belligerence | belligerence | status | ported (difference) | drop:detectionRange; harder blows and the flag belligerent (detection range is not ported) | PortedStatusTests; fight proving_hexer proving_plaguer |
+| furor | furor | modifiers | ported |  | PortedStatusTests; fight proving_hexer proving_plaguer |
+| rally | rallied | modifiers | ported |  | PortedStatusTests; fight proving_hexer proving_plaguer |
+| verdant_communion | verdant_communion | modifiers | ported |  | PortedStatusTests; fight proving_hexer proving_plaguer |
+| stone_communion | stone_communion | modifiers | ported |  | PortedStatusTests; fight proving_hexer proving_plaguer |
+| attuned_physical | attuned_stone | modifiers | ported |  | PortedStatusTests; fight proving_hexer proving_plaguer |
+| attuned_fire | attuned_ember | modifiers | ported |  | PortedStatusTests; fight proving_hexer proving_plaguer |
+| attuned_cold | attuned_tide | modifiers | ported |  | PortedStatusTests; fight proving_hexer proving_plaguer |
+| attuned_lightning | attuned_storm | modifiers | ported |  | PortedStatusTests; fight proving_hexer proving_plaguer |
+| attuned_chaos | attuned_void | modifiers | ported |  | PortedStatusTests; fight proving_hexer proving_plaguer |
+| kindled | kindled | status | ported | a light radius (lightwells, row C36, are not ported) | PortedStatusTests; fight proving_hexer proving_plaguer |
+| consecrated | consecrated | modifiers | ported |  | PortedStatusTests; fight proving_hexer proving_plaguer |
+| phasing | phasing | modifiers | ported |  | PortedStatusTests; fight proving_hexer proving_plaguer |
 | caroming |  |  | not ported | fabric |  |
 | windswept |  |  | not ported | fabric |  |
-| winded | winded | modifiers | ported |  | status duel |
+| winded | winded | modifiers | ported |  | PortedStatusTests; fight proving_hexer proving_plaguer |
 | cloudform |  |  | not ported | fabric |  |
 | aloft |  |  | not ported | fabric |  |
 | cloudhaven |  |  | not ported | fabric |  |
 | windlane |  |  | not ported | fabric |  |
 | stormlaced |  |  | not ported | fabric |  |
 | silverlined |  |  | not ported | fabric |  |
-| smothered | smothered | modifiers | ported (difference) | drop:detectionRange | status duel |
-| gloomveiled | gloomveiled | status | ported (difference) | drop:detectionRange, modifier detectability | status duel |
-| hearthglow | hearthglow | status | ported (difference) | drop:windchillWard | status duel |
-| transfixed | transfixed | modifiers | not ported | later: scrambled casts (row A21, later) | status duel |
-| emboldened | emboldened | modifiers | ported |  | status duel |
-| quickborn | quickborn | modifiers | ported |  | status duel |
-| blooming | blooming | status | ported |  | status duel |
+| smothered | smothered | modifiers | ported (difference) | drop:detectionRange | PortedStatusTests; fight proving_hexer proving_plaguer |
+| gloomveiled | gloomveiled | status | ported (difference) | drop:detectionRange, modifier detectability; less accuracy (the detection fabric is not ported) | PortedStatusTests; fight proving_hexer proving_plaguer |
+| hearthglow | hearthglow | status | ported (difference) | drop:windchillWard; Tide resistance and a little regeneration | PortedStatusTests; fight proving_hexer proving_plaguer |
+| transfixed | transfixed | modifiers | ported (difference) | later: scrambled casts (row A21, later) | status duel |
+| emboldened | emboldened | modifiers | ported |  | PortedStatusTests; fight proving_hexer proving_plaguer |
+| quickborn | quickborn | modifiers | ported |  | PortedStatusTests; fight proving_hexer proving_plaguer |
+| blooming | blooming | status | ported | mending takes better | PortedStatusTests; fight proving_hexer proving_plaguer |
 | infected_miasma |  |  | not ported | fabric |  |
 | infected_adrenal |  |  | not ported | fabric |  |
 | infected_mutant |  |  | not ported | fabric |  |
@@ -1639,22 +1639,22 @@ Every slice lands with a seeded duel the fight tool runs twice to the same trace
 | mu_sworn |  |  | not ported | fabric |  |
 | vent_submerged |  |  | not ported | fabric |  |
 | vent_sinking |  |  | not ported | fabric |  |
-| living_bomb | living_bomb | status | ported |  | status duel |
-| fulgur_brand | fulgur_brand | tick | ported |  | status duel |
-| doombrand | doombrand | status | ported |  | status duel |
-| powder_charge | powder_charge | status | ported |  | status duel |
-| warded | warded_shell | modifiers | ported (difference) | roster:warded_shell; bound to an absorption pool: bound_to names the pool status by hand | status duel |
-| mired | mired | modifiers | ported |  | status duel |
+| living_bomb | living_bomb | status | ported | bursts Ember on the bearer and its allies when it ends | PortedStatusTests; fight proving_hexer proving_plaguer |
+| fulgur_brand | fulgur_brand | tick | ported |  | PortedStatusTests; fight proving_hexer proving_plaguer |
+| doombrand | doombrand | status | ported | more damage taken | PortedStatusTests; fight proving_hexer proving_plaguer |
+| powder_charge | powder_charge | status | ported | spent by the next Ember blow that lands, which bursts | PortedStatusTests; fight proving_hexer proving_plaguer |
+| warded | warded_shell | modifiers | ported (difference) | roster:warded_shell; bound to an absorption pool: bound_to names the pool status by hand | PortedStatusTests; fight proving_hexer proving_plaguer |
+| mired | mired | modifiers | ported |  | PortedStatusTests; fight proving_hexer proving_plaguer |
 | sodden |  |  | not ported | fabric |  |
 | wading |  |  | not ported | fabric |  |
 | crestborne |  |  | not ported | fabric |  |
-| soulchill | soulchill | modifiers | ported (difference) | drop:insightSap | status duel |
+| soulchill | soulchill | modifiers | ported (difference) | drop:insightSap | PortedStatusTests; fight proving_hexer proving_plaguer |
 | swimming |  |  | not ported | fabric |  |
 | bogged |  |  | not ported | fabric |  |
-| bog_rot | bog_rot | tick | ported |  | status duel |
-| brine_burn | brine_burn | tick | ported |  | status duel |
-| sulphur_sting | sulphur_sting | tick | ported |  | status duel |
-| scalded | scalding | tick, bank | ported (difference) | roster:scalding | status duel |
+| bog_rot | bog_rot | tick | ported |  | PortedStatusTests; fight proving_hexer proving_plaguer |
+| brine_burn | brine_burn | tick | ported |  | PortedStatusTests; fight proving_hexer proving_plaguer |
+| sulphur_sting | sulphur_sting | tick | ported |  | PortedStatusTests; fight proving_hexer proving_plaguer |
+| scalded | scalding | tick, bank | ported (difference) | roster:scalding | PortedStatusTests; fight proving_hexer proving_plaguer |
 | soaked |  |  | not ported | fabric |  |
 | lamprey_flop |  |  | not ported | fabric |  |
 | basking_torpor |  |  | not ported | fabric |  |
@@ -1662,7 +1662,7 @@ Every slice lands with a seeded duel the fight tool runs twice to the same trace
 | slippery |  |  | not ported | fabric |  |
 | seabed |  |  | not ported | fabric |  |
 | concealed |  |  | not ported | fabric |  |
-| ensnared | ensnared | modifiers | ported |  | status duel |
+| ensnared | ensnared | modifiers | ported |  | PortedStatusTests; fight proving_hexer proving_plaguer |
 | caulfed |  |  | not ported | fabric |  |
 | caulmired |  |  | not ported | fabric |  |
 | blightfed |  |  | not ported | fabric |  |
@@ -1822,31 +1822,31 @@ Every slice lands with a seeded duel the fight tool runs twice to the same trace
 
 ## Charges (23: ported 12, ported (difference) 5, not ported 6)
 
-| Prototype | Ours | Mechanism | Status | Note | Proof |
+| Prototype | Ours | Mechanism | Status | Note | PortedStatusTests |
 |---|---|---|---|---|---|
-| fury | fury | charge kind | ported |  | charge duel |
-| static | static | charge kind | ported |  | charge duel |
-| stealth | stealth | charge kind | ported |  | charge duel |
-| wisp | wisp | charge kind | ported (difference) | regeneration of 2.5 per 10s: no accrual clock on a charge (seam or an interval proc) | charge duel |
-| verse | verse | charge kind | ported |  | charge duel |
-| riposte | riposte | charge kind | ported |  | charge duel |
-| magma | magma | charge kind | ported |  | charge duel |
-| rage | rage | charge kind | ported (difference) | per-charge modifiers are granted by whoever uses the charge, with gauge charge.<id> | charge duel |
-| bloodlust | bloodlust | charge kind | ported (difference) | per-charge modifiers are granted by whoever uses the charge, with gauge charge.<id>; mods only while draining: a drain flag by hand | charge duel |
-| soul | soul | charge kind | ported |  | charge duel |
-| gyre | gyre | charge kind | ported |  | charge duel |
-| storm | storm | charge kind | ported |  | charge duel |
-| frenzy | frenzy | charge kind | ported (difference) | per-charge modifiers are granted by whoever uses the charge, with gauge charge.<id> | charge duel |
-| brew | brew | charge kind | ported |  | charge duel |
-| verdict | verdict | charge kind | ported |  | charge duel |
-| communion | communion | charge kind | ported (difference) | per-charge modifiers are granted by whoever uses the charge, with gauge charge.<id> | charge duel |
+| fury | fury | charge kind | ported |  | PortedStatusTests |
+| static | static | charge kind | ported |  | PortedStatusTests |
+| stealth | stealth | charge kind | ported |  | PortedStatusTests |
+| wisp | wisp | charge kind | seam | regeneration of 2.5 per 10s: no accrual clock on a charge (seam or an interval proc); seam: a charge accrual clock (two and a half every ten seconds while a spender is slotted) | PortedStatusTests |
+| verse | verse | charge kind | ported |  | PortedStatusTests |
+| riposte | riposte | charge kind | ported |  | PortedStatusTests |
+| magma | magma | charge kind | ported |  | PortedStatusTests |
+| rage | rage | charge kind | seam | per-charge modifiers are granted by whoever uses the charge, with gauge charge.<id>; seam: charge modifiers (its per-charge haste and damage) | PortedStatusTests |
+| bloodlust | bloodlust | charge kind | seam | per-charge modifiers are granted by whoever uses the charge, with gauge charge.<id>; mods only while draining: a drain flag by hand; seam: charge modifiers (its per-charge haste, and modifiers only while draining) | PortedStatusTests |
+| soul | soul | charge kind | ported |  | PortedStatusTests |
+| gyre | gyre | charge kind | ported |  | PortedStatusTests |
+| storm | storm | charge kind | ported |  | PortedStatusTests |
+| frenzy | frenzy | charge kind | seam | per-charge modifiers are granted by whoever uses the charge, with gauge charge.<id>; seam: charge modifiers (its per-charge haste) | PortedStatusTests |
+| brew | brew | charge kind | ported |  | PortedStatusTests |
+| verdict | verdict | charge kind | ported |  | PortedStatusTests |
+| communion | communion | charge kind | seam | per-charge modifiers are granted by whoever uses the charge, with gauge charge.<id>; seam: charge modifiers (its per-charge damage) | PortedStatusTests |
 | flask_life | flask_life | charge kind | not ported | flask founts: the flask family is not ported | charge duel |
 | flask_mana | flask_mana | charge kind | not ported | flask founts: the flask family is not ported | charge duel |
 | flask_catalyst | flask_catalyst | charge kind | not ported | flask founts: the flask family is not ported | charge duel |
 | flask_quicksilver | flask_quicksilver | charge kind | not ported | flask founts: the flask family is not ported | charge duel |
 | flask_stoneskin | flask_stoneskin | charge kind | not ported | flask founts: the flask family is not ported | charge duel |
 | flask_antidote | flask_antidote | charge kind | not ported | flask founts: the flask family is not ported | charge duel |
-| wakeflame | wakeflame | charge kind | ported |  | charge duel |
+| wakeflame | wakeflame | charge kind | ported |  | PortedStatusTests |
 
 ## Passive notables, keystones and choice nodes (668: to author 663, blocked 5)
 

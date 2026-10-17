@@ -126,6 +126,75 @@ entries:
       warded_shell: ward
       shell_glow: shield
       iron_ward: tower
+      # the rest of the roster (statuses-roster.yaml)
+      flamewreathed: flame
+      starfire: sun
+      stonelashed: spike
+      sunscorched: sun
+      heatstroke: flame
+      faintness: swirl
+      swoon: stars
+      queasy: vial
+      retching: vial
+      entranced: swirl
+      petrifying: stance
+      petrified: stance
+      harrowing: skull
+      horrified: skull
+      sundered: stance
+      melting: droplet
+      waxlight: sun
+      scorch: flame
+      wither_agony: skull
+      unmade: spiral
+      jinxed: swirl
+      maddened: swirl
+      reeling: stars
+      voided: spiral
+      prey_marked: target
+      bolted: down
+      seared: flame
+      decay: skull
+      torment: skull
+      contagion: vial
+      despair: down
+      agony: blood
+      indecision: hourglass
+      befuddled: swirl
+      bewildered: swirl
+      disoriented: swirl
+      hedonism: heart
+      belligerence: shout
+      furor: swift
+      rallied: shout
+      verdant_communion: leaf
+      stone_communion: tower
+      attuned_stone: spike
+      attuned_ember: flame
+      attuned_tide: snow
+      attuned_storm: bolt
+      attuned_void: spiral
+      kindled: sun
+      consecrated: sun
+      phasing: veil
+      winded: swirl
+      smothered: veil
+      gloomveiled: veil
+      hearthglow: flame
+      transfixed: eye
+      emboldened: shout
+      quickborn: swift
+      blooming: sprout
+      living_bomb: flame
+      fulgur_brand: bolt
+      doombrand: hourglass
+      powder_charge: blast
+      mired: root
+      soulchill: snow
+      bog_rot: vial
+      brine_burn: droplet
+      sulphur_sting: flame
+      ensnared: root
       battle_trance: spiral
       ember_primed: flame
     looks:
