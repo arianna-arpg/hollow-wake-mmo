@@ -1,5 +1,7 @@
 # Launcher and releases
 
+Application and installer artwork comes from the canonical Hollow Wake assets through `scripts/sync-branding.mjs`; see [loading.md](loading.md). The launcher delivers the interactive Crossing with the client, and continues to report its own actual download/install work.
+
 The launcher is how players get, update and start the game. It is an Electron app in `launcher/` that installs the Godot client from this repository's GitHub Releases and hands it a server address. It holds no game logic and never talks to the game server: it passes the address to the client and steps aside.
 
 ## What a player sees
