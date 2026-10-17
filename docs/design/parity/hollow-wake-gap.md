@@ -548,7 +548,7 @@ entries:
 
 ### 3.1 Order and rules
 
-One foundation package (WP1) lands first and alone. It freezes the shared seams: the compiler's levels, hooks, patches, probes and dormant glyphs; the `cast` and `delay` effects; the trigger registry; the hit stage registry and hit scope; attribute families; slot and cast state; the schema for every P0 field on forms, glyphs and statuses; and the file splits listed below. Then five packages run in parallel on disjoint files. Each package does its P0 rows first and its P1 rows after its P0 acceptance passes.
+One foundation package (WP1) lands first and alone. It freezes the shared seams: the compiler's levels, hooks, patches, probes and dormant glyphs; the `cast` and `delay` effects; the trigger registry; the hit stage registry and hit scope; attribute families; slot and cast state; the schema for every P0 field on forms, glyphs and statuses; and the file splits listed below. Then six packages run in parallel on disjoint files: WP2 to WP6 in the simulation and on the wire, WP7 on the clients against the shapes WP6 freezes first. Each package does its P0 rows first and its P1 rows after its P0 acceptance passes.
 
 Rules for every package:
 
@@ -679,21 +679,35 @@ Tests: new `tests/HollowWake.Core.Tests/StatusTests.cs` (forbidden tags stop cas
 
 Acceptance: the common gates; a seeded `fight` trace shows leech, shield recharge, a poise break, a rupture and proc depth limits; `bench` attribute apply and zone tick within budget, with the hit scope pooled so per-hit allocation does not grow.
 
-#### WP6 Progression, items and the client
+#### WP6 Progression, items, dialogue and the wire
 
-Goal: passive parity, the item model for weaves, the grid inventory, stash and containers, the protocol and every UI surface. If capacity allows this package splits into a core half (progression, items, persistence) and a client half (protocol, server, Godot); the file lists already separate.
+Goal: passive parity, the item model for weaves, the grid inventory, stash and containers, dialogue and vendors in the simulation, and every message and intent the interface reads and sends. The interface itself is WP7, so WP6 lands its message shapes first: within its first commits it freezes, as records in `HollowWake.Protocol`, the self state, weave slot, inventory, container, passive, page, dialogue and vendor states and the intents that `docs/design/ui.md` lists, served with placeholder data where the simulation is not ready, so WP7 builds against real shapes while WP6 fills them in.
 
-Rows: P0 first: H2, H3, H8, I6, I8, J1, J2, J3, J4, J5, J9, and the message wiring for every new intent. Then H4, H5, H6, H9, H10, H11, I2, I3, I4, I5, I7, I10, I11, I12, J6, J7, J10, D21, D22, and P2 rows H7, I9, I13, J8 when time allows.
+Rows: P0 first: H2, H3, H8, I6, I8, J3, J4, the message wiring for every new intent and for every state in `ui.md`, and dialogue and vendors (new, from `ui.md`: conversations as content with lines, speakers, choices, gates as expressions and effects, run by the server; vendor stock, prices and buy-back from content and rules; intents to choose a line, buy and sell). Then H4, H5, H6, H9, H10, H11, I2, I3, I4, I5, I7, I10, I11, I12, D21, D22, and P2 rows H7, I9, I13 when time allows.
 
-Owns: `Progression/*`; `Definitions/Entities.cs`, `Definitions/Items.cs`, `Definitions/Play.cs`, `Definitions/Progression.cs`, `Definitions/Containers.cs`, `Definitions/Glyphs.Items.cs`; `Items/*`, `Loot/*`, `Crafting/*`, `Quests/*`; `Characters/CharacterSheet.cs`; `Components/Inventory.cs`, `Components/PassiveState.cs`, `Components/Play.cs`; `Intents/ItemIntents.cs`, `ProgressionIntents.cs`, `WorldIntents.cs`; `Systems/Intents/ItemIntentHandlers.cs`, `ProgressionIntentHandlers.cs`, `WorldIntentHandlers.cs`; `Content/Kinds/ProgressionKinds.cs`; new `Sim/Events/ProgressionEvents.cs`; everything under `src/HollowWake.Protocol/`, `src/HollowWake.Server/`, `src/HollowWake.Client/` and `src/HollowWake.Tools/` (after WP1).
+Owns: `Progression/*`; `Definitions/Entities.cs`, `Definitions/Items.cs`, `Definitions/Play.cs`, `Definitions/Progression.cs`, `Definitions/Containers.cs`, `Definitions/Glyphs.Items.cs`, new `Definitions/Dialogue.cs`; `Items/*`, `Loot/*`, `Crafting/*`, `Quests/*`, `Interaction/*`, new `Dialogue/*`; `Characters/CharacterSheet.cs`; `Components/Inventory.cs`, `Components/PassiveState.cs`, `Components/Play.cs`; `Intents/ItemIntents.cs`, `ProgressionIntents.cs`, `WorldIntents.cs`, new `DialogueIntents.cs`; `Systems/Intents/ItemIntentHandlers.cs`, `ProgressionIntentHandlers.cs`, `WorldIntentHandlers.cs`, new `DialogueIntentHandlers.cs`; `Content/Kinds/ProgressionKinds.cs`; new `Sim/Events/ProgressionEvents.cs`; everything under `src/HollowWake.Protocol/`, `src/HollowWake.Server/` and `src/HollowWake.Tools/` (after WP1); and `web/src/net/protocol.ts`, regenerated with every message change.
 
-Content: `content/core/entities/passives.yaml`, `content/core/entities/callings.yaml`, `content/core/items/*.yaml`, `content/core/slots.yaml`, `content/core/play/*.yaml` (the existing files), new `content/core/entities/passive-choices.yaml`, `passive-realms.yaml`, `content/core/items/containers.yaml`, `stashes.yaml`, `content/core/rules-inventory.yaml` (rule ids `inventory` and `passives`).
+Content: `content/core/entities/passives.yaml`, `content/core/entities/callings.yaml`, `content/core/items/*.yaml`, `content/core/slots.yaml`, `content/core/play/*.yaml` (the existing files), new `content/core/entities/passive-choices.yaml`, `passive-realms.yaml`, `content/core/items/containers.yaml`, `stashes.yaml`, new `content/core/dialogue/*.yaml` and `content/core/vendors.yaml`, `content/core/rules-inventory.yaml` (rule ids `inventory`, `passives`, `dialogue`).
 
-Docs: `docs/design/items-and-loot.md`, `docs/design/client.md`, `docs/design/networking-and-persistence.md`, new `docs/design/passives.md`.
+Docs: `docs/design/items-and-loot.md`, `docs/design/networking-and-persistence.md`, new `docs/design/passives.md`, new `docs/design/dialogue.md`, and the message section of `docs/design/ui.md`.
 
-Tests: new `tests/HollowWake.Core.Tests/PassiveTests.cs` (pick limits; unique per character; each, sole and first deals; realm adjacency and currencies; refund connectivity and pools), `InventoryTests.cs` (placement, swap and first fit; glyph stones socketing into weave slots; dormant glyphs reported; learning a better form copy), `ContainerTests.cs` (seated relics fold, unseated do not; masks and unlock rungs; stash pages); additions to `tests/HollowWake.Server.Tests/LoopbackTests.cs` (move item, socket glyph, allocate a choice, refund, weave preview).
+Tests: new `tests/HollowWake.Core.Tests/PassiveTests.cs` (pick limits; unique per character; each, sole and first deals; realm adjacency and currencies; refund connectivity and pools), `InventoryTests.cs` (placement, swap and first fit; glyph stones socketing into weave slots; dormant glyphs reported; learning a better form copy), `ContainerTests.cs` (seated relics fold, unseated do not; masks and unlock rungs; stash pages), `DialogueTests.cs` (gates, choices, effects, a line that opens a vendor, buy and sell at server prices); additions to `tests/HollowWake.Server.Tests/LoopbackTests.cs` (move item, socket glyph, allocate a choice, refund, weave preview, a conversation, a purchase) and to the protocol contract tests for every new message.
 
-Acceptance: the common gates; loopback tests pass; run the server and `probe`; `dotnet build src/HollowWake.Client` compiles; the Godot smoke run, extended to open the inventory, the weave rack and the passive tree, passes and saves screenshots of each.
+Acceptance: the common gates; loopback tests pass; run the server and `probe`; the WebSocket tests pass and the protocol module is current; every state and intent named in `ui.md` exists on the wire with a test that serializes it.
+
+#### WP7 The interface
+
+Goal: the interface of `docs/design/ui.md` on the Godot client first and the browser client second: the cluster with its orbs, overlays and rings, the weave bar and the menu tray; the core pane with the bag board, the equipment doll, the wallet and the ribbon with the weaves, passives, reliquary and character pages; the world panes (dialogue, vendor, quest offer, station, stash) opening beside the core pane under the book rule; and the theme as content.
+
+Rows: J1, J2, J5, J9 first, against the shapes WP6 freezes (where a message is still served with placeholder data the surface is built and the data arrives when WP6 fills it), then J6, J7, J8, J10, the browser client's parity, and the smoke extensions `ui.md` asks for.
+
+Owns: everything under `src/HollowWake.Client/` and `web/src/` except `web/src/net/protocol.ts`; new `content/core/ui/*.yaml` (theme, pages, cluster order) with its validator in a new `Content/Kinds/InterfaceKinds.cs`, the only core file it owns; `docs/design/client.md`, `docs/design/web-client.md` and the look sections of `docs/design/ui.md`.
+
+Dependency rule: WP7 reads messages and never core types. When it needs a field a message lacks it asks the coordinator, who sequences the change with WP6; WP7 never edits `HollowWake.Protocol`.
+
+Tests: the Godot smoke extended as `ui.md` describes, with a screenshot of every page and pane; the web smoke likewise; unit tests for the board widget (placement, footprints, drag targets) and for the book rule (binding, fronting, promotion, departure) in each client.
+
+Acceptance: the client assembly and the web client build; both smokes pass against a local server with every page and pane opened; the coordinator reviews the screenshots; no surface folds a number the server already sent (review).
 
 #### Deferred rows
 

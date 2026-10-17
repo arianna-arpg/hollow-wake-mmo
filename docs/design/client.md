@@ -20,6 +20,8 @@ WASD moves relative to the camera as a held direction; left click moves to the g
 
 ## UI
 
+The interface contract (the cluster, the core pane and its ribbon, the panes the world opens beside it) is [ui.md](ui.md); this section describes what is built today.
+
 Resource bars, a weave bar with cooldowns and costs, a target line, notices, a chat log, a character sheet (attributes, resistances, gear, bag, currency, quests) and a quest offer panel. All placeholder; the data shapes come from `self_state` and the quest and crafting messages.
 
 ## Coordinates
