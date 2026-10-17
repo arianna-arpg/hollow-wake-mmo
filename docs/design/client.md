@@ -2,6 +2,8 @@
 
 The Godot client is presentation. It never resolves gameplay. The browser client in `web/` follows the same rules with server-sent terrain; its contract is [web-client.md](web-client.md).
 
+The login insignia, window and exported executable icons, and static pre-scene splash use the canonical artwork in `assets/branding`, synchronized by `scripts/sync-branding.mjs`. Windows keeps the original ICO frames. The static splash has no minimum display duration; playable loading and character selection are separate client responsibilities.
+
 ## World
 
 On `enter_world` the client builds a `WorldGenerator` from the seed, layout and overlays the server sent and streams chunks around the player, generating them with the same core code the server runs. Generation runs on worker threads, nearest chunk first and one chunk further out than the meshes, so that every mesh is built knowing its neighbours; meshes are built on the main thread a few per frame. Chunks the server reports as modified arrive as `chunk_data` and replace local ones; their biome and water level come from the local generation, since the wire carries only what the simulation changes.

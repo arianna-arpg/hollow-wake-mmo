@@ -1,5 +1,7 @@
 # Launcher and releases
 
+Application and installer artwork comes from the canonical Hollow Wake assets in `assets/branding`, shared with both clients. `node scripts/sync-branding.mjs` refreshes the shipped copies; `--check` verifies byte equality in CI. The launcher header uses the website insignia, and Windows uses the original multi-resolution ICO. The launcher reports its own download/install work; the client's loading surface owns client preparation and terrain readiness, with no extra launcher delay.
+
 The launcher is how players get, update and start the game. It is an Electron app in `launcher/` that installs the Godot client from this repository's GitHub Releases and hands it a server address. It holds no game logic and never talks to the game server: it passes the address to the client and steps aside.
 
 ## What a player sees

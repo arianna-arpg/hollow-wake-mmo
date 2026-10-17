@@ -2,6 +2,8 @@
 
 The browser client is presentation, like the desktop client. It never resolves gameplay: it renders what the server says and sends intents the server may refuse. It lives in `web/` (Vite, TypeScript, three.js) and talks to the server over the WebSocket transport.
 
+The login insignia and browser favicon are synchronized from `assets/branding` by `scripts/sync-branding.mjs`, shared with the desktop client and launcher. Their relative URLs also work under the repository's Pages path.
+
 ## Shape
 
 `src/app.ts` is the root, the twin of the desktop `Main`: it owns the connection, the terrain and entity views, the camera rig, the interface and the player's settings, handles messages and turns input into intents. `net/` holds the generated message types, the codec and the socket; `world/` the chunk store, terrain colours and meshes, entity bodies, delivery shapes and snapshot interpolation; `view/camera.ts` both camera modes; `input/input.ts` the keys, mouse and controller; `ui/` the interface of [ui.md](ui.md) and the login panel. In `ui/`, `hud.ts` orchestrates as the desktop's `Hud` does; `cluster.ts`, `overlay.ts`, `core.ts`, `bookView.ts`, `board.ts` and `items.ts` draw the cluster, the plate, notices and chat, the core pane, books, boards and item cards; `pages/` holds the development pages and `panes/` the world panes and Options; `ui/logic/` holds the interface's logic as plain modules with tests, the same as the desktop's `UI/Logic` (content reading, the book rule, the workspace, placement, the menu fold, the hero's states, options and settings). `world/coords.ts` is the only place that converts coordinates: the simulation is X east, Y north, Z up, three.js is X east, Y up, Z south, so a simulation point (x, y, z) is drawn at (x, z, -y).

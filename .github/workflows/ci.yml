@@ -48,6 +48,8 @@ jobs:
           ELECTRON_SKIP_BINARY_DOWNLOAD: '1'
       - name: Build (type-check)
         run: npm run build
+      - name: Shared branding parity
+        run: node ../scripts/sync-branding.mjs --check
       - name: Unit tests (feed, verified download, extraction, install)
         run: npm test
       - name: Local startup cache and configuration

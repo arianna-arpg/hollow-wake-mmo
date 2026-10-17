@@ -71,6 +71,10 @@ public partial class LoginPanel : CanvasLayer
         var box = new VBoxContainer();
         box.AddThemeConstantOverride("separation", 8);
         host.AddChild(box);
+        box.AddChild(new TextureRect {
+            Texture = GD.Load<Texture2D>("res://icon.svg"), CustomMinimumSize = new Vector2(48, 48),
+            ExpandMode = TextureRect.ExpandModeEnum.IgnoreSize, StretchMode = TextureRect.StretchModeEnum.KeepAspectCentered,
+        });
         var muted = _skin?.S("ink_muted") ?? new Color(1, 1, 1, 0.7f);
         var tagline = new Label { Text = "the Weftmarches await", HorizontalAlignment = HorizontalAlignment.Center };
         tagline.AddThemeColorOverride("font_color", muted);

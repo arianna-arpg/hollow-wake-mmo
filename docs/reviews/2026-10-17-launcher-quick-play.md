@@ -8,6 +8,8 @@ Scope confirmed by the owner: desktop release selection, branch-specific browser
 
 ## Integration coordination
 
+The owner subsequently requested parity with `codex/brand-and-wisp-loading`. The imported shared identity, verification and loading-hook merge notes are in [the branding follow-up](2026-10-17-launcher-brand-parity.md).
+
 PR #8 (`claude/github-setup-63b667`) appeared during implementation. It overlaps README, `docs/design/launcher.md`, `docs/infrastructure/codespaces.md`, `.github/workflows/ci.yml`, and the launcher's main/renderer files. Preserve its rewritten README, public-repository wording and aggregate `ci` check when integrating this feature. This branch does not alter visibility, branch protection, licensing or branch cleanup. PR #9 currently has only its presentation review record; the startup hooks in the client roots are additive and must be retained when its presentation code lands. No simulation or protocol changes are part of this feature.
 
 Claude review requested for process ownership, repeat startup, error recovery, the release selection contract and the overlap with #8. Validation evidence follows below.

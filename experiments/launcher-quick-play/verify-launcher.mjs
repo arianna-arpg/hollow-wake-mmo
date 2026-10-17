@@ -38,17 +38,30 @@ const env = { ...process.env, HOLLOWWAKE_DATA_DIR: data, HOLLOWWAKE_GITHUB_API: 
 delete env.ELECTRON_RUN_AS_NODE;
 delete env.HOLLOWWAKE_FEED;
 delete env.HOLLOWWAKE_GITHUB_TOKEN;
-const exe = path.join(root, 'launcher/node_modules/electron/dist/electron.exe');
+const packaged = process.argv.includes('--packaged');
+const exe = path.join(root, packaged ? 'launcher/release/win-unpacked/Hollow Wake MMO.exe' : 'launcher/node_modules/electron/dist/electron.exe');
 let app;
 let gamePid;
 const result = {};
 const launch = async extra => {
-  app = await electron.launch({ executablePath: exe, args: [path.join(root, 'launcher'), '--disable-gpu', ...extra], env });
+  app = await electron.launch({ executablePath: exe, args: [...(packaged ? [] : [path.join(root, 'launcher')]), '--disable-gpu', ...extra], env });
   return app.firstWindow();
 };
 const killGame = () => { if (gamePid) { try { process.kill(gamePid); } catch {} gamePid = null; } };
 try {
   let page = await launch([]);
+  await page.waitForFunction(() => {
+    const mark = document.querySelector('img.mark');
+    return mark?.complete && mark.naturalWidth > 0;
+  });
+  const appPath = await app.evaluate(({ app }) => app.getAppPath());
+  const { extractFile } = createRequire(path.join(root, 'launcher/package.json'))('@electron/asar');
+  for (const file of ['logo.svg', 'icon.ico', 'icon.png']) {
+    const entry = file === 'logo.svg' ? path.join('dist', 'renderer', file) : path.join('dist', file);
+    const bundled = packaged ? extractFile(appPath, entry) : readFileSync(path.join(appPath, entry));
+    assert.deepEqual(bundled, readFileSync(path.join(root, 'assets/branding', file)), `bundled ${file} matches the canonical brand`);
+  }
+  result.brandArtwork = `${packaged ? 'Packaged' : 'Source'} launcher renders the shared insignia and bundles byte-identical PNG/ICO assets`;
   await page.waitForFunction(async () => (await window.launcher.getState()).builds.length === 2);
   await page.waitForFunction(async () => (await window.launcher.getState()).feed.remote?.version === '0.1.1');
   await page.evaluate(() => Promise.all([window.launcher.selectBuild('v0.1.0'), window.launcher.install()]));
