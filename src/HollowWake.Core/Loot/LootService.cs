@@ -80,9 +80,13 @@ public sealed class LootService
         return e;
     }
 
+    /// <summary>
+    /// Rolls a table and drops what it gives at a position. Stones and codices that a table leaves open lean
+    /// toward the forms and glyphs <paramref name="from"/> weaves with (question Q1: drops lean toward the dropper's kit).
+    /// </summary>
     public void DropTable(Simulation sim, string table, int level, Vector3 position, Entity owner, Entity from, Rng rng)
     {
-        foreach (var r in _generator.RollLoot(table, level, rng))
+        foreach (var r in _generator.RollLoot(table, level, rng, lean: LeanOf(sim, from)))
         {
             if (r.Item is not null)
             {
@@ -93,6 +97,37 @@ public sealed class LootService
                 GiveCurrency(sim, owner, r.Currency, r.Amount);
             }
         }
+    }
+
+    /// <summary>The forms and glyphs an entity's weaves are made of, or null when it weaves nothing.</summary>
+    private static HashSet<string>? LeanOf(Simulation sim, Entity from)
+    {
+        if (!sim.World.TryGet<WeaveBook>(from, out var book) || book.Slots.Count == 0)
+        {
+            return null;
+        }
+        var lean = new HashSet<string>(StringComparer.Ordinal);
+        foreach (var slot in book.Slots)
+        {
+            var spec = slot.Spec;
+            if (spec.Preset is { } preset && sim.Content.Get<Definitions.WeaveDef>(preset) is { } def)
+            {
+                lean.Add(def.Form);
+                foreach (var glyph in def.Glyphs)
+                {
+                    lean.Add(glyph.Id);
+                }
+            }
+            if (spec.Form is { } form)
+            {
+                lean.Add(form);
+            }
+            foreach (var glyph in spec.Glyphs)
+            {
+                lean.Add(glyph.Id);
+            }
+        }
+        return lean.Count == 0 ? null : lean;
     }
 
     public bool PickUp(Simulation sim, Entity who, Entity drop, out string reason)

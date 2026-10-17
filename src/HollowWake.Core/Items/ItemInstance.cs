@@ -1,5 +1,13 @@
 namespace HollowWake.Core.Items;
 
+/// <summary>One option a unique picked from a choice family, and the 0..1 roll per line of it.</summary>
+public sealed class UniqueChoiceRoll
+{
+    public required string Choice { get; init; }
+    public required string Option { get; init; }
+    public List<double> Rolls { get; init; } = new();
+}
+
 /// <summary>One rolled affix: which family, which tier, and the 0..1 roll per line. Values derive at read time.</summary>
 public sealed class AffixRoll
 {
@@ -27,6 +35,10 @@ public sealed class ItemInstance
     public List<AffixRoll> Affixes { get; init; } = new();
     public string? Unique { get; init; }
     public List<double> UniqueRolls { get; init; } = new();
+    /// <summary>The options a unique picked from its choice families at mint, with the rolls of their lines.</summary>
+    public List<UniqueChoiceRoll>? UniqueChoices { get; set; }
+    /// <summary>Minted superior: the base roll landed in the rarity's top window.</summary>
+    public bool Superior { get; set; }
     public int Count { get; set; } = 1;
     public int Stack { get; init; } = 1;
     /// <summary>Crafting quality 0..1; scales local values through the items.quality rule.</summary>
@@ -35,8 +47,19 @@ public sealed class ItemInstance
     public string? Crafter { get; set; }
     public bool Locked { get; set; }
 
+    /// <summary>The cell of the item's top-left corner on the board holding it; null when it lies on none.</summary>
+    public int? X { get; set; }
+    public int? Y { get; set; }
+
+    /// <summary>What a glyph stone or a codex holds: the glyph or the weave it teaches, at a level.</summary>
+    public ItemPayload? Payload { get; set; }
+
+    /// <summary>Stones socketed into this item, by socket index; null where a socket is empty. Null for items without sockets.</summary>
+    public List<ItemInstance?>? Sockets { get; set; }
+
     public bool CanStackWith(ItemInstance other) =>
-        Stack > 1 && other.Base == Base && Affixes.Count == 0 && other.Affixes.Count == 0 && Unique is null && other.Unique is null && Count < Stack;
+        Stack > 1 && other.Base == Base && Affixes.Count == 0 && other.Affixes.Count == 0 && Unique is null && other.Unique is null && Count < Stack
+        && Payload is null && other.Payload is null;
 
     public ItemInstance Clone(long uid) => new()
     {
@@ -51,13 +74,41 @@ public sealed class ItemInstance
         Affixes = Affixes.Select(a => new AffixRoll { Affix = a.Affix, Tier = a.Tier, Rolls = new List<double>(a.Rolls), Crafted = a.Crafted }).ToList(),
         Unique = Unique,
         UniqueRolls = new List<double>(UniqueRolls),
+        UniqueChoices = UniqueChoices?.Select(c => new UniqueChoiceRoll { Choice = c.Choice, Option = c.Option, Rolls = new List<double>(c.Rolls) }).ToList(),
+        Superior = Superior,
         Count = Count,
         Stack = Stack,
         Quality = Quality,
         Seed = Seed,
         Crafter = Crafter,
         Locked = Locked,
+        Payload = Payload?.Clone(),
+        // A copy has the same sockets, empty: stones are items of their own and are never duplicated.
+        Sockets = Sockets is null ? null : new List<ItemInstance?>(new ItemInstance?[Sockets.Count]),
     };
 
     public override string ToString() => $"{Name} ({Base} L{Level} {Rarity})";
+}
+
+/// <summary>
+/// What a weave item holds. A glyph stone holds a glyph at a level with the rows it rolled; a codex teaches a
+/// form (composed with threads the hero chooses) or a whole preset weave, at a level.
+/// </summary>
+public sealed class ItemPayload
+{
+    public string? Glyph { get; set; }
+    public string? Form { get; set; }
+    public string? Weave { get; set; }
+    public int Level { get; set; } = 1;
+    /// <summary>A glyph stone's rolled row per axis.</summary>
+    public Dictionary<string, string>? Rows { get; set; }
+
+    public ItemPayload Clone() => new()
+    {
+        Glyph = Glyph,
+        Form = Form,
+        Weave = Weave,
+        Level = Level,
+        Rows = Rows is null ? null : new Dictionary<string, string>(Rows, StringComparer.Ordinal),
+    };
 }

@@ -82,7 +82,7 @@ public sealed class CraftingService
         return true;
     }
 
-    private static bool MatchesInput(ItemResolver resolver, ItemInstance item, ItemRequirement req)
+    internal static bool MatchesInput(ItemResolver resolver, ItemInstance item, ItemRequirement req)
     {
         if (req.Item is not null)
         {

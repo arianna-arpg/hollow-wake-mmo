@@ -31,6 +31,8 @@ entries:
     rewards:
       xp: "40"
       currency: { floss: 5 }
+      # The Wellmother opens the Devotion realm and gives its first points.
+      points: { devotion: 2 }
     text:
       offer: You have not touched the Wellmother yet. Go on. She does not bite the new ones.
       complete: There. Now you are of the Hallows, for whatever that is worth.

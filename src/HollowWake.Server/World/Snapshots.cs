@@ -289,6 +289,26 @@ public static class Snapshots
             changes++;
             return b;
         }
+        // A shaped body's heading or spin can be set or changed by a delta, never cleared: that needs the full state.
+        if ((last.Heading is not null && next.Heading is null) || (last.Spin is not null && next.Spin is null) || (last.ShapeSize is not null && next.ShapeSize is null && next.Shape is not null))
+        {
+            return null;
+        }
+        float? NF(float? a, float? b)
+        {
+            if (a == b)
+            {
+                return null;
+            }
+            changes++;
+            return b;
+        }
+        ShapeSizeInfo? size = null;
+        if (!Equals(last.ShapeSize, next.ShapeSize) && next.ShapeSize is not null)
+        {
+            size = next.ShapeSize;
+            changes++;
+        }
         var resources = ChangedEntries(last.Resources, next.Resources);
         var maxes = ChangedEntries(last.ResourceMax, next.ResourceMax);
         var flags = SameSet(last.Flags, next.Flags) ? null : next.Flags;
@@ -327,6 +347,10 @@ public static class Snapshots
             VX = F(last.VX, next.VX),
             VY = F(last.VY, next.VY),
             VZ = F(last.VZ, next.VZ),
+            Shape = S(last.Shape, next.Shape),
+            ShapeSize = size,
+            Heading = NF(last.Heading, next.Heading),
+            Spin = NF(last.Spin, next.Spin),
         };
         empty = changes == 0;
         return delta;
@@ -533,12 +557,9 @@ public static class Snapshots
         var bag = new List<ItemInfo>();
         if (inv is not null)
         {
-            foreach (var item in inv.Slots)
+            foreach (var item in inv.Items)
             {
-                if (item is not null)
-                {
-                    bag.Add(Item(resolver, item));
-                }
+                bag.Add(Item(resolver, item));
             }
         }
         var equipment = new Dictionary<string, ItemInfo>(StringComparer.Ordinal);
@@ -636,20 +657,7 @@ public static class Snapshots
         }
         if (world.TryGet<Inventory>(e, out var inv))
         {
-            h.Add(inv.Capacity);
-            for (var i = 0; i < inv.Slots.Count; i++)
-            {
-                if (inv.Slots[i] is { } item)
-                {
-                    h.Add(i);
-                    AddItem(ref h, item);
-                }
-            }
-            foreach (var (currency, amount) in inv.Currency)
-            {
-                h.Add(currency);
-                h.Add(amount);
-            }
+            AddBag(ref h, inv);
         }
         if (world.TryGet<Equipment>(e, out var eq))
         {
@@ -690,6 +698,30 @@ public static class Snapshots
         return h.Value;
     }
 
+    /// <summary>The bag's shape, each item where it lies, the items without a cell, and the wallet.</summary>
+    internal static void AddBag(ref FingerprintHash h, Inventory inv)
+    {
+        h.Add(inv.Capacity);
+        var placed = inv.Bag.Placed;
+        for (var i = 0; i < placed.Count; i++)
+        {
+            var p = placed[i];
+            h.Add(p.X);
+            h.Add(p.Y);
+            AddItem(ref h, p.Item);
+        }
+        foreach (var item in inv.Overflow)
+        {
+            h.Add(-1);
+            AddItem(ref h, item);
+        }
+        foreach (var (currency, amount) in inv.Currency)
+        {
+            h.Add(currency);
+            h.Add(amount);
+        }
+    }
+
     internal static void AddItem(ref FingerprintHash h, ItemInstance item)
     {
         h.Add(item.Uid);
@@ -698,6 +730,16 @@ public static class Snapshots
         h.Add(item.Rarity);
         h.Add(item.Quality);
         h.Add(item.Affixes.Count);
+        h.Add(item.Locked);
+        h.Add(item.Payload?.Level ?? 0);
+        if (item.Sockets is { } sockets)
+        {
+            h.Add(sockets.Count);
+            foreach (var stone in sockets)
+            {
+                h.Add(stone?.Uid ?? 0);
+            }
+        }
     }
 
     // ------------------------------------------------------------ chunks

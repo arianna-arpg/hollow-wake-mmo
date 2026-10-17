@@ -1,0 +1,87 @@
+# The Quartermaster of Ninewells: work for new hands, the Wellmother, and a table of stock. Lines show the hero's
+# quests as they stand; a choice can accept or turn in a quest, open the stock beside the conversation, or end it.
+kind: dialogues
+entries:
+  - id: quartermaster
+    name: The Quartermaster
+    for: [quartermaster]
+    start: greet
+    nodes:
+      greet:
+        line: "Ninewells needs every pair of hands it can get, {hero}. What brings you to my table?"
+        effects:
+          - { type: set_flag, flag: met_quartermaster }
+        choices:
+          - { id: work, text: Any work going?, goto: work }
+          - { id: trade, text: Show me what you have., effects: [ { type: open_vendor, vendor: quartermaster } ], goto: trading }
+          - id: wardens
+            text: They say the Holdfast keep the wells.
+            when: 'has("calling.holdfast") && !has("flag.warden_oath")'
+            effects: [ { type: set_flag, flag: warden_oath }, { type: grant_points, currency: vocation, amount: 2 } ]
+            goto: wardens
+          - { id: bye, text: Nothing for now., end: true }
+
+      work:
+        line: "Work there is. The hedgerows will not thin themselves, and the Wellmother waits for those who have not met her."
+        choices:
+          - id: take_hobs
+            text: I will thin the hobs.
+            when: '!has("quest.taken.first_threads") && !has("quest.completed.first_threads")'
+            effects: [ { type: accept_quest, quest: first_threads } ]
+            goto: hobs_taken
+          - id: hobs_done
+            text: The hobs are thinned.
+            when: 'has("quest.complete.first_threads")'
+            effects: [ { type: turn_in_quest, quest: first_threads } ]
+            goto: hobs_thanks
+          - id: hobs_working
+            text: The hobs are still about.
+            when: 'has("quest.active.first_threads")'
+            goto: hobs_waiting
+          - id: take_wellmother
+            text: Tell me about the Wellmother.
+            when: 'has("quest.completed.first_threads") && !has("quest.taken.the_wellmother") && !has("quest.completed.the_wellmother")'
+            effects: [ { type: accept_quest, quest: the_wellmother } ]
+            goto: wellmother
+          - id: wellmother_done
+            text: I touched the Wellmother.
+            when: 'has("quest.complete.the_wellmother")'
+            effects: [ { type: turn_in_quest, quest: the_wellmother } ]
+            goto: devoted
+          - id: all_listed
+            text: What else is there?
+            effects: [ { type: offer_quests } ]
+            goto: greet
+          - { id: back, text: Something else., goto: greet }
+
+      hobs_taken:
+        line: "Five fewer hobs and the hedge holds another season. Mind their teeth."
+        choices:
+          - { id: back, text: I will be back., goto: greet }
+      hobs_waiting:
+        line: "Fewer would be better. Five, I said."
+        choices:
+          - { id: back, text: Something else., goto: greet }
+      hobs_thanks:
+        line: "That will do. Take this, and the Compact's thanks."
+        choices:
+          - { id: back, text: Glad to help., goto: work }
+      wellmother:
+        line: "Walk out past the wells and lay a hand on her. Every Marcher does it once. She does not bite the new ones."
+        choices:
+          - { id: back, text: I will go., goto: greet }
+      devoted:
+        line: "There. Now you are of the Hallows, for whatever that is worth. She teaches those who listen."
+        choices:
+          - { id: back, text: I am listening., goto: greet }
+
+      wardens:
+        line: "Some of us do. Swear it, then: the wells before your own hide. The oath teaches what it asks."
+        choices:
+          - { id: back, text: I swear it., goto: greet }
+
+      trading:
+        line: "Coin first, questions after."
+        choices:
+          - { id: back, text: Something else., goto: greet }
+          - { id: bye, text: That will do., end: true }

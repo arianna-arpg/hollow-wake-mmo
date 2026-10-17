@@ -164,6 +164,7 @@ public sealed class ZoneInstance
                     break;
                 case ItemAcquired ia:
                     ToOwner(ia.Entity, new NoticeMsg($"Picked up {ia.Base} x{ia.Count}.", "loot"));
+                    MarkPanes(ia.Entity);
                     break;
                 case IntentRejected ir:
                     ToOwner(ir.Entity, new IntentRejectedMsg(ir.Intent, ir.Reason));
@@ -208,10 +209,85 @@ public sealed class ZoneInstance
                 case Notice n:
                     ToOwner(n.To, new NoticeMsg(n.Text, "info"));
                     break;
+                case DialogueShown ds:
+                    ToOwner(ds.Entity, InterfaceStates.Dialogue(Sim, ds.Entity, ds.Speaker, ds.Dialogue));
+                    break;
+                case DialogueEnded de:
+                    ToOwner(de.Entity, InterfaceStates.Ended(Sim, de.Speaker, de.Dialogue));
+                    break;
+                case VendorOpened vo:
+                    _vendorDirty.Add(vo.Entity);
+                    break;
+                case VendorChanged vc:
+                    _vendorDirty.Add(vc.Entity);
+                    break;
+                case VendorClosed vcl:
+                    _vendorDirty.Remove(vcl.Entity);
+                    ToOwner(vcl.Entity, InterfaceStates.VendorClosed(Sim, vcl.Vendor));
+                    break;
+                case StationOpened so:
+                    _stationDirty.Add(so.Entity);
+                    break;
+                case StationClosed sc:
+                    _stationDirty.Remove(sc.Entity);
+                    ToOwner(sc.Entity, InterfaceStates.StationClosed(Sim, sc.Station));
+                    break;
+                case CurrencyChanged cur:
+                    MarkPanes(cur.Entity);
+                    break;
+                case ItemMoved moved:
+                    MarkPanes(moved.Entity);
+                    break;
+                case StationServed served:
+                    MarkPanes(served.Entity);
+                    break;
+                case GearSocketChanged socketed:
+                    MarkPanes(socketed.Entity);
+                    break;
+                case ContainerChanged changed:
+                    MarkPanes(changed.Entity);
+                    break;
                 case ChatMessage cm:
                     BroadcastAll(new ChatBroadcastMsg(Sim.World.Get<Identity>(cm.From)?.Name ?? "?", cm.Channel, cm.Text));
                     break;
             }
+        }
+        // A trade or a pickup changes what an open vendor or station shows; each is sent once per tick, whatever changed.
+        foreach (var hero in _vendorDirty)
+        {
+            if (Sim.World.Get<Panes>(hero)?.Vendor is not null)
+            {
+                ToOwner(hero, InterfaceStates.Vendor(Sim, hero));
+            }
+        }
+        foreach (var hero in _stationDirty)
+        {
+            if (Sim.World.Get<Panes>(hero)?.Station is { } station)
+            {
+                ToOwner(hero, InterfaceStates.Station(Sim, hero, station.Source, station.Tags));
+            }
+        }
+        _vendorDirty.Clear();
+        _stationDirty.Clear();
+    }
+
+    private readonly HashSet<Entity> _vendorDirty = new();
+    private readonly HashSet<Entity> _stationDirty = new();
+
+    /// <summary>Marks the hero's open vendor and station panes for a resend: what the bag and wallet hold changed.</summary>
+    private void MarkPanes(Entity hero)
+    {
+        if (Sim.World.Get<Panes>(hero) is not { } panes)
+        {
+            return;
+        }
+        if (panes.Vendor is not null)
+        {
+            _vendorDirty.Add(hero);
+        }
+        if (panes.Station is not null)
+        {
+            _stationDirty.Add(hero);
         }
     }
 

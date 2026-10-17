@@ -1,0 +1,36 @@
+# Realms: constellations of their own, shown as tabs beside the star. A realm opens when its unlock holds over the
+# hero; its roots are then granted free, and its nodes spend the realm's own currency.
+kind: passive_realms
+entries:
+  - id: devotion
+    name: Devotion
+    description: What the Wellmother teaches those who touched her.
+    adjacency: tree
+    roots: [devotion_root]
+    currency: devotion
+    unlock: 'has("quest.completed.the_wellmother")'
+    sealed_text: Touch the Wellmother and return to the Quartermaster to open Devotion.
+    order: 1
+  # A vocation: a mini-tree of one calling, opened by an oath found in the world (a story flag) and grown with
+  # vocation points that conversations and quests grant. Heroes of other callings never open it.
+  - id: warden
+    name: Warden
+    description: The oath of the Holdfast who keep the wells.
+    calling: holdfast
+    adjacency: tree
+    roots: [warden_root]
+    currency: vocation
+    unlock: 'has("flag.warden_oath")'
+    sealed_text: A Holdfast who asks the Quartermaster about the wardens may take their oath.
+    order: 2
+---
+kind: passives
+entries:
+  - { id: devotion_root, name: The Wellmother's Mark, kind: start, realm: devotion, x: 0, y: 0, links: [dv1, dv2], modifiers: [ { attribute: life.max, form: flat, value: 5 } ] }
+  - { id: dv1, name: Still Water, kind: small, realm: devotion, x: -3, y: 3, links: [devotion_root, dv3], modifiers: [ { attribute: mana.regen, form: increased, value: 0.1 } ] }
+  - { id: dv2, name: Deep Spring, kind: small, realm: devotion, x: 3, y: 3, links: [devotion_root, dv3], modifiers: [ { attribute: life.regen, form: flat, value: 1 } ] }
+  - { id: dv3, name: The Wellmother's Vows, kind: notable, realm: devotion, x: 0, y: 6, links: [dv1, dv2], choice: { group: wellmother_vows } }
+  - { id: warden_root, name: Warden's Oath, kind: start, realm: warden, x: 0, y: 0, links: [wd1, wd2], modifiers: [ { attribute: armor, form: increased, value: 0.05 } ] }
+  - { id: wd1, name: Wellguard, kind: small, realm: warden, x: -3, y: 3, links: [warden_root, wd3], modifiers: [ { attribute: block.chance, form: flat, value: 0.03 } ] }
+  - { id: wd2, name: Steadfast, kind: small, realm: warden, x: 3, y: 3, links: [warden_root, wd3], modifiers: [ { attribute: life.max, form: increased, value: 0.04 } ] }
+  - { id: wd3, name: Keeper of the Wells, kind: notable, realm: warden, x: 0, y: 6, links: [wd1, wd2], modifiers: [ { attribute: life.regen, form: increased, value: 0.25 }, { attribute: armor, form: increased, value: 0.1 } ] }
