@@ -62,6 +62,134 @@ public class ExpressionTests
         Assert.Equal(60, Expr.Parse("target.life + amount").Evaluate(scope));
         Assert.True(Expr.Parse("has(\"target.burning\")").IsTrue(scope));
     }
+
+    [Fact]
+    public void FunctionsTakeManyArguments()
+    {
+        static double Eval(string source) => Expr.Parse(source).Evaluate(EmptyScope.Instance);
+        // Nine arguments: one more than the evaluator keeps on the stack.
+        const string nine = "1, 9, 2, 8, 3, 7, 4, 6, 5";
+        Assert.Equal(1, Eval($"min({nine})"));
+        Assert.Equal(9, Eval($"max({nine})"));
+        Assert.Equal(45, Eval($"sum({nine})"));
+        Assert.Equal(5, Eval($"avg({nine})"));
+        Assert.Equal(8, Eval("max(1, 2, 3, 4, 5, 6, 7, 8)"));
+        var all = string.Join(", ", Enumerable.Range(1, 64));
+        Assert.Equal(2080, Eval($"sum({all})"));
+        Assert.Equal(64, Eval($"max({all})"));
+        Assert.Equal(32.5, Eval($"avg({all})"));
+        Assert.Throws<ExprParseException>(() => Expr.Parse($"sum({all}, 65)"));
+        Assert.Throws<ExprParseException>(() => Expr.Parse("clamp(1, 2)"));
+        // Nested calls each keep their own arguments, long lists included.
+        Assert.Equal(10, Eval("max(min(5, 3, 9, 1, 7, 2, 8, 6, 4), sum(1, 1, 1, 1, 1, 1, 1, 1, 1, 1), avg(2, 4))"));
+        Assert.Equal(18, Eval("sum(1, 1, 1, 1, 1, 1, 1, 1, 1, max(1, 2, 3, 4, 5, 6, 7, 8, 9, 8, 7))"));
+        // Arguments evaluate left to right, so rand() draws keep their order.
+        var expected = new Rng(5);
+        var first = expected.NextDouble();
+        var second = expected.NextDouble();
+        Assert.Equal(first + second * 1000, Expr.Parse("sum(rand(), rand() * 1000, 0, 0, 0, 0, 0, 0, 0)").Evaluate(new DictScope(new Rng(5))));
+    }
+
+    [Fact]
+    public void ListFunctionsMatchLinqExactly()
+    {
+        // min, max, sum and avg once ran through LINQ; they must keep its results bit for bit, NaN and signed zeros included.
+        var specials = new[] { 0.0, -0.0, 1.0, -1.0, double.NaN, double.PositiveInfinity, double.NegativeInfinity, 0.1, 1e300, -1e-300 };
+        var rng = new Rng(11);
+        for (var trial = 0; trial < 400; trial++)
+        {
+            var n = 1 + (int)(rng.NextDouble() * 12);
+            var values = new double[n];
+            var scope = new DictScope();
+            var names = new string[n];
+            for (var i = 0; i < n; i++)
+            {
+                values[i] = rng.NextDouble() < 0.5 ? specials[(int)(rng.NextDouble() * specials.Length)] : (rng.NextDouble() - 0.5) * 100;
+                names[i] = "a" + i;
+                scope.Set(names[i], values[i]);
+            }
+            var args = string.Join(", ", names);
+            AssertSameDouble(values.Min(), Expr.Parse($"min({args})").Evaluate(scope));
+            AssertSameDouble(values.Max(), Expr.Parse($"max({args})").Evaluate(scope));
+            AssertSameDouble(values.Sum(), Expr.Parse($"sum({args})").Evaluate(scope));
+            AssertSameDouble(values.Average(), Expr.Parse($"avg({args})").Evaluate(scope));
+        }
+        // Ties keep the earlier value.
+        AssertSameDouble(0.0, Expr.Parse("min(0, -0)").Evaluate(EmptyScope.Instance));
+        AssertSameDouble(-0.0, Expr.Parse("min(-0, 0)").Evaluate(EmptyScope.Instance));
+        AssertSameDouble(-0.0, Expr.Parse("max(-0, 0)").Evaluate(EmptyScope.Instance));
+        Assert.True(double.IsNaN(Expr.Parse("min(1, pow(-8, 0.5))").Evaluate(EmptyScope.Instance)));
+        Assert.Equal(1, Expr.Parse("max(pow(-8, 0.5), 1)").Evaluate(EmptyScope.Instance));
+    }
+
+    private static void AssertSameDouble(double expected, double actual)
+    {
+        if (double.IsNaN(expected))
+        {
+            Assert.True(double.IsNaN(actual), $"expected NaN, got {actual}");
+            return;
+        }
+        Assert.Equal(BitConverter.DoubleToInt64Bits(expected), BitConverter.DoubleToInt64Bits(actual));
+    }
+
+    [Fact]
+    public void EvaluationAllocatesNothing()
+    {
+        var scope = new DictScope(new Rng(1)).Set("a", 1).Set("b", 2).Flag("stationary");
+        var expr = Expr.Parse("max(a, b, 3, 4, 5, 6, 7, 8) + min(a, b) + lerp(a, b, rand()) + (has(\"stationary\") ? 1 : 0) + clamp(a / max(1, b), 0, 1) + sum(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)");
+        var total = expr.Evaluate(scope);
+        var before = GC.GetAllocatedBytesForCurrentThread();
+        for (var i = 0; i < 1000; i++)
+        {
+            total += expr.Evaluate(scope);
+        }
+        Assert.Equal(0, GC.GetAllocatedBytesForCurrentThread() - before);
+        Assert.True(total > 0);
+    }
+
+    [Fact]
+    public void DictScopeKeepsEveryNameAndTheLatestValue()
+    {
+        var scope = new DictScope();
+        for (var i = 0; i < 20; i++)
+        {
+            scope.Set("v" + i, i);
+        }
+        scope.Set("v3", 33).Set("v15", 150);
+        for (var i = 0; i < 20; i++)
+        {
+            Assert.True(scope.TryResolve("v" + i, out var v));
+            Assert.Equal(i == 3 ? 33 : i == 15 ? 150 : i, v);
+        }
+        Assert.False(scope.TryResolve("v20", out var missing));
+        Assert.Equal(0, missing);
+        Assert.False(scope.HasFlag("x"));
+        scope.Flag("x");
+        Assert.True(scope.HasFlag("x"));
+        scope.Flag("x", false);
+        Assert.False(scope.HasFlag("x"));
+        Assert.Throws<ArgumentNullException>(() => scope.Set(null!, 1));
+    }
+
+    [Fact]
+    public void OverlaysShadowMountAndFallBack()
+    {
+        var parent = new DictScope().Set("life", 80).Set("target.life", 1).Set("source.life", 7).Flag("burning");
+        var target = new DictScope().Set("life", 50).Flag("frozen");
+        var overlay = new ScopeOverlay(parent).Set("life", 10).Mount("target", target);
+        Assert.Equal(10, Expr.Parse("life").Evaluate(overlay));
+        // A mounted prefix answers alone; other prefixes and plain names fall through to the parent.
+        Assert.Equal(50, Expr.Parse("target.life").Evaluate(overlay));
+        Assert.False(overlay.TryResolve("target.mana", out _));
+        Assert.Equal(7, Expr.Parse("source.life").Evaluate(overlay));
+        Assert.True(overlay.HasFlag("target.frozen"));
+        Assert.False(overlay.HasFlag("target.burning"));
+        Assert.True(overlay.HasFlag("burning"));
+        // Mounting again under a prefix replaces the scope.
+        overlay.Mount("target", new DictScope().Set("life", 5));
+        Assert.Equal(5, Expr.Parse("target.life").Evaluate(overlay));
+        Assert.Equal(15, Expr.Parse("target.life + life").Evaluate(overlay));
+    }
 }
 
 public class TagTests
@@ -161,6 +289,36 @@ public class AttributeTests
     }
 
     [Fact]
+    public void ScopesMatchHierarchicallyAcrossContexts()
+    {
+        var set = new AttributeSet(Catalog());
+        set.Add(new Modifier { Attribute = "damage", Form = ModifierForm.Flat, Value = 1, Scope = TagSet.Of("weapon") });
+        set.Add(new Modifier { Attribute = "damage", Form = ModifierForm.Flat, Value = 10, Scope = TagSet.Of("weapon.sword") });
+        set.Add(new Modifier { Attribute = "damage", Form = ModifierForm.Flat, Value = 100, Scope = TagSet.Of("weapon", "fire") });
+        set.Add(new Modifier { Attribute = "damage", Form = ModifierForm.Flat, Value = 1000, Scope = TagSet.Of("weapon") });
+        var scope = EmptyScope.Instance;
+        var sword = TagSet.Of("weapon.sword", "attack");
+        var axe = TagSet.Of("weapon.axe", "fire");
+        var bare = TagSet.Of("weapon");
+        // Alternating contexts replace whatever the set remembers about the last one.
+        for (var round = 0; round < 3; round++)
+        {
+            Assert.Equal(1011, set.Apply("damage", 0, scope, sword));
+            Assert.Equal(1101, set.Apply("damage", 0, scope, axe));
+            Assert.Equal(1001, set.Apply("damage", 0, scope, bare));
+            Assert.Equal(0, set.Apply("damage", 0, scope, TagSet.Empty));
+        }
+        // Past 64 distinct scopes every modifier still matches on its own.
+        for (var i = 0; i < 70; i++)
+        {
+            set.Add(new Modifier { Attribute = "damage", Form = ModifierForm.Flat, Value = i, Scope = TagSet.Of("t" + i) });
+        }
+        Assert.Equal(1011 + 3 + 65, set.Apply("damage", 0, scope, sword.With("t3", "t65")));
+        Assert.Equal(1001, set.Apply("damage", 0, scope, bare));
+        Assert.Equal(0, set.Apply("damage", 0, scope, TagSet.Empty));
+    }
+
+    [Fact]
     public void ExtraModifiersJoinTheSameFold()
     {
         var set = new AttributeSet(Catalog());
@@ -209,6 +367,292 @@ public class AttributeTests
         var cyclic = new AttributeSet(new AttributeCatalog(new[] { new AttributeDef { Id = "a", Formula = Expr.Parse("b + 1") }, new AttributeDef { Id = "b", Formula = Expr.Parse("a + 1") } }));
         var owner = new AttributeOwnerScope(cyclic);
         Assert.Throws<AttributeCycleException>(() => cyclic.Get("a", owner));
+    }
+
+    [Fact]
+    public void LinksStaySingleHopWithExtras()
+    {
+        var set = new AttributeSet(Catalog());
+        var owner = Owner(set, new DictScope().Set("level", 1));
+        // life.regen = 1 + might(10) * 0.1 = 2. thorns gains half of it; the link back from thorns must not compound.
+        set.Add(new Modifier { Attribute = "thorns", Form = ModifierForm.Link, From = "life.regen", Value = 0.5, Source = "link" });
+        set.Add(new Modifier { Attribute = "life.regen", Form = ModifierForm.Link, From = "thorns", Value = 1.0, Source = "back" });
+        Assert.Equal(1, set.Get("thorns", owner), 6);
+        Assert.Equal(2, set.Get("life.regen", owner), 6);
+        // Extras join the source's fold too (+2 regen, read with links off = 4), and may carry links of their own.
+        var extra = new[]
+        {
+            new Modifier { Attribute = "life.regen", Form = ModifierForm.Flat, Value = 2, Source = "x.regen" },
+            new Modifier { Attribute = "thorns", Form = ModifierForm.Increased, Value = 1.0, Source = "x.inc" },
+            new Modifier { Attribute = "thorns", Form = ModifierForm.Link, From = "life.regen", Value = 0.25, Source = "x.link" },
+        };
+        // (0.5 * 4 + 0.25 * 4) * (1 + 1) = 6
+        Assert.Equal(6, set.Get("thorns", owner, TagSet.Empty, extra), 6);
+        var breakdown = set.Explain("thorns", owner, null, extra);
+        Assert.Equal(3, breakdown.Flat, 6);
+        Assert.Equal(1, breakdown.Increased, 6);
+        Assert.Equal(6, breakdown.Result, 6);
+        Assert.Equal(new[] { "link", "x.inc", "x.link" }, breakdown.Applied.Select(m => m.Source));
+        // Links to an attribute nobody declared read zero; a link with no source is ignored.
+        set.Add(new Modifier { Attribute = "thorns", Form = ModifierForm.Link, From = "nothing.here", Value = 3 });
+        set.Add(new Modifier { Attribute = "thorns", Form = ModifierForm.Link, Value = 3 });
+        Assert.Equal(1, set.Get("thorns", owner), 6);
+        // The cached query and the uncached one agree once no extras are involved.
+        Assert.Equal(set.Get("thorns", owner), set.Apply("thorns", 0, owner, TagSet.Empty), 6);
+    }
+
+    [Fact]
+    public void GaugeGatingEdges()
+    {
+        var set = new AttributeSet(Catalog());
+        var dict = new DictScope().Set("level", 2);
+        set.Add(new Modifier { Attribute = "damage", Form = ModifierForm.Flat, Value = 10, Gauge = "charge.rage", GaugeAt = 3 });
+        set.Add(new Modifier { Attribute = "damage", Form = ModifierForm.Flat, Value = 2, Gauge = "status.poison.stacks" });
+        // An unknown gauge reads zero: below the gate, and inert as a scale.
+        Assert.Equal(100, set.Apply("damage", 100, dict, TagSet.Empty), 6);
+        dict.Set("charge.rage", 2.999);
+        Assert.Equal(100, set.Apply("damage", 100, dict, TagSet.Empty), 6);
+        // At the threshold the gate opens with the full value, and above it the value is not scaled.
+        dict.Set("charge.rage", 3);
+        Assert.Equal(110, set.Apply("damage", 100, dict, TagSet.Empty), 6);
+        dict.Set("charge.rage", 7);
+        Assert.Equal(110, set.Apply("damage", 100, dict, TagSet.Empty), 6);
+        // A scaling gauge multiplies by whatever it reads, negative included; exactly zero makes it inert.
+        dict.Set("status.poison.stacks", -1.5);
+        Assert.Equal(107, set.Apply("damage", 100, dict, TagSet.Empty), 6);
+        dict.Set("status.poison.stacks", 0);
+        Assert.Equal(110, set.Apply("damage", 100, dict, TagSet.Empty), 6);
+        // gauge_at 0 opens even for a gauge that reads nothing.
+        set.Add(new Modifier { Attribute = "damage", Form = ModifierForm.Flat, Value = 1, Gauge = "charge.missing", GaugeAt = 0 });
+        Assert.Equal(111, set.Apply("damage", 100, dict, TagSet.Empty), 6);
+        // The condition gates before the gauge does.
+        set.Add(new Modifier { Attribute = "damage", Form = ModifierForm.Flat, Value = 100, Gauge = "charge.rage", GaugeAt = 1, Condition = Expr.Parse("has(\"enraged\")") });
+        Assert.Equal(111, set.Apply("damage", 100, dict, TagSet.Empty), 6);
+        dict.Flag("enraged");
+        Assert.Equal(211, set.Apply("damage", 100, dict, TagSet.Empty), 6);
+        // A value expression is scaled by its gauge like a constant.
+        set.Add(new Modifier { Attribute = "damage", Form = ModifierForm.Increased, ValueExpr = Expr.Parse("level * 0.1"), Gauge = "status.poison.stacks" });
+        dict.Set("status.poison.stacks", 3);
+        // (100 + 10 + 2 * 3 + 1 + 100) * (1 + 0.2 * 3) = 217 * 1.6
+        Assert.Equal(217 * 1.6, set.Apply("damage", 100, dict, TagSet.Empty), 6);
+        // Cached reads see gauge changes once the set is touched, as the Stats component does.
+        Assert.Equal(0.05, set.Get("crit.chance", dict), 6);
+        set.Add(new Modifier { Attribute = "crit.chance", Form = ModifierForm.Flat, Value = 0.5, Gauge = "charge.rage", GaugeAt = 8 });
+        Assert.Equal(0.05, set.Get("crit.chance", dict), 6);
+        dict.Set("charge.rage", 8);
+        Assert.Equal(0.05, set.Get("crit.chance", dict), 6);
+        set.Touch();
+        Assert.Equal(0.55, set.Get("crit.chance", dict), 6);
+    }
+
+    [Fact]
+    public void OverridePriorityTies()
+    {
+        var set = new AttributeSet(Catalog());
+        var scope = EmptyScope.Instance;
+        set.Add(new Modifier { Attribute = "crit.chance", Form = ModifierForm.Override, Value = 0.3, Priority = 1, Source = "a" });
+        set.Add(new Modifier { Attribute = "crit.chance", Form = ModifierForm.Override, Value = 0.4, Priority = 1, Source = "b" });
+        // Equal priorities: the later override wins.
+        Assert.Equal(0.4, set.Get("crit.chance", scope), 6);
+        // A lower priority added later loses; a higher one wins until removed.
+        set.Add(new Modifier { Attribute = "crit.chance", Form = ModifierForm.Override, Value = 0.2, Priority = 0, Source = "c" });
+        Assert.Equal(0.4, set.Get("crit.chance", scope), 6);
+        set.Add(new Modifier { Attribute = "crit.chance", Form = ModifierForm.Override, Value = 0.9, Priority = 2, Source = "d" });
+        Assert.Equal(0.9, set.Get("crit.chance", scope), 6);
+        Assert.Equal(1, set.RemoveSource("d"));
+        Assert.Equal(0.4, set.Get("crit.chance", scope), 6);
+        // Extras fold after the owner's modifiers, so an equal-priority extra takes the tie.
+        var extra = new[] { new Modifier { Attribute = "crit.chance", Form = ModifierForm.Override, Value = 0.6, Priority = 1, Source = "x" } };
+        Assert.Equal(0.6, set.Get("crit.chance", scope, TagSet.Empty, extra), 6);
+        var explained = set.Explain("crit.chance", scope, null, extra);
+        Assert.Equal(0.6, explained.Override);
+        Assert.Equal(new[] { "a", "b", "c", "x" }, explained.Applied.Select(m => m.Source));
+        // An override replaces flat, increased and more, but bounds still apply.
+        set.Add(new Modifier { Attribute = "crit.chance", Form = ModifierForm.Flat, Value = 0.25 });
+        set.Add(new Modifier { Attribute = "crit.chance", Form = ModifierForm.More, Value = 1.0 });
+        Assert.Equal(0.4, set.Get("crit.chance", scope), 6);
+        set.Add(new Modifier { Attribute = "crit.chance", Form = ModifierForm.Override, Value = 5, Priority = 1, Source = "e" });
+        Assert.Equal(1, set.Get("crit.chance", scope), 6);
+        // The first override lands whatever its priority, and ties at the minimum still go to the later one.
+        var low = new AttributeSet(Catalog());
+        low.Add(new Modifier { Attribute = "crit.chance", Form = ModifierForm.Override, Value = 0.25, Priority = int.MinValue });
+        Assert.Equal(0.25, low.Get("crit.chance", scope), 6);
+        low.Add(new Modifier { Attribute = "crit.chance", Form = ModifierForm.Override, Value = 0.75, Priority = int.MinValue });
+        Assert.Equal(0.75, low.Get("crit.chance", scope), 6);
+        Assert.Null(new AttributeSet(Catalog()).Explain("crit.chance", scope).Override);
+    }
+
+    [Fact]
+    public void ExplainAccountsForTheFold()
+    {
+        var set = new AttributeSet(Catalog());
+        var owner = Owner(set, new DictScope().Set("level", 5).Set("status.stacks", 2));
+        set.Add(new Modifier { Attribute = "life.max", Form = ModifierForm.Flat, Value = 20, Source = "a" });
+        set.Add(new Modifier { Attribute = "life.max", Form = ModifierForm.Increased, Value = 0.2, Source = "b" });
+        set.Add(new Modifier { Attribute = "life.max", Form = ModifierForm.Increased, Value = 0.3, Scope = TagSet.Of("ember"), Source = "c" });
+        set.Add(new Modifier { Attribute = "life.max", Form = ModifierForm.More, Value = 0.5, Condition = Expr.Parse("has(\"low_life\")"), Source = "d" });
+        set.Add(new Modifier { Attribute = "life.max", Form = ModifierForm.Flat, Value = 5, Gauge = "status.stacks", Source = "e" });
+        var extra = new[]
+        {
+            new Modifier { Attribute = "life.max", Form = ModifierForm.More, Value = 0.1, Source = "x" },
+            new Modifier { Attribute = "damage", Form = ModifierForm.Flat, Value = 99, Source = "y" },
+        };
+        var context = TagSet.Of("ember", "spell");
+        var b = set.Explain("life.max", owner, context, extra);
+        Assert.Equal("life.max", b.Attribute);
+        Assert.Equal(130, b.Base, 6);       // 40 + 5 * 10 + 10 * 4
+        Assert.Equal(30, b.Flat, 6);        // 20 + 5 * 2 stacks
+        Assert.Equal(0.5, b.Increased, 6);  // 0.2 + 0.3 for ember
+        Assert.Equal(1.1, b.More, 6);       // the low_life more is off; the extra's is on
+        Assert.Null(b.Override);
+        Assert.Equal(160 * 1.5 * 1.1, b.Result, 6);
+        Assert.Equal(new[] { "a", "b", "c", "e", "x" }, b.Applied.Select(m => m.Source));
+        Assert.Equal(b.Result, set.Get("life.max", owner, context, extra), 6);
+        // Without the context the scoped modifier drops out, and without extras so does theirs.
+        var plain = set.Explain("life.max", owner);
+        Assert.Equal(new[] { "a", "b", "e" }, plain.Applied.Select(m => m.Source));
+        Assert.Equal(160 * 1.2, plain.Result, 6);
+        Assert.Equal(plain.Result, set.Get("life.max", owner), 6);
+        // Bounds and rounding apply to the result, not the parts.
+        var bounded = new AttributeSet(new AttributeCatalog(new[] { new AttributeDef { Id = "speed", Base = 1, Max = 2, Decimals = 1 } }));
+        bounded.Add(new Modifier { Attribute = "speed", Form = ModifierForm.Increased, Value = 0.333 });
+        Assert.Equal(1.3, bounded.Explain("speed", EmptyScope.Instance).Result, 9);
+        Assert.Equal(0.333, bounded.Explain("speed", EmptyScope.Instance).Increased, 9);
+        bounded.Add(new Modifier { Attribute = "speed", Form = ModifierForm.Flat, Value = 5 });
+        Assert.Equal(2, bounded.Explain("speed", EmptyScope.Instance).Result, 9);
+    }
+
+    [Fact]
+    public void CachesPerContextUntilTouched()
+    {
+        var set = new AttributeSet(Catalog());
+        var dict = new DictScope().Set("rage", 1);
+        set.Add(new Modifier { Attribute = "damage", Form = ModifierForm.Flat, ValueExpr = Expr.Parse("rage"), Source = "rage" });
+        set.Add(new Modifier { Attribute = "damage", Form = ModifierForm.Flat, Value = 10, Scope = TagSet.Of("ember"), Source = "ember" });
+        Assert.Equal(1, set.Get("damage", dict));
+        Assert.Equal(11, set.Get("damage", dict, TagSet.Of("ember", "spell")));
+        dict.Set("rage", 5);
+        // Cached until touched; an equal context built separately shares the cached value.
+        Assert.Equal(1, set.Get("damage", dict));
+        Assert.Equal(11, set.Get("damage", dict, TagSet.Of("spell", "ember")));
+        // Folds with extras or an explicit base, and Apply, are never cached.
+        Assert.Equal(15, set.Get("damage", dict, TagSet.Of("ember"), Array.Empty<Modifier>(), baseValue: 0));
+        Assert.Equal(105, set.Apply("damage", 100, dict, TagSet.Empty));
+        set.Touch();
+        Assert.Equal(5, set.Get("damage", dict));
+        Assert.Equal(15, set.Get("damage", dict, TagSet.Of("ember")));
+        // Structural changes invalidate too.
+        set.Add(new Modifier { Attribute = "damage", Form = ModifierForm.Increased, Value = 1, Scope = TagSet.Of("spell"), Source = "spell" });
+        Assert.Equal(30, set.Get("damage", dict, TagSet.Of("ember", "spell")));
+        Assert.Equal(5, set.Get("damage", dict));
+        Assert.Equal(1, set.RemoveSource("spell"));
+        Assert.True(set.HasModifiers("damage"));
+        Assert.Equal(15, set.Get("damage", dict, TagSet.Of("ember", "spell")));
+        Assert.Equal(1, set.RemoveSource("rage"));
+        Assert.Equal(1, set.RemoveSource("ember"));
+        Assert.Equal(0, set.RemoveSource("ember"));
+        Assert.False(set.HasModifiers("damage"));
+        Assert.Equal(0, set.Get("damage", dict, TagSet.Of("ember", "spell")));
+        Assert.Empty(set.ModifiersFor("damage"));
+        Assert.Empty(set.ModifiedAttributes);
+    }
+
+    [Fact]
+    public void ConditionsOnTheirOwnAttributeAreCycles()
+    {
+        var set = new AttributeSet(Catalog());
+        var owner = Owner(set, new DictScope().Set("level", 1));
+        set.Add(new Modifier { Attribute = "damage", Form = ModifierForm.Flat, Value = 1, Condition = Expr.Parse("damage > 0"), Source = "loop" });
+        Assert.Throws<AttributeCycleException>(() => set.Get("damage", owner));
+        set.Add(new Modifier { Attribute = "thorns", Form = ModifierForm.Flat, ValueExpr = Expr.Parse("thorns + 1"), Source = "loop" });
+        Assert.Throws<AttributeCycleException>(() => set.Apply("thorns", 0, owner, TagSet.Empty));
+        // The guard is released after a failure: other attributes still resolve, and so do these once the loop is gone.
+        Assert.Equal(10, set.Get("might", owner));
+        Assert.Equal(2, set.RemoveSource("loop"));
+        Assert.Equal(0, set.Get("damage", owner));
+        Assert.Equal(0, set.Get("thorns", owner));
+    }
+
+    [Fact]
+    public void ModifierBookkeeping()
+    {
+        var set = new AttributeSet(Catalog());
+        var a = new Modifier { Attribute = "damage", Value = 1, Source = "s1" };
+        var b = new Modifier { Attribute = "life.max", Value = 2, Source = "s2" };
+        var c = new Modifier { Attribute = "damage", Value = 3, Source = "s2" };
+        // Queries and base overrides do not change the order attributes report in.
+        set.Get("thorns", EmptyScope.Instance);
+        set.Add(a);
+        set.Add(b);
+        set.Add(c);
+        set.SetBase("thorns", 4);
+        Assert.Equal(new[] { "damage", "life.max" }, set.ModifiedAttributes);
+        Assert.Equal(new[] { a, c, b }, set.AllModifiers);
+        Assert.Equal(new[] { a, c }, set.ModifiersFor("damage"));
+        Assert.Empty(set.ModifiersFor("thorns"));
+        Assert.True(set.HasSource("s2"));
+        // Remove takes the first equal modifier; records compare by value.
+        Assert.True(set.Remove(new Modifier { Attribute = "damage", Value = 3, Source = "s2" }));
+        Assert.False(set.Remove(c));
+        Assert.Equal(new[] { a }, set.ModifiersFor("damage"));
+        Assert.Equal(1, set.RemoveSource("s2"));
+        Assert.Equal(1, set.RemoveSource("s1"));
+        Assert.False(set.HasSource("s2"));
+        Assert.Empty(set.ModifiedAttributes);
+        Assert.Equal(4, set.Get("thorns", EmptyScope.Instance));
+        Assert.True(set.ClearBase("thorns"));
+        Assert.False(set.ClearBase("thorns"));
+        Assert.Equal(0, set.Get("thorns", EmptyScope.Instance));
+        set.SetBase("thorns", 6);
+        set.Add(b);
+        var version = set.Version;
+        set.Clear();
+        Assert.True(set.Version > version);
+        Assert.Empty(set.AllModifiers);
+        Assert.False(set.TryGetBaseOverride("thorns", out _));
+        Assert.Equal(0, set.Get("thorns", EmptyScope.Instance));
+        set.Add(a);
+        Assert.Equal(new[] { "damage" }, set.ModifiedAttributes);
+        Assert.Equal(101, set.Apply("damage", 100, EmptyScope.Instance, TagSet.Empty));
+    }
+
+    [Fact]
+    public void FoldAllocatesNothing()
+    {
+        var set = new AttributeSet(Catalog());
+        var dict = new DictScope().Set("level", 3).Set("life_pct", 0.8).Set("status.poison.stacks", 2);
+        var tags = new[] { TagSet.Of("ember", "spell"), TagSet.Of("attack", "melee") };
+        for (var i = 0; i < 24; i++)
+        {
+            set.Add(new Modifier
+            {
+                Attribute = "damage",
+                Form = (ModifierForm)(i % 3),
+                Value = 0.05 * (i + 1),
+                Scope = i % 2 == 0 ? tags[i % 4 / 2] : TagSet.Empty,
+                Condition = i % 5 == 0 ? Expr.Parse("life_pct > 0.5") : null,
+                Gauge = i % 7 == 0 ? "status.poison.stacks" : null,
+            });
+        }
+        set.Add(new Modifier { Attribute = "damage", Form = ModifierForm.Link, From = "might", Value = 0.1 });
+        var extra = new List<Modifier>
+        {
+            new() { Attribute = "damage", Form = ModifierForm.More, Value = 0.3 },
+            new() { Attribute = "damage", Form = ModifierForm.Increased, Value = 0.2, Scope = TagSet.Of("spell") },
+        };
+        var total = 0.0;
+        foreach (var t in tags)
+        {
+            total += set.Apply("damage", 100, dict, t, extra);
+        }
+        var before = GC.GetAllocatedBytesForCurrentThread();
+        for (var i = 0; i < 1000; i++)
+        {
+            total += set.Apply("damage", 100, dict, tags[i % 2], extra);
+            total += set.Get("damage", dict, tags[i % 2], extra);
+        }
+        Assert.Equal(0, GC.GetAllocatedBytesForCurrentThread() - before);
+        Assert.True(total > 0);
     }
 
     private static IExprScope Owner(AttributeSet set, IExprScope extra) => new AttributeOwnerScope(set, extra);
