@@ -12,6 +12,7 @@ using HollowWake.Core.Maths;
 using HollowWake.Core.Patterns;
 using HollowWake.Core.Sim;
 using HollowWake.Core.Tags;
+using HollowWake.Core.Weaves;
 using HollowWake.Core.Territory;
 using HollowWake.Core.World;
 using HollowWake.Core.WorldGen;
@@ -47,7 +48,7 @@ public static class Bench
         }
         if (only is "" or "tick")
         {
-            results.AddRange(Tick(content, opt("seed", "aureth"), int.Parse(opt("monsters", "300")), int.Parse(opt("players", "4")), int.Parse(opt("ticks", "600"))));
+            results.AddRange(Tick(content, opt("seed", "aureth"), int.Parse(opt("monsters", "300")), int.Parse(opt("players", "4")), int.Parse(opt("ticks", "600")), int.Parse(opt("minions", "0"))));
         }
         if (json)
         {
@@ -208,7 +209,7 @@ public static class Bench
 
     // ------------------------------------------------------------ zone tick
 
-    private static IEnumerable<Result> Tick(ContentRegistry content, string seed, int monsters, int players, int ticks)
+    private static IEnumerable<Result> Tick(ContentRegistry content, string seed, int monsters, int players, int ticks, int minions)
     {
         var generator = new WorldGenerator(content, Rng.Hash64(seed));
         var world = new WorldState(generator.Overlays);
@@ -230,6 +231,22 @@ public static class Bench
             var sheet = characters.Create(sim, "bench" + i, "bench", "Bench" + i, callings[i % callings.Count], items);
             sheet.Position = new Vector3((float)(sx + rng.Range(-6.0, 6.0)), (float)(sy + rng.Range(-6.0, 6.0)), 0);
             playerEntities.Add(characters.Materialize(sim, sheet));
+        }
+        if (minions > 0)
+        {
+            // Each player raises a pooled summon, so minions follow, assist and fight beside it: a minion-heavy zone.
+            var runtime = sim.Service<WeaveRuntime>();
+            foreach (var p in playerEntities)
+            {
+                var book = sim.World.Get<WeaveBook>(p)!;
+                var stats = sim.World.Get<Stats>(p)!;
+                var position = sim.World.Get<Transform>(p)!.Position;
+                var slot = book.Add(new HollowWake.Core.Definitions.WeaveSpec { Preset = "raise_barrow" });
+                stats.Attributes.Add(new Modifier { Attribute = "summon.max", Form = ModifierForm.Flat, Value = minions, Source = "bench" });
+                stats.Attributes.Add(new Modifier { Attribute = "summon.count", Form = ModifierForm.Flat, Value = minions, Source = "bench" });
+                runtime.TryBegin(sim, p, slot, Entity.None, position, Vector2.Zero, out _);
+            }
+            sim.Run(30);
         }
         var patterns = new[] { "hob", "wolf", "boar", "barrow_wight", "loosed_brigand" };
         for (var i = 0; i < monsters; i++)
@@ -317,6 +334,13 @@ public static class Bench
         var (deltaMs, deltaBytes, _) = Snapshot(sim, builder, views, playerEntities, output, snapshots);
         yield return new Result("snapshot.delta.build", deltaMs / (snapshots * players), "ms/player", "the same with deltas opted in");
         yield return new Result("snapshot.delta.bytes", deltaBytes / (double)(snapshots * players) / 1024, "KB/player", "changed entities as deltas plus self state, steady state, JSON");
+        foreach (var view in views)
+        {
+            view.SendInterface = true;
+        }
+        var (panelMs, panelBytes, _) = Snapshot(sim, builder, views, playerEntities, output, snapshots);
+        yield return new Result("snapshot.interface.build", panelMs / (snapshots * players), "ms/player", "deltas plus the interface states on change, build and encode");
+        yield return new Result("snapshot.interface.bytes", panelBytes / (double)(snapshots * players) / 1024, "KB/player", "an interface client: deltas, self state with pools and casts, weave slots, inventory, passives and pages on change");
     }
 
     /// <summary>Runs a stretch of snapshots the way the zone does: two ticks, then every viewer; the self state every fifth snapshot.</summary>
@@ -337,6 +361,10 @@ public static class Bench
                 if (round % 5 == 0 && builder.Self(views[i], viewers[i]) is { } self)
                 {
                     output.Add(self);
+                }
+                if (views[i].SendInterface)
+                {
+                    builder.Panels(views[i], viewers[i], output);
                 }
                 bytes += Encoded(output);
                 ms += Stopwatch.GetElapsedTime(t0).TotalMilliseconds;

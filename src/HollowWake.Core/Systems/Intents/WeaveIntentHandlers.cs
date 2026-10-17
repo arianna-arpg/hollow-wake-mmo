@@ -38,12 +38,18 @@ public static class WeaveIntentHandlers
 
     private static void CancelCast(in IntentContext ctx, CancelCastIntent _) => ctx.Sim.Service<WeaveRuntime>().Interrupt(ctx.Sim, ctx.Entity);
 
+    /// <summary>
+    /// Binds a weave to a slot. Misfit glyphs stay socketed but dormant, with their reasons on the slot; only a
+    /// weave that cannot compile at all is refused. While rule <c>casting.require_ownership</c> holds, the
+    /// hero must own what the spec names, as the registered <see cref="IWeaveOwnership"/> decides (a missing
+    /// service is permission).
+    /// </summary>
     private static void SetWeave(in IntentContext ctx, SetWeaveIntent sw)
     {
         var sim = ctx.Sim;
         var book = sim.World.GetOrAdd<WeaveBook>(ctx.Entity);
         var compiler = sim.Service<WeaveCompiler>();
-        if (!compiler.TryCompile(sw.Spec, out var compiled, out var error))
+        if (!compiler.TryCompile(sw.Spec, out var compiled, out var error, GlyphFit.Dormant))
         {
             ctx.Reject("invalid:" + error);
             return;
@@ -54,10 +60,16 @@ public static class WeaveIntentHandlers
             ctx.Reject("bad_slot");
             return;
         }
+        if (sim.Content.Rules.Flag("casting.require_ownership", false) && sim.TryService<IWeaveOwnership>(out var ownership)
+            && !ownership.Allows(sim, ctx.Entity, sw.Slot, sw.Spec, out var refusal))
+        {
+            ctx.Reject(refusal);
+            return;
+        }
         while (book.Slots.Count <= sw.Slot)
         {
             book.Slots.Add(new WeaveSlot { Spec = new Definitions.WeaveSpec { Preset = null, Form = null } });
         }
-        book.Slots[sw.Slot] = new WeaveSlot { Spec = sw.Spec, Compiled = compiled };
+        book.Slots[sw.Slot] = new WeaveSlot { Spec = sw.Spec, Compiled = compiled, Dormant = compiled!.Dormant };
     }
 }
