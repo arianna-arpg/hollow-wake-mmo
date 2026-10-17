@@ -58,24 +58,40 @@ public sealed class EquipmentService
             return false;
         }
         var inventory = sim.World.Get<Inventory>(wearer);
+        int? fromX = item.X, fromY = item.Y;
+        var fromOverflow = inventory is not null && inventory.Overflow.Contains(item);
         if (fromInventory && (inventory is null || !inventory.Remove(item)))
         {
             reason = "not_in_bag";
             return false;
         }
-        // Clear the slot and any slots this item occupies, returning displaced items to the bag.
-        var toClear = new List<string> { slot };
-        toClear.AddRange(b.Occupies);
-        foreach (var s in toClear)
+        // The slot and any slots this item also fills give up what they hold. Displaced items go to the bag,
+        // which by now includes the cells the moved item left; if one finds no room nothing changes at all.
+        var displaced = Displaced(equipment, slot, b);
+        if (inventory is not null && displaced.Count > 0)
         {
-            if (equipment.OccupiedBy.TryGetValue(s, out var bySlot))
+            var stowed = new List<ItemInstance>(displaced.Count);
+            foreach (var (_, d) in displaced)
             {
-                Unequip(sim, wearer, bySlot, out _);
+                if (!inventory.TryAdd(d))
+                {
+                    foreach (var s in stowed)
+                    {
+                        inventory.Remove(s);
+                    }
+                    if (fromInventory)
+                    {
+                        Restore(inventory, item, fromX, fromY, fromOverflow);
+                    }
+                    reason = "bag_full";
+                    return false;
+                }
+                stowed.Add(d);
             }
-            if (equipment.BySlot.ContainsKey(s))
-            {
-                Unequip(sim, wearer, s, out _);
-            }
+        }
+        foreach (var (s, _) in displaced)
+        {
+            TakeOffSlot(equipment, s);
         }
         equipment.BySlot[slot] = item;
         foreach (var s in b.Occupies)
@@ -85,6 +101,83 @@ public sealed class EquipmentService
         Recalculate(sim, wearer);
         sim.Events.Publish(new ItemEquipped(wearer, item.Uid, slot) { Tick = sim.Clock.Tick });
         return true;
+    }
+
+    /// <summary>The items (and the slots they are worn in) that equipping into <paramref name="slot"/> would displace.</summary>
+    private static List<(string Slot, ItemInstance Item)> Displaced(Equipment equipment, string slot, ItemBaseDef b)
+    {
+        var result = new List<(string, ItemInstance)>();
+        void Add(string s)
+        {
+            if (equipment.BySlot.TryGetValue(s, out var worn) && !result.Exists(r => ReferenceEquals(r.Item2, worn)))
+            {
+                result.Add((s, worn));
+            }
+        }
+        foreach (var s in b.Occupies.Prepend(slot))
+        {
+            if (equipment.OccupiedBy.TryGetValue(s, out var bySlot))
+            {
+                Add(bySlot);
+            }
+            Add(s);
+        }
+        return result;
+    }
+
+    private static void TakeOffSlot(Equipment equipment, string slot)
+    {
+        equipment.BySlot.Remove(slot);
+        foreach (var (occupied, by) in equipment.OccupiedBy.ToList())
+        {
+            if (by == slot)
+            {
+                equipment.OccupiedBy.Remove(occupied);
+            }
+        }
+    }
+
+    private static void Restore(Inventory inventory, ItemInstance item, int? x, int? y, bool overflow)
+    {
+        if (!overflow && x is { } px && y is { } py && inventory.TryAddAt(item, px, py))
+        {
+            return;
+        }
+        if (!inventory.TryAdd(item))
+        {
+            inventory.Overflow.Add(item);
+        }
+    }
+
+    /// <summary>Takes a worn item off into a cell of the bag, which must have room for it there.</summary>
+    public bool UnequipTo(Simulation sim, Entity wearer, string slot, int x, int y, out string reason)
+    {
+        reason = "";
+        if (!sim.World.TryGet<Equipment>(wearer, out var equipment) || !equipment.BySlot.TryGetValue(slot, out var item))
+        {
+            reason = "empty";
+            return false;
+        }
+        if (!sim.World.TryGet<Inventory>(wearer, out var inventory) || !inventory.TryAddAt(item, x, y))
+        {
+            reason = "no_room";
+            return false;
+        }
+        TakeOffSlot(equipment, slot);
+        Recalculate(sim, wearer);
+        return true;
+    }
+
+    /// <summary>Takes a worn item off without putting it anywhere; the caller decides where it goes.</summary>
+    public ItemInstance? TakeOff(Simulation sim, Entity wearer, string slot)
+    {
+        if (!sim.World.TryGet<Equipment>(wearer, out var equipment) || !equipment.BySlot.TryGetValue(slot, out var item))
+        {
+            return null;
+        }
+        TakeOffSlot(equipment, slot);
+        Recalculate(sim, wearer);
+        return item;
     }
 
     public bool Equip(Simulation sim, Entity wearer, ItemInstance item, string? slotOverride, bool fromInventory) => Equip(sim, wearer, item, slotOverride, fromInventory, out _);
@@ -103,14 +196,7 @@ public sealed class EquipmentService
             reason = "bag_full";
             return false;
         }
-        equipment.BySlot.Remove(slot);
-        foreach (var (occupied, by) in equipment.OccupiedBy.ToList())
-        {
-            if (by == slot)
-            {
-                equipment.OccupiedBy.Remove(occupied);
-            }
-        }
+        TakeOffSlot(equipment, slot);
         Recalculate(sim, wearer);
         return true;
     }

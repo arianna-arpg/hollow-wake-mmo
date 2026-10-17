@@ -20,6 +20,12 @@ public record ModLine : Modifier
     public bool Local { get; init; }
     /// <summary>Display override; {v} is replaced with the rolled value.</summary>
     public string? Text { get; init; }
+    /// <summary>
+    /// Lines of one item part (an affix, the implicits, a unique) that name the same key share one roll: the roll of
+    /// the first line with the key, so a damage range rolls its low and high end together (row I3).
+    /// </summary>
+    [JsonPropertyName("shared_roll")]
+    public string? SharedRoll { get; init; }
 }
 
 /// <summary>A base item family. Tier resolves from item level at mint; the family itself is tierless.</summary>
@@ -46,6 +52,15 @@ public sealed record ItemBaseDef : Definition
     public Dictionary<string, double> Affinity { get; init; } = new();
     [JsonPropertyName("affix_cap")]
     public Dictionary<string, int> AffixCap { get; init; } = new();
+    /// <summary>
+    /// The affix pool law (row I4): absent, the pool is open and every family whose requires and excludes allow the
+    /// base may roll; a list makes it explicit, and only the families (or groups) it names roll, whatever their tags.
+    /// </summary>
+    [JsonPropertyName("affix_pool")]
+    public List<string>? AffixPool { get; init; }
+    /// <summary>The lowest rarity the base mints at; a rolled rarity below it rises to it.</summary>
+    [JsonPropertyName("min_rarity")]
+    public string? MinRarity { get; init; }
     public int Stack { get; init; } = 1;
     public double Value { get; init; }
     public string? Icon { get; init; }
@@ -95,6 +110,35 @@ public sealed record UniqueDef : Definition
     public double Weight { get; init; } = 1;
     [JsonPropertyName("min_level")]
     public int MinLevel { get; init; } = 1;
+
+    /// <summary>
+    /// Rolled choice families (row I5): each family offers lines and the mint picks <see cref="UniqueChoiceDef.Pick"/>
+    /// of them by weight, so two copies of a unique can differ in which lines they carry. The picks persist on the item.
+    /// </summary>
+    public List<UniqueChoiceDef> Choices { get; init; } = new();
+
+    /// <summary>How many copies one container board may hold (a reliquary that takes one of each relic); absent is any number.</summary>
+    [JsonPropertyName("max_per_container")]
+    public int? MaxPerContainer { get; init; }
+}
+
+/// <summary>A family of lines a unique picks from at mint.</summary>
+public sealed record UniqueChoiceDef
+{
+    public string Id { get; init; } = "";
+
+    /// <summary>How many options the mint picks, without repeats.</summary>
+    public int Pick { get; init; } = 1;
+
+    public List<UniqueOptionDef> Options { get; init; } = new();
+}
+
+/// <summary>One option of a unique's choice family: its lines and its weight in the draw.</summary>
+public sealed record UniqueOptionDef
+{
+    public string Id { get; init; } = "";
+    public double Weight { get; init; } = 1;
+    public List<ModLine> Lines { get; init; } = new();
 }
 
 public sealed record CountWeight
@@ -116,6 +160,30 @@ public sealed record ItemRarityDef : Definition
     /// <summary>Base roll window width (commons roll widest).</summary>
     [JsonPropertyName("base_roll_window")]
     public double BaseRollWindow { get; init; } = 0.05;
+    /// <summary>A chance to mint superior: the base roll lands in the top window and the name says so (row I2).</summary>
+    public RaritySuperiorDef? Superior { get; init; }
+    /// <summary>A chance for affixes to roll tiers above the item level's gate, a step or more (row I2).</summary>
+    public RarityOverrollDef? Overroll { get; init; }
+}
+
+/// <summary>A rarity's superior contract: how often, and the top fraction of the base roll a superior item lands in.</summary>
+public sealed record RaritySuperiorDef
+{
+    public double Chance { get; init; }
+    public double Window { get; init; } = 0.25;
+}
+
+/// <summary>
+/// A rarity's overroll contract: how often an item may roll affix tiers above its level gate, how many tiers above
+/// at most, and how much each step above loses of its weight.
+/// </summary>
+public sealed record RarityOverrollDef
+{
+    public double Chance { get; init; }
+    [JsonPropertyName("max_steps")]
+    public int MaxSteps { get; init; } = 1;
+    [JsonPropertyName("step_decay")]
+    public double StepDecay { get; init; } = 0.5;
 }
 
 public sealed record LootEntry
@@ -136,6 +204,12 @@ public sealed record LootEntry
     public string? Currency { get; init; }
     public double[]? Amount { get; init; }
     public Expr? Condition { get; init; }
+    /// <summary>For a glyph stone: the glyph it holds. Absent draws one by drop weight, leaning toward the dropper's.</summary>
+    public string? Glyph { get; init; }
+    /// <summary>For a codex: the form it teaches. Absent (with no weave) draws one by drop weight, leaning toward the dropper's.</summary>
+    public string? Form { get; init; }
+    /// <summary>For a codex: the preset weave it teaches whole.</summary>
+    public string? Weave { get; init; }
 }
 
 public sealed record LootRoll

@@ -235,7 +235,16 @@ switch (command)
         var port = int.Parse(Opt("port", "7777"));
         var account = Opt("account", "probe");
         var seconds = double.Parse(Opt("seconds", "6"));
-        return await Probe.RunAsync(host, port, account, seconds);
+        var features = Opt("features", "").Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries).ToList();
+        if (Flag("deltas"))
+        {
+            features.Add(HollowWake.Protocol.ProtocolInfo.EntityDeltaFeature);
+        }
+        if (Flag("interface"))
+        {
+            features.Add(HollowWake.Protocol.ProtocolInfo.InterfaceFeature);
+        }
+        return await Probe.RunAsync(host, port, account, seconds, features.Distinct().ToList());
     }
     case "protocol-ts":
     {
@@ -283,6 +292,8 @@ switch (command)
               weave <preset|form> [--threads a,b] [--glyphs g,g@level] [--level n] [--calling c] [--caster-level n]
                                                   compile a weave: tags, mechanisms, dormant glyphs, graph, preview numbers
               protocol-ts [--out file] [--check]  write (or check) the web client's TypeScript message types
+              probe [--host h] [--port n] [--account a] [--seconds s] [--deltas] [--interface] [--features a,b]
+                                                  connect to a running server, enter, move and check what comes back
             """);
         return 0;
 }

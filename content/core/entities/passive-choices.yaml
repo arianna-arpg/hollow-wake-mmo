@@ -1,0 +1,53 @@
+# Choice groups: the options passive nodes deal. A node names a group in its choice; its owner picks options
+# from the group when allocating it. deal says how the group's nodes share it (each deals its own, first is
+# claimed by the first node allocated and shuts out the rest, sole deals only through the first node allocated);
+# unique says whether an option may be picked again (none, once per node, once per character).
+kind: passive_choices
+entries:
+  # Selectable attribute nodes: four of whichever core attribute the hero wants.
+  - id: attributes
+    name: Attribute
+    description: Four of any core attribute.
+    deal: each
+    unique: none
+    generate: { category: core, form: flat, value: 4 }
+
+  # A doctrine of the Holdfast spoke: each node that deals it offers the same three, and each may be taken once.
+  - id: doctrine_of_war
+    name: Doctrine of War
+    deal: each
+    unique: character
+    options:
+      - { id: iron, name: Iron Doctrine, description: Armor holds better., modifiers: [ { attribute: armor, form: increased, value: 0.2 } ] }
+      - { id: vigil, name: Vigil Doctrine, description: Wounds close while you stand., modifiers: [ { attribute: life.regen, form: flat, value: 3 } ] }
+      - { id: rout, name: Rout Doctrine, description: Blows land harder., modifiers: [ { attribute: damage, form: increased, value: 0.12, scope: [attack] } ] }
+
+  # A vow at the meeting of the Kindler and Sower spokes: whichever vow node is taken first, the other is closed.
+  - id: seam_vow
+    name: Seam Vow
+    deal: first
+    unique: node
+    options:
+      - { id: ash, name: Vow of Ash, modifiers: [ { attribute: damage, form: increased, value: 0.14, scope: [ember] } ] }
+      - { id: tide, name: Vow of Tide, modifiers: [ { attribute: damage, form: increased, value: 0.14, scope: [tide] } ] }
+      - { id: root, name: Vow of Root, modifiers: [ { attribute: healing, form: increased, value: 0.14 } ] }
+
+  # Waymarks across the outer ring: the first one taken deals a road; the others are shortcuts and deal nothing.
+  - id: waymark
+    name: Waymark
+    deal: sole
+    unique: node
+    options:
+      - { id: long_road, name: The Long Road, modifiers: [ { attribute: move.speed, form: increased, value: 0.06 } ] }
+      - { id: second_wind, name: Second Wind, modifiers: [ { attribute: stamina.regen, form: increased, value: 0.25 } ] }
+
+  # The Devotion realm's notable: two picks from the vows of the Wellmother.
+  - id: wellmother_vows
+    name: Vows of the Wellmother
+    pick: 2
+    deal: each
+    unique: node
+    options:
+      - { id: tending, name: Tending, modifiers: [ { attribute: healing, form: increased, value: 0.1 } ] }
+      - { id: patience, name: Patience, modifiers: [ { attribute: life.regen, form: flat, value: 2 } ] }
+      - { id: depth, name: Depth, modifiers: [ { attribute: mana.max, form: flat, value: 20 } ] }

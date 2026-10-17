@@ -19,29 +19,111 @@ public static class ItemIntentHandlers
         handlers.Register<CraftStartIntent>(CraftStart);
         handlers.Register<CraftSubmitIntent>(CraftSubmit);
         handlers.Register<MoveItemIntent>(MoveItem);
-        handlers.Register<SocketStoneIntent>(static (in IntentContext ctx, SocketStoneIntent _) => ctx.Reject("not_ready"));
-        handlers.Register<UnsocketStoneIntent>(static (in IntentContext ctx, UnsocketStoneIntent _) => ctx.Reject("not_ready"));
-        handlers.Register<LearnFormIntent>(static (in IntentContext ctx, LearnFormIntent _) => ctx.Reject("not_ready"));
-        handlers.Register<UnlearnFormIntent>(static (in IntentContext ctx, UnlearnFormIntent _) => ctx.Reject("not_ready"));
-        handlers.Register<BuyIntent>(static (in IntentContext ctx, BuyIntent _) => ctx.Reject("not_ready"));
-        handlers.Register<SellIntent>(static (in IntentContext ctx, SellIntent _) => ctx.Reject("not_ready"));
-        handlers.Register<BuyBackIntent>(static (in IntentContext ctx, BuyBackIntent _) => ctx.Reject("not_ready"));
+        handlers.Register<SocketStoneIntent>(SocketStone);
+        handlers.Register<UnsocketStoneIntent>(UnsocketStone);
+        handlers.Register<LearnFormIntent>(LearnForm);
+        handlers.Register<UnlearnFormIntent>(UnlearnForm);
+        handlers.Register<BuyIntent>(Buy);
+        handlers.Register<SellIntent>(Sell);
+        handlers.Register<BuyBackIntent>(BuyBack);
+        handlers.Register<BuyPageIntent>(BuyPage);
+        handlers.Register<StationServiceIntent>(StationService);
     }
 
-    /// <summary>Moves an item: onto equipment, into the world, or (as the boards land) onto a board's cell.</summary>
+    private static void BuyPage(in IntentContext ctx, BuyPageIntent b)
+    {
+        if (!ctx.Sim.TryService<ContainerService>(out var containers))
+        {
+            ctx.Reject("no_stash");
+            return;
+        }
+        if (!containers.Reachable(ctx.Sim, ctx.Entity, ContainerService.PageId(b.Stash, 1), out _))
+        {
+            ctx.Reject("out_of_reach");
+            return;
+        }
+        if (!containers.BuyPage(ctx.Sim, ctx.Entity, b.Stash, out var reason))
+        {
+            ctx.Reject(reason);
+        }
+    }
+
+    private static void StationService(in IntentContext ctx, StationServiceIntent s)
+    {
+        if (!StationServices.Perform(ctx.Sim, ctx.Entity, s.Station, s.Service, new StationServices.Target(s.Item, s.Slot, s.Node), out var reason))
+        {
+            ctx.Reject(reason);
+        }
+    }
+
+    private static void Buy(in IntentContext ctx, BuyIntent b)
+    {
+        if (!ctx.Sim.Service<VendorService>().Buy(ctx.Sim, ctx.Entity, b.Vendor, b.Stock, b.Count, out var reason))
+        {
+            ctx.Reject(reason);
+        }
+    }
+
+    private static void Sell(in IntentContext ctx, SellIntent s)
+    {
+        if (!ctx.Sim.Service<VendorService>().Sell(ctx.Sim, ctx.Entity, s.Vendor, s.ItemUid, s.Count, out var reason))
+        {
+            ctx.Reject(reason);
+        }
+    }
+
+    private static void BuyBack(in IntentContext ctx, BuyBackIntent b)
+    {
+        if (!ctx.Sim.Service<VendorService>().BuyBack(ctx.Sim, ctx.Entity, b.Vendor, b.ItemUid, out var reason))
+        {
+            ctx.Reject(reason);
+        }
+    }
+
+    private static void SocketStone(in IntentContext ctx, SocketStoneIntent s)
+    {
+        var done = s.Host is { } host
+            ? GearSockets.Socket(ctx.Sim, ctx.Entity, s.StoneUid, host, s.Socket, out var reason)
+            : ctx.Sim.Service<RackService>().Socket(ctx.Sim, ctx.Entity, s.StoneUid, s.Slot, s.Socket, out reason);
+        if (!done)
+        {
+            ctx.Reject(reason);
+        }
+    }
+
+    private static void UnsocketStone(in IntentContext ctx, UnsocketStoneIntent u)
+    {
+        var done = u.Host is { } host
+            ? GearSockets.Unsocket(ctx.Sim, ctx.Entity, host, u.Socket, u.X, u.Y, out var reason)
+            : ctx.Sim.Service<RackService>().Unsocket(ctx.Sim, ctx.Entity, u.Slot, u.Socket, u.X, u.Y, out reason);
+        if (!done)
+        {
+            ctx.Reject(reason);
+        }
+    }
+
+    private static void LearnForm(in IntentContext ctx, LearnFormIntent l)
+    {
+        if (!ctx.Sim.Service<RackService>().Learn(ctx.Sim, ctx.Entity, l.ItemUid, l.Slot, out var reason))
+        {
+            ctx.Reject(reason);
+        }
+    }
+
+    private static void UnlearnForm(in IntentContext ctx, UnlearnFormIntent u)
+    {
+        if (!ctx.Sim.Service<RackService>().Unlearn(ctx.Sim, ctx.Entity, u.Slot, u.X, u.Y, out var reason))
+        {
+            ctx.Reject(reason);
+        }
+    }
+
+    /// <summary>Moves an item to a board cell, an equipment slot or the world.</summary>
     private static void MoveItem(in IntentContext ctx, MoveItemIntent mi)
     {
-        switch (mi.Container)
+        if (!ctx.Sim.Service<InventoryService>().Move(ctx.Sim, ctx.Entity, mi.ItemUid, mi.Container, mi.X, mi.Y, mi.Slot, out var reason))
         {
-            case "equipment" when mi.Slot is not null:
-                Equip(ctx, new EquipIntent(mi.ItemUid, mi.Slot));
-                return;
-            case "world":
-                DropItem(ctx, new DropItemIntent(mi.ItemUid));
-                return;
-            default:
-                ctx.Reject("not_ready");
-                return;
+            ctx.Reject(reason);
         }
     }
 

@@ -69,6 +69,8 @@ public sealed record PassiveNodeDef : Definition
     public int Cost { get; init; } = 1;
     public string Realm { get; init; } = "star";
     public string? Calling { get; init; }
+    /// <summary>The options this node deals: a choice group and how many picks.</summary>
+    public PassiveChoiceRef? Choice { get; init; }
 }
 
 /// <summary>A starting path: attribute spread, starting weaves, items, passives. Never a cage.</summary>

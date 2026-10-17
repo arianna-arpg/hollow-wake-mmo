@@ -10,13 +10,25 @@ entries:
   - { id: start_harrier, name: Harrier Start, kind: start, calling: harrier, x: -8.7, y: -5, links: [hr1, inner_d, inner_e] }
   - { id: start_binder, name: Binder Start, kind: start, calling: binder, x: -8.7, y: 5, links: [bd1, inner_e, inner_f] }
 
-  # ---- inner ring (attribute nodes between starts)
-  - { id: inner_a, name: Fortitude, kind: attribute, x: 4.3, y: 7.5, links: [start_holdfast, start_kindler], modifiers: [ { attribute: vigor, form: flat, value: 4 } ] }
-  - { id: inner_b, name: Insight, kind: attribute, x: 8.7, y: 0, links: [start_kindler, start_sower], modifiers: [ { attribute: will, form: flat, value: 4 } ] }
-  - { id: inner_c, name: Poise, kind: attribute, x: 4.3, y: -7.5, links: [start_sower, start_shade], modifiers: [ { attribute: grace, form: flat, value: 4 } ] }
-  - { id: inner_d, name: Quickness, kind: attribute, x: -4.3, y: -7.5, links: [start_shade, start_harrier], modifiers: [ { attribute: grace, form: flat, value: 4 } ] }
-  - { id: inner_e, name: Brawn, kind: attribute, x: -8.7, y: 0, links: [start_harrier, start_binder], modifiers: [ { attribute: might, form: flat, value: 4 } ] }
-  - { id: inner_f, name: Resolve, kind: attribute, x: -4.3, y: 7.5, links: [start_binder, start_holdfast], modifiers: [ { attribute: vigor, form: flat, value: 2 }, { attribute: will, form: flat, value: 2 } ] }
+  # ---- inner ring (selectable attribute nodes between starts: four of any core attribute; the default is the
+  #      attribute each node gave before it offered a choice)
+  - { id: inner_a, name: Fortitude, kind: attribute, x: 4.3, y: 7.5, links: [start_holdfast, start_kindler], choice: { group: attributes, default: vigor } }
+  - { id: inner_b, name: Insight, kind: attribute, x: 8.7, y: 0, links: [start_kindler, start_sower], choice: { group: attributes, default: will } }
+  - { id: inner_c, name: Poise, kind: attribute, x: 4.3, y: -7.5, links: [start_sower, start_shade], choice: { group: attributes, default: grace } }
+  - { id: inner_d, name: Quickness, kind: attribute, x: -4.3, y: -7.5, links: [start_shade, start_harrier], choice: { group: attributes, default: grace } }
+  - { id: inner_e, name: Brawn, kind: attribute, x: -8.7, y: 0, links: [start_harrier, start_binder], choice: { group: attributes, default: might } }
+  - { id: inner_f, name: Resolve, kind: attribute, x: -4.3, y: 7.5, links: [start_binder, start_holdfast], choice: { group: attributes, default: vigor } }
+
+  # ---- choices between the spokes
+  # Doctrines beside the Holdfast spoke: each deals the three doctrines, each doctrine once per character.
+  - { id: doctrine_left, name: Doctrine, kind: notable, x: -3, y: 22, links: [hf3], choice: { group: doctrine_of_war } }
+  - { id: doctrine_right, name: Doctrine, kind: notable, x: 3, y: 22, links: [hf3], choice: { group: doctrine_of_war } }
+  # A vow where the Kindler and Sower spokes meet: the first vow node taken shuts the other.
+  - { id: vow_ember, name: Ember Vow, kind: notable, x: 15, y: 2, links: [kd2], choice: { group: seam_vow } }
+  - { id: vow_tide, name: Tide Vow, kind: notable, x: 15, y: -2, links: [sw2], choice: { group: seam_vow } }
+  # Waymarks: the first deals a road; the second is a shortcut between the spokes and deals nothing.
+  - { id: waymark_east, name: Eastern Waymark, kind: small, x: 13, y: 0, links: [vow_ember, vow_tide], choice: { group: waymark } }
+  - { id: waymark_west, name: Western Waymark, kind: small, x: -13, y: 0, links: [hr1, bd1], choice: { group: waymark } }
 
   # ---- Holdfast spoke: the wall
   - { id: hf1, name: Thick Hide, kind: small, x: 0, y: 14, links: [start_holdfast, hf2], modifiers: [ { attribute: armor, form: increased, value: 0.1 }, { attribute: life.max, form: flat, value: 10 } ] }

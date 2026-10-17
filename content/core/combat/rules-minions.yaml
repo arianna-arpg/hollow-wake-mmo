@@ -51,8 +51,10 @@ entries:
       # How far a squad command carries without a radius, and how far a minion looks for a foe to cast at.
       earshot: 21
       cast_range: 11
-      # How far around its focus a corpse summon looks for the dead.
+      # How far around its focus a corpse summon looks for the dead, and how near its aim a targeted corpse
+      # must lie (a cast aims at where a dead target lay).
       corpse_search: 6
+      corpse_target_reach: 0.5
       # Crew forwarding: the mechanism a summon weave needs before its glyphs board its minions' own weaves
       # (constructs board without it), and the share of a forwarded glyph's numbers a construct's copy keeps.
       forward_requires: resonance

@@ -41,14 +41,36 @@ public sealed record MoveItemMsg(long Item, string Container, int X, int Y) : Me
     public string? Slot { get; init; }
 }
 
-/// <summary>Sockets a glyph stone from the bag into a socket of a weave slot; a stone already there goes back to the bag.</summary>
-public sealed record SocketStoneMsg(long Stone, int Slot, int Socket) : Message;
+/// <summary>
+/// Sockets a stone from the bag into a socket: of a weave slot, or with <see cref="Host"/> of a gear item (worn or
+/// in the bag). A stone already there goes back to the bag.
+/// </summary>
+public sealed record SocketStoneMsg(long Stone, int Slot, int Socket) : Message
+{
+    /// <summary>The gear item whose socket takes the stone; omitted for a weave slot's socket.</summary>
+    public long? Host { get; init; }
+}
 
-/// <summary>Takes the stone out of a weave slot's socket into the bag, at a cell when one is given.</summary>
+/// <summary>Takes the stone out of a weave slot's socket (or a gear item's, with <see cref="Host"/>) into the bag, at a cell when one is given.</summary>
 public sealed record UnsocketStoneMsg(int Slot, int Socket) : Message
 {
     public int? X { get; init; }
     public int? Y { get; init; }
+    public long? Host { get; init; }
+}
+
+/// <summary>Buys the next page of a stash at the server's price.</summary>
+public sealed record BuyPageMsg(string Container) : Message;
+
+/// <summary>
+/// Asks a station for a service by name (raising a stone's or codex's level, merging codices, resetting passives),
+/// naming the item, weave slot or node it applies to where the service needs one.
+/// </summary>
+public sealed record StationServiceMsg(long Station, string Service) : Message
+{
+    public long? Item { get; init; }
+    public int? Slot { get; init; }
+    public string? Node { get; init; }
 }
 
 /// <summary>Learns a form item from the bag into a weave slot; a copy already there swaps back to the bag.</summary>
@@ -107,8 +129,9 @@ public sealed record PoolInfo(string Id, string State)
 public sealed record StatusInfo(string Id, int Stacks, double Remaining, double Duration);
 
 /// <summary>
-/// The cast in progress: the slot it came from, its mode (<c>cast</c>, <c>channel</c> or <c>charge</c>),
-/// progress from zero to one, and the overcharge stage reached out of the stage count.
+/// The cast in progress: the slot it came from, its mode (<c>cast</c>, <c>channel</c>, <c>charge</c>, <c>overcharge</c>
+/// or <c>guard</c>), progress from zero to one (how full a charge-up or overcharge is; how far a bar has run), and the
+/// overcharge stage reached out of the stage count.
 /// </summary>
 public sealed record CastInfo(int Slot, string Mode, double Progress, int Stage, int Stages)
 {
@@ -120,6 +143,8 @@ public sealed record CastInfo(int Slot, string Mode, double Progress, int Stage,
     public double? Held { get; init; }
     /// <summary>The full cast or charge time in seconds, when the cast has one.</summary>
     public double? Duration { get; init; }
+    /// <summary>For a raised guard: the fraction of its pool left, from zero to one; null in every other mode.</summary>
+    public double? Pool { get; init; }
 }
 
 /// <summary>A kind of banked charge: how many, and the cap.</summary>
@@ -142,7 +167,7 @@ public sealed record WeaveSeatInfo(int Slot, string? Key, string? Form, string N
     /// <summary>The learned form item in the slot.</summary>
     public long? Item { get; init; }
     public List<string>? Threads { get; init; }
-    /// <summary><c>instant</c>, <c>cast</c>, <c>channel</c> or <c>charge</c>.</summary>
+    /// <summary><c>instant</c>, <c>cast</c>, <c>channel</c>, <c>charge</c>, <c>overcharge</c> or <c>guard</c>.</summary>
     public string? CastMode { get; init; }
     public string? Targeting { get; init; }
     /// <summary>Costs per resource after the hero's multipliers.</summary>
@@ -150,10 +175,14 @@ public sealed record WeaveSeatInfo(int Slot, string? Key, string? Form, string N
     /// <summary>Use charges held and their cap, for weaves that bank uses.</summary>
     public int? Uses { get; init; }
     public int? UsesMax { get; init; }
+    /// <summary>Self stacks the slot holds, for weaves that pile them on use.</summary>
+    public int? Stacks { get; init; }
     /// <summary>The face the slot shows while a convert rule holds.</summary>
     public FaceInfo? Converted { get; init; }
     /// <summary>The slot's second ability.</summary>
     public FaceInfo? Meta { get; init; }
+    /// <summary>True while the slot's toggle or contract runs (a sustained summon, an aura), so its face shows on.</summary>
+    public bool? Active { get; init; }
 }
 
 /// <summary>A glyph in a weave slot's socket: its level, and why it is dormant, or null when it is active.</summary>
@@ -325,6 +354,19 @@ public sealed record StationStateMsg(long Source, string Name, List<RecipeInfo> 
 {
     public List<string>? Tags { get; init; }
     public double? Reach { get; init; }
+    /// <summary>The services the station offers, each quoted for what it would apply to.</summary>
+    public List<StationServiceInfo>? Services { get; init; }
+}
+
+/// <summary>A service a station offers, quoted for one item, weave slot or node: its price and whether it can be done now.</summary>
+public sealed record StationServiceInfo(string Id, string Label)
+{
+    public long? Item { get; init; }
+    public int? Slot { get; init; }
+    public string? Node { get; init; }
+    public Dictionary<string, double>? Price { get; init; }
+    public bool? Enabled { get; init; }
+    public string? Reason { get; init; }
 }
 
 public sealed record RecipeInfo(string Id, string Name, List<RecipeInputInfo> Inputs, ItemInfo Output, bool Craftable)

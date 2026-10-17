@@ -3,10 +3,14 @@ using HollowWake.Protocol;
 
 namespace HollowWake.Tools;
 
-/// <summary>Connects to a running server over TCP, logs in, creates a character, enters, moves, and reports what came back.</summary>
+/// <summary>
+/// Connects to a running server over TCP, logs in, creates a character, enters, moves, and reports what came back.
+/// Hello features can be asked for (<c>entity_delta</c>, <c>interface</c>): with deltas the probe follows itself
+/// through them, and with the interface it checks that the inventory, weave slot, passive and page states arrive.
+/// </summary>
 public static class Probe
 {
-    public static async Task<int> RunAsync(string host, int port, string account, double seconds)
+    public static async Task<int> RunAsync(string host, int port, string account, double seconds, IReadOnlyList<string>? features = null)
     {
         using var client = new TcpClient { NoDelay = true };
         try
@@ -53,9 +57,15 @@ public static class Probe
                 }
             }
         }
-        Send(new HelloMsg("probe", ProtocolInfo.Version));
+        Send(new HelloMsg("probe", ProtocolInfo.Version) { Features = features is { Count: > 0 } ? features.ToList() : null });
         Send(new LoginMsg(account, ""));
         await PumpAsync(1.0);
+        var welcome = inbox.OfType<WelcomeMsg>().LastOrDefault();
+        var granted = welcome?.Features ?? new List<string>();
+        if (features is { Count: > 0 })
+        {
+            Console.WriteLine($"asked for features: {string.Join(", ", features)}; granted: {(granted.Count == 0 ? "none" : string.Join(", ", granted))}");
+        }
         var list = inbox.OfType<CharacterListMsg>().LastOrDefault();
         if (list is null)
         {
@@ -99,7 +109,7 @@ public static class Probe
         Send(new JumpMsg());
         Send(new StopMsg());
         await PumpAsync(seconds / 2);
-        var self = inbox.OfType<EntityUpdateMsg>().SelectMany(u => u.States).Where(s => s.Key == enter.EntityKey).ToList();
+        var self = SelfStates(inbox, enter.EntityKey);
         var spawns = inbox.OfType<EntitySpawnMsg>().Select(s => s.State).ToList();
         Console.WriteLine($"messages: {string.Join(", ", counts.OrderByDescending(kv => kv.Value).Select(kv => kv.Key + "=" + kv.Value))}");
         Console.WriteLine($"self updates: {self.Count}; last position ({self.LastOrDefault()?.X:0.0}, {self.LastOrDefault()?.Y:0.0}, {self.LastOrDefault()?.Z:0.0})");
@@ -112,15 +122,73 @@ public static class Probe
         {
             Console.WriteLine($"chat: {c.From}: {c.Text}");
         }
+        var ok = true;
+        if (granted.Contains(ProtocolInfo.InterfaceFeature))
+        {
+            var inventory = inbox.OfType<InventoryStateMsg>().LastOrDefault();
+            var slots = inbox.OfType<WeaveSlotsMsg>().LastOrDefault();
+            var passives = inbox.OfType<PassiveStateMsg>().LastOrDefault();
+            var pages = inbox.OfType<PageStateMsg>().LastOrDefault();
+            Console.WriteLine($"interface: bag {inventory?.Bag.Width}x{inventory?.Bag.Height} with {inventory?.Bag.Items.Count} items, {inventory?.Equipment.Count} worn; " +
+                $"{slots?.Seats.Count(s => s.Key is not null)} of {slots?.Seats.Count} weave seats filled; {passives?.Allocated.Count} passives, points {string.Join(", ", passives?.Points.Select(p => p.Key + " " + p.Value) ?? Array.Empty<string>())}; " +
+                $"pages {string.Join(", ", pages?.Pages.Select(p => p.Id + (p.Sealed ? " (sealed)" : "") + (p.Pips > 0 ? $" ({p.Pips})" : "")) ?? Array.Empty<string>())}");
+            if (inventory is null || slots is null || passives is null || pages is null)
+            {
+                Console.WriteLine("PROBE: interface granted but its states did not all arrive");
+                ok = false;
+            }
+        }
         var moved = Displacement(inbox, enter) > 1;
-        Console.WriteLine(moved ? $"PROBE OK (walked {walked})" : "PROBE: did not move in any direction");
-        return moved ? 0 : 2;
+        if (!moved)
+        {
+            Console.WriteLine("PROBE: did not move in any direction");
+            return 2;
+        }
+        Console.WriteLine(ok ? $"PROBE OK (walked {walked})" : "PROBE FAILED");
+        return ok ? 0 : 3;
+    }
+
+    /// <summary>The probe's own states as it was told them: full states from spawns and updates, and deltas applied to the last one.</summary>
+    private static List<EntityState> SelfStates(List<Message> inbox, long key)
+    {
+        var states = new List<EntityState>();
+        EntityState? last = null;
+        foreach (var m in inbox)
+        {
+            switch (m)
+            {
+                case EntitySpawnMsg s when s.State.Key == key:
+                    last = s.State;
+                    break;
+                case EntityUpdateMsg u:
+                    foreach (var s in u.States)
+                    {
+                        if (s.Key == key)
+                        {
+                            last = s;
+                            states.Add(s);
+                        }
+                    }
+                    break;
+                case EntityDeltaMsg d when last is not null:
+                    foreach (var delta in d.Deltas)
+                    {
+                        if (delta.Key == key)
+                        {
+                            last = delta.ApplyTo(last);
+                            states.Add(last);
+                        }
+                    }
+                    break;
+            }
+        }
+        return states;
     }
 
     /// <summary>How far the probe has been seen from where it entered, on the larger horizontal axis.</summary>
     private static double Displacement(List<Message> inbox, EnterWorldMsg enter)
     {
-        var last = inbox.OfType<EntityUpdateMsg>().SelectMany(u => u.States).LastOrDefault(s => s.Key == enter.EntityKey);
+        var last = SelfStates(inbox, enter.EntityKey).LastOrDefault();
         return last is null ? 0 : Math.Max(Math.Abs(last.X - enter.X), Math.Abs(last.Y - enter.Y));
     }
 }

@@ -16,7 +16,16 @@ entries:
           - { weight: 55, kind: currency, currency: shards, amount: [2, 8] }
           - { weight: 14, kind: table, table: world_gear }
           - { weight: 18, kind: item, item: thread_floss, amount: [1, 3] }
+          - { weight: 5, kind: table, table: weave_items }
           - { weight: 13, kind: nothing }
+  # Stones and codices. The payload is left open, so each draws a glyph or form by drop weight and leans
+  # toward what the dropper weaves with.
+  - id: weave_items
+    rolls:
+      - count: 1
+        entries:
+          - { weight: 65, kind: item, item: glyph_stone }
+          - { weight: 35, kind: item, item: weave_codex, rarity_weights: { common: 60, magic: 30, rare: 9, unique: 1 } }
   - id: beast_drops
     rolls:
       - count: 1
@@ -47,6 +56,25 @@ entries:
       - count: 1
         entries:
           - { weight: 100, kind: currency, currency: shards, amount: [30, 60] }
+      - count: 1
+        entries:
+          - { weight: 60, kind: table, table: weave_items }
+          - { weight: 40, kind: nothing }
+      - count: 1
+        entries:
+          - { weight: 40, kind: table, table: relic_drops }
+          - { weight: 60, kind: nothing }
+  # Relics for the reliquary and vestige stones for gear sockets.
+  - id: relic_drops
+    rolls:
+      - count: 1
+        entries:
+          - { weight: 30, kind: item, item: relic_shard }
+          - { weight: 15, kind: item, item: relic_icon }
+          - { weight: 6, kind: item, item: relic_idol }
+          - { weight: 20, kind: item, item: vestige_ember }
+          - { weight: 20, kind: item, item: vestige_tide }
+          - { weight: 9, kind: item, item: vestige_marrow }
   - id: ruin_chest
     rolls:
       - count: 1

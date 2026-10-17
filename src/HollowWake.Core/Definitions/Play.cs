@@ -28,6 +28,10 @@ public sealed record RewardDef
     public Dictionary<string, double> Reputation { get; init; } = new();
     public List<string> Unlocks { get; init; } = new();
     public List<WeaveSpec> Weaves { get; init; } = new();
+    /// <summary>Passive points granted per currency (a realm's currency, say).</summary>
+    public Dictionary<string, int> Points { get; init; } = new();
+    /// <summary>Story flags set on the hero.</summary>
+    public List<string> Flags { get; init; } = new();
 }
 
 /// <summary>A hand-authored quest.</summary>

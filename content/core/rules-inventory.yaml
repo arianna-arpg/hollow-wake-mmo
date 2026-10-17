@@ -1,0 +1,113 @@
+# Rules of items, containers, passives and conversations: every number the inventory, rack, passive and
+# dialogue systems read. Code reads them by path (inventory.bag.width) and keeps a default for each.
+kind: rules
+entries:
+  - id: inventory
+    values:
+      # The hero's bag: a board of cells. A mask (rows of X and .) may switch cells off.
+      bag:
+        width: 12
+        height: 5
+      # The bases stones and codices are minted on, and how they are named ({name} is the glyph or weave).
+      stone_base: glyph_stone
+      codex_base: weave_codex
+      names:
+        stone: "{name} Stone"
+        codex: "{name} Codex"
+      # The sockets a codex gives its weave slot, by the codex's rarity (capped by what the form can hold).
+      codex_sockets:
+        common: 1
+        magic: 2
+        rare: 3
+        unique: 4
+      # Levels of freshly minted stones and codices, from the item level of the drop. Raising them is a station's work.
+      stone_level: "1"
+      codex_level: "1"
+      codex_max_level: 20
+      # How much more often a drop draws a glyph or form the dropper weaves with.
+      drop_lean: 4
+      # How far around the hero to look for a font, a stash or a station before checking each one's own reach.
+      reach_search: 12
+      # Why a board out of reach cannot be used ({kind} is the interactable kind that reaches it).
+      reach_text: Walk to a {kind} to use this.
+      # Gear sockets. A socket takes items with one of these tags; each socket up to a rarity's max rolls its
+      # chance at mint; a class holds at most its cap (the longest class prefix named here; none holds none).
+      sockets:
+        accepts: [vestige]
+        rarity:
+          common: { chance: 0.12, max: 1 }
+          magic: { chance: 0.2, max: 1 }
+          rare: { chance: 0.3, max: 2 }
+          unique: { chance: 0.25, max: 1 }
+        caps:
+          weapon: 2
+          armor: 1
+          armor.chest: 2
+          shield: 1
+          focus: 1
+      # Trade. Prices are expressions of the item (value, item_level, rarity_rank, tier, quality, count) and the hero.
+      vendor:
+        price: "max(1, round((value + 2 + item_level) * (1 + rarity_rank * 1.5))) * count"
+        sell_price: "max(1, floor((value + 1 + item_level * 0.5) * (1 + rarity_rank))) * count"
+        buy_back_markup: 1
+        restock_seconds: 1800
+        sold_out_text: Sold out.
+        cannot_afford_text: Not enough {currency}.
+      # Labels of the preview lines on a weave's card.
+      preview_labels:
+        damage: Damage
+        cast_time: Cast time
+        cooldown: Cooldown
+        cost: Cost
+        range: Range
+        crit: Critical chance
+
+  - id: dialogue
+    values:
+      # How far a hero may stand from whoever they talk or trade with before the pane closes.
+      reach: 6
+      # How far a hero may stand from a station beyond its own reach.
+      reach_slack: 1.5
+      # How often departures are checked, in seconds.
+      check_seconds: 0.5
+      # The choice a line offers when none of its own is open.
+      leave_text: Leave.
+
+  - id: passives
+    values:
+      # What refunding one node costs at a font, per currency: expressions of the hero (level, wallet ...), the
+      # node's cost (node_cost) and the refunds made so far (refunds).
+      refund_cost:
+        shards: "4 + level * 2 * node_cost + refunds"
+      # Points of a realm's currency that levels give (beside those quests grant), as expressions of level.
+      points:
+        devotion: "0"
+        vocation: "0"
+      # Why a vocation of another calling stays sealed ({calling} is the calling it belongs to).
+      calling_sealed_text: Only a {calling} walks this path.
+
+  # Heroes own their weaves: a set-weave must name what the rack seat holds (the codex, its stones in order,
+  # attuned Threads). The casting rules declare the switch; the item model turns it on.
+  - id: casting
+    patch: true
+    values:
+      require_ownership: true
+
+  # How a superior item is named ({name} is the minted name).
+  - id: items
+    patch: true
+    values:
+      superior_name: "Superior {name}"
+
+  # Why a station cannot do a service for a target, as the player reads it, by reason code.
+  - id: crafting
+    patch: true
+    values:
+      service_reasons:
+        max_level: Already at its highest level.
+        max_rarity: Already as rare as a codex gets.
+        no_duplicate: Needs a second copy in the bag.
+        nothing_to_reset: No passives to reset.
+        socket_cap: Holds all the sockets it can.
+        no_sockets: Cannot hold sockets.
+        not_levelled_here: Not raised here.
