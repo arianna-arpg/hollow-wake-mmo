@@ -6,6 +6,8 @@ using HollowWake.Core.Tags;
 
 namespace HollowWake.Core.Effects;
 
+internal sealed record ForecastRestrictions(IReadOnlySet<string> Attributes, IReadOnlySet<string> Flags, bool Resources);
+
 /// <summary>
 /// Conservative dependency preflight before invoking the real resolver. Checks formulas, modifiers,
 /// links, gauges and resource-derived flags without evaluating them. It is not a second attribute fold.
@@ -86,22 +88,26 @@ internal sealed class ForecastInputs
         {
             var resource = ResourceNames.OfFraction(name);
             if (_context.Sim.Content.Has<ResourceDef>(resource) || stats.Resources.ContainsKey(resource))
-                return ResourceMaximum(stats, resource);
+                return ResourceStable(stats) && ResourceMaximum(stats, resource);
         }
+        if (name.StartsWith("gauge.last_cost.", StringComparison.Ordinal)) return ResourceStable(stats);
         if (name.StartsWith("gauge.", StringComparison.Ordinal) || name.StartsWith("status.", StringComparison.Ordinal) ||
-            name.StartsWith("charge.", StringComparison.Ordinal) || stats.Resources.ContainsKey(name)) return true;
+            name.StartsWith("charge.", StringComparison.Ordinal)) return true;
+        if (stats.Resources.ContainsKey(name)) return ResourceStable(stats);
         if (stats.Mounted is not null) return Refuse("opaque_mounted_scope");
         return Attribute(stats, name, TagSet.Empty, null);
     }
 
     private bool StatsFlag(Stats stats, string flag)
     {
+        if (ReferenceEquals(stats, _context.SourceStats) && _context.ForecastRestrictions?.Flags.Contains(flag) == true)
+            return Refuse("pending_cast_state");
         if (stats.Flags.Contains(flag) || stats.Tags.Has(flag) || flag.StartsWith("recently_", StringComparison.Ordinal) ||
             flag is "combo_varied" or "combo_repeated") return true;
         if (ResourceNames.ConditionOf(flag) is { } condition &&
             (_context.Sim.Content.Has<ResourceDef>(condition.Resource) || condition.Resource is "life" or "mana"))
         {
-            if (!ResourceMaximum(stats, condition.Resource) || !Attribute(stats, condition.Line, TagSet.Empty, null)) return false;
+            if (!ResourceStable(stats) || !ResourceMaximum(stats, condition.Resource) || !Attribute(stats, condition.Line, TagSet.Empty, null)) return false;
         }
         return stats.Mounted is null || Refuse("opaque_mounted_scope");
     }
@@ -115,6 +121,8 @@ internal sealed class ForecastInputs
 
     private bool Attribute(Stats stats, string name, TagSet tags, IReadOnlyList<Modifier>? extra, bool suppliedBase = false, bool noLinks = false)
     {
+        if (ReferenceEquals(stats, _context.SourceStats) && _context.ForecastRestrictions?.Attributes.Contains(name) == true)
+            return Refuse("pending_caster_modifiers");
         var key = (stats, name, extra is not null, suppliedBase, noLinks);
         if (!_visiting.Add(key)) return Refuse("cyclic_attribute_dependency");
         if (++_depth > 64) { _depth--; _visiting.Remove(key); return Refuse("dependency_depth"); }
@@ -141,4 +149,7 @@ internal sealed class ForecastInputs
         }
         finally { _depth--; _visiting.Remove(key); }
     }
+
+    private bool ResourceStable(Stats stats) => !ReferenceEquals(stats, _context.SourceStats) ||
+        _context.ForecastRestrictions?.Resources != true || Refuse("pending_resource_payment");
 }

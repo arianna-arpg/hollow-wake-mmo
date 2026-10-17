@@ -14,6 +14,7 @@ using HollowWake.Core.Sim;
 using HollowWake.Core.StatusEffects;
 using HollowWake.Core.Systems;
 using HollowWake.Core.Tags;
+using HollowWake.Core.Weaves;
 using HollowWake.Core.World;
 using static HollowWake.Core.Effects.Handlers.EffectHelpers;
 
@@ -65,11 +66,12 @@ internal enum Pick
     Farthest,
     LowestLife,
     HighestLife,
+    AimedNearest,
 }
 
 internal static class Picks
 {
-    public static readonly string[] Names = { "random", "nearest", "farthest", "lowest_life", "highest_life" };
+    public static readonly string[] Names = { "random", "nearest", "farthest", "lowest_life", "highest_life", "aimed_nearest" };
 
     public static Pick Of(EffectCompileContext ctx, JsonNode? node, string fallback) => ctx.ChoiceOf(node, "pick", fallback, Names) switch
     {
@@ -77,6 +79,7 @@ internal static class Picks
         "farthest" => Pick.Farthest,
         "lowest_life" => Pick.LowestLife,
         "highest_life" => Pick.HighestLife,
+        "aimed_nearest" => Pick.AimedNearest,
         _ => Pick.Random,
     };
 
@@ -120,10 +123,10 @@ internal static class Picks
             for (var i = 0; i < max; i++)
             {
                 var best = i;
-                var bestKey = Key(ctx.Sim, pick, bodies[i], from);
+                var bestKey = SelectionKey(bodies[i]);
                 for (var j = i + 1; j < bodies.Count; j++)
                 {
-                    var key = Key(ctx.Sim, pick, bodies[j], from);
+                    var key = SelectionKey(bodies[j]);
                     if (key < bestKey)
                     {
                         best = j;
@@ -139,6 +142,9 @@ internal static class Picks
             }
         }
         bodies.RemoveRange(max, bodies.Count - max);
+
+        double SelectionKey(Entity e) => pick == Pick.AimedNearest && e == ctx.Target
+            ? double.NegativeInfinity : Key(ctx.Sim, pick, e, from);
     }
 }
 
@@ -156,7 +162,7 @@ internal sealed class AreaHandler : IEffectHandler
 {
     public string Type => "area";
 
-    public EffectSignature Signature { get; } = EffectSignature.Of("shape", "radius", "angle", "width", "inner", "filter", "center", "max_targets", "include_center", "pick", "require", "reach", "occlusion")
+    public EffectSignature Signature { get; } = EffectSignature.Of("shape", "radius", "angle", "width", "inner", "filter", "center", "max_targets", "include_center", "pick", "require", "reach", "occlusion", "report_miss")
         .Hook(EffectHooks.OnHit, "effects");
 
     public CompiledEffect Compile(JsonObject p, EffectCompileContext ctx) => new Effect
@@ -176,6 +182,7 @@ internal sealed class AreaHandler : IEffectHandler
         Require = ctx.ExprOf(p["require"]),
         FromEdge = ctx.ChoiceOf(p["reach"], "reach", "center", "center", "edge") == "edge",
         Free = OcclusionFree(ctx, p["occlusion"]),
+        ReportMiss = ctx.BoolOf(p["report_miss"], false),
     };
 
     private sealed class Effect : CompiledEffect, IDeliveryPlanSource
@@ -196,6 +203,7 @@ internal sealed class AreaHandler : IEffectHandler
         public bool FromEdge;
         /// <summary>Strikes through walls and rising ground (<c>occlusion: free</c>).</summary>
         public bool Free;
+        public bool ReportMiss;
 
         private ResolvedAreaPlan ResolvePlan(EffectContext ctx)
         {
@@ -277,6 +285,8 @@ internal sealed class AreaHandler : IEffectHandler
                     var max = (int)Math.Round(ctx.Eval(MaxTargets, targets.Count));
                     Picks.Keep(ctx, targets, Math.Max(0, max), Pick, plan.Anchor);
                 }
+                if (ReportMiss && targets.Count == 0)
+                    ReleaseTargets.Miss(ctx, MissReason(ctx, plan), emitted: true);
                 var deeper = ctx.Deeper();
                 foreach (var t in targets)
                 {
@@ -288,6 +298,18 @@ internal sealed class AreaHandler : IEffectHandler
                 Return(targets);
             }
             Echoes(ctx, plan.Anchor, plan.Size.Radius);
+        }
+
+        private static string MissReason(EffectContext ctx, ResolvedAreaPlan plan)
+        {
+            if (ctx.Target.IsNone) return "no_candidate";
+            if (!ctx.Sim.World.IsAlive(ctx.Target) || ctx.Sim.World.Has<Dead>(ctx.Target)) return "dead";
+            if (ctx.TargetTransform is not { } target) return "missing_position";
+            var delta = target.Position - plan.Anchor;
+            if (new Vector2(delta.X, delta.Y).Length() > plan.Reach || MathF.Abs(delta.Z) > plan.HeightTolerance) return "out_of_reach";
+            if (!plan.ContainsCenter(target.Position)) return "outside_area";
+            if (plan.RequiresLineOfSight && !LineOfSight.Clear(ctx.Sim.Terrain, plan.Anchor + Eye, target.Position + Eye)) return "line_of_sight";
+            return "no_candidate";
         }
 
         /// <summary>Aftershocks around the area and pulse repeats where it stood, from the weave's area.scatter and area.pulses.</summary>
@@ -897,6 +919,7 @@ internal sealed class ChainHandler : IEffectHandler
                 {
                     Pick.Nearest => distance,
                     Pick.Farthest => -distance,
+                    Pick.AimedNearest when e == ctx.Target => double.NegativeInfinity,
                     _ => Picks.Key(ctx.Sim, Pick, e, from),
                 };
                 // Ties keep the nearer body, then the one met first.

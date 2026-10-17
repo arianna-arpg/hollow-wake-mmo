@@ -30,6 +30,7 @@ entries:
   - { id: area.pulses, name: Area Pulses, category: weave, base: 0, min: 0, decimals: 0, description: Times an area strikes again where it struck. }
   - { id: area.strikes, name: Storm Strikes, category: weave, base: 1, min: 0, decimals: 0, description: Strikes a storm scatters over its disc. }
   - { id: melee.reach, name: Melee Reach, category: weave, base: 0, min: 0, decimals: 1, description: Units further melee cones and bands reach. }
+  - { id: melee.arc, name: Melee Arc, category: weave, base: 90, min: 1, max: 360, description: Full angle in degrees of ordinary melee swings. }
   - { id: knockback, name: Knockback, category: weave, base: 1, min: 0, percent: true, description: Scales how far knockbacks and buffets carry. }
   - { id: phasing, name: Phasing, category: weave, base: 0, min: 0, decimals: 0, description: "Above zero, deliveries pass through walls and rising ground: flights fly on, areas and fields reach behind them." }
   - { id: aim.spread, name: Aim Spread, category: weave, base: 1, min: 0, percent: true, description: Scales the random turn an aim gives each use. }

@@ -488,6 +488,9 @@ public sealed partial class WeaveRuntime
             {
                 t.Face(faceAt);
             }
+            // Store the accepted facing even for body-targeted casts; later movement/yaw cannot bend a swing.
+            if (direction.LengthSquared() <= 0.001f) direction = t.Forward;
+            else direction = Vector2.Normalize(direction);
         }
         var state = new CastState
         {
@@ -880,7 +883,7 @@ public sealed partial class WeaveRuntime
     /// empowering use), runs the graph, then the slot behaviors: repeats, follow-ups, cycles, stacks, the
     /// recovery lock and toggles turning on.
     /// </summary>
-    internal void ResolveUse(Simulation sim, Entity caster, WeaveBook book, Stats stats, CastState state, CompiledWeave weave, int depth = 0, in CastVarValues extraVars = default, bool triggered = false, string rngPrefix = "weave:")
+    internal bool ResolveUse(Simulation sim, Entity caster, WeaveBook book, Stats stats, CastState state, CompiledWeave weave, int depth = 0, in CastVarValues extraVars = default, bool triggered = false, string rngPrefix = "weave:")
     {
         var now = sim.Clock.Time;
         if (!state.CooldownStarted)
@@ -890,48 +893,19 @@ public sealed partial class WeaveRuntime
         }
         var vars = extraVars;
         var casting = weave.Casting;
-        var modifiers = state.HasModifiers ? state.Modifiers : null;
+        var spent = 0d;
         if (casting.Spend is { } spend)
         {
-            var spent = SpendCharges(sim, caster, spend);
+            spent = SpendCharges(sim, caster, spend);
             vars.ChargesSpent = spent;
-            if (spent > 0)
-            {
-                foreach (var scale in spend.Scales)
-                {
-                    (modifiers ??= state.Modifiers).Add(new Modifier { Attribute = scale.Attribute, Form = scale.Form, Value = scale.PerCharge * spent, Scope = scale.Scope, Source = "spend" });
-                }
-            }
         }
-        if (casting.Uses is { } uses)
-        {
+        if (casting.Uses is not null)
             vars.UsesSpent = state.UsesSpent;
-            if (state.UsesSpent > 0 && uses.Empower.Count > 0)
-            {
-                foreach (var m in uses.Empower)
-                {
-                    (modifiers ??= state.Modifiers).Add(m.Scaled(state.UsesSpent));
-                }
-            }
-        }
-        if (casting.SelfStack is { } stack)
-        {
-            var stacks = StacksNow(state.Slot, stack, now);
-            if (stacks > 0)
-            {
-                foreach (var m in stack.Modifiers)
-                {
-                    (modifiers ??= state.Modifiers).Add(m.Scaled(stacks));
-                }
-            }
-        }
-        if (state.Flawless && weave.Form.Timing is { } timing && timing.Bonus != 0)
-        {
-            (modifiers ??= state.Modifiers).Add(new Modifier { Attribute = "damage", Form = ModifierForm.More, Value = timing.Bonus, Source = "timing" });
-        }
+        state.LocalModifiers = UseModifiers(weave, state, now, spent, state.LocalModifiers);
         var view = state.HasModifiers ? weave.Root.WithModifiers(Combined(weave.Root.Modifiers, state.Modifiers)) : weave;
         var ctx = Run(sim, caster, stats, state, view, weave.Effects, depth, publishCast: true, vars, rngPrefix: rngPrefix);
         AfterUse(sim, caster, book, stats, state, weave, ctx, triggered);
+        return ctx is not null;
     }
 
     /// <summary>The weave's own modifiers followed by a cast's local ones, as one list.</summary>
@@ -956,6 +930,13 @@ public sealed partial class WeaveRuntime
     /// </summary>
     internal EffectContext? Run(Simulation sim, Entity caster, Stats stats, CastState state, CompiledWeave weave, IReadOnlyList<CompiledEffect> effects, int depth, bool publishCast, in CastVarValues vars, double damageScale = 1, string rngPrefix = "weave:", long rngNumber = -1)
     {
+        if (!ReleaseTargets.Check(sim, caster, state.Target, weave, out var miss))
+        {
+            Present(sim, caster, state, weave, "miss", miss);
+            sim.Events.Publish(new WeaveMissed(caster, state.Slot.Key, weave.Key, state.Target, miss)
+                { CastId = state.CastId, Tick = sim.Clock.Tick, Depth = depth });
+            return null;
+        }
         var target = state.Target;
         if (!target.IsNone && (!sim.World.IsAlive(target) || sim.World.Has<Dead>(target)))
         {
@@ -1328,15 +1309,7 @@ public sealed partial class WeaveRuntime
         }
         foreach (var ramp in ramps)
         {
-            var value = ramp.Per * Curves.Evaluate(ramp.Curve, held);
-            if (ramp.Max is { } max)
-            {
-                value = Math.Min(value, max);
-            }
-            if (ramp.Min is { } min)
-            {
-                value = Math.Max(value, min);
-            }
+            var value = RampValue(ramp, held);
             if (ramp.On == "caster")
             {
                 casterSource ??= cast.CasterSource = "cast:" + cast.Slot.Key;
@@ -1400,39 +1373,18 @@ public sealed partial class WeaveRuntime
                 {
                     cast.Fill = cast.Duration <= 0 ? 1 : Math.Min(1, cast.Held / cast.Duration);
                     cast.Modifiers.Clear();
-                    if (weave.Form.Charge is { } charge)
-                    {
-                        foreach (var scale in charge.Scales)
-                        {
-                            cast.Modifiers.Add(new Modifier { Attribute = scale.Attribute, Form = scale.Form, Value = scale.AtZero + (scale.AtFull - scale.AtZero) * cast.Fill, Scope = scale.Scope, Source = "charge" });
-                        }
-                    }
+                    AddChargeModifiers(cast.Modifiers, weave.Form.Charge, cast.Fill);
                     EndHeldState(sim, caster, stats, cast);
-                    ResolveUse(sim, caster, book, stats, cast, weave, 0, new CastVarValues { Held = cast.Held, Fill = cast.Fill });
-                    fired = true;
+                    fired = ResolveUse(sim, caster, book, stats, cast, weave, 0, new CastVarValues { Held = cast.Held, Fill = cast.Fill });
                 }
                 break;
             case CastMode.Overcharge:
                 if (release)
                 {
                     cast.Modifiers.Clear();
-                    if (weave.Form.Overcharge is { } over)
-                    {
-                        if (cast.Stage > 0)
-                        {
-                            foreach (var m in over.PerStage)
-                            {
-                                cast.Modifiers.Add(m.Scaled(cast.Stage).WithSource("overcharge"));
-                            }
-                        }
-                        if (over.Spark is { } spark && cast.Stage > 0 && now - cast.StageAt <= spark.Window + 1e-9)
-                        {
-                            cast.Modifiers.Add(new Modifier { Attribute = "damage", Form = ModifierForm.More, Value = spark.Bonus, Source = "spark" });
-                        }
-                    }
+                    AddOverchargeModifiers(cast.Modifiers, weave.Form.Overcharge, cast.Stage, now - cast.StageAt);
                     EndHeldState(sim, caster, stats, cast);
-                    ResolveUse(sim, caster, book, stats, cast, weave, 0, new CastVarValues { Held = cast.Held, Stage = cast.Stage, Fill = cast.Fill });
-                    fired = true;
+                    fired = ResolveUse(sim, caster, book, stats, cast, weave, 0, new CastVarValues { Held = cast.Held, Stage = cast.Stage, Fill = cast.Fill });
                 }
                 break;
             case CastMode.Guard:
@@ -1468,26 +1420,33 @@ public sealed partial class WeaveRuntime
     /// <summary>A held cast that fires on release points where its caster aims at that moment, when it aims.</summary>
     private static void AimAtRelease(Simulation sim, Entity caster, WeaveBook book, CastState cast, CompiledWeave weave)
     {
+        (cast.Point, cast.Direction) = ReleaseAim(sim, caster, book, cast, weave);
+    }
+
+    private static (Vector3 Point, Vector2 Direction) ReleaseAim(Simulation sim, Entity caster, WeaveBook book, CastState cast, CompiledWeave weave)
+    {
+        var result = (Point: cast.Point, Direction: cast.Direction);
         if (book.AimAt < cast.StartedAt)
         {
-            return;
+            return result;
         }
         if (book.AimDirection is { } dir && dir.LengthSquared() > 1e-6f && weave.Targeting == Targeting.Direction)
         {
-            cast.Direction = Vector2.Normalize(dir);
+            result.Direction = Vector2.Normalize(dir);
         }
         if (book.AimPoint is { } point && weave.Targeting is Targeting.Ground or Targeting.Direction)
         {
-            cast.Point = point;
+            result.Point = point;
             if (weave.Targeting == Targeting.Direction && (book.AimDirection is null) && sim.World.TryGet<Transform>(caster, out var t))
             {
                 var d = new Vector2(point.X - t.Position.X, point.Y - t.Position.Y);
                 if (d.LengthSquared() > 1e-6f)
                 {
-                    cast.Direction = Vector2.Normalize(d);
+                    result.Direction = Vector2.Normalize(d);
                 }
             }
         }
+        return result;
     }
 
     /// <summary>A channel's release: its payload (or its own graph) when the hold was long and full enough; then its persisting pulses.</summary>
@@ -1525,9 +1484,8 @@ public sealed partial class WeaveRuntime
                 {
                     vars.Fill = cast.Brim;
                 }
-                Run(sim, caster, stats, cast, view, effects, depth: 0, publishCast: true, vars, rngPrefix: "release:");
-                fired = true;
-                if (channel.Persist is { } persist)
+                fired = Run(sim, caster, stats, cast, view, effects, depth: 0, publishCast: true, vars, rngPrefix: "release:") is not null;
+                if (fired && channel.Persist is { } persist)
                 {
                     Persist(sim, caster, cast, weave, persist, scope);
                 }
@@ -1709,6 +1667,20 @@ public sealed partial class WeaveRuntime
             if (weave.Targeting is Targeting.Enemy or Targeting.Ground or Targeting.Direction && range > 0 && distance > range + radii)
             {
                 continue;
+            }
+            // A body's start-range allowance can extend beyond a positional delivery. Keep closing
+            // until the shared primary region can actually reach it, rather than stopping to whiff
+            // forever at the edge. Unknown deliveries retain their existing range-based behavior;
+            // held casts may grow or re-aim before release and are not constrained by this sample.
+            if (weave.Form.CastMode is CastMode.Cast or CastMode.Instant &&
+                weave.Targeting is Targeting.Enemy or Targeting.Ground or Targeting.Direction &&
+                ct is not null && tt is not null && weave.Effects.Count == 1 && weave.Effects[0] is IDeliveryPlanSource)
+            {
+                var context = new EffectContext { Sim = sim, Source = caster, Target = target,
+                    Point = tt.Position, Direction = new Vector2(tt.Position.X - ct.Position.X, tt.Position.Y - ct.Position.Y),
+                    Weave = weave, Tags = weave.Tags, Rng = new Rng(0) };
+                if (DeliveryForecasts.Describe(weave.Effects, context).PrimaryRegion is { } plan &&
+                    !plan.IsCandidate(context, target, tt.Position)) continue;
             }
             // A soft minimum: closer than min_range (edge to edge) the hint weighs near_weight, and without one
             // the weave waits for room.

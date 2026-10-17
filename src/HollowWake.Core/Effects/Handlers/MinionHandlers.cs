@@ -272,7 +272,7 @@ internal sealed class MinionCastHandler : IEffectHandler
                     Depth = ctx.Depth + 1,
                     Rng = new Rng(Rng.Combine(ctx.Rng.NextUInt64(), (ulong)minion.Key)),
                 };
-                ExecuteAll(weave.Effects, order);
+                ReleaseTargets.Execute(order, weave.Effects);
                 sim.Events.Publish(new MinionOrdered(minion, ctx.Origin, weave.Key, point) { Tick = sim.Clock.Tick });
             }
             service.ReturnList(list);
