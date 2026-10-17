@@ -104,7 +104,10 @@ public static class WeaveValidation
         }
     }
 
-    /// <summary>Every top-level effect in a list must be a registered type.</summary>
+    /// <summary>
+    /// Every top-level effect in a list must be a registered type (an error); then its parameters and its
+    /// nested effect lists are checked as <see cref="EffectParams"/> does.
+    /// </summary>
     public static void Effects(IEnumerable<TypedSpec>? specs, ValidationContext c, string field)
     {
         if (specs is null)
@@ -118,6 +121,119 @@ public static class WeaveValidation
                 c.Error($"'{field}' uses unknown effect type '{spec.Type}'.");
             }
         }
+        EffectParams(specs, c, field);
+    }
+
+    /// <summary>
+    /// Warns about what a list of effects would silently ignore: a parameter its type does not read (its
+    /// <see cref="EffectSignature"/> says what it reads; types that declare nothing are not checked), and in
+    /// nested lists an effect type nobody registered. Nested lists are found wherever a parameter holds a list
+    /// of objects naming a <c>type</c>, at any depth. Specs <paramref name="skip"/> accepts (dialogue
+    /// actions, say) are left to their own checks; top-level unknown types are left to the caller.
+    /// </summary>
+    public static void EffectParams(IEnumerable<TypedSpec>? specs, ValidationContext c, string field, Func<string, bool>? skip = null)
+    {
+        if (specs is null)
+        {
+            return;
+        }
+        var i = 0;
+        foreach (var spec in specs)
+        {
+            var at = $"{field}[{i++}]";
+            if (skip?.Invoke(spec.Type) == true)
+            {
+                continue;
+            }
+            if (EffectRegistry.Shared.Has(spec.Type))
+            {
+                Node(spec.Type, spec.Params, c, at);
+            }
+        }
+    }
+
+    /// <summary>The parameters of one effect node, then the lists nested in them.</summary>
+    private static void Node(string type, JsonObject parameters, ValidationContext c, string at)
+    {
+        if (EffectRegistry.Shared.TryGetSignature(type, out var signature) && !signature.IsOpen)
+        {
+            foreach (var (key, _) in parameters)
+            {
+                if (key != "type" && !signature.Accepts(key))
+                {
+                    c.Warn($"'{at}' effect '{type}' has parameter '{key}', which it does not read.");
+                }
+            }
+        }
+        Nested(parameters, c, at);
+    }
+
+    private static void Nested(JsonObject node, ValidationContext c, string at)
+    {
+        foreach (var (key, value) in node)
+        {
+            switch (value)
+            {
+                case JsonArray list:
+                    for (var i = 0; i < list.Count; i++)
+                    {
+                        if (list[i] is JsonObject element)
+                        {
+                            Element(element, c, $"{at}.{key}[{i}]");
+                        }
+                    }
+                    break;
+                case JsonObject obj:
+                    Nested(obj, c, $"{at}.{key}");
+                    break;
+            }
+        }
+    }
+
+    /// <summary>An object inside a list: an effect when it names a type, else a holder of further lists (choices, waves).</summary>
+    private static void Element(JsonObject element, ValidationContext c, string at)
+    {
+        if (element["type"] is JsonValue value && value.TryGetValue<string>(out var type))
+        {
+            if (EffectRegistry.Shared.Has(type))
+            {
+                Node(type, element, c, at);
+                return;
+            }
+            c.Warn($"'{at}' names unknown effect type '{type}'.");
+        }
+        Nested(element, c, at);
+    }
+
+    /// <summary>
+    /// Adds the effect checks to the kinds whose effect lists no other validator walks: form and preset
+    /// graphs, a status's own lists, and dialogue effects (dialogue actions keep their own check).
+    /// </summary>
+    internal static void RegisterEffectChecks()
+    {
+        ContentKinds.AddValidator<FormDef>((d, c) => EffectParams(d.Effects, c, "effects"));
+        ContentKinds.AddValidator<WeaveDef>((d, c) => EffectParams(d.Effects, c, "effects"));
+        ContentKinds.AddValidator<StatusDef>((d, c) =>
+        {
+            EffectParams(d.OnApply, c, "on_apply");
+            EffectParams(d.OnExpire, c, "on_expire");
+            if (d.Tick is { } tick)
+            {
+                EffectParams(tick.Effects, c, "tick.effects");
+            }
+        });
+        ContentKinds.AddValidator<DialogueDef>((d, c) =>
+        {
+            static bool IsAction(string type) => Dialogue.DialogueActions.Shared.TryGet(type, out _, out _);
+            foreach (var (id, node) in d.Nodes)
+            {
+                EffectParams(node.Effects, c, $"nodes.{id}.effects", IsAction);
+                foreach (var choice in node.Choices)
+                {
+                    EffectParams(choice.Effects, c, $"nodes.{id}.choices.{choice.Id}.effects", IsAction);
+                }
+            }
+        });
     }
 
     /// <summary>Glyph references must name glyphs, at a level within bounds, with rows their axes have. True when all do.</summary>

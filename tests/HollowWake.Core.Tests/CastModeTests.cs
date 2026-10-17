@@ -720,6 +720,63 @@ public class CastModeTests
         Assert.Equal(0.4, arena.Stats.Gauge(gauge), 6);
     }
 
+    // ------------------------------------------------------------ effect validation
+
+    [Fact]
+    public void EffectListsWarnAboutParametersTheirTypesDoNotRead()
+    {
+        const string layer = """
+kind: statuses
+entries:
+  - { id: t_leaky, name: Leaky, duration: 2, tick: { interval: 1, effects: [ { type: heal, amount: 1, splash: 2 } ] } }
+---
+kind: forms
+entries:
+  - id: t_sloppy
+    targeting: enemy
+    cast_mode: instant
+    min_threads: 0
+    attributes: { range: 10 }
+    effects:
+      - type: area
+        radius: 2
+        effects:
+          - { type: damage, amount: 5, threads: [mind], bonus: 3 }
+          - { type: t_no_such_effect }
+---
+kind: dialogues
+entries:
+  - id: t_chat
+    name: Chat
+    start: a
+    nodes:
+      a:
+        line: Hello
+        effects:
+          - { type: set_flag, flag: t_met }
+          - { type: heal, amount: 1, louder: true }
+""";
+        var dir = Path.Combine(Path.GetTempPath(), "hollowwake-effect-params-" + Guid.NewGuid().ToString("N"));
+        Directory.CreateDirectory(dir);
+        try
+        {
+            File.WriteAllText(Path.Combine(dir, "effect-params.yaml"), layer.Replace("\r\n", "\n"));
+            ContentRegistry.Load(new[] { CoreContent.FindContentDir(), dir }, out var report);
+            var warnings = report.Warnings.Select(w => w.Message).ToList();
+            Assert.Contains(warnings, w => w.Contains("'tick.effects[0]' effect 'heal' has parameter 'splash'"));
+            Assert.Contains(warnings, w => w.Contains("'effects[0].effects[0]' effect 'damage' has parameter 'bonus'"));
+            Assert.Contains(warnings, w => w.Contains("'effects[0].effects[1]' names unknown effect type 't_no_such_effect'"));
+            Assert.Contains(warnings, w => w.Contains("'nodes.a.effects[1]' effect 'heal' has parameter 'louder'"));
+            // Dialogue actions keep their own check; the shipped content raises none of these.
+            Assert.DoesNotContain(warnings, w => w.Contains("set_flag"));
+            Assert.DoesNotContain(report.Warnings, w => !w.Id.StartsWith("t_", StringComparison.Ordinal) && w.Message.Contains("which it does not read"));
+        }
+        finally
+        {
+            Directory.Delete(dir, recursive: true);
+        }
+    }
+
     // ------------------------------------------------------------ the effect context's variables
 
     [Fact]
