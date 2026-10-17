@@ -1,72 +1,60 @@
-# Flame cast events: implementation and peer-review handoff
+# Shared action presentation and ARPG convergence: review handoff
 
-Codex implemented the owner-requested confirmed cast lifecycle and first Flame presentation slice in both clients, based on main `07a2497`. Work is isolated in branch `codex/flame-cast-cues`, in the registered `flame-cast-cues/MMOARPG` worktree. The original integration checkout is clean after the owner's explicit approval of the verified transfer. The loader fix is its own commit/branch (`44b8a54`, `codex/content-loader-validation`), and the earlier visual/sprite proposals are a separate commit/branch (`4c68391`, `codex/visual-studies`). Review these in order; the feature is based on both.
+PR [#6](https://github.com/arianna-arpg/hollow-wake-mmo/pull/6), branch `codex/flame-cast-cues`, owns the common action-presentation stream and recipes. The owner required that Flame remain an example and that the original Hollow Wake ARPG be treated as eventual convergence scope. Work is isolated in the registered worktree; the shared integration checkout remains clean.
 
-Codex has read and acknowledges [Claude's first review](2026-10-17-claude-acknowledgment-and-review.md) and the new collaboration contract. Claude approved the loader and reviewed the proposed direction; Claude has not yet reviewed this completed feature. The owner explicitly selected **Flame** in the current request, resolving the naming question in that first review.
+## What changed
 
-## Scope and seam for Claude
+The runtime assigns stable cast identity, emits confirmed start/release/impact/end/interruption events, and preserves identity through delayed work and actual projectile contact after interruption. Both clients consume a reliable opt-in stream with sequence, expiry and interest handling. No visual recipe controls simulation.
 
-- `CastPresentationEvent` in Core: stable zone-local cast id; start, release, impact, end and interrupt semantics; exact simulation timestamps. Release means a non-empty effect list is executing, never that it hit. Impact requires confirmed positive, non-evaded, non-blocked damage. A held channel can release multiple payloads under one cast id.
-- `CastCueMsg` in Protocol with reliable opt-in `cast_cues` negotiation. ZoneInstance sends only to viewers who know the source, and for impacts the target too. Unknown targets are redacted. Entity spawn reconstructs ongoing preparation via `sync`, not old flourishes.
-- Both clients consume a bounded/deduplicated timeline and the same `content/core/ui/cast-visuals.yaml` profiles, registered as `ui_cast_visuals` through the interface family. Profiles select by tags and author geometry, stroke width, phase durations, color, height, motion and opacity. Crossed ribbons preserve stroke thickness in both camera projections with one mesh per cue. Neutral fallback is mandatory; reduced motion removes decorative spin, expansion and fading. These are cosmetic cues, never hit regions or cooldown authority.
-- Player-facing `Ember` becomes `Flame`; the stable `ember` ids, tags, attribute paths and save references remain compatible. The Thread description explicitly associates Flame with Fire. No internal-key migration is attempted.
+The extension composes one winning profile per authored layer instead of choosing one look for an entire action. Shared Thread templates instantiate from current or content-added Thread definitions. Flame overrides one Thread layer. Compiled mechanism capabilities can contribute body-sized accents; they do not assert that conditional paths executed or describe hit bounds. Segments, rings/arcs, rays and corners use paired registries and shared numeric fixtures. Budgets bound active layers and layers per event.
 
-Current file ownership includes core cast state/context/runtime and damage event emission; protocol messages; server negotiation/snapshot/event dispatch; client Main/app wiring; new cast timeline/render files; content visual definition/validator/recipes; display wording in content and lore; associated tests and design contract. Please review through this handoff before changing these same files. The core gameplay rules, timing and hit geometry are not being redesigned in this slice.
+An open server event-adapter registry adds distinct confirmed damage, healing, block, evade, status application/expiry and revival outcomes. These do not invent cast IDs. Beneficial status application differs from harmful application; correlated damage is not decorated twice; source/target interest checks apply. Outcomes anchor to the affected body, and content can retain lethal-contact/revival decoration while a dead snapshot is present.
 
-## Separate forecasting chat
+The read-only original-project census captures 948 skills, 457 supports, 18 delivery discriminants, 52 effect discriminants and 9 cast-mode discriminants. Source revision is `118b510f8b5bfb781163c5bc13ea4908f698e75b`; the before/after-stable TypeScript tree fingerprint is `6b9e8dab28f65957d0ff39231584fff813917d513b7cc52899db8a1446629275`. Individual source hashes and original casting/combat/defense profile data are retained. Its eight effect voices are only those registered by the base module, not an exhaustive painter inventory.
 
-The user-requested forecasting chat `01a14bbb-0128-7a93-850c-bee1d1dfea41` completed an initial `docs/design/cast-forecasting.md` and `experiments/cast-forecasting/`. The coordinator reviewed that contract and reran its proof against the completed feature: 27 real-core scenarios and 10 proposed-contract checks passed. Cleave preserves its existing committed direction and live resolution; moving out and interruption deal no damage, and paired armor reduces actual damage. The next proposed runtime slice is one shared resolved area plan feeding both the hit test and both clients. No production forecast hitbox, damage estimate, bridge eligibility or AI avoidance is claimed by this cosmetic slice.
+The coverage manifest groups these into 12 reusable families, explicitly distinguishing implemented, partial and pending work. Tests reject unclassified refreshed vocabulary, skill/support fields and nested variant paths, unclassified current effect handlers, and mismatched client primitive registries. All 79 shipped presets have valid shared lifecycle presentation. New skills using existing mechanisms inherit that infrastructure without renderer branches.
 
-Publication-time coordination: that chat subsequently published the expanded shared-provider proposal in [PR #3](https://github.com/arianna-arpg/hollow-wake-mmo/pull/3), on `codex/cast-forecasting` at `c99bfec`. **PR #3 owns the current forecasting proposal and supersedes the initial copies preserved in this branch.** During integration, take its versions of the forecasting design and experiment; do not overwrite them with these older copies. Its reported 63 scenario/provider checks and 10 contract checks ran on its own baseline, without this branch's lifecycle extension. The 27/10 rerun above remains the evidence for the initial proof against this implementation; it does not certify the expanded proposal against this branch.
+## Claude review requests and coordination
 
-Codex also read Claude's `docs/reviews/2026-10-17-positional-hits.md` on integration main at `0604d90`. The direct-target release-time reach/visibility gap is real and separate from cosmetic impact truth: a cue reports the damage the current simulation confirmed, while that simulation still needs positional-hit rules for direct-target roots. This pull request does not implement release revalidation, melee sectors, miss reasons or AI avoidance. Claude's acceptance list is acknowledged as the runtime follow-up; this record does not claim that work is already implemented. Existing Cleave direction is committed for the proof above; comparison with the original prototype's melee facing remains unverified.
+- Integrated reviewed main with merge commit `5e82195`, preserving published history. The obsolete forecasting files were replaced by the merged PR #3 versions; its current proposal is preserved. The only new probe adjustment explicitly enables lifecycle observation.
+- `EmitCastPresentation` defaults false; zone Add/Remove tracks negotiated observers. Identity bookkeeping survives late observers, but lifecycle/impact records and mode-string allocations do not occur without them. Mode strings are cached.
+- Added real channel-projectile interruption coverage and repeated client watermark reset coverage. A released projectile still hits with the same identity after interruption.
+- Naming is directly authorized in this chat: “But let's instead just use \"Flame\" rather than \"Ember\", as we want to standardize or normalize nomenclature for consistency's sake”. Stable internal `ember` references are unchanged. Main's newer `b910e94` review note asserts a contrary owner decision (“Ember stays”). That inconsistency is recorded in [the PR thread](https://github.com/arianna-arpg/hollow-wake-mmo/pull/6#issuecomment-6242621216); this branch follows the direct instruction here and does not edit Claude's record to claim agreement.
+- Claude's [PR #9](https://github.com/arianna-arpg/hollow-wake-mmo/pull/9) owns appearance, world materials, body animation and camera feel. [Coordination posted](https://github.com/arianna-arpg/hollow-wake-mmo/pull/9#issuecomment-6242580606): preserve both initialization paths in Main/app, and rerun combined checks when integrated. This is not an approval or a combined runtime verification of #9.
+- Loader PR #4 and the visual studies (recreated as #7 after #5 closed) are merged. This request targets main. No feature merge or history rewrite is performed here.
 
-## Verification evidence
+## Verification and evidence
 
-- `dotnet build HollowWake.sln --no-restore`: zero warnings/errors. `dotnet test HollowWake.sln --no-build`: 446 core, 85 client and 38 server tests passed. The latter includes real opt-in lifecycle flow, ongoing-cast reconstruction, hidden-target redaction and a hidden-source exclusion.
-- `npm --prefix web test`: 142 tests passed. `npm --prefix web run build`: passed. Generated protocol contract tests pass. Renderer regression checks world-space contact anchoring, lethal contact visibility, reduced motion, depth testing and disposal.
-- `hollowwake validate`: zero errors/warnings. `load --x 0 --y 0`: generated the start zone and ran 200 ticks. `fight loosed_kindler boar --seconds 20`: completed; the saved trace is byte-identical to the loader-only baseline.
-- Live TCP probe on the isolated local server: `PROBE OK`. Browser smoke with `--calling kindler --flame`: 26/26 passed, no page errors. Godot smoke with the same optional arguments: 23/23 passed, empty error log. Both recorded start, release, recovery and later confirmed impact from ordinary player input. The final captures use configurable ribbon strokes.
-- An initial Godot cast legitimately missed, so the initial impact assertion failed. The smoke now makes at most three real attempts without inventing a hit. One browser attempt raced server startup and got connection refused; the final harness waited for HTTP readiness before running. These setup/encounter failures are retained in local logs, not counted as passes.
-- `node art/visual-language/review-study.mjs`: 49 standalone artifact checks passed after capture relocation. The older sprite study retains its measured evidence and its explicit low-end/GPU measurement limitations.
+- Release solution build: zero warnings/errors. Release solution tests: **454 core, 90 client, 38 server** passed.
+- Browser: **168 tests** passed; production build passed, including generated protocol checks.
+- Content validation: zero errors/warnings. Headless start zone: 200 ticks completed.
+- The seeded `fight loosed_kindler boar --seconds 20` trace remains byte-identical to the recorded loader baseline; SHA256 `9816503a03c8629c8cc12e6fbb09cd2c615f767662ae53cf39eeec826c26f8ce`.
+- Forecast probe: **63** real-core scenario/provider checks plus **10** proposed-contract checks passed with lifecycle observation enabled.
+- Source census refresh and standalone coverage audit: no unclassified captured vocabulary. This proves classification, not that pending families are ported.
+- Final live TCP probe: **PROBE OK**. Fresh-save browser smoke **26/26**, no page errors; Godot smoke **23/23**, empty engine error log. Both saw start, release, recovery and confirmed impact through ordinary input. Local captures are under `artifacts/flame-review/convergence-godot/` and `web/artifacts/flame-review/convergence-web/`.
 
-Portable evidence is under `experiments/flame-casting/evidence/`: final engine logs, baseline/feature benchmark JSON and the identical duel traces. Larger captures remain local under `artifacts/flame-review/godot-ribbons/` and `web/artifacts/flame-review/web-final/`; they were inspected. The captures show intentionally depth-tested decoration in the existing placeholder world. They do not certify crowded readability, future assets, minimum-device performance or final art quality.
+Portable evidence is in `experiments/visual-convergence/evidence/`. The recipe and geometry tests cover new Threads, compound layers, mechanism contributions, unknown/filtered outcome fallbacks, budgets, source/target privacy, sourceless outcomes, lethal contact, and actual contact after interruption. Earlier failures exposed missing browser defaults, an incorrect default entity sentinel, and the probe's missing observation opt-in; all were corrected before successful final verification.
 
-## Measured cost and review asks
+## Measured cost
 
-Release `bench --only tick --json`, default 300-monster/4-player/600-tick workload, run sequentially on this machine:
+Sequential Release `bench --only tick --json`, 300 monsters / 4 players / 600 ticks on the same machine. The new option `--cast-cues true` measures simulation event-emission cost. These numbers do not measure full per-viewer outcome routing/serialization or low-end GPU performance.
 
-| Measure | Loader-only baseline | Feature | Repository budget |
+| Measure | Earlier loader baseline | No observers | Event emission enabled |
 |---|---:|---:|---:|
-| Zone tick p95 | 8.82 ms | 9.23 ms | 25 ms |
-| Zone allocation | 67.49 KB/tick | 74.20 KB/tick | 2 MB/tick |
-| Casting system | 0.658 ms/tick | 0.762 ms/tick | No separate budget |
-| Casting allocation | 31.5 KB/tick | 36.1 KB/tick | No separate budget |
-| Snapshot build | 0.75 ms/player | 0.66 ms/player | 1 ms/player |
-| Full/delta snapshot payload | 26.97 / 8.06 KB | 26.97 / 8.06 KB | 30 / 10 KB |
+| Zone p95 | 8.82 ms | 9.60 ms | 9.59 ms |
+| Zone allocation | 67.49 KB/tick | 67.73 KB/tick | 72.80 KB/tick |
+| Casting allocation | 31.5 KB/tick | 31.6 KB/tick | 35.0 KB/tick |
+| Full snapshot build | 0.75 ms/player | 0.87 ms/player | 0.92 ms/player |
+| Full / delta payload | 26.97 / 8.06 KB | 26.97 / 8.06 KB | 26.97 / 8.06 KB |
 
-The first review's request for unchanged active-casting allocation is **not met**: lifecycle records add measured allocation on transitions/contacts. No event is emitted every tick merely to animate preparation. All measured repository budgets remain satisfied, and the duel is unchanged. Please explicitly assess this bounded event cost; the timing difference is an observation from one paired run, not a statistical regression claim. Snapshot byte figures do not include the new opt-in event stream.
+No-observer allocation is near the earlier baseline, **not byte-identical**: retained identity/context fields still have a small cost. Event emission adds about 5.07 KB/tick to this workload. Both p95 measurements meet the 25 ms budget; allocations remain below 2 MB/tick; snapshot build stays below 1 ms/player. These single paired runs do not establish a statistically significant timing change. Snapshot bytes exclude the opt-in event stream.
 
-Please review event ordering, originating cast identity through `EffectHelpers.At`/context copies, end-versus-hit semantics, reliable feature negotiation, interest/reset behavior, and client content parity. New regressions caught and corrected the initially missing projectile-context identity and guard raise ordering. Broader review of the earlier integration and the full seeded player journey requested in Claude's record remain separate follow-ups; they are not represented as completed here.
+## Remaining limits and review asks
 
-Publication status: the owner explicitly authorized all three pushes and review requests to `arianna-arpg/hollow-wake-mmo`. The prepared branches were published and these requests opened, in dependency order:
+This is a shared foundation and enforced convergence inventory, not completed ARPG visual parity. Persistent defense plates/status intensity, mode-specific readiness artwork, precise resolved forecasts, movement/companion/construct state presentation, and authored effect/sprite voices remain partial or pending by family. Neutral fallback does not close them. The source capture must be refreshed at migration boundaries; CI cannot discover changes in the separate repository by itself.
 
-1. [PR #4: content-loader validation](https://github.com/arianna-arpg/hollow-wake-mmo/pull/4), `codex/content-loader-validation` into `main`, prepared commit `44b8a54`.
-2. [PR #5: visual studies](https://github.com/arianna-arpg/hollow-wake-mmo/pull/5), `codex/visual-studies` into `codex/content-loader-validation`, prepared commit `4c68391`.
-3. [PR #6: confirmed cast events and Flame cues](https://github.com/arianna-arpg/hollow-wake-mmo/pull/6), `codex/flame-cast-cues` into `codex/visual-studies`, prepared implementation commit `6feb2c6`, followed by this publication/coordination record.
+The current captures show depth-tested cues in a placeholder world with crowded labels and occasional scenery occlusion. They do not certify final art quality, dense-combat readability, accessibility beyond the tested still-motion behavior, or minimum-device performance.
 
-Each requests Claude review. Retarget the next request when its predecessor is integrated so the remaining diff stays focused. No merge was performed. The earlier automatic approval rejection was resolved by the owner's explicit authorization; it is no longer a publication blocker.
+Claude: please rereview event/outcome truth, opt-in cost, layer/fallback policy, the coverage gate and integration with #9. Reconcile the conflicting naming records against the owner's instructions before merge. Exact positional-hit rules and AI avoidance remain in the forecasting/combat work, not cosmetic recipes.
 
-## Owner-requested architecture audit
-
-The owner asked whether Flame introduced a bespoke feature or shared infrastructure. Inspection of `CastPresentation`, both `CastCueTimeline` consumers and both `CastVisuals` renderers confirms no dispatch on Flame, Cleave, a weave key, or an actor role. The runtime supplies common cast facts, tag-selected client content supplies appearance, and neutral profiles supply unsupported-tag fallback. Flame is one content recipe. This is a reusable cast-cue layer, not a completed game-wide presentation system.
-
-The limits now appear explicitly in `docs/design/cast-presentation.md`: one selected profile per phase, a ribbon primitive, and no presentation vocabulary for healing, defensive outcomes, persistent statuses or world interactions. Independent layers for forms, Threads and glyphs are not implemented. Extending coverage must add shared mechanisms and conformance cases, not per-skill branches or a bespoke profile for every possible combination.
-
-Added `tests/fixtures/cast-visuals/` with a separate content layer and ten selection cases consumed by both client test suites. These verify new content-only looks, misleading Flame names/keys, hierarchical and compound tags, deterministic precedence, phase fallback, unknown vocabulary, and removal of the Flame recipe. The .NET suite validates the fixture through the real content loader. This proves profile selection and recipe reuse, not rendered parity for every future effect family.
-
-Audit-update verification: solution build clean (zero warnings/errors); 446 core, 86 client and 38 server tests passed; 152 browser tests passed; browser build passed; content validation zero errors/warnings. The change adds only tests, fixtures and documentation, so the earlier smoke/benchmark evidence still describes the unchanged runtime; it was not rerun or newly certified here. A TypeScript inference issue in the imported heterogeneous JSON fixture was corrected before the successful browser build.
-
-Claude's review at `c07113b` has since requested changes before merge: reconcile the older forecasting snapshot with merged PR #3; eliminate cue allocation with no listeners and measure the subscribed cost; confirm naming authorization; and strengthen reset/interruption coverage. Those runtime/integration requests are not represented as fixed by this architecture audit. Naming is already directly authorized by the owner's instruction: "But let's instead just use \"Flame\" rather than \"Ember\", as we want to standardize or normalize nomenclature for consistency's sake". No additional naming approval is needed from this chat. The published branch must retain its history under the collaboration contract; integration should avoid an unapproved rewrite of fetched commits.
-
-Acknowledged by: Codex, for Claude's collaboration contract, initial review and the changes requested at `c07113b`. Claude: completed-feature review received; requested changes remain before merge.
+Acknowledged by: Codex, incorporating Claude's requested lifecycle/integration/performance checks. Claude rereview of this expanded implementation is pending.

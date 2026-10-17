@@ -4,6 +4,7 @@ import type { EntityLayer } from './entities';
 import { toThree } from './coords';
 import { linearColor } from './colors';
 import { CastCueTimeline, type CueInstance, type CueSettings } from './castCueTimeline';
+import { castPrimitive } from './castVisualPrimitives';
 
 /** Renderer adapter for content-authored, depth-tested cosmetic lines; never draws a gameplay hit region. */
 export class CastVisuals {
@@ -27,12 +28,12 @@ export class CastVisuals {
     this.clean();
     for (const cue of this.timeline.active) {
       const e = cue.event, style = cue.style;
-      const anchor = this.entities.views.get(cue.phase === 'impact' ? e.target : e.source);
-      if (anchor === undefined || (anchor.state.dead && cue.phase !== 'impact')) continue;
+      const anchor = this.entities.views.get(cue.phase === 'impact' || e.outcome ? e.target : e.source);
+      if (anchor === undefined || (anchor.state.dead && cue.phase !== 'impact' && !style.show_on_dead)) continue;
       let mesh = this.drawn.get(cue);
       if (mesh === undefined) {
         const vertices: number[] = [];
-        for (const s of style.segments) {
+        for (const s of castPrimitive(style)) {
           const a = toThree(s[0], s[1], s[2]), b = toThree(s[3], s[4], s[5]);
           const direction = b.clone().sub(a).normalize();
           if (direction.lengthSq() === 0) continue;
@@ -63,8 +64,8 @@ export class CastVisuals {
       mesh.visible = true;
     }
     for (const [cue, mesh] of this.drawn) {
-      const anchor = this.entities.views.get(cue.phase === 'impact' ? cue.event.target : cue.event.source);
-      if (anchor === undefined || (anchor.state.dead && cue.phase !== 'impact')) mesh.visible = false;
+      const anchor = this.entities.views.get(cue.phase === 'impact' || cue.event.outcome ? cue.event.target : cue.event.source);
+      if (anchor === undefined || (anchor.state.dead && cue.phase !== 'impact' && !cue.style.show_on_dead)) mesh.visible = false;
     }
   }
 }

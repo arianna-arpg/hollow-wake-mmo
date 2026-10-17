@@ -48,6 +48,7 @@ Core simulation with every system present end to end, the server and protocol, a
 - Real bodies, animation, VFX driven by weave tags and Thread colors.
 - Terrain materials and props from biome definitions, landmark meshes from prefab tags.
 - Sound hooks on events.
+- Mechanism-wide visual convergence from the original ARPG, tracked by the [visual convergence contract](design/parity/visual-convergence.md) and its audited coverage manifest. A fallback cast cue does not close a partial or pending presentation family.
 
 Order matters less than the rule that every milestone keeps the pillars intact.
 

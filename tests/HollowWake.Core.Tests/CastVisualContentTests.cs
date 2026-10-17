@@ -7,6 +7,12 @@ public class CastVisualContentTests
 {
     [Theory]
     [InlineData("\"max_effects\":0", "budget")]
+    [InlineData("\"max_layers_per_event\":0", "budget")]
+    [InlineData("\"outcomes\":[\"impact\"]", "lifecycle")]
+    [InlineData("\"thread_phases\":null", "Thread phases")]
+    [InlineData("\"profiles\":[{\"id\":\"thread.custom\"}]", "reserved")]
+    [InlineData("\"profiles\":[{\"id\":\"x\",\"phases\":{\"impact\":{\"primitive\":\"not_registered\"}}}]", "primitive")]
+    [InlineData("\"thread_phases\":{\"start\":{\"primitive\":\"ring\",\"pieces\":500}}", "pieces")]
     [InlineData("\"profiles\":null", "Profiles")]
     [InlineData("\"profiles\":[null]", "profile")]
     [InlineData("\"profiles\":[{\"id\":\"x\",\"phases\":{\"impact\":{\"segments\":[null]}}}]", "segments")]

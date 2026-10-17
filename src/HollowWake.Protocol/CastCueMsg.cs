@@ -9,4 +9,9 @@ namespace HollowWake.Protocol;
 public sealed record CastCueMsg(long Sequence, long CastId, string Phase, long Source, long Target,
     string Weave, string Name, string Mode, List<string> Tags, double ServerTime, double StartedAt,
     double Duration, float X, float Y, float Z, float AimX, float AimY, float AimZ,
-    bool Fired, string Reason) : Message;
+    bool Fired, string Reason) : Message
+{
+    /// <summary>Mechanisms of the compiled form and active glyphs, never a renderer instruction.</summary>
+    public List<string>? Mechanisms { get; init; }
+    public bool Outcome { get; init; }
+}

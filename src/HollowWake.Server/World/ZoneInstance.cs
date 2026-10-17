@@ -134,6 +134,7 @@ public sealed partial class ZoneInstance
         _pending.Clear();
         foreach (var evt in batch)
         {
+            OutcomeCueAdapters.Present(this, evt);
             switch (evt)
             {
                 case CastPresentationEvent cast:
@@ -329,6 +330,7 @@ public sealed partial class ZoneInstance
     public void Add(Session session)
     {
         Sessions.Add(session);
+        UpdateCastObservers();
         session.Zone = this;
         session.View.Reset();
         session.LastSnapshotAt = double.NegativeInfinity;
@@ -339,6 +341,7 @@ public sealed partial class ZoneInstance
     public void Remove(Session session)
     {
         Sessions.Remove(session);
+        UpdateCastObservers();
         if (session.Zone == this)
         {
             session.Zone = null;

@@ -18,6 +18,7 @@ public sealed record EntityJumped(Entity Entity) : GameEvent;
 
 public sealed record DamageDealt(Entity Source, Entity Target, double Total, bool Crit, TagSet Tags, IReadOnlyDictionary<string, double> ByThread, bool Evaded, bool Blocked) : GameEvent
 {
+    public long CastId { get; init; }
     public int Depth { get; init; }
 
     /// <summary>The target was culled at or below the attacker's threshold.</summary>

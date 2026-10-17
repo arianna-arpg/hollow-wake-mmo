@@ -8,6 +8,45 @@ namespace HollowWake.Core.Tests;
 public class CastPresentationTests
 {
     [Fact]
+    public void No_observers_emit_no_records_but_late_observation_keeps_the_cast_identity()
+    {
+        var a = CastingArena.Create();
+        a.Sim.EmitCastPresentation = false;
+        a.Begin(a.Slot("t_walk"));
+        var id = a.Book.Casting!.CastId;
+        Assert.True(id > 0);
+        a.RunSeconds(0.5);
+        Assert.Empty(a.Of<CastPresentationEvent>());
+        a.Sim.EmitCastPresentation = true;
+        a.RunSeconds(2);
+        Assert.Equal(new[] { "release", "end" }, a.Of<CastPresentationEvent>().Select(e => e.Phase));
+        Assert.All(a.Of<CastPresentationEvent>(), e => Assert.Equal(id, e.CastId));
+        a.Events.Clear();
+        a.Sim.EmitCastPresentation = false;
+        a.Begin(a.Slot("t_hit"));
+        Assert.Single(a.Of<DamageDealt>());
+        Assert.Empty(a.Of<CastPresentationEvent>());
+    }
+
+    [Fact]
+    public void Interrupting_a_channel_does_not_cancel_a_projectile_already_in_flight()
+    {
+        var a = CastingArena.Create();
+        a.Begin(a.Slot("t_channel_bolt"));
+        a.RunSeconds(0.2);
+        var release = Assert.Single(a.Of<CastPresentationEvent>(), e => e.Phase == "release");
+        Assert.DoesNotContain(a.Of<CastPresentationEvent>(), e => e.Phase == "impact");
+        a.Runtime.Interrupt(a.Sim, a.Caster);
+        var interrupted = Assert.Single(a.Of<CastPresentationEvent>(), e => e.Phase == "interrupt");
+        Assert.True(interrupted.Fired);
+        a.RunSeconds(4);
+        var impact = Assert.Single(a.Of<CastPresentationEvent>(), e => e.Phase == "impact");
+        Assert.Equal(release.CastId, impact.CastId);
+        Assert.True(impact.Time > interrupted.Time);
+        Assert.Single(a.Of<CastPresentationEvent>(), e => e.Phase == "release");
+    }
+
+    [Fact]
     public void Blocked_damage_never_gets_the_successful_contact_flourish()
     {
         var a = CastingArena.Create();
@@ -138,6 +177,8 @@ public class CastPresentationTests
         Assert.Equal(release.CastId, impact.CastId);
         Assert.True(impact.Time >= release.Time);
         Assert.True(release.Tags.Has("ember"));
+        Assert.True(release.Mechanisms.Has("projectile"));
+        Assert.True(impact.Mechanisms.Has("projectile"));
         Assert.Contains("Flame", release.Name);
         Assert.DoesNotContain("Ember", release.Name);
     }

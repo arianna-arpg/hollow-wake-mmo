@@ -26,8 +26,8 @@ public partial class CastVisuals : Node3D
         {
             var e = cue.Event;
             var style = cue.Style;
-            _world.Entities.TryGetValue(cue.Phase == "impact" ? e.Target : e.Source, out var anchor);
-            if (anchor is null || (anchor.State.Dead && cue.Phase != "impact"))
+            _world.Entities.TryGetValue(cue.Phase == "impact" || e.Outcome ? e.Target : e.Source, out var anchor);
+            if (anchor is null || (anchor.State.Dead && cue.Phase != "impact" && !style.ShowOnDead))
             {
                 if (_drawn.TryGetValue(cue, out var hidden)) hidden.Visible = false;
                 continue;
@@ -36,7 +36,7 @@ public partial class CastVisuals : Node3D
             {
                 var lines = new ImmediateMesh();
                 lines.SurfaceBegin(Mesh.PrimitiveType.Triangles);
-                foreach (var s in style.Segments)
+                foreach (var s in CastVisualPrimitives.Build(style))
                 {
                     var a = Coords.ToGodot(s[0], s[1], s[2]);
                     var b = Coords.ToGodot(s[3], s[4], s[5]);

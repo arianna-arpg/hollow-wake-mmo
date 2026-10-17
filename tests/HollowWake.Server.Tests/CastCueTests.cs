@@ -46,6 +46,7 @@ public class CastCueTests
         client.Drain();
         var session = Assert.Single(server.Sessions.Sessions);
         var sim = session.Zone!.Sim;
+        Assert.Equal(optedIn, sim.EmitCastPresentation);
         var at = sim.World.Get<Transform>(session.Entity)!.Position;
         var enemy = sim.Service<PatternFactory>().Spawn(sim, "hob", at + new Vector3(4, 0, 0));
         sim.World.Remove<Behavior>(enemy);
@@ -94,6 +95,28 @@ public class CastCueTests
             server.Step();
             Assert.DoesNotContain(client.Drain(), m => m is CastCueMsg c && c.CastId == 42);
         }
+        // Outcomes do not fabricate a successful cast or expose an unknown source/target.
+        sim.Events.Publish(new Healed(session.Entity, session.Entity, 5, "life"));
+        sim.Events.Publish(new Healed(session.Entity, session.Entity, 0, "life"));
+        sim.Events.Publish(new Healed(hidden, session.Entity, 5, "life"));
+        sim.Events.Publish(new Healed(session.Entity, hidden, 5, "life"));
+        sim.Events.Publish(new DamageDealt(session.Entity, session.Entity, 0, false, TagSet.Empty, new Dictionary<string, double>(), false, true));
+        sim.Events.Publish(new DamageDealt(session.Entity, session.Entity, 0, false, TagSet.Empty, new Dictionary<string, double>(), true, false));
+        sim.Events.Publish(new DamageDealt(session.Entity, session.Entity, 5, false, TagSet.Empty, new Dictionary<string, double>(), false, false));
+        sim.Events.Publish(new DamageDealt(session.Entity, session.Entity, 5, false, TagSet.Empty, new Dictionary<string, double>(), false, false) { CastId = 99 });
+        sim.Events.Publish(new StatusApplied(session.Entity, session.Entity, "burning", 1, 1));
+        sim.Events.Publish(new StatusExpired(session.Entity, "burning"));
+        server.Step();
+        var outcomes = client.Drain().OfType<CastCueMsg>().Where(c => c.Outcome).ToArray();
+        if (!optedIn) Assert.Empty(outcomes);
+        else
+        {
+            Assert.Equal(new[] { "heal", "block", "evade", "damage", "status", "status_expired" }, outcomes.Select(e => e.Phase));
+            Assert.All(outcomes, e => { Assert.Equal(0, e.CastId); Assert.Equal(session.Entity.Key, e.Target); Assert.False(e.Fired); });
+            Assert.Contains("harmful", Assert.Single(outcomes, e => e.Phase == "status").Tags);
+        }
+        session.Zone.Remove(session);
+        Assert.False(sim.EmitCastPresentation);
         await server.ShutdownAsync();
     }
 }

@@ -20,12 +20,14 @@ public sealed partial class WeaveRuntime
             cast.PresentationEnded = true;
         }
         if (phase == "release") cast.PresentationReleases++;
+        // Identity and lifecycle bookkeeping survive a late subscriber; decoration does not allocate without one.
+        if (!sim.EmitCastPresentation) return;
         var position = sim.World.Get<Transform>(caster)?.Position ?? cast.Point;
         var aim = weave.Targeting == Targeting.Direction ? position + new Vector3(cast.Direction, 0)
             : sim.World.Get<Transform>(cast.Target)?.Position ?? cast.Point;
         sim.Events.Publish(new CastPresentationEvent(cast.CastId, phase, caster, cast.Target,
-            weave.Key, weave.Name, cast.Mode.ToString().ToLowerInvariant(), weave.Tags,
+            weave.Key, weave.Name, CastPresentationEvent.ModeName(cast.Mode), weave.Tags,
             position, aim, cast.StartedAt, cast.Duration, sim.Clock.Time,
-            cast.PresentationReleases > 0, reason) { Tick = sim.Clock.Tick });
+            cast.PresentationReleases > 0, reason) { Tick = sim.Clock.Tick, Mechanisms = weave.Mechanisms });
     }
 }

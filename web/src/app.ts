@@ -134,7 +134,7 @@ export class App {
     this.terrain = new TerrainView(config.world, palette, (x, y) => this.send({ t: 'request_chunk', x, y }));
     this.scene.add(this.terrain.group);
     this.entities = new EntityLayer(config.entities, config.motion, labels);
-    this.castVisuals = new CastVisuals(this.scene, this.entities, cueSettings(kinds.get('ui_cast_visuals')?.[0]));
+    this.castVisuals = new CastVisuals(this.scene, this.entities, cueSettings(kinds.get('ui_cast_visuals')?.[0], kinds.get('threads') ?? []));
     this.scene.add(this.entities.group);
 
     const facts = (name: string): number | null => {

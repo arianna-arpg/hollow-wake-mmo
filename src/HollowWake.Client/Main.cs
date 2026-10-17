@@ -82,8 +82,10 @@ public partial class Main : Node3D
         InputSetup.Apply(_settings);
 
         _world = new ClientWorld(_content) { Name = "World" };
-        _castVisuals = new CastVisuals(_world, _content.Each<HollowWake.Core.Definitions.CastVisualsDef>().FirstOrDefault()
-            ?? new HollowWake.Core.Definitions.CastVisualsDef { Id = "fallback" });
+        _castVisuals = new CastVisuals(_world, HollowWake.Core.Definitions.CastVisualThemes.Resolve(
+            _content.Each<HollowWake.Core.Definitions.CastVisualsDef>().FirstOrDefault()
+                ?? new HollowWake.Core.Definitions.CastVisualsDef { Id = "fallback" },
+            _content.Each<HollowWake.Core.Definitions.ThreadDef>()));
         AddChild(_castVisuals);
         AddChild(_world);
         _camera = new CameraRig { Name = "CameraRig" };

@@ -469,6 +469,8 @@ export interface CastCueMsg {
   aim_z: number;
   fired: boolean;
   reason: string;
+  mechanisms?: string[];
+  outcome: boolean;
 }
 
 export interface ChatBroadcastMsg {

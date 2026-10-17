@@ -43,6 +43,9 @@ foreach (var rateNode in config["tickRates"]!.AsArray())
         string id = scenario["id"]!.GetValue<string>();
         var log = new ListSimLog();
         var sim = ZoneBuilder.CreateArena(content, config["seed"]!.GetValue<ulong>(), log: log, ticksPerSecond: rate);
+#if CAST_CUES
+        sim.EmitCastPresentation = true; // This probe explicitly observes the optional lifecycle stream.
+#endif
         var factory = sim.Service<PatternFactory>();
         var source = factory.Spawn(sim, config["sourcePattern"]!.GetValue<string>(), V3(config["sourcePosition"]!), new SpawnOptions { Faction = "forecast_red" });
         var target = factory.Spawn(sim, config["targetPattern"]!.GetValue<string>(), V3(scenario["targetPosition"] ?? config["targetPosition"]!), new SpawnOptions { Faction = scenario["friendly"]?.GetValue<bool>() == true ? "forecast_red" : "forecast_blue" });
