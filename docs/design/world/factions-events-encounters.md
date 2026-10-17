@@ -10,6 +10,10 @@ Factions are content: ids, relations, colors, whether they hold territory. The W
 
 An agent is a thing that moves on the world's time scale: a warband, an army column, a caravan, a patrol, a pilgrim company, a beast herd, a migration, a named creature. Agents are abstract: a kind (content), a faction, a strength (a budget of patterns by tags, so the combat content supplies the bodies), supplies, morale, an intent, and a position on the **route graph**: at a place, or on an edge between two places with a fraction travelled. Agent kinds are behaviors in the AI contract's sense, state machines in content with perception over the world (nearest hostile agent, the richest unguarded place in reach, the home camp's state, the season) and actions from a registry (march to, raid, besiege, hold, trade, forage, hunt, flee, disband, found a camp). Agents are created by the Weft's providers: a faction's goals spawn warbands from its camps, a place's kind spawns a caravan on a schedule, a beast biome spawns herds, a unique place spawns its named resident, an event spawns what it says.
 
+## Populations
+
+Not everything that lives is an agent. Each explored region keeps **populations**: stocks per population kind (the wolves of a valley, the hobs of the hedgerows, the Tangled of a Snarl, a foe faction's warriors, the folk of a stead), each with a size, a home (a biome, a place or a region) and a model as content: how it breeds, what it eats, how much pressure drives it off, how far it roams, where it goes when it leaves (along the routes to the neighboring region with the least pressure and the most of what it needs), how it recovers, and when it is gone. Pressure comes from deeds the ledger counts (kills by tag in a region, camps burned, Snarls cleared), from other populations (a predator's size, a foe faction's raids), from the weather and the season, and from the Weft's events. Spawn tables and inhabitants read the populations through density multipliers by tag, so a valley hunted empty stays quiet until the stock recovers, and the pack that fled it turns up in the next valley's spawns and starts on the deer there. A population that grows past its home's capacity founds a new place (a camp, a den, a stead) through a pin, and one that falls to nothing leaves its place abandoned, so the land's places follow its life. Agents are drawn from populations (a warband musters from a foe faction's stock and returns to it), and populations are what the far world simulates when no agent is worth the cost: a coarse step per world day moves stocks and pins and nothing more, which is enough for a region to have changed when a player comes back.
+
 ## The route graph
 
 Places are the nodes; edges are the routes the region plan lays between them (roads, rivers, passes, coasts, sea lanes) with a cost by terrain and season. The graph is generated, so it exists for every region whether or not a zone has ever loaded there, and it is the same graph on every server with the seed. The Weft moves agents along it in world ticks; an agent on an edge is somewhere between two places, which a loaded zone turns into a column walking that road.
@@ -30,6 +34,8 @@ Outcomes become ledger entries, and nothing else:
 - **overlays** scoped to a place or a circle: scorched ground after a fire, a Void thickening around an Unmaking, a Bloom tide, a faction's banners raised as a tag overlay;
 - **chunk edits** at a place: broken walls, a trench line, corpses and wreckage as props, a camp's palisade raised, a burned house's bones;
 - **place states**: a town occupied, a camp founded, a Snarl cleared and re-tangling, a lair emptied;
+- **pins**: a place promised beyond the frontier or sited inside it: a warband's new camp, the den a pack fled to, a Fount waking out past the explored valleys;
+- **populations**: a stock grown, broken, fled or gone;
 - **agents**: created, moved, weakened, disbanded, promoted (a warband that wins twice becomes an army);
 - **chronicle entries**: text in the lore's voice, generated from templates by the kind of outcome, with a time and a place.
 
@@ -41,14 +47,15 @@ An event is content: a kind, a scope (a region, a zone, a place, a circle, the w
 
 ## How far ahead the world simulates
 
-The Weft runs in bounded tiers so it never costs more than the budget:
+The Weft runs in bounded tiers so it never costs more than the budget, and the tiers are drawn around the players and the frontier:
 
 - **observed** regions (a zone loaded) run every world tick with materialized encounters;
-- **near** regions (adjacent to observed) run every world tick abstractly, so what walks toward the players is already moving;
-- **far** regions run on a coarse tick (a world day) with capped agents, so the far world drifts rather than churns;
+- **near** regions (a ring around the observed) run every world tick abstractly, so what walks toward the players is already moving;
+- **far** regions (explored, beyond the ring) run on a coarse tick (a world day): populations step, pins are placed, agents of consequence move, nothing else; the far world drifts rather than churns, and a region's state is a handful of numbers;
+- **latent** regions (beyond the frontier) are not simulated. They are consistent, because generation is pure, and they are promised: an event or a beat may pin something there, by direction and distance from the frontier, which generation honors when a player arrives and rumor speaks of before; the first player across the frontier moves it, and the region's populations start from what generation says lives there at the time it is reached;
 - while the server is down, nothing moves; on restart the Weft may catch up a bounded number of ticks, abstractly, so a world left for a night has turned a little and never a decade.
 
-Agents per region and bodies materialized per zone are capped by rule; beyond the caps the Weft merges, delays or disbands rather than exceeding the zone tick budget. The tiers, the catch-up bound and the caps are the owner's to set; the plan lists the question.
+Agents per region, bodies materialized per zone and pins per region are capped by rule; beyond the caps the Weft merges, delays or disbands rather than exceeding the zone tick budget. Cost follows the frontier and the tiers, never the map.
 
 ## How it is observed
 
@@ -63,4 +70,4 @@ Encounters and events raise quest offers at nearby hubs through templates whose 
 
 ## Rules used
 
-The `weft` group: the world tick, the tiers' cadences, the catch-up bound, agent caps per region, bodies per zone, encounter detection radius, morale and supply formulas, the chronicle's size; the `events` group: provider weights, cooldowns, the active cap.
+The `weft` group: the world tick, the tiers' cadences and the near ring, the far tick, the catch-up bound, agent, population and pin caps per region, bodies per zone, encounter detection radius, morale and supply formulas, the chronicle's size; the `events` group: provider weights, cooldowns, the active cap.

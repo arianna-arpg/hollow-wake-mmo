@@ -1,6 +1,6 @@
 # Destruction and persistence
 
-The land can be changed, by players and by the world, and the changes last. This page is the one path a change to the land takes, what can and cannot be changed, what persists for whom, and what happens when a player's change meets the world's.
+The land can be changed, by players and by the world. Most changes are passing: the land heals back to what generation made, so a meteor's crater is a crater for a season and a meadow again after, and no one walks into a wasteland another player left. Changes last where they are meant to: in a claim the player holds, under a Holding's structures, where a place's kind says the marks of war stay. This page is the one path a change to the land takes, what can and cannot be changed, what heals and what sticks, what persists for whom, and what happens when a player's change meets the world's.
 
 ## One path: chunk edits
 
@@ -17,7 +17,7 @@ What can be changed is said by tags and rules, never by type:
 - **Terrain**: heights move within bounds: a crater, a trench, a raised bank, a collapsed slope. The bounds are rules: how far below the generated height digging may go and how far above raising may reach, by surface tag (soil gives, rock resists, roadstone and lantern-steel never), and what the biome's Thread density does to it (Stone resists, the sag yields).
 - **Water**: an edit may dam or breach within the same bounds; water levels follow the overlays and edits that set them.
 
-What cannot: cells tagged protected (authored landmarks, the Firstworks, safe hubs' hearts, a holding's structures to anyone but its holder until sieges exist), cells below bedrock depth, and anything a rule marks immovable.
+What cannot: cells tagged protected (authored landmarks, the Firstworks, safe hubs' hearts, a holding's structures to anyone but its holder until sieges exist), cells below bedrock depth, and anything a rule marks immovable. What sticks is a separate question, answered below: outside a claim or a Holding, everything on this list heals.
 
 ## How changes happen
 
@@ -30,7 +30,7 @@ Every edit is validated by the simulation: range, line of sight, the target cell
 
 ## Healing and regrowth
 
-The Loom resolves what is not held. An edit may carry an expiry or a regrowth rule by kind: craters fill over a season, burned ground greens, rubble weathers, a felled tree's stump makes way for a sapling. Edits anchored by something that persists (a structure in a standing holding, a protected place, a road) do not heal while the anchor stands. Regrowth runs on the Weft's clock as edits that reverse edits, through the same path, so it is persistent and replayable. Flora and resource nodes respawn by their own rules as today; destruction of them is an edit only when the player meant to clear land.
+The Loom resolves what is not held. Every edit outside a claim carries an expiry and a regrowth rule by its kind: craters fill over a season, burned ground greens, rubble weathers, a felled tree's stump makes way for a sapling; the generated chunk is the before, the edit is the after, and healing is the return. Edits anchored by something that persists do not heal while the anchor stands: a claim the player holds (the land inside it is theirs to shape and keep), a structure in a standing Holding, a protected place, a road, a place whose kind says a battlefield stays. Regrowth runs on the Weft's clock as edits that reverse edits, through the same path, so it is persistent and replayable, and it is budgeted so that a region's healing is a few edits per world day. Flora and resource nodes respawn by their own rules as today; destruction of them is an edit only when the player meant to clear land.
 
 ## What persists
 
@@ -46,7 +46,7 @@ Precedence is by layer, then by rule, never by who was first:
 1. Generation and overlays paint the base. An overlay may change the base under any edit; the edit replays on top.
 2. Edits apply in time order; a later edit to a cell wins over an earlier one.
 3. Protection stops an edit before it is made: a protected cell refuses, and the actor is told why.
-4. Origins have standing by rule: a holding's edits inside its Reach outrank an event's unless the event is a siege or a contest aimed at that holding; a player's edits outside any holding are ordinary and the world may overwrite them (a flood fills a trench, an army tramples a garden); a world edit that destroys a player's structure is itself a chunk edit and an event the player hears about.
+4. Origins have standing by rule: a claim's and a Holding's edits inside their footprint outrank an event's unless the event is a siege or a contest aimed at them; a player's edits outside any holding are ordinary and the world may overwrite them (a flood fills a trench, an army tramples a garden); a world edit that destroys a player's structure is itself a chunk edit and an event the player hears about.
 5. Healing reverses what has no anchor, oldest first, and never touches protected or anchored cells.
 
 Conflicts are therefore ordinary edits with a rule choosing the order, visible in the ledger and in the chronicle, and replayable.

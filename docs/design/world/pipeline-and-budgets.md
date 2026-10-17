@@ -13,6 +13,8 @@ Everything open is a registry with a name, registered from one file per area and
 - **Event providers**: who may propose events to the Weft (the calendar, factions, territory, the campaign, randomness, mods).
 - **Encounter resolvers**: by encounter kind.
 - **Edit kinds**: what an edit operation may do to a cell and how it heals.
+- **Population models**: how a population kind breeds, roams, migrates and recovers; the far tier steps them.
+- **Pins**: by coordinate or by constraint, authored in content or placed at run time by the Weft and the campaign; one resolver sites both.
 - **Agent actions and perception names**: the AI registries, reused by the Weft's agent kinds.
 - **Objective types**: the quest registry, extended.
 - **The world clock**: the calendar is content; the clock is one service every system reads for the Span, the day, the time of day and the season.
@@ -29,7 +31,7 @@ Determinism is proved, never assumed:
 
 - **Golden hashes** pin regions, climate samples, zone plans, place plans, chunks of every layer, and overlaid worlds. Each package adds golden facts for what it builds in its own test file. An existing constant changes only in a pull request that names the change, says why generation moved, and shows the before and after (the zone map from the tools) so the reviewer can see it was meant; a constant that changes without that is a review block. The start zone stays walkable and its pins stay where the lore put them, tested by loading it and walking the smoke's path.
 - **Replay**: the Weft run headless from a seed for a span of world days writes a chronicle and a ledger; run twice, byte-identical. The same holds with a scripted sequence of player deeds injected, so player change is replayable too.
-- **Client parity**: a generator constructed from the world information a client receives (seed, layout, content hash, overlays, place states) hashes the same chunks and plans as the server's generator, with and without edits replayed; the test runs against the core, which both the server and the desktop client link.
+- **Client parity**: a generator constructed from the world information a client receives (seed, layout, content hash, overlays, place states, pins) hashes the same chunks and plans as the server's generator, with and without edits replayed; the test runs against the core, which both the server and the desktop client link.
 - **Edit replay**: a chunk regenerated under a changed overlay with its edits replayed equals the chunk edited live.
 - **Traces**: `load` and `fight` traces stay byte-identical across a package that claims not to change behavior.
 
@@ -47,6 +49,8 @@ Budgets are gates: a change that crosses one is wrong until the budget is restor
 | `worldgen.edits.replay` | replaying a chunk's edits on load, and the ledger bytes per edited chunk |
 | `weft.tick` | one world tick with the agent and region caps at their defaults |
 | `weft.catchup` | catching up the bounded number of ticks after a restart |
+| `weft.ecology` | the far tier's coarse step over one region's populations and pins |
+| `worldgen.frontier` | the plan caches' bound: what is kept for the observed and near tiers, and the time to drop and rebuild the farthest plan |
 | `zone.materialize` | materializing an encounter's bodies into a loaded zone, per tick |
 | `zone.tick.p95`, `zone.tick.alloc` | unchanged; the living world's systems in a zone fit inside them |
 | `snapshot.*` | unchanged; place states, weather and chronicle messages fit inside the delta budget |
@@ -58,6 +62,7 @@ The benchmark gains `--only worldgen` groups for plans and edits and a `weft` gr
 - The generator is safe to read from many threads: plans are built under their cache's add lock and published whole, scratch is per thread, and a pass allocates only what the chunk keeps. The desktop client already generates on workers; the server warms plans ahead of players on a worker.
 - Zones own their simulations; the world thread owns the Weft and the ledger. Zones never call the Weft and the Weft never touches an entity: the seam is an inbox and outbox of events per zone, drained on each side's tick, and a read-only snapshot of the Weft's view that a loading zone takes once. This is the same seam that moves zones to worker threads and later to other processes.
 - The ledger is written only on the world thread; zones send edits as events the world thread commits and persists, and reads of the ledger from a zone are of a snapshot taken when the zone loaded plus the entries it has been sent since.
+- Caches and the ledger are bounded by the frontier and the tiers: a plan outside the near ring may be dropped and rebuilt, latent land is never built, and the ledger holds entries only for explored regions and for the pins promised beyond them.
 - Persistence is behind store interfaces with JSON files today and a database later, unchanged in shape.
 
 ## Tools
