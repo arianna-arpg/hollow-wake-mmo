@@ -30,6 +30,17 @@ internal static class CastingKinds
         {
             CooldownAt(d.CooldownAt, c);
             Hint(d.Ai, c);
+            Trigger(d.Trigger, c, "trigger");
+            Gates(d.Gates, c);
+            Spend(d.Spend, c, "spend");
+            Uses(d.Uses, c, "uses");
+            Convert(d.Convert, c, "convert");
+            Meta(d.MetaAction, c, "meta_action");
+            FollowUp(d.FollowUp, c, "follow_up");
+            Cycle(d.Cycle, c, "cycle");
+            SelfStack(d.SelfStack, c, "self_stack");
+            Chain(d.Chain, c, "chain");
+            c.Modifiers(d.EquipModifiers, "equip_modifiers");
         });
     }
 

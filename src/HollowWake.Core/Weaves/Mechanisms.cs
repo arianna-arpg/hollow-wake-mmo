@@ -154,10 +154,10 @@ public static class MechanismRegistry
 
     private static bool IsGuard(WeaveProbe w) => w.Form.CastMode == CastMode.Guard || w.Tags.Has("guard");
 
-    /// <summary>A bank of uses from the form or an active glyph, or one a modifier raises through <c>uses.max</c>.</summary>
+    /// <summary>A bank of uses from the form, the preset or an active glyph, or one a modifier raises through <c>uses.max</c>.</summary>
     private static bool HasUses(WeaveProbe w)
     {
-        if (w.Form.Uses is not null || w.Raises("uses.max"))
+        if (w.Form.Uses is not null || w.Preset?.Uses is not null || w.Raises("uses.max"))
         {
             return true;
         }
@@ -268,6 +268,8 @@ public sealed class WeaveProbe
 {
     public required ContentRegistry Content { get; init; }
     public required FormDef Form { get; init; }
+    /// <summary>The preset the weave compiles from, when it has one: probes about what presets carry (a bank, a trigger, a meta) read it.</summary>
+    public WeaveDef? Preset { get; init; }
     public required IReadOnlyList<ThreadDef> Threads { get; init; }
     public required TagSet Tags { get; init; }
     /// <summary>Mechanisms the form and the active glyphs declare.</summary>
