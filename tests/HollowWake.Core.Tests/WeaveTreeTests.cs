@@ -64,7 +64,7 @@ public class WeaveTreeTests
         var weave = Compiler.Compile(Tree(4, "wide", "far", "grafted"));
         Assert.Contains(weave.Glyphs, g => g.Id == "t_repeat");
         Assert.Empty(weave.Grafts);
-        Assert.True(weave.Modifiers.Any(m => m.Attribute == "repeat.count"));
+        Assert.Contains(weave.Modifiers, m => m.Attribute == "repeat.count");
     }
 
     [Fact]
