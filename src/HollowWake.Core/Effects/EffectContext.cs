@@ -84,8 +84,10 @@ public sealed class EffectContext
     /// <summary>
     /// The scope of the effect's expressions, built when first read: <c>source.*</c> and <c>caster.*</c>
     /// resolve on the source, <c>target.*</c> on the target, <c>weave.*</c> through the weave folded on the
-    /// source, and the variables, <c>distance</c>, <c>depth</c> and <c>time</c> as they stood when it was
-    /// built; every other name resolves on the source.
+    /// source, the variables as they stand when read (so what an earlier effect in the list wrote, such as a
+    /// damage effect's <c>last_damage</c> and <c>amount</c>, reaches the effects after it), and
+    /// <c>distance</c>, <c>depth</c> and <c>time</c> as they stood when it was built; every other name
+    /// resolves on the source.
     /// </summary>
     public IExprScope Scope => _scope ??= new EffectScope(this);
 
@@ -146,10 +148,11 @@ public sealed class EffectContext
 
 /// <summary>
 /// The expression scope of one effect context, resolving what the context mounts without building an
-/// overlay: the variables, <c>distance</c>, <c>depth</c> and <c>time</c> are read when it is built (later
-/// writes to the variables are not seen, as with any scope built from a context), <c>source.</c> and
-/// <c>caster.</c> names resolve on the source's stats, <c>target.</c> names on the target's, <c>weave.</c>
-/// names through the weave folded on the source with the context's tags, and anything else on the source.
+/// overlay: the variables are read from the context's own dictionary when asked, so an effect sees what
+/// the effects before it in its list wrote; <c>distance</c>, <c>depth</c> and <c>time</c> are read when it
+/// is built; <c>source.</c> and <c>caster.</c> names resolve on the source's stats, <c>target.</c> names on
+/// the target's, <c>weave.</c> names through the weave folded on the source with the context's tags, and
+/// anything else on the source.
 /// </summary>
 internal sealed class EffectScope : IExprScope
 {
@@ -167,8 +170,7 @@ internal sealed class EffectScope : IExprScope
     private readonly double _distance;
     private readonly double _depth;
     private readonly double _time;
-    private readonly string[]? _names;
-    private readonly double[]? _values;
+    private readonly Dictionary<string, double> _vars;
 
     public EffectScope(EffectContext ctx)
     {
@@ -185,19 +187,7 @@ internal sealed class EffectScope : IExprScope
         }
         _depth = ctx.Depth;
         _time = ctx.Sim.Clock.Time;
-        var vars = ctx.Vars;
-        if (vars.Count > 0)
-        {
-            _names = new string[vars.Count];
-            _values = new double[vars.Count];
-            var i = 0;
-            foreach (var (k, v) in vars)
-            {
-                _names[i] = k;
-                _values[i] = v;
-                i++;
-            }
-        }
+        _vars = ctx.Vars;
     }
 
     public bool TryResolve(string name, out double value)
@@ -269,17 +259,9 @@ internal sealed class EffectScope : IExprScope
                 value = _distance;
                 return true;
         }
-        var names = _names;
-        if (names is not null)
+        if (_vars.Count > 0 && _vars.TryGetValue(name, out value))
         {
-            for (var i = 0; i < names.Length; i++)
-            {
-                if (string.Equals(names[i], name, StringComparison.Ordinal))
-                {
-                    value = _values![i];
-                    return true;
-                }
-            }
+            return true;
         }
         value = 0;
         return false;

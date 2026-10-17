@@ -7,10 +7,13 @@ using HollowWake.Core.Components;
 using HollowWake.Core.Content;
 using HollowWake.Core.Definitions;
 using HollowWake.Core.Ecs;
+using HollowWake.Core.Effects;
 using HollowWake.Core.Intents;
 using HollowWake.Core.Items;
+using HollowWake.Core.Maths;
 using HollowWake.Core.Sim;
 using HollowWake.Core.Systems;
+using HollowWake.Core.Tags;
 using HollowWake.Core.Weaves;
 using Xunit;
 
@@ -595,5 +598,44 @@ public class CastModeTests
         Assert.False(arena.Book.RecentlyRepeated(2));
         Assert.Equal(b.Key, arena.Book.Recent(0));
         Assert.Equal(a.Key, arena.Book.Recent(1));
+    }
+
+    // ------------------------------------------------------------ the effect context's variables
+
+    [Fact]
+    public void EffectsAfterADamageEffectReadWhatItDealt()
+    {
+        var arena = CastingArena.Create();
+        var sim = arena.Sim;
+        var foe = arena.EnemyStats;
+        // Half damage taken and no blocking, so what lands differs from what was asked; room for the heals.
+        foe.Attributes.Add(new Modifier { Attribute = "damage.taken", Form = ModifierForm.More, Value = -0.5, Source = "test" });
+        foe.Attributes.Add(new Modifier { Attribute = "block.chance", Form = ModifierForm.Override, Value = 0, Source = "test" });
+        foe.SetResource("life", foe.Resource("life") - 500);
+        var effects = sim.Service<EffectRegistry>();
+        var compile = new EffectCompileContext { Content = sim.Content, Registry = effects, Owner = "test" };
+        var list = new[]
+        {
+            effects.Compile(CastingTestContent.Spec("{\"type\": \"damage\", \"amount\": \"amount\", \"threads\": [\"mind\"], \"can_crit\": false}"), compile),
+            effects.Compile(CastingTestContent.Spec("{\"type\": \"heal\", \"amount\": \"last_damage\"}"), compile),
+            effects.Compile(CastingTestContent.Spec("{\"type\": \"heal\", \"amount\": \"amount * 0.5\"}"), compile),
+        };
+
+        CompiledEffect.ExecuteAll(list, new EffectContext
+        {
+            Sim = sim,
+            Source = arena.Caster,
+            Target = arena.Enemy,
+            Point = sim.World.Get<Transform>(arena.Enemy)!.Position,
+            Rng = new Rng(5),
+            Vars = new Dictionary<string, double>(StringComparer.Ordinal) { ["amount"] = 80 },
+        });
+
+        var dealt = Assert.Single(arena.Of<DamageDealt>()).Total;
+        Assert.InRange(dealt, 1, 40);
+        var heals = arena.Of<Healed>().Select(h => h.Amount).ToList();
+        Assert.Equal(2, heals.Count);
+        Assert.Equal(arena.Stats.Attributes.Apply("healing", dealt, arena.Stats, TagSet.Empty), heals[0], 6);
+        Assert.Equal(arena.Stats.Attributes.Apply("healing", dealt * 0.5, arena.Stats, TagSet.Empty), heals[1], 6);
     }
 }
