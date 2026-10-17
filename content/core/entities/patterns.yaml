@@ -118,6 +118,90 @@ entries:
       weaves: { list: [bite] }
       behavior: { id: aggressive_melee }
 
+  # ---- minions: bodies summons raise. Wild kin fight for their own factions; bound ones for their owner.
+  - id: remnant_archer
+    name: Remnant Archer
+    extends: creature
+    tags: [undead, remnant, shade, archer, summonable]
+    faction: remnant
+    level: 2
+    radius: 0.4
+    components:
+      stats: { attributes: { might: 6, grace: 11, will: 9, vigor: 5, move.speed: 5.2, resist.umbra: 0.5 } }
+      weaves: { list: [shade_bolt] }
+      behavior: { id: aggressive_ranged }
+      drops: { table: undead_drops, xp: "8 + level * 4", chance: 0.4 }
+
+  - id: stone_warden
+    name: Stone Warden
+    extends: creature
+    tags: [stone, warden, golem, summonable, no_corpse]
+    faction: players
+    level: 3
+    radius: 0.7
+    height: 2.2
+    components:
+      stats:
+        attributes: { might: 16, grace: 5, will: 4, vigor: 18, move.speed: 4.2, armor: 40, weapon.damage.min: 7, weapon.damage.max: 12, weapon.attack.time: 1.3 }
+        modifiers: [ { attribute: damage.taken, form: more, value: -0.1 } ]
+      weaves: { list: [warden_slam] }
+      behavior: { id: minion_melee }
+
+  # ---- constructs: devices deploys place. They stand where they were put and think with device behaviors.
+  - id: device
+    name: Device
+    tags: [device, no_corpse]
+    components:
+      stats: { attributes: { might: 4, grace: 4, will: 4, vigor: 8, move.speed: 0.5 } }
+      motion: {}
+      statuses: {}
+
+  - id: ember_totem
+    name: Ember Totem
+    extends: device
+    tags: [totem, ember]
+    faction: players
+    radius: 0.45
+    height: 1.4
+    components:
+      stats: { attributes: { will: 12, vigor: 10 } }
+      weaves: { list: [cinder_spit] }
+      behavior: { id: construct_turret }
+
+  - id: snare_trap
+    name: Snare Trap
+    extends: device
+    tags: [trap, stone]
+    faction: players
+    radius: 0.35
+    height: 0.3
+    components:
+      stats: { attributes: { vigor: 2 } }
+      weaves: { list: [snare_burst] }
+      behavior: { id: construct_trap }
+
+  - id: lumen_dome
+    name: Lumen Dome
+    extends: device
+    tags: [dome, lumen]
+    faction: players
+    radius: 0.5
+    height: 1.0
+    components:
+      stats: { attributes: { vigor: 20, armor: 30 } }
+
+  - id: shade_echo
+    name: Shade Echo
+    extends: device
+    tags: [echo, umbra]
+    faction: players
+    radius: 0.35
+    height: 1.6
+    components:
+      stats: { attributes: { vigor: 4 } }
+      motion: { flying: true }
+      behavior: { id: construct_echo }
+
   # ---- the Loosed
   - id: loosed_brigand
     name: Loosed Brigand

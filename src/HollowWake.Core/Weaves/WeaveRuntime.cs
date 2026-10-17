@@ -27,6 +27,11 @@ public sealed class WeaveRuntime
 
     public WeaveCompiler Compiler => _compiler;
 
+    /// <summary>
+    /// The slot's compiled weave, compiling it when needed with misfit glyphs dormant: they stay socketed,
+    /// contribute nothing, and their reasons stay on the slot. Null when the weave cannot compile at all.
+    /// Presets in content must fit (validation warns otherwise), so they compile as they always did.
+    /// </summary>
     public CompiledWeave? Resolve(Simulation sim, WeaveSlot slot, out string? error)
     {
         if (slot.Compiled is not null)
@@ -34,9 +39,10 @@ public sealed class WeaveRuntime
             error = null;
             return slot.Compiled;
         }
-        if (_compiler.TryCompile(slot.Spec, out var weave, out error))
+        if (_compiler.TryCompile(slot.Spec, out var weave, out error, GlyphFit.Dormant))
         {
             slot.Compiled = weave;
+            slot.Dormant = weave!.Dormant;
             return weave;
         }
         sim.Log.Warn($"weave {slot.Spec} failed to compile: {error}");

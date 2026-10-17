@@ -15,6 +15,9 @@ public sealed class Behavior : IComponent
     public double StateEnteredAt;
     public bool Entered;
 
+    /// <summary>The standing order this AI obeys, written by a command and read by <c>obey_command</c>; null when none stands.</summary>
+    public MinionOrder? Order;
+
     // Caches the behavior system keeps between thinks. None of it is state worth saving.
 
     /// <summary>Where the current movement plan leads. Meaningful while <see cref="Planned"/> is set.</summary>
