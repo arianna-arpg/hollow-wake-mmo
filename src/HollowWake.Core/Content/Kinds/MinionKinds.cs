@@ -6,8 +6,9 @@ namespace HollowWake.Core.Content.Kinds;
 
 /// <summary>
 /// Content for minions and constructs: the AI actions behaviors name, the minion rules (commands and the
-/// inheritance table), glyph forwarding, and the names minion perception and minion effects add to
-/// expression scopes. Validators are added to the existing kinds with <see cref="ContentKinds.AddValidator{T}"/>.
+/// inheritance table), glyph forwarding, the corpse and minion target kinds forms name, and the names minion
+/// perception and minion effects add to expression scopes. Validators are added to the existing kinds with
+/// <see cref="ContentKinds.AddValidator{T}"/>.
 /// </summary>
 internal static class MinionKinds
 {
@@ -24,6 +25,8 @@ internal static class MinionKinds
         {
             ScopeNames.Declare(name);
         }
+        // Forms name these in their target blocks, so they exist before content is validated.
+        Minions.MinionTargets.Register();
         ContentKinds.AddValidator<BehaviorDef>(Behavior);
         ContentKinds.AddValidator<RulesDef>(Rules);
         ContentKinds.AddValidator<GlyphDef>(Glyph);

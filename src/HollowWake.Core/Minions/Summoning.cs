@@ -303,8 +303,15 @@ internal sealed class SummonRecipe
 
     // ------------------------------------------------------------ running
 
+    /// <summary>
+    /// The summoning weave: the host slot's weave when a meta, trigger or <c>cast</c> runs this summon for it,
+    /// else the running weave. Its key names the bodies' weave and contract, its tags and modifiers fold their
+    /// inheritance, and its glyphs board their weaves.
+    /// </summary>
+    internal static CompiledWeave? HostOf(EffectContext ctx) => (ctx.Host ?? ctx.Weave)?.Root;
+
     /// <summary>The group the bodies join: the named group, else the pattern, else the summoning weave.</summary>
-    public string GroupFor(EffectContext ctx) => Group ?? (Pool.Length == 0 && Pattern is not null ? Pattern : ctx.Weave?.Key ?? Pattern ?? Pool[0].Pattern);
+    public string GroupFor(EffectContext ctx) => Group ?? (Pool.Length == 0 && Pattern is not null ? Pattern : HostOf(ctx)?.Key ?? Pattern ?? Pool[0].Pattern);
 
     /// <summary>A cast of the summon: toggles its contract, or raises a wave and schedules the rest.</summary>
     public void Run(EffectContext ctx)
@@ -313,7 +320,7 @@ internal sealed class SummonRecipe
         MinionContract? contract = null;
         if (Contract is not null)
         {
-            var key = ctx.Weave?.Key ?? GroupFor(ctx);
+            var key = HostOf(ctx)?.Key ?? GroupFor(ctx);
             if (service.ContractFor(ctx.Origin, key) is { } running)
             {
                 if (Contract.Toggle)
@@ -338,12 +345,13 @@ internal sealed class SummonRecipe
     private MinionContract StartContract(EffectContext ctx, MinionService service, string key)
     {
         var slot = SlotOf(ctx);
+        var host = HostOf(ctx);
         var contract = new MinionContract(ctx.Origin, key, GroupFor(ctx))
         {
             ExclusiveGroup = ExclusiveGroup,
             Slot = slot,
-            Weave = ctx.Weave,
-            Context = ctx.Weave?.Tags ?? TagSet.Empty,
+            Weave = host,
+            Context = host?.Tags ?? TagSet.Empty,
             Respawn = Math.Max(0, ctx.Eval(Contract!.Respawn, 8)),
             Recipe = this,
         };
@@ -366,16 +374,23 @@ internal sealed class SummonRecipe
         return contract;
     }
 
-    /// <summary>The owner's weave slot whose compiled weave this cast is, when it was cast from a slot.</summary>
+    /// <summary>
+    /// The owner's weave slot the cast came from: the context's slot when the runtime knows it, else the slot
+    /// holding the summoning weave.
+    /// </summary>
     private static WeaveSlot? SlotOf(EffectContext ctx)
     {
-        if (ctx.Weave is null || !ctx.Sim.World.TryGet<WeaveBook>(ctx.Origin, out var book))
+        if (ctx.Slot is { } known)
+        {
+            return known;
+        }
+        if (HostOf(ctx) is not { } host || !ctx.Sim.World.TryGet<WeaveBook>(ctx.Origin, out var book))
         {
             return null;
         }
         foreach (var slot in book.Slots)
         {
-            if (ReferenceEquals(slot.Compiled, ctx.Weave))
+            if (ReferenceEquals(slot.Compiled?.Root, host))
             {
                 return slot;
             }
@@ -450,7 +465,7 @@ internal sealed class SummonRecipe
             else if (Pattern is null && Pool.Length == 0)
             {
                 service.ReturnList(corpses);
-                sim.Events.Publish(new SummonFizzled(owner, ctx.Weave?.Key, "no_corpse") { Tick = sim.Clock.Tick });
+                sim.Events.Publish(new SummonFizzled(owner, HostOf(ctx)?.Key, "no_corpse") { Tick = sim.Clock.Tick });
                 return;
             }
         }
@@ -494,8 +509,9 @@ internal sealed class SummonRecipe
         {
             return max;
         }
-        var context = (ctx.Weave?.Tags ?? TagSet.Empty).With("pool." + PoolGroup);
-        return Math.Max(1, (int)Math.Round(ownerStats.Attributes.Get("minion.max", ownerStats, context, ctx.Weave?.Modifiers, max)));
+        var host = HostOf(ctx);
+        var context = (host?.Tags ?? TagSet.Empty).With("pool." + PoolGroup);
+        return Math.Max(1, (int)Math.Round(ownerStats.Attributes.Get("minion.max", ownerStats, context, host?.Modifiers, max)));
     }
 
     /// <summary>A pool entry by weight from the cast's random stream; null for a single pattern.</summary>
@@ -514,9 +530,27 @@ internal sealed class SummonRecipe
         var world = ctx.Sim.World;
         if (FromCorpse == "target")
         {
+            // A cast drops a dead target from its context and aims at where it lay, so a targeted corpse is
+            // the context's target when it still is one, else the corpse lying at the point.
             if (Corpses.Is(world, ctx.Target))
             {
                 into.Add(ctx.Target);
+                return;
+            }
+            var reach = (float)ctx.Sim.Content.Rules.Number("minions.corpse_target_reach", 0.5);
+            var at = Entity.None;
+            var nearest = float.MaxValue;
+            foreach (var (e, _, d) in ctx.Sim.Spatial.Within(ctx.Point, reach))
+            {
+                if (d < nearest && Corpses.Is(world, e))
+                {
+                    at = e;
+                    nearest = d;
+                }
+            }
+            if (!at.IsNone)
+            {
+                into.Add(at);
             }
             return;
         }
@@ -543,6 +577,12 @@ internal sealed class SummonRecipe
     }
 
     /// <summary>
+    /// Whether raising a corpse consumes it: as the summoning weave's form says when it targets corpses
+    /// (<c>target: { kind: corpse, consume }</c>), else always.
+    /// </summary>
+    internal static bool ConsumesCorpses(EffectContext ctx) => HostOf(ctx)?.Form.Target is not { Kind: "corpse" } spec || spec.Consume;
+
+    /// <summary>
     /// Raises one body: spawns the pattern at the owner's level, makes it the owner's minion of the group,
     /// gives it its tags, behavior, inheritance and terms, fills its resources, consumes the corpse it rose
     /// from, and runs the birth effects on it.
@@ -557,6 +597,7 @@ internal sealed class SummonRecipe
         }
         var now = sim.Clock.Time;
         var lifetime = contract is null && Lifetime is not null ? ctx.Eval(Lifetime, 20) : 0;
+        var host = HostOf(ctx);
         var minion = sim.World.Add(e, new Minion
         {
             Owner = owner,
@@ -564,7 +605,7 @@ internal sealed class SummonRecipe
             Group = group,
             PoolGroup = PoolGroup,
             ExclusiveGroup = ExclusiveGroup,
-            Weave = ctx.Weave?.Key,
+            Weave = host?.Key,
             BornAt = now,
             Sequence = service.NextSequence(),
             Construct = Construct,
@@ -572,7 +613,7 @@ internal sealed class SummonRecipe
             Contract = contract,
             Presence = Presence,
             Recipe = OnDeath.Length > 0 ? this : null,
-            SummonWeave = OnDeath.Length > 0 ? ctx.Weave : null,
+            SummonWeave = OnDeath.Length > 0 ? host : null,
         });
         if (Presence is not null)
         {
@@ -597,7 +638,7 @@ internal sealed class SummonRecipe
         {
             SetBehavior(sim, e, behavior, at);
         }
-        if (ctx.Weave is { } host)
+        if (host is not null)
         {
             CrewForwarding.Board(sim, e, host, Construct);
         }
@@ -605,7 +646,7 @@ internal sealed class SummonRecipe
         {
             if (Inherit && ownerStats is not null)
             {
-                service.Inherit(minion, stats, owner, ownerStats, ctx.Weave);
+                service.Inherit(minion, stats, owner, ownerStats, host);
             }
             stats.FillResources();
             if (Decay is not null)
@@ -631,7 +672,10 @@ internal sealed class SummonRecipe
         if (!corpse.IsNone)
         {
             sim.Events.Publish(new CorpseRaised(corpse, e, pattern) { Tick = sim.Clock.Tick });
-            service.Dismiss(corpse);
+            if (ConsumesCorpses(ctx))
+            {
+                service.Dismiss(corpse);
+            }
         }
         sim.Events.Publish(new MinionSummoned(e, owner, group, minion.Weave, Construct) { Tick = sim.Clock.Tick });
         if (OnBirth.Length > 0)

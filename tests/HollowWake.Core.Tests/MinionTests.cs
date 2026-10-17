@@ -43,6 +43,22 @@ internal sealed class MinionArena
             .With(Summon("t_crew", "{\"type\": \"summon\", \"pattern\": \"remnant_shade\", \"count\": 1, \"max_active\": 2, \"duration\": 0, \"group\": \"t_crew\"}", glyphs: "resonant_key,crew_frenzy"))
             .With(Summon("t_martyrs", "{\"type\": \"summon\", \"pattern\": \"remnant_shade\", \"count\": 1, \"max_active\": 2, \"duration\": 0, \"group\": \"t_martyrs\"}", glyphs: "martyrdom"))
             .With(Summon("t_crew_unkeyed","{\"type\": \"summon\", \"pattern\": \"remnant_shade\", \"count\": 1, \"max_active\": 2, \"duration\": 0, \"group\": \"t_crew2\"}", glyphs: "crew_frenzy"))
+            .With(new FormDef
+            {
+                Id = "t_raise_echo_form",
+                Targeting = Targeting.Ground,
+                CastMode = CastMode.Instant,
+                Attributes = { ["range"] = 10 },
+                Target = new TargetSpec { Kind = "corpse", SearchRadius = Expressions.Expr.Constant(4), Consume = false },
+                Mechanisms = TagSet.Of("summon", "spell"),
+                MinThreads = 0,
+            })
+            .With(new WeaveDef
+            {
+                Id = "t_raise_echo",
+                Form = "t_raise_echo_form",
+                Effects = { Spec("{\"type\": \"summon\", \"from_corpse\": \"target\", \"count\": 1, \"max_active\": 4, \"duration\": 0, \"group\": \"t_echoes\"}") },
+            })
             .With(new WeaveDef
             {
                 Id = "t_consume",
@@ -570,15 +586,79 @@ public class MinionTests
         arena.Sim.Service<Combat.DeathService>().Kill(arena.Sim, wolf, arena.Owner);
         Assert.True(Corpses.Is(arena.Sim.World, wolf));
         Assert.Equal("wolf", Corpses.PatternOf(arena.Sim.World, wolf));
-        arena.Cast(arena.Learn("raise_fallen"), point: arena.At(wolf));
+        var raise = arena.Learn("raise_fallen");
+        arena.Cast(raise, point: arena.At(wolf));
         var risen = arena.Minions("risen").Single();
         Assert.Equal("wolf", arena.Sim.World.Get<Identity>(risen)!.Pattern);
         Assert.Contains(arena.Events.OfType<CorpseRaised>(), r => r.Corpse == wolf && r.Minion == risen);
         Assert.True(arena.Sim.World.IsDeferredDestroy(wolf) || !arena.Sim.World.IsAlive(wolf));
-        // With no corpse in reach the summon fizzles.
-        arena.Cast(arena.Learn("raise_fallen"), point: arena.OwnerAt.Position + new Vector3(-8, 0, 0));
-        Assert.Contains(arena.Events.OfType<SummonFizzled>(), f => f.Reason == "no_corpse");
+        // With no corpse in reach the raise form's corpse target refuses the weave before its cost is paid.
+        arena.Sim.Tick();
+        arena.Sim.World.Get<WeaveBook>(arena.Owner)!.ReadyAt.Clear();
+        arena.OwnerStats.FillResources();
+        var mana = arena.OwnerStats.Resource("mana");
+        var runtime = arena.Sim.Service<WeaveRuntime>();
+        Assert.False(runtime.TryBegin(arena.Sim, arena.Owner, raise, Entity.None, arena.OwnerAt.Position + new Vector3(-8, 0, 0), Vector2.Zero, out var reason));
+        Assert.Equal("no_target", reason);
+        Assert.Equal(mana, arena.OwnerStats.Resource("mana"), 6);
+        Assert.DoesNotContain(arena.Events.OfType<SummonFizzled>(), f => f.Owner == arena.Owner);
         Assert.Single(arena.Minions("risen"));
+    }
+
+    [Fact]
+    public void ACorpseTargetThatIsNotConsumedCanRiseAgain()
+    {
+        var arena = MinionArena.Create();
+        var boar = arena.Foe("boar", arena.OwnerAt.Position + new Vector3(4, 0, 0));
+        arena.Sim.Service<Combat.DeathService>().Kill(arena.Sim, boar, arena.Owner);
+        var echo = arena.Learn("t_raise_echo");
+        arena.Cast(echo, point: arena.At(boar));
+        arena.Cast(echo, point: arena.At(boar));
+        Assert.Equal(2, arena.Minions("t_echoes").Count);
+        Assert.All(arena.Minions("t_echoes"), m => Assert.Equal("boar", arena.Sim.World.Get<Identity>(m)!.Pattern));
+        Assert.True(Corpses.Is(arena.Sim.World, boar), "the corpse was consumed");
+    }
+
+    [Fact]
+    public void AnOfferingSpendsTheMinionItTargetsAndRefusesWithoutOne()
+    {
+        var arena = MinionArena.Create();
+        arena.Cast(arena.Learn("t_shades"));
+        var shades = arena.Minions("t_shades");
+        var foe = arena.Foe("tangle", arena.At(shades[1]) + new Vector3(1, 0, 0));
+        foreach (var s in shades)
+        {
+            arena.Sim.World.Remove<Behavior>(s);
+        }
+        var offering = arena.Learn("grave_offering");
+        arena.Cast(offering, shades[1], arena.At(shades[1]));
+        var died = Assert.Single(arena.Events.OfType<EntityDied>());
+        Assert.Equal(shades[1], died.Entity);
+        Assert.True(arena.Hit(arena.Owner, foe), "the offering's burst missed the foe beside it");
+        // A foe is not one of the caster's minions, and nothing of the caster's stands near it.
+        arena.Move(shades[0], arena.OwnerAt.Position + new Vector3(-10, 0, 0));
+        arena.Sim.World.Get<WeaveBook>(arena.Owner)!.ReadyAt.Clear();
+        var runtime = arena.Sim.Service<WeaveRuntime>();
+        Assert.False(runtime.TryBegin(arena.Sim, arena.Owner, offering, foe, arena.At(foe), Vector2.Zero, out var reason));
+        Assert.Equal("no_target", reason);
+        Assert.Single(arena.Minions("t_shades"));
+    }
+
+    [Fact]
+    public void TheBindingsSecondFaceOrdersOnlyItsOwnCourt()
+    {
+        var arena = MinionArena.Create();
+        arena.Cast(arena.Learn("t_shades"));
+        var bind = arena.Learn("bind_remnant_court");
+        arena.Cast(bind);
+        var court = arena.Minions("remnant_court");
+        Assert.Equal(2, court.Count);
+        var book = arena.Sim.World.Get<WeaveBook>(arena.Owner)!;
+        Assert.True(arena.Sim.Service<WeaveRuntime>().UseMeta(arena.Sim, arena.Owner, book.Slots.IndexOf(bind), out var reason), reason);
+        var order = Assert.Single(arena.Events.OfType<MinionsCommanded>());
+        Assert.Equal(court.Count, order.Heeded);
+        Assert.All(court, m => Assert.Equal("assault", arena.Sim.World.Get<Behavior>(m)!.Order?.Command));
+        Assert.All(arena.Minions("t_shades"), m => Assert.Null(arena.Sim.World.Get<Behavior>(m)!.Order));
     }
 
     [Fact]

@@ -105,7 +105,10 @@ internal static class CrewForwarding
         return riders;
     }
 
-    /// <summary>The weave with the boarded glyphs' modifier values scaled: a construct's priced copy.</summary>
+    /// <summary>
+    /// The weave with the boarded glyphs' modifier values scaled: a construct's priced copy, as a view of the
+    /// compiled weave (everything else, its key and its casting specs are the weave's own).
+    /// </summary>
     private static CompiledWeave Priced(CompiledWeave weave, List<GlyphRef> boarded, double scale)
     {
         var sources = new HashSet<string>(StringComparer.Ordinal);
@@ -118,29 +121,6 @@ internal static class CrewForwarding
         {
             modifiers.Add(sources.Contains(m.Source) ? m.Scaled(scale) : m);
         }
-        return new CompiledWeave
-        {
-            Spec = weave.Spec,
-            Form = weave.Form,
-            Threads = weave.Threads,
-            Glyphs = weave.Glyphs,
-            Tags = weave.Tags,
-            Mechanisms = weave.Mechanisms,
-            Bases = weave.Bases,
-            Modifiers = modifiers,
-            Effects = weave.Effects,
-            Costs = weave.Costs,
-            Level = weave.Level,
-            Name = weave.Name,
-            Look = weave.Look,
-            Ai = weave.Ai,
-            GlyphRefs = weave.GlyphRefs,
-            Dormant = weave.Dormant,
-            DeclaredMechanisms = weave.DeclaredMechanisms,
-            CastScope = weave.CastScope,
-            LevelBonus = weave.LevelBonus,
-            Specs = weave.Specs,
-            Probe = weave.Probe,
-        };
+        return weave.WithModifiers(modifiers);
     }
 }
