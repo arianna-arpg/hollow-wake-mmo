@@ -37,10 +37,10 @@ public sealed class MovementSystem : SimSystem
                 continue;
             }
             var stats = sim.World.Get<Stats>(e);
-            var casting = sim.World.Get<WeaveBook>(e)?.Casting;
-            var mobileCast = casting?.Slot.Compiled?.Tags.Has("mobile") ?? false;
+            // A cast keeps the fraction of speed its cast state says: zero roots, one moves freely.
+            var castFactor = sim.World.Get<WeaveBook>(e)?.Casting?.MoveFactor ?? 1f;
             var immobile = stats is not null && (stats.HasFlag("stunned") || stats.HasFlag("rooted") || stats.HasFlag("frozen"));
-            var locked = immobile || (casting is not null && !mobileCast);
+            var locked = immobile || castFactor <= 0;
 
             // Path and target following produce the desired direction.
             if (!locked)
@@ -49,6 +49,10 @@ public sealed class MovementSystem : SimSystem
             }
             var dir = locked ? Vector2.Zero : m.MoveDir;
             var speed = stats?.Get("move.speed") ?? defaultSpeed;
+            if (castFactor is > 0 and < 1)
+            {
+                speed *= castFactor;
+            }
             if (speed <= 0)
             {
                 dir = Vector2.Zero;

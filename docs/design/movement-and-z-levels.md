@@ -8,7 +8,7 @@ Cells are blocked by cliffs (slope above `world.gen.max_walkable_slope` in non-t
 
 ## Movement
 
-The movement system integrates per tick: path following or a target or a held direction produce a desired direction; speed is `move.speed`; casting a non-mobile weave, stuns and roots lock movement; jumping sets vertical velocity from `move.jump_velocity` scaled by `jump.height` when grounded; gravity is `move.gravity`. Horizontal motion is validated against the destination cell and slides along X or Y when blocked. Vertical motion lands on the ground under the new position and can fall any distance; fall damage is a rule.
+The movement system integrates per tick: path following or a target or a held direction produce a desired direction; speed is `move.speed`, times the running cast's move factor (set when the cast begins: one for weaves tagged `mobile`, zero for the rest, which roots); stuns and roots lock movement; jumping sets vertical velocity from `move.jump_velocity` scaled by `jump.height` when grounded; gravity is `move.gravity`. Horizontal motion is validated against the destination cell and slides along X or Y when blocked. Vertical motion lands on the ground under the new position and can fall any distance; fall damage is a rule.
 
 Dashes and teleports resolve their destination by marching the segment and stopping at the first cell that cannot be occupied.
 

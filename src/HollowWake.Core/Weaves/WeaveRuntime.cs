@@ -171,11 +171,12 @@ public sealed class WeaveRuntime
             reason = "stunned";
             return Fail(sim, caster, slot, reason);
         }
-        foreach (var tag in weave.Tags)
+        var forbid = weave.ForbidFlags;
+        for (var i = 0; i < forbid.Count; i++)
         {
-            if (stats.HasFlag("forbid:" + tag))
+            if (stats.HasFlag(forbid[i]))
             {
-                reason = "forbidden:" + tag;
+                reason = "forbidden:" + weave.Tags.Items[i];
                 return Fail(sim, caster, slot, reason);
             }
         }
@@ -231,6 +232,7 @@ public sealed class WeaveRuntime
             Duration = duration,
             Channeling = weave.CastMode == CastMode.Channel,
             NextChannelAt = now,
+            MoveFactor = MoveFactorOf(weave),
         };
         if (weave.CastMode == CastMode.Instant || (duration <= 0 && weave.CastMode != CastMode.Channel))
         {
@@ -241,6 +243,12 @@ public sealed class WeaveRuntime
         sim.Events.Publish(new WeaveStarted(caster, weave.Key, target, point, duration) { Tick = sim.Clock.Tick });
         return true;
     }
+
+    /// <summary>
+    /// The fraction of movement speed a caster keeps while casting the weave: one for weaves tagged
+    /// <c>mobile</c>, zero (rooted) for the rest. The movement system reads it from the cast state.
+    /// </summary>
+    public static float MoveFactorOf(CompiledWeave weave) => weave.Tags.Has("mobile") ? 1f : 0f;
 
     private static bool Fail(Simulation sim, Entity caster, WeaveSlot slot, string reason)
     {

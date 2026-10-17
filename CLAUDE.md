@@ -8,13 +8,21 @@ Hollow Wake MMO is an MMOARPG foundation: an engine-agnostic C# simulation core,
 
 ## Repository map
 
-- `src/HollowWake.Core` — simulation. Namespaces mirror systems: `Attributes`, `Expressions`, `Content`, `Definitions`, `Ecs`, `Sim`, `Components`, `Effects` (handlers by family under `Effects/Handlers/`), `Weaves`, `Combat`, `StatusEffects`, `Items`, `Loot`, `Patterns`, `Ai`, `Movement`, `World`, `WorldGen`, `Quests`, `Crafting`, `Territory`, `Progression`, `Characters`, `Interaction`, `Intents`, `Systems`.
+- `src/HollowWake.Core` — simulation. Namespaces mirror systems: `Attributes`, `Expressions`, `Content`, `Definitions`, `Ecs`, `Sim`, `Components`, `Effects` (handlers by family under `Effects/Handlers/`), `Weaves`, `Combat`, `StatusEffects`, `Items`, `Loot`, `Patterns`, `Ai`, `Movement`, `World`, `WorldGen`, `Quests`, `Crafting`, `Territory`, `Progression`, `Characters`, `Interaction`, `Intents`, `Systems`. The open sets register in one file per area, so areas grow without editing each other:
+  - effect handler families: `Effects/Handlers/*Handlers.cs`, each with a `Register(EffectRegistry)` that `Effects/BuiltinEffects.cs` calls; handlers declare their parameters and hooks in an `EffectSignature`.
+  - the weave compiler: `Weaves/CompiledWeave.cs`, glyph patches and hooks in `Weaves/EffectPatches.cs`, mechanism probes in `Weaves/Mechanisms.cs` (`MechanismRegistry`) with each area's probes in `Weaves/Probes/`.
+  - hit stages: `Combat/Stages/` (`HitStages`), ordered by rule `combat.stages`; the hit scope in `Combat/HitScope.cs`.
+  - trigger kinds and the per-simulation trigger hub: `Sim/Triggers.cs`.
+  - intent handlers: `Systems/Intents/*IntentHandlers.cs`, registered in `IntentHandlers` and dispatched by `Systems/IntentSystem.cs`; intents declared per area in `Intents/`.
+  - content kinds and their validators: `Content/BuiltinKinds.cs` and `Content/Kinds/*Kinds.cs`; attribute families expand in `Content/AttributeFamilies.cs`; definitions are partial records split by area in `Definitions/`.
+  - systems: one file per system in `Systems/`, wired with their services in `Sim/ZoneBuilder.cs`; events in `Sim/Events.cs` and one file per area under `Sim/Events/`.
+  - named curves: `Expressions/Curves.cs`.
 - `src/HollowWake.Protocol` — `Messages.cs` (every wire message), `MessageSerializer.cs` (JSON + length framing) and `TypeScriptContract.cs` (generates the web client's message types).
 - `src/HollowWake.Server` — `GameServer` (composition root and loop), `Sessions/`, `World/` (`ZoneHost`, `ZoneInstance`, `Snapshots`), `Net/` (`ITransport`, TCP, WebSocket with the static web root, composite, loopback), `Persistence/` (JSON stores), `Config/`.
 - `src/HollowWake.Server.Host` — pure .NET entry point (TCP and WebSocket). `src/HollowWake.Server.Host.Brutal` — .NET 10 + BRUTAL RakNet entry point (compiles to a stub without the .NET 10 SDK).
 - `src/HollowWake.Client` — Godot 4.7 C#. `Main.cs` orchestrates; `World/` generates terrain locally and renders entities; `Camera/CameraRig.cs` has both camera modes; `UI/` is placeholder UI.
 - `web/` — browser client: Vite, TypeScript, three.js. `src/app.ts` orchestrates; `net/protocol.ts` is generated; `world/` builds terrain from server chunks and renders entities; `view/camera.ts` has both camera modes; `public/config.json` holds every client setting; `scripts/smoke.mjs` is the scripted browser play-through.
-- `src/HollowWake.Tools` — the `hollowwake` CLI (`Program.cs`, `Probe.cs`).
+- `src/HollowWake.Tools` — the `hollowwake` CLI (`Program.cs`, `Probe.cs`, `Bench.cs`, `WeaveReport.cs`).
 - `launcher/`: the desktop launcher (Electron + TypeScript, pinned versions, electron-builder). `src/main/` holds the release feed, the verified download, safe extraction, installs, self-update and game start; `src/renderer/` is the page; `src/test/` the node:test suite; `news.json` is the news panel's source. It holds no game logic. Contract: `docs/design/launcher.md`.
 - `scripts/package-client.sh`: exports the client per platform with `src/HollowWake.Client/export_presets.cfg`, bundles `content/core`, zips, and writes the release `manifest.json`.
 - `.github/workflows/`: `ci.yml` (every push and pull request), `release.yml` (v* tags; dry runs on dispatch and on pipeline pull requests), `nightly.yml` (nightly pre-releases), `package.yml` (the jobs both release workflows share).
@@ -32,6 +40,7 @@ dotnet test HollowWake.sln                                    # all tests
 dotnet run --project src/HollowWake.Tools -- validate          # content must report 0 errors (warnings are reviewed)
 dotnet run --project src/HollowWake.Tools -- load --x 0 --y 0  # headless zone smoke
 dotnet run --project src/HollowWake.Tools -- fight a b         # headless duel with event trace
+dotnet run --project src/HollowWake.Tools -- weave ember_bolt  # what the compiler makes of a weave: tags, mechanisms, dormant glyphs, graph
 dotnet run --project src/HollowWake.Server.Host                # run the server (TCP 7777; WebSocket and the web client on 7778)
 dotnet run --project src/HollowWake.Tools -- probe             # connect to a running server over TCP and exercise it
 dotnet run --project src/HollowWake.Tools -c Release -- bench   # performance baseline against docs/design/performance.md budgets
@@ -74,7 +83,7 @@ Before calling work done:
 - **Content first.** New gameplay = a definition kind, a handler or a system that reads content. Numbers go in `rules.yaml` or on definitions, never in code. Formulas are expressions.
 - **One modifier engine.** Every numeric change to anything is a `Modifier` on an `AttributeSet` (flat, increased, more, override, link; scoped by tags; conditions; gauges). Do not invent parallel stat systems.
 - **Tags, not type checks.** Scope, gate and filter by tags. A new tag costs nothing.
-- **Registries for open sets.** Effect types, AI actions, objective types, interactable kinds, component binders, content kinds, procedures, generator passes: register, never switch on strings inside systems.
+- **Registries for open sets.** Effect types, mechanism probes, hit stages, trigger kinds, intent handlers, AI actions, objective types, interactable kinds, component binders, content kinds and their validators, attribute families, curves, procedures, generator passes: register, never switch on strings inside systems.
 - **Events, not calls.** Systems publish `GameEvent`s; quests, loot, networking and tests subscribe.
 - **Determinism.** Every roll uses an `Rng` derived from a seed. Never `System.Random` or wall-clock time in gameplay code.
 - **Spatial queries are live views.** `Spatial.Within` iterates the grid in place: copy the results before spawning, destroying or moving entities inside the loop, because mutating the grid during iteration throws.

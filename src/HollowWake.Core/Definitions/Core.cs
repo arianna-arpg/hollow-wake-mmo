@@ -51,18 +51,67 @@ public sealed record TypedSpec
 
 /// <summary>
 /// What a character actually casts: a preset weave, or a composition of a form, threads and glyphs.
-/// Presets exist for onboarding and monsters; compositions are how players build.
+/// Presets exist for onboarding and monsters; compositions are how players build. Glyph order is socket
+/// order: patches in <c>first</c> mode and dormancy both respect it.
 /// </summary>
 public sealed record WeaveSpec
 {
     public string? Preset { get; init; }
     public string? Form { get; init; }
     public List<string> Threads { get; init; } = new();
-    public List<string> Glyphs { get; init; } = new();
+    public List<GlyphRef> Glyphs { get; init; } = new();
     public int Level { get; init; } = 1;
     public string? Name { get; init; }
 
     public override string ToString() => Preset ?? $"{Form}[{string.Join(",", Threads)}]+{string.Join(",", Glyphs)}";
+}
+
+/// <summary>
+/// A glyph as socketed in a weave: which glyph, at which level, and the row it rolled on each of its axes.
+/// Written as <c>fork</c>, <c>fork@3</c>, or <c>{ id: fork, level: 3, rows: { axis: row } }</c>. A plain
+/// string converts implicitly, so <c>Glyphs = { "fork" }</c> reads as before.
+/// </summary>
+public sealed record GlyphRef
+{
+    private static readonly IReadOnlyDictionary<string, string> NoRows = new Dictionary<string, string>(StringComparer.Ordinal);
+
+    public required string Id { get; init; }
+
+    /// <summary>The glyph's level. Null takes the level the glyph definition declares.</summary>
+    public int? Level { get; init; }
+
+    /// <summary>Axis id to the row this copy rolled. Axes left out use their first row.</summary>
+    public IReadOnlyDictionary<string, string> Rows { get; init; } = NoRows;
+
+    public static implicit operator GlyphRef(string text) => Parse(text);
+
+    /// <summary>Parses <c>id</c> or <c>id@level</c>.</summary>
+    public static GlyphRef Parse(string text)
+    {
+        ArgumentNullException.ThrowIfNull(text);
+        var at = text.IndexOf('@');
+        if (at < 0)
+        {
+            return new GlyphRef { Id = text.Trim() };
+        }
+        var levelText = text[(at + 1)..].Trim();
+        if (!int.TryParse(levelText, System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture, out var level))
+        {
+            throw new FormatException($"Glyph reference '{text}' has a level that is not a whole number.");
+        }
+        return new GlyphRef { Id = text[..at].Trim(), Level = level };
+    }
+
+    /// <summary><c>id</c>, <c>id@level</c>, or with rows <c>id@level{axis=row,...}</c>: stable, so it can key cooldowns and caches.</summary>
+    public override string ToString()
+    {
+        if (Rows.Count == 0)
+        {
+            return Level is null ? Id : $"{Id}@{Level}";
+        }
+        var rows = string.Join(",", Rows.OrderBy(kv => kv.Key, StringComparer.Ordinal).Select(kv => kv.Key + "=" + kv.Value));
+        return $"{Id}@{Level ?? 1}{{{rows}}}";
+    }
 }
 
 public sealed record ItemGrant
@@ -85,6 +134,43 @@ public sealed record AttributeDef : Definition
     public int? Decimals { get; init; }
     public bool Percent { get; init; }
     public bool Hidden { get; init; }
+
+    /// <summary>The attribute family this attribute was expanded from; null for attributes declared one by one.</summary>
+    [JsonIgnore]
+    public string? Family { get; init; }
+}
+
+/// <summary>
+/// Attributes declared once for every member of a set and expanded at load: <c>status.{status}.chance</c>
+/// over statuses gives each status its apply-chance attribute with a name, category and bounds. Members
+/// join the attribute catalog like declared attributes, so validation, names and bounds exist for each;
+/// an attribute declared one by one with the same id wins. <see cref="Definition.Name"/> and
+/// <see cref="Definition.Description"/> are templates: a placeholder there becomes the member's display name.
+/// </summary>
+public sealed record AttributeFamilyDef : Definition
+{
+    /// <summary>The member ids with placeholders in braces: <c>added.{thread}</c>, <c>convert.{from}.{to}</c>.</summary>
+    public required string Pattern { get; init; }
+
+    /// <summary>
+    /// What the placeholders range over: a content kind name (<c>statuses</c>), a list of values, or, for
+    /// several placeholders, a map from each placeholder to a kind name or a list.
+    /// </summary>
+    public JsonNode? Over { get; init; }
+
+    public string Category { get; init; } = "general";
+    public double Base { get; init; }
+    public AttributeBounds? Bounds { get; init; }
+    public bool Percent { get; init; }
+    public bool Hidden { get; init; }
+}
+
+/// <summary>Clamps and rounding shared by every member of an attribute family.</summary>
+public sealed record AttributeBounds
+{
+    public double? Min { get; init; }
+    public double? Max { get; init; }
+    public int? Decimals { get; init; }
 }
 
 /// <summary>A current/maximum pair with regeneration, such as life, mana, stamina or ward.</summary>

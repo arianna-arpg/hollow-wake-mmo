@@ -66,6 +66,9 @@ public static class ZoneBuilder
         sim.AddService(compiler);
         sim.AddService(new WeaveRuntime(compiler));
         sim.AddService(new StatusService(effects));
+        sim.AddService(new TriggerHub(sim));
+        sim.AddService(new ChargeService());
+        sim.AddService(IntentHandlers.CreateDefault());
         sim.AddService(new PatternFactory(content));
         sim.AddService(new BlockedCells());
         sim.AddService(new LootService(items));
@@ -86,14 +89,19 @@ public static class ZoneBuilder
             CellCost = cell => sim.Terrain.TagsAt(cell).Has("road") ? 0.6 : sim.Terrain.TagsAt(cell).Has("bog") ? 2.5 : 1.0,
         });
 
+        // Systems run by phase, then by order inside a phase (see each system's Phase and Order).
         sim.AddSystem(new IntentSystem());
         sim.AddSystem(new SpawnerSystem());
+        sim.AddSystem(new MinionSystem());
         sim.AddSystem(new BehaviorSystem());
         sim.AddSystem(new CastingSystem());
         sim.AddSystem(new MovementSystem());
+        sim.AddSystem(new DisplacementSystem());
         sim.AddSystem(new ProjectileSystem());
         sim.AddSystem(new FieldSystem());
+        sim.AddSystem(new TetherSystem());
         sim.AddSystem(new StatusSystem());
+        sim.AddSystem(new UpkeepSystem());
         sim.AddSystem(new QuestSystem());
         sim.AddSystem(new DiscoverySystem());
         sim.AddSystem(new TerritorySystem());

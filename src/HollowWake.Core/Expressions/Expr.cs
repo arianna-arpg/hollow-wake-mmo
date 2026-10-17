@@ -315,6 +315,49 @@ public sealed class Expr
         public override void Collect(List<string> identifiers, List<string> flags) { }
     }
 
+    /// <summary>
+    /// <c>randi(lo, hi)</c>: a whole number from lo to hi inclusive, drawn from the scope's random stream
+    /// like <c>rand()</c>. The bounds round inward to whole numbers and may come in either order; when no
+    /// whole number lies between them the result is the lower bound rounded up.
+    /// </summary>
+    private sealed class RandIntNode : Node
+    {
+        private readonly Node _lo, _hi;
+        public RandIntNode(Node lo, Node hi) { _lo = lo; _hi = hi; }
+
+        public override double Eval(IExprScope scope)
+        {
+            var a = _lo.Eval(scope);
+            var b = _hi.Eval(scope);
+            var low = Math.Ceiling(Math.Min(a, b));
+            var high = Math.Floor(Math.Max(a, b));
+            if (high <= low)
+            {
+                return low;
+            }
+            var roll = Math.Floor(scope.NextRandom() * (high - low + 1));
+            return Math.Min(high, low + roll);
+        }
+
+        public override void Collect(List<string> identifiers, List<string> flags)
+        {
+            _lo.Collect(identifiers, flags);
+            _hi.Collect(identifiers, flags);
+        }
+    }
+
+    /// <summary><c>curve("name", t)</c>: a named curve from <see cref="Curves"/> at t; a curve unregistered at evaluation is linear.</summary>
+    private sealed class CurveNode : Node
+    {
+        private readonly string _curve;
+        private readonly Node _t;
+        public CurveNode(string curve, Node t) { _curve = curve; _t = t; }
+
+        public override double Eval(IExprScope scope) => Curves.Evaluate(_curve, _t.Eval(scope));
+
+        public override void Collect(List<string> identifiers, List<string> flags) => _t.Collect(identifiers, flags);
+    }
+
     /// <summary>A registered function. Arguments evaluate in order into a stack buffer the function reads as a span.</summary>
     private sealed class CallNode : Node
     {
@@ -346,6 +389,22 @@ public sealed class Expr
                         throw new ExprParseException("rand() takes no arguments", position);
                     }
                     return new RandNode();
+                case "randi":
+                    if (args.Length != 2)
+                    {
+                        throw new ExprParseException("randi() takes a low and a high bound", position);
+                    }
+                    return new RandIntNode(args[0], args[1]);
+                case "curve":
+                    if (args.Length != 2 || args[0] is not StringNode curve)
+                    {
+                        throw new ExprParseException("curve() takes a quoted curve name and a value", position);
+                    }
+                    if (!Curves.Has(curve.Value))
+                    {
+                        throw new ExprParseException($"Unknown curve '{curve.Value}'", position);
+                    }
+                    return new CurveNode(curve.Value, args[1]);
                 case "if":
                     if (args.Length != 3)
                     {

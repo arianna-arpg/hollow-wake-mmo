@@ -13,10 +13,23 @@ using static HollowWake.Core.Effects.Handlers.EffectHelpers;
 
 namespace HollowWake.Core.Effects.Handlers;
 
-// Control flow: condition, random, repeat, sequence.
+/// <summary>Control flow: condition, random, repeat, sequence.</summary>
+public static class FlowHandlers
+{
+    public static void Register(EffectRegistry r)
+    {
+        r.Register(new ConditionHandler());
+        r.Register(new RandomHandler());
+        r.Register(new RepeatHandler());
+        r.Register(new SequenceHandler());
+    }
+}
+
 internal sealed class ConditionHandler : IEffectHandler
 {
     public string Type => "condition";
+
+    public EffectSignature Signature { get; } = EffectSignature.Of("if", "then", "else");
 
     public CompiledEffect Compile(JsonObject p, EffectCompileContext ctx) => new Effect
     {
@@ -39,6 +52,8 @@ internal sealed class ConditionHandler : IEffectHandler
 internal sealed class RandomHandler : IEffectHandler
 {
     public string Type => "random";
+
+    public EffectSignature Signature { get; } = EffectSignature.Of("choices");
 
     public CompiledEffect Compile(JsonObject p, EffectCompileContext ctx)
     {
@@ -75,6 +90,8 @@ internal sealed class RandomHandler : IEffectHandler
 internal sealed class RepeatHandler : IEffectHandler
 {
     public string Type => "repeat";
+
+    public EffectSignature Signature { get; } = EffectSignature.Of("times", "interval").Wrapping("effects");
 
     public CompiledEffect Compile(JsonObject p, EffectCompileContext ctx) => new Effect
     {
@@ -114,6 +131,8 @@ internal sealed class RepeatHandler : IEffectHandler
 internal sealed class SequenceHandler : IEffectHandler
 {
     public string Type => "sequence";
+
+    public EffectSignature Signature { get; } = EffectSignature.Of().Wrapping("effects");
 
     public CompiledEffect Compile(JsonObject p, EffectCompileContext ctx) => new Effect { Type = Type, Effects = ctx.CompileList(p["effects"], "effects") };
 

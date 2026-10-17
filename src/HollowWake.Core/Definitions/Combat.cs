@@ -1,3 +1,4 @@
+using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 using HollowWake.Core.Attributes;
 using HollowWake.Core.Expressions;
@@ -23,8 +24,11 @@ public sealed record StatusTick
     public List<TypedSpec> Effects { get; init; } = new();
 }
 
-/// <summary>A status: ailment, buff, debuff, state. Modifiers, flags and periodic effects while worn.</summary>
-public sealed record StatusDef : Definition
+/// <summary>
+/// A status: ailment, buff, debuff, state. Modifiers, flags and periodic effects while worn. Partial: the
+/// fields of later status mechanics (consumption, riders, banks) live in <c>Statuses.cs</c>.
+/// </summary>
+public sealed partial record StatusDef : Definition
 {
     public Expr? Duration { get; init; }
     [JsonPropertyName("max_stacks")]
@@ -69,13 +73,6 @@ public enum Targeting
     Any,
 }
 
-public enum CastMode
-{
-    Instant,
-    Cast,
-    Channel,
-}
-
 /// <summary>Hints monsters use to pick weaves without bespoke scripting.</summary>
 public sealed record AiHint
 {
@@ -89,9 +86,10 @@ public sealed record AiHint
 /// <summary>
 /// A form is the delivery of a weave: strike, projectile, nova, beam, field, ward, summon, dash.
 /// It carries the targeting rules, timing, costs, local attribute bases and an effect graph that
-/// references the chosen threads with placeholders.
+/// references the chosen threads with placeholders. Partial: casting fields live in
+/// <c>Forms.Casting.cs</c>, delivery fields in <c>Forms.Delivery.cs</c>, summon fields in <c>Forms.Summon.cs</c>.
 /// </summary>
-public sealed record FormDef : Definition
+public sealed partial record FormDef : Definition
 {
     public Targeting Targeting { get; init; } = Targeting.Enemy;
     [JsonPropertyName("cast_mode")]
@@ -118,36 +116,101 @@ public sealed record FormDef : Definition
     public string? Animation { get; init; }
 }
 
-/// <summary>A glyph alters a weave: local modifiers, extra tags, extra effects, gated by tags and mechanisms.</summary>
-public sealed record GlyphDef : Definition
+/// <summary>
+/// A glyph alters a weave: local modifiers, extra tags, extra effects, hooks into the form's deliveries
+/// and patches to their parameters, gated by tags and mechanisms. A glyph whose gate fails stays socketed
+/// but dormant and contributes nothing. Partial: trigger fields live in <c>Glyphs.Casting.cs</c>, minion
+/// fields in <c>Glyphs.Minion.cs</c>, rolled axes in <c>Glyphs.Items.cs</c>.
+/// </summary>
+public sealed partial record GlyphDef : Definition
 {
     /// <summary>The weave must carry at least one of these tags.</summary>
     public TagSet Requires { get; init; } = TagSet.Empty;
     public TagSet Excludes { get; init; } = TagSet.Empty;
-    /// <summary>The weave must have every one of these mechanisms, from any source.</summary>
+    /// <summary>
+    /// The weave must have every one of these mechanisms: declared by its form or another glyph, or held by
+    /// a probe of the compiled weave. A name may carry a parameter after a colon (<c>affliction:bleeding</c>).
+    /// </summary>
     [JsonPropertyName("requires_mechanisms")]
     public TagSet RequiresMechanisms { get; init; } = TagSet.Empty;
     public List<Modifier> Modifiers { get; init; } = new();
-    /// <summary>Extra per-level modifiers, scaled by (level - 1).</summary>
+    /// <summary>Extra per-level modifiers, scaled by the glyph's level minus one.</summary>
     [JsonPropertyName("per_level")]
     public List<Modifier> PerLevel { get; init; } = new();
     [JsonPropertyName("adds_tags")]
     public TagSet AddsTags { get; init; } = TagSet.Empty;
     [JsonPropertyName("adds_mechanisms")]
     public TagSet AddsMechanisms { get; init; } = TagSet.Empty;
+    /// <summary>Effects appended to the weave's root list.</summary>
     [JsonPropertyName("adds_effects")]
     public List<TypedSpec> AddsEffects { get; init; } = new();
+    /// <summary>
+    /// Effect lists keyed by hook name (<c>on_hit</c>, <c>on_kill</c>, <c>on_cast</c> ...). Each is appended
+    /// into every node of the weave's graph whose type exposes that hook; <c>on_cast</c> joins the root list.
+    /// </summary>
+    public Dictionary<string, List<TypedSpec>> Hooks { get; init; } = new(StringComparer.Ordinal);
+    /// <summary>Edits to the parameters of the form's effect nodes, applied in glyph order before compiling.</summary>
+    public List<EffectPatch> Patches { get; init; } = new();
+    /// <summary>Levels a socket gives this glyph when it names none.</summary>
     public int Level { get; init; } = 1;
+    /// <summary>Levels this glyph adds to its host weave.</summary>
+    [JsonPropertyName("level_bonus")]
+    public int LevelBonus { get; init; }
+    /// <summary>More host levels per glyph level above the first (rounded down).</summary>
+    [JsonPropertyName("level_bonus_per_level")]
+    public double LevelBonusPerLevel { get; init; }
     public double Weight { get; init; } = 1;
     public string Color { get; init; } = "#ffffff";
 }
 
+/// <summary>How a patch's values meet values already on the node.</summary>
+public enum PatchMode
+{
+    /// <summary>The first glyph to set a parameter wins over the form and over later glyphs.</summary>
+    First,
+    /// <summary>Sets a parameter only where the node has none.</summary>
+    Default,
+    /// <summary>Appends list values to the node's lists.</summary>
+    Append,
+    /// <summary>Wraps every matching node in the wrapper effect, nesting in glyph order.</summary>
+    Wrap,
+}
+
+/// <summary>Which nodes of the patched type a patch edits.</summary>
+public enum PatchWhere
+{
+    /// <summary>Every node of the type anywhere in the graph.</summary>
+    Any,
+    /// <summary>Only nodes in the weave's root list.</summary>
+    Root,
+    /// <summary>Only the first node of the type, walking the graph in order.</summary>
+    First,
+}
+
+/// <summary>
+/// One compile-time edit to the form's effect graph: <c>{ type, where, set, wrap, mode }</c>. <c>set</c>
+/// assigns parameters on the matched nodes; <c>wrap</c> replaces each matched node with the wrapper effect
+/// holding it (in the wrapper's declared list, <c>effects</c> for the built-ins). Without a mode, a patch
+/// with only <c>wrap</c> wraps and anything else is <c>first</c>.
+/// </summary>
+public sealed record EffectPatch
+{
+    public required string Type { get; init; }
+    public PatchWhere Where { get; init; } = PatchWhere.Any;
+    public JsonObject? Set { get; init; }
+    public TypedSpec? Wrap { get; init; }
+    public PatchMode? Mode { get; init; }
+
+    [JsonIgnore]
+    public PatchMode EffectiveMode => Mode ?? (Wrap is not null && Set is null ? PatchMode.Wrap : PatchMode.First);
+}
+
 /// <summary>A preset weave: a named composition, with optional overrides. Monsters and starters use these.</summary>
-public sealed record WeaveDef : Definition
+public sealed partial record WeaveDef : Definition
 {
     public required string Form { get; init; }
     public List<string> Threads { get; init; } = new();
-    public List<string> Glyphs { get; init; } = new();
+    public List<GlyphRef> Glyphs { get; init; } = new();
     public Dictionary<string, double> Attributes { get; init; } = new();
     public List<Modifier> Modifiers { get; init; } = new();
     public List<TypedSpec> Effects { get; init; } = new();

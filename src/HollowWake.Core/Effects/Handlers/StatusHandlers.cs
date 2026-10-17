@@ -13,10 +13,22 @@ using static HollowWake.Core.Effects.Handlers.EffectHelpers;
 
 namespace HollowWake.Core.Effects.Handlers;
 
-// Status application, removal and temporary modifiers.
+/// <summary>Status application, removal and temporary modifiers.</summary>
+public static class StatusHandlers
+{
+    public static void Register(EffectRegistry r)
+    {
+        r.Register(new ApplyStatusHandler());
+        r.Register(new RemoveStatusHandler());
+        r.Register(new ModifyHandler());
+    }
+}
+
 internal sealed class ApplyStatusHandler : IEffectHandler
 {
     public string Type => "apply_status";
+
+    public EffectSignature Signature { get; } = EffectSignature.Of("status", "duration", "chance", "stacks", "magnitude", "threads", "self");
 
     public CompiledEffect Compile(JsonObject p, EffectCompileContext ctx) => new Effect
     {
@@ -74,6 +86,7 @@ internal sealed class ApplyStatusHandler : IEffectHandler
                 Potency = ctx.Potency,
                 SourceKey = ctx.Weave?.Key ?? "effect",
                 Tags = ctx.Tags,
+                Depth = ctx.Depth,
             });
         }
     }
@@ -82,6 +95,8 @@ internal sealed class ApplyStatusHandler : IEffectHandler
 internal sealed class RemoveStatusHandler : IEffectHandler
 {
     public string Type => "remove_status";
+
+    public EffectSignature Signature { get; } = EffectSignature.Of("status", "tags", "count", "self");
 
     public CompiledEffect Compile(JsonObject p, EffectCompileContext ctx) => new Effect
     {
@@ -110,6 +125,8 @@ internal sealed class RemoveStatusHandler : IEffectHandler
 internal sealed class ModifyHandler : IEffectHandler
 {
     public string Type => "modify";
+
+    public EffectSignature Signature { get; } = EffectSignature.Of("attribute", "form", "value", "duration", "scope", "self", "key");
 
     public CompiledEffect Compile(JsonObject p, EffectCompileContext ctx)
     {

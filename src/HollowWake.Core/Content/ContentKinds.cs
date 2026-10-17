@@ -4,20 +4,57 @@ using HollowWake.Core.Definitions;
 
 namespace HollowWake.Core.Content;
 
-/// <summary>A registered definition kind: its content name, its C# type, and an optional validator.</summary>
+/// <summary>
+/// A registered definition kind: its content name, its C# type, and its validators. A kind can have
+/// several validators: the one it registers with, then any a package or mod adds for its own fields.
+/// </summary>
 public sealed class ContentKind
 {
+    private Action<IDefinition, ValidationContext>[] _validators = Array.Empty<Action<IDefinition, ValidationContext>>();
+
     public required string Name { get; init; }
     public required Type DefinitionType { get; init; }
     public required Func<JsonObject, IDefinition> Bind { get; init; }
-    public Action<IDefinition, ValidationContext>? Validate { get; init; }
     public bool Ordered { get; init; }
+
+    /// <summary>Every validator of the kind, in the order they were added.</summary>
+    public IReadOnlyList<Action<IDefinition, ValidationContext>> Validators => _validators;
+
+    /// <summary>All validators as one delegate, or null when the kind has none.</summary>
+    public Action<IDefinition, ValidationContext>? Validate
+    {
+        get
+        {
+            var validators = _validators;
+            if (validators.Length == 0)
+            {
+                return null;
+            }
+            return (d, ctx) =>
+            {
+                foreach (var v in validators)
+                {
+                    v(d, ctx);
+                }
+            };
+        }
+    }
+
+    /// <summary>Appends a validator. Copy on write, so a load in progress keeps the list it started with.</summary>
+    internal void AddValidator(Action<IDefinition, ValidationContext> validator)
+    {
+        var next = new Action<IDefinition, ValidationContext>[_validators.Length + 1];
+        Array.Copy(_validators, next, _validators.Length);
+        next[^1] = validator;
+        _validators = next;
+    }
 }
 
 /// <summary>
 /// Registry of definition kinds. Built-in kinds are registered at startup; code mods register their
 /// own with <see cref="Register{T}"/> and from then on the loader binds, validates and exposes them
-/// like any other kind.
+/// like any other kind. Packages that add fields to an existing kind add a validator for them with
+/// <see cref="AddValidator{T}"/> rather than editing the kind's own.
 /// </summary>
 public static class ContentKinds
 {
@@ -30,6 +67,7 @@ public static class ContentKinds
         BuiltinKinds.RegisterAll();
     }
 
+    /// <summary>Registers a kind, replacing any earlier kind of the same name (and its validators).</summary>
     public static void Register<T>(string name, Action<T, ValidationContext>? validate = null) where T : class, IDefinition
     {
         var kind = new ContentKind
@@ -37,12 +75,28 @@ public static class ContentKinds
             Name = name,
             DefinitionType = typeof(T),
             Bind = obj => ContentJson.Bind<T>(obj),
-            Validate = validate is null ? null : (d, ctx) => validate((T)d, ctx),
         };
+        if (validate is not null)
+        {
+            kind.AddValidator((d, ctx) => validate((T)d, ctx));
+        }
         lock (Gate)
         {
             Kinds[name] = kind;
             ByType[typeof(T)] = kind;
+        }
+    }
+
+    /// <summary>Adds a validator to the kind registered for <typeparamref name="T"/>.</summary>
+    public static void AddValidator<T>(Action<T, ValidationContext> validate) where T : class, IDefinition
+    {
+        lock (Gate)
+        {
+            if (!ByType.TryGetValue(typeof(T), out var kind))
+            {
+                throw new InvalidOperationException($"{typeof(T).Name} is not a registered content kind.");
+            }
+            kind.AddValidator((d, ctx) => validate((T)d, ctx));
         }
     }
 

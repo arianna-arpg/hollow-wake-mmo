@@ -53,6 +53,12 @@ public sealed class Motion : IComponent
     /// <summary>Entities this cannot pass through are resolved by the movement system; a simple no-clip flag for tools.</summary>
     public bool NoClip;
 
+    /// <summary>A shove on top of the body's own movement (knockback, pull, buffet), decaying as the displacement system integrates it.</summary>
+    public Vector3 Impulse;
+
+    /// <summary>A movement over time that overrides walking while it lasts (a dash, a leap); null when none.</summary>
+    public Displacement? Displacement;
+
     public void Stop()
     {
         MoveDir = Vector2.Zero;
@@ -61,6 +67,19 @@ public sealed class Motion : IComponent
     }
 
     public bool WantsToMove => MoveDir.LengthSquared() > 0.0001f || MoveTarget is not null || Path.Count > 0;
+}
+
+/// <summary>A body carried along a path over time instead of walking: where it goes, how fast, and until when.</summary>
+public sealed class Displacement
+{
+    /// <summary>What kind of displacement this is (dash, leap, knockback ...), for the systems and the client.</summary>
+    public string Kind = "";
+    public Vector3 From;
+    public Vector3 To;
+    public double StartedAt;
+    public double EndsAt;
+    /// <summary>The effect context the displacement's hits and landing run in, when it has any.</summary>
+    public Effects.EffectContext? Context;
 }
 
 /// <summary>Who or what this is: name, template, faction, tags, ownership.</summary>

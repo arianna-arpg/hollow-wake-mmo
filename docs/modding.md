@@ -83,14 +83,19 @@ effects:
           - { type: damage, amount: "weave.base_damage * spell.power * 0.7", threads: $threads }
 ```
 
-`$threads` resolves to the weave's Threads, `$thread_status` to the first Thread's status. `hollowwake schema` does not list effect parameters; the handlers in `HollowWake.Core/Effects/Handlers/` (one file per family: damage, status, delivery, summon, movement, flow, utility) are the reference.
+`$threads` resolves to the weave's Threads, `$thread_status` to the first Thread's status. `hollowwake schema` does not list effect parameters; the handlers in `HollowWake.Core/Effects/Handlers/` (one file per family) are the reference, and each declares the parameters it reads in its `EffectSignature`. `hollowwake weave <id>` prints what the compiler makes of a weave.
 
 ## Code mods
 
 A code mod is a .NET assembly that references `HollowWake.Core` and, before the server loads content, registers what it adds:
 
-- `ContentKinds.Register<MyDef>("my_kind", validator)` for a new definition kind.
-- `EffectRegistry.Register(new MyEffectHandler())` for a new effect type.
+- `ContentKinds.Register<MyDef>("my_kind", validator)` for a new definition kind; `ContentKinds.AddValidator<FormDef>(validator)` to validate fields of an existing kind.
+- `EffectRegistry.Register(new MyEffectHandler())` for a new effect type; give it an `EffectSignature` so glyph patches and hooks can reach it.
+- `MechanismRegistry.Register("my_mechanism", probe)` for a mechanism probe glyphs can require.
+- `HitStages.Register(new MyStage())` for a hit stage, placed by rule `combat.stages`.
+- `TriggerKinds.Register("my_trigger")` for a trigger kind, raised through the simulation's `TriggerHub`.
+- `IntentHandlers.Register<MyIntent>(handler)` on a simulation's intent handlers for a new intent.
+- `Curves.Register("my_curve", curve)` for a named curve.
 - `AiActions.Register("my_action", ...)` for a new AI action.
 - `QuestService.Register("my_objective", matcher)` for a new objective type.
 - `InteractionService.Register("my_kind", handler)` for a new interactable kind.

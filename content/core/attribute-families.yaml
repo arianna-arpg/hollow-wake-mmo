@@ -1,0 +1,24 @@
+# Attribute families: attributes declared once for every member of a set and expanded at load.
+# A pattern's placeholders range over a content kind (or a list); each member gets the family's category,
+# base and bounds, and its name and description with the placeholder replaced by the member's name.
+# Attributes declared one by one in attributes files win over family members with the same id.
+# These families are declared ahead of the mechanics that read them, so they stay hidden until then.
+kind: attribute_families
+entries:
+  - id: status_chance
+    pattern: "status.{status}.chance"
+    over: statuses
+    name: "Chance to inflict {status}"
+    description: "Chance that a hit inflicts {status}, rolled on every hit for every status."
+    category: status
+    bounds: { min: 0, max: 1 }
+    percent: true
+    hidden: true
+
+  - id: added_damage
+    pattern: "added.{thread}"
+    over: threads
+    name: "Added {thread} damage"
+    description: "Flat {thread} damage added to every hit, scaled by its added effectiveness."
+    category: offense
+    hidden: true

@@ -12,13 +12,36 @@ public sealed record EntityDespawned(Entity Entity, string? Pattern) : GameEvent
 public sealed record EntityMoved(Entity Entity, Vector3 From, Vector3 To) : GameEvent;
 public sealed record EntityJumped(Entity Entity) : GameEvent;
 
-public sealed record DamageDealt(Entity Source, Entity Target, double Total, bool Crit, TagSet Tags, IReadOnlyDictionary<string, double> ByThread, bool Evaded, bool Blocked) : GameEvent;
-public sealed record Healed(Entity Source, Entity Target, double Amount, string Resource) : GameEvent;
-public sealed record EntityDied(Entity Entity, Entity Killer, string? Pattern, TagSet Tags, Vector3 Position) : GameEvent;
+// Damage, healing, death and status events carry the effect depth they happened at (zero for a cast's
+// own effects, deeper for chained, repeated, delayed and cast-by-effect work), so triggers fed by them
+// can refuse to chain without limit.
+
+public sealed record DamageDealt(Entity Source, Entity Target, double Total, bool Crit, TagSet Tags, IReadOnlyDictionary<string, double> ByThread, bool Evaded, bool Blocked) : GameEvent
+{
+    public int Depth { get; init; }
+}
+
+public sealed record Healed(Entity Source, Entity Target, double Amount, string Resource) : GameEvent
+{
+    public int Depth { get; init; }
+}
+
+public sealed record EntityDied(Entity Entity, Entity Killer, string? Pattern, TagSet Tags, Vector3 Position) : GameEvent
+{
+    public int Depth { get; init; }
+}
+
 public sealed record EntityRevived(Entity Entity, Vector3 Position) : GameEvent;
 
-public sealed record StatusApplied(Entity Target, Entity Source, string Status, int Stacks, double Duration) : GameEvent;
-public sealed record StatusExpired(Entity Target, string Status) : GameEvent;
+public sealed record StatusApplied(Entity Target, Entity Source, string Status, int Stacks, double Duration) : GameEvent
+{
+    public int Depth { get; init; }
+}
+
+public sealed record StatusExpired(Entity Target, string Status) : GameEvent
+{
+    public int Depth { get; init; }
+}
 
 public sealed record WeaveStarted(Entity Caster, string Weave, Entity Target, Vector3 Point, double CastTime) : GameEvent;
 public sealed record WeaveCast(Entity Caster, string Weave, Entity Target, Vector3 Point, TagSet Tags) : GameEvent;

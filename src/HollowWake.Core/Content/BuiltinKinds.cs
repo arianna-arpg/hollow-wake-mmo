@@ -1,4 +1,6 @@
 using HollowWake.Core.Definitions;
+using HollowWake.Core.Effects;
+using HollowWake.Core.Weaves;
 
 namespace HollowWake.Core.Content;
 
@@ -91,13 +93,21 @@ internal static class BuiltinKinds
         {
             c.Modifiers(d.Modifiers, "modifiers");
             c.Modifiers(d.PerLevel, "per_level");
+            WeaveValidation.Glyph(d, c);
         });
         ContentKinds.Register<WeaveDef>("weaves", (d, c) =>
         {
-            c.Ref<FormDef>(d.Form, "form");
-            c.Refs<ThreadDef>(d.Threads, "threads");
-            c.Refs<GlyphDef>(d.Glyphs, "glyphs");
+            var refsOk = c.Ref<FormDef>(d.Form, "form");
+            foreach (var t in d.Threads)
+            {
+                refsOk &= c.Ref<ThreadDef>(t, "threads");
+            }
+            refsOk &= WeaveValidation.GlyphRefs(d.Glyphs, c, "glyphs");
             c.Modifiers(d.Modifiers, "modifiers");
+            if (refsOk)
+            {
+                WeaveValidation.Fits(new WeaveSpec { Preset = d.Id }, c, "preset");
+            }
         });
         ContentKinds.Register<MonsterRarityDef>("monster_rarities", (d, c) => c.Modifiers(d.Modifiers, "modifiers"));
         ContentKinds.Register<MonsterAffixDef>("monster_affixes", (d, c) => c.Modifiers(d.Modifiers, "modifiers"));
@@ -416,6 +426,25 @@ internal static class BuiltinKinds
                 c.Ref<LandmarkDef>(d.Landmark, "landmark");
             }
         });
+        ContentKinds.Register<AttributeFamilyDef>("attribute_families", (d, c) =>
+        {
+            // Expansion problems are reported when the families expand; here only what expansion cannot see.
+            if (d.Bounds is { Min: { } min, Max: { } max } && min > max)
+            {
+                c.Error("bounds.min is greater than bounds.max.");
+            }
+            if (AttributeFamilies.PlaceholdersOf(d.Pattern).Count == 0)
+            {
+                c.Warn($"pattern '{d.Pattern}' has no placeholder, so the family declares one attribute.");
+            }
+        });
+
+        // Each package validates its own fields and registers its own kinds in its own file.
+        Kinds.CastingKinds.Register();
+        Kinds.DeliveryKinds.Register();
+        Kinds.MinionKinds.Register();
+        Kinds.CombatKinds.Register();
+        Kinds.ProgressionKinds.Register();
     }
 
     public static void ValidateWeaveSpec(WeaveSpec w, ValidationContext c, string field)
@@ -425,9 +454,16 @@ internal static class BuiltinKinds
             c.Ref<WeaveDef>(w.Preset, field + ".preset");
             return;
         }
-        c.Ref<FormDef>(w.Form, field + ".form");
-        c.Refs<ThreadDef>(w.Threads, field + ".threads");
-        c.Refs<GlyphDef>(w.Glyphs, field + ".glyphs");
+        var refsOk = c.Ref<FormDef>(w.Form, field + ".form");
+        foreach (var t in w.Threads)
+        {
+            refsOk &= c.Ref<ThreadDef>(t, field + ".threads");
+        }
+        refsOk &= WeaveValidation.GlyphRefs(w.Glyphs, c, field + ".glyphs");
+        if (refsOk)
+        {
+            WeaveValidation.Fits(w, c, field);
+        }
     }
 
     public static IEnumerable<string> ExtractSlots(string? text)

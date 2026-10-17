@@ -17,6 +17,8 @@ public sealed class StatusApplication
     public double Potency { get; init; } = 1;
     public string SourceKey { get; init; } = "";
     public TagSet Tags { get; init; } = TagSet.Empty;
+    /// <summary>The effect depth the application came from; carried by the <see cref="StatusApplied"/> event.</summary>
+    public int Depth { get; init; }
 }
 
 /// <summary>
@@ -128,12 +130,12 @@ public sealed class StatusService
             instance.Values["potency"] = Math.Max(instance.Values.GetValueOrDefault("potency", 1), app.Potency);
         }
         Refresh(sim, target, stats, statuses);
-        sim.Events.Publish(new StatusApplied(target, source, statusId, instance.Stacks, instance.Remaining) { Tick = sim.Clock.Tick });
+        sim.Events.Publish(new StatusApplied(target, source, statusId, instance.Stacks, instance.Remaining) { Tick = sim.Clock.Tick, Depth = app.Depth });
 
         if (def.BuildupInto is not null && instance.Stacks >= def.MaxStacks)
         {
             RemoveInstance(sim, target, stats, statuses, instance, expired: false);
-            Apply(sim, target, def.BuildupInto, source, new StatusApplication { Magnitude = app.Magnitude, Potency = app.Potency, SourceKey = app.SourceKey, Tags = app.Tags });
+            Apply(sim, target, def.BuildupInto, source, new StatusApplication { Magnitude = app.Magnitude, Potency = app.Potency, SourceKey = app.SourceKey, Tags = app.Tags, Depth = app.Depth });
         }
         return instance;
     }

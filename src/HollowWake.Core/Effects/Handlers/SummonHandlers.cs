@@ -13,10 +13,21 @@ using static HollowWake.Core.Effects.Handlers.EffectHelpers;
 
 namespace HollowWake.Core.Effects.Handlers;
 
-// Summons and spawns.
+/// <summary>Summons and spawns.</summary>
+public static class SummonHandlers
+{
+    public static void Register(EffectRegistry r)
+    {
+        r.Register(new SummonHandler());
+        r.Register(new SpawnHandler());
+    }
+}
+
 internal sealed class SummonHandler : IEffectHandler
 {
     public string Type => "summon";
+
+    public EffectSignature Signature { get; } = EffectSignature.Of("pattern", "count", "duration", "max_active", "group");
 
     public CompiledEffect Compile(JsonObject p, EffectCompileContext ctx) => new Effect
     {
@@ -68,6 +79,8 @@ internal sealed class SummonHandler : IEffectHandler
 internal sealed class SpawnHandler : IEffectHandler
 {
     public string Type => "spawn";
+
+    public EffectSignature Signature { get; } = EffectSignature.Of("pattern", "count", "lifetime");
 
     public CompiledEffect Compile(JsonObject p, EffectCompileContext ctx) => new Effect
     {
