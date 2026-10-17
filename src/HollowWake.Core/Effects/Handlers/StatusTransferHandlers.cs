@@ -199,8 +199,8 @@ internal sealed class ConsumeStatusHandler : IEffectHandler
         public override void Execute(EffectContext ctx)
         {
             var sim = ctx.Sim;
-            EffectVars.Set(ctx, As, 0);
-            EffectVars.Set(ctx, AsDamage, 0);
+            ctx.Vars[As] = 0;
+            ctx.Vars[AsDamage] = 0;
             if (!OnSelf && ctx.Target.IsNone)
             {
                 return;
@@ -226,8 +226,8 @@ internal sealed class ConsumeStatusHandler : IEffectHandler
                 stacks += spent;
                 left -= spent;
             }
-            EffectVars.Set(ctx, As, stacks);
-            EffectVars.Set(ctx, AsDamage, damage);
+            ctx.Vars[As] = stacks;
+            ctx.Vars[AsDamage] = damage;
         }
     }
 }
@@ -267,7 +267,7 @@ internal sealed class SpreadStatusHandler : IEffectHandler
         public override void Execute(EffectContext ctx)
         {
             var sim = ctx.Sim;
-            EffectVars.Set(ctx, "spread", 0);
+            ctx.Vars["spread"] = 0;
             var bearer = ctx.Target;
             if (bearer.IsNone || sim.World.Get<Transform>(bearer) is not { } t)
             {
@@ -276,7 +276,7 @@ internal sealed class SpreadStatusHandler : IEffectHandler
             var spreading = Select.On(sim, bearer);
             if (spreading.Count == 0)
             {
-                EffectVars.Set(ctx, "spread", 0);
+                ctx.Vars["spread"] = 0;
                 return;
             }
             var strength = ctx.Eval(Strength, 1);
@@ -305,7 +305,7 @@ internal sealed class SpreadStatusHandler : IEffectHandler
                     }
                 }
             }
-            EffectVars.Set(ctx, "spread", copies);
+            ctx.Vars["spread"] = copies;
         }
     }
 }
@@ -411,7 +411,7 @@ internal sealed class MoveStatusHandler : IEffectHandler
                     moved++;
                 }
             }
-            EffectVars.Set(ctx, "moved", moved);
+            ctx.Vars["moved"] = moved;
         }
     }
 }
@@ -454,7 +454,7 @@ internal sealed class RuptureHandler : IEffectHandler
         public override void Execute(EffectContext ctx)
         {
             var sim = ctx.Sim;
-            EffectVars.Set(ctx, "ruptured", 0);
+            ctx.Vars["ruptured"] = 0;
             if (!OnSelf && ctx.Target.IsNone)
             {
                 return;
@@ -469,7 +469,7 @@ internal sealed class RuptureHandler : IEffectHandler
             var thread = StatusTransferHandlers.ThreadOf(sim, Status);
             var packet = DamagePipeline.BuildFixed(at, new[] { (thread, spent) }, Tags);
             var result = DamagePipeline.Apply(at, packet);
-            EffectVars.Set(ctx, "ruptured", result.Total);
+            ctx.Vars["ruptured"] = result.Total;
             sim.Events.Publish(new StatusRuptured(ctx.Source, bearer, Status, result.Total) { Tick = sim.Clock.Tick, Depth = ctx.Depth });
         }
     }
