@@ -1,0 +1,13 @@
+# Live cast observation and positional release: core ownership
+
+Base: combined integration commit `1ee5388f78fcfc2e7abc1259060f10484a1e9c48`, which includes cast presentation `edb0084` and delivery-plan foundation `a9402ac`. Work is isolated in `codex/cast-forecast-core`. The owner's coordination request in the integration chat explicitly authorizes working together on shared forecasts and hitboxes in both clients. This core slice implements the [positional-hit handoff](2026-10-17-positional-hits.md) and a read-only active-cast observation API.
+
+Ownership: core runtime/definitions/validation, combat content, core tests, combat/delivery contracts and this record. The integration chat owns protocol, server routing, both clients, their configuration/tests and `cast-forecasting.md`. No changes to those files or another checkout belong here. This branch will supply commits for cherry-pick into the integration branch, not merge into main.
+
+Agreed API: `WeaveRuntime.DescribeCast(Simulation, Entity) -> CastForecast?`. It exposes cast identity and content identity, live source position, sample tick/time, independent emission/readiness/maximum-hold deadlines, emission ordinal, direction policy/commitment, a detached effect context and the shared `DeliveryForecast`. The context is for server-side current-candidate eligibility checks, never serialization. Unsupported graphs remain explicitly unavailable. Primary coverage never implies complete coverage, damage or future eligibility.
+
+Observation must not compile a new weave, initialize runtime scopes, spend resources, evaluate opaque inputs, roll RNG, emit events or create scheduled work. Cast-local geometry modifiers must come from the same helpers used by execution, with honest unavailable coverage where prospective state cannot be safely represented. Held readiness and a scheduled beat do not prove emission. Existing ordinary timed facing commits at start; held aim retains its existing tracking/release policy.
+
+Incremental implementation handoff: the core builds, and the first 19 positional regressions pass locally. Full observation/catalog regressions and final gates are ongoing in follow-up commits. The existing channeler/trigger-caster duel needs its expected trace updated: a kiting channeler now escapes the duelist's committed swings; it previously took hits outside reach. AI selection now samples the same primary plan to prevent stationary out-of-reach cast loops. This is an integration checkpoint, not a completion or merge recommendation. Verification and contract updates will follow.
+
+Acknowledged by: integration chat accepted this API seam; Claude review pending the integrated PR.

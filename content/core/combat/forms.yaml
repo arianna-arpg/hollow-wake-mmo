@@ -6,6 +6,7 @@ entries:
     name: Strike
     description: A weapon blow against one foe.
     targeting: enemy
+    release_check: none # The sector selects a body at release; its aimed target is only a preference.
     cast_mode: cast
     cast_time: "weapon.attack.time"
     costs: { stamina: 4 }
@@ -17,10 +18,20 @@ entries:
     max_glyphs: 3
     ai: { role: damage, preferred_range: 1.6, weight: 1 }
     effects:
-      - type: damage
-        amount: "lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power"
-        threads: $threads
-        tags: [hit]
+      - type: area
+        shape: sector
+        center: source
+        radius: "weave.range"
+        angle: "weave.melee.arc"
+        reach: edge
+        max_targets: 1
+        pick: aimed_nearest
+        report_miss: true
+        effects:
+          - type: damage
+            amount: "lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power"
+            threads: $threads
+            tags: [hit]
 
   - id: cleave
     name: Cleave
