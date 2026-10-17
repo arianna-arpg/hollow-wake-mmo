@@ -48,6 +48,16 @@ public interface IDeliveryPlanSource
 }
 
 /// <summary>
+/// Internal fast path for a fresh observation-only context. It may initialize that context's scope;
+/// callers must not pass an execution context or reuse it for a later sample. Providers still perform
+/// the same live dependency checks and resolution. Third-party providers retain the public path.
+/// </summary>
+internal interface IDetachedDeliveryPlanSource : IDeliveryPlanSource
+{
+    DeliveryForecast DescribeDetachedDelivery(EffectContext context);
+}
+
+/// <summary>
 /// A primary-region observation only. It deliberately does not certify payload effects, secondary
 /// scatter/pulses, later graph nodes, hit outcomes, cast commitment or application times.
 /// A missing region means unknown coverage, not empty/safe space.
@@ -59,6 +69,10 @@ public sealed record DeliveryForecast(ResolvedAreaPlan? PrimaryRegion, string? U
 
 public static class DeliveryForecasts
 {
+    internal static DeliveryForecast DescribeDetached(IReadOnlyList<CompiledEffect> graph, EffectContext context) =>
+        graph.Count == 1 && graph[0] is IDetachedDeliveryPlanSource provider
+            ? provider.DescribeDetachedDelivery(context) : Describe(graph, context);
+
     public static DeliveryForecast Describe(CompiledEffect effect, EffectContext context) =>
         effect is IDeliveryPlanSource provider ? provider.DescribeDelivery(context) :
             DeliveryForecast.Unavailable("unsupported_delivery");

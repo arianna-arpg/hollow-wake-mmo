@@ -133,7 +133,7 @@ public sealed partial class WeaveRuntime
                 pulse && cast.Pulses > 0),
         };
         vars.WriteTo(context.Vars);
-        var delivery = unavailable is null ? DeliveryForecasts.Describe(effects, context) : DeliveryForecast.Unavailable(unavailable);
+        var delivery = unavailable is null ? DeliveryForecasts.DescribeDetached(effects, context) : DeliveryForecast.Unavailable(unavailable);
 
         var tracks = cast.Mode == CastMode.Channel && weave.Form.Channel?.TrackAim == true ||
             cast.Mode == CastMode.Guard && weave.Form.Guard?.TurnRate is not null;

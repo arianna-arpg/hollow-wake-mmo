@@ -1,0 +1,27 @@
+AI primary-area query allocation probe
+Command from repository root:
+dotnet run --project experiments/cast-forecast-core/AiPlanProbe.csproj -c Release
+
+Baseline implementation: f51599df2026de3c9daa8ff8d1cdc4d6a3dc1acd
+AI primary-area query: 2500 calls, 2500 selected, 1312 bytes/call, 21.349 ms total.
+
+Optimized implementation: allocation follow-up recorded with this evidence
+AI primary-area query: 2500 calls, 2500 selected, 568 bytes/call, 17.628 ms total.
+
+Arena seed 11, loosed_kindler versus hob, 1.5 units apart, hostile factions.
+Only the caster's strike slot is eligible. No simulation ticks run during the probe.
+512 warmup calls; 2500 measured calls; setup and warmup excluded.
+Allocations use GC.GetAllocatedBytesForCurrentThread; elapsed uses Stopwatch.
+744 fewer bytes per query, a 56.7% reduction in this isolated scenario.
+Elapsed samples are illustrative, not a production benchmark or budget claim.
+The integration chat owns final default and minion-heavy production measurements.
+
+Correctness checks on the optimized implementation:
+Release solution build: 0 warnings, 0 errors.
+Release solution tests: 562 core + 90 client + 38 server = 690 passing.
+Content validation: 0 errors, 0 warnings. Load smoke: 200 ticks, no system errors.
+Exact normalized duel matches against retained after-* evidence:
+proving_reaver / proving_bulwark: 513 lines (--seconds 60 --lines 2000).
+tide_channeler / spark_duelist: 41 lines (--seconds 60; first 40 events plus totals).
+wolf / hob: 41 lines (--seconds 60; first 40 events plus totals).
+Normalization trims trailing whitespace and treats line endings equivalently.
