@@ -94,7 +94,7 @@ Both draw the shield as a frosted glass veil over the life orb, the ward as a go
 
 ## The web client
 
-The browser client draws the same cluster, core pane, ribbon and world panes from the same theme content and the same messages, so a player sees one interface on either client. It lags the desktop client when a feature is new; a surface is done when both clients show it.
+The browser client draws the same cluster, core pane, ribbon, pages, world panes and Options from the same theme content and the same messages, so a player sees one interface on either client. Its layout logic is the same as the desktop's, kept as plain modules with tests beside the desktop's `UI/Logic` (see [web-client.md](web-client.md)). It lags the desktop client when a feature is new; a surface is done when both clients show it.
 
 ## What the client reads
 
