@@ -30,6 +30,9 @@ public sealed class QuestLog : IComponent
     public HashSet<string> Completed { get; } = new(StringComparer.Ordinal);
     public HashSet<string> Discovered { get; } = new(StringComparer.Ordinal);
     public Dictionary<string, double> Reputation { get; } = new(StringComparer.Ordinal);
+
+    /// <summary>Story flags conversations and rewards set (<c>has("flag.met_quartermaster")</c> in gates).</summary>
+    public HashSet<string> Flags { get; } = new(StringComparer.Ordinal);
 }
 
 /// <summary>A player-controlled entity and its pending intents.</summary>

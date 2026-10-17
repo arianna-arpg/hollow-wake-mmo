@@ -52,6 +52,16 @@ public sealed class CharacterSheet
     public List<string> CompletedQuests { get; set; } = new();
     public List<string> Discovered { get; set; } = new();
     public Dictionary<string, double> Reputation { get; set; } = new(StringComparer.Ordinal);
+    /// <summary>Story flags set by conversations and rewards.</summary>
+    public List<string> Flags { get; set; } = new();
+    /// <summary>Options picked on choice nodes, by node.</summary>
+    public Dictionary<string, List<string>> PassivePicks { get; set; } = new(StringComparer.Ordinal);
+    /// <summary>Passive points granted per currency by rewards.</summary>
+    public Dictionary<string, int> PassiveGranted { get; set; } = new(StringComparer.Ordinal);
+    /// <summary>Realms opened.</summary>
+    public List<string> OpenRealms { get; set; } = new();
+    /// <summary>Refunds made.</summary>
+    public int PassiveRefunds { get; set; }
     public Dictionary<string, double> Resources { get; set; } = new(StringComparer.Ordinal);
     public double X { get; set; }
     public double Y { get; set; }
@@ -209,8 +219,22 @@ public sealed class CharacterFactory
             stats.Attributes.AddRange(calling.Modifiers, "calling:" + calling.Id);
         }
         stats.Passives.AddRange(sheet.Passives.Distinct(StringComparer.Ordinal));
-        stats.PassivePointsSpent = stats.Passives.Sum(id => sim.Content.Get<PassiveNodeDef>(id) is { } n && n.Kind != PassiveKind.Start ? n.Cost : 0);
-        sim.Service<ProgressionService>().ApplyAllocated(sim, stats);
+        var passives = sim.World.Add(e, new PassiveState { Refunds = sheet.PassiveRefunds });
+        foreach (var (node, picks) in sheet.PassivePicks)
+        {
+            passives.Picks[node] = new List<string>(picks);
+        }
+        foreach (var (currency, points) in sheet.PassiveGranted)
+        {
+            passives.Granted[currency] = points;
+        }
+        foreach (var realm in sheet.OpenRealms)
+        {
+            passives.OpenRealms.Add(realm);
+        }
+        var progression = sim.Service<ProgressionService>();
+        progression.ApplyAllocated(sim, stats, passives);
+        progression.RecountSpent(sim, e, stats, passives);
 
         var book = sim.World.Add(e, new WeaveBook());
         foreach (var w in sheet.Weaves)
@@ -279,6 +303,12 @@ public sealed class CharacterFactory
         {
             log.Reputation[f] = r;
         }
+        foreach (var flag in sheet.Flags)
+        {
+            log.Flags.Add(flag);
+        }
+        // Realms whose unlocks read quests and flags open once those are back.
+        progression.RefreshRealms(sim, e);
 
         stats.FillResources();
         foreach (var (res, value) in sheet.Resources)
@@ -306,6 +336,13 @@ public sealed class CharacterFactory
             sheet.Level = stats.Level;
             sheet.Xp = stats.Xp;
             sheet.Passives = stats.Passives.ToList();
+            if (sim.World.TryGet<PassiveState>(e, out var passives))
+            {
+                sheet.PassivePicks = passives.Picks.ToDictionary(kv => kv.Key, kv => new List<string>(kv.Value), StringComparer.Ordinal);
+                sheet.PassiveGranted = new Dictionary<string, int>(passives.Granted, StringComparer.Ordinal);
+                sheet.OpenRealms = passives.OpenRealms.ToList();
+                sheet.PassiveRefunds = passives.Refunds;
+            }
             sheet.Resources = new Dictionary<string, double>(stats.Resources, StringComparer.Ordinal);
         }
         if (sim.World.TryGet<WeaveBook>(e, out var book))
@@ -341,6 +378,7 @@ public sealed class CharacterFactory
             sheet.CompletedQuests = log.Completed.ToList();
             sheet.Discovered = log.Discovered.ToList();
             sheet.Reputation = new Dictionary<string, double>(log.Reputation, StringComparer.Ordinal);
+            sheet.Flags = log.Flags.ToList();
         }
         sheet.LastPlayedAt = DateTimeOffset.UtcNow;
     }

@@ -13,10 +13,97 @@ internal static class ProgressionKinds
 {
     public static void Register()
     {
+        foreach (var prefix in Progression.HeroScope.Prefixes)
+        {
+            ScopeNames.DeclarePrefix(prefix);
+        }
+        ScopeNames.Declare("node_cost");
+        ScopeNames.Declare("refunds");
         ContentKinds.AddValidator<GlyphDef>(Axes);
         ContentKinds.AddValidator<GlyphDef>((d, c) => ItemFields(d.DropWeight, d.MinLevel, d.Requirements, c));
         ContentKinds.AddValidator<FormDef>((d, c) => ItemFields(d.DropWeight, d.MinLevel, d.Requirements, c));
         ContentKinds.AddValidator<LootTableDef>(LootPayloads);
+        ContentKinds.Register<PassiveChoiceDef>("passive_choices", Choices);
+        ContentKinds.Register<PassiveRealmDef>("passive_realms", Realm);
+        ContentKinds.AddValidator<PassiveNodeDef>(NodeChoice);
+    }
+
+    private static void Choices(PassiveChoiceDef d, ValidationContext c)
+    {
+        var ids = new HashSet<string>(StringComparer.Ordinal);
+        foreach (var option in d.Options)
+        {
+            if (!ids.Add(option.Id))
+            {
+                c.Error($"option '{option.Id}' is declared twice.");
+            }
+            c.Modifiers(option.Modifiers, $"options.{option.Id}.modifiers");
+        }
+        if (d.Options.Count == 0 && d.Generate is null)
+        {
+            c.Error("a choice group needs options or a generate block.");
+        }
+        if (d.Generate is { } generate && !c.Registry.Attributes.All.Any(a => a.Category == generate.Category))
+        {
+            c.Error($"generate.category '{generate.Category}' has no attributes.");
+        }
+        if (d.Pick < 1)
+        {
+            c.Error("pick must be at least 1.");
+        }
+        if (d.Max is < 1)
+        {
+            c.Error("max must be at least 1.");
+        }
+        if (d.Default is { } fallback && !ids.Contains(fallback) && d.Generate is null)
+        {
+            c.Error($"default '{fallback}' is not one of the options.");
+        }
+    }
+
+    private static void Realm(PassiveRealmDef d, ValidationContext c)
+    {
+        if (d.Adjacency is not ("tree" or "free"))
+        {
+            c.Error($"adjacency must be tree or free, not '{d.Adjacency}'.");
+        }
+        c.Refs<PassiveNodeDef>(d.Roots, "roots");
+        c.Expression(d.Unlock, "unlock");
+        if (d.Calling is not null)
+        {
+            c.Ref<CallingDef>(d.Calling, "calling");
+        }
+        foreach (var root in d.Roots)
+        {
+            if (c.Registry.Get<PassiveNodeDef>(root) is { } node && node.Realm != d.Id)
+            {
+                c.Error($"root '{root}' belongs to realm '{node.Realm}'.");
+            }
+        }
+    }
+
+    private static void NodeChoice(PassiveNodeDef d, ValidationContext c)
+    {
+        if (d.Realm != Progression.ProgressionService.MainRealm)
+        {
+            c.Ref<PassiveRealmDef>(d.Realm, "realm");
+        }
+        if (d.Choice is not { } choice)
+        {
+            return;
+        }
+        if (!c.Ref<PassiveChoiceDef>(choice.Group, "choice.group"))
+        {
+            return;
+        }
+        if (choice.Pick is < 1)
+        {
+            c.Error("choice.pick must be at least 1.");
+        }
+        if (choice.Default is { } fallback && Progression.PassiveChoices.Option(c.Registry, choice.Group, fallback) is null)
+        {
+            c.Error($"choice.default '{fallback}' is not an option of group '{choice.Group}'.");
+        }
     }
 
     private static void ItemFields(double dropWeight, int minLevel, Dictionary<string, double> requirements, ValidationContext c)

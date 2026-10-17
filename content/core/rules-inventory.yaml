@@ -26,6 +26,18 @@ entries:
       codex_max_level: 20
       # How much more often a drop draws a glyph or form the dropper weaves with.
       drop_lean: 4
+      # How far around the hero to look for a font, a stash or a station before checking each one's own reach.
+      reach_search: 12
+
+  - id: passives
+    values:
+      # What refunding one node costs at a font, per currency: expressions of the hero (level, wallet ...), the
+      # node's cost (node_cost) and the refunds made so far (refunds).
+      refund_cost:
+        shards: "4 + level * 2 * node_cost + refunds"
+      # Points of a realm's currency that levels give (beside those quests grant), as expressions of level.
+      points:
+        devotion: "0"
 
   # Heroes own their weaves: a set-weave must name what the rack seat holds (the codex, its stones in order,
   # attuned Threads). The casting rules declare the switch; the item model turns it on.

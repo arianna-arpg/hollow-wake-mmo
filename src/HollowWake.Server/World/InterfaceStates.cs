@@ -595,8 +595,34 @@ public static class InterfaceStates
     {
         var stats = sim.World.Require<Stats>(e);
         var progression = sim.Service<ProgressionService>();
-        var points = new Dictionary<string, int>(StringComparer.Ordinal) { ["passive"] = progression.AvailablePoints(sim, stats) };
-        return new PassiveStateMsg(new List<string>(stats.Passives), new Dictionary<string, List<string>>(StringComparer.Ordinal), points, new List<string> { "star" }, false);
+        var state = sim.World.Get<PassiveState>(e);
+        var points = new Dictionary<string, int>(StringComparer.Ordinal);
+        foreach (var currency in progression.Currencies(sim))
+        {
+            points[currency] = progression.Points(sim, e, currency);
+        }
+        var picks = new Dictionary<string, List<string>>(StringComparer.Ordinal);
+        if (state is not null)
+        {
+            foreach (var (node, options) in state.Picks)
+            {
+                picks[node] = new List<string>(options);
+            }
+        }
+        var realms = new List<string> { ProgressionService.MainRealm };
+        foreach (var realm in sim.Content.Each<PassiveRealmDef>().OrderBy(r => r.Order).ThenBy(r => r.Id, StringComparer.Ordinal))
+        {
+            if (progression.RealmOpen(sim, e, realm.Id))
+            {
+                realms.Add(realm.Id);
+            }
+        }
+        var font = Core.Interaction.Fonts.InReach(sim, e);
+        return new PassiveStateMsg(new List<string>(stats.Passives), picks, points, realms, font is not null)
+        {
+            Font = font?.Key,
+            RefundCost = font is null ? null : progression.RefundCostText(sim, e, new PassiveNodeDef { Id = "", Cost = 1 }),
+        };
     }
 
     public static ulong PassiveFingerprint(Simulation sim, Entity e)
@@ -611,6 +637,23 @@ public static class InterfaceStates
                 h.Add(p);
             }
         }
+        if (sim.World.TryGet<PassiveState>(e, out var state))
+        {
+            h.Add(state.Refunds);
+            foreach (var (node, picks) in state.Picks)
+            {
+                h.Add(node);
+                h.Add(picks.Count);
+            }
+            foreach (var (currency, points) in state.Granted)
+            {
+                h.Add(currency);
+                h.Add(points);
+            }
+            h.Add(state.OpenRealms.Count);
+        }
+        // Standing at a font turns refunds on.
+        h.Add(Core.Interaction.Fonts.InReach(sim, e)?.Key ?? -1);
         return h.Value;
     }
 

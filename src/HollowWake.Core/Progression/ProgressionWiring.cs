@@ -18,5 +18,6 @@ public static class ProgressionWiring
         sim.AddService(rack);
         inventory.Register(rack);
         sim.AddService<IWeaveOwnership>(new WeaveOwnership());
+        sim.AddSystem(new PassiveSystem());
     }
 }

@@ -206,6 +206,20 @@ public sealed class QuestService
             {
                 log.Reputation[faction] = log.Reputation.GetValueOrDefault(faction) + amount;
             }
+            foreach (var flag in r.Flags)
+            {
+                if (log.Flags.Add(flag))
+                {
+                    sim.Events.Publish(new StoryFlagSet(player, flag, true) { Tick = sim.Clock.Tick });
+                }
+            }
+        }
+        if (r.Points.Count > 0 && sim.TryService<ProgressionService>(out var points))
+        {
+            foreach (var (currency, amount) in r.Points)
+            {
+                points.GrantPoints(sim, player, currency, amount);
+            }
         }
         if (r.Weaves.Count > 0 && sim.Content.Rules.Flag("casting.require_ownership", false))
         {

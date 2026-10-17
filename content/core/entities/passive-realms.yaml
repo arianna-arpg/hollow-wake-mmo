@@ -1,0 +1,20 @@
+# Realms: constellations of their own, shown as tabs beside the star. A realm opens when its unlock holds over the
+# hero; its roots are then granted free, and its nodes spend the realm's own currency.
+kind: passive_realms
+entries:
+  - id: devotion
+    name: Devotion
+    description: What the Wellmother teaches those who touched her.
+    adjacency: tree
+    roots: [devotion_root]
+    currency: devotion
+    unlock: 'has("quest.completed.the_wellmother")'
+    sealed_text: Touch the Wellmother and return to the Quartermaster to open Devotion.
+    order: 1
+---
+kind: passives
+entries:
+  - { id: devotion_root, name: The Wellmother's Mark, kind: start, realm: devotion, x: 0, y: 0, links: [dv1, dv2], modifiers: [ { attribute: life.max, form: flat, value: 5 } ] }
+  - { id: dv1, name: Still Water, kind: small, realm: devotion, x: -3, y: 3, links: [devotion_root, dv3], modifiers: [ { attribute: mana.regen, form: increased, value: 0.1 } ] }
+  - { id: dv2, name: Deep Spring, kind: small, realm: devotion, x: 3, y: 3, links: [devotion_root, dv3], modifiers: [ { attribute: life.regen, form: flat, value: 1 } ] }
+  - { id: dv3, name: The Wellmother's Vows, kind: notable, realm: devotion, x: 0, y: 6, links: [dv1, dv2], choice: { group: wellmother_vows } }
