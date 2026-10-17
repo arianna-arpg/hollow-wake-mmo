@@ -144,8 +144,14 @@ public sealed class FieldSystem : SimSystem
             return;
         }
         var spec = f.Spec;
-        if (!f.Follow.IsNone && sim.World.TryGet<Transform>(f.Follow, out var ft))
+        if (!f.Follow.IsNone)
         {
+            if (!sim.World.TryGet<Transform>(f.Follow, out var ft) || sim.World.Has<Dead>(f.Follow))
+            {
+                // A field carried by a body (an aura) ends when its bearer falls.
+                End(sim, e);
+                return;
+            }
             t.Position = ft.Position;
             sim.Spatial.Update(e, t.Position);
         }

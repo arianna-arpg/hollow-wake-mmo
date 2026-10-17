@@ -433,17 +433,21 @@ internal sealed class AimHandler : IEffectHandler
         public required Expr Spread;
         public double[] Sequence = Array.Empty<double>();
         public CompiledEffect[] Effects = Array.Empty<CompiledEffect>();
-        // Where each source is in the sequence; a source's cursor lives as long as the compiled weave.
-        private readonly Dictionary<Entity, int> _cursor = new();
 
         public override void Execute(EffectContext ctx)
         {
             var degrees = ctx.Eval(Offset, 0);
-            if (Sequence.Length > 0)
+            if (Sequence.Length > 0 && ctx.Sim.World.IsAlive(ctx.Source))
             {
-                _cursor.TryGetValue(ctx.Source, out var at);
+                // Each source keeps its own place in the sequence, on itself, so it goes with the body.
+                var cursors = ctx.Sim.World.GetOrAdd<AimCursors>(ctx.Source).ByAim;
+                if (!cursors.TryGetValue(this, out var at) && cursors.Count >= AimCursors.Max)
+                {
+                    // Recompiled weaves leave their old aims behind; past a handful, every sequence starts over.
+                    cursors.Clear();
+                }
                 degrees += Sequence[at % Sequence.Length];
-                _cursor[ctx.Source] = (at + 1) % Sequence.Length;
+                cursors[this] = (at + 1) % Sequence.Length;
             }
             var spread = ctx.Eval(Spread, 0) * WeaveAttr(ctx, "aim.spread", 1);
             if (spread > 0)

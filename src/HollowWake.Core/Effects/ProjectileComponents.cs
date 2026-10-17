@@ -314,6 +314,15 @@ public sealed class Field : IComponent
     public bool Ended;
 }
 
+/// <summary>Where a body stands in each aim sequence it casts through, keyed by the compiled aim; gone with the body.</summary>
+public sealed class AimCursors : IComponent
+{
+    /// <summary>Aims a body keeps a place in at once; a weave recompiled past this many times starts its sequences over.</summary>
+    public const int Max = 16;
+
+    public Dictionary<object, int> ByAim { get; } = new(ReferenceEqualityComparer.Instance);
+}
+
 /// <summary>
 /// A live line between two ends (bodies or a point): every interval it strikes the bodies it passes within
 /// half its width of. It ends when its time runs out, when an end it is bound to is gone, or when it is

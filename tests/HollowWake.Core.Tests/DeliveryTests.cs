@@ -66,10 +66,10 @@ internal sealed class DeliveryArena
         return effects.Compile(Spec(json), new EffectCompileContext { Content = Sim.Content, Registry = effects, Owner = "test", Compiler = Sim.Service<WeaveCompiler>(), Threads = new[] { "ember" } });
     }
 
-    public EffectContext Context(Vector3 point, Vector2? direction = null, Entity? target = null, CompiledWeave? weave = null, ulong rng = 77) => new()
+    public EffectContext Context(Vector3 point, Vector2? direction = null, Entity? target = null, CompiledWeave? weave = null, ulong rng = 77, Entity? source = null) => new()
     {
         Sim = Sim,
-        Source = Caster,
+        Source = source ?? Caster,
         Target = target ?? Entity.None,
         Point = point,
         Direction = direction ?? Vector2.Zero,
@@ -880,6 +880,23 @@ public class AuraTetherAimDetonateTests
     }
 
     [Fact]
+    public void AnAuraEndsWhenItsBearerFalls()
+    {
+        var arena = DeliveryArena.Create();
+        var ally = arena.Body(11.5f, 10, faction: "red");
+        var allyStats = arena.Sim.World.Get<Stats>(ally)!;
+        var before = allyStats.Get("move.speed");
+        arena.Run("{\"type\": \"aura\", \"radius\": 3, \"interval\": 0.25, \"domain\": [{\"attribute\": \"move.speed\", \"form\": \"more\", \"value\": 0.5}], \"on_end\": [{\"type\": \"event\", \"name\": \"t_end\"}]}", new Vector3(10, 10, 0));
+        arena.Tick(2);
+        Assert.Equal(before * 1.5, allyStats.Get("move.speed"), 6);
+        arena.Sim.World.Add(arena.Caster, new Dead { DiedAt = arena.Sim.Clock.Time });
+        arena.Tick(2);
+        Assert.Equal(before, allyStats.Get("move.speed"), 6);
+        Assert.Single(arena.Struck("t_end"));
+        Assert.Empty(arena.Sim.World.Query<Field>());
+    }
+
+    [Fact]
     public void TethersStrikeWhatCrossesThemAndSnapWhenStretched()
     {
         var arena = DeliveryArena.Create();
@@ -926,6 +943,27 @@ public class AuraTetherAimDetonateTests
         Assert.Equal(spread, Spread(9));
         Assert.All(spread, y => Assert.InRange(y * 180 / MathF.PI, -20.01f, 20.01f));
         Assert.True(spread.Distinct().Count() > 1);
+    }
+
+    [Fact]
+    public void EachBodyKeepsItsOwnPlaceInAnAimSequence()
+    {
+        var arena = DeliveryArena.Create();
+        var other = arena.Body(10, 14, faction: "red");
+        var aim = arena.Effect("{\"type\": \"aim\", \"sequence\": [-30, 0, 30], \"effects\": [{\"type\": \"projectile\", \"speed\": 10, \"range\": 8, \"pierce\": 0}]}");
+        var yaws = new Dictionary<Entity, List<float>> { [arena.Caster] = new(), [other] = new() };
+        foreach (var source in new[] { arena.Caster, other, arena.Caster, other, other })
+        {
+            var before = arena.Spawned("projectile").Count;
+            aim.Execute(arena.Context(new Vector3(20, 12, 0), Vector2.UnitX, source: source));
+            var shot = arena.Spawned("projectile")[before].Entity;
+            yaws[source].Add(MathF.Round(arena.Sim.World.Get<Transform>(shot)!.Yaw * 180 / MathF.PI));
+        }
+        Assert.Equal(new[] { -30f, 0f }, yaws[arena.Caster]);
+        Assert.Equal(new[] { -30f, 0f, 30f }, yaws[other]);
+        // The place is kept on the body, so it goes when the body does.
+        arena.Sim.World.Destroy(other);
+        Assert.Single(arena.Sim.World.Query<AimCursors>());
     }
 
     [Fact]

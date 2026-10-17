@@ -136,7 +136,7 @@ A flight's entity has a `Transform` (position and heading), an `Identity` (look 
 |---|---|
 | `radius`, `shape`, `angle`, `width`, `inner` | its shape, as for areas; default `radius` the weave's `area.radius` |
 | `filter` | who pulses reach, as for areas |
-| `follow` | moves with its caster |
+| `follow` | moves with its caster, and ends (running `on_end`) when its caster dies |
 | `delay` | lands this many seconds later; until then it is marked and does nothing |
 | `exposure` | seconds a body must stand inside before pulses reach it |
 | `hit_once` | each body is pulsed once; `rearm_on_exit` lets a body that leaves and returns be pulsed again |
@@ -154,7 +154,7 @@ Hooks: `on_land` when a delayed field arrives, `on_tick` once each pulse at its 
 
 ## Auras
 
-`aura` places a field that goes where its source goes: `radius` (the weave's `area.radius`), a `domain` of modifiers for the bodies inside that pass `domain_filter` (default `ally_or_self`), a `pulse` (the `on_hit` hook) on the bodies passing `filter` every `interval` (1), `on_tick` at its center, and `on_enter`, `on_exit` and `on_end`. One aura per source and `key` (default the weave's): casting it again replaces it, or with `toggle` turns it off; a toggled aura lasts until turned off, others `duration` (the weave's). Reserving mana while it runs and paying upkeep belong to the cast modes.
+`aura` places a field that goes where its source goes: `radius` (the weave's `area.radius`), a `domain` of modifiers for the bodies inside that pass `domain_filter` (default `ally_or_self`), a `pulse` (the `on_hit` hook) on the bodies passing `filter` every `interval` (1), `on_tick` at its center, and `on_enter`, `on_exit` and `on_end`. One aura per source and `key` (default the weave's): casting it again replaces it, or with `toggle` turns it off; a toggled aura lasts until turned off, others `duration` (the weave's). An aura ends when its bearer dies, running its `on_end`. Reserving mana while it runs and paying upkeep belong to the cast modes.
 
 ## Tethers
 
@@ -168,7 +168,7 @@ Hooks: `on_land` when a delayed field arrives, `on_tick` once each pulse at its 
 
 Areas, fields and strikes placed under a cascade or an aftershock multiply their radius by variable `placement.scale`. A telegraphed strike or delayed field is marked by an entity with look `telegraph` (and a radius) that lives until it lands, and by a `PlacementTelegraphed` event.
 
-`aim` is a wrapper that turns the bearing its `effects` are delivered along: by `offset` degrees, by the next bearing of a `sequence` each time the same source runs it, and by a random turn within `spread` degrees (scaled by the weave's `aim.spread`) rolled on the cast's stream. The point turns about the source with it, and its deliveries go along the bearing rather than at a target. Glyphs graft it onto a form's delivery with a wrap patch.
+`aim` is a wrapper that turns the bearing its `effects` are delivered along: by `offset` degrees, by the next bearing of a `sequence` each time the same source runs it (the place in the sequence is kept on the source, so it goes with the body), and by a random turn within `spread` degrees (scaled by the weave's `aim.spread`) rolled on the cast's stream. The point turns about the source with it, and its deliveries go along the bearing rather than at a target. Glyphs graft it onto a form's delivery with a wrap patch.
 
 `detonate` sets off what the source owns: its projectiles in flight, its fields and tethers, and anything else it owns carrying one of `tags` (default `projectile` and `field`), all of them (`pick: all`, the default) or only the one nearest the point (`nearest`), within `radius` of the point when given. Each runs `effects` where it is, then ends: a projectile with its `on_end` as if its flight ran out there, a field or tether with its `on_end`, anything else despawned.
 
