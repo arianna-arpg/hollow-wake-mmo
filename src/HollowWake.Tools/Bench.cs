@@ -12,6 +12,7 @@ using HollowWake.Core.Maths;
 using HollowWake.Core.Patterns;
 using HollowWake.Core.Sim;
 using HollowWake.Core.Tags;
+using HollowWake.Core.Weaves;
 using HollowWake.Core.Territory;
 using HollowWake.Core.World;
 using HollowWake.Core.WorldGen;
@@ -47,7 +48,7 @@ public static class Bench
         }
         if (only is "" or "tick")
         {
-            results.AddRange(Tick(content, opt("seed", "aureth"), int.Parse(opt("monsters", "300")), int.Parse(opt("players", "4")), int.Parse(opt("ticks", "600"))));
+            results.AddRange(Tick(content, opt("seed", "aureth"), int.Parse(opt("monsters", "300")), int.Parse(opt("players", "4")), int.Parse(opt("ticks", "600")), int.Parse(opt("minions", "0"))));
         }
         if (json)
         {
@@ -208,7 +209,7 @@ public static class Bench
 
     // ------------------------------------------------------------ zone tick
 
-    private static IEnumerable<Result> Tick(ContentRegistry content, string seed, int monsters, int players, int ticks)
+    private static IEnumerable<Result> Tick(ContentRegistry content, string seed, int monsters, int players, int ticks, int minions)
     {
         var generator = new WorldGenerator(content, Rng.Hash64(seed));
         var world = new WorldState(generator.Overlays);
@@ -230,6 +231,22 @@ public static class Bench
             var sheet = characters.Create(sim, "bench" + i, "bench", "Bench" + i, callings[i % callings.Count], items);
             sheet.Position = new Vector3((float)(sx + rng.Range(-6.0, 6.0)), (float)(sy + rng.Range(-6.0, 6.0)), 0);
             playerEntities.Add(characters.Materialize(sim, sheet));
+        }
+        if (minions > 0)
+        {
+            // Each player raises a pooled summon, so minions follow, assist and fight beside it: a minion-heavy zone.
+            var runtime = sim.Service<WeaveRuntime>();
+            foreach (var p in playerEntities)
+            {
+                var book = sim.World.Get<WeaveBook>(p)!;
+                var stats = sim.World.Get<Stats>(p)!;
+                var position = sim.World.Get<Transform>(p)!.Position;
+                var slot = book.Add(new HollowWake.Core.Definitions.WeaveSpec { Preset = "raise_barrow" });
+                stats.Attributes.Add(new Modifier { Attribute = "summon.max", Form = ModifierForm.Flat, Value = minions, Source = "bench" });
+                stats.Attributes.Add(new Modifier { Attribute = "summon.count", Form = ModifierForm.Flat, Value = minions, Source = "bench" });
+                runtime.TryBegin(sim, p, slot, Entity.None, position, Vector2.Zero, out _);
+            }
+            sim.Run(30);
         }
         var patterns = new[] { "hob", "wolf", "boar", "barrow_wight", "loosed_brigand" };
         for (var i = 0; i < monsters; i++)
