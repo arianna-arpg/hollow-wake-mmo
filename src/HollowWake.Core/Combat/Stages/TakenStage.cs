@@ -15,7 +15,7 @@ internal sealed class TakenStage : IHitStage
         var ts = hit.Target!;
         var tags = hit.Tags;
         var received = hit.Result.Received;
-        var fold = !hit.Plan.Skips(tags, "damage_taken");
+        var fold = !hit.Skips("damage_taken");
         for (var i = 0; i < hit.ThreadCount; i++)
         {
             if (!hit.Live[i])

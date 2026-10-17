@@ -53,6 +53,7 @@ public sealed class HitScope
         hit.ThreadCount = 0;
         hit._distanceState = 0;
         hit._angleState = 0;
+        hit._matchedKnown = false;
         hit.Values.Clear();
         return hit;
     }
@@ -117,8 +118,28 @@ public sealed class HitScope
     /// <summary>The scope of the struck body's folds: unprefixed names resolve on the struck body.</summary>
     public IExprScope VictimScope => _victim;
 
-    /// <summary>Whether this hit's tags skip a stage or a declared step (rule <c>combat.stage_skips</c>).</summary>
-    public bool Skips(string name) => Plan.Skips(Tags, name);
+    private ulong _matched;
+    private bool _matchedKnown;
+
+    /// <summary>The skip entries of rule <c>combat.stage_skips</c> this hit's tags match, worked out once per hit.</summary>
+    public ulong MatchedSkips
+    {
+        get
+        {
+            if (!_matchedKnown)
+            {
+                _matched = Plan.MatchSkips(Tags);
+                _matchedKnown = true;
+            }
+            return _matched;
+        }
+    }
+
+    /// <summary>
+    /// Whether this hit's tags skip a stage, a declared step or a pool (rule <c>combat.stage_skips</c>). Ask only
+    /// once the hit's tags are final: the match is worked out on the first question.
+    /// </summary>
+    public bool Skips(string name) => Plan.Skips(MatchedSkips, name);
 
     /// <summary>Loads the packet's Threads into the working arrays, in packet order.</summary>
     public void LoadThreads()

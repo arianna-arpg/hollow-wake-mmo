@@ -105,7 +105,7 @@ public static class DamagePipeline
             }
             if (source is not null)
             {
-                if (!hit.Plan.Skips(tags, "added"))
+                if (!hit.Skips("added"))
                 {
                     AddFlat(ctx, source, packet, hit, extra, effectiveness);
                 }
@@ -214,7 +214,7 @@ public static class DamagePipeline
     {
         var tags = packet.Tags;
         double chance;
-        if (canCrit && !hit.Plan.Skips(tags, "crit"))
+        if (canCrit && !hit.Skips("crit"))
         {
             chance = Math.Clamp(source.Attributes.Get("crit.chance", source, tags, extra), 0, 1);
         }
@@ -365,12 +365,14 @@ public static class DamagePipeline
             return result;
         }
         var hit = HitScope.Rent(ctx, packet, result);
+        bool skipAilments;
         try
         {
             hit.LoadThreads();
             var plan = hit.Plan;
             var stages = plan.Stages;
-            var skipped = plan.SkippedStages(packet.Tags);
+            var skipped = plan.SkippedStages(hit.MatchedSkips);
+            skipAilments = hit.Skips("ailments");
             for (var i = 0; i < stages.Length; i++)
             {
                 if ((skipped & (1UL << i)) != 0)
@@ -389,7 +391,10 @@ public static class DamagePipeline
         }
 
         Publish(sim, ctx, result, packet);
-        ApplyAilments(ctx, packet, result);
+        if (!skipAilments)
+        {
+            ApplyAilments(ctx, packet, result);
+        }
 
         if (ts.Resource("life") <= 0)
         {
@@ -427,7 +432,7 @@ public static class DamagePipeline
             return;
         }
         var plan = HitPlan.For(sim.Content.Rules);
-        if ((result.Blocked && plan.BlockStopsAilments) || plan.Skips(packet.Tags, "ailments"))
+        if (result.Blocked && plan.BlockStopsAilments)
         {
             return;
         }
@@ -688,6 +693,9 @@ public sealed class HitPlan
 
     private readonly (TagSet Tag, ulong Stages, HashSet<string> Names)[] _skips;
 
+    // For each stage, step or pool name, the skip entries (bits by index into _skips) that name it.
+    private readonly Dictionary<string, ulong> _entriesByName = new(StringComparer.Ordinal);
+
     private HitPlan(Rules rules)
     {
         var names = rules.Has("combat.stages") ? rules.Strings("combat.stages") : HitStages.DefaultOrder;
@@ -743,6 +751,26 @@ public sealed class HitPlan
             }
         }
         _skips = skips.ToArray();
+        if (_skips.Length > 64)
+        {
+            problems.Add("combat.stage_skips has more than 64 tags; the rest are never matched");
+            Array.Resize(ref _skips, 64);
+        }
+        for (var e = 0; e < _skips.Length; e++)
+        {
+            var (_, stageMask, others) = _skips[e];
+            for (var i = 0; i < StageNames.Length; i++)
+            {
+                if ((stageMask & (1UL << i)) != 0)
+                {
+                    _entriesByName[StageNames[i]] = _entriesByName.GetValueOrDefault(StageNames[i]) | (1UL << e);
+                }
+            }
+            foreach (var name in others)
+            {
+                _entriesByName[name] = _entriesByName.GetValueOrDefault(name) | (1UL << e);
+            }
+        }
 
         var victimTags = new List<VictimTagRule>();
         if (rules.Node("combat.victim_tags") is JsonObject vt)
@@ -847,6 +875,37 @@ public sealed class HitPlan
 
     /// <summary>What is wrong with the rules, for validation.</summary>
     public IReadOnlyList<string> Problems { get; }
+
+    /// <summary>The skip entries a hit with these tags matches, as bits by their order in <c>combat.stage_skips</c>.</summary>
+    public ulong MatchSkips(TagSet hitTags)
+    {
+        var matched = 0UL;
+        for (var e = 0; e < _skips.Length; e++)
+        {
+            if (hitTags.HasAll(_skips[e].Tag))
+            {
+                matched |= 1UL << e;
+            }
+        }
+        return matched;
+    }
+
+    /// <summary>Whether a hit that matched these skip entries skips the named stage, step or pool.</summary>
+    public bool Skips(ulong matched, string name) => matched != 0 && _entriesByName.TryGetValue(name, out var entries) && (entries & matched) != 0;
+
+    /// <summary>The stages, as bits by their index in <see cref="Stages"/>, that a hit matching these skip entries skips.</summary>
+    public ulong SkippedStages(ulong matched)
+    {
+        var mask = 0UL;
+        for (var e = 0; matched != 0 && e < _skips.Length; e++)
+        {
+            if ((matched & (1UL << e)) != 0)
+            {
+                mask |= _skips[e].Stages;
+            }
+        }
+        return mask;
+    }
 
     /// <summary>The stages, as bits by their index in <see cref="Stages"/>, that a hit with these tags skips.</summary>
     public ulong SkippedStages(TagSet hitTags)

@@ -44,7 +44,7 @@ internal static class Sustain
         var onHit = CombatNames.MayCarry(attributes, extra, names.OnHitFamily);
         // Damage over time leeches by its status's own family: the tick carries the status.{id} tag.
         var statusLeech = 0.0;
-        if (tags.Has("dot") && CombatNames.MayCarry(attributes, extra, names.StatusLeechFamily))
+        if (CombatNames.MayCarry(attributes, extra, names.StatusLeechFamily) && tags.Has("dot"))
         {
             foreach (var tag in tags.Items)
             {

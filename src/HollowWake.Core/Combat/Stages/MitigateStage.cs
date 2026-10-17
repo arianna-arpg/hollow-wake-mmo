@@ -24,7 +24,7 @@ internal sealed class MitigateStage : IHitStage
         var names = CombatNames.For(sim.Content);
         var resistCap = hit.Plan.ResistCap;
         var resistFloor = hit.Plan.ResistFloor;
-        var skipArmor = hit.Plan.Skips(tags, "armor");
+        var skipArmor = hit.Skips("armor");
         for (var i = 0; i < hit.ThreadCount; i++)
         {
             if (!hit.Live[i])

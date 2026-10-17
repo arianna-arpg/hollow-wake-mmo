@@ -44,9 +44,9 @@ internal sealed class PoolsStage : IHitStage
             var isLife = pool == "life";
             if (rule.Break)
             {
-                if (landing && ts.Resources.ContainsKey(pool) && !hit.Plan.Skips(hit.Tags, pool))
+                if (remaining > 0 && ts.Resources.ContainsKey(pool) && !hit.Skips(pool))
                 {
-                    BreakBar(hit, rule, statuses);
+                    BreakBar(hit, rule, statuses, remaining);
                 }
                 continue;
             }
@@ -112,10 +112,10 @@ internal sealed class PoolsStage : IHitStage
     }
 
     /// <summary>
-    /// A break bar (poise) loses the landing hit times the attacker's <c>dealt</c> times its own <c>taken</c>
-    /// attribute, scoped by the hit's tags; emptied, it breaks. A bar already empty takes nothing.
+    /// A break bar (poise) loses what of the hit reaches it times the attacker's <c>dealt</c> times its own
+    /// <c>taken</c> attribute, scoped by the hit's tags; emptied, it breaks. A bar already empty takes nothing.
     /// </summary>
-    private static void BreakBar(HitScope hit, PoolRule rule, StatusService? statuses)
+    private static void BreakBar(HitScope hit, PoolRule rule, StatusService? statuses, double reaching)
     {
         var ts = hit.Target!;
         var cur = ts.Resource(rule.Resource);
@@ -125,7 +125,7 @@ internal sealed class PoolsStage : IHitStage
         }
         var dealt = hit.Source is { } source && rule.Dealt is { } d ? source.Attributes.Get(d, source, hit.Tags, hit.Extra) : 1;
         var taken = rule.Taken is { } t ? ts.Get(t, hit.Tags) : 1;
-        var damage = hit.Total * dealt * taken;
+        var damage = reaching * dealt * taken;
         if (damage <= 0)
         {
             return;
