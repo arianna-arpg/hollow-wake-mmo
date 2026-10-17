@@ -590,6 +590,7 @@ public sealed partial class WeaveRuntime
             {
                 var channel = form.Channel;
                 var windup = channel?.Windup is { } w ? Math.Max(0, w.Evaluate(scope)) / speed : 0;
+                state.NextChannelStartedAt = now;
                 state.NextChannelAt = now + windup;
                 state.MaxHold = channel?.MaxHold is { } max ? Math.Max(0, max.Evaluate(scope)) : state.Duration > 0 ? state.Duration : rules.MaxHold;
                 state.Duration = state.MaxHold;
@@ -1147,6 +1148,7 @@ public sealed partial class WeaveRuntime
                 interval = Math.Max(sim.Clock.Dt, interval + rng.Range(-spread, spread));
             }
             cast.Interval = interval;
+            cast.NextChannelStartedAt = now;
             cast.NextChannelAt = now + interval;
         }
         if (cast.MaxHold > 0 && cast.Held >= cast.MaxHold - 1e-9)
