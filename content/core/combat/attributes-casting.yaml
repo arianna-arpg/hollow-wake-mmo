@@ -1,0 +1,53 @@
+# Attributes of the cast modes: how weaves are held, triggered, repeated, banked and paid for.
+# Weave-category attributes are read in a weave's scope: the caster's stack with the weave's own modifiers.
+kind: attributes
+entries:
+  - { id: cast.mobility, name: Casting Mobility, category: weave, base: 0, min: -1, max: 1, percent: true, description: "Movement speed kept while casting, added to the weave's own factor." }
+  - { id: cooldown.added, name: Added Cooldown, category: weave, base: 0, min: 0, decimals: 2, description: "Seconds of cooldown levied on a weave, before recovery." }
+  - { id: cast.fizzle_chance, name: Fizzle Chance, category: tempo, base: 0, min: 0, max: 1, percent: true, hidden: true, description: "Chance a cast fails after paying and leaves its caster reeling." }
+  - { id: reflex, name: Reflex, category: weave, base: 0, min: 0, description: "Above zero, an instant weave resolves past its caster's running cast." }
+  - { id: trigger.chance, name: Trigger Chance, category: weave, base: 0, min: 0, max: 1, percent: true, description: "The chance a triggered weave casts on its event; its base is the trigger's own chance." }
+  - { id: repeat.count, name: Repeats, category: weave, base: 0, min: 0, description: "Extra times a use repeats; fractions carry to the next use." }
+  - { id: repeat.scale, name: Repeat Scale, category: weave, base: 0, percent: true, description: "Increased area radius per repeat." }
+  - { id: repeat.interval, name: Repeat Interval, category: weave, base: 0.25, min: 0.05, decimals: 2, description: "Seconds between repeats." }
+  - { id: repeat.retarget, name: Repeat Retarget, category: weave, base: 0, min: 0, max: 1, description: "Above zero, each repeat turns to the nearest foe." }
+  - { id: repeat.lock, name: Repeat Lock, category: weave, base: 0, min: 0, max: 1, description: "Above zero, the caster begins nothing else until its repeats end." }
+  - { id: repeat.seals, name: Unleash Seals, category: weave, base: 0, min: 0, decimals: 0, description: "Seals a resting weave banks, each one more repeat on its next use." }
+  - { id: repeat.seal_time, name: Unleash Seal Time, category: weave, base: 1.5, min: 0.05, decimals: 2, description: "Seconds of rest per seal." }
+  - { id: uses.max, name: Use Charges, category: weave, base: 0, min: 0, decimals: 0, description: "The size of a weave's bank of use charges; its base is the bank's own size." }
+  - { id: uses.rate, name: Use Recharge Rate, category: weave, base: 1, min: 0.1, percent: true, description: "How fast spent use charges come back." }
+  - { id: overcharge.stages, name: Overcharge Stages, category: weave, base: 3, min: 1, max: 12, decimals: 0, description: "Stages an overcharge can reach; its base is the overcharge's own." }
+  - { id: guard.strength, name: Guard Strength, category: weave, base: 1, min: 0, percent: true, description: "Scales the pool a guard absorbs." }
+  - { id: fuse.delay, name: Fuse Delay, category: weave, base: 1, min: 0, decimals: 2, description: "Seconds a fused hit waits before it lands." }
+  - { id: fuse.power, name: Fuse Power, category: weave, base: 0, percent: true, description: "More damage a fused hit deals when it lands." }
+
+---
+# Families the cast modes read: costs added to and moved between resources, and glyphs grafted onto rack seats.
+kind: attribute_families
+entries:
+  - id: cost_added
+    pattern: "cost.added.{resource}"
+    over: resources
+    name: "Added {resource} cost"
+    description: "{resource} added to every use's cost, before the cost fold."
+    category: weave
+    hidden: true
+
+  - id: cost_convert
+    pattern: "cost.convert.{from}.{to}"
+    over: { from: resources, to: resources }
+    name: "{from} cost paid as {to}"
+    description: "The fraction of a use's {from} cost paid as {to} instead."
+    category: weave
+    bounds: { min: 0, max: 1 }
+    percent: true
+    hidden: true
+
+  - id: glyph_slot_graft
+    pattern: "glyph.slot{seat}.{glyph}"
+    over: { seat: [1, 2, 3, 4, 5, 6, 7, 8], glyph: glyphs }
+    name: "{glyph} grafted onto seat {seat}"
+    description: "Grafts {glyph} at this level onto whatever weave sits in rack seat {seat}; a socketed copy wins."
+    category: weave
+    bounds: { min: 0, decimals: 0 }
+    hidden: true

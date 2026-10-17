@@ -64,6 +64,12 @@ internal sealed class InterruptHandler : IEffectHandler
     {
         public override void Execute(EffectContext ctx)
         {
+            if (ctx.Sim.TryService<Weaves.WeaveRuntime>(out var runtime))
+            {
+                // Through the runtime, so a guard, ramps and flags the cast put on come off at once.
+                runtime.Interrupt(ctx.Sim, ctx.Target);
+                return;
+            }
             if (ctx.Sim.World.TryGet<WeaveBook>(ctx.Target, out var book) && book.Casting is not null)
             {
                 var key = book.Casting.Slot.Key;
