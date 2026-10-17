@@ -53,6 +53,11 @@ public sealed class Minion : IComponent
     /// <summary>The presence sources the body wears now, kept in step by the minion system.</summary>
     internal List<string>? WornPresences;
 
+    /// <summary>The modifier source of its group's presence (<c>presence:{group}</c>), made once when first needed.</summary>
+    internal string PresenceKey => _presenceKey ??= "presence:" + Group;
+
+    private string? _presenceKey;
+
     /// <summary>Where and when a leash recall last saw the body make progress toward its owner.</summary>
     internal Vector3 ProgressFrom;
 
@@ -79,9 +84,6 @@ public sealed class MinionInheritance
 
     /// <summary>The owner's attribute version the values were folded at.</summary>
     public int OwnerVersion = int.MinValue;
-
-    /// <summary>The next time the owner's version is compared.</summary>
-    public double NextCheckAt;
 
     /// <summary>The value each inheritance rule produced at the last fold, by rule index.</summary>
     public double[] Values = Array.Empty<double>();
@@ -113,14 +115,6 @@ public sealed class MinionOrder
 
     /// <summary>Close enough to the mark (or the issuer, for a recall) to count as arrived.</summary>
     public float Arrive;
-}
-
-/// <summary>A dead body that can be raised or consumed until it despawns: what it was and when it fell.</summary>
-public sealed class Corpse : IComponent
-{
-    public required string Pattern;
-    public int Level = 1;
-    public double DiedAt;
 }
 
 /// <summary>

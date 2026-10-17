@@ -567,9 +567,8 @@ public class MinionTests
         var arena = MinionArena.Create();
         var wolf = arena.Foe("wolf", arena.OwnerAt.Position + new Vector3(5, 0, 0));
         arena.Sim.Service<Combat.DeathService>().Kill(arena.Sim, wolf, arena.Owner);
-        var corpse = arena.Sim.World.Get<Corpse>(wolf);
-        Assert.NotNull(corpse);
-        Assert.Equal("wolf", corpse!.Pattern);
+        Assert.True(Corpses.Is(arena.Sim.World, wolf));
+        Assert.Equal("wolf", Corpses.PatternOf(arena.Sim.World, wolf));
         arena.Cast(arena.Learn("raise_fallen"), point: arena.At(wolf));
         var risen = arena.Minions("risen").Single();
         Assert.Equal("wolf", arena.Sim.World.Get<Identity>(risen)!.Pattern);
@@ -587,9 +586,9 @@ public class MinionTests
         var arena = MinionArena.Create();
         var point = arena.OwnerAt.Position + new Vector3(4, 0, 0);
         arena.Cast(arena.Learn("exhume"), point: point);
-        var corpses = arena.Sim.World.Query<Corpse>().Select(c => c.Entity).ToList();
+        var corpses = arena.Sim.World.Query<Dead>().Select(c => c.Entity).Where(c => Corpses.Is(arena.Sim.World, c)).ToList();
         Assert.Equal(2, corpses.Count);
-        Assert.All(corpses, c => Assert.True(arena.Sim.World.Has<Dead>(c)));
+        Assert.All(corpses, c => Assert.Equal("barrow_wight", Corpses.PatternOf(arena.Sim.World, c)));
         Assert.Empty(arena.Events.OfType<EntityDied>());
         arena.Cast(arena.Learn("raise_fallen"), point: point);
         Assert.Equal("barrow_wight", arena.Sim.World.Get<Identity>(arena.Minions("risen").Single())!.Pattern);

@@ -462,9 +462,9 @@ internal sealed class SummonRecipe
             if (corpses is { Count: > 0 })
             {
                 var corpse = corpses[i];
-                if (sim.World.TryGet<Corpse>(corpse, out var body) && sim.World.TryGet<Transform>(corpse, out var at))
+                if (Corpses.PatternOf(sim.World, corpse) is { } kind && sim.World.TryGet<Transform>(corpse, out var at))
                 {
-                    Birth(ctx, service, owner, ownerStats, body.Pattern, null, group, at.Position, contract, corpse);
+                    Birth(ctx, service, owner, ownerStats, kind, null, group, at.Position, contract, corpse);
                 }
                 continue;
             }
@@ -509,7 +509,7 @@ internal sealed class SummonRecipe
         var world = ctx.Sim.World;
         if (FromCorpse == "target")
         {
-            if (IsCorpse(world, ctx.Target))
+            if (Corpses.Is(world, ctx.Target))
             {
                 into.Add(ctx.Target);
             }
@@ -523,7 +523,7 @@ internal sealed class SummonRecipe
             var bestDistance = float.MaxValue;
             foreach (var (e, _, d) in ctx.Sim.Spatial.Within(center, radius))
             {
-                if (d < bestDistance && IsCorpse(world, e) && !into.Contains(e))
+                if (d < bestDistance && Corpses.Is(world, e) && !into.Contains(e))
                 {
                     best = e;
                     bestDistance = d;
@@ -536,8 +536,6 @@ internal sealed class SummonRecipe
             into.Add(best);
         }
     }
-
-    internal static bool IsCorpse(Ecs.World world, Entity e) => !e.IsNone && world.IsAlive(e) && world.Has<Corpse>(e) && world.Has<Dead>(e);
 
     /// <summary>
     /// Raises one body: spawns the pattern at the owner's level, makes it the owner's minion of the group,
@@ -569,6 +567,10 @@ internal sealed class SummonRecipe
             Contract = contract,
             Presence = Presence,
         });
+        if (Presence is not null)
+        {
+            service.PresencesSeen = true;
+        }
         var stats = sim.World.Get<Stats>(e);
         var tags = service.BodyTags(Construct);
         if (entry is { Tags.IsEmpty: false })

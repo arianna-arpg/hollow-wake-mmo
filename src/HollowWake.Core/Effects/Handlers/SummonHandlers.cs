@@ -129,7 +129,7 @@ internal sealed class SpawnHandler : IEffectHandler
                 }
                 if (AsCorpse)
                 {
-                    Corpses.LayDown(ctx.Sim, e, Pattern);
+                    Corpses.LayDown(ctx.Sim, e);
                 }
                 else if (Lifetime is not null)
                 {
@@ -161,7 +161,7 @@ internal sealed class GatherCorpsesHandler : IEffectHandler
             var found = service.RentList();
             foreach (var (e, _, _) in sim.Spatial.Within(pile, (float)Math.Max(0.5, ctx.Eval(Radius, 8))))
             {
-                if (SummonRecipe.IsCorpse(sim.World, e))
+                if (Corpses.Is(sim.World, e))
                 {
                     found.Add(e);
                 }

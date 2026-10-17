@@ -71,6 +71,12 @@ public sealed class MinionService
     /// <summary>The next birth number; bodies born earlier are older.</summary>
     internal long NextSequence() => ++_sequence;
 
+    /// <summary>How many bodies were born here so far; the minion system looks at new ones on the tick they arrive.</summary>
+    internal long Births => _sequence;
+
+    /// <summary>Whether a body carrying a presence was ever born here; until one is, there are no presences to keep.</summary>
+    internal bool PresencesSeen { get; set; }
+
     private TagSet? _minionTags;
     private TagSet? _constructTags;
     private string? _defaultBehavior;

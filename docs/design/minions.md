@@ -1,0 +1,95 @@
+# Minions and constructs
+
+A minion is a body that belongs to someone: a summon, a raised corpse, a construct. It fights on its owner's side (relations follow the owner), its kills credit the owner, it inherits what the owner invests in minions, and its AI is ordinary behavior content that follows the owner, takes up what the owner fights and obeys orders. Players, monsters and constructs summon through the same effects, and minions cast through the same weave runtime as everyone else.
+
+Code: `Minions/` (the minion service, the summon recipe, contracts, corpses, crew forwarding), `Effects/Handlers/SummonHandlers.cs` (`summon`, `deploy`, `spawn`, `gather_corpses`), `Effects/Handlers/MinionHandlers.cs` (`recall_minions`, `command_minions`, `minion_cast`, `consume_minion`), `Ai/MinionActions.cs` (minion and construct AI actions, command kinds), `Systems/MinionSystem.cs`, `Components/Minions.cs`. Rules live in group `minions`.
+
+## Units
+
+Distances and speeds are world units (one cell). Numbers ported from the earlier prototype were converted once, at about thirty of its screen units to one of ours, a factor read off body radii and walking speeds; nothing converts at runtime.
+
+## The minion component
+
+`Minion` holds the owner, when the body expires, its **group** (what a summon's capacity counts and what effects and commands address; by default the pattern, or the summoning weave for a pool), an optional **pool group** and **exclusive group**, the key of the weave that raised it, its birth order (`Sequence`; the oldest goes first), whether it is a **construct**, whether it **inherits its caster**, and its inheritance, contract, decay and presence. Every summoned body wears the tags rule `minions.tags` lists, every construct those of `minions.construct_tags`.
+
+## Summoning
+
+`summon` raises bodies for the context's origin. Its parameters:
+
+- what: a `pattern`; a weighted `pool` of `{pattern, weight, tags, behavior}` re-rolled per body (entry tags join the body's tags, an entry's behavior overrides the summon's); or `from_corpse` (`nearest` to the focus within `search_radius`, by default `minions.corpse_search`, or the context's `target`), raising each corpse as its own kind and consuming it; a pattern beside `from_corpse` is the fallback
+- how many and how long: `count` (default `weave.summon.count`, at most `minions.max_per_cast`), `duration` (default `weave.duration`; zero or less lasts)
+- how many at once: `max_active` (default `weave.summon.max`) counted over the group; with a `pool_group` the count is over the pool and the capacity is the owner's `minion.max`, based on `max_active` and folded with the weave's tags plus `pool.{group}`, so investments can raise one pool. Past the capacity the oldest bodies are dismissed (despawned, not killed). An `exclusive_group` dismisses the owner's bodies of the other groups in it, and ends their contracts.
+- where: `place` with `at` (`focus`, the default: the target else the point; `caster`; `point`, clamped to `range` from the caster; `target`), and `shape`: `around` (the default: a ring of `radius`, by default `minions.ring`, at a random bearing per body), `scatter` (in a disc of `radius`; `scatter: r` is shorthand), `line` (across the facing, `spacing` apart) or `circle` (evenly around at `radius`)
+- what it runs: `behavior`, else the pool entry's, else rule `minions.behavior`
+- what it inherits: on unless `inherit: false`
+- riders: `on_birth` effects run on each newborn body (the context's target is the body); glyphs extend them through the `on_birth` hook
+- terms: `contract`, `decay`, `waves`, `presence`, `replenish` (below)
+
+Every roll comes from the cast's random stream: a single-pattern summon draws one bearing per body, a pool one pick more. Births publish `MinionSummoned`.
+
+### Inheritance
+
+Rule `minions.inherit` is a table of lines `{ from, attribute, form }`. At birth, and again whenever the owner's attribute version has moved (checked every `minions.inherit_interval` seconds), each line folds the owner attribute `from` in the context of the summoning weave's tags and the body's own tags, with the weave's modifiers (its glyphs') joining the fold, subtracts the owner attribute's declared base, and lands what is left on the minion as one modifier of `form` on `attribute`, under source `owner:{owner key}`. So `minion.damage` (based at one) lands as `damage more` of its excess, `minion.regen` (based at zero) as flat `life.regen`. A line may carry placeholders (`minion.status.{status}.chance`), expanded over the attribute catalog at load. Nothing is copied: the minion's numbers stay its own fold, and a refold touches the minion only when a value moved. Bodies are filled to their inherited maximums at birth.
+
+### Contracts
+
+`contract: { reserve: { resource: expr }, respawn: expr, toggle }` holds the summon: its reservation sits on the owner as flat modifiers on `{resource}.reserved` under `contract:{weave key}`, its weave slot reads `State["contract"] = 1`, its bodies never expire, and each that falls returns after `respawn` seconds times the owner's `minion.respawn_time` (folded with the weave's tags), re-rolled from the pool, at the owner's side (`ContractRespawned`). Casting the weave again ends a toggled contract; replacing the weave in its slot, an exclusive summon of another group and the owner leaving end it too. Ending dismisses the bodies and releases the reservation (`ContractStarted`, `ContractEnded`). A contract cannot also decay, come in waves or replenish.
+
+### Decay, waves, presences, replenishment
+
+- `decay: { delay, fraction, growth }`: after `delay` seconds the body loses `fraction` of its maximum life a second, multiplied by `growth` each second; unmitigable, and the death credits no one.
+- `waves: { count, interval, cost_factor }`: one cast raises `count` waves `interval` seconds apart; each later wave pays `cost_factor` of the weave's cost, and the first that cannot be paid ends the rest.
+- `presence: [modifiers]`: while a body of this summon lives, the owner's minions of other groups wear the modifiers under `presence:{group}`.
+- `replenish: { interval }`: while the weave sits compiled in a slot of a living owner, a body is born every interval when the group has room, with no cast and no cost; a full group never evicts. The minion system looks for such slots every `minions.replenish_scan` seconds.
+
+## Corpses
+
+A dead body is a corpse while it lies there, unless it is a player, a minion or tagged `no_corpse`; it remembers what it was through its identity, so a death adds nothing, and the lifetime system clears it after `combat.corpse_seconds` (`Corpses.Is`, `Corpses.PatternOf`). `summon` with `from_corpse` raises them, `spawn` with `as_corpse` lays fresh ones down without a death, and `gather_corpses { radius }` drags those around the focus into a pile. A corpse summon with nothing in reach publishes `SummonFizzled` after its cost is paid; refusing such a cast before costs waits for target kinds on forms. A kill hook (`on_kill`) holding `summon { from_corpse: target }` raises the slain.
+
+## Minion AI
+
+Minions think with behavior content like every other AI (`docs/design/ai.md`). The shipped minion behaviors follow the owner, take up what it fights, notice foes near themselves (passing over bodies tagged `prey`), heel back past their leash range, and obey orders; the actions:
+
+- `follow_owner { distance, stop }`: back to within `stop` once farther than `distance` (default `minions.follow_distance`).
+- `assist_owner { range, switch }`: take up the owner's foe when it stands within `range` of the owner (default `minions.assist_range`); the owner's foe is its AI's target, else what it last hit or cast at within `minions.assist_memory` seconds; with nothing to fight, turn on whoever last hurt the owner.
+- `return_to_owner { stop }`: head back to the owner. The leash recall teleports a heeling minion to `minions.recall_radius` of its owner when it is farther than `minions.recall_distance`, or has made less than `minions.stuck_progress` of headway for `minions.stuck_seconds`, at most once per `minions.recall_cooldown`.
+- `obey_command`: step the standing order (below).
+
+Minions perceive `has_owner`, `owner_distance`, `owner_has_target`, `owner_target_distance`, `commanded` and `command_distance`, with the owner's stats under `owner.*`.
+
+## Orders
+
+A command is content: rule `minions.commands` maps names to `{ kind, duration, mark_radius, arrive, pin_radius }`, and kinds are code registered in `MinionCommands`: `assault` (march on the mark and kill whatever holds it, the pinned quarry first; an empty mark reached is done), `hold` (stand the mark and repel what comes until the order expires) and `recall` (break off and keep to the issuer's side). Issuing writes a `MinionOrder` (command, kind, mark, pinned quarry, issuer, expiry, geometry) into each recipient's behavior, dropping its target and plan; each recipient heeds by its `obedience` plus the issuer's discipline (the effect's `discipline` and the issuer's `command.discipline`), rolled on the issuer's random stream. The quarry is the given target when it is a foe, else the nearest foe within `pin_radius` of the mark. Ordered minions are exempt from the leash. `MinionsCommanded` reports how many heeded and defied.
+
+Orders arrive two ways: the `command_minions` effect, and `MinionCommandRequested` events, which the wire's minion command intent publishes and the minion service handles (an unknown command name is ignored and logged).
+
+## Effects over minions
+
+Each addresses the context origin's minions: those of `group` when given; otherwise, run by a weave that summons or deploys, only that weave's own; otherwise all of them.
+
+- `recall_minions { radius, group }`: mobile minions blink to an even ring around the owner; constructs stay.
+- `command_minions { command, duration, affects, radius, discipline, group }`: orders at the context's point; `affects` is `minions`, `squad` (thinking bodies of the caster's faction within `radius`, by default `minions.earshot`, that answer to no owner) or `both`.
+- `minion_cast { weave, at, range, group }`: every addressed minion executes a preset weave at once, free, at the point or at its own nearest foe within `range` (default `minions.cast_range`), with its own numbers at its host's level. It raises no cast of the minion's (`MinionOrdered` instead).
+- `consume_minion { count, pick, group, radius, self, of, effects }`: spends minions (`of`: minions, constructs or any; `pick`: oldest, newest or nearest; `self`: the source itself), running `effects` where each stood with `consumed_life` and `consumed_life_max` set, then killing it with no credit (`MinionConsumed`). A minion's own self-destruct is a `minion_cast` of a weave holding `consume_minion { self: true }`.
+
+## Constructs
+
+`deploy` takes the summon's parameters (bar contracts and corpses) plus `lifetime`, `inherit_caster` and `intercept`. Constructs keep their pattern's behavior, stand where they were placed, and are not recalled or commanded. Device actions:
+
+- `construct_cast { weave }`: fire a ready weave at the target.
+- `spring { radius, weave, consume }`: when a foe comes within `radius`, fire at it; with `consume` (the default) the trap is spent.
+- `echo_owner { damage_scale }`: replay each weave the owner casts after the echo appeared, from where the echo stands, damage scaled; summons and movement are not replayed.
+
+Constructs cast free of cost from where they stand, and a weave waits its cooldown, its cast time or `minions.construct_interval`, whichever is longest, before firing again. A construct that inherits its caster casts with its owner as the source, so its numbers are the owner's and its kills credit the owner; the cast is still the construct's (`WeaveCast` names it). An `intercept { radius, mode, slow }` dome catches hostile projectiles about to reach its radius, before projectiles move: `dissolve`, `deflect` (turned back, now the dome owner's) or `slow` (speed kept at `slow` while inside); `ProjectileIntercepted` reports each.
+
+## Crew forwarding
+
+The glyphs socketed in a summoning weave board the weaves of the bodies it raises, wherever they fit. Minions board once the summoning weave has the mechanism rule `minions.forward_requires` names (a resonant key's); constructs board without it, and their copies keep `minions.construct_forward_scale` of the glyphs' modifier values. A glyph boards unless its `forwards` is false; one with a trigger boards only when it says so, and the glyph granting the mechanism never boards. Riders join each weave after its own glyphs in the host's socket order, up to its form's glyph limit; one that does not fit stays dormant there.
+
+## Mechanisms
+
+Probes in `Weaves/Probes/MinionProbes.cs`: `contract`, `pool`, `corpse` (raises, lays down or gathers corpses), `orders` (commands, minion casts or recalls) and `unlife` (decay). The built-in probes answer `summon`, `minion`, `construct`, `periodic_construct` and `engagement`.
+
+## The minion system
+
+Runs in the think phase after spawners and before behaviors: refolds inheritance where an owner's attributes changed, drains decaying bodies, ends contracts whose owner or slot is gone and brings back bodies whose time came, applies presences for owners whose minions changed, lets domes catch projectiles, and looks for replenishing slots. It does no per-minion work beyond these checks, and nothing in a zone without minions or domes.

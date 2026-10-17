@@ -10,7 +10,7 @@ using HollowWake.Core.StatusEffects;
 
 namespace HollowWake.Core.Combat;
 
-/// <summary>Deaths: mark (and leave a corpse to raise), stop, credit, drop, propagate, and later revive players.</summary>
+/// <summary>Deaths: mark, stop, credit, drop, propagate, and later revive players.</summary>
 public sealed class DeathService
 {
     /// <summary>Kills a body. <paramref name="depth"/> is the effect depth of the killing hit, carried by <see cref="EntityDied"/>.</summary>
@@ -25,7 +25,6 @@ public sealed class DeathService
         var t = sim.World.Get<Transform>(victim);
         stats?.SetResource("life", 0);
         sim.World.Add(victim, new Dead { DiedAt = sim.Clock.Time, Killer = killer });
-        Minions.Corpses.Mark(sim, victim);
         sim.World.Get<Motion>(victim)?.Stop();
         if (sim.World.TryGet<WeaveBook>(victim, out var book))
         {
@@ -98,7 +97,6 @@ public sealed class DeathService
             return false;
         }
         sim.World.Remove<Dead>(e);
-        sim.World.Remove<Corpse>(e);
         if (sim.World.TryGet<Statuses>(e, out var statuses))
         {
             foreach (var s in statuses.Active.ToList())

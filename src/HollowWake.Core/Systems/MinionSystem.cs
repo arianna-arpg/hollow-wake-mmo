@@ -28,6 +28,9 @@ public sealed class MinionSystem : SimSystem
     private readonly List<IReadOnlyList<Attributes.Modifier>> _presenceMods = new();
     private readonly Dictionary<(Entity Owner, string Slot), double> _replenishAt = new();
     private double _nextReplenishScan;
+    private double _nextInheritCheck;
+    private long _seenBirths;
+    private int _decaying;
 
     public override string Name => "minions";
     public override SimPhase Phase => SimPhase.Think;
@@ -40,7 +43,8 @@ public sealed class MinionSystem : SimSystem
             return;
         }
         var now = sim.Clock.Time;
-        if (sim.World.CountOf<Minion>() > 0)
+        // The bodies are walked when inheritance is due, while some decay, and on a tick bodies were born.
+        if (sim.World.CountOf<Minion>() > 0 && (now >= _nextInheritCheck || _decaying > 0 || service.Births != _seenBirths))
         {
             Upkeep(sim, service, now);
         }
@@ -48,7 +52,10 @@ public sealed class MinionSystem : SimSystem
         {
             Contracts(sim, service, now);
         }
-        Presences(sim, service);
+        if (service.PresencesSeen)
+        {
+            Presences(sim, service);
+        }
         if (sim.World.CountOf<Intercept>() > 0)
         {
             Domes(sim);
@@ -60,23 +67,30 @@ public sealed class MinionSystem : SimSystem
         }
     }
 
-    /// <summary>Folds inheritance again where an owner's attributes changed, and drains decaying bodies.</summary>
-    private static void Upkeep(Simulation sim, MinionService service, double now)
+    /// <summary>Folds inheritance again where an owner's attributes changed (every <c>minions.inherit_interval</c>), and drains decaying bodies.</summary>
+    private void Upkeep(Simulation sim, MinionService service, double now)
     {
-        var interval = sim.Content.Rules.Number("minions.inherit_interval", 0.5);
+        var inherit = now >= _nextInheritCheck;
+        if (inherit)
+        {
+            _nextInheritCheck = now + sim.Content.Rules.Number("minions.inherit_interval", 0.5);
+        }
+        _seenBirths = service.Births;
+        _decaying = 0;
         var dt = sim.Clock.Dt;
         foreach (var (e, m) in sim.World.Query<Minion>())
         {
-            if (m.Inheritance is { } inheritance && now >= inheritance.NextCheckAt)
+            if (inherit && m.Inheritance is { } inheritance && sim.World.TryGet<Stats>(m.Owner, out var ownerStats) && ownerStats.Attributes.Version != inheritance.OwnerVersion && sim.World.TryGet<Stats>(e, out var stats))
             {
-                inheritance.NextCheckAt = now + interval;
-                if (sim.World.TryGet<Stats>(m.Owner, out var ownerStats) && ownerStats.Attributes.Version != inheritance.OwnerVersion && sim.World.TryGet<Stats>(e, out var stats))
-                {
-                    service.Refold(stats, inheritance, ownerStats);
-                }
+                service.Refold(stats, inheritance, ownerStats);
             }
-            if (m.Decay is { } decay && now >= decay.StartsAt && sim.World.TryGet<Stats>(e, out var body) && !sim.World.Has<Dead>(e))
+            if (m.Decay is { } decay && sim.World.TryGet<Stats>(e, out var body) && !sim.World.Has<Dead>(e))
             {
+                _decaying++;
+                if (now < decay.StartsAt)
+                {
+                    continue;
+                }
                 var drain = decay.Rate * Math.Pow(decay.Growth, now - decay.StartsAt) * dt;
                 body.AddResource("life", -drain);
                 if (body.Resource("life") <= 0)
@@ -152,7 +166,7 @@ public sealed class MinionSystem : SimSystem
             {
                 if (sim.World.Get<Minion>(e) is { Presence: { } mods } m)
                 {
-                    var key = "presence:" + m.Group;
+                    var key = m.PresenceKey;
                     if (!_presences.Contains(key))
                     {
                         _presences.Add(key);
@@ -166,7 +180,7 @@ public sealed class MinionSystem : SimSystem
                 {
                     continue;
                 }
-                var own = "presence:" + m.Group;
+                var own = m.PresenceKey;
                 if (m.WornPresences is { } worn)
                 {
                     for (var i = worn.Count - 1; i >= 0; i--)
