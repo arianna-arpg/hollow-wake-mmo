@@ -43,4 +43,10 @@ The small [AI query probe](../../experiments/cast-forecast-core/AiPlanProbe.cs) 
 
 Verification: Release solution build has zero warnings/errors; Release solution tests pass with 562 core, 90 client and 38 server cases. New regressions exercise reused storage after a declined observation and across different arenas, and repeated AI queries with changing time, target mana, position, targetability, walls and phasing. Content validation has zero errors/warnings; the load smoke runs 200 ticks without system errors. Normalized duel output matches the retained core baseline exactly: complete proving trace (513 lines), tide channeler / spark duelist and wolf / hob (41 lines each, including full-run final totals). No content, selection order or RNG behavior changed in this follow-up.
 
-Acknowledged by: integration chat accepted this API seam and requested the allocation follow-up; Claude review pending the integrated PR.
+## Channel beat progress follow-up
+
+Integration review found that using the cast's original start for later channel-beat progress made the bar remain nearly full. `CastState.NextChannelStartedAt` now records the existing scheduler's time when it chooses the initial windup and each later interval. Additive optional `CastForecast.NextEmissionStartedAt` exposes that stamp, or the original start for a timed cast, only when an emission deadline exists. The positional constructor is unchanged. No interval, jitter or other gameplay input is evaluated again; this records already-chosen timestamps and changes no combat timing.
+
+A regression starts a channel away from time zero, crosses the first emission, verifies the second window starts at the actual first beat, and repeatedly samples partway through it without changing either endpoint. Existing timing tests also pin timed-cast starts and absent charge/guard emission windows. Full Release solution build has zero warnings/errors; tests pass with 563 core, 90 client and 38 server cases. The tide channeler / spark duelist's retained 41-line output, including full-run life totals, still matches exactly after whitespace normalization. Integration owns propagation to the wire, both clients and their progress-rendering tests.
+
+Acknowledged by: integration chat accepted this API seam and requested the allocation and channel-window follow-ups; Claude review pending the integrated PR.
