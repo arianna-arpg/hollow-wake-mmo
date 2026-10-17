@@ -1,0 +1,17 @@
+# Minion attributes. The minion.* attributes are an owner's investment in its minions: each folds with the
+# summoning weave's tags and the body's own, and lands on the minion through rule minions.inherit. The rest
+# set a pool group's capacity, a contract's respawn time, how readily a body heeds a command, and how hard
+# a commander's orders land.
+kind: attributes
+entries:
+  - { id: minion.damage, name: Minion Damage, category: minion, base: 1, min: 0, percent: true, description: "How hard your minions hit; they inherit what it adds as more damage." }
+  - { id: minion.life, name: Minion Life, category: minion, base: 1, min: 0.1, percent: true, description: "Your minions' maximum life; they inherit what it adds as more life." }
+  - { id: minion.damage_taken, name: Minion Damage Taken, category: minion, base: 1, min: 0, percent: true, description: "The damage your minions take, inherited as more damage taken." }
+  - { id: minion.move_speed, name: Minion Movement Speed, category: minion, base: 1, min: 0.1, percent: true, description: "How fast your minions move, inherited as more movement speed." }
+  - { id: minion.speed, name: Minion Haste, category: minion, base: 1, min: 0.1, percent: true, description: "Your minions' movement, attack and cast speed together." }
+  - { id: minion.regen, name: Minion Life Regeneration, category: minion, base: 0, description: "Life your minions regenerate each second." }
+  - { id: minion.crit_chance, name: Minion Critical Chance, category: minion, base: 0, min: 0, percent: true, description: "Critical chance your minions gain." }
+  - { id: minion.max, name: Minion Capacity, category: minion, base: 1, min: 1, decimals: 0, description: "How many bodies a pool group holds at once, scoped by pool.<group> and based on the summon's own maximum." }
+  - { id: minion.respawn_time, name: Minion Respawn Time, category: minion, base: 1, min: 0.1, percent: true, description: "How long a contract's fallen bodies take to return." }
+  - { id: obedience, name: Obedience, category: minion, base: 1, min: 0, max: 1, percent: true, description: "The chance a body heeds a command it is given." }
+  - { id: command.discipline, name: Command Discipline, category: minion, base: 0, percent: true, description: "Added to the chance those you command heed you." }

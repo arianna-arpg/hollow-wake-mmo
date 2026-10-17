@@ -32,6 +32,119 @@ entries:
     effects:
       - { type: summon, pattern: sprig, count: "weave.summon.count", duration: "weave.duration", max_active: "weave.summon.max", group: sprigs }
 
+  # ---- summoning: pools, contracts, corpses, devices and orders
+  - id: bind_remnant_court
+    name: Bind the Remnant Court
+    form: bind
+    threads: [umbra]
+    color: "#5a4a7a"
+    attributes: { summon.count: 2, summon.max: 3 }
+    effects:
+      - type: summon
+        pool:
+          - { pattern: remnant_shade, weight: 3 }
+          - { pattern: remnant_archer, weight: 1, tags: [archer], behavior: minion_ranged }
+        count: "weave.summon.count"
+        max_active: "weave.summon.max"
+        group: remnant_court
+        pool_group: undead
+        place: { at: caster, shape: scatter, radius: 1.5 }
+        inherit: true
+        contract: { reserve: { mana: "mana.max * 0.1" }, respawn: 8, toggle: true }
+  - id: bind_stone_warden
+    name: Bind Stone Warden
+    form: bind
+    threads: [stone]
+    color: "#9c8b72"
+    effects:
+      - type: summon
+        pattern: stone_warden
+        count: 1
+        max_active: 1
+        group: stone_warden
+        pool_group: warden
+        exclusive_group: warden
+        contract: { reserve: { mana: 30 }, respawn: 8 }
+  - id: raise_barrow
+    name: Raise the Barrow
+    form: summon
+    threads: [umbra]
+    glyphs: [resonant_key, crew_frenzy]
+    color: "#5a4a7a"
+    attributes: { summon.max: 5 }
+    effects:
+      - type: summon
+        pool:
+          - { pattern: remnant_shade, weight: 1 }
+          - { pattern: remnant_archer, weight: 1, tags: [archer], behavior: minion_ranged }
+        count: "weave.summon.count"
+        max_active: "weave.summon.max"
+        duration: 0
+        group: barrow
+        pool_group: undead
+  - id: call_wraiths
+    name: Call Wraiths
+    form: summon
+    threads: [umbra]
+    color: "#2b2033"
+    attributes: { summon.count: 3, summon.max: 6 }
+    effects:
+      - { type: summon, pattern: remnant_shade, count: "weave.summon.count", max_active: "weave.summon.max", duration: 0, group: wraiths, decay: { delay: 3, fraction: 0.04, growth: 1.3 } }
+  - id: raise_fallen
+    name: Raise the Fallen
+    form: raise
+    threads: [umbra]
+    color: "#5a4a7a"
+    effects:
+      - { type: summon, from_corpse: nearest, search_radius: 4, count: 1, max_active: "weave.summon.max", duration: 0, group: risen }
+  - id: exhume
+    name: Exhume
+    form: rite
+    threads: []
+    color: "#9c8b72"
+    effects:
+      - { type: spawn, pattern: barrow_wight, count: 2, as_corpse: true }
+  - id: plant_ember_totem
+    name: Ember Totem
+    form: totem
+    threads: [ember]
+    color: "#e8622a"
+    effects:
+      - { type: deploy, pattern: ember_totem, count: 1, max_active: "weave.summon.max", group: ember_totems, lifetime: "weave.duration", inherit_caster: true }
+  - id: lay_snare
+    name: Lay Snare
+    form: snare
+    threads: []
+    color: "#9c8b72"
+    effects:
+      - { type: deploy, pattern: snare_trap, count: 1, max_active: "weave.summon.max", group: snares, lifetime: "weave.duration", inherit_caster: true }
+  - id: lumen_dome
+    name: Lumen Dome
+    form: dome
+    threads: [lumen]
+    color: "#f5e27a"
+    effects:
+      - { type: deploy, pattern: lumen_dome, count: 1, max_active: 1, group: domes, lifetime: "weave.duration", intercept: { radius: "weave.area.radius", mode: dissolve } }
+  - id: shade_echo
+    name: Shade Echo
+    form: totem
+    threads: [umbra]
+    color: "#5a4a7a"
+    effects:
+      - { type: deploy, pattern: shade_echo, count: 1, max_active: 1, group: echoes, lifetime: "weave.duration", inherit_caster: true, place: { at: caster } }
+  - { id: command_assault, name: "Command: Assault", form: command, threads: [], color: "#d0a858", effects: [ { type: command_minions, command: assault } ] }
+  - { id: command_hold, name: "Command: Hold", form: command, threads: [], color: "#d0a858", effects: [ { type: command_minions, command: hold } ] }
+  - id: command_recall
+    name: "Command: Recall"
+    form: command
+    threads: []
+    color: "#9fe08a"
+    effects:
+      - { type: recall_minions }
+      - { type: command_minions, command: recall }
+  - { id: remnant_volley, name: Remnant Volley, form: command, threads: [], color: "#5a4a7a", effects: [ { type: minion_cast, weave: shade_bolt, at: enemy } ] }
+  - { id: last_rite, name: Last Rite, form: command, threads: [], color: "#e86848", effects: [ { type: minion_cast, weave: grave_burst, at: point } ] }
+
   # ---- monster kits
   - { id: bite, name: Bite, form: strike, threads: [], color: "#8a6d3b", attributes: { damage.effectiveness: 0.9 } }
   - { id: claw, name: Claw, form: strike, threads: [], color: "#8a6d3b", attributes: { damage.effectiveness: 1.1 } }
@@ -43,3 +156,24 @@ entries:
   - { id: howl, name: Howl, form: nova, threads: [mind], color: "#d470c0", attributes: { base_damage: 8, area.radius: 4 } }
   - { id: unmaking_pulse, name: Unmaking Pulse, form: nova, threads: [void], color: "#2b2033", attributes: { base_damage: 22, area.radius: 4.5 } }
   - { id: tangle_lash, name: Tangle Lash, form: beam, threads: [void, umbra], color: "#2b2033", attributes: { base_damage: 10 } }
+
+  # ---- minion and device kits
+  - { id: shade_bolt, name: Shade Bolt, form: bolt, threads: [umbra], color: "#5a4a7a", attributes: { base_damage: 9 } }
+  - { id: warden_slam, name: Warden Slam, form: cleave, threads: [stone], color: "#9c8b72", attributes: { damage.effectiveness: 1.1 } }
+  - { id: snare_burst, name: Snare Burst, form: blast, threads: [stone], color: "#9c8b72", attributes: { base_damage: 12, area.radius: 2 } }
+  - id: grave_burst
+    name: Grave Burst
+    form: rite
+    threads: [umbra]
+    color: "#e86848"
+    effects:
+      - type: consume_minion
+        self: true
+        effects:
+          - type: area
+            shape: circle
+            radius: 2.5
+            center: point
+            filter: enemy
+            effects:
+              - { type: damage, amount: "consumed_life_max * 0.65", threads: $threads }
