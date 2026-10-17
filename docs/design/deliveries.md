@@ -2,7 +2,7 @@
 
 A delivery is how a weave reaches its targets: projectiles that fly, areas that strike at once, chains that leap, fields that linger, placements that scatter or cascade, and movements that carry or shove bodies. Every one is an effect type whose behavior is its parameters plus the attributes of the weave that delivers it; nothing about a delivery is special-cased by weave. Choices (a firing style, a return, a shape) are parameters that glyphs set with patches; quantities (forks, homing, cascade steps) are weave attributes that forms set as bases and glyphs, passives and items modify; riders at named moments are hook lists. Handlers live in `Effects/Handlers/DeliveryHandlers.cs`, `PlacementHandlers.cs` and `MovementHandlers.cs`, their components in `Effects/ProjectileComponents.cs` and `Components/Body.cs`, and the systems that carry them over time in `Systems/ProjectileSystem.cs`, `FieldSystem.cs` and `DisplacementSystem.cs`.
 
-Distances are world units (a cell is one unit), angles are degrees in content and rates of turn are degrees per second, times are seconds. Parameters that default to a weave attribute fall back to a plain number when a delivery runs without a weave (a status's effects, a tool).
+Distances are world units (a cell is one unit), angles are degrees in content and rates of turn are degrees per second, times are seconds. Parameters that default to a weave attribute fall back to a plain number when a delivery runs without a weave (a status's effects, a tool). Whatever a delivery runs later (its hits, hooks, echoes and steps) keeps the slot and host weave of the cast, so effects that address their host, such as restoring its uses or sparing its cooldown, act on the weave that cast it.
 
 ## Shapes
 
@@ -71,7 +71,7 @@ Deliveries stop at walls. A wall is a cell of a structure that cannot be walked;
 | `gravity` | a lob: the flight arcs to land at the aim point, or at its range when the point lies beyond |
 | `look` | what clients draw |
 
-A flight aims at its target when it has one, else along the cast's direction, else toward the point. A fan spreads `count` flights across the spread; a volley fires them side by side; a ring sends them evenly all around from the aim; a salvo fires one now and one each interval after, each aimed afresh at the caster's live aim when the caster streams one (`AimIntent`), else at the cast's target where it now stands, else along the cast's own aim, and stops when the caster dies.
+A flight aims at its target when it has one, else along the cast's direction, else toward the point. A fan spreads `count` flights across the spread; a volley fires them side by side; a ring sends them evenly all around from the aim; a salvo fires one now and one each interval after, each aimed afresh at the live aim the caster has sent since the salvo began (an `AimIntent`, kept on its weave book and arriving at most rule `casting.max_aim_rate` times a second), else at the cast's target where it now stands, else along the cast's own aim, and stops when the caster dies.
 
 ### Trajectory axes
 
@@ -80,7 +80,7 @@ Each axis is a parameter defaulting to the weave attribute of the same name unde
 | Axis | Attribute | What it does |
 |---|---|---|
 | `homing` | `projectile.homing` | turns toward a quarry: the cast's target while it is fair game, else the nearest hostile body within rule `delivery.homing_radius`, looked for every `delivery.homing_reacquire` seconds |
-| `guide` | `projectile.guide` | turns toward the caster's live aim, else the point it was aimed at |
+| `guide` | `projectile.guide` | turns toward the live aim its caster has sent since it left, else the point it was aimed at |
 | `erratic` | `projectile.erratic` | the heading wanders by up to the rate each second, rolled on the flight's own stream |
 | `spiral` | `projectile.spiral` | wheels around where it was launched while flying outward |
 | `orbit` | `projectile.orbit` | circles its caster at `orbit_radius` (rule `delivery.orbit_radius`) |

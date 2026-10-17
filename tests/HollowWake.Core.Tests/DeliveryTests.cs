@@ -333,6 +333,59 @@ public class ProjectileDeliveryTests
     }
 
     [Fact]
+    public void SalvosAndGuidedFlightsFollowTheLiveAim()
+    {
+        var arena = DeliveryArena.Create();
+        var book = arena.Sim.World.GetOrAdd<WeaveBook>(arena.Caster);
+        // An aim sent before the cast is already in it, so the salvo keeps the aim it was made with.
+        book.AimPoint = new Vector3(10, 30, 0);
+        book.AimDirection = Vector2.UnitY;
+        book.AimAt = arena.Sim.Clock.Time - 1;
+        arena.Run("{\"type\": \"projectile\", \"fire\": \"salvo\", \"count\": 3, \"salvo_interval\": 0.2, \"speed\": 10, \"range\": 30, \"pierce\": 0}", new Vector3(20, 10, 0), Vector2.UnitX);
+        arena.Tick(6);
+        // An aim sent while it fires turns the shots that follow toward it.
+        book.AimAt = arena.Sim.Clock.Time;
+        arena.Tick(4);
+        Assert.Equal(new[] { 0f, 0f, 90f }, Yaws(arena).Select(y => MathF.Round(y * 180 / MathF.PI, 3)));
+
+        var guided = DeliveryArena.Create();
+        var guidedBook = guided.Sim.World.GetOrAdd<WeaveBook>(guided.Caster);
+        guided.Run("{\"type\": \"projectile\", \"speed\": 10, \"range\": 30, \"pierce\": 0, \"guide\": 720}", new Vector3(20, 10, 0), Vector2.UnitX);
+        var flight = guided.Spawned("projectile").Single().Entity;
+        guided.Tick(4);
+        var ft = guided.Sim.World.Get<Transform>(flight)!;
+        Assert.Equal(10, ft.Position.Y, 3);
+        guidedBook.AimPoint = new Vector3(ft.Position.X, 30, 0);
+        guidedBook.AimAt = guided.Sim.Clock.Time;
+        guided.Tick(6);
+        Assert.True(ft.Position.Y > 12, $"a guided flight turns toward the live aim, but stands at {ft.Position}");
+    }
+
+    [Fact]
+    public void WhatAFlightRunsKeepsTheSlotItWasCastFrom()
+    {
+        var arena = DeliveryArena.Create();
+        var book = arena.Sim.World.GetOrAdd<WeaveBook>(arena.Caster);
+        book.Slots.Clear();
+        book.ReadyAt.Clear();
+        var bolt = arena.Weave("bolt");
+        var nova = arena.Weave("nova");
+        var host = book.Add(bolt.Spec);
+        host.Compiled = bolt;
+        var other = book.Add(nova.Spec);
+        other.Compiled = nova;
+        var now = arena.Sim.Clock.Time;
+        book.ReadyAt[host.Key] = now + 10;
+        book.ReadyAt[other.Key] = now + 10;
+        var flight = arena.Effect("{\"type\": \"projectile\", \"speed\": 10, \"range\": 2, \"pierce\": 0, \"on_end\": [{\"type\": \"cooldown\", \"seconds\": 4}]}");
+        flight.Execute(new EffectContext { Sim = arena.Sim, Source = arena.Caster, Point = new Vector3(20, 10, 0), Direction = Vector2.UnitX, Rng = new Rng(3), Slot = host, Host = bolt });
+        arena.Tick(10);
+        // The flight's end shaves every cooldown but its own weave's, which it still knows as its host.
+        Assert.Equal(now + 10, book.ReadyAt[host.Key], 6);
+        Assert.Equal(now + 6, book.ReadyAt[other.Key], 6);
+    }
+
+    [Fact]
     public void HomingFlightsTurnOntoTheirQuarry()
     {
         var arena = DeliveryArena.Create();

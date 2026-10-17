@@ -104,6 +104,8 @@ internal static class EffectHelpers
         DamageScale = damageScale ?? basis.DamageScale,
         From = from,
         Vars = vars ?? basis.Vars,
+        Slot = basis.Slot,
+        Host = basis.Host,
     };
 
     /// <summary>A copy of a context's variables with one more set.</summary>
@@ -222,10 +224,12 @@ internal static class LiveAim
     /// </summary>
     public static bool TryGet(Simulation sim, Entity caster, double since, out Vector3 point, out Vector2 direction)
     {
-        // The weave book carries the aim once the cast modes stream it; until then every cast keeps its own aim.
-        _ = sim;
-        _ = caster;
-        _ = since;
+        if (sim.World.TryGet<WeaveBook>(caster, out var book) && book.AimAt >= since && book.AimPoint is { } aimed)
+        {
+            point = aimed;
+            direction = book.AimDirection ?? default;
+            return true;
+        }
         point = default;
         direction = default;
         return false;
