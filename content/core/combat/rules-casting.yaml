@@ -4,5 +4,40 @@ entries:
   - id: casting
     values:
       # While true, a player's SetWeave needs the hero to own the forms, glyphs and Threads it names, as the
-      # registered weave ownership service decides. Off until the item model for weaves lands.
+      # registered weave ownership service decides. The item model for weaves switches it on from its own file.
       require_ownership: false
+      # The fraction of movement speed kept while casting a weave whose form names none (tag mobile keeps all).
+      cast_move: 0
+      # Seconds a channel or other hold lasts at most when its form names no limit of its own.
+      max_hold: 8
+      # Seconds a full charge-up or a last overcharge stage is held before it releases by itself.
+      full_hold: 1
+      # A charge-up's seconds to full, an overcharge's seconds per stage and a channel's beat, when their forms name none.
+      charge_time: 1.5
+      stage_time: 0.6
+      channel_interval: 0.5
+      # The live aim: accepted at most this many times a second, and pulled within this range of the caster.
+      max_aim_rate: 10
+      max_aim_range: 40
+      # Seconds between the meta actions of one slot, and before a follow-up that names no delay.
+      meta_interval: 0.35
+      follow_up_delay: 0.3
+      # A fizzled cast leaves its caster under this status for this long.
+      fizzle_status: stunned
+      fizzle_duration: 0.4
+      # Changing the loadout (binding a weave to a seat) needs this to hold over the caster, unless the ground
+      # carries the waiver tag. Off without the expression; for example: '!has("recently_hurt") && !has("recently_hit")'.
+      swap_waived_by: sanctuary
+      # How many recent casts the weave book remembers for varied and repeated casting.
+      recent_casts: 8
+      # Stamp every payment into the caster's last_cost.{resource} gauges, not only for weaves that read them.
+      stamp_costs: false
+
+  # Extends the trigger rules: only weaves this quick (base cast time in seconds) trigger unless a permit rides
+  # along; events at this effect depth or deeper trigger nothing; no trigger chance exceeds the cap.
+  - id: triggers
+    patch: true
+    values:
+      max_cast_time: 1
+      max_depth: 4
+      chance_cap: 1

@@ -1,0 +1,179 @@
+# Glyphs of the cast modes: triggers, repeats, metas, banks, charge spends, slot behaviors, fuses and hexes.
+# A triggered weave casts itself; its key arms and disarms it. Held modes and toggles cannot be triggered.
+kind: glyphs
+entries:
+  - id: cast_on_crit
+    name: Ruinous Echo
+    description: The weave casts itself, at the struck foe, when its bearer lands a critical blow.
+    excludes: [cast.channel, cast.held, aura, movement]
+    color: "#e8622a"
+    trigger: { on: crit, chance: 0.7, icd: 0.15 }
+    per_level:
+      - { attribute: trigger.chance, form: flat, value: 0.06 }
+
+  - id: spark_on_strike
+    name: Kindling Spur
+    description: The weave casts itself whenever its bearer lands a melee blow, taking turns with its other spurred weaves.
+    requires: [spell]
+    excludes: [cast.channel, cast.held, aura, movement]
+    color: "#f5e27a"
+    trigger: { on: hit, tags: [melee], chance: 1, icd: 0.25 }
+
+  - id: retaliation
+    name: Retaliation
+    description: The weave casts itself at an attacker each time its bearer has lost a seventh of its life.
+    excludes: [cast.channel, cast.held, aura, movement]
+    color: "#9c8b72"
+    trigger: { on: hurt, life_fraction: 0.15, icd: 1 }
+
+  - id: undertow
+    name: Undertow
+    description: The weave casts itself on the beats of its bearer's channels.
+    excludes: [cast.channel, cast.held, aura, movement]
+    color: "#3aa6d8"
+    trigger: { on: channel_beat, chance: 1, icd: 0.6 }
+
+  - id: loosened_lattice
+    name: Loosened Lattice
+    description: Lifts the limit on how slow a triggered weave may be. It costs more.
+    requires_mechanisms: [triggered]
+    adds_mechanisms: [trigger_permit]
+    color: "#b58cff"
+    modifiers:
+      - { attribute: cost, form: increased, value: 0.3 }
+
+  - id: echoing
+    name: Echoing
+    description: Spells repeat once, a little weaker.
+    requires: [spell]
+    excludes: [cast.channel, cast.held]
+    color: "#d470c0"
+    modifiers:
+      - { attribute: repeat.count, form: flat, value: 1 }
+      - { attribute: damage, form: more, value: -0.15 }
+
+  - id: flurry
+    name: Flurry
+    description: Melee blows strike twice more in quick succession, each at the nearest foe.
+    requires: [melee]
+    excludes: [cast.channel, cast.held]
+    color: "#e0e0e0"
+    modifiers:
+      - { attribute: repeat.count, form: flat, value: 2 }
+      - { attribute: repeat.retarget, form: flat, value: 1 }
+      - { attribute: repeat.interval, form: override, value: 0.15 }
+      - { attribute: damage, form: more, value: -0.3 }
+
+  - id: unleash
+    name: Unleash
+    description: While the weave rests it banks seals; each seal is one more repeat on its next use.
+    requires: [spell]
+    excludes: [cast.channel, cast.held]
+    color: "#5a4a7a"
+    modifiers:
+      - { attribute: repeat.seals, form: flat, value: 2 }
+      - { attribute: damage, form: more, value: -0.2 }
+
+  - id: twin_rite
+    name: Twin Rite
+    description: Gives the weave's seat a second ability, a burst of Ember where its bearer aims.
+    requires: [spell]
+    color: "#e8622a"
+    meta: { weave: ember_blast, label: Detonate }
+
+  - id: munitions
+    name: Munitions
+    description: Turns the weave into a quiver of three shots that restrings itself when spent.
+    requires_mechanisms: [projectile]
+    color: "#9c8b72"
+    uses: { max: 3, recharge: 3 }
+    convert: { when: "slot.uses < 1", weave: quiver_restring }
+    modifiers:
+      - { attribute: damage, form: more, value: 0.15 }
+
+  - id: spent_fury
+    name: Spent Fury
+    description: Spends every charge of fury on use; each one spent strikes harder.
+    requires: [attack]
+    color: "#e8622a"
+    spend: { charge: fury, all: true, optional: true, scales: [ { attribute: damage, form: more, per_charge: 0.12 } ] }
+
+  - id: momentum
+    name: Momentum
+    description: Each use quickens the next; the pace drops after a pause.
+    requires: [attack, spell]
+    color: "#3aa6d8"
+    self_stack:
+      max: 5
+      duration: 3
+      modifiers:
+        - { attribute: attack.speed, form: increased, value: 0.06 }
+        - { attribute: cast.speed, form: increased, value: 0.06 }
+
+  - id: follow_through
+    name: Follow Through
+    description: Half the time a use is followed a beat later by a burst of Ember where it landed.
+    requires: [attack, spell]
+    color: "#e8622a"
+    follow_up: { weave: ember_blast, delay: 0.35, chance: 0.5 }
+    modifiers:
+      - { attribute: cost, form: increased, value: 0.2 }
+
+  - id: cadence
+    name: Cadence
+    description: Every third use also fortifies its bearer.
+    requires: [attack, spell]
+    color: "#f5e27a"
+    cycle:
+      count: 3
+      effects:
+        - { type: apply_status, status: fortified, duration: 3, self: true }
+
+  - id: time_fuse
+    name: Time Fuse
+    description: Hits land as fuses that go off a moment later, harder.
+    requires_mechanisms: [hit]
+    color: "#b58cff"
+    patches:
+      - { type: damage, wrap: { type: fuse, delay: 0.8, power: 0.25 } }
+
+  - id: hexing
+    name: Hexing
+    description: Hits lay a hex that leaves the struck more open to harm.
+    requires_mechanisms: [hit]
+    color: "#d470c0"
+    hooks:
+      on_hit:
+        - { type: apply_status, status: shocked, chance: 0.5 }
+
+  - id: bastion
+    name: Bastion
+    description: While this weave sits in the rack its bearer is harder to hurt.
+    color: "#9c8b72"
+    equip_modifiers:
+      - { attribute: armor, form: flat, value: 15 }
+
+  - id: blood_levy
+    name: Blood Levy
+    description: Strikes far harder, but only in good health, and every use costs life.
+    requires: [attack, spell]
+    color: "#a83232"
+    gates: ['life_pct > 0.5']
+    modifiers:
+      - { attribute: damage, form: more, value: 0.4 }
+      - { attribute: cost.added.life, form: flat, value: 6 }
+
+  - id: last_word
+    name: Last Word
+    description: Below a third of its bearer's life, the seat casts a ward of Lumen instead.
+    requires: [spell]
+    color: "#f5e27a"
+    convert: { when: "life_pct < 0.33", weave: lumen_ward }
+
+  - id: third_lens
+    name: Third Lens
+    description: Overcharges climb one stage higher.
+    requires_mechanisms: [overcharge]
+    color: "#b58cff"
+    modifiers:
+      - { attribute: overcharge.stages, form: flat, value: 1 }
