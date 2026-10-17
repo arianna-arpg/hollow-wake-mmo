@@ -25,6 +25,7 @@ public partial class LoginPanel : CanvasLayer
     public event Action<string, int, string>? ConnectRequested;
     public event Action<string, string>? CreateRequested;
     public event Action<string>? EnterRequested;
+    public event Action? OptionsRequested;
 
     /// <summary>The server the fields start with; the launcher passes it as <c>--host</c> and <c>--port</c>.</summary>
     public string DefaultHost { get; init; } = LaunchOptions.DefaultHost;
@@ -90,6 +91,9 @@ public partial class LoginPanel : CanvasLayer
         _connect = new Button { Text = "Connect", FocusMode = Control.FocusModeEnum.None };
         _connect.Pressed += () => ConnectRequested?.Invoke(_host.Text.Trim(), int.TryParse(_port.Text, out var p) ? p : 7777, _account.Text.Trim());
         row2.AddChild(_connect);
+        var options = new Button { Text = "Options", FocusMode = Control.FocusModeEnum.None };
+        options.Pressed += () => OptionsRequested?.Invoke();
+        row2.AddChild(options);
         _status = new Label { Text = "Not connected.", AutowrapMode = TextServer.AutowrapMode.WordSmart };
         _status.AddThemeColorOverride("font_color", muted);
         box.AddChild(_status);

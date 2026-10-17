@@ -1,0 +1,46 @@
+# The input map: every action the clients bind, its display group, the context its bindings must not collide
+# in, and its default bindings per device. Keys are key names (W, Shift+Tab, F1); pad names a controller
+# button or stick direction. Clients register these at start and lay the player's rebinds from Options over
+# them; a new action here is a new row in Options with no other change.
+kind: input_actions
+entries:
+  # ---- movement
+  - { id: move_forward, name: Move forward, group: movement, order: 0, keys: [W, Up], pad: [LeftStickUp], held: true }
+  - { id: move_back, name: Move back, group: movement, order: 1, keys: [S, Down], pad: [LeftStickDown], held: true }
+  - { id: move_left, name: Move left, group: movement, order: 2, keys: [A, Left], pad: [LeftStickLeft], held: true }
+  - { id: move_right, name: Move right, group: movement, order: 3, keys: [D, Right], pad: [LeftStickRight], held: true }
+  - { id: jump, name: Jump, group: movement, order: 4, keys: [Space], pad: [A] }
+
+  # ---- the world around the hero
+  - { id: interact, name: Interact with the nearest, group: interaction, order: 0, keys: [F], pad: [X] }
+  - { id: pick_up, name: Pick up the nearest drop, group: interaction, order: 1, keys: [G], pad: [Y] }
+  - { id: respawn, name: Respawn, group: interaction, order: 2, keys: [R] }
+  - { id: cancel, name: Cancel and close, group: interaction, order: 3, keys: [Escape], pad: [B] }
+  - { id: chat, name: Chat, group: interaction, order: 4, keys: [Enter] }
+
+  # ---- weave seats
+  - { id: slot_1, name: Weave seat 1, group: weaves, order: 1, keys: ["1"], pad: [RB] }
+  - { id: slot_2, name: Weave seat 2, group: weaves, order: 2, keys: ["2"], pad: [RT] }
+  - { id: slot_3, name: Weave seat 3, group: weaves, order: 3, keys: ["3"], pad: [LB] }
+  - { id: slot_4, name: Weave seat 4, group: weaves, order: 4, keys: ["4"], pad: [LT] }
+  - { id: slot_5, name: Weave seat 5, group: weaves, order: 5, keys: ["5"] }
+  - { id: slot_6, name: Weave seat 6, group: weaves, order: 6, keys: ["6"] }
+  - { id: slot_7, name: Weave seat 7, group: weaves, order: 7, keys: ["7"] }
+  - { id: slot_8, name: Weave seat 8, group: weaves, order: 8, keys: ["8"] }
+
+  # ---- cameras
+  - { id: camera_toggle, name: Switch camera, group: camera, order: 0, keys: [V], pad: [RightStick] }
+  - { id: camera_rotate_left, name: Turn the camera left, group: camera, order: 1, keys: [Q], pad: [DpadLeft] }
+  - { id: camera_rotate_right, name: Turn the camera right, group: camera, order: 2, keys: [E], pad: [DpadRight] }
+
+  # ---- the interface: pages, the menu tray, the book walk and Options
+  - { id: page_inventory, name: Inventory, group: interface, order: 0, keys: [I], pad: [Back] }
+  - { id: page_weaves, name: Weaves, group: interface, order: 1, keys: [K] }
+  - { id: page_passives, name: Passives, group: interface, order: 2, keys: [P] }
+  - { id: page_reliquary, name: Reliquary, group: interface, order: 3, keys: [O] }
+  - { id: page_character, name: Character, group: interface, order: 4, keys: [C] }
+  - { id: page_options, name: Options, group: interface, order: 5, keys: [F10] }
+  - { id: ui_menu_tray, name: Menu, group: interface, order: 6, keys: [Tab], pad: [Start] }
+  # The walk turns a book of two or more tabs; it is live only while one stands, so it may share Tab with the menu.
+  - { id: ui_book_next, name: Next tab, group: interface, context: book, order: 7, keys: [Tab], pad: [DpadDown] }
+  - { id: ui_book_previous, name: Previous tab, group: interface, context: book, order: 8, keys: [Shift+Tab], pad: [DpadUp] }

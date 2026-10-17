@@ -26,13 +26,15 @@ public static class MenuFold
         IReadOnlyList<UiPage> pages,
         IReadOnlyDictionary<string, PageStatus>? served,
         Func<string, int> fallbackPips,
-        Func<string, bool> showing)
+        Func<string, bool> showing,
+        Func<UiPage, string>? keyLabel = null)
     {
         var rows = new List<TrayRow>(pages.Count);
         foreach (var page in pages)
         {
-            var label = KeyName.Label(page.Key);
-            if (served is not null && served.TryGetValue(page.Id, out var status))
+            var label = keyLabel?.Invoke(page) ?? "";
+            // A menu page is the client's own: the page state neither hides nor seals it.
+            if (served is not null && !page.InMenuOnly && served.TryGetValue(page.Id, out var status))
             {
                 if (!status.Exists)
                 {
@@ -92,6 +94,22 @@ public readonly record struct KeyName(string Key, bool Shift, bool Ctrl, bool Al
     }
 
     public bool IsEmpty => Key.Length == 0;
+
+    /// <summary>A key name in one spelling (modifiers in a fixed order, a letter upper case), for comparing bindings.</summary>
+    public static string Canonical(string? text)
+    {
+        var k = Parse(text);
+        if (k.IsEmpty)
+        {
+            return "";
+        }
+        var key = k.Key.Length == 1 ? k.Key.ToUpperInvariant() : k.Key == "Esc" ? "Escape" : k.Key == "Return" ? "Enter" : k.Key;
+        return (k.Alt ? "Alt+" : "") + (k.Ctrl ? "Ctrl+" : "") + (k.Shift ? "Shift+" : "") + key;
+    }
+
+    /// <summary>A key name from its parts, as content writes it.</summary>
+    public static string Compose(string key, bool shift, bool ctrl, bool alt) =>
+        (ctrl ? "Ctrl+" : "") + (alt ? "Alt+" : "") + (shift ? "Shift+" : "") + key;
 
     /// <summary>The label a key wears on a ribbon or a tray row.</summary>
     public static string Label(string? text)

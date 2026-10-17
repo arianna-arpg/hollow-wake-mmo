@@ -171,15 +171,18 @@ public sealed class UiIconSet
 }
 
 /// <summary>A page of the core pane as content declares it.</summary>
-public sealed record UiPage(string Id, string Name, string Key, string Icon, int Order, string Place, string Description)
+public sealed record UiPage(string Id, string Name, string Action, string Icon, int Order, string Place, string Description)
 {
     public bool IsCore => Place == "core";
     public bool OnRibbon => Place is "ribbon" or "popout";
 
+    /// <summary>A client page reached from the menu alone (Options); the page state never hides it.</summary>
+    public bool InMenuOnly => Place == "menu";
+
     public static UiPage From(JsonObject o) => new(
         Json.Str(o["id"]),
         Json.Str(o["name"], Json.Str(o["id"])),
-        Json.Str(o["key"]),
+        Json.Str(o["action"], "page_" + Json.Str(o["id"])),
         Json.Str(o["icon"]),
         (int)Json.Num(o["order"]),
         Json.Str(o["place"], "ribbon"),
@@ -205,7 +208,6 @@ public sealed class UiLayout
     public List<string> Ranks { get; init; } = new() { "page", "station", "decision" };
     public Dictionary<string, string> Panes { get; init; } = new(StringComparer.Ordinal);
     public Dictionary<string, (int Column, int Row)> Doll { get; init; } = new(StringComparer.Ordinal);
-    public Dictionary<string, string> Keys { get; init; } = new(StringComparer.Ordinal);
     public Dictionary<string, double> Metrics { get; init; } = new(StringComparer.Ordinal);
 
     public double M(string name, double fallback) => Metrics.TryGetValue(name, out var v) ? v : fallback;
@@ -241,7 +243,6 @@ public sealed class UiLayout
             Ranks = ranks.Count > 0 ? ranks : new List<string> { "page", "station", "decision" },
             Panes = Json.StringMap(o["panes"]),
             Doll = doll,
-            Keys = Json.StringMap(o["keys"]),
             Metrics = Json.NumberMap(o["metrics"]),
         };
     }
@@ -274,21 +275,23 @@ public sealed class UiContent
     public required IReadOnlyList<UiPage> Pages { get; init; }
     public required UiLayout Layout { get; init; }
     public required IReadOnlyList<UiSheetSection> Sheet { get; init; }
+    public IReadOnlyDictionary<string, UiIconSet> IconSets { get; init; } = new Dictionary<string, UiIconSet>();
 
     public UiPage? Page(string id) => Pages.FirstOrDefault(p => p.Id == id);
 
     public UiPage? CorePage => Pages.FirstOrDefault(p => p.IsCore);
 
-    /// <summary>The same content drawn with another theme (the icon set follows the theme when it names another).</summary>
-    public UiContent WithTheme(UiTheme theme, IReadOnlyDictionary<string, UiIconSet> sets) => new()
+    /// <summary>
+    /// The same content drawn with a theme and an icon set the player picked: the theme by id (else this one),
+    /// the icon set by id, else the one the theme names, else this one.
+    /// </summary>
+    public UiContent WithLook(string? themeId, string? iconSetId)
     {
-        Theme = theme,
-        Themes = Themes,
-        Icons = sets.TryGetValue(theme.IconSet, out var s) ? s : Icons,
-        Pages = Pages,
-        Layout = Layout,
-        Sheet = Sheet,
-    };
+        var theme = Themes.FirstOrDefault(t => t.Id == themeId) ?? Theme;
+        var icons = iconSetId is not null && IconSets.TryGetValue(iconSetId, out var chosen) ? chosen
+            : IconSets.TryGetValue(theme.IconSet, out var named) ? named : Icons;
+        return new UiContent { Theme = theme, Themes = Themes, Icons = icons, Pages = Pages, Layout = Layout, Sheet = Sheet, IconSets = IconSets };
+    }
 
     /// <summary>
     /// Reads the interface content. <paramref name="rawOfKind"/> yields the entries of a content kind as JSON
@@ -302,16 +305,16 @@ public sealed class UiContent
             themes.Add(new UiTheme { Id = "plain", Name = "Plain", Default = true });
         }
         var theme = themes.FirstOrDefault(t => t.Id == themeId) ?? themes.FirstOrDefault(t => t.Default) ?? themes[0];
-        var sets = IconSets(rawOfKind);
+        var sets = LoadIconSets(rawOfKind);
         var icons = sets.TryGetValue(theme.IconSet, out var set) ? set : sets.Values.FirstOrDefault() ?? new UiIconSet();
         var pages = rawOfKind("ui_pages").Select(UiPage.From).OrderBy(p => p.Order).ThenBy(p => p.Id, StringComparer.Ordinal).ToList();
         var layoutRaw = rawOfKind("ui_layouts").ToList();
         var layout = layoutRaw.Select(UiLayout.From).FirstOrDefault(l => l.Id == "default") ?? layoutRaw.Select(UiLayout.From).FirstOrDefault() ?? new UiLayout();
         var sheetRaw = rawOfKind("ui_sheets").FirstOrDefault(s => Json.Str(s["id"]) == "character") ?? rawOfKind("ui_sheets").FirstOrDefault();
         var sheet = sheetRaw is null ? new List<UiSheetSection>() : Json.Items(sheetRaw["sections"]).Select(UiSheetSection.From).ToList();
-        return new UiContent { Theme = theme, Themes = themes, Icons = icons, Pages = pages, Layout = layout, Sheet = sheet };
+        return new UiContent { Theme = theme, Themes = themes, Icons = icons, Pages = pages, Layout = layout, Sheet = sheet, IconSets = sets };
     }
 
-    public static Dictionary<string, UiIconSet> IconSets(Func<string, IEnumerable<JsonObject>> rawOfKind) =>
+    public static Dictionary<string, UiIconSet> LoadIconSets(Func<string, IEnumerable<JsonObject>> rawOfKind) =>
         rawOfKind("ui_icon_sets").Select(UiIconSet.From).ToDictionary(s => s.Id, StringComparer.Ordinal);
 }

@@ -27,14 +27,14 @@ public partial class RailView : Control
         MouseFilter = MouseFilterEnum.Stop;
     }
 
-    /// <summary>Where a page's ribbon is on screen, for scripted clicks.</summary>
+    /// <summary>Where a page's ribbon is in the viewport (screen pixels, through the interface's scale), for scripted clicks.</summary>
     public Vector2? CenterOf(string pageId)
     {
         foreach (var (row, rect) in _ribbons)
         {
             if (row.Page.Id == pageId)
             {
-                return GetGlobalTransform() * rect.GetCenter();
+                return GetGlobalTransformWithCanvas() * rect.GetCenter();
             }
         }
         return null;

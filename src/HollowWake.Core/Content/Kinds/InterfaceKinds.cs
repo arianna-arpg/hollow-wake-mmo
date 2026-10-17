@@ -4,30 +4,81 @@ using HollowWake.Core.Definitions;
 namespace HollowWake.Core.Content.Kinds;
 
 /// <summary>
-/// Content for the interface: themes, icon sets, pages, the layout and the character sheet. The clients
-/// read them; the server reads the pages' gates and pip sources to serve the page state. Registers the
-/// kinds and their validators.
+/// Content for the interface: themes, icon sets, pages, the layout, the character sheet, the Options pane and
+/// the input map. The clients read them; the server reads the pages' gates and pip sources to serve the page
+/// state. Registers the kinds and their validators.
 /// </summary>
 internal static class InterfaceKinds
 {
     /// <summary>The frame styles both clients draw. A theme names one of them and colours it.</summary>
     public static readonly IReadOnlyList<string> FrameStyles = new[] { "stone", "brass" };
 
-    /// <summary>Where a page lives: the core pane itself, a ribbon page docked beside it, or a popout ribbon.</summary>
-    public static readonly IReadOnlyList<string> Places = new[] { "core", "ribbon", "popout" };
+    /// <summary>
+    /// Where a page lives: the core pane itself, a ribbon page docked beside it, a popout ribbon, or the menu
+    /// alone (a client page such as Options, which the page state never hides).
+    /// </summary>
+    public static readonly IReadOnlyList<string> Places = new[] { "core", "ribbon", "popout", "menu" };
 
     /// <summary>What a sheet section lists.</summary>
     public static readonly IReadOnlyList<string> SectionKinds = new[] { "attributes", "threads", "quests" };
+
+    /// <summary>The kinds of option entries the Options pane draws.</summary>
+    public static readonly IReadOnlyList<string> OptionKinds = new[] { "toggle", "choice", "slider", "key", "color", "text" };
+
+    /// <summary>Where an option's value lives.</summary>
+    public static readonly IReadOnlyList<string> OptionScopes = new[] { "client", "account", "character" };
+
+    /// <summary>When a changed option takes effect.</summary>
+    public static readonly IReadOnlyList<string> OptionApplies = new[] { "live", "on_close", "restart" };
+
+    /// <summary>Key names the clients understand besides single letters and digits.</summary>
+    public static readonly IReadOnlyList<string> NamedKeys = new[]
+    {
+        "Tab", "Escape", "Esc", "Enter", "Return", "Space", "Backspace", "Delete", "Insert", "Home", "End", "PageUp", "PageDown",
+        "Up", "Down", "Left", "Right", "Minus", "Equal", "BracketLeft", "BracketRight", "Semicolon", "Apostrophe", "Comma",
+        "Period", "Slash", "Backslash", "QuoteLeft", "F1", "F2", "F3", "F4", "F5", "F6", "F7", "F8", "F9", "F10", "F11", "F12",
+    };
+
+    /// <summary>Controller inputs by name: buttons, then stick directions.</summary>
+    public static readonly IReadOnlyList<string> PadInputs = new[]
+    {
+        "A", "B", "X", "Y", "LB", "RB", "LT", "RT", "Back", "Start", "LeftStick", "RightStick", "DpadUp", "DpadDown", "DpadLeft", "DpadRight",
+        "LeftStickUp", "LeftStickDown", "LeftStickLeft", "LeftStickRight", "RightStickUp", "RightStickDown", "RightStickLeft", "RightStickRight",
+    };
 
     public static void Register()
     {
         // Page gates and pip sources read the hero; the page scope adds the unspent points of each currency.
         ScopeNames.DeclarePrefix("points.");
+        // Option gates and requirements read the client's facts and the other options.
+        ScopeNames.DeclarePrefix("client.");
+        ScopeNames.DeclarePrefix("option.");
         ContentKinds.Register<UiThemeDef>("ui_themes", Theme);
         ContentKinds.Register<UiIconSetDef>("ui_icon_sets", IconSet);
         ContentKinds.Register<UiPageDef>("ui_pages", Page);
         ContentKinds.Register<UiLayoutDef>("ui_layouts", Layout);
         ContentKinds.Register<UiSheetDef>("ui_sheets", Sheet);
+        ContentKinds.Register<UiOptionPageDef>("ui_options", OptionPage);
+        ContentKinds.Register<InputActionDef>("input_actions", InputAction);
+    }
+
+    /// <summary>Whether a key name is one the clients bind: a letter, a digit or a named key, with modifiers.</summary>
+    public static bool IsKeyName(string text)
+    {
+        var parts = text.Split('+', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+        if (parts.Length == 0)
+        {
+            return false;
+        }
+        var key = parts[^1];
+        foreach (var modifier in parts[..^1])
+        {
+            if (modifier is not ("Shift" or "Ctrl" or "Control" or "Alt"))
+            {
+                return false;
+            }
+        }
+        return (key.Length == 1 && char.IsLetterOrDigit(key[0])) || NamedKeys.Contains(key);
     }
 
     /// <summary>A colour as the clients read it: #rgb, #rrggbb or #rrggbbaa.</summary>
@@ -175,9 +226,18 @@ internal static class InterfaceKinds
         {
             c.Error($"place '{d.Place}' is not one of {string.Join(", ", Places)}.");
         }
-        if (d.Key.Trim().Length == 0)
+        // The page's keys are the bindings of its input action; a page without one is reached by menu and ribbon.
+        var action = d.Action ?? "page_" + d.Id;
+        if (!c.Registry.Has<InputActionDef>(action))
         {
-            c.Warn("page has no key; it can still be requested from the menu and the ribbon.");
+            if (d.Action is not null)
+            {
+                c.Error($"action '{action}' is not a declared input action.");
+            }
+            else
+            {
+                c.Warn($"no input action '{action}' requests the page; it can still be opened from the menu and the ribbon.");
+            }
         }
         if (d.Icon.Length > 0 && !c.Registry.Each<UiIconSetDef>().Any(s => s.Icons.ContainsKey(d.Icon)))
         {
@@ -186,13 +246,6 @@ internal static class InterfaceKinds
         c.Expression(d.Gate, "gate");
         c.Expression(d.Pips, "pips");
         var pages = c.Registry.All<UiPageDef>();
-        foreach (var other in pages.Values)
-        {
-            if (other.Id != d.Id && d.Key.Length > 0 && string.Equals(other.Key, d.Key, StringComparison.OrdinalIgnoreCase) && string.CompareOrdinal(other.Id, d.Id) < 0)
-            {
-                c.Error($"key '{d.Key}' is also the key of page '{other.Id}'.");
-            }
-        }
         if (d.Id == pages.Keys.Min(StringComparer.Ordinal))
         {
             var cores = pages.Values.Count(p => p.Place == "core");
@@ -292,6 +345,220 @@ internal static class InterfaceKinds
                     c.Error($"section '{s.Id}' has a cap pattern without {{thread}}.");
                 }
             }
+        }
+    }
+
+    /// <summary>A key name in one spelling: modifiers in a fixed order, the key's letter upper case.</summary>
+    public static string CanonicalKey(string text)
+    {
+        var parts = text.Split('+', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+        if (parts.Length == 0)
+        {
+            return "";
+        }
+        var mods = parts[..^1].Select(m => m == "Control" ? "Ctrl" : m).OrderBy(m => m, StringComparer.Ordinal);
+        var key = parts[^1];
+        key = key.Length == 1 ? key.ToUpperInvariant() : key == "Esc" ? "Escape" : key == "Return" ? "Enter" : key;
+        return string.Join("+", mods.Append(key));
+    }
+
+    private static void InputAction(InputActionDef d, ValidationContext c)
+    {
+        if (d.Group.Trim().Length == 0)
+        {
+            c.Error("group is required.");
+        }
+        foreach (var key in d.Keys.Where(k => !IsKeyName(k)))
+        {
+            c.Error($"keys names '{key}', which is not a key the clients bind.");
+        }
+        foreach (var pad in d.Pad.Where(p => !PadInputs.Contains(p)))
+        {
+            c.Error($"pad names '{pad}', which is not a controller input the clients bind.");
+        }
+        // Defaults never collide within a context; each pair is reported once, on the later id.
+        foreach (var other in c.Registry.Each<InputActionDef>())
+        {
+            if (other.Id == d.Id || other.Context != d.Context || string.CompareOrdinal(other.Id, d.Id) > 0)
+            {
+                continue;
+            }
+            foreach (var key in d.Keys.Where(k => other.Keys.Any(o => CanonicalKey(o) == CanonicalKey(k))))
+            {
+                c.Error($"key '{key}' is also bound to '{other.Id}' in the {d.Context} context.");
+            }
+            foreach (var pad in d.Pad.Where(other.Pad.Contains))
+            {
+                c.Error($"pad '{pad}' is also bound to '{other.Id}' in the {d.Context} context.");
+            }
+        }
+    }
+
+    /// <summary>The option entries of a page, with the key entries its binding groups expand into.</summary>
+    public static IEnumerable<(UiOptionGroupDef Group, UiOptionDef Entry)> EntriesOf(UiOptionPageDef page, ContentRegistry registry)
+    {
+        foreach (var group in page.Groups)
+        {
+            foreach (var e in group.Entries)
+            {
+                yield return (group, e);
+            }
+            if (group.Bindings is { } bindings)
+            {
+                foreach (var action in registry.Each<InputActionDef>().Where(a => a.Group == bindings).OrderBy(a => a.Order).ThenBy(a => a.Id, StringComparer.Ordinal))
+                {
+                    yield return (group, new UiOptionDef { Id = "key." + action.Id, Name = action.DisplayName, Kind = "key", Action = action.Id, Applies = "live" });
+                }
+            }
+        }
+    }
+
+    private static void OptionPage(UiOptionPageDef d, ValidationContext c)
+    {
+        c.Expression(d.Gate, "gate");
+        if (d.Icon.Length > 0 && !c.Registry.Each<UiIconSetDef>().Any(s => s.Icons.ContainsKey(d.Icon)))
+        {
+            c.Warn($"icon '{d.Icon}' is in no icon set.");
+        }
+        // Nested records bind their known keys and drop the rest; a typo there would vanish silently.
+        if (c.Registry.Raw("ui_options", d.Id) is { } raw && raw["groups"] is System.Text.Json.Nodes.JsonArray groups)
+        {
+            foreach (var g in groups.OfType<System.Text.Json.Nodes.JsonObject>())
+            {
+                foreach (var unknown in ContentJson.UnknownKeys(typeof(UiOptionGroupDef), g))
+                {
+                    c.Warn($"group '{JsonNum.StringOf(g["id"])}' has an unknown key '{unknown}' (ignored).");
+                }
+                if (g["entries"] is System.Text.Json.Nodes.JsonArray entries)
+                {
+                    foreach (var e in entries.OfType<System.Text.Json.Nodes.JsonObject>())
+                    {
+                        foreach (var unknown in ContentJson.UnknownKeys(typeof(UiOptionDef), e))
+                        {
+                            c.Warn($"entry '{JsonNum.StringOf(e["id"])}' has an unknown key '{unknown}' (ignored).");
+                        }
+                    }
+                }
+            }
+        }
+        var groupIds = new HashSet<string>(StringComparer.Ordinal);
+        foreach (var g in d.Groups)
+        {
+            if (g.Id.Length == 0 || !groupIds.Add(g.Id))
+            {
+                c.Error($"group '{g.Id}' needs an id unique on the page.");
+            }
+            if (g.Bindings is { } bindings && !c.Registry.Each<InputActionDef>().Any(a => a.Group == bindings))
+            {
+                c.Error($"group '{g.Id}' binds input action group '{bindings}', which no input action is in.");
+            }
+        }
+        // Entry ids are unique across every page: each id is reported once, on the later page in id order.
+        var mine = EntriesOf(d, c.Registry).Select(x => x.Entry.Id).ToList();
+        foreach (var dup in mine.GroupBy(i => i).Where(x => x.Count() > 1))
+        {
+            c.Error($"entry '{dup.Key}' is declared twice on the page.");
+        }
+        foreach (var other in c.Registry.Each<UiOptionPageDef>().Where(p => string.CompareOrdinal(p.Id, d.Id) < 0))
+        {
+            foreach (var id in EntriesOf(other, c.Registry).Select(x => x.Entry.Id).Intersect(mine))
+            {
+                c.Error($"entry '{id}' is also an entry of page '{other.Id}'.");
+            }
+        }
+        foreach (var (group, e) in EntriesOf(d, c.Registry))
+        {
+            Option(e, c, $"{group.Id}.{e.Id}");
+        }
+    }
+
+    private static void Option(UiOptionDef e, ValidationContext c, string at)
+    {
+        if (e.Id.Length == 0)
+        {
+            c.Error($"an entry in {at} has no id.");
+            return;
+        }
+        if (!OptionKinds.Contains(e.Kind))
+        {
+            c.Error($"{at}: kind '{e.Kind}' is not one of {string.Join(", ", OptionKinds)}.");
+            return;
+        }
+        if (!OptionScopes.Contains(e.Scope))
+        {
+            c.Error($"{at}: scope '{e.Scope}' is not one of {string.Join(", ", OptionScopes)}.");
+        }
+        if (!OptionApplies.Contains(e.Applies))
+        {
+            c.Error($"{at}: applies '{e.Applies}' is not one of {string.Join(", ", OptionApplies)}.");
+        }
+        switch (e.Kind)
+        {
+            case "toggle":
+                if (e.Default is not System.Text.Json.Nodes.JsonValue v || !v.TryGetValue<bool>(out _))
+                {
+                    c.Error($"{at}: a toggle's default must be true or false.");
+                }
+                break;
+            case "slider":
+                if (e.Min >= e.Max)
+                {
+                    c.Error($"{at}: min must be below max.");
+                }
+                if (e.Step <= 0)
+                {
+                    c.Error($"{at}: step must be positive.");
+                }
+                if (!JsonNum.TryDouble(e.Default, out var number) || number < e.Min || number > e.Max)
+                {
+                    c.Error($"{at}: the default must be a number from {e.Min} to {e.Max}.");
+                }
+                break;
+            case "choice":
+                var choices = e.Choices.Select(x => x.Id).ToList();
+                if (e.ChoicesFrom is { } kind)
+                {
+                    if (!ContentKinds.TryGet(kind, out _))
+                    {
+                        c.Error($"{at}: choices_from names '{kind}', which is not a content kind.");
+                        break;
+                    }
+                    choices.AddRange(c.Registry.IdsOfKind(kind));
+                }
+                if (choices.Count == 0)
+                {
+                    c.Error($"{at}: a choice needs choices or choices_from.");
+                    break;
+                }
+                if (JsonNum.StringOf(e.Default) is not { } chosen || !choices.Contains(chosen))
+                {
+                    c.Error($"{at}: the default must be one of the choices.");
+                }
+                break;
+            case "key":
+                if (e.Action is null || !c.Registry.Has<InputActionDef>(e.Action))
+                {
+                    c.Error($"{at}: action '{e.Action}' is not a declared input action.");
+                }
+                break;
+            case "color":
+                if (!IsColor(JsonNum.StringOf(e.Default)))
+                {
+                    c.Error($"{at}: a colour's default must be a colour (#rgb, #rrggbb or #rrggbbaa).");
+                }
+                break;
+            case "text":
+                if (e.Default is not null && (JsonNum.StringOf(e.Default) is not { } text || text.Length > e.MaxLength))
+                {
+                    c.Error($"{at}: a text's default must be a string of at most {e.MaxLength} characters.");
+                }
+                break;
+        }
+        c.Expression(e.Gate, at + ".gate");
+        c.Expression(e.Requires, at + ".requires");
+        if (e.Requires is not null && e.RequiresReason.Length == 0)
+        {
+            c.Warn($"{at}: requires has no requires_reason to show while it is greyed.");
         }
     }
 }

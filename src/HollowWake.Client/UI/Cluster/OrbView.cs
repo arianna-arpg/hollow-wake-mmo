@@ -83,12 +83,13 @@ public partial class OrbView : Control
             veil = (float)Math.Clamp(oc / om, 0, 1);
             if (hero.Pool(overlay)?.State == "recharging")
             {
-                pulse = 0.5f + 0.5f * Mathf.Sin((float)now * 4.2f);
+                pulse = Motion.Reduced ? 0.35f : 0.5f + 0.5f * Mathf.Sin((float)now * 4.2f);
             }
             break;
         }
         _material.SetShaderParameter("veil", veil);
         _material.SetShaderParameter("pulse", pulse);
+        _material.SetShaderParameter("motion", Motion.Reduced ? 0f : 1f);
         var tip = Tooltip(hero);
         if (tip != _tooltip)
         {

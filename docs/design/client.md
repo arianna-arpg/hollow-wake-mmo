@@ -12,11 +12,15 @@ Entities are placeholder bodies chosen by what they are (capsules for creatures,
 
 ## Camera
 
-`CameraRig` has two modes over one world. Isometric: orthographic, fixed pitch, yaw in 45 degree steps, follows the player, scroll to zoom. Third person: perspective behind the character, orbit with the right mouse button, scroll for distance. `V` toggles; `Q` and `E` rotate. Everything else in the client asks the rig for the ground-plane forward and for mouse rays.
+`CameraRig` has two modes over one world. Isometric: orthographic, fixed pitch, yaw in steps, follows the player, scroll to zoom. Third person: perspective behind the character, orbit with the right mouse button, scroll for distance. The starting mode, the step, the zoom range, the drag sensitivity and inversion and the field of view are Options. `V` toggles; `Q` and `E` rotate. Everything else in the client asks the rig for the ground-plane forward and for mouse rays.
 
 ## Input
 
-WASD moves relative to the camera as a held direction; left click moves to the ground point under the mouse (a ray marched against the local height field) or interacts with an entity under the mouse; `1` to `8` cast slots with the hovered entity as target and the ground point as the aim; `Space` jumps; `F` interacts with the nearest interactable; `G` picks up the nearest drop; `Enter` chats. The interface's keys come from its content: each page's key (the inventory, the weaves, the passives, the reliquary, the character popout) requests it and a second press closes the core pane; the menu key fans the tray; Tab and Shift+Tab walk a book of two or more tabs. `Escape` drops a carried item, folds the tray, closes the front pane and closes the core pane last; with nothing open it cancels a cast. The world's input map is registered from code in `InputSetup`; the interface's binds by key name from `ui_pages` and `ui_layouts`.
+Every binding is content: `InputSetup` registers the `input_actions` entries (keys and controller inputs) with the player's rebinds from the settings file layered over them, and nothing binds a key in code. The defaults: WASD moves relative to the camera as a held direction; left click moves to the ground point under the mouse (a ray marched against the local height field, unless click to move is off) or interacts with an entity under the mouse; `1` to `8` cast slots with the hovered entity as target and the ground point as the aim; `Space` jumps; `F` interacts with the nearest interactable; `G` picks up the nearest drop; `Enter` chats. Each page's action (the inventory, the weaves, the passives, the reliquary, the character popout, Options) requests it and a second press closes the core pane; the menu action fans the tray; Tab and Shift+Tab walk a book of two or more tabs. `Escape` drops a carried item, folds the tray, closes the front pane and closes the core pane last; with nothing open it cancels a running cast, and otherwise opens Options.
+
+## Settings
+
+The client keeps the player's Options in `user://settings/<profile>.json` (the profile is `default` unless `--profile NAME` names another), read at start with the content's defaults for anything missing or malformed and written on every change. Live entries apply as they change through one applier per entry id in `Main`; on-close entries apply when the pane closes. The smoke and the mockup run under their own profiles and start from the defaults each run. `--developer` shows the Developer page.
 
 ## UI
 
@@ -42,7 +46,7 @@ A scripted play-through drives the client against a running server with no hand 
 
     godot --path src/HollowWake.Client -- --smoke --shots <dir> [--account NAME] [--host H] [--port P]
 
-It logs in, creates or picks a character called Smoke, enters the world, waits for the terrain, then exercises held movement, jumping, click-to-move, the quartermaster's quest offer, both cameras, the character popout and weaves on the nearest hob through the same input map a player uses, saving a screenshot at each stage. Every check prints a `SMOKE PASS` or `SMOKE FAIL` line and the process exits non-zero when any check fails. The character it drives keeps its position between runs, so a run that starts next to the hedgerow fights before it walks back to the hamlet.
+It logs in, creates or picks a character called Smoke, enters the world, waits for the terrain, then exercises held movement, jumping, click-to-move, the quartermaster's quest offer, both cameras, the character popout, the core pane and every ribbon page, a villager's conversation, a vendor's trade, Options (switching the theme, rebinding a key and using it, scaling the interface, resetting a group) and weaves on the nearest hob through the same input map a player uses, saving a screenshot at each stage. Every check prints a `SMOKE PASS` or `SMOKE FAIL` line and the process exits non-zero when any check fails. The character it drives keeps its position between runs, so a run that starts next to the hedgerow fights before it walks back to the hamlet.
 
 `--theme ID` draws the interface with another theme from `ui_themes`. A mockup renders the interface with no server, over locally generated terrain and with a staged hero that uses every field the interface draws, and saves the cluster, the core pane and the book beside it in every theme (or those named):
 

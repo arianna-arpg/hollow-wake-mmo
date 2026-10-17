@@ -44,6 +44,9 @@ public sealed class Leaf
     /// <summary>Arrived behind and not yet looked at.</summary>
     public bool Fresh { get; set; }
 
+    /// <summary>Stands without the core pane (Options): opening it does not open the core pane, closing the core pane keeps it.</summary>
+    public bool Standalone { get; set; }
+
     public override string ToString() => $"{Id}({Group}, rank {Rank}{(Fresh ? ", fresh" : "")})";
 }
 

@@ -213,6 +213,7 @@ public partial class Smoke : Node
         await CorePaneAndPages();
         await TalkToAVillager();
         await TradeWithAVendor();
+        await OptionsSteps();
 
         // Weaves: walk to the nearest hob, hover it and press 1 to 4 until a combat line shows.
         var hob = Nearest(e => e.State.Pattern is not null && e.State.Pattern.StartsWith("hob", StringComparison.Ordinal) && !e.State.Dead);
@@ -256,7 +257,7 @@ public partial class Smoke : Node
     {
         var hud = _main.Hud;
         await Until(() => hud.Hero.Inventory is not null || !hud.Hero.Interface, 5);
-        TapName(hud.KeyOf("inventory"));
+        TapAction(hud.ActionOf("inventory"));
         await Wait(0.5);
         var open = hud.CoreOpen;
         var bag = hud.Hero.Bag(10);
@@ -274,7 +275,7 @@ public partial class Smoke : Node
             }
             else
             {
-                TapName(hud.KeyOf(page));
+                TapAction(hud.ActionOf(page));
             }
             var shown = await Until(() => hud.IsShown(page), 3);
             await Wait(0.4);
@@ -371,6 +372,169 @@ public partial class Smoke : Node
         Tap(Key.Escape);
         await Wait(0.2);
     }
+
+    /// <summary>
+    /// Options: open it, switch the theme and see the cluster recolour, rebind a key and use it, change the
+    /// interface scale and see the panes refit, and reset a group, all through the pane's own controls.
+    /// </summary>
+    private async Task OptionsSteps()
+    {
+        var hud = _main.Hud;
+        TapAction("page_options");
+        var open = await Until(() => hud.OptionsOpen && hud.FrontView<UI.Pages.OptionsPane>() is not null, 3);
+        await Wait(0.4);
+        await Shot("11_options.png");
+        Record("options open", open, $"open={open}, page {hud.FrontView<UI.Pages.OptionsPane>()?.SelectedPage}, {hud.FrontView<UI.Pages.OptionsPane>()?.RowCount} rows");
+        if (!open)
+        {
+            return;
+        }
+
+        // The theme: pick the other direction in the theme row's list; the cluster redraws in it.
+        var before = SamplePixel(hud.ClusterRect);
+        var themeRow = Pane()?.RowOf("theme");
+        var picker = themeRow?.FindChildren("*", "OptionButton", true, false).OfType<OptionButton>().FirstOrDefault();
+        var other = 0;
+        if (picker is not null)
+        {
+            for (var i = 0; i < picker.ItemCount; i++)
+            {
+                if (picker.GetItemText(i) != picker.GetItemText(picker.Selected))
+                {
+                    other = i;
+                }
+            }
+            picker.Select(other);
+            picker.EmitSignal(OptionButton.SignalName.ItemSelected, other);
+        }
+        await Wait(0.6);
+        var themed = _main.Hud.Skin.T.Id;
+        var after = SamplePixel(_main.Hud.ClusterRect);
+        await Shot("12_theme.png");
+        Record("options switch the theme", picker is not null && themed != "etched_stone" && before != after,
+            $"theme {themed}, cluster pixel {before} -> {after}");
+
+        // A key: find the camera switch by searching, rebind it to B through its row, use it, and see the camera turn.
+        await ShowOptionsPage("controls");
+        await SearchOptions("Switch camera");
+        var camRow = Pane()?.RowOf("key.camera_toggle");
+        var primary = camRow?.FindChildren("*", "Button", true, false).OfType<Button>().FirstOrDefault(b => b.Text == "V");
+        var rebound = false;
+        if (primary is not null)
+        {
+            await Click(ScreenCenter(primary));
+            await Wait(0.2);
+            Tap(Key.B);
+            await Wait(0.3);
+            rebound = _main.Settings.Bindings("camera_toggle").Primary == "B";
+        }
+        await Shot("13_rebound.png");
+        // Done keeps the changes and closes the pane; the new key works in the world.
+        await CloseOptionsByDone();
+        var mode0 = _main.Rig.Mode;
+        Tap(Key.B);
+        await Wait(0.5);
+        var turned = _main.Rig.Mode != mode0;
+        Tap(Key.B);
+        await Wait(0.4);
+        Record("options rebind a key", rebound && turned, $"camera switch on B={rebound}, B turned the camera={turned}");
+
+        // The interface scale: larger, with the core pane open, and the panes refit above the cluster.
+        TapAction("page_options");
+        await Until(() => hud.OptionsOpen, 3);
+        TapAction("page_inventory");
+        await Wait(0.3);
+        await ShowOptionsPage("interface");
+        var scaleRow = Pane()?.RowOf("ui_scale");
+        var slider = scaleRow?.FindChildren("*", "HSlider", true, false).OfType<HSlider>().FirstOrDefault();
+        var clusterBefore = hud.ClusterRect.W * hud.UiScale;
+        slider?.SetValue(1.25);
+        await Wait(0.6);
+        var clusterAfter = hud.ClusterRect.W * hud.UiScale;
+        var fits = hud.Rects is { } r && r.Core.Bottom <= hud.ClusterRect.Y + 0.5f && r.Core.Right <= hud.ClusterRect.X + 1e5f;
+        await Shot("14_scale.png");
+        Record("options scale the interface", Math.Abs(hud.UiScale - 1.25f) < 0.01f && clusterAfter > clusterBefore + 10 && fits,
+            $"scale {hud.UiScale:0.00}, cluster {clusterBefore:0} -> {clusterAfter:0} px wide, panes above the cluster={fits}");
+
+        // Reset the group: the theme and the scale return to their defaults.
+        var lookReset = Pane()?.FindChildren("*", "Button", true, false).OfType<Button>().FirstOrDefault(b => b.Text == "Reset group");
+        if (lookReset is not null)
+        {
+            await Click(ScreenCenter(lookReset));
+        }
+        await Wait(0.6);
+        var reset = _main.Settings.Text("theme") == "etched_stone" && Math.Abs(_main.Settings.Number("ui_scale") - 1) < 1e-6;
+        await Shot("15_reset.png");
+        Record("options reset a group", lookReset is not null && reset, $"theme {_main.Settings.Text("theme")}, scale {_main.Settings.Number("ui_scale"):0.00}");
+        // Leave the key as it was for the steps that follow, and close everything.
+        _main.Settings.Reset(UI.Logic.OptionsCatalog.KeyEntryId("camera_toggle"));
+        await CloseOptionsByDone();
+        for (var i = 0; i < 6 && hud.CoreOpen; i++)
+        {
+            Tap(Key.Escape);
+            await Wait(0.15);
+        }
+    }
+
+    private UI.Pages.OptionsPane? Pane() => _main.Hud.FrontView<UI.Pages.OptionsPane>();
+
+    /// <summary>Types into the Options search field; the rows narrow to the matching entries of every page.</summary>
+    private async Task SearchOptions(string text)
+    {
+        var field = Pane()?.FindChildren("*", "LineEdit", true, false).OfType<LineEdit>().FirstOrDefault(l => l.PlaceholderText.StartsWith("Search", StringComparison.Ordinal));
+        if (field is null)
+        {
+            return;
+        }
+        await Click(ScreenCenter(field));
+        field.Text = text;
+        field.EmitSignal(LineEdit.SignalName.TextChanged, text);
+        await Wait(0.3);
+    }
+
+    /// <summary>Picks an Options page through its button in the pane's page list, as a player would.</summary>
+    private async Task ShowOptionsPage(string id)
+    {
+        if (Pane() is not { } pane || pane.SelectedPage == id)
+        {
+            return;
+        }
+        var name = _main.Settings.Catalog.Pages.FirstOrDefault(p => p.Id == id)?.Name;
+        var button = pane.FindChildren("*", "Button", true, false).OfType<Button>().FirstOrDefault(b => b.Text == name);
+        if (button is not null)
+        {
+            await Click(ScreenCenter(button));
+        }
+        await Until(() => Pane()?.SelectedPage == id, 2);
+        await Wait(0.3);
+    }
+
+    private async Task CloseOptionsByDone()
+    {
+        var done = Pane()?.FindChildren("*", "Button", true, false).OfType<Button>().FirstOrDefault(b => b.Text == "Done");
+        if (done is not null)
+        {
+            await Click(ScreenCenter(done));
+        }
+        await Until(() => !_main.Hud.OptionsOpen, 3);
+    }
+
+    /// <summary>A control's middle in viewport pixels, through the interface's scale.</summary>
+    private static Vector2 ScreenCenter(Control control) => control.GetGlobalTransformWithCanvas() * (control.Size / 2);
+
+    /// <summary>The colour of the weave bar's frame in the drawn frame, to see the cluster recolour.</summary>
+    private string SamplePixel(UI.Logic.Box cluster)
+    {
+        var image = GetViewport().GetTexture().GetImage();
+        var scale = _main.Hud.UiScale;
+        var x = (int)((cluster.X + cluster.W / 2) * scale);
+        var y = (int)((cluster.Y + cluster.H - 4) * scale);
+        x = Math.Clamp(x, 0, image.GetWidth() - 1);
+        y = Math.Clamp(y, 0, image.GetHeight() - 1);
+        return image.GetPixel(x, y).ToHtml(false);
+    }
+
+    private void TapAction(string action) => TapName(_main.Settings.Bindings(action).Primary);
 
     private static string Trim(string text) => text.Length > 48 ? text[..48] + "..." : text;
 

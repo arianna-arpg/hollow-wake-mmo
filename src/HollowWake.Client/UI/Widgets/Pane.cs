@@ -177,14 +177,14 @@ public partial class PaneHeader : Control
                 DrawRect(r, _skin.S("edge_dark") with { A = 0.7f }, false, 1);
                 if (tab.Fresh)
                 {
-                    var pulse = 0.55f + 0.45f * Mathf.Sin((float)Time.GetTicksMsec() / 260f);
+                    var pulse = Motion.Reduced ? 1f : 0.55f + 0.45f * Mathf.Sin((float)Time.GetTicksMsec() / 260f);
                     DrawCircle(new Vector2(r.End.X - 7, r.Position.Y + 7), 3.2f, _skin.State("fresh", accent) with { A = pulse }, true, -1, true);
                 }
                 DrawString(_skin.Body, new Vector2(r.Position.X + 10, r.Position.Y + r.Size.Y * 0.68f), tab.Title, HorizontalAlignment.Left, r.Size.X - 18, _skin.BodySize, tab.Active ? ink : muted);
                 _tabRects.Add((r, tab.Id));
                 x += w + 3;
             }
-            if (_pane.Tabs.Any(t => t.Fresh))
+            if (_pane.Tabs.Any(t => t.Fresh) && !Motion.Reduced)
             {
                 QueueRedraw();
             }

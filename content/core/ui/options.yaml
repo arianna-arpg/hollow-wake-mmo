@@ -1,0 +1,169 @@
+# The Options pane (docs/design/options.md): pages, their groups and the entries in each group. An entry is a
+# toggle, choice, slider, key, color or text with a default, a scope (client, account, character) and when it
+# applies (live, on_close, restart). Gates hide and requires grey, over the client's facts (client.desktop,
+# client.web, client.developer) and the other options (option.<id>). A group with bindings lists a key entry
+# for every input action of that group. Nothing in the simulation reads an option.
+kind: ui_options
+entries:
+  - id: interface
+    name: Interface
+    order: 0
+    icon: figure
+    description: How the interface looks and what it shows.
+    groups:
+      - id: look
+        name: Look
+        entries:
+          - { id: theme, name: Theme, kind: choice, choices_from: ui_themes, default: etched_stone, description: "The texture of every pane, frame and orb setting." }
+          - { id: icon_set, name: Icon set, kind: choice, choices_from: ui_icon_sets, default: runic, description: "The glyphs for pages, pools, statuses and weaves." }
+          - { id: ui_scale, name: Interface scale, kind: slider, min: 0.75, max: 1.5, step: 0.05, unit: x, default: 1, description: "The size of the cluster, the panes and their text." }
+          - id: panel_layout
+            name: Panel layout
+            kind: choice
+            default: movable
+            description: Movable panes drag by their header and remember their seat; fixed panes keep the default seat.
+            choices:
+              - { id: movable, name: Movable }
+              - { id: fixed, name: Fixed }
+      - id: text
+        name: Text over the world
+        entries:
+          - { id: combat_text, name: Combat text, kind: toggle, default: true, description: The numbers that rise above the hero for hits and heals. }
+          - { id: combat_text_crits, name: Mark critical hits, kind: toggle, default: true, requires: option.combat_text, requires_reason: Combat text is off., description: Critical hits rise larger. }
+          - { id: notice_seconds, name: Notice time, kind: slider, min: 1, max: 10, step: 0.5, unit: s, default: 4, description: How long a notice stays at the top of the screen. }
+          - { id: prop_labels, name: Names over props, kind: toggle, default: true, description: "Labels over resource nodes, chests and stations as well as creatures." }
+      - id: cards
+        name: Item cards
+        entries:
+          - { id: compare_worn, name: Compare with the worn item, kind: toggle, default: true, description: Show the item worn in the same slot beside a hovered item's card. }
+      - id: chat
+        name: Chat
+        entries:
+          - { id: chat_lines, name: Chat history, kind: slider, min: 50, max: 500, step: 50, unit: lines, default: 200, description: How many lines the chat keeps. }
+
+  - id: controls
+    name: Camera and controls
+    order: 1
+    icon: eye
+    description: The cameras, how the hero moves, and every key.
+    groups:
+      - id: camera
+        name: Camera
+        entries:
+          - id: camera_mode
+            name: Starting camera
+            kind: choice
+            default: isometric
+            description: The camera the world opens with; the switch camera key flips it in play.
+            choices:
+              - { id: isometric, name: Isometric }
+              - { id: third_person, name: Third person }
+          - { id: iso_rotate_step, name: Isometric turn, kind: slider, min: 15, max: 90, step: 15, unit: "°", default: 45, description: How far one turn of the isometric camera goes. }
+          - { id: iso_zoom_max, name: Isometric zoom out, kind: slider, min: 40, max: 140, step: 10, default: 90, description: How far out the isometric camera can zoom. }
+          - { id: third_sensitivity, name: Third-person sensitivity, kind: slider, min: 0.25, max: 3, step: 0.25, unit: x, default: 1, description: How fast dragging with the right button turns the camera. }
+          - { id: third_invert, name: Invert vertical drag, kind: toggle, default: false, description: Dragging up tilts the camera down. }
+          - { id: third_fov, name: Third-person field of view, kind: slider, min: 50, max: 100, step: 5, unit: "°", default: 65, description: The width of the third-person view. }
+      - id: moving
+        name: Moving
+        entries:
+          - { id: click_to_move, name: Click to move, kind: toggle, default: true, description: A left click on the ground walks the hero there. }
+      - { id: keys_movement, name: Movement keys, bindings: movement }
+      - { id: keys_weaves, name: Weave keys, bindings: weaves }
+      - { id: keys_interaction, name: Interaction keys, bindings: interaction }
+      - { id: keys_camera, name: Camera keys, bindings: camera }
+      - { id: keys_interface, name: Interface keys, bindings: interface }
+
+  - id: graphics
+    name: Graphics
+    order: 2
+    icon: sun
+    description: The window, the world's draw distance and its detail.
+    groups:
+      - id: display
+        name: Display
+        entries:
+          - id: window_mode
+            name: Window
+            kind: choice
+            default: windowed
+            gate: client.desktop
+            description: A window, the whole screen, or a borderless window the size of the screen.
+            choices:
+              - { id: windowed, name: Windowed }
+              - { id: fullscreen, name: Fullscreen }
+              - { id: borderless, name: Borderless }
+          - { id: vsync, name: Vertical sync, kind: toggle, default: true, gate: client.desktop, description: Wait for the screen between frames. }
+          - { id: frame_cap, name: Frame cap, kind: slider, min: 0, max: 240, step: 10, unit: fps, default: 0, gate: client.desktop, description: The most frames a second; zero is no cap. }
+          - { id: pixel_ratio, name: Pixel ratio cap, kind: slider, min: 0.5, max: 3, step: 0.25, unit: x, default: 2, gate: client.web, applies: restart, description: The sharpest the browser draws on a dense screen. }
+      - id: world
+        name: World
+        entries:
+          - { id: view_distance, name: Draw distance, kind: slider, min: 2, max: 6, step: 1, unit: chunks, default: 3, description: How many chunks around the hero are drawn. }
+          - { id: shadows, name: Shadows, kind: toggle, default: true, description: The sun casts shadows. }
+          - { id: fog, name: Distance haze, kind: toggle, default: true, description: A light haze toward the horizon. }
+          - id: antialiasing
+            name: Anti-aliasing
+            kind: choice
+            default: msaa_2x
+            gate: client.desktop
+            description: Smooths the edges of the world.
+            choices:
+              - { id: "off", name: "Off" }
+              - { id: msaa_2x, name: 2x }
+              - { id: msaa_4x, name: 4x }
+              - { id: msaa_8x, name: 8x }
+
+  - id: audio
+    name: Audio
+    order: 3
+    icon: shout
+    description: Volume.
+    groups:
+      - id: volume
+        name: Volume
+        entries:
+          - { id: master_volume, name: Master volume, kind: slider, min: 0, max: 100, step: 5, unit: "%", default: 80, description: Every sound the client makes. }
+          - { id: mute_unfocused, name: Mute when unfocused, kind: toggle, default: false, description: Silence while the window is in the background. }
+
+  - id: accessibility
+    name: Accessibility
+    order: 4
+    icon: eye
+    description: Motion and readability.
+    groups:
+      - id: motion
+        name: Motion
+        entries:
+          - { id: reduce_motion, name: Reduce motion, kind: toggle, default: false, description: "Still pools in the orbs, no pulsing veils or glowing tabs." }
+
+  - id: network
+    name: Network
+    order: 5
+    icon: scroll
+    description: The connection and its diagnostics.
+    groups:
+      - id: stream
+        name: Stream
+        entries:
+          - id: snapshot_stream
+            name: Entity updates
+            kind: choice
+            default: deltas
+            applies: restart
+            description: Changes only (deltas) or full states, for diagnostics; takes effect on the next connection.
+            choices:
+              - { id: deltas, name: Changes only }
+              - { id: full, name: Full states }
+          - { id: net_overlay, name: Connection overlay, kind: toggle, default: false, description: "The round trip, chunks and entities in the top corner." }
+
+  - id: developer
+    name: Developer
+    order: 6
+    icon: rune
+    gate: client.developer
+    description: Tools for building the game.
+    groups:
+      - id: debug
+        name: Debug
+        entries:
+          - { id: dev_rects, name: Show layout rectangles, kind: toggle, default: false, description: Outline the cluster's published rectangle and the panes' seats. }

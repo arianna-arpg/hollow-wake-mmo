@@ -40,6 +40,13 @@ public partial class CorePane : Control
     public RailView Rail => _rail;
     public float RailWidth => _skin.Metric("rail", 46);
 
+    /// <summary>Whether the header drags the pane (the movable panel layout).</summary>
+    public bool Draggable
+    {
+        get => _pane.Draggable;
+        set => _pane.Draggable = value;
+    }
+
     public override void _Ready()
     {
         AddChild(_pane);

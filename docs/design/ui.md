@@ -62,9 +62,10 @@ The interface reads its own content from `content/core/ui/`, validated by `Conte
 
 - `ui_themes`: a look. Each names a frame style both clients draw (`stone` or `brass`) and colours it: named surface colours (panes, edges, wells, ink, accents), material tunables (grain, fibre, seams, vignette, bevel, corner, glass and etching strength), a swatch per resource (its fill and the deep end of its gradient), a colour per Thread, per rarity and per notice level, interface state colours (reserved caps, broken rings, dormant and sealed faces, pips, badges, drop tints), fonts by role and the icon set. One theme is the default; a client may draw another (`--theme` on the desktop, `?theme=` in the browser).
 - `ui_icon_sets`: glyphs as SVG path data in a square view box, drawn as strokes, and which glyph stands for each pool, status, weave look or form and equipment slot; anything unmapped wears the fallback.
-- `ui_pages`: the pages, their names, keys, glyphs and order, where each lives (the core pane itself, a ribbon page or a popout), and the gate and pip source the server evaluates for the page state.
-- `ui_layouts`: the arrangement: the orbs with the pools drawn on and around them nearest first, the book's primacy ladder and each world pane's rank, the equipment doll's cells, the interface's keys, and every size and tunable (pixels at scale one, the departure reach, notice and combat text times).
+- `ui_pages`: the pages, their names, the input action that requests each, glyphs and order, where each lives (the core pane itself, a ribbon page, a popout, or the menu alone, as Options does), and the gate and pip source the server evaluates for the page state.
+- `ui_layouts`: the arrangement: the orbs with the pools drawn on and around them nearest first, the book's primacy ladder and each world pane's rank, the equipment doll's cells, and every size and tunable (pixels at scale one, the departure reach, notice and combat text times).
 - `ui_sheets`: the character popout's sections, each listing attributes by name and category, one row per Thread from a pattern, or the quest log.
+- `input_actions` and `ui_options`: every action the clients bind with its default keys and controller input, and every preference the Options pane draws; their contract is [options.md](options.md).
 
 A mod recolours a pool by patching one swatch, adds a page with one entry (and a server-side gate), or reorders the rings in the layout, without touching a client.
 

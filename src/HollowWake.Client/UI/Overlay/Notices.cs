@@ -29,12 +29,15 @@ public partial class Notices : Control
 
     public string Current => _now < _noticeUntil ? _notice : "";
 
+    /// <summary>How long a notice stays (the notice time option).</summary>
+    public double Seconds { get; set; } = 4;
+
     public void Notice(string text, string level, double now)
     {
         _notice = text;
         _level = level;
         _noticeAt = now;
-        _noticeUntil = now + _skin.Metric("notice_seconds", 4);
+        _noticeUntil = now + Seconds;
     }
 
     /// <summary>Text rising above the hero.</summary>

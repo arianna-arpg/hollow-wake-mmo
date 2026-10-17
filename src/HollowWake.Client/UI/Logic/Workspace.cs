@@ -65,6 +65,17 @@ public sealed class Workspace
         {
             return;
         }
+        if (page.InMenuOnly)
+        {
+            // A menu page (Options) is a pane of its own: its key or row toggles it, the core pane untouched.
+            if (Book.Get(page.Id) is { } open && (via is Via.Key or Via.Menu) && Book.IsDrawn(open.Id))
+            {
+                CloseWorld(open.Id);
+                return;
+            }
+            OpenWorld(page.Id, page.Id, page.Name, ask: Ask.Front, standalone: true);
+            return;
+        }
         if (page.IsCore)
         {
             if (via == Via.Show)
@@ -141,7 +152,7 @@ public sealed class Workspace
         {
             Book.Close(leaf.Id);
         }
-        foreach (var leaf in Book.Within(LeafGroup.World))
+        foreach (var leaf in Book.Within(LeafGroup.World).Where(l => !l.Standalone))
         {
             CloseWorld(leaf.Id);
         }
@@ -152,12 +163,23 @@ public sealed class Workspace
     /// <summary>Dismisses one page and forgets it; its book promotes another.</summary>
     public void DismissPage(string pageId) => Book.Close(pageId);
 
-    /// <summary>A pane the world opened (a dialogue, a vendor, a station, a stash): opens the core pane beside it.</summary>
-    public Leaf OpenWorld(string id, string kind, string title, long source = 0, float reach = 0, Ask ask = Ask.Auto)
+    /// <summary>
+    /// A pane the world opened (a dialogue, a vendor, a station, a stash): opens the core pane beside it. A
+    /// standalone pane (Options) stands without it.
+    /// </summary>
+    public Leaf OpenWorld(string id, string kind, string title, long source = 0, float reach = 0, Ask ask = Ask.Auto, bool standalone = false)
     {
-        OpenCore();
-        return Book.Bind(id, LeafGroup.World, kind, _rankOf(kind), title, ask, source, reach);
+        if (!standalone)
+        {
+            OpenCore();
+        }
+        var leaf = Book.Bind(id, LeafGroup.World, kind, _rankOf(kind), title, ask, source, reach);
+        leaf.Standalone = standalone;
+        return leaf;
     }
+
+    /// <summary>Whether anything at all is open: the core pane or a standalone pane.</summary>
+    public bool AnythingOpen => CoreOpen || Book.Leaves.Count > 0;
 
     public bool HasWorld(string id) => Book.Get(id) is { Group: LeafGroup.World };
 

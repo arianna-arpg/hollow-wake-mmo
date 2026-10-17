@@ -101,6 +101,7 @@ public partial class Mockup : Node
         var hud = _main.Hud;
         hud.Visible = true;
         hud.Hero.Interface = true;
+        hud.InWorld = true;
         // The staged vendor stands beside the hero, so its pane does not depart.
         hud.DistanceTo = _ => 1f;
         hud.Hero.ObserveServerTime(1000, Time.GetTicksMsec() / 1000.0);

@@ -47,6 +47,16 @@ public static class PaneLayout
         float ChipHeight,
         float RailTop);
 
+    /// <summary>A pane standing alone (Options with the core pane closed): centred above the cluster, inside the viewport.</summary>
+    public static Box Centered(Box viewport, Box cluster, float width, float height, float edge)
+    {
+        var bottom = MathF.Max(viewport.Y + edge * 4, cluster.IsEmpty ? viewport.Bottom - edge : cluster.Y - edge);
+        var area = new Box(viewport.X + edge, viewport.Y + edge, MathF.Max(0, viewport.W - edge * 2), MathF.Max(0, bottom - viewport.Y - edge));
+        var w = MathF.Min(width, area.W);
+        var h = MathF.Min(height, area.H);
+        return new Box(area.X + (area.W - w) / 2, area.Y + (area.H - h) / 2, w, h);
+    }
+
     public static WorkspaceRects Compute(Input i)
     {
         var view = i.Viewport;

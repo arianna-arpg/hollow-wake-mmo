@@ -152,7 +152,20 @@ public partial class EntityView : Node3D
         _label.Position = new Vector3(0, s.Height + 0.5f, 0);
         _overlay.Position = new Vector3(0, s.Height + 0.25f, 0);
         _overlay.Visible = s.Resources.ContainsKey("life") && s.Interactable is null;
-        _label.Visible = s.Resources.Count > 0 || s.Interactable is not null;
+        RefreshLabel();
+    }
+
+    /// <summary>Whether interactable props wear their names (the names over props option); creatures always do.</summary>
+    public static bool PropLabels { get; set; } = true;
+
+    public void RefreshLabel()
+    {
+        if (_label is null)
+        {
+            return;
+        }
+        var s = State;
+        _label.Visible = s.Resources.Count > 0 || (s.Interactable is not null && PropLabels);
     }
 
     private static bool IsTree(string look) => look.Contains("oak") || look.Contains("pine") || look.Contains("birch") || look.Contains("tree");

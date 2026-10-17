@@ -102,8 +102,8 @@ public sealed record UiIconSetDef : Definition
 /// </summary>
 public sealed record UiPageDef : Definition
 {
-    /// <summary>The key that requests the page, as a key name (I, K, Tab, F1).</summary>
-    public string Key { get; init; } = "";
+    /// <summary>The input action that requests the page; absent means <c>page_{id}</c>. Its bindings are the page's keys.</summary>
+    public string? Action { get; init; }
 
     public string Icon { get; init; } = "";
     public int Order { get; init; }
@@ -123,8 +123,8 @@ public sealed record UiPageDef : Definition
 
 /// <summary>
 /// The arrangement the interface follows: the cluster's orbs with the pools drawn on and around them, the
-/// equipment doll's cells, the book's primacy ladder and the rank of each world pane, the keys of the
-/// interface itself and the sizes and tunables of every surface.
+/// equipment doll's cells, the book's primacy ladder and the rank of each world pane, and the sizes and
+/// tunables of every surface. Keys are input actions.
 /// </summary>
 public sealed record UiLayoutDef : Definition
 {
@@ -139,9 +139,6 @@ public sealed record UiLayoutDef : Definition
 
     /// <summary>Equipment slots to [column, row] cells of the doll; slots it does not place follow in slot order.</summary>
     public Dictionary<string, double[]> Doll { get; init; } = new();
-
-    /// <summary>Interface keys by role (menu, book_next, book_previous), as key names.</summary>
-    public Dictionary<string, string> Keys { get; init; } = new();
 
     /// <summary>Sizes in pixels at scale one and other client tunables, by name.</summary>
     public Dictionary<string, double> Metrics { get; init; } = new();
@@ -188,4 +185,92 @@ public sealed record UiSheetSectionDef
     public List<string> Exclude { get; init; } = new();
     public string? Pattern { get; init; }
     public string? Cap { get; init; }
+}
+
+/// <summary>
+/// A page of the Options pane: its groups of entries, in order. A gate (over the client's facts, such as
+/// <c>client.developer</c>) hides the whole page where it does not apply.
+/// </summary>
+public sealed record UiOptionPageDef : Definition
+{
+    public int Order { get; init; }
+    public string Icon { get; init; } = "";
+    public Expr? Gate { get; init; }
+    public List<UiOptionGroupDef> Groups { get; init; } = new();
+}
+
+/// <summary>
+/// A group of entries on an Options page. A group that names an input action group (<c>bindings</c>) gains a
+/// key entry for every action of that group, after its own entries, so a new action is a new row with no
+/// other change.
+/// </summary>
+public sealed record UiOptionGroupDef
+{
+    public string Id { get; init; } = "";
+    public string Name { get; init; } = "";
+    public string Description { get; init; } = "";
+    public string? Bindings { get; init; }
+    public List<UiOptionDef> Entries { get; init; } = new();
+}
+
+/// <summary>
+/// One preference. Its kind (toggle, choice, slider, key, color, text) shapes its default and control; its
+/// scope (client, account, character) says where the value lives; applies (live, on_close, restart) says when
+/// a change takes effect. A gate hides it and a requires greys it with the reason, both over the client's
+/// facts (<c>client.*</c>) and the other options (<c>option.*</c>). Nothing in the simulation reads an option.
+/// </summary>
+public sealed record UiOptionDef
+{
+    public string Id { get; init; } = "";
+    public string Name { get; init; } = "";
+    public string Description { get; init; } = "";
+    public string Kind { get; init; } = "toggle";
+    public System.Text.Json.Nodes.JsonNode? Default { get; init; }
+    public string Scope { get; init; } = "client";
+    public string Applies { get; init; } = "live";
+    public int Order { get; init; }
+
+    /// <summary>A choice's literal options.</summary>
+    public List<UiOptionChoiceDef> Choices { get; init; } = new();
+
+    /// <summary>A choice drawn from the entries of a content kind (every theme, every icon set).</summary>
+    public string? ChoicesFrom { get; init; }
+
+    public double Min { get; init; }
+    public double Max { get; init; } = 1;
+    public double Step { get; init; } = 0.1;
+    public string Unit { get; init; } = "";
+
+    /// <summary>A key entry's input action.</summary>
+    public string? Action { get; init; }
+
+    /// <summary>A text entry's longest length.</summary>
+    public int MaxLength { get; init; } = 120;
+
+    public Expr? Gate { get; init; }
+    public Expr? Requires { get; init; }
+    public string RequiresReason { get; init; } = "";
+}
+
+/// <summary>A literal option of a choice entry.</summary>
+public sealed record UiOptionChoiceDef
+{
+    public string Id { get; init; } = "";
+    public string Name { get; init; } = "";
+}
+
+/// <summary>
+/// An action the clients bind: its display group, the context in which its bindings must not collide, its
+/// default bindings per device (keys as key names such as W, Shift+Tab or F1; controller buttons and stick
+/// directions by name), and whether it is sampled while held. Clients register their input map from these,
+/// with the player's rebinds from Options laid over them.
+/// </summary>
+public sealed record InputActionDef : Definition
+{
+    public string Group { get; init; } = "general";
+    public string Context { get; init; } = "world";
+    public int Order { get; init; }
+    public List<string> Keys { get; init; } = new();
+    public List<string> Pad { get; init; } = new();
+    public bool Held { get; init; }
 }

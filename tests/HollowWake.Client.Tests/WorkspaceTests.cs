@@ -7,10 +7,10 @@ public class WorkspaceTests
 {
     private static readonly UiPage[] Pages =
     {
-        new("inventory", "Inventory", "I", "bag", 0, "core", ""),
-        new("weaves", "Weaves", "K", "weave", 1, "ribbon", ""),
-        new("passives", "Passives", "P", "star", 2, "ribbon", ""),
-        new("character", "Character", "C", "figure", 4, "popout", ""),
+        new("inventory", "Inventory", "page_inventory", "bag", 0, "core", ""),
+        new("weaves", "Weaves", "page_weaves", "weave", 1, "ribbon", ""),
+        new("passives", "Passives", "page_passives", "star", 2, "ribbon", ""),
+        new("character", "Character", "page_character", "figure", 4, "popout", ""),
     };
 
     private static Workspace Make()
@@ -159,6 +159,23 @@ public class WorkspaceTests
         w.Depart(k => distances.TryGetValue(k, out var d) ? d : null, defaultReach: 6);
         Assert.Equal(new[] { "dialogue:6", "vendor:5" }, closed);
         Assert.True(w.CoreOpen);
+    }
+
+    [Fact]
+    public void AMenuPageStandsAloneAndOutlivesTheCorePane()
+    {
+        var pages = Pages.Append(new UiPage("options", "Options", "page_options", "rune", 9, "menu", "")).ToArray();
+        var layout = new UiLayout { Ranks = new List<string> { "page", "station", "decision" }, Panes = new Dictionary<string, string> { ["options"] = "station" } };
+        var w = new Workspace(id => pages.FirstOrDefault(p => p.Id == id), layout.RankOf);
+        w.RequestPage("options", Via.Key);
+        Assert.False(w.CoreOpen);
+        Assert.True(w.Book.IsDrawn("options"));
+        w.RequestPage("weaves", Via.Key);
+        w.CloseCore();
+        Assert.True(w.Book.Has("options"));
+        w.RequestPage("options", Via.Key);
+        Assert.False(w.Book.Has("options"));
+        Assert.Equal(EscapeStep.Nothing, w.Escape());
     }
 
     [Fact]

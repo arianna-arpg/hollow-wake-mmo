@@ -188,9 +188,71 @@ public sealed class Skin
             t.SetStylebox("grabber_highlight", bar, Flat(accent with { A = 0.8f }, dark, 0, 2, 0));
             t.SetStylebox("grabber_pressed", bar, Flat(accent, dark, 0, 2, 0));
         }
+        // Switches draw only their switch, in the theme's colours; the row around them is the frame.
+        foreach (var state in new[] { "normal", "hover", "pressed", "hover_pressed", "disabled", "focus" })
+        {
+            t.SetStylebox(state, "CheckButton", new StyleBoxEmpty());
+        }
+        t.SetColor("font_color", "CheckButton", ink);
+        t.SetColor("font_pressed_color", "CheckButton", ink);
+        t.SetColor("font_hover_color", "CheckButton", ink);
+        t.SetColor("font_hover_pressed_color", "CheckButton", ink);
+        var light = S("pane_light", well);
+        t.SetIcon("checked", "CheckButton", Svg(Switch(accent, light, dark, true)));
+        t.SetIcon("unchecked", "CheckButton", Svg(Switch(well, muted, dark, false)));
+        t.SetIcon("checked_disabled", "CheckButton", Svg(Switch(accent with { A = 0.5f }, light with { A = 0.6f }, dark, true)));
+        t.SetIcon("unchecked_disabled", "CheckButton", Svg(Switch(well with { A = 0.5f }, muted with { A = 0.5f }, dark, false)));
+        // Sliders: a sunken track filled with the accent up to a round grabber.
+        var track = Flat(well, dark, 1, 4, 0);
+        track.ContentMarginTop = track.ContentMarginBottom = 3;
+        var filled = Flat(accent with { A = 0.75f }, dark, 1, 4, 0);
+        filled.ContentMarginTop = filled.ContentMarginBottom = 3;
+        t.SetStylebox("slider", "HSlider", track);
+        t.SetStylebox("grabber_area", "HSlider", filled);
+        t.SetStylebox("grabber_area_highlight", "HSlider", filled);
+        t.SetIcon("grabber", "HSlider", Svg(Knob(light, dark)));
+        t.SetIcon("grabber_highlight", "HSlider", Svg(Knob(light, accent)));
+        t.SetIcon("grabber_disabled", "HSlider", Svg(Knob(well, dark)));
+        // Drop-down lists of choices.
+        var menu = Flat(S("pane"), edge, 1, -1, 6);
+        menu.ShadowColor = new Color(0, 0, 0, 0.4f);
+        menu.ShadowSize = 5;
+        t.SetStylebox("panel", "PopupMenu", menu);
+        t.SetStylebox("hover", "PopupMenu", Flat(S("hover", well), accent, 1, -1, 2));
+        t.SetColor("font_color", "PopupMenu", ink);
+        t.SetColor("font_hover_color", "PopupMenu", ink);
+        t.SetColor("font_disabled_color", "PopupMenu", muted);
+        t.SetColor("font_separator_color", "PopupMenu", muted);
+        t.SetFont("font", "PopupMenu", Body);
+        t.SetFontSize("font_size", "PopupMenu", BodySize);
+        t.SetColor("font_color", "OptionButton", ink);
+        t.SetColor("font_hover_color", "OptionButton", ink);
+        t.SetColor("font_pressed_color", "OptionButton", ink);
+        t.SetColor("font_focus_color", "OptionButton", ink);
         t.SetConstant("separation", "VBoxContainer", 4);
         t.SetConstant("separation", "HBoxContainer", 6);
         return t;
+    }
+
+    /// <summary>An SVG paint: the colour and its opacity, written culture-free.</summary>
+    private static string Paint(string attribute, Color c) =>
+        $"{attribute}='#{c.ToHtml(false)}' {attribute}-opacity='{c.A.ToString("0.###", System.Globalization.CultureInfo.InvariantCulture)}'";
+
+    /// <summary>A switch glyph: a rounded track with its knob at the on or off end.</summary>
+    private static string Switch(Color track, Color knob, Color edge, bool on) =>
+        "<svg xmlns='http://www.w3.org/2000/svg' width='40' height='22'>" +
+        $"<rect x='1' y='2' width='38' height='18' rx='9' {Paint("fill", track)} {Paint("stroke", edge)} stroke-width='1.5'/>" +
+        $"<circle cx='{(on ? 29 : 11)}' cy='11' r='6.5' {Paint("fill", knob)} {Paint("stroke", edge)} stroke-width='1'/></svg>";
+
+    /// <summary>A slider grabber: a round knob with a rim.</summary>
+    private static string Knob(Color fill, Color rim) =>
+        "<svg xmlns='http://www.w3.org/2000/svg' width='18' height='18'>" +
+        $"<circle cx='9' cy='9' r='7' {Paint("fill", fill)} {Paint("stroke", rim)} stroke-width='2'/></svg>";
+
+    private static Texture2D Svg(string svg)
+    {
+        var image = new Image();
+        return image.LoadSvgFromString(svg, 1f) == Error.Ok ? ImageTexture.CreateFromImage(image) : Placeholder(16);
     }
 
     /// <summary>Ink that reads on a colour: the theme's light label on dark colours, its ink on light ones.</summary>

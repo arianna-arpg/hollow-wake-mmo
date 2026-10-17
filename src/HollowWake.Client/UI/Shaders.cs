@@ -44,6 +44,7 @@ uniform vec4 empty_color = vec4(0.05, 0.045, 0.04, 1.0);
 uniform vec4 glass_color = vec4(1.0);
 uniform float glass = 0.22;
 uniform float phase = 0.0;
+uniform float motion = 1.0;
 " + Noise + @"
 void fragment() {
     vec2 p = UV * 2.0 - 1.0;
@@ -51,8 +52,8 @@ void fragment() {
     float aa = max(fwidth(r) * 1.5, 0.004);
     float alpha = 1.0 - smoothstep(1.0 - aa, 1.0, r);
     float h = 1.0 - UV.y;
-    float t = TIME * 0.6 + phase;
-    float calm = smoothstep(0.0, 0.04, fill) * smoothstep(1.0, 0.96, fill);
+    float t = TIME * 0.6 * motion + phase;
+    float calm = smoothstep(0.0, 0.04, fill) * smoothstep(1.0, 0.96, fill) * motion;
     float wave = (sin(UV.x * 9.0 + t * 1.7) * 0.012 + sin(UV.x * 17.0 - t * 2.3) * 0.006) * calm;
     float level = fill + wave;
     vec3 col = empty_color.rgb * (0.65 + 0.35 * (1.0 - h));

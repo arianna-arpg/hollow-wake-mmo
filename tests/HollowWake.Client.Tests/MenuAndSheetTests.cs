@@ -7,10 +7,10 @@ public class MenuAndSheetTests
 {
     private static readonly UiPage[] Pages =
     {
-        new("inventory", "Inventory", "I", "bag", 0, "core", ""),
-        new("weaves", "Weaves", "K", "weave", 1, "ribbon", ""),
-        new("passives", "Passives", "P", "star", 2, "ribbon", ""),
-        new("reliquary", "Reliquary", "O", "reliquary", 3, "ribbon", ""),
+        new("inventory", "Inventory", "page_inventory", "bag", 0, "core", ""),
+        new("weaves", "Weaves", "page_weaves", "weave", 1, "ribbon", ""),
+        new("passives", "Passives", "page_passives", "star", 2, "ribbon", ""),
+        new("reliquary", "Reliquary", "page_reliquary", "reliquary", 3, "ribbon", ""),
     };
 
     [Fact]
@@ -34,7 +34,7 @@ public class MenuAndSheetTests
     [Fact]
     public void BeforeThePageStateTheContentListDrivesTheTray()
     {
-        var rows = MenuFold.Fold(Pages, null, id => id == "passives" ? 4 : 0, _ => false);
+        var rows = MenuFold.Fold(Pages, null, id => id == "passives" ? 4 : 0, _ => false, p => p.Id == "weaves" ? "K" : "");
         Assert.All(rows, r => Assert.Equal(TrayState.Open, r.State));
         Assert.Equal(4, MenuFold.Badge(rows));
         Assert.Equal("K", rows[1].KeyLabel);

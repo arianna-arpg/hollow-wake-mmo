@@ -42,6 +42,9 @@ public abstract partial class LeafView : Control
     /// <summary>Drop targets the leaf offers while an item is carried.</summary>
     public virtual IEnumerable<IDropTarget> DropTargets => Array.Empty<IDropTarget>();
 
+    /// <summary>Escape reaches the front leaf first; true when the leaf used it (a capture ended, changes undone).</summary>
+    public virtual bool OnEscape() => false;
+
     /// <summary>A small label in the theme's ink.</summary>
     protected Label MakeLabel(string text, Color? color = null, int? size = null, bool wrap = false, Font? font = null)
     {
