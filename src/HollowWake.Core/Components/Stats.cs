@@ -228,10 +228,11 @@ public sealed class Stats : IComponent, IExprScope
     internal ulong RegenMask;
     internal ulong PoolMask;
 
-    // The casting rhythm the status system reads from the weave book each tick, answered by has("combo_varied") and
-    // has("combo_repeated") without becoming flags.
-    internal bool ComboVaried;
-    internal bool ComboRepeated;
+    // The body's weave book and rule combat.combo_casts, handed over by the status system with the modifier profile,
+    // so has("combo_varied") and has("combo_repeated") read the recent-cast ring when asked. They never become flags:
+    // a body's own rhythm is nothing another client needs, and flags travel with every entity's snapshot.
+    internal WeaveBook? Book;
+    internal int ComboCasts;
 
     /// <summary>
     /// Regenerates a resource by its definition: <see cref="AddResource(string, double)"/> without looking the
@@ -386,8 +387,8 @@ public sealed class Stats : IComponent, IExprScope
             case "full_life": return ResourceFraction("life") >= Line("full_life.line", 0.95);
             case "low_mana": return ResourceFraction("mana") <= Line("low_mana.line", 0.25);
             case "full_mana": return ResourceFraction("mana") >= Line("full_mana.line", 0.95);
-            case "combo_varied": return ComboVaried;
-            case "combo_repeated": return ComboRepeated;
+            case "combo_varied": return Book is { } varied && varied.RecentlyVaried(ComboCasts);
+            case "combo_repeated": return Book is { } repeated && repeated.RecentlyRepeated(ComboCasts);
         }
         if (ResourceNames.ConditionOf(flag) is { } condition && HoldsLine(condition.Resource, condition.Line, condition.Low))
         {

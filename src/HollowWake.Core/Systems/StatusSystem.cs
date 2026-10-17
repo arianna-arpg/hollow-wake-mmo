@@ -10,9 +10,10 @@ namespace HollowWake.Core.Systems;
 
 /// <summary>
 /// Ticks statuses, decays and drains charges, regenerates resources, keeps the pools' state flags, maintains
-/// condition flags for motion (<c>moving</c>, <c>stationary</c>, <c>airborne</c>), and reads the casting rhythm that
-/// <c>has()</c> answers (<c>combo_varied</c> while the last rule <c>combat.combo_casts</c> casts were all different weaves,
-/// <c>combo_repeated</c> while they were all the same one, read from the weave book's recent-cast ring).
+/// condition flags for motion (<c>moving</c>, <c>stationary</c>, <c>airborne</c>), and hands each body its weave book
+/// with its modifier profile, so <c>has()</c> can read the casting rhythm from the book's recent-cast ring when a
+/// condition asks (<c>combo_varied</c> while the last rule <c>combat.combo_casts</c> casts were all different weaves,
+/// <c>combo_repeated</c> while they were all the same one).
 /// </summary>
 /// <remarks>
 /// Pools whose rule (<c>combat.pool_rules.{id}.states</c>) asks for it carry the flag the interface reads for
@@ -83,6 +84,8 @@ public sealed class StatusSystem : SimSystem
         if (stats.ProfileVersion != stats.Attributes.Version)
         {
             Profile(stats);
+            stats.Book = sim.World.Get<WeaveBook>(e);
+            stats.ComboCasts = _comboCasts;
         }
         var regenerating = _regenerating;
         var regenMask = stats.RegenMask;
@@ -116,13 +119,6 @@ public sealed class StatusSystem : SimSystem
             Set(stats, "moving", moving);
             Set(stats, "stationary", stationary);
             Set(stats, "airborne", !m.Grounded && !m.Flying);
-        }
-        if (_comboCasts >= 2 && sim.World.TryGet<WeaveBook>(e, out var book) && book.RecentCount > 0)
-        {
-            // Answered by has() from these two fields rather than kept as flags: a body's own rhythm is nothing
-            // another client needs, and flags travel with every entity's snapshot.
-            stats.ComboVaried = book.RecentlyVaried(_comboCasts);
-            stats.ComboRepeated = book.RecentlyRepeated(_comboCasts);
         }
     }
 
