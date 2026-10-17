@@ -335,4 +335,3 @@ public class PositionalReleaseTests
         Assert.NotNull(a.Runtime.ChooseForAi(a.Sim, a.Caster, a.Enemy));
     }
 }
-
