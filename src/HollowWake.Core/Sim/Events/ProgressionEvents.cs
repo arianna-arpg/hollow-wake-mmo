@@ -68,5 +68,8 @@ public sealed record ContainerChanged(Entity Entity, string Board) : GameEvent;
 /// <summary>A stone went into a gear item's socket (or came out, when <paramref name="Socketed"/> is false).</summary>
 public sealed record GearSocketChanged(Entity Entity, long Host, int Socket, long Stone, bool Socketed) : GameEvent;
 
+/// <summary>A node of a weave's own tree was bought for a weave slot.</summary>
+public sealed record WeaveTreeNodeBought(Entity Entity, int Slot, string Weave, string Node) : GameEvent;
+
 /// <summary>A station performed a service for the hero (levelled a stone, merged codices, reset passives).</summary>
 public sealed record StationServed(Entity Entity, Entity Station, string Service, IReadOnlyDictionary<string, double> Paid) : GameEvent;

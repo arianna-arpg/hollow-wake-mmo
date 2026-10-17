@@ -614,6 +614,50 @@ public class LoopbackTests
     }
 
     [Fact]
+    public void ATreeIsBoughtOverTheWireShownOnItsSeatAndResetAtAFont()
+    {
+        var (server, transport) = Create();
+        var (client, _, session, replies, _) = Enter(server, transport, "tree", "Wrenna", new List<string> { ProtocolInfo.InterfaceFeature });
+        var sim = session.Zone!.Sim;
+        var hero = session.Entity;
+        var inbox = new List<Message>(replies);
+        var inv = sim.World.Get<Inventory>(hero)!;
+        var codex = sim.Service<Core.Items.ItemGenerator>().Roll("weave_codex", 6, "common", new Core.Maths.Rng(81), new Core.Items.ItemGenerator.PayloadRequest { Form = "torrent", Level = 4 });
+        Assert.True(inv.TryAdd(codex));
+        client.Send(new LearnFormMsg(codex.Uid, 4));
+        var learned = Await<WeaveSlotsMsg>(server, client, inbox, s => s.Seats.Count > 4 && s.Seats[4].Form == "torrent");
+        Assert.NotNull(learned);
+        Assert.Equal(0, learned!.Seats[4].TreeSpent);
+        Assert.Equal(3, learned.Seats[4].TreePoints);
+
+        client.Send(new BuyTreeNodeMsg(4, "swelling"));
+        client.Send(new BuyTreeNodeMsg(4, "quick_pour"));
+        var bought = Await<WeaveSlotsMsg>(server, client, inbox, s => s.Seats[4].TreeSpent == 2);
+        Assert.NotNull(bought);
+        Assert.Equal(new List<string> { "swelling", "quick_pour" }, bought!.Seats[4].Tree);
+        Assert.Null(bought.Seats[4].DormantNodes);
+
+        // A node the compiler would not count is refused with its reason, and the seat is unchanged.
+        client.Send(new BuyTreeNodeMsg(4, "broad_stream"));
+        var refused = Await<IntentRejectedMsg>(server, client, inbox);
+        Assert.NotNull(refused);
+        Assert.Equal(new[] { "swelling", "quick_pour" }, sim.World.Get<WeaveBook>(hero)!.Slots[4].Spec.Tree);
+
+        // A font quotes the reset for the seat and unweaves it.
+        var at = sim.World.Get<Transform>(hero)!.Position;
+        var font = sim.Service<Core.Patterns.PatternFactory>().Spawn(sim, "passive_font", at + new System.Numerics.Vector3(1.5f, 0, 0));
+        inv.AddCurrency("shards", 100);
+        client.Send(new InteractMsg(font.Key));
+        var pane = Await<StationStateMsg>(server, client, inbox, s => s.Services?.Any(v => v.Id == "reset_tree") == true);
+        Assert.NotNull(pane);
+        Assert.Equal(4, pane!.Services!.Single(v => v.Id == "reset_tree").Slot);
+        client.Send(new StationServiceMsg(font.Key, "reset_tree") { Slot = 4 });
+        var reset = Await<WeaveSlotsMsg>(server, client, inbox, s => s.Seats[4].TreeSpent == 0);
+        Assert.NotNull(reset);
+        Assert.Null(reset!.Seats[4].Tree);
+    }
+
+    [Fact]
     public void ARaisedGuardShowsItsPoolOnTheCastBar()
     {
         var (server, transport) = Create();

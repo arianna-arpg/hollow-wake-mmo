@@ -663,13 +663,14 @@ public static class InterfaceStates
             {
                 var glyphRef = slot.Spec.Glyphs[socket];
                 var def = sim.Content.Get<GlyphDef>(glyphRef.Id);
-                glyphs.Add(new SeatGlyphInfo(socket, glyphRef.Id, def?.DisplayName ?? glyphRef.Id, glyphRef.Level ?? def?.Level ?? 1) { Dormant = DormantReason(slot, glyphRef.Id) });
+                glyphs.Add(new SeatGlyphInfo(socket, glyphRef.Id, def?.DisplayName ?? glyphRef.Id, glyphRef.Level ?? def?.Level ?? 1) { Dormant = DormantReason(slot, glyphRef.Id), Riding = IsRiding(slot, glyphRef.Id) ? true : null });
             }
             sockets = glyphs.Count;
         }
         var usesMax = 0;
         var uses = compiled?.Casting.Uses is null ? -1 : runtime.Uses(sim, e, slot, out usesMax);
         var stacks = compiled is null ? 0 : runtime.Stacks(sim, slot);
+        var (treeSpent, treePoints) = compiled is null ? (0, 0) : runtime.TreePoints(sim, slot);
         return new WeaveSeatInfo(index, key, compiled?.Form.Id ?? slot.Spec.Form, compiled?.Name ?? key, compiled?.Level ?? slot.Spec.Level,
             sockets, glyphs, Math.Round(readyIn, 2), Math.Round(cooldown, 2), preview)
         {
@@ -686,7 +687,42 @@ public static class InterfaceStates
             Converted = compiled is null ? null : ConvertedFace(sim, e, runtime, slot, compiled),
             Meta = compiled is null ? null : MetaFace(sim, runtime, slot),
             Active = IsActive(slot) ? true : null,
+            Tree = slot.Spec.Tree.Count > 0 ? new List<string>(slot.Spec.Tree) : null,
+            DormantNodes = DormantNodesOf(compiled),
+            TreeSpent = compiled?.Form.Tree is null ? null : treeSpent,
+            TreePoints = compiled?.Form.Tree is null ? null : treePoints,
         };
+    }
+
+    /// <summary>Whether a socketed glyph rides to the weave's crew (<see cref="CompiledWeave.Riding"/>).</summary>
+    private static bool IsRiding(WeaveSlot? slot, string glyph)
+    {
+        if (slot?.Compiled is not { Riding.Count: > 0 } compiled)
+        {
+            return false;
+        }
+        foreach (var rider in compiled.Riding)
+        {
+            if (rider.Id == glyph)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static List<DormantNodeInfo>? DormantNodesOf(CompiledWeave? compiled)
+    {
+        if (compiled is not { DormantNodes.Count: > 0 })
+        {
+            return null;
+        }
+        var list = new List<DormantNodeInfo>(compiled.DormantNodes.Count);
+        foreach (var node in compiled.DormantNodes)
+        {
+            list.Add(new DormantNodeInfo(node.Id, node.Reason));
+        }
+        return list;
     }
 
     /// <summary>The face the slot shows instead of its own weave while a convert or a combo step holds, or null.</summary>
@@ -735,6 +771,7 @@ public static class InterfaceStates
             {
                 Dormant = slot is null ? null : DormantReason(slot, id),
                 Item = seat.Stones[socket]!.Uid,
+                Riding = IsRiding(slot, id) ? true : null,
             });
         }
         return glyphs;
@@ -767,6 +804,7 @@ public static class InterfaceStates
                 h.Add((long)System.Runtime.CompilerServices.RuntimeHelpers.GetHashCode(slot));
                 h.Add(slot.Dormant.Count);
                 h.Add(IsActive(slot));
+                h.Add(slot.Spec.Tree.Count);
                 // Whole use charges, self stacks and the face a convert or a combo step puts on the slot.
                 if (slot.Compiled is { } compiled)
                 {
@@ -776,6 +814,10 @@ public static class InterfaceStates
                         h.Add(max);
                     }
                     h.Add(runtime.Stacks(sim, slot));
+                    h.Add(compiled.TreeSpent);
+                    h.Add(compiled.TreePoints);
+                    h.Add(compiled.DormantNodes.Count);
+                    h.Add(compiled.Riding.Count);
                     if (compiled.Casting.Convert is not null || compiled.Casting.Chain is not null)
                     {
                         h.Add((long)System.Runtime.CompilerServices.RuntimeHelpers.GetHashCode(runtime.FaceOf(sim, e, slot)));

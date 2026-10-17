@@ -258,6 +258,7 @@ public sealed class SessionManager
         UnlearnFormMsg uf => new UnlearnFormIntent(uf.Slot, uf.X, uf.Y),
         RefundPassiveMsg rp => new RefundPassiveIntent(rp.Node),
         BindGraftMsg bg => new BindGraftIntent(bg.Source, bg.Slot),
+        BuyTreeNodeMsg bt => new BuyTreeNodeIntent(bt.Slot, bt.Node),
         ChooseDialogueMsg cd => new ChooseDialogueIntent(cd.Conversation, cd.Choice, cd.Node),
         CloseDialogueMsg cl => new CloseDialogueIntent(cl.Conversation),
         ClosePaneMsg cp => new ClosePaneIntent(cp.Pane, sim.World.Resolve(cp.Source)),

@@ -93,6 +93,7 @@ public partial class InterfaceProtocolTests
         yield return new UnlearnFormMsg(2) { X = 0, Y = 0 };
         yield return new RefundPassiveMsg("hf1");
         yield return new BindGraftMsg("wd3", 1);
+        yield return new BuyTreeNodeMsg(4, "swelling");
         yield return new ChooseDialogueMsg("quartermaster", "work") { Node = "greet" };
         yield return new CloseDialogueMsg("quartermaster");
         yield return new ClosePaneMsg("vendor", 4);
@@ -143,7 +144,7 @@ public partial class InterfaceProtocolTests
             });
         yield return new WeaveSlotsMsg(new List<WeaveSeatInfo>
         {
-            new(0, "bolt[ember]+forking@2", "bolt", "Ember Bolt", 2, 2, new List<SeatGlyphInfo> { new(0, "forking", "Forking", 2) { Dormant = "needs projectile", Item = 10 } }, 1.5, 4,
+            new(0, "bolt[ember]+forking@2", "bolt", "Ember Bolt", 2, 2, new List<SeatGlyphInfo> { new(0, "forking", "Forking", 2) { Dormant = "needs projectile", Item = 10, Riding = true } }, 1.5, 4,
                 new List<PreviewLineInfo> { new("Damage", "12 to 18 Ember") })
             {
                 Icon = "bolt",
@@ -159,6 +160,10 @@ public partial class InterfaceProtocolTests
                 Converted = new FaceInfo("Reload") { Icon = "reload" },
                 Meta = new FaceInfo("Detonate"),
                 Active = true,
+                Tree = new List<string> { "swelling", "swelling", "quick_pour" },
+                DormantNodes = new List<DormantNodeInfo> { new("broad_stream", "excluded by quick_pour") },
+                TreeSpent = 3,
+                TreePoints = 3,
             },
             new(1, null, null, "", 0, 0, new List<SeatGlyphInfo>(), 0, 0, new List<PreviewLineInfo>()),
         });
