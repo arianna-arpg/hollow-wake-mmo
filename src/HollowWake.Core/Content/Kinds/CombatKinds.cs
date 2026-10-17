@@ -24,6 +24,35 @@ internal static class CombatKinds
         ContentKinds.Register<ProcDef>("procs", Proc);
         ContentKinds.AddValidator<StatusDef>(Status);
         ContentKinds.AddValidator<RulesDef>(Rules);
+        ContentKinds.AddValidator<AttributeDef>(PerPoint);
+    }
+
+    /// <summary>
+    /// Per-point modifiers scale by the attribute that grants them: plain flat, increased or more lines on other
+    /// declared attributes, never on one that grants per point itself (that would read in a circle).
+    /// </summary>
+    private static void PerPoint(AttributeDef d, ValidationContext c)
+    {
+        c.Modifiers(d.PerPoint, "per_point");
+        foreach (var m in d.PerPoint)
+        {
+            if (m.Attribute == d.Id)
+            {
+                c.Error("per_point modifies the attribute itself.");
+            }
+            if (m.Gauge is not null || m.GaugeAt is not null)
+            {
+                c.Error($"per_point line on '{m.Attribute}' has a gauge; the points are its gauge.");
+            }
+            if (m.Form is Attributes.ModifierForm.Link or Attributes.ModifierForm.Override)
+            {
+                c.Error($"per_point line on '{m.Attribute}' must be flat, increased or more.");
+            }
+            if (c.Registry.Attributes.Get(m.Attribute) is { PerPoint.Count: > 0 })
+            {
+                c.Error($"per_point targets '{m.Attribute}', which grants per point itself.");
+            }
+        }
     }
 
     private static void Status(StatusDef d, ValidationContext c)
@@ -125,6 +154,11 @@ internal static class CombatKinds
             ProcRules(d, c);
             return;
         }
+        if (d.Id == "attributes")
+        {
+            TradeRules(d, c);
+            return;
+        }
         if (d.Id != "combat")
         {
             return;
@@ -213,6 +247,59 @@ internal static class CombatKinds
         if (rules.Text("combat.block", "fraction") is not ("fraction" or "guard") and var block)
         {
             c.Error($"block must be fraction or guard, not '{block}'.");
+        }
+    }
+
+    /// <summary>Trades name declared attributes; their dials are never traded themselves, and nothing trades with itself.</summary>
+    private static void TradeRules(RulesDef d, ValidationContext c)
+    {
+        if (d.Values?["trades"] is not JsonArray trades)
+        {
+            return;
+        }
+        var traded = new HashSet<string>(StringComparer.Ordinal);
+        var dials = new List<string>();
+        foreach (var item in trades)
+        {
+            if (item is not JsonObject trade)
+            {
+                c.Error("trades lists something that is not { from, to, rate, forgo }.");
+                continue;
+            }
+            var from = JsonNum.StringOf(trade["from"]);
+            var to = JsonNum.StringOf(trade["to"]);
+            if (from is null || to is null || from == to)
+            {
+                c.Error("a trade needs a from and a different to.");
+                continue;
+            }
+            traded.Add(from);
+            traded.Add(to);
+            foreach (var name in new[] { from, to })
+            {
+                if (!c.Registry.Attributes.Contains(name))
+                {
+                    c.Error($"trade names undeclared attribute '{name}'.");
+                }
+            }
+            foreach (var key in new[] { "rate", "forgo" })
+            {
+                if (JsonNum.StringOf(trade[key]) is { } dial)
+                {
+                    dials.Add(dial);
+                    if (!c.Registry.Attributes.Contains(dial))
+                    {
+                        c.Error($"trade dial '{dial}' is not a declared attribute.");
+                    }
+                }
+            }
+        }
+        foreach (var dial in dials)
+        {
+            if (traded.Contains(dial))
+            {
+                c.Error($"trade dial '{dial}' is itself traded.");
+            }
         }
     }
 

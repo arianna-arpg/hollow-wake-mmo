@@ -1,19 +1,52 @@
 # Attributes: every number an entity, weave, item or holding can carry.
-# Formulas read other attributes and `level`. Undeclared attributes still work as channels; declaring
+# Formulas read other attributes and `level`; what a point of a core attribute grants is its per_point
+# list, which the fold applies and tooltips read. Undeclared attributes still work as channels; declaring
 # them gives names, defaults, bounds and tool support.
 kind: attributes
 entries:
   # ---- core
-  - { id: might, name: Might, category: core, base: 10, min: 0, description: Physical force. Scales attacks and armor. }
-  - { id: grace, name: Grace, category: core, base: 10, min: 0, description: "Speed and precision. Scales accuracy, evasion and critical strikes." }
-  - { id: will, name: Will, category: core, base: 10, min: 0, description: Command over the Loom. Scales weaves and mana. }
-  - { id: vigor, name: Vigor, category: core, base: 10, min: 0, description: Endurance. Scales life and recovery. }
+  - id: might
+    name: Might
+    category: core
+    base: 10
+    min: 0
+    description: Physical force. Scales attacks and armor.
+    per_point:
+      - { attribute: attack.power, form: flat, value: 0.02 }
+  - id: grace
+    name: Grace
+    category: core
+    base: 10
+    min: 0
+    description: "Speed and precision. Scales accuracy, evasion and critical strikes."
+    per_point:
+      - { attribute: accuracy, form: flat, value: 3 }
+      - { attribute: evasion, form: flat, value: 2 }
+  - id: will
+    name: Will
+    category: core
+    base: 10
+    min: 0
+    description: Command over the Loom. Scales weaves and mana.
+    per_point:
+      - { attribute: mana.max, form: flat, value: 3 }
+      - { attribute: mana.regen, form: flat, value: 0.08 }
+      - { attribute: spell.power, form: flat, value: 0.025 }
+  - id: vigor
+    name: Vigor
+    category: core
+    base: 10
+    min: 0
+    description: Endurance. Scales life and recovery.
+    per_point:
+      - { attribute: life.max, form: flat, value: 4 }
+      - { attribute: life.regen, form: flat, value: 0.05 }
 
   # ---- resources
-  - { id: life.max, name: Maximum Life, category: resource, formula: "40 + level * 10 + vigor * 4", min: 1, decimals: 0 }
-  - { id: life.regen, name: Life Regeneration, category: resource, formula: "0.5 + vigor * 0.05", decimals: 2 }
-  - { id: mana.max, name: Maximum Mana, category: resource, formula: "30 + level * 5 + will * 3", min: 0, decimals: 0 }
-  - { id: mana.regen, name: Mana Regeneration, category: resource, formula: "1 + will * 0.08", decimals: 2 }
+  - { id: life.max, name: Maximum Life, category: resource, formula: "40 + level * 10", min: 1, decimals: 0 }
+  - { id: life.regen, name: Life Regeneration, category: resource, base: 0.5, decimals: 2 }
+  - { id: mana.max, name: Maximum Mana, category: resource, formula: "30 + level * 5", min: 0, decimals: 0 }
+  - { id: mana.regen, name: Mana Regeneration, category: resource, base: 1, decimals: 2 }
   - { id: stamina.max, name: Maximum Stamina, category: resource, base: 100, min: 0, decimals: 0 }
   - { id: stamina.regen, name: Stamina Regeneration, category: resource, base: 12, decimals: 2 }
   - { id: ward.max, name: Maximum Ward, category: resource, base: 0, min: 0, decimals: 0, description: A shield of bound Thread that absorbs damage before life. }
@@ -37,9 +70,9 @@ entries:
 
   # ---- offense
   - { id: damage, name: Damage, category: offense, base: 0, description: The damage channel. Scope by thread and weave tags. }
-  - { id: attack.power, name: Attack Power, category: offense, formula: "1 + might * 0.02 + level * 0.01", percent: true }
-  - { id: spell.power, name: Weave Power, category: offense, formula: "1 + will * 0.025 + level * 0.015", percent: true }
-  - { id: accuracy, name: Accuracy, category: offense, formula: "80 + level * 5 + grace * 3", min: 0, decimals: 0 }
+  - { id: attack.power, name: Attack Power, category: offense, formula: "1 + level * 0.01", percent: true }
+  - { id: spell.power, name: Weave Power, category: offense, formula: "1 + level * 0.015", percent: true }
+  - { id: accuracy, name: Accuracy, category: offense, formula: "80 + level * 5", min: 0, decimals: 0 }
   - { id: crit.chance, name: Critical Chance, category: offense, base: 0.05, min: 0, max: 1, percent: true }
   - { id: crit.multiplier, name: Critical Multiplier, category: offense, base: 1.5, min: 1, percent: true }
   - { id: crit.dot, name: Damage over Time Critical Chance, category: offense, base: 0, min: 0, max: 1, percent: true, description: Chance for a tick of damage over time to strike critically. }
@@ -69,7 +102,7 @@ entries:
 
   # ---- defense
   - { id: armor, name: Armor, category: defense, base: 0, min: 0, decimals: 0 }
-  - { id: evasion, name: Evasion, category: defense, formula: "20 + level * 3 + grace * 2", min: 0, decimals: 0 }
+  - { id: evasion, name: Evasion, category: defense, formula: "20 + level * 3", min: 0, decimals: 0 }
   - { id: block.chance, name: Block Chance, category: defense, base: 0, min: 0, max: 0.75, percent: true }
   - { id: block.amount, name: Block Amount, category: defense, base: 1, min: 0, max: 1, percent: true }
   - { id: block.value, name: Block Value, category: defense, base: 0, min: 0, decimals: 0, description: "With guard blocking: damage a block stops beyond the level floor." }
@@ -111,6 +144,10 @@ entries:
   - { id: summon.count, name: Summon Count, category: weave, base: 1, min: 1, decimals: 0 }
   - { id: summon.max, name: Summon Maximum, category: weave, base: 3, min: 1, decimals: 0 }
   - { id: cost, name: Cost, category: weave, base: 0, description: The cost channel. Scope by resource and weave tags. }
+
+  # ---- trade dials (rule attributes.trades): how much of one attribute is gained as another, and forgone
+  - { id: trade.life_to_shield, name: Life Woven into Shield, category: trade, base: 0, min: 0, max: 1, percent: true, description: Maximum life gained as maximum shield. }
+  - { id: trade.life_to_shield.forgo, name: Life Given Up for Shield, category: trade, base: 0, min: 0, max: 1, percent: true, description: Maximum life forgone by the weave of life into shield. }
 
   # ---- conditions: the lines low and full life and mana are drawn at
   - { id: low_life.line, name: Low Life Line, category: condition, base: 0.35, min: 0, max: 1, percent: true }

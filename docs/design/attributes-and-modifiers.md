@@ -4,7 +4,15 @@ The one numeric engine. Characters, monsters, weaves, items and holdings all car
 
 ## Definitions
 
-`attributes.yaml` declares attributes: id, name, category, base or formula, min, max, decimals, percent, hidden. Formulas read other attributes and `level` (`life.max: "40 + level * 10 + vigor * 4"`). Undeclared attributes still work as channels with base zero; declaring them adds bounds, names and validation. Hidden attributes are kept out of the character sheet the self state lists.
+`attributes.yaml` declares attributes: id, name, category, base or formula, min, max, decimals, percent, hidden, per_point. Formulas read other attributes and `level` (`life.max: "40 + level * 10"`). Undeclared attributes still work as channels with base zero; declaring them adds bounds, names and validation. Hidden attributes are kept out of the character sheet the self state lists.
+
+### Per point
+
+What a point of an attribute grants is its `per_point` list (vigor: `life.max` flat 4, `life.regen` flat 0.05), so tooltips and the fold read the same data. Every body carries each line as a modifier whose gauge is the granting attribute, under the source `per_point:{attribute}`: the line scales with the points like any gauge, joins the fold in its layer, and shows in a breakdown. Validation keeps the lines plain (flat, increased or more, no gauge of their own) and off attributes that grant per point themselves.
+
+### Trades
+
+Rule `attributes.trades` lists stat trades `{ from, to, rate, forgo }`: a body gains `rate` times its `from` as flat `to` while forgoing `forgo` of its `from`. `rate` and `forgo` name attributes, the dials, so any modifier source turns a trade up. Each trade is two modifiers every body carries under the source `trade:{from}:{to}`, a link onto `to` and a more on `from`, each with its dial as its gauge, so a trade is inert (and costs no link) while its dials read zero. The link reads `from` as it stands, after forgoing; links are single hop, so trades never chain. Validation refuses dials that are themselves traded.
 
 ### Families
 

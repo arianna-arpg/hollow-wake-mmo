@@ -108,6 +108,13 @@ entries:
         addled: "1"
         sapped: "amount * 0.2"
 
+  - id: attributes
+    values:
+      # Stat trades: gain rate of one attribute as flat another while forgoing a fraction of the first. rate and
+      # forgo name attributes (the dials) that any modifier turns; a trade is inert while its dials read zero.
+      trades:
+        - { from: life.max, to: shield.max, rate: trade.life_to_shield, forgo: trade.life_to_shield.forgo }
+
   - id: procs
     values:
       # Procs, status riders and consumed stacks are refused at this effect depth and deeper; below it each

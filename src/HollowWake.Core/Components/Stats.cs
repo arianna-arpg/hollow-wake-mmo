@@ -56,6 +56,14 @@ public sealed class Stats : IComponent, IExprScope
     {
         _content = content;
         Attributes = new AttributeSet(content.Attributes);
+        foreach (var m in PerPoint.Of(content.Attributes))
+        {
+            Attributes.Add(m);
+        }
+        foreach (var m in Trades.Of(content.Rules))
+        {
+            Attributes.Add(m);
+        }
     }
 
     public void UseRng(Rng rng) => _rng = rng;
@@ -464,3 +472,71 @@ public static class ResourceNames
     /// <summary><c>reserved.{resource}</c>: the gauge the interface reads the reserved amount from.</summary>
     public static string GaugeOf(string id) => Of(id).Gauge;
 }
+
+/// <summary>
+/// The modifiers attributes grant per point (<c>per_point</c> on an attribute definition: vigor's life, will's
+/// mana), as every body carries them: each scaled by the attribute itself through its gauge, under the source
+/// <c>per_point:{attribute}</c>. Built once per catalog, so tooltips and the fold read the same data.
+/// </summary>
+public static class PerPoint
+{
+    private static readonly System.Runtime.CompilerServices.ConditionalWeakTable<AttributeCatalog, Modifier[]> Cache = new();
+
+    public static Modifier[] Of(AttributeCatalog catalog) => Cache.GetValue(catalog, static c =>
+    {
+        var list = new List<Modifier>();
+        foreach (var def in c.All)
+        {
+            foreach (var m in def.PerPoint)
+            {
+                list.Add(m with { Gauge = def.Id, GaugeAt = null, Source = "per_point:" + def.Id });
+            }
+        }
+        return list.ToArray();
+    });
+}
+
+/// <summary>
+/// Stat trades (rule <c>attributes.trades</c>, a list of <c>{ from, to, rate, forgo }</c>): a body gains <c>rate</c>
+/// times its <c>from</c> as flat <c>to</c> while forgoing <c>forgo</c> of its <c>from</c>, where <c>rate</c> and
+/// <c>forgo</c> name attributes (the dials) any modifier turns. Each trade is two modifiers every body carries
+/// under the source <c>trade:{from}:{to}</c>: a link onto <c>to</c> scaled by the rate dial, and a more on
+/// <c>from</c> scaled by the forgo dial; both are inert while their dial reads zero. The link reads <c>from</c> as it
+/// stands, after forgoing, and links are single hop, so trades never chain.
+/// </summary>
+public static class Trades
+{
+    private static readonly System.Runtime.CompilerServices.ConditionalWeakTable<Rules, Modifier[]> Cache = new();
+
+    public static Modifier[] Of(Rules rules) => Cache.GetValue(rules, static r =>
+    {
+        var list = new List<Modifier>();
+        if (r.Node("attributes.trades") is System.Text.Json.Nodes.JsonArray trades)
+        {
+            foreach (var item in trades)
+            {
+                if (item is not System.Text.Json.Nodes.JsonObject trade)
+                {
+                    continue;
+                }
+                var from = JsonNum.StringOf(trade["from"]);
+                var to = JsonNum.StringOf(trade["to"]);
+                if (from is null || to is null)
+                {
+                    continue;
+                }
+                var source = $"trade:{from}:{to}";
+                if (JsonNum.StringOf(trade["rate"]) is { } rate)
+                {
+                    list.Add(new Modifier { Attribute = to, Form = ModifierForm.Link, From = from, Value = 1, Gauge = rate, Source = source });
+                }
+                if (JsonNum.StringOf(trade["forgo"]) is { } forgo)
+                {
+                    list.Add(new Modifier { Attribute = from, Form = ModifierForm.More, Value = -1, Gauge = forgo, Source = source });
+                }
+            }
+        }
+        return list.ToArray();
+    });
+}
+

@@ -400,6 +400,38 @@ public class DefenseTests
     }
 
     [Fact]
+    public void PointsOfACoreAttributeGrantTheirPerPointLines()
+    {
+        var bench = CombatBench.Create();
+        var stats = bench.VictimStats;
+        // A level one hob with seven vigor: 40 + 10 from the formula, 28 from vigor's per-point line.
+        Assert.Equal(78, stats.ResourceMax("life"), 9);
+        var vigor = stats.Attributes.Explain("life.max", stats).Applied.Single(m => m.Source == "per_point:vigor");
+        Assert.Equal(4, vigor.Value, 9);
+        bench.Modify(bench.Victim, "vigor", 5);
+        Assert.Equal(98, stats.ResourceMax("life"), 9);
+        // Will grants spell power per point through the same fold as every other modifier.
+        Assert.Equal(1 + 0.015 + 0.025 * stats.Get("will"), stats.Get("spell.power"), 9);
+    }
+
+    [Fact]
+    public void TradesGainOneAttributeAsAnotherWhileForgoingSome()
+    {
+        var bench = CombatBench.Create();
+        var stats = bench.VictimStats;
+        var life = stats.ResourceMax("life");
+        Assert.Equal(0, stats.ResourceMax("shield"), 9);
+        // The dials are ordinary attributes: half of life woven into shield, a fifth of life given up for it.
+        bench.Modify(bench.Victim, "trade.life_to_shield", 0.5);
+        bench.Modify(bench.Victim, "trade.life_to_shield.forgo", 0.2);
+        // Both maxima round to whole points, as declared.
+        var kept = Math.Round(life * 0.8, MidpointRounding.AwayFromZero);
+        Assert.Equal(kept, stats.ResourceMax("life"), 9);
+        Assert.Equal(Math.Round(kept * 0.5, MidpointRounding.AwayFromZero), stats.ResourceMax("shield"), 9);
+        Assert.Contains(stats.Attributes.ModifiersFor("shield.max"), m => m.Source == "trade:life.max:shield.max");
+    }
+
+    [Fact]
     public void TheDefaultLadderListsTheNewStagesInRuleOrder()
     {
         var plan = HitPlan.For(CoreContent.Registry.Rules);
