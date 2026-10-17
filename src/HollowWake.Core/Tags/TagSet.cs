@@ -116,9 +116,31 @@ public sealed class TagSet : IEquatable<TagSet>, IEnumerable<string>
 
     public TagSet With(params string[] more) => Union(From(more));
 
+    /// <summary>Adds one tag without rebuilding the set: the common case on the hit path.</summary>
+    public TagSet With(string tag)
+    {
+        var n = Normalize(tag);
+        if (n.Length == 0)
+        {
+            return this;
+        }
+        var at = Array.BinarySearch(_tags, n, StringComparer.Ordinal);
+        if (at >= 0)
+        {
+            return this;
+        }
+        at = ~at;
+        var arr = new string[_tags.Length + 1];
+        Array.Copy(_tags, 0, arr, 0, at);
+        arr[at] = n;
+        Array.Copy(_tags, at, arr, at + 1, _tags.Length - at);
+        return new TagSet(arr);
+    }
+
+    /// <summary>Merges two sorted sets in one pass; returns one of the inputs when the other adds nothing.</summary>
     public TagSet Union(TagSet other)
     {
-        if (other.IsEmpty)
+        if (other.IsEmpty || ReferenceEquals(this, other))
         {
             return this;
         }
@@ -126,7 +148,47 @@ public sealed class TagSet : IEquatable<TagSet>, IEnumerable<string>
         {
             return other;
         }
-        return From(_tags.Concat(other._tags));
+        var a = _tags;
+        var b = other._tags;
+        var merged = new string[a.Length + b.Length];
+        var i = 0;
+        var j = 0;
+        var n = 0;
+        while (i < a.Length && j < b.Length)
+        {
+            var c = string.CompareOrdinal(a[i], b[j]);
+            if (c < 0)
+            {
+                merged[n++] = a[i++];
+            }
+            else if (c > 0)
+            {
+                merged[n++] = b[j++];
+            }
+            else
+            {
+                merged[n++] = a[i++];
+                j++;
+            }
+        }
+        while (i < a.Length)
+        {
+            merged[n++] = a[i++];
+        }
+        while (j < b.Length)
+        {
+            merged[n++] = b[j++];
+        }
+        if (n == a.Length)
+        {
+            return this;
+        }
+        if (n == b.Length)
+        {
+            return other;
+        }
+        Array.Resize(ref merged, n);
+        return new TagSet(merged);
     }
 
     public TagSet Without(TagSet other)

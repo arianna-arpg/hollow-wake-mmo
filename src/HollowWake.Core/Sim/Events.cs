@@ -19,6 +19,12 @@ public sealed record EntityJumped(Entity Entity) : GameEvent;
 public sealed record DamageDealt(Entity Source, Entity Target, double Total, bool Crit, TagSet Tags, IReadOnlyDictionary<string, double> ByThread, bool Evaded, bool Blocked) : GameEvent
 {
     public int Depth { get; init; }
+
+    /// <summary>The target was culled at or below the attacker's threshold.</summary>
+    public bool Culled { get; init; }
+
+    /// <summary>A per-hit cap clamped the amount.</summary>
+    public bool Clamped { get; init; }
 }
 
 public sealed record Healed(Entity Source, Entity Target, double Amount, string Resource) : GameEvent

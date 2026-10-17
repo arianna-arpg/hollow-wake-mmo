@@ -23,7 +23,7 @@ entries:
 A later layer may:
 
 - **Replace** an entry by using the same id.
-- **Patch** an entry with `patch: true`: objects merge recursively, `null` deletes a key, lists replace.
+- **Patch** an entry with `patch: true`: objects merge recursively, `null` deletes a key, lists replace. A patch may sit in any file of its layer: when its target is not defined yet, it applies once every file of the layer is read, so a file can extend a rule group that another file of the same layer defines.
 - **Remove** an entry with `remove: true`.
 
 ```yaml
