@@ -164,6 +164,20 @@ public sealed class ContentNames
                 Json.Str(o["id"]),
                 Json.Str(o["name"], Humanize(Json.Str(o["id"]))),
                 Json.Items(o["modifiers"]).Select(m => ModifierText.Line(m, names)).Where(l => l.Length > 0).ToList())).ToList();
+            // A generated group deals one option per visible attribute of a category, as PassiveChoices.OptionsOf does.
+            if (g["generate"] is JsonObject generate)
+            {
+                var category = Json.Str(generate["category"]);
+                foreach (var attribute in attributes.Where(a => a.Category == category && !a.Hidden).OrderBy(a => a.Id, StringComparer.Ordinal))
+                {
+                    if (options.Any(o => o.Id == attribute.Id))
+                    {
+                        continue;
+                    }
+                    var modifier = new JsonObject { ["attribute"] = attribute.Id, ["form"] = Json.Str(generate["form"], "flat"), ["value"] = Json.Num(generate["value"]) };
+                    options.Add(new ChoiceOption(attribute.Id, attribute.Name, new[] { ModifierText.Line(modifier, names) }));
+                }
+            }
             var id = Json.Str(g["id"]);
             names.Choices[id] = new ChoiceGroup(id, Json.Str(g["name"], Humanize(id)), (int)Json.Num(g["pick"], 1), options);
         }

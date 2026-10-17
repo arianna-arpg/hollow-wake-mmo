@@ -150,6 +150,9 @@ public class ThemeContentTests
         Assert.Contains(names.Threads, t => t.Id == "ember");
         Assert.Contains(names.Slots, s => s.Id == "main_hand");
         Assert.NotEmpty(names.Passives);
+        // A generated choice group deals one option per visible attribute of its category.
+        var generated = names.Choices["attributes"].Options;
+        Assert.Contains(generated, o => o.Id == "might" && o.Lines.Single() == "+4 Might");
         var notable = names.Passives.First(p => p.Kind == "notable" && p.Choice is null);
         Assert.NotEmpty(notable.Lines);
         Assert.Equal("Main Hand", ContentNames.Humanize("main_hand"));

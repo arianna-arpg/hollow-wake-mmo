@@ -438,7 +438,15 @@ public partial class ClientWorld : Node3D
     {
         if (_entities.Remove(key, out var view))
         {
-            view.QueueFree();
+            // A telegraph's strike landed: its mark fades out and frees itself.
+            if (view.IsTelegraph)
+            {
+                view.Dying();
+            }
+            else
+            {
+                view.QueueFree();
+            }
         }
     }
 
