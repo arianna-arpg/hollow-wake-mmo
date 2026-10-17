@@ -79,6 +79,11 @@ entries:
       # The highest level a glyph reaches; references above it are clamped and validation refuses them.
       max_level: 20
 
+  - id: triggers
+    values:
+      # How near a death must happen, in units, for a death_near subscriber to hear of it.
+      death_near_radius: 8
+
   - id: move
     values:
       gravity: 24
