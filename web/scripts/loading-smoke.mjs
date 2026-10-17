@@ -59,6 +59,10 @@ try {
   await page.evaluate(()=>window.lease.fail('Disconnected'));
   check('failure without retry is reported',await page.evaluate(()=>window.cover.snapshot.failed));
   await page.evaluate(()=>window.lease.fail('Retry the stage',()=>window.lease.update({label:'Retrying'})));
+  await page.locator('#mu-loading-screen').focus();await page.keyboard.press('Shift+Tab');
+  check('reverse tab selects the last loading action',await page.evaluate(()=>document.activeElement.textContent==='Cancel'));
+  await page.keyboard.press('Tab');
+  check('tab cycles only loading actions',await page.evaluate(()=>document.activeElement.textContent==='Retry'));
   await page.getByRole('button',{name:'Retry'}).click();
   check('retry clears failure',await page.evaluate(()=>!window.cover.snapshot.failed&&window.cover.snapshot.label==='Retrying'));
   await page.keyboard.down('KeyD');

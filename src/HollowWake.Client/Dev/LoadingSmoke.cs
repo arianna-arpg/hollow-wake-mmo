@@ -36,6 +36,15 @@ public partial class LoadingSmoke(Main main, string[] args) : Node
             }
             var cancelled=false;
             screen.Begin("Cancel check",cancel:()=>{cancelled=true;screen.Close();});
+            for(var i=0;i<4;i++)
+            {
+                Input.ParseInputEvent(new InputEventKey { Keycode=Key.Tab,PhysicalKeycode=Key.Tab,Pressed=true });
+                await ToSignal(GetTree(),SceneTree.SignalName.ProcessFrame);
+                await ToSignal(GetTree(),SceneTree.SignalName.ProcessFrame);
+                var focus=GetViewport().GuiGetFocusOwner();
+                Check("tab stays inside cover",focus is Button&&screen.IsAncestorOf(focus));
+                Input.ParseInputEvent(new InputEventKey { Keycode=Key.Tab,PhysicalKeycode=Key.Tab,Pressed=false });
+            }
             screen.Session.Cancel!();
             Check("cancel closes cover",cancelled&&!screen.Active);
             GD.Print("LOADING SMOKE PASS");GetTree().Quit();

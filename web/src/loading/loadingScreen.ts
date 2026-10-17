@@ -158,7 +158,7 @@ export class LoadingScreen {
     if (e.code === 'Tab') {
       const buttons = Array.from(this.actions!.querySelectorAll('button'));
       const i = buttons.indexOf(document.activeElement as HTMLButtonElement);
-      if (buttons.length) buttons[(i + (e.shiftKey ? buttons.length - 1 : 1)) % buttons.length].focus();
+      if (buttons.length) buttons[i < 0 ? e.shiftKey ? buttons.length - 1 : 0 : (i + (e.shiftKey ? -1 : 1) + buttons.length) % buttons.length].focus();
       e.preventDefault(); e.stopImmediatePropagation(); return;
     }
     if ((e.code === 'Enter' || e.code === 'Space') && e.target instanceof HTMLButtonElement) { e.stopPropagation(); return; }

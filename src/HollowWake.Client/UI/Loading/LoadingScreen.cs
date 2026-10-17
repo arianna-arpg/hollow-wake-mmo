@@ -129,7 +129,24 @@ public partial class LoadingScreen : CanvasLayer
             if (!key.Pressed) { if (_held.Remove(code)) GetViewport().SetInputAsHandled(); }
             else if (Active) { _held.Add(code); _pointer = null; }
             else if (_held.Contains(code)) { GetViewport().SetInputAsHandled(); return; }
-            if (Active && key.Keycode is Key.Tab or Key.Enter or Key.Space) return; // The cover's buttons retain keyboard focus.
+            if (Active && key.Keycode == Key.Tab)
+            {
+                if (key.Pressed)
+                {
+                    var buttons = new[] { _retry, _cancel }.Where(b => b.Visible).ToArray();
+                    if (buttons.Length == 0) _root.GrabFocus();
+                    else
+                    {
+                        var index = Array.IndexOf(buttons, GetViewport().GuiGetFocusOwner() as Button);
+                        var next = index < 0 ? key.ShiftPressed ? buttons.Length - 1 : 0
+                            : (index + (key.ShiftPressed ? -1 : 1) + buttons.Length) % buttons.Length;
+                        buttons[next].GrabFocus();
+                    }
+                }
+                GetViewport().SetInputAsHandled(); return;
+            }
+            if (Active && key.Keycode is Key.Enter or Key.Space && GetViewport().GuiGetFocusOwner() is Button focused && _root.IsAncestorOf(focused))
+                return; // Only the cover's focused buttons receive GUI activation.
         }
         if (!Active) return;
         // Let the focused cover buttons receive their GUI touch events.
@@ -169,6 +186,8 @@ public partial class LoadingScreen : CanvasLayer
             return;
         }
         Refresh();
+        var focus = GetViewport().GuiGetFocusOwner();
+        if (focus is not null && focus != _root && !_root.IsAncestorOf(focus)) _root.GrabFocus();
         var size = GetViewport().GetVisibleRect().Size;
         _view.Position = new Vector2(0, size.Y < 480 ? 80 : 108);
         _view.Size = new Vector2(size.X, Math.Max(1, size.Y - (size.Y < 480 ? 225 : 270)));

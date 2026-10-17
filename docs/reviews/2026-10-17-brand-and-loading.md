@@ -27,7 +27,7 @@ Local gates on Windows:
 - `hollowwake validate`: 0 errors, 0 warnings.
 - `hollowwake load --x 0 --y 0`: 100 chunks; ran 200 ticks successfully. `fight hob hob`: completed with life 0/78 and 26/78. The documentation's literal `fight a b` was also tried; those placeholder patterns are absent and that invocation is not counted as evidence.
 - Live `hollowwake probe --host 127.0.0.1 --port 17877 --account loading-probe --seconds 3 --features entity_delta,interface`: `PROBE OK (walked south)`, both features granted and interface states received.
-- Native real-client smoke against the isolated server: 22/22 passed, including entry, movement, combat and all interface pages. Native loading smoke: all six checks passed, with captures for down/left/right. Native `--boot-check`: `BOOT PASS`.
+- Native real-client smoke against the isolated server: 22/22 passed, including entry, movement, combat and all interface pages. Native loading smoke: all checks passed, including repeated Tab focus containment, with captures for down/left/right. Native `--boot-check`: `BOOT PASS`.
 - `npm --prefix web test`: 142/142 passed. `npm --prefix web run build`: passed. Protocol regenerated without a diff. Browser real-client smoke: 25/25 passed, no page errors.
 - Browser loading course: every direction with keyboard, pointer, touch and controller; stale leases; actual/unknown progress; retry and failure without retry; held keys/controller quarantine; focus restoration; portrait/reduced-motion and touch cancellation. `LOADING SMOKE PASS`.
 - Browser delayed-entry course against the real server: playable slow entry, cancellation, ignored late frames, reconnect, timeout, retry without duplicate selection, and completion on readiness. `ENTRY SMOKE PASS`.
@@ -35,6 +35,8 @@ Local gates on Windows:
 - `git diff --check`: clean. PR release dry-run status is reported by its checks; it must pass before merge.
 
 `scripts/loading-reference.mjs` runs the original model at the pinned commit and records independent traces. Both ports match the same seeded courses in all directions, including gate geometry and encounter/impact/pace values. Screenshots were inspected for the inherited mark, alphabet, wisp, soul flames, gate openings and responsive layout.
+
+Native full-smoke shutdown still reports an orphaned standard Button and dependent rendering resources. An untouched archive of base `63436df`, built and run under the ignored experiment output, also reports that orphan (16 ObjectDB instances on base, 19 on this branch). The diagnostic comparison's baseline course had one vendor-state timing failure (21/22), so it is not claimed as a passing gate; the branch's full course passed 22/22. Dedicated loading and boot courses exit without that diagnostic. Loading-owned fonts and gradient resources are explicitly disposed. This unrelated standard-UI lifetime issue is documented rather than treated as a clean shutdown.
 
 ## Limits and review request
 
