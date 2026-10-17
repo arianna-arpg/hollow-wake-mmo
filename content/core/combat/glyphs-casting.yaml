@@ -79,7 +79,7 @@ entries:
     description: Gives the weave's seat a second ability, a burst of Ember where its bearer aims.
     requires: [spell]
     color: "#e8622a"
-    meta: { weave: ember_blast, label: Detonate }
+    meta_action: { weave: ember_blast, label: Detonate }
 
   - id: munitions
     name: Munitions

@@ -21,7 +21,7 @@ internal static class CastingProbes
         MechanismRegistry.Register("spends", static (w, _) => Spends(w), description: "the weave spends charges when it resolves");
         MechanismRegistry.Register("repeats", static (w, _) => w.Raises("repeat.count"), description: "the weave repeats after it resolves");
         MechanismRegistry.Register("convert", static (w, _) => w.Form.Convert is not null || Any(w, static g => g.Convert is not null), description: "the slot casts another weave while a condition holds");
-        MechanismRegistry.Register("meta", static (w, _) => w.Form.Meta is not null || Any(w, static g => g.Meta is not null), description: "the slot has a second ability");
+        MechanismRegistry.Register("meta", static (w, _) => w.Form.MetaAction is not null || Any(w, static g => g.MetaAction is not null), description: "the slot has a second ability");
     }
 
     private static bool Triggered(WeaveProbe w) => w.Form.Trigger is not null || Any(w, static g => g.Trigger is not null);

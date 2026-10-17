@@ -194,7 +194,7 @@ internal static class CastingKinds
             Costs(upkeep.PerSecond, c, "upkeep.per_second");
         }
         Convert(d.Convert, c, "convert");
-        Meta(d.Meta, c, "meta");
+        Meta(d.MetaAction, c, "meta_action");
         FollowUp(d.FollowUp, c, "follow_up");
         Cycle(d.Cycle, c, "cycle");
         SelfStack(d.SelfStack, c, "self_stack");
@@ -222,7 +222,7 @@ internal static class CastingKinds
         Spend(d.Spend, c, "spend");
         Uses(d.Uses, c, "uses");
         Convert(d.Convert, c, "convert");
-        Meta(d.Meta, c, "meta");
+        Meta(d.MetaAction, c, "meta_action");
         FollowUp(d.FollowUp, c, "follow_up");
         Cycle(d.Cycle, c, "cycle");
         SelfStack(d.SelfStack, c, "self_stack");

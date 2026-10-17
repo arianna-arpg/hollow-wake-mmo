@@ -618,7 +618,7 @@ public sealed class WeaveCompiler
         {
             triggers.Add(new WeaveTrigger(formTrigger, KindOf(formTrigger, form.Id), "form", triggers.Count));
         }
-        if (form.Meta is { } formMeta)
+        if (form.MetaAction is { } formMeta)
         {
             metas.Add(formMeta);
         }
@@ -639,7 +639,7 @@ public sealed class WeaveCompiler
                 triggers.Add(new WeaveTrigger(trigger, KindOf(trigger, g.Id), g.Id, triggers.Count));
             }
             gates.AddRange(g.Gates);
-            if (g.Meta is { } meta)
+            if (g.MetaAction is { } meta)
             {
                 metas.Add(meta);
             }

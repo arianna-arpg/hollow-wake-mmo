@@ -26,8 +26,9 @@ public sealed partial record GlyphDef
     /// <summary>While the expression holds, pressing the host's slot casts another weave instead.</summary>
     public ConvertSpec? Convert { get; init; }
 
-    /// <summary>A meta action run after the form's and earlier glyphs' metas.</summary>
-    public MetaSpec? Meta { get; init; }
+    /// <summary>A meta action run after the form's and earlier glyphs' metas (<c>meta_action</c>: <c>meta</c> holds free-form tool metadata).</summary>
+    [JsonPropertyName("meta_action")]
+    public MetaSpec? MetaAction { get; init; }
 
     /// <summary>Modifiers the caster wears while the host sits in a slot.</summary>
     [JsonPropertyName("equip_modifiers")]

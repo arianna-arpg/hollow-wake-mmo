@@ -81,8 +81,9 @@ public sealed partial record FormDef
     /// <summary>While the expression holds, pressing the slot casts another weave instead.</summary>
     public ConvertSpec? Convert { get; init; }
 
-    /// <summary>The second ability on the weave's slot.</summary>
-    public MetaSpec? Meta { get; init; }
+    /// <summary>The second ability on the weave's slot (<c>meta_action</c>: <c>meta</c> holds free-form tool metadata).</summary>
+    [JsonPropertyName("meta_action")]
+    public MetaSpec? MetaAction { get; init; }
 
     /// <summary>Modifiers the caster wears while the weave sits in a slot.</summary>
     [JsonPropertyName("equip_modifiers")]

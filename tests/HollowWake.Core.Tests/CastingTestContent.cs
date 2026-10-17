@@ -120,7 +120,7 @@ entries:
     reserve: { mana: 20 }
     upkeep: { per_second: { mana: 10 } }
     effects: [ { type: event, name: t_on } ]
-  - { id: t_meta_host, targeting: self, cast_mode: instant, min_threads: 0, meta: { weave: t_meta_a, label: A }, effects: [ { type: event, name: t_meta_host } ] }
+  - { id: t_meta_host, targeting: self, cast_mode: instant, min_threads: 0, meta_action: { weave: t_meta_a, label: A }, effects: [ { type: event, name: t_meta_host } ] }
   - { id: t_reflex, targeting: self, cast_mode: instant, reflex: true, min_threads: 0, effects: [ { type: event, name: t_reflex } ] }
   - { id: t_recover, targeting: self, cast_mode: instant, recovery: 1, min_threads: 0, effects: [ { type: event, name: t_recover } ] }
   - { id: t_shave, targeting: self, cast_mode: instant, min_threads: 0, effects: [ { type: cooldown, seconds: 2, fraction: 0.5 } ] }
@@ -130,7 +130,7 @@ entries:
 ---
 kind: glyphs
 entries:
-  - { id: t_meta_b, meta: { weave: t_meta_b_preset, label: B } }
+  - { id: t_meta_b, meta_action: { weave: t_meta_b_preset, label: B } }
   - { id: t_on_hit, trigger: { on: hit, chance: 1 } }
   - { id: t_on_hit_icd, trigger: { on: hit, chance: 1, icd: 1 } }
   - { id: t_on_hurt, trigger: { on: hurt, life_fraction: 0.2 } }
