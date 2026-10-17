@@ -137,9 +137,15 @@ public sealed class ProgressionService
         }
         var state = sim.World.GetOrAdd<PassiveState>(e);
         HeroScope? scope = null;
+        string? calling = null;
         foreach (var realm in sim.Content.Each<PassiveRealmDef>())
         {
             if (state.OpenRealms.Contains(realm.Id))
+            {
+                continue;
+            }
+            // A vocation opens only to its own calling, whatever else it asks (row H5).
+            if (realm.Calling is not null && realm.Calling != (calling ??= CallingOf(sim, e) ?? ""))
             {
                 continue;
             }
@@ -160,9 +166,20 @@ public sealed class ProgressionService
         }
     }
 
-    /// <summary>Why a sealed realm is sealed, or null when it is open.</summary>
-    public string? SealedReason(Simulation sim, Entity e, PassiveRealmDef realm) =>
-        RealmOpen(sim, e, realm.Id) ? null : realm.SealedText.Length > 0 ? realm.SealedText : "Sealed.";
+    /// <summary>Why a sealed realm is sealed, or null when it is open. A vocation of another calling says whose it is.</summary>
+    public string? SealedReason(Simulation sim, Entity e, PassiveRealmDef realm)
+    {
+        if (RealmOpen(sim, e, realm.Id))
+        {
+            return null;
+        }
+        if (realm.Calling is { } owner && owner != CallingOf(sim, e))
+        {
+            var name = sim.Content.Get<CallingDef>(owner)?.DisplayName ?? Definition.Humanize(owner);
+            return sim.Content.Rules.Text("passives.calling_sealed_text", "Only a {calling} walks this path.").Replace("{calling}", name, StringComparison.Ordinal);
+        }
+        return realm.SealedText.Length > 0 ? realm.SealedText : "Sealed.";
+    }
 
     // ------------------------------------------------------------ the graph
 

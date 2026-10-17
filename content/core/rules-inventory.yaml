@@ -82,6 +82,9 @@ entries:
       # Points of a realm's currency that levels give (beside those quests grant), as expressions of level.
       points:
         devotion: "0"
+        vocation: "0"
+      # Why a vocation of another calling stays sealed ({calling} is the calling it belongs to).
+      calling_sealed_text: Only a {calling} walks this path.
 
   # Heroes own their weaves: a set-weave must name what the rack seat holds (the codex, its stones in order,
   # attuned Threads). The casting rules declare the switch; the item model turns it on.

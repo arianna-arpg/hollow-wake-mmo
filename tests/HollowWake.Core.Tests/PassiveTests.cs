@@ -174,6 +174,56 @@ public class PassiveTests
     }
 
     [Fact]
+    public void AVocationOpensOnlyToItsCallingOnceItsOathIsFound()
+    {
+        var (sim, hero, _) = Hero(calling: "holdfast", id: "pas7");
+        var progression = sim.Service<ProgressionService>();
+        Assert.False(progression.RealmOpen(sim, hero, "warden"));
+        sim.World.Get<QuestLog>(hero)!.Flags.Add("warden_oath");
+        progression.RefreshRealms(sim, hero);
+        Assert.True(progression.RealmOpen(sim, hero, "warden"));
+        Assert.Contains("warden_root", sim.World.Get<Stats>(hero)!.Passives);
+        Assert.Contains("warden_root", progression.Anchors(sim, hero));
+
+        // Its nodes spend vocation points, which only grants give.
+        Assert.False(progression.Allocate(sim, hero, "wd1", null, out var reason));
+        Assert.Equal("no_points", reason);
+        progression.GrantPoints(sim, hero, "vocation", 2);
+        Assert.True(progression.Allocate(sim, hero, "wd1", null, out reason), reason);
+        Assert.Equal(1, progression.Points(sim, hero, "vocation"));
+
+        // A hero of another calling who found the same oath never opens it, and is told whose it is.
+        var (other, kindler, _) = Hero(calling: "kindler", id: "pas8");
+        var theirs = other.Service<ProgressionService>();
+        other.World.Get<QuestLog>(kindler)!.Flags.Add("warden_oath");
+        theirs.RefreshRealms(other, kindler);
+        Assert.False(theirs.RealmOpen(other, kindler, "warden"));
+        Assert.Contains("Holdfast", theirs.SealedReason(other, kindler, other.Content.Get<PassiveRealmDef>("warden")!));
+        Assert.False(theirs.Allocate(other, kindler, "warden_root", null, out reason));
+    }
+
+    [Fact]
+    public void AnotherCallingsStartIsBoughtAsTravelAndNeverAnchors()
+    {
+        var (sim, hero, _) = Hero(calling: "holdfast", id: "pas9", level: 5);
+        var progression = sim.Service<ProgressionService>();
+        var stats = sim.World.Get<Stats>(hero)!;
+        Assert.False(progression.Allocate(sim, hero, "start_holdfast", null, out var reason));
+        Assert.Equal("already", reason);
+        Assert.True(progression.Allocate(sim, hero, "inner_a", "might", out reason), reason);
+        var points = progression.Points(sim, hero, ProgressionService.MainCurrency);
+        Assert.True(progression.Allocate(sim, hero, "start_kindler", null, out reason), reason);
+        Assert.Equal(points - 1, progression.Points(sim, hero, ProgressionService.MainCurrency));
+        Assert.DoesNotContain("start_kindler", progression.Anchors(sim, hero));
+
+        // A travel start refunds like any node, and nothing hangs from it but itself.
+        sim.Service<PatternFactory>().Spawn(sim, "passive_font", new Vector3(9.5f, 8, 0));
+        sim.World.Get<Inventory>(hero)!.AddCurrency("shards", 500);
+        Assert.True(progression.RefundAtFont(sim, hero, "start_kindler", out reason), reason);
+        Assert.DoesNotContain("start_kindler", stats.Passives);
+    }
+
+    [Fact]
     public void PicksSurviveASaveAndOldNodesGetTheirDefault()
     {
         var (sim, hero, sheet) = Hero(id: "pas6");

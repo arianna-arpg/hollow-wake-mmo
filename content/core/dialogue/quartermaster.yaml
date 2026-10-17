@@ -14,6 +14,11 @@ entries:
         choices:
           - { id: work, text: Any work going?, goto: work }
           - { id: trade, text: Show me what you have., effects: [ { type: open_vendor, vendor: quartermaster } ], goto: trading }
+          - id: wardens
+            text: They say the Holdfast keep the wells.
+            when: 'has("calling.holdfast") && !has("flag.warden_oath")'
+            effects: [ { type: set_flag, flag: warden_oath }, { type: grant_points, currency: vocation, amount: 2 } ]
+            goto: wardens
           - { id: bye, text: Nothing for now., end: true }
 
       work:
@@ -69,6 +74,11 @@ entries:
         line: "There. Now you are of the Hallows, for whatever that is worth. She teaches those who listen."
         choices:
           - { id: back, text: I am listening., goto: greet }
+
+      wardens:
+        line: "Some of us do. Swear it, then: the wells before your own hide. The oath teaches what it asks."
+        choices:
+          - { id: back, text: I swear it., goto: greet }
 
       trading:
         line: "Coin first, questions after."

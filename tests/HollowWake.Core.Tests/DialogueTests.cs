@@ -68,7 +68,8 @@ public class DialogueTests
         var view = View(sim, hero);
         Assert.Equal("Quartermaster", view.Speaker);
         Assert.Contains("Odile", view.Line);
-        Assert.Equal(new[] { "work", "trade", "bye" }, view.Choices.Select(c => c.Id));
+        // A Holdfast is also asked about the wardens, the oath that opens their vocation.
+        Assert.Equal(new[] { "work", "trade", "wardens", "bye" }, view.Choices.Select(c => c.Id));
         Assert.Contains("met_quartermaster", sim.World.Get<QuestLog>(hero)!.Flags);
 
         var dialogues = sim.Service<DialogueService>();
