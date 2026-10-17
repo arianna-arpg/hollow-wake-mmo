@@ -178,7 +178,7 @@ internal sealed class AreaHandler : IEffectHandler
         Free = OcclusionFree(ctx, p["occlusion"]),
     };
 
-    private sealed class Effect : CompiledEffect
+    private sealed class Effect : CompiledEffect, IDeliveryPlanSource
     {
         public required Shape Shape;
         public Expr? Radius;
@@ -197,7 +197,7 @@ internal sealed class AreaHandler : IEffectHandler
         /// <summary>Strikes through walls and rising ground (<c>occlusion: free</c>).</summary>
         public bool Free;
 
-        public override void Execute(EffectContext ctx)
+        private ResolvedAreaPlan ResolvePlan(EffectContext ctx)
         {
             var center = Center(ctx, CenterMode ?? (Shape.Anchored ? "source" : "focus"));
             var radius = (float)Math.Max(0.1, ParamOrAttr(ctx, Radius, "area.radius", 2));
@@ -221,20 +221,42 @@ internal sealed class AreaHandler : IEffectHandler
             var size = SizeOf(ctx, Shape, radius, Angle, Width, Inner, scaleAngle: true);
             var facing = Facing(ctx);
             var occluded = Occluded(ctx, Free);
+            return new ResolvedAreaPlan(Shape, size, anchor, facing, CenterMode ?? (Shape.Anchored ? "source" : "focus"),
+                Filter, IncludeCenter ? Entity.None : ctx.Target, occluded, Require is not null, MaxTargets is not null);
+        }
+
+        public DeliveryForecast DescribeDelivery(EffectContext ctx)
+        {
+            // Observation must not initialize the caller's lazy scope and freeze its time/distance.
+            // Sample live inputs in a detached context; never advance either shared random stream.
+            ctx = ctx.Fork();
+            var inputs = new ForecastInputs(ctx);
+            if (!inputs.ParameterOrAttribute(Radius, "area.radius") || !inputs.Expression(Angle) ||
+                Shape.HasAngle && !inputs.WeaveAttribute("area.angle") ||
+                Shape.HasWidth && !inputs.ParameterOrAttribute(Width, "area.width") ||
+                !inputs.Expression(Inner) || Shape.Anchored && ctx.Tags.Has("melee") && !inputs.WeaveAttribute("melee.reach") ||
+                !Free && !inputs.WeaveAttribute("phasing"))
+                return DeliveryForecast.Unavailable(inputs.Failure ?? "unavailable_inputs");
+            try
+            {
+                var plan = ResolvePlan(ctx);
+                return plan.IsFinite ? new DeliveryForecast(plan, null) : DeliveryForecast.Unavailable("non_finite_geometry");
+            }
+            catch (ExprEvalException) { return DeliveryForecast.Unavailable("unresolved_expression"); }
+            catch (AttributeCycleException) { return DeliveryForecast.Unavailable("cyclic_attribute_dependency"); }
+            catch (ArithmeticException) { return DeliveryForecast.Unavailable("invalid_expression"); }
+            catch (ArgumentException) { return DeliveryForecast.Unavailable("invalid_expression"); }
+        }
+
+        public override void Execute(EffectContext ctx)
+        {
+            var plan = ResolvePlan(ctx);
             var targets = Rent();
             try
             {
-                foreach (var (e, pos, _) in ctx.Sim.Spatial.Within(anchor, Shape.Reach(size)))
+                foreach (var (e, pos, _) in ctx.Sim.Spatial.Within(plan.Anchor, plan.Reach, plan.HeightTolerance))
                 {
-                    if (!Shape.Contains(size, new Vector2(pos.X - anchor.X, pos.Y - anchor.Y), facing, 0))
-                    {
-                        continue;
-                    }
-                    if (!Passes(ctx, e, Filter) || (!IncludeCenter && e == ctx.Target))
-                    {
-                        continue;
-                    }
-                    if (occluded && !LineOfSight.Clear(ctx.Sim.Terrain, anchor + Eye, pos + Eye))
+                    if (!plan.IsCandidate(ctx, e, pos))
                     {
                         continue;
                     }
@@ -253,7 +275,7 @@ internal sealed class AreaHandler : IEffectHandler
                 if (MaxTargets is not null)
                 {
                     var max = (int)Math.Round(ctx.Eval(MaxTargets, targets.Count));
-                    Picks.Keep(ctx, targets, Math.Max(0, max), Pick, anchor);
+                    Picks.Keep(ctx, targets, Math.Max(0, max), Pick, plan.Anchor);
                 }
                 var deeper = ctx.Deeper();
                 foreach (var t in targets)
@@ -265,7 +287,7 @@ internal sealed class AreaHandler : IEffectHandler
             {
                 Return(targets);
             }
-            Echoes(ctx, center, radius);
+            Echoes(ctx, plan.Anchor, plan.Size.Radius);
         }
 
         /// <summary>Aftershocks around the area and pulse repeats where it stood, from the weave's area.scatter and area.pulses.</summary>
