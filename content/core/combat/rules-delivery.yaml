@@ -1,0 +1,37 @@
+# Delivery rules: how projectiles fork, chain, home and return, how placements echo, and how shoves
+# carry and settle. Distances are world units, angles degrees, times seconds.
+kind: rules
+entries:
+  - id: delivery
+    values:
+      # A spent projectile with forks splits into this many children, fanned this many degrees each side.
+      fork_children: 2
+      fork_angle: 30
+      # A spent projectile with chains turns toward the nearest foe it has not struck within this range.
+      chain_range: 8
+      # Homing flights look for a quarry this far around them, this often.
+      homing_radius: 10
+      homing_reacquire: 0.25
+      # Accelerations never slow a flight below this speed.
+      min_speed: 0.5
+      # A returning flight is home within this distance; one still out this long after turning ends.
+      return_arrive: 0.6
+      return_max_seconds: 6
+      # A lobbed flight keeps this share of its fall speed when it bounces.
+      bounce_restitution: 0.6
+      # Defaults for projectile parameters content leaves out.
+      salvo_interval: 0.15
+      wave_amplitude: 0.6
+      orbit_radius: 2.5
+      # Aftershocks are this much smaller than the area that set them off and follow it this far apart.
+      aftershock_scale: 0.5
+      aftershock_delay: 0.15
+      # Pulse repeats of an area follow it this far apart.
+      pulse_interval: 0.4
+      # Seeking fields look for a foe this far around them.
+      seek_radius: 8
+      # Impulses decay by this rate per second and settle below this speed; a shove still this fast when
+      # something stops it is a collision.
+      impulse_decay: 8
+      impulse_min: 0.3
+      collision_speed: 2

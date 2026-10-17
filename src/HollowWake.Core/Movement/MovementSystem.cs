@@ -36,6 +36,11 @@ public sealed class MovementSystem : SimSystem
                 m.Stop();
                 continue;
             }
+            if (m.Displacement is not null)
+            {
+                // A dash, leap or blink carries the body; the displacement system moves it until it lands.
+                continue;
+            }
             var stats = sim.World.Get<Stats>(e);
             // A cast keeps the fraction of speed its cast state says: zero roots, one moves freely.
             var castFactor = sim.World.Get<WeaveBook>(e)?.Casting?.MoveFactor ?? 1f;
@@ -229,9 +234,15 @@ public sealed class MovementSystem : SimSystem
     }
 
     /// <summary>Walks a straight segment and returns the furthest reachable point, for dashes and teleports.</summary>
-    public static Vector3 ResolveDestination(Simulation sim, Vector3 from, Vector3 to)
+    public static Vector3 ResolveDestination(Simulation sim, Vector3 from, Vector3 to) => ResolveDestination(sim, from, to, throughPlaced: false);
+
+    /// <summary>
+    /// <see cref="ResolveDestination(Simulation, Vector3, Vector3)"/>; with <paramref name="throughPlaced"/> the
+    /// cells placed things block (trees, veins) do not stop it, for phasing dashes. Walls and cliffs still do.
+    /// </summary>
+    public static Vector3 ResolveDestination(Simulation sim, Vector3 from, Vector3 to, bool throughPlaced)
     {
-        var blocked = sim.TryService<BlockedCells>(out var bc) ? bc : null;
+        var blocked = !throughPlaced && sim.TryService<BlockedCells>(out var bc) ? bc : null;
         var stepUp = sim.Content.Rules.Number("move.step_up", 0.6) + 0.6;
         var delta = to - from;
         var length = new Vector2(delta.X, delta.Y).Length();
