@@ -1,0 +1,68 @@
+# Minion glyphs: investment in what a summon raises, contract terms, the resonant key that lets a summon's
+# glyphs board its minions' own weaves, riders on birth, and kills that raise the slain.
+kind: glyphs
+entries:
+  - id: pack_fury
+    name: Pack Fury
+    description: Your minions hit much harder. The summoning costs more.
+    requires_mechanisms: [summon]
+    color: "#9c3f3f"
+    modifiers:
+      - { attribute: minion.damage, form: increased, value: 0.3 }
+      - { attribute: cost, form: increased, value: 0.15 }
+    per_level:
+      - { attribute: minion.damage, form: increased, value: 0.03 }
+
+  - id: thick_hide
+    name: Thick Hide
+    description: Your minions have more life.
+    requires_mechanisms: [summon]
+    color: "#9c8b72"
+    modifiers:
+      - { attribute: minion.life, form: increased, value: 0.4 }
+    per_level:
+      - { attribute: minion.life, form: increased, value: 0.04 }
+
+  - id: soul_tether
+    name: Soul Tether
+    description: A contract's fallen return sooner.
+    requires_mechanisms: [contract]
+    color: "#5a4a7a"
+    modifiers:
+      - { attribute: minion.respawn_time, form: increased, value: -0.4 }
+
+  - id: resonant_key
+    name: Resonant Key
+    description: The summoning's other glyphs board its minions' own weaves wherever they fit.
+    requires_mechanisms: [summon]
+    adds_mechanisms: [resonance]
+    color: "#b08ae8"
+    modifiers:
+      - { attribute: cost, form: increased, value: 0.1 }
+
+  - id: crew_frenzy
+    name: Crew Frenzy
+    description: Quicker hands. Beside a Resonant Key, the minions' hands too.
+    requires: [spell, attack]
+    color: "#3aa6d8"
+    modifiers:
+      - { attribute: attack.speed, form: increased, value: 0.2 }
+      - { attribute: cast.speed, form: increased, value: 0.2 }
+
+  - id: fervent_birth
+    name: Fervent Birth
+    description: What you summon is born hasted.
+    requires_mechanisms: [summon]
+    color: "#b58cff"
+    hooks:
+      on_birth:
+        - { type: apply_status, status: hasted, duration: 6 }
+
+  - id: reaping
+    name: Reaping
+    description: Those this weave kills rise to serve you for a while.
+    requires: [spell, attack]
+    color: "#5a4a7a"
+    hooks:
+      on_kill:
+        - { type: summon, from_corpse: target, count: 1, max_active: 3, group: reaped, duration: 20 }

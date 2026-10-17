@@ -1,0 +1,100 @@
+# Summoning forms: binding contracts, raising the dead, rites at a point, placing devices, laying snares,
+# raising domes and ordering minions. Their preset weaves carry the summon, deploy and order effects; the
+# summon form itself lives with the other forms.
+kind: forms
+entries:
+  - id: bind
+    name: Bind
+    description: A binding contract. Its minions stay while their price is held, and return when they fall. Weave it again to let them go.
+    targeting: self
+    cast_mode: cast
+    cast_time: 1.0
+    costs: { mana: 12 }
+    cooldown: 3
+    attributes: { range: 0, summon.count: 1, summon.max: 1 }
+    mechanisms: [summon, spell]
+    tags: [spell, summon, persistent]
+    max_glyphs: 3
+
+  - id: raise
+    name: Raise
+    description: Raise the dead where you point, as what they were.
+    targeting: ground
+    cast_mode: cast
+    cast_time: 0.9
+    costs: { mana: 16 }
+    cooldown: 1
+    attributes: { range: 10, summon.count: 1, summon.max: 3 }
+    mechanisms: [summon, spell]
+    tags: [spell, summon, corpse]
+    max_glyphs: 3
+    ai: { role: summon, preferred_range: 6, weight: 0.5 }
+
+  - id: rite
+    name: Rite
+    description: A rite worked at a point; what it does is the weave's own.
+    targeting: ground
+    cast_mode: cast
+    cast_time: 0.6
+    costs: { mana: 8 }
+    cooldown: 2
+    attributes: { range: 10 }
+    mechanisms: [spell]
+    tags: [spell, rite]
+    min_threads: 0
+    max_glyphs: 2
+
+  - id: totem
+    name: Totem
+    description: Plant a device that fights beside you.
+    targeting: ground
+    cast_mode: cast
+    cast_time: 0.8
+    costs: { mana: 14 }
+    cooldown: 2
+    attributes: { range: 8, summon.count: 1, summon.max: 2, duration: 12 }
+    mechanisms: [construct, spell, duration]
+    tags: [spell, construct, totem]
+    max_glyphs: 3
+    ai: { role: summon, preferred_range: 6, weight: 0.5 }
+
+  - id: snare
+    name: Snare
+    description: Lay a snare that springs on the first foe to step near.
+    targeting: ground
+    cast_mode: instant
+    costs: { stamina: 10 }
+    cooldown: 1.5
+    attributes: { range: 6, summon.count: 1, summon.max: 3, duration: 20 }
+    mechanisms: [construct, duration]
+    tags: [trap, construct, mobile]
+    min_threads: 0
+    max_threads: 1
+    max_glyphs: 2
+
+  - id: dome
+    name: Dome
+    description: Raise a dome that catches what flies at you.
+    targeting: self
+    cast_mode: cast
+    cast_time: 0.6
+    costs: { mana: 18 }
+    cooldown: 10
+    attributes: { range: 0, summon.count: 1, summon.max: 1, duration: 8, area.radius: 3.5 }
+    mechanisms: [construct, spell, duration]
+    tags: [spell, construct, dome]
+    max_glyphs: 2
+
+  - id: command
+    name: Command
+    description: An order to your minions, given where you point.
+    targeting: ground
+    cast_mode: instant
+    costs: { mana: 6 }
+    cooldown: 6
+    attributes: { range: 30 }
+    mechanisms: [orders]
+    tags: [minion, command, mobile]
+    min_threads: 0
+    max_threads: 1
+    max_glyphs: 2
