@@ -172,6 +172,8 @@ export interface PaneInput {
   chips: number;
   chipHeight: number;
   railTop: number;
+  /** A book narrower than it would like takes the room beside the core pane down to this before it stands over it. */
+  minWidth?: number;
 }
 
 export interface WorkspaceRects {
@@ -205,7 +207,13 @@ export function paneLayout(i: PaneInput): WorkspaceRects {
   const roomRight = right(area) - right(core);
   const pagesLeft = roomLeft >= roomRight;
   const beside = (left: boolean, width: number): Box => {
-    const w = Math.min(width, area.w);
+    let w = Math.min(width, area.w);
+    // Narrower than it would like still beats laid over the core pane: down to the minimum width.
+    const room = (left ? roomLeft : roomRight) - gap;
+    const min = i.minWidth ?? 0;
+    if (min > 0 && room < w && room >= min) {
+      w = room;
+    }
     return clampInto({ x: left ? core.x - gap - w : right(core) + gap, y: core.y, w, h: core.h }, area);
   };
   const fits = (left: boolean, width: number) => (left ? roomLeft : roomRight) >= width + gap;

@@ -1,0 +1,150 @@
+/* The target plate, notices, combat text, the chat and the connection overlay (overlay.ts). */
+
+.target-plate {
+  position: absolute;
+  padding: 7px 14px 8px;
+  text-align: center;
+  pointer-events: none !important;
+}
+
+.target-plate.emphasised {
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.5), 0 0 0 1px var(--edge-dark), inset 0 0 0 var(--bevel) color-mix(in srgb, var(--accent) 55%, transparent), inset 0 0 0 calc(var(--bevel) + 1px) var(--edge-dark);
+}
+
+.plate-name {
+  font-family: var(--font-title);
+  font-size: var(--size-title);
+  font-weight: var(--weight-title);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.plate-use {
+  font-size: calc(var(--size-body) - 2px);
+}
+
+.plate-bar {
+  position: relative;
+  height: 14px;
+  margin-top: 4px;
+  border-radius: 2px;
+  background: var(--well);
+  box-shadow: inset 2px 2px 0 var(--edge-dark);
+  overflow: hidden;
+}
+
+.plate-life {
+  position: absolute;
+  left: 2px;
+  top: 2px;
+  bottom: 2px;
+  max-width: calc(100% - 4px);
+  background: linear-gradient(180deg, color-mix(in srgb, var(--life) 70%, white) 0 40%, var(--life) 40%);
+}
+
+.plate-ward {
+  position: absolute;
+  left: 2px;
+  top: 2px;
+  height: 3px;
+  max-width: calc(100% - 4px);
+}
+
+.plate-life-text {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-size: calc(var(--size-num) - 2px);
+  color: #fff;
+  text-shadow: 0 0 2px #000, 0 0 2px #000;
+}
+
+.plate-statuses {
+  display: flex;
+  justify-content: center;
+  gap: 3px;
+  margin-top: 4px;
+}
+
+.notices {
+  z-index: 4;
+}
+
+.top-notice {
+  position: absolute;
+  left: 0;
+  top: 104px;
+  text-align: center;
+  font-family: var(--font-title);
+  font-size: calc(var(--size-title) + 5px);
+  font-weight: var(--weight-title);
+  text-shadow: 0 0 4px #000, 0 0 3px #000, 0 1px 3px #000;
+  pointer-events: none !important;
+}
+
+.floater {
+  position: absolute;
+  left: 0;
+  top: 0;
+  font-size: calc(var(--size-num) + 3px);
+  font-weight: 700;
+  white-space: nowrap;
+  text-shadow: 0 0 3px #000, 0 0 3px #000, 0 1px 2px #000;
+  pointer-events: none !important;
+  will-change: transform, opacity;
+}
+
+.floater.big {
+  font-size: calc(var(--size-title) + 6px);
+}
+
+.chat-pane {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 10px 10px 9px;
+  opacity: 0.94;
+  background-color: color-mix(in srgb, var(--pane) 78%, transparent);
+}
+
+.chat-log {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  font-size: calc(var(--size-body) - 1px);
+  user-select: text;
+  -webkit-user-select: text;
+}
+
+.chat-line {
+  overflow-wrap: anywhere;
+}
+
+.chat-line.k-combat {
+  color: var(--ink-muted);
+}
+
+.chat-line.k-system {
+  color: var(--good);
+}
+
+.ui-root .chat-input {
+  flex: none;
+  width: 100%;
+}
+
+.net-overlay {
+  position: absolute;
+  right: 12px;
+  top: 8px;
+  color: var(--label);
+  text-shadow: 0 0 3px #000, 0 0 2px #000;
+  pointer-events: none !important;
+}
+
+.reduce-motion .floater {
+  transition: none;
+}

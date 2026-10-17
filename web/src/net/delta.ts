@@ -3,8 +3,9 @@ import type { EntityDelta, EntityState } from './protocol';
 /**
  * What a client does with an entity delta, exactly as EntityDelta.ApplyTo in src/HollowWake.Protocol/Messages.cs:
  * the known state with every field the delta carries replaced. An absent field is unchanged; the strings that can
- * become empty (pattern, look, faction, rarity, interactable, casting) arrive as "" when they are cleared; flags and
- * statuses arrive whole; resources and their maxima carry only the entries that changed.
+ * become empty (pattern, look, faction, rarity, interactable, casting, shape) arrive as "" when they are cleared, and a
+ * cleared shape takes its size with it; flags and statuses arrive whole; resources and their maxima carry only the
+ * entries that changed.
  */
 export function applyDelta(state: EntityState, delta: EntityDelta): EntityState {
   const cleared = (value: string | undefined, before: string | undefined) => (value === undefined ? before : value.length === 0 ? undefined : value);
@@ -34,5 +35,9 @@ export function applyDelta(state: EntityState, delta: EntityDelta): EntityState 
     vx: delta.vx ?? state.vx,
     vy: delta.vy ?? state.vy,
     vz: delta.vz ?? state.vz,
+    shape: cleared(delta.shape, state.shape),
+    shape_size: delta.shape === '' ? undefined : delta.shape_size ?? state.shape_size,
+    heading: delta.heading ?? state.heading,
+    spin: delta.spin ?? state.spin,
   };
 }

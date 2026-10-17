@@ -1,0 +1,194 @@
+/* The core pane, its rail, the doll and the summary (core.ts). */
+
+.core {
+  position: absolute;
+  z-index: 10;
+}
+
+/* The books draw over the core pane: on a screen too narrow for both, the leaf the player is reading is on top. */
+.pane.book {
+  z-index: 11;
+}
+
+.core > .pane {
+  position: absolute;
+}
+
+.core-top {
+  display: flex;
+  gap: 14px;
+  margin-bottom: 10px;
+}
+
+.doll {
+  position: relative;
+  flex: none;
+}
+
+.doll-slot {
+  position: absolute;
+  border-radius: 2px;
+  background: color-mix(in srgb, var(--inset) 90%, transparent);
+  box-shadow: inset 2px 2px 0 var(--edge-dark), inset -1px -1px 0 color-mix(in srgb, var(--edge) 40%, transparent);
+  display: grid;
+  place-items: center;
+}
+
+.doll-slot.empty .doll-glyph {
+  color: color-mix(in srgb, var(--ink-muted) 22%, transparent);
+}
+
+.doll-slot.taken .doll-glyph {
+  color: color-mix(in srgb, var(--ink-muted) 50%, transparent);
+}
+
+.doll-slot.drop-fit {
+  outline: 2px solid var(--state-fit, #7fd47a);
+  outline-offset: -1px;
+}
+
+.doll-slot.drop-swap {
+  outline: 2px solid var(--state-swap, #e8c25a);
+  outline-offset: -1px;
+}
+
+.core-summary {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.core-level {
+  font-family: var(--font-title);
+  font-size: var(--size-title);
+  font-weight: var(--weight-title);
+}
+
+[data-frame='stone'] .core-level {
+  font-variant: small-caps;
+}
+
+.xp-bar {
+  position: relative;
+  height: 10px;
+  margin: 4px 0 2px;
+}
+
+.xp-fill {
+  position: absolute;
+  left: 2px;
+  top: 2px;
+  bottom: 2px;
+  max-width: calc(100% - 4px);
+  background: var(--accent);
+}
+
+.core-xp {
+  font-size: calc(var(--size-num) - 1px);
+  margin-bottom: 6px;
+}
+
+.core-points {
+  font-size: calc(var(--size-body) - 1px);
+}
+
+.core-attr {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: calc(var(--size-body) - 1px);
+}
+
+.rail {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding-bottom: 10px;
+  border-radius: var(--corner);
+  background: color-mix(in srgb, var(--pane) 75%, black);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.45), 0 0 0 1px var(--edge-dark), inset 0 0 0 var(--bevel) color-mix(in srgb, var(--edge) 55%, transparent), inset 0 0 0 calc(var(--bevel) + 1px) var(--edge-dark);
+}
+
+.core.rail-left .rail {
+  left: 0;
+  right: auto;
+}
+
+[data-frame='brass'] .rail {
+  background: color-mix(in srgb, var(--edge) 55%, black);
+}
+
+.rail-ribbons,
+.rail-chips {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 4px;
+  padding: 0 4px;
+}
+
+.ribbon {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 2px;
+  padding: 5px 0 0;
+  border: none;
+  border-radius: 2px;
+  background: var(--well);
+  box-shadow: inset 2px 2px 0 var(--edge-dark), inset -1px -1px 0 color-mix(in srgb, var(--edge) 40%, transparent);
+  color: var(--label);
+  cursor: pointer;
+}
+
+.ribbon:hover:not(.sealed) {
+  outline: 1px solid color-mix(in srgb, var(--accent) 45%, transparent);
+  outline-offset: -1px;
+}
+
+.ribbon.showing {
+  background: color-mix(in srgb, var(--well) 75%, var(--accent));
+  color: var(--accent);
+  box-shadow: inset 0 0 0 2px var(--accent);
+}
+
+.ribbon.sealed {
+  color: var(--state-sealed, var(--ink-muted));
+  cursor: default;
+}
+
+.ribbon-key {
+  font-size: calc(var(--size-num) - 2px);
+  opacity: 0.8;
+}
+
+.ribbon-badge {
+  position: absolute;
+  right: 1px;
+  top: 2px;
+  transform: scale(0.85);
+}
+
+.chip {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: 2px;
+  background: color-mix(in srgb, var(--well) 80%, transparent);
+  box-shadow: inset 2px 2px 0 var(--edge-dark);
+  color: var(--label);
+  font-size: calc(var(--size-num) - 2px);
+}
+
+.chip-glyph {
+  color: var(--accent);
+}

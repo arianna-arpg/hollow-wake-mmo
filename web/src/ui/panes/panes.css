@@ -1,0 +1,372 @@
+/*
+ * The world panes (quest offers, a conversation, a vendor, a station) and the Options pane in the theme's look:
+ * every colour is a custom property Skin.apply sets on the interface root, so a theme change restyles them with
+ * no rule here. The desktop client draws the same panes in UI/WorldPanes/WorldPanes.cs and
+ * UI/Pages/OptionsPane.cs.
+ */
+
+/* ---------------------------------------------------------------- world panes */
+
+.world-pane {
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.world-pane .pane-column {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+  padding: 4px 6px 8px 4px;
+}
+
+.dialogue-pane .pane-column {
+  gap: 8px;
+}
+
+.vendor-pane .pane-column {
+  gap: 4px;
+}
+
+.world-pane .pane-heading,
+.world-pane .pane-heading:first-child {
+  margin: 4px 0 0;
+}
+
+.pane-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.pane-grow {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.pane-swatch {
+  position: relative;
+  flex: none;
+}
+
+.pane-swatch .item-tile {
+  inset: 2px;
+}
+
+.pane-price {
+  flex: none;
+  white-space: nowrap;
+}
+
+.pane-sub {
+  padding-left: 18px;
+  font-size: calc(var(--size-body) - 1px);
+  white-space: pre-wrap;
+}
+
+.pane-small {
+  font-size: calc(var(--size-body) - 1px);
+}
+
+.pane-rule {
+  flex: none;
+  height: 1px;
+  margin: 3px 0;
+  background: var(--edge-dark);
+  box-shadow: 0 1px 0 color-mix(in srgb, var(--edge) 30%, transparent);
+}
+
+.quest-entry,
+.station-recipe,
+.station-service {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.quest-entry {
+  align-items: flex-start;
+}
+
+.btn.quest-button,
+.btn.dialogue-choice {
+  justify-content: flex-start;
+  max-width: 100%;
+  text-align: left;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+.btn.dialogue-choice {
+  width: 100%;
+}
+
+.dialogue-speaker {
+  font-family: var(--font-title);
+  font-size: var(--size-title);
+  font-weight: var(--weight-title);
+  color: var(--accent);
+  overflow-wrap: anywhere;
+}
+
+[data-frame='stone'] .dialogue-speaker {
+  font-variant: small-caps;
+}
+
+.dialogue-line {
+  font-size: calc(var(--size-body) + 1px);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.recipe-name {
+  font-family: var(--font-title);
+  font-weight: var(--weight-title);
+}
+
+.vendor-pane.drop-hover {
+  outline: 2px solid var(--state-fit, var(--good));
+  outline-offset: -2px;
+}
+
+/* ---------------------------------------------------------------- options */
+
+.options-pane {
+  box-sizing: border-box;
+  display: flex;
+  gap: 12px;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+}
+
+.options-side {
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 170px;
+  min-height: 0;
+}
+
+.options-pages {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+.btn.options-page {
+  justify-content: flex-start;
+  text-align: left;
+}
+
+.options-fill {
+  flex: 1 1 auto;
+}
+
+.options-main {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+  min-height: 0;
+}
+
+.options-top {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.options-search {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.options-list {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-height: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  padding-right: 6px;
+}
+
+.options-group {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 2px;
+}
+
+.options-group-title {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-family: var(--font-title);
+  font-size: calc(var(--size-title) - 2px);
+  font-weight: var(--weight-title);
+  color: var(--accent);
+  overflow-wrap: anywhere;
+}
+
+[data-frame='stone'] .options-group-title {
+  font-variant: small-caps;
+}
+
+.options-group-desc {
+  font-size: calc(var(--size-body) - 2px);
+}
+
+.options-gap {
+  flex: none;
+  height: 6px;
+}
+
+.option-row {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 3px 4px;
+  border-radius: var(--corner);
+}
+
+.option-row:hover {
+  background: color-mix(in srgb, var(--hover) 45%, transparent);
+}
+
+.option-text {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.option-name {
+  overflow-wrap: anywhere;
+}
+
+.option-row.unmet .option-name {
+  color: var(--ink-muted);
+}
+
+.option-desc,
+.option-reason {
+  font-size: calc(var(--size-body) - 3px);
+  overflow-wrap: anywhere;
+}
+
+.option-desc {
+  color: var(--ink-muted);
+}
+
+.option-reason {
+  color: var(--bad);
+}
+
+.option-control {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 240px;
+}
+
+.option-row[data-kind='key'] .option-control {
+  width: 300px;
+  gap: 4px;
+}
+
+.option-control select,
+.option-control input[type='text'] {
+  flex: 1 1 auto;
+  width: 100%;
+  min-width: 0;
+}
+
+.option-control input[type='range'] {
+  flex: 1 1 auto;
+  min-width: 0;
+  margin: 0;
+}
+
+.option-control input[type='range']:disabled,
+.option-control input[type='text']:disabled,
+.option-control input[type='color']:disabled,
+.option-control select:disabled {
+  opacity: 0.55;
+}
+
+.option-value {
+  flex: none;
+  width: 64px;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.option-control input[type='color'] {
+  width: 64px;
+  height: 26px;
+  padding: 2px;
+  border: 1px solid var(--edge-dark);
+  border-radius: var(--corner);
+  background: var(--inset);
+  cursor: pointer;
+}
+
+.btn.key-slot {
+  display: block;
+  flex: 1 1 0;
+  min-width: 0;
+  padding: 3px 6px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: center;
+}
+
+.btn.key-slot.capturing {
+  border-color: var(--accent);
+  background: var(--inset);
+  color: var(--accent);
+}
+
+/* A row's reset keeps its place while hidden, so the controls stay in one column. */
+.option-row .row-reset[hidden] {
+  display: inline-flex !important;
+  visibility: hidden;
+}
+
+.conflict {
+  flex: none;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 8px;
+  border: 1px solid var(--bad);
+  border-radius: var(--corner);
+  background: color-mix(in srgb, var(--bad) 12%, transparent);
+}
+
+.conflict-text {
+  flex: 1 1 200px;
+  min-width: 0;
+  color: var(--bad);
+}
+
+.options-notice {
+  flex: none;
+  min-height: 1.3em;
+  font-size: calc(var(--size-body) - 1px);
+  color: var(--accent);
+}

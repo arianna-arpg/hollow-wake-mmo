@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { bundledKinds, loadNames, loadUi, rankOf, weaveIcon } from './content';
+import { bundledKinds, loadNames, loadUi, lookOf, PLAIN_LOOK, rankOf, statusLookOf, weaveIcon } from './content';
 import { badgeText, foldTray, keyLabelOf, keyMatches, parseKeyName, servedPages, trayBadge, webCode } from './menu';
 import { buildSheet, formatValue } from './sheet';
 
@@ -39,11 +39,30 @@ describe('the interface content', () => {
     expect(names.slots.some((s) => s.id === 'main_hand')).toBe(true);
     expect(names.threadOfStatus.get('burning')).toBe('ember');
     const ui = loadUi(kinds);
-    for (const status of names.statuses.keys()) {
-      expect(ui.icons.statuses[status], status).toBeDefined();
+    // A status the rows show wears a glyph: its meta names one, or the icon set maps it.
+    for (const status of [...names.statuses.keys()].filter((s) => !lookOf(names, s).hidden)) {
+      const icon = lookOf(names, status).icon;
+      expect((icon !== null && ui.icons.icons[icon] !== undefined) || ui.icons.statuses[status] !== undefined, status).toBe(true);
     }
-    const notable = names.passives.find((p) => p.kind === 'notable');
+    // A generated choice group deals one option per visible attribute of its category.
+    const might = names.choices.get('attributes')?.options.find((o) => o.id === 'might');
+    expect(might?.lines).toEqual(['+4 Might']);
+    const notable = names.passives.find((p) => p.kind === 'notable' && p.choice === null);
     expect(notable?.lines.length).toBeGreaterThan(0);
+  });
+
+  it('presents statuses from their content meta block', () => {
+    const names = loadNames(kinds);
+    expect(lookOf(names, 'poise_rearming').hidden).toBe(true);
+    expect(lookOf(names, 'burning').hidden).toBe(false);
+    expect(lookOf(names, 'burning').color).toBe('#e8622a');
+    expect(lookOf(names, 'no_such_status')).toEqual(PLAIN_LOOK);
+    // The frame follows the status's beneficial flag unless meta names a kind.
+    expect(lookOf(names, 'burning').kind).toBe('debuff');
+    expect([...names.statusLooks.values()].some((l) => l.kind === 'buff')).toBe(true);
+    expect(statusLookOf({ id: 'y', beneficial: true, meta: { kind: 'neutral' } }).kind).toBe('neutral');
+    expect(statusLookOf({ id: 'x', meta: { icon: 'flame', color: '#112233', kind: 'debuff', cue: 'pulse' } }))
+      .toEqual({ hidden: false, icon: 'flame', color: '#112233', kind: 'debuff', cue: 'pulse' });
   });
 });
 

@@ -33,9 +33,8 @@
   pointer-events: auto;
 }
 
-.ui-root button,
-.ui-root input,
-.ui-root select {
+/* Controls take the interface's type and ink unless a class says otherwise (no specificity of its own). */
+:where(.ui-root) :where(button, input, select) {
   font-family: inherit;
   font-size: inherit;
   color: inherit;
@@ -644,4 +643,32 @@
 .quick-item:hover {
   background: var(--hover);
   border-color: var(--accent);
+}
+
+/* ---------------------------------------------------------------- the developer's layout rectangles */
+
+.dev-rects {
+  z-index: 90;
+}
+
+.dev-rect {
+  position: absolute;
+  border: 2px solid;
+  pointer-events: none !important;
+}
+
+.dev-rect.cluster-rect {
+  border-color: rgb(255, 77, 77);
+}
+
+.dev-rect.core-rect {
+  border-color: rgb(77, 255, 77);
+}
+
+.dev-rect.page-rect {
+  border-color: rgb(77, 153, 255);
+}
+
+.dev-rect.world-rect {
+  border-color: rgb(255, 230, 77);
 }

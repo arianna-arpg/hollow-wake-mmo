@@ -1,4 +1,4 @@
-import { metric, resolveIcon, type ContentNames, type UiContent, type UiIconSet } from './logic/content';
+import { forStatus, lookOf, metric, resolveIcon, type ContentNames, type UiContent, type UiIconSet } from './logic/content';
 
 /** A colour as numbers from zero to one, read from theme content (#rgb, #rrggbb, #rrggbbaa). */
 export interface Rgba {
@@ -163,6 +163,18 @@ export class Skin {
     }
     const svg = `<svg xmlns='http://www.w3.org/2000/svg' width='512' height='512'>${layers.join('')}</svg>`;
     return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
+  }
+
+  /**
+   * A status's glyph and tint as content presents it: the icon and colour of its meta block (or its own colour),
+   * else the icon set's glyph for it and its Thread's colour, else the accent.
+   */
+  statusFace(status: string): { icon: string; tint: Rgba } {
+    const look = lookOf(this.names, status);
+    const icon = look.icon !== null && this.icons.icons[look.icon] !== undefined ? look.icon : forStatus(this.icons, status);
+    const thread = this.names.threadOfStatus.get(status);
+    const tint = look.color !== null ? parseColor(look.color) : thread !== undefined ? this.thread(thread) : this.surface('accent');
+    return { icon, tint };
   }
 
   /** A glyph of the icon set as an inline SVG, drawn in the current text colour. */

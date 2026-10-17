@@ -23,7 +23,14 @@ export class CameraRig {
   private readonly raycaster = new Raycaster();
   private readonly ndc = new Vector2();
 
-  constructor(private readonly settings: CameraSettings) {
+  private readonly settings: CameraSettings;
+  private readonly baseOrbit: number;
+  private readonly basePitch: number;
+
+  constructor(settings: CameraSettings) {
+    this.settings = { ...settings };
+    this.baseOrbit = settings.orbitSensitivity;
+    this.basePitch = settings.pitchSensitivity;
     this.ortho = new OrthographicCamera(-1, 1, 1, -1, settings.near, settings.far);
     this.perspective = new PerspectiveCamera(settings.thirdFovDegrees, this.aspect, settings.near, settings.far);
     this.mode = settings.mode === 'third_person' ? 'third_person' : 'isometric';
@@ -67,6 +74,26 @@ export class CameraRig {
   toggle(): void {
     this.mode = this.mode === 'isometric' ? 'third_person' : 'isometric';
     this.update(0, true);
+  }
+
+  setMode(mode: CameraMode): void {
+    if (mode !== this.mode) {
+      this.toggle();
+    }
+  }
+
+  /** The camera options: the isometric turn and zoom range, third-person sensitivity, inversion and field of view. */
+  configure(o: { isoRotateStep: number; isoZoomMax: number; sensitivity: number; invert: boolean; fov: number }): void {
+    const s = this.settings;
+    s.isoRotateStepDegrees = o.isoRotateStep;
+    s.isoSizeMax = Math.max(s.isoSizeMin + 1, o.isoZoomMax);
+    this.isoSize = MathUtils.clamp(this.isoSize, s.isoSizeMin, s.isoSizeMax);
+    this.applyOrthoSize();
+    s.orbitSensitivity = this.baseOrbit * o.sensitivity;
+    s.pitchSensitivity = this.basePitch * o.sensitivity * (o.invert ? -1 : 1);
+    s.thirdFovDegrees = o.fov;
+    this.perspective.fov = o.fov;
+    this.perspective.updateProjectionMatrix();
   }
 
   rotateStep(direction: number): void {

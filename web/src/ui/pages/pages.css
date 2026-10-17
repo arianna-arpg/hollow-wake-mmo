@@ -1,0 +1,508 @@
+/*
+ * The development pages' look: the rack, the passive constellation, the character sheet and the container boards,
+ * over the theme's custom properties (interface.css). A page fills its book's body and scrolls itself where the
+ * desktop scrolls. Nothing here names a colour of its own beyond shadows and highlights.
+ */
+
+.leaf-page {
+  position: relative;
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  min-height: 0;
+}
+
+/* The hidden attribute wins over the display a class gives (buttons, flex rows). */
+.leaf-page[hidden],
+.leaf-page [hidden] {
+  display: none !important;
+}
+
+/* ---------------------------------------------------------------- the rack */
+
+.weaves-page {
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.rack-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.rack-seat {
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-height: 78px;
+  box-sizing: border-box;
+  padding-right: 8px;
+  background: color-mix(in srgb, var(--inset) 45%, transparent);
+  border: 1px solid color-mix(in srgb, var(--edge-dark) 50%, transparent);
+}
+
+.rack-seat[data-drop='fit'] {
+  box-shadow: inset 0 0 0 2px var(--state-fit);
+}
+
+.rack-seat[data-drop='swap'] {
+  box-shadow: inset 0 0 0 2px var(--state-swap);
+}
+
+.rack-seat[data-drop='blocked'] {
+  box-shadow: inset 0 0 0 2px var(--state-blocked);
+}
+
+.rack-seat.swap-target {
+  box-shadow: inset 0 0 0 2px var(--accent);
+}
+
+.rack-seat .seat-index {
+  flex: none;
+  box-sizing: border-box;
+  width: 28px;
+  padding-left: 8px;
+  color: var(--ink-muted);
+  font-size: calc(var(--size-num) + 2px);
+}
+
+.rack-seat .seat-glyph {
+  position: relative;
+  flex: none;
+  display: grid;
+  place-items: center;
+  box-sizing: border-box;
+  width: 52px;
+  height: 52px;
+  overflow: hidden;
+  color: var(--label);
+  cursor: grab;
+}
+
+.rack-seat.empty .seat-glyph {
+  cursor: default;
+}
+
+.rack-seat.dormant .seat-glyph {
+  color: var(--state-dormant, var(--ink-muted));
+}
+
+/* A seat whose toggle or contract runs is lit: the well warmed toward the accent, ringed, its halo bright. */
+.rack-seat.active .seat-glyph {
+  background: color-mix(in srgb, var(--well) 78%, var(--accent));
+  box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--accent) 90%, transparent), inset 0 2px 4px rgba(0, 0, 0, 0.45);
+}
+
+.seat-glyph > .seat-halo {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 33px;
+  height: 33px;
+  margin: -16.5px 0 0 -16.5px;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: 0.14;
+  pointer-events: none;
+}
+
+.rack-seat.active .seat-halo {
+  opacity: 0.32;
+}
+
+.rack-seat.dormant .seat-halo {
+  opacity: 0.06;
+}
+
+.seat-glyph > .seat-icon {
+  position: relative;
+}
+
+.seat-glyph > .seat-sweep {
+  position: absolute;
+  inset: 2px;
+  background: conic-gradient(transparent calc(360deg - var(--sweep, 0deg)), color-mix(in srgb, var(--state-cooldown, #000) 60%, transparent) 0);
+  pointer-events: none;
+}
+
+.seat-glyph > .seat-costs {
+  position: absolute;
+  right: 3px;
+  bottom: 1px;
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: flex-end;
+  font-family: var(--font-num);
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1.05;
+  text-shadow: 0 0 3px #000, 0 0 2px #000;
+  pointer-events: none;
+}
+
+.seat-glyph > .seat-face {
+  position: absolute;
+  right: 3px;
+  top: 3px;
+  width: 6px;
+  height: 6px;
+  background: var(--accent);
+  pointer-events: none;
+}
+
+.rack-seat .seat-main {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 6px 8px 6px 12px;
+}
+
+.rack-seat .seat-empty {
+  color: var(--ink-muted);
+}
+
+.rack-seat .seat-name {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-family: var(--font-title);
+  font-size: calc(var(--size-title) - 1px);
+  font-weight: var(--weight-title);
+  color: var(--ink);
+}
+
+.rack-seat.dormant .seat-name {
+  color: var(--state-dormant, var(--ink-muted));
+}
+
+.rack-seat .seat-meta {
+  font-size: calc(var(--size-body) - 2px);
+  color: var(--ink-muted);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.rack-seat.dormant .seat-meta {
+  color: var(--bad, var(--ink-muted));
+}
+
+.rack-seat .seat-sockets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 3px;
+}
+
+.rack-seat .seat-socket {
+  position: relative;
+  display: grid;
+  place-items: center;
+  box-sizing: border-box;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 2px solid var(--edge-dark);
+  background: var(--well);
+}
+
+.rack-seat .seat-socket.drop {
+  box-shadow: 0 0 0 2px var(--state-fit);
+}
+
+.rack-seat .socket-stone {
+  display: grid;
+  place-items: center;
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: var(--well);
+  font-family: var(--font-num);
+  font-size: 9px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.rack-seat .socket-stone.dormant {
+  background: var(--state-dormant, var(--ink-muted));
+}
+
+.rack-seat .seat-preview {
+  flex: 0 0 40%;
+  min-width: 0;
+  align-self: flex-start;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  padding-top: 6px;
+}
+
+.rack-seat .preview-line {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.rack-seat .preview-label {
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-size: calc(var(--size-body) - 3px);
+  color: var(--ink-muted);
+}
+
+.rack-seat .preview-text {
+  flex: none;
+  white-space: nowrap;
+  font-size: calc(var(--size-num) - 1px);
+  color: var(--ink);
+}
+
+/* A seat dragged by its glyph, under the pointer on the interface's top layer. */
+.seat-ghost {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 60;
+  display: grid;
+  place-items: center;
+  box-sizing: border-box;
+  width: 52px;
+  height: 52px;
+  border: 2px solid var(--accent);
+  border-radius: var(--corner);
+  background: color-mix(in srgb, var(--well) 90%, transparent);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.5);
+  pointer-events: none !important;
+}
+
+/* ---------------------------------------------------------------- the passive constellation */
+
+.passives-page {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  overflow: hidden;
+}
+
+.passives-bar {
+  flex: none;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px;
+}
+
+.passives-bar .passives-points {
+  flex: 1 1 auto;
+  min-width: 0;
+  padding: 0 4px;
+  color: var(--accent);
+  white-space: pre-wrap;
+}
+
+.passives-view {
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.passives-canvas {
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  touch-action: none;
+  cursor: grab;
+}
+
+.passives-canvas.over-node {
+  cursor: pointer;
+}
+
+.passives-canvas.panning {
+  cursor: grabbing;
+}
+
+.passives-grafts {
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  max-height: 40%;
+  overflow-y: auto;
+}
+
+.passives-grafts .grafts-heading {
+  font-family: var(--font-title);
+  font-weight: var(--weight-title);
+  color: var(--accent);
+}
+
+.passives-grafts .graft {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.passives-grafts .graft-name {
+  flex: 1 1 auto;
+  min-width: 0;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+
+.passives-grafts .graft-seat {
+  flex: none;
+  max-width: 60%;
+}
+
+.choice-popup {
+  position: absolute;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  box-sizing: border-box;
+  width: 286px;
+  padding: 12px;
+  border-radius: var(--corner);
+  background-color: var(--pane);
+  background-image: var(--surface-texture);
+  background-size: 512px 512px;
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.6), 0 0 0 1px var(--edge-dark), inset 0 0 0 1px var(--edge);
+}
+
+.choice-popup .choice-search {
+  box-sizing: border-box;
+  width: 100%;
+}
+
+.choice-popup .choice-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  height: 220px;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.choice-popup .choice-option {
+  flex: none;
+  justify-content: flex-start;
+  text-align: left;
+  white-space: normal;
+}
+
+.choice-popup .choice-cancel {
+  align-self: flex-start;
+}
+
+/* ---------------------------------------------------------------- the character sheet */
+
+.character-page {
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.char-section {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-bottom: 6px;
+}
+
+.char-section .char-heading {
+  margin: 4px 0 2px;
+  font-size: calc(var(--size-title) - 1px);
+}
+
+.char-section .char-row {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.char-section .char-label {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow-wrap: anywhere;
+  color: var(--ink);
+}
+
+.char-section .char-value {
+  flex: none;
+  color: var(--ink);
+}
+
+.char-section .char-row.quest .char-value {
+  color: var(--ink-muted);
+}
+
+.char-section .char-desc {
+  font-size: calc(var(--size-body) - 3px);
+  color: var(--ink-muted);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.char-section .char-objectives {
+  font-size: calc(var(--size-body) - 2px);
+  color: var(--ink-muted);
+  white-space: pre-line;
+  overflow-wrap: anywhere;
+}
+
+/* ---------------------------------------------------------------- the container boards */
+
+.container-page {
+  overflow: auto;
+}
+
+.container-column {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.container-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.container-tabs .container-tab.locked {
+  opacity: 0.6;
+}
+
+.container-column .container-note,
+.container-column .container-overflow-note {
+  align-self: stretch;
+  color: var(--ink-muted);
+  overflow-wrap: anywhere;
+}
+
+.container-rungs {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.container-rungs .container-rung {
+  font-size: calc(var(--size-body) - 1px);
+  color: var(--ink);
+}
+
+.container-rungs .container-rung.locked {
+  color: var(--ink-muted);
+}

@@ -2,10 +2,16 @@ import {
   BoxGeometry,
   CapsuleGeometry,
   CylinderGeometry,
+  ExtrudeGeometry,
   Group,
   Mesh,
+  MeshBasicMaterial,
   MeshLambertMaterial,
+  Path,
+  Shape,
+  ShapeGeometry,
   SphereGeometry,
+  Vector2,
   Vector3,
   type BufferGeometry,
   type Camera,
@@ -15,12 +21,16 @@ import type { EntityState, Int64 } from '../net/protocol';
 import { linearColor } from './colors';
 import { toThree, type CorePoint } from './coords';
 import { pushSample, sampleAt, lerpAngle, type Sample } from './interpolation';
+import { regionOf, specOf, type ShapeSpec } from './shapes';
 
 /**
  * Placeholder bodies for server entities, chosen by what they are like the desktop client's EntityView:
  * capsules for creatures, a trunk and canopy for trees, boxes for other props and structures, spheres for
- * projectiles, cylinders for drops, fields, markers and founts. Coloured by faction and rarity from config,
- * with a name, level and life bar label kept over each body in screen space.
+ * projectiles, cylinders for drops, fields, markers and founts. A projectile, area or field the server names a
+ * shape for is drawn as that shape (a slab for a projectile, a flat mark for the rest), facing its heading and
+ * turned by its spin; a telegraph is a ground mark that fades in, pulses, and fades out when the strike lands.
+ * Coloured by faction and rarity from config, with a name, level and life bar label kept over each body in
+ * screen space.
  */
 
 interface BodyShape {
@@ -36,6 +46,23 @@ interface BodyShape {
    * its whole place). Null: never under the cursor (ground fields, projectiles in flight).
    */
   pick: { radius: number; height: number } | null;
+  /** Drawn by a delivery shape: faces its heading and spin rather than the body's yaw, and casts no shadow. */
+  shaped?: boolean;
+  /** A telegraph mark: fades in, pulses, and fades out when it goes. */
+  telegraph?: boolean;
+}
+
+/** A shape's region as a mesh on the ground, x along its facing and y to its left; a thickness extrudes it upward. */
+export function shapeGeometry(spec: ShapeSpec, thickness: number): BufferGeometry {
+  const region = regionOf(spec);
+  const outline = new Shape(region.outer.map(([x, y]) => new Vector2(x, y)));
+  for (const hole of region.holes) {
+    outline.holes.push(new Path(hole.map(([x, y]) => new Vector2(x, y))));
+  }
+  const geometry = thickness > 0 ? new ExtrudeGeometry(outline, { depth: thickness, bevelEnabled: false, curveSegments: 4 }) : new ShapeGeometry(outline);
+  // The shape's plane (x, y) lies on the ground as three's (x, -z), and the extrusion rises along y.
+  geometry.rotateX(-Math.PI / 2);
+  return geometry;
 }
 
 const r2 = (n: number) => Math.round(n * 100) / 100;
@@ -88,6 +115,22 @@ export function shapeFor(s: EntityState, palette: EntityPaletteSettings): BodySh
   const color = colorFor(s, palette);
   const radius = s.radius;
   const height = s.height;
+  if (s.shape || look === 'telegraph') {
+    const spec = specOf(s.shape ?? 'circle', s.shape_size, Math.max(0.1, radius));
+    const kind = look === 'telegraph' ? 'telegraph' : look === 'projectile' || s.pattern === 'projectile' ? 'projectile' : 'area';
+    const thickness = kind === 'projectile' ? r2(Math.min(0.4, Math.max(0.12, height * 0.4))) : 0;
+    const key = `shape:${spec.name}:${r2(spec.radius)}:${r2(spec.angle)}:${r2(spec.width)}:${r2(spec.inner)}:${thickness}`;
+    return {
+      key,
+      build: () => shapeGeometry(spec, thickness),
+      color: kind === 'telegraph' ? palette.telegraph : color,
+      opacity: kind === 'telegraph' ? palette.telegraphOpacity : kind === 'projectile' ? 1 : palette.fieldOpacity,
+      lift: kind === 'projectile' ? Math.max(0.1, height * 0.5) - thickness / 2 : kind === 'telegraph' ? 0.07 : 0.05,
+      pick: null,
+      shaped: true,
+      telegraph: kind === 'telegraph',
+    };
+  }
   if (look.startsWith('drop:')) {
     return { key: 'drop', build: () => new CylinderGeometry(0.25, 0.25, 0.25, 12), color, opacity: 1, lift: 0.125, pick: { radius: 0.25, height: 0.25 } };
   }
@@ -161,6 +204,19 @@ export class EntityView {
   private body: Mesh | null = null;
   private canopy: Mesh | null = null;
   private shapeKey = '';
+  /** Drawn by a delivery shape, facing its heading. */
+  private shaped = false;
+  /** A telegraph's own material, whose opacity fades; null for every other body. */
+  private fade: MeshBasicMaterial | null = null;
+  /** A telegraph's fill, growing from its anchor to the whole mark as the strike nears. */
+  private fill: Mesh | null = null;
+  private fillMaterial: MeshBasicMaterial | null = null;
+  private fadeOpacity = 0;
+  private bornAt = 0;
+  /** The server time the client first saw the body, for a telegraph's progress toward its until. */
+  private bornServer = 0;
+  /** When a telegraph's strike landed (it despawned): it fades out from then. */
+  dyingAt: number | null = null;
   /** What the mouse picks; see BodyShape.pick. */
   pickSize: { radius: number; height: number } | null = null;
   private readonly samples: Sample[] = [];
@@ -210,29 +266,69 @@ export class EntityView {
     toThree(state.vx, state.vy, state.vz, this.velocity);
     this.receivedAt = localSeconds;
     if (snap) {
-      this.root.position.copy(this.target);
-      this.root.rotation.y = -state.yaw + Math.PI / 2;
+      this.bornAt = localSeconds;
+      this.bornServer = this.layer.serverNow;
     }
     const shape = shapeFor(state, this.layer.palette);
     if (snap || shape.key !== this.shapeKey || state.dead !== previous.dead || colorFor(state, this.layer.palette) !== colorFor(previous, this.layer.palette)) {
       this.rebuild(shape);
     }
+    if (snap) {
+      this.root.position.copy(this.target);
+      this.root.rotation.y = this.facing(state.yaw);
+    }
     this.refreshLabel();
+  }
+
+  /** The body's turn about the vertical: a shape faces its heading (else the yaw) plus its spin; a body its yaw. */
+  private facing(yaw: number): number {
+    return this.shaped ? (this.state.heading ?? yaw) + (this.state.spin ?? 0) : -yaw + Math.PI / 2;
   }
 
   private rebuild(shape: BodyShape): void {
     const s = this.state;
     this.shapeKey = shape.key;
     this.pickSize = shape.pick;
+    this.shaped = shape.shaped === true;
     const opacity = s.dead ? Math.min(shape.opacity, this.layer.palette.deadOpacity) : shape.opacity;
+    let material: MeshLambertMaterial | MeshBasicMaterial = this.layer.material(shape.color, opacity);
+    if (shape.telegraph) {
+      // A telegraph's opacity is its own to fade, so it takes its own materials: the mark, and its growing fill.
+      this.fade?.dispose();
+      this.fillMaterial?.dispose();
+      this.fade = new MeshBasicMaterial({ color: linearColor(shape.color), transparent: true, opacity: 0, depthWrite: false });
+      this.fillMaterial = new MeshBasicMaterial({ color: linearColor(shape.color), transparent: true, opacity: 0, depthWrite: false });
+      this.fadeOpacity = opacity;
+      material = this.fade;
+      const geometry = this.layer.geometry(shape.key, shape.build);
+      if (this.fill === null) {
+        this.fill = new Mesh(geometry, this.fillMaterial);
+        this.fill.renderOrder = 3;
+        this.root.add(this.fill);
+      } else {
+        this.fill.geometry = geometry;
+        this.fill.material = this.fillMaterial;
+      }
+      this.fill.position.y = shape.lift + 0.01;
+      this.fill.visible = true;
+    } else {
+      this.fade?.dispose();
+      this.fade = null;
+      this.fillMaterial?.dispose();
+      this.fillMaterial = null;
+      if (this.fill !== null) {
+        this.fill.visible = false;
+      }
+    }
     if (this.body === null) {
-      this.body = new Mesh(this.layer.geometry(shape.key, shape.build), this.layer.material(shape.color, opacity));
-      this.body.castShadow = true;
+      this.body = new Mesh(this.layer.geometry(shape.key, shape.build), material);
       this.root.add(this.body);
     } else {
       this.body.geometry = this.layer.geometry(shape.key, shape.build);
-      this.body.material = this.layer.material(shape.color, opacity);
+      this.body.material = material;
     }
+    this.body.castShadow = !this.shaped;
+    this.body.renderOrder = shape.telegraph ? 2 : 0;
     this.body.position.y = shape.lift;
     if (shape.canopy) {
       const c = shape.canopy;
@@ -252,10 +348,11 @@ export class EntityView {
     }
   }
 
-  private refreshLabel(): void {
+  refreshLabel(): void {
     const s = this.state;
     const palette = this.layer.palette;
-    const shown = hasResources(s) || s.interactable != null;
+    // Creatures always wear a label; props wear one while the names-over-props option is on.
+    const shown = hasResources(s) || (s.interactable != null && this.layer.propLabels);
     this.labelShown = shown;
     if (!shown) {
       this.label.style.display = 'none';
@@ -278,20 +375,49 @@ export class EntityView {
   }
 
   frame(dt: number, localSeconds: number, renderServerTime: number, motion: MotionSettings): void {
+    if (this.fade !== null) {
+      // A telegraph fades in, breathes while its strike is coming, its fill growing from the anchor to the whole
+      // mark as the server time nears its until, and fades out once it lands or its time is up.
+      const age = localSeconds - this.bornAt;
+      const reduced = this.layer.reducedMotion;
+      const pulse = reduced ? 1 : 0.78 + 0.22 * Math.sin(age * 6);
+      const fadeIn = Math.min(1, age / 0.35);
+      const until = this.state.until;
+      const span = until !== undefined ? until - this.bornServer : 0;
+      const progress = span > 0.01 ? Math.min(1, Math.max(0, (this.layer.serverNow - this.bornServer) / span)) : 1;
+      if (until !== undefined && this.dyingAt === null && this.layer.serverNow > until + 0.1) {
+        this.dyingAt = localSeconds;
+      }
+      const fadeOut = this.dyingAt === null ? 1 : Math.max(0, 1 - (localSeconds - this.dyingAt) / EntityLayer.fadeSeconds);
+      this.fade.opacity = this.fadeOpacity * 0.55 * fadeIn * fadeOut * pulse;
+      if (this.fill !== null && this.fillMaterial !== null) {
+        const grown = Math.max(0.02, progress);
+        this.fill.scale.set(grown, 1, grown);
+        this.fillMaterial.opacity = this.fadeOpacity * (0.45 + 0.4 * progress) * fadeIn * fadeOut;
+      }
+    }
     if (this.isSelf) {
       // The player's own body leads: last known position plus velocity, smoothed, as the desktop client does.
       const age = Math.min(localSeconds - this.receivedAt, motion.maxExtrapolationMs / 1000);
       const t = 1 - Math.exp(-dt * motion.selfSmoothing);
       const predicted = this.velocity.clone().multiplyScalar(age).add(this.target);
       this.root.position.lerp(predicted, t);
-      this.root.rotation.y = lerpAngle(this.root.rotation.y, -this.state.yaw + Math.PI / 2, t);
+      this.root.rotation.y = lerpAngle(this.root.rotation.y, this.facing(this.state.yaw), t);
+      return;
+    }
+    if (this.dyingAt !== null) {
       return;
     }
     const pose = sampleAt(this.samples, renderServerTime, motion.maxExtrapolationMs / 1000);
     if (pose !== null) {
       toThree(pose.x, pose.y, pose.z, this.root.position);
-      this.root.rotation.y = -pose.yaw + Math.PI / 2;
+      this.root.rotation.y = this.facing(pose.yaw);
     }
+  }
+
+  /** Whether the body is a telegraph mark, which lingers to fade out when it goes. */
+  get isTelegraph(): boolean {
+    return this.fade !== null;
   }
 
   placeLabel(camera: Camera, width: number, height: number, scratch: Vector3): void {
@@ -320,6 +446,8 @@ export class EntityView {
 
   dispose(): void {
     this.label.remove();
+    this.fade?.dispose();
+    this.fillMaterial?.dispose();
   }
 }
 
@@ -327,9 +455,30 @@ export class EntityLayer {
   readonly group = new Group();
   readonly views = new Map<Int64, EntityView>();
   selfKey: Int64 | null = null;
+  /** Labels over resource nodes, chests and stations as well as creatures (the names-over-props option). */
+  propLabels = true;
+  /** Still marks: telegraphs do not breathe (the reduce motion option). */
+  reducedMotion = false;
+  /** The server's clock now, as the client estimates it, for marks that end at a server time. */
+  serverNow = 0;
+  /** How long a telegraph takes to fade once its strike lands. */
+  static readonly fadeSeconds = 0.35;
+  /** Telegraphs whose strike landed, fading out before they go. */
+  private readonly fading: EntityView[] = [];
   private readonly geometries = new Map<string, BufferGeometry>();
   private readonly materials = new Map<string, MeshLambertMaterial>();
   private readonly scratch = new Vector3();
+
+  /** Shows or hides the props' labels. */
+  setPropLabels(on: boolean): void {
+    if (on === this.propLabels) {
+      return;
+    }
+    this.propLabels = on;
+    for (const view of this.views.values()) {
+      view.refreshLabel();
+    }
+  }
 
   constructor(
     readonly palette: EntityPaletteSettings,
@@ -385,10 +534,17 @@ export class EntityLayer {
     }
   }
 
-  despawn(key: Int64): void {
+  despawn(key: Int64, fade = true): void {
     const view = this.views.get(key);
     if (view !== undefined) {
       this.views.delete(key);
+      if (fade && view.isTelegraph) {
+        // The strike landed: the mark lingers to fade out.
+        view.dyingAt = performance.now() / 1000;
+        this.fading.push(view);
+        view.label.style.display = 'none';
+        return;
+      }
       this.group.remove(view.root);
       view.dispose();
     }
@@ -396,14 +552,27 @@ export class EntityLayer {
 
   clear(): void {
     for (const key of [...this.views.keys()]) {
-      this.despawn(key);
+      this.despawn(key, false);
+    }
+    for (const view of this.fading.splice(0)) {
+      this.group.remove(view.root);
+      view.dispose();
     }
   }
 
-  /** Moves every body to where it should be drawn this frame. */
+  /** Moves every body to where it should be drawn this frame, and lets faded telegraphs go. */
   animate(dt: number, localSeconds: number, renderServerTime: number): void {
     for (const view of this.views.values()) {
       view.frame(dt, localSeconds, renderServerTime, this.motion);
+    }
+    for (let i = this.fading.length - 1; i >= 0; i--) {
+      const view = this.fading[i];
+      view.frame(dt, localSeconds, renderServerTime, this.motion);
+      if (view.dyingAt !== null && localSeconds - view.dyingAt > EntityLayer.fadeSeconds) {
+        this.fading.splice(i, 1);
+        this.group.remove(view.root);
+        view.dispose();
+      }
     }
   }
 

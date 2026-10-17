@@ -324,6 +324,10 @@ export function loadUi(kinds: Map<string, Obj[]>, themeId?: string | null): UiCo
 /** The icon id the set draws for an icon (the fallback when the set lacks it). */
 export const resolveIcon = (set: UiIconSet, icon: string | undefined | null): string => (icon && set.icons[icon] !== undefined ? icon : set.fallback);
 
+export const forPool = (set: UiIconSet, pool: string): string => resolveIcon(set, set.pools[pool]);
+export const forStatus = (set: UiIconSet, status: string): string => resolveIcon(set, set.statuses[status]);
+export const forSlot = (set: UiIconSet, slot: string): string => resolveIcon(set, set.slots[slot]);
+
 /** A weave's glyph: its look, else a word of its key that names a look or form, else the fallback. */
 export function weaveIcon(set: UiIconSet, look: string | undefined | null, key: string | undefined | null): string {
   if (look && set.looks[look] !== undefined) {
@@ -386,8 +390,40 @@ export interface ChoiceGroup {
   options: ChoiceOption[];
 }
 
+/**
+ * How a status is presented, read from its content (never from the simulation): its meta block's hidden keeps it
+ * out of the status rows (the pool states the orbs draw), icon names its glyph, color tints it (the status's own
+ * color stands in), kind (buff, debuff or neutral) frames it (by default a buff when the status is beneficial,
+ * else a debuff), and cue (pulse or none, by default none) says how it draws the eye. The desktop's StatusLook.
+ */
+export interface StatusLook {
+  hidden: boolean;
+  icon: string | null;
+  color: string | null;
+  kind: string;
+  cue: string | null;
+}
+
+export const PLAIN_LOOK: StatusLook = { hidden: false, icon: null, color: null, kind: 'neutral', cue: null };
+
+const isColorText = (v: YamlValue | undefined): v is string => typeof v === 'string' && /^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$/.test(v);
+
+export function statusLookOf(status: Obj): StatusLook {
+  const meta = isObj(status.meta) ? status.meta : {};
+  return {
+    hidden: meta.hidden === true,
+    icon: typeof meta.icon === 'string' && meta.icon.length > 0 ? meta.icon : null,
+    color: isColorText(meta.color) ? meta.color : isColorText(status.color) ? status.color : null,
+    kind: typeof meta.kind === 'string' && meta.kind.length > 0 ? meta.kind : status.beneficial === true ? 'buff' : 'debuff',
+    cue: typeof meta.cue === 'string' ? meta.cue : null,
+  };
+}
+
+export const lookOf = (names: ContentNames, status: string): StatusLook => names.statusLooks.get(status) ?? PLAIN_LOOK;
+
 export interface ContentNames {
   statuses: Map<string, NamedEntry>;
+  statusLooks: Map<string, StatusLook>;
   threads: NamedEntry[];
   currencies: Map<string, NamedEntry>;
   slots: NamedEntry[];
@@ -487,16 +523,23 @@ export function loadNames(kinds: Map<string, Obj[]>): ContentNames {
   const choices = new Map<string, ChoiceGroup>();
   for (const g of kinds.get('passive_choices') ?? []) {
     const id = str(g.id);
-    choices.set(id, {
-      id,
-      name: str(g.name, humanize(id)),
-      pick: num(g.pick, 1),
-      options: objects(g.options).map((o) => ({
-        id: str(o.id),
-        name: str(o.name, humanize(str(o.id))),
-        lines: objects(o.modifiers).map((m) => modifierLine(m, attributeById)).filter((l) => l.length > 0),
-      })),
-    });
+    const options: ChoiceOption[] = objects(g.options).map((o) => ({
+      id: str(o.id),
+      name: str(o.name, humanize(str(o.id))),
+      lines: objects(o.modifiers).map((m) => modifierLine(m, attributeById)).filter((l) => l.length > 0),
+    }));
+    // A generated group deals one option per visible attribute of a category, as PassiveChoices.OptionsOf does.
+    if (isObj(g.generate)) {
+      const gen = g.generate;
+      const category = str(gen.category);
+      for (const a of attributes.filter((x) => x.category === category && !x.hidden).sort((x, y) => (x.id < y.id ? -1 : x.id > y.id ? 1 : 0))) {
+        if (options.some((o) => o.id === a.id)) {
+          continue;
+        }
+        options.push({ id: a.id, name: a.name, lines: [modifierLine({ attribute: a.id, form: str(gen.form, 'flat'), value: num(gen.value) }, attributeById)] });
+      }
+    }
+    choices.set(id, { id, name: str(g.name, humanize(id)), pick: num(g.pick, 1), options });
   }
   const realms = new Map<string, string>();
   for (const r of kinds.get('passive_realms') ?? []) {
@@ -504,6 +547,7 @@ export function loadNames(kinds: Map<string, Obj[]>): ContentNames {
   }
   return {
     statuses: new Map((kinds.get('statuses') ?? []).map((s, i) => [str(s.id), named(s, i)])),
+    statusLooks: new Map((kinds.get('statuses') ?? []).map((s) => [str(s.id), statusLookOf(s)])),
     threads,
     currencies: new Map((kinds.get('currencies') ?? []).map((c, i) => [str(c.id), named(c, i)])),
     slots: (kinds.get('slots') ?? []).map(named).sort((a, b) => a.order - b.order),

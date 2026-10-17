@@ -3,18 +3,9 @@ import builtIn from '../public/config.json';
 /**
  * Client settings. public/config.json is the single source: it is compiled in as the defaults and fetched
  * again beside the page at startup, so an operator can retune a deployed client by editing dist/config.json.
- * Nothing here is gameplay; it is how the client looks, listens and connects.
+ * Nothing here is gameplay; it is how the client looks and connects. The player's preferences and every key
+ * binding are content (ui_options and input_actions under content/core/ui) with the player's settings over them.
  */
-
-export const ACTIONS = [
-  'move_forward', 'move_back', 'move_left', 'move_right',
-  'jump', 'interact', 'pick_up', 'respawn',
-  'camera_toggle', 'camera_rotate_left', 'camera_rotate_right',
-  'toggle_sheet', 'chat', 'cancel',
-  'slot_1', 'slot_2', 'slot_3', 'slot_4', 'slot_5', 'slot_6', 'slot_7', 'slot_8',
-] as const;
-
-export type Action = (typeof ACTIONS)[number];
 
 export interface ServerSettings {
   /** Empty: the page's own host when a game server answers there, otherwise whatever the player types. */
@@ -76,7 +67,7 @@ export interface MotionSettings {
 }
 
 export interface InputSettings {
-  bindings: Record<Action, string[]>;
+  /** How near the nearest interactable must be for the interact and pick-up keys. */
   interactReach: number;
 }
 
@@ -130,6 +121,9 @@ export interface EntityPaletteSettings {
   projectile: string;
   field: string;
   fieldOpacity: number;
+  /** The ground mark where a telegraphed strike will land, and how opaque it is at its height. */
+  telegraph: string;
+  telegraphOpacity: number;
   poi: string;
   fount: string;
   flora: FloraRule[];
@@ -143,16 +137,6 @@ export interface EntityPaletteSettings {
   deadOpacity: number;
 }
 
-export interface UiSettings {
-  noticeSeconds: number;
-  chatLines: number;
-  resourceColors: Record<string, string>;
-  resourceFallback: string;
-  rarityColors: Record<string, string>;
-  rarityFallback: string;
-  hint: string;
-}
-
 export interface ClientConfig {
   server: ServerSettings;
   world: WorldSettings;
@@ -162,7 +146,6 @@ export interface ClientConfig {
   render: RenderSettings;
   terrain: TerrainPaletteSettings;
   entities: EntityPaletteSettings;
-  ui: UiSettings;
 }
 
 /** The compiled-in defaults: the same file the page fetches, checked against the types above. */

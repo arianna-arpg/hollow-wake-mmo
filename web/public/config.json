@@ -51,30 +51,6 @@
     "selfSmoothing": 12
   },
   "input": {
-    "bindings": {
-      "move_forward": ["KeyW"],
-      "move_back": ["KeyS"],
-      "move_left": ["KeyA"],
-      "move_right": ["KeyD"],
-      "jump": ["Space"],
-      "interact": ["KeyF"],
-      "pick_up": ["KeyG"],
-      "respawn": ["KeyR"],
-      "camera_toggle": ["KeyV"],
-      "camera_rotate_left": ["KeyQ"],
-      "camera_rotate_right": ["KeyE"],
-      "toggle_sheet": ["KeyC"],
-      "chat": ["Enter", "NumpadEnter"],
-      "cancel": ["Escape"],
-      "slot_1": ["Digit1", "Numpad1"],
-      "slot_2": ["Digit2", "Numpad2"],
-      "slot_3": ["Digit3", "Numpad3"],
-      "slot_4": ["Digit4", "Numpad4"],
-      "slot_5": ["Digit5", "Numpad5"],
-      "slot_6": ["Digit6", "Numpad6"],
-      "slot_7": ["Digit7", "Numpad7"],
-      "slot_8": ["Digit8", "Numpad8"]
-    },
     "interactReach": 6
   },
   "render": {
@@ -136,6 +112,8 @@
     "projectile": "#ff9933",
     "field": "#804db3",
     "fieldOpacity": 0.35,
+    "telegraph": "#ff5a36",
+    "telegraphOpacity": 0.5,
     "poi": "#f2e680",
     "fount": "#99e6ff",
     "flora": [
@@ -159,14 +137,5 @@
     "labelColors": { "player": "#b3e6ff", "dead": "#999999", "magic": "#8099ff", "rare": "#ffd966", "champion": "#ff994d" },
     "labelDefault": "#ffffff",
     "deadOpacity": 0.4
-  },
-  "ui": {
-    "noticeSeconds": 4,
-    "chatLines": 200,
-    "resourceColors": { "life": "#bf3333", "mana": "#3373d9", "stamina": "#40a64d", "ward": "#e6bf33" },
-    "resourceFallback": "#808080",
-    "rarityColors": { "magic": "#6c9cff", "rare": "#ffd34d", "unique": "#e8622a" },
-    "rarityFallback": "#d0d0d0",
-    "hint": "WASD or click to move, Space jumps, 1-8 weaves, F interact, G pick up, V camera, Q/E rotate, C sheet, Enter chat"
   }
 }

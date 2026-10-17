@@ -84,6 +84,17 @@ describe('pane placement', () => {
     expect(merged.worldBook).toEqual(merged.pageBook);
   });
 
+  it('gives a book the room beside the core pane rather than stand over it, down to its minimum', () => {
+    const viewport = { x: 0, y: 0, w: 1024, h: 900 };
+    const cluster = { x: 132, y: 700, w: 760, h: 190 };
+    const r = paneLayout(input({ viewport, cluster, pageWidth: 760, minWidth: 340 }));
+    expect(right(r.pageBook)).toBeLessThanOrEqual(r.core.x + 0.01);
+    expect(r.pageBook.w).toBeCloseTo(1024 - 14 - 430 - 14 - 7);
+    const narrow = paneLayout(input({ viewport: { x: 0, y: 0, w: 700, h: 900 }, cluster: { x: -30, y: 700, w: 760, h: 190 }, minWidth: 340 }));
+    expect(narrow.pageBook.x).toBeGreaterThanOrEqual(14);
+    expect(narrow.pageBook.w).toBe(460);
+  });
+
   it('drops the rail badges before the wallet chips', () => {
     expect(paneLayout(input())).toMatchObject({ railBadges: true, railChips: true });
     expect(paneLayout(input({ coreHeight: 400 }))).toMatchObject({ railBadges: false, railChips: true });

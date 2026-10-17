@@ -1,13 +1,16 @@
 // Scripted play-through of the web client against a running server, the browser twin of the Godot client's
 // --smoke: logs in, creates or picks a character called Smoke, enters the world, waits for the terrain, then
-// checks held movement, jumping, click-to-move, the quartermaster's quest offer, both cameras, the sheet,
-// chat and weaves on the nearest hob through real keyboard and mouse input. Prints one SMOKE PASS or FAIL
-// line per check, saves a screenshot per stage and exits non-zero when any check fails.
+// checks held movement, jumping, click-to-move, the quartermaster's quest offer, both cameras, the character
+// page, chat, the core pane and every ribbon page, a villager's conversation, a vendor's trade, Options
+// (switching the theme, rebinding a key and using it, scaling the interface, resetting a group) and weaves on
+// the nearest hob through real keyboard and mouse input. Prints one SMOKE PASS or FAIL line per check, saves a
+// screenshot per stage and exits non-zero when any check fails.
 //
 //   npm run smoke -- [--url http://localhost:7778/] [--shots DIR] [--account NAME]
 //                    [--browser msedge|chrome|chromium] [--executable PATH] [--headed] [--full-states]
 //
-// --full-states runs the client without entity deltas (full entity states only), for comparison.
+// --full-states runs the client without entity deltas (full entity states only), for comparison. The page
+// runs under its own settings profile (smoke), started from the content's defaults each run.
 //
 // It drives an installed Edge or Chrome through playwright-core, so nothing is downloaded. The page reads
 // the client's state from window.hollowWake (src/app.ts, probe()); every action goes through input events.
@@ -159,8 +162,229 @@ async function hover(key) {
   return s;
 }
 
+/** Clicks an entity where it is drawn, as a player would. */
+async function clickEntity(key) {
+  await hover(key);
+  const s = await hw((k) => window.hollowWake.screenOf(k), key);
+  if (s && s.visible) {
+    await page.mouse.click(s.x, s.y);
+  }
+}
+
+const statesOf = async (type) => (await counts()).states[type] ?? 0;
+
+/** Presses Escape until the core pane and every pane are closed (Escape with nothing open would open Options). */
+async function closeEverything() {
+  for (let i = 0; i < 8; i++) {
+    const u = await ui();
+    if (!u.coreOpen && u.worldPanes.length === 0) {
+      return;
+    }
+    await page.keyboard.press('Escape');
+    await sleep(150);
+  }
+}
+
+/**
+ * The core pane: the inventory key opens it with the bag, the doll and the wallet; each ribbon the hero has
+ * shows its page; Escape closes the front page, then the core pane last.
+ */
+async function corePaneAndPages() {
+  await closeEverything();
+  await page.keyboard.press('KeyI');
+  const open = await until(async () => (await ui()).coreOpen, 3000);
+  await sleep(400);
+  const dollSlots = await page.locator('#hud-doll .doll-slot').count();
+  const chips = await page.locator('.rail .chip').count();
+  const u = await ui();
+  await shot('06_core_pane.png');
+  record('core pane', open && dollSlots > 0, `open=${open}, ${u.bagItems} bag items, ${dollSlots} doll slots, ${chips} wallet chips, ribbons ${u.ribbonPages.join(' ')}`);
+  const shown = [];
+  for (const id of ['weaves', 'passives', 'character', 'reliquary', 'stash']) {
+    const ribbon = page.locator(`.ribbon[data-page="${id}"]`);
+    if ((await ribbon.count()) === 0 || ((await ribbon.getAttribute('class')) ?? '').includes('sealed')) {
+      shown.push(`${id}=${(await ribbon.count()) === 0 ? 'absent' : 'sealed'}`);
+      continue;
+    }
+    await ribbon.click();
+    const ok = await until(async () => (await ui()).shownPages.includes(id), 2000);
+    await sleep(350);
+    await shot(`07_page_${id}.png`);
+    shown.push(`${id}=${ok ? 'shown' : 'not shown'}`);
+  }
+  record('ribbon pages', ['weaves', 'passives', 'character'].every((id) => shown.includes(`${id}=shown`)), shown.join(', '));
+  for (let i = 0; i < 8 && (await ui()).coreOpen; i++) {
+    await page.keyboard.press('Escape');
+    await sleep(150);
+  }
+  record('escape closes the core pane last', !(await ui()).coreOpen && !(await ui()).optionsOpen, `core open=${(await ui()).coreOpen}`);
+}
+
+/** A villager: walk up, click it, read its line and answer the first open choice. */
+async function talkToAVillager() {
+  const villager = await nearest((e) => e.pattern === 'villager' || e.interactable === 'talk');
+  if (!villager) {
+    record('talk to a villager', false, 'no villager in view');
+    return;
+  }
+  const reached = await travelTo(villager.key, 1.6, 45000);
+  await sleep(400);
+  const before = await statesOf('dialogue_state');
+  await clickEntity(villager.key);
+  const shown = await until(async () => (await statesOf('dialogue_state')) > before && (await ui()).worldPanes.includes('dialogue'), 6000);
+  await sleep(300);
+  await shot('08_dialogue.png');
+  let line = 'no dialogue_state arrived';
+  if (shown) {
+    const speaker = await page.locator('.dialogue-pane .dialogue-speaker').first().innerText().catch(() => '');
+    const said = await page.locator('.dialogue-pane .dialogue-line').first().innerText().catch(() => '');
+    line = `${speaker}: "${said.slice(0, 48)}"`;
+    const choice = page.locator('.dialogue-pane .dialogue-choice:not([disabled])').first();
+    if ((await choice.count()) > 0) {
+      const asked = await statesOf('dialogue_state');
+      const text = await choice.innerText();
+      await choice.click();
+      const answered = await until(async () => (await statesOf('dialogue_state')) > asked, 5000);
+      line += `, chose "${text.slice(0, 40)}" (answered=${answered})`;
+    }
+  }
+  record('talk to a villager', reached && shown, `reached=${reached}, ${line}${await rejected()}`);
+  await closeEverything();
+}
+
+/** The quartermaster's trade: talk, ask to trade, see the stock, and buy the first thing the hero can afford. */
+async function tradeWithAVendor() {
+  const quartermaster = await nearest((e) => e.pattern === 'quartermaster' || e.name === 'Quartermaster');
+  if (!quartermaster) {
+    record('trade with a vendor', false, 'no quartermaster in view');
+    return;
+  }
+  const reached = await travelTo(quartermaster.key, 1.4, 45000);
+  await sleep(400);
+  const vendors = await statesOf('vendor_state');
+  const talked = await statesOf('dialogue_state');
+  await clickEntity(quartermaster.key);
+  await until(async () => (await statesOf('dialogue_state')) > talked && (await ui()).worldPanes.includes('dialogue'), 6000);
+  // The dialogue pane may sit behind the quest offers in one book: bring it to the front.
+  const tab = page.locator('.pane-tabs .tab', { hasText: 'Quartermaster' });
+  if ((await tab.count()) > 0) {
+    await tab.first().click();
+    await sleep(200);
+  }
+  const trade = page.locator('.dialogue-pane .dialogue-choice[data-choice="trade"]');
+  if ((await trade.count()) > 0) {
+    await trade.first().click();
+  }
+  const opened = await until(async () => (await statesOf('vendor_state')) > vendors && (await ui()).worldPanes.includes('vendor'), 6000);
+  await sleep(300);
+  // The vendor arrives as a fresh tab behind the conversation that opened it: look at it.
+  const vendorTab = page.locator('.pane-tabs .tab[data-tab^="vendor:"]');
+  if ((await vendorTab.count()) > 0) {
+    await vendorTab.first().click();
+    await sleep(300);
+  }
+  const stock = await page.locator('.vendor-pane .vendor-stock').count();
+  let bought = 'nothing the hero can afford';
+  const buy = page.locator('.vendor-pane .vendor-buy:not([disabled])').first();
+  if (opened && (await buy.count()) > 0) {
+    const bag0 = (await ui()).bagItems;
+    await buy.click();
+    const ok = await until(async () => (await ui()).bagItems !== bag0, 3000);
+    bought = ok ? 'bought one' : `asked to buy${await rejected()}`;
+  }
+  await shot('09_vendor.png');
+  record('trade with a vendor', reached && opened && stock > 0, `reached=${reached}, vendor open=${opened}, ${stock} stock rows, ${bought}`);
+  await closeEverything();
+}
+
+/**
+ * Options: open it, switch the theme and see the frame change, find a key by search, rebind it and use it,
+ * scale the interface with the core pane open and see the panes refit above the cluster, and reset a group,
+ * all through the pane's own controls.
+ */
+async function optionsSteps() {
+  await closeEverything();
+  await page.keyboard.press('F10');
+  const open = await until(async () => (await ui()).optionsOpen, 3000);
+  await sleep(400);
+  await shot('11_options.png');
+  record('options open', open, `open=${open}, ${await page.locator('.options-pane .option-row').count()} rows`);
+  if (!open) {
+    return;
+  }
+  const frameOf = () => page.evaluate(() => document.getElementById('interface')?.getAttribute('data-frame') ?? '');
+  const frame0 = await frameOf();
+  await page.locator('.option-row[data-entry="theme"] select').selectOption('runic_brass');
+  const themed = await until(async () => (await ui()).theme === 'runic_brass', 3000);
+  await sleep(400);
+  const frame1 = await frameOf();
+  await shot('12_theme.png');
+  record('options switch the theme', themed && frame0 !== frame1, `theme ${(await ui()).theme}, frame ${frame0} -> ${frame1}`);
+
+  await page.locator('input.options-search').fill('Switch camera');
+  await sleep(300);
+  let rebound = false;
+  const slot = page.locator('.option-row[data-entry="key.camera_toggle"] .key-slot[data-slot="0"]');
+  if ((await slot.count()) > 0) {
+    await slot.click();
+    await sleep(200);
+    await page.keyboard.press('KeyB');
+    await sleep(300);
+    rebound = (await hw(() => window.hollowWake.bindings('camera_toggle'))).primary === 'B';
+  }
+  await shot('13_rebound.png');
+  await page.locator('.options-done').click();
+  await until(async () => !(await ui()).optionsOpen, 3000);
+  const mode0 = (await ui()).cameraMode;
+  await page.keyboard.press('KeyB');
+  await sleep(500);
+  const turned = (await ui()).cameraMode !== mode0;
+  await page.keyboard.press('KeyB');
+  await sleep(400);
+  record('options rebind a key', rebound && turned, `camera switch on B=${rebound}, B turned the camera=${turned}`);
+
+  await page.keyboard.press('F10');
+  await until(async () => (await ui()).optionsOpen, 3000);
+  await page.keyboard.press('KeyI');
+  await sleep(300);
+  await page.locator('.options-page[data-page="interface"]').click();
+  await sleep(300);
+  const u0 = await ui();
+  const before = u0.cluster.w * u0.uiScale;
+  await page.locator('.option-row[data-entry="ui_scale"] input[type="range"]').evaluate((input) => {
+    input.value = '1.25';
+    input.dispatchEvent(new Event('input', { bubbles: true }));
+    input.dispatchEvent(new Event('change', { bubbles: true }));
+  });
+  await sleep(600);
+  const u1 = await ui();
+  const after = u1.cluster.w * u1.uiScale;
+  const fits = u1.rects !== null && u1.rects.core.y + u1.rects.core.h <= u1.cluster.y + 0.5;
+  await shot('14_scale.png');
+  record('options scale the interface', Math.abs(u1.uiScale - 1.25) < 0.01 && after > before + 10 && fits,
+    `scale ${u1.uiScale.toFixed(2)}, cluster ${before.toFixed(0)} -> ${after.toFixed(0)} px wide, panes above the cluster=${fits}`);
+
+  await page.locator('.group-reset[data-group="look"]').first().click();
+  await sleep(600);
+  const theme = await hw(() => window.hollowWake.setting('theme'));
+  const scale = await hw(() => window.hollowWake.setting('ui_scale'));
+  await shot('15_reset.png');
+  record('options reset a group', theme === 'etched_stone' && scale === 1, `theme ${theme}, scale ${scale}`);
+
+  // Put the key back through its row and close everything.
+  await page.locator('input.options-search').fill('Switch camera');
+  await sleep(300);
+  const reset = page.locator('.option-row[data-entry="key.camera_toggle"] .row-reset');
+  if ((await reset.count()) > 0 && (await reset.isVisible())) {
+    await reset.click();
+  }
+  await page.locator('.options-done').click();
+  await until(async () => !(await ui()).optionsOpen, 3000);
+  await closeEverything();
+}
+
 async function script() {
-  await page.goto(`${url}${url.includes('?') ? '&' : '?'}account=${encodeURIComponent(account)}${flag('full-states') ? '&full-states' : ''}`);
+  await page.goto(`${url}${url.includes('?') ? '&' : '?'}account=${encodeURIComponent(account)}&profile=smoke&fresh-settings${flag('full-states') ? '&full-states' : ''}`);
   await page.waitForFunction(() => window.hollowWake !== undefined);
   await until(async () => (await page.inputValue('#login-host')).length > 0, 5000);
   const lists0 = (await counts()).characterLists;
@@ -256,13 +480,13 @@ async function script() {
     const viaF = await hw(() => window.hollowWake.lastInteracted);
     let how = `F interacted with ${viaF}`;
     if (!shown) {
-      await hover(quartermaster.key);
-      const s = await hw((k) => window.hollowWake.screenOf(k), quartermaster.key);
-      await page.mouse.click(s.x, s.y);
+      // Whoever F found may have opened a pane over the quartermaster: close it, then click the quartermaster.
+      await closeEverything();
+      await clickEntity(quartermaster.key);
       shown = await until(async () => (await counts()).questOffers > offers0 && (await ui()).questsVisible, 8000);
       how += ', then clicked the quartermaster';
     }
-    const qs = await page.locator('#hud-quests .quest-button').count();
+    const qs = await page.locator('.quest-pane .quest-button').count();
     record('quartermaster offers quests', reached && shown, `reached=${reached}, ${how}, panel shown=${shown} with ${qs} entries${await rejected()}`);
     await shot('02_quest_offer.png');
     await page.keyboard.press('Escape');
@@ -308,6 +532,11 @@ async function script() {
   await page.keyboard.press('Enter');
   const echoed = await until(async () => (await page.locator('#hud-log').innerText()).includes(line), 5000);
   record('chat', echoed, echoed ? 'echoed by the zone' : 'no echo');
+
+  await corePaneAndPages();
+  await talkToAVillager();
+  await tradeWithAVendor();
+  await optionsSteps();
 
   // Weaves: walk up to the nearest hob, hover it and press the attack slots until the player's own hit lands.
   // Hobs wander and fight back, so each try walks up again first.

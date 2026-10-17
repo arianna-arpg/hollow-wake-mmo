@@ -28,6 +28,19 @@ describe('entity deltas', () => {
     expect(next.faction).toBe('wilds');
   });
 
+  it('carries a shape with its size, heading and spin, and clears the size with the shape', () => {
+    const bolt: EntityState = { ...hob, key: 9, shape: 'orb', shape_size: { radius: 0.4 }, heading: 1.2, spin: 0 };
+    const turned = applyDelta(bolt, { key: 9, heading: 2.4, spin: 3 });
+    expect(turned).toMatchObject({ shape: 'orb', shape_size: { radius: 0.4 }, heading: 2.4, spin: 3 });
+    const fan = applyDelta(bolt, { key: 9, shape: 'cone', shape_size: { radius: 5, angle: 60 } });
+    expect(fan.shape).toBe('cone');
+    expect(fan.shape_size).toEqual({ radius: 5, angle: 60 });
+    const none = applyDelta(bolt, { key: 9, shape: '' });
+    expect(none.shape).toBeUndefined();
+    expect(none.shape_size).toBeUndefined();
+    expect(applyDelta(bolt, { key: 9 }).shape_size).toEqual({ radius: 0.4 });
+  });
+
   it('merges resource entries and replaces lists whole', () => {
     const next = applyDelta(hob, { key: 7, resources: { life: 60 }, resource_max: { life: 80 }, statuses: [], flags: ['monster', 'enraged'] });
     expect(next.resources).toEqual({ life: 60, stamina: 20 });
