@@ -46,9 +46,12 @@ public partial class ProtocolContractTests
         var state = new EntityState { Key = 5L << 32 | 3, Name = "Hob", Pattern = "hob", Look = "hob", Faction = "the_loosed", Rarity = "magic", Interactable = "talk", Casting = "Ember", VX = 1, Resources = { ["life"] = 3 }, ResourceMax = { ["life"] = 9 }, Flags = { "monster" }, Statuses = { "burning" } };
         var item = new ItemInfo(9, "short_blade", "Short Blade", "rare", 1, 4, "main_hand", new List<string> { "+3 damage" }, new Dictionary<string, double> { ["damage.min"] = 2 });
         var quest = new QuestInfo("q", "Quest", "active", new List<string> { "Slay" }, new List<int> { 1 }, new List<int> { 3 }, "quartermaster", 2);
+        var delta = new EntityDelta { Key = 9, X = 1, Look = "", Dead = true, Resources = new Dictionary<string, float> { ["life"] = 2 }, Statuses = new List<string> { "burning" }, VX = 0 };
         var samples = new (Message Message, string Interface)[]
         {
             (new EntitySpawnMsg(state), nameof(EntitySpawnMsg)),
+            (new EntitySpawnMsg(state with { Static = true }), nameof(EntitySpawnMsg)),
+            (new EntityDeltaMsg(new List<EntityDelta> { delta }, 3.5), nameof(EntityDeltaMsg)),
             (new EntityUpdateMsg(new List<EntityState> { state }, 12.5), nameof(EntityUpdateMsg)),
             (new UseWeaveMsg(1, 7, 1, 2, 3, 0.5f, 0.5f), nameof(UseWeaveMsg)),
             (new ChunkDataMsg(0, 0, 1, new float[] { 1 }, new byte[] { 1 }, new List<string> { "ground grass" }, new ushort[] { 0 }, new List<LayerInfo> { new(0, 2, true, "bridge") }, 1, 0.5f), nameof(ChunkDataMsg)),
@@ -74,7 +77,7 @@ public partial class ProtocolContractTests
             Assert.True(key == "t" || fields!.Contains(key), $"{name} on the wire has '{key}', which the TypeScript interface does not declare");
         }
         // Nested records are checked through the interfaces they are declared as.
-        var nested = new Dictionary<string, string> { ["state"] = "EntityState", ["states"] = "EntityState", ["world"] = "WorldInfo", ["weaves"] = "WeaveSlotInfo", ["bag"] = "ItemInfo", ["offers"] = "QuestInfo", ["quests"] = "QuestInfo", ["layers"] = "LayerInfo", ["overlays"] = "OverlayInfo" };
+        var nested = new Dictionary<string, string> { ["state"] = "EntityState", ["states"] = "EntityState", ["deltas"] = "EntityDelta", ["world"] = "WorldInfo", ["weaves"] = "WeaveSlotInfo", ["bag"] = "ItemInfo", ["offers"] = "QuestInfo", ["quests"] = "QuestInfo", ["layers"] = "LayerInfo", ["overlays"] = "OverlayInfo" };
         foreach (var (key, record) in nested)
         {
             switch (node[key])

@@ -241,6 +241,12 @@ export interface EntityUpdateMsg {
   server_time: number;
 }
 
+export interface EntityDeltaMsg {
+  t: "entity_delta";
+  deltas: EntityDelta[];
+  server_time: number;
+}
+
 export interface EntityDespawnMsg {
   t: "entity_despawn";
   key: Int64;
@@ -394,6 +400,35 @@ export interface EntityState {
   vx: number;
   vy: number;
   vz: number;
+  static?: boolean;
+}
+
+export interface EntityDelta {
+  key: Int64;
+  name?: string;
+  pattern?: string;
+  look?: string;
+  x?: number;
+  y?: number;
+  z?: number;
+  yaw?: number;
+  radius?: number;
+  height?: number;
+  faction?: string;
+  rarity?: string;
+  level?: number;
+  resources?: Record<string, number>;
+  resource_max?: Record<string, number>;
+  flags?: string[];
+  statuses?: string[];
+  interactable?: string;
+  dead?: boolean;
+  casting?: string;
+  cast_progress?: number;
+  grounded?: boolean;
+  vx?: number;
+  vy?: number;
+  vz?: number;
 }
 
 export interface WeaveSlotInfo {
@@ -486,6 +521,7 @@ export type Message =
   | ZoneChangedMsg
   | EntitySpawnMsg
   | EntityUpdateMsg
+  | EntityDeltaMsg
   | EntityDespawnMsg
   | SelfStateMsg
   | CombatEventMsg
@@ -543,6 +579,7 @@ export const MESSAGE_TYPES: readonly MessageType[] = [
   "zone_changed",
   "entity_spawn",
   "entity_update",
+  "entity_delta",
   "entity_despawn",
   "self_state",
   "combat_event",

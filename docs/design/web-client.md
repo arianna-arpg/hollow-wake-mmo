@@ -22,6 +22,8 @@ Meshes are a port of the desktop `TerrainMesh`: one quad per cell, corner height
 
 Bodies are chosen by what an entity is, by the same rules as the desktop `EntityView`: capsules for creatures, a trunk and canopy for trees, boxes for other props and structures, spheres for projectiles, cylinders for drops, fields, markers and founts. Colours come from config.json by player, drop rarity, kind, flora and faction, then rarity. A label in screen space carries the name, the level for creatures, a dead mark, cast progress and statuses, and a life bar. The mouse picks against the drawn bodies rather than the simulation radius (a marker's radius covers its whole place). Creatures and interactables win over plain props under the cursor, so a canopy in front of a hob does not take the hover from it, and among overlapping bodies the one the cursor is nearest the middle of wins, so a quest giver beside a marker is the one you get when you point at the quest giver.
 
+An `entity_spawn` for a known key replaces its state; static entities (flora, props, markers, founts, drops) arrive once with `static` set and are never updated, and an `entity_update` lists only the entities that changed, so one it does not list keeps the state it had. The client does not ask for `entity_delta`, so it always reads full states.
+
 Other entities are drawn a little in the past at the server's time, blended between the two snapshots around it, and run on with their velocity for a short while past the newest one. The server clock is estimated from snapshot times and smoothed against jitter. The player's own body leads instead: its last known position plus velocity, smoothed, as on the desktop.
 
 ## Camera

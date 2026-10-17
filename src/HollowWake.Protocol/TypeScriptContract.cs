@@ -96,13 +96,16 @@ public static class TypeScriptContract
             {
                 sb.Append("  t: \"").Append(tag).Append("\";\n");
             }
+            // [JsonIgnore] with no condition never reaches the wire; a conditional one (WhenWritingDefault, say)
+            // makes the field optional rather than absent.
             var properties = type.GetProperties(BindingFlags.Public | BindingFlags.Instance)
-                .Where(p => p.GetMethod is not null && p.GetIndexParameters().Length == 0 && p.GetCustomAttribute<JsonIgnoreAttribute>() is null)
+                .Where(p => p.GetMethod is not null && p.GetIndexParameters().Length == 0 && p.GetCustomAttribute<JsonIgnoreAttribute>() is not { Condition: JsonIgnoreCondition.Always })
                 .OrderBy(p => p.MetadataToken);
             foreach (var p in properties)
             {
                 var name = p.GetCustomAttribute<JsonPropertyNameAttribute>()?.Name ?? naming.ConvertName(p.Name);
                 var optional = Nullable.GetUnderlyingType(p.PropertyType) is not null
+                    || p.GetCustomAttribute<JsonIgnoreAttribute>() is not null
                     || (!p.PropertyType.IsValueType && nullability.Create(p).ReadState == NullabilityState.Nullable);
                 var ts = Map(p.PropertyType);
                 if (p.PropertyType == typeof(byte[]))
