@@ -12,18 +12,25 @@ A target is an aim, never a guarantee. Every application of an effect to a body 
 
 ## Split of work
 
-**Claude**, on branch `claude/positional-hits`, as a pull request for Codex to review:
+Updated the same day: the owner reports that Codex is already implementing this fix, so the Claude implementation was stopped before it changed anything and its branch removed. One engineer builds it; the other reviews.
 
-- A release-time target check for Enemy, Ally and Any targeting at every point a cast applies root effects to a stored target (timed release, channel beats, charge and overcharge release, triggered casts, follow-ups and metas), driven by rule `casting.recheck_target_at_release` and a form field `release_check` (full, range, none). A failed check misses: no effects, costs paid, cooldown as for a completed cast, and a new event `WeaveMissed(Caster, Slot, Weave, Target, Reason)` with reasons out_of_reach, line_of_sight, dead and not_hostile, surfaced as a combat log line.
-- Melee forms with direct roots (strike, measured_strike, bash, monster melee) become sector areas: reach as radius, a new attribute `melee.arc`, one body, a new pick `target` that takes the aimed body when it is inside the arc and the nearest body otherwise, facing the direction captured when the swing began. Cleave stays a cone.
-- Tests pinning the whole family: a swing whiffs when its target steps out of reach or behind it, a bystander in the arc takes the blow, a bolt misses a target that moved after release unless it seeks, a heal on an ally out of range at release misses, `release_check: none` still lands, a wall at release misses with line_of_sight.
+**Codex** implements, on its own branch as a pull request:
+
+- A release-time target check for Enemy, Ally and Any targeting at every point a cast applies root effects to a stored target (timed release, channel beats, charge and overcharge release, triggered casts, follow-ups and metas), driven by a rule such as `casting.recheck_target_at_release` and a form field such as `release_check` (full, range, none). A failed check misses: no effects, costs paid, cooldown as for a completed cast, and an event such as `WeaveMissed(Caster, Slot, Weave, Target, Reason)` with reasons out_of_reach, line_of_sight, dead and not_hostile, surfaced as a combat log line and available to the cast cues as a whiff phase.
+- Melee forms with direct roots (strike, measured_strike, bash, monster melee) become sector areas: reach as radius, an attribute for the arc, one body, a pick that takes the aimed body when it is inside the arc and the nearest body otherwise. Cleave stays a cone. The forecast's region for a swing is that sector, from the same plan the hit test uses.
 - Behaviors kept honest: monsters still close in, face and re-attack; the standard duels still end in a death, and their traces change in a named way.
 
-**Codex**, in its cast-cue and forecasting work:
+**Claude** reviews the pull request against this acceptance list, each item a test the change should carry:
 
-- `WeaveMissed` is the seam for a miss as a presentation phase: a swing that whiffs should read as a whiff, never as an impact, and never as a release that landed.
-- The forecast's region for a melee swing is the sector the area root resolves, from the same plan the hit test uses, as the forecasting document already proposes; no second geometry.
-- When the pull request opens, review it for defects, compatibility risks and missing regressions, then rebase the cast-cue branch onto it; the runtime change is kept to one commented place at the release so the rebase is small.
+- A timed swing whose target steps out of reach during the swing lands nothing and misses with out_of_reach.
+- A target that steps behind the swing escapes it; a bystander standing in the arc takes the blow when it is the nearest body.
+- A target inside the arc at release is hit.
+- A non-homing bolt flies to where its target was and misses a target that moved aside after release; a seeking glyph then hits.
+- A heal on an ally out of range at release misses with the reason.
+- A form that opts out of the check still lands.
+- A wall between caster and target at release makes a full check miss with line_of_sight.
+- The standard duels (loosed_kindler against boar, wolf against hob, the proving, channeler and skirmisher duels) still end as the contracts describe, with the before and after endings named.
+- The Release bench stays within docs/design/performance.md, and the minion-heavy bench runs with zero errors.
 
 ## Open question for Codex, from the prototype
 
