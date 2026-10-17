@@ -1,5 +1,6 @@
 using System.Globalization;
 using HollowWake.Core.Components;
+using HollowWake.Core.Crafting;
 using HollowWake.Core.Definitions;
 using HollowWake.Core.Ecs;
 using HollowWake.Core.Items;
@@ -271,6 +272,10 @@ public static class InterfaceStates
                 Owner = "character",
             });
         }
+        if (sim.World.TryGet<Containers>(e, out var boards) && sim.TryService<ContainerService>(out var service))
+        {
+            AddContainers(sim, e, resolver, stats, boards, service, containers);
+        }
         var slots = new List<EquipSlotInfo>();
         foreach (var def in sim.Content.Each<SlotDef>().OrderBy(s => s.Order).ThenBy(s => s.Id, StringComparer.Ordinal))
         {
@@ -295,6 +300,93 @@ public static class InterfaceStates
             wallet.Add(new CurrencyInfo(def.Id, def.DisplayName, inv?.CurrencyOf(def.Id) ?? 0));
         }
         return new InventoryStateMsg(bag, slots, equipment, wallet, containers);
+    }
+
+    /// <summary>
+    /// The hero's container boards: each container with its rungs, then every page of every stash (pages not yet
+    /// bought arrive locked with their price), and the items a board holds without a cell as a board of their own.
+    /// </summary>
+    private static void AddContainers(Simulation sim, Entity e, ItemResolver resolver, Stats? stats, Containers boards, ContainerService service, List<ContainerInfo> into)
+    {
+        var scope = new HeroScope(sim, e);
+        foreach (var def in sim.Content.Each<ContainerDef>().OrderBy(d => d.Id, StringComparer.Ordinal))
+        {
+            if (!boards.Boards.TryGetValue(def.Id, out var board))
+            {
+                continue;
+            }
+            var reachable = service.Reachable(sim, e, def.Id, out var reason);
+            var rungs = new List<RungInfo>(def.Board.Count);
+            for (var i = 0; i < def.Board.Count; i++)
+            {
+                var rung = def.Board[i];
+                rungs.Add(new RungInfo(i, ContainerService.Unlocked(rung, scope), rung.Cells) { Requirement = rung.Requirement.Length > 0 ? rung.Requirement : null });
+            }
+            into.Add(new ContainerInfo(def.Id, def.DisplayName, def.Kind, BoardOf(sim, resolver, stats, board) with { Rungs = rungs }, reachable)
+            {
+                Reason = reason,
+                Owner = def.Owner,
+                Active = def.Active ? true : null,
+            });
+            AddLoose(sim, resolver, stats, boards, def.Id, def.Owner, into);
+        }
+        foreach (var stash in sim.Content.Each<StashDef>().OrderBy(d => d.Id, StringComparer.Ordinal))
+        {
+            var reachable = service.Reachable(sim, e, ContainerService.PageId(stash.Id, 1), out var reason);
+            var owned = ContainerService.Owned(boards, stash);
+            for (var page = 1; page <= stash.Pages; page++)
+            {
+                var id = ContainerService.PageId(stash.Id, page);
+                if (page <= owned && boards.Boards.TryGetValue(id, out var board))
+                {
+                    into.Add(new ContainerInfo(id, stash.DisplayName, "stash", BoardOf(sim, resolver, stats, board), reachable)
+                    {
+                        Reason = reason,
+                        Owner = stash.Owner,
+                        Of = stash.Id,
+                        Page = page,
+                    });
+                }
+                else
+                {
+                    into.Add(new ContainerInfo(id, stash.DisplayName, "stash", new BoardInfo(stash.Width, stash.Height, new List<ItemInfo>()), reachable)
+                    {
+                        Reason = reason,
+                        Owner = stash.Owner,
+                        Of = stash.Id,
+                        Page = page,
+                        Locked = true,
+                        Price = service.PagePrice(sim, e, stash, page),
+                    });
+                }
+                AddLoose(sim, resolver, stats, boards, id, stash.Owner, into);
+            }
+        }
+    }
+
+    /// <summary>Items a container board holds without a cell, as a column board of their own (<c>{board}:loose</c>) to take them out of.</summary>
+    private static void AddLoose(Simulation sim, ItemResolver resolver, Stats? stats, Containers boards, string board, string owner, List<ContainerInfo> into)
+    {
+        if (!boards.Loose.TryGetValue(board, out var loose) || loose.Count == 0)
+        {
+            return;
+        }
+        var items = new List<ItemInfo>(loose.Count);
+        var y = 0;
+        var width = 1;
+        foreach (var item in loose)
+        {
+            var (w, h) = resolver.Of(item);
+            items.Add(Card(sim, resolver, stats, item) with { X = 0, Y = y, W = w, H = h });
+            y += h;
+            width = Math.Max(width, w);
+        }
+        into.Add(new ContainerInfo(board + ":loose", "Overflow", "overflow", new BoardInfo(width, Math.Max(1, y), items), true)
+        {
+            Reason = "Make room on the board for these.",
+            Owner = owner,
+            Of = board,
+        });
     }
 
     /// <summary>A board as the wire draws it: its shape and mask, and every item with its cell and footprint.</summary>
@@ -422,7 +514,57 @@ public static class InterfaceStates
             h.Add(stats.Level);
             h.Add(stats.Passives.Count);
         }
+        if (sim.World.TryGet<Containers>(e, out var boards))
+        {
+            AddContainers(ref h, sim, e, boards);
+        }
         return h.Value;
+    }
+
+    private static void AddContainers(ref FingerprintHash h, Simulation sim, Entity e, Containers boards)
+    {
+        foreach (var (id, board) in boards.Boards)
+        {
+            h.Add(id);
+            h.Add(board.Width);
+            h.Add(board.Height);
+            h.Add(board.UsableCells);
+            var placed = board.Placed;
+            for (var i = 0; i < placed.Count; i++)
+            {
+                h.Add(placed[i].X);
+                h.Add(placed[i].Y);
+                Snapshots.AddItem(ref h, placed[i].Item);
+            }
+        }
+        foreach (var (id, loose) in boards.Loose)
+        {
+            h.Add(id);
+            foreach (var item in loose)
+            {
+                Snapshots.AddItem(ref h, item);
+            }
+        }
+        foreach (var (stash, bought) in boards.Bought)
+        {
+            h.Add(stash);
+            h.Add(bought);
+        }
+        // Walking up to a chest (or away) changes what the hero can reach.
+        if (sim.TryService<ContainerService>(out _))
+        {
+            foreach (var def in sim.Content.Each<ContainerDef>())
+            {
+                if (def.At is not null)
+                {
+                    h.Add(ContainerService.InReach(sim, e, def.At));
+                }
+            }
+            foreach (var stash in sim.Content.Each<StashDef>())
+            {
+                h.Add(ContainerService.InReach(sim, e, stash.At));
+            }
+        }
     }
 
     // ------------------------------------------------------------ weave slots
@@ -743,7 +885,20 @@ public static class InterfaceStates
             });
         }
         var reach = sim.World.Get<Panes>(hero)?.Station is { } pane && pane.Source == station ? Math.Round(pane.Reach, 2) : (double?)null;
-        return new StationStateMsg(station.Key, sim.World.Get<Identity>(station)?.Name ?? "", recipes, false) { Tags = tags.IsEmpty ? null : tags.ToList(), Reach = reach };
+        List<StationServiceInfo>? services = null;
+        foreach (var quote in StationServices.For(sim, hero, station))
+        {
+            (services ??= new List<StationServiceInfo>()).Add(new StationServiceInfo(quote.Def.Id, quote.Def.DisplayName)
+            {
+                Item = quote.Target.Item,
+                Slot = quote.Target.Slot,
+                Node = quote.Target.Node,
+                Price = quote.Price.Count == 0 ? null : quote.Price,
+                Enabled = quote.Enabled,
+                Reason = quote.Reason,
+            });
+        }
+        return new StationStateMsg(station.Key, sim.World.Get<Identity>(station)?.Name ?? "", recipes, false) { Tags = tags.IsEmpty ? null : tags.ToList(), Reach = reach, Services = services };
     }
 
     public static StationStateMsg StationClosed(Simulation sim, Entity station) =>

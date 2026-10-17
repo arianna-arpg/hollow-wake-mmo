@@ -19,6 +19,9 @@ public static class ProgressionWiring
         var rack = new RackService();
         sim.AddService(rack);
         inventory.Register(rack);
+        var containers = new ContainerService(sim.Content);
+        sim.AddService(containers);
+        inventory.Register(containers);
         sim.AddService<IWeaveOwnership>(new WeaveOwnership());
         sim.AddService(new DialogueService());
         sim.AddService(new VendorService());

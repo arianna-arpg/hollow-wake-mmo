@@ -1,6 +1,7 @@
 using HollowWake.Core.Definitions;
 using HollowWake.Core.Ecs;
 using HollowWake.Core.Expressions;
+using HollowWake.Core.Items;
 using HollowWake.Core.Sim;
 
 namespace HollowWake.Core.Progression;
@@ -16,14 +17,6 @@ public readonly record struct PageView(string Id, bool Sealed, string? Reason, i
 /// </summary>
 public static class PageGates
 {
-    /// <summary>A source of container pages: the containers of a kind the hero owns, with whether each is reachable.</summary>
-    public delegate void ContainerPages(Simulation sim, Entity hero, string kind, List<PageView> into, string pageId, int pips);
-
-    private static ContainerPages? _containers;
-
-    /// <summary>Lets the container service list container pages (one source; registering again replaces it).</summary>
-    public static void RegisterContainers(ContainerPages source) => _containers = source;
-
     public static List<PageView> For(Simulation sim, Entity hero)
     {
         var pages = new List<PageView>();
@@ -37,7 +30,10 @@ public static class PageGates
             var pips = page.Pips is null ? 0 : Count(page.Pips, scope);
             if (page.Container is not null)
             {
-                _containers?.Invoke(sim, hero, page.Container, pages, page.Id, pips);
+                if (sim.TryService<ContainerService>(out var containers))
+                {
+                    containers.Pages(sim, hero, page.Container, pages, page.Id, pips);
+                }
                 continue;
             }
             pages.Add(new PageView(page.Id, false, null, pips, null));

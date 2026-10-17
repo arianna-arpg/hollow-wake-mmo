@@ -585,4 +585,55 @@ public class LoopbackTests
         client.Send(new CloseDialogueMsg("quartermaster"));
         Assert.NotNull(Await<DialogueStateMsg>(server, client, inbox, d => d.Ended));
     }
+
+    [Fact]
+    public void ContainersStashPagesAndStationServicesTravelOverTheWire()
+    {
+        var (server, transport) = Create();
+        var (client, _, session, replies, _) = Enter(server, transport, "keeper", "Sorrel", new List<string> { ProtocolInfo.InterfaceFeature });
+        var sim = session.Zone!.Sim;
+        var hero = session.Entity;
+        var inbox = new List<Message>(replies);
+        var inv = sim.World.Get<Inventory>(hero)!;
+        inv.AddCurrency("shards", 2000);
+
+        // The reliquary arrives with its rungs; a relic moved into it shows there.
+        var relic = sim.Service<Core.Items.ItemGenerator>().Roll("relic_shard", 5, "magic", new Core.Maths.Rng(71));
+        Assert.True(inv.TryAdd(relic));
+        client.Send(new MoveItemMsg(relic.Uid, "reliquary", 0, 0));
+        var seated = Await<InventoryStateMsg>(server, client, inbox, s => s.Containers.Any(c => c.Id == "reliquary" && c.Board.Items.Any(i => i.Uid == relic.Uid)));
+        Assert.NotNull(seated);
+        var reliquary = seated!.Containers.Single(c => c.Id == "reliquary");
+        Assert.True(reliquary.Active);
+        Assert.Equal("account", reliquary.Owner);
+        Assert.Contains(reliquary.Board.Rungs!, r => !r.Unlocked && r.Requirement is not null);
+
+        // Stash pages are out of reach until the hero stands at a chest; then a page can be bought.
+        var stash = seated.Containers.Single(c => c.Id == "personal_stash:1");
+        Assert.False(stash.Reachable);
+        Assert.NotNull(stash.Reason);
+        Assert.True(seated.Containers.Single(c => c.Id == "personal_stash:2").Locked);
+        var at = sim.World.Get<Transform>(hero)!.Position;
+        sim.Service<Core.Patterns.PatternFactory>().Spawn(sim, "stash_chest", at + new System.Numerics.Vector3(1.5f, 0, 0));
+        Assert.NotNull(Await<InventoryStateMsg>(server, client, inbox, s => s.Containers.Single(c => c.Id == "personal_stash:1").Reachable));
+        client.Send(new BuyPageMsg("personal_stash"));
+        var bought = Await<InventoryStateMsg>(server, client, inbox, s => s.Containers.Single(c => c.Id == "personal_stash:2").Locked is null);
+        Assert.NotNull(bought);
+
+        // A font quotes its services in the station pane and raises a stone for shards.
+        var font = sim.Service<Core.Patterns.PatternFactory>().Spawn(sim, "passive_font", at + new System.Numerics.Vector3(0, 1.5f, 0));
+        var stone = sim.Service<Core.Items.ItemGenerator>().Roll("glyph_stone", 1, "common", new Core.Maths.Rng(72), new Core.Items.ItemGenerator.PayloadRequest { Glyph = "needle" });
+        Assert.True(inv.TryAdd(stone));
+        client.Send(new InteractMsg(font.Key));
+        var pane = Await<StationStateMsg>(server, client, inbox, s => s.Services is not null);
+        Assert.NotNull(pane);
+        var raise = pane!.Services!.Single(s => s.Id == "raise_stone" && s.Item == stone.Uid);
+        Assert.True(raise.Enabled);
+        Assert.True(raise.Price!["shards"] > 0);
+        var level = stone.Payload!.Level;
+        client.Send(new StationServiceMsg(font.Key, "raise_stone") { Item = stone.Uid });
+        Assert.NotNull(Await<StationStateMsg>(server, client, inbox, s => s != pane));
+        Assert.Equal(level + 1, stone.Payload.Level);
+        Assert.DoesNotContain(inbox, m => m is IntentRejectedMsg);
+    }
 }

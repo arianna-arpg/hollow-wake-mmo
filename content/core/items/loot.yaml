@@ -60,6 +60,21 @@ entries:
         entries:
           - { weight: 60, kind: table, table: weave_items }
           - { weight: 40, kind: nothing }
+      - count: 1
+        entries:
+          - { weight: 40, kind: table, table: relic_drops }
+          - { weight: 60, kind: nothing }
+  # Relics for the reliquary and vestige stones for gear sockets.
+  - id: relic_drops
+    rolls:
+      - count: 1
+        entries:
+          - { weight: 30, kind: item, item: relic_shard }
+          - { weight: 15, kind: item, item: relic_icon }
+          - { weight: 6, kind: item, item: relic_idol }
+          - { weight: 20, kind: item, item: vestige_ember }
+          - { weight: 20, kind: item, item: vestige_tide }
+          - { weight: 9, kind: item, item: vestige_marrow }
   - id: ruin_chest
     rolls:
       - count: 1

@@ -28,6 +28,143 @@ internal static class ProgressionKinds
         ContentKinds.AddValidator<PassiveNodeDef>(NodeChoice);
         ContentKinds.Register<DialogueDef>("dialogues", Dialogue);
         ContentKinds.Register<VendorDef>("vendors", Vendor);
+        ScopeNames.Declare("page");
+        ContentKinds.Register<ContainerDef>("containers", Container);
+        ContentKinds.Register<StashDef>("stashes", Stash);
+        ContentKinds.AddValidator<UniqueDef>(UniqueChoices);
+        ContentKinds.AddValidator<ItemBaseDef>(BaseLaws);
+        foreach (var name in new[] { "item_level", "rarity_rank", "sockets" })
+        {
+            ScopeNames.Declare(name);
+        }
+        ContentKinds.Register<StationServiceDef>("station_services", StationService);
+    }
+
+    private static void StationService(StationServiceDef d, ValidationContext c)
+    {
+        if (!Crafting.StationServices.Has(d.Type))
+        {
+            c.Error($"type '{d.Type}' is not a registered station service ({string.Join(", ", Crafting.StationServices.TypeNames.OrderBy(t => t, StringComparer.Ordinal))}).");
+        }
+        if (d.At.Count == 0)
+        {
+            c.Warn("is offered nowhere (at is empty).");
+        }
+        foreach (var (currency, expr) in d.Price)
+        {
+            c.Ref<CurrencyDef>(currency, "price");
+            c.Expression(expr, $"price.{currency}");
+        }
+    }
+
+    private static void Owner(string owner, ValidationContext c)
+    {
+        if (owner is not ("character" or "account"))
+        {
+            c.Error($"owner '{owner}' is neither character nor account.");
+        }
+    }
+
+    private static void Container(ContainerDef d, ValidationContext c)
+    {
+        Owner(d.Owner, c);
+        if (d.Board.Count == 0)
+        {
+            c.Error("a container needs at least one rung of cells.");
+        }
+        var always = false;
+        for (var i = 0; i < d.Board.Count; i++)
+        {
+            var rung = d.Board[i];
+            c.Expression(rung.Unlock, $"board.{i}.unlock");
+            always |= rung.Unlock is null;
+            if (rung.Cells.Count == 0 || rung.Cells.TrueForAll(r => !r.Any(ch => ch is not ('.' or ' '))))
+            {
+                c.Warn($"board.{i} adds no cells.");
+            }
+            if (rung.Unlock is not null && rung.Requirement.Length == 0)
+            {
+                c.Warn($"board.{i} unlocks on a condition but says nothing of it (requirement).");
+            }
+        }
+        if (!always && d.Board.Count > 0)
+        {
+            c.Warn("no rung is unlocked from the start, so the board begins without cells.");
+        }
+        c.Modifiers(d.Modifiers, "modifiers");
+        if (!d.Active && d.Modifiers.Count > 0)
+        {
+            c.Warn("has modifiers but is not active; they apply all the same while it holds anything.");
+        }
+    }
+
+    private static void Stash(StashDef d, ValidationContext c)
+    {
+        Owner(d.Owner, c);
+        if (d.Width < 1 || d.Height < 1 || d.Pages < 1)
+        {
+            c.Error("a stash needs a width, a height and at least one page.");
+        }
+        if (d.FreePages < 0 || d.FreePages > d.Pages)
+        {
+            c.Error($"free_pages {d.FreePages} is not between 0 and its {d.Pages} pages.");
+        }
+        if (d.FreePages < d.Pages && d.PageCost.Count == 0)
+        {
+            c.Warn("has pages to buy but no page_cost, so they are free.");
+        }
+        foreach (var (currency, expr) in d.PageCost)
+        {
+            c.Ref<CurrencyDef>(currency, "page_cost");
+            c.Expression(expr, $"page_cost.{currency}");
+        }
+    }
+
+    /// <summary>A base's affix pool names affix families or groups, and its rarity floor is a rarity.</summary>
+    private static void BaseLaws(ItemBaseDef d, ValidationContext c)
+    {
+        if (d.MinRarity is not null)
+        {
+            c.Ref<ItemRarityDef>(d.MinRarity, "min_rarity");
+        }
+        if (d.AffixPool is not { } pool)
+        {
+            return;
+        }
+        foreach (var entry in pool)
+        {
+            if (!c.Registry.Has<AffixDef>(entry) && !c.Registry.Each<AffixDef>().Any(a => a.Group == entry))
+            {
+                c.Error($"affix_pool names '{entry}', which is neither an affix nor an affix group.");
+            }
+        }
+        if (pool.Count == 0)
+        {
+            c.Warn("has an empty affix pool, so it never rolls affixes.");
+        }
+    }
+
+    private static void UniqueChoices(UniqueDef d, ValidationContext c)
+    {
+        foreach (var choice in d.Choices)
+        {
+            if (choice.Options.Count == 0)
+            {
+                c.Error($"choice '{choice.Id}' has no options.");
+            }
+            if (choice.Pick < 1 || choice.Pick > choice.Options.Count)
+            {
+                c.Error($"choice '{choice.Id}' picks {choice.Pick} of {choice.Options.Count} options.");
+            }
+            foreach (var option in choice.Options)
+            {
+                c.Modifiers(option.Lines, $"choices.{choice.Id}.{option.Id}.lines");
+            }
+        }
+        if (d.MaxPerContainer is < 1)
+        {
+            c.Error("max_per_container must be at least 1.");
+        }
     }
 
     private static void Dialogue(DialogueDef d, ValidationContext c)

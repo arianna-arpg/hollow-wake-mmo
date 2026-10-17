@@ -66,6 +66,25 @@ public sealed class ItemResolver : Components.IFootprints
         return line.Value;
     }
 
+    /// <summary>
+    /// The roll a line reads: its own, or for a line with a <see cref="ModLine.SharedRoll"/> key the roll of the first
+    /// line of the same part with that key (row I3).
+    /// </summary>
+    private static double RollOf(IReadOnlyList<ModLine> lines, IReadOnlyList<double> rolls, int i)
+    {
+        if (lines[i].SharedRoll is { } key)
+        {
+            for (var j = 0; j < i; j++)
+            {
+                if (lines[j].SharedRoll == key)
+                {
+                    return j < rolls.Count ? rolls[j] : 0.5;
+                }
+            }
+        }
+        return i < rolls.Count ? rolls[i] : 0.5;
+    }
+
     /// <summary>Every modifier line with its rolled value resolved. Local lines are tagged so callers can split them.</summary>
     public IEnumerable<(ModLine Line, double Value, string Origin)> Lines(ItemInstance item)
     {
@@ -73,7 +92,7 @@ public sealed class ItemResolver : Components.IFootprints
         for (var i = 0; i < b.Implicits.Count; i++)
         {
             var line = b.Implicits[i];
-            var roll = i < item.ImplicitRolls.Count ? item.ImplicitRolls[i] : 0.5;
+            var roll = RollOf(b.Implicits, item.ImplicitRolls, i);
             yield return (line, LineValue(line, roll, item.Tier, TierScale(line, "items.implicit_tier_scale")), "implicit");
         }
         foreach (var a in item.Affixes)
@@ -87,7 +106,7 @@ public sealed class ItemResolver : Components.IFootprints
             for (var i = 0; i < def.Lines.Count; i++)
             {
                 var line = def.Lines[i];
-                var roll = i < a.Rolls.Count ? a.Rolls[i] : 0.5;
+                var roll = RollOf(def.Lines, a.Rolls, i);
                 double value;
                 if (tier is not null && i < tier.Ranges.Count && tier.Ranges[i].Length >= 2)
                 {
@@ -109,8 +128,38 @@ public sealed class ItemResolver : Components.IFootprints
             for (var i = 0; i < unique.Lines.Count; i++)
             {
                 var line = unique.Lines[i];
-                var roll = i < item.UniqueRolls.Count ? item.UniqueRolls[i] : 0.5;
+                var roll = RollOf(unique.Lines, item.UniqueRolls, i);
                 yield return (line, LineValue(line, roll, item.Tier, TierScale(line, "items.unique_tier_scale")), "unique");
+            }
+            if (item.UniqueChoices is { } picks)
+            {
+                foreach (var pick in picks)
+                {
+                    if (unique.Choices.Find(c => c.Id == pick.Choice)?.Options.Find(o => o.Id == pick.Option) is not { } option)
+                    {
+                        continue;
+                    }
+                    for (var i = 0; i < option.Lines.Count; i++)
+                    {
+                        var line = option.Lines[i];
+                        yield return (line, LineValue(line, RollOf(option.Lines, pick.Rolls, i), item.Tier, TierScale(line, "items.unique_tier_scale")), "unique");
+                    }
+                }
+            }
+        }
+        if (item.Sockets is { } sockets)
+        {
+            // Socketed stones lend the host their lines (row I7): while the host is worn, they are the wearer's.
+            foreach (var stone in sockets)
+            {
+                if (stone is null || !_content.Has<ItemBaseDef>(stone.Base))
+                {
+                    continue;
+                }
+                foreach (var (line, value, _) in Lines(stone))
+                {
+                    yield return (line, value, "socket");
+                }
             }
         }
     }

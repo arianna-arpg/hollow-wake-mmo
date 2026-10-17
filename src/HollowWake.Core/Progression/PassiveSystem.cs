@@ -4,8 +4,8 @@ using HollowWake.Core.Sim;
 namespace HollowWake.Core.Progression;
 
 /// <summary>
-/// Opens realms when what unlocks them happens: a hero who levels, turns in a quest or has a story flag set gets
-/// their realms re-checked once that tick.
+/// Opens realms and container rungs when what unlocks them happens: a hero who levels, turns in a quest or has a
+/// story flag set gets their realms and container boards re-checked once that tick.
 /// </summary>
 public sealed class PassiveSystem : SimSystem
 {
@@ -30,11 +30,13 @@ public sealed class PassiveSystem : SimSystem
             return;
         }
         var progression = sim.Service<ProgressionService>();
+        sim.TryService<Items.ContainerService>(out var containers);
         foreach (var hero in _pending)
         {
             if (sim.World.IsAlive(hero))
             {
                 progression.RefreshRealms(sim, hero);
+                containers?.Refresh(sim, hero);
             }
         }
         _pending.Clear();

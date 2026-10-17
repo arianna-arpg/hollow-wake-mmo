@@ -407,6 +407,30 @@ public sealed class Inventory : IComponent
 }
 
 /// <summary>
+/// The boards a hero keeps beyond the bag: containers such as the reliquary and the pages of stashes, owned by the
+/// character or the account. A board's id is its container's id, or <c>{stash}:{page}</c> for a stash page.
+/// </summary>
+public sealed class Containers : IComponent
+{
+    public Dictionary<string, Board> Boards { get; } = new(StringComparer.Ordinal);
+
+    /// <summary>Pages bought per stash, beyond its free pages.</summary>
+    public Dictionary<string, int> Bought { get; } = new(StringComparer.Ordinal);
+
+    /// <summary>Items a board holds without a cell (its rungs or size shrank), kept until there is room.</summary>
+    public Dictionary<string, List<ItemInstance>> Loose { get; } = new(StringComparer.Ordinal);
+
+    /// <summary>The account's items on boards content no longer has, kept as they were and saved back with the account.</summary>
+    public Dictionary<string, List<ItemInstance>> Orphans { get; } = new(StringComparer.Ordinal);
+
+    /// <summary>
+    /// Whether the account's boards came from the account's save. When they did not (a tool, a test, a store that
+    /// keeps no accounts) the account's boards are never written back, so an empty board cannot overwrite a full one.
+    /// </summary>
+    public bool AccountLoaded { get; set; }
+}
+
+/// <summary>
 /// The weave rack: the codices a hero has learned and the glyph stones socketed beside them, seat by seat.
 /// Seat <c>i</c> builds weave slot <c>i</c> of the <see cref="WeaveBook"/>; each seat remembers the weave slot
 /// it built so that reordering the slots carries the seat along.

@@ -26,6 +26,34 @@ public static class ItemIntentHandlers
         handlers.Register<BuyIntent>(Buy);
         handlers.Register<SellIntent>(Sell);
         handlers.Register<BuyBackIntent>(BuyBack);
+        handlers.Register<BuyPageIntent>(BuyPage);
+        handlers.Register<StationServiceIntent>(StationService);
+    }
+
+    private static void BuyPage(in IntentContext ctx, BuyPageIntent b)
+    {
+        if (!ctx.Sim.TryService<ContainerService>(out var containers))
+        {
+            ctx.Reject("no_stash");
+            return;
+        }
+        if (!containers.Reachable(ctx.Sim, ctx.Entity, ContainerService.PageId(b.Stash, 1), out _))
+        {
+            ctx.Reject("out_of_reach");
+            return;
+        }
+        if (!containers.BuyPage(ctx.Sim, ctx.Entity, b.Stash, out var reason))
+        {
+            ctx.Reject(reason);
+        }
+    }
+
+    private static void StationService(in IntentContext ctx, StationServiceIntent s)
+    {
+        if (!StationServices.Perform(ctx.Sim, ctx.Entity, s.Station, s.Service, new StationServices.Target(s.Item, s.Slot, s.Node), out var reason))
+        {
+            ctx.Reject(reason);
+        }
     }
 
     private static void Buy(in IntentContext ctx, BuyIntent b)
@@ -54,7 +82,10 @@ public static class ItemIntentHandlers
 
     private static void SocketStone(in IntentContext ctx, SocketStoneIntent s)
     {
-        if (!ctx.Sim.Service<RackService>().Socket(ctx.Sim, ctx.Entity, s.StoneUid, s.Slot, s.Socket, out var reason))
+        var done = s.Host is { } host
+            ? GearSockets.Socket(ctx.Sim, ctx.Entity, s.StoneUid, host, s.Socket, out var reason)
+            : ctx.Sim.Service<RackService>().Socket(ctx.Sim, ctx.Entity, s.StoneUid, s.Slot, s.Socket, out reason);
+        if (!done)
         {
             ctx.Reject(reason);
         }
@@ -62,7 +93,10 @@ public static class ItemIntentHandlers
 
     private static void UnsocketStone(in IntentContext ctx, UnsocketStoneIntent u)
     {
-        if (!ctx.Sim.Service<RackService>().Unsocket(ctx.Sim, ctx.Entity, u.Slot, u.Socket, u.X, u.Y, out var reason))
+        var done = u.Host is { } host
+            ? GearSockets.Unsocket(ctx.Sim, ctx.Entity, host, u.Socket, u.X, u.Y, out var reason)
+            : ctx.Sim.Service<RackService>().Unsocket(ctx.Sim, ctx.Entity, u.Slot, u.Socket, u.X, u.Y, out reason);
+        if (!done)
         {
             ctx.Reject(reason);
         }

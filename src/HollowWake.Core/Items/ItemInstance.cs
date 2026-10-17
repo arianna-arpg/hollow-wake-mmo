@@ -1,5 +1,13 @@
 namespace HollowWake.Core.Items;
 
+/// <summary>One option a unique picked from a choice family, and the 0..1 roll per line of it.</summary>
+public sealed class UniqueChoiceRoll
+{
+    public required string Choice { get; init; }
+    public required string Option { get; init; }
+    public List<double> Rolls { get; init; } = new();
+}
+
 /// <summary>One rolled affix: which family, which tier, and the 0..1 roll per line. Values derive at read time.</summary>
 public sealed class AffixRoll
 {
@@ -27,6 +35,10 @@ public sealed class ItemInstance
     public List<AffixRoll> Affixes { get; init; } = new();
     public string? Unique { get; init; }
     public List<double> UniqueRolls { get; init; } = new();
+    /// <summary>The options a unique picked from its choice families at mint, with the rolls of their lines.</summary>
+    public List<UniqueChoiceRoll>? UniqueChoices { get; set; }
+    /// <summary>Minted superior: the base roll landed in the rarity's top window.</summary>
+    public bool Superior { get; set; }
     public int Count { get; set; } = 1;
     public int Stack { get; init; } = 1;
     /// <summary>Crafting quality 0..1; scales local values through the items.quality rule.</summary>
@@ -62,6 +74,8 @@ public sealed class ItemInstance
         Affixes = Affixes.Select(a => new AffixRoll { Affix = a.Affix, Tier = a.Tier, Rolls = new List<double>(a.Rolls), Crafted = a.Crafted }).ToList(),
         Unique = Unique,
         UniqueRolls = new List<double>(UniqueRolls),
+        UniqueChoices = UniqueChoices?.Select(c => new UniqueChoiceRoll { Choice = c.Choice, Option = c.Option, Rolls = new List<double>(c.Rolls) }).ToList(),
+        Superior = Superior,
         Count = Count,
         Stack = Stack,
         Quality = Quality,

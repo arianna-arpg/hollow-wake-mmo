@@ -10,3 +10,13 @@ entries:
     components:
       prop: { blocking: true }
       interactable: { kind: font, range: 2.5 }
+
+  # Standing at it reaches the stashes (their pages and the purchase of new ones); using it opens its pane.
+  - id: stash_chest
+    name: Stash Chest
+    tags: [prop, station, stash]
+    radius: 0.6
+    height: 1.0
+    components:
+      prop: { blocking: true }
+      interactable: { kind: stash, range: 2.5 }

@@ -514,7 +514,7 @@ public sealed class RackService : InventoryService.IItemPlace
     /// Puts items into the bag, the first at a cell when one is given and it fits there, the rest in the first
     /// space that fits; all or nothing.
     /// </summary>
-    private static bool Stow(Inventory inv, List<ItemInstance> items, int? x, int? y)
+    internal static bool Stow(Inventory inv, List<ItemInstance> items, int? x, int? y)
     {
         var stowed = new List<ItemInstance>(items.Count);
         for (var i = 0; i < items.Count; i++)
@@ -539,7 +539,7 @@ public sealed class RackService : InventoryService.IItemPlace
         return true;
     }
 
-    private static void Restore(Inventory inv, ItemInstance item, int? x, int? y, bool overflow)
+    internal static void Restore(Inventory inv, ItemInstance item, int? x, int? y, bool overflow)
     {
         if (!overflow && x is { } px && y is { } py && inv.TryAddAt(item, px, py))
         {

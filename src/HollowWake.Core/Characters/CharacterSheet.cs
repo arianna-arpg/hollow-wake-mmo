@@ -47,6 +47,15 @@ public sealed class CharacterSheet
     /// <summary>The bag's usable cells when saved. The bag's shape comes from rule <c>inventory.bag</c>; this is a record, not a setting.</summary>
     public int BagCapacity { get; set; } = 40;
     public Dictionary<string, ItemInstance> Equipment { get; set; } = new(StringComparer.Ordinal);
+    /// <summary>The character's own container boards and stash pages, by board id, and the stash pages bought.</summary>
+    public ContainerSave Containers { get; set; } = new();
+    /// <summary>
+    /// The account's boards (the reliquary, the account stash) while this character plays. The store fills it from the
+    /// account when the character loads and writes it back to the account when the character saves; the character's
+    /// own file never holds it. Null means no account save came with the sheet, and the account's boards stay untouched.
+    /// </summary>
+    [JsonIgnore]
+    public ContainerSave? Vault { get; set; }
     public Dictionary<string, double> Currency { get; set; } = new(StringComparer.Ordinal);
     public Dictionary<string, SavedQuest> Quests { get; set; } = new(StringComparer.Ordinal);
     public List<string> CompletedQuests { get; set; } = new();
@@ -309,6 +318,11 @@ public sealed class CharacterFactory
         }
         // Realms whose unlocks read quests and flags open once those are back.
         progression.RefreshRealms(sim, e);
+        // Container rungs read the same; seated relics apply before resources fill.
+        if (sim.TryService<ContainerService>(out var containers))
+        {
+            containers.Load(sim, e, sheet.Containers, sheet.Vault);
+        }
 
         stats.FillResources();
         foreach (var (res, value) in sheet.Resources)
@@ -371,6 +385,14 @@ public sealed class CharacterFactory
         if (sim.World.TryGet<Equipment>(e, out var eq))
         {
             sheet.Equipment = new Dictionary<string, ItemInstance>(eq.BySlot, StringComparer.Ordinal);
+        }
+        if (sim.World.TryGet<Containers>(e, out var boards) && sim.TryService<ContainerService>(out var containers))
+        {
+            sheet.Containers = containers.Capture(sim, e, "character");
+            if (boards.AccountLoaded)
+            {
+                sheet.Vault = containers.Capture(sim, e, "account");
+            }
         }
         if (sim.World.TryGet<QuestLog>(e, out var log))
         {

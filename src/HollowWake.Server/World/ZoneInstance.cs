@@ -238,6 +238,15 @@ public sealed class ZoneInstance
                 case ItemMoved moved:
                     MarkPanes(moved.Entity);
                     break;
+                case StationServed served:
+                    MarkPanes(served.Entity);
+                    break;
+                case GearSocketChanged socketed:
+                    MarkPanes(socketed.Entity);
+                    break;
+                case ContainerChanged changed:
+                    MarkPanes(changed.Entity);
+                    break;
                 case ChatMessage cm:
                     BroadcastAll(new ChatBroadcastMsg(Sim.World.Get<Identity>(cm.From)?.Name ?? "?", cm.Channel, cm.Text));
                     break;

@@ -99,13 +99,28 @@ public sealed class ItemGenerator
         return item;
     }
 
+    // The contracts added after the first mints (superior, overroll, sockets, unique choices) draw from a stream of
+    // the item's own seed, so the shared stream draws exactly what it drew before and old seeds mint the same items.
+    private static readonly ulong MintSalt = Rng.Hash64("mint");
+
+    private static Rng MintStream(ulong seed) => new(seed ^ MintSalt);
+
     private ItemInstance RollBase(string baseId, int itemLevel, string? rarity, Rng rng)
     {
         var b = _content.Require<ItemBaseDef>(baseId);
         rarity ??= RollRarity(rng);
+        rarity = AtLeast(rarity, b.MinRarity);
         var rarityDef = _content.Get<ItemRarityDef>(rarity);
         var tier = TierFor(itemLevel);
         var window = rarityDef?.BaseRollWindow ?? 0.05;
+        var baseRoll = Math.Clamp(0.5 + (rng.NextDouble() - 0.5) * 2 * Math.Max(window, 0.5), 0, 1);
+        var seed = rng.NextUInt64();
+        var mint = MintStream(seed);
+        var superior = rarityDef?.Superior is { } sup && b.Stack <= 1 && mint.Chance(sup.Chance);
+        if (superior)
+        {
+            baseRoll = 1 - Math.Clamp(rarityDef!.Superior!.Window, 0, 1) * mint.NextDouble();
+        }
         var item = new ItemInstance
         {
             Uid = NextUid(),
@@ -113,9 +128,10 @@ public sealed class ItemGenerator
             Level = Math.Max(1, itemLevel),
             Tier = tier,
             Rarity = rarity,
-            BaseRoll = Math.Clamp(0.5 + (rng.NextDouble() - 0.5) * 2 * Math.Max(window, 0.5), 0, 1),
+            BaseRoll = baseRoll,
             Stack = b.Stack,
-            Seed = rng.NextUInt64(),
+            Seed = seed,
+            Superior = superior,
         };
         for (var i = 0; i < b.Implicits.Count; i++)
         {
@@ -123,10 +139,72 @@ public sealed class ItemGenerator
         }
         if (rarityDef is not null && b.Stack <= 1)
         {
-            RollAffixes(item, b, rarityDef, rng);
+            var overroll = rarityDef.Overroll is { } over && mint.Chance(over.Chance) ? mint.Range(1, Math.Max(1, over.MaxSteps)) : 0;
+            RollAffixes(item, b, rarityDef, rng, overroll);
         }
         item.Name = MintName(item, b, rng);
+        if (superior)
+        {
+            item.Name = _content.Rules.Text("items.superior_name", "Superior {name}").Replace("{name}", item.Name, StringComparison.Ordinal);
+        }
+        item.Sockets = MintSockets(b, rarity, mint);
         return item;
+    }
+
+    /// <summary>A rarity raised to a floor (a base's <c>min_rarity</c>), by rank.</summary>
+    private string AtLeast(string rarity, string? floor)
+    {
+        if (floor is null || floor == rarity || _content.Get<ItemRarityDef>(floor) is not { } min)
+        {
+            return rarity;
+        }
+        return (_content.Get<ItemRarityDef>(rarity)?.Rank ?? int.MinValue) < min.Rank ? floor : rarity;
+    }
+
+    /// <summary>
+    /// Gear sockets at mint (row I7): each socket up to the rarity's most rolls its chance (rules
+    /// <c>inventory.sockets.rarity.{rarity}</c>), bounded by the cap of the item's class (<c>inventory.sockets.caps</c>,
+    /// the longest class prefix that names one). Null when the item has none.
+    /// </summary>
+    private List<ItemInstance?>? MintSockets(ItemBaseDef b, string rarity, Rng mint)
+    {
+        if (b.Stack > 1 || b.Slot is null)
+        {
+            return null;
+        }
+        var cap = SocketCap(_content, b.Class);
+        var most = Math.Min(cap, (int)_content.Rules.Number("inventory.sockets.rarity." + rarity + ".max", 0));
+        if (most <= 0)
+        {
+            return null;
+        }
+        var chance = _content.Rules.Number("inventory.sockets.rarity." + rarity + ".chance", 0);
+        var count = 0;
+        while (count < most && mint.Chance(chance))
+        {
+            count++;
+        }
+        return count == 0 ? null : new List<ItemInstance?>(new ItemInstance?[count]);
+    }
+
+    /// <summary>The most sockets an item class holds: the cap of the longest class prefix in rules <c>inventory.sockets.caps</c>, zero when none names it.</summary>
+    public static int SocketCap(ContentRegistry content, string itemClass)
+    {
+        var cls = itemClass;
+        while (true)
+        {
+            var cap = content.Rules.Number("inventory.sockets.caps." + cls, -1);
+            if (cap >= 0)
+            {
+                return (int)cap;
+            }
+            var dot = cls.LastIndexOf('.');
+            if (dot < 0)
+            {
+                return 0;
+            }
+            cls = cls[..dot];
+        }
     }
 
     public ItemInstance RollUnique(string uniqueId, int itemLevel, Rng rng)
@@ -154,7 +232,40 @@ public sealed class ItemGenerator
         {
             item.UniqueRolls.Add(rng.NextDouble());
         }
+        if (u.Choices.Count > 0)
+        {
+            item.UniqueChoices = RollChoices(u, MintStream(item.Seed));
+        }
+        item.Sockets = MintSockets(b, "unique", MintStream(item.Seed ^ 1));
         return item;
+    }
+
+    /// <summary>A unique's picks from each choice family (row I5): by weight, without repeats, with a roll per line.</summary>
+    private static List<UniqueChoiceRoll> RollChoices(UniqueDef u, Rng rng)
+    {
+        var picks = new List<UniqueChoiceRoll>();
+        foreach (var choice in u.Choices)
+        {
+            var open = new List<UniqueOptionDef>(choice.Options);
+            for (var n = 0; n < choice.Pick && open.Count > 0; n++)
+            {
+                var weights = new List<double>(open.Count);
+                foreach (var option in open)
+                {
+                    weights.Add(option.Weight);
+                }
+                var i = Math.Max(0, rng.PickWeighted(weights));
+                var pick = open[i];
+                open.RemoveAt(i);
+                var roll = new UniqueChoiceRoll { Choice = choice.Id, Option = pick.Id };
+                for (var l = 0; l < pick.Lines.Count; l++)
+                {
+                    roll.Rolls.Add(rng.NextDouble());
+                }
+                picks.Add(roll);
+            }
+        }
+        return picks;
     }
 
     /// <summary>Picks a base family matching a class filter such as weapon or armor.chest by drop weight.</summary>
@@ -175,7 +286,7 @@ public sealed class ItemGenerator
 
     // ------------------------------------------------------------ affixes
 
-    private void RollAffixes(ItemInstance item, ItemBaseDef b, ItemRarityDef rarity, Rng rng)
+    private void RollAffixes(ItemInstance item, ItemBaseDef b, ItemRarityDef rarity, Rng rng, int overroll = 0)
     {
         var maxPrefixes = rarity.Prefixes;
         var maxSuffixes = rarity.Suffixes;
@@ -213,7 +324,7 @@ public sealed class ItemGenerator
             {
                 kind = rng.Chance(0.5) ? AffixKind.Prefix : AffixKind.Suffix;
             }
-            if (!TryAddAffix(item, b, kind, rng))
+            if (!TryAddAffix(item, b, kind, rng, overroll: overroll))
             {
                 break;
             }
@@ -229,7 +340,8 @@ public sealed class ItemGenerator
     }
 
     /// <summary>Adds one affix of a kind if any family is eligible. Used by drops and by the crafting bench.</summary>
-    public bool TryAddAffix(ItemInstance item, ItemBaseDef b, AffixKind kind, Rng rng, bool crafted = false)
+    /// <param name="overroll">Tiers above the item level's gate that may roll, each step losing weight by the rarity's step decay.</param>
+    public bool TryAddAffix(ItemInstance item, ItemBaseDef b, AffixKind kind, Rng rng, bool crafted = false, int overroll = 0)
     {
         var tags = _resolver.TagsOf(item);
         var usedGroups = item.Affixes.Select(a => _content.Get<AffixDef>(a.Affix)?.Group ?? a.Affix).ToHashSet(StringComparer.Ordinal);
@@ -244,11 +356,15 @@ public sealed class ItemGenerator
             {
                 continue;
             }
-            if (!def.Requires.IsEmpty && !tags.HasAny(def.Requires))
+            if (b.AffixPool is { } pool)
             {
-                continue;
+                // An explicit pool names what rolls; tags do not widen or narrow it.
+                if (!pool.Contains(def.Id) && (string.IsNullOrEmpty(def.Group) || !pool.Contains(def.Group)))
+                {
+                    continue;
+                }
             }
-            if (!def.Excludes.IsEmpty && tags.HasAny(def.Excludes))
+            else if ((!def.Requires.IsEmpty && !tags.HasAny(def.Requires)) || (!def.Excludes.IsEmpty && tags.HasAny(def.Excludes)))
             {
                 continue;
             }
@@ -282,6 +398,21 @@ public sealed class ItemGenerator
                 var w = def.Weight * affinity * def.Tiers[ti].Weight * Math.Pow(bias, step);
                 options.Add((def, ti));
                 weights.Add(w);
+            }
+            if (overroll > 0 && eligible[0] > 0)
+            {
+                // Tiers are best first, so the tiers above the gate sit just before the best eligible one.
+                var decay = _content.Get<ItemRarityDef>(item.Rarity)?.Overroll?.StepDecay ?? 0.5;
+                for (var up = 1; up <= overroll && eligible[0] - up >= 0; up++)
+                {
+                    var ti = eligible[0] - up;
+                    if (def.Tiers[ti].MagicOnly && !isMagic)
+                    {
+                        continue;
+                    }
+                    options.Add((def, ti));
+                    weights.Add(def.Weight * affinity * def.Tiers[ti].Weight * Math.Pow(decay, up));
+                }
             }
         }
         if (options.Count == 0)

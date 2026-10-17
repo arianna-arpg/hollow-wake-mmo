@@ -61,3 +61,12 @@ public sealed record ItemBought(Entity Entity, Entity Vendor, string Stock, long
 
 /// <summary>The hero sold to a vendor.</summary>
 public sealed record ItemSold(Entity Entity, Entity Vendor, long ItemUid, IReadOnlyDictionary<string, double> Received) : GameEvent;
+
+/// <summary>A container board changed: an item went in or out, a rung unlocked, or a stash page was bought.</summary>
+public sealed record ContainerChanged(Entity Entity, string Board) : GameEvent;
+
+/// <summary>A stone went into a gear item's socket (or came out, when <paramref name="Socketed"/> is false).</summary>
+public sealed record GearSocketChanged(Entity Entity, long Host, int Socket, long Stone, bool Socketed) : GameEvent;
+
+/// <summary>A station performed a service for the hero (levelled a stone, merged codices, reset passives).</summary>
+public sealed record StationServed(Entity Entity, Entity Station, string Service, IReadOnlyDictionary<string, double> Paid) : GameEvent;

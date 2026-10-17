@@ -41,6 +41,10 @@ public sealed class InteractionService
                 vendors.Open(sim, player, target, i.Ref, out _);
             }
         });
+        // A font and a stash chest open a station pane too: their services (raising stones, merging codices, resets)
+        // are quoted in it, and the boards they reach stand beside it.
+        Register("font", (sim, player, target, i) => OpenStation(sim, player, target, i));
+        Register("stash", (sim, player, target, i) => OpenStation(sim, player, target, i));
         Register("station", (sim, player, target, i) =>
         {
             if (sim.TryService<Crafting.StationService>(out var stations))
@@ -101,6 +105,14 @@ public sealed class InteractionService
     }
 
     public void Register(string kind, Action<Simulation, Entity, Entity, Interactable> handler) => _handlers[kind] = handler;
+
+    private static void OpenStation(Simulation sim, Entity player, Entity target, Interactable i)
+    {
+        if (sim.TryService<Crafting.StationService>(out var stations))
+        {
+            stations.Open(sim, player, target, i.Tags.With(i.Kind));
+        }
+    }
 
     /// <summary>Opens the conversation the entity holds for the hero, if any.</summary>
     private static void Talk(Simulation sim, Entity player, Entity target)
