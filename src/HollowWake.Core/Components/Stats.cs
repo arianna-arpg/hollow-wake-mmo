@@ -382,7 +382,31 @@ public sealed class Stats : IComponent, IExprScope
             case "low_mana": return ResourceFraction("mana") <= Line("low_mana.line", 0.25);
             case "full_mana": return ResourceFraction("mana") >= Line("full_mana.line", 0.95);
         }
+        if (ResourceNames.ConditionOf(flag) is { } condition && HoldsLine(condition.Resource, condition.Line, condition.Low))
+        {
+            return true;
+        }
         return Mounted?.HasFlag(flag) ?? false;
+    }
+
+    /// <summary>
+    /// Any other resource's low or full condition (<c>low_shield</c>): it holds where content declares the line
+    /// (<c>low_shield.line</c>) and the body holds the pool, against the usable maximum.
+    /// </summary>
+    private bool HoldsLine(string resource, string line, bool low)
+    {
+        if (!_content.Has<ResourceDef>(resource) || !(Attributes.Catalog.Contains(line) || Attributes.HasModifiers(line)))
+        {
+            return false;
+        }
+        var max = ResourceMax(resource);
+        if (max <= 0)
+        {
+            return false;
+        }
+        var fraction = Math.Clamp(Resource(resource) / max, 0, 1);
+        var at = Attributes.Get(line, this);
+        return low ? fraction <= at : fraction >= at;
     }
 
     /// <summary>A condition's line from its attribute (<c>low_life.line</c>), or the fallback where nothing declares it.</summary>
@@ -493,6 +517,25 @@ public static class ResourceNames
 
     /// <summary>The resource a fraction name reads (<c>life_pct</c> is life), built once per name.</summary>
     public static string OfFraction(string name) => Fractions.GetOrAdd(name, static n => n[..^4]);
+
+    private static readonly System.Collections.Concurrent.ConcurrentDictionary<string, (string Resource, string Line, bool Low)> Conditions = new(StringComparer.Ordinal);
+
+    /// <summary>
+    /// A resource condition by name (<c>low_shield</c>, <c>full_shield</c>): the resource, the attribute holding its line
+    /// (<c>low_shield.line</c>) and whether it is the low side; null for any other name. Built once per name.
+    /// </summary>
+    public static (string Resource, string Line, bool Low)? ConditionOf(string flag)
+    {
+        if (flag.StartsWith("low_", StringComparison.Ordinal))
+        {
+            return Conditions.GetOrAdd(flag, static f => (f[4..], f + ".line", true));
+        }
+        if (flag.StartsWith("full_", StringComparison.Ordinal))
+        {
+            return Conditions.GetOrAdd(flag, static f => (f[5..], f + ".line", false));
+        }
+        return null;
+    }
 }
 
 /// <summary>

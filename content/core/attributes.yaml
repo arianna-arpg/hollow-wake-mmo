@@ -151,11 +151,14 @@ entries:
   - { id: trade.life_to_shield, name: Life Woven into Shield, category: trade, base: 0, min: 0, max: 1, percent: true, description: Maximum life gained as maximum shield. }
   - { id: trade.life_to_shield.forgo, name: Life Given Up for Shield, category: trade, base: 0, min: 0, max: 1, percent: true, description: Maximum life forgone by the weave of life into shield. }
 
-  # ---- conditions: the lines low and full life and mana are drawn at
+  # ---- conditions: the lines low and full life, mana and shield are drawn at. Any resource's has("low_{id}") and
+  # has("full_{id}") read lines named like these, and hold only where the line is declared and the body holds the pool.
   - { id: low_life.line, name: Low Life Line, category: condition, base: 0.35, min: 0, max: 1, percent: true }
   - { id: full_life.line, name: Full Life Line, category: condition, base: 0.95, min: 0, max: 1, percent: true }
   - { id: low_mana.line, name: Low Mana Line, category: condition, base: 0.25, min: 0, max: 1, percent: true }
   - { id: full_mana.line, name: Full Mana Line, category: condition, base: 0.95, min: 0, max: 1, percent: true }
+  - { id: low_shield.line, name: Low Shield Line, category: condition, base: 0.35, min: 0, max: 1, percent: true }
+  - { id: full_shield.line, name: Full Shield Line, category: condition, base: 0.95, min: 0, max: 1, percent: true }
 
   # ---- misc
   - { id: xp.gain, name: Experience Gain, category: misc, base: 0, percent: true }

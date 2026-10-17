@@ -515,4 +515,27 @@ public class DefenseTests
         Assert.True(statuses.Has("vulnerable"));
         Assert.False(statuses.Has("weakened"));
     }
+
+    [Fact]
+    public void LowAndFullShieldReadTheirLinesWhereABodyHoldsAShield()
+    {
+        var bench = CombatBench.Create();
+        var stats = bench.VictimStats;
+        // Without a shield neither condition holds.
+        Assert.False(stats.HasFlag("low_shield"));
+        Assert.False(stats.HasFlag("full_shield"));
+        stats.Attributes.SetBase("shield.max", 40);
+        stats.SetResource("shield", 40);
+        Assert.True(stats.HasFlag("full_shield"));
+        Assert.False(stats.HasFlag("low_shield"));
+        stats.SetResource("shield", 10);
+        Assert.True(stats.HasFlag("low_shield"));
+        // The line is an attribute like any other: lowered to 0.15, a quarter of the shield is no longer low.
+        bench.Modify(bench.Victim, "low_shield.line", -0.2);
+        Assert.False(stats.HasFlag("low_shield"));
+        // A resource whose lines nothing declares has no such conditions.
+        stats.Attributes.SetBase("poise.max", 30);
+        stats.SetResource("poise", 0);
+        Assert.False(stats.HasFlag("low_poise"));
+    }
 }
