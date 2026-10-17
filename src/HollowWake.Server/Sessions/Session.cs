@@ -42,7 +42,7 @@ public sealed class Session
     public long BytesSent { get; private set; }
     public long MessagesSent { get; private set; }
 
-    /// <summary>Payload bytes of snapshot traffic: entity spawns, updates, deltas and despawns, and self states.</summary>
+    /// <summary>Payload bytes of snapshot traffic: entity spawns, updates, deltas and despawns, and the hero's own states.</summary>
     public long SnapshotBytes { get; private set; }
 
     /// <summary>The part of <see cref="SnapshotBytes"/> that is entity changes: updates and deltas.</summary>
@@ -51,7 +51,7 @@ public sealed class Session
     /// <summary>The part of <see cref="SnapshotBytes"/> that is interest: spawns and despawns.</summary>
     public long InterestBytes { get; private set; }
 
-    /// <summary>The part of <see cref="SnapshotBytes"/> that is self states.</summary>
+    /// <summary>The part of <see cref="SnapshotBytes"/> that is the hero's own state: self states, and the interface's inventory, weave slot, passive and page states.</summary>
     public long SelfBytes { get; private set; }
 
     /// <summary>Entity snapshots built for this client; with <see cref="SnapshotBytes"/>, the bytes it costs per snapshot.</summary>
@@ -81,7 +81,7 @@ public sealed class Session
                     InterestBytes += payload.Length;
                     SnapshotBytes += payload.Length;
                     break;
-                case SelfStateMsg:
+                case SelfStateMsg or InventoryStateMsg or WeaveSlotsMsg or PassiveStateMsg or PageStateMsg:
                     SelfBytes += payload.Length;
                     SnapshotBytes += payload.Length;
                     break;

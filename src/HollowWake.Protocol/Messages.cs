@@ -39,6 +39,26 @@ namespace HollowWake.Protocol;
 [JsonDerivedType(typeof(RespawnMsg), "respawn")]
 [JsonDerivedType(typeof(PingMsg), "ping")]
 [JsonDerivedType(typeof(RequestChunkMsg), "request_chunk")]
+// client -> server: the held-input and minion intents of the cast modes and summons (InterfaceMessages.cs)
+[JsonDerivedType(typeof(ReleaseWeaveMsg), "release_weave")]
+[JsonDerivedType(typeof(PressWeaveMsg), "press_weave")]
+[JsonDerivedType(typeof(AimMsg), "aim")]
+[JsonDerivedType(typeof(UseMetaMsg), "use_meta")]
+[JsonDerivedType(typeof(SwapWeaveSlotsMsg), "swap_weave_slots")]
+[JsonDerivedType(typeof(CommandMinionsMsg), "command_minions")]
+// client -> server: items, the rack, passives, conversations and trade (InterfaceMessages.cs)
+[JsonDerivedType(typeof(MoveItemMsg), "move_item")]
+[JsonDerivedType(typeof(SocketStoneMsg), "socket_stone")]
+[JsonDerivedType(typeof(UnsocketStoneMsg), "unsocket_stone")]
+[JsonDerivedType(typeof(LearnFormMsg), "learn_form")]
+[JsonDerivedType(typeof(UnlearnFormMsg), "unlearn_form")]
+[JsonDerivedType(typeof(RefundPassiveMsg), "refund_passive")]
+[JsonDerivedType(typeof(ChooseDialogueMsg), "choose_dialogue")]
+[JsonDerivedType(typeof(CloseDialogueMsg), "close_dialogue")]
+[JsonDerivedType(typeof(ClosePaneMsg), "close_pane")]
+[JsonDerivedType(typeof(BuyMsg), "buy")]
+[JsonDerivedType(typeof(SellMsg), "sell")]
+[JsonDerivedType(typeof(BuyBackMsg), "buy_back")]
 // server -> client
 [JsonDerivedType(typeof(WelcomeMsg), "welcome")]
 [JsonDerivedType(typeof(LoginResultMsg), "login_result")]
@@ -61,6 +81,14 @@ namespace HollowWake.Protocol;
 [JsonDerivedType(typeof(IntentRejectedMsg), "intent_rejected")]
 [JsonDerivedType(typeof(PongMsg), "pong")]
 [JsonDerivedType(typeof(DisconnectMsg), "disconnect")]
+// server -> client: the interface's states (InterfaceMessages.cs)
+[JsonDerivedType(typeof(InventoryStateMsg), "inventory_state")]
+[JsonDerivedType(typeof(WeaveSlotsMsg), "weave_slots")]
+[JsonDerivedType(typeof(PassiveStateMsg), "passive_state")]
+[JsonDerivedType(typeof(PageStateMsg), "page_state")]
+[JsonDerivedType(typeof(DialogueStateMsg), "dialogue_state")]
+[JsonDerivedType(typeof(VendorStateMsg), "vendor_state")]
+[JsonDerivedType(typeof(StationStateMsg), "station_state")]
 public abstract record Message;
 
 // ---------------------------------------------------------------- client -> server
@@ -95,7 +123,12 @@ public sealed record PickUpMsg(long Drop) : Message;
 public sealed record EquipMsg(long ItemUid, string? Slot) : Message;
 public sealed record UnequipMsg(string Slot) : Message;
 public sealed record DropItemMsg(long ItemUid) : Message;
-public sealed record AllocatePassiveMsg(string Node) : Message;
+public sealed record AllocatePassiveMsg(string Node) : Message
+{
+    /// <summary>For a choice node, the option picked from what the node deals. Omitted for ordinary nodes.</summary>
+    public string? Option { get; init; }
+}
+
 public sealed record SetWeaveMsg(int Slot, WeaveSpec Spec) : Message;
 public sealed record AcceptQuestMsg(string Quest, long Giver) : Message;
 public sealed record TurnInQuestMsg(string Quest, long Giver) : Message;
@@ -265,7 +298,40 @@ public sealed record EntityDelta
 }
 
 public sealed record WeaveSlotInfo(int Slot, string Key, string Name, string? Look, double ReadyIn, Dictionary<string, double> Costs, string Targeting, double Range);
-public sealed record ItemInfo(long Uid, string Base, string Name, string Rarity, int Count, int Level, string? Slot, List<string> Lines, Dictionary<string, double> Local);
+/// <summary>
+/// An item's card. The self state's bag carries the positional fields only; the inventory state and the
+/// world panes fill the rest as it applies: where the item lies on its board, its footprint, its sockets,
+/// what it requires and whether that is met, and for glyph stones and form items what they hold.
+/// </summary>
+public sealed record ItemInfo(long Uid, string Base, string Name, string Rarity, int Count, int Level, string? Slot, List<string> Lines, Dictionary<string, double> Local)
+{
+    /// <summary>The cell of the item's top-left corner on the board that holds it.</summary>
+    public int? X { get; init; }
+    public int? Y { get; init; }
+    /// <summary>The footprint in cells.</summary>
+    public int? W { get; init; }
+    public int? H { get; init; }
+    /// <summary>The item class, such as weapon.sword, glyph or form.</summary>
+    public string? Class { get; init; }
+    public string? Icon { get; init; }
+    /// <summary>Crafting quality from zero to one, when the item has any.</summary>
+    public double? Quality { get; init; }
+    /// <summary>A unique's flavor line.</summary>
+    public string? Flavor { get; init; }
+    /// <summary>The item cannot be sold, dropped or broken down until unlocked.</summary>
+    public bool? Locked { get; init; }
+    /// <summary>Gear sockets in order, each with the stone it holds or none.</summary>
+    public List<SocketInfo>? Sockets { get; init; }
+    /// <summary>Requirements as text, each with whether the hero meets it now.</summary>
+    public List<RequirementInfo>? Requirements { get; init; }
+    /// <summary>A glyph stone's glyph, level and rolled rows.</summary>
+    public ItemGlyphInfo? Glyph { get; init; }
+    /// <summary>A form item's form, level and the socket count it gives a weave slot.</summary>
+    public ItemFormInfo? Form { get; init; }
+    /// <summary>For a loose glyph stone: how it fits each occupied weave slot.</summary>
+    public List<StoneFitInfo>? Fits { get; init; }
+}
+
 public sealed record QuestInfo(string Id, string Name, string State, List<string> Objectives, List<int> Counts, List<int> Required, string? Giver, int Level);
 
 public sealed record SelfStateMsg
@@ -287,7 +353,31 @@ public sealed record SelfStateMsg
     List<QuestInfo> Quests,
     Dictionary<string, double> Reputation,
     List<string> Holdings
-) : Message;
+) : Message
+{
+    // The cluster's fields. Sent to clients that negotiated the interface feature, and omitted when empty.
+
+    /// <summary>Per resource, the amount held back by toggles and contracts: drawn as a darkened cap on its orb.</summary>
+    public Dictionary<string, double>? Reserved { get; init; }
+
+    /// <summary>The pools that stand before life, in the order hits reach them, each with its state.</summary>
+    public List<PoolInfo>? Pools { get; init; }
+
+    /// <summary>The hero's own statuses with stacks and timers.</summary>
+    public List<StatusInfo>? Statuses { get; init; }
+
+    /// <summary>The cast, channel or charge-up in progress, for the bar above the weave bar.</summary>
+    public CastInfo? Cast { get; init; }
+
+    /// <summary>Banked charges with their caps.</summary>
+    public List<ChargeInfo>? Charges { get; init; }
+
+    /// <summary>
+    /// Server times of the moments the cluster animates (hurt, healed, blocked, evaded, hit, crit, cast ...),
+    /// for those within the recency window.
+    /// </summary>
+    public Dictionary<string, double>? Stamps { get; init; }
+}
 
 public sealed record CombatEventMsg(string Kind, long Source, long Target, double Amount, bool Crit, List<string> Tags, string? Status) : Message;
 public sealed record ChatBroadcastMsg(string From, string Channel, string Text) : Message;
@@ -314,4 +404,10 @@ public static class ProtocolInfo
 
     /// <summary>Hello feature: the client applies <see cref="EntityDeltaMsg"/>, so changes may be sent as deltas.</summary>
     public const string EntityDeltaFeature = "entity_delta";
+
+    /// <summary>
+    /// Hello feature: the client draws the interface of docs/design/ui.md, so it is sent the cluster's fields
+    /// in self states and the inventory, weave slot, passive and page states as they change.
+    /// </summary>
+    public const string InterfaceFeature = "interface";
 }

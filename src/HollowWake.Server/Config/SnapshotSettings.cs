@@ -39,6 +39,12 @@ public sealed record SnapshotSettings
     /// <summary>How far above and below a player interest reaches: interest is a column, not a sphere.</summary>
     public double InterestHeight { get; init; } = 64;
 
+    /// <summary>
+    /// For clients that draw the interface: the shortest time between two refreshes of the weave previews when
+    /// only the hero's numbers changed (a buff, a debuff). A change to the slots themselves goes out at once.
+    /// </summary>
+    public double PreviewSeconds { get; init; } = 2;
+
     /// <summary>The same settings with every value brought into a range the snapshot builder can use.</summary>
     public SnapshotSettings Normalized()
     {
@@ -53,6 +59,7 @@ public sealed record SnapshotSettings
             ResourceStep = Math.Max(0, ResourceStep),
             CastSteps = Math.Max(1, CastSteps),
             InterestHeight = Math.Max(0, InterestHeight),
+            PreviewSeconds = Math.Max(self, PreviewSeconds),
         };
     }
 }

@@ -19,6 +19,7 @@ snapshots:                # what each client is sent and how precisely (defaults
   resource_step: 0.02     # a resource counts as changed in steps of this fraction of its maximum
   cast_steps: 5           # cast progress counts as changed in this many steps per cast
   interest_height: 64     # how far above and below a player interest reaches
+  preview_seconds: 2      # interface clients: the shortest time between weave preview refreshes when only the hero's numbers changed
 content_layers:
   - content/core
 strict_content: true

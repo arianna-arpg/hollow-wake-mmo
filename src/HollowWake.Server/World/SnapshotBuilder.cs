@@ -53,6 +53,24 @@ public sealed class SnapshotView
     /// </summary>
     public bool SendDeltas { get; set; }
 
+    /// <summary>
+    /// The viewer draws the interface (<see cref="ProtocolInfo.InterfaceFeature"/>): self states carry the
+    /// cluster's fields, and the inventory, weave slot, passive and page states are sent as they change. Off
+    /// unless the client asks for it in its hello.
+    /// </summary>
+    public bool SendInterface { get; set; }
+
+    /// <summary>Fingerprints of the interface states last sent, and when the weave previews last refreshed.</summary>
+    internal ulong InventoryFingerprint;
+    internal ulong WeaveSlotsFingerprint;
+    internal ulong PassiveFingerprint;
+    internal ulong PageFingerprint;
+    internal int PreviewVersion = -1;
+    internal double PreviewAt = double.NegativeInfinity;
+
+    /// <summary>Interface states sent to this view.</summary>
+    public long Panels { get; internal set; }
+
     /// <summary>Entity snapshots built for this view.</summary>
     public long Frames { get; internal set; }
     public long Spawns { get; internal set; }
@@ -76,6 +94,12 @@ public sealed class SnapshotView
         SelfCache.Clear();
         SelfFingerprint = 0;
         SelfSentAt = double.NegativeInfinity;
+        InventoryFingerprint = 0;
+        WeaveSlotsFingerprint = 0;
+        PassiveFingerprint = 0;
+        PageFingerprint = 0;
+        PreviewVersion = -1;
+        PreviewAt = double.NegativeInfinity;
     }
 }
 
@@ -307,6 +331,10 @@ public sealed class SnapshotBuilder
         var settings = view.Settings;
         var now = _sim.Clock.Time;
         var fingerprint = Snapshots.SelfFingerprint(_sim, viewer, settings.SelfSeconds, settings.ResourceStep);
+        if (view.SendInterface)
+        {
+            fingerprint = InterfaceStates.ClusterFingerprint(_sim, viewer, fingerprint, settings);
+        }
         if (fingerprint == view.SelfFingerprint && now - view.SelfSentAt < settings.SelfMaxSeconds - _sim.Clock.Dt * 0.5)
         {
             view.SelfStatesSkipped++;
@@ -315,7 +343,59 @@ public sealed class SnapshotBuilder
         view.SelfFingerprint = fingerprint;
         view.SelfSentAt = now;
         view.SelfStates++;
-        return Snapshots.Self(_sim, viewer, view.SelfCache);
+        var self = Snapshots.Self(_sim, viewer, view.SelfCache);
+        return view.SendInterface ? InterfaceStates.WithCluster(_sim, viewer, self) : self;
+    }
+
+    /// <summary>
+    /// For a viewer that draws the interface, the inventory, weave slot, passive and page states whose
+    /// fingerprints changed since they were last sent to it, appended to <paramref name="output"/>. Call it on
+    /// the self cadence; it appends nothing for other viewers or when nothing changed.
+    /// </summary>
+    public void Panels(SnapshotView view, Entity viewer, List<Message> output)
+    {
+        if (!view.SendInterface || !_sim.World.Has<Stats>(viewer))
+        {
+            return;
+        }
+        var now = _sim.Clock.Time;
+        var settings = view.Settings;
+        var inventory = InterfaceStates.InventoryFingerprint(_sim, viewer);
+        if (inventory != view.InventoryFingerprint)
+        {
+            view.InventoryFingerprint = inventory;
+            output.Add(InterfaceStates.Inventory(_sim, viewer));
+            view.Panels++;
+        }
+        // Previews follow the hero's numbers, which move with every buff in a fight, so they refresh at most
+        // once per preview interval; the rest of the weave slots go out as soon as they change.
+        var stats = _sim.World.Get<Stats>(viewer)!;
+        if (stats.Attributes.Version != view.PreviewVersion && now - view.PreviewAt >= settings.PreviewSeconds - _sim.Clock.Dt * 0.5)
+        {
+            view.PreviewVersion = stats.Attributes.Version;
+            view.PreviewAt = now;
+        }
+        var slots = InterfaceStates.WeaveSlotsFingerprint(_sim, viewer, view.PreviewVersion);
+        if (slots != view.WeaveSlotsFingerprint)
+        {
+            view.WeaveSlotsFingerprint = slots;
+            output.Add(InterfaceStates.WeaveSlots(_sim, viewer));
+            view.Panels++;
+        }
+        var passives = InterfaceStates.PassiveFingerprint(_sim, viewer);
+        if (passives != view.PassiveFingerprint)
+        {
+            view.PassiveFingerprint = passives;
+            output.Add(InterfaceStates.Passives(_sim, viewer));
+            view.Panels++;
+        }
+        var pages = InterfaceStates.PageFingerprint(_sim, viewer);
+        if (pages != view.PageFingerprint)
+        {
+            view.PageFingerprint = pages;
+            output.Add(InterfaceStates.Pages(_sim, viewer));
+            view.Panels++;
+        }
     }
 
     // ------------------------------------------------------------ entries

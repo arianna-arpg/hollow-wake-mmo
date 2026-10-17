@@ -690,7 +690,7 @@ public static class Snapshots
         return h.Value;
     }
 
-    private static void AddItem(ref FingerprintHash h, ItemInstance item)
+    internal static void AddItem(ref FingerprintHash h, ItemInstance item)
     {
         h.Add(item.Uid);
         h.Add(item.Count);

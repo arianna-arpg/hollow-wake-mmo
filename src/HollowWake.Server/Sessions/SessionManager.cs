@@ -130,10 +130,17 @@ public sealed class SessionManager
                 }
                 // Features are opt-in: a hello without them gets exactly the plain protocol.
                 session.View.SendDeltas = hello.Features?.Contains(ProtocolInfo.EntityDeltaFeature) == true;
-                session.Send(new WelcomeMsg(ServerInfo.Version, ProtocolInfo.Version, _config.Name, _config.Motd)
+                session.View.SendInterface = hello.Features?.Contains(ProtocolInfo.InterfaceFeature) == true;
+                var granted = new List<string>();
+                if (session.View.SendDeltas)
                 {
-                    Features = session.View.SendDeltas ? new List<string> { ProtocolInfo.EntityDeltaFeature } : null,
-                });
+                    granted.Add(ProtocolInfo.EntityDeltaFeature);
+                }
+                if (session.View.SendInterface)
+                {
+                    granted.Add(ProtocolInfo.InterfaceFeature);
+                }
+                session.Send(new WelcomeMsg(ServerInfo.Version, ProtocolInfo.Version, _config.Name, _config.Motd) { Features = granted });
                 return;
             case PingMsg ping:
                 session.Send(new PongMsg(ping.Nonce, _zones.Elapsed));
@@ -226,7 +233,7 @@ public sealed class SessionManager
         EquipMsg e => new EquipIntent(e.ItemUid, e.Slot),
         UnequipMsg u => new UnequipIntent(u.Slot),
         DropItemMsg d => new DropItemIntent(d.ItemUid),
-        AllocatePassiveMsg a => new AllocatePassiveIntent(a.Node),
+        AllocatePassiveMsg a => new AllocatePassiveIntent(a.Node) { Option = a.Option },
         SetWeaveMsg s => new SetWeaveIntent(s.Slot, s.Spec),
         AcceptQuestMsg q => new AcceptQuestIntent(q.Quest, sim.World.Resolve(q.Giver)),
         TurnInQuestMsg q => new TurnInQuestIntent(q.Quest, sim.World.Resolve(q.Giver)),
@@ -236,6 +243,24 @@ public sealed class SessionManager
         EnactDecreeMsg d => new EnactDecreeIntent(d.Holding, d.Decree),
         BuildStructureMsg b => new BuildStructureIntent(b.Holding, b.Structure, new Vector3(b.X, b.Y, b.Z)),
         RespawnMsg => new RespawnIntent(),
+        ReleaseWeaveMsg r => new ReleaseWeaveIntent(r.Slot),
+        PressWeaveMsg p => new PressWeaveIntent(p.Slot),
+        AimMsg a => new AimIntent(new Vector3(a.X, a.Y, a.Z), new Vector2(a.DirX, a.DirY)),
+        UseMetaMsg u => new UseMetaIntent(u.Slot),
+        SwapWeaveSlotsMsg s => new SwapWeaveSlotsIntent(s.A, s.B),
+        CommandMinionsMsg c => new CommandMinionsIntent(c.Command, sim.World.Resolve(c.Target), new Vector3(c.X, c.Y, c.Z), c.Group),
+        MoveItemMsg mi => new MoveItemIntent(mi.Item, mi.Container, mi.X, mi.Y) { Slot = mi.Slot },
+        SocketStoneMsg ss => new SocketStoneIntent(ss.Stone, ss.Slot, ss.Socket),
+        UnsocketStoneMsg us => new UnsocketStoneIntent(us.Slot, us.Socket, us.X, us.Y),
+        LearnFormMsg lf => new LearnFormIntent(lf.Item, lf.Slot),
+        UnlearnFormMsg uf => new UnlearnFormIntent(uf.Slot, uf.X, uf.Y),
+        RefundPassiveMsg rp => new RefundPassiveIntent(rp.Node),
+        ChooseDialogueMsg cd => new ChooseDialogueIntent(cd.Conversation, cd.Choice, cd.Node),
+        CloseDialogueMsg cl => new CloseDialogueIntent(cl.Conversation),
+        ClosePaneMsg cp => new ClosePaneIntent(cp.Pane, sim.World.Resolve(cp.Source)),
+        BuyMsg b => new BuyIntent(sim.World.Resolve(b.Vendor), b.Stock, b.Count),
+        SellMsg s => new SellIntent(sim.World.Resolve(s.Vendor), s.Item, s.Count),
+        BuyBackMsg bb => new BuyBackIntent(sim.World.Resolve(bb.Vendor), bb.Item),
         _ => null,
     };
 
