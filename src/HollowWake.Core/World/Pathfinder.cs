@@ -29,6 +29,13 @@ public sealed class Pathfinder
     public int MaxNodes { get; init; } = 4000;
     public Func<CellCoord, double> CellCost { get; init; } = _ => 1.0;
 
+    /// <summary>
+    /// Cells something placed at runtime blocks (trees, veins, structures a simulation tracks in its
+    /// blocked-cell index), which the movement system refuses to enter. The search neither stands in such
+    /// a cell nor cuts a corner past one. Null when nothing is placed.
+    /// </summary>
+    public Func<CellCoord, bool>? Blocked { get; init; }
+
     public Pathfinder(Terrain terrain)
     {
         _terrain = terrain;
@@ -189,10 +196,15 @@ public sealed class Pathfinder
 
     /// <summary>
     /// The ground a body at height z finds in a cell, judged as a cell to stand in (walkable, not blocked,
-    /// within the drop) and as a corner to pass (the step rule of <see cref="Terrain.CanStep"/>).
+    /// within the drop) and as a corner to pass (the step rule of <see cref="Terrain.CanStep"/>). A cell a
+    /// placed thing blocks is neither.
     /// </summary>
     private Probe ProbeCell(CellCoord cell, double z)
     {
+        if (Blocked is { } blockedByPlaced && blockedByPlaced(cell))
+        {
+            return default;
+        }
         if (!_terrain.TryFindGround(cell.X + 0.5, cell.Y + 0.5, z, StepUp, out var ground, out _, out var flags))
         {
             return default;
