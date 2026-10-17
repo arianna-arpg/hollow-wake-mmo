@@ -22,11 +22,15 @@ internal static class DeliveryKinds
     private static readonly string[] Origins = { "caster", "point" };
     private static readonly string[] Centers = { "focus", "source", "point" };
     private static readonly string[] Reaches = { "center", "edge" };
-    private static readonly string[] MoveKinds = { "teleport", "dash", "knockback", "pull", "buffet" };
+    private static readonly string[] MoveKinds = { "teleport", "dash", "leap", "blink", "recall", "knockback", "pull", "buffet" };
+    private static readonly string[] Links = { "target", "point", "owner" };
+    private static readonly string[] DetonatePicks = { "all", "nearest" };
+    private static readonly string[] MarkAt = { "caster", "point" };
     private static readonly string[] Movers = { "source", "target" };
     private static readonly string[] ScatterAt = { "random", "enemies" };
     private static readonly string[] CascadeDirs = { "forward", "backward", "axis", "out", "random" };
     private static readonly string[] SegmentAxes = { "along", "across" };
+    private static readonly string[] Occlusions = { "blocked", "free" };
 
     public static void Register()
     {
@@ -125,6 +129,10 @@ internal static class DeliveryKinds
     /// <summary>The delivery parameters one node of a type sets.</summary>
     private static void Params(string type, JsonObject p, ValidationContext c, string field)
     {
+        if (type is "area" or "projectile" or "field" or "aura")
+        {
+            Choice(p, "occlusion", Occlusions, c, field);
+        }
         switch (type)
         {
             case "area":
@@ -176,6 +184,27 @@ internal static class DeliveryKinds
                 break;
             case "cascade":
                 Choice(p, "dir", CascadeDirs, c, field);
+                break;
+            case "aura":
+                if (p["domain"] is { } auraDomain)
+                {
+                    Domain(auraDomain, c, field);
+                }
+                break;
+            case "tether":
+                Choice(p, "link", Links, c, field);
+                break;
+            case "aim":
+                if (p["sequence"] is { } sequence && sequence is not JsonArray)
+                {
+                    c.Error($"'{field}.sequence' must be a list of bearings in degrees.");
+                }
+                break;
+            case "detonate":
+                Choice(p, "pick", DetonatePicks, c, field);
+                break;
+            case "mark":
+                Choice(p, "at", MarkAt, c, field);
                 break;
         }
     }

@@ -29,6 +29,21 @@ internal static class DeliveryProbes
         MechanismRegistry.Register("storm", static (w, _) => w.Has("scatter"), description: "strikes scattered over a disc");
         MechanismRegistry.Register("telegraph", static (w, _) => Telegraphed(w), description: "placements marked before they land: delayed fields, telegraphed strikes");
         MechanismRegistry.Register("shove", static (w, _) => Shoves(w), description: "knockbacks, pulls and buffets that shove bodies");
+        MechanismRegistry.Register("leap", static (w, _) => Moves(w, "leap"), description: "leaps through the air that land");
+        MechanismRegistry.Register("dash", static (w, _) => Moves(w, "dash"), description: "dashes, instant or over time");
+        MechanismRegistry.Register("tether", static (w, _) => w.Has("tether"), description: "live lines between bodies or points");
+    }
+
+    private static bool Moves(WeaveProbe w, string kind)
+    {
+        foreach (var node in w.Nodes("move"))
+        {
+            if (Text(node, "kind") == kind)
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
     private static string? Text(JsonObject node, string param) => JsonNum.StringOf(node[param]);

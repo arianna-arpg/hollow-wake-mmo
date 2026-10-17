@@ -282,3 +282,112 @@ public class ShoveTests
         Assert.Contains(arena.Of<StatusApplied>(), s => s.Target == boar && s.Status == "stunned");
     }
 }
+
+/// <summary>Displacements over time: dashes through a corridor, leaps through the air, blinks, marks and recalls.</summary>
+public class DisplacementTests
+{
+    private static Vector3 At(DeliveryArena arena, Entity e) => arena.Sim.World.Get<Transform>(e)!.Position;
+
+    private static Stats StatsOf(DeliveryArena arena, Entity e) => arena.Sim.World.Get<Stats>(e)!;
+
+    [Fact]
+    public void DashesTravelOverTimeAndStrikeTheirCorridorOnce()
+    {
+        var arena = DeliveryArena.Create();
+        var inWay = arena.Body(13, 10.5f);
+        var aside = arena.Body(13, 12.2f);
+        arena.Run("{\"type\": \"move\", \"kind\": \"dash\", \"distance\": 6, \"speed\": 10, \"width\": 1.5, \"on_contact\": [{\"type\": \"event\", \"name\": \"t_hit\"}], \"on_end\": [{\"type\": \"event\", \"name\": \"t_end\"}]}", new Vector3(16, 10, 0));
+        Assert.True(StatsOf(arena, arena.Caster).HasFlag("dashing"));
+        Assert.Single(arena.Of<DisplacementStarted>());
+        arena.Tick(4);
+        var x = At(arena, arena.Caster).X;
+        Assert.InRange(x, 11.5f, 12.5f);
+        arena.Tick(10);
+        Assert.Equal(16, At(arena, arena.Caster).X, 2);
+        Assert.Equal(new[] { inWay }, arena.Struck());
+        Assert.Single(arena.Struck("t_end"));
+        Assert.False(StatsOf(arena, arena.Caster).HasFlag("dashing"));
+        Assert.True(Assert.Single(arena.Of<DisplacementEnded>()).Arrived);
+        _ = aside;
+    }
+
+    [Fact]
+    public void DashesStopShortOfWallsAndOfTreesUnlessTheyPhase()
+    {
+        var arena = DeliveryArena.Create();
+        for (var y = 6; y <= 14; y++)
+        {
+            arena.Sim.Service<PatternFactory>().Spawn(arena.Sim, "oak", new Vector3(13.5f, y + 0.5f, 0));
+        }
+        arena.Run("{\"type\": \"move\", \"kind\": \"dash\", \"distance\": 6, \"speed\": 20}", new Vector3(16, 10, 0));
+        arena.Tick(20);
+        Assert.True(At(arena, arena.Caster).X < 13, $"dashed into the trees to {At(arena, arena.Caster)}");
+        var phasing = DeliveryArena.Create();
+        for (var y = 6; y <= 14; y++)
+        {
+            phasing.Sim.Service<PatternFactory>().Spawn(phasing.Sim, "oak", new Vector3(13.5f, y + 0.5f, 0));
+        }
+        phasing.Run("{\"type\": \"move\", \"kind\": \"dash\", \"distance\": 6, \"speed\": 20, \"phase\": true}", new Vector3(16, 10, 0));
+        phasing.Tick(20);
+        Assert.Equal(16, At(phasing, phasing.Caster).X, 2);
+    }
+
+    [Fact]
+    public void LeapsAreUntargetableInTheAirThenLand()
+    {
+        var arena = DeliveryArena.Create();
+        var foe = arena.Body(16.5f, 10);
+        arena.Run("{\"type\": \"move\", \"kind\": \"leap\", \"distance\": 6, \"air_time\": 0.5, \"arc\": 2, \"on_land\": [{\"type\": \"area\", \"radius\": 2, \"center\": \"point\", \"effects\": [{\"type\": \"event\", \"name\": \"t_hit\"}]}]}", new Vector3(16, 10, 0));
+        arena.Tick(5);
+        var mid = At(arena, arena.Caster);
+        Assert.True(mid.Z > 1.5f, $"the leap is only {mid.Z} high");
+        Assert.True(StatsOf(arena, arena.Caster).HasFlag("untargetable"));
+        // A foe's area cannot reach the leaper in the air.
+        var other = DeliveryArenaFoe(arena, foe);
+        Assert.Empty(other);
+        arena.Tick(8);
+        Assert.Equal(16, At(arena, arena.Caster).X, 2);
+        Assert.Equal(0, At(arena, arena.Caster).Z, 2);
+        Assert.False(StatsOf(arena, arena.Caster).HasFlag("untargetable"));
+        Assert.Equal(new[] { foe }, arena.Struck());
+    }
+
+    /// <summary>The foe strikes everything around it; returns whom it struck.</summary>
+    private static List<Entity> DeliveryArenaFoe(DeliveryArena arena, Entity foe)
+    {
+        var struck = new List<Entity>();
+        var area = arena.Effect("{\"type\": \"area\", \"radius\": 30, \"center\": \"source\", \"effects\": [{\"type\": \"event\", \"name\": \"t_foe\"}]}");
+        area.Execute(new EffectContext { Sim = arena.Sim, Source = foe, Point = At(arena, foe), Rng = new Rng(1) });
+        struck.AddRange(arena.Struck("t_foe"));
+        return struck;
+    }
+
+    [Fact]
+    public void BlinksArriveBehindTheirTargetAfterTheirDelay()
+    {
+        var arena = DeliveryArena.Create();
+        var foe = arena.Body(16, 10);
+        var ft = arena.Sim.World.Get<Transform>(foe)!;
+        ft.Yaw = MathF.PI;
+        arena.Run("{\"type\": \"move\", \"kind\": \"blink\", \"behind\": true, \"delay\": 0.3, \"distance\": 20}", At(arena, foe), target: foe);
+        arena.Tick(3);
+        Assert.Equal(10, At(arena, arena.Caster).X, 2);
+        arena.Tick(4);
+        // Behind a body facing west is east of it.
+        Assert.True(At(arena, arena.Caster).X > 16.5f, $"arrived at {At(arena, arena.Caster)}");
+    }
+
+    [Fact]
+    public void MarksAreRecalledOnce()
+    {
+        var arena = DeliveryArena.Create();
+        arena.Run("{\"type\": \"mark\", \"key\": \"t_home\"}", new Vector3(10, 10, 0));
+        arena.Run("{\"type\": \"move\", \"kind\": \"teleport\", \"distance\": 5}", new Vector3(15, 10, 0));
+        Assert.Equal(15, At(arena, arena.Caster).X, 2);
+        arena.Run("{\"type\": \"move\", \"kind\": \"recall\", \"mark\": \"t_home\"}", new Vector3(15, 10, 0));
+        Assert.Equal(10, At(arena, arena.Caster).X, 2);
+        arena.Run("{\"type\": \"move\", \"kind\": \"teleport\", \"distance\": 5}", new Vector3(15, 10, 0));
+        arena.Run("{\"type\": \"move\", \"kind\": \"recall\", \"mark\": \"t_home\"}", new Vector3(15, 10, 0));
+        Assert.Equal(15, At(arena, arena.Caster).X, 2);
+    }
+}

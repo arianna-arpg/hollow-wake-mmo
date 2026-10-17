@@ -1,10 +1,12 @@
 using System.Numerics;
 using System.Text.Json.Nodes;
 using HollowWake.Core.Components;
+using HollowWake.Core.Content;
 using HollowWake.Core.Ecs;
 using HollowWake.Core.Expressions;
 using HollowWake.Core.Maths;
 using HollowWake.Core.Sim;
+using HollowWake.Core.Systems;
 using HollowWake.Core.Tags;
 using static HollowWake.Core.Effects.Handlers.EffectHelpers;
 
@@ -21,6 +23,9 @@ public static class PlacementHandlers
     {
         r.Register(new ScatterHandler());
         r.Register(new CascadeHandler());
+        r.Register(new TetherHandler());
+        r.Register(new AimHandler());
+        r.Register(new DetonateHandler());
     }
 
     private static readonly TagSet TelegraphTags = TagSet.Of("telegraph");
@@ -296,6 +301,302 @@ internal sealed class CascadeHandler : IEffectHandler
                 var placement = At(ctx, Entity.None, at, facing, at, ctx.Depth + 1, vars, ctx.DamageScale * Math.Max(0, 1 + damageStep * i));
                 PlacementHandlers.RunAt(Effects, placement, delay);
             }
+        }
+    }
+}
+
+/// <summary>
+/// <c>tether</c>: a live line from the source to its target (<c>link: target</c>, the default), to the point
+/// (<c>point</c>) or to the source's owner (<c>owner</c>, for constructs and minions). Every <c>interval</c> it
+/// strikes the bodies passing <c>filter</c> that it crosses within half its <c>width</c> (<c>pulse</c>, the
+/// <c>on_hit</c> hook); it lasts <c>duration</c> seconds (the weave's by default) and snaps when stretched past
+/// <c>max_length</c> or when an end it is bound to is gone, running <c>on_end</c>.
+/// </summary>
+internal sealed class TetherHandler : IEffectHandler
+{
+    public string Type => "tether";
+
+    public EffectSignature Signature { get; } = EffectSignature.Of("link", "width", "duration", "interval", "filter", "max_length", "look")
+        .Hook(EffectHooks.OnHit, "pulse")
+        .Hook(EffectHooks.OnEnd, "on_end");
+
+    public CompiledEffect Compile(JsonObject p, EffectCompileContext ctx) => new Effect
+    {
+        Type = Type,
+        Link = ctx.ChoiceOf(p["link"], "link", "target", "target", "point", "owner"),
+        Width = ctx.ExprOf(p["width"], Expr.Constant(1))!,
+        Duration = ctx.ExprOf(p["duration"]),
+        Interval = ctx.ExprOf(p["interval"], Expr.Constant(0.5))!,
+        Filter = ctx.StringOf(p["filter"]) ?? "enemy",
+        MaxLength = ctx.ExprOf(p["max_length"]),
+        Look = ctx.StringOf(p["look"]),
+        Pulse = ctx.CompileList(p["pulse"], "pulse"),
+        OnEnd = ctx.CompileList(p["on_end"], "on_end"),
+    };
+
+    private sealed class Effect : CompiledEffect
+    {
+        public string Link = "target";
+        public required Expr Width;
+        public Expr? Duration;
+        public required Expr Interval;
+        public string Filter = "enemy";
+        public Expr? MaxLength;
+        public string? Look;
+        public CompiledEffect[] Pulse = Array.Empty<CompiledEffect>();
+        public CompiledEffect[] OnEnd = Array.Empty<CompiledEffect>();
+
+        public override void Execute(EffectContext ctx)
+        {
+            var sim = ctx.Sim;
+            var to = Entity.None;
+            switch (Link)
+            {
+                case "target":
+                    if (ctx.Target.IsNone || ctx.Target == ctx.Source)
+                    {
+                        return;
+                    }
+                    to = ctx.Target;
+                    break;
+                case "owner":
+                    to = sim.World.Get<Identity>(ctx.Source)?.Owner ?? Entity.None;
+                    if (to.IsNone)
+                    {
+                        return;
+                    }
+                    break;
+            }
+            var now = sim.Clock.Time;
+            var tether = new Tether
+            {
+                Context = ctx.Deeper(),
+                From = ctx.Source,
+                To = to,
+                Point = ctx.Point,
+                Width = (float)Math.Max(0.05, ctx.Eval(Width, 1)),
+                MaxLength = MaxLength is null ? float.PositiveInfinity : (float)ctx.Eval(MaxLength, 10),
+                Interval = Math.Max(sim.Clock.Dt, ctx.Eval(Interval, 0.5)),
+                NextPulseAt = now,
+                ExpiresAt = now + Math.Max(sim.Clock.Dt, ParamOrAttr(ctx, Duration, "duration", 4)),
+                Filter = Filter,
+                Pulse = Pulse,
+                OnEnd = OnEnd,
+            };
+            TetherSystem.Spawn(sim, tether, ctx.Origin, Look ?? ctx.Weave?.Look);
+        }
+    }
+}
+
+/// <summary>
+/// <c>aim</c>: a wrapper that turns the bearing its <c>effects</c> are delivered along: by <c>offset</c>
+/// degrees, by the next of a <c>sequence</c> of bearings each time the same source runs it, and by a random
+/// turn within <c>spread</c> degrees (scaled by the weave's <c>aim.spread</c>) rolled on the cast's stream. The
+/// point turns about the source with it, and the deliveries go along the bearing rather than at a target.
+/// Glyphs graft it onto a form's delivery with a wrap patch.
+/// </summary>
+internal sealed class AimHandler : IEffectHandler
+{
+    public string Type => "aim";
+
+    public EffectSignature Signature { get; } = EffectSignature.Of("offset", "spread", "sequence")
+        .Wrapping("effects");
+
+    public CompiledEffect Compile(JsonObject p, EffectCompileContext ctx)
+    {
+        var sequence = Array.Empty<double>();
+        if (p["sequence"] is JsonArray steps)
+        {
+            sequence = new double[steps.Count];
+            for (var i = 0; i < steps.Count; i++)
+            {
+                sequence[i] = JsonNum.Of(steps[i], 0);
+            }
+        }
+        else if (p["sequence"] is not null)
+        {
+            throw new InvalidOperationException($"'sequence' must be a list of bearings in degrees in {ctx.Owner}.");
+        }
+        return new Effect
+        {
+            Type = Type,
+            Offset = ctx.ExprOf(p["offset"], Expr.Constant(0))!,
+            Spread = ctx.ExprOf(p["spread"], Expr.Constant(0))!,
+            Sequence = sequence,
+            Effects = ctx.CompileList(p["effects"], "effects"),
+        };
+    }
+
+    private sealed class Effect : CompiledEffect
+    {
+        public required Expr Offset;
+        public required Expr Spread;
+        public double[] Sequence = Array.Empty<double>();
+        public CompiledEffect[] Effects = Array.Empty<CompiledEffect>();
+        // Where each source is in the sequence; a source's cursor lives as long as the compiled weave.
+        private readonly Dictionary<Entity, int> _cursor = new();
+
+        public override void Execute(EffectContext ctx)
+        {
+            var degrees = ctx.Eval(Offset, 0);
+            if (Sequence.Length > 0)
+            {
+                _cursor.TryGetValue(ctx.Source, out var at);
+                degrees += Sequence[at % Sequence.Length];
+                _cursor[ctx.Source] = (at + 1) % Sequence.Length;
+            }
+            var spread = ctx.Eval(Spread, 0) * WeaveAttr(ctx, "aim.spread", 1);
+            if (spread > 0)
+            {
+                degrees += (ctx.Rng.NextDouble() - 0.5) * spread;
+            }
+            var facing = Facing(ctx);
+            var origin = ctx.From ?? ctx.SourceTransform?.Position ?? ctx.Point;
+            if (!ctx.Target.IsNone && ctx.TargetTransform is { } tt && ctx.Target != ctx.Source)
+            {
+                var toTarget = new Vector2(tt.Position.X - origin.X, tt.Position.Y - origin.Y);
+                if (toTarget.LengthSquared() > 1e-6f)
+                {
+                    facing = Vector2.Normalize(toTarget);
+                }
+            }
+            var angle = MathF.Atan2(facing.Y, facing.X) + (float)(degrees * Math.PI / 180.0);
+            var direction = new Vector2(MathF.Cos(angle), MathF.Sin(angle));
+            var reach = new Vector2(ctx.Point.X - origin.X, ctx.Point.Y - origin.Y).Length();
+            var point = new Vector3(origin.X + direction.X * reach, origin.Y + direction.Y * reach, ctx.Point.Z);
+            var target = ctx.Target == ctx.Source ? ctx.Target : Entity.None;
+            ExecuteAll(Effects, At(ctx, target, point, direction, ctx.From, ctx.Depth));
+        }
+    }
+}
+
+/// <summary>
+/// <c>detonate</c>: sets off what the source owns: its projectiles in flight, its fields, and anything else it
+/// owns that carries one of the <c>tags</c> (default <c>projectile</c> and <c>field</c>), all of them or only
+/// the one nearest the point (<c>pick: nearest</c>), within <c>radius</c> of the point when given. Each runs
+/// <c>effects</c> where it is, then ends: a projectile with its <c>on_end</c> as if its flight ran out there, a
+/// field with its <c>on_end</c>, anything else gone.
+/// </summary>
+internal sealed class DetonateHandler : IEffectHandler
+{
+    public string Type => "detonate";
+
+    public EffectSignature Signature { get; } = EffectSignature.Of("tags", "pick", "radius", "effects");
+
+    private static readonly TagSet DefaultTags = TagSet.Of("projectile", "field");
+
+    public CompiledEffect Compile(JsonObject p, EffectCompileContext ctx)
+    {
+        var tags = p["tags"] is null ? DefaultTags : ctx.TagsOf(p["tags"]);
+        return new Effect
+        {
+            Type = Type,
+            Tags = tags,
+            Nearest = ctx.ChoiceOf(p["pick"], "pick", "all", "all", "nearest") == "nearest",
+            Radius = ctx.ExprOf(p["radius"]),
+            Effects = ctx.CompileList(p["effects"], "effects"),
+            OnlyDeliveries = tags.Items.All(t => t is "projectile" or "field"),
+        };
+    }
+
+    private sealed class Effect : CompiledEffect
+    {
+        public TagSet Tags = TagSet.Empty;
+        public bool Nearest;
+        public Expr? Radius;
+        public CompiledEffect[] Effects = Array.Empty<CompiledEffect>();
+        public bool OnlyDeliveries;
+
+        public override void Execute(EffectContext ctx)
+        {
+            var sim = ctx.Sim;
+            var radius = Radius is null ? float.PositiveInfinity : (float)ctx.Eval(Radius, 10);
+            var owned = Rent();
+            try
+            {
+                if (Tags.Has("projectile"))
+                {
+                    foreach (var (e, p) in sim.World.Query<Projectile>())
+                    {
+                        if (!p.Ended && p.Context.Origin == ctx.Origin)
+                        {
+                            owned.Add(e);
+                        }
+                    }
+                }
+                if (Tags.Has("field"))
+                {
+                    foreach (var (e, f) in sim.World.Query<Field>())
+                    {
+                        if (!f.Ended && f.Context.Origin == ctx.Origin)
+                        {
+                            owned.Add(e);
+                        }
+                    }
+                }
+                if (!OnlyDeliveries)
+                {
+                    foreach (var (e, id) in sim.World.Query<Identity>())
+                    {
+                        if (id.Owner == ctx.Origin && id.Tags.HasAny(Tags) && !sim.World.Has<Projectile>(e) && !sim.World.Has<Field>(e))
+                        {
+                            owned.Add(e);
+                        }
+                    }
+                }
+                // Keep those within reach; for the nearest, only the nearest of them.
+                var best = Entity.None;
+                var bestDistance = float.MaxValue;
+                for (var i = owned.Count - 1; i >= 0; i--)
+                {
+                    var at = sim.World.Get<Transform>(owned[i])?.Position ?? ctx.Point;
+                    var d = Vector2.Distance(new Vector2(at.X, at.Y), new Vector2(ctx.Point.X, ctx.Point.Y));
+                    if (d > radius)
+                    {
+                        owned.RemoveAt(i);
+                    }
+                    else if (d <= bestDistance)
+                    {
+                        best = owned[i];
+                        bestDistance = d;
+                    }
+                }
+                if (Nearest)
+                {
+                    owned.Clear();
+                    if (!best.IsNone)
+                    {
+                        owned.Add(best);
+                    }
+                }
+                foreach (var e in owned)
+                {
+                    Detonate(ctx, e);
+                }
+            }
+            finally
+            {
+                Return(owned);
+            }
+        }
+
+        private void Detonate(EffectContext ctx, Entity e)
+        {
+            var sim = ctx.Sim;
+            if (!sim.World.IsAlive(e) || !sim.World.TryGet<Transform>(e, out var t))
+            {
+                return;
+            }
+            var at = t.Position;
+            if (Effects.Length > 0)
+            {
+                ExecuteAll(Effects, At(ctx, Entity.None, at, t.Forward, at, ctx.Depth + 1));
+            }
+            if (ProjectileSystem.Detonate(sim, e) || FieldSystem.End(sim, e) || TetherSystem.End(sim, e))
+            {
+                return;
+            }
+            LifetimeSystem.Despawn(sim, e);
         }
     }
 }

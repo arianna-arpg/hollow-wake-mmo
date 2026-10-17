@@ -750,6 +750,268 @@ public class PlacementDeliveryTests
     }
 }
 
+/// <summary>Walls stop deliveries unless they phase.</summary>
+public class OcclusionTests
+{
+    private const string Hit = "\"on_hit\": [{\"type\": \"event\", \"name\": \"t_hit\"}]";
+
+    /// <summary>A wall of structure cells that cannot be walked, across x from y0 to y1.</summary>
+    private static void Wall(Simulation sim, int x, int y0, int y1)
+    {
+        for (var y = y0; y <= y1; y++)
+        {
+            var (chunk, i) = sim.Terrain.Locate(new World.CellCoord(x, y));
+            chunk.Flags[i] = World.CellFlags.Structure | World.CellFlags.Blocked;
+        }
+    }
+
+    [Fact]
+    public void LinesOfSightStopAtWallsAndRisingGround()
+    {
+        var arena = DeliveryArena.Create();
+        Wall(arena.Sim, 13, 8, 12);
+        var terrain = arena.Sim.Terrain;
+        Assert.True(World.LineOfSight.Clear(terrain, new Vector3(10, 10, 1), new Vector3(12.5f, 10, 1)));
+        Assert.False(World.LineOfSight.Clear(terrain, new Vector3(10, 10, 1), new Vector3(16, 10, 1)));
+        Assert.True(World.LineOfSight.Clear(terrain, new Vector3(10, 14, 1), new Vector3(16, 14, 1)));
+        Assert.Equal(new World.CellCoord(13, 10), World.LineOfSight.Blocker(terrain, new Vector3(10, 10, 1), new Vector3(16, 11, 1), out var t));
+        Assert.InRange(t, 0.4f, 0.6f);
+        // A hill between the ends blocks too.
+        var (chunk, i) = terrain.Locate(new World.CellCoord(20, 20));
+        chunk.Height[i] = 5;
+        Assert.False(World.LineOfSight.Clear(terrain, new Vector3(18.5f, 20.5f, 1), new Vector3(22.5f, 20.5f, 1)));
+    }
+
+    [Fact]
+    public void WallsStopFlightsAndAreasUnlessTheyPhase()
+    {
+        var arena = DeliveryArena.Create();
+        Wall(arena.Sim, 13, 6, 14);
+        var behind = arena.Body(15, 10);
+        arena.Run("{\"type\": \"projectile\", \"speed\": 12, \"range\": 10, \"pierce\": 0, " + Hit + ", \"on_end\": [{\"type\": \"event\", \"name\": \"t_end\"}]}", new Vector3(20, 10, 0), Vector2.UnitX);
+        arena.Tick(20);
+        Assert.Empty(arena.Struck());
+        Assert.Single(arena.Struck("t_end"));
+        arena.Events.Clear();
+        arena.Run("{\"type\": \"projectile\", \"speed\": 12, \"range\": 10, \"pierce\": 0, \"occlusion\": \"free\", " + Hit + "}", new Vector3(20, 10, 0), Vector2.UnitX);
+        arena.Tick(20);
+        Assert.Equal(new[] { behind }, arena.Struck());
+        arena.Events.Clear();
+        var nova = "{\"type\": \"area\", \"radius\": 7, \"center\": \"source\", \"effects\": [{\"type\": \"event\", \"name\": \"t_hit\"}]";
+        arena.Run(nova + "}", new Vector3(10, 10, 0));
+        Assert.Empty(arena.Struck());
+        arena.Run(nova + ", \"occlusion\": \"free\"}", new Vector3(10, 10, 0));
+        Assert.Equal(new[] { behind }, arena.Struck());
+    }
+
+    [Fact]
+    public void BouncingFlightsGlanceOffWalls()
+    {
+        var arena = DeliveryArena.Create();
+        Wall(arena.Sim, 13, 6, 14);
+        arena.Run("{\"type\": \"projectile\", \"speed\": 10, \"range\": 10, \"pierce\": 0, \"bounce\": 1}", new Vector3(20, 10, 0), Vector2.UnitX);
+        var e = arena.Spawned("projectile").Single().Entity;
+        arena.Tick(8);
+        Assert.Single(arena.Of<ProjectileBounced>());
+        var flight = arena.Sim.World.Get<Projectile>(e)!;
+        Assert.True(MathF.Cos(flight.Heading) < -0.9f, $"heading {flight.Heading} after the bounce");
+    }
+}
+
+/// <summary>Auras, tethers, aim transforms and detonations.</summary>
+public class AuraTetherAimDetonateTests
+{
+    [Fact]
+    public void AurasFollowTheirSourceLendTheirDomainAndToggleOff()
+    {
+        var arena = DeliveryArena.Create();
+        var ally = arena.Body(11.5f, 10, faction: "red");
+        var foe = arena.Body(12, 11);
+        var allyStats = arena.Sim.World.Get<Stats>(ally)!;
+        var before = allyStats.Get("move.speed");
+        var aura = "{\"type\": \"aura\", \"radius\": 3, \"toggle\": true, \"interval\": 0.25, \"domain\": [{\"attribute\": \"move.speed\", \"form\": \"more\", \"value\": 0.5}], \"pulse\": [{\"type\": \"event\", \"name\": \"t_hit\"}]}";
+        arena.Run(aura, new Vector3(10, 10, 0));
+        arena.Tick(2);
+        Assert.Equal(before * 1.5, allyStats.Get("move.speed"), 6);
+        Assert.Contains(foe, arena.Struck());
+        Assert.DoesNotContain(ally, arena.Struck());
+        // It goes where its source goes.
+        var ct = arena.Sim.World.Get<Transform>(arena.Caster)!;
+        ct.Position = new Vector3(30, 10, 0);
+        arena.Sim.Spatial.Update(arena.Caster, ct.Position);
+        arena.Tick(2);
+        Assert.Equal(before, allyStats.Get("move.speed"), 6);
+        Assert.Equal(30, arena.Sim.World.Query<Transform, Field>().Single().C1.Position.X, 3);
+        // Casting it again turns it off.
+        arena.Run(aura, new Vector3(30, 10, 0));
+        arena.Tick();
+        Assert.Empty(arena.Sim.World.Query<Field>());
+    }
+
+    [Fact]
+    public void TethersStrikeWhatCrossesThemAndSnapWhenStretched()
+    {
+        var arena = DeliveryArena.Create();
+        var anchor = arena.Body(18, 10);
+        var crossing = arena.Body(14, 10.4f);
+        var clear = arena.Body(14, 12.5f);
+        arena.Run("{\"type\": \"tether\", \"link\": \"target\", \"width\": 1, \"interval\": 0.5, \"duration\": 3, \"max_length\": 12, \"pulse\": [{\"type\": \"event\", \"name\": \"t_hit\"}], \"on_end\": [{\"type\": \"event\", \"name\": \"t_snap\"}]}", new Vector3(18, 10, 0), target: anchor);
+        arena.Tick(2);
+        Assert.Equal(new[] { crossing }, arena.Struck());
+        Assert.Single(arena.Spawned("tether"));
+        arena.Tick(10);
+        Assert.Equal(2, arena.Struck().Count);
+        var at = arena.Sim.World.Get<Transform>(anchor)!;
+        at.Position = new Vector3(30, 10, 0);
+        arena.Sim.Spatial.Update(anchor, at.Position);
+        arena.Tick(2);
+        Assert.Single(arena.Struck("t_snap"));
+        Assert.Empty(arena.Sim.World.Query<Tether>());
+        _ = clear;
+    }
+
+    [Fact]
+    public void AimTurnsTheBearingBySequenceAndBySpreadForASeed()
+    {
+        var arena = DeliveryArena.Create();
+        var aim = arena.Effect("{\"type\": \"aim\", \"sequence\": [-30, 0, 30], \"effects\": [{\"type\": \"projectile\", \"speed\": 10, \"range\": 8, \"pierce\": 0}]}");
+        for (var i = 0; i < 4; i++)
+        {
+            aim.Execute(arena.Context(new Vector3(20, 10, 0), Vector2.UnitX));
+        }
+        var yaws = arena.Spawned("projectile").Select(s => MathF.Round(arena.Sim.World.Get<Transform>(s.Entity)!.Yaw * 180 / MathF.PI)).ToList();
+        Assert.Equal(new[] { -30f, 0f, 30f, -30f }, yaws);
+        List<float> Spread(ulong seed)
+        {
+            var other = DeliveryArena.Create();
+            var effect = other.Effect("{\"type\": \"aim\", \"spread\": 40, \"effects\": [{\"type\": \"projectile\", \"speed\": 10, \"range\": 8, \"pierce\": 0}]}");
+            for (var i = 0; i < 5; i++)
+            {
+                effect.Execute(other.Context(new Vector3(20, 10, 0), Vector2.UnitX, rng: seed + (ulong)i));
+            }
+            return other.Spawned("projectile").Select(s => other.Sim.World.Get<Transform>(s.Entity)!.Yaw).ToList();
+        }
+        var spread = Spread(9);
+        Assert.Equal(spread, Spread(9));
+        Assert.All(spread, y => Assert.InRange(y * 180 / MathF.PI, -20.01f, 20.01f));
+        Assert.True(spread.Distinct().Count() > 1);
+    }
+
+    [Fact]
+    public void DetonationsSetOffWhatTheSourceOwns()
+    {
+        var arena = DeliveryArena.Create();
+        arena.Run("{\"type\": \"projectile\", \"speed\": 2, \"range\": 20, \"pierce\": 0, \"on_end\": [{\"type\": \"event\", \"name\": \"t_end\"}]}", new Vector3(20, 10, 0), Vector2.UnitX);
+        arena.Run("{\"type\": \"projectile\", \"speed\": 2, \"range\": 20, \"pierce\": 0, \"on_end\": [{\"type\": \"event\", \"name\": \"t_end\"}]}", new Vector3(10, 20, 0), Vector2.UnitY);
+        arena.Run("{\"type\": \"field\", \"radius\": 1, \"duration\": 10, \"interval\": 1, \"on_end\": [{\"type\": \"event\", \"name\": \"t_field_end\"}]}", new Vector3(14, 14, 0));
+        arena.Tick(10);
+        // The nearest projectile to the point first.
+        arena.Run("{\"type\": \"detonate\", \"tags\": [\"projectile\"], \"pick\": \"nearest\", \"effects\": [{\"type\": \"event\", \"name\": \"t_boom\"}]}", new Vector3(12, 10, 0));
+        Assert.Single(arena.Struck("t_end"));
+        Assert.Single(arena.Struck("t_boom"));
+        arena.Run("{\"type\": \"detonate\", \"effects\": [{\"type\": \"event\", \"name\": \"t_boom\"}]}", new Vector3(12, 10, 0));
+        arena.Tick();
+        Assert.Equal(2, arena.Struck("t_end").Count);
+        Assert.Single(arena.Struck("t_field_end"));
+        Assert.Equal(3, arena.Struck("t_boom").Count);
+        Assert.Empty(arena.Sim.World.Query<Projectile>());
+        Assert.Empty(arena.Sim.World.Query<Field>());
+    }
+}
+
+/// <summary>The delivery forms and glyphs in content, cast through the runtime.</summary>
+public class DeliveryContentTests
+{
+    private static bool Cast(DeliveryArena arena, string preset, Entity target, Vector3 point, Vector2? direction = null)
+    {
+        var book = arena.Sim.World.Get<WeaveBook>(arena.Caster)!;
+        var slot = book.Slots.FirstOrDefault(s => s.Spec.Preset == preset) ?? book.Add(new WeaveSpec { Preset = preset });
+        book.ReadyAt.Clear();
+        return arena.Sim.Service<WeaveRuntime>().TryBegin(arena.Sim, arena.Caster, slot, target, point, direction ?? Vector2.Zero, out _);
+    }
+
+    private static void Full(DeliveryArena arena)
+    {
+        var stats = arena.Sim.World.Get<Stats>(arena.Caster)!;
+        foreach (var r in new[] { "mana", "stamina" })
+        {
+            stats.SetResource(r, stats.ResourceMax(r));
+        }
+    }
+
+    [Fact]
+    public void LeapSlamsLandAndThrowFoesBack()
+    {
+        var arena = DeliveryArena.Create();
+        var foe = arena.Body(16.5f, 10);
+        Assert.True(Cast(arena, "stone_leap", Entity.None, new Vector3(16, 10, 0)));
+        arena.Tick(30);
+        Assert.Equal(16, arena.Sim.World.Get<Transform>(arena.Caster)!.Position.X, 1);
+        Assert.Contains(arena.Of<DamageDealt>(), d => d.Target == foe);
+        Assert.True(arena.Sim.World.Get<Transform>(foe)!.Position.X > 17, "the landing did not throw the foe back");
+        Assert.Single(arena.Spawned("telegraph"));
+    }
+
+    [Fact]
+    public void ShadowstepArrivesBehindItsTarget()
+    {
+        var arena = DeliveryArena.Create();
+        var foe = arena.Body(15, 10);
+        arena.Sim.World.Get<Transform>(foe)!.Yaw = MathF.PI;
+        Assert.True(Cast(arena, "umbra_step", foe, new Vector3(15, 10, 0)));
+        Assert.True(arena.Sim.World.Get<Transform>(arena.Caster)!.Position.X > 15.5f);
+    }
+
+    [Fact]
+    public void PresenceTogglesOnAndOff()
+    {
+        var arena = DeliveryArena.Create();
+        var foe = arena.Body(12, 10);
+        Assert.True(Cast(arena, "lumen_presence", arena.Caster, new Vector3(10, 10, 0)));
+        arena.Tick(25);
+        Assert.Single(arena.Sim.World.Query<Field>());
+        Assert.Contains(arena.Of<DamageDealt>(), d => d.Target == foe);
+        Full(arena);
+        Assert.True(Cast(arena, "lumen_presence", arena.Caster, new Vector3(10, 10, 0)));
+        arena.Tick();
+        Assert.Empty(arena.Sim.World.Query<Field>());
+    }
+
+    [Fact]
+    public void BindingBurnsWhatCrossesItsLine()
+    {
+        var arena = DeliveryArena.Create();
+        var foe = arena.Body(18, 10);
+        var crossing = arena.Body(14, 10.3f);
+        Assert.True(Cast(arena, "void_binding", foe, new Vector3(18, 10, 0)));
+        arena.Tick(40);
+        Assert.Contains(arena.Of<DamageDealt>(), d => d.Target == crossing);
+        Assert.DoesNotContain(arena.Of<DamageDealt>(), d => d.Target == foe);
+    }
+
+    [Fact]
+    public void GlyphsGraftAimsAndPhasing()
+    {
+        var compiler = new WeaveCompiler(DeliveryArena.Registry, EffectRegistry.Shared);
+        var scatter = compiler.Compile(new WeaveSpec { Form = "bolt", Threads = { "ember" }, Glyphs = { GlyphRef.Parse("scattershot") } });
+        Assert.Equal("aim", scatter.Specs[0].Type);
+        Assert.True(compiler.Compile(new WeaveSpec { Preset = "stone_leap" }).Mechanisms.Has("leap"));
+        Assert.True(compiler.Compile(new WeaveSpec { Preset = "void_binding" }).Mechanisms.Has("tether"));
+        Assert.True(compiler.Compile(new WeaveSpec { Preset = "quick_dash" }).Mechanisms.Has("dash"));
+        var arena = DeliveryArena.Create();
+        var (chunk, i) = arena.Sim.Terrain.Locate(new World.CellCoord(13, 10));
+        chunk.Flags[i] = World.CellFlags.Structure | World.CellFlags.Blocked;
+        var behind = arena.Body(15, 10);
+        var ethereal = arena.Sim.Service<WeaveCompiler>().Compile(new WeaveSpec { Form = "bolt", Threads = { "ember" }, Glyphs = { GlyphRef.Parse("ethereal") } });
+        foreach (var effect in ethereal.Effects)
+        {
+            effect.Execute(arena.Context(new Vector3(15, 10, 0), target: behind, weave: ethereal));
+        }
+        arena.Tick(20);
+        Assert.Contains(arena.Of<DamageDealt>(), d => d.Target == behind);
+    }
+}
+
 /// <summary>Content naming shapes, styles and choices that do not exist fails validation.</summary>
 public class DeliveryValidationTests
 {

@@ -85,6 +85,8 @@ public sealed class Displacement
     public Effects.EffectContext? Context;
     /// <summary>Bodies the way passes within this many units of are struck by <see cref="OnContact"/>, each once.</summary>
     public float Width;
+    /// <summary>Who <see cref="OnContact"/> strikes: <c>enemy</c> by default, as delivery filters read.</summary>
+    public string Filter = "enemy";
     /// <summary>Peak height above the straight line between the ends, for leaps.</summary>
     public float Arc;
     /// <summary>Passes through bodies and the cells placed things block; walls still stop it.</summary>
@@ -113,6 +115,12 @@ public sealed class ShoveRider
 /// <summary>Marks a body the displacement system is moving: an impulse is decaying on it or a displacement carries it.</summary>
 public sealed class Displaced : IComponent
 {
+}
+
+/// <summary>Points a body marked to come back to later, by key: what <c>mark</c> stores and <c>move</c> kind <c>recall</c> reads.</summary>
+public sealed class Marks : IComponent
+{
+    public Dictionary<string, Vector3> Points { get; } = new(StringComparer.Ordinal);
 }
 
 /// <summary>Who or what this is: name, template, faction, tags, ownership.</summary>

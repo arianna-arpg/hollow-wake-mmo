@@ -155,3 +155,22 @@ entries:
     modifiers:
       - { attribute: damage, form: more, value: 0.2, scope: [vs.full_life] }
       - { attribute: area.radius, form: increased, value: 0.25 }
+
+  - id: scattershot
+    name: Scattershot
+    description: Each cast flies off at a wild bearing, and hits harder for the gamble.
+    requires_mechanisms: [projectile]
+    color: "#e8622a"
+    patches:
+      - { type: projectile, where: root, wrap: { type: aim, spread: 40 }, mode: first }
+    modifiers:
+      - { attribute: damage, form: more, value: 0.15 }
+
+  - id: ethereal
+    name: Ethereal
+    description: Deliveries pass through walls and over rising ground.
+    requires: [spell, attack]
+    color: "#5a4a7a"
+    modifiers:
+      - { attribute: phasing, form: flat, value: 1 }
+      - { attribute: damage, form: more, value: -0.1 }

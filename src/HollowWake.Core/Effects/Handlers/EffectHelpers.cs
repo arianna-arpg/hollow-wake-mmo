@@ -28,14 +28,15 @@ internal static class EffectHelpers
     }
 
     /// <summary>
-    /// Whether one body passes a filter: alive, not dead, with stats, and <c>enemy</c> (hostile to the
-    /// origin), <c>ally</c> (not hostile, not the origin), <c>ally_or_self</c>, <c>self</c> (the source),
-    /// <c>not_self</c>, or <c>all</c> (any other word passes everyone).
+    /// Whether one body passes a filter: alive, not dead, with stats, not flagged <c>untargetable</c> (a
+    /// leaper in the air), and <c>enemy</c> (hostile to the origin), <c>ally</c> (not hostile, not the
+    /// origin), <c>ally_or_self</c>, <c>self</c> (the source), <c>not_self</c>, or <c>all</c> (any other word
+    /// passes everyone).
     /// </summary>
     internal static bool Passes(EffectContext ctx, Entity e, string filter)
     {
         var world = ctx.Sim.World;
-        if (!world.IsAlive(e) || world.Has<Dead>(e) || !world.Has<Stats>(e))
+        if (!world.IsAlive(e) || world.Has<Dead>(e) || !world.TryGet<Stats>(e, out var stats) || stats.Flags.Contains(Untargetable))
         {
             return false;
         }
@@ -126,6 +127,21 @@ internal static class EffectHelpers
         var i = inner is null ? shape.DefaultInner : (float)Math.Clamp(ctx.Eval(inner, 0), 0, 1);
         return new ShapeSize(radius, a, w, i);
     }
+
+    /// <summary>The height above the ground lines of sight are drawn at, between bodies and the points deliveries act from.</summary>
+    internal static readonly Vector3 Eye = new(0, 0, 1);
+
+    /// <summary>The flag a body wears while no delivery may strike it.</summary>
+    internal const string Untargetable = "untargetable";
+
+    /// <summary>
+    /// Whether a delivery's lines are stopped by walls and rising ground: unless its <c>occlusion</c> is
+    /// <c>free</c> or its weave phases (<c>phasing</c> above zero).
+    /// </summary>
+    internal static bool Occluded(EffectContext ctx, bool free) => !free && WeaveAttr(ctx, "phasing", 0) <= 0;
+
+    /// <summary>Reads an <c>occlusion</c> parameter: true for <c>free</c>, false for <c>blocked</c> (the default).</summary>
+    internal static bool OcclusionFree(EffectCompileContext ctx, JsonNode? node) => ctx.ChoiceOf(node, "occlusion", "blocked", "blocked", "free") == "free";
 
     /// <summary>Reads a shape name, failing compilation with the known names when it is not one.</summary>
     internal static Shape ShapeOf(EffectCompileContext ctx, JsonNode? node, string field)

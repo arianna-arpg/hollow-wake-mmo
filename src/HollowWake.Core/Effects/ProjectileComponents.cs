@@ -95,6 +95,8 @@ public sealed class Projectile : IComponent
     /// <summary>Seconds a struck body is safe from this projectile; zero means each body is struck once.</summary>
     public float Rehit;
     public int Bounces;
+    /// <summary>Flies through walls: launched with <c>occlusion: free</c> or by a weave that phases.</summary>
+    public bool Phases;
     public bool Returning;
     /// <summary>When a returning flight turned back.</summary>
     public double TurnedAt;
@@ -297,6 +299,8 @@ public sealed class Field : IComponent
     public float Rotate;
     /// <summary>One per caster and key: a new field with the key ends the caster's older one.</summary>
     public string? Key;
+    /// <summary>Reaches only bodies with a clear line from its center, past no wall or rising ground.</summary>
+    public bool Occluded;
     /// <summary>The modifier source of the field's domain on the bodies inside.</summary>
     public string DomainSource = "";
     /// <summary>The domain's modifiers with this field as their source, built when the field is placed.</summary>
@@ -304,6 +308,31 @@ public sealed class Field : IComponent
     /// <summary>The bodies inside, when the field tracks them.</summary>
     public Dictionary<Entity, Occupant>? Occupants;
     /// <summary>Set when the field ended this tick; the entity is gone at the end of the tick.</summary>
+    public bool Ended;
+}
+
+/// <summary>
+/// A live line between two ends (bodies or a point): every interval it strikes the bodies it passes within
+/// half its width of. It ends when its time runs out, when an end it is bound to is gone, or when it is
+/// stretched past its length.
+/// </summary>
+public sealed class Tether : IComponent
+{
+    public required EffectContext Context;
+    /// <summary>The body the line starts from.</summary>
+    public Entity From = Entity.None;
+    /// <summary>The body the line runs to; none when it runs to <see cref="Point"/>.</summary>
+    public Entity To = Entity.None;
+    public Vector3 Point;
+    public float Width = 1f;
+    /// <summary>Stretched further than this, the line snaps; infinite when it cannot.</summary>
+    public float MaxLength = float.PositiveInfinity;
+    public double Interval = 0.5;
+    public double NextPulseAt;
+    public double ExpiresAt = double.PositiveInfinity;
+    public string Filter = "enemy";
+    public CompiledEffect[] Pulse = Array.Empty<CompiledEffect>();
+    public CompiledEffect[] OnEnd = Array.Empty<CompiledEffect>();
     public bool Ended;
 }
 

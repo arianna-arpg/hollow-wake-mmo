@@ -12,3 +12,7 @@ entries:
   - { id: ember_wall, name: Ember Wall, form: wall, threads: [ember], color: "#e8622a" }
   - { id: tide_maelstrom, name: Tide Maelstrom, form: maelstrom, threads: [tide], color: "#3aa6d8" }
   - { id: shield_bash, name: Shield Bash, form: bash, threads: [], color: "#9c8b72" }
+  - { id: stone_leap, name: Stone Leap, form: leap_slam, threads: [], color: "#9c8b72" }
+  - { id: umbra_step, name: Umbra Step, form: shadowstep, threads: [umbra], color: "#5a4a7a" }
+  - { id: lumen_presence, name: Lumen Presence, form: presence, threads: [lumen], color: "#f5e27a" }
+  - { id: void_binding, name: Void Binding, form: binding, threads: [void], color: "#2b2033" }

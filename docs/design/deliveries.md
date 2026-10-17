@@ -43,6 +43,10 @@ Projectiles test bodies with the body's radius (a body whose edge touches the sh
 
 Anchored shapes of weaves tagged `melee` reach further by the weave's `melee.reach`. After an area resolves, the weave's `area.scatter` sets off that many aftershocks at random points within its radius, each smaller by rule `delivery.aftershock_scale` and following at `delivery.aftershock_delay` apart, and `area.pulses` repeats the area where it stood every `delivery.pulse_interval`. Echoes run one level deeper and never echo again.
 
+## Occlusion
+
+Deliveries stop at walls. A wall is a cell of a structure that cannot be walked; rising ground blocks a line too (`World/LineOfSight.cs` walks the cells a segment crosses, drawing lines a unit above the ground). An area or a field reaches only bodies with a clear line from where it acts (its anchor or center); a flight that enters a wall ends against it (or glances off while it has bounces). A delivery with `occlusion: free`, or of a weave whose `phasing` is above zero, passes through. Bodies flagged `untargetable` are passed over by every delivery.
+
 ## Projectiles
 
 `projectile` launches flights that the projectile system carries.
@@ -148,6 +152,14 @@ A flight's entity has a `Transform` (position and heading), an `Identity` (look 
 
 Hooks: `on_land` when a delayed field arrives, `on_tick` once each pulse at its center before the pulse reaches the bodies (emitters), `on_enter` and `on_exit` for bodies passing its filter, `on_end` when it ends. A field faces the cast's direction, else its caster's facing. A field keeps track of who is inside only when it needs to (entering, leaving, domains, exposure, strike-once, pull); others look only when they pulse.
 
+## Auras
+
+`aura` places a field that goes where its source goes: `radius` (the weave's `area.radius`), a `domain` of modifiers for the bodies inside that pass `domain_filter` (default `ally_or_self`), a `pulse` (the `on_hit` hook) on the bodies passing `filter` every `interval` (1), `on_tick` at its center, and `on_enter`, `on_exit` and `on_end`. One aura per source and `key` (default the weave's): casting it again replaces it, or with `toggle` turns it off; a toggled aura lasts until turned off, others `duration` (the weave's). Reserving mana while it runs and paying upkeep belong to the cast modes.
+
+## Tethers
+
+`tether` draws a live line from the source to its target (`link: target`, the default), to the point (`point`) or to the source's owner (`owner`, for constructs and minions). Every `interval` (0.5) it runs its `pulse` (the `on_hit` hook) on the bodies passing `filter` that it crosses within half its `width` (1); it lasts `duration` (the weave's) and snaps when stretched past `max_length` or when a bound end dies or is gone, running `on_end`. Its entity sits at the line's middle, facing along it, its radius half the line's length.
+
 ## Placements
 
 `scatter` rains strikes in a disc around the focus. `count` strikes (default the weave's `area.strikes`) land within `radius` (default twice `area.radius`), one every `interval` seconds or all at once. `at: enemies` places the first under the nearest bodies passing `filter`, within `jitter` of where they stood, and the rest at random; `random` (default) places all at random. With `telegraph` each strike is marked that many seconds before it lands. Each strike runs `effects` at its point, one level deeper, with variable `placement.step` its index. The points draw from a stream seeded once from the cast's stream.
@@ -156,15 +168,23 @@ Hooks: `on_land` when a delayed field arrives, `on_tick` once each pulse at its 
 
 Areas, fields and strikes placed under a cascade or an aftershock multiply their radius by variable `placement.scale`. A telegraphed strike or delayed field is marked by an entity with look `telegraph` (and a radius) that lives until it lands, and by a `PlacementTelegraphed` event.
 
+`aim` is a wrapper that turns the bearing its `effects` are delivered along: by `offset` degrees, by the next bearing of a `sequence` each time the same source runs it, and by a random turn within `spread` degrees (scaled by the weave's `aim.spread`) rolled on the cast's stream. The point turns about the source with it, and its deliveries go along the bearing rather than at a target. Glyphs graft it onto a form's delivery with a wrap patch.
+
+`detonate` sets off what the source owns: its projectiles in flight, its fields and tethers, and anything else it owns carrying one of `tags` (default `projectile` and `field`), all of them (`pick: all`, the default) or only the one nearest the point (`nearest`), within `radius` of the point when given. Each runs `effects` where it is, then ends: a projectile with its `on_end` as if its flight ran out there, a field or tether with its `on_end`, anything else despawned.
+
 ## Movement and shoves
 
-`move` moves a body: the source for `teleport` and `dash` (straight toward the target or point by up to `distance`, stopping before the first cell it cannot stand in), the target for `knockback` (away from the source), `pull` (toward it, stopping a unit short) and `buffet` (a random way, rolled on the context's stream). Shoves ride an impulse on the body's `Motion` that the displacement system integrates on top of the body's own movement: the starting speed is chosen so the impulse carries the body `distance` units as it decays at rule `delivery.impulse_decay` per second, and it settles below `delivery.impulse_min`. Knockbacks and buffets scale by the weave's `knockback`. A shove that runs a body into something it cannot enter (a wall, a cliff, a placed blocker) stops there; at rule `delivery.collision_speed` or more the body collides: the move's `on_collide` list runs on it, a `BodyCollided` event is published and the `collision` trigger kind fires for the body and for its shover. `status` names a status the shoved body wears until the shove settles. Bodies flagged `immovable` are not shoved.
+`move` moves a body: the source for `teleport`, `dash`, `leap`, `blink` and `recall`, the target for `knockback`, `pull` and `buffet` (`who` chooses otherwise).
 
-Code shoves through `DisplacementSystem.Shove`, which marks the body `Displaced` so the system visits only bodies it is moving; `SpeedFor` gives the impulse for a distance and `Nudge` moves a body a small validated step (fields pulling bodies in use it).
+A `teleport`, and a `dash` without a `speed`, moves straight toward the target or point by up to `distance`, stopping before the first cell it cannot stand in. A dash with a `speed` travels there over time instead: the body stops walking and wears flag `dashing`, bodies passing `filter` within half its `width` (1.5) of its way are struck once each by `on_contact` (the `on_hit` hook), `on_travel` runs every `travel` units, and it ends at its destination or against what stops it, running `on_end`; with `phase` it passes the cells placed things block, never walls. A `leap` arcs to the target or point over `air_time` seconds (0.6), rising `arc` units (2) at its middle, landing where a body may stand on anything up to the top of its arc; in the air it wears `leaping` and `untargetable`, and it lands with `on_land` and `on_end`; with `telegraph` its landing is marked for its air time. A `blink` arrives after `delay` seconds (at once without one), with `behind` just behind its target. `mark` stores where its source stands (or the point, `at: point`) under a `key`, and `recall` with the same `mark` key returns there and spends it. Carried bodies are moved by the displacement system, and the movement system leaves them be until they land.
+
+`knockback` (away from the source), `pull` (toward it, stopping a unit short) and `buffet` (a random way, rolled on the context's stream) shove the target. Shoves ride an impulse on the body's `Motion` that the displacement system integrates on top of the body's own movement: the starting speed is chosen so the impulse carries the body `distance` units as it decays at rule `delivery.impulse_decay` per second, and it settles below `delivery.impulse_min`. Knockbacks and buffets scale by the weave's `knockback`. A shove that runs a body into something it cannot enter (a wall, a cliff, a placed blocker) stops there; at rule `delivery.collision_speed` or more the body collides: the move's `on_collide` list runs on it, a `BodyCollided` event is published and the `collision` trigger kind fires for the body and for its shover. `status` names a status the shoved body wears until the shove settles. Bodies flagged `immovable` are not shoved.
+
+Code carries bodies through `DisplacementSystem.Carry` and shoves them through `DisplacementSystem.Shove`, which mark the body `Displaced` so the system visits only bodies it is moving; `SpeedFor` gives the impulse for a distance and `Nudge` moves a body a small validated step (fields pulling bodies in use it).
 
 ## Attributes
 
-The delivery channels are declared in `content/core/combat/attributes-delivery.yaml`: the projectile lifecycle (`projectile.spread`, `.forks`, `.chain`, `.rehit`, `.bounce`), the trajectory axes, and the area and placement channels (`area.angle`, `area.width`, `area.cascade`, `area.scatter`, `area.pulses`, `area.strikes`, `melee.reach`, `knockback`), beside the core ones in `attributes.yaml` (`projectile.count`, `.speed`, `.pierce`, `area.radius`, `chain.count`, `range`, `duration`).
+The delivery channels are declared in `content/core/combat/attributes-delivery.yaml`: the projectile lifecycle (`projectile.spread`, `.forks`, `.chain`, `.rehit`, `.bounce`), the trajectory axes, the area and placement channels (`area.angle`, `area.width`, `area.cascade`, `area.scatter`, `area.pulses`, `area.strikes`, `melee.reach`, `knockback`), `phasing` and `aim.spread`, beside the core ones in `attributes.yaml` (`projectile.count`, `.speed`, `.pierce`, `area.radius`, `chain.count`, `range`, `duration`).
 
 ## Rules
 
@@ -180,7 +200,7 @@ Rule group `delivery` (`content/core/combat/rules-delivery.yaml`): `fork_childre
 
 ## When the source is gone
 
-Every delivery's effects read its source's stats and weave. A delivery whose source no longer exists (a caster despawned, a minion dismissed while its arrows fly) therefore ends quietly, as delayed effects do: a projectile is checked once a tick before it tests hits and despawns with none of its hooks; a field ends without its `on_end` and takes its domain off the bodies inside; scheduled strikes, cascade steps, aftershocks, salvo beats and telegraph marks never land; a collision runs no `on_collide`. A source that is dead but still lies there is still a source.
+Every delivery's effects read its source's stats and weave. A delivery whose source no longer exists (a caster despawned, a minion dismissed while its arrows fly) therefore ends quietly, as delayed effects do: a projectile is checked once a tick before it tests hits and despawns with none of its hooks; a field or an aura ends without its `on_end` and takes its domain off the bodies inside; a tether ends without its `on_end`; scheduled strikes, cascade steps, aftershocks, salvo beats and telegraph marks never land; a collision runs no `on_collide`; a body carried by a move whose caster is gone simply stops. A source that is dead but still lies there is still a source.
 
 ## Order and cost
 

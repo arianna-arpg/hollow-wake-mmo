@@ -201,7 +201,7 @@ entries:
     max_glyphs: 2
     ai: { role: movement, preferred_range: 6, weight: 0.4, when: "target_distance > 5" }
     effects:
-      - { type: move, kind: dash, distance: "weave.range" }
+      - { type: move, kind: dash, distance: "weave.range", speed: 24 }
 
   - id: summon
     name: Summon

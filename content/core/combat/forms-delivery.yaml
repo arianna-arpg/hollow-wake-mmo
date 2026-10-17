@@ -228,3 +228,96 @@ entries:
         distance: 3
         on_collide:
           - { type: apply_status, status: stunned, duration: 1 }
+
+  - id: leap_slam
+    name: Leap Slam
+    description: A bound through the air that comes down hard, throwing foes back from where it lands.
+    targeting: ground
+    cast_mode: cast
+    cast_time: 0.3
+    costs: { stamina: 14 }
+    cooldown: 6
+    attributes: { range: 7, area.radius: 2.2, damage.effectiveness: 1.1 }
+    mechanisms: [movement, area, hit, attack, cooldown]
+    tags: [attack, area, movement]
+    min_threads: 0
+    max_threads: 1
+    max_glyphs: 3
+    ai: { role: movement, preferred_range: 6, weight: 0.5, when: "target_distance > 3" }
+    effects:
+      - type: move
+        kind: leap
+        distance: "weave.range"
+        air_time: 0.55
+        arc: 2.2
+        telegraph: true
+        on_land:
+          - type: area
+            radius: "weave.area.radius"
+            center: point
+            effects:
+              - type: damage
+                amount: "lerp(weapon.damage.min, weapon.damage.max, rand()) * weave.damage.effectiveness * attack.power"
+                threads: $threads
+              - { type: move, kind: knockback, distance: 2 }
+
+  - id: shadowstep
+    name: Shadowstep
+    description: A step through the dark that arrives behind a foe.
+    targeting: enemy
+    cast_mode: instant
+    costs: { stamina: 12 }
+    cooldown: 5
+    attributes: { range: 10 }
+    mechanisms: [movement, cooldown]
+    tags: [movement, mobile]
+    min_threads: 0
+    max_threads: 1
+    max_glyphs: 2
+    ai: { role: movement, preferred_range: 8, weight: 0.4, when: "target_distance > 4" }
+    effects:
+      - { type: move, kind: blink, behind: true, distance: "weave.range" }
+
+  - id: presence
+    name: Presence
+    description: A held aura that steadies allies near the weaver and wears at foes; cast again to let it go.
+    targeting: self
+    cast_mode: instant
+    costs: { mana: 10 }
+    cooldown: 1
+    attributes: { range: 0, area.radius: 5, base_damage: 4 }
+    mechanisms: [aura, spell, area]
+    tags: [spell, aura, area, mobile]
+    max_glyphs: 3
+    ai: { role: defense, preferred_range: 3, weight: 0.3, when: "nearest_enemy_distance < 5" }
+    effects:
+      - type: aura
+        radius: "weave.area.radius"
+        toggle: true
+        interval: 1
+        domain:
+          - { attribute: damage, form: increased, value: 0.15 }
+        pulse:
+          - { type: damage, amount: "weave.base_damage * spell.power", threads: $threads, can_crit: false }
+
+  - id: binding
+    name: Binding
+    description: A line of thread to a foe that burns whoever crosses it, until it is stretched to breaking.
+    targeting: enemy
+    cast_mode: cast
+    cast_time: 0.6
+    costs: { mana: 14 }
+    cooldown: 6
+    attributes: { range: 9, base_damage: 6, duration: 5 }
+    mechanisms: [spell, hit, duration, cooldown]
+    tags: [spell]
+    ai: { role: control, preferred_range: 7, weight: 0.4 }
+    effects:
+      - type: tether
+        link: target
+        width: 0.8
+        interval: 0.5
+        duration: "weave.duration"
+        max_length: 12
+        pulse:
+          - { type: damage, amount: "weave.base_damage * spell.power", threads: $threads, can_crit: false }

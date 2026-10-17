@@ -7,6 +7,7 @@ using HollowWake.Core.Effects.Handlers;
 using HollowWake.Core.Maths;
 using HollowWake.Core.Sim;
 using HollowWake.Core.Tags;
+using HollowWake.Core.World;
 
 namespace HollowWake.Core.Systems;
 
@@ -182,9 +183,16 @@ public sealed class ProjectileSystem : SimSystem
         }
 
         var ground = sim.Terrain.HeightAt(at.X, at.Y);
-        if (at.Z < ground - 0.05f)
+        var wall = !p.Phases && HitsWall(sim.Terrain, t.Position, at);
+        if (wall || at.Z < ground - 0.05f)
         {
-            if (spec.Gravity && p.Velocity.Z <= 0)
+            if (wall && p.Bounces <= 0)
+            {
+                // Stopped by a wall: the flight ends against it, where it last flew free.
+                Finish(sim, e, p, t.Position, spec.OnExpire, spec.OnEnd);
+                return;
+            }
+            if (!wall && spec.Gravity && p.Velocity.Z <= 0)
             {
                 if (p.Bounces > 0)
                 {
@@ -390,7 +398,7 @@ public sealed class ProjectileSystem : SimSystem
     private static bool Quarry(Simulation sim, Projectile p, Entity body, double now)
     {
         var world = sim.World;
-        if (!world.IsAlive(body) || body == p.Context.Origin || !world.Has<Transform>(body) || !world.Has<Stats>(body) || world.Has<Dead>(body))
+        if (!world.IsAlive(body) || body == p.Context.Origin || !world.Has<Transform>(body) || !world.TryGet<Stats>(body, out var stats) || world.Has<Dead>(body) || stats.Flags.Contains(EffectHelpers.Untargetable))
         {
             return false;
         }
@@ -401,11 +409,27 @@ public sealed class ProjectileSystem : SimSystem
         return Relations.IsHostile(sim, p.Context.Origin, body);
     }
 
-    /// <summary>Bounces a flight off rising ground: mirrors the heading across the side it struck.</summary>
+    /// <summary>Whether a step ends in a wall, or for a long step passes one halfway.</summary>
+    private static bool HitsWall(Terrain terrain, Vector3 from, Vector3 to)
+    {
+        if (LineOfSight.IsWall(terrain, CellCoord.Of(to.X, to.Y)))
+        {
+            return true;
+        }
+        var dx = to.X - from.X;
+        var dy = to.Y - from.Y;
+        return dx * dx + dy * dy > 0.81f && LineOfSight.IsWall(terrain, CellCoord.Of(from.X + dx * 0.5f, from.Y + dy * 0.5f));
+    }
+
+    /// <summary>Whether a flight may be at a point: above the ground there and, unless it phases, not in a wall.</summary>
+    private static bool Open(Simulation sim, Projectile p, float x, float y, float z) =>
+        sim.Terrain.HeightAt(x, y) <= z && (p.Phases || !LineOfSight.IsWall(sim.Terrain, CellCoord.Of(x, y)));
+
+    /// <summary>Bounces a flight off rising ground or a wall: mirrors the heading across the side it struck.</summary>
     private static void Reflect(Simulation sim, Projectile p, Vector3 from, Vector3 to)
     {
-        var alongX = sim.Terrain.HeightAt(to.X, from.Y) <= to.Z;
-        var alongY = sim.Terrain.HeightAt(from.X, to.Y) <= to.Z;
+        var alongX = Open(sim, p, to.X, from.Y, to.Z);
+        var alongY = Open(sim, p, from.X, to.Y, to.Z);
         if (alongX && !alongY)
         {
             p.Heading = -p.Heading;
@@ -451,7 +475,7 @@ public sealed class ProjectileSystem : SimSystem
         for (var i = 0; i < _near.Count && !p.Ended; i++)
         {
             var other = _near[i].Entity;
-            if (p.Hits.Holds(other, now, p.Rehit) || !sim.World.Has<Stats>(other) || sim.World.Has<Dead>(other))
+            if (p.Hits.Holds(other, now, p.Rehit) || !sim.World.TryGet<Stats>(other, out var stats) || sim.World.Has<Dead>(other) || stats.Flags.Contains(EffectHelpers.Untargetable))
             {
                 continue;
             }

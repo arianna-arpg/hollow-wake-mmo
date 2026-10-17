@@ -14,11 +14,12 @@ using HollowWake.Core.Sim;
 using HollowWake.Core.StatusEffects;
 using HollowWake.Core.Systems;
 using HollowWake.Core.Tags;
+using HollowWake.Core.World;
 using static HollowWake.Core.Effects.Handlers.EffectHelpers;
 
 namespace HollowWake.Core.Effects.Handlers;
 
-/// <summary>Deliveries: areas, projectiles, chains and fields.</summary>
+/// <summary>Deliveries: areas, projectiles, chains, fields and auras.</summary>
 public static class DeliveryHandlers
 {
     public static void Register(EffectRegistry r)
@@ -27,6 +28,7 @@ public static class DeliveryHandlers
         r.Register(new ProjectileHandler());
         r.Register(new ChainHandler());
         r.Register(new FieldHandler());
+        r.Register(new AuraHandler());
     }
 }
 
@@ -154,7 +156,7 @@ internal sealed class AreaHandler : IEffectHandler
 {
     public string Type => "area";
 
-    public EffectSignature Signature { get; } = EffectSignature.Of("shape", "radius", "angle", "width", "inner", "filter", "center", "max_targets", "include_center", "pick", "require", "reach")
+    public EffectSignature Signature { get; } = EffectSignature.Of("shape", "radius", "angle", "width", "inner", "filter", "center", "max_targets", "include_center", "pick", "require", "reach", "occlusion")
         .Hook(EffectHooks.OnHit, "effects");
 
     public CompiledEffect Compile(JsonObject p, EffectCompileContext ctx) => new Effect
@@ -173,6 +175,7 @@ internal sealed class AreaHandler : IEffectHandler
         Pick = Picks.Of(ctx, p["pick"], "random"),
         Require = ctx.ExprOf(p["require"]),
         FromEdge = ctx.ChoiceOf(p["reach"], "reach", "center", "center", "edge") == "edge",
+        Free = OcclusionFree(ctx, p["occlusion"]),
     };
 
     private sealed class Effect : CompiledEffect
@@ -191,6 +194,8 @@ internal sealed class AreaHandler : IEffectHandler
         public Pick Pick;
         public Expr? Require;
         public bool FromEdge;
+        /// <summary>Strikes through walls and rising ground (<c>occlusion: free</c>).</summary>
+        public bool Free;
 
         public override void Execute(EffectContext ctx)
         {
@@ -215,6 +220,7 @@ internal sealed class AreaHandler : IEffectHandler
             }
             var size = SizeOf(ctx, Shape, radius, Angle, Width, Inner, scaleAngle: true);
             var facing = Facing(ctx);
+            var occluded = Occluded(ctx, Free);
             var targets = Rent();
             try
             {
@@ -225,6 +231,10 @@ internal sealed class AreaHandler : IEffectHandler
                         continue;
                     }
                     if (!Passes(ctx, e, Filter) || (!IncludeCenter && e == ctx.Target))
+                    {
+                        continue;
+                    }
+                    if (occluded && !LineOfSight.Clear(ctx.Sim.Terrain, anchor + Eye, pos + Eye))
                     {
                         continue;
                     }
@@ -321,7 +331,7 @@ internal sealed class ProjectileHandler : IEffectHandler
             "fire", "salvo_interval", "volley_spacing", "ring_jitter", "spread_by_aim", "origin", "origin_range",
             "duration", "return", "forks", "chains", "rehit", "bounce",
             "homing", "guide", "erratic", "spiral", "orbit", "spin", "wave", "accel", "recurve", "converge",
-            "amplitude", "orbit_radius", "zigzag", "zigzag_every", "tick", "travel")
+            "amplitude", "orbit_radius", "zigzag", "zigzag_every", "tick", "travel", "occlusion")
         .Hook(EffectHooks.OnHit, "on_hit")
         .Hook(DeliveryHooks.OnFirstHit, "on_first_hit")
         .Hook(EffectHooks.OnEnd, "on_end")
@@ -400,6 +410,7 @@ internal sealed class ProjectileHandler : IEffectHandler
             OrbitRadius = ctx.ExprOf(p["orbit_radius"]),
             Zigzag = ctx.ExprOf(p["zigzag"]),
             ZigzagEvery = ctx.ExprOf(p["zigzag_every"]),
+            Free = OcclusionFree(ctx, p["occlusion"]),
         };
     }
 
@@ -430,6 +441,7 @@ internal sealed class ProjectileHandler : IEffectHandler
         public float ZigzagEvery;
         public float Radius;
         public ShapeSize Size;
+        public bool Phases;
     }
 
     private sealed class Effect : CompiledEffect
@@ -473,6 +485,8 @@ internal sealed class ProjectileHandler : IEffectHandler
         public Expr? OrbitRadius;
         public Expr? Zigzag;
         public Expr? ZigzagEvery;
+        /// <summary>Flies through walls (<c>occlusion: free</c>).</summary>
+        public bool Free;
 
         public override void Execute(EffectContext ctx)
         {
@@ -607,6 +621,7 @@ internal sealed class ProjectileHandler : IEffectHandler
                 ZigzagEvery = (float)Math.Max(0.25, ZigzagEvery is null ? 2 : ctx.Eval(ZigzagEvery, 2)),
                 Radius = radius,
                 Size = SizeOf(ctx, Spec.Shape, shapeSize, ShapeAngle, ShapeWidth, null, scaleAngle: false),
+                Phases = !Occluded(ctx, Free),
             };
         }
 
@@ -663,6 +678,7 @@ internal sealed class ProjectileHandler : IEffectHandler
                 ZigzagAt = f.ZigzagEvery,
                 AimPoint = aimPoint,
                 Converging = f.Converge != 0,
+                Phases = f.Phases,
                 SpiralAngle = heading,
                 Side = side,
                 NextTickAt = sim.Clock.Time + Spec.TickInterval,
@@ -889,7 +905,7 @@ internal sealed class FieldHandler : IEffectHandler
     public EffectSignature Signature { get; } = EffectSignature.Of(
             "radius", "duration", "interval", "filter", "look", "follow",
             "shape", "angle", "width", "inner", "delay", "exposure", "pull", "drift", "seek", "rotate", "radius_curve",
-            "hit_once", "rearm_on_exit", "domain", "domain_filter", "exclusive", "segments", "pulses")
+            "hit_once", "rearm_on_exit", "domain", "domain_filter", "exclusive", "segments", "pulses", "occlusion")
         .Hook(EffectHooks.OnHit, "pulse")
         .Hook(EffectHooks.OnTick, "on_tick")
         .Hook(EffectHooks.OnLand, "on_land")
@@ -949,6 +965,7 @@ internal sealed class FieldHandler : IEffectHandler
             SegmentCount = segments is null ? 1 : Math.Max(1, JsonNum.IntOf(segments["count"], 1)),
             SegmentSpacing = segments is null ? 0 : JsonNum.Of(segments["spacing"], 2),
             SegmentsAcross = segments is not null && (JsonNum.StringOf(segments["axis"]) ?? "along") == "across",
+            Free = OcclusionFree(ctx, p["occlusion"]),
         };
     }
 
@@ -976,12 +993,15 @@ internal sealed class FieldHandler : IEffectHandler
         public int SegmentCount = 1;
         public double SegmentSpacing;
         public bool SegmentsAcross;
+        /// <summary>Reaches through walls (<c>occlusion: free</c>).</summary>
+        public bool Free;
 
         public override void Execute(EffectContext ctx)
         {
             var sim = ctx.Sim;
             var now = sim.Clock.Time;
             var center = ctx.Focus;
+            var occluded = Occluded(ctx, Free);
             var radius = (float)(ParamOrAttr(ctx, Radius, "area.radius", 2) * PlacementScale(ctx));
             var interval = Math.Max(sim.Clock.Dt, ctx.Eval(Interval, 0.5));
             var duration = Math.Max(sim.Clock.Dt, ParamOrAttr(ctx, Duration, "duration", 4));
@@ -1027,6 +1047,7 @@ internal sealed class FieldHandler : IEffectHandler
                     Seek = seek,
                     Rotate = rotate,
                     Key = Exclusive,
+                    Occluded = occluded,
                 };
                 FieldSystem.Spawn(sim, field, at, ctx.Origin, Look ?? ctx.Weave?.Look);
                 if (delay > 0)
@@ -1034,6 +1055,102 @@ internal sealed class FieldHandler : IEffectHandler
                     sim.Events.Publish(new PlacementTelegraphed(ctx.Origin, at, radius, delay) { Tick = sim.Clock.Tick });
                 }
             }
+        }
+    }
+}
+
+/// <summary>
+/// <c>aura</c>: a field that goes where its source goes. Bodies inside that pass <c>domain_filter</c> carry
+/// its <c>domain</c> modifiers while they stay; its <c>pulse</c> (the <c>on_hit</c> hook) strikes the bodies
+/// inside that pass <c>filter</c> every <c>interval</c>, and <c>on_tick</c> runs at its center. One aura per
+/// source and <c>key</c> (default the weave's): casting it again replaces it, or with <c>toggle</c> turns it
+/// off. A toggled aura lasts until turned off; others last <c>duration</c> (the weave's by default).
+/// </summary>
+internal sealed class AuraHandler : IEffectHandler
+{
+    public string Type => "aura";
+
+    public EffectSignature Signature { get; } = EffectSignature.Of("radius", "duration", "interval", "filter", "domain", "domain_filter", "key", "toggle", "look", "occlusion")
+        .Hook(EffectHooks.OnHit, "pulse")
+        .Hook(EffectHooks.OnTick, "on_tick")
+        .Hook(DeliveryHooks.OnEnter, "on_enter")
+        .Hook(DeliveryHooks.OnExit, "on_exit")
+        .Hook(EffectHooks.OnEnd, "on_end");
+
+    public CompiledEffect Compile(JsonObject p, EffectCompileContext ctx)
+    {
+        var filter = ctx.StringOf(p["filter"]) ?? "enemy";
+        return new Effect
+        {
+            Type = Type,
+            Spec = new FieldSpec
+            {
+                OnTick = ctx.CompileList(p["on_tick"], "on_tick"),
+                OnEnter = ctx.CompileList(p["on_enter"], "on_enter"),
+                OnExit = ctx.CompileList(p["on_exit"], "on_exit"),
+                OnEnd = ctx.CompileList(p["on_end"], "on_end"),
+                Domain = p["domain"] is { } domain ? (domain.Deserialize<List<Modifier>>(ContentJson.Options) ?? new List<Modifier>()).ToArray() : Array.Empty<Modifier>(),
+                DomainFilter = ctx.StringOf(p["domain_filter"]) ?? "ally_or_self",
+            },
+            Radius = ctx.ExprOf(p["radius"]),
+            Duration = ctx.ExprOf(p["duration"]),
+            Interval = ctx.ExprOf(p["interval"], Expr.Constant(1))!,
+            Filter = filter,
+            Pulse = ctx.CompileList(p["pulse"], "pulse"),
+            Key = ctx.StringOf(p["key"]),
+            Toggle = ctx.BoolOf(p["toggle"], false),
+            Look = ctx.StringOf(p["look"]),
+            Free = OcclusionFree(ctx, p["occlusion"]),
+        };
+    }
+
+    private sealed class Effect : CompiledEffect
+    {
+        public required FieldSpec Spec;
+        public Expr? Radius;
+        public Expr? Duration;
+        public required Expr Interval;
+        public string Filter = "enemy";
+        public CompiledEffect[] Pulse = Array.Empty<CompiledEffect>();
+        public string? Key;
+        public bool Toggle;
+        public string? Look;
+        public bool Free;
+
+        public override void Execute(EffectContext ctx)
+        {
+            var sim = ctx.Sim;
+            if (!sim.World.TryGet<Transform>(ctx.Source, out var st))
+            {
+                return;
+            }
+            var key = Key ?? "aura:" + (ctx.Weave?.Key ?? "aura");
+            if (FieldSystem.EndExclusive(sim, ctx.Origin, key) > 0 && Toggle)
+            {
+                return;
+            }
+            var now = sim.Clock.Time;
+            var radius = (float)(ParamOrAttr(ctx, Radius, "area.radius", 2) * PlacementScale(ctx));
+            var duration = Toggle && Duration is null ? double.PositiveInfinity : Math.Max(sim.Clock.Dt, ParamOrAttr(ctx, Duration, "duration", 4));
+            var field = new Field
+            {
+                Context = ctx.Deeper(),
+                Radius = radius,
+                Interval = Math.Max(sim.Clock.Dt, ctx.Eval(Interval, 1)),
+                NextPulseAt = now,
+                ExpiresAt = now + duration,
+                Filter = Filter,
+                Pulse = Pulse,
+                Follow = ctx.Source,
+                Spec = Spec,
+                Size = new ShapeSize(radius, 360, 0, 0),
+                Facing = st.Yaw,
+                BornAt = now,
+                LandsAt = now,
+                Key = key,
+                Occluded = Occluded(ctx, Free),
+            };
+            FieldSystem.Spawn(sim, field, st.Position, ctx.Origin, Look ?? ctx.Weave?.Look);
         }
     }
 }

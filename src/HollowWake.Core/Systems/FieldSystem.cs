@@ -7,6 +7,7 @@ using HollowWake.Core.Effects.Handlers;
 using HollowWake.Core.Expressions;
 using HollowWake.Core.Sim;
 using HollowWake.Core.Tags;
+using HollowWake.Core.World;
 
 namespace HollowWake.Core.Systems;
 
@@ -69,9 +70,13 @@ public sealed class FieldSystem : SimSystem
         return e;
     }
 
-    /// <summary>Ends every field a caster placed under an exclusive key.</summary>
-    public static void EndExclusive(Simulation sim, Entity origin, string key)
+    /// <summary>Ends every field a caster placed under an exclusive key; how many there were.</summary>
+    public static int EndExclusive(Simulation sim, Entity origin, string key)
     {
+        if (sim.World.CountOf<Field>() == 0)
+        {
+            return 0;
+        }
         var ending = EffectHelpers.Rent();
         try
         {
@@ -86,6 +91,7 @@ public sealed class FieldSystem : SimSystem
             {
                 End(sim, e);
             }
+            return ending.Count;
         }
         finally
         {
@@ -353,10 +359,15 @@ public sealed class FieldSystem : SimSystem
         var center = t.Position;
         foreach (var (other, pos, _) in sim.Spatial.Within(center, shape.Reach(f.Size), 3f))
         {
-            if (other != e && shape.Contains(f.Size, new Vector2(pos.X - center.X, pos.Y - center.Y), facing, 0))
+            if (other == e || !shape.Contains(f.Size, new Vector2(pos.X - center.X, pos.Y - center.Y), facing, 0))
             {
-                _near.Add((other, pos));
+                continue;
             }
+            if (f.Occluded && !LineOfSight.Clear(sim.Terrain, center + EffectHelpers.Eye, pos + EffectHelpers.Eye))
+            {
+                continue;
+            }
+            _near.Add((other, pos));
         }
     }
 
