@@ -296,8 +296,12 @@ public sealed record QuestOffersMsg(long Giver, List<QuestInfo> Offers, List<Que
 public sealed record CraftChallengeMsg(string Recipe, string Type, string Data, double TimeLimit) : Message;
 public sealed record CraftResultMsg(string Recipe, bool Success, double Score, double Quality, string Reason, ItemInfo? Item) : Message;
 
-/// <summary>A modified chunk. Clients generate unmodified chunks themselves from the world seed.</summary>
-public sealed record ChunkDataMsg(int X, int Y, int Size, float[] Height, byte[] Flags, List<string> Tags, ushort[] SurfaceTag, List<LayerInfo> Layers, int GenVersion) : Message;
+/// <summary>
+/// A chunk's terrain. Sent for modified chunks on entering a zone and for any chunk on request: the desktop
+/// client generates unmodified chunks from the world seed, the web client asks for every chunk it shows.
+/// WaterLevel is the chunk's water surface height, absent when the chunk has none.
+/// </summary>
+public sealed record ChunkDataMsg(int X, int Y, int Size, float[] Height, byte[] Flags, List<string> Tags, ushort[] SurfaceTag, List<LayerInfo> Layers, int GenVersion, float? WaterLevel = null) : Message;
 public sealed record LayerInfo(int Index, float Height, bool Walkable, string Tags);
 
 public sealed record IntentRejectedMsg(string Intent, string Reason) : Message;

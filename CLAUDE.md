@@ -4,20 +4,22 @@ Guidance for Claude Code (and people) working in this repository. Committed and 
 
 ## What this is
 
-Hollow Wake MMO is an MMOARPG foundation: an engine-agnostic C# simulation core, an authoritative server, a Godot client, a YAML content pack and tools. The core vision is in [docs/VISION.md](docs/VISION.md) and is the test for every change: **data over code, one modifier engine, tags as the universal join, composition over bespoke, server authority, a seamless generated world, and observability.** If a change hard-codes something content could express, it is probably wrong.
+Hollow Wake MMO is an MMOARPG foundation: an engine-agnostic C# simulation core, an authoritative server, a Godot client, a browser client, a YAML content pack and tools. The core vision is in [docs/VISION.md](docs/VISION.md) and is the test for every change: **data over code, one modifier engine, tags as the universal join, composition over bespoke, server authority, a seamless generated world, and observability.** If a change hard-codes something content could express, it is probably wrong.
 
 ## Repository map
 
 - `src/HollowWake.Core` — simulation. Namespaces mirror systems: `Attributes`, `Expressions`, `Content`, `Definitions`, `Ecs`, `Sim`, `Components`, `Effects` (handlers by family under `Effects/Handlers/`), `Weaves`, `Combat`, `StatusEffects`, `Items`, `Loot`, `Patterns`, `Ai`, `Movement`, `World`, `WorldGen`, `Quests`, `Crafting`, `Territory`, `Progression`, `Characters`, `Interaction`, `Intents`, `Systems`.
-- `src/HollowWake.Protocol` — `Messages.cs` (every wire message) and `MessageSerializer.cs` (JSON + length framing).
-- `src/HollowWake.Server` — `GameServer` (composition root and loop), `Sessions/`, `World/` (`ZoneHost`, `ZoneInstance`, `Snapshots`), `Net/` (`ITransport`, TCP, loopback), `Persistence/` (JSON stores), `Config/`.
-- `src/HollowWake.Server.Host` — pure .NET entry point. `src/HollowWake.Server.Host.Brutal` — .NET 10 + BRUTAL RakNet entry point (compiles to a stub without the .NET 10 SDK).
+- `src/HollowWake.Protocol` — `Messages.cs` (every wire message), `MessageSerializer.cs` (JSON + length framing) and `TypeScriptContract.cs` (generates the web client's message types).
+- `src/HollowWake.Server` — `GameServer` (composition root and loop), `Sessions/`, `World/` (`ZoneHost`, `ZoneInstance`, `Snapshots`), `Net/` (`ITransport`, TCP, WebSocket with the static web root, composite, loopback), `Persistence/` (JSON stores), `Config/`.
+- `src/HollowWake.Server.Host` — pure .NET entry point (TCP and WebSocket). `src/HollowWake.Server.Host.Brutal` — .NET 10 + BRUTAL RakNet entry point (compiles to a stub without the .NET 10 SDK).
 - `src/HollowWake.Client` — Godot 4.7 C#. `Main.cs` orchestrates; `World/` generates terrain locally and renders entities; `Camera/CameraRig.cs` has both camera modes; `UI/` is placeholder UI.
+- `web/` — browser client: Vite, TypeScript, three.js. `src/app.ts` orchestrates; `net/protocol.ts` is generated; `world/` builds terrain from server chunks and renders entities; `view/camera.ts` has both camera modes; `public/config.json` holds every client setting; `scripts/smoke.mjs` is the scripted browser play-through.
 - `src/HollowWake.Tools` — the `hollowwake` CLI (`Program.cs`, `Probe.cs`).
 - `content/core` — the base content layer, one YAML file per area. `rules.yaml` holds every formula and tunable.
-- `tests/` — xunit. `HollowWake.Core.Tests` (foundations and gameplay against the real content), `HollowWake.Server.Tests` (loopback end to end).
+- `tests/` — xunit. `HollowWake.Core.Tests` (foundations and gameplay against the real content), `HollowWake.Server.Tests` (loopback and WebSocket end to end, the generated protocol module). Web client unit tests are vitest files beside the code in `web/src`.
 - `docs/` — `VISION.md`, `ARCHITECTURE.md`, `ROADMAP.md`, `modding.md`, `design/` (one contract per system; `design/parity/` holds gap analyses against the earlier prototype), `lore/`, `infrastructure/`, `adr/`.
 - `deploy/` — Dockerfile, Compose, VPS bootstrap. `config/server.yaml` — server settings.
+- `.devcontainer/` — the Codespaces container. `scripts/codespace-play.sh` — builds the web client and runs the server. `.github/workflows/` — CI and the GitHub Pages build of the web client.
 
 ## Commands
 
@@ -27,10 +29,15 @@ dotnet test HollowWake.sln                                    # all tests
 dotnet run --project src/HollowWake.Tools -- validate          # content must report 0 errors (warnings are reviewed)
 dotnet run --project src/HollowWake.Tools -- load --x 0 --y 0  # headless zone smoke
 dotnet run --project src/HollowWake.Tools -- fight a b         # headless duel with event trace
-dotnet run --project src/HollowWake.Server.Host                # run the server (TCP 7777)
+dotnet run --project src/HollowWake.Server.Host                # run the server (TCP 7777; WebSocket and the web client on 7778)
 dotnet run --project src/HollowWake.Tools -- probe             # connect to a running server over TCP and exercise it
 dotnet run --project src/HollowWake.Tools -c Release -- bench   # performance baseline against docs/design/performance.md budgets
 godot --path src/HollowWake.Client -- --smoke --shots DIR      # scripted client play-through against a running server (Godot 4.7 .NET)
+dotnet run --project src/HollowWake.Tools -- protocol-ts       # regenerate web/src/net/protocol.ts after changing a message
+npm --prefix web ci && npm --prefix web run build              # build the web client into web/dist (Node 22)
+npm --prefix web test                                          # web client unit tests
+npm --prefix web run smoke -- --shots DIR                      # scripted browser play-through against a running server (installed Edge or Chrome)
+scripts/codespace-play.sh                                      # build the web client and run the server (Codespaces, Linux, macOS)
 ```
 
 ## Verification gates
@@ -41,6 +48,7 @@ Before calling work done:
 3. `hollowwake validate` reports 0 errors and no new warnings.
 4. If the change touches generation, movement, combat or networking: `hollowwake load`, `hollowwake fight`, and the loopback server tests still pass; for networking also run the server and `hollowwake probe`.
 5. If the change touches the client: `dotnet build src/HollowWake.Client` compiles, and when Godot is available, the smoke play-through above passes against a local server (it saves screenshots to look at).
+6. If the change touches the web client or a message: `npm --prefix web test` and `npm --prefix web run build` pass, `web/src/net/protocol.ts` is regenerated (the server tests fail otherwise), and the browser smoke passes against a local server.
 
 ## Conventions
 
@@ -52,7 +60,7 @@ Before calling work done:
 - **Determinism.** Every roll uses an `Rng` derived from a seed. Never `System.Random` or wall-clock time in gameplay code.
 - **Spatial queries are live views.** `Spatial.Within` iterates the grid in place: copy the results before spawning, destroying or moving entities inside the loop, because mutating the grid during iteration throws.
 - **Server authority.** The client sends intents and renders state. Validation happens in the simulation.
-- **Coordinates.** Core is X east, Y north, Z up. Godot conversion only in `Coords.cs`.
+- **Coordinates.** Core is X east, Y north, Z up. Godot conversion only in `Coords.cs`; three.js conversion only in `web/src/world/coords.ts`.
 - **Numbers from JSON nodes** go through `JsonNum` (nodes hold ints, longs or doubles depending on origin).
 - **Docs are durable.** No counts, rosters or version strings that go stale. Each system has one contract in `docs/design/`; update it with the system.
 - Avoid em-dashes in prose. Files are UTF-8 with LF.

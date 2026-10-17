@@ -8,8 +8,10 @@ content/core (YAML)  --->  HollowWake.Core (simulation, .NET 8, no engine)  <---
                                  |                     |
                  HollowWake.Server (.NET 10) ----------- HollowWake.Client (Godot 4.7, .NET 8)
                  zones, sessions, persistence       terrain from seed, views, cameras, UI
-                        ^
-          HollowWake.Server.Host (TCP)   HollowWake.Server.Host.Brutal (RakNet UDP via BRUTAL)
+                        ^         ^
+                        |         +------- WebSocket ------- web/ (TypeScript, three.js, in a browser)
+                        |                                    terrain from the server, types generated from Protocol
+          HollowWake.Server.Host (TCP + WebSocket)   HollowWake.Server.Host.Brutal (RakNet UDP via BRUTAL)
 ```
 
 The core is the product. It compiles for .NET 8 so both the Godot client and the .NET 10 server can reference it. It has no sockets, no rendering, no database. Everything that runs in a zone on the server can run in a tool, a test or the client.
@@ -40,11 +42,13 @@ The core is the product. It compiles for .NET 8 so both the Godot client and the
 
 ## The server
 
-`GameServer` is the composition root: content, `ZoneHost`, `SessionManager`, a transport. One world thread steps everything at the tick rate: transport events are drained from a thread-safe inbox, each `ZoneInstance` ticks its simulation, snapshots go out to sessions by interest radius, autosave runs on a timer. `ZoneHost` creates zones on demand, moves players across zone borders by capturing the character sheet and materializing it in the neighbor, schedules world events as generation overlays, and persists holdings, events, characters, accounts and modified chunks through store interfaces (JSON files today). Transports implement `ITransport`: TCP with length framing, an in-process loopback for tests, and RakNet UDP through BRUTAL in the .NET 10 host.
+`GameServer` is the composition root: content, `ZoneHost`, `SessionManager`, a transport. One world thread steps everything at the tick rate: transport events are drained from a thread-safe inbox, each `ZoneInstance` ticks its simulation, snapshots go out to sessions by interest radius, autosave runs on a timer. `ZoneHost` creates zones on demand, moves players across zone borders by capturing the character sheet and materializing it in the neighbor, schedules world events as generation overlays, and persists holdings, events, characters, accounts and modified chunks through store interfaces (JSON files today). Transports implement `ITransport`: TCP with length framing, WebSocket with one message per binary frame (on `HttpListener`, which also serves the built web client from `web_root` on the same port), an in-process loopback for tests, and RakNet UDP through BRUTAL in the .NET 10 host. A `CompositeTransport` fans several into one, which is how the pure host runs TCP and WebSocket into the same world; it re-numbers connections so session ids stay unique across them.
 
 ## The client
 
 Godot renders what the server says. On entering the world it receives the seed, layout and overlays and generates terrain locally with the same `WorldGenerator`; modified chunks arrive on the wire. Entities are placeholder bodies interpolated between snapshots. The camera rig is the only place that knows whether the view is isometric or third person. Input becomes intents; nothing is resolved on the client.
+
+The web client in `web/` does the same in a browser, over WebSocket. It cannot run the C# generator, so it asks the server for every chunk it shows (`request_chunk`, answered by `chunk_data`); its message types are generated from `HollowWake.Protocol`. It is served by the game server itself or from GitHub Pages ([web-client.md](design/web-client.md), [ADR 0006](adr/0006-browser-client.md)).
 
 ## Scaling path
 
