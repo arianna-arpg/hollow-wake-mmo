@@ -221,6 +221,8 @@ switch (command)
         }
         return 0;
     }
+    case "weave":
+        return WeaveReport.Run(LoadContent(false), rest.FirstOrDefault(a => !a.StartsWith("--")), Opt);
     case "bench":
         return Bench.Run(LoadContent(false), Opt, Flag("json"));
     case "probe":
@@ -258,6 +260,8 @@ switch (command)
               world [--radius n] [--seed s]       print the region grid around the origin
               load --x n --y n [--ticks n]        build a zone simulation and run it headless
               fight <pattern> <pattern> [--seconds n] [--seed s]   simulate a duel in an arena
+              weave <preset|form> [--threads a,b] [--glyphs g,g@level] [--level n] [--calling c] [--caster-level n]
+                                                  compile a weave: tags, mechanisms, dormant glyphs, graph, preview numbers
             """);
         return 0;
 }
