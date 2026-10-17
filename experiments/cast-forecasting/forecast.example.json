@@ -38,5 +38,5 @@
     "identity": ["zoneEpoch", "castId"],
     "baseline": "complete_active_forecast_set_at_revision"
   },
-  "threadDisplay": {"ember": {"name": "Flame", "element": "Fire"}}
+  "threadDisplay": {"ember": {"name": "Ember", "element": "Fire"}}
 }
