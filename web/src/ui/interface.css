@@ -1,0 +1,674 @@
+/*
+ * The interface's look, read from the theme content: Skin.apply sets the theme's colours, fonts, material
+ * tunables and layout metrics as custom properties on .ui-root, and data-frame picks the frame style both
+ * clients draw (stone or brass). Nothing here names a colour of its own beyond shadows and highlights.
+ */
+
+.ui-root {
+  position: fixed;
+  left: 0;
+  top: 0;
+  transform-origin: 0 0;
+  pointer-events: none;
+  font-family: var(--font-body, Georgia, serif);
+  font-size: var(--size-body, 14px);
+  line-height: 1.3;
+  color: var(--ink, #e8dfcb);
+  user-select: none;
+  -webkit-user-select: none;
+  overflow: hidden;
+}
+
+.ui-root > * {
+  pointer-events: auto;
+}
+
+.ui-root .layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.ui-root .layer > * {
+  pointer-events: auto;
+}
+
+/* Controls take the interface's type and ink unless a class says otherwise (no specificity of its own). */
+:where(.ui-root) :where(button, input, select) {
+  font-family: inherit;
+  font-size: inherit;
+  color: inherit;
+}
+
+.ui-root .glyph,
+.ui-root .tile-glyph {
+  display: block;
+  flex: none;
+}
+
+/* ---------------------------------------------------------------- panes */
+
+.pane {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+  color: var(--ink);
+  background-color: var(--pane);
+  background-image: var(--surface-texture), radial-gradient(ellipse at 50% 40%, transparent 55%, var(--vignette) 100%), linear-gradient(180deg, var(--pane-light), var(--pane) 38%);
+  background-size: 512px 512px, 100% 100%, 100% 100%;
+  border-radius: var(--corner);
+  box-shadow: 0 8px 26px rgba(0, 0, 0, calc(var(--shadow-strength) * 0.9)), 0 0 0 1px var(--edge-dark);
+}
+
+/* The frame drawn over the ground: stone is a bevelled slate band with an incised groove and runes at the corners. */
+.pane::before,
+.pane::after {
+  content: '';
+  position: absolute;
+  pointer-events: none;
+  z-index: 3;
+}
+
+[data-frame='stone'] .pane::before {
+  inset: 0;
+  border-radius: var(--corner);
+  border: var(--bevel) solid var(--edge);
+  border-top-color: var(--edge-bright);
+  border-left-color: var(--edge-bright);
+  box-shadow: inset 0 0 0 1px var(--edge-dark), inset 0 0 0 2px rgba(255, 255, 255, 0.05);
+  opacity: 0.85;
+}
+
+[data-frame='stone'] .pane::after {
+  inset: calc(var(--bevel) + 2px);
+  border: 1px solid var(--etch);
+  opacity: calc(var(--etch-strength, 0.5) * 0.35);
+  border-radius: 1px;
+}
+
+/* Brass is a banded rim with an engraved line and rivets at the corners. */
+[data-frame='brass'] .pane::before {
+  inset: 0;
+  border-radius: var(--corner);
+  border: calc(var(--bevel) + 1px) solid var(--edge);
+  border-image: linear-gradient(135deg, var(--edge-bright), var(--edge) 30%, var(--edge-dark) 50%, var(--edge) 70%, var(--edge-bright)) 1;
+  box-shadow: inset 0 0 0 1px var(--edge-dark);
+}
+
+[data-frame='brass'] .pane::after {
+  inset: 2px;
+  background:
+    radial-gradient(circle at 5px 5px, var(--edge-bright) 0 2px, var(--edge-dark) 2.5px, transparent 3.2px) top left / 12px 12px no-repeat,
+    radial-gradient(circle at calc(100% - 5px) 5px, var(--edge-bright) 0 2px, var(--edge-dark) 2.5px, transparent 3.2px) top right / 12px 12px no-repeat,
+    radial-gradient(circle at 5px calc(100% - 5px), var(--edge-bright) 0 2px, var(--edge-dark) 2.5px, transparent 3.2px) bottom left / 12px 12px no-repeat,
+    radial-gradient(circle at calc(100% - 5px) calc(100% - 5px), var(--edge-bright) 0 2px, var(--edge-dark) 2.5px, transparent 3.2px) bottom right / 12px 12px no-repeat;
+}
+
+.pane.emphasised {
+  box-shadow: 0 10px 30px rgba(0, 0, 0, calc(var(--shadow-strength) * 1.1)), 0 0 0 1px var(--edge-dark), 0 0 0 2px var(--accent-dim);
+}
+
+.pane-head {
+  position: relative;
+  z-index: 4;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex: none;
+  height: var(--m-tab-height, 30px);
+  margin: calc(var(--bevel) + 3px) calc(var(--bevel) + 4px) 0;
+  padding: 0 4px 0 6px;
+  border-bottom: 1px solid color-mix(in srgb, var(--edge-dark) 60%, transparent);
+  box-shadow: 0 1px 0 color-mix(in srgb, var(--edge) 25%, transparent);
+}
+
+.pane-head.grip {
+  cursor: grab;
+}
+
+.pane-head.grip:active {
+  cursor: grabbing;
+}
+
+.pane-title {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-family: var(--font-title);
+  font-size: var(--size-title);
+  font-weight: var(--weight-title);
+  letter-spacing: 0.03em;
+  color: var(--ink);
+}
+
+[data-frame='stone'] .pane-title {
+  font-variant: small-caps;
+}
+
+.pane-title::after {
+  content: '\25C6';
+  margin-left: 10px;
+  font-size: 0.5em;
+  vertical-align: middle;
+  color: var(--etch);
+  opacity: 0.55;
+}
+
+.pane-tabs {
+  display: flex;
+  flex: 1 1 auto;
+  min-width: 0;
+  gap: 3px;
+  overflow: hidden;
+  align-self: stretch;
+  padding-top: 3px;
+}
+
+.pane-tabs .tab {
+  position: relative;
+  max-width: 170px;
+  padding: 0 14px 0 10px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  border: 1px solid color-mix(in srgb, var(--edge-dark) 70%, transparent);
+  border-bottom: none;
+  border-radius: 3px 3px 0 0;
+  background: color-mix(in srgb, var(--tab) 75%, transparent);
+  color: var(--ink-muted);
+  cursor: pointer;
+}
+
+.pane-tabs .tab:hover {
+  background: var(--tab);
+}
+
+.pane-tabs .tab.active {
+  background: color-mix(in srgb, var(--pane-light) 92%, transparent);
+  color: var(--ink);
+  box-shadow: inset 0 -2px 0 var(--accent);
+}
+
+.pane-tabs .tab.fresh::after {
+  content: '';
+  position: absolute;
+  right: 4px;
+  top: 4px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--state-fresh, var(--accent));
+  animation: fresh-pulse 1.6s ease-in-out infinite;
+}
+
+.reduce-motion .pane-tabs .tab.fresh::after {
+  animation: none;
+}
+
+@keyframes fresh-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.25; }
+}
+
+.pane-close {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: none;
+  background: none;
+  color: var(--ink-muted);
+  cursor: pointer;
+}
+
+.pane-close:hover {
+  color: var(--accent);
+}
+
+.pane-body {
+  position: relative;
+  z-index: 2;
+  flex: 1 1 auto;
+  min-height: 0;
+  margin: 6px calc(var(--bevel) + 9px) calc(var(--bevel) + 8px);
+  overflow: auto;
+}
+
+.pane-heading {
+  margin: 10px 0 4px;
+  font-family: var(--font-title);
+  font-size: calc(var(--size-body) + 1px);
+  font-weight: var(--weight-title);
+  color: var(--accent);
+  letter-spacing: 0.02em;
+}
+
+[data-frame='stone'] .pane-heading {
+  font-variant: small-caps;
+}
+
+.pane-heading:first-child {
+  margin-top: 0;
+}
+
+/* ---------------------------------------------------------------- text, buttons, wells */
+
+.line {
+  overflow-wrap: anywhere;
+}
+
+.muted {
+  color: var(--ink-muted);
+}
+
+.accent {
+  color: var(--accent);
+}
+
+.good {
+  color: var(--good);
+}
+
+.bad {
+  color: var(--bad);
+}
+
+.num {
+  font-family: var(--font-num);
+  font-size: var(--size-num);
+  font-variant-numeric: tabular-nums;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 26px;
+  padding: 3px 10px;
+  border: 1px solid var(--edge-dark);
+  border-radius: var(--corner);
+  background: var(--pane-light);
+  color: var(--ink);
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.btn:hover:not(:disabled) {
+  background: var(--hover);
+  border-color: var(--accent);
+}
+
+.btn.pressed,
+.btn[aria-pressed='true'] {
+  background: var(--inset);
+  border: 2px solid var(--accent);
+  padding: 2px 9px;
+  color: var(--accent);
+}
+
+.btn:disabled {
+  opacity: 0.55;
+  cursor: default;
+}
+
+.well {
+  background: var(--well);
+  border: 1px solid var(--edge-dark);
+  border-radius: var(--corner);
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.45);
+}
+
+.badge {
+  display: inline-grid;
+  place-items: center;
+  min-width: 16px;
+  height: 16px;
+  padding: 0 4px;
+  border-radius: 8px;
+  background: var(--state-badge, #b8322a);
+  color: #fff;
+  font-family: var(--font-num);
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.6);
+}
+
+.glyph-box {
+  display: inline-grid;
+  place-items: center;
+}
+
+/* Form controls inside panes: fields, choice lists, sliders and switches in the theme's colours. */
+.ui-root input[type='text'],
+.ui-root input[type='search'],
+.ui-root select {
+  min-height: 26px;
+  padding: 3px 8px;
+  border: 1px solid var(--edge-dark);
+  border-radius: var(--corner);
+  background: var(--inset);
+  color: var(--ink);
+  outline: none;
+}
+
+.ui-root input[type='text']:focus,
+.ui-root input[type='search']:focus,
+.ui-root select:focus {
+  border-color: var(--accent);
+}
+
+.ui-root input::placeholder {
+  color: var(--ink-muted);
+}
+
+.ui-root select option {
+  background: var(--pane);
+  color: var(--ink);
+}
+
+.ui-root input[type='range'] {
+  accent-color: var(--accent);
+}
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 40px;
+  height: 22px;
+  flex: none;
+  cursor: pointer;
+}
+
+.switch input {
+  position: absolute;
+  opacity: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  cursor: pointer;
+}
+
+.switch span {
+  position: absolute;
+  inset: 2px 1px;
+  border-radius: 9px;
+  border: 1.5px solid var(--edge-dark);
+  background: var(--inset);
+  transition: background 0.12s;
+}
+
+.switch span::after {
+  content: '';
+  position: absolute;
+  top: 1.5px;
+  left: 2px;
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  border: 1px solid var(--edge-dark);
+  background: var(--ink-muted);
+  transition: transform 0.12s;
+}
+
+.switch input:checked + span {
+  background: var(--accent);
+}
+
+.switch input:checked + span::after {
+  transform: translateX(17px);
+  background: var(--pane-light);
+}
+
+.switch input:disabled + span {
+  opacity: 0.5;
+}
+
+.ui-root ::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+.ui-root ::-webkit-scrollbar-thumb {
+  background: color-mix(in srgb, var(--edge) 70%, transparent);
+  border-radius: 5px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+.ui-root ::-webkit-scrollbar-track {
+  background: color-mix(in srgb, var(--inset) 50%, transparent);
+}
+
+/* ---------------------------------------------------------------- items and boards */
+
+.item-tile {
+  position: absolute;
+  display: grid;
+  place-items: center;
+  box-sizing: border-box;
+  border: 1.5px solid var(--tile-edge);
+  border-radius: 2px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.06), transparent 35%), var(--tile-floor);
+  color: var(--tile-ink);
+  overflow: hidden;
+}
+
+.item-tile.hover {
+  border-width: 2px;
+  border-color: var(--tile-edge);
+  filter: brightness(1.12);
+}
+
+.item-tile.unmet::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: color-mix(in srgb, var(--bad) 22%, transparent);
+}
+
+.tile-letter {
+  font-family: var(--font-title);
+  font-weight: 700;
+  line-height: 1;
+}
+
+.tile-count {
+  position: absolute;
+  right: 3px;
+  bottom: 1px;
+  font-family: var(--font-num);
+  font-size: 11px;
+  font-weight: 700;
+  color: #fff;
+  text-shadow: 0 0 3px #000, 0 0 2px #000;
+}
+
+.tile-lock {
+  position: absolute;
+  left: 3px;
+  top: 3px;
+  color: var(--ink-muted);
+}
+
+.board {
+  position: relative;
+  flex: none;
+  box-sizing: content-box;
+  background-color: var(--inset);
+  background-image:
+    linear-gradient(to right, color-mix(in srgb, var(--edge-dark) 70%, transparent) 1px, transparent 1px),
+    linear-gradient(to bottom, color-mix(in srgb, var(--edge-dark) 70%, transparent) 1px, transparent 1px);
+  background-size: var(--cell) var(--cell);
+  border: 1px solid var(--edge-dark);
+  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.4);
+}
+
+.board-items {
+  position: absolute;
+  inset: 0;
+}
+
+.board-sealed {
+  position: absolute;
+  background: repeating-linear-gradient(45deg, color-mix(in srgb, var(--edge-dark) 75%, transparent) 0 3px, transparent 3px 7px), color-mix(in srgb, var(--state-sealed, #6f675d) 35%, transparent);
+}
+
+.board-tint {
+  position: absolute;
+  pointer-events: none;
+  border: 2px solid;
+  z-index: 2;
+}
+
+.board-tint[data-fit='fits'] {
+  background: color-mix(in srgb, var(--state-fit, #7fd47a) 30%, transparent);
+  border-color: var(--state-fit, #7fd47a);
+}
+
+.board-tint[data-fit='swap'] {
+  background: color-mix(in srgb, var(--state-swap, #e8c25a) 30%, transparent);
+  border-color: var(--state-swap, #e8c25a);
+}
+
+.board-tint[data-fit='blocked'] {
+  background: color-mix(in srgb, var(--state-blocked, #d0564a) 30%, transparent);
+  border-color: var(--state-blocked, #d0564a);
+}
+
+.board.locked {
+  opacity: 0.85;
+}
+
+.item-cards {
+  position: absolute;
+  z-index: 50;
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  pointer-events: none !important;
+}
+
+.item-card {
+  position: relative;
+  min-width: 180px;
+  max-width: 420px;
+  padding: 12px 14px 12px;
+  border-radius: var(--corner);
+  background-color: var(--pane);
+  background-image: var(--surface-texture);
+  background-size: 512px 512px;
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.6), 0 0 0 1px var(--edge-dark), inset 0 0 0 1px var(--edge);
+}
+
+.item-card::before {
+  content: '';
+  position: absolute;
+  left: 6px;
+  right: 6px;
+  top: 6px;
+  height: 2px;
+  background: var(--card-edge);
+}
+
+.card-line {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.card-line.card-name {
+  font-family: var(--font-title);
+  font-size: var(--size-title);
+  font-weight: var(--weight-title);
+}
+
+.card-line.caption {
+  font-size: calc(var(--size-body) - 1px);
+}
+
+.card-line.gap {
+  margin-top: 6px;
+}
+
+.card-line.flavor {
+  font-style: italic;
+  color: color-mix(in srgb, var(--accent) 85%, transparent);
+}
+
+.carry-ghost {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 60;
+  pointer-events: none !important;
+  opacity: 0.88;
+}
+
+.carry-ghost .item-tile {
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.quick-menu {
+  position: absolute;
+  z-index: 70;
+  display: flex;
+  flex-direction: column;
+  min-width: 140px;
+  padding: 4px;
+  border-radius: var(--corner);
+  background: var(--pane);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.55), 0 0 0 1px var(--edge);
+}
+
+.quick-item {
+  padding: 5px 10px;
+  border: 1px solid transparent;
+  border-radius: 2px;
+  background: none;
+  color: var(--ink);
+  text-align: left;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.quick-item:hover {
+  background: var(--hover);
+  border-color: var(--accent);
+}
+
+/* ---------------------------------------------------------------- the developer's layout rectangles */
+
+.dev-rects {
+  z-index: 90;
+}
+
+.dev-rect {
+  position: absolute;
+  border: 2px solid;
+  pointer-events: none !important;
+}
+
+.dev-rect.cluster-rect {
+  border-color: rgb(255, 77, 77);
+}
+
+.dev-rect.core-rect {
+  border-color: rgb(77, 255, 77);
+}
+
+.dev-rect.page-rect {
+  border-color: rgb(77, 153, 255);
+}
+
+.dev-rect.world-rect {
+  border-color: rgb(255, 230, 77);
+}

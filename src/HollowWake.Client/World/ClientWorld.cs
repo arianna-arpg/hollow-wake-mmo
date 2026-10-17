@@ -29,8 +29,51 @@ public partial class ClientWorld : Node3D
     private Node3D _entityRoot = null!;
     private ChunkCoord? _lastCenter;
 
-    /// <summary>Chunks kept built around the player in each direction.</summary>
-    public int ViewChunks { get; set; } = 3;
+    private int _viewChunks = 3;
+    private DirectionalLight3D? _sun;
+    private Godot.Environment? _environment;
+
+    /// <summary>Chunks kept built around the player in each direction (the draw distance option); a change replans at once.</summary>
+    public int ViewChunks
+    {
+        get => _viewChunks;
+        set
+        {
+            if (_viewChunks != value)
+            {
+                _viewChunks = Math.Clamp(value, 1, 12);
+                _lastCenter = null;
+            }
+        }
+    }
+
+    /// <summary>The sun casts shadows (the shadows option).</summary>
+    public void SetShadows(bool on)
+    {
+        if (_sun is not null)
+        {
+            _sun.ShadowEnabled = on;
+        }
+    }
+
+    /// <summary>The haze toward the horizon (the distance haze option).</summary>
+    public void SetFog(bool on)
+    {
+        if (_environment is not null)
+        {
+            _environment.FogEnabled = on;
+        }
+    }
+
+    /// <summary>Shows or hides the labels of props (the names over props option).</summary>
+    public void SetPropLabels(bool on)
+    {
+        EntityView.PropLabels = on;
+        foreach (var view in _entities.Values)
+        {
+            view.RefreshLabel();
+        }
+    }
 
     /// <summary>Chunk generations running at once on worker threads.</summary>
     public int Workers { get; set; } = Math.Clamp(System.Environment.ProcessorCount / 2, 1, 4);
@@ -63,6 +106,7 @@ public partial class ClientWorld : Node3D
         var sun = new DirectionalLight3D { Name = "Sun", LightEnergy = 1.2f, ShadowEnabled = true };
         sun.RotationDegrees = new Vector3(-55, 35, 0);
         AddChild(sun);
+        _sun = sun;
         var env = new Godot.Environment
         {
             BackgroundMode = Godot.Environment.BGMode.Color,
@@ -76,6 +120,7 @@ public partial class ClientWorld : Node3D
             FogDensity = 0.0007f,
         };
         AddChild(new WorldEnvironment { Name = "Environment", Environment = env });
+        _environment = env;
     }
 
     public void ApplyWorldInfo(WorldInfo info)
@@ -393,7 +438,15 @@ public partial class ClientWorld : Node3D
     {
         if (_entities.Remove(key, out var view))
         {
-            view.QueueFree();
+            // A telegraph's strike landed: its mark fades out and frees itself.
+            if (view.IsTelegraph)
+            {
+                view.Dying();
+            }
+            else
+            {
+                view.QueueFree();
+            }
         }
     }
 
@@ -458,34 +511,51 @@ public partial class ClientWorld : Node3D
         return null;
     }
 
-    /// <summary>The nearest entity view to a ray, if any lies within its radius of the ray.</summary>
+    /// <summary>
+    /// The entity whose drawn body a ray passes through, ignoring the player's own. Creatures and interactables win
+    /// over plain props, so a canopy in front of a hob does not take the hover from it; among overlapping bodies the
+    /// one the ray passes closest to the middle of wins, nearer ones on a tie. The browser client's EntityLayer.pick.
+    /// </summary>
     public EntityView? PickEntity(Vector3 origin, Vector3 direction, float maxDistance = 400f)
     {
         EntityView? best = null;
-        var bestDist = float.MaxValue;
+        var bestScore = float.MaxValue;
+        EntityView? bestProp = null;
+        var bestPropScore = float.MaxValue;
         foreach (var view in _entities.Values)
         {
-            if (view.Key == SelfKey)
+            if (view.Key == SelfKey || view.PickSize is not { } size)
             {
                 continue;
             }
-            var center = view.GlobalPosition + new Vector3(0, view.State.Height * 0.5f, 0);
-            var to = center - origin;
-            var along = to.Dot(direction);
+            var center = view.GlobalPosition + new Vector3(0, size.Height * 0.5f, 0);
+            var along = (center - origin).Dot(direction);
             if (along < 0 || along > maxDistance)
             {
                 continue;
             }
-            var closest = origin + direction * along;
-            var dist = (center - closest).Length();
-            var reach = Mathf.Max(view.State.Radius, 0.5f) + view.State.Height * 0.35f;
-            if (dist <= reach && along < bestDist)
+            var off = (center - (origin + direction * along)).Length();
+            var reach = Mathf.Max(size.Radius, 0.5f) + size.Height * 0.35f;
+            if (off > reach)
             {
-                bestDist = along;
-                best = view;
+                continue;
+            }
+            var score = off / reach + along * 1e-4f;
+            if (view.State.Resources.Count > 0 || view.State.Interactable is not null)
+            {
+                if (score < bestScore)
+                {
+                    bestScore = score;
+                    best = view;
+                }
+            }
+            else if (score < bestPropScore)
+            {
+                bestPropScore = score;
+                bestProp = view;
             }
         }
-        return best;
+        return best ?? bestProp;
     }
 }
 

@@ -176,8 +176,18 @@ public partial class Smoke : Node
             await Wait(0.4);
             var offers = _main.QuestOffers;
             Tap(Key.F);
-            var shown = await Until(() => _main.QuestOffers > offers && _main.Hud.QuestsVisible, 10);
-            Record("quartermaster offers quests", reached && shown, $"reached={reached} at {Flat(Pos(), new(quartermaster.State.X, quartermaster.State.Y, 0)):0.0} units, F interacted with {_main.LastInteracted}, panel shown={shown}{Rejected()}");
+            var shown = await Until(() => _main.QuestOffers > offers && _main.Hud.QuestsVisible, 6);
+            var how = $"F interacted with {_main.LastInteracted}";
+            if (!shown)
+            {
+                // A villager wandered nearer and F took it: close what it opened and click the quartermaster.
+                await CloseEverything();
+                await Hover(quartermaster);
+                await Click(Screen(quartermaster.GlobalPosition + new Vector3(0, quartermaster.State.Height * 0.5f, 0)));
+                shown = await Until(() => _main.QuestOffers > offers && _main.Hud.QuestsVisible, 8);
+                how += ", then clicked the quartermaster";
+            }
+            Record("quartermaster offers quests", reached && shown, $"reached={reached} at {Flat(Pos(), new(quartermaster.State.X, quartermaster.State.Y, 0)):0.0} units, {how}, panel shown={shown}{Rejected()}");
             await Shot("02_quest_offer.png");
             Tap(Key.Escape);
             await Wait(0.3);
@@ -209,6 +219,11 @@ public partial class Smoke : Node
         Tap(Key.C);
         await Wait(0.3);
         Record("character sheet", sheetOpen && !_main.Hud.SheetVisible, $"opened={sheetOpen} closed={!_main.Hud.SheetVisible}");
+
+        await CorePaneAndPages();
+        await TalkToAVillager();
+        await TradeWithAVendor();
+        await OptionsSteps();
 
         // Weaves: walk to the nearest hob, hover it and press 1 to 4 until a combat line shows.
         var hob = Nearest(e => e.State.Pattern is not null && e.State.Pattern.StartsWith("hob", StringComparison.Ordinal) && !e.State.Dead);
@@ -243,6 +258,350 @@ public partial class Smoke : Node
             }
         }
         await Wait(0.5);
+    }
+
+    // ------------------------------------------------------------ the interface
+
+    /// <summary>The core pane opens with its key; every ribbon page the hero has opens from its ribbon on the rail.</summary>
+    private async Task CorePaneAndPages()
+    {
+        var hud = _main.Hud;
+        await Until(() => hud.Hero.Inventory is not null || !hud.Hero.Interface, 5);
+        TapAction(hud.ActionOf("inventory"));
+        await Wait(0.5);
+        var open = hud.CoreOpen;
+        var bag = hud.Hero.Bag(10);
+        await Shot("06_core_pane.png");
+        Record("core pane", open && bag is not null && hud.Rects is not null,
+            $"open={open}, bag {bag?.Items.Count ?? 0} items on {bag?.Width ?? 0}x{bag?.Height ?? 0}, {hud.Hero.Inventory?.Slots.Count ?? 0} doll slots, wallet {hud.Hero.Inventory?.Wallet.Count ?? 0}, interface={hud.Hero.Interface}");
+        var pages = hud.RibbonPages.ToList();
+        var visited = new List<string>();
+        foreach (var page in pages)
+        {
+            var at = hud.RibbonCenter(page);
+            if (at is { } p)
+            {
+                await Click(p);
+            }
+            else
+            {
+                TapAction(hud.ActionOf(page));
+            }
+            var shown = await Until(() => hud.IsShown(page), 3);
+            await Wait(0.4);
+            await Shot($"07_page_{page}.png");
+            visited.Add($"{page}={(shown ? "shown" : "missing")}");
+        }
+        Record("ribbon pages", pages.Count > 0 && visited.All(v => v.EndsWith("=shown", StringComparison.Ordinal)), string.Join(", ", visited) + Rejected());
+        // Escape closes the pages, then the core pane.
+        for (var i = 0; i < pages.Count + 2 && hud.CoreOpen; i++)
+        {
+            Tap(Key.Escape);
+            await Wait(0.15);
+        }
+        Record("escape closes the core pane last", !hud.CoreOpen, $"core open={hud.CoreOpen}");
+    }
+
+    /// <summary>Walks to the nearest villager, talks, and takes the first open choice.</summary>
+    private async Task TalkToAVillager()
+    {
+        var villager = Nearest(e => e.State.Pattern == "villager" || e.State.Interactable == "talk");
+        if (villager is null)
+        {
+            Record("talk to a villager", false, "no villager in view");
+            return;
+        }
+        var reached = await TravelTo(() => (villager.State.X, villager.State.Y), 1.0f, 45);
+        await Wait(0.3);
+        await CloseEverything();
+        var states = _main.DialogueStates;
+        bool Talking() => _main.DialogueStates > states && _main.Hud.FrontView<UI.WorldPanes.DialoguePane>()?.State?.Source == villager.Key;
+        // Beside the villager, F talks to it; when someone stands nearer, click the villager instead.
+        Tap(Key.F);
+        var shown = await Until(Talking, 4);
+        if (!shown)
+        {
+            await CloseEverything();
+            await Hover(villager);
+            await Click(Screen(villager.GlobalPosition + new Vector3(0, villager.State.Height * 0.5f, 0)));
+            shown = await Until(Talking, 6);
+        }
+        await Shot("08_dialogue.png");
+        var pane = _main.Hud.FrontView<UI.WorldPanes.DialoguePane>();
+        var line = pane?.State is { } s ? $"{s.Speaker}: \"{Trim(s.Line)}\" with {s.Choices.Count} choices" : "no dialogue_state arrived";
+        if (shown && pane?.State is { } state && state.Choices.FirstOrDefault(c => c.Enabled) is { } choice)
+        {
+            var before = _main.DialogueStates;
+            var button = pane.FindChildren("*", "Button", true, false).OfType<Button>().FirstOrDefault(b => !b.Disabled);
+            if (button is not null)
+            {
+                await Click(button.GetGlobalRect().GetCenter());
+                var answered = await Until(() => _main.DialogueStates > before, 5);
+                line += $", chose \"{Trim(choice.Text)}\" (answered={answered})";
+            }
+        }
+        Record("talk to a villager", reached && shown, $"reached={reached}, {line}{Rejected()}");
+        if (_main.Hud.HasWorldPane("dialogue"))
+        {
+            Tap(Key.Escape);
+            await Wait(0.3);
+        }
+    }
+
+    /// <summary>
+    /// Opens a vendor (one in view, else the quartermaster's, asked through its conversation), sees its shelf,
+    /// and buys the first thing the hero can afford when there is one.
+    /// </summary>
+    private async Task TradeWithAVendor()
+    {
+        var hud = _main.Hud;
+        if (!hud.HasWorldPane("vendor"))
+        {
+            var vendor = Nearest(e => e.State.Interactable == "vendor" || e.State.Pattern?.Contains("vendor", StringComparison.Ordinal) == true || e.State.Pattern?.Contains("merchant", StringComparison.Ordinal) == true)
+                ?? Nearest(e => e.State.Pattern == "quartermaster" || e.State.Name == "Quartermaster");
+            if (vendor is null)
+            {
+                Record("trade with a vendor", false, $"no vendor or quartermaster in view{Rejected()}");
+                return;
+            }
+            await TravelTo(() => (vendor.State.X, vendor.State.Y), 1.4f, 45);
+            await Wait(0.4);
+            var states = _main.VendorStates;
+            var talks = _main.DialogueStates;
+            await Click(Screen(vendor.GlobalPosition + new Vector3(0, vendor.State.Height * 0.5f, 0)));
+            await Until(() => (_main.VendorStates > states && hud.HasWorldPane("vendor")) || (_main.DialogueStates > talks && hud.HasWorldPane("dialogue")), 6);
+            // A trader that talks first: bring its conversation to the front and ask to trade, as a player would.
+            if (!hud.HasWorldPane("vendor") && hud.FrontView<UI.WorldPanes.DialoguePane>() is { State: { } talk } dialogue)
+            {
+                hud.Workspace.SelectTab($"dialogue:{talk.Source}");
+                await Wait(0.3);
+                var index = talk.Choices.FindIndex(c => c.Id == "trade" && c.Enabled);
+                var button = index < 0 ? null : dialogue.FindChildren("*", "Button", true, false).OfType<Button>().FirstOrDefault(b => b.Text.StartsWith($"{index + 1}. ", StringComparison.Ordinal));
+                if (button is not null)
+                {
+                    await Click(ScreenCenter(button));
+                }
+                await Until(() => _main.VendorStates > states && hud.HasWorldPane("vendor"), 6);
+            }
+        }
+        var pane = hud.FrontView<UI.WorldPanes.VendorPane>();
+        if (pane?.State is { } shown)
+        {
+            // The shelf arrives as a fresh tab behind the conversation that opened it: look at it.
+            hud.Workspace.SelectTab($"vendor:{shown.Source}");
+        }
+        await Wait(0.5);
+        await Shot("09_vendor.png");
+        if (pane?.State is not { } state)
+        {
+            Record("trade with a vendor", false, $"no vendor_state arrived{Rejected()}");
+            return;
+        }
+        var items0 = hud.BagItems;
+        var inventories = _main.InventoryStates;
+        var buy = pane.FindChildren("*", "Button", true, false).OfType<Button>().FirstOrDefault(b => !b.Disabled && b.Text == "Buy");
+        var bought = "nothing the hero can afford";
+        if (buy is not null)
+        {
+            await Click(ScreenCenter(buy));
+            bought = await Until(() => _main.InventoryStates > inventories && hud.BagItems > items0, 6) ? $"bought one, bag {items0} -> {hud.BagItems}" : $"asked to buy{Rejected()}";
+            await Shot("10_bought.png");
+        }
+        Record("trade with a vendor", state.Stock.Count > 0, $"{state.Name}: {state.Stock.Count} on the shelf, {bought}");
+        for (var i = 0; i < 6 && (hud.CoreOpen || hud.HasWorldPane("vendor") || hud.HasWorldPane("dialogue")); i++)
+        {
+            Tap(Key.Escape);
+            await Wait(0.2);
+        }
+    }
+
+    /// <summary>
+    /// Options: open it, switch the theme and see the cluster recolour, rebind a key and use it, change the
+    /// interface scale and see the panes refit, and reset a group, all through the pane's own controls.
+    /// </summary>
+    private async Task OptionsSteps()
+    {
+        var hud = _main.Hud;
+        TapAction("page_options");
+        var open = await Until(() => hud.OptionsOpen && hud.FrontView<UI.Pages.OptionsPane>() is not null, 3);
+        await Wait(0.4);
+        await Shot("11_options.png");
+        Record("options open", open, $"open={open}, page {hud.FrontView<UI.Pages.OptionsPane>()?.SelectedPage}, {hud.FrontView<UI.Pages.OptionsPane>()?.RowCount} rows");
+        if (!open)
+        {
+            return;
+        }
+
+        // The theme: pick the other direction in the theme row's list; the cluster redraws in it.
+        var before = SamplePixel(hud.ClusterRect);
+        var themeRow = Pane()?.RowOf("theme");
+        var picker = themeRow?.FindChildren("*", "OptionButton", true, false).OfType<OptionButton>().FirstOrDefault();
+        var other = 0;
+        if (picker is not null)
+        {
+            for (var i = 0; i < picker.ItemCount; i++)
+            {
+                if (picker.GetItemText(i) != picker.GetItemText(picker.Selected))
+                {
+                    other = i;
+                }
+            }
+            picker.Select(other);
+            picker.EmitSignal(OptionButton.SignalName.ItemSelected, other);
+        }
+        await Wait(0.6);
+        var themed = _main.Hud.Skin.T.Id;
+        var after = SamplePixel(_main.Hud.ClusterRect);
+        await Shot("12_theme.png");
+        Record("options switch the theme", picker is not null && themed != "etched_stone" && before != after,
+            $"theme {themed}, cluster pixel {before} -> {after}");
+
+        // A key: find the camera switch by searching, rebind it to B through its row, use it, and see the camera turn.
+        await ShowOptionsPage("controls");
+        await SearchOptions("Switch camera");
+        var camRow = Pane()?.RowOf("key.camera_toggle");
+        var primary = camRow?.FindChildren("*", "Button", true, false).OfType<Button>().FirstOrDefault(b => b.Text == "V");
+        var rebound = false;
+        if (primary is not null)
+        {
+            await Click(ScreenCenter(primary));
+            await Wait(0.2);
+            Tap(Key.B);
+            await Wait(0.3);
+            rebound = _main.Settings.Bindings("camera_toggle").Primary == "B";
+        }
+        await Shot("13_rebound.png");
+        // Done keeps the changes and closes the pane; the new key works in the world.
+        await CloseOptionsByDone();
+        var mode0 = _main.Rig.Mode;
+        Tap(Key.B);
+        await Wait(0.5);
+        var turned = _main.Rig.Mode != mode0;
+        Tap(Key.B);
+        await Wait(0.4);
+        Record("options rebind a key", rebound && turned, $"camera switch on B={rebound}, B turned the camera={turned}");
+
+        // The interface scale: larger, with the core pane open, and the panes refit above the cluster.
+        TapAction("page_options");
+        await Until(() => hud.OptionsOpen, 3);
+        TapAction("page_inventory");
+        await Wait(0.3);
+        await ShowOptionsPage("interface");
+        var scaleRow = Pane()?.RowOf("ui_scale");
+        var slider = scaleRow?.FindChildren("*", "HSlider", true, false).OfType<HSlider>().FirstOrDefault();
+        var clusterBefore = hud.ClusterRect.W * hud.UiScale;
+        slider?.SetValue(1.25);
+        await Wait(0.6);
+        var clusterAfter = hud.ClusterRect.W * hud.UiScale;
+        var fits = hud.Rects is { } r && r.Core.Bottom <= hud.ClusterRect.Y + 0.5f && r.Core.Right <= hud.ClusterRect.X + 1e5f;
+        await Shot("14_scale.png");
+        Record("options scale the interface", Math.Abs(hud.UiScale - 1.25f) < 0.01f && clusterAfter > clusterBefore + 10 && fits,
+            $"scale {hud.UiScale:0.00}, cluster {clusterBefore:0} -> {clusterAfter:0} px wide, panes above the cluster={fits}");
+
+        // Reset the group: the theme and the scale return to their defaults.
+        var lookReset = Pane()?.FindChildren("*", "Button", true, false).OfType<Button>().FirstOrDefault(b => b.Text == "Reset group");
+        if (lookReset is not null)
+        {
+            await Click(ScreenCenter(lookReset));
+        }
+        await Wait(0.6);
+        var reset = _main.Settings.Text("theme") == "etched_stone" && Math.Abs(_main.Settings.Number("ui_scale") - 1) < 1e-6;
+        await Shot("15_reset.png");
+        Record("options reset a group", lookReset is not null && reset, $"theme {_main.Settings.Text("theme")}, scale {_main.Settings.Number("ui_scale"):0.00}");
+        // Leave the key as it was for the steps that follow, and close everything.
+        _main.Settings.Reset(UI.Logic.OptionsCatalog.KeyEntryId("camera_toggle"));
+        await CloseOptionsByDone();
+        for (var i = 0; i < 6 && hud.CoreOpen; i++)
+        {
+            Tap(Key.Escape);
+            await Wait(0.15);
+        }
+    }
+
+    private UI.Pages.OptionsPane? Pane() => _main.Hud.FrontView<UI.Pages.OptionsPane>();
+
+    /// <summary>Presses Escape until the core pane and every pane are closed (with nothing open it would open Options).</summary>
+    private async Task CloseEverything()
+    {
+        var hud = _main.Hud;
+        for (var i = 0; i < 8 && (hud.CoreOpen || hud.Workspace.Book.Leaves.Count > 0); i++)
+        {
+            Tap(Key.Escape);
+            await Wait(0.15);
+        }
+    }
+
+    /// <summary>Types into the Options search field; the rows narrow to the matching entries of every page.</summary>
+    private async Task SearchOptions(string text)
+    {
+        var field = Pane()?.FindChildren("*", "LineEdit", true, false).OfType<LineEdit>().FirstOrDefault(l => l.PlaceholderText.StartsWith("Search", StringComparison.Ordinal));
+        if (field is null)
+        {
+            return;
+        }
+        await Click(ScreenCenter(field));
+        field.Text = text;
+        field.EmitSignal(LineEdit.SignalName.TextChanged, text);
+        await Wait(0.3);
+    }
+
+    /// <summary>Picks an Options page through its button in the pane's page list, as a player would.</summary>
+    private async Task ShowOptionsPage(string id)
+    {
+        if (Pane() is not { } pane || pane.SelectedPage == id)
+        {
+            return;
+        }
+        var name = _main.Settings.Catalog.Pages.FirstOrDefault(p => p.Id == id)?.Name;
+        var button = pane.FindChildren("*", "Button", true, false).OfType<Button>().FirstOrDefault(b => b.Text == name);
+        if (button is not null)
+        {
+            await Click(ScreenCenter(button));
+        }
+        await Until(() => Pane()?.SelectedPage == id, 2);
+        await Wait(0.3);
+    }
+
+    private async Task CloseOptionsByDone()
+    {
+        var done = Pane()?.FindChildren("*", "Button", true, false).OfType<Button>().FirstOrDefault(b => b.Text == "Done");
+        if (done is not null)
+        {
+            await Click(ScreenCenter(done));
+        }
+        await Until(() => !_main.Hud.OptionsOpen, 3);
+    }
+
+    /// <summary>A control's middle in viewport pixels, through the interface's scale.</summary>
+    private static Vector2 ScreenCenter(Control control) => control.GetGlobalTransformWithCanvas() * (control.Size / 2);
+
+    /// <summary>The colour of the weave bar's frame in the drawn frame, to see the cluster recolour.</summary>
+    private string SamplePixel(UI.Logic.Box cluster)
+    {
+        var image = GetViewport().GetTexture().GetImage();
+        var scale = _main.Hud.UiScale;
+        var x = (int)((cluster.X + cluster.W / 2) * scale);
+        var y = (int)((cluster.Y + cluster.H - 4) * scale);
+        x = Math.Clamp(x, 0, image.GetWidth() - 1);
+        y = Math.Clamp(y, 0, image.GetHeight() - 1);
+        return image.GetPixel(x, y).ToHtml(false);
+    }
+
+    private void TapAction(string action) => TapName(_main.Settings.Bindings(action).Primary);
+
+    private static string Trim(string text) => text.Length > 48 ? text[..48] + "..." : text;
+
+    /// <summary>Presses a key written as content writes keys (I, K, Shift+Tab).</summary>
+    private static void TapName(string keyName)
+    {
+        var name = UI.Logic.KeyName.Parse(keyName);
+        if (name.IsEmpty)
+        {
+            return;
+        }
+        var key = OS.FindKeycodeFromString(name.Key);
+        Input.ParseInputEvent(new InputEventKey { Keycode = key, PhysicalKeycode = key, Pressed = true, ShiftPressed = name.Shift });
+        Input.ParseInputEvent(new InputEventKey { Keycode = key, PhysicalKeycode = key, Pressed = false, ShiftPressed = name.Shift });
     }
 
     // ------------------------------------------------------------ helpers

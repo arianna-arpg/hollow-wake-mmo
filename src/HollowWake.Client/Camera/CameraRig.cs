@@ -23,6 +23,11 @@ public partial class CameraRig : Node3D
     private float _distance = 14f;
     private float _thirdPitch = Mathf.DegToRad(28f);
     private bool _orbiting;
+    private float _isoStep = Mathf.DegToRad(45);
+    private float _isoZoomMax = 90f;
+    private float _sensitivity = 1f;
+    private bool _invert;
+    private float _fov = 65f;
     private bool _hasTarget;
 
     public CameraMode Mode { get; private set; } = CameraMode.Isometric;
@@ -48,11 +53,31 @@ public partial class CameraRig : Node3D
         Apply(force: true);
     }
 
+    public void SetMode(CameraMode mode)
+    {
+        if (Mode != mode)
+        {
+            Mode = mode;
+            Apply(force: true);
+        }
+    }
+
+    /// <summary>The camera options: the isometric turn and zoom-out limit, third-person drag sensitivity and inversion, and its field of view.</summary>
+    public void Configure(float isoStepDegrees, float isoZoomMax, float sensitivity, bool invert, float fov)
+    {
+        _isoStep = Mathf.DegToRad(Mathf.Clamp(isoStepDegrees, 1, 180));
+        _isoZoomMax = Mathf.Max(10, isoZoomMax);
+        _orthoSize = Mathf.Min(_orthoSize, _isoZoomMax);
+        _sensitivity = sensitivity;
+        _invert = invert;
+        _fov = Mathf.Clamp(fov, 30, 120);
+    }
+
     public void RotateStep(int direction)
     {
         if (Mode == CameraMode.Isometric)
         {
-            _yaw += Mathf.DegToRad(45) * direction;
+            _yaw += _isoStep * direction;
         }
         else
         {
@@ -64,7 +89,7 @@ public partial class CameraRig : Node3D
     {
         if (Mode == CameraMode.Isometric)
         {
-            _orthoSize = Mathf.Clamp(_orthoSize - steps * 3f, 8f, 90f);
+            _orthoSize = Mathf.Clamp(_orthoSize - steps * 3f, 8f, _isoZoomMax);
         }
         else
         {
@@ -91,8 +116,8 @@ public partial class CameraRig : Node3D
         }
         if (@event is InputEventMouseMotion mm && _orbiting && Mode == CameraMode.ThirdPerson)
         {
-            _yaw -= mm.Relative.X * 0.005f;
-            _thirdPitch = Mathf.Clamp(_thirdPitch + mm.Relative.Y * 0.004f, Mathf.DegToRad(5), Mathf.DegToRad(80));
+            _yaw -= mm.Relative.X * 0.005f * _sensitivity;
+            _thirdPitch = Mathf.Clamp(_thirdPitch + mm.Relative.Y * 0.004f * _sensitivity * (_invert ? -1 : 1), Mathf.DegToRad(5), Mathf.DegToRad(80));
         }
     }
 
@@ -134,7 +159,7 @@ public partial class CameraRig : Node3D
         else
         {
             _camera.Projection = Camera3D.ProjectionType.Perspective;
-            _camera.Fov = 65f;
+            _camera.Fov = _fov;
             var eye = _target + new Vector3(0, 1.6f, 0);
             var dir = new Vector3(Mathf.Cos(_thirdPitch) * Mathf.Sin(_yaw), Mathf.Sin(_thirdPitch), Mathf.Cos(_thirdPitch) * Mathf.Cos(_yaw));
             desired = eye + dir * _distance;

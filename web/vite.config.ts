@@ -16,6 +16,8 @@ export default defineConfig({
   },
   server: {
     port: 5173,
+    // The interface reads the repository's content/core at build time (src/ui/logic/contentFiles.ts).
+    fs: { allow: ['..'] },
     proxy: {
       '/ws': { target: server, ws: true, changeOrigin: true },
     },

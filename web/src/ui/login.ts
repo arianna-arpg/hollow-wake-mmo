@@ -6,9 +6,14 @@ export interface LoginHandlers {
   connect: (address: ServerAddress, account: string, token: string) => void;
   create: (name: string, calling: string) => void;
   enter: (characterId: string) => void;
+  /** Opens the Options pane over the login screen. */
+  options: () => void;
 }
 
-/** Connect, log in, pick or create a character. Hidden once in the world. The desktop LoginPanel's twin. */
+/**
+ * Connect, log in, pick or create a character, or open Options. Hidden once in the world; drawn in the theme's
+ * colours. The desktop LoginPanel's twin.
+ */
 export class LoginPanel {
   readonly root: HTMLElement;
   private readonly host: HTMLInputElement;
@@ -41,6 +46,8 @@ export class LoginPanel {
     this.newName = el('input', { id: 'login-new-name', type: 'text', placeholder: 'New character name', maxlength: '24', spellcheck: 'false' });
     this.calling = el('select', { id: 'login-calling' });
     const createButton = el('button', { id: 'login-create', type: 'button', text: 'Create' });
+    const optionsButton = el('button', { id: 'login-options', type: 'button', text: 'Options' });
+    optionsButton.addEventListener('click', () => this.handlers.options());
 
     const form = el('form', { class: 'login-form' },
       el('div', { class: 'login-row' },
@@ -50,7 +57,7 @@ export class LoginPanel {
       el('div', { class: 'login-row' },
         el('label', { for: 'login-account', text: 'Account' }), this.account,
         el('label', { for: 'login-token', class: 'compact', text: 'Token' }), this.token),
-      el('div', { class: 'login-row end' }, this.connectButton));
+      el('div', { class: 'login-row end' }, optionsButton, this.connectButton));
     form.addEventListener('submit', (e) => {
       e.preventDefault();
       this.submit();

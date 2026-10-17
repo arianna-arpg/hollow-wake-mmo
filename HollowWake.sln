@@ -25,6 +25,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HollowWake.Core.Tests", "te
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HollowWake.Server.Tests", "tests\HollowWake.Server.Tests\HollowWake.Server.Tests.csproj", "{6CE11355-2545-4AEE-B3BD-C3D54EC246EC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HollowWake.Client.Tests", "tests\HollowWake.Client.Tests\HollowWake.Client.Tests.csproj", "{DD016DF0-A646-4F20-8CAC-44CDEB18067F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -143,6 +145,18 @@ Global
 		{6CE11355-2545-4AEE-B3BD-C3D54EC246EC}.Release|x64.Build.0 = Release|Any CPU
 		{6CE11355-2545-4AEE-B3BD-C3D54EC246EC}.Release|x86.ActiveCfg = Release|Any CPU
 		{6CE11355-2545-4AEE-B3BD-C3D54EC246EC}.Release|x86.Build.0 = Release|Any CPU
+		{DD016DF0-A646-4F20-8CAC-44CDEB18067F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DD016DF0-A646-4F20-8CAC-44CDEB18067F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DD016DF0-A646-4F20-8CAC-44CDEB18067F}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{DD016DF0-A646-4F20-8CAC-44CDEB18067F}.Debug|x64.Build.0 = Debug|Any CPU
+		{DD016DF0-A646-4F20-8CAC-44CDEB18067F}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{DD016DF0-A646-4F20-8CAC-44CDEB18067F}.Debug|x86.Build.0 = Debug|Any CPU
+		{DD016DF0-A646-4F20-8CAC-44CDEB18067F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DD016DF0-A646-4F20-8CAC-44CDEB18067F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DD016DF0-A646-4F20-8CAC-44CDEB18067F}.Release|x64.ActiveCfg = Release|Any CPU
+		{DD016DF0-A646-4F20-8CAC-44CDEB18067F}.Release|x64.Build.0 = Release|Any CPU
+		{DD016DF0-A646-4F20-8CAC-44CDEB18067F}.Release|x86.ActiveCfg = Release|Any CPU
+		{DD016DF0-A646-4F20-8CAC-44CDEB18067F}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -157,5 +171,6 @@ Global
 		{817E638C-2BA8-42FE-AFAE-C4A1211E8F25} = {827E0CD3-B72D-47B6-A68D-7590B98EB39B}
 		{C330A9A4-F26D-402D-9D12-1386FC80CAD3} = {0AB3BF05-4346-4AA6-1389-037BE0695223}
 		{6CE11355-2545-4AEE-B3BD-C3D54EC246EC} = {0AB3BF05-4346-4AA6-1389-037BE0695223}
+		{DD016DF0-A646-4F20-8CAC-44CDEB18067F} = {0AB3BF05-4346-4AA6-1389-037BE0695223}
 	EndGlobalSection
 EndGlobal

@@ -5,12 +5,29 @@ namespace HollowWake.Client.World;
 
 /// <summary>
 /// A placeholder body for a server entity: a capsule, box, sphere or cylinder by what it is, a name
-/// and a life bar above it, and smoothing between snapshots. Looks are a presentation concern;
-/// swapping this for models and animation does not touch anything else.
+/// and a life bar above it, and smoothing between snapshots. A projectile, area or field the server names a
+/// shape for is drawn as that shape (a slab for a projectile, a flat mark for the rest), facing its heading
+/// and turned by its spin; a telegraph is a ground mark that fades in, breathes, and fades out when its strike
+/// lands. Looks are a presentation concern; swapping this for models and animation does not touch anything else.
 /// </summary>
 public partial class EntityView : Node3D
 {
     private const float BarWidth = 1.2f;
+
+    /// <summary>How long a telegraph takes to fade once its strike lands.</summary>
+    public const float FadeSeconds = 0.35f;
+
+    private bool _shaped;
+    private StandardMaterial3D? _fade;
+    private StandardMaterial3D? _fillMaterial;
+    private MeshInstance3D _fill = null!;
+    private float _fadeAlpha;
+    private double _bornAt;
+    private double _bornServer;
+    private double? _dyingAt;
+
+    /// <summary>The server's clock now as the client estimates it, or null before it knows; marks that end at a server time read it.</summary>
+    public static Func<double?>? ServerNow { get; set; }
 
     private MeshInstance3D _mesh = null!;
     private MeshInstance3D _canopy = null!;
@@ -39,6 +56,8 @@ public partial class EntityView : Node3D
     {
         _mesh = new MeshInstance3D { Name = "body" };
         AddChild(_mesh);
+        _fill = new MeshInstance3D { Name = "fill", Visible = false, CastShadow = GeometryInstance3D.ShadowCastingSetting.Off };
+        AddChild(_fill);
         _canopy = new MeshInstance3D { Name = "canopy", Visible = false };
         AddChild(_canopy);
         _label = new Label3D
@@ -85,36 +104,125 @@ public partial class EntityView : Node3D
         RenderPriority = priority,
     };
 
+    /// <summary>Whether the body is a telegraph mark, which lingers to fade out when it goes.</summary>
+    public bool IsTelegraph => _fade is not null;
+
+    /// <summary>
+    /// The size the mouse picks, matching what is drawn rather than the simulation radius (a marker's radius is its
+    /// whole place); null never under the cursor (fields, projectiles, shapes, marks).
+    /// </summary>
+    public (float Radius, float Height)? PickSize { get; private set; }
+
+    /// <summary>The telegraph's strike landed (the world let it go): the mark fades out and then frees itself.</summary>
+    public void Dying()
+    {
+        _released = true;
+        _dyingAt ??= Time.GetTicksMsec() / 1000.0;
+    }
+
+    /// <summary>The world no longer holds this view; it frees itself once faded.</summary>
+    private bool _released;
+
+    /// <summary>The body's turn about the vertical: a shape faces its heading (else the yaw) plus its spin; a body its yaw.</summary>
+    private float Facing(EntityState s) => _shaped ? (s.Heading ?? s.Yaw) + (s.Spin ?? 0) : -s.Yaw + Mathf.Pi / 2;
+
+    /// <summary>A shaped body: the delivery's shape as a slab (a projectile) or a flat mark (an area, a field, a telegraph).</summary>
+    private void BuildShape(EntityState s, string look)
+    {
+        PickSize = null;
+        var size = s.ShapeSize;
+        var spec = UI.Logic.ShapeOutline.SpecOf(s.Shape ?? "circle", size?.Radius, size?.Angle, size?.Width, size?.Inner, Mathf.Max(0.1f, s.Radius), size?.Curvature);
+        var telegraph = look == "telegraph";
+        var projectile = !telegraph && (look == "projectile" || s.Pattern == "projectile");
+        var thickness = projectile ? Mathf.Clamp(s.Height * 0.4f, 0.12f, 0.4f) : 0f;
+        _mesh.Mesh = ShapeMesh.Build(UI.Logic.ShapeOutline.RegionOf(spec), thickness);
+        var color = telegraph ? new Color(1f, 0.35f, 0.21f) : ColorFor(s);
+        var alpha = telegraph ? 0.5f : projectile ? 1f : 0.35f;
+        var material = new StandardMaterial3D
+        {
+            AlbedoColor = new Color(color, telegraph ? 0 : alpha),
+            Transparency = alpha < 1 || telegraph ? BaseMaterial3D.TransparencyEnum.Alpha : BaseMaterial3D.TransparencyEnum.Disabled,
+            CullMode = BaseMaterial3D.CullModeEnum.Disabled,
+            ShadingMode = telegraph ? BaseMaterial3D.ShadingModeEnum.Unshaded : BaseMaterial3D.ShadingModeEnum.PerPixel,
+            Roughness = 0.8f,
+        };
+        _mesh.MaterialOverride = material;
+        _mesh.CastShadow = GeometryInstance3D.ShadowCastingSetting.Off;
+        _fade = telegraph ? material : null;
+        _fadeAlpha = alpha;
+        _mesh.Position = new Vector3(0, projectile ? Mathf.Max(0.1f, s.Height * 0.5f) - thickness / 2 : telegraph ? 0.07f : 0.05f, 0);
+        // A telegraph's fill grows from its anchor to the whole mark as the strike nears.
+        _fill.Visible = telegraph;
+        if (telegraph)
+        {
+            _fillMaterial = new StandardMaterial3D
+            {
+                AlbedoColor = new Color(color, 0),
+                Transparency = BaseMaterial3D.TransparencyEnum.Alpha,
+                CullMode = BaseMaterial3D.CullModeEnum.Disabled,
+                ShadingMode = BaseMaterial3D.ShadingModeEnum.Unshaded,
+                RenderPriority = 1,
+            };
+            _fill.Mesh = _mesh.Mesh;
+            _fill.MaterialOverride = _fillMaterial;
+            _fill.Position = _mesh.Position + new Vector3(0, 0.01f, 0);
+        }
+        else
+        {
+            _fillMaterial = null;
+        }
+        _canopy.Visible = false;
+        _label.Position = new Vector3(0, s.Height + 0.5f, 0);
+        _overlay.Visible = false;
+        RefreshLabel();
+    }
+
     private void Rebuild()
     {
         var s = State;
         var look = s.Look ?? s.Pattern ?? "";
+        _shaped = s.Shape is not null || look == "telegraph";
+        if (_shaped)
+        {
+            BuildShape(s, look);
+            return;
+        }
+        _fade = null;
+        _fill.Visible = false;
+        _mesh.CastShadow = GeometryInstance3D.ShadowCastingSetting.On;
         Mesh mesh;
         var color = ColorFor(s);
         if (look.StartsWith("drop:", StringComparison.Ordinal))
         {
             mesh = new CylinderMesh { TopRadius = 0.25f, BottomRadius = 0.25f, Height = 0.25f };
+            PickSize = (0.25f, 0.25f);
         }
         else if (look == "projectile" || s.Pattern == "projectile")
         {
             mesh = new SphereMesh { Radius = Mathf.Max(0.15f, s.Radius * 0.6f), Height = Mathf.Max(0.3f, s.Radius * 1.2f) };
+            PickSize = null;
         }
         else if (look == "field")
         {
             mesh = new CylinderMesh { TopRadius = s.Radius, BottomRadius = s.Radius, Height = 0.1f };
             color = new Color(color, 0.35f);
+            PickSize = null;
         }
         else if (look.StartsWith("poi:", StringComparison.Ordinal))
         {
+            // A marker's radius is its whole place; it picks by the pillar drawn.
             mesh = new CylinderMesh { TopRadius = 0.15f, BottomRadius = 0.6f, Height = 3.5f };
+            PickSize = (0.6f, 3.5f);
         }
         else if (look == "fount")
         {
             mesh = new CylinderMesh { TopRadius = 0.2f, BottomRadius = 1.0f, Height = s.Height };
+            PickSize = (1f, s.Height);
         }
         else if (s.Interactable is not null && s.Resources.Count == 0)
         {
             mesh = new BoxMesh { Size = new Vector3(s.Radius * 2, s.Height, s.Radius * 2) };
+            PickSize = (Mathf.Max(0.2f, s.Radius), Mathf.Max(0.2f, s.Height));
         }
         else if (s.Resources.Count == 0 && IsTree(look))
         {
@@ -127,15 +235,18 @@ public partial class EntityView : Node3D
             _canopy.MaterialOverride = new StandardMaterial3D { AlbedoColor = color, Roughness = 0.9f };
             _canopy.Visible = true;
             color = new Color(0.42f, 0.3f, 0.2f);
+            PickSize = (canopy, s.Height);
         }
         else if (s.Resources.Count == 0)
         {
             // other flora and props: a block the size the simulation uses
             mesh = new BoxMesh { Size = new Vector3(Mathf.Max(0.3f, s.Radius * 1.4f), s.Height, Mathf.Max(0.3f, s.Radius * 1.4f)) };
+            PickSize = (Mathf.Max(0.3f, s.Radius * 1.4f) / 2, s.Height);
         }
         else
         {
             mesh = new CapsuleMesh { Radius = Mathf.Max(0.2f, s.Radius), Height = Mathf.Max(0.6f, s.Height) };
+            PickSize = (Mathf.Max(0.2f, s.Radius), Mathf.Max(0.6f, s.Height));
         }
         if (!(s.Resources.Count == 0 && IsTree(look)))
         {
@@ -152,7 +263,20 @@ public partial class EntityView : Node3D
         _label.Position = new Vector3(0, s.Height + 0.5f, 0);
         _overlay.Position = new Vector3(0, s.Height + 0.25f, 0);
         _overlay.Visible = s.Resources.ContainsKey("life") && s.Interactable is null;
-        _label.Visible = s.Resources.Count > 0 || s.Interactable is not null;
+        RefreshLabel();
+    }
+
+    /// <summary>Whether interactable props wear their names (the names over props option); creatures always do.</summary>
+    public static bool PropLabels { get; set; } = true;
+
+    public void RefreshLabel()
+    {
+        if (_label is null)
+        {
+            return;
+        }
+        var s = State;
+        _label.Visible = s.Resources.Count > 0 || (s.Interactable is not null && PropLabels);
     }
 
     private static bool IsTree(string look) => look.Contains("oak") || look.Contains("pine") || look.Contains("birch") || look.Contains("tree");
@@ -204,24 +328,30 @@ public partial class EntityView : Node3D
 
     public void Apply(EntityState state, bool snap)
     {
-        var rebuild = state.Look != State.Look || state.Dead != State.Dead || Math.Abs(state.Height - State.Height) > 0.01f || state.Interactable is null != State.Interactable is null;
+        var rebuild = state.Look != State.Look || state.Dead != State.Dead || Math.Abs(state.Height - State.Height) > 0.01f || state.Interactable is null != State.Interactable is null
+            || state.Shape != State.Shape || state.ShapeSize != State.ShapeSize;
         State = state;
         _targetPosition = Coords.ToGodot(state.X, state.Y, state.Z);
         _velocity = Coords.ToGodot(state.VX, state.VY, state.VZ);
-        _targetYaw = -state.Yaw;
         _lastUpdate = Time.GetTicksMsec() / 1000.0;
         if (snap)
         {
+            _bornAt = _lastUpdate;
+            _bornServer = ServerNow?.Invoke() ?? 0;
+        }
+        if (IsNodeReady() && rebuild)
+        {
+            Rebuild();
+        }
+        _targetYaw = Facing(state);
+        if (snap)
+        {
             GlobalPosition = _targetPosition;
-            Rotation = new Vector3(0, _targetYaw + Mathf.Pi / 2, 0);
+            Rotation = new Vector3(0, _targetYaw, 0);
         }
         if (!IsNodeReady())
         {
             return;
-        }
-        if (rebuild)
-        {
-            Rebuild();
         }
         RefreshOverlay();
     }
@@ -259,12 +389,48 @@ public partial class EntityView : Node3D
     public override void _Process(double delta)
     {
         var dt = (float)delta;
-        var age = (float)(Time.GetTicksMsec() / 1000.0 - _lastUpdate);
+        var now = Time.GetTicksMsec() / 1000.0;
+        if (_fade is not null)
+        {
+            // A telegraph fades in, breathes while its strike is coming, its fill growing from the anchor to the
+            // whole mark as the server time nears its until, and fades out once it lands or its time is up.
+            var life = (float)(now - _bornAt);
+            var pulse = UI.Motion.Reduced ? 1f : 0.78f + 0.22f * Mathf.Sin(life * 6f);
+            var fadeIn = Mathf.Min(1f, life / 0.35f);
+            var serverNow = ServerNow?.Invoke();
+            var progress = 1f;
+            if (State.Until is { } until && serverNow is { } sn && until - _bornServer > 0.01)
+            {
+                progress = (float)Math.Clamp((sn - _bornServer) / (until - _bornServer), 0, 1);
+                if (_dyingAt is null && sn > until + 0.1)
+                {
+                    _dyingAt = now;
+                }
+            }
+            var fadeOut = _dyingAt is { } dying ? Mathf.Max(0f, 1f - (float)(now - dying) / FadeSeconds) : 1f;
+            _fade.AlbedoColor = _fade.AlbedoColor with { A = _fadeAlpha * 0.55f * fadeIn * fadeOut * pulse };
+            if (_fillMaterial is not null)
+            {
+                var grown = Mathf.Max(0.02f, progress);
+                _fill.Scale = new Vector3(grown, 1, grown);
+                _fillMaterial.AlbedoColor = _fillMaterial.AlbedoColor with { A = _fadeAlpha * (0.45f + 0.4f * progress) * fadeIn * fadeOut };
+            }
+            if (_released && _dyingAt is { } gone && now - gone > FadeSeconds)
+            {
+                QueueFree();
+                return;
+            }
+        }
+        if (_dyingAt is not null)
+        {
+            return;
+        }
+        var age = (float)(now - _lastUpdate);
         var predicted = _targetPosition + _velocity * Mathf.Min(age, 0.25f);
         var t = 1f - Mathf.Exp(-dt * 12f);
         GlobalPosition = GlobalPosition.Lerp(predicted, t);
         var yaw = Rotation.Y;
-        Rotation = new Vector3(0, Mathf.LerpAngle(yaw, _targetYaw + Mathf.Pi / 2, t), 0);
+        Rotation = new Vector3(0, Mathf.LerpAngle(yaw, _targetYaw, t), 0);
         if (_overlay.Visible)
         {
             var camera = GetViewport().GetCamera3D();

@@ -1,12 +1,14 @@
 import { DirectionalLight, FogExp2, HemisphereLight, MathUtils, Scene, SRGBColorSpace, Vector3, WebGLRenderer } from 'three';
-import type { Action, ClientConfig } from './config';
+import type { ClientConfig } from './config';
 import { Input } from './input/input';
 import { Connection } from './net/connection';
 import { applyDelta } from './net/delta';
-import { PROTOCOL_VERSION, type CombatEventMsg, type EntityState, type Int64, type Message } from './net/protocol';
-import { Hud } from './ui/hud';
+import { ENTITY_DELTA_FEATURE, INTERFACE_FEATURE, PROTOCOL_VERSION, type CombatEventMsg, type EntityState, type Int64, type Message } from './net/protocol';
 import { parseServerInput, sameOrigin, socketUrl, type ServerAddress } from './ui/address';
 import { el, storageGet, storageSet } from './ui/dom';
+import { Hud } from './ui/hud';
+import { bundledKinds, loadNames, loadUi } from './ui/logic/content';
+import { gateFacts, OptionsCatalog, Settings, type OptionEntry } from './ui/logic/options';
 import { LoginPanel } from './ui/login';
 import { CameraRig } from './view/camera';
 import { chunkFromMessage } from './world/chunks';
@@ -21,30 +23,40 @@ export const CLIENT_NAME = 'hollow-wake-web 0.1';
 
 const STORAGE_SERVER = 'hollowwake.server';
 const STORAGE_ACCOUNT = 'hollowwake.account';
+const STORAGE_SETTINGS = 'hollowwake.settings.';
 
 /**
  * The client's root, the browser twin of the desktop Main: owns the connection, the terrain and entity views,
- * the camera rig and the UI, handles messages and turns input into intents. Everything the player sees comes
- * from server state; everything the player does is a request the server may refuse.
+ * the camera rig, the interface and the player's settings, handles messages and turns input into intents.
+ * Everything the player sees comes from server state; everything the player does is a request the server may
+ * refuse. Preferences are the Options content (ui_options) stored per profile in this browser, and every binding
+ * is an input action from content with the player's rebinds over it.
  */
 export class App {
   private readonly renderer: WebGLRenderer;
   private readonly scene = new Scene();
   private readonly sun: DirectionalLight;
   private readonly sunOffset: Vector3;
+  private readonly fog: FogExp2 | null = null;
   readonly rig: CameraRig;
   readonly terrain: TerrainView;
   readonly entities: EntityLayer;
   readonly hud: Hud;
   readonly login: LoginPanel;
+  readonly settings: Settings;
+  readonly catalog: OptionsCatalog;
   private readonly input: Input;
   readonly connection: Connection;
   private readonly clock = new ServerClock();
   private readonly canvasHost: HTMLElement;
+  private readonly profile: string;
+  private readonly developer: boolean;
+  private readonly appliers = new Map<string, () => void>();
   private width = 1;
   private height = 1;
   inWorld = false;
-  private zoneName = '';
+  /** The zone the hero stands in, as the server names it. */
+  zoneName = '';
   private worldKey = '';
   private lastMoveDir: [number, number] = [0, 0];
   private lastPingAt = 0;
@@ -63,21 +75,37 @@ export class App {
   lastHit = '';
   questOffers = 0;
   characterLists = 0;
+  /** Interface states received, by message type, for scripted checks. */
+  readonly received = new Map<string, number>();
 
   constructor(root: HTMLElement, readonly config: ClientConfig) {
+    const params = new URLSearchParams(window.location.search);
+    this.developer = params.has('developer');
+    // A profile keeps its own settings; ?fresh-settings starts it from the content's defaults (the smoke's way).
+    this.profile = (params.get('profile') ?? 'default').replace(/[^A-Za-z0-9_-]/g, '') || 'default';
+    const kinds = bundledKinds();
+    this.catalog = OptionsCatalog.load(kinds);
+    this.settings = Settings.load(this.catalog, params.has('fresh-settings') ? null : storageGet(STORAGE_SETTINGS + this.profile));
+    const theme = params.get('theme');
+    if (theme !== null) {
+      this.settings.set('theme', theme);
+    }
+
     this.canvasHost = el('div', { class: 'world' });
     const labels = el('div', { class: 'labels' });
     root.append(this.canvasHost, labels);
 
     this.renderer = new WebGLRenderer({ antialias: config.render.antialias, powerPreference: 'high-performance' });
-    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, config.render.maxPixelRatio));
+    // The pixel ratio cap applies after a restart, as the option says.
+    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, this.settings.number('pixel_ratio', config.render.maxPixelRatio)));
     this.renderer.outputColorSpace = SRGBColorSpace;
     this.renderer.shadowMap.enabled = config.render.shadows;
     this.canvasHost.append(this.renderer.domElement);
 
     this.scene.background = linearColor(config.render.background);
     if (config.render.fogDensity > 0) {
-      this.scene.fog = new FogExp2(linearColor(config.render.fogColor), config.render.fogDensity);
+      this.fog = new FogExp2(linearColor(config.render.fogColor), config.render.fogDensity);
+      this.scene.fog = this.fog;
     }
     this.scene.add(new HemisphereLight(linearColor(config.render.ambientSky), linearColor(config.render.ambientGround), config.render.ambientIntensity));
     this.sun = new DirectionalLight(linearColor(config.render.sunColor), config.render.sunIntensity);
@@ -105,30 +133,112 @@ export class App {
     this.entities = new EntityLayer(config.entities, config.motion, labels);
     this.scene.add(this.entities.group);
 
-    this.hud = new Hud(config.ui, {
-      slot: (slot) => this.useSlot(slot),
-      chat: (text) => this.send({ t: 'chat', channel: 'zone', text }),
-      accept: (quest, giver) => this.send({ t: 'accept_quest', quest, giver }),
-      turnIn: (quest, giver) => this.send({ t: 'turn_in_quest', quest, giver }),
-    });
+    const facts = (name: string): number | null => {
+      switch (name) {
+        case 'client.web':
+          return 1;
+        case 'client.desktop':
+          return 0;
+        case 'client.developer':
+          return this.developer ? 1 : 0;
+        case 'client.controller':
+          return typeof navigator.getGamepads === 'function' && [...navigator.getGamepads()].some((p) => p !== null && p.connected) ? 1 : 0;
+        default:
+          return null;
+      }
+    };
+    this.hud = new Hud(loadUi(kinds), loadNames(kinds), this.settings, gateFacts(this.settings, facts));
+    this.hud.send = (m) => this.send(m);
+    this.hud.slotPressed = (slot) => this.useSlot(slot);
+    this.hud.casting = () => this.hud.hero.cast !== null;
+    this.hud.heroScreen = () => this.heroScreen();
+    this.hud.distanceTo = (key) => this.distanceTo(key);
+    this.hud.optionsClosed = () => this.optionsClosed();
     this.login = new LoginPanel({
       connect: (address, account, token) => void this.connect(address, account, token),
       create: (name, calling) => this.send({ t: 'create_character', name, calling }),
       enter: (characterId) => this.send({ t: 'select_character', character_id: characterId }),
+      options: () => this.hud.openOptions(),
     });
-    root.append(this.hud.root, this.login.root);
+    root.append(this.login.root, this.hud.root);
+    // The login panel wears the interface's look and follows it when the theme changes.
+    this.hud.skin.apply(this.login.root);
+    this.hud.restyled = (skin) => skin.apply(this.login.root);
 
     this.connection = new Connection((m) => this.handle(m), (reason) => this.closed(reason));
-    this.input = new Input(config.input.bindings, this.renderer.domElement, {
-      action: (a) => this.action(a),
+    this.input = new Input(this.renderer.domElement, {
+      press: (actions) => this.press(actions),
       click: (x, y) => this.click(x, y),
       zoom: (steps) => this.rig.zoom(steps),
       orbit: (dx, dy) => this.rig.orbit(dx, dy),
       released: () => this.handleMovement(true),
     }, config.camera.wheelStepPixels);
+    this.rebind();
 
+    this.registerAppliers();
+    this.settings.onChange((entry) => this.settingChanged(entry));
+    for (const apply of new Set(this.appliers.values())) {
+      apply();
+    }
     window.addEventListener('resize', () => this.resize());
     this.resize();
+  }
+
+  // ------------------------------------------------------------ options
+
+  /** What each option does when it changes, by entry id; entries without one are read where they are used. */
+  private registerAppliers(): void {
+    const s = this.settings;
+    const camera = () => this.rig.configure({
+      isoRotateStep: s.number('iso_rotate_step', 45),
+      isoZoomMax: s.number('iso_zoom_max', 90),
+      sensitivity: s.number('third_sensitivity', 1),
+      invert: s.toggle('third_invert'),
+      fov: s.number('third_fov', 65),
+    });
+    for (const id of ['iso_rotate_step', 'iso_zoom_max', 'third_sensitivity', 'third_invert', 'third_fov']) {
+      this.appliers.set(id, camera);
+    }
+    this.appliers.set('camera_mode', () => this.rig.setMode(s.text('camera_mode') === 'third_person' ? 'third_person' : 'isometric'));
+    this.appliers.set('view_distance', () => {
+      this.config.world.chunkRadius = Math.round(s.number('view_distance', 3));
+    });
+    this.appliers.set('shadows', () => {
+      this.sun.castShadow = this.config.render.shadows && s.toggle('shadows', true);
+    });
+    this.appliers.set('fog', () => {
+      if (this.fog !== null) {
+        this.fog.density = s.toggle('fog', true) ? this.config.render.fogDensity : 0;
+      }
+    });
+    this.appliers.set('prop_labels', () => this.entities.setPropLabels(s.toggle('prop_labels', true)));
+    this.appliers.set('reduce_motion', () => {
+      this.entities.reducedMotion = s.toggle('reduce_motion');
+    });
+  }
+
+  private settingChanged(entry: OptionEntry): void {
+    storageSet(STORAGE_SETTINGS + this.profile, this.settings.serialize());
+    if (entry.kind === 'key') {
+      this.rebind();
+      return;
+    }
+    if (entry.applies === 'live') {
+      this.appliers.get(entry.id)?.();
+    }
+  }
+
+  /** The Options pane closed: entries that apply on close take effect now. */
+  private optionsClosed(): void {
+    for (const entry of this.catalog.entries.values()) {
+      if (entry.applies === 'on_close') {
+        this.appliers.get(entry.id)?.();
+      }
+    }
+  }
+
+  private rebind(): void {
+    this.input.bind(this.catalog.actions, (id) => this.settings.bindings(id));
   }
 
   // ------------------------------------------------------------ startup and connection
@@ -194,6 +304,20 @@ export class App {
     }
   }
 
+  /**
+   * The hello features: the interface states always, and entity deltas unless the snapshot stream option (or a
+   * ?full-states link) asks for full states.
+   */
+  private helloFeatures(): string[] {
+    const full = new URLSearchParams(window.location.search).has('full-states') || this.settings.text('snapshot_stream') === 'full';
+    const wanted = new Set(this.config.server.features);
+    wanted.add(INTERFACE_FEATURE);
+    if (full) {
+      wanted.delete(ENTITY_DELTA_FEATURE);
+    }
+    return [...wanted];
+  }
+
   private async connect(address: ServerAddress, account: string, token: string): Promise<void> {
     const url = socketUrl(address);
     this.login.setBusy(true);
@@ -207,16 +331,16 @@ export class App {
     }
     storageSet(STORAGE_SERVER, url);
     storageSet(STORAGE_ACCOUNT, account);
-    // A ?full-states link asks for full entity states only, for comparison and debugging (the desktop's --full-states).
-    const features = new URLSearchParams(window.location.search).has('full-states') ? [] : this.config.server.features;
-    this.send({ t: 'hello', client_version: CLIENT_NAME, protocol: PROTOCOL_VERSION, features: features.length > 0 ? [...features] : undefined });
+    const features = this.helloFeatures();
+    this.send({ t: 'hello', client_version: CLIENT_NAME, protocol: PROTOCOL_VERSION, features: features.length > 0 ? features : undefined });
     this.send({ t: 'login', account, token });
     this.login.setStatus('Logging in...');
   }
 
   private closed(reason: string): void {
     this.inWorld = false;
-    this.hud.show(false);
+    this.hud.inWorld = false;
+    this.hud.hero.clear();
     this.login.show(true);
     this.login.setBusy(false);
     this.login.setStatus(`Disconnected: ${reason}`);
@@ -235,6 +359,7 @@ export class App {
     switch (m.t) {
       case 'welcome':
         this.features = m.features ?? [];
+        this.hud.hero.interface = this.features.includes(INTERFACE_FEATURE);
         this.login.setStatus(`Connected to ${m.server_name}: ${m.motd}`);
         console.info(`server granted features: ${this.features.length > 0 ? this.features.join(', ') : 'none'}`);
         break;
@@ -254,7 +379,7 @@ export class App {
           console.debug(m.text);
           break;
         }
-        this.hud.notify(m.text, 'error');
+        this.hud.notice(m.text, 'error');
         this.login.setStatus(m.text);
         break;
       case 'disconnect':
@@ -271,28 +396,31 @@ export class App {
         this.entities.selfKey = m.entity_key;
         this.clock.reset();
         this.clock.observe(m.server_time, local);
+        this.hud.hero.observeServerTime(m.server_time, local);
         this.inWorld = true;
+        this.hud.inWorld = true;
         this.login.show(false);
-        this.hud.show(true);
         this.rig.follow(toThree(m.x, m.y, m.z));
         this.hud.line(`Entered the world at ${Math.round(m.x)}, ${Math.round(m.y)} (zone ${m.zone}).`, 'system');
         break;
       }
       case 'zone_changed':
         this.zoneName = `${m.zone_name} (L${m.level}${m.safe ? ', safe' : ''})`;
-        this.hud.notify(m.zone_name, 'discovery');
+        this.hud.notice(m.zone_name, 'discovery');
         break;
       case 'entity_spawn':
         this.entities.spawn(m.state, this.clock.now(local), local);
         break;
       case 'entity_update':
         this.clock.observe(m.server_time, local);
+        this.hud.hero.observeServerTime(m.server_time, local);
         for (const state of m.states) {
           this.entities.update(state, m.server_time, local);
         }
         break;
       case 'entity_delta':
         this.clock.observe(m.server_time, local);
+        this.hud.hero.observeServerTime(m.server_time, local);
         for (const delta of m.deltas) {
           // A delta for an entity this client does not know is ignored; the next refresh brings its full state.
           const view = this.entities.views.get(delta.key);
@@ -305,7 +433,35 @@ export class App {
         this.entities.despawn(m.key);
         break;
       case 'self_state':
-        this.hud.applySelf(m, this.zoneName);
+        this.hud.applySelf(m);
+        break;
+      case 'weave_slots':
+        this.count(m.t);
+        this.hud.applySlots(m);
+        break;
+      case 'inventory_state':
+        this.count(m.t);
+        this.hud.applyInventory(m);
+        break;
+      case 'passive_state':
+        this.count(m.t);
+        this.hud.applyPassives(m);
+        break;
+      case 'page_state':
+        this.count(m.t);
+        this.hud.applyPages(m);
+        break;
+      case 'dialogue_state':
+        this.count(m.t);
+        this.hud.showDialogue(m);
+        break;
+      case 'vendor_state':
+        this.count(m.t);
+        this.hud.showVendor(m);
+        break;
+      case 'station_state':
+        this.count(m.t);
+        this.hud.showStation(m);
         break;
       case 'combat_event':
         this.showCombat(m);
@@ -314,7 +470,7 @@ export class App {
         this.hud.chat(m.from, m.channel, m.text);
         break;
       case 'notice':
-        this.hud.notify(m.text, m.level);
+        this.hud.notice(m.text, m.level);
         break;
       case 'quest_offers':
         this.questOffers++;
@@ -322,7 +478,7 @@ export class App {
         break;
       case 'intent_rejected':
         this.lastRejected = `${m.intent}: ${m.reason}`;
-        this.hud.notify(this.lastRejected, 'error');
+        this.hud.notice(this.lastRejected, 'error');
         break;
       case 'chunk_data':
         this.terrain.receive(chunkFromMessage(m));
@@ -331,7 +487,7 @@ export class App {
         this.hud.line(`Crafting ${m.recipe}: ${m.type} challenge (${Math.round(m.time_limit)}s)`, 'system');
         break;
       case 'craft_result':
-        this.hud.notify(m.success ? `Crafted ${m.item?.name ?? m.recipe} (quality ${m.quality.toFixed(2)})` : `Craft failed: ${m.reason}`, m.success ? 'quest' : 'error');
+        this.hud.notice(m.success ? `Crafted ${m.item?.name ?? m.recipe} (quality ${m.quality.toFixed(2)})` : `Craft failed: ${m.reason}`, m.success ? 'quest' : 'error');
         break;
       case 'pong':
         this.rtt = performance.now() - Number(m.nonce);
@@ -341,9 +497,14 @@ export class App {
     }
   }
 
+  private count(type: string): void {
+    this.received.set(type, (this.received.get(type) ?? 0) + 1);
+  }
+
   private showCombat(c: CombatEventMsg): void {
     const self = this.entities.selfKey;
-    if (c.source !== self && c.target !== self) {
+    const mine = (k: Int64) => self !== null && String(k) === String(self);
+    if (!mine(c.source) && !mine(c.target)) {
       return;
     }
     const name = (key: Int64) => this.entities.views.get(key)?.state.name ?? '?';
@@ -357,8 +518,9 @@ export class App {
       : c.kind === 'death' ? `${target} dies`
       : c.kind;
     this.hud.line(text, 'combat');
+    this.hud.combatText(c.kind, c.amount, c.crit, mine(c.target));
     this.combatLines++;
-    if (c.kind === 'damage' && c.source === self) {
+    if (c.kind === 'damage' && mine(c.source)) {
       this.hitsDealt++;
       this.lastHit = target;
     }
@@ -366,7 +528,17 @@ export class App {
 
   // ------------------------------------------------------------ input
 
-  private action(action: Action): void {
+  /** A press of one or more actions: the interface first (Escape, the book walk, the tray, pages), then the world. */
+  private press(actions: readonly string[]): void {
+    if (this.hud.press(actions)) {
+      return;
+    }
+    for (const action of actions) {
+      this.action(action);
+    }
+  }
+
+  private action(action: string): void {
     if (!this.inWorld) {
       return;
     }
@@ -395,15 +567,11 @@ export class App {
       case 'respawn':
         this.send({ t: 'respawn' });
         return;
-      case 'toggle_sheet':
-        this.hud.toggleSheet();
-        return;
       case 'cancel':
         this.send({ t: 'cancel_cast' });
-        this.hud.hideQuests();
         return;
       default:
-        if (action.startsWith('slot_')) {
+        if (/^slot_\d+$/.test(action)) {
           this.useSlot(Number(action.slice(5)) - 1);
         }
     }
@@ -457,6 +625,9 @@ export class App {
       this.send({ t: 'pick_up', drop: picked.key });
       return;
     }
+    if (!this.settings.toggle('click_to_move', true)) {
+      return;
+    }
     const ground = this.terrain.rayToGround(origin, direction);
     if (ground !== null) {
       this.send({ t: 'move_to', x: ground.x, y: ground.y, z: ground.z });
@@ -471,13 +642,7 @@ export class App {
     const { origin, direction } = this.mouseRay();
     const hovered = this.entities.pick(origin, direction);
     this.hoveredKey = hovered?.key ?? 0;
-    if (hovered === null) {
-      this.hud.setTarget('');
-      return;
-    }
-    const s = hovered.state;
-    const life = s.resources.life !== undefined && s.resource_max.life !== undefined ? `  ${Math.round(s.resources.life)}/${Math.round(s.resource_max.life)}` : '';
-    this.hud.setTarget(`${s.name}${s.level > 0 ? ` [${s.level}]` : ''}${life}${s.interactable != null ? `  (${s.interactable})` : ''}`);
+    this.hud.setTarget(hovered?.state ?? null);
   }
 
   /** Weave slots aim at the ground under the cursor and target whatever is hovered, as on the desktop. */
@@ -522,6 +687,30 @@ export class App {
     this.send(kind === 'pick_up' ? { t: 'pick_up', drop: best.key } : { t: 'interact', target: best.key });
   }
 
+  /** The ground distance from the hero to an entity this client knows, for world panes' departure. */
+  private distanceTo(key: Int64): number | null {
+    const self = this.entities.self;
+    const other = this.entities.views.get(key);
+    if (self === undefined || other === undefined) {
+      return null;
+    }
+    const a = self.position;
+    const b = other.position;
+    return Math.hypot(a.x - b.x, a.y - b.y);
+  }
+
+  /** The hero's head on screen this frame, in client pixels, or null when it is not on screen. */
+  private heroScreen(): { x: number; y: number } | null {
+    const self = this.entities.self;
+    if (self === undefined) {
+      return null;
+    }
+    const p = self.root.position.clone();
+    p.y += self.state.height + 0.3;
+    const s = this.rig.project(p, this.width, this.height);
+    return s.visible ? { x: s.x, y: s.y } : null;
+  }
+
   takeRejected(): string {
     const r = this.lastRejected;
     this.lastRejected = '';
@@ -551,7 +740,9 @@ export class App {
   private work(local: number): void {
     const dt = Math.min(0.1, Math.max(0, local - this.lastFrame));
     this.lastFrame = local;
+    this.input.pollPad();
     const renderTime = this.clock.now(local) - this.config.motion.interpolationDelayMs / 1000;
+    this.entities.serverNow = this.clock.now(local);
     this.entities.animate(dt, local, renderTime);
     if (this.inWorld) {
       const self = this.entities.self;
@@ -561,17 +752,18 @@ export class App {
         this.sun.position.copy(self.root.position).add(this.sunOffset);
         this.terrain.update(self.position, local);
       }
+      this.hud.setSelfEntity(self?.state ?? null);
       this.handleMovement();
       this.updateHover();
       if (local - this.lastPingAt > this.config.world.pingSeconds) {
         this.lastPingAt = local;
         this.send({ t: 'ping', nonce: Math.round(performance.now()) });
       }
-      this.hud.setNet(`${this.rtt === null ? '' : `${Math.round(this.rtt)} ms  `}${this.terrain.builtCount} chunks  ${this.entities.views.size} entities`);
+      this.hud.netText = `${this.rtt === null ? '' : `${Math.round(this.rtt)} ms  `}${this.terrain.builtCount} chunks  ${this.entities.views.size} entities`;
     }
     this.rig.update(dt);
     this.entities.placeLabels(this.rig.camera, this.width, this.height);
-    this.hud.frame(local);
+    this.hud.frame(performance.now() / 1000, this.width, this.height);
     this.renderer.render(this.scene, this.rig.camera);
   }
 
@@ -599,10 +791,30 @@ export class App {
           chunksRequested: app.terrain.requested,
           entities: app.entities.views.size,
           frameMs: Math.round(app.frameMs * 100) / 100,
+          states: Object.fromEntries(app.received),
         };
       },
       get ui() {
-        return { questsVisible: app.hud.questsVisible, sheetVisible: app.hud.sheetVisible, target: app.hud.targetText, cameraMode: app.rig.mode, cameraYaw: app.rig.yaw };
+        const hud = app.hud;
+        return {
+          questsVisible: hud.questsVisible,
+          sheetVisible: hud.sheetVisible,
+          target: hud.targetLine,
+          cameraMode: app.rig.mode,
+          cameraYaw: app.rig.yaw,
+          coreOpen: hud.coreOpen,
+          optionsOpen: hud.optionsOpen,
+          trayOpen: hud.workspace.trayOpen,
+          shownPages: hud.trayRows.filter((r) => hud.isShown(r.page.id)).map((r) => r.page.id),
+          ribbonPages: hud.ribbonPages,
+          worldPanes: hud.workspace.book.within('world').map((l) => l.kind),
+          bagItems: hud.bagItems,
+          uiScale: hud.uiScale,
+          theme: hud.skin.theme.id,
+          cluster: hud.clusterRect,
+          rects: hud.workspaceRects,
+          notice: hud.noticeText,
+        };
       },
       get hoveredKey() {
         return app.hoveredKey;
@@ -616,6 +828,9 @@ export class App {
       get lastHit() {
         return app.lastHit;
       },
+      /** The player's effective bindings for an action, as Options shows them. */
+      bindings: (action: string) => app.settings.bindings(action),
+      setting: (id: string) => app.settings.value(id),
       characters: () => app.login.characters,
       callings: () => app.login.callings,
       self: (): (EntityState & { drawn: CorePoint }) | null => {

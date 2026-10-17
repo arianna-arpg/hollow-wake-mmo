@@ -1,11 +1,12 @@
-import type { Action } from '../config';
-
-/** Actions that are held (sampled every frame) rather than pressed. */
-const HELD: ReadonlySet<Action> = new Set<Action>(['move_forward', 'move_back', 'move_left', 'move_right']);
+import { keyMatches, parseKeyName, webCode } from '../ui/logic/menu';
+import type { Binding, InputAction } from '../ui/logic/options';
 
 export interface InputHandlers {
-  /** A press of a non-held action (jump, slots, camera keys, ...). */
-  action: (action: Action) => void;
+  /**
+   * A press of the keys or controller inputs bound to one or more actions (Tab is the menu and the book's walk):
+   * the interface decides first, then the world. Held actions are sampled instead.
+   */
+  press: (actions: readonly string[]) => void;
   /** Left button pressed on the world at a canvas point. */
   click: (x: number, y: number) => void;
   /** Wheel steps: positive zooms in. */
@@ -16,33 +17,60 @@ export interface InputHandlers {
   released: () => void;
 }
 
+/** The standard gamepad layout's buttons by the names content gives them. */
+const PAD_BUTTONS: Record<string, number> = {
+  A: 0,
+  B: 1,
+  X: 2,
+  Y: 3,
+  LB: 4,
+  RB: 5,
+  LT: 6,
+  RT: 7,
+  Back: 8,
+  Start: 9,
+  LeftStick: 10,
+  RightStick: 11,
+  DpadUp: 12,
+  DpadDown: 13,
+  DpadLeft: 14,
+  DpadRight: 15,
+};
+
+/** Stick directions by name: the axis and its sign. */
+const PAD_AXES: Record<string, [number, number]> = {
+  LeftStickUp: [1, -1],
+  LeftStickDown: [1, 1],
+  LeftStickLeft: [0, -1],
+  LeftStickRight: [0, 1],
+  RightStickUp: [3, -1],
+  RightStickDown: [3, 1],
+  RightStickLeft: [2, -1],
+  RightStickRight: [2, 1],
+};
+
+const DEAD_ZONE = 0.35;
+
 /**
- * Keyboard and mouse, mapped through the bindings in config.json (KeyboardEvent.code values), the browser
- * counterpart of the desktop client's InputSetup. Keys typed into a text field never reach the game.
+ * Keyboard, mouse and controller, mapped through the input actions content declares with the player's rebinds
+ * from Options over them: the browser counterpart of the desktop client's InputSetup. Keys typed into a text
+ * field never reach the game; a capture in the Options pane takes keys before this sees them.
  */
 export class Input {
   private readonly down = new Set<string>();
-  private readonly actionsByCode = new Map<string, Action[]>();
-  private readonly codesByAction = new Map<Action, string[]>();
+  private actions: InputAction[] = [];
+  private bindings = new Map<string, Binding>();
+  private readonly heldPad = new Set<string>();
   private orbiting = false;
   private wheel = 0;
   readonly mouse = { x: 0, y: 0, over: false };
   private readonly listeners: Array<() => void> = [];
 
   constructor(
-    bindings: Record<Action, string[]>,
     private readonly surface: HTMLElement,
     private readonly handlers: InputHandlers,
     private readonly wheelStepPixels: number,
   ) {
-    for (const [action, codes] of Object.entries(bindings) as Array<[Action, string[]]>) {
-      this.codesByAction.set(action, codes);
-      for (const code of codes) {
-        const list = this.actionsByCode.get(code) ?? [];
-        list.push(action);
-        this.actionsByCode.set(code, list);
-      }
-    }
     this.listen(window, 'keydown', (e) => this.keyDown(e as KeyboardEvent));
     this.listen(window, 'keyup', (e) => this.keyUp(e as KeyboardEvent));
     this.listen(window, 'blur', () => this.releaseAll());
@@ -65,6 +93,12 @@ export class Input {
     this.listen(surface, 'wheel', (e) => this.onWheel(e as WheelEvent), { passive: false });
   }
 
+  /** Takes the input map: every action content declares and its effective bindings. */
+  bind(actions: readonly InputAction[], bindingsOf: (action: string) => Binding): void {
+    this.actions = [...actions];
+    this.bindings = new Map(actions.map((a) => [a.id, bindingsOf(a.id)]));
+  }
+
   private listen(target: EventTarget, type: string, fn: (e: Event) => void, options?: AddEventListenerOptions): void {
     target.addEventListener(type, fn, options);
     this.listeners.push(() => target.removeEventListener(type, fn, options));
@@ -75,32 +109,35 @@ export class Input {
     return el instanceof HTMLInputElement || el instanceof HTMLTextAreaElement || el instanceof HTMLSelectElement || (el instanceof HTMLElement && el.isContentEditable);
   }
 
-  isHeld(action: Action): boolean {
-    return (this.codesByAction.get(action) ?? []).some((code) => this.down.has(code));
+  private keysOf(action: string): string[] {
+    const b = this.bindings.get(action);
+    return b === undefined ? [] : [b.primary, b.secondary].filter((k) => k.length > 0);
   }
 
-  matches(event: KeyboardEvent, action: Action): boolean {
-    return (this.codesByAction.get(action) ?? []).includes(event.code);
+  /** Whether a held action's key or controller input is down; held keys ignore modifiers. */
+  isHeld(action: string): boolean {
+    if (this.keysOf(action).some((k) => this.down.has(webCode(parseKeyName(k))))) {
+      return true;
+    }
+    const pad = this.bindings.get(action)?.pad ?? '';
+    return pad.length > 0 && this.heldPad.has(pad);
   }
 
   private keyDown(e: KeyboardEvent): void {
-    if (Input.typing() || e.ctrlKey || e.metaKey || e.altKey) {
+    if (Input.typing() || e.metaKey) {
       return;
     }
-    const actions = this.actionsByCode.get(e.code);
-    if (actions === undefined) {
+    const held = this.actions.filter((a) => a.held && this.keysOf(a.id).some((k) => webCode(parseKeyName(k)) === e.code));
+    const pressed = this.actions.filter((a) => !a.held && this.keysOf(a.id).some((k) => keyMatches(e, k)));
+    if (held.length === 0 && pressed.length === 0) {
       return;
     }
     e.preventDefault();
     this.down.add(e.code);
-    if (e.repeat) {
+    if (e.repeat || pressed.length === 0) {
       return;
     }
-    for (const action of actions) {
-      if (!HELD.has(action)) {
-        this.handlers.action(action);
-      }
-    }
+    this.handlers.press(pressed.map((a) => a.id));
   }
 
   private keyUp(e: KeyboardEvent): void {
@@ -109,8 +146,43 @@ export class Input {
 
   private releaseAll(): void {
     this.down.clear();
+    this.heldPad.clear();
     this.orbiting = false;
     this.handlers.released();
+  }
+
+  /** Reads the first connected controller once a frame: held directions, and presses on the frame a button goes down. */
+  pollPad(): void {
+    const pads = typeof navigator.getGamepads === 'function' ? navigator.getGamepads() : [];
+    const pad = [...pads].find((p) => p !== null && p.connected) ?? null;
+    if (pad === null) {
+      if (this.heldPad.size > 0) {
+        this.heldPad.clear();
+      }
+      return;
+    }
+    const now = new Set<string>();
+    for (const [name, index] of Object.entries(PAD_BUTTONS)) {
+      if (pad.buttons[index]?.pressed) {
+        now.add(name);
+      }
+    }
+    for (const [name, [axis, sign]] of Object.entries(PAD_AXES)) {
+      if ((pad.axes[axis] ?? 0) * sign > DEAD_ZONE) {
+        now.add(name);
+      }
+    }
+    const rising = [...now].filter((n) => !this.heldPad.has(n));
+    this.heldPad.clear();
+    for (const n of now) {
+      this.heldPad.add(n);
+    }
+    for (const name of rising) {
+      const pressed = this.actions.filter((a) => !a.held && this.bindings.get(a.id)?.pad === name);
+      if (pressed.length > 0) {
+        this.handlers.press(pressed.map((a) => a.id));
+      }
+    }
   }
 
   private pointerMove(e: PointerEvent): void {
