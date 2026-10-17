@@ -1,0 +1,29 @@
+# Relays: one school's weave prepares the next hit of another. A relay is a proc on the caster's own casts that
+# grants the caster a consumable buff; the buff's stacks are spent by the hits it prepares. Passives grant the
+# relay's chance (proc.<id>) like any other modifier.
+kind: procs
+entries:
+  - id: ember_relay
+    name: Ember Relay
+    description: An Ember spell primes the next melee blow.
+    on: cast
+    tags: [ember, spell]
+    target: owner
+    effects:
+      - { type: apply_status, status: ember_primed, duration: 6 }
+---
+kind: statuses
+entries:
+  - id: ember_primed
+    name: Ember Primed
+    description: The next melee blow carries the last spell's fire, and sets its target alight.
+    tags: [buff, ember]
+    beneficial: true
+    duration: 6
+    stack_policy: refresh
+    color: "#ff8a3d"
+    consume_on: { event: hit, tags: [melee] }
+    modifiers:
+      - { attribute: damage, form: more, value: 0.3, scope: [melee] }
+    on_bearer_hit:
+      - { type: apply_status, status: burning, magnitude: "2 + level * 0.4", duration: 3 }

@@ -1,4 +1,5 @@
 using System.Numerics;
+using System.Text.Json;
 using HollowWake.Core.Characters;
 using HollowWake.Core.Components;
 using HollowWake.Core.Content;
@@ -243,6 +244,35 @@ public class PassiveTests
         Assert.Equal(0, stats.Get("glyph.slot2.anchor"));
         Assert.Empty(sim.World.Get<PassiveState>(hero)!.Grafts);
         Assert.DoesNotContain("glyph.anchor", runtime.Resolve(sim, book.Slots[1], out _)!.Tags);
+    }
+
+    [Fact]
+    public void AnEmberRelayPrimesTheNextMeleeBlowWhichSpendsIt()
+    {
+        var (sim, hero, _) = Hero(calling: "kindler", id: "pas11", level: 20);
+        var progression = sim.Service<ProgressionService>();
+        Assert.True(progression.Allocate(sim, hero, "inner_a", "might", out var reason), reason);
+        Assert.True(progression.Allocate(sim, hero, "relay_embers", null, out reason), reason);
+        Assert.Equal(1, sim.World.Get<Stats>(hero)!.Get("proc.ember_relay"));
+        sim.Tick();
+
+        var at = sim.World.Get<Transform>(hero)!.Position;
+        var hob = sim.Service<PatternFactory>().Spawn(sim, "hob", at + new Vector3(6, 0, 0));
+        sim.World.Remove<Behavior>(hob);
+        var slot = sim.World.Get<WeaveBook>(hero)!.Add(new WeaveSpec { Preset = "ember_bolt" });
+        var runtime = sim.Service<Weaves.WeaveRuntime>();
+        Assert.True(runtime.TryBegin(sim, hero, slot, hob, sim.World.Get<Transform>(hob)!.Position, Vector2.UnitX, out reason), reason);
+        sim.RunSeconds(1.5);
+        var statuses = sim.World.Get<Statuses>(hero)!;
+        Assert.Contains(statuses.Active, s => s.Id == "ember_primed");
+
+        // A melee blow spends it and sets its target alight.
+        var effects = sim.Service<Effects.EffectRegistry>();
+        var spec = JsonSerializer.Deserialize<TypedSpec>("{\"type\": \"damage\", \"amount\": 5, \"threads\": [\"stone\"], \"can_crit\": false, \"tags\": [\"melee\"]}", ContentJson.Options)!;
+        var blow = effects.Compile(spec, new Effects.EffectCompileContext { Content = sim.Content, Registry = effects, Owner = "test" });
+        blow.Execute(new Effects.EffectContext { Sim = sim, Source = hero, Target = hob, Point = sim.World.Get<Transform>(hob)!.Position, Rng = new Maths.Rng(5) });
+        Assert.DoesNotContain(statuses.Active, s => s.Id == "ember_primed");
+        Assert.Contains(sim.World.Get<Statuses>(hob)!.Active, s => s.Id == "burning");
     }
 
     [Fact]

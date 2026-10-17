@@ -30,6 +30,10 @@ A **vocation** is a realm that names a `calling`: it opens only to heroes of tha
 
 A node, or an option of a choice group, may grant a glyph as a graft (`glyph: { id, level }`). Its owner binds the graft to one weave slot (`bind_graft {source, slot}`, the source being the node or `{node}:{option}`; a slot below zero unbinds it), and it is grafted onto that seat as slot grafts are: the attribute `glyph.slot{n}.{glyph}` at the glyph's level, under source `graft:{source}`, which the weave runtime reads when it arms the book (the book is re-armed when a binding changes). A socketed copy of the glyph wins over the graft, and a graft that misfits goes dormant. Binding needs the calm a loadout change needs (rule `casting.swap_requires`). Refunding the node or the pick takes the graft and its binding away; bindings save with the character.
 
+## Mechanics beyond modifiers
+
+A node reaches past plain numbers through the systems it grants into. A **relay** (one school's weave prepares the next hit of another) is a proc the node grants by its chance attribute `proc.{id}`: the proc listens to the owner's casts of one school and gives the owner a consumable buff, whose `consume_on` spends it on the hits of another school and whose modifiers and `on_bearer_hit` shape them. The Ember Relay notable is the example: an Ember spell primes the next melee blow, which hits harder and sets its target alight. Distance bands are victim tags and cast scopes are the cast-scope tags weaves carry, both read by scoped modifiers like any other.
+
 ## Refunds
 
 A node is refunded at a font: an interactable of kind `font` within its reach of the hero (`refund_passive {node}`). The calling's start and the roots of open realms are anchors and are never refunded. A refund is refused when some other allocated node would no longer connect to an anchor without it (nodes of `free` realms need no path). A choice node's picks go with it, its points return to their own currency, and the price is rule `passives.refund_cost`, a map of currency to an expression of the hero, the node's cost (`node_cost`) and the refunds made so far (`refunds`), paid from the wallet.
