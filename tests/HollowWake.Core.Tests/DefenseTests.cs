@@ -481,4 +481,38 @@ public class DefenseTests
         Assert.True(plan.PoolRuleOf("poise")!.Break);
         Assert.Equal("shield_delay", plan.PoolRuleOf("shield")!.OnHurt);
     }
+
+    [Fact]
+    public void ARolledAmountDrawsAsRandWouldAndTheHitCarriesItsRoll()
+    {
+        var rolled = CombatBench.Create();
+        var ctx = rolled.Run("{\"type\": \"damage\", \"amount\": \"lerp(10, 20, roll)\", \"threads\": [\"stone\"], \"can_crit\": false}");
+        var random = CombatBench.Create();
+        var plain = random.Run("{\"type\": \"damage\", \"amount\": \"lerp(10, 20, rand())\", \"threads\": [\"stone\"], \"can_crit\": false}");
+        // One draw at the same point: writing roll for rand() changes no outcome, and the roll is that draw.
+        Assert.Equal(random.HitsOn(random.Victim).Single().Total, rolled.HitsOn(rolled.Victim).Single().Total, 9);
+        Assert.Equal(new HollowWake.Core.Maths.Rng(5).NextDouble(), ctx.Vars["roll"], 12);
+        // An amount that never reads the roll draws none.
+        Assert.False(plain.Vars.ContainsKey("roll"));
+
+        var hit = rolled.Context(rolled.Attacker, rolled.Victim);
+        var packet = DamagePipeline.Build(hit, 10, new[] { "stone" }, HollowWake.Core.Tags.TagSet.Empty, false);
+        packet.Roll = 0.75;
+        Assert.Equal(0.75, DamagePipeline.Apply(hit, packet).Roll);
+    }
+
+    [Fact]
+    public void AHighRollCanDoMoreAfterTheHit()
+    {
+        var bench = CombatBench.Create();
+        var roll = new HollowWake.Core.Maths.Rng(5).NextDouble().ToString("R", System.Globalization.CultureInfo.InvariantCulture);
+        bench.Run("{\"type\": \"sequence\", \"effects\": [" +
+            "{\"type\": \"damage\", \"amount\": \"lerp(10, 20, roll)\", \"threads\": [\"stone\"], \"can_crit\": false}," +
+            "{\"type\": \"condition\", \"if\": \"abs(roll - " + roll + ") < 0.000000001\", " +
+            "\"then\": [{\"type\": \"apply_status\", \"status\": \"vulnerable\", \"duration\": 3}], " +
+            "\"else\": [{\"type\": \"apply_status\", \"status\": \"weakened\", \"duration\": 3}]}]}");
+        var statuses = bench.Sim.World.Get<Statuses>(bench.Victim)!;
+        Assert.True(statuses.Has("vulnerable"));
+        Assert.False(statuses.Has("weakened"));
+    }
 }

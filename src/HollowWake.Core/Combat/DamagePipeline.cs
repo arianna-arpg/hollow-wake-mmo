@@ -28,6 +28,12 @@ public sealed class DamagePacket
     /// <summary>Life leech this hit carries on top of the attacker's own (a damage effect's <c>leech</c>).</summary>
     public double Leech { get; set; }
 
+    /// <summary>
+    /// Where the hit's amount fell within its range, from 0 to 1: var <c>roll</c>, drawn once by a damage effect whose
+    /// amount reads it (<c>lerp(lo, hi, roll)</c>). Null when the amount rolled no position.
+    /// </summary>
+    public double? Roll { get; set; }
+
     /// <summary>The skip entries of rule <c>combat.stage_skips</c> the packet's tags matched when it was built; null until then.</summary>
     internal ulong? MatchedSkips { get; set; }
 }
@@ -52,6 +58,8 @@ public sealed class HitResult
     public double Staggered;
     /// <summary>Damage dealt to break bars (poise).</summary>
     public double Broken;
+    /// <summary>The packet's roll within its range (<see cref="DamagePacket.Roll"/>), for high-roll effects; null when it rolled none.</summary>
+    public double? Roll;
     public Dictionary<string, double> Received = new(StringComparer.Ordinal);
 }
 
@@ -360,7 +368,7 @@ public static class DamagePipeline
     public static HitResult Apply(EffectContext ctx, DamagePacket packet)
     {
         var sim = ctx.Sim;
-        var result = new HitResult { Crit = packet.Crit };
+        var result = new HitResult { Crit = packet.Crit, Roll = packet.Roll };
         var target = ctx.Target;
         if (!sim.World.TryGet<Components.Stats>(target, out var ts) || sim.World.Has<Dead>(target))
         {

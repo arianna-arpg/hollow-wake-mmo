@@ -16,7 +16,7 @@ internal static class CombatKinds
     public static void Register()
     {
         CombatTriggers.EnsureRegistered();
-        foreach (var name in new[] { "remaining_damage", "pop", "banked", "elapsed", "total", "consumed", "consumed_damage", "spread", "moved", "ruptured", "last_damage", "crit", "angle", "pen" })
+        foreach (var name in new[] { "remaining_damage", "pop", "banked", "elapsed", "total", "consumed", "consumed_damage", "spread", "moved", "ruptured", "last_damage", "crit", "angle", "pen", "roll" })
         {
             ScopeNames.Declare(name);
         }
