@@ -135,6 +135,10 @@ public sealed record AttributeDef : Definition
     public bool Percent { get; init; }
     public bool Hidden { get; init; }
 
+    /// <summary>Modifiers granted per point of this attribute, so tooltips and the fold read the same data.</summary>
+    [JsonPropertyName("per_point")]
+    public List<Modifier> PerPoint { get; init; } = new();
+
     /// <summary>The attribute family this attribute was expanded from; null for attributes declared one by one.</summary>
     [JsonIgnore]
     public string? Family { get; init; }

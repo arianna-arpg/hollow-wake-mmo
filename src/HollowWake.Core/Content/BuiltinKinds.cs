@@ -445,6 +445,7 @@ internal static class BuiltinKinds
         Kinds.MinionKinds.Register();
         Kinds.CombatKinds.Register();
         Kinds.ProgressionKinds.Register();
+        Kinds.InterfaceKinds.Register();
     }
 
     public static void ValidateWeaveSpec(WeaveSpec w, ValidationContext c, string field)

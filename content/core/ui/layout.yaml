@@ -1,0 +1,73 @@
+# The arrangement of the interface, the same under every theme: the cluster's orbs with the pools drawn on and
+# around them (nearest first), the book's primacy ladder and the rank of each pane the world opens, the
+# equipment doll's cells, the interface's own keys, and every size and tunable the clients use. Sizes are
+# pixels at scale one.
+kind: ui_layouts
+entries:
+  - id: default
+    name: Default
+    orbs:
+      - { side: left, fill: life, overlays: [shield], rim: [ward], rings: [poise, insight] }
+      - { side: right, fill: mana, rings: [stamina] }
+    # A newcomer of a higher rank takes the book's front; one of the same rank arrives behind as a fresh tab.
+    ranks: [page, station, decision]
+    panes:
+      dialogue: station
+      vendor: station
+      quest_offer: station
+      station: station
+      stash: station
+      bounty_board: station
+      choice: decision
+    doll:
+      head: [1, 0]
+      amulet: [2, 0]
+      main_hand: [0, 1]
+      chest: [1, 1]
+      off_hand: [2, 1]
+      hands: [0, 2]
+      belt: [1, 2]
+      ring: [2, 2]
+      feet: [1, 3]
+    keys:
+      menu: Tab
+      book_next: Tab
+      book_previous: Shift+Tab
+    metrics:
+      # the cluster
+      orb: 124
+      rim: 7
+      ring: 6
+      ring_gap: 3
+      slot: 52
+      slot_gap: 6
+      slots: 8
+      bar_pad: 10
+      cluster_margin: 10
+      cast_bar: 14
+      status_icon: 28
+      menu_button: 46
+      tray_row: 34
+      tray_width: 270
+      plate_width: 340
+      chat_width: 420
+      chat_height: 200
+      chat_lines: 200
+      notice_seconds: 4
+      combat_text_seconds: 1.3
+      # the core pane, its pages and the world's panes
+      cell: 36
+      doll_cell: 50
+      bag_columns: 10
+      rail: 46
+      page_width: 460
+      edge: 14
+      tab_height: 30
+      drag_threshold: 6
+      # a world pane closes when the hero walks this far from what opened it, unless its message says
+      departure_reach: 6
+      # the passive constellation
+      passive_scale: 26
+      passive_node: 14
+      zoom_min: 0.4
+      zoom_max: 2.5
