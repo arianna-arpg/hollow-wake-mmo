@@ -56,7 +56,7 @@ entries:
       - "..#....=.............=....#.."
       - "..#....=..W...Q...W..=....#.."
       - "..#....=.............=....#.."
-      - "..#....=..L...G...G..=....#.."
+      - "..#....=..L...G...G.F=....#.."
       - "..#....=.............=....#.."
       - "...#...===============...#..."
       - "...#.....................#..."
@@ -75,6 +75,7 @@ entries:
       "L": { height: 0, walkable: true, tags: [paved], spawn: loom }
       "Q": { height: 0, walkable: true, tags: [paved], spawn: quartermaster }
       "G": { height: 0, walkable: true, tags: [paved], spawn: spindlewatch_guard }
+      "F": { height: 0, walkable: true, tags: [paved], spawn: passive_font }
 
   - id: shrine_ring
     name: Shrine

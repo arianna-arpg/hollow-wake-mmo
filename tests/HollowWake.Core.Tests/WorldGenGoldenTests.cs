@@ -37,7 +37,7 @@ public class WorldGenGoldenTests
     }
 
     [Theory]
-    [InlineData(0, 0, "A0C8EB30665B745F", "C01ED288CB1AFB07")]
+    [InlineData(0, 0, "A0C8EB30665B745F", "49F442650FB349B4")]
     [InlineData(1, 0, "280FCB8C963B4878", "D45DEE4AEADDBE63")]
     [InlineData(0, -1, "E19E9ED040FD912E", "067903F6A091CF31")]
     [InlineData(3, 2, "CF73FC02A61B2A1A", "2F33A841D313EBF7")]
@@ -100,7 +100,7 @@ public class WorldGenGoldenTests
         {
             HashPoint(h, g, 40 + i * 0.83, 20 + i * 0.61, i % 20 == 0);
         }
-        Golden("overlaid world", "AAC5246FE003A662", h.Hex);
+        Golden("overlaid world", "9AA4980AFBECEC81", h.Hex);
 
         // Removing an overlay must regenerate exactly what a generator that never had it produces.
         overlays.Remove("fount");
