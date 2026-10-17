@@ -210,6 +210,10 @@ public partial class Smoke : Node
         await Wait(0.3);
         Record("character sheet", sheetOpen && !_main.Hud.SheetVisible, $"opened={sheetOpen} closed={!_main.Hud.SheetVisible}");
 
+        await CorePaneAndPages();
+        await TalkToAVillager();
+        await TradeWithAVendor();
+
         // Weaves: walk to the nearest hob, hover it and press 1 to 4 until a combat line shows.
         var hob = Nearest(e => e.State.Pattern is not null && e.State.Pattern.StartsWith("hob", StringComparison.Ordinal) && !e.State.Dead);
         if (hob is null)
@@ -243,6 +247,144 @@ public partial class Smoke : Node
             }
         }
         await Wait(0.5);
+    }
+
+    // ------------------------------------------------------------ the interface
+
+    /// <summary>The core pane opens with its key; every ribbon page the hero has opens from its ribbon on the rail.</summary>
+    private async Task CorePaneAndPages()
+    {
+        var hud = _main.Hud;
+        await Until(() => hud.Hero.Inventory is not null || !hud.Hero.Interface, 5);
+        TapName(hud.KeyOf("inventory"));
+        await Wait(0.5);
+        var open = hud.CoreOpen;
+        var bag = hud.Hero.Bag(10);
+        await Shot("06_core_pane.png");
+        Record("core pane", open && bag is not null && hud.Rects is not null,
+            $"open={open}, bag {bag?.Items.Count ?? 0} items on {bag?.Width ?? 0}x{bag?.Height ?? 0}, {hud.Hero.Inventory?.Slots.Count ?? 0} doll slots, wallet {hud.Hero.Inventory?.Wallet.Count ?? 0}, interface={hud.Hero.Interface}");
+        var pages = hud.RibbonPages.ToList();
+        var visited = new List<string>();
+        foreach (var page in pages)
+        {
+            var at = hud.RibbonCenter(page);
+            if (at is { } p)
+            {
+                await Click(p);
+            }
+            else
+            {
+                TapName(hud.KeyOf(page));
+            }
+            var shown = await Until(() => hud.IsShown(page), 3);
+            await Wait(0.4);
+            await Shot($"07_page_{page}.png");
+            visited.Add($"{page}={(shown ? "shown" : "missing")}");
+        }
+        Record("ribbon pages", pages.Count > 0 && visited.All(v => v.EndsWith("=shown", StringComparison.Ordinal)), string.Join(", ", visited) + Rejected());
+        // Escape closes the pages, then the core pane.
+        for (var i = 0; i < pages.Count + 2 && hud.CoreOpen; i++)
+        {
+            Tap(Key.Escape);
+            await Wait(0.15);
+        }
+        Record("escape closes the core pane last", !hud.CoreOpen, $"core open={hud.CoreOpen}");
+    }
+
+    /// <summary>Walks to the nearest villager, talks, and takes the first open choice.</summary>
+    private async Task TalkToAVillager()
+    {
+        var villager = Nearest(e => e.State.Pattern == "villager" || e.State.Interactable == "talk");
+        if (villager is null)
+        {
+            Record("talk to a villager", false, "no villager in view");
+            return;
+        }
+        var reached = await TravelTo(() => (villager.State.X, villager.State.Y), 1.6f, 45);
+        await Wait(0.4);
+        var states = _main.DialogueStates;
+        await Hover(villager);
+        await Click(Screen(villager.GlobalPosition + new Vector3(0, villager.State.Height * 0.5f, 0)));
+        var shown = await Until(() => _main.DialogueStates > states && _main.Hud.HasWorldPane("dialogue"), 6);
+        await Shot("08_dialogue.png");
+        var pane = _main.Hud.FrontView<UI.WorldPanes.DialoguePane>();
+        var line = pane?.State is { } s ? $"{s.Speaker}: \"{Trim(s.Line)}\" with {s.Choices.Count} choices" : "no dialogue_state arrived";
+        if (shown && pane?.State is { } state && state.Choices.FirstOrDefault(c => c.Enabled) is { } choice)
+        {
+            var before = _main.DialogueStates;
+            var button = pane.FindChildren("*", "Button", true, false).OfType<Button>().FirstOrDefault(b => !b.Disabled);
+            if (button is not null)
+            {
+                await Click(button.GetGlobalRect().GetCenter());
+                var answered = await Until(() => _main.DialogueStates > before, 5);
+                line += $", chose \"{Trim(choice.Text)}\" (answered={answered})";
+            }
+        }
+        Record("talk to a villager", reached && shown, $"reached={reached}, {line}{Rejected()}");
+        if (_main.Hud.HasWorldPane("dialogue"))
+        {
+            Tap(Key.Escape);
+            await Wait(0.3);
+        }
+    }
+
+    /// <summary>Opens a vendor (one in view, or the one the conversation opened) and buys the first thing it can.</summary>
+    private async Task TradeWithAVendor()
+    {
+        var hud = _main.Hud;
+        if (!hud.HasWorldPane("vendor"))
+        {
+            var vendor = Nearest(e => e.State.Interactable == "vendor" || e.State.Pattern?.Contains("vendor", StringComparison.Ordinal) == true || e.State.Pattern?.Contains("merchant", StringComparison.Ordinal) == true);
+            if (vendor is null)
+            {
+                Record("trade with a vendor", false, $"no vendor in view and no conversation opened one{Rejected()}");
+                return;
+            }
+            await TravelTo(() => (vendor.State.X, vendor.State.Y), 1.6f, 45);
+            await Wait(0.4);
+            var states = _main.VendorStates;
+            await Click(Screen(vendor.GlobalPosition + new Vector3(0, vendor.State.Height * 0.5f, 0)));
+            await Until(() => _main.VendorStates > states && hud.HasWorldPane("vendor"), 6);
+        }
+        var pane = hud.FrontView<UI.WorldPanes.VendorPane>();
+        await Wait(0.4);
+        await Shot("09_vendor.png");
+        if (pane?.State is not { } state)
+        {
+            Record("trade with a vendor", false, $"no vendor_state arrived{Rejected()}");
+            return;
+        }
+        var items0 = hud.BagItems;
+        var inventories = _main.InventoryStates;
+        var buy = pane.FindChildren("*", "Button", true, false).OfType<Button>().FirstOrDefault(b => !b.Disabled && b.Text == "Buy");
+        if (buy is null)
+        {
+            Record("trade with a vendor", false, $"{state.Name}: nothing can be bought ({state.Stock.Count} on the shelf)");
+            return;
+        }
+        await Click(buy.GetGlobalRect().GetCenter());
+        var bought = await Until(() => _main.InventoryStates > inventories && hud.BagItems > items0, 6);
+        await Shot("10_bought.png");
+        Record("trade with a vendor", bought, $"{state.Name}: {state.Stock.Count} on the shelf, bag {items0} -> {hud.BagItems}{Rejected()}");
+        Tap(Key.Escape);
+        await Wait(0.2);
+        Tap(Key.Escape);
+        await Wait(0.2);
+    }
+
+    private static string Trim(string text) => text.Length > 48 ? text[..48] + "..." : text;
+
+    /// <summary>Presses a key written as content writes keys (I, K, Shift+Tab).</summary>
+    private static void TapName(string keyName)
+    {
+        var name = UI.Logic.KeyName.Parse(keyName);
+        if (name.IsEmpty)
+        {
+            return;
+        }
+        var key = OS.FindKeycodeFromString(name.Key);
+        Input.ParseInputEvent(new InputEventKey { Keycode = key, PhysicalKeycode = key, Pressed = true, ShiftPressed = name.Shift });
+        Input.ParseInputEvent(new InputEventKey { Keycode = key, PhysicalKeycode = key, Pressed = false, ShiftPressed = name.Shift });
     }
 
     // ------------------------------------------------------------ helpers

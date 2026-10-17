@@ -27,6 +27,19 @@ public partial class RailView : Control
         MouseFilter = MouseFilterEnum.Stop;
     }
 
+    /// <summary>Where a page's ribbon is on screen, for scripted clicks.</summary>
+    public Vector2? CenterOf(string pageId)
+    {
+        foreach (var (row, rect) in _ribbons)
+        {
+            if (row.Page.Id == pageId)
+            {
+                return GetGlobalTransform() * rect.GetCenter();
+            }
+        }
+        return null;
+    }
+
     public static float RibbonHeight(Skin skin) => skin.Metric("rail", 46) * 1.05f;
     public static float BadgeHeight => 12;
     public static float ChipHeight => 38;

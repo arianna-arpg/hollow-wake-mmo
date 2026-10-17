@@ -792,6 +792,8 @@ public partial class Hud : CanvasLayer, IItemHost
     public LeafView? ViewOfLeaf(string id) => _views.GetValueOrDefault(id);
     public T? FrontView<T>() where T : LeafView => _views.Values.OfType<T>().FirstOrDefault();
     public Box ClusterRect => _cluster.Drawn;
+    public Vector2? RibbonCenter(string pageId) => _core.Visible ? _core.Rail.CenterOf(pageId) : null;
+    public string KeyOf(string pageId) => _ui.Page(pageId)?.Key ?? "";
     public WorkspaceRects? Rects => _rects;
     public int BagItems => Hero.Bag((int)Skin.Metric("bag_columns", 10))?.Items.Count ?? 0;
 
