@@ -21,7 +21,7 @@ public sealed record ProcDef : Definition
     /// </summary>
     public TagSet Excludes { get; init; } = TagSet.Of("dot");
 
-    /// <summary>An expression on the owner that must hold.</summary>
+    /// <summary>An expression on the owner that must hold; it also reads the trigger's <c>amount</c>, <c>crit</c> and <c>roll</c>.</summary>
     public Expr? When { get; init; }
 
     /// <summary>An expression on the other body of the event (the struck, the striker, the slain) that must hold.</summary>

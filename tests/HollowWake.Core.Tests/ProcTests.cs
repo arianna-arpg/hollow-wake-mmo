@@ -154,6 +154,30 @@ public class ProcTests
     }
 
     [Fact]
+    public void AHighRollCanProc()
+    {
+        var registry = WithProcs("""{"id": "t_high", "on": "hit", "when": "roll >= 0.5", "effects": [ {"type": "log", "text": "high"} ]}""");
+        var bench = CombatBench.Create(registry);
+        bench.VictimStats.Attributes.SetBase("life.max", 1_000_000);
+        bench.VictimStats.FillResources();
+        Grant(bench, bench.Attacker, "proc.t_high");
+        var rolled = bench.Effect("""{"type": "damage", "amount": "lerp(1, 2, roll)", "threads": ["stone"], "can_crit": false}""");
+        for (var i = 0; i < 40; i++)
+        {
+            rolled.Execute(bench.Context(bench.Attacker, bench.Victim, rng: (ulong)i + 1));
+        }
+        var hits = bench.HitsOn(bench.Victim);
+        Assert.Equal(40, hits.Count);
+        Assert.All(hits, h => Assert.InRange(h.Roll!.Value, 0, 1));
+        var high = hits.Count(h => h.Roll >= 0.5);
+        Assert.InRange(high, 1, 39);
+        Assert.Equal(high, bench.Events.OfType<ProcFired>().Count());
+        // A hit that rolled no position reads a roll of zero.
+        Assert.Null(bench.Hit(5).Roll);
+        Assert.Equal(high, bench.Events.OfType<ProcFired>().Count());
+    }
+
+    [Fact]
     public void RetaliationAnswersTheStriker()
     {
         var bench = CombatBench.Create();

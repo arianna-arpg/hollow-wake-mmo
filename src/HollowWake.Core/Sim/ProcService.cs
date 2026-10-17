@@ -11,7 +11,8 @@ namespace HollowWake.Core.Sim;
 /// Runs procs (content kind <c>procs</c>): when a trigger kind fires for an owner whose chance attribute
 /// (<c>proc.{id}</c>, granted by any modifier source) is above zero, and the event carries the proc's tags, its
 /// <c>when</c> holds on the owner and its <c>victim</c> on the other body, the proc rolls and runs its effect graph
-/// one level deeper than the event. Rates are a chance, an internal cooldown, or procs per minute (the chance
+/// one level deeper than the event. <c>when</c> and the payload also read the trigger's <c>amount</c>, <c>crit</c> and
+/// <c>roll</c> (where a hit fell within its range, zero for hits that rolled none), so a high roll can proc. Rates are a chance, an internal cooldown, or procs per minute (the chance
 /// growing with the time since the owner's last check). Depth gates chains: past rule <c>procs.max_depth</c> a
 /// proc is refused, and below it the chance keeps <c>falloff</c> (rule <c>procs.depth_falloff</c>) per level;
 /// rule <c>procs.chance_cap</c> caps any chance. Each owner rolls from its own stream derived from the
@@ -30,6 +31,8 @@ public sealed class ProcService
     private TriggerKind[] _kinds = Array.Empty<TriggerKind>();
     private readonly Dictionary<Entity, int[]> _subscriptions = new();
     private readonly TriggerHandler _handler;
+    // The owner scope with the trigger numbers on top, reused for every when check.
+    private readonly TriggerScope _when = new();
 
     private sealed class Entry
     {
@@ -195,7 +198,7 @@ public sealed class ProcService
             return;
         }
         var other = e.Source == owner ? e.Target : e.Source;
-        if (def.When is { } when && !when.IsTrue(stats))
+        if (def.When is { } when && !_when.Holds(when, stats, e))
         {
             return;
         }
@@ -233,9 +236,62 @@ public sealed class ProcService
                 ["amount"] = e.Amount,
                 ["last_damage"] = e.Amount,
                 ["crit"] = e.Crit ? 1 : 0,
+                ["roll"] = TriggerScope.RollOf(e),
             },
         };
         CompiledEffect.ExecuteAll(effects, ctx);
+    }
+
+    /// <summary>
+    /// A proc owner's scope with the trigger's <c>amount</c>, <c>crit</c> and <c>roll</c> layered on top. One instance
+    /// serves every check: a check only evaluates, so nothing can run inside it.
+    /// </summary>
+    private sealed class TriggerScope : Expressions.IExprScope
+    {
+        private Stats _owner = null!;
+        private double _amount;
+        private bool _crit;
+        private double _roll;
+
+        /// <summary>Where the trigger's hit fell within its range; zero when it came from no rolled hit.</summary>
+        public static double RollOf(in TriggerEvent e) => e.Cause is DamageDealt { Roll: { } roll } ? roll : 0;
+
+        public bool Holds(Expressions.Expr expr, Stats owner, in TriggerEvent e)
+        {
+            _owner = owner;
+            _amount = e.Amount;
+            _crit = e.Crit;
+            _roll = RollOf(e);
+            try
+            {
+                return expr.IsTrue(this);
+            }
+            finally
+            {
+                _owner = null!;
+            }
+        }
+
+        public bool TryResolve(string name, out double value)
+        {
+            switch (name)
+            {
+                case "amount":
+                    value = _amount;
+                    return true;
+                case "crit":
+                    value = _crit ? 1 : 0;
+                    return true;
+                case "roll":
+                    value = _roll;
+                    return true;
+            }
+            return _owner.TryResolve(name, out value);
+        }
+
+        public bool HasFlag(string flag) => _owner.HasFlag(flag);
+
+        public double NextRandom() => _owner.NextRandom();
     }
 
     private CompiledEffect[] Compile(ProcDef def)

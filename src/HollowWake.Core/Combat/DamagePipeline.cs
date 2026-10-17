@@ -425,6 +425,7 @@ public static class DamagePipeline
             Depth = ctx.Depth,
             Culled = result.Culled,
             Clamped = result.Clamped,
+            Roll = result.Roll,
         });
     }
 
