@@ -59,7 +59,7 @@ const REPOSITORY = repository();
 const USER_AGENT = `HollowWakeMMO-Launcher/${app.getVersion()} (${PLATFORM})`;
 const PAGE = path.join(__dirname, '..', 'renderer', 'index.html');
 const BUNDLED_NEWS = path.join(__dirname, '..', 'news.json');
-const ICON = path.join(__dirname, '..', 'icon.png');
+const ICON = path.join(__dirname, '..', process.platform === 'win32' ? 'icon.ico' : 'icon.png');
 
 let settings: Settings;
 let token: string | null = null;

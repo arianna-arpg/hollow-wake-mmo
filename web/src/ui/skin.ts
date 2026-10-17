@@ -199,6 +199,13 @@ export class Skin {
       path.setAttribute('stroke-linejoin', 'round');
     }
     svg.append(path);
+    const accent = set.accents?.[resolved];
+    if (accent) {
+      const detail = document.createElementNS(SVG, 'path');
+      detail.setAttribute('d', accent);
+      detail.setAttribute('fill', 'currentColor');
+      svg.append(detail);
+    }
     return svg;
   }
 
