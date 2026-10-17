@@ -1,0 +1,27 @@
+{
+  "status": "PROPOSAL_ONLY_NOT_LOADABLE_GAME_CONTENT",
+  "schema_intent": "Artist-authored presentation registry resolved from semantic tags and server descriptors",
+  "id": "thread.ember.delivery.bolt",
+  "match": {"thread_tags": ["ember"], "delivery_tags": ["projectile"]},
+  "precedence": ["authored_visual_profile", "semantic_composition", "neutral_fallback"],
+  "thread": {"palette": "ember", "motif": "rising_hook", "grain": "upward", "contrast_pair": ["ink", "bone"]},
+  "delivery": {"family": "bolt", "seat": "hands", "direction_source": "resolved_server_heading"},
+  "layers": {
+    "functional": ["body_pose", "readiness_mark", "authoritative_footprint", "confirmed_contact"],
+    "decorative": ["rear_intake", "shoulder_grain", "filament_tail"]
+  },
+  "phase_bindings": {
+    "anticipation": "cast_state",
+    "release": "confirmed_release_with_payload",
+    "impact": "confirmed_hit_with_cast_identity",
+    "recovery_lock": "server_recovery_until",
+    "decorative_recovery": "short_nonfunctional_fade",
+    "interrupt": "confirmed_interruption",
+    "unknown_end": "neutral_dissolve_without_release_or_impact"
+  },
+  "relation_style": {"hostile": "inward_teeth", "support": "spaced_squares", "unknown": "neutral_dashed_brackets"},
+  "composition": {"mixed_threads": "neutral_seat_plus_up_to_two_motif_accents", "glyphs": "semantic_delivery_overlays", "unresolved_profile": "neutral_fallback"},
+  "reduced_motion": {"camera_impulse": 0, "strobe": false, "travelling_motes": false, "readiness": "static_segments", "release": "single_direction_stroke", "impact": "bounded_contact_mark"},
+  "density": {"essential_cues": "retained", "decorative_order_to_reduce": ["distant_allies", "off_target_neutrals", "secondary_filaments", "ambient_fount_motion"]},
+  "required_runtime_inputs_not_all_available": ["cast_instance_id", "event_sequence", "release_result", "interrupt_reason", "recovery_until", "resolved_relation", "surface_anchor"]
+}

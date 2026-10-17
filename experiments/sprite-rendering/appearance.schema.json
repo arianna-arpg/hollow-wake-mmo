@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:hollow-wake:study:appearance:1",
+  "title": "Hollow Wake appearance export proposal",
+  "type": "object",
+  "required": ["schemaVersion", "id", "source", "representations", "selection", "equipment", "bounds"],
+  "properties": {
+    "$schema": { "type": "string" },
+    "schemaVersion": { "const": 1 },
+    "id": { "type": "string", "minLength": 1, "pattern": "^[a-z0-9_.-]+$" },
+    "description": { "type": "string" },
+    "source": { "type": "object", "required": ["creator", "license", "revision"], "properties": { "creator": { "type": "string" }, "license": { "type": "string" }, "revision": { "type": "string" } } },
+    "representations": {
+      "type": "object", "required": ["sprite", "mesh"],
+      "properties": {
+        "sprite": {
+          "type": "object",
+          "required": ["atlas", "atlasPixels", "cellPixels", "grid", "worldWidth", "footPivotNormalized", "directionsDegrees", "pitchDegrees", "framesPerPitch", "alpha", "colorSpace", "lighting", "mirrorSafe", "clips", "sockets"],
+          "properties": {
+            "atlas": { "type": "string", "minLength": 1 },
+            "atlasPixels": { "$ref": "#/$defs/pixelPair" }, "cellPixels": { "$ref": "#/$defs/pixelPair" }, "grid": { "$ref": "#/$defs/pixelPair" },
+            "worldWidth": { "type": "number", "exclusiveMinimum": 0 },
+            "footPivotNormalized": { "$ref": "#/$defs/normalizedPair" },
+            "pivotConvention": { "type": "string" },
+            "directionConvention": { "type": "string" },
+            "directionsDegrees": { "type": "array", "minItems": 4, "uniqueItems": true, "items": { "type": "number", "minimum": 0, "exclusiveMaximum": 360 } },
+            "pitchDegrees": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "number", "minimum": -90, "maximum": 90 } },
+            "rowLayout": { "const": "pitchIndex * framesPerPitch + frameIndex" },
+            "framesPerPitch": { "type": "integer", "minimum": 1 },
+            "alpha": { "enum": ["cutout", "opaque", "blend"] }, "alphaThreshold": { "type": "number", "minimum": 0, "maximum": 1 },
+            "colorSpace": { "const": "srgb" }, "lighting": { "enum": ["baked", "normal-map", "unlit"] }, "mirrorSafe": { "type": "boolean" },
+            "clips": { "type": "array", "minItems": 1, "items": { "type": "object", "required": ["id", "frameIndices", "fps", "loop"], "properties": { "id": { "type": "string" }, "frameIndices": { "type": "array", "minItems": 1, "items": { "type": "integer", "minimum": 0 } }, "fps": { "type": "number", "exclusiveMinimum": 0 }, "loop": { "type": "boolean" } } } },
+            "sockets": { "type": "array", "items": { "type": "object", "required": ["name", "samples"], "properties": { "name": { "type": "string" }, "samples": { "type": "array", "items": { "type": "object", "required": ["directionIndex", "pitchIndex", "frameIndex", "position", "order"], "properties": { "directionIndex": { "type": "integer", "minimum": 0 }, "pitchIndex": { "type": "integer", "minimum": 0 }, "frameIndex": { "type": "integer", "minimum": 0 }, "position": { "$ref": "#/$defs/normalizedPair" }, "order": { "enum": ["behind-body", "in-front-of-body"] } } } } } } },
+            "socketConvention": { "type": "string" }
+          }
+        },
+        "mesh": { "type": "object", "required": ["asset", "forwardAxis", "upAxis", "unit"], "properties": { "asset": { "type": ["string", "null"] }, "generator": { "type": "string" }, "forwardAxis": { "const": "+Z" }, "upAxis": { "const": "+Y" }, "unit": { "const": "world-unit" }, "animation": { "type": "string" } } }
+      }
+    },
+    "selection": { "type": "object", "required": ["isoPreferred", "thirdPersonPreferred", "missingAssetFallback", "policyStatus"], "properties": { "isoPreferred": { "enum": ["sprite", "mesh"] }, "thirdPersonPreferred": { "enum": ["sprite", "mesh"] }, "missingAssetFallback": { "const": "existing-placeholder" }, "policyStatus": { "const": "proposal-only" } } },
+    "equipment": { "type": "object", "required": ["mode", "slotsIncluded", "variant"], "properties": { "mode": { "enum": ["combined-outfit", "layered", "hybrid"] }, "slotsIncluded": { "type": "array", "items": { "type": "string" } }, "variant": { "type": "string" }, "dyeMasks": { "type": "array", "items": { "type": "string" } }, "attachmentPolicy": { "type": "string" } } },
+    "bounds": { "type": "object", "required": ["visualHeight", "visualRadius", "picking", "collision"], "properties": { "visualHeight": { "type": "number", "exclusiveMinimum": 0 }, "visualRadius": { "type": "number", "exclusiveMinimum": 0 }, "picking": { "type": "string" }, "collision": { "type": "string" } } }
+  },
+  "$defs": {
+    "pixelPair": { "type": "array", "minItems": 2, "maxItems": 2, "items": { "type": "integer", "minimum": 1 } },
+    "normalizedPair": { "type": "array", "minItems": 2, "maxItems": 2, "items": { "type": "number", "minimum": 0, "maximum": 1 } }
+  }
+}

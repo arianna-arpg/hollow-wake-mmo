@@ -1,0 +1,10 @@
+{
+  "maxActors": 512,
+  "defaultActors": 48,
+  "atlas": { "cellPixels": 128, "directions": 8, "frames": 4, "pitchDegrees": [15, 35.264, 65], "frameRate": 6, "worldSize": 2.8, "bottom": -0.3 },
+  "tiers": {
+    "low": { "resolutionScale": 0.75, "maxPixelRatio": 1, "decorativeMotes": 12, "contactShadows": false, "spriteDirections": 4 },
+    "balanced": { "resolutionScale": 1, "maxPixelRatio": 1, "decorativeMotes": 36, "contactShadows": true, "spriteDirections": 8 },
+    "high": { "resolutionScale": 1, "maxPixelRatio": 1.5, "decorativeMotes": 72, "contactShadows": true, "spriteDirections": 8 }
+  }
+}

@@ -1,0 +1,66 @@
+Hollow Wake visual language: first deliverable validation
+Review date: 2026-10-17 (America/Chicago)
+
+Scope
+  Authored only docs/design/visual-language.md and art/visual-language/.
+  No shared source, content, existing design file, roadmap or README edited.
+  No commit, push or publication. The shared checkout has other active work.
+
+Artifact checks: PASS
+  node --check art/visual-language/study.js
+  node art/visual-language/review-study.mjs
+  49 browser checks passed in installed Edge with existing playwright-core.
+  All nine Thread choices and four phase selections exercised.
+  Four territory states exercised.
+  Reduced motion disables playback and respects the OS preference.
+  Grayscale is applied to both diagrams and the Thread symbol.
+  Playback advances the sequence and can be paused.
+  Current standalone study loads without the optional local concept image; no browser console/page errors.
+  No page overflow at viewport widths 1440, 768 and 390.
+  Proposed recipe parses as JSON and is marked non-loadable game content.
+  Authored text uses LF and has no trailing whitespace.
+
+Visual inspection
+  Inspected the generated concept, desktop combat, crowded pale-ground
+  grayscale combat, contested territory and narrow full-page captures.
+  Corrected Void's interior to remain empty.
+  Replaced the territory owner mark with a separate seal instead of a Thread.
+  Re-ran browser verification and inspected updated captures after those edits.
+  Captures and machine check results are under experiments/visual-language/evidence/.
+  At narrow widths the diagram annotations are small; explanatory HTML remains
+  readable. Review art details at desktop width. This is a review artifact,
+  not a mobile gameplay presentation.
+
+Repository gates attempted (shared checkout snapshot)
+  dotnet build HollowWake.sln --no-restore
+    NOT GREEN. Non-Godot projects built, but Godot.NET.Sdk/4.7.2 could not
+    resolve. NuGet repository-signature lookup also emitted warnings.
+    No dependency or SDK configuration was changed for this art-only task.
+
+  dotnet test HollowWake.sln --no-build --no-restore
+    NOT COMPLETE / NOT GREEN. Core suite: 429 passed, 0 failed, 0 skipped.
+    Solution evaluation also reported the unavailable Godot SDK.
+    Server suite did not emit a completion result after roughly three minutes;
+    this task's test command was interrupted to keep the deliverable bounded.
+    No server-test pass is claimed and no cause of its delay is established.
+
+  dotnet run --project src/HollowWake.Tools --no-build -- validate
+    PASS: 0 errors, 0 warnings.
+
+Limits
+  No runtime integration, Godot capture or web-gameplay smoke performed.
+  No GPU, frame-time, overdraw, memory or network-timing result is claimed.
+  No human recognition study or colour-vision user test was performed.
+  Shape grain and state signs are shown; nine complete motion grammars are not.
+  The Canvas crowd is illustrative, not the acceptance gate's engine fixture.
+  The image is a mood/sequence concept, not production-ready game assets.
+  The exact Lumoria reference page was inaccessible and was not substituted.
+
+Integration priority
+  Confirm actual wire lifecycle after Claude's casting/interface merge.
+  Existing internal release/interruption events do not themselves provide a
+  correlated, authoritative client release/impact/recovery stream.
+  Keep unknown ends neutral; do not infer success from a disappearing bar.
+  The contract lists the proposed descriptors and acceptance gates.
+
+Coordinator update: captures moved to experiments/visual-language/evidence; oversized imagery remains local and ignored. The 49 checks passed again after relocation on 2026-10-17. These study checks are separate from production client verification.

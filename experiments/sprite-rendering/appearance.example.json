@@ -1,0 +1,35 @@
+{
+  "$schema": "./appearance.schema.json",
+  "schemaVersion": 1,
+  "id": "study.pilgrim.staff",
+  "description": "Illustrative artist export contract. The experiment generates these pixels in memory; production import is not implemented.",
+  "source": { "creator": "Hollow Wake rendering study", "license": "Original procedural study artwork", "revision": "study-01" },
+  "representations": {
+    "sprite": {
+      "atlas": "evidence/atlas-staff.png",
+      "atlasPixels": [1024, 1536],
+      "cellPixels": [128, 128],
+      "grid": [8, 12],
+      "worldWidth": 2.8,
+      "footPivotNormalized": [0.5, 0.8928571428571429],
+      "pivotConvention": "top-left origin, X right, Y down; feet are the entity origin",
+      "directionsDegrees": [0, 45, 90, 135, 180, 225, 270, 315],
+      "directionConvention": "0 = viewer in front of model +Z; increase toward model +X; relative to actor heading",
+      "pitchDegrees": [15, 35.264, 65],
+      "rowLayout": "pitchIndex * framesPerPitch + frameIndex",
+      "framesPerPitch": 4,
+      "alpha": "cutout",
+      "alphaThreshold": 0.5,
+      "colorSpace": "srgb",
+      "lighting": "baked",
+      "mirrorSafe": false,
+      "clips": [{ "id": "study_walk", "frameIndices": [0, 1, 2, 3], "fps": 6, "loop": true }],
+      "sockets": [],
+      "socketConvention": "Production sockets must supply one normalized 2D position and behind/front ordering for every pitch, direction and frame; none are authored in this combined-outfit proxy."
+    },
+    "mesh": { "asset": null, "generator": "actors.mjs:actorGeometry", "forwardAxis": "+Z", "upAxis": "+Y", "unit": "world-unit", "animation": "four static poses, no skinning" }
+  },
+  "selection": { "isoPreferred": "sprite", "thirdPersonPreferred": "mesh", "missingAssetFallback": "existing-placeholder", "policyStatus": "proposal-only" },
+  "equipment": { "mode": "combined-outfit", "slotsIncluded": ["body", "head", "main_hand"], "variant": "staff", "dyeMasks": [], "attachmentPolicy": "Do not infer public equipment from private inventory." },
+  "bounds": { "visualHeight": 2.5, "visualRadius": 0.8, "picking": "reuse-current-client-body-proxy", "collision": "server-only; visual bounds never replace entity radius/height" }
+}
