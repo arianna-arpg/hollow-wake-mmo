@@ -10,7 +10,9 @@ Distances and speeds are world units (one cell). Numbers ported from the earlier
 
 ## The minion component
 
-`Minion` holds the owner, when the body expires, its **group** (what a summon's capacity counts and what effects and commands address; by default the pattern, or the summoning weave for a pool), an optional **pool group** and **exclusive group**, the key of the weave that raised it, its birth order (`Sequence`; the oldest goes first), whether it is a **construct**, whether it **inherits its caster**, and its inheritance, contract, decay and presence. Every summoned body wears the tags rule `minions.tags` lists, every construct those of `minions.construct_tags`.
+`Minion` holds the owner, when the body expires, its **group** (what a summon's capacity counts and what effects and commands address; by default the pattern, or the summoning weave for a pool), an optional **pool group** and **exclusive group**, the key of the summoning weave, its birth order (`Sequence`; the oldest goes first), whether it is a **construct**, whether it **inherits its caster**, and its inheritance, contract, decay and presence. Every summoned body wears the tags rule `minions.tags` lists, every construct those of `minions.construct_tags`.
+
+The **summoning weave** is the context's host when a meta, trigger or `cast` runs the summon for a slot's weave (`EffectContext.Host`), else the running weave. Its key names the bodies' weave and their contract, its tags and modifiers fold their inheritance and pool capacity, and its glyphs board their weaves; a contract binds to the context's weave slot.
 
 ## Summoning
 
@@ -44,7 +46,9 @@ Rule `minions.inherit` is a table of lines `{ from, attribute, form }`. At birth
 
 ## Corpses
 
-A dead body is a corpse while it lies there, unless it is a player, a minion or tagged `no_corpse`; it remembers what it was through its identity, so a death adds nothing, and the lifetime system clears it after `combat.corpse_seconds` (`Corpses.Is`, `Corpses.PatternOf`). `summon` with `from_corpse` raises them, `spawn` with `as_corpse` lays fresh ones down without a death, and `gather_corpses { radius }` drags those around the focus into a pile. A corpse summon with nothing in reach publishes `SummonFizzled` after its cost is paid; refusing such a cast before costs waits for target kinds on forms. A kill hook (`on_kill`) holding `summon { from_corpse: target }` raises the slain.
+A dead body is a corpse while it lies there, unless it is a player, a minion or tagged `no_corpse`; it remembers what it was through its identity, so a death adds nothing, and the lifetime system clears it after `combat.corpse_seconds` (`Corpses.Is`, `Corpses.PatternOf`). `summon` with `from_corpse` raises them, `spawn` with `as_corpse` lays fresh ones down without a death, and `gather_corpses { radius }` drags those around the focus into a pile. A kill hook (`on_kill`) holding `summon { from_corpse: target }` raises the slain.
+
+Two target kinds join the weave runtime's registry: `corpse` (a corpse that can still be raised or consumed) and `minion` (one of the caster's living minions or constructs). A form's `target: { kind: corpse, search_radius, consume }` refuses the weave before its cost is paid when no corpse lies in reach, and aims it at the one it found; since a cast drops a dead target and aims at where it lay, `from_corpse: target` takes the corpse lying within `minions.corpse_target_reach` of the aim. Raising consumes the corpse unless the summoning weave's form says `consume: false`, so one corpse can rise again. A summon with no such form whose search finds nothing publishes `SummonFizzled`.
 
 ## Minion AI
 
@@ -65,12 +69,12 @@ Orders arrive two ways: the `command_minions` effect, and `MinionCommandRequeste
 
 ## Effects over minions
 
-Each addresses the context origin's minions: those of `group` when given; otherwise, run by a weave that summons or deploys, only that weave's own; otherwise all of them.
+Each addresses the context origin's minions: those of `group` when given; otherwise, when the summoning weave (the host, else the running weave) summons or deploys, only that weave's own, so a summon's meta orders its own retinue; otherwise all of them.
 
 - `recall_minions { radius, group }`: mobile minions blink to an even ring around the owner; constructs stay.
 - `command_minions { command, duration, affects, radius, discipline, group }`: orders at the context's point; `affects` is `minions`, `squad` (thinking bodies of the caster's faction within `radius`, by default `minions.earshot`, that answer to no owner) or `both`.
 - `minion_cast { weave, at, range, group }`: every addressed minion executes a preset weave at once, free, at the point or at its own nearest foe within `range` (default `minions.cast_range`), with its own numbers at its host's level. It raises no cast of the minion's (`MinionOrdered` instead).
-- `consume_minion { count, pick, group, radius, self, of, effects }`: spends minions (`of`: minions, constructs or any; `pick`: oldest, newest or nearest; `self`: the source itself), running `effects` where each stood with `consumed_life` and `consumed_life_max` set, then killing it with no credit (`MinionConsumed`). A minion's own self-destruct is a `minion_cast` of a weave holding `consume_minion { self: true }`.
+- `consume_minion { count, pick, group, radius, self, of, effects }`: spends minions (`of`: minions, constructs or any; `pick`: oldest, newest, nearest, or `target`, the context's target when it is one of the caster's minions, as a form's `minion` target kind chooses; `self`: the source itself), running `effects` where each stood with `consumed_life` and `consumed_life_max` set, then killing it with no credit (`MinionConsumed`). A minion's own self-destruct is a `minion_cast` of a weave holding `consume_minion { self: true }`.
 
 ## Constructs
 
