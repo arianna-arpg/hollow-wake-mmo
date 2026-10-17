@@ -1,23 +1,66 @@
 # Attributes: every number an entity, weave, item or holding can carry.
-# Formulas read other attributes and `level`. Undeclared attributes still work as channels; declaring
+# Formulas read other attributes and `level`; what a point of a core attribute grants is its per_point
+# list, which the fold applies and tooltips read. Undeclared attributes still work as channels; declaring
 # them gives names, defaults, bounds and tool support.
 kind: attributes
 entries:
   # ---- core
-  - { id: might, name: Might, category: core, base: 10, min: 0, description: Physical force. Scales attacks and armor. }
-  - { id: grace, name: Grace, category: core, base: 10, min: 0, description: "Speed and precision. Scales accuracy, evasion and critical strikes." }
-  - { id: will, name: Will, category: core, base: 10, min: 0, description: Command over the Loom. Scales weaves and mana. }
-  - { id: vigor, name: Vigor, category: core, base: 10, min: 0, description: Endurance. Scales life and recovery. }
+  - id: might
+    name: Might
+    category: core
+    base: 10
+    min: 0
+    description: Physical force. Scales attacks and armor.
+    per_point:
+      - { attribute: attack.power, form: flat, value: 0.02 }
+  - id: grace
+    name: Grace
+    category: core
+    base: 10
+    min: 0
+    description: "Speed and precision. Scales accuracy, evasion and critical strikes."
+    per_point:
+      - { attribute: accuracy, form: flat, value: 3 }
+      - { attribute: evasion, form: flat, value: 2 }
+  - id: will
+    name: Will
+    category: core
+    base: 10
+    min: 0
+    description: Command over the Loom. Scales weaves and mana.
+    per_point:
+      - { attribute: mana.max, form: flat, value: 3 }
+      - { attribute: mana.regen, form: flat, value: 0.08 }
+      - { attribute: spell.power, form: flat, value: 0.025 }
+  - id: vigor
+    name: Vigor
+    category: core
+    base: 10
+    min: 0
+    description: Endurance. Scales life and recovery.
+    per_point:
+      - { attribute: life.max, form: flat, value: 4 }
+      - { attribute: life.regen, form: flat, value: 0.05 }
 
   # ---- resources
-  - { id: life.max, name: Maximum Life, category: resource, formula: "40 + level * 10 + vigor * 4", min: 1, decimals: 0 }
-  - { id: life.regen, name: Life Regeneration, category: resource, formula: "0.5 + vigor * 0.05", decimals: 2 }
-  - { id: mana.max, name: Maximum Mana, category: resource, formula: "30 + level * 5 + will * 3", min: 0, decimals: 0 }
-  - { id: mana.regen, name: Mana Regeneration, category: resource, formula: "1 + will * 0.08", decimals: 2 }
+  - { id: life.max, name: Maximum Life, category: resource, formula: "40 + level * 10", min: 1, decimals: 0 }
+  - { id: life.regen, name: Life Regeneration, category: resource, base: 0.5, decimals: 2 }
+  - { id: mana.max, name: Maximum Mana, category: resource, formula: "30 + level * 5", min: 0, decimals: 0 }
+  - { id: mana.regen, name: Mana Regeneration, category: resource, base: 1, decimals: 2 }
   - { id: stamina.max, name: Maximum Stamina, category: resource, base: 100, min: 0, decimals: 0 }
   - { id: stamina.regen, name: Stamina Regeneration, category: resource, base: 12, decimals: 2 }
   - { id: ward.max, name: Maximum Ward, category: resource, base: 0, min: 0, decimals: 0, description: A shield of bound Thread that absorbs damage before life. }
   - { id: ward.regen, name: Ward Regeneration, category: resource, base: 0, decimals: 2 }
+  - { id: shield.max, name: Maximum Shield, category: resource, base: 0, min: 0, decimals: 0, description: "A second life of bound thread before life, refilling once no blow has landed for a while." }
+  - { id: shield.recharge_rate, name: Shield Recharge Rate, category: resource, base: 0.2, min: 0, percent: true, description: The fraction of the maximum shield restored each second while it recharges. }
+  - { id: shield.recharge_delay, name: Shield Recharge Delay, category: resource, base: 2, min: 0, decimals: 2, description: Seconds without a landing blow before the shield starts to recharge. }
+  - { id: shield.recharge, name: Shield Recharge, category: resource, formula: "shield.max * shield.recharge_rate", min: 0, decimals: 2, hidden: true, description: Shield restored each second; nothing while the recharge delay lasts. }
+  - { id: poise.max, name: Maximum Poise, category: resource, base: 0, min: 0, decimals: 0, description: "Footing that blows wear down; emptied, it breaks and must re-arm." }
+  - { id: poise.regen, name: Poise Regeneration, category: resource, formula: "poise.max * 0.1", min: 0, decimals: 2 }
+  - { id: poise.damage, name: Poise Damage, category: offense, base: 1, min: 0, percent: true, description: "Poise a hit wears down per point of damage it lands." }
+  - { id: poise.damage.taken, name: Poise Damage Taken, category: defense, base: 1, min: 0, percent: true }
+  - { id: insight.max, name: Maximum Insight, category: resource, base: 0, min: 0, decimals: 0, description: "Foresight built by momentum (on_hit.insight, leech.insight); it turns blows aside before any other pool." }
+  - { id: insight.regen, name: Insight Regeneration, category: resource, base: 0, decimals: 2 }
 
   # ---- movement and tempo
   - { id: move.speed, name: Movement Speed, category: tempo, base: 5, min: 0.5, max: 16, decimals: 2 }
@@ -29,11 +72,15 @@ entries:
 
   # ---- offense
   - { id: damage, name: Damage, category: offense, base: 0, description: The damage channel. Scope by thread and weave tags. }
-  - { id: attack.power, name: Attack Power, category: offense, formula: "1 + might * 0.02 + level * 0.01", percent: true }
-  - { id: spell.power, name: Weave Power, category: offense, formula: "1 + will * 0.025 + level * 0.015", percent: true }
-  - { id: accuracy, name: Accuracy, category: offense, formula: "80 + level * 5 + grace * 3", min: 0, decimals: 0 }
+  - { id: attack.power, name: Attack Power, category: offense, formula: "1 + level * 0.01", percent: true }
+  - { id: spell.power, name: Weave Power, category: offense, formula: "1 + level * 0.015", percent: true }
+  - { id: accuracy, name: Accuracy, category: offense, formula: "80 + level * 5", min: 0, decimals: 0 }
   - { id: crit.chance, name: Critical Chance, category: offense, base: 0.05, min: 0, max: 1, percent: true }
   - { id: crit.multiplier, name: Critical Multiplier, category: offense, base: 1.5, min: 1, percent: true }
+  - { id: crit.dot, name: Damage over Time Critical Chance, category: offense, base: 0, min: 0, max: 1, percent: true, description: Chance for a tick of damage over time to strike critically. }
+  - { id: added.effectiveness, name: Added Damage Effectiveness, category: offense, base: 1, min: 0, percent: true, description: How much of the flat damage added to every hit a hit receives. }
+  - { id: pen.armor, name: Armor Penetration, category: offense, base: 0, min: 0, max: 1, percent: true, description: The fraction of the target armor a Stone hit ignores. }
+  - { id: status.stacks, name: Additional Status Stacks, category: offense, base: 0, min: 0, decimals: 0, description: More stacks the statuses you apply can reach; scope by status.<id>. }
   - { id: ailment.chance, name: Ailment Chance, category: offense, base: 0, min: 0, percent: true }
   - { id: ailment.potency, name: Ailment Potency, category: offense, base: 0, percent: true }
   - { id: cull.threshold, name: Culling Threshold, category: offense, base: 0, min: 0, max: 1, percent: true }
@@ -57,9 +104,15 @@ entries:
 
   # ---- defense
   - { id: armor, name: Armor, category: defense, base: 0, min: 0, decimals: 0 }
-  - { id: evasion, name: Evasion, category: defense, formula: "20 + level * 3 + grace * 2", min: 0, decimals: 0 }
+  - { id: evasion, name: Evasion, category: defense, formula: "20 + level * 3", min: 0, decimals: 0 }
   - { id: block.chance, name: Block Chance, category: defense, base: 0, min: 0, max: 0.75, percent: true }
   - { id: block.amount, name: Block Amount, category: defense, base: 1, min: 0, max: 1, percent: true }
+  - { id: block.value, name: Block Value, category: defense, base: 0, min: 0, decimals: 0, description: "With guard blocking: damage a block stops beyond the level floor." }
+  - { id: block.power, name: Block Power, category: defense, base: 1, min: 0, max: 1, percent: true, description: "With guard blocking: the most of one hit a block can stop." }
+  - { id: crit.avoid, name: Critical Avoidance, category: defense, base: 0, min: -1, max: 1, percent: true, description: Less chance to be struck critically; negative makes it likelier. }
+  - { id: hit.cap, name: Hit Cap, category: defense, base: 0, min: 0, max: 1, percent: true, description: "No single hit lands more than this fraction of maximum life (none at zero)." }
+  - { id: stagger.fraction, name: Stagger, category: defense, base: 0, min: 0, max: 1, percent: true, description: The fraction of each hit taken over time instead of at once. }
+  - { id: cheat_death.chance, name: Cheat Death, category: defense, base: 0, min: 0, max: 1, percent: true, description: Chance to survive a killing blow with one life. }
   - { id: damage.taken, name: Damage Taken, category: defense, base: 0, description: Multiplier channel on incoming damage. }
   - { id: status.resistance, name: Status Resistance, category: defense, base: 0, max: 0.9, percent: true }
   - { id: resist.ember, name: Ember Resistance, category: defense, base: 0, min: -2, percent: true }
@@ -93,6 +146,19 @@ entries:
   - { id: summon.count, name: Summon Count, category: weave, base: 1, min: 1, decimals: 0 }
   - { id: summon.max, name: Summon Maximum, category: weave, base: 3, min: 1, decimals: 0 }
   - { id: cost, name: Cost, category: weave, base: 0, description: The cost channel. Scope by resource and weave tags. }
+
+  # ---- trade dials (rule attributes.trades): how much of one attribute is gained as another, and forgone
+  - { id: trade.life_to_shield, name: Life Woven into Shield, category: trade, base: 0, min: 0, max: 1, percent: true, description: Maximum life gained as maximum shield. }
+  - { id: trade.life_to_shield.forgo, name: Life Given Up for Shield, category: trade, base: 0, min: 0, max: 1, percent: true, description: Maximum life forgone by the weave of life into shield. }
+
+  # ---- conditions: the lines low and full life, mana and shield are drawn at. Any resource's has("low_{id}") and
+  # has("full_{id}") read lines named like these, and hold only where the line is declared and the body holds the pool.
+  - { id: low_life.line, name: Low Life Line, category: condition, base: 0.35, min: 0, max: 1, percent: true }
+  - { id: full_life.line, name: Full Life Line, category: condition, base: 0.95, min: 0, max: 1, percent: true }
+  - { id: low_mana.line, name: Low Mana Line, category: condition, base: 0.25, min: 0, max: 1, percent: true }
+  - { id: full_mana.line, name: Full Mana Line, category: condition, base: 0.95, min: 0, max: 1, percent: true }
+  - { id: low_shield.line, name: Low Shield Line, category: condition, base: 0.35, min: 0, max: 1, percent: true }
+  - { id: full_shield.line, name: Full Shield Line, category: condition, base: 0.95, min: 0, max: 1, percent: true }
 
   # ---- misc
   - { id: xp.gain, name: Experience Gain, category: misc, base: 0, percent: true }

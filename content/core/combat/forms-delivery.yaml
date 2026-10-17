@@ -1,0 +1,323 @@
+# Delivery forms: weaves that show what projectiles, placements and shoves can do when content composes
+# them. Every behavior here is an effect parameter or a weave attribute; see docs/design/deliveries.md.
+kind: forms
+entries:
+  - id: glaive
+    name: Glaive
+    description: A thrown blade that cuts through foes and comes back to the hand.
+    targeting: direction
+    cast_mode: cast
+    cast_time: "weapon.attack.time"
+    costs: { stamina: 10 }
+    attributes: { range: 8, projectile.speed: 13, projectile.pierce: 2, damage.effectiveness: 0.7 }
+    mechanisms: [projectile, hit, attack]
+    tags: [attack, projectile]
+    min_threads: 0
+    max_threads: 1
+    max_glyphs: 3
+    ai: { role: damage, preferred_range: 6, weight: 1 }
+    effects:
+      - type: projectile
+        radius: 0.55
+        return: caster
+        spin: 900
+        look: glaive
+        on_hit:
+          - type: damage
+            amount: "lerp(weapon.damage.min, weapon.damage.max, rand()) * weave.damage.effectiveness * attack.power"
+            threads: $threads
+
+  - id: orb
+    name: Orb
+    description: A slow sphere that grinds through foes, sheds shards as it drifts and bursts where it fades.
+    targeting: direction
+    cast_mode: cast
+    cast_time: 0.8
+    costs: { mana: 20 }
+    cooldown: 5
+    attributes: { range: 10, base_damage: 10, projectile.speed: 4.5, area.radius: 2.5 }
+    mechanisms: [projectile, spell, hit, area, cooldown]
+    tags: [spell, projectile, area]
+    ai: { role: damage, preferred_range: 7, weight: 0.7 }
+    effects:
+      - type: projectile
+        radius: 0.7
+        duration: 2.4
+        rehit: 0.6
+        tick: 0.4
+        on_hit:
+          - { type: damage, amount: "weave.base_damage * spell.power * 0.3", threads: $threads, can_crit: false }
+        on_tick:
+          - type: projectile
+            fire: ring
+            count: 3
+            ring_jitter: 60
+            speed: 15
+            range: 5
+            radius: 0.25
+            on_hit:
+              - { type: damage, amount: "weave.base_damage * spell.power * 0.35", threads: $threads }
+        on_end:
+          - type: area
+            radius: "weave.area.radius"
+            effects:
+              - { type: damage, amount: "weave.base_damage * spell.power", threads: $threads }
+
+  - id: volley
+    name: Volley
+    description: Missiles loosed side by side in a rank.
+    targeting: direction
+    cast_mode: cast
+    cast_time: 0.7
+    costs: { mana: 12 }
+    attributes: { range: 12, base_damage: 8, projectile.count: 3, projectile.speed: 17 }
+    mechanisms: [projectile, spell, hit]
+    tags: [spell, projectile]
+    ai: { role: damage, preferred_range: 9, weight: 0.8 }
+    effects:
+      - type: projectile
+        fire: volley
+        volley_spacing: 0.8
+        radius: 0.35
+        on_hit:
+          - { type: damage, amount: "weave.base_damage * spell.power", threads: $threads }
+
+  - id: wheel
+    name: Wheel
+    description: Blades that wheel around the weaver, cutting whatever comes close.
+    targeting: self
+    cast_mode: instant
+    costs: { stamina: 18 }
+    cooldown: 8
+    attributes: { range: 0, projectile.count: 3, projectile.orbit: 270, duration: 4, damage.effectiveness: 0.45 }
+    mechanisms: [projectile, hit, attack, duration, cooldown]
+    tags: [attack, projectile, mobile]
+    min_threads: 0
+    max_threads: 1
+    max_glyphs: 3
+    ai: { role: damage, preferred_range: 2, weight: 0.6, when: "nearest_enemy_distance < 3" }
+    effects:
+      - type: projectile
+        fire: ring
+        duration: "weave.duration"
+        rehit: 0.5
+        orbit_radius: 1.8
+        radius: 0.45
+        look: blade
+        on_hit:
+          - type: damage
+            amount: "lerp(weapon.damage.min, weapon.damage.max, rand()) * weave.damage.effectiveness * attack.power"
+            threads: $threads
+
+  - id: storm
+    name: Storm
+    description: Strikes rain around a chosen point, foes first, each marked a moment before it lands.
+    targeting: ground
+    cast_mode: cast
+    cast_time: 1.0
+    costs: { mana: 22 }
+    cooldown: 6
+    attributes: { range: 12, base_damage: 12, area.radius: 1.3, area.strikes: 5 }
+    mechanisms: [spell, hit, area, cooldown]
+    tags: [spell, area]
+    ai: { role: damage, preferred_range: 9, weight: 0.6 }
+    effects:
+      - type: scatter
+        radius: 4
+        interval: 0.15
+        at: enemies
+        jitter: 0.6
+        telegraph: 0.5
+        effects:
+          - type: area
+            radius: "weave.area.radius"
+            center: point
+            effects:
+              - { type: damage, amount: "weave.base_damage * spell.power", threads: $threads }
+
+  - id: ripple
+    name: Ripple
+    description: A burst at a chosen point that rolls onward in a line of bursts, each larger than the last.
+    targeting: ground
+    cast_mode: cast
+    cast_time: 0.8
+    costs: { mana: 16 }
+    cooldown: 3
+    attributes: { range: 9, base_damage: 12, area.radius: 1.6, area.cascade: 3 }
+    mechanisms: [spell, hit, area, cooldown]
+    tags: [spell, area]
+    ai: { role: damage, preferred_range: 6, weight: 0.7 }
+    effects:
+      - type: cascade
+        dir: out
+        step: 2
+        scale_step: 0.15
+        interval: 0.18
+        effects:
+          - type: area
+            radius: "weave.area.radius"
+            center: point
+            effects:
+              - { type: damage, amount: "weave.base_damage * spell.power", threads: $threads }
+
+  - id: wall
+    name: Wall
+    description: A line of lingering ground laid across the way.
+    targeting: ground
+    cast_mode: cast
+    cast_time: 0.9
+    costs: { mana: 20 }
+    cooldown: 8
+    attributes: { range: 10, base_damage: 5, area.radius: 1.1, duration: 6 }
+    mechanisms: [spell, area, duration, field, cooldown]
+    tags: [spell, area, field]
+    ai: { role: control, preferred_range: 6, weight: 0.4 }
+    effects:
+      - type: field
+        radius: "weave.area.radius"
+        duration: "weave.duration"
+        interval: 0.5
+        segments: { count: 5, spacing: 1.8, axis: across }
+        pulse:
+          - { type: damage, amount: "weave.base_damage * spell.power", threads: $threads, can_crit: false }
+
+  - id: maelstrom
+    name: Maelstrom
+    description: A whirl that drags foes toward its eye and swells as it lasts.
+    targeting: ground
+    cast_mode: cast
+    cast_time: 1.1
+    costs: { mana: 24 }
+    cooldown: 10
+    attributes: { range: 10, base_damage: 4, area.radius: 3.5, duration: 4 }
+    mechanisms: [spell, area, duration, field, cooldown]
+    tags: [spell, area, field]
+    ai: { role: control, preferred_range: 7, weight: 0.4 }
+    effects:
+      - type: field
+        radius: "weave.area.radius"
+        duration: "weave.duration"
+        interval: 0.4
+        pull: 2.5
+        radius_curve: { from: 0.6, to: 1.2, curve: quad_out }
+        pulse:
+          - { type: damage, amount: "weave.base_damage * spell.power", threads: $threads, can_crit: false }
+
+  - id: bash
+    name: Bash
+    description: A shoulder blow that throws a foe back; a foe thrown into a wall is stunned.
+    targeting: enemy
+    cast_mode: cast
+    cast_time: "weapon.attack.time"
+    costs: { stamina: 12 }
+    cooldown: 4
+    attributes: { range: 1.9, damage.effectiveness: 0.8 }
+    mechanisms: [hit, melee, attack, cooldown]
+    tags: [attack, melee]
+    min_threads: 0
+    max_threads: 1
+    max_glyphs: 3
+    ai: { role: control, preferred_range: 1.6, weight: 0.5 }
+    effects:
+      - type: damage
+        amount: "lerp(weapon.damage.min, weapon.damage.max, rand()) * weave.damage.effectiveness * attack.power"
+        threads: $threads
+        tags: [hit]
+      - type: move
+        kind: knockback
+        distance: 3
+        on_collide:
+          - { type: apply_status, status: stunned, duration: 1 }
+
+  - id: leap_slam
+    name: Leap Slam
+    description: A bound through the air that comes down hard, throwing foes back from where it lands.
+    targeting: ground
+    cast_mode: cast
+    cast_time: 0.3
+    costs: { stamina: 14 }
+    cooldown: 6
+    attributes: { range: 7, area.radius: 2.2, damage.effectiveness: 1.1 }
+    mechanisms: [movement, area, hit, attack, cooldown]
+    tags: [attack, area, movement]
+    min_threads: 0
+    max_threads: 1
+    max_glyphs: 3
+    ai: { role: movement, preferred_range: 6, weight: 0.5, when: "target_distance > 3" }
+    effects:
+      - type: move
+        kind: leap
+        distance: "weave.range"
+        air_time: 0.55
+        arc: 2.2
+        telegraph: true
+        on_land:
+          - type: area
+            radius: "weave.area.radius"
+            center: point
+            effects:
+              - type: damage
+                amount: "lerp(weapon.damage.min, weapon.damage.max, rand()) * weave.damage.effectiveness * attack.power"
+                threads: $threads
+              - { type: move, kind: knockback, distance: 2 }
+
+  - id: shadowstep
+    name: Shadowstep
+    description: A step through the dark that arrives behind a foe.
+    targeting: enemy
+    cast_mode: instant
+    costs: { stamina: 12 }
+    cooldown: 5
+    attributes: { range: 10 }
+    mechanisms: [movement, cooldown]
+    tags: [movement, mobile]
+    min_threads: 0
+    max_threads: 1
+    max_glyphs: 2
+    ai: { role: movement, preferred_range: 8, weight: 0.4, when: "target_distance > 4" }
+    effects:
+      - { type: move, kind: blink, behind: true, distance: "weave.range" }
+
+  - id: presence
+    name: Presence
+    description: A held aura that steadies allies near the weaver and wears at foes; cast again to let it go.
+    targeting: self
+    cast_mode: instant
+    costs: { mana: 10 }
+    cooldown: 1
+    attributes: { range: 0, area.radius: 5, base_damage: 4 }
+    mechanisms: [aura, spell, area]
+    tags: [spell, aura, area, mobile]
+    max_glyphs: 3
+    ai: { role: defense, preferred_range: 3, weight: 0.3, when: "nearest_enemy_distance < 5" }
+    effects:
+      - type: aura
+        radius: "weave.area.radius"
+        toggle: true
+        interval: 1
+        domain:
+          - { attribute: damage, form: increased, value: 0.15 }
+        pulse:
+          - { type: damage, amount: "weave.base_damage * spell.power", threads: $threads, can_crit: false }
+
+  - id: binding
+    name: Binding
+    description: A line of thread to a foe that burns whoever crosses it, until it is stretched to breaking.
+    targeting: enemy
+    cast_mode: cast
+    cast_time: 0.6
+    costs: { mana: 14 }
+    cooldown: 6
+    attributes: { range: 9, base_damage: 6, duration: 5 }
+    mechanisms: [spell, hit, duration, cooldown]
+    tags: [spell]
+    ai: { role: control, preferred_range: 7, weight: 0.4 }
+    effects:
+      - type: tether
+        link: target
+        width: 0.8
+        interval: 0.5
+        duration: "weave.duration"
+        max_length: 12
+        pulse:
+          - { type: damage, amount: "weave.base_damage * spell.power", threads: $threads, can_crit: false }

@@ -14,11 +14,15 @@ Dashes and teleports resolve their destination by marching the segment and stopp
 
 Movement keeps the spatial grid current, and everything that asks who is near (perception, targeting, areas, interest) reads it through radius queries. A radius query walks the grid in place without copying: a caller that adds or removes entities, or moves them between grid cells, while enumerating materializes the results first, or the enumeration throws.
 
+Dashes, leaps, blinks and shoves (knockback, pull, buffet) move bodies through the displacement system on top of walking; see [deliveries.md](deliveries.md).
+
 ## Pathfinding
 
 A* over cells with eight neighbors, no corner cutting past blocked cells, step-up and max-drop limits, cell costs by tags (roads cheap, bog dear) and a node budget: `move.path_max_nodes` for a player's click-to-move, `move.ai_path_max_nodes` for AI movers, which also try a straight walk first and keep their plans until they go stale (see the AI contract). A failed search returns the best partial path so click-to-move still makes progress, and reports whether it reached the goal, got partway or found no step.
 
 The pathfinder keeps its search state between searches and can write into the caller's path list, and ground queries resolve stacked surfaces without building anything, so planning and walking allocate nothing in steady state.
+
+The search never stands in a cell a placed thing blocks (the cells BlockedCells tracks, which walking refuses), may pass such a cell's corner on a diagonal as walking does, and counts reaching a cell beside a goal inside one as arriving.
 
 ## Rules used
 

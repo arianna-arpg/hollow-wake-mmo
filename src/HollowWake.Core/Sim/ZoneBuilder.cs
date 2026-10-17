@@ -69,6 +69,7 @@ public static class ZoneBuilder
         sim.AddService(new TriggerHub(sim));
         sim.AddService(new Minions.MinionService(sim));
         sim.AddService(new ChargeService());
+        sim.AddService(new ProcService(sim));
         sim.AddService(IntentHandlers.CreateDefault());
         sim.AddService(new PatternFactory(content));
         sim.AddService(new BlockedCells());
@@ -88,6 +89,7 @@ public static class ZoneBuilder
             MaxDrop = content.Rules.Number("move.max_drop", 3),
             MaxNodes = (int)content.Rules.Number("move.path_max_nodes", 4000),
             CellCost = cell => sim.Terrain.TagsAt(cell).Has("road") ? 0.6 : sim.Terrain.TagsAt(cell).Has("bog") ? 2.5 : 1.0,
+            Blocked = sim.Service<BlockedCells>().IsBlocked,
         });
         ProgressionWiring.Wire(sim);
 

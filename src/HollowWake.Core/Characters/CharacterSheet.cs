@@ -71,6 +71,8 @@ public sealed class CharacterSheet
     public List<string> OpenRealms { get; set; } = new();
     /// <summary>Refunds made.</summary>
     public int PassiveRefunds { get; set; }
+    /// <summary>Passive grafts bound to weave slots: the source (a node, or node:option) to the slot index.</summary>
+    public Dictionary<string, int> PassiveGrafts { get; set; } = new(StringComparer.Ordinal);
     public Dictionary<string, double> Resources { get; set; } = new(StringComparer.Ordinal);
     public double X { get; set; }
     public double Y { get; set; }
@@ -274,6 +276,12 @@ public sealed class CharacterFactory
                 }
             }
         }
+        // Grafts the passives grant go back on the seats they were bound to.
+        foreach (var (source, slot) in sheet.PassiveGrafts)
+        {
+            passives.Grafts[source] = slot;
+        }
+        Progression.PassiveGrafts.Apply(sim, e);
         // The bag's shape comes from the rules, not the save: a saved item keeps its cell while it still fits there.
         var inventory = sim.World.Add(e, InventoryService.CreateBag(sim.Content, sim.Service<ItemResolver>()));
         InventoryService.PlaceSaved(inventory, sheet.Bag);
@@ -356,6 +364,7 @@ public sealed class CharacterFactory
                 sheet.PassiveGranted = new Dictionary<string, int>(passives.Granted, StringComparer.Ordinal);
                 sheet.OpenRealms = passives.OpenRealms.ToList();
                 sheet.PassiveRefunds = passives.Refunds;
+                sheet.PassiveGrafts = new Dictionary<string, int>(passives.Grafts, StringComparer.Ordinal);
             }
             sheet.Resources = new Dictionary<string, double>(stats.Resources, StringComparer.Ordinal);
         }

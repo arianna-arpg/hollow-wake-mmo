@@ -88,6 +88,9 @@ public sealed record UnlearnFormMsg(int Slot) : Message
 /// <summary>Refunds one allocated passive node at a font within reach; a choice node refunds its picks with it.</summary>
 public sealed record RefundPassiveMsg(string Node) : Message;
 
+/// <summary>Binds a graft a passive grants (its source: a node, or node:option) to a weave slot; a slot below zero unbinds it.</summary>
+public sealed record BindGraftMsg(string Source, int Slot) : Message;
+
 /// <summary>Picks one of the open choices of the conversation's current line.</summary>
 public sealed record ChooseDialogueMsg(string Conversation, string Choice) : Message
 {
@@ -294,6 +297,14 @@ public sealed record PassiveStateMsg(List<string> Allocated, Dictionary<string, 
     public string? RefundCost { get; init; }
     /// <summary>The font in reach that allows refunds.</summary>
     public long? Font { get; init; }
+    /// <summary>The grafts the hero's passives grant, each with the weave slot it is bound to (absent while unbound).</summary>
+    public List<GraftInfo>? Grafts { get; init; }
+}
+
+/// <summary>A graft a passive grants: its source (a node, or node:option), the glyph and its level, and the slot it is bound to.</summary>
+public sealed record GraftInfo(string Source, string Glyph, string Name, int Level)
+{
+    public int? Slot { get; init; }
 }
 
 /// <summary>The pages the hero has. A page left out does not exist for the hero.</summary>

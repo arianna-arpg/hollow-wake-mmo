@@ -1,6 +1,8 @@
+using HollowWake.Core.Sim;
+
 namespace HollowWake.Core.Combat.Stages;
 
-/// <summary>A target left at or below the attacker's <c>cull.threshold</c> of its life is finished.</summary>
+/// <summary>A target left at or below the attacker's <c>cull.threshold</c> of its life is finished, and the hit is marked culled.</summary>
 internal sealed class CullStage : IHitStage
 {
     public string Name => "cull";
@@ -16,6 +18,9 @@ internal sealed class CullStage : IHitStage
         if (cull > 0 && ts.ResourceFraction("life") <= cull)
         {
             ts.SetResource("life", 0);
+            hit.Result.Culled = true;
+            var ctx = hit.Context;
+            CombatTriggers.Raise(hit.Sim, ctx.Source, CombatTriggers.Cull, ctx.Source, ctx.Target, null, ctx.Depth);
         }
         return HitFlow.Continue;
     }

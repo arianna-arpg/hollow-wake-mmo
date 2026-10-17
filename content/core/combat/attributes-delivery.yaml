@@ -1,0 +1,35 @@
+# Delivery channels: the numbers projectiles, areas, fields and shoves read from the weave that delivers
+# them. Forms set bases in their attributes; glyphs, passives and items add to them or scale them.
+# Rates of turn are degrees per second; see docs/design/deliveries.md for what each one does.
+kind: attributes
+entries:
+  # ---- projectile lifecycle
+  - { id: projectile.spread, name: Projectile Spread, category: weave, base: 1, min: 0, percent: true, description: Scales the angle a fan of projectiles spreads across. }
+  - { id: projectile.forks, name: Projectile Forks, category: weave, base: 0, min: 0, decimals: 0, description: Times a projectile splits in two where it hits instead of ending. }
+  - { id: projectile.chain, name: Projectile Chains, category: weave, base: 0, min: 0, decimals: 0, description: Times a projectile turns toward another foe where it hits instead of ending. }
+  - { id: projectile.rehit, name: Projectile Rehit, category: weave, base: 0, min: 0, decimals: 2, description: "Seconds before a projectile that never ends on hits may strike the same foe again; zero means it ends on hits as usual." }
+  - { id: projectile.bounce, name: Projectile Bounces, category: weave, base: 0, min: 0, decimals: 0, description: Times a projectile glances off the ground or a slope instead of ending. }
+
+  # ---- trajectory axes
+  - { id: projectile.homing, name: Homing, category: weave, base: 0, min: 0, decimals: 0, description: Degrees per second a projectile turns toward the foe it hunts. }
+  - { id: projectile.guide, name: Guided Flight, category: weave, base: 0, min: 0, decimals: 0, description: Degrees per second a projectile turns toward its caster's aim. }
+  - { id: projectile.erratic, name: Erratic Flight, category: weave, base: 0, min: 0, decimals: 0, description: Degrees per second a projectile's heading wanders at random. }
+  - { id: projectile.spiral, name: Spiral, category: weave, base: 0, decimals: 0, description: Degrees per second a projectile wheels around where it was launched as it flies outward. }
+  - { id: projectile.orbit, name: Orbit, category: weave, base: 0, decimals: 0, description: Degrees per second a projectile circles its caster. }
+  - { id: projectile.spin, name: Spin, category: weave, base: 0, decimals: 0, description: Degrees per second a projectile's hit shape turns as it flies. }
+  - { id: projectile.wave, name: Weaving, category: weave, base: 0, min: 0, decimals: 2, description: Times per second a projectile sways from side to side. }
+  - { id: projectile.accel, name: Projectile Acceleration, category: weave, base: 0, decimals: 1, description: Units per second a projectile gains in speed each second; negative slows it. }
+  - { id: projectile.recurve, name: Recurve, category: weave, base: 0, decimals: 0, description: "Degrees per second a projectile bends, mirrored across a fan so the fan closes in." }
+  - { id: projectile.converge, name: Convergence, category: weave, base: 0, min: 0, decimals: 0, description: Degrees per second projectiles bend toward the point they were aimed at. }
+
+  # ---- areas and placements
+  - { id: area.angle, name: Area Angle, category: weave, base: 1, min: 0.05, percent: true, description: "Scales the angle of cones, crescents, arcs and waves." }
+  - { id: area.width, name: Area Width, category: weave, base: 2, min: 0.1, decimals: 1, description: The width of lines and the default thickness of bars and blades. }
+  - { id: area.cascade, name: Cascade, category: weave, base: 0, min: 0, decimals: 0, description: More placements a cascade sets down stepping away from the first. }
+  - { id: area.scatter, name: Aftershocks, category: weave, base: 0, min: 0, decimals: 0, description: Smaller aftershocks an area sets off around itself. }
+  - { id: area.pulses, name: Area Pulses, category: weave, base: 0, min: 0, decimals: 0, description: Times an area strikes again where it struck. }
+  - { id: area.strikes, name: Storm Strikes, category: weave, base: 1, min: 0, decimals: 0, description: Strikes a storm scatters over its disc. }
+  - { id: melee.reach, name: Melee Reach, category: weave, base: 0, min: 0, decimals: 1, description: Units further melee cones and bands reach. }
+  - { id: knockback, name: Knockback, category: weave, base: 1, min: 0, percent: true, description: Scales how far knockbacks and buffets carry. }
+  - { id: phasing, name: Phasing, category: weave, base: 0, min: 0, decimals: 0, description: "Above zero, deliveries pass through walls and rising ground: flights fly on, areas and fields reach behind them." }
+  - { id: aim.spread, name: Aim Spread, category: weave, base: 1, min: 0, percent: true, description: Scales the random turn an aim gives each use. }

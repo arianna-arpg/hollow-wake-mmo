@@ -324,6 +324,12 @@ export interface StationServiceMsg {
   node?: string;
 }
 
+export interface BindGraftMsg {
+  t: "bind_graft";
+  source: string;
+  slot: number;
+}
+
 export interface WelcomeMsg {
   t: "welcome";
   server_version: string;
@@ -526,6 +532,7 @@ export interface PassiveStateMsg {
   refund: boolean;
   refund_cost?: string;
   font?: Int64;
+  grafts?: GraftInfo[];
 }
 
 export interface PageStateMsg {
@@ -803,6 +810,14 @@ export interface WeaveSeatInfo {
   active?: boolean;
 }
 
+export interface GraftInfo {
+  source: string;
+  glyph: string;
+  name: string;
+  level: number;
+  slot?: number;
+}
+
 export interface PageInfo {
   id: string;
   sealed: boolean;
@@ -988,6 +1003,7 @@ export type Message =
   | BuyBackMsg
   | BuyPageMsg
   | StationServiceMsg
+  | BindGraftMsg
   | WelcomeMsg
   | LoginResultMsg
   | CharacterListMsg
@@ -1073,6 +1089,7 @@ export const MESSAGE_TYPES: readonly MessageType[] = [
   "buy_back",
   "buy_page",
   "station_service",
+  "bind_graft",
   "welcome",
   "login_result",
   "character_list",

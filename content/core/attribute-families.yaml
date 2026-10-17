@@ -2,23 +2,119 @@
 # A pattern's placeholders range over a content kind (or a list); each member gets the family's category,
 # base and bounds, and its name and description with the placeholder replaced by the member's name.
 # Attributes declared one by one in attributes files win over family members with the same id.
-# These families are declared ahead of the mechanics that read them, so they stay hidden until then.
+# Families declared ahead of the mechanics that read them stay hidden until then, and so do detail families
+# with a member per status or per pair of Threads, which would crowd the character sheet.
 kind: attribute_families
 entries:
+  # ---- statuses
   - id: status_chance
     pattern: "status.{status}.chance"
     over: statuses
     name: "Chance to inflict {status}"
-    description: "Chance that a hit inflicts {status}, rolled on every hit for every status."
+    description: "Chance that a hit inflicts {status}, rolled on every hit for every status; scope by hit tags."
+    category: status
+    bounds: { min: 0, max: 1 }
+    percent: true
+
+  - id: minion_status_chance
+    pattern: "minion.status.{status}.chance"
+    over: statuses
+    name: "Minions' chance to inflict {status}"
+    description: "Carried onto minions as their chance to inflict {status}."
+    category: minion
+    bounds: { min: 0, max: 1 }
+    percent: true
+    hidden: true
+
+  - id: status_leech
+    pattern: "status.{status}.leech"
+    over: statuses
+    name: "{status} leech"
+    description: "The fraction of the damage {status} you applied deals that returns to you as life."
     category: status
     bounds: { min: 0, max: 1 }
     percent: true
     hidden: true
 
+  - id: status_pop
+    pattern: "status.{status}.pop"
+    over: statuses
+    name: "{status} pop power"
+    description: "Power added to {status}'s pop when you apply it over a live instance."
+    category: status
+    percent: true
+    hidden: true
+
+  # ---- damage
   - id: added_damage
     pattern: "added.{thread}"
     over: threads
     name: "Added {thread} damage"
     description: "Flat {thread} damage added to every hit, scaled by its added effectiveness."
     category: offense
+
+  - id: taken_as
+    pattern: "taken_as.{from}.{to}"
+    over: { from: threads, to: threads }
+    name: "{from} damage taken as {to}"
+    description: "The fraction of {from} damage you receive that is taken as {to} before mitigation."
+    category: defense
+    bounds: { min: 0, max: 1 }
+    percent: true
     hidden: true
+
+  # ---- reservation: contracts and toggles add flat modifiers here; the usable maximum drops by it and the
+  # interface reads it through the gauge reserved.<resource>
+  - id: reserved
+    pattern: "{resource}.reserved"
+    over: resources
+    name: "Reserved {resource}"
+    description: "{resource} held back by contracts and toggles; the usable maximum is lower by this."
+    category: resource
+    bounds: { min: 0 }
+    hidden: true
+
+  # ---- sustain
+  - id: leech
+    pattern: "leech.{resource}"
+    over: resources
+    name: "{resource} leech"
+    description: "The fraction of the damage your hits deal that returns to you as {resource}."
+    category: sustain
+    bounds: { min: 0, max: 1 }
+    percent: true
+
+  - id: on_hit
+    pattern: "on_hit.{resource}"
+    over: resources
+    name: "{resource} on hit"
+    description: "{resource} you gain each time a hit of yours lands."
+    category: sustain
+    bounds: { min: 0 }
+
+  - id: on_kill
+    pattern: "on_kill.{resource}"
+    over: resources
+    name: "{resource} on kill"
+    description: "{resource} you gain for each kill."
+    category: sustain
+    bounds: { min: 0 }
+
+  # ---- procs and charges
+  - id: proc_chance
+    pattern: "proc.{proc}"
+    over: procs
+    name: "Chance to {proc}"
+    description: "The chance {proc} fires when its trigger happens."
+    category: proc
+    bounds: { min: 0, max: 1 }
+    percent: true
+
+  - id: charge_max
+    pattern: "charge.{charge}.max"
+    over: charges
+    name: "Maximum {charge}"
+    description: "The most {charge} you can hold."
+    category: charge
+    base: 3
+    bounds: { min: 0, decimals: 0 }

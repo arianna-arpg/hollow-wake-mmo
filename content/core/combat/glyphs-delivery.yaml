@@ -1,0 +1,176 @@
+# Delivery glyphs: forks, returns, homing, wild flight, emitters, sequels, cascades, aftershocks, salvos,
+# rings, bounces and chains. Quantities are attributes; choices (a return, a firing style, a shape) are
+# patches; riders at named moments are hooks.
+kind: glyphs
+entries:
+  - id: forking
+    name: Forking
+    description: Projectiles split in two where they hit.
+    requires_mechanisms: [projectile]
+    color: "#b58cff"
+    modifiers:
+      - { attribute: projectile.forks, form: flat, value: 1 }
+      - { attribute: damage, form: more, value: -0.1 }
+    per_level:
+      - { attribute: damage, form: increased, value: 0.04 }
+
+  - id: returning
+    name: Returning
+    description: Projectiles fly back to where they were loosed, striking again on the way.
+    requires_mechanisms: ["flight:spends"]
+    color: "#d8c27a"
+    patches:
+      - { type: projectile, set: { return: origin }, mode: first }
+    modifiers:
+      - { attribute: damage, form: more, value: -0.15 }
+    per_level:
+      - { attribute: damage, form: increased, value: 0.03 }
+
+  - id: seeking
+    name: Seeking
+    description: Projectiles hunt the nearest foe.
+    requires_mechanisms: [projectile]
+    color: "#7ad8c2"
+    modifiers:
+      - { attribute: projectile.homing, form: flat, value: 240 }
+      - { attribute: projectile.speed, form: increased, value: -0.1 }
+    per_level:
+      - { attribute: projectile.homing, form: flat, value: 15 }
+
+  - id: wild
+    name: Wild
+    description: Projectiles wander as they fly, and bite harder for it.
+    requires_mechanisms: [projectile]
+    color: "#e8622a"
+    modifiers:
+      - { attribute: projectile.erratic, form: flat, value: 540 }
+      - { attribute: damage, form: more, value: 0.15 }
+
+  - id: shedding
+    name: Shedding
+    description: Projectiles cast off sparks of their thread as they fly.
+    requires_mechanisms: [projectile]
+    excludes: [melee]
+    color: "#f5e27a"
+    hooks:
+      on_tick:
+        - type: projectile
+          fire: ring
+          count: 2
+          ring_jitter: 90
+          speed: 14
+          range: 4
+          radius: 0.25
+          on_hit:
+            - { type: damage, amount: "weave.base_damage * spell.power * 0.2", threads: $threads }
+    modifiers:
+      - { attribute: cost, form: increased, value: 0.2 }
+
+  - id: parting_gift
+    name: Parting Gift
+    description: Where a projectile's flight ends, embers burst.
+    requires_mechanisms: [projectile]
+    color: "#e8622a"
+    hooks:
+      on_end:
+        - { type: cast, weave: ember_blast, at: point, damage_scale: 0.6 }
+    modifiers:
+      - { attribute: cost, form: increased, value: 0.25 }
+
+  - id: cascading
+    name: Cascading
+    description: Bursts roll onward, setting down again a step further out.
+    requires_mechanisms: [area]
+    color: "#9c8b72"
+    patches:
+      - { type: area, where: root, wrap: { type: cascade, dir: out, interval: 0.2 }, mode: first }
+    modifiers:
+      - { attribute: area.cascade, form: flat, value: 2 }
+      - { attribute: damage, form: more, value: -0.2 }
+
+  - id: aftershock
+    name: Aftershock
+    description: Areas set off smaller bursts around themselves.
+    requires_mechanisms: [area]
+    color: "#c96a3a"
+    modifiers:
+      - { attribute: area.scatter, form: flat, value: 2 }
+      - { attribute: damage, form: more, value: -0.15 }
+
+  - id: salvo
+    name: Salvo
+    description: Projectiles leave one after another, each aimed anew.
+    requires_mechanisms: [projectile]
+    excludes: [melee]
+    color: "#3aa6d8"
+    patches:
+      - { type: projectile, set: { fire: salvo }, mode: first }
+    modifiers:
+      - { attribute: projectile.count, form: flat, value: 2 }
+      - { attribute: damage, form: more, value: -0.2 }
+
+  - id: ringing
+    name: Ringing
+    description: Projectiles leave in a ring all around.
+    requires_mechanisms: [projectile]
+    color: "#b58cff"
+    patches:
+      - { type: projectile, set: { fire: ring }, mode: first }
+    modifiers:
+      - { attribute: projectile.count, form: flat, value: 5 }
+      - { attribute: damage, form: more, value: -0.35 }
+
+  - id: rebounding
+    name: Rebounding
+    description: Projectiles glance off the ground and slopes instead of breaking.
+    requires_mechanisms: [projectile]
+    color: "#9c8b72"
+    modifiers:
+      - { attribute: projectile.bounce, form: flat, value: 2 }
+
+  - id: chaining
+    name: Chaining
+    description: Projectiles turn toward another foe where they hit.
+    requires_mechanisms: [projectile]
+    color: "#d470c0"
+    modifiers:
+      - { attribute: projectile.chain, form: flat, value: 2 }
+      - { attribute: damage, form: more, value: -0.15 }
+
+  - id: sweeping
+    name: Sweeping
+    description: Cones and arcs open wider.
+    requires_mechanisms: ["shape:sector"]
+    color: "#f5e27a"
+    modifiers:
+      - { attribute: area.angle, form: increased, value: 0.4 }
+
+  - id: crescent_sigil
+    name: Crescent Sigil
+    description: Areas take the shape of a crescent, striking the far edge hard.
+    requires_mechanisms: [area]
+    color: "#d8c27a"
+    patches:
+      - { type: area, set: { shape: crescent }, mode: first }
+    modifiers:
+      - { attribute: damage, form: more, value: 0.2, scope: [vs.full_life] }
+      - { attribute: area.radius, form: increased, value: 0.25 }
+
+  - id: scattershot
+    name: Scattershot
+    description: Each cast flies off at a wild bearing, and hits harder for the gamble.
+    requires_mechanisms: [projectile]
+    color: "#e8622a"
+    patches:
+      - { type: projectile, where: root, wrap: { type: aim, spread: 40 }, mode: first }
+    modifiers:
+      - { attribute: damage, form: more, value: 0.15 }
+
+  - id: ethereal
+    name: Ethereal
+    description: Deliveries pass through walls and over rising ground.
+    requires: [spell, attack]
+    color: "#5a4a7a"
+    modifiers:
+      - { attribute: phasing, form: flat, value: 1 }
+      - { attribute: damage, form: more, value: -0.1 }

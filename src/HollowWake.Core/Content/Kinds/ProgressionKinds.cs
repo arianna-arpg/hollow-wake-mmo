@@ -26,6 +26,7 @@ internal static class ProgressionKinds
         ContentKinds.Register<PassiveChoiceDef>("passive_choices", Choices);
         ContentKinds.Register<PassiveRealmDef>("passive_realms", Realm);
         ContentKinds.AddValidator<PassiveNodeDef>(NodeChoice);
+        ContentKinds.AddValidator<PassiveNodeDef>((d, c) => GlyphGrant(d.Glyph, "glyph", c));
         ContentKinds.Register<DialogueDef>("dialogues", Dialogue);
         ContentKinds.Register<VendorDef>("vendors", Vendor);
         ScopeNames.Declare("page");
@@ -54,6 +55,20 @@ internal static class ProgressionKinds
         {
             c.Ref<CurrencyDef>(currency, "price");
             c.Expression(expr, $"price.{currency}");
+        }
+    }
+
+    /// <summary>A passive's graft names a glyph at a level of at least one.</summary>
+    private static void GlyphGrant(PassiveGlyphGrant? grant, string field, ValidationContext c)
+    {
+        if (grant is null)
+        {
+            return;
+        }
+        c.Ref<GlyphDef>(grant.Id, field);
+        if (grant.Level < 1)
+        {
+            c.Error($"'{field}' grants level {grant.Level}; a graft is level 1 or more.");
         }
     }
 
@@ -296,6 +311,7 @@ internal static class ProgressionKinds
                 c.Error($"option '{option.Id}' is declared twice.");
             }
             c.Modifiers(option.Modifiers, $"options.{option.Id}.modifiers");
+            GlyphGrant(option.Glyph, $"options.{option.Id}.glyph", c);
         }
         if (d.Options.Count == 0 && d.Generate is null)
         {

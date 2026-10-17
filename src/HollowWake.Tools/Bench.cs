@@ -50,6 +50,10 @@ public static class Bench
         {
             results.AddRange(Tick(content, opt("seed", "aureth"), int.Parse(opt("monsters", "300")), int.Parse(opt("players", "4")), int.Parse(opt("ticks", "600")), int.Parse(opt("minions", "0"))));
         }
+        if (only is "" or "deliveries")
+        {
+            results.AddRange(BenchDeliveries.Run(content));
+        }
         if (json)
         {
             Console.WriteLine(JsonSerializer.Serialize(results, new JsonSerializerOptions { WriteIndented = true }));

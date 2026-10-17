@@ -1,0 +1,88 @@
+# Glyphs of affliction: the status, sustain and charge mechanics bound into weaves. Like every glyph they are
+# gated by tags and mechanisms (the combat probes find ruptures, banks, charges and leech in a weave's graph).
+kind: glyphs
+entries:
+  - id: rending
+    name: Rending
+    description: A blow tears open what bleeds; the bleeding bursts at once instead of running its course.
+    requires: [melee]
+    excludes: [area]
+    requires_mechanisms: ["affliction:bleeding"]
+    color: "#a0282b"
+    adds_effects:
+      - { type: rupture, status: bleeding, fraction: 1 }
+
+  - id: hemorrhaging
+    name: Hemorrhaging
+    description: Any hit may open a bleeding wound.
+    requires: [attack, spell]
+    color: "#c0392b"
+    modifiers:
+      - { attribute: status.bleeding.chance, form: flat, value: 0.3 }
+    per_level:
+      - { attribute: status.bleeding.chance, form: flat, value: 0.02 }
+
+  - id: contagion
+    name: Contagion
+    description: A kill passes its afflictions to the fallen's allies.
+    requires: [attack, spell]
+    color: "#6c8a3a"
+    hooks:
+      on_kill:
+        - { type: spread_status, kind: harmful, radius: 5, strength: 0.7, max_targets: 3 }
+
+  - id: searing
+    name: Searing
+    description: Statuses the weave applies sear their bearer as they tick.
+    requires_mechanisms: [status]
+    color: "#ff8a3d"
+    hooks:
+      on_status_tick:
+        - { type: damage, amount: "1 + level * 0.3", threads: [ember], tags: [dot], can_crit: false }
+
+  - id: leeching
+    name: Leeching
+    description: Hits return a share of their damage as life.
+    requires: [attack, spell]
+    color: "#8a1f2b"
+    modifiers:
+      - { attribute: leech.life, form: flat, value: 0.06 }
+    per_level:
+      - { attribute: leech.life, form: flat, value: 0.005 }
+
+  - id: ambush
+    name: Ambush
+    description: Far more damage to a foe struck from behind.
+    requires: [attack]
+    color: "#5a4a7a"
+    modifiers:
+      - { attribute: damage, form: more, value: 0.5, scope: [vs.behind] }
+
+  - id: reaping
+    name: Reaping
+    description: Against a foe whose poise is broken, the blow adds half of its poise as damage.
+    requires: [melee]
+    excludes: [area]
+    color: "#d9b25a"
+    adds_effects:
+      - { type: condition, if: 'has("target.pool.poise.broken")', then: [ { type: damage, amount: "target.poise.max * 0.5", threads: $threads, can_crit: false } ] }
+
+  - id: furious
+    name: Furious
+    description: Blows that land bank fury.
+    requires: [melee]
+    excludes: [area]
+    requires_mechanisms: [strikes]
+    color: "#e8622a"
+    adds_effects:
+      - { type: condition, if: "last_damage > 0", then: [ { type: charge, id: fury, gain: 1 } ] }
+
+  - id: furywoven
+    name: Furywoven
+    description: The weave spends all the fury its weaver banked and binds eight ward for each charge spent.
+    requires: [buff]
+    color: "#f1c40f"
+    adds_effects:
+      - { type: charge, id: fury, all: true }
+      - { type: resource, resource: ward, amount: "charges_spent * 8" }
+
