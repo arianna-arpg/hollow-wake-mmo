@@ -360,10 +360,6 @@ public sealed partial class WeaveRuntime
             return;
         }
         var hostTags = host.Tags;
-        if (!target.IsNone && (!sim.World.IsAlive(target) || sim.World.Has<Dead>(target)))
-        {
-            target = Entity.None;
-        }
         if (!target.IsNone && sim.World.TryGet<Transform>(target, out var tt))
         {
             point = tt.Position;
@@ -382,7 +378,7 @@ public sealed partial class WeaveRuntime
             Slot = slot,
             Host = host.Root,
         };
-        CompiledEffect.ExecuteAll(weave.Effects, ctx);
+        ReleaseTargets.Execute(ctx, weave.Effects);
     }
 
     private sealed class PresetJob

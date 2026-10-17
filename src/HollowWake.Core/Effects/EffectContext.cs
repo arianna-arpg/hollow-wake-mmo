@@ -52,6 +52,10 @@ public sealed class EffectContext
 
     public Dictionary<string, double> Vars { get; init; } = new(StringComparer.Ordinal);
 
+    // A live observation can describe known pending transitions without mutating the owner to simulate
+    // them. A provider declines only geometry that depends on these changing inputs.
+    internal ForecastRestrictions? ForecastRestrictions { get; init; }
+
     /// <summary>
     /// The weave slot the cast came from, when a runtime knows it: effects that act on their host slot
     /// (restoring its uses, commanding its minions) read it. Casts by a <c>cast</c> effect keep their host's.
@@ -143,6 +147,7 @@ public sealed class EffectContext
             DamageScale = damageScale ?? DamageScale,
             From = From,
             Vars = vars ?? Vars,
+            ForecastRestrictions = ForecastRestrictions,
             Slot = Slot,
             Host = Host,
         };

@@ -60,6 +60,8 @@ internal static class CastingKinds
 
     private static void Form(FormDef d, ValidationContext c)
     {
+        if (d.ReleaseCheck is not (null or "full" or "range" or "none"))
+            c.Error("release_check must be full, range or none.");
         c.Expression(d.CastMove, "cast_move");
         Hint(d.Ai, c);
         CooldownAt(d.CooldownAt, c);

@@ -181,6 +181,7 @@ public sealed class CastState
     internal Expressions.IExprScope? Scope;
 
     private List<Modifier>? _modifiers;
+    internal List<Modifier>? LocalModifiers { get => _modifiers; set => _modifiers = value; }
 
     /// <summary>
     /// Modifiers local to this cast, such as ramps and charge-up scales, joining the weave's fold while
