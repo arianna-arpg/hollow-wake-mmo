@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Hollow Wake | The visible weave</title>
+  <link rel="stylesheet" href="study.css">
+  <script defer src="study.js"></script>
+</head>
+<body>
+<main>
+  <header><p class="eyebrow">HOLLOW WAKE / VISUAL LANGUAGE / FIRST STUDY</p><h1>The visible weave.</h1><p class="intro">A quiet world. A legible act of magic. The land remembers what you change.</p><p class="disclaimer">Art-direction proposal. Illustrative cues and timing; this is not a running game or a performance benchmark.</p></header>
+  <p class="note">01 / MATERIAL &amp; MOOD. Worn limestone, woven light, tended ground. The optional <a href="hollow-wake-concept.png">local concept sheet</a> is preserved in the author's worktree and excluded from Git because of its size. The interactive studies below are self-contained.</p>
+  <section aria-labelledby="combat-title">
+    <div class="section-heading"><div><p class="eyebrow">02 / COMBAT GRAMMAR</p><h2 id="combat-title">Read the act before the ornament.</h2></div><p>Choose a Thread. Compare every phase with colour removed and the fight crowded.</p></div>
+    <div class="workbench">
+      <div class="stage"><canvas id="combat" width="1120" height="660" role="img" aria-label="Illustrated spell cue study"></canvas><div class="phase-strip" aria-label="Spell phase"><button data-phase="0" aria-pressed="true">01 Anticipation</button><button data-phase="1" aria-pressed="false">02 Release</button><button data-phase="2" aria-pressed="false">03 Impact</button><button data-phase="3" aria-pressed="false">04 Recovery</button></div></div>
+      <aside class="controls" aria-label="Study controls">
+        <label for="thread">Thread</label><select id="thread"></select>
+        <div class="thread-note"><svg id="thread-symbol" viewBox="-26 -26 52 52" aria-hidden="true"></svg><p id="thread-note"></p></div>
+        <label for="density">Fight density</label><select id="density"><option value="solo">Quiet encounter</option><option value="crowd">Crowded encounter</option></select>
+        <label for="ground">Ground value</label><select id="ground"><option value="dark">Moss &amp; shadow</option><option value="light">Pale limestone</option></select>
+        <label class="check"><input type="checkbox" id="gray"> Grayscale proof</label>
+        <label class="check"><input type="checkbox" id="reduced"> Reduce motion</label>
+        <button id="play" class="play">Play sequence</button>
+        <p id="phase-copy" role="status" aria-live="polite"></p>
+        <p class="fine">The threat teeth and support squares keep their meaning across every Thread. Decorative wisps yield to these signs.</p>
+      </aside>
+    </div>
+    <div class="legend"><span><b class="teeth">△△△</b> inward teeth = hostile extent</span><span><b>□ · □</b> spaced squares = supportive extent</span><span><b>⌁</b> broken, open trace = spent decoration</span></div>
+    <p class="note">Solid boundary geometry is independent of the caster's body ornament. Foot placement, target contact and negative space carry the action. The small guard-shaped subject is a target proxy, not a second Calling.</p>
+  </section>
+  <section aria-labelledby="territory-title">
+    <div class="section-heading"><div><p class="eyebrow">03 / THE LAND ANSWERS</p><h2 id="territory-title">A Holding reads as care.</h2></div><p>One place, four states. Crop order, joining strands and broken ties reveal what changed.</p></div>
+    <div class="territory-wrap"><canvas id="territory" width="1120" height="460" role="img" aria-label="Fount and territory state study"></canvas><div class="phase-strip territory-controls" aria-label="Territory state"><button data-territory="0" aria-pressed="true">Unbound</button><button data-territory="1" aria-pressed="false">Vigil</button><button data-territory="2" aria-pressed="false">Bound</button><button data-territory="3" aria-pressed="false">Contested</button></div></div>
+    <p id="territory-copy" class="note" role="status" aria-live="polite"></p>
+    <p class="fine">Demonstration values are authored for this study. Binding progress, ownership, contest state, decree effects and resource availability must come from server state in a client. The contour shown here is an inspectable boundary aid, not a permanent luminous wall.</p>
+  </section>
+  <section class="principles" aria-label="Art principles"><article><p class="eyebrow">MATERIAL</p><h3>Stone holds. Cloth yields.</h3><p>Broad painted planes and worn edges establish the world. Fine etching belongs near the player, in artifacts and the interface.</p></article><article><p class="eyebrow">MAGIC</p><h3>Thread has a grain.</h3><p>Shape and cadence carry identity. Hue adds richness. Umbra settles; Void removes. Neither is a moral alignment.</p></article><article><p class="eyebrow">TRUTH</p><h3>A cue is a promise.</h3><p>Only confirmed hits bloom at contact. An interrupted cast unthreads inward. No client guesses success from a vanished bar.</p></article></section>
+  <footer><p>Original concept generated with the built-in imagegen tool. Cue diagrams authored for Hollow Wake. No external assets or web dependencies.</p><a href="../../docs/design/visual-language.md">Read the art-direction contract</a><a href="visual-recipe.example.json">Inspect the proposed recipe</a><a href="concept-prompt.txt">Concept prompt &amp; constraints</a></footer>
+</main>
+</body>
+</html>

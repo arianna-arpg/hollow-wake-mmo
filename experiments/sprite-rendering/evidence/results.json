@@ -1,0 +1,1660 @@
+{
+  "context": "Headless Edge, isolated local fixture. No hardware recommendation can be inferred.",
+  "recordedAt": "2026-10-17T21:06:27.996Z",
+  "sourceHashes": {
+    "web/src/world/terrainMesh.ts": "7d50945230dc6562a1898c3b4034d6862a3424d7406147ac8f6c302cbb1e003e",
+    "web/src/world/chunks.ts": "6d2ce35e516aba9b9ba29d8d5b86871213691299f2808a0b397b3b2088802b4e",
+    "web/src/world/palette.ts": "7d2bfe6b7f6f20ae9b0db882da3e4fe72394007e3aa08d3c4da55b7b4b916479",
+    "web/src/world/coords.ts": "236c5687cd3d518f73f67a5a132713d7e3ec5b4b98aef0ff2cb087260651e69d",
+    "web/src/view/camera.ts": "be9e0fd4bc087b074a90f5b560b4d1a9ab87b15155386ade99ef4ce896d35711",
+    "web/public/config.json": "099d85050006eb78bbc8f583d2b764cb45240be69a7f55e83541327384443ac2",
+    "web/package-lock.json": "851e44aff62b43a7825f7c57da3aa5d62d7c81527bfef35b31407f86e24d1372",
+    "experiments/sprite-rendering/study.mjs": "4bfb4399069dbc359f7a01a70867e6b01eeedcc78c3e68ca8f0c390712f681be",
+    "experiments/sprite-rendering/actors.mjs": "3a634185b61d776d88d536913d762d9bfb3119f0a5a97c033ae472c64f6e0765",
+    "experiments/sprite-rendering/fixture.mjs": "74d36c120354abb59ab0b0cbc7d666402484840f114e7af71c9a70fae286c9e8",
+    "experiments/sprite-rendering/study-config.json": "f2922d7b4b397b1ed1e92b9b60ba2139fc7f2a09f4a8e37f212793a5c8a6639b",
+    "experiments/sprite-rendering/serve.mjs": "4131e7353f460ea91ca4f208ea359b7c0f49c752eba02eb3d855b181d870b96b",
+    "experiments/sprite-rendering/validate.mjs": "2ccb44d85f6052beb1d7e05c01fffd179526945f6871ee8337a8f37efb1b7269",
+    "experiments/sprite-rendering/index.html": "9e2a91cbd7c42a3573fc509ee83acfb1c23227acb0dfb960fe0d480f386f1a19",
+    "experiments/sprite-rendering/study.css": "ef21ca19cb136f2a018c6f9c1288b372031a3389682a9fa0766ce618f38204b9"
+  },
+  "checks": [
+    {
+      "name": "Existing terrain mesher includes elevated deck",
+      "pass": true,
+      "detail": 42
+    },
+    {
+      "name": "Fixture draws actors at both elevations",
+      "pass": true,
+      "detail": [
+        {
+          "x": -3,
+          "y": -4,
+          "z": 0,
+          "yaw": 0.6
+        },
+        {
+          "x": 4.628090416443431,
+          "y": -0.17124699226419693,
+          "z": 3.2,
+          "yaw": 0
+        },
+        {
+          "x": 4.869823035869998,
+          "y": -3.66,
+          "z": 0,
+          "yaw": 3.4
+        },
+        {
+          "x": 6.208710243547008,
+          "y": 3.509999999999998,
+          "z": 0,
+          "yaw": 5.1
+        },
+        {
+          "x": 6.450955518147519,
+          "y": -1.3200000000000003,
+          "z": 0,
+          "yaw": 6.8
+        },
+        {
+          "x": 5.5537711765947435,
+          "y": 5.850000000000001,
+          "z": 0,
+          "yaw": 8.5
+        },
+        {
+          "x": 3.6756265196051756,
+          "y": 1.019999999999996,
+          "z": 0,
+          "yaw": 10.2
+        },
+        {
+          "x": 3.61342629295334,
+          "y": 0.20027213135269428,
+          "z": 3.2,
+          "yaw": 0
+        }
+      ]
+    },
+    {
+      "name": "Atlas is eight directions, four frames, three pitches",
+      "pass": true,
+      "detail": {
+        "width": 1024,
+        "height": 1536
+      }
+    },
+    {
+      "name": "Split mode submits actual geometry",
+      "pass": true,
+      "detail": {
+        "cpuMs": 0.5999999940395355,
+        "intervalMs": 4.199999999999932,
+        "calls": 137,
+        "triangles": 39456,
+        "actorStats": {
+          "pitchIndex": 1,
+          "sampledPitch": 35.264,
+          "spriteTriangles": 96,
+          "meshTriangles": 27456
+        },
+        "count": 48
+      }
+    },
+    {
+      "name": "Extreme pitch uses nearest documented bake",
+      "pass": true,
+      "detail": {
+        "pitchIndex": 2,
+        "sampledPitch": 65,
+        "spriteTriangles": 96,
+        "meshTriangles": 24768
+      }
+    },
+    {
+      "name": "No rendering errors after visual controls",
+      "pass": true,
+      "detail": []
+    },
+    {
+      "name": "sprite 48 repetition 0 sampled visible frames",
+      "pass": true,
+      "detail": 478
+    },
+    {
+      "name": "mesh 48 repetition 0 sampled visible frames",
+      "pass": true,
+      "detail": 481
+    },
+    {
+      "name": "mesh 48 repetition 1 sampled visible frames",
+      "pass": true,
+      "detail": 464
+    },
+    {
+      "name": "sprite 48 repetition 1 sampled visible frames",
+      "pass": true,
+      "detail": 481
+    },
+    {
+      "name": "sprite 48 repetition 2 sampled visible frames",
+      "pass": true,
+      "detail": 403
+    },
+    {
+      "name": "mesh 48 repetition 2 sampled visible frames",
+      "pass": true,
+      "detail": 463
+    },
+    {
+      "name": "sprite 256 repetition 0 sampled visible frames",
+      "pass": true,
+      "detail": 479
+    },
+    {
+      "name": "mesh 256 repetition 0 sampled visible frames",
+      "pass": true,
+      "detail": 446
+    },
+    {
+      "name": "mesh 256 repetition 1 sampled visible frames",
+      "pass": true,
+      "detail": 398
+    },
+    {
+      "name": "sprite 256 repetition 1 sampled visible frames",
+      "pass": true,
+      "detail": 393
+    },
+    {
+      "name": "sprite 256 repetition 2 sampled visible frames",
+      "pass": true,
+      "detail": 402
+    },
+    {
+      "name": "mesh 256 repetition 2 sampled visible frames",
+      "pass": true,
+      "detail": 406
+    },
+    {
+      "name": "sprite 512 repetition 0 sampled visible frames",
+      "pass": true,
+      "detail": 362
+    },
+    {
+      "name": "mesh 512 repetition 0 sampled visible frames",
+      "pass": true,
+      "detail": 393
+    },
+    {
+      "name": "mesh 512 repetition 1 sampled visible frames",
+      "pass": true,
+      "detail": 384
+    },
+    {
+      "name": "sprite 512 repetition 1 sampled visible frames",
+      "pass": true,
+      "detail": 421
+    },
+    {
+      "name": "sprite 512 repetition 2 sampled visible frames",
+      "pass": true,
+      "detail": 395
+    },
+    {
+      "name": "mesh 512 repetition 2 sampled visible frames",
+      "pass": true,
+      "detail": 349
+    },
+    {
+      "name": "No browser or shader errors",
+      "pass": true,
+      "detail": []
+    }
+  ],
+  "errors": [],
+  "results": [
+    {
+      "repetition": 0,
+      "recordedAt": "2026-10-17T21:05:36.142Z",
+      "environment": {
+        "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/155.0.0.0 Safari/537.36 Edg/155.0.0.0",
+        "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3090 (0x00002204) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "vendor": "Google Inc. (NVIDIA)",
+        "threeRevision": "186",
+        "maxTextureSize": 16384,
+        "gpuTimerAvailable": true
+      },
+      "state": {
+        "mode": "sprite",
+        "camera": "isometric",
+        "quality": "balanced",
+        "count": 48,
+        "gear": "staff",
+        "paused": false
+      },
+      "viewport": {
+        "width": 1354,
+        "height": 858,
+        "devicePixelRatio": 1,
+        "renderPixelRatio": 1,
+        "drawingWidth": 1354,
+        "drawingHeight": 858
+      },
+      "warmupMs": 1000,
+      "requestedDurationMs": 2000,
+      "samples": 478,
+      "hiddenDuringRun": false,
+      "observed": {
+        "rafIntervalMs": {
+          "median": 4.199999999999818,
+          "p95": 4.300000000000182,
+          "max": 12.5
+        },
+        "cpuUpdateAndSubmissionMs": {
+          "median": 0.4000000059604645,
+          "p95": 0.5999999940395355,
+          "max": 0.7999999821186066
+        },
+        "drawCalls": {
+          "median": 70,
+          "p95": 70,
+          "max": 70
+        },
+        "submittedTriangles": {
+          "median": 6156,
+          "p95": 6156,
+          "max": 6156
+        },
+        "resourceCounts": {
+          "geometries": 79,
+          "textures": 2
+        },
+        "bakeMs": 167.89999997615814
+      },
+      "estimates": {
+        "atlasBaseBytesPerOutfit": 6291456,
+        "atlasMipBytesPerOutfit": 8388608,
+        "outfitAtlases": 2
+      },
+      "unmeasured": [
+        "GPU elapsed time",
+        "GPU bytes resident",
+        "power",
+        "network and gameplay",
+        "Godot parity",
+        "minimum hardware",
+        "production artwork and skinning"
+      ],
+      "notes": [
+        "Split view draws the world twice; compare single modes for timing.",
+        "RAF includes browser scheduling and display pacing, not pure GPU work.",
+        "CPU timing includes state sampling, camera, uploads, and render submission; GPU is asynchronous.",
+        "Both alternatives are instanced. Mesh uses four static animation-pose buckets; no skeleton or skinning.",
+        "The full atlas remains allocated when Low selects four directions."
+      ]
+    },
+    {
+      "repetition": 0,
+      "recordedAt": "2026-10-17T21:05:39.184Z",
+      "environment": {
+        "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/155.0.0.0 Safari/537.36 Edg/155.0.0.0",
+        "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3090 (0x00002204) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "vendor": "Google Inc. (NVIDIA)",
+        "threeRevision": "186",
+        "maxTextureSize": 16384,
+        "gpuTimerAvailable": true
+      },
+      "state": {
+        "mode": "mesh",
+        "camera": "isometric",
+        "quality": "balanced",
+        "count": 48,
+        "gear": "staff",
+        "paused": false
+      },
+      "viewport": {
+        "width": 1354,
+        "height": 858,
+        "devicePixelRatio": 1,
+        "renderPixelRatio": 1,
+        "drawingWidth": 1354,
+        "drawingHeight": 858
+      },
+      "warmupMs": 1000,
+      "requestedDurationMs": 2000,
+      "samples": 481,
+      "hiddenDuringRun": false,
+      "observed": {
+        "rafIntervalMs": {
+          "median": 4.199999999999818,
+          "p95": 4.300000000000182,
+          "max": 5.600000000000364
+        },
+        "cpuUpdateAndSubmissionMs": {
+          "median": 0.5,
+          "p95": 0.699999988079071,
+          "max": 0.9000000059604645
+        },
+        "drawCalls": {
+          "median": 73,
+          "p95": 73,
+          "max": 73
+        },
+        "submittedTriangles": {
+          "median": 33516,
+          "p95": 33516,
+          "max": 33516
+        },
+        "resourceCounts": {
+          "geometries": 79,
+          "textures": 2
+        },
+        "bakeMs": 167.89999997615814
+      },
+      "estimates": {
+        "atlasBaseBytesPerOutfit": 6291456,
+        "atlasMipBytesPerOutfit": 8388608,
+        "outfitAtlases": 2
+      },
+      "unmeasured": [
+        "GPU elapsed time",
+        "GPU bytes resident",
+        "power",
+        "network and gameplay",
+        "Godot parity",
+        "minimum hardware",
+        "production artwork and skinning"
+      ],
+      "notes": [
+        "Split view draws the world twice; compare single modes for timing.",
+        "RAF includes browser scheduling and display pacing, not pure GPU work.",
+        "CPU timing includes state sampling, camera, uploads, and render submission; GPU is asynchronous.",
+        "Both alternatives are instanced. Mesh uses four static animation-pose buckets; no skeleton or skinning.",
+        "The full atlas remains allocated when Low selects four directions."
+      ]
+    },
+    {
+      "repetition": 1,
+      "recordedAt": "2026-10-17T21:05:42.222Z",
+      "environment": {
+        "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/155.0.0.0 Safari/537.36 Edg/155.0.0.0",
+        "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3090 (0x00002204) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "vendor": "Google Inc. (NVIDIA)",
+        "threeRevision": "186",
+        "maxTextureSize": 16384,
+        "gpuTimerAvailable": true
+      },
+      "state": {
+        "mode": "mesh",
+        "camera": "isometric",
+        "quality": "balanced",
+        "count": 48,
+        "gear": "staff",
+        "paused": false
+      },
+      "viewport": {
+        "width": 1354,
+        "height": 858,
+        "devicePixelRatio": 1,
+        "renderPixelRatio": 1,
+        "drawingWidth": 1354,
+        "drawingHeight": 858
+      },
+      "warmupMs": 1000,
+      "requestedDurationMs": 2000,
+      "samples": 464,
+      "hiddenDuringRun": false,
+      "observed": {
+        "rafIntervalMs": {
+          "median": 4.199999999998909,
+          "p95": 4.299999999999272,
+          "max": 16.700000000000728
+        },
+        "cpuUpdateAndSubmissionMs": {
+          "median": 0.5,
+          "p95": 0.7000000178813934,
+          "max": 0.9000000059604645
+        },
+        "drawCalls": {
+          "median": 73,
+          "p95": 73,
+          "max": 73
+        },
+        "submittedTriangles": {
+          "median": 33516,
+          "p95": 33516,
+          "max": 33516
+        },
+        "resourceCounts": {
+          "geometries": 79,
+          "textures": 2
+        },
+        "bakeMs": 167.89999997615814
+      },
+      "estimates": {
+        "atlasBaseBytesPerOutfit": 6291456,
+        "atlasMipBytesPerOutfit": 8388608,
+        "outfitAtlases": 2
+      },
+      "unmeasured": [
+        "GPU elapsed time",
+        "GPU bytes resident",
+        "power",
+        "network and gameplay",
+        "Godot parity",
+        "minimum hardware",
+        "production artwork and skinning"
+      ],
+      "notes": [
+        "Split view draws the world twice; compare single modes for timing.",
+        "RAF includes browser scheduling and display pacing, not pure GPU work.",
+        "CPU timing includes state sampling, camera, uploads, and render submission; GPU is asynchronous.",
+        "Both alternatives are instanced. Mesh uses four static animation-pose buckets; no skeleton or skinning.",
+        "The full atlas remains allocated when Low selects four directions."
+      ]
+    },
+    {
+      "repetition": 1,
+      "recordedAt": "2026-10-17T21:05:45.260Z",
+      "environment": {
+        "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/155.0.0.0 Safari/537.36 Edg/155.0.0.0",
+        "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3090 (0x00002204) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "vendor": "Google Inc. (NVIDIA)",
+        "threeRevision": "186",
+        "maxTextureSize": 16384,
+        "gpuTimerAvailable": true
+      },
+      "state": {
+        "mode": "sprite",
+        "camera": "isometric",
+        "quality": "balanced",
+        "count": 48,
+        "gear": "staff",
+        "paused": false
+      },
+      "viewport": {
+        "width": 1354,
+        "height": 858,
+        "devicePixelRatio": 1,
+        "renderPixelRatio": 1,
+        "drawingWidth": 1354,
+        "drawingHeight": 858
+      },
+      "warmupMs": 1000,
+      "requestedDurationMs": 2000,
+      "samples": 481,
+      "hiddenDuringRun": false,
+      "observed": {
+        "rafIntervalMs": {
+          "median": 4.199999999998909,
+          "p95": 4.299999999999272,
+          "max": 5.600000000000364
+        },
+        "cpuUpdateAndSubmissionMs": {
+          "median": 0.5,
+          "p95": 0.699999988079071,
+          "max": 1.0999999940395355
+        },
+        "drawCalls": {
+          "median": 70,
+          "p95": 70,
+          "max": 70
+        },
+        "submittedTriangles": {
+          "median": 6156,
+          "p95": 6156,
+          "max": 6156
+        },
+        "resourceCounts": {
+          "geometries": 79,
+          "textures": 2
+        },
+        "bakeMs": 167.89999997615814
+      },
+      "estimates": {
+        "atlasBaseBytesPerOutfit": 6291456,
+        "atlasMipBytesPerOutfit": 8388608,
+        "outfitAtlases": 2
+      },
+      "unmeasured": [
+        "GPU elapsed time",
+        "GPU bytes resident",
+        "power",
+        "network and gameplay",
+        "Godot parity",
+        "minimum hardware",
+        "production artwork and skinning"
+      ],
+      "notes": [
+        "Split view draws the world twice; compare single modes for timing.",
+        "RAF includes browser scheduling and display pacing, not pure GPU work.",
+        "CPU timing includes state sampling, camera, uploads, and render submission; GPU is asynchronous.",
+        "Both alternatives are instanced. Mesh uses four static animation-pose buckets; no skeleton or skinning.",
+        "The full atlas remains allocated when Low selects four directions."
+      ]
+    },
+    {
+      "repetition": 2,
+      "recordedAt": "2026-10-17T21:05:48.300Z",
+      "environment": {
+        "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/155.0.0.0 Safari/537.36 Edg/155.0.0.0",
+        "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3090 (0x00002204) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "vendor": "Google Inc. (NVIDIA)",
+        "threeRevision": "186",
+        "maxTextureSize": 16384,
+        "gpuTimerAvailable": true
+      },
+      "state": {
+        "mode": "sprite",
+        "camera": "isometric",
+        "quality": "balanced",
+        "count": 48,
+        "gear": "staff",
+        "paused": false
+      },
+      "viewport": {
+        "width": 1354,
+        "height": 858,
+        "devicePixelRatio": 1,
+        "renderPixelRatio": 1,
+        "drawingWidth": 1354,
+        "drawingHeight": 858
+      },
+      "warmupMs": 1000,
+      "requestedDurationMs": 2000,
+      "samples": 403,
+      "hiddenDuringRun": false,
+      "observed": {
+        "rafIntervalMs": {
+          "median": 4.199999999998909,
+          "p95": 12.399999999999636,
+          "max": 29.100000000000364
+        },
+        "cpuUpdateAndSubmissionMs": {
+          "median": 0.4000000059604645,
+          "p95": 0.5999999940395355,
+          "max": 2
+        },
+        "drawCalls": {
+          "median": 70,
+          "p95": 70,
+          "max": 70
+        },
+        "submittedTriangles": {
+          "median": 6156,
+          "p95": 6156,
+          "max": 6156
+        },
+        "resourceCounts": {
+          "geometries": 79,
+          "textures": 2
+        },
+        "bakeMs": 167.89999997615814
+      },
+      "estimates": {
+        "atlasBaseBytesPerOutfit": 6291456,
+        "atlasMipBytesPerOutfit": 8388608,
+        "outfitAtlases": 2
+      },
+      "unmeasured": [
+        "GPU elapsed time",
+        "GPU bytes resident",
+        "power",
+        "network and gameplay",
+        "Godot parity",
+        "minimum hardware",
+        "production artwork and skinning"
+      ],
+      "notes": [
+        "Split view draws the world twice; compare single modes for timing.",
+        "RAF includes browser scheduling and display pacing, not pure GPU work.",
+        "CPU timing includes state sampling, camera, uploads, and render submission; GPU is asynchronous.",
+        "Both alternatives are instanced. Mesh uses four static animation-pose buckets; no skeleton or skinning.",
+        "The full atlas remains allocated when Low selects four directions."
+      ]
+    },
+    {
+      "repetition": 2,
+      "recordedAt": "2026-10-17T21:05:51.357Z",
+      "environment": {
+        "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/155.0.0.0 Safari/537.36 Edg/155.0.0.0",
+        "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3090 (0x00002204) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "vendor": "Google Inc. (NVIDIA)",
+        "threeRevision": "186",
+        "maxTextureSize": 16384,
+        "gpuTimerAvailable": true
+      },
+      "state": {
+        "mode": "mesh",
+        "camera": "isometric",
+        "quality": "balanced",
+        "count": 48,
+        "gear": "staff",
+        "paused": false
+      },
+      "viewport": {
+        "width": 1354,
+        "height": 858,
+        "devicePixelRatio": 1,
+        "renderPixelRatio": 1,
+        "drawingWidth": 1354,
+        "drawingHeight": 858
+      },
+      "warmupMs": 1000,
+      "requestedDurationMs": 2000,
+      "samples": 463,
+      "hiddenDuringRun": false,
+      "observed": {
+        "rafIntervalMs": {
+          "median": 4.200000000000728,
+          "p95": 4.299999999999272,
+          "max": 29.200000000000728
+        },
+        "cpuUpdateAndSubmissionMs": {
+          "median": 0.5,
+          "p95": 0.800000011920929,
+          "max": 1.5
+        },
+        "drawCalls": {
+          "median": 73,
+          "p95": 73,
+          "max": 73
+        },
+        "submittedTriangles": {
+          "median": 33516,
+          "p95": 33516,
+          "max": 33516
+        },
+        "resourceCounts": {
+          "geometries": 79,
+          "textures": 2
+        },
+        "bakeMs": 167.89999997615814
+      },
+      "estimates": {
+        "atlasBaseBytesPerOutfit": 6291456,
+        "atlasMipBytesPerOutfit": 8388608,
+        "outfitAtlases": 2
+      },
+      "unmeasured": [
+        "GPU elapsed time",
+        "GPU bytes resident",
+        "power",
+        "network and gameplay",
+        "Godot parity",
+        "minimum hardware",
+        "production artwork and skinning"
+      ],
+      "notes": [
+        "Split view draws the world twice; compare single modes for timing.",
+        "RAF includes browser scheduling and display pacing, not pure GPU work.",
+        "CPU timing includes state sampling, camera, uploads, and render submission; GPU is asynchronous.",
+        "Both alternatives are instanced. Mesh uses four static animation-pose buckets; no skeleton or skinning.",
+        "The full atlas remains allocated when Low selects four directions."
+      ]
+    },
+    {
+      "repetition": 0,
+      "recordedAt": "2026-10-17T21:05:54.416Z",
+      "environment": {
+        "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/155.0.0.0 Safari/537.36 Edg/155.0.0.0",
+        "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3090 (0x00002204) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "vendor": "Google Inc. (NVIDIA)",
+        "threeRevision": "186",
+        "maxTextureSize": 16384,
+        "gpuTimerAvailable": true
+      },
+      "state": {
+        "mode": "sprite",
+        "camera": "isometric",
+        "quality": "balanced",
+        "count": 256,
+        "gear": "staff",
+        "paused": false
+      },
+      "viewport": {
+        "width": 1354,
+        "height": 858,
+        "devicePixelRatio": 1,
+        "renderPixelRatio": 1,
+        "drawingWidth": 1354,
+        "drawingHeight": 858
+      },
+      "warmupMs": 1000,
+      "requestedDurationMs": 2000,
+      "samples": 479,
+      "hiddenDuringRun": false,
+      "observed": {
+        "rafIntervalMs": {
+          "median": 4.200000000000728,
+          "p95": 4.299999999999272,
+          "max": 8.200000000000728
+        },
+        "cpuUpdateAndSubmissionMs": {
+          "median": 0.5999999940395355,
+          "p95": 0.9000000059604645,
+          "max": 1.2000000178813934
+        },
+        "drawCalls": {
+          "median": 70,
+          "p95": 70,
+          "max": 70
+        },
+        "submittedTriangles": {
+          "median": 9068,
+          "p95": 9068,
+          "max": 9068
+        },
+        "resourceCounts": {
+          "geometries": 79,
+          "textures": 2
+        },
+        "bakeMs": 167.89999997615814
+      },
+      "estimates": {
+        "atlasBaseBytesPerOutfit": 6291456,
+        "atlasMipBytesPerOutfit": 8388608,
+        "outfitAtlases": 2
+      },
+      "unmeasured": [
+        "GPU elapsed time",
+        "GPU bytes resident",
+        "power",
+        "network and gameplay",
+        "Godot parity",
+        "minimum hardware",
+        "production artwork and skinning"
+      ],
+      "notes": [
+        "Split view draws the world twice; compare single modes for timing.",
+        "RAF includes browser scheduling and display pacing, not pure GPU work.",
+        "CPU timing includes state sampling, camera, uploads, and render submission; GPU is asynchronous.",
+        "Both alternatives are instanced. Mesh uses four static animation-pose buckets; no skeleton or skinning.",
+        "The full atlas remains allocated when Low selects four directions."
+      ]
+    },
+    {
+      "repetition": 0,
+      "recordedAt": "2026-10-17T21:05:57.453Z",
+      "environment": {
+        "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/155.0.0.0 Safari/537.36 Edg/155.0.0.0",
+        "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3090 (0x00002204) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "vendor": "Google Inc. (NVIDIA)",
+        "threeRevision": "186",
+        "maxTextureSize": 16384,
+        "gpuTimerAvailable": true
+      },
+      "state": {
+        "mode": "mesh",
+        "camera": "isometric",
+        "quality": "balanced",
+        "count": 256,
+        "gear": "staff",
+        "paused": false
+      },
+      "viewport": {
+        "width": 1354,
+        "height": 858,
+        "devicePixelRatio": 1,
+        "renderPixelRatio": 1,
+        "drawingWidth": 1354,
+        "drawingHeight": 858
+      },
+      "warmupMs": 1000,
+      "requestedDurationMs": 2000,
+      "samples": 446,
+      "hiddenDuringRun": false,
+      "observed": {
+        "rafIntervalMs": {
+          "median": 4.200000000000728,
+          "p95": 4.700000000000728,
+          "max": 20.899999999997817
+        },
+        "cpuUpdateAndSubmissionMs": {
+          "median": 0.5,
+          "p95": 0.800000011920929,
+          "max": 1.0999999940395355
+        },
+        "drawCalls": {
+          "median": 73,
+          "p95": 73,
+          "max": 73
+        },
+        "submittedTriangles": {
+          "median": 154988,
+          "p95": 154988,
+          "max": 154988
+        },
+        "resourceCounts": {
+          "geometries": 79,
+          "textures": 2
+        },
+        "bakeMs": 167.89999997615814
+      },
+      "estimates": {
+        "atlasBaseBytesPerOutfit": 6291456,
+        "atlasMipBytesPerOutfit": 8388608,
+        "outfitAtlases": 2
+      },
+      "unmeasured": [
+        "GPU elapsed time",
+        "GPU bytes resident",
+        "power",
+        "network and gameplay",
+        "Godot parity",
+        "minimum hardware",
+        "production artwork and skinning"
+      ],
+      "notes": [
+        "Split view draws the world twice; compare single modes for timing.",
+        "RAF includes browser scheduling and display pacing, not pure GPU work.",
+        "CPU timing includes state sampling, camera, uploads, and render submission; GPU is asynchronous.",
+        "Both alternatives are instanced. Mesh uses four static animation-pose buckets; no skeleton or skinning.",
+        "The full atlas remains allocated when Low selects four directions."
+      ]
+    },
+    {
+      "repetition": 1,
+      "recordedAt": "2026-10-17T21:06:00.496Z",
+      "environment": {
+        "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/155.0.0.0 Safari/537.36 Edg/155.0.0.0",
+        "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3090 (0x00002204) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "vendor": "Google Inc. (NVIDIA)",
+        "threeRevision": "186",
+        "maxTextureSize": 16384,
+        "gpuTimerAvailable": true
+      },
+      "state": {
+        "mode": "mesh",
+        "camera": "isometric",
+        "quality": "balanced",
+        "count": 256,
+        "gear": "staff",
+        "paused": false
+      },
+      "viewport": {
+        "width": 1354,
+        "height": 858,
+        "devicePixelRatio": 1,
+        "renderPixelRatio": 1,
+        "drawingWidth": 1354,
+        "drawingHeight": 858
+      },
+      "warmupMs": 1000,
+      "requestedDurationMs": 2000,
+      "samples": 398,
+      "hiddenDuringRun": false,
+      "observed": {
+        "rafIntervalMs": {
+          "median": 4.200000000000728,
+          "p95": 8.400000000001455,
+          "max": 16.80000000000291
+        },
+        "cpuUpdateAndSubmissionMs": {
+          "median": 0.5,
+          "p95": 0.7000000178813934,
+          "max": 0.9000000059604645
+        },
+        "drawCalls": {
+          "median": 73,
+          "p95": 73,
+          "max": 73
+        },
+        "submittedTriangles": {
+          "median": 154988,
+          "p95": 154988,
+          "max": 154988
+        },
+        "resourceCounts": {
+          "geometries": 79,
+          "textures": 2
+        },
+        "bakeMs": 167.89999997615814
+      },
+      "estimates": {
+        "atlasBaseBytesPerOutfit": 6291456,
+        "atlasMipBytesPerOutfit": 8388608,
+        "outfitAtlases": 2
+      },
+      "unmeasured": [
+        "GPU elapsed time",
+        "GPU bytes resident",
+        "power",
+        "network and gameplay",
+        "Godot parity",
+        "minimum hardware",
+        "production artwork and skinning"
+      ],
+      "notes": [
+        "Split view draws the world twice; compare single modes for timing.",
+        "RAF includes browser scheduling and display pacing, not pure GPU work.",
+        "CPU timing includes state sampling, camera, uploads, and render submission; GPU is asynchronous.",
+        "Both alternatives are instanced. Mesh uses four static animation-pose buckets; no skeleton or skinning.",
+        "The full atlas remains allocated when Low selects four directions."
+      ]
+    },
+    {
+      "repetition": 1,
+      "recordedAt": "2026-10-17T21:06:03.544Z",
+      "environment": {
+        "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/155.0.0.0 Safari/537.36 Edg/155.0.0.0",
+        "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3090 (0x00002204) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "vendor": "Google Inc. (NVIDIA)",
+        "threeRevision": "186",
+        "maxTextureSize": 16384,
+        "gpuTimerAvailable": true
+      },
+      "state": {
+        "mode": "sprite",
+        "camera": "isometric",
+        "quality": "balanced",
+        "count": 256,
+        "gear": "staff",
+        "paused": false
+      },
+      "viewport": {
+        "width": 1354,
+        "height": 858,
+        "devicePixelRatio": 1,
+        "renderPixelRatio": 1,
+        "drawingWidth": 1354,
+        "drawingHeight": 858
+      },
+      "warmupMs": 1000,
+      "requestedDurationMs": 2000,
+      "samples": 393,
+      "hiddenDuringRun": false,
+      "observed": {
+        "rafIntervalMs": {
+          "median": 4.200000000000728,
+          "p95": 12.5,
+          "max": 29.200000000000728
+        },
+        "cpuUpdateAndSubmissionMs": {
+          "median": 0.5,
+          "p95": 0.699999988079071,
+          "max": 1
+        },
+        "drawCalls": {
+          "median": 70,
+          "p95": 70,
+          "max": 70
+        },
+        "submittedTriangles": {
+          "median": 9068,
+          "p95": 9068,
+          "max": 9068
+        },
+        "resourceCounts": {
+          "geometries": 79,
+          "textures": 2
+        },
+        "bakeMs": 167.89999997615814
+      },
+      "estimates": {
+        "atlasBaseBytesPerOutfit": 6291456,
+        "atlasMipBytesPerOutfit": 8388608,
+        "outfitAtlases": 2
+      },
+      "unmeasured": [
+        "GPU elapsed time",
+        "GPU bytes resident",
+        "power",
+        "network and gameplay",
+        "Godot parity",
+        "minimum hardware",
+        "production artwork and skinning"
+      ],
+      "notes": [
+        "Split view draws the world twice; compare single modes for timing.",
+        "RAF includes browser scheduling and display pacing, not pure GPU work.",
+        "CPU timing includes state sampling, camera, uploads, and render submission; GPU is asynchronous.",
+        "Both alternatives are instanced. Mesh uses four static animation-pose buckets; no skeleton or skinning.",
+        "The full atlas remains allocated when Low selects four directions."
+      ]
+    },
+    {
+      "repetition": 2,
+      "recordedAt": "2026-10-17T21:06:06.587Z",
+      "environment": {
+        "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/155.0.0.0 Safari/537.36 Edg/155.0.0.0",
+        "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3090 (0x00002204) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "vendor": "Google Inc. (NVIDIA)",
+        "threeRevision": "186",
+        "maxTextureSize": 16384,
+        "gpuTimerAvailable": true
+      },
+      "state": {
+        "mode": "sprite",
+        "camera": "isometric",
+        "quality": "balanced",
+        "count": 256,
+        "gear": "staff",
+        "paused": false
+      },
+      "viewport": {
+        "width": 1354,
+        "height": 858,
+        "devicePixelRatio": 1,
+        "renderPixelRatio": 1,
+        "drawingWidth": 1354,
+        "drawingHeight": 858
+      },
+      "warmupMs": 1000,
+      "requestedDurationMs": 2000,
+      "samples": 402,
+      "hiddenDuringRun": false,
+      "observed": {
+        "rafIntervalMs": {
+          "median": 4.19999999999709,
+          "p95": 8.400000000001455,
+          "max": 27.5
+        },
+        "cpuUpdateAndSubmissionMs": {
+          "median": 0.5,
+          "p95": 0.7999999821186066,
+          "max": 1.0999999940395355
+        },
+        "drawCalls": {
+          "median": 70,
+          "p95": 70,
+          "max": 70
+        },
+        "submittedTriangles": {
+          "median": 9068,
+          "p95": 9068,
+          "max": 9068
+        },
+        "resourceCounts": {
+          "geometries": 79,
+          "textures": 2
+        },
+        "bakeMs": 167.89999997615814
+      },
+      "estimates": {
+        "atlasBaseBytesPerOutfit": 6291456,
+        "atlasMipBytesPerOutfit": 8388608,
+        "outfitAtlases": 2
+      },
+      "unmeasured": [
+        "GPU elapsed time",
+        "GPU bytes resident",
+        "power",
+        "network and gameplay",
+        "Godot parity",
+        "minimum hardware",
+        "production artwork and skinning"
+      ],
+      "notes": [
+        "Split view draws the world twice; compare single modes for timing.",
+        "RAF includes browser scheduling and display pacing, not pure GPU work.",
+        "CPU timing includes state sampling, camera, uploads, and render submission; GPU is asynchronous.",
+        "Both alternatives are instanced. Mesh uses four static animation-pose buckets; no skeleton or skinning.",
+        "The full atlas remains allocated when Low selects four directions."
+      ]
+    },
+    {
+      "repetition": 2,
+      "recordedAt": "2026-10-17T21:06:09.633Z",
+      "environment": {
+        "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/155.0.0.0 Safari/537.36 Edg/155.0.0.0",
+        "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3090 (0x00002204) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "vendor": "Google Inc. (NVIDIA)",
+        "threeRevision": "186",
+        "maxTextureSize": 16384,
+        "gpuTimerAvailable": true
+      },
+      "state": {
+        "mode": "mesh",
+        "camera": "isometric",
+        "quality": "balanced",
+        "count": 256,
+        "gear": "staff",
+        "paused": false
+      },
+      "viewport": {
+        "width": 1354,
+        "height": 858,
+        "devicePixelRatio": 1,
+        "renderPixelRatio": 1,
+        "drawingWidth": 1354,
+        "drawingHeight": 858
+      },
+      "warmupMs": 1000,
+      "requestedDurationMs": 2000,
+      "samples": 406,
+      "hiddenDuringRun": false,
+      "observed": {
+        "rafIntervalMs": {
+          "median": 4.19999999999709,
+          "p95": 8.400000000001455,
+          "max": 25
+        },
+        "cpuUpdateAndSubmissionMs": {
+          "median": 0.5,
+          "p95": 0.7999999821186066,
+          "max": 1.5999999940395355
+        },
+        "drawCalls": {
+          "median": 73,
+          "p95": 73,
+          "max": 73
+        },
+        "submittedTriangles": {
+          "median": 154988,
+          "p95": 154988,
+          "max": 154988
+        },
+        "resourceCounts": {
+          "geometries": 79,
+          "textures": 2
+        },
+        "bakeMs": 167.89999997615814
+      },
+      "estimates": {
+        "atlasBaseBytesPerOutfit": 6291456,
+        "atlasMipBytesPerOutfit": 8388608,
+        "outfitAtlases": 2
+      },
+      "unmeasured": [
+        "GPU elapsed time",
+        "GPU bytes resident",
+        "power",
+        "network and gameplay",
+        "Godot parity",
+        "minimum hardware",
+        "production artwork and skinning"
+      ],
+      "notes": [
+        "Split view draws the world twice; compare single modes for timing.",
+        "RAF includes browser scheduling and display pacing, not pure GPU work.",
+        "CPU timing includes state sampling, camera, uploads, and render submission; GPU is asynchronous.",
+        "Both alternatives are instanced. Mesh uses four static animation-pose buckets; no skeleton or skinning.",
+        "The full atlas remains allocated when Low selects four directions."
+      ]
+    },
+    {
+      "repetition": 0,
+      "recordedAt": "2026-10-17T21:06:12.689Z",
+      "environment": {
+        "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/155.0.0.0 Safari/537.36 Edg/155.0.0.0",
+        "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3090 (0x00002204) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "vendor": "Google Inc. (NVIDIA)",
+        "threeRevision": "186",
+        "maxTextureSize": 16384,
+        "gpuTimerAvailable": true
+      },
+      "state": {
+        "mode": "sprite",
+        "camera": "isometric",
+        "quality": "balanced",
+        "count": 512,
+        "gear": "staff",
+        "paused": false
+      },
+      "viewport": {
+        "width": 1354,
+        "height": 858,
+        "devicePixelRatio": 1,
+        "renderPixelRatio": 1,
+        "drawingWidth": 1354,
+        "drawingHeight": 858
+      },
+      "warmupMs": 1000,
+      "requestedDurationMs": 2000,
+      "samples": 362,
+      "hiddenDuringRun": false,
+      "observed": {
+        "rafIntervalMs": {
+          "median": 4.19999999999709,
+          "p95": 12.5,
+          "max": 71.40000000000146
+        },
+        "cpuUpdateAndSubmissionMs": {
+          "median": 0.5999999940395355,
+          "p95": 0.7999999821186066,
+          "max": 1
+        },
+        "drawCalls": {
+          "median": 70,
+          "p95": 70,
+          "max": 70
+        },
+        "submittedTriangles": {
+          "median": 12652,
+          "p95": 12652,
+          "max": 12652
+        },
+        "resourceCounts": {
+          "geometries": 79,
+          "textures": 2
+        },
+        "bakeMs": 167.89999997615814
+      },
+      "estimates": {
+        "atlasBaseBytesPerOutfit": 6291456,
+        "atlasMipBytesPerOutfit": 8388608,
+        "outfitAtlases": 2
+      },
+      "unmeasured": [
+        "GPU elapsed time",
+        "GPU bytes resident",
+        "power",
+        "network and gameplay",
+        "Godot parity",
+        "minimum hardware",
+        "production artwork and skinning"
+      ],
+      "notes": [
+        "Split view draws the world twice; compare single modes for timing.",
+        "RAF includes browser scheduling and display pacing, not pure GPU work.",
+        "CPU timing includes state sampling, camera, uploads, and render submission; GPU is asynchronous.",
+        "Both alternatives are instanced. Mesh uses four static animation-pose buckets; no skeleton or skinning.",
+        "The full atlas remains allocated when Low selects four directions."
+      ]
+    },
+    {
+      "repetition": 0,
+      "recordedAt": "2026-10-17T21:06:15.729Z",
+      "environment": {
+        "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/155.0.0.0 Safari/537.36 Edg/155.0.0.0",
+        "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3090 (0x00002204) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "vendor": "Google Inc. (NVIDIA)",
+        "threeRevision": "186",
+        "maxTextureSize": 16384,
+        "gpuTimerAvailable": true
+      },
+      "state": {
+        "mode": "mesh",
+        "camera": "isometric",
+        "quality": "balanced",
+        "count": 512,
+        "gear": "staff",
+        "paused": false
+      },
+      "viewport": {
+        "width": 1354,
+        "height": 858,
+        "devicePixelRatio": 1,
+        "renderPixelRatio": 1,
+        "drawingWidth": 1354,
+        "drawingHeight": 858
+      },
+      "warmupMs": 1000,
+      "requestedDurationMs": 2000,
+      "samples": 393,
+      "hiddenDuringRun": false,
+      "observed": {
+        "rafIntervalMs": {
+          "median": 4.19999999999709,
+          "p95": 12,
+          "max": 24.900000000001455
+        },
+        "cpuUpdateAndSubmissionMs": {
+          "median": 0.5,
+          "p95": 0.800000011920929,
+          "max": 1.5
+        },
+        "drawCalls": {
+          "median": 73,
+          "p95": 73,
+          "max": 73
+        },
+        "submittedTriangles": {
+          "median": 304492,
+          "p95": 304492,
+          "max": 304492
+        },
+        "resourceCounts": {
+          "geometries": 79,
+          "textures": 2
+        },
+        "bakeMs": 167.89999997615814
+      },
+      "estimates": {
+        "atlasBaseBytesPerOutfit": 6291456,
+        "atlasMipBytesPerOutfit": 8388608,
+        "outfitAtlases": 2
+      },
+      "unmeasured": [
+        "GPU elapsed time",
+        "GPU bytes resident",
+        "power",
+        "network and gameplay",
+        "Godot parity",
+        "minimum hardware",
+        "production artwork and skinning"
+      ],
+      "notes": [
+        "Split view draws the world twice; compare single modes for timing.",
+        "RAF includes browser scheduling and display pacing, not pure GPU work.",
+        "CPU timing includes state sampling, camera, uploads, and render submission; GPU is asynchronous.",
+        "Both alternatives are instanced. Mesh uses four static animation-pose buckets; no skeleton or skinning.",
+        "The full atlas remains allocated when Low selects four directions."
+      ]
+    },
+    {
+      "repetition": 1,
+      "recordedAt": "2026-10-17T21:06:18.782Z",
+      "environment": {
+        "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/155.0.0.0 Safari/537.36 Edg/155.0.0.0",
+        "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3090 (0x00002204) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "vendor": "Google Inc. (NVIDIA)",
+        "threeRevision": "186",
+        "maxTextureSize": 16384,
+        "gpuTimerAvailable": true
+      },
+      "state": {
+        "mode": "mesh",
+        "camera": "isometric",
+        "quality": "balanced",
+        "count": 512,
+        "gear": "staff",
+        "paused": false
+      },
+      "viewport": {
+        "width": 1354,
+        "height": 858,
+        "devicePixelRatio": 1,
+        "renderPixelRatio": 1,
+        "drawingWidth": 1354,
+        "drawingHeight": 858
+      },
+      "warmupMs": 1000,
+      "requestedDurationMs": 2000,
+      "samples": 384,
+      "hiddenDuringRun": false,
+      "observed": {
+        "rafIntervalMs": {
+          "median": 4.19999999999709,
+          "p95": 12.5,
+          "max": 42.099999999998545
+        },
+        "cpuUpdateAndSubmissionMs": {
+          "median": 0.5999999940395355,
+          "p95": 0.800000011920929,
+          "max": 1.199999988079071
+        },
+        "drawCalls": {
+          "median": 73,
+          "p95": 73,
+          "max": 73
+        },
+        "submittedTriangles": {
+          "median": 304492,
+          "p95": 304492,
+          "max": 304492
+        },
+        "resourceCounts": {
+          "geometries": 79,
+          "textures": 2
+        },
+        "bakeMs": 167.89999997615814
+      },
+      "estimates": {
+        "atlasBaseBytesPerOutfit": 6291456,
+        "atlasMipBytesPerOutfit": 8388608,
+        "outfitAtlases": 2
+      },
+      "unmeasured": [
+        "GPU elapsed time",
+        "GPU bytes resident",
+        "power",
+        "network and gameplay",
+        "Godot parity",
+        "minimum hardware",
+        "production artwork and skinning"
+      ],
+      "notes": [
+        "Split view draws the world twice; compare single modes for timing.",
+        "RAF includes browser scheduling and display pacing, not pure GPU work.",
+        "CPU timing includes state sampling, camera, uploads, and render submission; GPU is asynchronous.",
+        "Both alternatives are instanced. Mesh uses four static animation-pose buckets; no skeleton or skinning.",
+        "The full atlas remains allocated when Low selects four directions."
+      ]
+    },
+    {
+      "repetition": 1,
+      "recordedAt": "2026-10-17T21:06:21.899Z",
+      "environment": {
+        "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/155.0.0.0 Safari/537.36 Edg/155.0.0.0",
+        "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3090 (0x00002204) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "vendor": "Google Inc. (NVIDIA)",
+        "threeRevision": "186",
+        "maxTextureSize": 16384,
+        "gpuTimerAvailable": true
+      },
+      "state": {
+        "mode": "sprite",
+        "camera": "isometric",
+        "quality": "balanced",
+        "count": 512,
+        "gear": "staff",
+        "paused": false
+      },
+      "viewport": {
+        "width": 1354,
+        "height": 858,
+        "devicePixelRatio": 1,
+        "renderPixelRatio": 1,
+        "drawingWidth": 1354,
+        "drawingHeight": 858
+      },
+      "warmupMs": 1000,
+      "requestedDurationMs": 2000,
+      "samples": 421,
+      "hiddenDuringRun": false,
+      "observed": {
+        "rafIntervalMs": {
+          "median": 4.19999999999709,
+          "p95": 8.30000000000291,
+          "max": 41.400000000001455
+        },
+        "cpuUpdateAndSubmissionMs": {
+          "median": 0.699999988079071,
+          "p95": 1.0999999940395355,
+          "max": 4.799999982118607
+        },
+        "drawCalls": {
+          "median": 70,
+          "p95": 70,
+          "max": 70
+        },
+        "submittedTriangles": {
+          "median": 12652,
+          "p95": 12652,
+          "max": 12652
+        },
+        "resourceCounts": {
+          "geometries": 79,
+          "textures": 2
+        },
+        "bakeMs": 167.89999997615814
+      },
+      "estimates": {
+        "atlasBaseBytesPerOutfit": 6291456,
+        "atlasMipBytesPerOutfit": 8388608,
+        "outfitAtlases": 2
+      },
+      "unmeasured": [
+        "GPU elapsed time",
+        "GPU bytes resident",
+        "power",
+        "network and gameplay",
+        "Godot parity",
+        "minimum hardware",
+        "production artwork and skinning"
+      ],
+      "notes": [
+        "Split view draws the world twice; compare single modes for timing.",
+        "RAF includes browser scheduling and display pacing, not pure GPU work.",
+        "CPU timing includes state sampling, camera, uploads, and render submission; GPU is asynchronous.",
+        "Both alternatives are instanced. Mesh uses four static animation-pose buckets; no skeleton or skinning.",
+        "The full atlas remains allocated when Low selects four directions."
+      ]
+    },
+    {
+      "repetition": 2,
+      "recordedAt": "2026-10-17T21:06:24.943Z",
+      "environment": {
+        "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/155.0.0.0 Safari/537.36 Edg/155.0.0.0",
+        "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3090 (0x00002204) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "vendor": "Google Inc. (NVIDIA)",
+        "threeRevision": "186",
+        "maxTextureSize": 16384,
+        "gpuTimerAvailable": true
+      },
+      "state": {
+        "mode": "sprite",
+        "camera": "isometric",
+        "quality": "balanced",
+        "count": 512,
+        "gear": "staff",
+        "paused": false
+      },
+      "viewport": {
+        "width": 1354,
+        "height": 858,
+        "devicePixelRatio": 1,
+        "renderPixelRatio": 1,
+        "drawingWidth": 1354,
+        "drawingHeight": 858
+      },
+      "warmupMs": 1000,
+      "requestedDurationMs": 2000,
+      "samples": 395,
+      "hiddenDuringRun": false,
+      "observed": {
+        "rafIntervalMs": {
+          "median": 4.19999999999709,
+          "p95": 8.400000000001455,
+          "max": 35.30000000000291
+        },
+        "cpuUpdateAndSubmissionMs": {
+          "median": 0.699999988079071,
+          "p95": 1,
+          "max": 1.2999999821186066
+        },
+        "drawCalls": {
+          "median": 70,
+          "p95": 70,
+          "max": 70
+        },
+        "submittedTriangles": {
+          "median": 12652,
+          "p95": 12652,
+          "max": 12652
+        },
+        "resourceCounts": {
+          "geometries": 79,
+          "textures": 2
+        },
+        "bakeMs": 167.89999997615814
+      },
+      "estimates": {
+        "atlasBaseBytesPerOutfit": 6291456,
+        "atlasMipBytesPerOutfit": 8388608,
+        "outfitAtlases": 2
+      },
+      "unmeasured": [
+        "GPU elapsed time",
+        "GPU bytes resident",
+        "power",
+        "network and gameplay",
+        "Godot parity",
+        "minimum hardware",
+        "production artwork and skinning"
+      ],
+      "notes": [
+        "Split view draws the world twice; compare single modes for timing.",
+        "RAF includes browser scheduling and display pacing, not pure GPU work.",
+        "CPU timing includes state sampling, camera, uploads, and render submission; GPU is asynchronous.",
+        "Both alternatives are instanced. Mesh uses four static animation-pose buckets; no skeleton or skinning.",
+        "The full atlas remains allocated when Low selects four directions."
+      ]
+    },
+    {
+      "repetition": 2,
+      "recordedAt": "2026-10-17T21:06:27.990Z",
+      "environment": {
+        "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/155.0.0.0 Safari/537.36 Edg/155.0.0.0",
+        "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3090 (0x00002204) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "vendor": "Google Inc. (NVIDIA)",
+        "threeRevision": "186",
+        "maxTextureSize": 16384,
+        "gpuTimerAvailable": true
+      },
+      "state": {
+        "mode": "mesh",
+        "camera": "isometric",
+        "quality": "balanced",
+        "count": 512,
+        "gear": "staff",
+        "paused": false
+      },
+      "viewport": {
+        "width": 1354,
+        "height": 858,
+        "devicePixelRatio": 1,
+        "renderPixelRatio": 1,
+        "drawingWidth": 1354,
+        "drawingHeight": 858
+      },
+      "warmupMs": 1000,
+      "requestedDurationMs": 2000,
+      "samples": 349,
+      "hiddenDuringRun": false,
+      "observed": {
+        "rafIntervalMs": {
+          "median": 4.19999999999709,
+          "p95": 12.5,
+          "max": 29.299999999995634
+        },
+        "cpuUpdateAndSubmissionMs": {
+          "median": 0.5,
+          "p95": 0.7000000178813934,
+          "max": 1.5
+        },
+        "drawCalls": {
+          "median": 73,
+          "p95": 73,
+          "max": 73
+        },
+        "submittedTriangles": {
+          "median": 304492,
+          "p95": 304492,
+          "max": 304492
+        },
+        "resourceCounts": {
+          "geometries": 79,
+          "textures": 2
+        },
+        "bakeMs": 167.89999997615814
+      },
+      "estimates": {
+        "atlasBaseBytesPerOutfit": 6291456,
+        "atlasMipBytesPerOutfit": 8388608,
+        "outfitAtlases": 2
+      },
+      "unmeasured": [
+        "GPU elapsed time",
+        "GPU bytes resident",
+        "power",
+        "network and gameplay",
+        "Godot parity",
+        "minimum hardware",
+        "production artwork and skinning"
+      ],
+      "notes": [
+        "Split view draws the world twice; compare single modes for timing.",
+        "RAF includes browser scheduling and display pacing, not pure GPU work.",
+        "CPU timing includes state sampling, camera, uploads, and render submission; GPU is asynchronous.",
+        "Both alternatives are instanced. Mesh uses four static animation-pose buckets; no skeleton or skinning.",
+        "The full atlas remains allocated when Low selects four directions."
+      ]
+    }
+  ]
+}

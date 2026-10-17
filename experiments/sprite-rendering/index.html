@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Hollow Wake · Rendering study</title>
+  <link rel="stylesheet" href="./study.css">
+  <script type="importmap">{"imports":{"three":"/vendor/three.module.js","three/addons/utils/BufferGeometryUtils.js":"/vendor/BufferGeometryUtils.js"}}</script>
+</head>
+<body>
+  <header><div><span class="eyebrow">HOLLOW WAKE / RENDERING STUDY 01</span><h1>The Verdant Crossing</h1></div><p>One world. Two ways to draw its people.<br><span>Original procedural study art · No server connection</span></p></header>
+  <main>
+    <aside>
+      <div class="section-title">Compare the character</div>
+      <div class="segmented" role="group" aria-label="Rendering mode"><button data-mode="split" class="active">Side by side</button><button data-mode="sprite">Sprite</button><button data-mode="mesh">Geometry</button></div>
+      <label>Camera<select id="camera"><option value="isometric">Isometric</option><option value="third_person">Third person</option></select></label>
+      <div class="row"><button id="left" aria-label="Rotate camera left">↶ Rotate</button><button id="right" aria-label="Rotate camera right">Rotate ↷</button></div>
+      <label>Perspective pitch <output id="pitchValue">28°</output><input id="pitch" type="range" min="5" max="80" value="28"></label>
+      <label>Population <output id="countValue">48</output><input id="count" type="range" min="4" max="512" step="4" value="48"></label>
+      <label>Quality<select id="quality"><option value="low">Low</option><option value="balanced" selected>Balanced</option><option value="high">High</option></select></label>
+      <label>Equipment silhouette<select id="gear"><option value="staff">Pilgrim staff & hood</option><option value="crown">Antler crown & greatblade</option></select></label>
+      <label class="check"><input id="canopy" type="checkbox" checked> Foreground canopy</label>
+      <label class="check"><input id="effects" type="checkbox" checked> Ground warnings & motes</label>
+      <label class="check"><input id="pause" type="checkbox"> Freeze the scene</label>
+      <button id="benchmark" class="primary">Measure this view · 5 seconds</button>
+      <button id="export" disabled>Save last measurement</button>
+      <p class="small">Drag to orbit in third person. Scroll to zoom. Q / E rotate, V changes camera. Gold ring: upper bridge. Coral ring: ground below.</p>
+      <p class="small">The sprite uses baked views of the same model. This compares rendering behavior, not finished character art.</p>
+    </aside>
+    <section id="stage" aria-label="Interactive 3D comparison">
+      <div id="loading">Preparing original character views…</div>
+      <div class="panel-tag" id="tagLeft"><b>A / DIRECTIONAL SPRITE</b><span>Depth-tested cards · baked light</span></div>
+      <div class="panel-tag" id="tagRight"><b>B / PAINTED-STYLE GEOMETRY</b><span>Solid silhouette · live light</span></div>
+      <div id="divider"></div>
+      <div id="caption">Same terrain, pose stream, equipment and camera. Bridge and ground remain separate heights.</div>
+      <div id="metrics" aria-live="polite"></div>
+    </section>
+  </main>
+  <footer><span id="status">Loading…</span><span>Bounded prototype · GPU time and minimum hardware are unmeasured</span></footer>
+  <script type="module" src="./study.mjs"></script>
+</body></html>

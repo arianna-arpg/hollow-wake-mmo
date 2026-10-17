@@ -1,0 +1,20 @@
+{
+  "recordedAt": "2026-10-17T21:06:36.185Z",
+  "scope": "JSON syntax, local schema references and example semantic checks only. Full JSON Schema validation was not run.",
+  "checks": [
+    "Schema reference #/$defs/pixelPair",
+    "Schema reference #/$defs/pixelPair",
+    "Schema reference #/$defs/pixelPair",
+    "Schema reference #/$defs/normalizedPair",
+    "Schema reference #/$defs/normalizedPair",
+    "Manifest root required fields",
+    "Grid matches pixel dimensions",
+    "Grid covers views and frames",
+    "Clips stay inside pose set",
+    "Foot pivot is normalized and matches the bake",
+    "Manifest matches generated study views",
+    "Atlas stays in experiment",
+    "Exported PNG dimensions match manifest",
+    "All provided socket samples are in range"
+  ]
+}
