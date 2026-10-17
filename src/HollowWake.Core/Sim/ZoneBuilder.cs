@@ -67,6 +67,7 @@ public static class ZoneBuilder
         sim.AddService(new WeaveRuntime(compiler));
         sim.AddService(new StatusService(effects));
         sim.AddService(new TriggerHub(sim));
+        sim.AddService(new Minions.MinionService(sim));
         sim.AddService(new ChargeService());
         sim.AddService(new ProcService(sim));
         sim.AddService(IntentHandlers.CreateDefault());
