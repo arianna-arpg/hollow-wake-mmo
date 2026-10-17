@@ -408,6 +408,16 @@ export class Settings {
   }
 }
 
+/** What the Options pane remembers between visits: the page, the search, and the visit's unconfirmed changes. */
+export class OptionsState {
+  page = '';
+  search = '';
+  /** The values entries had before this visit changed them, by entry id, for Escape to put back. */
+  readonly originals = new Map<string, OptionValue | null>();
+  /** Entries changed this visit that take effect after a restart. */
+  readonly needRestart = new Set<string>();
+}
+
 // ---------------------------------------------------------------- gates
 
 /**
