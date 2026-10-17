@@ -138,6 +138,44 @@ public class ItemContractTests
     }
 
     [Fact]
+    public void AChassisStoneKeepsTheRowsItRolledAndTheWeaveFoldsThem()
+    {
+        var gen = new ItemGenerator(CoreContent.Registry);
+        var rolled = new HashSet<string>();
+        ItemInstance? wide = null;
+        ItemInstance? narrow = null;
+        for (var seed = 1; seed <= 80; seed++)
+        {
+            var stone = gen.Roll("glyph_stone", 5, "common", new Rng((ulong)seed), new ItemGenerator.PayloadRequest { Glyph = "weavers_chassis" });
+            var rows = stone.Payload!.Rows!;
+            Assert.Equal(2, rows.Count);
+            rolled.Add(rows["edge"] + "/" + rows["reach"]);
+            Assert.Equal(rows, stone.Clone(10_000 + seed).Payload!.Rows);
+            if (rows["reach"] == "wide")
+            {
+                wide ??= stone;
+            }
+            else if (rows["reach"] == "far" && rows["edge"] == "heavy")
+            {
+                narrow ??= stone;
+            }
+        }
+        Assert.True(rolled.Count >= 4);
+
+        // A bolt has no area: the stone that rolled wide sits dormant with the reason; a far, heavy one folds both rows.
+        var compiler = new Weaves.WeaveCompiler(CoreContent.Registry, Effects.EffectRegistry.CreateDefault());
+        var dormant = compiler.Compile(new WeaveSpec { Form = "bolt", Threads = { "ember" }, Glyphs = { WeaveItems.RefOf(wide!) } }, Weaves.GlyphFit.Dormant);
+        Assert.Contains(dormant.Dormant, d => d.Glyph.Id == "weavers_chassis");
+        var folded = compiler.Compile(new WeaveSpec { Form = "bolt", Threads = { "ember" }, Glyphs = { WeaveItems.RefOf(narrow!) } }, Weaves.GlyphFit.Dormant);
+        Assert.Empty(folded.Dormant);
+        Assert.Contains(folded.Modifiers, m => m.Attribute == "range" && m.Form == Attributes.ModifierForm.Increased);
+        Assert.Contains(folded.Modifiers, m => m.Attribute == "damage" && m.Form == Attributes.ModifierForm.More && Math.Abs(m.Value - 0.15) < 1e-9);
+        // A copy granted without rows takes the first row of each axis.
+        var granted = compiler.Compile(new WeaveSpec { Form = "bolt", Threads = { "ember" }, Glyphs = { "weavers_chassis" } });
+        Assert.Contains(granted.Modifiers, m => m.Attribute == "crit.chance");
+    }
+
+    [Fact]
     public void GearMintsSocketsByRarityUpToItsClassCap()
     {
         var gen = new ItemGenerator(CoreContent.Registry);

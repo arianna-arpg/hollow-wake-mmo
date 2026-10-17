@@ -226,6 +226,8 @@ switch (command)
     }
     case "weave":
         return WeaveReport.Run(LoadContent(false), rest.FirstOrDefault(a => !a.StartsWith("--")), Opt);
+    case "passives":
+        return PassiveLint.Run(LoadContent(false), Flag("verbose"));
     case "bench":
         return Bench.Run(LoadContent(false), Opt, Flag("json"));
     case "probe":
@@ -290,6 +292,7 @@ switch (command)
               fight <pattern> <pattern> [--seconds n] [--seed s]   simulate a duel in an arena
               weave <preset|form> [--threads a,b] [--glyphs g,g@level] [--level n] [--calling c] [--caster-level n]
                                                   compile a weave: tags, mechanisms, dormant glyphs, graph, preview numbers
+              passives [--verbose]                lint the constellations: broken links, orphans, unreachable nodes, route costs
               protocol-ts [--out file] [--check]  write (or check) the web client's TypeScript message types
               probe [--host h] [--port n] [--account a] [--seconds s] [--deltas] [--interface] [--features a,b]
                                                   connect to a running server, enter, move and check what comes back

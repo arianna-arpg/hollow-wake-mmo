@@ -1,0 +1,28 @@
+# A support chassis: one glyph whose copies differ. Each stone of it rolls one weighted row per axis when it is
+# minted and keeps it; a copy granted without rows (a preset, a monster's kit) takes the first row of each axis.
+# Rows carry their own modifiers and the mechanisms they need of the weave, joining the glyph's own gate, so a
+# stone whose row the weave cannot use sits dormant with the reason.
+kind: glyphs
+entries:
+  - id: weavers_chassis
+    name: Weaver's Chassis
+    description: A frame for a support. Every stone of it was cut differently.
+    requires: [spell, attack]
+    color: "#c8b48a"
+    axes:
+      - id: edge
+        rows:
+          - { id: keen, weight: 3, text: "+4% critical chance", modifiers: [ { attribute: crit.chance, form: flat, value: 0.04 } ] }
+          - id: heavy
+            weight: 2
+            text: "15% more damage, 10% slower"
+            modifiers:
+              - { attribute: damage, form: more, value: 0.15 }
+              - { attribute: cast.speed, form: increased, value: -0.1 }
+              - { attribute: attack.speed, form: increased, value: -0.1 }
+          - { id: thrifty, weight: 3, text: "20% less cost", modifiers: [ { attribute: cost, form: increased, value: -0.2 } ] }
+      - id: reach
+        rows:
+          - { id: far, weight: 3, text: "25% more range", modifiers: [ { attribute: range, form: increased, value: 0.25 } ] }
+          - { id: wide, weight: 2, text: "30% wider areas", requires_mechanisms: [area], modifiers: [ { attribute: area.radius, form: increased, value: 0.3 } ] }
+          - { id: volley, weight: 1, text: "One more projectile", requires_mechanisms: [projectile], modifiers: [ { attribute: projectile.count, form: flat, value: 1 } ] }
