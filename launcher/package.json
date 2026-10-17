@@ -1,0 +1,35 @@
+{
+  "name": "hollow-wake-mmo-launcher",
+  "productName": "Hollow Wake MMO",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Desktop launcher for Hollow Wake MMO: installs and updates the game client from GitHub Releases and starts it.",
+  "author": "Arianna",
+  "license": "UNLICENSED",
+  "homepage": "https://github.com/arianna-arpg/hollow-wake-mmo",
+  "repository": "github:arianna-arpg/hollow-wake-mmo",
+  "main": "dist/main/main.js",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "start": "electron .",
+    "test": "node --test \"dist/test/**/*.test.js\"",
+    "smoke": "electron . --smoke-test",
+    "dist": "npm run build && electron-builder --publish never",
+    "dist:win": "npm run build && electron-builder --win --publish never",
+    "dist:linux": "npm run build && electron-builder --linux --publish never",
+    "serve-feed": "node scripts/serve-feed.mjs"
+  },
+  "dependencies": {
+    "electron-updater": "6.8.9",
+    "semver": "7.8.5",
+    "yauzl": "3.4.0"
+  },
+  "devDependencies": {
+    "@types/node": "24.13.6",
+    "@types/semver": "7.7.1",
+    "@types/yauzl": "3.4.0",
+    "electron": "44.5.1",
+    "electron-builder": "26.15.3",
+    "typescript": "6.0.3"
+  }
+}

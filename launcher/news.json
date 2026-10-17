@@ -1,0 +1,23 @@
+{
+  "schema": 1,
+  "motd": "Welcome to the Weftmarches. Hollow Wake MMO is a foundation, not a game yet: expect placeholder shapes, rough edges and frequent changes.",
+  "items": [
+    {
+      "date": "2026-10-16",
+      "title": "The launcher is here",
+      "body": "The launcher installs the game client from GitHub Releases, checks every download against the release manifest and keeps itself up to date. Pick Stable for hand-cut releases or Nightly for the newest build.",
+      "url": "https://github.com/arianna-arpg/hollow-wake-mmo/releases"
+    },
+    {
+      "date": "2026-10-16",
+      "title": "Running your own server",
+      "body": "Point the Server field at any Hollow Wake MMO server. The default, 127.0.0.1:7777, is a server running on this computer: start one from a checkout with dotnet run --project src/HollowWake.Server.Host.",
+      "url": "https://github.com/arianna-arpg/hollow-wake-mmo#run-it"
+    },
+    {
+      "date": "2026-10-16",
+      "title": "What to try",
+      "body": "Make a character, walk out of Ninewells, take the quartermaster's offer, and fight the hobs by the hedgerow. Weaves sit on the number keys; V switches between the isometric and third-person cameras."
+    }
+  ]
+}
