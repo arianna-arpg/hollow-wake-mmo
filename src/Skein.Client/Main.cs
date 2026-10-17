@@ -27,6 +27,26 @@ public partial class Main : Node3D
     private double _lastPingAt;
     private EntityView? _hovered;
     private long _hoveredKey;
+    private string _lastRejected = "";
+
+    // Read by the scripted smoke run (Dev/Smoke.cs); nothing else should need these.
+    internal ClientWorld World => _world;
+    internal CameraRig Rig => _camera;
+    internal Hud Hud => _hud;
+    internal LoginPanel Login => _login;
+    internal NetClient Net => _net;
+    internal bool InWorld => _inWorld;
+    internal long HoveredKey => _hoveredKey;
+    internal int CombatLines { get; private set; }
+    internal int CharacterLists { get; private set; }
+    internal int QuestOffers { get; private set; }
+
+    internal string TakeRejected()
+    {
+        var r = _lastRejected;
+        _lastRejected = "";
+        return r;
+    }
 
     public override void _Ready()
     {
@@ -49,6 +69,12 @@ public partial class Main : Node3D
         _hud.QuestAccepted += (quest, giver) => _net.Send(new AcceptQuestMsg(quest, giver));
         _hud.QuestTurnedIn += (quest, giver) => _net.Send(new TurnInQuestMsg(quest, giver));
         _net.Closed += reason => CallDeferred(nameof(OnClosed), reason);
+
+        var userArgs = OS.GetCmdlineUserArgs();
+        if (userArgs.Contains("--smoke"))
+        {
+            AddChild(new Dev.Smoke(this, userArgs) { Name = "Smoke" });
+        }
     }
 
     private static ContentRegistry LoadContent()
@@ -139,6 +165,7 @@ public partial class Main : Node3D
                 _login.SetStatus(r.Ok ? "Logged in. Pick a character." : "Login failed: " + r.Error);
                 break;
             case CharacterListMsg list:
+                CharacterLists++;
                 _login.ShowCharacters(list);
                 break;
             case ErrorMsg e:
@@ -187,10 +214,12 @@ public partial class Main : Node3D
                 _hud.Notice(n.Text, n.Level);
                 break;
             case QuestOffersMsg q:
+                QuestOffers++;
                 _hud.ShowQuestOffers(q);
                 break;
             case IntentRejectedMsg rej:
-                _hud.Notice($"{rej.Intent}: {rej.Reason}", "error");
+                _lastRejected = $"{rej.Intent}: {rej.Reason}";
+                _hud.Notice(_lastRejected, "error");
                 break;
             case ChunkDataMsg chunk:
                 _world.ReceiveChunk(chunk);
@@ -223,6 +252,7 @@ public partial class Main : Node3D
             _ => c.Kind,
         };
         _hud.Log($"[color=#cccccc]{text}[/color]");
+        CombatLines++;
     }
 
     // ------------------------------------------------------------ input
@@ -425,9 +455,16 @@ public partial class Main : Node3D
         }
         if (best is not null)
         {
+            LastInteracted = $"{best.State.Name} ({best.State.Interactable}) at {bestDist:0.0}";
             _net.Send(kind == "pick_up" ? new PickUpMsg(best.Key) : new InteractMsg(best.Key));
         }
+        else
+        {
+            LastInteracted = "nothing within reach";
+        }
     }
+
+    internal string LastInteracted { get; private set; } = "";
 
     public override void _ExitTree() => _net.Dispose();
 }

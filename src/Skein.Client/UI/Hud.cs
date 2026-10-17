@@ -29,6 +29,7 @@ public partial class Hud : CanvasLayer
 
     public bool ChatFocused => _chatInput.HasFocus();
     public bool SheetVisible => _sheet.Visible;
+    public bool QuestsVisible => _quests.Visible;
 
     public override void _Ready()
     {
@@ -69,9 +70,9 @@ public partial class Hud : CanvasLayer
         var chatBox = new VBoxContainer { Name = "chat" };
         chatBox.SetAnchorsPreset(Control.LayoutPreset.BottomLeft);
         chatBox.Position = new Vector2(12, -220);
-        chatBox.CustomMinimumSize = new Vector2(420, 200);
+        chatBox.CustomMinimumSize = new Vector2(396, 200);
         AddChild(chatBox);
-        _chat = new RichTextLabel { CustomMinimumSize = new Vector2(420, 170), ScrollFollowing = true, BbcodeEnabled = true, FocusMode = Control.FocusModeEnum.None };
+        _chat = new RichTextLabel { CustomMinimumSize = new Vector2(396, 170), ScrollFollowing = true, BbcodeEnabled = true, FocusMode = Control.FocusModeEnum.None };
         _chat.AddThemeColorOverride("default_color", Colors.White);
         chatBox.AddChild(_chat);
         _chatInput = new LineEdit { PlaceholderText = "Enter to chat" };

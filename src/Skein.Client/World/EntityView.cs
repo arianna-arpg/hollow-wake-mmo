@@ -10,8 +10,12 @@ namespace Skein.Client.World;
 /// </summary>
 public partial class EntityView : Node3D
 {
+    private const float BarWidth = 1.2f;
+
     private MeshInstance3D _mesh = null!;
+    private MeshInstance3D _canopy = null!;
     private Label3D _label = null!;
+    private Node3D _overlay = null!;
     private MeshInstance3D _lifeBar = null!;
     private MeshInstance3D _lifeBack = null!;
     private Vector3 _targetPosition;
@@ -35,30 +39,50 @@ public partial class EntityView : Node3D
     {
         _mesh = new MeshInstance3D { Name = "body" };
         AddChild(_mesh);
+        _canopy = new MeshInstance3D { Name = "canopy", Visible = false };
+        AddChild(_canopy);
         _label = new Label3D
         {
             Name = "label",
             Billboard = BaseMaterial3D.BillboardModeEnum.Enabled,
-            FontSize = 36,
-            PixelSize = 0.006f,
-            OutlineSize = 8,
+            // Fixed size keeps names legible from the isometric camera 120 units out as well as up close.
+            FixedSize = true,
+            FontSize = 30,
+            PixelSize = 0.0011f,
+            OutlineSize = 6,
             NoDepthTest = true,
         };
         AddChild(_label);
-        _lifeBack = new MeshInstance3D { Name = "lifeback", Mesh = new BoxMesh { Size = new Vector3(1.2f, 0.12f, 0.02f) }, MaterialOverride = Unlit(new Color(0.1f, 0.1f, 0.1f, 0.8f)) };
-        _lifeBar = new MeshInstance3D { Name = "life", Mesh = new BoxMesh { Size = new Vector3(1.2f, 0.12f, 0.03f) }, MaterialOverride = Unlit(new Color(0.8f, 0.2f, 0.2f)) };
-        AddChild(_lifeBack);
-        AddChild(_lifeBar);
+        // The overlay is turned to face the camera every frame, so its children are laid out in a
+        // screen-aligned space: the life bar hangs from its left edge and scales with the life left.
+        _overlay = new Node3D { Name = "overlay" };
+        AddChild(_overlay);
+        _lifeBack = new MeshInstance3D
+        {
+            Name = "lifeback",
+            Mesh = new QuadMesh { Size = new Vector2(BarWidth + 0.04f, 0.14f) },
+            MaterialOverride = Unlit(new Color(0.08f, 0.08f, 0.08f, 0.85f), 0),
+        };
+        _lifeBar = new MeshInstance3D
+        {
+            Name = "life",
+            Mesh = new QuadMesh { Size = new Vector2(BarWidth, 0.1f), CenterOffset = new Vector3(BarWidth * 0.5f, 0, 0) },
+            MaterialOverride = Unlit(new Color(0.85f, 0.2f, 0.2f, 1f), 1),
+            Position = new Vector3(-BarWidth * 0.5f, 0, 0.01f),
+        };
+        _overlay.AddChild(_lifeBack);
+        _overlay.AddChild(_lifeBar);
         Rebuild();
+        RefreshOverlay();
     }
 
-    private static StandardMaterial3D Unlit(Color c) => new()
+    private static StandardMaterial3D Unlit(Color c, int priority) => new()
     {
         AlbedoColor = c,
         ShadingMode = BaseMaterial3D.ShadingModeEnum.Unshaded,
-        BillboardMode = BaseMaterial3D.BillboardModeEnum.Enabled,
-        Transparency = c.A < 1 ? BaseMaterial3D.TransparencyEnum.Alpha : BaseMaterial3D.TransparencyEnum.Disabled,
+        Transparency = BaseMaterial3D.TransparencyEnum.Alpha,
         NoDepthTest = true,
+        RenderPriority = priority,
     };
 
     private void Rebuild()
@@ -92,14 +116,30 @@ public partial class EntityView : Node3D
         {
             mesh = new BoxMesh { Size = new Vector3(s.Radius * 2, s.Height, s.Radius * 2) };
         }
+        else if (s.Resources.Count == 0 && IsTree(look))
+        {
+            // Trees: a trunk with a round canopy on top, so tall flora reads as a tree and not a pillar.
+            var trunk = Mathf.Max(0.25f, s.Radius * 0.6f);
+            mesh = new BoxMesh { Size = new Vector3(trunk, s.Height * 0.6f, trunk) };
+            var canopy = Mathf.Clamp(s.Height * 0.28f, 0.8f, 4f);
+            _canopy.Mesh = new SphereMesh { Radius = canopy, Height = canopy * 2f, RadialSegments = 12, Rings = 6 };
+            _canopy.Position = new Vector3(0, s.Height - canopy, 0);
+            _canopy.MaterialOverride = new StandardMaterial3D { AlbedoColor = color, Roughness = 0.9f };
+            _canopy.Visible = true;
+            color = new Color(0.42f, 0.3f, 0.2f);
+        }
         else if (s.Resources.Count == 0)
         {
-            // flora and props: a thin trunk and a canopy block
+            // other flora and props: a block the size the simulation uses
             mesh = new BoxMesh { Size = new Vector3(Mathf.Max(0.3f, s.Radius * 1.4f), s.Height, Mathf.Max(0.3f, s.Radius * 1.4f)) };
         }
         else
         {
             mesh = new CapsuleMesh { Radius = Mathf.Max(0.2f, s.Radius), Height = Mathf.Max(0.6f, s.Height) };
+        }
+        if (!(s.Resources.Count == 0 && IsTree(look)))
+        {
+            _canopy.Visible = false;
         }
         _mesh.Mesh = mesh;
         _mesh.MaterialOverride = new StandardMaterial3D
@@ -110,13 +150,12 @@ public partial class EntityView : Node3D
         };
         _mesh.Position = new Vector3(0, mesh is CapsuleMesh ? Mathf.Max(0.6f, s.Height) * 0.5f : mesh is CylinderMesh cyl ? cyl.Height * 0.5f : mesh is BoxMesh box ? box.Size.Y * 0.5f : s.Height * 0.5f, 0);
         _label.Position = new Vector3(0, s.Height + 0.5f, 0);
-        _lifeBack.Position = new Vector3(0, s.Height + 0.25f, 0);
-        _lifeBar.Position = new Vector3(0, s.Height + 0.25f, 0.001f);
-        var showBar = s.Resources.ContainsKey("life") && s.Interactable is null;
-        _lifeBack.Visible = showBar;
-        _lifeBar.Visible = showBar;
+        _overlay.Position = new Vector3(0, s.Height + 0.25f, 0);
+        _overlay.Visible = s.Resources.ContainsKey("life") && s.Interactable is null;
         _label.Visible = s.Resources.Count > 0 || s.Interactable is not null;
     }
+
+    private static bool IsTree(string look) => look.Contains("oak") || look.Contains("pine") || look.Contains("birch") || look.Contains("tree");
 
     private static Color ColorFor(EntityState s)
     {
@@ -165,7 +204,7 @@ public partial class EntityView : Node3D
 
     public void Apply(EntityState state, bool snap)
     {
-        var rebuild = state.Look != State.Look || state.Dead != State.Dead || Math.Abs(state.Height - State.Height) > 0.01f;
+        var rebuild = state.Look != State.Look || state.Dead != State.Dead || Math.Abs(state.Height - State.Height) > 0.01f || state.Interactable is null != State.Interactable is null;
         State = state;
         _targetPosition = Coords.ToGodot(state.X, state.Y, state.Z);
         _velocity = Coords.ToGodot(state.VX, state.VY, state.VZ);
@@ -176,14 +215,15 @@ public partial class EntityView : Node3D
             GlobalPosition = _targetPosition;
             Rotation = new Vector3(0, _targetYaw + Mathf.Pi / 2, 0);
         }
-        if (rebuild && IsNodeReady())
+        if (!IsNodeReady())
+        {
+            return;
+        }
+        if (rebuild)
         {
             Rebuild();
         }
-        if (IsNodeReady())
-        {
-            RefreshOverlay();
-        }
+        RefreshOverlay();
     }
 
     private void RefreshOverlay()
@@ -212,7 +252,6 @@ public partial class EntityView : Node3D
         {
             var frac = Mathf.Clamp(life / max, 0f, 1f);
             _lifeBar.Scale = new Vector3(Mathf.Max(0.001f, frac), 1, 1);
-            _lifeBar.Position = new Vector3(-(1 - frac) * 0.6f, s.Height + 0.25f, 0.001f);
         }
         _mesh.Transparency = s.Dead ? 0.6f : 0f;
     }
@@ -226,5 +265,13 @@ public partial class EntityView : Node3D
         GlobalPosition = GlobalPosition.Lerp(predicted, t);
         var yaw = Rotation.Y;
         Rotation = new Vector3(0, Mathf.LerpAngle(yaw, _targetYaw + Mathf.Pi / 2, t), 0);
+        if (_overlay.Visible)
+        {
+            var camera = GetViewport().GetCamera3D();
+            if (camera is not null)
+            {
+                _overlay.GlobalBasis = camera.GlobalBasis;
+            }
+        }
     }
 }

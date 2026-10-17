@@ -29,6 +29,7 @@ dotnet run --project src/Skein.Tools -- load --x 0 --y 0  # headless zone smoke
 dotnet run --project src/Skein.Tools -- fight a b         # headless duel with event trace
 dotnet run --project src/Skein.Server.Host                # run the server (TCP 7777)
 dotnet run --project src/Skein.Tools -- probe             # connect to a running server over TCP and exercise it
+godot --path src/Skein.Client -- --smoke --shots DIR      # scripted client play-through against a running server (Godot 4.7 .NET)
 ```
 
 ## Verification gates
@@ -38,7 +39,7 @@ Before calling work done:
 2. `dotnet test Skein.sln` passes.
 3. `skein validate` reports 0 errors and no new warnings.
 4. If the change touches generation, movement, combat or networking: `skein load`, `skein fight`, and the loopback server tests still pass; for networking also run the server and `skein probe`.
-5. If the change touches the client: `dotnet build src/Skein.Client` compiles, and when Godot is available, the scene runs against a local server.
+5. If the change touches the client: `dotnet build src/Skein.Client` compiles, and when Godot is available, the smoke play-through above passes against a local server (it saves screenshots to look at).
 
 ## Conventions
 

@@ -89,11 +89,29 @@ public partial class LoginPanel : CanvasLayer
         createRow.AddChild(_create);
     }
 
+    public string Status => _status.Text;
+    public IReadOnlyList<CharacterSummary> Characters => _list;
+    public IReadOnlyList<string> Callings { get; private set; } = Array.Empty<string>();
+
     public void SetStatus(string text) => _status.Text = text;
+
+    // Drive the panel from code (the scripted smoke run does); these raise the same events as the buttons.
+    public void ConnectTo(string host, int port, string account)
+    {
+        _host.Text = host;
+        _port.Text = port.ToString();
+        _account.Text = account;
+        ConnectRequested?.Invoke(host, port, account);
+    }
+
+    public void Create(string name, string calling) => CreateRequested?.Invoke(name, calling);
+
+    public void Enter(string id) => EnterRequested?.Invoke(id);
 
     public void ShowCharacters(CharacterListMsg msg)
     {
         _list = msg.Characters;
+        Callings = msg.Callings;
         _characters.Clear();
         foreach (var c in msg.Characters)
         {

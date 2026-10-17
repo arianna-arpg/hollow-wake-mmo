@@ -27,6 +27,7 @@ public partial class CameraRig : Node3D
 
     public CameraMode Mode { get; private set; } = CameraMode.Isometric;
     public Camera3D Camera => _camera;
+    public float Yaw => _yaw;
 
     public override void _Ready()
     {
