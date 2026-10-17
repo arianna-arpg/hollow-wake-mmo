@@ -221,6 +221,8 @@ switch (command)
         }
         return 0;
     }
+    case "bench":
+        return Bench.Run(LoadContent(false), Opt, Flag("json"));
     case "probe":
     {
         var host = Opt("host", "127.0.0.1");

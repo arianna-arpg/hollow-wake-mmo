@@ -17,7 +17,8 @@ namespace HollowWake.Server.World;
 /// <summary>
 /// One running zone: its simulation, the sessions inside it, and the translation of simulation
 /// events into messages for the players who should hear about them. Interest is a radius around
-/// each player; entities enter and leave a session's known set as they come and go.
+/// each player; entities enter and leave a session's known set as they come and go, and the
+/// <see cref="SnapshotBuilder"/> decides what each session needs to hear on each snapshot.
 /// </summary>
 public sealed class ZoneInstance
 {
@@ -25,6 +26,10 @@ public sealed class ZoneInstance
     private readonly List<GameEvent> _pending = new();
     private readonly double _snapshotInterval;
     private readonly float _interestRadius;
+    private readonly List<Message> _outbox = new();
+
+    /// <summary>Builds every session's entity snapshots and self states for this zone.</summary>
+    public SnapshotBuilder SnapshotBuilder { get; }
 
     public ZoneCoord Coord { get; }
     public Simulation Sim { get; }
@@ -44,6 +49,7 @@ public sealed class ZoneInstance
         Info = sim.Generator!.Zone(coord);
         _snapshotInterval = 1.0 / Math.Max(1, snapshotRate);
         _interestRadius = (float)interestRadius;
+        SnapshotBuilder = new SnapshotBuilder(sim, _interestRadius);
         LoadReport = ZoneBuilder.LoadZone(sim);
         LastPopulatedAt = sim.Clock.Time;
         sim.Events.SubscribeAll(e => _pending.Add(e));
@@ -61,6 +67,9 @@ public sealed class ZoneInstance
             LastPopulatedAt = Sim.Clock.Time;
         }
         DispatchEvents();
+        // Times are multiples of the tick, so half a tick of slack keeps floating point from skipping a due snapshot.
+        var now = Sim.Clock.Time;
+        var slack = Sim.Clock.Dt * 0.5;
         foreach (var session in Sessions.ToArray())
         {
             if (session.Entity.IsNone || !Sim.World.IsAlive(session.Entity))
@@ -71,62 +80,37 @@ public sealed class ZoneInstance
             if (t is not null && !Contains(t.Position))
             {
                 TransferRequested?.Invoke(session, t.Position);
+                // A transfer moves or removes a body, so what other viewers were told this tick may be stale.
+                SnapshotBuilder.Invalidate();
                 continue;
             }
-            if (Sim.Clock.Time - session.LastSnapshotAt >= _snapshotInterval)
+            if (now - session.LastSnapshotAt >= _snapshotInterval - slack)
             {
-                session.LastSnapshotAt = Sim.Clock.Time;
+                session.LastSnapshotAt = now;
                 SendSnapshot(session);
             }
-            if (Sim.Clock.Time - session.LastSelfAt >= 0.5)
+            if (now - session.LastSelfAt >= session.View.Settings.SelfSeconds - slack)
             {
-                session.LastSelfAt = Sim.Clock.Time;
-                session.Send(Snapshots.Self(Sim, session.Entity));
+                session.LastSelfAt = now;
+                var self = SnapshotBuilder.Self(session.View, session.Entity);
+                if (self is not null)
+                {
+                    session.Send(self);
+                }
             }
         }
     }
 
     private void SendSnapshot(Session session)
     {
-        if (!Sim.World.TryGet<Transform>(session.Entity, out var me))
+        _outbox.Clear();
+        SnapshotBuilder.Entities(session.View, session.Entity, _outbox);
+        session.SnapshotsBuilt++;
+        foreach (var message in _outbox)
         {
-            return;
+            session.Send(message);
         }
-        var visible = new HashSet<long>();
-        var states = new List<EntityState>();
-        foreach (var (e, _, _) in Sim.Spatial.Within(me.Position, _interestRadius, 64f))
-        {
-            if (!Sim.World.IsAlive(e))
-            {
-                continue;
-            }
-            if (Sim.World.Has<Spawner>(e))
-            {
-                continue;
-            }
-            visible.Add(e.Key);
-            var state = Snapshots.Capture(Sim, e);
-            if (session.Known.Add(e.Key))
-            {
-                session.Send(new EntitySpawnMsg(state));
-            }
-            else
-            {
-                states.Add(state);
-            }
-        }
-        foreach (var key in session.Known.ToList())
-        {
-            if (!visible.Contains(key))
-            {
-                session.Known.Remove(key);
-                session.Send(new EntityDespawnMsg(key));
-            }
-        }
-        if (states.Count > 0)
-        {
-            session.Send(new EntityUpdateMsg(states, Sim.Clock.Time));
-        }
+        _outbox.Clear();
     }
 
     private void DispatchEvents()
@@ -256,7 +240,7 @@ public sealed class ZoneInstance
     {
         Sessions.Add(session);
         session.Zone = this;
-        session.Known.Clear();
+        session.View.Reset();
         session.LastSnapshotAt = double.NegativeInfinity;
         session.LastSelfAt = double.NegativeInfinity;
         LastPopulatedAt = Sim.Clock.Time;
@@ -274,8 +258,13 @@ public sealed class ZoneInstance
             LifetimeSystem.Despawn(Sim, session.Entity);
             Sim.World.Flush();
         }
+        var view = session.View;
+        var per = Math.Max(1, session.SnapshotsBuilt);
+        _log.LogInformation("{Session} left {Zone}: {PerSnapshot:0} snapshot bytes per snapshot over {Snapshots} snapshots since connecting: {Changes:0} changes, {Interest:0} spawns and despawns, {Self:0} self ({Spawns} spawns, {Updates} full states, {Deltas} deltas, {SelfStates} self states)",
+            session, Coord, session.SnapshotBytesPerSnapshot, session.SnapshotsBuilt, session.ChangeBytes / (double)per, session.InterestBytes / (double)per, session.SelfBytes / (double)per,
+            view.Spawns, view.Updates, view.Deltas, view.SelfStates);
         session.Entity = Entity.None;
-        session.Known.Clear();
+        view.Reset();
     }
 
     public IEnumerable<ChunkData> ModifiedChunks() => Sim.Terrain.LoadedChunks.Where(c => c.Modified);

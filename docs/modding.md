@@ -83,7 +83,7 @@ effects:
           - { type: damage, amount: "weave.base_damage * spell.power * 0.7", threads: $threads }
 ```
 
-`$threads` resolves to the weave's Threads, `$thread_status` to the first Thread's status. `hollowwake schema` does not list effect parameters; the handlers in `HollowWake.Core/Effects/BuiltinEffects.cs` are the reference.
+`$threads` resolves to the weave's Threads, `$thread_status` to the first Thread's status. `hollowwake schema` does not list effect parameters; the handlers in `HollowWake.Core/Effects/Handlers/` (one file per family: damage, status, delivery, summon, movement, flow, utility) are the reference.
 
 ## Code mods
 

@@ -48,6 +48,7 @@ namespace HollowWake.Protocol;
 [JsonDerivedType(typeof(ZoneChangedMsg), "zone_changed")]
 [JsonDerivedType(typeof(EntitySpawnMsg), "entity_spawn")]
 [JsonDerivedType(typeof(EntityUpdateMsg), "entity_update")]
+[JsonDerivedType(typeof(EntityDeltaMsg), "entity_delta")]
 [JsonDerivedType(typeof(EntityDespawnMsg), "entity_despawn")]
 [JsonDerivedType(typeof(SelfStateMsg), "self_state")]
 [JsonDerivedType(typeof(CombatEventMsg), "combat_event")]
@@ -64,7 +65,21 @@ public abstract record Message;
 
 // ---------------------------------------------------------------- client -> server
 
-public sealed record HelloMsg(string ClientVersion, int Protocol) : Message;
+public sealed record HelloMsg(string ClientVersion, int Protocol) : Message
+{
+    private readonly List<string>? _features;
+
+    /// <summary>
+    /// Optional capabilities the client understands, such as <see cref="ProtocolInfo.EntityDeltaFeature"/>.
+    /// Omitted from the wire when empty; a hello without features gets the plain protocol.
+    /// </summary>
+    public List<string>? Features
+    {
+        get => _features is { Count: > 0 } ? _features : null;
+        init => _features = value;
+    }
+}
+
 public sealed record LoginMsg(string Account, string Token) : Message;
 public sealed record CreateCharacterMsg(string Name, string Calling) : Message;
 public sealed record SelectCharacterMsg(string CharacterId) : Message;
@@ -101,7 +116,18 @@ public sealed record WorldInfo(ulong Seed, int ChunkSize, int ZoneChunks, int Re
 
 public sealed record OverlayInfo(string Id, bool Global, List<int[]> Regions, List<int[]> Zones, double[]? Circle, Dictionary<string, double> Params, int Priority);
 
-public sealed record WelcomeMsg(string ServerVersion, int Protocol, string ServerName, string Motd) : Message;
+public sealed record WelcomeMsg(string ServerVersion, int Protocol, string ServerName, string Motd) : Message
+{
+    private readonly List<string>? _features;
+
+    /// <summary>The hello features the server granted this client. Omitted from the wire when empty.</summary>
+    public List<string>? Features
+    {
+        get => _features is { Count: > 0 } ? _features : null;
+        init => _features = value;
+    }
+}
+
 public sealed record LoginResultMsg(bool Ok, string? AccountId, string? Error) : Message;
 public sealed record CharacterSummary(string Id, string Name, string Calling, int Level, string Zone);
 public sealed record CharacterListMsg(List<CharacterSummary> Characters, List<string> Callings) : Message;
@@ -137,11 +163,106 @@ public sealed record EntityState
     public float VX { get; init; }
     public float VY { get; init; }
     public float VZ { get; init; }
+
+    /// <summary>
+    /// Set on spawns of things that never move or change on their own (flora, props, markers, founts,
+    /// drops). Static entities never appear in updates: a later spawn for the same key replaces the
+    /// state, and a despawn removes it. Omitted from the wire when false.
+    /// </summary>
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+    public bool Static { get; init; }
 }
 
 public sealed record EntitySpawnMsg(EntityState State) : Message;
 public sealed record EntityUpdateMsg(List<EntityState> States, double ServerTime) : Message;
 public sealed record EntityDespawnMsg(long Key) : Message;
+
+/// <summary>
+/// Changes to known dynamic entities since the last state this client was sent, for clients that asked
+/// for deltas (they get these instead of the changed-entity part of entity updates; refreshes and
+/// changes a delta cannot express still arrive as full states in an entity update).
+/// </summary>
+public sealed record EntityDeltaMsg(List<EntityDelta> Deltas, double ServerTime) : Message;
+
+/// <summary>
+/// The fields of one entity that changed; absent (null) means unchanged. Strings that can become empty
+/// (pattern, look, faction, rarity, interactable, casting) arrive as "" when they do. Flags and statuses
+/// arrive whole when they change; resources and resource maxima carry only the entries that changed.
+/// </summary>
+public sealed record EntityDelta
+{
+    public long Key { get; init; }
+    public string? Name { get; init; }
+    public string? Pattern { get; init; }
+    public string? Look { get; init; }
+    public float? X { get; init; }
+    public float? Y { get; init; }
+    public float? Z { get; init; }
+    public float? Yaw { get; init; }
+    public float? Radius { get; init; }
+    public float? Height { get; init; }
+    public string? Faction { get; init; }
+    public string? Rarity { get; init; }
+    public int? Level { get; init; }
+    public Dictionary<string, float>? Resources { get; init; }
+    public Dictionary<string, float>? ResourceMax { get; init; }
+    public List<string>? Flags { get; init; }
+    public List<string>? Statuses { get; init; }
+    public string? Interactable { get; init; }
+    public bool? Dead { get; init; }
+    public string? Casting { get; init; }
+    public float? CastProgress { get; init; }
+    public bool? Grounded { get; init; }
+    public float? VX { get; init; }
+    public float? VY { get; init; }
+    public float? VZ { get; init; }
+
+    /// <summary>What a client does with a delta: the known state with every field the delta carries replaced.</summary>
+    public EntityState ApplyTo(EntityState state)
+    {
+        static string? Cleared(string value) => value.Length == 0 ? null : value;
+        static Dictionary<string, float> Merged(Dictionary<string, float> before, Dictionary<string, float>? changed)
+        {
+            if (changed is null)
+            {
+                return before;
+            }
+            var merged = new Dictionary<string, float>(before);
+            foreach (var (key, value) in changed)
+            {
+                merged[key] = value;
+            }
+            return merged;
+        }
+        return state with
+        {
+            Name = Name ?? state.Name,
+            Pattern = Pattern is null ? state.Pattern : Cleared(Pattern),
+            Look = Look is null ? state.Look : Cleared(Look),
+            X = X ?? state.X,
+            Y = Y ?? state.Y,
+            Z = Z ?? state.Z,
+            Yaw = Yaw ?? state.Yaw,
+            Radius = Radius ?? state.Radius,
+            Height = Height ?? state.Height,
+            Faction = Faction is null ? state.Faction : Cleared(Faction),
+            Rarity = Rarity is null ? state.Rarity : Cleared(Rarity),
+            Level = Level ?? state.Level,
+            Resources = Merged(state.Resources, Resources),
+            ResourceMax = Merged(state.ResourceMax, ResourceMax),
+            Flags = Flags ?? state.Flags,
+            Statuses = Statuses ?? state.Statuses,
+            Interactable = Interactable is null ? state.Interactable : Cleared(Interactable),
+            Dead = Dead ?? state.Dead,
+            Casting = Casting is null ? state.Casting : Cleared(Casting),
+            CastProgress = CastProgress ?? state.CastProgress,
+            Grounded = Grounded ?? state.Grounded,
+            VX = VX ?? state.VX,
+            VY = VY ?? state.VY,
+            VZ = VZ ?? state.VZ,
+        };
+    }
+}
 
 public sealed record WeaveSlotInfo(int Slot, string Key, string Name, string? Look, double ReadyIn, Dictionary<string, double> Costs, string Targeting, double Range);
 public sealed record ItemInfo(long Uid, string Base, string Name, string Rarity, int Count, int Level, string? Slot, List<string> Lines, Dictionary<string, double> Local);
@@ -186,4 +307,7 @@ public sealed record DisconnectMsg(string Reason) : Message;
 public static class ProtocolInfo
 {
     public const int Version = 1;
+
+    /// <summary>Hello feature: the client applies <see cref="EntityDeltaMsg"/>, so changes may be sent as deltas.</summary>
+    public const string EntityDeltaFeature = "entity_delta";
 }

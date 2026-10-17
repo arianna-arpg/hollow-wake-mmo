@@ -377,6 +377,18 @@ public partial class ClientWorld : Node3D
         }
     }
 
+    /// <summary>
+    /// Applies the fields a delta carries to a known entity. A delta for an entity this client does not know
+    /// is ignored: the server's next refresh brings its full state.
+    /// </summary>
+    public void ApplyDelta(EntityDelta delta)
+    {
+        if (_entities.TryGetValue(delta.Key, out var view))
+        {
+            view.Apply(delta.ApplyTo(view.State), snap: false);
+        }
+    }
+
     public void Despawn(long key)
     {
         if (_entities.Remove(key, out var view))
