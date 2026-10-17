@@ -74,6 +74,14 @@ public static class Bench
         return sw.Elapsed.TotalMilliseconds;
     }
 
+    /// <summary>Collects garbage before a timed loop, so a collection of startup data does not land inside it.</summary>
+    private static void Settle()
+    {
+        GC.Collect();
+        GC.WaitForPendingFinalizers();
+        GC.Collect();
+    }
+
     // ------------------------------------------------------------ attributes
 
     private static IEnumerable<Result> Attributes(ContentRegistry content)
@@ -100,6 +108,7 @@ public static class Bench
             set.Get("damage", scope, tags[i % tags.Length]);
             set.Apply("damage", 100, scope, tags[i % tags.Length], extra);
         }
+        Settle();
         const int n = 200_000;
         var cached = Time(() => set.Get("life.max", scope, tags[0]), n);
         yield return new Result("attribute.get.cached", cached / n * 1e6, "ns/op", "formula + 20 modifiers, cached");
@@ -111,6 +120,7 @@ public static class Bench
         yield return new Result("attribute.get.uncached", scopedGet / (n / 10) * 1e6, "ns/op", "40 modifiers, 4 contexts, cache cleared");
         var apply = Time(() => set.Apply("damage", 100, scope, tags[0], extra), n);
         yield return new Result("attribute.apply.extra", apply / n * 1e6, "ns/op", "damage fold with weave extras (never cached)");
+        Settle();
         var before = GC.GetTotalAllocatedBytes(true);
         for (var i = 0; i < 10_000; i++)
         {
@@ -132,6 +142,14 @@ public static class Bench
             Expr.Parse("clamp(accuracy / max(1, accuracy + evasion * 0.25), 0.05, 1)"),
         };
         scope.Set("accuracy", 180).Set("evasion", 60);
+        for (var i = 0; i < 20_000; i++)
+        {
+            foreach (var f in formulas)
+            {
+                f.Evaluate(scope);
+            }
+        }
+        Settle();
         const int n = 1_000_000;
         var total = 0.0;
         var ms = Time(() =>
@@ -142,12 +160,18 @@ public static class Bench
             }
         }, n / formulas.Length);
         yield return new Result("expression.evaluate", ms / n * 1e6, "ns/eval", $"four formulas, checksum {total:0}");
+        Settle();
         var before = GC.GetTotalAllocatedBytes(true);
         for (var i = 0; i < 100_000; i++)
         {
             formulas[1].Evaluate(scope);
         }
         yield return new Result("expression.alloc", (GC.GetTotalAllocatedBytes(true) - before) / 100_000.0, "bytes/eval", "lerp with rand()");
+        for (var i = 0; i < 2_000; i++)
+        {
+            Expr.Parse("40 + level * 10 + vigor * 4");
+        }
+        Settle();
         var parse = Time(() => Expr.Parse("40 + level * 10 + vigor * 4 + " + Guid.NewGuid().ToString("N")[..4].Length), 20_000);
         yield return new Result("expression.parse", parse / 20_000 * 1e6, "ns/parse", "uncached parse of a short formula");
     }
@@ -162,6 +186,7 @@ public static class Bench
         var info = generator.Zone(zone);
         yield return new Result("worldgen.zone.plan", sw.Elapsed.TotalMilliseconds, "ms", $"{info.Pois.Count} pois, {info.Quests.Count} quests");
         var chunks = generator.Layout.ChunksOf(zone).ToList();
+        Settle();
         sw.Restart();
         var before = GC.GetTotalAllocatedBytes(true);
         long cells = 0;
@@ -236,6 +261,7 @@ public static class Bench
         var entitiesStart = sim.World.Count;
         sim.Run(40);
         sim.Profile = true;
+        Settle();
         var samples = new double[ticks];
         var allocBefore = GC.GetTotalAllocatedBytes(true);
         var gen0Before = GC.CollectionCount(0);
@@ -260,31 +286,73 @@ public static class Bench
         var errors = log.Lines.Count(l => l.StartsWith("error"));
         yield return new Result("zone.errors", errors, "count", errors == 0 ? "no system errors" : log.Lines.First(l => l.StartsWith("error")));
 
-        // Snapshots: what the server builds and serializes per player per snapshot.
-        var interest = (float)content.Rules.Number("server.interest_radius", 48);
-        sw.Restart();
-        long bytes = 0;
-        var states = 0;
-        for (var round = 0; round < 10; round++)
+        // Snapshots, on the server path: one view per player persists across snapshots and the zone ticks
+        // twice between snapshots (a 20 Hz simulation under 10 Hz snapshots). Entering costs one burst of
+        // spawns; afterwards only changed entities are sent, as full states or, when a client opts in, deltas.
+        var builder = new SnapshotBuilder(sim, (float)content.Rules.Number("server.interest_radius", 48));
+        var views = new List<SnapshotView>();
+        var output = new List<Message>();
+        long enterBytes = 0;
+        foreach (var p in playerEntities)
         {
-            foreach (var p in playerEntities)
+            var view = new SnapshotView();
+            views.Add(view);
+            output.Clear();
+            builder.Entities(view, p, output);
+            if (builder.Self(view, p) is { } self)
             {
-                var t = sim.World.Get<Transform>(p)!;
-                var list = new List<EntityState>();
-                foreach (var (e, _, _) in sim.Spatial.Within(t.Position, interest, 64f))
+                output.Add(self);
+            }
+            enterBytes += Encoded(output);
+        }
+        yield return new Result("snapshot.enter", enterBytes / (double)players / 1024, "KB/player", "spawns and self state on entering the zone, sent once");
+        const int snapshots = 50;
+        var (fullMs, fullBytes, known) = Snapshot(sim, builder, views, playerEntities, output, snapshots);
+        yield return new Result("snapshot.build", fullMs / (snapshots * players), "ms/player", $"{known / (double)(snapshots * players):0} known entities per player; build and encode");
+        yield return new Result("snapshot.bytes", fullBytes / (double)(snapshots * players) / 1024, "KB/player", "changed entities as full states plus self state, steady state, JSON");
+        foreach (var view in views)
+        {
+            view.SendDeltas = true;
+        }
+        var (deltaMs, deltaBytes, _) = Snapshot(sim, builder, views, playerEntities, output, snapshots);
+        yield return new Result("snapshot.delta.build", deltaMs / (snapshots * players), "ms/player", "the same with deltas opted in");
+        yield return new Result("snapshot.delta.bytes", deltaBytes / (double)(snapshots * players) / 1024, "KB/player", "changed entities as deltas plus self state, steady state, JSON");
+    }
+
+    /// <summary>Runs a stretch of snapshots the way the zone does: two ticks, then every viewer; the self state every fifth snapshot.</summary>
+    private static (double Milliseconds, long Bytes, long Known) Snapshot(Simulation sim, SnapshotBuilder builder, List<SnapshotView> views, List<Entity> viewers, List<Message> output, int snapshots)
+    {
+        double ms = 0;
+        long bytes = 0;
+        long known = 0;
+        for (var round = 0; round < snapshots; round++)
+        {
+            sim.Tick();
+            sim.Tick();
+            for (var i = 0; i < viewers.Count; i++)
+            {
+                output.Clear();
+                var t0 = Stopwatch.GetTimestamp();
+                builder.Entities(views[i], viewers[i], output);
+                if (round % 5 == 0 && builder.Self(views[i], viewers[i]) is { } self)
                 {
-                    if (sim.World.IsAlive(e) && !sim.World.Has<Spawner>(e))
-                    {
-                        list.Add(Snapshots.Capture(sim, e));
-                    }
+                    output.Add(self);
                 }
-                states += list.Count;
-                bytes += MessageSerializer.Encode(new EntityUpdateMsg(list, sim.Clock.Time)).Length;
-                bytes += MessageSerializer.Encode(Snapshots.Self(sim, p)).Length;
+                bytes += Encoded(output);
+                ms += Stopwatch.GetElapsedTime(t0).TotalMilliseconds;
+                known += views[i].Known.Count;
             }
         }
-        var perSnapshot = sw.Elapsed.TotalMilliseconds / (10.0 * players);
-        yield return new Result("snapshot.build", perSnapshot, "ms/player", $"{states / (10.0 * players):0} visible entities per player");
-        yield return new Result("snapshot.bytes", bytes / (10.0 * players) / 1024, "KB/player", "entity update plus self state, JSON");
+        return (ms, bytes, known);
+    }
+
+    private static long Encoded(List<Message> messages)
+    {
+        long bytes = 0;
+        foreach (var m in messages)
+        {
+            bytes += MessageSerializer.Encode(m).Length;
+        }
+        return bytes;
     }
 }

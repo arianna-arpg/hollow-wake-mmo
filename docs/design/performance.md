@@ -10,7 +10,7 @@ The foundation must stay pristine as the game scales, so performance is measured
 - `expression.*`: formula evaluation, allocation and uncached parsing.
 - `worldgen.*`: zone planning, chunk generation time and allocation, climate sampling.
 - `zone.*`: a loaded start zone with several hundred monsters and a few walking, casting players, ticking for a stretch: average, median, 95th percentile and worst tick, allocation per tick, events per tick, per-system time and allocation (the simulation's profiler), and errors.
-- `snapshot.*`: what the server builds and serializes per player per snapshot.
+- `snapshot.*`: what the server builds and serializes per player per snapshot on the server path: the one-time burst on entering a zone, then steady state with only changed entities as full states, then the same with deltas opted in.
 
 `--only <group>` runs one group; `--monsters`, `--players` and `--ticks` size the zone run; `--json` emits results for machines.
 
