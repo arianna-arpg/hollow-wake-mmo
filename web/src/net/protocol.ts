@@ -242,6 +242,7 @@ export interface SocketStoneMsg {
   stone: Int64;
   slot: number;
   socket: number;
+  host?: Int64;
 }
 
 export interface UnsocketStoneMsg {
@@ -250,6 +251,7 @@ export interface UnsocketStoneMsg {
   socket: number;
   x?: number;
   y?: number;
+  host?: Int64;
 }
 
 export interface LearnFormMsg {
@@ -306,6 +308,20 @@ export interface BuyBackMsg {
   t: "buy_back";
   vendor: Int64;
   item: Int64;
+}
+
+export interface BuyPageMsg {
+  t: "buy_page";
+  container: string;
+}
+
+export interface StationServiceMsg {
+  t: "station_service";
+  station: Int64;
+  service: string;
+  item?: Int64;
+  slot?: number;
+  node?: string;
 }
 
 export interface WelcomeMsg {
@@ -549,6 +565,7 @@ export interface StationStateMsg {
   closed: boolean;
   tags?: string[];
   reach?: number;
+  services?: StationServiceInfo[];
 }
 
 // ---------------------------------------------------------------- records inside messages
@@ -828,6 +845,17 @@ export interface RecipeInfo {
   cost?: Record<string, number>;
 }
 
+export interface StationServiceInfo {
+  id: string;
+  label: string;
+  item?: Int64;
+  slot?: number;
+  node?: string;
+  price?: Record<string, number>;
+  enabled?: boolean;
+  reason?: string;
+}
+
 export interface OverlayInfo {
   id: string;
   global: boolean;
@@ -956,6 +984,8 @@ export type Message =
   | BuyMsg
   | SellMsg
   | BuyBackMsg
+  | BuyPageMsg
+  | StationServiceMsg
   | WelcomeMsg
   | LoginResultMsg
   | CharacterListMsg
@@ -1039,6 +1069,8 @@ export const MESSAGE_TYPES: readonly MessageType[] = [
   "buy",
   "sell",
   "buy_back",
+  "buy_page",
+  "station_service",
   "welcome",
   "login_result",
   "character_list",

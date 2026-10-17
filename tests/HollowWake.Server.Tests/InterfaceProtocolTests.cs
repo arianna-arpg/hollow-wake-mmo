@@ -87,8 +87,8 @@ public partial class InterfaceProtocolTests
         yield return new SwapWeaveSlotsMsg(0, 3);
         yield return new CommandMinionsMsg("assault", 7, 1, 2, 3) { Group = "remnants" };
         yield return new MoveItemMsg(9, "equipment", 0, 0) { Slot = "main_hand" };
-        yield return new SocketStoneMsg(10, 1, 0);
-        yield return new UnsocketStoneMsg(1, 0) { X = 3, Y = 1 };
+        yield return new SocketStoneMsg(10, 1, 0) { Host = 9 };
+        yield return new UnsocketStoneMsg(1, 0) { X = 3, Y = 1, Host = 9 };
         yield return new LearnFormMsg(11, 2);
         yield return new UnlearnFormMsg(2) { X = 0, Y = 0 };
         yield return new RefundPassiveMsg("hf1");
@@ -98,6 +98,8 @@ public partial class InterfaceProtocolTests
         yield return new BuyMsg(4, "floss", 2);
         yield return new SellMsg(4, 9) { Count = 1 };
         yield return new BuyBackMsg(4, 9);
+        yield return new BuyPageMsg("personal_stash");
+        yield return new StationServiceMsg(4, "level_item") { Item = 10, Slot = 1, Node = "hf1" };
 
         // server -> client
         yield return new WelcomeMsg("1", ProtocolInfo.Version, "dev", "motd") { Features = new List<string> { ProtocolInfo.InterfaceFeature } };
@@ -171,7 +173,7 @@ public partial class InterfaceProtocolTests
         yield return new StationStateMsg(4, "Smith's Anvil", new List<RecipeInfo>
         {
             new("reweave_blade", "Reweave a Blade", new List<RecipeInputInfo> { new("Iron Ore", 1, 3) }, item, false) { Reason = "Missing Iron Ore.", Cost = new Dictionary<string, double> { ["shards"] = 5 } },
-        }, false) { Tags = new List<string> { "smithing" }, Reach = 2.5 };
+        }, false) { Tags = new List<string> { "smithing" }, Reach = 2.5, Services = new List<StationServiceInfo> { new("level_item", "Raise a level") { Item = 10, Slot = 1, Node = "hf1", Price = new Dictionary<string, double> { ["shards"] = 40 }, Enabled = false, Reason = "Not enough Shards." } } };
     }
 
     [Fact]

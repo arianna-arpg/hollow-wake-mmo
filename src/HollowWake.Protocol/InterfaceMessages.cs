@@ -41,14 +41,36 @@ public sealed record MoveItemMsg(long Item, string Container, int X, int Y) : Me
     public string? Slot { get; init; }
 }
 
-/// <summary>Sockets a glyph stone from the bag into a socket of a weave slot; a stone already there goes back to the bag.</summary>
-public sealed record SocketStoneMsg(long Stone, int Slot, int Socket) : Message;
+/// <summary>
+/// Sockets a stone from the bag into a socket: of a weave slot, or with <see cref="Host"/> of a gear item (worn or
+/// in the bag). A stone already there goes back to the bag.
+/// </summary>
+public sealed record SocketStoneMsg(long Stone, int Slot, int Socket) : Message
+{
+    /// <summary>The gear item whose socket takes the stone; omitted for a weave slot's socket.</summary>
+    public long? Host { get; init; }
+}
 
-/// <summary>Takes the stone out of a weave slot's socket into the bag, at a cell when one is given.</summary>
+/// <summary>Takes the stone out of a weave slot's socket (or a gear item's, with <see cref="Host"/>) into the bag, at a cell when one is given.</summary>
 public sealed record UnsocketStoneMsg(int Slot, int Socket) : Message
 {
     public int? X { get; init; }
     public int? Y { get; init; }
+    public long? Host { get; init; }
+}
+
+/// <summary>Buys the next page of a stash at the server's price.</summary>
+public sealed record BuyPageMsg(string Container) : Message;
+
+/// <summary>
+/// Asks a station for a service by name (raising a stone's or codex's level, merging codices, resetting passives),
+/// naming the item, weave slot or node it applies to where the service needs one.
+/// </summary>
+public sealed record StationServiceMsg(long Station, string Service) : Message
+{
+    public long? Item { get; init; }
+    public int? Slot { get; init; }
+    public string? Node { get; init; }
 }
 
 /// <summary>Learns a form item from the bag into a weave slot; a copy already there swaps back to the bag.</summary>
@@ -327,6 +349,19 @@ public sealed record StationStateMsg(long Source, string Name, List<RecipeInfo> 
 {
     public List<string>? Tags { get; init; }
     public double? Reach { get; init; }
+    /// <summary>The services the station offers, each quoted for what it would apply to.</summary>
+    public List<StationServiceInfo>? Services { get; init; }
+}
+
+/// <summary>A service a station offers, quoted for one item, weave slot or node: its price and whether it can be done now.</summary>
+public sealed record StationServiceInfo(string Id, string Label)
+{
+    public long? Item { get; init; }
+    public int? Slot { get; init; }
+    public string? Node { get; init; }
+    public Dictionary<string, double>? Price { get; init; }
+    public bool? Enabled { get; init; }
+    public string? Reason { get; init; }
 }
 
 public sealed record RecipeInfo(string Id, string Name, List<RecipeInputInfo> Inputs, ItemInfo Output, bool Craftable)

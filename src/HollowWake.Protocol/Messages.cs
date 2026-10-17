@@ -59,6 +59,8 @@ namespace HollowWake.Protocol;
 [JsonDerivedType(typeof(BuyMsg), "buy")]
 [JsonDerivedType(typeof(SellMsg), "sell")]
 [JsonDerivedType(typeof(BuyBackMsg), "buy_back")]
+[JsonDerivedType(typeof(BuyPageMsg), "buy_page")]
+[JsonDerivedType(typeof(StationServiceMsg), "station_service")]
 // server -> client
 [JsonDerivedType(typeof(WelcomeMsg), "welcome")]
 [JsonDerivedType(typeof(LoginResultMsg), "login_result")]
