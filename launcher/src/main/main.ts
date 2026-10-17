@@ -14,7 +14,7 @@
 // contract.
 //
 // Environment overrides, for testing and mirrors (all optional):
-//   HOLLOWWAKE_GITHUB_TOKEN        token for a private repository (also settable in the page)
+//   HOLLOWWAKE_GITHUB_TOKEN        optional GitHub token, for a private fork (also settable in the page)
 //   HOLLOWWAKE_FEED                a manifest.json (path or URL) to install from instead of GitHub
 //   HOLLOWWAKE_GITHUB_API          REST root instead of https://api.github.com
 //   HOLLOWWAKE_REPO                owner/name instead of package.json's repository

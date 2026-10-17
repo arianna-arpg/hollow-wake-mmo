@@ -65,3 +65,16 @@ jobs:
           docker logs hollowwake-smoke | tee /tmp/smoke.log
           grep -q "is up" /tmp/smoke.log
           docker stop hollowwake-smoke
+
+  ci:
+    # The one check main requires (branch protection): green only when every job above succeeded.
+    needs: [build-test, launcher, docker]
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Every job succeeded
+        env:
+          RESULTS: ${{ toJSON(needs) }}
+        run: |
+          echo "$RESULTS"
+          test "$(jq -r '[.[].result] | all(. == "success")' <<<"$RESULTS")" = true
