@@ -45,6 +45,15 @@ public sealed class Session
     /// <summary>Payload bytes of snapshot traffic: entity spawns, updates, deltas and despawns, and self states.</summary>
     public long SnapshotBytes { get; private set; }
 
+    /// <summary>The part of <see cref="SnapshotBytes"/> that is entity changes: updates and deltas.</summary>
+    public long ChangeBytes { get; private set; }
+
+    /// <summary>The part of <see cref="SnapshotBytes"/> that is interest: spawns and despawns.</summary>
+    public long InterestBytes { get; private set; }
+
+    /// <summary>The part of <see cref="SnapshotBytes"/> that is self states.</summary>
+    public long SelfBytes { get; private set; }
+
     /// <summary>Entity snapshots built for this client; with <see cref="SnapshotBytes"/>, the bytes it costs per snapshot.</summary>
     public long SnapshotsBuilt { get; set; }
 
@@ -62,9 +71,20 @@ public sealed class Session
             var payload = MessageSerializer.Encode(message);
             BytesSent += payload.Length;
             MessagesSent++;
-            if (message is EntitySpawnMsg or EntityUpdateMsg or EntityDeltaMsg or EntityDespawnMsg or SelfStateMsg)
+            switch (message)
             {
-                SnapshotBytes += payload.Length;
+                case EntityUpdateMsg or EntityDeltaMsg:
+                    ChangeBytes += payload.Length;
+                    SnapshotBytes += payload.Length;
+                    break;
+                case EntitySpawnMsg or EntityDespawnMsg:
+                    InterestBytes += payload.Length;
+                    SnapshotBytes += payload.Length;
+                    break;
+                case SelfStateMsg:
+                    SelfBytes += payload.Length;
+                    SnapshotBytes += payload.Length;
+                    break;
             }
             // Updates and deltas may be dropped by unreliable transports; the snapshot refresh repairs them.
             Connection.Send(payload, reliable: message is not (EntityUpdateMsg or EntityDeltaMsg));

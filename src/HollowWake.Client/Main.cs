@@ -112,7 +112,12 @@ public partial class Main : Node3D
             _login.SetStatus("Could not connect: " + _net.LastError);
             return;
         }
-        _net.Send(new HelloMsg(ClientInfo.Name + " 0.1", ProtocolInfo.Version));
+        // The client applies entity deltas; --full-states asks for full entity states only (for comparison and debugging).
+        var deltas = !OS.GetCmdlineUserArgs().Contains("--full-states");
+        _net.Send(new HelloMsg(ClientInfo.Name + " 0.1", ProtocolInfo.Version)
+        {
+            Features = deltas ? new List<string> { ProtocolInfo.EntityDeltaFeature } : null,
+        });
         _net.Send(new LoginMsg(account, ""));
         _login.SetStatus("Logging in...");
     }
@@ -160,6 +165,7 @@ public partial class Main : Node3D
         {
             case WelcomeMsg w:
                 _login.SetStatus($"Connected to {w.ServerName}: {w.Motd}");
+                GD.Print($"server granted features: {(w.Features is null ? "none" : string.Join(", ", w.Features))}");
                 break;
             case LoginResultMsg r:
                 _login.SetStatus(r.Ok ? "Logged in. Pick a character." : "Login failed: " + r.Error);
@@ -196,6 +202,12 @@ public partial class Main : Node3D
                 foreach (var state in u.States)
                 {
                     _world.Update(state);
+                }
+                break;
+            case EntityDeltaMsg d:
+                foreach (var delta in d.Deltas)
+                {
+                    _world.ApplyDelta(delta);
                 }
                 break;
             case EntityDespawnMsg d:

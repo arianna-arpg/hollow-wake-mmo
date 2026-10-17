@@ -161,20 +161,20 @@ public class LoopbackTests
 
     // ------------------------------------------------------------ interest and deltas
 
-    /// <summary>Logs in a new account, creates a character and enters the world; returns what arrived on entering.</summary>
-    private static (LoopbackClient Client, EnterWorldMsg Enter, Session Session, List<Message> Replies) Enter(GameServer server, LoopbackTransport transport, string account, string name)
+    /// <summary>Logs in a new account, creates a character and enters the world; returns the welcome and what arrived on entering.</summary>
+    private static (LoopbackClient Client, EnterWorldMsg Enter, Session Session, List<Message> Replies, WelcomeMsg Welcome) Enter(GameServer server, LoopbackTransport transport, string account, string name, List<string>? features = null)
     {
         var client = transport.Connect();
-        client.Send(new HelloMsg("test", ProtocolInfo.Version));
+        client.Send(new HelloMsg("test", ProtocolInfo.Version) { Features = features });
         client.Send(new LoginMsg(account, ""));
-        Pump(server, client);
+        var welcome = Assert.Single(Pump(server, client).OfType<WelcomeMsg>());
         client.Send(new CreateCharacterMsg(name, "kindler"));
         var list = Assert.Single(Pump(server, client).OfType<CharacterListMsg>());
         client.Send(new SelectCharacterMsg(Assert.Single(list.Characters).Id));
         var replies = Pump(server, client, 3);
         var enter = Assert.Single(replies.OfType<EnterWorldMsg>());
         var session = server.Sessions.Sessions.Single(s => s.Character?.Name == name);
-        return (client, enter, session, replies);
+        return (client, enter, session, replies, welcome);
     }
 
     private static void Step(GameServer server, int ticks, params (LoopbackClient Client, List<Message> Inbox)[] clients)
@@ -193,7 +193,9 @@ public class LoopbackTests
     public void StaticEntitiesSpawnOnceAndNeverUpdate()
     {
         var (server, transport) = Create();
-        var (client, enter, session, replies) = Enter(server, transport, "flora", "Fern");
+        var (client, enter, session, replies, welcome) = Enter(server, transport, "flora", "Fern");
+        Assert.Null(welcome.Features);
+        Assert.False(session.View.SendDeltas);
         var zone = session.Zone!;
         var spawns = replies.OfType<EntitySpawnMsg>().Select(s => s.State).ToList();
         Assert.NotEmpty(spawns);
@@ -235,8 +237,8 @@ public class LoopbackTests
     public void StandingPlayerGetsNoUpdatesForItselfWhileAMovingOneKeepsGettingThem()
     {
         var (server, transport) = Create();
-        var (still, stillEnter, stillSession, _) = Enter(server, transport, "still", "Wren");
-        var (mover, moverEnter, moverSession, _) = Enter(server, transport, "mover", "Ash");
+        var (still, stillEnter, stillSession, _, _) = Enter(server, transport, "still", "Wren");
+        var (mover, moverEnter, moverSession, _, _) = Enter(server, transport, "mover", "Ash");
         var stillInbox = new List<Message>();
         var moverInbox = new List<Message>();
 
@@ -271,11 +273,61 @@ public class LoopbackTests
     }
 
     [Fact]
+    public void SnapshotSettingsBindFromServerYaml()
+    {
+        var path = Path.Combine(Path.GetTempPath(), $"hollowwake-snapshots-{Guid.NewGuid():N}.yaml");
+        File.WriteAllText(path, "snapshot_rate: 10\nsnapshots:\n  refresh_seconds: 3\n  sweep_seconds: 12\n  self_seconds: 0.25\n  self_max_seconds: 4\n  resource_step: 0.05\n  cast_steps: 4\n  interest_height: 32\n");
+        try
+        {
+            var bound = ServerConfig.Load(path).Snapshots;
+            Assert.Equal(new SnapshotSettings { RefreshSeconds = 3, SweepSeconds = 12, SelfSeconds = 0.25, SelfMaxSeconds = 4, ResourceStep = 0.05, CastSteps = 4, InterestHeight = 32 }, bound);
+        }
+        finally
+        {
+            File.Delete(path);
+        }
+        // The committed server settings load, and a settings section that is absent means the defaults.
+        var committed = ServerConfig.Load(Path.Combine(Path.GetDirectoryName(Path.GetDirectoryName(ContentDir()))!, "config", "server.yaml"));
+        Assert.NotNull(committed.Snapshots);
+        Assert.Equal(SnapshotSettings.Default, new ServerConfig().Snapshots);
+        Assert.Equal(new SnapshotSettings { RefreshSeconds = 0.05, SweepSeconds = 0.05, SelfSeconds = 0.05, SelfMaxSeconds = 0.05, ResourceStep = 0, CastSteps = 1, InterestHeight = 0 },
+            new SnapshotSettings { RefreshSeconds = 0, SweepSeconds = -1, SelfSeconds = 0, SelfMaxSeconds = 0, ResourceStep = -1, CastSteps = 0, InterestHeight = -5 }.Normalized());
+    }
+
+    [Fact]
+    public void HelloFeaturesAreOptInAndAbsentWhenEmpty()
+    {
+        // A hello without features is byte-for-byte the plain protocol, empty or not.
+        Assert.Equal("{\"t\":\"hello\",\"client_version\":\"test\",\"protocol\":1}", MessageSerializer.ToJson(new HelloMsg("test", ProtocolInfo.Version)));
+        Assert.Equal("{\"t\":\"hello\",\"client_version\":\"test\",\"protocol\":1}", MessageSerializer.ToJson(new HelloMsg("test", ProtocolInfo.Version) { Features = new List<string>() }));
+        var asked = MessageSerializer.ToJson(new HelloMsg("test", ProtocolInfo.Version) { Features = new List<string> { ProtocolInfo.EntityDeltaFeature } });
+        Assert.Contains("\"features\":[\"entity_delta\"]", asked);
+        var back = Assert.IsType<HelloMsg>(MessageSerializer.Decode(System.Text.Encoding.UTF8.GetBytes(asked)));
+        Assert.Equal(new List<string> { ProtocolInfo.EntityDeltaFeature }, back.Features);
+        Assert.Null(Assert.IsType<HelloMsg>(MessageSerializer.Decode(System.Text.Encoding.UTF8.GetBytes("{\"t\":\"hello\",\"client_version\":\"old\",\"protocol\":1}"))).Features);
+
+        var (server, transport) = Create();
+        var plain = transport.Connect();
+        plain.Send(new HelloMsg("old", ProtocolInfo.Version));
+        var welcome = Assert.Single(Pump(server, plain).OfType<WelcomeMsg>());
+        Assert.Null(welcome.Features);
+        Assert.DoesNotContain("features", MessageSerializer.ToJson(welcome));
+        var unknown = transport.Connect();
+        unknown.Send(new HelloMsg("future", ProtocolInfo.Version) { Features = new List<string> { "teleport" } });
+        Assert.Null(Assert.Single(Pump(server, unknown).OfType<WelcomeMsg>()).Features);
+        var asking = transport.Connect();
+        asking.Send(new HelloMsg("new", ProtocolInfo.Version) { Features = new List<string> { "teleport", ProtocolInfo.EntityDeltaFeature } });
+        Assert.Equal(new List<string> { ProtocolInfo.EntityDeltaFeature }, Assert.Single(Pump(server, asking).OfType<WelcomeMsg>()).Features);
+        Assert.Equal(new[] { false, false, true }, server.Sessions.Sessions.OrderBy(s => s.Id).Select(s => s.View.SendDeltas).ToArray());
+    }
+
+    [Fact]
     public void DeltasCarryOnlyWhatChanged()
     {
         var (server, transport) = Create();
-        var (client, enter, session, replies) = Enter(server, transport, "delta", "Sorrel");
-        session.View.SendDeltas = true;
+        var (client, enter, session, replies, welcome) = Enter(server, transport, "delta", "Sorrel", new List<string> { ProtocolInfo.EntityDeltaFeature });
+        Assert.Equal(new List<string> { ProtocolInfo.EntityDeltaFeature }, welcome.Features);
+        Assert.True(session.View.SendDeltas);
         var mirror = new Dictionary<long, EntityState>();
         var inbox = new List<Message>();
         client.Send(new MoveDirMsg(1, 0));
@@ -308,7 +360,7 @@ public class LoopbackTests
                     {
                         if (mirror.TryGetValue(delta.Key, out var before))
                         {
-                            mirror[delta.Key] = Apply(before, delta);
+                            mirror[delta.Key] = delta.ApplyTo(before);
                         }
                     }
                     break;
@@ -346,8 +398,9 @@ public class LoopbackTests
         Assert.Equal(new Dictionary<string, float> { ["life"] = 7 }, delta.Resources);
         Assert.Null(delta.ResourceMax);
         Assert.True(delta.Dead);
-        var applied = Apply(a, delta);
+        var applied = delta.ApplyTo(a);
         Assert.Equal(MessageSerializer.ToJson(new EntitySpawnMsg(b)), MessageSerializer.ToJson(new EntitySpawnMsg(applied)));
+        Assert.Same(a.ResourceMax, applied.ResourceMax);
         // A changed resource set cannot be expressed as a delta: the full state must go.
         Assert.Null(Snapshots.Delta(a, a with { Resources = new Dictionary<string, float> { ["life"] = 10 } }, out _));
         // Round trip through the wire format keeps absent fields absent.
@@ -356,48 +409,5 @@ public class LoopbackTests
         var back = Assert.IsType<EntityDeltaMsg>(MessageSerializer.Decode(MessageSerializer.Encode(new EntityDeltaMsg(new List<EntityDelta> { delta }, 1))));
         Assert.Equal(delta.X, back.Deltas[0].X);
         Assert.Null(back.Deltas[0].Y);
-    }
-
-    /// <summary>What a client does with a delta: every present field replaces the known one.</summary>
-    private static EntityState Apply(EntityState s, EntityDelta d)
-    {
-        static string? Clear(string? value) => value == "" ? null : value;
-        var resources = new Dictionary<string, float>(s.Resources);
-        foreach (var (k, v) in d.Resources ?? new Dictionary<string, float>())
-        {
-            resources[k] = v;
-        }
-        var maxes = new Dictionary<string, float>(s.ResourceMax);
-        foreach (var (k, v) in d.ResourceMax ?? new Dictionary<string, float>())
-        {
-            maxes[k] = v;
-        }
-        return s with
-        {
-            Name = d.Name ?? s.Name,
-            Pattern = d.Pattern is null ? s.Pattern : Clear(d.Pattern),
-            Look = d.Look is null ? s.Look : Clear(d.Look),
-            X = d.X ?? s.X,
-            Y = d.Y ?? s.Y,
-            Z = d.Z ?? s.Z,
-            Yaw = d.Yaw ?? s.Yaw,
-            Radius = d.Radius ?? s.Radius,
-            Height = d.Height ?? s.Height,
-            Faction = d.Faction is null ? s.Faction : Clear(d.Faction),
-            Rarity = d.Rarity is null ? s.Rarity : Clear(d.Rarity),
-            Level = d.Level ?? s.Level,
-            Resources = resources,
-            ResourceMax = maxes,
-            Flags = d.Flags ?? s.Flags,
-            Statuses = d.Statuses ?? s.Statuses,
-            Interactable = d.Interactable is null ? s.Interactable : Clear(d.Interactable),
-            Dead = d.Dead ?? s.Dead,
-            Casting = d.Casting is null ? s.Casting : Clear(d.Casting),
-            CastProgress = d.CastProgress ?? s.CastProgress,
-            Grounded = d.Grounded ?? s.Grounded,
-            VX = d.VX ?? s.VX,
-            VY = d.VY ?? s.VY,
-            VZ = d.VZ ?? s.VZ,
-        };
     }
 }
