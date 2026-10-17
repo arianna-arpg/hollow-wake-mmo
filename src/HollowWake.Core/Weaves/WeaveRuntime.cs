@@ -1679,7 +1679,7 @@ public sealed partial class WeaveRuntime
                 var context = new EffectContext { Sim = sim, Source = caster, Target = target,
                     Point = tt.Position, Direction = new Vector2(tt.Position.X - ct.Position.X, tt.Position.Y - ct.Position.Y),
                     Weave = weave, Tags = weave.Tags, Rng = new Rng(0) };
-                if (DeliveryForecasts.Describe(weave.Effects, context).PrimaryRegion is { } plan &&
+                if (DeliveryForecasts.DescribeDetached(weave.Effects, context).PrimaryRegion is { } plan &&
                     !plan.IsCandidate(context, target, tt.Position)) continue;
             }
             // A soft minimum: closer than min_range (edge to edge) the hint weighs near_weight, and without one

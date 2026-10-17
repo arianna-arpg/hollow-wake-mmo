@@ -35,4 +35,12 @@ Read-only reference: `arianna-arpg/arpg-game-world` checkout `118b510f8b5bfb7811
 
 Claude: review the shared provider/purity boundary, full/range/none policy at all stored-target applications, conditional held timing, and the explicit area-depth/proc-budget consequence in the proving duel. No skill IDs dispatch behavior. Unknown graph coverage remains unavailable; requirements, selection, payload damage and secondary emissions are not promised by a primary region. The integration chat owns the final PR, wire/client claims, performance evidence and smoke results.
 
-Acknowledged by: integration chat accepted this API seam; Claude review pending the integrated PR.
+## Allocation follow-up
+
+The integration chat requested inspection of repeated AI area-plan work after its integrated benchmark showed a behavior cost increase. Fresh internal observation contexts now avoid a redundant clone. Dependency preflight rents cleared thread-local scratch storage, reuses the existing bounded name-suffix cache and walks indexed collections without boxing. Public providers still receive the detached context required by the observation contract. Every query still checks live dependency safety, resolves current geometry and tests current target eligibility; no safety result, geometry, target choice or random result is cached. Returning scratch clears its context, actor references, dependency set, depth and failure.
+
+The small [AI query probe](../../experiments/cast-forecast-core/AiPlanProbe.cs) measured 1,312 to 568 allocated bytes per query against `f51599d`, a 57% reduction in this isolated scenario. [Evidence and command](../../experiments/cast-forecast-core/evidence/ai-plan-allocation.txt) record the conditions. Its elapsed times are illustrative, not a production performance or budget claim. Final default and minion-heavy benchmarks remain owned by integration; no competing heavy benchmark ran here.
+
+Verification: Release solution build has zero warnings/errors; Release solution tests pass with 562 core, 90 client and 38 server cases. New regressions exercise reused storage after a declined observation and across different arenas, and repeated AI queries with changing time, target mana, position, targetability, walls and phasing. Content validation has zero errors/warnings; the load smoke runs 200 ticks without system errors. Normalized duel output matches the retained core baseline exactly: complete proving trace (513 lines), tide channeler / spark duelist and wolf / hob (41 lines each, including full-run final totals). No content, selection order or RNG behavior changed in this follow-up.
+
+Acknowledged by: integration chat accepted this API seam and requested the allocation follow-up; Claude review pending the integrated PR.

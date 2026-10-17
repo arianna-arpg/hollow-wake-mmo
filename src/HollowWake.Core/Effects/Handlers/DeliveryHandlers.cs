@@ -185,7 +185,7 @@ internal sealed class AreaHandler : IEffectHandler
         ReportMiss = ctx.BoolOf(p["report_miss"], false),
     };
 
-    private sealed class Effect : CompiledEffect, IDeliveryPlanSource
+    private sealed class Effect : CompiledEffect, IDetachedDeliveryPlanSource
     {
         public required Shape Shape;
         public Expr? Radius;
@@ -237,8 +237,12 @@ internal sealed class AreaHandler : IEffectHandler
         {
             // Observation must not initialize the caller's lazy scope and freeze its time/distance.
             // Sample live inputs in a detached context; never advance either shared random stream.
-            ctx = ctx.Fork();
-            var inputs = new ForecastInputs(ctx);
+            return DescribeDetachedDelivery(ctx.Fork());
+        }
+
+        public DeliveryForecast DescribeDetachedDelivery(EffectContext ctx)
+        {
+            using var inputs = ForecastInputs.Rent(ctx);
             if (!inputs.ParameterOrAttribute(Radius, "area.radius") || !inputs.Expression(Angle) ||
                 Shape.HasAngle && !inputs.WeaveAttribute("area.angle") ||
                 Shape.HasWidth && !inputs.ParameterOrAttribute(Width, "area.width") ||
