@@ -41,6 +41,28 @@ public class MenuAndSheetTests
     }
 
     [Fact]
+    public void AContainerPageListedOncePerContainerIsOpenWhenAnyIsInReach()
+    {
+        var near = MenuFold.Served(new[] { "inventory", "stash" }, new[]
+        {
+            ("inventory", false, (string?)null, 0),
+            ("stash", true, (string?)"Stand at a stash chest.", 0),
+            ("stash", false, (string?)null, 0),
+        });
+        Assert.True(near["stash"].Exists);
+        Assert.Null(near["stash"].Sealed);
+        var far = MenuFold.Served(new[] { "stash" }, new[]
+        {
+            ("stash", true, (string?)"Stand at a stash chest.", 0),
+            ("stash", true, (string?)"Stand at the account chest.", 2),
+        });
+        Assert.Equal("Stand at a stash chest.", far["stash"].Sealed);
+        Assert.Equal(2, far["stash"].Pips);
+        var none = MenuFold.Served(new[] { "stash" }, Array.Empty<(string, bool, string?, int)>());
+        Assert.False(none["stash"].Exists);
+    }
+
+    [Fact]
     public void BadgesCapAndSignaturesChangeWithTheRows()
     {
         Assert.Equal("", MenuFold.BadgeText(0));

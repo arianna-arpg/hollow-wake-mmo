@@ -38,9 +38,10 @@ entries:
   - { id: page_weaves, name: Weaves, group: interface, order: 1, keys: [K] }
   - { id: page_passives, name: Passives, group: interface, order: 2, keys: [P] }
   - { id: page_reliquary, name: Reliquary, group: interface, order: 3, keys: [O] }
-  - { id: page_character, name: Character, group: interface, order: 4, keys: [C] }
-  - { id: page_options, name: Options, group: interface, order: 5, keys: [F10] }
-  - { id: ui_menu_tray, name: Menu, group: interface, order: 6, keys: [Tab], pad: [Start] }
+  - { id: page_stash, name: Stash, group: interface, order: 4, keys: [H] }
+  - { id: page_character, name: Character, group: interface, order: 5, keys: [C] }
+  - { id: page_options, name: Options, group: interface, order: 6, keys: [F10] }
+  - { id: ui_menu_tray, name: Menu, group: interface, order: 7, keys: [Tab], pad: [Start] }
   # The walk turns a book of two or more tabs; it is live only while one stands, so it may share Tab with the menu.
-  - { id: ui_book_next, name: Next tab, group: interface, context: book, order: 7, keys: [Tab], pad: [DpadDown] }
-  - { id: ui_book_previous, name: Previous tab, group: interface, context: book, order: 8, keys: [Shift+Tab], pad: [DpadUp] }
+  - { id: ui_book_next, name: Next tab, group: interface, context: book, order: 8, keys: [Tab], pad: [DpadDown] }
+  - { id: ui_book_previous, name: Previous tab, group: interface, context: book, order: 9, keys: [Shift+Tab], pad: [DpadUp] }

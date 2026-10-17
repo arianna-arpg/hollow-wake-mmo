@@ -6,10 +6,12 @@ using HollowWake.Protocol;
 namespace HollowWake.Client.UI.Pages;
 
 /// <summary>
-/// A container's board as a page or a pane: the reliquary (whose seated relics are active), a stash with its
-/// pages, a station's board. It shows each board the inventory state sends for the container, its unlock rungs
-/// with what each requires, and why it cannot be changed from here when it cannot. Items move between it and
-/// the bag by drag and drop or click-lift, one move intent each.
+/// A container's board as a page or a pane: the reliquary (whose seated relics are active), the stashes with
+/// their pages, a station's board. It shows each board the inventory state sends for the page, a tab per board
+/// when there are several (a stash's pages, named by their stash when more than one stash is shown), its unlock
+/// rungs with what each requires, why it cannot be changed from here when it cannot, a page not yet bought with
+/// its price, and the board's overflow (items it holds without a cell) to take them out of. Items move between
+/// it and the bag by drag and drop or click-lift, one move intent each.
 /// </summary>
 public partial class ContainerPage : LeafView
 {
@@ -19,6 +21,8 @@ public partial class ContainerPage : LeafView
     private HBoxContainer _pages = null!;
     private BoardView _board = null!;
     private Label _note = null!;
+    private Label _overflowNote = null!;
+    private BoardView _overflow = null!;
     private VBoxContainer _rungs = null!;
     private string _selected = "";
     private int _version = -1;
@@ -31,9 +35,27 @@ public partial class ContainerPage : LeafView
         Name = "ContainerPage";
     }
 
-    public override IEnumerable<IDropTarget> DropTargets => _board is { } b && b.Info is not null ? new IDropTarget[] { b } : Array.Empty<IDropTarget>();
+    public override IEnumerable<IDropTarget> DropTargets
+    {
+        get
+        {
+            if (_board is { } b && b.Info is not null)
+            {
+                yield return b;
+            }
+            if (_overflow is { } o && o.Info is not null && o.Visible)
+            {
+                yield return o;
+            }
+        }
+    }
 
     public ContainerInfo? Shown { get; private set; }
+
+    /// <summary>The boards the page tabs between: every matching container but the overflow boards, in page order.</summary>
+    public IReadOnlyList<ContainerInfo> Boards =>
+        Hero.Inventory?.Containers.Where(c => c.Kind != "overflow" && _matches(c)).OrderBy(c => c.Of ?? c.Id, StringComparer.Ordinal).ThenBy(c => c.Page ?? 0).ToList()
+        ?? new List<ContainerInfo>();
 
     public override void _Ready()
     {
@@ -52,6 +74,11 @@ public partial class ContainerPage : LeafView
         _column.AddChild(_board);
         _rungs = new VBoxContainer();
         _column.AddChild(_rungs);
+        _overflowNote = MakeLabel("", Skin.S("ink_muted"), wrap: true);
+        _overflowNote.SizeFlagsHorizontal = SizeFlags.ExpandFill;
+        _column.AddChild(_overflowNote);
+        _overflow = new BoardView(Ctx.Items, "");
+        _column.AddChild(_overflow);
     }
 
     public override void Refresh()
@@ -61,7 +88,7 @@ public partial class ContainerPage : LeafView
             return;
         }
         _version = Hero.InventoryVersion;
-        var containers = Hero.Inventory?.Containers.Where(_matches).OrderBy(c => c.Page ?? 0).ToList() ?? new List<ContainerInfo>();
+        var containers = Boards;
         Clear(_pages);
         Clear(_rungs);
         if (containers.Count == 0)
@@ -69,6 +96,7 @@ public partial class ContainerPage : LeafView
             Shown = null;
             _note.Text = _emptyText;
             _board.Show(null, 0);
+            ShowOverflow(null);
             return;
         }
         if (containers.All(c => c.Id != _selected))
@@ -77,17 +105,24 @@ public partial class ContainerPage : LeafView
         }
         if (containers.Count > 1)
         {
+            // Pages of one stash read "Page 2"; with more than one stash shown, each tab names its stash.
+            var stashes = containers.Select(c => c.Of ?? c.Id).Distinct(StringComparer.Ordinal).Count();
             foreach (var c in containers)
             {
                 var id = c.Id;
-                var tab = MakeButton(c.Page is { } page ? $"Page {page}" : c.Name, () =>
+                var label = c.Page is { } page ? (stashes > 1 ? $"{c.Name} {page}" : $"Page {page}") : c.Name;
+                var tab = MakeButton(label, () =>
                 {
                     _selected = id;
                     _version = -1;
                     Refresh();
-                }, tip: c.Locked == true && c.Price is { } price ? "Locked: " + string.Join(", ", price.Select(p => $"{p.Value:0} {Skin.Names.CurrencyName(p.Key)}")) : null);
+                }, tip: c.Locked == true && c.Price is { } price ? "Not yet bought: " + PriceText(price) : null);
                 tab.ToggleMode = true;
                 tab.ButtonPressed = id == _selected;
+                if (c.Locked == true)
+                {
+                    tab.Modulate = new Color(1, 1, 1, 0.6f);
+                }
                 _pages.AddChild(tab);
             }
         }
@@ -104,7 +139,7 @@ public partial class ContainerPage : LeafView
         }
         if (shown.Locked == true)
         {
-            notes.Add("This page is not yet bought" + (shown.Price is { } cost ? ": " + string.Join(", ", cost.Select(p => $"{p.Value:0} {Skin.Names.CurrencyName(p.Key)}")) : "."));
+            notes.Add("This page is not yet bought" + (shown.Price is { } cost ? ": " + PriceText(cost) + "." : "."));
         }
         _note.Text = string.Join(" ", notes);
         _board.Container = shown.Id;
@@ -114,5 +149,24 @@ public partial class ContainerPage : LeafView
             var text = $"Rung {rung.Index + 1}: {rung.Cells.Count} cell{(rung.Cells.Count == 1 ? "" : "s")}{(rung.Unlocked ? "" : rung.Requirement is { } req ? ", requires " + req : ", locked")}";
             _rungs.AddChild(MakeLabel(text, rung.Unlocked ? Skin.S("ink") : Skin.S("ink_muted"), Skin.BodySize - 1));
         }
+        ShowOverflow(Hero.Inventory?.Containers.FirstOrDefault(c => c.Kind == "overflow" && c.Of == shown.Id));
     }
+
+    /// <summary>The items a board holds without a cell, to drag out of (nothing drops onto them).</summary>
+    private void ShowOverflow(ContainerInfo? overflow)
+    {
+        _overflowNote.Visible = overflow is not null;
+        _overflow.Visible = overflow is not null;
+        if (overflow is null)
+        {
+            _overflow.Show(null, 0);
+            return;
+        }
+        _overflowNote.Text = $"{overflow.Name}: {overflow.Reason ?? "items without a place on the board."}";
+        _overflow.Container = overflow.Id;
+        _overflow.Show(overflow.Board, Skin.Metric("cell", 36), locked: true);
+    }
+
+    private string PriceText(IReadOnlyDictionary<string, double> price) =>
+        string.Join(", ", price.Select(p => $"{p.Value:0} {Skin.Names.CurrencyName(p.Key)}"));
 }

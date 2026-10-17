@@ -179,6 +179,9 @@ public sealed record UiPage(string Id, string Name, string Action, string Icon, 
     /// <summary>A client page reached from the menu alone (Options); the page state never hides it.</summary>
     public bool InMenuOnly => Place == "menu";
 
+    /// <summary>The kind of container the page shows (reliquary, stash), or null for a page of its own.</summary>
+    public string? Container { get; init; }
+
     public static UiPage From(JsonObject o) => new(
         Json.Str(o["id"]),
         Json.Str(o["name"], Json.Str(o["id"])),
@@ -186,7 +189,10 @@ public sealed record UiPage(string Id, string Name, string Action, string Icon, 
         Json.Str(o["icon"]),
         (int)Json.Num(o["order"]),
         Json.Str(o["place"], "ribbon"),
-        Json.Str(o["description"]));
+        Json.Str(o["description"]))
+    {
+        Container = Json.StrOrNull(o["container"]),
+    };
 }
 
 /// <summary>One orb of the cluster: the resource that fills it and the pools drawn on and around it, nearest first.</summary>

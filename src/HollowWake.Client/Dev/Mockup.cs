@@ -159,7 +159,7 @@ public partial class Mockup : Node
         Reserved = new Dictionary<string, double> { ["mana"] = 48 },
         Pools = new List<PoolInfo> { new("shield", "recharging"), new("ward", "ready"), new("poise", "broken") { Since = 998, Until = 1006 } },
         Statuses = new List<StatusInfo> { new("burning", 3, 2.4, 4), new("hasted", 1, 8.5, 10), new("regrowth", 2, 5, 12) },
-        Cast = new CastInfo(1, "charge", 0.62, 2, 3) { Name = "Ember Bolt", Brim = 0.85 },
+        Cast = new CastInfo(1, "overcharge", 0.67, 2, 3) { Name = "Ember Bolt" },
     };
 
     private static WeaveSlotsMsg Slots()

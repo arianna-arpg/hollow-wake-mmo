@@ -50,6 +50,28 @@ public static class MenuFold
         return rows;
     }
 
+    /// <summary>
+    /// The page state as the tray reads it: every content page absent until the state names it. A page named more
+    /// than once (a container page lists itself once per container) exists, is sealed only when every entry is
+    /// (with the first reason), and shows the largest pip count.
+    /// </summary>
+    public static Dictionary<string, PageStatus> Served(IEnumerable<string> contentPages, IEnumerable<(string Id, bool Sealed, string? Reason, int Pips)> entries)
+    {
+        var map = new Dictionary<string, PageStatus>(StringComparer.Ordinal);
+        foreach (var id in contentPages)
+        {
+            map[id] = new PageStatus(false, null, 0);
+        }
+        foreach (var (id, isSealed, reason, pips) in entries)
+        {
+            var sealedWith = isSealed ? reason ?? "Sealed here" : null;
+            map[id] = map.TryGetValue(id, out var prior) && prior.Exists
+                ? new PageStatus(true, prior.Sealed is not null && sealedWith is not null ? prior.Sealed : null, Math.Max(prior.Pips, pips))
+                : new PageStatus(true, sealedWith, pips);
+        }
+        return map;
+    }
+
     /// <summary>The button's badge: the pips of every page that can be opened.</summary>
     public static int Badge(IEnumerable<TrayRow> rows) => rows.Where(r => r.State == TrayState.Open).Sum(r => r.Pips);
 

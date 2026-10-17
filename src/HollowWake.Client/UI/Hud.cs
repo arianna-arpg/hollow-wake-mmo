@@ -427,7 +427,6 @@ public partial class Hud : CanvasLayer, IItemHost
             "weaves" => new WeavesPage(_leafContext),
             "passives" => new PassivesPage(_leafContext),
             "character" => new CharacterPage(_leafContext),
-            "reliquary" => new ContainerPage(_leafContext, c => c.Kind == "reliquary", "The reliquary has not opened to you."),
             "options" => MakeOptions(id),
             "quest_offer" => new QuestOfferPane(_leafContext),
             "dialogue" => new DialoguePane(_leafContext),
@@ -466,9 +465,17 @@ public partial class Hud : CanvasLayer, IItemHost
         return pane;
     }
 
-    /// <summary>A container page: the boards of the container the page state names for it (a stash's pages share it).</summary>
+    /// <summary>
+    /// A container page: a content page naming a container kind shows every container of that kind the inventory
+    /// state sends (the reliquary, each stash's pages); a page only the page state names shows the container it
+    /// names and that container's pages.
+    /// </summary>
     private LeafView ContainerPageFor(string pageId)
     {
+        if (Ui.Page(pageId) is { Container: { } kind } page)
+        {
+            return new ContainerPage(_leafContext, c => c.Kind == kind, $"No {page.Name.ToLowerInvariant()} has opened to you.");
+        }
         var container = Hero.Pages?.Pages.FirstOrDefault(p => p.Id == pageId)?.Container ?? pageId;
         return new ContainerPage(_leafContext, c => c.Id == container || c.Of == container, "Nothing is stored here.");
     }
@@ -499,16 +506,8 @@ public partial class Hud : CanvasLayer, IItemHost
         {
             return null;
         }
-        var map = new Dictionary<string, PageStatus>(StringComparer.Ordinal);
-        foreach (var page in Ui.Pages)
-        {
-            map[page.Id] = new PageStatus(false, null, 0);
-        }
-        foreach (var p in served.Pages)
-        {
-            map[p.Id] = new PageStatus(true, p.Sealed ? p.Reason ?? "Sealed here" : null, p.Pips);
-        }
-        return map;
+        // A container page arrives once per container: it is open when any of them is in reach.
+        return MenuFold.Served(Ui.Pages.Select(p => p.Id), served.Pages.Select(p => (p.Id, p.Sealed, p.Reason, p.Pips)));
     }
 
     /// <summary>The label of an action's first binding, as the tray and the rail show it.</summary>

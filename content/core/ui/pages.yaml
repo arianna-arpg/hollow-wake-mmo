@@ -3,7 +3,8 @@
 # ids: it evaluates each gate (a page whose gate fails does not exist for the hero) and each pip source (how
 # many things on the page are unspent) over the hero. A menu page (Options) is the client's own and always
 # exists. Each page's keys are the bindings of its input action, page_<id> unless it names another.
-# Container pages (a stash near its chest, a station's board) arrive in the page state with their container id.
+# A page with a container shows the hero's containers of that kind: the page state lists the page once per
+# container (each stash by its first page), sealed with its reach text when the container is out of reach.
 kind: ui_pages
 entries:
   - id: inventory
@@ -30,11 +31,19 @@ entries:
     icon: reliquary
     order: 3
     place: ribbon
+    container: reliquary
     description: The account board whose seated relics are active.
+  - id: stash
+    name: Stash
+    icon: chest
+    order: 4
+    place: ribbon
+    container: stash
+    description: The pages of the stashes, reached at a stash chest.
   - id: character
     name: Character
     icon: figure
-    order: 4
+    order: 5
     place: popout
     description: The sheet by category, resistances by Thread, and the quest log.
   - id: options
