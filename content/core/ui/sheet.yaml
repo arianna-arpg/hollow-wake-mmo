@@ -1,0 +1,17 @@
+# The character popout: sections in order. An attributes section lists its named attributes, then every
+# attribute of its categories in content order, leaving out ids that start with an excluded prefix; a threads
+# section lists one row per Thread from a pattern, with its cap when one is named; quests lists the quest log.
+# Names and one-line descriptions come from the attribute definitions; values come from the server.
+kind: ui_sheets
+entries:
+  - id: character
+    name: Character
+    sections:
+      - { id: attributes, name: Attributes, kind: attributes, categories: [core] }
+      - { id: pools, name: Pools, kind: attributes, categories: [resource] }
+      - { id: offense, name: Offense, kind: attributes, categories: [offense], exclude: [pen., convert., extra.] }
+      - { id: defense, name: Defense, kind: attributes, categories: [defense], exclude: [resist.] }
+      - { id: tempo, name: Tempo, kind: attributes, categories: [tempo] }
+      - { id: resistances, name: Resistances, kind: threads, pattern: "resist.{thread}", cap: "resist.{thread}.max" }
+      - { id: penetration, name: Penetration, kind: threads, pattern: "pen.{thread}" }
+      - { id: quests, name: Quest Log, kind: quests }

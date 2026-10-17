@@ -1,0 +1,43 @@
+# The pages of the core pane, the one source of page ids, labels, keys, icons and order. The menu tray lists
+# them, the ribbon rail holds the ribbon and popout pages, and the server keys the page state to these ids:
+# it evaluates each gate (a page whose gate fails does not exist for the hero) and each pip source (how many
+# things on the page are unspent) over the hero. Container pages (a stash near its chest, a station's board)
+# arrive in the page state with their container id.
+kind: ui_pages
+entries:
+  - id: inventory
+    name: Inventory
+    key: I
+    icon: bag
+    order: 0
+    place: core
+    description: The bag, the worn gear and the wallet. Every page and every pane the world opens stands beside it.
+  - id: weaves
+    name: Weaves
+    key: K
+    icon: weave
+    order: 1
+    place: ribbon
+    description: "The rack: every weave seat with its form, its glyph sockets and what the server says it does."
+  - id: passives
+    name: Passives
+    key: P
+    icon: star
+    order: 2
+    place: ribbon
+    pips: points.passive
+    description: The constellation of passive nodes and its realms.
+  - id: reliquary
+    name: Reliquary
+    key: O
+    icon: reliquary
+    order: 3
+    place: ribbon
+    description: The account board whose seated relics are active.
+  - id: character
+    name: Character
+    key: C
+    icon: figure
+    order: 4
+    place: popout
+    description: The sheet by category, resistances by Thread, and the quest log.

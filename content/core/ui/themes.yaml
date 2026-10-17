@@ -1,0 +1,172 @@
+# The look of the interface. A theme picks a frame style both clients draw (stone or brass), colours its
+# surfaces, sets the palette per resource, per Thread, per rarity and per notice, and names its fonts and icon
+# set. The arrangement lives in layout.yaml and does not change with the theme; a mod recolours a pool by
+# patching one swatch here.
+kind: ui_themes
+entries:
+  - id: etched_stone
+    name: Etched Stone
+    default: true
+    description: Basalt panes cut with runes, glass orbs set in slate, bone-pale ink.
+    frame: stone
+    icon_set: runic
+    fonts:
+      title: { families: [Cinzel, "Trajan Pro", Georgia, serif], size: 17, weight: 700 }
+      body: { families: [Georgia, "Palatino Linotype", serif], size: 14 }
+      numerals: { families: [Georgia, "Palatino Linotype", serif], size: 13, weight: 700 }
+    surface:
+      pane: "#1d1b19"
+      pane_light: "#2b2825"
+      edge: "#7a7163"
+      edge_dark: "#0c0b0a"
+      inset: "#141210"
+      well: "#100f0e"
+      ink: "#e8dfcb"
+      ink_muted: "#a2967e"
+      label: "#efe6d2"
+      accent: "#c9a458"
+      accent_dim: "#7a6338"
+      etch: "#d4c49c"
+      glass: "#ffffff"
+      shadow: "#000000"
+      good: "#8fd18a"
+      bad: "#e2725b"
+      hover: "#3a352f"
+      select: "#c9a458"
+      tab: "#24211e"
+    material:
+      grain: 0.16
+      fibre: 0
+      vignette: 0.45
+      bevel: 3
+      corner: 2
+      etch: 0.55
+      glass: 0.22
+      shadow: 0.55
+    resources:
+      life: { fill: "#c0262e", deep: "#4c0a10" }
+      mana: { fill: "#2d6fd8", deep: "#0b1d47" }
+      stamina: { fill: "#5cb85c", deep: "#1d3f1e" }
+      ward: { fill: "#e7c766", deep: "#6e5520" }
+      shield: { fill: "#9edcff", deep: "#2b5f7d" }
+      poise: { fill: "#d9cfb5", deep: "#575043" }
+      insight: { fill: "#c49cff", deep: "#3e2a68" }
+    resource_fallback: { fill: "#9a9a9a", deep: "#333333" }
+    threads:
+      ember: "#e8622a"
+      tide: "#3aa6d8"
+      storm: "#b58cff"
+      stone: "#9c8b72"
+      bloom: "#5fbf5a"
+      umbra: "#7a6a9a"
+      lumen: "#f5e27a"
+      void: "#8a6aa8"
+      mind: "#d470c0"
+    rarities:
+      normal: "#d8d0c0"
+      magic: "#6c9cff"
+      rare: "#ffd34d"
+      unique: "#e8622a"
+      champion: "#ff8c40"
+    notices:
+      info: "#efe6d2"
+      levelup: "#ffd84d"
+      quest: "#a8f0a0"
+      event: "#e0a0ff"
+      discovery: "#9fe0ff"
+      error: "#ff8a80"
+    states:
+      reserved: "#07060c"
+      broken: "#6d6d6d"
+      dormant: "#77736c"
+      sealed: "#6f675d"
+      pip: "#f0c850"
+      badge: "#b8322a"
+      cooldown: "#000000"
+      fresh: "#f0d070"
+      fit: "#7fd47a"
+      swap: "#e8c25a"
+      blocked: "#d0564a"
+
+  - id: runic_brass
+    name: Runic Brass
+    description: Parchment panes in iron-gall ink, framed in engraved brass; orbs set in brass rings.
+    frame: brass
+    icon_set: runic
+    fonts:
+      title: { families: ["Palatino Linotype", "Book Antiqua", Palatino, Georgia, serif], size: 17, weight: 700 }
+      body: { families: ["Palatino Linotype", "Book Antiqua", Palatino, Georgia, serif], size: 14 }
+      numerals: { families: ["Palatino Linotype", "Book Antiqua", Georgia, serif], size: 13, weight: 700 }
+    surface:
+      pane: "#e6d7b2"
+      pane_light: "#f3e8cb"
+      edge: "#d2a24c"
+      edge_dark: "#4e3413"
+      inset: "#d3c194"
+      well: "#2a1d10"
+      ink: "#2b1d12"
+      ink_muted: "#6b5641"
+      label: "#f6e7c1"
+      accent: "#8c1c13"
+      accent_dim: "#b06a3a"
+      etch: "#5a3f17"
+      glass: "#fff8e0"
+      shadow: "#1a1008"
+      good: "#2f6b2a"
+      bad: "#8c1c13"
+      hover: "#f6ecd0"
+      select: "#8c1c13"
+      tab: "#d9c69a"
+    material:
+      grain: 0.08
+      fibre: 0.6
+      vignette: 0.55
+      bevel: 4
+      corner: 5
+      etch: 0.7
+      glass: 0.3
+      shadow: 0.45
+    resources:
+      life: { fill: "#b81f27", deep: "#45080c" }
+      mana: { fill: "#2a62c4", deep: "#0a1a40" }
+      stamina: { fill: "#4f9e4a", deep: "#1a3618" }
+      ward: { fill: "#e2b84e", deep: "#6a4a12" }
+      shield: { fill: "#a8e0ff", deep: "#2b5f7d" }
+      poise: { fill: "#e3d6b4", deep: "#5d5340" }
+      insight: { fill: "#b88cf0", deep: "#3a2660" }
+    resource_fallback: { fill: "#9a9a9a", deep: "#333333" }
+    threads:
+      ember: "#c4461a"
+      tide: "#1f7fae"
+      storm: "#7a52c4"
+      stone: "#7a684e"
+      bloom: "#3f8f3a"
+      umbra: "#4e3f6e"
+      lumen: "#b8960a"
+      void: "#3b2a4a"
+      mind: "#a03c90"
+    rarities:
+      normal: "#3a2c1f"
+      magic: "#2747a8"
+      rare: "#946200"
+      unique: "#a33a12"
+      champion: "#b5531a"
+    notices:
+      info: "#f6e7c1"
+      levelup: "#ffd84d"
+      quest: "#b6f0a8"
+      event: "#e6b0ff"
+      discovery: "#a8e6ff"
+      error: "#ff9a8a"
+    states:
+      reserved: "#0a0606"
+      broken: "#6d6d6d"
+      dormant: "#8a8070"
+      sealed: "#8a7a62"
+      pip: "#c4461a"
+      badge: "#8c1c13"
+      cooldown: "#1a1008"
+      fresh: "#b8860b"
+      fit: "#2f6b2a"
+      swap: "#a8780a"
+      blocked: "#8c1c13"
