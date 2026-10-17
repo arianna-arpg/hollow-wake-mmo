@@ -1,4 +1,6 @@
 using Godot;
+using HollowWake.Client.World.Appearance;
+using HollowWake.Client.World.Logic;
 using HollowWake.Core.Content;
 using HollowWake.Core.World;
 using HollowWake.Core.WorldGen;
@@ -32,6 +34,111 @@ public partial class ClientWorld : Node3D
     private int _viewChunks = 3;
     private DirectionalLight3D? _sun;
     private Godot.Environment? _environment;
+    private AppearanceService? _appearance;
+    private CardBaker? _baker;
+    private DayCycle? _day;
+    private SurfaceLook? _surfaces;
+    private bool _shadows = true;
+    private double _serverNow;
+    private bool _hasServerNow;
+
+    /// <summary>The appearance pipeline the views draw with, and the measurements the smoke reports.</summary>
+    public AppearanceService? Appearance => _appearance;
+
+    /// <summary>The surfaces content the terrain is coloured with.</summary>
+    public SurfaceLook Surfaces => _surfaces ??= new SurfaceLook(_appearance?.Catalog.Surfaces ?? new HollowWake.Core.Definitions.SurfacesDef { Id = "default" });
+
+    /// <summary>Triangles the drawn bodies hold, and how many are cards, for the measurement line.</summary>
+    public (int Triangles, int Cards, int Bodies) BodyCounts
+    {
+        get
+        {
+            var triangles = 0;
+            var cards = 0;
+            var bodies = 0;
+            foreach (var view in _entities.Values)
+            {
+                triangles += view.Triangles;
+                if (view.Triangles > 0)
+                {
+                    bodies++;
+                }
+                if (view.IsCard)
+                {
+                    cards++;
+                }
+            }
+            return (triangles, cards, bodies);
+        }
+    }
+
+    /// <summary>The offscreen baker of card atlases, a child of the world.</summary>
+    public CardBaker Baker => _baker ?? throw new InvalidOperationException("the world is not in the tree yet");
+
+    /// <summary>Gives the views the appearance content and the card baker; called once the content is loaded.</summary>
+    public void UseAppearance(AppearanceService service)
+    {
+        _appearance = service;
+        _surfaces = new SurfaceLook(service.Catalog.Surfaces);
+        TerrainMesh.ConfigureWater(_surfaces);
+        _day = new DayCycle(service.Catalog.World);
+        EntityView.Appearance = service;
+        EntityView.PropLabelReach = service.Motion.Labels("prop_reach", 7);
+        EntityView.HeroPosition = () => Self?.GlobalPosition;
+        service.Shadows = _shadows;
+    }
+
+    /// <summary>What the camera is doing this frame, for the cards and the representation choice.</summary>
+    public void ObserveCamera(bool isometric, float orthoSize, float yaw)
+    {
+        if (_appearance is null)
+        {
+            return;
+        }
+        _appearance.Isometric = isometric;
+        _appearance.OrthoSize = orthoSize;
+        _appearance.CameraYaw = yaw;
+        CardNode.CameraYaw = yaw;
+    }
+
+    /// <summary>The server's clock, for the day cycle.</summary>
+    public void ObserveServerTime(double serverNow)
+    {
+        _serverNow = serverNow;
+        _hasServerNow = true;
+    }
+
+    private float? _dayOverride;
+
+    /// <summary>A held fraction of the day for previews (the developer options), or null for the server's clock.</summary>
+    public float? DayOverride
+    {
+        get => _dayOverride;
+        set
+        {
+            _dayOverride = value;
+            _lastDayFraction = -1;
+        }
+    }
+
+    /// <summary>The fraction of the day the sky shows now, for the smoke and the overlay.</summary>
+    public float TimeOfDay => _dayOverride ?? (_day is null || !_hasServerNow ? 0.5f : _day.TimeOfDay(_serverNow));
+
+    /// <summary>A blow landed: the struck body flinches and flashes, the striker's swing comes through.</summary>
+    public void CombatHit(CombatEventMsg c)
+    {
+        if (c.Kind == "damage" && _entities.TryGetValue(c.Target, out var target))
+        {
+            target.Hit(c.Amount, _entities.TryGetValue(c.Source, out var source) ? source.GlobalPosition : null);
+        }
+        if (c.Kind is "damage" or "evade" or "block" && _entities.TryGetValue(c.Source, out var striker))
+        {
+            striker.Struck();
+        }
+    }
+
+    /// <summary>The self's worn gear changed: its body shows it.</summary>
+    public void RefreshSelfEquipment() => Self?.RefreshEquipment();
 
     /// <summary>Chunks kept built around the player in each direction (the draw distance option); a change replans at once.</summary>
     public int ViewChunks
@@ -47,18 +154,52 @@ public partial class ClientWorld : Node3D
         }
     }
 
+    private float _foliageDensity = 1f;
+
+    /// <summary>How many tufts the chunks grow, as a multiplier (the foliage density option); a change rebuilds the chunks in view.</summary>
+    public float FoliageDensity
+    {
+        get => _foliageDensity;
+        set
+        {
+            var clamped = Math.Clamp(value, 0f, 3f);
+            if (MathF.Abs(clamped - _foliageDensity) < 0.001f)
+            {
+                return;
+            }
+            _foliageDensity = clamped;
+            foreach (var (coord, node) in _chunkNodes.ToList())
+            {
+                node.QueueFree();
+                _chunkNodes.Remove(coord);
+            }
+            _lastCenter = null;
+        }
+    }
+
     /// <summary>The sun casts shadows (the shadows option).</summary>
     public void SetShadows(bool on)
     {
+        _shadows = on;
         if (_sun is not null)
         {
             _sun.ShadowEnabled = on;
+        }
+        if (_appearance is not null)
+        {
+            _appearance.Shadows = on;
+        }
+        foreach (var view in _entities.Values)
+        {
+            view.SetShadows(on);
         }
     }
 
     /// <summary>The haze toward the horizon (the distance haze option).</summary>
     public void SetFog(bool on)
     {
+        _fogOn = on;
+        _lastDayFraction = -1;
         if (_environment is not null)
         {
             _environment.FogEnabled = on;
@@ -103,14 +244,26 @@ public partial class ClientWorld : Node3D
         _entityRoot = new Node3D { Name = "Entities" };
         AddChild(_chunkRoot);
         AddChild(_entityRoot);
-        var sun = new DirectionalLight3D { Name = "Sun", LightEnergy = 1.2f, ShadowEnabled = true };
+        _baker = new CardBaker { Name = "CardBaker" };
+        AddChild(_baker);
+        // One shadow split reaches the isometric camera's whole view at a fixed height and costs one pass over the casters.
+        var sun = new DirectionalLight3D { Name = "Sun", LightEnergy = 1.2f, ShadowEnabled = true, DirectionalShadowMode = DirectionalLight3D.ShadowMode.Orthogonal, DirectionalShadowMaxDistance = 110f, ShadowBias = 0.06f };
         sun.RotationDegrees = new Vector3(-55, 35, 0);
         AddChild(sun);
         _sun = sun;
+        _sky = new ProceduralSkyMaterial
+        {
+            SkyTopColor = new Color(0.45f, 0.58f, 0.78f),
+            SkyHorizonColor = new Color(0.75f, 0.8f, 0.88f),
+            GroundBottomColor = new Color(0.2f, 0.18f, 0.16f),
+            GroundHorizonColor = new Color(0.6f, 0.58f, 0.54f),
+            SunAngleMax = 12f,
+            SunCurve = 0.1f,
+        };
         var env = new Godot.Environment
         {
-            BackgroundMode = Godot.Environment.BGMode.Color,
-            BackgroundColor = new Color(0.55f, 0.66f, 0.8f),
+            BackgroundMode = Godot.Environment.BGMode.Sky,
+            Sky = new Sky { SkyMaterial = _sky },
             AmbientLightSource = Godot.Environment.AmbientSource.Color,
             AmbientLightColor = new Color(0.6f, 0.62f, 0.7f),
             AmbientLightEnergy = 0.55f,
@@ -118,10 +271,48 @@ public partial class ClientWorld : Node3D
             FogEnabled = true,
             FogLightColor = new Color(0.62f, 0.7f, 0.82f),
             FogDensity = 0.0007f,
+            FogSkyAffect = 0.35f,
+            TonemapMode = Godot.Environment.ToneMapper.Filmic,
+            TonemapWhite = 4f,
         };
         AddChild(new WorldEnvironment { Name = "Environment", Environment = env });
         _environment = env;
     }
+
+    private ProceduralSkyMaterial? _sky;
+    private float _lastDayFraction = -1;
+
+    public override void _Process(double delta)
+    {
+        if (_day is null || (!_hasServerNow && _dayOverride is null) || _environment is null || _sun is null || _sky is null)
+        {
+            return;
+        }
+        // the sky, sun and haze follow the server's clock through the content's day
+        var fraction = _dayOverride ?? _day.TimeOfDay(_serverNow);
+        if (MathF.Abs(fraction - _lastDayFraction) < 0.0005f)
+        {
+            return;
+        }
+        _lastDayFraction = fraction;
+        var sky = _day.At(fraction);
+        static Color C(HollowWake.Client.UI.Logic.Rgba c) => new(c.R, c.G, c.B);
+        _sun.LightColor = C(sky.Sun);
+        _sun.LightEnergy = sky.SunEnergy;
+        _sun.Visible = sky.SunPitch > 0.5f;
+        // the sun stands at its height over the bearing the day gives it: a Godot rotation about x is the pitch, about y the bearing
+        _sun.RotationDegrees = new Vector3(-MathF.Max(2f, sky.SunPitch), sky.SunYaw, 0);
+        _environment.AmbientLightColor = C(sky.Ambient);
+        _environment.AmbientLightEnergy = sky.AmbientEnergy;
+        _environment.FogLightColor = C(sky.Fog);
+        _environment.FogDensity = _fogOn ? sky.FogDensity : 0f;
+        _sky.SkyTopColor = C(sky.Sky);
+        _sky.SkyHorizonColor = C(sky.Horizon);
+        _sky.GroundHorizonColor = C(sky.Horizon).Darkened(0.2f);
+        _sky.GroundBottomColor = C(sky.Fog).Darkened(0.6f);
+    }
+
+    private bool _fogOn = true;
 
     public void ApplyWorldInfo(WorldInfo info)
     {
@@ -368,7 +559,11 @@ public partial class ClientWorld : Node3D
                 continue;
             }
             var chunk = _terrain!.GetChunk(c);
-            var node = TerrainMesh.Build(chunk, _terrain.Layout, _content, Lookup);
+            var node = TerrainMesh.Build(chunk, _terrain.Layout, Surfaces, Lookup);
+            if (_appearance is not null && Foliage.Build(chunk, _terrain.Layout, _appearance.Catalog.World.Foliage.Tufts, _foliageDensity) is { } tufts)
+            {
+                node.AddChild(tufts);
+            }
             _chunkRoot.AddChild(node);
             _chunkNodes[c] = node;
             _wantedMesh.RemoveAt(i);

@@ -1,0 +1,553 @@
+# How things look (docs/design/appearance.md). Read by the clients only; the simulation never sees this file.
+#
+# A body entry is found by an entity's look id first (a pattern's look, which is its id unless it names
+# another; a Calling's look; drop:<item base>), then by the pattern's tags: the entry whose match tags the
+# pattern all carries with the highest priority wins. A gear entry has a slot and is found by the worn item's
+# class and tags the same way. Families are the builders both clients implement; everything else here is a
+# number or a colour a mod can patch. Colours follow the visual language: broad painted planes, matte limestone,
+# cloth that catches light at the hem, brass at joints, no Thread locked to a hue.
+kind: ui_appearances
+entries:
+  # ---------------------------------------------------------------- fallbacks, lowest priority, by what a thing is
+  - id: creature_fallback
+    match: [creature]
+    priority: -10
+    body: biped
+    palette: { skin: "#b89a7a", cloth: "#6b5f52", leather: "#55463a", metal: "#8c8c90", accent: "#b89a67", eyes: "#2a2622" }
+  - id: beast_fallback
+    match: [beast]
+    priority: -5
+    body: quadruped
+    palette: { hide: "#8a6d4b", belly: "#c2a98a", hoof: "#3a2e24", horn: "#d9cfb5", eyes: "#1b1612" }
+  - id: humanoid_fallback
+    match: [humanoid]
+    priority: -5
+    body: biped
+    palette: { skin: "#c8a888", hair: "#4a3828", cloth: "#75685a", cloth2: "#5c4f44", leather: "#55463a", metal: "#8c8c90", accent: "#b89a67", eyes: "#2a2622" }
+  - id: prop_fallback
+    match: [prop]
+    priority: -10
+    body: rock
+    palette: { stone: "#8c8a7a" }
+  - id: flora_fallback
+    match: [flora]
+    priority: -10
+    body: bush
+    palette: { leaf: "#5f7a46", leaf2: "#7f9a5c" }
+  - id: device_fallback
+    match: [device]
+    priority: -10
+    body: totem
+    palette: { wood: "#6b5236", band: "#b89a67", face: "#d9cfb5" }
+
+  # ---------------------------------------------------------------- people of the Hallows
+  - id: villager
+    name: Marcher
+    body: biped
+    shape: { head: 1, torso: 1, legs: 1, arms: 1, width: 1 }
+    palette: { skin: "#d2b08e", hair: "#5a4030", cloth: "#9a8c74", cloth2: "#6e6254", leather: "#55463a", metal: "#8c8c90", accent: "#b89a67", eyes: "#2a2622" }
+    gear: { belt: armor.belt, feet: armor.feet }
+    variation: { hue: 0.04, value: 0.1, scale: 0.06 }
+  - id: quartermaster
+    body: biped
+    shape: { torso: 1.05, width: 1.1, belly: 0.3 }
+    palette: { skin: "#c9a27e", hair: "#8a8278", cloth: "#5c6b4e", cloth2: "#3f4a36", leather: "#6b4a2e", metal: "#b89a67", accent: "#c9a458", eyes: "#2a2622" }
+    gear: { chest: armor.chest.light, belt: armor.belt, feet: armor.feet }
+    card: allow
+  - id: loom_warden
+    body: biped
+    shape: { torso: 1.05, head: 0.95 }
+    palette: { skin: "#b9937a", hair: "#2b2622", cloth: "#d8c070", cloth2: "#5a4a2a", leather: "#4a3a2e", metal: "#b89a67", accent: "#f5e27a", eyes: "#2a2622" }
+    gear: { main_hand: weapon.staff, chest: armor.chest.cloth, head: armor.head.cloth }
+  - id: spindlewatch_guard
+    body: biped
+    shape: { shoulders: 1.15, width: 1.08 }
+    palette: { skin: "#c8a07c", hair: "#3a2c22", cloth: "#4f5e8a", cloth2: "#2e3550", leather: "#4a3a2e", metal: "#9a9ca4", accent: "#b89a67", eyes: "#2a2622" }
+    gear: { main_hand: weapon.spear, chest: armor.chest.medium, head: armor.head.heavy, feet: armor.feet, belt: armor.belt }
+  - id: loosed_brigand
+    body: biped
+    shape: { hunch: 0.15, shoulders: 1.05 }
+    palette: { skin: "#b08a6c", hair: "#2a1e18", cloth: "#6a3a34", cloth2: "#3b2a28", leather: "#4a3a2e", metal: "#7c7a78", accent: "#9c3f3f", eyes: "#2a2622" }
+    gear: { main_hand: weapon.sword, chest: armor.chest.light, head: armor.head.cloth }
+  - id: loosed_kindler
+    body: biped
+    shape: { torso: 0.95, width: 0.92 }
+    palette: { skin: "#a8846a", hair: "#2a1e18", cloth: "#4a2a2a", cloth2: "#2a1a1a", leather: "#4a3a2e", metal: "#7c7a78", accent: "#edac69", eyes: "#edac69" }
+    gear: { main_hand: weapon.wand, chest: armor.chest.cloth, head: armor.head.cloth }
+    glow: "#edac69"
+  - id: loosed_skirmisher
+    match: [loosed, skirmisher]
+    priority: 5
+    body: biped
+    shape: { width: 0.95, legs: 1.05 }
+    palette: { skin: "#b08a6c", hair: "#2a1e18", cloth: "#5a4a3a", cloth2: "#3b2a28", leather: "#4a3a2e", metal: "#7c7a78", accent: "#9c3f3f", eyes: "#2a2622" }
+    gear: { main_hand: weapon.dagger, off_hand: weapon.dagger, chest: armor.chest.light }
+  - id: tide_caller
+    match: [loosed, caster]
+    priority: 5
+    body: biped
+    palette: { skin: "#a8846a", hair: "#2a1e18", cloth: "#2e4a52", cloth2: "#1e2e34", leather: "#4a3a2e", metal: "#7c7a78", accent: "#81c3c9", eyes: "#81c3c9" }
+    gear: { main_hand: weapon.staff, chest: armor.chest.cloth, head: armor.head.cloth }
+  - id: proving_reaver
+    match: [proving, reaver]
+    priority: 5
+    body: biped
+    shape: { shoulders: 1.1, arms: 1.05 }
+    palette: { skin: "#c8a07c", hair: "#3a2c22", cloth: "#7a4a3a", cloth2: "#4a2e28", leather: "#4a3a2e", metal: "#8c8c90", accent: "#b89a67", eyes: "#2a2622" }
+    gear: { main_hand: weapon.axe, chest: armor.chest.medium }
+  - id: proving_bulwark
+    match: [proving, bulwark]
+    priority: 5
+    body: biped
+    shape: { shoulders: 1.2, width: 1.15 }
+    palette: { skin: "#c8a07c", hair: "#3a2c22", cloth: "#4a5a7a", cloth2: "#2e3550", leather: "#4a3a2e", metal: "#9a9ca4", accent: "#b89a67", eyes: "#2a2622" }
+    gear: { main_hand: weapon.maul, off_hand: shield, chest: armor.chest.heavy, head: armor.head.heavy }
+
+  # ---------------------------------------------------------------- the Callings: players read their build through gear and stance
+  - id: holdfast
+    body: biped
+    shape: { shoulders: 1.1, width: 1.05, stance: 1.1 }
+    palette: { skin: "#d2b08e", hair: "#4a3828", cloth: "#6b6a5a", cloth2: "#4a4a3e", leather: "#55463a", metal: "#9a9ca4", accent: "#b89a67", eyes: "#2a2622" }
+    card: allow
+  - id: kindler
+    body: biped
+    shape: { width: 0.95 }
+    palette: { skin: "#d2b08e", hair: "#6a3a28", cloth: "#5a3a3a", cloth2: "#3a2626", leather: "#55463a", metal: "#8c8c90", accent: "#edac69", eyes: "#2a2622" }
+  - id: sower
+    body: biped
+    palette: { skin: "#c8a888", hair: "#3a2c22", cloth: "#5a6a4a", cloth2: "#3a4a34", leather: "#55463a", metal: "#8c8c90", accent: "#a5c58b", eyes: "#2a2622" }
+  - id: shade
+    body: biped
+    shape: { width: 0.92, hunch: 0.08 }
+    palette: { skin: "#c8a888", hair: "#1e1a1a", cloth: "#3a3442", cloth2: "#26222c", leather: "#3a3030", metal: "#6c6a70", accent: "#c1a1c8", eyes: "#2a2622" }
+  - id: harrier
+    body: biped
+    shape: { legs: 1.05, width: 0.95 }
+    palette: { skin: "#c8a888", hair: "#8a6a3a", cloth: "#5a6a6a", cloth2: "#3a4a4a", leather: "#55463a", metal: "#8c8c90", accent: "#c5b7ef", eyes: "#2a2622" }
+  - id: binder
+    body: biped
+    palette: { skin: "#d2b08e", hair: "#d8d0c0", cloth: "#d8d2ba", cloth2: "#8a846a", leather: "#55463a", metal: "#b89a67", accent: "#eee0a3", eyes: "#2a2622" }
+
+  # ---------------------------------------------------------------- beasts of the Hallows
+  - id: hob
+    body: biped
+    shape: { head: 1.45, neck: 0.6, torso: 0.9, legs: 0.75, arms: 1.15, width: 1.1, hunch: 0.35, stance: 1.2, belly: 0.25 }
+    palette: { skin: "#7f8a5c", hair: "#3a3a2a", cloth: "#6a5a44", cloth2: "#4a3e30", leather: "#4a3a2e", metal: "#7c7a78", accent: "#c9a458", eyes: "#f0e0a0" }
+    features: [ears_long, snout]
+    gear: { main_hand: weapon.club }
+    variation: { hue: 0.05, value: 0.12, scale: 0.1 }
+  - id: hob_howler
+    body: biped
+    shape: { head: 1.5, neck: 0.6, torso: 0.95, legs: 0.75, arms: 1.1, width: 1.1, hunch: 0.3, stance: 1.2 }
+    palette: { skin: "#7a7a58", hair: "#8a2a2a", cloth: "#5a3a3a", cloth2: "#3a2626", leather: "#4a3a2e", metal: "#7c7a78", accent: "#c5b7ef", eyes: "#f0e0a0" }
+    features: [ears_long, snout, crest]
+  - id: wolf
+    body: quadruped
+    shape: { head: 1, snout: 1.2, neck: 0.9, torso: 1.1, legs: 1, width: 0.9, tail: 1.2, rump: 0.9 }
+    palette: { hide: "#6e6a62", belly: "#a8a49a", hoof: "#2a2622", horn: "#d9cfb5", eyes: "#e0c050" }
+    features: [tail_bushy]
+    variation: { hue: 0.03, value: 0.14, scale: 0.08 }
+  - id: grove_stag
+    body: quadruped
+    shape: { head: 0.9, snout: 1, neck: 1.3, torso: 1, legs: 1.35, width: 0.85, tail: 0.3, rump: 1 }
+    palette: { hide: "#8f6b46", belly: "#d2b896", hoof: "#2a2622", horn: "#d9cfb5", eyes: "#1b1612" }
+    features: [antlers]
+    variation: { hue: 0.03, value: 0.1, scale: 0.08 }
+  - id: boar
+    body: quadruped
+    shape: { head: 1.1, snout: 1.1, neck: 0.5, torso: 1.1, legs: 0.7, width: 1.2, tail: 0.3, rump: 1.15, mane: 0.6 }
+    palette: { hide: "#4e3f33", belly: "#7a6a5a", hoof: "#1e1a16", horn: "#e8e0c8", eyes: "#1b1612" }
+    features: [tusks]
+    variation: { hue: 0.02, value: 0.12, scale: 0.1 }
+
+  # ---------------------------------------------------------------- remnants, the Tangled and the knots
+  - id: barrow_wight
+    body: wisp
+    shape: { head: 1, torso: 1.1, hover: 0.1, trail: 1.2, width: 1, arms: 1 }
+    palette: { cloth: "#4a4858", cloth2: "#2c2a36", face: "#d9d4c0", glow: "#c1a1c8" }
+    features: [hood, arms]
+    gear: { main_hand: weapon.sword }
+    glow: "#c1a1c8"
+  - id: remnant_shade
+    body: wisp
+    shape: { head: 0.95, torso: 1, hover: 0.25, trail: 1.4, width: 0.9, arms: 1 }
+    palette: { cloth: "#3a3648", cloth2: "#221f2c", face: "#cfc8b8", glow: "#c1a1c8" }
+    features: [hood, arms]
+    glow: "#c1a1c8"
+  - id: remnant_archer
+    body: wisp
+    shape: { head: 0.95, torso: 1, hover: 0.25, trail: 1.2, width: 0.9, arms: 1 }
+    palette: { cloth: "#3a3648", cloth2: "#221f2c", face: "#cfc8b8", glow: "#c1a1c8" }
+    features: [hood, arms]
+    gear: { main_hand: weapon.bow }
+    glow: "#c1a1c8"
+  - id: shade_echo
+    body: wisp
+    shape: { head: 0.9, torso: 0.9, hover: 0.5, trail: 1.6, width: 0.8 }
+    palette: { cloth: "#2e2a3a", cloth2: "#1c1824", face: "#c1a1c8", glow: "#c1a1c8" }
+    features: [hood]
+    glow: "#c1a1c8"
+    card: never
+  - id: cinder_imp
+    body: biped
+    shape: { head: 1.35, neck: 0.5, torso: 0.8, legs: 0.8, arms: 1.2, width: 0.9, hunch: 0.25, stance: 1.1 }
+    palette: { skin: "#5a2e22", hair: "#edac69", cloth: "#3a1e18", cloth2: "#2a1410", leather: "#3a1e18", metal: "#7c7a78", accent: "#edac69", eyes: "#ffd27a" }
+    features: [horns, tail]
+    glow: "#edac69"
+    variation: { hue: 0.03, value: 0.1, scale: 0.08 }
+  - id: tide_crawler
+    body: crawler
+    shape: { shell: 1, legs: 1, width: 1.1, claws: 1.1, eyes: 1 }
+    palette: { shell: "#314f52", flesh: "#5e8a8c", claw: "#d8d2ba", eyes: "#81c3c9" }
+    glow: "#81c3c9"
+    variation: { hue: 0.03, value: 0.1, scale: 0.1 }
+  - id: tangle
+    body: knot
+    shape: { loops: 9, spread: 1.2 }
+    palette: { strand: "#2b2033", strand2: "#4a3a5a", core: "#bcc5d5" }
+    glow: "#bcc5d5"
+    card: never
+
+  # ---------------------------------------------------------------- what players raise: summons and devices
+  - id: sprig
+    body: biped
+    shape: { head: 1.3, neck: 0.4, torso: 0.8, legs: 0.7, arms: 1.1, width: 0.9, stance: 1.1 }
+    palette: { skin: "#71816c", hair: "#a5c58b", cloth: "#5f7a46", cloth2: "#3f5a30", leather: "#4a5a3a", metal: "#71816c", accent: "#a5c58b", eyes: "#eee9da" }
+    features: [leaf_crown]
+  - id: stone_warden
+    body: biped
+    shape: { head: 0.8, neck: 0.3, torso: 1.2, legs: 0.9, arms: 1.25, width: 1.35, shoulders: 1.4, blocky: 1, stance: 1.3 }
+    palette: { skin: "#8a8070", hair: "#8a8070", cloth: "#6e6658", cloth2: "#524c42", leather: "#524c42", metal: "#b89a67", accent: "#c5ae82", eyes: "#eee0a3" }
+    features: [runes]
+    variation: { hue: 0.01, value: 0.06, scale: 0.04 }
+    card: never
+  - id: ember_totem
+    body: totem
+    shape: { width: 1, faces: 3, crown: 1 }
+    palette: { wood: "#4a3226", band: "#b89a67", face: "#edac69" }
+    glow: "#edac69"
+  - id: snare_trap
+    body: trap
+    shape: { width: 1, teeth: 8 }
+    palette: { metal: "#7c7a78", teeth: "#c5ae82" }
+  - id: lumen_dome
+    body: dome
+    shape: { width: 1, ribs: 6 }
+    palette: { shell: "#eee0a3", rib: "#b89a67" }
+    glow: "#eee0a3"
+    card: never
+
+  # ---------------------------------------------------------------- flora and resource nodes
+  - id: oak
+    body: tree
+    shape: { trunk: 1, canopy: 1.15, layers: 3, spread: 1.2, taper: 0.7 }
+    palette: { bark: "#5a4634", canopy: "#4f7a3c", canopy2: "#6f9a4e" }
+    variation: { hue: 0.03, value: 0.12, scale: 0.12 }
+  - id: pine
+    body: tree
+    shape: { trunk: 0.8, canopy: 1, layers: 4, spread: 0.8, taper: 0.4 }
+    palette: { bark: "#4e3a2c", canopy: "#2f5a34", canopy2: "#4a7a48" }
+    variation: { hue: 0.02, value: 0.12, scale: 0.12 }
+  - id: birch
+    body: tree
+    shape: { trunk: 0.7, canopy: 0.9, layers: 2, spread: 0.9, taper: 0.8, lean: 0.4 }
+    palette: { bark: "#d9d4c0", canopy: "#7f9a52", canopy2: "#a2b86a" }
+    variation: { hue: 0.03, value: 0.1, scale: 0.1 }
+  - id: ashen_tree
+    body: tree
+    shape: { trunk: 0.9, canopy: 0.6, layers: 2, spread: 1.1, taper: 0.5, bare: 1 }
+    palette: { bark: "#3a2c28", canopy: "#6b4a3a", canopy2: "#edac69" }
+    glow: "#edac69"
+    variation: { hue: 0.02, value: 0.1, scale: 0.1 }
+  - id: shrub
+    body: bush
+    shape: { lobes: 4, spread: 1 }
+    palette: { leaf: "#5f7a46", leaf2: "#7f9a5c" }
+    variation: { hue: 0.04, value: 0.12, scale: 0.15 }
+  - id: fern
+    body: fern
+    shape: { fronds: 6, spread: 1 }
+    palette: { leaf: "#4a7a3c", leaf2: "#6f9a4e" }
+    variation: { hue: 0.03, value: 0.1, scale: 0.15 }
+  - id: reed
+    body: reed
+    shape: { stalks: 7, spread: 1 }
+    palette: { leaf: "#7f8a4a", leaf2: "#b8a35a" }
+    variation: { hue: 0.03, value: 0.1, scale: 0.15 }
+  - id: boulder
+    body: rock
+    shape: { facets: 1, flat: 0.3 }
+    palette: { stone: "#8c8a7a", stone2: "#6e6c60", fleck: "#8c8a7a" }
+    variation: { hue: 0.01, value: 0.1, scale: 0.15 }
+  - id: cairn_stone
+    body: stone
+    shape: { taper: 0.7, lean: 0.1, cap: 1 }
+    palette: { stone: "#9a9484", stone2: "#6e6c60", rune: "#b89a67" }
+    variation: { hue: 0.01, value: 0.08, scale: 0.05 }
+  - id: iron_vein
+    body: rock
+    shape: { facets: 1, flat: 0.5, flecks: 1 }
+    palette: { stone: "#7a766a", stone2: "#5e5a50", fleck: "#b89a67" }
+    variation: { hue: 0.01, value: 0.1, scale: 0.12 }
+  - id: ember_bloom_plant
+    body: plant
+    shape: { stem: 1, petals: 5, bud: 1 }
+    palette: { stem: "#5f7a46", petal: "#edac69", bud: "#ffd27a" }
+    glow: "#edac69"
+  - id: fallen_ash
+    body: log
+    shape: { length: 1, stubs: 3 }
+    palette: { bark: "#5a4634", wood: "#c2a98a", moss: "#71816c" }
+    variation: { hue: 0.02, value: 0.1, scale: 0.1 }
+  - id: floss_knot
+    body: knot
+    shape: { loops: 5, spread: 0.8 }
+    palette: { strand: "#d8d2ba", strand2: "#b89a67", core: "#eee9da" }
+    variation: { hue: 0.03, value: 0.08, scale: 0.12 }
+
+  # ---------------------------------------------------------------- stations, props and places
+  - id: anvil
+    body: anvil
+    shape: { horn: 1, block: 1 }
+    palette: { metal: "#5c5c60", wood: "#4a3226", band: "#b89a67" }
+  - id: loom
+    body: loom
+    shape: { frame: 1, threads: 12 }
+    palette: { wood: "#6b4a2e", thread: "#d8d2ba", thread2: "#81c3c9", band: "#b89a67" }
+  - id: shrine_stone
+    body: shrine
+    shape: { steps: 2, niche: 1 }
+    palette: { stone: "#d8d2ba", stone2: "#b8b2a0", light: "#eee0a3" }
+    glow: "#eee0a3"
+  - id: ruin_chest
+    body: chest
+    shape: { lid: 1, bands: 2 }
+    palette: { wood: "#4a3226", band: "#b89a67", lock: "#7c7a78" }
+  - id: stash_chest
+    body: chest
+    shape: { lid: 1, bands: 3 }
+    palette: { wood: "#6b4a2e", band: "#b89a67", lock: "#c9a458" }
+  - id: passive_font
+    body: fount
+    shape: { basin: 0.8, rim: 1, spill: 0 }
+    palette: { stone: "#d8d2ba", stone2: "#b8b2a0", water: "#314f52", light: "#c1a1c8" }
+    glow: "#c1a1c8"
+  - id: fount
+    body: fount
+    shape: { basin: 1, rim: 1, spill: 1 }
+    palette: { stone: "#d8d2ba", stone2: "#b8b2a0", water: "#314f52", light: "#9ad6d8" }
+    glow: "#9ad6d8"
+    card: never
+  - id: marker
+    match: []
+    body: marker
+    shape: { height: 1, cap: 1 }
+    palette: { stone: "#d8d2ba", stone2: "#b8b2a0", rune: "#b89a67" }
+  - id: marker_knot
+    match: [knot]
+    priority: 5
+    body: marker
+    shape: { height: 0.8, cap: 0, knotted: 1 }
+    palette: { stone: "#4a4452", stone2: "#2b2033", rune: "#bcc5d5" }
+  - id: marker_shrine
+    match: [shrine]
+    priority: 5
+    body: marker
+    shape: { height: 1.1, cap: 1 }
+    palette: { stone: "#d8d2ba", stone2: "#b8b2a0", rune: "#eee0a3" }
+  - id: marker_camp
+    match: [camp]
+    priority: 5
+    body: marker
+    shape: { height: 0.9, cap: 0 }
+    palette: { stone: "#5a4634", stone2: "#3a2c28", rune: "#9c3f3f" }
+  - id: projectile
+    body: orb
+    shape: { core: 1, halo: 1 }
+    palette: { core: "#eee9da", halo: "#edac69" }
+    card: never
+
+  # ---------------------------------------------------------------- gear: what a body wears, found by the item's class and tags
+  - id: gear_sword
+    slot: main_hand
+    match: [weapon.sword]
+    body: blade
+    shape: { length: 0.75, width: 0.07, guard: 1 }
+    palette: { metal: "#b9bcc4", edge: "#eee9da", grip: "#4a3226", band: "#b89a67" }
+  - id: gear_dagger
+    slot: main_hand
+    match: [weapon.dagger]
+    priority: 1
+    body: blade
+    shape: { length: 0.42, width: 0.05, guard: 0.5 }
+    palette: { metal: "#b9bcc4", edge: "#eee9da", grip: "#2a2622", band: "#8c8c90" }
+  - id: gear_club
+    slot: main_hand
+    match: [weapon.club]
+    body: maul
+    shape: { length: 0.6, head: 0.6 }
+    palette: { metal: "#6b5236", wood: "#5a4634", band: "#4a3a2e" }
+  - id: gear_axe
+    slot: main_hand
+    match: [weapon.axe]
+    body: axe
+    shape: { length: 0.7, head: 1 }
+    palette: { metal: "#a4a6ac", edge: "#eee9da", wood: "#5a4634", band: "#b89a67" }
+  - id: gear_spear
+    slot: main_hand
+    match: [weapon.spear]
+    body: spear
+    shape: { length: 1.9, head: 1 }
+    palette: { metal: "#b9bcc4", wood: "#6b4a2e", band: "#b89a67" }
+  - id: gear_maul
+    slot: main_hand
+    match: [weapon.maul]
+    body: maul
+    shape: { length: 1.2, head: 1 }
+    palette: { metal: "#7c7a78", wood: "#4a3226", band: "#b89a67" }
+  - id: gear_bow
+    slot: main_hand
+    match: [weapon.bow]
+    body: bow
+    shape: { length: 1.3, curve: 1 }
+    palette: { wood: "#6b4a2e", string: "#d8d2ba", band: "#b89a67" }
+  - id: gear_wand
+    slot: main_hand
+    match: [weapon.wand]
+    body: wand
+    shape: { length: 0.5, tip: 1 }
+    palette: { wood: "#3a2c28", tip: "#edac69", band: "#b89a67" }
+  - id: gear_staff
+    slot: main_hand
+    match: [weapon.staff]
+    body: staff
+    shape: { length: 1.8, head: 1 }
+    palette: { wood: "#5a4634", head: "#9ad6d8", band: "#b89a67" }
+  - id: gear_shield
+    slot: off_hand
+    match: [shield]
+    body: shield
+    shape: { size: 0.6, round: 1 }
+    palette: { face: "#6b4a2e", rim: "#b89a67", boss: "#8c8c90" }
+  - id: gear_tome
+    slot: off_hand
+    match: [focus]
+    body: tome
+    shape: { size: 0.3 }
+    palette: { cover: "#5a2a2a", page: "#eee9da", band: "#b89a67" }
+  - id: gear_helm
+    slot: head
+    match: [armor.head, heavy]
+    body: helm
+    shape: { brim: 0.6, crest: 0.4, visor: 1 }
+    palette: { metal: "#9a9ca4", band: "#b89a67" }
+  - id: gear_cap
+    slot: head
+    match: [armor.head, light]
+    body: helm
+    shape: { brim: 1, crest: 0, visor: 0 }
+    palette: { metal: "#6b4a2e", band: "#4a3226" }
+  - id: gear_hood
+    slot: head
+    match: [armor.head, cloth]
+    body: hood
+    shape: { depth: 1 }
+    palette: { cloth: "#4a4458" }
+  - id: gear_cuirass
+    slot: chest
+    match: [armor.chest, heavy]
+    body: cuirass
+    shape: { plates: 1, skirt: 0.6 }
+    palette: { metal: "#9a9ca4", band: "#b89a67", cloth: "#4a4a3e" }
+  - id: gear_hauberk
+    slot: chest
+    match: [armor.chest, medium]
+    body: cuirass
+    shape: { plates: 0.5, skirt: 1 }
+    palette: { metal: "#7c7a78", band: "#6b4a2e", cloth: "#4f5e8a" }
+  - id: gear_jerkin
+    slot: chest
+    match: [armor.chest, light]
+    body: jerkin
+    shape: { straps: 1 }
+    palette: { leather: "#6b4a2e", band: "#b89a67" }
+  - id: gear_robe
+    slot: chest
+    match: [armor.chest, cloth]
+    body: robe
+    shape: { length: 1, sash: 1 }
+    palette: { cloth: "#5a4a6a", sash: "#b89a67" }
+  - id: gear_gloves
+    slot: hands
+    match: [armor.hands]
+    body: gloves
+    shape: { cuff: 1 }
+    palette: { leather: "#5a4634" }
+  - id: gear_gauntlets
+    slot: hands
+    match: [armor.hands, heavy]
+    priority: 1
+    body: gloves
+    shape: { cuff: 1.4 }
+    palette: { leather: "#9a9ca4" }
+  - id: gear_boots
+    slot: feet
+    match: [armor.feet]
+    body: boots
+    shape: { height: 1 }
+    palette: { leather: "#4a3226" }
+  - id: gear_greaves
+    slot: feet
+    match: [armor.feet, heavy]
+    priority: 1
+    body: boots
+    shape: { height: 1.3 }
+    palette: { leather: "#9a9ca4" }
+  - id: gear_belt
+    slot: belt
+    match: [armor.belt]
+    body: belt
+    shape: { pouches: 2 }
+    palette: { leather: "#4a3226", band: "#b89a67" }
+  - id: gear_sack
+    slot: belt
+    match: [material]
+    body: sack
+    shape: { size: 1 }
+    palette: { cloth: "#b8a888", band: "#6b4a2e" }
+  - id: gear_gem
+    slot: ring
+    match: [jewelry]
+    body: gem
+    shape: { size: 1 }
+    palette: { metal: "#c9a458", gem: "#81c3c9" }
+  - id: gear_stone
+    slot: ring
+    match: [glyph]
+    body: gem
+    shape: { size: 1.2 }
+    palette: { metal: "#4a4452", gem: "#c1a1c8" }
+  - id: gear_vestige
+    slot: ring
+    match: [socketable]
+    body: gem
+    shape: { size: 1.1 }
+    palette: { metal: "#2b2033", gem: "#bcc5d5" }
+  - id: gear_relic
+    slot: ring
+    match: [relic]
+    body: gem
+    shape: { size: 1.4 }
+    palette: { metal: "#c9a458", gem: "#eee0a3" }
+  - id: gear_codex
+    slot: off_hand
+    match: [codex]
+    body: tome
+    shape: { size: 0.32 }
+    palette: { cover: "#2e4a52", page: "#eee9da", band: "#b89a67" }
+
+  # ---------------------------------------------------------------- what lies on the ground: a ring under the dropped piece
+  - id: drop
+    body: drop
+    palette: { ring: "#eee9da" }
+    card: never
