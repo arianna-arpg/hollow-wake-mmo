@@ -16,6 +16,7 @@ public sealed class ItemGenerator
 {
     private readonly ContentRegistry _content;
     private readonly ItemResolver _resolver;
+    private readonly Dictionary<string, IPayloadRoller> _payloads = new(StringComparer.Ordinal);
     private long _nextUid;
 
     public ItemGenerator(ContentRegistry content, long firstUid = 1)
@@ -23,9 +24,30 @@ public sealed class ItemGenerator
         _content = content;
         _resolver = new ItemResolver(content);
         _nextUid = firstUid;
+        RegisterPayload("glyph", new GlyphStonePayloads());
+        RegisterPayload("codex", new CodexPayloads());
     }
 
     public ItemResolver Resolver => _resolver;
+
+    public ContentRegistry Content => _content;
+
+    /// <summary>
+    /// What a weave item should hold: a glyph for a stone, a form or a preset weave for a codex, at a level. Left
+    /// empty, the item draws one by drop weight, leaning toward <see cref="Lean"/>.
+    /// </summary>
+    public sealed record PayloadRequest
+    {
+        public string? Glyph { get; init; }
+        public string? Form { get; init; }
+        public string? Weave { get; init; }
+        public int? Level { get; init; }
+        /// <summary>Forms and glyphs the dropper weaves with: drawn more often, by rule <c>inventory.drop_lean</c>.</summary>
+        public IReadOnlyCollection<string>? Lean { get; init; }
+    }
+
+    /// <summary>Registers what fills the payload of items whose class starts with <paramref name="itemClass"/>.</summary>
+    public void RegisterPayload(string itemClass, IPayloadRoller roller) => _payloads[itemClass] = roller;
 
     public long NextUid() => Interlocked.Increment(ref _nextUid);
 
@@ -61,8 +83,23 @@ public sealed class ItemGenerator
         return idx < 0 ? rarities[0].Id : rarities[idx].Id;
     }
 
-    /// <summary>Rolls a base family at an item level and rarity. Null rarity rolls it from the rarity table.</summary>
-    public ItemInstance Roll(string baseId, int itemLevel, string? rarity, Rng rng)
+    /// <summary>
+    /// Rolls a base family at an item level and rarity. Null rarity rolls it from the rarity table. A base whose
+    /// class has a payload roller (glyph stones, codices) also gets its payload, as <paramref name="payload"/> asks.
+    /// </summary>
+    public ItemInstance Roll(string baseId, int itemLevel, string? rarity, Rng rng, PayloadRequest? payload = null)
+    {
+        var item = RollBase(baseId, itemLevel, rarity, rng);
+        var b = _content.Require<ItemBaseDef>(baseId);
+        var root = b.Class.Contains('.') ? b.Class[..b.Class.IndexOf('.')] : b.Class;
+        if (_payloads.TryGetValue(root, out var roller))
+        {
+            roller.Fill(this, item, b, payload, rng);
+        }
+        return item;
+    }
+
+    private ItemInstance RollBase(string baseId, int itemLevel, string? rarity, Rng rng)
     {
         var b = _content.Require<ItemBaseDef>(baseId);
         rarity ??= RollRarity(rng);
@@ -305,7 +342,8 @@ public sealed class ItemGenerator
 
     // ------------------------------------------------------------ loot
 
-    public List<LootResult> RollLoot(string tableId, int itemLevel, Rng rng, IExprScope? scope = null, int depth = 0)
+    /// <param name="lean">Forms and glyphs the dropper weaves with; stones and codices without a fixed payload lean toward them.</param>
+    public List<LootResult> RollLoot(string tableId, int itemLevel, Rng rng, IExprScope? scope = null, int depth = 0, IReadOnlyCollection<string>? lean = null)
     {
         var results = new List<LootResult>();
         var maxDepth = (int)_content.Rules.Number("items.loot.max_depth", 8);
@@ -338,7 +376,10 @@ public sealed class ItemGenerator
                     case "item":
                     {
                         var rarity = e.Rarity ?? (e.RarityWeights.Count > 0 ? RollRarity(rng, e.RarityWeights) : null);
-                        var item = e.Item is not null ? Roll(e.Item, level, rarity, rng) : RollFromClass(e.Class, level, rarity, rng);
+                        var payload = e.Glyph is null && e.Form is null && e.Weave is null && lean is null
+                            ? null
+                            : new PayloadRequest { Glyph = e.Glyph, Form = e.Form, Weave = e.Weave, Lean = lean };
+                        var item = e.Item is not null ? Roll(e.Item, level, rarity, rng, payload) : RollFromClass(e.Class, level, rarity, rng);
                         if (item is not null)
                         {
                             if (e.Amount is { Length: > 0 } amt && item.Stack > 1)
@@ -364,7 +405,7 @@ public sealed class ItemGenerator
                     case "table":
                         if (e.Table is not null)
                         {
-                            results.AddRange(RollLoot(e.Table, level, rng, scope, depth + 1));
+                            results.AddRange(RollLoot(e.Table, level, rng, scope, depth + 1, lean));
                         }
                         break;
                     case "currency":

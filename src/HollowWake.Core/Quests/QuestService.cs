@@ -207,7 +207,28 @@ public sealed class QuestService
                 log.Reputation[faction] = log.Reputation.GetValueOrDefault(faction) + amount;
             }
         }
-        if (r.Weaves.Count > 0 && sim.World.TryGet<WeaveBook>(player, out var book))
+        if (r.Weaves.Count > 0 && sim.Content.Rules.Flag("casting.require_ownership", false))
+        {
+            // Where heroes own their weaves, a weave reward is the codex (and stones) that teach it, given to the bag.
+            if (sim.TryService<LootService>(out var giver) && sim.TryService<ItemGenerator>(out var items))
+            {
+                foreach (var seat in Characters.CharacterFactory.SeatsFor(sim, r.Weaves, items, sim.RngFor(player, "quest_weaves:" + def.Id)))
+                {
+                    if (seat.Codex is not null)
+                    {
+                        giver.Give(sim, player, seat.Codex);
+                    }
+                    foreach (var stone in seat.Stones)
+                    {
+                        if (stone is not null)
+                        {
+                            giver.Give(sim, player, stone);
+                        }
+                    }
+                }
+            }
+        }
+        else if (r.Weaves.Count > 0 && sim.World.TryGet<WeaveBook>(player, out var book))
         {
             foreach (var w in r.Weaves)
             {

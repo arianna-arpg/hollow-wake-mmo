@@ -136,6 +136,12 @@ public sealed record LootEntry
     public string? Currency { get; init; }
     public double[]? Amount { get; init; }
     public Expr? Condition { get; init; }
+    /// <summary>For a glyph stone: the glyph it holds. Absent draws one by drop weight, leaning toward the dropper's.</summary>
+    public string? Glyph { get; init; }
+    /// <summary>For a codex: the form it teaches. Absent (with no weave) draws one by drop weight, leaning toward the dropper's.</summary>
+    public string? Form { get; init; }
+    /// <summary>For a codex: the preset weave it teaches whole.</summary>
+    public string? Weave { get; init; }
 }
 
 public sealed record LootRoll

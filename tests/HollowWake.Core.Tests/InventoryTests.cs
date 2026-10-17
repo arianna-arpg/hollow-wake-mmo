@@ -5,6 +5,7 @@ using HollowWake.Core.Ecs;
 using HollowWake.Core.Items;
 using HollowWake.Core.Maths;
 using HollowWake.Core.Sim;
+using HollowWake.Core.Weaves;
 using Xunit;
 
 namespace HollowWake.Core.Tests;
@@ -165,6 +166,199 @@ public class InventoryTests
         Assert.Equal(25, crowd.Items.Count());
         Assert.NotEmpty(crowd.Overflow);
         AssertNoOverlap(crowd);
+    }
+
+    // ------------------------------------------------------------ the weave rack
+
+    private static ItemInstance Codex(Simulation sim, string form, string rarity = "common", int seed = 1, string? weave = null) =>
+        sim.Service<ItemGenerator>().Roll("weave_codex", 1, rarity, new Rng((ulong)seed), new ItemGenerator.PayloadRequest { Form = weave is null ? form : null, Weave = weave });
+
+    private static ItemInstance Stone(Simulation sim, string glyph, int seed = 1, int level = 1) =>
+        sim.Service<ItemGenerator>().Roll("glyph_stone", 1, "common", new Rng((ulong)seed), new ItemGenerator.PayloadRequest { Glyph = glyph, Level = level });
+
+    [Fact]
+    public void ACallingStartsWithItsWeavesLearnedAsCodices()
+    {
+        var (sim, hero, sheet) = Hero("kindler", "rack1");
+        var rack = sim.World.Get<Rack>(hero)!;
+        var book = sim.World.Get<WeaveBook>(hero)!;
+        var calling = sim.Content.Get<Definitions.CallingDef>("kindler")!;
+        Assert.Equal(calling.Weaves.Count, sheet.Rack.Count);
+        for (var i = 0; i < calling.Weaves.Count; i++)
+        {
+            Assert.Equal(calling.Weaves[i].Preset, rack.Seats[i].Codex!.Payload!.Weave);
+            Assert.Equal(calling.Weaves[i].ToString(), book.Slots[i].Key);
+            Assert.NotNull(sim.Service<WeaveRuntime>().Resolve(sim, book.Slots[i], out _));
+            Assert.Same(book.Slots[i], rack.Seats[i].Bound);
+        }
+        Assert.Equal("Ember Bolt Codex", rack.Seats[0].Codex!.Name);
+    }
+
+    [Fact]
+    public void StonesSocketIntoWeaveSlotsAndAMisfitStaysDormantWithItsReason()
+    {
+        var (sim, hero, _) = Hero("kindler", "rack2");
+        var inv = sim.World.Get<Inventory>(hero)!;
+        var book = sim.World.Get<WeaveBook>(hero)!;
+        var service = sim.Service<RackService>();
+        var bolt = Codex(sim, "bolt", seed: 2);
+        var fork = Stone(sim, "fork", 3);
+        Assert.True(inv.TryAdd(bolt) && inv.TryAdd(fork));
+
+        Assert.True(service.Learn(sim, hero, bolt.Uid, 4, out var reason), reason);
+        Assert.DoesNotContain(bolt, inv.Items);
+        Assert.Equal("bolt", book.Slots[4].Spec.Form);
+        Assert.Equal(new List<string> { "ember" }, book.Slots[4].Spec.Threads);
+        Assert.True(service.Socket(sim, hero, fork.Uid, 4, 0, out reason), reason);
+        Assert.Equal("fork", Assert.Single(book.Slots[4].Spec.Glyphs).Id);
+        Assert.Empty(book.Slots[4].Dormant);
+        Assert.Contains(book.Slots[4].Compiled!.GlyphRefs, g => g.Id == "fork");
+
+        // A stone whose gate fails stays socketed, dormant, with its reason; the weave still compiles without it.
+        var second = Stone(sim, "fork", 4);
+        Assert.True(inv.TryAdd(second));
+        Assert.True(service.Socket(sim, hero, second.Uid, 1, 0, out reason), reason);
+        var nova = book.Slots[1];
+        Assert.NotNull(nova.Compiled);
+        var dormant = Assert.Single(nova.Dormant);
+        Assert.Equal("fork", dormant.Ref.Id);
+        Assert.Contains("projectile", dormant.Reason);
+
+        // A socket with no codex, a socket past the codex's count and a missing stone are refused.
+        var third = Stone(sim, "ring", 5);
+        Assert.True(inv.TryAdd(third));
+        Assert.False(service.Socket(sim, hero, third.Uid, 6, 0, out reason));
+        Assert.Equal("not_learned", reason);
+        Assert.False(service.Socket(sim, hero, third.Uid, 4, 1, out reason));
+        Assert.Equal("no_socket", reason);
+        Assert.False(service.Socket(sim, hero, 999999, 4, 0, out reason));
+        Assert.Equal("no_item", reason);
+    }
+
+    [Fact]
+    public void ABetterCopySwapsInPlaceAndKeepsItsStones()
+    {
+        var (sim, hero, _) = Hero("kindler", "rack3");
+        var inv = sim.World.Get<Inventory>(hero)!;
+        var rack = sim.World.Get<Rack>(hero)!;
+        var service = sim.Service<RackService>();
+        var common = Codex(sim, "bolt", "common", 6);
+        var magic = Codex(sim, "bolt", "magic", 7);
+        var fork = Stone(sim, "fork", 8);
+        Assert.True(inv.TryAdd(common) && inv.TryAdd(magic) && inv.TryAdd(fork));
+        Assert.True(service.Learn(sim, hero, common.Uid, 5, out var reason), reason);
+        Assert.True(service.Socket(sim, hero, fork.Uid, 5, 0, out reason), reason);
+        Assert.Equal(1, WeaveItems.SocketsOf(sim.Content, common));
+        Assert.Equal(2, WeaveItems.SocketsOf(sim.Content, magic));
+        var magicCell = (magic.X, magic.Y);
+
+        Assert.True(service.Learn(sim, hero, magic.Uid, 5, out reason), reason);
+        Assert.Same(magic, rack.Seats[5].Codex);
+        Assert.Same(fork, rack.Seats[5].Stones[0]);
+        Assert.Contains(common, inv.Items);
+        Assert.Equal(magicCell, (common.X, common.Y));
+
+        // The stone comes out into a chosen cell; unlearning returns the codex.
+        Assert.True(inv.Bag.Fits(11, 4, 1, 1));
+        Assert.True(service.Unsocket(sim, hero, 5, 0, 11, 4, out reason), reason);
+        Assert.Equal((11, 4), (fork.X, fork.Y));
+        Assert.True(service.Unlearn(sim, hero, 5, null, null, out reason), reason);
+        Assert.Contains(magic, inv.Items);
+        Assert.Null(rack.Seats[5].Codex);
+        Assert.Null(sim.World.Get<WeaveBook>(hero)!.Slots[5].Spec.Form);
+    }
+
+    [Fact]
+    public void AStoneCardKnowsHowItFitsEverySeat()
+    {
+        var (sim, hero, _) = Hero("kindler", "rack4");
+        var service = sim.Service<RackService>();
+        var ring = Stone(sim, "ring", 9);
+        // Ember bolt has no area, the storm nova has one; a full seat is full.
+        Assert.Equal("misfit", service.FitOf(sim, hero, ring, 0).Fit);
+        Assert.Equal("fits", service.FitOf(sim, hero, ring, 1).Fit);
+        var other = Stone(sim, "ring", 10);
+        Assert.True(sim.World.Get<Inventory>(hero)!.TryAdd(other));
+        Assert.True(service.Socket(sim, hero, other.Uid, 1, 0, out var reason), reason);
+        Assert.Equal("full", service.FitOf(sim, hero, ring, 1).Fit);
+    }
+
+    [Fact]
+    public void OwnershipChecksTheSeatsCodexStonesLevelAndThreads()
+    {
+        var (sim, hero, _) = Hero("kindler", "rack5");
+        var inv = sim.World.Get<Inventory>(hero)!;
+        var service = sim.Service<RackService>();
+        var ownership = sim.Service<Weaves.IWeaveOwnership>();
+        var bolt = Codex(sim, "bolt", seed: 11);
+        var fork = Stone(sim, "fork", 12);
+        Assert.True(inv.TryAdd(bolt) && inv.TryAdd(fork));
+        Assert.True(service.Learn(sim, hero, bolt.Uid, 4, out var reason), reason);
+        Assert.True(service.Socket(sim, hero, fork.Uid, 4, 0, out reason), reason);
+        var owned = new Definitions.WeaveSpec { Form = "bolt", Threads = new List<string> { "storm" }, Glyphs = new List<Definitions.GlyphRef> { "fork@1" }, Level = 1 };
+        Assert.True(ownership.Allows(sim, hero, 4, owned, out reason), reason);
+        Assert.False(ownership.Allows(sim, hero, 4, owned with { Threads = new List<string> { "void" } }, out reason));
+        Assert.Equal("not_attuned:void", reason);
+        Assert.False(ownership.Allows(sim, hero, 4, owned with { Glyphs = new List<Definitions.GlyphRef> { "fork@2" } }, out reason));
+        Assert.Equal("glyph_not_owned", reason);
+        Assert.False(ownership.Allows(sim, hero, 4, owned with { Form = "nova" }, out reason));
+        Assert.Equal("not_learned", reason);
+        Assert.False(ownership.Allows(sim, hero, 6, owned, out reason));
+        Assert.Equal("not_learned", reason);
+        Assert.True(ownership.Allows(sim, hero, 0, new Definitions.WeaveSpec { Preset = "ember_bolt" }, out reason), reason);
+    }
+
+    [Fact]
+    public void TheRackSurvivesASaveAndFollowsReorderedSlots()
+    {
+        var (sim, hero, sheet) = Hero("kindler", "rack6");
+        var inv = sim.World.Get<Inventory>(hero)!;
+        var service = sim.Service<RackService>();
+        var fork = Stone(sim, "fork", 13);
+        Assert.True(inv.TryAdd(fork));
+        Assert.True(service.Socket(sim, hero, fork.Uid, 0, 0, out var reason), reason);
+        // Reordering the book (as swapping weave slots does) carries the seats along.
+        var book = sim.World.Get<WeaveBook>(hero)!;
+        (book.Slots[0], book.Slots[2]) = (book.Slots[2], book.Slots[0]);
+        service.Reconcile(sim, hero);
+        var rack = sim.World.Get<Rack>(hero)!;
+        Assert.Same(fork, rack.Seats[2].Stones[0]);
+        Assert.Equal("ember_bolt", rack.Seats[2].Codex!.Payload!.Weave);
+
+        var factory = sim.Service<CharacterFactory>();
+        factory.Capture(sim, hero, sheet);
+        var json = System.Text.Json.JsonSerializer.Serialize(sheet, Content.ContentJson.Options);
+        var loaded = System.Text.Json.JsonSerializer.Deserialize<CharacterSheet>(json, Content.ContentJson.Options)!;
+        var again = factory.Materialize(sim, loaded);
+        var rebuilt = sim.World.Get<WeaveBook>(again)!;
+        Assert.Equal("ember_bolt", rebuilt.Slots[2].Spec.Preset);
+        Assert.Equal(fork.Uid, sim.World.Get<Rack>(again)!.Seats[2].Stones[0]!.Uid);
+        Assert.Contains(rebuilt.Slots[2].Spec.Glyphs, g => g.Id == "fork");
+    }
+
+    [Fact]
+    public void DropsLeanTowardWhatTheDropperWeaves()
+    {
+        var sim = ZoneBuilder.CreateArena(CoreContent.Registry, 5);
+        var gen = sim.Service<ItemGenerator>();
+        int Forks(IReadOnlyCollection<string>? lean)
+        {
+            var forks = 0;
+            for (var i = 0; i < 300; i++)
+            {
+                foreach (var r in gen.RollLoot("weave_items", 5, new Rng((ulong)(1000 + i)), lean: lean))
+                {
+                    if (r.Item?.Payload?.Glyph == "fork")
+                    {
+                        forks++;
+                    }
+                }
+            }
+            return forks;
+        }
+        var plain = Forks(null);
+        var leaned = Forks(new HashSet<string> { "fork" });
+        Assert.True(leaned > plain * 2, $"fork stones: {leaned} with the lean against {plain} without");
     }
 
     private static void AssertNoOverlap(Inventory inv)

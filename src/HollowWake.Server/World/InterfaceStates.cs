@@ -48,7 +48,7 @@ public static class InterfaceStates
         }
         foreach (var (res, _) in stats.Resources)
         {
-            h.Add((long)Math.Round(stats.Gauge("reserved." + res) * 10));
+            h.Add((long)Math.Round(ReservedOf(stats, res) * 10));
         }
         foreach (var pool in PoolIds(sim))
         {
@@ -88,7 +88,7 @@ public static class InterfaceStates
         Dictionary<string, double>? reserved = null;
         foreach (var (res, _) in stats.Resources)
         {
-            var amount = stats.Gauge("reserved." + res);
+            var amount = ReservedOf(stats, res);
             if (amount > 0)
             {
                 (reserved ??= new Dictionary<string, double>(StringComparer.Ordinal))[res] = Math.Round(amount, 1);
@@ -96,6 +96,14 @@ public static class InterfaceStates
         }
         return reserved;
     }
+
+    private static readonly System.Collections.Concurrent.ConcurrentDictionary<string, string> ReservedNames = new(StringComparer.Ordinal);
+
+    /// <summary>
+    /// What toggles and contracts hold back of a resource: attribute <c>{resource}.reserved</c>, which they raise
+    /// with flat modifiers while they run (and which the resource's maximum already discounts).
+    /// </summary>
+    private static double ReservedOf(Stats stats, string resource) => stats.Get(ReservedNames.GetOrAdd(resource, static r => r + ".reserved"));
 
     /// <summary>The pools hits reach before life, from rule <c>combat.pools</c>.</summary>
     private static IEnumerable<string> PoolIds(Simulation sim)
@@ -245,7 +253,8 @@ public static class InterfaceStates
         var stats = sim.World.Get<Stats>(e);
         var inv = sim.World.Get<Inventory>(e);
         var eq = sim.World.Get<Equipment>(e);
-        var bag = inv is null ? new BoardInfo(1, 1, new List<ItemInfo>()) : BoardOf(sim, resolver, stats, inv.Bag);
+        sim.Service<RackService>().Reconcile(sim, e);
+        var bag = inv is null ? new BoardInfo(1, 1, new List<ItemInfo>()) : BoardOf(sim, resolver, stats, inv.Bag, e);
         var containers = new List<ContainerInfo>();
         if (inv is not null && inv.Overflow.Count > 0)
         {
@@ -289,12 +298,14 @@ public static class InterfaceStates
     }
 
     /// <summary>A board as the wire draws it: its shape and mask, and every item with its cell and footprint.</summary>
-    public static BoardInfo BoardOf(Simulation sim, ItemResolver resolver, Stats? stats, Board board)
+    /// <param name="fitsFor">For the hero's own bag: loose stones list how they fit the hero's rack.</param>
+    public static BoardInfo BoardOf(Simulation sim, ItemResolver resolver, Stats? stats, Board board, Entity? fitsFor = null)
     {
         var items = new List<ItemInfo>(board.Placed.Count);
         foreach (var p in board.Placed)
         {
-            items.Add(Card(sim, resolver, stats, p.Item) with { X = p.X, Y = p.Y, W = p.Width, H = p.Height });
+            var card = Card(sim, resolver, stats, p.Item) with { X = p.X, Y = p.Y, W = p.Width, H = p.Height };
+            items.Add(fitsFor is { } hero ? WithFits(sim, hero, card, p.Item) : card);
         }
         return new BoardInfo(board.Width, board.Height, items) { Mask = board.MaskRows() };
     }
@@ -304,16 +315,54 @@ public static class InterfaceStates
     {
         var b = resolver.BaseOf(item);
         List<RequirementInfo>? requirements = null;
+        void Require(string attr, double required)
+        {
+            var have = stats is null ? 0 : attr == "level" ? stats.Level : stats.Get(attr);
+            (requirements ??= new List<RequirementInfo>()).Add(new RequirementInfo(WeaveItems.RequirementText(sim.Content, attr, required), have >= required));
+        }
         foreach (var (attr, required) in b.Requirements)
         {
-            var name = attr == "level" ? "Level" : sim.Content.Attributes.Get(attr)?.DisplayName ?? Definition.Humanize(attr);
-            var have = stats is null ? 0 : attr == "level" ? stats.Level : stats.Get(attr);
-            (requirements ??= new List<RequirementInfo>()).Add(new RequirementInfo($"{name} {required.ToString("0.##", Invariant)}", have >= required));
+            Require(attr, required);
+        }
+        foreach (var (attr, required) in WeaveItems.RequirementsOf(sim.Content, item))
+        {
+            Require(attr, required);
         }
         string? flavor = null;
         if (item.Unique is not null && sim.Content.TryGet<UniqueDef>(item.Unique, out var unique) && unique is not null && unique.Flavor.Length > 0)
         {
             flavor = unique.Flavor;
+        }
+        ItemGlyphInfo? glyph = null;
+        ItemFormInfo? form = null;
+        if (item.Payload is { Glyph: { } glyphId } stone)
+        {
+            var def = sim.Content.Get<GlyphDef>(glyphId);
+            List<string>? rows = null;
+            if (stone.Rows is { Count: > 0 } && def is not null)
+            {
+                foreach (var axis in def.Axes)
+                {
+                    if (stone.Rows.TryGetValue(axis.Id, out var rowId) && axis.Rows.Find(r => r.Id == rowId) is { } row)
+                    {
+                        (rows ??= new List<string>()).Add(row.Text.Length > 0 ? row.Text : Definition.Humanize(row.Id));
+                    }
+                }
+            }
+            glyph = new ItemGlyphInfo(glyphId, def?.DisplayName ?? Definition.Humanize(glyphId), Math.Max(1, stone.Level)) { Rows = rows };
+        }
+        else if (item.Payload is { } codex && WeaveItems.IsCodex(item))
+        {
+            form = new ItemFormInfo(codex.Weave ?? codex.Form!, WeaveItems.TeachingName(sim.Content, codex), Math.Max(1, codex.Level), WeaveItems.SocketsOf(sim.Content, item));
+        }
+        List<SocketInfo>? sockets = null;
+        if (item.Sockets is { } held)
+        {
+            sockets = new List<SocketInfo>(held.Count);
+            for (var i = 0; i < held.Count; i++)
+            {
+                sockets.Add(new SocketInfo(i) { Stone = held[i] is { } s ? Card(sim, resolver, stats, s) : null });
+            }
         }
         return Snapshots.Item(resolver, item) with
         {
@@ -324,8 +373,32 @@ public static class InterfaceStates
             Quality = item.Quality > 0 ? Math.Round(item.Quality, 3) : null,
             Flavor = flavor,
             Locked = item.Locked ? true : null,
+            Sockets = sockets,
             Requirements = requirements,
+            Glyph = glyph,
+            Form = form,
         };
+    }
+
+    /// <summary>A loose stone's card with how it fits every learned seat of the rack.</summary>
+    private static ItemInfo WithFits(Simulation sim, Entity e, ItemInfo card, ItemInstance item)
+    {
+        if (!WeaveItems.IsStone(item) || !sim.World.TryGet<Rack>(e, out var rack))
+        {
+            return card;
+        }
+        var service = sim.Service<RackService>();
+        List<StoneFitInfo>? fits = null;
+        for (var slot = 0; slot < rack.Seats.Count; slot++)
+        {
+            if (rack.Seats[slot].Codex is null)
+            {
+                continue;
+            }
+            var (fit, reason) = service.FitOf(sim, e, item, slot);
+            (fits ??= new List<StoneFitInfo>()).Add(new StoneFitInfo(slot, fit) { Reason = reason });
+        }
+        return card with { Fits = fits };
     }
 
     public static ulong InventoryFingerprint(Simulation sim, Entity e)
@@ -359,89 +432,135 @@ public static class InterfaceStates
         var stats = sim.World.Require<Stats>(e);
         var book = sim.World.Get<WeaveBook>(e);
         var runtime = sim.Service<WeaveRuntime>();
-        var compiler = sim.Service<WeaveCompiler>();
-        var count = Math.Max(book?.Slots.Count ?? 0, (int)sim.Content.Rules.Number("weaves.max_slots", 8));
+        sim.Service<RackService>().Reconcile(sim, e);
+        var rack = sim.World.Get<Rack>(e);
+        var count = Math.Max(Math.Max(book?.Slots.Count ?? 0, rack?.Seats.Count ?? 0), RackService.MaxSeats(sim));
         var seats = new List<WeaveSeatInfo>(count);
         for (var i = 0; i < count; i++)
         {
             var slot = book is not null && i < book.Slots.Count ? book.Slots[i] : null;
+            var seat = rack is not null && i < rack.Seats.Count ? rack.Seats[i] : null;
             if (slot is null || (slot.Spec.Preset is null && slot.Spec.Form is null))
             {
-                seats.Add(new WeaveSeatInfo(i, null, null, "", 0, 0, new List<SeatGlyphInfo>(), 0, 0, new List<PreviewLineInfo>()));
+                seats.Add(Empty(sim, i, seat));
                 continue;
             }
-            seats.Add(Seat(sim, stats, book!, runtime, compiler, i, slot));
+            seats.Add(Seat(sim, e, stats, book!, runtime, i, slot, seat));
         }
         return new WeaveSlotsMsg(seats);
     }
 
-    private static WeaveSeatInfo Seat(Simulation sim, Stats stats, WeaveBook book, WeaveRuntime runtime, WeaveCompiler compiler, int index, WeaveSlot slot)
+    /// <summary>A slot with no weave: still drawn, with any codex or stones its seat holds.</summary>
+    private static WeaveSeatInfo Empty(Simulation sim, int index, RackSeat? seat) =>
+        new(index, null, null, "", 0, seat?.Codex is { } codex ? WeaveItems.SocketsOf(sim.Content, codex) : 0, StonesOf(sim, seat, null), 0, 0, new List<PreviewLineInfo>())
+        {
+            Item = seat?.Codex?.Uid,
+        };
+
+    private static WeaveSeatInfo Seat(Simulation sim, Entity e, Stats stats, WeaveBook book, WeaveRuntime runtime, int index, WeaveSlot slot, RackSeat? seat)
     {
         var key = slot.Key;
         var compiled = runtime.Resolve(sim, slot, out var error);
-        string? dormant = null;
-        if (compiled is null)
-        {
-            // A strict compile failed: compile with misfits dormant so the slot still shows what it holds and why.
-            compiler.TryCompile(slot.Spec, out compiled, out var dormantError, GlyphFit.Dormant);
-            dormant = compiled is null ? dormantError ?? error : error;
-        }
-        var glyphs = new List<SeatGlyphInfo>();
-        if (compiled is not null)
-        {
-            var socket = 0;
-            foreach (var glyphRef in slot.Spec.Glyphs)
-            {
-                var def = sim.Content.Get<GlyphDef>(glyphRef.Id);
-                var reason = (string?)null;
-                foreach (var d in compiled.Dormant)
-                {
-                    if (d.Ref.Id == glyphRef.Id)
-                    {
-                        reason = d.Reason;
-                        break;
-                    }
-                }
-                glyphs.Add(new SeatGlyphInfo(socket, glyphRef.Id, def?.DisplayName ?? glyphRef.Id, glyphRef.Level ?? def?.Level ?? 1) { Dormant = reason });
-                socket++;
-            }
-        }
-        var readyIn = book.ReadyAt.TryGetValue(key, out var at) ? Math.Max(0, at - sim.Clock.Time) : 0;
         var preview = new List<PreviewLineInfo>();
         double cooldown = 0;
         Dictionary<string, double>? costs = null;
+        string? dormant = compiled is null ? error : null;
         if (compiled is not null)
         {
             cooldown = compiled.Cooldown(stats);
-            costs = runtime.Costs(compiled, stats);
-            preview.Add(new PreviewLineInfo("Cast time", Seconds(runtime.CastDuration(compiled, stats))));
             if (cooldown > 0)
             {
-                preview.Add(new PreviewLineInfo("Cooldown", Seconds(cooldown)));
+                cooldown /= Math.Max(0.1, stats.Attributes.Get("cooldown.recovery", stats, compiled.Tags, compiled.Modifiers));
             }
-            foreach (var (resource, cost) in costs)
+            costs = runtime.Costs(compiled, stats);
+            foreach (var line in WeavePreviews.Lines(sim, e, compiled))
             {
-                preview.Add(new PreviewLineInfo("Cost", $"{cost.ToString("0.#", Invariant)} {sim.Content.Get<ResourceDef>(resource)?.DisplayName ?? resource}"));
+                preview.Add(new PreviewLineInfo(line.Label, line.Text));
             }
-            preview.Add(new PreviewLineInfo("Range", compiled.Range(stats).ToString("0.#", Invariant)));
         }
+        if (dormant is null && seat?.Codex is { } codex && WeaveItems.Unmet(WeaveItems.RequirementsOf(sim.Content, codex), stats) is { } unmet)
+        {
+            dormant = "Requires " + WeaveItems.RequirementText(sim.Content, unmet.Attribute, unmet.Value);
+        }
+        var readyIn = book.ReadyAt.TryGetValue(key, out var at) ? Math.Max(0, at - sim.Clock.Time) : 0;
         var icon = slot.Spec.Preset is { } preset ? sim.Content.Get<WeaveDef>(preset)?.Icon : null;
+        List<SeatGlyphInfo> glyphs;
+        int sockets;
+        if (seat?.Codex is { } learned)
+        {
+            glyphs = StonesOf(sim, seat, slot);
+            sockets = WeaveItems.SocketsOf(sim.Content, learned);
+        }
+        else
+        {
+            // A weave bound without the rack (a monster's, a tool's, free composition): its glyphs in socket order.
+            glyphs = new List<SeatGlyphInfo>();
+            for (var socket = 0; socket < slot.Spec.Glyphs.Count; socket++)
+            {
+                var glyphRef = slot.Spec.Glyphs[socket];
+                var def = sim.Content.Get<GlyphDef>(glyphRef.Id);
+                glyphs.Add(new SeatGlyphInfo(socket, glyphRef.Id, def?.DisplayName ?? glyphRef.Id, glyphRef.Level ?? def?.Level ?? 1) { Dormant = DormantReason(slot, glyphRef.Id) });
+            }
+            sockets = glyphs.Count;
+        }
         return new WeaveSeatInfo(index, key, compiled?.Form.Id ?? slot.Spec.Form, compiled?.Name ?? key, compiled?.Level ?? slot.Spec.Level,
-            compiled?.Form.MaxGlyphs ?? 0, glyphs, Math.Round(readyIn, 2), Math.Round(cooldown, 2), preview)
+            sockets, glyphs, Math.Round(readyIn, 2), Math.Round(cooldown, 2), preview)
         {
             Icon = icon ?? compiled?.Look,
             Dormant = dormant,
+            Item = seat?.Codex?.Uid,
             Threads = compiled is null ? null : compiled.Threads.Select(t => t.Id).ToList(),
             CastMode = compiled is null ? null : ModeName(compiled.CastMode),
             Targeting = compiled?.Targeting.ToString().ToLowerInvariant(),
             Costs = costs,
+            Active = IsActive(slot) ? true : null,
         };
     }
 
-    private static string Seconds(double s) => s.ToString("0.##", Invariant) + " s";
+    /// <summary>A slot whose toggle or contract runs: the slot state's <c>contract</c> or <c>toggle</c> is set.</summary>
+    private static bool IsActive(WeaveSlot slot) =>
+        slot.HasState && ((slot.State.TryGetValue("contract", out var c) && c > 0) || (slot.State.TryGetValue("toggle", out var t) && t > 0));
+
+    /// <summary>The stones a seat holds, each at its socket, with why it is dormant when it is.</summary>
+    private static List<SeatGlyphInfo> StonesOf(Simulation sim, RackSeat? seat, WeaveSlot? slot)
+    {
+        var glyphs = new List<SeatGlyphInfo>();
+        if (seat is null)
+        {
+            return glyphs;
+        }
+        for (var socket = 0; socket < seat.Stones.Count; socket++)
+        {
+            if (seat.Stones[socket]?.Payload is not { Glyph: { } id } payload)
+            {
+                continue;
+            }
+            var def = sim.Content.Get<GlyphDef>(id);
+            glyphs.Add(new SeatGlyphInfo(socket, id, def?.DisplayName ?? id, Math.Max(1, payload.Level))
+            {
+                Dormant = slot is null ? null : DormantReason(slot, id),
+                Item = seat.Stones[socket]!.Uid,
+            });
+        }
+        return glyphs;
+    }
+
+    private static string? DormantReason(WeaveSlot slot, string glyph)
+    {
+        foreach (var d in slot.Dormant)
+        {
+            if (d.Ref.Id == glyph)
+            {
+                return d.Reason;
+            }
+        }
+        return null;
+    }
 
     public static ulong WeaveSlotsFingerprint(Simulation sim, Entity e, int previewVersion)
     {
+        // What the slots hold and how they compiled. Cooldowns are left out on purpose: casting starts one every few
+        // seconds in a fight, the self state already counts each down, and this message carries the full duration.
         var h = new FingerprintHash(4);
         h.Add(previewVersion);
         if (sim.World.TryGet<WeaveBook>(e, out var book))
@@ -450,14 +569,20 @@ public static class InterfaceStates
             {
                 h.Add(slot.Key);
                 h.Add((long)System.Runtime.CompilerServices.RuntimeHelpers.GetHashCode(slot));
+                h.Add(slot.Dormant.Count);
+                h.Add(IsActive(slot));
             }
-            // Cooldowns by when they end, so a sweep counting down does not resend the slots.
-            foreach (var (key, at) in book.ReadyAt)
+        }
+        if (sim.World.TryGet<Rack>(e, out var rack))
+        {
+            foreach (var seat in rack.Seats)
             {
-                if (at > sim.Clock.Time)
+                h.Add(seat.Codex?.Uid ?? 0);
+                h.Add(seat.Codex?.Payload?.Level ?? 0);
+                foreach (var stone in seat.Stones)
                 {
-                    h.Add(key);
-                    h.Add(at);
+                    h.Add(stone?.Uid ?? 0);
+                    h.Add(stone?.Payload?.Level ?? 0);
                 }
             }
         }

@@ -154,6 +154,8 @@ public sealed record WeaveSeatInfo(int Slot, string? Key, string? Form, string N
     public FaceInfo? Converted { get; init; }
     /// <summary>The slot's second ability.</summary>
     public FaceInfo? Meta { get; init; }
+    /// <summary>True while the slot's toggle or contract runs (a sustained summon, an aura), so its face shows on.</summary>
+    public bool? Active { get; init; }
 }
 
 /// <summary>A glyph in a weave slot's socket: its level, and why it is dormant, or null when it is active.</summary>

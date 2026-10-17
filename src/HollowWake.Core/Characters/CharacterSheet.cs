@@ -13,6 +13,15 @@ namespace HollowWake.Core.Characters;
 /// <summary>A quest's saved state.</summary>
 public sealed record SavedQuest(string QuestId, QuestState State, Dictionary<string, int> Counts, double StartedAt);
 
+/// <summary>A rack seat's saved state: the codex learned there, the stones by socket, and a form codex's Threads.</summary>
+public sealed class SavedSeat
+{
+    public int Slot { get; set; }
+    public ItemInstance? Codex { get; set; }
+    public List<ItemInstance?> Stones { get; set; } = new();
+    public List<string> Threads { get; set; } = new();
+}
+
 /// <summary>
 /// Everything that persists about a character: identity, calling, progress, passives, weave loadout,
 /// bag, gear, quests, position. Pure data; the server stores it, the factory turns it into an entity
@@ -27,7 +36,12 @@ public sealed class CharacterSheet
     public int Level { get; set; } = 1;
     public double Xp { get; set; }
     public List<string> Passives { get; set; } = new();
+    /// <summary>The weave slots as last bound. Seats of <see cref="Rack"/> rebuild theirs from what they hold.</summary>
     public List<WeaveSpec> Weaves { get; set; } = new();
+    /// <summary>The weave rack: codices learned and stones socketed, seat by seat.</summary>
+    public List<SavedSeat> Rack { get; set; } = new();
+    /// <summary>Zero for a save from before the rack, whose weaves get codices once when it loads.</summary>
+    public int RackVersion { get; set; }
     /// <summary>Everything in the bag; each item keeps its cell on the board (<see cref="ItemInstance.X"/>, <see cref="ItemInstance.Y"/>).</summary>
     public List<ItemInstance> Bag { get; set; } = new();
     /// <summary>The bag's usable cells when saved. The bag's shape comes from rule <c>inventory.bag</c>; this is a record, not a setting.</summary>
@@ -88,6 +102,10 @@ public sealed class CharacterFactory
                 sheet.Bag.Add(item);
             }
         }
+        // The calling's weaves arrive as codices learned into the rack, with a stone for every glyph a composed
+        // weave names, so the hero owns every weave they start with.
+        sheet.Rack.AddRange(SeatsFor(sim, calling.Weaves, items, rng));
+        sheet.RackVersion = 1;
         if (sim.Generator is not null)
         {
             var (x, y) = sim.Generator.StartPoint(sim.Generator.StartZone());
@@ -95,6 +113,66 @@ public sealed class CharacterFactory
             sheet.Y = y;
         }
         return sheet;
+    }
+
+    /// <summary>
+    /// Rack seats that teach these weaves: a codex per weave (a preset's codex teaches it whole, a composed
+    /// weave's codex its form) at the weave's level, its Threads, and a stone per glyph of a composed weave.
+    /// </summary>
+    public static List<SavedSeat> SeatsFor(Simulation sim, IReadOnlyList<WeaveSpec> weaves, ItemGenerator items, Maths.Rng rng)
+    {
+        var seats = new List<SavedSeat>(weaves.Count);
+        var codexBase = WeaveItems.CodexBase(sim.Content);
+        var stoneBase = WeaveItems.StoneBase(sim.Content);
+        if (!sim.Content.Has<ItemBaseDef>(codexBase))
+        {
+            return seats;
+        }
+        for (var i = 0; i < weaves.Count; i++)
+        {
+            var spec = weaves[i];
+            if (spec.Preset is null && spec.Form is null)
+            {
+                continue;
+            }
+            var codex = items.Roll(codexBase, 1, RarityWithSockets(sim, spec.Preset is null ? spec.Glyphs.Count : 0), rng,
+                new ItemGenerator.PayloadRequest { Weave = spec.Preset, Form = spec.Preset is null ? spec.Form : null, Level = Math.Max(1, spec.Level) });
+            var seat = new SavedSeat { Slot = i, Codex = codex };
+            if (spec.Preset is null)
+            {
+                seat.Threads.AddRange(spec.Threads);
+            }
+            foreach (var glyph in spec.Glyphs)
+            {
+                if (!sim.Content.Has<ItemBaseDef>(stoneBase) || !sim.Content.Has<GlyphDef>(glyph.Id))
+                {
+                    continue;
+                }
+                var stone = items.Roll(stoneBase, 1, "common", rng, new ItemGenerator.PayloadRequest { Glyph = glyph.Id, Level = glyph.Level });
+                if (glyph.Rows.Count > 0)
+                {
+                    stone.Payload!.Rows = new Dictionary<string, string>(glyph.Rows, StringComparer.Ordinal);
+                }
+                seat.Stones.Add(stone);
+            }
+            seats.Add(seat);
+        }
+        return seats;
+    }
+
+    /// <summary>The lowest item rarity whose codex has at least <paramref name="sockets"/> sockets (rule <c>inventory.codex_sockets</c>).</summary>
+    private static string RarityWithSockets(Simulation sim, int sockets)
+    {
+        string? best = null;
+        foreach (var rarity in sim.Content.Each<ItemRarityDef>().OrderBy(r => r.Rank))
+        {
+            best = rarity.Id;
+            if (sim.Content.Rules.Number("inventory.codex_sockets." + rarity.Id, 1) >= sockets)
+            {
+                return rarity.Id;
+            }
+        }
+        return best ?? "common";
     }
 
     /// <summary>Builds the player entity from a sheet inside a simulation.</summary>
@@ -138,6 +216,30 @@ public sealed class CharacterFactory
         foreach (var w in sheet.Weaves)
         {
             book.Add(w);
+        }
+        // A save from before the rack gets codices (and stones) for the weaves it had, so it keeps them as owned.
+        if (sheet.RackVersion == 0)
+        {
+            if (sheet.Rack.Count == 0 && sheet.Weaves.Count > 0)
+            {
+                sheet.Rack.AddRange(SeatsFor(sim, sheet.Weaves, sim.Service<ItemGenerator>(), new Maths.Rng(sheet.Id + ":rack")));
+            }
+            sheet.RackVersion = 1;
+        }
+        var rack = sim.World.Add(e, new Rack());
+        if (sim.TryService<RackService>(out var rackService))
+        {
+            foreach (var saved in sheet.Rack)
+            {
+                var seat = rack.SeatAt(saved.Slot);
+                seat.Codex = saved.Codex;
+                seat.Stones.AddRange(saved.Stones);
+                seat.Threads.AddRange(saved.Threads);
+                if (seat.Codex is not null)
+                {
+                    rackService.Rebuild(sim, e, saved.Slot);
+                }
+            }
         }
         // The bag's shape comes from the rules, not the save: a saved item keeps its cell while it still fits there.
         var inventory = sim.World.Add(e, InventoryService.CreateBag(sim.Content, sim.Service<ItemResolver>()));
@@ -208,7 +310,20 @@ public sealed class CharacterFactory
         }
         if (sim.World.TryGet<WeaveBook>(e, out var book))
         {
+            sim.Service<RackService>().Reconcile(sim, e);
             sheet.Weaves = book.Slots.Select(s => s.Spec).ToList();
+        }
+        if (sim.World.TryGet<Rack>(e, out var rack))
+        {
+            sheet.Rack = new List<SavedSeat>();
+            for (var i = 0; i < rack.Seats.Count; i++)
+            {
+                var seat = rack.Seats[i];
+                if (!seat.IsEmpty)
+                {
+                    sheet.Rack.Add(new SavedSeat { Slot = i, Codex = seat.Codex, Stones = new List<ItemInstance?>(seat.Stones), Threads = new List<string>(seat.Threads) });
+                }
+            }
         }
         if (sim.World.TryGet<Inventory>(e, out var inv))
         {

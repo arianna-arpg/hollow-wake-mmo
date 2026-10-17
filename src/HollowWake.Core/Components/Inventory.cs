@@ -406,6 +406,43 @@ public sealed class Inventory : IComponent
     }
 }
 
+/// <summary>
+/// The weave rack: the codices a hero has learned and the glyph stones socketed beside them, seat by seat.
+/// Seat <c>i</c> builds weave slot <c>i</c> of the <see cref="WeaveBook"/>; each seat remembers the weave slot
+/// it built so that reordering the slots carries the seat along.
+/// </summary>
+public sealed class Rack : IComponent
+{
+    public List<RackSeat> Seats { get; } = new();
+
+    /// <summary>The seat at an index, growing the rack with empty seats up to it.</summary>
+    public RackSeat SeatAt(int index)
+    {
+        while (Seats.Count <= index)
+        {
+            Seats.Add(new RackSeat());
+        }
+        return Seats[index];
+    }
+}
+
+/// <summary>One seat of the rack: a learned codex, the stones in its sockets, and the Threads chosen for a form codex.</summary>
+public sealed class RackSeat
+{
+    public ItemInstance? Codex;
+
+    /// <summary>Stones by socket index; null where a socket is empty.</summary>
+    public List<ItemInstance?> Stones { get; } = new();
+
+    /// <summary>The Threads woven into a form codex; empty for a preset codex, which keeps its own.</summary>
+    public List<string> Threads { get; } = new();
+
+    /// <summary>The weave slot this seat last built, so a reordered or replaced slot can be found again.</summary>
+    public WeaveSlot? Bound;
+
+    public bool IsEmpty => Codex is null && Stones.TrueForAll(s => s is null);
+}
+
 public sealed class Equipment : IComponent
 {
     public Dictionary<string, ItemInstance> BySlot { get; } = new(StringComparer.Ordinal);

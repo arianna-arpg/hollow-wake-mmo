@@ -8,3 +8,21 @@ entries:
       bag:
         width: 12
         height: 5
+      # The bases stones and codices are minted on, and how they are named ({name} is the glyph or weave).
+      stone_base: glyph_stone
+      codex_base: weave_codex
+      names:
+        stone: "{name} Stone"
+        codex: "{name} Codex"
+      # The sockets a codex gives its weave slot, by the codex's rarity (capped by what the form can hold).
+      codex_sockets:
+        common: 1
+        magic: 2
+        rare: 3
+        unique: 4
+      # Levels of freshly minted stones and codices, from the item level of the drop. Raising them is a station's work.
+      stone_level: "1"
+      codex_level: "1"
+      codex_max_level: 20
+      # How much more often a drop draws a glyph or form the dropper weaves with.
+      drop_lean: 4

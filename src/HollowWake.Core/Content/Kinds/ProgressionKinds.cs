@@ -4,14 +4,69 @@ using HollowWake.Core.Weaves;
 namespace HollowWake.Core.Content.Kinds;
 
 /// <summary>
-/// Content for progression and items: glyph axes rolled per copy now; passive choices, realms, containers
-/// and stashes as they land. Adds validators to the existing kinds and registers new kinds.
+/// Content for progression and items: the item fields of glyphs and forms (rolled axes, drop weights, level
+/// floors, requirements), loot entries that name what a stone or codex holds; passive choices, realms,
+/// containers, stashes, conversations and vendors as they land. Adds validators to the existing kinds and
+/// registers new kinds.
 /// </summary>
 internal static class ProgressionKinds
 {
     public static void Register()
     {
         ContentKinds.AddValidator<GlyphDef>(Axes);
+        ContentKinds.AddValidator<GlyphDef>((d, c) => ItemFields(d.DropWeight, d.MinLevel, d.Requirements, c));
+        ContentKinds.AddValidator<FormDef>((d, c) => ItemFields(d.DropWeight, d.MinLevel, d.Requirements, c));
+        ContentKinds.AddValidator<LootTableDef>(LootPayloads);
+    }
+
+    private static void ItemFields(double dropWeight, int minLevel, Dictionary<string, double> requirements, ValidationContext c)
+    {
+        if (dropWeight < 0)
+        {
+            c.Error("drop_weight cannot be negative.");
+        }
+        if (minLevel < 1)
+        {
+            c.Error("min_level must be at least 1.");
+        }
+        foreach (var attr in requirements.Keys)
+        {
+            if (attr != "level" && !c.Registry.Attributes.Contains(attr))
+            {
+                c.Warn($"requirements name undeclared attribute '{attr}'.");
+            }
+        }
+    }
+
+    /// <summary>A loot entry that names a glyph, form or preset must name real ones, on an item whose class holds them.</summary>
+    private static void LootPayloads(LootTableDef d, ValidationContext c)
+    {
+        foreach (var roll in d.Rolls)
+        {
+            foreach (var e in roll.Entries)
+            {
+                if (e.Glyph is null && e.Form is null && e.Weave is null)
+                {
+                    continue;
+                }
+                if (e.Glyph is not null)
+                {
+                    c.Ref<GlyphDef>(e.Glyph, "entries.glyph");
+                }
+                if (e.Form is not null)
+                {
+                    c.Ref<FormDef>(e.Form, "entries.form");
+                }
+                if (e.Weave is not null)
+                {
+                    c.Ref<WeaveDef>(e.Weave, "entries.weave");
+                }
+                if (e.Kind != "item" || e.Item is null)
+                {
+                    c.Error("entries naming a glyph, form or weave must be item entries that name the stone or codex base.");
+                }
+            }
+        }
     }
 
     private static void Axes(GlyphDef d, ValidationContext c)

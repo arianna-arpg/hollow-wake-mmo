@@ -19,13 +19,45 @@ public static class ItemIntentHandlers
         handlers.Register<CraftStartIntent>(CraftStart);
         handlers.Register<CraftSubmitIntent>(CraftSubmit);
         handlers.Register<MoveItemIntent>(MoveItem);
-        handlers.Register<SocketStoneIntent>(static (in IntentContext ctx, SocketStoneIntent _) => ctx.Reject("not_ready"));
-        handlers.Register<UnsocketStoneIntent>(static (in IntentContext ctx, UnsocketStoneIntent _) => ctx.Reject("not_ready"));
-        handlers.Register<LearnFormIntent>(static (in IntentContext ctx, LearnFormIntent _) => ctx.Reject("not_ready"));
-        handlers.Register<UnlearnFormIntent>(static (in IntentContext ctx, UnlearnFormIntent _) => ctx.Reject("not_ready"));
+        handlers.Register<SocketStoneIntent>(SocketStone);
+        handlers.Register<UnsocketStoneIntent>(UnsocketStone);
+        handlers.Register<LearnFormIntent>(LearnForm);
+        handlers.Register<UnlearnFormIntent>(UnlearnForm);
         handlers.Register<BuyIntent>(static (in IntentContext ctx, BuyIntent _) => ctx.Reject("not_ready"));
         handlers.Register<SellIntent>(static (in IntentContext ctx, SellIntent _) => ctx.Reject("not_ready"));
         handlers.Register<BuyBackIntent>(static (in IntentContext ctx, BuyBackIntent _) => ctx.Reject("not_ready"));
+    }
+
+    private static void SocketStone(in IntentContext ctx, SocketStoneIntent s)
+    {
+        if (!ctx.Sim.Service<RackService>().Socket(ctx.Sim, ctx.Entity, s.StoneUid, s.Slot, s.Socket, out var reason))
+        {
+            ctx.Reject(reason);
+        }
+    }
+
+    private static void UnsocketStone(in IntentContext ctx, UnsocketStoneIntent u)
+    {
+        if (!ctx.Sim.Service<RackService>().Unsocket(ctx.Sim, ctx.Entity, u.Slot, u.Socket, u.X, u.Y, out var reason))
+        {
+            ctx.Reject(reason);
+        }
+    }
+
+    private static void LearnForm(in IntentContext ctx, LearnFormIntent l)
+    {
+        if (!ctx.Sim.Service<RackService>().Learn(ctx.Sim, ctx.Entity, l.ItemUid, l.Slot, out var reason))
+        {
+            ctx.Reject(reason);
+        }
+    }
+
+    private static void UnlearnForm(in IntentContext ctx, UnlearnFormIntent u)
+    {
+        if (!ctx.Sim.Service<RackService>().Unlearn(ctx.Sim, ctx.Entity, u.Slot, u.X, u.Y, out var reason))
+        {
+            ctx.Reject(reason);
+        }
     }
 
     /// <summary>Moves an item to a board cell, an equipment slot or the world.</summary>

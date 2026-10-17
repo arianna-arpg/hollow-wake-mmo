@@ -773,6 +773,7 @@ export interface WeaveSeatInfo {
   uses_max?: number;
   converted?: FaceInfo;
   meta?: FaceInfo;
+  active?: boolean;
 }
 
 export interface PageInfo {

@@ -1,5 +1,6 @@
 using HollowWake.Core.Items;
 using HollowWake.Core.Sim;
+using HollowWake.Core.Weaves;
 
 namespace HollowWake.Core.Progression;
 
@@ -13,5 +14,9 @@ public static class ProgressionWiring
     {
         var inventory = new InventoryService();
         sim.AddService(inventory);
+        var rack = new RackService();
+        sim.AddService(rack);
+        inventory.Register(rack);
+        sim.AddService<IWeaveOwnership>(new WeaveOwnership());
     }
 }

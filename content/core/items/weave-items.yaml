@@ -1,0 +1,10 @@
+# The items of the weave model: glyph stones and codices. Each is one base; what a copy holds (a glyph at a
+# level with its rolled rows, or the form or preset weave a codex teaches) is its payload, minted with it.
+# Their drop weights are zero so random class rolls never pick them; loot entries name them, and leave the
+# payload open to draw one by the glyphs' and forms' own drop weights, leaning toward the dropper's weaves.
+kind: items
+entries:
+  - { id: glyph_stone, name: Glyph Stone, class: glyph, tags: [glyph, stone, socketable], width: 1, height: 1, drop_weight: 0, value: 12,
+      affix_cap: { prefix: 0, suffix: 0 }, description: A bound glyph. Socket it beside a learned codex and the weave takes its shape. }
+  - { id: weave_codex, name: Codex, class: codex, tags: [codex, weave], width: 1, height: 2, drop_weight: 0, value: 20,
+      affix_cap: { prefix: 0, suffix: 0 }, description: A weave written down. Learn it into a seat of the rack; its rarity says how many glyphs it holds. }

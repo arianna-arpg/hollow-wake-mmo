@@ -154,6 +154,7 @@ public partial class InterfaceProtocolTests
                 UsesMax = 3,
                 Converted = new FaceInfo("Reload") { Icon = "reload" },
                 Meta = new FaceInfo("Detonate"),
+                Active = true,
             },
             new(1, null, null, "", 0, 0, new List<SeatGlyphInfo>(), 0, 0, new List<PreviewLineInfo>()),
         });
