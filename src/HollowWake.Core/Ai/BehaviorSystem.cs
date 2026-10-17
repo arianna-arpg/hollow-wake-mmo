@@ -102,7 +102,7 @@ public static class AiActions
                 return;
             }
             var runtime = c.Sim.Service<WeaveRuntime>();
-            var choice = runtime.ChooseForAi(c.Sim, c.Entity, c.Behavior.Target);
+            var choice = runtime.ChooseForAi(c.Sim, c.Entity, c.Behavior.Target, c.Scope);
             if (choice is null)
             {
                 return;

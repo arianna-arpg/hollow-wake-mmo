@@ -4,6 +4,7 @@ using HollowWake.Core.Components;
 using HollowWake.Core.Definitions;
 using HollowWake.Core.Ecs;
 using HollowWake.Core.Effects;
+using HollowWake.Core.Expressions;
 using HollowWake.Core.Sim;
 using HollowWake.Core.Tags;
 
@@ -323,7 +324,7 @@ public sealed class WeaveRuntime
     }
 
     /// <summary>Picks the best ready weave for an AI toward a target, honoring hints and range.</summary>
-    public (WeaveSlot Slot, CompiledWeave Weave)? ChooseForAi(Simulation sim, Entity caster, Entity target)
+    public (WeaveSlot Slot, CompiledWeave Weave)? ChooseForAi(Simulation sim, Entity caster, Entity target, IExprScope? perception = null)
     {
         if (!sim.World.TryGet<WeaveBook>(caster, out var book) || !sim.World.TryGet<Stats>(caster, out var stats))
         {
@@ -348,9 +349,14 @@ public sealed class WeaveRuntime
             {
                 continue;
             }
-            if (hint?.When is not null && !hint.When.IsTrue(weave.ScopeFor(stats)))
+            if (hint?.When is not null)
             {
-                continue;
+                // Hints read the AI's perception (nearest_enemy_distance, life_pct ...) with the weave mounted.
+                var hintScope = perception is null ? weave.ScopeFor(stats) : new ScopeOverlay(perception).Mount("weave", new WeaveScope(weave, stats, weave.Tags));
+                if (!hint.When.IsTrue(hintScope))
+                {
+                    continue;
+                }
             }
             var score = (hint?.Weight ?? 1) * (0.75 + rng.NextDouble() * 0.5);
             if (score > bestScore)
