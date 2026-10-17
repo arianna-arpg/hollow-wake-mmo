@@ -1,0 +1,264 @@
+# More statuses: the earlier roster ported into the Threads' vocabulary (physical as Stone, chaos as Void or
+# Umbra by theme), each one a composition of the status mechanics: independent stack clocks, banks and their
+# ruptures, pops on reapplication, consumable stacks and next-hit riders, absorption pools and the states bound
+# to them, baselines for statuses applied without a hit.
+kind: statuses
+entries:
+  # ---- afflictions
+  - id: poison
+    name: Poison
+    description: Decay in the blood; every dose runs its own course.
+    tags: [ailment, umbra, dot, poison]
+    duration: 3
+    stack_policy: stack
+    stack_clock: independent
+    max_stacks: 12
+    baseline: "1 + level * 0.3"
+    color: "#6c8a3a"
+    tick:
+      interval: 0.5
+      effects:
+        - { type: damage, amount: "amount * stacks", threads: [umbra], tags: [dot], can_crit: false }
+
+  - id: scalding
+    name: Scalding
+    description: Heat banked from every application, dealt out over the time left; a rupture spends it at once.
+    tags: [ailment, ember, dot]
+    duration: 4
+    stack_policy: refresh
+    bank: { from: applications, cap: 4 }
+    baseline: "2 + level * 0.5"
+    color: "#ff8a3d"
+    tick:
+      interval: 0.5
+      effects:
+        - { type: damage, amount: amount, threads: [ember], tags: [dot], can_crit: false }
+
+  - id: hemorrhage
+    name: Hemorrhage
+    description: Reopening the wound bursts what it still had to bleed.
+    tags: [ailment, stone, dot]
+    duration: 5
+    stack_policy: refresh
+    color: "#a0282b"
+    tick:
+      interval: 0.5
+      effects:
+        - { type: damage, amount: amount, threads: [stone], tags: [dot], can_crit: false }
+    on_reapply:
+      - { type: damage, amount: "remaining_damage * (0.5 + pop)", threads: [stone], tags: [dot, pop], can_crit: false }
+
+  - id: impaled
+    name: Impaled
+    description: A lodged spear; each of the next blows that land on the bearer drives part of it home and spends a stack.
+    tags: [ailment, stone]
+    duration: 4
+    stack_policy: stack
+    max_stacks: 5
+    bank: { from: applications }
+    color: "#b5a58a"
+    consume_on: { event: hurt, count: 1 }
+    on_bearer_struck:
+      - { type: rupture, status: impaled, fraction: 0.25 }
+
+  - id: doom
+    name: Doom
+    description: Banked ruin that falls when it ends, or the moment it is enough to kill.
+    tags: [ailment, void, curse]
+    duration: 6
+    stack_policy: refresh
+    bank: { from: applications }
+    baseline: "4 + level"
+    color: "#3a2a4a"
+    on_bank_lethal:
+      - { type: rupture, status: doom }
+    on_expire:
+      - { type: condition, if: "banked > 0", then: [ { type: damage, amount: banked, threads: [void], tags: [dot, doom], can_crit: false } ] }
+
+  - id: kindling_brand
+    name: Kindling Brand
+    description: A brand that burns hotter the longer it holds.
+    tags: [ailment, ember, dot, curse]
+    duration: 5
+    stack_policy: strongest
+    baseline: "2 + level * 0.4"
+    color: "#ffb347"
+    tick:
+      interval: 0.5
+      effects:
+        - { type: damage, amount: "amount * (0.5 + elapsed / total)", threads: [ember], tags: [dot], can_crit: false }
+
+  # ---- debuffs
+  - id: vulnerable
+    name: Vulnerable
+    tags: [debuff, curse, lumen]
+    duration: 5
+    stack_policy: refresh
+    color: "#f0e6a0"
+    modifiers:
+      - { attribute: damage.taken, form: increased, value: 0.2 }
+
+  - id: weakened
+    name: Weakened
+    tags: [debuff, curse, umbra]
+    duration: 5
+    stack_policy: refresh
+    color: "#7a6a8a"
+    modifiers:
+      - { attribute: damage, form: more, value: -0.2 }
+
+  - id: brittle
+    name: Brittle
+    description: Struck critically far more often.
+    tags: [debuff, tide]
+    duration: 4
+    stack_policy: refresh
+    color: "#cfefff"
+    modifiers:
+      - { attribute: crit.avoid, form: flat, value: -0.6 }
+
+  - id: exposed
+    name: Exposed
+    tags: [debuff, curse, void]
+    duration: 5
+    stack_policy: refresh
+    color: "#4a3a5a"
+    modifiers:
+      - { attribute: resist.ember, form: flat, value: -0.1 }
+      - { attribute: resist.tide, form: flat, value: -0.1 }
+      - { attribute: resist.storm, form: flat, value: -0.1 }
+      - { attribute: resist.bloom, form: flat, value: -0.1 }
+      - { attribute: resist.umbra, form: flat, value: -0.1 }
+      - { attribute: resist.lumen, form: flat, value: -0.1 }
+      - { attribute: resist.void, form: flat, value: -0.1 }
+      - { attribute: resist.mind, form: flat, value: -0.1 }
+      - { attribute: armor, form: increased, value: -0.1 }
+
+  - id: blinded
+    name: Blinded
+    tags: [debuff, lumen]
+    duration: 3
+    stack_policy: refresh
+    flags: [blinded]
+    scales_with_potency: false
+    color: "#fffbe0"
+    modifiers:
+      - { attribute: accuracy, form: more, value: -0.5 }
+
+  # ---- control
+  - id: disarmed
+    name: Disarmed
+    tags: [control, stone]
+    duration: 2.5
+    stack_policy: refresh
+    flags: [disarmed]
+    forbids_tags: [attack]
+    scales_with_potency: false
+    color: "#8a7a6a"
+
+  - id: taunted
+    name: Taunted
+    description: Drawn to the one who taunted; that one keeps the credit while others stack it.
+    tags: [control, mind]
+    duration: 4
+    stack_policy: refresh
+    keep_source: true
+    flags: [taunted]
+    scales_with_potency: false
+    color: "#d470c0"
+
+  # ---- buffs
+  - id: honed
+    name: Honed
+    description: The next melee blows land harder; each one spends a stack.
+    tags: [buff, stone]
+    beneficial: true
+    duration: 8
+    stack_policy: stack
+    max_stacks: 2
+    color: "#c8b48a"
+    consume_on: { event: hit, tags: [melee] }
+    modifiers:
+      - { attribute: damage, form: more, value: 0.5, scope: [melee] }
+
+  - id: searing_edge
+    name: Searing Edge
+    description: The next blow that lands sets its target alight.
+    tags: [buff, ember]
+    beneficial: true
+    duration: 6
+    stack_policy: refresh
+    color: "#ff8a3d"
+    consume_on: { event: hit }
+    on_bearer_hit:
+      - { type: apply_status, status: burning, magnitude: "3 + level * 0.5", duration: 3 }
+
+  - id: restoring
+    name: Restoring
+    description: A draught's stream of life.
+    tags: [buff, bloom, hot]
+    beneficial: true
+    duration: 4
+    stack_policy: refresh
+    baseline: "6 + level * 1.5"
+    color: "#5fbf5a"
+    tick:
+      interval: 0.5
+      effects:
+        - { type: heal, amount: "magnitude * 0.5", resource: life }
+
+  - id: warded_shell
+    name: Warded Shell
+    description: An absorbing shell; it shatters when it has taken its fill.
+    tags: [buff, lumen, shell]
+    beneficial: true
+    duration: 6
+    stack_policy: refresh
+    pool: "magnitude"
+    color: "#f5e27a"
+
+  - id: shell_glow
+    name: Shell Glow
+    description: Calm that lasts only while the shell holds.
+    tags: [buff, lumen]
+    beneficial: true
+    duration: 6
+    stack_policy: refresh
+    bound_to: warded_shell
+    color: "#fff6c0"
+    modifiers:
+      - { attribute: status.resistance, form: flat, value: 0.3 }
+
+  - id: iron_ward
+    name: Iron Ward
+    description: Less damage taken while half of what lands is banked, then let loose around the bearer.
+    tags: [buff, stone]
+    beneficial: true
+    duration: 4
+    stack_policy: refresh
+    bank: { from: taken, fraction: 0.5, cap: "life.max" }
+    color: "#9c8b72"
+    modifiers:
+      - { attribute: damage.taken, form: more, value: -0.3 }
+    on_expire:
+      - type: condition
+        if: "banked > 0"
+        then:
+          - type: area
+            shape: circle
+            radius: 4
+            center: target
+            filter: enemy
+            effects:
+              - { type: damage, amount: banked, threads: [stone], tags: [iron_ward], can_crit: false }
+
+  - id: battle_trance
+    name: Battle Trance
+    description: Critical blows strike twice.
+    tags: [buff, storm]
+    beneficial: true
+    duration: 8
+    stack_policy: refresh
+    color: "#b58cff"
+    modifiers:
+      - { attribute: proc.brutal_strike, form: flat, value: 1 }

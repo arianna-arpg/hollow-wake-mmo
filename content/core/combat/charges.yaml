@@ -1,0 +1,25 @@
+# Charges: named banks a body builds and spends. The count reads as the gauge charge.<id> and the most a body
+# holds is its attribute charge.<id>.max (three unless declared otherwise or modified). Charges last their
+# duration after the last gain, then decay (decay per second, or all at once at zero).
+kind: charges
+entries:
+  - id: fury
+    name: Fury
+    description: Banked by blows that land; heavy strikes spend it.
+    duration: 8
+    decay: 1
+    color: "#e8622a"
+
+  - id: focus
+    name: Focus
+    description: Gathered by weaving undisturbed; spells spend it for power.
+    duration: 10
+    decay: 0
+    color: "#2e86de"
+
+  - id: resolve
+    name: Resolve
+    description: Earned by enduring blows; spent to shrug off the next.
+    duration: 12
+    decay: 1
+    color: "#9c8b72"
