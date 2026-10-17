@@ -122,7 +122,8 @@ public sealed class StatusSystem : SimSystem
         var regenerating = _regenerating;
         for (var i = 0; i < regenerating.Length && i < 64; i++)
         {
-            if (stats.Resources.ContainsKey(regenerating[i].Id) || stats.Attributes.Carries(regenerating[i].Max))
+            var r = regenerating[i];
+            if (stats.Resources.ContainsKey(r.Id) || (stats.Attributes.Carries(r.Max) && stats.Attributes.Get(r.Max, stats) > 0))
             {
                 regen |= 1UL << i;
             }
@@ -132,7 +133,7 @@ public sealed class StatusSystem : SimSystem
         for (var i = 0; i < stated.Length; i++)
         {
             var (rule, _, max) = stated[i];
-            if (stats.Resources.ContainsKey(rule.Resource) || (max is not null && stats.Attributes.Carries(max)))
+            if (stats.Resources.ContainsKey(rule.Resource) || (max is not null && stats.Attributes.Carries(max) && stats.Attributes.Get(max, stats) > 0))
             {
                 pools |= 1UL << i;
             }

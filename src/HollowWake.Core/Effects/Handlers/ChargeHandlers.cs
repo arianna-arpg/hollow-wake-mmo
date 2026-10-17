@@ -57,12 +57,12 @@ internal sealed class ChargeHandler : IEffectHandler
             var charges = sim.Service<ChargeService>();
             if (All)
             {
-                ctx.Vars[CastVars.ChargesSpent] = charges.SpendAll(sim, holder, Id, ctx.Depth);
+                EffectVars.Set(ctx, CastVars.ChargesSpent, charges.SpendAll(sim, holder, Id, ctx.Depth));
             }
             else if (Spend is not null)
             {
                 var amount = Math.Max(0, ctx.Eval(Spend));
-                ctx.Vars[CastVars.ChargesSpent] = charges.Spend(sim, holder, Id, amount, ctx.Depth) ? amount : 0;
+                EffectVars.Set(ctx, CastVars.ChargesSpent, charges.Spend(sim, holder, Id, amount, ctx.Depth) ? amount : 0);
             }
             if (Gain is not null)
             {

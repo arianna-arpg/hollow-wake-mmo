@@ -46,13 +46,14 @@ entries:
       resist_cap: 0.75
       resist_floor: -2
       # The pools hits reach before life, in order, then life. The interface lists the ones before life.
-      pools: [poise, ward, shield, life]
+      pools: [insight, poise, ward, shield, life]
       # What each pool does. Pools absorb by default (at most fraction of what reaches them); a break bar
       # (kind: break) never absorbs, loses each landing hit times the attacker's dealt attribute times its own
       # taken attribute, and breaks when emptied. on_hurt is applied when a landing hit reaches a pool the body
       # holds, on_break when a hit empties it, rearm marks re-arming; with states the pool keeps the flags
       # pool.<id>.broken, pool.<id>.rearming and pool.<id>.recharging (stamped when they begin).
       pool_rules:
+        insight: { states: true }
         poise: { kind: break, dealt: poise.damage, taken: poise.damage.taken, on_break: poise_broken, rearm: poise_rearming, states: true }
         ward: { states: true }
         shield: { on_hurt: shield_delay, states: true }
@@ -88,15 +89,13 @@ entries:
         deferred: [guard, evade, block, crit, added, taken_as, mitigate, damage_taken, cap, stagger, poise, leech, ailments]
         no_crit: [crit]
       # Victim tags beyond the struck body's own tags, flags and statuses: each adds vs.<key> to a hit when its
-      # expression holds in the hit scope (target.*, source.*, distance, angle: zero in front, 180 behind).
+      # expression holds in the hit scope (target.*, source.*, distance, angle: zero in front, 180 behind). Every
+      # rule is read on every hit, so the core lists the ones content scopes by; more axes are one line each
+      # (near: "distance <= 3", higher_level: "target.level > source.level").
       victim_tags:
         low_life: "target.life_pct <= target.low_life.line"
         full_life: "target.life_pct >= target.full_life.line"
         behind: "angle > 120"
-        near: "distance <= 3"
-        far: "distance >= 8"
-        higher_level: "target.level > source.level"
-        lower_level: "target.level < source.level"
       ailment_magnitude:
         burning: "amount * 0.3"
         bleeding: "amount * 0.25"

@@ -400,6 +400,46 @@ public class DefenseTests
     }
 
     [Fact]
+    public void InsightFillsWithMomentumAndTurnsBlowsAsideFirst()
+    {
+        var bench = CombatBench.Create();
+        // The attacker builds insight by landing blows; it starts empty.
+        bench.Modify(bench.Attacker, "insight.max", 30);
+        bench.Modify(bench.Attacker, "on_hit.insight", 5);
+        var attacker = bench.AttackerStats;
+        bench.Sim.Tick();
+        Assert.Equal(0, attacker.Resource("insight"), 9);
+        bench.Hit(10);
+        bench.Hit(10);
+        Assert.Equal(10, attacker.Resource("insight"), 9);
+        // Struck, it takes the blow before any other pool.
+        var life = attacker.Resource("life");
+        bench.Run("""{"type": "damage", "amount": 8, "threads": ["stone"], "can_crit": false}""", source: bench.Victim, target: bench.Attacker);
+        Assert.Equal(2, attacker.Resource("insight"), 9);
+        Assert.Equal(life, attacker.Resource("life"), 9);
+    }
+
+    [Fact]
+    public void WardCanBeBoughtWithSpentCharges()
+    {
+        double WardAfterCasting(double fury)
+        {
+            var bench = CombatBench.Create();
+            var sim = bench.Sim;
+            bench.Modify(bench.Attacker, "ward.max", 200);
+            sim.Service<ChargeService>().Gain(sim, bench.Attacker, "fury", fury);
+            var book = sim.World.Get<HollowWake.Core.Components.WeaveBook>(bench.Attacker) ?? sim.World.Add(bench.Attacker, new HollowWake.Core.Components.WeaveBook());
+            var slot = book.Add(new WeaveSpec { Form = "ward", Threads = { "lumen" }, Glyphs = { "furywoven" } });
+            var at = sim.World.Get<Transform>(bench.Attacker)!.Position;
+            Assert.True(sim.Service<HollowWake.Core.Weaves.WeaveRuntime>().TryBegin(sim, bench.Attacker, slot, bench.Attacker, at, Vector2.Zero, out var reason), reason);
+            Assert.Equal(0, sim.Service<ChargeService>().Count(sim, bench.Attacker, "fury"));
+            return bench.AttackerStats.Resource("ward");
+        }
+        // The furywoven glyph spends all fury and wards eight for each charge spent, on top of the form's own ward.
+        Assert.Equal(24, WardAfterCasting(3) - WardAfterCasting(0), 6);
+    }
+
+    [Fact]
     public void PointsOfACoreAttributeGrantTheirPerPointLines()
     {
         var bench = CombatBench.Create();
@@ -437,7 +477,7 @@ public class DefenseTests
         var plan = HitPlan.For(CoreContent.Registry.Rules);
         Assert.Empty(plan.Problems);
         Assert.Equal(new[] { "immunity", "guard", "evade", "block", "taken_as", "mitigate", "taken", "cap", "stagger", "pools", "cheat_death", "cull", "leech" }, plan.StageNames);
-        Assert.Equal(new[] { "poise", "ward", "shield", "life" }, plan.Pools);
+        Assert.Equal(new[] { "insight", "poise", "ward", "shield", "life" }, plan.Pools);
         Assert.True(plan.PoolRuleOf("poise")!.Break);
         Assert.Equal("shield_delay", plan.PoolRuleOf("shield")!.OnHurt);
     }

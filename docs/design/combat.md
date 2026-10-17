@@ -38,7 +38,7 @@ Each hit rents a pooled `HitScope`: the hit's packet, result and per-Thread work
 
 ### Victim tags
 
-Victim tags are the struck body's tags, flags and active statuses, prefixed `vs.`, plus `vs.{key}` for each entry of rule `combat.victim_tags` whose expression holds in the hit scope (`low_life`, `full_life`, `behind`, `near`, `far`, `higher_level` in the core rules). They are computed once per hit and join the hit's tags, so they scope modifiers (`damage` more against `vs.burning`) and keep the attribute cache valid.
+Victim tags are the struck body's tags, flags and active statuses, prefixed `vs.`, plus `vs.{key}` for each entry of rule `combat.victim_tags` whose expression holds in the hit scope (`low_life`, `full_life` and `behind` in the core rules; every rule is read on every hit, so axes such as `near` or `higher_level` are added where content scopes by them). They are computed once per hit and join the hit's tags, so they scope modifiers (`damage` more against `vs.burning`) and keep the attribute cache valid.
 
 ## Pools
 

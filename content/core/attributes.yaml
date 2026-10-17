@@ -59,6 +59,8 @@ entries:
   - { id: poise.regen, name: Poise Regeneration, category: resource, formula: "poise.max * 0.1", min: 0, decimals: 2 }
   - { id: poise.damage, name: Poise Damage, category: offense, base: 1, min: 0, percent: true, description: "Poise a hit wears down per point of damage it lands." }
   - { id: poise.damage.taken, name: Poise Damage Taken, category: defense, base: 1, min: 0, percent: true }
+  - { id: insight.max, name: Maximum Insight, category: resource, base: 0, min: 0, decimals: 0, description: "Foresight built by momentum (on_hit.insight, leech.insight); it turns blows aside before any other pool." }
+  - { id: insight.regen, name: Insight Regeneration, category: resource, base: 0, decimals: 2 }
 
   # ---- movement and tempo
   - { id: move.speed, name: Movement Speed, category: tempo, base: 5, min: 0.5, max: 16, decimals: 2 }

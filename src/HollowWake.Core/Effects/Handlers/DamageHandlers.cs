@@ -115,7 +115,7 @@ internal sealed class DamageHandler : IEffectHandler
                 packet.Leech = Math.Max(0, ctx.Eval(Leech));
             }
             var result = DamagePipeline.Apply(ctx, packet);
-            ctx.Vars["last_damage"] = result.Total;
+            EffectVars.Set(ctx, "last_damage", result.Total);
             ctx.Vars["amount"] = result.Total;
             if (OnKill.Length > 0 && result.Killed)
             {
@@ -210,3 +210,21 @@ internal sealed class ResourceHandler : IEffectHandler
         }
     }
 }
+
+/// <summary>
+/// Variables an effect leaves for the effects after it in the same list (<c>last_damage</c>, <c>charges_spent</c>,
+/// <c>consumed</c>, <c>ruptured</c> ...). The context's expression scope copies its variables when first built, so
+/// a variable set afterwards is also written into the built scope, where later expressions read it.
+/// </summary>
+internal static class EffectVars
+{
+    public static void Set(EffectContext ctx, string name, double value)
+    {
+        ctx.Vars[name] = value;
+        if (ctx.Scope is ScopeOverlay overlay)
+        {
+            overlay.Set(name, value);
+        }
+    }
+}
+

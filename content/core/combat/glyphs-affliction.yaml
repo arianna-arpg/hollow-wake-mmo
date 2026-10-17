@@ -76,3 +76,13 @@ entries:
     color: "#e8622a"
     adds_effects:
       - { type: condition, if: "last_damage > 0", then: [ { type: charge, id: fury, gain: 1 } ] }
+
+  - id: furywoven
+    name: Furywoven
+    description: The weave spends all the fury its weaver banked and binds eight ward for each charge spent.
+    requires: [buff]
+    color: "#f1c40f"
+    adds_effects:
+      - { type: charge, id: fury, all: true }
+      - { type: resource, resource: ward, amount: "charges_spent * 8" }
+
