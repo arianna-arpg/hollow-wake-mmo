@@ -23,6 +23,10 @@ public partial class LoginPanel : CanvasLayer
     public event Action<string, string>? CreateRequested;
     public event Action<string>? EnterRequested;
 
+    /// <summary>The server the fields start with; the launcher passes it as <c>--host</c> and <c>--port</c>.</summary>
+    public string DefaultHost { get; init; } = LaunchOptions.DefaultHost;
+    public int DefaultPort { get; init; } = LaunchOptions.DefaultPort;
+
     public override void _Ready()
     {
         Layer = 20;
@@ -41,9 +45,9 @@ public partial class LoginPanel : CanvasLayer
         var row = new HBoxContainer();
         box.AddChild(row);
         row.AddChild(new Label { Text = "Server" });
-        _host = new LineEdit { Text = "127.0.0.1", CustomMinimumSize = new Vector2(220, 0) };
+        _host = new LineEdit { Text = DefaultHost, CustomMinimumSize = new Vector2(220, 0) };
         row.AddChild(_host);
-        _port = new LineEdit { Text = "7777", CustomMinimumSize = new Vector2(80, 0) };
+        _port = new LineEdit { Text = DefaultPort.ToString(), CustomMinimumSize = new Vector2(80, 0) };
         row.AddChild(_port);
         var row2 = new HBoxContainer();
         box.AddChild(row2);

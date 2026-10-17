@@ -58,7 +58,12 @@ public partial class Main : Node3D
         AddChild(_camera);
         _hud = new Hud { Name = "Hud", Visible = false };
         AddChild(_hud);
-        _login = new LoginPanel { Name = "Login" };
+        var launch = LaunchOptions.FromCommandLine();
+        if (launch.ServerGiven)
+        {
+            GD.Print($"server {launch.Host}:{launch.Port} from the command line");
+        }
+        _login = new LoginPanel { Name = "Login", DefaultHost = launch.Host, DefaultPort = launch.Port };
         AddChild(_login);
 
         _login.ConnectRequested += OnConnect;
