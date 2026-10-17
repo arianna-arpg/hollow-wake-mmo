@@ -5,6 +5,7 @@ using HollowWake.Core.Content;
 using HollowWake.Core.Definitions;
 using HollowWake.Core.Effects;
 using HollowWake.Core.Expressions;
+using HollowWake.Core.Sim;
 using HollowWake.Core.Tags;
 
 namespace HollowWake.Core.Weaves;
@@ -41,9 +42,57 @@ public static class CastScopes
     {
         CastMode.Instant => Instant,
         CastMode.Channel => Channel,
-        CastMode.Charge => Held,
+        CastMode.Charge or CastMode.Overcharge or CastMode.Guard => Held,
         _ => form.CastTime is null || (form.CastTime.IsConstant && form.CastTime.ConstantValue <= 0) ? Instant : Timed,
     };
+}
+
+/// <summary>The named sections of a weave's graph besides its main list.</summary>
+public static class WeaveSections
+{
+    /// <summary>A channel's release payload.</summary>
+    public const string Release = "release";
+    /// <summary>A guard's bash.</summary>
+    public const string Bash = "bash";
+    /// <summary>What a toggle runs when it turns off.</summary>
+    public const string Deactivate = "deactivate";
+    /// <summary>A cycle's payload.</summary>
+    public const string Cycle = "cycle";
+}
+
+/// <summary>One trigger a compiled weave carries: its spec, its kind, and the form or glyph it came from.</summary>
+public sealed record WeaveTrigger(TriggerSpec Spec, TriggerKind Kind, string Source, int Index)
+{
+    /// <summary>The slot state names of this trigger's internal cooldown and damage accumulator.</summary>
+    public string IcdKey { get; } = "trigger." + Index + ".icd";
+    public string AccumKey { get; } = "trigger." + Index + ".life";
+}
+
+/// <summary>
+/// The casting side of a compiled weave, resolved once from the form and the active glyphs: triggers,
+/// gates, the use bank, the charge spend, slot behaviors, worn modifiers and the compiled sections. Where a
+/// weave holds only one of a kind the first active glyph in socket order wins over later glyphs and over
+/// the form; triggers, gates, metas, follow-ups and worn modifiers add up.
+/// </summary>
+public sealed class WeaveCasting
+{
+    public static readonly WeaveCasting None = new();
+
+    public IReadOnlyList<WeaveTrigger> Triggers { get; init; } = Array.Empty<WeaveTrigger>();
+    public IReadOnlyList<Expr> Gates { get; init; } = Array.Empty<Expr>();
+    public UsesSpec? Uses { get; init; }
+    public SpendSpec? Spend { get; init; }
+    public ConvertSpec? Convert { get; init; }
+    public IReadOnlyList<MetaSpec> Metas { get; init; } = Array.Empty<MetaSpec>();
+    public IReadOnlyList<FollowUpSpec> FollowUps { get; init; } = Array.Empty<FollowUpSpec>();
+    public CycleSpec? Cycle { get; init; }
+    public SelfStackSpec? SelfStack { get; init; }
+    public ComboSpec? Chain { get; init; }
+    public IReadOnlyList<Modifier> EquipModifiers { get; init; } = Array.Empty<Modifier>();
+    public IReadOnlyList<CompiledEffect> Release { get; init; } = Array.Empty<CompiledEffect>();
+    public IReadOnlyList<CompiledEffect> Bash { get; init; } = Array.Empty<CompiledEffect>();
+    public IReadOnlyList<CompiledEffect> Deactivate { get; init; } = Array.Empty<CompiledEffect>();
+    public IReadOnlyList<CompiledEffect> CycleEffects { get; init; } = Array.Empty<CompiledEffect>();
 }
 
 /// <summary>
@@ -77,6 +126,9 @@ public sealed class CompiledWeave
     /// <summary>Socketed glyphs whose gates fail, in socket order, each with its reason.</summary>
     public IReadOnlyList<DormantGlyph> Dormant { get; init; } = Array.Empty<DormantGlyph>();
 
+    /// <summary>Glyphs a slot graft added beyond the sockets (attribute family <c>glyph.slot{n}.{glyph}</c>).</summary>
+    public IReadOnlyList<GlyphRef> Grafts { get; init; } = Array.Empty<GlyphRef>();
+
     /// <summary>The mechanisms the form and the active glyphs declare, before probes.</summary>
     public TagSet DeclaredMechanisms { get; init; } = TagSet.Empty;
 
@@ -89,12 +141,25 @@ public sealed class CompiledWeave
     /// <summary>The root effect list after patches and hooks, as the effects were compiled from it.</summary>
     public IReadOnlyList<TypedSpec> Specs { get; init; } = Array.Empty<TypedSpec>();
 
+    /// <summary>When the cooldown clock starts, <c>press</c> or <c>complete</c>: the preset's, else the form's; null takes the rule.</summary>
+    public string? CooldownAt { get; init; }
+
+    /// <summary>Triggers, gates, banks, slot behaviors and compiled sections.</summary>
+    public WeaveCasting Casting { get; init; } = WeaveCasting.None;
+
     internal WeaveProbe? Probe { get; init; }
 
+    /// <summary>For a view with cast-local modifiers, the weave it was made from; null for a compiled weave.</summary>
+    internal CompiledWeave? Origin { get; init; }
+
+    /// <summary>The compiled weave itself: a view's origin, or this.</summary>
+    public CompiledWeave Root => Origin ?? this;
+
     private string[]? _forbidFlags;
+    private string? _key;
 
     /// <summary>The flag that forbids each of the weave's tags (<c>forbid:{tag}</c>), in tag order, built once.</summary>
-    public IReadOnlyList<string> ForbidFlags => _forbidFlags ??= BuildForbidFlags();
+    public IReadOnlyList<string> ForbidFlags => _forbidFlags ??= Origin is { } origin ? (string[])origin.ForbidFlags : BuildForbidFlags();
 
     private string[] BuildForbidFlags()
     {
@@ -107,12 +172,23 @@ public sealed class CompiledWeave
         return flags;
     }
 
-    public string Key => Spec.ToString();
+    /// <summary>The spec as text, built once: cooldowns, random streams and events key by it.</summary>
+    public string Key => _key ??= Origin?.Key ?? Spec.ToString();
+
     public Targeting Targeting => Form.Targeting;
     public CastMode CastMode => Form.CastMode;
 
     /// <summary>True when every socketed glyph is active.</summary>
     public bool Fits => Dormant.Count == 0;
+
+    /// <summary>True when the weave casts itself on events rather than when pressed.</summary>
+    public bool IsTriggered => Casting.Triggers.Count > 0;
+
+    /// <summary>True for a weave that is pressed on and off.</summary>
+    public bool IsToggle => Form.Toggle is not null;
+
+    /// <summary>True for the modes a caster holds: channels, charge-ups, overcharges and guards.</summary>
+    public bool IsHeld => Form.CastMode is CastMode.Channel or CastMode.Charge or CastMode.Overcharge or CastMode.Guard;
 
     /// <summary>Whether the weave has a mechanism, including parameterized probes such as <c>affliction:bleeding</c>.</summary>
     public bool HasMechanism(string mechanism) =>
@@ -126,9 +202,51 @@ public sealed class CompiledWeave
         return caster.Attributes.Get(attribute, caster, ctx, Modifiers, baseValue);
     }
 
+    /// <summary>Whether the weave's own bases or modifiers name an attribute.</summary>
+    internal bool Mentions(string attribute)
+    {
+        if (Bases.ContainsKey(attribute))
+        {
+            return true;
+        }
+        var mods = Modifiers;
+        for (var i = 0; i < mods.Count; i++)
+        {
+            if (mods[i].Attribute == attribute)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /// <summary>
+    /// <see cref="Attr(Stats, string, TagSet?)"/> for an attribute that is usually untouched: folded only when
+    /// the weave, the caster's stack or the attribute's declaration could move it off zero, else zero without
+    /// a fold, so the many casts that never meet it pay nothing for it.
+    /// </summary>
+    internal double AttrOrZero(Stats caster, string attribute)
+    {
+        if (Mentions(attribute) || caster.Attributes.HasModifiers(attribute) || caster.Attributes.TryGetBaseOverride(attribute, out _))
+        {
+            return Attr(caster, attribute);
+        }
+        var def = caster.Attributes.Catalog.Get(attribute);
+        return def is null || (def.Formula is null && def.Base == 0) ? 0 : Attr(caster, attribute);
+    }
+
+    /// <summary>A weave attribute with the base given here when neither the form nor the preset sets one: the spec's own number.</summary>
+    public double Attr(Stats caster, string attribute, double fallbackBase)
+    {
+        var baseValue = Bases.TryGetValue(attribute, out var b) ? b : fallbackBase;
+        return caster.Attributes.Get(attribute, caster, Tags, Modifiers, baseValue);
+    }
+
     public double Range(Stats caster) => Form.Range is null ? Attr(caster, "range") : Form.Range.Evaluate(ScopeFor(caster));
     public double CastTime(Stats caster) => Form.CastTime is null ? 0 : Math.Max(0, Form.CastTime.Evaluate(ScopeFor(caster)));
-    public double Cooldown(Stats caster) => Form.Cooldown is null ? 0 : Math.Max(0, Form.Cooldown.Evaluate(ScopeFor(caster)));
+
+    /// <summary>The cooldown before recovery: the form's value plus attribute <c>cooldown.added</c> in the weave's scope.</summary>
+    public double Cooldown(Stats caster) => Math.Max(0, (Form.Cooldown is null ? 0 : Form.Cooldown.Evaluate(ScopeFor(caster))) + AttrOrZero(caster, "cooldown.added"));
 
     public IExprScope ScopeFor(Stats caster)
     {
@@ -138,16 +256,51 @@ public sealed class CompiledWeave
         return overlay;
     }
 
+    /// <summary>
+    /// A view of this weave whose modifiers are <paramref name="modifiers"/> (the weave's own followed by a
+    /// cast's local ones): everything else, its key and its forbid flags are shared. The weave runtime builds
+    /// one per beat of a cast that carries local modifiers, so ramps and charge scales join every fold of
+    /// that beat's effects and nothing else.
+    /// </summary>
+    internal CompiledWeave WithModifiers(IReadOnlyList<Modifier> modifiers) => new()
+    {
+        Spec = Spec,
+        Form = Form,
+        Threads = Threads,
+        Glyphs = Glyphs,
+        Tags = Tags,
+        Mechanisms = Mechanisms,
+        Bases = Bases,
+        Modifiers = modifiers,
+        Effects = Effects,
+        Costs = Costs,
+        Level = Level,
+        Name = Name,
+        Look = Look,
+        Ai = Ai,
+        GlyphRefs = GlyphRefs,
+        Dormant = Dormant,
+        Grafts = Grafts,
+        DeclaredMechanisms = DeclaredMechanisms,
+        CastScope = CastScope,
+        LevelBonus = LevelBonus,
+        Specs = Specs,
+        CooldownAt = CooldownAt,
+        Casting = Casting,
+        Probe = Probe,
+        Origin = Root,
+    };
+
     public override string ToString() => Name.Length > 0 ? Name : Key;
 }
 
 /// <summary>
 /// Turns specs into compiled weaves. In order: the preset, form and Threads resolve; glyphs resolve at
-/// their levels with their rolled rows; then, to a fixpoint, the active glyphs' tags, mechanisms,
-/// modifiers, patches and hooks build the weave, the mechanism probes run on it, and the last active
-/// glyph in socket order whose gate fails goes dormant (in strict mode the first misfit fails the
-/// compile). Glyphs that enable each other through tags, mechanisms or what their patches add therefore
-/// self-lift, and where glyphs exclude each other the earlier socket stays active.
+/// their levels with their rolled rows, slot grafts joining after the sockets; then, to a fixpoint, the
+/// active glyphs' tags, mechanisms, modifiers, patches and hooks build the weave, the mechanism probes run
+/// on it, and the last active glyph in socket order whose gate fails goes dormant (in strict mode the first
+/// misfit fails the compile). Glyphs that enable each other through tags, mechanisms or what their patches
+/// add therefore self-lift, and where glyphs exclude each other the earlier socket stays active.
 /// </summary>
 public sealed class WeaveCompiler
 {
@@ -172,23 +325,31 @@ public sealed class WeaveCompiler
 
     public CompiledWeave Compile(WeaveSpec spec) => Compile(spec, GlyphFit.Strict);
 
-    public CompiledWeave Compile(WeaveSpec spec, GlyphFit fit)
+    public CompiledWeave Compile(WeaveSpec spec, GlyphFit fit) => Compile(spec, fit, null);
+
+    /// <summary>
+    /// Compiles a spec with glyphs grafted onto it beyond its sockets: they do not count against the form's
+    /// glyph limit, a socketed copy of the same glyph wins over a graft, and a misfit graft goes dormant.
+    /// </summary>
+    public CompiledWeave Compile(WeaveSpec spec, GlyphFit fit, IReadOnlyList<GlyphRef>? grafts)
     {
-        var key = CacheKey(spec, fit);
+        var key = CacheKey(spec, fit, grafts);
         if (_cache.TryGetValue(key, out var cached))
         {
             return cached;
         }
-        var compiled = Build(spec, fit);
+        var compiled = Build(spec, fit, grafts);
         _cache[key] = compiled;
         return compiled;
     }
 
-    public bool TryCompile(WeaveSpec spec, out CompiledWeave? weave, out string? error, GlyphFit fit = GlyphFit.Strict)
+    public bool TryCompile(WeaveSpec spec, out CompiledWeave? weave, out string? error, GlyphFit fit = GlyphFit.Strict) => TryCompile(spec, out weave, out error, fit, null);
+
+    public bool TryCompile(WeaveSpec spec, out CompiledWeave? weave, out string? error, GlyphFit fit, IReadOnlyList<GlyphRef>? grafts)
     {
         try
         {
-            weave = Compile(spec, fit);
+            weave = Compile(spec, fit, grafts);
             error = null;
             return true;
         }
@@ -200,11 +361,14 @@ public sealed class WeaveCompiler
         }
     }
 
-    private static string CacheKey(WeaveSpec spec, GlyphFit fit) =>
-        $"{spec.Preset}|{spec.Form}|{string.Join(",", spec.Threads)}|{string.Join(",", spec.Glyphs)}|{spec.Level}|{spec.Name}|{(int)fit}";
+    private static string CacheKey(WeaveSpec spec, GlyphFit fit, IReadOnlyList<GlyphRef>? grafts)
+    {
+        var key = $"{spec.Preset}|{spec.Form}|{string.Join(",", spec.Threads)}|{string.Join(",", spec.Glyphs)}|{spec.Level}|{spec.Name}|{(int)fit}";
+        return grafts is { Count: > 0 } ? key + "|g:" + string.Join(",", grafts) : key;
+    }
 
     /// <summary>A glyph as socketed: its reference, definition, level and the rows it rolled.</summary>
-    private sealed record Socketed(GlyphRef Ref, GlyphDef Def, int Level, IReadOnlyList<GlyphRow> Rows);
+    private sealed record Socketed(GlyphRef Ref, GlyphDef Def, int Level, IReadOnlyList<GlyphRow> Rows, bool Graft);
 
     /// <summary>The weave as it stands with one set of active glyphs.</summary>
     private sealed class Evaluation
@@ -219,12 +383,12 @@ public sealed class WeaveCompiler
         public readonly List<string> Satisfied = new();
     }
 
-    private CompiledWeave Build(WeaveSpec spec, GlyphFit fit)
+    private CompiledWeave Build(WeaveSpec spec, GlyphFit fit, IReadOnlyList<GlyphRef>? grafts)
     {
         var tracked = spec.Preset is not null && _building.Add(spec.Preset);
         try
         {
-            return BuildCore(spec, fit);
+            return BuildCore(spec, fit, grafts);
         }
         finally
         {
@@ -235,7 +399,7 @@ public sealed class WeaveCompiler
         }
     }
 
-    private CompiledWeave BuildCore(WeaveSpec spec, GlyphFit fit)
+    private CompiledWeave BuildCore(WeaveSpec spec, GlyphFit fit, IReadOnlyList<GlyphRef>? grafts)
     {
         WeaveDef? preset = null;
         var formId = spec.Form;
@@ -300,16 +464,35 @@ public sealed class WeaveCompiler
         foreach (var gref in glyphRefs)
         {
             var g = _content.Get<GlyphDef>(gref.Id) ?? throw new WeaveCompileException($"Unknown glyph '{gref.Id}'.");
-            glyphs.Add(new Socketed(gref, g, Math.Clamp(gref.Level ?? g.Level, 1, maxLevel), RowsOf(gref, g)));
+            glyphs.Add(new Socketed(gref, g, Math.Clamp(gref.Level ?? g.Level, 1, maxLevel), RowsOf(gref, g), Graft: false));
         }
         if (glyphs.Count > form.MaxGlyphs)
         {
             throw new WeaveCompileException($"Form '{form.Id}' takes at most {form.MaxGlyphs} glyphs; got {glyphs.Count}.");
         }
+        var grafted = new List<GlyphRef>();
+        if (grafts is not null)
+        {
+            foreach (var gref in grafts)
+            {
+                // A socketed copy wins over a graft of the same glyph.
+                if (glyphs.Exists(s => s.Ref.Id == gref.Id))
+                {
+                    continue;
+                }
+                if (_content.Get<GlyphDef>(gref.Id) is not { } g)
+                {
+                    continue;
+                }
+                glyphs.Add(new Socketed(gref, g, Math.Clamp(gref.Level ?? g.Level, 1, maxLevel), RowsOf(gref, g), Graft: true));
+                grafted.Add(gref);
+            }
+        }
 
         // Every glyph starts active. While some active glyph's gate fails, the last such glyph in socket order
         // goes dormant (so where glyphs exclude each other the earlier socket keeps its place) and the weave is
-        // rebuilt without it. Only removals happen, so this ends. Strict mode fails on the first misfit instead.
+        // rebuilt without it. Only removals happen, so this ends. Strict mode fails on the first socketed
+        // misfit instead; a graft that does not fit always goes dormant.
         var active = new bool[glyphs.Count];
         Array.Fill(active, true);
         var reasons = new string?[glyphs.Count];
@@ -325,7 +508,7 @@ public sealed class WeaveCompiler
                 {
                     continue;
                 }
-                if (fit == GlyphFit.Strict)
+                if (fit == GlyphFit.Strict && !glyphs[i].Graft)
                 {
                     throw new WeaveCompileException(why);
                 }
@@ -350,10 +533,15 @@ public sealed class WeaveCompiler
         };
         List<TypedSpec> specs;
         var effects = new List<CompiledEffect>();
+        IReadOnlyList<CompiledEffect> release, bash, deactivate, cycle;
         try
         {
             specs = state.Graph.ToSpecs();
             effects.AddRange(_effects.CompileAll(specs, compileCtx));
+            release = Section(state.Graph, WeaveSections.Release, compileCtx);
+            bash = Section(state.Graph, WeaveSections.Bash, compileCtx);
+            deactivate = Section(state.Graph, WeaveSections.Deactivate, compileCtx);
+            cycle = Section(state.Graph, WeaveSections.Cycle, compileCtx);
         }
         catch (InvalidOperationException ex)
         {
@@ -401,13 +589,99 @@ public sealed class WeaveCompiler
             Ai = ai ?? form.Ai,
             GlyphRefs = activeRefs,
             Dormant = dormant,
+            Grafts = grafted,
             DeclaredMechanisms = state.Declared,
             CastScope = castScope,
             LevelBonus = state.LevelBonus,
             Specs = specs,
+            CooldownAt = preset?.CooldownAt ?? form.CooldownAt,
+            Casting = CastingOf(form, activeGlyphs, release, bash, deactivate, cycle),
             Probe = state.Probe,
         };
     }
+
+    private IReadOnlyList<CompiledEffect> Section(WeaveGraph graph, string section, EffectCompileContext ctx) =>
+        graph.HasSection(section) ? _effects.CompileAll(graph.ToSpecs(section), ctx).ToArray() : Array.Empty<CompiledEffect>();
+
+    /// <summary>The casting fields of the form and the active glyphs, combined.</summary>
+    private static WeaveCasting CastingOf(FormDef form, List<GlyphDef> glyphs, IReadOnlyList<CompiledEffect> release, IReadOnlyList<CompiledEffect> bash, IReadOnlyList<CompiledEffect> deactivate, IReadOnlyList<CompiledEffect> cycle)
+    {
+        var triggers = new List<WeaveTrigger>();
+        var gates = new List<Expr>(form.Gates);
+        var metas = new List<MetaSpec>();
+        var followUps = new List<FollowUpSpec>();
+        var equip = new List<Modifier>(form.EquipModifiers);
+        if (form.Trigger is { } formTrigger)
+        {
+            triggers.Add(new WeaveTrigger(formTrigger, KindOf(formTrigger, form.Id), "form", triggers.Count));
+        }
+        if (form.Meta is { } formMeta)
+        {
+            metas.Add(formMeta);
+        }
+        if (form.FollowUp is { } formFollow)
+        {
+            followUps.Add(formFollow);
+        }
+        UsesSpec? uses = null;
+        SpendSpec? spend = null;
+        ConvertSpec? convert = null;
+        CycleSpec? cycleSpec = null;
+        SelfStackSpec? selfStack = null;
+        ComboSpec? chain = null;
+        foreach (var g in glyphs)
+        {
+            if (g.Trigger is { } trigger)
+            {
+                triggers.Add(new WeaveTrigger(trigger, KindOf(trigger, g.Id), g.Id, triggers.Count));
+            }
+            gates.AddRange(g.Gates);
+            if (g.Meta is { } meta)
+            {
+                metas.Add(meta);
+            }
+            if (g.FollowUp is { } follow)
+            {
+                followUps.Add(follow);
+            }
+            equip.AddRange(g.EquipModifiers);
+            uses ??= g.Uses;
+            spend ??= g.Spend;
+            convert ??= g.Convert;
+            cycleSpec ??= g.Cycle;
+            selfStack ??= g.SelfStack;
+            chain ??= g.Chain;
+        }
+        var nothing = triggers.Count == 0 && gates.Count == 0 && metas.Count == 0 && followUps.Count == 0 && equip.Count == 0
+            && uses is null && form.Uses is null && spend is null && form.Spend is null && convert is null && form.Convert is null
+            && cycleSpec is null && form.Cycle is null && selfStack is null && form.SelfStack is null && chain is null && form.Chain is null
+            && release.Count == 0 && bash.Count == 0 && deactivate.Count == 0 && cycle.Count == 0;
+        if (nothing)
+        {
+            return WeaveCasting.None;
+        }
+        return new WeaveCasting
+        {
+            Triggers = triggers,
+            Gates = gates,
+            Uses = uses ?? form.Uses,
+            Spend = spend ?? form.Spend,
+            Convert = convert ?? form.Convert,
+            Metas = metas,
+            FollowUps = followUps,
+            Cycle = cycleSpec ?? form.Cycle,
+            SelfStack = selfStack ?? form.SelfStack,
+            Chain = chain ?? form.Chain,
+            EquipModifiers = equip,
+            Release = release,
+            Bash = bash,
+            Deactivate = deactivate,
+            CycleEffects = cycle,
+        };
+    }
+
+    private static TriggerKind KindOf(TriggerSpec trigger, string owner) =>
+        TriggerKinds.TryGet(trigger.On, out var kind) ? kind : throw new WeaveCompileException($"'{owner}' triggers on unknown kind '{trigger.On}'.");
 
     /// <summary>The weave with the active glyphs: tags, declared and probed mechanisms, modifiers, and the patched, hooked graph.</summary>
     private Evaluation Evaluate(WeaveDef? preset, FormDef form, List<ThreadDef> threads, TagSet baseTags, Dictionary<string, double> bases, List<Socketed> glyphs, bool[] active)
@@ -430,13 +704,15 @@ public sealed class WeaveCompiler
             modifiers.AddRange(preset.Modifiers.Select(m => m.WithSource("preset:" + preset.Id)));
         }
         var levelBonus = 0;
+        var activeDefs = new List<GlyphDef>();
         for (var i = 0; i < glyphs.Count; i++)
         {
             if (!active[i])
             {
                 continue;
             }
-            var (_, g, level, rows) = glyphs[i];
+            var (_, g, level, rows, _) = glyphs[i];
+            activeDefs.Add(g);
             var source = "glyph:" + g.Id;
             modifiers.AddRange(g.Modifiers.Select(m => m.WithSource(source)));
             foreach (var row in rows)
@@ -451,8 +727,9 @@ public sealed class WeaveCompiler
             levelBonus += g.LevelBonus + (int)Math.Floor(g.LevelBonusPerLevel * levelsAbove);
         }
 
-        // The graph: the form's and preset's effects take patches in glyph order; glyphs' added effects
-        // join the root; hooks append into every node exposing them; on_cast lists close the root.
+        // The graph: the form's and preset's effects take patches in glyph order, and so do the form's
+        // sections (a channel's release, a guard's bash, a toggle's deactivation, a cycle's payload); glyphs'
+        // added effects join the root; hooks append into every node exposing them; on_cast lists close the root.
         var graph = new WeaveGraph(_effects);
         foreach (var s in form.Effects)
         {
@@ -463,6 +740,36 @@ public sealed class WeaveCompiler
             foreach (var s in preset.Effects)
             {
                 graph.Add(s, patchable: true);
+            }
+        }
+        if (form.Channel?.Release is { } release)
+        {
+            foreach (var s in release.Effects)
+            {
+                graph.Add(s, patchable: true, WeaveSections.Release);
+            }
+        }
+        if (form.Guard?.Bash is { } bash)
+        {
+            foreach (var s in bash.Effects)
+            {
+                graph.Add(s, patchable: true, WeaveSections.Bash);
+            }
+        }
+        if (form.Toggle is { } toggle)
+        {
+            foreach (var s in toggle.OnDeactivate)
+            {
+                graph.Add(s, patchable: true, WeaveSections.Deactivate);
+            }
+        }
+        // The first active glyph's cycle wins over the form's.
+        var cycleFromGlyph = activeDefs.Find(g => g.Cycle is not null)?.Cycle;
+        if ((cycleFromGlyph ?? form.Cycle) is { } cycle)
+        {
+            foreach (var s in cycle.Effects)
+            {
+                graph.Add(s, patchable: cycleFromGlyph is null, WeaveSections.Cycle);
             }
         }
         var patcher = new EffectPatcher(graph);
@@ -538,6 +845,7 @@ public sealed class WeaveCompiler
             Modifiers = modifiers,
             Bases = bases,
             Graph = graph,
+            Glyphs = activeDefs,
         };
         var mechanisms = declared.Union(TagSet.From(MechanismRegistry.Held(probe)));
         return new Evaluation

@@ -10,7 +10,9 @@ namespace HollowWake.Core.Weaves;
 /// The effect graph a weave compiles from, held as JSON the compiler can edit: the root list in order,
 /// each entry an effect node with its <c>type</c>. Entries that no patch or hook touched compile from
 /// their original specs; touched entries compile from the edited JSON. Probes read the graph through
-/// <see cref="Nodes()"/>, which walks every effect node depth first.
+/// <see cref="Nodes()"/>, which walks every effect node depth first. Besides the main list the graph holds
+/// named sections (a channel's release, a guard's bash, a toggle's deactivation, a cycle's payload) that
+/// patches and hooks edit like the main list and that compile to their own lists.
 /// </summary>
 public sealed class WeaveGraph
 {
@@ -20,6 +22,7 @@ public sealed class WeaveGraph
         public JsonObject Node = null!;
         public bool Dirty;
         public bool Patchable;
+        public string? Section;
     }
 
     private readonly EffectRegistry _effects;
@@ -36,12 +39,28 @@ public sealed class WeaveGraph
 
     public int Count => _roots.Count;
 
-    /// <summary>Appends a root entry. Patchable entries (the form's and the preset's) are the ones patches edit.</summary>
-    public void Add(TypedSpec spec, bool patchable)
+    /// <summary>
+    /// Appends a root entry to the main list, or to a named section. Patchable entries (the form's and the
+    /// preset's) are the ones patches edit.
+    /// </summary>
+    public void Add(TypedSpec spec, bool patchable, string? section = null)
     {
         var node = ToNode(spec);
-        _roots.Add(new Root { Original = spec, Node = node, Patchable = patchable });
+        _roots.Add(new Root { Original = spec, Node = node, Patchable = patchable, Section = section });
         _rootNodes.Add(node);
+    }
+
+    /// <summary>Whether a named section holds any entry.</summary>
+    public bool HasSection(string section)
+    {
+        foreach (var r in _roots)
+        {
+            if (r.Section == section)
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
     /// <summary>Whether a node was a root entry as added, before any wrap moved it under a wrapper.</summary>
@@ -107,12 +126,19 @@ public sealed class WeaveGraph
 
     public static string? TypeOf(JsonObject node) => JsonNum.StringOf(node["type"]);
 
-    /// <summary>The root list as specs to compile: originals where nothing changed, the edited JSON elsewhere.</summary>
-    public List<TypedSpec> ToSpecs()
+    /// <summary>The main root list as specs to compile: originals where nothing changed, the edited JSON elsewhere.</summary>
+    public List<TypedSpec> ToSpecs() => ToSpecs(null);
+
+    /// <summary>A section's root list as specs to compile; the main list for a null section.</summary>
+    public List<TypedSpec> ToSpecs(string? section)
     {
         var specs = new List<TypedSpec>(_roots.Count);
         foreach (var r in _roots)
         {
+            if (r.Section != section)
+            {
+                continue;
+            }
             if (!r.Dirty && r.Original is not null)
             {
                 specs.Add(r.Original);

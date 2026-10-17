@@ -1,3 +1,4 @@
+using System.Collections.Concurrent;
 using System.Numerics;
 using System.Text.Json;
 using System.Text.Json.Nodes;
@@ -49,6 +50,18 @@ public sealed class EffectContext
 
     public Dictionary<string, double> Vars { get; init; } = new(StringComparer.Ordinal);
 
+    /// <summary>
+    /// The weave slot the cast came from, when a runtime knows it: effects that act on their host slot
+    /// (restoring its uses, commanding its minions) read it. Casts by a <c>cast</c> effect keep their host's.
+    /// </summary>
+    public WeaveSlot? Slot { get; init; }
+
+    /// <summary>
+    /// The weave of the slot a meta, follow-up, trigger or <c>cast</c> runs for, when the running weave is
+    /// another: effects that address their host (its minions, its bank) read <c>Host ?? Weave</c>.
+    /// </summary>
+    public CompiledWeave? Host { get; init; }
+
     /// <summary>The original caster for summoned and chained effects, used for ownership and credit.</summary>
     public Entity Origin
     {
@@ -66,45 +79,15 @@ public sealed class EffectContext
     /// <summary>Where the effect is centered: the target if any, else the point.</summary>
     public Vector3 Focus => Sim.World.TryGet<Transform>(Target, out var t) ? t.Position : Point;
 
-    private IExprScope? _scope;
+    private EffectScope? _scope;
 
-    public IExprScope Scope
-    {
-        get
-        {
-            if (_scope is not null)
-            {
-                return _scope;
-            }
-            var sourceStats = SourceStats;
-            var overlay = new ScopeOverlay(sourceStats, Rng);
-            if (sourceStats is not null)
-            {
-                overlay.Mount("source", sourceStats);
-                overlay.Mount("caster", sourceStats);
-            }
-            if (TargetStats is { } ts)
-            {
-                overlay.Mount("target", ts);
-            }
-            if (Weave is not null && sourceStats is not null)
-            {
-                overlay.Mount("weave", new WeaveScope(Weave, sourceStats, Tags));
-            }
-            foreach (var (k, v) in Vars)
-            {
-                overlay.Set(k, v);
-            }
-            if (Sim.World.TryGet<Transform>(Source, out var st) && Sim.World.TryGet<Transform>(Target, out var tt))
-            {
-                overlay.Set("distance", st.DistanceTo(tt));
-            }
-            overlay.Set("depth", Depth);
-            overlay.Set("time", Sim.Clock.Time);
-            _scope = overlay;
-            return overlay;
-        }
-    }
+    /// <summary>
+    /// The scope of the effect's expressions, built when first read: <c>source.*</c> and <c>caster.*</c>
+    /// resolve on the source, <c>target.*</c> on the target, <c>weave.*</c> through the weave folded on the
+    /// source, and the variables, <c>distance</c>, <c>depth</c> and <c>time</c> as they stood when it was
+    /// built; every other name resolves on the source.
+    /// </summary>
+    public IExprScope Scope => _scope ??= new EffectScope(this);
 
     public double Eval(Expr? expr, double fallback = 0) => expr is null ? fallback : expr.Evaluate(Scope);
 
@@ -134,7 +117,10 @@ public sealed class EffectContext
     /// </summary>
     public EffectContext Fork(int deeper = 0) => Copy(depth: Depth + deeper, vars: new Dictionary<string, double>(Vars, StringComparer.Ordinal));
 
-    private EffectContext Copy(Entity? source = null, Entity? target = null, Vector3? point = null, int? depth = null, Dictionary<string, double>? vars = null, TagSet? tags = null)
+    /// <summary><see cref="Fork"/> with damage effects scaled by a further factor: a fuse's power.</summary>
+    public EffectContext Fork(int deeper, double damageScale) => Copy(depth: Depth + deeper, vars: new Dictionary<string, double>(Vars, StringComparer.Ordinal), damageScale: DamageScale * damageScale);
+
+    private EffectContext Copy(Entity? source = null, Entity? target = null, Vector3? point = null, int? depth = null, Dictionary<string, double>? vars = null, TagSet? tags = null, double? damageScale = null)
     {
         return new EffectContext
         {
@@ -149,10 +135,168 @@ public sealed class EffectContext
             Depth = depth ?? Depth,
             Rng = Rng,
             Potency = Potency,
-            DamageScale = DamageScale,
+            DamageScale = damageScale ?? DamageScale,
             From = From,
             Vars = vars ?? Vars,
+            Slot = Slot,
+            Host = Host,
         };
+    }
+}
+
+/// <summary>
+/// The expression scope of one effect context, resolving what the context mounts without building an
+/// overlay: the variables, <c>distance</c>, <c>depth</c> and <c>time</c> are read when it is built (later
+/// writes to the variables are not seen, as with any scope built from a context), <c>source.</c> and
+/// <c>caster.</c> names resolve on the source's stats, <c>target.</c> names on the target's, <c>weave.</c>
+/// names through the weave folded on the source with the context's tags, and anything else on the source.
+/// </summary>
+internal sealed class EffectScope : IExprScope
+{
+    // "target.life" -> "life": the part after the mount, kept so prefixed lookups do not allocate.
+    private static readonly ConcurrentDictionary<string, string> Suffixes = new(StringComparer.Ordinal);
+    private const int SuffixLimit = 4096;
+    private static int _suffixCount;
+
+    private readonly Rng _rng;
+    private readonly Stats? _source;
+    private readonly Stats? _target;
+    private readonly CompiledWeave? _weave;
+    private readonly TagSet _tags;
+    private readonly bool _hasDistance;
+    private readonly double _distance;
+    private readonly double _depth;
+    private readonly double _time;
+    private readonly string[]? _names;
+    private readonly double[]? _values;
+
+    public EffectScope(EffectContext ctx)
+    {
+        var world = ctx.Sim.World;
+        _rng = ctx.Rng;
+        _source = world.Get<Stats>(ctx.Source);
+        _target = world.Get<Stats>(ctx.Target);
+        _weave = ctx.Weave;
+        _tags = ctx.Tags;
+        if (world.TryGet<Transform>(ctx.Source, out var st) && world.TryGet<Transform>(ctx.Target, out var tt))
+        {
+            _hasDistance = true;
+            _distance = st.DistanceTo(tt);
+        }
+        _depth = ctx.Depth;
+        _time = ctx.Sim.Clock.Time;
+        var vars = ctx.Vars;
+        if (vars.Count > 0)
+        {
+            _names = new string[vars.Count];
+            _values = new double[vars.Count];
+            var i = 0;
+            foreach (var (k, v) in vars)
+            {
+                _names[i] = k;
+                _values[i] = v;
+                i++;
+            }
+        }
+    }
+
+    public bool TryResolve(string name, out double value)
+    {
+        if (TryValue(name, out value))
+        {
+            return true;
+        }
+        var dot = name.IndexOf('.');
+        if (dot > 0)
+        {
+            switch (dot)
+            {
+                case 6 when _source is not null && (string.CompareOrdinal(name, 0, "source", 0, 6) == 0 || string.CompareOrdinal(name, 0, "caster", 0, 6) == 0):
+                    return _source.TryResolve(Suffix(name, dot), out value);
+                case 6 when _target is not null && string.CompareOrdinal(name, 0, "target", 0, 6) == 0:
+                    return _target.TryResolve(Suffix(name, dot), out value);
+                case 5 when _weave is not null && _source is not null && string.CompareOrdinal(name, 0, "weave", 0, 5) == 0:
+                {
+                    var rest = Suffix(name, dot);
+                    value = rest == "level" ? _weave.Level : _weave.Attr(_source, rest, _tags);
+                    return true;
+                }
+            }
+        }
+        if (_source is not null)
+        {
+            return _source.TryResolve(name, out value);
+        }
+        value = 0;
+        return false;
+    }
+
+    public bool HasFlag(string flag)
+    {
+        var dot = flag.IndexOf('.');
+        if (dot > 0)
+        {
+            switch (dot)
+            {
+                case 6 when _source is not null && (string.CompareOrdinal(flag, 0, "source", 0, 6) == 0 || string.CompareOrdinal(flag, 0, "caster", 0, 6) == 0):
+                    return _source.HasFlag(Suffix(flag, dot));
+                case 6 when _target is not null && string.CompareOrdinal(flag, 0, "target", 0, 6) == 0:
+                    return _target.HasFlag(Suffix(flag, dot));
+                case 5 when _weave is not null && _source is not null && string.CompareOrdinal(flag, 0, "weave", 0, 5) == 0:
+                {
+                    var rest = Suffix(flag, dot);
+                    return _weave.Tags.Has(rest) || _weave.Mechanisms.Has(rest);
+                }
+            }
+        }
+        return _source?.HasFlag(flag) ?? false;
+    }
+
+    public double NextRandom() => _rng.NextDouble();
+
+    /// <summary>The context's own values: the real depth, time and distance win over variables of the same names.</summary>
+    private bool TryValue(string name, out double value)
+    {
+        switch (name)
+        {
+            case "depth":
+                value = _depth;
+                return true;
+            case "time":
+                value = _time;
+                return true;
+            case "distance" when _hasDistance:
+                value = _distance;
+                return true;
+        }
+        var names = _names;
+        if (names is not null)
+        {
+            for (var i = 0; i < names.Length; i++)
+            {
+                if (string.Equals(names[i], name, StringComparison.Ordinal))
+                {
+                    value = _values![i];
+                    return true;
+                }
+            }
+        }
+        value = 0;
+        return false;
+    }
+
+    private static string Suffix(string name, int dot)
+    {
+        if (Suffixes.TryGetValue(name, out var suffix))
+        {
+            return suffix;
+        }
+        suffix = name.Substring(dot + 1);
+        if (Volatile.Read(ref _suffixCount) < SuffixLimit && Suffixes.TryAdd(name, suffix))
+        {
+            Interlocked.Increment(ref _suffixCount);
+        }
+        return suffix;
     }
 }
 
@@ -175,8 +319,24 @@ public static class CastVars
     /// <summary>How many charges a cast spent.</summary>
     public const string ChargesSpent = "charges_spent";
 
+    /// <summary>How many use charges a cast spent from its slot's bank.</summary>
+    public const string UsesSpent = "uses_spent";
+
+    /// <summary>The power a trigger banked from its event, and the event's amount (damage, healing, stacks).</summary>
+    public const string TriggerPower = "trigger.power";
+    public const string TriggerAmount = "trigger.amount";
+
+    /// <summary>Which repeat of a use this is, from one.</summary>
+    public const string RepeatIndex = "repeat.index";
+
+    /// <summary>Damage a guard absorbed before its bash.</summary>
+    public const string GuardAbsorbed = "guard.absorbed";
+
+    /// <summary>The share of a persisting channel's strength left, from one down to its fade.</summary>
+    public const string Persist = "cast.persist";
+
     /// <summary>Every name above, for validators.</summary>
-    public static readonly IReadOnlyList<string> All = new[] { Held, Fill, Stage, ChargesSpent };
+    public static readonly IReadOnlyList<string> All = new[] { Held, Fill, Stage, ChargesSpent, UsesSpent, TriggerPower, TriggerAmount, RepeatIndex, GuardAbsorbed, Persist };
 }
 
 /// <summary>Resolves <c>weave.*</c> names: weave attributes folded on the caster with the weave's local modifiers.</summary>
@@ -302,8 +462,9 @@ public abstract class CompiledEffect
             ctx.Sim.Log.Warn($"effect chain exceeded depth {limit}; stopping");
             return;
         }
-        foreach (var e in effects)
+        for (var i = 0; i < effects.Count; i++)
         {
+            var e = effects[i];
             try
             {
                 e.Execute(ctx);
