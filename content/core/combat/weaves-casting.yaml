@@ -1,0 +1,50 @@
+# Preset weaves of the cast modes, for callings, monsters and tests. Every preset must fit: validation warns
+# when one of its glyphs would be dormant.
+kind: weaves
+entries:
+  - { id: tide_torrent, name: Tide Torrent, form: torrent, threads: [tide], color: "#3aa6d8" }
+  - { id: umbra_gathering, name: Umbra Gathering, form: gathering, threads: [umbra], color: "#5a4a7a" }
+  - { id: ember_draw, name: Ember Draw, form: drawn_shot, threads: [ember], color: "#e8622a" }
+  - { id: storm_surge, name: Storm Surge, form: surge, threads: [storm], color: "#b58cff" }
+  - { id: stone_bulwark, name: Stone Bulwark, form: bulwark, threads: [stone], color: "#9c8b72" }
+  - { id: measured_cut, name: Measured Cut, form: measured_strike, threads: [], color: "#9c8b72" }
+  - { id: bramble_quiver, name: Bramble Quiver, form: quiver, threads: [bloom], color: "#5fbf5a" }
+  - { id: quiver_restring, name: Restring, form: restring, threads: [], color: "#9c8b72" }
+  - { id: lumen_vigil, name: Lumen Vigil, form: vigil, threads: [lumen], color: "#f5e27a" }
+  # Triggered weaves: each casts itself on its event, and the bar takes turns among those of one kind.
+  - { id: kindling_spark, name: Kindling Spark, form: bolt, threads: [ember], glyphs: [spark_on_strike], color: "#e8622a", attributes: { base_damage: 8 } }
+  - { id: static_spark, name: Static Spark, form: bolt, threads: [storm], glyphs: [spark_on_strike], color: "#b58cff", attributes: { base_damage: 8 } }
+  - { id: ruinous_bolt, name: Ruinous Bolt, form: bolt, threads: [ember], glyphs: [cast_on_crit], color: "#e8622a" }
+  - { id: undertow_bolt, name: Undertow Bolt, form: bolt, threads: [tide], glyphs: [undertow], color: "#3aa6d8", attributes: { base_damage: 7 } }
+  # Repeats and slot behaviors.
+  - { id: echoing_nova, name: Echoing Nova, form: nova, threads: [storm], glyphs: [echoing], color: "#b58cff" }
+  - { id: flurry_strike, name: Flurry Strike, form: strike, threads: [], glyphs: [flurry], color: "#e0e0e0" }
+
+---
+# Two duelists for the cast modes, used by the acceptance fight and tests: one channels a torrent that ramps and
+# releases, the other strikes in melee and every landed blow casts the next of its two spurred sparks in turn.
+kind: patterns
+entries:
+  - id: tide_channeler
+    name: Tide Channeler
+    extends: monster
+    tags: [humanoid, loosed, caster, channeler]
+    faction: the_loosed
+    level: 4
+    components:
+      stats: { attributes: { might: 6, grace: 9, will: 14, vigor: 9, move.speed: 4.6 } }
+      weaves: { list: [tide_torrent] }
+      behavior: { id: aggressive_ranged }
+      drops: { table: world_common, xp: "22 + level * 6", chance: 0.8 }
+
+  - id: spark_duelist
+    name: Spark Duelist
+    extends: monster
+    tags: [humanoid, loosed, duelist]
+    faction: the_loosed
+    level: 4
+    components:
+      stats: { attributes: { might: 10, grace: 10, will: 12, vigor: 10, move.speed: 5, weapon.damage.min: 4, weapon.damage.max: 8, weapon.attack.time: 0.9 } }
+      weaves: { list: [strike, kindling_spark, static_spark] }
+      behavior: { id: aggressive_melee }
+      drops: { table: world_common, xp: "22 + level * 6", chance: 0.8 }

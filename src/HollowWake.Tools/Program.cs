@@ -205,6 +205,9 @@ switch (command)
         sim.Events.Subscribe<EntityDied>(d => events.Add($"t={sim.Clock.Time:0.00} {sim.World.Get<Identity>(d.Entity)} died"));
         sim.Events.Subscribe<StatusApplied>(s => events.Add($"t={sim.Clock.Time:0.00} status {s.Status} x{s.Stacks} on {sim.World.Get<Identity>(s.Target)} from {sim.World.Get<Identity>(s.Source)}"));
         sim.Events.Subscribe<WeaveCast>(w => events.Add($"t={sim.Clock.Time:0.00} {sim.World.Get<Identity>(w.Caster)} cast {w.Weave} at {sim.World.Get<Identity>(w.Target)}"));
+        sim.Events.Subscribe<ChannelPulsed>(p => events.Add($"t={sim.Clock.Time:0.00} {sim.World.Get<Identity>(p.Caster)} channel beat {p.Pulse} of {p.Weave} held {p.Held:0.00}s"));
+        sim.Events.Subscribe<WeaveReleased>(r => events.Add($"t={sim.Clock.Time:0.00} {sim.World.Get<Identity>(r.Caster)} released {r.Weave} ({r.Mode}, {r.Reason}) held {r.Held:0.00}s{(r.Fired ? "" : " without firing")}"));
+        sim.Events.Subscribe<WeaveTriggered>(t => events.Add($"t={sim.Clock.Time:0.00} {sim.World.Get<Identity>(t.Caster)} triggered {t.Weave} on {t.Kind} at {sim.World.Get<Identity>(t.Target)}"));
         sim.Events.Subscribe<EntitySpawned>(s => events.Add($"t={sim.Clock.Time:0.00} spawned {s.Pattern} at {s.Position}"));
         sim.Events.Subscribe<EntityDespawned>(s => events.Add($"t={sim.Clock.Time:0.00} despawned {s.Pattern}"));
         sim.Events.Subscribe<CombatNote>(n => events.Add($"t={sim.Clock.Time:0.00} {n.Describe(e => sim.World.Get<Identity>(e)?.ToString() ?? "?")}"));
