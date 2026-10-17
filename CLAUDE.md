@@ -2,6 +2,8 @@
 
 Guidance for Claude Code (and people) working in this repository. Committed and shared.
 
+Two kinds of engineer work here: Claude sessions and Codex chats. The rules in this file apply to both; how they work side by side (branches, a clean integration tree, pull requests reviewed by the other side, review records) is [docs/COLLABORATION.md](docs/COLLABORATION.md), and [AGENTS.md](AGENTS.md) is where a Codex chat starts.
+
 ## What this is
 
 Hollow Wake MMO is an MMOARPG foundation: an engine-agnostic C# simulation core, an authoritative server, a Godot client, a browser client, a YAML content pack and tools. The core vision is in [docs/VISION.md](docs/VISION.md) and is the test for every change: **data over code, one modifier engine, tags as the universal join, composition over bespoke, server authority, a seamless generated world, and observability.** If a change hard-codes something content could express, it is probably wrong.
