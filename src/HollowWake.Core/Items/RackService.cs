@@ -61,11 +61,8 @@ public sealed class RackService : InventoryService.IItemPlace
             if (at < book.Slots.Count && seat.Codex?.Payload is { } payload && Teaches(sim, payload, book.Slots[at].Spec))
             {
                 seat.Bound = book.Slots[at];
-                if (payload.Form is not null)
-                {
-                    seat.Threads.Clear();
-                    seat.Threads.AddRange(book.Slots[at].Spec.Threads);
-                }
+                seat.Threads.Clear();
+                seat.Threads.AddRange(book.Slots[at].Spec.Threads);
             }
         }
         rack.Seats.Clear();

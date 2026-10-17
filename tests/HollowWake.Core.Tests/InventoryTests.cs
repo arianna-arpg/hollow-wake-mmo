@@ -309,6 +309,29 @@ public class InventoryTests
     }
 
     [Fact]
+    public void WithOwnershipOnASetWeaveMustNameWhatTheSeatHolds()
+    {
+        Assert.True(CoreContent.Registry.Rules.Flag("casting.require_ownership", false));
+        var (sim, hero, _) = Hero("kindler", "rack7");
+        var player = sim.World.Get<Player>(hero)!;
+        var rejected = new List<Systems.IntentRejected>();
+        sim.Events.Subscribe<Systems.IntentRejected>(rejected.Add);
+        // Seat 0 holds the ember bolt codex: binding it again (with an attuned Thread) is fine; a weave it does not teach is not.
+        player.Intents.Enqueue(new Intents.SetWeaveIntent(0, new Definitions.WeaveSpec { Preset = "ember_bolt", Threads = new List<string> { "storm" } }));
+        player.Intents.Enqueue(new Intents.SetWeaveIntent(1, new Definitions.WeaveSpec { Preset = "ember_bolt" }));
+        sim.Tick();
+        Assert.Equal("not_learned", Assert.Single(rejected).Reason);
+        var book = sim.World.Get<WeaveBook>(hero)!;
+        Assert.Equal(new List<string> { "storm" }, book.Slots[0].Spec.Threads);
+        Assert.Equal("storm_nova", book.Slots[1].Spec.Preset);
+        // The seat adopts the rebound slot and its Threads.
+        sim.Service<RackService>().Reconcile(sim, hero);
+        var seat = sim.World.Get<Rack>(hero)!.Seats[0];
+        Assert.Same(book.Slots[0], seat.Bound);
+        Assert.Equal(new List<string> { "storm" }, seat.Threads);
+    }
+
+    [Fact]
     public void TheRackSurvivesASaveAndFollowsReorderedSlots()
     {
         var (sim, hero, sheet) = Hero("kindler", "rack6");

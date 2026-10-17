@@ -26,3 +26,10 @@ entries:
       codex_max_level: 20
       # How much more often a drop draws a glyph or form the dropper weaves with.
       drop_lean: 4
+
+  # Heroes own their weaves: a set-weave must name what the rack seat holds (the codex, its stones in order,
+  # attuned Threads). The casting rules declare the switch; the item model turns it on.
+  - id: casting
+    patch: true
+    values:
+      require_ownership: true

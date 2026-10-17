@@ -434,7 +434,7 @@ public sealed class RackSeat
     /// <summary>Stones by socket index; null where a socket is empty.</summary>
     public List<ItemInstance?> Stones { get; } = new();
 
-    /// <summary>The Threads woven into a form codex; empty for a preset codex, which keeps its own.</summary>
+    /// <summary>The Threads the seat's weave is woven with: a form codex's, or a preset's override (empty keeps the preset's own).</summary>
     public List<string> Threads { get; } = new();
 
     /// <summary>The weave slot this seat last built, so a reordered or replaced slot can be found again.</summary>
