@@ -1,4 +1,5 @@
 using System.Numerics;
+using System.Runtime.CompilerServices;
 using HollowWake.Core.Combat;
 using HollowWake.Core.Components;
 using HollowWake.Core.Definitions;
@@ -45,30 +46,92 @@ public sealed class WeaveRuntime
     /// <summary>Costs after the caster's cost multipliers, per resource.</summary>
     public Dictionary<string, double> Costs(CompiledWeave weave, Stats caster)
     {
-        var scope = weave.ScopeFor(caster);
         var result = new Dictionary<string, double>(StringComparer.Ordinal);
-        foreach (var (resource, expr) in weave.Costs)
+        var plan = CostPlanFor(weave);
+        if (plan.Length == 0)
         {
-            var baseCost = Math.Max(0, expr.Evaluate(scope));
-            var cost = caster.Attributes.Apply("cost", baseCost, caster, weave.Tags.With("cost." + resource), weave.Modifiers);
-            result[resource] = Math.Max(0, cost);
+            return result;
+        }
+        var scope = new CasterWeaveScope(weave, caster);
+        foreach (var entry in plan)
+        {
+            result[entry.Resource] = CostOf(weave, caster, scope, entry);
         }
         return result;
     }
 
-    public bool CanAfford(CompiledWeave weave, Stats caster, out string? missing)
+    public bool CanAfford(CompiledWeave weave, Stats caster, out string? missing) => CanAfford(weave, caster, null, out missing);
+
+    /// <summary>
+    /// <see cref="CanAfford(CompiledWeave, Stats, out string?)"/> without allocating: every cost is computed
+    /// first, in the weave's cost order, then each is checked in the same order, exactly as reading
+    /// <see cref="Costs"/> would.
+    /// </summary>
+    private bool CanAfford(CompiledWeave weave, Stats caster, IExprScope? scope, out string? missing)
     {
-        foreach (var (resource, cost) in Costs(weave, caster))
+        var plan = CostPlanFor(weave);
+        if (plan.Length == 0)
         {
-            if (caster.Resource(resource) < cost - 1e-6)
+            missing = null;
+            return true;
+        }
+        scope ??= new CasterWeaveScope(weave, caster);
+        Span<double> costs = plan.Length <= 16 ? stackalloc double[plan.Length] : new double[plan.Length];
+        for (var i = 0; i < plan.Length; i++)
+        {
+            costs[i] = CostOf(weave, caster, scope, plan[i]);
+        }
+        for (var i = 0; i < plan.Length; i++)
+        {
+            if (caster.Resource(plan[i].Resource) < costs[i] - 1e-6)
             {
-                missing = resource;
+                missing = plan[i].Resource;
                 return false;
             }
         }
         missing = null;
         return true;
     }
+
+    private static double CostOf(CompiledWeave weave, Stats caster, IExprScope scope, CostEntry entry)
+    {
+        var baseCost = Math.Max(0, entry.Expr.Evaluate(scope));
+        var cost = caster.Attributes.Apply("cost", baseCost, caster, entry.Tags, weave.Modifiers);
+        return Math.Max(0, cost);
+    }
+
+    /// <summary>One resource a weave costs: its formula and the tag context the caster's cost stack sees.</summary>
+    private readonly record struct CostEntry(string Resource, Expr Expr, TagSet Tags);
+
+    // A compiled weave never changes, so its cost entries and their tag contexts are built once.
+    private readonly ConditionalWeakTable<CompiledWeave, CostEntry[]> _costPlans = new();
+
+    private CostEntry[] CostPlanFor(CompiledWeave weave) => _costPlans.GetValue(weave, static w =>
+    {
+        var entries = new List<CostEntry>();
+        foreach (var (resource, expr) in w.Costs)
+        {
+            entries.Add(new CostEntry(resource, expr, w.Tags.With("cost." + resource)));
+        }
+        return entries.ToArray();
+    });
+
+    /// <summary>The slot's cached scopes for its compiled weave and caster, rebuilt when either changes.</summary>
+    private static WeaveSlotCache CacheFor(WeaveSlot slot, CompiledWeave weave, Stats caster)
+    {
+        var cache = slot.RuntimeCache;
+        if (cache is null || !ReferenceEquals(cache.Weave, weave) || !ReferenceEquals(cache.Caster, caster))
+        {
+            var scope = new CasterWeaveScope(weave, caster);
+            cache = new WeaveSlotCache(weave, caster, scope, new PerceptionWeaveScope(scope.Weave));
+            slot.RuntimeCache = cache;
+        }
+        return cache;
+    }
+
+    /// <summary><see cref="CompiledWeave.Range"/> reading the slot's cached scope instead of building one.</summary>
+    private static double RangeOf(CompiledWeave weave, Stats caster, WeaveSlotCache cache) =>
+        weave.Form.Range is null ? weave.Range(caster) : weave.Form.Range.Evaluate(cache.Scope);
 
     public double CastDuration(CompiledWeave weave, Stats caster)
     {
@@ -339,12 +402,17 @@ public sealed class WeaveRuntime
         foreach (var slot in book.Slots)
         {
             var weave = Resolve(sim, slot, out _);
-            if (weave is null || !book.IsReady(slot, sim.Clock.Time) || !CanAfford(weave, stats, out _))
+            if (weave is null || !book.IsReady(slot, sim.Clock.Time))
+            {
+                continue;
+            }
+            var cache = CacheFor(slot, weave, stats);
+            if (!CanAfford(weave, stats, cache.Scope, out _))
             {
                 continue;
             }
             var hint = weave.Ai;
-            var range = weave.Range(stats);
+            var range = RangeOf(weave, stats, cache);
             if (weave.Targeting is Targeting.Enemy or Targeting.Ground or Targeting.Direction && range > 0 && distance > range + (tt?.Radius ?? 0) + (ct?.Radius ?? 0))
             {
                 continue;
@@ -352,8 +420,24 @@ public sealed class WeaveRuntime
             if (hint?.When is not null)
             {
                 // Hints read the AI's perception (nearest_enemy_distance, life_pct ...) with the weave mounted.
-                var hintScope = perception is null ? weave.ScopeFor(stats) : new ScopeOverlay(perception).Mount("weave", new WeaveScope(weave, stats, weave.Tags));
-                if (!hint.When.IsTrue(hintScope))
+                bool holds;
+                if (perception is null)
+                {
+                    holds = hint.When.IsTrue(cache.Scope);
+                }
+                else
+                {
+                    cache.Hint.Perception = perception;
+                    try
+                    {
+                        holds = hint.When.IsTrue(cache.Hint);
+                    }
+                    finally
+                    {
+                        cache.Hint.Perception = EmptyScope.Instance;
+                    }
+                }
+                if (!holds)
                 {
                     continue;
                 }
@@ -383,9 +467,96 @@ public sealed class WeaveRuntime
             {
                 continue;
             }
-            var r = weave.Ai?.PreferredRange ?? Math.Max(1.2, weave.Range(stats) * 0.8);
+            var r = weave.Ai?.PreferredRange ?? Math.Max(1.2, RangeOf(weave, stats, CacheFor(slot, weave, stats)) * 0.8);
             best = Math.Max(best, r);
         }
         return best <= 0 ? 1.5 : best;
     }
+}
+
+/// <summary>
+/// What the runtime keeps on a weave slot so AI choice and cost checks build no scopes: the caster's view
+/// of the compiled weave and the weave mounted over an AI's perception. Rebuilt when the slot's compiled
+/// weave or its caster changes; holds no state of its own.
+/// </summary>
+internal sealed class WeaveSlotCache
+{
+    public readonly CompiledWeave Weave;
+    public readonly Stats Caster;
+    public readonly CasterWeaveScope Scope;
+    public readonly PerceptionWeaveScope Hint;
+
+    public WeaveSlotCache(CompiledWeave weave, Stats caster, CasterWeaveScope scope, PerceptionWeaveScope hint)
+    {
+        Weave = weave;
+        Caster = caster;
+        Scope = scope;
+        Hint = hint;
+    }
+}
+
+/// <summary>
+/// The scope <see cref="CompiledWeave.ScopeFor"/> builds, without its dictionaries: <c>level</c> is the
+/// caster's level, <c>weave.*</c> resolves through the weave, everything else through the caster.
+/// </summary>
+internal sealed class CasterWeaveScope : IExprScope
+{
+    private readonly Stats _caster;
+
+    public CasterWeaveScope(CompiledWeave weave, Stats caster)
+    {
+        _caster = caster;
+        Weave = new WeaveScope(weave, caster, weave.Tags);
+    }
+
+    public WeaveScope Weave { get; }
+
+    public bool TryResolve(string name, out double value)
+    {
+        if (name == "level")
+        {
+            value = _caster.Level;
+            return true;
+        }
+        return TryWeave(name, out var rest) ? Weave.TryResolve(rest, out value) : _caster.TryResolve(name, out value);
+    }
+
+    public bool HasFlag(string flag) => TryWeave(flag, out var rest) ? Weave.HasFlag(rest) : _caster.HasFlag(flag);
+
+    public double NextRandom() => _caster.NextRandom();
+
+    /// <summary>Whether a name is mounted under <c>weave</c>: the text before its first dot, as an overlay splits it.</summary>
+    internal static bool TryWeave(string name, out string rest)
+    {
+        if (name.Length >= 6 && name[5] == '.' && name.StartsWith("weave", StringComparison.Ordinal))
+        {
+            rest = name.Substring(6);
+            return true;
+        }
+        rest = "";
+        return false;
+    }
+}
+
+/// <summary>
+/// An AI's perception with a weave mounted as <c>weave.</c>, for hint conditions: what an overlay of the
+/// perception with that mount resolves, reused across thinks with the perception swapped in.
+/// </summary>
+internal sealed class PerceptionWeaveScope : IExprScope
+{
+    private readonly WeaveScope _weave;
+
+    public PerceptionWeaveScope(WeaveScope weave)
+    {
+        _weave = weave;
+    }
+
+    public IExprScope Perception { get; set; } = EmptyScope.Instance;
+
+    public bool TryResolve(string name, out double value) =>
+        CasterWeaveScope.TryWeave(name, out var rest) ? _weave.TryResolve(rest, out value) : Perception.TryResolve(name, out value);
+
+    public bool HasFlag(string flag) => CasterWeaveScope.TryWeave(flag, out var rest) ? _weave.HasFlag(rest) : Perception.HasFlag(flag);
+
+    public double NextRandom() => Perception.NextRandom();
 }
