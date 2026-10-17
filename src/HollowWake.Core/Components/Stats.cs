@@ -228,7 +228,8 @@ public sealed class Stats : IComponent, IExprScope
     internal ulong RegenMask;
     internal ulong PoolMask;
 
-    // The status system's last word on the combo conditions, so the flags change only when the answer does.
+    // The casting rhythm the status system reads from the weave book each tick, answered by has("combo_varied") and
+    // has("combo_repeated") without becoming flags.
     internal bool ComboVaried;
     internal bool ComboRepeated;
 
@@ -385,6 +386,8 @@ public sealed class Stats : IComponent, IExprScope
             case "full_life": return ResourceFraction("life") >= Line("full_life.line", 0.95);
             case "low_mana": return ResourceFraction("mana") <= Line("low_mana.line", 0.25);
             case "full_mana": return ResourceFraction("mana") >= Line("full_mana.line", 0.95);
+            case "combo_varied": return ComboVaried;
+            case "combo_repeated": return ComboRepeated;
         }
         if (ResourceNames.ConditionOf(flag) is { } condition && HoldsLine(condition.Resource, condition.Line, condition.Low))
         {

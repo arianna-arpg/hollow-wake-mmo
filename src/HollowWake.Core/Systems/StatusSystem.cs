@@ -10,8 +10,8 @@ namespace HollowWake.Core.Systems;
 
 /// <summary>
 /// Ticks statuses, decays and drains charges, regenerates resources, keeps the pools' state flags, maintains
-/// condition flags: motion (<c>moving</c>, <c>stationary</c>, <c>airborne</c>) and casting rhythm
-/// (<c>combo_varied</c> while the last rule <c>combat.combo_casts</c> casts were all different weaves,
+/// condition flags for motion (<c>moving</c>, <c>stationary</c>, <c>airborne</c>), and reads the casting rhythm that
+/// <c>has()</c> answers (<c>combo_varied</c> while the last rule <c>combat.combo_casts</c> casts were all different weaves,
 /// <c>combo_repeated</c> while they were all the same one, read from the weave book's recent-cast ring).
 /// </summary>
 /// <remarks>
@@ -119,21 +119,10 @@ public sealed class StatusSystem : SimSystem
         }
         if (_comboCasts >= 2 && sim.World.TryGet<WeaveBook>(e, out var book) && book.RecentCount > 0)
         {
-            Combo(stats, book.RecentlyVaried(_comboCasts), book.RecentlyRepeated(_comboCasts));
-        }
-    }
-
-    private static void Combo(Stats stats, bool varied, bool repeated)
-    {
-        if (varied != stats.ComboVaried)
-        {
-            stats.ComboVaried = varied;
-            Set(stats, "combo_varied", varied);
-        }
-        if (repeated != stats.ComboRepeated)
-        {
-            stats.ComboRepeated = repeated;
-            Set(stats, "combo_repeated", repeated);
+            // Answered by has() from these two fields rather than kept as flags: a body's own rhythm is nothing
+            // another client needs, and flags travel with every entity's snapshot.
+            stats.ComboVaried = book.RecentlyVaried(_comboCasts);
+            stats.ComboRepeated = book.RecentlyRepeated(_comboCasts);
         }
     }
 
