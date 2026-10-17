@@ -4,8 +4,9 @@ namespace HollowWake.Core.Expressions;
 
 /// <summary>
 /// Named shaping curves over a parameter: channel ramps, charge-ups and size envelopes name one instead of
-/// carrying a formula. The parameter is a fraction from zero to one for envelopes, or seconds held for
-/// ramps; curves meant for fractions clamp it. Mods register more with <see cref="Register"/>.
+/// carrying a formula, and expressions read one with <c>curve("name", t)</c>. The parameter is a fraction
+/// from zero to one for envelopes, or seconds held for ramps; curves meant for fractions clamp it. Mods
+/// register more with <see cref="Register"/>, before content that names them is parsed.
 /// </summary>
 public static class Curves
 {
