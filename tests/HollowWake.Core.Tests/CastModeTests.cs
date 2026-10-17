@@ -32,7 +32,10 @@ public class CastModeTests
     [Fact]
     public void PlayerSlotsKeepMisfitGlyphsDormantAcrossRecompiles()
     {
-        var (sim, hero, player) = Hero();
+        // The test is about dormant recompiles, not ownership: build the hero with the ownership rule off.
+        var registry = ContentRegistry.Load(new[] { CoreContent.FindContentDir() }, out _);
+        registry.With(new RulesDef { Id = "casting", Values = new JsonObject { ["require_ownership"] = false } });
+        var (sim, hero, player) = Hero(registry);
         var rejected = new List<IntentRejected>();
         sim.Events.Subscribe<IntentRejected>(rejected.Add);
         // A strike cannot carry fork (it needs a projectile): the seat takes it anyway, dormant with its reason.

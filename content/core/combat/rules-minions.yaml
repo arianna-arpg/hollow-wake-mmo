@@ -1,0 +1,63 @@
+# Minion rules: what summoned bodies run, inherit and obey, how far they follow and stray, the commands
+# they take, how contracts, corpses and constructs work. Distances are world units, converted once from
+# the earlier prototype at about thirty of its screen units to one of ours (from body radii and walking
+# speeds).
+kind: rules
+entries:
+  - id: minions
+    values:
+      # The behavior summoned bodies run unless their summon or pool entry names one.
+      behavior: minion_melee
+      # Tags every summoned body wears, and every construct.
+      tags: [minion]
+      construct_tags: [construct]
+      # Bodies one summon raises at most, and the ring they appear on around their center.
+      max_per_cast: 32
+      ring: 1.2
+      # Inheritance. Each line folds an owner attribute with the summoning weave's tags and the body's own,
+      # with the weave's modifiers joining the fold, subtracts the owner attribute's declared base, and lands
+      # the rest on the minion as a modifier of the form, under a source keyed by the owner.
+      inherit:
+        - { from: minion.damage, attribute: damage, form: more }
+        - { from: minion.life, attribute: life.max, form: more }
+        - { from: minion.damage_taken, attribute: damage.taken, form: more }
+        - { from: minion.move_speed, attribute: move.speed, form: more }
+        - { from: minion.speed, attribute: move.speed, form: more }
+        - { from: minion.speed, attribute: attack.speed, form: more }
+        - { from: minion.speed, attribute: cast.speed, form: more }
+        - { from: minion.regen, attribute: life.regen, form: flat }
+        - { from: minion.crit_chance, attribute: crit.chance, form: flat }
+        - { from: "minion.status.{status}.chance", attribute: "status.{status}.chance", form: flat }
+      # Seconds between looks at an owner's attributes for a change to fold again.
+      inherit_interval: 0.5
+      # Following and assisting: how far a minion strays before heading back to its owner, how far from the
+      # owner a foe may stand for its minions to take it up, and how long the owner's last target is remembered.
+      follow_distance: 3
+      assist_range: 14
+      assist_memory: 4
+      # The leash. A heeling minion this far from its owner, or one making less than stuck_progress of
+      # headway for stuck_seconds, teleports to recall_radius of its owner, at most once per recall_cooldown.
+      recall_distance: 40
+      stuck_progress: 1
+      stuck_seconds: 3
+      recall_cooldown: 5
+      recall_radius: 1.5
+      # Commands by name: the kind that drives the order, how long it stands, how far around the mark foes are
+      # fought, how close to the mark counts as arrived, and how near the mark a foe must stand to be pinned.
+      commands:
+        assault: { kind: assault, duration: 6, mark_radius: 6, arrive: 1.8, pin_radius: 1.7 }
+        hold: { kind: hold, duration: 8, mark_radius: 6, arrive: 1.8, pin_radius: 1.7 }
+        recall: { kind: recall, duration: 6, mark_radius: 0, arrive: 2, pin_radius: 0 }
+      # How far a squad command carries without a radius, and how far a minion looks for a foe to cast at.
+      earshot: 21
+      cast_range: 11
+      # How far around its focus a corpse summon looks for the dead.
+      corpse_search: 6
+      # Crew forwarding: the mechanism a summon weave needs before its glyphs board its minions' own weaves
+      # (constructs board without it), and the share of a forwarded glyph's numbers a construct's copy keeps.
+      forward_requires: resonance
+      construct_forward_scale: 0.7
+      # The least time between two casts of one construct weave.
+      construct_interval: 1
+      # Seconds between looks for slotted summons that replenish themselves.
+      replenish_scan: 1

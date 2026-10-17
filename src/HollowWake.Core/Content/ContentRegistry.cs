@@ -466,7 +466,8 @@ public sealed class Rules
     public static readonly Rules Empty = new(new Dictionary<string, JsonNode?>(StringComparer.Ordinal));
 
     private readonly Dictionary<string, JsonNode?> _flat;
-    private readonly Dictionary<string, Expr> _exprCache = new(StringComparer.Ordinal);
+    // Zones tick on worker threads and share one registry, so the lazily filled cache must take concurrent writers.
+    private readonly System.Collections.Concurrent.ConcurrentDictionary<string, Expr> _exprCache = new(StringComparer.Ordinal);
 
     private Rules(Dictionary<string, JsonNode?> flat)
     {
@@ -542,8 +543,7 @@ public sealed class Rules
         {
             e = Expressions.Expr.Parse(fallback);
         }
-        _exprCache[path] = e;
-        return e;
+        return _exprCache.GetOrAdd(path, e);
     }
 
     public double Number(string path, double fallback)
