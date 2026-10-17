@@ -1,6 +1,8 @@
 import './style.css';
-import { App } from './app';
+import type { App } from './app';
 import { loadConfig } from './config';
+import { LoadingScreen } from './loading/loadingScreen';
+import { presentation } from './loading/content';
 
 declare global {
   interface Window {
@@ -14,21 +16,23 @@ if (root === null) {
   throw new Error('#app is missing from index.html');
 }
 
-function fail(message: string): void {
-  const box = document.createElement('div');
-  box.className = 'fatal';
-  box.textContent = message;
-  root!.append(box);
-}
-
-const config = await loadConfig();
-let app: App;
+let app: App | undefined;
+const loading = new LoadingScreen(() => app?.releaseLoadingInput(), () => app?.reducedLoadingMotion ?? false);
+const boot = loading.begin({ kind: 'entry', label: presentation.labels.boot });
+await boot.paint();
 try {
-  app = new App(root, config);
+  const [{ App: Client }, config] = await Promise.all([import('./app'), loadConfig()]);
+  if (boot.current) {
+    app = new Client(root, config, loading);
+    window.hollowWake = app.probe();
+    app.start();
+    await app.prefill();
+    boot.finish();
+    const preview = new URLSearchParams(location.search).get('loadingPreview');
+    if (preview === 'down' || preview === 'right' || preview === 'left') {
+      loading.begin({ kind: 'entry', direction: preview, label: presentation.labels.boot, cancel: () => loading.close() });
+    }
+  }
 } catch (error) {
-  fail(`Hollow Wake MMO needs WebGL, which this browser could not start: ${error instanceof Error ? error.message : String(error)}`);
-  throw error;
+  boot.fail(error instanceof Error ? error.message : String(error), () => location.reload());
 }
-window.hollowWake = app.probe();
-app.start();
-await app.prefill();

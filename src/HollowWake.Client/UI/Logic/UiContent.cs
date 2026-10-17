@@ -108,6 +108,7 @@ public sealed class UiIconSet
     public double Stroke { get; init; } = 1.75;
     public Dictionary<string, string> Icons { get; init; } = new(StringComparer.Ordinal);
     public HashSet<string> Filled { get; init; } = new(StringComparer.Ordinal);
+    public Dictionary<string, string> Accents { get; init; } = new(StringComparer.Ordinal);
     public Dictionary<string, string> Pools { get; init; } = new(StringComparer.Ordinal);
     public Dictionary<string, string> Statuses { get; init; } = new(StringComparer.Ordinal);
     public Dictionary<string, string> Looks { get; init; } = new(StringComparer.Ordinal);
@@ -152,7 +153,8 @@ public sealed class UiIconSet
         var style = Filled.Contains(id)
             ? $"fill=\"{color}\" stroke=\"none\""
             : $"fill=\"none\" stroke=\"{color}\" stroke-width=\"{stroke}\" stroke-linecap=\"round\" stroke-linejoin=\"round\"";
-        return $"<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"{size}\" height=\"{size}\" viewBox=\"0 0 {box} {box}\"><path d=\"{path}\" {style}/></svg>";
+        var accent = Accents.TryGetValue(id, out var detail) ? $"<path d=\"{detail}\" fill=\"{color}\"/>" : "";
+        return $"<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"{size}\" height=\"{size}\" viewBox=\"0 0 {box} {box}\"><path d=\"{path}\" {style}/>{accent}</svg>";
     }
 
     public static UiIconSet From(JsonObject o) => new()
@@ -162,6 +164,7 @@ public sealed class UiIconSet
         Stroke = Json.Num(o["stroke"], 1.75),
         Icons = Json.StringMap(o["icons"]),
         Filled = new HashSet<string>(Json.Strings(o["filled"]), StringComparer.Ordinal),
+        Accents = Json.StringMap(o["accents"]),
         Pools = Json.StringMap(o["pools"]),
         Statuses = Json.StringMap(o["statuses"]),
         Looks = Json.StringMap(o["looks"]),
