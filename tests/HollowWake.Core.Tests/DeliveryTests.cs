@@ -824,6 +824,18 @@ public class OcclusionTests
     }
 
     [Fact]
+    public void ABodyPressedAgainstAWallIsNotStruckThroughIt()
+    {
+        var arena = DeliveryArena.Create();
+        Wall(arena.Sim, 13, 6, 14);
+        arena.Body(14.2f, 10);
+        // Its fifth step lands at 13.4, inside the wall and within reach of the body behind it.
+        arena.Run("{\"type\": \"projectile\", \"speed\": 13.6, \"range\": 10, \"pierce\": 0, " + Hit + "}", new Vector3(20, 10, 0), Vector2.UnitX);
+        arena.Tick(20);
+        Assert.Empty(arena.Struck());
+    }
+
+    [Fact]
     public void BouncingFlightsGlanceOffWalls()
     {
         var arena = DeliveryArena.Create();

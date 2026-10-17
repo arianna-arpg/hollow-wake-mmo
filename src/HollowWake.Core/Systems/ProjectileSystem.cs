@@ -177,6 +177,22 @@ public sealed class ProjectileSystem : SimSystem
         }
         p.SpinAngle += p.Spin * dt;
 
+        // A wall stops the flight before it can reach anything behind it: it ends against the wall, where it
+        // last flew free, or glances off while it has bounces.
+        if (!p.Phases && HitsWall(sim.Terrain, t.Position, at))
+        {
+            if (p.Bounces <= 0)
+            {
+                Finish(sim, e, p, t.Position, spec.OnExpire, spec.OnEnd);
+                return;
+            }
+            p.Bounces--;
+            Reflect(sim, p, t.Position, at);
+            at = t.Position;
+            p.Carrier = at;
+            sim.Events.Publish(new ProjectileBounced(e, p.Context.Origin, at) { Tick = sim.Clock.Tick });
+        }
+
         Strikes(sim, e, p, at, now, in r);
         if (p.Ended)
         {
@@ -184,16 +200,9 @@ public sealed class ProjectileSystem : SimSystem
         }
 
         var ground = sim.Terrain.HeightAt(at.X, at.Y);
-        var wall = !p.Phases && HitsWall(sim.Terrain, t.Position, at);
-        if (wall || at.Z < ground - 0.05f)
+        if (at.Z < ground - 0.05f)
         {
-            if (wall && p.Bounces <= 0)
-            {
-                // Stopped by a wall: the flight ends against it, where it last flew free.
-                Finish(sim, e, p, t.Position, spec.OnExpire, spec.OnEnd);
-                return;
-            }
-            if (!wall && spec.Gravity && p.Velocity.Z <= 0)
+            if (spec.Gravity && p.Velocity.Z <= 0)
             {
                 if (p.Bounces > 0)
                 {
