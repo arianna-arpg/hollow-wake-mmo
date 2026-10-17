@@ -18,7 +18,7 @@ entries:
     ai: { role: damage, preferred_range: 1.6, weight: 1 }
     effects:
       - type: damage
-        amount: "lerp(weapon.damage.min, weapon.damage.max, rand()) * weave.damage.effectiveness * attack.power"
+        amount: "lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power"
         threads: $threads
         tags: [hit]
 
@@ -44,7 +44,7 @@ entries:
         filter: enemy
         effects:
           - type: damage
-            amount: "lerp(weapon.damage.min, weapon.damage.max, rand()) * weave.damage.effectiveness * attack.power"
+            amount: "lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power"
             threads: $threads
 
   - id: bolt

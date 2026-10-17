@@ -260,7 +260,7 @@ entries:
           - type: area
             shape: circle
             radius: 4
-            center: target
+            center: focus
             filter: enemy
             effects:
               - { type: damage, amount: banked, threads: [stone], tags: [iron_ward], can_crit: false }

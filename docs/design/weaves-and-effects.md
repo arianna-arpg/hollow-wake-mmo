@@ -108,6 +108,6 @@ The context carries depth; nested deliveries, repeats, delays and casts deepen i
 
 An effect context's scope is built when first read: `source.*` and `caster.*` resolve on the source, `target.*` on the target, `weave.*` through the weave folded on the source with the context's tags, the variables as they stand when read (so what an effect writes, such as a damage effect's `last_damage` and `amount`, reaches the effects after it in its list), and `distance`, `depth` and `time` as they stood when it was built; every other name resolves on the source. A context carries the slot a cast came from (`Slot`) and, for metas, follow-ups, guard pulses and `cast`, the weave of that slot (`Host`), so effects that act on their host read `Host ?? Weave`. The cast variables a runtime sets are `cast.held`, `cast.fill`, `cast.stage`, `cast.persist`, `charges_spent`, `uses_spent`, `trigger.power`, `trigger.amount`, `repeat.index` and `guard.absorbed`; a formula reading one where it was never set fails like any unknown name.
 
-## Projectiles and fields
+## Deliveries
 
-Projectiles are entities with velocity, range, pierce and hit effects; the projectile system flies them, tests hostile bodies by radius, runs on-hit effects, and expires them on range or terrain. Fields are entities that pulse effects on bodies inside them until they expire; they can follow their caster.
+How a weave reaches its targets (projectiles, areas, chains, fields, auras, tethers, placements, and the movements that carry or shove bodies) is its own contract: [deliveries.md](deliveries.md).
