@@ -57,4 +57,16 @@ Publication status: the owner explicitly authorized all three pushes and review 
 
 Each requests Claude review. Retarget the next request when its predecessor is integrated so the remaining diff stays focused. No merge was performed. The earlier automatic approval rejection was resolved by the owner's explicit authorization; it is no longer a publication blocker.
 
-Acknowledged by: Codex, for Claude's collaboration contract and initial review. Claude: pending completed-feature review.
+## Owner-requested architecture audit
+
+The owner asked whether Flame introduced a bespoke feature or shared infrastructure. Inspection of `CastPresentation`, both `CastCueTimeline` consumers and both `CastVisuals` renderers confirms no dispatch on Flame, Cleave, a weave key, or an actor role. The runtime supplies common cast facts, tag-selected client content supplies appearance, and neutral profiles supply unsupported-tag fallback. Flame is one content recipe. This is a reusable cast-cue layer, not a completed game-wide presentation system.
+
+The limits now appear explicitly in `docs/design/cast-presentation.md`: one selected profile per phase, a ribbon primitive, and no presentation vocabulary for healing, defensive outcomes, persistent statuses or world interactions. Independent layers for forms, Threads and glyphs are not implemented. Extending coverage must add shared mechanisms and conformance cases, not per-skill branches or a bespoke profile for every possible combination.
+
+Added `tests/fixtures/cast-visuals/` with a separate content layer and ten selection cases consumed by both client test suites. These verify new content-only looks, misleading Flame names/keys, hierarchical and compound tags, deterministic precedence, phase fallback, unknown vocabulary, and removal of the Flame recipe. The .NET suite validates the fixture through the real content loader. This proves profile selection and recipe reuse, not rendered parity for every future effect family.
+
+Audit-update verification: solution build clean (zero warnings/errors); 446 core, 86 client and 38 server tests passed; 152 browser tests passed; browser build passed; content validation zero errors/warnings. The change adds only tests, fixtures and documentation, so the earlier smoke/benchmark evidence still describes the unchanged runtime; it was not rerun or newly certified here. A TypeScript inference issue in the imported heterogeneous JSON fixture was corrected before the successful browser build.
+
+Claude's review at `c07113b` has since requested changes before merge: reconcile the older forecasting snapshot with merged PR #3; eliminate cue allocation with no listeners and measure the subscribed cost; confirm naming authorization; and strengthen reset/interruption coverage. Those runtime/integration requests are not represented as fixed by this architecture audit. Naming is already directly authorized by the owner's instruction: "But let's instead just use \"Flame\" rather than \"Ember\", as we want to standardize or normalize nomenclature for consistency's sake". No additional naming approval is needed from this chat. The published branch must retain its history under the collaboration contract; integration should avoid an unapproved rewrite of fetched commits.
+
+Acknowledged by: Codex, for Claude's collaboration contract, initial review and the changes requested at `c07113b`. Claude: completed-feature review received; requested changes remain before merge.

@@ -1,7 +1,9 @@
 import { describe, expect, it } from 'vitest';
-import { bundledKinds } from '../ui/logic/content';
+import { bundledKinds, type Obj } from '../ui/logic/content';
 import { CastCueTimeline, cueSettings } from './castCueTimeline';
 import type { CastCueMsg } from '../net/protocol';
+import profileContent from '../../../tests/fixtures/cast-visuals/content/profiles.json';
+import profileCases from '../../../tests/fixtures/cast-visuals/cases.json';
 
 const config = cueSettings(bundledKinds().get('ui_cast_visuals')?.[0]);
 const cue = (phase: string, sequence: number, extra: Partial<CastCueMsg> = {}): CastCueMsg => ({
@@ -11,6 +13,19 @@ const cue = (phase: string, sequence: number, extra: Partial<CastCueMsg> = {}): 
 });
 
 describe('confirmed cast presentation', () => {
+  it.each(profileCases)('shared content-only profile: $id', example => {
+    // JSON has no undefined values; TS adds optional undefined fields while inferring this heterogeneous array.
+    const settings = cueSettings(profileContent.entries[0] as unknown as Obj);
+    const t = new CastCueTimeline(settings);
+    expect(t.receive(cue(example.phase, 1, {
+      weave: example.weave, name: example.name, tags: example.tags, fired: example.fired ?? false,
+    }), 10)).toBe(true);
+    expect(t.active).toHaveLength(1);
+    const expected = settings.profiles.find(p => p.id === example.expected_profile)!;
+    expect(t.active[0].phase).toBe(example.expected_phase);
+    expect(t.active[0].color).toBe(expected.color);
+    expect(t.active[0].style).toBe(expected.phases[example.expected_phase]);
+  });
   it('selects Flame by tags and neutral fallback without weave-name switches', () => {
     const t = new CastCueTimeline(config);
     t.receive(cue('start', 1, { weave: 'a_modded_spell', name: 'Custom' }), 10);

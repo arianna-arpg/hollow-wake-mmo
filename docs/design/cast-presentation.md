@@ -2,6 +2,14 @@
 
 Players, enemies and summons use the same lifecycle facts. Cosmetic presentation never resolves damage, moves a hit region, promises that an attack lands, or determines when another action is legal. Forecast regions are a separate contract in [cast-forecasting.md](cast-forecasting.md).
 
+## Reuse boundary
+
+Flame is an authored example of this shared cast-cue mechanism. Neither skill names nor Thread ids choose runtime behavior. A new look using the supported phases and ribbon primitive is a content profile: its semantic tags, geometry, timing and motion apply through the same consumer and renderer in both clients. Unknown tags retain neutral cues. Tests load an independent content layer and run the same profile-selection cases in both consumers, including renamed skills, hierarchical tags, compound matching, priority, phase fallback and removal of the Flame recipe.
+
+This contract is not a completed game-wide visual-effects system. It currently selects one matching profile per phase; it does not layer a form's geometry, multiple Threads and glyph alterations independently. The renderer supports ribbon segments, not a registered library of sprites, particles, trails, decals or character animations. Healing, defensive outcomes, persistent statuses, environmental changes and world interactions do not yet have presentation events in this contract. Their absence must not be reported as supported merely because casts have a neutral fallback.
+
+Further coverage must add reusable semantic events and shared presentation mechanisms, with matching adapters and conformance cases for both clients. Skill names, actor roles and individual content ids must not become dispatch branches. A genuinely new rendering primitive or event family is shared infrastructure work; another skill using an existing mechanism is content work. Compound presentation should describe the compiled mechanisms and their contributions, rather than require a separate hand-authored profile for every possible form, Thread and glyph combination. Forecast safety and exact hit geometry remain authoritative and separate from optional decoration.
+
 ## Lifecycle
 
 The weave runtime publishes `CastPresentationEvent` through the simulation event bus. A zone-local cast identity is assigned once, without consuming gameplay randomness. A timed or held cast emits `start`; a non-empty effect list beginning execution emits `release`. A channel can release many payloads under one identity. A guard starts before its raise effects execute. Instant casts enter at release. `end` records a completed lifecycle and whether any payload executed; `interrupt` records interruption, death or an externally cleared cast. A rejected or fizzled attempt has no preparation or successful release. No events are emitted just because a tick passed.
