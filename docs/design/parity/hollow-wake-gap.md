@@ -87,6 +87,10 @@ Five moves carry most of the parity, each in our idiom rather than a port of the
 4. **A hit stage registry.** The damage pipeline keeps its stage order in rules and registers stage implementations by name, so guard, shields, poise and leech become registrations.
 5. **An item model for weaves.** Forms are learned from items whose rarity sets socket count; glyphs become stones with levels and rolls; the rack of weave slots becomes the skill UI (question Q1).
 
+### 1.5 Where this stands
+
+The foundations package and the six packages of section 3 have landed in the order the plan gave, each proving the standard duel traces unchanged and staying within the performance budgets. Everything the owner named as P0 exists: cast modes and triggers, projectiles with shapes and trajectories, summons with inheritance and orders, the status, charge and proc economy with the shield, poise and insight pools, the weave item model with codices and stones, passives with choice nodes, realms, vocations and refunds, dialogue and vendors, the grid bag, stashes and the reliquary, and the interface on both clients with its Options pane. Rows still open, each the owner of its files may take in a later round: A13, C11, C20, C23, C29, C33, C35 to C38, C47, C48 (the P2 cast and effect rows), D21 skill grants, E14 movement states, E15 weak spots, G11, G17, G18, H7 conduits, I9 memories, I13 salvage, and J6 per-weave tree pages on the clients. Account-scoped options wait on an account settings message, and there is no audio yet.
+
 ## 2. Parity matrix
 
 Rows are grouped by area: A cast modes and timing, B deliveries and trajectories, C effect types, D supports, E statuses, F modifiers, G damage pipeline, H passives, I items, J UI surfaces. Row ids are referenced from dependencies and from the work packages. YAML sketches for the main proposals follow the tables in 2.11.

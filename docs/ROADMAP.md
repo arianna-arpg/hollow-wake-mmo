@@ -50,3 +50,7 @@ Core simulation with every system present end to end, the server and protocol, a
 - Sound hooks on events.
 
 Order matters less than the rule that every milestone keeps the pillars intact.
+
+## Parity follow-ups
+
+Rows of the parity analysis ([hollow-wake-gap.md](design/parity/hollow-wake-gap.md), section 1.5) that remain open after the first seven packages, for a later round: the P2 cast and effect rows (companions, grabs, possession, clouds, lightwells, fog, orbs, ledgers), skill grants from items, movement states on statuses, weak spots, luck and taunt-scoped damage, passive conduits, memories, salvage, per-weave tree pages on the clients, an account settings message for account-scoped options, and audio. Each belongs to the package that owns its files in section 3 of that document.
