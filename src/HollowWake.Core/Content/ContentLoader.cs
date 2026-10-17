@@ -16,7 +16,11 @@ public static class ContentLoader
 {
     public static readonly string[] Extensions = { ".yaml", ".yml", ".json" };
 
-    /// <summary>Reads every layer directory in order and merges entries by (kind, id).</summary>
+    /// <summary>
+    /// Reads every layer directory in order and merges entries by (kind, id). Within a layer, files apply in
+    /// ordinal path order; a patch whose target no file has defined yet waits until the layer is read, so a
+    /// file can extend an entry that a later file of the same layer defines.
+    /// </summary>
     public static IReadOnlyDictionary<string, Dictionary<string, RawDefinition>> LoadRaw(IEnumerable<string> layerDirectories, ValidationReport report)
     {
         var merged = new Dictionary<string, Dictionary<string, RawDefinition>>(StringComparer.Ordinal);
@@ -31,15 +35,44 @@ public static class ContentLoader
                 .Where(f => Extensions.Contains(Path.GetExtension(f), StringComparer.OrdinalIgnoreCase))
                 .OrderBy(f => f, StringComparer.Ordinal)
                 .ToList();
+            var pending = new List<PendingPatch>();
             foreach (var file in files)
             {
                 foreach (var doc in ReadDocuments(file, report))
                 {
-                    ApplyDocument(doc, file, merged, report);
+                    ApplyDocument(doc, file, merged, pending, report);
                 }
             }
+            ApplyPending(pending, merged, report);
         }
         return merged;
+    }
+
+    private sealed record PendingPatch(string Kind, string Id, JsonObject Obj, string Origin);
+
+    private static void Patch(string kind, string id, JsonObject obj, string origin, RawDefinition existing, Dictionary<string, RawDefinition> byId)
+    {
+        var target = (JsonObject)existing.Object.DeepClone();
+        MergePatch(target, obj);
+        byId[id] = new RawDefinition(kind, id, target, $"{existing.Origin} + {origin}");
+    }
+
+    /// <summary>Patches whose target no earlier file defined apply after the layer is read, in file order; a target still missing becomes a new entry.</summary>
+    private static void ApplyPending(List<PendingPatch> pending, Dictionary<string, Dictionary<string, RawDefinition>> merged, ValidationReport report)
+    {
+        foreach (var p in pending)
+        {
+            var byId = merged[p.Kind];
+            if (byId.TryGetValue(p.Id, out var existing))
+            {
+                Patch(p.Kind, p.Id, p.Obj, p.Origin, existing, byId);
+            }
+            else
+            {
+                report.Warn(p.Kind, p.Id, "Patch requested but nothing defines it in this or an earlier layer; treated as a new entry.", p.Origin);
+                byId[p.Id] = new RawDefinition(p.Kind, p.Id, (JsonObject)p.Obj.DeepClone(), p.Origin);
+            }
+        }
     }
 
     /// <summary>Parses one file's documents into raw definitions without merging. Used by tools and tests.</summary>
@@ -107,7 +140,7 @@ public static class ContentLoader
         return results;
     }
 
-    private static void ApplyDocument(JsonObject doc, string origin, Dictionary<string, Dictionary<string, RawDefinition>> merged, ValidationReport report)
+    private static void ApplyDocument(JsonObject doc, string origin, Dictionary<string, Dictionary<string, RawDefinition>> merged, List<PendingPatch> pending, ValidationReport report)
     {
         var kind = doc["kind"]?.GetValue<string>();
         if (string.IsNullOrWhiteSpace(kind))
@@ -141,7 +174,7 @@ public static class ContentLoader
                     report.Error(kind, "", "Entry has no 'id'.", origin);
                     continue;
                 }
-                ApplyEntry(kind, id, obj, origin, byId, report);
+                ApplyEntry(kind, id, obj, origin, byId, pending, report);
             }
         }
         else if (entries is JsonObject map)
@@ -154,7 +187,7 @@ public static class ContentLoader
                     continue;
                 }
                 obj["id"] ??= kv.Key;
-                ApplyEntry(kind, kv.Key, obj, origin, byId, report);
+                ApplyEntry(kind, kv.Key, obj, origin, byId, pending, report);
             }
         }
         else
@@ -163,7 +196,7 @@ public static class ContentLoader
         }
     }
 
-    private static void ApplyEntry(string kind, string id, JsonObject obj, string origin, Dictionary<string, RawDefinition> byId, ValidationReport report)
+    private static void ApplyEntry(string kind, string id, JsonObject obj, string origin, Dictionary<string, RawDefinition> byId, List<PendingPatch> pending, ValidationReport report)
     {
         var remove = obj["remove"]?.GetValue<bool>() ?? false;
         var patch = obj["patch"]?.GetValue<bool>() ?? false;
@@ -182,13 +215,11 @@ public static class ContentLoader
         {
             if (!byId.TryGetValue(id, out var existing))
             {
-                report.Warn(kind, id, "Patch requested but no earlier layer defines it; treated as a new entry.", origin);
-                byId[id] = new RawDefinition(kind, id, (JsonObject)obj.DeepClone(), origin);
+                // A later file of this layer may still define the target: apply once the layer is read.
+                pending.Add(new PendingPatch(kind, id, obj, origin));
                 return;
             }
-            var target = (JsonObject)existing.Object.DeepClone();
-            MergePatch(target, obj);
-            byId[id] = new RawDefinition(kind, id, target, $"{existing.Origin} + {origin}");
+            Patch(kind, id, obj, origin, existing, byId);
             return;
         }
         byId[id] = new RawDefinition(kind, id, (JsonObject)obj.DeepClone(), origin);

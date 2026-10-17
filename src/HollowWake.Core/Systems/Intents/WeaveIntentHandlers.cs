@@ -17,6 +17,8 @@ public static class WeaveIntentHandlers
         handlers.Register<ReleaseWeaveIntent>(static (in IntentContext _, ReleaseWeaveIntent _) => { });
         handlers.Register<PressWeaveIntent>(static (in IntentContext _, PressWeaveIntent _) => { });
         handlers.Register<AimIntent>(static (in IntentContext _, AimIntent _) => { });
+        handlers.Register<UseMetaIntent>(static (in IntentContext _, UseMetaIntent _) => { });
+        handlers.Register<SwapWeaveSlotsIntent>(static (in IntentContext _, SwapWeaveSlotsIntent _) => { });
     }
 
     private static void UseWeave(in IntentContext ctx, UseWeaveIntent u)
