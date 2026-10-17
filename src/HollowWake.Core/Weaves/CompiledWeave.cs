@@ -128,9 +128,10 @@ public sealed class CompiledWeave
 /// <summary>
 /// Turns specs into compiled weaves. In order: the preset, form and Threads resolve; glyphs resolve at
 /// their levels with their rolled rows; then, to a fixpoint, the active glyphs' tags, mechanisms,
-/// modifiers, patches and hooks build the weave, the mechanism probes run on it, and the first active
-/// glyph in socket order whose gate fails goes dormant (or, in strict mode, fails the compile). Glyphs
-/// that enable each other through tags, mechanisms or what their patches add therefore self-lift.
+/// modifiers, patches and hooks build the weave, the mechanism probes run on it, and the last active
+/// glyph in socket order whose gate fails goes dormant (in strict mode the first misfit fails the
+/// compile). Glyphs that enable each other through tags, mechanisms or what their patches add therefore
+/// self-lift, and where glyphs exclude each other the earlier socket stays active.
 /// </summary>
 public sealed class WeaveCompiler
 {
@@ -290,8 +291,9 @@ public sealed class WeaveCompiler
             throw new WeaveCompileException($"Form '{form.Id}' takes at most {form.MaxGlyphs} glyphs; got {glyphs.Count}.");
         }
 
-        // Every glyph starts active; the first misfit in socket order goes dormant and the weave is rebuilt
-        // without it, until every active glyph's gate holds. Only removals happen, so this ends.
+        // Every glyph starts active. While some active glyph's gate fails, the last such glyph in socket order
+        // goes dormant (so where glyphs exclude each other the earlier socket keeps its place) and the weave is
+        // rebuilt without it. Only removals happen, so this ends. Strict mode fails on the first misfit instead.
         var active = new bool[glyphs.Count];
         Array.Fill(active, true);
         var reasons = new string?[glyphs.Count];
@@ -303,24 +305,20 @@ public sealed class WeaveCompiler
             string? reason = null;
             for (var i = 0; i < glyphs.Count; i++)
             {
-                if (!active[i])
+                if (!active[i] || Gate(glyphs[i], state) is not { } why)
                 {
                     continue;
                 }
-                reason = Gate(glyphs[i], state);
-                if (reason is not null)
+                if (fit == GlyphFit.Strict)
                 {
-                    failing = i;
-                    break;
+                    throw new WeaveCompileException(why);
                 }
+                failing = i;
+                reason = why;
             }
             if (failing < 0)
             {
                 break;
-            }
-            if (fit == GlyphFit.Strict)
-            {
-                throw new WeaveCompileException(reason!);
             }
             active[failing] = false;
             reasons[failing] = reason;

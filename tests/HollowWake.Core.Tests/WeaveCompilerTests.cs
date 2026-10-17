@@ -49,6 +49,8 @@ public class WeaveCompilerTests
             .With(new GlyphDef { Id = "t_needs_cooldown", RequiresMechanisms = TagSet.Of("cooldown") })
             .With(new GlyphDef { Id = "t_levy", Modifiers = { new Modifier { Attribute = "cooldown.added", Form = ModifierForm.Flat, Value = 2 } } })
             .With(new GlyphDef { Id = "t_needs_burning", RequiresMechanisms = TagSet.Of("affliction:burning") })
+            .With(new GlyphDef { Id = "t_excl_a", AddsTags = TagSet.Of("t_a"), Excludes = TagSet.Of("t_b") })
+            .With(new GlyphDef { Id = "t_excl_b", AddsTags = TagSet.Of("t_b"), Excludes = TagSet.Of("t_a") })
             .With(new GlyphDef
             {
                 Id = "t_rolled",
@@ -256,6 +258,18 @@ public class WeaveCompilerTests
         Assert.Equal(new[] { "whetted" }, weave.Glyphs.Select(g => g.Id));
         Assert.DoesNotContain(weave.Modifiers, m => m.Source == "glyph:fork");
         Assert.False(weave.Tags.Has("glyph.fork"));
+    }
+
+    [Fact]
+    public void WhereGlyphsExcludeEachOtherTheEarlierSocketStaysActive()
+    {
+        var compiler = Compiler();
+        var ab = compiler.Compile(Bolt("t_excl_a", "t_excl_b"), GlyphFit.Dormant);
+        Assert.Equal(new[] { "t_excl_a" }, ab.Glyphs.Select(g => g.Id));
+        Assert.Equal("t_excl_b", Assert.Single(ab.Dormant).Glyph.Id);
+        var ba = compiler.Compile(Bolt("t_excl_b", "t_excl_a"), GlyphFit.Dormant);
+        Assert.Equal(new[] { "t_excl_b" }, ba.Glyphs.Select(g => g.Id));
+        Assert.Equal("t_excl_a", Assert.Single(ba.Dormant).Glyph.Id);
     }
 
     [Fact]
