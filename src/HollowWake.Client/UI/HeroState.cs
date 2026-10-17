@@ -39,7 +39,31 @@ public sealed class HeroState
     {
         Self = self;
         SelfAt = now;
+        foreach (var w in self.Weaves)
+        {
+            TrackCooldown(w.Slot, w.ReadyIn, now);
+        }
         Version++;
+    }
+
+    /// <summary>Each slot's running cooldown as the self state reports it: when it ends (local seconds) and its length.</summary>
+    private readonly Dictionary<int, (double ReadyAt, double Span)> _cooldowns = new();
+
+    /// <summary>
+    /// Follows a slot's time left from one self state to the next: a later end than the running one starts a new
+    /// cooldown whose length is the time left first seen; the same cooldown keeps its length and takes the fresher end.
+    /// </summary>
+    private void TrackCooldown(int slot, double readyIn, double now)
+    {
+        if (readyIn <= 0.01)
+        {
+            _cooldowns.Remove(slot);
+            return;
+        }
+        var readyAt = now + readyIn;
+        _cooldowns[slot] = _cooldowns.TryGetValue(slot, out var c) && readyAt <= c.ReadyAt + 0.1
+            ? (readyAt, Math.Max(c.Span, readyIn))
+            : (readyAt, readyIn);
     }
 
     public void Apply(WeaveSlotsMsg slots, double now)
@@ -96,6 +120,7 @@ public sealed class HeroState
         Pages = null;
         Entity = null;
         HasServerClock = false;
+        _cooldowns.Clear();
         Version++;
     }
 
@@ -175,7 +200,8 @@ public sealed class HeroState
         {
             foreach (var s in slots.Seats.OrderBy(s => s.Slot))
             {
-                seats.Add(new Seat(s.Slot, s.Key, s.Name, s.Icon, s.Threads ?? new List<string>(), SlotsAt + s.ReadyIn, s.Cooldown,
+                var (readyAt, span) = Timer(s.Slot, SlotsAt + s.ReadyIn, s.Cooldown);
+                seats.Add(new Seat(s.Slot, s.Key, s.Name, s.Icon, s.Threads ?? new List<string>(), readyAt, span,
                     s.Costs ?? new Dictionary<string, double>(), s.Dormant, s.Uses, s.UsesMax, s.Converted, s.Meta, s));
             }
         }
@@ -183,7 +209,8 @@ public sealed class HeroState
         {
             foreach (var w in self.Weaves)
             {
-                seats.Add(new Seat(w.Slot, w.Key, w.Name, w.Look, Array.Empty<string>(), SelfAt + w.ReadyIn, w.ReadyIn, w.Costs, null, null, null, null, null, null));
+                var (readyAt, span) = Timer(w.Slot, SelfAt + w.ReadyIn, 0);
+                seats.Add(new Seat(w.Slot, w.Key, w.Name, w.Look, Array.Empty<string>(), readyAt, span, w.Costs, null, null, null, null, null, null));
             }
         }
         for (var i = seats.Count; i < count; i++)
@@ -191,6 +218,23 @@ public sealed class HeroState
             seats.Add(new Seat(i, null, "", null, Array.Empty<string>(), 0, 0, new Dictionary<string, double>(), null, null, null, null, null, null));
         }
         return seats;
+    }
+
+    /// <summary>
+    /// A seat's cooldown: the self state's time left (sent every tick) when it reports the slot, else the weave
+    /// slot state's; its length is the seat's cooldown when that covers the time left, else the length followed.
+    /// </summary>
+    private (double ReadyAt, double Span) Timer(int slot, double fallbackAt, double cooldown)
+    {
+        if (Self?.Weaves.Any(w => w.Slot == slot) != true)
+        {
+            return (fallbackAt, cooldown > 0 ? cooldown : Math.Max(0, fallbackAt - SlotsAt));
+        }
+        if (!_cooldowns.TryGetValue(slot, out var c))
+        {
+            return (SelfAt, cooldown);
+        }
+        return (c.ReadyAt, cooldown > 0 && cooldown >= c.ReadyAt - SelfAt - 0.05 ? cooldown : c.Span);
     }
 
     // ------------------------------------------------------------ items
