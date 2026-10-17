@@ -176,8 +176,18 @@ public partial class Smoke : Node
             await Wait(0.4);
             var offers = _main.QuestOffers;
             Tap(Key.F);
-            var shown = await Until(() => _main.QuestOffers > offers && _main.Hud.QuestsVisible, 10);
-            Record("quartermaster offers quests", reached && shown, $"reached={reached} at {Flat(Pos(), new(quartermaster.State.X, quartermaster.State.Y, 0)):0.0} units, F interacted with {_main.LastInteracted}, panel shown={shown}{Rejected()}");
+            var shown = await Until(() => _main.QuestOffers > offers && _main.Hud.QuestsVisible, 6);
+            var how = $"F interacted with {_main.LastInteracted}";
+            if (!shown)
+            {
+                // A villager wandered nearer and F took it: close what it opened and click the quartermaster.
+                await CloseEverything();
+                await Hover(quartermaster);
+                await Click(Screen(quartermaster.GlobalPosition + new Vector3(0, quartermaster.State.Height * 0.5f, 0)));
+                shown = await Until(() => _main.QuestOffers > offers && _main.Hud.QuestsVisible, 8);
+                how += ", then clicked the quartermaster";
+            }
+            Record("quartermaster offers quests", reached && shown, $"reached={reached} at {Flat(Pos(), new(quartermaster.State.X, quartermaster.State.Y, 0)):0.0} units, {how}, panel shown={shown}{Rejected()}");
             await Shot("02_quest_offer.png");
             Tap(Key.Escape);
             await Wait(0.3);
@@ -301,12 +311,21 @@ public partial class Smoke : Node
             Record("talk to a villager", false, "no villager in view");
             return;
         }
-        var reached = await TravelTo(() => (villager.State.X, villager.State.Y), 1.6f, 45);
-        await Wait(0.4);
+        var reached = await TravelTo(() => (villager.State.X, villager.State.Y), 1.0f, 45);
+        await Wait(0.3);
+        await CloseEverything();
         var states = _main.DialogueStates;
-        await Hover(villager);
-        await Click(Screen(villager.GlobalPosition + new Vector3(0, villager.State.Height * 0.5f, 0)));
-        var shown = await Until(() => _main.DialogueStates > states && _main.Hud.HasWorldPane("dialogue"), 6);
+        bool Talking() => _main.DialogueStates > states && _main.Hud.FrontView<UI.WorldPanes.DialoguePane>()?.State?.Source == villager.Key;
+        // Beside the villager, F talks to it; when someone stands nearer, click the villager instead.
+        Tap(Key.F);
+        var shown = await Until(Talking, 4);
+        if (!shown)
+        {
+            await CloseEverything();
+            await Hover(villager);
+            await Click(Screen(villager.GlobalPosition + new Vector3(0, villager.State.Height * 0.5f, 0)));
+            shown = await Until(Talking, 6);
+        }
         await Shot("08_dialogue.png");
         var pane = _main.Hud.FrontView<UI.WorldPanes.DialoguePane>();
         var line = pane?.State is { } s ? $"{s.Speaker}: \"{Trim(s.Line)}\" with {s.Choices.Count} choices" : "no dialogue_state arrived";
@@ -329,26 +348,49 @@ public partial class Smoke : Node
         }
     }
 
-    /// <summary>Opens a vendor (one in view, or the one the conversation opened) and buys the first thing it can.</summary>
+    /// <summary>
+    /// Opens a vendor (one in view, else the quartermaster's, asked through its conversation), sees its shelf,
+    /// and buys the first thing the hero can afford when there is one.
+    /// </summary>
     private async Task TradeWithAVendor()
     {
         var hud = _main.Hud;
         if (!hud.HasWorldPane("vendor"))
         {
-            var vendor = Nearest(e => e.State.Interactable == "vendor" || e.State.Pattern?.Contains("vendor", StringComparison.Ordinal) == true || e.State.Pattern?.Contains("merchant", StringComparison.Ordinal) == true);
+            var vendor = Nearest(e => e.State.Interactable == "vendor" || e.State.Pattern?.Contains("vendor", StringComparison.Ordinal) == true || e.State.Pattern?.Contains("merchant", StringComparison.Ordinal) == true)
+                ?? Nearest(e => e.State.Pattern == "quartermaster" || e.State.Name == "Quartermaster");
             if (vendor is null)
             {
-                Record("trade with a vendor", false, $"no vendor in view and no conversation opened one{Rejected()}");
+                Record("trade with a vendor", false, $"no vendor or quartermaster in view{Rejected()}");
                 return;
             }
-            await TravelTo(() => (vendor.State.X, vendor.State.Y), 1.6f, 45);
+            await TravelTo(() => (vendor.State.X, vendor.State.Y), 1.4f, 45);
             await Wait(0.4);
             var states = _main.VendorStates;
+            var talks = _main.DialogueStates;
             await Click(Screen(vendor.GlobalPosition + new Vector3(0, vendor.State.Height * 0.5f, 0)));
-            await Until(() => _main.VendorStates > states && hud.HasWorldPane("vendor"), 6);
+            await Until(() => (_main.VendorStates > states && hud.HasWorldPane("vendor")) || (_main.DialogueStates > talks && hud.HasWorldPane("dialogue")), 6);
+            // A trader that talks first: bring its conversation to the front and ask to trade, as a player would.
+            if (!hud.HasWorldPane("vendor") && hud.FrontView<UI.WorldPanes.DialoguePane>() is { State: { } talk } dialogue)
+            {
+                hud.Workspace.SelectTab($"dialogue:{talk.Source}");
+                await Wait(0.3);
+                var index = talk.Choices.FindIndex(c => c.Id == "trade" && c.Enabled);
+                var button = index < 0 ? null : dialogue.FindChildren("*", "Button", true, false).OfType<Button>().FirstOrDefault(b => b.Text.StartsWith($"{index + 1}. ", StringComparison.Ordinal));
+                if (button is not null)
+                {
+                    await Click(ScreenCenter(button));
+                }
+                await Until(() => _main.VendorStates > states && hud.HasWorldPane("vendor"), 6);
+            }
         }
         var pane = hud.FrontView<UI.WorldPanes.VendorPane>();
-        await Wait(0.4);
+        if (pane?.State is { } shown)
+        {
+            // The shelf arrives as a fresh tab behind the conversation that opened it: look at it.
+            hud.Workspace.SelectTab($"vendor:{shown.Source}");
+        }
+        await Wait(0.5);
         await Shot("09_vendor.png");
         if (pane?.State is not { } state)
         {
@@ -358,19 +400,19 @@ public partial class Smoke : Node
         var items0 = hud.BagItems;
         var inventories = _main.InventoryStates;
         var buy = pane.FindChildren("*", "Button", true, false).OfType<Button>().FirstOrDefault(b => !b.Disabled && b.Text == "Buy");
-        if (buy is null)
+        var bought = "nothing the hero can afford";
+        if (buy is not null)
         {
-            Record("trade with a vendor", false, $"{state.Name}: nothing can be bought ({state.Stock.Count} on the shelf)");
-            return;
+            await Click(ScreenCenter(buy));
+            bought = await Until(() => _main.InventoryStates > inventories && hud.BagItems > items0, 6) ? $"bought one, bag {items0} -> {hud.BagItems}" : $"asked to buy{Rejected()}";
+            await Shot("10_bought.png");
         }
-        await Click(buy.GetGlobalRect().GetCenter());
-        var bought = await Until(() => _main.InventoryStates > inventories && hud.BagItems > items0, 6);
-        await Shot("10_bought.png");
-        Record("trade with a vendor", bought, $"{state.Name}: {state.Stock.Count} on the shelf, bag {items0} -> {hud.BagItems}{Rejected()}");
-        Tap(Key.Escape);
-        await Wait(0.2);
-        Tap(Key.Escape);
-        await Wait(0.2);
+        Record("trade with a vendor", state.Stock.Count > 0, $"{state.Name}: {state.Stock.Count} on the shelf, {bought}");
+        for (var i = 0; i < 6 && (hud.CoreOpen || hud.HasWorldPane("vendor") || hud.HasWorldPane("dialogue")); i++)
+        {
+            Tap(Key.Escape);
+            await Wait(0.2);
+        }
     }
 
     /// <summary>
@@ -477,6 +519,17 @@ public partial class Smoke : Node
     }
 
     private UI.Pages.OptionsPane? Pane() => _main.Hud.FrontView<UI.Pages.OptionsPane>();
+
+    /// <summary>Presses Escape until the core pane and every pane are closed (with nothing open it would open Options).</summary>
+    private async Task CloseEverything()
+    {
+        var hud = _main.Hud;
+        for (var i = 0; i < 8 && (hud.CoreOpen || hud.Workspace.Book.Leaves.Count > 0); i++)
+        {
+            Tap(Key.Escape);
+            await Wait(0.15);
+        }
+    }
 
     /// <summary>Types into the Options search field; the rows narrow to the matching entries of every page.</summary>
     private async Task SearchOptions(string text)

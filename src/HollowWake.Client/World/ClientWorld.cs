@@ -511,34 +511,51 @@ public partial class ClientWorld : Node3D
         return null;
     }
 
-    /// <summary>The nearest entity view to a ray, if any lies within its radius of the ray.</summary>
+    /// <summary>
+    /// The entity whose drawn body a ray passes through, ignoring the player's own. Creatures and interactables win
+    /// over plain props, so a canopy in front of a hob does not take the hover from it; among overlapping bodies the
+    /// one the ray passes closest to the middle of wins, nearer ones on a tie. The browser client's EntityLayer.pick.
+    /// </summary>
     public EntityView? PickEntity(Vector3 origin, Vector3 direction, float maxDistance = 400f)
     {
         EntityView? best = null;
-        var bestDist = float.MaxValue;
+        var bestScore = float.MaxValue;
+        EntityView? bestProp = null;
+        var bestPropScore = float.MaxValue;
         foreach (var view in _entities.Values)
         {
-            if (view.Key == SelfKey)
+            if (view.Key == SelfKey || view.PickSize is not { } size)
             {
                 continue;
             }
-            var center = view.GlobalPosition + new Vector3(0, view.State.Height * 0.5f, 0);
-            var to = center - origin;
-            var along = to.Dot(direction);
+            var center = view.GlobalPosition + new Vector3(0, size.Height * 0.5f, 0);
+            var along = (center - origin).Dot(direction);
             if (along < 0 || along > maxDistance)
             {
                 continue;
             }
-            var closest = origin + direction * along;
-            var dist = (center - closest).Length();
-            var reach = Mathf.Max(view.State.Radius, 0.5f) + view.State.Height * 0.35f;
-            if (dist <= reach && along < bestDist)
+            var off = (center - (origin + direction * along)).Length();
+            var reach = Mathf.Max(size.Radius, 0.5f) + size.Height * 0.35f;
+            if (off > reach)
             {
-                bestDist = along;
-                best = view;
+                continue;
+            }
+            var score = off / reach + along * 1e-4f;
+            if (view.State.Resources.Count > 0 || view.State.Interactable is not null)
+            {
+                if (score < bestScore)
+                {
+                    bestScore = score;
+                    best = view;
+                }
+            }
+            else if (score < bestPropScore)
+            {
+                bestPropScore = score;
+                bestProp = view;
             }
         }
-        return best;
+        return best ?? bestProp;
     }
 }
 

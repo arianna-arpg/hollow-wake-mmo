@@ -107,6 +107,12 @@ public partial class EntityView : Node3D
     /// <summary>Whether the body is a telegraph mark, which lingers to fade out when it goes.</summary>
     public bool IsTelegraph => _fade is not null;
 
+    /// <summary>
+    /// The size the mouse picks, matching what is drawn rather than the simulation radius (a marker's radius is its
+    /// whole place); null never under the cursor (fields, projectiles, shapes, marks).
+    /// </summary>
+    public (float Radius, float Height)? PickSize { get; private set; }
+
     /// <summary>The telegraph's strike landed (the world let it go): the mark fades out and then frees itself.</summary>
     public void Dying()
     {
@@ -123,6 +129,7 @@ public partial class EntityView : Node3D
     /// <summary>A shaped body: the delivery's shape as a slab (a projectile) or a flat mark (an area, a field, a telegraph).</summary>
     private void BuildShape(EntityState s, string look)
     {
+        PickSize = null;
         var size = s.ShapeSize;
         var spec = UI.Logic.ShapeOutline.SpecOf(s.Shape ?? "circle", size?.Radius, size?.Angle, size?.Width, size?.Inner, Mathf.Max(0.1f, s.Radius), size?.Curvature);
         var telegraph = look == "telegraph";
@@ -181,33 +188,41 @@ public partial class EntityView : Node3D
             return;
         }
         _fade = null;
+        _fill.Visible = false;
         _mesh.CastShadow = GeometryInstance3D.ShadowCastingSetting.On;
         Mesh mesh;
         var color = ColorFor(s);
         if (look.StartsWith("drop:", StringComparison.Ordinal))
         {
             mesh = new CylinderMesh { TopRadius = 0.25f, BottomRadius = 0.25f, Height = 0.25f };
+            PickSize = (0.25f, 0.25f);
         }
         else if (look == "projectile" || s.Pattern == "projectile")
         {
             mesh = new SphereMesh { Radius = Mathf.Max(0.15f, s.Radius * 0.6f), Height = Mathf.Max(0.3f, s.Radius * 1.2f) };
+            PickSize = null;
         }
         else if (look == "field")
         {
             mesh = new CylinderMesh { TopRadius = s.Radius, BottomRadius = s.Radius, Height = 0.1f };
             color = new Color(color, 0.35f);
+            PickSize = null;
         }
         else if (look.StartsWith("poi:", StringComparison.Ordinal))
         {
+            // A marker's radius is its whole place; it picks by the pillar drawn.
             mesh = new CylinderMesh { TopRadius = 0.15f, BottomRadius = 0.6f, Height = 3.5f };
+            PickSize = (0.6f, 3.5f);
         }
         else if (look == "fount")
         {
             mesh = new CylinderMesh { TopRadius = 0.2f, BottomRadius = 1.0f, Height = s.Height };
+            PickSize = (1f, s.Height);
         }
         else if (s.Interactable is not null && s.Resources.Count == 0)
         {
             mesh = new BoxMesh { Size = new Vector3(s.Radius * 2, s.Height, s.Radius * 2) };
+            PickSize = (Mathf.Max(0.2f, s.Radius), Mathf.Max(0.2f, s.Height));
         }
         else if (s.Resources.Count == 0 && IsTree(look))
         {
@@ -220,15 +235,18 @@ public partial class EntityView : Node3D
             _canopy.MaterialOverride = new StandardMaterial3D { AlbedoColor = color, Roughness = 0.9f };
             _canopy.Visible = true;
             color = new Color(0.42f, 0.3f, 0.2f);
+            PickSize = (canopy, s.Height);
         }
         else if (s.Resources.Count == 0)
         {
             // other flora and props: a block the size the simulation uses
             mesh = new BoxMesh { Size = new Vector3(Mathf.Max(0.3f, s.Radius * 1.4f), s.Height, Mathf.Max(0.3f, s.Radius * 1.4f)) };
+            PickSize = (Mathf.Max(0.3f, s.Radius * 1.4f) / 2, s.Height);
         }
         else
         {
             mesh = new CapsuleMesh { Radius = Mathf.Max(0.2f, s.Radius), Height = Mathf.Max(0.6f, s.Height) };
+            PickSize = (Mathf.Max(0.2f, s.Radius), Mathf.Max(0.6f, s.Height));
         }
         if (!(s.Resources.Count == 0 && IsTree(look)))
         {
