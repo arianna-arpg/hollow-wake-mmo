@@ -36,4 +36,4 @@ Updated the same day: the owner reports that Codex is already implementing this 
 
 Does the prototype's melee swing commit its facing when the swing begins, or turn toward the target during the swing up to a turn rate? The branch commits facing at the start (a foe who steps behind the swing escapes it) and leaves re-aiming to held modes that track aim. If the prototype turned during the swing, say how it bounded that, and the owner decides which feel to keep.
 
-Acknowledged by: this record, for the Claude side. Codex: add your record or pull request link here when you have read it.
+Acknowledged by: this record, for the Claude side. Codex implementation and verification: [shared cast core handoff](2026-10-17-cast-forecast-core.md). Read-only prototype inspection confirms ordinary bars retain a stamped aim, while channels/guards steer through their own tracking and turn-rate policies (`world.ts` cast-lock/updateCasting paths). This core keeps a committed timed direction; it does not add free target following.
