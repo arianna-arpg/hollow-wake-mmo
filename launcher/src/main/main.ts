@@ -137,7 +137,7 @@ async function start(): Promise<void> {
   selfUpdater = new SelfUpdater({
     owner: REPOSITORY.owner,
     repo: REPOSITORY.repo,
-    token,
+    token: () => token,
     overrideUrl: env['HOLLOWWAKE_LAUNCHER_UPDATE_URL'] || null,
     installOnQuit: !flags.smoke && !flags.screenshot,
     log,
@@ -213,7 +213,12 @@ function createWindow(): void {
         version: app.getVersion(),
         settled: () => feed.status !== 'checking' && feed.status !== 'idle' && news.status !== 'loading',
         pageErrors,
-      }).then((code) => app.exit(code));
+      })
+        .catch((error: unknown) => {
+          process.stdout.write(`SMOKE launcher FAIL: ${describeError(error)}\n`);
+          return 1;
+        })
+        .then((code) => app.exit(code));
     }
   });
   void win.loadFile(PAGE);
@@ -638,6 +643,7 @@ function registerIpc(): void {
     log.info(`GitHub token saved (${settings.token.encrypted ? 'encrypted' : 'unencrypted: no key store is available'})`);
     void checkFeed();
     void refreshNews();
+    void selfUpdater.check();
     return { ok: true };
   });
 
@@ -647,6 +653,7 @@ function registerIpc(): void {
     resolveToken();
     log.info('GitHub token removed');
     void checkFeed();
+    void refreshNews();
   });
 
   handle('checkForUpdates', () => {
@@ -673,8 +680,12 @@ function registerIpc(): void {
 }
 
 function fromOurPage(event: IpcMainInvokeEvent): boolean {
-  const normal = (url: string) => decodeURIComponent(url).replace(/[?#].*$/, '').toLowerCase();
-  return normal(event.senderFrame?.url ?? '') === normal(pathToFileURL(PAGE).href);
+  try {
+    const normal = (url: string) => decodeURIComponent(url).replace(/[?#].*$/, '').toLowerCase();
+    return normal(event.senderFrame?.url ?? '') === normal(pathToFileURL(PAGE).href);
+  } catch {
+    return false;
+  }
 }
 
 // ------------------------------------------------------------------------------- flags

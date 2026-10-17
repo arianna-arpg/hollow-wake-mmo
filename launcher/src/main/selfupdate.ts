@@ -16,7 +16,8 @@ import type { Logger } from './log';
 export interface SelfUpdateConfig {
   owner: string;
   repo: string;
-  token: string | null;
+  /** Read at every check, so a token added or removed in the page applies without a restart. */
+  token: () => string | null;
   overrideUrl: string | null;
   /** Install a downloaded update when the launcher quits. Off for smoke and screenshot runs. */
   installOnQuit: boolean;
@@ -44,12 +45,27 @@ export class SelfUpdater {
       return;
     }
     this.wire();
+    this.configureFeed();
     this.set({ status: 'checking', message: null });
     try {
       await autoUpdater.checkForUpdates();
     } catch (error) {
       this.fail(error);
     }
+  }
+
+  /** The override, or the repository's GitHub releases; a token selects the private provider (API host, token auth). */
+  private configureFeed(): void {
+    if (this.cfg.overrideUrl) {
+      autoUpdater.setFeedURL({ provider: 'generic', url: this.cfg.overrideUrl });
+      return;
+    }
+    const token = this.cfg.token();
+    autoUpdater.setFeedURL(
+      token
+        ? { provider: 'github', owner: this.cfg.owner, repo: this.cfg.repo, token }
+        : { provider: 'github', owner: this.cfg.owner, repo: this.cfg.repo, releaseType: 'release' },
+    );
   }
 
   /** Quit and run the downloaded update; the launcher starts again afterwards. */
@@ -76,12 +92,6 @@ export class SelfUpdater {
     autoUpdater.disableWebInstaller = true;
     autoUpdater.allowPrerelease = false;
     autoUpdater.allowDowngrade = false;
-    if (this.cfg.overrideUrl) {
-      autoUpdater.setFeedURL({ provider: 'generic', url: this.cfg.overrideUrl });
-    } else if (this.cfg.token) {
-      // A token selects electron-updater's private GitHub provider (the API host, token auth).
-      autoUpdater.setFeedURL({ provider: 'github', owner: this.cfg.owner, repo: this.cfg.repo, token: this.cfg.token });
-    }
     autoUpdater.on('update-available', (info: UpdateInfo) => {
       log.info(`launcher update ${info.version} found; downloading`);
       this.set({ status: 'downloading', version: info.version, percent: 0, message: null });
@@ -101,7 +111,7 @@ export class SelfUpdater {
     if (/checksum mismatch/i.test(text)) {
       message = 'A launcher update failed verification and was discarded.';
     } else if (/\b404\b|ERR_UPDATER_LATEST_VERSION_NOT_FOUND|ERR_UPDATER_CHANNEL_FILE_NOT_FOUND/.test(text)) {
-      message = this.cfg.token
+      message = this.cfg.token()
         ? 'No stable launcher release is visible yet.'
         : 'No launcher release is visible: none is published yet, or the repository is private and needs a token.';
     } else if (/ENOTFOUND|EAI_AGAIN|ECONNREFUSED|ETIMEDOUT|net::ERR_/.test(text)) {
@@ -109,7 +119,12 @@ export class SelfUpdater {
     } else if (/\b401\b|\b403\b/.test(text)) {
       message = 'GitHub refused the launcher update check; check the token.';
     }
-    this.cfg.log.warn(`launcher self-update: ${firstLine(text)}`);
+    // electron-updater reports one failure both as a rejected check and as an error event.
+    if (this.view.status === 'error' && this.view.message === message) {
+      return;
+    }
+    this.cfg.log.warn(`launcher self-update: ${message} (${firstLine(text).trim() || 'no detail'})`);
+    this.cfg.log.debug(`launcher self-update detail: ${text.slice(0, 1200)}`);
     this.set({ status: 'error', message });
   }
 
