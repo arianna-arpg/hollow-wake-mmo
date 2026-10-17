@@ -69,6 +69,20 @@ The interface reads its own content from `content/core/ui/`, validated by `Conte
 
 A mod recolours a pool by patching one swatch, adds a page with one entry (and a server-side gate), or reorders the rings in the layout, without touching a client.
 
+### Status presentation
+
+How a status looks in the status row and on the target plate is read from the status's content by its id, never from the simulation. The keys live in the status's `meta` block, which the simulation never reads, and each has a fallback, so authors add meta only for the exceptions:
+
+| Key | Says | Without it |
+|---|---|---|
+| `hidden` | the status stays out of the rows (the pool states the orbs already draw) | false |
+| `icon` | the glyph, an icon of the icon set | the icon set's `statuses` map, then the fallback glyph |
+| `color` | the tint | the status's own `color`, then its Thread's colour, then the accent |
+| `kind` | the frame: `buff`, `debuff` or `neutral` | buff when the status is `beneficial`, else debuff |
+| `cue` | how it draws the eye: `pulse` or `none` (reduce motion stills a pulse) | none |
+
+The first icon set's validator warns about an icon in no set, a malformed colour, or an unknown kind or cue.
+
 ### Texture directions
 
 Two directions ship as themes, over the same arrangement, so the owner can judge them side by side; `godot --path src/HollowWake.Client -- --mockup DIR` renders both over generated terrain with a staged hero and no server. The shots are in [ui-mockups](ui-mockups/).

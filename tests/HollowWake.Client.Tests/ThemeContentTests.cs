@@ -122,6 +122,10 @@ public class ThemeContentTests
         // A status's own colour stands in when its meta names none.
         Assert.True(names.LookOf("burning").Color is { } c && Math.Abs(c.R - 0xe8 / 255f) < 0.01f);
         Assert.Equal(StatusLook.Plain, names.LookOf("no_such_status"));
+        // The frame follows the status's beneficial flag unless meta names a kind.
+        Assert.Equal("debuff", names.LookOf("burning").Kind);
+        Assert.Contains(names.StatusLooks.Values, l => l.Kind == "buff");
+        Assert.Equal("neutral", StatusLook.From(new JsonObject { ["id"] = "y", ["beneficial"] = true, ["meta"] = new JsonObject { ["kind"] = "neutral" } }).Kind);
         var look = StatusLook.From(new JsonObject { ["id"] = "x", ["meta"] = new JsonObject { ["icon"] = "flame", ["color"] = "#112233", ["kind"] = "debuff", ["cue"] = "pulse" } });
         Assert.Equal("flame", look.Icon);
         Assert.Equal("debuff", look.Kind);

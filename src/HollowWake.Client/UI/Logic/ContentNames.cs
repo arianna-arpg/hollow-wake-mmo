@@ -23,10 +23,11 @@ public sealed record ChoiceOption(string Id, string Name, IReadOnlyList<string> 
 public sealed record ChoiceGroup(string Id, string Name, int Pick, IReadOnlyList<ChoiceOption> Options);
 
 /// <summary>
-/// How a status is presented, read from its content's <c>meta</c> block (never from the simulation):
+/// How a status is presented, read from its content (never from the simulation): its <c>meta</c> block's
 /// <c>hidden</c> keeps it out of the status rows (the pool states the orbs already draw), <c>icon</c> names its
-/// glyph in the icon set, <c>color</c> tints it, <c>kind</c> (buff, debuff or neutral) frames it, and <c>cue</c>
-/// (pulse or none) says how it draws the eye. The status's own <c>color</c> stands in when meta names none.
+/// glyph in the icon set, <c>color</c> tints it (the status's own <c>color</c> stands in), <c>kind</c> (buff,
+/// debuff or neutral) frames it (by default a buff when the status is <c>beneficial</c>, else a debuff), and
+/// <c>cue</c> (pulse or none, by default none) says how it draws the eye.
 /// </summary>
 public sealed record StatusLook(bool Hidden, string? Icon, Rgba? Color, string Kind, string? Cue)
 {
@@ -43,7 +44,7 @@ public sealed record StatusLook(bool Hidden, string? Icon, Rgba? Color, string K
             Json.Bool(meta?["hidden"]),
             Json.StrOrNull(meta?["icon"]),
             color,
-            Json.Str(meta?["kind"], "neutral"),
+            Json.StrOrNull(meta?["kind"]) ?? (Json.Bool(status["beneficial"]) ? "buff" : "debuff"),
             Json.StrOrNull(meta?["cue"]));
     }
 }
