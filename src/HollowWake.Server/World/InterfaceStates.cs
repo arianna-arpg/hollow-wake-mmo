@@ -245,20 +245,23 @@ public static class InterfaceStates
         var stats = sim.World.Get<Stats>(e);
         var inv = sim.World.Get<Inventory>(e);
         var eq = sim.World.Get<Equipment>(e);
-        var width = Math.Max(1, (int)sim.Content.Rules.Number("inventory.bag.width", 10));
-        var items = new List<ItemInfo>();
-        var capacity = inv?.Capacity ?? 0;
-        if (inv is not null)
+        var bag = inv is null ? new BoardInfo(1, 1, new List<ItemInfo>()) : BoardOf(sim, resolver, stats, inv.Bag);
+        var containers = new List<ContainerInfo>();
+        if (inv is not null && inv.Overflow.Count > 0)
         {
-            for (var i = 0; i < inv.Slots.Count; i++)
+            // Items the bag holds without a cell show as a board of their own until there is room for them.
+            var overflow = new List<ItemInfo>(inv.Overflow.Count);
+            for (var i = 0; i < inv.Overflow.Count; i++)
             {
-                if (inv.Slots[i] is { } item)
-                {
-                    items.Add(Card(sim, resolver, stats, item) with { X = i % width, Y = i / width, W = 1, H = 1 });
-                }
+                var (w, h) = inv.FootprintOf(inv.Overflow[i]);
+                overflow.Add(Card(sim, resolver, stats, inv.Overflow[i]) with { X = 0, Y = i, W = w, H = h });
             }
+            containers.Add(new ContainerInfo(InventoryService.Overflow, "Overflow", "overflow", new BoardInfo(1, Math.Max(1, inv.Overflow.Count), overflow), true)
+            {
+                Reason = "Make room in the bag for these.",
+                Owner = "character",
+            });
         }
-        var bag = new BoardInfo(width, Math.Max(1, (capacity + width - 1) / width), items);
         var slots = new List<EquipSlotInfo>();
         foreach (var def in sim.Content.Each<SlotDef>().OrderBy(s => s.Order).ThenBy(s => s.Id, StringComparer.Ordinal))
         {
@@ -282,7 +285,18 @@ public static class InterfaceStates
         {
             wallet.Add(new CurrencyInfo(def.Id, def.DisplayName, inv?.CurrencyOf(def.Id) ?? 0));
         }
-        return new InventoryStateMsg(bag, slots, equipment, wallet, new List<ContainerInfo>());
+        return new InventoryStateMsg(bag, slots, equipment, wallet, containers);
+    }
+
+    /// <summary>A board as the wire draws it: its shape and mask, and every item with its cell and footprint.</summary>
+    public static BoardInfo BoardOf(Simulation sim, ItemResolver resolver, Stats? stats, Board board)
+    {
+        var items = new List<ItemInfo>(board.Placed.Count);
+        foreach (var p in board.Placed)
+        {
+            items.Add(Card(sim, resolver, stats, p.Item) with { X = p.X, Y = p.Y, W = p.Width, H = p.Height });
+        }
+        return new BoardInfo(board.Width, board.Height, items) { Mask = board.MaskRows() };
     }
 
     /// <summary>An item's full card: the self state's fields plus its footprint, class, requirements and payload.</summary>
@@ -319,20 +333,7 @@ public static class InterfaceStates
         var h = new FingerprintHash(3);
         if (sim.World.TryGet<Inventory>(e, out var inv))
         {
-            h.Add(inv.Capacity);
-            for (var i = 0; i < inv.Slots.Count; i++)
-            {
-                if (inv.Slots[i] is { } item)
-                {
-                    h.Add(i);
-                    Snapshots.AddItem(ref h, item);
-                }
-            }
-            foreach (var (currency, amount) in inv.Currency)
-            {
-                h.Add(currency);
-                h.Add(amount);
-            }
+            Snapshots.AddBag(ref h, inv);
         }
         if (sim.World.TryGet<Equipment>(e, out var eq))
         {

@@ -533,12 +533,9 @@ public static class Snapshots
         var bag = new List<ItemInfo>();
         if (inv is not null)
         {
-            foreach (var item in inv.Slots)
+            foreach (var item in inv.Items)
             {
-                if (item is not null)
-                {
-                    bag.Add(Item(resolver, item));
-                }
+                bag.Add(Item(resolver, item));
             }
         }
         var equipment = new Dictionary<string, ItemInfo>(StringComparer.Ordinal);
@@ -636,20 +633,7 @@ public static class Snapshots
         }
         if (world.TryGet<Inventory>(e, out var inv))
         {
-            h.Add(inv.Capacity);
-            for (var i = 0; i < inv.Slots.Count; i++)
-            {
-                if (inv.Slots[i] is { } item)
-                {
-                    h.Add(i);
-                    AddItem(ref h, item);
-                }
-            }
-            foreach (var (currency, amount) in inv.Currency)
-            {
-                h.Add(currency);
-                h.Add(amount);
-            }
+            AddBag(ref h, inv);
         }
         if (world.TryGet<Equipment>(e, out var eq))
         {
@@ -690,6 +674,30 @@ public static class Snapshots
         return h.Value;
     }
 
+    /// <summary>The bag's shape, each item where it lies, the items without a cell, and the wallet.</summary>
+    internal static void AddBag(ref FingerprintHash h, Inventory inv)
+    {
+        h.Add(inv.Capacity);
+        var placed = inv.Bag.Placed;
+        for (var i = 0; i < placed.Count; i++)
+        {
+            var p = placed[i];
+            h.Add(p.X);
+            h.Add(p.Y);
+            AddItem(ref h, p.Item);
+        }
+        foreach (var item in inv.Overflow)
+        {
+            h.Add(-1);
+            AddItem(ref h, item);
+        }
+        foreach (var (currency, amount) in inv.Currency)
+        {
+            h.Add(currency);
+            h.Add(amount);
+        }
+    }
+
     internal static void AddItem(ref FingerprintHash h, ItemInstance item)
     {
         h.Add(item.Uid);
@@ -698,6 +706,16 @@ public static class Snapshots
         h.Add(item.Rarity);
         h.Add(item.Quality);
         h.Add(item.Affixes.Count);
+        h.Add(item.Locked);
+        h.Add(item.Payload?.Level ?? 0);
+        if (item.Sockets is { } sockets)
+        {
+            h.Add(sockets.Count);
+            foreach (var stone in sockets)
+            {
+                h.Add(stone?.Uid ?? 0);
+            }
+        }
     }
 
     // ------------------------------------------------------------ chunks

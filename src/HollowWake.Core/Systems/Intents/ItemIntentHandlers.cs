@@ -28,20 +28,12 @@ public static class ItemIntentHandlers
         handlers.Register<BuyBackIntent>(static (in IntentContext ctx, BuyBackIntent _) => ctx.Reject("not_ready"));
     }
 
-    /// <summary>Moves an item: onto equipment, into the world, or (as the boards land) onto a board's cell.</summary>
+    /// <summary>Moves an item to a board cell, an equipment slot or the world.</summary>
     private static void MoveItem(in IntentContext ctx, MoveItemIntent mi)
     {
-        switch (mi.Container)
+        if (!ctx.Sim.Service<InventoryService>().Move(ctx.Sim, ctx.Entity, mi.ItemUid, mi.Container, mi.X, mi.Y, mi.Slot, out var reason))
         {
-            case "equipment" when mi.Slot is not null:
-                Equip(ctx, new EquipIntent(mi.ItemUid, mi.Slot));
-                return;
-            case "world":
-                DropItem(ctx, new DropItemIntent(mi.ItemUid));
-                return;
-            default:
-                ctx.Reject("not_ready");
-                return;
+            ctx.Reject(reason);
         }
     }
 

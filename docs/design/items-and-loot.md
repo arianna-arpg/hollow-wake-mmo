@@ -12,7 +12,13 @@ Rarity definitions set prefix and suffix caps, count distributions and base roll
 
 ## Equipment
 
-Equipping checks the slot's accepted tags and the item's requirements, displaces occupants, and recalculates: every `item:` source is removed and re-added from wearer lines; armor, evasion and ward sum from local values; weapon locals become `weapon.*` (main hand) and `offhand.*` bases on the wearer, which is what attack forms read.
+Equipping checks the slot's accepted tags and the item's requirements, displaces occupants, and recalculates: every `item:` source is removed and re-added from wearer lines; armor, evasion and ward sum from local values; weapon locals become `weapon.*` (main hand) and `offhand.*` bases on the wearer, which is what attack forms read. Displaced items go to the bag, which by then includes the cells the equipped item left; when one of them finds no room the equip is refused and nothing changes, so an item is never lost to a full bag.
+
+## Boards
+
+The bag, every stash page and the reliquary are boards: a grid of cells with an optional mask (rows of `X` and `.`) that switches cells off. An item covers its base's `width` by `height` cells and records its top-left cell on itself, so its place persists with it. The bag's shape is rule `inventory.bag` (`width`, `height`, `mask`), read when a hero enters the world; a saved item keeps its cell while it still fits there, otherwise it takes the first space that fits (row by row from the top left), and an item with no room at all is kept without a cell (shown as an overflow board) until room is made. Nothing merges or is lost on loading.
+
+`InventoryService.Move` is the one move: an item goes to a cell of the bag or a container's board, to an equipment slot, or to the world. On the bag, moving onto exactly one other item swaps the two (the other takes the moved item's old cell, or the first space that fits it); a target under two items, out of bounds or with no room for the swap is refused, and nothing changes. Moves from the equipment doll or a container need free cells at the target. Containers and the weave rack register as places with the service, so a move between any two of them is the same call.
 
 ## Loot
 

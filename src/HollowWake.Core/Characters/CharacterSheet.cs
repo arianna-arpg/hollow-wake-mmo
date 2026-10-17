@@ -28,7 +28,9 @@ public sealed class CharacterSheet
     public double Xp { get; set; }
     public List<string> Passives { get; set; } = new();
     public List<WeaveSpec> Weaves { get; set; } = new();
+    /// <summary>Everything in the bag; each item keeps its cell on the board (<see cref="ItemInstance.X"/>, <see cref="ItemInstance.Y"/>).</summary>
     public List<ItemInstance> Bag { get; set; } = new();
+    /// <summary>The bag's usable cells when saved. The bag's shape comes from rule <c>inventory.bag</c>; this is a record, not a setting.</summary>
     public int BagCapacity { get; set; } = 40;
     public Dictionary<string, ItemInstance> Equipment { get; set; } = new(StringComparer.Ordinal);
     public Dictionary<string, double> Currency { get; set; } = new(StringComparer.Ordinal);
@@ -137,11 +139,9 @@ public sealed class CharacterFactory
         {
             book.Add(w);
         }
-        var inventory = sim.World.Add(e, new Inventory(sheet.BagCapacity));
-        foreach (var item in sheet.Bag)
-        {
-            inventory.TryAdd(item);
-        }
+        // The bag's shape comes from the rules, not the save: a saved item keeps its cell while it still fits there.
+        var inventory = sim.World.Add(e, InventoryService.CreateBag(sim.Content, sim.Service<ItemResolver>()));
+        InventoryService.PlaceSaved(inventory, sheet.Bag);
         foreach (var (currency, amount) in sheet.Currency)
         {
             inventory.AddCurrency(currency, amount);

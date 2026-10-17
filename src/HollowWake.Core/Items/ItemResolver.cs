@@ -6,8 +6,8 @@ using HollowWake.Core.Tags;
 
 namespace HollowWake.Core.Items;
 
-/// <summary>Reads what an item is worth: its tags, its lines as modifiers, its local attributes, its display.</summary>
-public sealed class ItemResolver
+/// <summary>Reads what an item is worth: its tags, its lines as modifiers, its local attributes, its display, its footprint.</summary>
+public sealed class ItemResolver : Components.IFootprints
 {
     private readonly ContentRegistry _content;
 
@@ -19,6 +19,10 @@ public sealed class ItemResolver
     public ContentRegistry Content => _content;
 
     public ItemBaseDef BaseOf(ItemInstance item) => _content.Require<ItemBaseDef>(item.Base);
+
+    /// <summary>The cells an item covers on a board: its base's width and height.</summary>
+    public (int Width, int Height) Of(ItemInstance item) =>
+        _content.TryGet<ItemBaseDef>(item.Base, out var b) && b is not null ? (Math.Max(1, b.Width), Math.Max(1, b.Height)) : (1, 1);
 
     public static TagSet ClassTags(string itemClass)
     {

@@ -1,0 +1,10 @@
+# Rules of items, containers, passives and conversations: every number the inventory, rack, passive and
+# dialogue systems read. Code reads them by path (inventory.bag.width) and keeps a default for each.
+kind: rules
+entries:
+  - id: inventory
+    values:
+      # The hero's bag: a board of cells. A mask (rows of X and .) may switch cells off.
+      bag:
+        width: 12
+        height: 5
