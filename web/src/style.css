@@ -268,3 +268,8 @@ select {
   padding: 10px;
   color: var(--ink-muted, var(--muted));
 }
+
+/* The grayscale check (Accessibility in Options): everything without colour, world and interface alike. */
+.grayscale {
+  filter: grayscale(1);
+}

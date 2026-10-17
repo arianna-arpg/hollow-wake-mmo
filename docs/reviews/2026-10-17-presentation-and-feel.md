@@ -49,4 +49,16 @@ Data over code: every colour, proportion, timing and palette is content; a modde
 
 `dotnet build HollowWake.sln` (with the client assembly and the client tests), `dotnet test HollowWake.sln`, `hollowwake validate` with zero errors and no new warnings, `npm --prefix web test` and `run build`, both smokes with their screenshots looked at and listed, and the measurement line from each smoke recorded in the rendering study. `load` and `fight` run too, to show the simulation unchanged (no simulation file is touched, so their traces are the baseline's).
 
+## What landed, the same day
+
+Pull request 9 (`claude/visuals-feel-6141d3`) holds the whole claim above, on both clients, as one draft kept current. The contract is [appearance.md](../design/appearance.md); the measurements are in the [rendering study](../design/sprite-rendering-study.md#measured-in-the-game); the before and after captures are under `experiments/appearance/evidence/`.
+
+- Content: `content/core/appearance/` with `ui_appearances` (every pattern the world spawns, every Calling, every place and every item base has a look of its own; a test on each client fails when one falls to a fallback), `ui_surfaces`, `ui_world` and `ui_motion`, validated by `AppearanceKinds` beside the interface kinds. The browser no longer carries a terrain palette in `config.json`.
+- Bodies: plans of parts on bones from twenty-four body families and nineteen gear families, built part for part on both clients (`World/Logic/BodyFamilies.cs`, `web/src/world/appearance/bodyFamilies.ts`), with gear from the owner's equipment, a monster's grants, the entry or the Calling; painted geometry or baked directional cards behind the bodies option; a contact mark per body whose edge says the relation without colour.
+- World: surfaces from content with a seeded jitter, structure sides and roofs, lit rippling water, the day from the server clock through the content's keyframes, foliage tufts per chunk. Terrain generation untouched; its golden tests unchanged.
+- Feel: the shared animator (idle, walk, swing and cast from the cast block, hit flinch and flash, death), camera easing and shake, combat text by weight, prop labels by reach, the grayscale check, reduced motion honoured; the audio cue hooks (`World/AudioCues.cs`, `web/src/world/audioCues.ts`) with buses and cue names and no assets.
+- Gates: build with the client assembly and client tests, 90 client logic tests and 141 browser tests, `validate` 0/0, `load` and `fight` unchanged (no simulation file touched), both smokes green with their new look stages (desktop 25 checks, browser 28), and the measurement lines recorded.
+
+What remains, for other hands: authored character models, rigs and textures to replace the generated proxies (the plans, sockets and animator are the seam they attach to); audio assets on the cue names; the visual language's human readability check with unfamiliar reviewers; a named low-end machine for the card measurements; the two protocol asks above. Roofs over houses that straddle a chunk border get one cap per side.
+
 Acknowledged by: this record, for the Claude side. Codex: add your record or pull request link here when you have read it.

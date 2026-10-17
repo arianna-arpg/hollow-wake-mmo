@@ -1,4 +1,4 @@
-import { DirectionalLight, FogExp2, HemisphereLight, MathUtils, Scene, SRGBColorSpace, Vector3, WebGLRenderer } from 'three';
+import { Color, DirectionalLight, FogExp2, HemisphereLight, MathUtils, Scene, SRGBColorSpace, Vector3, WebGLRenderer } from 'three';
 import type { ClientConfig } from './config';
 import { Input } from './input/input';
 import { Connection } from './net/connection';
@@ -11,12 +11,16 @@ import { bundledKinds, loadNames, loadUi } from './ui/logic/content';
 import { gateFacts, OptionsCatalog, Settings, type OptionEntry } from './ui/logic/options';
 import { LoginPanel } from './ui/login';
 import { CameraRig } from './view/camera';
+import { bodyLight } from './world/appearance/bodyMesh';
+import { AudioCues } from './world/audioCues';
+import { DayCycle, type SkyState } from './world/appearance/dayCycle';
+import { SurfaceLook } from './world/appearance/surfaceLook';
 import { chunkFromMessage } from './world/chunks';
 import { linearColor } from './world/colors';
 import { groundToCore, toThree, type CorePoint } from './world/coords';
-import { EntityLayer, isDrop, type EntityView } from './world/entities';
+import { AppearanceService, EntityLayer, isDrop, type BodiesMode, type EntityView } from './world/entities';
 import { ServerClock } from './world/interpolation';
-import { SurfacePalette } from './world/palette';
+import { toLinear } from './world/palette';
 import { TerrainView } from './world/terrain';
 
 export const CLIENT_NAME = 'hollow-wake-web 0.1';
@@ -36,11 +40,19 @@ export class App {
   private readonly renderer: WebGLRenderer;
   private readonly scene = new Scene();
   private readonly sun: DirectionalLight;
-  private readonly sunOffset: Vector3;
+  private readonly hemisphere: HemisphereLight;
+  private sunOffset: Vector3;
   private readonly fog: FogExp2 | null = null;
+  private readonly day: DayCycle;
+  /** A held fraction of the day for previews (the developer options), or null for the server's clock. */
+  dayOverride: number | null = null;
+  private lastDayFraction = -1;
+  private fogOn = true;
   readonly rig: CameraRig;
   readonly terrain: TerrainView;
   readonly entities: EntityLayer;
+  readonly appearance: AppearanceService;
+  readonly audio = new AudioCues();
   readonly hud: Hud;
   readonly login: LoginPanel;
   readonly settings: Settings;
@@ -107,7 +119,8 @@ export class App {
       this.fog = new FogExp2(linearColor(config.render.fogColor), config.render.fogDensity);
       this.scene.fog = this.fog;
     }
-    this.scene.add(new HemisphereLight(linearColor(config.render.ambientSky), linearColor(config.render.ambientGround), config.render.ambientIntensity));
+    this.hemisphere = new HemisphereLight(linearColor(config.render.ambientSky), linearColor(config.render.ambientGround), config.render.ambientIntensity);
+    this.scene.add(this.hemisphere);
     this.sun = new DirectionalLight(linearColor(config.render.sunColor), config.render.sunIntensity);
     // The light shines along its -Z turned by pitch then yaw, as the desktop sun's rotation does.
     const pitch = MathUtils.degToRad(config.render.sunPitchDegrees);
@@ -127,11 +140,24 @@ export class App {
     this.scene.add(this.sun, this.sun.target);
 
     this.rig = new CameraRig(config.camera);
-    const palette = new SurfacePalette(config.terrain);
-    this.terrain = new TerrainView(config.world, palette, (x, y) => this.send({ t: 'request_chunk', x, y }));
+    // The appearance pipeline: looks, bodies, cards, the surfaces, the day and the motion timings, all from content.
+    this.appearance = new AppearanceService(kinds, this.renderer);
+    const feel = this.appearance.catalog.motion;
+    this.rig.zoomEase = feel.camera('zoom_ease', 9);
+    this.rig.shakeSeconds = feel.camera('shake_time', 0.28);
+    this.rig.shakeRate = feel.camera('shake_rate', 28);
+    this.day = new DayCycle(this.appearance.catalog.world);
+    const surfaces = new SurfaceLook(this.appearance.catalog.surfaces);
+    this.terrain = new TerrainView(config.world, surfaces, this.day.foliage, (x, y) => this.send({ t: 'request_chunk', x, y }));
     this.scene.add(this.terrain.group);
-    this.entities = new EntityLayer(config.entities, config.motion, labels);
+    this.entities = new EntityLayer(config.entities, config.motion, labels, this.appearance);
     this.scene.add(this.entities.group);
+    // the sound hooks: the bodies' moments raise cues at their places; nothing plays until an asset is registered
+    this.entities.cue = (cue, variant, position) => {
+      const hero = this.entities.self?.root.position;
+      this.audio.play(cue, variant, hero ? hero.distanceTo(position) : 0);
+    };
+    this.entities.surfaceAt = (position) => this.terrain.surfaceAt(position);
 
     const facts = (name: string): number | null => {
       switch (name) {
@@ -151,6 +177,11 @@ export class App {
     this.hud.send = (m) => this.send(m);
     this.hud.slotPressed = (slot) => this.useSlot(slot);
     this.hud.casting = () => this.hud.hero.cast !== null;
+    this.appearance.selfEquipment = () => this.hud.hero.equipment;
+    this.entities.selfCast = () => {
+      const cast = this.hud.hero.cast;
+      return cast === null ? null : { mode: cast.mode, progress: cast.progress };
+    };
     this.hud.heroScreen = () => this.heroScreen();
     this.hud.distanceTo = (key) => this.distanceTo(key);
     this.hud.optionsClosed = () => this.optionsClosed();
@@ -207,14 +238,38 @@ export class App {
       this.sun.castShadow = this.config.render.shadows && s.toggle('shadows', true);
     });
     this.appliers.set('fog', () => {
+      this.fogOn = s.toggle('fog', true);
+      this.lastDayFraction = -1;
       if (this.fog !== null) {
-        this.fog.density = s.toggle('fog', true) ? this.config.render.fogDensity : 0;
+        this.fog.density = this.fogOn ? this.config.render.fogDensity : 0;
       }
     });
     this.appliers.set('prop_labels', () => this.entities.setPropLabels(s.toggle('prop_labels', true)));
     this.appliers.set('reduce_motion', () => {
       this.entities.reducedMotion = s.toggle('reduce_motion');
+      this.appearance.reducedMotion = s.toggle('reduce_motion');
+      this.rig.reducedMotion = s.toggle('reduce_motion');
     });
+    this.appliers.set('bodies', () => {
+      const mode = s.text('bodies');
+      this.appearance.mode = mode === 'geometry' || mode === 'cards' ? (mode as BodiesMode) : 'auto';
+    });
+    this.appliers.set('water_detail', () => this.terrain.setWaterDetail(s.toggle('water_detail', true)));
+    this.appliers.set('foliage_density', () => this.terrain.setFoliageDensity(s.number('foliage_density', 1)));
+    this.appliers.set('screen_shake', () => {
+      this.rig.shakeEnabled = s.toggle('screen_shake', true);
+    });
+    this.appliers.set('master_volume', () => this.audio.setMasterVolume(s.number('master_volume', 80) / 100));
+    this.appliers.set('grayscale', () => {
+      this.canvasHost.classList.toggle('grayscale', s.toggle('grayscale'));
+      this.hud.root.classList.toggle('grayscale', s.toggle('grayscale'));
+    });
+    const day = () => {
+      this.dayOverride = s.toggle('day_lock') ? s.number('day_time', 12) / 24 : null;
+      this.lastDayFraction = -1;
+    };
+    this.appliers.set('day_lock', day);
+    this.appliers.set('day_time', day);
   }
 
   private settingChanged(entry: OptionEntry): void {
@@ -442,6 +497,7 @@ export class App {
       case 'inventory_state':
         this.count(m.t);
         this.hud.applyInventory(m);
+        this.entities.refreshSelfEquipment();
         break;
       case 'passive_state':
         this.count(m.t);
@@ -502,6 +558,8 @@ export class App {
   }
 
   private showCombat(c: CombatEventMsg): void {
+    // every body in view reacts: the struck flinch and flash, the strikers' swings come through
+    this.entities.combatHit(c.kind, c.source, c.target, c.amount);
     const self = this.entities.selfKey;
     const mine = (k: Int64) => self !== null && String(k) === String(self);
     if (!mine(c.source) && !mine(c.target)) {
@@ -510,6 +568,15 @@ export class App {
     const name = (key: Int64) => this.entities.views.get(key)?.state.name ?? '?';
     const source = name(c.source);
     const target = name(c.target);
+    const feel = this.appearance.catalog.motion;
+    const now = performance.now() / 1000;
+    if (mine(c.target) && c.kind === 'damage') {
+      this.rig.shakeBy(c.crit ? feel.camera('shake_crit', 0.25) : feel.camera('shake_hit', 0.12), now);
+    } else if (mine(c.source) && c.kind === 'death') {
+      this.rig.shakeBy(feel.camera('shake_death', 0.35), now);
+    }
+    const maxLife = this.entities.views.get(c.target)?.state.resource_max.life ?? 0;
+    const weight = maxLife > 0 && (c.kind === 'damage' || c.kind === 'heal') ? Math.min(1, Math.max(0, c.amount / maxLife / Math.max(0.01, feel.combatText('heavy_fraction', 0.12)))) : 0;
     const text = c.kind === 'damage' ? `${source} hits ${target} for ${Math.round(c.amount)}${c.crit ? ' (crit)' : ''}`
       : c.kind === 'evade' ? `${target} evades ${source}`
       : c.kind === 'block' ? `${target} blocks ${source}`
@@ -518,7 +585,7 @@ export class App {
       : c.kind === 'death' ? `${target} dies`
       : c.kind;
     this.hud.line(text, 'combat');
-    this.hud.combatText(c.kind, c.amount, c.crit, mine(c.target));
+    this.hud.combatText(c.kind, c.amount, c.crit, mine(c.target), weight);
     this.combatLines++;
     if (c.kind === 'damage' && mine(c.source)) {
       this.hitsDealt++;
@@ -642,6 +709,7 @@ export class App {
     const { origin, direction } = this.mouseRay();
     const hovered = this.entities.pick(origin, direction);
     this.hoveredKey = hovered?.key ?? 0;
+    this.entities.hoveredKey = hovered?.key ?? null;
     this.hud.setTarget(hovered?.state ?? null);
   }
 
@@ -743,8 +811,13 @@ export class App {
     this.input.pollPad();
     const renderTime = this.clock.now(local) - this.config.motion.interpolationDelayMs / 1000;
     this.entities.serverNow = this.clock.now(local);
+    this.appearance.isometric = this.rig.mode === 'isometric';
+    this.appearance.orthoSize = this.rig.orthoSize;
+    this.appearance.cameraYaw = this.rig.yawCurrent;
+    this.appearance.baker.step();
     this.entities.animate(dt, local, renderTime);
     if (this.inWorld) {
+      this.followDay(this.clock.now(local));
       const self = this.entities.self;
       if (self !== undefined) {
         this.rig.follow(self.root.position);
@@ -752,6 +825,7 @@ export class App {
         this.sun.position.copy(self.root.position).add(this.sunOffset);
         this.terrain.update(self.position, local);
       }
+      this.terrain.animateWater(this.clock.now(local), bodyLight.sunDirection);
       this.hud.setSelfEntity(self?.state ?? null);
       this.handleMovement();
       this.updateHover();
@@ -761,10 +835,50 @@ export class App {
       }
       this.hud.netText = `${this.rtt === null ? '' : `${Math.round(this.rtt)} ms  `}${this.terrain.builtCount} chunks  ${this.entities.views.size} entities`;
     }
-    this.rig.update(dt);
-    this.entities.placeLabels(this.rig.camera, this.width, this.height);
+    this.rig.update(dt, false, local);
+    this.entities.placeLabels(this.rig.camera, this.width, this.height, dt);
     this.hud.frame(performance.now() / 1000, this.width, this.height);
     this.renderer.render(this.scene, this.rig.camera);
+  }
+
+  /** The fraction of the day the sky shows now, for the smoke and the overlay. */
+  get timeOfDay(): number {
+    return this.dayOverride ?? this.day.timeOfDay(this.clock.now(performance.now() / 1000));
+  }
+
+  /** The sky, sun, ambient light and haze follow the server's clock through the content's day. */
+  private followDay(serverNow: number): void {
+    const fraction = this.dayOverride ?? this.day.timeOfDay(serverNow);
+    if (Math.abs(fraction - this.lastDayFraction) < 0.0005) {
+      return;
+    }
+    this.lastDayFraction = fraction;
+    const sky = this.day.at(fraction);
+    this.applySky(sky);
+  }
+
+  private applySky(sky: SkyState): void {
+    const lin = (c: [number, number, number]) => new Color(...toLinear(c));
+    this.sun.color.copy(lin(sky.sun));
+    this.sun.intensity = sky.sunEnergy * this.config.render.sunIntensity / 1.2;
+    this.sun.visible = sky.sunPitch > 0.5;
+    // the sun shines down from its height over its bearing (degrees clockwise from north), as the desktop sun does
+    const pitch = MathUtils.degToRad(-Math.max(2, sky.sunPitch));
+    const yaw = MathUtils.degToRad(sky.sunYaw);
+    const shine = new Vector3(0, Math.sin(pitch), -Math.cos(pitch)).applyAxisAngle(new Vector3(0, 1, 0), yaw);
+    this.sunOffset = shine.clone().multiplyScalar(-80);
+    bodyLight.sunDirection.copy(shine).negate().normalize();
+    bodyLight.sunColor.copy(lin(sky.sun)).multiplyScalar(sky.sunEnergy);
+    this.hemisphere.color.copy(lin(sky.ambient)).multiplyScalar(1.2);
+    this.hemisphere.groundColor.copy(lin(sky.fog)).multiplyScalar(0.5);
+    this.hemisphere.intensity = sky.ambientEnergy * this.config.render.ambientIntensity / 0.55;
+    bodyLight.ambientSky.copy(lin(sky.ambient)).multiplyScalar(sky.ambientEnergy * 1.6);
+    bodyLight.ambientGround.copy(lin(sky.fog)).multiplyScalar(sky.ambientEnergy * 0.7);
+    this.scene.background = lin(sky.sky);
+    if (this.fog !== null) {
+      this.fog.color.copy(lin(sky.fog));
+      this.fog.density = this.fogOn ? sky.fogDensity : 0;
+    }
   }
 
   // ------------------------------------------------------------ scripted checks
@@ -792,6 +906,35 @@ export class App {
           entities: app.entities.views.size,
           frameMs: Math.round(app.frameMs * 100) / 100,
           states: Object.fromEntries(app.received),
+        };
+      },
+      /** The renderer's counts and the bodies drawn, for the measurement line. */
+      get render() {
+        const info = app.renderer.info;
+        const bodies = app.entities.bodyCounts;
+        return {
+          drawCalls: info.render.calls,
+          triangles: info.render.triangles,
+          textures: info.memory.textures,
+          geometries: info.memory.geometries,
+          bodies: bodies.bodies,
+          cards: bodies.cards,
+          bodyTriangles: bodies.triangles,
+          atlases: app.appearance.atlasCount,
+          atlasBytes: app.appearance.atlasBytes,
+          bakesPending: app.appearance.baker.pending,
+          timeOfDay: app.timeOfDay,
+          cues: Object.fromEntries(app.audio.raised),
+          light: {
+            sun: app.sun.intensity,
+            sunVisible: app.sun.visible,
+            sunColor: app.sun.color.getHexString(),
+            sunAt: app.sun.position.toArray().map((v) => Math.round(v * 10) / 10),
+            hemisphere: app.hemisphere.intensity,
+            hemisphereColor: app.hemisphere.color.getHexString(),
+            fog: app.fog?.density ?? 0,
+            background: app.scene.background instanceof Color ? app.scene.background.getHexString() : null,
+          },
         };
       },
       get ui() {
@@ -831,6 +974,8 @@ export class App {
       /** The player's effective bindings for an action, as Options shows them. */
       bindings: (action: string) => app.settings.bindings(action),
       setting: (id: string) => app.settings.value(id),
+      /** Sets a player option as the Options pane would (the smoke's way to the look's stages). */
+      setSetting: (id: string, value: unknown) => app.settings.set(id, value as never),
       characters: () => app.login.characters,
       callings: () => app.login.callings,
       self: (): (EntityState & { drawn: CorePoint }) | null => {

@@ -200,9 +200,9 @@ public static class PartGeometry
 
     private static void Quad(List<Vec3> tris, Vec3 a, Vec3 b, Vec3 c, Vec3 d)
     {
-        // a, b, c, d around the face, counter-clockwise seen from outside.
-        tris.Add(a); tris.Add(b); tris.Add(c);
-        tris.Add(a); tris.Add(c); tris.Add(d);
+        // a, b, c, d around the face as listed clockwise seen from outside; emitted counter-clockwise like every other part.
+        tris.Add(a); tris.Add(c); tris.Add(b);
+        tris.Add(a); tris.Add(d); tris.Add(c);
     }
 
     /// <summary>A box; pinch narrows the top face along z (a wedge when near one).</summary>

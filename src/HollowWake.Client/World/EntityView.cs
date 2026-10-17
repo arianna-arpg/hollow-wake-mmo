@@ -46,6 +46,12 @@ public partial class EntityView : Node3D
     /// <summary>The self's cast as the interface knows it (mode and progress), richer than the entity state's.</summary>
     public static Func<(string Mode, float Progress)?>? SelfCast { get; set; }
 
+    /// <summary>Where the animator's moments go as sound cues: a footstep on a surface, a swing, a death. Null raises none.</summary>
+    public static Action<string, string?, Vector3>? Cue { get; set; }
+
+    /// <summary>The surface tag under a world point (grass, sand, stone ...), for the footstep variant; null when unknown.</summary>
+    public static Func<Vector3, string?>? SurfaceAt { get; set; }
+
     private MeshInstance3D _mesh = null!;
     private Label3D _label = null!;
     private Node3D _overlay = null!;
@@ -74,6 +80,8 @@ public partial class EntityView : Node3D
     private float _hitFrom = float.NaN;
     private double _diedAt = double.NegativeInfinity;
     private bool _wasCasting;
+    private bool _wasDead;
+    private bool _settled;
     private string _selfEquipmentKey = "";
     private float _labelAlpha = 1;
 
@@ -409,6 +417,7 @@ public partial class EntityView : Node3D
     {
         var now = ServerNow?.Invoke() ?? Time.GetTicksMsec() / 1000.0;
         _hitAt = now;
+        Cue?.Invoke("hit", _plan?.Rig, GlobalPosition);
         var max = State.ResourceMax.TryGetValue("life", out var m) && m > 0 ? m : 100f;
         _hitStrength = Mathf.Clamp((float)(amount / max) * 4f, 0.25f, 1f);
         if (fromGodot is { } from)
@@ -430,6 +439,7 @@ public partial class EntityView : Node3D
         {
             _releasedAt = ServerNow?.Invoke() ?? Time.GetTicksMsec() / 1000.0;
         }
+        Cue?.Invoke("swing", _plan?.Swings == true ? "weapon" : _plan?.Rig, GlobalPosition);
     }
 
     private void RefreshOverlay()
@@ -531,6 +541,13 @@ public partial class EntityView : Node3D
         var service = Appearance;
         var s = State;
         var serverNow = ServerNow?.Invoke() ?? Time.GetTicksMsec() / 1000.0;
+        // a settled static prop (a rock, a chest, a marker) keeps its pose until something happens to it
+        if (_plan!.Rig == "static" && !s.Dead && serverNow - _hitAt > 1 && _settled)
+        {
+            ChooseRepresentation(service);
+            return;
+        }
+        _settled = _plan.Rig == "static";
         // the walk cycle follows the distance the drawn body moved
         var drawn = GlobalPosition;
         if (_hasDrawn)
@@ -541,7 +558,13 @@ public partial class EntityView : Node3D
             var speed = dt > 1e-4f ? distance / dt : 0;
             _speed += (speed - _speed) * Mathf.Min(1f, dt * 10f);
             var stride = (service?.Motion.Walk("stride", 1.5f) ?? 1.5f) * Mathf.Clamp(_plan!.Height / 1.8f, 0.4f, 2.5f);
+            var before = _visual.WalkPhase;
             _visual.WalkPhase = Mathf.PosMod(_visual.WalkPhase + distance / Mathf.Max(0.2f, stride) * MathF.PI * 2, MathF.PI * 2);
+            // a foot plants each half cycle: the footstep cue, with the surface underfoot as its variant
+            if (_speed > 0.5f && s.Grounded && !s.Dead && _plan.Rig is "biped" or "quadruped" && (int)(before / MathF.PI) != (int)(_visual.WalkPhase / MathF.PI))
+            {
+                Cue?.Invoke("footstep", SurfaceAt?.Invoke(drawn), drawn);
+            }
             // a lean into acceleration, read from the drawn motion
             var forward = new Vector3(Mathf.Cos(Rotation.Y), 0, -Mathf.Sin(Rotation.Y));
             var along = dt > 1e-4f ? moved.Dot(forward) / dt : 0;
@@ -557,6 +580,11 @@ public partial class EntityView : Node3D
         _visual.Dashing = s.Flags.Contains("dashing");
         _visual.Dead = s.Dead;
         _visual.DeadFor = s.Dead ? (float)Math.Max(0, serverNow - _diedAt) : 0;
+        if (s.Dead && !_wasDead)
+        {
+            Cue?.Invoke("death", _plan!.Rig, drawn);
+        }
+        _wasDead = s.Dead;
         var casting = s.Casting is { Length: > 0 };
         var mode = "cast";
         var progress = s.CastProgress;

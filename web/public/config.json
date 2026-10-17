@@ -1,5 +1,5 @@
 {
-  "_doc": "Hollow Wake MMO web client settings, read at build time and again from config.json beside the page at startup, so a deployed client can be retuned by editing dist/config.json. Fields are described in docs/design/web-client.md.",
+  "_doc": "Hollow Wake MMO web client settings, read at build time and again from config.json beside the page at startup, so a deployed client can be retuned by editing dist/config.json. Fields are described in docs/design/web-client.md. The look of the world and its bodies is content under content/core/appearance, not configuration.",
   "server": {
     "host": "",
     "port": 0,
@@ -7,7 +7,9 @@
     "path": "/ws",
     "account": "marcher",
     "probeSameOrigin": true,
-    "features": ["entity_delta"]
+    "features": [
+      "entity_delta"
+    ]
   },
   "world": {
     "chunkRadius": 3,
@@ -68,61 +70,13 @@
     "ambientGround": "#6b6655",
     "ambientIntensity": 1.6
   },
-  "terrain": {
-    "base": [
-      { "tags": ["snow"], "color": "#e8ecf0" },
-      { "tags": ["ash"], "color": "#6b4a3a" },
-      { "tags": ["grey"], "color": "#4a4452" },
-      { "tags": ["bog"], "color": "#4f6b3a" },
-      { "tags": ["sand"], "color": "#d8c89a" },
-      { "tags": ["rock"], "color": "#8c8a7a" },
-      { "tags": ["forest_floor", "deep"], "color": "#1f4d22" },
-      { "tags": ["forest_floor"], "color": "#2f6b2f" },
-      { "tags": ["scrub"], "color": "#b8a35a" },
-      { "tags": ["heath"], "color": "#9aa05a" },
-      { "tags": ["meadow"], "color": "#79b84a" },
-      { "tags": ["grass"], "color": "#5b8c3a" }
-    ],
-    "fallback": "#738c59",
-    "structure": [
-      { "tags": ["road"], "color": "#9e8f75" },
-      { "tags": ["wall"], "color": "#807a80" },
-      { "tags": ["house"], "color": "#807a80" },
-      { "tags": ["pillar"], "color": "#807a80" }
-    ],
-    "structureFallback": "#99948a",
-    "tints": [
-      { "flags": ["road"], "color": "#9e8f75", "mix": 0.7 },
-      { "tags": ["cliff"], "darken": 0.35 },
-      { "tags": ["shallow"], "flags": ["water"], "color": "#5b8fa3", "mix": 0.45 },
-      { "tags": ["deep"], "flags": ["water"], "color": "#2f5878", "mix": 0.65 },
-      { "flags": ["blocked"], "darken": 0.2 }
-    ],
-    "skirtDarken": 0.3,
-    "layers": [
-      { "tags": ["bridge"], "color": "#8c6b4d" }
-    ],
-    "layerFallback": "#99948c",
-    "waterColor": "#3373b3",
-    "waterOpacity": 0.55
-  },
   "entities": {
     "player": "#59bff2",
-    "drops": { "normal": "#d9d9cc", "magic": "#6699ff", "rare": "#ffd44d", "unique": "#e66633" },
     "projectile": "#ff9933",
     "field": "#804db3",
     "fieldOpacity": 0.35,
     "telegraph": "#ff5a36",
     "telegraphOpacity": 0.5,
-    "poi": "#f2e680",
-    "fount": "#99e6ff",
-    "flora": [
-      { "match": ["oak", "pine", "birch", "tree"], "color": "#337333", "tree": true },
-      { "match": ["boulder", "stone", "vein"], "color": "#808080", "tree": false },
-      { "match": ["anvil", "loom"], "color": "#996640", "tree": false }
-    ],
-    "floraFallback": "#598c4d",
-    "trunk": "#6b4d33",
     "factions": {
       "players": "#66cc99",
       "weftmarch_compact": "#bfbf73",
@@ -132,9 +86,13 @@
       "tangled": "#593373",
       "remnant": "#736699"
     },
-    "rarities": { "magic": "#8099ff", "rare": "#ffcc4d", "champion": "#ff8c40" },
-    "creatureFallback": "#b38059",
-    "labelColors": { "player": "#b3e6ff", "dead": "#999999", "magic": "#8099ff", "rare": "#ffd966", "champion": "#ff994d" },
+    "labelColors": {
+      "player": "#b3e6ff",
+      "dead": "#999999",
+      "magic": "#8099ff",
+      "rare": "#ffd966",
+      "champion": "#ff994d"
+    },
     "labelDefault": "#ffffff",
     "deadOpacity": 0.4
   }

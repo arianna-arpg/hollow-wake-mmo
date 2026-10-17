@@ -33,12 +33,12 @@ The pages ship with these groups; each grows as its system lands, and the schema
 
 - **Interface**: theme, icon set, interface scale, the cluster's seat and the panel layout mode (fixed or movable with remembered seats), tooltip detail and delay, combat text (amounts, crits, statuses, colours), nameplates (whom, what, when), the chat channels shown and their colours, the quest tracker, the minimap.
 - **Camera and controls**: the default camera, isometric rotation steps and zoom range, third-person sensitivity and inversion, click to move, hold to move, attack in place, target lock behaviour, cursor confinement, controller dead zones and vibration.
-- **Graphics**: window mode and monitor, resolution and scale, vertical sync and frame cap, a quality preset that sets the rows below, terrain draw distance and detail, chunk streaming radius, shadows, water, foliage density, effects density, anti-aliasing, field of view in third person, screen shake and flash.
+- **Graphics**: window mode and monitor, resolution and scale, vertical sync and frame cap, a quality preset that sets the rows below, terrain draw distance and detail, chunk streaming radius, shadows, water detail, foliage density, effects density, anti-aliasing, field of view in third person, the bodies' representation (painted geometry, directional cards, or by camera; see [appearance.md](appearance.md)), screen shake and flash.
 - **Audio**: output device, master and per-bus volumes (music, effects, interface, voice, ambience), mute when unfocused, subtitles.
 - **Gameplay**: auto pickup rules, item filter level, confirmations (sell, destroy, refund, trade), loot and currency notices, the duel and trade request policies, the profanity filter.
-- **Accessibility**: colour-vision palettes (themes that remap the pool and rarity colours), text size, high contrast, reduce motion, hold or toggle for held actions, cooldown and status readouts as numbers, screen reader hints.
+- **Accessibility**: colour-vision palettes (themes that remap the pool and rarity colours), text size, high contrast, the grayscale check, reduce motion, hold or toggle for held actions, cooldown and status readouts as numbers, screen reader hints.
 - **Network**: the server address book and the last server, the snapshot stream choice (deltas or full states, for diagnostics), the latency and traffic overlay, connection timeouts.
-- **Developer**: gated by a developer flag; the smoke, the mockup renderer, verbose logs, the profiler overlay.
+- **Developer**: gated by a developer flag; the smoke, the mockup renderer, verbose logs, the profiler overlay, the held time of day for look previews.
 
 ## Checking
 

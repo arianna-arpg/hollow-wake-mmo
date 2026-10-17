@@ -1,11 +1,12 @@
 import { describe, expect, it } from 'vitest';
-import { DEFAULTS } from '../config';
 import { CellFlag, ChunkStore, chunkFromMessage } from './chunks';
-import { SurfacePalette } from './palette';
+import { bundledKinds } from '../ui/logic/content';
+import { AppearanceCatalog } from './appearance/looks';
+import { SurfaceLook } from './appearance/surfaceLook';
 import { buildGround, hasWater } from './terrainMesh';
 import { chunkMessage } from './testChunks';
 
-const palette = new SurfacePalette(DEFAULTS.terrain);
+const palette = new SurfaceLook(new AppearanceCatalog(bundledKinds()).surfaces);
 
 function storeOf(size: number, height: (wx: number, wy: number) => number, flags?: (wx: number, wy: number) => number): ChunkStore {
   const store = new ChunkStore(size);

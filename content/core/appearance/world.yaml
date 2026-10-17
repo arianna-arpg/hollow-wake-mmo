@@ -7,14 +7,14 @@ entries:
   - id: default
     day: { length_seconds: 1800, start: 0.3 }
     sky:
-      - { at: 0.0, sky: "#182236", horizon: "#2c3a52", sun: "#8ea0c8", sun_energy: 0.25, ambient: "#3a4660", ambient_energy: 0.5, fog: "#243048" }
+      - { at: 0.0, sky: "#182236", horizon: "#2c3a52", sun: "#8ea0c8", sun_energy: 0.25, ambient: "#4e5c7c", ambient_energy: 0.75, fog: "#243048" }
       - { at: 0.2, sky: "#2c3450", horizon: "#8a6a70", sun: "#e0a070", sun_energy: 0.6, ambient: "#5a5a74", ambient_energy: 0.5, fog: "#6a5e70" }
       - { at: 0.3, sky: "#7f9ec4", horizon: "#d6c6b0", sun: "#ffe0b8", sun_energy: 1.05, ambient: "#9aa2b4", ambient_energy: 0.55, fog: "#b8c0cc" }
       - { at: 0.5, sky: "#8ca8cc", horizon: "#cfd8e4", sun: "#fff6e8", sun_energy: 1.25, ambient: "#9ea4b2", ambient_energy: 0.55, fog: "#9eb3d1" }
       - { at: 0.7, sky: "#7f94b8", horizon: "#e2c2a0", sun: "#ffd6a0", sun_energy: 1.0, ambient: "#9a9aa8", ambient_energy: 0.52, fog: "#b8aeb0" }
       - { at: 0.8, sky: "#3a3858", horizon: "#b06a58", sun: "#e88c58", sun_energy: 0.5, ambient: "#5c5470", ambient_energy: 0.5, fog: "#6a5660" }
-      - { at: 0.9, sky: "#1c2438", horizon: "#30405a", sun: "#8ea0c8", sun_energy: 0.3, ambient: "#3a4660", ambient_energy: 0.5, fog: "#263250" }
-      - { at: 1.0, sky: "#182236", horizon: "#2c3a52", sun: "#8ea0c8", sun_energy: 0.25, ambient: "#3a4660", ambient_energy: 0.5, fog: "#243048" }
+      - { at: 0.9, sky: "#1c2438", horizon: "#30405a", sun: "#8ea0c8", sun_energy: 0.3, ambient: "#4e5c7c", ambient_energy: 0.72, fog: "#263250" }
+      - { at: 1.0, sky: "#182236", horizon: "#2c3a52", sun: "#8ea0c8", sun_energy: 0.25, ambient: "#4e5c7c", ambient_energy: 0.75, fog: "#243048" }
     sun: { noon_pitch: 58, noon_yaw: 35, daylight: 0.62 }
     haze: { density: 0.0007, night: 1.6 }
     foliage:

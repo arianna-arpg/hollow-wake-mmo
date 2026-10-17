@@ -551,3 +551,10 @@ entries:
     body: drop
     palette: { ring: "#eee9da" }
     card: never
+  - id: spark_duelist
+    match: [loosed, duelist]
+    priority: 5
+    body: biped
+    shape: { width: 0.96, legs: 1.02 }
+    palette: { skin: "#b08a6c", hair: "#2a1e18", cloth: "#4a3a5a", cloth2: "#2e2438", leather: "#4a3a2e", metal: "#9a9ca4", accent: "#c5b7ef", eyes: "#2a2622" }
+    gear: { main_hand: weapon.sword, chest: armor.chest.light, head: armor.head.cloth }

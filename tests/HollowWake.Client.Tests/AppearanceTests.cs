@@ -49,9 +49,13 @@ public class AppearanceTests
                 }
             }
         }
+        // every concrete pattern by its inherited tags, as the browser's test counts them, so both agree
+        var catalog = new AppearanceCatalog(content);
         foreach (var pattern in content.Each<PatternDef>())
         {
-            if (pattern.Tags.Has("summonable") || pattern.Tags.Has("device") && pattern.Id != "device" || pattern.Tags.Has("npc") || pattern.Tags.Has("prop") || pattern.Tags.Has("flora") || pattern.Tags.Has("monster") && pattern.Id != "monster")
+            var tags = catalog.PatternTags(pattern.Id);
+            var concrete = new[] { "summonable", "device", "npc", "prop", "flora", "monster" }.Any(tags.Has) && pattern.Id is not ("device" or "monster");
+            if (concrete)
             {
                 ids.Add(pattern.Id);
             }

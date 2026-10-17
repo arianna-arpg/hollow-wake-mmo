@@ -140,6 +140,39 @@ public partial class ClientWorld : Node3D
     /// <summary>The self's worn gear changed: its body shows it.</summary>
     public void RefreshSelfEquipment() => Self?.RefreshEquipment();
 
+    /// <summary>The sound cue hooks, raised by the bodies' moments; no asset plays until one is registered.</summary>
+    public AudioCues Cues => _cues ?? throw new InvalidOperationException("the world is not in the tree yet");
+    private AudioCues? _cues;
+
+    /// <summary>The first surface tag of the cell under a Godot point (grass, sand, stone ...), or null off the built world.</summary>
+    public string? SurfaceAt(Vector3 godotPoint)
+    {
+        if (_terrain is null)
+        {
+            return null;
+        }
+        var core = Coords.ToCore(godotPoint);
+        var coord = _terrain.Layout.ChunkOf(core.X, core.Y);
+        if (!_chunkData.TryGetValue(coord, out var chunk))
+        {
+            return null;
+        }
+        var origin = _terrain.Layout.ChunkOrigin(coord);
+        var lx = (int)MathF.Floor(core.X) - origin.X;
+        var ly = (int)MathF.Floor(core.Y) - origin.Y;
+        if (lx < 0 || ly < 0 || lx >= chunk.Size || ly >= chunk.Size)
+        {
+            return null;
+        }
+        var index = chunk.Index(lx, ly);
+        if ((chunk.Flags[index] & CellFlags.Water) != 0)
+        {
+            return "water";
+        }
+        var tags = chunk.TagsAt(index);
+        return tags.Items.Count > 0 ? tags.Items[0] : null;
+    }
+
     /// <summary>Chunks kept built around the player in each direction (the draw distance option); a change replans at once.</summary>
     public int ViewChunks
     {
@@ -246,6 +279,10 @@ public partial class ClientWorld : Node3D
         AddChild(_entityRoot);
         _baker = new CardBaker { Name = "CardBaker" };
         AddChild(_baker);
+        _cues = new AudioCues();
+        AddChild(_cues);
+        EntityView.Cue = (cue, variant, at) => _cues.Play(cue, variant, at);
+        EntityView.SurfaceAt = SurfaceAt;
         // One shadow split reaches the isometric camera's whole view at a fixed height and costs one pass over the casters.
         var sun = new DirectionalLight3D { Name = "Sun", LightEnergy = 1.2f, ShadowEnabled = true, DirectionalShadowMode = DirectionalLight3D.ShadowMode.Orthogonal, DirectionalShadowMaxDistance = 110f, ShadowBias = 0.06f };
         sun.RotationDegrees = new Vector3(-55, 35, 0);

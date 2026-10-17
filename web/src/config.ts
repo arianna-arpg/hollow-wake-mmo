@@ -3,7 +3,8 @@ import builtIn from '../public/config.json';
 /**
  * Client settings. public/config.json is the single source: it is compiled in as the defaults and fetched
  * again beside the page at startup, so an operator can retune a deployed client by editing dist/config.json.
- * Nothing here is gameplay; it is how the client looks and connects. The player's preferences and every key
+ * Nothing here is gameplay; it is how the client connects and renders. The look of the world and its bodies is
+ * content under content/core/appearance, read by both clients. The player's preferences and every key
  * binding are content (ui_options and input_actions under content/core/ui) with the player's settings over them.
  */
 
@@ -87,51 +88,17 @@ export interface RenderSettings {
   ambientIntensity: number;
 }
 
-/** A rule matches a cell when the cell has every listed surface tag and every listed cell flag. */
-export interface SurfaceRule {
-  tags?: string[];
-  flags?: string[];
-  color?: string;
-  mix?: number;
-  darken?: number;
-}
-
-export interface TerrainPaletteSettings {
-  base: SurfaceRule[];
-  fallback: string;
-  structure: SurfaceRule[];
-  structureFallback: string;
-  tints: SurfaceRule[];
-  skirtDarken: number;
-  layers: SurfaceRule[];
-  layerFallback: string;
-  waterColor: string;
-  waterOpacity: number;
-}
-
-export interface FloraRule {
-  match: string[];
-  color: string;
-  tree: boolean;
-}
-
 export interface EntityPaletteSettings {
+  /** The colour of the player's own drawn shapes (a flight with no Thread colour of its own). */
   player: string;
-  drops: Record<string, string>;
   projectile: string;
   field: string;
   fieldOpacity: number;
   /** The ground mark where a telegraphed strike will land, and how opaque it is at its height. */
   telegraph: string;
   telegraphOpacity: number;
-  poi: string;
-  fount: string;
-  flora: FloraRule[];
-  floraFallback: string;
-  trunk: string;
+  /** Shape colours by the caster's faction, for flights with no Thread colour. */
   factions: Record<string, string>;
-  rarities: Record<string, string>;
-  creatureFallback: string;
   labelColors: Record<string, string>;
   labelDefault: string;
   deadOpacity: number;
@@ -144,7 +111,6 @@ export interface ClientConfig {
   motion: MotionSettings;
   input: InputSettings;
   render: RenderSettings;
-  terrain: TerrainPaletteSettings;
   entities: EntityPaletteSettings;
 }
 
