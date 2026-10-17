@@ -299,12 +299,13 @@ public static class ContentJson
                 Glyphs = node["glyphs"] is JsonArray ga ? ga.Select(n => GlyphRefConverter.FromNode(n)).ToList() : new List<GlyphRef>(),
                 Level = JsonNum.IntOf(node["level"], 1),
                 Name = node["name"]?.GetValue<string>(),
+                Tree = node["tree"] is JsonArray tr ? tr.Select(n => n!.GetValue<string>()).ToList() : new List<string>(),
             };
         }
 
         public override void Write(Utf8JsonWriter writer, WeaveSpec value, JsonSerializerOptions options)
         {
-            if (value.Preset is not null && value.Form is null && value.Glyphs.Count == 0 && value.Level == 1)
+            if (value.Preset is not null && value.Form is null && value.Glyphs.Count == 0 && value.Level == 1 && value.Tree.Count == 0)
             {
                 writer.WriteStringValue(value.Preset);
                 return;
@@ -326,6 +327,11 @@ public static class ContentJson
             if (value.Name is not null)
             {
                 writer.WriteString("name", value.Name);
+            }
+            if (value.Tree.Count > 0)
+            {
+                writer.WritePropertyName("tree");
+                JsonSerializer.Serialize(writer, value.Tree, options);
             }
             writer.WriteEndObject();
         }
