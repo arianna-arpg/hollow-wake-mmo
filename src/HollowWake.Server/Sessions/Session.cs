@@ -24,13 +24,31 @@ public sealed class Session
     public CharacterSheet? Character { get; set; }
     public Entity Entity { get; set; } = Entity.None;
     public ZoneInstance? Zone { get; set; }
-    public HashSet<long> Known { get; } = new();
+
+    /// <summary>What this client has been told about its zone: known entities, fingerprints, refresh cadences.</summary>
+    public SnapshotView View { get; } = new();
+
+    /// <summary>Keys of the entities this client has been spawned and not yet despawned.</summary>
+    public HashSet<long> Known => View.Known;
+
     public double LastSnapshotAt { get; set; } = double.NegativeInfinity;
     public double LastSelfAt { get; set; } = double.NegativeInfinity;
     public double LastSaveAt { get; set; }
     public string ClientVersion { get; set; } = "";
     public DateTimeOffset ConnectedAt { get; } = DateTimeOffset.UtcNow;
     public int MessagesThisTick { get; set; }
+
+    /// <summary>Payload bytes and messages sent to this client since it connected (framing excluded).</summary>
+    public long BytesSent { get; private set; }
+    public long MessagesSent { get; private set; }
+
+    /// <summary>Payload bytes of snapshot traffic: entity spawns, updates, deltas and despawns, and self states.</summary>
+    public long SnapshotBytes { get; private set; }
+
+    /// <summary>Entity snapshots built for this client; with <see cref="SnapshotBytes"/>, the bytes it costs per snapshot.</summary>
+    public long SnapshotsBuilt { get; set; }
+
+    public double SnapshotBytesPerSnapshot => SnapshotsBuilt == 0 ? 0 : SnapshotBytes / (double)SnapshotsBuilt;
 
     public Session(IConnection connection)
     {
@@ -41,7 +59,15 @@ public sealed class Session
     {
         if (State != SessionState.Closed && Connection.IsOpen)
         {
-            Connection.Send(MessageSerializer.Encode(message), reliable: message is not EntityUpdateMsg);
+            var payload = MessageSerializer.Encode(message);
+            BytesSent += payload.Length;
+            MessagesSent++;
+            if (message is EntitySpawnMsg or EntityUpdateMsg or EntityDeltaMsg or EntityDespawnMsg or SelfStateMsg)
+            {
+                SnapshotBytes += payload.Length;
+            }
+            // Updates and deltas may be dropped by unreliable transports; the snapshot refresh repairs them.
+            Connection.Send(payload, reliable: message is not (EntityUpdateMsg or EntityDeltaMsg));
         }
     }
 
