@@ -15,7 +15,11 @@ Current file ownership includes core cast state/context/runtime and damage event
 
 ## Separate forecasting chat
 
-The user-requested forecasting chat `01a14bbb-0128-7a93-850c-bee1d1dfea41` completed `docs/design/cast-forecasting.md` and `experiments/cast-forecasting/`. The coordinator reviewed its contract and reran its proof against the completed feature: 27 real-core scenarios and 10 proposed-contract checks passed. Cleave preserves its existing committed direction and live resolution; moving out and interruption deal no damage, and paired armor reduces actual damage. The next proposed runtime slice is one shared resolved area plan feeding both the hit test and both clients. No production forecast hitbox, damage estimate, bridge eligibility or AI avoidance is claimed by this cosmetic slice.
+The user-requested forecasting chat `01a14bbb-0128-7a93-850c-bee1d1dfea41` completed an initial `docs/design/cast-forecasting.md` and `experiments/cast-forecasting/`. The coordinator reviewed that contract and reran its proof against the completed feature: 27 real-core scenarios and 10 proposed-contract checks passed. Cleave preserves its existing committed direction and live resolution; moving out and interruption deal no damage, and paired armor reduces actual damage. The next proposed runtime slice is one shared resolved area plan feeding both the hit test and both clients. No production forecast hitbox, damage estimate, bridge eligibility or AI avoidance is claimed by this cosmetic slice.
+
+Publication-time coordination: that chat subsequently published the expanded shared-provider proposal in [PR #3](https://github.com/arianna-arpg/hollow-wake-mmo/pull/3), on `codex/cast-forecasting` at `c99bfec`. **PR #3 owns the current forecasting proposal and supersedes the initial copies preserved in this branch.** During integration, take its versions of the forecasting design and experiment; do not overwrite them with these older copies. Its reported 63 scenario/provider checks and 10 contract checks ran on its own baseline, without this branch's lifecycle extension. The 27/10 rerun above remains the evidence for the initial proof against this implementation; it does not certify the expanded proposal against this branch.
+
+Codex also read Claude's `docs/reviews/2026-10-17-positional-hits.md` on integration main at `0604d90`. The direct-target release-time reach/visibility gap is real and separate from cosmetic impact truth: a cue reports the damage the current simulation confirmed, while that simulation still needs positional-hit rules for direct-target roots. This pull request does not implement release revalidation, melee sectors, miss reasons or AI avoidance. Claude's acceptance list is acknowledged as the runtime follow-up; this record does not claim that work is already implemented. Existing Cleave direction is committed for the proof above; comparison with the original prototype's melee facing remains unverified.
 
 ## Verification evidence
 
@@ -45,6 +49,12 @@ The first review's request for unchanged active-casting allocation is **not met*
 
 Please review event ordering, originating cast identity through `EffectHelpers.At`/context copies, end-versus-hit semantics, reliable feature negotiation, interest/reset behavior, and client content parity. New regressions caught and corrected the initially missing projectile-context identity and guard raise ordering. Broader review of the earlier integration and the full seeded player journey requested in Claude's record remain separate follow-ups; they are not represented as completed here.
 
-Publication status: local commits are ready for separate stacked review requests. Automatic approval review rejected the attempted GitHub push because explicit authorization for the private payload/destination is required. No push or pull request was created by that rejected action. User approval will be requested against the exact prepared branches; nothing is merged.
+Publication status: the owner explicitly authorized all three pushes and review requests to `arianna-arpg/hollow-wake-mmo`. The prepared branches were published and these requests opened, in dependency order:
+
+1. [PR #4: content-loader validation](https://github.com/arianna-arpg/hollow-wake-mmo/pull/4), `codex/content-loader-validation` into `main`, prepared commit `44b8a54`.
+2. [PR #5: visual studies](https://github.com/arianna-arpg/hollow-wake-mmo/pull/5), `codex/visual-studies` into `codex/content-loader-validation`, prepared commit `4c68391`.
+3. [PR #6: confirmed cast events and Flame cues](https://github.com/arianna-arpg/hollow-wake-mmo/pull/6), `codex/flame-cast-cues` into `codex/visual-studies`, prepared implementation commit `6feb2c6`, followed by this publication/coordination record.
+
+Each requests Claude review. Retarget the next request when its predecessor is integrated so the remaining diff stays focused. No merge was performed. The earlier automatic approval rejection was resolved by the owner's explicit authorization; it is no longer a publication blocker.
 
 Acknowledged by: Codex, for Claude's collaboration contract and initial review. Claude: pending completed-feature review.
