@@ -1,0 +1,123 @@
+# The interface's glyphs: SVG path data in a 24 unit square, drawn as strokes by both clients, and which glyph
+# stands for each pool, status, weave look or form, and equipment slot. Anything unmapped wears the fallback.
+kind: ui_icon_sets
+entries:
+  - id: runic
+    name: Runic
+    description: Thin strokes cut like runes, so every glyph reads at the size of a pip.
+    box: 24
+    stroke: 1.75
+    fallback: rune
+    icons:
+      # pages and panes
+      bag: "M5.5 9.5h13l-1 9.6a2 2 0 0 1-2 1.9H8.5a2 2 0 0 1-2-1.9z M9 9.5V7.5a3 3 0 0 1 6 0v2 M9.5 14h5"
+      weave: "M3 9c3-4 6-4 9 0s6 4 9 0 M3 15c3 4 6 4 9 0s6-4 9 0"
+      star: "M5 18L10 11L15 14L19 5 M3.4 18a1.6 1.6 0 1 0 3.2 0a1.6 1.6 0 1 0 -3.2 0 M8.4 11a1.6 1.6 0 1 0 3.2 0a1.6 1.6 0 1 0 -3.2 0 M13.4 14a1.6 1.6 0 1 0 3.2 0a1.6 1.6 0 1 0 -3.2 0 M17.4 5a1.6 1.6 0 1 0 3.2 0a1.6 1.6 0 1 0 -3.2 0"
+      reliquary: "M4 11h16v9H4z M6 11V8l6-4 6 4v3 M12 13.5l2 2-2 2-2-2z"
+      figure: "M9 7a3 3 0 1 0 6 0a3 3 0 1 0 -6 0 M5 21c0-4 3-7 7-7s7 3 7 7"
+      menu: "M5 7h14 M5 12h14 M5 17h14"
+      close: "M6 6l12 12 M18 6L6 18"
+      coin: "M6 12a6 6 0 1 0 12 0a6 6 0 1 0 -12 0 M10 9.5h4 M10 14.5h4 M12 9.5v5"
+      scroll: "M7 4h11v13a3 3 0 0 1-3 3H6a2 2 0 0 1-2-2v-2h3z M7 4a2 2 0 0 0-2 2v2h2 M10 9h5 M10 12.5h5"
+      speech: "M4 5h16v10h-9l-5 4v-4H4z M8 9h8 M8 12h5"
+      scales: "M12 4v16 M7 20h10 M5 7h14 M5 7l-2.5 6h5z M19 7l-2.5 6h5z"
+      anvil: "M3 8h12c2.5 0 4.5-1 6-3v6h-5c0 2-1.5 3-3.5 3h-3C7.5 14 6 13 6 11H3z M9 14v4 M13 14v4 M6 20h10"
+      chest: "M4 10h16v9H4z M4 10c0-3 2-5 4-5h8c2 0 4 2 4 5 M11 12h2v3h-2z"
+      lock: "M7 11V8a5 5 0 0 1 10 0v3 M5 11h14v9H5z M12 14v3"
+      gem: "M6 9l3-4h6l3 4-6 11z M6 9h12 M9 5l3 4 3-4"
+      # pools
+      heart: "M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"
+      droplet: "M12 3c3 4.6 6 7.6 6 11a6 6 0 0 1-12 0c0-3.4 3-6.4 6-11z"
+      wing: "M3 18c7 0 12-5 13-13 M7 18c5-1 8-4 10-8 M11 18c3-1 6-3 8-6"
+      ward: "M12 3l7 3v5c0 5-3 8.5-7 10-4-1.5-7-5-7-10V6z M12 7.5v9 M9 10.5l3-3 3 3"
+      shield: "M3 12a9 9 0 1 0 18 0a9 9 0 1 0 -18 0 M7 12a5 5 0 1 0 10 0a5 5 0 1 0 -10 0"
+      stance: "M3 19l6-9 3 4 3-6 6 11z"
+      eye: "M2 12s4-6 10-6 10 6 10 6-4 6-10 6S2 12 2 12z M9 12a3 3 0 1 0 6 0a3 3 0 1 0 -6 0"
+      # statuses
+      flame: "M12 3c1 4 5 5.5 5 10a5 5 0 0 1-10 0c0-3 2-4 2.5-6.5C11 8 12 10 12 12c1-2.5 1-5.5 0-9z"
+      blood: "M12 4c2.5 4 5 7 5 10a5 5 0 0 1-10 0c0-3 2.5-6 5-10z M10 14a2 2 0 0 0 2 2"
+      snow: "M12 3v18 M4.2 7.5l15.6 9 M4.2 16.5l15.6-9 M9.5 4.5L12 7l2.5-2.5 M9.5 19.5L12 17l2.5 2.5"
+      ice: "M12 3l7.8 4.5v9L12 21l-7.8-4.5v-9z M12 3v18 M4.2 7.5l15.6 9 M19.8 7.5l-15.6 9"
+      bolt: "M13 2L5 14h6l-1 8 8-12h-6z"
+      leaf: "M5 19c0-8 6-14 14-14 0 8-6 14-14 14z M5 19l8-8"
+      skull: "M5 11a7 7 0 0 1 14 0v4l-2 1v3H7v-3l-2-1z M8.5 12a1.5 1.5 0 1 0 3 0a1.5 1.5 0 1 0 -3 0 M12.5 12a1.5 1.5 0 1 0 3 0a1.5 1.5 0 1 0 -3 0 M10.5 19v-2 M13.5 19v-2"
+      sun: "M8 12a4 4 0 1 0 8 0a4 4 0 1 0 -8 0 M12 2v3 M12 19v3 M2 12h3 M19 12h3 M4.9 4.9L7 7 M17 17l2.1 2.1 M4.9 19.1L7 17 M17 7l2.1-2.1"
+      spiral: "M12 12a1 1 0 0 1 1 1a2 2 0 0 1-2 2a3 3 0 0 1-3-3a4 4 0 0 1 4-4a5 5 0 0 1 5 5a6 6 0 0 1-6 6"
+      swirl: "M5 9c1-3 4-5 7-4s4 5 1 6-4-2-2-3 M19 15c-1 3-4 5-7 4s-4-5-1-6 4 2 2 3"
+      stars: "M6 4l1 2.2 2.2 1L7 8.2 6 10.4 5 8.2 2.8 7.2 5 6.2z M18 4l1 2.2 2.2 1L19 8.2l-1 2.2-1-2.2-2.2-1L17 6.2z M12 12l1.5 3 3 1.5-3 1.5-1.5 3-1.5-3-3-1.5 3-1.5z"
+      root: "M12 3v18 M12 12c-2 2-5 3-7 7 M12 12c2 2 5 3 7 7"
+      mute: "M4 9h4l5-4v14l-5-4H4z M16 9l5 6 M21 9l-5 6"
+      swift: "M3 7h9 M5 12h12 M3 17h9 M15 6l6 6-6 6"
+      tower: "M6 21V9h12v12 M5 9V4h2.5v2h2.5V4h4v2h2.5V4H19v5 M10 21v-4a2 2 0 0 1 4 0v4"
+      sprout: "M12 21v-9 M12 12c0-4-3-6-7-6 0 4 3 6 7 6 M12 10c0-3 3-6 7-6 0 4-3 6-7 6"
+      veil: "M2 12s4-6 10-6 10 6 10 6-4 6-10 6S2 12 2 12z M4 4l16 16"
+      rune: "M12 3v18 M12 8l5-3 M12 13l-5-3 M12 18l5-3"
+      # weave looks and forms
+      blade: "M20 4L10 14 M20 4h-4 M20 4v4 M7 12l5 5 M9.5 14.5L5 19 M4 20l1-1"
+      arc: "M4 19A15 15 0 0 1 19 4 M14.5 3.5L19 4l-.5 4.5 M8 20a11 11 0 0 1 12-12"
+      missile: "M3 12h10 M10 8l4 4-4 4 M16 12a2.5 2.5 0 1 0 5 0a2.5 2.5 0 1 0 -5 0"
+      nova: "M9 12a3 3 0 1 0 6 0a3 3 0 1 0 -6 0 M12 2v4 M12 18v4 M2 12h4 M18 12h4 M5 5l2.8 2.8 M16.2 16.2L19 19 M5 19l2.8-2.8 M16.2 7.8L19 5"
+      blast: "M21 12L16.2 13.7L18.4 18.4L13.7 16.2L12 21L10.3 16.2L5.6 18.4L7.8 13.7L3 12L7.8 10.3L5.6 5.6L10.3 7.8L12 3L13.7 7.8L18.4 5.6L16.2 10.3z"
+      beam: "M4 20L20 4 M4 15L15 4 M9 20L20 9"
+      zone: "M3 16a9 3.5 0 1 0 18 0a9 3.5 0 1 0 -18 0 M8 15V9 M12 16V6 M16 15V9"
+      mend: "M12 7v10 M7 12h10 M3 12a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"
+      dash: "M3 8h7 M5 12h9 M3 16h7 M14 6l6 6-6 6"
+      summon: "M12 3l3.5 6h-7z M6 21a6 6 0 0 1 12 0 M12 9v5"
+      shout: "M4 10v4h3l6 5V5L7 10z M16 8.5a5 5 0 0 1 0 7 M18.5 6a8.5 8.5 0 0 1 0 12"
+      # equipment slots
+      helm: "M5 14a7 7 0 0 1 14 0v5H5z M12 7v5 M9 19v-3h6v3"
+      cuirass: "M8 4l4 2 4-2 4 4-2 3v9H6v-9L4 8z M12 6v14"
+      glove: "M8 21v-7L6 10 M8 14V6.5a1 1 0 0 1 2 0V12 M10 11V5a1 1 0 0 1 2 0v6 M12 11V6a1 1 0 0 1 2 0v6 M14 12V8a1 1 0 0 1 2 0v8l-2 5H8"
+      boot: "M8 3v10l-4 4v3h15v-3l-6-3V3z M4 17h15"
+      belt: "M3 10h18v4H3z M10 9h4v6h-4z"
+      ring: "M6 14a6 6 0 1 0 12 0a6 6 0 1 0 -12 0 M10 4h4l-1 4h-2z"
+      amulet: "M6 3c0 6 2.5 9 6 10 3.5-1 6-4 6-10 M9.5 16a2.5 2.5 0 1 0 5 0a2.5 2.5 0 1 0 -5 0"
+    pools:
+      life: heart
+      mana: droplet
+      stamina: wing
+      ward: ward
+      shield: shield
+      poise: stance
+      insight: eye
+    statuses:
+      burning: flame
+      bleeding: blood
+      chilled: snow
+      frozen: ice
+      shocked: bolt
+      sapped: leaf
+      withered: skull
+      dazzled: sun
+      unraveling: spiral
+      addled: swirl
+      stunned: stars
+      rooted: root
+      silenced: mute
+      hasted: swift
+      fortified: tower
+      regrowth: sprout
+      hidden: veil
+    looks:
+      strike: blade
+      cleave: arc
+      bolt: missile
+      nova: nova
+      blast: blast
+      beam: beam
+      field: zone
+      ward: ward
+      mend: mend
+      dash: dash
+      summon: summon
+      shout: shout
+    slots:
+      main_hand: blade
+      off_hand: shield
+      head: helm
+      chest: cuirass
+      hands: glove
+      feet: boot
+      belt: belt
+      ring: ring
+      amulet: amulet

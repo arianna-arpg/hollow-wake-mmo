@@ -25,6 +25,12 @@ public sealed class WeaveSlot
 
     /// <summary>True once anything was written to <see cref="State"/>, so readers need not create it.</summary>
     public bool HasState => _state is { Count: > 0 };
+
+    /// <summary>
+    /// The socketed glyphs that are dormant, each with the reason its gate fails, as of the slot's last
+    /// compile. Dormant glyphs stay socketed and contribute nothing until something lifts their gate.
+    /// </summary>
+    public IReadOnlyList<Weaves.DormantGlyph> Dormant { get; internal set; } = Array.Empty<Weaves.DormantGlyph>();
 }
 
 /// <summary>A cast in progress: what it aims at, when it started and how it is being held.</summary>

@@ -410,4 +410,65 @@ public class LoopbackTests
         Assert.Equal(delta.X, back.Deltas[0].X);
         Assert.Null(back.Deltas[0].Y);
     }
+
+    // ------------------------------------------------------------ the interface
+
+    [Fact]
+    public void InterfaceStatesGoToClientsThatAskAndToNoOthers()
+    {
+        var (server, transport) = Create();
+        var (client, enter, session, replies, welcome) = Enter(server, transport, "panes", "Linden", new List<string> { ProtocolInfo.InterfaceFeature });
+        Assert.Equal(new List<string> { ProtocolInfo.InterfaceFeature }, welcome.Features);
+        Assert.True(session.View.SendInterface);
+        var inventory = Assert.Single(replies.OfType<InventoryStateMsg>());
+        Assert.True(inventory.Bag.Width > 0 && inventory.Bag.Height > 0);
+        Assert.NotEmpty(inventory.Slots);
+        Assert.Contains(inventory.Slots, s => s.Id == "main_hand");
+        Assert.NotEmpty(inventory.Equipment);
+        Assert.All(inventory.Bag.Items, i => Assert.True(i.X is not null && i.Y is not null && i.W >= 1 && i.H >= 1, $"{i.Name} has no place on the board"));
+        var slots = Assert.Single(replies.OfType<WeaveSlotsMsg>());
+        Assert.True(slots.Seats.Count >= 4);
+        Assert.Equal(Enumerable.Range(0, slots.Seats.Count), slots.Seats.Select(s => s.Slot));
+        Assert.Contains(slots.Seats, s => s.Key is not null && s.Name.Length > 0 && s.Preview.Count > 0);
+        var passives = Assert.Single(replies.OfType<PassiveStateMsg>());
+        Assert.Contains("start_kindler", passives.Allocated);
+        Assert.True(passives.Points.ContainsKey("passive"));
+        var pages = Assert.Single(replies.OfType<PageStateMsg>());
+        Assert.Contains(pages.Pages, p => p.Id == "passives");
+
+        // Nothing changed, so nothing is sent again; a move of an item would change the inventory state.
+        var inbox = new List<Message>();
+        Step(server, 30, (client, inbox));
+        Assert.DoesNotContain(inbox, m => m is InventoryStateMsg or WeaveSlotsMsg or PassiveStateMsg or PageStateMsg);
+
+        // A client that did not ask gets none of it, and its self states stay as they were.
+        var (_, _, plainSession, plainReplies, plainWelcome) = Enter(server, transport, "plainpanes", "Rowan");
+        Assert.Null(plainWelcome.Features);
+        Assert.False(plainSession.View.SendInterface);
+        Assert.DoesNotContain(plainReplies, m => m is InventoryStateMsg or WeaveSlotsMsg or PassiveStateMsg or PageStateMsg);
+        var plainSelf = plainReplies.OfType<SelfStateMsg>().Last();
+        Assert.Null(plainSelf.Pools);
+        Assert.Null(plainSelf.Stamps);
+        Assert.DoesNotContain("\"pools\"", MessageSerializer.ToJson(plainSelf));
+        _output.WriteLine($"interface states on entering: inventory {MessageSerializer.Encode(inventory).Length} bytes, slots {MessageSerializer.Encode(slots).Length}, passives {MessageSerializer.Encode(passives).Length}, pages {MessageSerializer.Encode(pages).Length}");
+    }
+
+    [Fact]
+    public void MinionCommandsBecomeEventsForTheMinionSystem()
+    {
+        var (server, transport) = Create();
+        var (client, _, session, _, _) = Enter(server, transport, "commander", "Briar");
+        var sim = session.Zone!.Sim;
+        var heard = new List<Core.Sim.MinionCommandRequested>();
+        sim.Events.Subscribe<Core.Sim.MinionCommandRequested>(heard.Add);
+        client.Send(new CommandMinionsMsg("assault", 0, 3, 4, 0) { Group = "remnants" });
+        client.Send(new CommandMinionsMsg("", 0, 0, 0, 0));
+        var replies = Pump(server, client, 2);
+        var command = Assert.Single(heard);
+        Assert.Equal(session.Entity, command.Owner);
+        Assert.Equal("assault", command.Command);
+        Assert.Equal("remnants", command.Group);
+        Assert.True(command.Target.IsNone);
+        Assert.Contains(replies, m => m is IntentRejectedMsg r && r.Reason == "bad_command");
+    }
 }

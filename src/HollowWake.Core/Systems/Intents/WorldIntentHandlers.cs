@@ -1,11 +1,12 @@
 using HollowWake.Core.Intents;
 using HollowWake.Core.Interaction;
+using HollowWake.Core.Sim;
 using HollowWake.Core.Quests;
 using HollowWake.Core.Territory;
 
 namespace HollowWake.Core.Systems.Intents;
 
-/// <summary>Interacting, quests, founts, decrees and structures, and respawning.</summary>
+/// <summary>Interacting, quests, founts, decrees and structures, respawning, and orders to minions.</summary>
 public static class WorldIntentHandlers
 {
     public static void Register(IntentHandlers handlers)
@@ -17,6 +18,31 @@ public static class WorldIntentHandlers
         handlers.Register<EnactDecreeIntent>(EnactDecree);
         handlers.Register<BuildStructureIntent>(BuildStructure);
         handlers.Register<RespawnIntent>(Respawn, whileDead: true);
+        handlers.Register<CommandMinionsIntent>(CommandMinions);
+        // Conversations and world panes have their own file; the registry's default set reaches them through here.
+        DialogueIntentHandlers.Register(handlers);
+    }
+
+    /// <summary>
+    /// Checks the order and hands it to the minion system as an event: the command names and what they do are
+    /// the minion system's, so an unknown command is refused there, not here.
+    /// </summary>
+    private static void CommandMinions(in IntentContext ctx, CommandMinionsIntent cm)
+    {
+        // A command is a content id; anything longer than an id could be is noise from the wire.
+        var command = cm.Command.Trim();
+        if (command.Length == 0 || command.Length > 64)
+        {
+            ctx.Reject("bad_command");
+            return;
+        }
+        if (!float.IsFinite(cm.Point.X) || !float.IsFinite(cm.Point.Y) || !float.IsFinite(cm.Point.Z))
+        {
+            ctx.Reject("bad_point");
+            return;
+        }
+        var target = ctx.Sim.World.IsAlive(cm.Target) ? cm.Target : Ecs.Entity.None;
+        ctx.Sim.Events.Publish(new MinionCommandRequested(ctx.Entity, command, target, cm.Point, string.IsNullOrWhiteSpace(cm.Group) ? null : cm.Group) { Tick = ctx.Sim.Clock.Tick });
     }
 
     private static void Interact(in IntentContext ctx, InteractIntent i)
