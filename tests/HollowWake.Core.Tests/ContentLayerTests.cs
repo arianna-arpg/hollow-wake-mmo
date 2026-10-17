@@ -19,8 +19,8 @@ public class ContentLayerTests
             var report = new ValidationReport();
             var raw = ContentLoader.LoadRaw(new[] { layer }, report);
             var values = (JsonObject)raw["rules"]["triggers"].Object["values"]!;
-            Assert.Equal(8, values["death_near_radius"]!.GetValue<int>());
-            Assert.Equal(0.9, values["chance_cap"]!.GetValue<double>());
+            Assert.Equal(8, JsonNum.IntOf(values["death_near_radius"], 0));
+            Assert.Equal(0.9, JsonNum.Of(values["chance_cap"], 0));
             Assert.Empty(report.Warnings);
         }
         finally
