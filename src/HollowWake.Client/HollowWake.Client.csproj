@@ -1,0 +1,13 @@
+<Project Sdk="Godot.NET.Sdk/4.7.2">
+  <!-- Godot 4 client: presentation only. Simulation rules come from HollowWake.Core; wire format from HollowWake.Protocol. -->
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <EnableDynamicLoading>true</EnableDynamicLoading>
+    <RootNamespace>HollowWake.Client</RootNamespace>
+    <AssemblyName>HollowWake.Client</AssemblyName>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\HollowWake.Core\HollowWake.Core.csproj" />
+    <ProjectReference Include="..\HollowWake.Protocol\HollowWake.Protocol.csproj" />
+  </ItemGroup>
+</Project>

@@ -35,7 +35,7 @@ entries:
       resist_cap: 0.8
 ```
 
-`skein validate --content content/core;mods/my-mod` loads layers in that order and reports every problem with its origin.
+`hollowwake validate --content content/core;mods/my-mod` loads layers in that order and reports every problem with its origin.
 
 ## The kinds
 
@@ -48,11 +48,11 @@ entries:
 | `biomes`, `spawn_tables`, `region_archetypes`, `pois`, `landmarks`, `region_overrides`, `zone_overrides`, `world_events` | The world |
 | `quests`, `quest_templates`, `recipes`, `procedures`, `decrees`, `structures` | Play |
 
-`skein schema` prints every kind and its fields.
+`hollowwake schema` prints every kind and its fields.
 
 ## Expressions
 
-Any field typed as an expression accepts a number or a formula string: `"40 + level * 10 + vigor * 4"`, `"has(\"burning\") ? 1.5 : 1"`, `"lerp(weapon.damage.min, weapon.damage.max, rand())"`. Identifiers are attribute ids and the scope names the evaluating system provides (`level`, `life_pct`, `target.*`, `weave.*`, `amount`, and the AI perception names). Percent literals work: `20%` is `0.2`. `skein expr "..."` evaluates against a sample scope.
+Any field typed as an expression accepts a number or a formula string: `"40 + level * 10 + vigor * 4"`, `"has(\"burning\") ? 1.5 : 1"`, `"lerp(weapon.damage.min, weapon.damage.max, rand())"`. Identifiers are attribute ids and the scope names the evaluating system provides (`level`, `life_pct`, `target.*`, `weave.*`, `amount`, and the AI perception names). Percent literals work: `20%` is `0.2`. `hollowwake expr "..."` evaluates against a sample scope.
 
 ## Modifiers
 
@@ -83,11 +83,11 @@ effects:
           - { type: damage, amount: "weave.base_damage * spell.power * 0.7", threads: $threads }
 ```
 
-`$threads` resolves to the weave's Threads, `$thread_status` to the first Thread's status. `skein schema` does not list effect parameters; the handlers in `Skein.Core/Effects/BuiltinEffects.cs` are the reference.
+`$threads` resolves to the weave's Threads, `$thread_status` to the first Thread's status. `hollowwake schema` does not list effect parameters; the handlers in `HollowWake.Core/Effects/BuiltinEffects.cs` are the reference.
 
 ## Code mods
 
-A code mod is a .NET assembly that references `Skein.Core` and, before the server loads content, registers what it adds:
+A code mod is a .NET assembly that references `HollowWake.Core` and, before the server loads content, registers what it adds:
 
 - `ContentKinds.Register<MyDef>("my_kind", validator)` for a new definition kind.
 - `EffectRegistry.Register(new MyEffectHandler())` for a new effect type.
@@ -110,4 +110,4 @@ Hand-made structures are ASCII rows with a legend. `.` and spaces keep natural t
 - Unknown keys on an entry warn with the file and id.
 - Missing references error (a weave naming a form that does not exist).
 - Expressions reading undeclared names warn.
-- Glyph gates, slot limits and thread counts are enforced when weaves compile; `skein validate` compiles every preset weave through the tests.
+- Glyph gates, slot limits and thread counts are enforced when weaves compile; `hollowwake validate` compiles every preset weave through the tests.

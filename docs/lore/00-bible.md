@@ -1,8 +1,8 @@
-# Skein: The Bible
+# Hollow Wake: The Bible
 
 ## What this is
 
-Skein is the working title of a massively multiplayer action role-playing game set in a world called Aureth. This file is the first page of its lore. It says what the world is, how it should feel, and where to read next. Everything in the other files under this folder follows from the facts set here. Where a later file disagrees with this one, this one wins.
+Hollow Wake MMO is the working title of a massively multiplayer action role-playing game set in a world called Aureth. This file is the first page of its lore. It says what the world is, how it should feel, and where to read next. Everything in the other files under this folder follows from the facts set here. Where a later file disagrees with this one, this one wins.
 
 ## The world in one breath
 
@@ -28,7 +28,7 @@ Not grimdark. Horror is permitted and should be real, but it is never the point 
 
 Not cartoon. Nobody winks at the camera. Humour comes from people, not from the world making fun of itself. Names are real names.
 
-The absent maker. The single most important feeling in Skein is that of walking through a house that was tidied by someone who then went out and did not come back. The table was set. The lamps were trimmed. The door is open. Whoever did this meant it, and they are not here. Everything in the world, from religion to architecture to the shape of the sky, should carry that feeling.
+The absent maker. The single most important feeling in Hollow Wake is that of walking through a house that was tidied by someone who then went out and did not come back. The table was set. The lamps were trimmed. The door is open. Whoever did this meant it, and they are not here. Everything in the world, from religion to architecture to the shape of the sky, should carry that feeling.
 
 ## The fixed facts
 
@@ -40,7 +40,7 @@ The absent maker. The single most important feeling in Skein is that of walking 
 - Knots are places where Threads tangled in the Unraveling. They shift, regrow and are never the same twice. Landmarks are fixed, deliberately made places that survived.
 - Founts are wellsprings where the Loom surfaces. Whoever binds a Fount can shape the land around it, raise structures, set decrees and draw its yield. A bound region is a Holding. Binding is a rite, not a conquest, though it can be contested.
 - Callings are starting paths, never cages.
-- A Weaver's personal Pattern is their Skein. Growing it is the long game.
+- A Weaver's personal Pattern is their HollowWake. Growing it is the long game.
 
 ## Why people go out
 

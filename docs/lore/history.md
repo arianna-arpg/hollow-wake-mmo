@@ -104,7 +104,7 @@ Into this, in the present year, new Weavers arrive at Ninewells.
 
 ## The explanations of the Unraveling
 
-The true cause of the Unraveling is not known, and the lore of Skein must never settle it. Four explanations are held in earnest by the peoples of Aureth, and each explains something the others cannot.
+The true cause of the Unraveling is not known, and the lore of Hollow Wake must never settle it. Four explanations are held in earnest by the peoples of Aureth, and each explains something the others cannot.
 
 ### The Hubris
 

@@ -1,21 +1,21 @@
-# One-box deployment: the Skein server with its data on a named volume.
+# One-box deployment: the Hollow Wake MMO server with its data on a named volume.
 # Postgres is included, stopped by default, for the day the JSON stores are swapped for a database.
 #   docker compose -f deploy/docker-compose.yml up -d --build
 services:
-  skein:
+  hollowwake:
     build:
       context: ..
       dockerfile: deploy/Dockerfile
       args:
         HOST: tcp            # or brutal for the RakNet UDP host
-    image: skein-server:local
-    container_name: skein
+    image: hollowwake-server:local
+    container_name: hollowwake
     restart: unless-stopped
     ports:
       - "7777:7777/tcp"
       - "7777:7777/udp"
     volumes:
-      - skein-data:/app/data
+      - hollowwake-data:/app/data
       - ../config/server.yaml:/app/config/server.yaml:ro
     environment:
       - DOTNET_CLI_TELEMETRY_OPTOUT=1
@@ -32,18 +32,18 @@ services:
 
   postgres:
     image: postgres:17-alpine
-    container_name: skein-postgres
+    container_name: hollowwake-postgres
     profiles: ["db"]
     restart: unless-stopped
     environment:
-      POSTGRES_USER: skein
+      POSTGRES_USER: hollowwake
       POSTGRES_PASSWORD: change-me
-      POSTGRES_DB: skein
+      POSTGRES_DB: hollowwake
     volumes:
-      - skein-postgres:/var/lib/postgresql/data
+      - hollowwake-postgres:/var/lib/postgresql/data
     ports:
       - "127.0.0.1:5432:5432"
 
 volumes:
-  skein-data:
-  skein-postgres:
+  hollowwake-data:
+  hollowwake-postgres:

@@ -1,0 +1,39 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!--
+    BRUTAL-backed host: RakNet UDP transport and the BRUTAL job runner.
+    BRUTAL packages are .NET 10 only. When built with an older SDK this project
+    compiles to a stub that explains the requirement, so building HollowWake.sln
+    always succeeds; with the .NET 10 SDK it becomes the real host.
+  -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>HollowWake.Server.Host.Brutal</RootNamespace>
+    <AssemblyName>hollowwake-server-brutal</AssemblyName>
+    <InvariantGlobalization>true</InvariantGlobalization>
+    <HollowWakeHasNet10 Condition="$([MSBuild]::VersionGreaterThanOrEquals('$(NETCoreSdkVersion)', '10.0'))">true</HollowWakeHasNet10>
+    <TargetFramework Condition="'$(HollowWakeHasNet10)' == 'true'">net10.0</TargetFramework>
+    <TargetFramework Condition="'$(HollowWakeHasNet10)' != 'true'">net8.0</TargetFramework>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <DefineConstants Condition="'$(HollowWakeHasNet10)' == 'true'">$(DefineConstants);HOLLOWWAKE_BRUTAL</DefineConstants>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\HollowWake.Server\HollowWake.Server.csproj" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="8.0.1" Condition="'$(HollowWakeHasNet10)' != 'true'" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(HollowWakeHasNet10)' == 'true'">
+    <PackageReference Include="Ahwoo.Brutal.Core" Version="2026.10.1" />
+    <PackageReference Include="Ahwoo.Brutal.Interop" Version="2026.10.1" />
+    <PackageReference Include="Ahwoo.Brutal.Strings" Version="2026.10.1" />
+    <PackageReference Include="Ahwoo.Brutal.RakNet" Version="2026.10.2" />
+    <PackageReference Include="Ahwoo.Brutal.Concurrency" Version="2026.10.1" />
+    <PackageReference Include="Ahwoo.Brutal.Logging" Version="2026.10.2" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="10.0.0" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(HollowWakeHasNet10)' != 'true'">
+    <Compile Remove="**/*.cs" />
+    <Compile Include="Stub/RequiresNet10.cs" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(HollowWakeHasNet10)' == 'true'">
+    <Compile Remove="Stub/**/*.cs" />
+  </ItemGroup>
+</Project>

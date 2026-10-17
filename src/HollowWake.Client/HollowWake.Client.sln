@@ -1,0 +1,62 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HollowWake.Client", "HollowWake.Client.csproj", "{C9B41A49-B16D-4392-986C-7B7D5D9B5627}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HollowWake.Core", "..\HollowWake.Core\HollowWake.Core.csproj", "{ACE7A43D-178B-4C85-A194-52626687F258}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HollowWake.Protocol", "..\HollowWake.Protocol\HollowWake.Protocol.csproj", "{48D6F281-F57E-4FC3-8D84-C9515F7C753D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|Any CPU = Release|Any CPU
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C9B41A49-B16D-4392-986C-7B7D5D9B5627}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C9B41A49-B16D-4392-986C-7B7D5D9B5627}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C9B41A49-B16D-4392-986C-7B7D5D9B5627}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{C9B41A49-B16D-4392-986C-7B7D5D9B5627}.Debug|x64.Build.0 = Debug|Any CPU
+		{C9B41A49-B16D-4392-986C-7B7D5D9B5627}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{C9B41A49-B16D-4392-986C-7B7D5D9B5627}.Debug|x86.Build.0 = Debug|Any CPU
+		{C9B41A49-B16D-4392-986C-7B7D5D9B5627}.Release|Any CPU.ActiveCfg = Debug|Any CPU
+		{C9B41A49-B16D-4392-986C-7B7D5D9B5627}.Release|Any CPU.Build.0 = Debug|Any CPU
+		{C9B41A49-B16D-4392-986C-7B7D5D9B5627}.Release|x64.ActiveCfg = Debug|Any CPU
+		{C9B41A49-B16D-4392-986C-7B7D5D9B5627}.Release|x64.Build.0 = Debug|Any CPU
+		{C9B41A49-B16D-4392-986C-7B7D5D9B5627}.Release|x86.ActiveCfg = Debug|Any CPU
+		{C9B41A49-B16D-4392-986C-7B7D5D9B5627}.Release|x86.Build.0 = Debug|Any CPU
+		{ACE7A43D-178B-4C85-A194-52626687F258}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ACE7A43D-178B-4C85-A194-52626687F258}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ACE7A43D-178B-4C85-A194-52626687F258}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{ACE7A43D-178B-4C85-A194-52626687F258}.Debug|x64.Build.0 = Debug|Any CPU
+		{ACE7A43D-178B-4C85-A194-52626687F258}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{ACE7A43D-178B-4C85-A194-52626687F258}.Debug|x86.Build.0 = Debug|Any CPU
+		{ACE7A43D-178B-4C85-A194-52626687F258}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ACE7A43D-178B-4C85-A194-52626687F258}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ACE7A43D-178B-4C85-A194-52626687F258}.Release|x64.ActiveCfg = Release|Any CPU
+		{ACE7A43D-178B-4C85-A194-52626687F258}.Release|x64.Build.0 = Release|Any CPU
+		{ACE7A43D-178B-4C85-A194-52626687F258}.Release|x86.ActiveCfg = Release|Any CPU
+		{ACE7A43D-178B-4C85-A194-52626687F258}.Release|x86.Build.0 = Release|Any CPU
+		{48D6F281-F57E-4FC3-8D84-C9515F7C753D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{48D6F281-F57E-4FC3-8D84-C9515F7C753D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{48D6F281-F57E-4FC3-8D84-C9515F7C753D}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{48D6F281-F57E-4FC3-8D84-C9515F7C753D}.Debug|x64.Build.0 = Debug|Any CPU
+		{48D6F281-F57E-4FC3-8D84-C9515F7C753D}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{48D6F281-F57E-4FC3-8D84-C9515F7C753D}.Debug|x86.Build.0 = Debug|Any CPU
+		{48D6F281-F57E-4FC3-8D84-C9515F7C753D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{48D6F281-F57E-4FC3-8D84-C9515F7C753D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{48D6F281-F57E-4FC3-8D84-C9515F7C753D}.Release|x64.ActiveCfg = Release|Any CPU
+		{48D6F281-F57E-4FC3-8D84-C9515F7C753D}.Release|x64.Build.0 = Release|Any CPU
+		{48D6F281-F57E-4FC3-8D84-C9515F7C753D}.Release|x86.ActiveCfg = Release|Any CPU
+		{48D6F281-F57E-4FC3-8D84-C9515F7C753D}.Release|x86.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

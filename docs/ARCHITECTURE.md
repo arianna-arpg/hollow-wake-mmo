@@ -3,13 +3,13 @@
 ## Shape
 
 ```
-content/core (YAML)  --->  Skein.Core (simulation, .NET 8, no engine)  <---  Skein.Protocol (messages)
+content/core (YAML)  --->  HollowWake.Core (simulation, .NET 8, no engine)  <---  HollowWake.Protocol (messages)
                                  ^                     ^
                                  |                     |
-                 Skein.Server (.NET 10) ----------- Skein.Client (Godot 4.7, .NET 8)
+                 HollowWake.Server (.NET 10) ----------- HollowWake.Client (Godot 4.7, .NET 8)
                  zones, sessions, persistence       terrain from seed, views, cameras, UI
                         ^
-          Skein.Server.Host (TCP)   Skein.Server.Host.Brutal (RakNet UDP via BRUTAL)
+          HollowWake.Server.Host (TCP)   HollowWake.Server.Host.Brutal (RakNet UDP via BRUTAL)
 ```
 
 The core is the product. It compiles for .NET 8 so both the Godot client and the .NET 10 server can reference it. It has no sockets, no rendering, no database. Everything that runs in a zone on the server can run in a tool, a test or the client.

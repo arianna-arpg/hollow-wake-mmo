@@ -1,6 +1,6 @@
 # Glossary
 
-Every proper noun and term in the Skein lore, one line each, alphabetical by the main word. People are listed by their second name (house, by-name, wake-house or seam-name), except the Loosed, who have only one. The example name lists in naming.md are not glossed; everything that appears in the lore itself is.
+Every proper noun and term in the Hollow Wake lore, one line each, alphabetical by the main word. People are listed by their second name (house, by-name, wake-house or seam-name), except the Loosed, who have only one. The example name lists in naming.md are not glossed; everything that appears in the lore itself is.
 
 ## A
 
@@ -348,7 +348,7 @@ Every proper noun and term in the Skein lore, one line each, alphabetical by the
 - Shuttle, the (sun): the Marcher name for the sun, which carries the day back and forth across the Warp.
 - Shuttle, the (Glyph): a Glyph that passes a Weave from one target to the next.
 - Sisters, the: tors in the Emberfells where the Storm Knots gather.
-- Skein: a living person's Pattern; a Weaver's grows in Threads, ties and plies, and the game is named for it.
+- Skein: a living person's Pattern; a Weaver's grows in Threads, ties and plies, and the game that came before this one was named for it; here it names the thing itself.
 - Skyfall: an Emberfells Storm Thinning on a tor, where lightning stands in the air.
 - Skyfold: a Storm Fount on the highest tor of the Emberfells, which woke in M 303 and is unbound; everyone wants it.
 - Skystep: a Storm Weave, one of the Harrier's first.

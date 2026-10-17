@@ -1,10 +1,10 @@
-<p align="center"><img src="src/Skein.Client/icon.svg" width="96" alt="Skein"></p>
+<p align="center"><img src="src/HollowWake.Client/icon.svg" width="96" alt="Hollow Wake MMO"></p>
 
-<h1 align="center">Skein</h1>
+<h1 align="center">Hollow Wake MMO</h1>
 
 <p align="center"><b>An MMOARPG foundation where every rule, number, creature, place and system is data, and the world is a seamless, generated land.</b></p>
 
-Skein is a server-authoritative online action RPG set in **Aureth**, a high-fantasy world woven from nine Threads. Players arrive in the Weftmarches, a frontier of generated regions, zones and chunks seeded with hand-placed landmarks, points of interest and the quests those places give rise to. They fight with weaves they compose themselves, loot and reweave gear, bind Founts to raise Holdings, and grow a character whose build is theirs to invent.
+Hollow Wake MMO is a server-authoritative online action RPG set in **Aureth**, a high-fantasy world woven from nine Threads. Players arrive in the Weftmarches, a frontier of generated regions, zones and chunks seeded with hand-placed landmarks, points of interest and the quests those places give rise to. They fight with weaves they compose themselves, loot and reweave gear, bind Founts to raise Holdings, and grow a character whose build is theirs to invent.
 
 This repository is the foundation: the engine-agnostic simulation core, the authoritative server, the wire protocol, a Godot client, the first content pack, the tools and the documents that hold the vision steady. It is built so that nearly everything is **extensible, flexible, customizable, modifiable, attributable and configurable** rather than hard-coded.
 
@@ -12,11 +12,11 @@ This repository is the foundation: the engine-agnostic simulation core, the auth
 
 | Part | What it is |
 |---|---|
-| `src/Skein.Core` | The simulation. Attributes and modifiers, expressions, content layers, entities, weaves and effects, combat, statuses, items, loot, AI, quests, crafting, territory, world generation, movement with z-levels. No engine, no sockets. |
-| `src/Skein.Protocol` | The messages between client and server. |
-| `src/Skein.Server` | Sessions, zones, interest management, persistence, world events. Hosted by `Skein.Server.Host` (pure .NET, TCP) or `Skein.Server.Host.Brutal` (.NET 10 + BRUTAL RakNet UDP). |
-| `src/Skein.Client` | Godot 4 client: generates the same terrain locally from the server's seed, renders placeholder bodies, offers an isometric and a third-person camera over one fully 3D world. |
-| `src/Skein.Tools` | The `skein` command line: validate content, roll items, simulate fights, describe generated regions and zones, run a zone headless, probe a live server. |
+| `src/HollowWake.Core` | The simulation. Attributes and modifiers, expressions, content layers, entities, weaves and effects, combat, statuses, items, loot, AI, quests, crafting, territory, world generation, movement with z-levels. No engine, no sockets. |
+| `src/HollowWake.Protocol` | The messages between client and server. |
+| `src/HollowWake.Server` | Sessions, zones, interest management, persistence, world events. Hosted by `HollowWake.Server.Host` (pure .NET, TCP) or `HollowWake.Server.Host.Brutal` (.NET 10 + BRUTAL RakNet UDP). |
+| `src/HollowWake.Client` | Godot 4 client: generates the same terrain locally from the server's seed, renders placeholder bodies, offers an isometric and a third-person camera over one fully 3D world. |
+| `src/HollowWake.Tools` | The `hollowwake` command line: validate content, roll items, simulate fights, describe generated regions and zones, run a zone headless, probe a live server. |
 | `content/core` | The first content layer. Everything the engine runs comes from here. |
 | `docs/` | The vision, the architecture, one design contract per system, the lore bible, hosting research, decision records. |
 | `deploy/` | Dockerfile, Compose file, a VPS bootstrap script. |
@@ -26,21 +26,21 @@ This repository is the foundation: the engine-agnostic simulation core, the auth
 Requires the .NET 10 SDK (the .NET 8 targeting pack is fetched automatically) and, for the client, Godot 4.7 .NET edition.
 
 ```bash
-dotnet build Skein.sln
-dotnet test Skein.sln
-dotnet run --project src/Skein.Tools -- validate
-dotnet run --project src/Skein.Server.Host
+dotnet build HollowWake.sln
+dotnet test HollowWake.sln
+dotnet run --project src/HollowWake.Tools -- validate
+dotnet run --project src/HollowWake.Server.Host
 ```
 
-Open `src/Skein.Client/project.godot` in Godot, press play, connect to `127.0.0.1:7777`, make a character and walk out of Ninewells.
+Open `src/HollowWake.Client/project.godot` in Godot, press play, connect to `127.0.0.1:7777`, make a character and walk out of Ninewells.
 
 Useful tools:
 
 ```bash
-dotnet run --project src/Skein.Tools -- zone --x 0 --y 0 --map
-dotnet run --project src/Skein.Tools -- fight loosed_kindler boar --seconds 20
-dotnet run --project src/Skein.Tools -- item random --class weapon --level 20 --rarity rare
-dotnet run --project src/Skein.Tools -- probe --host 127.0.0.1 --port 7777
+dotnet run --project src/HollowWake.Tools -- zone --x 0 --y 0 --map
+dotnet run --project src/HollowWake.Tools -- fight loosed_kindler boar --seconds 20
+dotnet run --project src/HollowWake.Tools -- item random --class weapon --level 20 --rarity rare
+dotnet run --project src/HollowWake.Tools -- probe --host 127.0.0.1 --port 7777
 ```
 
 ## Where the truth lives

@@ -34,4 +34,4 @@ Passes: **terrain** (height, biome, flags, surface tags, water, cliffs, terracin
 
 ## Tools
 
-`skein region`, `skein zone --map`, `skein world` and `skein load` show what the generator does without a client.
+`hollowwake region`, `hollowwake zone --map`, `hollowwake world` and `hollowwake load` show what the generator does without a client.

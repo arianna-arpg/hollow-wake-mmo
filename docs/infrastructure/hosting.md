@@ -1,4 +1,4 @@
-# Skein hosting and scaling plan
+# Hollow Wake MMO hosting and scaling plan
 
 | | |
 |---|---|
@@ -26,7 +26,7 @@ Evidence legend used in the tables:
 
 The expectation is right in shape. Two details need correcting and one needs a qualifier.
 
-**Confirmed.** One small shared-vCPU VPS in the metro nearest the players, running Docker Compose with the Skein server and PostgreSQL on the same box, is the right starter for 4 players. The workload needs roughly 2 vCPU and 2 to 4 GB of RAM. The bill is the VM; bandwidth is negligible (about 25 GB a month at the assumptions in section 9).
+**Confirmed.** One small shared-vCPU VPS in the metro nearest the players, running Docker Compose with the Hollow Wake MMO server and PostgreSQL on the same box, is the right starter for 4 players. The workload needs roughly 2 vCPU and 2 to 4 GB of RAM. The bill is the VM; bandwidth is negligible (about 25 GB a month at the assumptions in section 9).
 
 **Corrected and qualified.**
 
@@ -87,9 +87,9 @@ These are per region and exclude your own time, domain registration and any paid
 
 I looked at the working tree without changing it. At the time the host programs were placeholders ("host not wired yet"), so the ports, tick rate and configuration keys in this document are placeholders and every capacity figure is an assumption. Four findings do change the hosting advice:
 
-1. **The RakNet host needs .NET 10.** `src/Skein.Server.Host.Brutal` builds on the `Ahwoo.Brutal.*` packages (2026.10.x). Its project file says they are .NET 10 only and falls back to a stub on older SDKs. Use a .NET 10 runtime image for that host. .NET 10 is the supported LTS (to 2028-11-14); .NET 8 ends on 2026-11-10 ([Microsoft support policy](https://dotnet.microsoft.com/en-us/platform/support/policy/dotnet-core)).
+1. **The RakNet host needs .NET 10.** `src/HollowWake.Server.Host.Brutal` builds on the `Ahwoo.Brutal.*` packages (2026.10.x). Its project file says they are .NET 10 only and falls back to a stub on older SDKs. Use a .NET 10 runtime image for that host. .NET 10 is the supported LTS (to 2028-11-14); .NET 8 ends on 2026-11-10 ([Microsoft support policy](https://dotnet.microsoft.com/en-us/platform/support/policy/dotnet-core)).
 2. **The other projects still target net8.0** (Core, Protocol, Client, Server, the pure-.NET TCP host, Tools and the tests), and `global.json` pins SDK 8.0.100 with `rollForward: latestMajor`. Retarget them to net10.0 before the first production build, so one runtime image serves everything and nothing ships on an unsupported runtime.
-3. **There is no linux-arm64 RakNet library.** The restore output for `Ahwoo.Brutal.RakNet` 2026.10.2 (`src/Skein.Server.Host.Brutal/obj/project.assets.json`) lists native libraries for linux-x64, osx-arm64 and win-x64 only. Arm servers (Oracle Always Free A1, Hetzner CAX) cannot run the RakNet host unless the vendor adds an arm64 build, so stay on x86_64 plans. Prefer a Debian or Ubuntu based runtime image over Alpine until you have tested the native library there (my precaution; I did not test musl).
+3. **There is no linux-arm64 RakNet library.** The restore output for `Ahwoo.Brutal.RakNet` 2026.10.2 (`src/HollowWake.Server.Host.Brutal/obj/project.assets.json`) lists native libraries for linux-x64, osx-arm64 and win-x64 only. Arm servers (Oracle Always Free A1, Hetzner CAX) cannot run the RakNet host unless the vendor adds an arm64 build, so stay on x86_64 plans. Prefer a Debian or Ubuntu based runtime image over Alpine until you have tested the native library there (my precaution; I did not test musl).
 4. **Idle CPU is unknown.** I could not see how the BRUTAL job runner behaves at idle. If its worker threads spin, burstable or low-baseline shared CPUs (Lightsail 5 to 20% per vCPU, Fly shared 6.25%) will not hold, and "CPU per player" has to be measured after subtracting the idle load (section 13).
 
 ---
@@ -183,7 +183,7 @@ All prices below were read on 2026-10-16. The "Basis" column says where each num
 
 Short answer: only Fly.io can accept public UDP, and it costs more than a plain VPS for a steady tick loop. Railway and Render cannot host the RakNet port at all. Prices and documentation in this section were read on 2026-10-16.
 
-| Platform | Public inbound UDP | What the documentation says (V unless marked) | Price relevant to Skein | Verdict |
+| Platform | Public inbound UDP | What the documentation says (V unless marked) | Price relevant to Hollow Wake MMO | Verdict |
 |---|---|---|---|---|
 | Fly.io | Yes, with conditions | UDP needs a dedicated IPv4 address; shared IPv4 and public IPv6 cannot carry it. The server must bind its UDP socket to the special `fly-global-services` address and reply from it, because binding `0.0.0.0` makes Linux answer from the wrong source address. Fly rewrites the IP but not the port, so the internal and external UDP ports must match. Plan for about 1300-byte packets, not 1500, because of WireGuard and proxy overhead ([UDP and TCP docs](https://docs.fly.io/networking/udp-and-tcp)). Shared vCPUs get a 6.25% baseline with a burst balance capped at 500 seconds; when it is empty the vCPU is throttled to the baseline. Performance vCPUs get 100% ([CPU performance](https://docs.fly.io/machines/cpu-performance)) | `shared-cpu-1x` 1 GB is $6.70/month in Ashburn, but a 20 Hz tick loop will exhaust the burst balance. `performance-1x` 2 GB is $33.00/month. Dedicated IPv4 $2/month. Volumes $0.15/GB-month. Egress $0.02/GB in North America and Europe, $0.04/GB in Asia Pacific and South America. No free tier for new organisations ([pricing](https://docs.fly.io/about/pricing)). Managed Postgres starts at $38/month plus $0.28/GB ([Fly Postgres docs](https://docs.fly.io/postgres/)) | Works technically. About $36.50/month for one full vCPU, 2 GB and 10 GB of volume (my sum of the quoted rates), versus $20 for 2 vCPU / 4 GB at Vultr. Revisit for a later edge or short-lived-instance role |
 | Railway | No | TCP Proxy is the only way to expose non-HTTP services, and its docs describe raw TCP only ([TCP proxy](https://docs.railway.com/networking/tcp-proxy)). A feature request for inbound UDP, opened 2026-01-17, was still marked as under review with user replies as late as 2026-07-21 ([Railway Station thread](https://station.railway.com/feedback/udp-inboud-connections-9f036ffc)). A search summary of Railway staff replies says inbound UDP is unsupported while outbound UDP works (S) | Hobby $5/month with $5 of usage; usage rates $20 per vCPU-month, $10 per GB-month of RAM, $0.05/GB egress, $0.15/GB-month volumes ([plans](https://docs.railway.com/reference/pricing/plans)). One vCPU plus 1 GB is about $30/month by those rates | Does not fit. Could host an HTTP-only side service |
@@ -208,7 +208,7 @@ Prices and documentation in this subsection were read on 2026-10-16.
 
 ### 4.2 Port forwarding risks
 
-1. **Exposure.** Your home IP and every listening Skein port (RakNet parsing, TCP, any HTTP admin) are reachable from the whole internet from a machine on your home network.
+1. **Exposure.** Your home IP and every listening Hollow Wake MMO port (RakNet parsing, TCP, any HTTP admin) are reachable from the whole internet from a machine on your home network.
 2. **No DDoS shield.** VPS providers filter volumetric floods (Hetzner, DigitalOcean, Vultr and OVHcloud all advertise it, section 2); your household link does not. A flood knocks everyone in the house offline.
 3. **CGNAT.** If the router's WAN address is inside 100.64.0.0/10 (the shared address space reserved for carrier-grade NAT, [RFC 6598](https://www.rfc-editor.org/rfc/rfc6598)), inbound port forwarding cannot work. Ask the ISP for a public IPv4 address or use Tailscale.
 4. **Dynamic address.** Run a DDNS updater and keep the TTL low. With Cloudflare DNS the record must be DNS-only.
@@ -528,13 +528,13 @@ Azure's published median (P50) RTT between datacenters, dataset ending 2026-07-3
 | Population risk | A region can feel empty; pooling by time zone helps | One large pool |
 | Fits | An ARPG with real-time combat | Slow-paced or turn-based games |
 
-For Skein: start with one region and one world. Add a second world in another region only when measured latency demands it, and keep account and authentication data separable from world data now so that decision stays cheap.
+For Hollow Wake MMO: start with one region and one world. Add a second world in another region only when measured latency demands it, and keep account and authentication data separable from world data now so that decision stays cheap.
 
 ---
 
 ## 11. Bootstrap: the starter VPS, step by step
 
-Target: one Ubuntu LTS VPS running Docker Compose with the Skein server and PostgreSQL, SSH by key only, a firewall, automatic security updates, log rotation, nightly off-provider backups, and a rollout procedure that costs players a few seconds. Commands assume the placeholder ports from the top of this file. `SERVER_IP` is the address the provider gives you.
+Target: one Ubuntu LTS VPS running Docker Compose with the Hollow Wake MMO server and PostgreSQL, SSH by key only, a firewall, automatic security updates, log rotation, nightly off-provider backups, and a rollout procedure that costs players a few seconds. Commands assume the placeholder ports from the top of this file. `SERVER_IP` is the address the provider gives you.
 
 ### Step 1. Create the VM
 
@@ -542,20 +542,20 @@ Target: one Ubuntu LTS VPS running Docker Compose with the Skein server and Post
 - **Access:** paste your SSH public key into the provider's form at creation time. On your Windows PC, PowerShell can create the key:
 
 ```powershell
-ssh-keygen -t ed25519 -C "skein-admin" -f "$env:USERPROFILE\.ssh\skein_ed25519"
-Get-Content "$env:USERPROFILE\.ssh\skein_ed25519.pub"
+ssh-keygen -t ed25519 -C "hollowwake-admin" -f "$env:USERPROFILE\.ssh\hollowwake_ed25519"
+Get-Content "$env:USERPROFILE\.ssh\hollowwake_ed25519.pub"
 ```
 
 - **Provider firewall** (Hetzner Cloud Firewall, DigitalOcean Cloud Firewall, Vultr Firewall, Lightsail networking tab): allow inbound TCP 22 from your own IP only, UDP 27500 and TCP 27501 from anywhere (or from your players' IPs during a closed alpha), ICMP, and all outbound. A provider firewall sits outside the VM, so Docker's iptables rules cannot bypass it (see step 5).
-- **Name** the host `skein-01`. Enable IPv4; IPv6 is optional.
+- **Name** the host `hollowwake-01`. Enable IPv4; IPv6 is optional.
 
 ### Step 2. First login, updates, time zone
 
 ```bash
-ssh -i ~/.ssh/skein_ed25519 root@SERVER_IP
+ssh -i ~/.ssh/hollowwake_ed25519 root@SERVER_IP
 apt update && apt full-upgrade -y
 timedatectl set-timezone UTC
-hostnamectl set-hostname skein-01
+hostnamectl set-hostname hollowwake-01
 reboot        # only needed if the kernel was updated
 ```
 
@@ -570,12 +570,12 @@ chown deploy:deploy /home/deploy/.ssh/authorized_keys
 chmod 600 /home/deploy/.ssh/authorized_keys
 ```
 
-Open a second terminal and confirm `ssh -i ~/.ssh/skein_ed25519 deploy@SERVER_IP` works and `sudo -v` succeeds before moving on.
+Open a second terminal and confirm `ssh -i ~/.ssh/hollowwake_ed25519 deploy@SERVER_IP` works and `sudo -v` succeeds before moving on.
 
 ### Step 4. SSH: keys only, no root
 
 ```bash
-sudo tee /etc/ssh/sshd_config.d/10-skein.conf >/dev/null <<'EOF'
+sudo tee /etc/ssh/sshd_config.d/10-hollowwake.conf >/dev/null <<'EOF'
 PermitRootLogin no
 PasswordAuthentication no
 KbdInteractiveAuthentication no
@@ -594,8 +594,8 @@ Keep the existing session open, then test a brand-new login in another terminal.
 sudo ufw default deny incoming
 sudo ufw default allow outgoing
 sudo ufw limit 22/tcp                          # rate-limits SSH; or: sudo ufw allow from YOUR_HOME_IP to any port 22 proto tcp
-sudo ufw allow 27500/udp comment 'Skein RakNet'
-sudo ufw allow 27501/tcp comment 'Skein TCP'
+sudo ufw allow 27500/udp comment 'Hollow Wake MMO RakNet'
+sudo ufw allow 27501/tcp comment 'Hollow Wake MMO TCP'
 sudo ufw enable
 sudo ufw status verbose
 ```
@@ -628,7 +628,7 @@ With key-only SSH, fail2ban mainly cuts log noise and wasted CPU. **Do not use i
 
 ```bash
 sudo apt install -y unattended-upgrades          # installed by default on Ubuntu Server; harmless if present
-sudo tee /etc/apt/apt.conf.d/52skein-unattended >/dev/null <<'EOF'
+sudo tee /etc/apt/apt.conf.d/52hollowwake-unattended >/dev/null <<'EOF'
 Unattended-Upgrade::Automatic-Reboot "true";
 Unattended-Upgrade::Automatic-Reboot-Time "04:30";
 Unattended-Upgrade::Remove-Unused-Kernel-Packages "true";
@@ -644,7 +644,7 @@ By default the tool applies Ubuntu security updates and does not reboot; `Automa
 ```bash
 sudo fallocate -l 1G /swapfile && sudo chmod 600 /swapfile && sudo mkswap /swapfile && sudo swapon /swapfile
 echo '/swapfile none swap sw 0 0' | sudo tee -a /etc/fstab
-sudo tee /etc/sysctl.d/90-skein.conf >/dev/null <<'EOF'
+sudo tee /etc/sysctl.d/90-hollowwake.conf >/dev/null <<'EOF'
 vm.swappiness = 10
 net.core.rmem_max = 8388608
 net.core.wmem_max = 8388608
@@ -701,12 +701,12 @@ The setting applies to containers created after the restart. Have the server wri
 ### Step 11. Project layout and the Compose file
 
 ```bash
-sudo mkdir -p /opt/skein /var/backups/skein
-sudo chown -R deploy:deploy /opt/skein /var/backups/skein
-cd /opt/skein
+sudo mkdir -p /opt/hollowwake /var/backups/hollowwake
+sudo chown -R deploy:deploy /opt/hollowwake /var/backups/hollowwake
+cd /opt/hollowwake
 umask 077
 cat > .env <<'EOF'
-SKEIN_TAG=2026-10-16.1
+HOLLOWWAKE_TAG=2026-10-16.1
 POSTGRES_PASSWORD=replace-with-output-of-openssl-rand-hex-24
 EOF
 ```
@@ -714,13 +714,13 @@ EOF
 Build the image on your PC or in CI for the right platform and push it to a registry (GitHub Container Registry, Docker Hub, or any other); do not build on the small VPS:
 
 ```powershell
-docker buildx build --platform linux/amd64 -t ghcr.io/YOUR_ORG/skein-server:2026-10-16.1 --push .
+docker buildx build --platform linux/amd64 -t ghcr.io/YOUR_ORG/hollowwake-server:2026-10-16.1 --push .
 ```
 
-`/opt/skein/compose.yaml`:
+`/opt/hollowwake/compose.yaml`:
 
 ```yaml
-name: skein
+name: hollowwake
 
 x-logging: &logging
   driver: local
@@ -733,8 +733,8 @@ services:
     image: postgres:18
     restart: unless-stopped
     environment:
-      POSTGRES_DB: skein
-      POSTGRES_USER: skein
+      POSTGRES_DB: hollowwake
+      POSTGRES_USER: hollowwake
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set it in .env}
     volumes:
       # PostgreSQL 18+ images: mount the PARENT directory (PGDATA is /var/lib/postgresql/18/docker).
@@ -749,20 +749,20 @@ services:
       -c effective_cache_size=1GB
       -c max_connections=50
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U skein -d skein"]
+      test: ["CMD-SHELL", "pg_isready -U hollowwake -d hollowwake"]
       interval: 10s
       timeout: 3s
       retries: 6
     logging: *logging
 
   game:
-    image: ghcr.io/YOUR_ORG/skein-server:${SKEIN_TAG:?set it in .env}
+    image: ghcr.io/YOUR_ORG/hollowwake-server:${HOLLOWWAKE_TAG:?set it in .env}
     restart: unless-stopped
     depends_on:
       db:
         condition: service_healthy
     environment:
-      ConnectionStrings__Skein: "Host=db;Port=5432;Database=skein;Username=skein;Password=${POSTGRES_PASSWORD}"
+      ConnectionStrings__HollowWake: "Host=db;Port=5432;Database=hollowwake;Username=hollowwake;Password=${POSTGRES_PASSWORD}"
     ports:
       - "27500:27500/udp"            # RakNet
       - "27501:27501/tcp"            # game TCP
@@ -792,25 +792,25 @@ Dockerfile sketch for the RakNet host (untested, because the host program is a p
 FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 WORKDIR /src
 COPY . .
-RUN dotnet publish src/Skein.Server.Host.Brutal -c Release -r linux-x64 --self-contained false -o /out
+RUN dotnet publish src/HollowWake.Server.Host.Brutal -c Release -r linux-x64 --self-contained false -o /out
 
 FROM mcr.microsoft.com/dotnet/runtime:10.0
 WORKDIR /app
 COPY --from=build /out .
 USER $APP_UID
-ENTRYPOINT ["./skein-server-brutal"]
+ENTRYPOINT ["./hollowwake-server-brutal"]
 ```
 
-The assembly name `skein-server-brutal` comes from the project file, `-r linux-x64` selects the native RakNet library that the package ships, and `InvariantGlobalization` is already on in the project file, so no ICU packages are needed. The default Microsoft runtime images are Debian based, which is what section 1.6 recommends over Alpine. Check Microsoft's current tag list before pinning.
+The assembly name `hollowwake-server-brutal` comes from the project file, `-r linux-x64` selects the native RakNet library that the package ships, and `InvariantGlobalization` is already on in the project file, so no ICU packages are needed. The default Microsoft runtime images are Debian based, which is what section 1.6 recommends over Alpine. Check Microsoft's current tag list before pinning.
 
 ### Step 12. Start on boot: restart policy plus an optional systemd unit
 
-`restart: unless-stopped` plus `systemctl enable docker` already brings both containers back after a reboot or a crash, and keeps them stopped if you stopped them on purpose. Add a systemd unit if you also want `systemctl start|stop|restart skein` to bring the whole stack up (for example after a `docker compose down`):
+`restart: unless-stopped` plus `systemctl enable docker` already brings both containers back after a reboot or a crash, and keeps them stopped if you stopped them on purpose. Add a systemd unit if you also want `systemctl start|stop|restart hollowwake` to bring the whole stack up (for example after a `docker compose down`):
 
 ```bash
-sudo tee /etc/systemd/system/skein.service >/dev/null <<'EOF'
+sudo tee /etc/systemd/system/hollowwake.service >/dev/null <<'EOF'
 [Unit]
-Description=Skein game stack (docker compose)
+Description=Hollow Wake MMO game stack (docker compose)
 Requires=docker.service
 After=docker.service network-online.target
 Wants=network-online.target
@@ -820,7 +820,7 @@ Type=oneshot
 RemainAfterExit=yes
 User=deploy
 Group=docker
-WorkingDirectory=/opt/skein
+WorkingDirectory=/opt/hollowwake
 ExecStart=/usr/bin/docker compose up -d --wait --wait-timeout 120
 ExecStop=/usr/bin/docker compose stop -t 45
 TimeoutStartSec=300
@@ -830,10 +830,10 @@ TimeoutStopSec=90
 WantedBy=multi-user.target
 EOF
 sudo systemctl daemon-reload
-sudo systemctl enable --now skein.service
+sudo systemctl enable --now hollowwake.service
 ```
 
-Start the stack the first time with `cd /opt/skein && docker compose up -d --wait`, then `docker compose ps` and `docker compose logs -f game`.
+Start the stack the first time with `cd /opt/hollowwake && docker compose up -d --wait`, then `docker compose ps` and `docker compose logs -f game`.
 
 ### Step 13. Nightly pg_dump to object storage, and a restore drill
 
@@ -841,42 +841,42 @@ Install rclone, create a bucket at a provider other than the game host (R2 or B2
 
 ```bash
 sudo apt install -y rclone
-sudo install -m 600 -o deploy -g deploy /dev/null /etc/skein-backup.env
-sudo tee /etc/skein-backup.env >/dev/null <<'EOF'
+sudo install -m 600 -o deploy -g deploy /dev/null /etc/hollowwake-backup.env
+sudo tee /etc/hollowwake-backup.env >/dev/null <<'EOF'
 RCLONE_CONFIG_OFFSITE_TYPE=s3
 RCLONE_CONFIG_OFFSITE_PROVIDER=Cloudflare
 RCLONE_CONFIG_OFFSITE_ACCESS_KEY_ID=REPLACE
 RCLONE_CONFIG_OFFSITE_SECRET_ACCESS_KEY=REPLACE
 RCLONE_CONFIG_OFFSITE_ENDPOINT=https://ACCOUNT_ID.r2.cloudflarestorage.com
-BACKUP_BUCKET=skein-backups
+BACKUP_BUCKET=hollowwake-backups
 HC_UUID=your-healthchecks-io-uuid
 EOF
 ```
 
-`/usr/local/bin/skein-backup.sh` (mode 755):
+`/usr/local/bin/hollowwake-backup.sh` (mode 755):
 
 ```bash
 #!/usr/bin/env bash
 set -euo pipefail
-cd /opt/skein
+cd /opt/hollowwake
 STAMP=$(date -u +%Y%m%dT%H%M%SZ)
-OUT=/var/backups/skein/skein-${STAMP}.dump
+OUT=/var/backups/hollowwake/hollowwake-${STAMP}.dump
 
 # 1. dump in PostgreSQL custom format (already compressed)
-docker compose exec -T db pg_dump -U skein -d skein -Fc --no-owner > "${OUT}.partial"
+docker compose exec -T db pg_dump -U hollowwake -d hollowwake -Fc --no-owner > "${OUT}.partial"
 
 # 2. verify the archive can be read, then publish it
 docker compose exec -T db pg_restore --list < "${OUT}.partial" > /dev/null
 mv "${OUT}.partial" "${OUT}"
 
 # 3. optional: encrypt with age before upload (backups hold player data)
-#    age -R /etc/skein-backup-recipients.txt -o "${OUT}.age" "${OUT}" && OUT="${OUT}.age"
+#    age -R /etc/hollowwake-backup-recipients.txt -o "${OUT}.age" "${OUT}" && OUT="${OUT}.age"
 
 # 4. upload to a bucket at a different provider
 rclone copyto "${OUT}" "offsite:${BACKUP_BUCKET}/pg/$(basename "${OUT}")" --s3-no-check-bucket
 
 # 5. keep three days locally; remote retention is a bucket lifecycle rule (for example 30 days)
-find /var/backups/skein -name 'skein-*.dump*' -mtime +3 -delete
+find /var/backups/hollowwake -name 'hollowwake-*.dump*' -mtime +3 -delete
 
 # 6. dead-man's switch: alerts if no ping arrives in 26 hours
 curl -fsS -m 10 --retry 3 "https://hc-ping.com/${HC_UUID}" > /dev/null
@@ -885,22 +885,22 @@ curl -fsS -m 10 --retry 3 "https://hc-ping.com/${HC_UUID}" > /dev/null
 Schedule it with a systemd timer (it catches up after downtime thanks to `Persistent=true`):
 
 ```bash
-sudo chmod 755 /usr/local/bin/skein-backup.sh
-sudo tee /etc/systemd/system/skein-backup.service >/dev/null <<'EOF'
+sudo chmod 755 /usr/local/bin/hollowwake-backup.sh
+sudo tee /etc/systemd/system/hollowwake-backup.service >/dev/null <<'EOF'
 [Unit]
-Description=Skein nightly pg_dump to object storage
+Description=Hollow Wake MMO nightly pg_dump to object storage
 After=docker.service
 
 [Service]
 Type=oneshot
 User=deploy
 Group=docker
-EnvironmentFile=/etc/skein-backup.env
-ExecStart=/usr/local/bin/skein-backup.sh
+EnvironmentFile=/etc/hollowwake-backup.env
+ExecStart=/usr/local/bin/hollowwake-backup.sh
 EOF
-sudo tee /etc/systemd/system/skein-backup.timer >/dev/null <<'EOF'
+sudo tee /etc/systemd/system/hollowwake-backup.timer >/dev/null <<'EOF'
 [Unit]
-Description=Run the Skein backup nightly
+Description=Run the Hollow Wake MMO backup nightly
 
 [Timer]
 OnCalendar=*-*-* 04:10:00 UTC
@@ -911,22 +911,22 @@ Persistent=true
 WantedBy=timers.target
 EOF
 sudo systemctl daemon-reload
-sudo systemctl enable --now skein-backup.timer
-sudo systemctl start skein-backup.service && journalctl -u skein-backup.service -n 20 --no-pager
+sudo systemctl enable --now hollowwake-backup.timer
+sudo systemctl start hollowwake-backup.service && journalctl -u hollowwake-backup.service -n 20 --no-pager
 ```
 
 Restore drill (do this once now, then monthly), using a throwaway database inside the same container:
 
 ```bash
-cd /opt/skein
-LATEST=$(ls -1t /var/backups/skein/skein-*.dump | head -n 1)
-docker compose exec -T db createdb -U skein skein_restore_test
-docker compose exec -T db pg_restore -U skein -d skein_restore_test --no-owner < "$LATEST"
-docker compose exec -T db psql -U skein -d skein_restore_test -c '\dt'
-docker compose exec -T db dropdb -U skein skein_restore_test
+cd /opt/hollowwake
+LATEST=$(ls -1t /var/backups/hollowwake/hollowwake-*.dump | head -n 1)
+docker compose exec -T db createdb -U hollowwake hollowwake_restore_test
+docker compose exec -T db pg_restore -U hollowwake -d hollowwake_restore_test --no-owner < "$LATEST"
+docker compose exec -T db psql -U hollowwake -d hollowwake_restore_test -c '\dt'
+docker compose exec -T db dropdb -U hollowwake hollowwake_restore_test
 ```
 
-Full disaster recovery is: create a new VM, run steps 1 to 12, copy the newest dump down from the bucket with rclone, restore it into `skein`, `docker compose up -d`, and repoint DNS. Time one rehearsal; that is your real recovery time.
+Full disaster recovery is: create a new VM, run steps 1 to 12, copy the newest dump down from the bucket with rclone, restore it into `hollowwake`, `docker compose up -d`, and repoint DNS. Time one rehearsal; that is your real recovery time.
 
 ### Step 14. Monitoring agent
 
@@ -942,17 +942,17 @@ What "near-zero" means here: with one authoritative process holding the world in
 4. **Expand-then-contract database migrations.** Apply additive schema changes first so the old and new server versions both work, and remove old columns only in a later release.
 5. **Protocol version in the handshake**, so an outdated client gets a clear message instead of a crash.
 
-`/opt/skein/deploy.sh`:
+`/opt/hollowwake/deploy.sh`:
 
 ```bash
 #!/usr/bin/env bash
 # usage: ./deploy.sh 2026-10-17.1
 set -euo pipefail
 TAG="${1:?usage: deploy.sh <image-tag>}"
-cd /opt/skein
-PREV=$(grep '^SKEIN_TAG=' .env | cut -d= -f2)
+cd /opt/hollowwake
+PREV=$(grep '^HOLLOWWAKE_TAG=' .env | cut -d= -f2)
 
-sed -i "s/^SKEIN_TAG=.*/SKEIN_TAG=${TAG}/" .env
+sed -i "s/^HOLLOWWAKE_TAG=.*/HOLLOWWAKE_TAG=${TAG}/" .env
 docker compose pull game                         # 1. no downtime: image is now local
 
 # 2. optional: run additive migrations with the new image before the swap
@@ -963,14 +963,14 @@ docker compose pull game                         # 1. no downtime: image is now 
 # 4. swap only the game container; Postgres keeps running
 if ! docker compose up -d --no-deps --wait --wait-timeout 90 game; then
   echo "new version failed its health check, rolling back to ${PREV}" >&2
-  sed -i "s/^SKEIN_TAG=.*/SKEIN_TAG=${PREV}/" .env
+  sed -i "s/^HOLLOWWAKE_TAG=.*/HOLLOWWAKE_TAG=${PREV}/" .env
   docker compose up -d --no-deps --wait game
   exit 1
 fi
 docker image prune -f > /dev/null
 ```
 
-True blue/green (two game containers on different UDP ports while players drain from one to the other) needs two things Skein may not have yet: a directory the TCP gateway uses to tell clients which UDP port to join, and a single-owner rule for each zone so that two processes never simulate and save the same zone at once (for example a Postgres advisory lock per zone). Build both during stage 3 and the rollout becomes: start the new version beside the old, move new logins, drain the old, stop it.
+True blue/green (two game containers on different UDP ports while players drain from one to the other) needs two things Hollow Wake MMO may not have yet: a directory the TCP gateway uses to tell clients which UDP port to join, and a single-owner rule for each zone so that two processes never simulate and save the same zone at once (for example a Postgres advisory lock per zone). Build both during stage 3 and the rollout becomes: start the new version beside the old, move new logins, drain the old, stop it.
 
 ### Step 16. Verify
 
@@ -979,7 +979,7 @@ sudo ss -lunp | grep 27500                  # UDP listener is up (published by d
 sudo ss -ltnp | grep -E '27501|8080|5432'   # 8080 and 5432 must show 127.0.0.1, not 0.0.0.0
 sudo ufw status verbose
 sudo fail2ban-client status sshd
-sudo systemctl list-timers --all | grep skein
+sudo systemctl list-timers --all | grep hollowwake
 docker compose ps && docker stats --no-stream
 sudo tcpdump -ni any udp port 27500 -c 20   # while a player connects: packets in and replies out
 ```
@@ -1164,7 +1164,7 @@ Every URL below was opened on **2026-10-16** (the access date) unless a differen
 
 - `global.json` : SDK 8.0.100 with `rollForward: latestMajor`
 - `Directory.Build.props` and the `*.csproj` files under `src/` and `tests/` : target frameworks (net8.0 everywhere except the BRUTAL host)
-- `src/Skein.Server.Host.Brutal/Skein.Server.Host.Brutal.csproj` : BRUTAL packages are .NET 10 only; package versions
-- `src/Skein.Server.Host.Brutal/obj/project.assets.json` : native runtime list of `Ahwoo.Brutal.RakNet` 2026.10.2 (linux-x64, osx-arm64, win-x64)
-- `src/Skein.Server.Host/Program.cs` and `src/Skein.Server.Host.Brutal/Program.cs` : both are placeholders at the time of reading
+- `src/HollowWake.Server.Host.Brutal/HollowWake.Server.Host.Brutal.csproj` : BRUTAL packages are .NET 10 only; package versions
+- `src/HollowWake.Server.Host.Brutal/obj/project.assets.json` : native runtime list of `Ahwoo.Brutal.RakNet` 2026.10.2 (linux-x64, osx-arm64, win-x64)
+- `src/HollowWake.Server.Host/Program.cs` and `src/HollowWake.Server.Host.Brutal/Program.cs` : both are placeholders at the time of reading
 - Nothing in the repository was modified. The only file created is this one (the folder `docs/infrastructure` was created for it).

@@ -1,5 +1,5 @@
-# Skein server settings. Copy to server.local.yaml for machine-specific overrides (ignored by git).
-name: Skein Dev
+# Hollow Wake MMO server settings. Copy to server.local.yaml for machine-specific overrides (ignored by git).
+name: Hollow Wake MMO Dev
 motd: A quiet corner of the Weftmarches.
 port: 7777
 bind: 0.0.0.0

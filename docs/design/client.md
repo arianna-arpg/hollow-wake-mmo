@@ -28,9 +28,9 @@ Core is X east, Y north, Z up; Godot is X east, Y up, Z south. `Coords` is the o
 
 ## Running and checking
 
-The project needs Godot 4.7 .NET. `src/Skein.Client/Skein.Client.sln` is what the editor builds when play is pressed, and `content/core` is found by walking up from the project directory, so the client reads the same content as the server. A scripted play-through drives the client against a running server with no hand on the keyboard:
+The project needs Godot 4.7 .NET. `src/HollowWake.Client/HollowWake.Client.sln` is what the editor builds when play is pressed, and `content/core` is found by walking up from the project directory, so the client reads the same content as the server. A scripted play-through drives the client against a running server with no hand on the keyboard:
 
-    godot --path src/Skein.Client -- --smoke --shots <dir> [--account NAME] [--host H] [--port P]
+    godot --path src/HollowWake.Client -- --smoke --shots <dir> [--account NAME] [--host H] [--port P]
 
 It logs in, creates or picks a character called Smoke, enters the world, waits for the terrain, then exercises held movement, jumping, click-to-move, the quartermaster's quest offer, both cameras, the sheet and weaves on the nearest hob through the same input map a player uses, saving a screenshot at each stage. Every check prints a `SMOKE PASS` or `SMOKE FAIL` line and the process exits non-zero when any check fails. The character it drives keeps its position between runs, so a run that starts next to the hedgerow fights before it walks back to the hamlet.
 

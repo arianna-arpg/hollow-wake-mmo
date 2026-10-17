@@ -1,0 +1,325 @@
+using System.Numerics;
+using Microsoft.Extensions.Logging;
+using HollowWake.Core.Characters;
+using HollowWake.Core.Components;
+using HollowWake.Core.Crafting;
+using HollowWake.Core.Definitions;
+using HollowWake.Core.Ecs;
+using HollowWake.Core.Intents;
+using HollowWake.Core.Items;
+using HollowWake.Core.Sim;
+using HollowWake.Protocol;
+using HollowWake.Server.Config;
+using HollowWake.Server.Net;
+using HollowWake.Server.Persistence;
+using HollowWake.Server.World;
+
+namespace HollowWake.Server.Sessions;
+
+/// <summary>
+/// The front door: connections become sessions, messages become authentication, character
+/// management or intents. Everything runs on the world thread; the transport inbox feeds it.
+/// </summary>
+public sealed class SessionManager
+{
+    private readonly ServerConfig _config;
+    private readonly ILogger _log;
+    private readonly ZoneHost _zones;
+    private readonly IAccountStore _accounts;
+    private readonly ICharacterStore _characters;
+    private readonly Dictionary<long, Session> _sessions = new();
+
+    public IReadOnlyCollection<Session> Sessions => _sessions.Values;
+
+    public SessionManager(ServerConfig config, ILogger<SessionManager> log, ZoneHost zones, IAccountStore accounts, ICharacterStore characters)
+    {
+        _config = config;
+        _log = log;
+        _zones = zones;
+        _accounts = accounts;
+        _characters = characters;
+    }
+
+    public void Handle(TransportEvent evt)
+    {
+        switch (evt.Kind)
+        {
+            case TransportEventKind.Connected:
+            {
+                if (_sessions.Count >= _config.MaxPlayers)
+                {
+                    evt.Connection.Send(MessageSerializer.Encode(new DisconnectMsg("server full")));
+                    evt.Connection.Close("server full");
+                    return;
+                }
+                var session = new Session(evt.Connection);
+                _sessions[session.Id] = session;
+                _log.LogInformation("{Session} connected", session);
+                break;
+            }
+            case TransportEventKind.Received:
+            {
+                if (!_sessions.TryGetValue(evt.Connection.Id, out var session))
+                {
+                    return;
+                }
+                Message? message;
+                try
+                {
+                    message = MessageSerializer.Decode(evt.Payload!);
+                }
+                catch (Exception ex)
+                {
+                    _log.LogWarning("{Session} sent an unreadable message: {Error}", session, ex.Message);
+                    session.Error("bad_message", "Could not read message.");
+                    return;
+                }
+                if (message is null)
+                {
+                    return;
+                }
+                try
+                {
+                    Dispatch(session, message);
+                }
+                catch (Exception ex)
+                {
+                    _log.LogError(ex, "{Session} message {Type} failed", session, message.GetType().Name);
+                    session.Error("internal", "That could not be done.");
+                }
+                break;
+            }
+            case TransportEventKind.Disconnected:
+            {
+                if (_sessions.Remove(evt.Connection.Id, out var session))
+                {
+                    _zones.Leave(session);
+                    session.State = SessionState.Closed;
+                    _log.LogInformation("{Session} disconnected: {Reason}", session, evt.Reason);
+                }
+                break;
+            }
+        }
+    }
+
+    public void DisconnectAll(string reason)
+    {
+        foreach (var s in _sessions.Values.ToArray())
+        {
+            _zones.Leave(s);
+            s.Send(new DisconnectMsg(reason));
+            s.Connection.Close(reason);
+        }
+        _sessions.Clear();
+    }
+
+    private void Dispatch(Session session, Message message)
+    {
+        switch (message)
+        {
+            case HelloMsg hello:
+                session.ClientVersion = hello.ClientVersion;
+                if (hello.Protocol != ProtocolInfo.Version)
+                {
+                    session.Send(new DisconnectMsg($"protocol {hello.Protocol} not supported; server speaks {ProtocolInfo.Version}"));
+                    session.Connection.Close("protocol mismatch");
+                    return;
+                }
+                session.Send(new WelcomeMsg(ServerInfo.Version, ProtocolInfo.Version, _config.Name, _config.Motd));
+                return;
+            case PingMsg ping:
+                session.Send(new PongMsg(ping.Nonce, _zones.Elapsed));
+                return;
+            case LoginMsg login:
+                Login(session, login);
+                return;
+        }
+        if (session.State == SessionState.Connected)
+        {
+            session.Error("not_logged_in", "Log in first.");
+            return;
+        }
+        switch (message)
+        {
+            case CreateCharacterMsg create:
+                CreateCharacter(session, create);
+                return;
+            case SelectCharacterMsg select:
+                SelectCharacter(session, select);
+                return;
+            case LeaveWorldMsg:
+                _zones.Leave(session);
+                SendCharacterList(session);
+                return;
+        }
+        if (session.State != SessionState.InWorld || session.Zone is null || session.Entity.IsNone)
+        {
+            session.Error("not_in_world", "Enter the world first.");
+            return;
+        }
+        var sim = session.Zone.Sim;
+        var player = sim.World.Get<Player>(session.Entity);
+        if (player is null)
+        {
+            return;
+        }
+        if (_config.LogIntents)
+        {
+            _log.LogDebug("{Session} -> {Message}", session, MessageSerializer.ToJson(message));
+        }
+        switch (message)
+        {
+            case ChatMsg chat:
+            {
+                var text = chat.Text.Trim();
+                if (text.Length == 0 || text.Length > 400)
+                {
+                    return;
+                }
+                sim.Events.Publish(new ChatMessage(session.Entity, chat.Channel, text) { Tick = sim.Clock.Tick });
+                return;
+            }
+            case RequestChunkMsg req:
+            {
+                var chunk = sim.Terrain.GetChunk(new Core.World.ChunkCoord(req.X, req.Y));
+                session.Send(Snapshots.Chunk(chunk));
+                return;
+            }
+        }
+        var intent = ToIntent(sim, message);
+        if (intent is null)
+        {
+            session.Error("unknown_message", message.GetType().Name);
+            return;
+        }
+        player.Intents.Enqueue(intent);
+        player.LastInputAt = sim.Clock.Time;
+    }
+
+    private static IIntent? ToIntent(Simulation sim, Message m) => m switch
+    {
+        MoveDirMsg d => new MoveDirIntent(new Vector2(d.X, d.Y)),
+        MoveToMsg to => new MoveToIntent(new Vector3(to.X, to.Y, to.Z)),
+        StopMsg => new StopIntent(),
+        JumpMsg => new JumpIntent(),
+        UseWeaveMsg u => new UseWeaveIntent(u.Slot, sim.World.Resolve(u.Target), new Vector3(u.X, u.Y, u.Z), new Vector2(u.DirX, u.DirY)),
+        CancelCastMsg => new CancelCastIntent(),
+        InteractMsg i => new InteractIntent(sim.World.Resolve(i.Target)),
+        PickUpMsg p => new PickUpIntent(sim.World.Resolve(p.Drop)),
+        EquipMsg e => new EquipIntent(e.ItemUid, e.Slot),
+        UnequipMsg u => new UnequipIntent(u.Slot),
+        DropItemMsg d => new DropItemIntent(d.ItemUid),
+        AllocatePassiveMsg a => new AllocatePassiveIntent(a.Node),
+        SetWeaveMsg s => new SetWeaveIntent(s.Slot, s.Spec),
+        AcceptQuestMsg q => new AcceptQuestIntent(q.Quest, sim.World.Resolve(q.Giver)),
+        TurnInQuestMsg q => new TurnInQuestIntent(q.Quest, sim.World.Resolve(q.Giver)),
+        CraftStartMsg c => new CraftStartIntent(c.Recipe, sim.World.Resolve(c.Station)),
+        CraftSubmitMsg c => new CraftSubmitIntent(c.Recipe, sim.World.Resolve(c.Station), new ProcedureInput { Times = c.Times, Choices = c.Choices, Values = c.Values }),
+        BindFountMsg b => new BindFountIntent(sim.World.Resolve(b.Fount)),
+        EnactDecreeMsg d => new EnactDecreeIntent(d.Holding, d.Decree),
+        BuildStructureMsg b => new BuildStructureIntent(b.Holding, b.Structure, new Vector3(b.X, b.Y, b.Z)),
+        RespawnMsg => new RespawnIntent(),
+        _ => null,
+    };
+
+    // ------------------------------------------------------------ accounts and characters
+
+    private void Login(Session session, LoginMsg login)
+    {
+        var name = login.Account.Trim();
+        if (name.Length is < 2 or > 32 || !name.All(c => char.IsLetterOrDigit(c) || c is '_' or '-' or '.'))
+        {
+            session.Send(new LoginResultMsg(false, null, "Account names are 2 to 32 letters, digits, dots, dashes or underscores."));
+            return;
+        }
+        if (_config.Auth == "token" && !string.Equals(login.Token, _config.Token, StringComparison.Ordinal))
+        {
+            session.Send(new LoginResultMsg(false, null, "Bad token."));
+            return;
+        }
+        var id = name.ToLowerInvariant();
+        foreach (var other in _sessions.Values)
+        {
+            if (other != session && other.AccountId == id)
+            {
+                _zones.Leave(other);
+                other.Send(new DisconnectMsg("logged in elsewhere"));
+                other.Connection.Close("logged in elsewhere");
+            }
+        }
+        var account = _accounts.Load(id) ?? new Account { Id = id, Name = name };
+        account.LastLoginAt = DateTimeOffset.UtcNow;
+        _accounts.Save(account);
+        session.AccountId = id;
+        session.State = SessionState.Authenticated;
+        session.Send(new LoginResultMsg(true, id, null));
+        SendCharacterList(session);
+    }
+
+    private void SendCharacterList(Session session)
+    {
+        var account = _accounts.Load(session.AccountId!);
+        var list = new List<CharacterSummary>();
+        if (account is not null)
+        {
+            foreach (var cid in account.Characters)
+            {
+                var sheet = _characters.Load(cid);
+                if (sheet is not null)
+                {
+                    list.Add(new CharacterSummary(sheet.Id, sheet.Name, sheet.Calling, sheet.Level, _zones.Generator.Layout.ZoneOf(sheet.X, sheet.Y).Key));
+                }
+            }
+        }
+        session.Send(new CharacterListMsg(list, _zones.Content.Each<CallingDef>().Select(c => c.Id).ToList()));
+    }
+
+    private void CreateCharacter(Session session, CreateCharacterMsg create)
+    {
+        var name = create.Name.Trim();
+        if (name.Length is < 2 or > 24 || !name.All(c => char.IsLetter(c) || c == ' ' || c == '\''))
+        {
+            session.Error("bad_name", "Names are 2 to 24 letters.");
+            return;
+        }
+        if (!_zones.Content.Has<CallingDef>(create.Calling))
+        {
+            session.Error("bad_calling", "Unknown calling.");
+            return;
+        }
+        var account = _accounts.Load(session.AccountId!)!;
+        if (account.Characters.Count >= 8)
+        {
+            session.Error("too_many", "That account has enough characters.");
+            return;
+        }
+        var start = _zones.GetOrCreate(_zones.Generator.StartZone());
+        var sheet = start.Sim.Service<CharacterFactory>().Create(start.Sim, _characters.NewId(), account.Id, name, create.Calling, start.Sim.Service<ItemGenerator>());
+        _characters.Save(sheet);
+        account.Characters.Add(sheet.Id);
+        _accounts.Save(account);
+        _log.LogInformation("{Session} created character {Name} ({Calling})", session, name, create.Calling);
+        SendCharacterList(session);
+    }
+
+    private void SelectCharacter(Session session, SelectCharacterMsg select)
+    {
+        var account = _accounts.Load(session.AccountId!)!;
+        if (!account.Characters.Contains(select.CharacterId))
+        {
+            session.Error("not_yours", "No such character on this account.");
+            return;
+        }
+        var sheet = _characters.Load(select.CharacterId);
+        if (sheet is null)
+        {
+            session.Error("missing", "That character could not be loaded.");
+            return;
+        }
+        if (session.State == SessionState.InWorld)
+        {
+            _zones.Leave(session);
+        }
+        _zones.Enter(session, sheet);
+    }
+}

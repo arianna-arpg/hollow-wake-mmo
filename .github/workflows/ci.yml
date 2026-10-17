@@ -16,15 +16,15 @@ jobs:
             8.0.x
             10.0.x
       - name: Restore
-        run: dotnet restore Skein.sln
+        run: dotnet restore HollowWake.sln
       - name: Build
-        run: dotnet build Skein.sln --no-restore -c Release
+        run: dotnet build HollowWake.sln --no-restore -c Release
       - name: Validate content
-        run: dotnet run --project src/Skein.Tools -c Release --no-build -- validate
+        run: dotnet run --project src/HollowWake.Tools -c Release --no-build -- validate
       - name: Test
-        run: dotnet test Skein.sln --no-build -c Release --logger "trx;LogFileName=results.trx"
+        run: dotnet test HollowWake.sln --no-build -c Release --logger "trx;LogFileName=results.trx"
       - name: Headless zone smoke
-        run: dotnet run --project src/Skein.Tools -c Release --no-build -- load --x 0 --y 0 --ticks 100
+        run: dotnet run --project src/HollowWake.Tools -c Release --no-build -- load --x 0 --y 0 --ticks 100
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -37,11 +37,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Build server image
-        run: docker build -f deploy/Dockerfile -t skein-server:ci .
+        run: docker build -f deploy/Dockerfile -t hollowwake-server:ci .
       - name: Image smoke
         run: |
-          docker run --rm -d --name skein-smoke -p 7777:7777 skein-server:ci
+          docker run --rm -d --name hollowwake-smoke -p 7777:7777 hollowwake-server:ci
           sleep 8
-          docker logs skein-smoke | tee /tmp/smoke.log
+          docker logs hollowwake-smoke | tee /tmp/smoke.log
           grep -q "is up" /tmp/smoke.log
-          docker stop skein-smoke
+          docker stop hollowwake-smoke

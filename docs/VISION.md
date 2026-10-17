@@ -1,6 +1,6 @@
 # Vision
 
-Skein is an online action RPG with the feel of a classic isometric MMO, the horizon of a seamless open world, and the build depth of the deepest modern action RPGs. It is built on one commitment: **the game is data, and the engine is a set of mechanisms that data composes.** Emergent play comes from systems that combine, not from features that were scripted.
+Hollow Wake MMO is an online action RPG with the feel of a classic isometric MMO, the horizon of a seamless open world, and the build depth of the deepest modern action RPGs. It is built on one commitment: **the game is data, and the engine is a set of mechanisms that data composes.** Emergent play comes from systems that combine, not from features that were scripted.
 
 ## The experience
 

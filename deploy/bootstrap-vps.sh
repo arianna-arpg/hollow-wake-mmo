@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
-# Bootstraps a fresh Ubuntu LTS VPS to run the Skein server under Docker Compose.
+# Bootstraps a fresh Ubuntu LTS VPS to run the Hollow Wake MMO server under Docker Compose.
 # Run as root once:  bash bootstrap-vps.sh <deploy-user> <github-repo-url>
-# Afterwards, as the deploy user:  cd ~/skein && docker compose -f deploy/docker-compose.yml up -d --build
+# Afterwards, as the deploy user:  cd ~/hollowwake && docker compose -f deploy/docker-compose.yml up -d --build
 set -euo pipefail
 
-USER_NAME="${1:-skein}"
-REPO_URL="${2:-https://github.com/arianna-arpg/skein.git}"
+USER_NAME="${1:-hollowwake}"
+REPO_URL="${2:-https://github.com/arianna-arpg/hollow-wake-mmo.git}"
 
 apt-get update
 apt-get install -y ca-certificates curl gnupg ufw fail2ban unattended-upgrades git
@@ -46,7 +46,7 @@ dpkg-reconfigure -f noninteractive unattended-upgrades
 systemctl enable --now fail2ban
 
 # The repository.
-sudo -u "$USER_NAME" git clone "$REPO_URL" "/home/$USER_NAME/skein" || true
+sudo -u "$USER_NAME" git clone "$REPO_URL" "/home/$USER_NAME/hollowwake" || true
 
 echo "Done. Log in as $USER_NAME, then:"
-echo "  cd ~/skein && docker compose -f deploy/docker-compose.yml up -d --build"
+echo "  cd ~/hollowwake && docker compose -f deploy/docker-compose.yml up -d --build"

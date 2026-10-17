@@ -140,7 +140,7 @@ Saying: Mind is the Thread that knows it is a Thread.
 
 A Pattern is any woven thing: a pebble, a storm, a song, a grudge, a city. Every Pattern has a proportion of Threads and a particular way they are tied. Two oaks are both mostly Bloom and Stone, but they are not the same Pattern any more than they are the same tree. A Weaver who reads a Pattern sees its Threads and its ties and, with practice, its history, because ties remember how they were made.
 
-A living person's Pattern is called their Skein. Everyone has one. In most people the Skein is close-woven: tight, finished, holding its shape for a lifetime and changing only slowly with age and grief and love. In a Weaver the Skein has a loose Thread, sometimes several, which is why they can reach into the Loom at all. A Weaver's Skein grows as they weave. It takes on more Threads, more ties, more plies, and it becomes more complex and more particular, until an old Weaver's Skein is a thing no one else could have made. This growth is the long game of a Weaver's life. The game takes its name from it.
+A living person's Pattern is called their HollowWake. Everyone has one. In most people the Skein is close-woven: tight, finished, holding its shape for a lifetime and changing only slowly with age and grief and love. In a Weaver the Skein has a loose Thread, sometimes several, which is why they can reach into the Loom at all. A Weaver's Skein grows as they weave. It takes on more Threads, more ties, more plies, and it becomes more complex and more particular, until an old Weaver's Skein is a thing no one else could have made. This growth is the long game of a Weaver's life.
 
 ## Weavers
 

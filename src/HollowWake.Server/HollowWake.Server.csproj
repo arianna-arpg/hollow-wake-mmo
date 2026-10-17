@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- Authoritative server library: sessions, zones, persistence, transport abstractions.
+       Hosted by HollowWake.Server.Host (.NET 8, pure) or HollowWake.Server.Host.Brutal (.NET 10 + BRUTAL). -->
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <RootNamespace>HollowWake.Server</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\HollowWake.Core\HollowWake.Core.csproj" />
+    <ProjectReference Include="..\HollowWake.Protocol\HollowWake.Protocol.csproj" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.0" />
+  </ItemGroup>
+</Project>

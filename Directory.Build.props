@@ -1,5 +1,5 @@
 <Project>
-  <!-- Shared build settings for every project in the Skein solution. -->
+  <!-- Shared build settings for every project in the Hollow Wake MMO solution. -->
   <PropertyGroup>
     <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
@@ -10,7 +10,7 @@
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
     <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
     <Authors>Arianna</Authors>
-    <Product>Skein</Product>
+    <Product>Hollow Wake MMO</Product>
     <NoWarn>$(NoWarn);CS1591</NoWarn>
   </PropertyGroup>
 </Project>
