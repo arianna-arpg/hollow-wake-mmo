@@ -140,16 +140,35 @@ public static class MechanismRegistry
         Register("minion", static (w, _) => w.Has("summon"), description: "the weave makes minions");
         Register("construct", static (w, p) => Construct(w, p), ProbeParameter.OneOf("massed"), "the graph places constructs; massed when more than one");
         Register("periodic_construct", static (w, _) => Constructs(w).Any(n => n.ContainsKey("interval") || n.ContainsKey("pulse")), description: "a construct that acts on an interval");
-        Register("engagement", static (w, _) => w.Has("aura") || w.Nodes("summon").Any(n => n.ContainsKey("contract")) || w.Tags.Has("guard"), description: "a toggle, a contract or a held guard");
+        Register("engagement", static (w, _) => w.Has("aura") || w.Nodes("summon").Any(n => n.ContainsKey("contract")) || IsGuard(w) || w.Form.Toggle is not null, description: "a toggle, a contract or a held guard");
         Register("displaces", static (w, _) => w.Has("move"), description: "the graph moves bodies");
         Register("channel", static (w, _) => w.Form.CastMode == CastMode.Channel, description: "a channeled cast");
-        Register("held", static (w, _) => w.Form.CastMode == CastMode.Charge, description: "a held cast that releases");
-        Register("guard", static (w, _) => w.Tags.Has("guard"), description: "a guard stance");
-        Register("uses", static (w, _) => w.Raises("uses.max"), description: "a bank of use charges");
-        Register("bankless", static (w, _) => !w.Raises("uses.max"), description: "no bank of use charges");
+        Register("held", static (w, _) => w.Form.CastMode is CastMode.Charge or CastMode.Overcharge || (w.Form.CastMode == CastMode.Channel && w.Form.Channel?.Release is not null), description: "a held cast that releases: a charge-up, an overcharge or a channel with a release");
+        Register("guard", static (w, _) => IsGuard(w), description: "a guard stance");
+        Register("uses", static (w, _) => HasUses(w), description: "a bank of use charges");
+        Register("bankless", static (w, _) => !HasUses(w), description: "no bank of use charges");
         Register("affliction", static (w, p) => Affliction(w, p), ProbeParameter.Status, "the weave can inflict an ailment, or the named status");
         Register("status", static (w, p) => AppliesStatus(w, p), ProbeParameter.Status, "the weave applies a status whose strength can scale, or the named status");
         Register("landing", static (w, _) => w.Nodes("projectile").Any(n => WeaveProbe.Flag(n, "gravity")) || w.Nodes().Any(n => n.ContainsKey("on_land")), description: "the delivery lands: lobbed projectiles, leaps, delayed placements");
+    }
+
+    private static bool IsGuard(WeaveProbe w) => w.Form.CastMode == CastMode.Guard || w.Tags.Has("guard");
+
+    /// <summary>A bank of uses from the form or an active glyph, or one a modifier raises through <c>uses.max</c>.</summary>
+    private static bool HasUses(WeaveProbe w)
+    {
+        if (w.Form.Uses is not null || w.Raises("uses.max"))
+        {
+            return true;
+        }
+        foreach (var g in w.Glyphs)
+        {
+            if (g.Uses is not null)
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
     private static bool Flight(WeaveProbe w, string? parameter)
@@ -256,6 +275,8 @@ public sealed class WeaveProbe
     public required IReadOnlyList<Modifier> Modifiers { get; init; }
     public required IReadOnlyDictionary<string, double> Bases { get; init; }
     public required WeaveGraph Graph { get; init; }
+    /// <summary>The active glyphs, in socket order: probes about what glyphs grant (a use bank, a trigger) read them.</summary>
+    public IReadOnlyList<GlyphDef> Glyphs { get; init; } = Array.Empty<GlyphDef>();
 
     public IEnumerable<JsonObject> Nodes() => Graph.Nodes();
     public IEnumerable<JsonObject> Nodes(string type) => Graph.Nodes(type);

@@ -65,12 +65,14 @@ internal sealed class RandomHandler : IEffectHandler
                 choices.Add((ctx.NumberOf(c["weight"], 1), ctx.CompileList(c["effects"], "effects")));
             }
         }
-        return new Effect { Type = Type, Choices = choices };
+        return new Effect { Type = Type, Choices = choices, Weights = choices.Select(c => c.Item1).ToArray() };
     }
 
     private sealed class Effect : CompiledEffect
     {
         public List<(double Weight, CompiledEffect[] Effects)> Choices = new();
+        // The weights in choice order, built once rather than per pick.
+        public double[] Weights = Array.Empty<double>();
 
         public override void Execute(EffectContext ctx)
         {
@@ -78,7 +80,7 @@ internal sealed class RandomHandler : IEffectHandler
             {
                 return;
             }
-            var idx = ctx.Rng.PickWeighted(Choices.Select(c => c.Weight).ToList());
+            var idx = ctx.Rng.PickWeighted(Weights);
             if (idx >= 0)
             {
                 ExecuteAll(Choices[idx].Effects, ctx);
