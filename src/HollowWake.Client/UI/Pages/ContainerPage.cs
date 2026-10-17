@@ -21,6 +21,7 @@ public partial class ContainerPage : LeafView
     private HBoxContainer _pages = null!;
     private BoardView _board = null!;
     private Label _note = null!;
+    private Button _buy = null!;
     private Label _overflowNote = null!;
     private BoardView _overflow = null!;
     private VBoxContainer _rungs = null!;
@@ -70,6 +71,17 @@ public partial class ContainerPage : LeafView
         _note = MakeLabel("", Skin.S("ink_muted"), wrap: true);
         _note.SizeFlagsHorizontal = SizeFlags.ExpandFill;
         _column.AddChild(_note);
+        // Buys the stash's next page at the server's price; the server answers with the page unlocked.
+        _buy = MakeButton("Buy this page", () =>
+        {
+            if (Shown is { Locked: true } page)
+            {
+                Ctx.Send(new BuyPageMsg(page.Of ?? page.Id));
+            }
+        });
+        _buy.SizeFlagsHorizontal = SizeFlags.ShrinkBegin;
+        _buy.Visible = false;
+        _column.AddChild(_buy);
         _board = new BoardView(Ctx.Items, "");
         _column.AddChild(_board);
         _rungs = new VBoxContainer();
@@ -95,6 +107,7 @@ public partial class ContainerPage : LeafView
         {
             Shown = null;
             _note.Text = _emptyText;
+            _buy.Visible = false;
             _board.Show(null, 0);
             ShowOverflow(null);
             return;
@@ -137,11 +150,22 @@ public partial class ContainerPage : LeafView
         {
             notes.Add(shown.Reason ?? "Out of reach from here.");
         }
+        // Pages are bought in order: the first locked page of its stash can be bought, later ones wait for it.
+        var next = shown.Locked == true
+            ? containers.Where(c => c.Locked == true && (c.Of ?? c.Id) == (shown.Of ?? shown.Id)).OrderBy(c => c.Page ?? 0).FirstOrDefault()
+            : null;
         if (shown.Locked == true)
         {
             notes.Add("This page is not yet bought" + (shown.Price is { } cost ? ": " + PriceText(cost) + "." : "."));
+            if (next is not null && next.Id != shown.Id)
+            {
+                notes.Add("The pages before it are bought first.");
+            }
         }
         _note.Text = string.Join(" ", notes);
+        _buy.Visible = next is not null && next.Id == shown.Id;
+        _buy.Disabled = !shown.Reachable;
+        _buy.TooltipText = shown.Reachable ? (shown.Price is { } p ? "Costs " + PriceText(p) : "") : shown.Reason ?? "Out of reach from here.";
         _board.Container = shown.Id;
         _board.Show(shown.Board, Skin.Metric("cell", 36), locked: !shown.Reachable || shown.Locked == true);
         foreach (var rung in shown.Board.Rungs ?? new List<RungInfo>())

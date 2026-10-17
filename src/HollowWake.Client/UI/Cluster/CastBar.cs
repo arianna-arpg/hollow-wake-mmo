@@ -106,11 +106,11 @@ public partial class CastBar : Control
         }
     }
 
-    /// <summary>A guard: the pool it has left (the brim the server sends for a guard) above a strip of the hold that remains.</summary>
+    /// <summary>A raised guard: the fraction of its pool left, as the server sends it, above a strip of the hold that remains.</summary>
     private void DrawGuard(Rect2 inner)
     {
         var guard = _skin.State("guard", _skin.Fill("ward"));
-        var pool = (float)Math.Clamp(_cast!.Brim ?? 1, 0, 1);
+        var pool = (float)Math.Clamp(_cast!.Pool ?? 1, 0, 1);
         var strip = Math.Max(2, inner.Size.Y * 0.22f);
         var top = new Rect2(inner.Position, new Vector2(inner.Size.X, inner.Size.Y - strip));
         DrawRect(new Rect2(top.Position, new Vector2(top.Size.X * pool, top.Size.Y)), guard);

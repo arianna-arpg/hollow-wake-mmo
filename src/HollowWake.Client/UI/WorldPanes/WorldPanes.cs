@@ -322,9 +322,40 @@ public partial class StationPane : LeafView
         _dirty = false;
         Clear(_column);
         var s = _state;
-        if (s.Recipes.Count == 0)
+        var services = s.Services ?? new List<StationServiceInfo>();
+        if (s.Recipes.Count == 0 && services.Count == 0)
         {
             _column.AddChild(MakeLabel("Nothing can be made here yet.", Skin.S("ink_muted")));
+        }
+        // The station's services, each quoted for the item, weave slot or node it applies to.
+        if (services.Count > 0)
+        {
+            _column.AddChild(MakeLabel("Services", Skin.S("accent"), font: Skin.Title));
+            foreach (var service in services)
+            {
+                var sv = service;
+                var row = new HBoxContainer();
+                if (sv.Item is { } uid && Hero.FindItem(uid) is { } item)
+                {
+                    row.AddChild(new ItemSwatch(Skin, Ctx.Items, item) { CustomMinimumSize = new Vector2(30, 30) });
+                }
+                var text = sv.Price is { Count: > 0 } price
+                    ? $"{sv.Label}  ({string.Join(", ", price.Select(p => $"{Math.Round(p.Value)} {Skin.Names.CurrencyName(p.Key)}"))})"
+                    : sv.Label;
+                var label = MakeLabel(text, sv.Enabled == false ? Skin.S("ink_muted") : Skin.S("ink"), wrap: true);
+                label.SizeFlagsHorizontal = SizeFlags.ExpandFill;
+                row.AddChild(label);
+                row.AddChild(MakeButton("Ask", () => Ctx.Send(new StationServiceMsg(s.Source, sv.Id) { Item = sv.Item, Slot = sv.Slot, Node = sv.Node }), sv.Enabled != false, sv.Reason));
+                _column.AddChild(row);
+                if (sv.Enabled == false && sv.Reason is { Length: > 0 } reason)
+                {
+                    _column.AddChild(MakeLabel("   " + reason, Skin.S("bad", Skin.S("ink_muted")), Skin.BodySize - 1, wrap: true));
+                }
+            }
+            if (s.Recipes.Count > 0)
+            {
+                _column.AddChild(MakeLabel("Recipes", Skin.S("accent"), font: Skin.Title));
+            }
         }
         foreach (var recipe in s.Recipes)
         {

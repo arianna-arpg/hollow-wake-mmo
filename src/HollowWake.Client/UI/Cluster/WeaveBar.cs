@@ -148,7 +148,9 @@ public partial class WeaveBar : Control
             var r = new Rect2(Vector2.Zero, Size);
             var seat = _seat;
             var dormant = seat?.Dormant is not null;
-            Paint.Well(this, _skin, r, _skin.S("well"), _casting);
+            // A slot whose toggle or contract runs (a sustained summon, an aura) shows its face on: the well lit.
+            var active = seat?.Info?.Active == true;
+            Paint.Well(this, _skin, r, active ? _skin.S("well").Lerp(_skin.S("accent"), 0.22f) : _skin.S("well"), _casting || active);
             var label = _skin.S("label");
             var keySize = Math.Max(9, (int)(Size.Y * 0.22f));
             if (seat is null || seat.Empty)
@@ -166,8 +168,8 @@ public partial class WeaveBar : Control
             }
             var iconSize = Size.X * 0.62f;
             var iconRect = new Rect2((Size - new Vector2(iconSize, iconSize)) / 2, new Vector2(iconSize, iconSize));
-            // a faint halo of the Thread behind the glyph
-            DrawCircle(Size / 2, iconSize * 0.46f, tint with { A = dormant ? 0.06f : 0.14f }, true, -1, true);
+            // a faint halo of the Thread behind the glyph, bright while the slot is on
+            DrawCircle(Size / 2, iconSize * 0.46f, tint with { A = dormant ? 0.06f : active ? 0.32f : 0.14f }, true, -1, true);
             DrawTextureRect(_skin.Icon(glyph, (int)iconSize), iconRect, false, tint);
             if (dormant)
             {
@@ -211,6 +213,15 @@ public partial class WeaveBar : Control
             if (seat.Meta is not null)
             {
                 Paint.Text(this, _skin.Body, new Vector2(4, Size.Y - 4), "+", keySize, _skin.S("accent"), outline: 3);
+            }
+            if (seat.Info?.Stacks is > 0 and var stacks)
+            {
+                // Self stacks the slot holds, as the server counts them.
+                Paint.Text(this, _skin.Numerals, new Vector2(0, Size.Y - 4), $"x{stacks}", keySize, label, HorizontalAlignment.Center, Size.X, 3);
+            }
+            if (active)
+            {
+                DrawRect(r.Grow(-1.5f), _skin.S("accent") with { A = 0.9f }, false, 2);
             }
             if (_hover)
             {

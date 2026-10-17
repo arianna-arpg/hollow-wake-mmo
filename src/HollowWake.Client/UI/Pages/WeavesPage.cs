@@ -280,7 +280,16 @@ public partial class WeavesPage : LeafView
             var nameColor = dormant ? Skin.State("dormant", muted) : seat.Threads.Count > 0 ? Skin.Thread(seat.Threads[0]) : ink;
             DrawString(Skin.Title, new Vector2(x, 24), seat.Name, HorizontalAlignment.Left, Size.X * 0.5f, Skin.TitleSize - 1, nameColor);
             var info = seat.Info;
-            var meta = info is null ? "" : string.Join("  ", new[] { $"Level {info.Level}", info.Form?.Replace('_', ' '), info.CastMode }.Where(t => !string.IsNullOrEmpty(t)));
+            var meta = info is null ? "" : string.Join("  ", new[]
+            {
+                $"Level {info.Level}",
+                info.Form?.Replace('_', ' '),
+                info.CastMode,
+                info.Active == true ? "on" : null,
+                info.UsesMax is > 1 ? $"{info.Uses ?? 0}/{info.UsesMax} uses" : null,
+                info.Stacks is > 0 ? $"{info.Stacks} stacks" : null,
+                info.Meta is { } m ? "second: " + m.Label : null,
+            }.Where(t => !string.IsNullOrEmpty(t)));
             if (dormant)
             {
                 meta = "Dormant: " + seat.Dormant;
