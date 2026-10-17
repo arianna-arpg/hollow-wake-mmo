@@ -142,10 +142,9 @@ public static class ContentLoader
 
     private static void ApplyDocument(JsonObject doc, string origin, Dictionary<string, Dictionary<string, RawDefinition>> merged, List<PendingPatch> pending, ValidationReport report)
     {
-        var kind = doc["kind"]?.GetValue<string>();
-        if (string.IsNullOrWhiteSpace(kind))
+        if (!TryReadName(doc["kind"], out var kind))
         {
-            report.Error("file", origin, "Document has no 'kind'.");
+            report.Error("file", origin, "Document 'kind' must be a non-empty string.", origin);
             return;
         }
         if (!merged.TryGetValue(kind, out var byId))
@@ -168,10 +167,9 @@ public static class ContentLoader
                     report.Error(kind, "", "Entry is not an object.", origin);
                     continue;
                 }
-                var id = obj["id"]?.GetValue<string>();
-                if (string.IsNullOrWhiteSpace(id))
+                if (!TryReadName(obj["id"], out var id))
                 {
-                    report.Error(kind, "", "Entry has no 'id'.", origin);
+                    report.Error(kind, "", "Entry 'id' must be a non-empty string.", origin);
                     continue;
                 }
                 ApplyEntry(kind, id, obj, origin, byId, pending, report);
@@ -198,8 +196,14 @@ public static class ContentLoader
 
     private static void ApplyEntry(string kind, string id, JsonObject obj, string origin, Dictionary<string, RawDefinition> byId, List<PendingPatch> pending, ValidationReport report)
     {
-        var remove = obj["remove"]?.GetValue<bool>() ?? false;
-        var patch = obj["patch"]?.GetValue<bool>() ?? false;
+        // Validate control fields before changing the object or the merged definitions. Bad authoring
+        // input belongs in the report, and must not prevent valid sibling entries from being read.
+        var validRemove = TryReadFlag(obj, "remove", kind, id, origin, report, out var remove);
+        var validPatch = TryReadFlag(obj, "patch", kind, id, origin, report, out var patch);
+        if (!validRemove || !validPatch)
+        {
+            return;
+        }
         obj.Remove("remove");
         obj.Remove("patch");
 
@@ -223,6 +227,30 @@ public static class ContentLoader
             return;
         }
         byId[id] = new RawDefinition(kind, id, (JsonObject)obj.DeepClone(), origin);
+    }
+
+    private static bool TryReadName(JsonNode? node, out string name)
+    {
+        if (node is JsonValue value && value.TryGetValue<string>(out var text) && !string.IsNullOrWhiteSpace(text))
+        {
+            name = text;
+            return true;
+        }
+        name = "";
+        return false;
+    }
+
+    private static bool TryReadFlag(JsonObject obj, string field, string kind, string id, string origin, ValidationReport report, out bool flag)
+    {
+        flag = false;
+        // Preserve the existing default for absent or null optional flags.
+        var node = obj[field];
+        if (node is null || node is JsonValue value && value.TryGetValue<bool>(out flag))
+        {
+            return true;
+        }
+        report.Error(kind, id, $"Entry '{field}' must be a boolean.", origin);
+        return false;
     }
 
     /// <summary>JSON Merge Patch semantics: objects merge recursively, null deletes, anything else replaces.</summary>
