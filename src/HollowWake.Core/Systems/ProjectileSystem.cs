@@ -151,6 +151,7 @@ public sealed class ProjectileSystem : SimSystem
         }
         else
         {
+            Adopt(p);
             if (p.Returning || p.Steers || p.Accel != 0)
             {
                 Steer(sim, e, p, dt, now, in r);
@@ -278,6 +279,32 @@ public sealed class ProjectileSystem : SimSystem
     }
 
     // ------------------------------------------------------------ steering
+
+    /// <summary>
+    /// Takes up a velocity something else gave the flight (a dome turning it back or slowing it): the heading
+    /// and speed follow the ground velocity when they no longer match it, so steering carries on from there.
+    /// </summary>
+    private static void Adopt(Projectile p)
+    {
+        var vx = p.Velocity.X;
+        var vy = p.Velocity.Y;
+        var squared = vx * vx + vy * vy;
+        if (squared < 1e-8f)
+        {
+            return;
+        }
+        var speed = MathF.Sqrt(squared);
+        if (MathF.Abs(speed - p.Speed) > 1e-3f)
+        {
+            p.Speed = speed;
+        }
+        var cos = MathF.Cos(p.Heading);
+        var sin = MathF.Sin(p.Heading);
+        if (MathF.Abs(vx - cos * speed) > 1e-3f * speed || MathF.Abs(vy - sin * speed) > 1e-3f * speed)
+        {
+            p.Heading = MathF.Atan2(vy, vx);
+        }
+    }
 
     private static void Steer(Simulation sim, Entity e, Projectile p, float dt, double now, in FlightRules r)
     {

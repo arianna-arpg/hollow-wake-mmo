@@ -104,6 +104,9 @@ public sealed class Projectile : IComponent
     /// <summary>Set when the flight ended this tick; the entity is gone at the end of the tick.</summary>
     public bool Ended;
     public HitLedger Hits = new();
+
+    /// <summary>The bodies this flight has struck (its <see cref="Hits"/> ledger), cleared by whatever turns it around.</summary>
+    public HitLedger Hit => Hits;
     /// <summary>The body the cast aimed at, for homing.</summary>
     public Entity CastTarget = Entity.None;
 
