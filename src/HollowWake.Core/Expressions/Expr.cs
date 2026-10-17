@@ -1,3 +1,4 @@
+using System.Buffers;
 using System.Collections.Concurrent;
 using System.Globalization;
 
@@ -37,6 +38,11 @@ public sealed class ExprEvalException : Exception
 /// (<c>"40 + level * 8 + strength * 2"</c>, <c>"has(\"burning\") ? 1.5 : 1"</c>) and the engine
 /// evaluates them against a scope. Parsing is cached by source text.
 /// </summary>
+/// <remarks>
+/// The tree has one node class per operator and per call kind, so evaluating a node is one virtual call
+/// with no dispatch on operator text. Function arguments live in a stack buffer (a pooled one for long
+/// argument lists), so evaluation allocates nothing.
+/// </remarks>
 public sealed class Expr
 {
     private static readonly ConcurrentDictionary<string, Expr> Cache = new(StringComparer.Ordinal);
@@ -106,7 +112,7 @@ public sealed class Expr
 
     private sealed class ConstNode : Node
     {
-        public double Value { get; }
+        public readonly double Value;
         public ConstNode(double v) => Value = v;
         public override double Eval(IExprScope scope) => Value;
         public override void Collect(List<string> identifiers, List<string> flags) { }
@@ -114,7 +120,7 @@ public sealed class Expr
 
     private sealed class StringNode : Node
     {
-        public string Value { get; }
+        public readonly string Value;
         public StringNode(string v) => Value = v;
         public override double Eval(IExprScope scope) => throw new ExprEvalException($"String \"{Value}\" used where a number was expected.");
         public override void Collect(List<string> identifiers, List<string> flags) { }
@@ -122,76 +128,163 @@ public sealed class Expr
 
     private sealed class VarNode : Node
     {
-        public string Name { get; }
-        public VarNode(string name) => Name = name;
+        private readonly string _name;
+        public VarNode(string name) => _name = name;
 
-        public override double Eval(IExprScope scope)
-        {
-            if (scope.TryResolve(Name, out var v))
-            {
-                return v;
-            }
-            throw new ExprEvalException($"Unknown identifier '{Name}'.");
-        }
+        public override double Eval(IExprScope scope) => scope.TryResolve(_name, out var v) ? v : throw Unknown(_name);
 
-        public override void Collect(List<string> identifiers, List<string> flags) => identifiers.Add(Name);
+        private static ExprEvalException Unknown(string name) => new($"Unknown identifier '{name}'.");
+
+        public override void Collect(List<string> identifiers, List<string> flags) => identifiers.Add(_name);
     }
 
-    private sealed class UnaryNode : Node
+    private abstract class UnaryNode : Node
     {
-        private readonly char _op;
-        private readonly Node _a;
-        public UnaryNode(char op, Node a) { _op = op; _a = a; }
+        protected readonly Node A;
+        protected UnaryNode(Node a) => A = a;
+        public sealed override void Collect(List<string> identifiers, List<string> flags) => A.Collect(identifiers, flags);
+    }
 
-        public override double Eval(IExprScope scope) => _op switch
+    private sealed class NegateNode : UnaryNode
+    {
+        public NegateNode(Node a) : base(a) { }
+        public override double Eval(IExprScope scope) => -A.Eval(scope);
+    }
+
+    private sealed class NotNode : UnaryNode
+    {
+        public NotNode(Node a) : base(a) { }
+        public override double Eval(IExprScope scope) => A.Eval(scope) == 0 ? 1 : 0;
+    }
+
+    /// <summary>Operands evaluate left then right (rand() draws keep their order).</summary>
+    private abstract class BinaryNode : Node
+    {
+        protected readonly Node A;
+        protected readonly Node B;
+        protected BinaryNode(Node a, Node b) { A = a; B = b; }
+
+        public sealed override void Collect(List<string> identifiers, List<string> flags)
         {
-            '-' => -_a.Eval(scope),
-            '!' => _a.Eval(scope) == 0 ? 1 : 0,
-            _ => throw new ExprEvalException($"Unknown unary operator {_op}.")
+            A.Collect(identifiers, flags);
+            B.Collect(identifiers, flags);
+        }
+
+        public static Node Make(string op, Node a, Node b) => op switch
+        {
+            "+" => new AddNode(a, b),
+            "-" => new SubtractNode(a, b),
+            "*" => new MultiplyNode(a, b),
+            "/" => new DivideNode(a, b),
+            "%" => new ModuloNode(a, b),
+            "^" => new PowerNode(a, b),
+            "<" => new LessNode(a, b),
+            "<=" => new LessEqualNode(a, b),
+            ">" => new GreaterNode(a, b),
+            ">=" => new GreaterEqualNode(a, b),
+            "==" => new EqualNode(a, b),
+            "!=" => new NotEqualNode(a, b),
+            "&&" => new AndNode(a, b),
+            "||" => new OrNode(a, b),
+            _ => throw new ExprEvalException($"Unknown operator {op}.")
         };
-
-        public override void Collect(List<string> identifiers, List<string> flags) => _a.Collect(identifiers, flags);
     }
 
-    private sealed class BinaryNode : Node
+    private sealed class AddNode : BinaryNode
     {
-        private readonly string _op;
-        private readonly Node _a;
-        private readonly Node _b;
-        public BinaryNode(string op, Node a, Node b) { _op = op; _a = a; _b = b; }
+        public AddNode(Node a, Node b) : base(a, b) { }
+        public override double Eval(IExprScope scope) => A.Eval(scope) + B.Eval(scope);
+    }
+
+    private sealed class SubtractNode : BinaryNode
+    {
+        public SubtractNode(Node a, Node b) : base(a, b) { }
+        public override double Eval(IExprScope scope) => A.Eval(scope) - B.Eval(scope);
+    }
+
+    private sealed class MultiplyNode : BinaryNode
+    {
+        public MultiplyNode(Node a, Node b) : base(a, b) { }
+        public override double Eval(IExprScope scope) => A.Eval(scope) * B.Eval(scope);
+    }
+
+    /// <summary>Division by zero yields zero.</summary>
+    private sealed class DivideNode : BinaryNode
+    {
+        public DivideNode(Node a, Node b) : base(a, b) { }
 
         public override double Eval(IExprScope scope)
         {
-            switch (_op)
-            {
-                case "&&": return _a.Eval(scope) != 0 && _b.Eval(scope) != 0 ? 1 : 0;
-                case "||": return _a.Eval(scope) != 0 || _b.Eval(scope) != 0 ? 1 : 0;
-            }
-            var x = _a.Eval(scope);
-            var y = _b.Eval(scope);
-            return _op switch
-            {
-                "+" => x + y,
-                "-" => x - y,
-                "*" => x * y,
-                "/" => y == 0 ? 0 : x / y,
-                "%" => y == 0 ? 0 : x % y,
-                "^" => Math.Pow(x, y),
-                "<" => x < y ? 1 : 0,
-                "<=" => x <= y ? 1 : 0,
-                ">" => x > y ? 1 : 0,
-                ">=" => x >= y ? 1 : 0,
-                "==" => Math.Abs(x - y) < 1e-9 ? 1 : 0,
-                "!=" => Math.Abs(x - y) >= 1e-9 ? 1 : 0,
-                _ => throw new ExprEvalException($"Unknown operator {_op}.")
-            };
+            var x = A.Eval(scope);
+            var y = B.Eval(scope);
+            return y == 0 ? 0 : x / y;
         }
+    }
 
-        public override void Collect(List<string> identifiers, List<string> flags)
+    private sealed class ModuloNode : BinaryNode
+    {
+        public ModuloNode(Node a, Node b) : base(a, b) { }
+
+        public override double Eval(IExprScope scope)
         {
-            _a.Collect(identifiers, flags);
-            _b.Collect(identifiers, flags);
+            var x = A.Eval(scope);
+            var y = B.Eval(scope);
+            return y == 0 ? 0 : x % y;
         }
+    }
+
+    private sealed class PowerNode : BinaryNode
+    {
+        public PowerNode(Node a, Node b) : base(a, b) { }
+        public override double Eval(IExprScope scope) => Math.Pow(A.Eval(scope), B.Eval(scope));
+    }
+
+    private sealed class LessNode : BinaryNode
+    {
+        public LessNode(Node a, Node b) : base(a, b) { }
+        public override double Eval(IExprScope scope) => A.Eval(scope) < B.Eval(scope) ? 1 : 0;
+    }
+
+    private sealed class LessEqualNode : BinaryNode
+    {
+        public LessEqualNode(Node a, Node b) : base(a, b) { }
+        public override double Eval(IExprScope scope) => A.Eval(scope) <= B.Eval(scope) ? 1 : 0;
+    }
+
+    private sealed class GreaterNode : BinaryNode
+    {
+        public GreaterNode(Node a, Node b) : base(a, b) { }
+        public override double Eval(IExprScope scope) => A.Eval(scope) > B.Eval(scope) ? 1 : 0;
+    }
+
+    private sealed class GreaterEqualNode : BinaryNode
+    {
+        public GreaterEqualNode(Node a, Node b) : base(a, b) { }
+        public override double Eval(IExprScope scope) => A.Eval(scope) >= B.Eval(scope) ? 1 : 0;
+    }
+
+    private sealed class EqualNode : BinaryNode
+    {
+        public EqualNode(Node a, Node b) : base(a, b) { }
+        public override double Eval(IExprScope scope) => Math.Abs(A.Eval(scope) - B.Eval(scope)) < 1e-9 ? 1 : 0;
+    }
+
+    private sealed class NotEqualNode : BinaryNode
+    {
+        public NotEqualNode(Node a, Node b) : base(a, b) { }
+        public override double Eval(IExprScope scope) => Math.Abs(A.Eval(scope) - B.Eval(scope)) >= 1e-9 ? 1 : 0;
+    }
+
+    private sealed class AndNode : BinaryNode
+    {
+        public AndNode(Node a, Node b) : base(a, b) { }
+        public override double Eval(IExprScope scope) => A.Eval(scope) != 0 && B.Eval(scope) != 0 ? 1 : 0;
+    }
+
+    private sealed class OrNode : BinaryNode
+    {
+        public OrNode(Node a, Node b) : base(a, b) { }
+        public override double Eval(IExprScope scope) => A.Eval(scope) != 0 || B.Eval(scope) != 0 ? 1 : 0;
     }
 
     private sealed class TernaryNode : Node
@@ -208,72 +301,107 @@ public sealed class Expr
         }
     }
 
+    private sealed class HasNode : Node
+    {
+        private readonly string _flag;
+        public HasNode(string flag) => _flag = flag;
+        public override double Eval(IExprScope scope) => scope.HasFlag(_flag) ? 1 : 0;
+        public override void Collect(List<string> identifiers, List<string> flags) => flags.Add(_flag);
+    }
+
+    private sealed class RandNode : Node
+    {
+        public override double Eval(IExprScope scope) => scope.NextRandom();
+        public override void Collect(List<string> identifiers, List<string> flags) { }
+    }
+
+    /// <summary>A registered function. Arguments evaluate in order into a stack buffer the function reads as a span.</summary>
     private sealed class CallNode : Node
     {
-        private readonly string _name;
-        private readonly Node[] _args;
-        private readonly ExprFunctions.Function? _fn;
+        public const int StackArgs = 8;
 
-        public CallNode(string name, Node[] args, int position)
+        private readonly Node[] _args;
+        private readonly ExprFunctions.Body _impl;
+
+        private CallNode(Node[] args, ExprFunctions.Body impl)
         {
-            _name = name;
             _args = args;
+            _impl = impl;
+        }
+
+        /// <summary>Validates a call while parsing: built-in forms first, then the function registry.</summary>
+        public static Node Make(string name, Node[] args, int position)
+        {
             switch (name)
             {
                 case "has":
-                    if (args.Length != 1 || args[0] is not StringNode)
+                    if (args.Length != 1 || args[0] is not StringNode flag)
                     {
                         throw new ExprParseException("has() takes exactly one quoted flag name", position);
                     }
-                    break;
+                    return new HasNode(flag.Value);
                 case "rand":
                     if (args.Length != 0)
                     {
                         throw new ExprParseException("rand() takes no arguments", position);
                     }
-                    break;
+                    return new RandNode();
                 case "if":
                     if (args.Length != 3)
                     {
                         throw new ExprParseException("if() takes condition, then, else", position);
                     }
-                    break;
+                    return new TernaryNode(args[0], args[1], args[2]);
                 default:
-                    if (!ExprFunctions.TryGet(name, out _fn))
+                    if (!ExprFunctions.TryGet(name, out var fn))
                     {
                         throw new ExprParseException($"Unknown function '{name}'", position);
                     }
-                    if (args.Length < _fn!.MinArgs || args.Length > _fn.MaxArgs)
+                    if (args.Length < fn!.MinArgs || args.Length > fn.MaxArgs)
                     {
-                        throw new ExprParseException($"{name}() expects {_fn.MinArgs}..{_fn.MaxArgs} arguments, got {args.Length}", position);
+                        throw new ExprParseException($"{name}() expects {fn.MinArgs}..{fn.MaxArgs} arguments, got {args.Length}", position);
                     }
-                    break;
+                    return new CallNode(args, fn.Impl);
             }
         }
 
         public override double Eval(IExprScope scope)
         {
-            switch (_name)
+            var args = _args;
+            if (args.Length > StackArgs)
             {
-                case "has": return scope.HasFlag(((StringNode)_args[0]).Value) ? 1 : 0;
-                case "rand": return scope.NextRandom();
-                case "if": return _args[0].Eval(scope) != 0 ? _args[1].Eval(scope) : _args[2].Eval(scope);
+                return EvalPooled(scope);
             }
-            var values = new double[_args.Length];
+            Span<double> values = stackalloc double[StackArgs];
+            values = values[..args.Length];
             for (var i = 0; i < values.Length; i++)
             {
-                values[i] = _args[i].Eval(scope);
+                values[i] = args[i].Eval(scope);
             }
-            return _fn!.Impl(values);
+            return _impl(values);
+        }
+
+        private double EvalPooled(IExprScope scope)
+        {
+            var args = _args;
+            var rented = ArrayPool<double>.Shared.Rent(args.Length);
+            try
+            {
+                var values = rented.AsSpan(0, args.Length);
+                for (var i = 0; i < values.Length; i++)
+                {
+                    values[i] = args[i].Eval(scope);
+                }
+                return _impl(values);
+            }
+            finally
+            {
+                ArrayPool<double>.Shared.Return(rented);
+            }
         }
 
         public override void Collect(List<string> identifiers, List<string> flags)
         {
-            if (_name == "has")
-            {
-                flags.Add(((StringNode)_args[0]).Value);
-                return;
-            }
             foreach (var a in _args)
             {
                 a.Collect(identifiers, flags);
@@ -311,10 +439,8 @@ public sealed class Expr
             {
                 throw new ExprParseException($"Unexpected '{_text}'", _tokStart);
             }
-            return Fold(n);
+            return n;
         }
-
-        private static Node Fold(Node n) => n;
 
         private Node ParseTernary()
         {
@@ -336,7 +462,7 @@ public sealed class Expr
             while (_tok == Tok.Op && _text == "||")
             {
                 Advance();
-                n = new BinaryNode("||", n, ParseAnd());
+                n = new OrNode(n, ParseAnd());
             }
             return n;
         }
@@ -347,7 +473,7 @@ public sealed class Expr
             while (_tok == Tok.Op && _text == "&&")
             {
                 Advance();
-                n = new BinaryNode("&&", n, ParseCompare());
+                n = new AndNode(n, ParseCompare());
             }
             return n;
         }
@@ -359,7 +485,7 @@ public sealed class Expr
             {
                 var op = _text;
                 Advance();
-                n = new BinaryNode(op, n, ParseAdd());
+                n = BinaryNode.Make(op, n, ParseAdd());
             }
             return n;
         }
@@ -371,7 +497,7 @@ public sealed class Expr
             {
                 var op = _text;
                 Advance();
-                n = new BinaryNode(op, n, ParseMul());
+                n = BinaryNode.Make(op, n, ParseMul());
             }
             return n;
         }
@@ -383,7 +509,7 @@ public sealed class Expr
             {
                 var op = _text;
                 Advance();
-                n = new BinaryNode(op, n, ParseUnary());
+                n = BinaryNode.Make(op, n, ParseUnary());
             }
             return n;
         }
@@ -395,11 +521,11 @@ public sealed class Expr
                 var op = _text[0];
                 Advance();
                 var operand = ParseUnary();
-                if (op == '-' && operand is ConstNode c)
+                if (op == '-')
                 {
-                    return new ConstNode(-c.Value);
+                    return operand is ConstNode c ? new ConstNode(-c.Value) : new NegateNode(operand);
                 }
-                return new UnaryNode(op, operand);
+                return new NotNode(operand);
             }
             return ParsePow();
         }
@@ -411,7 +537,7 @@ public sealed class Expr
             {
                 Advance();
                 var exponent = ParseUnary();
-                return new BinaryNode("^", n, exponent);
+                return new PowerNode(n, exponent);
             }
             return n;
         }
@@ -451,7 +577,7 @@ public sealed class Expr
                             }
                         }
                         Expect(Tok.RParen, ")");
-                        return new CallNode(name, args.ToArray(), start);
+                        return CallNode.Make(name, args.ToArray(), start);
                     }
                     if (name == "true")
                     {
@@ -576,13 +702,17 @@ public sealed class Expr
                 case ',': _tok = Tok.Comma; _text = ","; return;
                 case '?': _tok = Tok.Question; _text = "?"; return;
                 case ':': _tok = Tok.Colon; _text = ":"; return;
-                case '+': case '-': case '*': case '/': case '%': case '^':
-                    _tok = Tok.Op; _text = c.ToString(); return;
+                case '+': _tok = Tok.Op; _text = "+"; return;
+                case '-': _tok = Tok.Op; _text = "-"; return;
+                case '*': _tok = Tok.Op; _text = "*"; return;
+                case '/': _tok = Tok.Op; _text = "/"; return;
+                case '%': _tok = Tok.Op; _text = "%"; return;
+                case '^': _tok = Tok.Op; _text = "^"; return;
                 case '<': case '>': case '=': case '!':
                     if (_pos < _s.Length && _s[_pos] == '=')
                     {
                         _pos++;
-                        _text = c + "=";
+                        _text = c switch { '<' => "<=", '>' => ">=", '=' => "==", _ => "!=" };
                     }
                     else
                     {
@@ -590,7 +720,7 @@ public sealed class Expr
                         {
                             throw new ExprParseException("Use '==' for comparison", _tokStart);
                         }
-                        _text = c.ToString();
+                        _text = c switch { '<' => "<", '>' => ">", _ => "!" };
                     }
                     _tok = Tok.Op;
                     return;
