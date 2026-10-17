@@ -547,6 +547,25 @@ public class ProjectileDeliveryTests
     }
 
     [Fact]
+    public void FlightsAndFieldsAllocateNothingPerTickInSteadyState()
+    {
+        var arena = DeliveryArena.Create();
+        arena.Body(30, 40);
+        arena.Run("{\"type\": \"projectile\", \"fire\": \"ring\", \"count\": 12, \"speed\": 2, \"range\": 30, \"pierce\": 0, \"homing\": 30, \"wave\": 1, \"spin\": 90}", new Vector3(20, 10, 0), Vector2.UnitX);
+        arena.Run("{\"type\": \"field\", \"radius\": 3, \"duration\": 30, \"interval\": 0.2, \"pulse\": [{\"type\": \"event\", \"name\": \"t_hit\"}]}", new Vector3(40, 40, 0));
+        arena.Sim.Profile = true;
+        arena.Tick(10);
+        var projectiles = arena.Sim.Costs["projectiles"];
+        var fields = arena.Sim.Costs["fields"];
+        var (p0, f0, t0) = (projectiles.TotalAllocatedBytes, fields.TotalAllocatedBytes, projectiles.Ticks);
+        arena.Tick(40);
+        // Only the component query's own enumerator is allocated each tick.
+        Assert.True((projectiles.TotalAllocatedBytes - p0) / (double)(projectiles.Ticks - t0) < 200, $"{(projectiles.TotalAllocatedBytes - p0) / (projectiles.Ticks - t0)} bytes a tick for flights");
+        Assert.True((fields.TotalAllocatedBytes - f0) / (double)(fields.Ticks - t0) < 200, $"{(fields.TotalAllocatedBytes - f0) / (fields.Ticks - t0)} bytes a tick for fields");
+        Assert.Equal(12, arena.Sim.World.CountOf<Projectile>());
+    }
+
+    [Fact]
     public void AFlightWhoseCasterIsGoneEndsQuietly()
     {
         var arena = DeliveryArena.Create();
