@@ -16,13 +16,17 @@ Entities are placeholder bodies chosen by what they are (capsules for creatures,
 
 ## Input
 
-WASD moves relative to the camera as a held direction; left click moves to the ground point under the mouse (a ray marched against the local height field) or interacts with an entity under the mouse; `1` to `8` cast slots with the hovered entity as target and the ground point as the aim; `Space` jumps; `F` interacts with the nearest interactable; `G` picks up the nearest drop; `C` opens the sheet; `Enter` chats; `Escape` cancels a cast. The input map is registered from code in `InputSetup`.
+WASD moves relative to the camera as a held direction; left click moves to the ground point under the mouse (a ray marched against the local height field) or interacts with an entity under the mouse; `1` to `8` cast slots with the hovered entity as target and the ground point as the aim; `Space` jumps; `F` interacts with the nearest interactable; `G` picks up the nearest drop; `Enter` chats. The interface's keys come from its content: each page's key (the inventory, the weaves, the passives, the reliquary, the character popout) requests it and a second press closes the core pane; the menu key fans the tray; Tab and Shift+Tab walk a book of two or more tabs. `Escape` drops a carried item, folds the tray, closes the front pane and closes the core pane last; with nothing open it cancels a cast. The world's input map is registered from code in `InputSetup`; the interface's binds by key name from `ui_pages` and `ui_layouts`.
 
 ## UI
 
-The interface contract (the cluster, the core pane and its ribbon, the panes the world opens beside it) is [ui.md](ui.md); this section describes what is built today.
+The interface contract (the cluster, the core pane and its ribbon, the panes the world opens beside it) is [ui.md](ui.md); its look is the theme content in `content/core/ui/`. The hello asks for the `interface` feature, and the client draws from `self_state` with the cluster's fields, `weave_slots`, `inventory_state`, `passive_state`, `page_state` and the world panes' states; without the feature it falls back to the plain self state's resources, weaves and bag.
 
-Resource bars, a weave bar with cooldowns and costs, a target line, notices, a chat log, a character sheet (attributes, resistances, gear, bag, currency, quests) and a quest offer panel. All placeholder; the data shapes come from `self_state` and the quest and crafting messages.
+- `UI/Hud.cs` orchestrates: the cluster, the target plate, notices and combat text above the hero, the chat in the lower left corner, the core pane and the books beside it, the item card, the carried item and the quick actions. Every intent it raises goes out through one event.
+- `UI/Logic/` holds the layout logic as plain classes that never touch an engine type, tested by `tests/HollowWake.Client.Tests`: the cluster's geometry, the board (footprints, the cell under the pointer, drop fits), the book rule (binding, fronting, promotion, the walk), the workspace (page requests, the core pane's lifecycle, Escape, departure), pane placement (the remembered seat, docking, merging the sides into one book, the rail's compaction), the menu fold, the sheet and the reading of the interface content.
+- `UI/Cluster/`, `UI/Core/`, `UI/Pages/`, `UI/WorldPanes/`, `UI/Book/`, `UI/Overlay/` and `UI/Widgets/` draw: orbs with a shader for the pool, the veil and the glass; rings, frames, wells and sweeps drawn on the canvas in the theme's frame style; glyphs rasterized from the icon set's SVG paths; pane grounds from a surface shader (stone grain and seams, parchment fibre).
+- Pages and world panes dock beside the core pane on the side with room. When the other side has room too, world panes stand there; when it does not, they bind with the pages into one book where a station's pane fronts over a development page. The core pane drags by its header and remembers its seat in `user://interface.cfg`.
+- Items lift by a drag or a click and drop on a bag cell, a doll slot, a rack seat or socket, a vendor (to sell), a container board or the world, one `move_item` (or `socket_stone`, `learn_form`, `sell`) each; right-click opens quick actions with the classic equip, unequip and drop intents.
 
 ## Coordinates
 
@@ -38,8 +42,12 @@ A scripted play-through drives the client against a running server with no hand 
 
     godot --path src/HollowWake.Client -- --smoke --shots <dir> [--account NAME] [--host H] [--port P]
 
-It logs in, creates or picks a character called Smoke, enters the world, waits for the terrain, then exercises held movement, jumping, click-to-move, the quartermaster's quest offer, both cameras, the sheet and weaves on the nearest hob through the same input map a player uses, saving a screenshot at each stage. Every check prints a `SMOKE PASS` or `SMOKE FAIL` line and the process exits non-zero when any check fails. The character it drives keeps its position between runs, so a run that starts next to the hedgerow fights before it walks back to the hamlet.
+It logs in, creates or picks a character called Smoke, enters the world, waits for the terrain, then exercises held movement, jumping, click-to-move, the quartermaster's quest offer, both cameras, the character popout and weaves on the nearest hob through the same input map a player uses, saving a screenshot at each stage. Every check prints a `SMOKE PASS` or `SMOKE FAIL` line and the process exits non-zero when any check fails. The character it drives keeps its position between runs, so a run that starts next to the hedgerow fights before it walks back to the hamlet.
+
+`--theme ID` draws the interface with another theme from `ui_themes`. A mockup renders the interface with no server, over locally generated terrain and with a staged hero that uses every field the interface draws, and saves the cluster, the core pane and the book beside it in every theme (or those named):
+
+    godot --path src/HollowWake.Client -- --mockup <dir> [--themes etched_stone,runic_brass]
 
 ## Still rough
 
-Placeholder on purpose, but worth knowing before judging a screenshot: every interactable prop carries a label, so resource nodes clutter dense areas; structure cells are flat-topped blocks with skirts, so walls read as crenellated slabs; bodies neither animate nor face anywhere meaningful; the sheet and quest panels are unstyled containers and the sheet cuts off below the bag; water and layered surfaces have not yet been seen in play; the third-person camera passes through terrain, walls and canopies; the hint line and the target line share the top-left column with the bars.
+Placeholder on purpose, but worth knowing before judging a screenshot: every interactable prop carries a label, so resource nodes clutter dense areas; structure cells are flat-topped blocks with skirts, so walls read as crenellated slabs; bodies neither animate nor face anywhere meaningful; water and layered surfaces have not yet been seen in play; the third-person camera passes through terrain, walls and canopies; world labels draw under the interface but are not hidden by it.

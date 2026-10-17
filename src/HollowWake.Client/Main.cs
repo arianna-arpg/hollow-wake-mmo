@@ -2,6 +2,7 @@ using Godot;
 using HollowWake.Client.Camera;
 using HollowWake.Client.Net;
 using HollowWake.Client.UI;
+using HollowWake.Client.UI.Logic;
 using HollowWake.Client.World;
 using HollowWake.Core.Content;
 using HollowWake.Protocol;
@@ -21,7 +22,6 @@ public partial class Main : Node3D
     private CameraRig _camera = null!;
     private Hud _hud = null!;
     private LoginPanel _login = null!;
-    private string _zoneName = "";
     private bool _inWorld;
     private Vector2 _lastMoveDir;
     private double _lastPingAt;
@@ -29,7 +29,7 @@ public partial class Main : Node3D
     private long _hoveredKey;
     private string _lastRejected = "";
 
-    // Read by the scripted smoke run (Dev/Smoke.cs); nothing else should need these.
+    // Read by the scripted smoke run (Dev/Smoke.cs) and the mockup (Dev/Mockup.cs); nothing else should need these.
     internal ClientWorld World => _world;
     internal CameraRig Rig => _camera;
     internal Hud Hud => _hud;
@@ -40,6 +40,11 @@ public partial class Main : Node3D
     internal int CombatLines { get; private set; }
     internal int CharacterLists { get; private set; }
     internal int QuestOffers { get; private set; }
+    internal int DialogueStates { get; private set; }
+    internal int VendorStates { get; private set; }
+    internal int InventoryStates { get; private set; }
+    internal string LastRejectedIntent { get; private set; } = "";
+    internal ContentRegistry Content => _content;
 
     internal string TakeRejected()
     {
@@ -56,30 +61,106 @@ public partial class Main : Node3D
         AddChild(_world);
         _camera = new CameraRig { Name = "CameraRig" };
         AddChild(_camera);
-        _hud = new Hud { Name = "Hud", Visible = false };
+        var userArgs = OS.GetCmdlineUserArgs();
+        _hud = MakeHud(ThemeArg(userArgs));
+        _hud.Visible = false;
         AddChild(_hud);
         var launch = LaunchOptions.FromCommandLine();
         if (launch.ServerGiven)
         {
             GD.Print($"server {launch.Host}:{launch.Port} from the command line");
         }
-        _login = new LoginPanel { Name = "Login", DefaultHost = launch.Host, DefaultPort = launch.Port };
+        _login = new LoginPanel { Name = "Login", DefaultHost = launch.Host, DefaultPort = launch.Port, Skin = _hud.Skin };
         AddChild(_login);
 
         _login.ConnectRequested += OnConnect;
         _login.CreateRequested += (name, calling) => _net.Send(new CreateCharacterMsg(name, calling));
         _login.EnterRequested += id => _net.Send(new SelectCharacterMsg(id));
-        _hud.SlotPressed += slot => UseSlot(slot);
-        _hud.ChatSubmitted += text => _net.Send(new ChatMsg("zone", text));
-        _hud.QuestAccepted += (quest, giver) => _net.Send(new AcceptQuestMsg(quest, giver));
-        _hud.QuestTurnedIn += (quest, giver) => _net.Send(new TurnInQuestMsg(quest, giver));
         _net.Closed += reason => CallDeferred(nameof(OnClosed), reason);
 
-        var userArgs = OS.GetCmdlineUserArgs();
-        if (userArgs.Contains("--smoke"))
+        if (userArgs.Contains("--mockup"))
+        {
+            AddChild(new Dev.Mockup(this, userArgs) { Name = "Mockup" });
+        }
+        else if (userArgs.Contains("--smoke"))
         {
             AddChild(new Dev.Smoke(this, userArgs) { Name = "Smoke" });
         }
+    }
+
+    private static string? ThemeArg(string[] args)
+    {
+        var i = Array.IndexOf(args, "--theme");
+        return i >= 0 && i + 1 < args.Length ? args[i + 1] : null;
+    }
+
+    /// <summary>The interface drawn with a theme (the content's default when none is named).</summary>
+    internal Hud MakeHud(string? theme)
+    {
+        IEnumerable<System.Text.Json.Nodes.JsonObject> Raw(string kind) => _content.RawOfKind(kind).Select(r => r.Object);
+        var ui = UiContent.Load(Raw, theme);
+        var names = ContentNames.Load(Raw);
+        var hud = new Hud(ui, names) { Name = "Hud" };
+        hud.Send += message => _net.Send(message);
+        hud.SlotPressed += slot => UseSlot(slot);
+        hud.HeroScreen = HeroScreen;
+        hud.DistanceTo = DistanceTo;
+        return hud;
+    }
+
+    /// <summary>Swaps the interface for one drawn with another theme, keeping the hero's states.</summary>
+    internal void UseTheme(string theme)
+    {
+        var old = _hud;
+        var next = MakeHud(theme);
+        next.Visible = old.Visible;
+        AddChild(next);
+        next.Hero.Interface = old.Hero.Interface;
+        if (old.Hero.Self is { } self)
+        {
+            next.ApplySelf(self);
+        }
+        if (old.Hero.Slots is { } slots)
+        {
+            next.ApplySlots(slots);
+        }
+        if (old.Hero.Inventory is { } inventory)
+        {
+            next.ApplyInventory(inventory);
+        }
+        if (old.Hero.Passives is { } passives)
+        {
+            next.ApplyPassives(passives);
+        }
+        if (old.Hero.Pages is { } pages)
+        {
+            next.ApplyPages(pages);
+        }
+        _hud = next;
+        RemoveChild(old);
+        old.QueueFree();
+    }
+
+    private Vector2? HeroScreen()
+    {
+        var self = _world.Self;
+        if (self is null || _camera.Camera.IsPositionBehind(self.GlobalPosition))
+        {
+            return null;
+        }
+        return _camera.Camera.UnprojectPosition(self.GlobalPosition + new Vector3(0, self.State.Height + 0.4f, 0));
+    }
+
+    private float? DistanceTo(long key)
+    {
+        var self = _world.Self;
+        if (self is null || !_world.Entities.TryGetValue(key, out var other))
+        {
+            return null;
+        }
+        var a = self.State;
+        var b = other.State;
+        return MathF.Sqrt((a.X - b.X) * (a.X - b.X) + (a.Y - b.Y) * (a.Y - b.Y));
     }
 
     private static ContentRegistry LoadContent()
@@ -118,11 +199,13 @@ public partial class Main : Node3D
             return;
         }
         // The client applies entity deltas; --full-states asks for full entity states only (for comparison and debugging).
-        var deltas = !OS.GetCmdlineUserArgs().Contains("--full-states");
-        _net.Send(new HelloMsg(ClientInfo.Name + " 0.1", ProtocolInfo.Version)
+        // It always draws the interface, so it asks for the interface's states.
+        var features = new List<string> { ProtocolInfo.InterfaceFeature };
+        if (!OS.GetCmdlineUserArgs().Contains("--full-states"))
         {
-            Features = deltas ? new List<string> { ProtocolInfo.EntityDeltaFeature } : null,
-        });
+            features.Insert(0, ProtocolInfo.EntityDeltaFeature);
+        }
+        _net.Send(new HelloMsg(ClientInfo.Name + " 0.1", ProtocolInfo.Version) { Features = features });
         _net.Send(new LoginMsg(account, ""));
         _login.SetStatus("Logging in...");
     }
@@ -131,6 +214,8 @@ public partial class Main : Node3D
     {
         _inWorld = false;
         _hud.Visible = false;
+        _hud.Workspace.CloseCore();
+        _hud.Hero.Clear();
         _login.Visible = true;
         _login.SetStatus("Disconnected: " + reason);
         _world.ClearEntities();
@@ -151,6 +236,7 @@ public partial class Main : Node3D
                 _camera.Follow(self.GlobalPosition);
                 _world.Stream(Coords.ToCore(self.GlobalPosition));
             }
+            _hud.SetSelfEntity(self?.State);
             HandleMovementInput();
             UpdateHover();
             var now = Time.GetTicksMsec() / 1000.0;
@@ -164,12 +250,15 @@ public partial class Main : Node3D
 
     // ------------------------------------------------------------ messages
 
+    private static double LocalNow => Time.GetTicksMsec() / 1000.0;
+
     private void Handle(Message message)
     {
         switch (message)
         {
             case WelcomeMsg w:
                 _login.SetStatus($"Connected to {w.ServerName}: {w.Motd}");
+                _hud.Hero.Interface = w.Features?.Contains(ProtocolInfo.InterfaceFeature) == true;
                 GD.Print($"server granted features: {(w.Features is null ? "none" : string.Join(", ", w.Features))}");
                 break;
             case LoginResultMsg r:
@@ -193,23 +282,25 @@ public partial class Main : Node3D
                 _inWorld = true;
                 _login.Visible = false;
                 _hud.Visible = true;
+                _hud.Hero.ObserveServerTime(enter.ServerTime, LocalNow);
                 _camera.Follow(Coords.ToGodot(enter.X, enter.Y, enter.Z));
-                _hud.Log($"[color=#aaffaa]Entered the world at {enter.X:0}, {enter.Y:0} (zone {enter.Zone}).[/color]");
+                _hud.Log($"[color=#{_hud.Skin.Notice("quest").ToHtml(false)}]Entered the world at {enter.X:0}, {enter.Y:0} (zone {Hud.Escape(enter.Zone)}).[/color]");
                 break;
             case ZoneChangedMsg z:
-                _zoneName = $"{z.ZoneName} (L{z.Level}{(z.Safe ? ", safe" : "")})";
-                _hud.Notice($"{z.ZoneName}", "discovery");
+                _hud.Notice($"{z.ZoneName}{(z.Safe ? ", safe" : "")}", "discovery");
                 break;
             case EntitySpawnMsg s:
                 _world.Spawn(s.State);
                 break;
             case EntityUpdateMsg u:
+                _hud.Hero.ObserveServerTime(u.ServerTime, LocalNow);
                 foreach (var state in u.States)
                 {
                     _world.Update(state);
                 }
                 break;
             case EntityDeltaMsg d:
+                _hud.Hero.ObserveServerTime(d.ServerTime, LocalNow);
                 foreach (var delta in d.Deltas)
                 {
                     _world.ApplyDelta(delta);
@@ -219,7 +310,31 @@ public partial class Main : Node3D
                 _world.Despawn(d.Key);
                 break;
             case SelfStateMsg self:
-                _hud.ApplySelf(self, _zoneName);
+                _hud.ApplySelf(self);
+                break;
+            case WeaveSlotsMsg slots:
+                _hud.ApplySlots(slots);
+                break;
+            case InventoryStateMsg inventory:
+                InventoryStates++;
+                _hud.ApplyInventory(inventory);
+                break;
+            case PassiveStateMsg passives:
+                _hud.ApplyPassives(passives);
+                break;
+            case PageStateMsg pages:
+                _hud.ApplyPages(pages);
+                break;
+            case DialogueStateMsg dialogue:
+                DialogueStates++;
+                _hud.ShowDialogue(dialogue);
+                break;
+            case VendorStateMsg vendor:
+                VendorStates++;
+                _hud.ShowVendor(vendor);
+                break;
+            case StationStateMsg station:
+                _hud.ShowStation(station);
                 break;
             case CombatEventMsg c:
                 ShowCombat(c);
@@ -236,13 +351,14 @@ public partial class Main : Node3D
                 break;
             case IntentRejectedMsg rej:
                 _lastRejected = $"{rej.Intent}: {rej.Reason}";
+                LastRejectedIntent = _lastRejected;
                 _hud.Notice(_lastRejected, "error");
                 break;
             case ChunkDataMsg chunk:
                 _world.ReceiveChunk(chunk);
                 break;
             case CraftChallengeMsg cc:
-                _hud.Log($"[color=#ffd27a]Crafting {cc.Recipe}: {cc.Type} challenge ({cc.TimeLimit:0}s)[/color]");
+                _hud.Log($"[color=#{_hud.Skin.Notice("event").ToHtml(false)}]Crafting {Hud.Escape(cc.Recipe)}: {Hud.Escape(cc.Type)} challenge ({cc.TimeLimit:0}s)[/color]");
                 break;
             case CraftResultMsg cr:
                 _hud.Notice(cr.Success ? $"Crafted {cr.Item?.Name} (quality {cr.Quality:0.00})" : $"Craft failed: {cr.Reason}", cr.Success ? "quest" : "error");
@@ -268,7 +384,8 @@ public partial class Main : Node3D
             "death" => $"{target} dies",
             _ => c.Kind,
         };
-        _hud.Log($"[color=#cccccc]{text}[/color]");
+        _hud.Log($"[color=#{_hud.Skin.S("ink_muted").ToHtml(false)}]{Hud.Escape(text)}[/color]");
+        _hud.CombatText(c.Kind, c.Amount, c.Crit, c.Source == _world.SelfKey, c.Target == _world.SelfKey);
         CombatLines++;
     }
 
@@ -335,6 +452,12 @@ public partial class Main : Node3D
         {
             return;
         }
+        // The interface's keys come first: Escape closes its panes before it cancels a cast.
+        if (_hud.HandleInput(@event))
+        {
+            GetViewport().SetInputAsHandled();
+            return;
+        }
         if (@event.IsActionPressed("jump"))
         {
             _net.Send(new JumpMsg());
@@ -363,14 +486,9 @@ public partial class Main : Node3D
         {
             _net.Send(new RespawnMsg());
         }
-        else if (@event.IsActionPressed("toggle_sheet"))
-        {
-            _hud.ToggleSheet();
-        }
         else if (@event.IsActionPressed("cancel"))
         {
             _net.Send(new CancelCastMsg());
-            _hud.HideQuests();
         }
         else
         {
@@ -417,14 +535,7 @@ public partial class Main : Node3D
         var (origin, direction) = MouseRay();
         _hovered = _world.PickEntity(origin, direction);
         _hoveredKey = _hovered?.Key ?? 0;
-        if (_hovered is null)
-        {
-            _hud.SetTarget("");
-            return;
-        }
-        var s = _hovered.State;
-        var life = s.Resources.TryGetValue("life", out var l) && s.ResourceMax.TryGetValue("life", out var m) ? $"  {l:0}/{m:0}" : "";
-        _hud.SetTarget($"{s.Name}{(s.Level > 0 ? " [" + s.Level + "]" : "")}{life}{(s.Interactable is not null ? "  (" + s.Interactable + ")" : "")}");
+        _hud.SetTarget(_hovered?.State);
     }
 
     private void UseSlot(int slot)

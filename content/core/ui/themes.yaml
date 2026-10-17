@@ -35,7 +35,8 @@ entries:
       select: "#c9a458"
       tab: "#24211e"
     material:
-      grain: 0.16
+      grain: 0.2
+      veins: 0.2
       fibre: 0
       vignette: 0.45
       bevel: 3
@@ -119,7 +120,7 @@ entries:
       tab: "#d9c69a"
     material:
       grain: 0.08
-      fibre: 0.6
+      fibre: 0.75
       vignette: 0.55
       bevel: 4
       corner: 5
