@@ -5,7 +5,7 @@ kind: forms
 entries:
   - id: bind
     name: Bind
-    description: A binding contract. Its minions stay while their price is held, and return when they fall. Weave it again to let them go.
+    description: A binding contract. Its minions stay while their price is held, and return when they fall. Weave it again to let them go; its second face sends them at your mark.
     targeting: self
     cast_mode: cast
     cast_time: 1.0
@@ -15,20 +15,36 @@ entries:
     mechanisms: [summon, spell]
     tags: [spell, summon, persistent]
     max_glyphs: 3
+    meta_action: { weave: command_assault, label: "Attack!" }
 
   - id: raise
     name: Raise
-    description: Raise the dead where you point, as what they were.
+    description: Raise a corpse where you point, as what it was. Without a corpse in reach the weave is not woven.
     targeting: ground
     cast_mode: cast
     cast_time: 0.9
     costs: { mana: 16 }
     cooldown: 1
     attributes: { range: 10, summon.count: 1, summon.max: 3 }
+    target: { kind: corpse, search_radius: 4, consume: true }
     mechanisms: [summon, spell]
     tags: [spell, summon, corpse]
     max_glyphs: 3
     ai: { role: summon, preferred_range: 6, weight: 0.5 }
+
+  - id: offering
+    name: Offering
+    description: Spend one of your own minions where you point.
+    targeting: any
+    cast_mode: cast
+    cast_time: 0.5
+    costs: { mana: 6 }
+    cooldown: 3
+    attributes: { range: 12 }
+    target: { kind: minion, search_radius: 3 }
+    mechanisms: [spell]
+    tags: [spell, minion]
+    max_glyphs: 2
 
   - id: rite
     name: Rite

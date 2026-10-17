@@ -96,7 +96,23 @@ entries:
     threads: [umbra]
     color: "#5a4a7a"
     effects:
-      - { type: summon, from_corpse: nearest, search_radius: 4, count: 1, max_active: "weave.summon.max", duration: 0, group: risen }
+      - { type: summon, from_corpse: target, count: 1, max_active: "weave.summon.max", duration: 0, group: risen }
+  - id: grave_offering
+    name: Grave Offering
+    form: offering
+    threads: [umbra]
+    color: "#5a4a7a"
+    effects:
+      - type: consume_minion
+        pick: target
+        effects:
+          - type: area
+            shape: circle
+            radius: 3
+            center: point
+            filter: enemy
+            effects:
+              - { type: damage, amount: "consumed_life_max * 0.6", threads: $threads }
   - id: exhume
     name: Exhume
     form: rite
