@@ -796,6 +796,7 @@ export interface WeaveSeatInfo {
   costs?: Record<string, number>;
   uses?: number;
   uses_max?: number;
+  stacks?: number;
   converted?: FaceInfo;
   meta?: FaceInfo;
   active?: boolean;

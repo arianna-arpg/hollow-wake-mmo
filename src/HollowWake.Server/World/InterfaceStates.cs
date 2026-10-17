@@ -198,11 +198,13 @@ public static class InterfaceStates
             return null;
         }
         var slot = book.Slots.IndexOf(casting.Slot);
-        var compiled = casting.Slot.Compiled;
-        var mode = compiled is null ? "cast" : ModeName(compiled.CastMode);
-        return new CastInfo(slot, mode, Math.Round(CastProgress(sim, casting), 2), casting.Stage, 0)
+        var weave = casting.Weave ?? casting.Slot.Compiled;
+        // A charge-up or an overcharge fills as it is held; a bar, a channel or a guard runs its length.
+        var progress = casting.Mode is CastMode.Charge or CastMode.Overcharge ? Math.Clamp(casting.Fill, 0, 1) : CastProgress(sim, casting);
+        return new CastInfo(slot, ModeName(casting.Mode), Math.Round(progress, 2), casting.Stage, casting.Stages)
         {
-            Name = compiled?.Name,
+            Name = weave?.Name,
+            Brim = casting.Brim > 0 ? Math.Round(casting.Brim, 2) : null,
             Held = casting.Held > 0 ? Math.Round(casting.Held, 2) : null,
             Duration = casting.Duration > 0 ? Math.Round(casting.Duration, 2) : null,
         };
@@ -213,6 +215,8 @@ public static class InterfaceStates
         CastMode.Instant => "instant",
         CastMode.Channel => "channel",
         CastMode.Charge => "charge",
+        CastMode.Overcharge => "overcharge",
+        CastMode.Guard => "guard",
         _ => "cast",
     };
 
@@ -645,6 +649,9 @@ public static class InterfaceStates
             }
             sockets = glyphs.Count;
         }
+        var usesMax = 0;
+        var uses = compiled?.Casting.Uses is null ? -1 : runtime.Uses(sim, e, slot, out usesMax);
+        var stacks = compiled is null ? 0 : runtime.Stacks(sim, slot);
         return new WeaveSeatInfo(index, key, compiled?.Form.Id ?? slot.Spec.Form, compiled?.Name ?? key, compiled?.Level ?? slot.Spec.Level,
             sockets, glyphs, Math.Round(readyIn, 2), Math.Round(cooldown, 2), preview)
         {
@@ -655,13 +662,41 @@ public static class InterfaceStates
             CastMode = compiled is null ? null : ModeName(compiled.CastMode),
             Targeting = compiled?.Targeting.ToString().ToLowerInvariant(),
             Costs = costs,
+            Uses = uses >= 0 ? uses : null,
+            UsesMax = uses >= 0 ? usesMax : null,
+            Stacks = stacks > 0 ? stacks : null,
+            Converted = compiled is null ? null : ConvertedFace(sim, e, runtime, slot, compiled),
+            Meta = compiled is null ? null : MetaFace(sim, runtime, slot),
             Active = IsActive(slot) ? true : null,
         };
     }
 
-    /// <summary>A slot whose toggle or contract runs: the slot state's <c>contract</c> or <c>toggle</c> is set.</summary>
+    /// <summary>The face the slot shows instead of its own weave while a convert or a combo step holds, or null.</summary>
+    private static FaceInfo? ConvertedFace(Simulation sim, Entity e, WeaveRuntime runtime, WeaveSlot slot, CompiledWeave compiled)
+    {
+        if (compiled.Casting.Convert is null && compiled.Casting.Chain is null)
+        {
+            return null;
+        }
+        return runtime.FaceOf(sim, e, slot) is { } face && !ReferenceEquals(face, compiled) ? new FaceInfo(face.Name) { Icon = face.Look } : null;
+    }
+
+    /// <summary>The slot's second ability: the first meta face, labelled by content or by the weave it casts.</summary>
+    private static FaceInfo? MetaFace(Simulation sim, WeaveRuntime runtime, WeaveSlot slot)
+    {
+        var metas = runtime.MetasOf(slot);
+        if (metas.Count == 0)
+        {
+            return null;
+        }
+        var meta = metas[0];
+        var def = sim.Content.Get<WeaveDef>(meta.Weave);
+        return new FaceInfo(meta.Label.Length > 0 ? meta.Label : def?.DisplayName ?? Definition.Humanize(meta.Weave)) { Icon = def?.Icon };
+    }
+
+    /// <summary>A slot whose toggle or contract runs (a sustained summon, an aura).</summary>
     private static bool IsActive(WeaveSlot slot) =>
-        slot.HasState && ((slot.State.TryGetValue("contract", out var c) && c > 0) || (slot.State.TryGetValue("toggle", out var t) && t > 0));
+        slot.HasState && (WeaveRuntime.IsToggledOn(slot) || slot.StateOr(Core.Minions.MinionContract.SlotState, 0) > 0);
 
     /// <summary>The stones a seat holds, each at its socket, with why it is dormant when it is.</summary>
     private static List<SeatGlyphInfo> StonesOf(Simulation sim, RackSeat? seat, WeaveSlot? slot)
@@ -707,12 +742,27 @@ public static class InterfaceStates
         h.Add(previewVersion);
         if (sim.World.TryGet<WeaveBook>(e, out var book))
         {
+            var runtime = sim.Service<WeaveRuntime>();
             foreach (var slot in book.Slots)
             {
                 h.Add(slot.Key);
                 h.Add((long)System.Runtime.CompilerServices.RuntimeHelpers.GetHashCode(slot));
                 h.Add(slot.Dormant.Count);
                 h.Add(IsActive(slot));
+                // Whole use charges, self stacks and the face a convert or a combo step puts on the slot.
+                if (slot.Compiled is { } compiled)
+                {
+                    if (compiled.Casting.Uses is not null)
+                    {
+                        h.Add(runtime.Uses(sim, e, slot, out var max));
+                        h.Add(max);
+                    }
+                    h.Add(runtime.Stacks(sim, slot));
+                    if (compiled.Casting.Convert is not null || compiled.Casting.Chain is not null)
+                    {
+                        h.Add((long)System.Runtime.CompilerServices.RuntimeHelpers.GetHashCode(runtime.FaceOf(sim, e, slot)));
+                    }
+                }
             }
         }
         if (sim.World.TryGet<Rack>(e, out var rack))

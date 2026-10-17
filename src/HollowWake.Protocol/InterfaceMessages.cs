@@ -129,8 +129,9 @@ public sealed record PoolInfo(string Id, string State)
 public sealed record StatusInfo(string Id, int Stacks, double Remaining, double Duration);
 
 /// <summary>
-/// The cast in progress: the slot it came from, its mode (<c>cast</c>, <c>channel</c> or <c>charge</c>),
-/// progress from zero to one, and the overcharge stage reached out of the stage count.
+/// The cast in progress: the slot it came from, its mode (<c>cast</c>, <c>channel</c>, <c>charge</c>, <c>overcharge</c>
+/// or <c>guard</c>), progress from zero to one (how full a charge-up or overcharge is; how far a bar has run), and the
+/// overcharge stage reached out of the stage count.
 /// </summary>
 public sealed record CastInfo(int Slot, string Mode, double Progress, int Stage, int Stages)
 {
@@ -164,7 +165,7 @@ public sealed record WeaveSeatInfo(int Slot, string? Key, string? Form, string N
     /// <summary>The learned form item in the slot.</summary>
     public long? Item { get; init; }
     public List<string>? Threads { get; init; }
-    /// <summary><c>instant</c>, <c>cast</c>, <c>channel</c> or <c>charge</c>.</summary>
+    /// <summary><c>instant</c>, <c>cast</c>, <c>channel</c>, <c>charge</c>, <c>overcharge</c> or <c>guard</c>.</summary>
     public string? CastMode { get; init; }
     public string? Targeting { get; init; }
     /// <summary>Costs per resource after the hero's multipliers.</summary>
@@ -172,6 +173,8 @@ public sealed record WeaveSeatInfo(int Slot, string? Key, string? Form, string N
     /// <summary>Use charges held and their cap, for weaves that bank uses.</summary>
     public int? Uses { get; init; }
     public int? UsesMax { get; init; }
+    /// <summary>Self stacks the slot holds, for weaves that pile them on use.</summary>
+    public int? Stacks { get; init; }
     /// <summary>The face the slot shows while a convert rule holds.</summary>
     public FaceInfo? Converted { get; init; }
     /// <summary>The slot's second ability.</summary>

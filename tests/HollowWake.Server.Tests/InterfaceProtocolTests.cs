@@ -119,7 +119,7 @@ public partial class InterfaceProtocolTests
             Reserved = new Dictionary<string, double> { ["mana"] = 12 },
             Pools = new List<PoolInfo> { new("ward", "recharging") { Since = 1.5, Until = 4 } },
             Statuses = new List<StatusInfo> { new("burning", 2, 1.5, 4) },
-            Cast = new CastInfo(1, "charge", 0.5, 1, 3) { Name = "Bolt", Brim = 0.8, Held = 1.2, Duration = 2 },
+            Cast = new CastInfo(1, "overcharge", 0.5, 1, 3) { Name = "Bolt", Brim = 0.8, Held = 1.2, Duration = 2 },
             Charges = new List<ChargeInfo> { new("fury", 2, 3) },
             Stamps = new Dictionary<string, double> { ["hurt"] = 11.5 },
         };
@@ -154,6 +154,7 @@ public partial class InterfaceProtocolTests
                 Costs = new Dictionary<string, double> { ["mana"] = 6 },
                 Uses = 1,
                 UsesMax = 3,
+                Stacks = 2,
                 Converted = new FaceInfo("Reload") { Icon = "reload" },
                 Meta = new FaceInfo("Detonate"),
                 Active = true,

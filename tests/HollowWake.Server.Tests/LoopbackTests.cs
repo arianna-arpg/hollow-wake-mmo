@@ -587,6 +587,33 @@ public class LoopbackTests
     }
 
     [Fact]
+    public void UseBanksMetasAndConvertedFacesReachTheWeaveSlots()
+    {
+        var (server, transport) = Create();
+        var (client, _, session, replies, _) = Enter(server, transport, "faces", "Linnet", new List<string> { ProtocolInfo.InterfaceFeature });
+        var sim = session.Zone!.Sim;
+        var hero = session.Entity;
+        var inbox = new List<Message>(replies);
+        var book = sim.World.Get<Core.Components.WeaveBook>(hero)!;
+        var quiver = book.Add(new Core.Definitions.WeaveSpec { Form = "quiver" });
+        book.Add(new Core.Definitions.WeaveSpec { Form = "bolt", Threads = { "ember" }, Glyphs = { "twin_rite" } });
+
+        var slots = Await<WeaveSlotsMsg>(server, client, inbox, s => s.Seats.Any(x => x.UsesMax == 4) && s.Seats.Any(x => x.Meta is not null));
+        Assert.NotNull(slots);
+        var bank = slots!.Seats.Single(x => x.UsesMax == 4);
+        Assert.Equal(4, bank.Uses);
+        Assert.Null(bank.Converted);
+        Assert.Equal("Detonate", slots.Seats.Single(x => x.Meta is not null).Meta!.Label);
+
+        // An empty bank converts the face to its restring.
+        quiver.State[Core.Components.SlotState.Uses] = 0;
+        quiver.State[Core.Components.SlotState.UsesAt] = sim.Clock.Time;
+        var spent = Await<WeaveSlotsMsg>(server, client, inbox, s => s.Seats.Any(x => x.UsesMax == 4 && x.Converted is not null));
+        Assert.NotNull(spent);
+        Assert.Equal("Restring", spent!.Seats.Single(x => x.UsesMax == 4).Converted!.Label);
+    }
+
+    [Fact]
     public void ContainersStashPagesAndStationServicesTravelOverTheWire()
     {
         var (server, transport) = Create();
