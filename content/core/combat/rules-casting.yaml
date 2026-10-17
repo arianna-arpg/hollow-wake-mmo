@@ -30,6 +30,8 @@ entries:
       swap_waived_by: sanctuary
       # How many recent casts the weave book remembers for varied and repeated casting.
       recent_casts: 8
+      # The most repeats one use schedules, whatever its repeat count, seals and vented uses add up to.
+      max_repeats: 50
       # Stamp every payment into the caster's last_cost.{resource} gauges, not only for weaves that read them.
       stamp_costs: false
 

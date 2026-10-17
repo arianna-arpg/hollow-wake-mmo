@@ -234,7 +234,7 @@ public sealed partial class WeaveRuntime
         {
             return;
         }
-        repeats = Math.Min(repeats, 50);
+        repeats = Math.Min(repeats, RulesOf(sim).MaxRepeats);
         var interval = Math.Max(sim.Clock.Dt, weave.Attr(stats, "repeat.interval"));
         var scale = weave.Attr(stats, "repeat.scale");
         var retarget = weave.Attr(stats, "repeat.retarget") > 0;

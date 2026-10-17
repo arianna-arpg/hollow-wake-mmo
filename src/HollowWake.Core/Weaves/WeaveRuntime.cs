@@ -992,6 +992,11 @@ public sealed partial class WeaveRuntime
         return ctx;
     }
 
+    /// <summary>
+    /// Stops the caster's running cast: nothing more fires. A hold that already took effect (a channel that
+    /// beat, a raised guard) starts the cooldown it was holding for its end, so letting go by cancelling
+    /// is never cheaper than letting go; a bar or a charge that never fired starts none.
+    /// </summary>
     public void Interrupt(Simulation sim, Entity caster)
     {
         if (sim.World.TryGet<WeaveBook>(caster, out var book) && book.Casting is { } cast)
@@ -1001,6 +1006,12 @@ public sealed partial class WeaveRuntime
             if (sim.World.TryGet<Stats>(caster, out var stats))
             {
                 EndHeldState(sim, caster, stats, cast);
+                var tookEffect = cast.Mode == CastMode.Guard || (cast.Mode == CastMode.Channel && cast.Pulses > 0);
+                if (tookEffect && !cast.CooldownStarted && (cast.Weave ?? cast.Slot.Compiled) is { } weave)
+                {
+                    StartCooldown(sim, book, weave.Root, stats);
+                    cast.CooldownStarted = true;
+                }
             }
             sim.Events.Publish(new WeaveInterrupted(caster, key) { Tick = sim.Clock.Tick });
         }
@@ -1883,6 +1894,7 @@ internal sealed class CastingRules
         SwapRequires = rules.Has("casting.swap_requires") ? rules.Expr("casting.swap_requires", "1") : null;
         SwapWaivedBy = rules.Text("casting.swap_waived_by", "sanctuary");
         RecentCasts = Math.Max(2, (int)rules.Number("casting.recent_casts", 8));
+        MaxRepeats = Math.Max(0, (int)rules.Number("casting.max_repeats", 50));
         StampCosts = rules.Flag("casting.stamp_costs", false);
         TriggerMaxCastTime = rules.Number("triggers.max_cast_time", 1);
         TriggerMaxDepth = (int)rules.Number("triggers.max_depth", 4);
@@ -1908,6 +1920,7 @@ internal sealed class CastingRules
     public Expr? SwapRequires { get; }
     public string SwapWaivedBy { get; }
     public int RecentCasts { get; }
+    public int MaxRepeats { get; }
     public bool StampCosts { get; }
     public double TriggerMaxCastTime { get; }
     public int TriggerMaxDepth { get; }

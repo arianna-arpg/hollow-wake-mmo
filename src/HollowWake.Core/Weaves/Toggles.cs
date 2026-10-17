@@ -173,9 +173,18 @@ public sealed partial class WeaveRuntime
             {
                 busy |= UpkeepStill(sim, caster, slot, weave, still, stats, dt);
             }
-            if (weave.Form.Channel?.Brim is { } brim && !(book.Casting is { } cast && ReferenceEquals(cast.Slot, slot)))
+            if (weave.Form.Channel?.Brim is { } brim)
             {
-                busy |= DecayBrim(stats, slot, brim, i, now);
+                // A brim being held fills instead; the book stays listed so it decays once the hold ends,
+                // however it ends.
+                if (book.Casting is { } cast && ReferenceEquals(cast.Slot, slot))
+                {
+                    busy = true;
+                }
+                else
+                {
+                    busy |= DecayBrim(stats, slot, brim, i, now);
+                }
             }
         }
         return busy;

@@ -210,10 +210,11 @@ public sealed record PersistSpec
 }
 
 /// <summary>
-/// The brim of a channel: a gauge per slot filled by holding over <c>fill_time</c>, decaying at rest by
-/// <c>decay</c> per second down to <c>bank_at</c> once reached, fizzling below <c>min_release</c>, spent by a
-/// release when <c>spend</c>, released by itself when full with <c>auto_release</c>, and scaling the
-/// release's damage from <c>scale.at_empty</c> to <c>scale.at_full</c> along a curve.
+/// The brim of a channel: a gauge per slot filled by holding over <c>fill_time</c> (the channel's longest hold
+/// without one), decaying at rest by <c>decay</c> per second down to <c>bank_at</c> once reached, fizzling
+/// below <c>min_release</c>, spent by a release when <c>spend</c>, released by itself when full with
+/// <c>auto_release</c>, and scaling the release's damage from <c>scale.at_empty</c> to <c>scale.at_full</c>
+/// along a curve.
 /// </summary>
 public sealed record BrimSpec
 {
@@ -324,7 +325,7 @@ public sealed record BashSpec
     public bool OnBreak { get; init; }
 }
 
-/// <summary>A preset weave a guard casts every <c>interval</c> seconds while held.</summary>
+/// <summary>A preset weave a guard casts every <c>interval</c> seconds while held (the channel beat of rule <c>casting.channel_interval</c> without one).</summary>
 public sealed record GuardPulseSpec
 {
     public required string Weave { get; init; }

@@ -600,6 +600,45 @@ public class CastModeTests
         Assert.Equal(a.Key, arena.Book.Recent(1));
     }
 
+    // ------------------------------------------------------------ brims
+
+    [Fact]
+    public void ABrimFizzlesWhenThinReleasesItselfWhenFullAndRestsAtItsBank()
+    {
+        var arena = CastingArena.Create();
+        var slot = arena.Slot("umbra_gathering");
+        var seat = arena.SlotIndex(slot);
+        var gauge = "brim." + (seat + 1);
+
+        // Let go almost at once: the brim is below its least release, so nothing fires.
+        arena.Begin(slot);
+        arena.RunSeconds(0.2);
+        Assert.True(arena.Runtime.Release(arena.Sim, arena.Caster, seat));
+        var thin = arena.Of<WeaveReleased>().Last();
+        Assert.False(thin.Fired);
+        Assert.Equal("fizzle", thin.Reason);
+
+        // Held to the brim, it lets go by itself and fires, spending the brim.
+        arena.RunSeconds(2.5);
+        arena.Begin(slot);
+        arena.RunSeconds(3.5);
+        var full = arena.Of<WeaveReleased>().Last();
+        Assert.True(full.Fired);
+        Assert.Equal("full", full.Reason);
+        Assert.Equal(0, arena.Stats.Gauge(gauge), 6);
+
+        // Cancelled partway, it keeps what it gathered and decays at rest, never below its bank; the channel
+        // had beaten, so cancelling started its cooldown as letting go would have.
+        arena.RunSeconds(2.5);
+        arena.Begin(slot);
+        arena.RunSeconds(1.4);
+        Assert.InRange(arena.Stats.Gauge(gauge), 0.5, 0.95);
+        arena.Runtime.Interrupt(arena.Sim, arena.Caster);
+        Assert.False(arena.Book.IsReady(slot, arena.Now));
+        arena.RunSeconds(6);
+        Assert.Equal(0.4, arena.Stats.Gauge(gauge), 6);
+    }
+
     // ------------------------------------------------------------ the effect context's variables
 
     [Fact]

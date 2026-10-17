@@ -30,7 +30,7 @@ public sealed partial class WeaveRuntime
         var pulseAt = double.PositiveInfinity;
         if (spec?.Pulse is { } pulse)
         {
-            pulseAt = now + PulseInterval(pulse, scope);
+            pulseAt = now + PulseInterval(pulse, scope, rules);
         }
         sim.World.Add(caster, new Guard
         {
@@ -46,7 +46,8 @@ public sealed partial class WeaveRuntime
         stats.Attributes.Touch();
     }
 
-    private static double PulseInterval(GuardPulseSpec pulse, IExprScope scope) => pulse.Interval is { } i ? Math.Max(0.05, i.Evaluate(scope)) : 1;
+    /// <summary>A guard pulse's interval: its own, else the channel beat of rule <c>casting.channel_interval</c>.</summary>
+    private static double PulseInterval(GuardPulseSpec pulse, IExprScope scope, CastingRules rules) => pulse.Interval is { } i ? Math.Max(0.05, i.Evaluate(scope)) : rules.ChannelInterval;
 
     private void AdvanceGuard(Simulation sim, Entity caster, WeaveBook book, Stats stats, CastState cast, CompiledWeave weave, double now)
     {
@@ -75,7 +76,7 @@ public sealed partial class WeaveRuntime
         if (spec?.Pulse is { } pulse && now >= guard.NextPulseAt - 1e-9)
         {
             var scope = ScopeOf(cast, weave, stats);
-            guard.NextPulseAt = now + PulseInterval(pulse, scope);
+            guard.NextPulseAt = now + PulseInterval(pulse, scope, RulesOf(sim));
             var t = sim.World.Get<Transform>(caster);
             CastPreset(sim, caster, pulse.Weave, weave, cast.Slot, cast.Target, t?.Position ?? cast.Point, cast.Direction.LengthSquared() > 1e-6f ? cast.Direction : t?.Forward ?? Vector2.UnitX, 1, "guard:", cast.Pulses++);
             RaiseKind(sim, caster, CastingTriggers.GuardBeat, FocusOf(cast), cast.Pulses, weave.Tags);
@@ -143,11 +144,11 @@ public sealed partial class WeaveRuntime
         return Math.Max(floor, brim - spec.Decay * since);
     }
 
-    /// <summary>A channel with a brim fills it while held, over its fill time divided by the speed attribute.</summary>
+    /// <summary>A channel with a brim fills it while held, over its fill time (its longest hold without one) divided by the speed attribute.</summary>
     private void FillBrim(Simulation sim, Entity caster, WeaveBook book, Stats stats, CastState cast, CompiledWeave weave, BrimSpec brim, double now)
     {
         var scope = ScopeOf(cast, weave, stats);
-        var fill = (brim.FillTime is { } f ? Math.Max(0.05, f.Evaluate(scope)) : 2) / Speed(weave, stats);
+        var fill = (brim.FillTime is { } f ? Math.Max(0.05, f.Evaluate(scope)) : Math.Max(0.05, cast.MaxHold)) / Speed(weave, stats);
         cast.Brim = Math.Min(1, cast.Brim + sim.Clock.Dt / fill);
         cast.Fill = cast.Brim;
         SetBrim(caster, book, stats, cast.Slot, cast.Brim, now);
@@ -182,13 +183,15 @@ public sealed partial class WeaveRuntime
             return false;
         }
         var value = BrimNow(slot, spec, now);
+        var floor = spec.BankAt > 0 && stored >= spec.BankAt - 1e-9 ? spec.BankAt : 0;
+        // The gauge follows in steps while the brim falls, and lands exactly where it comes to rest.
+        var resting = value <= floor + 1e-9;
         var gauge = BrimGauge(seat);
-        if (Math.Abs(stats.Gauge(gauge) - value) >= 0.01 || value <= 0)
+        if (resting || Math.Abs(stats.Gauge(gauge) - value) >= 0.01)
         {
             stats.SetGauge(gauge, value);
         }
-        var floor = spec.BankAt > 0 && stored >= spec.BankAt - 1e-9 ? spec.BankAt : 0;
-        return value > floor + 1e-9;
+        return !resting;
     }
 
     // ------------------------------------------------------------ persisting pulses
