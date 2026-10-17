@@ -37,16 +37,54 @@ public sealed partial class WeaveRuntime
     // The depth of the triggered cast running now, so events its own effects raise (casts publish no depth)
     // count as deeper; -1 when none runs.
     private int _triggerDepth = -1;
-    private bool _feeds;
 
-    /// <summary>Arms a book whose slots changed since it was last armed.</summary>
+    /// <summary>
+    /// The attribute family whose members (<c>glyph.slot{seat}.{glyph}</c>) graft glyphs onto rack seats, as
+    /// content declares it.
+    /// </summary>
+    internal const string GraftFamily = "glyph_slot_graft";
+
+    /// <summary>
+    /// Arms a book whose slots changed since it was last armed, or whose bearer's grafts changed from outside
+    /// the book (gear, passives, statuses granting <c>glyph.slot</c> attributes).
+    /// </summary>
     internal void EnsureArmed(Simulation sim, Entity caster, WeaveBook book, Stats? stats = null)
     {
         if (book.ArmedVersion == book.Version && book.ArmedCount == book.Slots.Count)
         {
-            return;
+            if (book.ArmedStats is { } armed && armed.Attributes.Version != book.GraftVersion)
+            {
+                WatchGrafts(book, armed);
+            }
+            if (book.ArmedVersion == book.Version)
+            {
+                return;
+            }
         }
         Arm(sim, caster, book, stats ?? sim.World.Get<Stats>(caster));
+    }
+
+    /// <summary>
+    /// Looks at a bearer's grafts again once its attributes changed, the way minion inheritance watches its
+    /// owner: they are compared with the seats' only when the bearer carries the graft family or the book holds
+    /// grafts, and a difference re-arms the book.
+    /// </summary>
+    private static void WatchGrafts(WeaveBook book, Stats stats)
+    {
+        book.GraftVersion = stats.Attributes.Version;
+        if (!book.HasGrafts && !stats.Attributes.CarriesFamily(GraftFamily))
+        {
+            return;
+        }
+        var found = FindGrafts(stats, book.Slots.Count);
+        for (var i = 0; i < book.Slots.Count; i++)
+        {
+            if (!SameGrafts(book.Slots[i].Grafts, found?[i]))
+            {
+                book.Changed();
+                return;
+            }
+        }
     }
 
     /// <summary>
@@ -57,7 +95,7 @@ public sealed partial class WeaveRuntime
     {
         book.ArmedVersion = book.Version;
         book.ArmedCount = book.Slots.Count;
-        EnsureFeeds(sim);
+        book.ArmedStats = stats;
         var hub = sim.TryService<TriggerHub>(out var h) ? h : null;
         var triggers = book.Triggers;
         if (triggers is not null)
@@ -121,6 +159,8 @@ public sealed partial class WeaveRuntime
                 group.Entries.Add(new TriggerEntry(slot, trigger));
             }
         }
+        // Worn modifiers moved the attribute version; the grafts as read above are current as of it.
+        book.GraftVersion = stats.Attributes.Version;
         if (triggers is null || hub is null)
         {
             return;
@@ -130,18 +170,6 @@ public sealed partial class WeaveRuntime
             var g = group;
             triggers.Handles.Add(hub.Subscribe(g.Kind, caster, (in TriggerEvent e) => OnTrigger(sim, caster, book, g, e)));
         }
-    }
-
-    /// <summary>Events that change what a book's seats grant: gear and passives re-arm their bearer's book.</summary>
-    private void EnsureFeeds(Simulation sim)
-    {
-        if (_feeds)
-        {
-            return;
-        }
-        _feeds = true;
-        sim.Events.Subscribe<PassiveAllocated>(p => sim.World.Get<WeaveBook>(p.Entity)?.Changed());
-        sim.Events.Subscribe<ItemEquipped>(p => sim.World.Get<WeaveBook>(p.Entity)?.Changed());
     }
 
     /// <summary>A triggered weave's key arms and disarms it.</summary>

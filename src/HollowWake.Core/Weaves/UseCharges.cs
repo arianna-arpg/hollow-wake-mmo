@@ -7,8 +7,10 @@ namespace HollowWake.Core.Weaves;
 
 // Banks of use charges kept in a slot's state. A bank starts full; a trickle bank recovers one use per
 // recharge, a magazine refills when emptied (all at once, or one at a time with drip), a still bank
-// recovers only while its caster stands still and bleeds while it moves. Banks are brought up to date when
-// read, so only still banks need the upkeep system.
+// recovers only while its caster stands still and bleeds while it moves. Reading a bank changes nothing:
+// what it holds now is computed from what it held when it last changed, so checks, AI and the slot message
+// can read it freely. A bank is brought up to date only as it changes (a spend, a restore, a still bank's
+// beat), and only still banks need the upkeep system.
 public sealed partial class WeaveRuntime
 {
     /// <summary>The bank's size: attribute <c>uses.max</c> in the weave's scope, its base the spec's <c>max</c>.</summary>
@@ -29,15 +31,16 @@ public sealed partial class WeaveRuntime
         return seconds / Math.Max(0.1, weave.Attr(stats, "uses.rate", 1));
     }
 
-    /// <summary>The charges in a slot's bank now (fractional while recovering), bringing the bank up to date.</summary>
+    /// <summary>
+    /// The charges in a slot's bank now (fractional while recovering), from what it held when it last
+    /// changed. Pure: the slot is not touched, so a snapshot or a check never moves the simulation.
+    /// </summary>
     internal static double UsesNow(WeaveSlot slot, CompiledWeave weave, UsesSpec spec, Stats stats, double now)
     {
         var max = UsesMax(weave, spec, stats);
-        var state = slot.State;
-        if (!state.TryGetValue(SlotState.Uses, out var uses))
+        var uses = slot.StateOr(SlotState.Uses, double.NaN);
+        if (double.IsNaN(uses))
         {
-            state[SlotState.Uses] = max;
-            state[SlotState.UsesAt] = now;
             return max;
         }
         var elapsed = Math.Max(0, now - slot.StateOr(SlotState.UsesAt, now));
@@ -55,10 +58,6 @@ public sealed partial class WeaveRuntime
                 {
                     uses = max;
                 }
-                if (uses >= max - 1e-9)
-                {
-                    state[SlotState.UsesReload] = 0;
-                }
             }
         }
         else if (spec.Still is null && uses < max)
@@ -66,9 +65,23 @@ public sealed partial class WeaveRuntime
             var recharge = RechargeSeconds(weave, spec, stats);
             uses = recharge <= 0 ? max : Math.Min(max, uses + elapsed / recharge);
         }
-        uses = Math.Min(uses, max);
+        return Math.Min(uses, max);
+    }
+
+    /// <summary>
+    /// Brings a slot's bank up to date before it changes: stores what <see cref="UsesNow"/> reads as of now,
+    /// and ends a magazine's reload once it is full again.
+    /// </summary>
+    private static double SettleUses(WeaveSlot slot, CompiledWeave weave, UsesSpec spec, Stats stats, double now)
+    {
+        var uses = UsesNow(slot, weave, spec, stats, now);
+        var state = slot.State;
         state[SlotState.Uses] = uses;
         state[SlotState.UsesAt] = now;
+        if (uses >= UsesMax(weave, spec, stats) - 1e-9 && slot.StateOr(SlotState.UsesReload, 0) > 0)
+        {
+            state[SlotState.UsesReload] = 0;
+        }
         return uses;
     }
 
@@ -78,7 +91,7 @@ public sealed partial class WeaveRuntime
     /// </summary>
     private int SpendUses(Simulation sim, Entity caster, WeaveSlot slot, CompiledWeave weave, UsesSpec spec, Stats stats, double now)
     {
-        var uses = UsesNow(slot, weave, spec, stats, now);
+        var uses = SettleUses(slot, weave, spec, stats, now);
         var whole = (int)Math.Floor(uses + 1e-9);
         if (whole < 1)
         {
@@ -104,7 +117,7 @@ public sealed partial class WeaveRuntime
     {
         var now = sim.Clock.Time;
         var max = UsesMax(weave, spec, stats);
-        var uses = Math.Min(max, UsesNow(slot, weave, spec, stats, now) + Math.Max(0, amount));
+        var uses = Math.Min(max, SettleUses(slot, weave, spec, stats, now) + Math.Max(0, amount));
         slot.State[SlotState.Uses] = uses;
         if (uses >= max - 1e-9)
         {
@@ -115,7 +128,7 @@ public sealed partial class WeaveRuntime
 
     /// <summary>
     /// The whole charges in a slot's bank now and its size, for the slot message; -1 (and a size of zero) for a
-    /// weave without a bank.
+    /// weave without a bank. A pure read: the bank is not brought up to date by reading it.
     /// </summary>
     public int Uses(Simulation sim, Entity caster, WeaveSlot slot, out int max)
     {
@@ -132,7 +145,7 @@ public sealed partial class WeaveRuntime
     private bool UpkeepStill(Simulation sim, Entity caster, WeaveSlot slot, CompiledWeave weave, UsesSpec spec, Stats stats, double dt)
     {
         var max = UsesMax(weave, spec, stats);
-        var uses = UsesNow(slot, weave, spec, stats, sim.Clock.Time);
+        var uses = SettleUses(slot, weave, spec, stats, sim.Clock.Time);
         var before = uses;
         if (stats.Flags.Contains("moving"))
         {

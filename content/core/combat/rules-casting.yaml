@@ -32,6 +32,8 @@ entries:
       recent_casts: 8
       # The most repeats one use schedules, whatever its repeat count, seals and vented uses add up to.
       max_repeats: 50
+      # The points a weave has for its form's tree, an expression of the weave's own level; one per rank bought.
+      tree_points: "max(0, level - 1)"
       # Stamp every payment into the caster's last_cost.{resource} gauges, not only for weaves that read them.
       stamp_costs: false
 

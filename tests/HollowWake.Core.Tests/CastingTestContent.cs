@@ -126,6 +126,23 @@ entries:
   - { id: t_shave, targeting: self, cast_mode: instant, min_threads: 0, effects: [ { type: cooldown, seconds: 2, fraction: 0.5 } ] }
   - { id: t_fused, targeting: enemy, cast_mode: instant, attributes: { range: 30 }, min_threads: 0, effects: [ { type: fuse, delay: 0.5, power: 1, effects: [ { type: damage, amount: 10, threads: [mind], can_crit: false } ] } ] }
   - { id: t_corpse_only, targeting: enemy, cast_mode: instant, costs: { mana: 7 }, attributes: { range: 30 }, min_threads: 0, target: { kind: t_marked }, effects: [ { type: event, name: t_corpse_only } ] }
+  - { id: t_far_hint, targeting: enemy, cast_mode: instant, attributes: { range: 30 }, min_threads: 0, ai: { weight: 100, min_range: 3, range_attribute: range }, effects: [ { type: event, name: t_far_hint } ] }
+  - { id: t_soft_hint, targeting: enemy, cast_mode: instant, attributes: { range: 30 }, min_threads: 0, ai: { weight: 100, min_range: 3, near_weight: 0.01 }, effects: [ { type: event, name: t_soft_hint } ] }
+  - { id: t_near_hint, targeting: enemy, cast_mode: instant, attributes: { range: 30 }, min_threads: 0, ai: { weight: 1 }, effects: [ { type: event, name: t_near_hint } ] }
+  - { id: t_brace, targeting: self, cast_mode: instant, reflex: true, min_threads: 0, gates: [ 'has("guarding")' ], effects: [ { type: guard, amount: 25, self: true } ] }
+  - id: t_tree
+    targeting: self
+    cast_mode: instant
+    min_threads: 0
+    attributes: { area.radius: 2 }
+    tree:
+      opens_at: 2
+      nodes:
+        - { id: wide, ranks: 2, modifiers: [ { attribute: area.radius, form: increased, value: 0.5 } ] }
+        - { id: far, links: [ wide ], patches: [ { type: event, set: { name: t_tree_far } } ] }
+        - { id: near, links: [ wide ], excludes: [ far ], modifiers: [ { attribute: area.radius, form: flat, value: 1 } ] }
+        - { id: grafted, links: [ far, near ], glyph: t_repeat }
+    effects: [ { type: event, name: t_tree, data: { radius: weave.area.radius } } ]
 
 ---
 kind: glyphs
@@ -145,6 +162,8 @@ entries:
   - { id: t_chain, chain: { steps: [ t_step_a, t_step_b ], window: 1 } }
   - { id: t_worn, equip_modifiers: [ { attribute: armor, form: flat, value: 15 } ] }
   - { id: t_spend, spend: { charge: t_fury, all: true, minimum: 1, scales: [ { attribute: area.radius, form: increased, per_charge: 0.5 } ] } }
+  - { id: t_ranged_trigger, requires_mechanisms: [ projectile ], trigger: { on: hit, chance: 1 } }
+  - { id: t_no_forward, forwards: false, requires_mechanisms: [ projectile ], modifiers: [ { attribute: cost, form: increased, value: 0.5 } ] }
 
 ---
 kind: weaves
@@ -156,6 +175,11 @@ entries:
   - { id: t_step_b, form: t_marker }
   - { id: t_spark_a, form: t_shot, glyphs: [ t_on_hit ] }
   - { id: t_spark_b, form: t_shot, glyphs: [ t_on_hit ] }
+
+---
+kind: patterns
+entries:
+  - { id: t_blank, name: Blank, extends: monster, level: 1, components: { weaves: { list: [] } } }
 """;
 
     private static readonly Lazy<ContentRegistry> Loaded = new(() =>

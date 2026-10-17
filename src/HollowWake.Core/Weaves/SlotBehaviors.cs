@@ -22,7 +22,8 @@ public sealed partial class WeaveRuntime
     /// <summary>
     /// The weave pressing a slot casts now: a convert's preset while its condition holds over the caster and
     /// the slot's state (<c>slot.uses</c>, <c>slot.stack</c> ...), else the next step of a combo chain inside
-    /// its window, else the slot's own weave. The slot message shows this face.
+    /// its window, else the slot's own weave. The slot message shows this face. A pure read: it changes no
+    /// slot state, so a snapshot asking never moves the simulation.
     /// </summary>
     public CompiledWeave? FaceOf(Simulation sim, Entity caster, WeaveSlot slot)
     {
@@ -44,21 +45,20 @@ public sealed partial class WeaveRuntime
         var cache = CacheFor(slot, weave, stats);
         if (casting.Convert is { } convert)
         {
-            if (casting.Uses is { } uses)
-            {
-                UsesNow(slot, weave, uses, stats, now);
-            }
-            if (convert.When.IsTrue(cache.SlotScopeFor(slot)) && cache.Face(_compiler, convert.Weave, weave.Level) is { } converted)
+            // slot.uses, slot.stack and slot.brim read as they stand now, without bringing the slot up to date.
+            var scope = cache.SlotScopeFor(slot);
+            scope.Now = now;
+            if (convert.When.IsTrue(scope) && cache.Face(_compiler, convert.Weave, weave.Level) is { } converted)
             {
                 return converted;
             }
         }
         if (casting.Chain is { Steps.Count: > 0 } chain)
         {
+            // A chain whose window lapsed starts over; the press that walks it (AdvanceChain) stores that.
             var step = (int)slot.StateOr(SlotState.Chain, 0);
             if (step > 0 && now - slot.StateOr(SlotState.ChainAt, double.NegativeInfinity) > chain.Window + 1e-9)
             {
-                slot.State[SlotState.Chain] = 0;
                 step = 0;
             }
             if (step > 0 && step <= chain.Steps.Count && cache.Face(_compiler, chain.Steps[step - 1], weave.Level) is { } next)
@@ -113,7 +113,7 @@ public sealed partial class WeaveRuntime
     // ------------------------------------------------------------ self stacks
 
     /// <summary>Stacks held now: a pile drops after its duration without a use, or peels one per decay interval.</summary>
-    private static int StacksNow(WeaveSlot slot, SelfStackSpec spec, double now)
+    internal static int StacksNow(WeaveSlot slot, SelfStackSpec spec, double now)
     {
         var stacks = (int)slot.StateOr(SlotState.Stack, 0);
         if (stacks <= 0)
@@ -525,6 +525,50 @@ public sealed partial class WeaveRuntime
         return true;
     }
 
+    // ------------------------------------------------------------ trees
+
+    /// <summary>
+    /// The points a seat's weave has for its form's tree (rule <c>casting.tree_points</c> of its level) and how
+    /// many of those it spent on nodes that count: what a reset gives back, and what the slot shows. (0, 0)
+    /// for a weave whose form has no tree. A pure read.
+    /// </summary>
+    public (int Spent, int Points) TreePoints(Simulation sim, WeaveSlot slot)
+    {
+        var weave = Resolve(sim, slot, out _);
+        return weave?.Form.Tree is null ? (0, 0) : (weave.TreeSpent, weave.TreePoints);
+    }
+
+    /// <summary>
+    /// Clears a seat's tree, giving back every point spent in it: what a station's reset service calls. The
+    /// seat keeps its weave, glyphs, cooldown and state and recompiles without its nodes; a cast running from
+    /// it is interrupted. False with a reason when the seat is empty or nothing was spent in its tree.
+    /// </summary>
+    public bool ResetTree(Simulation sim, Entity caster, int slotIndex, out string reason)
+    {
+        reason = "";
+        if (!sim.World.TryGet<WeaveBook>(caster, out var book) || slotIndex < 0 || slotIndex >= book.Slots.Count)
+        {
+            reason = "no_slot";
+            return false;
+        }
+        var slot = book.Slots[slotIndex];
+        if (slot.Spec.Tree.Count == 0)
+        {
+            reason = "no_tree";
+            return false;
+        }
+        var refunded = Resolve(sim, slot, out _)?.TreeSpent ?? 0;
+        if (book.Casting is { } cast && ReferenceEquals(cast.Slot, slot))
+        {
+            Interrupt(sim, caster);
+        }
+        slot.Spec = slot.Spec with { Tree = new List<string>() };
+        slot.Compiled = null;
+        book.Changed();
+        sim.Events.Publish(new WeaveTreeReset(caster, slotIndex, slot.Key, refunded) { Tick = sim.Clock.Tick });
+        return true;
+    }
+
     /// <summary>
     /// Whether the caster may change its loadout now: rule <c>casting.swap_requires</c> (an expression over the
     /// caster, such as no recent hits), waived where the ground carries the tag rule <c>casting.swap_waived_by</c>
@@ -558,7 +602,27 @@ public sealed partial class WeaveRuntime
     /// value is the glyph's level), and recompiles a seat whose grafts changed. A socketed copy of a glyph
     /// wins over its graft; a graft that misfits goes dormant.
     /// </summary>
-    private void RefreshGrafts(Stats stats, WeaveBook book)
+    private static void RefreshGrafts(Stats stats, WeaveBook book)
+    {
+        var found = FindGrafts(stats, book.Slots.Count);
+        var any = false;
+        for (var i = 0; i < book.Slots.Count; i++)
+        {
+            var slot = book.Slots[i];
+            var grafts = found?[i];
+            any |= grafts is { Count: > 0 };
+            if (SameGrafts(slot.Grafts, grafts))
+            {
+                continue;
+            }
+            slot.Grafts = grafts;
+            slot.Compiled = null;
+        }
+        book.HasGrafts = any;
+    }
+
+    /// <summary>The glyphs the caster's <c>glyph.slot{n}.{glyph}</c> attributes graft onto each seat, sorted by id; null when none.</summary>
+    private static List<GlyphRef>[]? FindGrafts(Stats stats, int seats)
     {
         List<GlyphRef>[]? found = null;
         foreach (var attribute in stats.Attributes.ModifiedAttributes)
@@ -568,7 +632,7 @@ public sealed partial class WeaveRuntime
                 continue;
             }
             var dot = attribute.IndexOf('.', 10);
-            if (dot < 0 || !int.TryParse(attribute.AsSpan(10, dot - 10), System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture, out var seat) || seat < 1 || seat > book.Slots.Count)
+            if (dot < 0 || !int.TryParse(attribute.AsSpan(10, dot - 10), System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture, out var seat) || seat < 1 || seat > seats)
             {
                 continue;
             }
@@ -577,21 +641,17 @@ public sealed partial class WeaveRuntime
             {
                 continue;
             }
-            found ??= new List<GlyphRef>[book.Slots.Count];
+            found ??= new List<GlyphRef>[seats];
             (found[seat - 1] ??= new List<GlyphRef>()).Add(new GlyphRef { Id = attribute[(dot + 1)..], Level = level });
         }
-        for (var i = 0; i < book.Slots.Count; i++)
+        if (found is not null)
         {
-            var slot = book.Slots[i];
-            var grafts = found?[i];
-            grafts?.Sort(static (x, y) => string.CompareOrdinal(x.Id, y.Id));
-            if (SameGrafts(slot.Grafts, grafts))
+            foreach (var grafts in found)
             {
-                continue;
+                grafts?.Sort(static (x, y) => string.CompareOrdinal(x.Id, y.Id));
             }
-            slot.Grafts = grafts;
-            slot.Compiled = null;
         }
+        return found;
     }
 
     private static bool SameGrafts(IReadOnlyList<GlyphRef>? a, List<GlyphRef>? b)

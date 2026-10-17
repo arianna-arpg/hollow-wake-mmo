@@ -14,6 +14,14 @@ entries:
     tags: [spell, area, channel]
     max_glyphs: 3
     ai: { role: damage, preferred_range: 4.5, weight: 1 }
+    # Points from the weave's level (rule casting.tree_points), one per rank.
+    tree:
+      opens_at: 2
+      nodes:
+        - { id: swelling, name: Swelling, description: The stream runs wider., ranks: 3, modifiers: [ { attribute: area.radius, form: increased, value: 0.08 } ] }
+        - { id: quick_pour, name: Quick Pour, description: The beats come sooner., links: [ swelling ], ranks: 2, modifiers: [ { attribute: cast.speed, form: increased, value: 0.06 } ] }
+        - { id: broad_stream, name: Broad Stream, description: The stream fans out to a wide arc., links: [ swelling ], excludes: [ quick_pour ], patches: [ { type: area, where: first, set: { angle: 90 } } ] }
+        - { id: still_water, name: Still Water, description: Pouring steadies the one who pours., links: [ quick_pour, broad_stream ], glyph: bastion }
     channel:
       interval: 0.5
       windup: 0.3
@@ -168,6 +176,22 @@ entries:
         filter: enemy
         effects:
           - { type: taunt, duration: 1.5 }
+
+  - id: brace
+    name: Brace
+    description: Pour mana into a raised guard; a reflex, so it lands while the guard is held, and only then.
+    targeting: self
+    cast_mode: instant
+    reflex: true
+    costs: { mana: 15 }
+    cooldown: 4
+    attributes: { range: 0 }
+    tags: [guard]
+    min_threads: 0
+    max_threads: 1
+    gates: [ 'has("guarding")' ]
+    effects:
+      - { type: guard, amount: "30 * (1 + weave.level * 0.1)", self: true }
 
   - id: measured_strike
     name: Measured Strike

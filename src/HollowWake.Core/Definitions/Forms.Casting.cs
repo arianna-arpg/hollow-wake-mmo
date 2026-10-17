@@ -105,6 +105,41 @@ public sealed partial record FormDef
 
     /// <summary>What the weave must be aimed at, by a registered target kind (a corpse, a minion), checked before costs are paid.</summary>
     public TargetSpec? Target { get; init; }
+
+    /// <summary>The form's own tree of nodes, bought with points the weave's level grants (<see cref="WeaveSpec.Tree"/> lists what was spent).</summary>
+    public TreeSpec? Tree { get; init; }
+}
+
+/// <summary>
+/// A form's tree (row D23). A weave spends points on its nodes, one per rank: rule
+/// <c>casting.tree_points</c>, an expression of the weave's own level, says how many it has, and nothing can
+/// be bought below <c>opens_at</c>. A node with <c>links</c> needs one of them bought first; a node without is
+/// a root. <c>excludes</c> names nodes it cannot be held with, either way round.
+/// </summary>
+public sealed record TreeSpec
+{
+    [JsonPropertyName("opens_at")]
+    public int OpensAt { get; init; } = 1;
+
+    public List<TreeNodeSpec> Nodes { get; init; } = new();
+}
+
+/// <summary>
+/// One node of a form's tree. Each rank bought adds its <c>modifiers</c> once more; from its first rank its
+/// <c>patches</c> edit the weave's graph as glyph patches do (after the glyphs', so a socketed glyph's choice
+/// wins) and its <c>glyph</c> joins the weave as a graft does, beyond the sockets.
+/// </summary>
+public sealed record TreeNodeSpec
+{
+    public required string Id { get; init; }
+    public string Name { get; init; } = "";
+    public string Description { get; init; } = "";
+    public List<string> Links { get; init; } = new();
+    public List<string> Excludes { get; init; } = new();
+    public int Ranks { get; init; } = 1;
+    public List<Modifier> Modifiers { get; init; } = new();
+    public List<EffectPatch> Patches { get; init; } = new();
+    public GlyphRef? Glyph { get; init; }
 }
 
 /// <summary>

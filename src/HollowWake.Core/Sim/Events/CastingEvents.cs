@@ -3,8 +3,8 @@ using HollowWake.Core.Ecs;
 namespace HollowWake.Core.Sim;
 
 // Events of the cast modes: channel beats and releases, charge-up and overcharge stages, triggered casts,
-// repeats, use charges spent and refilled, toggles, guards, timed presses, metas and rack swaps. Declared
-// here so no package edits Sim/Events.cs.
+// repeats, use charges spent and refilled, toggles, guards and their surges, timed presses, metas, rack swaps
+// and tree resets. Declared here so no package edits Sim/Events.cs.
 
 /// <summary>A channel beat: the pulse's number from zero and the seconds held when it came.</summary>
 public sealed record ChannelPulsed(Entity Caster, string Weave, int Pulse, double Held) : GameEvent;
@@ -39,6 +39,12 @@ public sealed record GuardParried(Entity Bearer, Entity Attacker, string Weave) 
 
 /// <summary>A guard's pool broke.</summary>
 public sealed record GuardBroken(Entity Bearer, string Weave, double Absorbed) : GameEvent;
+
+/// <summary>An effect surged a raised guard: how much it added and the pool it left.</summary>
+public sealed record GuardSurged(Entity Bearer, string Weave, double Amount, double Pool) : GameEvent;
+
+/// <summary>A seat's tree was cleared (a station's reset): the points it gave back.</summary>
+public sealed record WeaveTreeReset(Entity Caster, int Slot, string Weave, int Refunded) : GameEvent;
 
 /// <summary>A press during a cast bar: whether a timed press landed (flawless), or a multitude strike.</summary>
 public sealed record WeavePressed(Entity Caster, string Weave, int Presses, bool Flawless) : GameEvent;
