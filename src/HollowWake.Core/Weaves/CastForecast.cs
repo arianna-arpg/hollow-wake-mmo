@@ -23,6 +23,8 @@ public sealed record CastForecast(
     int EmissionOrdinal, string DirectionPolicy, bool DirectionCommitted,
     EffectContext Context, DeliveryForecast Delivery)
 {
+    /// <summary>The recorded start of the next emission's window, absent without a known emission.</summary>
+    public double? NextEmissionStartedAt { get; init; }
     public string Coverage => Delivery.PrimaryRegion.HasValue ? "primary" : "unavailable";
     public string GeometryPolicy => "live";
 }
@@ -146,7 +148,11 @@ public sealed partial class WeaveRuntime
             cast.Mode == CastMode.Overcharge && cast.Stage >= cast.Stages && cast.FullAt >= 0 ? Finite(cast.FullAt) : null;
         return new CastForecast(cast.CastId, caster, cast.Target, weave.Key, weave.Name, cast.Mode, weave.Tags,
             weave.Mechanisms, position, sim.Clock.Tick, now, cast.StartedAt, nextEmission, ready, maximumHold,
-            cast.PresentationReleases, directionPolicy, !tracks && !canAimAtRelease, context, delivery);
+            cast.PresentationReleases, directionPolicy, !tracks && !canAimAtRelease, context, delivery)
+        {
+            NextEmissionStartedAt = nextEmission is null ? null : cast.Mode == CastMode.Cast ? Finite(cast.StartedAt) :
+                cast.NextChannelStartedAt is { } beatStart ? Finite(beatStart) : null,
+        };
     }
 
     private static double? Finite(double value) => double.IsFinite(value) && value >= 0 ? value : null;

@@ -31,6 +31,7 @@ public class CastForecastTests
         Assert.True(f.CastId > 0);
         Assert.Equal(cast.CastId, f.CastId);
         Assert.Equal(cast.StartedAt + cast.Duration, f.NextEmissionAt);
+        Assert.Equal(cast.StartedAt, f.NextEmissionStartedAt);
         Assert.Null(f.ReadyAt);
         Assert.Null(f.MaxHoldEndsAt);
         Assert.Equal("locked_on_start", f.DirectionPolicy);
@@ -63,6 +64,7 @@ public class CastForecastTests
         a.Begin(slot);
         var initial = Observe(a);
         Assert.Null(initial.NextEmissionAt);
+        Assert.Null(initial.NextEmissionStartedAt);
         Assert.Equal(a.Book.Casting!.StartedAt + a.Book.Casting.Duration, initial.ReadyAt);
         Assert.Equal(a.Book.Casting.StartedAt + a.Book.Casting.MaxHold, initial.MaxHoldEndsAt);
         Assert.Equal("aim_on_release", initial.DirectionPolicy);
@@ -87,6 +89,7 @@ public class CastForecastTests
         a.Begin(CastForecastContent.Slot(a, "forecast_channel"));
         var initial = Observe(a);
         Assert.Equal(a.Book.Casting!.NextChannelAt, initial.NextEmissionAt);
+        Assert.Equal(a.Book.Casting.StartedAt, initial.NextEmissionStartedAt);
         Assert.Equal("track_while_held", initial.DirectionPolicy);
         Assert.False(initial.DirectionCommitted);
         Assert.Null(initial.ReadyAt);
@@ -99,6 +102,37 @@ public class CastForecastTests
         Assert.Equal(2.25, Convert.ToDouble(Assert.Single(a.Custom("forecast_hit")).Data!["radius"]), 5);
         var next = a.Book.Casting.NextChannelAt;
         for (var i = 0; i < 20; i++) Assert.Equal(next, Observe(a).NextEmissionAt);
+    }
+
+    [Fact]
+    public void SecondChannelBeatUsesItsRecordedWindowRatherThanTheWholeHold()
+    {
+        var a = CastForecastContent.Arena();
+        a.RunSeconds(0.4);
+        a.Begin(CastForecastContent.Slot(a, "forecast_channel"));
+        var initial = Observe(a);
+        a.RunSeconds(0.25);
+        var cast = a.Book.Casting!;
+        var second = Observe(a);
+        Assert.Equal(1, second.EmissionOrdinal);
+        Assert.Equal(a.Now, cast.NextChannelStartedAt);
+        Assert.Equal(cast.NextChannelStartedAt, second.NextEmissionStartedAt);
+        Assert.True(second.NextEmissionStartedAt > initial.NextEmissionStartedAt);
+        Assert.Equal(cast.Interval, second.NextEmissionAt!.Value - second.NextEmissionStartedAt!.Value, 10);
+        var windowStart = second.NextEmissionStartedAt.Value;
+        var deadline = second.NextEmissionAt.Value;
+        a.RunSeconds(0.1);
+        for (var i = 0; i < 20; i++)
+        {
+            var sample = Observe(a);
+            Assert.Equal(windowStart, sample.NextEmissionStartedAt);
+            Assert.Equal(deadline, sample.NextEmissionAt);
+            Assert.Equal(1, sample.EmissionOrdinal);
+            var progress = (sample.SampleTime - windowStart) / (deadline - windowStart);
+            Assert.InRange(progress, 0.01, 0.5);
+        }
+        Assert.Equal(windowStart, cast.NextChannelStartedAt);
+        Assert.Equal(deadline, cast.NextChannelAt);
     }
 
     [Fact]
@@ -127,6 +161,7 @@ public class CastForecastTests
         var f = Observe(a);
         Assert.Equal("primary", f.Coverage);
         Assert.Null(f.NextEmissionAt);
+        Assert.Null(f.NextEmissionStartedAt);
         Assert.Null(f.ReadyAt);
         Assert.NotNull(f.MaxHoldEndsAt);
     }
