@@ -42,7 +42,7 @@ The first binding was done by Aurelis Aurevant, a Wellsinger of the Hem coast, w
 
 ### The Concord Age
 
-In the year that became C 1, nine Weaver-houses of the Hem coast, each devoted to a Thread, swore the Concord of Nine Hearths at Cassevault: Aurevant for Lumen, Belcastre for Mind, Castellane for Stone, Durenne for Ember, Mirevault for Tide, Solenne for Bloom, Valcoure for Storm, Orriaux for Umbra and Quillane, the quiet house, for Void. The Concord was a pact to bind Founts in common counsel rather than in rivalry, and to weave in the open rather than in secret. It held for twelve centuries.
+In the year that became C 1, nine Weaver-houses of the Hem coast, each devoted to a Thread, swore the Concord of Nine Hearths at Cassevault: Aurevant for Lumen, Belcastre for Mind, Castellane for Stone, Durenne for Flame, Mirevault for Tide, Solenne for Bloom, Valcoure for Storm, Orriaux for Umbra and Quillane, the quiet house, for Void. The Concord was a pact to bind Founts in common counsel rather than in rivalry, and to weave in the open rather than in secret. It held for twelve centuries.
 
 The Concord raised the First Lantern at Cassevault within its first fifty years: a Lumen working so steady that Patterns for a day's ride around it did not drift. The Lanterns are the Concord's signature. They steadied the Loom, lit the roads, and marked the chartered Founts. By the middle of the Concord Age there was a Lantern beside every great Fount in Ilvary, Loomroads between them, and Vaults beneath the cities to hold what the Weavers had learned.
 
@@ -78,7 +78,7 @@ The Order of the Mended Thread was founded three years later from the company th
 
 The Chancery was restored at Cassevault in M 93 and issued the Charter of Lanterns, which held that no Fount in Ilvary might be bound except by a sealed Weaver, and that every binding was a loan from the Chancery. It was the old Concord rule with the Concord taken out, and it is still in force in Ilvary.
 
-The Relighting followed slowly. Mirevault's Lantern was re-lit in M 140, the first since the tear, and the Chancery has been re-lighting since, one tower a generation. The Durn reopened Scarrow Gate in M 184 and resumed trade in Stone and Ember floss. The Wakefolk who came home from the Long Sailing settled the Scatter again and began to say, carefully, that the Selvage was real and that they had seen it from a distance.
+The Relighting followed slowly. Mirevault's Lantern was re-lit in M 140, the first since the tear, and the Chancery has been re-lighting since, one tower a generation. The Durn reopened Scarrow Gate in M 184 and resumed trade in Stone and Flame floss. The Wakefolk who came home from the Long Sailing settled the Scatter again and began to say, carefully, that the Selvage was real and that they had seen it from a distance.
 
 ### The Marching
 

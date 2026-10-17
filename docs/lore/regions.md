@@ -65,22 +65,22 @@ Knots: the Sallows' people call its Knots Hollows, because they are usually insi
 
 The uplands north and east of the Hallows, rising toward the Girdle.
 
-Biome and look: fells, tors, scree and heather, granite with ember seams in it: veins of Ember Thread burning slow in the rock like coal seams on fire, so that the hillsides glow at night and snow never lies on certain slopes. Old Durn workings, spoil-heaps, drystone walls that go nowhere. Thin air and long views. Weather: wind always, hard winters, summer thunderstorms that stand on the tors for days.
+Biome and look: fells, tors, scree and heather, granite with ember seams in it: veins of Flame Thread burning slow in the rock like coal seams on fire, so that the hillsides glow at night and snow never lies on certain slopes. Old Durn workings, spoil-heaps, drystone walls that go nowhere. Thin air and long views. Weather: wind always, hard winters, summer thunderstorms that stand on the tors for days.
 
 Mood: hard, bright, windswept, sublime. This is the Marches at its most made: the Cinderstair climbs a scarp to nothing, the ember seams run in lines too straight for nature, and the Durn have been digging here since before the Concord and still speak of the stone as something that is being polite to them. People come here to get rich or to get quiet.
 
-Dominant Threads: Stone and Ember, with Storm on the heights.
+Dominant Threads: Stone and Flame, with Storm on the heights.
 
 Founts:
 - The Greyseam Heart, deep in the Durn workings below Scarrow, Stone, bound by the Greyseam Delvers and held by them through the tear and since; the oldest continuous binding in the Marches.
-- The Kiln, a vent in the scarp face that breathes warm air and smells of a forge, Ember, bound and lost by half a dozen hands since the Marching; its Welling is twine that comes already spun.
+- The Kiln, a vent in the scarp face that breathes warm air and smells of a forge, Flame, bound and lost by half a dozen hands since the Marching; its Welling is twine that comes already spun.
 - Skyfold, a Fount on the highest tor, Storm, dark since the tear until it woke in M 303 with a sound heard in Ninewells. Unbound. Everyone wants it.
 
 Landmark: the Cinderstair. A Firstwork. A staircase of fused black glass, wide enough for six abreast, that climbs the great scarp above the Kiln in a single flight with no landing and stops in the air a hundred feet short of the top, with nothing above it and nothing below the last step but the drop. It is warm to the touch in all weathers. Climbing it is a rite for Marcher Weavers; standing on the last step is said to show you the Warp in daylight. Nobody has built on to it. Nobody has found where it was going.
 
 Also in the Emberfells: Scarrow, the Durn delve-town at the Girdle's foot, and Scarrow Gate above it, the iron door into the mountain; the Loomroad's broken northern reach; the Kiln-camps of the Longwake Company's flossers; the tors called the Sisters, where the Storm Knots gather.
 
-Knots: Delves are the Emberfells' Snarls, collapsed workings that the Loom has re-tangled into new galleries, Stone and Ember, held by cinderhounds and stoneboars and sometimes a Remnant that was wrought to guard a seam that no longer exists. The Delve at Slagtooth is the deepest known. Kilns are Ember Tangles, pockets of the scarp where the seam has come to the surface and burns in the open, and where ashlight gathers if the Knot has frayed. Skyfalls are Storm Thinnings on the tors, where lightning stands in the air and sound dies, and the Weaves cast there go further than they should. Burls in the Emberfells are the richest in the Marches, and the Delvers and the Company have gone to the Hedge over them.
+Knots: Delves are the Emberfells' Snarls, collapsed workings that the Loom has re-tangled into new galleries, Stone and Flame, held by cinderhounds and stoneboars and sometimes a Remnant that was wrought to guard a seam that no longer exists. The Delve at Slagtooth is the deepest known. Kilns are Flame Tangles, pockets of the scarp where the seam has come to the surface and burns in the open, and where ashlight gathers if the Knot has frayed. Skyfalls are Storm Thinnings on the tors, where lightning stands in the air and sound dies, and the Weaves cast there go further than they should. Burls in the Emberfells are the richest in the Marches, and the Delvers and the Company have gone to the Hedge over them.
 
 ### The Saltwrack
 
@@ -127,7 +127,7 @@ Knots: Echoes are the Hush's Thinnings, Mind, places that replay what happened i
 
 Ninewells is the town where new Weavers begin, and the safest place in the Weftmarches. It stands in the Hallows on the west bank of the Wend, on the Loomroad, half a day's walk north of Candlehall and in sight of the Spindle.
 
-It was founded in M 226 by the Nine Who Stayed, nine Weavers of nine Threads who bound the Wellmother in common. Their names are on the nine wells that ring the town's heart: Hob Ashdown for Stone, Wenna Cole for Ember, Tamsin Reed for Tide, Piers Fallow for Bloom, Isolde Marrick for Lumen, Sable Grieve for Umbra, Bram Gale for Storm, Oriel Penrose for Mind, and the Ninth Well, which is Void's and has no name on it, because the ninth Weaver gave her name into the binding. Children are told that if you say your own name into the Ninth Well it will keep it for you, and they do not do it.
+It was founded in M 226 by the Nine Who Stayed, nine Weavers of nine Threads who bound the Wellmother in common. Their names are on the nine wells that ring the town's heart: Hob Ashdown for Stone, Wenna Cole for Flame, Tamsin Reed for Tide, Piers Fallow for Bloom, Isolde Marrick for Lumen, Sable Grieve for Umbra, Bram Gale for Storm, Oriel Penrose for Mind, and the Ninth Well, which is Void's and has no name on it, because the ninth Weaver gave her name into the binding. Children are told that if you say your own name into the Ninth Well it will keep it for you, and they do not do it.
 
 The Wellhouse stands over the Wellmother's pool: a round moot-hall of wrought stone, raised rather than built, where the Moot meets and where the Compact was sworn. Around it the town goes out in rings: the wells, then the Heddles and the market, then the houses, then the Hedge. The Hedge is the town's wall and is a living thorn-hedge woven up out of the Hallows' own Bloom, twice a man's height and as thick as a house, with gates that close at dusk. The Compact's militia is named for it, because standing at the Hedge is what the militia does, and so "the Hedge" means both the wall and the people who hold it.
 
@@ -153,7 +153,7 @@ The Scatter is Tide's and Storm's and Void's. It lost half its people to the Sti
 
 ### The Girdle and Ondur
 
-The north. The Girdle is the mountain range that holds the world's upper edge, and the Durn hold that it is the hem that held when the Loom tore. Ondur is their city, delved into the Girdle's root behind Scarrow Gate, sealed through the Loose Years and open again now, cautiously. The Durn are Stone's own people, with Ember for warmth and Umbra for quiet: patient, blunt, deep-voiced, slow to decide and impossible to move once decided. They take a seam-name at adulthood from the working where they came of age, keep stone-silence about the maker, and trade Stone and Ember floss and worked iron for everything they do not grow, which is everything.
+The north. The Girdle is the mountain range that holds the world's upper edge, and the Durn hold that it is the hem that held when the Loom tore. Ondur is their city, delved into the Girdle's root behind Scarrow Gate, sealed through the Loose Years and open again now, cautiously. The Durn are Stone's own people, with Flame for warmth and Umbra for quiet: patient, blunt, deep-voiced, slow to decide and impossible to move once decided. They take a seam-name at adulthood from the working where they came of age, keep stone-silence about the maker, and trade Stone and Flame floss and worked iron for everything they do not grow, which is everything.
 
 Past the Girdle is the Fold, and no one has crossed it. The Durn say there is nothing there, and say it in a way that means they have looked.
 

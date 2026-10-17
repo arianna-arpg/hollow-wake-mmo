@@ -6,7 +6,7 @@ The question underneath all of them is the same: what does a Weaver owe the Loom
 
 ## The Lantern Chancery
 
-What it is: the old Concord's office of charters, restored at Cassevault after the tear, and the civil power of Ilvary. It keeps the Charter of Lanterns, seals Weavers, charters Founts, re-lights Lanterns, and regards all three as the same act. Its Threads are Lumen, Mind and Ember. Its symbol is a lantern. Its people are Chancellors, who sit at Cassevault and of whom one is sent north as Marchwarden; Lanterners, who are sealed Weavers in Chancery service and do its work in the field; and Clerks, who keep the Candle, the Chancery's office, in every town that will have one.
+What it is: the old Concord's office of charters, restored at Cassevault after the tear, and the civil power of Ilvary. It keeps the Charter of Lanterns, seals Weavers, charters Founts, re-lights Lanterns, and regards all three as the same act. Its Threads are Lumen, Mind and Flame. Its symbol is a lantern. Its people are Chancellors, who sit at Cassevault and of whom one is sent north as Marchwarden; Lanterners, who are sealed Weavers in Chancery service and do its work in the field; and Clerks, who keep the Candle, the Chancery's office, in every town that will have one.
 
 What it wants: the Charter of Lanterns extended over the Marches, so that every Fount is chartered, every Weaver sealed and every Lantern lit. It believes that the Loosening is the beginning of a second tear and that only order will hold the cloth, and it believes this sincerely. It wants the Vaults' lost knowledge recovered from the Eastmarch's ruins before the Company sells it. It wants the Loosed gone. Underneath, it wants to be the Concord again, and knows that it cannot.
 
@@ -112,7 +112,7 @@ And everyone wants Skyfold, which woke in M 303 and is unbound, and sits on the 
 
 ### The Greyseam Delvers
 
-A Durn kin at Scarrow, at the Girdle's foot, who hold the Greyseam Heart and have held it through the tear and since: the oldest continuous binding in the Marches. Seam-master Haldrek Greyseam speaks for them, rarely. They mine Stone and Ember floss, trade it at Scarrow for everything they do not grow, keep stone-silence about the maker and most other things, respect the Compact, distrust the Company, and ignore the Chancery. They want to be left alone and to reopen the deep seams that closed on Ninth Void, and they hire Weavers to clear Delves because the Delves keep opening where the seams were. They have never asked for help and have twice been given it, and they remember both times.
+A Durn kin at Scarrow, at the Girdle's foot, who hold the Greyseam Heart and have held it through the tear and since: the oldest continuous binding in the Marches. Seam-master Haldrek Greyseam speaks for them, rarely. They mine Stone and Flame floss, trade it at Scarrow for everything they do not grow, keep stone-silence about the maker and most other things, respect the Compact, distrust the Company, and ignore the Chancery. They want to be left alone and to reopen the deep seams that closed on Ninth Void, and they hire Weavers to clear Delves because the Delves keep opening where the seams were. They have never asked for help and have twice been given it, and they remember both times.
 
 ### The Spindlewatch
 

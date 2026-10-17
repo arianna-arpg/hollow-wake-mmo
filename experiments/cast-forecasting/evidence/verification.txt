@@ -1,0 +1,66 @@
+Cast forecasting verification, 2026-10-17
+
+Scope
+Only docs/design/cast-forecasting.md and experiments/cast-forecasting/ were authored.
+No production source/content edits, commits, pushes, publishing, or other-chat messages.
+The shared checkout was concurrently changing. Evidence/core-results.json includes
+the core module ID and source/content digest for the isolated probe. Those are not
+claimed to identify the earlier full-solution build/test snapshot.
+
+Passing isolated verification
+run.ps1 -PackageCache C:\Users\John\.nuget\packages
+27 scenarios (nine cases at 20, 10 and 60 ticks/second).
+10 contract-model tests.
+Actual Cleave damage and lifecycle events, not a separate damage simulation.
+Stable source/content fingerprint across the final probe run.
+Output: validation.txt and core-results.json.
+
+Diagnostic viewer inspected through the in-app browser
+Actual preparation scrubbed to 0.80 seconds, 67 percent.
+Moving defender visibly outside before release and no damage afterward.
+Late accepted aim does not rotate the current Cleave direction.
+Interruption removes region and shows no release or damage.
+Armor case shows 2.79 actual damage only after the recorded hit.
+Saved screenshots: windup.png, move-out.png, interrupted.png, tank.png.
+No automatic animation is used. This is not Godot/web production rendering QA.
+
+Repository gates attempted with outputs kept inside the experiment
+NUGET_PACKAGES=C:\Users\John\.nuget\packages
+dotnet build HollowWake.sln --artifacts-path experiments/cast-forecasting/.validation
+  --configfile experiments/cast-forecasting/NuGet.Config -p:NuGetAudit=false --verbosity quiet
+PASS: zero warnings, zero errors.
+
+dotnet test HollowWake.sln --artifacts-path experiments/cast-forecasting/.validation
+  --no-build --no-restore
+  --results-directory experiments/cast-forecasting/.validation/TestResults
+  --blame-hang-timeout 45s --blame-hang-dump-type none --verbosity normal
+NOT GREEN at this in-progress shared snapshot:
+Core: 429 passed, 1 failed.
+  InventoryTests.ACallingStartsWithItsWeavesLearnedAsCodices expected
+  Ember Bolt Codex, got Flame Bolt Codex.
+Client logic: 78 passed.
+Server: 30 passed, 2 failed, then aborted by the inactivity timeout.
+  InterfaceProtocolTests.EveryMessageTypeHasASample lacks CastCueMsg.
+  ProtocolContractTests.WebClientModuleMatchesTheMessages says protocol.ts is stale.
+  Active test at timeout: WebSocketTests.ServesTheWebClientBesideTheSocket.
+Detailed local log is ignored under .validation/solution-tests.txt.
+These active integration failures were not repaired outside the ownership boundary.
+
+An initial build/test path placed artifacts one extra directory deeper. Build passed,
+but many existing tests could not find content/core within their fixed upward-search
+limit. The shallower path above fixed that test setup problem without editing tests.
+Do not count those initial discovery failures as gameplay regressions.
+
+dotnet experiments/cast-forecasting/.validation/artifacts/bin/HollowWake.Tools/debug/hollowwake.dll validate
+PASS: 0 errors, 0 warnings.
+dotnet experiments/cast-forecasting/.validation/bin/HollowWake.Tools/debug/hollowwake.dll load --x 0 --y 0
+PASS: generated/loaded the zone, ran 200 ticks.
+dotnet experiments/cast-forecasting/.validation/bin/HollowWake.Tools/debug/hollowwake.dll fight loosed_brigand boar --seconds 5
+PASS: deterministic combat trace includes Cleave and Gore through the common runtime.
+
+Not claimed
+No production forecast feature, complete lifecycle-family audit, prospective damage
+bounds, bridge integration, real player/AI avoidance, network latency experiment,
+crowd/occlusion benchmark, minimum-device performance result, or full production
+client smoke. The first safe production slice and explicit owner seams are in the
+design document.

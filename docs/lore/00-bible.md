@@ -34,7 +34,7 @@ The absent maker. The single most important feeling in Hollow Wake is that of wa
 
 - The world is Aureth. Play begins in the Weftmarches.
 - Reality is the Loom. Everything is a Pattern woven of Threads.
-- There are exactly nine Threads: Ember, Tide, Storm, Stone, Bloom, Umbra, Lumen, Void and Mind. They are also the game's elements and damage types.
+- There are exactly nine Threads: Flame, Tide, Storm, Stone, Bloom, Umbra, Lumen, Void and Mind. They are also the game's elements and damage types.
 - People who can consciously alter Patterns are Weavers. A deliberate act of weaving is a Weave. A Glyph is a bound shape that changes how a Weave behaves. Crafting is Reweaving.
 - The Unraveling tore the Loom roughly three centuries before the present. Its true cause is not known, and the lore must never settle it.
 - Knots are places where Threads tangled in the Unraveling. They shift, regrow and are never the same twice. Landmarks are fixed, deliberately made places that survived.

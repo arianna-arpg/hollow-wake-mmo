@@ -59,6 +59,7 @@ public sealed class SnapshotView
     /// unless the client asks for it in its hello.
     /// </summary>
     public bool SendInterface { get; set; }
+    public bool SendCastCues { get; set; }
 
     /// <summary>Fingerprints of the interface states last sent, and when the weave previews last refreshed.</summary>
     internal ulong InventoryFingerprint;

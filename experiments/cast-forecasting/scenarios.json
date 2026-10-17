@@ -1,0 +1,33 @@
+{
+  "seed": 314159,
+  "tickRates": [20, 10, 60],
+  "sourcePattern": "loosed_brigand",
+  "targetPattern": "loosed_brigand",
+  "weave": "cleave",
+  "sourcePosition": [10, 10, 0],
+  "targetPosition": [12, 10, 0],
+  "aim": [1, 0],
+  "controls": {
+    "source": {"crit.chance": 0},
+    "target": {"evasion": 0, "block.chance": 0, "life.regen": 0}
+  },
+  "scenarios": [
+    {"id": "stand", "label": "Remain inside", "expectedHits": 1, "actions": []},
+    {"id": "move-out", "label": "Walk beyond the footprint", "expectedHits": 0,
+      "actions": [{"at": 0.25, "kind": "move", "direction": [0, 1]}]},
+    {"id": "committed-aim", "label": "Late aim does not rotate Cleave", "expectedHits": 1,
+      "actions": [{"at": 0.25, "kind": "aim", "direction": [0, 1]}]},
+    {"id": "interrupted", "label": "Stun during preparation", "expectedHits": 0,
+      "actions": [{"at": 0.25, "kind": "stun"}]},
+    {"id": "tank", "label": "Remain inside with armor", "expectedHits": 1,
+      "targetModifiers": {"armor": 250}, "actions": []},
+    {"id": "friendly", "label": "Same faction inside footprint", "expectedHits": 0,
+      "friendly": true, "actions": []},
+    {"id": "body-edge", "label": "Center outside, body edge inside", "expectedHits": 0,
+      "targetAtRadiusPlus": 0.1, "actions": []},
+    {"id": "vertical-near", "label": "Elevated body within current height tolerance", "expectedHits": 1,
+      "targetHeight": 3, "actions": []},
+    {"id": "vertical-far", "label": "Elevated body beyond current height tolerance", "expectedHits": 0,
+      "targetHeight": 5, "actions": []}
+  ]
+}

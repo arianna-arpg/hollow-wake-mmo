@@ -35,7 +35,7 @@ entries:
 
   - id: kindle
     name: Kindle
-    description: Ember hits may set the target alight without a hit of their own to take strength from.
+    description: Flame hits may set the target alight without a hit of their own to take strength from.
     on: hit
     tags: [ember]
     victim: "life_pct > 0"

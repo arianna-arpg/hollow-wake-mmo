@@ -419,6 +419,13 @@ public static class DamagePipeline
 
     internal static void Publish(Simulation sim, EffectContext ctx, HitResult result, DamagePacket packet)
     {
+        if (ctx.CastId != 0 && result.Total > 0 && !result.Evaded && !result.Blocked && ctx.Weave is { } weave)
+        {
+            var point = ctx.TargetTransform?.Position ?? ctx.Point;
+            sim.Events.Publish(new CastPresentationEvent(ctx.CastId, "impact", ctx.Source, ctx.Target,
+                weave.Key, weave.Name, weave.CastMode.ToString().ToLowerInvariant(), packet.Tags,
+                point, point, sim.Clock.Time, 0, sim.Clock.Time, true, "damage") { Tick = sim.Clock.Tick });
+        }
         sim.Events.Publish(new DamageDealt(ctx.Source, ctx.Target, result.Total, result.Crit, packet.Tags, result.Received, result.Evaded, result.Blocked)
         {
             Tick = sim.Clock.Tick,

@@ -44,6 +44,8 @@ public partial class InterfaceProtocolTests
     /// <summary>One sample of every message, every optional field set.</summary>
     public static IEnumerable<Message> Samples()
     {
+        yield return new CastCueMsg(9, 7, "release", 1, 2, "ember_bolt", "Flame Bolt", "cast",
+            new List<string> { "ember", "spell" }, 12, 11, 1, 1, 2, 3, 4, 5, 6, true, "confirmed");
         var item = Card(9);
         var quest = new QuestInfo("q", "Quest", "active", new List<string> { "Slay" }, new List<int> { 1 }, new List<int> { 3 }, "quartermaster", 2);
         var state = new EntityState { Key = 5L << 32 | 3, Name = "Hob", Pattern = "hob", Look = "hob", Faction = "the_loosed", Rarity = "magic", Interactable = "talk", Casting = "Ember", VX = 1, Static = true, Resources = { ["life"] = 3 }, ResourceMax = { ["life"] = 9 }, Flags = { "monster" }, Statuses = { "burning" }, Shape = "cone", ShapeSize = new ShapeSizeInfo { Radius = 3, Angle = 1.2f, Width = 1, Inner = 0.5f, Curvature = 1 }, Heading = 0.5f, Spin = 0.25f, Until = 12.5 };

@@ -3,12 +3,12 @@ kind: weaves
 entries:
   - { id: strike, name: Strike, form: strike, threads: [], color: "#9c8b72" }
   - { id: cleave, name: Cleave, form: cleave, threads: [], color: "#9c8b72" }
-  - { id: ember_strike, name: Ember Strike, form: strike, threads: [ember], glyphs: [emberbind], color: "#e8622a" }
-  - { id: ember_bolt, name: Ember Bolt, form: bolt, threads: [ember], color: "#e8622a" }
+  - { id: ember_strike, name: Flame Strike, form: strike, threads: [ember], glyphs: [emberbind], color: "#e8622a" }
+  - { id: ember_bolt, name: Flame Bolt, form: bolt, threads: [ember], color: "#e8622a" }
   - { id: tide_bolt, name: Tide Bolt, form: bolt, threads: [tide], color: "#3aa6d8" }
   - { id: storm_bolt, name: Storm Bolt, form: bolt, threads: [storm], glyphs: [echo], color: "#b58cff" }
   - { id: storm_nova, name: Storm Nova, form: nova, threads: [storm], color: "#b58cff" }
-  - { id: ember_blast, name: Ember Blast, form: blast, threads: [ember], color: "#e8622a" }
+  - { id: ember_blast, name: Flame Blast, form: blast, threads: [ember], color: "#e8622a" }
   - { id: stone_blast, name: Stone Blast, form: blast, threads: [stone], color: "#9c8b72" }
   - { id: umbra_field, name: Umbra Field, form: field, threads: [umbra], color: "#5a4a7a" }
   - { id: bloom_mend, name: Bloom Mend, form: mend, threads: [bloom], color: "#5fbf5a" }
@@ -121,7 +121,7 @@ entries:
     effects:
       - { type: spawn, pattern: barrow_wight, count: 2, as_corpse: true }
   - id: plant_ember_totem
-    name: Ember Totem
+    name: Flame Totem
     form: totem
     threads: [ember]
     color: "#e8622a"

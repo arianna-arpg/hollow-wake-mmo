@@ -19,6 +19,7 @@ public partial class Main : Node3D
     private readonly NetClient _net = new();
     private readonly Dictionary<string, Action> _appliers = new(StringComparer.Ordinal);
     private ContentRegistry _content = null!;
+    private CastVisuals _castVisuals = null!;
     private ClientWorld _world = null!;
     private CameraRig _camera = null!;
     private Hud _hud = null!;
@@ -43,6 +44,8 @@ public partial class Main : Node3D
     internal bool InWorld => _inWorld;
     internal long HoveredKey => _hoveredKey;
     internal int CombatLines { get; private set; }
+    internal int CastCuesReceived { get; private set; }
+    internal CastVisuals CastVisuals => _castVisuals;
     internal int CharacterLists { get; private set; }
     internal int QuestOffers { get; private set; }
     internal int DialogueStates { get; private set; }
@@ -79,6 +82,9 @@ public partial class Main : Node3D
         InputSetup.Apply(_settings);
 
         _world = new ClientWorld(_content) { Name = "World" };
+        _castVisuals = new CastVisuals(_world, _content.Each<HollowWake.Core.Definitions.CastVisualsDef>().FirstOrDefault()
+            ?? new HollowWake.Core.Definitions.CastVisualsDef { Id = "fallback" });
+        AddChild(_castVisuals);
         AddChild(_world);
         _camera = new CameraRig { Name = "CameraRig" };
         AddChild(_camera);
@@ -297,7 +303,7 @@ public partial class Main : Node3D
         }
         // The client applies entity deltas; --full-states asks for full entity states only (for comparison and debugging).
         // It always draws the interface, so it asks for the interface's states.
-        var features = new List<string> { ProtocolInfo.InterfaceFeature };
+        var features = new List<string> { ProtocolInfo.InterfaceFeature, ProtocolInfo.CastCuesFeature };
         if (!OS.GetCmdlineUserArgs().Contains("--full-states") && _settings.Text("snapshot_stream") != "full")
         {
             features.Insert(0, ProtocolInfo.EntityDeltaFeature);
@@ -317,6 +323,7 @@ public partial class Main : Node3D
         _login.Visible = true;
         _login.SetStatus("Disconnected: " + reason);
         _world.ClearEntities();
+        _castVisuals.Clear();
     }
 
     public override void _Process(double delta)
@@ -326,6 +333,7 @@ public partial class Main : Node3D
         {
             Handle(message);
         }
+        _castVisuals.Advance(_hud.Hero.ServerNow(LocalNow), _settings.Toggle("reduce_motion"));
         if (_inWorld)
         {
             var self = _world.Self;
@@ -377,6 +385,7 @@ public partial class Main : Node3D
             case EnterWorldMsg enter:
                 _world.ApplyWorldInfo(enter.World);
                 _world.ClearEntities();
+                _castVisuals.Clear();
                 _world.SelfKey = enter.EntityKey;
                 _inWorld = true;
                 _login.Visible = false;
@@ -407,6 +416,7 @@ public partial class Main : Node3D
                 }
                 break;
             case EntityDespawnMsg d:
+                _castVisuals.Timeline.RemoveEntity(d.Key);
                 _world.Despawn(d.Key);
                 break;
             case SelfStateMsg self:
@@ -438,6 +448,11 @@ public partial class Main : Node3D
                 break;
             case CombatEventMsg c:
                 ShowCombat(c);
+                break;
+            case CastCueMsg cue:
+                CastCuesReceived++;
+                _hud.Hero.ObserveServerTime(cue.ServerTime, LocalNow);
+                _castVisuals.Receive(cue, _hud.Hero.ServerNow(LocalNow));
                 break;
             case ChatBroadcastMsg chat:
                 _hud.Chat(chat.From, chat.Channel, chat.Text);

@@ -92,6 +92,10 @@ public static class SlotState
 /// <summary>A cast in progress: what it aims at, when it started and how it is being held.</summary>
 public sealed class CastState
 {
+    /// <summary>Zone-local presentation identity; never a gameplay RNG input or saved character state.</summary>
+    public long CastId;
+    internal bool PresentationEnded;
+    internal int PresentationReleases;
     public required WeaveSlot Slot;
 
     /// <summary>The weave this cast resolves: the slot's own, or the face a convert or a combo chain put on it.</summary>

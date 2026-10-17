@@ -1,0 +1,19 @@
+PASS: 27 real-core scenarios; armor comparisons and committed-aim comparisons passed.
+✔ late start uses server elapsed time, never a new full-duration countdown (1.4585ms)
+✔ deadline and expiry never imply release, impact or a known cancellation (0.5981ms)
+✔ interruption wins against delayed start and no payload is inferred (0.1519ms)
+✔ confirmed release is deduplicated and never represented as damage (0.2617ms)
+✔ revision rejects old geometry, while independent casts survive packet reordering (0.2191ms)
+✔ baseline reconstructs active states without replaying emissions, rejects old baseline (0.2456ms)
+✔ lost terminal repairs from empty baseline; old epoch never leaks after transfer (0.1897ms)
+✔ indefinite holds do not invent completion or suppress later pulse emissions (0.186ms)
+✔ proposed tracking has a rate cap; committed direction refuses later aim (0.2294ms)
+✔ Flame display keeps the persisted ember key; reduced motion retains information (0.3965ms)
+ℹ tests 10
+ℹ suites 0
+ℹ pass 10
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 91.0594

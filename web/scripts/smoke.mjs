@@ -400,6 +400,7 @@ async function script() {
   if (!character) {
     const before = (await counts()).characterLists;
     await page.fill('#login-new-name', 'Smoke');
+    if (opt('calling', '')) await page.selectOption('#login-calling', opt('calling', ''));
     await page.click('#login-create');
     await until(async () => (await counts()).characterLists > before, 20000);
     character = (await hw(() => window.hollowWake.characters())).find((c) => c.name === 'Smoke');
@@ -539,6 +540,26 @@ async function script() {
   await optionsSteps();
 
   // Weaves: walk up to the nearest hob, hover it and press the attack slots until the player's own hit lands.
+  if (flag('flame')) {
+    const phases = new Set();
+    for (let attempt = 0; attempt < 3 && !phases.has('impact'); attempt++) {
+      const target = await nearest(e => typeof e.pattern === 'string' && e.pattern.startsWith('hob') && !e.dead);
+      if (!target) break;
+      await travelTo(target.key, 3, 45000);
+      await hover(target.key);
+      await page.keyboard.press('Digit1');
+      const end = Date.now() + 4000;
+      while (Date.now() < end) {
+        const cues = await hw(() => window.hollowWake.castCues().filter(c => String(c.source) === String(window.hollowWake.self()?.key)));
+        for (const cue of cues) if (!phases.has(cue.phase)) {
+          phases.add(cue.phase);
+          await page.screenshot({ path: join(shots, `flame_${cue.phase}.png`) });
+        }
+        await sleep(15);
+      }
+    }
+    record('Flame presentation', ['start', 'release', 'impact'].every(p => phases.has(p)), `phases: ${[...phases].join(', ')}`);
+  }
   // Hobs wander and fight back, so each try walks up again first.
   const isHob = (e) => typeof e.pattern === 'string' && e.pattern.startsWith('hob') && !e.dead;
   let hob = await nearest(isHob);

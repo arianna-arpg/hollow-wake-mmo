@@ -4,7 +4,7 @@ kind: weaves
 entries:
   - { id: tide_torrent, name: Tide Torrent, form: torrent, threads: [tide], color: "#3aa6d8" }
   - { id: umbra_gathering, name: Umbra Gathering, form: gathering, threads: [umbra], color: "#5a4a7a" }
-  - { id: ember_draw, name: Ember Draw, form: drawn_shot, threads: [ember], color: "#e8622a" }
+  - { id: ember_draw, name: Flame Draw, form: drawn_shot, threads: [ember], color: "#e8622a" }
   - { id: storm_surge, name: Storm Surge, form: surge, threads: [storm], color: "#b58cff" }
   - { id: stone_bulwark, name: Stone Bulwark, form: bulwark, threads: [stone], color: "#9c8b72" }
   - { id: stone_brace, name: Stone Brace, form: brace, threads: [stone], color: "#9c8b72" }

@@ -4,6 +4,8 @@
 
 /** The protocol version the server speaks (ProtocolInfo.Version), sent in hello. */
 export const PROTOCOL_VERSION = 1;
+/** ProtocolInfo.CastCuesFeature */
+export const CAST_CUES_FEATURE = "cast_cues";
 /** ProtocolInfo.EntityDeltaFeature */
 export const ENTITY_DELTA_FEATURE = "entity_delta";
 /** ProtocolInfo.InterfaceFeature */
@@ -443,6 +445,30 @@ export interface CombatEventMsg {
   crit: boolean;
   tags: string[];
   status?: string;
+}
+
+export interface CastCueMsg {
+  t: "cast_cue";
+  sequence: Int64;
+  cast_id: Int64;
+  phase: string;
+  source: Int64;
+  target: Int64;
+  weave: string;
+  name: string;
+  mode: string;
+  tags: string[];
+  server_time: number;
+  started_at: number;
+  duration: number;
+  x: number;
+  y: number;
+  z: number;
+  aim_x: number;
+  aim_y: number;
+  aim_z: number;
+  fired: boolean;
+  reason: string;
 }
 
 export interface ChatBroadcastMsg {
@@ -1035,6 +1061,7 @@ export type Message =
   | EntityDespawnMsg
   | SelfStateMsg
   | CombatEventMsg
+  | CastCueMsg
   | ChatBroadcastMsg
   | NoticeMsg
   | QuestOffersMsg
@@ -1122,6 +1149,7 @@ export const MESSAGE_TYPES: readonly MessageType[] = [
   "entity_despawn",
   "self_state",
   "combat_event",
+  "cast_cue",
   "chat_broadcast",
   "notice",
   "quest_offers",

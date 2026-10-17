@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <AssemblyName>HollowWake.ForecastProbe</AssemblyName>
+    <NuGetAudit>false</NuGetAudit>
+    <DefaultItemExcludes>$(DefaultItemExcludes);.validation/**</DefaultItemExcludes>
+  </PropertyGroup>
+  <ItemGroup>
+    <!-- Compile the real current core into an isolated executable. No production build outputs change. -->
+    <Compile Include="../../src/HollowWake.Core/**/*.cs"
+             Exclude="../../src/HollowWake.Core/bin/**;../../src/HollowWake.Core/obj/**" />
+    <PackageReference Include="YamlDotNet" Version="18.1.0" />
+  </ItemGroup>
+</Project>

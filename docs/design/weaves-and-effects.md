@@ -94,6 +94,8 @@ AI chooses weaves through the same runtime with `ChooseForAi`, using each form's
 
 ## Effects
 
+The runtime also publishes confirmed semantic cast lifecycle events. Effect contexts retain the cast identity through delayed and nested delivery copies so confirmed damage can be correlated after a cast ends. The client-only recipe and event contract is [cast-presentation.md](cast-presentation.md).
+
 A registry of handlers compiles typed specs into executable effects. Handlers are grouped in families, one file each under `Effects/Handlers/` with a static `Register(EffectRegistry)`: damage and healing, statuses, charges, status transfer, deliveries, placements, movement, summons, minions, AI, control flow, casting, utilities. `BuiltinEffects.RegisterAll` only calls the families; a new handler goes into its family's file. Each handler reads its parameters as expressions, so `amount: "weave.base_damage * spell.power"` is ordinary, and declares an `EffectSignature`: the parameters it reads, the lists that are hooks, and for wrappers the list a wrap patch fills. Validation reads the signatures in every kind's effect lists (weave graphs and sections, glyph lists, status lists and hooks, procs, dialogue effects), nested lists included wherever a parameter holds objects naming a `type`: it warns about a parameter a type does not read and about an unknown type in a nested list, and errs on an unknown type at the top of a list.
 
 The context carries depth; nested deliveries, repeats, delays and casts deepen it, and rule `effects.max_depth` caps recursion. Damage, healing, death and status events carry the depth they happened at. `last_damage` and `amount` are set by damage effects so a following `apply_status` can size an ailment from the hit.

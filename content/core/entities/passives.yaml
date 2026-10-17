@@ -20,14 +20,14 @@ entries:
   - { id: inner_f, name: Resolve, kind: attribute, x: -4.3, y: 7.5, links: [start_binder, start_holdfast], choice: { group: attributes, default: vigor } }
 
   # ---- relays between the spokes: one school's weave prepares the next hit of another
-  - { id: relay_embers, name: Ember Relay, kind: notable, x: 6.5, y: 12, links: [inner_a], modifiers: [ { attribute: proc.ember_relay, form: flat, value: 1 }, { attribute: damage, form: increased, value: 0.1, scope: [melee] } ] }
+  - { id: relay_embers, name: Flame Relay, kind: notable, x: 6.5, y: 12, links: [inner_a], modifiers: [ { attribute: proc.ember_relay, form: flat, value: 1 }, { attribute: damage, form: increased, value: 0.1, scope: [melee] } ] }
 
   # ---- choices between the spokes
   # Doctrines beside the Holdfast spoke: each deals the three doctrines, each doctrine once per character.
   - { id: doctrine_left, name: Doctrine, kind: notable, x: -3, y: 22, links: [hf3], choice: { group: doctrine_of_war } }
   - { id: doctrine_right, name: Doctrine, kind: notable, x: 3, y: 22, links: [hf3], choice: { group: doctrine_of_war } }
   # A vow where the Kindler and Sower spokes meet: the first vow node taken shuts the other.
-  - { id: vow_ember, name: Ember Vow, kind: notable, x: 15, y: 2, links: [kd2], choice: { group: seam_vow } }
+  - { id: vow_ember, name: Flame Vow, kind: notable, x: 15, y: 2, links: [kd2], choice: { group: seam_vow } }
   - { id: vow_tide, name: Tide Vow, kind: notable, x: 15, y: -2, links: [sw2], choice: { group: seam_vow } }
   # Waymarks: the first deals a road; the second is a shortcut between the spokes and deals nothing.
   - { id: waymark_east, name: Eastern Waymark, kind: small, x: 13, y: 0, links: [vow_ember, vow_tide], choice: { group: waymark } }
@@ -43,7 +43,7 @@ entries:
   # ---- Kindler spoke: the fire
   - { id: kd1, name: Spark, kind: small, x: 12.1, y: 7, links: [start_kindler, kd2], modifiers: [ { attribute: damage, form: increased, value: 0.1, scope: [ember] }, { attribute: mana.max, form: flat, value: 10 } ] }
   - { id: kd2, name: Kindling, kind: small, x: 15.6, y: 9, links: [kd1, kd3], modifiers: [ { attribute: ailment.chance, form: flat, value: 0.1, scope: [ember] }, { attribute: damage, form: increased, value: 0.1, scope: [spell] } ] }
-  - { id: kd3, name: Ember Heart, kind: notable, x: 19, y: 11, links: [kd2, kd4], modifiers: [ { attribute: damage, form: increased, value: 0.25, scope: [ember] }, { attribute: ailment.potency, form: flat, value: 0.2, scope: [ember] }, { attribute: resist.ember, form: flat, value: 0.15 } ] }
+  - { id: kd3, name: Flame Heart, kind: notable, x: 19, y: 11, links: [kd2, kd4], modifiers: [ { attribute: damage, form: increased, value: 0.25, scope: [ember] }, { attribute: ailment.potency, form: flat, value: 0.2, scope: [ember] }, { attribute: resist.ember, form: flat, value: 0.15 } ] }
   - { id: kd4, name: Crackle, kind: small, x: 22.5, y: 13, links: [kd3, kd5], modifiers: [ { attribute: damage, form: increased, value: 0.12, scope: [storm] }, { attribute: cast.speed, form: increased, value: 0.05 } ] }
   - { id: kd5, name: Wildfire, kind: keystone, x: 26, y: 15, links: [kd4], modifiers: [ { attribute: area.radius, form: increased, value: 0.3 }, { attribute: damage, form: more, value: 0.3, scope: [vs.burning] }, { attribute: mana.max, form: increased, value: -0.2 } ] }
 

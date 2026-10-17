@@ -157,7 +157,7 @@ entries:
       statuses: {}
 
   - id: ember_totem
-    name: Ember Totem
+    name: Flame Totem
     extends: device
     tags: [totem, ember]
     faction: players
@@ -363,7 +363,7 @@ entries:
   - { id: reed, name: Reed, tags: [flora, ground, wet], radius: 0.3, height: 1.4, components: { prop: {} } }
   - { id: boulder, name: Boulder, tags: [flora, rock], radius: 0.9, height: 1.3, components: { prop: { blocking: true } } }
   - { id: cairn_stone, name: Standing Stone, tags: [flora, rock, landmark], radius: 0.6, height: 2.6, components: { prop: { blocking: true } } }
-  - { id: ember_bloom_plant, name: Ember Bloom, tags: [flora, herb, node, ember], radius: 0.4, height: 0.6,
+  - { id: ember_bloom_plant, name: Flame Bloom, tags: [flora, herb, node, ember], radius: 0.4, height: 0.6,
       components: { prop: {}, interactable: { kind: resource, ref: herb_node, range: 2 } } }
   - { id: iron_vein, name: Iron Vein, tags: [flora, rock, node, ore], radius: 0.8, height: 1.2,
       components: { prop: { blocking: true }, interactable: { kind: resource, ref: ore_node, range: 2.5 } } }

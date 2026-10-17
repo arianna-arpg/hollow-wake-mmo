@@ -159,7 +159,7 @@ public partial class Mockup : Node
         Reserved = new Dictionary<string, double> { ["mana"] = 48 },
         Pools = new List<PoolInfo> { new("shield", "recharging"), new("ward", "ready"), new("poise", "broken") { Since = 998, Until = 1006 } },
         Statuses = new List<StatusInfo> { new("burning", 3, 2.4, 4), new("hasted", 1, 8.5, 10), new("regrowth", 2, 5, 12) },
-        Cast = new CastInfo(1, "overcharge", 0.67, 2, 3) { Name = "Ember Bolt" },
+        Cast = new CastInfo(1, "overcharge", 0.67, 2, 3) { Name = "Flame Bolt" },
     };
 
     private static WeaveSlotsMsg Slots()
@@ -169,7 +169,7 @@ public partial class Mockup : Node
         {
             new(0, "strike", "strike", "Strike", 3, 2, new List<SeatGlyphInfo> { new(0, "keen", "Keen", 2) }, 0, 0, new List<PreviewLineInfo> { P("Damage", "18 to 26 Stone"), P("Cast time", "0.8 s") })
                 { Icon = "strike", Threads = new List<string> { "stone" }, CastMode = "instant", Costs = new Dictionary<string, double> { ["stamina"] = 6 } },
-            new(1, "ember_bolt", "bolt", "Ember Bolt", 5, 3, new List<SeatGlyphInfo> { new(0, "fork", "Fork", 3), new(1, "volley", "Volley", 1) { Dormant = "needs a projectile that travels" } }, 0, 0, new List<PreviewLineInfo> { P("Damage", "31 to 47 Ember"), P("Cast time", "1.6 s"), P("Cost", "12 Mana") })
+            new(1, "ember_bolt", "bolt", "Flame Bolt", 5, 3, new List<SeatGlyphInfo> { new(0, "fork", "Fork", 3), new(1, "volley", "Volley", 1) { Dormant = "needs a projectile that travels" } }, 0, 0, new List<PreviewLineInfo> { P("Damage", "31 to 47 Flame"), P("Cast time", "1.6 s"), P("Cost", "12 Mana") })
                 { Icon = "bolt", Threads = new List<string> { "ember" }, CastMode = "charge", Costs = new Dictionary<string, double> { ["mana"] = 12 } },
             new(2, "tide_nova", "nova", "Tide Nova", 4, 2, new List<SeatGlyphInfo>(), 3.2, 6, new List<PreviewLineInfo> { P("Damage", "22 to 30 Tide"), P("Cooldown", "6 s") })
                 { Icon = "nova", Threads = new List<string> { "tide" }, CastMode = "cast", Costs = new Dictionary<string, double> { ["mana"] = 20 } },
@@ -193,7 +193,7 @@ public partial class Mockup : Node
         {
             I(11, "Hedge Sword", "magic", 0, 0, 1, 3, "main_hand", "weapon.sword", "+14% increased Damage", "+6 Might"),
             I(12, "Wardstone Buckler", "rare", 1, 0, 2, 2, "off_hand", "shield", "+42 Armor", "+18 Maximum Ward", "+9% Tide Resistance"),
-            I(13, "Kindled Circlet", "unique", 3, 0, 2, 2, "head", "armor.head", "+1 to Ember weave levels", "Burning lasts 30% longer") with { Flavor = "It remembers every fire." },
+            I(13, "Kindled Circlet", "unique", 3, 0, 2, 2, "head", "armor.head", "+1 to Flame weave levels", "Burning lasts 30% longer") with { Flavor = "It remembers every fire." },
             I(14, "Fork", "magic", 5, 0, 1, 1, null, "glyph", "Projectiles fork once") with { Glyph = new ItemGlyphInfo("fork", "Fork", 2), Fits = new List<StoneFitInfo> { new(1, "fits"), new(0, "misfit") { Reason = "needs a projectile" } } },
             I(15, "Linen Wraps", "normal", 6, 0, 2, 2, "hands", "armor.hands", "+8 Evasion"),
             I(16, "Shard Pouch", "normal", 8, 0, 1, 1, null, "currency") with { Count = 24 },
@@ -203,9 +203,9 @@ public partial class Mockup : Node
         };
         var worn = new Dictionary<string, ItemInfo>
         {
-            ["main_hand"] = I(21, "Ashwood Staff", "rare", 0, 0, 1, 3, "main_hand", "weapon.staff", "+31% increased Weave Power", "+2 to Ember weave levels"),
+            ["main_hand"] = I(21, "Ashwood Staff", "rare", 0, 0, 1, 3, "main_hand", "weapon.staff", "+31% increased Weave Power", "+2 to Flame weave levels"),
             ["chest"] = I(22, "Loomwright Robe", "magic", 0, 0, 2, 3, "chest", "armor.chest", "+40 Maximum Life"),
-            ["amulet"] = I(23, "Ember Charm", "unique", 0, 0, 1, 1, "amulet", "jewelry.amulet", "Ember hits ignite"),
+            ["amulet"] = I(23, "Flame Charm", "unique", 0, 0, 1, 1, "amulet", "jewelry.amulet", "Flame hits ignite"),
             ["feet"] = I(24, "Road Boots", "normal", 0, 0, 2, 2, "feet", "armor.feet", "+4% Movement Speed"),
         };
         var slots = new[] { ("main_hand", "Main Hand"), ("off_hand", "Off Hand"), ("head", "Head"), ("chest", "Chest"), ("hands", "Hands"), ("feet", "Feet"), ("belt", "Belt"), ("ring", "Ring"), ("amulet", "Amulet") }
