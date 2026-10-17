@@ -538,4 +538,26 @@ public class DefenseTests
         stats.SetResource("poise", 0);
         Assert.False(stats.HasFlag("low_poise"));
     }
+
+    [Fact]
+    public void ARaisedGuardLetsDamageOverTimeThrough()
+    {
+        var arena = CastingArena.Create();
+        arena.Begin(arena.Slot("t_guard"));
+        Assert.True(arena.Stats.HasFlag("guarding"));
+        // Past the parry window, the foe in front burns the guarded caster.
+        arena.RunSeconds(0.3);
+        var life = arena.Stats.Resource("life");
+        arena.Sim.Service<StatusEffects.StatusService>().Apply(arena.Sim, arena.Caster, "burning", arena.Enemy, new StatusEffects.StatusApplication { Magnitude = 8, Duration = 2 });
+        arena.RunSeconds(1.1);
+        var guard = arena.Sim.World.Get<Guard>(arena.Caster)!;
+        var ticks = arena.Of<DamageDealt>().Where(d => d.Target == arena.Caster && d.Tags.Has("dot")).ToList();
+        Assert.NotEmpty(ticks);
+        Assert.All(ticks, d => Assert.False(d.Blocked));
+        Assert.Equal(0, guard.Absorbed, 9);
+        Assert.True(arena.Stats.Resource("life") < life);
+        // A blow from the same foe is caught.
+        arena.Hit(arena.Enemy, arena.Caster, 10);
+        Assert.Equal(10, guard.Absorbed, 9);
+    }
 }
