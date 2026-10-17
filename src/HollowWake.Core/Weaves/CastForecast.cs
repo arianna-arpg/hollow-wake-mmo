@@ -75,7 +75,12 @@ public sealed partial class WeaveRuntime
                         {
                             if (ramp.On == "caster") { changingAttributes.Add(ramp.Attribute); continue; }
                             if (!Curves.IsPreviewSafe(ramp.Curve)) { unavailable = "opaque_cast_curve"; break; }
-                            local.Add(new Modifier { Attribute = ramp.Attribute, Form = ramp.Form, Value = RampValue(ramp, held), Scope = ramp.Scope, Source = "ramp" });
+                            try
+                            {
+                                local.Add(new Modifier { Attribute = ramp.Attribute, Form = ramp.Form, Value = RampValue(ramp, held), Scope = ramp.Scope, Source = "ramp" });
+                            }
+                            catch (ArithmeticException) { unavailable = "invalid_cast_curve"; break; }
+                            catch (ArgumentException) { unavailable = "invalid_cast_curve"; break; }
                         }
                     }
                     if (!pulse)
