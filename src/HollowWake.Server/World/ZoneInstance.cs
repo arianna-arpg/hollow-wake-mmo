@@ -89,7 +89,7 @@ public sealed class ZoneInstance
                 session.LastSnapshotAt = now;
                 SendSnapshot(session);
             }
-            if (now - session.LastSelfAt >= SnapshotBuilder.SelfSeconds - slack)
+            if (now - session.LastSelfAt >= session.View.Settings.SelfSeconds - slack)
             {
                 session.LastSelfAt = now;
                 var self = SnapshotBuilder.Self(session.View, session.Entity);
@@ -259,8 +259,10 @@ public sealed class ZoneInstance
             Sim.World.Flush();
         }
         var view = session.View;
-        _log.LogInformation("{Session} left {Zone}: {PerSnapshot:0} snapshot bytes per snapshot over {Snapshots} snapshots since connecting ({Spawns} spawns, {Updates} full states, {Deltas} deltas, {SelfStates} self states)",
-            session, Coord, session.SnapshotBytesPerSnapshot, session.SnapshotsBuilt, view.Spawns, view.Updates, view.Deltas, view.SelfStates);
+        var per = Math.Max(1, session.SnapshotsBuilt);
+        _log.LogInformation("{Session} left {Zone}: {PerSnapshot:0} snapshot bytes per snapshot over {Snapshots} snapshots since connecting: {Changes:0} changes, {Interest:0} spawns and despawns, {Self:0} self ({Spawns} spawns, {Updates} full states, {Deltas} deltas, {SelfStates} self states)",
+            session, Coord, session.SnapshotBytesPerSnapshot, session.SnapshotsBuilt, session.ChangeBytes / (double)per, session.InterestBytes / (double)per, session.SelfBytes / (double)per,
+            view.Spawns, view.Updates, view.Deltas, view.SelfStates);
         session.Entity = Entity.None;
         view.Reset();
     }
