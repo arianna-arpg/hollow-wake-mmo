@@ -314,11 +314,14 @@ public sealed class StatusService
         return instance;
     }
 
-    /// <summary>The absorption a status pool holds, read on the applier with the application's magnitude and potency.</summary>
+    /// <summary>
+    /// The absorption a status pool holds, read on the applier with the application's magnitude and potency
+    /// (an applied magnitude already carries the applier's potency).
+    /// </summary>
     private static double PoolOf(StatusDef def, Stats applier, StatusApplication app)
     {
         var scope = new ScopeOverlay(applier).Set("magnitude", app.Magnitude).Set("potency", app.Potency);
-        return Math.Max(0, def.Pool!.Evaluate(scope) * app.Potency);
+        return Math.Max(0, def.Pool!.Evaluate(scope));
     }
 
     /// <summary>Adds per-stack timers for an application, dropping the stacks nearest to expiry past the cap.</summary>
@@ -381,19 +384,16 @@ public sealed class StatusService
                 continue;
             }
             var def = sim.Content.Get<StatusDef>(s.Id);
-            if (statusId is not null)
+            if (statusId is not null && s.Id != statusId)
             {
-                if (s.Id != statusId)
-                {
-                    continue;
-                }
+                continue;
             }
-            else
+            if (!tags.IsEmpty && (def is null || !def.Tags.HasAny(tags)))
             {
-                if (!tags.IsEmpty && (def is null || !def.Tags.HasAny(tags)))
-                {
-                    continue;
-                }
+                continue;
+            }
+            if (statusId is null)
+            {
                 if (def is { Dispellable: false } && tags.IsEmpty)
                 {
                     continue;
