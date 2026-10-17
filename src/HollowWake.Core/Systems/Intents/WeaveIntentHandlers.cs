@@ -5,7 +5,11 @@ using HollowWake.Core.Weaves;
 
 namespace HollowWake.Core.Systems.Intents;
 
-/// <summary>Casting from a slot, cancelling, binding a weave to a slot, and the held-input intents of the cast modes.</summary>
+/// <summary>
+/// Casting from a slot, cancelling, binding a weave to a slot, the held-input intents of the cast modes
+/// (release, a second press, the live aim), meta actions and swapping rack seats. Held input that finds
+/// nothing held is ignored rather than refused: a client may let go of a key just after its cast ended.
+/// </summary>
 public static class WeaveIntentHandlers
 {
     public static void Register(IntentHandlers handlers)
@@ -13,12 +17,11 @@ public static class WeaveIntentHandlers
         handlers.Register<UseWeaveIntent>(UseWeave);
         handlers.Register<CancelCastIntent>(CancelCast);
         handlers.Register<SetWeaveIntent>(SetWeave);
-        // Held input: accepted and ignored until the cast modes that read them land.
-        handlers.Register<ReleaseWeaveIntent>(static (in IntentContext _, ReleaseWeaveIntent _) => { });
-        handlers.Register<PressWeaveIntent>(static (in IntentContext _, PressWeaveIntent _) => { });
-        handlers.Register<AimIntent>(static (in IntentContext _, AimIntent _) => { });
-        handlers.Register<UseMetaIntent>(static (in IntentContext _, UseMetaIntent _) => { });
-        handlers.Register<SwapWeaveSlotsIntent>(static (in IntentContext _, SwapWeaveSlotsIntent _) => { });
+        handlers.Register<ReleaseWeaveIntent>(Release);
+        handlers.Register<PressWeaveIntent>(Press);
+        handlers.Register<AimIntent>(Aim);
+        handlers.Register<UseMetaIntent>(UseMeta);
+        handlers.Register<SwapWeaveSlotsIntent>(Swap);
     }
 
     private static void UseWeave(in IntentContext ctx, UseWeaveIntent u)
@@ -42,7 +45,7 @@ public static class WeaveIntentHandlers
     /// Binds a weave to a slot. Misfit glyphs stay socketed but dormant, with their reasons on the slot; only a
     /// weave that cannot compile at all is refused. While rule <c>casting.require_ownership</c> holds, the
     /// hero must own what the spec names, as the registered <see cref="IWeaveOwnership"/> decides (a missing
-    /// service is permission).
+    /// service is permission). Changing the loadout follows rule <c>casting.swap_requires</c>.
     /// </summary>
     private static void SetWeave(in IntentContext ctx, SetWeaveIntent sw)
     {
@@ -66,10 +69,38 @@ public static class WeaveIntentHandlers
             ctx.Reject(refusal);
             return;
         }
-        while (book.Slots.Count <= sw.Slot)
+        var runtime = sim.Service<WeaveRuntime>();
+        if (!runtime.CanChangeLoadout(sim, ctx.Entity, out var busy))
         {
-            book.Slots.Add(new WeaveSlot { Spec = new Definitions.WeaveSpec { Preset = null, Form = null } });
+            ctx.Reject(busy);
+            return;
         }
-        book.Slots[sw.Slot] = new WeaveSlot { Spec = sw.Spec, Compiled = compiled, Dormant = compiled!.Dormant };
+        if (sw.Slot < book.Slots.Count && book.Casting is { } cast && ReferenceEquals(cast.Slot, book.Slots[sw.Slot]))
+        {
+            runtime.Interrupt(sim, ctx.Entity);
+        }
+        book.Set(sw.Slot, new WeaveSlot { Spec = sw.Spec, Compiled = compiled, Dormant = compiled!.Dormant });
+    }
+
+    private static void Release(in IntentContext ctx, ReleaseWeaveIntent r) => ctx.Sim.Service<WeaveRuntime>().Release(ctx.Sim, ctx.Entity, r.Slot);
+
+    private static void Press(in IntentContext ctx, PressWeaveIntent p) => ctx.Sim.Service<WeaveRuntime>().Press(ctx.Sim, ctx.Entity, p.Slot);
+
+    private static void Aim(in IntentContext ctx, AimIntent a) => ctx.Sim.Service<WeaveRuntime>().Aim(ctx.Sim, ctx.Entity, a.Point, a.Direction);
+
+    private static void UseMeta(in IntentContext ctx, UseMetaIntent m)
+    {
+        if (!ctx.Sim.Service<WeaveRuntime>().UseMeta(ctx.Sim, ctx.Entity, m.Slot, out var reason))
+        {
+            ctx.Reject(reason);
+        }
+    }
+
+    private static void Swap(in IntentContext ctx, SwapWeaveSlotsIntent s)
+    {
+        if (!ctx.Sim.Service<WeaveRuntime>().Swap(ctx.Sim, ctx.Entity, s.A, s.B, out var reason))
+        {
+            ctx.Reject(reason);
+        }
     }
 }
