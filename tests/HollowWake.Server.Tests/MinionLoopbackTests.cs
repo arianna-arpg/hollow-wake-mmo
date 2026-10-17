@@ -35,13 +35,13 @@ public class MinionLoopbackTests
     }
 
     [Fact]
-    public void ACommandFromTheWireOrdersTheHerosMinions()
+    public async Task ACommandFromTheWireOrdersTheHerosMinions()
     {
         var config = new ServerConfig { ContentLayers = new List<string> { ContentDir() }, WorldEvents = false, AutosaveSeconds = 1e9, SnapshotRate = 20 };
         var transport = new LoopbackTransport();
         var stores = new MemoryStores();
         var server = new GameServer(config, NullLoggerFactory.Instance, transport, stores, stores, stores);
-        server.StartAsync(CancellationToken.None).GetAwaiter().GetResult();
+        await server.StartAsync(CancellationToken.None);
         var client = transport.Connect();
         client.Send(new HelloMsg("test", ProtocolInfo.Version));
         client.Send(new LoginMsg("summoner", ""));

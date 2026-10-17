@@ -441,7 +441,7 @@ public class MinionTests
         arena.Cast(arena.Learn("remnant_volley"));
         Assert.Equal(3, arena.Events.OfType<MinionOrdered>().Count());
         Assert.Equal(3, arena.Events.OfType<EntitySpawned>().Count(s => s.Pattern == "projectile"));
-        Assert.Empty(arena.Events.OfType<WeaveCast>().Where(w => w.Caster != arena.Owner));
+        Assert.DoesNotContain(arena.Events.OfType<WeaveCast>(), w => w.Caster != arena.Owner);
         _ = foe;
     }
 
