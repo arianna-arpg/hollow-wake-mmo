@@ -31,6 +31,26 @@ jobs:
           name: test-results
           path: '**/TestResults/*.trx'
 
+  launcher:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: launcher
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: launcher/package-lock.json
+      - run: npm ci
+        env:
+          ELECTRON_SKIP_BINARY_DOWNLOAD: '1'
+      - name: Build (type-check)
+        run: npm run build
+      - name: Unit tests (feed, verified download, extraction, install)
+        run: npm test
+
   docker:
     runs-on: ubuntu-latest
     needs: build-test

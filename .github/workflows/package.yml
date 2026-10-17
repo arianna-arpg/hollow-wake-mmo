@@ -1,0 +1,243 @@
+# ---------------------------------------------------------------------------------------------
+# PACKAGE: the jobs every release runs, called by release.yml (a v* tag) and nightly.yml.
+#
+#   client    exports the Godot client for Windows and Linux with a headless Godot .NET editor and
+#             the official export templates, puts content/core beside each executable, boots the
+#             Linux build headless to prove it loads its content, zips each platform and writes
+#             manifest.json (scripts/package-client.sh).
+#   launcher  builds the launcher installers with electron-builder (NSIS on Windows, AppImage on
+#             Linux), after its unit tests, and boots each packaged app through its smoke check.
+#   publish   uploads everything into a draft release, then publishes it in one step, so launchers
+#             (which never see drafts) are only ever offered a complete release.
+#
+# The release layout, the channels and the launcher's side of this contract are in
+# docs/design/launcher.md.
+# ---------------------------------------------------------------------------------------------
+name: package
+
+on:
+  workflow_call:
+    inputs:
+      version:
+        description: Version without the v, such as 0.1.0 or 0.1.1-nightly.20261017.42
+        type: string
+        required: true
+      tag:
+        description: The release tag, v plus the version
+        type: string
+        required: true
+      channel:
+        description: stable or nightly
+        type: string
+        required: true
+      notes:
+        description: Release notes; empty means GitHub generates them
+        type: string
+        default: ''
+      publish:
+        description: Create the GitHub release (false keeps the builds as workflow artifacts only)
+        type: boolean
+        default: true
+
+permissions:
+  contents: write
+
+jobs:
+  client:
+    name: client (Windows and Linux)
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: |
+            8.0.x
+            10.0.x
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      # The Godot version is the one the client project builds against (Godot.NET.Sdk in its csproj),
+      # so moving the client to a new Godot moves the release pipeline with it.
+      - name: Read the Godot version
+        id: godot
+        run: |
+          version="$(sed -n 's|.*Godot\.NET\.Sdk/\([0-9][0-9.]*\)".*|\1|p' src/HollowWake.Client/HollowWake.Client.csproj)"
+          test -n "$version" || { echo "::error::no Godot.NET.Sdk version in the client csproj"; exit 1; }
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          echo "templates=$HOME/.local/share/godot/export_templates/$version.stable.mono" >> "$GITHUB_OUTPUT"
+
+      - name: Cache the Godot editor and export templates
+        id: cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/godot
+            ${{ steps.godot.outputs.templates }}
+          key: godot-${{ steps.godot.outputs.version }}-stable-mono-linux-x86_64
+
+      - name: Download the Godot editor and export templates
+        if: steps.cache.outputs.cache-hit != 'true'
+        env:
+          GODOT: ${{ steps.godot.outputs.version }}
+          TEMPLATES: ${{ steps.godot.outputs.templates }}
+        run: |
+          set -euo pipefail
+          base="https://github.com/godotengine/godot/releases/download/${GODOT}-stable"
+          editor="Godot_v${GODOT}-stable_mono_linux_x86_64.zip"
+          tpz="Godot_v${GODOT}-stable_mono_export_templates.tpz"
+          mkdir -p ~/godot-download && cd ~/godot-download
+          curl -fsSL --retry 3 -o SHA512-SUMS.txt "$base/SHA512-SUMS.txt"
+          curl -fsSL --retry 3 -o "$editor" "$base/$editor"
+          curl -fsSL --retry 3 -o "$tpz" "$base/$tpz"
+          grep -E " ${editor}\$| ${tpz}\$" SHA512-SUMS.txt | sha512sum -c -
+          mkdir -p ~/godot "$TEMPLATES"
+          unzip -q "$editor" -d ~/godot
+          unzip -q -j -o "$tpz" templates/version.txt \
+            templates/linux_release.x86_64 templates/linux_debug.x86_64 \
+            templates/windows_release_x86_64.exe templates/windows_debug_x86_64.exe \
+            templates/windows_release_x86_64_console.exe templates/windows_debug_x86_64_console.exe \
+            -d "$TEMPLATES"
+          cd ~ && rm -rf ~/godot-download
+
+      - name: Export, bundle content, zip and write the manifest
+        env:
+          VERSION: ${{ inputs.version }}
+          CHANNEL: ${{ inputs.channel }}
+        run: |
+          set -euo pipefail
+          godot="$(find ~/godot -maxdepth 2 -type f -name 'Godot_v*_mono_linux*.x86_64' | head -n1)"
+          test -n "$godot" || { echo "::error::no Godot editor binary under ~/godot"; exit 1; }
+          chmod +x "$godot"
+          "$godot" --headless --version
+          bash scripts/package-client.sh --godot "$godot" --version "$VERSION" --channel "$CHANNEL" \
+            --commit "$GITHUB_SHA" --out "$GITHUB_WORKSPACE/out" --check
+          ls -l out
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: client
+          path: out/*
+          if-no-files-found: error
+          retention-days: 14
+
+  launcher:
+    name: launcher (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: windows-latest
+            target: --win
+          - os: ubuntu-latest
+            target: --linux
+    defaults:
+      run:
+        shell: bash
+        working-directory: launcher
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: launcher/package-lock.json
+
+      - run: npm ci
+
+      # The launcher carries the release's version, so its self-update compares like for like.
+      - name: Stamp the version
+        env:
+          VERSION: ${{ inputs.version }}
+        run: npm pkg set version="$VERSION"
+
+      - run: npm run build
+
+      - name: Unit tests
+        run: npm test
+
+      - name: Package
+        run: npx electron-builder ${{ matrix.target }} --publish never
+
+      # Boots the packaged app (the installer's exact payload) offline: the page, its bridge, the
+      # channel and Developer toggles and the bundled news must all come up, or nothing ships.
+      - name: Smoke the packaged launcher (Windows)
+        if: runner.os == 'Windows'
+        run: '"release/win-unpacked/Hollow Wake MMO.exe" --smoke-test --offline'
+
+      - name: Smoke the packaged launcher (Linux)
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq xvfb > /dev/null
+          # A runner has no display or GPU, and Ubuntu restricts the user namespaces Chromium's
+          # sandbox uses: CI-only facts, so they are flags here and never defaults in the app.
+          sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0 || true
+          xvfb-run -a release/linux-unpacked/hollow-wake-mmo --no-sandbox --disable-gpu --smoke-test --offline
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: launcher-${{ runner.os }}
+          path: |
+            launcher/release/*.exe
+            launcher/release/*.exe.blockmap
+            launcher/release/*.AppImage
+            launcher/release/*.yml
+            !launcher/release/builder-debug.yml
+          if-no-files-found: error
+          retention-days: 14
+
+  publish:
+    name: publish ${{ inputs.tag }}
+    if: inputs.publish
+    needs: [client, launcher]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: dist
+          merge-multiple: true
+
+      - name: Checksums
+        working-directory: dist
+        run: |
+          sha256sum -- * > SHA256SUMS.txt
+          cat SHA256SUMS.txt
+
+      - name: Create or refresh the draft, then publish it
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ inputs.tag }}
+          VERSION: ${{ inputs.version }}
+          CHANNEL: ${{ inputs.channel }}
+          NOTES: ${{ inputs.notes }}
+        run: |
+          set -euo pipefail
+          repo="$GITHUB_REPOSITORY"
+          title="Hollow Wake MMO $VERSION"
+          if [ "$CHANNEL" = nightly ]; then title="$title (nightly)"; fi
+          if gh release view "$TAG" --repo "$repo" > /dev/null 2>&1; then
+            # A re-run: replace the assets of the release that already exists.
+            gh release upload "$TAG" dist/* --repo "$repo" --clobber
+          else
+            notes_args=(--generate-notes)
+            if [ -n "$NOTES" ]; then
+              printf '%s\n' "$NOTES" > notes.md
+              notes_args=(--notes-file notes.md)
+            fi
+            channel_args=()
+            if [ "$CHANNEL" = nightly ]; then channel_args=(--prerelease); fi
+            gh release create "$TAG" dist/* --repo "$repo" --draft --target "$GITHUB_SHA" \
+              --title "$title" "${notes_args[@]}" "${channel_args[@]}"
+          fi
+          if [ "$CHANNEL" = nightly ]; then
+            gh release edit "$TAG" --repo "$repo" --draft=false --prerelease --latest=false
+          else
+            gh release edit "$TAG" --repo "$repo" --draft=false --latest
+          fi
+          gh release view "$TAG" --repo "$repo"

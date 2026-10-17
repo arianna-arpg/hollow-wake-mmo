@@ -121,7 +121,7 @@ for platform in $platforms; do
   if $check && can_run_here "$platform"; then
     echo "== checking that the $platform build loads its content"
     log="$stage/$platform-boot.log"
-    "$dir/$exe" --headless --quit-after 120 > "$log" 2>&1 || true
+    timeout 120 "$dir/$exe" --headless --quit-after 120 > "$log" 2>&1 || true
     cat "$log"
     if ! grep -Eq "content loaded from .*: 0 errors" "$log"; then
       echo "package-client: the exported $platform client did not load content/core" >&2
