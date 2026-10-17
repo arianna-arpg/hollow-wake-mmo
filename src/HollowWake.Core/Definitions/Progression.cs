@@ -31,7 +31,7 @@ public enum ChoiceDeal
 
 /// <summary>
 /// A group of options passive nodes deal: a node that names the group lets its owner pick options from it
-/// (row H2 of the parity plan). Options are modifiers (and, later, a glyph graft); options can also be generated
+/// (row H2 of the parity plan). Options are modifiers and may grant a glyph graft; options can also be generated
 /// over an attribute category (selectable attribute nodes, row H3).
 /// </summary>
 public sealed record PassiveChoiceDef : Definition
@@ -62,6 +62,9 @@ public sealed record PassiveOptionDef
     public string Name { get; init; } = "";
     public string Description { get; init; } = "";
     public List<Modifier> Modifiers { get; init; } = new();
+
+    /// <summary>A glyph the option grants as a graft, which its owner binds to one weave slot (row H6).</summary>
+    public PassiveGlyphGrant? Glyph { get; init; }
 
     [JsonIgnore]
     public string DisplayName => string.IsNullOrEmpty(Name) ? Definition.Humanize(Id) : Name;

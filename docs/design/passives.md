@@ -26,6 +26,10 @@ A realm is a constellation shown as its own tab. It opens when its `unlock` expr
 
 A **vocation** is a realm that names a `calling`: it opens only to heroes of that calling, whatever else its unlock asks, and for a hero of another calling its sealed reason says whose it is (rule `passives.calling_sealed_text`). Its unlock usually reads a story flag found in the world (a conversation choice, a discovery), and its currency is granted by conversations and quests rather than by levels. The Warden is the example: a Holdfast mini-tree on the `vocation` currency, opened by the flag `warden_oath`, which the Quartermaster grants, with vocation points, when a Holdfast asks about the wardens.
 
+## Grafts
+
+A node, or an option of a choice group, may grant a glyph as a graft (`glyph: { id, level }`). Its owner binds the graft to one weave slot (`bind_graft {source, slot}`, the source being the node or `{node}:{option}`; a slot below zero unbinds it), and it is grafted onto that seat as slot grafts are: the attribute `glyph.slot{n}.{glyph}` at the glyph's level, under source `graft:{source}`, which the weave runtime reads when it arms the book (the book is re-armed when a binding changes). A socketed copy of the glyph wins over the graft, and a graft that misfits goes dormant. Binding needs the calm a loadout change needs (rule `casting.swap_requires`). Refunding the node or the pick takes the graft and its binding away; bindings save with the character.
+
 ## Refunds
 
 A node is refunded at a font: an interactable of kind `font` within its reach of the hero (`refund_passive {node}`). The calling's start and the roots of open realms are anchors and are never refunded. A refund is refused when some other allocated node would no longer connect to an anchor without it (nodes of `free` realms need no path). A choice node's picks go with it, its points return to their own currency, and the price is rule `passives.refund_cost`, a map of currency to an expression of the hero, the node's cost (`node_cost`) and the refunds made so far (`refunds`), paid from the wallet.

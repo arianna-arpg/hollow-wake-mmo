@@ -92,6 +92,7 @@ public partial class InterfaceProtocolTests
         yield return new LearnFormMsg(11, 2);
         yield return new UnlearnFormMsg(2) { X = 0, Y = 0 };
         yield return new RefundPassiveMsg("hf1");
+        yield return new BindGraftMsg("wd3", 1);
         yield return new ChooseDialogueMsg("quartermaster", "work") { Node = "greet" };
         yield return new CloseDialogueMsg("quartermaster");
         yield return new ClosePaneMsg("vendor", 4);
@@ -162,7 +163,7 @@ public partial class InterfaceProtocolTests
             new(1, null, null, "", 0, 0, new List<SeatGlyphInfo>(), 0, 0, new List<PreviewLineInfo>()),
         });
         yield return new PassiveStateMsg(new List<string> { "start_holdfast", "hf1" }, new Dictionary<string, List<string>> { ["hf3"] = new() { "iron" } }, new Dictionary<string, int> { ["passive"] = 2, ["devotion"] = 1 },
-            new List<string> { "star", "devotion" }, true) { RefundCost = "40 Shards", Font = 4 };
+            new List<string> { "star", "devotion" }, true) { RefundCost = "40 Shards", Font = 4, Grafts = new List<GraftInfo> { new("wd3", "anchor", "Anchor", 1) { Slot = 1 }, new("hf3:iron", "ring", "Ring", 2) } };
         yield return new PageStateMsg(new List<PageInfo> { new("passives", false, 2), new("personal_stash", true, 0) { Reason = "Walk to a stash chest.", Container = "personal_stash:1" } });
         yield return new DialogueStateMsg(4, "quartermaster", "Quartermaster", "Hobs again.", new List<DialogueChoiceInfo> { new("work", "Any work?", true), new("trade", "Show me your stock.", false) { Reason = "Not yet." } }, false)
         {

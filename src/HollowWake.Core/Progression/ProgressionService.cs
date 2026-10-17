@@ -531,6 +531,8 @@ public sealed class ProgressionService
         }
         stats.Attributes.RemoveSource("passive:" + nodeId);
         stats.Passives.Remove(nodeId);
+        PassiveGrafts.Forget(state, nodeId);
+        PassiveGrafts.Apply(sim, e);
         Spend(sim, stats, state, CurrencyOf(sim, node), -node.Cost);
         state.Refunds++;
         sim.Events.Publish(new PassiveRefunded(e, nodeId) { Tick = sim.Clock.Tick });
@@ -691,7 +693,9 @@ public sealed class ProgressionService
             }
             stats.Attributes.RemoveSource("passive:" + id);
             stats.Passives.Remove(id);
+            PassiveGrafts.Forget(state, id);
         }
         RecountSpent(sim, e, stats, state);
+        PassiveGrafts.Apply(sim, e);
     }
 }
