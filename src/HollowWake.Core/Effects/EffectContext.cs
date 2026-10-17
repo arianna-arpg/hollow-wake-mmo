@@ -267,7 +267,7 @@ internal sealed class EffectScope : IExprScope
         return false;
     }
 
-    private static string Suffix(string name, int dot)
+    internal static string Suffix(string name, int dot)
     {
         if (Suffixes.TryGetValue(name, out var suffix))
         {

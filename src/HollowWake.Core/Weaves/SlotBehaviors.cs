@@ -31,10 +31,10 @@ public sealed partial class WeaveRuntime
             return null;
         }
         var weave = Resolve(sim, slot, out _);
-        return weave is null ? null : FaceOf(sim, book, slot, weave, stats, sim.Clock.Time);
+        return weave is null ? null : FaceOf(sim, slot, weave, stats, sim.Clock.Time);
     }
 
-    internal CompiledWeave FaceOf(Simulation sim, WeaveBook book, WeaveSlot slot, CompiledWeave weave, Stats stats, double now)
+    internal CompiledWeave FaceOf(Simulation sim, WeaveSlot slot, CompiledWeave weave, Stats stats, double now)
     {
         var casting = weave.Casting;
         if (casting.Convert is null && casting.Chain is null)
@@ -46,7 +46,7 @@ public sealed partial class WeaveRuntime
         {
             if (casting.Uses is { } uses)
             {
-                UsesNow(sim, slot, weave, uses, stats, now);
+                UsesNow(slot, weave, uses, stats, now);
             }
             if (convert.When.IsTrue(cache.SlotScopeFor(slot)) && cache.Face(_compiler, convert.Weave, weave.Level) is { } converted)
             {
@@ -66,7 +66,6 @@ public sealed partial class WeaveRuntime
                 return next;
             }
         }
-        _ = book;
         return weave;
     }
 

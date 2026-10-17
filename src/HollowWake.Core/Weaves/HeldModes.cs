@@ -174,7 +174,7 @@ public sealed partial class WeaveRuntime
     }
 
     /// <summary>A brim at rest decays; its gauge follows in steps. True while it is above its floor.</summary>
-    private bool DecayBrim(Simulation sim, WeaveBook book, Stats stats, WeaveSlot slot, BrimSpec spec, int seat, double now)
+    private static bool DecayBrim(Stats stats, WeaveSlot slot, BrimSpec spec, int seat, double now)
     {
         var stored = slot.StateOr(SlotState.Brim, 0);
         if (stored <= 0)
@@ -188,8 +188,6 @@ public sealed partial class WeaveRuntime
             stats.SetGauge(gauge, value);
         }
         var floor = spec.BankAt > 0 && stored >= spec.BankAt - 1e-9 ? spec.BankAt : 0;
-        _ = sim;
-        _ = book;
         return value > floor + 1e-9;
     }
 

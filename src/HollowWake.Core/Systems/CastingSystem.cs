@@ -9,7 +9,7 @@ namespace HollowWake.Core.Systems;
 /// overcharges climb their stages, guards hold, and every hold ends by release, by its own limit, by
 /// running dry or by interruption. Books whose slots changed are armed first (triggers subscribed, worn
 /// modifiers on). Books are visited in the world's order, so casts resolving on the same tick resolve in
-/// a stable order. Nothing here allocates in a tick where nothing resolves.
+/// a stable order. Beyond the world's query, nothing here allocates in a tick where nothing resolves.
 /// </summary>
 public sealed class CastingSystem : SimSystem
 {

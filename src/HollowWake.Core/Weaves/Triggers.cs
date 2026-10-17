@@ -244,7 +244,7 @@ public sealed partial class WeaveRuntime
         {
             return false;
         }
-        if (weave.Casting.Uses is { Empower.Count: 0 } uses && UsesNow(sim, slot, weave, uses, stats, now) < 1)
+        if (weave.Casting.Uses is { Empower.Count: 0 } uses && UsesNow(slot, weave, uses, stats, now) < 1)
         {
             return false;
         }

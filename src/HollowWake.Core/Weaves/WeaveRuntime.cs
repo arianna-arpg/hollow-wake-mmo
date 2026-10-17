@@ -385,7 +385,7 @@ public sealed partial class WeaveRuntime
         // A toggle that is on turns off; a triggered weave's key arms and disarms it.
         if (weave.IsToggle && IsToggledOn(slot))
         {
-            ToggleOff(sim, caster, book, stats, slot, weave, "press");
+            ToggleOff(sim, caster, stats, slot, weave, "press");
             return true;
         }
         if (weave.IsTriggered)
@@ -400,7 +400,7 @@ public sealed partial class WeaveRuntime
             return Fail(sim, caster, slot, reason);
         }
         // The face: a convert or a combo step may put another weave on the slot for this press.
-        var face = FaceOf(sim, book, slot, weave, stats, now);
+        var face = FaceOf(sim, slot, weave, stats, now);
         if (ForbiddenTag(stats, face) is { } forbidden)
         {
             reason = "forbidden:" + forbidden;
@@ -422,7 +422,7 @@ public sealed partial class WeaveRuntime
         var duration = CastDuration(face, stats, faceScope);
         var resolvesNow = face.CastMode == CastMode.Instant || (duration <= 0 && face.CastMode == CastMode.Cast);
         var casting = face.Casting;
-        if (casting.Uses is { } usesSpec && casting.Uses.Empower.Count == 0 && UsesNow(sim, slot, face, usesSpec, stats, now) < 1)
+        if (casting.Uses is { } usesSpec && casting.Uses.Empower.Count == 0 && UsesNow(slot, face, usesSpec, stats, now) < 1)
         {
             reason = "uses";
             return Fail(sim, caster, slot, reason);
@@ -810,7 +810,7 @@ public sealed partial class WeaveRuntime
             {
                 if (_candidate is not null)
                 {
-                    return _candidate.TryResolve(name.Substring(7), out value);
+                    return _candidate.TryResolve(EffectScope.Suffix(name, 6), out value);
                 }
                 value = 0;
                 return false;
@@ -819,7 +819,7 @@ public sealed partial class WeaveRuntime
         }
 
         public bool HasFlag(string flag) =>
-            flag.Length > 7 && flag[6] == '.' && flag.StartsWith("target", StringComparison.Ordinal) ? _candidate?.HasFlag(flag.Substring(7)) ?? false : _caster.HasFlag(flag);
+            flag.Length > 7 && flag[6] == '.' && flag.StartsWith("target", StringComparison.Ordinal) ? _candidate?.HasFlag(EffectScope.Suffix(flag, 6)) ?? false : _caster.HasFlag(flag);
 
         public double NextRandom() => _caster.NextRandom();
     }
@@ -1000,7 +1000,7 @@ public sealed partial class WeaveRuntime
             book.Casting = null;
             if (sim.World.TryGet<Stats>(caster, out var stats))
             {
-                EndHeldState(sim, caster, book, stats, cast);
+                EndHeldState(sim, caster, stats, cast);
             }
             sim.Events.Publish(new WeaveInterrupted(caster, key) { Tick = sim.Clock.Tick });
         }
@@ -1019,7 +1019,7 @@ public sealed partial class WeaveRuntime
             book.Casting = null;
             if (sim.World.TryGet<Stats>(caster, out var deadStats))
             {
-                EndHeldState(sim, caster, book, deadStats, cast);
+                EndHeldState(sim, caster, deadStats, cast);
             }
             return;
         }
@@ -1087,7 +1087,7 @@ public sealed partial class WeaveRuntime
             live.RemoveAt(i);
             if (sim.World.IsAlive(entry.Caster) && sim.World.TryGet<Stats>(entry.Caster, out var stats))
             {
-                EndHeldState(sim, entry.Caster, entry.Book, stats, entry.Cast);
+                EndHeldState(sim, entry.Caster, stats, entry.Cast);
             }
         }
     }
@@ -1112,7 +1112,7 @@ public sealed partial class WeaveRuntime
                 EndHeld(sim, caster, book, stats, cast, weave, "dry", release: true);
                 return;
             }
-            BuildRamps(sim, caster, stats, cast, weave, cast.Held);
+            BuildRamps(stats, cast, weave, cast.Held);
             var pulses = channel?.Release?.Pulses ?? true;
             if (pulses)
             {
@@ -1192,7 +1192,6 @@ public sealed partial class WeaveRuntime
         cast.Held = now - cast.StartedAt;
         if (cast.FullAt < 0 && cast.Stage < cast.Stages && now - cast.StageAt >= cast.Interval - 1e-9)
         {
-            var over = weave.Form.Overcharge;
             var plan = PlanFor(weave.Root);
             if (plan.StageCosts.Length > 0 && !TryPay(sim, weave, stats, ScopeOf(cast, weave, stats), plan.StageCosts, 1, out _))
             {
@@ -1214,7 +1213,6 @@ public sealed partial class WeaveRuntime
                     cast.FullAt = now;
                 }
             }
-            _ = over;
         }
         cast.Fill = cast.Stages <= 0 ? 1 : (double)cast.Stage / cast.Stages;
         var fullHold = weave.Form.Overcharge?.FullHold is { } fh ? Math.Max(0, fh.Evaluate(ScopeOf(cast, weave, stats))) : RulesOf(sim).FullHold;
@@ -1292,7 +1290,7 @@ public sealed partial class WeaveRuntime
     /// Builds a channel's ramps at a held time: weave ramps become the cast's local modifiers, caster ramps
     /// sit on the caster under source <c>cast:{slot}</c> until the cast ends.
     /// </summary>
-    private static void BuildRamps(Simulation sim, Entity caster, Stats stats, CastState cast, CompiledWeave weave, double held)
+    private static void BuildRamps(Stats stats, CastState cast, CompiledWeave weave, double held)
     {
         var ramps = weave.Form.Channel?.Ramps;
         if (ramps is null || ramps.Count == 0)
@@ -1326,8 +1324,6 @@ public sealed partial class WeaveRuntime
                 cast.Modifiers.Add(new Modifier { Attribute = ramp.Attribute, Form = ramp.Form, Value = value, Scope = ramp.Scope, Source = "ramp" });
             }
         }
-        _ = sim;
-        _ = caster;
     }
 
     // ------------------------------------------------------------ ending holds
@@ -1388,7 +1384,7 @@ public sealed partial class WeaveRuntime
                             cast.Modifiers.Add(new Modifier { Attribute = scale.Attribute, Form = scale.Form, Value = scale.AtZero + (scale.AtFull - scale.AtZero) * cast.Fill, Scope = scale.Scope, Source = "charge" });
                         }
                     }
-                    EndHeldState(sim, caster, book, stats, cast);
+                    EndHeldState(sim, caster, stats, cast);
                     ResolveUse(sim, caster, book, stats, cast, weave, 0, new CastVarValues { Held = cast.Held, Fill = cast.Fill });
                     fired = true;
                 }
@@ -1411,7 +1407,7 @@ public sealed partial class WeaveRuntime
                             cast.Modifiers.Add(new Modifier { Attribute = "damage", Form = ModifierForm.More, Value = spark.Bonus, Source = "spark" });
                         }
                     }
-                    EndHeldState(sim, caster, book, stats, cast);
+                    EndHeldState(sim, caster, stats, cast);
                     ResolveUse(sim, caster, book, stats, cast, weave, 0, new CastVarValues { Held = cast.Held, Stage = cast.Stage, Fill = cast.Fill });
                     fired = true;
                 }
@@ -1420,7 +1416,7 @@ public sealed partial class WeaveRuntime
                 fired = release && Bash(sim, caster, stats, cast, weave, reason);
                 break;
         }
-        EndHeldState(sim, caster, book, stats, cast);
+        EndHeldState(sim, caster, stats, cast);
         if (!cast.CooldownStarted)
         {
             StartCooldown(sim, book, weave.Root, stats);
@@ -1491,7 +1487,7 @@ public sealed partial class WeaveRuntime
             var full = cast.MaxHold <= 0 || cast.Held >= cast.MaxHold - 1e-9;
             if (cast.Held >= minHold - 1e-9 && (!release.RequireFull || full))
             {
-                BuildRamps(sim, caster, stats, cast, weave, cast.Held);
+                BuildRamps(stats, cast, weave, cast.Held);
                 if (channel.Brim is { } scaleBrim && (scaleBrim.Scale.AtEmpty != 1 || scaleBrim.Scale.AtFull != 1))
                 {
                     var t = Curves.Evaluate(scaleBrim.Scale.Curve, cast.Brim);
@@ -1524,7 +1520,7 @@ public sealed partial class WeaveRuntime
     /// Takes off what a held cast put on its caster: ramps on the caster, the guard and its flag, the channel
     /// and charge flags. Safe to call more than once.
     /// </summary>
-    private void EndHeldState(Simulation sim, Entity caster, WeaveBook book, Stats stats, CastState cast)
+    private void EndHeldState(Simulation sim, Entity caster, Stats stats, CastState cast)
     {
         var touched = false;
         if (cast.CasterSource is { } source)
@@ -1553,7 +1549,6 @@ public sealed partial class WeaveRuntime
         {
             stats.Attributes.Touch();
         }
-        _ = book;
     }
 
     // ------------------------------------------------------------ input during a cast
@@ -1676,7 +1671,7 @@ public sealed partial class WeaveRuntime
                 continue;
             }
             var cache = CacheFor(slot, weave, stats);
-            if (weave.Casting.Uses is { Empower.Count: 0 } uses && UsesNow(sim, slot, weave, uses, stats, now) < 1)
+            if (weave.Casting.Uses is { Empower.Count: 0 } uses && UsesNow(slot, weave, uses, stats, now) < 1)
             {
                 continue;
             }
@@ -2177,7 +2172,7 @@ internal sealed class SlotScope : IExprScope
     {
         if (name.Length > 5 && name[4] == '.' && name.StartsWith("slot", StringComparison.Ordinal))
         {
-            value = _slot.StateOr(name.Substring(5), 0);
+            value = _slot.StateOr(EffectScope.Suffix(name, 4), 0);
             return true;
         }
         return _caster.TryResolve(name, out value);
@@ -2223,7 +2218,7 @@ internal sealed class CasterWeaveScope : IExprScope
     {
         if (name.Length >= 6 && name[5] == '.' && name.StartsWith("weave", StringComparison.Ordinal))
         {
-            rest = name.Substring(6);
+            rest = EffectScope.Suffix(name, 5);
             return true;
         }
         rest = "";

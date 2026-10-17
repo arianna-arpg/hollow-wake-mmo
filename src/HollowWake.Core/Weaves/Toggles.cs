@@ -54,7 +54,7 @@ public sealed partial class WeaveRuntime
         sim.Events.Publish(new WeaveToggled(caster, weave.Key, true, "press") { Tick = sim.Clock.Tick });
     }
 
-    private void ToggleOff(Simulation sim, Entity caster, WeaveBook book, Stats stats, WeaveSlot slot, CompiledWeave weave, string reason)
+    private void ToggleOff(Simulation sim, Entity caster, Stats stats, WeaveSlot slot, CompiledWeave weave, string reason)
     {
         if (!IsToggledOn(slot))
         {
@@ -78,7 +78,6 @@ public sealed partial class WeaveRuntime
             Run(sim, caster, stats, state, weave, weave.Casting.Deactivate, depth: 0, publishCast: false, default, rngPrefix: "toggle:");
         }
         sim.Events.Publish(new WeaveToggled(caster, weave.Key, false, reason) { Tick = sim.Clock.Tick });
-        _ = book;
     }
 
     /// <summary>Puts a book on the upkeep list (still banks, decaying brims) once.</summary>
@@ -135,18 +134,18 @@ public sealed partial class WeaveRuntime
         }
         if (sim.World.Has<Dead>(caster))
         {
-            ToggleOff(sim, caster, book, stats, slot, weave, "death");
+            ToggleOff(sim, caster, stats, slot, weave, "death");
             return;
         }
         if (!book.Slots.Contains(slot))
         {
-            ToggleOff(sim, caster, book, stats, slot, weave, "unslotted");
+            ToggleOff(sim, caster, stats, slot, weave, "unslotted");
             return;
         }
         var elapsed = now - slot.StateOr(SlotState.ToggleAt, now);
         if (weave.Form.Toggle?.MaxDuration is { } max && elapsed >= max.Evaluate(CacheFor(slot, weave, stats).Scope) - 1e-9)
         {
-            ToggleOff(sim, caster, book, stats, slot, weave, "expired");
+            ToggleOff(sim, caster, stats, slot, weave, "expired");
             return;
         }
         var plan = PlanFor(weave.Root);
@@ -155,7 +154,7 @@ public sealed partial class WeaveRuntime
             var ramp = weave.Form.Upkeep?.Ramp ?? 0;
             if (!TryPay(sim, weave, stats, CacheFor(slot, weave, stats).Scope, plan.Upkeep, dt * (1 + ramp * elapsed), out _))
             {
-                ToggleOff(sim, caster, book, stats, slot, weave, "starved");
+                ToggleOff(sim, caster, stats, slot, weave, "starved");
             }
         }
     }
@@ -176,7 +175,7 @@ public sealed partial class WeaveRuntime
             }
             if (weave.Form.Channel?.Brim is { } brim && !(book.Casting is { } cast && ReferenceEquals(cast.Slot, slot)))
             {
-                busy |= DecayBrim(sim, book, stats, slot, brim, i, now);
+                busy |= DecayBrim(stats, slot, brim, i, now);
             }
         }
         return busy;

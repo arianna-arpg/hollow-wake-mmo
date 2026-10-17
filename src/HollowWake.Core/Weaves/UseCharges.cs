@@ -30,7 +30,7 @@ public sealed partial class WeaveRuntime
     }
 
     /// <summary>The charges in a slot's bank now (fractional while recovering), bringing the bank up to date.</summary>
-    internal double UsesNow(Simulation sim, WeaveSlot slot, CompiledWeave weave, UsesSpec spec, Stats stats, double now)
+    internal static double UsesNow(WeaveSlot slot, CompiledWeave weave, UsesSpec spec, Stats stats, double now)
     {
         var max = UsesMax(weave, spec, stats);
         var state = slot.State;
@@ -69,7 +69,6 @@ public sealed partial class WeaveRuntime
         uses = Math.Min(uses, max);
         state[SlotState.Uses] = uses;
         state[SlotState.UsesAt] = now;
-        _ = sim;
         return uses;
     }
 
@@ -79,7 +78,7 @@ public sealed partial class WeaveRuntime
     /// </summary>
     private int SpendUses(Simulation sim, Entity caster, WeaveSlot slot, CompiledWeave weave, UsesSpec spec, Stats stats, double now)
     {
-        var uses = UsesNow(sim, slot, weave, spec, stats, now);
+        var uses = UsesNow(slot, weave, spec, stats, now);
         var whole = (int)Math.Floor(uses + 1e-9);
         if (whole < 1)
         {
@@ -105,7 +104,7 @@ public sealed partial class WeaveRuntime
     {
         var now = sim.Clock.Time;
         var max = UsesMax(weave, spec, stats);
-        var uses = Math.Min(max, UsesNow(sim, slot, weave, spec, stats, now) + Math.Max(0, amount));
+        var uses = Math.Min(max, UsesNow(slot, weave, spec, stats, now) + Math.Max(0, amount));
         slot.State[SlotState.Uses] = uses;
         if (uses >= max - 1e-9)
         {
@@ -126,14 +125,14 @@ public sealed partial class WeaveRuntime
             return -1;
         }
         max = UsesMax(weave, spec, stats);
-        return (int)Math.Floor(UsesNow(sim, slot, weave, spec, stats, sim.Clock.Time) + 1e-9);
+        return (int)Math.Floor(UsesNow(slot, weave, spec, stats, sim.Clock.Time) + 1e-9);
     }
 
     /// <summary>A still bank's beat: it recovers while the caster stands still and bleeds while it moves. True while it is not full.</summary>
     private bool UpkeepStill(Simulation sim, Entity caster, WeaveSlot slot, CompiledWeave weave, UsesSpec spec, Stats stats, double dt)
     {
         var max = UsesMax(weave, spec, stats);
-        var uses = UsesNow(sim, slot, weave, spec, stats, sim.Clock.Time);
+        var uses = UsesNow(slot, weave, spec, stats, sim.Clock.Time);
         var before = uses;
         if (stats.Flags.Contains("moving"))
         {
