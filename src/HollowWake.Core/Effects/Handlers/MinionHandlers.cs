@@ -29,9 +29,13 @@ public static class MinionHandlers
         r.Register(new ConsumeMinionHandler());
     }
 
-    /// <summary>The key of the weave whose minions an effect addresses by default: the running weave when it raises minions or constructs.</summary>
+    /// <summary>
+    /// The key of the weave whose minions an effect addresses when it names no group: its host (the slot's
+    /// weave a meta, trigger or <c>cast</c> runs for), else the running weave, when that weave raises minions
+    /// or constructs; otherwise none, and the effect addresses all of them.
+    /// </summary>
     internal static string? HostWeave(EffectContext ctx, string? group) =>
-        group is null && ctx.Weave is { } w && (w.Mechanisms.Has("summon") || w.Mechanisms.Has("construct")) ? w.Key : null;
+        group is null && SummonRecipe.HostOf(ctx) is { } w && (w.Mechanisms.Has("summon") || w.Mechanisms.Has("construct")) ? w.Key : null;
 
     /// <summary>The body the minions answer to: the context's origin.</summary>
     internal static Vector3 OwnerPosition(EffectContext ctx) => ctx.Sim.World.Get<Transform>(ctx.Origin)?.Position ?? ctx.SourceTransform?.Position ?? ctx.Point;
@@ -219,7 +223,7 @@ internal sealed class MinionCastHandler : IEffectHandler
         public override void Execute(EffectContext ctx)
         {
             var sim = ctx.Sim;
-            var weave = Resolve(ctx, ctx.Weave?.Level ?? 1);
+            var weave = Resolve(ctx, SummonRecipe.HostOf(ctx)?.Level ?? 1);
             if (weave is null)
             {
                 return;
@@ -294,9 +298,10 @@ internal sealed class MinionCastHandler : IEffectHandler
 /// <summary>
 /// <c>consume_minion {count, pick, group, radius, self, of, effects}</c>: spends minions for power. Picks
 /// <c>count</c> of the caster's minions (<c>of</c>: <c>minions</c>, <c>constructs</c> or <c>any</c>) within
-/// <c>radius</c> of the focus when given, the <c>oldest</c>, <c>newest</c> or <c>nearest</c> first, or with
-/// <c>self</c> the source itself. Each one's <c>effects</c> run where it stands, with <c>consumed_life</c> and
-/// <c>consumed_life_max</c> set, and then it dies, crediting no one.
+/// <c>radius</c> of the focus when given, the <c>oldest</c>, <c>newest</c> or <c>nearest</c> first; with
+/// <c>pick: target</c> the context's target when it is one of the caster's minions (what a form's
+/// <c>minion</c> target kind chose); or with <c>self</c> the source itself. Each one's <c>effects</c> run
+/// where it stands, with <c>consumed_life</c> and <c>consumed_life_max</c> set, and then it dies, crediting no one.
 /// </summary>
 internal sealed class ConsumeMinionHandler : IEffectHandler
 {
@@ -308,7 +313,7 @@ internal sealed class ConsumeMinionHandler : IEffectHandler
     {
         Type = Type,
         Count = ctx.ExprOf(p["count"], Expr.Constant(1))!,
-        Pick = ctx.ChoiceOf(p["pick"], "pick", "oldest", "oldest", "newest", "nearest"),
+        Pick = ctx.ChoiceOf(p["pick"], "pick", "oldest", "oldest", "newest", "nearest", "target"),
         Group = ctx.StringOf(p["group"]),
         Radius = ctx.ExprOf(p["radius"]),
         Self = ctx.BoolOf(p["self"], false),
@@ -336,6 +341,13 @@ internal sealed class ConsumeMinionHandler : IEffectHandler
                 if (sim.World.Has<Minion>(ctx.Source) && !sim.World.Has<Dead>(ctx.Source))
                 {
                     list.Add(ctx.Source);
+                }
+            }
+            else if (Pick == "target")
+            {
+                if (MinionTargets.Owns(sim, ctx.Origin, ctx.Target))
+                {
+                    list.Add(ctx.Target);
                 }
             }
             else

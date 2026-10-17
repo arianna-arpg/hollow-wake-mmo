@@ -1,0 +1,29 @@
+# Rarity contracts beside the rarity table. Only commons can be superior: a superior common's base roll lands in
+# the top window and its name says so. Magic items may overroll: an affix may roll a tier or more above the item
+# level's gate, each step above losing weight. Both draw from the item's own seed, so the shared stream is untouched.
+kind: item_rarities
+entries:
+  - { id: common, patch: true, superior: { chance: 0.05, window: 0.25 } }
+  - { id: magic, patch: true, overroll: { chance: 0.1, max_steps: 1, step_decay: 0.35 } }
+---
+# A unique with rolled choice families: each copy picks its lines from the families at mint, so two copies differ.
+# The reliquary takes one of it.
+kind: uniques
+entries:
+  - id: wellmother_reliquae
+    name: The Wellmother's Reliquae
+    base: relic_idol
+    weight: 0.5
+    min_level: 10
+    max_per_container: 1
+    flavor: Nine wells, nine waters. She kept a drop of each.
+    lines:
+      - { attribute: life.max, form: increased, range: [0.05, 0.08] }
+    choices:
+      - id: water
+        pick: 2
+        options:
+          - { id: ember, lines: [ { attribute: resist.ember, form: flat, range: [0.08, 0.14] } ] }
+          - { id: tide, lines: [ { attribute: resist.tide, form: flat, range: [0.08, 0.14] } ] }
+          - { id: storm, lines: [ { attribute: resist.storm, form: flat, range: [0.08, 0.14] } ] }
+          - { id: umbra, lines: [ { attribute: resist.umbra, form: flat, range: [0.08, 0.14] } ] }

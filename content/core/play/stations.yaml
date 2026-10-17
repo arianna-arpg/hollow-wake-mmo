@@ -1,0 +1,22 @@
+# Places that serve a hero's development: a font where passives are refunded, a chest that opens the stash.
+# They are patterns like any prop; landmarks and zone overrides place them in the world.
+kind: patterns
+entries:
+  - id: passive_font
+    name: Font of Unweaving
+    tags: [prop, station, font]
+    radius: 0.7
+    height: 1.4
+    components:
+      prop: { blocking: true }
+      interactable: { kind: font, range: 2.5 }
+
+  # Standing at it reaches the stashes (their pages and the purchase of new ones); using it opens its pane.
+  - id: stash_chest
+    name: Stash Chest
+    tags: [prop, station, stash]
+    radius: 0.6
+    height: 1.0
+    components:
+      prop: { blocking: true }
+      interactable: { kind: stash, range: 2.5 }

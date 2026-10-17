@@ -1,0 +1,26 @@
+# Vendors: stock minted for each hero who opens them, priced by the vendor's formula or the rules
+# (inventory.vendor.price, sell_price), what they buy back and how many sold items they keep to sell back.
+# A conversation line opens one with { type: open_vendor, vendor: id }; an entity with interactable kind
+# vendor and the vendor's id as its ref opens one directly.
+kind: vendors
+entries:
+  - id: quartermaster
+    name: Quartermaster's Stock
+    currency: shards
+    buys: [weapon, armor, shield, focus, jewelry, material, glyph, codex]
+    buy_back: 8
+    stock:
+      - { id: floss, item: thread_floss, count: 5 }
+      - { id: ring, item: ring, rarity: magic }
+      - { id: jerkin, item: leather_jerkin, rarity: common }
+      - { id: cap, item: leather_cap, rarity: common }
+      - { id: blade, item: short_sword, rarity: magic, level: "level + 1" }
+      - { id: stone_ring, item: glyph_stone, glyph: ring, stock: 2 }
+      - { id: stone_needle, item: glyph_stone, glyph: needle, stock: 2 }
+      - id: codex_bolt
+        item: weave_codex
+        form: bolt
+        rarity: magic
+        stock: 1
+        enabled: 'has("quest.completed.first_threads")'
+        reason: The Quartermaster sells codices to those who have thinned the hobs.

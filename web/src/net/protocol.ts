@@ -242,6 +242,7 @@ export interface SocketStoneMsg {
   stone: Int64;
   slot: number;
   socket: number;
+  host?: Int64;
 }
 
 export interface UnsocketStoneMsg {
@@ -250,6 +251,7 @@ export interface UnsocketStoneMsg {
   socket: number;
   x?: number;
   y?: number;
+  host?: Int64;
 }
 
 export interface LearnFormMsg {
@@ -306,6 +308,20 @@ export interface BuyBackMsg {
   t: "buy_back";
   vendor: Int64;
   item: Int64;
+}
+
+export interface BuyPageMsg {
+  t: "buy_page";
+  container: string;
+}
+
+export interface StationServiceMsg {
+  t: "station_service";
+  station: Int64;
+  service: string;
+  item?: Int64;
+  slot?: number;
+  node?: string;
 }
 
 export interface WelcomeMsg {
@@ -549,6 +565,7 @@ export interface StationStateMsg {
   closed: boolean;
   tags?: string[];
   reach?: number;
+  services?: StationServiceInfo[];
 }
 
 // ---------------------------------------------------------------- records inside messages
@@ -598,6 +615,10 @@ export interface EntityState {
   vy: number;
   vz: number;
   static?: boolean;
+  shape?: string;
+  shape_size?: ShapeSizeInfo;
+  heading?: number;
+  spin?: number;
 }
 
 export interface EntityDelta {
@@ -626,6 +647,10 @@ export interface EntityDelta {
   vx?: number;
   vy?: number;
   vz?: number;
+  shape?: string;
+  shape_size?: ShapeSizeInfo;
+  heading?: number;
+  spin?: number;
 }
 
 export interface WeaveSlotInfo {
@@ -700,6 +725,7 @@ export interface CastInfo {
   brim?: number;
   held?: number;
   duration?: number;
+  pool?: number;
 }
 
 export interface ChargeInfo {
@@ -771,8 +797,10 @@ export interface WeaveSeatInfo {
   costs?: Record<string, number>;
   uses?: number;
   uses_max?: number;
+  stacks?: number;
   converted?: FaceInfo;
   meta?: FaceInfo;
+  active?: boolean;
 }
 
 export interface PageInfo {
@@ -819,6 +847,17 @@ export interface RecipeInfo {
   cost?: Record<string, number>;
 }
 
+export interface StationServiceInfo {
+  id: string;
+  label: string;
+  item?: Int64;
+  slot?: number;
+  node?: string;
+  price?: Record<string, number>;
+  enabled?: boolean;
+  reason?: string;
+}
+
 export interface OverlayInfo {
   id: string;
   global: boolean;
@@ -827,6 +866,13 @@ export interface OverlayInfo {
   circle?: number[];
   params: Record<string, number>;
   priority: number;
+}
+
+export interface ShapeSizeInfo {
+  radius?: number;
+  angle?: number;
+  width?: number;
+  inner?: number;
 }
 
 export interface SocketInfo {
@@ -940,6 +986,8 @@ export type Message =
   | BuyMsg
   | SellMsg
   | BuyBackMsg
+  | BuyPageMsg
+  | StationServiceMsg
   | WelcomeMsg
   | LoginResultMsg
   | CharacterListMsg
@@ -1023,6 +1071,8 @@ export const MESSAGE_TYPES: readonly MessageType[] = [
   "buy",
   "sell",
   "buy_back",
+  "buy_page",
+  "station_service",
   "welcome",
   "login_result",
   "character_list",
