@@ -160,6 +160,7 @@ public static class Snapshots
     public static ChunkDataMsg Chunk(Core.World.ChunkData c)
     {
         var layers = c.Layers.SelectMany(kv => kv.Value.Select(s => new LayerInfo(kv.Key, s.Height, s.Walkable, string.Join(" ", s.Tags)))).ToList();
-        return new ChunkDataMsg(c.Coord.X, c.Coord.Y, c.Size, c.Height, c.Flags.Select(f => (byte)f).ToArray(), c.TagTable.Select(t => string.Join(" ", t)).ToList(), c.SurfaceTag, layers, c.GenVersion);
+        return new ChunkDataMsg(c.Coord.X, c.Coord.Y, c.Size, c.Height, c.Flags.Select(f => (byte)f).ToArray(), c.TagTable.Select(t => string.Join(" ", t)).ToList(), c.SurfaceTag, layers, c.GenVersion,
+            float.IsFinite(c.WaterLevel) ? c.WaterLevel : null);
     }
 }

@@ -4,6 +4,10 @@ motd: A quiet corner of the Weftmarches.
 port: 7777
 bind: 0.0.0.0
 transport: tcp
+websocket_enabled: true # browser clients over WebSocket at /ws, and the web client over HTTP, on websocket_port
+websocket_port: 7778
+web_root: web/dist      # the built web client (npm --prefix web run build); empty serves only the socket
+chunk_request_radius: 8 # chunks around the player a client may request terrain for
 tick_rate: 20
 snapshot_rate: 10
 interest_radius: 48

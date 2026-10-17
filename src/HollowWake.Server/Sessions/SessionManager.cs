@@ -181,6 +181,15 @@ public sealed class SessionManager
             }
             case RequestChunkMsg req:
             {
+                // Terrain is served around the player only: a far request would make the world thread generate
+                // and keep chunks nobody stands near.
+                var here = sim.World.Get<Transform>(session.Entity)?.Position ?? Vector3.Zero;
+                var center = sim.Layout.ChunkOf(here.X, here.Y);
+                if (Math.Max(Math.Abs(req.X - center.X), Math.Abs(req.Y - center.Y)) > _config.ChunkRequestRadius)
+                {
+                    session.Error("chunk_out_of_range", $"Chunk {req.X},{req.Y} is too far away.");
+                    return;
+                }
                 var chunk = sim.Terrain.GetChunk(new Core.World.ChunkCoord(req.X, req.Y));
                 session.Send(Snapshots.Chunk(chunk));
                 return;
