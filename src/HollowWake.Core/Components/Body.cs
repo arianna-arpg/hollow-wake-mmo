@@ -56,6 +56,9 @@ public sealed class Motion : IComponent
     /// <summary>A shove on top of the body's own movement (knockback, pull, buffet), decaying as the displacement system integrates it.</summary>
     public Vector3 Impulse;
 
+    /// <summary>Who gave the current <see cref="Impulse"/> and what happens if it slams the body into something; null when nothing rides it.</summary>
+    public ShoveRider? Shove;
+
     /// <summary>A movement over time that overrides walking while it lasts (a dash, a leap); null when none.</summary>
     public Displacement? Displacement;
 
@@ -80,6 +83,36 @@ public sealed class Displacement
     public double EndsAt;
     /// <summary>The effect context the displacement's hits and landing run in, when it has any.</summary>
     public Effects.EffectContext? Context;
+    /// <summary>Bodies the way passes within this many units of are struck by <see cref="OnContact"/>, each once.</summary>
+    public float Width;
+    /// <summary>Peak height above the straight line between the ends, for leaps.</summary>
+    public float Arc;
+    /// <summary>Passes through bodies and the cells placed things block; walls still stop it.</summary>
+    public bool Phase;
+    public Effects.CompiledEffect[] OnContact = Array.Empty<Effects.CompiledEffect>();
+    public Effects.CompiledEffect[] OnTravel = Array.Empty<Effects.CompiledEffect>();
+    public Effects.CompiledEffect[] OnLand = Array.Empty<Effects.CompiledEffect>();
+    public Effects.CompiledEffect[] OnEnd = Array.Empty<Effects.CompiledEffect>();
+    /// <summary>Units between <see cref="OnTravel"/> beats.</summary>
+    public float TravelEvery = 2f;
+    public float Traveled;
+    public float NextTravelAt;
+    /// <summary>Flags the body wears while carried (dashing, airborne, untargetable), taken off on arrival.</summary>
+    public string[] Flags = Array.Empty<string>();
+    public Effects.HitLedger Struck = new();
+}
+
+/// <summary>Who shoved a body, and what happens when the shove slams it into something it cannot enter.</summary>
+public sealed class ShoveRider
+{
+    public Entity Source = Entity.None;
+    public Effects.EffectContext? Context;
+    public Effects.CompiledEffect[] OnCollide = Array.Empty<Effects.CompiledEffect>();
+}
+
+/// <summary>Marks a body the displacement system is moving: an impulse is decaying on it or a displacement carries it.</summary>
+public sealed class Displaced : IComponent
+{
 }
 
 /// <summary>Who or what this is: name, template, faction, tags, ownership.</summary>

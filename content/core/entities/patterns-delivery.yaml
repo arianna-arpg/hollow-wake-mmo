@@ -1,0 +1,27 @@
+# Delivery monsters: foes whose kits show returning, forking and homing flights. No spawn table names
+# them yet; the tools and tests pit them against others.
+kind: patterns
+entries:
+  - id: loosed_skirmisher
+    name: Loosed Skirmisher
+    extends: monster
+    tags: [humanoid, loosed, skirmisher]
+    faction: the_loosed
+    level: 4
+    components:
+      stats: { attributes: { might: 9, grace: 12, will: 10, vigor: 9, move.speed: 5.2, weapon.damage.min: 4, weapon.damage.max: 8, weapon.attack.time: 1.0 } }
+      weaves: { list: [stone_glaive, splitting_bolt, seeking_bolt] }
+      behavior: { id: aggressive_ranged }
+      drops: { table: world_common, xp: "22 + level * 6", chance: 0.8 }
+
+  - id: tide_caller
+    name: Tide Caller
+    extends: monster
+    tags: [humanoid, loosed, caster]
+    faction: the_loosed
+    level: 5
+    components:
+      stats: { attributes: { might: 6, grace: 9, will: 15, vigor: 8, move.speed: 4.8 } }
+      weaves: { list: [tide_orb, tide_maelstrom, storm_call] }
+      behavior: { id: aggressive_ranged }
+      drops: { table: world_common, xp: "26 + level * 6", chance: 0.8 }

@@ -1,0 +1,14 @@
+# Delivery presets: compositions of the delivery forms and glyphs for monsters, onboarding and the tools.
+kind: weaves
+entries:
+  - { id: stone_glaive, name: Stone Glaive, form: glaive, threads: [], color: "#9c8b72" }
+  - { id: splitting_bolt, name: Splitting Bolt, form: bolt, threads: [ember], glyphs: [forking], color: "#e8622a" }
+  - { id: seeking_bolt, name: Seeking Bolt, form: bolt, threads: [storm], glyphs: [seeking], color: "#b58cff" }
+  - { id: tide_orb, name: Tide Orb, form: orb, threads: [tide], color: "#3aa6d8" }
+  - { id: ember_volley, name: Ember Volley, form: volley, threads: [ember], color: "#e8622a" }
+  - { id: whirling_blades, name: Whirling Blades, form: wheel, threads: [], color: "#9c8b72" }
+  - { id: storm_call, name: Storm Call, form: storm, threads: [storm], color: "#b58cff" }
+  - { id: stone_ripple, name: Stone Ripple, form: ripple, threads: [stone], color: "#9c8b72" }
+  - { id: ember_wall, name: Ember Wall, form: wall, threads: [ember], color: "#e8622a" }
+  - { id: tide_maelstrom, name: Tide Maelstrom, form: maelstrom, threads: [tide], color: "#3aa6d8" }
+  - { id: shield_bash, name: Shield Bash, form: bash, threads: [], color: "#9c8b72" }

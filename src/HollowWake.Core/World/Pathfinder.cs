@@ -36,6 +36,12 @@ public sealed class Pathfinder
     /// </summary>
     public Func<CellCoord, bool>? Blocked { get; init; }
 
+    /// <summary>Searches run so far, for profiling.</summary>
+    public long Searches { get; private set; }
+
+    /// <summary>Cells expanded over every search so far, for profiling.</summary>
+    public long Expanded { get; private set; }
+
     public Pathfinder(Terrain terrain)
     {
         _terrain = terrain;
@@ -90,11 +96,21 @@ public sealed class Pathfinder
     public PathResult FindPath(Vector3 from, Vector3 to, List<Vector3> into, int maxNodes)
     {
         into.Clear();
+        Searches++;
         var start = CellCoord.Of(from.X, from.Y);
         var goal = CellCoord.Of(to.X, to.Y);
         if (start == goal)
         {
             into.Add(to);
+            return PathResult.Complete;
+        }
+
+        // A goal inside a placed blocker (a wander point or a home that fell in a tree) can never be stood
+        // in: reaching a cell beside it is as close as walking gets, and counts as arriving.
+        var goalBlocked = Blocked is { } placedGoal && placedGoal(goal);
+        if (goalBlocked && Math.Max(Math.Abs(start.X - goal.X), Math.Abs(start.Y - goal.Y)) == 1)
+        {
+            into.Add(from);
             return PathResult.Complete;
         }
 
@@ -117,6 +133,7 @@ public sealed class Pathfinder
             }
             _nodes[current].Closed = true;
             expanded++;
+            Expanded++;
             var cell = _nodes[current].Cell;
             var g = _nodes[current].G;
             var h = Heuristic(cell, goal);
@@ -128,6 +145,11 @@ public sealed class Pathfinder
             if (cell == goal)
             {
                 Reconstruct(current, into, to);
+                return PathResult.Complete;
+            }
+            if (goalBlocked && Math.Max(Math.Abs(cell.X - goal.X), Math.Abs(cell.Y - goal.Y)) == 1)
+            {
+                Reconstruct(current, into, null);
                 return PathResult.Complete;
             }
             // The four orthogonal cells serve as neighbors and as the corners diagonal moves pass.
@@ -197,14 +219,11 @@ public sealed class Pathfinder
     /// <summary>
     /// The ground a body at height z finds in a cell, judged as a cell to stand in (walkable, not blocked,
     /// within the drop) and as a corner to pass (the step rule of <see cref="Terrain.CanStep"/>). A cell a
-    /// placed thing blocks is neither.
+    /// placed thing blocks is no cell to stand in, as walking refuses it; a diagonal step may still pass its
+    /// corner, as walking allows.
     /// </summary>
     private Probe ProbeCell(CellCoord cell, double z)
     {
-        if (Blocked is { } blockedByPlaced && blockedByPlaced(cell))
-        {
-            return default;
-        }
         if (!_terrain.TryFindGround(cell.X + 0.5, cell.Y + 0.5, z, StepUp, out var ground, out _, out var flags))
         {
             return default;
@@ -214,7 +233,7 @@ public sealed class Pathfinder
         return new Probe
         {
             Height = ground.Height,
-            Node = ground.Walkable && !(drop > MaxDrop) && !blocked,
+            Node = ground.Walkable && !(drop > MaxDrop) && !blocked && !(Blocked is { } placed && placed(cell)),
             Corner = !(blocked && ground.Tags.Has("ground")) && drop <= MaxDrop,
         };
     }
