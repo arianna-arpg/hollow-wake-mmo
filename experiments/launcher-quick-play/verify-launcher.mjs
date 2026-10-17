@@ -44,6 +44,17 @@ const exe = path.join(root, packaged ? 'launcher/release/win-unpacked/Hollow Wak
 let app;
 let gamePid;
 const result = { feed: manifest.version };
+// IPC returns a Promise. Poll it from Node: a browser predicate treats that Promise as truthy.
+const waitState = async (page, predicate, timeout = 30000) => {
+  const deadline = Date.now() + timeout;
+  let state;
+  do {
+    state = await page.evaluate(() => window.launcher.getState());
+    if (predicate(state)) return state;
+    await new Promise(resolve => setTimeout(resolve, 100));
+  } while (Date.now() < deadline);
+  throw new Error('Launcher state did not settle: ' + JSON.stringify(state));
+};
 const verifyEntry = async name => {
   if (!process.argv.includes('--entry')) return;
   const logFile = path.join(data, 'launcher/logs/client.log');
@@ -78,32 +89,32 @@ try {
     assert.deepEqual(bundled, readFileSync(path.join(root, 'assets/branding', file)), `bundled ${file} matches the canonical brand`);
   }
   result.brandArtwork = `${packaged ? 'Packaged' : 'Source'} launcher renders the shared insignia and bundles byte-identical PNG/ICO assets`;
-  await page.waitForFunction(async () => (await window.launcher.getState()).builds.length === 2);
-  await page.waitForFunction(async () => (await window.launcher.getState()).feed.remote?.version === '0.1.1');
+  await waitState(page, s => s.builds.length === 2);
+  await waitState(page, s => s.feed.remote?.version === '0.1.1');
   await page.evaluate(() => Promise.all([window.launcher.selectBuild('v0.1.0'), window.launcher.install()]));
-  await page.waitForFunction(async () => (await window.launcher.getState()).task.kind === 'idle', null, { timeout: 60000 });
+  await waitState(page, s => s.task.kind === 'idle', 60000);
   const afterSelection = await page.evaluate(() => window.launcher.getState());
   assert.notEqual(afterSelection.installed?.version, '0.1.1', 'an immediate Install must never use the previous selection');
   result.selectionRace = 'Changing selection invalidates the previous release before asynchronous settings persistence';
-  await page.waitForFunction(async () => (await window.launcher.getState()).feed.remote?.version === '0.1.0');
+  await waitState(page, s => s.feed.remote?.version === '0.1.0');
   if (!afterSelection.installed) await page.locator('#primary').click();
-  await page.waitForFunction(async () => (await window.launcher.getState()).installed?.version === '0.1.0', null, { timeout: 60000 });
+  await waitState(page, s => s.installed?.version === '0.1.0', 60000);
   result.selectedInstall = 'Pinned older release downloaded, verified and installed';
   await page.waitForFunction(() => document.getElementById('build-select').value === 'v0.1.0' && !document.getElementById('build-select').disabled);
   await page.locator('#build-select').selectOption('');
-  await page.waitForFunction(async () => (await window.launcher.getState()).settings.releaseTag === null);
-  await page.waitForFunction(async () => (await window.launcher.getState()).action === 'update');
+  await waitState(page, s => s.settings.releaseTag === null);
+  await waitState(page, s => s.action === 'update');
   await page.locator('#secondary').filter({ hasText: 'Update to 0.1.1' }).waitFor();
   assert.equal(await page.locator('#primary').textContent(), 'Play');
   await page.screenshot({ path: path.join(output, 'launcher-ready.png') });
   slowDownload = true;
   await page.locator('#secondary').click();
-  await page.waitForFunction(async () => (await window.launcher.getState()).task.kind === 'download');
+  await waitState(page, s => s.task.kind === 'download');
   const outcomes = await page.evaluate(() => Promise.all([window.launcher.play(), window.launcher.play()]));
   assert.equal(outcomes.filter(o => o.ok).length, 1);
   gamePid = await page.evaluate(async () => (await window.launcher.getState()).game.pid);
   assert.ok(gamePid);
-  await page.waitForFunction(async () => (await window.launcher.getState()).installed?.version === '0.1.1', null, { timeout: 60000 });
+  await waitState(page, s => s.installed?.version === '0.1.1', 60000);
   assert.ok(existsSync(path.join(data, 'client/0.1.0', build.executable)));
   result.concurrentPlay = 'Play works during download, duplicate Play spawns once, running build survives install';
   await verifyEntry('play');
@@ -113,7 +124,7 @@ try {
   holdFeed = true;
   const started = performance.now();
   page = await launch(['--play']);
-  await page.waitForFunction(async () => (await window.launcher.getState()).game.running);
+  await waitState(page, s => s.game.running);
   const state = await page.evaluate(() => window.launcher.getState());
   gamePid = state.game.pid;
   assert.equal(state.feed.status, 'checking');
