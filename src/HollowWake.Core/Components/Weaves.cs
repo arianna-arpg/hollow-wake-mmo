@@ -362,4 +362,13 @@ public sealed class WeaveBook : IComponent
 
     /// <summary>True while the runtime keeps this book on its upkeep list.</summary>
     internal bool InUpkeep;
+
+    /// <summary>The bearer's stats the book was last armed with, watched for grafts arriving from elsewhere.</summary>
+    internal Stats? ArmedStats;
+
+    /// <summary>The bearer's attribute version the grafts were last read at.</summary>
+    internal int GraftVersion = -1;
+
+    /// <summary>True when any seat holds grafted glyphs, so losing the last one is noticed too.</summary>
+    internal bool HasGrafts;
 }

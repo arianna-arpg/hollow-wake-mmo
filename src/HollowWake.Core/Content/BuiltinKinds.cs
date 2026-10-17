@@ -446,6 +446,8 @@ internal static class BuiltinKinds
         Kinds.CombatKinds.Register();
         Kinds.ProgressionKinds.Register();
         Kinds.InterfaceKinds.Register();
+        // Effect parameters are checked in every kind's effect lists, so these come once all kinds exist.
+        WeaveValidation.RegisterEffectChecks();
     }
 
     public static void ValidateWeaveSpec(WeaveSpec w, ValidationContext c, string field)

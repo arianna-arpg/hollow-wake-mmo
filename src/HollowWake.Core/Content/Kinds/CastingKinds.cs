@@ -26,12 +26,42 @@ internal static class CastingKinds
         CastingTriggers.Register();
         ContentKinds.AddValidator<FormDef>(Form);
         ContentKinds.AddValidator<GlyphDef>(Glyph);
-        ContentKinds.AddValidator<WeaveDef>((d, c) => CooldownAt(d.CooldownAt, c));
+        ContentKinds.AddValidator<WeaveDef>((d, c) =>
+        {
+            CooldownAt(d.CooldownAt, c);
+            Hint(d.Ai, c);
+        });
+    }
+
+    /// <summary>An AI hint's soft minimum and its range attribute (row A23).</summary>
+    private static void Hint(AiHint? hint, ValidationContext c)
+    {
+        if (hint is null)
+        {
+            return;
+        }
+        if (hint.MinRange is < 0)
+        {
+            c.Error("ai.min_range must be at least 0.");
+        }
+        if (hint.NearWeight is < 0)
+        {
+            c.Error("ai.near_weight must be at least 0.");
+        }
+        if (hint.NearWeight is not null && hint.MinRange is null)
+        {
+            c.Warn("ai.near_weight has no min_range to apply below.");
+        }
+        if (hint.RangeAttribute is { } attribute)
+        {
+            Declared(attribute, c, "ai.range_attribute");
+        }
     }
 
     private static void Form(FormDef d, ValidationContext c)
     {
         c.Expression(d.CastMove, "cast_move");
+        Hint(d.Ai, c);
         CooldownAt(d.CooldownAt, c);
         if (d.Channel is { } channel)
         {
@@ -212,6 +242,113 @@ internal static class CastingKinds
             }
             c.Expression(target.Require, "target.require");
             c.Expression(target.SearchRadius, "target.search_radius");
+        }
+        if (d.Tree is { } tree)
+        {
+            Tree(tree, c);
+        }
+    }
+
+    /// <summary>
+    /// A form's tree (row D23): unique node ids, links and excludes naming nodes of the same tree, ranks of at
+    /// least one, a root to start from, and every node reachable from a root through its links (an unlinked
+    /// node could never be bought). Node modifiers, patches and glyphs are checked as a glyph's are.
+    /// </summary>
+    private static void Tree(TreeSpec tree, ValidationContext c)
+    {
+        if (tree.OpensAt < 1)
+        {
+            c.Error("tree.opens_at must be at least 1.");
+        }
+        if (tree.Nodes.Count == 0)
+        {
+            c.Warn("tree has no nodes.");
+            return;
+        }
+        var ids = new HashSet<string>(StringComparer.Ordinal);
+        foreach (var node in tree.Nodes)
+        {
+            if (!ids.Add(node.Id))
+            {
+                c.Error($"tree node '{node.Id}' is declared twice.");
+            }
+        }
+        foreach (var node in tree.Nodes)
+        {
+            var field = $"tree.{node.Id}";
+            if (node.Ranks < 1)
+            {
+                c.Error($"{field}.ranks must be at least 1.");
+            }
+            foreach (var link in node.Links)
+            {
+                if (link == node.Id)
+                {
+                    c.Error($"{field} links to itself.");
+                }
+                else if (!ids.Contains(link))
+                {
+                    c.Error($"{field} links to unknown node '{link}'.");
+                }
+            }
+            foreach (var other in node.Excludes)
+            {
+                if (other == node.Id)
+                {
+                    c.Error($"{field} excludes itself.");
+                }
+                else if (!ids.Contains(other))
+                {
+                    c.Error($"{field} excludes unknown node '{other}'.");
+                }
+            }
+            c.Modifiers(node.Modifiers, field + ".modifiers");
+            for (var i = 0; i < node.Patches.Count; i++)
+            {
+                WeaveValidation.Patch(node.Patches[i], c, $"{field}.patches[{i}]");
+            }
+            if (node.Glyph is { } glyph)
+            {
+                WeaveValidation.GlyphRefs(new[] { glyph }, c, field + ".glyph");
+            }
+            if (node.Modifiers.Count == 0 && node.Patches.Count == 0 && node.Glyph is null)
+            {
+                c.Warn($"{field} grants nothing.");
+            }
+        }
+        var reached = new HashSet<string>(StringComparer.Ordinal);
+        foreach (var node in tree.Nodes)
+        {
+            if (node.Links.Count == 0)
+            {
+                reached.Add(node.Id);
+            }
+        }
+        if (reached.Count == 0)
+        {
+            c.Error("tree has no root: every node links to another, so none can be bought first.");
+            return;
+        }
+        bool grew;
+        do
+        {
+            grew = false;
+            foreach (var node in tree.Nodes)
+            {
+                if (!reached.Contains(node.Id) && node.Links.Exists(reached.Contains))
+                {
+                    reached.Add(node.Id);
+                    grew = true;
+                }
+            }
+        }
+        while (grew);
+        foreach (var node in tree.Nodes)
+        {
+            if (!reached.Contains(node.Id))
+            {
+                c.Error($"tree.{node.Id} is unlinked: none of its links leads back to a root.");
+            }
         }
     }
 

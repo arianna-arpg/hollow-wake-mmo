@@ -1692,9 +1692,21 @@ public sealed partial class WeaveRuntime
             }
             var hint = weave.Ai;
             var range = RangeOf(weave, stats, cache);
-            if (weave.Targeting is Targeting.Enemy or Targeting.Ground or Targeting.Direction && range > 0 && distance > range + (tt?.Radius ?? 0) + (ct?.Radius ?? 0))
+            var radii = (tt?.Radius ?? 0) + (ct?.Radius ?? 0);
+            if (weave.Targeting is Targeting.Enemy or Targeting.Ground or Targeting.Direction && range > 0 && distance > range + radii)
             {
                 continue;
+            }
+            // A soft minimum: closer than min_range (edge to edge) the hint weighs near_weight, and without one
+            // the weave waits for room.
+            var weight = hint?.Weight ?? 1;
+            if (hint is { MinRange: { } minRange } && distance - radii < minRange)
+            {
+                weight = hint.NearWeight ?? 0;
+                if (weight <= 0)
+                {
+                    continue;
+                }
             }
             if (hint?.When is not null)
             {
@@ -1721,7 +1733,7 @@ public sealed partial class WeaveRuntime
                     continue;
                 }
             }
-            var score = (hint?.Weight ?? 1) * (0.75 + rng.NextDouble() * 0.5);
+            var score = weight * (0.75 + rng.NextDouble() * 0.5);
             if (score > bestScore)
             {
                 bestScore = score;
@@ -1744,7 +1756,10 @@ public sealed partial class WeaveRuntime
         return true;
     }
 
-    /// <summary>The longest range among an entity's weaves, for AI positioning.</summary>
+    /// <summary>
+    /// The longest range among an entity's weaves, for AI positioning: each hint's <c>preferred_range</c>, or
+    /// the weave's folded <c>range_attribute</c> when the hint names one, so the range scales with the caster.
+    /// </summary>
     public double PreferredRange(Simulation sim, Entity caster)
     {
         if (!sim.World.TryGet<WeaveBook>(caster, out var book) || !sim.World.TryGet<Stats>(caster, out var stats))
@@ -1759,7 +1774,9 @@ public sealed partial class WeaveRuntime
             {
                 continue;
             }
-            var r = weave.Ai?.PreferredRange ?? Math.Max(1.2, RangeOf(weave, stats, CacheFor(slot, weave, stats)) * 0.8);
+            var r = weave.Ai is { } hint
+                ? hint.RangeAttribute is { } attribute ? weave.Attr(stats, attribute) : hint.PreferredRange
+                : Math.Max(1.2, RangeOf(weave, stats, CacheFor(slot, weave, stats)) * 0.8);
             best = Math.Max(best, r);
         }
         return best <= 0 ? 1.5 : best;
@@ -2147,7 +2164,7 @@ internal sealed class WeaveSlotCache
         Hint = hint;
     }
 
-    public SlotScope SlotScopeFor(WeaveSlot slot) => _slotScope ??= new SlotScope(slot, Scope);
+    public SlotScope SlotScopeFor(WeaveSlot slot) => _slotScope ??= new SlotScope(slot, Scope, Weave, Caster);
 
     /// <summary>A preset compiled as a face of this slot, at the slot weave's level; cached.</summary>
     public CompiledWeave? Face(WeaveCompiler compiler, string preset, int level)
@@ -2167,28 +2184,54 @@ internal sealed class WeaveSlotCache
 }
 
 /// <summary>
-/// The scope of a slot's convert conditions: <c>slot.{name}</c> reads the slot's state (<c>slot.uses</c>,
-/// <c>slot.stack</c> ...), everything else resolves as the caster's view of the weave.
+/// The scope of a slot's convert conditions: <c>slot.{name}</c> reads the slot's state, with the values that
+/// move with time read as they stand at <see cref="Now"/> (<c>slot.uses</c> from the bank, <c>slot.stack</c>
+/// from the self stack, <c>slot.brim</c> from the brim) without bringing the slot up to date; everything else
+/// resolves as the caster's view of the weave.
 /// </summary>
 internal sealed class SlotScope : IExprScope
 {
     private readonly WeaveSlot _slot;
     private readonly IExprScope _caster;
+    private readonly CompiledWeave _weave;
+    private readonly Stats _stats;
 
-    public SlotScope(WeaveSlot slot, IExprScope caster)
+    public SlotScope(WeaveSlot slot, IExprScope caster, CompiledWeave weave, Stats stats)
     {
         _slot = slot;
         _caster = caster;
+        _weave = weave;
+        _stats = stats;
     }
+
+    /// <summary>The time the slot's moving values are read at; set before each evaluation.</summary>
+    public double Now { get; set; }
 
     public bool TryResolve(string name, out double value)
     {
         if (name.Length > 5 && name[4] == '.' && name.StartsWith("slot", StringComparison.Ordinal))
         {
-            value = _slot.StateOr(EffectScope.Suffix(name, 4), 0);
+            value = SlotValue(EffectScope.Suffix(name, 4));
             return true;
         }
         return _caster.TryResolve(name, out value);
+    }
+
+    private double SlotValue(string key)
+    {
+        if (key == SlotState.Uses && _weave.Casting.Uses is { } uses)
+        {
+            return WeaveRuntime.UsesNow(_slot, _weave, uses, _stats, Now);
+        }
+        if (key == SlotState.Stack && _weave.Casting.SelfStack is { } stack)
+        {
+            return WeaveRuntime.StacksNow(_slot, stack, Now);
+        }
+        if (key == SlotState.Brim && _weave.Form.Channel?.Brim is { } brim)
+        {
+            return WeaveRuntime.BrimNow(_slot, brim, Now);
+        }
+        return _slot.StateOr(key, 0);
     }
 
     public bool HasFlag(string flag) => _caster.HasFlag(flag);

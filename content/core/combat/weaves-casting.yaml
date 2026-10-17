@@ -7,6 +7,7 @@ entries:
   - { id: ember_draw, name: Ember Draw, form: drawn_shot, threads: [ember], color: "#e8622a" }
   - { id: storm_surge, name: Storm Surge, form: surge, threads: [storm], color: "#b58cff" }
   - { id: stone_bulwark, name: Stone Bulwark, form: bulwark, threads: [stone], color: "#9c8b72" }
+  - { id: stone_brace, name: Stone Brace, form: brace, threads: [stone], color: "#9c8b72" }
   - { id: measured_cut, name: Measured Cut, form: measured_strike, threads: [], color: "#9c8b72" }
   - { id: bramble_quiver, name: Bramble Quiver, form: quiver, threads: [bloom], color: "#5fbf5a" }
   - { id: quiver_restring, name: Restring, form: restring, threads: [], color: "#9c8b72" }
