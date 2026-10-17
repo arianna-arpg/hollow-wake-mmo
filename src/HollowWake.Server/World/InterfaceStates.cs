@@ -751,25 +751,28 @@ public static class InterfaceStates
 
     // ------------------------------------------------------------ pages
 
+    /// <summary>The pages the hero has, from the ui_pages content evaluated over the hero.</summary>
     public static PageStateMsg Pages(Simulation sim, Entity e)
     {
-        var stats = sim.World.Require<Stats>(e);
-        var unspent = Math.Max(0, sim.Service<ProgressionService>().AvailablePoints(sim, stats));
-        return new PageStateMsg(new List<PageInfo>
+        var pages = PageGates.For(sim, e);
+        var list = new List<PageInfo>(pages.Count);
+        foreach (var p in pages)
         {
-            new("inventory", false, 0),
-            new("weaves", false, 0),
-            new("passives", false, unspent),
-            new("character", false, 0),
-        });
+            list.Add(new PageInfo(p.Id, p.Sealed, p.Pips) { Reason = p.Reason, Container = p.Container });
+        }
+        return new PageStateMsg(list);
     }
 
+    /// <summary>The pages as they stand: which exist, which are sealed, their pips. Evaluates the gates; no state is kept.</summary>
     public static ulong PageFingerprint(Simulation sim, Entity e)
     {
         var h = new FingerprintHash(6);
-        if (sim.World.TryGet<Stats>(e, out var stats))
+        foreach (var p in PageGates.For(sim, e))
         {
-            h.Add(Math.Max(0, sim.Service<ProgressionService>().AvailablePoints(sim, stats)));
+            h.Add(p.Id);
+            h.Add(p.Sealed);
+            h.Add(p.Pips);
+            h.Add(p.Container);
         }
         return h.Value;
     }
