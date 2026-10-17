@@ -30,7 +30,7 @@ Hollow Wake MMO is an MMOARPG foundation: an engine-agnostic C# simulation core,
 - `.github/workflows/`: `ci.yml` (every push and pull request; its `ci` job is the one check main requires), `pages.yml` (the GitHub Pages build of the web client), `release.yml` (v* tags; dry runs on dispatch and on pipeline pull requests), `nightly.yml` (nightly pre-releases), `package.yml` (the jobs both release workflows share), `branches.yml` (the weekly branch report). `.github/pull_request_template.md` is the shape of a pull request.
 - `content/core` — the base content layer, one YAML file per area. `rules.yaml` holds every formula and tunable.
 - `tests/` — xunit. `HollowWake.Core.Tests` (foundations and gameplay against the real content), `HollowWake.Server.Tests` (loopback and WebSocket end to end, the generated protocol module). Web client unit tests are vitest files beside the code in `web/src`.
-- `docs/` — `VISION.md`, `ARCHITECTURE.md`, `ROADMAP.md`, `modding.md`, `design/` (one contract per system; `design/parity/` holds gap analyses against the earlier prototype), `lore/`, `infrastructure/`, `adr/`.
+- `docs/` — `VISION.md`, `ARCHITECTURE.md`, `ROADMAP.md`, `modding.md`, `design/` (one contract per system; `design/world/` holds the living world's contract set and its plan; `design/parity/` holds gap analyses against the earlier prototype), `lore/`, `infrastructure/`, `adr/`.
 - `deploy/` — Dockerfile, Compose, VPS bootstrap. `config/server.yaml` — server settings.
 - `.devcontainer/` — the Codespaces container. `scripts/codespace-play.sh` — builds the web client and runs the server. `scripts/branches.sh` — where every branch stands against main.
 
