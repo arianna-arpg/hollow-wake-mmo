@@ -22,6 +22,8 @@ public sealed record ServerConfig
     public int TickRate { get; init; } = 20;
     public int SnapshotRate { get; init; } = 10;
     public double InterestRadius { get; init; } = 48;
+    /// <summary>Snapshot precision and redundancy, given to every session's view; see <see cref="SnapshotSettings"/>.</summary>
+    public SnapshotSettings Snapshots { get; init; } = SnapshotSettings.Default;
     public List<string> ContentLayers { get; init; } = new() { "content/core" };
     public bool StrictContent { get; init; } = true;
     public string DataDir { get; init; } = "data";
