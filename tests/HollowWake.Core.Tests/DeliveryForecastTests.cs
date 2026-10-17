@@ -291,6 +291,26 @@ public class DeliveryForecastTests
     }
 
     [Fact]
+    public void ObservationScratchDoesNotRetainADeclinedContextsFailureOrDependencies()
+    {
+        var arena = DeliveryArena.Create();
+        var first = arena.Context(Vector3.Zero);
+        first.SourceStats!.Mounted = new ScopeOverlay().Mount("outside", new CountingScope());
+        var opaque = Area(arena, "\"radius\":\"outside\"");
+        Assert.Equal("opaque_mounted_scope", DeliveryForecasts.Describe(opaque, first).UnavailableReason);
+        var other = DeliveryArena.Create();
+        var safe = other.Context(Vector3.Zero);
+        var area = Area(other, "\"radius\":\"time + 2\"");
+        Assert.Equal(2, Plan(area, safe).Size.Radius);
+        other.Sim.Clock.Advance();
+        Assert.Equal(2 + other.Sim.Clock.Time, Plan(area, safe).Size.Radius, 5);
+        Assert.Equal("opaque_mounted_scope", DeliveryForecasts.Describe(opaque, first).UnavailableReason);
+        first.Vars["outside"] = 7;
+        Assert.Equal(7, Plan(opaque, first).Size.Radius);
+        Assert.Equal(2 + other.Sim.Clock.Time, safe.Eval(Expr.Parse("time + 2")), 5);
+    }
+
+    [Fact]
     public void RepeatedObservationsDoNotChangeRandomSelectionOrScheduledPayloadTrace()
     {
         List<string> Run(bool observe)

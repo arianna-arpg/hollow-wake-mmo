@@ -60,6 +60,7 @@ internal static class CastForecastContent
             r.With(form);
         }
         var timed = r.Get<FormDef>("forecast_timed")!;
+        r.With(timed with { Id = "forecast_live_ai", Effects = new() { Area("weave.area.radius + time + target.mana / 100") } });
         r.With(timed with { Id = "forecast_random", Effects = new() { Area("rand() + 2") } });
         r.With(timed with { Id = "forecast_stamped", Effects = new() { Area("has('recently_cast') ? 4 : 2") } });
         r.With(r.Get<FormDef>("forecast_charge")! with { Id = "forecast_charging", Effects = new() { Area("has('charging') ? 4 : 2") } });
@@ -332,6 +333,29 @@ public class PositionalReleaseTests
         a.Slot("strike");
         Assert.Null(a.Runtime.ChooseForAi(a.Sim, a.Caster, a.Enemy));
         CastForecastContent.Move(a, a.Enemy, new(11.7f, 10, 0));
+        Assert.NotNull(a.Runtime.ChooseForAi(a.Sim, a.Caster, a.Enemy));
+    }
+
+    [Fact]
+    public void RepeatedAiPlanQueriesKeepTimeTargetResourcesGeometryAndEligibilityLive()
+    {
+        var a = CastForecastContent.Arena(3);
+        a.Book.Slots.Clear();
+        CastForecastContent.Slot(a, "forecast_live_ai");
+        a.EnemyStats.Resources["mana"] = 0;
+        Assert.Null(a.Runtime.ChooseForAi(a.Sim, a.Caster, a.Enemy));
+        for (var i = 0; i < 20; i++) a.Sim.Clock.Advance();
+        Assert.NotNull(a.Runtime.ChooseForAi(a.Sim, a.Caster, a.Enemy));
+        CastForecastContent.Move(a, a.Enemy, new(14, 10, 0));
+        Assert.Null(a.Runtime.ChooseForAi(a.Sim, a.Caster, a.Enemy));
+        a.EnemyStats.Resources["mana"] = 100;
+        Assert.NotNull(a.Runtime.ChooseForAi(a.Sim, a.Caster, a.Enemy));
+        a.EnemyStats.Flags.Add("untargetable");
+        Assert.Null(a.Runtime.ChooseForAi(a.Sim, a.Caster, a.Enemy));
+        a.EnemyStats.Flags.Remove("untargetable");
+        CastForecastContent.Wall(a);
+        Assert.Null(a.Runtime.ChooseForAi(a.Sim, a.Caster, a.Enemy));
+        a.Stats.Attributes.Add(new Modifier { Attribute = "phasing", Value = 1 });
         Assert.NotNull(a.Runtime.ChooseForAi(a.Sim, a.Caster, a.Enemy));
     }
 }
