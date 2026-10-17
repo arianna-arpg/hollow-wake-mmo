@@ -204,7 +204,7 @@ Every delivery's effects read its source's stats and weave. A delivery whose sou
 
 ## Order and cost
 
-In the move phase, walking runs first, then displacement, then projectiles, then fields, then tethers. The delivery systems allocate nothing per tick in steady state: they iterate the spatial grid in place and copy out only the bodies a shape touches before running effects, rent pooled lists for areas, chains and placements, read their rules once a tick, and evaluate a launch's numbers once per launch rather than per flight. A flight spent on a hit leaves the spatial index and despawns once.
+In the move phase, walking runs first, then displacement, then projectiles, then fields, then tethers. The delivery systems allocate nothing per tick in steady state: they iterate the spatial grid in place and copy out only the bodies a shape touches before running effects, rent pooled lists for areas, chains and placements, read their rules once per rule set (rule sets never change in place), and evaluate a launch's numbers once per launch rather than per flight. A flight spent on a hit leaves the spatial index and despawns once.
 
 ## Planning around placed blockers
 

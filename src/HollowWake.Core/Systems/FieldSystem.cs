@@ -1,6 +1,7 @@
 using System.Numerics;
 using HollowWake.Core.Attributes;
 using HollowWake.Core.Components;
+using HollowWake.Core.Content;
 using HollowWake.Core.Ecs;
 using HollowWake.Core.Effects;
 using HollowWake.Core.Effects.Handlers;
@@ -28,11 +29,20 @@ public sealed class FieldSystem : SimSystem
     private readonly List<(Entity Entity, Vector3 Position)> _near = new();
     private readonly List<Entity> _left = new();
 
+    // The seek radius, read once per rule set since rule sets never change in place.
+    private Rules? _rulesOf;
+    private float _seekRadius;
+
     public override void Update(Simulation sim)
     {
         if (sim.World.CountOf<Field>() == 0)
         {
             return;
+        }
+        if (!ReferenceEquals(_rulesOf, sim.Content.Rules))
+        {
+            _rulesOf = sim.Content.Rules;
+            _seekRadius = (float)_rulesOf.Number("delivery.seek_radius", 8);
         }
         var now = sim.Clock.Time;
         foreach (var (e, t, f) in sim.World.Query<Transform, Field>())
@@ -175,7 +185,7 @@ public sealed class FieldSystem : SimSystem
         var dt = (float)sim.Clock.Dt;
         if (f.Drift != 0 || f.Seek != 0)
         {
-            Wander(sim, e, t, f, dt);
+            Wander(sim, e, t, f, dt, _seekRadius);
         }
         if (f.Rotate != 0)
         {
@@ -217,7 +227,7 @@ public sealed class FieldSystem : SimSystem
     }
 
     /// <summary>Drifts along the facing and seeks the nearest enemy, keeping to the ground.</summary>
-    private static void Wander(Simulation sim, Entity e, Transform t, Field f, float dt)
+    private static void Wander(Simulation sim, Entity e, Transform t, Field f, float dt, float seekRadius)
     {
         var move = Vector2.Zero;
         if (f.Drift != 0)
@@ -226,10 +236,9 @@ public sealed class FieldSystem : SimSystem
         }
         if (f.Seek != 0)
         {
-            var radius = (float)sim.Content.Rules.Number("delivery.seek_radius", 8);
             var best = Vector3.Zero;
             var bestDistance = float.MaxValue;
-            foreach (var (other, pos, distance) in sim.Spatial.Within(t.Position, radius))
+            foreach (var (other, pos, distance) in sim.Spatial.Within(t.Position, seekRadius))
             {
                 if (distance < bestDistance && other != e && EffectHelpers.Passes(f.Context, other, "enemy"))
                 {
