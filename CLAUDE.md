@@ -50,6 +50,7 @@ Before calling work done:
 - **Registries for open sets.** Effect types, AI actions, objective types, interactable kinds, component binders, content kinds, procedures, generator passes: register, never switch on strings inside systems.
 - **Events, not calls.** Systems publish `GameEvent`s; quests, loot, networking and tests subscribe.
 - **Determinism.** Every roll uses an `Rng` derived from a seed. Never `System.Random` or wall-clock time in gameplay code.
+- **Spatial queries are live views.** `Spatial.Within` iterates the grid in place: copy the results before spawning, destroying or moving entities inside the loop, because mutating the grid during iteration throws.
 - **Server authority.** The client sends intents and renders state. Validation happens in the simulation.
 - **Coordinates.** Core is X east, Y north, Z up. Godot conversion only in `Coords.cs`.
 - **Numbers from JSON nodes** go through `JsonNum` (nodes hold ints, longs or doubles depending on origin).
