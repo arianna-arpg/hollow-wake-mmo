@@ -22,11 +22,19 @@ Refusals name the rule: `needs_option`, `unknown_option`, `no_picks`, `already_p
 
 ## Realms
 
-A realm is a constellation shown as its own tab. It opens when its `unlock` expression holds over the hero (checked when the hero enters the world, levels, turns in a quest, gets a story flag or allocates); opening grants its `roots` free. Its nodes spend the realm's `currency`: points come from rule `passives.points.{currency}` (an expression of level) and from rewards (`points` on a quest's rewards), and are spent and refunded in that currency. `adjacency: tree` needs a linked allocated node; `free` does not. A realm can name the calling whose start node it hangs from, which is how vocations are written.
+A realm is a constellation shown as its own tab. It opens when its `unlock` expression holds over the hero (checked when the hero enters the world, levels, turns in a quest, gets a story flag or allocates); opening grants its `roots` free. Its nodes spend the realm's `currency`: points come from rule `passives.points.{currency}` (an expression of level) and from rewards (`points` on a quest's rewards), and are spent and refunded in that currency. `adjacency: tree` needs a linked allocated node; `free` does not.
+
+A **vocation** is a realm that names a `calling`: it opens only to heroes of that calling, whatever else its unlock asks, and for a hero of another calling its sealed reason says whose it is (rule `passives.calling_sealed_text`). Its unlock usually reads a story flag found in the world (a conversation choice, a discovery), and its currency is granted by conversations and quests rather than by levels. The Warden is the example: a Holdfast mini-tree on the `vocation` currency, opened by the flag `warden_oath`, which the Quartermaster grants, with vocation points, when a Holdfast asks about the wardens.
 
 ## Refunds
 
 A node is refunded at a font: an interactable of kind `font` within its reach of the hero (`refund_passive {node}`). The calling's start and the roots of open realms are anchors and are never refunded. A refund is refused when some other allocated node would no longer connect to an anchor without it (nodes of `free` realms need no path). A choice node's picks go with it, its points return to their own currency, and the price is rule `passives.refund_cost`, a map of currency to an expression of the hero, the node's cost (`node_cost`) and the refunds made so far (`refunds`), paid from the wallet.
+
+A full reset at a font is a station service (`reset_passives`, see items and loot): every bought node comes back at a price, and the anchors stay.
+
+## Linting
+
+`hollowwake passives [--verbose]` lints the constellations as allocation reads them: links to unknown nodes and links across realms, orphans, nodes no anchor of their realm reaches, and for each calling the cheapest points from its start to every notable and keystone of the star. Broken links, orphans and unreachable nodes fail it.
 
 ## Gates
 
