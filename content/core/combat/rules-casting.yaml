@@ -1,0 +1,8 @@
+# Casting rules: how weaves are begun, held, released and triggered.
+kind: rules
+entries:
+  - id: casting
+    values:
+      # While true, a player's SetWeave needs the hero to own the forms, glyphs and Threads it names, as the
+      # registered weave ownership service decides. Off until the item model for weaves lands.
+      require_ownership: false
