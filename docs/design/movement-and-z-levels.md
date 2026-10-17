@@ -12,10 +12,14 @@ The movement system integrates per tick: path following or a target or a held di
 
 Dashes and teleports resolve their destination by marching the segment and stopping at the first cell that cannot be occupied.
 
+Movement keeps the spatial grid current, and everything that asks who is near (perception, targeting, areas, interest) reads it through radius queries. A radius query walks the grid in place without copying: a caller that adds or removes entities, or moves them between grid cells, while enumerating materializes the results first, or the enumeration throws.
+
 ## Pathfinding
 
-A* over cells with eight neighbors, no corner cutting past blocked cells, step-up and max-drop limits, cell costs by tags (roads cheap, bog dear) and a node budget. A failed search returns the best partial path so click-to-move still makes progress.
+A* over cells with eight neighbors, no corner cutting past blocked cells, step-up and max-drop limits, cell costs by tags (roads cheap, bog dear) and a node budget: `move.path_max_nodes` for a player's click-to-move, `move.ai_path_max_nodes` for AI movers, which also try a straight walk first and keep their plans until they go stale (see the AI contract). A failed search returns the best partial path so click-to-move still makes progress, and reports whether it reached the goal, got partway or found no step.
+
+The pathfinder keeps its search state between searches and can write into the caller's path list, and ground queries resolve stacked surfaces without building anything, so planning and walking allocate nothing in steady state.
 
 ## Rules used
 
-`move.gravity`, `move.jump_velocity`, `move.step_up`, `move.max_drop`, `move.default_speed`, `move.path_max_nodes`, `move.fall_damage_per_unit`, `move.fall_damage_threshold`.
+`move.gravity`, `move.jump_velocity`, `move.step_up`, `move.max_drop`, `move.default_speed`, `move.path_max_nodes`, `move.ai_path_max_nodes`, `move.ai_repath_seconds`, `move.ai_repath_distance`, `move.fall_damage_per_unit`, `move.fall_damage_threshold`.

@@ -209,16 +209,14 @@ public sealed class MovementSystem : SimSystem
 
     public static bool CanOccupy(Simulation sim, BlockedCells? blocked, float x, float y, double feet, double stepUp, out Surface ground)
     {
-        if (!sim.Terrain.TryFindGround(x, y, feet, stepUp, out ground, out _))
+        if (!sim.Terrain.TryFindGround(x, y, feet, stepUp, out ground, out _, out var flags))
         {
             return false;
         }
-        var cell = CellCoord.Of(x, y);
-        if (blocked is not null && blocked.IsBlocked(cell))
+        if (blocked is not null && blocked.IsBlocked(CellCoord.Of(x, y)))
         {
             return false;
         }
-        var flags = sim.Terrain.FlagsAt(cell);
         if ((flags & CellFlags.Blocked) != 0 && ground.Tags.Has("ground"))
         {
             return false;
