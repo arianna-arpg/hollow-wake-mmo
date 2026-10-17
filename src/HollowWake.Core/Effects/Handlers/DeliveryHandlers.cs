@@ -13,10 +13,24 @@ using static HollowWake.Core.Effects.Handlers.EffectHelpers;
 
 namespace HollowWake.Core.Effects.Handlers;
 
-// Deliveries: areas, projectiles, chains and fields.
+/// <summary>Deliveries: areas, projectiles, chains and fields.</summary>
+public static class DeliveryHandlers
+{
+    public static void Register(EffectRegistry r)
+    {
+        r.Register(new AreaHandler());
+        r.Register(new ProjectileHandler());
+        r.Register(new ChainHandler());
+        r.Register(new FieldHandler());
+    }
+}
+
 internal sealed class AreaHandler : IEffectHandler
 {
     public string Type => "area";
+
+    public EffectSignature Signature { get; } = EffectSignature.Of("shape", "radius", "angle", "filter", "center", "max_targets", "include_center")
+        .Hook(EffectHooks.OnHit, "effects");
 
     public CompiledEffect Compile(JsonObject p, EffectCompileContext ctx) => new Effect
     {
@@ -49,7 +63,7 @@ internal sealed class AreaHandler : IEffectHandler
             var candidates = ctx.Sim.Spatial.Within(center, radius).Select(w => w.Entity);
             if (Shape == "cone")
             {
-                var origin = ctx.SourceTransform?.Position ?? center;
+                var origin = ctx.From ?? ctx.SourceTransform?.Position ?? center;
                 var dir = ctx.Direction.LengthSquared() > 0.001f ? Vector2.Normalize(ctx.Direction) : (ctx.SourceTransform?.Forward ?? Vector2.UnitX);
                 var half = MathF.PI * (float)ctx.Eval(Angle, 90) / 360f;
                 candidates = ctx.Sim.Spatial.Within(origin, radius).Where(w =>
@@ -65,7 +79,7 @@ internal sealed class AreaHandler : IEffectHandler
             }
             else if (Shape == "line")
             {
-                var origin = ctx.SourceTransform?.Position ?? center;
+                var origin = ctx.From ?? ctx.SourceTransform?.Position ?? center;
                 var dir = ctx.Direction.LengthSquared() > 0.001f ? Vector2.Normalize(ctx.Direction) : (ctx.SourceTransform?.Forward ?? Vector2.UnitX);
                 var width = 1.0f;
                 candidates = ctx.Sim.Spatial.Within(origin, radius).Where(w =>
@@ -103,6 +117,9 @@ internal sealed class ProjectileHandler : IEffectHandler
 {
     public string Type => "projectile";
 
+    public EffectSignature Signature { get; } = EffectSignature.Of("count", "speed", "range", "spread", "pierce", "radius", "on_expire", "look", "gravity")
+        .Hook(EffectHooks.OnHit, "on_hit");
+
     public CompiledEffect Compile(JsonObject p, EffectCompileContext ctx) => new Effect
     {
         Type = Type,
@@ -133,7 +150,7 @@ internal sealed class ProjectileHandler : IEffectHandler
 
         public override void Execute(EffectContext ctx)
         {
-            var origin = ctx.SourceTransform?.Position ?? ctx.Point;
+            var origin = ctx.From ?? ctx.SourceTransform?.Position ?? ctx.Point;
             var count = Math.Clamp((int)Math.Round(ctx.Eval(Count, 1)), 1, 64);
             var speed = (float)Math.Max(0.5, ctx.Eval(Speed, 12));
             var range = (float)Math.Max(1, ctx.Eval(Range, 12));
@@ -189,6 +206,9 @@ internal sealed class ChainHandler : IEffectHandler
 {
     public string Type => "chain";
 
+    public EffectSignature Signature { get; } = EffectSignature.Of("count", "range", "filter")
+        .Hook(EffectHooks.OnHit, "effects");
+
     public CompiledEffect Compile(JsonObject p, EffectCompileContext ctx) => new Effect
     {
         Type = Type,
@@ -234,6 +254,9 @@ internal sealed class ChainHandler : IEffectHandler
 internal sealed class FieldHandler : IEffectHandler
 {
     public string Type => "field";
+
+    public EffectSignature Signature { get; } = EffectSignature.Of("radius", "duration", "interval", "filter", "look", "follow")
+        .Hook(EffectHooks.OnHit, "pulse");
 
     public CompiledEffect Compile(JsonObject p, EffectCompileContext ctx) => new Effect
     {

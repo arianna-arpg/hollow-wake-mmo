@@ -13,10 +13,24 @@ using static HollowWake.Core.Effects.Handlers.EffectHelpers;
 
 namespace HollowWake.Core.Effects.Handlers;
 
-// Utilities: events, interrupts, taunts, grants, logging.
+/// <summary>Utilities: events, interrupts, grants, logging.</summary>
+public static class UtilityHandlers
+{
+    public static void Register(EffectRegistry r)
+    {
+        r.Register(new PublishEventHandler());
+        r.Register(new InterruptHandler());
+        r.Register(new GrantItemHandler());
+        r.Register(new GrantXpHandler());
+        r.Register(new LogHandler());
+    }
+}
+
 internal sealed class PublishEventHandler : IEffectHandler
 {
     public string Type => "event";
+
+    public EffectSignature Signature { get; } = EffectSignature.Of("name", "data");
 
     public CompiledEffect Compile(JsonObject p, EffectCompileContext ctx) => new Effect
     {
@@ -42,6 +56,8 @@ internal sealed class InterruptHandler : IEffectHandler
 {
     public string Type => "interrupt";
 
+    public EffectSignature Signature { get; } = EffectSignature.Of();
+
     public CompiledEffect Compile(JsonObject p, EffectCompileContext ctx) => new Effect { Type = Type };
 
     private sealed class Effect : CompiledEffect
@@ -58,30 +74,11 @@ internal sealed class InterruptHandler : IEffectHandler
     }
 }
 
-internal sealed class TauntHandler : IEffectHandler
-{
-    public string Type => "taunt";
-
-    public CompiledEffect Compile(JsonObject p, EffectCompileContext ctx) => new Effect { Type = Type, Duration = ctx.ExprOf(p["duration"], Expr.Constant(4))! };
-
-    private sealed class Effect : CompiledEffect
-    {
-        public required Expr Duration;
-
-        public override void Execute(EffectContext ctx)
-        {
-            if (ctx.Sim.World.TryGet<Behavior>(ctx.Target, out var b))
-            {
-                b.Target = ctx.Source;
-                b.Memory["taunted_until"] = ctx.Sim.Clock.Time + ctx.Eval(Duration, 4);
-            }
-        }
-    }
-}
-
 internal sealed class GrantItemHandler : IEffectHandler
 {
     public string Type => "grant_item";
+
+    public EffectSignature Signature { get; } = EffectSignature.Of("item", "table", "count", "rarity");
 
     public CompiledEffect Compile(JsonObject p, EffectCompileContext ctx) => new Effect
     {
@@ -123,6 +120,8 @@ internal sealed class GrantXpHandler : IEffectHandler
 {
     public string Type => "grant_xp";
 
+    public EffectSignature Signature { get; } = EffectSignature.Of("amount");
+
     public CompiledEffect Compile(JsonObject p, EffectCompileContext ctx) => new Effect { Type = Type, Amount = ctx.ExprOf(p["amount"], Expr.Constant(10))! };
 
     private sealed class Effect : CompiledEffect
@@ -140,6 +139,8 @@ internal sealed class GrantXpHandler : IEffectHandler
 internal sealed class LogHandler : IEffectHandler
 {
     public string Type => "log";
+
+    public EffectSignature Signature { get; } = EffectSignature.Of("text");
 
     public CompiledEffect Compile(JsonObject p, EffectCompileContext ctx) => new Effect { Type = Type, Text = ctx.StringOf(p["text"]) ?? "" };
 

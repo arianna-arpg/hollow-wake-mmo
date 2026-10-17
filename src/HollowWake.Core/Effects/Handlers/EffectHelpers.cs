@@ -71,7 +71,7 @@ internal static class EffectHelpers
     {
         return centerMode switch
         {
-            "source" => ctx.SourceTransform?.Position ?? ctx.Point,
+            "source" => ctx.From ?? ctx.SourceTransform?.Position ?? ctx.Point,
             "point" => ctx.Point,
             _ => ctx.Focus,
         };

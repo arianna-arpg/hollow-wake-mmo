@@ -33,6 +33,7 @@ public static class ContentJson
         o.Converters.Add(new TagSetConverter());
         o.Converters.Add(new ExprConverter());
         o.Converters.Add(new TypedSpecConverter());
+        o.Converters.Add(new GlyphRefConverter());
         o.Converters.Add(new WeaveSpecConverter());
         o.Converters.Add(new JsonStringEnumConverter(JsonNamingPolicy.SnakeCaseLower, allowIntegerValues: false));
         return o;
@@ -199,6 +200,83 @@ public static class ContentJson
         }
     }
 
+    /// <summary>A glyph reference is <c>id</c>, <c>id@level</c>, or <c>{ id, level, rows: { axis: row } }</c>.</summary>
+    private sealed class GlyphRefConverter : JsonConverter<GlyphRef>
+    {
+        public override GlyphRef? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+        {
+            if (reader.TokenType == JsonTokenType.Null)
+            {
+                return null;
+            }
+            if (reader.TokenType == JsonTokenType.String)
+            {
+                return FromText(reader.GetString()!);
+            }
+            return FromNode(JsonNode.Parse(ref reader));
+        }
+
+        public static GlyphRef FromNode(JsonNode? node)
+        {
+            switch (node)
+            {
+                case JsonValue v when v.TryGetValue<string>(out var text):
+                    return FromText(text);
+                case JsonObject o:
+                {
+                    var id = JsonNum.StringOf(o["id"]) ?? throw new JsonException("A glyph reference object needs an 'id'.");
+                    int? level = o["level"] is null ? null : JsonNum.IntOf(o["level"], 1);
+                    var rows = new Dictionary<string, string>(StringComparer.Ordinal);
+                    if (o["rows"] is JsonObject r)
+                    {
+                        foreach (var (axis, row) in r)
+                        {
+                            rows[axis] = JsonNum.StringOf(row) ?? throw new JsonException($"Glyph reference '{id}' row for axis '{axis}' must be a row id.");
+                        }
+                    }
+                    return new GlyphRef { Id = id, Level = level, Rows = rows };
+                }
+                default:
+                    throw new JsonException("A glyph reference is an id, id@level, or an object with an id.");
+            }
+        }
+
+        private static GlyphRef FromText(string text)
+        {
+            try
+            {
+                return GlyphRef.Parse(text);
+            }
+            catch (FormatException ex)
+            {
+                throw new JsonException(ex.Message);
+            }
+        }
+
+        public override void Write(Utf8JsonWriter writer, GlyphRef value, JsonSerializerOptions options)
+        {
+            if (value.Rows.Count == 0)
+            {
+                writer.WriteStringValue(value.ToString());
+                return;
+            }
+            writer.WriteStartObject();
+            writer.WriteString("id", value.Id);
+            if (value.Level is { } level)
+            {
+                writer.WriteNumber("level", level);
+            }
+            writer.WritePropertyName("rows");
+            writer.WriteStartObject();
+            foreach (var (axis, row) in value.Rows.OrderBy(kv => kv.Key, StringComparer.Ordinal))
+            {
+                writer.WriteString(axis, row);
+            }
+            writer.WriteEndObject();
+            writer.WriteEndObject();
+        }
+    }
+
     /// <summary>A weave spec is either a preset id string or a composition object.</summary>
     private sealed class WeaveSpecConverter : JsonConverter<WeaveSpec>
     {
@@ -218,7 +296,7 @@ public static class ContentJson
                 Preset = node["preset"]?.GetValue<string>(),
                 Form = node["form"]?.GetValue<string>(),
                 Threads = node["threads"] is JsonArray ta ? ta.Select(n => n!.GetValue<string>()).ToList() : new List<string>(),
-                Glyphs = node["glyphs"] is JsonArray ga ? ga.Select(n => n!.GetValue<string>()).ToList() : new List<string>(),
+                Glyphs = node["glyphs"] is JsonArray ga ? ga.Select(n => GlyphRefConverter.FromNode(n)).ToList() : new List<GlyphRef>(),
                 Level = JsonNum.IntOf(node["level"], 1),
                 Name = node["name"]?.GetValue<string>(),
             };

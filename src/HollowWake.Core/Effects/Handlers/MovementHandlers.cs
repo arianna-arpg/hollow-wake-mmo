@@ -13,10 +13,20 @@ using static HollowWake.Core.Effects.Handlers.EffectHelpers;
 
 namespace HollowWake.Core.Effects.Handlers;
 
-// Movement effects: teleport, dash, knockback, pull.
+/// <summary>Movement effects: teleport, dash, knockback, pull.</summary>
+public static class MovementHandlers
+{
+    public static void Register(EffectRegistry r)
+    {
+        r.Register(new MoveHandler());
+    }
+}
+
 internal sealed class MoveHandler : IEffectHandler
 {
     public string Type => "move";
+
+    public EffectSignature Signature { get; } = EffectSignature.Of("kind", "distance", "who");
 
     public CompiledEffect Compile(JsonObject p, EffectCompileContext ctx) => new Effect
     {
@@ -40,7 +50,7 @@ internal sealed class MoveHandler : IEffectHandler
                 return;
             }
             var dist = (float)ctx.Eval(Distance, 4);
-            var source = ctx.SourceTransform?.Position ?? ctx.Point;
+            var source = ctx.From ?? ctx.SourceTransform?.Position ?? ctx.Point;
             Vector3 destination;
             switch (Kind)
             {

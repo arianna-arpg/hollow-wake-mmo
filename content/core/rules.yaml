@@ -54,6 +54,15 @@ entries:
       auto_respawn: true
       crit_ailment_bonus: 0.5
       propagate_radius: 4
+      # The defender's ladder every hit walks, by registered stage name.
+      stages: [immunity, guard, evade, block, mitigate, taken, pools, cull]
+      # Stages (and steps such as crit) that hits carrying a tag skip: { tag: [stage, ...] }.
+      stage_skips: {}
+      # Victim tags beyond the struck body's own tags and flags: each adds vs.<key> to a hit when its
+      # expression holds in the hit scope (target.*, source.*, distance).
+      victim_tags:
+        low_life: "target.life_pct <= 0.35"
+        full_life: "target.life_pct >= 0.95"
       ailment_magnitude:
         burning: "amount * 0.3"
         bleeding: "amount * 0.25"
@@ -64,6 +73,11 @@ entries:
         unraveling: "1"
         addled: "1"
         sapped: "amount * 0.2"
+
+  - id: glyphs
+    values:
+      # The highest level a glyph reaches; references above it are clamped and validation refuses them.
+      max_level: 20
 
   - id: move
     values:

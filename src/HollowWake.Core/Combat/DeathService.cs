@@ -13,7 +13,8 @@ namespace HollowWake.Core.Combat;
 /// <summary>Deaths: mark, stop, credit, drop, propagate, and later revive players.</summary>
 public sealed class DeathService
 {
-    public void Kill(Simulation sim, Entity victim, Entity killer)
+    /// <summary>Kills a body. <paramref name="depth"/> is the effect depth of the killing hit, carried by <see cref="EntityDied"/>.</summary>
+    public void Kill(Simulation sim, Entity victim, Entity killer, int depth = 0)
     {
         if (!sim.World.IsAlive(victim) || sim.World.Has<Dead>(victim))
         {
@@ -38,7 +39,7 @@ public sealed class DeathService
         {
             ks.Stamp("killed", sim.Clock.Time);
         }
-        sim.Events.Publish(new EntityDied(victim, credit, identity?.Pattern, stats?.Tags ?? Tags.TagSet.Empty, t?.Position ?? default) { Tick = sim.Clock.Tick });
+        sim.Events.Publish(new EntityDied(victim, credit, identity?.Pattern, stats?.Tags ?? Tags.TagSet.Empty, t?.Position ?? default) { Tick = sim.Clock.Tick, Depth = depth });
 
         if (sim.World.TryGet<Drops>(victim, out var drops) && t is not null)
         {

@@ -62,7 +62,11 @@ public sealed class ValidationContext
         }
     }
 
-    /// <summary>Warns when a modifier targets an attribute no definition declares. Channels are allowed but visible.</summary>
+    /// <summary>
+    /// Warns when a modifier targets an attribute no definition declares (channels are allowed but visible),
+    /// and when a modifier reads the struck body (<c>target.*</c>, <c>distance</c>) on an attribute that is
+    /// not folded inside a hit, where it would have no target to read.
+    /// </summary>
     public void Modifiers(IEnumerable<Modifier>? mods, string field)
     {
         if (mods is null)
@@ -74,6 +78,10 @@ public sealed class ValidationContext
             if (!Registry.Attributes.Contains(m.Attribute))
             {
                 Warn($"'{field}' modifies undeclared attribute '{m.Attribute}'.");
+            }
+            if (ReadsTarget(m) && !Combat.HitFolds.Contains(m.Attribute))
+            {
+                Warn($"'{field}' reads the target on '{m.Attribute}', which is not folded inside a hit; only {string.Join(", ", Combat.HitFolds.All)} can read target.* or distance.");
             }
             if (m.Form == ModifierForm.Link && string.IsNullOrEmpty(m.From))
             {
@@ -88,6 +96,14 @@ public sealed class ValidationContext
                 Expression(m.Condition, $"{field}.condition");
             }
         }
+    }
+
+    /// <summary>Whether a modifier's condition, value or gauge reads the struck body.</summary>
+    public static bool ReadsTarget(Modifier m)
+    {
+        static bool TargetName(string name) => name == "distance" || name.StartsWith("target.", StringComparison.Ordinal);
+        static bool Reads(Expr? e) => e is not null && (e.Identifiers.Any(TargetName) || e.Flags.Any(TargetName));
+        return Reads(m.Condition) || Reads(m.ValueExpr) || (m.Gauge is { } g && TargetName(g));
     }
 
     /// <summary>Warns about identifiers that are neither attributes nor well-known context names.</summary>
@@ -256,30 +272,100 @@ public sealed class ContentRegistry
             registry._byKind[kindName] = bound;
         }
 
+        registry.ExpandFamilies(report);
         registry.Attributes = new AttributeCatalog(registry.All<AttributeDef>().Values);
         registry.Rules = Rules.FromDefinitions(registry.All<RulesDef>().Values);
 
         foreach (var (kindName, bound) in registry._byKind)
         {
-            if (!ContentKinds.TryGet(kindName, out var kind) || kind?.Validate is null)
+            if (!ContentKinds.TryGet(kindName, out var kind) || kind is null || kind.Validators.Count == 0)
             {
                 continue;
             }
+            var validators = kind.Validators;
             foreach (var (id, def) in bound)
             {
-                var origin = registry._raw[kindName][id].Origin;
+                var origin = registry.OriginOf(kindName, id);
                 var ctx = new ValidationContext(registry, report, kindName, id, origin);
-                try
+                foreach (var validate in validators)
                 {
-                    kind.Validate(def, ctx);
-                }
-                catch (Exception ex)
-                {
-                    report.Error(kindName, id, $"Validator crashed: {ex.Message}", origin);
+                    try
+                    {
+                        validate(def, ctx);
+                    }
+                    catch (Exception ex)
+                    {
+                        report.Error(kindName, id, $"Validator crashed: {ex.Message}", origin);
+                    }
                 }
             }
         }
         return registry;
+    }
+
+    // Where each attribute expanded from a family came from, for validation messages.
+    private readonly Dictionary<string, string> _expandedOrigins = new(StringComparer.Ordinal);
+
+    /// <summary>The file a definition came from; for attributes expanded from a family, the family's.</summary>
+    public string? OriginOf(string kind, string id)
+    {
+        if (_raw.TryGetValue(kind, out var entries) && entries.TryGetValue(id, out var raw))
+        {
+            return raw.Origin;
+        }
+        return _expandedOrigins.TryGetValue(id, out var origin) ? origin : null;
+    }
+
+    /// <summary>Every id of a kind, in no particular order.</summary>
+    public IEnumerable<string> IdsOfKind(string kind) =>
+        _byKind.TryGetValue(kind, out var dict) ? dict.Keys : Enumerable.Empty<string>();
+
+    /// <summary>A definition's display name, or the humanized id when it has none.</summary>
+    public string DisplayNameOf(string kind, string id) =>
+        _byKind.TryGetValue(kind, out var dict) && dict.TryGetValue(id, out var def) && def is Definition d ? d.DisplayName : Definition.Humanize(id);
+
+    /// <summary>
+    /// Adds the members of every attribute family to the attributes, in family id order. A member whose id
+    /// an attribute already declares is skipped: declared attributes win.
+    /// </summary>
+    private void ExpandFamilies(ValidationReport report)
+    {
+        var familyKind = ContentKinds.NameOf<AttributeFamilyDef>();
+        if (!_byKind.TryGetValue(familyKind, out var families) || families.Count == 0)
+        {
+            return;
+        }
+        foreach (var id in families.Keys.OrderBy(k => k, StringComparer.Ordinal).ToList())
+        {
+            ExpandFamily((AttributeFamilyDef)families[id], report);
+        }
+    }
+
+    private void ExpandFamily(AttributeFamilyDef family, ValidationReport? report)
+    {
+        var familyKind = ContentKinds.NameOf<AttributeFamilyDef>();
+        var attributeKind = ContentKinds.NameOf<AttributeDef>();
+        if (!_byKind.TryGetValue(attributeKind, out var attributes))
+        {
+            attributes = new Dictionary<string, IDefinition>(StringComparer.Ordinal);
+            _byKind[attributeKind] = attributes;
+        }
+        var problems = new List<string>();
+        var members = AttributeFamilies.Members(this, family, problems);
+        var origin = OriginOf(familyKind, family.Id);
+        foreach (var problem in problems)
+        {
+            report?.Error(familyKind, family.Id, problem, origin);
+        }
+        foreach (var member in members)
+        {
+            if (attributes.ContainsKey(member.Id))
+            {
+                continue;
+            }
+            attributes[member.Id] = member;
+            _expandedOrigins[member.Id] = origin is null ? $"family {family.Id}" : $"{origin} (family {family.Id})";
+        }
     }
 
     /// <summary>Adds a definition in code. Intended for tests and tools; content files are the normal path.</summary>
@@ -292,7 +378,11 @@ public sealed class ContentRegistry
             _byKind[name] = dict;
         }
         dict[definition.Id] = definition;
-        if (definition is AttributeDef)
+        if (definition is AttributeFamilyDef family)
+        {
+            ExpandFamily(family, null);
+        }
+        if (definition is AttributeDef or AttributeFamilyDef)
         {
             Attributes = new AttributeCatalog(All<AttributeDef>().Values);
         }

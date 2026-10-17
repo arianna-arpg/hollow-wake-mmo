@@ -1,22 +1,29 @@
-using System.Numerics;
 using System.Text.Json.Nodes;
 using HollowWake.Core.Combat;
 using HollowWake.Core.Components;
-using HollowWake.Core.Definitions;
-using HollowWake.Core.Ecs;
 using HollowWake.Core.Expressions;
-using HollowWake.Core.Patterns;
 using HollowWake.Core.Sim;
-using HollowWake.Core.StatusEffects;
 using HollowWake.Core.Tags;
-using static HollowWake.Core.Effects.Handlers.EffectHelpers;
 
 namespace HollowWake.Core.Effects.Handlers;
 
-// Damage, healing and resource effects.
+/// <summary>Damage, healing and resource effects.</summary>
+public static class DamageHandlers
+{
+    public static void Register(EffectRegistry r)
+    {
+        r.Register(new DamageHandler());
+        r.Register(new HealHandler());
+        r.Register(new ResourceHandler());
+    }
+}
+
 internal sealed class DamageHandler : IEffectHandler
 {
     public string Type => "damage";
+
+    public EffectSignature Signature { get; } = EffectSignature.Of("amount", "threads", "tags", "can_crit", "effectiveness")
+        .Hook(EffectHooks.OnKill, "on_kill");
 
     public CompiledEffect Compile(JsonObject p, EffectCompileContext ctx) => new Effect
     {
@@ -26,6 +33,7 @@ internal sealed class DamageHandler : IEffectHandler
         Tags = ctx.TagsOf(p["tags"]),
         CanCrit = ctx.BoolOf(p["can_crit"], true),
         Effectiveness = ctx.ExprOf(p["effectiveness"]),
+        OnKill = ctx.CompileList(p["on_kill"], "on_kill"),
     };
 
     private sealed class Effect : CompiledEffect
@@ -35,6 +43,11 @@ internal sealed class DamageHandler : IEffectHandler
         public TagSet Tags = TagSet.Empty;
         public bool CanCrit = true;
         public Expr? Effectiveness;
+        public CompiledEffect[] OnKill = Array.Empty<CompiledEffect>();
+
+        // The rule's default thread as a one-element list, kept while the rule text stays the same.
+        private string? _defaultThread;
+        private List<string>? _defaultThreads;
 
         public override void Execute(EffectContext ctx)
         {
@@ -47,11 +60,30 @@ internal sealed class DamageHandler : IEffectHandler
             {
                 amount *= ctx.Eval(Effectiveness, 1);
             }
-            var threads = Threads.Count > 0 ? Threads : new List<string> { ctx.Sim.Content.Rules.Text("combat.default_thread", "stone") };
+            if (ctx.DamageScale != 1)
+            {
+                amount *= ctx.DamageScale;
+            }
+            var threads = Threads.Count > 0 ? Threads : DefaultThreads(ctx);
             var packet = DamagePipeline.Build(ctx, amount, threads, Tags, CanCrit);
             var result = DamagePipeline.Apply(ctx, packet);
             ctx.Vars["last_damage"] = result.Total;
             ctx.Vars["amount"] = result.Total;
+            if (OnKill.Length > 0 && result.Killed)
+            {
+                ExecuteAll(OnKill, ctx.Deeper());
+            }
+        }
+
+        private List<string> DefaultThreads(EffectContext ctx)
+        {
+            var thread = ctx.Sim.Content.Rules.Text("combat.default_thread", "stone");
+            if (_defaultThreads is null || !string.Equals(_defaultThread, thread, StringComparison.Ordinal))
+            {
+                _defaultThread = thread;
+                _defaultThreads = new List<string> { thread };
+            }
+            return _defaultThreads;
         }
     }
 }
@@ -59,6 +91,8 @@ internal sealed class DamageHandler : IEffectHandler
 internal sealed class HealHandler : IEffectHandler
 {
     public string Type => "heal";
+
+    public EffectSignature Signature { get; } = EffectSignature.Of("amount", "resource", "tags");
 
     public CompiledEffect Compile(JsonObject p, EffectCompileContext ctx) => new Effect
     {
@@ -90,7 +124,7 @@ internal sealed class HealHandler : IEffectHandler
             if (healed > 0)
             {
                 stats.Stamp("healed", ctx.Sim.Clock.Time);
-                ctx.Sim.Events.Publish(new Healed(ctx.Source, target, healed, Resource) { Tick = ctx.Sim.Clock.Tick });
+                ctx.Sim.Events.Publish(new Healed(ctx.Source, target, healed, Resource) { Tick = ctx.Sim.Clock.Tick, Depth = ctx.Depth });
             }
         }
     }
@@ -99,6 +133,8 @@ internal sealed class HealHandler : IEffectHandler
 internal sealed class ResourceHandler : IEffectHandler
 {
     public string Type => "resource";
+
+    public EffectSignature Signature { get; } = EffectSignature.Of("amount", "resource");
 
     public CompiledEffect Compile(JsonObject p, EffectCompileContext ctx) => new Effect
     {
@@ -119,6 +155,3 @@ internal sealed class ResourceHandler : IEffectHandler
         }
     }
 }
-
-
-
