@@ -5,6 +5,7 @@ using HollowWake.Core.Expressions;
 using HollowWake.Core.Items;
 using HollowWake.Core.Progression;
 using HollowWake.Core.Sim;
+using HollowWake.Core.Weaves;
 
 namespace HollowWake.Core.Crafting;
 
@@ -45,6 +46,7 @@ public static class StationServices
         ["merge_codices"] = new MergeCodices(),
         ["reset_passives"] = new ResetPassives(),
         ["add_socket"] = new AddSocket(),
+        ["reset_tree"] = new ResetTree(),
     };
 
     public static void Register(string type, IService service) => Types[type] = service;
@@ -475,6 +477,57 @@ public static class StationServices
 
         public void Perform(Simulation sim, Entity hero, StationServiceDef def, Target target) =>
             sim.Service<ProgressionService>().Reset(sim, hero);
+    }
+
+    // ------------------------------------------------------------ reset_tree
+
+    /// <summary>
+    /// Clears a weave slot's tree, giving back every point spent in it (<see cref="WeaveRuntime.ResetTree"/>); quoted per
+    /// slot with a tree spent, the price reading <c>tree_spent</c> (<see cref="WeaveRuntime.TreePoints"/>) and <c>item_level</c>.
+    /// </summary>
+    private sealed class ResetTree : IService
+    {
+        private static IExprScope Scope(Simulation sim, Entity hero, WeaveSlot slot)
+        {
+            var (spent, _) = sim.Service<WeaveRuntime>().TreePoints(sim, slot);
+            return new ScopeOverlay(new HeroScope(sim, hero)).Set("tree_spent", spent).Set("item_level", slot.Spec.Level);
+        }
+
+        public void Candidates(Simulation sim, Entity hero, StationServiceDef def, List<Candidate> into)
+        {
+            if (!sim.World.TryGet<WeaveBook>(hero, out var book))
+            {
+                return;
+            }
+            for (var i = 0; i < book.Slots.Count; i++)
+            {
+                if (book.Slots[i].Spec.Tree.Count > 0)
+                {
+                    into.Add(new Candidate(new Target(null, i, null), Scope(sim, hero, book.Slots[i]), null));
+                }
+            }
+        }
+
+        public bool Check(Simulation sim, Entity hero, StationServiceDef def, Target target, out IExprScope scope, out string reason)
+        {
+            scope = EmptyScope.Instance;
+            if (target.Slot is not { } index || !sim.World.TryGet<WeaveBook>(hero, out var book) || index < 0 || index >= book.Slots.Count)
+            {
+                reason = "no_slot";
+                return false;
+            }
+            if (book.Slots[index].Spec.Tree.Count == 0)
+            {
+                reason = "no_tree";
+                return false;
+            }
+            scope = Scope(sim, hero, book.Slots[index]);
+            reason = "";
+            return true;
+        }
+
+        public void Perform(Simulation sim, Entity hero, StationServiceDef def, Target target) =>
+            sim.Service<WeaveRuntime>().ResetTree(sim, hero, target.Slot!.Value, out _);
     }
 
     // ------------------------------------------------------------ add_socket

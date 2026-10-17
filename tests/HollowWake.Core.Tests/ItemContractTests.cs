@@ -271,6 +271,47 @@ public class ItemContractTests
     }
 
     [Fact]
+    public void ATreeIsBoughtNodeByNodeKeptWithTheSeatAndResetAtAFont()
+    {
+        var (sim, hero) = Hero("ic4");
+        var gen = sim.Service<ItemGenerator>();
+        var inv = sim.World.Get<Inventory>(hero)!;
+        var rack = sim.Service<RackService>();
+        var codex = gen.Roll("weave_codex", 6, "common", new Rng(61), new ItemGenerator.PayloadRequest { Form = "torrent", Level = 4 });
+        Assert.True(inv.TryAdd(codex));
+        Assert.True(rack.Learn(sim, hero, codex.Uid, 4, out var reason), reason);
+        var book = sim.World.Get<WeaveBook>(hero)!;
+        var runtime = sim.Service<Weaves.WeaveRuntime>();
+        Assert.Equal((0, 3), runtime.TreePoints(sim, book.Slots[4]));
+
+        Assert.True(WeaveTrees.Buy(sim, hero, 4, "swelling", out reason), reason);
+        Assert.True(WeaveTrees.Buy(sim, hero, 4, "quick_pour", out reason), reason);
+        // Broad Stream excludes Quick Pour: the compiler would not count it, and the purchase says why.
+        Assert.False(WeaveTrees.Buy(sim, hero, 4, "broad_stream", out reason));
+        Assert.False(string.IsNullOrEmpty(reason));
+        Assert.Equal(new[] { "swelling", "quick_pour" }, book.Slots[4].Spec.Tree);
+        Assert.Equal((2, 3), runtime.TreePoints(sim, book.Slots[4]));
+        Assert.False(WeaveTrees.Buy(sim, hero, 0, "swelling", out reason));
+
+        // The seat keeps its tree when it is rebuilt, and the tree saves with the character.
+        rack.Rebuild(sim, hero, 4);
+        Assert.Equal(new[] { "swelling", "quick_pour" }, sim.World.Get<WeaveBook>(hero)!.Slots[4].Spec.Tree);
+        var json = System.Text.Json.JsonSerializer.Serialize(sim.World.Get<WeaveBook>(hero)!.Slots[4].Spec, Content.ContentJson.Options);
+        Assert.Equal(new[] { "swelling", "quick_pour" }, System.Text.Json.JsonSerializer.Deserialize<WeaveSpec>(json, Content.ContentJson.Options)!.Tree);
+
+        // A font unweaves it for shards, quoted by the points spent.
+        var font = sim.Service<PatternFactory>().Spawn(sim, "passive_font", new Vector3(9.5f, 8, 0));
+        Assert.True(sim.Service<Interaction.InteractionService>().Interact(sim, hero, font, out reason), reason);
+        var quote = Assert.Single(StationServices.For(sim, hero, font), q => q.Def.Id == "reset_tree");
+        Assert.Equal(4, quote.Target.Slot);
+        Assert.Equal(8 + 2 * 4, quote.Price["shards"]);
+        inv.AddCurrency("shards", 100);
+        Assert.True(StationServices.Perform(sim, hero, font, "reset_tree", new StationServices.Target(null, 4, null), out reason), reason);
+        Assert.Empty(sim.World.Get<WeaveBook>(hero)!.Slots[4].Spec.Tree);
+        Assert.Equal(100 - 16, inv.CurrencyOf("shards"));
+    }
+
+    [Fact]
     public void AnAnvilChiselsSocketsUpToTheCap()
     {
         var (sim, hero) = Hero("ic3");

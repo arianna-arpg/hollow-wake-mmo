@@ -91,6 +91,9 @@ public sealed record RefundPassiveMsg(string Node) : Message;
 /// <summary>Binds a graft a passive grants (its source: a node, or node:option) to a weave slot; a slot below zero unbinds it.</summary>
 public sealed record BindGraftMsg(string Source, int Slot) : Message;
 
+/// <summary>Buys a node of a weave slot's own tree; refused with the compiler's reason when the node would not count.</summary>
+public sealed record BuyTreeNodeMsg(int Slot, string Node) : Message;
+
 /// <summary>Picks one of the open choices of the conversation's current line.</summary>
 public sealed record ChooseDialogueMsg(string Conversation, string Choice) : Message
 {
@@ -186,7 +189,17 @@ public sealed record WeaveSeatInfo(int Slot, string? Key, string? Form, string N
     public FaceInfo? Meta { get; init; }
     /// <summary>True while the slot's toggle or contract runs (a sustained summon, an aura), so its face shows on.</summary>
     public bool? Active { get; init; }
+    /// <summary>The nodes of the weave's own tree bought for the slot, in the order they were bought (a node once per rank).</summary>
+    public List<string>? Tree { get; init; }
+    /// <summary>Bought nodes that do not count, each with the compiler's reason.</summary>
+    public List<DormantNodeInfo>? DormantNodes { get; init; }
+    /// <summary>For a weave whose form has a tree: the points spent on nodes that count, and the points its level grants.</summary>
+    public int? TreeSpent { get; init; }
+    public int? TreePoints { get; init; }
 }
+
+/// <summary>A bought tree node that does not count, and why (unknown, unlinked, excluded, past its ranks or the points).</summary>
+public sealed record DormantNodeInfo(string Id, string Reason);
 
 /// <summary>A glyph in a weave slot's socket: its level, and why it is dormant, or null when it is active.</summary>
 public sealed record SeatGlyphInfo(int Socket, string Id, string Name, int Level)
@@ -194,6 +207,8 @@ public sealed record SeatGlyphInfo(int Socket, string Id, string Name, int Level
     public string? Dormant { get; init; }
     /// <summary>The stone item, for stones a player socketed.</summary>
     public long? Item { get; init; }
+    /// <summary>A glyph that does not fit the weave but rides to its crew: it gives the weave nothing but its costs.</summary>
+    public bool? Riding { get; init; }
 }
 
 /// <summary>A face a slot can show: a label and an icon.</summary>

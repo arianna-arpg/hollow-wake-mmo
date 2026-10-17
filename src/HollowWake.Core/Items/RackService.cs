@@ -101,6 +101,12 @@ public sealed class RackService : InventoryService.IItemPlace
             book.Slots.Add(new WeaveSlot { Spec = new WeaveSpec() });
         }
         var spec = WeaveItems.SpecOf(seat) ?? new WeaveSpec();
+        // The weave's tree stays with the seat while it still teaches the same weave (a stone socketed, a better copy
+        // learned, the hero entering the world); a different weave starts with none.
+        if (book.Slots[slot].Spec is { Tree.Count: > 0 } previous && seat.Codex?.Payload is { } payload && Teaches(sim, payload, previous))
+        {
+            spec = spec with { Tree = new List<string>(previous.Tree) };
+        }
         var weaveSlot = new WeaveSlot { Spec = spec };
         book.Slots[slot] = weaveSlot;
         seat.Bound = weaveSlot;

@@ -9,5 +9,8 @@ public sealed record AllocatePassiveIntent(string NodeId) : IIntent
 /// <summary>Refunds one allocated node at a font within reach, with its picks; the points return to their own currency.</summary>
 public sealed record RefundPassiveIntent(string NodeId) : IIntent;
 
+/// <summary>Buys a node of the weave's own tree for a weave slot; the compiler decides whether it counts.</summary>
+public sealed record BuyTreeNodeIntent(int Slot, string Node) : IIntent;
+
 /// <summary>Binds a graft a passive grants (a node, or node:option) to a weave slot; a slot below zero unbinds it.</summary>
 public sealed record BindGraftIntent(string Source, int Slot) : IIntent;

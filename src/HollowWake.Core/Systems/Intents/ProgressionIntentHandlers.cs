@@ -11,6 +11,15 @@ public static class ProgressionIntentHandlers
         handlers.Register<AllocatePassiveIntent>(AllocatePassive);
         handlers.Register<RefundPassiveIntent>(RefundPassive);
         handlers.Register<BindGraftIntent>(BindGraft);
+        handlers.Register<BuyTreeNodeIntent>(BuyTreeNode);
+    }
+
+    private static void BuyTreeNode(in IntentContext ctx, BuyTreeNodeIntent b)
+    {
+        if (!Items.WeaveTrees.Buy(ctx.Sim, ctx.Entity, b.Slot, b.Node, out var reason))
+        {
+            ctx.Reject(reason);
+        }
     }
 
     private static void BindGraft(in IntentContext ctx, BindGraftIntent bg)

@@ -10,7 +10,7 @@ namespace HollowWake.Core.Definitions;
 /// </summary>
 public sealed record StationServiceDef : Definition
 {
-    /// <summary>The registered service that does the work (level_item, merge_codices, reset_passives, add_socket).</summary>
+    /// <summary>The registered service that does the work (level_item, merge_codices, reset_passives, add_socket, reset_tree).</summary>
     public string Type { get; init; } = "";
 
     /// <summary>Interactable kinds or station tags that offer it (font, forge).</summary>
@@ -19,7 +19,7 @@ public sealed record StationServiceDef : Definition
     /// <summary>Item tags of what it applies to (glyph, codex, weapon); empty applies to anything the service takes.</summary>
     public TagSet Accepts { get; init; } = TagSet.Empty;
 
-    /// <summary>The price per currency: expressions of the hero and the target (item_level, rarity_rank, sockets, refunds).</summary>
+    /// <summary>The price per currency: expressions of the hero and the target (item_level, rarity_rank, sockets, refunds, tree_spent).</summary>
     public Dictionary<string, Expr> Price { get; init; } = new(StringComparer.Ordinal);
 
     public int Order { get; init; }

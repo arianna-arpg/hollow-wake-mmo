@@ -330,6 +330,12 @@ export interface BindGraftMsg {
   slot: number;
 }
 
+export interface BuyTreeNodeMsg {
+  t: "buy_tree_node";
+  slot: number;
+  node: string;
+}
+
 export interface WelcomeMsg {
   t: "welcome";
   server_version: string;
@@ -809,6 +815,10 @@ export interface WeaveSeatInfo {
   converted?: FaceInfo;
   meta?: FaceInfo;
   active?: boolean;
+  tree?: string[];
+  dormant_nodes?: DormantNodeInfo[];
+  tree_spent?: number;
+  tree_points?: number;
 }
 
 export interface GraftInfo {
@@ -936,6 +946,7 @@ export interface SeatGlyphInfo {
   level: number;
   dormant?: string;
   item?: Int64;
+  riding?: boolean;
 }
 
 export interface PreviewLineInfo {
@@ -946,6 +957,11 @@ export interface PreviewLineInfo {
 export interface FaceInfo {
   label: string;
   icon?: string;
+}
+
+export interface DormantNodeInfo {
+  id: string;
+  reason: string;
 }
 
 export interface RecipeInputInfo {
@@ -1006,6 +1022,7 @@ export type Message =
   | BuyPageMsg
   | StationServiceMsg
   | BindGraftMsg
+  | BuyTreeNodeMsg
   | WelcomeMsg
   | LoginResultMsg
   | CharacterListMsg
@@ -1092,6 +1109,7 @@ export const MESSAGE_TYPES: readonly MessageType[] = [
   "buy_page",
   "station_service",
   "bind_graft",
+  "buy_tree_node",
   "welcome",
   "login_result",
   "character_list",

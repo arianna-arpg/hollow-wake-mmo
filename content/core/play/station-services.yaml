@@ -1,6 +1,6 @@
 # Station services: work a station does for a price. The type names a registered service; at names the
 # interactable kinds or station tags that offer it; accepts narrows what it works on by item tags; the price is
-# an expression per currency of the hero and the target (item_level, rarity_rank, sockets, refunds).
+# an expression per currency of the hero and the target (item_level, rarity_rank, sockets, refunds, tree_spent).
 kind: station_services
 entries:
   - id: raise_stone
@@ -34,10 +34,17 @@ entries:
     order: 3
     price: { shards: "20 + level * 6 + refunds * 2" }
     description: Returns every passive point bought; the calling's start and realm roots stay.
+  - id: reset_tree
+    name: Unweave a tree
+    type: reset_tree
+    at: [font]
+    order: 4
+    price: { shards: "8 + tree_spent * 4" }
+    description: Gives back every point a weave spent in its tree; the weave keeps its glyphs.
   - id: chisel_socket
     name: Chisel a socket
     type: add_socket
     at: [smithing]
-    order: 4
+    order: 5
     price: { shards: "15 + item_level * 2 + sockets * sockets * 40" }
     description: Cuts one more socket into a piece of gear, up to what its kind can hold.

@@ -34,7 +34,7 @@ internal static class ProgressionKinds
         ContentKinds.Register<StashDef>("stashes", Stash);
         ContentKinds.AddValidator<UniqueDef>(UniqueChoices);
         ContentKinds.AddValidator<ItemBaseDef>(BaseLaws);
-        foreach (var name in new[] { "item_level", "rarity_rank", "sockets" })
+        foreach (var name in new[] { "item_level", "rarity_rank", "sockets", "tree_spent" })
         {
             ScopeNames.Declare(name);
         }
