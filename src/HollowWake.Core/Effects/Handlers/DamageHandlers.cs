@@ -125,7 +125,7 @@ internal sealed class DamageHandler : IEffectHandler
             if (Rolls)
             {
                 roll = ctx.Scope.NextRandom();
-                EffectVars.Set(ctx, DamageHandler.Roll, roll.Value);
+                ctx.Vars[DamageHandler.Roll] = roll.Value;
             }
             var amount = ctx.Eval(Amount) * ctx.Potency;
             double? effectiveness = null;
@@ -153,7 +153,7 @@ internal sealed class DamageHandler : IEffectHandler
                 packet.Leech = Math.Max(0, ctx.Eval(Leech));
             }
             var result = DamagePipeline.Apply(ctx, packet);
-            EffectVars.Set(ctx, "last_damage", result.Total);
+            ctx.Vars["last_damage"] = result.Total;
             ctx.Vars["amount"] = result.Total;
             if (OnKill.Length > 0 && result.Killed)
             {
@@ -174,12 +174,16 @@ internal sealed class DamageHandler : IEffectHandler
     }
 }
 
-/// <summary><c>heal</c>: an amount folded through the healer's <c>healing</c>; <c>exclude_self</c> skips the healer.</summary>
+/// <summary>
+/// <c>heal</c>: an amount folded through the healer's <c>healing</c>, on the target (the healer when there is none);
+/// <c>self</c> heals the healer instead, as a status tick that heals whoever applied it; <c>exclude_self</c> skips
+/// the healer.
+/// </summary>
 internal sealed class HealHandler : IEffectHandler
 {
     public string Type => "heal";
 
-    public EffectSignature Signature { get; } = EffectSignature.Of("amount", "resource", "tags", "exclude_self");
+    public EffectSignature Signature { get; } = EffectSignature.Of("amount", "resource", "tags", "self", "exclude_self");
 
     public CompiledEffect Compile(JsonObject p, EffectCompileContext ctx) => new Effect
     {
@@ -187,6 +191,7 @@ internal sealed class HealHandler : IEffectHandler
         Amount = ctx.ExprOf(p["amount"], Expr.Constant(10))!,
         Resource = ctx.StringOf(p["resource"]) ?? "life",
         Tags = ctx.TagsOf(p["tags"]),
+        Self = ctx.BoolOf(p["self"], false),
         ExcludeSelf = ctx.BoolOf(p["exclude_self"], false),
     };
 
@@ -195,11 +200,12 @@ internal sealed class HealHandler : IEffectHandler
         public required Expr Amount;
         public string Resource = "life";
         public TagSet Tags = TagSet.Empty;
+        public bool Self;
         public bool ExcludeSelf;
 
         public override void Execute(EffectContext ctx)
         {
-            var target = ctx.Target.IsNone ? ctx.Source : ctx.Target;
+            var target = Self || ctx.Target.IsNone ? ctx.Source : ctx.Target;
             if (ExcludeSelf && target == ctx.Source)
             {
                 return;
@@ -223,46 +229,31 @@ internal sealed class HealHandler : IEffectHandler
     }
 }
 
+/// <summary><c>resource</c>: adds an amount of a resource to the target (the source when there is none); <c>self</c> gives it to the source.</summary>
 internal sealed class ResourceHandler : IEffectHandler
 {
     public string Type => "resource";
 
-    public EffectSignature Signature { get; } = EffectSignature.Of("amount", "resource");
+    public EffectSignature Signature { get; } = EffectSignature.Of("amount", "resource", "self");
 
     public CompiledEffect Compile(JsonObject p, EffectCompileContext ctx) => new Effect
     {
         Type = Type,
         Amount = ctx.ExprOf(p["amount"], Expr.Constant(10))!,
         Resource = ctx.StringOf(p["resource"]) ?? "mana",
+        Self = ctx.BoolOf(p["self"], false),
     };
 
     private sealed class Effect : CompiledEffect
     {
         public required Expr Amount;
         public string Resource = "mana";
+        public bool Self;
 
         public override void Execute(EffectContext ctx)
         {
-            var target = ctx.Target.IsNone ? ctx.Source : ctx.Target;
+            var target = Self || ctx.Target.IsNone ? ctx.Source : ctx.Target;
             ctx.Sim.World.Get<Stats>(target)?.AddResource(Resource, ctx.Eval(Amount) * ctx.Potency);
         }
     }
 }
-
-/// <summary>
-/// Variables an effect leaves for the effects after it in the same list (<c>last_damage</c>, <c>charges_spent</c>,
-/// <c>consumed</c>, <c>ruptured</c> ...). The context's expression scope copies its variables when first built, so
-/// a variable set afterwards is also written into the built scope, where later expressions read it.
-/// </summary>
-internal static class EffectVars
-{
-    public static void Set(EffectContext ctx, string name, double value)
-    {
-        ctx.Vars[name] = value;
-        if (ctx.Scope is ScopeOverlay overlay)
-        {
-            overlay.Set(name, value);
-        }
-    }
-}
-

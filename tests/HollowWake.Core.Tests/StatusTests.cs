@@ -507,4 +507,19 @@ public class StatusTests
         }
         Assert.True(ticks[^1] > ticks[0] * 1.5);
     }
+
+    [Fact]
+    public void SappingHealsTheSapperNotTheSapped()
+    {
+        var bench = CombatBench.Create();
+        // Both bodies are hurt, so a heal shows on whichever it lands.
+        bench.AttackerStats.SetResource("life", bench.AttackerStats.ResourceMax("life") * 0.5);
+        bench.VictimStats.SetResource("life", bench.VictimStats.ResourceMax("life") * 0.5);
+        bench.Apply(bench.Victim, "sapped", magnitude: 4, duration: 3);
+        bench.Run(2.2);
+        var heals = bench.Events.OfType<Healed>().ToList();
+        Assert.NotEmpty(heals);
+        Assert.All(heals, h => Assert.Equal(bench.Attacker, h.Target));
+        Assert.NotEmpty(bench.HitsOn(bench.Victim));
+    }
 }
