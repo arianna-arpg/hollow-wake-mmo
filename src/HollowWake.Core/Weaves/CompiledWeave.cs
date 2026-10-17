@@ -91,6 +91,22 @@ public sealed class CompiledWeave
 
     internal WeaveProbe? Probe { get; init; }
 
+    private string[]? _forbidFlags;
+
+    /// <summary>The flag that forbids each of the weave's tags (<c>forbid:{tag}</c>), in tag order, built once.</summary>
+    public IReadOnlyList<string> ForbidFlags => _forbidFlags ??= BuildForbidFlags();
+
+    private string[] BuildForbidFlags()
+    {
+        var tags = Tags.Items;
+        var flags = new string[tags.Count];
+        for (var i = 0; i < flags.Length; i++)
+        {
+            flags[i] = "forbid:" + tags[i];
+        }
+        return flags;
+    }
+
     public string Key => Spec.ToString();
     public Targeting Targeting => Form.Targeting;
     public CastMode CastMode => Form.CastMode;

@@ -39,7 +39,9 @@ A weave's mechanisms are the ones its form and active glyphs declare plus every 
 
 ## Runtime
 
-`WeaveRuntime.TryBegin` validates everything in one place: alive, not stunned, no forbidden tag (silence forbids `spell`), not busy, off cooldown, affordable, a valid target or point or direction within range. It pays costs, starts a cast, a channel or resolves instantly, and raises events. `Execute` runs the effect graph with an `EffectContext` whose scope mounts `source`, `target` and `weave`. Runtimes that know how a cast was made set the cast variables (`cast.held`, `cast.fill`, `cast.stage`, `charges_spent`) on its contexts.
+`WeaveRuntime.TryBegin` validates everything in one place: alive, not stunned, no forbidden tag (silence forbids `spell`; the `forbid:{tag}` flags are built once per compiled weave), not busy, off cooldown, affordable, a valid target or point or direction within range. It pays costs, starts a cast, a channel or resolves instantly, and raises events. `Execute` runs the effect graph with an `EffectContext` whose scope mounts `source`, `target` and `weave`. Runtimes that know how a cast was made set the cast variables (`cast.held`, `cast.fill`, `cast.stage`, `charges_spent`) on its contexts.
+
+A cast in progress is a `CastState`: its slot, target, point and direction, timing, and how it is held (`Held`, `Fill`, `Stage`), the fraction of movement speed the caster keeps (`MoveFactor`: one for weaves tagged `mobile`, zero otherwise, set when the cast begins) and modifiers local to the cast. A `WeaveSlot` keeps named `State` between casts (use banks, latches, cursors) beside the runtime's cache of scopes, which is not state.
 
 Cast time divides by `attack.speed` for attacks or `cast.speed` for everything else. Cooldowns divide by `cooldown.recovery`. Costs run through the `cost` channel scoped by resource and weave tags.
 
