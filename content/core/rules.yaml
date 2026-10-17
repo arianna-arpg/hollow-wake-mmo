@@ -79,13 +79,13 @@ entries:
       # The defender's ladder every hit walks, by registered stage name.
       stages: [immunity, guard, evade, block, taken_as, mitigate, taken, cap, stagger, pools, cheat_death, cull, leech]
       # Stages, declared steps (crit, armor, added, damage_taken, ailments) and break bars (poise) that hits
-      # carrying a tag skip: { tag: [name, ...] }. Damage over time (status ticks carry dot) is neither evaded
-      # nor blocked, never crits, ignores armor, takes no added damage, breaks no poise and leaves no statuses;
-      # resistances still apply. Deferred damage (a stagger paying out) was mitigated when it landed, so it
+      # carrying a tag skip: { tag: [name, ...] }. Damage over time (status ticks carry dot) is neither guarded,
+      # evaded nor blocked, never crits, ignores armor, takes no added damage, breaks no poise and leaves no
+      # statuses; resistances still apply. Deferred damage (a stagger paying out) was mitigated when it landed, so it
       # skips everything up to the pools. Payloads tagged no_crit never crit.
       stage_skips:
-        dot: [evade, block, crit, armor, added, poise, ailments]
-        deferred: [evade, block, crit, added, taken_as, mitigate, damage_taken, cap, stagger, poise, leech, ailments]
+        dot: [guard, evade, block, crit, armor, added, poise, ailments]
+        deferred: [guard, evade, block, crit, added, taken_as, mitigate, damage_taken, cap, stagger, poise, leech, ailments]
         no_crit: [crit]
       # Victim tags beyond the struck body's own tags, flags and statuses: each adds vs.<key> to a hit when its
       # expression holds in the hit scope (target.*, source.*, distance, angle: zero in front, 180 behind).
