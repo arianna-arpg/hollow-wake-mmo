@@ -1,0 +1,46 @@
+# Relics and vestiges: items that act from where they sit rather than where they are worn.
+#
+# Relics belong in the reliquary, the account's board: while seated, their lines apply to every hero of the account.
+# Their footprints run from one cell to two by two. They mint magic at the least, from an explicit affix pool, so a
+# relic never rolls a weapon's or an armor's affixes.
+#
+# Vestige stones go into gear sockets; a socketed stone lends the host its lines while the host is worn.
+#
+# Drop weights are zero so random class rolls never pick them; loot entries and vendors name them.
+kind: items
+entries:
+  - { id: relic_shard, name: Relic Shard, class: relic.shard, tags: [relic], width: 1, height: 1, drop_weight: 0, value: 30,
+      min_rarity: magic, affix_pool: [vigorous, of_might, of_grace, of_will, of_vigor, of_mana], affix_cap: { prefix: 1, suffix: 1 },
+      implicits: [ { attribute: life.max, form: flat, range: [4, 8] } ],
+      description: A splinter of something the Wake could not take. Seat it in the reliquary. }
+  - { id: relic_icon, name: Relic Icon, class: relic.icon, tags: [relic], width: 1, height: 2, drop_weight: 0, value: 45,
+      min_rarity: magic, affix_pool: [vigorous, of_might, of_grace, of_will, of_vigor, of_mana, of_the_ember, of_the_tide, of_the_storm, of_the_umbra],
+      affix_cap: { prefix: 1, suffix: 1 },
+      implicits: [ { attribute: mana.max, form: flat, range: [6, 12] } ],
+      description: A saint of a village nobody remembers. Seat it in the reliquary. }
+  - { id: relic_idol, name: Relic Idol, class: relic.idol, tags: [relic], width: 2, height: 2, drop_weight: 0, value: 70,
+      min_rarity: magic, affix_pool: [vigorous, of_might, of_grace, of_will, of_vigor, of_mana, of_the_ember, of_the_tide, of_the_storm, of_the_umbra],
+      affix_cap: { prefix: 1, suffix: 2 },
+      implicits: [ { attribute: life.max, form: increased, range: [0.03, 0.06] } ],
+      description: Heavy with the prayers of a house that is gone. Seat it in the reliquary. }
+
+  # ---- vestige stones (gear sockets)
+  - { id: vestige_ember, name: Ember Vestige, class: socketable.vestige, tags: [vestige, socketable, ember], width: 1, height: 1, drop_weight: 0, value: 15,
+      affix_cap: { prefix: 0, suffix: 0 },
+      implicits: [ { attribute: resist.ember, form: flat, range: [0.06, 0.12] } ],
+      description: A coal that will not go out. Socket it into gear. }
+  - { id: vestige_tide, name: Tide Vestige, class: socketable.vestige, tags: [vestige, socketable, tide], width: 1, height: 1, drop_weight: 0, value: 15,
+      affix_cap: { prefix: 0, suffix: 0 },
+      implicits: [ { attribute: resist.tide, form: flat, range: [0.06, 0.12] } ],
+      description: A drop of the old sea. Socket it into gear. }
+  - id: vestige_marrow
+    name: Marrow Vestige
+    class: socketable.vestige
+    tags: [vestige, socketable]
+    drop_weight: 0
+    value: 20
+    affix_cap: { prefix: 0, suffix: 0 }
+    implicits:
+      - { attribute: life.max, form: flat, range: [6, 14], shared_roll: marrow }
+      - { attribute: life.regen, form: flat, range: [0.3, 0.7], shared_roll: marrow }
+    description: Both its lines roll together, high or low. Socket it into gear.

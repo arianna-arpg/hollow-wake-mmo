@@ -90,6 +90,7 @@ public static class ZoneBuilder
             CellCost = cell => sim.Terrain.TagsAt(cell).Has("road") ? 0.6 : sim.Terrain.TagsAt(cell).Has("bog") ? 2.5 : 1.0,
             Blocked = sim.Service<BlockedCells>().IsBlocked,
         });
+        ProgressionWiring.Wire(sim);
 
         // Systems run by phase, then by order inside a phase (see each system's Phase and Order).
         sim.AddSystem(new IntentSystem());

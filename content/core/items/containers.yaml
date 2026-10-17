@@ -1,0 +1,66 @@
+# Containers: boards beyond the bag. A board is the union of the cells of the rungs the hero has unlocked; rungs
+# unlock on expressions of the hero (level, quests, flags) and say what they ask as text. Items keep their cells.
+#
+# The reliquary is the account's: seated relics apply their lines to every hero of the account, under source
+# container:reliquary. While it holds anything it puts its own modifiers on the hero, with the gauge
+# gauge.container.reliquary.cells counting the cells its relics cover; the experience price below is one such line, and
+# removing it switches the price off. Changing what sits in it needs the calm a loadout change needs.
+kind: containers
+entries:
+  - id: reliquary
+    name: Reliquary
+    kind: reliquary
+    owner: account
+    active: true
+    calm: true
+    accepts: [relic]
+    modifiers:
+      - { attribute: xp.gain, form: flat, value: -0.01, gauge: gauge.container.reliquary.cells }
+    board:
+      - cells:
+          - "XX...."
+          - "XX...."
+          - "......"
+          - "......"
+      - unlock: "level >= 10"
+        requirement: Reach level 10.
+        cells:
+          - "..XX.."
+          - "..XX.."
+          - "......"
+          - "......"
+      - unlock: "level >= 20"
+        requirement: Reach level 20.
+        cells:
+          - "....XX"
+          - "....XX"
+          - "......"
+          - "......"
+      - unlock: "level >= 30"
+        requirement: Reach level 30.
+        cells:
+          - "......"
+          - "......"
+          - "XXXXXX"
+          - "XXXXXX"
+---
+# Stashes: pages of identical boards at a stash chest (an interactable of kind stash). The first pages are free;
+# the rest are bought one at a time, the price an expression of the hero and the page's number (page).
+kind: stashes
+entries:
+  - id: personal_stash
+    name: Stash
+    owner: character
+    width: 12
+    height: 8
+    pages: 4
+    free_pages: 1
+    page_cost: { shards: "100 * page * page" }
+  - id: account_stash
+    name: Account Stash
+    owner: account
+    width: 12
+    height: 8
+    pages: 2
+    free_pages: 1
+    page_cost: { shards: "400 * page" }

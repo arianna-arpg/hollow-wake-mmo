@@ -46,8 +46,8 @@ public partial class InterfaceProtocolTests
     {
         var item = Card(9);
         var quest = new QuestInfo("q", "Quest", "active", new List<string> { "Slay" }, new List<int> { 1 }, new List<int> { 3 }, "quartermaster", 2);
-        var state = new EntityState { Key = 5L << 32 | 3, Name = "Hob", Pattern = "hob", Look = "hob", Faction = "the_loosed", Rarity = "magic", Interactable = "talk", Casting = "Ember", VX = 1, Static = true, Resources = { ["life"] = 3 }, ResourceMax = { ["life"] = 9 }, Flags = { "monster" }, Statuses = { "burning" } };
-        var delta = new EntityDelta { Key = 9, Name = "Hob", Pattern = "", Look = "", X = 1, Y = 2, Z = 3, Yaw = 1, Radius = 1, Height = 2, Faction = "", Rarity = "", Level = 2, Resources = new Dictionary<string, float> { ["life"] = 2 }, ResourceMax = new Dictionary<string, float> { ["life"] = 9 }, Flags = new List<string> { "monster" }, Statuses = new List<string> { "burning" }, Interactable = "", Dead = true, Casting = "", CastProgress = 0.5f, Grounded = false, VX = 0, VY = 0, VZ = 0 };
+        var state = new EntityState { Key = 5L << 32 | 3, Name = "Hob", Pattern = "hob", Look = "hob", Faction = "the_loosed", Rarity = "magic", Interactable = "talk", Casting = "Ember", VX = 1, Static = true, Resources = { ["life"] = 3 }, ResourceMax = { ["life"] = 9 }, Flags = { "monster" }, Statuses = { "burning" }, Shape = "cone", ShapeSize = new ShapeSizeInfo { Radius = 3, Angle = 1.2f, Width = 1, Inner = 0.5f }, Heading = 0.5f, Spin = 0.25f };
+        var delta = new EntityDelta { Key = 9, Name = "Hob", Pattern = "", Look = "", X = 1, Y = 2, Z = 3, Yaw = 1, Radius = 1, Height = 2, Faction = "", Rarity = "", Level = 2, Resources = new Dictionary<string, float> { ["life"] = 2 }, ResourceMax = new Dictionary<string, float> { ["life"] = 9 }, Flags = new List<string> { "monster" }, Statuses = new List<string> { "burning" }, Interactable = "", Dead = true, Casting = "", CastProgress = 0.5f, Grounded = false, VX = 0, VY = 0, VZ = 0, Shape = "ring", ShapeSize = new ShapeSizeInfo { Radius = 2, Inner = 1 }, Heading = 1, Spin = 2 };
         var slotInfo = new WeaveSlotInfo(0, "ember", "Ember", "ember", 0.5, new Dictionary<string, double> { ["mana"] = 4 }, "enemy", 12);
 
         // client -> server
@@ -87,8 +87,8 @@ public partial class InterfaceProtocolTests
         yield return new SwapWeaveSlotsMsg(0, 3);
         yield return new CommandMinionsMsg("assault", 7, 1, 2, 3) { Group = "remnants" };
         yield return new MoveItemMsg(9, "equipment", 0, 0) { Slot = "main_hand" };
-        yield return new SocketStoneMsg(10, 1, 0);
-        yield return new UnsocketStoneMsg(1, 0) { X = 3, Y = 1 };
+        yield return new SocketStoneMsg(10, 1, 0) { Host = 9 };
+        yield return new UnsocketStoneMsg(1, 0) { X = 3, Y = 1, Host = 9 };
         yield return new LearnFormMsg(11, 2);
         yield return new UnlearnFormMsg(2) { X = 0, Y = 0 };
         yield return new RefundPassiveMsg("hf1");
@@ -98,6 +98,8 @@ public partial class InterfaceProtocolTests
         yield return new BuyMsg(4, "floss", 2);
         yield return new SellMsg(4, 9) { Count = 1 };
         yield return new BuyBackMsg(4, 9);
+        yield return new BuyPageMsg("personal_stash");
+        yield return new StationServiceMsg(4, "level_item") { Item = 10, Slot = 1, Node = "hf1" };
 
         // server -> client
         yield return new WelcomeMsg("1", ProtocolInfo.Version, "dev", "motd") { Features = new List<string> { ProtocolInfo.InterfaceFeature } };
@@ -117,7 +119,7 @@ public partial class InterfaceProtocolTests
             Reserved = new Dictionary<string, double> { ["mana"] = 12 },
             Pools = new List<PoolInfo> { new("ward", "recharging") { Since = 1.5, Until = 4 } },
             Statuses = new List<StatusInfo> { new("burning", 2, 1.5, 4) },
-            Cast = new CastInfo(1, "charge", 0.5, 1, 3) { Name = "Bolt", Brim = 0.8, Held = 1.2, Duration = 2 },
+            Cast = new CastInfo(1, "overcharge", 0.5, 1, 3) { Name = "Bolt", Brim = 0.8, Held = 1.2, Duration = 2, Pool = 0.4 },
             Charges = new List<ChargeInfo> { new("fury", 2, 3) },
             Stamps = new Dictionary<string, double> { ["hurt"] = 11.5 },
         };
@@ -152,8 +154,10 @@ public partial class InterfaceProtocolTests
                 Costs = new Dictionary<string, double> { ["mana"] = 6 },
                 Uses = 1,
                 UsesMax = 3,
+                Stacks = 2,
                 Converted = new FaceInfo("Reload") { Icon = "reload" },
                 Meta = new FaceInfo("Detonate"),
+                Active = true,
             },
             new(1, null, null, "", 0, 0, new List<SeatGlyphInfo>(), 0, 0, new List<PreviewLineInfo>()),
         });
@@ -170,7 +174,7 @@ public partial class InterfaceProtocolTests
         yield return new StationStateMsg(4, "Smith's Anvil", new List<RecipeInfo>
         {
             new("reweave_blade", "Reweave a Blade", new List<RecipeInputInfo> { new("Iron Ore", 1, 3) }, item, false) { Reason = "Missing Iron Ore.", Cost = new Dictionary<string, double> { ["shards"] = 5 } },
-        }, false) { Tags = new List<string> { "smithing" }, Reach = 2.5 };
+        }, false) { Tags = new List<string> { "smithing" }, Reach = 2.5, Services = new List<StationServiceInfo> { new("level_item", "Raise a level") { Item = 10, Slot = 1, Node = "hf1", Price = new Dictionary<string, double> { ["shards"] = 40 }, Enabled = false, Reason = "Not enough Shards." } } };
     }
 
     [Fact]

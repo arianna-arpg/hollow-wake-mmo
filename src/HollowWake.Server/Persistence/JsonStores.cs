@@ -1,6 +1,7 @@
 using System.Text.Json;
 using HollowWake.Core.Characters;
 using HollowWake.Core.Content;
+using HollowWake.Core.Items;
 using HollowWake.Core.Territory;
 using HollowWake.Core.World;
 
@@ -13,6 +14,9 @@ public sealed class Account
     public DateTimeOffset CreatedAt { get; init; } = DateTimeOffset.UtcNow;
     public DateTimeOffset LastLoginAt { get; set; } = DateTimeOffset.UtcNow;
     public List<string> Characters { get; set; } = new();
+
+    /// <summary>The account's container boards (the reliquary, the account stash) and its stash pages bought.</summary>
+    public ContainerSave Vault { get; set; } = new();
 }
 
 public interface IAccountStore
@@ -90,8 +94,27 @@ public sealed class JsonFileStores : IAccountStore, ICharacterStore, IWorldStore
     public Account? Load(string id) => Read<Account>(Path.Combine(_root, "accounts", Safe(id) + ".json"));
     public void Save(Account account) => Write(Path.Combine(_root, "accounts", Safe(account.Id) + ".json"), account);
 
-    CharacterSheet? ICharacterStore.Load(string id) => Read<CharacterSheet>(Path.Combine(_root, "characters", Safe(id) + ".json"));
-    public void Save(CharacterSheet sheet) => Write(Path.Combine(_root, "characters", Safe(sheet.Id) + ".json"), sheet);
+    /// <summary>A character with its account's boards: the vault rides on the sheet while the character plays.</summary>
+    CharacterSheet? ICharacterStore.Load(string id)
+    {
+        var sheet = Read<CharacterSheet>(Path.Combine(_root, "characters", Safe(id) + ".json"));
+        if (sheet is not null)
+        {
+            sheet.Vault = Load(sheet.AccountId)?.Vault ?? new ContainerSave();
+        }
+        return sheet;
+    }
+
+    /// <summary>Saves a character, and the account's boards it carries back into the account.</summary>
+    public void Save(CharacterSheet sheet)
+    {
+        Write(Path.Combine(_root, "characters", Safe(sheet.Id) + ".json"), sheet);
+        if (sheet.Vault is { } vault && Load(sheet.AccountId) is { } account)
+        {
+            account.Vault = vault;
+            Save(account);
+        }
+    }
     public string NewId() => "c" + Guid.NewGuid().ToString("N")[..12];
 
     public WorldSave? Load() => Read<WorldSave>(Path.Combine(_root, "world.json"));

@@ -471,4 +471,213 @@ public class LoopbackTests
         Assert.True(command.Target.IsNone);
         Assert.Contains(replies, m => m is IntentRejectedMsg r && r.Reason == "bad_command");
     }
+
+    /// <summary>Steps until a message of type T matching the predicate arrives (or the ticks run out), keeping everything received.</summary>
+    private static T? Await<T>(GameServer server, LoopbackClient client, List<Message> inbox, Func<T, bool>? match = null, int ticks = 30) where T : Message
+    {
+        for (var i = 0; i < ticks; i++)
+        {
+            server.Step();
+            var got = client.Drain();
+            inbox.AddRange(got);
+            if (got.OfType<T>().LastOrDefault(m => match is null || match(m)) is { } found)
+            {
+                return found;
+            }
+        }
+        return null;
+    }
+
+    [Fact]
+    public void InterfaceFlowsMoveItemsSocketStonesAndAllocateAndRefundChoices()
+    {
+        var (server, transport) = Create();
+        var (client, _, session, replies, _) = Enter(server, transport, "flows", "Hazel", new List<string> { ProtocolInfo.InterfaceFeature });
+        var sim = session.Zone!.Sim;
+        var hero = session.Entity;
+        var inbox = new List<Message>(replies);
+
+        // Move an item to another cell of the bag.
+        var bag = replies.OfType<InventoryStateMsg>().Last().Bag;
+        var floss = bag.Items.First(i => i.Base == "thread_floss");
+        client.Send(new MoveItemMsg(floss.Uid, "bag", 11, 4));
+        var moved = Await<InventoryStateMsg>(server, client, inbox, s => s.Bag.Items.Any(i => i.Uid == floss.Uid && i.X == 11 && i.Y == 4));
+        Assert.NotNull(moved);
+
+        // Socket a glyph stone beside the codex of the first seat; the weave slot state shows it with its preview.
+        var stone = sim.Service<Core.Items.ItemGenerator>().Roll("glyph_stone", 1, "common", new Core.Maths.Rng(5), new Core.Items.ItemGenerator.PayloadRequest { Glyph = "needle" });
+        Assert.True(sim.World.Get<Inventory>(hero)!.TryAdd(stone));
+        client.Send(new SocketStoneMsg(stone.Uid, 0, 0));
+        var slots = Await<WeaveSlotsMsg>(server, client, inbox, s => s.Seats[0].Glyphs.Any(g => g.Item == stone.Uid));
+        Assert.NotNull(slots);
+        var seat = slots!.Seats[0];
+        Assert.Equal("needle", seat.Glyphs.Single().Id);
+        Assert.NotNull(seat.Item);
+        Assert.Contains(seat.Preview, p => p.Label == "Damage");
+        Assert.Contains(seat.Preview, p => p.Label == "Cast time");
+
+        // Allocate a choice node with an option, then refund it at a font.
+        sim.World.Get<Stats>(hero)!.Level = 5;
+        client.Send(new AllocatePassiveMsg("inner_a") { Option = "might" });
+        var passives = Await<PassiveStateMsg>(server, client, inbox, p => p.Picks.ContainsKey("inner_a"));
+        Assert.NotNull(passives);
+        Assert.Equal(new List<string> { "might" }, passives!.Picks["inner_a"]);
+        Assert.False(passives.Refund);
+
+        var at = sim.World.Get<Transform>(hero)!.Position;
+        sim.Service<Core.Patterns.PatternFactory>().Spawn(sim, "passive_font", at + new System.Numerics.Vector3(1.5f, 0, 0));
+        sim.World.Get<Inventory>(hero)!.AddCurrency("shards", 200);
+        var atFont = Await<PassiveStateMsg>(server, client, inbox, p => p.Refund);
+        Assert.NotNull(atFont);
+        Assert.NotNull(atFont!.RefundCost);
+        client.Send(new RefundPassiveMsg("inner_a"));
+        var refunded = Await<PassiveStateMsg>(server, client, inbox, p => !p.Allocated.Contains("inner_a"));
+        Assert.NotNull(refunded);
+        Assert.False(refunded!.Picks.ContainsKey("inner_a"));
+        Assert.DoesNotContain(inbox, m => m is IntentRejectedMsg);
+    }
+
+    [Fact]
+    public void AConversationOpensTheVendorAndAPurchaseLandsInTheBag()
+    {
+        var (server, transport) = Create();
+        var (client, _, session, replies, _) = Enter(server, transport, "trader", "Teasel", new List<string> { ProtocolInfo.InterfaceFeature });
+        var sim = session.Zone!.Sim;
+        var hero = session.Entity;
+        var inbox = new List<Message>(replies);
+        var at = sim.World.Get<Transform>(hero)!.Position;
+        var quartermaster = sim.Service<Core.Patterns.PatternFactory>().Spawn(sim, "quartermaster", at + new System.Numerics.Vector3(1.5f, 0, 0));
+        sim.World.Get<Inventory>(hero)!.AddCurrency("shards", 500);
+
+        client.Send(new InteractMsg(quartermaster.Key));
+        var greet = Await<DialogueStateMsg>(server, client, inbox);
+        Assert.NotNull(greet);
+        Assert.Equal(quartermaster.Key, greet!.Source);
+        Assert.Equal("greet", greet.Node);
+        Assert.Contains(greet.Choices, c => c.Id == "trade" && c.Enabled);
+        Assert.Contains(inbox, m => m is QuestOffersMsg);
+
+        client.Send(new ChooseDialogueMsg("quartermaster", "trade") { Node = "greet" });
+        var vendor = Await<VendorStateMsg>(server, client, inbox);
+        Assert.NotNull(vendor);
+        Assert.Equal(quartermaster.Key, vendor!.Source);
+        Assert.False(vendor.Closed);
+        var floss = vendor.Stock.Single(s => s.Id == "floss");
+        Assert.NotEqual(false, floss.Enabled);
+        Assert.Contains(inbox, m => m is DialogueStateMsg d && d.Node == "trading");
+
+        var before = sim.World.Get<Inventory>(hero)!.CountOf(i => i.Base == "thread_floss");
+        client.Send(new BuyMsg(quartermaster.Key, "floss", 1));
+        var after = Await<VendorStateMsg>(server, client, inbox, v => v != vendor);
+        Assert.NotNull(after);
+        Assert.Equal(before + floss.Item.Count, sim.World.Get<Inventory>(hero)!.CountOf(i => i.Base == "thread_floss"));
+        Assert.Equal(500 - floss.Price["shards"], sim.World.Get<Inventory>(hero)!.CurrencyOf("shards"));
+        Assert.DoesNotContain(inbox, m => m is IntentRejectedMsg);
+
+        // Selling a bag item pays what the vendor quoted for it.
+        var quote = after!.SellPrices.First();
+        var shards = sim.World.Get<Inventory>(hero)!.CurrencyOf("shards");
+        client.Send(new SellMsg(quartermaster.Key, quote.Item));
+        Await<VendorStateMsg>(server, client, inbox, v => v.BuyBack.Any(b => b.Item.Uid == quote.Item));
+        Assert.Equal(shards + quote.Price["shards"], sim.World.Get<Inventory>(hero)!.CurrencyOf("shards"));
+
+        // Closing the conversation ends it on the server too.
+        client.Send(new CloseDialogueMsg("quartermaster"));
+        Assert.NotNull(Await<DialogueStateMsg>(server, client, inbox, d => d.Ended));
+    }
+
+    [Fact]
+    public void UseBanksMetasAndConvertedFacesReachTheWeaveSlots()
+    {
+        var (server, transport) = Create();
+        var (client, _, session, replies, _) = Enter(server, transport, "faces", "Linnet", new List<string> { ProtocolInfo.InterfaceFeature });
+        var sim = session.Zone!.Sim;
+        var hero = session.Entity;
+        var inbox = new List<Message>(replies);
+        var book = sim.World.Get<Core.Components.WeaveBook>(hero)!;
+        var quiver = book.Add(new Core.Definitions.WeaveSpec { Form = "quiver" });
+        book.Add(new Core.Definitions.WeaveSpec { Form = "bolt", Threads = { "ember" }, Glyphs = { "twin_rite" } });
+
+        var slots = Await<WeaveSlotsMsg>(server, client, inbox, s => s.Seats.Any(x => x.UsesMax == 4) && s.Seats.Any(x => x.Meta is not null));
+        Assert.NotNull(slots);
+        var bank = slots!.Seats.Single(x => x.UsesMax == 4);
+        Assert.Equal(4, bank.Uses);
+        Assert.Null(bank.Converted);
+        Assert.Equal("Detonate", slots.Seats.Single(x => x.Meta is not null).Meta!.Label);
+
+        // An empty bank converts the face to its restring.
+        quiver.State[Core.Components.SlotState.Uses] = 0;
+        quiver.State[Core.Components.SlotState.UsesAt] = sim.Clock.Time;
+        var spent = Await<WeaveSlotsMsg>(server, client, inbox, s => s.Seats.Any(x => x.UsesMax == 4 && x.Converted is not null));
+        Assert.NotNull(spent);
+        Assert.Equal("Restring", spent!.Seats.Single(x => x.UsesMax == 4).Converted!.Label);
+    }
+
+    [Fact]
+    public void ARaisedGuardShowsItsPoolOnTheCastBar()
+    {
+        var (server, transport) = Create();
+        var (client, _, session, replies, _) = Enter(server, transport, "guard", "Brannock", new List<string> { ProtocolInfo.InterfaceFeature });
+        var sim = session.Zone!.Sim;
+        var hero = session.Entity;
+        var inbox = new List<Message>(replies);
+        var slot = sim.World.Get<Core.Components.WeaveBook>(hero)!.Add(new Core.Definitions.WeaveSpec { Preset = "stone_bulwark" });
+        var at = sim.World.Get<Transform>(hero)!.Position;
+        Assert.True(sim.Service<Core.Weaves.WeaveRuntime>().TryBegin(sim, hero, slot, Core.Ecs.Entity.None, at, System.Numerics.Vector2.UnitX, out var reason), reason);
+
+        var self = Await<SelfStateMsg>(server, client, inbox, s => s.Cast is { Mode: "guard" });
+        Assert.NotNull(self);
+        Assert.Equal(1, self!.Cast!.Pool);
+    }
+
+    [Fact]
+    public void ContainersStashPagesAndStationServicesTravelOverTheWire()
+    {
+        var (server, transport) = Create();
+        var (client, _, session, replies, _) = Enter(server, transport, "keeper", "Sorrel", new List<string> { ProtocolInfo.InterfaceFeature });
+        var sim = session.Zone!.Sim;
+        var hero = session.Entity;
+        var inbox = new List<Message>(replies);
+        var inv = sim.World.Get<Inventory>(hero)!;
+        inv.AddCurrency("shards", 2000);
+
+        // The reliquary arrives with its rungs; a relic moved into it shows there.
+        var relic = sim.Service<Core.Items.ItemGenerator>().Roll("relic_shard", 5, "magic", new Core.Maths.Rng(71));
+        Assert.True(inv.TryAdd(relic));
+        client.Send(new MoveItemMsg(relic.Uid, "reliquary", 0, 0));
+        var seated = Await<InventoryStateMsg>(server, client, inbox, s => s.Containers.Any(c => c.Id == "reliquary" && c.Board.Items.Any(i => i.Uid == relic.Uid)));
+        Assert.NotNull(seated);
+        var reliquary = seated!.Containers.Single(c => c.Id == "reliquary");
+        Assert.True(reliquary.Active);
+        Assert.Equal("account", reliquary.Owner);
+        Assert.Contains(reliquary.Board.Rungs!, r => !r.Unlocked && r.Requirement is not null);
+
+        // Stash pages are out of reach until the hero stands at a chest; then a page can be bought.
+        var stash = seated.Containers.Single(c => c.Id == "personal_stash:1");
+        Assert.False(stash.Reachable);
+        Assert.NotNull(stash.Reason);
+        Assert.True(seated.Containers.Single(c => c.Id == "personal_stash:2").Locked);
+        var at = sim.World.Get<Transform>(hero)!.Position;
+        sim.Service<Core.Patterns.PatternFactory>().Spawn(sim, "stash_chest", at + new System.Numerics.Vector3(1.5f, 0, 0));
+        Assert.NotNull(Await<InventoryStateMsg>(server, client, inbox, s => s.Containers.Single(c => c.Id == "personal_stash:1").Reachable));
+        client.Send(new BuyPageMsg("personal_stash"));
+        var bought = Await<InventoryStateMsg>(server, client, inbox, s => s.Containers.Single(c => c.Id == "personal_stash:2").Locked is null);
+        Assert.NotNull(bought);
+
+        // A font quotes its services in the station pane and raises a stone for shards.
+        var font = sim.Service<Core.Patterns.PatternFactory>().Spawn(sim, "passive_font", at + new System.Numerics.Vector3(0, 1.5f, 0));
+        var stone = sim.Service<Core.Items.ItemGenerator>().Roll("glyph_stone", 1, "common", new Core.Maths.Rng(72), new Core.Items.ItemGenerator.PayloadRequest { Glyph = "needle" });
+        Assert.True(inv.TryAdd(stone));
+        client.Send(new InteractMsg(font.Key));
+        var pane = Await<StationStateMsg>(server, client, inbox, s => s.Services is not null);
+        Assert.NotNull(pane);
+        var raise = pane!.Services!.Single(s => s.Id == "raise_stone" && s.Item == stone.Uid);
+        Assert.True(raise.Enabled);
+        Assert.True(raise.Price!["shards"] > 0);
+        var level = stone.Payload!.Level;
+        client.Send(new StationServiceMsg(font.Key, "raise_stone") { Item = stone.Uid });
+        Assert.NotNull(Await<StationStateMsg>(server, client, inbox, s => s != pane));
+        Assert.Equal(level + 1, stone.Payload.Level);
+        Assert.DoesNotContain(inbox, m => m is IntentRejectedMsg);
+    }
 }

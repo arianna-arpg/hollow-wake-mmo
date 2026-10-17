@@ -1,0 +1,36 @@
+# The Marchers of the Hallows. A villager says what is on their mind; a hero who has met the Quartermaster hears
+# more, and one who has touched the Wellmother is greeted as one of their own.
+kind: dialogues
+entries:
+  - id: marcher
+    name: A Marcher
+    for: [villager]
+    start: greet
+    nodes:
+      greet:
+        line: "Weft hold you, stranger."
+        choices:
+          - { id: news, text: Any news?, goto: news }
+          - { id: quartermaster, text: Who keeps order here?, when: '!has("flag.met_quartermaster")', goto: quartermaster }
+          - { id: bye, text: Farewell., end: true }
+      news:
+        line: "Hobs in the hedgerows again. The Quartermaster pays for every five, if you have the stomach for it."
+        choices:
+          - { id: back, text: Anything else?, goto: greet }
+          - { id: bye, text: Thank you., end: true }
+      quartermaster:
+        line: "The Quartermaster, at the table between the wells. Talk to them before you talk to the hobs."
+        choices:
+          - { id: back, text: I will., goto: greet }
+
+  - id: marcher_kin
+    name: A Marcher
+    for: [villager]
+    priority: 1
+    when: 'has("quest.completed.the_wellmother")'
+    start: greet
+    nodes:
+      greet:
+        line: "The Wellmother knows you now, {hero}. Then so do we."
+        choices:
+          - { id: bye, text: Weft hold you., end: true }
