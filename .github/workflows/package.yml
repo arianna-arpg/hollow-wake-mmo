@@ -193,7 +193,7 @@ jobs:
           retention-days: 14
 
   publish:
-    name: publish ${{ inputs.tag }}
+    name: publish
     if: inputs.publish
     needs: [client, launcher]
     runs-on: ubuntu-latest
