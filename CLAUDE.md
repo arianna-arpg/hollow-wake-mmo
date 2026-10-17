@@ -16,7 +16,7 @@ Hollow Wake MMO is an MMOARPG foundation: an engine-agnostic C# simulation core,
 - `src/HollowWake.Tools` — the `hollowwake` CLI (`Program.cs`, `Probe.cs`).
 - `content/core` — the base content layer, one YAML file per area. `rules.yaml` holds every formula and tunable.
 - `tests/` — xunit. `HollowWake.Core.Tests` (foundations and gameplay against the real content), `HollowWake.Server.Tests` (loopback end to end).
-- `docs/` — `VISION.md`, `ARCHITECTURE.md`, `ROADMAP.md`, `modding.md`, `design/` (one contract per system), `lore/`, `infrastructure/`, `adr/`.
+- `docs/` — `VISION.md`, `ARCHITECTURE.md`, `ROADMAP.md`, `modding.md`, `design/` (one contract per system; `design/parity/` holds gap analyses against the earlier prototype), `lore/`, `infrastructure/`, `adr/`.
 - `deploy/` — Dockerfile, Compose, VPS bootstrap. `config/server.yaml` — server settings.
 
 ## Commands
