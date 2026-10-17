@@ -29,10 +29,10 @@ public partial class QuickPlay(Main main, string[] args) : Node
 
     public override void _Process(double delta)
     {
-        if (main.InWorld && !_ready)
+        if (main.InWorld && main.World.Self is not null && !main.Loading.Active && !_ready)
         {
             _ready = true;
-            GD.Print("QUICKPLAY READY: entered the world");
+            GD.Print("QUICKPLAY READY: entered the world; Crossing complete");
         }
         if (_ready || main.CharacterLists == _lists) return;
         _lists = main.CharacterLists;

@@ -1,5 +1,7 @@
 # Web client
 
+Identity and the playable startup/entry cover follow [loading.md](loading.md). The small boot module paints the Crossing before importing the world client; its content and reference traces are shared with the native client.
+
 The browser client is presentation, like the desktop client. It never resolves gameplay: it renders what the server says and sends intents the server may refuse. It lives in `web/` (Vite, TypeScript, three.js) and talks to the server over the WebSocket transport.
 
 The login insignia and browser favicon are synchronized from `assets/branding` by `scripts/sync-branding.mjs`, shared with the desktop client and launcher. Their relative URLs also work under the repository's Pages path.

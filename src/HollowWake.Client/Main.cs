@@ -1,3 +1,4 @@
+using HollowWake.Client.UI.Loading;
 using Godot;
 using HollowWake.Client.Camera;
 using HollowWake.Client.Net;
@@ -59,9 +60,97 @@ public partial class Main : Node3D
         return r;
     }
 
-    public override void _Ready()
+    private LoadingScreen _loading = null!;
+    private LoadingSession.Lease? _entryLease;
+    private bool _initialized, _entryFailed;
+    private double _entryStarted;
+    private double _entryX, _entryY;
+    internal LoadingScreen Loading => _loading;
+
+    public override async void _Ready()
     {
-        _content = LoadContent();
+        var spec = LoadingSpec.FromDocument(Godot.FileAccess.GetFileAsString("res://Branding/loading.json"));
+        _loading = new LoadingScreen(spec) { Name = "Crossing", ReducedMotion = () => _initialized && _settings.Toggle("reduce_motion"), ClearWorldInput = ReleaseLoadingInput };
+        AddChild(_loading);
+        var boot = _loading.Begin(spec.Text("boot"));
+        try
+        {
+            await _loading.Paint();
+            var path = ContentPath();
+            var loaded = await Task.Run(() => {
+                var registry = ContentRegistry.Load(new[] { path }, out var report);
+                return (Registry: registry, Report: report);
+            });
+            _content = loaded.Registry;
+            GD.Print($"content loaded from {path}: {loaded.Report.ErrorCount} errors, {loaded.Report.WarningCount} warnings");
+            if (loaded.Report.ErrorCount != 0) throw new InvalidDataException("The content pack could not be validated.");
+            Initialize();
+            _initialized = true;
+            boot.Finish();
+            _loading.UseSpec(LoadingSpec.FromMeta(_content.Each<HollowWake.Core.Definitions.UiLoadingScreenDef>().Single(d => d.Default).Meta!));
+            var args = OS.GetCmdlineUserArgs();
+            if (args.Contains("--boot-check")) { GD.Print("BOOT PASS"); GetTree().Quit(); return; }
+            if (args.Contains("--loading-smoke")) { AddChild(new Dev.LoadingSmoke(this, args)); return; }
+            if (Arg(args, "--loading-preview") is { } direction && direction is "down" or "left" or "right")
+                _loading.Begin(spec.Text("boot"), cancel: () => _loading.Close(), direction: direction);
+            else if (args.Contains("--quick-play") && !args.Contains("--smoke") && !args.Contains("--mockup"))
+                AddChild(new Dev.QuickPlay(this, args) { Name = "QuickPlay" });
+        }
+        catch (Exception ex)
+        {
+            boot.Fail(spec.Text("failed"), ex.Message, () => GetTree().ReloadCurrentScene());
+            GD.PushError(ex.ToString());
+            if (OS.GetCmdlineUserArgs().Contains("--boot-check")) GetTree().Quit(1);
+        }
+    }
+
+    private void SelectCharacter(string id)
+    {
+        _entryFailed = false; _entryStarted = LocalNow;
+        _entryLease = _loading.Begin(_loading.Spec.Text("entry"), cancel: CancelEntry);
+        _net.Send(new SelectCharacterMsg(id));
+    }
+    private void ReleaseLoadingInput()
+    {
+        LoadingScreen.ReleaseActions();
+        if (_initialized && _inWorld) _net.Send(new StopMsg());
+        _lastMoveDir = Vector2.Zero;
+    }
+    private void CancelEntry()
+    {
+        _entryLease?.Finish(); _entryLease = null;
+        _net.Disconnect("Loading cancelled");
+        while (_net.TryDequeue(out _)) { }
+        OnClosed("Loading cancelled");
+    }
+    private void RetryEntry()
+    {
+        if (!_net.IsConnected) { CancelEntry(); return; }
+        _entryFailed = false; _entryStarted = LocalNow;
+        _world.RetryPreparation();
+        _entryLease?.Update(_loading.Spec.Text("entry"));
+        // TCP already owns delivery of the selection. Retry local preparation without
+        // selecting twice while an authoritative enter_world response is still arriving.
+    }
+    private void CheckEntry()
+    {
+        if (_entryLease?.Current != true || _entryFailed) return;
+        if (_inWorld)
+        {
+            var progress = _world.Readiness(_entryX, _entryY, Math.Min(_world.ViewChunks, _loading.Spec.ReadyRadius));
+            var hasSelf = _world.Self is not null;
+            _entryLease.Update(_loading.Spec.Text("terrain"), completed: progress.Completed + (hasSelf ? 1 : 0), total: progress.Total + 1);
+            if (hasSelf && progress.Completed == progress.Total) { _entryLease.Finish(); _entryLease = null; return; }
+        }
+        if (LocalNow - _entryStarted > _loading.Spec.TimeoutSeconds)
+        {
+            _entryFailed = true;
+            _entryLease.Fail(_loading.Spec.Text("failed"), _loading.Spec.Text("timeout"), RetryEntry);
+        }
+    }
+
+    private void Initialize()
+    {
         var userArgs = OS.GetCmdlineUserArgs();
         IEnumerable<System.Text.Json.Nodes.JsonObject> Raw(string kind) => _content.RawOfKind(kind).Select(r => r.Object);
 
@@ -102,9 +191,9 @@ public partial class Main : Node3D
 
         _login.ConnectRequested += OnConnect;
         _login.CreateRequested += (name, calling) => _net.Send(new CreateCharacterMsg(name, calling));
-        _login.EnterRequested += id => _net.Send(new SelectCharacterMsg(id));
+        _login.EnterRequested += SelectCharacter;
         _login.OptionsRequested += OpenOptionsFromLogin;
-        _net.Closed += reason => CallDeferred(nameof(OnClosed), reason);
+        _net.Closed += (generation, reason) => CallDeferred(nameof(OnConnectionClosed), generation, reason);
 
         RegisterAppliers();
         foreach (var apply in _appliers.Values.Distinct())
@@ -119,10 +208,6 @@ public partial class Main : Node3D
         else if (userArgs.Contains("--smoke"))
         {
             AddChild(new Dev.Smoke(this, userArgs) { Name = "Smoke" });
-        }
-        else if (userArgs.Contains("--quick-play"))
-        {
-            AddChild(new Dev.QuickPlay(this, userArgs) { Name = "QuickPlay" });
         }
     }
 
@@ -264,7 +349,7 @@ public partial class Main : Node3D
         return MathF.Sqrt((a.X - b.X) * (a.X - b.X) + (a.Y - b.Y) * (a.Y - b.Y));
     }
 
-    private static ContentRegistry LoadContent()
+    private static string ContentPath()
     {
         // The client needs the same content the server runs to generate terrain and name things.
         // It looks for content/core beside the executable, then up the tree (the repository layout).
@@ -281,13 +366,10 @@ public partial class Main : Node3D
         {
             if (Directory.Exists(c))
             {
-                var registry = ContentRegistry.Load(new[] { c }, out var report);
-                GD.Print($"content loaded from {c}: {report.ErrorCount} errors, {report.WarningCount} warnings");
-                return registry;
+                return c;
             }
         }
-        GD.PushError("content/core not found; terrain cannot be generated locally");
-        return ContentRegistry.Empty();
+        throw new DirectoryNotFoundException("content/core not found; terrain cannot be prepared.");
     }
 
     private async void OnConnect(string host, int port, string account)
@@ -311,8 +393,18 @@ public partial class Main : Node3D
         _login.SetStatus("Logging in...");
     }
 
+    private void OnConnectionClosed(long generation, string reason)
+    {
+        if (generation == _net.Generation) OnClosed(reason);
+    }
+
     private void OnClosed(string reason)
     {
+        if (_entryLease?.Current == true)
+        {
+            _entryFailed = true;
+            _entryLease.Fail(_loading.Spec.Text("failed"), reason);
+        }
         _inWorld = false;
         _hud.InWorld = false;
         _hud.Visible = false;
@@ -325,11 +417,13 @@ public partial class Main : Node3D
 
     public override void _Process(double delta)
     {
+        if (!_initialized) return;
         var budget = 500;
         while (budget-- > 0 && _net.TryDequeue(out var message))
         {
             Handle(message);
         }
+        CheckEntry();
         if (_inWorld)
         {
             var self = _world.Self;
@@ -339,8 +433,7 @@ public partial class Main : Node3D
                 _world.Stream(Coords.ToCore(self.GlobalPosition));
             }
             _hud.SetSelfEntity(self?.State);
-            HandleMovementInput();
-            UpdateHover();
+            if (!_loading.BlocksWorldInput) { HandleMovementInput(); UpdateHover(); }
             var now = Time.GetTicksMsec() / 1000.0;
             if (now - _lastPingAt > 5)
             {
@@ -372,6 +465,11 @@ public partial class Main : Node3D
                 _login.ShowCharacters(list);
                 break;
             case ErrorMsg e:
+                if (_entryLease?.Current == true)
+                {
+                    _entryFailed = true;
+                    _entryLease.Fail(_loading.Spec.Text("failed"), e.Text, RetryEntry);
+                }
                 _hud.Notice(e.Text, "error");
                 _login.SetStatus(e.Text);
                 break;
@@ -379,6 +477,13 @@ public partial class Main : Node3D
                 OnClosed(d.Reason);
                 break;
             case EnterWorldMsg enter:
+                if (_entryLease?.Current != true && !_inWorld) break;
+                if (_entryLease?.Current != true)
+                {
+                    _entryStarted = LocalNow;
+                    _entryLease = _loading.Begin(_loading.Spec.Text("entry"), kind: "travel", cancel: CancelEntry);
+                }
+                _entryX = enter.X; _entryY = enter.Y; _entryFailed = false;
                 _world.ApplyWorldInfo(enter.World);
                 _world.ClearEntities();
                 _world.SelfKey = enter.EntityKey;
@@ -545,6 +650,7 @@ public partial class Main : Node3D
 
     public override void _UnhandledInput(InputEvent @event)
     {
+        if (!_initialized || _loading.BlocksWorldInput) return;
         if (!_inWorld)
         {
             return;

@@ -23,3 +23,9 @@ for (const [asset, targets] of Object.entries(destinations)) {
   }
 }
 console.log(check ? 'Brand parity PASS' : 'Brand assets synchronized');
+// The boot cover needs its small content document before the full content pack is read.
+const bootstrap = readFileSync(join(root, 'content/core/ui/loading.json'));
+const bootstrapPath = join(root, 'src/HollowWake.Client/Branding/loading.json');
+if (check) {
+  if (!bootstrap.equals(readFileSync(bootstrapPath))) throw new Error('Loading bootstrap content is stale');
+} else writeFileSync(bootstrapPath, bootstrap);

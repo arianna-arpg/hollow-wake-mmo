@@ -2,7 +2,7 @@
 
 The Godot client is presentation. It never resolves gameplay. The browser client in `web/` follows the same rules with server-sent terrain; its contract is [web-client.md](web-client.md).
 
-The login insignia, window and exported executable icons, and static pre-scene splash use the canonical artwork in `assets/branding`, synchronized by `scripts/sync-branding.mjs`. Windows keeps the original ICO frames. The static splash has no minimum display duration; playable loading and character selection are separate client responsibilities.
+Identity, startup and world-entry preparation follow [loading.md](loading.md). The Crossing is a client-only activity, isolated from the simulation and ordinary world input.
 
 ## World
 
