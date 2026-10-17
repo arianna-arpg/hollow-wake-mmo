@@ -23,9 +23,33 @@ public static class ItemIntentHandlers
         handlers.Register<UnsocketStoneIntent>(UnsocketStone);
         handlers.Register<LearnFormIntent>(LearnForm);
         handlers.Register<UnlearnFormIntent>(UnlearnForm);
-        handlers.Register<BuyIntent>(static (in IntentContext ctx, BuyIntent _) => ctx.Reject("not_ready"));
-        handlers.Register<SellIntent>(static (in IntentContext ctx, SellIntent _) => ctx.Reject("not_ready"));
-        handlers.Register<BuyBackIntent>(static (in IntentContext ctx, BuyBackIntent _) => ctx.Reject("not_ready"));
+        handlers.Register<BuyIntent>(Buy);
+        handlers.Register<SellIntent>(Sell);
+        handlers.Register<BuyBackIntent>(BuyBack);
+    }
+
+    private static void Buy(in IntentContext ctx, BuyIntent b)
+    {
+        if (!ctx.Sim.Service<VendorService>().Buy(ctx.Sim, ctx.Entity, b.Vendor, b.Stock, b.Count, out var reason))
+        {
+            ctx.Reject(reason);
+        }
+    }
+
+    private static void Sell(in IntentContext ctx, SellIntent s)
+    {
+        if (!ctx.Sim.Service<VendorService>().Sell(ctx.Sim, ctx.Entity, s.Vendor, s.ItemUid, s.Count, out var reason))
+        {
+            ctx.Reject(reason);
+        }
+    }
+
+    private static void BuyBack(in IntentContext ctx, BuyBackIntent b)
+    {
+        if (!ctx.Sim.Service<VendorService>().BuyBack(ctx.Sim, ctx.Entity, b.Vendor, b.ItemUid, out var reason))
+        {
+            ctx.Reject(reason);
+        }
     }
 
     private static void SocketStone(in IntentContext ctx, SocketStoneIntent s)

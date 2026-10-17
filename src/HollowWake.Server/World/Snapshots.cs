@@ -289,6 +289,26 @@ public static class Snapshots
             changes++;
             return b;
         }
+        // A shaped body's heading or spin can be set or changed by a delta, never cleared: that needs the full state.
+        if ((last.Heading is not null && next.Heading is null) || (last.Spin is not null && next.Spin is null) || (last.ShapeSize is not null && next.ShapeSize is null && next.Shape is not null))
+        {
+            return null;
+        }
+        float? NF(float? a, float? b)
+        {
+            if (a == b)
+            {
+                return null;
+            }
+            changes++;
+            return b;
+        }
+        ShapeSizeInfo? size = null;
+        if (!Equals(last.ShapeSize, next.ShapeSize) && next.ShapeSize is not null)
+        {
+            size = next.ShapeSize;
+            changes++;
+        }
         var resources = ChangedEntries(last.Resources, next.Resources);
         var maxes = ChangedEntries(last.ResourceMax, next.ResourceMax);
         var flags = SameSet(last.Flags, next.Flags) ? null : next.Flags;
@@ -327,6 +347,10 @@ public static class Snapshots
             VX = F(last.VX, next.VX),
             VY = F(last.VY, next.VY),
             VZ = F(last.VZ, next.VZ),
+            Shape = S(last.Shape, next.Shape),
+            ShapeSize = size,
+            Heading = NF(last.Heading, next.Heading),
+            Spin = NF(last.Spin, next.Spin),
         };
         empty = changes == 0;
         return delta;

@@ -657,6 +657,98 @@ public static class InterfaceStates
         return h.Value;
     }
 
+    // ------------------------------------------------------------ world panes
+
+    /// <summary>The hero's current line, or an ended state for the speaker when the conversation is over.</summary>
+    public static DialogueStateMsg Dialogue(Simulation sim, Entity hero, Entity speaker, string conversation)
+    {
+        if (sim.Service<Core.Dialogue.DialogueService>().View(sim, hero) is { } view && view.Source == speaker && view.Conversation == conversation)
+        {
+            var choices = new List<DialogueChoiceInfo>(view.Choices.Count);
+            foreach (var c in view.Choices)
+            {
+                choices.Add(new DialogueChoiceInfo(c.Id, c.Text, c.Enabled) { Reason = c.Reason });
+            }
+            return new DialogueStateMsg(view.Source.Key, view.Conversation, view.Speaker, view.Line, choices, false) { Node = view.Node, Reach = Math.Round(view.Reach, 2) };
+        }
+        return Ended(sim, speaker, conversation);
+    }
+
+    public static DialogueStateMsg Ended(Simulation sim, Entity speaker, string conversation) =>
+        new(speaker.Key, conversation, sim.World.Get<Identity>(speaker)?.Name ?? "", "", new List<DialogueChoiceInfo>(), true);
+
+    /// <summary>The hero's open vendor pane: stock with prices and readiness, buy-back, and what the vendor pays per bag item.</summary>
+    public static VendorStateMsg Vendor(Simulation sim, Entity hero)
+    {
+        var panes = sim.World.Get<Panes>(hero);
+        if (panes?.Vendor is not { } pane || sim.Content.Get<VendorDef>(pane.Vendor) is not { } def)
+        {
+            return new VendorStateMsg(0, "", "", new List<VendorStockInfo>(), new List<VendorBuyBackInfo>(), new List<VendorQuoteInfo>(), true);
+        }
+        var resolver = sim.Service<ItemResolver>();
+        var stats = sim.World.Get<Stats>(hero);
+        var vendors = sim.Service<VendorService>();
+        var stock = new List<VendorStockInfo>();
+        foreach (var offer in vendors.Offers(sim, hero))
+        {
+            stock.Add(new VendorStockInfo(offer.Offer.Id, Card(sim, resolver, stats, offer.Offer.Item), new Dictionary<string, double>(offer.Offer.Price, StringComparer.Ordinal))
+            {
+                Count = offer.Remaining,
+                Enabled = offer.Enabled ? null : false,
+                Reason = offer.Reason,
+            });
+        }
+        var buyBack = new List<VendorBuyBackInfo>();
+        if (panes.BuyBack.TryGetValue(pane.Source.Key, out var sold))
+        {
+            for (var i = sold.Count - 1; i >= 0; i--)
+            {
+                buyBack.Add(new VendorBuyBackInfo(Card(sim, resolver, stats, sold[i].Item), VendorService.BuyBackPrice(sim, sold[i])));
+            }
+        }
+        var quotes = new List<VendorQuoteInfo>();
+        if (sim.World.TryGet<Inventory>(hero, out var inv))
+        {
+            foreach (var item in inv.Items)
+            {
+                if (vendors.SellPrice(sim, hero, def, item) is { } price)
+                {
+                    quotes.Add(new VendorQuoteInfo(item.Uid, price));
+                }
+            }
+        }
+        return new VendorStateMsg(pane.Source.Key, def.Id, def.DisplayName, stock, buyBack, quotes, false) { Reach = Math.Round(pane.Reach, 2) };
+    }
+
+    public static VendorStateMsg VendorClosed(Simulation sim, Entity vendor) =>
+        new(vendor.Key, "", sim.World.Get<Identity>(vendor)?.Name ?? "", new List<VendorStockInfo>(), new List<VendorBuyBackInfo>(), new List<VendorQuoteInfo>(), true);
+
+    /// <summary>The hero's open station pane: the recipes it offers with inputs, output cards and readiness.</summary>
+    public static StationStateMsg Station(Simulation sim, Entity hero, Entity station, Core.Tags.TagSet tags)
+    {
+        var resolver = sim.Service<ItemResolver>();
+        var stats = sim.World.Get<Stats>(hero);
+        var recipes = new List<RecipeInfo>();
+        foreach (var r in sim.Service<Core.Crafting.StationService>().Recipes(sim, hero, station, tags))
+        {
+            var inputs = new List<RecipeInputInfo>(r.Inputs.Count);
+            foreach (var input in r.Inputs)
+            {
+                inputs.Add(new RecipeInputInfo(input.Text, input.Have, input.Need));
+            }
+            recipes.Add(new RecipeInfo(r.Recipe.Id, r.Recipe.DisplayName, inputs, Card(sim, resolver, stats, r.Output), r.Craftable)
+            {
+                Reason = r.Reason,
+                Cost = r.Recipe.Currency.Count == 0 ? null : new Dictionary<string, double>(r.Recipe.Currency, StringComparer.Ordinal),
+            });
+        }
+        var reach = sim.World.Get<Panes>(hero)?.Station is { } pane && pane.Source == station ? Math.Round(pane.Reach, 2) : (double?)null;
+        return new StationStateMsg(station.Key, sim.World.Get<Identity>(station)?.Name ?? "", recipes, false) { Tags = tags.IsEmpty ? null : tags.ToList(), Reach = reach };
+    }
+
+    public static StationStateMsg StationClosed(Simulation sim, Entity station) =>
+        new(station.Key, sim.World.Get<Identity>(station)?.Name ?? "", new List<RecipeInfo>(), true);
+
     // ------------------------------------------------------------ pages
 
     public static PageStateMsg Pages(Simulation sim, Entity e)

@@ -598,6 +598,10 @@ export interface EntityState {
   vy: number;
   vz: number;
   static?: boolean;
+  shape?: string;
+  shape_size?: ShapeSizeInfo;
+  heading?: number;
+  spin?: number;
 }
 
 export interface EntityDelta {
@@ -626,6 +630,10 @@ export interface EntityDelta {
   vx?: number;
   vy?: number;
   vz?: number;
+  shape?: string;
+  shape_size?: ShapeSizeInfo;
+  heading?: number;
+  spin?: number;
 }
 
 export interface WeaveSlotInfo {
@@ -828,6 +836,13 @@ export interface OverlayInfo {
   circle?: number[];
   params: Record<string, number>;
   priority: number;
+}
+
+export interface ShapeSizeInfo {
+  radius?: number;
+  angle?: number;
+  width?: number;
+  inner?: number;
 }
 
 export interface SocketInfo {

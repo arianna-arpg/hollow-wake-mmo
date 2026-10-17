@@ -26,32 +26,32 @@ public sealed class InteractionService
 
     public InteractionService()
     {
-        Register("quest_giver", (sim, player, target, i) =>
+        // A quest giver lists what it offers and, when it holds a conversation, opens it too: clients that draw the
+        // conversation front it, and clients that only show quest offers keep working.
+        Register("quest_giver", (sim, player, target, _) =>
         {
-            if (!sim.TryService<Quests.QuestService>(out var quests) || !sim.World.TryGet<Identity>(target, out var id))
-            {
-                return;
-            }
-            var offers = quests.Offers(sim, player, i, id).Select(q => q.Id).ToList();
-            var turnIns = new List<string>();
-            if (sim.World.TryGet<QuestLog>(player, out var log))
-            {
-                foreach (var (qid, p) in log.Quests)
-                {
-                    if (p.State != QuestState.Complete)
-                    {
-                        continue;
-                    }
-                    var def = quests.Find(sim, qid);
-                    if (def?.Giver is not null && (def.Giver == i.Ref || def.Giver == id.Pattern))
-                    {
-                        turnIns.Add(qid);
-                    }
-                }
-            }
-            sim.Events.Publish(new QuestsOffered(player, target, offers, turnIns) { Tick = sim.Clock.Tick });
+            Quests.QuestOffers.Publish(sim, player, target);
+            Talk(sim, player, target);
         });
-        Register("station", (sim, player, target, i) => sim.Events.Publish(new StationOpened(player, target, i.Tags) { Tick = sim.Clock.Tick }));
+        Register("talk", (sim, player, target, _) => Talk(sim, player, target));
+        Register("vendor", (sim, player, target, i) =>
+        {
+            if (i.Ref is not null && sim.TryService<Items.VendorService>(out var vendors))
+            {
+                vendors.Open(sim, player, target, i.Ref, out _);
+            }
+        });
+        Register("station", (sim, player, target, i) =>
+        {
+            if (sim.TryService<Crafting.StationService>(out var stations))
+            {
+                stations.Open(sim, player, target, i.Tags);
+            }
+            else
+            {
+                sim.Events.Publish(new StationOpened(player, target, i.Tags) { Tick = sim.Clock.Tick });
+            }
+        });
         Register("portal", (sim, player, _, i) =>
         {
             if (i.Data.TryGetValue("x", out var xs) && i.Data.TryGetValue("y", out var ys) && double.TryParse(xs, out var x) && double.TryParse(ys, out var y))
@@ -101,6 +101,15 @@ public sealed class InteractionService
     }
 
     public void Register(string kind, Action<Simulation, Entity, Entity, Interactable> handler) => _handlers[kind] = handler;
+
+    /// <summary>Opens the conversation the entity holds for the hero, if any.</summary>
+    private static void Talk(Simulation sim, Entity player, Entity target)
+    {
+        if (sim.TryService<Dialogue.DialogueService>(out var dialogues) && dialogues.For(sim, player, target) is { } conversation)
+        {
+            dialogues.Open(sim, player, target, conversation, out _);
+        }
+    }
 
     public bool Interact(Simulation sim, Entity player, Entity target, out string reason)
     {

@@ -204,6 +204,30 @@ public sealed record EntityState
     /// </summary>
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
     public bool Static { get; init; }
+
+    /// <summary>
+    /// For projectiles, fields and telegraph marks: the registered shape the body is drawn as (see
+    /// docs/design/deliveries.md). Omitted for entities without one.
+    /// </summary>
+    public string? Shape { get; init; }
+
+    /// <summary>The shape's dimensions; omitted with the shape.</summary>
+    public ShapeSizeInfo? ShapeSize { get; init; }
+
+    /// <summary>The shape's facing in radians, when it has one apart from the body's yaw.</summary>
+    public float? Heading { get; init; }
+
+    /// <summary>The shape's spin angle in radians.</summary>
+    public float? Spin { get; init; }
+}
+
+/// <summary>A drawn shape's dimensions: radius, angle (radians), width and inner radius, each where the shape has it.</summary>
+public sealed record ShapeSizeInfo
+{
+    public float? Radius { get; init; }
+    public float? Angle { get; init; }
+    public float? Width { get; init; }
+    public float? Inner { get; init; }
 }
 
 public sealed record EntitySpawnMsg(EntityState State) : Message;
@@ -250,6 +274,12 @@ public sealed record EntityDelta
     public float? VY { get; init; }
     public float? VZ { get; init; }
 
+    /// <summary>The drawn shape's name; "" when the entity no longer has one.</summary>
+    public string? Shape { get; init; }
+    public ShapeSizeInfo? ShapeSize { get; init; }
+    public float? Heading { get; init; }
+    public float? Spin { get; init; }
+
     /// <summary>What a client does with a delta: the known state with every field the delta carries replaced.</summary>
     public EntityState ApplyTo(EntityState state)
     {
@@ -293,6 +323,10 @@ public sealed record EntityDelta
             VX = VX ?? state.VX,
             VY = VY ?? state.VY,
             VZ = VZ ?? state.VZ,
+            Shape = Shape is null ? state.Shape : Cleared(Shape),
+            ShapeSize = Shape is "" ? null : ShapeSize ?? state.ShapeSize,
+            Heading = Heading ?? state.Heading,
+            Spin = Spin ?? state.Spin,
         };
     }
 }

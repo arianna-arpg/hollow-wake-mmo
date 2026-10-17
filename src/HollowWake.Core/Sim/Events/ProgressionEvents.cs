@@ -34,3 +34,30 @@ public sealed record PassivePointsGranted(Entity Entity, string Currency, int Am
 
 /// <summary>A story flag was set or cleared on a hero (by a conversation or a reward).</summary>
 public sealed record StoryFlagSet(Entity Entity, string Flag, bool On) : GameEvent;
+
+/// <summary>A conversation showed a line to the hero.</summary>
+public sealed record DialogueShown(Entity Entity, Entity Speaker, string Dialogue, string Node) : GameEvent;
+
+/// <summary>The hero took a choice in a conversation (quests and tests can count it).</summary>
+public sealed record DialogueChosen(Entity Entity, Entity Speaker, string Dialogue, string Node, string Choice) : GameEvent;
+
+/// <summary>A conversation ended: <paramref name="Why"/> is ended, closed, departed, replaced or broken.</summary>
+public sealed record DialogueEnded(Entity Entity, Entity Speaker, string Dialogue, string Why) : GameEvent;
+
+/// <summary>A vendor pane opened for the hero, its stock minted.</summary>
+public sealed record VendorOpened(Entity Entity, Entity Vendor, string Id) : GameEvent;
+
+/// <summary>Something the open vendor pane shows changed (a trade, the wallet).</summary>
+public sealed record VendorChanged(Entity Entity, Entity Vendor) : GameEvent;
+
+/// <summary>The hero's vendor pane closed.</summary>
+public sealed record VendorClosed(Entity Entity, Entity Vendor, string Why) : GameEvent;
+
+/// <summary>The hero's crafting station pane closed.</summary>
+public sealed record StationClosed(Entity Entity, Entity Station, string Why) : GameEvent;
+
+/// <summary>The hero bought from a vendor.</summary>
+public sealed record ItemBought(Entity Entity, Entity Vendor, string Stock, long ItemUid, IReadOnlyDictionary<string, double> Paid) : GameEvent;
+
+/// <summary>The hero sold to a vendor.</summary>
+public sealed record ItemSold(Entity Entity, Entity Vendor, long ItemUid, IReadOnlyDictionary<string, double> Received) : GameEvent;

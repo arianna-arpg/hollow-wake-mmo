@@ -26,6 +26,127 @@ internal static class ProgressionKinds
         ContentKinds.Register<PassiveChoiceDef>("passive_choices", Choices);
         ContentKinds.Register<PassiveRealmDef>("passive_realms", Realm);
         ContentKinds.AddValidator<PassiveNodeDef>(NodeChoice);
+        ContentKinds.Register<DialogueDef>("dialogues", Dialogue);
+        ContentKinds.Register<VendorDef>("vendors", Vendor);
+    }
+
+    private static void Dialogue(DialogueDef d, ValidationContext c)
+    {
+        if (!d.Nodes.ContainsKey(d.Start))
+        {
+            c.Error($"start line '{d.Start}' is not one of the nodes.");
+        }
+        if (d.For.Count == 0)
+        {
+            c.Warn("is for no entity, so nothing opens it.");
+        }
+        foreach (var target in d.For)
+        {
+            if (!c.Registry.Has<PatternDef>(target))
+            {
+                c.Warn($"for '{target}' is not a pattern; it opens only for an interactable with that ref.");
+            }
+        }
+        c.Expression(d.When, "when");
+        foreach (var (id, node) in d.Nodes)
+        {
+            DialogueEffects(node.Effects, c, $"nodes.{id}.effects");
+            var choices = new HashSet<string>(StringComparer.Ordinal);
+            foreach (var choice in node.Choices)
+            {
+                if (!choices.Add(choice.Id))
+                {
+                    c.Error($"nodes.{id} declares choice '{choice.Id}' twice.");
+                }
+                if (choice.Goto is not null && !d.Nodes.ContainsKey(choice.Goto))
+                {
+                    c.Error($"nodes.{id}.choices.{choice.Id} goes to unknown line '{choice.Goto}'.");
+                }
+                if (choice.End && choice.Goto is not null)
+                {
+                    c.Warn($"nodes.{id}.choices.{choice.Id} both ends and goes on; it ends.");
+                }
+                c.Expression(choice.When, $"nodes.{id}.choices.{choice.Id}.when");
+                c.Expression(choice.Enabled, $"nodes.{id}.choices.{choice.Id}.enabled");
+                DialogueEffects(choice.Effects, c, $"nodes.{id}.choices.{choice.Id}.effects");
+            }
+        }
+    }
+
+    /// <summary>A conversation's effects name dialogue actions or effect types, with the parameters each declares.</summary>
+    private static void DialogueEffects(List<TypedSpec> effects, ValidationContext c, string field)
+    {
+        foreach (var spec in effects)
+        {
+            if (HollowWake.Core.Dialogue.DialogueActions.Shared.TryGet(spec.Type, out _, out var parameters))
+            {
+                foreach (var (key, _) in spec.Params)
+                {
+                    if (!parameters.Contains(key))
+                    {
+                        c.Error($"'{field}' action '{spec.Type}' has unknown parameter '{key}'.");
+                    }
+                }
+                if (spec.Type is "open_vendor" && JsonNum.StringOf(spec.Params["vendor"]) is { } vendor)
+                {
+                    c.Ref<VendorDef>(vendor, field + ".vendor");
+                }
+                if (spec.Type is "accept_quest" or "turn_in_quest" && JsonNum.StringOf(spec.Params["quest"]) is { } quest)
+                {
+                    c.Ref<QuestDef>(quest, field + ".quest");
+                }
+                continue;
+            }
+            if (!Effects.EffectRegistry.Shared.Has(spec.Type))
+            {
+                c.Error($"'{field}' uses unknown action or effect '{spec.Type}'.");
+            }
+        }
+    }
+
+    private static void Vendor(VendorDef d, ValidationContext c)
+    {
+        c.Ref<CurrencyDef>(d.Currency, "currency");
+        c.Expression(d.Price, "price");
+        c.Expression(d.SellPrice, "sell_price");
+        c.Expression(d.When, "when");
+        var ids = new HashSet<string>(StringComparer.Ordinal);
+        foreach (var s in d.Stock)
+        {
+            if (!ids.Add(s.Id))
+            {
+                c.Error($"stock '{s.Id}' is declared twice.");
+            }
+            c.Ref<ItemBaseDef>(s.Item, $"stock.{s.Id}.item");
+            if (s.Rarity is not null)
+            {
+                c.Ref<ItemRarityDef>(s.Rarity, $"stock.{s.Id}.rarity");
+            }
+            if (s.Glyph is not null)
+            {
+                c.Ref<GlyphDef>(s.Glyph, $"stock.{s.Id}.glyph");
+            }
+            if (s.Form is not null)
+            {
+                c.Ref<FormDef>(s.Form, $"stock.{s.Id}.form");
+            }
+            if (s.Weave is not null)
+            {
+                c.Ref<WeaveDef>(s.Weave, $"stock.{s.Id}.weave");
+            }
+            foreach (var (currency, expr) in s.Prices)
+            {
+                c.Ref<CurrencyDef>(currency, $"stock.{s.Id}.prices");
+                c.Expression(expr, $"stock.{s.Id}.prices.{currency}");
+            }
+            c.Expression(s.Level, $"stock.{s.Id}.level");
+            c.Expression(s.When, $"stock.{s.Id}.when");
+            c.Expression(s.Enabled, $"stock.{s.Id}.enabled");
+            if (s.Count < 1 || s.Stock is < 0)
+            {
+                c.Error($"stock.{s.Id} needs a count of at least 1 and a stock that is not negative.");
+            }
+        }
     }
 
     private static void Choices(PassiveChoiceDef d, ValidationContext c)

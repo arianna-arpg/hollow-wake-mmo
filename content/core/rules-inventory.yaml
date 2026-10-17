@@ -28,6 +28,33 @@ entries:
       drop_lean: 4
       # How far around the hero to look for a font, a stash or a station before checking each one's own reach.
       reach_search: 12
+      # Trade. Prices are expressions of the item (value, item_level, rarity_rank, tier, quality, count) and the hero.
+      vendor:
+        price: "max(1, round((value + 2 + item_level) * (1 + rarity_rank * 1.5))) * count"
+        sell_price: "max(1, floor((value + 1 + item_level * 0.5) * (1 + rarity_rank))) * count"
+        buy_back_markup: 1
+        restock_seconds: 1800
+        sold_out_text: Sold out.
+        cannot_afford_text: Not enough {currency}.
+      # Labels of the preview lines on a weave's card.
+      preview_labels:
+        damage: Damage
+        cast_time: Cast time
+        cooldown: Cooldown
+        cost: Cost
+        range: Range
+        crit: Critical chance
+
+  - id: dialogue
+    values:
+      # How far a hero may stand from whoever they talk or trade with before the pane closes.
+      reach: 6
+      # How far a hero may stand from a station beyond its own reach.
+      reach_slack: 1.5
+      # How often departures are checked, in seconds.
+      check_seconds: 0.5
+      # The choice a line offers when none of its own is open.
+      leave_text: Leave.
 
   - id: passives
     values:
