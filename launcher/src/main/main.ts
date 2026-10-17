@@ -613,6 +613,9 @@ function registerIpc(): void {
       return { ok: false, error: 'Choose a published build from the list.' };
     }
     settings.releaseTag = tag as string | null;
+    // Invalidate synchronously: a click on Install while settings are saving must not install
+    // the release that belonged to the previous selection.
+    invalidateFeed();
     await persist();
     void checkFeed();
     return { ok: true };
@@ -639,6 +642,7 @@ function registerIpc(): void {
     settings.channel = input;
     settings.releaseTag = null;
     builds = [];
+    invalidateFeed();
     await persist();
     log.info(`channel set to ${input}`);
     void checkFeed();
@@ -711,6 +715,13 @@ function registerIpc(): void {
   });
   handle('applyLauncherUpdate', () => selfUpdater.apply());
   handle('quit', () => app.quit());
+}
+
+function invalidateFeed(): void {
+  feedGeneration++;
+  release = null;
+  feed = { ...feed, status: 'checking', message: null, hint: null };
+  push();
 }
 
 function fromOurPage(event: IpcMainInvokeEvent): boolean {

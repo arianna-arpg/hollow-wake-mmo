@@ -50,12 +50,19 @@ const killGame = () => { if (gamePid) { try { process.kill(gamePid); } catch {} 
 try {
   let page = await launch([]);
   await page.waitForFunction(async () => (await window.launcher.getState()).builds.length === 2);
-  await page.locator('#build-select').selectOption('v0.1.0');
+  await page.waitForFunction(async () => (await window.launcher.getState()).feed.remote?.version === '0.1.1');
+  await page.evaluate(() => Promise.all([window.launcher.selectBuild('v0.1.0'), window.launcher.install()]));
+  await page.waitForFunction(async () => (await window.launcher.getState()).task.kind === 'idle', null, { timeout: 60000 });
+  const afterSelection = await page.evaluate(() => window.launcher.getState());
+  assert.notEqual(afterSelection.installed?.version, '0.1.1', 'an immediate Install must never use the previous selection');
+  result.selectionRace = 'Changing selection invalidates the previous release before asynchronous settings persistence';
   await page.waitForFunction(async () => (await window.launcher.getState()).feed.remote?.version === '0.1.0');
-  await page.locator('#primary').click();
+  if (!afterSelection.installed) await page.locator('#primary').click();
   await page.waitForFunction(async () => (await window.launcher.getState()).installed?.version === '0.1.0', null, { timeout: 60000 });
   result.selectedInstall = 'Pinned older release downloaded, verified and installed';
+  await page.waitForFunction(() => document.getElementById('build-select').value === 'v0.1.0' && !document.getElementById('build-select').disabled);
   await page.locator('#build-select').selectOption('');
+  await page.waitForFunction(async () => (await window.launcher.getState()).settings.releaseTag === null);
   await page.waitForFunction(async () => (await window.launcher.getState()).action === 'update');
   await page.locator('#secondary').filter({ hasText: 'Update to 0.1.1' }).waitFor();
   assert.equal(await page.locator('#primary').textContent(), 'Play');
