@@ -120,6 +120,10 @@ public partial class Main : Node3D
         {
             AddChild(new Dev.Smoke(this, userArgs) { Name = "Smoke" });
         }
+        else if (userArgs.Contains("--quick-play"))
+        {
+            AddChild(new Dev.QuickPlay(this, userArgs) { Name = "QuickPlay" });
+        }
     }
 
     private static string? Arg(string[] args, string name)

@@ -6,6 +6,7 @@ import { contextBridge, ipcRenderer } from 'electron';
 const call = (channel: string, ...args: unknown[]) => ipcRenderer.invoke(`launcher:${channel}`, ...args);
 
 const api: LauncherApi = {
+  selectBuild: (tag) => call('selectBuild', tag),
   getState: () => call('getState'),
   getLog: () => call('getLog'),
   onState: (listener) => {

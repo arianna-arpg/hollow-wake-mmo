@@ -1,0 +1,42 @@
+import assert from 'node:assert/strict';
+import { spawn } from 'node:child_process';
+import { createServer } from 'node:net';
+import { existsSync, readFileSync, writeFileSync } from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
+const run = args => new Promise((resolve, reject) => {
+  const start = performance.now();
+  const child = spawn(process.execPath, ['scripts/play-local.mjs', ...args], { cwd: root, windowsHide: true });
+  let output = '';
+  child.stdout.on('data', b => output += b);
+  child.stderr.on('data', b => output += b);
+  child.once('error', reject);
+  child.once('exit', code => resolve({ code, output, ms: Math.round(performance.now() - start) }));
+});
+const stateFile = path.join(root, 'artifacts/playtest/server.json');
+const results = {};
+assert.equal((await run(['--stop'])).code, 0);
+const config = JSON.parse(readFileSync(path.join(root, 'config/playtest.json')));
+const conflict = createServer();
+await new Promise((resolve, reject) => { conflict.once('error', reject); conflict.listen(config.port, '127.0.0.1', resolve); });
+try {
+  const result = await run(['--browser', '--no-open']);
+  assert.equal(result.code, 1);
+  assert.match(result.output, /Server startup failed/);
+  assert.equal(conflict.listening, true);
+  results.portConflict = 'Reported failure without killing the unrelated listener';
+} finally { await new Promise(resolve => conflict.close(resolve)); }
+assert.equal((await run(['--browser', '--no-open'])).code, 0);
+const first = JSON.parse(readFileSync(stateFile));
+const warm = await run(['--browser', '--no-open']);
+assert.equal(warm.code, 0);
+assert.match(warm.output, /Reusing local server/);
+assert.equal(JSON.parse(readFileSync(stateFile)).pid, first.pid);
+results.warmPreparationMilliseconds = warm.ms;
+assert.equal((await run(['--stop'])).code, 0);
+assert.equal(existsSync(stateFile), false);
+assert.match(readFileSync(path.join(root, 'artifacts/playtest/server.log'), 'utf8'), /shutting down/);
+results.shutdown = 'Lease removal requests the server save/shutdown path and clears the owned record';
+writeFileSync(path.join(root, 'experiments/launcher-quick-play/output/local-results.json'), JSON.stringify(results, null, 2));
+console.log(JSON.stringify(results, null, 2));

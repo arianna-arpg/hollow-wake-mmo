@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import { writeFileSync } from 'node:fs';
 import path from 'node:path';
 import { after, before, test } from 'node:test';
-import { FeedError, newsRequest, resolveRelease, type FeedConfig } from '../main/feed';
+import { FeedError, listBuilds, newsRequest, resolveRelease, type FeedConfig } from '../main/feed';
 import { bytes, json, serve, sha256, tempDir, type TestServer } from './helpers';
 
 // A stand-in for the GitHub REST API (owner o, repo r) plus a second origin playing the storage host
@@ -97,6 +97,10 @@ before(async () => {
       json(res, latest ? 200 : 404, latest ?? { message: 'Not Found' });
     } else if (url.pathname === '/repos/o/r/releases') {
       json(res, 200, list);
+    } else if (url.pathname.startsWith('/repos/o/r/releases/tags/')) {
+      const tag = decodeURIComponent(url.pathname.slice('/repos/o/r/releases/tags/'.length));
+      const selected = list.find(r => r.tag_name === tag);
+      json(res, selected ? 200 : 404, selected ?? { message: 'Not Found' });
     } else if (url.pathname.startsWith('/repos/o/r/releases/assets/')) {
       // The API answers an asset request with a redirect to storage on another origin.
       const id = Number(url.pathname.split('/').pop());
@@ -145,6 +149,23 @@ test('stable takes /releases/latest and its manifest', async () => {
   assert.equal(r.tag, 'v0.1.0');
   assert.match(r.archives['windows-x64']?.url ?? '', /\/download\/v0\.1\.0\/client-0\.1\.0-windows-x64\.zip$/);
   assert.ok(api.requests.every((q) => !q.headers['authorization']), 'no token, no authorization header');
+});
+
+test('the picker lists complete published builds and resolves an explicit older version', async () => {
+  reset([
+    { tag: 'v0.3.0', draft: true, manifest: manifestFor('0.3.0') },
+    { tag: 'v0.2.0', manifest: manifestFor('0.2.0') },
+    { tag: 'v0.1.1-nightly.1', prerelease: true, manifest: manifestFor('0.1.1-nightly.1', 'nightly') },
+    { tag: 'v0.1.0', manifest: manifestFor('0.1.0') },
+    { tag: 'v0.0.9', manifest: manifestFor('0.0.9'), manifestState: 'open' },
+  ]);
+  assert.deepEqual((await listBuilds(cfg(), 'stable', fetch)).map(b => b.tag), ['v0.2.0', 'v0.1.0']);
+  assert.equal((await listBuilds(cfg(), 'nightly', fetch)).length, 3);
+  assert.equal((await resolveRelease(cfg({ tag: 'v0.1.0' }), 'stable', fetch)).manifest.version, '0.1.0');
+  await assert.rejects(resolveRelease(cfg({ tag: 'v0.3.0' }), 'stable', fetch), FeedError);
+  await assert.rejects(resolveRelease(cfg({ tag: 'v9.9.9' }), 'stable', fetch), FeedError);
+  reset([{ tag: 'v0.1.0', manifest: manifestFor('0.2.0') }]);
+  await assert.rejects(resolveRelease(cfg({ tag: 'v0.1.0' }), 'stable', fetch), /does not match/);
 });
 
 test('nightly takes the newest published release, pre-releases included, and skips drafts and releases without a manifest', async () => {

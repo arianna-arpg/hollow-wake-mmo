@@ -2,6 +2,8 @@
 
 ## Sessions
 
+The pure .NET host's local-play orchestration flags are `--bind`, `--websocket` and `--lifetime-file`. The last watches a checkout-owned lease file, updating its heartbeat while present and requesting the existing save/shutdown path when removed. These are host lifecycle controls, not game messages; ordinary server runs need no lease. The local helper never terminates unrelated processes to free a port.
+
 A connection becomes a session. `hello` negotiates the protocol and optional features: a hello may list the `features` the client understands, and the welcome lists the ones the server granted. Both lists are absent when empty, so a hello without features gets the plain protocol, exactly as before features existed. `entity_delta` (see Deltas below) and `interface` (see Interface states below) are such features. `login` authenticates (development: any name; token mode: a shared secret) and returns the account's characters and the available callings; `create_character` and `select_character` manage characters; after `enter_world` every in-world message becomes an intent queued on the player entity and validated by the simulation. Pings answer with server time. Chat broadcasts within the zone.
 
 ## Zones and interest

@@ -1,6 +1,7 @@
 import './style.css';
 import { App } from './app';
 import { loadConfig } from './config';
+import { addPlayRibbon } from './ui/playRibbon';
 
 declare global {
   interface Window {
@@ -30,5 +31,6 @@ try {
   throw error;
 }
 window.hollowWake = app.probe();
+void addPlayRibbon(app.login.root.querySelector('.login-panel')!);
 app.start();
 await app.prefill();

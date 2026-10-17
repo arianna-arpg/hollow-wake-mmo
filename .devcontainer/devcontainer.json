@@ -15,14 +15,15 @@
     "7778": {
       "label": "Web client and WebSocket",
       "protocol": "http",
-      "onAutoForward": "notify"
+      "onAutoForward": "openBrowser"
     },
     "7777": {
       "label": "Game server TCP (desktop client)",
       "onAutoForward": "silent"
     }
   },
-  "postCreateCommand": "dotnet build HollowWake.sln && npm --prefix web ci && npm --prefix web run build",
+  "postCreateCommand": "node scripts/play-local.mjs --browser --no-open",
+  "postStartCommand": "node scripts/play-local.mjs --browser --no-open",
   "customizations": {
     "codespaces": {
       "openFiles": ["docs/infrastructure/codespaces.md"]

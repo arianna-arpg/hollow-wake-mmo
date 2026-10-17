@@ -1,0 +1,7 @@
+{
+  "client": "browser",
+  "port": 7777,
+  "webPort": 7778,
+  "account": "marcher",
+  "profile": "playtest"
+}

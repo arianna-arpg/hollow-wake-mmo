@@ -10,6 +10,7 @@ import { Hud } from './ui/hud';
 import { bundledKinds, loadNames, loadUi } from './ui/logic/content';
 import { gateFacts, OptionsCatalog, Settings, type OptionEntry } from './ui/logic/options';
 import { LoginPanel } from './ui/login';
+import { resumeCharacter } from './ui/quickPlay';
 import { CameraRig } from './view/camera';
 import { chunkFromMessage } from './world/chunks';
 import { linearColor } from './world/colors';
@@ -66,6 +67,8 @@ export class App {
   private frameMs = 0;
   hoveredKey: Int64 = 0;
   private lastRejected = '';
+  private quickPlay = new URLSearchParams(window.location.search).get('play') === '1';
+  private characterKey = '';
   /** Hello features the server granted (welcome.features). */
   features: string[] = [];
   lastInteracted = '';
@@ -157,7 +160,10 @@ export class App {
     this.login = new LoginPanel({
       connect: (address, account, token) => void this.connect(address, account, token),
       create: (name, calling) => this.send({ t: 'create_character', name, calling }),
-      enter: (characterId) => this.send({ t: 'select_character', character_id: characterId }),
+      enter: (characterId) => {
+        if (this.characterKey) storageSet(this.characterKey, characterId);
+        this.send({ t: 'select_character', character_id: characterId });
+      },
       options: () => this.hud.openOptions(),
     });
     root.append(this.login.root, this.hud.root);
@@ -279,6 +285,7 @@ export class App {
     this.login.setAddress(address);
     this.login.setAccount(params.get('account') ?? storageGet(STORAGE_ACCOUNT) ?? s.account);
     this.login.setStatus(note || 'Not connected.');
+    if (this.quickPlay && address.host) this.login.connect();
   }
 
   /** A game server answers a plain GET on its socket path with a description naming the service. */
@@ -320,6 +327,7 @@ export class App {
 
   private async connect(address: ServerAddress, account: string, token: string): Promise<void> {
     const url = socketUrl(address);
+    this.characterKey = `hollowwake.character.${url}/${account}`;
     this.login.setBusy(true);
     this.login.setStatus(`Connecting to ${url}...`);
     try {
@@ -373,6 +381,10 @@ export class App {
         this.characterLists++;
         this.login.setBusy(false);
         this.login.showCharacters(m);
+        if (this.quickPlay) {
+          const id = resumeCharacter(m.characters.map(c => c.id), storageGet(this.characterKey));
+          if (id !== null) this.login.enter(id);
+        }
         break;
       case 'error':
         if (m.code === 'chunk_out_of_range') {
@@ -387,6 +399,7 @@ export class App {
         this.closed(m.reason);
         break;
       case 'enter_world': {
+        this.quickPlay = false;
         const key = `${m.world.chunk_size}:${m.world.content_hash}:${m.world.seed}`;
         if (key !== this.worldKey) {
           this.worldKey = key;

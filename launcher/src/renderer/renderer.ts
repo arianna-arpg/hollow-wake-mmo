@@ -18,6 +18,8 @@
     addressError: $('address-error'),
     channelButtons: Array.from(document.querySelectorAll<HTMLButtonElement>('[data-channel]')),
     channelBlurb: $('channel-blurb'),
+    buildSelect: $<HTMLSelectElement>('build-select'),
+    buildNote: $('build-note'),
     installedVersion: $('installed-version'),
     remoteVersion: $('remote-version'),
     statusTitle: $('status-title'),
@@ -51,6 +53,7 @@
 
   let state: LauncherState | null = null;
   let newsKey = '';
+  let buildsKey = '';
 
   // ------------------------------------------------------------------ rendering
 
@@ -74,6 +77,20 @@
     el.channelBlurb.textContent = s.feed.overridden ? 'The feed override decides the build; the channel does not apply.' : CHANNEL_BLURB[s.settings.channel];
     el.developer.checked = s.settings.developer;
     el.autoUpdate.checked = s.settings.autoUpdate;
+    const nextBuildsKey = JSON.stringify([s.builds, s.settings.releaseTag]);
+    if (buildsKey !== nextBuildsKey) {
+      buildsKey = nextBuildsKey;
+      el.buildSelect.replaceChildren(new Option('Latest on this channel', ''));
+      for (const build of s.builds) el.buildSelect.add(new Option(`${build.version} (${build.channel})`, build.tag));
+      if (s.settings.releaseTag && !s.builds.some(b => b.tag === s.settings.releaseTag)) {
+        el.buildSelect.add(new Option(`${s.settings.releaseTag} (saved selection)`, s.settings.releaseTag));
+      }
+      el.buildSelect.value = s.settings.releaseTag ?? '';
+    }
+    el.buildSelect.disabled = s.feed.overridden || s.task.kind !== 'idle';
+    el.buildNote.textContent = s.feed.overridden ? 'The test feed chooses the build.' : s.buildsError
+      ? s.installed ? 'Build list unavailable. Your installed game is ready to play.' : 'Build list unavailable. Check the connection or try Latest on this channel.'
+      : s.settings.releaseTag ? 'Pinned build. Use Install or Switch below to change versions.' : 'Recent published builds. Nightly includes test releases.';
     document.body.classList.toggle('developer', s.settings.developer);
     el.logPanel.hidden = !s.settings.developer;
     renderToken(s.settings.token);
@@ -293,9 +310,17 @@
       default:
         break;
     }
-    const canPlayOld = (s.action === 'update' || s.action === 'switch') && s.installed !== null && !s.game.running;
-    el.secondary.hidden = !canPlayOld;
-    el.secondary.textContent = canPlayOld ? `Play ${s.installed?.version ?? ''} instead` : '';
+    // Playing the installed build is always the main action, even while updates are checked or downloaded.
+    if (s.installed) {
+      p.textContent = s.game.starting ? 'Starting…' : s.game.running ? 'Playing' : 'Play';
+      p.disabled = s.game.running || s.game.starting;
+      p.classList.remove('quiet');
+      p.title = `Start installed build ${s.installed.version} now`;
+    }
+    const updateAction = s.installed && (s.action === 'update' || s.action === 'switch' || s.action === 'busy');
+    el.secondary.hidden = !updateAction;
+    el.secondary.textContent = s.action === 'busy' ? 'Cancel download' : s.action === 'switch' ? `Switch to ${remote?.version ?? ''}` : `Update to ${remote?.version ?? ''}`;
+    el.secondary.disabled = s.action !== 'busy' && (s.game.running || s.game.starting);
     el.check.disabled = s.feed.status === 'checking' || t.kind !== 'idle';
     el.playError.textContent = s.game.error ?? '';
   }
@@ -335,6 +360,7 @@
       return;
     }
     el.playError.textContent = '';
+    if (state.installed) { await playNow(); return; }
     switch (state.action) {
       case 'install':
       case 'update':
@@ -376,7 +402,11 @@
   }
 
   el.primary.addEventListener('click', () => void primary());
-  el.secondary.addEventListener('click', () => void playNow());
+  el.secondary.addEventListener('click', () => void (state?.action === 'busy' ? api.cancel() : api.install()));
+  el.buildSelect.addEventListener('change', async () => {
+    const result = await api.selectBuild(el.buildSelect.value || null);
+    if (!result.ok) el.playError.textContent = result.error ?? 'Could not select that build.';
+  });
   el.check.addEventListener('click', () => void api.checkForUpdates());
   el.address.addEventListener('change', () => void commitAddress());
   el.address.addEventListener('keydown', (event) => {

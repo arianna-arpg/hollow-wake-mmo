@@ -21,7 +21,7 @@ export function launchGame(o: GameLaunch): Promise<ChildProcess> {
   return new Promise((resolve, reject) => {
     let child: ChildProcess;
     try {
-      child = spawn(o.executable, ['--host', o.host, '--port', String(o.port)], {
+      child = spawn(o.executable, ['--', '--host', o.host, '--port', String(o.port), '--quick-play'], {
         cwd: o.cwd,
         detached: true,
         stdio: ['ignore', out, out],

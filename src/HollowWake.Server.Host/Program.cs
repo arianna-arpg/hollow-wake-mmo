@@ -23,9 +23,17 @@ if (ArgValue(args, "--web-root") is { } webRoot)
 {
     config = config with { WebRoot = Path.GetFullPath(webRoot) };
 }
+if (ArgValue(args, "--bind") is { } bind)
+{
+    config = config with { Bind = bind };
+}
 if (args.Contains("--no-websocket"))
 {
     config = config with { WebsocketEnabled = false };
+}
+if (args.Contains("--websocket"))
+{
+    config = config with { WebsocketEnabled = true };
 }
 
 using var logs = LoggerFactory.Create(b => b
@@ -43,6 +51,22 @@ Console.CancelKeyPress += (_, e) =>
     cts.Cancel();
 };
 AppDomain.CurrentDomain.ProcessExit += (_, _) => cts.Cancel();
+
+// A local playtest owns a unique lease file. Removing it requests the usual save and shutdown;
+// no PID killing, console window or game-protocol control endpoint is needed.
+if (ArgValue(args, "--lifetime-file") is { } lifetimeFile)
+{
+    _ = Task.Run(async () =>
+    {
+        while (!cts.IsCancellationRequested && File.Exists(lifetimeFile))
+        {
+            try { File.SetLastWriteTimeUtc(lifetimeFile, DateTime.UtcNow); }
+            catch (IOException) { break; }
+            await Task.Delay(250);
+        }
+        await cts.CancelAsync();
+    });
+}
 
 var tcp = new TcpTransport(logs.CreateLogger<TcpTransport>());
 ITransport transport = config.WebsocketEnabled
