@@ -4,6 +4,8 @@
 
 /** The protocol version the server speaks (ProtocolInfo.Version), sent in hello. */
 export const PROTOCOL_VERSION = 1;
+/** ProtocolInfo.EntityDeltaFeature */
+export const ENTITY_DELTA_FEATURE = "entity_delta";
 
 /**
  * A 64-bit integer from C# (entity keys, item uids, nonces, the world seed): a number when it is a safe
@@ -17,6 +19,7 @@ export interface HelloMsg {
   t: "hello";
   client_version: string;
   protocol: number;
+  features?: string[];
 }
 
 export interface LoginMsg {
@@ -188,6 +191,7 @@ export interface WelcomeMsg {
   protocol: number;
   server_name: string;
   motd: string;
+  features?: string[];
 }
 
 export interface LoginResultMsg {

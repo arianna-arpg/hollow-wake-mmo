@@ -25,8 +25,10 @@ export interface ServerSettings {
   secure: boolean | null;
   path: string;
   account: string;
-  /** Look for a game server at the page's own origin (it answers GET on the socket path with 426). */
+  /** Look for a game server at the page's own origin (a plain GET on the socket path describes it). */
   probeSameOrigin: boolean;
+  /** Hello features to ask for, such as entity_delta; a `?full-states` link asks for none. */
+  features: string[];
 }
 
 export interface WorldSettings {

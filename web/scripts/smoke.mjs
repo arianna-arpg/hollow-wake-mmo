@@ -5,7 +5,9 @@
 // line per check, saves a screenshot per stage and exits non-zero when any check fails.
 //
 //   npm run smoke -- [--url http://localhost:7778/] [--shots DIR] [--account NAME]
-//                    [--browser msedge|chrome|chromium] [--executable PATH] [--headed]
+//                    [--browser msedge|chrome|chromium] [--executable PATH] [--headed] [--full-states]
+//
+// --full-states runs the client without entity deltas (full entity states only), for comparison.
 //
 // It drives an installed Edge or Chrome through playwright-core, so nothing is downloaded. The page reads
 // the client's state from window.hollowWake (src/app.ts, probe()); every action goes through input events.
@@ -158,13 +160,14 @@ async function hover(key) {
 }
 
 async function script() {
-  await page.goto(`${url}${url.includes('?') ? '&' : '?'}account=${encodeURIComponent(account)}`);
+  await page.goto(`${url}${url.includes('?') ? '&' : '?'}account=${encodeURIComponent(account)}${flag('full-states') ? '&full-states' : ''}`);
   await page.waitForFunction(() => window.hollowWake !== undefined);
   await until(async () => (await page.inputValue('#login-host')).length > 0, 5000);
   const lists0 = (await counts()).characterLists;
   await page.click('#login-connect');
   const connected = await until(async () => (await counts()).characterLists > lists0, 20000);
-  record('connect and log in', connected, await hw(() => window.hollowWake.status));
+  const granted = await hw(() => window.hollowWake.features);
+  record('connect and log in', connected, `${await hw(() => window.hollowWake.status)} (features: ${granted.length > 0 ? granted.join(', ') : 'none'})`);
   if (!connected) {
     return;
   }

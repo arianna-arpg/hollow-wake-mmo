@@ -6,7 +6,8 @@
     "secure": null,
     "path": "/ws",
     "account": "marcher",
-    "probeSameOrigin": true
+    "probeSameOrigin": true,
+    "features": ["entity_delta"]
   },
   "world": {
     "chunkRadius": 3,

@@ -1,7 +1,12 @@
 import { describe, expect, it } from 'vitest';
 import { ACTIONS, DEFAULTS, merge } from './config';
+import { ENTITY_DELTA_FEATURE } from './net/protocol';
 
 describe('config', () => {
+  it('asks for entity deltas by default, by the name the protocol gives them', () => {
+    expect(DEFAULTS.server.features).toContain(ENTITY_DELTA_FEATURE);
+  });
+
   it('binds every action, like the desktop input map', () => {
     for (const action of ACTIONS) {
       expect(DEFAULTS.input.bindings[action].length).toBeGreaterThan(0);

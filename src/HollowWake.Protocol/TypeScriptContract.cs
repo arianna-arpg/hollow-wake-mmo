@@ -141,6 +141,14 @@ public static class TypeScriptContract
         sb.Append('\n');
         sb.Append("/** The protocol version the server speaks (ProtocolInfo.Version), sent in hello. */\n");
         sb.Append("export const PROTOCOL_VERSION = ").Append(ProtocolInfo.Version).Append(";\n");
+        var names = typeof(ProtocolInfo).GetFields(BindingFlags.Public | BindingFlags.Static)
+            .Where(f => f.IsLiteral && f.FieldType == typeof(string))
+            .OrderBy(f => f.MetadataToken);
+        foreach (var field in names)
+        {
+            sb.Append("/** ProtocolInfo.").Append(field.Name).Append(" */\n");
+            sb.Append("export const ").Append(JsonNamingPolicy.SnakeCaseUpper.ConvertName(field.Name)).Append(" = \"").Append((string)field.GetRawConstantValue()!).Append("\";\n");
+        }
         sb.Append('\n');
         sb.Append("/**\n");
         sb.Append(" * A 64-bit integer from C# (entity keys, item uids, nonces, the world seed): a number when it is a safe\n");

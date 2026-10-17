@@ -2,6 +2,7 @@ import { DirectionalLight, FogExp2, HemisphereLight, MathUtils, Scene, SRGBColor
 import type { Action, ClientConfig } from './config';
 import { Input } from './input/input';
 import { Connection } from './net/connection';
+import { applyDelta } from './net/delta';
 import { PROTOCOL_VERSION, type CombatEventMsg, type EntityState, type Int64, type Message } from './net/protocol';
 import { Hud } from './ui/hud';
 import { parseServerInput, sameOrigin, socketUrl, type ServerAddress } from './ui/address';
@@ -53,6 +54,8 @@ export class App {
   private frameMs = 0;
   hoveredKey: Int64 = 0;
   private lastRejected = '';
+  /** Hello features the server granted (welcome.features). */
+  features: string[] = [];
   lastInteracted = '';
   combatLines = 0;
   /** Damage events the player's own entity dealt. */
@@ -204,7 +207,9 @@ export class App {
     }
     storageSet(STORAGE_SERVER, url);
     storageSet(STORAGE_ACCOUNT, account);
-    this.send({ t: 'hello', client_version: CLIENT_NAME, protocol: PROTOCOL_VERSION });
+    // A ?full-states link asks for full entity states only, for comparison and debugging (the desktop's --full-states).
+    const features = new URLSearchParams(window.location.search).has('full-states') ? [] : this.config.server.features;
+    this.send({ t: 'hello', client_version: CLIENT_NAME, protocol: PROTOCOL_VERSION, features: features.length > 0 ? [...features] : undefined });
     this.send({ t: 'login', account, token });
     this.login.setStatus('Logging in...');
   }
@@ -229,7 +234,9 @@ export class App {
     const local = performance.now() / 1000;
     switch (m.t) {
       case 'welcome':
+        this.features = m.features ?? [];
         this.login.setStatus(`Connected to ${m.server_name}: ${m.motd}`);
+        console.info(`server granted features: ${this.features.length > 0 ? this.features.join(', ') : 'none'}`);
         break;
       case 'login_result':
         this.login.setStatus(m.ok ? 'Logged in. Pick a character.' : `Login failed: ${m.error ?? 'refused'}`);
@@ -282,6 +289,16 @@ export class App {
         this.clock.observe(m.server_time, local);
         for (const state of m.states) {
           this.entities.update(state, m.server_time, local);
+        }
+        break;
+      case 'entity_delta':
+        this.clock.observe(m.server_time, local);
+        for (const delta of m.deltas) {
+          // A delta for an entity this client does not know is ignored; the next refresh brings its full state.
+          const view = this.entities.views.get(delta.key);
+          if (view !== undefined) {
+            this.entities.update(applyDelta(view.state, delta), m.server_time, local);
+          }
         }
         break;
       case 'entity_despawn':
@@ -592,6 +609,9 @@ export class App {
       },
       get lastInteracted() {
         return app.lastInteracted;
+      },
+      get features() {
+        return [...app.features];
       },
       get lastHit() {
         return app.lastHit;
