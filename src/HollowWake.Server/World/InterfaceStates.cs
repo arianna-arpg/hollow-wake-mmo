@@ -827,11 +827,21 @@ public static class InterfaceStates
                 realms.Add(realm.Id);
             }
         }
+        List<GraftInfo>? grafts = null;
+        foreach (var owned in PassiveGrafts.Of(sim, e))
+        {
+            var glyph = sim.Content.Get<GlyphDef>(owned.Glyph.Id);
+            (grafts ??= new List<GraftInfo>()).Add(new GraftInfo(owned.Source, owned.Glyph.Id, glyph?.DisplayName ?? Definition.Humanize(owned.Glyph.Id), Math.Max(1, owned.Glyph.Level))
+            {
+                Slot = state is not null && state.Grafts.TryGetValue(owned.Source, out var slot) ? slot : null,
+            });
+        }
         var font = Core.Interaction.Fonts.InReach(sim, e);
         return new PassiveStateMsg(new List<string>(stats.Passives), picks, points, realms, font is not null)
         {
             Font = font?.Key,
             RefundCost = font is null ? null : progression.RefundCostText(sim, e, new PassiveNodeDef { Id = "", Cost = 1 }),
+            Grafts = grafts,
         };
     }
 
@@ -861,6 +871,11 @@ public static class InterfaceStates
                 h.Add(points);
             }
             h.Add(state.OpenRealms.Count);
+            foreach (var (source, slot) in state.Grafts)
+            {
+                h.Add(source);
+                h.Add(slot);
+            }
         }
         // Standing at a font turns refunds on.
         h.Add(Core.Interaction.Fonts.InReach(sim, e)?.Key ?? -1);

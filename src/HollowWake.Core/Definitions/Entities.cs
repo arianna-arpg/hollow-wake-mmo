@@ -71,6 +71,15 @@ public sealed record PassiveNodeDef : Definition
     public string? Calling { get; init; }
     /// <summary>The options this node deals: a choice group and how many picks.</summary>
     public PassiveChoiceRef? Choice { get; init; }
+    /// <summary>A glyph the node grants as a graft, which its owner binds to one weave slot (row H6).</summary>
+    public PassiveGlyphGrant? Glyph { get; init; }
+}
+
+/// <summary>A glyph a passive grants as a graft: which glyph, at which level.</summary>
+public sealed record PassiveGlyphGrant
+{
+    public required string Id { get; init; }
+    public int Level { get; init; } = 1;
 }
 
 /// <summary>A starting path: attribute spread, starting weaves, items, passives. Never a cage.</summary>

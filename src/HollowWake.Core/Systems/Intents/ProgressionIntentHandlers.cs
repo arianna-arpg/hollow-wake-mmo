@@ -10,6 +10,15 @@ public static class ProgressionIntentHandlers
     {
         handlers.Register<AllocatePassiveIntent>(AllocatePassive);
         handlers.Register<RefundPassiveIntent>(RefundPassive);
+        handlers.Register<BindGraftIntent>(BindGraft);
+    }
+
+    private static void BindGraft(in IntentContext ctx, BindGraftIntent bg)
+    {
+        if (!PassiveGrafts.Bind(ctx.Sim, ctx.Entity, bg.Source, bg.Slot, out var reason))
+        {
+            ctx.Reject(reason);
+        }
     }
 
     private static void AllocatePassive(in IntentContext ctx, AllocatePassiveIntent ap)

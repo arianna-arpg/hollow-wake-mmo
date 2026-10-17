@@ -33,4 +33,5 @@ entries:
   - { id: warden_root, name: Warden's Oath, kind: start, realm: warden, x: 0, y: 0, links: [wd1, wd2], modifiers: [ { attribute: armor, form: increased, value: 0.05 } ] }
   - { id: wd1, name: Wellguard, kind: small, realm: warden, x: -3, y: 3, links: [warden_root, wd3], modifiers: [ { attribute: block.chance, form: flat, value: 0.03 } ] }
   - { id: wd2, name: Steadfast, kind: small, realm: warden, x: 3, y: 3, links: [warden_root, wd3], modifiers: [ { attribute: life.max, form: increased, value: 0.04 } ] }
-  - { id: wd3, name: Keeper of the Wells, kind: notable, realm: warden, x: 0, y: 6, links: [wd1, wd2], modifiers: [ { attribute: life.regen, form: increased, value: 0.25 }, { attribute: armor, form: increased, value: 0.1 } ] }
+  # A notable that grants a graft: its owner binds Anchor to one weave slot, where it acts as if socketed.
+  - { id: wd3, name: Keeper of the Wells, kind: notable, realm: warden, x: 0, y: 6, links: [wd1, wd2], glyph: { id: anchor, level: 1 }, modifiers: [ { attribute: life.regen, form: increased, value: 0.25 }, { attribute: armor, form: increased, value: 0.1 } ] }

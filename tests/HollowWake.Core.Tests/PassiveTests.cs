@@ -203,6 +203,49 @@ public class PassiveTests
     }
 
     [Fact]
+    public void APassiveGraftIsBoundToOneWeaveSlotAndLeavesWithItsNode()
+    {
+        var (sim, hero, sheet) = Hero(calling: "holdfast", id: "pas10");
+        var progression = sim.Service<ProgressionService>();
+        var stats = sim.World.Get<Stats>(hero)!;
+        var book = sim.World.Get<WeaveBook>(hero)!;
+        sim.World.Get<QuestLog>(hero)!.Flags.Add("warden_oath");
+        progression.RefreshRealms(sim, hero);
+        progression.GrantPoints(sim, hero, "vocation", 3);
+        Assert.True(progression.Allocate(sim, hero, "wd1", null, out var reason), reason);
+        Assert.False(PassiveGrafts.Bind(sim, hero, "wd3", 0, out reason));
+        Assert.Equal("no_graft", reason);
+        Assert.True(progression.Allocate(sim, hero, "wd3", null, out reason), reason);
+        Assert.Equal("anchor", Assert.Single(PassiveGrafts.Of(sim, hero)).Glyph.Id);
+
+        // Bound to the first seat, the graft is on the seat as if socketed; moving it moves it.
+        Assert.False(PassiveGrafts.Bind(sim, hero, "wd3", book.Slots.Count, out reason));
+        Assert.Equal("no_slot", reason);
+        Assert.True(PassiveGrafts.Bind(sim, hero, "wd3", 0, out reason), reason);
+        Assert.Equal(1, stats.Get("glyph.slot1.anchor"));
+        var runtime = sim.Service<Weaves.WeaveRuntime>();
+        Assert.Contains("glyph.anchor", runtime.Resolve(sim, book.Slots[0], out _)!.Tags);
+        Assert.True(PassiveGrafts.Bind(sim, hero, "wd3", 1, out reason), reason);
+        Assert.Equal(0, stats.Get("glyph.slot1.anchor"));
+        Assert.Equal(1, stats.Get("glyph.slot2.anchor"));
+
+        // The binding saves with the character.
+        var factory = sim.Service<CharacterFactory>();
+        factory.Capture(sim, hero, sheet);
+        Assert.Equal(1, sheet.PassiveGrafts["wd3"]);
+        var again = factory.Materialize(sim, sheet);
+        Assert.Equal(1, sim.World.Get<Stats>(again)!.Get("glyph.slot2.anchor"));
+
+        // Refunding the node takes the graft and its binding away.
+        sim.Service<PatternFactory>().Spawn(sim, "passive_font", new Vector3(9.5f, 8, 0));
+        sim.World.Get<Inventory>(hero)!.AddCurrency("shards", 500);
+        Assert.True(progression.RefundAtFont(sim, hero, "wd3", out reason), reason);
+        Assert.Equal(0, stats.Get("glyph.slot2.anchor"));
+        Assert.Empty(sim.World.Get<PassiveState>(hero)!.Grafts);
+        Assert.DoesNotContain("glyph.anchor", runtime.Resolve(sim, book.Slots[1], out _)!.Tags);
+    }
+
+    [Fact]
     public void AnotherCallingsStartIsBoughtAsTravelAndNeverAnchors()
     {
         var (sim, hero, _) = Hero(calling: "holdfast", id: "pas9", level: 5);

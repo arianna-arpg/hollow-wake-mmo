@@ -24,5 +24,14 @@ public sealed class PassiveState : IComponent
     /// <summary>Refunds made, which a refund cost formula may read.</summary>
     public int Refunds;
 
+    /// <summary>
+    /// Grafts bound to weave slots: the source (a node, or <c>{node}:{option}</c>) to the slot index it is bound to.
+    /// A graft the hero owns but has not bound is absent.
+    /// </summary>
+    public Dictionary<string, int> Grafts { get; } = new(StringComparer.Ordinal);
+
+    /// <summary>The modifier sources the bound grafts put on the hero, so they come off together.</summary>
+    internal List<string> GraftSources { get; } = new();
+
     public int PicksOf(string node) => Picks.TryGetValue(node, out var p) ? p.Count : 0;
 }
