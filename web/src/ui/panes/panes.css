@@ -234,11 +234,13 @@
   height: 6px;
 }
 
+/* A row's control wraps under its text when the pane is too narrow for both side by side. */
 .option-row {
   flex: none;
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  gap: 10px;
+  gap: 4px 10px;
   padding: 3px 4px;
   border-radius: var(--corner);
 }
@@ -248,7 +250,7 @@
 }
 
 .option-text {
-  flex: 1 1 auto;
+  flex: 1 1 180px;
   min-width: 0;
 }
 
@@ -275,15 +277,16 @@
 }
 
 .option-control {
-  flex: none;
+  flex: 0 1 240px;
   display: flex;
   align-items: center;
   gap: 6px;
-  width: 240px;
+  min-width: 200px;
+  margin-left: auto;
 }
 
 .option-row[data-kind='key'] .option-control {
-  width: 300px;
+  flex-basis: 300px;
   gap: 4px;
 }
 
