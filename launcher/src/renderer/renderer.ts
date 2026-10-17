@@ -126,7 +126,7 @@
         ? 'A token is saved, encrypted with the system key store.'
         : 'A token is saved unencrypted: this system offers no key store.';
     } else {
-      el.tokenNote.textContent = 'Only needed while the repository is private. It is sent to the GitHub API and nowhere else.';
+      el.tokenNote.textContent = 'Not needed: the repository is public. A private fork would need one; it is sent to the GitHub API and nowhere else.';
     }
   }
 

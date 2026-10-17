@@ -1,5 +1,10 @@
 Cast forecasting verification, 2026-10-17
 
+Historical proposal verification. The later delivery-plan foundation regenerated
+core-results.json through the production provider; only its sourceDigest and
+coreModuleId changed. All scenario outcomes and traces match this original run.
+Current verification: docs/reviews/2026-10-17-delivery-plan-foundation.md.
+
 Baseline and scope
 Branch: codex/cast-forecasting
 Base: 07a249755511922441e39f2abd90808098397699 (main)
