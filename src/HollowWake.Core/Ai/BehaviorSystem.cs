@@ -1,5 +1,6 @@
 using System.Numerics;
 using System.Runtime.CompilerServices;
+using System.Text.Json;
 using System.Text.Json.Nodes;
 using HollowWake.Core.Combat;
 using HollowWake.Core.Components;
@@ -7,9 +8,11 @@ using HollowWake.Core.Content;
 using HollowWake.Core.Definitions;
 using HollowWake.Core.Ecs;
 using HollowWake.Core.Expressions;
+using HollowWake.Core.Minions;
 using HollowWake.Core.Movement;
 using HollowWake.Core.Patterns;
 using HollowWake.Core.Sim;
+using HollowWake.Core.Tags;
 using HollowWake.Core.Weaves;
 using HollowWake.Core.World;
 
@@ -52,6 +55,8 @@ public static class AiActions
         {
             var range = (float)c.Num(p, "range", c.Def.AggroRange?.Evaluate(c.Scope) ?? 10);
             var filter = c.Str(p, "filter") ?? "enemy";
+            // Bodies wearing any of these tags are passed over: a minion leaves incidental prey alone.
+            var ignore = p["ignore"] is null ? null : IgnoredTags.GetValue(p, static q => q["ignore"].Deserialize<TagSet>(ContentJson.Options) ?? TagSet.Empty);
             Entity best = Entity.None;
             var bestDist = float.MaxValue;
             // Only memory can make someone closer than they are; without it, nobody farther than the best can win.
@@ -66,7 +71,8 @@ public static class AiActions
                 {
                     continue;
                 }
-                if (c.Sim.World.Get<Stats>(other)!.HasFlag("hidden"))
+                var otherStats = c.Sim.World.Get<Stats>(other)!;
+                if (otherStats.HasFlag("hidden") || (ignore is not null && otherStats.Tags.HasAny(ignore)))
                 {
                     continue;
                 }
@@ -99,36 +105,9 @@ public static class AiActions
                 return;
             }
             var stop = (float)c.Num(p, "stop", c.Sim.Service<WeaveRuntime>().PreferredRange(c.Sim, c.Entity) * 0.9);
-            var dist = c.Transform.GroundDistanceTo(tt.Position);
-            if (dist <= stop)
-            {
-                c.Motion.Stop();
-                c.Transform.Face(tt.Position);
-                return;
-            }
-            SetDestination(c, tt.Position, stop);
+            ChaseTo(c, tt, stop);
         });
-        Register("attack", (c, p) =>
-        {
-            if (!c.HasTarget)
-            {
-                return;
-            }
-            var runtime = c.Sim.Service<WeaveRuntime>();
-            var choice = runtime.ChooseForAi(c.Sim, c.Entity, c.Behavior.Target, c.Scope);
-            if (choice is null)
-            {
-                return;
-            }
-            var (slot, weave) = choice.Value;
-            var tt = c.TargetTransform!;
-            var dir = new Vector2(tt.Position.X - c.Transform.Position.X, tt.Position.Y - c.Transform.Position.Y);
-            var target = weave.Targeting is Targeting.Self or Targeting.Ally ? c.Entity : c.Behavior.Target;
-            if (runtime.TryBegin(c.Sim, c.Entity, slot, target, tt.Position, dir, out _))
-            {
-                c.Motion.Stop();
-            }
-        });
+        Register("attack", (c, p) => AttackTarget(c));
         Register("wander", (c, p) =>
         {
             if (c.Motion.WantsToMove || c.Rng.NextDouble() > c.Num(p, "chance", 0.3))
@@ -189,9 +168,65 @@ public static class AiActions
             }
         });
         Register("heal_self", (c, p) => c.Stats.AddResource("life", c.Num(p, "amount", 1)));
+        MinionActions.Register();
     }
 
+    /// <summary>The <c>ignore</c> tags of an <c>acquire_target</c>, parsed once per action spec.</summary>
+    private static readonly ConditionalWeakTable<JsonObject, TagSet> IgnoredTags = new();
+
     public static void Register(string name, Action<AiContext, JsonObject> action) => Actions[name] = action;
+
+    /// <summary>Moves toward a point under the shared planning policy (see <see cref="SetDestination"/>).</summary>
+    internal static void MoveTo(AiContext c, Vector3 destination, float stop) => SetDestination(c, destination, stop);
+
+    /// <summary>Closes on the target until within <paramref name="stop"/>, then stops and faces it.</summary>
+    internal static void ChaseTo(AiContext c, Transform tt, float stop)
+    {
+        var dist = c.Transform.GroundDistanceTo(tt.Position);
+        if (dist <= stop)
+        {
+            c.Motion.Stop();
+            c.Transform.Face(tt.Position);
+            return;
+        }
+        SetDestination(c, tt.Position, stop);
+    }
+
+    /// <summary>Casts the weave the AI's hints choose at its target, through the shared runtime; true when a cast began.</summary>
+    internal static bool AttackTarget(AiContext c)
+    {
+        if (!c.HasTarget)
+        {
+            return false;
+        }
+        var runtime = c.Sim.Service<WeaveRuntime>();
+        var choice = runtime.ChooseForAi(c.Sim, c.Entity, c.Behavior.Target, c.Scope);
+        if (choice is null)
+        {
+            return false;
+        }
+        var (slot, weave) = choice.Value;
+        var tt = c.TargetTransform!;
+        var dir = new Vector2(tt.Position.X - c.Transform.Position.X, tt.Position.Y - c.Transform.Position.Y);
+        var target = weave.Targeting is Targeting.Self or Targeting.Ally ? c.Entity : c.Behavior.Target;
+        if (runtime.TryBegin(c.Sim, c.Entity, slot, target, tt.Position, dir, out _))
+        {
+            c.Motion.Stop();
+            return true;
+        }
+        return false;
+    }
+
+    /// <summary>Fights the target as <c>chase</c> then <c>attack</c> would: closes to its preferred range and casts.</summary>
+    internal static void Engage(AiContext c)
+    {
+        if (!c.HasTarget || c.TargetTransform is not { } tt)
+        {
+            return;
+        }
+        ChaseTo(c, tt, (float)(c.Sim.Service<WeaveRuntime>().PreferredRange(c.Sim, c.Entity) * 0.9));
+        AttackTarget(c);
+    }
 
     public static bool TryGet(string name, out Action<AiContext, JsonObject>? action) => Actions.TryGetValue(name, out action);
 
@@ -344,6 +379,7 @@ internal sealed class PerceptionScope : IExprScope
     private readonly List<KeyValuePair<string, double>> _memory = new();
     private Stats _self = null!;
     private Stats? _target;
+    private Stats? _owner;
 
     public double HasTarget;
     public double TargetDistance;
@@ -356,14 +392,25 @@ internal sealed class PerceptionScope : IExprScope
     public double NearestEnemyDistance;
     public double PreferredRange;
 
+    // What a minion perceives of its owner and of the order it stands under.
+    public double HasOwner;
+    public double OwnerDistance;
+    public double OwnerHasTarget;
+    public double OwnerTargetDistance;
+    public double Commanded;
+    public double CommandDistance;
+
     public void Begin(Stats self)
     {
         _self = self;
         _target = null;
+        _owner = null;
         _memory.Clear();
     }
 
     public void MountTarget(Stats? target) => _target = target;
+
+    public void MountOwner(Stats? owner) => _owner = owner;
 
     public void Remember(Dictionary<string, double> memory)
     {
@@ -407,6 +454,24 @@ internal sealed class PerceptionScope : IExprScope
             case "preferred_range":
                 value = PreferredRange;
                 return true;
+            case "has_owner":
+                value = HasOwner;
+                return true;
+            case "owner_distance":
+                value = OwnerDistance;
+                return true;
+            case "owner_has_target":
+                value = OwnerHasTarget;
+                return true;
+            case "owner_target_distance":
+                value = OwnerTargetDistance;
+                return true;
+            case "commanded":
+                value = Commanded;
+                return true;
+            case "command_distance":
+                value = CommandDistance;
+                return true;
         }
         if (_memory.Count > 0 && name.StartsWith("memory.", StringComparison.Ordinal))
         {
@@ -424,15 +489,22 @@ internal sealed class PerceptionScope : IExprScope
         {
             return _target!.TryResolve(name.Substring(7), out value);
         }
+        if (IsOwnerName(name))
+        {
+            return _owner!.TryResolve(name.Substring(6), out value);
+        }
         return _self.TryResolve(name, out value);
     }
 
-    public bool HasFlag(string flag) => IsTargetName(flag) ? _target!.HasFlag(flag.Substring(7)) : _self.HasFlag(flag);
+    public bool HasFlag(string flag) => IsTargetName(flag) ? _target!.HasFlag(flag.Substring(7)) : IsOwnerName(flag) ? _owner!.HasFlag(flag.Substring(6)) : _self.HasFlag(flag);
 
     public double NextRandom() => _self.NextRandom();
 
     /// <summary>A name under the target mount: the text before its first dot is "target" and a target is mounted.</summary>
     private bool IsTargetName(string name) => _target is not null && name.Length >= 7 && name[6] == '.' && name.StartsWith("target", StringComparison.Ordinal);
+
+    /// <summary>A name under the owner mount: the text before its first dot is "owner" and an owner is mounted.</summary>
+    private bool IsOwnerName(string name) => _owner is not null && name.Length >= 6 && name[5] == '.' && name.StartsWith("owner", StringComparison.Ordinal);
 }
 
 /// <summary>
@@ -467,7 +539,8 @@ public sealed class BehaviorSystem : SimSystem
 
     private void Think(Simulation sim, double now, Entity e, Behavior b, Transform t, Motion m)
     {
-        if (sim.World.Has<Dead>(e))
+        // The dead do not think, nor do bodies dismissed earlier this tick that the world has yet to flush.
+        if (sim.World.Has<Dead>(e) || sim.World.IsDeferredDestroy(e))
         {
             return;
         }
@@ -589,7 +662,38 @@ public sealed class BehaviorSystem : SimSystem
         {
             scope.MountTarget(ts);
         }
+        PerceiveOwner(sim, e, b, t, scope);
         scope.Remember(b.Memory);
         return scope;
+    }
+
+    /// <summary>
+    /// What a minion perceives of its owner (whether it has one, how far it is, what it fights and how far
+    /// that is, its stats under <c>owner.</c>) and of its standing order (whether one stands, how far its mark
+    /// is). An expired order is cleared here. Bodies without an owner perceive nothing of it.
+    /// </summary>
+    private static void PerceiveOwner(Simulation sim, Entity e, Behavior b, Transform t, PerceptionScope scope)
+    {
+        scope.HasOwner = 0;
+        scope.OwnerDistance = 9999;
+        scope.OwnerHasTarget = 0;
+        scope.OwnerTargetDistance = 9999;
+        if (sim.World.TryGet<Minion>(e, out var minion) && !minion.Owner.IsNone && sim.World.IsAlive(minion.Owner) && sim.World.TryGet<Transform>(minion.Owner, out var ot))
+        {
+            scope.HasOwner = 1;
+            scope.OwnerDistance = t.GroundDistanceTo(ot.Position);
+            scope.MountOwner(sim.World.Get<Stats>(minion.Owner));
+            if (sim.TryService<MinionService>(out var minions) && minions.OwnerTarget(minion.Owner) is { IsNone: false } fought && sim.World.TryGet<Transform>(fought, out var ft))
+            {
+                scope.OwnerHasTarget = 1;
+                scope.OwnerTargetDistance = t.GroundDistanceTo(ft.Position);
+            }
+        }
+        if (b.Order is { } order && order.Until <= sim.Clock.Time)
+        {
+            b.Order = null;
+        }
+        scope.Commanded = b.Order is null ? 0 : 1;
+        scope.CommandDistance = b.Order is { } standing ? t.GroundDistanceTo(standing.Point) : 9999;
     }
 }

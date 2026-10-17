@@ -18,6 +18,31 @@ public static class ItemIntentHandlers
         handlers.Register<DropItemIntent>(DropItem);
         handlers.Register<CraftStartIntent>(CraftStart);
         handlers.Register<CraftSubmitIntent>(CraftSubmit);
+        handlers.Register<MoveItemIntent>(MoveItem);
+        handlers.Register<SocketStoneIntent>(static (in IntentContext ctx, SocketStoneIntent _) => ctx.Reject("not_ready"));
+        handlers.Register<UnsocketStoneIntent>(static (in IntentContext ctx, UnsocketStoneIntent _) => ctx.Reject("not_ready"));
+        handlers.Register<LearnFormIntent>(static (in IntentContext ctx, LearnFormIntent _) => ctx.Reject("not_ready"));
+        handlers.Register<UnlearnFormIntent>(static (in IntentContext ctx, UnlearnFormIntent _) => ctx.Reject("not_ready"));
+        handlers.Register<BuyIntent>(static (in IntentContext ctx, BuyIntent _) => ctx.Reject("not_ready"));
+        handlers.Register<SellIntent>(static (in IntentContext ctx, SellIntent _) => ctx.Reject("not_ready"));
+        handlers.Register<BuyBackIntent>(static (in IntentContext ctx, BuyBackIntent _) => ctx.Reject("not_ready"));
+    }
+
+    /// <summary>Moves an item: onto equipment, into the world, or (as the boards land) onto a board's cell.</summary>
+    private static void MoveItem(in IntentContext ctx, MoveItemIntent mi)
+    {
+        switch (mi.Container)
+        {
+            case "equipment" when mi.Slot is not null:
+                Equip(ctx, new EquipIntent(mi.ItemUid, mi.Slot));
+                return;
+            case "world":
+                DropItem(ctx, new DropItemIntent(mi.ItemUid));
+                return;
+            default:
+                ctx.Reject("not_ready");
+                return;
+        }
     }
 
     private static void PickUp(in IntentContext ctx, PickUpIntent p)

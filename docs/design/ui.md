@@ -64,6 +64,35 @@ The browser client draws the same cluster, core pane, ribbon and world panes fro
 
 Every surface above reads a message and sends intents. The self state carries every resource and its maximum, the reserved amount, the pools before life with their state (recharging, broken, re-arming), charges and their banks, and the stamps the cluster animates. The weave slot state carries, per seat, the form and its level, the socketed glyphs with level and dormant reason, the cooldown, uses, cast mode and progress, the converted and meta faces, and the preview numbers. The inventory state carries the board with positions and footprints, the equipment with sockets, the wallet, and every container the hero can reach with its board and unlock rungs. The passive state carries the allocated nodes, picks, points per currency and open realms. The page state carries which pages exist, which are sealed and why, and their pips. A dialogue state carries the speaker, line and choices; a vendor state carries stock, prices and buy-back. Intents move items, socket stones, set and reorder weaves, allocate and refund nodes, choose dialogue lines, buy and sell. The parity gap analysis lists which package owns each message.
 
+### The messages
+
+The shapes live in `src/HollowWake.Protocol` (`InterfaceMessages.cs` beside `Messages.cs`) and reach the browser as `web/src/net/protocol.ts`. A client that draws this interface lists the `interface` feature in its hello; the server then adds the cluster's fields to every self state and sends the hero's own states whenever they change, checked on the self-state cadence. A client that does not ask gets the plain protocol, unchanged. World panes answer what the hero does, so they reach every client.
+
+| Surface | Message | What it carries |
+|---|---|---|
+| The cluster | `self_state` | Beside the resources and maxima: `reserved` per resource, `pools` before life with `state` (ready, recharging, broken, rearming) and `since` and `until` times, the hero's `statuses` with stacks, remaining and duration, the `cast` (slot, mode, progress, stage of stages, brim, held, duration), `charges` with count and max, and `stamps`, the server times of the recent moments the cluster animates (hurt, healed, blocked, evaded, hit, crit, cast). |
+| Weave bar and rack | `weave_slots` | Every seat, empty ones included: key, form, name, level, icon, socket count, the socketed glyphs with level, stone and dormant reason, the weave's own dormant reason, `ready_in` and the full `cooldown`, uses and their cap, cast mode, targeting, costs, threads, the converted and meta faces, and `preview` lines (label and text formatted by the server). Previews follow the hero's numbers at most every `snapshots.preview_seconds`; any change to the seats goes out at once. |
+| Core pane | `inventory_state` | The bag board (width, height, mask, items with x, y, w, h and their cards), the equipment slots from content with what occupies them, the worn items, the wallet, and every container the hero owns, each board with its own id, rungs, whether it is reachable and why not. Item cards carry requirements as text with whether they are met, sockets, and what stones and form items hold; a loose stone's card lists how it fits each seated weave. |
+| Passives page | `passive_state` | Allocated nodes, the options picked per choice node, unspent points per currency, open realms, and whether a refund can be made here and its cost as text. The constellation itself is passive content. |
+| Menu tray, ribbon | `page_state` | The pages the hero has (absent means none): sealed with a reason, and pips. Gates and pips are the `ui_pages` content evaluated on the server. |
+| Dialogue pane | `dialogue_state` | The source entity, conversation, speaker, line, choices with whether each is enabled and why not, the reach, and `ended`. |
+| Vendor pane | `vendor_state` | The source, stock as cards with price per currency and count, buy-back, what the vendor pays per bag item, the reach, and `closed`. |
+| Station pane | `station_state` | The source, recipes with inputs (text, have, need), output card, craftable and reason, the reach, and `closed`. |
+
+| Intent | Message |
+|---|---|
+| Move an item to a board cell, an equipment slot or the world | `move_item {item, container, x, y, slot?}` |
+| Socket or unsocket a stone on a weave seat | `socket_stone {stone, slot, socket}`, `unsocket_stone {slot, socket, x?, y?}` |
+| Learn or unlearn a form | `learn_form {item, slot}`, `unlearn_form {slot, x?, y?}` |
+| Set or reorder weaves | `set_weave {slot, spec}`, `swap_weave_slots {a, b}` |
+| Held input and the second ability | `release_weave {slot}`, `press_weave {slot}`, `aim {x, y, z, dir_x, dir_y}`, `use_meta {slot}` |
+| Order minions | `command_minions {command, target, x, y, z, group?}` |
+| Allocate or refund a node | `allocate_passive {node, option?}`, `refund_passive {node}` |
+| Talk | `choose_dialogue {conversation, choice, node?}`, `close_dialogue {conversation}`, `close_pane {pane, source}` |
+| Trade | `buy {vendor, stock, count}`, `sell {vendor, item, count?}`, `buy_back {vendor, item}` |
+
+The server refuses an intent it cannot honor with `intent_rejected` and the reason; the hero's states then show what is true.
+
 ## Checking
 
 The scripted smoke play-through opens the core pane, visits every ribbon page, talks to a villager, trades with a vendor and saves a screenshot of each, on both clients. A page that reads anything but a message, or a client that folds a number the server already sent, fails review.

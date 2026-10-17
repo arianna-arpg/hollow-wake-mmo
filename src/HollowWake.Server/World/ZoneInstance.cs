@@ -97,6 +97,16 @@ public sealed class ZoneInstance
                 {
                     session.Send(self);
                 }
+                if (session.View.SendInterface)
+                {
+                    _outbox.Clear();
+                    SnapshotBuilder.Panels(session.View, session.Entity, _outbox);
+                    foreach (var message in _outbox)
+                    {
+                        session.Send(message);
+                    }
+                    _outbox.Clear();
+                }
             }
         }
     }

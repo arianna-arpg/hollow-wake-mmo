@@ -2,7 +2,7 @@
 
 ## Sessions
 
-A connection becomes a session. `hello` negotiates the protocol and optional features: a hello may list the `features` the client understands, and the welcome lists the ones the server granted. Both lists are absent when empty, so a hello without features gets the plain protocol, exactly as before features existed. `entity_delta` is such a feature (see Deltas below). `login` authenticates (development: any name; token mode: a shared secret) and returns the account's characters and the available callings; `create_character` and `select_character` manage characters; after `enter_world` every in-world message becomes an intent queued on the player entity and validated by the simulation. Pings answer with server time. Chat broadcasts within the zone.
+A connection becomes a session. `hello` negotiates the protocol and optional features: a hello may list the `features` the client understands, and the welcome lists the ones the server granted. Both lists are absent when empty, so a hello without features gets the plain protocol, exactly as before features existed. `entity_delta` (see Deltas below) and `interface` (see Interface states below) are such features. `login` authenticates (development: any name; token mode: a shared secret) and returns the account's characters and the available callings; `create_character` and `select_character` manage characters; after `enter_world` every in-world message becomes an intent queued on the player entity and validated by the simulation. Pings answer with server time. Chat broadcasts within the zone.
 
 ## Zones and interest
 
@@ -20,6 +20,8 @@ A `ZoneInstance` ticks its simulation and, at the snapshot rate (`snapshot_rate`
 
 **Self state.** The owner's view of their character (level, attributes, resources, weaves with cooldowns and costs, bag, equipment, currency, quests, reputation, holdings) is checked every `snapshots.self_seconds` and sent when its fingerprint changes, and at least every `snapshots.self_max_seconds`. The fingerprint covers what the message reads, with cooldowns counted down in steps of the check interval so a cooldown still visibly ticks; attribute values are reused while the attribute set is unchanged.
 
+**Interface states.** A client whose hello lists `interface` draws the interface of [ui.md](ui.md). Its self states also carry the cluster's fields (reserved amounts, the pools before life and their states, the hero's statuses, the cast, charges and recent stamps), and on the same cadence it is sent the `inventory_state`, `weave_slots`, `passive_state` and `page_state` messages whenever each one's fingerprint changes, and once on entering a zone. Fingerprints are built over what each message reads without allocating: statuses count by when they end and cooldowns by when they are ready, so timers running down change nothing, and weave previews follow the hero's numbers at most every `snapshots.preview_seconds`. World panes (`dialogue_state`, `vendor_state`, `station_state`) answer the hero's interactions and reach every client. A client that does not list `interface` gets self states exactly as before and none of the rest.
+
 **Cost.** Building snapshots never changes the simulation, so each entity is fingerprinted and captured at most once per tick however many sessions see it. Sessions count the payload bytes they are sent, the part that is snapshot traffic (split into changes, spawns and despawns, and self states), and the snapshots built for them; leaving a zone logs each per snapshot. The benchmark and tools can drive a `SnapshotBuilder` with their own views the same way a zone does.
 
 **Settings.** The `snapshots:` section of config/server.yaml (`SnapshotSettings`) tunes precision and redundancy; every session's view is given these settings when it connects. Coarser steps send fewer changes at the cost of how closely a client tracks values between them.
@@ -33,6 +35,7 @@ A `ZoneInstance` ticks its simulation and, at the snapshot rate (`snapshot_rate`
 | `resource_step` | 0.02 | Resources count as changed in steps of this fraction of their maximum, no finer than a tenth of a point and no coarser than this fraction of a hundred points |
 | `cast_steps` | 5 | Cast progress counts as changed in this many steps per cast |
 | `interest_height` | 64 | How far above and below a player interest reaches |
+| `preview_seconds` | 2 | For interface clients, the shortest time between weave preview refreshes when only the hero's numbers changed |
 
 Walking out of a zone or using a portal transfers the player: the sheet is captured, the entity despawned, the neighbor zone created if needed, the entity materialized there, and the client told to re-enter. Zones with no players unload after a timeout (the start zone stays).
 

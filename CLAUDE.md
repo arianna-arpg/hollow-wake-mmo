@@ -8,7 +8,7 @@ Hollow Wake MMO is an MMOARPG foundation: an engine-agnostic C# simulation core,
 
 ## Repository map
 
-- `src/HollowWake.Core` — simulation. Namespaces mirror systems: `Attributes`, `Expressions`, `Content`, `Definitions`, `Ecs`, `Sim`, `Components`, `Effects` (handlers by family under `Effects/Handlers/`), `Weaves`, `Combat`, `StatusEffects`, `Items`, `Loot`, `Patterns`, `Ai`, `Movement`, `World`, `WorldGen`, `Quests`, `Crafting`, `Territory`, `Progression`, `Characters`, `Interaction`, `Intents`, `Systems`. The open sets register in one file per area, so areas grow without editing each other:
+- `src/HollowWake.Core` — simulation. Namespaces mirror systems: `Attributes`, `Expressions`, `Content`, `Definitions`, `Ecs`, `Sim`, `Components`, `Effects` (handlers by family under `Effects/Handlers/`), `Weaves`, `Combat`, `StatusEffects`, `Items`, `Loot`, `Patterns`, `Ai`, `Movement`, `Minions`, `World`, `WorldGen`, `Quests`, `Crafting`, `Territory`, `Progression`, `Characters`, `Interaction`, `Intents`, `Systems`. The open sets register in one file per area, so areas grow without editing each other:
   - effect handler families: `Effects/Handlers/*Handlers.cs`, each with a `Register(EffectRegistry)` that `Effects/BuiltinEffects.cs` calls; handlers declare their parameters and hooks in an `EffectSignature`.
   - the weave compiler: `Weaves/CompiledWeave.cs`, glyph patches and hooks in `Weaves/EffectPatches.cs`, mechanism probes in `Weaves/Mechanisms.cs` (`MechanismRegistry`) with each area's probes in `Weaves/Probes/`.
   - hit stages: `Combat/Stages/` (`HitStages`), ordered by rule `combat.stages`; the hit scope in `Combat/HitScope.cs`.
