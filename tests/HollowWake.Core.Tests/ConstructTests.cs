@@ -1,10 +1,6 @@
 using System.Numerics;
 using HollowWake.Core.Attributes;
 using HollowWake.Core.Components;
-using HollowWake.Core.Content;
-using HollowWake.Core.Definitions;
-using HollowWake.Core.Ecs;
-using HollowWake.Core.Effects;
 using HollowWake.Core.Sim;
 using HollowWake.Core.Weaves;
 using Xunit;
