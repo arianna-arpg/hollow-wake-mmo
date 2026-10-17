@@ -72,7 +72,7 @@ test('proposed tracking has a rate cap; committed direction refuses later aim', 
 test('Flame display keeps the persisted ember key; reduced motion retains information', () => {
   assert.equal(displayThread('ember', config.threadDisplay), 'Flame');
   assert.equal(config.threadDisplay.ember.element, 'Fire');
-  assert.equal(config.presentation.reducedMotion.sweep, false);
+  assert.equal(config.meta.forecast.reducedMotion.sweep, false);
   for (const field of ['boundary', 'direction', 'relation', 'timing', 'surface'])
-    assert.ok(config.presentation.preserve.includes(field));
+    assert.ok(config.meta.forecast.preserve.includes(field));
 });

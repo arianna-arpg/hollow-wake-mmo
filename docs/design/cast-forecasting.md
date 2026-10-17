@@ -1,6 +1,6 @@
 # Cast forecasting
 
-Status: bounded design and executable experiment. Production integration is proposed. This chat owns only this document and `experiments/cast-forecasting/`; it does not own core, protocol, server, clients, content, or the earlier visual studies. No commits, pushes, publishing, or messages to another chat were performed.
+Status: shared-system design and executable experiment. Production integration is proposed. This deliverable owns this document, `experiments/cast-forecasting/` and its dated review record; core, protocol, server, clients, content and earlier visual studies remain with their owners. See the [Claude review handoff](../reviews/2026-10-17-cast-forecasting.md) for branch provenance and verification.
 
 ## Player contract
 
@@ -10,9 +10,21 @@ An attack's presentation has independent preparation, emission, delivery and out
 
 Use **Flame** as the player-facing Thread name, associated with **Fire**. Keep persisted IDs such as `ember`, `ember_bolt`, attribute scopes and tags compatible. The experiment demonstrates a display mapping; it does not rename gameplay keys. Display names must come from resolved content/localization, not string replacement in identifiers or messages. Existing documents and read-only references may still use the older name.
 
+## One casting foundation
+
+Preparation, aim commitment, release, interruption and delivery observation belong to the common weave runtime for every actor and every composed skill. There is no Cleave casting subsystem or Cleave forecasting renderer. Content selects existing casting modes, targeting rules, dimensions and delivery mechanisms; the forecast describes their resolved behavior. Skill, form, glyph and species IDs are identity and test data, never runtime dispatch keys.
+
+Use one lifecycle view for timed attacks, instant actions, charges, channels, toggles, projectiles and persistent deliveries. An instant action has no invented windup. A single-target or nonspatial effect may have a timing/target cue without an area. A beneficial effect follows the same lifecycle with its real relation semantics. Missing geometry support must not require a separate casting method or fabricate a harmful footprint.
+
+Register geometry providers by effect/delivery mechanism and shapes by their established shape registry. One direct-area provider must cover source-centered, point-centered and directional forms, including glyph-modified versions. It reads the compiled graph after mutators, the actual targeting context and the shared attribute fold. Presentation metadata under `meta` may choose art or sound but cannot alter duration, aim policy, hit membership or damage.
+
+A skill-specific mechanical difference is justified only by an explicit skill mutator requirement that existing composition cannot express. First implement the difference through glyph patches, modifiers, hooks and registered mechanisms. If a genuinely new capability is required, add that reusable mechanism with execution and forecast contracts together; the mutator selects it through content. Do not add a skill-name exception, a parallel cast state machine or a duplicate damage formula. Absence of an existing second consumer is not a reason to hard-code the first consumer's name.
+
+Acceptance must span different forms and targeting modes before rollout. Cleave is one regression fixture, alongside a source circle, a ground-point circle, a directional line, a second consumer of the cone mechanism and a compiled glyph that changes shape and reach. Their shared behavior must remain shared as the number of skills grows.
+
 ## Inspected implementation and limits
 
-The following describes source inspected on 2026-10-17, including the coordinator's in-progress lifecycle additions. The checkout was changing during this work; evidence records the compiled probe's module ID and a digest of core sources and content. A Git HEAD alone does not identify these uncommitted changes.
+The executable experiment runs against the clean integration baseline identified in its review record. Its output includes the compiled probe's module ID and a digest of core sources and content. The coordinator's unmerged lifecycle work was inspected separately as an integration reference; it is not copied into or required by this branch.
 
 | Existing seam | Observed behavior | Forecast implication |
 |---|---|---|
@@ -24,17 +36,17 @@ The following describes source inspected on 2026-10-17, including the coordinato
 | `SimPhase`, `ZoneBuilder` | Casting resolves in Act, before movement in Move. Scheduled work runs before systems. | Movement queued for the release tick may occur after the hit. Preserve current ordering in the first slice. |
 | `SpatialGrid.Within` and `LineOfSight` | Area queries use an implicit height tolerance of 4 around the anchor. LOS checks structure walls and rising base ground, not an explicit bridge/floor identity. | Never claim a bridge deck protects someone merely because it is a different rendered floor. |
 | `Snapshots`, `Messages` | Delivery entities already send shape, resolved size, heading, spin and expiry. Wire angles are radians; wire `inner` is a distance. Remote casts have basic casting/progress state; owner `CastInfo` is richer. | Reuse these units and renderers. Remote clients must not reconstruct missing form/glyph or owner state. |
-| `CastPresentationEvent`, `CastCueMsg`, `World/CastCues.cs` | New opt-in `cast_cues`: sequence, cast ID, phase, source/target, identity/tags, server times, positions, aim point, fired/reason. Interest entry emits `sync`; hidden targets are redacted. | Reuse confirmed lifecycle correlation. These messages do not yet carry forecast shape, explicit committed direction, policy, revisions, surface clipping or a complete forecast baseline. |
+| Coordinator's unmerged `CastPresentationEvent`, `CastCueMsg`, `World/CastCues.cs` | Proposed opt-in `cast_cues`: sequence, cast ID, phase, identity, times, positions and emission/reason. Interest entry emits `sync`; hidden targets are redacted. These files are absent from this branch's baseline. | After that separate work merges, adapt its confirmed correlation. It still needs resolved forecast geometry, commitment, revisions and complete forecast repair. |
 
-At inspection `CastPresentation.Present` derives its aim **point** from target/point, not `CastState.Direction`, and `sync` intentionally uses the source point. Do not calculate a committed cone bearing from those points. The new geometry seam must serialize the actual resolved direction separately. Reinspect this before integration because the coordinator is editing it.
+In the inspected unmerged lifecycle, `CastPresentation.Present` derives its aim **point** from target/point, not `CastState.Direction`, and `sync` uses the source point. Do not calculate a committed bearing from those points. Serialize the actual resolved direction separately. Reinspect that independently owned work before integration.
 
-The current lifecycle phases observed in source are `start`, `sync`, `release`, `impact`, `end`, `interrupt`. `Fired` records whether this cast has emitted any release, not a pulse index. Impact currently requires positive, unblocked, unevaded damage; blocked, evaded and other combat results still use `CombatEventMsg`. Do not interpret absence of impact as a miss, derive damage amounts from it, or turn every `end` with `Fired=true` into another release. The experiment verifies lifecycle correlation for its direct-area scenarios only, not every delayed or triggered effect path.
+The unmerged lifecycle phases observed were `start`, `sync`, `release`, `impact`, `end`, `interrupt`. `Fired` records any emission, not a pulse index. Impact required positive, unblocked, unevaded damage; other combat results use `CombatEventMsg`. Absence of impact is not proof of a miss, and `end` with `Fired=true` must not replay release. On the clean baseline, the probe verifies existing `WeaveStarted`, `WeaveCast`, `WeaveInterrupted` and `DamageDealt` events. Optional compile-time checks exercise the additional lifecycle only when that source is present; the evidence explicitly reports availability. Passing baseline checks does not validate the unmerged wire contract.
 
 The client shape adapters currently fall back to a circle for unknown names and apply some minimum dimensions. That fallback is unsuitable for an exact warning. Unknown/unrepresentable forecast shapes must become an explicitly uncertain envelope or a body timing cue; never silently paint a precise circle. Add parity checks at boundary points, including tiny widths, extreme inner fractions and aliases.
 
 ## Configurable contract
 
-The [example configuration](../../experiments/cast-forecasting/forecast.example.json) is a proposal, **not loadable production content**. Content selects a registered forecast provider/profile on a form or effect; glyph patches compose those fields through the existing compiler. Rendering profiles cannot change hit rules. Do not introduce a parallel attribute or formula engine.
+The [example configuration](../../experiments/cast-forecasting/forecast.example.json) is a proposal, **not loadable production content**. Delivery mechanisms select registered forecast providers; visual profiles live under `meta.forecast`. Forms and glyphs compose mechanics through the existing compiler. The provider must observe those mechanics rather than requiring every skill to repeat a forecast definition. Rendering profiles cannot change hit rules. Do not introduce a parallel attribute or formula engine.
 
 Register providers by delivery mechanism, initially `area`. A provider exposes a pure description from a shared resolved delivery plan. Execution and forecasting consume that same plan or the same pure plan builder. Extending to a new shape registers its hit predicate, resolved wire description and client outline adapters; extending to a new effect family registers a provider. Neither operation requires a switch over weave IDs.
 
@@ -63,7 +75,7 @@ These are **simulation policies**, resolved by registered handlers; the presenta
 
 | Policy | Meaning |
 |---|---|
-| `locked_on_start` | Direction commits with accepted start. Current timed Cleave. It says nothing about anchor or dimensions. |
+| `locked_on_start` | Direction commits with accepted start, as in current ordinary timed directional casts. It says nothing about anchor or dimensions. |
 | `track_until_commit` | Server samples accepted aim or perceived target, with a configured turn rate, until a server deadline. On commitment it stores and publishes the exact direction. A client timer alone cannot claim commitment. |
 | `track_to_release` | Aim can change through release; communicate that continued tracking. Releasing a held cast may resample aim under existing rules. |
 | `per_emission` | Every channel beat, salvo shot or repeated placement has its own aim/plan identity and any associated warning window. |
@@ -101,7 +113,7 @@ The current experiment proves a narrower statement: with the same deterministic 
 
 ## Network and lifecycle adapter
 
-Use the coordinator's `cast_cues` lifecycle for confirmed start/release/end/interrupt/impact. Add negotiated `cast_forecast_v1` state separately, or extend messages only after that owner agrees. Keep `CastId`; introduce an explicit zone epoch or an equally strong connection/world-entry reset guarantee. Do not identify a cast using only `(source, weave)` because repeats, reflex casts and delayed contacts may overlap.
+Once the coordinator's lifecycle has merged and been verified, reuse its confirmed start/release/end/interrupt/impact correlation. Add negotiated `cast_forecast_v1` state separately, or extend messages after seam agreement with that owner. Keep the shared cast identity; introduce an explicit zone epoch or equally strong connection/world-entry reset guarantee. Do not identify a cast using only `(source, weave)` because repeats, reflex casts and delayed contacts may overlap.
 
 1. On accepted start, send a current resolved view. A local input may display a distinct unconfirmed aiming preview, but no public cast, cost, release or damage is confirmed until the server accepts it. Rejected intents clear that preview.
 2. Update relevant geometry on accepted aim, commitment, movement/displacement, size/rule changes and relation changes. Rate-limit/coalesce unchanged views; commitment and terminal events are reliable transitions. Rate limits cannot turn a tracking estimate into a committed warning.
@@ -152,12 +164,12 @@ Expose semantic progress, relation, uncertainty and confirmed ending to optional
 Run from the repository root:
 
 ```powershell
-./experiments/cast-forecasting/run.ps1 -PackageCache 'C:\Users\John\.nuget\packages'
+./experiments/cast-forecasting/run.ps1
 ```
 
-The cache argument is optional when the normal NuGet cache is accessible. The isolated project uses the already-required YamlDotNet package and disables package feeds in its own directory. It compiles current core source into its own executable/output folders, loads shipped content, and leaves shared binaries and production source untouched. The wrapper checks that core/content did not change during the run. An unavailable cache is a build prerequisite failure, not a passing scenario.
+Use `-PackageCache <path>` if the normal NuGet cache is inaccessible. The isolated project uses the already-required YamlDotNet package and disables package feeds in its own directory. It compiles current core source and the existing engine-free client shape adapter into its own output folders, loads shipped content, and leaves shared binaries and production source untouched. The wrapper checks that core/content did not change during the run. An unavailable cache is a build prerequisite failure, not a passing scenario.
 
-Inputs: [scenario data](../../experiments/cast-forecasting/scenarios.json), [core probe](../../experiments/cast-forecasting/Program.cs), [proposed contract checks](../../experiments/cast-forecasting/contract-model.test.mjs). Outputs: [actual event/position traces](../../experiments/cast-forecasting/evidence/core-results.json). The fixture uses two brigand bodies through the common runtime; it does not exercise character creation, real AI choices, a network session or either production renderer.
+Inputs: [scenario data](../../experiments/cast-forecasting/scenarios.json), [core probe](../../experiments/cast-forecasting/Program.cs), [mechanism providers](../../experiments/cast-forecasting/ForecastProviders.cs), [proposed contract checks](../../experiments/cast-forecasting/contract-model.test.mjs). Outputs: [actual event/position traces](../../experiments/cast-forecasting/evidence/core-results.json). The fixture uses brigand bodies through the common runtime and actual compiled forms/glyphs. It does not exercise character creation, real AI choices, a network session or either complete production renderer.
 
 For the read-only replay, run `node experiments/cast-forecasting/serve.mjs` and open `http://127.0.0.1:8794`. The [viewer](../../experiments/cast-forecasting/index.html) scrubs the recorded frames; it has no damage formula, gameplay loop or automated camera motion. It shows numeric damage only after a recorded damage event. Its simple planar outline is diagnostic, not a production renderer. It does not implement the proposed relation/uncertainty grammar or vertical surface projection.
 
@@ -165,26 +177,21 @@ The controls disable crit, evasion, block and regeneration through ordinary modi
 
 | Scenario | Required proof |
 |---|---|
-| Stand through windup | No damage before actual duration; one start, release, impact and terminal transition for one cast ID. |
-| Walk out | Real movement leaves the footprint before resolution; release still occurs, no damage/impact. |
-| Committed aim | A late accepted aim update does not rotate ordinary Cleave or change the paired seeded hit. |
+| Stand through windup | No damage before actual duration; one authoritative start and payload resolution. |
+| Walk out | Real movement leaves the footprint before resolution; payload resolves with no damage. |
+| Committed aim | A late accepted aim update does not rotate an ordinary timed directional cast or change its paired seeded hit. |
 | Interrupted | Existing stun handling interrupts before release; no payload or damage. |
 | Tank | Same seed/position/attack, higher armor, lower but nonzero actual damage. |
 | Friendly | Same faction inside the candidate region is excluded by enemy filtering. |
 | Body edge | An actor's edge inside but center outside an area does not get hit. |
 | Elevated bodies | At 3 units above the anchor the current area may hit; at 5 it does not. These are stationary synthetic bodies, not bridge fixtures. |
+| Different consumers | The same provider supports cone, source circle, point circle and line; changing form does not select a new cast implementation. |
+| Compiled mutator | A glyph changes shape and radius through normal compilation. A target outside original reach is hit; a target inside the new hollow center is excluded. |
+| Unsupported mechanisms | Projectile and cascade graphs report no exact provider rather than being misrepresented as a direct area. |
 
-The probe's geometry reader intentionally accepts only one direct source-centered deterministic area and refuses other graphs. It uses the real registered shape and core size helpers; it is not the extensible production provider. A production implementation must extract the common plan evaluation from the handler, including every modifier/wrapper and selection condition.
+The experiment registry accepts a single direct deterministic `area` root. It uses real registered predicates, core size/anchor helpers and compiled glyph results; the viewer consumes the existing client's outline loops with no skill-name or shape switch. It distinguishes the caster from a ground-point anchor. This bounded proof is not the production plan extractor: its expression guard does not establish purity of arbitrary attribute dependencies, and it describes only the primary region, not scatter, pulse, trigger or nested payload coverage. A production implementation must extract common plan evaluation from the handler, model every relevant modifier/wrapper and selection condition, and validate declared certainty.
 
-Verification snapshot, 2026-10-17:
-
-- Isolated probe: all 27 real-core scenario/rate combinations passed, including correlated confirmed lifecycle transitions. Ten proposed-contract checks passed. [Recorded output](../../experiments/cast-forecasting/evidence/validation.txt). The wrapper confirmed stable core/content during this run.
-- At 20 ticks/second the paired stand and tank cases resolved approximately 9.8600 and 2.7889 damage respectively. Moving out and interruption resolved no damage. These are fixture observations, not prospective damage guarantees or balance targets.
-- Replay inspected in the in-app browser: windup at 67%, walk-out before release, unchanged direction after late aim, interrupted preparation without release, and armor with actual post-release damage. Saved captures: [windup](../../experiments/cast-forecasting/evidence/windup.png), [move out](../../experiments/cast-forecasting/evidence/move-out.png), [interruption](../../experiments/cast-forecasting/evidence/interrupted.png), [tank](../../experiments/cast-forecasting/evidence/tank.png). This is visual inspection of the diagnostic viewer, not a production client smoke.
-- Full solution build with outputs isolated under the experiment passed with zero warnings/errors. Content validation reported zero errors/warnings. Headless zone load and a five-second brigand/boar duel passed.
-- Full solution tests were **not all green** at the concurrent integration snapshot: core 429 passed/1 failed (old `Ember Bolt Codex` expectation versus `Flame Bolt Codex`); client logic 78 passed; server 30 passed/2 failed before the WebSocket test timed out. Server failures were missing `CastCueMsg` in the sample roster and stale generated web protocol. The timeout occurred in `WebSocketTests.ServesTheWebClientBesideTheSocket`; it is not established as a forecast defect. These shared files were left with their owner. Detailed attempt notes: [verification record](../../experiments/cast-forecasting/evidence/verification.txt).
-
-Coordinator update: the later complete casting implementation suite resolves the concurrent Flame-name/protocol failures and passes its live transport tests. See [the current verification record](../reviews/2026-10-17-flame-cast-events.md); the earlier snapshot above remains provenance for this experiment.
+Run-specific counts, commands, screenshots and limitations live in the [verification record](../../experiments/cast-forecasting/evidence/verification.txt) and [dated handoff](../reviews/2026-10-17-cast-forecasting.md). Those records identify the tested baseline; earlier results from a concurrently changing coordinator checkout are not evidence for this branch.
 
 Do not use the isolated contract checks as evidence that proposed tracking locks, network repair, bridge clipping, AI avoidance, prospective damage bounds, production performance or client visuals already work. Shared runtime integration and its fresh complete gates remain the coordinator's next responsibility.
 
@@ -194,16 +201,16 @@ Coordinator: Codex chat `01a14ba0-9495-7e43-b914-0a3f92cc24fc`. That chat owns t
 
 | Owner / proposed slice | Exact seam and boundary |
 |---|---|
-| This deliverable | Entire `docs/design/cast-forecasting.md` and `experiments/cast-forecasting/`. No edits elsewhere. |
+| This deliverable | `docs/design/cast-forecasting.md`, `experiments/cast-forecasting/` and the dated review record. No production edits. |
 | Existing coordinator | Current `CastPresentationEvent`, `CastCueMsg`, core release/contact/end correlation, server subscription/interest sync, both lifecycle consumers and Flame display/VFX changes. Finish and validate those before extending the wire. |
 | Next core owner, after seam agreement | Extract a pure resolved area plan from `Effects/Handlers/DeliveryHandlers.cs` and `EffectHelpers.cs`; expose it to execution and a registered forecast provider. Extend `CastState`/runtime only for genuine required observation or new mechanics. Do not add delayed commitment mechanics just to draw Cleave. |
 | Next protocol/server owner | Add resolved direction, node identity, size/anchor certainty, eligibility and observation/deadline fields; negotiate forecast capability; maintain lifecycle correlation, redaction and interest repair in `World/CastCues.cs`/snapshot seams. Regenerate web protocol. |
 | Next client owners | Feed those regions into Godot `ShapeOutline`/`ShapeMesh` and web `shapes.ts`, with safe unsupported-shape behavior, current core coordinates and shared golden fixtures. Keep decorative Flame VFX separate. |
 | Follow-on mechanics owners | Explicit vertical/surface eligibility, tracking commitment, delivery-family providers, quantitative damage bounds and optional AI avoidance. Each needs its own scope and tests; none is authorized as a runtime edit by this bounded deliverable. |
 
-**Next safe implementation slice:** after the coordinator accepts the shared plan/DTO seam, support the direct deterministic area provider and expose existing Cleave semantics in a flat two-client arena. Preserve start-locked direction, source-at-release origin, live dimensions, existing filters and center tests. Show a conditional boundary where future dimensions/origin/eligibility can change. Add one content-composed variant using the same provider to prove there is no weave-name branch. Keep all unsupported providers honest with timing-only or envelope cues. No damage estimate is required for this slice.
+**Next safe implementation slice:** after shared plan/DTO seam agreement, expose the common cast lifecycle and direct deterministic area provider in a flat two-client arena. Demonstrate directional, source-centered and ground-point forms plus a glyph-mutated variant through the same provider and renderer. Preserve each compiled form's existing targeting, direction commitment, anchor, live dimensions, filters and center tests. Show a conditional boundary where future dimensions/origin/eligibility can change. Keep unsupported providers honest with timing-only or envelope cues. No new skill-specific casting method or damage estimate is required.
 
-Acceptance: same committed cone for local player, remote player and enemy; move out before Act resolves; move on release tick follows documented ordering; late aim cannot bend Cleave; source displacement updates origin; a mid-cast size modifier updates the live region; interruption does not flash release; armor reduces the real result; release without a target produces no impact; late join shows elapsed preparation; reconnect/transfer/stale messages cannot resurrect it; unknown shapes fail safely. Run the repository build/test/content gates, core/server loopback and both production client builds/smokes when these shared files change. Bridge and crowded-world rollout waits for their explicit eligibility/clipping and readability gates.
+Acceptance: equivalent compiled behavior for local player, remote player and enemy; distinct shapes and anchors through common adapters; move out before Act resolves; movement on the release tick follows documented ordering; late aim cannot bend a start-locked direction; source displacement updates a source anchor without dragging a fixed point; a mid-cast size modifier updates the live region; a mutator changes the plan through composition; interruption does not flash release; armor reduces the real result; release without a target produces no impact; late join shows elapsed preparation; reconnect/transfer/stale messages cannot resurrect it; unknown shapes fail safely. Run repository build/test/content gates, core/server loopback and both production client builds/smokes when those shared files change. Bridge and crowded-world rollout waits for explicit eligibility/clipping and readability gates.
 
 Unresolved decisions: whether future authored attacks use delayed aim commitment; whether size/origin should ever freeze; vertical volume versus same-surface gameplay; supported notice/latency envelope and any input grace; target-cap/random-placement forecast policy; whether prospective damage intervals justify their complexity; quality-budget overload representation and minimum-device cost. The conservative defaults above allow the first slice without pretending those decisions are made.
 
@@ -211,5 +218,5 @@ Unresolved decisions: whether future authored attacks use delayed aim commitment
 
 - Repository [vision](../VISION.md), [architecture](../ARCHITECTURE.md), [combat](combat.md), [deliveries](deliveries.md), [movement](movement-and-z-levels.md), [networking](networking-and-persistence.md), [AI](ai.md), [JSON wire ADR](../adr/0004-wire-format.md), [browser ADR](../adr/0006-browser-client.md), and `CLAUDE.md`.
 - Actual source under `src/HollowWake.Core/Weaves`, `Effects/Shapes.cs`, `Effects/Handlers/DeliveryHandlers.cs`, `EffectHelpers.cs`, `Combat/DamagePipeline.cs`, `Combat/Stages`, `World/SpatialGrid.cs`, `World/LineOfSight.cs`, `Sim/SimSystem.cs`, `Sim/Events/CastPresentationEvents.cs`; `src/HollowWake.Protocol/CastCueMsg.cs`, `Messages.cs`; server `Snapshots.cs`, `CastCues.cs`, `ZoneInstance.cs`; both shape adapters; shipped forms/weaves/rules and existing cast/delivery tests.
-- Current [visual-language study](visual-language.md) and [sprite-rendering study](sprite-rendering-study.md), read-only. Their anticipation/contact distinctions, quiet nonessential effects and shape-first readability inform this proposal; their rendering/performance results are not recertified here.
+- Coordinator's unmerged `docs/design/visual-language.md` and `docs/design/sprite-rendering-study.md`, read-only references outside this branch. Their anticipation/contact distinctions, quiet nonessential effects and shape-first readability inform this proposal; their rendering/performance results are not recertified here. The lifecycle source paths above are also separately owned, unmerged references.
 - Prior project, read-only: `D:\Games\Claude\ARPG Game - World\AGENTS.md`, `CLAUDE.md`, `docs/design/casting-cues.md`, `combat-threat-cues.md`, `combat-readability.md`. Transferable principles: actual-clock readiness, fixed committed placement, distinct fracture/fizzle, relation-independent identity and no invented defensive guarantees. The older TypeScript implementation is not the new server's authority.

@@ -12,7 +12,7 @@
     "movement": "resolved_cast_move_factor",
     "interrupt": "existing_runtime_rules"
   },
-  "presentation": {
+  "meta": {"forecast": {
     "profile": "area_warning",
     "trackingBoundary": "dashed",
     "committedDirectionMarker": "closed_chevron",
@@ -23,9 +23,9 @@
     "unknownPattern": "crosshatch",
     "reducedMotion": {"sweep": false, "pulse": false, "cameraShake": false, "progress": "linear_meter"},
     "preserve": ["boundary", "direction", "relation", "timing", "uncertainty", "surface"]
-  },
+  }},
   "exampleTrackingVariant": {
-    "description": "Proposed mechanics; the current Cleave has no delayed commitment policy.",
+    "description": "Optional reusable mechanic only if an explicit mutator requires it; not a skill-specific casting method or current runtime behavior.",
     "direction": {"mode": "track_until_commit", "turnRateDegreesPerSecond": 180, "commitBeforeReleaseSeconds": 0.3},
     "commitAcknowledgmentRequired": true
   },

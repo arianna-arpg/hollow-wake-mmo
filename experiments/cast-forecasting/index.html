@@ -7,7 +7,7 @@
 :root{color-scheme:dark;font-family:system-ui,sans-serif;background:#12191b;color:#f1ede1}body{max-width:1080px;margin:40px auto;padding:0 24px}h1{font-family:Georgia,serif;font-weight:normal;font-size:38px;margin-bottom:8px}p{color:#b9c3c3;line-height:1.5}label{display:inline-block;margin:18px 20px 20px 0}select,button{padding:10px;border:1px solid #607074;background:#1e292c;color:inherit;border-radius:5px}main{display:grid;grid-template-columns:minmax(0,2fr) minmax(230px,1fr);gap:24px}svg{width:100%;background:#1a2527;border:1px solid #405256;border-radius:8px}aside{padding:20px;background:#1d292c;border-radius:8px}dt{color:#a4b6b6;margin-top:18px}dd{margin:5px 0;font-size:20px}input{width:100%;margin:20px 0}output{display:block;font-variant-numeric:tabular-nums}small{color:#b9c3c3}#error{color:#ffc5ae}@media(max-width:760px){main{grid-template-columns:1fr}}@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto}}
 </style>
 <h1>A warning you can act on</h1>
-<p>Recorded Cleave scenarios from Hollow Wake’s combat simulation. Scrub the real preparation and outcome. The viewer does not calculate damage or simulate another attack.</p>
+<p>One casting foundation, composed attacks. Scrub recorded preparation and outcomes across cones, circles, lines and glyph mutations. Geometry comes from the shared shape adapter; damage comes from the combat simulation.</p>
 <label>Scenario <select id="scenario" aria-label="Scenario"></select></label>
 <label>Simulation rate <select id="rate" aria-label="Simulation rate"><option>20</option><option>10</option><option>60</option></select></label>
 <main>
@@ -15,7 +15,8 @@
 <svg id="scene" viewBox="0 0 640 420" role="img" aria-label="Attack region, caster and moving defender">
 <defs><pattern id="grid" width="48" height="48" patternUnits="userSpaceOnUse"><path d="M48 0H0V48" fill="none" stroke="#2e3f42"/></pattern></defs>
 <rect width="640" height="420" fill="url(#grid)"/>
-<path id="region" fill="#db9654" fill-opacity=".13" stroke="#f2b578" stroke-width="3"/>
+<path id="region" fill="#db9654" fill-opacity=".13" fill-rule="evenodd" stroke="#f2b578" stroke-width="3"/>
+<circle id="anchor" r="5" fill="none" stroke="#f2b578" stroke-width="2"/>
 <path id="direction" stroke="#f5cd9b" stroke-width="3" fill="none"/>
 <circle id="source" r="12" fill="#d4a570" stroke="#f4e5c2" stroke-width="2"/>
 <circle id="target" r="12" fill="#88bdc5" stroke="#e4ffff" stroke-width="2"/>
@@ -30,56 +31,64 @@
 </section>
 <aside>
 <strong id="name"></strong>
-<dl><dt>Direction</dt><dd>Committed at start</dd><dt>Preparation</dt><dd id="duration"></dd><dt>Recorded outcome so far</dt><dd id="damage"></dd><dt>Defender armor</dt><dd id="armor"></dd></dl>
+<dl><dt>Shared area provider</dt><dd id="shape"></dd><dt>Preparation</dt><dd id="duration"></dd><dt>Recorded outcome so far</dt><dd id="damage"></dd><dt>Defender armor</dt><dd id="armor"></dd></dl>
 <p id="note"></p>
 <small>The outline tests body centers. Relation, height and line of sight also affect eligibility. A region is not a promise of damage.</small>
 </aside>
 </main>
 <p id="error" role="alert"></p>
-<p><small>Evidence viewer only. The elevated-body cases are synthetic probes of current height tolerance, not a bridge simulation. Numeric damage appears only after its recorded event.</small></p>
+<p><small id="coverage"></small></p>
+<p><small>Evidence viewer only. Shapes have live dimensions in the game; these fixtures hold dimensions fixed. The elevated-body cases are synthetic height probes. Numeric damage appears only after its recorded event. This is a planar candidate region, subject to eligibility and occlusion.</small></p>
 <script type="module">
 const $ = id => document.getElementById(id);
 try {
   const response = await fetch('./evidence/core-results.json');
   if (!response.ok) throw new Error(`Evidence could not be loaded (${response.status}).`);
   const evidence = await response.json();
-  const runs = evidence.results;
+  const runs = evidence.results.filter(r => r.frames);
+  const unavailable = evidence.results.filter(r => r.coverageOnly && r.tickRate === 20);
+  $('coverage').textContent = `${runs.length} recorded attacks. ${unavailable.length} additional graph types correctly have no exact provider: ${unavailable.map(r => r.label).join('; ')}.`;
   for (const run of runs.filter(r => r.tickRate === 20)) {
     const option = document.createElement('option'); option.value = run.id; option.textContent = run.label; $('scenario').append(option);
   }
-  let run;
-  const xy = p => [215 + (p[0] - 10) * 48, 230 - (p[1] - 10) * 48];
+  let run, xy;
+  const world = (point, frame) => [frame.anchor[0] + point[0] * Math.cos(frame.heading) - point[1] * Math.sin(frame.heading), frame.anchor[1] + point[0] * Math.sin(frame.heading) + point[1] * Math.cos(frame.heading)];
   function choose() {
     run = runs.find(r => r.id === $('scenario').value && r.tickRate === Number($('rate').value));
+    const points = run.frames.flatMap(frame => [frame.source, frame.target, frame.anchor, ...run.outline.flat().map(p => world(p, frame))]);
+    const minX = Math.min(...points.map(p => p[0])), maxX = Math.max(...points.map(p => p[0]));
+    const minY = Math.min(...points.map(p => p[1])), maxY = Math.max(...points.map(p => p[1]));
+    const scale = Math.min(500 / Math.max(4, maxX - minX), 250 / Math.max(4, maxY - minY));
+    xy = p => [320 + (p[0] - (minX + maxX) / 2) * scale, 205 - (p[1] - (minY + maxY) / 2) * scale];
     $('time').max = run.frames.length - 1; $('time').value = 0; draw();
   }
   function draw() {
     const frame = run.frames[Number($('time').value)];
     const [sx, sy] = xy(frame.source); const [tx, ty] = xy(frame.target);
-    const points = [[sx, sy]];
-    for (let i = 0; i <= 48; i++) {
-      const a = frame.heading - run.angleRadians / 2 + run.angleRadians * i / 48;
-      points.push([sx + Math.cos(a) * run.radius * 48, sy - Math.sin(a) * run.radius * 48]);
-    }
-    $('region').setAttribute('d', `M${points.map(p => p.join(',')).join('L')}Z`);
+    const [ax, ay] = xy(frame.anchor);
+    $('region').setAttribute('d', run.outline.map(loop => `M${loop.map(p => xy(world(p, frame)).join(',')).join('L')}Z`).join(''));
     $('region').style.display = frame.casting ? '' : 'none';
-    const dx = sx + Math.cos(frame.heading) * 70, dy = sy - Math.sin(frame.heading) * 70;
-    $('direction').setAttribute('d', `M${sx},${sy}L${dx},${dy}`);
+    $('anchor').setAttribute('cx', ax); $('anchor').setAttribute('cy', ay);
+    $('anchor').style.display = frame.casting ? '' : 'none';
+    const dx = ax + Math.cos(frame.heading) * 45, dy = ay - Math.sin(frame.heading) * 45;
+    $('direction').setAttribute('d', `M${ax},${ay}L${dx},${dy}`);
+    $('direction').style.display = frame.casting ? '' : 'none';
     for (const [id,x,y] of [['source',sx,sy],['target',tx,ty]]) {
       $(id).setAttribute('cx', x); $(id).setAttribute('cy', y);
       $(`${id}Label`).setAttribute('x', x - 25); $(`${id}Label`).setAttribute('y', y + 30);
     }
     const events = run.events.filter(e => e.time <= frame.time + 1e-8);
     const hits = events.filter(e => e.kind === 'damage');
-    const interrupted = events.some(e => e.kind === 'confirmed_interrupt');
-    const released = events.some(e => e.kind === 'confirmed_release');
-    $('stateLabel').textContent = frame.casting ? `Preparing · ${Math.round(frame.progress * 100)}%` : interrupted ? 'Interrupted · no release' : released ? 'Release confirmed' : 'No active preparation';
+    const interrupted = events.some(e => e.kind === 'interrupted');
+    const resolved = events.some(e => e.kind === 'resolved');
+    $('stateLabel').textContent = frame.casting ? `Preparing · ${Math.round(frame.progress * 100)}%` : interrupted ? 'Interrupted · no payload' : resolved ? 'Payload resolved' : 'No active preparation';
     $('bar').setAttribute('width', frame.casting ? 592 * frame.progress : 0);
     $('clock').textContent = `${frame.time.toFixed(2)} s · tick ${frame.tick}`;
     $('name').textContent = run.label; $('duration').textContent = `${run.duration.toFixed(2)} s`;
+    $('shape').textContent = run.shape;
     $('armor').textContent = run.armor.toFixed(1);
     $('damage').textContent = hits.length ? `${hits.reduce((s,e) => s + e.amount,0).toFixed(2)} damage resolved` : 'No damage event';
-    $('note').textContent = run.id.startsWith('vertical') ? `Defender is ${frame.target[2]} units above the anchor. This view shows the planar candidate region only.` : run.id === 'tank' ? 'The defender keeps position. Armor changes the resolved damage, not the attack region.' : run.id === 'friendly' ? 'The defender shares the caster’s faction. Cleave’s enemy filter excludes it.' : run.id === 'committed-aim' ? 'An accepted northward aim update occurs during windup. Cleave retains its original eastward direction.' : 'Source, defender and cast progress come from the recorded simulation frames.';
+    $('note').textContent = `${run.note} Defender height relative to anchor: ${(frame.target[2] - frame.anchor[2]).toFixed(1)}.`;
   }
   $('scenario').addEventListener('change', choose); $('rate').addEventListener('change', choose); $('time').addEventListener('input', draw); choose();
 } catch (error) { $('error').textContent = `${error.message} Run the probe, then open this viewer through serve.mjs.`; }

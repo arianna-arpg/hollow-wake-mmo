@@ -1,0 +1,78 @@
+[
+  {
+    "path": "docs/design/cast-forecasting.md",
+    "sha256": "4B3123F7BC80F51C573B8A15F0EF08F5E083306215AC513351EF747126869A9D"
+  },
+  {
+    "path": "experiments/cast-forecasting/.gitignore",
+    "sha256": "A5CAC342175BF9DADB0C335AB660D932905489A78777CD82C22AFB98716308C3"
+  },
+  {
+    "path": "experiments/cast-forecasting/contract-model.mjs",
+    "sha256": "8D452F941141221A724D092133B6A946ACB757E94B4BF14B7FA892E460F73849"
+  },
+  {
+    "path": "experiments/cast-forecasting/contract-model.test.mjs",
+    "sha256": "80B69D3710F47EFA1DB138D06C0627BC225B589D3F8A6AF2ED5815C4FB03A5E9"
+  },
+  {
+    "path": "experiments/cast-forecasting/forecast.example.json",
+    "sha256": "49049E8C453A7BFE097B55293ACC7B971B1D0602F002AEF9339B0BF4A71BED6C"
+  },
+  {
+    "path": "experiments/cast-forecasting/ForecastProbe.csproj",
+    "sha256": "159758C0011291C4981051E05F1F6D0C6E9E748646A7BB215CCABFB50FC4049F"
+  },
+  {
+    "path": "experiments/cast-forecasting/index.html",
+    "sha256": "26B74A91AEB5B7540D6D48BEB98CB84D0B9CB77CD5CE2E9FE8D41CE53788E81B"
+  },
+  {
+    "path": "experiments/cast-forecasting/NuGet.Config",
+    "sha256": "DA23BE69A7AE9DC0536CFA66DA909D95A9B06D06786E14BAA3249ABC1843EC60"
+  },
+  {
+    "path": "experiments/cast-forecasting/Program.cs",
+    "sha256": "82BF6525CEFF13E8834F012CBEDF530D824C013B3C97DCAFACB9CA2DED42F01C"
+  },
+  {
+    "path": "experiments/cast-forecasting/run.ps1",
+    "sha256": "1E64C2851C5C53116DE7ABE5FDB987A4270FF1EA7873096E80A01375148B201B"
+  },
+  {
+    "path": "experiments/cast-forecasting/scenarios.json",
+    "sha256": "58043DB1F10343F59AC2AD430556FBD6525AB677F2468272E3A8031C439AE555"
+  },
+  {
+    "path": "experiments/cast-forecasting/serve.mjs",
+    "sha256": "45A164B51062D619B4CBC98B92F71B6204D6AFD23F7812B4780C59EB7B699C90"
+  },
+  {
+    "path": "experiments/cast-forecasting/evidence/core-results.json",
+    "sha256": "5C5D10FEE938CF6F7D9A112333D8ABFD10AC6CDE83975D82104075B5C4E1DDD4"
+  },
+  {
+    "path": "experiments/cast-forecasting/evidence/interrupted.png",
+    "sha256": "CD8D28698169554DF7A910FBFE924EA6E869C232953A390B1F60709926EF61A9"
+  },
+  {
+    "path": "experiments/cast-forecasting/evidence/move-out.png",
+    "sha256": "E78AC2DC5960AD8C02A00559D196889ECED5B602BEE6C8453141148786262A18"
+  },
+  {
+    "path": "experiments/cast-forecasting/evidence/tank.png",
+    "sha256": "1FAC0376DD9B2B8A5DC191DD1C980152A40815206723F9613C3FD3B506327E27"
+  },
+  {
+    "path": "experiments/cast-forecasting/evidence/validation.txt",
+    "sha256": "032D394ACB809400AE97024A9D9195AB5F539A098E588872E86E9340B9BB7809"
+  },
+  {
+    "path": "experiments/cast-forecasting/evidence/verification.txt",
+    "sha256": "66F6FAE02ED4CE6CE7C74B91EBFB4E66B3CAA4E63FD3E6A022FEAB7A106E513E"
+  },
+  {
+    "path": "experiments/cast-forecasting/evidence/windup.png",
+    "sha256": "65E44EA32989FC402D814B62A332648687285DC2DA895F521A809965E6A4A71D"
+  }
+]

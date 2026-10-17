@@ -7,7 +7,7 @@ function Source-Fingerprint {
     $files = @(Get-ChildItem -LiteralPath (Join-Path $repositoryRoot 'src/HollowWake.Core') -Recurse -Filter '*.cs' |
         Where-Object { $_.FullName -notmatch '[\\/](bin|obj)[\\/]' })
     $files += @(Get-ChildItem -LiteralPath (Join-Path $repositoryRoot 'content/core') -Recurse -Filter '*.yaml')
-    return (($files | Sort-Object FullName | ForEach-Object { (Get-FileHash -LiteralPath $_.FullName -Algorithm SHA256).Hash }) -join '')
+    return (($files | Sort-Object FullName | ForEach-Object { $_.FullName + ':' + (Get-FileHash -LiteralPath $_.FullName -Algorithm SHA256).Hash }) -join '')
 }
 $before = Source-Fingerprint
 dotnet run --project (Join-Path $experimentRoot 'ForecastProbe.csproj') -- $repositoryRoot

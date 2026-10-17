@@ -1,66 +1,62 @@
 Cast forecasting verification, 2026-10-17
 
-Scope
-Only docs/design/cast-forecasting.md and experiments/cast-forecasting/ were authored.
-No production source/content edits, commits, pushes, publishing, or other-chat messages.
-The shared checkout was concurrently changing. Evidence/core-results.json includes
-the core module ID and source/content digest for the isolated probe. Those are not
-claimed to identify the earlier full-solution build/test snapshot.
+Baseline and scope
+Branch: codex/cast-forecasting
+Base: 07a249755511922441e39f2abd90808098397699 (main)
+Own managed worktree: C:/Users/John/.codex/worktrees/cast-forecasting/MMOARPG
+Only docs/design/cast-forecasting.md, experiments/cast-forecasting/ and the
+dated review handoff are authored here. No production source/content edits.
+The coordinator's unmerged lifecycle, Flame VFX and visual studies are not copied.
+The migration manifest records hashes of the original owned files before refinement;
+it is provenance, not a manifest of the final files.
 
-Passing isolated verification
-run.ps1 -PackageCache C:\Users\John\.nuget\packages
-27 scenarios (nine cases at 20, 10 and 60 ticks/second).
-10 contract-model tests.
-Actual Cleave damage and lifecycle events, not a separate damage simulation.
-Stable source/content fingerprint across the final probe run.
-Output: validation.txt and core-results.json.
+Shared mechanism proof
+./experiments/cast-forecasting/run.ps1 -PackageCache C:\Users\John\.nuget\packages
+PASS: 63 scenario/provider checks: 21 cases at 20, 10 and 60 ticks/second.
+57 real attacks and 6 unsupported-provider checks. Ten contract-model tests pass.
+The wrapper verified stable core/content fingerprints during execution.
+Evidence: validation.txt and core-results.json (actual event/position traces).
+Source/content SHA256: 650F59A32B0DF01C4F347A5BA3EA88EC66C455CC0A21D75EEA619A9522097CAD
+Confirmed lifecycle extension available: false on this clean baseline.
+Existing WeaveStarted/WeaveCast/WeaveInterrupted and DamageDealt events are checked.
+Optional unmerged CastPresentationEvent assertions were not exercised on this branch.
 
-Diagnostic viewer inspected through the in-app browser
-Actual preparation scrubbed to 0.80 seconds, 67 percent.
-Moving defender visibly outside before release and no damage afterward.
-Late accepted aim does not rotate the current Cleave direction.
-Interruption removes region and shows no release or damage.
-Armor case shows 2.79 actual damage only after the recorded hit.
-Saved screenshots: windup.png, move-out.png, interrupted.png, tank.png.
-No automatic animation is used. This is not Godot/web production rendering QA.
+One registered area provider handles compiled cone, circle, point circle and line
+forms. The crescent glyph changes shape and reach through the ordinary compiler.
+The original cone misses a target beyond its reach; the mutated region hits it,
+and the mutated hollow center excludes a nearer target. No skill/glyph/form IDs
+select behavior in Program.cs, ForecastProviders.cs or index.html.
+Projectile and cascade graphs decline exact geometry rather than faking an area.
+Probe scope: direct primary regions for fixed deterministic fixtures. Arbitrary
+expression purity, secondary scatter/pulses and nested payloads are not certified.
 
-Repository gates attempted with outputs kept inside the experiment
+Diagnostic viewer, in-app browser at localhost:8795
+Visually inspected the crescent with its empty center, a directional line, and a
+ground-point circle with its anchor distinct from the caster. Captures:
+mutator.png, line.png, point.png. Each is below 200 KB.
+Interruption at 1.60s: region hidden, 'Interrupted / no payload', no damage event.
+Armor case at 1.60s: 'Payload resolved', 2.79 actual damage, armor 250.
+Mind Lash walk-out at 0.90s: 'Payload resolved', no damage event.
+No automatic animation or damage prediction. This is not production renderer QA.
+
+Repository gates, all from this worktree
 NUGET_PACKAGES=C:\Users\John\.nuget\packages
-dotnet build HollowWake.sln --artifacts-path experiments/cast-forecasting/.validation
-  --configfile experiments/cast-forecasting/NuGet.Config -p:NuGetAudit=false --verbosity quiet
-PASS: zero warnings, zero errors.
+dotnet build HollowWake.sln --configfile experiments/cast-forecasting/NuGet.Config -p:NuGetAudit=false
+PASS: zero warnings, zero errors, including the Godot client assembly.
+dotnet test HollowWake.sln --no-build --no-restore --blame-hang-timeout 90s
+PASS: 416 core + 36 server + 78 client logic = 530 tests; zero failed/skipped.
+The server run includes loopback, WebSocket and generated-protocol checks.
+dotnet run --project src/HollowWake.Tools --no-build --no-restore -- validate
+PASS: zero errors, zero warnings.
+dotnet run --project src/HollowWake.Tools --no-build --no-restore -- load --x 0 --y 0
+PASS: zone generated, 200 ticks.
+dotnet run --project src/HollowWake.Tools --no-build --no-restore -- fight loosed_brigand boar --seconds 5
+PASS: deterministic combat trace with both Cleave and Gore through the common runtime.
 
-dotnet test HollowWake.sln --artifacts-path experiments/cast-forecasting/.validation
-  --no-build --no-restore
-  --results-directory experiments/cast-forecasting/.validation/TestResults
-  --blame-hang-timeout 45s --blame-hang-dump-type none --verbosity normal
-NOT GREEN at this in-progress shared snapshot:
-Core: 429 passed, 1 failed.
-  InventoryTests.ACallingStartsWithItsWeavesLearnedAsCodices expected
-  Ember Bolt Codex, got Flame Bolt Codex.
-Client logic: 78 passed.
-Server: 30 passed, 2 failed, then aborted by the inactivity timeout.
-  InterfaceProtocolTests.EveryMessageTypeHasASample lacks CastCueMsg.
-  ProtocolContractTests.WebClientModuleMatchesTheMessages says protocol.ts is stale.
-  Active test at timeout: WebSocketTests.ServesTheWebClientBesideTheSocket.
-Detailed local log is ignored under .validation/solution-tests.txt.
-These active integration failures were not repaired outside the ownership boundary.
-
-An initial build/test path placed artifacts one extra directory deeper. Build passed,
-but many existing tests could not find content/core within their fixed upward-search
-limit. The shallower path above fixed that test setup problem without editing tests.
-Do not count those initial discovery failures as gameplay regressions.
-
-dotnet experiments/cast-forecasting/.validation/artifacts/bin/HollowWake.Tools/debug/hollowwake.dll validate
-PASS: 0 errors, 0 warnings.
-dotnet experiments/cast-forecasting/.validation/bin/HollowWake.Tools/debug/hollowwake.dll load --x 0 --y 0
-PASS: generated/loaded the zone, ran 200 ticks.
-dotnet experiments/cast-forecasting/.validation/bin/HollowWake.Tools/debug/hollowwake.dll fight loosed_brigand boar --seconds 5
-PASS: deterministic combat trace includes Cleave and Gore through the common runtime.
-
-Not claimed
-No production forecast feature, complete lifecycle-family audit, prospective damage
-bounds, bridge integration, real player/AI avoidance, network latency experiment,
-crowd/occlusion benchmark, minimum-device performance result, or full production
-client smoke. The first safe production slice and explicit owner seams are in the
-design document.
+Limits
+This is a design/experiment PR. No production forecast feature, bridge/surface
+integration, prospective damage bounds, player/AI avoidance, network-latency
+experiment or performance certification is claimed. Production client smokes,
+web build and server probe were not run: their source and messages are unchanged.
+Earlier coordinator-checkout test failures are superseded by these clean-baseline
+gates and do not imply that the coordinator's separate branch has been validated.
