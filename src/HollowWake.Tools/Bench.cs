@@ -317,6 +317,13 @@ public static class Bench
         var (deltaMs, deltaBytes, _) = Snapshot(sim, builder, views, playerEntities, output, snapshots);
         yield return new Result("snapshot.delta.build", deltaMs / (snapshots * players), "ms/player", "the same with deltas opted in");
         yield return new Result("snapshot.delta.bytes", deltaBytes / (double)(snapshots * players) / 1024, "KB/player", "changed entities as deltas plus self state, steady state, JSON");
+        foreach (var view in views)
+        {
+            view.SendInterface = true;
+        }
+        var (panelMs, panelBytes, _) = Snapshot(sim, builder, views, playerEntities, output, snapshots);
+        yield return new Result("snapshot.interface.build", panelMs / (snapshots * players), "ms/player", "deltas plus the interface states on change, build and encode");
+        yield return new Result("snapshot.interface.bytes", panelBytes / (double)(snapshots * players) / 1024, "KB/player", "an interface client: deltas, self state with pools and casts, weave slots, inventory, passives and pages on change");
     }
 
     /// <summary>Runs a stretch of snapshots the way the zone does: two ticks, then every viewer; the self state every fifth snapshot.</summary>
@@ -337,6 +344,10 @@ public static class Bench
                 if (round % 5 == 0 && builder.Self(views[i], viewers[i]) is { } self)
                 {
                     output.Add(self);
+                }
+                if (views[i].SendInterface)
+                {
+                    builder.Panels(views[i], viewers[i], output);
                 }
                 bytes += Encoded(output);
                 ms += Stopwatch.GetElapsedTime(t0).TotalMilliseconds;
