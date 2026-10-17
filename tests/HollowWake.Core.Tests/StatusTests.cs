@@ -509,6 +509,27 @@ public class StatusTests
     }
 
     [Fact]
+    public void MuddledStacksMakeCastsFizzle()
+    {
+        var arena = CastingArena.Create();
+        var slot = arena.Slot("t_free");
+        var statuses = arena.Sim.Service<StatusService>();
+        statuses.Apply(arena.Sim, arena.Caster, "muddled", arena.Enemy, new StatusApplication { Stacks = 2, Duration = 3 });
+        Assert.Equal(0.5, arena.Stats.Get("cast.fizzle_chance"), 9);
+        // Four doses leave no chance of the cast holding.
+        statuses.Apply(arena.Sim, arena.Caster, "muddled", arena.Enemy, new StatusApplication { Stacks = 2, Duration = 3 });
+        Assert.Equal(1, arena.Stats.Get("cast.fizzle_chance"), 9);
+        Assert.False(arena.Begin(slot, out var reason));
+        Assert.Equal("fizzled", reason);
+
+        statuses.Remove(arena.Sim, arena.Caster, "muddled", TagSet.Empty);
+        Assert.Equal(0, arena.Stats.Get("cast.fizzle_chance"), 9);
+        // Once the reeling from the fizzle passes, the cast holds.
+        arena.RunSeconds(0.5);
+        Assert.True(arena.Begin(slot, out reason), reason);
+    }
+
+    [Fact]
     public void SappingHealsTheSapperNotTheSapped()
     {
         var bench = CombatBench.Create();

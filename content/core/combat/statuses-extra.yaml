@@ -167,6 +167,19 @@ entries:
     scales_with_potency: false
     color: "#d470c0"
 
+  - id: muddled
+    name: Muddled
+    description: Thought slips its thread; every dose makes a cast likelier to fizzle and leave the caster reeling.
+    tags: [control, mind]
+    duration: 4
+    stack_policy: stack
+    max_stacks: 4
+    modifiers_per_stack: true
+    scales_with_potency: false
+    color: "#d470c0"
+    modifiers:
+      - { attribute: cast.fizzle_chance, form: flat, value: 0.25 }
+
   # ---- buffs
   - id: honed
     name: Honed
