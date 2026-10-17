@@ -35,7 +35,7 @@ internal static class Sustain
         {
             return;
         }
-        var names = CombatNames.For(sim.Content);
+        var names = hit.Names;
         var extra = hit.Extra;
         var tags = hit.Tags;
         var dealt = hit.Total;

@@ -257,15 +257,12 @@ public sealed class AttributeSet
     /// </summary>
     public bool Carries(string attribute)
     {
-        if (_entries.TryGetValue(attribute, out var entry))
+        var entry = EntryFor(attribute);
+        if (entry.Count > 0 || entry.HasBase)
         {
-            if (entry.Count > 0 || entry.HasBase)
-            {
-                return true;
-            }
-            return entry.Def is { } def && (def.Formula is not null || def.Base != 0);
+            return true;
         }
-        return _catalog.Get(attribute) is { } d && (d.Formula is not null || d.Base != 0);
+        return entry.Def is { } def && (def.Formula is not null || def.Base != 0);
     }
 
     /// <summary>Computes the attribute with no tag context (only unscoped modifiers apply).</summary>

@@ -47,7 +47,13 @@ public sealed class HitScope
         hit.Result = result ?? Empty;
         hit.Source = context.SourceStats;
         hit.Target = context.TargetStats;
-        hit.Plan = HitPlan.For(context.Sim.Content.Rules);
+        var content = context.Sim.Content;
+        hit.Plan = HitPlan.For(content.Rules);
+        if (!ReferenceEquals(hit._namesFor, content))
+        {
+            hit._namesFor = content;
+            hit._names = CombatNames.For(content);
+        }
         hit.BlockMultiplier = 1;
         hit.Total = 0;
         hit.ThreadCount = 0;
@@ -88,6 +94,12 @@ public sealed class HitScope
     public Stats? Target { get; private set; }
     /// <summary>The rules every hit reads, resolved once per ruleset.</summary>
     public HitPlan Plan { get; private set; } = null!;
+
+    private Content.ContentRegistry? _namesFor;
+    private CombatNames _names = null!;
+
+    /// <summary>The attribute names the pipeline reads per Thread, resource and status, for this hit's content.</summary>
+    internal CombatNames Names => _names;
     /// <summary>The hit's tags: its own, its Threads', <c>hit</c>, <c>damage</c> and the victim tags.</summary>
     public TagSet Tags => Packet.Tags;
     /// <summary>The weave's local modifiers, joining the attacker's folds.</summary>
@@ -128,7 +140,9 @@ public sealed class HitScope
         {
             if (!_matchedKnown)
             {
-                _matched = Plan.MatchSkips(Tags);
+                // A packet built under this plan carries its match; the tags do not change after building.
+                _matched = Packet.MatchedSkips ?? Plan.MatchSkips(Tags);
+                Packet.MatchedSkips = _matched;
                 _matchedKnown = true;
             }
             return _matched;

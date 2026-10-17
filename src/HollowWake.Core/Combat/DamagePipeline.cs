@@ -27,6 +27,9 @@ public sealed class DamagePacket
 
     /// <summary>Life leech this hit carries on top of the attacker's own (a damage effect's <c>leech</c>).</summary>
     public double Leech { get; set; }
+
+    /// <summary>The skip entries of rule <c>combat.stage_skips</c> the packet's tags matched when it was built; null until then.</summary>
+    internal ulong? MatchedSkips { get; set; }
 }
 
 public sealed class HitResult
@@ -109,7 +112,7 @@ public static class DamagePipeline
                 {
                     AddFlat(ctx, source, packet, hit, extra, effectiveness);
                 }
-                ApplyConversion(ctx, source, packet, extra);
+                ApplyConversion(hit.Names, source, packet, extra);
                 RollCrit(ctx, source, packet, hit, canCrit, extra);
             }
         }
@@ -166,7 +169,7 @@ public static class DamagePipeline
     /// </summary>
     private static void AddFlat(EffectContext ctx, Components.Stats source, DamagePacket packet, HitScope hit, IReadOnlyList<Attributes.Modifier>? extra, double? effectiveness)
     {
-        var names = CombatNames.For(ctx.Sim.Content);
+        var names = hit.Names;
         if (!CombatNames.MayCarry(source.Attributes, extra, names.AddedFamily))
         {
             return;
@@ -288,9 +291,8 @@ public static class DamagePipeline
     private static string Vs(string name) => VsNames.GetOrAdd(name, static n => "vs." + n);
 
     /// <summary>convert.{from}.{to} moves a fraction of one thread into another; extra.{to} adds a share of everything as another thread.</summary>
-    private static void ApplyConversion(EffectContext ctx, Components.Stats source, DamagePacket packet, IReadOnlyList<Attributes.Modifier>? extra)
+    private static void ApplyConversion(CombatNames names, Components.Stats source, DamagePacket packet, IReadOnlyList<Attributes.Modifier>? extra)
     {
-        var names = CombatNames.For(ctx.Sim.Content);
         var threads = names.Threads;
         var original = new Dictionary<string, double>(packet.Amounts, StringComparer.Ordinal);
         foreach (var (from, amount) in original)
@@ -366,8 +368,10 @@ public static class DamagePipeline
         }
         var hit = HitScope.Rent(ctx, packet, result);
         bool skipAilments;
+        CombatNames names;
         try
         {
+            names = hit.Names;
             hit.LoadThreads();
             var plan = hit.Plan;
             var stages = plan.Stages;
@@ -393,7 +397,7 @@ public static class DamagePipeline
         Publish(sim, ctx, result, packet);
         if (!skipAilments)
         {
-            ApplyAilments(ctx, packet, result);
+            ApplyAilments(ctx, packet, result, names);
         }
 
         if (ts.Resource("life") <= 0)
@@ -424,7 +428,7 @@ public static class DamagePipeline
     /// <c>ailment.potency</c>. A block stops them all when rule <c>combat.block_stops_ailments</c> says so, and
     /// hits whose tags skip the <c>ailments</c> step (damage over time) leave none.
     /// </summary>
-    private static void ApplyAilments(EffectContext ctx, DamagePacket packet, HitResult result)
+    private static void ApplyAilments(EffectContext ctx, DamagePacket packet, HitResult result, CombatNames names)
     {
         var sim = ctx.Sim;
         if (ctx.SourceStats is not { } source || !sim.TryService<StatusService>(out var statuses))
@@ -436,7 +440,6 @@ public static class DamagePipeline
         {
             return;
         }
-        var names = CombatNames.For(sim.Content);
         var extra = ctx.Weave?.Modifiers;
         var chances = CombatNames.MayCarry(source.Attributes, extra, names.ChanceFamily);
         foreach (var (thread, dealt) in result.Received)
@@ -880,14 +883,64 @@ public sealed class HitPlan
     public ulong MatchSkips(TagSet hitTags)
     {
         var matched = 0UL;
+        var items = hitTags.Items;
         for (var e = 0; e < _skips.Length; e++)
         {
-            if (hitTags.HasAll(_skips[e].Tag))
+            var key = _skips[e].Tag.Items;
+            var all = true;
+            for (var k = 0; k < key.Count; k++)
+            {
+                if (!HasTag(items, key[k]))
+                {
+                    all = false;
+                    break;
+                }
+            }
+            if (all)
             {
                 matched |= 1UL << e;
             }
         }
         return matched;
+    }
+
+    /// <summary>
+    /// <see cref="TagSet.Has"/> over a set's sorted items: the tag itself, or a descendant (<c>tag.x</c>), which sorts
+    /// right after where the tag would stand.
+    /// </summary>
+    private static bool HasTag(IReadOnlyList<string> sorted, string tag)
+    {
+        int lo = 0, hi = sorted.Count - 1;
+        while (lo <= hi)
+        {
+            var mid = (lo + hi) >> 1;
+            var c = string.CompareOrdinal(sorted[mid], tag);
+            if (c == 0)
+            {
+                return true;
+            }
+            if (c < 0)
+            {
+                lo = mid + 1;
+            }
+            else
+            {
+                hi = mid - 1;
+            }
+        }
+        for (var i = lo; i < sorted.Count; i++)
+        {
+            var s = sorted[i];
+            if (!s.StartsWith(tag, StringComparison.Ordinal))
+            {
+                return false;
+            }
+            if (s.Length > tag.Length && s[tag.Length] == '.')
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
     /// <summary>Whether a hit that matched these skip entries skips the named stage, step or pool.</summary>

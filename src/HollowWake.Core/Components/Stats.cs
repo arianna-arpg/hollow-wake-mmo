@@ -164,8 +164,25 @@ public sealed class Stats : IComponent, IExprScope
     /// </summary>
     public void SetResource(string id, double value)
     {
-        var max = ResourceMax(id);
-        var lethal = _content.TryGet<ResourceDef>(id, out var def) && def is { Lethal: true };
+        double max;
+        var lethal = false;
+        if (_content.TryGet<ResourceDef>(id, out var def) && def is not null)
+        {
+            max = Attributes.Get(def.Max, this);
+            lethal = def.Lethal;
+        }
+        else
+        {
+            max = Attributes.Get(id + ".max", this);
+        }
+        if (AnyReserved())
+        {
+            var reserved = ResourceNames.ReservedOf(id);
+            if (Attributes.Carries(reserved))
+            {
+                max = Math.Max(0, max - Attributes.Get(reserved, this));
+            }
+        }
         if (max <= 0 && !lethal && !Resources.ContainsKey(id))
         {
             return;
@@ -309,7 +326,7 @@ public sealed class Stats : IComponent, IExprScope
         }
         if (name.EndsWith("_pct", StringComparison.Ordinal))
         {
-            var res = name[..^4];
+            var res = ResourceNames.OfFraction(name);
             if (_content.Has<ResourceDef>(res) || Resources.ContainsKey(res))
             {
                 value = ResourceFraction(res);
@@ -471,6 +488,11 @@ public static class ResourceNames
 
     /// <summary><c>reserved.{resource}</c>: the gauge the interface reads the reserved amount from.</summary>
     public static string GaugeOf(string id) => Of(id).Gauge;
+
+    private static readonly System.Collections.Concurrent.ConcurrentDictionary<string, string> Fractions = new(StringComparer.Ordinal);
+
+    /// <summary>The resource a fraction name reads (<c>life_pct</c> is life), built once per name.</summary>
+    public static string OfFraction(string name) => Fractions.GetOrAdd(name, static n => n[..^4]);
 }
 
 /// <summary>

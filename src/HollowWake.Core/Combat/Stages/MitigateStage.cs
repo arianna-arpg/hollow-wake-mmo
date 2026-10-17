@@ -21,7 +21,7 @@ internal sealed class MitigateStage : IHitStage
         var sim = ctx.Sim;
         var tags = hit.Tags;
         var extra = hit.Extra;
-        var names = CombatNames.For(sim.Content);
+        var names = hit.Names;
         var resistCap = hit.Plan.ResistCap;
         var resistFloor = hit.Plan.ResistFloor;
         var skipArmor = hit.Skips("armor");

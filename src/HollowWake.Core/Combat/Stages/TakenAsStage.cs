@@ -12,7 +12,7 @@ internal sealed class TakenAsStage : IHitStage
     public HitFlow Run(HitScope hit)
     {
         var ts = hit.Target!;
-        var names = CombatNames.For(hit.Sim.Content);
+        var names = hit.Names;
         if (!CombatNames.MayCarry(ts.Attributes, null, names.TakenAsFamily))
         {
             return HitFlow.Continue;
