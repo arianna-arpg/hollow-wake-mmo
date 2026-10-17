@@ -35,7 +35,7 @@ public partial class TargetPlate : Control
         }
         var width = _skin.Metric("plate_width", 340) * scale;
         var hasLife = target.ResourceMax.GetValueOrDefault("life") > 0;
-        var height = (hasLife ? 58 : 38) + (target.Statuses.Count > 0 ? 22 : 0);
+        var height = (hasLife ? 58 : 38) + (Shown(target).Count > 0 ? 22 : 0);
         Position = new Vector2((viewport.X - width) / 2, 10);
         Size = new Vector2(width, height * scale);
         QueueRedraw();
@@ -75,16 +75,20 @@ public partial class TargetPlate : Control
             Paint.Text(this, _skin.Numerals, new Vector2(bar.Position.X, bar.End.Y - 2), $"{Math.Round(cur)} / {Math.Round(max)}", _skin.NumeralSize - 2, Colors.White, HorizontalAlignment.Center, bar.Size.X, 3);
             y = bar.End.Y + 4;
         }
-        if (t.Statuses.Count > 0)
+        var shown = Shown(t);
+        if (shown.Count > 0)
         {
             var size = 18f;
-            var x = (Size.X - t.Statuses.Count * (size + 3)) / 2;
-            foreach (var s in t.Statuses)
+            var x = (Size.X - shown.Count * (size + 3)) / 2;
+            foreach (var s in shown)
             {
-                var tint = _skin.Names.ThreadOfStatus.TryGetValue(s, out var thread) ? _skin.Thread(thread) : _skin.S("accent");
-                DrawTextureRect(_skin.Icon(_skin.IconSet.ForStatus(s), (int)size), new Rect2(x, y, size, size), false, tint);
+                var (glyph, tint) = _skin.StatusFace(s);
+                DrawTextureRect(_skin.Icon(glyph, (int)size), new Rect2(x, y, size, size), false, tint);
                 x += size + 3;
             }
         }
     }
+
+    /// <summary>The target's statuses content does not hide.</summary>
+    private List<string> Shown(EntityState target) => target.Statuses.Where(s => !_skin.Names.LookOf(s).Hidden).ToList();
 }

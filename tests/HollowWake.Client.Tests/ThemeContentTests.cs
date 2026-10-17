@@ -104,10 +104,29 @@ public class ThemeContentTests
         var ui = UiContent.Load(RawOf);
         var names = ContentNames.Load(RawOf);
         Assert.NotEmpty(names.Statuses);
-        foreach (var status in names.Statuses.Keys)
+        // A status the rows show wears a glyph: its meta names one, or the icon set maps it.
+        foreach (var status in names.Statuses.Keys.Where(s => !names.LookOf(s).Hidden))
         {
-            Assert.True(ui.Icons.Statuses.ContainsKey(status), $"status {status} has no glyph");
+            var look = names.LookOf(status);
+            Assert.True((look.Icon is { } icon && ui.Icons.Icons.ContainsKey(icon)) || ui.Icons.Statuses.ContainsKey(status), $"status {status} has no glyph");
         }
+    }
+
+    [Fact]
+    public void StatusesArePresentedFromTheirMetaBlock()
+    {
+        var names = ContentNames.Load(RawOf);
+        // The pool states the orbs draw are hidden from the rows by their content.
+        Assert.True(names.LookOf("poise_rearming").Hidden);
+        Assert.False(names.LookOf("burning").Hidden);
+        // A status's own colour stands in when its meta names none.
+        Assert.True(names.LookOf("burning").Color is { } c && Math.Abs(c.R - 0xe8 / 255f) < 0.01f);
+        Assert.Equal(StatusLook.Plain, names.LookOf("no_such_status"));
+        var look = StatusLook.From(new JsonObject { ["id"] = "x", ["meta"] = new JsonObject { ["icon"] = "flame", ["color"] = "#112233", ["kind"] = "debuff", ["cue"] = "pulse" } });
+        Assert.Equal("flame", look.Icon);
+        Assert.Equal("debuff", look.Kind);
+        Assert.Equal("pulse", look.Cue);
+        Assert.True(look.Color is { } m && Math.Abs(m.B - 0x33 / 255f) < 0.01f);
     }
 
     [Fact]
@@ -127,7 +146,7 @@ public class ThemeContentTests
         Assert.Contains(names.Threads, t => t.Id == "ember");
         Assert.Contains(names.Slots, s => s.Id == "main_hand");
         Assert.NotEmpty(names.Passives);
-        var notable = names.Passives.First(p => p.Kind == "notable");
+        var notable = names.Passives.First(p => p.Kind == "notable" && p.Choice is null);
         Assert.NotEmpty(notable.Lines);
         Assert.Equal("Main Hand", ContentNames.Humanize("main_hand"));
     }

@@ -255,6 +255,18 @@ public sealed class Skin
         return image.LoadSvgFromString(svg, 1f) == Error.Ok ? ImageTexture.CreateFromImage(image) : Placeholder(16);
     }
 
+    /// <summary>
+    /// A status's glyph and tint as content presents it: the icon and colour of its meta block (or its own colour),
+    /// else the icon set's glyph for it and its Thread's colour, else the accent.
+    /// </summary>
+    public (string Icon, Color Tint) StatusFace(string status)
+    {
+        var look = Names.LookOf(status);
+        var icon = look.Icon is { } named && IconSet.Icons.ContainsKey(named) ? named : IconSet.ForStatus(status);
+        var tint = look.Color is { } c ? C(c) : Names.ThreadOfStatus.TryGetValue(status, out var thread) ? Thread(thread) : S("accent");
+        return (icon, tint);
+    }
+
     /// <summary>Ink that reads on a colour: the theme's light label on dark colours, its ink on light ones.</summary>
     public Color InkOn(Color background) => background.Luminance > 0.55f ? S("ink").Luminance < 0.5f ? S("ink") : new Color(0.08f, 0.06f, 0.05f) : S("label");
 }

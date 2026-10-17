@@ -15,6 +15,7 @@ public partial class StatusRow : Control
     private readonly Skin _skin;
     private IReadOnlyList<StatusInfo> _statuses = Array.Empty<StatusInfo>();
     private float _icon;
+    private double _now;
     private string _tip = "";
 
     public StatusRow(Skin skin)
@@ -27,7 +28,9 @@ public partial class StatusRow : Control
 
     public void Update(ClusterLayout layout, HeroState hero, double now)
     {
-        _statuses = hero.Statuses(now);
+        // Statuses content marks hidden (the pool states the orbs draw) stay out of the row.
+        _statuses = hero.Statuses(now).Where(s => !_skin.Names.LookOf(s.Id).Hidden).ToList();
+        _now = now;
         _icon = layout.StatusIcon;
         var width = _statuses.Count * (_icon + 4);
         Position = new Vector2(layout.Status.CenterX - width / 2, layout.Status.Y);
@@ -48,8 +51,14 @@ public partial class StatusRow : Control
             var s = _statuses[i];
             var r = new Rect2(i * (_icon + 4), 0, _icon, _icon);
             Paint.Well(this, _skin, r, _skin.S("well") with { A = 0.92f });
-            var tint = _skin.Names.ThreadOfStatus.TryGetValue(s.Id, out var thread) ? _skin.Thread(thread) : _skin.S("accent");
-            DrawTextureRect(_skin.Icon(_skin.IconSet.ForStatus(s.Id), (int)(_icon * 0.78f)), r.Grow(-_icon * 0.11f), false, tint);
+            var look = _skin.Names.LookOf(s.Id);
+            var (glyph, tint) = _skin.StatusFace(s.Id);
+            if (look.Kind is "buff" or "debuff")
+            {
+                DrawRect(r.Grow(-1), _skin.S(look.Kind == "buff" ? "good" : "bad") with { A = 0.85f }, false, 1.5f);
+            }
+            var alpha = look.Cue == "pulse" && !Motion.Reduced ? 0.6f + 0.4f * Mathf.Sin((float)_now * 5f) : 1f;
+            DrawTextureRect(_skin.Icon(glyph, (int)(_icon * 0.78f)), r.Grow(-_icon * 0.11f), false, tint with { A = alpha });
             if (s.Duration > 0 && s.Remaining >= 0)
             {
                 var spent = 1 - (float)Math.Clamp(s.Remaining / s.Duration, 0, 1);

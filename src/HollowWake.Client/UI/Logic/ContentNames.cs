@@ -23,6 +23,32 @@ public sealed record ChoiceOption(string Id, string Name, IReadOnlyList<string> 
 public sealed record ChoiceGroup(string Id, string Name, int Pick, IReadOnlyList<ChoiceOption> Options);
 
 /// <summary>
+/// How a status is presented, read from its content's <c>meta</c> block (never from the simulation):
+/// <c>hidden</c> keeps it out of the status rows (the pool states the orbs already draw), <c>icon</c> names its
+/// glyph in the icon set, <c>color</c> tints it, <c>kind</c> (buff, debuff or neutral) frames it, and <c>cue</c>
+/// (pulse or none) says how it draws the eye. The status's own <c>color</c> stands in when meta names none.
+/// </summary>
+public sealed record StatusLook(bool Hidden, string? Icon, Rgba? Color, string Kind, string? Cue)
+{
+    public static readonly StatusLook Plain = new(false, null, null, "neutral", null);
+
+    public static readonly IReadOnlyList<string> Kinds = new[] { "buff", "debuff", "neutral" };
+    public static readonly IReadOnlyList<string> Cues = new[] { "pulse", "none" };
+
+    public static StatusLook From(JsonObject status)
+    {
+        var meta = status["meta"] as JsonObject;
+        var color = Rgba.TryParse(Json.StrOrNull(meta?["color"]), out var c) ? c : Rgba.TryParse(Json.StrOrNull(status["color"]), out var own) ? own : (Rgba?)null;
+        return new StatusLook(
+            Json.Bool(meta?["hidden"]),
+            Json.StrOrNull(meta?["icon"]),
+            color,
+            Json.Str(meta?["kind"], "neutral"),
+            Json.StrOrNull(meta?["cue"]));
+    }
+}
+
+/// <summary>
 /// The names, descriptions and shapes the interface reads from the rest of the content: statuses, Threads,
 /// currencies, equipment slots, attributes and the passive constellation. Labels only; every value the
 /// interface shows comes from the server.
@@ -40,6 +66,11 @@ public sealed class ContentNames
 
     /// <summary>The Thread whose ailment a status is, so the status wears the Thread's colour.</summary>
     public Dictionary<string, string> ThreadOfStatus { get; init; } = new(StringComparer.Ordinal);
+
+    /// <summary>How each status is presented, from its content's meta block.</summary>
+    public Dictionary<string, StatusLook> StatusLooks { get; init; } = new(StringComparer.Ordinal);
+
+    public StatusLook LookOf(string status) => StatusLooks.TryGetValue(status, out var look) ? look : StatusLook.Plain;
 
     /// <summary>Choice groups by id (passive_choices content), for the choice popup.</summary>
     public Dictionary<string, ChoiceGroup> Choices { get; init; } = new(StringComparer.Ordinal);
@@ -97,6 +128,7 @@ public sealed class ContentNames
         var names = new ContentNames
         {
             Statuses = rawOfKind("statuses").Select(Named).ToDictionary(e => e.Id, StringComparer.Ordinal),
+            StatusLooks = rawOfKind("statuses").ToDictionary(s => Json.Str(s["id"]), StatusLook.From, StringComparer.Ordinal),
             Threads = rawOfKind("threads").Select(Named).ToList(),
             Currencies = rawOfKind("currencies").Select(Named).ToDictionary(e => e.Id, StringComparer.Ordinal),
             Slots = rawOfKind("slots").Select(Named).OrderBy(s => s.Order).ToList(),

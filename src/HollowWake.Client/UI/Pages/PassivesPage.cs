@@ -16,6 +16,7 @@ namespace HollowWake.Client.UI.Pages;
 public partial class PassivesPage : LeafView
 {
     private HBoxContainer _bar = null!;
+    private VBoxContainer _grafts = null!;
     private Canvas _canvas = null!;
     private Button _refund = null!;
     private Label _points = null!;
@@ -43,6 +44,8 @@ public partial class PassivesPage : LeafView
         column.AddChild(_bar);
         _canvas = new Canvas(this) { SizeFlagsVertical = SizeFlags.ExpandFill, SizeFlagsHorizontal = SizeFlags.ExpandFill, ClipContents = true };
         column.AddChild(_canvas);
+        _grafts = new VBoxContainer();
+        column.AddChild(_grafts);
         _points = MakeLabel("", Skin.S("accent"));
         _refund = MakeButton("Refund", () =>
         {
@@ -116,6 +119,44 @@ public partial class PassivesPage : LeafView
         {
             _refund.TooltipText = Hero.Passives?.RefundCost is { } cost ? $"Refund single nodes here for {cost}" : "Refund single nodes here";
             _bar.AddChild(_refund);
+        }
+        RebuildGrafts();
+    }
+
+    /// <summary>
+    /// The grafts the passives grant: each glyph with its level and the node that grants it, and the weave seat
+    /// it is bound to, picked from the seats; the server validates the binding.
+    /// </summary>
+    private void RebuildGrafts()
+    {
+        Clear(_grafts);
+        var grafts = Hero.Passives?.Grafts ?? new List<GraftInfo>();
+        if (grafts.Count == 0)
+        {
+            return;
+        }
+        _grafts.AddChild(MakeLabel("Grafts", Skin.S("accent"), font: Skin.Title));
+        var seats = Hero.Seats((int)Skin.Metric("slots", 8));
+        foreach (var graft in grafts)
+        {
+            var g = graft;
+            var row = new HBoxContainer();
+            var node = g.Source.Split(':')[0];
+            var from = Skin.Names.Passives.FirstOrDefault(p => p.Id == node)?.Name ?? ContentNames.Humanize(node);
+            var label = MakeLabel($"{g.Name} {g.Level}", Skin.S("ink"));
+            label.TooltipText = $"Granted by {from}";
+            label.SizeFlagsHorizontal = SizeFlags.ExpandFill;
+            row.AddChild(label);
+            var picker = new OptionButton { FocusMode = FocusModeEnum.None };
+            picker.AddItem("Unbound", 0);
+            for (var i = 0; i < seats.Count; i++)
+            {
+                picker.AddItem($"Seat {i + 1}: {(seats[i].Empty ? "empty" : seats[i].Name)}", i + 1);
+            }
+            picker.Select(g.Slot is { } bound && bound >= 0 && bound < seats.Count ? bound + 1 : 0);
+            picker.ItemSelected += index => Ctx.Send(new BindGraftMsg(g.Source, (int)index - 1));
+            row.AddChild(picker);
+            _grafts.AddChild(row);
         }
     }
 

@@ -218,6 +218,46 @@ internal static class InterfaceKinds
         {
             c.Warn($"slots.{slot} names no declared equipment slot.");
         }
+        // Status presentation is read from each status's meta block; the first icon set checks the keys the
+        // clients read once for all (statuses belong to another package, so these only warn).
+        if (d.Id == c.Registry.All<UiIconSetDef>().Keys.Min(StringComparer.Ordinal))
+        {
+            foreach (var status in c.Registry.Each<StatusDef>())
+            {
+                StatusMeta(status, c);
+            }
+        }
+    }
+
+    /// <summary>What a status's meta block may say to the interface.</summary>
+    public static readonly IReadOnlyList<string> StatusKinds = new[] { "buff", "debuff", "neutral" };
+
+    /// <summary>How a status may draw the eye.</summary>
+    public static readonly IReadOnlyList<string> StatusCues = new[] { "pulse", "none" };
+
+    private static void StatusMeta(StatusDef status, ValidationContext c)
+    {
+        if (status.Meta is not { } meta)
+        {
+            return;
+        }
+        string? Text(string key) => meta[key] is System.Text.Json.Nodes.JsonValue v && v.TryGetValue<string>(out var s) ? s : null;
+        if (Text("icon") is { } icon && !c.Registry.Each<UiIconSetDef>().Any(set => set.Icons.ContainsKey(icon)))
+        {
+            c.Warn($"status '{status.Id}' meta.icon '{icon}' is in no icon set.");
+        }
+        if (Text("color") is { } color && !IsColor(color))
+        {
+            c.Warn($"status '{status.Id}' meta.color '{color}' is not a colour (#rgb, #rrggbb or #rrggbbaa).");
+        }
+        if (Text("kind") is { } kind && !StatusKinds.Contains(kind))
+        {
+            c.Warn($"status '{status.Id}' meta.kind '{kind}' is not one of {string.Join(", ", StatusKinds)}.");
+        }
+        if (Text("cue") is { } cue && !StatusCues.Contains(cue))
+        {
+            c.Warn($"status '{status.Id}' meta.cue '{cue}' is not one of {string.Join(", ", StatusCues)}.");
+        }
     }
 
     private static void Page(UiPageDef d, ValidationContext c)
