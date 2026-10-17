@@ -209,7 +209,7 @@ public sealed record EntityState
     public bool Static { get; init; }
 
     /// <summary>
-    /// For projectiles, fields and telegraph marks: the registered shape the body is drawn as (see
+    /// For projectiles, fields, tethers and telegraph marks: the registered shape the body is drawn as (see
     /// docs/design/deliveries.md). Omitted for entities without one.
     /// </summary>
     public string? Shape { get; init; }
@@ -217,20 +217,31 @@ public sealed record EntityState
     /// <summary>The shape's dimensions; omitted with the shape.</summary>
     public ShapeSizeInfo? ShapeSize { get; init; }
 
-    /// <summary>The shape's facing in radians, when it has one apart from the body's yaw.</summary>
+    /// <summary>The shape's facing in radians; a client without one draws the shape along the body's yaw.</summary>
     public float? Heading { get; init; }
 
-    /// <summary>The shape's spin angle in radians.</summary>
+    /// <summary>A flight's spin in radians: how far its shape has turned from its heading.</summary>
     public float? Spin { get; init; }
+
+    /// <summary>For a body with a lifetime (a telegraph mark, a timed summon): the server time it lands or ends.</summary>
+    public double? Until { get; init; }
 }
 
-/// <summary>A drawn shape's dimensions: radius, angle (radians), width and inner radius, each where the shape has it.</summary>
+/// <summary>
+/// A drawn shape's dimensions, resolved by the server (content defaults applied), each where the shape has it.
+/// </summary>
 public sealed record ShapeSizeInfo
 {
+    /// <summary>World units: the main extent (a circle's radius, a sector's reach, a line's length, a square's half side, a bar's half length).</summary>
     public float? Radius { get; init; }
+    /// <summary>Radians: the full angle of a sector, crescent, arc or wave.</summary>
     public float? Angle { get; init; }
+    /// <summary>World units: the full width of a line, band or bar, the thickness of an arc or wave.</summary>
     public float? Width { get; init; }
+    /// <summary>World units: the radius left empty at the anchor (an edge-only ring, a crescent's hollow, a far-edge cone).</summary>
     public float? Inner { get; init; }
+    /// <summary>Radii: for arcs and waves, how far behind the anchor the circle they bow along centers.</summary>
+    public float? Curvature { get; init; }
 }
 
 public sealed record EntitySpawnMsg(EntityState State) : Message;

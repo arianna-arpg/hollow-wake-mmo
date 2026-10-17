@@ -63,6 +63,9 @@ public sealed record WeaveSpec
     public int Level { get; init; } = 1;
     public string? Name { get; init; }
 
+    /// <summary>Spent nodes of the form's own tree, by id, in the order they were bought.</summary>
+    public List<string> Tree { get; init; } = new();
+
     public override string ToString() => Preset ?? $"{Form}[{string.Join(",", Threads)}]+{string.Join(",", Glyphs)}";
 }
 

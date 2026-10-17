@@ -33,11 +33,12 @@ public static class Snapshots
         static (w, e) => w.Has<Motion>(e),
         static (w, e) => w.Has<Projectile>(e),
         static (w, e) => w.Has<Field>(e),
+        static (w, e) => w.Has<Tether>(e),
     };
 
     /// <summary>
     /// Registers a component that makes an entity dynamic: something that moves it or changes what a
-    /// client sees of it. Stats, motion, projectiles and fields are registered by default.
+    /// client sees of it. Stats, motion, projectiles, fields and tethers are registered by default.
     /// </summary>
     public static void MarkDynamic<T>() where T : class, IComponent
     {
@@ -90,6 +91,115 @@ public static class Snapshots
     private static float CastProgress(Simulation sim, CastState? casting) =>
         casting is null || casting.Duration <= 0 ? 0f : (float)Math.Clamp((sim.Clock.Time - casting.StartedAt) / casting.Duration, 0, 1);
 
+    // ------------------------------------------------------------ deliveries as drawn
+
+    private static readonly Shape Bar = Shapes.Get("bar");
+
+    /// <summary>
+    /// What a body is drawn as beyond its transform. A projectile or a field: its registered shape and size, facing its
+    /// heading or facing, a flight turned by its spin. A tether: a bar laid along its line (its transform sits at the
+    /// midpoint with half the length as radius and its yaw along the line; a bar lies across its facing, so the facing
+    /// is a quarter turn from the yaw). A telegraph mark: a circle of its radius. A flight's velocity, which it keeps
+    /// outside <see cref="Motion"/>. And for a body with a lifetime (a telegraph mark, a timed summon), when it ends;
+    /// NaN without one.
+    /// </summary>
+    private readonly record struct Drawn(Shape? Shape, ShapeSize Size, float Facing, float? Spin, bool Flies, Vector3 Velocity, double Until);
+
+    private static Drawn DrawnOf(EcsWorld world, Entity e, Transform? t)
+    {
+        Shape? shape = null;
+        var size = default(ShapeSize);
+        var facing = t?.Yaw ?? 0f;
+        float? spin = null;
+        var flies = false;
+        var velocity = Vector3.Zero;
+        if (world.TryGet<Projectile>(e, out var p))
+        {
+            flies = true;
+            velocity = p.Velocity;
+            facing = p.Heading;
+            shape = p.Spec.Shape;
+            // A circle's size is its collision radius; every other shape keeps its own.
+            size = ReferenceEquals(shape, Shapes.Circle) ? p.Size with { Radius = p.Radius } : p.Size;
+            spin = p.SpinAngle;
+        }
+        else if (world.TryGet<Field>(e, out var f))
+        {
+            facing = f.Facing;
+            shape = f.Spec.Shape;
+            size = f.Size;
+        }
+        else if (t is not null && world.TryGet<Tether>(e, out var tether))
+        {
+            shape = Bar;
+            size = new ShapeSize(t.Radius, 0f, tether.Width, 0f);
+            facing = t.Yaw + MathF.PI / 2f;
+        }
+        else if (t is not null && world.TryGet<Identity>(e, out var id) && id.Tags.Has("telegraph"))
+        {
+            shape = Shapes.Circle;
+            size = new ShapeSize(t.Radius, 0f, 0f, 0f);
+        }
+        if (shape is not null)
+        {
+            size = Resolved(shape, size);
+        }
+        var until = world.TryGet<Lifetime>(e, out var life) ? life.ExpiresAt : double.NaN;
+        return new Drawn(shape, size, facing, spin, flies, velocity, until);
+    }
+
+    /// <summary>
+    /// A size with the shape's defaults where it has none (Effects/Shapes.cs), so a client never needs that table: a
+    /// sector's or crescent's angle, a crescent's hollow, an arc's or wave's angle, a width for every shape with one (a
+    /// band as wide as it is long). Sizes that went through delivery content are resolved already and pass unchanged.
+    /// </summary>
+    private static ShapeSize Resolved(Shape shape, in ShapeSize size)
+    {
+        var unresolved = shape.HasAngle && size.Angle <= 0;
+        var angle = shape.HasAngle ? (size.Angle > 0 ? size.Angle : shape.DefaultAngle) : 0f;
+        // The weave's area width is not known here; the radius stands in for it, keeping a line's proportions.
+        var width = shape.HasWidth ? (size.Width > 0 ? size.Width : shape.DefaultWidth(size.Radius, size.Radius)) : 0f;
+        var inner = size.Inner > 0 ? size.Inner : unresolved ? shape.DefaultInner : 0f;
+        return new ShapeSize(size.Radius, angle, width, inner);
+    }
+
+    /// <summary>
+    /// The size as the wire carries it (see <see cref="ShapeSizeInfo"/>): radius, width and inner in world units (the
+    /// inner fraction times the radius), the angle in radians, and the curvature of a bowed shape in radii.
+    /// </summary>
+    private static ShapeSizeInfo SizeInfo(Shape shape, in ShapeSize size) => new()
+    {
+        Radius = Hundredths(size.Radius),
+        Angle = shape.HasAngle ? Hundredths(size.Angle * MathF.PI / 180f) : null,
+        Width = shape.HasWidth ? Hundredths(size.Width) : null,
+        Inner = size.Inner > 0 ? Hundredths(size.Inner * size.Radius) : null,
+        Curvature = shape.Curvature > 0 ? Hundredths(shape.Curvature) : null,
+    };
+
+    private static void AddDrawn(ref FingerprintHash h, in Drawn drawn)
+    {
+        if (drawn.Shape is { } shape)
+        {
+            h.Add(shape.Name);
+            h.Add(QHundredths(drawn.Size.Radius));
+            h.Add(QHundredths(drawn.Size.Angle * MathF.PI / 180f));
+            h.Add(QHundredths(drawn.Size.Width));
+            h.Add(QHundredths(drawn.Size.Inner * drawn.Size.Radius));
+            h.Add(QHundredths(drawn.Facing));
+            h.Add(drawn.Spin is { } spin ? QHundredths(spin) : long.MinValue);
+        }
+        if (drawn.Flies)
+        {
+            h.Add(QHundredths(drawn.Velocity.X));
+            h.Add(QHundredths(drawn.Velocity.Y));
+            h.Add(QHundredths(drawn.Velocity.Z));
+        }
+        if (!double.IsNaN(drawn.Until))
+        {
+            h.Add(Math.Round(drawn.Until, 2));
+        }
+    }
+
     // ------------------------------------------------------------ entity state
 
     public static EntityState Capture(Simulation sim, Entity e) => Capture(sim, e, IsStatic(sim, e));
@@ -108,6 +218,7 @@ public static class Snapshots
         var statuses = world.Get<Statuses>(e);
         var casting = world.Get<WeaveBook>(e)?.Casting;
         var interactable = world.Get<Interactable>(e);
+        var drawn = DrawnOf(world, e, t);
         var state = new EntityState
         {
             Key = e.Key,
@@ -129,10 +240,15 @@ public static class Snapshots
             Casting = casting?.Slot.Compiled?.Name ?? casting?.Slot.Key,
             CastProgress = Hundredths(CastProgress(sim, casting)),
             Grounded = motion?.Grounded ?? true,
-            VX = motion is null ? 0 : Hundredths(motion.Velocity.X),
-            VY = motion is null ? 0 : Hundredths(motion.Velocity.Y),
-            VZ = motion is null ? 0 : Hundredths(motion.Velocity.Z),
+            VX = motion is not null ? Hundredths(motion.Velocity.X) : drawn.Flies ? Hundredths(drawn.Velocity.X) : 0,
+            VY = motion is not null ? Hundredths(motion.Velocity.Y) : drawn.Flies ? Hundredths(drawn.Velocity.Y) : 0,
+            VZ = motion is not null ? Hundredths(motion.Velocity.Z) : drawn.Flies ? Hundredths(drawn.Velocity.Z) : 0,
             Static = isStatic,
+            Shape = drawn.Shape?.Name,
+            ShapeSize = drawn.Shape is { } shape ? SizeInfo(shape, drawn.Size) : null,
+            Heading = drawn.Shape is not null ? Hundredths(drawn.Facing) : null,
+            Spin = drawn.Spin is { } spin ? Hundredths(spin) : null,
+            Until = double.IsNaN(drawn.Until) ? null : Math.Round(drawn.Until, 2),
         };
         if (stats is not null)
         {
@@ -245,6 +361,8 @@ public static class Snapshots
             h.Add(QHundredths(motion.Velocity.Y));
             h.Add(QHundredths(motion.Velocity.Z));
         }
+        var body = world.Get<Transform>(e);
+        AddDrawn(ref h, DrawnOf(world, e, body));
         return h.Value;
     }
 
@@ -289,8 +407,10 @@ public static class Snapshots
             changes++;
             return b;
         }
-        // A shaped body's heading or spin can be set or changed by a delta, never cleared: that needs the full state.
-        if ((last.Heading is not null && next.Heading is null) || (last.Spin is not null && next.Spin is null) || (last.ShapeSize is not null && next.ShapeSize is null && next.Shape is not null))
+        // A shaped body's heading or spin can be set or changed by a delta, never cleared, and a lifetime's end never
+        // changes by one: those need the full state.
+        if ((last.Heading is not null && next.Heading is null) || (last.Spin is not null && next.Spin is null) || (last.ShapeSize is not null && next.ShapeSize is null && next.Shape is not null)
+            || last.Until != next.Until)
         {
             return null;
         }

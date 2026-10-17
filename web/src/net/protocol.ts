@@ -626,6 +626,7 @@ export interface EntityState {
   shape_size?: ShapeSizeInfo;
   heading?: number;
   spin?: number;
+  until?: number;
 }
 
 export interface EntityDelta {
@@ -888,6 +889,7 @@ export interface ShapeSizeInfo {
   angle?: number;
   width?: number;
   inner?: number;
+  curvature?: number;
 }
 
 export interface SocketInfo {

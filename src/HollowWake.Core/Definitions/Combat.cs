@@ -81,6 +81,17 @@ public sealed record AiHint
     public double PreferredRange { get; init; } = 2;
     public double Weight { get; init; } = 1;
     public Expr? When { get; init; }
+
+    /// <summary>Below this distance the hint weighs near_weight instead of weight; null means no soft minimum.</summary>
+    [JsonPropertyName("min_range")]
+    public double? MinRange { get; init; }
+
+    [JsonPropertyName("near_weight")]
+    public double? NearWeight { get; init; }
+
+    /// <summary>An attribute whose folded value replaces preferred_range, so range can scale with the caster.</summary>
+    [JsonPropertyName("range_attribute")]
+    public string? RangeAttribute { get; init; }
 }
 
 /// <summary>

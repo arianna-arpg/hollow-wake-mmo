@@ -19,6 +19,9 @@ entries:
   - { id: inner_e, name: Brawn, kind: attribute, x: -8.7, y: 0, links: [start_harrier, start_binder], choice: { group: attributes, default: might } }
   - { id: inner_f, name: Resolve, kind: attribute, x: -4.3, y: 7.5, links: [start_binder, start_holdfast], choice: { group: attributes, default: vigor } }
 
+  # ---- relays between the spokes: one school's weave prepares the next hit of another
+  - { id: relay_embers, name: Ember Relay, kind: notable, x: 6.5, y: 12, links: [inner_a], modifiers: [ { attribute: proc.ember_relay, form: flat, value: 1 }, { attribute: damage, form: increased, value: 0.1, scope: [melee] } ] }
+
   # ---- choices between the spokes
   # Doctrines beside the Holdfast spoke: each deals the three doctrines, each doctrine once per character.
   - { id: doctrine_left, name: Doctrine, kind: notable, x: -3, y: 22, links: [hf3], choice: { group: doctrine_of_war } }
