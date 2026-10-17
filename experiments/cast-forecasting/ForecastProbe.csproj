@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <AssemblyName>HollowWake.ForecastProbe</AssemblyName>
+    <NuGetAudit>false</NuGetAudit>
+    <DefaultItemExcludes>$(DefaultItemExcludes);.validation/**</DefaultItemExcludes>
+    <DefineConstants Condition="Exists('../../src/HollowWake.Core/Sim/Events/CastPresentationEvents.cs')">$(DefineConstants);CAST_CUES</DefineConstants>
+  </PropertyGroup>
+  <ItemGroup>
+    <!-- Compile the real current core into an isolated executable. No production build outputs change. -->
+    <Compile Include="../../src/HollowWake.Core/**/*.cs"
+             Exclude="../../src/HollowWake.Core/bin/**;../../src/HollowWake.Core/obj/**" />
+    <PackageReference Include="YamlDotNet" Version="18.1.0" />
+    <Compile Include="../../src/HollowWake.Client/UI/Logic/ShapeOutline.cs" />
+  </ItemGroup>
+</Project>

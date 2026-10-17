@@ -1,0 +1,202 @@
+{
+  "kind": "Standalone artifact verification, not game runtime tests",
+  "checks": [
+    {
+      "name": "Study loaded without optional local imagery",
+      "pass": true
+    },
+    {
+      "name": "Thread 0, phase 0 is selected",
+      "pass": true
+    },
+    {
+      "name": "Thread 0, phase 1 is selected",
+      "pass": true
+    },
+    {
+      "name": "Thread 0, phase 2 is selected",
+      "pass": true
+    },
+    {
+      "name": "Thread 0, phase 3 is selected",
+      "pass": true
+    },
+    {
+      "name": "Thread 1, phase 0 is selected",
+      "pass": true
+    },
+    {
+      "name": "Thread 1, phase 1 is selected",
+      "pass": true
+    },
+    {
+      "name": "Thread 1, phase 2 is selected",
+      "pass": true
+    },
+    {
+      "name": "Thread 1, phase 3 is selected",
+      "pass": true
+    },
+    {
+      "name": "Thread 2, phase 0 is selected",
+      "pass": true
+    },
+    {
+      "name": "Thread 2, phase 1 is selected",
+      "pass": true
+    },
+    {
+      "name": "Thread 2, phase 2 is selected",
+      "pass": true
+    },
+    {
+      "name": "Thread 2, phase 3 is selected",
+      "pass": true
+    },
+    {
+      "name": "Thread 3, phase 0 is selected",
+      "pass": true
+    },
+    {
+      "name": "Thread 3, phase 1 is selected",
+      "pass": true
+    },
+    {
+      "name": "Thread 3, phase 2 is selected",
+      "pass": true
+    },
+    {
+      "name": "Thread 3, phase 3 is selected",
+      "pass": true
+    },
+    {
+      "name": "Thread 4, phase 0 is selected",
+      "pass": true
+    },
+    {
+      "name": "Thread 4, phase 1 is selected",
+      "pass": true
+    },
+    {
+      "name": "Thread 4, phase 2 is selected",
+      "pass": true
+    },
+    {
+      "name": "Thread 4, phase 3 is selected",
+      "pass": true
+    },
+    {
+      "name": "Thread 5, phase 0 is selected",
+      "pass": true
+    },
+    {
+      "name": "Thread 5, phase 1 is selected",
+      "pass": true
+    },
+    {
+      "name": "Thread 5, phase 2 is selected",
+      "pass": true
+    },
+    {
+      "name": "Thread 5, phase 3 is selected",
+      "pass": true
+    },
+    {
+      "name": "Thread 6, phase 0 is selected",
+      "pass": true
+    },
+    {
+      "name": "Thread 6, phase 1 is selected",
+      "pass": true
+    },
+    {
+      "name": "Thread 6, phase 2 is selected",
+      "pass": true
+    },
+    {
+      "name": "Thread 6, phase 3 is selected",
+      "pass": true
+    },
+    {
+      "name": "Thread 7, phase 0 is selected",
+      "pass": true
+    },
+    {
+      "name": "Thread 7, phase 1 is selected",
+      "pass": true
+    },
+    {
+      "name": "Thread 7, phase 2 is selected",
+      "pass": true
+    },
+    {
+      "name": "Thread 7, phase 3 is selected",
+      "pass": true
+    },
+    {
+      "name": "Thread 8, phase 0 is selected",
+      "pass": true
+    },
+    {
+      "name": "Thread 8, phase 1 is selected",
+      "pass": true
+    },
+    {
+      "name": "Thread 8, phase 2 is selected",
+      "pass": true
+    },
+    {
+      "name": "Thread 8, phase 3 is selected",
+      "pass": true
+    },
+    {
+      "name": "Reduced motion prevents autoplay",
+      "pass": true
+    },
+    {
+      "name": "Grayscale applies to canvas",
+      "pass": true
+    },
+    {
+      "name": "Territory 0 selected",
+      "pass": true
+    },
+    {
+      "name": "Territory 1 selected",
+      "pass": true
+    },
+    {
+      "name": "Territory 2 selected",
+      "pass": true
+    },
+    {
+      "name": "Territory 3 selected",
+      "pass": true
+    },
+    {
+      "name": "Playback advances phase",
+      "pass": true
+    },
+    {
+      "name": "No page overflow at 1440px",
+      "pass": true
+    },
+    {
+      "name": "No page overflow at 768px",
+      "pass": true
+    },
+    {
+      "name": "No page overflow at 390px",
+      "pass": true
+    },
+    {
+      "name": "OS reduced motion is respected",
+      "pass": true
+    },
+    {
+      "name": "No browser errors",
+      "pass": true
+    }
+  ],
+  "errors": []
+}

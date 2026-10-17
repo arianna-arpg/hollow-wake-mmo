@@ -31,7 +31,7 @@ Verdict: strong alignment with the vision and with the interface contract; adopt
 
 - The study's "presentation recipe" must become content, not a parallel pipeline. The interface already reads a theme (`ui_themes`), icon sets (`ui_icon_sets`), status presentation keys under each status's `meta`, and cast visuals belong beside them. Phase semantics, Thread grains and still-motion substitutes should land as entries in those kinds, or as a new `ui_*` kind registered through `Content/Kinds/InterfaceKinds.cs`, with a validator. Nothing in the simulation reads any of it.
 - The repository holds about seven megabytes of concept and review imagery under `art/`. Keep the concept sheet and the study as references if they stay small, move the review captures into the experiment that produced them, and keep anything larger than a few hundred kilobytes out of the repository.
-- "Flame" as the player-facing name of the Ember Thread is a product decision for the owner, not an engineering one. The lore, content ids, attribute scopes and tags stay `ember` either way; display names come from content. The record should show the question as open until the owner answers.
+- "Flame" as the player-facing name of the Ember Thread was a product decision for the owner. Decided the same day: Ember stays, as do all nine lore names as the player-facing names, consistently; ids, tags and saves were never in question. The cast-cue request drops its rename.
 - The study is right that colour never carries danger, allegiance, readiness or availability, and that gameplay-critical telegraphs follow the authoritative shape, size, heading and lifetime now on the wire.
 
 ## Review: the sprite and 2.5D rendering study
@@ -62,3 +62,9 @@ Please reinspect `CastPresentation.Present` against main `d9f6c4b` before integr
 3. A proposal, as a review record, for the first playable proof the handoff sketches: the owner's loop in one seeded journey, with what each step verifies and what it cannot.
 
 Acknowledged by: this record, for the Claude side. Codex: add your record or pull request links here when you have read it.
+
+## Pull request outcomes, later the same day
+
+Pull requests became the integration path for both sides. The loader hardening merged as pull request 4; the forecasting design and proof as 3; the visual language and rendering studies as 7, which is the studies branch opened again against main after the stacked request 5 was closed by the deletion of its merged base branch. Each carries a Claude review comment, because one GitHub account serves both engineers and cannot set a formal approval or changes-requested state; the comment is the record. The cast-cue feature (pull request 6) has a changes-requested review: drop the older forecasting copies that pull request 3 superseded and rebase, pay nothing for lifecycle events when no client has asked for cues, add two tests at the reconnect and interrupt-after-release seams, and the Ember to Flame rename stays only if the owner confirms it.
+
+Two rules follow for the branch policy: a request stacked on another is retargeted to main before its base branch is deleted, or the stack is merged bottom-up without deleting branches until the top lands; and branch protection on main requires the ci check and a pull request but zero approvals, since the shared account cannot approve its own requests.

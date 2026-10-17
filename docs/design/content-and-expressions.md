@@ -14,6 +14,7 @@ See `docs/modding.md` for the authoring guide. This is the contract.
 - Typed specs are objects with a `type` key; the rest are parameters bound by the handler.
 - Numbers read from JSON nodes go through `JsonNum` because YAML integers, YAML floats and wire JSON produce different node types.
 - Unknown keys warn; missing required keys error; wrong types error with the entry's origin.
+- The loader validates document `kind`, list-entry `id`, and optional `patch`/`remove` controls before applying an entry. Invalid metadata produces an error with the source file instead of a conversion exception; valid sibling entries and later files still load for diagnostics. A malformed control cannot replace or remove an existing definition. Strict loading rejects the completed report. Absent or null optional controls retain their false default.
 
 ## Expressions
 
