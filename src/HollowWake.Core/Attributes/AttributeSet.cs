@@ -212,6 +212,24 @@ public sealed class AttributeSet
 
     public bool HasModifiers(string attribute) => _entries.TryGetValue(attribute, out var entry) && entry.Count > 0;
 
+    /// <summary>
+    /// Whether the attribute can be anything but zero for this owner: it has modifiers, a base of the owner's
+    /// own, or a catalog base or formula. Hot paths ask before folding attributes most owners never touch
+    /// (added damage per Thread, status chances, leech), so an untouched one costs a lookup and no fold.
+    /// </summary>
+    public bool Carries(string attribute)
+    {
+        if (_entries.TryGetValue(attribute, out var entry))
+        {
+            if (entry.Count > 0 || entry.HasBase)
+            {
+                return true;
+            }
+            return entry.Def is { } def && (def.Formula is not null || def.Base != 0);
+        }
+        return _catalog.Get(attribute) is { } d && (d.Formula is not null || d.Base != 0);
+    }
+
     /// <summary>Computes the attribute with no tag context (only unscoped modifiers apply).</summary>
     public double Get(string attribute, IExprScope owner) => Get(attribute, owner, TagSet.Empty);
 

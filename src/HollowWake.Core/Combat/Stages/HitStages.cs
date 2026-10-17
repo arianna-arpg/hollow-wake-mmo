@@ -32,8 +32,8 @@ public static class HitStages
     private static readonly ConcurrentDictionary<string, IHitStage> Stages = new(StringComparer.Ordinal);
     private static readonly ConcurrentDictionary<string, bool> Steps = new(StringComparer.Ordinal);
 
-    /// <summary>The order rule <c>combat.stages</c> falls back to: today's ladder.</summary>
-    public static readonly IReadOnlyList<string> DefaultOrder = new[] { "immunity", "guard", "evade", "block", "mitigate", "taken", "pools", "cull" };
+    /// <summary>The order rule <c>combat.stages</c> falls back to: the ladder the core content lists.</summary>
+    public static readonly IReadOnlyList<string> DefaultOrder = new[] { "immunity", "guard", "evade", "block", "taken_as", "mitigate", "taken", "cap", "stagger", "pools", "cheat_death", "cull", "leech" };
 
     static HitStages()
     {
@@ -41,12 +41,21 @@ public static class HitStages
         Register(new GuardStage());
         Register(new EvadeStage());
         Register(new BlockStage());
+        Register(new TakenAsStage());
         Register(new MitigateStage());
         Register(new TakenStage());
+        Register(new CapStage());
+        Register(new StaggerStage());
         Register(new PoolsStage());
+        Register(new CheatDeathStage());
         Register(new CullStage());
+        Register(new LeechStage());
+        // Steps inside stages, or outside the ladder, that hits can skip by tag.
         DeclareStep("crit");
         DeclareStep("armor");
+        DeclareStep("added");
+        DeclareStep("damage_taken");
+        DeclareStep("ailments");
     }
 
     public static void Register(IHitStage stage) => Stages[stage.Name] = stage;

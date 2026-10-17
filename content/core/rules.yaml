@@ -40,11 +40,33 @@ entries:
   - id: combat
     values:
       hit_chance: "clamp(accuracy / max(1, accuracy + evasion * 0.25), 0.05, 1)"
-      armor_reduction: "armor / (armor + 10 * raw)"
+      # Reduction of a Stone hit by armor: the target's armor, the hit's raw amount, the target's level and the
+      # attacker's armor penetration (pen, a fraction of armor ignored). The clamp is part of the rule.
+      armor_reduction: "clamp(armor * (1 - pen) / (armor * (1 - pen) + 10 * raw), 0, 0.9)"
       resist_cap: 0.75
       resist_floor: -2
-      pools: [ward, life]
+      # The pools hits reach before life, in order, then life. The interface lists the ones before life.
+      pools: [poise, ward, shield, life]
+      # What each pool does. Pools absorb by default (at most fraction of what reaches them); a break bar
+      # (kind: break) never absorbs, loses each landing hit times the attacker's dealt attribute times its own
+      # taken attribute, and breaks when emptied. on_hurt is applied when a landing hit reaches a pool the body
+      # holds, on_break when a hit empties it, rearm marks re-arming; with states the pool keeps the flags
+      # pool.<id>.broken, pool.<id>.rearming and pool.<id>.recharging (stamped when they begin).
+      pool_rules:
+        poise: { kind: break, dealt: poise.damage, taken: poise.damage.taken, on_break: poise_broken, rearm: poise_rearming, states: true }
+        ward: { states: true }
+        shield: { on_hurt: shield_delay, states: true }
       evadable_tags: [attack]
+      # Evasion rolls for each evadable hit (roll), or accumulates on the target so it lands on schedule (entropy).
+      evasion: roll
+      # A block keeps 1 - block.amount of the hit (fraction), or stops up to block_value, never more than
+      # block.power of the hit (guard). A blocked hit inflicts no statuses when block_stops_ailments holds.
+      block: fraction
+      block_value: "10 + level * 2 + block.value"
+      block_stops_ailments: true
+      # The status a stagger banks deferred damage into, and the one that keeps a body from cheating death twice.
+      stagger_status: stagger
+      cheat_death_status: death_cheated
       default_thread: stone
       cooldown_at: complete
       global_cooldown: 0
@@ -55,17 +77,26 @@ entries:
       crit_ailment_bonus: 0.5
       propagate_radius: 4
       # The defender's ladder every hit walks, by registered stage name.
-      stages: [immunity, guard, evade, block, mitigate, taken, pools, cull]
-      # Stages (and steps such as crit and armor) that hits carrying a tag skip: { tag: [stage, ...] }.
-      # Damage over time (status ticks carry the dot tag) is neither evaded nor blocked, never crits and
-      # ignores armor; resistances still apply.
+      stages: [immunity, guard, evade, block, taken_as, mitigate, taken, cap, stagger, pools, cheat_death, cull, leech]
+      # Stages, declared steps (crit, armor, added, damage_taken, ailments) and break bars (poise) that hits
+      # carrying a tag skip: { tag: [name, ...] }. Damage over time (status ticks carry dot) is neither evaded
+      # nor blocked, never crits, ignores armor, takes no added damage, breaks no poise and leaves no statuses;
+      # resistances still apply. Deferred damage (a stagger paying out) was mitigated when it landed, so it
+      # skips everything up to the pools. Payloads tagged no_crit never crit.
       stage_skips:
-        dot: [evade, block, crit, armor]
-      # Victim tags beyond the struck body's own tags and flags: each adds vs.<key> to a hit when its
-      # expression holds in the hit scope (target.*, source.*, distance).
+        dot: [evade, block, crit, armor, added, poise, ailments]
+        deferred: [evade, block, crit, added, taken_as, mitigate, damage_taken, cap, stagger, poise, leech, ailments]
+        no_crit: [crit]
+      # Victim tags beyond the struck body's own tags, flags and statuses: each adds vs.<key> to a hit when its
+      # expression holds in the hit scope (target.*, source.*, distance, angle: zero in front, 180 behind).
       victim_tags:
-        low_life: "target.life_pct <= 0.35"
-        full_life: "target.life_pct >= 0.95"
+        low_life: "target.life_pct <= target.low_life.line"
+        full_life: "target.life_pct >= target.full_life.line"
+        behind: "angle > 120"
+        near: "distance <= 3"
+        far: "distance >= 8"
+        higher_level: "target.level > source.level"
+        lower_level: "target.level < source.level"
       ailment_magnitude:
         burning: "amount * 0.3"
         bleeding: "amount * 0.25"
@@ -76,6 +107,15 @@ entries:
         unraveling: "1"
         addled: "1"
         sapped: "amount * 0.2"
+
+  - id: procs
+    values:
+      # Procs, status riders and consumed stacks are refused at this effect depth and deeper; below it each
+      # level of depth keeps depth_falloff of a proc's chance (a proc may name its own falloff).
+      max_depth: 3
+      depth_falloff: 0.5
+      # No proc's chance per event goes above this.
+      chance_cap: 1
 
   - id: glyphs
     values:

@@ -1,3 +1,4 @@
+using System.Collections.Concurrent;
 using System.Runtime.CompilerServices;
 using System.Text.Json.Nodes;
 using HollowWake.Core.Combat.Stages;
@@ -20,6 +21,12 @@ public sealed class DamagePacket
     public TagSet Tags { get; set; } = TagSet.Empty;
     public bool Crit { get; set; }
     public double Total => Amounts.Values.Sum();
+
+    /// <summary>The hit cannot take the target's last point of life.</summary>
+    public bool CannotKill { get; set; }
+
+    /// <summary>Life leech this hit carries on top of the attacker's own (a damage effect's <c>leech</c>).</summary>
+    public double Leech { get; set; }
 }
 
 public sealed class HitResult
@@ -29,22 +36,43 @@ public sealed class HitResult
     public bool Immune;
     public bool Crit;
     public bool Killed;
+    /// <summary>The target was culled at or below the attacker's threshold.</summary>
+    public bool Culled;
+    /// <summary>A per-hit cap clamped what the target received.</summary>
+    public bool Clamped;
+    /// <summary>The hit would have killed and the target cheated death.</summary>
+    public bool CheatedDeath;
     public double Total;
+    /// <summary>What the pools before life (status pools, ward, shield) absorbed.</summary>
+    public double Absorbed;
+    /// <summary>What was deferred into a stagger status instead of landing now.</summary>
+    public double Staggered;
+    /// <summary>Damage dealt to break bars (poise).</summary>
+    public double Broken;
     public Dictionary<string, double> Received = new(StringComparer.Ordinal);
 }
 
 /// <summary>
-/// The one path every hit takes. <see cref="Build"/> is the attacker's side: the base amount split over
-/// the hit's Threads, the attacker's damage fold scoped by the hit's tags (glyph modifiers joining) with
-/// the victim tags in the context, conversion and extra-as, and the crit roll. <see cref="Apply"/> walks
-/// the defender's ladder: the stages registered by name in the order rule <c>combat.stages</c> gives
-/// (immunity, guard, evade, block, mitigate, taken, pools, cull by default), skipping those rule
-/// <c>combat.stage_skips</c> names for the hit's tags; then the hit is published, ailments roll and life
-/// at zero kills. Every formula lives in rules. There is no unmitigated damage.
+/// The one path every hit takes. <see cref="Build"/> is the attacker's side: the base amount split over the
+/// hit's Threads plus any per-Thread amounts, flat added damage per Thread from <c>added.{thread}</c> scaled by
+/// its effectiveness, the attacker's damage fold scoped by the hit's tags (glyph modifiers joining) with the
+/// victim tags in the context, conversion and extra-as, and the crit roll against the victim's crit avoidance.
+/// <see cref="Apply"/> walks the defender's ladder: the stages registered by name in the order rule
+/// <c>combat.stages</c> gives, skipping those rule <c>combat.stage_skips</c> names for the hit's tags; then
+/// the hit is published, statuses roll and life at zero kills. Every formula lives in rules. There is no
+/// unmitigated damage.
 /// </summary>
 public static class DamagePipeline
 {
-    public static DamagePacket Build(EffectContext ctx, double amount, IReadOnlyList<string> threads, TagSet extraTags, bool canCrit)
+    public static DamagePacket Build(EffectContext ctx, double amount, IReadOnlyList<string> threads, TagSet extraTags, bool canCrit) =>
+        Build(ctx, amount, threads, ReadOnlySpan<(string, double)>.Empty, extraTags, canCrit, null);
+
+    /// <summary>
+    /// Builds a packet from an amount split over <paramref name="threads"/> plus per-Thread
+    /// <paramref name="shares"/>. <paramref name="effectiveness"/> scales the attacker's flat added damage;
+    /// without one it is the weave's <c>damage.effectiveness</c> (one for hits without a weave).
+    /// </summary>
+    public static DamagePacket Build(EffectContext ctx, double amount, IReadOnlyList<string> threads, ReadOnlySpan<(string Thread, double Amount)> shares, TagSet extraTags, bool canCrit, double? effectiveness)
     {
         var source = ctx.SourceStats;
         var packet = new DamagePacket();
@@ -53,38 +81,36 @@ public static class DamagePipeline
         {
             tags = tags.With(t);
         }
+        foreach (var (t, _) in shares)
+        {
+            tags = tags.With(t);
+        }
         var hit = HitScope.Rent(ctx, packet);
         try
         {
             if (hit.Target is { } ts)
             {
-                tags = tags.Union(VictimTagsOf(ts, hit));
+                tags = tags.Union(VictimTagsOf(ctx, ts, hit));
             }
             packet.Tags = tags;
             var share = threads.Count == 0 ? amount : amount / threads.Count;
             var extra = ctx.Weave?.Modifiers;
             foreach (var t in threads)
             {
-                var threadTags = tags.With(t);
-                var scaled = source is null ? share : source.Attributes.Apply("damage", share, hit.AttackerScope, threadTags, extra);
-                packet.Amounts[t] = packet.Amounts.TryGetValue(t, out var existing) ? existing + scaled : scaled;
+                AddScaled(packet, source, hit, t, share, tags, extra);
+            }
+            foreach (var (t, a) in shares)
+            {
+                AddScaled(packet, source, hit, t, a, tags, extra);
             }
             if (source is not null)
             {
-                ApplyConversion(ctx, source, packet, extra);
-                if (canCrit && !hit.Plan.Skips(tags, "crit"))
+                if (!hit.Plan.Skips(tags, "added"))
                 {
-                    var chance = Math.Clamp(source.Attributes.Get("crit.chance", source, tags, extra), 0, 1);
-                    if (ctx.Rng.Chance(chance))
-                    {
-                        var multiplier = Math.Max(1, source.Attributes.Get("crit.multiplier", source, tags, extra));
-                        foreach (var k in packet.Amounts.Keys.ToList())
-                        {
-                            packet.Amounts[k] *= multiplier;
-                        }
-                        packet.Crit = true;
-                    }
+                    AddFlat(ctx, source, packet, hit, extra, effectiveness);
                 }
+                ApplyConversion(ctx, source, packet, extra);
+                RollCrit(ctx, source, packet, hit, canCrit, extra);
             }
         }
         finally
@@ -95,20 +121,150 @@ public static class DamagePipeline
     }
 
     /// <summary>
-    /// Victim scope: <c>vs.</c> plus each of the struck body's tags and flags, then <c>vs.</c> plus the key
-    /// of each rule in <c>combat.victim_tags</c> whose expression holds in the hit scope.
+    /// A packet of amounts already worked out (a rupture's burst, a pop): no attacker fold, added damage,
+    /// conversion or crit, since what it carries was folded when it was banked; the victim tags still join it.
     /// </summary>
-    private static TagSet VictimTagsOf(Stats ts, HitScope hit)
+    public static DamagePacket BuildFixed(EffectContext ctx, ReadOnlySpan<(string Thread, double Amount)> amounts, TagSet extraTags)
+    {
+        var packet = new DamagePacket();
+        var tags = ctx.Tags.Union(extraTags).With("hit", "damage");
+        foreach (var (t, _) in amounts)
+        {
+            tags = tags.With(t);
+        }
+        var hit = HitScope.Rent(ctx, packet);
+        try
+        {
+            if (hit.Target is { } ts)
+            {
+                tags = tags.Union(VictimTagsOf(ctx, ts, hit));
+            }
+            packet.Tags = tags;
+            foreach (var (t, a) in amounts)
+            {
+                packet.Amounts[t] = packet.Amounts.TryGetValue(t, out var existing) ? existing + a : a;
+            }
+        }
+        finally
+        {
+            hit.Return();
+        }
+        return packet;
+    }
+
+    /// <summary>A Thread's share folded through the attacker's <c>damage</c> in the hit scope, added to the packet.</summary>
+    private static void AddScaled(DamagePacket packet, Components.Stats? source, HitScope hit, string thread, double share, TagSet tags, IReadOnlyList<Attributes.Modifier>? extra)
+    {
+        var threadTags = tags.With(thread);
+        var scaled = source is null ? share : source.Attributes.Apply("damage", share, hit.AttackerScope, threadTags, extra);
+        packet.Amounts[thread] = packet.Amounts.TryGetValue(thread, out var existing) ? existing + scaled : scaled;
+    }
+
+    /// <summary>
+    /// Flat damage the attacker adds per Thread (<c>added.{thread}</c>, scoped by the hit's tags), including
+    /// Threads the hit lacked, scaled by the added effectiveness and folded like the rest of the hit.
+    /// </summary>
+    private static void AddFlat(EffectContext ctx, Components.Stats source, DamagePacket packet, HitScope hit, IReadOnlyList<Attributes.Modifier>? extra, double? effectiveness)
+    {
+        var names = CombatNames.For(ctx.Sim.Content);
+        var effective = double.NaN;
+        for (var j = 0; j < names.Threads.Length; j++)
+        {
+            var attr = names.Added[j];
+            if (!source.Attributes.Carries(attr) && !Mentions(extra, attr))
+            {
+                continue;
+            }
+            var flat = source.Attributes.Get(attr, source, packet.Tags, extra);
+            if (flat <= 0)
+            {
+                continue;
+            }
+            if (double.IsNaN(effective))
+            {
+                effective = AddedEffectiveness(ctx, source, packet.Tags, extra, effectiveness);
+            }
+            if (effective <= 0)
+            {
+                return;
+            }
+            AddScaled(packet, source, hit, names.Threads[j], flat * effective, packet.Tags, extra);
+        }
+    }
+
+    private static double AddedEffectiveness(EffectContext ctx, Components.Stats source, TagSet tags, IReadOnlyList<Attributes.Modifier>? extra, double? effectiveness)
+    {
+        var e = effectiveness ?? (ctx.Weave is { } weave ? weave.Attr(source, "damage.effectiveness", ctx.Tags) : 1);
+        if (source.Attributes.Catalog.Contains("added.effectiveness") || source.Attributes.HasModifiers("added.effectiveness") || Mentions(extra, "added.effectiveness"))
+        {
+            e *= source.Attributes.Get("added.effectiveness", source, tags, extra);
+        }
+        return e;
+    }
+
+    /// <summary>
+    /// The crit roll: <c>crit.chance</c> lowered by the victim's <c>crit.avoid</c>, unless the hit's tags skip the
+    /// crit step; damage over time that skips it may still crit by the attacker's <c>crit.dot</c>.
+    /// </summary>
+    private static void RollCrit(EffectContext ctx, Components.Stats source, DamagePacket packet, HitScope hit, bool canCrit, IReadOnlyList<Attributes.Modifier>? extra)
+    {
+        var tags = packet.Tags;
+        double chance;
+        if (canCrit && !hit.Plan.Skips(tags, "crit"))
+        {
+            chance = Math.Clamp(source.Attributes.Get("crit.chance", source, tags, extra), 0, 1);
+        }
+        else if (tags.Has("dot") && (source.Attributes.Carries("crit.dot") || Mentions(extra, "crit.dot")))
+        {
+            chance = Math.Clamp(source.Attributes.Get("crit.dot", source, tags, extra), 0, 1);
+        }
+        else
+        {
+            return;
+        }
+        if (hit.Target is { } target && target.Attributes.Carries("crit.avoid"))
+        {
+            chance *= 1 - Math.Clamp(target.Attributes.Get("crit.avoid", target, tags), -1, 1);
+            chance = Math.Clamp(chance, 0, 1);
+        }
+        if (ctx.Rng.Chance(chance))
+        {
+            var multiplier = Math.Max(1, source.Attributes.Get("crit.multiplier", source, tags, extra));
+            foreach (var k in packet.Amounts.Keys.ToList())
+            {
+                packet.Amounts[k] *= multiplier;
+            }
+            packet.Crit = true;
+        }
+    }
+
+    /// <summary>
+    /// Victim scope: <c>vs.</c> plus each of the struck body's tags, flags and active statuses, then <c>vs.</c>
+    /// plus the key of each rule in <c>combat.victim_tags</c> whose expression holds in the hit scope.
+    /// </summary>
+    private static TagSet VictimTagsOf(EffectContext ctx, Components.Stats ts, HitScope hit)
     {
         var vs = hit.VictimTags;
         vs.Clear();
         foreach (var tag in ts.Tags)
         {
-            vs.Add("vs." + tag);
+            vs.Add(Vs(tag));
         }
         foreach (var flag in ts.Flags)
         {
-            vs.Add("vs." + flag);
+            // The status: and forbid: copies of flags say nothing a victim scope needs.
+            if (flag.StartsWith("status:", StringComparison.Ordinal) || flag.StartsWith("forbid:", StringComparison.Ordinal))
+            {
+                continue;
+            }
+            vs.Add(Vs(flag));
+        }
+        if (ctx.Sim.World.TryGet<Statuses>(ctx.Target, out var statuses))
+        {
+            foreach (var s in statuses.Active)
+            {
+                vs.Add(Vs(s.Id));
+            }
         }
         foreach (var rule in hit.Plan.VictimTags)
         {
@@ -122,10 +278,15 @@ public static class DamagePipeline
         return result;
     }
 
+    private static readonly ConcurrentDictionary<string, string> VsNames = new(StringComparer.Ordinal);
+
+    /// <summary><c>vs.{name}</c>, built once per name.</summary>
+    private static string Vs(string name) => VsNames.GetOrAdd(name, static n => "vs." + n);
+
     /// <summary>convert.{from}.{to} moves a fraction of one thread into another; extra.{to} adds a share of everything as another thread.</summary>
-    private static void ApplyConversion(EffectContext ctx, Stats source, DamagePacket packet, IReadOnlyList<Attributes.Modifier>? extra)
+    private static void ApplyConversion(EffectContext ctx, Components.Stats source, DamagePacket packet, IReadOnlyList<Attributes.Modifier>? extra)
     {
-        var names = ConversionNames.For(ctx.Sim.Content);
+        var names = CombatNames.For(ctx.Sim.Content);
         var threads = names.Threads;
         var original = new Dictionary<string, double>(packet.Amounts, StringComparer.Ordinal);
         foreach (var (from, amount) in original)
@@ -143,7 +304,7 @@ public static class DamagePipeline
                     continue;
                 }
                 var attr = names.Convert(from, j);
-                if (!source.Attributes.HasModifiers(attr) && !Mentions(extra, attr))
+                if (!source.Attributes.Carries(attr) && !Mentions(extra, attr))
                 {
                     continue;
                 }
@@ -162,7 +323,7 @@ public static class DamagePipeline
         {
             var to = threads[j];
             var attr = names.Extra[j];
-            if (!source.Attributes.HasModifiers(attr) && !Mentions(extra, attr))
+            if (!source.Attributes.Carries(attr) && !Mentions(extra, attr))
             {
                 continue;
             }
@@ -174,7 +335,7 @@ public static class DamagePipeline
         }
     }
 
-    private static bool Mentions(IReadOnlyList<Attributes.Modifier>? extra, string attribute)
+    internal static bool Mentions(IReadOnlyList<Attributes.Modifier>? extra, string attribute)
     {
         if (extra is null)
         {
@@ -195,7 +356,7 @@ public static class DamagePipeline
         var sim = ctx.Sim;
         var result = new HitResult { Crit = packet.Crit };
         var target = ctx.Target;
-        if (!sim.World.TryGet<Stats>(target, out var ts) || sim.World.Has<Dead>(target))
+        if (!sim.World.TryGet<Components.Stats>(target, out var ts) || sim.World.Has<Dead>(target))
         {
             return result;
         }
@@ -230,16 +391,30 @@ public static class DamagePipeline
         {
             result.Killed = true;
             sim.Service<DeathService>().Kill(sim, target, ctx.Origin, ctx.Depth);
+            Sustain.OnKill(ctx, packet);
         }
         return result;
     }
 
     internal static void Publish(Simulation sim, EffectContext ctx, HitResult result, DamagePacket packet)
     {
-        sim.Events.Publish(new DamageDealt(ctx.Source, ctx.Target, result.Total, result.Crit, packet.Tags, result.Received, result.Evaded, result.Blocked) { Tick = sim.Clock.Tick, Depth = ctx.Depth });
+        sim.Events.Publish(new DamageDealt(ctx.Source, ctx.Target, result.Total, result.Crit, packet.Tags, result.Received, result.Evaded, result.Blocked)
+        {
+            Tick = sim.Clock.Tick,
+            Depth = ctx.Depth,
+            Culled = result.Culled,
+            Clamped = result.Clamped,
+        });
     }
 
-    /// <summary>Each thread may inflict its status; chance and magnitude come from attributes and rules.</summary>
+    /// <summary>
+    /// Statuses a landed hit inflicts. Each Thread that dealt damage may leave its ailment by
+    /// <c>ailment.chance</c> scoped to the Thread (plus the attacker's chance for that very status and a crit
+    /// bonus); then every other status the attacker has a <c>status.{id}.chance</c> for rolls once. Magnitudes
+    /// come from rule <c>combat.ailment_magnitude.{status}</c> (or the status's baseline), potency from
+    /// <c>ailment.potency</c>. A block stops them all when rule <c>combat.block_stops_ailments</c> says so, and
+    /// hits whose tags skip the <c>ailments</c> step (damage over time) leave none.
+    /// </summary>
     private static void ApplyAilments(EffectContext ctx, DamagePacket packet, HitResult result)
     {
         var sim = ctx.Sim;
@@ -247,6 +422,13 @@ public static class DamagePipeline
         {
             return;
         }
+        var plan = HitPlan.For(sim.Content.Rules);
+        if ((result.Blocked && plan.BlockStopsAilments) || plan.Skips(packet.Tags, "ailments"))
+        {
+            return;
+        }
+        var names = CombatNames.For(sim.Content);
+        var extra = ctx.Weave?.Modifiers;
         foreach (var (thread, dealt) in result.Received)
         {
             if (dealt <= 0)
@@ -258,10 +440,15 @@ public static class DamagePipeline
             {
                 continue;
             }
-            var chance = source.Attributes.Get("ailment.chance", source, packet.Tags.With(thread), ctx.Weave?.Modifiers);
+            var chance = source.Attributes.Get("ailment.chance", source, packet.Tags.With(thread), extra);
             if (def.StatusChance is not null && Expr.TryParse(def.StatusChance, out var ce, out _))
             {
                 chance += ce!.Evaluate(ctx.Scope);
+            }
+            var own = names.StatusChance(def.Status);
+            if (own is not null && (source.Attributes.Carries(own) || Mentions(extra, own)))
+            {
+                chance += source.Attributes.Get(own, source, packet.Tags.With(thread), extra);
             }
             if (packet.Crit)
             {
@@ -272,8 +459,8 @@ public static class DamagePipeline
                 continue;
             }
             var scope = new DictScope(ctx.Rng).Set("amount", dealt).Set("level", source.Level);
-            var magnitude = sim.Content.Rules.Eval($"combat.ailment_magnitude.{def.Status}", "amount * 0.25", scope);
-            var potency = 1 + source.Attributes.Get("ailment.potency", source, packet.Tags.With(thread), ctx.Weave?.Modifiers);
+            var magnitude = (plan.AilmentMagnitude(def.Status) ?? DefaultMagnitude).Evaluate(scope);
+            var potency = 1 + source.Attributes.Get("ailment.potency", source, packet.Tags.With(thread), extra);
             statuses.Apply(sim, ctx.Target, def.Status, ctx.Source, new StatusApplication
             {
                 Magnitude = magnitude,
@@ -283,46 +470,166 @@ public static class DamagePipeline
                 Depth = ctx.Depth,
             });
         }
-    }
-
-    /// <summary>
-    /// The attribute names conversion reads, built once per content set instead of per hit, and never changed
-    /// afterwards, so zones on several threads share them. Threads are fixed for a loaded content set; a
-    /// registry extended in code after its first hit keeps the names it had, which only tools and tests do.
-    /// </summary>
-    private sealed class ConversionNames
-    {
-        private static readonly ConditionalWeakTable<ContentRegistry, ConversionNames> Cache = new();
-
-        private readonly Dictionary<string, string[]> _convert = new(StringComparer.Ordinal);
-
-        private ConversionNames(string[] threads)
+        if (result.Total <= 0 || sim.World.Has<Dead>(ctx.Target))
         {
-            Threads = threads;
-            Extra = threads.Select(t => $"extra.{t}").ToArray();
-            foreach (var from in threads)
+            return;
+        }
+        // Every other status the attacker has a chance for, rolled once per hit in id order.
+        var ids = names.Statuses;
+        for (var i = 0; i < ids.Length; i++)
+        {
+            var attr = names.Chances[i];
+            if (!source.Attributes.Carries(attr) && !Mentions(extra, attr))
             {
-                _convert[from] = threads.Select(t => $"convert.{from}.{t}").ToArray();
+                continue;
+            }
+            if (ThreadAilmentRolled(sim, result, ids[i]))
+            {
+                continue;
+            }
+            var chance = source.Attributes.Get(attr, source, packet.Tags, extra);
+            if (chance <= 0 || !ctx.Rng.Chance(Math.Min(1, chance)))
+            {
+                continue;
+            }
+            var status = ids[i];
+            var magnitude = MagnitudeOf(sim, ctx, source, status, result.Total);
+            var potency = 1 + source.Attributes.Get("ailment.potency", source, packet.Tags, extra);
+            statuses.Apply(sim, ctx.Target, status, ctx.Source, new StatusApplication
+            {
+                Magnitude = magnitude,
+                Potency = potency,
+                SourceKey = ctx.Weave?.Key ?? "hit",
+                Tags = packet.Tags,
+                Depth = ctx.Depth,
+            });
+            if (sim.World.Has<Dead>(ctx.Target))
+            {
+                return;
             }
         }
-
-        public string[] Threads { get; }
-        public string[] Extra { get; }
-
-        public static ConversionNames For(ContentRegistry content) =>
-            Cache.GetValue(content, static c => new ConversionNames(c.Each<ThreadDef>().Select(t => t.Id).ToArray()));
-
-        /// <summary><c>convert.{from}.{to}</c> for the thread at index <paramref name="to"/>.</summary>
-        public string Convert(string from, int to) =>
-            _convert.TryGetValue(from, out var row) ? row[to] : $"convert.{from}.{Threads[to]}";
     }
+
+    /// <summary>A Thread ailment's magnitude when the rules name none for it.</summary>
+    private static readonly Expr DefaultMagnitude = Expr.Parse("amount * 0.25");
+
+    /// <summary>Whether a Thread that dealt damage this hit already rolled this status as its own ailment.</summary>
+    private static bool ThreadAilmentRolled(Simulation sim, HitResult result, string status)
+    {
+        foreach (var (thread, dealt) in result.Received)
+        {
+            if (dealt > 0 && sim.Content.Get<ThreadDef>(thread)?.Status == status)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /// <summary>A status's magnitude from a hit: its <c>combat.ailment_magnitude</c> rule over the damage, else its baseline, else one.</summary>
+    internal static double MagnitudeOf(Simulation sim, EffectContext ctx, Components.Stats source, string status, double amount)
+    {
+        if (HitPlan.For(sim.Content.Rules).AilmentMagnitude(status) is { } rule)
+        {
+            var scope = new DictScope(ctx.Rng).Set("amount", amount).Set("level", source.Level);
+            return rule.Evaluate(scope);
+        }
+        if (sim.Content.Get<StatusDef>(status)?.Baseline is { } baseline)
+        {
+            return baseline.Evaluate(source);
+        }
+        return 1;
+    }
+}
+
+/// <summary>
+/// The attribute names the pipeline reads per Thread, per resource and per status, built once per content set
+/// instead of per hit and never changed afterwards, so zones on several threads share them. A registry extended
+/// in code after its first hit keeps the names it had, which only tools and tests do.
+/// </summary>
+internal sealed class CombatNames
+{
+    private static readonly ConditionalWeakTable<ContentRegistry, CombatNames> Cache = new();
+
+    private readonly Dictionary<string, string[]> _convert = new(StringComparer.Ordinal);
+    private readonly Dictionary<string, string[]> _takenAs = new(StringComparer.Ordinal);
+    private readonly Dictionary<string, string> _statusChance = new(StringComparer.Ordinal);
+    private readonly Dictionary<string, string> _statusLeech = new(StringComparer.Ordinal);
+    private readonly Dictionary<string, int> _threadIndex = new(StringComparer.Ordinal);
+
+    private CombatNames(ContentRegistry content)
+    {
+        Threads = content.Each<ThreadDef>().Select(t => t.Id).ToArray();
+        Extra = Threads.Select(t => $"extra.{t}").ToArray();
+        Added = Threads.Select(t => $"added.{t}").ToArray();
+        var defs = content.Each<ThreadDef>().ToDictionary(t => t.Id, StringComparer.Ordinal);
+        Resist = Threads.Select(t => defs[t].Resist ?? $"resist.{t}").ToArray();
+        ResistMax = Resist.Select(r => r + ".max").ToArray();
+        Pen = Threads.Select(t => defs[t].Penetration ?? $"pen.{t}").ToArray();
+        for (var i = 0; i < Threads.Length; i++)
+        {
+            _threadIndex[Threads[i]] = i;
+        }
+        foreach (var from in Threads)
+        {
+            _convert[from] = Threads.Select(t => $"convert.{from}.{t}").ToArray();
+            _takenAs[from] = Threads.Select(t => $"taken_as.{from}.{t}").ToArray();
+        }
+        Statuses = content.Each<StatusDef>().Select(s => s.Id).OrderBy(s => s, StringComparer.Ordinal).ToArray();
+        Chances = Statuses.Select(s => $"status.{s}.chance").ToArray();
+        foreach (var s in Statuses)
+        {
+            _statusChance[s] = $"status.{s}.chance";
+            _statusLeech["status." + s] = $"status.{s}.leech";
+        }
+        Resources = content.Each<ResourceDef>().Select(r => r.Id).ToArray();
+        Leech = Resources.Select(r => $"leech.{r}").ToArray();
+        OnHit = Resources.Select(r => $"on_hit.{r}").ToArray();
+        OnKill = Resources.Select(r => $"on_kill.{r}").ToArray();
+        LifeIndex = Array.IndexOf(Resources, "life");
+    }
+
+    public string[] Threads { get; }
+    public string[] Extra { get; }
+    public string[] Added { get; }
+    public string[] Resist { get; }
+    public string[] ResistMax { get; }
+    public string[] Pen { get; }
+    /// <summary>Status ids in id order, and the matching <c>status.{id}.chance</c> attributes.</summary>
+    public string[] Statuses { get; }
+    public string[] Chances { get; }
+    public string[] Resources { get; }
+    public string[] Leech { get; }
+    public string[] OnHit { get; }
+    public string[] OnKill { get; }
+    public int LifeIndex { get; }
+
+    public static CombatNames For(ContentRegistry content) => Cache.GetValue(content, static c => new CombatNames(c));
+
+    /// <summary>The index of a Thread, or -1.</summary>
+    public int ThreadIndex(string thread) => _threadIndex.TryGetValue(thread, out var i) ? i : -1;
+
+    /// <summary><c>convert.{from}.{to}</c> for the thread at index <paramref name="to"/>.</summary>
+    public string Convert(string from, int to) =>
+        _convert.TryGetValue(from, out var row) ? row[to] : $"convert.{from}.{Threads[to]}";
+
+    /// <summary><c>taken_as.{from}.{to}</c> for the thread at index <paramref name="to"/>.</summary>
+    public string TakenAs(string from, int to) =>
+        _takenAs.TryGetValue(from, out var row) ? row[to] : $"taken_as.{from}.{Threads[to]}";
+
+    /// <summary><c>status.{id}.chance</c>, or null for an unknown status.</summary>
+    public string? StatusChance(string status) => _statusChance.TryGetValue(status, out var a) ? a : null;
+
+    /// <summary>The leech attribute of a status a damage-over-time tick carries the <c>status.{id}</c> tag of.</summary>
+    public bool StatusLeech(string statusTag, out string attribute) => _statusLeech.TryGetValue(statusTag, out attribute!);
 }
 
 /// <summary>
 /// The rules every hit reads, resolved once per ruleset: the stage order (<c>combat.stages</c>), which
 /// stages hits with a tag skip (<c>combat.stage_skips</c>, a map from tag to stage names; a name that is
 /// not a stage, such as <c>crit</c>, is checked by the step it names), the victim tag rules
-/// (<c>combat.victim_tags</c>, a map from tag to expression), and the numbers the built-in stages use.
+/// (<c>combat.victim_tags</c>, a map from tag to expression), the pools and what each does
+/// (<c>combat.pools</c>, <c>combat.pool_rules</c>), and the modes and numbers the built-in stages use.
 /// </summary>
 public sealed class HitPlan
 {
@@ -394,7 +701,7 @@ public sealed class HitPlan
         {
             foreach (var (tag, _) in vt)
             {
-                victimTags.Add(new VictimTagRule("vs." + tag, rules.Expr("combat.victim_tags." + tag, "0")));
+                victimTags.Add(new VictimTagRule("vs." + tag, Parse(rules, "combat.victim_tags." + tag, "0", problems)));
             }
         }
         VictimTags = victimTags.ToArray();
@@ -404,8 +711,28 @@ public sealed class HitPlan
         var pools = rules.Strings("combat.pools");
         Pools = pools.Count == 0 ? new[] { "ward", "life" } : pools.ToArray();
         PoolsIncludeLife = Array.IndexOf(Pools, "life") >= 0;
+        PoolRules = new PoolRule[Pools.Length];
+        for (var i = 0; i < Pools.Length; i++)
+        {
+            PoolRules[i] = PoolRule.Read(rules, Pools[i], problems);
+        }
         ResistCap = rules.Number("combat.resist_cap", 0.75);
         ResistFloor = rules.Number("combat.resist_floor", -2.0);
+        EntropyEvasion = rules.Text("combat.evasion", "roll") == "entropy";
+        GuardBlock = rules.Text("combat.block", "fraction") == "guard";
+        BlockStopsAilments = rules.Flag("combat.block_stops_ailments", false);
+        StaggerStatus = rules.Text("combat.stagger_status", "stagger");
+        HitChance = Parse(rules, "combat.hit_chance", "clamp(accuracy / max(1, accuracy + evasion * 0.25), 0.05, 1)", problems);
+        ArmorReduction = Parse(rules, "combat.armor_reduction", "clamp(armor * (1 - pen) / (armor * (1 - pen) + 10 * raw), 0, 0.9)", problems);
+        BlockValue = Parse(rules, "combat.block_value", "10 + level * 2 + block.value", problems);
+        if (rules.Node("combat.ailment_magnitude") is JsonObject magnitudes)
+        {
+            foreach (var (status, _) in magnitudes)
+            {
+                _magnitudes[status] = Parse(rules, "combat.ailment_magnitude." + status, "1", problems);
+            }
+        }
+        CheatDeathStatus = rules.Text("combat.cheat_death_status", "death_cheated");
         Problems = problems;
     }
 
@@ -415,10 +742,60 @@ public sealed class HitPlan
     public string[] StageNames { get; }
     public VictimTagRule[] VictimTags { get; }
     public TagSet EvadableTags { get; }
+    /// <summary>Pool ids in the order hits reach them; the interface lists the ones before life.</summary>
     public string[] Pools { get; }
+    /// <summary>What each pool in <see cref="Pools"/> does, by position.</summary>
+    public PoolRule[] PoolRules { get; }
     public bool PoolsIncludeLife { get; }
     public double ResistCap { get; }
     public double ResistFloor { get; }
+    /// <summary>Rule <c>combat.evasion</c> is <c>entropy</c>: evasion accumulates instead of rolling.</summary>
+    public bool EntropyEvasion { get; }
+    /// <summary>Rule <c>combat.block</c> is <c>guard</c>: a block stops up to a value rather than a fraction.</summary>
+    public bool GuardBlock { get; }
+    /// <summary>Rule <c>combat.block_stops_ailments</c>: a blocked hit inflicts no statuses.</summary>
+    public bool BlockStopsAilments { get; }
+    public string StaggerStatus { get; }
+    public string CheatDeathStatus { get; }
+    /// <summary>Rule <c>combat.hit_chance</c> over <c>accuracy</c>, <c>evasion</c> and <c>level</c>.</summary>
+    public Expr HitChance { get; }
+    /// <summary>Rule <c>combat.armor_reduction</c> over <c>armor</c>, <c>raw</c>, <c>level</c> and <c>pen</c>.</summary>
+    public Expr ArmorReduction { get; }
+    /// <summary>Rule <c>combat.block_value</c> over the blocker's <c>level</c> and <c>block.value</c>.</summary>
+    public Expr BlockValue { get; }
+
+    private readonly Dictionary<string, Expr> _magnitudes = new(StringComparer.Ordinal);
+
+    /// <summary>Rule <c>combat.ailment_magnitude.{status}</c> over <c>amount</c> and <c>level</c>, or null when the rules name none.</summary>
+    public Expr? AilmentMagnitude(string status) => _magnitudes.TryGetValue(status, out var e) ? e : null;
+
+    /// <summary>
+    /// A rule formula parsed for the plan alone, never through the shared rules cache: plans are built once per
+    /// ruleset and read by hits on every zone thread.
+    /// </summary>
+    private static Expr Parse(Rules rules, string path, string fallback, List<string> problems)
+    {
+        if (rules.Node(path) is JsonValue v)
+        {
+            if (JsonNum.TryDouble(v, out var d))
+            {
+                return Expr.Constant(d);
+            }
+            if (v.TryGetValue<bool>(out var b))
+            {
+                return Expr.Constant(b ? 1 : 0);
+            }
+            if (v.TryGetValue<string>(out var text))
+            {
+                if (Expr.TryParse(text, out var parsed, out var error))
+                {
+                    return parsed!;
+                }
+                problems.Add($"{path} does not parse: {error}");
+            }
+        }
+        return Expr.Parse(fallback);
+    }
 
     /// <summary>What is wrong with the rules, for validation.</summary>
     public IReadOnlyList<string> Problems { get; }
@@ -457,5 +834,70 @@ public sealed class HitPlan
             }
         }
         return false;
+    }
+
+    /// <summary>The rule of a pool by id, or null when the pool is not in <c>combat.pools</c>.</summary>
+    public PoolRule? PoolRuleOf(string pool)
+    {
+        for (var i = 0; i < Pools.Length; i++)
+        {
+            if (Pools[i] == pool)
+            {
+                return PoolRules[i];
+            }
+        }
+        return null;
+    }
+}
+
+/// <summary>
+/// What a pool in rule <c>combat.pools</c> does, from <c>combat.pool_rules.{id}</c>. An absorbing pool takes
+/// damage before life (a <c>fraction</c> of what reaches it at most); a break bar (<c>kind: break</c>) never
+/// absorbs but loses <c>dealt</c> times <c>taken</c> of each landing hit and breaks when it empties. A landing
+/// hit that reaches a pool the body holds applies <c>on_hurt</c> (the shield's recharge delay), and one that
+/// empties it applies <c>on_break</c>. With <c>states</c> the status system keeps the pool's state flags
+/// (<c>pool.{id}.broken</c>, <c>.rearming</c>, <c>.recharging</c>) for the interface: broken while empty or
+/// while <c>on_break</c> lasts, re-arming while <c>on_hurt</c> or <c>rearm</c> lasts, recharging while it refills.
+/// </summary>
+public sealed class PoolRule
+{
+    public required string Resource { get; init; }
+    public bool Break { get; init; }
+    public double Fraction { get; init; } = 1;
+    public string? Dealt { get; init; }
+    public string? Taken { get; init; }
+    public string? OnHurt { get; init; }
+    public string? OnBreak { get; init; }
+    public string? Rearm { get; init; }
+    public bool States { get; init; }
+    public string BrokenFlag { get; init; } = "";
+    public string RearmingFlag { get; init; } = "";
+    public string RechargingFlag { get; init; } = "";
+
+    internal static PoolRule Read(Rules rules, string pool, List<string> problems)
+    {
+        var path = "combat.pool_rules." + pool;
+        var kind = rules.Text(path + ".kind", "absorb");
+        if (kind is not ("absorb" or "break"))
+        {
+            problems.Add($"{path}.kind must be absorb or break, not '{kind}'");
+        }
+        string? Text(string key) => rules.Node(path + "." + key) is JsonValue v && v.TryGetValue<string>(out var s) && s.Length > 0 ? s : null;
+        var isBreak = kind == "break";
+        return new PoolRule
+        {
+            Resource = pool,
+            Break = isBreak,
+            Fraction = Math.Clamp(rules.Number(path + ".fraction", 1), 0, 1),
+            Dealt = Text("dealt") ?? (isBreak ? pool + ".damage" : null),
+            Taken = Text("taken") ?? (isBreak ? pool + ".damage.taken" : null),
+            OnHurt = Text("on_hurt"),
+            OnBreak = Text("on_break"),
+            Rearm = Text("rearm"),
+            States = rules.Flag(path + ".states", false),
+            BrokenFlag = $"pool.{pool}.broken",
+            RearmingFlag = $"pool.{pool}.rearming",
+            RechargingFlag = $"pool.{pool}.recharging",
+        };
     }
 }

@@ -11,10 +11,12 @@ namespace HollowWake.Core.Combat;
 /// <summary>
 /// One hit as it walks the pipeline: its context, packet, result and per-Thread working amounts, and the
 /// expression scopes its uncached folds read. In those scopes <c>target.*</c> is the struck body,
-/// <c>source.*</c> the attacker and <c>distance</c> the distance between them; every other name resolves
-/// on the fold's owner exactly as the owner's own scope would, so the attacker's <c>damage</c> fold can
-/// scale by the victim's stacks without the attribute cache ever seeing a target. Scopes are pooled per
-/// thread; a hit raised inside another hit (an ailment's on-apply damage) rents its own.
+/// <c>source.*</c> the attacker, <c>distance</c> the distance between them and <c>angle</c> how far round the
+/// struck body the attacker stands (zero in front, 180 behind); every other name resolves on the fold's owner
+/// exactly as the owner's own scope would, so the attacker's <c>damage</c> fold can scale by the victim's stacks
+/// without the attribute cache ever seeing a target. Stages read rule formulas through <see cref="Values"/>, a
+/// small reusable scope, so a hit allocates no scopes. Scopes are pooled per thread; a hit raised inside another
+/// hit (an ailment's on-apply damage) rents its own.
 /// </summary>
 public sealed class HitScope
 {
@@ -25,11 +27,14 @@ public sealed class HitScope
     private readonly View _victim;
     private double _distance;
     private int _distanceState; // 0 unknown, 1 known, 2 unavailable
+    private double _angle;
+    private int _angleState;
 
     private HitScope()
     {
         _attacker = new View(this, attacker: true);
         _victim = new View(this, attacker: false);
+        Values = new StageValues(this);
     }
 
     /// <summary>Takes a scope from this thread's pool for a hit. Return it with <see cref="Return"/>.</summary>
@@ -47,6 +52,8 @@ public sealed class HitScope
         hit.Total = 0;
         hit.ThreadCount = 0;
         hit._distanceState = 0;
+        hit._angleState = 0;
+        hit.Values.Clear();
         return hit;
     }
 
@@ -64,6 +71,7 @@ public sealed class HitScope
         }
         ThreadCount = 0;
         VictimTags.Clear();
+        Values.Clear();
         (_pool ??= new Stack<HitScope>()).Push(this);
     }
 
@@ -83,6 +91,9 @@ public sealed class HitScope
     public TagSet Tags => Packet.Tags;
     /// <summary>The weave's local modifiers, joining the attacker's folds.</summary>
     public IReadOnlyList<Modifier>? Extra => Context.Weave?.Modifiers;
+
+    /// <summary>A reusable scope of named numbers for the rule formulas a stage evaluates (armor, accuracy, block value).</summary>
+    public StageValues Values { get; }
 
     /// <summary>The fraction of each Thread's amount a block lets through; one when the hit was not blocked.</summary>
     public double BlockMultiplier;
@@ -106,17 +117,14 @@ public sealed class HitScope
     /// <summary>The scope of the struck body's folds: unprefixed names resolve on the struck body.</summary>
     public IExprScope VictimScope => _victim;
 
+    /// <summary>Whether this hit's tags skip a stage or a declared step (rule <c>combat.stage_skips</c>).</summary>
+    public bool Skips(string name) => Plan.Skips(Tags, name);
+
     /// <summary>Loads the packet's Threads into the working arrays, in packet order.</summary>
     public void LoadThreads()
     {
         var amounts = Packet.Amounts;
-        if (ThreadIds.Length < amounts.Count)
-        {
-            var size = Math.Max(amounts.Count, ThreadIds.Length * 2);
-            ThreadIds = new string[size];
-            Amounts = new double[size];
-            Live = new bool[size];
-        }
+        Ensure(amounts.Count);
         var i = 0;
         foreach (var (thread, amount) in amounts)
         {
@@ -126,6 +134,54 @@ public sealed class HitScope
             i++;
         }
         ThreadCount = i;
+    }
+
+    /// <summary>Adds an amount to a Thread's working slot, opening a slot for a Thread the hit did not carry.</summary>
+    public void AddToThread(string thread, double amount)
+    {
+        for (var i = 0; i < ThreadCount; i++)
+        {
+            if (string.Equals(ThreadIds[i], thread, StringComparison.Ordinal))
+            {
+                Amounts[i] += amount;
+                Live[i] = Amounts[i] > 0;
+                return;
+            }
+        }
+        Ensure(ThreadCount + 1);
+        ThreadIds[ThreadCount] = thread;
+        Amounts[ThreadCount] = amount;
+        Live[ThreadCount] = amount > 0;
+        ThreadCount++;
+    }
+
+    private void Ensure(int count)
+    {
+        if (ThreadIds.Length >= count)
+        {
+            return;
+        }
+        var size = Math.Max(count, ThreadIds.Length * 2);
+        Array.Resize(ref ThreadIds, size);
+        Array.Resize(ref Amounts, size);
+        Array.Resize(ref Live, size);
+    }
+
+    /// <summary>Scales what was received (each Thread and the total) by a factor: a cap or a stagger taking part of it.</summary>
+    public void ScaleReceived(double factor)
+    {
+        var received = Result.Received;
+        for (var i = 0; i < ThreadCount; i++)
+        {
+            var thread = ThreadIds[i];
+            if (received.TryGetValue(thread, out var v))
+            {
+                received[thread] = v * factor;
+            }
+            Amounts[i] *= factor;
+        }
+        Total *= factor;
+        Result.Total = Total;
     }
 
     /// <summary>Publishes the hit as it stands: for stages that end a hit having decided it (an evade).</summary>
@@ -148,6 +204,37 @@ public sealed class HitScope
         }
         distance = _distance;
         return _distanceState == 1;
+    }
+
+    /// <summary>Degrees between the struck body's facing and the way to the attacker: zero in front, 180 behind.</summary>
+    private bool TryAngle(out double angle)
+    {
+        if (_angleState == 0)
+        {
+            var world = Context.Sim.World;
+            if (world.TryGet<Transform>(Context.Source, out var st) && world.TryGet<Transform>(Context.Target, out var tt))
+            {
+                var dx = st.Position.X - tt.Position.X;
+                var dy = st.Position.Y - tt.Position.Y;
+                if (dx * dx + dy * dy < 1e-8f)
+                {
+                    _angle = 0;
+                }
+                else
+                {
+                    var toward = Math.Atan2(dy, dx);
+                    var diff = Math.Abs(Math.IEEERemainder(toward - tt.Yaw, Math.PI * 2));
+                    _angle = diff * 180 / Math.PI;
+                }
+                _angleState = 1;
+            }
+            else
+            {
+                _angleState = 2;
+            }
+        }
+        angle = _angle;
+        return _angleState == 1;
     }
 
     // "target.life_pct" -> "life_pct": kept so prefixed lookups do not allocate.
@@ -193,6 +280,10 @@ public sealed class HitScope
             {
                 return _hit.TryDistance(out value);
             }
+            if (name == "angle")
+            {
+                return _hit.TryAngle(out value);
+            }
             if (Owner is { } owner)
             {
                 return owner.TryResolve(name, out value);
@@ -215,6 +306,72 @@ public sealed class HitScope
         }
 
         public double NextRandom() => Owner?.NextRandom() ?? 0.5;
+    }
+
+    /// <summary>
+    /// A few named numbers for a stage's rule formula (<c>armor</c>, <c>raw</c>, <c>level</c>), set and read
+    /// without allocating. Random draws come from the hit's own stream, as a fresh scope's would.
+    /// </summary>
+    public sealed class StageValues : IExprScope
+    {
+        private readonly HitScope _hit;
+        private string[] _names = new string[6];
+        private double[] _values = new double[6];
+        private int _count;
+
+        internal StageValues(HitScope hit)
+        {
+            _hit = hit;
+        }
+
+        public StageValues Clear()
+        {
+            for (var i = 0; i < _count; i++)
+            {
+                _names[i] = null!;
+            }
+            _count = 0;
+            return this;
+        }
+
+        public StageValues Set(string name, double value)
+        {
+            for (var i = 0; i < _count; i++)
+            {
+                if (string.Equals(_names[i], name, StringComparison.Ordinal))
+                {
+                    _values[i] = value;
+                    return this;
+                }
+            }
+            if (_count == _names.Length)
+            {
+                Array.Resize(ref _names, _count * 2);
+                Array.Resize(ref _values, _count * 2);
+            }
+            _names[_count] = name;
+            _values[_count] = value;
+            _count++;
+            return this;
+        }
+
+        public bool TryResolve(string name, out double value)
+        {
+            for (var i = 0; i < _count; i++)
+            {
+                if (string.Equals(_names[i], name, StringComparison.Ordinal))
+                {
+                    value = _values[i];
+                    return true;
+                }
+            }
+            value = 0;
+            return false;
+        }
+
+        public bool HasFlag(string flag) => false;
+
+        public double NextRandom() => _hit.Context.Rng.NextDouble();
     }
 }
 
