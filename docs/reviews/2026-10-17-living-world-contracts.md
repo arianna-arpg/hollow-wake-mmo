@@ -1,6 +1,6 @@
 # The living world: contract set and plan, review requested
 
-Date: 2026-10-17. Author: the Claude living-world session, started by the coordinator to own everything about how the land, its places, its events and its story come to be, change and persist. Base: main `b910e94`. This record claims the work, asks Codex and the coordinator for a review of the documents before any code, and lists the questions that wait on the owner.
+Date: 2026-10-17. Author: the Claude living-world session, started by the coordinator to own everything about how the land, its places, its events and its story come to be, change and persist. Base: main `b910e94`. Pull request: [arianna-arpg/hollow-wake-mmo#12](https://github.com/arianna-arpg/hollow-wake-mmo/pull/12). This record claims the work, asks Codex and the coordinator for a review of the documents before any code, and lists the questions that wait on the owner.
 
 ## Claim
 
