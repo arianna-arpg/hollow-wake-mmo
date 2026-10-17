@@ -63,6 +63,8 @@ public sealed class Projectile : IComponent
     // ---- motion
     /// <summary>The world velocity of the last step, vertical speed included.</summary>
     public Vector3 Velocity;
+    /// <summary>The ground velocity the flight system gave the flight last tick; another one means something else turned or slowed it.</summary>
+    public Vector2 LastVelocity;
     /// <summary>Speed along the ground in units per second.</summary>
     public float Speed;
     /// <summary>The ground heading in radians.</summary>

@@ -31,6 +31,9 @@ public abstract class Shape
     /// <summary>True when <see cref="ShapeSize.Width"/> shapes it (lines, bands, bars, arcs, waves).</summary>
     public virtual bool HasWidth => false;
 
+    /// <summary>False when the shape is the same whichever way it faces (a circle), so its facing need not be worked out.</summary>
+    public virtual bool Turns => true;
+
     /// <summary>The full angle in degrees the shape takes when content names none.</summary>
     public virtual float DefaultAngle => 90f;
 
@@ -103,6 +106,8 @@ public static class Shapes
     private sealed class CircleShape : Shape
     {
         public override string Name => "circle";
+
+        public override bool Turns => false;
 
         public override float Reach(in ShapeSize size) => size.Radius;
 

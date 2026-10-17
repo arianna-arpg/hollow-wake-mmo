@@ -1,6 +1,7 @@
 using System.Numerics;
 using HollowWake.Core.Combat;
 using HollowWake.Core.Components;
+using HollowWake.Core.Content;
 using HollowWake.Core.Ecs;
 using HollowWake.Core.Effects;
 using HollowWake.Core.Effects.Handlers;
@@ -30,12 +31,16 @@ public sealed class ProjectileSystem : SimSystem
     // The bodies near one flight this tick, copied out of the spatial grid before any hit runs effects.
     private readonly List<(Entity Entity, Vector3 Position)> _near = new();
 
-    /// <summary>The delivery rules a tick of flights reads, read once per tick.</summary>
+    // The delivery rules flights read, and the rule set they were read from: rule sets never change in place,
+    // so they are read again only when the content brings a new one.
+    private FlightRules _rules;
+    private Rules? _rulesOf;
+
+    /// <summary>The delivery rules a tick of flights reads.</summary>
     private readonly struct FlightRules
     {
-        public FlightRules(Simulation sim)
+        public FlightRules(Rules rules)
         {
-            var rules = sim.Content.Rules;
             Gravity = (float)rules.Number("move.gravity", 24);
             ChainRange = (float)rules.Number("delivery.chain_range", 8);
             ForkChildren = Math.Max(1, (int)rules.Number("delivery.fork_children", 2));
@@ -66,12 +71,16 @@ public sealed class ProjectileSystem : SimSystem
         {
             return;
         }
-        var rules = new FlightRules(sim);
+        if (!ReferenceEquals(_rulesOf, sim.Content.Rules))
+        {
+            _rulesOf = sim.Content.Rules;
+            _rules = new FlightRules(_rulesOf);
+        }
         foreach (var (e, t, p) in sim.World.Query<Transform, Projectile>())
         {
             if (!p.Ended)
             {
-                Fly(sim, e, t, p, in rules);
+                Fly(sim, e, t, p, in _rules);
             }
         }
     }
@@ -164,6 +173,7 @@ public sealed class ProjectileSystem : SimSystem
             }
             step = p.Velocity * dt;
             next = p.Carrier + step;
+            p.LastVelocity = new Vector2(p.Velocity.X, p.Velocity.Y);
         }
         var flat = new Vector2(step.X, step.Y).Length();
         p.Traveled += flat;
@@ -297,6 +307,10 @@ public sealed class ProjectileSystem : SimSystem
     {
         var vx = p.Velocity.X;
         var vy = p.Velocity.Y;
+        if (vx == p.LastVelocity.X && vy == p.LastVelocity.Y)
+        {
+            return;
+        }
         var squared = vx * vx + vy * vy;
         if (squared < 1e-8f)
         {
@@ -494,7 +508,7 @@ public sealed class ProjectileSystem : SimSystem
     {
         var owner = p.Context.Origin;
         var shape = p.Spec.Shape;
-        var facing = p.SpinAngle == 0 ? p.Direction : new Vector2(MathF.Cos(p.Heading + p.SpinAngle), MathF.Sin(p.Heading + p.SpinAngle));
+        var facing = !shape.Turns ? Vector2.UnitX : p.SpinAngle == 0 ? p.Direction : new Vector2(MathF.Cos(p.Heading + p.SpinAngle), MathF.Sin(p.Heading + p.SpinAngle));
         _near.Clear();
         foreach (var (other, pos, _) in sim.Spatial.Within(at, shape.Reach(p.Size) + 1.5f, 3f))
         {

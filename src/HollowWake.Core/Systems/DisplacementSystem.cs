@@ -1,5 +1,6 @@
 using System.Numerics;
 using HollowWake.Core.Components;
+using HollowWake.Core.Content;
 using HollowWake.Core.Ecs;
 using HollowWake.Core.Effects;
 using HollowWake.Core.Effects.Handlers;
@@ -29,18 +30,35 @@ public sealed class DisplacementSystem : SimSystem
     private readonly List<Entity> _settled = new();
     private readonly List<Entity> _contacts = new();
 
+    // Rules read once per rule set and tick length, since rule sets never change in place.
+    private Rules? _rulesOf;
+    private float _dtOf;
+    private float _decay;
+    private float _min;
+    private float _collisionSpeed;
+    private double _stepUp;
+
     public override void Update(Simulation sim)
     {
         if (sim.World.CountOf<Displaced>() == 0)
         {
             return;
         }
-        var rules = sim.Content.Rules;
         var dt = (float)sim.Clock.Dt;
-        var decay = MathF.Exp(-(float)rules.Number("delivery.impulse_decay", 8) * dt);
-        var min = (float)rules.Number("delivery.impulse_min", 0.3);
-        var collisionSpeed = (float)rules.Number("delivery.collision_speed", 2);
-        var stepUp = rules.Number("move.step_up", 0.6);
+        if (!ReferenceEquals(_rulesOf, sim.Content.Rules) || _dtOf != dt)
+        {
+            var rules = sim.Content.Rules;
+            _rulesOf = rules;
+            _dtOf = dt;
+            _decay = MathF.Exp(-(float)rules.Number("delivery.impulse_decay", 8) * dt);
+            _min = (float)rules.Number("delivery.impulse_min", 0.3);
+            _collisionSpeed = (float)rules.Number("delivery.collision_speed", 2);
+            _stepUp = rules.Number("move.step_up", 0.6);
+        }
+        var decay = _decay;
+        var min = _min;
+        var collisionSpeed = _collisionSpeed;
+        var stepUp = _stepUp;
         var blocked = sim.TryService<BlockedCells>(out var bc) ? bc : null;
         _settled.Clear();
         foreach (var (e, t, m, _) in sim.World.Query<Transform, Motion, Displaced>())
