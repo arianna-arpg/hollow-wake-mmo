@@ -289,6 +289,31 @@ public class TriggerTests
         Assert.Empty(arena.Runtime.Resolve(arena.Sim, arena.Book.Slots[seat - 1], out _)!.Grafts);
     }
 
+    [Fact]
+    public void ForwardingGlyphsRideAResonantSummonAndBillItTheirCosts()
+    {
+        var compiler = new WeaveCompiler(CastingTestContent.Registry, Effects.EffectRegistry.Shared);
+        var keyed = compiler.Compile(new WeaveSpec { Form = "summon", Threads = { "umbra" }, Glyphs = { "resonant_key", "loosened_lattice", "t_ranged_trigger" } }, GlyphFit.Dormant);
+
+        // The lattice fits no summon, but it forwards to the crew, so it rides: not dormant, nothing but its cost.
+        Assert.Equal("loosened_lattice", Assert.Single(keyed.Riding).Id);
+        Assert.DoesNotContain(keyed.Glyphs, g => g.Id == "loosened_lattice");
+        Assert.Contains(keyed.Modifiers, m => m.Source == "glyph:loosened_lattice" && m.Attribute == "cost");
+        Assert.False(keyed.HasMechanism("trigger_permit"));
+        // A glyph with a trigger keeps to its owner's hands, so its misfit stays dormant; so does one that says it does not forward.
+        Assert.Equal("t_ranged_trigger", Assert.Single(keyed.Dormant).Ref.Id);
+        var unforwarded = compiler.Compile(new WeaveSpec { Form = "summon", Threads = { "umbra" }, Glyphs = { "resonant_key", "t_no_forward" } }, GlyphFit.Dormant);
+        Assert.Equal("t_no_forward", Assert.Single(unforwarded.Dormant).Ref.Id);
+        Assert.DoesNotContain(unforwarded.Modifiers, m => m.Source == "glyph:t_no_forward");
+
+        // Strict compiles accept a rider; without the key the same glyph is a dormant misfit.
+        Assert.True(compiler.TryCompile(new WeaveSpec { Form = "summon", Threads = { "umbra" }, Glyphs = { "resonant_key", "loosened_lattice" } }, out _, out var error), error);
+        var plain = compiler.Compile(new WeaveSpec { Form = "summon", Threads = { "umbra" }, Glyphs = { "loosened_lattice" } }, GlyphFit.Dormant);
+        Assert.Empty(plain.Riding);
+        Assert.Equal("loosened_lattice", Assert.Single(plain.Dormant).Ref.Id);
+        Assert.DoesNotContain(plain.Modifiers, m => m.Source == "glyph:loosened_lattice");
+    }
+
     // ------------------------------------------------------------ effects of the casting family
 
     [Fact]

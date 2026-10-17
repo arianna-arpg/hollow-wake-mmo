@@ -162,6 +162,8 @@ entries:
   - { id: t_chain, chain: { steps: [ t_step_a, t_step_b ], window: 1 } }
   - { id: t_worn, equip_modifiers: [ { attribute: armor, form: flat, value: 15 } ] }
   - { id: t_spend, spend: { charge: t_fury, all: true, minimum: 1, scales: [ { attribute: area.radius, form: increased, per_charge: 0.5 } ] } }
+  - { id: t_ranged_trigger, requires_mechanisms: [ projectile ], trigger: { on: hit, chance: 1 } }
+  - { id: t_no_forward, forwards: false, requires_mechanisms: [ projectile ], modifiers: [ { attribute: cost, form: increased, value: 0.5 } ] }
 
 ---
 kind: weaves

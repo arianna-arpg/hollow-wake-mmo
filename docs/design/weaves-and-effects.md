@@ -16,6 +16,8 @@ A weave is what a character casts. Players compose weaves; presets exist for mon
 
 Glyphs can enable each other: one adds a tag, a mechanism, a cooldown or a projectile another needs. The compiler starts with every glyph active, builds the weave (tags, mechanisms, modifiers, the patched and hooked graph, then the probes), and checks every active glyph's gate. The last one in socket order that fails goes dormant with its reason and the weave is rebuilt without it, until every active gate holds. Only removals happen, so this ends, and the result does not depend on socket order except where glyphs exclude each other, where the earlier socket stays active.
 
+On a weave with the mechanism rule `minions.forward_requires` names (a summoning that carries a resonant key), a forwarding glyph whose gate fails rides to the crew instead of going dormant: its `forwards` flag says whether it forwards (by default it does unless it carries a trigger), and the glyph granting the mechanism never rides. A rider is listed in `CompiledWeave.Riding`, gives the weave nothing but its cost modifiers (`cost` and the `cost.*` families), which the weave pays, and boards the minions' weaves as the minion contract describes; once the mechanism is lost, riders are misfits again. A strict compile accepts a rider.
+
 A dormant glyph stays socketed and contributes nothing, not even costs. `WeaveCompiler.Compile(spec, GlyphFit.Dormant)` compiles that way and lists dormant glyphs with their reasons; `GlyphFit.Strict` (the default) refuses a weave with a misfit, naming the first one. Presets and starting weaves in content must fit: validation compiles each and warns when a glyph would be dormant.
 
 ### Hooks

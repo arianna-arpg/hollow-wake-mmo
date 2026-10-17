@@ -135,6 +135,13 @@ public sealed class CompiledWeave
     /// <summary>Glyphs a slot graft added beyond the sockets (attribute family <c>glyph.slot{n}.{glyph}</c>).</summary>
     public IReadOnlyList<GlyphRef> Grafts { get; init; } = Array.Empty<GlyphRef>();
 
+    /// <summary>
+    /// Socketed glyphs that do not fit the weave but ride to its crew (row D15): on a weave with the mechanism
+    /// rule <c>minions.forward_requires</c> names, a forwarding glyph's misfit is not dormancy. A rider gives the
+    /// weave nothing but its cost modifiers, which the weave pays.
+    /// </summary>
+    public IReadOnlyList<GlyphRef> Riding { get; init; } = Array.Empty<GlyphRef>();
+
     /// <summary>The tree nodes that count, each with the ranks bought, in the order they were first bought.</summary>
     public IReadOnlyList<TreeRank> Tree { get; init; } = Array.Empty<TreeRank>();
 
@@ -299,6 +306,7 @@ public sealed class CompiledWeave
         Ai = Ai,
         GlyphRefs = GlyphRefs,
         Dormant = Dormant,
+        Riding = Riding,
         Grafts = Grafts,
         Tree = Tree,
         DormantNodes = DormantNodes,
@@ -656,31 +664,61 @@ public sealed class WeaveCompiler
         var active = new bool[glyphs.Count];
         Array.Fill(active, true);
         var reasons = new string?[glyphs.Count];
+        // Crew forwarding (row D15): on a weave with the mechanism rule minions.forward_requires names, a
+        // forwarding glyph that does not fit the weave itself rides to the crew instead of going dormant: it
+        // gives the weave nothing but bills its cost modifiers to it.
+        var forwardKey = _content.Rules.Text("minions.forward_requires", "resonance");
+        var riding = new bool[glyphs.Count];
         Evaluation state;
         while (true)
         {
-            state = Evaluate(preset, form, threads, baseTags, bases, glyphs, active, tree.Ranks);
+            state = Evaluate(preset, form, threads, baseTags, bases, glyphs, active, tree.Ranks, riding);
             var failing = -1;
             string? reason = null;
+            var rides = false;
             for (var i = 0; i < glyphs.Count; i++)
             {
                 if (!active[i] || Gate(glyphs[i], state) is not { } why)
                 {
                     continue;
                 }
-                if (fit == GlyphFit.Strict && !glyphs[i].Graft)
+                var forwards = Rides(glyphs[i].Def, state, forwardKey);
+                if (fit == GlyphFit.Strict && !glyphs[i].Graft && !forwards)
                 {
                     throw new WeaveCompileException(why);
                 }
                 failing = i;
                 reason = why;
+                rides = forwards;
             }
             if (failing < 0)
             {
-                break;
+                // A rider needs the mechanism to the end: once the glyph granting it went dormant, riders are misfits too.
+                var lost = false;
+                for (var i = 0; i < glyphs.Count; i++)
+                {
+                    if (riding[i] && !state.Mechanisms.Has(forwardKey))
+                    {
+                        riding[i] = false;
+                        reasons[i] = Gate(glyphs[i], state) ?? $"Glyph '{glyphs[i].Def.Id}' rides only a weave with {forwardKey}.";
+                        lost = true;
+                    }
+                }
+                if (!lost)
+                {
+                    break;
+                }
+                continue;
             }
             active[failing] = false;
-            reasons[failing] = reason;
+            if (rides)
+            {
+                riding[failing] = true;
+            }
+            else
+            {
+                reasons[failing] = reason;
+            }
         }
 
         var compileCtx = new EffectCompileContext
@@ -718,12 +756,17 @@ public sealed class WeaveCompiler
         var activeGlyphs = new List<GlyphDef>();
         var activeRefs = new List<GlyphRef>();
         var dormant = new List<DormantGlyph>();
+        var riders = new List<GlyphRef>();
         for (var i = 0; i < glyphs.Count; i++)
         {
             if (active[i])
             {
                 activeGlyphs.Add(glyphs[i].Def);
                 activeRefs.Add(glyphs[i].Ref);
+            }
+            else if (riding[i])
+            {
+                riders.Add(glyphs[i].Ref);
             }
             else
             {
@@ -749,6 +792,7 @@ public sealed class WeaveCompiler
             Ai = ai ?? form.Ai,
             GlyphRefs = activeRefs,
             Dormant = dormant,
+            Riding = riders,
             Grafts = grafted,
             Tree = tree.Ranks,
             DormantNodes = tree.Dormant,
@@ -848,7 +892,7 @@ public sealed class WeaveCompiler
         TriggerKinds.TryGet(trigger.On, out var kind) ? kind : throw new WeaveCompileException($"'{owner}' triggers on unknown kind '{trigger.On}'.");
 
     /// <summary>The weave with the active glyphs: tags, declared and probed mechanisms, modifiers, and the patched, hooked graph.</summary>
-    private Evaluation Evaluate(WeaveDef? preset, FormDef form, List<ThreadDef> threads, TagSet baseTags, Dictionary<string, double> bases, List<Socketed> glyphs, bool[] active, List<TreeRank> tree)
+    private Evaluation Evaluate(WeaveDef? preset, FormDef form, List<ThreadDef> threads, TagSet baseTags, Dictionary<string, double> bases, List<Socketed> glyphs, bool[] active, List<TreeRank> tree, bool[] riding)
     {
         var tags = baseTags;
         var declared = form.Mechanisms;
@@ -889,6 +933,25 @@ public sealed class WeaveCompiler
                 modifiers.AddRange(g.PerLevel.Select(m => m.Scaled(levelsAbove).WithSource(source)));
             }
             levelBonus += g.LevelBonus + (int)Math.Floor(g.LevelBonusPerLevel * levelsAbove);
+        }
+        // Riders bill their cost modifiers to the weave they ride on, and give it nothing else.
+        for (var i = 0; i < glyphs.Count; i++)
+        {
+            if (!riding[i])
+            {
+                continue;
+            }
+            var (_, g, level, rows, _) = glyphs[i];
+            var source = "glyph:" + g.Id;
+            AddCosts(modifiers, g.Modifiers, source, 1);
+            foreach (var row in rows)
+            {
+                AddCosts(modifiers, row.Modifiers, source, 1);
+            }
+            if (level > 1)
+            {
+                AddCosts(modifiers, g.PerLevel, source, level - 1);
+            }
         }
         // Tree nodes: each rank bought adds the node's modifiers once more.
         foreach (var (node, ranks) in tree)
@@ -1043,6 +1106,26 @@ public sealed class WeaveCompiler
             Probe = probe,
             LevelBonus = levelBonus,
         };
+    }
+
+    /// <summary>
+    /// Whether a glyph whose gate fails rides to the crew instead (row D15): the weave has the forwarding
+    /// mechanism, the glyph forwards (its <c>forwards</c> flag, or by default unless it carries a trigger), and
+    /// it is not the glyph granting the mechanism.
+    /// </summary>
+    private static bool Rides(GlyphDef glyph, Evaluation state, string key) =>
+        key.Length > 0 && state.Mechanisms.Has(key) && (glyph.Forwards ?? glyph.Trigger is null) && !glyph.AddsMechanisms.Has(key);
+
+    /// <summary>The cost modifiers of a list (<c>cost</c> and the <c>cost.*</c> families), scaled and sourced.</summary>
+    private static void AddCosts(List<Modifier> into, IEnumerable<Modifier> modifiers, string source, double scale)
+    {
+        foreach (var m in modifiers)
+        {
+            if (m.Attribute == "cost" || m.Attribute.StartsWith("cost.", StringComparison.Ordinal))
+            {
+                into.Add((scale == 1 ? m : m.Scaled(scale)).WithSource(source));
+            }
+        }
     }
 
     /// <summary>Null when the glyph's gate holds on the weave as it stands; else the reason it fails.</summary>
