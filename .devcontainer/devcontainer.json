@@ -1,0 +1,34 @@
+{
+  "name": "Hollow Wake MMO",
+  "image": "mcr.microsoft.com/devcontainers/dotnet:2-10.0",
+  "features": {
+    "ghcr.io/devcontainers/features/node:1": {
+      "version": "22"
+    }
+  },
+  "hostRequirements": {
+    "cpus": 2,
+    "memory": "4gb"
+  },
+  "forwardPorts": [7778, 7777],
+  "portsAttributes": {
+    "7778": {
+      "label": "Web client and WebSocket",
+      "protocol": "http",
+      "onAutoForward": "notify"
+    },
+    "7777": {
+      "label": "Game server TCP (desktop client)",
+      "onAutoForward": "silent"
+    }
+  },
+  "postCreateCommand": "dotnet build HollowWake.sln && npm --prefix web ci && npm --prefix web run build",
+  "customizations": {
+    "codespaces": {
+      "openFiles": ["docs/infrastructure/codespaces.md"]
+    },
+    "vscode": {
+      "extensions": ["ms-dotnettools.csdevkit", "editorconfig.editorconfig"]
+    }
+  }
+}

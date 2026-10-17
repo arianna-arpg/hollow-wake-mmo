@@ -3,8 +3,10 @@ using HollowWake.Server;
 using HollowWake.Server.Config;
 using HollowWake.Server.Net;
 
-// hollowwake-server: the pure .NET host. TCP transport, no native dependencies.
-//   hollowwake-server [--config config/server.yaml] [--root <repo or install dir>]
+// hollowwake-server: the pure .NET host. TCP for the desktop client and, unless websocket_enabled is
+// false, WebSocket plus the built web client for browsers. No native dependencies.
+//   hollowwake-server [--config config/server.yaml] [--root <repo or install dir>] [--port n]
+//                     [--ws-port n] [--web-root dir] [--no-websocket] [--log level]
 
 var configPath = ArgValue(args, "--config") ?? "config/server.yaml";
 var root = ArgValue(args, "--root") ?? FindRoot();
@@ -12,6 +14,18 @@ var config = ServerConfig.Load(Path.IsPathRooted(configPath) ? configPath : Path
 if (ArgValue(args, "--port") is { } portText && int.TryParse(portText, out var port))
 {
     config = config with { Port = port };
+}
+if (ArgValue(args, "--ws-port") is { } wsPortText && int.TryParse(wsPortText, out var wsPort))
+{
+    config = config with { WebsocketPort = wsPort };
+}
+if (ArgValue(args, "--web-root") is { } webRoot)
+{
+    config = config with { WebRoot = Path.GetFullPath(webRoot) };
+}
+if (args.Contains("--no-websocket"))
+{
+    config = config with { WebsocketEnabled = false };
 }
 
 using var logs = LoggerFactory.Create(b => b
@@ -30,7 +44,10 @@ Console.CancelKeyPress += (_, e) =>
 };
 AppDomain.CurrentDomain.ProcessExit += (_, _) => cts.Cancel();
 
-var transport = new TcpTransport(logs.CreateLogger<TcpTransport>());
+var tcp = new TcpTransport(logs.CreateLogger<TcpTransport>());
+ITransport transport = config.WebsocketEnabled
+    ? new CompositeTransport(tcp, new WebSocketTransport(logs.CreateLogger<WebSocketTransport>()))
+    : tcp;
 await using var server = new GameServer(config, logs, transport);
 await server.RunAsync(cts.Token);
 return 0;

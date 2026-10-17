@@ -2,14 +2,16 @@ using HollowWake.Core.Components;
 using HollowWake.Core.Ecs;
 using HollowWake.Core.Sim;
 using HollowWake.Protocol;
+using HollowWake.Server.Config;
 
 namespace HollowWake.Server.World;
 
 /// <summary>
 /// Everything one viewer has been told about a zone: which entities it knows, whether each is static,
 /// the fingerprint of the state it was last sent, and when each is next due a refresh; plus the
-/// self-state fingerprint and attribute cache. A session owns one; a benchmark can hold one per player.
-/// It is reused across snapshots, so a steady-state snapshot allocates little beyond the messages it sends.
+/// self-state fingerprint and attribute cache, the snapshot settings it is served with, and whether it
+/// takes deltas. A session owns one; a benchmark can hold one per player. It is reused across snapshots,
+/// so a steady-state snapshot allocates little beyond the messages it sends.
 /// </summary>
 public sealed class SnapshotView
 {
@@ -42,9 +44,12 @@ public sealed class SnapshotView
 
     public Snapshots.SelfCache SelfCache { get; } = new();
 
+    /// <summary>Precision and redundancy for this viewer; a session gets the server's configured settings.</summary>
+    public SnapshotSettings Settings { get; set; } = SnapshotSettings.Default;
+
     /// <summary>
     /// The viewer understands <see cref="EntityDeltaMsg"/>: changes go as deltas of the fields that
-    /// changed, and full states only on refreshes. Off by default; a client asks for it.
+    /// changed, and full states only on refreshes. Off unless the client asks for it in its hello.
     /// </summary>
     public bool SendDeltas { get; set; }
 
@@ -81,20 +86,18 @@ public sealed class SnapshotView
 /// <item>Static entities (<see cref="Snapshots.IsStatic"/>) are spawned once with the static flag and never updated. They are re-verified on the refresh cadence; if one ever changes it is spawned again, which replaces its state.</item>
 /// <item>Dynamic entities appear in an update only when their <see cref="Snapshots.Fingerprint"/> differs from the one last sent to this viewer. A viewer that takes deltas gets an <see cref="EntityDeltaMsg"/> with only the changed fields instead.</item>
 /// <item>Refresh: on its refresh cadence, an entity that changed since its last refresh is sent as a full state (once more after it goes quiet), so a lost unreliable update or delta is repaired; every entity is resent in full on the sweep cadence regardless. Cadences are staggered by entity key so refreshes spread over snapshots.</item>
-/// <item>The self state goes out when its <see cref="Snapshots.SelfFingerprint"/> changes, and at least every <see cref="SelfMaxSeconds"/>.</item>
+/// <item>The self state goes out when its <see cref="Snapshots.SelfFingerprint"/> changes, and at least every <see cref="SnapshotSettings.SelfMaxSeconds"/>.</item>
 /// </list>
-/// Tunables come from rules: <c>server.snapshot_refresh_seconds</c>, <c>server.snapshot_sweep_seconds</c>,
-/// <c>server.self_state_seconds</c>, <c>server.self_state_max_seconds</c>, <c>server.snapshot_resource_step</c>,
-/// <c>server.snapshot_cast_steps</c> and <c>server.interest_height</c>.
+/// Cadences and precision come from each view's <see cref="SnapshotView.Settings"/>.
 /// </summary>
 /// <example>
 /// A zone, the benchmark or a tool drives it the same way, with one view per viewer kept across snapshots:
 /// <code>
 /// var builder = new SnapshotBuilder(sim, interestRadius);
-/// var view = new SnapshotView();
+/// var view = new SnapshotView();                                  // default settings, full states
 /// var output = new List&lt;Message&gt;();
 /// builder.Entities(view, player, output);                        // every snapshot
-/// if (builder.Self(view, player) is { } self) output.Add(self);  // every SelfSeconds
+/// if (builder.Self(view, player) is { } self) output.Add(self);  // every view.Settings.SelfSeconds
 /// foreach (var m in output) bytes += MessageSerializer.Encode(m).Length;
 /// </code>
 /// </example>
@@ -106,46 +109,20 @@ public sealed class SnapshotBuilder
     /// Fingerprints and dynamic states already worked out this tick. Viewers near each other see the same
     /// entities, and building snapshots does not change the simulation, so each entity is fingerprinted and
     /// captured at most once per tick however many viewers it has. States are never mutated once built,
-    /// so sharing them between messages is safe.
+    /// so sharing them between messages is safe. Fingerprints depend on precision, so the cache also
+    /// starts over when a viewer with different precision asks.
     /// </summary>
     private readonly Dictionary<long, (ulong Fingerprint, EntityState? State)> _tick = new();
     private long _tickNumber = -1;
+    private double _tickResourceStep = double.NaN;
+    private int _tickCastSteps = -1;
 
     public float InterestRadius { get; }
-
-    /// <summary>How often an entity that changed is resent once it goes quiet, and how often static entities are re-verified.</summary>
-    public double RefreshSeconds { get; init; }
-
-    /// <summary>How often every known dynamic entity is resent in full whether or not it changed.</summary>
-    public double SweepSeconds { get; init; }
-
-    /// <summary>How often the self state is checked for change; also the step its cooldowns count down in.</summary>
-    public double SelfSeconds { get; init; }
-
-    /// <summary>The longest a viewer goes without a self state.</summary>
-    public double SelfMaxSeconds { get; init; }
-
-    /// <summary>A resource counts as changed when it moves by this fraction of its maximum.</summary>
-    public double ResourceStep { get; init; }
-
-    /// <summary>Cast progress counts as changed in this many steps per cast.</summary>
-    public int CastSteps { get; init; }
-
-    /// <summary>Height tolerance of the interest query: interest is a column, not a sphere.</summary>
-    public float HeightTolerance { get; init; }
 
     public SnapshotBuilder(Simulation sim, float interestRadius)
     {
         _sim = sim;
         InterestRadius = interestRadius;
-        var rules = sim.Content.Rules;
-        RefreshSeconds = Math.Max(0.05, rules.Number("server.snapshot_refresh_seconds", 2));
-        SweepSeconds = Math.Max(RefreshSeconds, rules.Number("server.snapshot_sweep_seconds", 10));
-        SelfSeconds = Math.Max(0.05, rules.Number("server.self_state_seconds", 0.5));
-        SelfMaxSeconds = Math.Max(SelfSeconds, rules.Number("server.self_state_max_seconds", 2));
-        ResourceStep = Math.Max(0, rules.Number("server.snapshot_resource_step", Snapshots.DefaultResourceStep));
-        CastSteps = (int)Math.Max(1, rules.Number("server.snapshot_cast_steps", Snapshots.DefaultCastSteps));
-        HeightTolerance = (float)Math.Max(0, rules.Number("server.interest_height", 64));
     }
 
     /// <summary>Forgets what was worked out this tick. Call it after changing the simulation between two viewers' snapshots in one tick.</summary>
@@ -155,30 +132,32 @@ public sealed class SnapshotBuilder
         _tickNumber = -1;
     }
 
-    private void SyncTick()
+    private void SyncTick(SnapshotSettings settings)
     {
-        if (_tickNumber != _sim.Clock.Tick)
+        if (_tickNumber != _sim.Clock.Tick || _tickResourceStep != settings.ResourceStep || _tickCastSteps != settings.CastSteps)
         {
             _tick.Clear();
             _tickNumber = _sim.Clock.Tick;
+            _tickResourceStep = settings.ResourceStep;
+            _tickCastSteps = settings.CastSteps;
         }
     }
 
-    private ulong FingerprintOf(Entity e)
+    private ulong FingerprintOf(Entity e, SnapshotSettings settings)
     {
-        SyncTick();
+        SyncTick(settings);
         if (_tick.TryGetValue(e.Key, out var known))
         {
             return known.Fingerprint;
         }
-        var fingerprint = Snapshots.Fingerprint(_sim, e, ResourceStep, CastSteps);
+        var fingerprint = Snapshots.Fingerprint(_sim, e, settings.ResourceStep, settings.CastSteps);
         _tick[e.Key] = (fingerprint, null);
         return fingerprint;
     }
 
-    private EntityState DynamicStateOf(Entity e)
+    private EntityState DynamicStateOf(Entity e, SnapshotSettings settings)
     {
-        var fingerprint = FingerprintOf(e);
+        var fingerprint = FingerprintOf(e, settings);
         var known = _tick[e.Key];
         if (known.State is { } state)
         {
@@ -202,13 +181,14 @@ public sealed class SnapshotBuilder
         {
             return;
         }
+        var settings = view.Settings;
         var now = _sim.Clock.Time;
         var slack = _sim.Clock.Dt * 0.5;
         var epoch = ++view.Epoch;
         view.Frames++;
         view.Changed.Clear();
         view.ChangedDeltas.Clear();
-        foreach (var (e, _, _) in _sim.Spatial.Within(me.Position, InterestRadius, HeightTolerance))
+        foreach (var (e, _, _) in _sim.Spatial.Within(me.Position, InterestRadius, (float)settings.InterestHeight))
         {
             if (!world.IsAlive(e))
             {
@@ -217,7 +197,7 @@ public sealed class SnapshotBuilder
             var key = e.Key;
             if (!view.Entries.TryGetValue(key, out var entry))
             {
-                entry = new SnapshotView.Entry { Entity = e, Seen = epoch, NextRefreshAt = now + RefreshSeconds * Phase(key) };
+                entry = new SnapshotView.Entry { Entity = e, Seen = epoch, NextRefreshAt = now + settings.RefreshSeconds * Phase(key) };
                 view.Entries.Add(key, entry);
                 Introduce(view, entry, now, output);
                 continue;
@@ -226,7 +206,7 @@ public sealed class SnapshotBuilder
             var due = now >= entry.NextRefreshAt - slack;
             if (due)
             {
-                entry.NextRefreshAt = now + RefreshSeconds;
+                entry.NextRefreshAt = now + settings.RefreshSeconds;
             }
             if (!entry.Sent)
             {
@@ -244,7 +224,7 @@ public sealed class SnapshotBuilder
                 }
                 continue;
             }
-            var fingerprint = FingerprintOf(e);
+            var fingerprint = FingerprintOf(e, settings);
             var changedNow = fingerprint != entry.Fingerprint;
             entry.Fingerprint = fingerprint;
             if (due && (changedNow || entry.Dirty || now >= entry.NextSweepAt - slack))
@@ -256,7 +236,7 @@ public sealed class SnapshotBuilder
                     view.Refreshes++;
                 }
                 entry.Dirty = changedNow;
-                entry.NextSweepAt = now + SweepSeconds;
+                entry.NextSweepAt = now + settings.SweepSeconds;
                 Emit(view, entry, full: true);
             }
             else if (changedNow)
@@ -296,7 +276,7 @@ public sealed class SnapshotBuilder
     /// <summary>Queues a known dynamic entity's state: as a delta when the viewer takes them and one can express the change, else in full.</summary>
     private void Emit(SnapshotView view, SnapshotView.Entry entry, bool full)
     {
-        var state = DynamicStateOf(entry.Entity);
+        var state = DynamicStateOf(entry.Entity, view.Settings);
         if (!full && view.SendDeltas && entry.Last is { } last)
         {
             var delta = Snapshots.Delta(last, state, out var empty);
@@ -315,8 +295,8 @@ public sealed class SnapshotBuilder
     }
 
     /// <summary>
-    /// The viewer's self state when its fingerprint changed or <see cref="SelfMaxSeconds"/> have passed
-    /// since the last one; otherwise null. Call it on the <see cref="SelfSeconds"/> cadence.
+    /// The viewer's self state when its fingerprint changed or <see cref="SnapshotSettings.SelfMaxSeconds"/>
+    /// have passed since the last one; otherwise null. Call it on the <see cref="SnapshotSettings.SelfSeconds"/> cadence.
     /// </summary>
     public SelfStateMsg? Self(SnapshotView view, Entity viewer)
     {
@@ -324,9 +304,10 @@ public sealed class SnapshotBuilder
         {
             return null;
         }
+        var settings = view.Settings;
         var now = _sim.Clock.Time;
-        var fingerprint = Snapshots.SelfFingerprint(_sim, viewer, SelfSeconds, ResourceStep);
-        if (fingerprint == view.SelfFingerprint && now - view.SelfSentAt < SelfMaxSeconds - _sim.Clock.Dt * 0.5)
+        var fingerprint = Snapshots.SelfFingerprint(_sim, viewer, settings.SelfSeconds, settings.ResourceStep);
+        if (fingerprint == view.SelfFingerprint && now - view.SelfSentAt < settings.SelfMaxSeconds - _sim.Clock.Dt * 0.5)
         {
             view.SelfStatesSkipped++;
             return null;
@@ -369,7 +350,7 @@ public sealed class SnapshotBuilder
             entry.Sent = false;
             return;
         }
-        if (isStatic && FingerprintOf(e) == entry.Fingerprint)
+        if (isStatic && FingerprintOf(e, view.Settings) == entry.Fingerprint)
         {
             return;
         }
@@ -379,12 +360,12 @@ public sealed class SnapshotBuilder
     private void Spawn(SnapshotView view, SnapshotView.Entry entry, bool isStatic, double now, List<Message> output)
     {
         var e = entry.Entity;
-        var state = isStatic ? Snapshots.Capture(_sim, e, isStatic: true) : DynamicStateOf(e);
-        entry.Fingerprint = FingerprintOf(e);
+        var state = isStatic ? Snapshots.Capture(_sim, e, isStatic: true) : DynamicStateOf(e, view.Settings);
+        entry.Fingerprint = FingerprintOf(e, view.Settings);
         entry.Static = isStatic;
         entry.Sent = true;
         entry.Dirty = false;
-        entry.NextSweepAt = now + SweepSeconds;
+        entry.NextSweepAt = now + view.Settings.SweepSeconds;
         entry.Last = view.SendDeltas && !isStatic ? state : null;
         view.Known.Add(e.Key);
         view.Spawns++;

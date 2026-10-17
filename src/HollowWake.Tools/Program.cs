@@ -233,6 +233,22 @@ switch (command)
         var seconds = double.Parse(Opt("seconds", "6"));
         return await Probe.RunAsync(host, port, account, seconds);
     }
+    case "protocol-ts":
+    {
+        // The web client's message types, generated from HollowWake.Protocol so they cannot drift.
+        var path = Opt("out", HollowWake.Protocol.TypeScriptContract.ModulePath);
+        var text = HollowWake.Protocol.TypeScriptContract.Generate();
+        if (Flag("check"))
+        {
+            var current = File.Exists(path) ? File.ReadAllText(path).Replace("\r\n", "\n") : "";
+            Console.WriteLine(current == text ? $"{path} is current" : $"{path} is stale; run without --check to regenerate");
+            return current == text ? 0 : 1;
+        }
+        Directory.CreateDirectory(Path.GetDirectoryName(Path.GetFullPath(path))!);
+        File.WriteAllText(path, text);
+        Console.WriteLine($"wrote {path}");
+        return 0;
+    }
     case "schema":
     {
         foreach (var kind in ContentKinds.All)
@@ -262,6 +278,7 @@ switch (command)
               fight <pattern> <pattern> [--seconds n] [--seed s]   simulate a duel in an arena
               weave <preset|form> [--threads a,b] [--glyphs g,g@level] [--level n] [--calling c] [--caster-level n]
                                                   compile a weave: tags, mechanisms, dormant glyphs, graph, preview numbers
+              protocol-ts [--out file] [--check]  write (or check) the web client's TypeScript message types
             """);
         return 0;
 }

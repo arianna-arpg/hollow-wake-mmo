@@ -1,0 +1,103 @@
+name: pages
+
+# Builds and tests the browser client (web/) and publishes it to GitHub Pages from main. The published page
+# is only the client: the player points it at a running game server (a Codespace, a VPS, a local server).
+# When Pages is not available on this repository's plan, or not set to deploy from Actions, the run still
+# succeeds, says so in a notice and keeps the build as the web-dist artifact. The fallback needs no Pages
+# at all: the game server serves web/dist itself on its WebSocket port (docs/infrastructure/codespaces.md).
+
+on:
+  push:
+    branches: [main]
+    paths: ['web/**', '.github/workflows/pages.yml']
+  pull_request:
+    paths: ['web/**', '.github/workflows/pages.yml']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    outputs:
+      publish: ${{ steps.pages.outputs.publish }}
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+      - name: Install
+        working-directory: web
+        run: npm ci
+      - name: Test
+        working-directory: web
+        run: npm test
+      - name: Build
+        working-directory: web
+        run: npm run build
+      - name: Configure for Pages
+        # Pages has no game server at the page's own origin, so the client should not look for one there.
+        working-directory: web
+        run: >-
+          node -e "const fs = require('fs'); const f = 'dist/config.json'; const c = JSON.parse(fs.readFileSync(f, 'utf8'));
+          c.server.probeSameOrigin = false; fs.writeFileSync(f, JSON.stringify(c, null, 2) + '\n');"
+      - name: Check Pages
+        id: pages
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          fallback="The build is attached to this run as the web-dist artifact, and the game server serves web/dist itself on its WebSocket port (see docs/infrastructure/codespaces.md)."
+          if info=$(gh api "repos/${GITHUB_REPOSITORY}/pages" 2>/dev/null); then
+            build_type=$(jq -r '.build_type // "legacy"' <<<"$info")
+            if [ "$build_type" = "workflow" ]; then
+              url=$(jq -r '.html_url // ""' <<<"$info")
+              if [ "${GITHUB_EVENT_NAME}" = "pull_request" ]; then
+                echo "publish=false" >> "$GITHUB_OUTPUT"
+                echo "Pages is set up; this pull request build is checked but not published. Merging to main publishes it at ${url}." >> "$GITHUB_STEP_SUMMARY"
+              else
+                echo "publish=true" >> "$GITHUB_OUTPUT"
+                echo "Publishing the web client to GitHub Pages at ${url}." >> "$GITHUB_STEP_SUMMARY"
+              fi
+              exit 0
+            fi
+            reason="GitHub Pages builds from a branch on this repository; set Settings, Pages, Source to GitHub Actions to publish the web client."
+          else
+            reason="GitHub Pages is not enabled for this repository, or not available on its plan (Pages for a private repository needs GitHub Pro, Team or Enterprise)."
+          fi
+          echo "publish=false" >> "$GITHUB_OUTPUT"
+          echo "::notice title=Web client built, not published to Pages::${reason} ${fallback}"
+          {
+            echo "### Web client built, not published to Pages"
+            echo
+            echo "${reason}"
+            echo
+            echo "${fallback}"
+          } >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@v7
+        with:
+          name: web-dist
+          path: web/dist
+          retention-days: 14
+      - if: steps.pages.outputs.publish == 'true'
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: web/dist
+
+  deploy:
+    needs: build
+    if: needs.build.outputs.publish == 'true'
+    runs-on: ubuntu-latest
+    concurrency:
+      group: pages
+      cancel-in-progress: false
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v5

@@ -82,9 +82,20 @@ public static class Probe
             return 1;
         }
         Console.WriteLine($"entered zone {enter.Zone} at ({enter.X:0.0}, {enter.Y:0.0}, {enter.Z:0.0}); seed {enter.World.Seed}; tick {enter.TickRate}");
-        Send(new MoveDirMsg(0, -1));
         Send(new ChatMsg("zone", "probe says hello"));
-        await PumpAsync(seconds / 2);
+        // A saved character may stand where one way is blocked, so walk until something moves.
+        var directions = new (float X, float Y, string Name)[] { (0, -1, "south"), (1, 0, "east"), (0, 1, "north"), (-1, 0, "west") };
+        var walked = "nowhere";
+        for (var i = 0; i < directions.Length; i++)
+        {
+            Send(new MoveDirMsg(directions[i].X, directions[i].Y));
+            await PumpAsync(i == 0 ? seconds / 2 : seconds / 4);
+            if (Displacement(inbox, enter) > 1)
+            {
+                walked = directions[i].Name;
+                break;
+            }
+        }
         Send(new JumpMsg());
         Send(new StopMsg());
         await PumpAsync(seconds / 2);
@@ -101,8 +112,15 @@ public static class Probe
         {
             Console.WriteLine($"chat: {c.From}: {c.Text}");
         }
-        var moved = self.Count > 0 && Math.Abs(self.Last().Y - enter.Y) > 1;
-        Console.WriteLine(moved ? "PROBE OK" : "PROBE: did not move");
+        var moved = Displacement(inbox, enter) > 1;
+        Console.WriteLine(moved ? $"PROBE OK (walked {walked})" : "PROBE: did not move in any direction");
         return moved ? 0 : 2;
+    }
+
+    /// <summary>How far the probe has been seen from where it entered, on the larger horizontal axis.</summary>
+    private static double Displacement(List<Message> inbox, EnterWorldMsg enter)
+    {
+        var last = inbox.OfType<EntityUpdateMsg>().SelectMany(u => u.States).LastOrDefault(s => s.Key == enter.EntityKey);
+        return last is null ? 0 : Math.Max(Math.Abs(last.X - enter.X), Math.Abs(last.Y - enter.Y));
     }
 }

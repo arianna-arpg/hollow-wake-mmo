@@ -1,0 +1,113 @@
+# ---------------------------------------------------------------------------------------------
+# NIGHTLY: a pre-release for testers, every night that main has moved, or on demand.
+#
+# Version: the patch after the newest stable tag, with a nightly suffix, for example v0.2.1-nightly.20261017.42
+# when v0.2.0 is the newest stable (before the first stable, the launcher's package.json version).
+# Semver orders it above v0.2.0 and below v0.2.1, so a nightly never outranks the stable it leads
+# to, and the stable supersedes it the moment it ships. Launchers on the nightly channel install it;
+# the stable channel and the launcher's own self-update never see pre-releases.
+#
+# The jobs are package.yml's, the same a tagged release runs; the release is published only when
+# all of them pass, so a red night publishes nothing and testers keep the last good build. Older
+# nightlies are pruned afterwards, keeping KEEP_NIGHTLIES.
+# ---------------------------------------------------------------------------------------------
+name: nightly
+
+on:
+  schedule:
+    - cron: '17 8 * * *'
+  workflow_dispatch:
+    inputs:
+      force:
+        description: Build even when nothing changed since the last nightly
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: nightly
+  cancel-in-progress: false
+
+env:
+  KEEP_NIGHTLIES: 10
+
+jobs:
+  meta:
+    runs-on: ubuntu-latest
+    outputs:
+      build: ${{ steps.meta.outputs.build }}
+      version: ${{ steps.meta.outputs.version }}
+      tag: ${{ steps.meta.outputs.tag }}
+      notes: ${{ steps.meta.outputs.notes }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Decide whether tonight builds, and its version
+        id: meta
+        env:
+          FORCE: ${{ inputs.force && 'true' || 'false' }}
+        run: |
+          set -euo pipefail
+          git fetch --force --tags origin
+          head="$(git rev-parse HEAD)"
+          last_nightly="$(git tag -l 'v*-nightly.*' | sort -V | tail -n1)"
+          if [ -n "$last_nightly" ] && [ "$(git rev-list -n1 "$last_nightly")" = "$head" ] && [ "$FORCE" != true ]; then
+            echo "Nothing new since $last_nightly; no nightly tonight."
+            echo "build=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          stable="$(git tag -l 'v*' | grep -E '^v[0-9]+\.[0-9]+\.[0-9]+$' | sort -V | tail -n1 || true)"
+          if [ -n "$stable" ]; then
+            IFS=. read -r major minor patch <<< "${stable#v}"
+            base="$major.$minor.$((patch + 1))"
+          else
+            base="$(jq -r .version launcher/package.json)"
+          fi
+          version="$base-nightly.$(date -u +%Y%m%d).$GITHUB_RUN_NUMBER"
+          since="${last_nightly:-$stable}"
+          range="${since:+$since..}HEAD"
+          {
+            echo "build=true"
+            echo "version=$version"
+            echo "tag=v$version"
+            echo "notes<<HOLLOWWAKE_NOTES_END"
+            echo "Nightly build of \`${head:0:9}\` from main, for testers. Launchers on the nightly channel install it; the stable channel never sees it."
+            echo
+            echo "Changes${since:+ since $since}:"
+            echo
+            git log --no-merges --format='- %s (%h)' -n 60 "$range"
+            echo "HOLLOWWAKE_NOTES_END"
+          } >> "$GITHUB_OUTPUT"
+          echo "Building v$version"
+
+  package:
+    needs: meta
+    if: needs.meta.outputs.build == 'true'
+    uses: ./.github/workflows/package.yml
+    with:
+      version: ${{ needs.meta.outputs.version }}
+      tag: ${{ needs.meta.outputs.tag }}
+      channel: nightly
+      notes: ${{ needs.meta.outputs.notes }}
+      publish: true
+
+  prune:
+    needs: package
+    runs-on: ubuntu-latest
+    steps:
+      - name: Keep the newest nightlies
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          gh release list --repo "$GITHUB_REPOSITORY" --limit 200 --json tagName,isPrerelease \
+            --jq '.[] | select(.isPrerelease and (.tagName | test("-nightly\\."))) | .tagName' \
+            | sort -V -r | tail -n +"$((KEEP_NIGHTLIES + 1))" \
+            | while read -r tag; do
+                echo "removing $tag"
+                gh release delete "$tag" --repo "$GITHUB_REPOSITORY" --cleanup-tag --yes
+              done

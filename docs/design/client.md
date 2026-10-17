@@ -1,6 +1,6 @@
 # Client
 
-The Godot client is presentation. It never resolves gameplay.
+The Godot client is presentation. It never resolves gameplay. The browser client in `web/` follows the same rules with server-sent terrain; its contract is [web-client.md](web-client.md).
 
 ## World
 
@@ -20,6 +20,8 @@ WASD moves relative to the camera as a held direction; left click moves to the g
 
 ## UI
 
+The interface contract (the cluster, the core pane and its ribbon, the panes the world opens beside it) is [ui.md](ui.md); this section describes what is built today.
+
 Resource bars, a weave bar with cooldowns and costs, a target line, notices, a chat log, a character sheet (attributes, resistances, gear, bag, currency, quests) and a quest offer panel. All placeholder; the data shapes come from `self_state` and the quest and crafting messages.
 
 ## Coordinates
@@ -28,7 +30,11 @@ Core is X east, Y north, Z up; Godot is X east, Y up, Z south. `Coords` is the o
 
 ## Running and checking
 
-The project needs Godot 4.7 .NET. `src/HollowWake.Client/HollowWake.Client.sln` is what the editor builds when play is pressed, and `content/core` is found by walking up from the project directory, so the client reads the same content as the server. A scripted play-through drives the client against a running server with no hand on the keyboard:
+The project needs Godot 4.7 .NET. `src/HollowWake.Client/HollowWake.Client.sln` is what the editor builds when play is pressed, and `content/core` is found beside the executable first and then by walking up from the project directory, so a checkout and an exported build both read the same content as the server.
+
+`--host H` and `--port P` (also `--host=H`, as engine arguments or after `--`) fill the login panel's server fields; the launcher starts exported builds that way. `export_presets.cfg` holds the Windows Desktop and Linux release presets the release pipeline exports with; `scripts/package-client.sh` exports both, puts `content/core` beside each executable and zips them (see [launcher.md](launcher.md)).
+
+A scripted play-through drives the client against a running server with no hand on the keyboard:
 
     godot --path src/HollowWake.Client -- --smoke --shots <dir> [--account NAME] [--host H] [--port P]
 

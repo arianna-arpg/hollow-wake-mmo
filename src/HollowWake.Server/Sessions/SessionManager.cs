@@ -28,6 +28,7 @@ public sealed class SessionManager
     private readonly IAccountStore _accounts;
     private readonly ICharacterStore _characters;
     private readonly Dictionary<long, Session> _sessions = new();
+    private readonly SnapshotSettings _snapshots;
 
     public IReadOnlyCollection<Session> Sessions => _sessions.Values;
 
@@ -38,6 +39,7 @@ public sealed class SessionManager
         _zones = zones;
         _accounts = accounts;
         _characters = characters;
+        _snapshots = config.Snapshots.Normalized();
     }
 
     public void Handle(TransportEvent evt)
@@ -53,6 +55,7 @@ public sealed class SessionManager
                     return;
                 }
                 var session = new Session(evt.Connection);
+                session.View.Settings = _snapshots;
                 _sessions[session.Id] = session;
                 _log.LogInformation("{Session} connected", session);
                 break;
@@ -125,7 +128,12 @@ public sealed class SessionManager
                     session.Connection.Close("protocol mismatch");
                     return;
                 }
-                session.Send(new WelcomeMsg(ServerInfo.Version, ProtocolInfo.Version, _config.Name, _config.Motd));
+                // Features are opt-in: a hello without them gets exactly the plain protocol.
+                session.View.SendDeltas = hello.Features?.Contains(ProtocolInfo.EntityDeltaFeature) == true;
+                session.Send(new WelcomeMsg(ServerInfo.Version, ProtocolInfo.Version, _config.Name, _config.Motd)
+                {
+                    Features = session.View.SendDeltas ? new List<string> { ProtocolInfo.EntityDeltaFeature } : null,
+                });
                 return;
             case PingMsg ping:
                 session.Send(new PongMsg(ping.Nonce, _zones.Elapsed));
@@ -181,6 +189,15 @@ public sealed class SessionManager
             }
             case RequestChunkMsg req:
             {
+                // Terrain is served around the player only: a far request would make the world thread generate
+                // and keep chunks nobody stands near.
+                var here = sim.World.Get<Transform>(session.Entity)?.Position ?? Vector3.Zero;
+                var center = sim.Layout.ChunkOf(here.X, here.Y);
+                if (Math.Max(Math.Abs(req.X - center.X), Math.Abs(req.Y - center.Y)) > _config.ChunkRequestRadius)
+                {
+                    session.Error("chunk_out_of_range", $"Chunk {req.X},{req.Y} is too far away.");
+                    return;
+                }
                 var chunk = sim.Terrain.GetChunk(new Core.World.ChunkCoord(req.X, req.Y));
                 session.Send(Snapshots.Chunk(chunk));
                 return;

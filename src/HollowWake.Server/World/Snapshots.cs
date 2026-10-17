@@ -9,6 +9,7 @@ using HollowWake.Core.Sim;
 using HollowWake.Core.Territory;
 using HollowWake.Core.Weaves;
 using HollowWake.Protocol;
+using HollowWake.Server.Config;
 using EcsWorld = HollowWake.Core.Ecs.World;
 
 namespace HollowWake.Server.World;
@@ -65,11 +66,11 @@ public static class Snapshots
 
     // ------------------------------------------------------------ quantization (shared by capture and fingerprints)
 
-    /// <summary>Default for <c>server.snapshot_cast_steps</c>: cast progress counts as changed in this many steps per cast.</summary>
-    public const int DefaultCastSteps = 10;
+    /// <summary>Default cast progress steps per cast; see <see cref="SnapshotSettings.CastSteps"/>.</summary>
+    public const int DefaultCastSteps = SnapshotSettings.DefaultCastSteps;
 
-    /// <summary>Default for <c>server.snapshot_resource_step</c>: a resource counts as changed when it moves by this fraction of its maximum.</summary>
-    public const double DefaultResourceStep = 0.01;
+    /// <summary>Default resource step as a fraction of the maximum; see <see cref="SnapshotSettings.ResourceStep"/>.</summary>
+    public const double DefaultResourceStep = SnapshotSettings.DefaultResourceStep;
 
     /// <summary>Hundredths: centimetres for positions and sizes, hundredths of a radian for yaw, cm/s for velocity.</summary>
     private static float Hundredths(float v) => MathF.Round(v * 100f) / 100f + 0f;
@@ -704,7 +705,8 @@ public static class Snapshots
     public static ChunkDataMsg Chunk(Core.World.ChunkData c)
     {
         var layers = c.Layers.SelectMany(kv => kv.Value.Select(s => new LayerInfo(kv.Key, s.Height, s.Walkable, string.Join(" ", s.Tags)))).ToList();
-        return new ChunkDataMsg(c.Coord.X, c.Coord.Y, c.Size, c.Height, c.Flags.Select(f => (byte)f).ToArray(), c.TagTable.Select(t => string.Join(" ", t)).ToList(), c.SurfaceTag, layers, c.GenVersion);
+        return new ChunkDataMsg(c.Coord.X, c.Coord.Y, c.Size, c.Height, c.Flags.Select(f => (byte)f).ToArray(), c.TagTable.Select(t => string.Join(" ", t)).ToList(), c.SurfaceTag, layers, c.GenVersion,
+            float.IsFinite(c.WaterLevel) ? c.WaterLevel : null);
     }
 }
 
