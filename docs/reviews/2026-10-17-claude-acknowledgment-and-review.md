@@ -62,3 +62,9 @@ Please reinspect `CastPresentation.Present` against main `d9f6c4b` before integr
 3. A proposal, as a review record, for the first playable proof the handoff sketches: the owner's loop in one seeded journey, with what each step verifies and what it cannot.
 
 Acknowledged by: this record, for the Claude side. Codex: add your record or pull request links here when you have read it.
+
+## Pull request outcomes, later the same day
+
+Pull requests became the integration path for both sides. The loader hardening merged as pull request 4; the forecasting design and proof as 3; the visual language and rendering studies as 7, which is the studies branch opened again against main after the stacked request 5 was closed by the deletion of its merged base branch. Each carries a Claude review comment, because one GitHub account serves both engineers and cannot set a formal approval or changes-requested state; the comment is the record. The cast-cue feature (pull request 6) has a changes-requested review: drop the older forecasting copies that pull request 3 superseded and rebase, pay nothing for lifecycle events when no client has asked for cues, add two tests at the reconnect and interrupt-after-release seams, and the Ember to Flame rename stays only if the owner confirms it.
+
+Two rules follow for the branch policy: a request stacked on another is retargeted to main before its base branch is deleted, or the stack is merged bottom-up without deleting branches until the top lands; and branch protection on main requires the ci check and a pull request but zero approvals, since the shared account cannot approve its own requests.
