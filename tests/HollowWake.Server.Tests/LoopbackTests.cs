@@ -614,6 +614,23 @@ public class LoopbackTests
     }
 
     [Fact]
+    public void ARaisedGuardShowsItsPoolOnTheCastBar()
+    {
+        var (server, transport) = Create();
+        var (client, _, session, replies, _) = Enter(server, transport, "guard", "Brannock", new List<string> { ProtocolInfo.InterfaceFeature });
+        var sim = session.Zone!.Sim;
+        var hero = session.Entity;
+        var inbox = new List<Message>(replies);
+        var slot = sim.World.Get<Core.Components.WeaveBook>(hero)!.Add(new Core.Definitions.WeaveSpec { Preset = "stone_bulwark" });
+        var at = sim.World.Get<Transform>(hero)!.Position;
+        Assert.True(sim.Service<Core.Weaves.WeaveRuntime>().TryBegin(sim, hero, slot, Core.Ecs.Entity.None, at, System.Numerics.Vector2.UnitX, out var reason), reason);
+
+        var self = Await<SelfStateMsg>(server, client, inbox, s => s.Cast is { Mode: "guard" });
+        Assert.NotNull(self);
+        Assert.Equal(1, self!.Cast!.Pool);
+    }
+
+    [Fact]
     public void ContainersStashPagesAndStationServicesTravelOverTheWire()
     {
         var (server, transport) = Create();

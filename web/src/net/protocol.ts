@@ -725,6 +725,7 @@ export interface CastInfo {
   brim?: number;
   held?: number;
   duration?: number;
+  pool?: number;
 }
 
 export interface ChargeInfo {

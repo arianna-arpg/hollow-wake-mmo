@@ -71,7 +71,14 @@ public static class InterfaceStates
             h.Add(casting.StartedAt);
             h.Add(casting.Stage);
             h.Add(casting.Channeling);
-            h.Add((long)(CastProgress(sim, casting) * Math.Max(1, settings.CastSteps)));
+            var steps = Math.Max(1, settings.CastSteps);
+            var progress = casting.Mode is CastMode.Charge or CastMode.Overcharge ? Math.Clamp(casting.Fill, 0, 1) : CastProgress(sim, casting);
+            h.Add((long)(progress * steps));
+            h.Add((long)(casting.Brim * steps));
+            if (casting.Mode == CastMode.Guard && GuardPool(sim, e, casting) is { } pool)
+            {
+                h.Add((long)(pool * steps));
+            }
         }
         if (sim.World.TryGet<Charges>(e, out var charges))
         {
@@ -207,7 +214,18 @@ public static class InterfaceStates
             Brim = casting.Brim > 0 ? Math.Round(casting.Brim, 2) : null,
             Held = casting.Held > 0 ? Math.Round(casting.Held, 2) : null,
             Duration = casting.Duration > 0 ? Math.Round(casting.Duration, 2) : null,
+            Pool = casting.Mode == CastMode.Guard ? GuardPool(sim, e, casting) : null,
         };
+    }
+
+    /// <summary>The fraction of a raised guard's pool left, from the bearer's guard while it is the one this cast holds.</summary>
+    private static double? GuardPool(Simulation sim, Entity e, CastState casting)
+    {
+        if (!sim.World.TryGet<Guard>(e, out var guard) || !ReferenceEquals(guard.Cast, casting))
+        {
+            return null;
+        }
+        return guard.MaxPool <= 0 ? 0 : Math.Round(Math.Clamp(guard.Pool / guard.MaxPool, 0, 1), 2);
     }
 
     public static string ModeName(CastMode mode) => mode switch

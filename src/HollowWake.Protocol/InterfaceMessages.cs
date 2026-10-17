@@ -143,6 +143,8 @@ public sealed record CastInfo(int Slot, string Mode, double Progress, int Stage,
     public double? Held { get; init; }
     /// <summary>The full cast or charge time in seconds, when the cast has one.</summary>
     public double? Duration { get; init; }
+    /// <summary>For a raised guard: the fraction of its pool left, from zero to one; null in every other mode.</summary>
+    public double? Pool { get; init; }
 }
 
 /// <summary>A kind of banked charge: how many, and the cap.</summary>
