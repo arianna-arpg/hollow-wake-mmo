@@ -25,6 +25,9 @@ public sealed record DamageDealt(Entity Source, Entity Target, double Total, boo
 
     /// <summary>A per-hit cap clamped the amount.</summary>
     public bool Clamped { get; init; }
+
+    /// <summary>Where the hit landed within its rolled range, 0 to 1; null when the hit rolled no position.</summary>
+    public double? Roll { get; init; }
 }
 
 public sealed record Healed(Entity Source, Entity Target, double Amount, string Resource) : GameEvent
