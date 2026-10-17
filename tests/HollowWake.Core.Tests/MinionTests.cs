@@ -41,7 +41,8 @@ internal sealed class MinionArena
             .With(Summon("t_born_hasted", "{\"type\": \"summon\", \"pattern\": \"sprig\", \"count\": 1, \"max_active\": 2, \"duration\": 0, \"group\": \"t_born\"}", glyphs: "fervent_birth"))
             .With(Summon("t_replenish", "{\"type\": \"summon\", \"pattern\": \"sprig\", \"count\": 1, \"max_active\": 2, \"duration\": 0, \"group\": \"t_fill\", \"replenish\": {\"interval\": 1}}"))
             .With(Summon("t_crew", "{\"type\": \"summon\", \"pattern\": \"remnant_shade\", \"count\": 1, \"max_active\": 2, \"duration\": 0, \"group\": \"t_crew\"}", glyphs: "resonant_key,crew_frenzy"))
-            .With(Summon("t_crew_unkeyed", "{\"type\": \"summon\", \"pattern\": \"remnant_shade\", \"count\": 1, \"max_active\": 2, \"duration\": 0, \"group\": \"t_crew2\"}", glyphs: "crew_frenzy"))
+            .With(Summon("t_martyrs", "{\"type\": \"summon\", \"pattern\": \"remnant_shade\", \"count\": 1, \"max_active\": 2, \"duration\": 0, \"group\": \"t_martyrs\"}", glyphs: "martyrdom"))
+            .With(Summon("t_crew_unkeyed","{\"type\": \"summon\", \"pattern\": \"remnant_shade\", \"count\": 1, \"max_active\": 2, \"duration\": 0, \"group\": \"t_crew2\"}", glyphs: "crew_frenzy"))
             .With(new WeaveDef
             {
                 Id = "t_consume",
@@ -715,6 +716,27 @@ public class MinionTests
             trace.Add($"{sim.Clock.Tick} {Name(m)} ends at {arena.At(m)} with {sim.World.Get<Stats>(m)!.Resource("life"):0.###} life");
         }
         return (trace, facts);
+    }
+
+    [Fact]
+    public void DeathRidersBurstWhereTheBodyFallsAsTheOwner()
+    {
+        var arena = MinionArena.Create();
+        arena.Cast(arena.Learn("t_martyrs"));
+        var martyr = arena.Minions("t_martyrs").Single();
+        var foe = arena.Foe("tangle", arena.At(martyr) + new Vector3(1, 0, 0));
+        var lifeMax = arena.Sim.World.Get<Stats>(martyr)!.ResourceMax("life");
+        arena.Sim.Service<Combat.DeathService>().Kill(arena.Sim, martyr, foe);
+        var burst = Assert.Single(arena.Events.OfType<DamageDealt>(), d => d.Target == foe);
+        Assert.Equal(arena.Owner, burst.Source);
+        Assert.True(burst.Total > 0 && burst.Total <= lifeMax * 0.3 * 2, $"{burst.Total} from {lifeMax}");
+        // A body that is dismissed rather than killed does not burst.
+        var slot = arena.Learn("t_martyrs");
+        arena.Cast(slot);
+        arena.Cast(slot);
+        arena.Cast(slot);
+        Assert.Contains(arena.Events.OfType<EntityDespawned>(), d => arena.Sim.World.Get<Minion>(d.Entity)?.Group == "t_martyrs" || d.Pattern == "remnant_shade");
+        Assert.Single(arena.Events.OfType<DamageDealt>(), d => d.Target == foe && d.Source == arena.Owner);
     }
 
     [Fact]

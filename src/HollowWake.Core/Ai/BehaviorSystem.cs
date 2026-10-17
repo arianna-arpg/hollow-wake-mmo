@@ -539,7 +539,8 @@ public sealed class BehaviorSystem : SimSystem
 
     private void Think(Simulation sim, double now, Entity e, Behavior b, Transform t, Motion m)
     {
-        if (sim.World.Has<Dead>(e))
+        // The dead do not think, nor do bodies dismissed earlier this tick that the world has yet to flush.
+        if (sim.World.Has<Dead>(e) || sim.World.IsDeferredDestroy(e))
         {
             return;
         }

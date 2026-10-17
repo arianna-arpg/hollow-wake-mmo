@@ -22,7 +22,7 @@ Distances and speeds are world units (one cell). Numbers ported from the earlier
 - where: `place` with `at` (`focus`, the default: the target else the point; `caster`; `point`, clamped to `range` from the caster; `target`), and `shape`: `around` (the default: a ring of `radius`, by default `minions.ring`, at a random bearing per body), `scatter` (in a disc of `radius`; `scatter: r` is shorthand), `line` (across the facing, `spacing` apart) or `circle` (evenly around at `radius`)
 - what it runs: `behavior`, else the pool entry's, else rule `minions.behavior`
 - what it inherits: on unless `inherit: false`
-- riders: `on_birth` effects run on each newborn body (the context's target is the body); glyphs extend them through the `on_birth` hook
+- riders: `on_birth` effects run on each newborn body (the context's target is the body); `on_death` effects run where a body falls when it dies (not when it is dismissed or expires), as its owner while the owner stands, one deeper than the killing hit, with `body_life_max` set; glyphs extend both through the `on_birth` and `on_death` hooks
 - terms: `contract`, `decay`, `waves`, `presence`, `replenish` (below)
 
 Every roll comes from the cast's random stream: a single-pattern summon draws one bearing per body, a pool one pick more. Births publish `MinionSummoned`.
@@ -74,7 +74,7 @@ Each addresses the context origin's minions: those of `group` when given; otherw
 
 ## Constructs
 
-`deploy` takes the summon's parameters (bar contracts and corpses) plus `lifetime`, `inherit_caster` and `intercept`. Constructs keep their pattern's behavior, stand where they were placed, and are not recalled or commanded. Device actions:
+`deploy` takes the summon's parameters (bar contracts and corpses) plus `lifetime`, `inherit_caster` and `intercept`. Constructs keep their pattern's behavior, stand where they were placed, and are not recalled or commanded; a breakable one bursts through `on_death`, and one that answers blows reads `has("recently_hurt")` in its behavior. Device actions:
 
 - `construct_cast { weave }`: fire a ready weave at the target.
 - `spring { radius, weave, consume }`: when a foe comes within `radius`, fire at it; with `consume` (the default) the trap is spent.

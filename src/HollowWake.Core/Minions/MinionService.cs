@@ -216,7 +216,8 @@ public sealed class MinionService
         _pairs.Clear();
         foreach (var (e, m) in world.Query<Minion>())
         {
-            if (m.Owner == owner && scope.Admits(m) && !world.Has<Dead>(e))
+            // Bodies dismissed earlier this tick are still in the world until it flushes; they no longer count.
+            if (m.Owner == owner && scope.Admits(m) && !world.Has<Dead>(e) && !world.IsDeferredDestroy(e))
             {
                 _pairs.Add((m.Sequence, e));
             }
@@ -278,8 +279,16 @@ public sealed class MinionService
         ReturnList(list);
     }
 
-    /// <summary>Removes a minion quietly: no death, no credit, no corpse.</summary>
-    public void Dismiss(Entity e) => Systems.LifetimeSystem.Despawn(_sim, e);
+    /// <summary>Removes a minion quietly: no death, no credit, no corpse. A cast it had begun goes with it.</summary>
+    public void Dismiss(Entity e)
+    {
+        if (_sim.World.TryGet<WeaveBook>(e, out var book))
+        {
+            book.Casting = null;
+        }
+        _sim.World.Get<Motion>(e)?.Stop();
+        Systems.LifetimeSystem.Despawn(_sim, e);
+    }
 
     /// <summary>
     /// Moves a body to a point at once, as far along the way from <paramref name="anchor"/> as the ground
@@ -501,6 +510,7 @@ public sealed class MinionService
             var scale = ownerStats.Attributes.Get("minion.respawn_time", ownerStats, contract.Context);
             contract.Due.Add(_sim.Clock.Time + Math.Max(0, contract.Respawn * scale));
         }
+        m.Recipe?.Died(_sim, d.Entity, m, d.Position, d.Depth);
     }
 
     private void OnDespawned(EntityDespawned d)

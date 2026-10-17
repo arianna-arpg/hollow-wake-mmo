@@ -253,6 +253,8 @@ public sealed class MinionSystem : SimSystem
                         (intercept.Slowed ??= new Dictionary<Entity, float>())[e] = intercept.Slow;
                         break;
                     default:
+                        // Without its projectile component nothing flies or hits with it before the world flushes.
+                        sim.World.Remove<Projectile>(e);
                         sim.Spatial.Remove(e);
                         sim.Events.Publish(new EntityDespawned(e, "projectile") { Tick = sim.Clock.Tick });
                         sim.World.DestroyDeferred(e);

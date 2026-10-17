@@ -15,7 +15,7 @@ internal static class MinionKinds
     public static readonly IReadOnlyList<string> ScopeNamesAdded = new[]
     {
         "has_owner", "owner_distance", "owner_has_target", "owner_target_distance", "commanded", "command_distance",
-        "consumed_life", "consumed_life_max",
+        "consumed_life", "consumed_life_max", "body_life_max",
     };
 
     public static void Register()

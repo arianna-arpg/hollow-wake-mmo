@@ -167,12 +167,16 @@ internal sealed class SummonRecipe
     public Expr? SearchRadius;
     public InterceptSpec? Intercept;
     public CompiledEffect[] OnBirth = Array.Empty<CompiledEffect>();
+    public CompiledEffect[] OnDeath = Array.Empty<CompiledEffect>();
 
     /// <summary>The parameters <c>summon</c> and <c>deploy</c> share.</summary>
     public static readonly string[] SharedParams =
     {
         "pattern", "pool", "count", "max_active", "group", "pool_group", "exclusive_group", "place", "behavior", "inherit",
     };
+
+    /// <summary>The variable death effects read: the fallen body's maximum life.</summary>
+    public const string BodyLifeMax = "body_life_max";
 
     public static SummonRecipe Read(JsonObject p, EffectCompileContext ctx, bool construct)
     {
@@ -195,6 +199,7 @@ internal sealed class SummonRecipe
             SearchRadius = ctx.ExprOf(p["search_radius"]),
             Replenish = p["replenish"] is JsonObject replenish ? ctx.ExprOf(replenish["interval"], Expr.Constant(4)) : null,
             OnBirth = ctx.CompileList(p["on_birth"], "on_birth"),
+            OnDeath = ctx.CompileList(p["on_death"], "on_death"),
         };
         if (p["pool"] is { } poolNode)
         {
@@ -566,6 +571,8 @@ internal sealed class SummonRecipe
             InheritCaster = InheritCaster,
             Contract = contract,
             Presence = Presence,
+            Recipe = OnDeath.Length > 0 ? this : null,
+            SummonWeave = OnDeath.Length > 0 ? ctx.Weave : null,
         });
         if (Presence is not null)
         {
@@ -632,6 +639,29 @@ internal sealed class SummonRecipe
             CompiledEffect.ExecuteAll(OnBirth, ctx.WithTarget(e).Deeper());
         }
         return e;
+    }
+
+    /// <summary>
+    /// Runs the death effects of a body that just died, where it fell: as its owner while the owner stands
+    /// (else as the body), in the weave that raised it, one deeper than the killing hit, with
+    /// <c>body_life_max</c> set. A martyr's burst, a breakable wall's shards.
+    /// </summary>
+    internal void Died(Simulation sim, Entity body, Minion minion, Vector3 at, int depth)
+    {
+        var source = !minion.Owner.IsNone && sim.World.IsAlive(minion.Owner) && sim.World.Has<Stats>(minion.Owner) ? minion.Owner : body;
+        var weave = minion.SummonWeave;
+        CompiledEffect.ExecuteAll(OnDeath, new EffectContext
+        {
+            Sim = sim,
+            Source = source,
+            Point = at,
+            From = at,
+            Weave = weave,
+            Tags = weave?.Tags ?? TagSet.Empty,
+            Depth = depth + 1,
+            Rng = sim.RngFor(body, "on_death"),
+            Vars = new Dictionary<string, double>(StringComparer.Ordinal) { [BodyLifeMax] = sim.World.Get<Stats>(body)?.ResourceMax("life") ?? 0 },
+        });
     }
 
     /// <summary>Gives a body a behavior of its own in place of its pattern's, starting from its first state.</summary>

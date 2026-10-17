@@ -58,6 +58,21 @@ entries:
       on_birth:
         - { type: apply_status, status: hasted, duration: 6 }
 
+  - id: martyrdom
+    name: Martyrdom
+    description: What you summon bursts when it falls, a share of its life striking those around it.
+    requires_mechanisms: [summon]
+    color: "#e86848"
+    hooks:
+      on_death:
+        - type: area
+          shape: circle
+          radius: 2.5
+          center: point
+          filter: enemy
+          effects:
+            - { type: damage, amount: "body_life_max * 0.3", threads: $threads }
+
   - id: reaping
     name: Reaping
     description: Those this weave kills rise to serve you for a while.

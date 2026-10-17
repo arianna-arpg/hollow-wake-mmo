@@ -50,6 +50,11 @@ public sealed class Minion : IComponent
     /// <summary>Modifiers the owner's other minions wear while this body lives (an apex's presence); null for none.</summary>
     public IReadOnlyList<Modifier>? Presence;
 
+    /// <summary>The summon or deploy that raised the body and the weave it ran in, for what happens when it dies.</summary>
+    internal Minions.SummonRecipe? Recipe;
+
+    internal Weaves.CompiledWeave? SummonWeave;
+
     /// <summary>The presence sources the body wears now, kept in step by the minion system.</summary>
     internal List<string>? WornPresences;
 

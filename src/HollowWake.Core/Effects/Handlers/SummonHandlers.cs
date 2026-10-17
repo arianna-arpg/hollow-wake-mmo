@@ -22,6 +22,9 @@ public static class SummonHandlers
 
     /// <summary>The hook a summon's and a deploy's birth effects answer to: they run on each body as it is born.</summary>
     public const string OnBirth = "on_birth";
+
+    /// <summary>The hook a summon's and a deploy's death effects answer to: they run where each body falls when it dies.</summary>
+    public const string OnDeath = "on_death";
 }
 
 /// <summary>
@@ -31,8 +34,9 @@ public static class SummonHandlers
 /// dismissed), or in the <c>pool_group</c>, whose capacity is the owner's <c>minion.max</c>; an
 /// <c>exclusive_group</c> dismisses the other groups in it. Bodies appear where <c>place</c> says, run the
 /// summon's <c>behavior</c> (else rule <c>minions.behavior</c>), inherit their owner's minion attributes
-/// unless <c>inherit</c> is false, and run <c>on_birth</c>. A <c>contract</c> holds a reservation and brings
-/// fallen bodies back; <c>decay</c>, <c>waves</c>, <c>presence</c> and <c>replenish</c> shape the rest.
+/// unless <c>inherit</c> is false, run <c>on_birth</c> as they are born and <c>on_death</c> where they fall.
+/// A <c>contract</c> holds a reservation and brings fallen bodies back; <c>decay</c>, <c>waves</c>,
+/// <c>presence</c> and <c>replenish</c> shape the rest.
 /// </summary>
 internal sealed class SummonHandler : IEffectHandler
 {
@@ -42,7 +46,8 @@ internal sealed class SummonHandler : IEffectHandler
         {
             "duration", "contract", "decay", "waves", "presence", "replenish", "from_corpse", "search_radius",
         }).ToArray())
-        .Hook(SummonHandlers.OnBirth, "on_birth");
+        .Hook(SummonHandlers.OnBirth, "on_birth")
+        .Hook(SummonHandlers.OnDeath, "on_death");
 
     public CompiledEffect Compile(JsonObject p, EffectCompileContext ctx) => new SummonEffect { Type = Type, Recipe = SummonRecipe.Read(p, ctx, construct: false) };
 }
@@ -52,7 +57,8 @@ internal sealed class SummonHandler : IEffectHandler
 /// Like <c>summon</c> without contracts or corpses; constructs keep their pattern's behavior, last
 /// <c>lifetime</c> seconds, stand where <c>place</c> lays them (a <c>line</c> across the facing or a
 /// <c>circle</c> makes walls and rings), cast with their owner's numbers and credit when
-/// <c>inherit_caster</c> is set, and intercept projectiles with an <c>intercept</c> dome.
+/// <c>inherit_caster</c> is set, intercept projectiles with an <c>intercept</c> dome, and burst with
+/// <c>on_death</c> when broken.
 /// </summary>
 internal sealed class DeployHandler : IEffectHandler
 {
@@ -62,7 +68,8 @@ internal sealed class DeployHandler : IEffectHandler
         {
             "lifetime", "inherit_caster", "intercept", "decay", "presence",
         }).ToArray())
-        .Hook(SummonHandlers.OnBirth, "on_birth");
+        .Hook(SummonHandlers.OnBirth, "on_birth")
+        .Hook(SummonHandlers.OnDeath, "on_death");
 
     public CompiledEffect Compile(JsonObject p, EffectCompileContext ctx) => new SummonEffect { Type = Type, Recipe = SummonRecipe.Read(p, ctx, construct: true) };
 }
