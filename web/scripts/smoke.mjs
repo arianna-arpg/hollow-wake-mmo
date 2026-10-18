@@ -450,6 +450,8 @@ async function lookStages() {
   const cards = await measure('cards');
   await shot('16_cards.png');
   record('bodies as cards', baked && cards.cards > 0 && cards.p95 < 50, cards.line);
+  const canvasViewport = (await hw(() => window.hollowWake.render)).canvasViewport;
+  record('card baking restores the world viewport', canvasViewport, `full canvas viewport=${canvasViewport}`);
   await set('bodies', 'auto');
   await sleep(300);
   await set('grayscale', true);
