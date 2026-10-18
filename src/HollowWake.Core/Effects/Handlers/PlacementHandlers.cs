@@ -471,7 +471,7 @@ internal sealed class AimHandler : IEffectHandler
             var point = new Vector3(origin.X + direction.X * reach, origin.Y + direction.Y * reach, ctx.Point.Z);
             var target = ctx.Target == ctx.Source ? ctx.Target : Entity.None;
             // The turned point is where the effects are aimed now.
-            ExecuteAll(Effects, At(ctx, target, point, direction, ctx.From, ctx.Depth, aim: point));
+            ExecuteAll(Effects, At(ctx, target, point, direction, ctx.From, ctx.Depth, aim: point, launchLift: ctx.LaunchLift));
         }
     }
 }

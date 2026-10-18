@@ -46,7 +46,7 @@ entries:
     tags: [knot, combat]
     slots:
       knot: { poi_tags: [knot], within: 320, level_delta: { max: 2 } }
-      foe: { pattern_tags: [tangled], within: 160, local_population: true, level_delta: { max: 2 } }
+      foe: { pattern_tags: [tangled], within: 160, local_population: true, population_at: $knot, level_delta: { max: 2 } }
     objectives:
       - { id: reach, type: reach, poi: $knot, count: 1, text: "Find $knot" }
       - { id: cull, type: kill, target: $foe, count: 6, text: "Unmake six $foe" }

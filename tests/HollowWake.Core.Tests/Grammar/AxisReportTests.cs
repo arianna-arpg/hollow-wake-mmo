@@ -453,7 +453,7 @@ entries:
         var aimBinding = Assert.Single(AxisBindings.Of("projectile", "aim"));
         Assert.Equal(ProjectileAims.Names.OrderBy(n => n), AxisBindings.WordsOf(aimBinding)!.OrderBy(n => n));
         var aim = Assert.Single(Report(CoreContent.Registry, new WeaveSpec { Form = "bolt", Threads = { "ember" } }), v => v.Effect == "projectile" && v.Parameter == "aim");
-        Assert.Equal("point", aim.Word);
+        Assert.Equal("target", aim.Word);
         Assert.Null(aim.Number);
         Assert.Equal(AxisSource.Rule, aim.Source);
         Assert.Equal("delivery.projectile_aim", aim.Detail);

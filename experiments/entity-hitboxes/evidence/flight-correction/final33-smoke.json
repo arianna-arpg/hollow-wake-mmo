@@ -1,0 +1,52 @@
+{
+  "started": "2026-10-18T21:25:29.014Z",
+  "root": "C:\\Users\\John\\.codex\\worktrees\\precise-entity-hitboxes\\MMOARPG",
+  "directory": "C:\\Users\\John\\.codex\\worktrees\\precise-entity-hitboxes\\MMOARPG\\experiments\\entity-hitboxes\\artifacts\\flight-correction\\final33-smoke\\run-i2p30g",
+  "suite": "all",
+  "status": "passed",
+  "stages": [
+    {
+      "name": "smoke-web",
+      "status": "passed",
+      "started": "2026-10-18T21:25:30.330Z",
+      "code": 0,
+      "signal": null,
+      "passed": 30,
+      "total": 30,
+      "skipped": [],
+      "finished": "2026-10-18T21:26:52.410Z"
+    },
+    {
+      "name": "import-godot",
+      "status": "passed",
+      "started": "2026-10-18T21:26:52.412Z",
+      "code": 0,
+      "signal": null,
+      "finished": "2026-10-18T21:26:56.611Z"
+    },
+    {
+      "name": "smoke-godot",
+      "status": "passed",
+      "started": "2026-10-18T21:26:56.611Z",
+      "code": 0,
+      "signal": null,
+      "passed": 36,
+      "total": 36,
+      "skipped": [
+        "appearance rendering: headless display; geometry/card performance and readability require graphical evidence",
+        "theme rendered pixels: headless display; theme state checked above"
+      ],
+      "finished": "2026-10-18T21:27:30.378Z"
+    }
+  ],
+  "nativeRendering": "not covered by headless mode",
+  "godot": "C:\\Users\\John\\AppData\\Local\\Microsoft\\WinGet\\Packages\\GodotEngine.GodotEngine.Mono_Microsoft.Winget.Source_8wekyb3d8bbwe\\Godot_v4.7.2-stable_mono_win64\\Godot_v4.7.2-stable_mono_win64.exe",
+  "server": {
+    "tcp": 58735,
+    "url": "http://127.0.0.1:58736",
+    "name": "harness-run-i2p30g",
+    "data": "C:\\Users\\John\\.codex\\worktrees\\precise-entity-hitboxes\\MMOARPG\\experiments\\entity-hitboxes\\artifacts\\flight-correction\\final33-smoke\\run-i2p30g\\data"
+  },
+  "cleanupErrors": [],
+  "finished": "2026-10-18T21:27:30.690Z"
+}

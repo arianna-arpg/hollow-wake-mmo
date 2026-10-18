@@ -96,6 +96,12 @@ public sealed class EffectContext
     public Vector3? From { get; init; }
 
     /// <summary>
+    /// Lift for a projectile launched from this delivery's anchor. Null uses the content-defined ground
+    /// placement lift; a flight supplies zero because its emission point is already at flight height.
+    /// </summary>
+    public float? LaunchLift { get; init; }
+
+    /// <summary>
     /// The point the cast was aimed at. It is the context's point until a delivery moves the point (onto a body
     /// it struck, or to where a flight or a placement is), which keeps the aim here, so the effects of a hit can
     /// still reach where the cast was aimed.
@@ -210,6 +216,7 @@ public sealed class EffectContext
             Potency = Potency,
             DamageScale = damageScale ?? DamageScale,
             From = From,
+            LaunchLift = LaunchLift,
             Vars = vars ?? Vars,
             ForecastRestrictions = ForecastRestrictions,
             Slot = Slot,

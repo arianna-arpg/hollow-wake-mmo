@@ -1,0 +1,15 @@
+  Determining projects to restore...
+  Restored C:\Users\John\.codex\worktrees\entity-main-audit\MMOARPG\artifacts\entity33-pre54-baseline\src\HollowWake.Core\HollowWake.Core.csproj (in 290 ms).
+  Restored C:\Users\John\.codex\worktrees\entity-main-audit\MMOARPG\artifacts\entity33-pre54-baseline\src\HollowWake.Server\HollowWake.Server.csproj (in 290 ms).
+  Restored C:\Users\John\.codex\worktrees\entity-main-audit\MMOARPG\artifacts\entity33-pre54-baseline\src\HollowWake.Tools\HollowWake.Tools.csproj (in 290 ms).
+  Restored C:\Users\John\.codex\worktrees\entity-main-audit\MMOARPG\artifacts\entity33-pre54-baseline\src\HollowWake.Protocol\HollowWake.Protocol.csproj (in 290 ms).
+  HollowWake.Core -> C:\Users\John\.codex\worktrees\entity-main-audit\MMOARPG\artifacts\entity33-pre54-baseline\src\HollowWake.Core\bin\Release\net8.0\HollowWake.Core.dll
+  HollowWake.Protocol -> C:\Users\John\.codex\worktrees\entity-main-audit\MMOARPG\artifacts\entity33-pre54-baseline\src\HollowWake.Protocol\bin\Release\net8.0\HollowWake.Protocol.dll
+  HollowWake.Server -> C:\Users\John\.codex\worktrees\entity-main-audit\MMOARPG\artifacts\entity33-pre54-baseline\src\HollowWake.Server\bin\Release\net10.0\HollowWake.Server.dll
+  HollowWake.Tools -> C:\Users\John\.codex\worktrees\entity-main-audit\MMOARPG\artifacts\entity33-pre54-baseline\src\HollowWake.Tools\bin\Release\net10.0\hollowwake.dll
+
+Build succeeded.
+    0 Warning(s)
+    0 Error(s)
+
+Time Elapsed 00:00:13.41
