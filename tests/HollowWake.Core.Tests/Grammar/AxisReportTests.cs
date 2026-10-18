@@ -58,6 +58,8 @@ entries:
           - { type: damage, amount: 3, effectiveness: 0.5, threads: [ember] }
           - { type: damage, threads: [ember] }
       - { type: aura, toggle: true }
+      - { type: apply_status, status: burning, duration: 3, fixed_duration: 2 }
+      - { type: charge, id: fury, gain: 1, max: 4 }
 ---
 kind: weaves
 entries:
@@ -84,8 +86,9 @@ entries:
     {
         var values = Report(CoreContent.Registry, new WeaveSpec { Preset = "ember_bolt" });
 
-        // Geometry: the chain leaps a written six units, a literal no modifier reaches; the flights fold the bolt's base.
-        var leap = Assert.Single(values, v => v.Name == "geometry.chain_range");
+        // The chain looks a written six units for its next body, a literal no modifier reaches, on targeting with the
+        // other radii of acquisition; the flights fold the bolt's base.
+        var leap = Assert.Single(values, v => v.Name == "targeting.chain_range");
         Assert.Equal((6.0, "units", AxisSource.Literal, "chain"), (leap.Number, leap.Unit, leap.Source, leap.Effect));
         Assert.True(leap.Frozen);
         var flights = Assert.Single(values, v => v.Name == "geometry.flights");
@@ -229,6 +232,14 @@ entries:
 
         // A toggled aura with no written duration lasts until it is turned off: the weave's duration is not its duration.
         Assert.Null(At("effects[5].duration"));
+
+        // A fixed duration replaces the duration: a second door onto it, frozen, and the scaled one is not read.
+        var fixedDuration = Assert.Single(values, v => v.Name == "payload.duration" && v.Path.StartsWith("effects[6].", StringComparison.Ordinal));
+        Assert.Equal(("fixed_duration", 2.0, true), (fixedDuration.Parameter, fixedDuration.Number, fixedDuration.Frozen));
+
+        // A written charge cap replaces the holder's own charge.{id}.max, which the literal names; nothing reaches it.
+        var cap = Assert.Single(values, v => v.Name == "economy.charge.max");
+        Assert.Equal((4.0, "charge.fury.max", true), (cap.Number, cap.Attribute, cap.Frozen));
     }
 
     [Fact]
@@ -431,9 +442,15 @@ entries:
             {
                 Assert.True(effects.TryGetSignature(binding.Type, out var signature) && signature.Accepts(binding.Top), $"{binding.Type} has no parameter '{binding.Top}'");
             }
-            if (binding.Attribute is { } attribute)
+            if (binding.Attribute is { } attribute && !attribute.Contains('{'))
             {
                 Assert.True(content.Attributes.Contains(attribute), $"{binding.Type}.{binding.Parameter} names undeclared attribute '{attribute}'");
+            }
+            else if (binding.Attribute is { } template)
+            {
+                // A sibling's word in braces stands for itself: the sibling must be a parameter of the type.
+                var sibling = template[(template.IndexOf('{') + 1)..template.IndexOf('}')];
+                Assert.True(effects.TryGetSignature(binding.Type, out var signature) && signature.Accepts(sibling), $"{binding.Type}.{binding.Parameter} names '{template}' over no parameter '{sibling}'");
             }
             Assert.True(binding.Kind != ParameterKind.Axis || binding.Dimension is not null, $"{binding.Type}.{binding.Parameter} is an axis on no dimension");
             if (binding.Kind == ParameterKind.Choice && binding.Registry is { } registry && AxisBindings.WordsOf(binding) is { } words)

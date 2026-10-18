@@ -99,7 +99,7 @@ internal static class DeliveryAxes
         double? number = null;
         string? word = null;
         string? detail = null;
-        string? attribute = binding.Role == AttributeRole.Fallback ? binding.Attribute : null;
+        string? attribute = binding.Role == AttributeRole.Fallback ? Expand(binding.Attribute, node) : null;
         var multiplied = false;
         if (AxisUnits.IsWord(binding.Unit))
         {
@@ -152,7 +152,7 @@ internal static class DeliveryAxes
         }
         // Written as a constant, whoever wrote it: a patch's or a rider's number is as frozen as the form's.
         var constant = nature == AxisSource.Literal && number is not null;
-        if (binding.Role is AttributeRole.Multiplier or AttributeRole.Channel && binding.Attribute is { } scale)
+        if (binding.Role is AttributeRole.Multiplier or AttributeRole.Channel && Expand(binding.Attribute, node) is { } scale)
         {
             attribute = scale;
             multiplied = true;
@@ -287,15 +287,15 @@ internal static class DeliveryAxes
 
     /// <summary>
     /// A number as the attribute of a multiplier or a channel reaches it: times the weave's fold of a multiplier,
-    /// through the weave's modifiers on a channel; as written where the stack is the caster's own, which the
-    /// holder has none of.
+    /// through the weave's modifiers on a channel; as written where the stack is another's (the caster's own, a
+    /// bearer's), which the report's holder has none of.
     /// </summary>
     private static (double Number, string Detail)? Reach(AxisReading reading, AxisBinding binding, string attribute, double value)
     {
         var text = AxisReport.Format(value);
-        if (binding.Fold == AttributeFold.Caster)
+        if (binding.Fold != AttributeFold.Weave)
         {
-            return (value, $"{text} x {attribute} on the caster's own stack");
+            return (value, $"{text} x {attribute} on the {(binding.Fold == AttributeFold.Caster ? "caster's" : "bearer's")} own stack");
         }
         if (binding.Role == AttributeRole.Channel)
         {
@@ -305,6 +305,24 @@ internal static class DeliveryAxes
     }
 
     private static string? Join(string? a, string? b) => string.IsNullOrEmpty(a) ? b : string.IsNullOrEmpty(b) ? a : a + "; " + b;
+
+    /// <summary>
+    /// A binding's attribute with each sibling named in braces put in as the node writes it (<c>charge.{id}.max</c>
+    /// is <c>charge.fury.max</c>); null where the node writes no such word.
+    /// </summary>
+    private static string? Expand(string? attribute, AxisNode node)
+    {
+        while (attribute is not null && attribute.IndexOf('{') is var open and >= 0)
+        {
+            var close = attribute.IndexOf('}', open);
+            if (close < 0 || JsonNum.StringOf(node.Node[attribute[(open + 1)..close]]) is not { } word)
+            {
+                return null;
+            }
+            attribute = attribute[..open] + word + attribute[(close + 1)..];
+        }
+        return attribute;
+    }
 
     /// <summary>
     /// Where a binding's parameter sits in a node: the parameter itself, a field inside a block

@@ -22,7 +22,6 @@ public class SignatureGrammarTests
     /// </summary>
     private static readonly string[] Flags =
     {
-        "apply_status.fixed_duration",
         "apply_status.self",
         "area.include_center",
         "aura.toggle",
@@ -58,17 +57,14 @@ public class SignatureGrammarTests
 
     /// <summary>
     /// Effect lists at moments no signature declares as a hook, so no glyph can ride them (a wrapper's inner list is
-    /// the node it wraps, not a moment, and is not counted). A list declared a hook is removed from this list; a new
-    /// plain list fails the test.
+    /// the node it wraps, and a condition's or a random pick's branches the graph they nest, not moments, and are not
+    /// counted). A list declared a hook is removed from this list; a new plain list fails the test.
     /// </summary>
     private static readonly string[] PlainLists =
     {
-        "condition.else",
-        "condition.then",
         "consume_minion.effects",
         "detonate.effects",
         "projectile.on_expire",
-        "random.choices",
         "scatter.effects",
     };
 
@@ -119,7 +115,6 @@ public class SignatureGrammarTests
         "agency.bodies",
         "agency.inherit",
         "agency.lifetime",
-        "geometry.chain_range",
         "geometry.radius",
         "geometry.spread",
         "geometry.width",
@@ -129,6 +124,7 @@ public class SignatureGrammarTests
         "payload.duration",
         "payload.resource",
         "targeting.at",
+        "targeting.chain_range",
         "targeting.domain_filter",
         "targeting.filter",
         "targeting.pick",
@@ -195,6 +191,19 @@ public class SignatureGrammarTests
             }
         }
         Baseline("references the signatures do not declare", UndeclaredReferences, undeclared);
+    }
+
+    [Fact]
+    public void NoBuiltInHandlerIsOpen()
+    {
+        // A handler that declares no signature accepts any parameter and exposes no hooks: validation cannot read it,
+        // and neither can the bindings.
+        var effects = EffectRegistry.Shared;
+        foreach (var type in effects.Types)
+        {
+            Assert.True(effects.TryGetSignature(type, out var signature));
+            Assert.False(signature.IsOpen, $"handler '{type}' declares no signature");
+        }
     }
 
     [Fact]
@@ -296,7 +305,7 @@ public class SignatureGrammarTests
             {
                 continue;
             }
-            Assert.True(AxisBindings.Of(type, parameter).Any(b => b.Kind == ParameterKind.Node && b.Node == NodeShape.Effects),
+            Assert.True(AxisBindings.Of(type, parameter).Any(b => b.Kind == ParameterKind.Node && b.Node is NodeShape.Effects or NodeShape.Branch),
                 $"{type}.{parameter} holds effects but is not declared an effect list");
             foreach (var child in nested)
             {

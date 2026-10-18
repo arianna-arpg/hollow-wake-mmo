@@ -47,6 +47,11 @@ public enum NodeShape
     None,
     /// <summary>An effect list.</summary>
     Effects,
+    /// <summary>
+    /// An effect list that is one branch of a nesting operator (a condition's <c>then</c> and <c>else</c>, a random
+    /// pick's choices): the graph it nests, as a wrapper's inner list is, not a moment content rides.
+    /// </summary>
+    Branch,
     /// <summary>A modifier list lent to bodies.</summary>
     Modifiers,
     /// <summary>A condition, an expression that holds or not.</summary>
@@ -85,6 +90,11 @@ public enum AttributeFold
     /// <c>effect.duration</c>, read by the status service).
     /// </summary>
     Caster,
+    /// <summary>
+    /// The stack of the body that bears what the effect writes, without the weave's tags or modifiers: the most
+    /// charges a body holds is its own <c>charge.{id}.max</c>, the caster's or a target's.
+    /// </summary>
+    Bearer,
 }
 
 /// <summary>
@@ -140,6 +150,7 @@ public sealed record AxisBinding
     /// <summary>The dimension the parameter's value is placed on; null for what the report does not place (effect lists, keys, presentation) or a family reader places.</summary>
     public Dimension? Dimension { get; init; }
     public string Unit { get; init; } = Word;
+    /// <summary>The attribute behind the parameter; a sibling's word in braces stands for itself (<c>charge.{id}.max</c>).</summary>
     public string? Attribute { get; init; }
     public AttributeRole Role { get; init; }
     /// <summary>Whose stack the attribute is folded on: the weave's, unless the handler reads the caster's own.</summary>
@@ -372,7 +383,7 @@ public static class AxisBindings
 
     // ------------------------------------------------------------ declaration helpers
 
-    private static void Axis(string type, string parameter, Dimension dimension, string unit, string? attribute = null, double? @default = null, double factor = 1, string? rule = null, string? when = null, string? name = null, string? fallbackWhen = null, string? factorOf = null) =>
+    private static void Axis(string type, string parameter, Dimension dimension, string unit, string? attribute = null, double? @default = null, double factor = 1, string? rule = null, string? when = null, string? name = null, string? fallbackWhen = null, string? factorOf = null, AttributeFold fold = AttributeFold.Weave) =>
         Register(new AxisBinding
         {
             Type = type,
@@ -382,6 +393,7 @@ public static class AxisBindings
             Unit = unit,
             Attribute = attribute,
             Role = attribute is null ? AttributeRole.None : AttributeRole.Fallback,
+            Fold = fold,
             Factor = factor,
             FactorOf = factorOf,
             Default = @default,
@@ -491,6 +503,15 @@ public static class AxisBindings
         foreach (var parameter in parameters)
         {
             NodeOf(type, parameter, NodeShape.Effects);
+        }
+    }
+
+    /// <summary>Effect lists that are the branches of a nesting operator, not moments (<see cref="NodeShape.Branch"/>).</summary>
+    private static void Branches(string type, params string[] parameters)
+    {
+        foreach (var parameter in parameters)
+        {
+            NodeOf(type, parameter, NodeShape.Branch);
         }
     }
 
@@ -604,7 +625,8 @@ public static class AxisBindings
         Choice("projectile", "return", Kinematics, "none", new[] { "none", "origin", "caster" }, hidesNumber: true);
         Axis("projectile", "forks", Kinematics, Count, "projectile.forks", 0);
         Axis("projectile", "chains", Kinematics, Count, "projectile.chain", 0);
-        Axis("projectile", "rehit", Kinematics, Seconds, "projectile.rehit", 0);
+        // A rehit is the lockout before a flight may strike the same body again: targeting, as a field's strike-once is.
+        Axis("projectile", "rehit", Targeting, Seconds, "projectile.rehit", 0);
         Axis("projectile", "bounce", Kinematics, Count, "projectile.bounce", 0);
         foreach (var turning in new[] { "homing", "guide", "erratic", "spiral", "orbit", "spin", "recurve", "converge" })
         {
@@ -623,7 +645,8 @@ public static class AxisBindings
         // The flight system's rules: no glyph reaches them (rule 5 of the grammar names them as frozen axes).
         Implicit("projectile", "fork_children", Kinematics, Count, rule: "delivery.fork_children", @default: 2, when: "forks");
         Implicit("projectile", "fork_angle", Kinematics, Degrees, rule: "delivery.fork_angle", @default: 30, when: "forks");
-        Implicit("projectile", "chain_range", Geometry, Units, rule: "delivery.chain_range", @default: 8, when: "chains");
+        // How far a chain looks for its next body is a radius of acquisition, on targeting with the homing radius.
+        Implicit("projectile", "chain_range", Targeting, Units, rule: "delivery.chain_range", @default: 8, when: "chains");
         Implicit("projectile", "homing_radius", Targeting, Units, rule: "delivery.homing_radius", @default: 10, when: "homing");
         Implicit("projectile", "homing_reacquire", Targeting, Seconds, rule: "delivery.homing_reacquire", @default: 0.25, when: "homing");
         Implicit("projectile", "bounce_restitution", Kinematics, Fraction, rule: "delivery.bounce_restitution", @default: 0.6, when: "bounce");
@@ -635,7 +658,7 @@ public static class AxisBindings
 
         // chain
         Axis("chain", "count", Kinematics, Count, "chain.count", 0, name: "chains");
-        Axis("chain", "range", Geometry, Units, @default: 6, name: "chain_range");
+        Axis("chain", "range", Targeting, Units, @default: 6, name: "chain_range");
         Choice("chain", "filter", Targeting, "enemy", registry: "filters");
         Choice("chain", "pick", Targeting, "nearest", registry: "picks");
         Effects("chain", "effects");
@@ -806,8 +829,9 @@ public static class AxisBindings
         Reference("apply_status", "status", readBy: "statuses");
         // The status service scales a duration by the applier's effect.duration, read on the applier's own stack without
         // the weave's modifiers, and a harmful one by the bearer's status.resistance, a defense as resistances are to damage.
-        Scaled("apply_status", "duration", Payload, Seconds, "effect.duration", fold: AttributeFold.Caster);
-        FlagOf("apply_status", "fixed_duration", Payload, unit: Seconds);
+        // A fixed duration replaces the duration and nothing scales it: a second door onto the duration, its number frozen.
+        Scaled("apply_status", "duration", Payload, Seconds, "effect.duration", when: "!fixed_duration", fold: AttributeFold.Caster);
+        Axis("apply_status", "fixed_duration", Payload, Seconds, name: "duration");
         Axis("apply_status", "chance", Payload, Fraction, @default: 1);
         Axis("apply_status", "stacks", Payload, Count, @default: 1);
         Axis("apply_status", "magnitude", Payload, Resource);
@@ -835,7 +859,8 @@ public static class AxisBindings
 
         Reference("charge", "id", readBy: "statuses");
         Axis("charge", "gain", Economy, Count, name: "charge.gain");
-        Axis("charge", "max", Economy, Count, name: "charge.max");
+        // A written max replaces the holder's own charge.{id}.max (ChargeService.Gain), read on the holder's stack.
+        Axis("charge", "max", Economy, Count, "charge.{id}.max", name: "charge.max", fold: AttributeFold.Bearer);
         Axis("charge", "spend", Economy, Count, name: "charge.spend");
         FlagOf("charge", "all", Economy, name: "charge.all");
         Axis("charge", "drain", Economy, CountPerSecond, name: "charge.drain");
@@ -965,8 +990,8 @@ public static class AxisBindings
     private static void Flow()
     {
         NodeOf("condition", "if", NodeShape.Predicate, Causality, name: "condition");
-        Effects("condition", "then", "else");
-        Effects("random", "choices");
+        Branches("condition", "then", "else");
+        Branches("random", "choices");
         Axis("random", "choices[].weight", Causality, Weight, @default: 1, name: "weight");
         Axis("repeat", "times", Causality, Count, @default: 3, name: "repeat");
         Axis("repeat", "interval", Timing, Seconds, @default: 0.3);

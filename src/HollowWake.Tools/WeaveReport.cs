@@ -132,7 +132,7 @@ public static class WeaveReport
         Console.WriteLine($"literals    {literals.Count} frozen: literal numbers no modifier reaches, each with who wrote it and where in their definition");
         foreach (var v in literals)
         {
-            var door = v.Attribute is { } a ? "write weave." + a : "no attribute reaches it";
+            var door = Door(v) is { } attribute ? (BearersOwn(v) ? "leave it unwritten for the bearer's " : "write weave.") + attribute : "no attribute reaches it";
             var what = v.Effect is null ? "cast layer" : $"{v.Effect}.{v.Parameter}";
             Console.WriteLine($"  {v.Name,-36} {v.Text,-12} {v.Unit,-10} {v.Path}  ({what}; {door}; {v.Key})");
         }
@@ -175,8 +175,9 @@ public static class WeaveReport
         Console.WriteLine($"literals    {frozen.Count} in {compiled.Count(a => a.Values.Any(v => v.Frozen))} weaves; {keys.Count} distinct by who wrote them ({byWriter}); most often");
         foreach (var group in frozen.GroupBy(v => v.Effect is null ? v.Name : $"{v.Effect}.{v.Parameter}").OrderByDescending(g => g.Count()).ThenBy(g => g.Key, StringComparer.Ordinal).Take(20))
         {
-            var door = group.First().Attribute is { } a ? "weave." + a : "no attribute";
-            Console.WriteLine($"  {group.Key,-32} {group.Count(),6}  {group.First().Name} ({door})");
+            var first = group.First();
+            var door = Door(first, template: true) is { } attribute ? (BearersOwn(first) ? "the bearer's " : "weave.") + attribute : "no attribute";
+            Console.WriteLine($"  {group.Key,-32} {group.Count(),6}  {first.Name} ({door})");
         }
         var rules = compiled.SelectMany(a => a.Values.Where(v => v.Source == AxisSource.Rule)).GroupBy(v => v.Detail ?? "").OrderByDescending(g => g.Count()).ThenBy(g => g.Key, StringComparer.Ordinal).ToList();
         Console.WriteLine($"rules       {rules.Count} read where a graph or block gives nothing");
@@ -255,6 +256,20 @@ public static class WeaveReport
     }
 
     private static string Lower(AxisSource source) => source.ToString().ToLowerInvariant();
+
+    /// <summary>The binding a value was read through, where it names an attribute.</summary>
+    private static AxisBinding? BindingOf(AxisValue v) =>
+        v.Effect is { } effect && v.Parameter is { } parameter ? AxisBindings.Of(effect, parameter).FirstOrDefault(b => b.Attribute is not null) : null;
+
+    /// <summary>
+    /// The attribute a frozen literal shadows, as the value names it or, with <paramref name="template"/>, as its
+    /// binding declares it (<c>charge.{id}.max</c>); null where none does.
+    /// </summary>
+    private static string? Door(AxisValue v, bool template = false) =>
+        v.Attribute is null ? null : template && BindingOf(v)?.Attribute is { } declared ? declared : v.Attribute;
+
+    /// <summary>Whether the attribute a literal shadows is the bearer's own, which an unwritten value falls back to, rather than the weave's.</summary>
+    private static bool BearersOwn(AxisValue v) => BindingOf(v)?.Fold == AttributeFold.Bearer;
 
     // Formulas print as written: no escaping of characters such as '+'.
     private static readonly System.Text.Json.JsonSerializerOptions Plain = new() { Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping };
