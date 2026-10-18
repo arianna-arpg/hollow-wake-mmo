@@ -32,10 +32,14 @@ The movement actions (`chase`, `wander`, `return_home`, `flee`, and the minion a
 
 - The work is bounded by a budget the server picks by who moves: a player's is the pathfinder's own `move.path_max_nodes`, any other mover's the smaller `move.ai_path_max_nodes`, since the AI's movers are many and renew their plans as they go.
 - A new plan walks straight when it can: the segment takes no more samples than the budget, sampled about a step per tick apart with the movement system's own occupancy check, no step drops further than `move.max_drop`, and no cell crossed costs more than plain ground. Otherwise the pathfinder searches on the budget, so a point at any distance costs bounded work and loads bounded ground. A click also stops any steering by direction; a destination sent again leaves it, since the movement system keeps steering by its last direction on the tick a waypoint is reached.
-- A search that cannot bring the mover closer (no step at all, or a partial path ending no nearer the goal) leaves it following what it found, then walking straight at the goal.
+- A search with no step leaves the mover walking straight at the goal. A partial path is followed to its end; a click stops there, while a subsequent `KeepPlan` destination can resume walking straight after a partial path that made no progress, without repeating the failed search until renewal.
 - The AI sends its destination again every think, marked `KeepPlan`, so a plan is kept while it lasts: the handler plans again only when the path or move target has run out, when the destination has moved more than `move.ai_repath_distance` from the goal it planned for, or when the plan is older than `move.ai_repath_seconds`, and a search that failed is not repeated for that goal until the plan is renewed, so an unreachable target costs one search per renewal, not one per think. A click is planned afresh every time. The flag only lets a sender keep its own plan; it never chooses the budget, so it could go on the wire without letting a client pick the AI's.
 
 The plan is a cache on `Motion` (`PlanGoal`, `PlannedAt`, `Planned`, `PlanFailed`), kept by the move-to handler; a teleport or an order drops it.
+
+The straight-walk test's sample spacing is 0.25 units, so its maximum reach is that spacing times the mover's budget (125 units with the shipped AI budget). An order beyond that reach uses bounded searches even across clear ground. This also bounds the work of a distant minion order, which previously tested the whole straight segment.
+
+Seeded replay is exact within the tested platform/runtime. The simulation does not promise identical floating-point state across platforms where native math functions contribute values. The chase regression fixtures compare full-precision positions and path counts from non-wandering scenarios; facing angles are excluded because platform `Atan2` results can differ in their last bits. That test does not claim portable combat or world-generation state.
 
 ## Weave choice
 

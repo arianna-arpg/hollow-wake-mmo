@@ -1,7 +1,4 @@
-using System.Globalization;
 using System.Numerics;
-using System.Security.Cryptography;
-using System.Text;
 using HollowWake.Core.Ai;
 using HollowWake.Core.Characters;
 using HollowWake.Core.Components;
@@ -326,50 +323,4 @@ public class AiIntentTests
         Assert.True(near.Chunks <= far.Chunks, $"the near click loaded {near.Chunks} chunks, the far {far.Chunks}");
     }
 
-    /// <summary>
-    /// A hunter's walk tick by tick (position, facing and path length), the same trace the independent review
-    /// took on the base before the walks were intents.
-    /// </summary>
-    private static string Trace(string hunter, Vector3 at, Vector3 preyAt, Action<Simulation> walls, double seconds, bool preyMoves)
-    {
-        var sim = ZoneBuilder.CreateArena(CoreContent.Registry, 3);
-        var factory = sim.Service<PatternFactory>();
-        var h = factory.Spawn(sim, hunter, at, new SpawnOptions { Faction = "red" });
-        var p = factory.Spawn(sim, "boar", preyAt, new SpawnOptions { Faction = "blue" });
-        if (!preyMoves)
-        {
-            sim.World.Remove<Behavior>(p);
-        }
-        walls(sim);
-        var t = sim.World.Get<Transform>(h)!;
-        var m = sim.World.Get<Motion>(h)!;
-        var sb = new StringBuilder();
-        for (var i = 0; i < seconds * sim.Clock.TicksPerSecond; i++)
-        {
-            sim.Tick();
-            sb.Append(i).Append(' ')
-              .Append(t.Position.X.ToString("R", CultureInfo.InvariantCulture)).Append(' ')
-              .Append(t.Position.Y.ToString("R", CultureInfo.InvariantCulture)).Append(' ')
-              .Append(t.Yaw.ToString("R", CultureInfo.InvariantCulture)).Append(' ')
-              .Append(m.Path.Count).Append('\n');
-        }
-        return sb.ToString();
-    }
-
-    private static string Sha256(string text) => Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(text))).ToLowerInvariant();
-
-    [Fact]
-    public void ChasesAroundObstaclesWalkTheBaseTrajectoryTickForTick()
-    {
-        // The hashes are of the traces the base drew (main at a810b0a, before the walks were intents).
-        var detour = Trace("wolf", new Vector3(10.5f, 10.5f, 0), new Vector3(17.5f, 10.5f, 0),
-            sim => { for (var y = 2; y <= 18; y++) Block(sim, 14, y); }, 8, false);
-        Assert.Equal("2ec6e14af3a1528319c700b0fd63e2f5396be1ce6083eaca52322fd911159e30", Sha256(detour));
-        var forest = Trace("wolf", new Vector3(5.5f, 5.5f, 0), new Vector3(30.5f, 24.5f, 0),
-            sim => { for (var x = 8; x <= 28; x += 3) for (var y = 6; y <= 24; y += 2) { Block(sim, x, y); Block(sim, x, y + 1); } }, 12, false);
-        Assert.Equal("3334d55b1e943f275be04d54d10fcf4c93fc016dc2e8937014716e96009ab787", Sha256(forest));
-        var zigzag = Trace("hob", new Vector3(5.5f, 10.5f, 0), new Vector3(30.5f, 10.5f, 0),
-            sim => { for (var y = 0; y <= 16; y++) Block(sim, 10, y); for (var y = 5; y <= 22; y++) Block(sim, 16, y); for (var y = 0; y <= 16; y++) Block(sim, 22, y); }, 15, true);
-        Assert.Equal("2d722ec264001e4047db8221086d92f93714cc495901806dbcdeeb5ee2af20b6", Sha256(zigzag));
-    }
 }

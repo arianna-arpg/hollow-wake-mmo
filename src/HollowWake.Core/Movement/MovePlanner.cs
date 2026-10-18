@@ -14,8 +14,8 @@ namespace HollowWake.Core.Movement;
 /// smaller <c>move.ai_path_max_nodes</c>, since the AI's movers are many and renew their plans as they go. A new
 /// plan walks straight when the segment is clear and no longer than the budget's worth of samples; otherwise the
 /// pathfinder searches on that budget, so a point at any distance costs bounded work and loads bounded ground.
-/// When a search cannot bring the mover closer (no step, or a partial path that ends no nearer the goal), the
-/// mover follows what it found and then walks straight at the goal.
+/// With no step the mover walks straight at the goal. A partial path is followed to its end; a click stops
+/// there, while a subsequent kept destination can walk straight after a partial path that made no progress.
 /// <para>
 /// A destination sent again every think (<see cref="Intents.MoveToIntent.KeepPlan"/>) keeps its plan while it
 /// lasts: it is planned again only when its path or move target has run out, when the destination has moved

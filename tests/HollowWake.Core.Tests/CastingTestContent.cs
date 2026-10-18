@@ -222,6 +222,30 @@ entries:
   - { id: t_spark_a, form: t_shot, glyphs: [ t_on_hit ] }
   - { id: t_spark_b, form: t_shot, glyphs: [ t_on_hit ] }
   - { id: t_relay, form: t_marker, effects: [ { type: event, name: t_relay }, { type: cast, weave: host } ] }
+  # Presets with held-mode blocks of their own on the test forms, each replacing its form's block whole, and
+  # one without, which holds its form's.
+  - id: t_brisk_channel
+    form: t_channel
+    channel:
+      interval: 0.25
+      move: 0.8
+      max_hold: 1
+      release: { effects: [ { type: event, name: t_brisk_release, data: { held: cast.held } } ] }
+  - { id: t_plain_channel, form: t_channel }
+  - id: t_deep_charge
+    form: t_charge
+    charge:
+      max_time: 2
+      full_hold: 0.25
+      scales: [ { attribute: area.radius, form: increased, at_zero: 0, at_full: 3 } ]
+  - id: t_wide_guard
+    form: t_guard
+    guard:
+      arc: 360
+      pool: 80
+      max_duration: 1.5
+      bash: { threshold: 0.1, effects: [ { type: event, name: t_wide_bash, data: { absorbed: guard.absorbed } } ] }
+  - { id: t_tight_timing, form: t_timed, timing: { kind: perfect, window: 0.1, bonus: 3 } }
 
 ---
 kind: rules

@@ -14,7 +14,7 @@ using Xunit;
 
 namespace HollowWake.Core.Tests;
 
-/// <summary>The weave compiler: glyph levels, level bonuses, rolled rows, patches, hooks, probes, dormant glyphs and cast scopes.</summary>
+/// <summary>The weave compiler: glyph levels, level bonuses, rolled rows, patches, hooks, probes, dormant glyphs, cast scopes and presets' own held-mode blocks.</summary>
 public class WeaveCompilerTests
 {
     /// <summary>The core content plus test glyphs and forms, loaded once for this class.</summary>
@@ -322,6 +322,76 @@ public class WeaveCompilerTests
             Assert.Contains(errors, e => e.StartsWith("bad_trigger") && e.Contains("sneeze"));
             Assert.Contains(errors, e => e.StartsWith("bad_meta") && e.Contains("no_such_weave"));
             Assert.DoesNotContain(errors, e => e.StartsWith("good_preset"));
+        }
+        finally
+        {
+            Directory.Delete(dir, recursive: true);
+        }
+    }
+
+    [Fact]
+    public void APresetsHeldBlocksReplaceItsFormsWholeAndSayWhereTheyCameFrom()
+    {
+        var content = CastingTestContent.Registry;
+        var compiler = new WeaveCompiler(content, EffectRegistry.CreateDefault());
+        var form = content.Get<FormDef>("t_channel")!;
+
+        // The preset's channel is the weave's whole channel, and the probes read it: its release, none of the form's ramps.
+        var brisk = compiler.Compile(new WeaveSpec { Preset = "t_brisk_channel" });
+        Assert.Same(content.Get<WeaveDef>("t_brisk_channel")!.Channel, brisk.Channel);
+        Assert.Equal(("channel", "preset t_brisk_channel"), Assert.Single(brisk.HeldBlocks.Sources()));
+        Assert.True(brisk.HasMechanism("release"));
+        Assert.False(brisk.HasMechanism("ramps"));
+
+        // The form itself, and a preset that gives no block, hold the form's.
+        var bare = compiler.Compile(new WeaveSpec { Form = "t_channel" });
+        var plain = compiler.Compile(new WeaveSpec { Preset = "t_plain_channel" });
+        foreach (var weave in new[] { bare, plain })
+        {
+            Assert.Same(form.Channel, weave.Channel);
+            Assert.Equal(("channel", "form t_channel"), Assert.Single(weave.HeldBlocks.Sources()));
+            Assert.True(weave.HasMechanism("ramps"));
+        }
+
+        // Each of the other blocks likewise: the preset's where it gives one, nothing it does not.
+        var deep = compiler.Compile(new WeaveSpec { Preset = "t_deep_charge" });
+        Assert.Same(content.Get<WeaveDef>("t_deep_charge")!.Charge, deep.Charge);
+        Assert.Equal(("charge", "preset t_deep_charge"), Assert.Single(deep.HeldBlocks.Sources()));
+        Assert.Same(content.Get<WeaveDef>("t_wide_guard")!.Guard, compiler.Compile(new WeaveSpec { Preset = "t_wide_guard" }).Guard);
+        var tight = compiler.Compile(new WeaveSpec { Preset = "t_tight_timing" });
+        Assert.Same(content.Get<WeaveDef>("t_tight_timing")!.Timing, tight.Timing);
+        Assert.Null(tight.Channel);
+        Assert.True(tight.HasMechanism("timing"));
+    }
+
+    [Fact]
+    public void ValidationRefusesAPresetBlockItsFormsModeDoesNotRead()
+    {
+        var dir = Path.Combine(Path.GetTempPath(), "hollowwake-held-" + Guid.NewGuid().ToString("N"));
+        Directory.CreateDirectory(dir);
+        try
+        {
+            File.WriteAllText(Path.Combine(dir, "weaves.yaml"), string.Join("\n",
+                "kind: weaves",
+                "entries:",
+                "  - { id: channel_on_bolt, form: bolt, threads: [ember], channel: { interval: 0.25 } }",
+                "  - { id: charge_on_torrent, form: torrent, threads: [tide], charge: { max_time: 1 } }",
+                "  - { id: guard_on_draw, form: drawn_shot, guard: { arc: 90, pool: 10 } }",
+                "  - { id: timing_on_bulwark, form: bulwark, timing: { kind: perfect, window: 0.2 } }",
+                "  - { id: bad_ramp, form: torrent, threads: [tide], channel: { ramps: [ { attribute: damage, per: 0.1, curve: wobbly } ] } }",
+                "  - { id: good_channel, form: torrent, threads: [tide], channel: { interval: 0.25, release: { min_hold: 0.5 } } }",
+                "  - { id: good_timing, form: measured_strike, timing: { kind: timed, window: 0.3, bonus: 1 } }",
+                ""));
+            ContentRegistry.Load(new[] { CoreContent.FindContentDir(), dir }, out var report);
+            var errors = report.Errors.Select(e => $"{e.Id}: {e.Message}").ToList();
+            // The cast mode stays the form's, so a block its mode would never read is refused, naming both.
+            Assert.Contains(errors, e => e.StartsWith("channel_on_bolt") && e.Contains("channel block") && e.Contains("'bolt' has cast_mode cast"));
+            Assert.Contains(errors, e => e.StartsWith("charge_on_torrent") && e.Contains("charge block") && e.Contains("'torrent' has cast_mode channel"));
+            Assert.Contains(errors, e => e.StartsWith("guard_on_draw") && e.Contains("guard block") && e.Contains("'drawn_shot' has cast_mode charge"));
+            Assert.Contains(errors, e => e.StartsWith("timing_on_bulwark") && e.Contains("timing block") && e.Contains("'bulwark' has cast_mode guard"));
+            // A block that suits its form is checked as a form's block is.
+            Assert.Contains(errors, e => e.StartsWith("bad_ramp") && e.Contains("wobbly"));
+            Assert.DoesNotContain(errors, e => e.StartsWith("good_"));
         }
         finally
         {

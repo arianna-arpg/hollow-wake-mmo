@@ -13,4 +13,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\HollowWake.Core\HollowWake.Core.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <None Update="Fixtures\AiTrajectories\*.txt" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
 </Project>
