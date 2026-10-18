@@ -3,7 +3,7 @@ import type { CastForecastInfo, Int64 } from '../net/protocol';
 import type { EntityLayer } from './entities';
 import { toThree } from './coords';
 import { linearColor } from './colors';
-import { CastForecastTimeline, forecastCaption, forecastOutline, forecastProgress, forecastSegments } from './castForecastTimeline';
+import { CastForecastTimeline, forecastCaption, forecastOutline, forecastProgress, forecastSegments, forecastVerticalBounds } from './castForecastTimeline';
 
 export interface ForecastStyle {
   segments: number; max_segments: number; max_chord_error: number; stroke: number; dash_fraction: number; underlay_scale: number; direction_size: number; lift: number; bar_width: number; bar_height: number;
@@ -52,7 +52,7 @@ export class CastForecasts {
         v = { signature: '', meshes: [], label, text, bar }; this.drawn.set(id, v);
       }
       const region = !stale && forecastSegments(c.region, s.segments, s.max_segments, s.max_chord_error) > 0 ? c.region : undefined;
-      const signature = region ? JSON.stringify([region.shape, region.size, region.height_tolerance, region.center_allowance, region.viewer_eligibility, c.direction_committed]) : '';
+      const signature = region ? JSON.stringify([region.shape, region.size, region.target_test, forecastVerticalBounds(region), region.center_allowance, region.viewer_eligibility, c.direction_committed]) : '';
       if (signature !== v.signature) {
         for (const m of v.meshes) { this.scene.remove(m); m.geometry.dispose(); m.material.dispose(); }
         v.meshes = region ? this.boundary(c) : []; v.signature = signature;
@@ -76,17 +76,19 @@ export class CastForecasts {
   private boundary(c: CastForecastInfo): Mesh<BufferGeometry, MeshBasicMaterial>[] {
     const r = c.region!, s = this.style, outline = forecastOutline(r, forecastSegments(r, s.segments, s.max_segments, s.max_chord_error));
     const parts: number[][] = [];
+    const [bottom, top] = forecastVerticalBounds(r);
+    const levels = r.target_test === 'body' ? (bottom === top ? [bottom] : [bottom, top]) : [0];
     const arrow = s.direction_size;
-    parts.push([0, -arrow / 2, 0, arrow, 0, 0], [arrow, 0, 0, 0, arrow / 2, 0]);
-    if (c.direction_committed) parts.push([0, arrow / 2, 0, 0, -arrow / 2, 0]);
-    for (const loop of [outline.outer, ...outline.holes]) for (let i = 0; i < loop.length; i++) {
+    parts.push([0, -arrow / 2, levels[0], arrow, 0, levels[0]], [arrow, 0, levels[0], 0, arrow / 2, levels[0]]);
+    if (c.direction_committed) parts.push([0, arrow / 2, levels[0], 0, -arrow / 2, levels[0]]);
+    for (const level of levels) for (const loop of [outline.outer, ...outline.holes]) for (let i = 0; i < loop.length; i++) {
       const a = loop[i], b = loop[(i + 1) % loop.length];
       // Broken perimeter means live candidate coverage, never certified safe space beyond it.
-      parts.push([a[0], a[1], 0, a[0] + (b[0] - a[0]) * s.dash_fraction, a[1] + (b[1] - a[1]) * s.dash_fraction, 0]);
+      parts.push([a[0], a[1], level, a[0] + (b[0] - a[0]) * s.dash_fraction, a[1] + (b[1] - a[1]) * s.dash_fraction, level]);
     }
     for (let i = 0; i < outline.outer.length; i += Math.max(1, Math.floor(outline.outer.length / 4))) {
-      const p = outline.outer[i], extent = r.height_tolerance, marker = Math.min(extent, s.height_marker_size);
-      parts.push([p[0], p[1], -extent, p[0], p[1], -extent + marker], [p[0], p[1], extent - marker, p[0], p[1], extent]);
+      const p = outline.outer[i], marker = Math.min((top - bottom) / 2, s.height_marker_size);
+      parts.push([p[0], p[1], bottom, p[0], p[1], bottom + marker], [p[0], p[1], top - marker, p[0], p[1], top]);
     }
     const color = r.viewer_eligibility === 'candidate' ? s.candidate_color : s.color;
     return [this.lines(parts, r, s.stroke * s.underlay_scale, s.underlay_color, 10), this.lines(parts, r, s.stroke, color, 11)];

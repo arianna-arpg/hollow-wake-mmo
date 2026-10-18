@@ -1,0 +1,57 @@
+  HollowWake.Core -> C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\src\HollowWake.Core\bin\Debug\net8.0\HollowWake.Core.dll
+C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\PortedProjectileTests.cs(254,19): warning xUnit2031: Do not use a Where clause to filter before calling Assert.Single. Use the overload of Assert.Single that accepts a filtering function. (https://xunit.net/xunit.analyzers/rules/xUnit2031) [C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\HollowWake.Core.Tests.csproj]
+C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\PortedProjectileTests.cs(267,9): warning xUnit2031: Do not use a Where clause to filter before calling Assert.Single. Use the overload of Assert.Single that accepts a filtering function. (https://xunit.net/xunit.analyzers/rules/xUnit2031) [C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\HollowWake.Core.Tests.csproj]
+C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\PortedProjectileTests.cs(280,9): warning xUnit2031: Do not use a Where clause to filter before calling Assert.Single. Use the overload of Assert.Single that accepts a filtering function. (https://xunit.net/xunit.analyzers/rules/xUnit2031) [C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\HollowWake.Core.Tests.csproj]
+  HollowWake.Core.Tests -> C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\bin\Debug\net10.0\HollowWake.Core.Tests.dll
+Test run for C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\bin\Debug\net10.0\HollowWake.Core.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+[xUnit.net 00:00:01.90]     HollowWake.Core.Tests.TriggerTests.AChannelerAndATriggerCasterDuelTheSameWayTwice [FAIL]
+  Failed HollowWake.Core.Tests.TriggerTests.AChannelerAndATriggerCasterDuelTheSameWayTwice [612 ms]
+  Error Message:
+   12 damage 10.462
+12 cast tide_torrent source=E0.1 target=E(none) d=2.1149998
+12 beat 0
+22 damage 11.449
+22 cast tide_torrent source=E0.1 target=E(none) d=3.2124977
+22 beat 1
+29 cast strike source=E1.1 target=E0.1 d=3.9212456
+32 damage 12.436
+32 cast tide_torrent source=E0.1 target=E(none) d=3.474996
+32 beat 2
+42 damage 13.423
+42 cast tide_torrent source=E0.1 target=E(none) d=2.6499982
+42 beat 3
+52 damage 14.41
+52 cast tide_torrent source=E0.1 target=E(none) d=3.4899993
+52 beat 4
+60 cast strike source=E1.1 target=E0.1 d=3.791
+62 damage 15.397
+62 cast tide_torrent source=E0.1 target=E(none) d=3.291
+62 beat 5
+66 damage 39.48
+66 cast tide_torrent source=E0.1 target=E(none) d=2.291
+66 release tide_torrent max_hold True
+85 cast strike source=E1.1 target=E0.1 d=5.281
+117 cast strike source=E1.1 target=E0.1 d=4.361
+147 cast strike source=E1.1 target=E0.1 d=4.361
+153 damage 10.462
+153 cast tide_torrent source=E0.1 target=E(none) d=2.8609998
+153 beat 0
+163 cast tide_torrent source=E0.1 target=E(none) d=2.2024999
+163 beat 1
+173 cast tide_torrent source=E0.1 target=E(none) d=1.1899998
+173 beat 2
+183 cast tide_torrent source=E0.1 target=E(none) d=0.265
+183 beat 3
+193 cast tide_torrent source=E0.1 target=E(none) d=0.57500005
+193 beat 4
+203 cast tide_torrent source=E0.1 target=E(none) d=1.3274992
+203 beat 5
+207 cast tide_torrent source=E0.1 target=E(none) d=1.5944993
+207 release tide_torrent max_hold True
+  Stack Trace:
+     at HollowWake.Core.Tests.TriggerTests.AChannelerAndATriggerCasterDuelTheSameWayTwice() in C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\TriggerTests.cs:line 387
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+
+Failed!  - Failed:     1, Passed:     0, Skipped:     0, Total:     1, Duration: 612 ms - HollowWake.Core.Tests.dll (net10.0)

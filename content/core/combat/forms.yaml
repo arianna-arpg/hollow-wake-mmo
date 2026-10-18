@@ -19,6 +19,7 @@ entries:
     ai: { role: damage, preferred_range: 1.6, weight: 1 }
     effects:
       - type: area
+        contact: body
         shape: sector
         center: source
         radius: "weave.range"
@@ -50,6 +51,7 @@ entries:
     effects:
       - type: area
         shape: cone
+        contact: body
         angle: 110
         radius: "weave.area.radius"
         center: source

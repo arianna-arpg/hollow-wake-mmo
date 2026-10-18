@@ -134,6 +134,10 @@ public sealed class SessionManager
                 session.View.SendCastForecasts = hello.Features?.Contains(ProtocolInfo.CastForecastFeature) == true;
                 session.View.SendCastCues = hello.Features?.Contains(ProtocolInfo.CastCuesFeature) == true || session.View.SendCastForecasts;
                 var granted = new List<string>();
+                var hitBodies = hello.Features?.Contains(ProtocolInfo.HitBodiesFeature) == true;
+                session.View.SendHitBodies = hitBodies;
+                if (hitBodies) granted.Add(ProtocolInfo.HitBodiesFeature);
+                if (hello.Features?.Contains(ProtocolInfo.ProjectileSlabsFeature) == true) granted.Add(ProtocolInfo.ProjectileSlabsFeature);
                 session.EntryFlow = hello.Features?.Contains(ProtocolInfo.EntryFlowFeature) == true;
                 if (session.EntryFlow) granted.Add(ProtocolInfo.EntryFlowFeature);
                 if (session.View.SendCastCues) granted.Add(ProtocolInfo.CastCuesFeature);
@@ -147,6 +151,9 @@ public sealed class SessionManager
                     granted.Add(ProtocolInfo.InterfaceFeature);
                 }
                 session.Send(new WelcomeMsg(ServerInfo.Version, ProtocolInfo.Version, _config.Name, _config.Motd) { Features = granted });
+                if (hitBodies) session.Send(new HitBodiesMsg(_zones.Content.Each<HitBodyDef>().OrderBy(d => d.Id, StringComparer.Ordinal)
+                    .Select(d => new HitBodyInfo(d.Id, d.Aim, d.Volumes.Select(v => new HitVolumeInfo(
+                        v.Shape, v.Forward, v.Left, v.Up, v.Radius, v.HalfHeight)).ToList())).ToList()));
                 return;
             case PingMsg ping:
                 session.Send(new PongMsg(ping.Nonce, _zones.Elapsed));

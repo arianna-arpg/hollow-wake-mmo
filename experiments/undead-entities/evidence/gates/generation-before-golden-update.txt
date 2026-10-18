@@ -1,0 +1,53 @@
+  Determining projects to restore...
+  All projects are up-to-date for restore.
+  HollowWake.Core -> C:\Users\John\.codex\worktrees\undead-entity-foundation\MMOARPG\src\HollowWake.Core\bin\Debug\net8.0\HollowWake.Core.dll
+  HollowWake.Core.Tests -> C:\Users\John\.codex\worktrees\undead-entity-foundation\MMOARPG\tests\HollowWake.Core.Tests\bin\Debug\net10.0\HollowWake.Core.Tests.dll
+Test run for C:\Users\John\.codex\worktrees\undead-entity-foundation\MMOARPG\tests\HollowWake.Core.Tests\bin\Debug\net10.0\HollowWake.Core.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+[xUnit.net 00:00:01.86]     HollowWake.Core.Tests.WorldGenGoldenTests.ZoneMatchesGoldenHashes(x: 1, y: 0, infoHash: "280FCB8C963B4878", chunksHash: "D45DEE4AEADDBE63") [FAIL]
+[xUnit.net 00:00:02.08]     HollowWake.Core.Tests.WorldGenGoldenTests.ZoneMatchesGoldenHashes(x: 3, y: 2, infoHash: "CF73FC02A61B2A1A", chunksHash: "2F33A841D313EBF7") [FAIL]
+[xUnit.net 00:00:02.28]     HollowWake.Core.Tests.WorldGenGoldenTests.ZoneMatchesGoldenHashes(x: 0, y: -1, infoHash: "E19E9ED040FD912E", chunksHash: "067903F6A091CF31") [FAIL]
+[xUnit.net 00:00:02.52]     HollowWake.Core.Tests.WorldGenGoldenTests.ZoneMatchesGoldenHashes(x: 0, y: 0, infoHash: "A0C8EB30665B745F", chunksHash: "9277347F7101CD5A") [FAIL]
+  Failed HollowWake.Core.Tests.WorldGenGoldenTests.ZoneMatchesGoldenHashes(x: 1, y: 0, infoHash: "280FCB8C963B4878", chunksHash: "D45DEE4AEADDBE63") [706 ms]
+  Error Message:
+   zone(1,0) info and chunks: expected 280FCB8C963B4878 D45DEE4AEADDBE63, generated C2FB146D336C5F08 FC33BA56BCEB707E. Generation output changed; update the constant only if that was intended.
+  Stack Trace:
+     at HollowWake.Core.Tests.WorldGenGoldenTests.Golden(String what, String expected, String actual) in C:\Users\John\.codex\worktrees\undead-entity-foundation\MMOARPG\tests\HollowWake.Core.Tests\WorldGenGoldenTests.cs:line 164
+   at HollowWake.Core.Tests.WorldGenGoldenTests.ZoneMatchesGoldenHashes(Int32 x, Int32 y, String infoHash, String chunksHash) in C:\Users\John\.codex\worktrees\undead-entity-foundation\MMOARPG\tests\HollowWake.Core.Tests\WorldGenGoldenTests.cs:line 55
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeDirectByRefWithFewArgs(Object obj, Span`1 copyOfArgs, BindingFlags invokeAttr)
+  Failed HollowWake.Core.Tests.WorldGenGoldenTests.ZoneMatchesGoldenHashes(x: 3, y: 2, infoHash: "CF73FC02A61B2A1A", chunksHash: "2F33A841D313EBF7") [223 ms]
+  Error Message:
+   zone(3,2) info and chunks: expected CF73FC02A61B2A1A 2F33A841D313EBF7, generated 8C5F6DA25EAF9E01 2F33A841D313EBF7. Generation output changed; update the constant only if that was intended.
+  Stack Trace:
+     at HollowWake.Core.Tests.WorldGenGoldenTests.Golden(String what, String expected, String actual) in C:\Users\John\.codex\worktrees\undead-entity-foundation\MMOARPG\tests\HollowWake.Core.Tests\WorldGenGoldenTests.cs:line 164
+   at HollowWake.Core.Tests.WorldGenGoldenTests.ZoneMatchesGoldenHashes(Int32 x, Int32 y, String infoHash, String chunksHash) in C:\Users\John\.codex\worktrees\undead-entity-foundation\MMOARPG\tests\HollowWake.Core.Tests\WorldGenGoldenTests.cs:line 55
+   at InvokeStub_WorldGenGoldenTests.ZoneMatchesGoldenHashes(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Failed HollowWake.Core.Tests.WorldGenGoldenTests.ZoneMatchesGoldenHashes(x: 0, y: -1, infoHash: "E19E9ED040FD912E", chunksHash: "067903F6A091CF31") [204 ms]
+  Error Message:
+   zone(0,-1) info and chunks: expected E19E9ED040FD912E 067903F6A091CF31, generated B59ACD622B675EA2 067903F6A091CF31. Generation output changed; update the constant only if that was intended.
+  Stack Trace:
+     at HollowWake.Core.Tests.WorldGenGoldenTests.Golden(String what, String expected, String actual) in C:\Users\John\.codex\worktrees\undead-entity-foundation\MMOARPG\tests\HollowWake.Core.Tests\WorldGenGoldenTests.cs:line 164
+   at HollowWake.Core.Tests.WorldGenGoldenTests.ZoneMatchesGoldenHashes(Int32 x, Int32 y, String infoHash, String chunksHash) in C:\Users\John\.codex\worktrees\undead-entity-foundation\MMOARPG\tests\HollowWake.Core.Tests\WorldGenGoldenTests.cs:line 55
+   at InvokeStub_WorldGenGoldenTests.ZoneMatchesGoldenHashes(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Failed HollowWake.Core.Tests.WorldGenGoldenTests.ZoneMatchesGoldenHashes(x: 0, y: 0, infoHash: "A0C8EB30665B745F", chunksHash: "9277347F7101CD5A") [231 ms]
+  Error Message:
+   zone(0,0) info and chunks: expected A0C8EB30665B745F 9277347F7101CD5A, generated 1C78174C94305CE1 9277347F7101CD5A. Generation output changed; update the constant only if that was intended.
+  Stack Trace:
+     at HollowWake.Core.Tests.WorldGenGoldenTests.Golden(String what, String expected, String actual) in C:\Users\John\.codex\worktrees\undead-entity-foundation\MMOARPG\tests\HollowWake.Core.Tests\WorldGenGoldenTests.cs:line 164
+   at HollowWake.Core.Tests.WorldGenGoldenTests.ZoneMatchesGoldenHashes(Int32 x, Int32 y, String infoHash, String chunksHash) in C:\Users\John\.codex\worktrees\undead-entity-foundation\MMOARPG\tests\HollowWake.Core.Tests\WorldGenGoldenTests.cs:line 55
+   at InvokeStub_WorldGenGoldenTests.ZoneMatchesGoldenHashes(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:03.06]     HollowWake.Core.Tests.WorldGenGoldenTests.OverlaidWorldMatchesGoldenHash [FAIL]
+  Failed HollowWake.Core.Tests.WorldGenGoldenTests.OverlaidWorldMatchesGoldenHash [491 ms]
+  Error Message:
+   overlaid world: expected 7CBD4ACA12B3F798, generated F8BD42800D55CFC9. Generation output changed; update the constant only if that was intended.
+  Stack Trace:
+     at HollowWake.Core.Tests.WorldGenGoldenTests.Golden(String what, String expected, String actual) in C:\Users\John\.codex\worktrees\undead-entity-foundation\MMOARPG\tests\HollowWake.Core.Tests\WorldGenGoldenTests.cs:line 164
+   at HollowWake.Core.Tests.WorldGenGoldenTests.OverlaidWorldMatchesGoldenHash() in C:\Users\John\.codex\worktrees\undead-entity-foundation\MMOARPG\tests\HollowWake.Core.Tests\WorldGenGoldenTests.cs:line 103
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+
+Failed!  - Failed:     5, Passed:     2, Skipped:     0, Total:     7, Duration: 1 s - HollowWake.Core.Tests.dll (net10.0)

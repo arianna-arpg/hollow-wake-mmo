@@ -1,0 +1,149 @@
+{
+  "errors": [],
+  "bodies": [
+    {
+      "id": "orc_grunt",
+      "body": "orc",
+      "rig": "biped",
+      "parts": 35,
+      "triangles": 588,
+      "height": 1.82
+    },
+    {
+      "id": "orc_ravager",
+      "body": "orc",
+      "rig": "biped",
+      "parts": 36,
+      "triangles": 576,
+      "height": 1.98
+    },
+    {
+      "id": "orc_cleaver",
+      "body": "orc",
+      "rig": "biped",
+      "parts": 38,
+      "triangles": 584,
+      "height": 2.11055
+    },
+    {
+      "id": "orc_bulwark",
+      "body": "orc",
+      "rig": "biped",
+      "parts": 39,
+      "triangles": 692,
+      "height": 2.08
+    },
+    {
+      "id": "orc_shieldbreaker",
+      "body": "orc",
+      "rig": "biped",
+      "parts": 40,
+      "triangles": 636,
+      "height": 2.2374935507714833
+    },
+    {
+      "id": "orc_headhunter",
+      "body": "orc",
+      "rig": "biped",
+      "parts": 41,
+      "triangles": 668,
+      "height": 2.2800000000000002
+    },
+    {
+      "id": "orc_rockhurler",
+      "body": "orc",
+      "rig": "biped",
+      "parts": 37,
+      "triangles": 648,
+      "height": 2.2
+    },
+    {
+      "id": "orc_ashcaller",
+      "body": "orc",
+      "rig": "biped",
+      "parts": 36,
+      "triangles": 598,
+      "height": 2.1204144950163246
+    },
+    {
+      "id": "orc_bloodchanter",
+      "body": "orc",
+      "rig": "biped",
+      "parts": 38,
+      "triangles": 676,
+      "height": 2.02
+    },
+    {
+      "id": "orc_overseer",
+      "body": "orc",
+      "rig": "biped",
+      "parts": 37,
+      "triangles": 592,
+      "height": 2.8455000000000004
+    },
+    {
+      "id": "orc_slaver",
+      "body": "orc",
+      "rig": "biped",
+      "parts": 41,
+      "triangles": 672,
+      "height": 2.04
+    },
+    {
+      "id": "orc_warlord",
+      "body": "orc",
+      "rig": "biped",
+      "parts": 43,
+      "triangles": 688,
+      "height": 3.3604
+    },
+    {
+      "id": "reed_gnasher",
+      "body": "gnasher",
+      "rig": "biped",
+      "parts": 25,
+      "triangles": 376,
+      "height": 0.608
+    },
+    {
+      "id": "thornback_gnasher",
+      "body": "gnasher",
+      "rig": "biped",
+      "parts": 25,
+      "triangles": 312,
+      "height": 1.0167513982373204
+    },
+    {
+      "id": "great_gnasher",
+      "body": "gnasher",
+      "rig": "biped",
+      "parts": 30,
+      "triangles": 420,
+      "height": 1.518
+    },
+    {
+      "id": "saddle_gnasher",
+      "body": "gnasher",
+      "rig": "biped",
+      "parts": 30,
+      "triangles": 436,
+      "height": 1.1984000000000001
+    },
+    {
+      "id": "ironjaw_gnasher",
+      "body": "gnasher",
+      "rig": "biped",
+      "parts": 28,
+      "triangles": 360,
+      "height": 1.5621999999999998
+    },
+    {
+      "id": "brood_gnasher",
+      "body": "gnasher",
+      "rig": "biped",
+      "parts": 30,
+      "triangles": 420,
+      "height": 1.748
+    }
+  ]
+}

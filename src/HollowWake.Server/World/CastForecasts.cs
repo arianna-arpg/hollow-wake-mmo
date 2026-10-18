@@ -62,6 +62,8 @@ public sealed class CastForecastBuilder
                         Width = r.Size.Width, Inner = r.Size.Inner * r.Size.Radius, Curvature = r.Shape.Curvature },
                     X = r.Anchor.X, Y = r.Anchor.Y, Z = r.Anchor.Z, Heading = MathF.Atan2(r.Direction.Y, r.Direction.X),
                     Anchor = r.AnchorMode, HeightTolerance = r.HeightTolerance,
+                    TargetTest = r.BodyContact ? "body" : "center",
+                    Bottom = r.BodyContact ? r.Bottom : null, Top = r.BodyContact ? r.Top : null,
                     CenterAllowance = MathF.Sqrt(r.Shape.CenterAllowanceSquared), RequiresLineOfSight = r.RequiresLineOfSight,
                     HasRequirement = r.HasRequirement, HasTargetLimit = r.HasTargetLimit,
                     ViewerEligibility = r.IsCandidate(sample.Context, viewerEntity, viewer) ? "candidate" : "not_candidate_now",

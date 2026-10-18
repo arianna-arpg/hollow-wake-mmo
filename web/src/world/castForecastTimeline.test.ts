@@ -1,13 +1,24 @@
 import { describe, expect, it } from 'vitest';
 import shapes from '../../../tests/fixtures/cast-forecasts/shapes.json';
 import { inside, SHAPES } from './shapes';
-import { CastForecastTimeline, forecastCaption, forecastOutline, forecastProgress, usableForecast, forecastSegments } from './castForecastTimeline';
+import { CastForecastTimeline, forecastCaption, forecastOutline, forecastProgress, usableForecast, forecastSegments, forecastVerticalBounds } from './castForecastTimeline';
 import type { CastForecastInfo, CastForecastMsg, CastCueMsg, CastForecastRegion } from '../net/protocol';
 const cast = (id = 1): CastForecastInfo => ({ cast_id: id, source: 12, name: 'any content', mode: 'cast', started_at: 1, next_emission_at: 3,
   emission_ordinal: 0, direction_policy: 'locked_on_start', direction_committed: true, x: 0, y: 0, z: 0, coverage: 'unavailable' });
 const frame = (sequence: number, time: number, casts: CastForecastInfo[] = []): CastForecastMsg => ({ t: 'cast_forecast', epoch: 'zone', sequence,
   server_time: time, valid_until: time + .5, casts, omitted: 0 });
 describe('shared forecast state', () => {
+  it('requires finite body bounds and preserves the actual elevated slab', () => {
+    const r = { shape: 'circle', size: { radius: 2 }, target_test: 'body', height_tolerance: 4, x: 0, y: 0, z: 10, heading: 0 } as CastForecastRegion;
+    expect(usableForecast(r)).toBe(false);
+    const bounded = { ...r, bottom: 11, top: 12.5 };
+    expect(usableForecast(bounded)).toBe(true);
+    expect(forecastVerticalBounds(bounded)).toEqual([1, 2.5]);
+    expect(usableForecast({ ...bounded, top: 10 })).toBe(false);
+    expect(usableForecast({ ...bounded, bottom: NaN })).toBe(false);
+    expect(usableForecast({ ...bounded, target_test: 'unknown' })).toBe(false);
+    expect(forecastVerticalBounds({ ...bounded, target_test: 'center' })).toEqual([-4, 4]);
+  });
   it('repairs baselines, suppresses ended casts, resets epochs and preserves 64-bit order', () => {
     const t = new CastForecastTimeline(); t.reset('zone'); expect(t.receive(frame(1, 1, [cast()]))).toBe(true);
     t.lifecycle({ cast_id: 1, source: 12, phase: 'interrupt', server_time: 1.2 } as CastCueMsg); expect(t.active.size).toBe(0);

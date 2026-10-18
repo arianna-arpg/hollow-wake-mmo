@@ -147,26 +147,32 @@ entries:
 
   # ---------------------------------------------------------------- the Callings: players read their build through gear and stance
   - id: holdfast
+    variation: { hue: 0.025, value: 0.05, scale: 0 }
     body: biped
     shape: { shoulders: 1.1, width: 1.05, stance: 1.1 }
     palette: { skin: "#d2b08e", hair: "#4a3828", cloth: "#6b6a5a", cloth2: "#4a4a3e", leather: "#55463a", metal: "#9a9ca4", accent: "#b89a67", eyes: "#2a2622" }
     card: allow
   - id: kindler
+    variation: { hue: 0.025, value: 0.05, scale: 0 }
     body: biped
     shape: { width: 0.95 }
     palette: { skin: "#d2b08e", hair: "#6a3a28", cloth: "#5a3a3a", cloth2: "#3a2626", leather: "#55463a", metal: "#8c8c90", accent: "#edac69", eyes: "#2a2622" }
   - id: sower
+    variation: { hue: 0.025, value: 0.05, scale: 0 }
     body: biped
     palette: { skin: "#c8a888", hair: "#3a2c22", cloth: "#5a6a4a", cloth2: "#3a4a34", leather: "#55463a", metal: "#8c8c90", accent: "#a5c58b", eyes: "#2a2622" }
   - id: shade
+    variation: { hue: 0.025, value: 0.05, scale: 0 }
     body: biped
     shape: { width: 0.92, hunch: 0.08 }
     palette: { skin: "#c8a888", hair: "#1e1a1a", cloth: "#3a3442", cloth2: "#26222c", leather: "#3a3030", metal: "#6c6a70", accent: "#c1a1c8", eyes: "#2a2622" }
   - id: harrier
+    variation: { hue: 0.025, value: 0.05, scale: 0 }
     body: biped
     shape: { legs: 1.05, width: 0.95 }
     palette: { skin: "#c8a888", hair: "#8a6a3a", cloth: "#5a6a6a", cloth2: "#3a4a4a", leather: "#55463a", metal: "#8c8c90", accent: "#c5b7ef", eyes: "#2a2622" }
   - id: binder
+    variation: { hue: 0.025, value: 0.05, scale: 0 }
     body: biped
     palette: { skin: "#d2b08e", hair: "#d8d0c0", cloth: "#d8d2ba", cloth2: "#8a846a", leather: "#55463a", metal: "#b89a67", accent: "#eee0a3", eyes: "#2a2622" }
 
@@ -183,25 +189,6 @@ entries:
     shape: { head: 1.5, neck: 0.6, torso: 0.95, legs: 0.75, arms: 1.1, width: 1.1, hunch: 0.3, stance: 1.2 }
     palette: { skin: "#7a7a58", hair: "#8a2a2a", cloth: "#5a3a3a", cloth2: "#3a2626", leather: "#4a3a2e", metal: "#7c7a78", accent: "#c5b7ef", eyes: "#f0e0a0" }
     features: [ears_long, snout, crest]
-  - id: wolf
-    body: quadruped
-    shape: { head: 1, snout: 1.2, neck: 0.9, torso: 1.1, legs: 1, width: 0.9, tail: 1.2, rump: 0.9 }
-    palette: { hide: "#6e6a62", belly: "#a8a49a", hoof: "#2a2622", horn: "#d9cfb5", eyes: "#e0c050" }
-    features: [tail_bushy]
-    variation: { hue: 0.03, value: 0.14, scale: 0.08 }
-  - id: grove_stag
-    body: quadruped
-    shape: { head: 0.9, snout: 1, neck: 1.3, torso: 1, legs: 1.35, width: 0.85, tail: 0.3, rump: 1 }
-    palette: { hide: "#8f6b46", belly: "#d2b896", hoof: "#2a2622", horn: "#d9cfb5", eyes: "#1b1612" }
-    features: [antlers]
-    variation: { hue: 0.03, value: 0.1, scale: 0.08 }
-  - id: boar
-    body: quadruped
-    shape: { head: 1.1, snout: 1.1, neck: 0.5, torso: 1.1, legs: 0.7, width: 1.2, tail: 0.3, rump: 1.15, mane: 0.6 }
-    palette: { hide: "#4e3f33", belly: "#7a6a5a", hoof: "#1e1a16", horn: "#e8e0c8", eyes: "#1b1612" }
-    features: [tusks]
-    variation: { hue: 0.02, value: 0.12, scale: 0.1 }
-
   # ---------------------------------------------------------------- remnants, the Tangled and the knots
   - id: barrow_wight
     body: wisp

@@ -1,0 +1,555 @@
+{
+  "kind": "ui_appearances",
+  "entries": [
+    {
+      "id": "goblin_scavenger",
+      "body": "goblinkin",
+      "shape": {
+        "breadth": 0.5641025641025641,
+        "depth": 0.4615384615384615,
+        "legs": 0.8,
+        "head": 1.2
+      },
+      "palette": {
+        "skin": "#64834a",
+        "cloth": "#654239",
+        "metal": "#787c78",
+        "wood": "#725b3d",
+        "bone": "#dfd5b3",
+        "eye": "#e6c16b",
+        "dark": "#302d2c",
+        "moss": "#536f3e",
+        "accent": "#ba754b"
+      },
+      "features": [
+        "sack"
+      ],
+      "gear": {
+        "main_hand": "weapon.dagger"
+      },
+      "card": "allow",
+      "variation": {
+        "hue": 0.012,
+        "value": 0.04,
+        "scale": 0
+      },
+      "meta": {
+        "prototype_look": "goblin_skirmisher",
+        "translation": "Occupied body proportions shared with the physical profile; larger ears, jaws, equipment and posture distinguish the standing 3D silhouette."
+      }
+    },
+    {
+      "id": "goblin_skirmisher",
+      "body": "goblinkin",
+      "shape": {
+        "breadth": 0.48277777777777775,
+        "depth": 0.3621111111111111,
+        "legs": 1.08
+      },
+      "palette": {
+        "skin": "#64834a",
+        "cloth": "#654239",
+        "metal": "#787c78",
+        "wood": "#725b3d",
+        "bone": "#dfd5b3",
+        "eye": "#e6c16b",
+        "dark": "#302d2c",
+        "moss": "#536f3e",
+        "accent": "#ba754b"
+      },
+      "features": [],
+      "gear": {
+        "main_hand": "weapon.dagger"
+      },
+      "card": "allow",
+      "variation": {
+        "hue": 0.012,
+        "value": 0.04,
+        "scale": 0
+      },
+      "meta": {
+        "prototype_look": "goblin_skirmisher",
+        "translation": "Occupied body proportions shared with the physical profile; larger ears, jaws, equipment and posture distinguish the standing 3D silhouette."
+      }
+    },
+    {
+      "id": "goblin_slinger",
+      "body": "goblinkin",
+      "shape": {
+        "breadth": 0.4906976744186046,
+        "depth": 0.36116279069767443,
+        "arms": 1.1
+      },
+      "palette": {
+        "skin": "#64834a",
+        "cloth": "#654239",
+        "metal": "#787c78",
+        "wood": "#725b3d",
+        "bone": "#dfd5b3",
+        "eye": "#e6c16b",
+        "dark": "#302d2c",
+        "moss": "#536f3e",
+        "accent": "#ba754b"
+      },
+      "features": [
+        "sling",
+        "sack"
+      ],
+      "gear": {},
+      "card": "allow",
+      "variation": {
+        "hue": 0.012,
+        "value": 0.04,
+        "scale": 0
+      },
+      "meta": {
+        "prototype_look": "goblin_skirmisher",
+        "translation": "Occupied body proportions shared with the physical profile; larger ears, jaws, equipment and posture distinguish the standing 3D silhouette."
+      }
+    },
+    {
+      "id": "goblin_shaman",
+      "body": "goblinkin",
+      "shape": {
+        "breadth": 0.4769148936170213,
+        "depth": 0.35382978723404257,
+        "head": 0.95
+      },
+      "palette": {
+        "skin": "#64834a",
+        "cloth": "#654239",
+        "metal": "#787c78",
+        "wood": "#725b3d",
+        "bone": "#dfd5b3",
+        "eye": "#e6c16b",
+        "dark": "#302d2c",
+        "moss": "#536f3e",
+        "accent": "#ba754b"
+      },
+      "features": [
+        "hat",
+        "robe"
+      ],
+      "gear": {
+        "main_hand": "weapon.staff"
+      },
+      "card": "allow",
+      "variation": {
+        "hue": 0.012,
+        "value": 0.04,
+        "scale": 0
+      },
+      "meta": {
+        "prototype_look": "goblin_shaman",
+        "translation": "Occupied body proportions shared with the physical profile; larger ears, jaws, equipment and posture distinguish the standing 3D silhouette."
+      }
+    },
+    {
+      "id": "goblin_sapper",
+      "body": "goblinkin",
+      "shape": {
+        "breadth": 0.576304347826087,
+        "depth": 0.576304347826087
+      },
+      "palette": {
+        "skin": "#64834a",
+        "cloth": "#654239",
+        "metal": "#787c78",
+        "wood": "#725b3d",
+        "bone": "#dfd5b3",
+        "eye": "#e6c16b",
+        "dark": "#302d2c",
+        "moss": "#536f3e",
+        "accent": "#ba754b"
+      },
+      "features": [
+        "keg",
+        "goggles",
+        "torch"
+      ],
+      "gear": {},
+      "card": "allow",
+      "variation": {
+        "hue": 0.012,
+        "value": 0.04,
+        "scale": 0
+      },
+      "meta": {
+        "prototype_look": "goblin_sapper",
+        "translation": "Occupied body proportions shared with the physical profile; larger ears, jaws, equipment and posture distinguish the standing 3D silhouette."
+      }
+    },
+    {
+      "id": "goblin_brute",
+      "body": "goblinkin",
+      "shape": {
+        "breadth": 0.7151612903225807,
+        "depth": 0.4557258064516129,
+        "legs": 0.75,
+        "arms": 1.15,
+        "jaw": 1.3
+      },
+      "palette": {
+        "skin": "#64834a",
+        "cloth": "#654239",
+        "metal": "#787c78",
+        "wood": "#725b3d",
+        "bone": "#dfd5b3",
+        "eye": "#e6c16b",
+        "dark": "#302d2c",
+        "moss": "#536f3e",
+        "accent": "#ba754b"
+      },
+      "features": [
+        "pauldrons"
+      ],
+      "gear": {
+        "main_hand": "weapon.maul"
+      },
+      "card": "allow",
+      "variation": {
+        "hue": 0.012,
+        "value": 0.04,
+        "scale": 0
+      },
+      "meta": {
+        "prototype_look": "goblin_brute",
+        "translation": "Occupied body proportions shared with the physical profile; larger ears, jaws, equipment and posture distinguish the standing 3D silhouette."
+      }
+    },
+    {
+      "id": "goblin_chief",
+      "body": "goblinkin",
+      "shape": {
+        "breadth": 0.5677450980392156,
+        "depth": 0.3742156862745098
+      },
+      "palette": {
+        "skin": "#64834a",
+        "cloth": "#654239",
+        "metal": "#787c78",
+        "wood": "#725b3d",
+        "bone": "#dfd5b3",
+        "eye": "#e6c16b",
+        "dark": "#302d2c",
+        "moss": "#536f3e",
+        "accent": "#ba754b"
+      },
+      "features": [
+        "crown",
+        "banner",
+        "armor"
+      ],
+      "gear": {
+        "main_hand": "weapon.sword"
+      },
+      "card": "allow",
+      "variation": {
+        "hue": 0.012,
+        "value": 0.04,
+        "scale": 0
+      },
+      "meta": {
+        "prototype_look": "goblin_chief",
+        "translation": "Occupied body proportions shared with the physical profile; larger ears, jaws, equipment and posture distinguish the standing 3D silhouette."
+      }
+    },
+    {
+      "id": "hobgoblin_taskmaster",
+      "body": "goblinkin",
+      "shape": {
+        "breadth": 0.4615714285714286,
+        "depth": 0.3077142857142857,
+        "legs": 1.15,
+        "head": 0.8
+      },
+      "palette": {
+        "skin": "#64834a",
+        "cloth": "#654239",
+        "metal": "#787c78",
+        "wood": "#725b3d",
+        "bone": "#dfd5b3",
+        "eye": "#e6c16b",
+        "dark": "#302d2c",
+        "moss": "#536f3e",
+        "accent": "#ba754b"
+      },
+      "features": [
+        "banner",
+        "pauldrons",
+        "warpaint"
+      ],
+      "gear": {
+        "main_hand": "weapon.spear"
+      },
+      "card": "allow",
+      "variation": {
+        "hue": 0.012,
+        "value": 0.04,
+        "scale": 0
+      },
+      "meta": {
+        "prototype_look": "hobgoblin_taskmaster",
+        "translation": "Occupied body proportions shared with the physical profile; larger ears, jaws, equipment and posture distinguish the standing 3D silhouette."
+      }
+    },
+    {
+      "id": "goblin_warboss",
+      "body": "goblinkin",
+      "shape": {
+        "breadth": 0.7045652173913044,
+        "depth": 0.43181159420289855,
+        "legs": 0.85,
+        "jaw": 1.3
+      },
+      "palette": {
+        "skin": "#64834a",
+        "cloth": "#654239",
+        "metal": "#787c78",
+        "wood": "#725b3d",
+        "bone": "#dfd5b3",
+        "eye": "#e6c16b",
+        "dark": "#302d2c",
+        "moss": "#536f3e",
+        "accent": "#ba754b"
+      },
+      "features": [
+        "armor",
+        "pauldrons",
+        "crown",
+        "tusks"
+      ],
+      "gear": {
+        "main_hand": "weapon.axe"
+      },
+      "card": "allow",
+      "variation": {
+        "hue": 0.012,
+        "value": 0.04,
+        "scale": 0
+      },
+      "meta": {
+        "prototype_look": "goblin_warboss",
+        "translation": "Occupied body proportions shared with the physical profile; larger ears, jaws, equipment and posture distinguish the standing 3D silhouette."
+      }
+    },
+    {
+      "id": "troll_mauler",
+      "body": "goblinkin",
+      "shape": {
+        "breadth": 0.5849056603773585,
+        "depth": 0.39622641509433965,
+        "arms": 1.5,
+        "legs": 0.72,
+        "head": 0.8
+      },
+      "palette": {
+        "skin": "#73958a",
+        "cloth": "#654239",
+        "metal": "#787c78",
+        "wood": "#725b3d",
+        "bone": "#dfd5b3",
+        "eye": "#e6c16b",
+        "dark": "#302d2c",
+        "moss": "#536f3e",
+        "accent": "#ba754b"
+      },
+      "features": [
+        "tusks",
+        "moss"
+      ],
+      "gear": {
+        "main_hand": "weapon.club"
+      },
+      "card": "allow",
+      "variation": {
+        "hue": 0.012,
+        "value": 0.04,
+        "scale": 0
+      },
+      "meta": {
+        "prototype_look": "troll_mauler",
+        "translation": "Occupied body proportions shared with the physical profile; larger ears, jaws, equipment and posture distinguish the standing 3D silhouette."
+      }
+    },
+    {
+      "id": "troll_bridgewarden",
+      "body": "goblinkin",
+      "shape": {
+        "breadth": 0.6551724137931034,
+        "depth": 0.41379310344827586,
+        "arms": 1.4,
+        "legs": 0.7,
+        "head": 0.85
+      },
+      "palette": {
+        "skin": "#73958a",
+        "cloth": "#654239",
+        "metal": "#787c78",
+        "wood": "#725b3d",
+        "bone": "#dfd5b3",
+        "eye": "#e6c16b",
+        "dark": "#302d2c",
+        "moss": "#536f3e",
+        "accent": "#ba754b"
+      },
+      "features": [
+        "stone_harness",
+        "moss",
+        "tusks"
+      ],
+      "gear": {
+        "main_hand": "weapon.maul"
+      },
+      "card": "allow",
+      "variation": {
+        "hue": 0.012,
+        "value": 0.04,
+        "scale": 0
+      },
+      "meta": {
+        "prototype_look": "troll_bridgewarden",
+        "translation": "Occupied body proportions shared with the physical profile; larger ears, jaws, equipment and posture distinguish the standing 3D silhouette."
+      }
+    },
+    {
+      "id": "goblin_colossus",
+      "body": "goblinkin",
+      "shape": {
+        "breadth": 0.6538461538461539,
+        "depth": 0.43269230769230765,
+        "arms": 1.25,
+        "legs": 0.7,
+        "head": 0.7
+      },
+      "palette": {
+        "skin": "#596b48",
+        "cloth": "#654239",
+        "metal": "#787c78",
+        "wood": "#725b3d",
+        "bone": "#dfd5b3",
+        "eye": "#e6c16b",
+        "dark": "#302d2c",
+        "moss": "#536f3e",
+        "accent": "#ba754b"
+      },
+      "features": [
+        "armor",
+        "pauldrons",
+        "crown",
+        "tusks",
+        "warpaint"
+      ],
+      "gear": {
+        "main_hand": "weapon.maul"
+      },
+      "card": "never",
+      "variation": {
+        "hue": 0.012,
+        "value": 0.04,
+        "scale": 0
+      },
+      "meta": {
+        "prototype_look": "goblin_colossus",
+        "translation": "Occupied body proportions shared with the physical profile; larger ears, jaws, equipment and posture distinguish the standing 3D silhouette."
+      }
+    },
+    {
+      "id": "gnasher_whelp",
+      "body": "gnasher",
+      "shape": {
+        "breadth": 1.0,
+        "depth": 1.1111111111111112
+      },
+      "palette": {
+        "skin": "#a58155",
+        "cloth": "#654239",
+        "metal": "#787c78",
+        "wood": "#725b3d",
+        "bone": "#dfd5b3",
+        "eye": "#e6c16b",
+        "dark": "#302d2c",
+        "moss": "#536f3e",
+        "accent": "#ba754b"
+      },
+      "features": [],
+      "gear": {},
+      "card": "allow",
+      "variation": {
+        "hue": 0.012,
+        "value": 0.04,
+        "scale": 0
+      },
+      "meta": {
+        "prototype_look": "cave_gnasher",
+        "translation": "Occupied body proportions shared with the physical profile; larger ears, jaws, equipment and posture distinguish the standing 3D silhouette."
+      }
+    },
+    {
+      "id": "cave_gnasher",
+      "body": "gnasher",
+      "shape": {
+        "breadth": 0.975,
+        "depth": 1.0999999999999999
+      },
+      "palette": {
+        "skin": "#a58155",
+        "cloth": "#654239",
+        "metal": "#787c78",
+        "wood": "#725b3d",
+        "bone": "#dfd5b3",
+        "eye": "#e6c16b",
+        "dark": "#302d2c",
+        "moss": "#536f3e",
+        "accent": "#ba754b"
+      },
+      "features": [
+        "spines"
+      ],
+      "gear": {},
+      "card": "allow",
+      "variation": {
+        "hue": 0.012,
+        "value": 0.04,
+        "scale": 0
+      },
+      "meta": {
+        "prototype_look": "cave_gnasher",
+        "translation": "Occupied body proportions shared with the physical profile; larger ears, jaws, equipment and posture distinguish the standing 3D silhouette."
+      }
+    },
+    {
+      "id": "warg",
+      "body": "warbeast",
+      "shape": {
+        "breadth": 0.6428571428571428,
+        "depth": 1.6517857142857142
+      },
+      "palette": {
+        "skin": "#6d6655",
+        "cloth": "#654239",
+        "metal": "#787c78",
+        "wood": "#725b3d",
+        "bone": "#dfd5b3",
+        "eye": "#e6c16b",
+        "dark": "#302d2c",
+        "moss": "#536f3e",
+        "accent": "#ba754b"
+      },
+      "features": [
+        "mane"
+      ],
+      "gear": {},
+      "card": "allow",
+      "variation": {
+        "hue": 0.012,
+        "value": 0.04,
+        "scale": 0
+      },
+      "meta": {
+        "prototype_look": "warg",
+        "translation": "Occupied body proportions shared with the physical profile; larger ears, jaws, equipment and posture distinguish the standing 3D silhouette."
+      }
+    }
+  ]
+}

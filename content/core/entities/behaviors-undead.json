@@ -1,0 +1,75 @@
+{
+  "kind": "behaviors",
+  "entries": [
+    {
+      "id": "undead_shambler",
+      "initial": "idle",
+      "tick_interval": 0.4,
+      "aggro_range": 6,
+      "leash_range": 24,
+      "states": {
+        "idle": {
+          "tick": [
+            {
+              "type": "wander",
+              "radius": 3,
+              "chance": 0.08
+            },
+            {
+              "type": "acquire_target",
+              "filter": "enemy"
+            }
+          ],
+          "transitions": [
+            {
+              "to": "chase",
+              "when": "has_target",
+              "priority": 10
+            }
+          ]
+        },
+        "chase": {
+          "tick": [
+            {
+              "type": "chase"
+            },
+            {
+              "type": "attack"
+            }
+          ],
+          "transitions": [
+            {
+              "to": "return",
+              "when": "!has_target || home_distance > leash_range",
+              "priority": 20
+            },
+            {
+              "to": "return",
+              "when": "target_distance > aggro_range * 1.5 && !taunted",
+              "priority": 10
+            }
+          ]
+        },
+        "return": {
+          "enter": [
+            {
+              "type": "drop_target"
+            }
+          ],
+          "tick": [
+            {
+              "type": "return_home"
+            }
+          ],
+          "transitions": [
+            {
+              "to": "idle",
+              "when": "home_distance < 1.5",
+              "priority": 10
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

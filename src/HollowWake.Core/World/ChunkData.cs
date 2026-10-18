@@ -20,7 +20,10 @@ public enum CellFlags : byte
     Flattened = 32,
 }
 
-public sealed record SpawnPoint(string Pattern, float X, float Y, int PackSize, double RespawnSeconds, string? Group);
+public sealed record SpawnPoint(string Pattern, float X, float Y, int PackSize, double RespawnSeconds, string? Group)
+{
+    public int? Level { get; init; }
+}
 
 public sealed record FloraPlacement(string Pattern, float X, float Y, float Scale);
 

@@ -1,0 +1,500 @@
+{
+  "kind": "weaves",
+  "entries": [
+    {
+      "id": "bone_arrow",
+      "name": "Bone Arrow",
+      "form": "shot",
+      "threads": [
+        "stone"
+      ],
+      "tags": [
+        "bone"
+      ],
+      "description": "A straight physical arrow from the skeletal archer's bow.",
+      "attributes": {
+        "cast.time": 0.85,
+        "cost.base.stamina": 0,
+        "damage.effectiveness": 1,
+        "range": 12,
+        "projectile.speed": 18
+      },
+      "ai": {
+        "role": "damage",
+        "preferred_range": 9,
+        "weight": 1
+      },
+      "effects": [
+        {
+          "type": "projectile",
+          "radius": 0.16,
+          "on_hit": [
+            {
+              "type": "damage",
+              "threads": "$threads",
+              "amount": "lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power"
+            }
+          ]
+        }
+      ],
+      "meta": {
+        "prototype": {
+          "id": "bone_arrow"
+        },
+        "integration": "Basic weapon-driven shot on the existing shell."
+      }
+    },
+    {
+      "id": "summon_skeleton",
+      "name": "Summon Skeleton Warrior",
+      "form": "summon",
+      "threads": [
+        "umbra"
+      ],
+      "tags": [
+        "undead"
+      ],
+      "description": "Call a skeleton warrior to serve you. It uses its own combat kit, inherits your minion investments, and obeys your orders.",
+      "attributes": {
+        "summon.max": 3
+      },
+      "effects": [
+        {
+          "type": "summon",
+          "pattern": "skeleton_warrior",
+          "count": "weave.summon.count",
+          "max_active": "weave.summon.max",
+          "duration": 0,
+          "group": "summon_skeleton",
+          "behavior": "minion_melee"
+        }
+      ],
+      "meta": {
+        "prototype": {
+          "id": "summon_skeleton"
+        },
+        "integration": "Uses the existing Summon form timing and costs."
+      }
+    },
+    {
+      "id": "summon_skeleton_archer",
+      "name": "Summon Skeleton Archer",
+      "form": "summon",
+      "threads": [
+        "umbra"
+      ],
+      "tags": [
+        "undead"
+      ],
+      "description": "Call a skeleton archer to serve you. It uses its own combat kit, inherits your minion investments, and obeys your orders.",
+      "attributes": {
+        "summon.max": 2
+      },
+      "effects": [
+        {
+          "type": "summon",
+          "pattern": "skeleton_archer",
+          "count": "weave.summon.count",
+          "max_active": "weave.summon.max",
+          "duration": 0,
+          "group": "summon_skeleton_archer",
+          "behavior": "minion_ranged"
+        }
+      ],
+      "meta": {
+        "prototype": {
+          "id": "summon_skeleton_archer"
+        },
+        "integration": "Uses the existing Summon form timing and costs."
+      }
+    },
+    {
+      "id": "summon_skeletal_sentinel",
+      "name": "Summon Skeletal Sentinel",
+      "form": "summon",
+      "threads": [
+        "umbra"
+      ],
+      "tags": [
+        "undead"
+      ],
+      "description": "Call a skeletal sentinel to serve you. It uses its own combat kit, inherits your minion investments, and obeys your orders.",
+      "attributes": {
+        "summon.max": 2
+      },
+      "effects": [
+        {
+          "type": "summon",
+          "pattern": "skeletal_sentinel",
+          "count": "weave.summon.count",
+          "max_active": "weave.summon.max",
+          "duration": 0,
+          "group": "summon_skeletal_sentinel",
+          "behavior": "minion_melee"
+        }
+      ],
+      "meta": {
+        "prototype": {
+          "monster": "skeletal_sentinel",
+          "tree_node": "grave_phalanx"
+        },
+        "integration": "New MMO preset exposing this prototype body. Uses the existing Summon form timing and costs."
+      }
+    },
+    {
+      "id": "summon_skeletal_duelist",
+      "name": "Summon Skeletal Duelist",
+      "form": "summon",
+      "threads": [
+        "umbra"
+      ],
+      "tags": [
+        "undead"
+      ],
+      "description": "Call a skeletal duelist to serve you. It uses its own combat kit, inherits your minion investments, and obeys your orders.",
+      "attributes": {
+        "summon.max": 3
+      },
+      "effects": [
+        {
+          "type": "summon",
+          "pattern": "skeletal_duelist",
+          "count": "weave.summon.count",
+          "max_active": "weave.summon.max",
+          "duration": 0,
+          "group": "summon_skeletal_duelist",
+          "behavior": "minion_melee"
+        }
+      ],
+      "meta": {
+        "prototype": {
+          "monster": "skeletal_duelist",
+          "tree_node": "ossuary_duelists"
+        },
+        "integration": "New MMO preset exposing this prototype body. Uses the existing Summon form timing and costs."
+      }
+    },
+    {
+      "id": "summon_abomination",
+      "name": "Summon Stitched Abomination",
+      "form": "summon",
+      "threads": [
+        "umbra"
+      ],
+      "tags": [
+        "undead"
+      ],
+      "description": "Call a stitched abomination to serve you. It uses its own combat kit, inherits your minion investments, and obeys your orders.",
+      "attributes": {
+        "summon.max": 1
+      },
+      "effects": [
+        {
+          "type": "summon",
+          "pattern": "court_abomination",
+          "count": "weave.summon.count",
+          "max_active": "weave.summon.max",
+          "duration": 0,
+          "group": "summon_abomination",
+          "behavior": "minion_melee"
+        }
+      ],
+      "meta": {
+        "prototype": {
+          "monster": "court_abomination",
+          "tree_node": "flesh_assembly"
+        },
+        "integration": "New MMO preset exposing this prototype body. Uses the existing Summon form timing and costs."
+      }
+    },
+    {
+      "id": "summon_ossuary_lich",
+      "name": "Summon Ossuary Lich",
+      "form": "summon",
+      "threads": [
+        "umbra"
+      ],
+      "tags": [
+        "undead"
+      ],
+      "description": "Call an ossuary lich to serve you. It uses its own combat kit, inherits your minion investments, and obeys your orders.",
+      "attributes": {
+        "summon.max": 1
+      },
+      "effects": [
+        {
+          "type": "summon",
+          "pattern": "ossuary_lich",
+          "count": "weave.summon.count",
+          "max_active": "weave.summon.max",
+          "duration": 0,
+          "group": "summon_ossuary_lich",
+          "behavior": "minion_ranged"
+        }
+      ],
+      "meta": {
+        "prototype": {
+          "monster": "ossuary_lich"
+        },
+        "integration": "New MMO preset exposing this prototype body. Uses the existing Summon form timing and costs."
+      }
+    },
+    {
+      "id": "summon_blade_wraith",
+      "name": "Summon Blade Wraith",
+      "form": "summon",
+      "threads": [
+        "umbra"
+      ],
+      "tags": [
+        "undead"
+      ],
+      "description": "Call a blade wraith to serve you. It uses its own combat kit, inherits your minion investments, and obeys your orders.",
+      "attributes": {
+        "summon.max": 3
+      },
+      "effects": [
+        {
+          "type": "summon",
+          "pattern": "blade_wraith",
+          "count": "weave.summon.count",
+          "max_active": "weave.summon.max",
+          "duration": 0,
+          "group": "summon_blade_wraith",
+          "behavior": "minion_melee"
+        }
+      ],
+      "meta": {
+        "prototype": {
+          "id": "summon_blade_wraith"
+        },
+        "integration": "Uses the existing Summon form timing and costs."
+      }
+    },
+    {
+      "id": "summon_barrow_hound",
+      "name": "Summon Barrow Hound",
+      "form": "summon",
+      "threads": [
+        "umbra"
+      ],
+      "tags": [
+        "undead"
+      ],
+      "description": "Call a barrow hound to serve you. It uses its own combat kit, inherits your minion investments, and obeys your orders.",
+      "attributes": {
+        "summon.max": 2
+      },
+      "effects": [
+        {
+          "type": "summon",
+          "pattern": "barrow_hound",
+          "count": "weave.summon.count",
+          "max_active": "weave.summon.max",
+          "duration": 0,
+          "group": "summon_barrow_hound",
+          "behavior": "minion_melee"
+        }
+      ],
+      "meta": {
+        "prototype": {
+          "monster": "barrow_hound"
+        },
+        "integration": "New MMO preset exposing this prototype body. Uses the existing Summon form timing and costs."
+      }
+    },
+    {
+      "id": "summon_wraith",
+      "name": "Summon Wraith",
+      "form": "summon",
+      "threads": [
+        "umbra"
+      ],
+      "tags": [
+        "undead"
+      ],
+      "description": "Call a wraith to serve you. It uses its own combat kit, inherits your minion investments, and obeys your orders.",
+      "attributes": {
+        "summon.max": 6
+      },
+      "effects": [
+        {
+          "type": "summon",
+          "pattern": "decay_wraith",
+          "count": "weave.summon.count",
+          "max_active": "weave.summon.max",
+          "duration": 0,
+          "group": "summon_wraith",
+          "behavior": "minion_ranged",
+          "decay": {
+            "delay": 4,
+            "fraction": 0.04,
+            "growth": 1.35
+          }
+        }
+      ],
+      "meta": {
+        "prototype": {
+          "id": "summon_wraith"
+        },
+        "integration": "Uses the existing Summon form timing and costs."
+      }
+    },
+    {
+      "id": "raise_zombie",
+      "name": "Raise Zombie",
+      "form": "raise",
+      "threads": [
+        "umbra"
+      ],
+      "tags": [
+        "undead"
+      ],
+      "description": "Consume a corpse to raise a shambling zombie. Its body and kit are those of a zombie.",
+      "attributes": {
+        "summon.max": 3
+      },
+      "effects": [
+        {
+          "type": "summon",
+          "count": 1,
+          "max_active": "weave.summon.max",
+          "duration": 0,
+          "group": "raised_zombies",
+          "behavior": "minion_melee",
+          "from_corpse": "target",
+          "raise_as": "zombie"
+        }
+      ],
+      "meta": {
+        "prototype": {
+          "monster": "zombie"
+        },
+        "integration": "New MMO preset exposing this prototype body. Uses the existing corpse-targeted Raise form timing and costs; consumes the targeted corpse."
+      }
+    },
+    {
+      "id": "summon_bone_golem",
+      "name": "Summon Bone Golem",
+      "form": "bind",
+      "threads": [
+        "umbra"
+      ],
+      "tags": [
+        "undead"
+      ],
+      "description": "Bind one assembled bone golem. It shares the warden contract slot, reserves mana and returns after falling.",
+      "attributes": {
+        "summon.max": 1
+      },
+      "effects": [
+        {
+          "type": "summon",
+          "pattern": "bone_golem",
+          "count": 1,
+          "max_active": 1,
+          "group": "bone_golem",
+          "pool_group": "warden",
+          "exclusive_group": "warden",
+          "behavior": "minion_melee",
+          "contract": {
+            "reserve": {
+              "mana": 30
+            },
+            "respawn": 8,
+            "toggle": true
+          }
+        }
+      ],
+      "meta": {
+        "prototype": {
+          "id": "summon_bone_golem"
+        },
+        "integration": "Uses the existing Bind form timing and costs, and shares the warden contract exclusivity pool."
+      }
+    },
+    {
+      "id": "summon_skeletal_mages",
+      "name": "Summon Skeletal Mages",
+      "form": "summon",
+      "threads": [
+        "umbra"
+      ],
+      "tags": [
+        "undead",
+        "skeleton"
+      ],
+      "description": "Call two bone scholars, each independently drawn from Ember, Tide, Storm and Umbra. At most four serve at once.",
+      "attributes": {
+        "summon.count": 2,
+        "summon.max": 4
+      },
+      "effects": [
+        {
+          "type": "summon",
+          "pool": [
+            {
+              "pattern": "skeletal_pyromancer",
+              "weight": 1,
+              "behavior": "minion_ranged"
+            },
+            {
+              "pattern": "skeletal_cryomancer",
+              "weight": 1,
+              "behavior": "minion_ranged"
+            },
+            {
+              "pattern": "skeletal_stormcaller",
+              "weight": 1,
+              "behavior": "minion_ranged"
+            },
+            {
+              "pattern": "skeletal_venomancer",
+              "weight": 1,
+              "behavior": "minion_ranged"
+            }
+          ],
+          "count": "weave.summon.count",
+          "max_active": "weave.summon.max",
+          "duration": 0,
+          "group": "skeletal_mages"
+        }
+      ]
+    },
+    {
+      "id": "raise_dead",
+      "name": "Raise Dead",
+      "form": "summon",
+      "threads": [
+        "umbra"
+      ],
+      "tags": [
+        "undead"
+      ],
+      "description": "Call a skeleton warrior or a zombie with equal chance, up to five servants.",
+      "attributes": {
+        "summon.max": 5
+      },
+      "effects": [
+        {
+          "type": "summon",
+          "pool": [
+            {
+              "pattern": "skeleton_warrior",
+              "weight": 1
+            },
+            {
+              "pattern": "zombie",
+              "weight": 1
+            }
+          ],
+          "count": "weave.summon.count",
+          "max_active": "weave.summon.max",
+          "duration": 0,
+          "group": "raised_dead",
+          "behavior": "minion_melee"
+        }
+      ]
+    }
+  ]
+}

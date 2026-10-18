@@ -50,7 +50,7 @@ public sealed partial class WeaveRuntime
         var held = Math.Max(0, now - cast.StartedAt);
         var pulse = cast.Mode == CastMode.Channel && (weave.Channel?.Release?.Pulses ?? true);
         var releaseAim = cast.Mode is CastMode.Charge or CastMode.Overcharge or CastMode.Guard || cast.Mode == CastMode.Channel && !pulse;
-        var (point, direction) = releaseAim ? ReleaseAim(sim, caster, book, cast, weave) : (cast.Point, cast.Direction);
+        var (point, direction, aimOffset) = releaseAim ? ReleaseAim(sim, caster, book, cast, weave) : (cast.Point, cast.Direction, cast.AimOffset);
         var position = transform.Position;
         var target = cast.Target;
         if (!target.IsNone && (!sim.World.IsAlive(target) || sim.World.Has<Dead>(target))) target = Entity.None;
@@ -132,6 +132,7 @@ public sealed partial class WeaveRuntime
         var context = new EffectContext
         {
             CastId = cast.CastId, Sim = sim, Source = caster, Target = target, Point = point,
+            AimOffset = aimOffset,
             Direction = direction, Weave = view, Tags = view.Tags, Rng = new Rng(0), Slot = cast.Slot,
             ForecastRestrictions = new ForecastRestrictions(changingAttributes ?? NoChangingAttributes, changingFlags ?? CastChangingFlags,
                 pulse && cast.Pulses > 0),

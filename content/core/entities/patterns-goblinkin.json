@@ -1,0 +1,1060 @@
+{
+  "kind": "patterns",
+  "entries": [
+    {
+      "id": "goblinkin_body",
+      "name": "Warren body template",
+      "extends": "creature",
+      "faction": "goblinkin",
+      "tags": [
+        "goblinkin"
+      ],
+      "components": {
+        "stats": {
+          "attributes": {
+            "might": 9,
+            "grace": 10,
+            "will": 7,
+            "stamina.max": 90,
+            "stamina.regen": 18,
+            "mana.max": 100,
+            "mana.regen": 12
+          }
+        },
+        "statuses": {}
+      }
+    },
+    {
+      "id": "goblin_scavenger",
+      "name": "Warren Scavenger",
+      "extends": "goblinkin_body",
+      "tags": [
+        "monster",
+        "body.flesh",
+        "family.goblin",
+        "role.scavenger",
+        "habitat.forest",
+        "humanoid",
+        "melee",
+        "size.small"
+      ],
+      "faction": "goblinkin",
+      "level": 1,
+      "radius": 0.22,
+      "height": 0.78,
+      "components": {
+        "physical": {
+          "width": 0.44,
+          "depth": 0.36,
+          "height": 0.78,
+          "fill": 0.12,
+          "heft": 1,
+          "materials": [
+            {
+              "material": "flesh",
+              "fraction": 1.0
+            }
+          ]
+        },
+        "stats": {
+          "attributes": {
+            "life.max": "24 + (level - 1) * 4",
+            "move.speed": 5.6,
+            "weapon.damage.min": "2 + (level - 1) * 0.65",
+            "weapon.damage.max": "5 + (level - 1) * 1.05",
+            "weapon.attack.time": 0.8,
+            "poise.max": 0
+          }
+        },
+        "weaves": {
+          "list": [
+            "claw"
+          ]
+        },
+        "behavior": {
+          "id": "goblin_raider"
+        },
+        "drops": {
+          "table": "goblinkin_drops",
+          "xp": "10 + level * 6",
+          "chance": 0.5
+        }
+      },
+      "meta": {
+        "prototype": {
+          "repository": "arianna-arpg/arpg-game-world",
+          "revision": "118b510f8b5bfb781163c5bc13ea4908f698e75b",
+          "id": "goblin_skirmisher"
+        },
+        "adaptation": true
+      }
+    },
+    {
+      "id": "goblin_skirmisher",
+      "name": "Goblin Skirmisher",
+      "extends": "goblinkin_body",
+      "tags": [
+        "monster",
+        "body.flesh",
+        "family.goblin",
+        "role.skirmisher",
+        "habitat.forest",
+        "humanoid",
+        "melee",
+        "size.small"
+      ],
+      "faction": "goblinkin",
+      "level": 2,
+      "radius": 0.21725,
+      "height": 0.9,
+      "components": {
+        "physical": {
+          "width": 0.4345,
+          "depth": 0.3259,
+          "height": 0.9,
+          "fill": 0.12,
+          "heft": 1,
+          "materials": [
+            {
+              "material": "flesh",
+              "fraction": 1.0
+            }
+          ]
+        },
+        "stats": {
+          "attributes": {
+            "life.max": "42 + (level - 1) * 4",
+            "move.speed": 5.8,
+            "weapon.damage.min": "2 + (level - 1) * 0.65",
+            "weapon.damage.max": "5 + (level - 1) * 1.05",
+            "weapon.attack.time": 0.8,
+            "poise.max": 8
+          }
+        },
+        "weaves": {
+          "list": [
+            "claw",
+            "fan_of_blades"
+          ]
+        },
+        "behavior": {
+          "id": "goblin_raider"
+        },
+        "drops": {
+          "table": "goblinkin_drops",
+          "xp": "10 + level * 6",
+          "chance": 0.5
+        }
+      },
+      "meta": {
+        "prototype": {
+          "repository": "arianna-arpg/arpg-game-world",
+          "revision": "118b510f8b5bfb781163c5bc13ea4908f698e75b",
+          "id": "goblin_skirmisher"
+        },
+        "adaptation": false
+      }
+    },
+    {
+      "id": "goblin_slinger",
+      "name": "Goblin Stoneflinger",
+      "extends": "goblinkin_body",
+      "tags": [
+        "monster",
+        "body.flesh",
+        "family.goblin",
+        "role.ranged",
+        "habitat.forest",
+        "humanoid",
+        "ranged",
+        "size.small"
+      ],
+      "faction": "goblinkin",
+      "level": 2,
+      "radius": 0.211,
+      "height": 0.86,
+      "components": {
+        "physical": {
+          "width": 0.422,
+          "depth": 0.3106,
+          "height": 0.86,
+          "fill": 0.12,
+          "heft": 1,
+          "materials": [
+            {
+              "material": "flesh",
+              "fraction": 1.0
+            }
+          ]
+        },
+        "stats": {
+          "attributes": {
+            "life.max": "38 + (level - 1) * 4",
+            "move.speed": 5.1,
+            "weapon.damage.min": "2 + (level - 1) * 0.65",
+            "weapon.damage.max": "5 + (level - 1) * 1.05",
+            "weapon.attack.time": 0.8,
+            "poise.max": 5
+          }
+        },
+        "weaves": {
+          "list": [
+            "hurl_debris"
+          ]
+        },
+        "behavior": {
+          "id": "aggressive_ranged"
+        },
+        "drops": {
+          "table": "goblinkin_drops",
+          "xp": "10 + level * 6",
+          "chance": 0.5
+        }
+      },
+      "meta": {
+        "prototype": {
+          "repository": "arianna-arpg/arpg-game-world",
+          "revision": "118b510f8b5bfb781163c5bc13ea4908f698e75b",
+          "id": "goblin_skirmisher"
+        },
+        "adaptation": true
+      }
+    },
+    {
+      "id": "goblin_shaman",
+      "name": "Goblin Shaman",
+      "extends": "goblinkin_body",
+      "tags": [
+        "monster",
+        "body.flesh",
+        "family.goblin",
+        "role.caster",
+        "habitat.warren_encampment",
+        "humanoid",
+        "ranged",
+        "caster",
+        "size.small"
+      ],
+      "faction": "goblinkin",
+      "level": 4,
+      "radius": 0.22415,
+      "height": 0.94,
+      "components": {
+        "physical": {
+          "width": 0.4483,
+          "depth": 0.3326,
+          "height": 0.94,
+          "fill": 0.12,
+          "heft": 1,
+          "materials": [
+            {
+              "material": "flesh",
+              "fraction": 1.0
+            }
+          ]
+        },
+        "stats": {
+          "attributes": {
+            "life.max": "55 + (level - 1) * 4",
+            "move.speed": 4.1,
+            "weapon.damage.min": "2 + (level - 1) * 0.65",
+            "weapon.damage.max": "5 + (level - 1) * 1.05",
+            "weapon.attack.time": 0.8,
+            "poise.max": 12
+          }
+        },
+        "weaves": {
+          "list": [
+            "spark",
+            "rallying_shout"
+          ]
+        },
+        "behavior": {
+          "id": "aggressive_ranged"
+        },
+        "drops": {
+          "table": "goblinkin_drops",
+          "xp": "10 + level * 6",
+          "chance": 0.5
+        }
+      },
+      "meta": {
+        "prototype": {
+          "repository": "arianna-arpg/arpg-game-world",
+          "revision": "118b510f8b5bfb781163c5bc13ea4908f698e75b",
+          "id": "goblin_shaman"
+        },
+        "adaptation": false
+      }
+    },
+    {
+      "id": "goblin_sapper",
+      "name": "Goblin Sapper",
+      "extends": "goblinkin_body",
+      "tags": [
+        "monster",
+        "body.flesh",
+        "family.goblin",
+        "role.artillery",
+        "habitat.scrap_fort",
+        "humanoid",
+        "ranged",
+        "size.small"
+      ],
+      "faction": "goblinkin",
+      "level": 5,
+      "radius": 0.2651,
+      "height": 0.92,
+      "components": {
+        "physical": {
+          "width": 0.5302,
+          "depth": 0.5302,
+          "height": 0.92,
+          "fill": 0.12,
+          "heft": 1,
+          "materials": [
+            {
+              "material": "flesh",
+              "fraction": 0.86
+            },
+            {
+              "material": "wood",
+              "fraction": 0.12
+            },
+            {
+              "material": "iron",
+              "fraction": 0.02
+            }
+          ]
+        },
+        "stats": {
+          "attributes": {
+            "life.max": "65 + (level - 1) * 5",
+            "move.speed": 4.7,
+            "weapon.damage.min": "2 + (level - 1) * 0.65",
+            "weapon.damage.max": "5 + (level - 1) * 1.05",
+            "weapon.attack.time": 0.8,
+            "poise.max": 12
+          }
+        },
+        "weaves": {
+          "list": [
+            "goblin_cinder_keg",
+            "hurl_debris"
+          ]
+        },
+        "behavior": {
+          "id": "aggressive_ranged"
+        },
+        "drops": {
+          "table": "goblinkin_drops",
+          "xp": "10 + level * 6",
+          "chance": 0.5
+        }
+      },
+      "meta": {
+        "prototype": {
+          "repository": "arianna-arpg/arpg-game-world",
+          "revision": "118b510f8b5bfb781163c5bc13ea4908f698e75b",
+          "id": "goblin_sapper"
+        },
+        "adaptation": false
+      }
+    },
+    {
+      "id": "goblin_brute",
+      "name": "Goblin Brute",
+      "extends": "goblinkin_body",
+      "tags": [
+        "monster",
+        "body.flesh",
+        "family.goblin",
+        "role.bruiser",
+        "habitat.warren_encampment",
+        "humanoid",
+        "melee",
+        "stature.exceptional",
+        "size.medium"
+      ],
+      "faction": "goblinkin",
+      "level": 5,
+      "radius": 0.4434,
+      "height": 1.24,
+      "components": {
+        "physical": {
+          "width": 0.8868,
+          "depth": 0.5651,
+          "height": 1.24,
+          "fill": 0.15,
+          "heft": 1,
+          "materials": [
+            {
+              "material": "flesh",
+              "fraction": 1.0
+            }
+          ]
+        },
+        "stats": {
+          "attributes": {
+            "life.max": "160 + (level - 1) * 13",
+            "move.speed": 3.5,
+            "weapon.damage.min": "6 + (level - 1) * 0.65",
+            "weapon.damage.max": "9 + (level - 1) * 1.05",
+            "weapon.attack.time": 0.8,
+            "poise.max": 40
+          }
+        },
+        "weaves": {
+          "list": [
+            "heavy_strike",
+            "sunder_maul"
+          ]
+        },
+        "behavior": {
+          "id": "aggressive_melee"
+        },
+        "drops": {
+          "table": "goblinkin_drops",
+          "xp": "10 + level * 6",
+          "chance": 0.5
+        }
+      },
+      "meta": {
+        "prototype": {
+          "repository": "arianna-arpg/arpg-game-world",
+          "revision": "118b510f8b5bfb781163c5bc13ea4908f698e75b",
+          "id": "goblin_brute"
+        },
+        "adaptation": false
+      }
+    },
+    {
+      "id": "goblin_chief",
+      "name": "Goblin Chief",
+      "extends": "goblinkin_body",
+      "tags": [
+        "monster",
+        "body.flesh",
+        "family.goblin",
+        "role.commander",
+        "habitat.warren_encampment",
+        "humanoid",
+        "melee",
+        "size.small"
+      ],
+      "faction": "goblinkin",
+      "level": 7,
+      "radius": 0.28955,
+      "height": 1.02,
+      "components": {
+        "physical": {
+          "width": 0.5791,
+          "depth": 0.3817,
+          "height": 1.02,
+          "fill": 0.15,
+          "heft": 1,
+          "materials": [
+            {
+              "material": "flesh",
+              "fraction": 0.97
+            },
+            {
+              "material": "iron",
+              "fraction": 0.03
+            }
+          ]
+        },
+        "stats": {
+          "attributes": {
+            "life.max": "170 + (level - 1) * 14",
+            "move.speed": 4.2,
+            "weapon.damage.min": "6 + (level - 1) * 0.65",
+            "weapon.damage.max": "9 + (level - 1) * 1.05",
+            "weapon.attack.time": 0.8,
+            "poise.max": 35,
+            "armor": 20
+          }
+        },
+        "weaves": {
+          "list": [
+            "cleave",
+            "rallying_shout"
+          ]
+        },
+        "behavior": {
+          "id": "close_melee"
+        },
+        "drops": {
+          "table": "goblinkin_drops",
+          "xp": "10 + level * 6",
+          "chance": 0.5
+        }
+      },
+      "meta": {
+        "prototype": {
+          "repository": "arianna-arpg/arpg-game-world",
+          "revision": "118b510f8b5bfb781163c5bc13ea4908f698e75b",
+          "id": "goblin_chief"
+        },
+        "adaptation": false
+      }
+    },
+    {
+      "id": "hobgoblin_taskmaster",
+      "name": "Hobgoblin Taskmaster",
+      "extends": "goblinkin_body",
+      "tags": [
+        "monster",
+        "body.flesh",
+        "family.goblin",
+        "role.commander",
+        "habitat.scrap_fort",
+        "humanoid",
+        "melee",
+        "size.medium"
+      ],
+      "faction": "goblinkin",
+      "level": 8,
+      "radius": 0.3231,
+      "height": 1.4,
+      "components": {
+        "physical": {
+          "width": 0.6462,
+          "depth": 0.4308,
+          "height": 1.4,
+          "fill": 0.15,
+          "heft": 1,
+          "materials": [
+            {
+              "material": "flesh",
+              "fraction": 1.0
+            }
+          ]
+        },
+        "stats": {
+          "attributes": {
+            "life.max": "175 + (level - 1) * 14",
+            "move.speed": 4.2,
+            "weapon.damage.min": "6 + (level - 1) * 0.65",
+            "weapon.damage.max": "10 + (level - 1) * 1.05",
+            "weapon.attack.time": 0.8,
+            "poise.max": 40
+          }
+        },
+        "weaves": {
+          "list": [
+            "cleave",
+            "rallying_shout"
+          ]
+        },
+        "behavior": {
+          "id": "close_melee"
+        },
+        "drops": {
+          "table": "goblinkin_drops",
+          "xp": "10 + level * 6",
+          "chance": 0.5
+        }
+      },
+      "meta": {
+        "prototype": {
+          "repository": "arianna-arpg/arpg-game-world",
+          "revision": "118b510f8b5bfb781163c5bc13ea4908f698e75b",
+          "id": "hobgoblin_taskmaster"
+        },
+        "adaptation": false
+      }
+    },
+    {
+      "id": "goblin_warboss",
+      "name": "Goblin Warboss",
+      "extends": "goblinkin_body",
+      "tags": [
+        "monster",
+        "body.flesh",
+        "family.goblin",
+        "role.champion",
+        "habitat.scrap_fort",
+        "humanoid",
+        "melee",
+        "stature.exceptional",
+        "size.medium"
+      ],
+      "faction": "goblinkin",
+      "level": 12,
+      "radius": 0.48615,
+      "height": 1.38,
+      "components": {
+        "physical": {
+          "width": 0.9723,
+          "depth": 0.5959,
+          "height": 1.38,
+          "fill": 0.18,
+          "heft": 1,
+          "materials": [
+            {
+              "material": "flesh",
+              "fraction": 0.97
+            },
+            {
+              "material": "iron",
+              "fraction": 0.03
+            }
+          ]
+        },
+        "stats": {
+          "attributes": {
+            "life.max": "420 + (level - 1) * 34",
+            "move.speed": 3.6,
+            "weapon.damage.min": "15 + (level - 1) * 0.65",
+            "weapon.damage.max": "23 + (level - 1) * 1.05",
+            "weapon.attack.time": 1.3,
+            "poise.max": 60,
+            "armor": 40
+          }
+        },
+        "weaves": {
+          "list": [
+            "heavy_strike",
+            "rallying_shout",
+            "sunder_maul"
+          ]
+        },
+        "behavior": {
+          "id": "close_melee"
+        },
+        "drops": {
+          "table": "goblinkin_drops",
+          "xp": "10 + level * 6",
+          "chance": 0.5
+        }
+      },
+      "meta": {
+        "prototype": {
+          "repository": "arianna-arpg/arpg-game-world",
+          "revision": "118b510f8b5bfb781163c5bc13ea4908f698e75b",
+          "id": "goblin_warboss"
+        },
+        "adaptation": false
+      }
+    },
+    {
+      "id": "troll_mauler",
+      "name": "Troll Mauler",
+      "extends": "goblinkin_body",
+      "tags": [
+        "monster",
+        "body.flesh",
+        "family.troll",
+        "role.juggernaut",
+        "habitat.troll_toll",
+        "humanoid",
+        "melee",
+        "size.large"
+      ],
+      "faction": "goblinkin",
+      "level": 9,
+      "radius": 0.775,
+      "height": 2.65,
+      "components": {
+        "physical": {
+          "width": 1.55,
+          "depth": 1.05,
+          "height": 2.65,
+          "fill": 0.18,
+          "heft": 1,
+          "materials": [
+            {
+              "material": "flesh",
+              "fraction": 1.0
+            }
+          ]
+        },
+        "stats": {
+          "attributes": {
+            "life.max": "410 + (level - 1) * 33",
+            "move.speed": 2.8,
+            "weapon.damage.min": "14 + (level - 1) * 0.65",
+            "weapon.damage.max": "23 + (level - 1) * 1.05",
+            "weapon.attack.time": 1.3,
+            "poise.max": 65,
+            "life.regen": 8
+          }
+        },
+        "weaves": {
+          "list": [
+            "heavy_strike",
+            "ground_slam"
+          ]
+        },
+        "behavior": {
+          "id": "aggressive_melee"
+        },
+        "drops": {
+          "table": "goblinkin_drops",
+          "xp": "10 + level * 6",
+          "chance": 0.5
+        }
+      },
+      "meta": {
+        "prototype": {
+          "repository": "arianna-arpg/arpg-game-world",
+          "revision": "118b510f8b5bfb781163c5bc13ea4908f698e75b",
+          "id": "troll_mauler"
+        },
+        "adaptation": false
+      }
+    },
+    {
+      "id": "troll_bridgewarden",
+      "name": "Troll Bridgewarden",
+      "extends": "goblinkin_body",
+      "tags": [
+        "monster",
+        "body.flesh",
+        "family.troll",
+        "role.guardian",
+        "habitat.troll_toll",
+        "humanoid",
+        "melee",
+        "size.large"
+      ],
+      "faction": "goblinkin",
+      "level": 12,
+      "radius": 0.95,
+      "height": 2.9,
+      "components": {
+        "physical": {
+          "width": 1.9,
+          "depth": 1.2,
+          "height": 2.9,
+          "fill": 0.18,
+          "heft": 1,
+          "materials": [
+            {
+              "material": "flesh",
+              "fraction": 0.91
+            },
+            {
+              "material": "stone",
+              "fraction": 0.09
+            }
+          ]
+        },
+        "stats": {
+          "attributes": {
+            "life.max": "560 + (level - 1) * 45",
+            "move.speed": 2.4,
+            "weapon.damage.min": "20 + (level - 1) * 0.65",
+            "weapon.damage.max": "31 + (level - 1) * 1.05",
+            "weapon.attack.time": 1.3,
+            "poise.max": 70,
+            "life.regen": 8,
+            "armor": 40
+          }
+        },
+        "weaves": {
+          "list": [
+            "sunder_maul",
+            "ground_slam"
+          ]
+        },
+        "behavior": {
+          "id": "close_melee"
+        },
+        "drops": {
+          "table": "goblinkin_drops",
+          "xp": "10 + level * 6",
+          "chance": 0.5
+        }
+      },
+      "meta": {
+        "prototype": {
+          "repository": "arianna-arpg/arpg-game-world",
+          "revision": "118b510f8b5bfb781163c5bc13ea4908f698e75b",
+          "id": "troll_bridgewarden"
+        },
+        "adaptation": false
+      }
+    },
+    {
+      "id": "goblin_colossus",
+      "name": "Warren Colossus",
+      "extends": "goblinkin_body",
+      "tags": [
+        "monster",
+        "body.flesh",
+        "family.goblin",
+        "role.colossus",
+        "habitat.scrap_fort",
+        "humanoid",
+        "melee",
+        "size.giant"
+      ],
+      "faction": "goblinkin",
+      "level": 20,
+      "radius": 1.7,
+      "height": 5.2,
+      "components": {
+        "physical": {
+          "width": 3.4,
+          "depth": 2.25,
+          "height": 5.2,
+          "fill": 0.18,
+          "heft": 1,
+          "materials": [
+            {
+              "material": "flesh",
+              "fraction": 0.97
+            },
+            {
+              "material": "iron",
+              "fraction": 0.03
+            }
+          ]
+        },
+        "stats": {
+          "attributes": {
+            "life.max": "1800 + (level - 1) * 144",
+            "move.speed": 2.1,
+            "weapon.damage.min": "63 + (level - 1) * 0.65",
+            "weapon.damage.max": "99 + (level - 1) * 1.05",
+            "weapon.attack.time": 1.3,
+            "poise.max": 95,
+            "armor": 40
+          }
+        },
+        "weaves": {
+          "list": [
+            "ground_slam",
+            "sunder_maul",
+            "rallying_shout"
+          ]
+        },
+        "behavior": {
+          "id": "close_melee"
+        },
+        "drops": {
+          "table": "goblinkin_drops",
+          "xp": "10 + level * 6",
+          "chance": 0.5
+        }
+      },
+      "meta": {
+        "prototype": {
+          "repository": "arianna-arpg/arpg-game-world",
+          "revision": "118b510f8b5bfb781163c5bc13ea4908f698e75b",
+          "id": "goblin_colossus"
+        },
+        "adaptation": false
+      }
+    },
+    {
+      "id": "gnasher_whelp",
+      "name": "Gnasher Whelp",
+      "extends": "goblinkin_body",
+      "tags": [
+        "monster",
+        "body.flesh",
+        "family.gnasher",
+        "role.swarm",
+        "habitat.warren_encampment",
+        "beast",
+        "melee",
+        "size.tiny",
+        "fauna",
+        "quest.cull"
+      ],
+      "faction": "goblinkin",
+      "level": 1,
+      "radius": 0.2,
+      "height": 0.36,
+      "components": {
+        "physical": {
+          "width": 0.36,
+          "depth": 0.4,
+          "height": 0.36,
+          "fill": 0.37,
+          "heft": 1,
+          "materials": [
+            {
+              "material": "flesh",
+              "fraction": 1.0
+            }
+          ]
+        },
+        "stats": {
+          "attributes": {
+            "life.max": "18 + (level - 1) * 4",
+            "move.speed": 6.3,
+            "weapon.damage.min": "2 + (level - 1) * 0.65",
+            "weapon.damage.max": "5 + (level - 1) * 1.05",
+            "weapon.attack.time": 0.8,
+            "poise.max": 0
+          }
+        },
+        "weaves": {
+          "list": [
+            "bite"
+          ]
+        },
+        "behavior": {
+          "id": "aggressive_melee"
+        },
+        "drops": {
+          "table": "goblinkin_drops",
+          "xp": "10 + level * 6",
+          "chance": 0.5
+        }
+      },
+      "meta": {
+        "prototype": {
+          "repository": "arianna-arpg/arpg-game-world",
+          "revision": "118b510f8b5bfb781163c5bc13ea4908f698e75b",
+          "id": "cave_gnasher"
+        },
+        "adaptation": true
+      }
+    },
+    {
+      "id": "cave_gnasher",
+      "name": "Cave Gnasher",
+      "extends": "goblinkin_body",
+      "tags": [
+        "monster",
+        "body.flesh",
+        "family.gnasher",
+        "role.biter",
+        "habitat.warren_encampment",
+        "beast",
+        "melee",
+        "size.small",
+        "fauna",
+        "quest.cull"
+      ],
+      "faction": "goblinkin",
+      "level": 4,
+      "radius": 0.44,
+      "height": 0.8,
+      "components": {
+        "physical": {
+          "width": 0.78,
+          "depth": 0.88,
+          "height": 0.8,
+          "fill": 0.38,
+          "heft": 1,
+          "materials": [
+            {
+              "material": "flesh",
+              "fraction": 1.0
+            }
+          ]
+        },
+        "stats": {
+          "attributes": {
+            "life.max": "75 + (level - 1) * 6",
+            "move.speed": 5.6,
+            "weapon.damage.min": "3 + (level - 1) * 0.65",
+            "weapon.damage.max": "5 + (level - 1) * 1.05",
+            "weapon.attack.time": 0.8,
+            "poise.max": 8
+          }
+        },
+        "weaves": {
+          "list": [
+            "bite",
+            "claw"
+          ]
+        },
+        "behavior": {
+          "id": "aggressive_melee"
+        },
+        "drops": {
+          "table": "goblinkin_drops",
+          "xp": "10 + level * 6",
+          "chance": 0.5
+        }
+      },
+      "meta": {
+        "prototype": {
+          "repository": "arianna-arpg/arpg-game-world",
+          "revision": "118b510f8b5bfb781163c5bc13ea4908f698e75b",
+          "id": "cave_gnasher"
+        },
+        "adaptation": false
+      }
+    },
+    {
+      "id": "warg",
+      "name": "Warren Warg",
+      "extends": "goblinkin_body",
+      "tags": [
+        "monster",
+        "body.flesh",
+        "family.warg",
+        "role.hunter",
+        "habitat.forest",
+        "beast",
+        "melee",
+        "size.small",
+        "fauna",
+        "quest.cull"
+      ],
+      "faction": "goblinkin",
+      "level": 6,
+      "radius": 0.925,
+      "height": 1.12,
+      "components": {
+        "physical": {
+          "width": 0.72,
+          "depth": 1.85,
+          "height": 1.12,
+          "fill": 0.31,
+          "heft": 1,
+          "materials": [
+            {
+              "material": "flesh",
+              "fraction": 0.92
+            },
+            {
+              "material": "fur",
+              "fraction": 0.08
+            }
+          ]
+        },
+        "stats": {
+          "attributes": {
+            "life.max": "130 + (level - 1) * 10",
+            "move.speed": 6.2,
+            "weapon.damage.min": "5 + (level - 1) * 0.65",
+            "weapon.damage.max": "7 + (level - 1) * 1.05",
+            "weapon.attack.time": 0.8,
+            "poise.max": 25
+          }
+        },
+        "weaves": {
+          "list": [
+            "bite",
+            "claw"
+          ]
+        },
+        "behavior": {
+          "id": "aggressive_melee"
+        },
+        "drops": {
+          "table": "goblinkin_drops",
+          "xp": "10 + level * 6",
+          "chance": 0.5
+        }
+      },
+      "meta": {
+        "prototype": {
+          "repository": "arianna-arpg/arpg-game-world",
+          "revision": "118b510f8b5bfb781163c5bc13ea4908f698e75b",
+          "id": "warg"
+        },
+        "adaptation": false
+      }
+    }
+  ]
+}

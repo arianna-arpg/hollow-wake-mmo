@@ -71,6 +71,8 @@ public sealed class EffectContext
         _scope?.ClearObservation();
         _observationSpare = this;
     }
+    /// <summary>Body aim offset sampled separately from planar bearing and original cast aim.</summary>
+    public Vector3 AimOffset { get; init; }
 
     /// <summary>
     /// How deep in a chain this effect runs. Nested deliveries, repeats, delays and casts (of other weaves or
@@ -195,6 +197,8 @@ public sealed class EffectContext
             Target = target ?? Target,
             Point = point ?? Point,
             Aim = aim ?? Aim,
+            AimOffset = target is { } aimed && Sim.World.Get<Transform>(aimed) is { } at ?
+                Combat.HitBodies.AimPoint(Sim, aimed) - at.Position : point is not null ? Vector3.Zero : AimOffset,
             Direction = Direction,
             Weave = Weave,
             Tags = tags ?? Tags,

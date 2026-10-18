@@ -1,6 +1,7 @@
 using System.Numerics;
 using System.Text.Json.Nodes;
 using HollowWake.Core.Components;
+using HollowWake.Core.Combat;
 using HollowWake.Core.Content;
 using HollowWake.Core.Ecs;
 using HollowWake.Core.Expressions;
@@ -39,7 +40,7 @@ public static class PlacementHandlers
         var sim = ctx.Sim;
         var e = sim.World.Create();
         sim.World.Add(e, new Transform { Position = at, Radius = radius });
-        sim.World.Add(e, new Identity { Name = "telegraph", Tags = TelegraphTags, Faction = sim.World.Get<Identity>(ctx.Origin)?.Faction, Owner = ctx.Origin, Look = "telegraph" });
+        sim.World.Add(e, new Identity { Name = "telegraph", Tags = TelegraphTags, Faction = Relations.FactionOf(sim, ctx.Origin), Owner = ctx.Origin, Look = "telegraph" });
         sim.World.Add(e, new Lifetime { ExpiresAt = sim.Clock.Time + seconds });
         sim.Spatial.Update(e, at);
         sim.Events.Publish(new EntitySpawned(e, "telegraph", at) { Tick = sim.Clock.Tick });

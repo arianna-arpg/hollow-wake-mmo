@@ -248,7 +248,7 @@ public static class Snapshots
     /// The wire state of one entity, positions to the centimetre and resources to a tenth. Allocates the
     /// state and its collections only; flags and statuses are skipped when an entity has none.
     /// </summary>
-    public static EntityState Capture(Simulation sim, Entity e, bool isStatic)
+    public static EntityState Capture(Simulation sim, Entity e, bool isStatic, bool hitBodies = true)
     {
         var world = sim.World;
         var t = world.Get<Transform>(e);
@@ -271,7 +271,8 @@ public static class Snapshots
             Yaw = t is null ? 0 : Hundredths(t.Yaw),
             Radius = t is null ? 0.4f : Hundredths(t.Radius),
             Height = t is null ? 1.8f : Hundredths(t.Height),
-            Faction = id?.Faction,
+            HitBody = hitBodies ? world.Get<HollowWake.Core.Combat.HitBody>(e)?.Definition.Id : null,
+            Faction = HollowWake.Core.Combat.Relations.FactionOf(sim, e),
             Rarity = id?.Rarity,
             IsPlayer = id?.IsPlayer ?? false,
             Level = stats?.Level ?? 0,
@@ -348,7 +349,7 @@ public static class Snapshots
             h.Add(id.Name);
             h.Add(id.Pattern);
             h.Add(id.Look);
-            h.Add(id.Faction);
+            h.Add(HollowWake.Core.Combat.Relations.FactionOf(sim, e));
             h.Add(id.Rarity);
             h.Add(id.IsPlayer);
             if (id.IsPlayer && world.TryGet<Equipment>(e, out var equipment) && equipment.BySlot.Count > 0)
@@ -358,6 +359,7 @@ public static class Snapshots
         }
         h.Add(world.TryGet<Interactable>(e, out var interactable) ? interactable.Kind : null);
         h.Add(world.Has<Dead>(e));
+        h.Add(world.Get<HollowWake.Core.Combat.HitBody>(e)?.Definition.Id);
         if (world.TryGet<Stats>(e, out var stats))
         {
             h.Add(stats.Level);
@@ -502,6 +504,7 @@ public static class Snapshots
             Yaw = F(last.Yaw, next.Yaw),
             Radius = F(last.Radius, next.Radius),
             Height = F(last.Height, next.Height),
+            HitBody = S(last.HitBody, next.HitBody),
             Faction = S(last.Faction, next.Faction),
             Rarity = S(last.Rarity, next.Rarity),
             Level = level,

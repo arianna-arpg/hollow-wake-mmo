@@ -211,6 +211,7 @@ entries:
     timing: { kind: perfect, window: 0.25, bonus: 0.6 }
     effects:
       - type: area
+        contact: body
         shape: sector
         center: source
         radius: "weave.range"

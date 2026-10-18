@@ -14,6 +14,7 @@ entries:
     yields: { shards: 4, floss: 2 }
 
   - id: shore
+    spawn_tables: [fauna_shore]
     name: Shore
     parent: wilds
     priority: 5
@@ -27,6 +28,7 @@ entries:
     yields: { shards: 3, floss: 1 }
 
   - id: meadow
+    spawn_tables: [fauna_meadow]
     name: Meadow
     parent: wilds
     elevation: { min: 1, max: 14 }
@@ -46,6 +48,7 @@ entries:
     yields: { shards: 5, floss: 2 }
 
   - id: forest
+    spawn_tables: [warren_foragers, fauna_forest]
     name: Forest
     parent: wilds
     elevation: { min: 1, max: 20 }
@@ -64,6 +67,7 @@ entries:
     yields: { shards: 4, floss: 3 }
 
   - id: deep_forest
+    spawn_tables: [remnant_hounds, gnasher_packs, fauna_deep_forest]
     name: Deep Forest
     parent: forest
     priority: 2
@@ -77,6 +81,7 @@ entries:
       - { pattern: barrow_wight, density: 0.4, pack_size: [1, 2], respawn: 240, level: { min: 3 } }
 
   - id: marsh
+    spawn_tables: [remnant_mire, fauna_marsh]
     name: Marsh
     parent: wilds
     priority: 3
@@ -93,6 +98,7 @@ entries:
     yields: { floss: 4, residue: 1 }
 
   - id: heath
+    spawn_tables: [fauna_heath]
     name: Heath
     parent: wilds
     elevation: { min: 1, max: 24 }
@@ -110,6 +116,7 @@ entries:
     yields: { shards: 5 }
 
   - id: scrub
+    spawn_tables: [fauna_scrub]
     name: Scrub
     parent: heath
     priority: 2
@@ -133,6 +140,7 @@ entries:
     yields: { shards: 6, residue: 2 }
 
   - id: hollowed
+    spawn_tables: [remnant_haunts, fauna_hollowed]
     name: The Hollowed
     parent: wilds
     priority: 9
@@ -148,6 +156,7 @@ entries:
     yields: { residue: 4 }
 
   - id: highland
+    spawn_tables: [fauna_highland]
     name: Highland
     parent: wilds
     priority: 10
@@ -165,6 +174,7 @@ entries:
     yields: { shards: 7 }
 
   - id: alpine
+    spawn_tables: [fauna_alpine]
     name: Alpine
     parent: highland
     priority: 12

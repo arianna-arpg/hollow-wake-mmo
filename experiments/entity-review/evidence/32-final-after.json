@@ -1,0 +1,870 @@
+[
+  {
+    "Zone": "0_0",
+    "Level": 1,
+    "Sites": [
+      {
+        "Id": "poi.0_0.hamlet.128.128",
+        "Level": 1,
+        "Population": 13
+      },
+      {
+        "Id": "poi.0_0.fount.150.134",
+        "Level": 1,
+        "Population": 0
+      },
+      {
+        "Id": "poi.0_0.shrine.90.170",
+        "Level": 1,
+        "Population": 1
+      },
+      {
+        "Id": "poi.0_0.knot.200.60",
+        "Level": 3,
+        "Population": 16
+      }
+    ],
+    "Patterns": [
+      {
+        "Pattern": "anvil",
+        "Points": 1,
+        "Bodies": 1
+      },
+      {
+        "Pattern": "cairn_stone",
+        "Points": 7,
+        "Bodies": 7
+      },
+      {
+        "Pattern": "cinder_imp",
+        "Points": 2,
+        "Bodies": 4
+      },
+      {
+        "Pattern": "goblin_scavenger",
+        "Points": 2,
+        "Bodies": 6
+      },
+      {
+        "Pattern": "grove_stag",
+        "Points": 8,
+        "Bodies": 13
+      },
+      {
+        "Pattern": "hob",
+        "Points": 80,
+        "Bodies": 238
+      },
+      {
+        "Pattern": "loom",
+        "Points": 1,
+        "Bodies": 1
+      },
+      {
+        "Pattern": "passive_font",
+        "Points": 1,
+        "Bodies": 1
+      },
+      {
+        "Pattern": "quartermaster",
+        "Points": 2,
+        "Bodies": 2
+      },
+      {
+        "Pattern": "remnant_shade",
+        "Points": 1,
+        "Bodies": 4
+      },
+      {
+        "Pattern": "shrine_stone",
+        "Points": 1,
+        "Bodies": 1
+      },
+      {
+        "Pattern": "spindlewatch_guard",
+        "Points": 4,
+        "Bodies": 4
+      },
+      {
+        "Pattern": "stash_chest",
+        "Points": 1,
+        "Bodies": 1
+      },
+      {
+        "Pattern": "tangle",
+        "Points": 1,
+        "Bodies": 1
+      },
+      {
+        "Pattern": "villager",
+        "Points": 3,
+        "Bodies": 3
+      }
+    ],
+    "SpawnLevels": [
+      {
+        "Pattern": "anvil",
+        "Group": "poi.0_0.hamlet.128.128",
+        "ExplicitLevel": null,
+        "EffectiveLevel": 1,
+        "Points": 1,
+        "Bodies": 1
+      },
+      {
+        "Pattern": "cairn_stone",
+        "Group": "poi.0_0.knot.200.60",
+        "ExplicitLevel": null,
+        "EffectiveLevel": 1,
+        "Points": 7,
+        "Bodies": 7
+      },
+      {
+        "Pattern": "cinder_imp",
+        "Group": "poi.0_0.knot.200.60",
+        "ExplicitLevel": null,
+        "EffectiveLevel": 4,
+        "Points": 2,
+        "Bodies": 4
+      },
+      {
+        "Pattern": "goblin_scavenger",
+        "Group": null,
+        "ExplicitLevel": null,
+        "EffectiveLevel": 1,
+        "Points": 2,
+        "Bodies": 6
+      },
+      {
+        "Pattern": "grove_stag",
+        "Group": null,
+        "ExplicitLevel": null,
+        "EffectiveLevel": 1,
+        "Points": 8,
+        "Bodies": 13
+      },
+      {
+        "Pattern": "hob",
+        "Group": null,
+        "ExplicitLevel": null,
+        "EffectiveLevel": 1,
+        "Points": 80,
+        "Bodies": 238
+      },
+      {
+        "Pattern": "loom",
+        "Group": "poi.0_0.hamlet.128.128",
+        "ExplicitLevel": null,
+        "EffectiveLevel": 1,
+        "Points": 1,
+        "Bodies": 1
+      },
+      {
+        "Pattern": "passive_font",
+        "Group": "poi.0_0.hamlet.128.128",
+        "ExplicitLevel": null,
+        "EffectiveLevel": 1,
+        "Points": 1,
+        "Bodies": 1
+      },
+      {
+        "Pattern": "quartermaster",
+        "Group": "poi.0_0.hamlet.128.128",
+        "ExplicitLevel": null,
+        "EffectiveLevel": 5,
+        "Points": 2,
+        "Bodies": 2
+      },
+      {
+        "Pattern": "remnant_shade",
+        "Group": "poi.0_0.knot.200.60",
+        "ExplicitLevel": null,
+        "EffectiveLevel": 2,
+        "Points": 1,
+        "Bodies": 4
+      },
+      {
+        "Pattern": "shrine_stone",
+        "Group": "poi.0_0.shrine.90.170",
+        "ExplicitLevel": null,
+        "EffectiveLevel": 1,
+        "Points": 1,
+        "Bodies": 1
+      },
+      {
+        "Pattern": "spindlewatch_guard",
+        "Group": "poi.0_0.hamlet.128.128",
+        "ExplicitLevel": null,
+        "EffectiveLevel": 5,
+        "Points": 4,
+        "Bodies": 4
+      },
+      {
+        "Pattern": "stash_chest",
+        "Group": "poi.0_0.hamlet.128.128",
+        "ExplicitLevel": null,
+        "EffectiveLevel": 1,
+        "Points": 1,
+        "Bodies": 1
+      },
+      {
+        "Pattern": "tangle",
+        "Group": "poi.0_0.knot.200.60",
+        "ExplicitLevel": null,
+        "EffectiveLevel": 6,
+        "Points": 1,
+        "Bodies": 1
+      },
+      {
+        "Pattern": "villager",
+        "Group": "poi.0_0.hamlet.128.128",
+        "ExplicitLevel": null,
+        "EffectiveLevel": 1,
+        "Points": 3,
+        "Bodies": 3
+      }
+    ],
+    "Quests": [
+      {
+        "Id": "gen.poi.0_0.hamlet.128.128.gather_floss.1",
+        "Level": 1,
+        "Targets": [
+          {
+            "Type": "collect",
+            "Target": "thread_floss",
+            "Poi": null
+          }
+        ]
+      },
+      {
+        "Id": "gen.poi.0_0.hamlet.128.128.cull_beasts.2",
+        "Level": 1,
+        "Targets": [
+          {
+            "Type": "kill",
+            "Target": "hob",
+            "Poi": null
+          }
+        ]
+      },
+      {
+        "Id": "gen.poi.0_0.hamlet.128.128.scout_ruin.3",
+        "Level": 1,
+        "Targets": [
+          {
+            "Type": "discover",
+            "Target": null,
+            "Poi": "poi.1_0.ossuary.421.38"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "Zone": "1_0",
+    "Level": 1,
+    "Sites": [
+      {
+        "Id": "poi.1_0.ossuary.421.38",
+        "Level": 3,
+        "Population": 7
+      },
+      {
+        "Id": "poi.1_0.knot.431.198",
+        "Level": 3,
+        "Population": 17
+      },
+      {
+        "Id": "poi.1_0.ruin.291.217",
+        "Level": 2,
+        "Population": 7
+      },
+      {
+        "Id": "poi.1_0.grove.309.104",
+        "Level": 1,
+        "Population": 16
+      }
+    ],
+    "Patterns": [
+      {
+        "Pattern": "barrow_wight",
+        "Points": 2,
+        "Bodies": 3
+      },
+      {
+        "Pattern": "cairn_stone",
+        "Points": 7,
+        "Bodies": 7
+      },
+      {
+        "Pattern": "cinder_imp",
+        "Points": 2,
+        "Bodies": 6
+      },
+      {
+        "Pattern": "gnasher_whelp",
+        "Points": 2,
+        "Bodies": 8
+      },
+      {
+        "Pattern": "goblin_scavenger",
+        "Points": 4,
+        "Bodies": 9
+      },
+      {
+        "Pattern": "grove_stag",
+        "Points": 26,
+        "Bodies": 60
+      },
+      {
+        "Pattern": "hob",
+        "Points": 80,
+        "Bodies": 242
+      },
+      {
+        "Pattern": "oak",
+        "Points": 10,
+        "Bodies": 10
+      },
+      {
+        "Pattern": "remnant_shade",
+        "Points": 2,
+        "Bodies": 6
+      },
+      {
+        "Pattern": "ruin_chest",
+        "Points": 2,
+        "Bodies": 2
+      },
+      {
+        "Pattern": "shrine_stone",
+        "Points": 1,
+        "Bodies": 1
+      },
+      {
+        "Pattern": "skeleton_archer",
+        "Points": 1,
+        "Bodies": 1
+      },
+      {
+        "Pattern": "skeleton_warrior",
+        "Points": 2,
+        "Bodies": 5
+      },
+      {
+        "Pattern": "tangle",
+        "Points": 1,
+        "Bodies": 1
+      }
+    ],
+    "SpawnLevels": [
+      {
+        "Pattern": "barrow_wight",
+        "Group": "poi.1_0.ruin.291.217",
+        "ExplicitLevel": null,
+        "EffectiveLevel": 3,
+        "Points": 2,
+        "Bodies": 3
+      },
+      {
+        "Pattern": "cairn_stone",
+        "Group": "poi.1_0.knot.431.198",
+        "ExplicitLevel": null,
+        "EffectiveLevel": 1,
+        "Points": 7,
+        "Bodies": 7
+      },
+      {
+        "Pattern": "cinder_imp",
+        "Group": "poi.1_0.knot.431.198",
+        "ExplicitLevel": null,
+        "EffectiveLevel": 4,
+        "Points": 2,
+        "Bodies": 6
+      },
+      {
+        "Pattern": "gnasher_whelp",
+        "Group": null,
+        "ExplicitLevel": null,
+        "EffectiveLevel": 1,
+        "Points": 2,
+        "Bodies": 8
+      },
+      {
+        "Pattern": "goblin_scavenger",
+        "Group": null,
+        "ExplicitLevel": null,
+        "EffectiveLevel": 1,
+        "Points": 4,
+        "Bodies": 9
+      },
+      {
+        "Pattern": "grove_stag",
+        "Group": null,
+        "ExplicitLevel": null,
+        "EffectiveLevel": 1,
+        "Points": 24,
+        "Bodies": 55
+      },
+      {
+        "Pattern": "grove_stag",
+        "Group": "poi.1_0.grove.309.104",
+        "ExplicitLevel": null,
+        "EffectiveLevel": 1,
+        "Points": 2,
+        "Bodies": 5
+      },
+      {
+        "Pattern": "hob",
+        "Group": null,
+        "ExplicitLevel": null,
+        "EffectiveLevel": 1,
+        "Points": 80,
+        "Bodies": 242
+      },
+      {
+        "Pattern": "oak",
+        "Group": "poi.1_0.grove.309.104",
+        "ExplicitLevel": null,
+        "EffectiveLevel": 1,
+        "Points": 10,
+        "Bodies": 10
+      },
+      {
+        "Pattern": "remnant_shade",
+        "Group": "poi.1_0.knot.431.198",
+        "ExplicitLevel": null,
+        "EffectiveLevel": 2,
+        "Points": 1,
+        "Bodies": 3
+      },
+      {
+        "Pattern": "remnant_shade",
+        "Group": "poi.1_0.ruin.291.217",
+        "ExplicitLevel": null,
+        "EffectiveLevel": 2,
+        "Points": 1,
+        "Bodies": 3
+      },
+      {
+        "Pattern": "ruin_chest",
+        "Group": "poi.1_0.ossuary.421.38",
+        "ExplicitLevel": null,
+        "EffectiveLevel": 1,
+        "Points": 1,
+        "Bodies": 1
+      },
+      {
+        "Pattern": "ruin_chest",
+        "Group": "poi.1_0.ruin.291.217",
+        "ExplicitLevel": null,
+        "EffectiveLevel": 1,
+        "Points": 1,
+        "Bodies": 1
+      },
+      {
+        "Pattern": "shrine_stone",
+        "Group": "poi.1_0.grove.309.104",
+        "ExplicitLevel": null,
+        "EffectiveLevel": 1,
+        "Points": 1,
+        "Bodies": 1
+      },
+      {
+        "Pattern": "skeleton_archer",
+        "Group": "poi.1_0.ossuary.421.38",
+        "ExplicitLevel": null,
+        "EffectiveLevel": 3,
+        "Points": 1,
+        "Bodies": 1
+      },
+      {
+        "Pattern": "skeleton_warrior",
+        "Group": "poi.1_0.ossuary.421.38",
+        "ExplicitLevel": null,
+        "EffectiveLevel": 3,
+        "Points": 2,
+        "Bodies": 5
+      },
+      {
+        "Pattern": "tangle",
+        "Group": "poi.1_0.knot.431.198",
+        "ExplicitLevel": null,
+        "EffectiveLevel": 6,
+        "Points": 1,
+        "Bodies": 1
+      }
+    ],
+    "Quests": []
+  },
+  {
+    "Zone": "0_-1",
+    "Level": 5,
+    "Sites": [
+      {
+        "Id": "poi.0_-1.knot.176.-74",
+        "Level": 7,
+        "Population": 17
+      },
+      {
+        "Id": "poi.0_-1.knot.41.-37",
+        "Level": 7,
+        "Population": 16
+      },
+      {
+        "Id": "poi.0_-1.knot.185.-214",
+        "Level": 7,
+        "Population": 16
+      }
+    ],
+    "Patterns": [
+      {
+        "Pattern": "cairn_stone",
+        "Points": 21,
+        "Bodies": 21
+      },
+      {
+        "Pattern": "cinder_imp",
+        "Points": 6,
+        "Bodies": 15
+      },
+      {
+        "Pattern": "hob",
+        "Points": 72,
+        "Bodies": 213
+      },
+      {
+        "Pattern": "loosed_kindler",
+        "Points": 18,
+        "Bodies": 25
+      },
+      {
+        "Pattern": "remnant_shade",
+        "Points": 3,
+        "Bodies": 10
+      },
+      {
+        "Pattern": "tangle",
+        "Points": 3,
+        "Bodies": 3
+      },
+      {
+        "Pattern": "wolf",
+        "Points": 41,
+        "Bodies": 102
+      }
+    ],
+    "SpawnLevels": [
+      {
+        "Pattern": "cairn_stone",
+        "Group": "poi.0_-1.knot.176.-74",
+        "ExplicitLevel": null,
+        "EffectiveLevel": 1,
+        "Points": 7,
+        "Bodies": 7
+      },
+      {
+        "Pattern": "cairn_stone",
+        "Group": "poi.0_-1.knot.185.-214",
+        "ExplicitLevel": null,
+        "EffectiveLevel": 1,
+        "Points": 7,
+        "Bodies": 7
+      },
+      {
+        "Pattern": "cairn_stone",
+        "Group": "poi.0_-1.knot.41.-37",
+        "ExplicitLevel": null,
+        "EffectiveLevel": 1,
+        "Points": 7,
+        "Bodies": 7
+      },
+      {
+        "Pattern": "cinder_imp",
+        "Group": "poi.0_-1.knot.176.-74",
+        "ExplicitLevel": null,
+        "EffectiveLevel": 4,
+        "Points": 2,
+        "Bodies": 5
+      },
+      {
+        "Pattern": "cinder_imp",
+        "Group": "poi.0_-1.knot.185.-214",
+        "ExplicitLevel": null,
+        "EffectiveLevel": 4,
+        "Points": 2,
+        "Bodies": 6
+      },
+      {
+        "Pattern": "cinder_imp",
+        "Group": "poi.0_-1.knot.41.-37",
+        "ExplicitLevel": null,
+        "EffectiveLevel": 4,
+        "Points": 2,
+        "Bodies": 4
+      },
+      {
+        "Pattern": "hob",
+        "Group": null,
+        "ExplicitLevel": null,
+        "EffectiveLevel": 1,
+        "Points": 72,
+        "Bodies": 213
+      },
+      {
+        "Pattern": "loosed_kindler",
+        "Group": null,
+        "ExplicitLevel": null,
+        "EffectiveLevel": 4,
+        "Points": 18,
+        "Bodies": 25
+      },
+      {
+        "Pattern": "remnant_shade",
+        "Group": "poi.0_-1.knot.176.-74",
+        "ExplicitLevel": null,
+        "EffectiveLevel": 2,
+        "Points": 1,
+        "Bodies": 4
+      },
+      {
+        "Pattern": "remnant_shade",
+        "Group": "poi.0_-1.knot.185.-214",
+        "ExplicitLevel": null,
+        "EffectiveLevel": 2,
+        "Points": 1,
+        "Bodies": 2
+      },
+      {
+        "Pattern": "remnant_shade",
+        "Group": "poi.0_-1.knot.41.-37",
+        "ExplicitLevel": null,
+        "EffectiveLevel": 2,
+        "Points": 1,
+        "Bodies": 4
+      },
+      {
+        "Pattern": "tangle",
+        "Group": "poi.0_-1.knot.176.-74",
+        "ExplicitLevel": null,
+        "EffectiveLevel": 6,
+        "Points": 1,
+        "Bodies": 1
+      },
+      {
+        "Pattern": "tangle",
+        "Group": "poi.0_-1.knot.185.-214",
+        "ExplicitLevel": null,
+        "EffectiveLevel": 6,
+        "Points": 1,
+        "Bodies": 1
+      },
+      {
+        "Pattern": "tangle",
+        "Group": "poi.0_-1.knot.41.-37",
+        "ExplicitLevel": null,
+        "EffectiveLevel": 6,
+        "Points": 1,
+        "Bodies": 1
+      },
+      {
+        "Pattern": "wolf",
+        "Group": null,
+        "ExplicitLevel": null,
+        "EffectiveLevel": 2,
+        "Points": 41,
+        "Bodies": 102
+      }
+    ],
+    "Quests": []
+  },
+  {
+    "Zone": "3_2",
+    "Level": 1,
+    "Sites": [
+      {
+        "Id": "poi.3_2.ruin.890.658",
+        "Level": 2,
+        "Population": 6
+      },
+      {
+        "Id": "poi.3_2.shrine.918.566",
+        "Level": 1,
+        "Population": 1
+      },
+      {
+        "Id": "poi.3_2.shrine.998.637",
+        "Level": 1,
+        "Population": 1
+      },
+      {
+        "Id": "poi.3_2.knot.965.744",
+        "Level": 3,
+        "Population": 16
+      }
+    ],
+    "Patterns": [
+      {
+        "Pattern": "barrow_wight",
+        "Points": 2,
+        "Bodies": 3
+      },
+      {
+        "Pattern": "cairn_stone",
+        "Points": 7,
+        "Bodies": 7
+      },
+      {
+        "Pattern": "cinder_imp",
+        "Points": 2,
+        "Bodies": 5
+      },
+      {
+        "Pattern": "gnasher_whelp",
+        "Points": 9,
+        "Bodies": 47
+      },
+      {
+        "Pattern": "goblin_scavenger",
+        "Points": 5,
+        "Bodies": 12
+      },
+      {
+        "Pattern": "grove_stag",
+        "Points": 29,
+        "Bodies": 58
+      },
+      {
+        "Pattern": "hob",
+        "Points": 75,
+        "Bodies": 224
+      },
+      {
+        "Pattern": "remnant_shade",
+        "Points": 2,
+        "Bodies": 5
+      },
+      {
+        "Pattern": "ruin_chest",
+        "Points": 1,
+        "Bodies": 1
+      },
+      {
+        "Pattern": "shrine_stone",
+        "Points": 2,
+        "Bodies": 2
+      },
+      {
+        "Pattern": "tangle",
+        "Points": 1,
+        "Bodies": 1
+      }
+    ],
+    "SpawnLevels": [
+      {
+        "Pattern": "barrow_wight",
+        "Group": "poi.3_2.ruin.890.658",
+        "ExplicitLevel": null,
+        "EffectiveLevel": 3,
+        "Points": 2,
+        "Bodies": 3
+      },
+      {
+        "Pattern": "cairn_stone",
+        "Group": "poi.3_2.knot.965.744",
+        "ExplicitLevel": null,
+        "EffectiveLevel": 1,
+        "Points": 7,
+        "Bodies": 7
+      },
+      {
+        "Pattern": "cinder_imp",
+        "Group": "poi.3_2.knot.965.744",
+        "ExplicitLevel": null,
+        "EffectiveLevel": 4,
+        "Points": 2,
+        "Bodies": 5
+      },
+      {
+        "Pattern": "gnasher_whelp",
+        "Group": null,
+        "ExplicitLevel": null,
+        "EffectiveLevel": 1,
+        "Points": 9,
+        "Bodies": 47
+      },
+      {
+        "Pattern": "goblin_scavenger",
+        "Group": null,
+        "ExplicitLevel": null,
+        "EffectiveLevel": 1,
+        "Points": 5,
+        "Bodies": 12
+      },
+      {
+        "Pattern": "grove_stag",
+        "Group": null,
+        "ExplicitLevel": null,
+        "EffectiveLevel": 1,
+        "Points": 29,
+        "Bodies": 58
+      },
+      {
+        "Pattern": "hob",
+        "Group": null,
+        "ExplicitLevel": null,
+        "EffectiveLevel": 1,
+        "Points": 75,
+        "Bodies": 224
+      },
+      {
+        "Pattern": "remnant_shade",
+        "Group": "poi.3_2.knot.965.744",
+        "ExplicitLevel": null,
+        "EffectiveLevel": 2,
+        "Points": 1,
+        "Bodies": 3
+      },
+      {
+        "Pattern": "remnant_shade",
+        "Group": "poi.3_2.ruin.890.658",
+        "ExplicitLevel": null,
+        "EffectiveLevel": 2,
+        "Points": 1,
+        "Bodies": 2
+      },
+      {
+        "Pattern": "ruin_chest",
+        "Group": "poi.3_2.ruin.890.658",
+        "ExplicitLevel": null,
+        "EffectiveLevel": 1,
+        "Points": 1,
+        "Bodies": 1
+      },
+      {
+        "Pattern": "shrine_stone",
+        "Group": "poi.3_2.shrine.918.566",
+        "ExplicitLevel": null,
+        "EffectiveLevel": 1,
+        "Points": 1,
+        "Bodies": 1
+      },
+      {
+        "Pattern": "shrine_stone",
+        "Group": "poi.3_2.shrine.998.637",
+        "ExplicitLevel": null,
+        "EffectiveLevel": 1,
+        "Points": 1,
+        "Bodies": 1
+      },
+      {
+        "Pattern": "tangle",
+        "Group": "poi.3_2.knot.965.744",
+        "ExplicitLevel": null,
+        "EffectiveLevel": 6,
+        "Points": 1,
+        "Bodies": 1
+      }
+    ],
+    "Quests": []
+  }
+]

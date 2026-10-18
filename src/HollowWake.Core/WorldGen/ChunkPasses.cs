@@ -253,7 +253,7 @@ public sealed class ChunkPasses
                 }
                 if (cell.Spawn is not null)
                 {
-                    chunk.Spawns.Add(new SpawnPoint(cell.Spawn, wx + 0.5f, wy + 0.5f, 1, 300, poi.Id));
+                    chunk.Spawns.Add(new SpawnPoint(cell.Spawn, wx + 0.5f, wy + 0.5f, 1, 300, poi.Id) { Level = cell.UseSiteLevel ? poi.Level : null });
                 }
                 stampedAny = true;
             }
@@ -368,7 +368,7 @@ public sealed class ChunkPasses
     {
         var origin = _layout.ChunkOrigin(chunk.Coord);
         var zc = _layout.ZoneOf(chunk.Coord);
-        var zone = _gen.Zone(zc);
+        var zoneLevel = _gen.PopulationLevel(zc);
         var rng = _gen.RngFor($"spawns:{chunk.Coord.X}:{chunk.Coord.Y}");
         // Walkable open cells grouped by biome entry in one buffer: group b is cells[start[b] .. start[b] + count[b]),
         // in cell order, and the groups are visited in the order their first cell appears.
@@ -391,7 +391,7 @@ public sealed class ChunkPasses
             }
             foreach (var spec in AllSpawns(biome))
             {
-                if (spec.Level is { } lvl && !lvl.Contains(zone.Level))
+                if (spec.Level is { } lvl && !lvl.Contains(zoneLevel))
                 {
                     continue;
                 }
@@ -431,13 +431,18 @@ public sealed class ChunkPasses
             var prng = _gen.RngFor($"inhabitants:{poi.Id}");
             foreach (var spec in poi.Def.Inhabitants)
             {
+                // The site level includes its authored offset from the region.
+                if (spec.Level is { } level && !level.Contains(poi.Level))
+                {
+                    continue;
+                }
                 var count = Math.Max(1, (int)Math.Round(spec.Density));
                 for (var k = 0; k < count; k++)
                 {
                     var ang = prng.NextDouble() * Math.PI * 2;
                     var dist = prng.Range(1.0, Math.Max(1.5, poi.Def.Radius - 1));
                     var pack = prng.Range((int)spec.PackSize[0], (int)spec.PackSize[Math.Min(1, spec.PackSize.Length - 1)]);
-                    chunk.Spawns.Add(new SpawnPoint(spec.Pattern, (float)(poi.X + Math.Cos(ang) * dist), (float)(poi.Y + Math.Sin(ang) * dist), Math.Max(1, pack), spec.Respawn, poi.Id));
+                    chunk.Spawns.Add(new SpawnPoint(spec.Pattern, (float)(poi.X + Math.Cos(ang) * dist), (float)(poi.Y + Math.Sin(ang) * dist), Math.Max(1, pack), spec.Respawn, poi.Id) { Level = spec.UseSiteLevel ? poi.Level : null });
                 }
             }
         }

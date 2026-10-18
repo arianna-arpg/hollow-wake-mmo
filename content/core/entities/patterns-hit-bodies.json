@@ -1,0 +1,383 @@
+{
+  "kind": "patterns",
+  "entries": [
+    {
+      "id": "goblin_scavenger",
+      "patch": true,
+      "components": {
+        "hit_body": {
+          "profile": "goblin_scavenger"
+        }
+      }
+    },
+    {
+      "id": "goblin_skirmisher",
+      "patch": true,
+      "components": {
+        "hit_body": {
+          "profile": "goblin_skirmisher"
+        }
+      }
+    },
+    {
+      "id": "goblin_slinger",
+      "patch": true,
+      "components": {
+        "hit_body": {
+          "profile": "goblin_slinger"
+        }
+      }
+    },
+    {
+      "id": "goblin_shaman",
+      "patch": true,
+      "components": {
+        "hit_body": {
+          "profile": "goblin_shaman"
+        }
+      }
+    },
+    {
+      "id": "goblin_sapper",
+      "patch": true,
+      "components": {
+        "hit_body": {
+          "profile": "goblin_sapper"
+        }
+      }
+    },
+    {
+      "id": "goblin_brute",
+      "patch": true,
+      "components": {
+        "hit_body": {
+          "profile": "goblin_brute"
+        }
+      }
+    },
+    {
+      "id": "goblin_chief",
+      "patch": true,
+      "components": {
+        "hit_body": {
+          "profile": "goblin_chief"
+        }
+      }
+    },
+    {
+      "id": "hobgoblin_taskmaster",
+      "patch": true,
+      "components": {
+        "hit_body": {
+          "profile": "hobgoblin_taskmaster"
+        }
+      }
+    },
+    {
+      "id": "goblin_warboss",
+      "patch": true,
+      "components": {
+        "hit_body": {
+          "profile": "goblin_warboss"
+        }
+      }
+    },
+    {
+      "id": "troll_mauler",
+      "patch": true,
+      "components": {
+        "hit_body": {
+          "profile": "troll_mauler"
+        }
+      }
+    },
+    {
+      "id": "troll_bridgewarden",
+      "patch": true,
+      "components": {
+        "hit_body": {
+          "profile": "troll_bridgewarden"
+        }
+      }
+    },
+    {
+      "id": "goblin_colossus",
+      "patch": true,
+      "components": {
+        "hit_body": {
+          "profile": "goblin_colossus"
+        }
+      }
+    },
+    {
+      "id": "gnasher_whelp",
+      "patch": true,
+      "components": {
+        "hit_body": {
+          "profile": "gnasher_whelp"
+        }
+      }
+    },
+    {
+      "id": "cave_gnasher",
+      "patch": true,
+      "components": {
+        "hit_body": {
+          "profile": "cave_gnasher"
+        }
+      }
+    },
+    {
+      "id": "warg",
+      "patch": true,
+      "components": {
+        "hit_body": {
+          "profile": "warg"
+        }
+      }
+    },
+    {
+      "id": "orc_grunt",
+      "patch": true,
+      "components": {
+        "hit_body": {
+          "profile": "orc_grunt"
+        }
+      }
+    },
+    {
+      "id": "orc_ravager",
+      "patch": true,
+      "components": {
+        "hit_body": {
+          "profile": "orc_ravager"
+        }
+      }
+    },
+    {
+      "id": "orc_cleaver",
+      "patch": true,
+      "components": {
+        "hit_body": {
+          "profile": "orc_cleaver"
+        }
+      }
+    },
+    {
+      "id": "orc_bulwark",
+      "patch": true,
+      "components": {
+        "hit_body": {
+          "profile": "orc_bulwark"
+        }
+      }
+    },
+    {
+      "id": "orc_shieldbreaker",
+      "patch": true,
+      "components": {
+        "hit_body": {
+          "profile": "orc_shieldbreaker"
+        }
+      }
+    },
+    {
+      "id": "orc_headhunter",
+      "patch": true,
+      "components": {
+        "hit_body": {
+          "profile": "orc_headhunter"
+        }
+      }
+    },
+    {
+      "id": "orc_rockhurler",
+      "patch": true,
+      "components": {
+        "hit_body": {
+          "profile": "orc_rockhurler"
+        }
+      }
+    },
+    {
+      "id": "orc_ashcaller",
+      "patch": true,
+      "components": {
+        "hit_body": {
+          "profile": "orc_ashcaller"
+        }
+      }
+    },
+    {
+      "id": "orc_bloodchanter",
+      "patch": true,
+      "components": {
+        "hit_body": {
+          "profile": "orc_bloodchanter"
+        }
+      }
+    },
+    {
+      "id": "orc_overseer",
+      "patch": true,
+      "components": {
+        "hit_body": {
+          "profile": "orc_overseer"
+        }
+      }
+    },
+    {
+      "id": "orc_slaver",
+      "patch": true,
+      "components": {
+        "hit_body": {
+          "profile": "orc_slaver"
+        }
+      }
+    },
+    {
+      "id": "orc_warlord",
+      "patch": true,
+      "components": {
+        "hit_body": {
+          "profile": "orc_warlord"
+        }
+      }
+    },
+    {
+      "id": "reed_gnasher",
+      "patch": true,
+      "components": {
+        "hit_body": {
+          "profile": "reed_gnasher"
+        }
+      }
+    },
+    {
+      "id": "thornback_gnasher",
+      "patch": true,
+      "components": {
+        "hit_body": {
+          "profile": "thornback_gnasher"
+        }
+      }
+    },
+    {
+      "id": "great_gnasher",
+      "patch": true,
+      "components": {
+        "hit_body": {
+          "profile": "great_gnasher"
+        }
+      }
+    },
+    {
+      "id": "saddle_gnasher",
+      "patch": true,
+      "components": {
+        "hit_body": {
+          "profile": "saddle_gnasher"
+        }
+      }
+    },
+    {
+      "id": "ironjaw_gnasher",
+      "patch": true,
+      "components": {
+        "hit_body": {
+          "profile": "ironjaw_gnasher"
+        }
+      }
+    },
+    {
+      "id": "brood_gnasher",
+      "patch": true,
+      "components": {
+        "hit_body": {
+          "profile": "brood_gnasher"
+        }
+      }
+    },
+    {
+      "id": "skeleton_warrior",
+      "patch": true,
+      "components": {
+        "hit_body": {
+          "profile": "skeleton_warrior"
+        }
+      }
+    },
+    {
+      "id": "skeleton_archer",
+      "patch": true,
+      "components": {
+        "hit_body": {
+          "profile": "skeleton_archer"
+        }
+      }
+    },
+    {
+      "id": "skeletal_pyromancer",
+      "patch": true,
+      "components": {
+        "hit_body": {
+          "profile": "skeletal_pyromancer"
+        }
+      }
+    },
+    {
+      "id": "skeletal_cryomancer",
+      "patch": true,
+      "components": {
+        "hit_body": {
+          "profile": "skeletal_cryomancer"
+        }
+      }
+    },
+    {
+      "id": "skeletal_stormcaller",
+      "patch": true,
+      "components": {
+        "hit_body": {
+          "profile": "skeletal_stormcaller"
+        }
+      }
+    },
+    {
+      "id": "skeletal_venomancer",
+      "patch": true,
+      "components": {
+        "hit_body": {
+          "profile": "skeletal_venomancer"
+        }
+      }
+    },
+    {
+      "id": "skeletal_sentinel",
+      "patch": true,
+      "components": {
+        "hit_body": {
+          "profile": "skeletal_sentinel"
+        }
+      }
+    },
+    {
+      "id": "skeletal_duelist",
+      "patch": true,
+      "components": {
+        "hit_body": {
+          "profile": "skeletal_duelist"
+        }
+      }
+    },
+    {
+      "id": "ossuary_lich",
+      "patch": true,
+      "components": {
+        "hit_body": {
+          "profile": "ossuary_lich"
+        }
+      }
+    }
+  ]
+}

@@ -57,6 +57,7 @@ public class ReleasePolicyTests
         var pattern = new PatternDef { Id = "invalid_rider_pattern", Components =
             { ["weaves"] = JsonNode.Parse("""{"list":[{"form":"strike","glyphs":["escaped_payload"]}]}""")!.AsObject() } };
         var report = new ValidationReport();
+        content.With(pattern);
         Assert.True(ContentKinds.TryGet("patterns", out var kind));
         kind!.Validate!(pattern, new ValidationContext(content, report, "patterns", pattern.Id, null));
         Assert.Contains(report.Errors, error => error.Message.Contains("every root"));

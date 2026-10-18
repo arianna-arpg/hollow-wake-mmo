@@ -96,6 +96,22 @@ public class SnapshotHistoryTests
         Matches(sim, body, catchingUp.ApplyTo(initial));
     }
 
+    [Fact]
+    public void DiagnosticViewCannotReuseAnOrdinaryViewsDeltaWithTheSameHistory()
+    {
+        var (sim, body, builder, a, b, initial) = Scene();
+        sim.World.Add(body, new HollowWake.Core.Combat.HitBody { Definition = new HollowWake.Core.Definitions.HitBodyDef
+            { Id = "diagnostic", Volumes = new() { new() { Shape = "cylinder", Up = .5f, Radius = .2f, HalfHeight = .5f } } } });
+        sim.Clock.Advance();
+        Move(sim, body, 1, 0);
+        b.SendHitBodies = true;
+        var ordinary = Delta(builder, a, body);
+        var diagnostic = Delta(builder, b, body);
+        Assert.Null(ordinary.ApplyTo(initial).HitBody);
+        Assert.Equal("diagnostic", diagnostic.ApplyTo(initial).HitBody);
+        Assert.NotSame(ordinary, diagnostic);
+    }
+
     [Theory]
     [InlineData(false)]
     [InlineData(true)]

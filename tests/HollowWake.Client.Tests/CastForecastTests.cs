@@ -66,6 +66,20 @@ public class CastForecastTests
         Assert.True(50 * (1 - Math.Cos(Math.PI / segments)) <= .025);
         Assert.Equal(0, CastForecastTimeline.SegmentsFor(r with { Size = new() { Radius = 100000 } }, 64, 256, .025));
     }
+
+    [Fact]
+    public void BodyVolumesRequireOrderedFiniteBoundsAndUseTheirActualElevation()
+    {
+        var r = new CastForecastRegion { Shape = "circle", Size = new() { Radius = 2 }, TargetTest = "body", Z = 10 };
+        Assert.False(CastForecastTimeline.Usable(r));
+        r = r with { Bottom = 11, Top = 12.5f };
+        Assert.True(CastForecastTimeline.Usable(r));
+        Assert.Equal((1f, 2.5f), CastForecastTimeline.VerticalBounds(r));
+        Assert.False(CastForecastTimeline.Usable(r with { Top = 10 }));
+        Assert.False(CastForecastTimeline.Usable(r with { Bottom = float.NaN }));
+        Assert.False(CastForecastTimeline.Usable(r with { TargetTest = "unknown" }));
+        Assert.Equal((-4f, 4f), CastForecastTimeline.VerticalBounds(r with { TargetTest = "center", HeightTolerance = 4 }));
+    }
     [Fact]
     public void Every_registered_shape_matches_combat_samples_including_thin_hollows()
     {

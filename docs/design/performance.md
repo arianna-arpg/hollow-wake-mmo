@@ -17,6 +17,7 @@ The foundation must stay pristine as the game scales, so performance is measured
 `--only <group>` runs one group; `--monsters`, `--players`, `--ticks` and `--minions` (pooled summons per player, so minions think, follow and fight) size the zone run; `--json` emits results for machines.
 
 Expression allocation has explicitly different scopes. The historical `expression.alloc` row retains its original whole-process counter and loop; keep its nonzero readings when comparing old records. `expression.alloc.calling_thread` measures allocations on the synchronous evaluator's thread after a fixed forty warmup loops of the exact sample delegate, then one measured loop of one hundred thousand evaluations. `expression.alloc.sample_process` records whole-process allocation over that same new sample, including other runtime threads. No sample is retried or chosen for being zero, and no estimated overhead is subtracted. The zero-allocation small-call contract applies to the warmed calling-thread sample; runtime bookkeeping on that thread is still counted and a nonzero result must be reported and investigated. The process rows remain diagnostics and must not be relabeled as zero or omitted. These counters do not certify asynchronous/custom functions that allocate on other threads.
+`--only hit-bodies` repeats the deliveries workload with a deterministic roster of resolved patterns carrying authored hit profiles. This exercises compound-volume contact and broad-phase bounds; the ordinary unprofiled deliveries workload is not a substitute for it.
 
 ## Budgets
 
@@ -30,6 +31,7 @@ Budgets are for the benchmark's default zone run in Release on a development mac
 | snapshot.build | at most 1 ms per player | Ten snapshots a second per player |
 | snapshot.bytes | at most 30 KB per player per snapshot | Full states are the fallback for a client that does not negotiate deltas; in a melee of hundreds of monsters their life, stamina and cast progress change every snapshot |
 | snapshot.delta.bytes | at most 10 KB per player per snapshot | Every shipped client negotiates deltas, so this is the number players feel |
+| worldgen.zone.plan | at most 40 ms | Bounds synchronous zone planning, including local quest population inspection |
 | worldgen.chunk | at most 4 ms and 400 KB | Zones load in well under a second; clients stream without hitches |
 | attribute.apply.extra | at most 500 ns and 200 bytes | Every hit folds damage several times |
 | expression.evaluate | at most 150 ns, no allocation for small calls | Formulas run everywhere |

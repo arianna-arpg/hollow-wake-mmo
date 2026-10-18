@@ -17,7 +17,9 @@ public class AiApproachTests
         a.Slot("strike");
         var standing = a.Runtime.PreferredRange(a.Sim, a.Caster, a.Enemy);
         Assert.NotNull(a.Runtime.ChooseForAi(a.Sim, a.Caster, a.Enemy));
-        a.Sim.World.Get<Motion>(a.Enemy)!.Velocity = Vector3.UnitX;
+        // Body contact remains eligible beyond the center boundary; retreat far enough that
+        // the complete body, not just its center, is predicted to leave the committed swing.
+        a.Sim.World.Get<Motion>(a.Enemy)!.Velocity = Vector3.UnitX * 1.5f;
         Assert.True(a.Runtime.PreferredRange(a.Sim, a.Caster, a.Enemy) < standing);
         Assert.Null(a.Runtime.ChooseForAi(a.Sim, a.Caster, a.Enemy));
         CastForecastContent.Move(a, a.Enemy, new(10.9f, 10, 0));

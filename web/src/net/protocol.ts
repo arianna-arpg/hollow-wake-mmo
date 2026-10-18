@@ -10,6 +10,10 @@ export const ENTRY_FLOW_FEATURE = "entry_flow";
 export const CAST_CUES_FEATURE = "cast_cues";
 /** ProtocolInfo.CastForecastFeature */
 export const CAST_FORECAST_FEATURE = "cast_forecast_v1";
+/** ProtocolInfo.HitBodiesFeature */
+export const HIT_BODIES_FEATURE = "hit_bodies_v2";
+/** ProtocolInfo.ProjectileSlabsFeature */
+export const PROJECTILE_SLABS_FEATURE = "projectile_slabs_v1";
 /** ProtocolInfo.EntityDeltaFeature */
 export const ENTITY_DELTA_FEATURE = "entity_delta";
 /** ProtocolInfo.InterfaceFeature */
@@ -496,6 +500,11 @@ export interface CastForecastMsg {
   retained?: CastForecastRef[];
 }
 
+export interface HitBodiesMsg {
+  t: "hit_bodies";
+  bodies: HitBodyInfo[];
+}
+
 export interface ChatBroadcastMsg {
   t: "chat_broadcast";
   from: string;
@@ -671,6 +680,7 @@ export interface EntityState {
   yaw: number;
   radius: number;
   height: number;
+  hit_body?: string;
   faction?: string;
   rarity?: string;
   is_player: boolean;
@@ -707,6 +717,7 @@ export interface EntityDelta {
   yaw?: number;
   radius?: number;
   height?: number;
+  hit_body?: string;
   faction?: string;
   rarity?: string;
   level?: number;
@@ -834,6 +845,12 @@ export interface CastForecastInfo {
 export interface CastForecastRef {
   cast_id: Int64;
   revision: Int64;
+}
+
+export interface HitBodyInfo {
+  id: string;
+  aim: number;
+  volumes: HitVolumeInfo[];
 }
 
 export interface LayerInfo {
@@ -1039,10 +1056,21 @@ export interface CastForecastRegion {
   height_tolerance: number;
   center_allowance: number;
   target_test: string;
+  bottom?: number;
+  top?: number;
   requires_line_of_sight: boolean;
   has_requirement: boolean;
   has_target_limit: boolean;
   viewer_eligibility: string;
+}
+
+export interface HitVolumeInfo {
+  shape: string;
+  forward: number;
+  left: number;
+  up: number;
+  radius: number;
+  half_height: number;
 }
 
 export interface RungInfo {
@@ -1152,6 +1180,7 @@ export type Message =
   | CombatEventMsg
   | CastCueMsg
   | CastForecastMsg
+  | HitBodiesMsg
   | ChatBroadcastMsg
   | NoticeMsg
   | QuestOffersMsg
@@ -1241,6 +1270,7 @@ export const MESSAGE_TYPES: readonly MessageType[] = [
   "combat_event",
   "cast_cue",
   "cast_forecast",
+  "hit_bodies",
   "chat_broadcast",
   "notice",
   "quest_offers",

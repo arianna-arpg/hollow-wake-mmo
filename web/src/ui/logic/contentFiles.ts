@@ -4,7 +4,13 @@
  * slots, the passive constellation). The desktop client reads the same files from disk. A server running
  * other layers changes what the server sends, not these labels.
  */
-export const CONTENT_FILES: Record<string, string> = import.meta.glob(['../../../../content/core/**/*.{yaml,yml,json}', '!../../../../content/core/ui/ability-icons.json'], {
+export const CONTENT_FILES: Record<string, string> = import.meta.glob([
+  '../../../../content/core/**/*.{yaml,yml,json}',
+  // Simulation-only anatomy arrives in the negotiated server catalog, never the UI's local content.
+  '!../../../../content/core/entities/hit-bodies.json',
+  // Artwork is loaded separately under the boot cover below.
+  '!../../../../content/core/ui/ability-icons.json',
+], {
   query: '?raw',
   import: 'default',
   eager: true,

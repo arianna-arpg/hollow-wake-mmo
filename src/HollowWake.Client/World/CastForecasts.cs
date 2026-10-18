@@ -78,6 +78,8 @@ public partial class CastForecasts : Node3D
             var region = !stale && CastForecastTimeline.SegmentsFor(cast.Region, _style.Segments, _style.MaxSegments, _style.MaxChordError) > 0 ? cast.Region : null;
             if (region?.Shape != v.Region?.Shape || !Equals(region?.Size, v.Region?.Size) ||
                 region?.HeightTolerance != v.Region?.HeightTolerance || region?.CenterAllowance != v.Region?.CenterAllowance ||
+                region?.TargetTest != v.Region?.TargetTest || region?.Bottom - region?.Z != v.Region?.Bottom - v.Region?.Z ||
+                region?.Top - region?.Z != v.Region?.Top - v.Region?.Z ||
                 region?.ViewerEligibility != v.Region?.ViewerEligibility || v.Committed != cast.DirectionCommitted)
             {
                 foreach (var mesh in v.Meshes) mesh.QueueFree();
@@ -105,21 +107,23 @@ public partial class CastForecasts : Node3D
     {
         var outline = CastForecastTimeline.Outline(region, CastForecastTimeline.SegmentsFor(region, _style.Segments, _style.MaxSegments, _style.MaxChordError));
         var parts = new List<(Vector3 A, Vector3 B)>();
+        var (bottom, top) = CastForecastTimeline.VerticalBounds(region);
+        var levels = region.TargetTest == "body" ? (bottom == top ? new[] { bottom } : new[] { bottom, top }) : new[] { 0f };
         var arrow = (float)_style.DirectionSize;
-        parts.Add((Coords.ToGodot(0, -arrow / 2, 0), Coords.ToGodot(arrow, 0, 0)));
-        parts.Add((Coords.ToGodot(arrow, 0, 0), Coords.ToGodot(0, arrow / 2, 0)));
-        if (committed) parts.Add((Coords.ToGodot(0, arrow / 2, 0), Coords.ToGodot(0, -arrow / 2, 0)));
-        foreach (var loop in outline.Holes.Prepend(outline.Outer)) for (var i = 0; i < loop.Count; i++)
+        parts.Add((Coords.ToGodot(0, -arrow / 2, levels[0]), Coords.ToGodot(arrow, 0, levels[0])));
+        parts.Add((Coords.ToGodot(arrow, 0, levels[0]), Coords.ToGodot(0, arrow / 2, levels[0])));
+        if (committed) parts.Add((Coords.ToGodot(0, arrow / 2, levels[0]), Coords.ToGodot(0, -arrow / 2, levels[0])));
+        foreach (var level in levels) foreach (var loop in outline.Holes.Prepend(outline.Outer)) for (var i = 0; i < loop.Count; i++)
         {
             var a = loop[i]; var b = loop[(i + 1) % loop.Count];
-            parts.Add((Coords.ToGodot(a.X, a.Y, 0), Coords.ToGodot(a.X + (b.X - a.X) * (float)_style.DashFraction, a.Y + (b.Y - a.Y) * (float)_style.DashFraction, 0)));
+            parts.Add((Coords.ToGodot(a.X, a.Y, level), Coords.ToGodot(a.X + (b.X - a.X) * (float)_style.DashFraction, a.Y + (b.Y - a.Y) * (float)_style.DashFraction, level)));
         }
         for (var i = 0; i < outline.Outer.Count; i += Math.Max(1, outline.Outer.Count / 4))
         {
-            var p = outline.Outer[i]; var extent = region.HeightTolerance;
-            var marker = Math.Min(extent, (float)_style.HeightMarkerSize);
-            parts.Add((Coords.ToGodot(p.X, p.Y, -extent), Coords.ToGodot(p.X, p.Y, -extent + marker)));
-            parts.Add((Coords.ToGodot(p.X, p.Y, extent - marker), Coords.ToGodot(p.X, p.Y, extent)));
+            var p = outline.Outer[i];
+            var marker = Math.Min((top - bottom) / 2, (float)_style.HeightMarkerSize);
+            parts.Add((Coords.ToGodot(p.X, p.Y, bottom), Coords.ToGodot(p.X, p.Y, bottom + marker)));
+            parts.Add((Coords.ToGodot(p.X, p.Y, top - marker), Coords.ToGodot(p.X, p.Y, top)));
         }
         return new() { Lines(parts, region, _style.Stroke * _style.UnderlayScale, _style.UnderlayColor, 9),
             Lines(parts, region, _style.Stroke, region.ViewerEligibility == "candidate" ? _style.CandidateColor : _style.Color, 10) };

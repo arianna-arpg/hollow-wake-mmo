@@ -60,6 +60,9 @@ public class CastForecastTests
             Assert.Equal(plan.Size.Inner * plan.Size.Radius, state.Region.Size.Inner);
             Assert.Equal(MathF.Sqrt(plan.Shape.CenterAllowanceSquared), state.Region.CenterAllowance);
             Assert.Equal(plan.Anchor.X, state.Region.X); Assert.Equal(0, state.Region.Heading);
+            Assert.Equal(plan.BodyContact ? "body" : "center", state.Region.TargetTest);
+            Assert.Equal(plan.BodyContact ? plan.Bottom : (float?)null, state.Region.Bottom);
+            Assert.Equal(plan.BodyContact ? plan.Top : (float?)null, state.Region.Top);
             // Exact unchanged data uses its original revision; a reset repairs a fresh observer.
             var builder = new CastForecastBuilder(sim);
             var view = new SnapshotView(); view.Known.UnionWith(session.View.Known);

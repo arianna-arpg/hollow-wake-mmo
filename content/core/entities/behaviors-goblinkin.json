@@ -1,0 +1,95 @@
+{
+  "kind": "behaviors",
+  "entries": [
+    {
+      "id": "goblin_raider",
+      "initial": "idle",
+      "tick_interval": 0.25,
+      "aggro_range": 9,
+      "leash_range": 28,
+      "states": {
+        "idle": {
+          "tick": [
+            {
+              "type": "wander",
+              "radius": 4,
+              "chance": 0.12
+            },
+            {
+              "type": "acquire_target",
+              "filter": "enemy"
+            }
+          ],
+          "transitions": [
+            {
+              "to": "fight",
+              "when": "has_target",
+              "priority": 10
+            }
+          ]
+        },
+        "fight": {
+          "tick": [
+            {
+              "type": "chase"
+            },
+            {
+              "type": "attack"
+            }
+          ],
+          "transitions": [
+            {
+              "to": "return",
+              "when": "!has_target || home_distance > leash_range",
+              "priority": 30
+            },
+            {
+              "to": "withdraw",
+              "when": "life_pct < 0.35 && !taunted",
+              "priority": 20
+            }
+          ]
+        },
+        "withdraw": {
+          "tick": [
+            {
+              "type": "flee",
+              "distance": 7
+            }
+          ],
+          "transitions": [
+            {
+              "to": "return",
+              "when": "!has_target || home_distance > leash_range",
+              "priority": 30
+            },
+            {
+              "to": "fight",
+              "when": "taunted || state_time > 3",
+              "priority": 20
+            }
+          ]
+        },
+        "return": {
+          "enter": [
+            {
+              "type": "drop_target"
+            }
+          ],
+          "tick": [
+            {
+              "type": "return_home"
+            }
+          ],
+          "transitions": [
+            {
+              "to": "idle",
+              "when": "home_distance < 1.5",
+              "priority": 10
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

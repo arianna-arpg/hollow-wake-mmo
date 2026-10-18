@@ -1,0 +1,26 @@
+t=1.85 Oldwood Bear hit Iron-Tusk Grunt for 26 crit
+t=1.85 Oldwood Bear cast claw at Iron-Tusk Grunt
+t=1.85 Iron-Tusk Grunt's poise recharging from 2.12
+t=2.05 Iron-Tusk Grunt hit Oldwood Bear for 11.8
+t=2.05 Iron-Tusk Grunt cast cleave at
+t=2.05 Oldwood Bear's poise recharging from 53.53
+t=2.90 status poise_broken x1 on Iron-Tusk Grunt from Iron-Tusk Grunt
+t=2.90 Oldwood Bear broke Iron-Tusk Grunt's poise
+t=2.90 Oldwood Bear hit Iron-Tusk Grunt for 31.8
+t=2.90 status stunned x1 on Iron-Tusk Grunt from Oldwood Bear
+t=2.90 Oldwood Bear cast heavy_strike at
+t=3.85 Oldwood Bear's poise restored to 65
+t=4.10 Oldwood Bear hit Iron-Tusk Grunt for 26.2
+t=4.10 Oldwood Bear cast claw at Iron-Tusk Grunt
+t=4.85 status poise_rearming x1 on Iron-Tusk Grunt from Iron-Tusk Grunt
+t=5.85 Oldwood Bear hit Iron-Tusk Grunt for 19.5
+t=5.85 Oldwood Bear cast claw at Iron-Tusk Grunt
+t=6.10 Iron-Tusk Grunt hit Oldwood Bear for 18.9
+t=6.10 Iron-Tusk Grunt cast cleave at
+t=6.10 Oldwood Bear's poise recharging from 46.46
+t=6.85 Oldwood Bear hit Iron-Tusk Grunt for 50.5
+t=6.85 Iron-Tusk Grunt died
+t=6.85 Oldwood Bear cast heavy_strike at
+t=9.00 Oldwood Bear's poise restored to 65
+t=18.85 despawned orc_grunt
+brown_bear: life 322/327   orc_grunt: life /
