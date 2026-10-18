@@ -7,7 +7,8 @@ namespace HollowWake.Core.Weaves;
 
 // Banks of use charges kept in a slot's state. A bank starts full; a trickle bank recovers one use per
 // recharge, a magazine refills when emptied (all at once, or one at a time with drip), a still bank
-// recovers only while its caster stands still and bleeds while it moves. Reading a bank changes nothing:
+// recovers only while its caster stands still and bleeds while it moves, a manual bank never recovers on its
+// own (only restore_uses and converts refill it). Reading a bank changes nothing:
 // what it holds now is computed from what it held when it last changed, so checks, AI and the slot message
 // can read it freely. A bank is brought up to date only as it changes (a spend, a restore, a still bank's
 // beat), and only still banks need the upkeep system.
@@ -60,7 +61,7 @@ public sealed partial class WeaveRuntime
                 }
             }
         }
-        else if (spec.Still is null && uses < max)
+        else if (spec.Still is null && !spec.Manual && uses < max)
         {
             var recharge = RechargeSeconds(weave, spec, stats);
             uses = recharge <= 0 ? max : Math.Min(max, uses + elapsed / recharge);

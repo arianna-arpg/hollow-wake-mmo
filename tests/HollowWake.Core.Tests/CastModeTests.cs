@@ -416,6 +416,26 @@ public class CastModeTests
         Assert.Equal(slot.Key, arena.Runtime.FaceOf(arena.Sim, arena.Caster, slot)!.Key);
     }
 
+    [Fact]
+    public void AManualBankNeverRecoversOnItsOwn()
+    {
+        var arena = CastingArena.Create();
+        var slot = arena.Slot("t_manual");
+        arena.Begin(slot);
+        arena.Begin(slot);
+        Assert.Equal(0, arena.Runtime.Uses(arena.Sim, arena.Caster, slot, out var max));
+        Assert.Equal(2, max);
+        // No cooldown, no recharge: a trickle bank would be full again at once. A manual one stays empty.
+        arena.RunSeconds(30);
+        Assert.Equal(0, arena.Runtime.Uses(arena.Sim, arena.Caster, slot, out _));
+        Assert.Equal("quiver_restring", arena.Runtime.FaceOf(arena.Sim, arena.Caster, slot)!.Key);
+        // Only its reload puts uses back.
+        arena.Begin(slot);
+        arena.RunSeconds(1);
+        Assert.Equal(2, arena.Runtime.Uses(arena.Sim, arena.Caster, slot, out _));
+        Assert.Equal(slot.Key, arena.Runtime.FaceOf(arena.Sim, arena.Caster, slot)!.Key);
+    }
+
     // ------------------------------------------------------------ gates, costs, spends
 
     [Fact]

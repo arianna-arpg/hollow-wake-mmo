@@ -92,6 +92,7 @@ entries:
   - { id: t_still, targeting: self, cast_mode: instant, min_threads: 0, uses: { max: 2, recharge: 1, still: { bleed: 1 } }, effects: [ { type: event, name: t_still } ] }
   - { id: t_vent, targeting: self, cast_mode: instant, min_threads: 0, uses: { max: 3, recharge: 100, vent_all: true, steps_from_bank: true }, effects: [ { type: event, name: t_vent, data: { spent: uses_spent } } ] }
   - { id: t_reloading, targeting: self, cast_mode: instant, min_threads: 0, uses: { max: 1, recharge: 100 }, convert: { when: "slot.uses < 1", weave: quiver_restring }, effects: [ { type: event, name: t_reloading } ] }
+  - { id: t_manual, targeting: self, cast_mode: instant, min_threads: 0, uses: { max: 2, manual: true }, convert: { when: "slot.uses < 1", weave: quiver_restring }, effects: [ { type: event, name: t_manual } ] }
   - { id: t_gated, targeting: self, cast_mode: instant, min_threads: 0, gates: [ 'life_pct > 0.5' ], effects: [ { type: event, name: t_gated } ] }
   - id: t_guard
     targeting: self
