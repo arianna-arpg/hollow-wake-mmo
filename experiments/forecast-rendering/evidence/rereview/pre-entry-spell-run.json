@@ -1,0 +1,52 @@
+{
+  "started": "2026-10-18T18:08:24.329Z",
+  "root": "C:\\Users\\John\\.codex\\worktrees\\shared-cast-forecasts\\MMOARPG",
+  "directory": "C:\\Users\\John\\.codex\\worktrees\\shared-cast-forecasts\\MMOARPG\\artifacts\\forecast-rereview\\smoke-spell-final\\run-vp8ENC",
+  "suite": "all",
+  "status": "passed",
+  "stages": [
+    {
+      "name": "smoke-web",
+      "status": "passed",
+      "started": "2026-10-18T18:08:26.391Z",
+      "code": 0,
+      "signal": null,
+      "passed": 33,
+      "total": 33,
+      "skipped": [],
+      "finished": "2026-10-18T18:10:07.016Z"
+    },
+    {
+      "name": "import-godot",
+      "status": "passed",
+      "started": "2026-10-18T18:10:07.019Z",
+      "code": 0,
+      "signal": null,
+      "finished": "2026-10-18T18:10:15.533Z"
+    },
+    {
+      "name": "smoke-godot",
+      "status": "passed",
+      "started": "2026-10-18T18:10:15.534Z",
+      "code": 0,
+      "signal": null,
+      "passed": 28,
+      "total": 28,
+      "skipped": [
+        "appearance rendering: headless display; geometry/card performance and readability require graphical evidence",
+        "theme rendered pixels: headless display; theme state checked above"
+      ],
+      "finished": "2026-10-18T18:11:08.718Z"
+    }
+  ],
+  "nativeRendering": "not covered by headless mode",
+  "godot": "C:\\Users\\John\\AppData\\Local\\Microsoft\\WinGet\\Packages\\GodotEngine.GodotEngine.Mono_Microsoft.Winget.Source_8wekyb3d8bbwe\\Godot_v4.7.2-stable_mono_win64\\Godot_v4.7.2-stable_mono_win64.exe",
+  "server": {
+    "tcp": 61220,
+    "url": "http://127.0.0.1:61221",
+    "name": "harness-run-vp8ENC",
+    "data": "C:\\Users\\John\\.codex\\worktrees\\shared-cast-forecasts\\MMOARPG\\artifacts\\forecast-rereview\\smoke-spell-final\\run-vp8ENC\\data"
+  },
+  "cleanupErrors": [],
+  "finished": "2026-10-18T18:11:09.607Z"
+}

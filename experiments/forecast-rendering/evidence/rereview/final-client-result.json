@@ -1,0 +1,84 @@
+{
+  "started": "2026-10-18T19:17:03.514Z",
+  "root": "C:\\Users\\John\\.codex\\worktrees\\shared-cast-forecasts\\MMOARPG",
+  "directory": "C:\\Users\\John\\.codex\\worktrees\\shared-cast-forecasts\\MMOARPG\\artifacts\\forecast-rereview\\final-client\\run-Yb6fyj",
+  "suite": "all",
+  "status": "passed",
+  "stages": [
+    {
+      "name": "build-server",
+      "status": "passed",
+      "started": "2026-10-18T19:17:03.519Z",
+      "code": 0,
+      "signal": null,
+      "finished": "2026-10-18T19:17:08.443Z"
+    },
+    {
+      "name": "typecheck-web",
+      "status": "passed",
+      "started": "2026-10-18T19:17:08.444Z",
+      "code": 0,
+      "signal": null,
+      "finished": "2026-10-18T19:17:16.908Z"
+    },
+    {
+      "name": "build-web",
+      "status": "passed",
+      "started": "2026-10-18T19:17:16.908Z",
+      "code": 0,
+      "signal": null,
+      "finished": "2026-10-18T19:17:17.895Z"
+    },
+    {
+      "name": "build-godot",
+      "status": "passed",
+      "started": "2026-10-18T19:17:17.895Z",
+      "code": 0,
+      "signal": null,
+      "finished": "2026-10-18T19:17:20.897Z"
+    },
+    {
+      "name": "smoke-web",
+      "status": "passed",
+      "started": "2026-10-18T19:17:22.489Z",
+      "code": 0,
+      "signal": null,
+      "passed": 33,
+      "total": 33,
+      "skipped": [],
+      "finished": "2026-10-18T19:18:50.317Z"
+    },
+    {
+      "name": "import-godot",
+      "status": "passed",
+      "started": "2026-10-18T19:18:50.318Z",
+      "code": 0,
+      "signal": null,
+      "finished": "2026-10-18T19:18:55.568Z"
+    },
+    {
+      "name": "smoke-godot",
+      "status": "passed",
+      "started": "2026-10-18T19:18:55.569Z",
+      "code": 0,
+      "signal": null,
+      "passed": 38,
+      "total": 38,
+      "skipped": [
+        "appearance rendering: headless display; geometry/card performance and readability require graphical evidence",
+        "theme rendered pixels: headless display; theme state checked above"
+      ],
+      "finished": "2026-10-18T19:19:37.410Z"
+    }
+  ],
+  "nativeRendering": "not covered by headless mode",
+  "godot": "C:\\Users\\John\\AppData\\Local\\Microsoft\\WinGet\\Packages\\GodotEngine.GodotEngine.Mono_Microsoft.Winget.Source_8wekyb3d8bbwe\\Godot_v4.7.2-stable_mono_win64\\Godot_v4.7.2-stable_mono_win64.exe",
+  "server": {
+    "tcp": 56298,
+    "url": "http://127.0.0.1:56299",
+    "name": "harness-run-Yb6fyj",
+    "data": "C:\\Users\\John\\.codex\\worktrees\\shared-cast-forecasts\\MMOARPG\\artifacts\\forecast-rereview\\final-client\\run-Yb6fyj\\data"
+  },
+  "cleanupErrors": [],
+  "finished": "2026-10-18T19:19:37.818Z"
+}

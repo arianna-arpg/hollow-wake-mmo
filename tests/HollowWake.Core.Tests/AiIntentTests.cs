@@ -331,7 +331,7 @@ public class AiIntentTests
     /// </summary>
     private static List<(float X, float Y, float Yaw, int Path)> Walk(string hunter, Vector3 at, Vector3 preyAt, Action<Simulation> walls, double seconds, bool preyMoves)
     {
-        var sim = ZoneBuilder.CreateArena(CoreContent.Registry, 3);
+        var sim = ZoneBuilder.CreateArena(HistoricalAiContent.Registry, 3);
         var factory = sim.Service<PatternFactory>();
         var h = factory.Spawn(sim, hunter, at, new SpawnOptions { Faction = "red" });
         var p = factory.Spawn(sim, "boar", preyAt, new SpawnOptions { Faction = "blue" });

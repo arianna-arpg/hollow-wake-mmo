@@ -197,10 +197,11 @@ entries:
     name: Measured Strike
     description: A blow with a beat to it; pressing again in the last moment of the swing lands it flawless.
     targeting: enemy
+    release_check: { policy: delivery }
     cast_mode: cast
     cast_time: "weapon.attack.time * 1.4"
     costs: { stamina: 6 }
-    attributes: { range: 2, damage.effectiveness: 1.3 }
+    attributes: { ai.anticipation: 1, range: 2, damage.effectiveness: 1.3 }
     mechanisms: [hit, melee, attack]
     tags: [attack, melee]
     min_threads: 0
@@ -209,10 +210,21 @@ entries:
     ai: { role: damage, preferred_range: 1.6, weight: 0.7 }
     timing: { kind: perfect, window: 0.25, bonus: 0.6 }
     effects:
-      - type: damage
-        amount: "lerp(weapon.damage.min, weapon.damage.max, rand()) * weave.damage.effectiveness * attack.power"
-        threads: $threads
-        tags: [hit]
+      - type: area
+        shape: sector
+        center: source
+        radius: "weave.range"
+        angle: "weave.melee.arc"
+        reach: edge
+        max_targets: 1
+        pick: aimed_nearest
+        report_miss: true
+        payload_depth: same
+        effects:
+          - type: damage
+            amount: "lerp(weapon.damage.min, weapon.damage.max, rand()) * weave.damage.effectiveness * attack.power"
+            threads: $threads
+            tags: [hit]
 
   - id: quiver
     name: Quiver

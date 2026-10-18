@@ -167,7 +167,7 @@ public static class AiActions
             {
                 return;
             }
-            var stop = (float)c.Num(p, "stop", c.Sim.Service<WeaveRuntime>().PreferredRange(c.Sim, c.Entity) * 0.9);
+            var stop = (float)c.Num(p, "stop", c.Sim.Service<WeaveRuntime>().PreferredRange(c.Sim, c.Entity, c.Behavior.Target) * 0.9);
             ChaseTo(c, tt, stop);
         });
         Register("attack", (c, p) => AttackTarget(c));
@@ -305,7 +305,7 @@ public static class AiActions
         {
             return;
         }
-        ChaseTo(c, tt, (float)(c.Sim.Service<WeaveRuntime>().PreferredRange(c.Sim, c.Entity) * 0.9));
+        ChaseTo(c, tt, (float)(c.Sim.Service<WeaveRuntime>().PreferredRange(c.Sim, c.Entity, c.Behavior.Target) * 0.9));
         AttackTarget(c);
     }
 
@@ -623,7 +623,7 @@ public sealed class BehaviorSystem : SimSystem
             }
         }
         scope.NearestEnemyDistance = nearest;
-        scope.PreferredRange = sim.Service<WeaveRuntime>().PreferredRange(sim, e);
+        scope.PreferredRange = sim.Service<WeaveRuntime>().PreferredRange(sim, e, b.Target);
         if (hasTarget && sim.World.Get<Stats>(b.Target) is { } ts)
         {
             scope.MountTarget(ts);

@@ -1,0 +1,13 @@
+SMOKE CRASH System.ObjectDisposedException: Cannot access a disposed object.
+Object name: 'HollowWake.Client.UI.WorldPanes.DialoguePane'.
+   at Godot.GodotObject.GetPtr(GodotObject instance) in /root/godot/modules/mono/glue/GodotSharp/GodotSharp/Core/GodotObject.base.cs:line 93
+   at Godot.Node.FindChildren(String pattern, String type, Boolean recursive, Boolean owned) in /root/godot/modules/mono/glue/GodotSharp/GodotSharp/Generated/GodotObjects/Node.cs:line 1015
+   at HollowWake.Client.Dev.Smoke.TradeWithAVendor() in <worktree>\src\HollowWake.Client\Dev\Smoke.cs:line 448
+   at HollowWake.Client.Dev.Smoke.Script() in <worktree>\src\HollowWake.Client\Dev\Smoke.cs:line 225
+   at HollowWake.Client.Dev.Smoke.Run() in <worktree>\src\HollowWake.Client\Dev\Smoke.cs:line 65
+WARNING: 343 RIDs of type "CanvasItem" were leaked.
+   at: _free_rids (servers/rendering/renderer_canvas_cull.cpp:2735)
+WARNING: 26 RIDs of type "Texture" were leaked.
+   at: finalize (servers/rendering/rendering_device.cpp:8900)
+WARNING: 863 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)

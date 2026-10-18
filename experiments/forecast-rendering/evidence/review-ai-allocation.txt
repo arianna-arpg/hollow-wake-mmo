@@ -1,0 +1,1 @@
+AI primary-area query: 2500 calls, 2500 selected, 56 bytes/call, 25.301 ms total.

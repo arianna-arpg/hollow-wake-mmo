@@ -287,6 +287,33 @@ public class AppearanceTests
         Assert.Equal(0, pose["head"].Turn.Z);
     }
 
+    [Theory]
+    [InlineData("biped", true)]
+    [InlineData("biped", false)]
+    [InlineData("wisp", true)]
+    [InlineData("wisp", false)]
+    [InlineData("quadruped", true)]
+    [InlineData("crawler", true)]
+    public void Emission_is_visible_during_a_channel_then_returns_to_preparation(string rig, bool swings)
+    {
+        var motion = new MotionLook(Catalog().Motion);
+        var state = new VisualState { Rig = rig, Swings = swings, CastMode = "channel", CastProgress = 0.6f,
+            Time = 12, ReducedMotion = true, ReleaseAge = 0.1f };
+        var emitted = new Pose();
+        Animator.Animate(state, motion, emitted);
+        state.Casting = true;
+        var channel = new Pose();
+        Animator.Animate(state, motion, channel);
+        Assert.Equal(emitted.Bones, channel.Bones);
+        state.ReleaseAge = 100;
+        Animator.Animate(state, motion, channel);
+        Assert.False(emitted.Bones.SequenceEqual(channel.Bones));
+        var ready = new Pose();
+        state.ReleaseAge = float.PositiveInfinity;
+        Animator.Animate(state, motion, ready);
+        Assert.Equal(ready.Bones, channel.Bones);
+    }
+
     [Fact]
     public void SurfacesColourCellsByTagsAndFlagsWithStableJitter()
     {

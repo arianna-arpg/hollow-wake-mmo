@@ -11,6 +11,8 @@ The foundation must stay pristine as the game scales, so performance is measured
 - `worldgen.*`: zone planning, chunk generation time and allocation, climate sampling.
 - `zone.*`: a loaded start zone with several hundred monsters and a few walking, casting players, ticking for a stretch: average, median, 95th percentile and worst tick, allocation per tick, events per tick, per-system time and allocation (the simulation's profiler), and errors.
 - `snapshot.*`: what the server builds and serializes per player per snapshot on the server path: the one-time burst on entering a zone, then steady state with only changed entities as full states, then the same with deltas opted in.
+- `snapshot.forecast.*`: incremental production forecast observation, interest filtering, exact revision reuse and JSON encoding. The note reports active observations so an empty scene cannot masquerade as a forecast measurement.
+- `snapshot.combined.*`: entity deltas, self/interface state, forecasts and encoding in the same snapshot. This shares the existing snapshot time and delta-traffic budgets; forecasts do not receive an additional allowance.
 
 `--only <group>` runs one group; `--monsters`, `--players`, `--ticks` and `--minions` (pooled summons per player, so minions think, follow and fight) size the zone run; `--json` emits results for machines.
 
@@ -31,6 +33,8 @@ Budgets are for the benchmark's default zone run in Release on a development mac
 | expression.evaluate | at most 150 ns, no allocation for small calls | Formulas run everywhere |
 
 When a change crosses a budget, the change is wrong until the budget is restored or the budget is argued down in this file.
+
+The full-state, delta and interface groups run sequential stretches of the same workload. Do not add their averages and call that an end-to-end result; use `snapshot.combined.*` for simultaneous cost. Both shipped clients request forecasts, so protocol negotiation is compatibility protection, not evidence that forecast cost is optional in normal play. The added forecast epoch/day fields and changed combat outcomes can also increase ordinary snapshot traffic; report remaining headroom in both full and delta groups. Run `--only tick --cast-cues true` to include confirmed cast-event production, and add `--minions` for a summon-heavy stress report. Default budgets remain default-workload gates; stress reports must explicitly retain any over-budget measurements and do not establish crowd or minimum-hardware certification.
 
 ## Profiling
 

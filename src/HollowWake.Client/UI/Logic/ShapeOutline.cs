@@ -4,7 +4,7 @@ namespace HollowWake.Client.UI.Logic;
 /// A shape's full proportions: radius, full angle in radians, full width, the distance from the anchor left empty,
 /// and for arcs and waves how far behind the anchor (in radii) the circle they bow along centers.
 /// </summary>
-public readonly record struct ShapeSpec(string Name, float Radius, float Angle, float Width, float Inner, float Curvature = 0);
+public readonly record struct ShapeSpec(string Name, float Radius, float Angle, float Width, float Inner, float Curvature = 0, float CenterAllowance = 0);
 
 /// <summary>A filled region in a shape's own frame: its outer loop and any holes, each counter-clockwise.</summary>
 public sealed record ShapeRegion(IReadOnlyList<(float X, float Y)> Outer, IReadOnlyList<IReadOnlyList<(float X, float Y)>> Holes);
@@ -23,6 +23,8 @@ public static class ShapeOutline
 
     /// <summary>Shapes the clients draw; any other name falls back to a circle.</summary>
     public static readonly IReadOnlyList<string> Names = new[] { "circle", "square", "triangle", "sector", "cone", "crescent", "line", "band", "bar", "arc", "wave" };
+    public static readonly IReadOnlyList<string> WidthNames = new[] { "line", "band", "bar", "arc", "wave" };
+    public static readonly IReadOnlyList<string> AngleNames = new[] { "sector", "cone", "crescent", "arc", "wave" };
 
     /// <summary>A shape's specification from what the wire sent, with the shape's defaults for what it left out.</summary>
     public static ShapeSpec SpecOf(string name, float? radius, float? angle, float? width, float? inner, float fallbackRadius, float? curvature = null)
@@ -99,18 +101,30 @@ public static class ShapeOutline
             case "cone":
             case "crescent":
             {
-                var half = spec.Angle / 2;
-                if (spec.Inner > 0)
+                var angle = Math.Clamp(spec.Angle, 0, MathF.Tau);
+                var half = angle / 2;
+                var center = Math.Min(r, spec.CenterAllowance);
+                // Core's angular test saturates at a full turn. Its central allowance still
+                // obeys both radial bounds; a hollow must not be filled by this union.
+                if (angle >= MathF.Tau || center >= r) return Ring(0, spec.Inner, r, segments);
+                if (angle <= 0) return spec.Inner < center ? Ring(0, spec.Inner, center, segments) : new(Array.Empty<(float, float)>(), none);
+                if (spec.Inner >= center && spec.Inner > 0)
                 {
                     return new ShapeRegion(Annulus(0, spec.Inner, r, -half, half, segments), none);
                 }
-                var pts = new List<(float, float)> { (0, 0) };
+                var pts = new List<(float, float)>();
                 for (var i = 0; i <= segments; i++)
                 {
-                    var a = -half + spec.Angle * i / segments;
+                    var a = -half + angle * i / segments;
                     pts.Add((MathF.Cos(a) * r, MathF.Sin(a) * r));
                 }
-                return new ShapeRegion(pts, none);
+                if (center <= 0) pts.Add((0, 0));
+                else for (var i = 0; i <= segments; i++)
+                {
+                    var a = half + (MathF.Tau - angle) * i / segments;
+                    pts.Add((MathF.Cos(a) * center, MathF.Sin(a) * center));
+                }
+                return new ShapeRegion(pts, spec.Inner > 0 ? new[] { Hole(spec.Inner, segments * 2) } : none);
             }
             case "line":
             case "band":
@@ -129,8 +143,12 @@ public static class ShapeOutline
             {
                 // A blade bowed forward: part of a circle whose center lies behind the anchor by curvature times the radius.
                 var bend = r * MathF.Max(0.1f, spec.Curvature);
-                var half = spec.Angle / 2;
-                return new ShapeRegion(Annulus(-bend, MathF.Max(0.01f, bend - spec.Width / 2), bend + spec.Width / 2, -half, half, segments), none);
+                var angle = Math.Clamp(spec.Angle, 0, MathF.Tau);
+                var half = angle / 2;
+                var inner = MathF.Max(0, bend - spec.Width / 2);
+                var outer = bend + spec.Width / 2;
+                return angle >= MathF.Tau ? Ring(-bend, inner, outer, segments) :
+                    new ShapeRegion(Annulus(-bend, inner, outer, -half, half, segments), none);
             }
             default:
             {
@@ -145,6 +163,12 @@ public static class ShapeOutline
             }
         }
     }
+
+    private static ShapeRegion Ring(float center, float inner, float outer, int segments) =>
+        new(Circle(outer, segments * 2, center), inner > 0 ? new[] { Hole(inner, segments * 2, center) } : Array.Empty<IReadOnlyList<(float, float)>>());
+
+    private static List<(float X, float Y)> Hole(float radius, int segments, float center = 0)
+    { var loop = Circle(radius, segments, center); loop.Reverse(); return loop; }
 
     /// <summary>The farthest any point of a region lies from the anchor.</summary>
     public static float Reach(ShapeRegion region) => region.Outer.Max(p => MathF.Sqrt(p.X * p.X + p.Y * p.Y));

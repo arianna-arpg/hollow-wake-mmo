@@ -1,0 +1,29 @@
+kind: ui_cast_forecasts
+entries:
+  shared:
+    segments: 64
+    max_segments: 256
+    max_chord_error: 0.025
+    stroke: 0.045
+    dash_fraction: 0.7
+    underlay_scale: 2.4
+    direction_size: 0.45
+    height_marker_size: 0.22
+    lift: 0.08
+    # Screen pixels, shared by both clients.
+    bar_width: 98
+    bar_height: 4
+    label_height: 0.5
+    font_size: 12
+    color: '#f5db97'
+    candidate_color: '#fff5d7'
+    unknown_color: '#bdc7dc'
+    underlay_color: '#182231'
+    labels:
+      primary: ''
+      unavailable: 'Area unknown'
+      ready: 'Ready · held'
+      channel: 'Channeling'
+      waiting: 'Awaiting resolution'
+      stale: 'Forecast delayed'
+      overflow: 'Additional casts nearby'

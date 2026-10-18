@@ -11,6 +11,9 @@ namespace HollowWake.Core.Definitions;
 // over later glyphs and over the form; triggers, gates, metas, follow-ups and worn modifiers add up.
 public sealed partial record GlyphDef
 {
+    [JsonPropertyName("release_check")]
+    public ReleaseCheckSpec? ReleaseCheck { get; init; }
+
     /// <summary>Casts the host weave when an event of the named trigger kind happens to its caster.</summary>
     public TriggerSpec? Trigger { get; init; }
 

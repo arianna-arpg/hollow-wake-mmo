@@ -1,0 +1,51 @@
+  Determining projects to restore...
+  Restored C:\Users\John\.codex\worktrees\shared-cast-forecasts\MMOARPG\tests\HollowWake.Core.Tests\HollowWake.Core.Tests.csproj (in 593 ms).
+  4 of 5 projects are up-to-date for restore.
+  HollowWake.Core -> C:\Users\John\.codex\worktrees\shared-cast-forecasts\MMOARPG\src\HollowWake.Core\bin\Release\net8.0\HollowWake.Core.dll
+  HollowWake.Protocol -> C:\Users\John\.codex\worktrees\shared-cast-forecasts\MMOARPG\src\HollowWake.Protocol\bin\Release\net8.0\HollowWake.Protocol.dll
+  HollowWake.Server -> C:\Users\John\.codex\worktrees\shared-cast-forecasts\MMOARPG\src\HollowWake.Server\bin\Release\net10.0\HollowWake.Server.dll
+  HollowWake.Tools -> C:\Users\John\.codex\worktrees\shared-cast-forecasts\MMOARPG\src\HollowWake.Tools\bin\Release\net10.0\hollowwake.dll
+  HollowWake.Core.Tests -> C:\Users\John\.codex\worktrees\shared-cast-forecasts\MMOARPG\tests\HollowWake.Core.Tests\bin\Release\net10.0\HollowWake.Core.Tests.dll
+Test run for C:\Users\John\.codex\worktrees\shared-cast-forecasts\MMOARPG\tests\HollowWake.Core.Tests\bin\Release\net10.0\HollowWake.Core.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+[xUnit.net 00:00:02.80]     HollowWake.Core.Tests.AiTrajectoryTests.ChasesWalkThePreIntentTrajectoryTickForTick(scenario: "detour") [FAIL]
+[xUnit.net 00:00:02.82]     HollowWake.Core.Tests.AiTrajectoryTests.ChasesWalkThePreIntentTrajectoryTickForTick(scenario: "zigzag-moving") [FAIL]
+[xUnit.net 00:00:02.86]     HollowWake.Core.Tests.AiTrajectoryTests.ChasesWalkThePreIntentTrajectoryTickForTick(scenario: "forest") [FAIL]
+[xUnit.net 00:00:02.88]     HollowWake.Core.Tests.AiIntentTests.ChasesAroundObstaclesWalkTheBaseTrajectoryTickForTick [FAIL]
+  Failed HollowWake.Core.Tests.AiTrajectoryTests.ChasesWalkThePreIntentTrajectoryTickForTick(scenario: "detour") [2 s]
+  Error Message:
+   detour first differs at tick 64:
+base a810b0a: 64 17.514488 7.8419485 0 0
+current:       64 17.512716 8.166944 0 0
+  Stack Trace:
+     at HollowWake.Core.Tests.AiTrajectoryTests.ChasesWalkThePreIntentTrajectoryTickForTick(String scenario) in C:\Users\John\.codex\worktrees\shared-cast-forecasts\MMOARPG\tests\HollowWake.Core.Tests\AiTrajectoryTests.cs:line 26
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeDirectByRefWithFewArgs(Object obj, Span`1 copyOfArgs, BindingFlags invokeAttr)
+  Failed HollowWake.Core.Tests.AiTrajectoryTests.ChasesWalkThePreIntentTrajectoryTickForTick(scenario: "zigzag-moving") [17 ms]
+  Error Message:
+   zigzag-moving first differs at tick 123:
+base a810b0a: 123 28.317898 18.523094 0 0
+current:       123 28.545637 18.677235 0 0
+  Stack Trace:
+     at HollowWake.Core.Tests.AiTrajectoryTests.ChasesWalkThePreIntentTrajectoryTickForTick(String scenario) in C:\Users\John\.codex\worktrees\shared-cast-forecasts\MMOARPG\tests\HollowWake.Core.Tests\AiTrajectoryTests.cs:line 26
+   at InvokeStub_AiTrajectoryTests.ChasesWalkThePreIntentTrajectoryTickForTick(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithOneArg(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Failed HollowWake.Core.Tests.AiTrajectoryTests.ChasesWalkThePreIntentTrajectoryTickForTick(scenario: "forest") [42 ms]
+  Error Message:
+   forest first differs at tick 124:
+base a810b0a: 124 30.15179 21.647402 0 0
+current:       124 30.19117 21.970007 0 0
+  Stack Trace:
+     at HollowWake.Core.Tests.AiTrajectoryTests.ChasesWalkThePreIntentTrajectoryTickForTick(String scenario) in C:\Users\John\.codex\worktrees\shared-cast-forecasts\MMOARPG\tests\HollowWake.Core.Tests\AiTrajectoryTests.cs:line 26
+   at InvokeStub_AiTrajectoryTests.ChasesWalkThePreIntentTrajectoryTickForTick(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithOneArg(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Failed HollowWake.Core.Tests.AiIntentTests.ChasesAroundObstaclesWalkTheBaseTrajectoryTickForTick [13 ms]
+  Error Message:
+   wall_detour: at tick 9 the walker stands at (10.5, 10.5), 0.2298100000000005 from the recorded (10.72981, 10.27019)
+  Stack Trace:
+     at HollowWake.Core.Tests.AiIntentTests.Follows(String name, JsonNode recorded, List`1 walk, Double tolerance) in C:\Users\John\.codex\worktrees\shared-cast-forecasts\MMOARPG\tests\HollowWake.Core.Tests\AiIntentTests.cs:line 369
+   at HollowWake.Core.Tests.AiIntentTests.ChasesAroundObstaclesWalkTheBaseTrajectoryTickForTick() in C:\Users\John\.codex\worktrees\shared-cast-forecasts\MMOARPG\tests\HollowWake.Core.Tests\AiIntentTests.cs:line 386
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+
+Failed!  - Failed:     4, Passed:    98, Skipped:     0, Total:   102, Duration: 11 s - HollowWake.Core.Tests.dll (net10.0)

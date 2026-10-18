@@ -24,7 +24,7 @@ The current Thread palette is authoritative content. Preserve original motif and
 The implemented foundation composes Thread and mechanism layers, uses paired primitive registries, and carries confirmed lifecycle/contact and outcome events. It covers current presets with a validated shared baseline. It does **not** mean the original catalog is migrated or every mechanic's complete visual meaning is present:
 
 - Mode-specific readiness art and staged timing require shared state bindings.
-- Exact damage shapes, movement-dependent aim and spatial miss reasons require resolved forecasting.
+- Shared active-cast timing, primary area candidate shapes, held-aim policies and spatial misses now use [resolved forecasting](../cast-forecasting.md). Secondary placements, dependent wrappers, arbitrary delivery families and surface clipping remain partial.
 - Persistent defenses, stacks, stored resources and transforms require durable state adapters.
 - Complex trails, tethers, construct/companion states and authored effect voices require reusable rendering families.
 - World interaction, crafting, territory and audio need additional family contracts beyond this combat census.
@@ -45,6 +45,6 @@ Run `node experiments/visual-convergence/audit.mjs` from this repository. To ref
 
 ## Coordination
 
-PR #6 owns the confirmed action-event stream, composable cosmetic recipes and convergence gate. The merged forecasting proposal owns the resolved-shape direction; its probe opts into the lifecycle stream when present. Claude's PR #9 owns body appearance, world materials, procedural body animation and camera feel. Preserve both initialization paths in `Main.cs` and `web/src/app.ts` during integration and rerun combined smokes.
+PR #6 owns the confirmed action-event stream, composable cosmetic recipes and convergence gate. The forecasting integration owns the shared resolved delivery, positional release checks, reliable forecast baselines and both-client boundaries; the probe opts into the lifecycle stream when present. Claude's PR #9 owns body appearance, world materials, procedural body animation and camera feel. Preserve both initialization paths in `Main.cs` and `web/src/app.ts` during integration and rerun combined smokes.
 
 The broader mechanics migration remains in [the parity plan](hollow-wake-gap.md), with this contract supplying visual acceptance requirements.

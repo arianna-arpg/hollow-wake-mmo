@@ -1,6 +1,9 @@
 using System.Numerics;
 using HollowWake.Core.Ecs;
 using HollowWake.Core.Effects.Handlers;
+using HollowWake.Core.Maths;
+using HollowWake.Core.Sim;
+using HollowWake.Core.Weaves;
 using HollowWake.Core.World;
 
 namespace HollowWake.Core.Effects;
@@ -33,6 +36,7 @@ public readonly record struct ResolvedAreaPlan(
 
     public bool IsFinite => float.IsFinite(Size.Radius) && float.IsFinite(Size.Angle) &&
         float.IsFinite(Size.Width) && float.IsFinite(Size.Inner) && float.IsFinite(Reach) &&
+        float.IsFinite(Shape.Curvature) && float.IsFinite(Shape.CenterAllowanceSquared) && Shape.CenterAllowanceSquared >= 0 &&
         float.IsFinite(Anchor.X) && float.IsFinite(Anchor.Y) && float.IsFinite(Anchor.Z) &&
         float.IsFinite(Direction.X) && float.IsFinite(Direction.Y);
 }
@@ -48,6 +52,24 @@ public interface IDeliveryPlanSource
 }
 
 /// <summary>
+/// Internal fast path for a fresh observation-only context. It may initialize that context's scope;
+/// callers must not pass an execution context or reuse it for a later sample. Providers still perform
+/// the same live dependency checks and resolution. Third-party providers retain the public path.
+/// </summary>
+internal interface IDetachedDeliveryPlanSource : IDeliveryPlanSource
+{
+    DeliveryForecast DescribeDetachedDelivery(EffectContext context);
+}
+
+// Synchronous built-in capability: never retain the context or expose it to external providers.
+// Unlike persistent DescribeDetachedDelivery, this borrows a freshly rebound context/scope per call.
+// null means unknown, retaining the caller's existing behavior rather than claiming ineligibility.
+internal interface IImmediateDeliveryCandidateSource : IDetachedDeliveryPlanSource
+{
+    bool? IsCandidate(EffectContext context, Entity target, Vector3 position);
+}
+
+/// <summary>
 /// A primary-region observation only. It deliberately does not certify payload effects, secondary
 /// scatter/pulses, later graph nodes, hit outcomes, cast commitment or application times.
 /// A missing region means unknown coverage, not empty/safe space.
@@ -59,6 +81,25 @@ public sealed record DeliveryForecast(ResolvedAreaPlan? PrimaryRegion, string? U
 
 public static class DeliveryForecasts
 {
+    internal static bool? CandidateForAi(CompiledEffect effect, Simulation sim, Entity caster,
+        Entity target, Vector3 point, Vector2 direction, CompiledWeave weave, Vector3? candidatePosition = null)
+    {
+        if (effect is IImmediateDeliveryCandidateSource immediate)
+        {
+            var scratch = EffectContext.RentObservation(sim, caster, target, point, direction, weave);
+            try { return immediate.IsCandidate(scratch, target, candidatePosition ?? point); }
+            finally { scratch.ReturnObservation(); }
+        }
+        // Preserve the public provider's detached lifetime and safety contract.
+        var context = new EffectContext { Sim = sim, Source = caster, Target = target, Point = point,
+            Direction = direction, Weave = weave, Tags = weave.Tags, Rng = new Rng(0) };
+        return Describe(effect, context).PrimaryRegion is { } plan ? plan.IsCandidate(context, target, candidatePosition ?? point) : null;
+    }
+
+    internal static DeliveryForecast DescribeDetached(IReadOnlyList<CompiledEffect> graph, EffectContext context) =>
+        graph.Count == 1 && graph[0] is IDetachedDeliveryPlanSource provider
+            ? provider.DescribeDetachedDelivery(context) : Describe(graph, context);
+
     public static DeliveryForecast Describe(CompiledEffect effect, EffectContext context) =>
         effect is IDeliveryPlanSource provider ? provider.DescribeDelivery(context) :
             DeliveryForecast.Unavailable("unsupported_delivery");

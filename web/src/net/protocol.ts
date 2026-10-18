@@ -8,6 +8,8 @@ export const PROTOCOL_VERSION = 1;
 export const ENTRY_FLOW_FEATURE = "entry_flow";
 /** ProtocolInfo.CastCuesFeature */
 export const CAST_CUES_FEATURE = "cast_cues";
+/** ProtocolInfo.CastForecastFeature */
+export const CAST_FORECAST_FEATURE = "cast_forecast_v1";
 /** ProtocolInfo.EntityDeltaFeature */
 export const ENTITY_DELTA_FEATURE = "entity_delta";
 /** ProtocolInfo.InterfaceFeature */
@@ -383,6 +385,7 @@ export interface EnterWorldMsg {
   world: WorldInfo;
   server_time: number;
   tick_rate: number;
+  forecast_epoch?: string;
   day_length?: number;
   time_of_day?: number;
 }
@@ -480,6 +483,17 @@ export interface CastCueMsg {
   reason: string;
   mechanisms?: string[];
   outcome: boolean;
+}
+
+export interface CastForecastMsg {
+  t: "cast_forecast";
+  epoch: string;
+  sequence: Int64;
+  server_time: number;
+  valid_until: number;
+  casts: CastForecastInfo[];
+  omitted: number;
+  retained?: CastForecastRef[];
 }
 
 export interface ChatBroadcastMsg {
@@ -796,6 +810,32 @@ export interface ChargeInfo {
   max: number;
 }
 
+export interface CastForecastInfo {
+  cast_id: Int64;
+  source: Int64;
+  name: string;
+  mode: string;
+  started_at: number;
+  next_emission_started_at?: number;
+  next_emission_at?: number;
+  ready_at?: number;
+  max_hold_ends_at?: number;
+  emission_ordinal: number;
+  direction_policy: string;
+  direction_committed: boolean;
+  x: number;
+  y: number;
+  z: number;
+  coverage: string;
+  unavailable_reason?: string;
+  region?: CastForecastRegion;
+}
+
+export interface CastForecastRef {
+  cast_id: Int64;
+  revision: Int64;
+}
+
 export interface LayerInfo {
   index: number;
   height: number;
@@ -985,6 +1025,24 @@ export interface StoneFitInfo {
   reason?: string;
 }
 
+export interface CastForecastRegion {
+  node: string;
+  shape: string;
+  size: ShapeSizeInfo;
+  x: number;
+  y: number;
+  z: number;
+  heading: number;
+  anchor: string;
+  height_tolerance: number;
+  center_allowance: number;
+  target_test: string;
+  requires_line_of_sight: boolean;
+  has_requirement: boolean;
+  has_target_limit: boolean;
+  viewer_eligibility: string;
+}
+
 export interface RungInfo {
   index: number;
   unlocked: boolean;
@@ -1089,6 +1147,7 @@ export type Message =
   | SelfStateMsg
   | CombatEventMsg
   | CastCueMsg
+  | CastForecastMsg
   | ChatBroadcastMsg
   | NoticeMsg
   | QuestOffersMsg
@@ -1177,6 +1236,7 @@ export const MESSAGE_TYPES: readonly MessageType[] = [
   "self_state",
   "combat_event",
   "cast_cue",
+  "cast_forecast",
   "chat_broadcast",
   "notice",
   "quest_offers",

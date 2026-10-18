@@ -31,6 +31,12 @@ Projectiles test bodies with the body's radius (a body whose edge touches the sh
 
 Area execution resolves a `ResolvedAreaPlan` and uses its shared candidate predicate. The same resolver is available for observation through the compiled effect's `IDeliveryPlanSource` capability and `DeliveryForecasts.Describe`. This yields current primary candidate coverage only, with body-center/height, relation, exclusion and LOS semantics; requirements, capped/random selection, payloads and secondary echoes remain execution work. Unsafe or unsupported dependencies decline observation without affecting execution. See [cast forecasting](cast-forecasting.md#implemented-core-foundation) for the purity contract, live sampling and integration limits.
 
+`WeaveRuntime.DescribeCast` observes an already-compiled active cast on the simulation thread. Its `CastForecast` carries identity, source position, sample time, direction policy, emission ordinal and independent emission/readiness/maximum-hold deadlines, plus a detached server-local context and `DeliveryForecast`. Charge readiness and the end of a hold are not guaranteed emissions. Channels expose only their already-scheduled next beat; a release-only channel or guard describes its conditional release graph. A primary region is current candidate coverage, not a damage promise or a claim to cover every branch.
+
+When an emission deadline is known, optional `NextEmissionStartedAt` records the beginning of that window: the cast start for an ordinary timed cast, or the current channel beat's scheduling time. The runtime stamps a channel's initial windup and each newly chosen interval; observation never reevaluates the interval or jitter. Later beat progress is measured within this window rather than over the entire hold. Without a known emission, this start is absent too.
+
+Execution and observation share the charge, overcharge, ramp and use-modifier construction helpers and the ordinary attribute fold. Observation never compiles a weave, initializes a gameplay scope, spends resources, rolls RNG, emits events or schedules work. Geometry is unavailable when it depends on an opaque expression/curve or prospective state that cannot safely be represented: charge spending, pending resource payment, changing caster ramps/flags, or conditional brim scaling. Timing remains available independently. A new skill or glyph inherits observation through its compiled mechanism; a new wrapper needs an honest provider, never a skill-name exception or an invented circle.
+
 | Parameter | Meaning |
 |---|---|
 | `shape` | a registered shape; default `circle` |
@@ -40,8 +46,12 @@ Area execution resolves a `ResolvedAreaPlan` and uses its shared candidate predi
 | `reach` | `center` (default) or `edge`: anchored shapes reach further by the source's body radius |
 | `filter` | `enemy` (default), `ally`, `ally_or_self`, `self`, `not_self`, or `all` |
 | `include_center` | false spares the context's target |
-| `max_targets`, `pick` | over the cap, `pick` chooses: `random` (default, shuffled on the context's stream), `nearest`, `farthest`, `lowest_life`, `highest_life` (by fraction of maximum life) |
+| `max_targets`, `pick` | over the cap, `pick` chooses: `random` (default, shuffled on the context's stream), `nearest`, `farthest`, `lowest_life`, `highest_life` (by fraction of maximum life), or `aimed_nearest` (eligible context target first, then nearest) |
 | `require` | an expression each body must meet, read with the body as `target` (`target.life_pct < 0.5`) |
+| `report_miss` | false by default; publishes a primary miss when selection leaves no recipients; echoed placements and later cascade steps suppress duplicate miss cues |
+| `payload_depth` | `next` (default) runs payloads one level deeper; `same` makes this area a selector at its incoming depth, independent of target count or miss reporting |
+
+The shipped single-target melee selectors author `payload_depth: same`, preserving the proc budget of the direct payloads they replaced. Ordinary area deliveries retain `next`. Either policy leaves real echoes, delayed work, repeats and nested casts responsible for their own depth increments; existing effect/trigger/proc depth limits still apply. This is a reusable content policy, not a skill identity exception.
 
 Anchored shapes of weaves tagged `melee` reach further by the weave's `melee.reach`. After an area resolves, the weave's `area.scatter` sets off that many aftershocks at random points within its radius, each smaller by rule `delivery.aftershock_scale` and following at `delivery.aftershock_delay` apart, and `area.pulses` repeats the area where it stood every `delivery.pulse_interval`. Echoes run one level deeper and never echo again.
 

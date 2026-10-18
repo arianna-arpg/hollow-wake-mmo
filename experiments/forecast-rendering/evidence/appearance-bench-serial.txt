@@ -1,0 +1,40 @@
+benchmark                                 value unit         note
+attribute.get.cached                     22.675 ns/op        formula + 20 modifiers, cached
+attribute.get.uncached                  245.185 ns/op        40 modifiers, 4 contexts, cache cleared
+attribute.apply.extra                   336.449 ns/op        damage fold with weave extras (never cached)
+attribute.apply.alloc                     0.134 bytes/op     allocation per damage fold
+expression.evaluate                     108.658 ns/eval      four formulas, checksum 57948161
+expression.alloc                          0.017 bytes/eval   lerp with rand()
+expression.parse                        210.195 ns/parse     uncached parse of a short formula
+worldgen.zone.plan                       18.438 ms           4 pois, 4 quests
+worldgen.chunk                             0.71 ms/chunk     64 chunks, 65536 cells
+worldgen.chunk.alloc                     14.323 KB/chunk     allocation per generated chunk
+worldgen.sample                         989.775 ns/sample    climate sample
+zone.load                                90.999 ms           zone(0,0): 100 chunks, 4 pois, 2 founts, 113 spawners, 2269 flora, 4 quests
+zone.tick.avg                             4.836 ms/tick      2692 entities at start, 2924 at end, 300 monsters, 4 players
+zone.tick.p50                             3.934 ms/tick      median
+zone.tick.p95                            10.691 ms/tick      95th percentile
+zone.tick.max                            20.248 ms/tick      worst tick
+zone.tick.alloc                          69.333 KB/tick      gen0 collections 4
+zone.events                                  20 events       raised during the last tick
+system.casting                            0.721 ms/tick      33.1 KB/tick allocated
+system.behavior                            2.52 ms/tick      23.0 KB/tick allocated
+system.territory                          0.034 ms/tick      6.1 KB/tick allocated
+system.statuses                           0.723 ms/tick      3.7 KB/tick allocated
+system.quests                             0.013 ms/tick      1.7 KB/tick allocated
+system.intents                            0.011 ms/tick      0.3 KB/tick allocated
+zone.errors                                   0 count        no system errors
+snapshot.enter                          167.869 KB/player    spawns and self state on entering the zone, sent once
+snapshot.build                            0.801 ms/player    434 known entities per player; build and encode
+snapshot.bytes                           28.148 KB/player    changed entities as full states plus self state, steady state, JSON
+snapshot.delta.build                      0.634 ms/player    the same with deltas opted in
+snapshot.delta.bytes                       9.39 KB/player    changed entities as deltas plus self state, steady state, JSON
+snapshot.interface.build                  0.821 ms/player    deltas plus the interface states on change, build and encode
+snapshot.interface.bytes                  8.238 KB/player    an interface client: deltas, self state with pools and casts, weave slots, inventory, passives and pages on change
+snapshot.forecast.build                   0.303 ms/player    incremental build + encode, 3459 active cast observations
+snapshot.forecast.bytes                   2.124 KB/player    complete opt-in baseline, incremental to entity/interface stream
+snapshot.forecast.alloc                  45.332 KB/player    incremental forecast build and encode allocation
+deliveries.tick                           0.466 ms/tick      33 flights in the air on average among 120 foes, casts included
+deliveries.tick.alloc                    29.467 KB/tick      casts, hits and effects included
+deliveries.projectiles                    0.263 ms/tick      21.0 KB/tick allocated, hits and their effects included
+deliveries.fields                         0.034 ms/tick      2.8 KB/tick allocated

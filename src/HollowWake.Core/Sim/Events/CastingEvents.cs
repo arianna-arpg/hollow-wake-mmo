@@ -2,6 +2,13 @@ using HollowWake.Core.Ecs;
 
 namespace HollowWake.Core.Sim;
 
+/// <summary>A paid application found no eligible body; it did not apply its payload.</summary>
+public sealed record WeaveMissed(Entity Caster, string Slot, string Weave, Entity Target, string Reason) : CombatNote
+{
+    public long CastId { get; init; }
+    public override string Describe(Func<Entity, string> name) => $"{name(Caster)} missed {Weave} at {name(Target)}: {Reason}";
+}
+
 // Events of the cast modes: channel beats and releases, charge-up and overcharge stages, triggered casts,
 // repeats, use charges spent and refilled, toggles, guards and their surges, timed presses, metas, rack swaps
 // and tree resets. Declared here so no package edits Sim/Events.cs.

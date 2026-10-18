@@ -1,0 +1,4 @@
+Test run for C:\Users\John\.codex\worktrees\shared-cast-forecasts\MMOARPG\tests\HollowWake.Server.Tests\bin\Release\net10.0\HollowWake.Server.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+
+Passed!  - Failed:     0, Passed:    58, Skipped:     0, Total:    58, Duration: 16 s - HollowWake.Server.Tests.dll (net10.0)

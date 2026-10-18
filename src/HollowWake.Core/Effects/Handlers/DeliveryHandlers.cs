@@ -14,6 +14,7 @@ using HollowWake.Core.Sim;
 using HollowWake.Core.StatusEffects;
 using HollowWake.Core.Systems;
 using HollowWake.Core.Tags;
+using HollowWake.Core.Weaves;
 using HollowWake.Core.World;
 using static HollowWake.Core.Effects.Handlers.EffectHelpers;
 
@@ -65,11 +66,12 @@ internal enum Pick
     Farthest,
     LowestLife,
     HighestLife,
+    AimedNearest,
 }
 
 internal static class Picks
 {
-    public static readonly string[] Names = { "random", "nearest", "farthest", "lowest_life", "highest_life" };
+    public static readonly string[] Names = { "random", "nearest", "farthest", "lowest_life", "highest_life", "aimed_nearest" };
 
     public static Pick Of(EffectCompileContext ctx, JsonNode? node, string fallback) => ctx.ChoiceOf(node, "pick", fallback, Names) switch
     {
@@ -77,6 +79,7 @@ internal static class Picks
         "farthest" => Pick.Farthest,
         "lowest_life" => Pick.LowestLife,
         "highest_life" => Pick.HighestLife,
+        "aimed_nearest" => Pick.AimedNearest,
         _ => Pick.Random,
     };
 
@@ -120,10 +123,10 @@ internal static class Picks
             for (var i = 0; i < max; i++)
             {
                 var best = i;
-                var bestKey = Key(ctx.Sim, pick, bodies[i], from);
+                var bestKey = SelectionKey(bodies[i]);
                 for (var j = i + 1; j < bodies.Count; j++)
                 {
-                    var key = Key(ctx.Sim, pick, bodies[j], from);
+                    var key = SelectionKey(bodies[j]);
                     if (key < bestKey)
                     {
                         best = j;
@@ -139,6 +142,9 @@ internal static class Picks
             }
         }
         bodies.RemoveRange(max, bodies.Count - max);
+
+        double SelectionKey(Entity e) => pick == Pick.AimedNearest && e == ctx.Target
+            ? double.NegativeInfinity : Key(ctx.Sim, pick, e, from);
     }
 }
 
@@ -156,7 +162,7 @@ internal sealed class AreaHandler : IEffectHandler
 {
     public string Type => "area";
 
-    public EffectSignature Signature { get; } = EffectSignature.Of("shape", "radius", "angle", "width", "inner", "filter", "center", "max_targets", "include_center", "pick", "require", "reach", "occlusion")
+    public EffectSignature Signature { get; } = EffectSignature.Of("shape", "radius", "angle", "width", "inner", "filter", "center", "max_targets", "include_center", "pick", "require", "reach", "occlusion", "report_miss", "payload_depth")
         .Hook(EffectHooks.OnHit, "effects");
 
     public CompiledEffect Compile(JsonObject p, EffectCompileContext ctx) => new Effect
@@ -176,10 +182,13 @@ internal sealed class AreaHandler : IEffectHandler
         Require = ctx.ExprOf(p["require"]),
         FromEdge = ctx.ChoiceOf(p["reach"], "reach", "center", "center", "edge") == "edge",
         Free = OcclusionFree(ctx, p["occlusion"]),
+        ReportMiss = ctx.BoolOf(p["report_miss"], false),
+        PreservePayloadDepth = ctx.ChoiceOf(p["payload_depth"], "payload_depth", "next", "next", "same") == "same",
     };
 
-    private sealed class Effect : CompiledEffect, IDeliveryPlanSource
+    private sealed class Effect : CompiledEffect, IImmediateDeliveryCandidateSource, IReleaseTargetSelector
     {
+        public bool ChecksLineOfSight => !Free;
         public required Shape Shape;
         public Expr? Radius;
         public Expr? Angle;
@@ -196,6 +205,8 @@ internal sealed class AreaHandler : IEffectHandler
         public bool FromEdge;
         /// <summary>Strikes through walls and rising ground (<c>occlusion: free</c>).</summary>
         public bool Free;
+        public bool ReportMiss;
+        public bool PreservePayloadDepth;
 
         private ResolvedAreaPlan ResolvePlan(EffectContext ctx)
         {
@@ -229,23 +240,41 @@ internal sealed class AreaHandler : IEffectHandler
         {
             // Observation must not initialize the caller's lazy scope and freeze its time/distance.
             // Sample live inputs in a detached context; never advance either shared random stream.
-            ctx = ctx.Fork();
-            var inputs = new ForecastInputs(ctx);
+            return DescribeDetachedDelivery(ctx.Fork());
+        }
+
+        public DeliveryForecast DescribeDetachedDelivery(EffectContext ctx)
+            => TryDescribePlan(ctx, out var plan, out var reason)
+                ? new DeliveryForecast(plan, null) : DeliveryForecast.Unavailable(reason!);
+
+        public bool? IsCandidate(EffectContext ctx, Entity target, Vector3 position)
+            => TryDescribePlan(ctx, out var plan, out _) ? plan.IsCandidate(ctx, target, position) : null;
+
+        private bool TryDescribePlan(EffectContext ctx, out ResolvedAreaPlan plan, out string? reason)
+        {
+            plan = default;
+            reason = null;
+            using var inputs = ForecastInputs.Rent(ctx);
             if (!inputs.ParameterOrAttribute(Radius, "area.radius") || !inputs.Expression(Angle) ||
                 Shape.HasAngle && !inputs.WeaveAttribute("area.angle") ||
                 Shape.HasWidth && !inputs.ParameterOrAttribute(Width, "area.width") ||
                 !inputs.Expression(Inner) || Shape.Anchored && ctx.Tags.Has("melee") && !inputs.WeaveAttribute("melee.reach") ||
                 !Free && !inputs.WeaveAttribute("phasing"))
-                return DeliveryForecast.Unavailable(inputs.Failure ?? "unavailable_inputs");
+            {
+                reason = inputs.Failure ?? "unavailable_inputs";
+                return false;
+            }
             try
             {
-                var plan = ResolvePlan(ctx);
-                return plan.IsFinite ? new DeliveryForecast(plan, null) : DeliveryForecast.Unavailable("non_finite_geometry");
+                plan = ResolvePlan(ctx);
+                if (plan.IsFinite) return true;
+                reason = "non_finite_geometry";
             }
-            catch (ExprEvalException) { return DeliveryForecast.Unavailable("unresolved_expression"); }
-            catch (AttributeCycleException) { return DeliveryForecast.Unavailable("cyclic_attribute_dependency"); }
-            catch (ArithmeticException) { return DeliveryForecast.Unavailable("invalid_expression"); }
-            catch (ArgumentException) { return DeliveryForecast.Unavailable("invalid_expression"); }
+            catch (ExprEvalException) { reason = "unresolved_expression"; }
+            catch (AttributeCycleException) { reason = "cyclic_attribute_dependency"; }
+            catch (ArithmeticException) { reason = "invalid_expression"; }
+            catch (ArgumentException) { reason = "invalid_expression"; }
+            return false;
         }
 
         public override void Execute(EffectContext ctx)
@@ -277,7 +306,12 @@ internal sealed class AreaHandler : IEffectHandler
                     var max = (int)Math.Round(ctx.Eval(MaxTargets, targets.Count));
                     Picks.Keep(ctx, targets, Math.Max(0, max), Pick, plan.Anchor);
                 }
-                var deeper = ctx.Deeper();
+                // Only the original selection reports a primary miss. Secondary placements still
+                // execute their payloads and retain their normal depth, without replaying that cue.
+                if (ReportMiss && targets.Count == 0 && !ctx.Vars.ContainsKey(DeliveryVars.Echo) &&
+                    ctx.Vars.GetValueOrDefault(DeliveryVars.Step) <= 0)
+                    ReleaseTargets.Miss(ctx, MissReason(ctx, plan), emitted: true);
+                var deeper = PreservePayloadDepth ? ctx : ctx.Deeper();
                 foreach (var t in targets)
                 {
                     ExecuteAll(Effects, deeper.WithTarget(t));
@@ -288,6 +322,18 @@ internal sealed class AreaHandler : IEffectHandler
                 Return(targets);
             }
             Echoes(ctx, plan.Anchor, plan.Size.Radius);
+        }
+
+        private static string MissReason(EffectContext ctx, ResolvedAreaPlan plan)
+        {
+            if (ctx.Target.IsNone) return "no_candidate";
+            if (!ctx.Sim.World.IsAlive(ctx.Target) || ctx.Sim.World.Has<Dead>(ctx.Target)) return "dead";
+            if (ctx.TargetTransform is not { } target) return "missing_position";
+            var delta = target.Position - plan.Anchor;
+            if (new Vector2(delta.X, delta.Y).Length() > plan.Reach || MathF.Abs(delta.Z) > plan.HeightTolerance) return "out_of_reach";
+            if (!plan.ContainsCenter(target.Position)) return "outside_area";
+            if (plan.RequiresLineOfSight && !LineOfSight.Clear(ctx.Sim.Terrain, plan.Anchor + Eye, target.Position + Eye)) return "line_of_sight";
+            return "no_candidate";
         }
 
         /// <summary>Aftershocks around the area and pulse repeats where it stood, from the weave's area.scatter and area.pulses.</summary>
@@ -897,6 +943,7 @@ internal sealed class ChainHandler : IEffectHandler
                 {
                     Pick.Nearest => distance,
                     Pick.Farthest => -distance,
+                    Pick.AimedNearest when e == ctx.Target => double.NegativeInfinity,
                     _ => Picks.Key(ctx.Sim, Pick, e, from),
                 };
                 // Ties keep the nearer body, then the one met first.

@@ -63,3 +63,7 @@ It logs in, creates or picks a character called Smoke, enters the world, waits f
 ## Still rough
 
 Worth knowing before judging a screenshot: bodies are generated low-poly proxies from content, not authored models, and cards carry no per-entity variation (see [appearance.md](appearance.md)); structure cells are flat-topped blocks with skirts, so a wall is a slab and only roof cells get a cap; the third-person camera passes through terrain, walls and canopies; world labels draw under the interface but are not hidden by it; no audio asset ships yet.
+
+## Shared cast forecasts
+
+Both shipped clients negotiate `cast_forecasts`. Confirmed lifecycle events drive release, contact and cancellation; preparation bars and candidate regions consume the server's resolved forecasts. When this feature is active, the legacy name-label cast percentage is hidden to avoid conflicting progress displays. Unsupported spatial providers keep timing with explicit unknown coverage. Shape adapters draw the supplied world-space dimensions without skill-name dispatch; cosmetic profiles do not change hit membership. See [cast-forecasting.md](cast-forecasting.md) for parity, relation cues, expiry, visibility repair and current coverage limits.

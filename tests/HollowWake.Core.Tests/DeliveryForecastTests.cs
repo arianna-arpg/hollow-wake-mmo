@@ -291,6 +291,26 @@ public class DeliveryForecastTests
     }
 
     [Fact]
+    public void ObservationScratchDoesNotRetainADeclinedContextsFailureOrDependencies()
+    {
+        var arena = DeliveryArena.Create();
+        var first = arena.Context(Vector3.Zero);
+        first.SourceStats!.Mounted = new ScopeOverlay().Mount("outside", new CountingScope());
+        var opaque = Area(arena, "\"radius\":\"outside\"");
+        Assert.Equal("opaque_mounted_scope", DeliveryForecasts.Describe(opaque, first).UnavailableReason);
+        var other = DeliveryArena.Create();
+        var safe = other.Context(Vector3.Zero);
+        var area = Area(other, "\"radius\":\"time + 2\"");
+        Assert.Equal(2, Plan(area, safe).Size.Radius);
+        other.Sim.Clock.Advance();
+        Assert.Equal(2 + other.Sim.Clock.Time, Plan(area, safe).Size.Radius, 5);
+        Assert.Equal("opaque_mounted_scope", DeliveryForecasts.Describe(opaque, first).UnavailableReason);
+        first.Vars["outside"] = 7;
+        Assert.Equal(7, Plan(opaque, first).Size.Radius);
+        Assert.Equal(2 + other.Sim.Clock.Time, safe.Eval(Expr.Parse("time + 2")), 5);
+    }
+
+    [Fact]
     public void RepeatedObservationsDoNotChangeRandomSelectionOrScheduledPayloadTrace()
     {
         List<string> Run(bool observe)
@@ -334,6 +354,27 @@ public class DeliveryForecastTests
         registry.Register(new ObservedHandler());
         var effect = registry.Compile(DeliveryArena.Spec("{\"type\":\"t_observed\"}"), new EffectCompileContext { Content = arena.Sim.Content, Registry = registry, Owner = "test" });
         Assert.Equal("custom_sample", DeliveryForecasts.Describe(effect, arena.Context(Vector3.Zero)).UnavailableReason);
+    }
+
+    [Theory]
+    [InlineData(0.01f, 0f, true)]
+    [InlineData(-0.01f, 0f, false)]
+    [InlineData(float.NaN, 0f, false)]
+    [InlineData(0f, float.PositiveInfinity, false)]
+    public void Shape_observation_metadata_must_be_finite_and_nonnegative(float allowance, float curvature, bool valid)
+    {
+        var arena = DeliveryArena.Create();
+        var plan = DeliveryForecasts.Describe(Area(arena), arena.Context(Vector3.Zero)).PrimaryRegion!.Value;
+        Assert.Equal(valid, (plan with { Shape = new MetadataShape(allowance, curvature) }).IsFinite);
+    }
+
+    private sealed class MetadataShape(float allowance, float curvature) : Shape
+    {
+        public override string Name => "metadata_test";
+        public override float CenterAllowanceSquared => allowance;
+        public override float Curvature => curvature;
+        public override float Reach(in ShapeSize size) => size.Radius;
+        public override bool Contains(in ShapeSize size, Vector2 to, Vector2 facing, float pad) => false;
     }
 
     private sealed class CountingScope : IExprScope

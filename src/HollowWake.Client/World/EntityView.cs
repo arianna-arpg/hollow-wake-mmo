@@ -17,6 +17,8 @@ namespace HollowWake.Client.World;
 /// </summary>
 public partial class EntityView : Node3D
 {
+    public static bool ShowLegacyCast { get; set; } = true;
+    public static bool ConfirmedCastCues { get; set; }
     private const float BarWidth = 1.2f;
 
     /// <summary>How long a telegraph takes to fade once its strike lands.</summary>
@@ -371,7 +373,7 @@ public partial class EntityView : Node3D
         var rebuild = state.Look != State.Look || Math.Abs(state.Height - State.Height) > 0.01f || state.Interactable is null != State.Interactable is null
             || state.Shape != State.Shape || state.ShapeSize != State.ShapeSize || state.Faction != State.Faction || !SameAppearance(state.Appearance, State.Appearance);
         var now = ServerNow?.Invoke() ?? Time.GetTicksMsec() / 1000.0;
-        if (state.Casting is null && State.Casting is not null)
+        if (!ConfirmedCastCues && state.Casting is null && State.Casting is not null)
         {
             _releasedAt = now;
         }
@@ -436,9 +438,19 @@ public partial class EntityView : Node3D
         }
     }
 
-    /// <summary>This body landed a blow: its swing comes through now even if the snapshot missed the cast.</summary>
+    /// <summary>Validated lifecycle facts drive body motion even when no cosmetic layer is selected.</summary>
+    public void ObserveCastCue(CastCueMsg cue)
+    {
+        if (cue.Phase is "start" or "sync") _releasedAt = double.NegativeInfinity;
+        if (cue.Phase != "release" || !cue.Fired) return;
+        _releasedAt = cue.ServerTime;
+        Cue?.Invoke("swing", _plan?.Swings == true ? "weapon" : _plan?.Rig, GlobalPosition);
+    }
+
+    /// <summary>Legacy-server fallback only; a later hit must not replay a confirmed release.</summary>
     public void Struck()
     {
+        if (ConfirmedCastCues) return;
         if (!_wasCasting)
         {
             _releasedAt = ServerNow?.Invoke() ?? Time.GetTicksMsec() / 1000.0;
@@ -458,7 +470,7 @@ public partial class EntityView : Node3D
         {
             title += " (dead)";
         }
-        if (s.Casting is not null)
+        if (ShowLegacyCast && s.Casting is not null)
         {
             title += $"  {s.Casting} {(int)(s.CastProgress * 100)}%";
         }

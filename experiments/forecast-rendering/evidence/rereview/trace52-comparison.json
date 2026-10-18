@@ -1,0 +1,44 @@
+{
+  "Compared": "Every JSON field recursively except trace Hash",
+  "Identical": true,
+  "Seeds": 10,
+  "Seconds": 60,
+  "Platform": "win-x64",
+  "Hashes": [
+    {
+      "Pair": "wolf:hob",
+      "Before": "096fae942239eba7",
+      "After": "096fae942239eba7"
+    },
+    {
+      "Pair": "loosed_skirmisher:hob",
+      "Before": "a60798285d1db19e",
+      "After": "299660b7acc4c95b"
+    },
+    {
+      "Pair": "loosed_skirmisher:boar",
+      "Before": "8825086812a7dcfd",
+      "After": "957dd0fa00d36afc"
+    },
+    {
+      "Pair": "loosed_kindler:boar",
+      "Before": "75b61d603d05c3f1",
+      "After": "75b61d603d05c3f1"
+    },
+    {
+      "Pair": "tide_channeler:spark_duelist",
+      "Before": "75071943711ba3eb",
+      "After": "75071943711ba3eb"
+    },
+    {
+      "Pair": "proving_reaver:proving_bulwark",
+      "Before": "afb3fac2523af03a",
+      "After": "afb3fac2523af03a"
+    },
+    {
+      "Pair": "loosed_skirmisher:tide_caller",
+      "Before": "c66673c0240d5bf3",
+      "After": "d5b2b56a7491fbd1"
+    }
+  ]
+}

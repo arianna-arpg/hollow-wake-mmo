@@ -393,10 +393,6 @@ public sealed partial class WeaveRuntime
     /// </summary>
     private static void RunFree(Simulation sim, Entity caster, Entity origin, CompiledWeave weave, TagSet tags, CompiledWeave? host, WeaveSlot? slot, Entity target, Vector3 point, Vector2 direction, int depth, Rng rng, double damageScale)
     {
-        if (!target.IsNone && (!sim.World.IsAlive(target) || sim.World.Has<Dead>(target)))
-        {
-            target = Entity.None;
-        }
         if (!target.IsNone && sim.World.TryGet<Transform>(target, out var tt))
         {
             point = tt.Position;
@@ -417,7 +413,7 @@ public sealed partial class WeaveRuntime
             Host = host,
             From = origin == caster ? null : sim.World.Get<Transform>(caster)?.Position,
         };
-        CompiledEffect.ExecuteAll(weave.Effects, ctx);
+        ReleaseTargets.Execute(ctx, weave.Effects);
     }
 
     private sealed class PresetJob

@@ -390,10 +390,7 @@ internal sealed class CastHandler : IEffectHandler
             switch (At)
             {
                 case "target":
-                    if (!ctx.Target.IsNone && ctx.Sim.World.IsAlive(ctx.Target) && !ctx.Sim.World.Has<Dead>(ctx.Target))
-                    {
-                        target = ctx.Target;
-                    }
+                    target = ctx.Target; // Preserve a lost body so the shared release gate can report the miss.
                     point = ctx.Focus;
                     from = point;
                     break;
@@ -434,7 +431,7 @@ internal sealed class CastHandler : IEffectHandler
                 Slot = ctx.Slot,
                 Host = ctx.Host ?? ctx.Weave,
             };
-            ExecuteAll(weave.Effects, cast);
+            ReleaseTargets.Execute(cast, weave.Effects);
         }
 
         /// <summary>The variable counting a weave's host casts: by the weave's key, which its views and levels share.</summary>

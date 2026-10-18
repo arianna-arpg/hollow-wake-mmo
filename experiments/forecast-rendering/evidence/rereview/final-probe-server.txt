@@ -1,0 +1,12 @@
+14:14:58 info: HollowWake.Server.GameServer[0] content loaded: 62 kinds from C:\Users\John\.codex\worktrees\shared-cast-forecasts\MMOARPG\content\core
+14:14:58 info: HollowWake.Server.World.ZoneHost[0] world seed 'aureth' (10175781948776629366); start zone zone(0,0)
+14:14:58 info: HollowWake.Server.Net.TcpTransport[0] tcp transport listening on 127.0.0.1:56025
+14:14:58 info: HollowWake.Server.World.ZoneHost[0] zone zone(0,0) 'Ninewells' loaded: zone(0,0): 100 chunks, 4 pois, 2 founts, 113 spawners, 2269 flora, 4 quests
+14:14:58 info: HollowWake.Server.GameServer[0] forecast-final-probe-39b6e681d1a845aea4341eae9ffc4456 is up: transport tcp, tick 20 Hz, data in C:/Users/John/.codex/worktrees/shared-cast-forecasts/MMOARPG/artifacts/forecast-rereview/final-probe-data
+14:14:58 warn: HollowWake.Server.GameServer[0] tick took 93.1 ms (budget 50.0 ms)
+14:14:59 info: HollowWake.Server.Sessions.SessionManager[0] session 2 (127.0.0.1:56031) Connected  connected
+14:15:00 info: HollowWake.Server.Sessions.SessionManager[0] session 2 (127.0.0.1:56031) Authenticated  created character Probe (holdfast)
+14:15:01 info: HollowWake.Server.World.ZoneHost[0] session 2 (127.0.0.1:56031) InWorld Probe entered zone(0,0) at <129.5, 111, 14.692402>
+14:15:08 info: HollowWake.Server.World.ZoneInstance[0] session 2 (127.0.0.1:56031) InWorld Probe left zone(0,0): 3004 snapshot bytes per snapshot over 76 snapshots since connecting: 865 changes, 1648 spawns and despawns, 490 self (355 spawns, 69 full states, 592 deltas, 4 self states)
+14:15:08 info: HollowWake.Server.Sessions.SessionManager[0] session 2 (127.0.0.1:56031) Closed Probe disconnected: read failed: IOException
+14:15:08 info: HollowWake.Server.GameServer[0] shutting down

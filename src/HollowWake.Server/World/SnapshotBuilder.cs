@@ -60,6 +60,8 @@ public sealed class SnapshotView
     /// </summary>
     public bool SendInterface { get; set; }
     public bool SendCastCues { get; set; }
+    public bool SendCastForecasts { get; set; }
+    internal readonly Dictionary<long, (CastForecastInfo Info, long Revision, double RefreshAt)> Forecasts = new();
 
     /// <summary>Fingerprints of the interface states last sent, and when the weave previews last refreshed.</summary>
     internal ulong InventoryFingerprint;
@@ -92,6 +94,7 @@ public sealed class SnapshotView
         Changed.Clear();
         ChangedDeltas.Clear();
         Known.Clear();
+        Forecasts.Clear();
         SelfCache.Clear();
         SelfFingerprint = 0;
         SelfSentAt = double.NegativeInfinity;
@@ -138,6 +141,9 @@ public sealed class SnapshotBuilder
     /// starts over when a viewer with different precision asks.
     /// </summary>
     private readonly Dictionary<long, (ulong Fingerprint, EntityState? State)> _tick = new();
+    // Only captured states owned by this builder participate. A viewer with a different history
+    // recomputes the delta; retain at most one history per entity, and discard it with the tick cache.
+    private readonly Dictionary<long, (EntityState Last, EntityDelta? Delta, bool Empty)> _tickDeltas = new();
     private long _tickNumber = -1;
     private double _tickResourceStep = double.NaN;
     private int _tickCastSteps = -1;
@@ -154,6 +160,7 @@ public sealed class SnapshotBuilder
     public void Invalidate()
     {
         _tick.Clear();
+        _tickDeltas.Clear();
         _tickNumber = -1;
     }
 
@@ -162,6 +169,7 @@ public sealed class SnapshotBuilder
         if (_tickNumber != _sim.Clock.Tick || _tickResourceStep != settings.ResourceStep || _tickCastSteps != settings.CastSteps)
         {
             _tick.Clear();
+            _tickDeltas.Clear();
             _tickNumber = _sim.Clock.Tick;
             _tickResourceStep = settings.ResourceStep;
             _tickCastSteps = settings.CastSteps;
@@ -304,7 +312,18 @@ public sealed class SnapshotBuilder
         var state = DynamicStateOf(entry.Entity, view.Settings);
         if (!full && view.SendDeltas && entry.Last is { } last)
         {
-            var delta = Snapshots.Delta(last, state, out var empty);
+            EntityDelta? delta;
+            bool empty;
+            if (_tickDeltas.TryGetValue(entry.Entity.Key, out var cached) && ReferenceEquals(cached.Last, last))
+            {
+                delta = cached.Delta;
+                empty = cached.Empty;
+            }
+            else
+            {
+                delta = Snapshots.Delta(last, state, out empty);
+                _tickDeltas[entry.Entity.Key] = (last, delta, empty);
+            }
             if (delta is not null)
             {
                 entry.Last = state;

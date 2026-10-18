@@ -138,6 +138,22 @@ describe('bodies', () => {
 });
 
 describe('animator', () => {
+  it.each([['biped', true], ['biped', false], ['wisp', true], ['wisp', false], ['quadruped', true], ['crawler', true]] as const)(
+    'shows a channel emission then returns to preparation: %s swings=%s', (rig, swings) => {
+      const state = { ...freshVisualState(), rig, swings, castMode: 'channel', castProgress: 0.6,
+        time: 12, reducedMotion: true, releaseAge: 0.1 };
+      const emitted = new Pose(), channel = new Pose(), ready = new Pose();
+      animate(state, catalog.motion, emitted);
+      state.casting = true;
+      animate(state, catalog.motion, channel);
+      expect(channel.bones).toEqual(emitted.bones);
+      state.releaseAge = 100;
+      animate(state, catalog.motion, channel);
+      expect(channel.bones).not.toEqual(emitted.bones);
+      state.releaseAge = Infinity;
+      animate(state, catalog.motion, ready);
+      expect(channel.bones).toEqual(ready.bones);
+    });
   it('poses every rig in every state with numbers, swings and falls', () => {
     const motion = catalog.motion;
     const pose = new Pose();

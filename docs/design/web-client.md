@@ -86,3 +86,7 @@ The [background testing harness](testing.md) builds this client, starts a privat
 ## Still rough
 
 Worth knowing before judging a screenshot: bodies are generated proxies from content, not authored models, and the browser's custom materials carry no shadows; trees and walls hide the player from the isometric camera; `F` takes the nearest interactable, so a villager standing between you and the quartermaster answers first (click the quartermaster instead); the browser downloads every chunk it shows, tens of kilobytes each; the server speaks plain HTTP and WebSocket, so TLS comes from whatever is in front of it (the Codespaces forwarder, a reverse proxy); on Windows the server listens on this machine only unless a URL ACL allows the wildcard prefix.
+
+## Shared cast forecasts
+
+Both shipped clients negotiate `cast_forecasts`. Confirmed lifecycle events drive release, contact and cancellation; preparation bars and candidate regions consume the server's resolved forecasts. When this feature is active, the legacy name-label cast percentage is hidden to avoid conflicting progress displays. Unsupported spatial providers keep timing with explicit unknown coverage. Shape adapters draw the supplied world-space dimensions without skill-name dispatch; cosmetic profiles do not change hit membership. See [cast-forecasting.md](cast-forecasting.md) for parity, relation cues, expiry, visibility repair and current coverage limits.

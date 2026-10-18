@@ -1,0 +1,25 @@
+  Determining projects to restore...
+  Restored C:\Users\John\.codex\worktrees\shared-cast-forecasts\MMOARPG\src\HollowWake.Core\HollowWake.Core.csproj (in 394 ms).
+  Restored C:\Users\John\.codex\worktrees\shared-cast-forecasts\MMOARPG\src\HollowWake.Server\HollowWake.Server.csproj (in 452 ms).
+  Restored C:\Users\John\.codex\worktrees\shared-cast-forecasts\MMOARPG\tests\HollowWake.Server.Tests\HollowWake.Server.Tests.csproj (in 445 ms).
+  Restored C:\Users\John\.codex\worktrees\shared-cast-forecasts\MMOARPG\src\HollowWake.Protocol\HollowWake.Protocol.csproj (in 426 ms).
+  HollowWake.Core -> C:\Users\John\.codex\worktrees\shared-cast-forecasts\MMOARPG\src\HollowWake.Core\bin\Release\net8.0\HollowWake.Core.dll
+  HollowWake.Protocol -> C:\Users\John\.codex\worktrees\shared-cast-forecasts\MMOARPG\src\HollowWake.Protocol\bin\Release\net8.0\HollowWake.Protocol.dll
+  HollowWake.Server -> C:\Users\John\.codex\worktrees\shared-cast-forecasts\MMOARPG\src\HollowWake.Server\bin\Release\net10.0\HollowWake.Server.dll
+  HollowWake.Server.Tests -> C:\Users\John\.codex\worktrees\shared-cast-forecasts\MMOARPG\tests\HollowWake.Server.Tests\bin\Release\net10.0\HollowWake.Server.Tests.dll
+Test run for C:\Users\John\.codex\worktrees\shared-cast-forecasts\MMOARPG\tests\HollowWake.Server.Tests\bin\Release\net10.0\HollowWake.Server.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v3.1.5+1b188a7b0a (64-bit .NET 10.0.13)
+[xUnit.net 00:00:00.95]   Discovering: HollowWake.Server.Tests
+[xUnit.net 00:00:01.05]   Discovered:  HollowWake.Server.Tests
+[xUnit.net 00:00:01.09]   Starting:    HollowWake.Server.Tests
+  Passed HollowWake.Server.Tests.SnapshotHistoryTests.InvalidationOrPrecisionChangeCannotReuseAnEarlierStateInTheSameTick(precisionChange: False) [2 s]
+[xUnit.net 00:00:03.47]   Finished:    HollowWake.Server.Tests
+  Passed HollowWake.Server.Tests.SnapshotHistoryTests.InvalidationOrPrecisionChangeCannotReuseAnEarlierStateInTheSameTick(precisionChange: True) [1 ms]
+  Passed HollowWake.Server.Tests.SnapshotHistoryTests.AViewerThatSkippedAFrameStillReceivesEveryMissingField [< 1 ms]
+  Passed HollowWake.Server.Tests.SnapshotHistoryTests.IdenticalHistoriesShareAnUnchangedDeltaAcrossViewers [1 ms]
+
+Test Run Successful.
+Total tests: 4
+     Passed: 4
+ Total time: 5.4621 Seconds

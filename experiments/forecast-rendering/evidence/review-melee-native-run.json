@@ -1,0 +1,56 @@
+{
+  "started": "2026-10-18T01:38:07.394Z",
+  "root": "<worktree>",
+  "directory": "<worktree>\\artifacts\\forecast-review\\review-melee-native\\run-QQfgAH",
+  "suite": "godot",
+  "status": "passed",
+  "stages": [
+    {
+      "name": "build-server",
+      "status": "passed",
+      "started": "2026-10-18T01:38:07.399Z",
+      "code": 0,
+      "signal": null,
+      "finished": "2026-10-18T01:38:11.858Z"
+    },
+    {
+      "name": "build-godot",
+      "status": "passed",
+      "started": "2026-10-18T01:38:11.858Z",
+      "code": 0,
+      "signal": null,
+      "finished": "2026-10-18T01:38:14.416Z"
+    },
+    {
+      "name": "import-godot",
+      "status": "passed",
+      "started": "2026-10-18T01:38:16.442Z",
+      "code": 0,
+      "signal": null,
+      "finished": "2026-10-18T01:38:24.496Z"
+    },
+    {
+      "name": "smoke-godot",
+      "status": "passed",
+      "started": "2026-10-18T01:38:24.497Z",
+      "code": 0,
+      "signal": null,
+      "passed": 25,
+      "total": 25,
+      "skipped": [
+        "theme rendered pixels: headless display; theme state checked above"
+      ],
+      "finished": "2026-10-18T01:39:12.675Z"
+    }
+  ],
+  "nativeRendering": "not covered by headless mode",
+  "godot": "C:\\Users\\John\\AppData\\Local\\Microsoft\\WinGet\\Packages\\GodotEngine.GodotEngine.Mono_Microsoft.Winget.Source_8wekyb3d8bbwe\\Godot_v4.7.2-stable_mono_win64\\Godot_v4.7.2-stable_mono_win64.exe",
+  "server": {
+    "tcp": 61020,
+    "url": "http://127.0.0.1:61021",
+    "name": "harness-run-QQfgAH",
+    "data": "<worktree>\\artifacts\\forecast-review\\review-melee-native\\run-QQfgAH\\data"
+  },
+  "cleanupErrors": [],
+  "finished": "2026-10-18T01:39:12.988Z"
+}

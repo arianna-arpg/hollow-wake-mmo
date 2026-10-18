@@ -114,26 +114,36 @@ export class CardBaker {
     this.camera.position.copy(centre).add(dir.clone().multiplyScalar(40));
     this.camera.lookAt(centre);
     const previousTarget = this.renderer.getRenderTarget();
-    const previousClear = this.renderer.getClearAlpha();
+    const previousFace = this.renderer.getActiveCubeFace();
+    const previousMip = this.renderer.getActiveMipmapLevel();
+    const previousColor = this.renderer.getClearColor(new Color());
+    const previousAlpha = this.renderer.getClearAlpha();
     const previousAuto = this.renderer.autoClear;
-    this.renderer.setRenderTarget(target);
-    this.renderer.setClearColor(new Color(0, 0, 0), 0);
-    this.renderer.clear();
-    this.renderer.autoClear = false;
-    for (let cell = 0; cell < CELLS; cell++) {
-      body.root.rotation.y = yaw + (cell * Math.PI * 2) / CELLS;
-      body.root.updateMatrixWorld(true);
-      this.renderer.setViewport(cell * pixels, 0, pixels, pixels);
-      this.renderer.setScissor(cell * pixels, 0, pixels, pixels);
-      this.renderer.setScissorTest(true);
-      this.renderer.render(this.scene, this.camera);
+    let baked = false;
+    try {
+      this.renderer.setRenderTarget(target);
+      this.renderer.setClearColor(new Color(0, 0, 0), 0);
+      this.renderer.clear();
+      this.renderer.autoClear = false;
+      for (let cell = 0; cell < CELLS; cell++) {
+        body.root.rotation.y = yaw + (cell * Math.PI * 2) / CELLS;
+        body.root.updateMatrixWorld(true);
+        // Target-local physical pixels: do not mutate the canvas viewport or apply its pixel ratio.
+        target.viewport.set(cell * pixels, 0, pixels, pixels);
+        target.scissor.copy(target.viewport);
+        target.scissorTest = true;
+        this.renderer.setRenderTarget(target);
+        this.renderer.render(this.scene, this.camera);
+      }
+      baked = true;
+    } finally {
+      this.renderer.autoClear = previousAuto;
+      this.renderer.setRenderTarget(previousTarget, previousFace, previousMip);
+      this.renderer.setClearColor(previousColor, previousAlpha);
+      this.scene.remove(body.root);
+      body.dispose();
+      if (!baked) target.dispose();
     }
-    this.renderer.setScissorTest(false);
-    this.renderer.autoClear = previousAuto;
-    this.renderer.setRenderTarget(previousTarget);
-    this.renderer.setClearAlpha(previousClear);
-    this.scene.remove(body.root);
-    body.dispose();
     atlas.target = target;
     atlas.height = plan.height;
     atlas.width = plan.width;

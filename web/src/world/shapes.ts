@@ -28,12 +28,16 @@ export interface ShapeSpec {
   inner: number;
   /** For arcs and waves, in radii: how far behind the anchor the circle they bow along centers. */
   curvature: number;
+  /** Core angular allowance, clipped by outer and inner radial bounds. */
+  centerAllowance?: number;
 }
 
 const DEG = Math.PI / 180;
 
 /** Shapes the client draws; any other name falls back to a circle. */
 export const SHAPES = ['circle', 'square', 'triangle', 'sector', 'cone', 'crescent', 'line', 'band', 'bar', 'arc', 'wave'] as const;
+export const WIDTH_SHAPES: readonly string[] = ['line', 'band', 'bar', 'arc', 'wave'];
+export const ANGLE_SHAPES: readonly string[] = ['sector', 'cone', 'crescent', 'arc', 'wave'];
 
 /** A shape's full specification from what the wire sent, with the shape's defaults for what it left out. */
 export function specOf(name: string, size: ShapeSizeInfo | undefined, fallbackRadius: number): ShapeSpec {
@@ -72,6 +76,9 @@ const circle = (r: number, segments: number, cx = 0): Point[] => {
   }
   return pts;
 };
+const ring = (cx: number, inner: number, outer: number, segments: number): Region => ({
+  outer: circle(outer, segments * 2, cx), holes: inner > 0 ? [circle(inner, segments * 2, cx).reverse()] : [],
+});
 
 /** A ring sector between two radii and two angles about a center, counter-clockwise. */
 const annulus = (cx: number, r0: number, r1: number, a0: number, a1: number, segments: number): Point[] => {
@@ -102,16 +109,25 @@ export function regionOf(spec: ShapeSpec, segments = 32): Region {
     case 'sector':
     case 'cone':
     case 'crescent': {
-      const half = spec.angle / 2;
-      if (spec.inner > 0) {
+      const angle = Math.min(Math.PI * 2, Math.max(0, spec.angle)), half = angle / 2;
+      const center = Math.min(r, spec.centerAllowance ?? 0);
+      // Saturated angles cover a full turn. The core's central allowance obeys both radial bounds.
+      if (angle >= Math.PI * 2 || center >= r) return ring(0, spec.inner, r, segments);
+      if (angle <= 0) return spec.inner < center ? ring(0, spec.inner, center, segments) : { outer: [], holes: [] };
+      if (spec.inner >= center && spec.inner > 0) {
         return { outer: annulus(0, spec.inner, r, -half, half, segments), holes: [] };
       }
-      const pts: Point[] = [[0, 0]];
+      const pts: Point[] = [];
       for (let i = 0; i <= segments; i++) {
-        const a = -half + (spec.angle * i) / segments;
+        const a = -half + (angle * i) / segments;
         pts.push([Math.cos(a) * r, Math.sin(a) * r]);
       }
-      return { outer: pts, holes: [] };
+      if (center <= 0) pts.push([0, 0]);
+      else for (let i = 0; i <= segments; i++) {
+        const a = half + ((Math.PI * 2 - angle) * i) / segments;
+        pts.push([Math.cos(a) * center, Math.sin(a) * center]);
+      }
+      return { outer: pts, holes: spec.inner > 0 ? [circle(spec.inner, segments * 2).reverse()] : [] };
     }
     case 'line':
     case 'band': {
@@ -127,8 +143,10 @@ export function regionOf(spec: ShapeSpec, segments = 32): Region {
     case 'wave': {
       // A blade bowed forward: part of a circle whose center lies behind the anchor by curvature times the radius.
       const bend = r * Math.max(0.1, spec.curvature);
-      const half = spec.angle / 2;
-      return { outer: annulus(-bend, Math.max(0.01, bend - spec.width / 2), bend + spec.width / 2, -half, half, segments), holes: [] };
+      const angle = Math.min(Math.PI * 2, Math.max(0, spec.angle)), half = angle / 2;
+      const inner = Math.max(0, bend - spec.width / 2), outer = bend + spec.width / 2;
+      return angle >= Math.PI * 2 ? ring(-bend, inner, outer, segments) :
+        { outer: annulus(-bend, inner, outer, -half, half, segments), holes: [] };
     }
     default:
       return { outer: circle(r, segments * 2), holes: spec.inner > 0 ? [circle(spec.inner, segments * 2).reverse()] : [] };

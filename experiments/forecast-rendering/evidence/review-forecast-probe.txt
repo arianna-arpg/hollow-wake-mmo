@@ -1,0 +1,1 @@
+PASS: 63 real-core scenario/provider checks; configured damage comparisons passed. Confirmed lifecycle extension available: True.

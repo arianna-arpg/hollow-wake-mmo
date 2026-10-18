@@ -1,0 +1,14 @@
+Godot Engine v4.7.2.stable.mono.official.ed1daf0bf - https://godotengine.org
+Vulkan 1.3.280 - Forward+ - Using Device #0: NVIDIA - NVIDIA GeForce RTX 3090
+
+content loaded from <worktree>\content\core: 0 errors, 0 warnings
+server 127.0.0.1:18077 from the command line
+server granted features: cast_cues, cast_forecast_v1, entity_delta, interface
+SMOKE ok   connect and log in: Logged in. Pick a character.
+SMOKE ok   create character: Smoke the holdfast
+SMOKE FAIL enter world: Disconnected: Loading cancelled
+SMOKE SUMMARY
+SMOKE PASS connect and log in: Logged in. Pick a character.
+SMOKE PASS create character: Smoke the holdfast
+SMOKE FAIL enter world: Disconnected: Loading cancelled
+SMOKE DONE 2/3 passed in 20.5s; 770 fps at the end with 0 chunks and 0 entities

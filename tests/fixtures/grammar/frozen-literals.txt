@@ -2,6 +2,7 @@
 # one a line, keyed by who wrote it (a form, a preset or a glyph) and where in their own definition. Written by
 # hollowwake weave --axes --all --literals tests/fixtures/grammar/frozen-literals.txt; the axis report tests hold
 # the core content to it, so a new literal fails them and a literal resolved is removed by writing the file again.
+form bash effects[0].max_targets
 form binding effects[0].interval
 form binding effects[0].max_length
 form binding effects[0].width
@@ -21,6 +22,7 @@ form maelstrom effects[0].interval
 form maelstrom effects[0].pull
 form maelstrom effects[0].radius_curve.from
 form maelstrom effects[0].radius_curve.to
+form measured_strike effects[0].max_targets
 form measured_strike timing.bonus
 form measured_strike timing.window
 form nova effects[0].effects[1].chance
@@ -42,6 +44,7 @@ form storm effects[0].interval
 form storm effects[0].jitter
 form storm effects[0].radius
 form storm effects[0].telegraph
+form strike effects[0].max_targets
 form surge overcharge.spark.bonus
 form surge overcharge.spark.window
 form swing_multitude timing.window
@@ -62,14 +65,14 @@ glyph cascading patches[0].wrap.interval
 glyph contagion hooks.on_kill[0].max_targets
 glyph contagion hooks.on_kill[0].radius
 glyph contagion hooks.on_kill[0].strength
-glyph furious adds_effects[0].then[0].gain
+glyph furious hooks.after_damage[0].gain
 glyph hexing hooks.on_hit[0].chance
 glyph martyrdom hooks.on_death[0].radius
 glyph parting_gift hooks.on_end[0].damage_scale
 glyph reaping hooks.on_kill[0].count
 glyph reaping hooks.on_kill[0].duration
 glyph reaping hooks.on_kill[0].max_active
-glyph rending adds_effects[0].fraction
+glyph rending hooks.after_damage[0].fraction
 glyph shedding hooks.on_tick[0].count
 glyph shedding hooks.on_tick[0].radius
 glyph shedding hooks.on_tick[0].range

@@ -29,7 +29,7 @@ public class AiTrajectoryTests
 
     private static string[] Trace(string scenario)
     {
-        var sim = ZoneBuilder.CreateArena(CoreContent.Registry, 3);
+        var sim = ZoneBuilder.CreateArena(HistoricalAiContent.Registry, 3);
         var factory = sim.Service<PatternFactory>();
         var (hunter, at, preyAt, seconds) = scenario switch
         {

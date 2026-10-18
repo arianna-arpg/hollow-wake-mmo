@@ -28,6 +28,6 @@ public sealed partial class WeaveRuntime
         sim.Events.Publish(new CastPresentationEvent(cast.CastId, phase, caster, cast.Target,
             weave.Key, weave.Name, CastPresentationEvent.ModeName(cast.Mode), weave.Tags,
             position, aim, cast.StartedAt, cast.Duration, sim.Clock.Time,
-            cast.PresentationReleases > 0, reason) { Tick = sim.Clock.Tick, Mechanisms = weave.Mechanisms });
+            cast.PresentationReleases > 0, reason) { Tick = sim.Clock.Tick, Mechanisms = weave.Mechanisms, Outcome = phase == "miss" });
     }
 }

@@ -1,0 +1,83 @@
+{
+  "started": "2026-10-18T01:28:10.357Z",
+  "root": "<worktree>",
+  "directory": "<worktree>\\artifacts\\forecast-review\\review-spell\\run-VFnJL8",
+  "suite": "all",
+  "status": "passed",
+  "stages": [
+    {
+      "name": "build-server",
+      "status": "passed",
+      "started": "2026-10-18T01:28:10.366Z",
+      "code": 0,
+      "signal": null,
+      "finished": "2026-10-18T01:28:17.273Z"
+    },
+    {
+      "name": "typecheck-web",
+      "status": "passed",
+      "started": "2026-10-18T01:28:17.274Z",
+      "code": 0,
+      "signal": null,
+      "finished": "2026-10-18T01:28:26.522Z"
+    },
+    {
+      "name": "build-web",
+      "status": "passed",
+      "started": "2026-10-18T01:28:26.523Z",
+      "code": 0,
+      "signal": null,
+      "finished": "2026-10-18T01:28:27.409Z"
+    },
+    {
+      "name": "build-godot",
+      "status": "passed",
+      "started": "2026-10-18T01:28:27.410Z",
+      "code": 0,
+      "signal": null,
+      "finished": "2026-10-18T01:28:31.127Z"
+    },
+    {
+      "name": "smoke-web",
+      "status": "passed",
+      "started": "2026-10-18T01:28:32.957Z",
+      "code": 0,
+      "signal": null,
+      "passed": 27,
+      "total": 27,
+      "skipped": [],
+      "finished": "2026-10-18T01:30:02.162Z"
+    },
+    {
+      "name": "import-godot",
+      "status": "passed",
+      "started": "2026-10-18T01:30:02.165Z",
+      "code": 0,
+      "signal": null,
+      "finished": "2026-10-18T01:30:08.723Z"
+    },
+    {
+      "name": "smoke-godot",
+      "status": "passed",
+      "started": "2026-10-18T01:30:08.723Z",
+      "code": 0,
+      "signal": null,
+      "passed": 26,
+      "total": 26,
+      "skipped": [
+        "theme rendered pixels: headless display; theme state checked above"
+      ],
+      "finished": "2026-10-18T01:30:54.433Z"
+    }
+  ],
+  "nativeRendering": "not covered by headless mode",
+  "godot": "C:\\Users\\John\\AppData\\Local\\Microsoft\\WinGet\\Packages\\GodotEngine.GodotEngine.Mono_Microsoft.Winget.Source_8wekyb3d8bbwe\\Godot_v4.7.2-stable_mono_win64\\Godot_v4.7.2-stable_mono_win64.exe",
+  "server": {
+    "tcp": 59649,
+    "url": "http://127.0.0.1:59650",
+    "name": "harness-run-VFnJL8",
+    "data": "<worktree>\\artifacts\\forecast-review\\review-spell\\run-VFnJL8\\data"
+  },
+  "cleanupErrors": [],
+  "finished": "2026-10-18T01:30:54.843Z"
+}

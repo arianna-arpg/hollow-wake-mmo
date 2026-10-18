@@ -3,6 +3,8 @@ kind: rules
 entries:
   - id: casting
     values:
+      # Stored body targets must still be reachable when an application releases.
+      release_height_tolerance: 4
       # While true, a player's SetWeave needs the hero to own the forms, glyphs and Threads it names, as the
       # registered weave ownership service decides. The item model for weaves switches it on from its own file.
       require_ownership: false

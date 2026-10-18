@@ -15,6 +15,9 @@ namespace HollowWake.Core.Definitions;
 // does. The cast mode stays the form's, and validation refuses a block the form's mode would not read.
 public sealed partial record WeaveDef
 {
+    [JsonPropertyName("release_check")]
+    public ReleaseCheckSpec? ReleaseCheck { get; init; }
+
     /// <summary>Mechanisms the preset declares beside its form's.</summary>
     public TagSet Mechanisms { get; init; } = TagSet.Empty;
 
