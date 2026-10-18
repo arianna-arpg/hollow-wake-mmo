@@ -158,6 +158,7 @@ public sealed class PatternFactory
             stats.FillResources();
         }
         sim.Spatial.Update(e, snapped);
+        Combat.HitBodies.InvalidateBounds(sim);
         sim.Events.Publish(new EntitySpawned(e, patternId, snapped) { Tick = sim.Clock.Tick });
         return e;
     }
@@ -265,6 +266,10 @@ public sealed class PatternFactory
             transform.Radius = (float)(Math.Max(profile.Width, profile.Depth) / 2);
             transform.Height = (float)profile.Height;
         });
+        Register("hit_body", c => c.Sim.World.Add(c.Entity, new Combat.HitBody
+        {
+            Definition = c.Sim.Content.Require<HitBodyDef>(c.Str("profile") ?? ""),
+        }));
         Register("motion", c =>
         {
             var m = c.Sim.World.GetOrAdd<Motion>(c.Entity);

@@ -27,6 +27,8 @@ public sealed class EffectContext
     public Entity Source { get; init; } = Entity.None;
     public Entity Target { get; init; } = Entity.None;
     public Vector3 Point { get; init; }
+    /// <summary>Authored body aim offset sampled by the cast, independent of payload targeting and planar bearing.</summary>
+    public Vector3 AimOffset { get; init; }
     public Vector2 Direction { get; init; }
     public CompiledWeave? Weave { get; init; }
     public TagSet Tags { get; init; } = TagSet.Empty;
@@ -134,6 +136,8 @@ public sealed class EffectContext
             Source = source ?? Source,
             Target = target ?? Target,
             Point = point ?? Point,
+            AimOffset = target is { } aimed && Sim.World.Get<Transform>(aimed) is { } at ?
+                Combat.HitBodies.AimPoint(Sim, aimed) - at.Position : point is not null ? Vector3.Zero : AimOffset,
             Direction = Direction,
             Weave = Weave,
             Tags = tags ?? Tags,

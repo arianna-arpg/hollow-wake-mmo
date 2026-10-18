@@ -211,6 +211,8 @@ Do not use the isolated contract checks as evidence that proposed tracking locks
 
 ## Ownership and integration handoff
 
+The entity-hitbox foundation extends `ResolvedAreaPlan` with an opt-in body-contact policy and an explicit bottom/top slab. `IsCandidate` shares the anatomy predicate with execution; `ContainsCenter` remains a center-only diagnostic. Default center areas and fields retain their policy. Observation rejects unsafe height/elevation expressions just as it rejects unsafe radius inputs. A flat footprint alone cannot certify body contact at another height: any wire integration must carry or honestly qualify this vertical eligibility. This branch does not integrate the separately owned forecast lifecycle or its positional-miss event. Preserve that work when combining the runtime changes.
+
 The coordinator owns the confirmed lifecycle and presentation across core/protocol/server/both clients. This foundation is an independent core slice explicitly authorized by the owner while cast cues and positional hits were still absent from its baseline. It does not claim those prerequisites landed or that another chat acknowledged the handoff.
 
 | Owner / proposed slice | Exact seam and boundary |

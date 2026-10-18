@@ -252,7 +252,9 @@ public class AreaDeliveryTests
     public void AreaAngleAndMeleeReachScaleSweeps()
     {
         var arena = DeliveryArena.Create();
-        var side = arena.Body(11.5f, 12.4f);
+        // The unmodified sweep now touches body edges. Put this body beyond that graze,
+        // but inside the wider glyph's cone, so the test still proves angle scaling.
+        var side = arena.Body(11.2f, 12.9f);
         var reach = arena.Body(13.6f, 10);
         var plain = arena.Weave("cleave", "");
         var wide = arena.Sim.Service<WeaveCompiler>().Compile(new WeaveSpec { Form = "cleave", Glyphs = { GlyphRef.Parse("t_wide") } });

@@ -36,6 +36,7 @@ export function applyDelta(state: EntityState, delta: EntityDelta): EntityState 
     vy: delta.vy ?? state.vy,
     vz: delta.vz ?? state.vz,
     shape: cleared(delta.shape, state.shape),
+    hit_body: cleared(delta.hit_body, state.hit_body),
     shape_size: delta.shape === '' ? undefined : delta.shape_size ?? state.shape_size,
     heading: delta.heading ?? state.heading,
     spin: delta.spin ?? state.spin,
