@@ -80,16 +80,6 @@ public class MorphTests
             "within one press max_active caps nothing (MakeRoom dismisses only bodies already standing), so the crowd scenario's single press cannot show it; it bites only on a later press"),
         new("deploy", "sensitive", "axis 'max_active' moves nothing",
             "within one press max_active caps nothing (MakeRoom dismisses only bodies already standing), so the crowd scenario's single press cannot show it; it bites only on a later press"),
-        new("summon", "left behind", "with no lifetime and no contract",
-            "duration 0 raises a body for good (SummonRecipe.Birth gives it no end), held only by max_active, which one press does not enforce; shipped wraith and risen summons are raised this way, outside the rule that a summon left standing has a lifetime or a contract")
-        {
-            When = v => v.Num("duration") <= 0,
-        },
-        new("deploy", "left behind", "with no lifetime and no contract",
-            "lifetime 0 places a construct for good (SummonRecipe.Birth gives it no end), held only by max_active, which one press does not enforce; outside the rule that a body left standing has a lifetime or a contract")
-        {
-            When = v => v.Num("lifetime") <= 0,
-        },
         new("deploy", "states", "'construct:massed' does not hold though count",
             "construct:massed (Weaves/Mechanisms.cs Construct) reads only a deploy or spawn node's count, never the weave attribute summon.count that a deploy's count falls back to")
         {

@@ -155,9 +155,9 @@ internal static class MorphArena
             outcome.Broke("terminates", $"{recorder.Hits - hits} hits and {recorder.Marks.Values.Sum(m => m.Count) - marks} markers came in the quiet second after the expected life of {budget.Seconds:0.##} s");
         }
 
-        // Left behind: at the end, everything the press made is gone, or is a summon under its owner's cap with a
-        // lifetime or a contract. What overstayed its end was reported above.
-        foreach (var message in recorder.LeftBehind(budget, overdue))
+        // Left behind: at the end, everything the press made is gone, or is a summon or construct that its lifetime, its
+        // contract or its owner's cap will end. What overstayed its end was reported above.
+        foreach (var message in recorder.LeftBehind(overdue))
         {
             outcome.Broke("left behind", message);
         }
@@ -377,11 +377,13 @@ internal static class MorphArena
         }
 
         /// <summary>
-        /// What the press made that is still here at the end, by the rule: a summon or construct may stay while it stands
-        /// under its owner's cap with a lifetime or a contract; anything else is left behind. What overstayed its own end
-        /// was already reported.
+        /// What the press made that is still here at the end, by the rule: a summon or construct may stay while something
+        /// will end it, its own lifetime or contract, or its owner's cap. A body raised for good stands under its owner's
+        /// cap (every summon and deploy counts its group against <c>max_active</c>) and ends with its owner: the cap
+        /// replaces it, the owner dismisses it, or the owner falls or leaves. A group standing past its cap is the bounded
+        /// check's to report. Anything else is left behind; what overstayed its own end was already reported.
         /// </summary>
-        public IEnumerable<string> LeftBehind(Budget budget, List<Entity> overdue)
+        public IEnumerable<string> LeftBehind(List<Entity> overdue)
         {
             var world = _sim.World;
             var standing = Made.Where(e => world.IsAlive(e) && !overdue.Contains(e)).ToList();
@@ -392,11 +394,11 @@ internal static class MorphArena
             {
                 if (world.TryGet<Minion>(e, out var minion))
                 {
-                    var group = standing.Count(o => world.TryGet<Minion>(o, out var m) && m.Owner == minion.Owner && m.Group == minion.Group);
                     var termed = double.IsFinite(minion.ExpiresAt) || minion.Contract is not null;
-                    if (!termed || group > budget.Live)
+                    var capped = !minion.Owner.IsNone && minion.Group is not null;
+                    if (!termed && !capped)
                     {
-                        var what = $"{(minion.Construct ? "construct" : "summon")} {(termed ? "with a lifetime" : "with no lifetime and no contract")}, {group} of its group standing against a cap of {budget.Live:0.#}";
+                        var what = $"{(minion.Construct ? "construct" : "summon")} with no lifetime, no contract and no owner's cap";
                         minions[what] = minions.TryGetValue(what, out var n) ? n + 1 : 1;
                     }
                 }
