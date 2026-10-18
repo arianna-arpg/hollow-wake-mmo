@@ -15,11 +15,8 @@ namespace HollowWake.Core.Tests.Grammar;
 /// </summary>
 internal static class Families
 {
-    /// <summary>
-    /// The relation words <c>EffectHelpers.Passes</c> knows (any other word passes everyone). A list for now:
-    /// <c>Filters.Names</c>, the registry of filter words, replaces it once pull request #41 merges.
-    /// </summary>
-    public static readonly string[] Filters = { "enemy", "ally", "ally_or_self", "self", "not_self", "all" };
+    /// <summary>The words of the filter registry, <c>Filters.Names</c>: which bodies a delivery reaches (an unregistered word reaches nobody).</summary>
+    public static readonly string[] FilterWords = Filters.Names.ToArray();
 
     /// <summary>The words of the pick registry, <c>Picks.Names</c>, read from it: the registry is internal to the core, so by name.</summary>
     public static readonly string[] PickWords = (string[])typeof(EffectRegistry).Assembly
@@ -422,7 +419,7 @@ internal static class Families
             Parameter.Count("max_targets", Targeting, "bodies", 0, 24, "shipped 1..24; floored 0") with { Absent = 0.5, Live = Map(("radius", 4.0)) },
             Parameter.Choice("pick", Targeting, PickWords, "Picks.Names") with { Default = "random", Absent = 0.5, Rolling = new[] { "random" }, Live = Map(("max_targets", 1.0), ("radius", 3.8)) },
             Parameter.Choice("reach", Geometry, new[] { "center", "edge" }, "the handler's reaches") with { Default = "center", Absent = 0.5, Live = Map(("shape", "sector"), ("radius", 1.8)) },
-            Parameter.Choice("filter", Targeting, Filters, "the words EffectHelpers.Passes knows") with { Default = "enemy", Absent = 0.4, Live = Map(("center", "source"), ("radius", 5.5)) },
+            Parameter.Choice("filter", Targeting, FilterWords, "Filters.Names") with { Default = "enemy", Absent = 0.4, Live = Map(("center", "source"), ("radius", 5.5)) },
             Parameter.Choice("occlusion", Geometry, Occlusions, "blocked or free") with { Default = "blocked", Absent = 0.5 },
             Parameter.Count("area.scatter", Causality, "aftershocks", 0, 4, "shipped +2 as a glyph modifier; no clamp") with { Attribute = "area.scatter", AttributeOnly = true, Absent = 0.5 },
             Parameter.Count("area.pulses", Causality, "repeats", 0, 4, "never moved by shipped content; no clamp") with { Attribute = "area.pulses", AttributeOnly = true, Absent = 0.5 },
@@ -517,7 +514,7 @@ internal static class Families
         {
             Parameter.Count("count", Kinematics, "leaps", 0, 8, "shipped weave.chain.count (3, +2); no clamp") with { Attribute = "chain.count", Absent = 0.2 },
             Parameter.Axis("range", Geometry, "units", 0, 12, "shipped 6..8.75; no clamp") with { Default = 6.0, Absent = 0.3 },
-            Parameter.Choice("filter", Targeting, Filters, "the words EffectHelpers.Passes knows") with { Default = "enemy", Absent = 0.4 },
+            Parameter.Choice("filter", Targeting, FilterWords, "Filters.Names") with { Default = "enemy", Absent = 0.4 },
             Parameter.Choice("pick", Targeting, PickWords, "Picks.Names") with { Default = "nearest", Absent = 0.4, Rolling = new[] { "random" } },
         },
         Defaults = Map(("count", 3.0), ("range", 6.0)),
@@ -558,7 +555,7 @@ internal static class Families
             Parameter.Axis("seek", Kinematics, "units a second", 0, 4, "shipped 1.72; floored 0") with { Absent = 0.7 },
             Parameter.Axis("rotate", Kinematics, "degrees a second", -360, 360, "never shipped") with { Absent = 0.7, Pair = (0.0, 360.0), Live = Map(("shape", "sector"), ("angle", 60.0), ("radius", 4.0)) },
             Parameter.Count("pulses", Timing, "pulses", 1, 10, "never shipped; floored 1, absent unlimited") with { Absent = 0.5 },
-            Parameter.Choice("filter", Targeting, Filters, "the words EffectHelpers.Passes knows") with { Default = "enemy", Absent = 0.4, Live = Map(("radius", 8.0)) },
+            Parameter.Choice("filter", Targeting, FilterWords, "Filters.Names") with { Default = "enemy", Absent = 0.4, Live = Map(("radius", 8.0)) },
             Parameter.Choice("occlusion", Geometry, Occlusions, "blocked or free") with { Default = "blocked", Absent = 0.5 },
         },
         Defaults = Map(("radius", 2.5), ("duration", 2.0), ("interval", 0.5)),
@@ -652,7 +649,7 @@ internal static class Families
             Parameter.Axis("delay", Timing, "seconds", 0, 1.5, "never shipped; a blink's wait, floored 0") with { Absent = 0.5, Live = Map(("kind", "blink")) },
             Parameter.Choice("anchor", Kinematics, new[] { "from", "caster", "point" }, "the handler's anchors") with { Default = "from", Absent = 0.4, Live = Map(("kind", "knockback")) },
             Parameter.Axis("travel", Causality, "units", 0.25, 4, "never shipped on a move; a literal, floored 0.25") with { Default = 2.0, Absent = 0.5, Live = Map(("kind", "dash")) },
-            Parameter.Choice("filter", Targeting, Filters, "the words EffectHelpers.Passes knows") with { Default = "enemy", Absent = 0.4, Live = Map(("kind", "dash")) },
+            Parameter.Choice("filter", Targeting, FilterWords, "Filters.Names") with { Default = "enemy", Absent = 0.4, Live = Map(("kind", "dash")) },
         },
         Defaults = Map(("kind", "dash"), ("distance", 6.0), ("speed", 20.0)),
         Lists = new[]
@@ -755,7 +752,7 @@ internal static class Families
             Parameter.Axis("jitter", Geometry, "units", 0, 2, "shipped 0.6; floored 0") with { Default = 0.0, Absent = 0.5, Live = Map(("at", "enemies")) },
             Parameter.Axis("telegraph", Timing, "seconds", 0, 1.5, "shipped 0.5; floored 0") with { Default = 0.0, Absent = 0.5 },
             Parameter.Axis("telegraph_radius", Geometry, "units", 0.1, 4, "never shipped; default area.radius") with { Absent = 0.6, Live = Map(("telegraph", 0.5)) },
-            Parameter.Choice("filter", Targeting, Filters, "the words EffectHelpers.Passes knows") with { Default = "enemy", Absent = 0.4, Live = Map(("at", "enemies"), ("count", 1.0), ("radius", 6.5)) },
+            Parameter.Choice("filter", Targeting, FilterWords, "Filters.Names") with { Default = "enemy", Absent = 0.4, Live = Map(("at", "enemies"), ("count", 1.0), ("radius", 6.5)) },
         },
         // Strikes under the nearest bodies: random placement would roll differently for every weave, so the default places none at random.
         Defaults = Map(("count", 5.0), ("radius", 4.0), ("at", "enemies")),
@@ -841,7 +838,7 @@ internal static class Families
             Parameter.Axis("radius", Geometry, "units", 0.25, 9, "shipped weave.area.radius (1.1..9 as area.radius); no clamp in the handler") with { Attribute = "area.radius", Absent = 0.2 },
             Parameter.Axis("duration", Timing, "seconds", 0.1, 6, "never shipped as a number (the shipped aura toggles); floored at a tick") with { Attribute = "duration", Absent = 0.2 },
             Parameter.Axis("interval", Timing, "seconds", 0.05, 2, "shipped 1; floored at a tick") with { Default = 1.0, Absent = 0.2 },
-            Parameter.Choice("filter", Targeting, Filters, "the words EffectHelpers.Passes knows") with { Default = "enemy", Absent = 0.4, Live = Map(("radius", 5.5)) },
+            Parameter.Choice("filter", Targeting, FilterWords, "Filters.Names") with { Default = "enemy", Absent = 0.4, Live = Map(("radius", 5.5)) },
             Parameter.Choice("occlusion", Geometry, Occlusions, "blocked or free") with { Default = "blocked", Absent = 0.5 },
         },
         Defaults = Map(("radius", 3.0), ("duration", 2.0), ("interval", 0.5)),
@@ -894,7 +891,7 @@ internal static class Families
             Parameter.Axis("duration", Timing, "seconds", 0.1, 6, "shipped weave.duration; floored at a tick") with { Attribute = "duration", Absent = 0.2 },
             Parameter.Axis("interval", Timing, "seconds", 0.05, 2, "shipped 0.5; floored at a tick") with { Default = 0.5, Absent = 0.2 },
             Parameter.Axis("max_length", Geometry, "units", 0, 15, "shipped 12; no clamp, absent unlimited") with { Absent = 0.5 },
-            Parameter.Choice("filter", Targeting, Filters, "the words EffectHelpers.Passes knows") with { Default = "enemy", Absent = 0.4, Live = Map(("width", 2.6)) },
+            Parameter.Choice("filter", Targeting, FilterWords, "Filters.Names") with { Default = "enemy", Absent = 0.4, Live = Map(("width", 2.6)) },
         },
         Defaults = Map(("link", "point"), ("duration", 2.0), ("interval", 0.5)),
         Lists = new[]
