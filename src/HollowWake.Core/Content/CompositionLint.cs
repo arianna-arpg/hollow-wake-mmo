@@ -23,6 +23,12 @@ public sealed record CompositionFinding(string Check, string Severity, string? K
     internal string Order { get; init; } = "";
 }
 
+/// <summary>
+/// One parameter a definition writes, as the composition lint's walk found it: the definition, the effect type and
+/// parameter, and the path of the node (a patch's for a <c>set</c>, <c>hooks.name</c> for a glyph's hook list).
+/// </summary>
+public sealed record CompositionWrite(string Kind, string Id, string Type, string Parameter, string Path);
+
 /// <summary>The findings of one check, in report order.</summary>
 public sealed record CompositionGroup(string Check, IReadOnlyList<CompositionFinding> Findings)
 {
@@ -113,6 +119,10 @@ public sealed class CompositionLint
             .ToList();
     }
 
+    /// <summary>Every parameter write the walk finds in the loaded content, in walk order.</summary>
+    public IReadOnlyList<CompositionWrite> Writes() =>
+        Walk().Writes.Select(w => new CompositionWrite(w.Owner.Kind, w.Owner.Id, w.Type, w.Parameter, w.Path)).ToList();
+
     /// <summary>Findings grouped by check: one group for every check in <see cref="Checks"/> order, empty ones included.</summary>
     public static IReadOnlyList<CompositionGroup> ByCheck(IEnumerable<CompositionFinding> findings)
     {
@@ -136,15 +146,17 @@ public sealed class CompositionLint
     // ------------------------------------------------------------ the axis table
 
     /// <summary>
-    /// The weave attribute an effect parameter falls back to when content leaves it out, keyed by (effect type,
-    /// parameter). Read from the handlers under Effects/Handlers/: the ParamOrAttr and Rate calls, the
+    /// The attribute an effect parameter falls back to when content leaves it out, keyed by (effect type, parameter).
+    /// Read from the handlers under Effects/Handlers/: the ParamOrAttr and Rate calls, the
     /// "Field is null ? WeaveAttr(...)" defaults of scatter and cascade, the fuse's weave.Attr defaults and the
     /// area.width default SizeOf gives a missing width. The rows read outside the handlers are kept by hand: summon and
-    /// deploy (SummonRecipe.Read in Minions/Summoning.cs reads them for both types) and damage effectiveness
-    /// (DamagePipeline.AddedEffectiveness takes the node's value over the weave's damage.effectiveness for added damage). Multipliers are left out, because a literal there is still scaled by its attribute: area angle
-    /// (area.angle), projectile spread (projectile.spread), aim spread (aim.spread) and a shove's distance (knockback);
-    /// so is a charge's max, which falls back to the holder's charge.{id}.max rather than a weave attribute. This table
-    /// is replaced by AxisBindings (Weaves/AxisBindings.cs) when both land; nothing but
+    /// deploy (SummonRecipe.Read in Minions/Summoning.cs reads them for both types), damage effectiveness
+    /// (DamagePipeline.AddedEffectiveness takes the node's value over the weave's damage.effectiveness for added damage)
+    /// and a charge gain's max (ChargeService.Gain caps at the holder's charge.{id}.max unless the node gives a max). An
+    /// attribute with a {parameter} placeholder is the holder's rather than the weave's, named by that parameter of the
+    /// same node. Multipliers are left out, because a literal there is still scaled by its attribute: area angle
+    /// (area.angle), projectile spread (projectile.spread), aim spread (aim.spread) and a shove's distance (knockback).
+    /// This table is replaced by AxisBindings (Weaves/AxisBindings.cs) when both land; nothing but
     /// <see cref="FallbackAttribute"/> reads it.
     /// </summary>
     private static readonly Dictionary<(string Type, string Parameter), string> AxisFallbacks = new()
@@ -195,11 +207,23 @@ public sealed class CompositionLint
         // Kept by hand: DamagePipeline.AddedEffectiveness (Combat/DamagePipeline.cs) reads the node's effectiveness, else
         // weave.damage.effectiveness, for the attacker's added damage.
         [("damage", "effectiveness")] = "damage.effectiveness",
+        // Kept by hand: ChargeService.Gain (Combat/ChargeService.cs) caps a gain at the holder's charge.{id}.max, which
+        // the charge-max family gives every charge, unless the node gives its own max.
+        [("charge", "max")] = "charge.{id}.max",
     };
 
-    /// <summary>The weave attribute an effect parameter falls back to when content leaves it out; null when it has none.</summary>
+    /// <summary>
+    /// The attribute an effect parameter falls back to when content leaves it out; null when it has none. A
+    /// <c>{parameter}</c> placeholder (<c>charge.{id}.max</c>) marks the holder's attribute, named by that parameter.
+    /// </summary>
     public static string? FallbackAttribute(string type, string parameter) =>
         AxisFallbacks.TryGetValue((type, parameter), out var attribute) ? attribute : null;
+
+    private static readonly Regex Placeholder = new(@"\{(\w+)\}", RegexOptions.CultureInvariant);
+
+    /// <summary>An attribute with its placeholders filled from the node's parameters; a placeholder the node cannot fill stays.</summary>
+    private static string Fill(string attribute, JsonObject? node) =>
+        Placeholder.Replace(attribute, m => node is not null && JsonNum.StringOf(node[m.Groups[1].Value]) is { } value ? value : m.Value);
 
     // ------------------------------------------------------------ forms
 
@@ -250,27 +274,41 @@ public sealed class CompositionLint
         return byKind != 0 ? byKind : string.CompareOrdinal(a.Id, b.Id);
     });
 
-    /// <summary>One parameter a definition writes: on an effect node, through a patch's <c>set</c>, or on a patch's wrapper.</summary>
-    private sealed record Write(Owner Owner, string Type, string Parameter, JsonNode? Value, string Path);
+    /// <summary>
+    /// One parameter a definition writes: on an effect node, through a patch's <c>set</c>, on a patch's wrapper, or by a
+    /// glyph's hook list. <see cref="Node"/> is the object holding the parameter, when there is one.
+    /// </summary>
+    private sealed record Write(Owner Owner, string Type, string Parameter, JsonNode? Value, string Path, JsonObject? Node);
 
     private sealed class Graph
     {
         public readonly List<Write> Writes = new();
 
-        /// <summary>The effect types some node in content has.</summary>
-        public readonly HashSet<string> Used = new(StringComparer.Ordinal);
+        /// <summary>The definitions holding at least one node of each effect type.</summary>
+        public readonly Dictionary<string, SortedSet<Owner>> Users = new(StringComparer.Ordinal);
+
+        public void Use(string type, Owner owner)
+        {
+            if (!Users.TryGetValue(type, out var owners))
+            {
+                Users[type] = owners = new SortedSet<Owner>(OwnerOrder);
+            }
+            owners.Add(owner);
+        }
     }
 
     /// <summary>
     /// Every effect node in loaded content, at every depth, as the weave compiler finds them: a list element whose
     /// <c>type</c> names a registered effect is a node, any other object is data that may hold lists. A list under
     /// <c>patches</c> holds patches, whose <c>set</c> writes parameters of the patched type and whose <c>wrap</c> is a
-    /// node. Every kind is walked (forms, presets, glyphs with their hooks and patches, statuses, procs, behaviors
-    /// and the rest); a definition's free-form <c>meta</c> is not.
+    /// node. A glyph's hook list writes every parameter a signature maps to that hook, since the compiler appends it
+    /// there. Every kind is walked (forms, presets, glyphs, statuses, procs, behaviors and the rest); a definition's
+    /// free-form <c>meta</c> is not.
     /// </summary>
     private Graph Walk()
     {
         var graph = new Graph();
+        var glyphs = ContentKinds.NameOf<GlyphDef>();
         foreach (var kind in _content.KindNames.OrderBy(k => k, StringComparer.Ordinal))
         {
             foreach (var raw in _content.RawOfKind(kind).OrderBy(r => r.Id, StringComparer.Ordinal))
@@ -278,14 +316,34 @@ public sealed class CompositionLint
                 var owner = new Owner(kind, raw.Id);
                 foreach (var (key, value) in raw.Object)
                 {
-                    if (key != "meta")
+                    if (key == "meta")
                     {
-                        WalkValue(value, owner, key, key, graph);
+                        continue;
                     }
+                    if (kind == glyphs && key == "hooks" && value is JsonObject hooks)
+                    {
+                        Hooks(hooks, owner, graph);
+                    }
+                    WalkValue(value, owner, key, key, graph);
                 }
             }
         }
         return graph;
+    }
+
+    /// <summary>A glyph's hook lists, each a write of every parameter a type's signature maps to its hook.</summary>
+    private void Hooks(JsonObject hooks, Owner owner, Graph graph)
+    {
+        foreach (var (hook, list) in hooks)
+        {
+            foreach (var type in _effects.Types)
+            {
+                if (_effects.TryGetSignature(type, out var signature) && signature.Hooks.TryGetValue(hook, out var parameter))
+                {
+                    graph.Writes.Add(new Write(owner, type, parameter, list, $"hooks.{hook}", null));
+                }
+            }
+        }
     }
 
     private void WalkValue(JsonNode? value, Owner owner, string path, string key, Graph graph)
@@ -330,14 +388,14 @@ public sealed class CompositionLint
 
     private void Node(string type, JsonObject node, Owner owner, string path, Graph graph)
     {
-        graph.Used.Add(type);
+        graph.Use(type, owner);
         foreach (var (key, value) in node)
         {
             if (key == "type")
             {
                 continue;
             }
-            graph.Writes.Add(new Write(owner, type, key, value, path));
+            graph.Writes.Add(new Write(owner, type, key, value, path, node));
             WalkValue(value, owner, $"{path}.{key}", key, graph);
         }
     }
@@ -352,7 +410,7 @@ public sealed class CompositionLint
                 {
                     continue;
                 }
-                graph.Writes.Add(new Write(owner, type, key, value, path));
+                graph.Writes.Add(new Write(owner, type, key, value, path, set));
                 WalkValue(value, owner, $"{path}.set.{key}", key, graph);
             }
         }
@@ -376,6 +434,7 @@ public sealed class CompositionLint
     private void Parameters(Graph graph, List<CompositionFinding> findings)
     {
         var writers = new Dictionary<(string Type, string Parameter), SortedSet<Owner>>();
+        var users = graph.Users.ToDictionary(kv => kv.Key, kv => new SortedSet<Owner>(kv.Value, OwnerOrder), StringComparer.Ordinal);
         foreach (var write in graph.Writes)
         {
             if (!_effects.TryGetSignature(write.Type, out var signature) || !signature.Accepts(write.Parameter))
@@ -387,39 +446,57 @@ public sealed class CompositionLint
                 writers[(write.Type, write.Parameter)] = owners = new SortedSet<Owner>(OwnerOrder);
             }
             owners.Add(write.Owner);
+            if (users.TryGetValue(write.Type, out var typeUsers))
+            {
+                typeUsers.Add(write.Owner);
+            }
         }
         foreach (var type in _effects.Types)
         {
             _effects.TryGetSignature(type, out var signature);
             var written = writers.Where(kv => kv.Key.Type == type).OrderBy(kv => kv.Key.Parameter, StringComparer.Ordinal).ToList();
-            foreach (var (key, owners) in written)
+            if (users.TryGetValue(type, out var typeUsers) && typeUsers.Count == 1)
             {
-                if (owners.Count == 1)
+                // A type one definition alone uses: one finding for the type rather than one per parameter it writes.
+                var only = typeUsers.Min!;
+                var parameters = written.Count == 0 ? "" : $" ({string.Join(", ", written.Select(kv => kv.Key.Parameter))})";
+                findings.Add(new CompositionFinding(ParameterSingleUse, Smell, "effect", type, _content.OriginOf(only.Kind, only.Id), null,
+                    $"Only {only.Kind}/{only.Id} uses '{type}', so no second definition reuses its parameters{parameters}.")
+                { Order = type });
+            }
+            else
+            {
+                foreach (var (key, owners) in written)
                 {
-                    var only = owners.Min!;
-                    findings.Add(new CompositionFinding(ParameterSingleUse, Smell, "effect", $"{type}.{key.Parameter}", _content.OriginOf(only.Kind, only.Id), null,
-                        $"Only {only.Kind}/{only.Id} writes '{key.Parameter}' of '{type}', so no second definition reuses it.")
-                    { Order = $"{type}.{key.Parameter}" });
+                    if (owners.Count == 1)
+                    {
+                        var only = owners.Min!;
+                        findings.Add(new CompositionFinding(ParameterSingleUse, Smell, "effect", $"{type}.{key.Parameter}", _content.OriginOf(only.Kind, only.Id), null,
+                            $"Only {only.Kind}/{only.Id} writes '{key.Parameter}' of '{type}', so no second definition reuses it.")
+                        { Order = $"{type}.{key.Parameter}" });
+                    }
                 }
             }
             if (signature.IsOpen)
             {
                 continue;
             }
-            var unused = signature.Params.Where(p => !writers.ContainsKey((type, p))).OrderBy(p => p, StringComparer.Ordinal).ToList();
-            if (!graph.Used.Contains(type) && written.Count == 0)
+            if (!graph.Users.ContainsKey(type))
             {
-                var message = unused.Count == 0
-                    ? $"No loaded content uses effect type '{type}'."
-                    : $"No loaded content uses effect type '{type}', so none of its parameters ({string.Join(", ", unused)}) is written.";
+                var declared = signature.Params.OrderBy(p => p, StringComparer.Ordinal).ToList();
+                var message = declared.Count == 0
+                    ? $"No loaded content has a '{type}' node."
+                    : $"No loaded content has a '{type}' node, so none of its parameters ({string.Join(", ", declared)}) is exercised.";
                 findings.Add(new CompositionFinding(ParameterUnused, Note, "effect", type, null, null, message) { Order = type });
                 continue;
             }
-            foreach (var parameter in unused)
+            foreach (var parameter in signature.Params.Where(p => !writers.ContainsKey((type, p))).OrderBy(p => p, StringComparer.Ordinal))
             {
-                findings.Add(new CompositionFinding(ParameterUnused, Note, "effect", $"{type}.{parameter}", null, null,
-                    $"'{type}' declares '{parameter}' but no loaded content writes it.")
-                { Order = $"{type}.{parameter}" });
+                // Where an attribute carries the parameter, leaving it unwritten is the intended state.
+                var message = FallbackAttribute(type, parameter) is { } attribute
+                    ? $"'{type}' declares '{parameter}', which no loaded content writes, as intended: attribute '{attribute}' carries it."
+                    : $"'{type}' declares '{parameter}' but no loaded content writes it.";
+                findings.Add(new CompositionFinding(ParameterUnused, Note, "effect", $"{type}.{parameter}", null, null, message) { Order = $"{type}.{parameter}" });
             }
         }
     }
@@ -427,9 +504,11 @@ public sealed class CompositionLint
     // ------------------------------------------------------------ frozen axes
 
     /// <summary>
-    /// <c>axis.frozen</c>: in a graph the weave compiler reads (forms, presets, glyphs), a literal number, or an
-    /// expression that reads nothing, written for a parameter whose handler would otherwise read a weave attribute.
-    /// Statuses, procs and other graphs run without a weave, where the handler falls back to its own literal anyway.
+    /// <c>axis.frozen</c>: a literal number, or an expression that reads nothing, written for a parameter whose handler
+    /// would otherwise read an attribute. A weave attribute counts in the graphs the weave compiler reads (forms,
+    /// presets, glyphs); statuses, procs and other graphs run without a weave, where the handler falls back to its own
+    /// literal anyway. A holder's attribute (<c>charge.{id}.max</c>) counts in every graph, since the holder has it
+    /// wherever the effect runs.
     /// </summary>
     private void Axes(Graph graph, List<CompositionFinding> findings)
     {
@@ -439,12 +518,20 @@ public sealed class CompositionLint
         };
         foreach (var write in graph.Writes)
         {
-            if (!weaveKinds.Contains(write.Owner.Kind) || FallbackAttribute(write.Type, write.Parameter) is not { } attribute || Literal(write.Value) is not { } literal)
+            if (FallbackAttribute(write.Type, write.Parameter) is not { } attribute || Literal(write.Value) is not { } literal)
             {
                 continue;
             }
-            findings.Add(About(AxisFrozen, Smell, write.Owner, $"{write.Path}.{write.Parameter}",
-                $"'{write.Parameter}' on the '{write.Type}' effect at {write.Path} is the literal {literal}, so nothing that moves weave attribute '{attribute}' reaches it."));
+            var holder = attribute.Contains('{', StringComparison.Ordinal);
+            if (!holder && !weaveKinds.Contains(write.Owner.Kind))
+            {
+                continue;
+            }
+            var name = Fill(attribute, write.Node);
+            var at = $"'{write.Parameter}' on the '{write.Type}' effect at {write.Path} is the literal {literal}";
+            findings.Add(About(AxisFrozen, Smell, write.Owner, $"{write.Path}.{write.Parameter}", holder
+                ? $"{at}, which shadows the holder's attribute '{name}'."
+                : $"{at}, so nothing that moves weave attribute '{name}' reaches it."));
         }
     }
 

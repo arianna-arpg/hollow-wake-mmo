@@ -40,11 +40,24 @@ entries:
   - { id: t_lint_copy_c, duration: 2, on_apply: [ { type: heal, amount: "level * 1.37 + 0.11" } ] }
   - { id: t_lint_copy_d, duration: 2, on_apply: [ { type: heal, amount: "level  *  1.37 +  0.11" } ] }
   - { id: t_lint_copy_e, duration: 2, on_apply: [ { type: heal, amount: "level * 1.37 + 0.11" } ] }
+  - { id: t_lint_charger, duration: 2, on_apply: [ { type: charge, id: fury, gain: 1, max: 3 } ] }
+
+---
+kind: glyphs
+entries:
+  - id: t_lint_patcher
+    patches:
+      - { type: projectile, set: { count: 4 } }
+      - { type: damage, wrap: { type: fuse, delay: 0.5, power: 0.1 } }
+  - id: t_lint_hooker
+    hooks:
+      on_kill: [ { type: heal, amount: 1 } ]
 
 ---
 kind: world_events
 entries:
-  - { id: t_lint_event, on_start: [ { type: t_lint_probe, used: 1 } ] }
+  - { id: t_lint_event_a, on_start: [ { type: t_lint_probe, used: 1, shared: 1 }, { type: t_lint_solo, alpha: 1, beta: 2 } ] }
+  - { id: t_lint_event_b, on_start: [ { type: t_lint_probe, shared: 2 } ] }
 """;
 
     private static readonly Lazy<ContentRegistry> Loaded = new(() =>
@@ -64,11 +77,15 @@ entries:
         }
     });
 
-    // The shared effects plus a test type declaring one parameter the layer writes once and one it never writes.
+    // The shared effects plus test types only the layer's world events use (their lists are not validated against the
+    // shared registry): t_lint_probe, which two events use, one writing a parameter the other does not and neither
+    // writing a third; t_lint_solo, which one event alone uses; and t_lint_idle, which nothing uses.
     private static readonly Lazy<EffectRegistry> Effects = new(() =>
     {
         var effects = EffectRegistry.CreateDefault();
-        effects.Register(new ProbeHandler());
+        effects.Register(new ProbeHandler("t_lint_probe", "used", "shared", "unused"));
+        effects.Register(new ProbeHandler("t_lint_solo", "alpha", "beta"));
+        effects.Register(new ProbeHandler("t_lint_idle", "gamma"));
         return effects;
     });
 
@@ -76,9 +93,15 @@ entries:
 
     private sealed class ProbeHandler : IEffectHandler
     {
-        public string Type => "t_lint_probe";
+        public ProbeHandler(string type, params string[] parameters)
+        {
+            Type = type;
+            Signature = EffectSignature.Of(parameters);
+        }
 
-        public EffectSignature Signature { get; } = EffectSignature.Of("used", "unused");
+        public string Type { get; }
+
+        public EffectSignature Signature { get; }
 
         public CompiledEffect Compile(JsonObject parameters, EffectCompileContext ctx) => new Nothing { Type = Type };
 
@@ -113,8 +136,62 @@ entries:
     public void A_parameter_one_definition_writes_is_single_use_and_one_none_writes_is_unused()
     {
         var single = Single(CompositionLint.ParameterSingleUse, "effect", "t_lint_probe.used");
-        Assert.Contains("world_events/t_lint_event", single.Message);
+        Assert.Contains("world_events/t_lint_event_a", single.Message);
+        Assert.DoesNotContain(Planted.Value, f => f.Id == "t_lint_probe.shared");
         Assert.Equal(CompositionLint.Note, Single(CompositionLint.ParameterUnused, "effect", "t_lint_probe.unused").Severity);
+    }
+
+    [Fact]
+    public void A_type_one_definition_alone_uses_is_one_finding_and_a_type_nothing_uses_is_unused_whole()
+    {
+        var solo = Single(CompositionLint.ParameterSingleUse, "effect", "t_lint_solo");
+        Assert.Contains("world_events/t_lint_event_a", solo.Message);
+        Assert.Contains("alpha, beta", solo.Message);
+        Assert.DoesNotContain(Planted.Value, f => f.Id is "t_lint_solo.alpha" or "t_lint_solo.beta");
+        var idle = Single(CompositionLint.ParameterUnused, "effect", "t_lint_idle");
+        Assert.Contains("gamma", idle.Message);
+        Assert.DoesNotContain(Planted.Value, f => f.Id == "t_lint_idle.gamma");
+    }
+
+    [Fact]
+    public void Unused_parameters_an_attribute_carries_are_expected()
+    {
+        var unused = Planted.Value.Where(f => f.Check == CompositionLint.ParameterUnused && f.Id!.Contains('.')).ToList();
+        Assert.NotEmpty(unused);
+        foreach (var f in unused)
+        {
+            var dot = f.Id!.IndexOf('.');
+            var carried = CompositionLint.FallbackAttribute(f.Id[..dot], f.Id[(dot + 1)..]) is not null;
+            Assert.True(carried == f.Message.Contains("as intended", StringComparison.Ordinal), f.Message);
+        }
+    }
+
+    [Fact]
+    public void A_glyphs_patches_and_hooks_count_as_writes_and_their_literals_freeze()
+    {
+        var lint = new CompositionLint(Loaded.Value, null, Effects.Value);
+        var writes = lint.Writes();
+        Assert.Contains(new CompositionWrite("glyphs", "t_lint_patcher", "projectile", "count", "patches[0]"), writes);
+        Assert.Contains(new CompositionWrite("glyphs", "t_lint_patcher", "fuse", "delay", "patches[1].wrap"), writes);
+        Assert.Contains(new CompositionWrite("glyphs", "t_lint_patcher", "fuse", "power", "patches[1].wrap"), writes);
+        // The compiler appends a hook list into every parameter a signature maps to the hook.
+        Assert.Contains(new CompositionWrite("glyphs", "t_lint_hooker", "damage", "on_kill", "hooks.on_kill"), writes);
+        Assert.Contains(writes, w => w.Id == "t_lint_hooker" && w.Type == "heal" && w.Path == "hooks.on_kill[0]");
+
+        var frozen = Planted.Value.Where(f => f.Check == CompositionLint.AxisFrozen && f.Id == "t_lint_patcher").Select(f => f.Message).ToList();
+        Assert.Equal(3, frozen.Count);
+        Assert.Contains(frozen, m => m.Contains("'projectile.count'", StringComparison.Ordinal) && m.Contains("patches[0]", StringComparison.Ordinal));
+        Assert.Contains(frozen, m => m.Contains("'fuse.delay'", StringComparison.Ordinal) && m.Contains("patches[1].wrap", StringComparison.Ordinal));
+        Assert.Contains(frozen, m => m.Contains("'fuse.power'", StringComparison.Ordinal));
+    }
+
+    [Fact]
+    public void A_literal_charge_max_shadows_the_holders_attribute_in_any_graph()
+    {
+        Assert.Equal("charge.{id}.max", CompositionLint.FallbackAttribute("charge", "max"));
+        var max = Single(CompositionLint.AxisFrozen, "statuses", "t_lint_charger");
+        Assert.Contains("'charge.fury.max'", max.Message);
+        Assert.Contains("holder", max.Message);
     }
 
     [Fact]
