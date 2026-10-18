@@ -26,7 +26,7 @@ Angular sweeps at or above a full turn render as the saturated circle/ring that 
 - A new delivery family implements `IDeliveryPlanSource` only if it can describe its semantics safely. Wrappers must preserve sequencing, placement, conditional state and scope. The migration coverage record remains partial until these capabilities exist and tests prove them. A neutral fallback does not satisfy full visual parity.
 - Forecasts do not yet include prospective damage, guaranteed survival, per-surface clipping, AI dodge decisions, latency compensation or a comprehensive hazard union under overload.
 
-The integrated review record lists the tested baseline, complete gates and remaining rollout limits. Benchmark `snapshot.forecast.*` measures the actual production builder and JSON serialization separately from entity snapshots, with the active observation count so empty work cannot masquerade as a loaded measurement.
+The integrated review record lists the tested baseline, complete gates and remaining rollout limits. Benchmark `snapshot.forecast.*` reports incremental observation and serialization with an active observation count. `snapshot.combined.*` measures entity deltas, interface state, forecasts and encoding together against the existing snapshot budgets. Forecast timing is diagnostic, not a separate budget allowance.
 
 ## Original study and follow-on design (historical)
 

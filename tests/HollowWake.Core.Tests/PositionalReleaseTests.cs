@@ -31,11 +31,9 @@ internal static class CastForecastContent
         var direct = r.Get<FormDef>("t_shot")! with
         {
             Id = "forecast_direct", Cooldown = Expr.Parse("2"),
-            Attributes = new() { ["range"] = 4 }, ReleaseCheck = "full",
+            Attributes = new() { ["range"] = 4 }, ReleaseCheck = new(),
         };
         r.With(direct);
-        r.With(direct with { Id = "forecast_none", ReleaseCheck = "none" });
-        r.With(direct with { Id = "forecast_range", ReleaseCheck = "range" });
         r.With(direct with { Id = "forecast_heal", Targeting = Targeting.Ally,
             Effects = new() { Spec("""{"type":"heal","amount":20}""") } });
         r.With(direct with { Id = "forecast_channel_target", CastMode = CastMode.Channel,
@@ -104,8 +102,6 @@ public class PositionalReleaseTests
 {
     [Theory]
     [InlineData("forecast_direct", true)]
-    [InlineData("forecast_none", false)]
-    [InlineData("forecast_range", true)]
     public void StoredTargetsAreRecheckedAtApplicationAndAMissKeepsCostsAndCooldown(string form, bool misses)
     {
         var a = CastForecastContent.Arena();
@@ -124,7 +120,7 @@ public class PositionalReleaseTests
             var miss = Assert.Single(a.Of<WeaveMissed>());
             Assert.Equal("out_of_reach", miss.Reason);
             Assert.Equal(id, miss.CastId);
-            Assert.Contains(a.Of<CastPresentationEvent>(), e => e.CastId == id && e.Phase == "miss");
+            Assert.Contains(a.Of<CastPresentationEvent>(), e => e.CastId == id && e.Phase == "miss" && e.Outcome);
             Assert.Contains(a.Of<CastPresentationEvent>(), e => e.CastId == id && e.Phase == "end");
         }
         else Assert.Empty(a.Of<WeaveMissed>());
@@ -132,9 +128,7 @@ public class PositionalReleaseTests
 
     [Theory]
     [InlineData("forecast_direct", true)]
-    [InlineData("forecast_range", false)]
-    [InlineData("forecast_none", false)]
-    public void FullReleaseChecksSeeNewWallsWhileExplicitPoliciesRemainAuthorable(string form, bool misses)
+    public void ReleaseChecksSeeNewWalls(string form, bool misses)
     {
         var a = CastForecastContent.Arena();
         a.Begin(CastForecastContent.Slot(a, form));
@@ -206,7 +200,7 @@ public class PositionalReleaseTests
     }
 
     [Fact]
-    public void NestedPresetApplicationsCannotBypassTheReleaseGate()
+    public void NestedPresetApplicationsUseTheirAuthoredOrigin()
     {
         var a = CastForecastContent.Arena();
         var registry = a.Sim.Service<EffectRegistry>();
@@ -215,8 +209,8 @@ public class PositionalReleaseTests
         CastForecastContent.Move(a, a.Enemy, new(22, 10, 0));
         effect.Execute(new EffectContext { Sim = a.Sim, Source = a.Caster, Target = a.Enemy,
             Point = new(22, 10, 0), Rng = new Rng(5) });
-        Assert.Empty(a.Custom("t_shot"));
-        Assert.Equal("out_of_reach", Assert.Single(a.Of<WeaveMissed>()).Reason);
+        Assert.Single(a.Custom("t_shot"));
+        Assert.Empty(a.Of<WeaveMissed>());
     }
 
     [Fact]
@@ -470,6 +464,24 @@ public class PositionalReleaseTests
         Assert.Equal(firstTime, retainedTime);
         Assert.True(provider.Contexts[1].Scope.TryResolve("time", out var laterTime));
         Assert.True(laterTime > firstTime);
+    }
+
+    [Fact]
+    public void AiRejectsMinimumRangeBeforeCallingAnyDeliveryProvider()
+    {
+        var registry = ContentRegistry.Load(new[] { CoreContent.FindContentDir() }, out _);
+        registry.With(CastForecastContent.Registry.Get<FormDef>("forecast_timed")! with
+        {
+            Id = "minimum_range_observation", Ai = new() { MinRange = 5 },
+            Effects = new() { CastForecastContent.Spec("""{"type":"t_retained_observation"}""") },
+        });
+        var a = CastingArena.Create(distance: 3, registry: registry);
+        var provider = new RetainingObservation();
+        a.Sim.Service<EffectRegistry>().Register(provider);
+        a.Book.Slots.Clear();
+        a.Slot(new WeaveSpec { Form = "minimum_range_observation" });
+        Assert.Null(a.Runtime.ChooseForAi(a.Sim, a.Caster, a.Enemy));
+        Assert.Empty(provider.Contexts);
     }
 
     private sealed class RetainingObservation : IEffectHandler

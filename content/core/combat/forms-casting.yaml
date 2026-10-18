@@ -197,11 +197,11 @@ entries:
     name: Measured Strike
     description: A blow with a beat to it; pressing again in the last moment of the swing lands it flawless.
     targeting: enemy
-    release_check: none
+    release_check: { policy: delivery }
     cast_mode: cast
     cast_time: "weapon.attack.time * 1.4"
     costs: { stamina: 6 }
-    attributes: { range: 2, damage.effectiveness: 1.3 }
+    attributes: { ai.anticipation: 1, range: 2, damage.effectiveness: 1.3 }
     mechanisms: [hit, melee, attack]
     tags: [attack, melee]
     min_threads: 0

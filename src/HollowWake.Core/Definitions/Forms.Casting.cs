@@ -29,10 +29,9 @@ public enum CastMode
 // combo chains, modifiers worn while slotted). The weave runtime reads them through the compiled weave.
 public sealed partial record FormDef
 {
-    /// <summary>Revalidate a stored body at application: full (range, relation, LOS), range, or none.
-    /// Null follows casting.recheck_target_at_release. Positional deliveries may opt out because they select their own bodies.</summary>
+    /// <summary>Release validation inherited by the compiled weave.</summary>
     [JsonPropertyName("release_check")]
-    public string? ReleaseCheck { get; init; }
+    public ReleaseCheckSpec? ReleaseCheck { get; init; }
 
     /// <summary>The fraction of movement speed kept while casting; joins attribute <c>cast.mobility</c>. Null takes rule <c>casting.cast_move</c>.</summary>
     [JsonPropertyName("cast_move")]

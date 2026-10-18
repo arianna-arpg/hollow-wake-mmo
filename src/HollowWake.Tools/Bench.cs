@@ -349,21 +349,32 @@ public static class Bench
         // The exact production forecast builder, including per-tick shared sampling, viewer eligibility,
         // baseline construction and JSON. Refresh interest outside this incremental measurement.
         var forecasts = new CastForecastBuilder(sim);
-        double forecastMs = 0; long forecastBytes = 0, forecastAlloc = 0, forecastCasts = 0;
+        double forecastMs = 0, combinedMs = 0; long forecastBytes = 0, forecastAlloc = 0, forecastCasts = 0, combinedBytes = 0, combinedAlloc = 0;
         for (var round = 0; round < snapshots; round++)
         {
             sim.Tick(); sim.Tick();
             for (var i = 0; i < playerEntities.Count; i++)
             {
+                var combinedBefore = GC.GetAllocatedBytesForCurrentThread(); var combinedStart = Stopwatch.GetTimestamp();
                 output.Clear(); builder.Entities(views[i], playerEntities[i], output);
+                if (round % 5 == 0 && builder.Self(views[i], playerEntities[i]) is { } own) output.Add(own);
+                if (views[i].SendInterface) builder.Panels(views[i], playerEntities[i], output);
+                var entityBytes = Encoded(output);
                 var before = GC.GetAllocatedBytesForCurrentThread(); var t0 = Stopwatch.GetTimestamp();
                 var forecast = forecasts.Build(views[i], playerEntities[i], .1);
-                forecastBytes += MessageSerializer.Encode(forecast).Length;
+                var encoded = MessageSerializer.Encode(forecast).Length;
+                forecastBytes += encoded;
                 forecastMs += Stopwatch.GetElapsedTime(t0).TotalMilliseconds;
                 forecastAlloc += GC.GetAllocatedBytesForCurrentThread() - before;
                 forecastCasts += forecast.Casts.Count + (forecast.Retained?.Count ?? 0);
+                combinedMs += Stopwatch.GetElapsedTime(combinedStart).TotalMilliseconds;
+                combinedBytes += entityBytes + encoded;
+                combinedAlloc += GC.GetAllocatedBytesForCurrentThread() - combinedBefore;
             }
         }
+        yield return new Result("snapshot.combined.build", combinedMs / (snapshots * players), "ms/player", "deltas, interface, forecasts and encoding together; shares the existing 1 ms snapshot budget");
+        yield return new Result("snapshot.combined.bytes", combinedBytes / (double)(snapshots * players) / 1024, "KB/player", "all snapshot traffic together; shares the existing 10 KB delta budget");
+        yield return new Result("snapshot.combined.alloc", combinedAlloc / (double)(snapshots * players) / 1024, "KB/player", "all snapshot allocation together");
         yield return new Result("snapshot.forecast.build", forecastMs / (snapshots * players), "ms/player", $"incremental build + encode, {forecastCasts} active cast observations");
         yield return new Result("snapshot.forecast.bytes", forecastBytes / (double)(snapshots * players) / 1024, "KB/player", "complete opt-in baseline, incremental to entity/interface stream");
         yield return new Result("snapshot.forecast.alloc", forecastAlloc / (double)(snapshots * players) / 1024, "KB/player", "incremental forecast build and encode allocation");

@@ -207,12 +207,12 @@ entries:
     name: Bash
     description: A shoulder blow that throws a foe back; a foe thrown into a wall is stunned.
     targeting: enemy
-    release_check: none
+    release_check: { policy: delivery }
     cast_mode: cast
     cast_time: "weapon.attack.time"
     costs: { stamina: 12 }
     cooldown: 4
-    attributes: { range: 1.9, damage.effectiveness: 0.8 }
+    attributes: { ai.anticipation: 1, range: 1.9, damage.effectiveness: 0.8 }
     mechanisms: [hit, melee, attack, cooldown]
     tags: [attack, melee]
     min_threads: 0

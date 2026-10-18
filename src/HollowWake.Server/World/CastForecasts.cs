@@ -19,6 +19,9 @@ public sealed class CastForecastBuilder
     private long _forecastSequence;
     private long _forecastSampleTick = -1;
     private readonly Dictionary<Entity, CastForecast?> _forecastSamples = new();
+    private readonly List<(Entity Entity, float Distance)> _candidates = new();
+    private readonly HashSet<long> _active = new();
+    private readonly List<long> _expired = new();
 
     public CastForecastMsg Build(SnapshotView view, Entity viewerEntity, double snapshotInterval)
     {
@@ -27,15 +30,23 @@ public sealed class CastForecastBuilder
         var runtime = Sim.Service<WeaveRuntime>();
         var casts = new List<CastForecastInfo>();
         var retained = new List<CastForecastRef>();
-        var active = new HashSet<long>();
+        var active = _active;
+        active.Clear();
         var sequence = ++_forecastSequence;
         var omitted = 0;
         // All casters use the same path: players, remote players, monsters and summons. Interest is
         // refreshed first. Distance then stable identity makes overload selection deterministic.
-        foreach (var entity in view.Known.Append(viewerEntity.Key).Distinct().Select(Sim.World.Resolve)
-            .Where(e => !e.IsNone && Sim.World.Get<WeaveBook>(e)?.Casting is not null)
-            .OrderBy(e => Vector3.DistanceSquared(Sim.World.Get<Transform>(e)?.Position ?? viewer, viewer)).ThenBy(e => e.Key))
+        _candidates.Clear();
+        foreach (var key in view.Known) AddCandidate(Sim.World.Resolve(key), viewer);
+        if (!view.Known.Contains(viewerEntity.Key)) AddCandidate(viewerEntity, viewer);
+        _candidates.Sort(static (a, b) =>
         {
+            var order = a.Distance.CompareTo(b.Distance);
+            return order != 0 ? order : a.Entity.Key.CompareTo(b.Entity.Key);
+        });
+        foreach (var candidate in _candidates)
+        {
+            var entity = candidate.Entity;
             if (active.Count >= _forecastSettings.MaxCasts) { omitted++; continue; }
             if (!_forecastSamples.TryGetValue(entity, out var sample)) _forecastSamples[entity] = sample = runtime.DescribeCast(Sim, entity);
             if (sample is null) continue;
@@ -76,9 +87,17 @@ public sealed class CastForecastBuilder
                 view.Forecasts[info.CastId] = (info, sequence, Sim.Clock.Time + _forecastSettings.RefreshSeconds);
             }
         }
-        foreach (var id in view.Forecasts.Keys.Where(id => !active.Contains(id)).ToArray()) view.Forecasts.Remove(id);
+        _expired.Clear();
+        foreach (var id in view.Forecasts.Keys) if (!active.Contains(id)) _expired.Add(id);
+        foreach (var id in _expired) view.Forecasts.Remove(id);
         return new CastForecastMsg(Epoch, sequence, Sim.Clock.Time,
             Sim.Clock.Time + Math.Max(_forecastSettings.ValidSeconds, snapshotInterval * 3), casts, omitted)
             { Retained = retained.Count == 0 ? null : retained };
+    }
+
+    private void AddCandidate(Entity entity, Vector3 viewer)
+    {
+        if (!entity.IsNone && Sim.World.Get<WeaveBook>(entity)?.Casting is not null)
+            _candidates.Add((entity, Vector3.DistanceSquared(Sim.World.Get<Transform>(entity)?.Position ?? viewer, viewer)));
     }
 }

@@ -82,18 +82,18 @@ public sealed record DeliveryForecast(ResolvedAreaPlan? PrimaryRegion, string? U
 public static class DeliveryForecasts
 {
     internal static bool? CandidateForAi(CompiledEffect effect, Simulation sim, Entity caster,
-        Entity target, Vector3 point, Vector2 direction, CompiledWeave weave)
+        Entity target, Vector3 point, Vector2 direction, CompiledWeave weave, Vector3? candidatePosition = null)
     {
         if (effect is IImmediateDeliveryCandidateSource immediate)
         {
             var scratch = EffectContext.RentObservation(sim, caster, target, point, direction, weave);
-            try { return immediate.IsCandidate(scratch, target, point); }
+            try { return immediate.IsCandidate(scratch, target, candidatePosition ?? point); }
             finally { scratch.ReturnObservation(); }
         }
         // Preserve the public provider's detached lifetime and safety contract.
         var context = new EffectContext { Sim = sim, Source = caster, Target = target, Point = point,
             Direction = direction, Weave = weave, Tags = weave.Tags, Rng = new Rng(0) };
-        return Describe(effect, context).PrimaryRegion is { } plan ? plan.IsCandidate(context, target, point) : null;
+        return Describe(effect, context).PrimaryRegion is { } plan ? plan.IsCandidate(context, target, candidatePosition ?? point) : null;
     }
 
     internal static DeliveryForecast DescribeDetached(IReadOnlyList<CompiledEffect> graph, EffectContext context) =>

@@ -186,8 +186,9 @@ internal sealed class AreaHandler : IEffectHandler
         PreservePayloadDepth = ctx.ChoiceOf(p["payload_depth"], "payload_depth", "next", "next", "same") == "same",
     };
 
-    private sealed class Effect : CompiledEffect, IImmediateDeliveryCandidateSource
+    private sealed class Effect : CompiledEffect, IImmediateDeliveryCandidateSource, IReleaseTargetSelector
     {
+        public bool ChecksLineOfSight => !Free;
         public required Shape Shape;
         public Expr? Radius;
         public Expr? Angle;

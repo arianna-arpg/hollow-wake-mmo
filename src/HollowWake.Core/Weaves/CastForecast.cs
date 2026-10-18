@@ -1,4 +1,5 @@
 using System.Numerics;
+using System.Collections.Frozen;
 using HollowWake.Core.Attributes;
 using HollowWake.Core.Components;
 using HollowWake.Core.Definitions;
@@ -31,6 +32,8 @@ public sealed record CastForecast(
 
 public sealed partial class WeaveRuntime
 {
+    private static readonly IReadOnlySet<string> NoChangingAttributes = Array.Empty<string>().ToFrozenSet(StringComparer.Ordinal);
+    private static readonly IReadOnlySet<string> CastChangingFlags = new[] { "recently_cast" }.ToFrozenSet(StringComparer.Ordinal);
     /// <summary>
     /// Observe on the simulation thread, only when someone needs it. No compilation, runtime scopes,
     /// RNG streams, costs, events or scheduled work are touched. An unsupported graph still has timing.
@@ -55,12 +58,11 @@ public sealed partial class WeaveRuntime
 
         var local = cast.HasModifiers ? new List<Modifier>(cast.Modifiers) : null;
         var vars = new CastVarValues();
-        var changingAttributes = new HashSet<string>(StringComparer.Ordinal);
-        var changingFlags = new HashSet<string>(StringComparer.Ordinal);
+        HashSet<string>? changingAttributes = null;
+        HashSet<string>? changingFlags = null;
         // Run stamps these immediately before evaluating its graph. Do not describe a region using
         // the pre-release value of a condition that the application itself is about to change.
-        changingFlags.Add("recently_cast");
-        if (weave.Tags.Has("movement")) changingFlags.Add("recently_moved");
+        if (weave.Tags.Has("movement")) (changingFlags ??= new(CastChangingFlags, StringComparer.Ordinal)).Add("recently_moved");
         string? unavailable = null;
         IReadOnlyList<CompiledEffect> effects = weave.Effects;
         switch (cast.Mode)
@@ -75,7 +77,7 @@ public sealed partial class WeaveRuntime
                         local = new List<Modifier>();
                         foreach (var ramp in channel.Ramps)
                         {
-                            if (ramp.On == "caster") { changingAttributes.Add(ramp.Attribute); continue; }
+                            if (ramp.On == "caster") { (changingAttributes ??= new(StringComparer.Ordinal)).Add(ramp.Attribute); continue; }
                             if (!Curves.IsPreviewSafe(ramp.Curve)) { unavailable = "opaque_cast_curve"; break; }
                             try
                             {
@@ -100,7 +102,7 @@ public sealed partial class WeaveRuntime
                 vars.Fill = cast.Duration <= 0 ? 1 : Math.Min(1, held / cast.Duration);
                 local = new List<Modifier>();
                 AddChargeModifiers(local, weave.Charge, vars.Fill.Value);
-                changingFlags.Add("charging");
+                (changingFlags ??= new(CastChangingFlags, StringComparer.Ordinal)).Add("charging");
                 break;
             case CastMode.Overcharge:
                 vars.Held = held;
@@ -108,7 +110,7 @@ public sealed partial class WeaveRuntime
                 vars.Fill = cast.Fill;
                 local = new List<Modifier>();
                 AddOverchargeModifiers(local, weave.Form.Overcharge, cast.Stage, now - cast.StageAt);
-                changingFlags.Add("charging");
+                (changingFlags ??= new(CastChangingFlags, StringComparer.Ordinal)).Add("charging");
                 break;
             case CastMode.Guard:
                 effects = weave.Casting.Bash;
@@ -125,13 +127,13 @@ public sealed partial class WeaveRuntime
         }
         if (cast.Mode is CastMode.Charge or CastMode.Overcharge && cast.CasterSource is { } removedSource)
             foreach (var modifier in stats.Attributes.AllModifiers)
-                if (modifier.Source == removedSource) changingAttributes.Add(modifier.Attribute);
+                if (modifier.Source == removedSource) (changingAttributes ??= new(StringComparer.Ordinal)).Add(modifier.Attribute);
         var view = local is { Count: > 0 } ? weave.Root.WithModifiers(Combined(weave.Root.Modifiers, local)) : weave;
         var context = new EffectContext
         {
             CastId = cast.CastId, Sim = sim, Source = caster, Target = target, Point = point,
             Direction = direction, Weave = view, Tags = view.Tags, Rng = new Rng(0), Slot = cast.Slot,
-            ForecastRestrictions = new ForecastRestrictions(changingAttributes, changingFlags,
+            ForecastRestrictions = new ForecastRestrictions(changingAttributes ?? NoChangingAttributes, changingFlags ?? CastChangingFlags,
                 pulse && cast.Pulses > 0),
         };
         vars.WriteTo(context.Vars);

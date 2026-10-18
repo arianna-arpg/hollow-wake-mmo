@@ -124,3 +124,7 @@ An effect context's scope is built when first read: `source.*` and `caster.*` re
 ## Deliveries
 
 How a weave reaches its targets (projectiles, areas, chains, fields, auras, tethers, placements, and the movements that carry or shove bodies) is its own contract: [deliveries.md](deliveries.md).
+
+## Release validation composition
+
+The optional `release_check` block on forms, presets and glyphs follows whole-block precedence: first active glyph, then preset, then form. It compiles into `WeaveCasting.ReleaseCheck` and `ReleasePolicy`; execution does not inspect its authoring source. `policy: body` validates the stored body at each application; `height_tolerance` may be an expression. `policy: delivery` delegates to compiled selectors that explicitly own target selection and LOS, and rejects unchecked root payloads. Glyph and tree graph patches are checked after composition. A package registers another policy through `ReleasePolicies` and supplies both its application check and compiled-graph acceptance contract. See [combat.md](combat.md) for costs, events, nested origins and miss semantics.

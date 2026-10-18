@@ -6,11 +6,11 @@ entries:
     name: Strike
     description: A weapon blow against one foe.
     targeting: enemy
-    release_check: none # The sector selects a body at release; its aimed target is only a preference.
+    release_check: { policy: delivery } # The sector selects a body at release; its aimed target is only a preference.
     cast_mode: cast
     cast_time: "weapon.attack.time"
     costs: { stamina: 4 }
-    attributes: { range: 1.9, damage.effectiveness: 1.0 }
+    attributes: { ai.anticipation: 1, range: 1.9, damage.effectiveness: 1.0 }
     mechanisms: [hit, melee, attack]
     tags: [attack, melee]
     min_threads: 0

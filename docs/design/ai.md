@@ -26,6 +26,6 @@ The plan is a cache on `Behavior` (`PlanGoal`, `PlannedAt`, `Planned`, `PlanFail
 
 ## Weave choice
 
-`WeaveRuntime.ChooseForAi` filters the entity's weaves by readiness, cost, range and the hint's `when` expression, skipping triggered weaves, toggles that are on, empty banks and failed gates, then weights by the hint. `PreferredRange` is the longest hinted range, used by `chase` and perception.
+`WeaveRuntime.ChooseForAi` filters the entity's weaves by readiness, cost, range and the hint's `when` expression, skipping triggered weaves, toggles that are on, empty banks and failed gates, then weights by the hint. A zero-weight `min_range` rejection happens before geometry resolution or LOS work. Ordinary timed and instant positional attacks with a supported primary region also test the current target against that same region before committing; unsupported graphs retain range-based choice. This prevents stationary edge stalls, but does not predict a moving target's future position or retarget a committed swing. `PreferredRange` is the longest hinted range, used by `chase` and perception.
 
 Taunts set the target and a memory timestamp the behaviors read as `taunted`.
