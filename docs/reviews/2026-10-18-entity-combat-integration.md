@@ -50,3 +50,11 @@ Source `97becc4ed5f55de0a8e84dea0f6de9cd5c48dbd1` consumes complete parent `4699
 The full fresh proving JSON equals the exact archived preceding source, including all three inherited win-ceiling breaches, outcomes, mechanisms and hashes. The command exits1; this is not a balance pass. Seven hashes do not capture vertical spawn coordinates: the inherited launch correction's detailed trace and child-contact regressions establish the actual emission-height change. No timing run or budget relaxation accompanies this source. Full gate evidence: `34-combined-*` and `34-pre54-*`. Client/transport coverage is stated separately rather than inferred from simulation checks.
 
 Claude rereview requested for the complete combined source. Historical performance misses remain open under coordinated ownership; no merge to main.
+
+## #34 combined client and transport verification
+
+Source `97becc4ed5f55de0a8e84dea0f6de9cd5c48dbd1`: browser unit tests 298 pass, production browser build and porter tests pass, generated protocol is current. Private `run-8cdtTL` passes browser 31/31 and native 36/36; teardown is clean. Native rendered pixels remain explicitly skipped; complete headless output, including exit diagnostics, is retained. The isolated TCP probe passes with all six requested features granted. The production build retains its existing large-chunk advisory.
+
+Fresh run-8cdtTL card and grayscale frames were inspected: terrain, trees, villagers, the player and wildlife are visible across the full world viewport. The previous blank-world frame is corrected; the world-pixel assertion also passes. Both screenshots and full logs are retained. Native rendered pixels remain explicitly untested.
+
+These functional gates do not resolve the retained pre-main performance misses or establish a post-main timing pass. No benchmark was run during this integration.
