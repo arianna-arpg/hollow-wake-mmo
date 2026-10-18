@@ -7,6 +7,7 @@ using HollowWake.Core.Effects;
 using HollowWake.Core.Maths;
 using HollowWake.Core.Sim;
 using HollowWake.Core.World;
+using HollowWake.Core.Weaves;
 using Xunit;
 
 namespace HollowWake.Core.Tests;
@@ -220,7 +221,7 @@ public class AimWrapperElevationTests
         {
             a.Effect(child).Execute(Context());
             Assert.True(Vector3.Distance(flights[2].Velocity, nested.Velocity) < 0.00001f);
-            Assert.True(Vector3.Distance(retainedTarget ? new Vector3(18, 10, 0) : Context().Point, nested.Context.Point) < 0.00001f);
+            Assert.True(Vector3.Distance(Context().Point, nested.Context.Point) < 0.00001f);
             a.Tick(30);
             if (retainedTarget)
             {
@@ -232,29 +233,145 @@ public class AimWrapperElevationTests
     }
 
     [Theory]
-    [InlineData(false)]
-    [InlineData(true)]
-    public void IdentitySupportsPreservePointPlacedAreaAndProjectileContacts(bool projectile)
+    [InlineData(false, false)]
+    [InlineData(false, true)]
+    [InlineData(true, false)]
+    [InlineData(true, true)]
+    public void IdentitySupportsPreservePointPlacedAreaAndProjectileContacts(bool projectile, bool retainedTarget)
     {
         var a = DeliveryArena.Create();
         var point = new Vector3(16, 10, 0);
         var direction = Vector2.Normalize(new Vector2(1, .2f));
-        var targetPoint = projectile ? point + new Vector3(direction * 4, 0) : point;
+        var targetPoint = projectile ? retainedTarget ? new Vector3(20, 10, 0) : point + new Vector3(direction * 4, 0) : point;
         var target = a.Body(targetPoint.X, targetPoint.Y);
+        var aimed = !retainedTarget ? Entity.None : projectile ? target : a.Body(22, 10);
+        if (projectile && retainedTarget)
+        {
+            a.Sim.World.Get<Transform>(target)!.Yaw = 0;
+            a.Sim.World.Add(target, new HitBody { Definition = new HitBodyDef
+            {
+                Id = "point-origin-offset", Volumes = { new HitVolumeSpec { Left = 1, Up = .5f, Radius = .025f, HalfHeight = .1f } },
+            } });
+        }
         var child = projectile
-            ? """{"type":"projectile","origin":"point","aim":"horizontal","speed":15,"range":6,"radius":0.1,"on_hit":[{"type":"event","name":"point_hit"}]}"""
+            ? """{"type":"projectile","origin":"point","aim":"target","speed":15,"range":6,"radius":0.1,"on_hit":[{"type":"event","name":"point_hit"}]}"""
             : """{"type":"area","center":"point","radius":0.1,"effects":[{"type":"event","name":"point_hit"}]}""";
         static string Wrap(string effects) => "{\"type\":\"aim\",\"offset\":0,\"effects\":[" + effects + "]}";
         var flights = new List<Projectile>();
         a.Sim.Events.Subscribe<EntitySpawned>(e => { if (a.Sim.World.Get<Projectile>(e.Entity) is { } p) flights.Add(p); });
         foreach (var graph in new[] { child, Wrap(child), Wrap(Wrap(child)) })
-            a.Effect(graph).Execute(a.Context(point, direction));
+            a.Effect(graph).Execute(a.Context(point, direction, aimed));
         a.Tick(30);
         Assert.Equal(3, a.Struck("point_hit").Count(e => e == target));
+        if (!projectile && retainedTarget) Assert.DoesNotContain(aimed, a.Struck("point_hit"));
         if (projectile)
         {
             Assert.Equal(3, flights.Count);
             Assert.All(flights, p => Assert.Equal(new Vector3(16, 10, 1), p.Origin));
+            Assert.All(flights, p => Assert.True(Vector3.Distance(flights[0].Velocity, p.Velocity) < .00001f));
         }
+    }
+
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public void DelaysAndSalvosKeepTheFrozenAimAndActualPointOrigin(bool salvo)
+    {
+        var a = DeliveryArena.Create();
+        Entity OffsetBody()
+        {
+            var body = a.Body(20, 10);
+            a.Sim.World.Get<Transform>(body)!.Yaw = 0;
+            a.Sim.World.Add(body, new HitBody { Definition = new HitBodyDef
+            {
+                Id = "frozen-offset", Volumes = { new HitVolumeSpec { Left = 1, Up = .5f, Radius = .025f, HalfHeight = .1f } },
+            } });
+            return body;
+        }
+        var target = OffsetBody();
+        var child = """{"type":"projectile","origin":"point","speed":15,"range":6,"radius":0.02,"on_hit":[{"type":"event","name":"frozen_hit"}]}""";
+        child = salvo ? child.Replace("\"speed\":15", "\"speed\":15,\"fire\":\"salvo\",\"count\":3,\"salvo_interval\":0.1")
+            : "{\"type\":\"delay\",\"seconds\":0.1,\"effects\":[" + child + "]}";
+        var flights = new List<Projectile>();
+        a.Sim.Events.Subscribe<EntitySpawned>(e => { if (a.Sim.World.Get<Projectile>(e.Entity) is { } p) flights.Add(p); });
+        a.Effect("{\"type\":\"aim\",\"offset\":0,\"effects\":[" + child + "]}").Execute(a.Context(new(16, 10, 0), Vector2.UnitX, target));
+        var transform = a.Sim.World.Get<Transform>(target)!;
+        transform.Position = new Vector3(25, 14, 0);
+        a.Sim.Spatial.Update(target, transform.Position);
+        var bystander = OffsetBody();
+        a.Tick(40);
+        Assert.Equal(salvo ? 3 : 1, flights.Count);
+        Assert.Equal(flights.Count, a.Struck("frozen_hit").Count(e => e == bystander));
+        Assert.DoesNotContain(target, a.Struck("frozen_hit"));
+        Assert.All(flights, p =>
+        {
+            Assert.Equal(new Vector3(16, 10, 1), p.Origin);
+            Assert.Equal(new Vector3(20, 10, 0), p.Context.SampledTargetPoint);
+            Assert.Equal(Entity.None, p.CastTarget);
+        });
+    }
+
+    [Fact]
+    public void ExplicitReaimAndRetargetClearTheFrozenBodySample()
+    {
+        var a = DeliveryArena.Create();
+        var target = a.Body(18, 10);
+        var context = new EffectContext
+        {
+            Sim = a.Sim, Source = a.Caster, Point = new Vector3(16, 10, 0),
+            Direction = Vector2.UnitX, Rng = new Rng(481), SampledTargetPoint = new Vector3(18, 10, 0),
+            AimOffset = new Vector3(0, 1, 2),
+        };
+        var fork = context.Fork(1);
+        Assert.Equal(new Vector3(18, 11, 2), ProjectileAims.Get("target")(fork));
+        var point = new Vector3(12, 8, 0);
+        var reaimed = fork.WithPoint(point);
+        Assert.Null(reaimed.SampledTargetPoint);
+        Assert.Null(ProjectileAims.Get("target")(reaimed));
+        Assert.Equal(point, ProjectileAims.Get("point")(reaimed));
+        var retargeted = fork.WithTarget(target);
+        Assert.Null(retargeted.SampledTargetPoint);
+        Assert.Equal(HitBodies.AimPoint(a.Sim, target), ProjectileAims.Get("target")(retargeted));
+    }
+
+    [Fact]
+    public void EverySalvoBeatUsesTheOnceSampledOriginRange()
+    {
+        var a = DeliveryArena.Create();
+        var flights = new List<Projectile>();
+        a.Sim.Events.Subscribe<EntitySpawned>(e => { if (a.Sim.World.Get<Projectile>(e.Entity) is { } p) flights.Add(p); });
+        a.Run("""{"type":"projectile","origin":"point","origin_range":"4 + rand()","fire":"salvo","count":3,"salvo_interval":0.1,"range":12}""", new(20, 10, 0), Vector2.UnitX);
+        a.Tick(10);
+        Assert.Equal(3, flights.Count);
+        Assert.InRange(flights[0].Origin.X, 14, 15);
+        Assert.All(flights, p => Assert.Equal(flights[0].Origin, p.Origin));
+    }
+
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public void LiveReaimMovesPointSalvosAndReleasesTheOldBody(bool wrapped)
+    {
+        var a = DeliveryArena.Create();
+        var oldTarget = a.Body(20, 10);
+        var newTarget = a.Body(20, 14);
+        const string child = """{"type":"projectile","origin":"point","fire":"salvo","count":3,"salvo_interval":0.15,"speed":15,"range":6,"radius":0.1,"on_hit":[{"type":"event","name":"reaim_hit"}]}""";
+        var flights = new List<Projectile>();
+        a.Sim.Events.Subscribe<EntitySpawned>(e => { if (a.Sim.World.Get<Projectile>(e.Entity) is { } p) flights.Add(p); });
+        a.Effect(wrapped ? "{\"type\":\"aim\",\"offset\":0,\"effects\":[" + child + "]}" : child)
+            .Execute(a.Context(new(16, 10, 0), Vector2.UnitX, oldTarget));
+        a.Tick();
+        Assert.True(a.Sim.Service<WeaveRuntime>().Aim(a.Sim, a.Caster, new(16, 14, 0), Vector2.UnitX));
+        a.Tick(35);
+        Assert.Equal(3, flights.Count);
+        Assert.Equal(1, a.Struck("reaim_hit").Count(e => e == oldTarget));
+        Assert.Equal(2, a.Struck("reaim_hit").Count(e => e == newTarget));
+        Assert.All(flights.Skip(1), p =>
+        {
+            Assert.Equal(new Vector3(16, 14, 1), p.Origin);
+            Assert.Equal(0f, p.Velocity.Z);
+            Assert.Equal(Entity.None, p.CastTarget);
+            Assert.Null(p.Context.SampledTargetPoint);
+        });
     }
 }

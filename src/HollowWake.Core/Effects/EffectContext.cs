@@ -75,6 +75,9 @@ public sealed class EffectContext
     }
     /// <summary>Body aim offset sampled separately from planar bearing and original cast aim.</summary>
     public Vector3 AimOffset { get; init; }
+    /// <summary>A frozen target center after releasing its entity lock, independent of placement Point.
+    /// Together with AimOffset it preserves the body's aiming point; null keeps an explicit direction.</summary>
+    public Vector3? SampledTargetPoint { get; init; }
 
     /// <summary>
     /// How deep in a chain this effect runs. Nested deliveries, repeats, delays and casts (of other weaves or
@@ -208,6 +211,7 @@ public sealed class EffectContext
             Aim = aim ?? Aim,
             AimOffset = target is { } aimed && Sim.World.Get<Transform>(aimed) is { } at ?
                 Combat.HitBodies.AimPoint(Sim, aimed) - at.Position : point is not null ? Vector3.Zero : AimOffset,
+            SampledTargetPoint = target is not null || point is not null ? null : SampledTargetPoint,
             Direction = Direction,
             Weave = Weave,
             Tags = tags ?? Tags,

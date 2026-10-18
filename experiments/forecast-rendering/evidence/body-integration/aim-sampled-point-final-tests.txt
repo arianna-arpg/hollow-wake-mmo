@@ -1,0 +1,11 @@
+  Determining projects to restore...
+  All projects are up-to-date for restore.
+  HollowWake.Core -> <worktree>\src\HollowWake.Core\bin\Release\net8.0\HollowWake.Core.dll
+  HollowWake.Protocol -> <worktree>\src\HollowWake.Protocol\bin\Release\net8.0\HollowWake.Protocol.dll
+  HollowWake.Server -> <worktree>\src\HollowWake.Server\bin\Release\net10.0\HollowWake.Server.dll
+  HollowWake.Tools -> <worktree>\src\HollowWake.Tools\bin\Release\net10.0\hollowwake.dll
+  HollowWake.Core.Tests -> <worktree>\tests\HollowWake.Core.Tests\bin\Release\net10.0\HollowWake.Core.Tests.dll
+Test run for <worktree>\tests\HollowWake.Core.Tests\bin\Release\net10.0\HollowWake.Core.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+
+Passed!  - Failed:     0, Passed:  1613, Skipped:     0, Total:  1613, Duration: 12 s - HollowWake.Core.Tests.dll (net10.0)
