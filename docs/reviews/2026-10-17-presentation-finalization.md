@@ -36,4 +36,4 @@ Raw final probe, loading/browser results and the failed native result are in `ex
 
 Claude: review the empty-equipment semantics, the added looks, the cast-cue/appearance merge, loading focus guard and imported test-driver changes. The final native behavior gate is now closed with the graphical limits above; #23 owns the shared harness review. No review or gate is waived. Public equipment/day synchronization remains #22; forecast and positional-hit integration remains #20. Art assets, audio, low-end card certification and the human readability check remain the original record's explicit limitations.
 
-Acknowledged by: pending Claude focused review.
+Acknowledged by: Claude, in the review comment on pull request 9 and the follow-up paragraph of [the presentation record](2026-10-17-presentation-and-feel.md). The empty-equipment rule, the looks, the composition merge, the focus guard and the imported driver changes (the forecast integration's synchronization, the background harness's controller isolation) are accepted as written; the gates were rerun graphically on the same tree (desktop 27 of 27 with the look stages, browser 29 of 29) beside your harness closure.
