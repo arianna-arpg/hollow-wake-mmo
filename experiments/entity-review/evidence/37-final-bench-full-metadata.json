@@ -1,0 +1,31 @@
+{
+  "Source": "c6e117a362b552f9865155789fdf020d979f97d2",
+  "RuntimeSource": "ce3bcf569fb27426991ec69931c950e6951c74e1",
+  "ContentTree": "46a1e09fccc16e7a5c184efc439935a92b55ec15",
+  "ProcessId": 86304,
+  "Priority": "Normal",
+  "Arguments": [
+    "C:\\Users\\John\\.codex\\worktrees\\undead-entity-foundation\\MMOARPG\\src\\HollowWake.Tools\\bin\\Release\\net10.0\\hollowwake.dll",
+    "bench",
+    "--json"
+  ],
+  "StartedUtc": "2026-10-18T19:47:42.9426704Z",
+  "Binaries": [
+    {
+      "Path": "C:\\Users\\John\\.codex\\worktrees\\undead-entity-foundation\\MMOARPG\\src\\HollowWake.Tools\\bin\\Release\\net10.0\\HollowWake.Core.dll",
+      "Hash": "BAA816AFDAA193DEF81D8E57FB3A3DF4CBEE8F0F655B2E75524A18196DE32849"
+    },
+    {
+      "Path": "C:\\Users\\John\\.codex\\worktrees\\undead-entity-foundation\\MMOARPG\\src\\HollowWake.Tools\\bin\\Release\\net10.0\\hollowwake.dll",
+      "Hash": "ED35A734A756E1F5E88F9EE4BF835F0E69725032F41F9C22B39021A209051E00"
+    },
+    {
+      "Path": "C:\\Users\\John\\.codex\\worktrees\\undead-entity-foundation\\MMOARPG\\src\\HollowWake.Tools\\bin\\Release\\net10.0\\HollowWake.Protocol.dll",
+      "Hash": "08885776665C15EBB56984A0C68891FD5A98E6814DC45C7B3684C7FA877A42DA"
+    },
+    {
+      "Path": "C:\\Users\\John\\.codex\\worktrees\\undead-entity-foundation\\MMOARPG\\src\\HollowWake.Tools\\bin\\Release\\net10.0\\HollowWake.Server.dll",
+      "Hash": "347B3B201EE97EF72E000C5FD4B9DDFDB19BFBA23C7994F0EBC0FC002BB61DF6"
+    }
+  ]
+}
