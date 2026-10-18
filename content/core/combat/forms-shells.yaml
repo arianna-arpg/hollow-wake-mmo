@@ -3,7 +3,7 @@
 # preset sets (cast.time, cooldown.base, cost.base.<resource>, cost.pct_max.<resource>, cast.move; the
 # channel.*, guard.*, reserve.* and upkeep.* families for held modes and toggles), so one shell serves every
 # preset of its kind. A shell has no graph of its own: the preset carries it. A codex that teaches a bare shell
-# teaches nothing to cast, so loot names the presets. One shell per delivery and cast mode; a shell is added
+# teaches nothing to cast, so these shells have zero drop weight and authored rewards must name a preset. One shell per delivery and cast mode; a shell is added
 # only where no composition expresses a delivery, never for one preset.
 kind: forms
 entries:
@@ -24,6 +24,7 @@ entries:
     max_threads: 2
     max_glyphs: 4
     ai: { role: damage, preferred_range: 1.7, weight: 1 }
+    drop_weight: 0
     effects: []
 
   - id: swing_perfect
@@ -43,6 +44,7 @@ entries:
     max_glyphs: 4
     ai: { role: damage, preferred_range: 1.7, weight: 1 }
     timing: { kind: perfect, window: 0.25, bonus: 0.5 }
+    drop_weight: 0
     effects: []
 
   - id: swing_timed
@@ -62,6 +64,7 @@ entries:
     max_glyphs: 4
     ai: { role: damage, preferred_range: 1.7, weight: 1 }
     timing: { kind: timed, window: 0.25, bonus: 0.5 }
+    drop_weight: 0
     effects: []
 
   - id: swing_multitude
@@ -81,6 +84,7 @@ entries:
     max_glyphs: 4
     ai: { role: damage, preferred_range: 1.7, weight: 1 }
     timing: { kind: multitude, window: 4, bonus: 0.5 }
+    drop_weight: 0
     effects: []
 
   - id: swing_sentence
@@ -100,6 +104,7 @@ entries:
     max_threads: 2
     max_glyphs: 4
     ai: { role: damage, preferred_range: 1.7, weight: 1 }
+    drop_weight: 0
     effects: []
 
   - id: thrust_wounded
@@ -119,6 +124,7 @@ entries:
     max_threads: 2
     max_glyphs: 4
     ai: { role: damage, preferred_range: 1.7, weight: 1 }
+    drop_weight: 0
     effects: []
 
   - id: whirl
@@ -137,6 +143,7 @@ entries:
     max_threads: 2
     max_glyphs: 4
     ai: { role: damage, preferred_range: 2, weight: 1, when: "nearest_enemy_distance < 3.5" }
+    drop_weight: 0
     effects: []
 
   - id: whirl_stream
@@ -155,6 +162,7 @@ entries:
     max_glyphs: 4
     ai: { role: damage, preferred_range: 2, weight: 1, when: "nearest_enemy_distance < 3" }
     channel: { interval: weave.channel.interval, move: weave.channel.move }
+    drop_weight: 0
     effects: []
 
   - id: sweep
@@ -173,6 +181,7 @@ entries:
     max_threads: 2
     max_glyphs: 4
     ai: { role: damage, preferred_range: 2.5, weight: 1 }
+    drop_weight: 0
     effects: []
 
   - id: sweep_quick
@@ -189,6 +198,7 @@ entries:
     max_threads: 2
     max_glyphs: 4
     ai: { role: damage, preferred_range: 2.5, weight: 1 }
+    drop_weight: 0
     effects: []
 
   - id: slam_quick
@@ -205,4 +215,5 @@ entries:
     max_threads: 2
     max_glyphs: 4
     ai: { role: damage, preferred_range: 3, weight: 1 }
+    drop_weight: 0
     effects: []

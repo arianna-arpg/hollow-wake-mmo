@@ -21,6 +21,22 @@ public class PortedStrikeTests
 {
     private static WeaveCompiler Compiler() => new(CoreContent.Registry, HollowWake.Core.Effects.EffectRegistry.CreateDefault());
 
+    [Fact]
+    public void EmptyStrikeShellsAreNotRandomCodexDrops()
+    {
+        // Random codices select every positive-weight form. A bare shell has no effects to teach.
+        var shells = new[] { "swing", "swing_perfect", "swing_timed", "swing_multitude", "swing_sentence",
+            "thrust_wounded", "whirl", "whirl_stream", "sweep", "sweep_quick", "slam_quick" };
+        Assert.All(shells, id =>
+        {
+            var form = CoreContent.Registry.Get<FormDef>(id)!;
+            Assert.Empty(form.Effects);
+            Assert.True(form.DropWeight == 0, $"{form.Id} is eligible for an empty codex drop");
+        });
+        // Named presets still compose on the excluded forms.
+        Assert.True(Compiler().Compile(new WeaveSpec { Preset = "heavy_strike" }).Fits);
+    }
+
     [Theory]
     [InlineData("one_two", "chain")]
     [InlineData("haymaker", "spend")]
