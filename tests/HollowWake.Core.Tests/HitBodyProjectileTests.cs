@@ -63,10 +63,19 @@ public class HitBodyProjectileTests
         {
             if (a.Sim.World.Get<Projectile>(e.Entity) is { } p) flights.Add(p);
         });
+        // A successful return clears the leg ledger. Observe contact when damage is delivered,
+        // before a later turn can erase it, while still requiring the projectile's own ledger.
+        var contacted = new HashSet<Projectile>();
+        a.Sim.Events.Subscribe<DamageDealt>(hit =>
+        {
+            if (hit.Source != a.Caster || hit.Target != target || hit.Total <= 0) return;
+            foreach (var flight in flights)
+                if (flight.Hits.Holds(target, a.Sim.Clock.Time, 0)) contacted.Add(flight);
+        });
         Assert.True(a.Sim.Service<WeaveRuntime>().TryBegin(a.Sim, a.Caster, slot, target, at.Position, Vector2.UnitX, out var reason), reason);
         a.Tick(100);
         Assert.Contains(a.Events, e => e is EntitySpawned spawned && spawned.Pattern == "projectile");
         Assert.Contains(a.Events, e => e is DamageDealt hit && hit.Source == a.Caster && hit.Target == target && hit.Total > 0);
-        Assert.Contains(flights, p => p.Hits.Holds(target, a.Sim.Clock.Time, 0));
+        Assert.Contains(flights, contacted.Contains);
     }
 }
