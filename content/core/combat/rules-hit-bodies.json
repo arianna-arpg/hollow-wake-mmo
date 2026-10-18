@@ -2,6 +2,6 @@
   "kind": "rules",
   "entries": [
     { "id": "body", "values": { "player_hit_profile": "humanoid" } },
-    { "id": "delivery", "patch": true, "values": { "projectile_height": 0.2, "projectile_origin_height": 1, "projectile_aim": "target", "projectile_ground_floor": 0.342 } }
+    { "id": "delivery", "patch": true, "values": { "projectile_height": 0.2, "projectile_origin_height": 1, "projectile_aim": "target", "projectile_ground_floor": 0.16 } }
   ]
 }

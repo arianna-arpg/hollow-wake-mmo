@@ -25,23 +25,68 @@ public class FreeShotGroundFloorTests(ITestOutputHelper output)
 
     [Theory, MemberData(nameof(Contacts))]
     public void HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(string pattern, float slope, string preset, bool beyond)
+        => AssertHumanoidFreeShotContact(pattern, slope, preset, beyond ? 8 : 4, beyond ? 1 : 6);
+
+    public void AssertHumanoidFreeShotContact(string pattern, float slope, string preset,
+        float distance, float cursorDistance, bool expectedHit = true)
     {
         var a = Arena(slope);
-        var distance = beyond ? 8 : 4;
         var target = a.Body(10 + distance, 10, pattern: pattern);
         var t = a.Sim.World.Get<Transform>(target)!;
         Assert.Equal((float)a.Sim.Service<PatternFactory>().Resolve(pattern).Def.Height, t.Height);
         var originalHeight = t.Height;
         var originalRadius = t.Radius;
         var flights = Capture(a);
-        Press(a, preset, beyond ? 1 : 6);
-        a.Tick(150);
+        var positions = new List<(Vector3 Position, float Height)>();
+        if (!expectedHit)
+            a.Sim.Events.Subscribe<EntitySpawned>(spawn =>
+            {
+                if (a.Sim.World.Get<Projectile>(spawn.Entity) is not null &&
+                    a.Sim.World.Get<Transform>(spawn.Entity) is { } transform)
+                    positions.Add((transform.Position, transform.Height));
+            });
+        Press(a, preset, cursorDistance);
+        for (var tick = 0; tick < 150; tick++)
+        {
+            a.Tick();
+            if (!expectedHit)
+                foreach (var (_, transform, _) in a.Sim.World.Query<Transform, Projectile>())
+                    positions.Add((transform.Position, transform.Height));
+        }
         var p = Assert.Single(flights);
-        output.WriteLine($"{preset}/{pattern}, slope {slope}, beyond={beyond}, launch={p.Origin}, distance={p.Traveled:F3}");
+        output.WriteLine($"{preset}/{pattern}, slope {slope}, body={distance}, cursor={cursorDistance}, launch={p.Origin}, distance={p.Traveled:F3}");
         Assert.Equal(1.098f, p.Origin.Z, 4);
         Assert.True(p.Context.Target.IsNone);
         Assert.Equal(Vector3.Zero, p.Context.AimOffset);
-        Assert.Contains(a.Events.OfType<DamageDealt>(), h => h.Source == a.Caster && h.Target == target && h.Total > 0);
+        if (expectedHit)
+            Assert.Contains(a.Events.OfType<DamageDealt>(), h => h.Source == a.Caster && h.Target == target && h.Total > 0);
+        else
+        {
+            Assert.DoesNotContain(a.Events.OfType<DamageDealt>(), h => h.Target == target);
+            Assert.True(p.Traveled >= p.Range, "The airborne miss must still complete its flight.");
+            Assert.Same(Shapes.Circle, p.Spec.Shape);
+            Assert.All(positions, sample => Assert.Equal(t.Position.Y, sample.Position.Y, 4));
+            var bodyTop = t.Position.Z + t.Height;
+            var reach = t.Radius + p.Size.Radius;
+            var lower = float.PositiveInfinity;
+            var overlaps = 0;
+            for (var i = 1; i < positions.Count; i++)
+            {
+                var from = positions[i - 1];
+                var to = positions[i];
+                if (to.Position.X <= from.Position.X) continue;
+                var enter = Math.Max(from.Position.X, t.Position.X - reach);
+                var leave = Math.Min(to.Position.X, t.Position.X + reach);
+                if (enter > leave) continue;
+                var entry = Vector3.Lerp(from.Position, to.Position, (enter - from.Position.X) / (to.Position.X - from.Position.X));
+                var exit = Vector3.Lerp(from.Position, to.Position, (leave - from.Position.X) / (to.Position.X - from.Position.X));
+                lower = Math.Min(lower, Math.Min(entry.Z, exit.Z) - to.Height * .5f);
+                overlaps++;
+            }
+            Assert.True(overlaps > 0, "Observe the flight crossing the body's full horizontal envelope.");
+            output.WriteLine($"AIRBORNE_CLEARANCE body={pattern} preset={preset} slope={slope} body_top={bodyTop:R} min_slab_bottom={lower:R} gap={lower - bodyTop:R} overlapping_segments={overlaps}");
+            Assert.True(lower > bodyTop, $"Flight bottom {lower} must remain above body top {bodyTop} throughout XY overlap.");
+        }
         Assert.Equal(originalHeight, t.Height);
         Assert.Equal(originalRadius, t.Radius);
     }
@@ -89,14 +134,16 @@ public class FreeShotGroundFloorTests(ITestOutputHelper output)
     }
 
     [Fact]
-    public void ShippedFloorMatchesTheShortestAuthoredDamageBodyTop()
+    public void ShippedFloorMatchesTheShortestDamageBodyIncludingFallbackCylinders()
     {
         var content = DeliveryArena.Registry;
         var factory = new PatternFactory(content);
         var top = content.Each<PatternDef>().Select(p => factory.Resolve(p.Id))
-            .Where(p => p.Components.ContainsKey("hit_body"))
-            .Min(p => content.Get<HitBodyDef>(p.Components["hit_body"]["profile"]!.GetValue<string>())!
-                .Volumes.Max(v => v.Up + v.HalfHeight) * p.Def.Height);
+            .Where(p => p.Components.ContainsKey("stats"))
+            .Min(p => p.Components.TryGetValue("hit_body", out var body)
+                ? content.Get<HitBodyDef>(body["profile"]!.GetValue<string>())!
+                    .Volumes.Max(v => v.Up + v.HalfHeight) * p.Def.Height
+                : p.Def.Height);
         Assert.Equal(top, content.Rules.Number("delivery.projectile_ground_floor", 0), 5);
     }
 
