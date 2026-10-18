@@ -1,0 +1,61 @@
+== proving_hexer (A) vs proving_pitfighter (B), seed mech, 30 s kitA=call_wraiths,void_lash
+     11  A cast void_lash
+     11  A dealt damage events
+     11  A started void_lash
+      1  B cast cross_jab
+      2  B cast frenzy
+      2  B cast haymaker
+      3  B cast one_two
+      1  B dealt damage events
+      1  B started cross_jab
+      2  B started frenzy
+      3  B started haymaker
+      3  B started one_two
+-- ticks by state (20 per second)
+     21  A state engage, casting Cast
+     15  A state engage, free
+    393  A state idle, free
+     90  A state kite, casting Cast
+     41  A state kite, free
+     40  A state return, free
+      3  B state , free
+    103  B state chase, casting Cast
+     56  B state chase, free
+      5  B state idle, free
+-- A walked 45.8 units
+-- B walked 11.2 units
+-- life A 148/148  B gone
+-- timeline
+  t=0.05 A (10.00,10.00) idle | B (14.00,10.00)  | dist 4.00
+  t=1.00 A (8.75,10.00) kite | B (11.40,10.00) chase casting=haymaker(Cast) | dist 2.65
+  t=2.00 A (7.50,10.00) kite casting=void_lash(Cast) | B (10.10,10.00) chase | dist 2.60
+  t=3.00 A (6.25,10.00) kite casting=void_lash(Cast) | B (8.02,10.00) chase casting=one_two(Cast) | dist 1.77
+  t=4.00 A (5.00,10.00) kite | B (7.76,10.00) chase casting=one_two(Cast) | dist 2.76
+  t=5.00 A (3.50,10.00) kite casting=void_lash(Cast) | B (7.24,10.00) chase casting=haymaker(Cast) | dist 3.74
+  t=5.30 B spent 1 fury (left 0)
+  t=6.00 A (3.50,10.00) kite casting=void_lash(Cast) | B (5.68,10.00) chase casting=frenzy(Cast) | dist 2.18
+  t=7.00 A (1.25,10.00) kite | B (3.60,10.00) chase casting=frenzy(Cast) | dist 2.35
+  t=8.00 A (-0.25,10.00) engage casting=void_lash(Cast) | B (2.82,10.00) chase casting=haymaker(Cast) | dist 3.07
+  t=8.40 B died
+  t=9.00 A (1.75,10.00) return | B dead | dist 1.07
+  t=10.00 A (6.75,10.00) return | B dead | dist 3.93
+  t=11.00 A (9.50,10.00) idle | B dead | dist 6.68
+  t=12.00 A (9.50,10.00) idle | B dead | dist 6.68
+  t=13.00 A (9.50,10.00) idle | B dead | dist 6.68
+  t=14.00 A (7.17,10.91) idle | B dead | dist 4.44
+  t=15.00 A (10.51,9.21) idle | B dead | dist 7.73
+  t=16.00 A (10.51,9.21) idle | B dead | dist 7.73
+  t=17.00 A (10.51,9.21) idle | B dead | dist 7.73
+  t=18.00 A (10.51,9.21) idle | B dead | dist 7.73
+  t=19.00 A (9.78,9.37) idle | B dead | dist 6.99
+  t=20.00 A (8.29,9.03) idle | B dead | dist 5.56
+  t=21.00 A (7.45,8.10) idle | B dead | dist -1.00
+  t=22.00 A (7.45,8.10) idle | B dead | dist -1.00
+  t=23.00 A (7.45,8.10) idle | B dead | dist -1.00
+  t=24.00 A (7.45,8.10) idle | B dead | dist -1.00
+  t=25.00 A (7.72,10.09) idle | B dead | dist -1.00
+  t=26.00 A (8.09,12.81) idle | B dead | dist -1.00
+  t=27.00 A (8.09,12.81) idle | B dead | dist -1.00
+  t=28.00 A (11.25,9.61) idle | B dead | dist -1.00
+  t=29.00 A (11.62,8.95) idle | B dead | dist -1.00
+  t=30.00 A (12.35,11.05) idle | B dead | dist -1.00
