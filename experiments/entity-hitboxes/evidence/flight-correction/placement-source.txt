@@ -1,0 +1,25 @@
+Runtime source: 5e12dbc28a6e073a3739df69e5a0a496e26252f0
+Previous checkpoint: 8a15fd43d8e025bdc3ce770d48d51fb34f23b9dd
+Reviewed owner sequence: 70f3ace0e6dfbd04bfa09cf824b6d44aed7e9214, 783fe37cd32fd5c7a211ac2551008cd4cac6465a, 85ee039781b46025ca8631d5f23786636ab95f1a
+Independent peer disposition: https://github.com/arianna-arpg/hollow-wake-mmo/pull/20#issuecomment-6255782966
+Complete foundation ancestor: a3eafab043d38a3acf43d24f4c8f31c255668bd0
+Integration commands:
+  dotnet build HollowWake.sln --no-restore
+  dotnet build src/HollowWake.Tools -c Release --no-restore
+  dotnet test HollowWake.sln --no-build --no-restore
+  npm --prefix web test
+  dotnet test tests/HollowWake.Core.Tests/HollowWake.Core.Tests.csproj --no-build --no-restore --filter FullyQualifiedName~AimWrapperElevationTests|FullyQualifiedName~ProjectileLaunchRegressionTests
+  dotnet src/HollowWake.Tools/bin/Release/net10.0/hollowwake.dll validate
+  dotnet src/HollowWake.Tools/bin/Release/net10.0/hollowwake.dll load --x 0 --y 0
+  dotnet src/HollowWake.Tools/bin/Release/net10.0/hollowwake.dll tournament --standard --check-hashes experiments/combat-grammar/baselines/standard-duels.json
+  dotnet src/HollowWake.Tools/bin/Release/net10.0/hollowwake.dll tournament --pairs proving_reaver:proving_bulwark,proving_hexer:proving_plaguer,proving_pitfighter:proving_mower,proving_fletcher:proving_evoker --seeds 10 --seconds 60 --bands --out experiments/entity-hitboxes/artifacts/flight-correction/placement-proving.json
+  dotnet src/HollowWake.Tools/bin/Release/net10.0/hollowwake.dll weave --axes --all --literals experiments/entity-hitboxes/artifacts/flight-correction/placement-literals.txt
+  dotnet src/HollowWake.Tools/bin/Release/net10.0/hollowwake.dll lint --json experiments/entity-hitboxes/artifacts/flight-correction/placement-lint.json
+  node scripts/test-background.mjs --suite all --no-build --out experiments/entity-hitboxes/artifacts/flight-correction/placement-smoke
+The focused filter was passed as one quoted argument. All normal gates exit0. Proving exits1 for the same three inherited ceiling failures; its full JSON is structurally identical to aim-wrapper-proving.json.
+Current full tests: core1900/server59/native132/browser269=2360. Focused aim/launch:93. Private smoke:30browser/36native,cleanupErrors empty. Native pixels untested. No benchmark or trace.
+Only conflict resolution: retain all existing EffectContext fields and add reviewed SampledTargetPoint declaration/copy line; no full #20 observation pool or #50 field import.
+Unchanged client/content/script trees, checkpoint then runtime:
+content 9bd9827a424215f36dda98245ee028c14af4c564 = 9bd9827a424215f36dda98245ee028c14af4c564
+web b5a3908277b4fc0e43f0146a4cc2a74862fd4237 = b5a3908277b4fc0e43f0146a4cc2a74862fd4237
+scripts ad75f90583372af3dc468c5abd72f263e744b483 = ad75f90583372af3dc468c5abd72f263e744b483
