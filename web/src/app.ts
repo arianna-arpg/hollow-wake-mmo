@@ -5,7 +5,7 @@ import type { ClientConfig } from './config';
 import { Input } from './input/input';
 import { Connection } from './net/connection';
 import { applyDelta } from './net/delta';
-import { CAST_CUES_FEATURE, ENTITY_DELTA_FEATURE, INTERFACE_FEATURE, PROTOCOL_VERSION, type CombatEventMsg, type EntityState, type Int64, type Message } from './net/protocol';
+import { CAST_CUES_FEATURE, ENTITY_DELTA_FEATURE, HIT_BODIES_FEATURE, INTERFACE_FEATURE, PROJECTILE_SLABS_FEATURE, PROTOCOL_VERSION, type CombatEventMsg, type EntityState, type Int64, type Message } from './net/protocol';
 import { CastVisuals } from './world/castVisuals';
 import { cueSettings } from './world/castCueTimeline';
 import { parseServerInput, sameOrigin, socketUrl, type ServerAddress } from './ui/address';
@@ -327,6 +327,7 @@ export class App {
       this.lastDayFraction = -1;
     };
     this.appliers.set('day_lock', day);
+    this.appliers.set('dev_hit_bodies', () => { this.entities.showHitBodies = this.settings.toggle('dev_hit_bodies'); });
     this.appliers.set('day_time', day);
   }
 
@@ -427,6 +428,10 @@ export class App {
     const wanted = new Set(this.config.server.features);
     wanted.add(INTERFACE_FEATURE);
     wanted.add(CAST_CUES_FEATURE);
+    wanted.add(PROJECTILE_SLABS_FEATURE);
+    wanted.delete('hit_bodies_v1');
+    if (this.settings.toggle('dev_hit_bodies')) wanted.add(HIT_BODIES_FEATURE);
+    else wanted.delete(HIT_BODIES_FEATURE);
     if (full) {
       wanted.delete(ENTITY_DELTA_FEATURE);
     }
@@ -434,6 +439,7 @@ export class App {
   }
 
   private async connect(address: ServerAddress, account: string, token: string): Promise<void> {
+    this.entities.hitBodyCatalog = null;
     const url = socketUrl(address);
     this.characterKey = `hollowwake.character.${url}/${account}`;
     this.login.setBusy(true);
@@ -478,8 +484,12 @@ export class App {
   private handle(m: Message): void {
     const local = performance.now() / 1000;
     switch (m.t) {
+      case 'hit_bodies':
+        this.entities.hitBodyCatalog = new Map(m.bodies.map(b => [b.id, b]));
+        break;
       case 'welcome':
         this.features = m.features ?? [];
+        this.entities.preciseProjectileSlabs = this.features.includes(PROJECTILE_SLABS_FEATURE);
         this.hud.hero.interface = this.features.includes(INTERFACE_FEATURE);
         this.login.setStatus(`Connected to ${m.server_name}: ${m.motd}`);
         console.info(`server granted features: ${this.features.length > 0 ? this.features.join(', ') : 'none'}`);

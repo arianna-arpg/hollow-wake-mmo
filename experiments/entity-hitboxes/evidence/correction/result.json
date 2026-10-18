@@ -1,0 +1,84 @@
+{
+  "started": "2026-10-18T17:34:02.089Z",
+  "root": "C:\\Users\\John\\.codex\\worktrees\\precise-entity-hitboxes\\MMOARPG",
+  "directory": "C:\\Users\\John\\.codex\\worktrees\\precise-entity-hitboxes\\MMOARPG\\artifacts\\testing\\run-csgTBC",
+  "suite": "all",
+  "status": "passed",
+  "stages": [
+    {
+      "name": "build-server",
+      "status": "passed",
+      "started": "2026-10-18T17:34:02.111Z",
+      "code": 0,
+      "signal": null,
+      "finished": "2026-10-18T17:34:09.324Z"
+    },
+    {
+      "name": "typecheck-web",
+      "status": "passed",
+      "started": "2026-10-18T17:34:09.325Z",
+      "code": 0,
+      "signal": null,
+      "finished": "2026-10-18T17:34:19.261Z"
+    },
+    {
+      "name": "build-web",
+      "status": "passed",
+      "started": "2026-10-18T17:34:19.262Z",
+      "code": 0,
+      "signal": null,
+      "finished": "2026-10-18T17:34:20.294Z"
+    },
+    {
+      "name": "build-godot",
+      "status": "passed",
+      "started": "2026-10-18T17:34:20.351Z",
+      "code": 0,
+      "signal": null,
+      "finished": "2026-10-18T17:34:23.041Z"
+    },
+    {
+      "name": "smoke-web",
+      "status": "passed",
+      "started": "2026-10-18T17:34:24.585Z",
+      "code": 0,
+      "signal": null,
+      "passed": 29,
+      "total": 29,
+      "skipped": [],
+      "finished": "2026-10-18T17:35:43.930Z"
+    },
+    {
+      "name": "import-godot",
+      "status": "passed",
+      "started": "2026-10-18T17:35:43.931Z",
+      "code": 0,
+      "signal": null,
+      "finished": "2026-10-18T17:35:50.172Z"
+    },
+    {
+      "name": "smoke-godot",
+      "status": "passed",
+      "started": "2026-10-18T17:35:50.173Z",
+      "code": 0,
+      "signal": null,
+      "passed": 25,
+      "total": 25,
+      "skipped": [
+        "appearance rendering: headless display; geometry/card performance and readability require graphical evidence",
+        "theme rendered pixels: headless display; theme state checked above"
+      ],
+      "finished": "2026-10-18T17:36:33.155Z"
+    }
+  ],
+  "nativeRendering": "not covered by headless mode",
+  "godot": "C:\\Users\\John\\AppData\\Local\\Microsoft\\WinGet\\Packages\\GodotEngine.GodotEngine.Mono_Microsoft.Winget.Source_8wekyb3d8bbwe\\Godot_v4.7.2-stable_mono_win64\\Godot_v4.7.2-stable_mono_win64.exe",
+  "server": {
+    "tcp": 54529,
+    "url": "http://127.0.0.1:54530",
+    "name": "harness-run-csgTBC",
+    "data": "C:\\Users\\John\\.codex\\worktrees\\precise-entity-hitboxes\\MMOARPG\\artifacts\\testing\\run-csgTBC\\data"
+  },
+  "cleanupErrors": [],
+  "finished": "2026-10-18T17:36:33.553Z"
+}

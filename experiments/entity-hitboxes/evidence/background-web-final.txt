@@ -1,0 +1,3 @@
+TEST evidence: C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\artifacts\testing\run-m55zD6
+TEST smoke-web; evidence: C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\artifacts\testing\run-m55zD6
+TEST PASSED; report: C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\artifacts\testing\run-m55zD6\result.json

@@ -497,6 +497,7 @@ public sealed partial class WeaveRuntime
             Target = target,
             Focus = focus,
             Point = point,
+            AimOffset = sim.World.Get<Transform>(focus) is { } aimBody ? HitBodies.AimPoint(sim, focus) - aimBody.Position : Vector3.Zero,
             Direction = direction,
             StartedAt = now,
             Duration = duration,
@@ -970,6 +971,7 @@ public sealed partial class WeaveRuntime
             Source = caster,
             Target = target,
             Point = target.IsNone ? state.Point : (sim.World.Get<Transform>(target)?.Position ?? state.Point),
+            AimOffset = state.AimOffset,
             Direction = state.Direction,
             Weave = weave,
             Tags = weave.Tags,
@@ -1276,6 +1278,7 @@ public sealed partial class WeaveRuntime
         {
             desired = new Vector2(ft.Position.X - t.Position.X, ft.Position.Y - t.Position.Y);
             cast.Point = ft.Position;
+            cast.AimOffset = HitBodies.AimPoint(sim, cast.Focus) - ft.Position;
         }
         else
         {
@@ -1309,6 +1312,7 @@ public sealed partial class WeaveRuntime
         if (cast.AimPoint is { } p)
         {
             cast.Point = p;
+            cast.AimOffset = Vector3.Zero;
         }
     }
 
@@ -1482,6 +1486,7 @@ public sealed partial class WeaveRuntime
         if (book.AimPoint is { } point && weave.Targeting is Targeting.Ground or Targeting.Direction)
         {
             cast.Point = point;
+            cast.AimOffset = Vector3.Zero;
             if (weave.Targeting == Targeting.Direction && (book.AimDirection is null) && sim.World.TryGet<Transform>(caster, out var t))
             {
                 var d = new Vector2(point.X - t.Position.X, point.Y - t.Position.Y);

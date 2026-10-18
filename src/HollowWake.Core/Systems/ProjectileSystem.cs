@@ -29,7 +29,7 @@ public sealed class ProjectileSystem : SimSystem
     private static readonly TagSet ProjectileTags = TagSet.Of("projectile");
 
     // The bodies near one flight this tick, copied out of the spatial grid before any hit runs effects.
-    private readonly List<(Entity Entity, Vector3 Position)> _near = new();
+    private readonly List<(Entity Entity, float Time)> _near = new();
 
     // The delivery rules flights read, and the rule set they were read from: rule sets never change in place,
     // so they are read again only when the content brings a new one.
@@ -89,7 +89,8 @@ public sealed class ProjectileSystem : SimSystem
     public static Entity Spawn(Simulation sim, Projectile p, Vector3 at, Entity origin, string? look)
     {
         var e = sim.World.Create();
-        sim.World.Add(e, new Transform { Position = at, Yaw = p.Heading, Radius = p.Radius, Height = 0.5f });
+        sim.World.Add(e, new Transform { Position = at, Yaw = p.Heading, Radius = p.Radius,
+            Height = (float)sim.Content.Rules.Number("delivery.projectile_height", 0.2) });
         sim.World.Add(e, new Identity { Name = "projectile", Pattern = null, Tags = ProjectileTags, Faction = Relations.FactionOf(sim, origin), Owner = origin, Look = look });
         sim.World.Add(e, p);
         sim.Spatial.Update(e, at);
@@ -127,6 +128,7 @@ public sealed class ProjectileSystem : SimSystem
         var dt = (float)sim.Clock.Dt;
         var now = sim.Clock.Time;
         var spec = p.Spec;
+        var returningAtStart = p.Returning;
         Vector3 next;
         Vector3 step;
         if (p.Orbit != 0 && !p.Returning)
@@ -137,7 +139,7 @@ public sealed class ProjectileSystem : SimSystem
                 return;
             }
             p.SpiralAngle += p.Orbit * dt;
-            next = new Vector3(ct.Position.X + MathF.Cos(p.SpiralAngle) * p.OrbitRadius, ct.Position.Y + MathF.Sin(p.SpiralAngle) * p.OrbitRadius, ct.Position.Z + 1f);
+            next = new Vector3(ct.Position.X + MathF.Cos(p.SpiralAngle) * p.OrbitRadius, ct.Position.Y + MathF.Sin(p.SpiralAngle) * p.OrbitRadius, HitBodies.AimPoint(sim, p.Context.Source).Z);
             p.Heading = p.SpiralAngle + (p.Orbit > 0 ? MathF.PI / 2 : -MathF.PI / 2);
             step = next - p.Carrier;
             p.Velocity = step / dt;
@@ -203,10 +205,18 @@ public sealed class ProjectileSystem : SimSystem
             sim.Events.Publish(new ProjectileBounced(e, p.Context.Origin, at) { Tick = sim.Clock.Tick });
         }
 
-        Strikes(sim, e, p, at, now, in r);
+        var contactTime = Strikes(sim, e, p, t.Position, at, now, in r);
         if (p.Ended)
         {
             return;
+        }
+        if (contactTime < 1)
+        {
+            // A chain or return starts at contact; the unused part of this tick's old path is discarded.
+            at = Vector3.Lerp(t.Position, at, contactTime);
+            p.Carrier = at;
+            p.Odometer -= flat * (1 - contactTime);
+            if (p.Returning) p.Traveled -= flat * (1 - contactTime);
         }
 
         var ground = sim.Terrain.HeightAt(at.X, at.Y);
@@ -247,7 +257,7 @@ public sealed class ProjectileSystem : SimSystem
         {
             var home = Destination(sim, p);
             var reach = Math.Max(p.Speed * dt, r.ReturnArrive);
-            if (new Vector2(home.X - at.X, home.Y - at.Y).LengthSquared() <= reach * reach)
+            if (returningAtStart && new Vector2(home.X - at.X, home.Y - at.Y).LengthSquared() <= reach * reach)
             {
                 sim.Events.Publish(new ProjectileReturned(e, p.Context.Origin, at) { Tick = sim.Clock.Tick });
                 Finish(sim, e, p, at, spec.OnReturn, spec.OnEnd);
@@ -349,7 +359,9 @@ public sealed class ProjectileSystem : SimSystem
         {
             if (Quarry(sim, p, p.SeekTarget, now) && sim.World.TryGet<Transform>(p.SeekTarget, out var chased))
             {
-                p.Heading = Toward(at, chased.Position, p.Heading);
+                var aim = HitBodies.AimPoint(sim, p.SeekTarget);
+                p.Heading = Toward(at, aim, p.Heading);
+                if (!p.Spec.Gravity) p.Velocity.Z = (aim.Z - at.Z) / MathF.Max(dt, Vector2.Distance(new(at.X, at.Y), new(aim.X, aim.Y)) / MathF.Max(.01f, p.Speed));
                 return;
             }
             p.Chasing = false;
@@ -359,7 +371,9 @@ public sealed class ProjectileSystem : SimSystem
             var quarry = Seek(sim, e, p, at, now, in r);
             if (!quarry.IsNone && sim.World.TryGet<Transform>(quarry, out var qt))
             {
-                Turn(ref p.Heading, Toward(at, qt.Position, p.Heading), p.Homing * dt);
+                var aim = HitBodies.AimPoint(sim, quarry);
+                Turn(ref p.Heading, Toward(at, aim, p.Heading), p.Homing * dt);
+                if (!p.Spec.Gravity) p.Velocity.Z = (aim.Z - at.Z) / MathF.Max(dt, Vector2.Distance(new(at.X, at.Y), new(aim.X, aim.Y)) / MathF.Max(.01f, p.Speed));
             }
         }
         if (p.Guide != 0)
@@ -501,27 +515,33 @@ public sealed class ProjectileSystem : SimSystem
     /// <summary>
     /// Strikes the bodies the flight's shape touches this tick. The grid is walked in place and only the
     /// bodies the shape touches are copied out (striking runs effects that may move or spawn bodies); the
-    /// rest of the tests, all of them pure, run on the copies in grid order as the hits land, so a body an
+    /// rest of the tests, all of them pure, run on the copies in contact order as the hits land, so a body an
     /// earlier hit killed is spared.
     /// </summary>
-    private void Strikes(Simulation sim, Entity e, Projectile p, Vector3 at, double now, in FlightRules r)
+    private float Strikes(Simulation sim, Entity e, Projectile p, Vector3 from, Vector3 at, double now, in FlightRules r)
     {
         var owner = p.Context.Origin;
         var shape = p.Spec.Shape;
         var facing = !shape.Turns ? Vector2.UnitX : p.SpinAngle == 0 ? p.Direction : new Vector2(MathF.Cos(p.Heading + p.SpinAngle), MathF.Sin(p.Heading + p.SpinAngle));
+        var bounds = HitBodies.Bounds(sim);
+        var midpoint = (from + at) * 0.5f;
+        var halfHeight = sim.World.Get<Transform>(e)!.Height * 0.5f;
+        var distance = Vector2.Distance(new(from.X, from.Y), new(at.X, at.Y));
         _near.Clear();
-        foreach (var (other, pos, _) in sim.Spatial.Within(at, shape.Reach(p.Size) + 1.5f, 3f))
+        foreach (var (other, _, _) in sim.Spatial.Within(midpoint, shape.Reach(p.Size) + bounds.Radius + distance * 0.5f,
+            bounds.Height + halfHeight + MathF.Abs(at.Z - from.Z) * 0.5f))
         {
-            if (other == e || other == owner || !sim.World.TryGet<Transform>(other, out var ot))
+            if (other == e || other == owner || !sim.World.Has<Stats>(other))
             {
                 continue;
             }
-            if (!shape.Contains(p.Size, new Vector2(pos.X - at.X, pos.Y - at.Y), facing, ot.Radius) || Math.Abs(pos.Z + ot.Height * 0.5f - at.Z) > ot.Height)
+            if (HitBodies.Sweep(sim, other, shape, p.Size, from, at, facing, halfHeight) is not { } time)
             {
                 continue;
             }
-            _near.Add((other, pos));
+            _near.Add((other, time));
         }
+        _near.Sort(static (a, b) => a.Time != b.Time ? a.Time.CompareTo(b.Time) : a.Entity.Key.CompareTo(b.Entity.Key));
         for (var i = 0; i < _near.Count && !p.Ended; i++)
         {
             var other = _near[i].Entity;
@@ -533,9 +553,19 @@ public sealed class ProjectileSystem : SimSystem
             {
                 continue;
             }
-            Strike(sim, e, p, other, at, now, in r);
+            var contact = Vector3.Lerp(from, at, _near[i].Time);
+            var chains = p.Chains;
+            var returning = p.Returning;
+            Strike(sim, e, p, other, contact, now, in r);
+            if (!p.Ended && (p.Chains != chains || p.Returning != returning))
+            {
+                var time = _near[i].Time;
+                _near.Clear();
+                return time;
+            }
         }
         _near.Clear();
+        return 1;
     }
 
     private static void Strike(Simulation sim, Entity e, Projectile p, Entity other, Vector3 at, double now, in FlightRules r)
@@ -664,7 +694,7 @@ public sealed class ProjectileSystem : SimSystem
     {
         if (p.Spec.Return == ReturnMode.Caster && sim.World.TryGet<Transform>(p.Context.Source, out var ct) && !sim.World.Has<Dead>(p.Context.Source))
         {
-            return ct.Position + new Vector3(0, 0, 1f);
+            return HitBodies.AimPoint(sim, p.Context.Source);
         }
         return p.Origin;
     }

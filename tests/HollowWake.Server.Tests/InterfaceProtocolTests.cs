@@ -113,6 +113,7 @@ public partial class InterfaceProtocolTests
         yield return new EnterWorldMsg("c1", 3, "0_0", 1, 2, 3, new WorldInfo(ulong.MaxValue, 32, 8, 8, new List<OverlayInfo> { new("o", true, new List<int[]> { new[] { 0, 0 } }, new List<int[]>(), new double[] { 1, 2, 3 }, new Dictionary<string, double> { ["bloom"] = 1 }, 1) }, "abc"), 0, 20) { DayLength = 1800, TimeOfDay = 0.3 };
         yield return new ZoneChangedMsg("0_0", "Ninewells", 1, true);
         yield return new EntitySpawnMsg(state);
+        yield return new HitBodiesMsg(new() { new("test", 0, new() { new("ellipsoid", .1f, .2f, .5f, .3f, .5f) }) });
         yield return new EntityUpdateMsg(new List<EntityState> { state with { Static = false } }, 12.5);
         yield return new EntityDeltaMsg(new List<EntityDelta> { delta }, 3.5);
         yield return new EntityDespawnMsg(9);

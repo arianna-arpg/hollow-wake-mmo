@@ -186,6 +186,7 @@ entries:
         name: Debug
         entries:
           - { id: dev_rects, name: Show layout rectangles, kind: toggle, default: false, description: Outline the cluster's published rectangle and the panes' seats. }
+          - { id: dev_hit_bodies, name: Show body hit volumes, kind: toggle, default: false, description: "Enable before connecting, or reconnect to load the diagnostic catalog. Cyan shows server damage volumes; yellow shows movement clearance. Gaps can be missed." }
       - id: look
         name: Look
         entries:

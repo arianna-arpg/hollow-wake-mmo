@@ -34,6 +34,10 @@ An `entity_spawn` for a known key replaces its state; static entities (flora, pr
 
 Other entities are drawn a little in the past at the server's time, blended between the two snapshots around it, and run on with their velocity for a short while past the newest one. The server clock is estimated from snapshot times and smoothed against jitter. The player's own body leads instead: its last known position plus velocity, smoothed, as on the desktop.
 
+## Hit-body diagnostics
+
+Developer Options exposes `dev_hit_bodies`: cyan outlines the negotiated server damage anatomy, yellow shows movement clearance. `world/hitBodies.ts` uses the last authoritative snapshot pose rather than the interpolated artwork and shares line fixtures with the native client. The option explains missing catalogs and unknown primitives; it never infers collision from cosmetic meshes. The entity-hitbox gallery compares these outlines against actual body meshes at common scale and rotated views.
+
 ## Camera
 
 The same two modes as the desktop `CameraRig`. Isometric: orthographic, fixed pitch, yaw in steps with `Q` and `E`, follows the player, scroll to zoom. Third person: perspective behind the character, orbit with the right mouse button, scroll for distance, `Q` and `E` in smaller steps. `V` toggles. The zoom and the turn ease and a shake rides on a hit taken or a kill, timed by the motion content. The starting mode, the isometric step and zoom range, and the third-person sensitivity, inversion and field of view are Options.

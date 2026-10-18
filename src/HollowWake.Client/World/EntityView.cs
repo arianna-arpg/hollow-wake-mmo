@@ -17,6 +17,10 @@ namespace HollowWake.Client.World;
 /// </summary>
 public partial class EntityView : Node3D
 {
+    public static IReadOnlyDictionary<string, HitBodyInfo>? HitBodyCatalog { get; set; }
+    public static bool PreciseProjectileSlabs { get; set; }
+    public static bool ShowHitBodies { get; set; }
+    private HitBodyDebug? _hitDebug;
     private const float BarWidth = 1.2f;
 
     /// <summary>How long a telegraph takes to fade once its strike lands.</summary>
@@ -187,7 +191,7 @@ public partial class EntityView : Node3D
         var spec = UI.Logic.ShapeOutline.SpecOf(s.Shape ?? "circle", size?.Radius, size?.Angle, size?.Width, size?.Inner, Mathf.Max(0.1f, s.Radius), size?.Curvature);
         var telegraph = look == "telegraph";
         var projectile = !telegraph && (look == "projectile" || s.Pattern == "projectile");
-        var thickness = projectile ? Mathf.Clamp(s.Height * 0.4f, 0.12f, 0.4f) : 0f;
+        var thickness = projectile ? (PreciseProjectileSlabs ? s.Height : Mathf.Clamp(s.Height * 0.4f, 0.12f, 0.4f)) : 0f;
         _mesh.Visible = true;
         _mesh.Mesh = ShapeMesh.Build(UI.Logic.ShapeOutline.RegionOf(spec), thickness);
         var color = telegraph ? new Color(1f, 0.35f, 0.21f) : ColorFor(s);
@@ -204,7 +208,7 @@ public partial class EntityView : Node3D
         _mesh.CastShadow = GeometryInstance3D.ShadowCastingSetting.Off;
         _fade = telegraph ? material : null;
         _fadeAlpha = alpha;
-        _mesh.Position = new Vector3(0, projectile ? Mathf.Max(0.1f, s.Height * 0.5f) - thickness / 2 : telegraph ? 0.07f : 0.05f, 0);
+        _mesh.Position = new Vector3(0, projectile ? (PreciseProjectileSlabs ? 0 : Mathf.Max(0.1f, s.Height * 0.5f)) - thickness / 2 : telegraph ? 0.07f : 0.05f, 0);
         // A telegraph's fill grows from its anchor to the whole mark as the strike nears.
         _fill.Visible = telegraph;
         if (telegraph)
@@ -481,6 +485,13 @@ public partial class EntityView : Node3D
 
     public override void _Process(double delta)
     {
+        if (ShowHitBodies && HitBodyCatalog is not null && State.Resources.Count > 0 && !State.Dead)
+        {
+            if (_hitDebug is null) { _hitDebug = new HitBodyDebug(); AddChild(_hitDebug); _hitDebug.TopLevel = true; }
+            _hitDebug.Visible = true;
+            _hitDebug.Update(State, HitBodyCatalog);
+        }
+        else if (_hitDebug is not null) _hitDebug.Visible = false;
         var dt = (float)delta;
         var now = Time.GetTicksMsec() / 1000.0;
         if (_fade is not null)
