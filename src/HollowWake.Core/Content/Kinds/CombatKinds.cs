@@ -98,6 +98,10 @@ internal static class CombatKinds
         }
     }
 
+    /// <summary>
+    /// A charge kind: how it fades, its maximum, and the modifiers each charge held grants. The count scales those
+    /// through its gauge, so a line carries no gauge of its own.
+    /// </summary>
     private static void Charge(ChargeDef d, ValidationContext c)
     {
         c.Expression(d.Duration, "duration");
@@ -112,6 +116,14 @@ internal static class CombatKinds
         if (!c.Registry.Attributes.Contains(ChargeNames.MaxOf(d.Id)))
         {
             c.Warn($"'{ChargeNames.MaxOf(d.Id)}' is not declared, so the charge has no maximum.");
+        }
+        c.Modifiers(d.Modifiers, "modifiers");
+        foreach (var m in d.Modifiers)
+        {
+            if (m.Gauge is not null || m.GaugeAt is not null)
+            {
+                c.Error($"modifiers line on '{m.Attribute}' has a gauge; the charges held are its gauge.");
+            }
         }
     }
 
