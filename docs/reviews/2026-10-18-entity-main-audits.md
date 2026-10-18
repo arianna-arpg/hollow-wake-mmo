@@ -96,3 +96,11 @@ Source `0ae9ec326a5c86ee58912013d31417fc05c4eeee`: browser unit tests 291 pass, 
 Fresh run-yVBA1c card and grayscale frames were inspected: both show interface/nameplates over a flat background, with no world terrain or bodies. This confirms the retained inherited blank-world defect on #34; behavioral smoke is not visual clearance. The separately committed #37 renderer correction 30f6c91 is the integration fix and will be rechecked after importing this foundation. No native pixel verification is claimed.
 
 These functional gates do not resolve the retained pre-main performance misses or establish a post-main timing pass. No benchmark was run during this integration.
+
+## #37 main integration gates
+
+Source `4185c7fdbc8e057d35b78fc9b9587642f4f7183d`: solution build zero warnings/errors; all core 2780, server 59 and client 134 tests pass. Validation is zero errors/warnings; load and the skeleton/zombie duel pass. The generated frozen-literal keys exactly equal the reviewed fixture; full census and keys are retained with these gates under `experiments/entity-review/evidence/37-main-*`. This verifies functional integration, not performance after main. Earlier benchmark misses remain open; no timing run or budget change accompanied these gates.
+
+Release tools build with zero warnings/errors and enforce all seven recorded Windows replay hashes unchanged from the reviewed baseline. The three inherited proving-band breaches remain open as documented above; this replay pass does not establish balance clearance.
+
+A fresh #37 Release proving-pair run exits 1 on the same three inherited win ceilings; its entire JSON equals the retained #34 report, including outcomes, mechanisms, hashes and breaches. The report is retained as `37-main-proving.*`. No numeric bands or content changed.
