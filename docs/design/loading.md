@@ -1,6 +1,6 @@
 # Identity and the Crossing
 
-Hollow Wake's loading surface is a rewardless, playable crossing. Its reference is the loading mini-game in `arianna-arpg/arpg-game-world` at `64819bd4351001a34c92eed13b63e1f55f0c52ef`. The Mu scene with vessels is character selection and is a separate future migration.
+Hollow Wake's loading surface is a rewardless, playable crossing. Its reference is the loading mini-game in `arianna-arpg/arpg-game-world` at `64819bd4351001a34c92eed13b63e1f55f0c52ef`. The [Mu scene with vessels](entry.md) handles character selection before this Crossing.
 
 ## Identity
 
@@ -40,7 +40,7 @@ The cover clears movement, blocks gameplay input and owns focus. Browser sibling
 
 `scripts/loading-reference.mjs <prototype-checkout>` extracts and runs the original model from the pinned commit to regenerate `tests/fixtures/loading-reference.json`. The C# and TypeScript tests compare their full courses against these independent reference traces, including gate geometry. Do not generate the baseline from either port.
 
-Automatic quick play uses the same entry handlers and leases as manual selection. It starts after content initialization, and reports readiness only after the hero and nearby terrain are available and the Crossing closes. A first or ambiguous account still stops at character creation/selection.
+Quick play authenticates into [Mu](entry.md) and focuses a remembered vessel. Explicit Wake uses the same entry handlers and leases as ordinary selection, reporting readiness only after the hero and nearby terrain are available and the Crossing closes.
 
 The normal client and browser smoke courses verify world entry and gameplay after the cover. Additional checks:
 

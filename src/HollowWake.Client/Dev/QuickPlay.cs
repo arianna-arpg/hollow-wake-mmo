@@ -40,7 +40,7 @@ public partial class QuickPlay(Main main, string[] args) : Node
         var list = main.Login.Characters;
         var remembered = _saved.GetValue("characters", _key, "").AsString();
         var id = UI.Logic.ResumeCharacter.Select(list.Select(c => c.Id).ToArray(), remembered);
-        if (id is not null) main.Login.Enter(id);
-        // Empty or ambiguous accounts keep the ordinary creation/selection panel visible.
+        if (id is not null && !main.Loading.Active && !main.InWorld) main.Login.FocusCharacter(id);
+        // Quick play connects and focuses a remembered vessel; waking is always an explicit choice.
     }
 }

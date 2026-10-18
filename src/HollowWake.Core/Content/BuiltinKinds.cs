@@ -16,6 +16,7 @@ internal static class BuiltinKinds
             return;
         }
         _done = true;
+        Kinds.EntryKinds.Register();
 
         ContentKinds.Register<AttributeDef>("attributes", (d, c) =>
         {

@@ -8,6 +8,8 @@ The pure .NET host's local-play orchestration flags are `--bind`, `--websocket` 
 
 A connection becomes a session. `hello` negotiates the protocol and optional features: a hello may list the `features` the client understands, and the welcome lists the ones the server granted. Both lists are absent when empty, so a hello without features gets the plain protocol, exactly as before features existed. `entity_delta` (see Deltas below) and `interface` (see Interface states below) are such features. `login` authenticates (development: any name; token mode: a shared secret) and returns the account's characters and the available callings; `create_character` and `select_character` manage characters; after `enter_world` every in-world message becomes an intent queued on the player entity and validated by the simulation. Pings answer with server time. Chat broadcasts within the zone.
 
+The optional `entry_flow` feature adds server-owned account stages, Calling availability and correlated creation results to the character list. Selection and creation are checked against the active stage. The [account entry contract](entry.md) defines these additive fields and the tutorial handoff. Leaving the world returns to the same entry surface.
+
 ## Zones and interest
 
 The optional `cast_cues` feature adds reliable, correlated lifecycle events and ongoing-preparation reconstruction on spawn. The phase, sequence, interest and reset rules are specified in [cast-presentation.md](cast-presentation.md); it carries no client visual recipes or prospective hit regions.
@@ -60,6 +62,8 @@ On an interval the host picks a loaded region and a weighted event definition, a
 Entering a zone sends `chunk_data` for every chunk the simulation has modified. `request_chunk` returns any chunk within `chunk_request_radius` chunks of the player (farther requests get a `chunk_out_of_range` error, so a client cannot make the world thread generate and keep land nobody is near); the web client builds all of its terrain this way. `chunk_data` carries heights, cell flags, the interned surface tag strings, layers and the chunk's water level.
 
 ## Persistence
+
+Accounts persist server-owned `entry_facts` tags, empty for older records. No client message can award these facts; a future tutorial must record completion at its authoritative threshold.
 
 Store interfaces: accounts, characters, world (holdings, events, the item uid counter) and modified chunks. The JSON file implementation writes one file per record under the data directory with atomic replace. Autosave runs on a timer and on shutdown; characters save on leave and on autosave. A database implementation of the same interfaces is the planned next step.
 

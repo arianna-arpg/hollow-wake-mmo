@@ -1,10 +1,15 @@
 import type { CharacterListMsg, CharacterSummary } from '../net/protocol';
 import { parseServerInput, type ServerAddress } from './address';
-import { clear, el } from './dom';
+import { el } from './dom';
+import { createEntryView, type AccountEntryView } from './entry/entryViews';
+import type { AppearanceService } from '../world/entities';
+import type { Obj } from './logic/content';
+import type { Settings } from './logic/options';
 
 export interface LoginHandlers {
   connect: (address: ServerAddress, account: string, token: string) => void;
-  create: (name: string, calling: string) => void;
+  create: (name: string, calling: string, request?: string) => void;
+  leave: () => void;
   enter: (characterId: string) => void;
   /** Opens the Options pane over the login screen. */
   options: () => void;
@@ -23,17 +28,13 @@ export class LoginPanel {
   private readonly token: HTMLInputElement;
   private readonly connectButton: HTMLButtonElement;
   private readonly status: HTMLElement;
-  private readonly characterBox: HTMLElement;
-  private readonly list: HTMLElement;
-  private readonly newName: HTMLInputElement;
-  private readonly calling: HTMLSelectElement;
-  private readonly enterButton: HTMLButtonElement;
+  entry: AccountEntryView | null = null;
+  private entryId: string | null = null;
   private path = '/ws';
-  private selected: string | null = null;
   characters: CharacterSummary[] = [];
   callings: string[] = [];
 
-  constructor(private readonly handlers: LoginHandlers) {
+  constructor(private readonly handlers: LoginHandlers, private readonly kinds: Map<string, Obj[]>, private readonly appearance: AppearanceService, private readonly settings: Settings, private readonly suspended: () => boolean) {
     this.host = el('input', { id: 'login-host', type: 'text', placeholder: 'server host or wss:// address', autocomplete: 'off', spellcheck: 'false' });
     this.port = el('input', { id: 'login-port', type: 'number', min: '1', max: '65535', placeholder: 'port' });
     this.secure = el('input', { id: 'login-secure', type: 'checkbox' });
@@ -41,11 +42,6 @@ export class LoginPanel {
     this.token = el('input', { id: 'login-token', type: 'password', autocomplete: 'off', placeholder: 'only if the server asks' });
     this.connectButton = el('button', { id: 'login-connect', type: 'submit', text: 'Connect' });
     this.status = el('div', { class: 'login-status', id: 'login-status', role: 'status', text: 'Not connected.' });
-    this.list = el('div', { class: 'character-list', id: 'character-list', role: 'listbox' });
-    this.enterButton = el('button', { id: 'login-enter', type: 'button', text: 'Enter the Weft' });
-    this.newName = el('input', { id: 'login-new-name', type: 'text', placeholder: 'New character name', maxlength: '24', spellcheck: 'false' });
-    this.calling = el('select', { id: 'login-calling' });
-    const createButton = el('button', { id: 'login-create', type: 'button', text: 'Create' });
     const optionsButton = el('button', { id: 'login-options', type: 'button', text: 'Options' });
     optionsButton.addEventListener('click', () => this.handlers.options());
 
@@ -69,41 +65,13 @@ export class LoginPanel {
       }
     });
 
-    this.characterBox = el('div', { class: 'character-box', hidden: '' },
-      el('h2', { text: 'Characters' }),
-      this.list,
-      el('div', { class: 'login-row end' }, this.enterButton),
-      el('div', { class: 'login-row' }, this.newName, this.calling, createButton));
-    this.enterButton.addEventListener('click', () => {
-      if (this.selected !== null) {
-        this.handlers.enter(this.selected);
-      }
-    });
-    const create = () => {
-      const name = this.newName.value.trim();
-      if (name.length >= 2 && this.calling.value) {
-        this.handlers.create(name, this.calling.value);
-        this.newName.value = '';
-      } else {
-        this.setStatus('Names are 2 to 24 letters; pick a calling.');
-      }
-    };
-    createButton.addEventListener('click', create);
-    this.newName.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') {
-        e.preventDefault();
-        create();
-      }
-    });
-
     this.root = el('div', { class: 'login', id: 'login' },
       el('div', { class: 'login-panel' },
         el('img', { src: './icon.svg', alt: 'Hollow Wake insignia', width: '48', height: '48' }),
         el('h1', { text: 'Hollow Wake MMO' }),
         el('p', { class: 'tagline', text: 'the Weftmarches await' }),
         form,
-        this.status,
-        this.characterBox));
+        this.status));
   }
 
   address(): ServerAddress {
@@ -144,6 +112,7 @@ export class LoginPanel {
 
   setStatus(text: string): void {
     this.status.textContent = text;
+    this.entry?.error(text);
   }
 
   get statusText(): string {
@@ -161,46 +130,29 @@ export class LoginPanel {
   showCharacters(msg: CharacterListMsg): void {
     this.characters = msg.characters;
     this.callings = msg.callings;
-    clear(this.list);
-    if (!this.characters.some((c) => c.id === this.selected)) {
-      this.selected = this.characters[0]?.id ?? null;
+    const flow = this.kinds.get('entry_flows')?.find(f => f.default === true);
+    const stages = flow?.stages as unknown as {kind: string; presentation: string}[];
+    const stage = msg.entry ?? stages?.[0];
+    const spec = this.kinds.get('ui_entry_scenes')?.find(s => s.id === stage?.presentation)?.meta as Obj;
+    if (!stage || !spec) { this.reset(); this.setStatus('This entry stage needs a compatible client.'); return; }
+    const id = stage.kind + ':' + stage.presentation;
+    if (!this.entry || this.entryId !== id) {
+      this.entry?.dispose();
+      this.entry = createEntryView(stage.kind, { spec, kinds: this.kinds, appearance: this.appearance, settings: this.settings, handlers: this.handlers, suspended: this.suspended });
+      this.entryId = id;
+      if (!this.entry) { this.reset(); this.setStatus('This entry activity needs a compatible client.'); return; }
+      this.root.append(this.entry.root);
     }
-    for (const c of msg.characters) {
-      const row = el('div', { class: 'character', role: 'option', tabindex: '0', 'data-id': c.id },
-        el('span', { class: 'character-name', text: c.name }),
-        el('span', { class: 'character-meta', text: `${c.calling}, level ${c.level}, zone ${c.zone}` }));
-      const select = () => {
-        this.selected = c.id;
-        for (const other of this.list.children) {
-          other.classList.toggle('selected', (other as HTMLElement).dataset.id === c.id);
-          other.setAttribute('aria-selected', String((other as HTMLElement).dataset.id === c.id));
-        }
-      };
-      row.addEventListener('click', select);
-      row.addEventListener('dblclick', () => this.handlers.enter(c.id));
-      row.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') {
-          this.handlers.enter(c.id);
-        }
-      });
-      row.classList.toggle('selected', c.id === this.selected);
-      row.setAttribute('aria-selected', String(c.id === this.selected));
-      this.list.append(row);
-    }
-    if (msg.characters.length === 0) {
-      this.list.append(el('div', { class: 'empty', text: 'No characters yet. Make one below.' }));
-    }
-    const current = this.calling.value;
-    clear(this.calling);
-    for (const calling of msg.callings) {
-      this.calling.append(el('option', { value: calling, text: calling }));
-    }
-    if (msg.callings.includes(current)) {
-      this.calling.value = current;
-    }
-    this.enterButton.disabled = msg.characters.length === 0;
-    this.characterBox.hidden = false;
+    (this.root.querySelector('.login-panel') as HTMLElement).hidden = true;
+    this.entry.show(msg);
   }
+
+  reset(): void {
+    this.entry?.dispose(); this.entry = null; this.entryId = null;
+    (this.root.querySelector('.login-panel') as HTMLElement).hidden = false;
+    this.characters = []; this.callings = [];
+  }
+  focusCharacter(id: string): void { this.entry?.focusCharacter(id); }
 
   /** Scripted checks: pick a character by id and enter, as a click would. */
   enter(characterId: string): void {

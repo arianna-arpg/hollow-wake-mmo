@@ -1,0 +1,69 @@
+{
+  "kind": "ui_entry_scenes",
+  "entries": [
+    {
+      "id": "mu",
+      "name": "Mu",
+      "meta": {
+        "activity": "spatial_vessels",
+        "provenance": {
+          "repository": "arpg-game-world",
+          "commit": "118b510f",
+          "sources": [
+            "src/data/mu.ts",
+            "src/engine/muRing.ts",
+            "src/engine/scenes.ts"
+          ]
+        },
+        "radius": 250,
+        "seatGap": 190,
+        "rankGap": 180,
+        "arcFrom": -2.57610597594363,
+        "arcTo": -0.5654866776461628,
+        "dwellRadius": 78,
+        "bodyRadius": 15,
+        "dwellSeconds": 0.9,
+        "speed": 210,
+        "turnRate": 2.4,
+        "wrapRadius": 920,
+        "wrapReentry": 880,
+        "wrapClear": 310,
+        "units": 50,
+        "cameraSpan": 850,
+        "bodyHeight": 1.8,
+        "bodyWidth": 0.35,
+        "maxFrame": 0.05,
+        "palette": {
+          "floor": "#080a14",
+          "ink": "#bcd4e8",
+          "accent": "#d1b878",
+          "wisp": "#bcd4e8"
+        },
+        "labels": {
+          "title": "Mu",
+          "prompt": "Drift near a standing vessel and be still. Move with WASD, arrows, a stick, or touch the ground. Tab reaches every vessel.",
+          "saved": "Remembered lives",
+          "new": "Unclaimed vessels",
+          "wake": "Wake",
+          "create": "Name this vessel and wake",
+          "back": "Return to the wisp",
+          "name": "Your name",
+          "pending": "Awaiting the waking...",
+          "empty": "No vessels are available.",
+          "full": "Your account has enough characters. Wake a remembered life.",
+          "unavailable": "This vessel is not available to this account.",
+          "disconnect": "Leave Mu",
+          "options": "Options",
+          "cancel": "Cancel",
+          "brand": "HOLLOW WAKE"
+        },
+        "wispSource": "mu_crossing",
+        "wispRadius": 10,
+        "cameraHeight": 14,
+        "cameraOffset": 8,
+        "cameraLead": 2,
+        "apparitionOpacity": 0.65
+      }
+    }
+  ]
+}
