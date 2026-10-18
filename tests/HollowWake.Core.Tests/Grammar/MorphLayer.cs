@@ -87,17 +87,41 @@ internal sealed class MorphLayer
                     p.ViaAttribute.Add(parameter.Name);
                 }
             }
-            foreach (var list in family.Lists)
+            var drawn = family.Lists.Where(list => rng.NextDouble() < list.Chance).ToList();
+            // A rider that stands alone takes its list for itself.
+            foreach (var alone in drawn.Where(l => l.Alone).ToList())
             {
-                if (rng.NextDouble() < list.Chance)
-                {
-                    p.Lists.Add(list.Name);
-                }
+                drawn.RemoveAll(l => l.Name == alone.Name && !ReferenceEquals(l, alone));
+            }
+            foreach (var list in drawn)
+            {
+                p.Lists.Add(list.Key);
+            }
+            if (family.Relay > 0 && rng.NextDouble() < family.Relay)
+            {
+                p.Lists.Add(Relay);
             }
             points.Add(p);
         }
         return points;
     }
+
+    /// <summary>What a point's lists hold when its caster carries the relay seat and the cast proc.</summary>
+    public const string Relay = "relay";
+
+    /// <summary>The scratch entries the causal riders name: the status that ticks, the weaves a cast and a follow-up run, the relay seat, and the cast proc.</summary>
+    public const string Mark = "morph_mark";
+    public const string Echo = "morph_echo";
+    public const string Follow = "morph_follow";
+    public const string RelaySeat = "morph_relay";
+    public const string CastProc = "morph_cast_echo";
+
+    /// <summary>Seconds the marking status lasts, and between its ticks.</summary>
+    public const double MarkSeconds = 1.0;
+    public const double MarkInterval = 0.25;
+
+    /// <summary>Seconds after the relay's use its follow-up runs.</summary>
+    public const double FollowDelay = 0.25;
 
     /// <summary>
     /// A family's sensitivity points: for each parameter, one point per value it compares (an axis's range ends, or
@@ -132,9 +156,9 @@ internal sealed class MorphLayer
                 {
                     p.ViaAttribute.Add(parameter.Name);
                 }
-                foreach (var list in family.Lists)
+                foreach (var list in family.Lists.Where(l => !l.Sampled))
                 {
-                    p.Lists.Add(list.Name);
+                    p.Lists.Add(list.Key);
                 }
                 return p;
             }
@@ -170,7 +194,9 @@ internal sealed class MorphLayer
                 Json($"{{\"id\": \"{MorphArena.Blue}\", \"name\": \"Morph Crowd\", \"relations\": {{\"{MorphArena.Red}\": \"hostile\"}}}}"),
             });
             Write(Path.Combine(dir, "patterns.yaml"), "patterns", points.Select(CasterOf).Prepend(Dummy()));
-            Write(Path.Combine(dir, "weaves.yaml"), "weaves", points.Select(WeaveOf));
+            Write(Path.Combine(dir, "weaves.yaml"), "weaves", points.Select(WeaveOf).Concat(Causes()));
+            Write(Path.Combine(dir, "statuses.yaml"), "statuses", new[] { MarkStatus() });
+            Write(Path.Combine(dir, "procs.yaml"), "procs", new[] { Proc() });
             var content = ContentRegistry.Load(new[] { CoreContent.FindContentDir(), dir }, out var report);
             return new MorphLayer { Content = content, Report = report, Morph = morph, Sensitivity = sensitivity };
         }
@@ -209,22 +235,92 @@ internal sealed class MorphLayer
         },
     };
 
-    /// <summary>The caster of a point: a creature wearing the point's weave, with life to spare and the resources to pay.</summary>
-    private static JsonObject CasterOf(Point p) => new()
+    /// <summary>
+    /// The caster of a point: a creature wearing the point's weave, with life to spare and the resources to pay. With
+    /// the relay it also wears the relay seat and the chance of the cast proc.
+    /// </summary>
+    private static JsonObject CasterOf(Point p)
     {
-        ["id"] = p.Caster,
-        ["name"] = "Morph Caster",
-        ["extends"] = "creature",
-        ["radius"] = 0.5,
-        ["components"] = new JsonObject
+        var relay = p.Lists.Contains(Relay);
+        var modifiers = new JsonArray(Modifier("life.max", "flat", 100000));
+        var weaves = new JsonArray(p.Id);
+        if (relay)
         {
-            ["stats"] = new JsonObject
+            modifiers.Add(Modifier("proc." + CastProc, "flat", 1));
+            weaves.Add(RelaySeat);
+        }
+        return new JsonObject
+        {
+            ["id"] = p.Caster,
+            ["name"] = "Morph Caster",
+            ["extends"] = "creature",
+            ["radius"] = 0.5,
+            ["components"] = new JsonObject
             {
-                ["attributes"] = new JsonObject { ["mana.max"] = 400, ["stamina.max"] = 400 },
-                ["modifiers"] = new JsonArray(Modifier("life.max", "flat", 100000)),
+                ["stats"] = new JsonObject
+                {
+                    ["attributes"] = new JsonObject { ["mana.max"] = 400, ["stamina.max"] = 400 },
+                    ["modifiers"] = modifiers,
+                },
+                ["weaves"] = new JsonObject { ["list"] = weaves },
             },
-            ["weaves"] = new JsonObject { ["list"] = new JsonArray(p.Id) },
-        },
+        };
+    }
+
+    /// <summary>
+    /// The weaves the causal riders run, each a marker of the depth it runs at: what a cast rider casts, what the relay's
+    /// follow-up casts, and the relay seat itself, a self-aimed preset that casts itself once when its caster casts,
+    /// costs nothing and follows up.
+    /// </summary>
+    private static IEnumerable<JsonObject> Causes()
+    {
+        yield return new JsonObject
+        {
+            ["id"] = Echo,
+            ["name"] = "Morph Echo",
+            ["form"] = "slam_quick",
+            ["threads"] = new JsonArray("ember"),
+            ["effects"] = new JsonArray(Riders.Marker("cast_run")),
+        };
+        yield return new JsonObject
+        {
+            ["id"] = Follow,
+            ["name"] = "Morph Follow",
+            ["form"] = "slam_quick",
+            ["threads"] = new JsonArray("ember"),
+            ["effects"] = new JsonArray(Riders.Marker("follow_up")),
+        };
+        yield return new JsonObject
+        {
+            ["id"] = RelaySeat,
+            ["name"] = "Morph Relay",
+            ["form"] = "burst",
+            ["threads"] = new JsonArray("ember"),
+            ["attributes"] = new JsonObject { ["cast.time"] = 0, ["cost.base.mana"] = 0, ["cooldown.base"] = 0 },
+            ["trigger"] = new JsonObject { ["on"] = "cast", ["icd"] = 600 },
+            ["follow_up"] = new JsonObject { ["weave"] = Follow, ["delay"] = FollowDelay },
+            ["effects"] = new JsonArray(Riders.Marker("relay")),
+        };
+    }
+
+    /// <summary>The status the status rider applies: no modifiers and no effects of its own, a tick for the applier's riders to ride, hidden from the interface.</summary>
+    private static JsonObject MarkStatus() => new()
+    {
+        ["id"] = Mark,
+        ["name"] = "Morph Mark",
+        ["duration"] = MarkSeconds,
+        ["tick"] = new JsonObject { ["interval"] = MarkInterval, ["effects"] = new JsonArray() },
+        ["meta"] = new JsonObject { ["hidden"] = true },
+    };
+
+    /// <summary>The proc on the caster's casts: it marks the depth it runs at, for every cast, the relay's among them.</summary>
+    private static JsonObject Proc() => new()
+    {
+        ["id"] = CastProc,
+        ["name"] = "Morph Cast Echo",
+        ["on"] = "cast",
+        ["target"] = "owner",
+        ["effects"] = new JsonArray(Riders.Marker("proc")),
     };
 
     private static JsonObject Modifier(string attribute, string form, double value) => new() { ["attribute"] = attribute, ["form"] = form, ["value"] = value };
@@ -269,9 +365,18 @@ internal sealed class MorphLayer
         }
         foreach (var list in p.Family.Lists)
         {
-            if (p.Lists.Contains(list.Name))
+            if (!p.Lists.Contains(list.Key))
             {
-                node[list.Name] = Riders.Of(list);
+                continue;
+            }
+            if (node[list.Name] is not JsonArray riders)
+            {
+                riders = new JsonArray();
+                node[list.Name] = riders;
+            }
+            foreach (var rider in Riders.Of(list))
+            {
+                riders.Add(rider!.DeepClone());
             }
         }
         return node;

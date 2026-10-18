@@ -96,6 +96,26 @@ public class MorphTests
             "within one press max_active caps nothing (MakeRoom dismisses only bodies already standing), so the crowd scenario's single press cannot show it; it bites only on a later press"),
         new("deploy", "sensitive", "axis 'max_active' moves nothing",
             "within one press max_active caps nothing (MakeRoom dismisses only bodies already standing), so the crowd scenario's single press cannot show it; it bites only on a later press"),
+        new("area", "pipeline", "with no DamageDealt on it",
+            "the resource effect takes life with no hit: it adds to the resource directly (DamageHandlers.cs ResourceHandler), so a drain on a struck body lowers its life outside the stage ladder; the grammar's invariant 1 names it as the baseline exception")
+        {
+            When = v => v.Fills("effects+drain"),
+        },
+        new("area", "depth", "status ticks restart the depth",
+            "a status runs its tick effects and the applier's tick riders in a context at depth 0 (StatusService.cs Execute), whatever depth applied it; rule 8's baseline")
+        {
+            When = v => v.Fills("effects+status"),
+        },
+        new("area", "depth", "follow-ups restart the depth",
+            "a use schedules its follow-ups at depth 1 (SlotBehaviors.cs ScheduleFollowUp), whatever depth the use ran at, so a triggered use's follow-up runs shallower than the use; rule 8's baseline")
+        {
+            When = v => v.Fills(MorphLayer.Relay),
+        },
+        new("area", "depth", "cast events restart the depth",
+            "a cast raises the cast trigger kind at depth 0 (Sim/Triggers.cs OnCast: WeaveCast carries no depth), so a proc answering a triggered use's cast runs at depth 1 whatever depth the use ran at; the runtime lifts its own triggered seats by the depth it keeps while a triggered cast resolves, but procs and status hooks read the event's; rule 8's baseline")
+        {
+            When = v => v.Fills(MorphLayer.Relay),
+        },
         new("deploy", "states", "'construct:massed' does not hold though count",
             "construct:massed (Weaves/Mechanisms.cs Construct) reads only a deploy or spawn node's count, never the weave attribute summon.count that a deploy's count falls back to")
         {
@@ -156,7 +176,7 @@ public class MorphTests
             }
             violations.AddRange(broken.Select(b => new Violation(point, view, b.Invariant, b.Message)));
         }
-        Settle(name, examined, violations, "deterministic", "pipeline", "bounded", "terminates", "left behind", "pays", "runs");
+        Settle(name, examined, violations, "deterministic", "pipeline", "bounded", "terminates", "left behind", "pays", "depth", "runs");
     }
 
     /// <summary>How many of a point's seeds a rolling value is compared over.</summary>

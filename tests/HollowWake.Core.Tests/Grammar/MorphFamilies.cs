@@ -322,14 +322,45 @@ internal static class Families
             Parameter.Count("area.pulses", Causality, "repeats", 0, 4, "never moved by shipped content; no clamp") with { Attribute = "area.pulses", AttributeOnly = true, Absent = 0.5 },
         },
         Defaults = Map(("shape", "circle"), ("radius", 2.5)),
-        Lists = new[] { new ListFill("effects", Rider.Damage) },
+        Lists = new[]
+        {
+            new ListFill("effects", Rider.Damage),
+            // What the grammar names beyond a hit, on sampled points: a drain standing alone in the list, so the life it
+            // takes has no hit in its tick; a status that ticks; a cast of another weave. Each marks the depth it runs at.
+            new ListFill("effects", Rider.Drain, 0.2) { Sampled = true, Alone = true },
+            new ListFill("effects", Rider.Status, 0.35) { Sampled = true },
+            new ListFill("effects", Rider.Cast, 0.35) { Sampled = true },
+        },
+        Relay = 0.35,
         Carrier = Root,
         Budget = v =>
         {
             var echoes = Count0(v.Num("area.scatter")) + Count0(v.Num("area.pulses"));
             var per = v.Sets("max_targets") ? Math.Min(MorphArena.Bodies, Math.Max(0, Math.Round(v.Num("max_targets")))) : MorphArena.Bodies;
+            var reached = (1 + echoes) * per;
             var seconds = Math.Max(Count0(v.Num("area.scatter")) * v.Rule("delivery.aftershock_delay", 0.15), Count0(v.Num("area.pulses")) * v.Rule("delivery.pulse_interval", 0.4));
-            return new Budget((1 + echoes) * per, 0, 0, seconds, $"1 strike and {echoes} echoes, each on at most {per} bodies");
+            var markers = new Dictionary<string, double>();
+            if (v.Fills("effects+status"))
+            {
+                // Each body reached wears the mark for its seconds after the last strike that reached it, ticking on.
+                seconds += MorphLayer.MarkSeconds;
+                markers["status"] = reached;
+                markers["status_tick"] = reached * (Math.Ceiling(MorphLayer.MarkSeconds / MorphLayer.MarkInterval) + 1);
+            }
+            if (v.Fills("effects+cast"))
+            {
+                markers["cast"] = reached;
+                markers["cast_run"] = reached;
+            }
+            if (v.Fills(MorphLayer.Relay))
+            {
+                // The relay casts once, its follow-up a beat later, and the proc answers both casts.
+                seconds = Math.Max(seconds, MorphLayer.FollowDelay);
+                markers["relay"] = 1;
+                markers["follow_up"] = 1;
+                markers["proc"] = 2;
+            }
+            return new Budget(reached, 0, 0, seconds, $"1 strike and {echoes} echoes, each on at most {per} bodies") { Markers = markers };
         },
         States = v =>
         {
@@ -925,7 +956,39 @@ internal static class Riders
         ["tags"] = new JsonArray(Prefix + list),
     };
 
-    public static JsonObject Marker(string list) => new() { ["type"] = "event", ["name"] = Prefix + list };
+    /// <summary>A counted marker, carrying the effect depth it runs at.</summary>
+    public static JsonObject Marker(string list) => new()
+    {
+        ["type"] = "event",
+        ["name"] = Prefix + list,
+        ["data"] = new JsonObject { ["depth"] = "depth" },
+    };
+
+    /// <summary>The life a drain takes from the body it reaches.</summary>
+    public const double Drained = 5;
+
+    /// <summary>A drain: the resource effect lowering the reached body's life directly, with no hit.</summary>
+    public static JsonObject Drain() => new() { ["type"] = "resource", ["resource"] = "life", ["amount"] = -Drained };
+
+    /// <summary>A status rider: a marker of the depth it is applied at, then the marking status, whose every tick runs a marker of the depth the tick runs at.</summary>
+    public static JsonObject[] Status() => new[]
+    {
+        Marker("status"),
+        new JsonObject
+        {
+            ["type"] = "apply_status",
+            ["status"] = MorphLayer.Mark,
+            ["fixed_duration"] = MorphLayer.MarkSeconds,
+            ["on_status_tick"] = new JsonArray(Marker("status_tick")),
+        },
+    };
+
+    /// <summary>A cast rider: a marker of the depth the cast effect runs at, then a cast of a weave whose graph marks the depth it runs at.</summary>
+    public static JsonObject[] Cast() => new[]
+    {
+        Marker("cast"),
+        new JsonObject { ["type"] = "cast", ["weave"] = MorphLayer.Echo },
+    };
 
     /// <summary>
     /// A small burst of damage where a plain list runs (scattered strikes, cascade placements): its radius scales with
@@ -937,6 +1000,9 @@ internal static class Riders
     {
         Rider.Damage => new JsonArray(Damage(list.Name)),
         Rider.Marker => new JsonArray(Marker(list.Name)),
+        Rider.Drain => new JsonArray(Drain()),
+        Rider.Status => new JsonArray(Status()),
+        Rider.Cast => new JsonArray(Cast()),
         _ => new JsonArray(Burst(list.Name)),
     };
 }

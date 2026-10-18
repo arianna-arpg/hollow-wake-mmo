@@ -207,6 +207,12 @@ internal static class MorphArena
             }
         }
 
+        // Causality continues the budget (the grammar's rule 8): what a resolution sets going runs deeper than it.
+        foreach (var message in Causality(recorder.Depths, point))
+        {
+            outcome.Broke(message.Invariant, message.Message);
+        }
+
         foreach (var line in log.Lines)
         {
             outcome.Broke("runs", line);
@@ -218,6 +224,49 @@ internal static class MorphArena
         outcome.Events = recorder.Lines.Select(l => l.Line).ToList();
         outcome.Observable = recorder.Observable();
         return outcome;
+    }
+
+    /// <summary>
+    /// The depths the causal riders marked, against what rule 8 asks: a status ticks deeper than the depth it was
+    /// applied at, a cast runs deeper than the cast effect, a follow-up deeper than the use it follows, and a cast event
+    /// raises what answers it deeper than the use that cast. The relay, when the point carries it, must have fired.
+    /// </summary>
+    private static IEnumerable<(string Invariant, string Message)> Causality(List<(string Name, int Depth)> marks, Point point)
+    {
+        int[] Of(string name) => marks.Where(m => m.Name == name).Select(m => m.Depth).ToArray();
+        var applied = Of("status");
+        var ticks = Of("status_tick");
+        if (applied.Length > 0 && ticks.Length > 0 && ticks.Min() <= applied.Min())
+        {
+            yield return ("depth", $"status ticks restart the depth: a tick of the status ran at depth {ticks.Min()}, though the status was applied at depth {applied.Min()}");
+        }
+        for (var i = 0; i < marks.Count; i++)
+        {
+            // A cast runs its weave at once, so the cast effect's marker is followed by the cast weave's.
+            if (marks[i].Name == "cast" && i + 1 < marks.Count && marks[i + 1].Name == "cast_run" && marks[i + 1].Depth <= marks[i].Depth)
+            {
+                yield return ("depth", $"a cast restarts the depth: the weave a cast effect at depth {marks[i].Depth} cast ran at depth {marks[i + 1].Depth}");
+            }
+        }
+        var relay = Of("relay");
+        if (point.Lists.Contains(MorphLayer.Relay) && relay.Length == 0)
+        {
+            yield return ("runs", "the relay seat never fired on the caster's cast");
+        }
+        if (relay.Length > 0)
+        {
+            var use = relay.Min();
+            var follow = Of("follow_up");
+            if (follow.Length > 0 && follow.Min() <= use)
+            {
+                yield return ("depth", $"follow-ups restart the depth: the relay's follow-up ran at depth {follow.Min()}, though the relay's use ran at depth {use}");
+            }
+            var procs = Of("proc");
+            if (procs.Length > 0 && procs.Max() <= use)
+            {
+                yield return ("depth", $"cast events restart the depth: the procs the casts raised ran at depth {procs.Max()} at most, though the relay's use, one of those casts, ran at depth {use}");
+            }
+        }
     }
 
     private static void Advance(Simulation sim, Recorder recorder, double seconds)
@@ -341,6 +390,9 @@ internal static class MorphArena
         public List<Entity> Made { get; } = new();
 
         public SortedDictionary<string, (int Count, long First)> Marks { get; } = new(StringComparer.Ordinal);
+
+        /// <summary>Every marker in the order it ran, by its list's name, with the effect depth it ran at.</summary>
+        public List<(string Name, int Depth)> Depths { get; } = new();
         public int Hits { get; private set; }
         public int MaxLive { get; private set; }
 
@@ -501,11 +553,13 @@ internal static class MorphArena
                     Add(e.Tick, $"{t} despawn {gone.Entity.Key} {KindOf(gone.Entity)}");
                     break;
                 case CustomEvent custom:
+                    var depth = custom.Data.TryGetValue("depth", out var d0) ? (int)d0 : -1;
                     if (custom.Name.StartsWith(Riders.Prefix, StringComparison.Ordinal))
                     {
                         Marks[custom.Name] = Marks.TryGetValue(custom.Name, out var m) ? (m.Count + 1, m.First) : (1, t);
+                        Depths.Add((custom.Name[Riders.Prefix.Length..], depth));
                     }
-                    Add(e.Tick, $"{t} marker {custom.Name} {custom.Target.Key}");
+                    Add(e.Tick, $"{t} marker {custom.Name} {custom.Target.Key} depth {depth}");
                     break;
                 case ProjectileForked or ProjectileChained or ProjectileBounced or ProjectileTurned or ProjectileReturned or PlacementTelegraphed or PlacementLanded
                     or DisplacementStarted or DisplacementEnded or BodyCollided or EntityMoved or StatusApplied or MinionSummoned:

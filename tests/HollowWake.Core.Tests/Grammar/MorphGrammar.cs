@@ -138,16 +138,35 @@ internal sealed record Alike(string Parameter, string A, string B, string Reason
     }
 }
 
-/// <summary>What a list the family fills carries: a plain damage hit, a counted marker (lists that run without a target), or a small burst of damage (plain lists run at a point).</summary>
+/// <summary>
+/// What a list the family fills carries: a plain damage hit, a counted marker (lists that run without a target), a
+/// small burst of damage (plain lists run at a point), or one of the riders that reach what the grammar names beyond a
+/// hit: a drain that lowers life through the resource effect, a status that ticks, or a cast of another weave.
+/// </summary>
 internal enum Rider
 {
     Damage,
     Marker,
     Burst,
+    Drain,
+    Status,
+    Cast,
 }
 
-/// <summary>A list of the delivery node the family fills, the rider it carries, and the share of morph points that fill it.</summary>
-internal sealed record ListFill(string Name, Rider Rider, double Chance = 1);
+/// <summary>
+/// A list of the delivery node the family fills, the rider it carries, and the share of morph points that fill it. A
+/// list may carry several riders, one fill each, in table order. A <see cref="Sampled"/> fill is drawn by sampled
+/// points only (the sensitivity points leave it out); an <see cref="Alone"/> fill, when drawn, is the list's only
+/// rider, so what it does is all the list does.
+/// </summary>
+internal sealed record ListFill(string Name, Rider Rider, double Chance = 1)
+{
+    public bool Sampled { get; init; }
+    public bool Alone { get; init; }
+
+    /// <summary>The fill's key among a point's lists: the list's name for its first rider, the name and the rider for another.</summary>
+    public string Key => Rider is Rider.Drain or Rider.Status or Rider.Cast ? $"{Name}+{Rider.ToString().ToLowerInvariant()}" : Name;
+}
 
 /// <summary>
 /// What one press may do at most, derived from the point's parameters and the rules, and how long what it makes may
@@ -211,6 +230,12 @@ internal sealed class Family
 
     /// <summary>Further sensitivity rows, each comparing a parameter's values under its own live overrides.</summary>
     public IReadOnlyList<Row> Rows { get; init; } = Array.Empty<Row>();
+
+    /// <summary>
+    /// The share of sampled points whose caster also carries the relay: a seat triggered by the caster's own cast, with
+    /// a follow-up, and a proc that answers every cast, each marking the depth it runs at.
+    /// </summary>
+    public double Relay { get; init; }
 
     /// <summary>Parameters the table leaves unsampled for now (flags, nodes, presentation), each with why: a later pass turns them into axes or choices.</summary>
     public IReadOnlyDictionary<string, string> Unsampled { get; init; } = new Dictionary<string, string>();
