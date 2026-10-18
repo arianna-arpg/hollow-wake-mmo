@@ -90,15 +90,14 @@ public class EntityPopulationTests
 
     [Theory]
     [InlineData(0, 0, "spindlewatch_guard", 5)]
-    [InlineData(0, 0, "tangle", 6)]
-    [InlineData(0, -1, "remnant_shade", 2)]
-    public void LegacyResidentsKeepTheirAuthoredLevels(int x, int y, string pattern, int level)
+    [InlineData(3, 2, "remnant_shade", 2)]
+    public void ResidentsWithoutAnOptInKeepTheirAuthoredLevels(int x, int y, string pattern, int level)
     {
         var content = CoreContent.Registry;
         var generator = new WorldGenerator(content, Rng.Hash64("aureth"));
         var sim = ZoneBuilder.CreateZone(content, generator, new WorldState(new GenerationOverlays()), new ZoneCoord(x, y));
         ZoneBuilder.LoadZone(sim);
-        var spawners = sim.World.Query<Spawner>().Select(s => s.C1).Where(s => s.Pattern == pattern && s.Group is not null).ToArray();
+        var spawners = sim.World.Query<Spawner>().Select(s => s.C1).Where(s => s.Pattern == pattern && s.Group is not null && !s.Group.Contains(".knot.", StringComparison.Ordinal)).ToArray();
         Assert.NotEmpty(spawners);
         Assert.All(spawners, s => Assert.Null(s.Level));
         sim.Tick();
