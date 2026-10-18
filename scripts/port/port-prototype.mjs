@@ -413,7 +413,7 @@ function riderOf(e, k, ctx) {
     case 'minionCast': return { type: 'minion_cast', weave: e.skillId, at: e.at === 'enemy' ? 'enemy' : 'point' };
     case 'detonateMinions': { ctx.notes.push('minions explode through consume_minion rather than a self-destruct charge'); return { type: 'consume_minion', count: 99, pick: 'nearest', radius: 20, effects: [{ type: 'area', radius: 2.5, center: 'point', filter: 'enemy', effects: [{ type: 'damage', amount: `consumed_life_max * ${e.fraction}`, threads: '$threads' }] }] }; }
     case 'spawnCorpse': return { type: 'spawn', pattern: patternOf(e.monsterId, ctx), count: e.count, as_corpse: true };
-    case 'spawnZone': return { type: 'field', radius: u(e.radius), duration: e.duration, interval: e.tickInterval ?? 0.5, center: 'focus', pulse: [damageNode(k, { ...ctx, scale: e.damageScale ?? 1, noCrit: true })].filter(Boolean) };
+    case 'spawnZone': return { type: 'field', radius: u(e.radius), duration: e.duration, interval: e.tickInterval ?? 0.5, pulse: [damageNode(k, { ...ctx, scale: e.damageScale ?? 1, noCrit: true })].filter(Boolean) };
     case 'birth': { ctx.notes.push('a birth becomes a spawn of our pattern'); return { type: 'spawn', pattern: patternOf(e.monsterId ?? e.pool?.[0]?.id ?? 'sprig', ctx), count: e.count ?? 1, lifetime: e.duration ?? 20 }; }
     case 'shatterConstructs': return { type: 'detonate', tags: ['construct'], radius: e.radius ? u(e.radius) : undefined, effects: [{ type: 'area', radius: 2.5, center: 'point', filter: 'enemy', effects: [{ type: 'damage', amount: `body_life_max * ${e.fraction}`, threads: '$threads' }] }] };
     default:
@@ -547,7 +547,7 @@ function graphOf(k, ctx) {
       const impact = { type: 'area', shape: d.shape === 'sector' ? 'sector' : d.shape ?? undefined, angle: d.arcDeg, radius: 'weave.area.radius', center: 'point', filter: 'enemy', effects: hits };
       if (d.lingerDuration) {
         ctx.attrs.duration = d.lingerDuration;
-        const f = { type: 'field', radius: 'weave.area.radius', duration: 'weave.duration', interval: d.tickInterval ?? 0.5, center: 'point' };
+        const f = { type: 'field', radius: 'weave.area.radius', duration: 'weave.duration', interval: d.tickInterval ?? 0.5 };
         if (d.shape && d.shape !== 'circle') { f.shape = d.shape; if (d.arcDeg) f.angle = d.arcDeg; }
         if (d.delay) f.delay = d.delay;
         if (d.exposure) f.exposure = d.exposure;

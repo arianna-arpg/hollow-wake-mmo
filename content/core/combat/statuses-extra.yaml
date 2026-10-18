@@ -91,12 +91,15 @@ entries:
   # ---- debuffs
   - id: vulnerable
     name: Vulnerable
+    description: Opened wounds; each stack takes a little more, and an execution spends them all.
     tags: [debuff, curse, lumen]
-    duration: 5
-    stack_policy: refresh
+    duration: 6
+    stack_policy: stack
+    max_stacks: 5
+    modifiers_per_stack: true
     color: "#f0e6a0"
     modifiers:
-      - { attribute: damage.taken, form: increased, value: 0.2 }
+      - { attribute: damage.taken, form: more, value: 0.08 }
 
   - id: weakened
     name: Weakened

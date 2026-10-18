@@ -195,6 +195,13 @@ entries:
       brine_burn: droplet
       sulphur_sting: flame
       ensnared: root
+      # blessings and brands the ported weaves grant (statuses-weaves.yaml)
+      frenzy: swift
+      zanshin: blade
+      carve: blade
+      deep_carve: blade
+      static_charged: bolt
+      storm_charged: bolt
       battle_trance: spiral
       ember_primed: flame
     looks:

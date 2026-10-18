@@ -87,73 +87,73 @@ Every slice lands with a seeded duel the fight tool runs twice to the same trace
 | hingejaw_snap |  | melee kit skill | not ported | kit |  |
 | shard_waltz |  | melee kit skill | not ported | kit |  |
 | showstopper |  | cone kit skill | not ported | kit |  |
-| cleave | cleave | preset on swing: area (stone) | ported (difference) | req; tree | fight port duel: strikes |
-| heavy_strike | heavy_strike | preset on swing: area (stone) | ported (difference) | req; tree | fight port duel: strikes |
-| ground_slam | ground_slam | preset on whirl: area (stone) | ported (difference) | req | fight port duel: strikes |
-| frenzy | frenzy | preset on swing: area (stone) | ported (difference) | req | fight port duel: strikes |
-| tide_lash | tide_lash | preset on swing: area (stone+tide) | ported (difference) | status sodden is not ported; req; grow | fight port duel: strikes |
-| mirage_knife | mirage_knife | preset on swing: area (stone+ember) | ported (difference) | req; grow | fight port duel: strikes |
-| hellfire_lash | hellfire_lash | preset on swing: area (ember) | ported (difference) | req; grow | fight port duel: strikes |
-| gore_rend | gore_rend | preset on swing: area (stone) | ported (difference) | req; grow | fight port duel: strikes |
-| machete_arc | machete_arc | preset on sweep: area (stone) | ported (difference) | req; grow | fight port duel: strikes |
-| zeal | zeal | preset on swing: area (stone+ember) | ported (difference) | req; crowd empowerment (row C47, open); grow | fight port duel: strikes |
-| zanshin_cut | zanshin_cut | preset on swing: area (stone) | seam | req; tree; grow; seam: preset behaviors (cycle) | fight port duel: strikes |
-| surgical_strike | surgical_strike | preset on sweep: area (stone) | ported (difference) | req | fight port duel: strikes |
-| buckler_strike | buckler_strike | preset on swing: area (stone) | ported (difference) | req; aim transforms (an aim wrapper by hand); tree | fight port duel: strikes |
-| static_strike | static_strike | preset on swing: area (stone+storm) | ported (difference) | req; static discharge (a bank status by hand) | fight port duel: strikes |
-| rend | rend | preset on swing: area (stone) | ported (difference) | req; tree | fight port duel: strikes |
-| bloodlet | bloodlet | preset on whirl: area (stone) | ported (difference) | req; grow | fight port duel: strikes |
-| eviscerate | eviscerate | preset on thrust: damage (stone) | ported (difference) | req; tree; grow | fight port duel: strikes |
-| reckoning | reckoning | preset on swing: area (stone) | seam | req; tree; grow; seam: preset behaviors (spend) | fight port duel: strikes |
-| reprisal | reprisal | preset on swing: area (stone) | seam | req; tree; grow; seam: preset behaviors (gates) | fight port duel: strikes |
+| cleave | cleave | preset on swing: area (stone) | ported (difference) | req; tree; the core Cleave form stands for it | PortedStrikeTests; fight proving_pitfighter proving_mower |
+| heavy_strike | heavy_strike | preset on swing: area (stone) | ported (difference) | req; tree | PortedStrikeTests; fight proving_pitfighter proving_mower |
+| ground_slam | ground_slam | preset on whirl: area (stone) | ported (difference) | req | PortedStrikeTests; fight proving_pitfighter proving_mower |
+| frenzy | frenzy | preset on swing: area (stone) | ported (difference) | req | PortedStrikeTests; fight proving_pitfighter proving_mower |
+| tide_lash | tide_lash | preset on swing: area (stone+tide) | ported (difference) | status sodden is not ported; req; grow; status sodden is not ported: the lash chills nothing and soaks nothing | PortedStrikeTests; fight proving_pitfighter proving_mower |
+| mirage_knife | mirage_knife | preset on swing: area (stone+ember) | ported (difference) | req; grow | PortedStrikeTests; fight proving_pitfighter proving_mower |
+| hellfire_lash | hellfire_lash | preset on swing: area (ember) | ported (difference) | req; grow | PortedStrikeTests; fight proving_pitfighter proving_mower |
+| gore_rend | gore_rend | preset on swing: area (stone) | ported (difference) | req; grow | PortedStrikeTests; fight proving_pitfighter proving_mower |
+| machete_arc | machete_arc | preset on sweep: area (stone) | ported (difference) | req; grow | PortedStrikeTests; fight proving_pitfighter proving_mower |
+| zeal | zeal | preset on swing: area (stone+ember) | ported (difference) | req; grow; crowd empowerment (row C47, open) is not carried: the swing stands without it | PortedStrikeTests; fight proving_pitfighter proving_mower |
+| zanshin_cut | zanshin_cut | preset on swing: area (stone) | ported (difference) | req; tree; grow | PortedStrikeTests; fight proving_pitfighter proving_mower |
+| surgical_strike | surgical_strike | preset on sweep: area (stone) | ported (difference) | req | PortedStrikeTests; fight proving_pitfighter proving_mower |
+| buckler_strike | buckler_strike | preset on swing: area (stone) | ported (difference) | req; aim transforms (an aim wrapper by hand); tree; two cuts through a repeat and an aim sequence; cast.move keeps the feet | PortedStrikeTests; fight proving_pitfighter proving_mower |
+| static_strike | static_strike | preset on swing: area (stone+storm) | ported (difference) | req; static discharge (a bank status by hand); the discharge is the Static Charged status ticking a bolt from the bank | PortedStrikeTests; fight proving_pitfighter proving_mower |
+| rend | rend | preset on swing: area (stone) | ported (difference) | req; tree | PortedStrikeTests; fight proving_pitfighter proving_mower |
+| bloodlet | bloodlet | preset on whirl: area (stone) | ported (difference) | req; grow | PortedStrikeTests; fight proving_pitfighter proving_mower |
+| eviscerate | eviscerate | preset on thrust: damage (stone) | ported (difference) | req; tree; grow; the Wounded Thrust shell needs a bleeding foe; the bleed ruptures whole before the blow | PortedStrikeTests; fight proving_pitfighter proving_mower |
+| reckoning | reckoning | preset on swing: area (stone) | ported (difference) | req; tree; grow | PortedStrikeTests; fight proving_pitfighter proving_mower |
+| reprisal | reprisal | preset on swing: area (stone) | ported (difference) | req; tree; grow | PortedStrikeTests; fight proving_pitfighter proving_mower |
 | riposte_thrust |  | melee kit skill | not ported | kit |  |
-| sunder_maul | sunder_maul | preset on swing: area (stone) | ported (difference) | req; tree; grow; inn | fight port duel: strikes |
-| verdict | verdict | preset on swing: area (stone) | ported (difference) | req; tree; grow; an amount over target.poise.max, by hand | fight port duel: strikes |
-| severing_lash | severing_lash | preset on swing: area (stone) | ported (difference) | req; grow; inn | fight port duel: strikes |
-| thousand_cuts | thousand_cuts | preset on swing: area (stone) | seam | req; grow; seam: preset behaviors (self_stack) | fight port duel: strikes |
-| backstab | backstab | preset on swing: area (stone) | ported (difference) | req; tree; a vs.behind modifier, by hand | fight port duel: strikes |
-| acid_spray | acid_spray | preset on sweep: area (void) | ported (difference) | req | fight port duel: strikes |
-| skewer | skewer | preset on swing: area (stone) | ported (difference) | req; tree; grow; inn | fight port duel: strikes |
-| scythe_sweep | scythe_sweep | preset on swing: area (stone) | ported (difference) | req; aim transforms (an aim wrapper by hand) | fight port duel: strikes |
-| execution | execution | preset on swing: area (stone) | ported (difference) | req; consume_status before the hit, by hand | fight port duel: strikes |
-| toppling_stroke | toppling_stroke | preset on swing: area (stone) | ported (difference) | req; tree; grow | fight port duel: strikes |
-| tuning_strike | tuning_strike | preset on swing: area (stone) | seam | req; tree; grow; seam: preset tags (duration) | fight port duel: strikes |
-| sanctified_strike | sanctified_strike | preset on swing: area (stone+ember) | seam | req; tree; grow; seam: preset tags (heal) | fight port duel: strikes |
-| talon_rake | talon_rake | preset on swing: area (stone) | ported (difference) | req; grow | fight port duel: strikes |
-| lash_roots | lash_roots | preset on swing: area (stone) | ported (difference) | req; grow | fight port duel: strikes |
+| sunder_maul | sunder_maul | preset on swing: area (stone) | ported (difference) | req; tree; grow; inn | PortedStrikeTests; fight proving_pitfighter proving_mower |
+| verdict | verdict | preset on swing: area (stone) | ported (difference) | req; tree; grow; an amount over target.poise.max, by hand; the Sentence shell needs a sundered foe; the blow reaps 1.5 of the victim's maximum poise | PortedStrikeTests; fight proving_pitfighter proving_mower |
+| severing_lash | severing_lash | preset on swing: area (stone) | ported (difference) | req; grow; inn | PortedStrikeTests; fight proving_pitfighter proving_mower |
+| thousand_cuts | thousand_cuts | preset on swing: area (stone) | ported (difference) | req; grow | PortedStrikeTests; fight proving_pitfighter proving_mower |
+| backstab | backstab | preset on swing: area (stone) | ported (difference) | req; tree; a vs.behind modifier, by hand; a vs.behind modifier on the preset | PortedStrikeTests; fight proving_pitfighter proving_mower |
+| acid_spray | acid_spray | preset on sweep: area (void) | ported (difference) | req | PortedStrikeTests; fight proving_pitfighter proving_mower |
+| skewer | skewer | preset on swing: area (stone) | ported (difference) | req; tree; grow; inn; lodges an impaled bank of 35% of the blow | PortedStrikeTests; fight proving_pitfighter proving_mower |
+| scythe_sweep | scythe_sweep | preset on swing: area (stone) | ported (difference) | req; aim transforms (an aim wrapper by hand); three cuts through a repeat and an aim sequence | PortedStrikeTests; fight proving_pitfighter proving_mower |
+| execution | execution | preset on swing: area (stone) | ported (difference) | req; consume_status before the hit, by hand; consume_status eats the vulnerable stacks; the blow lands 45% more per stack | PortedStrikeTests; fight proving_pitfighter proving_mower |
+| toppling_stroke | toppling_stroke | preset on swing: area (stone) | ported (difference) | req; tree; grow | PortedStrikeTests; fight proving_pitfighter proving_mower |
+| tuning_strike | tuning_strike | preset on swing: area (stone) | ported (difference) | req; tree; grow; one attunement of three through a random choice | PortedStrikeTests; fight proving_pitfighter proving_mower |
+| sanctified_strike | sanctified_strike | preset on swing: area (stone+ember) | ported (difference) | req; tree; grow; a second area mends the allies in the arc | PortedStrikeTests; fight proving_pitfighter proving_mower |
+| talon_rake | talon_rake | preset on swing: area (stone) | ported (difference) | req; grow | PortedStrikeTests; fight proving_pitfighter proving_mower |
+| lash_roots | lash_roots | preset on swing: area (stone) | ported (difference) | req; grow | PortedStrikeTests; fight proving_pitfighter proving_mower |
 | snap_shut |  | nova kit skill | not ported | kit |  |
 | shadow_slash |  | melee kit skill | not ported | kit |  |
-| whirling_reap | whirling_reap | preset on swing: area (stone) | ported (difference) | req; aim transforms (an aim wrapper by hand); tree | fight port duel: strikes |
-| winters_sweep | winters_sweep | preset on whirl: area (tide+stone) | ported |  | fight port duel: strikes |
+| whirling_reap | whirling_reap | preset on swing: area (stone) | ported (difference) | req; aim transforms (an aim wrapper by hand); tree; six cuts around through a repeat and an aim sequence | PortedStrikeTests; fight proving_pitfighter proving_mower |
+| winters_sweep | winters_sweep | preset on whirl: area (tide+stone) | ported |  | PortedStrikeTests; fight proving_pitfighter proving_mower |
 | festering_bite |  | melee kit skill | not ported | kit |  |
-| zealots_cadence | zealots_cadence | preset on swing: area (stone) | seam | req; thr; seam: preset behaviors (uses) | fight port duel: strikes |
-| siphon_strike | siphon_strike | preset on swing: area (stone) | blocked | req; blocked: siphonOrb: resource orbs (row C23, open) | fight port duel: strikes |
-| forgebound | forgebound | preset on swing: area (stone) | ported (difference) | req; inn | fight port duel: strikes |
-| harvest_stroke | harvest_stroke | preset on swing: area (stone) | seam | req; seam: preset behaviors (follow_up) | fight port duel: strikes |
+| zealots_cadence | zealots_cadence | preset on swing: area (stone) | ported (difference) | req; thr | PortedStrikeTests; fight proving_pitfighter proving_mower |
+| siphon_strike | siphon_strike | preset on swing: area (stone) | blocked | req; blocked: siphonOrb: resource orbs (row C23, open); resource orbs (row C23, open) are not carried: the swing stands without them | PortedStrikeTests; fight proving_pitfighter proving_mower |
+| forgebound | forgebound | preset on swing: area (stone) | ported (difference) | req; inn; its conscripting proc comes with the procs slice | PortedStrikeTests; fight proving_pitfighter proving_mower |
+| harvest_stroke | harvest_stroke | preset on swing: area (stone) | ported (difference) | req | PortedStrikeTests; fight proving_pitfighter proving_mower |
 | lance_burst |  | nova kit skill | not ported | kit |  |
-| piledriver | piledriver | preset on swing: area (stone) | ported (difference) | req; tree; grow; inn | fight port duel: strikes |
-| one_two | one_two | preset on swing: area (stone) | seam | req; tree; grow; seam: preset behaviors (chain) | fight port duel: strikes |
-| cross_jab | cross_jab | preset on swing: area (stone) | ported (difference) | band swing drawn as a bar shape; grow | fight port duel: strikes |
-| haymaker | haymaker | preset on swing: area (stone) | seam | req; tree; grow; inn; seam: preset behaviors (spend) | fight port duel: strikes |
-| mantra_strike | mantra_strike | preset on swing: area (stone) | seam | req; tree; grow; seam: preset behaviors (self_stack) | fight port duel: strikes |
+| piledriver | piledriver | preset on swing: area (stone) | ported (difference) | req; tree; grow; inn | PortedStrikeTests; fight proving_pitfighter proving_mower |
+| one_two | one_two | preset on swing: area (stone) | ported (difference) | req; tree; grow | PortedStrikeTests; fight proving_pitfighter proving_mower |
+| cross_jab | cross_jab | preset on swing: area (stone) | ported (difference) | band swing drawn as a bar shape; grow; a bar across the front | PortedStrikeTests; fight proving_pitfighter proving_mower |
+| haymaker | haymaker | preset on swing: area (stone) | ported (difference) | req; tree; grow; inn | PortedStrikeTests; fight proving_pitfighter proving_mower |
+| mantra_strike | mantra_strike | preset on swing: area (stone) | ported (difference) | req; tree; grow | PortedStrikeTests; fight proving_pitfighter proving_mower |
 | improvised_strike |  | melee kit skill | not ported | kit |  |
-| possession |  | preset on swing: area | not ported | req; grow; seam: preset tags (possession); seam: preset behaviors (convert); later: possess: possession (row C38, later) | fight port duel: strikes |
-| seize |  | preset on swing: area (stone) | not ported | req; grow; seam: preset tags (grab); later: grabSeize: the grab fabric (row C37, later) | fight port duel: strikes |
+| possession |  | preset on swing: area | not ported | later: possession (row C38) |  |
+| seize |  | preset on swing: area (stone) | not ported | later: the grab fabric (row C37) |  |
 | mauler_clinch |  | melee kit skill | not ported | kit |  |
 | gulp |  | melee kit skill | not ported | kit |  |
 | yeti_snatch |  | melee kit skill | not ported | kit |  |
-| tempest_gathering | tempest_gathering | preset on swing: area (stone+storm) | ported (difference) | req; static discharge (a bank status by hand); thr | fight port duel: strikes |
-| trisect | trisect | preset on swing: area (stone) | seam | req; seam: preset behaviors (chain) | fight port duel: strikes |
-| bisect_cut | bisect_cut | preset on swing: area (stone) | ported |  | fight port duel: strikes |
-| trisect_finisher | trisect_finisher | preset on swing: area (stone) | ported |  | fight port duel: strikes |
-| carve | carve | preset on swing: area (stone) | ported (difference) | req | fight port duel: strikes |
-| deep_carve | deep_carve | preset on swing: area (stone) | ported (difference) | req | fight port duel: strikes |
+| tempest_gathering | tempest_gathering | preset on swing: area (stone+storm) | ported (difference) | req; static discharge (a bank status by hand); thr; the discharge is the Storm Charged status ticking a bolt from the bank | PortedStrikeTests; fight proving_pitfighter proving_mower |
+| trisect | trisect | preset on swing: area (stone) | ported (difference) | req | PortedStrikeTests; fight proving_pitfighter proving_mower |
+| bisect_cut | bisect_cut | preset on swing: area (stone) | ported |  | PortedStrikeTests; fight proving_pitfighter proving_mower |
+| trisect_finisher | trisect_finisher | preset on swing: area (stone) | ported | the closing circle is a circle shape | PortedStrikeTests; fight proving_pitfighter proving_mower |
+| carve | carve | preset on swing: area (stone) | ported (difference) | req | PortedStrikeTests; fight proving_pitfighter proving_mower |
+| deep_carve | deep_carve | preset on swing: area (stone) | ported (difference) | req | PortedStrikeTests; fight proving_pitfighter proving_mower |
 | harvester_scythe |  | melee kit skill | not ported | kit |  |
-| caul_lash | caul_lash | preset on swing: area (stone) | ported (difference) | req; grow | fight port duel: strikes |
-| devouring_maw | devouring_maw | preset on swing: area (stone) | blocked | req; grow; blocked: siphonOrb: resource orbs (row C23, open) | fight port duel: strikes |
-| tendril_lash | tendril_lash | preset on swing: area (stone+void) | ported (difference) | req; grow | fight port duel: strikes |
-| lancing_flurry | lancing_flurry | preset on whirl: area (stone) | seam | req; seam: preset tags (javelin) | fight port duel: strikes |
-| bastion_thrust | bastion_thrust | preset on sweep_quick: area (stone) | seam | usable while guarding: a reflex here; req; seam: preset tags (javelin, instant) | fight port duel: strikes |
+| caul_lash | caul_lash | preset on swing: area (stone) | ported (difference) | req; grow | PortedStrikeTests; fight proving_pitfighter proving_mower |
+| devouring_maw | devouring_maw | preset on swing: area (stone) | blocked | req; grow; blocked: siphonOrb: resource orbs (row C23, open); resource orbs (row C23, open) are not carried: the bite stands without them | PortedStrikeTests; fight proving_pitfighter proving_mower |
+| tendril_lash | tendril_lash | preset on swing: area (stone+void) | ported (difference) | req; grow | PortedStrikeTests; fight proving_pitfighter proving_mower |
+| lancing_flurry | lancing_flurry | preset on whirl: area (stone) | ported (difference) | req | PortedStrikeTests; fight proving_pitfighter proving_mower |
+| bastion_thrust | bastion_thrust | preset on sweep_quick: area (stone) | ported (difference) | usable while guarding: a reflex here; req | PortedStrikeTests; fight proving_pitfighter proving_mower |
 | phalanx_thrust |  | cone kit skill | not ported | kit |  |
 | claw |  | melee kit skill | not ported | kit |  |
 | gloom_nip |  | melee kit skill | not ported | kit |  |
@@ -165,7 +165,7 @@ Every slice lands with a seeded duel the fight tool runs twice to the same trace
 | bladder_vent |  | nova kit skill | not ported | kit |  |
 | hopper_jab |  | melee kit skill | not ported | kit |  |
 | mineral_slam |  | melee kit skill | not ported | kit |  |
-| scalding_lash | scalding_lash | preset on sweep: area (ember) | ported (difference) | req; grow | fight port duel: strikes |
+| scalding_lash | scalding_lash | preset on sweep: area (ember) | ported (difference) | req; grow | PortedStrikeTests; fight proving_pitfighter proving_mower |
 | tempo_stamp |  | melee kit skill | not ported | kit |  |
 | tempo_vent_burst |  | nova kit skill | not ported | kit |  |
 | crab_tick |  | melee kit skill | not ported | kit |  |
@@ -187,7 +187,7 @@ Every slice lands with a seeded duel the fight tool runs twice to the same trace
 | coil_lash |  | melee kit skill | not ported | kit |  |
 | couched_lance |  | cone kit skill | not ported | kit |  |
 | soul_toll |  | melee kit skill | not ported | kit |  |
-| gale_lash | gale_lash | preset on sweep: area (stone) | ported (difference) | req; thr; grow | fight port duel: strikes |
+| gale_lash | gale_lash | preset on sweep: area (stone) | ported (difference) | req; thr; grow | PortedStrikeTests; fight proving_pitfighter proving_mower |
 
 ### projectiles and bows (160: not ported 61, ported (difference) 50, seam 36, blocked 6, ported 7)
 
@@ -1564,7 +1564,7 @@ Every slice lands with a seeded duel the fight tool runs twice to the same trace
 | rooted | rooted | forbids, modifiers | ported (difference) | roster:rooted | PortedStatusTests; fight proving_hexer proving_plaguer |
 | sundered | sundered | modifiers | ported |  | PortedStatusTests; fight proving_hexer proving_plaguer |
 | weaken | weakened | modifiers | ported (difference) | roster:weakened | PortedStatusTests; fight proving_hexer proving_plaguer |
-| vulnerable | vulnerable | modifiers | ported (difference) | roster:vulnerable | PortedStatusTests; fight proving_hexer proving_plaguer |
+| vulnerable | vulnerable | modifiers | ported | roster:vulnerable; now stacks to five at 8% more damage taken each, as the prototype's, so an execution has stacks to eat | PortedStatusTests; fight proving_hexer proving_plaguer |
 | brittle | brittle | modifiers | ported (difference) | roster:brittle | PortedStatusTests; fight proving_hexer proving_plaguer |
 | melting | melting | modifiers | ported |  | PortedStatusTests; fight proving_hexer proving_plaguer |
 | waxlight | waxlight | status | ported (difference) | drop:detectability; lit for all to see: less evasion and the flag lit | PortedStatusTests; fight proving_hexer proving_plaguer |

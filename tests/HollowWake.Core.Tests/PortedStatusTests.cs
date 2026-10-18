@@ -2,6 +2,7 @@ using System.Numerics;
 using HollowWake.Core.Combat;
 using HollowWake.Core.Components;
 using HollowWake.Core.Content;
+using HollowWake.Core.Maths;
 using HollowWake.Core.Patterns;
 using HollowWake.Core.Sim;
 using Xunit;
@@ -133,7 +134,7 @@ public class PortedStatusTests
     {
         List<string> Duel()
         {
-            var sim = ZoneBuilder.CreateArena(CoreContent.Registry, 23);
+            var sim = ZoneBuilder.CreateArena(CoreContent.Registry, Rng.Hash64("roster"));
             var factory = sim.Service<PatternFactory>();
             factory.Spawn(sim, "proving_hexer", new Vector3(10, 10, 0), new SpawnOptions { Faction = "red" });
             factory.Spawn(sim, "proving_plaguer", new Vector3(14, 10, 0), new SpawnOptions { Faction = "blue" });
