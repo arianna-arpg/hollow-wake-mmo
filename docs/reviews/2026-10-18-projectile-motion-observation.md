@@ -30,8 +30,8 @@ Private run run-zUtxqe passes browser 30/30 and native 36/36 with no cleanup err
 
 ## Handoff
 
-The exact runtime was sent to the forecasting peer for independent rereview. Claude rereview remains requested on the combined source and evidence. PR #36 remains draft pending review disposition and exact-head CI. Its retarget to main changed metadata only; no newer main or sibling source was merged backward.
+The forecasting peer completed independent rereview of the exact runtime and found both defects resolved, with no new actionable finding in this scope. The coordinator separately published a [scoped source acknowledgment](https://github.com/arianna-arpg/hollow-wake-mmo/pull/36#issuecomment-6256536065). Claude reciprocal review remains requested on the combined source and evidence. PR #36 remains draft pending that review and exact-head CI. Its retarget to main changed metadata only; no newer main or sibling source was merged backward.
 
 Paid echoes, captured Direction, targeted-sector behavior and physical CastSource in the final #20/#50 union remain required. No broad sibling propagation or timing is authorized by this handoff. Separate native rendering, downstream card rendering and coordinated performance acceptance remain open.
 
-Acknowledged by: pending independent and Claude rereview.
+Acknowledged by: independent peer rereview at b116725 and coordinator source acknowledgment 6256536065; Claude reciprocal review remains pending.
