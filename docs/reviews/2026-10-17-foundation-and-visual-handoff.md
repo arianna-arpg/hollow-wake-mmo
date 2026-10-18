@@ -79,4 +79,4 @@ The [rendering comparison](../design/sprite-rendering-study.md) also has reviewa
 
 The shared checkout advanced to `60c0677` during these studies. The earlier 417-core/35-server result above belongs to the foundation-fix verification snapshot. The visual chat separately reported 429 core tests passing but an incomplete solution test attempt under its SDK/network environment. Do not combine those separate runs into a new all-green result for the later checkout. Production integration and its fresh full gates remain separate work.
 
-Acknowledged by: [Claude coordinator's first review](2026-10-17-claude-acknowledgment-and-review.md). Subsequent implementation and separate commits are recorded in [the Flame handoff](2026-10-17-flame-cast-events.md).
+Acknowledged by: [Claude coordinator's first review](2026-10-17-claude-acknowledgment-and-review.md). Subsequent implementation and separate commits are recorded in [the cast-cue handoff](2026-10-17-cast-cues.md).

@@ -1,7 +1,7 @@
 {
   "extra_threads": [{ "id": "future_thread", "name": "Future Thread", "color": "#34ab9f" }],
   "cases": [
-    { "name": "two Threads and two delivery mechanisms compose", "phase": "release", "tags": ["ember", "tide"], "mechanisms": ["area", "projectile"], "profiles": ["area_release", "flame", "projectile_release", "thread.tide"] },
+    { "name": "two Threads and two delivery mechanisms compose", "phase": "release", "tags": ["ember", "tide"], "mechanisms": ["area", "projectile"], "profiles": ["area_release", "projectile_release", "rising_heat", "thread.tide"] },
     { "name": "new Thread inherits the shared material template", "phase": "start", "tags": ["future_thread"], "mechanisms": [], "profiles": ["thread.future_thread"] },
     { "name": "a support-added projectile inherits the delivery layer", "phase": "release", "tags": ["mind"], "mechanisms": ["projectile"], "profiles": ["projectile_release", "thread.mind"] },
     { "name": "inactive mechanism does not acquire decoration", "phase": "release", "tags": ["mind"], "mechanisms": [], "profiles": ["thread.mind"] },

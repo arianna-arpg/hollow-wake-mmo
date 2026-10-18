@@ -20,6 +20,8 @@ Core simulation with every system present end to end, the server and protocol, a
 
 ## M2: The world breathes
 
+The living world's contract set and its work packages are in [design/world](design/world/overview.md) and [its plan](design/world/plan.md); the items below are the milestone's shape.
+
 - Rivers and roads as generator passes (flow accumulation, least-cost paths between hubs).
 - Region-level narrative: faction control per region, warfronts between adjacent regions, event chains.
 - Knots as instanced sub-areas with their own generators (caves, towers) entered from the overworld.

@@ -191,7 +191,7 @@ public class InventoryTests
             Assert.NotNull(sim.Service<WeaveRuntime>().Resolve(sim, book.Slots[i], out _));
             Assert.Same(book.Slots[i], rack.Seats[i].Bound);
         }
-        Assert.Equal("Flame Bolt Codex", rack.Seats[0].Codex!.Name);
+        Assert.Equal("Ember Bolt Codex", rack.Seats[0].Codex!.Name);
     }
 
     [Fact]

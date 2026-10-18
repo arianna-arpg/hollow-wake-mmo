@@ -172,7 +172,7 @@ entries:
         tier_bias_low: 0.85
         tier_bias_high: 0.5
       rare_names:
-        first: [Storm, Grim, Flame, Dusk, Iron, Blood, Gale, Hollow, Raven, Frost, Dread, Sun, Ash, Viper, Oath, Thorn, Wolf, Doom, Star, Bone, Rune, Shade, Brine, Loom]
+        first: [Storm, Grim, Ember, Dusk, Iron, Blood, Gale, Hollow, Raven, Frost, Dread, Sun, Ash, Viper, Oath, Thorn, Wolf, Doom, Star, Bone, Rune, Shade, Brine, Loom]
         second: [song, " Ward", " Grasp", " Veil", " Coil", " Mark", " Bite", " Crest", " Shroud", " Pledge", " Snare", " Brand", " Knell", " Husk", " Gyre", " Fang", " Weave", " Keep", " Whorl", " Call"]
       loot:
         max_depth: 8

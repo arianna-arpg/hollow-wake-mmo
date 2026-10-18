@@ -54,7 +54,7 @@ entries:
   - { id: thread_floss, name: Thread Floss, class: material.floss, tags: [material, floss], stack: 99, drop_weight: 0, value: 2, description: Loose thread gathered from frayed places. }
   - { id: iron_ore, name: Iron Ore, class: material.ore, tags: [material, ore, stone], stack: 99, drop_weight: 0, value: 3 }
   - { id: ash_wood, name: Ash Wood, class: material.wood, tags: [material, wood], stack: 99, drop_weight: 0, value: 1 }
-  - { id: ember_bloom, name: Flame Bloom, class: material.herb, tags: [material, herb, ember], stack: 99, drop_weight: 0, value: 4 }
+  - { id: ember_bloom, name: Ember Bloom, class: material.herb, tags: [material, herb, ember], stack: 99, drop_weight: 0, value: 4 }
   - { id: wisp_essence, name: Wisp Essence, class: material.essence, tags: [material, essence, lumen], stack: 99, drop_weight: 0, value: 6 }
   - { id: remnant_dust, name: Remnant Dust, class: material.essence, tags: [material, essence, umbra], stack: 99, drop_weight: 0, value: 6 }
   - { id: hob_hide, name: Hob Hide, class: material.hide, tags: [material, hide], stack: 99, drop_weight: 0, value: 2 }

@@ -11,9 +11,9 @@ Every proper noun and term in the Hollow Wake lore, one line each, alphabetical 
 - Ash: a Loosed Weaver, a Marcher girl from Reedham who went into the Fray at fourteen and came back at twenty; the one the Compact fears most.
 - Ashdown: a stead in the Hallows near Ninewells; its bottom-field has a Hob in it.
 - Ashdown, Hob: Stone-weaver of the Nine Who Stayed; the first well at Ninewells bears his name.
-- Ashfall: a Flame Weave, one of the Kindler's first.
-- ashlight: frayed Flame; cold fire that gives no warmth, consumes nothing, and spreads.
-- ashwolf: one of the Tangled, a wolf re-tied with Flame.
+- Ashfall: an Ember Weave, one of the Kindler's first.
+- ashlight: frayed Ember; cold fire that gives no warmth, consumes nothing, and spreads.
+- ashwolf: one of the Tangled, a wolf re-tied with Ember.
 - Aurevant: the Concord house of Lumen, which founded Cassevault and kept its name through the Loose Years.
 - Aurevant, Aurelis: a Wellsinger of the Hem coast who sat the first Vigil, bound Font Aurelle and raised Cassevault.
 - Aurevant, Lucan: Clerk of the Lantern Chancery who keeps the Candle at Ninewells and is polite to everyone.
@@ -54,15 +54,15 @@ Every proper noun and term in the Hollow Wake lore, one line each, alphabetical 
 - Chancery of Lanterns, the: the Concord-era name of the Lantern Chancery, founded in C 112 to keep the Fount charters.
 - Chandevault: the Chancery's Concord name for Candlehall, which nobody in the Marches uses.
 - Charter of Lanterns, the: the Chancery's law of M 93 that no Fount may be bound except by a sealed Weaver, and every binding is a loan from the Chancery.
-- cinderhound: one of the Tangled, a hound re-tied with Flame, common in the Delves.
-- Cinderedge: a Flame Weave, one of the Holdfast's first.
+- cinderhound: one of the Tangled, a hound re-tied with Ember, common in the Delves.
+- Cinderedge: an Ember Weave, one of the Holdfast's first.
 - Cinderstair, the: a Firstwork in the Emberfells; a staircase of fused black glass that climbs a scarp and stops in the air.
 - Clerk: a Chancery officer who keeps a Candle.
 - close folk, the close-woven: what Weavers call people who cannot weave; no insult is meant.
 - close-wove: an item whose Pattern has no room for Glyphs.
 - Coldedge: a Tide Weave, one of the Harrier's first.
 - Cole, Edda: of Wenna Cole's line; keeps the smithy at Ninewells and teaches the Kindler's Calling.
-- Cole, Wenna: Flame-weaver of the Nine Who Stayed.
+- Cole, Wenna: Ember-weaver of the Nine Who Stayed.
 - Common: the shared tongue of Aureth, spoken plainly by Marchers.
 - Concord Age, the: the twelve centuries from the swearing of the Concord to the Unraveling.
 - Concord Count, the: the old calendar, written C, counted from the swearing of the Concord of Nine Hearths.
@@ -88,7 +88,7 @@ Every proper noun and term in the Hollow Wake lore, one line each, alphabetical 
 - drowned, the: Tangled dead of the meres and sea-caves, re-tied with Tide; never given any other name.
 - Drowned Font, the: a Tide Fount under the deepest mere of the Sallows, reachable only when the water chooses.
 - Drowning: a Sallows Tide Snarl under a mere, which floods and empties on its own schedule.
-- Durenne: the Concord house of Flame, which kept its name through the Loose Years.
+- Durenne: the Concord house of Ember, which kept its name through the Loose Years.
 - Durenne, Mathis: Lanterner, second to the Marchwarden, who likes the Marches more than his office allows.
 - Durn: the people of the Girdle and Ondur; Stone's own, patient and blunt.
 - Duskveil: an Umbra Weave, one of the Shade's first.
@@ -99,9 +99,9 @@ Every proper noun and term in the Hollow Wake lore, one line each, alphabetical 
 - Echo, the (Glyph): a Glyph that makes a Weave repeat.
 - Echo (Knot): a Hush Thinning of Mind, a place that replays what happened in it.
 - Echo of Serapha, the: an Echo in the Hush that replays an hour of a woman in Concord dress speaking to no one.
-- Flame: the Thread of fire and heat, change by consumption.
-- Emberfells, the: the upland sub-region of the Weftmarches, Stone and Flame, with Storm on the heights.
-- Emberlash: a Flame Weave, one of the Kindler's first.
+- Ember: the Thread of fire and heat, change by consumption.
+- Emberfells, the: the upland sub-region of the Weftmarches, Stone and Ember, with Storm on the heights.
+- Emberlash: an Ember Weave, one of the Kindler's first.
 - Emberspan: the fifth Span of the year, high summer.
 - Eye: the heart of a Fount, where the Threads can be seen directly; a Wakefolk word now used everywhere.
 - Eye of Greyheron, the: a Storm and Tide Fount at the foot of Greyheron Light, bound by the Light's keeper.
@@ -116,7 +116,7 @@ Every proper noun and term in the Hollow Wake lore, one line each, alphabetical 
 - First Lantern, the: the Lantern raised at Cassevault in C 44, which guttered and held on Ninth Void and burns still.
 - Firstdelve, Ysmur: the Durn who opened Scarrow Gate from the mountain side in C 290.
 - Firstworks: Landmarks that were there before any people, made by the Loomwright or by nothing at all.
-- floss: loose Thread shed by Knots, the raw material of Reweaving; named by Thread, as Flame floss.
+- floss: loose Thread shed by Knots, the raw material of Reweaving; named by Thread, as Ember floss.
 - flosser: one who harvests Knots for floss; the Company's crews, and independents who die young.
 - Fold, the: whatever lies beyond the Girdle; uncrossed.
 - Font: the Ilvarene word for a Fount, used before its name.
@@ -168,7 +168,7 @@ Every proper noun and term in the Hollow Wake lore, one line each, alphabetical 
 - Hobsmere: a Tide and Bloom Fount under a mere east of Ninewells; the classic first Holding, where the Compact teaches the Vigil.
 - Hold: the Marcher form for a Holding, as in Ashdown Hold.
 - Holder: whoever has bound a Fount.
-- Holdfast: the Calling of those who stay; Stone and Lumen, with Flame.
+- Holdfast: the Calling of those who stay; Stone and Lumen, with Ember.
 - Holding: a Fount's bound Reach, shaped and ruled by its Holder.
 - Hollins, Nance: Old Nance, senior Knotwife of Ninewells and the Compact's conscience.
 - Hollow: a Sallows Snarl inside a hollow tree or drowned building, Bloom and Umbra.
@@ -188,12 +188,12 @@ Every proper noun and term in the Hollow Wake lore, one line each, alphabetical 
 ## K
 
 - Kettle, the: an island of the Scatter.
-- Kiln, the (Fount): a Flame Fount in the scarp face of the Emberfells, whose Welling is twine already spun.
-- Kiln (Knot): an Emberfells Flame Tangle where a seam burns in the open.
+- Kiln, the (Fount): an Ember Fount in the scarp face of the Emberfells, whose Welling is twine already spun.
+- Kiln (Knot): an Emberfells Ember Tangle where a seam burns in the open.
 - Kiln-camps: the Longwake Company's flosser camps in the Emberfells.
 - Kilnwife, Kilnman: a Sower who has learned to Kindle.
-- Kindle: a Flame Weave, one of the Kindler's first.
-- Kindler: the Calling of those who start things; Flame and Storm, with Mind.
+- Kindle: an Ember Weave, one of the Kindler's first.
+- Kindler: the Calling of those who start things; Ember and Storm, with Mind.
 - Knot: a place where Threads tangled in the Unraveling and never settled; it turns, and is never the same twice.
 - knot-prayer: a Marcher cord with a knot tied in it for a wish, thanks, fear or name, untied at the Selvage.
 - Knotwife: a Marcher folk-weaver and midwife, licensed by nobody, who ties knots for those who cannot.

@@ -2,7 +2,7 @@
 # a mitigation rule (armor for Stone, resistance for the rest) and the ailment it tends to leave.
 kind: threads
 entries:
-  - { id: ember, name: Flame, color: "#e8622a", opposes: tide, mitigation: resist, status: burning, tags: [elemental, heat], description: Fire and the will to change. }
+  - { id: ember, name: Ember, color: "#e8622a", opposes: tide, mitigation: resist, status: burning, tags: [elemental, heat], description: Fire and the will to change. }
   - { id: tide, name: Tide, color: "#3aa6d8", opposes: ember, mitigation: resist, status: chilled, tags: [elemental, cold, water], description: "Cold, water and patience." }
   - { id: storm, name: Storm, color: "#b58cff", opposes: stone, mitigation: resist, status: shocked, tags: [elemental, lightning, wind], description: "Lightning and wind, the sudden Thread." }
   - { id: stone, name: Stone, color: "#9c8b72", opposes: storm, mitigation: armor, status: bleeding, tags: [physical, earth], description: "Earth and the body. Blunt, cutting, enduring." }

@@ -1,6 +1,6 @@
 # Shared action presentation
 
-This is the cosmetic event and recipe contract for both clients. It applies to every actor and compiled weave. Flame is an authored Thread override within that contract. The simulation never reads a visual recipe, and a cosmetic cue never decides damage, timing, reach or a hit region.
+This is the cosmetic event and recipe contract for both clients. It applies to every actor and compiled weave. Ember is an authored Thread override within that contract. The simulation never reads a visual recipe, and a cosmetic cue never decides damage, timing, reach or a hit region.
 
 The original Hollow Wake ARPG is a required convergence source. [Visual convergence](parity/visual-convergence.md) records its reusable cast, combat and defense language and the families still lacking parity. A neutral fallback means graceful display, not complete visual coverage.
 
@@ -28,7 +28,7 @@ Clients clear sequence watermarks and decoration on world entry/disconnect, remo
 
 Distinct `layer` values compose. Each layer selects its first applicable profile by descending priority then ordinal id. Profiles marked `fallback` are considered after ordinary profiles and only when no ordinary layer was selected. A validated unfiltered fallback is required for every lifecycle phase and for generic outcomes when outcomes are declared. A known outcome whose specialized profiles do not match can still use that generic fallback. Budgets choose deterministic winners and may omit cosmetic layers.
 
-`thread_phases` is a shared template instantiated from every `ThreadDef`, including content-added Threads. Its color comes from the Thread definition. Generated profile/layer keys use `thread.<id>`; generated profile IDs are reserved. An authored profile with a different ID can override that same layer at higher priority. Flame does this for `thread.ember`. Mixed Threads compose their layers; authors need not enumerate every combination.
+`thread_phases` is a shared template instantiated from every `ThreadDef`, including content-added Threads. Its color comes from the Thread definition. Generated profile/layer keys use `thread.<id>`; generated profile IDs are reserved. An authored profile with a different ID can override that same layer at higher priority. Ember does this for `thread.ember`. Mixed Threads compose their layers; authors need not enumerate every combination.
 
 Mechanisms come from the compiled weave after glyph processing. They describe capabilities, including nested/conditional paths, not proof that every branch executed on this release. Delivery accents are deliberately small and body-bound. Only authoritative entity state or outcome events can assert flight, a hit, healing or a defense. Glyphs that change geometry must ultimately affect the shared resolved plan described in [cast forecasting](cast-forecasting.md), not scale a cosmetic ring to suggest an unverified hitbox.
 
@@ -44,8 +44,8 @@ The original game's inward mend, defensive barrier/ghost, beneficial opening, ha
 
 ## Names and extension gate
 
-The owner selected **Flame**, associated with Fire, as the player-facing name. Persisted `ember` keys, weave IDs, attribute paths and icon references remain compatible. Presentation selects the stable semantic tag, not the displayed name.
+Threads retain their lore names as player-facing names, including **Ember**. Persisted `ember` keys, weave IDs, attribute paths and icon references remain compatible. Presentation selects the stable semantic tag, not the displayed name.
 
-A new skill using supported mechanisms is content work. A new mechanism requires a family-level event/state adapter where necessary, paired rendering support, validation and conformance evidence. The [coverage manifest](../../experiments/visual-convergence/coverage.json) classifies the captured original vocabulary and current effect registry, including partial/pending work. Tests reject an unclassified current handler, an unclassified refreshed prototype mechanic or a primitive registry mismatch. Every shipped preset must retain valid shared lifecycle presentation. These gates cannot certify unimplemented future behavior or detect separate-repository changes until its census is refreshed.
+A new skill using supported mechanisms is content work. A new mechanism requires a family-level event/state adapter where necessary, paired rendering support, validation and conformance evidence. The [coverage manifest](../../tests/fixtures/cast-visuals/coverage.json) classifies the captured original vocabulary and current effect registry, including partial/pending work. Tests reject an unclassified current handler, an unclassified refreshed prototype mechanic or a primitive registry mismatch. Every shipped preset must retain valid shared lifecycle presentation. These gates cannot certify unimplemented future behavior or detect separate-repository changes until its census is refreshed.
 
-Verification includes shared composition fixtures, actual delayed damage after interruption, opt-in/interest/privacy tests, both lifecycle consumers, content validation, the seeded duel, live probe, client smokes and Release allocation evidence. Measurements and remaining review obligations belong in the [dated handoff](../reviews/2026-10-17-flame-cast-events.md).
+Verification includes shared composition fixtures, actual delayed damage after interruption, opt-in/interest/privacy tests, both lifecycle consumers, content validation, the seeded duel, live probe, client smokes and Release allocation evidence. Measurements and remaining review obligations belong in the [dated handoff](../reviews/2026-10-17-cast-cues.md).

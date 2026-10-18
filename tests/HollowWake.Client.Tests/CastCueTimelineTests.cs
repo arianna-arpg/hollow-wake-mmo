@@ -38,7 +38,7 @@ public class CastCueTimelineTests
             }
         }
         // Baseline coverage is explicit, including missing families. Adding a new handler cannot silently skip that review.
-        using var manifest = JsonDocument.Parse(File.ReadAllText(Path.Combine(core, "..", "..", "experiments", "visual-convergence", "coverage.json")));
+        using var manifest = JsonDocument.Parse(File.ReadAllText(Path.Combine(core, "..", "..", "tests", "fixtures", "cast-visuals", "coverage.json")));
         var classified = manifest.RootElement.GetProperty("families").EnumerateObject()
             .Where(f => f.Value.TryGetProperty("current_effects", out _))
             .SelectMany(f => f.Value.GetProperty("current_effects").Deserialize<string[]>()!).ToArray();
@@ -86,7 +86,7 @@ public class CastCueTimelineTests
     }
 
     [Fact]
-    public void Content_selects_Flame_and_an_unknown_thread_falls_back()
+    public void Content_selects_a_Thread_profile_and_an_unknown_thread_falls_back()
     {
         var t = new CastCueTimeline(Config);
         Assert.True(t.Receive(Cue("start", 1), 10));

@@ -69,8 +69,8 @@ test('proposed tracking has a rate cap; committed direction refuses later aim', 
   assert.equal(directionAfterCommit(direction, .1), Math.PI * .1);
   assert.equal(directionAfterCommit({ ...direction, committed: true }, .1), 0);
 });
-test('Flame display keeps the persisted ember key; reduced motion retains information', () => {
-  assert.equal(displayThread('ember', config.threadDisplay), 'Flame');
+test('Ember display keeps the persisted ember key; reduced motion retains information', () => {
+  assert.equal(displayThread('ember', config.threadDisplay), 'Ember');
   assert.equal(config.threadDisplay.ember.element, 'Fire');
   assert.equal(config.meta.forecast.reducedMotion.sweep, false);
   for (const field of ['boundary', 'direction', 'relation', 'timing', 'surface'])

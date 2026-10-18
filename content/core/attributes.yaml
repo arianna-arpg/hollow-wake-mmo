@@ -85,7 +85,7 @@ entries:
   - { id: ailment.potency, name: Ailment Potency, category: offense, base: 0, percent: true }
   - { id: cull.threshold, name: Culling Threshold, category: offense, base: 0, min: 0, max: 1, percent: true }
   - { id: healing, name: Healing, category: offense, base: 0, description: The healing channel. }
-  - { id: pen.ember, name: Flame Penetration, category: offense, base: 0, percent: true }
+  - { id: pen.ember, name: Ember Penetration, category: offense, base: 0, percent: true }
   - { id: pen.tide, name: Tide Penetration, category: offense, base: 0, percent: true }
   - { id: pen.storm, name: Storm Penetration, category: offense, base: 0, percent: true }
   - { id: pen.bloom, name: Bloom Penetration, category: offense, base: 0, percent: true }
@@ -93,8 +93,8 @@ entries:
   - { id: pen.lumen, name: Lumen Penetration, category: offense, base: 0, percent: true }
   - { id: pen.void, name: Void Penetration, category: offense, base: 0, percent: true }
   - { id: pen.mind, name: Mind Penetration, category: offense, base: 0, percent: true }
-  - { id: convert.stone.ember, name: Stone to Flame Conversion, category: offense, base: 0, min: 0, max: 1, percent: true }
-  - { id: extra.ember, name: Extra Flame Damage, category: offense, base: 0, min: 0, percent: true }
+  - { id: convert.stone.ember, name: Stone to Ember Conversion, category: offense, base: 0, min: 0, max: 1, percent: true }
+  - { id: extra.ember, name: Extra Ember Damage, category: offense, base: 0, min: 0, percent: true }
 
   # ---- weapon (set by equipment, read by attack forms)
   - { id: weapon.damage.min, name: Weapon Damage Minimum, category: weapon, base: 2, min: 0 }
@@ -115,7 +115,7 @@ entries:
   - { id: cheat_death.chance, name: Cheat Death, category: defense, base: 0, min: 0, max: 1, percent: true, description: Chance to survive a killing blow with one life. }
   - { id: damage.taken, name: Damage Taken, category: defense, base: 0, description: Multiplier channel on incoming damage. }
   - { id: status.resistance, name: Status Resistance, category: defense, base: 0, max: 0.9, percent: true }
-  - { id: resist.ember, name: Flame Resistance, category: defense, base: 0, min: -2, percent: true }
+  - { id: resist.ember, name: Ember Resistance, category: defense, base: 0, min: -2, percent: true }
   - { id: resist.tide, name: Tide Resistance, category: defense, base: 0, min: -2, percent: true }
   - { id: resist.storm, name: Storm Resistance, category: defense, base: 0, min: -2, percent: true }
   - { id: resist.bloom, name: Bloom Resistance, category: defense, base: 0, min: -2, percent: true }
@@ -123,7 +123,7 @@ entries:
   - { id: resist.lumen, name: Lumen Resistance, category: defense, base: 0, min: -2, percent: true }
   - { id: resist.void, name: Void Resistance, category: defense, base: 0, min: -2, percent: true }
   - { id: resist.mind, name: Mind Resistance, category: defense, base: 0, min: -2, percent: true }
-  - { id: resist.ember.max, name: Maximum Flame Resistance, category: defense, base: 0.75, max: 0.9, percent: true }
+  - { id: resist.ember.max, name: Maximum Ember Resistance, category: defense, base: 0.75, max: 0.9, percent: true }
   - { id: resist.tide.max, name: Maximum Tide Resistance, category: defense, base: 0.75, max: 0.9, percent: true }
   - { id: resist.storm.max, name: Maximum Storm Resistance, category: defense, base: 0.75, max: 0.9, percent: true }
   - { id: resist.bloom.max, name: Maximum Bloom Resistance, category: defense, base: 0.75, max: 0.9, percent: true }

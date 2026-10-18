@@ -23,6 +23,8 @@ const copies = [
   ['src/renderer/index.html', 'dist/renderer/index.html'],
   ['src/renderer/style.css', 'dist/renderer/style.css'],
   ['build/icon.png', 'dist/icon.png'],
+  ['build/icon.ico', 'dist/icon.ico'],
+  ['build/logo.svg', 'dist/renderer/logo.svg'],
   ['news.json', 'dist/news.json'],
 ];
 for (const [from, to] of copies) {

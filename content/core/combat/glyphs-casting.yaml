@@ -76,7 +76,7 @@ entries:
 
   - id: twin_rite
     name: Twin Rite
-    description: Gives the weave's seat a second ability, a burst of Flame where its bearer aims.
+    description: Gives the weave's seat a second ability, a burst of Ember where its bearer aims.
     requires: [spell]
     color: "#e8622a"
     meta_action: { weave: ember_blast, label: Detonate }
@@ -112,7 +112,7 @@ entries:
 
   - id: follow_through
     name: Follow Through
-    description: Half the time a use is followed a beat later by a burst of Flame where it landed.
+    description: Half the time a use is followed a beat later by a burst of Ember where it landed.
     requires: [attack, spell]
     color: "#e8622a"
     follow_up: { weave: ember_blast, delay: 0.35, chance: 0.5 }

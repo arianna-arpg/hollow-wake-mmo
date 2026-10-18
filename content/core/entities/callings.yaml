@@ -17,7 +17,7 @@ entries:
 
   - id: kindler
     name: Kindler
-    description: Those who burn. Flame and Storm. Bolts, novas and a short temper.
+    description: Those who burn. Ember and Storm. Bolts, novas and a short temper.
     threads: [ember, storm]
     color: "#e8622a"
     look: kindler

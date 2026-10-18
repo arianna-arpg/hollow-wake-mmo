@@ -10,9 +10,9 @@ The six are given below in the voice of the Marches, each with the Threads it le
 
 ## Holdfast
 
-The Holdfast is the one who stays. Where everyone else moves, the Holdfast plants their feet, draws Stone up through the soles and Lumen down through the crown, and becomes the thing that the fight happens around. They are shield and wall and door; they hold the line at the Hedge and the stair in a Delve and the ford while the cart crosses. A Holdfast's Weaves are slow and heavy and do not miss: ground that grips, skin that remembers being rock, a ward of clean light that turns a blow aside, and a Flame edge for when standing is not enough. They are the oldest Calling, older than the Concord, because someone always had to stand at the door. Holdfasts are patient, stubborn and often funny in a dry way, because they have had time to think. The Durn produce them by the seam, the Hedge makes them by necessity, and the Chancery's Lanterners are mostly Holdfasts who learned to read.
+The Holdfast is the one who stays. Where everyone else moves, the Holdfast plants their feet, draws Stone up through the soles and Lumen down through the crown, and becomes the thing that the fight happens around. They are shield and wall and door; they hold the line at the Hedge and the stair in a Delve and the ford while the cart crosses. A Holdfast's Weaves are slow and heavy and do not miss: ground that grips, skin that remembers being rock, a ward of clean light that turns a blow aside, and an Ember edge for when standing is not enough. They are the oldest Calling, older than the Concord, because someone always had to stand at the door. Holdfasts are patient, stubborn and often funny in a dry way, because they have had time to think. The Durn produce them by the seam, the Hedge makes them by necessity, and the Chancery's Lanterners are mostly Holdfasts who learned to read.
 
-Threads: Stone and Lumen, with Flame.
+Threads: Stone and Lumen, with Ember.
 
 Teacher in Ninewells: Jory Fenn, Hedge-captain, who teaches at the north gate and is not gentle.
 
@@ -20,9 +20,9 @@ First Weaves: Rootstand, Bulwark, Lanternward, Cinderedge.
 
 ## Kindler
 
-The Kindler is the one who starts things. They draw Flame and Storm and throw them, and the world changes where the throw lands. A Kindler's Weaves are quick, bright and loud: a lash of fire, a crack of lightning, a gale that scatters, a burn that spreads. They lean on Mind more than they admit, because aiming is thinking, and the best Kindlers are the ones who can hold a Weave for a breath longer than seems wise and let it go at the right moment. They are impatient, generous and dangerous to stand next to, and they are the Calling most often blamed for things. The Concord's war-weavers were Kindlers; so were most of the Drawn, who could not hold on Ninth Void. In the Marches they are the flossers' best friends and the Hedge's first call, and they burn out young unless someone teaches them the Fall.
+The Kindler is the one who starts things. They draw Ember and Storm and throw them, and the world changes where the throw lands. A Kindler's Weaves are quick, bright and loud: a lash of fire, a crack of lightning, a gale that scatters, a burn that spreads. They lean on Mind more than they admit, because aiming is thinking, and the best Kindlers are the ones who can hold a Weave for a breath longer than seems wise and let it go at the right moment. They are impatient, generous and dangerous to stand next to, and they are the Calling most often blamed for things. The Concord's war-weavers were Kindlers; so were most of the Drawn, who could not hold on Ninth Void. In the Marches they are the flossers' best friends and the Hedge's first call, and they burn out young unless someone teaches them the Fall.
 
-Threads: Flame and Storm, with Mind.
+Threads: Ember and Storm, with Mind.
 
 Teacher in Ninewells: Edda Cole, of Wenna Cole's line, who keeps the smithy and teaches in the yard behind it.
 

@@ -1,0 +1,972 @@
+{
+  "commit": "64819bd4351001a34c92eed13b63e1f55f0c52ef",
+  "sourceSha256": "552f65193008f13e76322917770d0d36944f07cfcbbc978b245603ac38ea3a2f",
+  "cases": [
+    {
+      "seed": 160,
+      "direction": "down",
+      "samples": [
+        {
+          "frame": 0,
+          "time": 0.03333333333333334,
+          "lane": 16.333333333333332,
+          "distance": 7.000000000000001,
+          "speed": 1,
+          "passed": 0,
+          "hits": 0,
+          "collected": 0,
+          "boostGates": 0,
+          "currentsTaken": 0,
+          "dash": 0,
+          "hinder": 0,
+          "gates": [
+            {
+              "id": 1,
+              "u": 1053,
+              "openings": [
+                {
+                  "lane": -181.22863966505975,
+                  "width": 135.11675521777943
+                },
+                {
+                  "lane": -6.228639665059745,
+                  "width": 135.860854185652
+                },
+                {
+                  "lane": 168.77136033494025,
+                  "width": 134.31711972365156
+                }
+              ],
+              "resolved": false,
+              "hit": false
+            }
+          ]
+        },
+        {
+          "frame": 29,
+          "time": 0.9999999999999989,
+          "lane": 265,
+          "distance": 210,
+          "speed": 1,
+          "passed": 0,
+          "hits": 0,
+          "collected": 0,
+          "boostGates": 0,
+          "currentsTaken": 0,
+          "dash": 0,
+          "hinder": 0,
+          "gates": [
+            {
+              "id": 1,
+              "u": 850,
+              "openings": [
+                {
+                  "lane": -181.22863966505975,
+                  "width": 135.11675521777943
+                },
+                {
+                  "lane": -6.228639665059745,
+                  "width": 135.860854185652
+                },
+                {
+                  "lane": 168.77136033494025,
+                  "width": 134.31711972365156
+                }
+              ],
+              "resolved": false,
+              "hit": false
+            }
+          ]
+        },
+        {
+          "frame": 119,
+          "time": 3.9999999999999885,
+          "lane": -265,
+          "distance": 861.8399999999978,
+          "speed": 1,
+          "passed": 0,
+          "hits": 1,
+          "collected": 0,
+          "boostGates": 0,
+          "currentsTaken": 1,
+          "dash": 0,
+          "hinder": 0,
+          "gates": [
+            {
+              "id": 1,
+              "u": 198.1600000000022,
+              "openings": [
+                {
+                  "lane": -181.22863966505975,
+                  "width": 135.11675521777943
+                },
+                {
+                  "lane": -6.228639665059745,
+                  "width": 135.860854185652
+                },
+                {
+                  "lane": 168.77136033494025,
+                  "width": 134.31711972365156
+                }
+              ],
+              "resolved": true,
+              "hit": true
+            },
+            {
+              "id": 2,
+              "u": 677.6600000000022,
+              "openings": [
+                {
+                  "lane": -128.43611024785787,
+                  "width": 130.75258999317884
+                },
+                {
+                  "lane": 131.56388975214213,
+                  "width": 164.91407326050103
+                }
+              ],
+              "resolved": false,
+              "hit": false
+            }
+          ]
+        },
+        {
+          "frame": 299,
+          "time": 10.000000000000073,
+          "lane": 265,
+          "distance": 2064.317500000013,
+          "speed": 1,
+          "passed": 1,
+          "hits": 2,
+          "collected": 1,
+          "boostGates": 0,
+          "currentsTaken": 1,
+          "dash": 0,
+          "hinder": 0,
+          "gates": [
+            {
+              "id": 3,
+              "u": -44.47750000000573,
+              "openings": [
+                {
+                  "lane": -112.50037427525967,
+                  "width": 154.6424625464715
+                },
+                {
+                  "lane": 147.49962572474033,
+                  "width": 119.78194587444887
+                }
+              ],
+              "resolved": true,
+              "hit": true
+            },
+            {
+              "id": 4,
+              "u": 434.7774999999957,
+              "openings": [
+                {
+                  "lane": -17.9780378844589,
+                  "width": 174.02424956299365
+                }
+              ],
+              "resolved": false,
+              "hit": false
+            },
+            {
+              "id": 5,
+              "u": 914.75,
+              "openings": [
+                {
+                  "lane": 19.54949837643653,
+                  "width": 172.2114192461595
+                }
+              ],
+              "resolved": false,
+              "hit": false
+            }
+          ]
+        },
+        {
+          "frame": 599,
+          "time": 19.999999999999506,
+          "lane": -265,
+          "distance": 3792.477500000049,
+          "speed": 1,
+          "passed": 1,
+          "hits": 6,
+          "collected": 1,
+          "boostGates": 0,
+          "currentsTaken": 1,
+          "dash": 0,
+          "hinder": 0,
+          "gates": [
+            {
+              "id": 7,
+              "u": 146.92000000000075,
+              "openings": [
+                {
+                  "lane": -118.3012204291299,
+                  "width": 137.80550222843885
+                },
+                {
+                  "lane": 141.6987795708701,
+                  "width": 132.40680888667703
+                }
+              ],
+              "resolved": true,
+              "hit": true
+            },
+            {
+              "id": 8,
+              "u": 626.2100000000004,
+              "openings": [
+                {
+                  "lane": -129.8644265998155,
+                  "width": 172.41878704167902
+                },
+                {
+                  "lane": 130.1355734001845,
+                  "width": 123.34784759581089
+                }
+              ],
+              "resolved": false,
+              "hit": false
+            }
+          ]
+        },
+        {
+          "frame": 1199,
+          "time": 39.99999999999837,
+          "lane": 150,
+          "distance": 7470.155000000161,
+          "speed": 1,
+          "passed": 2,
+          "hits": 12,
+          "collected": 2,
+          "boostGates": 0,
+          "currentsTaken": 1,
+          "dash": 0,
+          "hinder": 0,
+          "gates": [
+            {
+              "id": 15,
+              "u": 309.4600000000004,
+              "openings": [
+                {
+                  "lane": 46.44994471454993,
+                  "width": 229.6528120590374
+                }
+              ],
+              "resolved": false,
+              "hit": false
+            },
+            {
+              "id": 16,
+              "u": 788.75,
+              "openings": [
+                {
+                  "lane": -174.5694117853418,
+                  "width": 122.77100668149069
+                },
+                {
+                  "lane": 0.43058821465820074,
+                  "width": 133.79303683992475
+                },
+                {
+                  "lane": 175.4305882146582,
+                  "width": 118.0677603688091
+                }
+              ],
+              "resolved": false,
+              "hit": false
+            }
+          ]
+        },
+        {
+          "frame": 1799,
+          "time": 59.999999999997236,
+          "lane": -265,
+          "distance": 11073.072499999695,
+          "speed": 1,
+          "passed": 3,
+          "hits": 19,
+          "collected": 4,
+          "boostGates": 0,
+          "currentsTaken": 2,
+          "dash": 0,
+          "hinder": 0,
+          "gates": [
+            {
+              "id": 22,
+              "u": 65.73749999999609,
+              "openings": [
+                {
+                  "lane": 52.83958818530664,
+                  "width": 184.99810925871134
+                }
+              ],
+              "resolved": true,
+              "hit": true
+            },
+            {
+              "id": 23,
+              "u": 545.7100000000004,
+              "openings": [
+                {
+                  "lane": -184.82429602649063,
+                  "width": 135.02318606199697
+                },
+                {
+                  "lane": -9.824296026490629,
+                  "width": 126.2417533705011
+                },
+                {
+                  "lane": 165.17570397350937,
+                  "width": 135.08026506379247
+                }
+              ],
+              "resolved": false,
+              "hit": false
+            },
+            {
+              "id": 24,
+              "u": 1026.75,
+              "openings": [
+                {
+                  "lane": -25.085485968738794,
+                  "width": 125.7123136408627
+                }
+              ],
+              "resolved": false,
+              "hit": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "seed": 8273,
+      "direction": "right",
+      "samples": [
+        {
+          "frame": 0,
+          "time": 0.03333333333333334,
+          "lane": 16.333333333333332,
+          "distance": 7.000000000000001,
+          "speed": 1,
+          "passed": 0,
+          "hits": 0,
+          "collected": 0,
+          "boostGates": 0,
+          "currentsTaken": 0,
+          "dash": 0,
+          "hinder": 0,
+          "gates": [
+            {
+              "id": 1,
+              "u": 1053,
+              "openings": [
+                {
+                  "lane": -27.641723747365177,
+                  "width": 167.27179321739823
+                }
+              ],
+              "resolved": false,
+              "hit": false
+            }
+          ]
+        },
+        {
+          "frame": 29,
+          "time": 0.9999999999999989,
+          "lane": 265,
+          "distance": 210,
+          "speed": 1,
+          "passed": 0,
+          "hits": 0,
+          "collected": 0,
+          "boostGates": 0,
+          "currentsTaken": 0,
+          "dash": 0,
+          "hinder": 0,
+          "gates": [
+            {
+              "id": 1,
+              "u": 850,
+              "openings": [
+                {
+                  "lane": -27.641723747365177,
+                  "width": 167.27179321739823
+                }
+              ],
+              "resolved": false,
+              "hit": false
+            }
+          ]
+        },
+        {
+          "frame": 119,
+          "time": 3.9999999999999885,
+          "lane": -265,
+          "distance": 817.5999999999999,
+          "speed": 1,
+          "passed": 0,
+          "hits": 1,
+          "collected": 1,
+          "boostGates": 0,
+          "currentsTaken": 0,
+          "dash": 0,
+          "hinder": 0.5333333333333339,
+          "gates": [
+            {
+              "id": 1,
+              "u": 242.4000000000001,
+              "openings": [
+                {
+                  "lane": -27.641723747365177,
+                  "width": 167.27179321739823
+                }
+              ],
+              "resolved": true,
+              "hit": true
+            },
+            {
+              "id": 2,
+              "u": 721.9000000000001,
+              "openings": [
+                {
+                  "lane": -42.2086186776869,
+                  "width": 206.95881176553667
+                }
+              ],
+              "resolved": false,
+              "hit": false
+            }
+          ]
+        },
+        {
+          "frame": 299,
+          "time": 10.000000000000073,
+          "lane": 265,
+          "distance": 1821.1200000000176,
+          "speed": 1,
+          "passed": 0,
+          "hits": 3,
+          "collected": 1,
+          "boostGates": 0,
+          "currentsTaken": 0,
+          "dash": 0,
+          "hinder": 0,
+          "gates": [
+            {
+              "id": 3,
+              "u": 197.67000000000075,
+              "openings": [
+                {
+                  "lane": -150.948480903171,
+                  "width": 118.77417811565101
+                },
+                {
+                  "lane": 109.051519096829,
+                  "width": 115.86733711324632
+                }
+              ],
+              "resolved": true,
+              "hit": true
+            },
+            {
+              "id": 4,
+              "u": 678.7100000000004,
+              "openings": [
+                {
+                  "lane": -181.9418015750125,
+                  "width": 114.48799082776532
+                },
+                {
+                  "lane": -6.941801575012505,
+                  "width": 118.4253543545492
+                },
+                {
+                  "lane": 168.0581984249875,
+                  "width": 117.53318904992193
+                }
+              ],
+              "resolved": false,
+              "hit": false
+            }
+          ]
+        },
+        {
+          "frame": 599,
+          "time": 19.999999999999506,
+          "lane": -265,
+          "distance": 3642.240000000045,
+          "speed": 1,
+          "passed": 0,
+          "hits": 6,
+          "collected": 1,
+          "boostGates": 0,
+          "currentsTaken": 0,
+          "dash": 0,
+          "hinder": 0,
+          "gates": [
+            {
+              "id": 7,
+              "u": 297.2100000000004,
+              "openings": [
+                {
+                  "lane": -113.56274652760476,
+                  "width": 154.10624475963414
+                },
+                {
+                  "lane": 146.43725347239524,
+                  "width": 118.22718465188518
+                }
+              ],
+              "resolved": false,
+              "hit": false
+            },
+            {
+              "id": 8,
+              "u": 776.5,
+              "openings": [
+                {
+                  "lane": -122.45000235270709,
+                  "width": 142.00164115056396
+                },
+                {
+                  "lane": 137.5499976472929,
+                  "width": 122.95531889609993
+                }
+              ],
+              "resolved": false,
+              "hit": false
+            }
+          ]
+        },
+        {
+          "frame": 1199,
+          "time": 39.99999999999837,
+          "lane": 150,
+          "distance": 7926.222500000119,
+          "speed": 1,
+          "passed": 3,
+          "hits": 12,
+          "collected": 3,
+          "boostGates": 0,
+          "currentsTaken": 3,
+          "dash": 0,
+          "hinder": 0,
+          "gates": [
+            {
+              "id": 16,
+              "u": 332.2100000000004,
+              "openings": [
+                {
+                  "lane": 15.110178822651505,
+                  "width": 156.28891075681895
+                }
+              ],
+              "resolved": false,
+              "hit": false
+            },
+            {
+              "id": 17,
+              "u": 813.25,
+              "openings": [
+                {
+                  "lane": 30.54895032895729,
+                  "width": 140.58811350166798
+                }
+              ],
+              "resolved": false,
+              "hit": false
+            }
+          ]
+        },
+        {
+          "frame": 1799,
+          "time": 59.999999999997236,
+          "lane": -265,
+          "distance": 11415.197499999656,
+          "speed": 1,
+          "passed": 3,
+          "hits": 20,
+          "collected": 4,
+          "boostGates": 0,
+          "currentsTaken": 3,
+          "dash": 0,
+          "hinder": 0.0333333333333333,
+          "gates": [
+            {
+              "id": 23,
+              "u": 203.51499999999922,
+              "openings": [
+                {
+                  "lane": -112.30318933259696,
+                  "width": 176.56943915504962
+                },
+                {
+                  "lane": 147.69681066740304,
+                  "width": 167.4828890701756
+                }
+              ],
+              "resolved": true,
+              "hit": true
+            },
+            {
+              "id": 24,
+              "u": 684.5550000000023,
+              "openings": [
+                {
+                  "lane": -20.19956910982728,
+                  "width": 189.85958700533956
+                }
+              ],
+              "resolved": false,
+              "hit": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "seed": 42639,
+      "direction": "left",
+      "samples": [
+        {
+          "frame": 0,
+          "time": 0.03333333333333334,
+          "lane": 16.333333333333332,
+          "distance": 7.000000000000001,
+          "speed": 1,
+          "passed": 0,
+          "hits": 0,
+          "collected": 0,
+          "boostGates": 0,
+          "currentsTaken": 0,
+          "dash": 0,
+          "hinder": 0,
+          "gates": [
+            {
+              "id": 1,
+              "u": 1053,
+              "openings": [
+                {
+                  "lane": -180.9764818381518,
+                  "width": 132.69595371792093
+                },
+                {
+                  "lane": -5.9764818381518126,
+                  "width": 128.61020164284855
+                },
+                {
+                  "lane": 169.0235181618482,
+                  "width": 118.39603751525283
+                }
+              ],
+              "resolved": false,
+              "hit": false
+            }
+          ]
+        },
+        {
+          "frame": 29,
+          "time": 0.9999999999999989,
+          "lane": 265,
+          "distance": 210,
+          "speed": 1,
+          "passed": 0,
+          "hits": 0,
+          "collected": 0,
+          "boostGates": 0,
+          "currentsTaken": 0,
+          "dash": 0,
+          "hinder": 0,
+          "gates": [
+            {
+              "id": 1,
+              "u": 850,
+              "openings": [
+                {
+                  "lane": -180.9764818381518,
+                  "width": 132.69595371792093
+                },
+                {
+                  "lane": -5.9764818381518126,
+                  "width": 128.61020164284855
+                },
+                {
+                  "lane": 169.0235181618482,
+                  "width": 118.39603751525283
+                }
+              ],
+              "resolved": false,
+              "hit": false
+            }
+          ]
+        },
+        {
+          "frame": 119,
+          "time": 3.9999999999999885,
+          "lane": -265,
+          "distance": 817.5999999999999,
+          "speed": 1,
+          "passed": 0,
+          "hits": 1,
+          "collected": 1,
+          "boostGates": 0,
+          "currentsTaken": 0,
+          "dash": 0,
+          "hinder": 0.5333333333333339,
+          "gates": [
+            {
+              "id": 1,
+              "u": 242.4000000000001,
+              "openings": [
+                {
+                  "lane": -180.9764818381518,
+                  "width": 132.69595371792093
+                },
+                {
+                  "lane": -5.9764818381518126,
+                  "width": 128.61020164284855
+                },
+                {
+                  "lane": 169.0235181618482,
+                  "width": 118.39603751525283
+                }
+              ],
+              "resolved": true,
+              "hit": true
+            },
+            {
+              "id": 2,
+              "u": 721.9000000000001,
+              "openings": [
+                {
+                  "lane": -109.56961372401565,
+                  "width": 156.25914585543796
+                },
+                {
+                  "lane": 150.43038627598435,
+                  "width": 115.45652814907953
+                }
+              ],
+              "resolved": false,
+              "hit": false
+            }
+          ]
+        },
+        {
+          "frame": 299,
+          "time": 10.000000000000073,
+          "lane": 265,
+          "distance": 1949.3600000000147,
+          "speed": 1,
+          "passed": 1,
+          "hits": 2,
+          "collected": 1,
+          "boostGates": 0,
+          "currentsTaken": 0,
+          "dash": 0,
+          "hinder": 0,
+          "gates": [
+            {
+              "id": 3,
+              "u": 69.4299999999943,
+              "openings": [
+                {
+                  "lane": -3.2974447053857148,
+                  "width": 234.424952480942
+                }
+              ],
+              "resolved": true,
+              "hit": true
+            },
+            {
+              "id": 4,
+              "u": 550.4349999999957,
+              "openings": [
+                {
+                  "lane": -23.205942686181515,
+                  "width": 141.00418716482818
+                }
+              ],
+              "resolved": false,
+              "hit": false
+            },
+            {
+              "id": 5,
+              "u": 1030.25,
+              "openings": [
+                {
+                  "lane": -15.552726841997355,
+                  "width": 221.6986975837499
+                }
+              ],
+              "resolved": false,
+              "hit": false
+            }
+          ]
+        },
+        {
+          "frame": 599,
+          "time": 19.999999999999506,
+          "lane": -265,
+          "distance": 3715.600000000047,
+          "speed": 1,
+          "passed": 1,
+          "hits": 6,
+          "collected": 4,
+          "boostGates": 0,
+          "currentsTaken": 0,
+          "dash": 0,
+          "hinder": 0.2916666666666667,
+          "gates": [
+            {
+              "id": 7,
+              "u": 224.3400000000006,
+              "openings": [
+                {
+                  "lane": -103.63143139984459,
+                  "width": 143.2094189375639
+                },
+                {
+                  "lane": 156.3685686001554,
+                  "width": 135.68832924077287
+                }
+              ],
+              "resolved": true,
+              "hit": true
+            },
+            {
+              "id": 8,
+              "u": 703.6300000000002,
+              "openings": [
+                {
+                  "lane": -121.82690132409334,
+                  "width": 136.1461113234982
+                },
+                {
+                  "lane": 138.17309867590666,
+                  "width": 162.11870455602184
+                }
+              ],
+              "resolved": false,
+              "hit": false
+            }
+          ]
+        },
+        {
+          "frame": 1199,
+          "time": 39.99999999999837,
+          "lane": 150,
+          "distance": 7754.967500000223,
+          "speed": 1,
+          "passed": 4,
+          "hits": 11,
+          "collected": 8,
+          "boostGates": 0,
+          "currentsTaken": 0,
+          "dash": 0,
+          "hinder": 0,
+          "gates": [
+            {
+              "id": 15,
+              "u": 24.420000000000755,
+              "openings": [
+                {
+                  "lane": 46.82510022772476,
+                  "width": 203.51275378186256
+                }
+              ],
+              "resolved": true,
+              "hit": true
+            },
+            {
+              "id": 16,
+              "u": 503.7100000000004,
+              "openings": [
+                {
+                  "lane": -124.36286957003176,
+                  "width": 158.86890135426074
+                },
+                {
+                  "lane": 135.63713042996824,
+                  "width": 123.91042195726186
+                }
+              ],
+              "resolved": false,
+              "hit": false
+            },
+            {
+              "id": 17,
+              "u": 984.75,
+              "openings": [
+                {
+                  "lane": -107.43309774436057,
+                  "width": 135.20010559028015
+                },
+                {
+                  "lane": 152.56690225563943,
+                  "width": 126.77212872728705
+                }
+              ],
+              "resolved": false,
+              "hit": false
+            }
+          ]
+        },
+        {
+          "frame": 1799,
+          "time": 59.999999999997236,
+          "lane": -265,
+          "distance": 11933.10999999971,
+          "speed": 1,
+          "passed": 7,
+          "hits": 17,
+          "collected": 11,
+          "boostGates": 0,
+          "currentsTaken": 1,
+          "dash": 0,
+          "hinder": 0,
+          "gates": [
+            {
+              "id": 24,
+              "u": 165.99500000000114,
+              "openings": [
+                {
+                  "lane": -21.271110114175826,
+                  "width": 135.90338040702045
+                }
+              ],
+              "resolved": true,
+              "hit": true
+            },
+            {
+              "id": 25,
+              "u": 645.4600000000004,
+              "openings": [
+                {
+                  "lane": -173.60514043830335,
+                  "width": 131.34851992782205
+                },
+                {
+                  "lane": 1.3948595616966486,
+                  "width": 129.15199025114998
+                },
+                {
+                  "lane": 176.39485956169665,
+                  "width": 120.69173160241917
+                }
+              ],
+              "resolved": false,
+              "hit": false
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

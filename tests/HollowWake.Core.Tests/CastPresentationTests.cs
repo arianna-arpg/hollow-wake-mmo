@@ -166,7 +166,7 @@ public class CastPresentationTests
     }
 
     [Fact]
-    public void Flame_projectile_contact_keeps_identity_after_the_cast_ends()
+    public void Projectile_contact_keeps_identity_after_the_cast_ends()
     {
         var a = CastingArena.Create();
         a.Begin(a.Slot("ember_bolt"));
@@ -179,7 +179,6 @@ public class CastPresentationTests
         Assert.True(release.Tags.Has("ember"));
         Assert.True(release.Mechanisms.Has("projectile"));
         Assert.True(impact.Mechanisms.Has("projectile"));
-        Assert.Contains("Flame", release.Name);
-        Assert.DoesNotContain("Ember", release.Name);
+        Assert.Contains("Ember", release.Name);
     }
 }

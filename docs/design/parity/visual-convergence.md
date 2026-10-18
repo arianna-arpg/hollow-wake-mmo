@@ -1,6 +1,6 @@
 # Visual convergence from Hollow Wake ARPG
 
-The original ARPG is a convergence requirement, not a disposable reference. Its skills, attacks, supports, defenses and delivery mutations must eventually have equivalent readable presentation in both MMO clients. Preserve reusable visual language and source attribution while expressing it through registries, authoritative events and content. No renderer dispatches on an individual skill, support, Flame or Cleave ID.
+The original ARPG is a convergence requirement, not a disposable reference. Its skills, attacks, supports, defenses and delivery mutations must eventually have equivalent readable presentation in both MMO clients. Preserve reusable visual language and source attribution while expressing it through registries, authoritative events and content. No renderer dispatches on an individual skill, support, Ember or Cleave ID.
 
 ## Source and evidence
 
@@ -15,11 +15,11 @@ The read-only capture tool and evidence live in [experiments/visual-convergence]
 | `src/render/vis/aoeTrace.ts` | Damage warnings use the same resolved shapes and timing as simulation, never approximate bounds from names or decoration. |
 | `src/data/skills.ts`, `src/data/supports.ts`, `src/engine/skills.ts` | Supports, grafts, trees, sequels and triggers change the compiled result. Inherit presentation from that result and its executed outcomes. |
 
-The current Thread palette is authoritative content. Preserve original motif and material semantics where they fit; the old game's five damage colors are not automatically the MMO's nine Thread taxonomy. Flame remains the display name of persisted `ember` content.
+The current Thread palette is authoritative content. Preserve original motif and material semantics where they fit; the old game's five damage colors are not automatically the MMO's nine Thread taxonomy. Ember remains the display name of persisted `ember` content.
 
 ## Coverage by family
 
-[coverage.json](../../../experiments/visual-convergence/coverage.json) is the machine-readable classification. Each family has a status, concrete coverage statement and explicit missing work. It covers original delivery/effect/cast-mode vocabulary, observed skill/support fields and nested variant paths, plus the current MMO effect handler registry. Categories distinguish metadata, intentional absence of decoration, implemented shared cues, partial coverage and pending families. Counts and source hashes belong in dated evidence.
+[coverage.json](../../../tests/fixtures/cast-visuals/coverage.json) is the machine-readable classification. Each family has a status, concrete coverage statement and explicit missing work. It covers original delivery/effect/cast-mode vocabulary, observed skill/support fields and nested variant paths, plus the current MMO effect handler registry. Categories distinguish metadata, intentional absence of decoration, implemented shared cues, partial coverage and pending families. Counts and source hashes belong in dated evidence.
 
 The implemented foundation composes Thread and mechanism layers, uses paired primitive registries, and carries confirmed lifecycle/contact and outcome events. It covers current presets with a validated shared baseline. It does **not** mean the original catalog is migrated or every mechanic's complete visual meaning is present:
 
@@ -39,7 +39,7 @@ These are mechanism-sized obligations. Implementing a family must benefit every 
 4. Prefer existing layers, templates and primitives. A novel family needs a shared adapter and both client implementations; mark only verified portions complete.
 5. Add appropriate conformance scenarios: players/non-player actors, composed supports, interruption/expiry, unknown vocabulary, reduced motion and truthful timing/geometry. Supply captures and relevant budget measurements for new visual families.
 
-CI audits the committed census; it cannot observe future edits in the separate ARPG checkout automatically. Refresh at each migration boundary. Passing classification proves no **unclassified captured mechanism**; it never turns a partial/pending family into implemented coverage. Runtime unknowns fall back safely while content/contract review catches missing families before claiming parity.
+CI audits the committed census; it cannot observe future edits in the separate ARPG checkout automatically. The engineer authoring each migration or visual-family PR owns refreshing the census at that boundary, recording its revision and source-tree fingerprint in the PR, and reviewing the resulting classification changes. The opposite-side reviewer verifies that provenance before accepting a parity claim. A captured fingerprint describes that snapshot only; it does not certify the current external checkout. Passing classification proves no **unclassified captured mechanism**; it never turns a partial/pending family into implemented coverage. Runtime unknowns fall back safely while content/contract review catches missing families before claiming parity.
 
 Run `node experiments/visual-convergence/audit.mjs` from this repository. To refresh, invoke the original repository's installed tsx CLI on `capture-prototype.mjs`, passing that repository root and this experiment's `evidence/prototype-census.json`. No original files are copied back, normalized or modified.
 

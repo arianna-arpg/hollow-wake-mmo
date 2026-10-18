@@ -1,5 +1,5 @@
 # Cosmetic line recipes shared by both clients. All geometry is local X east, Y north, Z up.
-# Internal ember is a persisted Thread key; its player-facing name is Flame (Fire).
+# Thread display names and persisted keys come from threads.yaml.
 kind: ui_cast_visuals
 entries:
   - id: default
@@ -61,7 +61,7 @@ entries:
             opacity: 0.5
             expand: -0.6
             segments: [[-0.5,0,-0.1, -0.25,0,0.1], [0.5,0,-0.1, 0.25,0,0.1]]
-      - id: flame
+      - id: rising_heat
         layer: thread.ember
         match: [ember]
         priority: 10

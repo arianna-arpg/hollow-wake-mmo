@@ -6,7 +6,7 @@ const here = fileURLToPath(new URL('.', import.meta.url));
 const read = name => JSON.parse(readFileSync(resolve(here, name), 'utf8'));
 export const loadAudit = () => {
   const census = read('evidence/prototype-census.json');
-  return { census, coverage: read('coverage.json'),
+  return { census, coverage: read('../../tests/fixtures/cast-visuals/coverage.json'),
     skills: census.skills_files.flatMap(file => read(`evidence/${file}`)), supports: read(`evidence/${census.supports_file}`) };
 };
 

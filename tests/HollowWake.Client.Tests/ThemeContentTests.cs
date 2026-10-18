@@ -18,12 +18,12 @@ public class ThemeContentTests
         Raw.Value.TryGetValue(kind, out var entries) ? entries.Values.Select(r => r.Object) : Enumerable.Empty<JsonObject>();
 
     [Fact]
-    public void Flame_display_name_and_modifier_scope_keep_the_persisted_key()
+    public void Ember_display_name_and_modifier_scope_keep_the_persisted_key()
     {
         var names = ContentNames.Load(RawOf);
-        Assert.Equal("Flame", names.ThreadName("ember"));
+        Assert.Equal("Ember", names.ThreadName("ember"));
         var modifier = JsonNode.Parse("{\"attribute\":\"damage\",\"form\":\"increased\",\"value\":0.1,\"scope\":[\"ember\"]}")!.AsObject();
-        Assert.Contains("(Flame)", ModifierText.Line(modifier, names));
+        Assert.Contains("(Ember)", ModifierText.Line(modifier, names));
     }
 
     public static string FindContentDir()

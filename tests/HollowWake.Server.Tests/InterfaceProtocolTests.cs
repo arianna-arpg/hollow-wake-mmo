@@ -44,7 +44,7 @@ public partial class InterfaceProtocolTests
     /// <summary>One sample of every message, every optional field set.</summary>
     public static IEnumerable<Message> Samples()
     {
-        yield return new CastCueMsg(9, 7, "release", 1, 2, "ember_bolt", "Flame Bolt", "cast",
+        yield return new CastCueMsg(9, 7, "release", 1, 2, "ember_bolt", "Ember Bolt", "cast",
             new List<string> { "ember", "spell" }, 12, 11, 1, 1, 2, 3, 4, 5, 6, true, "confirmed");
         var item = Card(9);
         var quest = new QuestInfo("q", "Quest", "active", new List<string> { "Slay" }, new List<int> { 1 }, new List<int> { 3 }, "quartermaster", 2);

@@ -92,6 +92,24 @@ public partial class ClientWorld : Node3D
     /// <summary>Chunks with a mesh in the scene.</summary>
     public int BuiltChunks => _chunkNodes.Count;
 
+    public (int Completed, int Total) Readiness(double x, double y, int radius)
+    {
+        var total = (radius * 2 + 1) * (radius * 2 + 1);
+        if (_terrain is null) return (0, total);
+        var center = _terrain.Layout.ChunkOf(x, y);
+        var completed = 0;
+        for (var dy = -radius; dy <= radius; dy++)
+        for (var dx = -radius; dx <= radius; dx++)
+            if (_chunkNodes.ContainsKey(new ChunkCoord(center.X + dx, center.Y + dy))) completed++;
+        return (completed, total);
+    }
+
+    public void RetryPreparation()
+    {
+        _failed.Clear();
+        _lastCenter = null;
+    }
+
     public ClientWorld(ContentRegistry content)
     {
         _content = content;

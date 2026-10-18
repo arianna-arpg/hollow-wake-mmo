@@ -42,7 +42,7 @@ People: a given name of two to four syllables, soft consonants, open vowels, and
 
 Given names: Amadee, Aurelis, Benoic, Caelis, Celandine, Elouan, Ferrant, Isaure, Lucan, Marisol, Mathis, Noemie, Ondrea, Oriane, Perrin, Serapha, Severin, Taelin, Vesper, Ysabeau.
 
-House names, the nine of the Concord: Aurevant (Lumen), Belcastre (Mind; struck from the Lanterns, never borne by a living person), Castellane (Stone), Durenne (Flame), Mirevault (Tide), Solenne (Bloom), Valcoure (Storm; survives only as village names), Orriaux (Umbra), Quillane (Void; the quiet house, gone).
+House names, the nine of the Concord: Aurevant (Lumen), Belcastre (Mind; struck from the Lanterns, never borne by a living person), Castellane (Stone), Durenne (Ember), Mirevault (Tide), Solenne (Bloom), Valcoure (Storm; survives only as village names), Orriaux (Umbra), Quillane (Void; the quiet house, gone).
 
 House names, lesser: Corbenne, Damiraux, Estrevant, Maurenne, Rosvault, Sallenge, Verrine.
 
@@ -118,7 +118,7 @@ Mending works are named for what they do: the Last Stitch, the Hospice, the watc
 
 A Weave's common name is one plain word, or two run together, and names what the Weave does or looks like. No "of", no numbers, no adjectives on their own. The Thread is usually audible in the name but not always. Formal Ilvarene names are given above.
 
-Flame: Kindle, Emberlash, Ashfall, Cinderedge, Hearthwall, Brand, Flare, Scorch, Kilnbreath, Emberstep.
+Ember: Kindle, Emberlash, Ashfall, Cinderedge, Hearthwall, Brand, Flare, Scorch, Kilnbreath, Emberstep.
 
 Tide: Undertow, Hoarfrost, Coldedge, Tidewall, Ebb, Riptide, Snowfall, Stillwater, Longswell, Brine.
 
@@ -148,7 +148,7 @@ Ordinary items are material and noun: an ash spear, a tin lamp.
 
 Rewoven items carry the Thread they were wrought in: emberwrought, tidewrought, stormwrought, stonewrought, bloomwrought, duskwrought (for Umbra), lanternwrought (for Lumen), hollowwrought (for Void), silverwrought (for Mind). An item with room in its Pattern for Glyphs is loose-wove; one with none is close-wove.
 
-Materials from the Loom: floss and twine by Thread (Flame floss, Tide twine), Burl floss for the rare kind, fray-floss for what the Loosed bring out of the east. Concord materials: lantern-steel, vault-glass, roadstone.
+Materials from the Loom: floss and twine by Thread (Ember floss, Tide twine), Burl floss for the rare kind, fray-floss for what the Loosed bring out of the east. Concord materials: lantern-steel, vault-glass, roadstone.
 
 Famous items are named by their culture's rule above. Wherever possible a named item has a story that fits in one sentence.
 

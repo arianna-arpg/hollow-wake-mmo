@@ -36,9 +36,8 @@ describe('the interface content', () => {
     const names = loadNames(kinds);
     expect(names.attributeById.get('might')?.name).toBe('Might');
     expect(names.threads.some((t) => t.id === 'ember')).toBe(true);
-    expect(names.threads.find(t => t.id === 'ember')?.name).toBe('Flame');
-    expect(names.passives.flatMap(p => p.lines).some(l => l.includes('(Flame)'))).toBe(true);
-    expect(names.passives.flatMap(p => p.lines).some(l => l.includes('(Ember)'))).toBe(false);
+    expect(names.threads.find(t => t.id === 'ember')?.name).toBe('Ember');
+    expect(names.passives.flatMap(p => p.lines).some(l => l.includes('(Ember)'))).toBe(true);
     expect(names.slots.some((s) => s.id === 'main_hand')).toBe(true);
     expect(names.threadOfStatus.get('burning')).toBe('ember');
     const ui = loadUi(kinds);

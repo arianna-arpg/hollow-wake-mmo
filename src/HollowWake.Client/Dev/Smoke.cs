@@ -225,7 +225,7 @@ public partial class Smoke : Node
         await TradeWithAVendor();
         await OptionsSteps();
 
-        if (_args.Contains("--flame")) await FlameSequence();
+        if (_args.Contains("--cast-cues")) await CastCueSequence();
 
         // Weaves: walk to the nearest hob, hover it and press 1 to 4 until a combat line shows.
         var hob = Nearest(e => e.State.Pattern is not null && e.State.Pattern.StartsWith("hob", StringComparison.Ordinal) && !e.State.Dead);
@@ -270,7 +270,7 @@ public partial class Smoke : Node
         return i >= 0 && i + 1 < _args.Length ? _args[i + 1] : null;
     }
 
-    private async Task FlameSequence()
+    private async Task CastCueSequence()
     {
         var phases = new HashSet<string>();
         // Real moving targets can evade a projectile. Retry ordinary input; never synthesize a contact.
@@ -286,12 +286,12 @@ public partial class Smoke : Node
             {
                 foreach (var cue in _main.CastVisuals.Timeline.Active.ToArray())
                 {
-                    if (cue.Event.Source == Self?.Key && phases.Add(cue.Phase)) await Shot($"flame_{cue.Phase}.png");
+                    if (cue.Event.Source == Self?.Key && phases.Add(cue.Phase)) await Shot($"cast_cue_{cue.Phase}.png");
                 }
                 await Frame();
             }
         }
-        Record("Flame presentation", phases.Contains("start") && phases.Contains("release") && phases.Contains("impact"),
+        Record("Cast cue presentation", phases.Contains("start") && phases.Contains("release") && phases.Contains("impact"),
             $"phases={string.Join(',', phases)}; received={_main.CastCuesReceived}");
     }
 

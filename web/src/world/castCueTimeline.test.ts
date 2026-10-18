@@ -9,7 +9,7 @@ import { castPrimitive } from './castVisualPrimitives';
 
 const config = cueSettings(bundledKinds().get('ui_cast_visuals')?.[0]);
 const cue = (phase: string, sequence: number, extra: Partial<CastCueMsg> = {}): CastCueMsg => ({
-  t: 'cast_cue', sequence, cast_id: 7, phase, source: 1, target: 2, weave: 'ember_bolt', name: 'Flame Bolt', mode: 'cast',
+  t: 'cast_cue', sequence, cast_id: 7, phase, source: 1, target: 2, weave: 'ember_bolt', name: 'Ember Bolt', mode: 'cast',
   tags: ['spell', 'ember'], server_time: 10, started_at: 9, duration: 2, x: 1, y: 2, z: 3, aim_x: 4, aim_y: 5, aim_z: 3,
   fired: false, outcome: false, reason: '', ...extra,
 });
@@ -60,7 +60,7 @@ describe('confirmed cast presentation', () => {
     expect(t.active[0].color).toBe(expected.color);
     expect(t.active[0].style).toBe(expected.phases[example.expected_phase]);
   });
-  it('selects Flame by tags and neutral fallback without weave-name switches', () => {
+  it('selects Ember by tags and neutral fallback without weave-name switches', () => {
     const t = new CastCueTimeline(config);
     t.receive(cue('start', 1, { weave: 'a_modded_spell', name: 'Custom' }), 10);
     expect(t.active[0].color).toBe('#ffb45c');

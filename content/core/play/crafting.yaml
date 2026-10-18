@@ -27,7 +27,7 @@ entries:
     quality: "score"
     xp: "25"
   - id: ember_dagger
-    name: Flame Dagger
+    name: Ember Dagger
     station: [smithing]
     level: 4
     inputs: [ { item: iron_ore, count: 2 }, { item: ember_bloom, count: 2 } ]

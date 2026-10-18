@@ -61,7 +61,7 @@ entries:
 
   - id: emberbind
     name: Emberbind
-    description: Half of a weapon blow burns as Flame.
+    description: Half of a weapon blow burns as Ember.
     requires: [attack]
     adds_tags: [ember]
     color: "#e8622a"

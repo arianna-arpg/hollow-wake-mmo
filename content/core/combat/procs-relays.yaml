@@ -4,8 +4,8 @@
 kind: procs
 entries:
   - id: ember_relay
-    name: Flame Relay
-    description: An Flame spell primes the next melee blow.
+    name: Ember Relay
+    description: An Ember spell primes the next melee blow.
     on: cast
     tags: [ember, spell]
     target: owner
@@ -15,7 +15,7 @@ entries:
 kind: statuses
 entries:
   - id: ember_primed
-    name: Flame Primed
+    name: Ember Primed
     description: The next melee blow carries the last spell's fire, and sets its target alight.
     tags: [buff, ember]
     beneficial: true

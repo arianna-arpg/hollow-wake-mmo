@@ -1,5 +1,7 @@
 # Launcher and releases
 
+Application and installer artwork comes from the canonical Hollow Wake assets through `scripts/sync-branding.mjs`; see [loading.md](loading.md). The launcher delivers the interactive Crossing with the client, and continues to report its own actual download/install work.
+
 The launcher is how players get, update and start the game. It is an Electron app in `launcher/` that installs the Godot client from this repository's GitHub Releases and hands it a server address. It holds no game logic and never talks to the game server: it passes the address to the client and steps aside.
 
 ## What a player sees
@@ -71,9 +73,9 @@ git push origin v0.2.0
 
 electron-updater checks the repository's latest stable release a few seconds after start, whatever the game channel: pre-releases are never offered and the launcher never downgrades. The update downloads in the background, is verified against the sha512 in `latest.yml` or `latest-linux.yml`, and installs on Restart to update (offered in the corner) or when the launcher quits. It works for the NSIS install on Windows and the AppImage on Linux; a development run (`npm start`) says it does not self-update.
 
-## Private repositories
+## Tokens and private copies
 
-While the repository is private, GitHub answers 404 to a request without a token, for the feed, the news and electron-updater alike. The launcher tells that case apart from an empty feed (it asks for the repository itself) and says to add a token. A token comes from `HOLLOWWAKE_GITHUB_TOKEN`, which wins, or from the Settings field, where it is stored encrypted with the system key store (stored plainly, and said so, where none exists). It is sent only to the GitHub API host: releases are listed there, assets and the news are fetched through the API endpoints (whose redirects to storage carry no token), and electron-updater switches to its private GitHub provider. A fine-grained token with read access to the repository's contents is enough. With the repository public, no token is needed.
+The repository is public, so the feed, the news and electron-updater need no token: a player installs and updates with nothing to set up. The token support stays for a private fork or mirror, where GitHub answers 404 to a request without a token, for the feed, the news and electron-updater alike. The launcher tells that case apart from an empty feed (it asks for the repository itself) and says to add a token. A token comes from `HOLLOWWAKE_GITHUB_TOKEN`, which wins, or from the Settings field, where it is stored encrypted with the system key store (stored plainly, and said so, where none exists). It is sent only to the GitHub API host: releases are listed there, assets and the news are fetched through the API endpoints (whose redirects to storage carry no token), and electron-updater switches to its private GitHub provider. A fine-grained token with read access to the repository's contents is enough.
 
 ## Where files live
 

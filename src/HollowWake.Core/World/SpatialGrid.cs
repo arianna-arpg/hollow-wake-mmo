@@ -120,13 +120,16 @@ public sealed class SpatialGrid
         return false;
     }
 
+    /// <summary>The default vertical band used by ground-plane radius queries.</summary>
+    public const float DefaultHeightTolerance = 4f;
+
     /// <summary>
     /// Entities within radius of a point, measured on the ground plane with a height tolerance.
     /// Enumerates the grid in place without copying or allocating. Moving an entity within its cell
     /// while enumerating is fine; a caller that adds or removes entities, or moves them between cells,
     /// must materialize the results first (for example with <c>ToList()</c>), or the enumeration throws.
     /// </summary>
-    public Query Within(Vector3 center, float radius, float heightTolerance = 4f) => new(this, center, radius, heightTolerance);
+    public Query Within(Vector3 center, float radius, float heightTolerance = DefaultHeightTolerance) => new(this, center, radius, heightTolerance);
 
     public IEnumerable<Entity> All => _where.Keys;
 

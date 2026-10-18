@@ -540,7 +540,7 @@ async function script() {
   await optionsSteps();
 
   // Weaves: walk up to the nearest hob, hover it and press the attack slots until the player's own hit lands.
-  if (flag('flame')) {
+  if (flag('cast-cues')) {
     const phases = new Set();
     for (let attempt = 0; attempt < 3 && !phases.has('impact'); attempt++) {
       const target = await nearest(e => typeof e.pattern === 'string' && e.pattern.startsWith('hob') && !e.dead);
@@ -553,12 +553,12 @@ async function script() {
         const cues = await hw(() => window.hollowWake.castCues().filter(c => String(c.source) === String(window.hollowWake.self()?.key)));
         for (const cue of cues) if (!phases.has(cue.phase)) {
           phases.add(cue.phase);
-          await page.screenshot({ path: join(shots, `flame_${cue.phase}.png`) });
+          await page.screenshot({ path: join(shots, `cast_cue_${cue.phase}.png`) });
         }
         await sleep(15);
       }
     }
-    record('Flame presentation', ['start', 'release', 'impact'].every(p => phases.has(p)), `phases: ${[...phases].join(', ')}`);
+    record('Cast cue presentation', ['start', 'release', 'impact'].every(p => phases.has(p)), `phases: ${[...phases].join(', ')}`);
   }
   // Hobs wander and fight back, so each try walks up again first.
   const isHob = (e) => typeof e.pattern === 'string' && e.pattern.startsWith('hob') && !e.dead;

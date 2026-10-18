@@ -24,13 +24,13 @@ No faith in Aureth worships the Loomwright as a god who listens. The common wisd
 
 ## The Nine Threads
 
-There are nine Threads, and every Pattern in the world is made of some mixture of them. A stone is almost all Stone with a little Flame remembered from the fire that made it. A person is all nine in a proportion that is theirs alone. The Threads are not gods, though folk-tales treat them like people, and they are not opposed pairs, though some sit more easily together than others. Each has a character, a way it is felt by people who cannot see it, places and people it gathers, and a way of going wrong when it frays.
+There are nine Threads, and every Pattern in the world is made of some mixture of them. A stone is almost all Stone with a little Ember remembered from the fire that made it. A person is all nine in a proportion that is theirs alone. The Threads are not gods, though folk-tales treat them like people, and they are not opposed pairs, though some sit more easily together than others. Each has a character, a way it is felt by people who cannot see it, places and people it gathers, and a way of going wrong when it frays.
 
 A Weaver sees the Threads as a kind of light with a grain to it, each with its own colour and movement. The colours given below are the ones commonly reported; they are a convention for artists, not a rule of the world.
 
-### Flame
+### Ember
 
-Fire, heat, hunger, the moment of catching. Flame is the Thread of change by consumption: whatever it touches becomes something else and gives off warmth in the going. It is seen as red gold with a rising grain.
+Fire, heat, hunger, the moment of catching. Ember is the Thread of change by consumption: whatever it touches becomes something else and gives off warmth in the going. It is seen as red gold with a rising grain.
 
 How it is felt: the hearth, the smell of smoke, the hour when bread comes out of the oven, the sting of a fever, the sudden courage that arrives when there is no time to be afraid.
 
@@ -38,7 +38,7 @@ Who and what it gathers: smiths, cooks, soldiers, kiln-keepers, the restless and
 
 When it frays: ashlight. Fire that is cold, gives no warmth, consumes nothing, and spreads. Cinders that fall upward. Hearths that go out and cannot be lit by any means. People who are burnt out in the plain sense, with nothing left in them to kindle, and others who burn too fast and cannot be slowed.
 
-Saying: Flame asks to be fed.
+Saying: Ember asks to be fed.
 
 ### Tide
 
@@ -211,11 +211,11 @@ Landmarks are found, explored, mapped, fought over and sometimes lived in. Many 
 
 Most people in Aureth are not Weavers and will never see a Thread. They are not ignorant of the Loom; they live in it. A farmer knows the grain of a field the way a Weaver knows its Pattern, and gets the same harvest. A fisherwoman knows which currents return. A mason knows which stone remembers.
 
-Close folk speak of the Threads constantly and plainly. A hot-tempered child has too much Flame in her. A house that never gets warm is Tide-sick. A man who will not change his mind is all Stone, and a woman who will not stop talking is Storm's own. Everyone knows the nine and the order they are sung in, because the year is counted by them and children learn the count before they learn to read:
+Close folk speak of the Threads constantly and plainly. A hot-tempered child has too much Ember in her. A house that never gets warm is Tide-sick. A man who will not change his mind is all Stone, and a woman who will not stop talking is Storm's own. Everyone knows the nine and the order they are sung in, because the year is counted by them and children learn the count before they learn to read:
 
 Lumen first to light the year,
 Tide comes back and Storm comes near,
-Bloom to grow and Flame burn,
+Bloom to grow and Ember burn,
 Stone to stand and Umbra turn,
 Mind to count what Void unmakes,
 and five loose days the Selvage takes.

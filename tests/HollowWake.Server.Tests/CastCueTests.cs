@@ -38,7 +38,7 @@ public class CastCueTests
         server.Step();
         var welcome = Assert.Single(client.Drain().OfType<WelcomeMsg>());
         Assert.Equal(optedIn, welcome.Features?.Contains(ProtocolInfo.CastCuesFeature) == true);
-        client.Send(new CreateCharacterMsg("Flame", "kindler"));
+        client.Send(new CreateCharacterMsg("Ember", "kindler"));
         server.Step();
         var character = Assert.Single(Assert.Single(client.Drain().OfType<CharacterListMsg>()).Characters);
         client.Send(new SelectCharacterMsg(character.Id));

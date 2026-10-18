@@ -98,6 +98,7 @@ export class LoginPanel {
 
     this.root = el('div', { class: 'login', id: 'login' },
       el('div', { class: 'login-panel' },
+        el('img', { src: './icon.svg', alt: 'Hollow Wake insignia', width: '48', height: '48' }),
         el('h1', { text: 'Hollow Wake MMO' }),
         el('p', { class: 'tagline', text: 'the Weftmarches await' }),
         form,
