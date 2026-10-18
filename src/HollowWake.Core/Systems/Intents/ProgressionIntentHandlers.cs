@@ -3,15 +3,15 @@ using HollowWake.Core.Progression;
 
 namespace HollowWake.Core.Systems.Intents;
 
-/// <summary>Allocating passives (with an option on choice nodes) and refunding them at a font.</summary>
+/// <summary>Allocating passives (with an option on choice nodes) and refunding them at a font: a character's progression, so players only.</summary>
 public static class ProgressionIntentHandlers
 {
     public static void Register(IntentHandlers handlers)
     {
-        handlers.Register<AllocatePassiveIntent>(AllocatePassive);
-        handlers.Register<RefundPassiveIntent>(RefundPassive);
-        handlers.Register<BindGraftIntent>(BindGraft);
-        handlers.Register<BuyTreeNodeIntent>(BuyTreeNode);
+        handlers.Register<AllocatePassiveIntent>(AllocatePassive, playerOnly: true);
+        handlers.Register<RefundPassiveIntent>(RefundPassive, playerOnly: true);
+        handlers.Register<BindGraftIntent>(BindGraft, playerOnly: true);
+        handlers.Register<BuyTreeNodeIntent>(BuyTreeNode, playerOnly: true);
     }
 
     private static void BuyTreeNode(in IntentContext ctx, BuyTreeNodeIntent b)
