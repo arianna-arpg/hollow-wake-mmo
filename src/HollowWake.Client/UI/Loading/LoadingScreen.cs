@@ -92,7 +92,7 @@ public partial class LoadingScreen : CanvasLayer
         direction ??= kind == "entry" ? "down" : rng.Next() < .5 ? "right" : "left";
         Run = _activities[Spec.Activity](direction, seed);
         _pointer = null; _padQuarantined = true;
-        _padConfirm = Input.GetConnectedJoypads().Any(p => Input.IsJoyButtonPressed(p, JoyButton.A));
+        _padConfirm = !InputSetup.IgnorePads && Input.GetConnectedJoypads().Any(p => Input.IsJoyButtonPressed(p, JoyButton.A));
         ClearWorldInput();
         var lease = Session.Begin(label, cancel);
         _root.Visible = true; _root.GrabFocus();
@@ -112,6 +112,7 @@ public partial class LoadingScreen : CanvasLayer
     }
     private bool PadNeutral()
     {
+        if (InputSetup.IgnorePads) return true;
         foreach (var pad in Input.GetConnectedJoypads())
         {
             for (var axis = 0; axis < (int)JoyAxis.Max; axis++)
@@ -196,7 +197,7 @@ public partial class LoadingScreen : CanvasLayer
         var positive = down ? _positiveX : _positiveY;
         foreach (var k in negative.Concat(positive)) if (Input.IsPhysicalKeyPressed(k)) _held.Add(k);
         double axis = (positive.Any(Input.IsPhysicalKeyPressed) ? 1 : 0) - (negative.Any(Input.IsPhysicalKeyPressed) ? 1 : 0);
-        var pads = Input.GetConnectedJoypads();
+        var pads = InputSetup.IgnorePads ? new Godot.Collections.Array<int>() : Input.GetConnectedJoypads();
         if (pads.Count > 0)
         {
             var pad = pads[0];
