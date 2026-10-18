@@ -75,4 +75,12 @@ Visual inspection is not fully passing: ordinary isometric world drawing works, 
 
 Performance is pending the coordinator's assigned quiet window. No benchmark was started while other owners' comparison runs were reserved. Claude rereview, shared dependency approval and the shared visual fix remain open; do not merge this checkpoint.
 
+## Shared card-renderer correction consumed
+
+Cherry-picked the owner-published standalone 30f6c91 as 4d482d5, preserving attribution. It has no Gnoll/Beastkin content dependency. This consumes the shared renderer fix instead of adding a second implementation. The imported review record documents viewport/scissor isolation, physical-pixel atlas extents and renderer restoration on success/failure.
+
+On this Kobold tree, all 285 browser tests / 36 files and the production build pass. Fresh private browser run-lWMcHU passes 31/31, including the new nonblank-world assertion, with cleanupErrors empty. The card screenshot's dominant color fraction is 18.55% across 172 color bins; direct inspection confirms terrain and bodies. Retain both integration/card-world-missing.png and integration/card-world-restored.png. This closes the observed browser blank-world defect; it is not a general art-quality or native-pixel certification.
+
+The change only touches browser rendering/tests and evidence. The previous 2249 core / 48 server / 124 native-client tests and native26/26 smoke still apply to the unchanged simulation/native tree; no redundant native run is claimed. A fresh Release Tools build is clean. Performance still awaits the coordinator's explicit window. Shared reviews and #20 release-policy integration remain open.
+
 Acknowledged by: pending Claude rereview.

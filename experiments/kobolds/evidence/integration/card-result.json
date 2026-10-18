@@ -1,0 +1,29 @@
+{
+  "started": "2026-10-18T18:35:23.264Z",
+  "root": "C:\\Users\\John\\.codex\\worktrees\\kobold-scaleclans\\MMOARPG",
+  "directory": "C:\\Users\\John\\.codex\\worktrees\\kobold-scaleclans\\MMOARPG\\experiments\\kobolds\\artifacts\\card-smoke\\run-lWMcHU",
+  "suite": "web",
+  "status": "passed",
+  "stages": [
+    {
+      "name": "smoke-web",
+      "status": "passed",
+      "started": "2026-10-18T18:35:25.800Z",
+      "code": 0,
+      "signal": null,
+      "passed": 31,
+      "total": 31,
+      "skipped": [],
+      "finished": "2026-10-18T18:36:47.640Z"
+    }
+  ],
+  "nativeRendering": "not covered by headless mode",
+  "server": {
+    "tcp": 50215,
+    "url": "http://127.0.0.1:50216",
+    "name": "harness-run-lWMcHU",
+    "data": "C:\\Users\\John\\.codex\\worktrees\\kobold-scaleclans\\MMOARPG\\experiments\\kobolds\\artifacts\\card-smoke\\run-lWMcHU\\data"
+  },
+  "cleanupErrors": [],
+  "finished": "2026-10-18T18:36:48.492Z"
+}
