@@ -49,6 +49,7 @@ internal static class InterfaceKinds
     public static void Register()
     {
         LoadingKinds.Register();
+        AbilityIconKinds.Register();
         // Page gates and pip sources read the hero; the page scope adds the unspent points of each currency.
         CastVisualKinds.Register();
         CastForecastKinds.Register();
@@ -215,7 +216,6 @@ internal static class InterfaceKinds
         }
         Mapped(d.Pools, "pools");
         Mapped(d.Statuses, "statuses");
-        Mapped(d.Looks, "looks");
         Mapped(d.Slots, "slots");
         if (!d.Icons.ContainsKey(d.Fallback))
         {

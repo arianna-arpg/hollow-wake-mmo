@@ -1,0 +1,2 @@
+Imported 388 reachable entries from 948 skill faces and 457 support faces from 5bf91b865dbce821780a6c1611e9d628af0c50f1.
+PASS: catalog regeneration is byte-identical; authored bindings and style unchanged.

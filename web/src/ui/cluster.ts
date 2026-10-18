@@ -1,6 +1,7 @@
 import './cluster.css';
 import { clear, el } from './dom';
-import { lookOf, weaveIcon, type UiOrb } from './logic/content';
+import { lookOf, type UiOrb } from './logic/content';
+import { seatArt } from './abilityArt';
 import { seatEmpty, seatReadyIn, type HeroState, type Seat } from './logic/heroState';
 import { clusterLayout, ringRadius, rimRadius, type Box, type ClusterLayout } from './logic/layout';
 import { badgeText, trayBadge, traySignature, type TrayRow } from './logic/menu';
@@ -471,7 +472,7 @@ class WeaveBarView {
     }
     const info = seat.info;
     return [seat.key, seat.name, seat.icon, seat.threads.join(','), seat.dormant, Object.entries(seat.costs).map(([k, v]) => `${k}${Math.round(v)}`).join(','),
-      `${seat.uses}/${seat.usesMax}`, info?.stacks, seat.converted?.icon, seat.converted?.label, seat.meta?.label, info?.active, casting, label, size, info?.level, info?.preview.map((p) => p.text).join(';')].join('|');
+      `${seat.uses}/${seat.usesMax}`, info?.form, info?.preset, info?.stacks, seat.converted?.icon, seat.converted?.weave, seat.converted?.form, seat.converted?.label, seat.meta?.label, info?.active, casting, label, size, info?.level, info?.preview.map((p) => p.text).join(';')].join('|');
   }
 
   private build(parts: SlotParts, seat: Seat | undefined, index: number, casting: boolean, label: string, size: number): void {
@@ -494,10 +495,9 @@ class WeaveBarView {
     root.classList.toggle('dormant', dormant);
     root.classList.toggle('active', active);
     const face = seat.converted;
-    const glyph = weaveIcon(s.icons, face?.icon ?? seat.icon, seat.key);
     const tint = dormant ? s.state('dormant', '#777777') : seat.threads.length > 0 ? s.thread(seat.threads[0]) : s.surface('label');
     root.style.setProperty('--tint', css(tint));
-    root.append(el('span', { class: 'slot-halo' }), s.icon(glyph, Math.round(size * 0.62), 'slot-glyph'));
+    root.append(el('span', { class: 'slot-halo' }), seatArt(s, seat, Math.round(size * 0.62), 'slot-glyph'));
     if (dormant) {
       root.append(el('span', { class: 'slot-hatch' }));
     }

@@ -31,7 +31,7 @@ public partial class InterfaceProtocolTests
         Sockets = new List<SocketInfo> { new(0) { Stone = new ItemInfo(uid + 1, "vestige", "Vestige", "common", 1, 1, null, new List<string>(), new Dictionary<string, double>()) }, new(1) },
         Requirements = new List<RequirementInfo> { new("Might 14", true), new("Level 3", false) },
         Glyph = new ItemGlyphInfo("forking", "Forking", 2) { Rows = new List<string> { "+1 fork" } },
-        Form = new ItemFormInfo("bolt", "Bolt", 3, 2),
+        Form = new ItemFormInfo("ember_bolt", "Ember Bolt", 3, 2) { Weave = "ember_bolt" },
         Fits = new List<StoneFitInfo> { new(0, "fits"), new(1, "misfit") { Reason = "needs projectile" } },
     };
 
@@ -170,8 +170,9 @@ public partial class InterfaceProtocolTests
                 Uses = 1,
                 UsesMax = 3,
                 Stacks = 2,
-                Converted = new FaceInfo("Reload") { Icon = "reload" },
-                Meta = new FaceInfo("Detonate"),
+                Preset = "ember_bolt",
+                Converted = new FaceInfo("Reload") { Icon = "reload", Weave = "quiver_restring", Form = "restring" },
+                Meta = new FaceInfo("Detonate") { Weave = "ember_blast", Form = "blast" },
                 Active = true,
                 Tree = new List<string> { "swelling", "swelling", "quick_pour" },
                 DormantNodes = new List<DormantNodeInfo> { new("broad_stream", "excluded by quick_pour") },
