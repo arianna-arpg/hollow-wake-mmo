@@ -226,8 +226,85 @@ public sealed record TraceBaseline(int Seeds, double Seconds, IReadOnlyDictionar
 /// </summary>
 public static class Tournament
 {
-    private static readonly Vector3 SpawnA = new(10, 10, 0);
-    private static readonly Vector3 SpawnB = new(14, 10, 0);
+    /// <summary>How far apart the two bodies spawn, in metres.</summary>
+    private const float SpawnDistance = 4;
+
+    /// <summary>What a tournament's seed text opens with: <c>tournament:a:b:i</c>.</summary>
+    private const string SeedPrefix = "tournament";
+
+    /// <summary>
+    /// The seed text of a pairing's fight <paramref name="index"/>, <c>tournament:a:b:i</c>: its arena is seeded with
+    /// the text's hash, and <c>hollowwake fight a b --seed</c> with the same text stages the same fight.
+    /// </summary>
+    public static string SeedText(Pairing pairing, int index) => FormattableString.Invariant($"{SeedPrefix}:{pairing.A}:{pairing.B}:{index}");
+
+    /// <summary>Reads a seed text <see cref="SeedText"/> wrote back to its pairing and index; false for any other text.</summary>
+    public static bool TryReadSeed(string text, out Pairing pairing, out int index)
+    {
+        pairing = new Pairing("", "");
+        index = -1;
+        var parts = text.Split(':');
+        if (parts.Length != 4 || parts[0] != SeedPrefix || parts[1].Length == 0 || parts[2].Length == 0
+            || !int.TryParse(parts[3], NumberStyles.None, CultureInfo.InvariantCulture, out var read))
+        {
+            return false;
+        }
+        pairing = new Pairing(parts[1], parts[2]);
+        index = read;
+        return true;
+    }
+
+    /// <summary>
+    /// Whether b spawns before a in a pairing's fight <paramref name="index"/>: the side spawned first is created
+    /// first and so thinks and acts first on every tick the two share, so it alternates, a on even indices and b on
+    /// odd ones, and neither side is first in every fight.
+    /// </summary>
+    public static bool BFirst(int index) => index % 2 == 1;
+
+    /// <summary>
+    /// Spawns a pairing's two bodies for a duel: <see cref="SpawnDistance"/> apart on the east-west line through the
+    /// arena's origin, mirrored about it with a to the west, under two hostile factions added to the registry only
+    /// where it lacks them; b first when <paramref name="bFirst"/> says so. Each body is then turned toward the
+    /// other, so neither starts the fight facing away. Throws when a pattern is unknown.
+    /// </summary>
+    public static (Entity A, Entity B) Spawn(Simulation sim, Pairing pairing, bool bFirst)
+    {
+        var content = sim.Content;
+        // The two sides fight under the same two factions the fight tool and the tests use, added only where the
+        // registry lacks them, so a registry shared with other work is not written on every fight.
+        if (!content.Has<FactionDef>("red"))
+        {
+            content.With(new FactionDef { Id = "red", Relations = { ["blue"] = Stance.Hostile } });
+        }
+        if (!content.Has<FactionDef>("blue"))
+        {
+            content.With(new FactionDef { Id = "blue", Relations = { ["red"] = Stance.Hostile } });
+        }
+        var factory = sim.Service<PatternFactory>();
+        var west = new Vector3(-SpawnDistance / 2, 0, 0);
+        var east = new Vector3(SpawnDistance / 2, 0, 0);
+        Entity a;
+        Entity b;
+        if (bFirst)
+        {
+            b = factory.Spawn(sim, pairing.B, east, new SpawnOptions { Faction = "blue" });
+            a = factory.Spawn(sim, pairing.A, west, new SpawnOptions { Faction = "red" });
+        }
+        else
+        {
+            a = factory.Spawn(sim, pairing.A, west, new SpawnOptions { Faction = "red" });
+            b = factory.Spawn(sim, pairing.B, east, new SpawnOptions { Faction = "blue" });
+        }
+        if (a.IsNone || b.IsNone)
+        {
+            throw new InvalidOperationException($"a pairing names an unknown pattern: {pairing.A} or {pairing.B}.");
+        }
+        var ta = sim.World.Get<Transform>(a)!;
+        var tb = sim.World.Get<Transform>(b)!;
+        ta.Face(tb.Position);
+        tb.Face(ta.Position);
+        return (a, b);
+    }
 
     /// <summary>Fights every pairing <paramref name="seeds"/> times, after checking every pattern they name exists, so a bad pairing fails before any fight.</summary>
     public static TournamentReport Run(ContentRegistry content, IReadOnlyList<Pairing> pairings, int seeds, double seconds, bool checkBands)
@@ -278,33 +355,20 @@ public static class Tournament
     private static string Hex(ulong hash) => hash.ToString("x16", CultureInfo.InvariantCulture);
 
     /// <summary>
-    /// One fight of a pairing: index <paramref name="index"/> seeds it, so a pairing's fights differ and repeat. The
-    /// fight's <c>Hash</c> is the FNV-1a hash (<see cref="Rng.Hash64"/>) of its ordered event log, one line per spawn,
-    /// despawn, cast, hit, status applied and death, and a last line for the end; see <see cref="Trace"/>.
+    /// One fight of a pairing: index <paramref name="index"/> seeds it (<see cref="SeedText"/>) and decides which
+    /// side spawns first (<see cref="BFirst"/>), so a pairing's fights differ and repeat. The fight's <c>Hash</c> is
+    /// the FNV-1a hash (<see cref="Rng.Hash64"/>) of its ordered event log, one line per spawn, despawn, cast, hit,
+    /// status applied and death, and a last line for the end; see <see cref="Trace"/>.
     /// </summary>
     public static Fight Duel(ContentRegistry content, Pairing pairing, int index, double seconds)
     {
-        var seed = Rng.Hash64(FormattableString.Invariant($"tournament:{pairing.A}:{pairing.B}:{index}"));
-        // The two sides fight under the same two factions the fight tool and the tests use, added only where the
-        // registry lacks them, so a registry shared with other work is not written on every fight.
-        if (!content.Has<FactionDef>("red"))
-        {
-            content.With(new FactionDef { Id = "red", Relations = { ["blue"] = Stance.Hostile } });
-        }
-        if (!content.Has<FactionDef>("blue"))
-        {
-            content.With(new FactionDef { Id = "blue", Relations = { ["red"] = Stance.Hostile } });
-        }
+        var seed = Rng.Hash64(SeedText(pairing, index));
         var sim = ZoneBuilder.CreateArena(content, seed);
-        var factory = sim.Service<PatternFactory>();
         // The trace listens before the spawns, so the log opens with them.
         var trace = new Trace(sim);
-        var a = trace.A = factory.Spawn(sim, pairing.A, SpawnA, new SpawnOptions { Faction = "red" });
-        var b = trace.B = factory.Spawn(sim, pairing.B, SpawnB, new SpawnOptions { Faction = "blue" });
-        if (a.IsNone || b.IsNone)
-        {
-            throw new InvalidOperationException($"a pairing names an unknown pattern: {pairing.A} or {pairing.B}.");
-        }
+        var (a, b) = Spawn(sim, pairing, BFirst(index));
+        trace.A = a;
+        trace.B = b;
         var tallies = new Dictionary<long, Tally> { [a.Key] = new(a), [b.Key] = new(b) };
         // Whatever a side owns works for it: credit climbs the owner chain from a minion, construct, projectile or
         // field the way kill credit does.

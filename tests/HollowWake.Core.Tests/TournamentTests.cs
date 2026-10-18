@@ -1,7 +1,10 @@
 using System.Globalization;
+using System.Numerics;
+using HollowWake.Core.Components;
 using HollowWake.Core.Content;
 using HollowWake.Core.Definitions;
 using HollowWake.Core.Evaluation;
+using HollowWake.Core.Sim;
 using Xunit;
 
 namespace HollowWake.Core.Tests;
@@ -44,6 +47,42 @@ public class TournamentTests
         var second = Tournament.Duel(CoreContent.Registry, pairing, index: 1, seconds: 20);
         Assert.NotEqual(first.Seed, second.Seed);
         Assert.NotEqual(first.Hash, second.Hash);
+    }
+
+    [Fact]
+    public void NeitherSideIsStructurallyFirst()
+    {
+        // The side spawned first is created first, and so thinks and acts first on every tick: it alternates with
+        // the fight's index.
+        Assert.Equal(new[] { false, true, false, true }, Enumerable.Range(0, 4).Select(Tournament.BFirst));
+        foreach (var bFirst in new[] { false, true })
+        {
+            var sim = ZoneBuilder.CreateArena(CoreContent.Registry, 1);
+            var (a, b) = Tournament.Spawn(sim, new Pairing("wolf", "hob"), bFirst);
+            Assert.Equal(bFirst, b.Index < a.Index);
+            var ta = sim.World.Get<Transform>(a)!;
+            var tb = sim.World.Get<Transform>(b)!;
+            // Mirrored about the arena's origin, a to the west, and each turned toward the other.
+            Assert.Equal(-ta.Position.X, tb.Position.X, 3);
+            Assert.Equal(ta.Position.Y, tb.Position.Y, 3);
+            Assert.True(ta.Position.X < tb.Position.X);
+            Assert.Equal(1, Vector2.Dot(ta.Forward, Vector2.UnitX), 3);
+            Assert.Equal(-1, Vector2.Dot(tb.Forward, Vector2.UnitX), 3);
+        }
+    }
+
+    [Fact]
+    public void ATournamentSeedTextNamesItsFight()
+    {
+        var pairing = new Pairing("wolf", "hob");
+        Assert.Equal("tournament:wolf:hob:7", Tournament.SeedText(pairing, 7));
+        Assert.True(Tournament.TryReadSeed(Tournament.SeedText(pairing, 7), out var read, out var index));
+        Assert.Equal(pairing, read);
+        Assert.Equal(7, index);
+        foreach (var other in new[] { "fight", "tournament:wolf:hob", "tournament:wolf:hob:x", "tournament:wolf:hob:-1", "tourney:wolf:hob:1", "tournament::hob:1" })
+        {
+            Assert.False(Tournament.TryReadSeed(other, out _, out _), other);
+        }
     }
 
     [Fact]

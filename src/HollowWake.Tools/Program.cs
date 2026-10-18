@@ -5,6 +5,7 @@ using HollowWake.Core;
 using HollowWake.Core.Components;
 using HollowWake.Core.Content;
 using HollowWake.Core.Definitions;
+using HollowWake.Core.Evaluation;
 using HollowWake.Core.Expressions;
 using HollowWake.Core.Items;
 using HollowWake.Core.Maths;
@@ -190,16 +191,23 @@ switch (command)
     case "fight":
     {
         var registry = LoadContent(false);
-        var sim = ZoneBuilder.CreateArena(registry, Rng.Hash64(Opt("seed", "fight")));
-        var log = new ListSimLog();
-        sim.Log = log;
-        var factory = sim.Service<PatternFactory>();
         var a = rest.Count > 0 && !rest[0].StartsWith("--") ? rest[0] : "wolf";
         var b = rest.Count > 1 && !rest[1].StartsWith("--") ? rest[1] : "hob";
+        var pairing = new Pairing(a, b);
+        if (Tournament.Refusal(registry, pairing) is { } refusal)
+        {
+            Console.WriteLine(refusal);
+            return 1;
+        }
+        // A duel is staged as the tournament stages one, and a tournament fight's seed text (tournament:a:b:i)
+        // stages that fight: the same arena and the same side spawning first.
+        var seedText = Opt("seed", "fight");
+        var bFirst = Tournament.TryReadSeed(seedText, out var fought, out var index) && fought == pairing && Tournament.BFirst(index);
+        var sim = ZoneBuilder.CreateArena(registry, Rng.Hash64(seedText));
+        var log = new ListSimLog();
+        sim.Log = log;
         var seconds = double.Parse(Opt("seconds", "30"));
-        var ea = factory.Spawn(sim, a, new Vector3(10, 10, 0), new SpawnOptions { Faction = "red" });
-        var eb = factory.Spawn(sim, b, new Vector3(14, 10, 0), new SpawnOptions { Faction = "blue" });
-        registry.With(new FactionDef { Id = "red", Relations = { ["blue"] = Stance.Hostile } }).With(new FactionDef { Id = "blue", Relations = { ["red"] = Stance.Hostile } });
+        var (ea, eb) = Tournament.Spawn(sim, pairing, bFirst);
         var events = new List<string>();
         sim.Events.Subscribe<DamageDealt>(d => events.Add($"t={sim.Clock.Time:0.00} {sim.World.Get<Identity>(d.Source)} hit {sim.World.Get<Identity>(d.Target)} for {d.Total:0.#}{(d.Crit ? " crit" : "")}{(d.Evaded ? " evaded" : "")}"));
         sim.Events.Subscribe<EntityDied>(d => events.Add($"t={sim.Clock.Time:0.00} {sim.World.Get<Identity>(d.Entity)} died"));
