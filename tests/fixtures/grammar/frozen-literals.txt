@@ -4,6 +4,7 @@
 # the core content to it, so a new literal fails them and a literal resolved is removed by writing the file again.
 # The 21 pre-existing undead preset keys from #31 are reviewed in
 # docs/reviews/2026-10-18-entity-main-audits.md; no content values or audit rules changed.
+# #32 pre-main content additions are reviewed individually in docs/reviews/2026-10-18-entity-main-audits.md.
 form binding effects[0].interval
 form binding effects[0].max_length
 form binding effects[0].width
@@ -218,6 +219,8 @@ preset gloriole effects[0].origin_range
 preset gloriole effects[0].radius
 preset goad effects[0].on_hit[1].chance
 preset goad effects[0].radius
+preset goblin_cinder_keg effects[0].on_end[0].radius
+preset goblin_cinder_keg effects[0].radius
 preset gore_rend effects[0].effects[1].chance
 preset grave_burst effects[0].effects[0].radius
 preset grave_offering effects[0].effects[0].radius

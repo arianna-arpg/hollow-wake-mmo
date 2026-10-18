@@ -47,6 +47,10 @@ Seeded replay is exact within the tested platform/runtime. The simulation does n
 
 Taunts set the target and a memory timestamp the behaviors read as `taunted`.
 
+## Temporary close-combat content
+
+`close_melee` is a reusable behavior for kits that must close despite a longer-ranged secondary skill. It explicitly supplies the chase stop distance and keeps ordinary acquire/attack/return actions. Goblinkin leaders opt into it; downstream faction kits can reuse the same definition. Other behaviors retain their own policy and PreferredRange remains the longest hinted range. The stop distance currently follows the existing center-distance movement convention; future contact-aware AI must revisit that contract together with collision clearance. This is replaceable content scaffolding, not the planned tactical AI engine.
+
 ## The AI as a player
 
 What any AI in this engine must and must not be, whatever runs it, is stated in [combat-grammar.md](combat-grammar.md): its inputs are what a client could show and what the compiled weave states, its outputs are the intents a client sends, its decisions are registered affordances, perception names and considerations bound by doctrines authored as content, and every decision publishes an event that explains it. The behavior machine above stays the outer mode machine; each piece of that section replaces what it supersedes here as it lands.

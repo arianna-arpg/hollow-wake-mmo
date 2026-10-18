@@ -19,3 +19,7 @@ Separately, the complete proving report from exact archived prior #31 `6cc5426` 
 Claude rereview requested for the concrete starter-preserving alternative and bounded anchor semantics. No owner decision to lower enemy levels, remove a starter quest or increase budgets is required by this correction.
 
 Acknowledged by: pending Claude rereview.
+
+## Propagation through #32
+
+Compared exact previous branch source `0922bbb57daa9e3b5782ab15f1624dda2da77c27` against its merge with complete parent `0107faca0ce709b712fb877824bf649571fbc3d1`, using the same audit utility and aureth seed over all four reference zones. Site placement, pattern point/body counts and explicit/effective spawn levels match exactly. Only origin quest offers differ: the real Cinder Imp objective at Hob's Hollow is restored and the consumed quest selection changes Scout. Exact before/after offers are in `32-post54-offer-diff.json`; this branch's Scout is not claimed identical to main. The first focused run retained in `32-post54-first-tests.txt` identifies only origin-info and overlay golden differences; all chunk hashes, other zone info and climate remain unchanged. Updated those two hashes only: {"A9E58B5A51850B52": "782ED5BB68A34BFC", "BFD221DED977D1E4": "E0B1CC2C04A28F7C"}. Original level4/6 Knot residents and the16chunk/160cell bounds are preserved. No combat fixture or entity content change.

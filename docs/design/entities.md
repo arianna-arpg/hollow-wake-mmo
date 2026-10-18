@@ -14,6 +14,7 @@ Hierarchical tags provide independent joins:
 | `family.*` | Related bodies for content filters |
 | `role.*` | The combat role its current kit can perform |
 | `habitat.*` | Intended environments, checked against authored population references |
+| `size.*` | Authored scale category for content filters; exact dimensions live in the physical profile |
 
 Existing broad tags such as `undead`, `monster`, `summonable`, `beast`, `melee`, `ranged` and `caster` remain available to existing filters. Tags describe what is currently implemented. They do not grant unimplemented immunities, attacks, collision behavior or spawning by themselves. A habitat requires an actual biome spawn-table or point-of-interest inhabitant reference. `no_corpse` uses the existing corpse rule; it does not change movement or grant invulnerability.
 
@@ -38,3 +39,5 @@ Appearance definitions and provenance metadata are presentation or authoring inf
 The appearance contract governs geometry, directional cards, animation and accessibility. A reviewed shared fixture compares native and browser plans including worn gear, with tolerance for float precision. Browser screenshots demonstrate the rendered translation in both camera angles and grayscale; native headless checks verify behavior but do not claim native pixel coverage.
 
 Related contracts: [minions](minions.md), [AI](ai.md), [appearance](appearance.md), [places](world/places.md), [networking](networking-and-persistence.md).
+
+Physical creatures use the registered [physical body contract](physical-bodies.md) for dimensions, material density, mass and displacement. Allegiance is independent of species: warband beasts can share their handlers’ faction without reclassifying unrelated wildlife.

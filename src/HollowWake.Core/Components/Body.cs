@@ -10,8 +10,20 @@ public sealed class Transform : IComponent
     public Vector3 Position;
     /// <summary>Facing on the ground plane, radians, 0 along +X.</summary>
     public float Yaw;
-    public float Radius = 0.4f;
-    public float Height = 1.8f;
+    private float _radius = 0.4f;
+    private float _height = 1.8f;
+    /// <summary>Geometry-dependent attribute inputs invalidate only when a dimension changes.</summary>
+    public event Action? DimensionsChanged;
+    public float Radius
+    {
+        get => _radius;
+        set { if (_radius != value) { _radius = value; DimensionsChanged?.Invoke(); } }
+    }
+    public float Height
+    {
+        get => _height;
+        set { if (_height != value) { _height = value; DimensionsChanged?.Invoke(); } }
+    }
 
     public Vector2 Forward => new(MathF.Cos(Yaw), MathF.Sin(Yaw));
 

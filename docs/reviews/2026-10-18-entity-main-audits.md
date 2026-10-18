@@ -45,3 +45,16 @@ The following 21 keys are reviewed additions to the census of numbers already au
 ## #31 main integration gates
 
 Source `a8a52b9770e01ef9156b2bfbf0aa02bb4d41bb8d`: solution build zero warnings/errors; all core 801, server 53 and client 128 tests pass. Validation is zero errors/warnings; load and the skeleton/zombie duel pass. The generated frozen-literal keys exactly equal the reviewed fixture; full census and keys are retained with these gates under `experiments/entity-review/evidence/31-main-*`. This verifies functional integration, not performance after main. Earlier benchmark misses remain open; no timing run or budget change accompanied these gates.
+
+## #32 existing content census admission
+
+Main's new audit finds the following existing constants in #32's pre-merge source `1fa611f3ef52703febab46d62b16e08126c8e90a`. Each raw content value and full owning content-file Git blob was verified unchanged; no literal disappeared from the inherited fixture. This record explicitly admits these old constants to the new census while retaining the exhaustive equality test. It does not add or change combat numbers. The axis and shadowed attribute below show the future composability work: replacing a literal with an attribute expression changes which modifiers reach it and must be a separate, tested combat-content change. Exact source blobs and values are retained in `32-main-audit-literals.json`.
+
+| Exact key | Existing value | Reported axis/unit | Attribute shadowed |
+| --- | ---: | --- | --- |
+| `preset goblin_cinder_keg effects[0].on_end[0].radius` | `2.2` | `geometry.radius` (units) | `area.radius` |
+| `preset goblin_cinder_keg effects[0].radius` | `0.3` | `geometry.radius` (units) | `none declared` |
+
+## #32 main integration gates
+
+Source `f1e2927105c95b4326c38503f7054bd3f8da6181`: solution build zero warnings/errors; all core 849, server 53 and client 129 tests pass. Validation is zero errors/warnings; load and the skeleton/zombie duel pass. The generated frozen-literal keys exactly equal the reviewed fixture; full census and keys are retained with these gates under `experiments/entity-review/evidence/32-main-*`. This verifies functional integration, not performance after main. Earlier benchmark misses remain open; no timing run or budget change accompanied these gates.

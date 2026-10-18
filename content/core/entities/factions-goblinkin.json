@@ -1,0 +1,23 @@
+{
+  "kind": "factions",
+  "entries": [
+    {
+      "id": "goblinkin",
+      "name": "The Warren Warbands",
+      "color": "#879253",
+      "default": "neutral",
+      "relations": {
+        "goblinkin": "allied",
+        "players": "hostile",
+        "lantern_chancery": "hostile",
+        "weftmarch_compact": "hostile",
+        "longwake_company": "hostile",
+        "mended_thread": "hostile",
+        "remnant": "hostile",
+        "tangled": "hostile",
+        "wilds": "hostile",
+        "the_loosed": "hostile"
+      }
+    }
+  ]
+}

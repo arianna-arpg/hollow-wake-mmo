@@ -36,12 +36,12 @@ public class WorldGenGoldenTests
         Assert.Equal(new ZoneCoord(0, 0), g.StartZone());
     }
 
-    // Site-level policy: exact before/after maps and levels in experiments/entity-review/evidence/31-sitelevel-*.
+    // Site-level policy: exact before/after maps and levels in experiments/entity-review/evidence/32-sitelevel-*.
     [Theory]
-    [InlineData(0, 0, "0CA8824E9BBCEB25", "18A63543AC11297A")]
-    [InlineData(1, 0, "C2FB146D336C5F08", "99C1C0903D1A255E")]
-    [InlineData(0, -1, "B59ACD622B675EA2", "6D9AEE576A168431")]
-    [InlineData(3, 2, "8C5F6DA25EAF9E01", "3ABA13943256C927")]
+    [InlineData(0, 0, "782ED5BB68A34BFC", "FE239499AF4B1519")]
+    [InlineData(1, 0, "BC141514C90FA4F3", "09ED05825A4C6B50")]
+    [InlineData(0, -1, "1958D6A42DDD64E1", "04FB8C3BEEEC74A9")]
+    [InlineData(3, 2, "42C2BAE7451AAA64", "B7AF6323F6B6FF7C")]
     public void ZoneMatchesGoldenHashes(int x, int y, string infoHash, string chunksHash)
     {
         var g = new WorldGenerator(Registry.Value, Rng.Hash64(Seed));
@@ -101,7 +101,7 @@ public class WorldGenGoldenTests
         {
             HashPoint(h, g, 40 + i * 0.83, 20 + i * 0.61, i % 20 == 0);
         }
-        Golden("overlaid world", "657770B629C24C11", h.Hex);
+        Golden("overlaid world", "72299E8C3D124A24", h.Hex);
 
         // Removing an overlay must regenerate exactly what a generator that never had it produces.
         overlays.Remove("fount");

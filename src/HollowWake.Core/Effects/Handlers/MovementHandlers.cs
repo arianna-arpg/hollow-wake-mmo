@@ -143,10 +143,13 @@ internal sealed class MoveHandler : IEffectHandler
             {
                 return;
             }
-            var distance = (float)ctx.Eval(Distance, 4);
-            // What the shove measures from: where the context's deliveries start (a flight's hit point; with none
-            // given, the caster), the caster's own position (a hook on a flight reeling its catch home), or the point
-            // the cast was aimed at, which a hit keeps when it moves the context's point onto the struck body.
+            var authority = WeaveAttr(ctx, "shove.authority", ctx.SourceStats?.Get("shove.authority", ctx.Tags) ?? 1);
+            // Knockback is another force modifier, so it also belongs before the final ceiling.
+            if (Kind != "pull") authority *= WeaveAttr(ctx, "knockback", 1);
+            var distance = (float)(ctx.Eval(Distance, 4) * Physicality.ShoveScale(sim, ctx.Source, mover, authority));
+            // Scale before the pull clamp: even a strong pusher cannot reel through its anchor.
+            // What the shove measures from: where the effect acts (a flight's hit point, a field's center), the
+            // caster's own position (a hook on a flight reeling its catch home), or the original aim point preserved on hits.
             var source = Anchor switch
             {
                 "caster" => ctx.SourceTransform?.Position ?? ctx.From ?? ctx.Point,
@@ -172,14 +175,12 @@ internal sealed class MoveHandler : IEffectHandler
                 {
                     var angle = ctx.Rng.NextDouble() * Math.PI * 2;
                     direction = new Vector2((float)Math.Cos(angle), (float)Math.Sin(angle));
-                    distance *= (float)WeaveAttr(ctx, "knockback", 1);
                     break;
                 }
                 default:
                 {
                     var away = new Vector2(t.Position.X - source.X, t.Position.Y - source.Y);
                     direction = away.LengthSquared() < 0.001f ? Facing(ctx) : Vector2.Normalize(away);
-                    distance *= (float)WeaveAttr(ctx, "knockback", 1);
                     break;
                 }
             }

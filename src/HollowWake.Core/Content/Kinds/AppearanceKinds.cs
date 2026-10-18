@@ -14,6 +14,9 @@ internal static class AppearanceKinds
     /// <summary>Body families both clients build, each with the shape names it reads.</summary>
     public static readonly IReadOnlyDictionary<string, IReadOnlyList<string>> BodyFamilies = new Dictionary<string, IReadOnlyList<string>>(StringComparer.Ordinal)
     {
+        ["goblinkin"] = new[] { "breadth", "depth", "legs", "arms", "head", "jaw" },
+        ["gnasher"] = new[] { "breadth", "depth" },
+        ["warbeast"] = new[] { "breadth", "depth" },
         ["biped"] = new[] { "head", "neck", "torso", "hips", "legs", "arms", "width", "hunch", "stance", "blocky", "belly", "shoulders" },
         ["skeleton"] = new[] { "head", "torso", "legs", "arms", "width", "hunch", "shoulders", "thickness", "ribs", "asymmetry" },
         ["stitched"] = new[] { "head", "torso", "legs", "arms", "width", "hunch", "shoulders", "thickness", "ribs", "asymmetry", "stitches" },

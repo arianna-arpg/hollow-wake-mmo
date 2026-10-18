@@ -1,0 +1,22 @@
+{
+  "kind": "rules",
+  "entries": [
+    {
+      "id": "physicality",
+      "values": {
+        "reference_mass": 80,
+        "minimum_weight": 0.05,
+        "poise_anchor": 0.012,
+        "authority_power": 0.55,
+        "authority_min": 0.4,
+        "authority_max": 2.75,
+        "anchor_pool": "poise",
+        "anchor_broken_flag": "pool.poise.broken",
+        "shove_scale_min": 0,
+        "shove_scale_max": 3,
+        "weight": "max(minimum_weight, mass / reference_mass * (1 + anchor * poise_anchor))",
+        "shove": "clamp(if(source_present, clamp(pow(source_weight, authority_power), authority_min, authority_max), 1) * authority / target_weight, shove_scale_min, shove_scale_max)"
+      }
+    }
+  ]
+}

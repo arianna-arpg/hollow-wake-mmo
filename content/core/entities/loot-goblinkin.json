@@ -1,0 +1,33 @@
+{
+  "kind": "loot",
+  "entries": [
+    {
+      "id": "goblinkin_drops",
+      "rolls": [
+        {
+          "count": 1,
+          "entries": [
+            {
+              "kind": "currency",
+              "currency": "shards",
+              "weight": 6,
+              "amount": [
+                1,
+                3
+              ]
+            },
+            {
+              "kind": "table",
+              "table": "world_common",
+              "weight": 3
+            },
+            {
+              "kind": "nothing",
+              "weight": 2
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -13,3 +13,11 @@ The full fresh proving JSON equals the exact archived same-branch pre-54 report 
 Claude rereview requested for this combined source. No local performance claim or merge to main is made. Combined client/transport verification is retained downstream where the complete contact foundation is present.
 
 Acknowledged by: [Claude rereview of #31 at 749e99b](https://github.com/arianna-arpg/hollow-wake-mmo/pull/31#issuecomment-6255391549) accepts the Knot implementation; the contract follow-up and paired timing remain pending final review.
+
+## #32 combined source
+
+Source `02e774698c4dd786f478f41c0dba91d234648f67` combines complete parent `0107faca0ce709b712fb877824bf649571fbc3d1` and the shared starter restoration with previous entity head `0922bbb57daa9e3b5782ab15f1624dda2da77c27`. Only `content/core/play/quests.yaml` differs in content, and its blob exactly matches reviewed `7d3518b`; every other content file is unchanged. Both solution and Release tools build with zero warnings/errors; core 876, server 53, client 129 tests pass. Validation is 0/0; load, duel and all seven Release Windows replay hashes pass without fixture changes. Generated grammar keys exactly equal the existing 499-key fixture, with no new admission or relaxed test.
+
+The full fresh proving JSON equals the exact archived same-branch pre-54 report at `0922bbb57daa9e3b5782ab15f1624dda2da77c27`, including outcomes, mechanisms, trace hashes and all 4 inherited win-ceiling breaches: proving_bulwark wins 10 of 10, above the ceiling 0.8; proving_plaguer wins 10 of 10, above the ceiling 0.8; proving_pitfighter wins 10 of 10, above the ceiling 0.8; proving_evoker wins 9 of 10, above the ceiling 0.8. It exits 1 and contains zero simulation warnings/errors. The balance gate is explicitly not passed. This comparison uses the actual previous source, not a later stack with different hit bodies. Source inspection confirms `raise_as` remains registered and capacity is clamped before corpse selection and room/birth processing. Full logs are retained as `32-post54-*` and `32-pre54-*`.
+
+Claude rereview requested for this combined source. No local performance claim or merge to main is made. Combined client/transport verification is retained downstream where the complete contact foundation is present.

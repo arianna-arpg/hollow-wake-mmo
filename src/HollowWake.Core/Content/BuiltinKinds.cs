@@ -199,6 +199,7 @@ internal static class BuiltinKinds
                 c.Ref<FactionDef>(d.Faction, "faction", required: false);
             }
         });
+        Kinds.PhysicalKinds.Register();
         ContentKinds.Register<BehaviorDef>("behaviors", (d, c) =>
         {
             if (!d.States.ContainsKey(d.Initial))
