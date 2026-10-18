@@ -209,7 +209,10 @@ public class ElementalTests(ITestOutputHelper output)
         var before=new WorldGenerator(baseline,Rng.Hash64("aureth"));
         var after=new WorldGenerator(CoreContent.Registry,Rng.Hash64("aureth"));
         static string Describe(PoiInstance p)=>$"{p.Zone}:{p.Def.Id}:{p.X:R}:{p.Y:R}:{p.Landmark}:{p.Name}:L{p.Level}";
-        foreach(var zone in new[]{new ZoneCoord(0,0),new ZoneCoord(1,0),new ZoneCoord(0,-1),new ZoneCoord(3,2)})
+        // Include the adjacent zones whose sites changed, so identical reference-zone populations
+        // cannot conceal a removed camp or a new ruin just over the boundary.
+        foreach(var zone in new[]{new ZoneCoord(0,0),new ZoneCoord(1,0),new ZoneCoord(0,-1),new ZoneCoord(3,2),
+            new ZoneCoord(-1,0),new ZoneCoord(-1,1),new ZoneCoord(2,1),new ZoneCoord(3,1)})
         {
             var old=before.PoisAround(zone).Select(Describe).ToArray();
             var next=after.PoisAround(zone).Select(Describe).ToArray();

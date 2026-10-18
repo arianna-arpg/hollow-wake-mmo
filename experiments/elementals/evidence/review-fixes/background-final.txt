@@ -1,0 +1,5 @@
+TEST evidence: <worktree>\experiments\elementals\artifacts\background-final\run-6SAVKY
+TEST smoke-web; evidence: <worktree>\experiments\elementals\artifacts\background-final\run-6SAVKY
+TEST import-godot; evidence: <worktree>\experiments\elementals\artifacts\background-final\run-6SAVKY
+TEST smoke-godot; evidence: <worktree>\experiments\elementals\artifacts\background-final\run-6SAVKY
+TEST PASSED; report: <worktree>\experiments\elementals\artifacts\background-final\run-6SAVKY\result.json

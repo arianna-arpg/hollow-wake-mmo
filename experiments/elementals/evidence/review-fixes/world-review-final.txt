@@ -1,0 +1,45 @@
+World review: corrected shared base 26c50de with elemental content through 2b485e1.
+Seed: aureth. Baseline removes elemental POI definitions and site.manifestation
+budget entries from the same catalog. Other content and runtime are identical.
+
+The four reference-zone CLI maps, local POI descriptions and quest text are
+byte-identical before/after. Their chunk hashes and the climate hash are unchanged.
+Their wider neighbor plans change; all four zone-info hashes and the overlay hash
+were intentionally updated. The focused golden/audit run passes 8/8, and the
+full Release solution CI at 2b485e1 passes Core2297/client121/server48.
+
+The expanded audit also measures neighboring zones with changed sites. Values
+include all authored spawn rows (creatures and props), not just monsters:
+
+zone       spawners before -> after   initial bodies before -> after
+(0,0)      115 -> 115                 293 -> 293
+(1,0)      122 -> 122                 339 -> 339
+(0,-1)     171 -> 171                 403 -> 403
+(3,2)      146 -> 146                 392 -> 392
+(-1,0)     154 -> 153                 398 -> 399
+(-1,1)     165 -> 169                 409 -> 421
+(2,1)      135 -> 139                 372 -> 378
+(3,1)      133 -> 134                 345 -> 346
+
+These are rerolled populations, not purely additive elemental bodies. Scrap Fort
+and Grave Court replacements remove their Goblin/Orc and elite Undead residents;
+new ruins/knots add ordinary wights, shades and imps. Ruin chests change 2->1 in
+(-1,1) and 2->3 in (2,1); shrine stones change 1->2 in (3,1). The manifestation
+stamps themselves contain no chest, shrine stone, palisade or extra spawn.
+world-population-final.txt lists every per-pattern count and neighbor change.
+
+Home quests remain level1 and retain their same targets: Hob's Hollow/Cinder Imp,
+Thread Floss, Hob, and ruin poi.1_1.ruin.305.334. The seven other audited zones have
+no generated quests in this sample. Separate seeded scout_ruin regression tests
+reject nearer manifestations. Generic site/quest level eligibility is owned by
+the shared foundation; natural manifestations have eligible residents and carry
+their site's level into spawn points.
+
+Natural-site counts across zones [-48,48] after the Ember Seam weight adjustment:
+ember_seam3, tide_memory6, rime_bloom87, storm_eye91, mineral_wake71,
+bloom_exhalation13, unbound_refraction2, selvage_rent7.
+Only ember_seam changes from the preceding 0.22-weight sample (0->3); its habitats
+are unchanged. Its weight is now0.8, others0.22, and the common budget remains0.12.
+The budget multiplies each matching candidate and raises total desired site
+count, rather than reserving a fixed manifestation pool. No claim is made that
+other seeds or unmeasured zones retain their old populations or quest plans.

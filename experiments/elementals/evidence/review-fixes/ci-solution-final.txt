@@ -1,0 +1,12 @@
+Revision: 2b485e1
+CI: https://github.com/arianna-arpg/hollow-wake-mmo/actions/runs/39153486537
+Commands: Release solution build, validate, full solution test, headless load
+Build: Build succeeded.
+Build:     0 Warning(s)
+Build:     0 Error(s)
+Validate content: 0 error(s), 0 warning(s)
+Test: Passed!  - Failed:     0, Passed:   121, Skipped:     0, Total:   121, Duration: 12 s - HollowWake.Client.Tests.dll (net10.0)
+Test: Passed!  - Failed:     0, Passed:    48, Skipped:     0, Total:    48, Duration: 28 s - HollowWake.Server.Tests.dll (net10.0)
+Test: Passed!  - Failed:     0, Passed:  2297, Skipped:     0, Total:  2297, Duration: 34 s - HollowWake.Core.Tests.dll (net10.0)
+Headless zone smoke: zone(0,0): 100 chunks, 4 pois, 2 founts, 115 spawners, 2269 flora, 4 quests in 168 ms
+Headless zone smoke: ran 100 ticks in 432 ms; entities 2685; monsters 281

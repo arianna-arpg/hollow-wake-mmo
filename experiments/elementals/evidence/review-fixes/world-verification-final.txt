@@ -1,0 +1,109 @@
+  Determining projects to restore...
+  All projects are up-to-date for restore.
+  HollowWake.Core -> <worktree>\src\HollowWake.Core\bin\Debug\net8.0\HollowWake.Core.dll
+  HollowWake.Core.Tests -> <worktree>\tests\HollowWake.Core.Tests\bin\Debug\net10.0\HollowWake.Core.Tests.dll
+Test run for <worktree>\tests\HollowWake.Core.Tests\bin\Debug\net10.0\HollowWake.Core.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+<worktree>\tests\HollowWake.Core.Tests\bin\Debug\net10.0\HollowWake.Core.Tests.dll
+[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v3.1.5+1b188a7b0a (64-bit .NET 10.0.13)
+[xUnit.net 00:00:00.35]   Discovering: HollowWake.Core.Tests
+[xUnit.net 00:00:05.29]   Discovered:  HollowWake.Core.Tests
+[xUnit.net 00:00:05.36]   Starting:    HollowWake.Core.Tests
+  Passed HollowWake.Core.Tests.WorldGenGoldenTests.ClimateSamplesMatchGoldenHash [1 s]
+  Passed HollowWake.Core.Tests.WorldGenGoldenTests.ZoneMatchesGoldenHashes(x: 0, y: -1, infoHash: "BED451948F4FF6AD", chunksHash: "D785D8F084A1F919") [505 ms]
+  Passed HollowWake.Core.Tests.WorldGenGoldenTests.ZoneMatchesGoldenHashes(x: 1, y: 0, infoHash: "535B02D1C10CB22D", chunksHash: "DF735AA7610989B3") [414 ms]
+  Passed HollowWake.Core.Tests.WorldGenGoldenTests.ZoneMatchesGoldenHashes(x: 3, y: 2, infoHash: "2B931093C9DDE5E2", chunksHash: "8C46ACF595DB3A42") [438 ms]
+  Passed HollowWake.Core.Tests.WorldGenGoldenTests.ZoneMatchesGoldenHashes(x: 0, y: 0, infoHash: "678462695CF5FCF1", chunksHash: "384BA03BE0D34C0A") [634 ms]
+  Passed HollowWake.Core.Tests.WorldGenGoldenTests.StartZoneIsTheOrigin [6 ms]
+  Passed HollowWake.Core.Tests.WorldGenGoldenTests.OverlaidWorldMatchesGoldenHash [2 s]
+[xUnit.net 00:00:11.77]   Finished:    HollowWake.Core.Tests
+  Passed HollowWake.Core.Tests.ElementalTests.ReviewedWorldPopulationAuditSeparatesManifestationsFromTheBase [6 s]
+  Standard Output Messages:
+ zone(0,0) neighbor removed: zone(-1,0):kiln:-218.5:235.5:kiln_ring:Emberseat:L8
+ zone(0,0) neighbor removed: zone(-1,0):scrap_fort:-42.5:229.5:ruin_walls:Scrap Fort:L11
+ zone(0,0) neighbor removed: zone(-1,0):ruin:-46.5:48.5:ruin_walls:the Fallen Hall:L7
+ zone(0,0) neighbor removed: zone(-1,1):knot:-34.5:419.5:knot_stones:a Skyfall:L8
+ zone(0,0) neighbor removed: zone(-1,1):grave_court:-198.5:436.5:ruin_walls:the Silent Faculty:L10
+ zone(0,0) neighbor removed: zone(-1,1):scrap_fort:-234.5:294.5:ruin_walls:Scrap Fort:L11
+ zone(0,0) neighbor added: zone(-1,0):ruin:-218.5:235.5:ruin_walls:the Last Stitch:L7
+ zone(0,0) neighbor added: zone(-1,0):ruin:-42.5:229.5:barrow:the Sunken Lantern:L7
+ zone(0,0) neighbor added: zone(-1,0):kiln:-56.5:100.5:kiln_ring:the Cinderstair:L8
+ zone(0,0) neighbor added: zone(-1,1):knot:-34.5:419.5:knot_stones:a Tangle:L8
+ zone(0,0) neighbor added: zone(-1,1):ruin:-198.5:436.5:ruin_walls:the Last Stitch:L7
+ zone(0,0) neighbor added: zone(-1,1):knot:-234.5:294.5:knot_stones:a Snarl:L8
+ zone(0,0) total population: (115, 293) -> (115, 293) (spawners, initial bodies)
+ zone(0,0) population anvil: (1, 1) -> (1, 1) (spawners, initial bodies)
+ zone(0,0) population cairn_stone: (7, 7) -> (7, 7) (spawners, initial bodies)
+ zone(0,0) population cinder_imp: (2, 4) -> (2, 4) (spawners, initial bodies)
+ zone(0,0) population gnasher_whelp: (2, 8) -> (2, 8) (spawners, initial bodies)
+ zone(0,0) population goblin_scavenger: (2, 6) -> (2, 6) (spawners, initial bodies)
+ zone(0,0) population grove_stag: (6, 11) -> (6, 11) (spawners, initial bodies)
+ zone(0,0) population hedgehog: (2, 3) -> (2, 3) (spawners, initial bodies)
+ zone(0,0) population hob: (78, 235) -> (78, 235) (spawners, initial bodies)
+ zone(0,0) population loom: (1, 1) -> (1, 1) (spawners, initial bodies)
+ zone(0,0) population passive_font: (1, 1) -> (1, 1) (spawners, initial bodies)
+ zone(0,0) population quartermaster: (2, 2) -> (2, 2) (spawners, initial bodies)
+ zone(0,0) population remnant_shade: (1, 4) -> (1, 4) (spawners, initial bodies)
+ zone(0,0) population shrine_stone: (1, 1) -> (1, 1) (spawners, initial bodies)
+ zone(0,0) population spindlewatch_guard: (4, 4) -> (4, 4) (spawners, initial bodies)
+ zone(0,0) population stash_chest: (1, 1) -> (1, 1) (spawners, initial bodies)
+ zone(0,0) population tangle: (1, 1) -> (1, 1) (spawners, initial bodies)
+ zone(0,0) population villager: (3, 3) -> (3, 3) (spawners, initial bodies)
+ zone(0,0) before quest gen.poi.0_0.hamlet.128.128.clear_knot.0 level=1: poi.0_0.knot.200.60;cinder_imp
+ zone(0,0) before quest gen.poi.0_0.hamlet.128.128.gather_floss.1 level=1: thread_floss
+ zone(0,0) before quest gen.poi.0_0.hamlet.128.128.cull_beasts.2 level=1: hob
+ zone(0,0) before quest gen.poi.0_0.hamlet.128.128.scout_ruin.3 level=1: poi.1_1.ruin.305.334
+ zone(0,0) after quest gen.poi.0_0.hamlet.128.128.clear_knot.0 level=1: poi.0_0.knot.200.60;cinder_imp
+ zone(0,0) after quest gen.poi.0_0.hamlet.128.128.gather_floss.1 level=1: thread_floss
+ zone(0,0) after quest gen.poi.0_0.hamlet.128.128.cull_beasts.2 level=1: hob
+ zone(0,0) after quest gen.poi.0_0.hamlet.128.128.scout_ruin.3 level=1: poi.1_1.ruin.305.334
+ zone(1,0) neighbor added: zone(2,1):ruin:535.5:288.5:ruin_walls:the Sunken Lantern:L2
+ zone(1,0) total population: (122, 339) -> (122, 339) (spawners, initial bodies)
+ zone(1,0) population gnasher_whelp: (2, 8) -> (2, 8) (spawners, initial bodies)
+ zone(1,0) population goblin_scavenger: (5, 10) -> (5, 10) (spawners, initial bodies)
+ zone(1,0) population goblin_skirmisher: (1, 1) -> (1, 1) (spawners, initial bodies)
+ zone(1,0) population grove_stag: (23, 51) -> (23, 51) (spawners, initial bodies)
+ zone(1,0) population hedgehog: (1, 1) -> (1, 1) (spawners, initial bodies)
+ zone(1,0) population hob: (84, 259) -> (84, 259) (spawners, initial bodies)
+ zone(1,0) population orc_ashcaller: (1, 1) -> (1, 1) (spawners, initial bodies)
+ zone(1,0) population orc_grunt: (1, 1) -> (1, 1) (spawners, initial bodies)
+ zone(1,0) population ruin_chest: (1, 1) -> (1, 1) (spawners, initial bodies)
+ zone(1,0) population skeleton_archer: (1, 1) -> (1, 1) (spawners, initial bodies)
+ zone(1,0) population skeleton_warrior: (2, 5) -> (2, 5) (spawners, initial bodies)
+ zone(0,-1) neighbor removed: zone(-1,0):kiln:-218.5:235.5:kiln_ring:Emberseat:L8
+ zone(0,-1) neighbor removed: zone(-1,0):scrap_fort:-42.5:229.5:ruin_walls:Scrap Fort:L11
+ zone(0,-1) neighbor removed: zone(-1,0):ruin:-46.5:48.5:ruin_walls:the Fallen Hall:L7
+ zone(0,-1) neighbor added: zone(-1,0):ruin:-218.5:235.5:ruin_walls:the Last Stitch:L7
+ zone(0,-1) neighbor added: zone(-1,0):ruin:-42.5:229.5:barrow:the Sunken Lantern:L7
+ zone(0,-1) neighbor added: zone(-1,0):kiln:-56.5:100.5:kiln_ring:the Cinderstair:L8
+ zone(0,-1) total population: (171, 403) -> (171, 403) (spawners, initial bodies)
+ zone(0,-1) population cairn_stone: (21, 21) -> (21, 21) (spawners, initial bodies)
+ zone(0,-1) population cinder_imp: (6, 15) -> (6, 15) (spawners, initial bodies)
+ zone(0,-1) population grove_stag: (1, 2) -> (1, 2) (spawners, initial bodies)
+ zone(0,-1) population hob: (76, 222) -> (76, 222) (spawners, initial bodies)
+ zone(0,-1) population loosed_kindler: (18, 25) -> (18, 25) (spawners, initial bodies)
+ zone(0,-1) population remnant_shade: (3, 10) -> (3, 10) (spawners, initial bodies)
+ zone(0,-1) population tangle: (3, 3) -> (3, 3) (spawners, initial bodies)
+ zone(0,-1) population wolf: (41, 103) -> (41, 103) (spawners, initial bodies)
+ zone(0,-1) population wolverine: (2, 2) -> (2, 2) (spawners, initial bodies)
+ zone(3,2) neighbor added: zone(2,1):ruin:535.5:288.5:ruin_walls:the Sunken Lantern:L2
+ zone(3,2) neighbor added: zone(3,1):shrine:823.5:460.5:shrine_ring:the Stitch Shrine:L1
+ zone(3,2) total population: (146, 392) -> (146, 392) (spawners, initial bodies)
+ zone(3,2) population barrow_wight: (2, 3) -> (2, 3) (spawners, initial bodies)
+ zone(3,2) population cairn_stone: (7, 7) -> (7, 7) (spawners, initial bodies)
+ zone(3,2) population cinder_imp: (2, 5) -> (2, 5) (spawners, initial bodies)
+ zone(3,2) population gnasher_whelp: (9, 47) -> (9, 47) (spawners, initial bodies)
+ zone(3,2) population goblin_scavenger: (4, 10) -> (4, 10) (spawners, initial bodies)
+ zone(3,2) population grove_stag: (30, 60) -> (30, 60) (spawners, initial bodies)
+ zone(3,2) population hob: (86, 251) -> (86, 251) (spawners, initial bodies)
+ zone(3,2) population remnant_shade: (2, 5) -> (2, 5) (spawners, initial bodies)
+ zone(3,2) population ruin_chest: (1, 1) -> (1, 1) (spawners, initial bodies)
+ zone(3,2) population shrine_stone: (2, 2) -> (2, 2) (spawners, initial bodies)
+ zone(3,2) population tangle: (1, 1) -> (1, 1) (spawners, initial bodies)
+
+
+
+Test Run Successful.
+Total tests: 8
+     Passed: 8
+ Total time: 13.9938 Seconds

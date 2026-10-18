@@ -1,0 +1,222 @@
+  Determining projects to restore...
+  All projects are up-to-date for restore.
+  HollowWake.Core -> <worktree>\src\HollowWake.Core\bin\Debug\net8.0\HollowWake.Core.dll
+  HollowWake.Core.Tests -> <worktree>\tests\HollowWake.Core.Tests\bin\Debug\net10.0\HollowWake.Core.Tests.dll
+Test run for <worktree>\tests\HollowWake.Core.Tests\bin\Debug\net10.0\HollowWake.Core.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+<worktree>\tests\HollowWake.Core.Tests\bin\Debug\net10.0\HollowWake.Core.Tests.dll
+[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v3.1.5+1b188a7b0a (64-bit .NET 10.0.13)
+[xUnit.net 00:00:00.20]   Discovering: HollowWake.Core.Tests
+[xUnit.net 00:00:06.06]   Discovered:  HollowWake.Core.Tests
+[xUnit.net 00:00:06.11]   Starting:    HollowWake.Core.Tests
+[xUnit.net 00:00:15.97]   Finished:    HollowWake.Core.Tests
+  Passed HollowWake.Core.Tests.ElementalTests.ReviewedWorldPopulationAuditSeparatesManifestationsFromTheBase [9 s]
+  Standard Output Messages:
+ zone(0,0) neighbor removed: zone(-1,0):kiln:-218.5:235.5:kiln_ring:Emberseat:L8
+ zone(0,0) neighbor removed: zone(-1,0):scrap_fort:-42.5:229.5:ruin_walls:Scrap Fort:L11
+ zone(0,0) neighbor removed: zone(-1,0):ruin:-46.5:48.5:ruin_walls:the Fallen Hall:L7
+ zone(0,0) neighbor removed: zone(-1,1):knot:-34.5:419.5:knot_stones:a Skyfall:L8
+ zone(0,0) neighbor removed: zone(-1,1):grave_court:-198.5:436.5:ruin_walls:the Silent Faculty:L10
+ zone(0,0) neighbor removed: zone(-1,1):scrap_fort:-234.5:294.5:ruin_walls:Scrap Fort:L11
+ zone(0,0) neighbor added: zone(-1,0):ruin:-218.5:235.5:ruin_walls:the Last Stitch:L7
+ zone(0,0) neighbor added: zone(-1,0):ruin:-42.5:229.5:barrow:the Sunken Lantern:L7
+ zone(0,0) neighbor added: zone(-1,0):kiln:-56.5:100.5:kiln_ring:the Cinderstair:L8
+ zone(0,0) neighbor added: zone(-1,1):knot:-34.5:419.5:knot_stones:a Tangle:L8
+ zone(0,0) neighbor added: zone(-1,1):ruin:-198.5:436.5:ruin_walls:the Last Stitch:L7
+ zone(0,0) neighbor added: zone(-1,1):knot:-234.5:294.5:knot_stones:a Snarl:L8
+ zone(0,0) total population: (115, 293) -> (115, 293) (spawners, initial bodies)
+ zone(0,0) population anvil: (1, 1) -> (1, 1) (spawners, initial bodies)
+ zone(0,0) population cairn_stone: (7, 7) -> (7, 7) (spawners, initial bodies)
+ zone(0,0) population cinder_imp: (2, 4) -> (2, 4) (spawners, initial bodies)
+ zone(0,0) population gnasher_whelp: (2, 8) -> (2, 8) (spawners, initial bodies)
+ zone(0,0) population goblin_scavenger: (2, 6) -> (2, 6) (spawners, initial bodies)
+ zone(0,0) population grove_stag: (6, 11) -> (6, 11) (spawners, initial bodies)
+ zone(0,0) population hedgehog: (2, 3) -> (2, 3) (spawners, initial bodies)
+ zone(0,0) population hob: (78, 235) -> (78, 235) (spawners, initial bodies)
+ zone(0,0) population loom: (1, 1) -> (1, 1) (spawners, initial bodies)
+ zone(0,0) population passive_font: (1, 1) -> (1, 1) (spawners, initial bodies)
+ zone(0,0) population quartermaster: (2, 2) -> (2, 2) (spawners, initial bodies)
+ zone(0,0) population remnant_shade: (1, 4) -> (1, 4) (spawners, initial bodies)
+ zone(0,0) population shrine_stone: (1, 1) -> (1, 1) (spawners, initial bodies)
+ zone(0,0) population spindlewatch_guard: (4, 4) -> (4, 4) (spawners, initial bodies)
+ zone(0,0) population stash_chest: (1, 1) -> (1, 1) (spawners, initial bodies)
+ zone(0,0) population tangle: (1, 1) -> (1, 1) (spawners, initial bodies)
+ zone(0,0) population villager: (3, 3) -> (3, 3) (spawners, initial bodies)
+ zone(0,0) before quest gen.poi.0_0.hamlet.128.128.clear_knot.0 level=1: poi.0_0.knot.200.60;cinder_imp
+ zone(0,0) before quest gen.poi.0_0.hamlet.128.128.gather_floss.1 level=1: thread_floss
+ zone(0,0) before quest gen.poi.0_0.hamlet.128.128.cull_beasts.2 level=1: hob
+ zone(0,0) before quest gen.poi.0_0.hamlet.128.128.scout_ruin.3 level=1: poi.1_1.ruin.305.334
+ zone(0,0) after quest gen.poi.0_0.hamlet.128.128.clear_knot.0 level=1: poi.0_0.knot.200.60;cinder_imp
+ zone(0,0) after quest gen.poi.0_0.hamlet.128.128.gather_floss.1 level=1: thread_floss
+ zone(0,0) after quest gen.poi.0_0.hamlet.128.128.cull_beasts.2 level=1: hob
+ zone(0,0) after quest gen.poi.0_0.hamlet.128.128.scout_ruin.3 level=1: poi.1_1.ruin.305.334
+ zone(1,0) neighbor added: zone(2,1):ruin:535.5:288.5:ruin_walls:the Sunken Lantern:L2
+ zone(1,0) total population: (122, 339) -> (122, 339) (spawners, initial bodies)
+ zone(1,0) population gnasher_whelp: (2, 8) -> (2, 8) (spawners, initial bodies)
+ zone(1,0) population goblin_scavenger: (5, 10) -> (5, 10) (spawners, initial bodies)
+ zone(1,0) population goblin_skirmisher: (1, 1) -> (1, 1) (spawners, initial bodies)
+ zone(1,0) population grove_stag: (23, 51) -> (23, 51) (spawners, initial bodies)
+ zone(1,0) population hedgehog: (1, 1) -> (1, 1) (spawners, initial bodies)
+ zone(1,0) population hob: (84, 259) -> (84, 259) (spawners, initial bodies)
+ zone(1,0) population orc_ashcaller: (1, 1) -> (1, 1) (spawners, initial bodies)
+ zone(1,0) population orc_grunt: (1, 1) -> (1, 1) (spawners, initial bodies)
+ zone(1,0) population ruin_chest: (1, 1) -> (1, 1) (spawners, initial bodies)
+ zone(1,0) population skeleton_archer: (1, 1) -> (1, 1) (spawners, initial bodies)
+ zone(1,0) population skeleton_warrior: (2, 5) -> (2, 5) (spawners, initial bodies)
+ zone(0,-1) neighbor removed: zone(-1,0):kiln:-218.5:235.5:kiln_ring:Emberseat:L8
+ zone(0,-1) neighbor removed: zone(-1,0):scrap_fort:-42.5:229.5:ruin_walls:Scrap Fort:L11
+ zone(0,-1) neighbor removed: zone(-1,0):ruin:-46.5:48.5:ruin_walls:the Fallen Hall:L7
+ zone(0,-1) neighbor added: zone(-1,0):ruin:-218.5:235.5:ruin_walls:the Last Stitch:L7
+ zone(0,-1) neighbor added: zone(-1,0):ruin:-42.5:229.5:barrow:the Sunken Lantern:L7
+ zone(0,-1) neighbor added: zone(-1,0):kiln:-56.5:100.5:kiln_ring:the Cinderstair:L8
+ zone(0,-1) total population: (171, 403) -> (171, 403) (spawners, initial bodies)
+ zone(0,-1) population cairn_stone: (21, 21) -> (21, 21) (spawners, initial bodies)
+ zone(0,-1) population cinder_imp: (6, 15) -> (6, 15) (spawners, initial bodies)
+ zone(0,-1) population grove_stag: (1, 2) -> (1, 2) (spawners, initial bodies)
+ zone(0,-1) population hob: (76, 222) -> (76, 222) (spawners, initial bodies)
+ zone(0,-1) population loosed_kindler: (18, 25) -> (18, 25) (spawners, initial bodies)
+ zone(0,-1) population remnant_shade: (3, 10) -> (3, 10) (spawners, initial bodies)
+ zone(0,-1) population tangle: (3, 3) -> (3, 3) (spawners, initial bodies)
+ zone(0,-1) population wolf: (41, 103) -> (41, 103) (spawners, initial bodies)
+ zone(0,-1) population wolverine: (2, 2) -> (2, 2) (spawners, initial bodies)
+ zone(3,2) neighbor added: zone(2,1):ruin:535.5:288.5:ruin_walls:the Sunken Lantern:L2
+ zone(3,2) neighbor added: zone(3,1):shrine:823.5:460.5:shrine_ring:the Stitch Shrine:L1
+ zone(3,2) total population: (146, 392) -> (146, 392) (spawners, initial bodies)
+ zone(3,2) population barrow_wight: (2, 3) -> (2, 3) (spawners, initial bodies)
+ zone(3,2) population cairn_stone: (7, 7) -> (7, 7) (spawners, initial bodies)
+ zone(3,2) population cinder_imp: (2, 5) -> (2, 5) (spawners, initial bodies)
+ zone(3,2) population gnasher_whelp: (9, 47) -> (9, 47) (spawners, initial bodies)
+ zone(3,2) population goblin_scavenger: (4, 10) -> (4, 10) (spawners, initial bodies)
+ zone(3,2) population grove_stag: (30, 60) -> (30, 60) (spawners, initial bodies)
+ zone(3,2) population hob: (86, 251) -> (86, 251) (spawners, initial bodies)
+ zone(3,2) population remnant_shade: (2, 5) -> (2, 5) (spawners, initial bodies)
+ zone(3,2) population ruin_chest: (1, 1) -> (1, 1) (spawners, initial bodies)
+ zone(3,2) population shrine_stone: (2, 2) -> (2, 2) (spawners, initial bodies)
+ zone(3,2) population tangle: (1, 1) -> (1, 1) (spawners, initial bodies)
+ zone(-1,0) neighbor removed: zone(-2,0):knot:-434.5:44.5:knot_stones:the Drowning:L8
+ zone(-1,0) neighbor removed: zone(-2,0):scrap_fort:-278.5:21.5:ruin_walls:Scrap Fort:L11
+ zone(-1,0) neighbor removed: zone(-2,0):orc_muster:-444.5:220.5:camp_ring:Iron-Tusk Muster:L10
+ zone(-1,0) neighbor removed: zone(-1,0):kiln:-218.5:235.5:kiln_ring:Emberseat:L8
+ zone(-1,0) neighbor removed: zone(-1,0):scrap_fort:-42.5:229.5:ruin_walls:Scrap Fort:L11
+ zone(-1,0) neighbor removed: zone(-1,0):ruin:-46.5:48.5:ruin_walls:the Fallen Hall:L7
+ zone(-1,0) neighbor removed: zone(-2,1):knot:-448.5:392.5:knot_stones:the Hob Hollow:L8
+ zone(-1,0) neighbor removed: zone(-2,1):knot:-372.5:487.5:knot_stones:the Drowning:L8
+ zone(-1,0) neighbor removed: zone(-2,1):knot:-280.5:351.5:knot_stones:a Thinning:L8
+ zone(-1,0) neighbor removed: zone(-1,1):knot:-34.5:419.5:knot_stones:a Skyfall:L8
+ zone(-1,0) neighbor removed: zone(-1,1):grave_court:-198.5:436.5:ruin_walls:the Silent Faculty:L10
+ zone(-1,0) neighbor removed: zone(-1,1):scrap_fort:-234.5:294.5:ruin_walls:Scrap Fort:L11
+ zone(-1,0) neighbor added: zone(-2,0):kiln:-434.5:44.5:kiln_ring:the Red Kiln:L8
+ zone(-1,0) neighbor added: zone(-2,0):kiln:-278.5:21.5:kiln_ring:the Cinderstair:L8
+ zone(-1,0) neighbor added: zone(-2,0):scrap_fort:-444.5:220.5:ruin_walls:Scrap Fort:L11
+ zone(-1,0) neighbor added: zone(-1,0):ruin:-218.5:235.5:ruin_walls:the Last Stitch:L7
+ zone(-1,0) neighbor added: zone(-1,0):ruin:-42.5:229.5:barrow:the Sunken Lantern:L7
+ zone(-1,0) neighbor added: zone(-1,0):kiln:-56.5:100.5:kiln_ring:the Cinderstair:L8
+ zone(-1,0) neighbor added: zone(-2,1):knot:-448.5:392.5:knot_stones:a Burl:L8
+ zone(-1,0) neighbor added: zone(-2,1):knot:-372.5:487.5:knot_stones:a Thinning:L8
+ zone(-1,0) neighbor added: zone(-2,1):knot:-280.5:351.5:knot_stones:a Snarl:L8
+ zone(-1,0) neighbor added: zone(-1,1):knot:-34.5:419.5:knot_stones:a Tangle:L8
+ zone(-1,0) neighbor added: zone(-1,1):ruin:-198.5:436.5:ruin_walls:the Last Stitch:L7
+ zone(-1,0) neighbor added: zone(-1,1):knot:-234.5:294.5:knot_stones:a Snarl:L8
+ zone(-1,0) total population: (154, 398) -> (153, 399) (spawners, initial bodies)
+ zone(-1,0) population barrow_wight: (2, 2) -> (4, 6) (spawners, initial bodies)
+ zone(-1,0) population cinder_imp: (3, 8) -> (3, 8) (spawners, initial bodies)
+ zone(-1,0) population goblin_sapper: (1, 2) -> (0, 0) (spawners, initial bodies)
+ zone(-1,0) population hob: (84, 254) -> (84, 254) (spawners, initial bodies)
+ zone(-1,0) population hobgoblin_taskmaster: (1, 2) -> (0, 0) (spawners, initial bodies)
+ zone(-1,0) population loosed_kindler: (17, 23) -> (17, 23) (spawners, initial bodies)
+ zone(-1,0) population orc_ravager: (1, 1) -> (0, 0) (spawners, initial bodies)
+ zone(-1,0) population remnant_shade: (1, 2) -> (2, 5) (spawners, initial bodies)
+ zone(-1,0) population ruin_chest: (2, 2) -> (2, 2) (spawners, initial bodies)
+ zone(-1,0) population warg: (1, 1) -> (0, 0) (spawners, initial bodies)
+ zone(-1,0) population wolf: (40, 100) -> (40, 100) (spawners, initial bodies)
+ zone(-1,0) population wolverine: (1, 1) -> (1, 1) (spawners, initial bodies)
+ zone(-1,1) neighbor removed: zone(-2,0):knot:-434.5:44.5:knot_stones:the Drowning:L8
+ zone(-1,1) neighbor removed: zone(-2,0):scrap_fort:-278.5:21.5:ruin_walls:Scrap Fort:L11
+ zone(-1,1) neighbor removed: zone(-2,0):orc_muster:-444.5:220.5:camp_ring:Iron-Tusk Muster:L10
+ zone(-1,1) neighbor removed: zone(-1,0):kiln:-218.5:235.5:kiln_ring:Emberseat:L8
+ zone(-1,1) neighbor removed: zone(-1,0):scrap_fort:-42.5:229.5:ruin_walls:Scrap Fort:L11
+ zone(-1,1) neighbor removed: zone(-1,0):ruin:-46.5:48.5:ruin_walls:the Fallen Hall:L7
+ zone(-1,1) neighbor removed: zone(-2,1):knot:-448.5:392.5:knot_stones:the Hob Hollow:L8
+ zone(-1,1) neighbor removed: zone(-2,1):knot:-372.5:487.5:knot_stones:the Drowning:L8
+ zone(-1,1) neighbor removed: zone(-2,1):knot:-280.5:351.5:knot_stones:a Thinning:L8
+ zone(-1,1) neighbor removed: zone(-1,1):knot:-34.5:419.5:knot_stones:a Skyfall:L8
+ zone(-1,1) neighbor removed: zone(-1,1):grave_court:-198.5:436.5:ruin_walls:the Silent Faculty:L10
+ zone(-1,1) neighbor removed: zone(-1,1):scrap_fort:-234.5:294.5:ruin_walls:Scrap Fort:L11
+ zone(-1,1) neighbor removed: zone(-2,2):grave_court:-359.5:689.5:ruin_walls:the Cinder Lectern:L10
+ zone(-1,1) neighbor removed: zone(-2,2):knot:-488.5:565.5:knot_stones:the Hob Hollow:L8
+ zone(-1,1) neighbor removed: zone(-2,2):troll_toll:-280.5:535.5:barrow:Troll Toll:L10
+ zone(-1,1) neighbor removed: zone(-1,2):orc_chaincamp:-74.5:742.5:camp_ring:Chainkeeper Camp:L13
+ zone(-1,1) neighbor removed: zone(-1,2):ruin:-163.5:550.5:barrow:Barrowgate:L7
+ zone(-1,1) neighbor added: zone(-2,0):kiln:-434.5:44.5:kiln_ring:the Red Kiln:L8
+ zone(-1,1) neighbor added: zone(-2,0):kiln:-278.5:21.5:kiln_ring:the Cinderstair:L8
+ zone(-1,1) neighbor added: zone(-2,0):scrap_fort:-444.5:220.5:ruin_walls:Scrap Fort:L11
+ zone(-1,1) neighbor added: zone(-1,0):ruin:-218.5:235.5:ruin_walls:the Last Stitch:L7
+ zone(-1,1) neighbor added: zone(-1,0):ruin:-42.5:229.5:barrow:the Sunken Lantern:L7
+ zone(-1,1) neighbor added: zone(-1,0):kiln:-56.5:100.5:kiln_ring:the Cinderstair:L8
+ zone(-1,1) neighbor added: zone(-2,1):knot:-448.5:392.5:knot_stones:a Burl:L8
+ zone(-1,1) neighbor added: zone(-2,1):knot:-372.5:487.5:knot_stones:a Thinning:L8
+ zone(-1,1) neighbor added: zone(-2,1):knot:-280.5:351.5:knot_stones:a Snarl:L8
+ zone(-1,1) neighbor added: zone(-1,1):knot:-34.5:419.5:knot_stones:a Tangle:L8
+ zone(-1,1) neighbor added: zone(-1,1):ruin:-198.5:436.5:ruin_walls:the Last Stitch:L7
+ zone(-1,1) neighbor added: zone(-1,1):knot:-234.5:294.5:knot_stones:a Snarl:L8
+ zone(-1,1) neighbor added: zone(-2,2):knot:-359.5:689.5:knot_stones:a Burl:L8
+ zone(-1,1) neighbor added: zone(-2,2):scrap_fort:-488.5:565.5:ruin_walls:Scrap Fort:L11
+ zone(-1,1) neighbor added: zone(-2,2):kiln:-280.5:535.5:kiln_ring:the Cinderstair:L8
+ zone(-1,1) neighbor added: zone(-1,2):grave_court:-74.5:742.5:ruin_walls:the Cinder Lectern:L10
+ zone(-1,1) neighbor added: zone(-1,2):ruin:-163.5:550.5:barrow:the Old Seam:L7
+ zone(-1,1) total population: (165, 409) -> (169, 421) (spawners, initial bodies)
+ zone(-1,1) population barrow_wight: (0, 0) -> (2, 4) (spawners, initial bodies)
+ zone(-1,1) population cairn_stone: (7, 7) -> (14, 14) (spawners, initial bodies)
+ zone(-1,1) population cinder_imp: (2, 4) -> (4, 9) (spawners, initial bodies)
+ zone(-1,1) population goblin_sapper: (1, 1) -> (0, 0) (spawners, initial bodies)
+ zone(-1,1) population hob: (81, 241) -> (81, 241) (spawners, initial bodies)
+ zone(-1,1) population hobgoblin_taskmaster: (1, 1) -> (0, 0) (spawners, initial bodies)
+ zone(-1,1) population loosed_kindler: (16, 22) -> (16, 22) (spawners, initial bodies)
+ zone(-1,1) population orc_ravager: (1, 2) -> (0, 0) (spawners, initial bodies)
+ zone(-1,1) population ossuary_lich: (1, 1) -> (0, 0) (spawners, initial bodies)
+ zone(-1,1) population remnant_shade: (1, 4) -> (3, 11) (spawners, initial bodies)
+ zone(-1,1) population ruin_chest: (2, 2) -> (1, 1) (spawners, initial bodies)
+ zone(-1,1) population salt_ibex: (1, 1) -> (1, 1) (spawners, initial bodies)
+ zone(-1,1) population skeletal_cryomancer: (1, 1) -> (0, 0) (spawners, initial bodies)
+ zone(-1,1) population skeletal_pyromancer: (1, 1) -> (0, 0) (spawners, initial bodies)
+ zone(-1,1) population skeletal_stormcaller: (1, 1) -> (0, 0) (spawners, initial bodies)
+ zone(-1,1) population skeletal_venomancer: (1, 1) -> (0, 0) (spawners, initial bodies)
+ zone(-1,1) population tangle: (1, 1) -> (2, 2) (spawners, initial bodies)
+ zone(-1,1) population warg: (1, 2) -> (0, 0) (spawners, initial bodies)
+ zone(-1,1) population wolf: (42, 113) -> (42, 113) (spawners, initial bodies)
+ zone(-1,1) population wolverine: (3, 3) -> (3, 3) (spawners, initial bodies)
+ zone(2,1) neighbor added: zone(2,1):ruin:535.5:288.5:ruin_walls:the Sunken Lantern:L2
+ zone(2,1) neighbor added: zone(3,1):shrine:823.5:460.5:shrine_ring:the Stitch Shrine:L1
+ zone(2,1) total population: (135, 372) -> (139, 378) (spawners, initial bodies)
+ zone(2,1) population barrow_wight: (2, 4) -> (4, 7) (spawners, initial bodies)
+ zone(2,1) population gnasher_whelp: (9, 45) -> (9, 45) (spawners, initial bodies)
+ zone(2,1) population goblin_sapper: (1, 1) -> (1, 1) (spawners, initial bodies)
+ zone(2,1) population goblin_scavenger: (7, 17) -> (7, 17) (spawners, initial bodies)
+ zone(2,1) population grove_stag: (33, 69) -> (33, 69) (spawners, initial bodies)
+ zone(2,1) population hedgehog: (3, 4) -> (3, 4) (spawners, initial bodies)
+ zone(2,1) population hob: (75, 225) -> (75, 225) (spawners, initial bodies)
+ zone(2,1) population remnant_shade: (1, 2) -> (2, 4) (spawners, initial bodies)
+ zone(2,1) population ruin_chest: (2, 2) -> (3, 3) (spawners, initial bodies)
+ zone(2,1) population shrine_stone: (1, 1) -> (1, 1) (spawners, initial bodies)
+ zone(2,1) population warg: (1, 2) -> (1, 2) (spawners, initial bodies)
+ zone(3,1) neighbor added: zone(2,1):ruin:535.5:288.5:ruin_walls:the Sunken Lantern:L2
+ zone(3,1) neighbor added: zone(3,1):shrine:823.5:460.5:shrine_ring:the Stitch Shrine:L1
+ zone(3,1) total population: (133, 345) -> (134, 346) (spawners, initial bodies)
+ zone(3,1) population cairn_stone: (7, 7) -> (7, 7) (spawners, initial bodies)
+ zone(3,1) population cinder_imp: (2, 4) -> (2, 4) (spawners, initial bodies)
+ zone(3,1) population gnasher_whelp: (5, 18) -> (5, 18) (spawners, initial bodies)
+ zone(3,1) population goblin_scavenger: (2, 6) -> (2, 6) (spawners, initial bodies)
+ zone(3,1) population grove_stag: (26, 57) -> (26, 57) (spawners, initial bodies)
+ zone(3,1) population hedgehog: (1, 1) -> (1, 1) (spawners, initial bodies)
+ zone(3,1) population hob: (86, 247) -> (86, 247) (spawners, initial bodies)
+ zone(3,1) population reed_gnasher: (1, 1) -> (1, 1) (spawners, initial bodies)
+ zone(3,1) population remnant_shade: (1, 2) -> (1, 2) (spawners, initial bodies)
+ zone(3,1) population shrine_stone: (1, 1) -> (2, 2) (spawners, initial bodies)
+ zone(3,1) population tangle: (1, 1) -> (1, 1) (spawners, initial bodies)
+
+
+
+Test Run Successful.
+Total tests: 1
+     Passed: 1
+ Total time: 19.3886 Seconds
