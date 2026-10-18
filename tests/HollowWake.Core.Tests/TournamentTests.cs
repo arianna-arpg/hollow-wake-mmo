@@ -5,22 +5,85 @@ using HollowWake.Core.Content;
 using HollowWake.Core.Definitions;
 using HollowWake.Core.Evaluation;
 using HollowWake.Core.Sim;
+using HollowWake.Tools;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace HollowWake.Core.Tests;
 
 /// <summary>
 /// The evaluation harness (docs/design/evaluation.md): seeded duels across pairings measured from the
 /// simulation's events, repeating exactly, with bands read from content that name what they break, pairings
-/// listed in content, and trace hashes a baseline holds a later run to.
+/// listed in content, trace hashes a baseline holds a later run to, and the command that drives them.
 /// </summary>
 public class TournamentTests
 {
+    private readonly ITestOutputHelper _output;
+
+    public TournamentTests(ITestOutputHelper output)
+    {
+        _output = output;
+    }
+
     private static string Scratch(string name)
     {
         var dir = Path.Combine(Path.GetTempPath(), "hollowwake-" + name + "-" + Guid.NewGuid().ToString("N"));
         Directory.CreateDirectory(dir);
         return dir;
+    }
+
+    /// <summary>The repository's root: the folder that holds content/core.</summary>
+    private static string RepositoryRoot() => Path.GetDirectoryName(Path.GetDirectoryName(CoreContent.FindContentDir()))!;
+
+    /// <summary>Runs the tournament command over <paramref name="args"/>; returns its exit code and the lines it wrote.</summary>
+    private static (int Code, string[] Lines) Command(ContentRegistry content, params string[] args)
+    {
+        var written = new StringWriter();
+        var code = TournamentCommand.Run(content, args, written);
+        return (code, written.ToString().Split('\n', StringSplitOptions.RemoveEmptyEntries).Select(l => l.TrimEnd('\r')).ToArray());
+    }
+
+    [Theory]
+    [InlineData("unknown option --check-hash", "--standard", "--check-hash", "baseline.json")]
+    [InlineData("unknown option --seed", "--seed", "3")]
+    [InlineData("--check-hashes needs a value", "--standard", "--check-hashes")]
+    [InlineData("--check-hashes needs a value", "--check-hashes", "--standard")]
+    [InlineData("--out needs a value", "--hashes", "--out")]
+    [InlineData("--out needs a value", "--out", "--hashes")]
+    [InlineData("--seeds needs a value", "--pairs", "wolf:hob", "--seeds")]
+    [InlineData("unexpected word 'wolf:hob'", "--standard", "wolf:hob")]
+    [InlineData("--seeds is given twice", "--seeds", "3", "--seeds", "4")]
+    [InlineData("--seeds takes a whole number", "--pairs", "wolf:hob", "--seeds", "0")]
+    [InlineData("--check-hashes: no baseline at", "--check-hashes", "no-such-baseline.json")]
+    public void TheCommandRefusesABadOptionWithOneLineBeforeAnyFight(string refusal, params string[] args)
+    {
+        var (code, lines) = Command(CoreContent.Registry, args);
+        Assert.Equal(1, code);
+        // One line, and no table: nothing was fought.
+        var line = Assert.Single(lines);
+        Assert.StartsWith(refusal, line, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void TheCommittedBaselineHoldsOnItsPlatform()
+    {
+        var path = Path.Combine(RepositoryRoot(), "experiments", "combat-grammar", "baselines", "standard-duels.json");
+        var baseline = TraceBaseline.FromJson(File.ReadAllText(path));
+        var standard = Pairing.Listed(CoreContent.Registry, Pairing.StandardDuels);
+        var run = Tournament.Run(CoreContent.Registry, standard, baseline.Seeds, baseline.Seconds, checkBands: false);
+        if (baseline.Platform == TraceBaseline.CurrentPlatform)
+        {
+            Assert.Empty(baseline.Differences(run));
+            return;
+        }
+        // On another platform a hash need only repeat: how it differs from the recorded one is a finding to record.
+        var again = Tournament.Run(CoreContent.Registry, standard, baseline.Seeds, baseline.Seconds, checkBands: false);
+        Assert.Equal(run.Pairs.Select(p => p.Hash), again.Pairs.Select(p => p.Hash));
+        _output.WriteLine($"the baseline was recorded on {baseline.Platform ?? "an unnamed platform"}, this run is on {TraceBaseline.CurrentPlatform}:");
+        foreach (var difference in baseline.Differences(run))
+        {
+            _output.WriteLine("    " + difference);
+        }
     }
 
     [Fact]

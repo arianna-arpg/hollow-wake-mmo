@@ -234,12 +234,17 @@ public sealed record TournamentReport(int Seeds, double Seconds, string Hash, bo
 
 /// <summary>
 /// Recorded trace hashes, the baseline a later run is checked against: the seeds and the cap the run fought with,
-/// and each pairing's hash keyed <c>a:b</c>. <c>tournament --hashes --out</c> writes one, <c>--check-hashes</c>
-/// reads one; the file is small and sorted so a review can diff it.
+/// the platform it ran on, and each pairing's hash keyed <c>a:b</c>. <c>tournament --hashes --out</c> writes one,
+/// <c>--check-hashes</c> reads one; the file is small and sorted so a review can diff it. A hash repeats on the
+/// platform it was recorded on; on another, floating point may round differently, so a difference there is a
+/// finding to record rather than a regression. A baseline that names no platform was recorded on none known.
 /// </summary>
-public sealed record TraceBaseline(int Seeds, double Seconds, IReadOnlyDictionary<string, string> Hashes)
+public sealed record TraceBaseline(int Seeds, double Seconds, string? Platform, IReadOnlyDictionary<string, string> Hashes)
 {
     private static readonly JsonSerializerOptions Json = new() { WriteIndented = true };
+
+    /// <summary>The platform this process runs on, as the runtime names it: <c>win-x64</c>, <c>linux-x64</c>, <c>osx-arm64</c>.</summary>
+    public static string CurrentPlatform => System.Runtime.InteropServices.RuntimeInformation.RuntimeIdentifier;
 
     public static TraceBaseline Of(TournamentReport report)
     {
@@ -248,7 +253,7 @@ public sealed record TraceBaseline(int Seeds, double Seconds, IReadOnlyDictionar
         {
             hashes[new Pairing(p.A, p.B).ToString()] = p.Hash;
         }
-        return new TraceBaseline(report.Seeds, report.Seconds, hashes);
+        return new TraceBaseline(report.Seeds, report.Seconds, CurrentPlatform, hashes);
     }
 
     /// <summary>The baseline as JSON with LF line ends and a final newline, whatever the platform.</summary>
