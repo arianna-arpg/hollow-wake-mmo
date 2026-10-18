@@ -146,6 +146,7 @@ internal static class Families
         Budget = ProjectileBudget,
         States = ProjectileStates,
         Checks = SalvoBeats,
+        Lands = _ => (false, "a flight lands only lobbed, and the table does not sample gravity"),
         Exempt = new Dictionary<string, string>
         {
             ["bounce"] = "flights glance only off walls, rising ground or (lobbed) the ground, and gravity is a flag the table does not sample: " + OpenArena,
@@ -287,50 +288,61 @@ internal static class Families
             : toFloor + (distance - covered) / floor;
     }
 
+    /// <summary>What a projectile point's compiled weave must state, and must not, of every mechanism the table's samples move.</summary>
     private static IEnumerable<Statement> ProjectileStates(View v)
     {
         yield return new Statement("projectile", true, "the graph fires a projectile");
-        var fire = v.Word("fire");
-        if (fire != "fan")
+        yield return new Statement("flight", true, "the graph fires a projectile");
+        foreach (var s in FireStates(v.Word("fire")).Concat(ShapeStates(v.Word("shape"))))
         {
-            yield return new Statement("fire", true, $"fire {fire}");
-            yield return new Statement("fire:" + fire, true, $"fire {fire}");
+            yield return s;
         }
-        var shape = v.Word("shape");
-        if (shape != "circle")
+        yield return new Statement("returning", v.Word("return") != "none", $"return {v.Word("return")}");
+        yield return new Statement("homing", v.Num("homing", 0) != 0, $"homing {v.Num("homing", 0):0.##}");
+        var bent = Trajectory.FirstOrDefault(axis => v.Num(axis, 0) != 0);
+        yield return bent is null
+            ? new Statement("trajectory", false, "no trajectory axis is set")
+            : new Statement("trajectory", true, $"{bent} {v.Num(bent):0.##}");
+        yield return new Statement("chain", Count0(v.Num("chains")) > 0, $"chains {v.Num("chains")}");
+        yield return new Statement("flight:children", Count0(v.Num("forks")) > 0, $"forks {v.Num("forks")}");
+        yield return v.Num("rehit") > 0
+            ? new Statement("flight:spends", false, $"rehit {v.Num("rehit"):0.##}: a hit never ends the flight")
+            : new Statement("flight:spends", true, "rehit 0: a hit ends the flight");
+        yield return Landing(v);
+    }
+
+    /// <summary>The firing styles, bare (any but a fan) and by name.</summary>
+    private static IEnumerable<Statement> FireStates(string fire)
+    {
+        yield return new Statement("fire", fire != "fan", $"fire {fire}");
+        foreach (var style in Firing)
         {
-            yield return new Statement("shape", true, $"shape {shape}");
-            yield return new Statement("shape:" + shape, true, $"shape {shape}");
-        }
-        if (v.Word("return") != "none")
-        {
-            yield return new Statement("returning", true, $"return {v.Word("return")}");
-        }
-        if (v.Num("homing", 0) != 0)
-        {
-            yield return new Statement("homing", true, $"homing {v.Num("homing"):0.##}");
-        }
-        foreach (var axis in Trajectory)
-        {
-            if (v.Num(axis, 0) != 0)
-            {
-                yield return new Statement("trajectory", true, $"{axis} {v.Num(axis):0.##}");
-                break;
-            }
-        }
-        if (Count0(v.Num("chains")) > 0)
-        {
-            yield return new Statement("chain", true, $"chains {v.Num("chains")}");
-        }
-        if (Count0(v.Num("forks")) > 0)
-        {
-            yield return new Statement("flight:children", true, $"forks {v.Num("forks")}");
-        }
-        if (v.Num("rehit") > 0)
-        {
-            yield return new Statement("flight:spends", false, $"rehit {v.Num("rehit"):0.##}: a hit never ends the flight");
+            yield return new Statement("fire:" + style, fire == style, $"fire {fire}");
         }
     }
+
+    private static readonly string[] Firing = { "fan", "volley", "ring", "salvo" };
+
+    /// <summary>The shapes, bare (any but a circle) and by name; the registry's cone is its sector.</summary>
+    private static IEnumerable<Statement> ShapeStates(string shape)
+    {
+        yield return new Statement("shape", shape != "circle", $"shape {shape}");
+        foreach (var name in ShapeNames)
+        {
+            var same = name == shape || (name, shape) is ("sector", "cone") or ("cone", "sector");
+            yield return new Statement("shape:" + name, same, $"shape {shape}");
+        }
+    }
+
+    /// <summary>Whether the point's delivery lands, as its family says, stated both ways.</summary>
+    private static Statement Landing(View v)
+    {
+        var (lands, because) = v.Point.Family.Lands?.Invoke(v) ?? (false, $"a {v.Point.Family.Name} never lands");
+        return new Statement("landing", lands, because);
+    }
+
+    /// <summary>Whether a point's delivery lands, as its family says (false for a family whose deliveries never land).</summary>
+    internal static bool Lands(View v) => v.Point.Family.Lands?.Invoke(v).Lands ?? false;
 
     // ------------------------------------------------------------ area
 
@@ -403,11 +415,19 @@ internal static class Families
         {
             var shape = v.Word("shape");
             var states = new List<Statement> { new("area", shape != "line", $"shape {shape}") };
-            if (shape != "circle")
-            {
-                states.Add(new Statement("shape", true, $"shape {shape}"));
-                states.Add(new Statement("shape:" + shape, true, $"shape {shape}"));
-            }
+            states.AddRange(ShapeStates(shape));
+            // The hit list's damage strikes with the weave's Thread (ember, whose ailment is burning); a drain standing alone deals none.
+            var hits = v.Fills("effects");
+            var because = hits ? "the hit list deals damage with the ember Thread" : "the hit list holds a drain alone";
+            states.Add(new Statement("strikes", hits, because));
+            states.Add(new Statement("affliction", hits, because));
+            states.Add(new Statement("affliction:burning", hits, because));
+            var marks = v.Fills("effects+status");
+            var applies = marks ? "the hit list applies the marking status, which ticks" : "the hit list applies no status";
+            states.Add(new Statement("status", marks, applies));
+            states.Add(new Statement("status:" + MorphLayer.Mark, marks, applies));
+            states.Add(new Statement("affliction:" + MorphLayer.Mark, marks, applies));
+            states.Add(Landing(v));
             return states;
         },
         Exempt = new Dictionary<string, string> { ["occlusion"] = OpenArena },
@@ -452,7 +472,7 @@ internal static class Families
             var leaps = Math.Min(MorphArena.Bodies, Count0(v.Num("count")));
             return new Budget(1 + leaps, 1, 1, CarrierSeconds, $"the carrier's hit and at most {leaps} leaps");
         },
-        States = _ => new[] { new Statement("chain", true, "the graph chains") },
+        States = v => new[] { new Statement("chain", true, "the graph chains"), Landing(v) },
     };
 
     // ------------------------------------------------------------ field
@@ -519,19 +539,14 @@ internal static class Families
                 new("area", true, "a field"),
                 new("surface", true, "a field"),
                 new("surface:standing", true, "a field that does not follow"),
+                new("telegraph", v.Num("delay", 0) > 0, $"delay {v.Num("delay", 0):0.##}"),
+                Landing(v),
             };
-            if (v.Num("delay", 0) > 0)
-            {
-                states.Add(new Statement("telegraph", true, $"delay {v.Num("delay"):0.##}"));
-            }
-            var shape = v.Word("shape");
-            if (shape != "circle")
-            {
-                states.Add(new Statement("shape", true, $"shape {shape}"));
-                states.Add(new Statement("shape:" + shape, true, $"shape {shape}"));
-            }
+            states.AddRange(ShapeStates(v.Word("shape")));
             return states;
         },
+        // A field placed after a delay lands when the delay is over; one placed at once never lands.
+        Lands = v => (v.Num("delay", 0) > 0, $"delay {v.Num("delay", 0):0.##}"),
         Exempt = new Dictionary<string, string> { ["occlusion"] = OpenArena },
         Alike = new[]
         {
@@ -618,17 +633,21 @@ internal static class Families
         States = v =>
         {
             var kind = v.Word("kind");
-            var states = new List<Statement> { new("displaces", true, $"kind {kind}") };
-            if (kind is "dash" or "leap")
+            var shove = Shoves.Contains(kind);
+            return new List<Statement>
             {
-                states.Add(new Statement(kind, true, $"kind {kind}"));
-            }
-            if (Shoves.Contains(kind))
-            {
-                states.Add(new Statement("shove", true, $"kind {kind}"));
-            }
-            return states;
+                new("displaces", true, $"kind {kind}"),
+                new("dash", kind == "dash", $"kind {kind}"),
+                new("leap", kind == "leap", $"kind {kind}"),
+                new("shove", shove, $"kind {kind}"),
+                // A shove rides the hit of the carrier, a circle of an area.
+                new("area", shove, $"kind {kind}{(shove ? ", on the carrier's circle" : "")}"),
+                new("shape:circle", shove, $"kind {kind}{(shove ? ", on the carrier's circle" : "")}"),
+                Landing(v),
+            };
         },
+        // Of the moves, a leap lands: it arcs through the air and comes down where it aimed.
+        Lands = v => (v.Word("kind") == "leap", $"kind {v.Word("kind")}"),
         Exempt = new Dictionary<string, string>
         {
             ["arc"] = "a leap's height shows only in the air: it lands where and when it would have, and its body is untargetable throughout",
@@ -685,15 +704,14 @@ internal static class Families
             var marks = telegraph > 0 ? strikes : 0;
             return new Budget(strikes * MorphArena.Bodies, marks, marks, interval * Math.Max(0, strikes - 1) + telegraph, $"{strikes} strikes on at most {MorphArena.Bodies} bodies each, {marks} marks");
         },
-        States = v =>
+        States = v => new[]
         {
-            var states = new List<Statement> { new("storm", true, "a scatter") };
-            if (v.Num("telegraph", 0) > 0)
-            {
-                states.Add(new Statement("telegraph", true, $"telegraph {v.Num("telegraph"):0.##}"));
-            }
-            return states;
+            new Statement("storm", true, "a scatter"),
+            new Statement("telegraph", v.Num("telegraph", 0) > 0, $"telegraph {v.Num("telegraph", 0):0.##}"),
+            Landing(v),
         },
+        // A telegraphed strike is marked where it will land and lands when the mark is done: a delayed placement.
+        Lands = v => (v.Num("telegraph", 0) > 0, $"telegraph {v.Num("telegraph", 0):0.##}"),
         Exempt = new Dictionary<string, string>
         {
             ["telegraph_radius"] = "the mark's radius is what clients draw; strikes land as they would have",
@@ -740,7 +758,7 @@ internal static class Families
             }
             return new Budget((1 + extra) * MorphArena.Bodies, 0, 0, seconds, $"{1 + extra} placements on at most {MorphArena.Bodies} bodies each");
         },
-        States = _ => new[] { new Statement("cascade", true, "a cascade") },
+        States = v => new[] { new Statement("cascade", true, "a cascade"), Landing(v) },
     };
 
     // ------------------------------------------------------------ aura
@@ -782,7 +800,7 @@ internal static class Families
                 Markers = new Dictionary<string, double> { ["on_end"] = 1, ["on_tick"] = pulses },
             };
         },
-        States = _ => new[] { new Statement("engagement", true, "an aura") },
+        States = v => new[] { new Statement("engagement", true, "an aura"), Landing(v) },
         Exempt = new Dictionary<string, string> { ["occlusion"] = OpenArena },
         Unsampled = new Dictionary<string, string>
         {
@@ -831,7 +849,22 @@ internal static class Families
                 Markers = new Dictionary<string, double> { ["on_end"] = 1 },
             };
         },
-        States = _ => new[] { new Statement("tether", true, "a tether") },
+        States = v =>
+        {
+            // A tether to a target rides a plain flight's hit: the carrier's flight is what the projectile probes see.
+            var carried = v.Word("link") == "target";
+            var because = carried ? "link target, on the carrier's flight" : $"link {v.Word("link")}, with no carrier";
+            return new[]
+            {
+                new Statement("tether", true, "a tether"),
+                new Statement("projectile", carried, because),
+                new Statement("flight", carried, because),
+                new Statement("flight:spends", carried, because),
+                new Statement("fire:fan", carried, because),
+                new Statement("shape:circle", carried, because),
+                Landing(v),
+            };
+        },
         Alike = new[]
         {
             new Alike("filter", "ally", "ally_or_self", "a tether strikes the bodies it crosses but never the one it runs from, the caster"),
@@ -884,14 +917,14 @@ internal static class Families
         },
         States = v =>
         {
-            var states = new List<Statement> { new(probe, true, $"a {name}") };
+            var states = new List<Statement> { new(probe, true, $"a {name}"), Landing(v) };
             if (name == "summon")
             {
                 states.Add(new Statement("minion", true, "a summon"));
             }
-            else if (Math.Round(v.Num("count")) > 1)
+            else
             {
-                states.Add(new Statement("construct:massed", true, $"count {v.Num("count")}"));
+                states.Add(new Statement("construct:massed", Math.Round(v.Num("count")) > 1, $"count {v.Num("count")}"));
             }
             return states;
         },
@@ -960,12 +993,12 @@ internal static class Families
         },
         States = v =>
         {
-            var states = new List<Statement> { new("construct", true, "a spawn") };
-            if (Math.Round(v.Num("count")) > 1)
+            return new List<Statement>
             {
-                states.Add(new Statement("construct:massed", true, $"count {v.Num("count")}"));
-            }
-            return states;
+                new("construct", true, "a spawn"),
+                new("construct:massed", Math.Round(v.Num("count")) > 1, $"count {v.Num("count")}"),
+                Landing(v),
+            };
         },
         Unsampled = new Dictionary<string, string>
         {

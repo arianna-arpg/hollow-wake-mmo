@@ -132,6 +132,16 @@ public class MorphTests
         {
             When = v => !OnNode(v, "count") && Math.Round(v.Num("count")) > 1,
         },
+        new(Finding.AnyFamily, "states", "'landing' does not hold though",
+            "the landing probe (Weaves/Mechanisms.cs) holds only for a projectile's gravity or a node carrying an on_land list, so a leap, a field placed after a delay or a telegraphed strike that carries none is never stated as landing, though the probe's own description names lobbed flights, leaps and delayed placements")
+        {
+            When = v => Families.Lands(v) && !v.Fills("on_land"),
+        },
+        new(Finding.AnyFamily, "states", "'landing' holds though",
+            "the landing probe holds for any node carrying an on_land list, so a flight that is not lobbed, a field placed at once (whose on_land never runs) or a move that is not a leap (a dash runs it where it stops) is stated as landing, though none lands as the probe describes landing")
+        {
+            When = v => !Families.Lands(v) && v.Fills("on_land"),
+        },
         new("spawn", "left behind", "bare spawn",
             "exempt: a spawn without a lifetime places a body with no owner's terms, so it outlives every scenario by design; a finding, not a failure")
         {
@@ -162,6 +172,21 @@ public class MorphTests
         foreach (var (parameter, why) in family.Unsampled)
         {
             _output.WriteLine($"  unsampled '{parameter}': {why}");
+        }
+        // Every registered mechanism whose answer the table's samples move must be stated, both ways, at every point.
+        var held = examined.Select(v => (View: v, Held: MorphChecks.Held(layer, v.Point))).Where(h => h.Held is not null).ToList();
+        foreach (var mechanism in MorphChecks.Variants)
+        {
+            if (held.Select(h => h.Held![mechanism]).Distinct().Count() < 2)
+            {
+                continue;
+            }
+            var unstated = held.FirstOrDefault(h => !family.States(h.View).Any(s => s.Mechanism == mechanism));
+            if (unstated.View is { } view)
+            {
+                violations.Add(new Violation(view.Point, view, "states",
+                    $"'{mechanism}' holds at some of the family's points and not at others, and the table does not state it here (it {(unstated.Held![mechanism] ? "holds" : "does not hold")})"));
+            }
         }
         Settle(name, examined, violations, "validates", "compiles", "states");
     }
@@ -343,7 +368,7 @@ public class MorphTests
     /// </summary>
     private static void Settle(string family, IEnumerable<View> examined, List<Violation> violations, params string[] invariants)
     {
-        var known = Known.Where(f => f.Family == family && invariants.Contains(f.Invariant)).ToList();
+        var known = Known.Where(f => f.Of(family) && invariants.Contains(f.Invariant)).ToList();
         var unexplained = violations.Where(v => !known.Any(f => f.Matches(v))).ToList();
         var views = examined.ToList();
         var stale = known.Where(f => !violations.Any(f.Matches) && (f.When is null || views.Any(f.When))).ToList();

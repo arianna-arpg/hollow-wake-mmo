@@ -225,6 +225,12 @@ internal sealed class Family
     /// <summary>Checks of the family's own on what a run showed, each an invariant and what broke it.</summary>
     public Func<View, MorphArena.Outcome, IEnumerable<(string Invariant, string Message)>>? Checks { get; init; }
 
+    /// <summary>
+    /// Whether a point's delivery lands, as the landing probe describes landing (a lobbed flight, a leap, a delayed
+    /// placement), with why; null for a family whose deliveries never land.
+    /// </summary>
+    public Func<View, (bool Lands, string Because)>? Lands { get; init; }
+
     /// <summary>Parameters the crowd scenario cannot show, each with why. The check still runs them and fails when one moves after all.</summary>
     public IReadOnlyDictionary<string, string> Exempt { get; init; } = new Dictionary<string, string>();
 
@@ -377,18 +383,25 @@ internal sealed class View
 
 /// <summary>
 /// A defect the morph test has found and keeps finding: a violation of <see cref="Invariant"/> in
-/// <see cref="Family"/> whose message holds <see cref="Contains"/> (and whose point meets <see cref="When"/>) is
-/// expected, with <see cref="Reason"/>. A finding that stops reproducing fails the test, so the list stays honest.
+/// <see cref="Family"/> (<see cref="AnyFamily"/> for a defect several families show) whose message holds
+/// <see cref="Contains"/> (and whose point meets <see cref="When"/>) is expected, with <see cref="Reason"/>. A finding
+/// that stops reproducing fails the test, so the list stays honest.
 /// </summary>
 internal sealed record Finding(string Family, string Invariant, string Contains, string Reason)
 {
+    /// <summary>The family name of a finding any family may show.</summary>
+    public const string AnyFamily = "*";
+
     /// <summary>A condition on the point, so the finding is expected only where the point meets it.</summary>
     public Func<View, bool>? When { get; init; }
 
     /// <summary>A condition on what the run showed (the violation's outcome), so the finding matches only a violation that shows it.</summary>
     public Func<Violation, bool>? Shows { get; init; }
 
-    public bool Matches(Violation v) => v.Point.Family.Name == Family && v.Invariant == Invariant && v.Message.Contains(Contains, StringComparison.Ordinal)
+    /// <summary>Whether the finding is one a family may show.</summary>
+    public bool Of(string family) => Family == AnyFamily || Family == family;
+
+    public bool Matches(Violation v) => Of(v.Point.Family.Name) && v.Invariant == Invariant && v.Message.Contains(Contains, StringComparison.Ordinal)
         && (When is null || When(v.View)) && (Shows is null || Shows(v));
 }
 

@@ -651,22 +651,42 @@ internal static class MorphArena
     }
 }
 
-/// <summary>The checks a point passes before it runs: its layer entries validate, its weave compiles strictly, and the compiled weave states what the point is.</summary>
+/// <summary>
+/// The checks a point passes before it runs: its layer entries validate, its weave compiles strictly, and the compiled
+/// weave states what the point is. A point compiles once: its checks and what every mechanism says of it are kept, by
+/// the point's weave, for every theory that asks (the layer is built once and never changes).
+/// </summary>
 internal static class MorphChecks
 {
-    public static IEnumerable<(string Invariant, string Message)> Static(MorphLayer layer, Point p)
+    private static readonly System.Collections.Concurrent.ConcurrentDictionary<string, (List<(string Invariant, string Message)> Broken, IReadOnlyDictionary<string, bool>? Held)> Cache = new(StringComparer.Ordinal);
+
+    public static IReadOnlyList<(string Invariant, string Message)> Static(MorphLayer layer, Point p) => Checked(layer, p).Broken;
+
+    /// <summary>What every registered mechanism says of a point's compiled weave, or null when it does not compile.</summary>
+    public static IReadOnlyDictionary<string, bool>? Held(MorphLayer layer, Point p) => Checked(layer, p).Held;
+
+    private static (List<(string Invariant, string Message)> Broken, IReadOnlyDictionary<string, bool>? Held) Checked(MorphLayer layer, Point p) =>
+        Cache.GetOrAdd(p.Id, _ =>
+        {
+            var compiler = new WeaveCompiler(layer.Content, EffectRegistry.Shared);
+            var compiled = compiler.TryCompile(new WeaveSpec { Preset = p.Id }, out var weave, out var error);
+            var probe = compiled ? ProbeOf(layer.Content, weave!, p.Id) : null;
+            var broken = Check(layer, p, weave, probe, error).ToList();
+            var held = probe is null ? null : Variants.ToDictionary(m => m, m => MechanismRegistry.Holds(probe, m), StringComparer.Ordinal);
+            return (broken, held);
+        });
+
+    private static IEnumerable<(string Invariant, string Message)> Check(MorphLayer layer, Point p, CompiledWeave? weave, WeaveProbe? probe, string? error)
     {
         foreach (var issue in layer.IssuesOf(p))
         {
             yield return ("validates", $"{issue.Severity}: {issue.Kind}/{issue.Id}: {issue.Message}");
         }
-        var compiler = new WeaveCompiler(layer.Content, EffectRegistry.Shared);
-        if (!compiler.TryCompile(new WeaveSpec { Preset = p.Id }, out var weave, out var error))
+        if (weave is null || probe is null)
         {
             yield return ("compiles", $"the weave does not compile: {error}");
             yield break;
         }
-        var probe = ProbeOf(layer.Content, weave!, p.Id);
         var states = p.Family.States(new View(p, layer.Content)).ToList();
         if (!states.Any(s => s.Mechanism == p.Family.Probe))
         {
@@ -675,7 +695,7 @@ internal static class MorphChecks
         foreach (var s in states)
         {
             var holds = MechanismRegistry.Holds(probe, s.Mechanism);
-            var carried = s.Mechanism.Contains(':') ? weave!.HasMechanism(s.Mechanism) : weave!.Mechanisms.Has(s.Mechanism);
+            var carried = s.Mechanism.Contains(':') ? weave.HasMechanism(s.Mechanism) : weave.Mechanisms.Has(s.Mechanism);
             if (s.Holds && !(holds && carried))
             {
                 yield return ("states", $"'{s.Mechanism}' does not hold though {s.Because} (probe {holds}, compiled {carried})");
@@ -686,6 +706,26 @@ internal static class MorphChecks
             }
         }
     }
+
+    /// <summary>
+    /// Every registered mechanism a probe can answer of a point, by name: each probe bare, with each word its parameter
+    /// takes, and with each status a point can apply or inflict (the marking status and the ember Thread's ailment).
+    /// </summary>
+    public static readonly IReadOnlyList<string> Variants = MechanismRegistry.All.SelectMany(info =>
+    {
+        var names = new List<string> { info.Name };
+        if (ReferenceEquals(info.Parameter, ProbeParameter.Status))
+        {
+            names.Add(info.Name + ":" + MorphLayer.Mark);
+            names.Add(info.Name + ":burning");
+        }
+        else if (!ReferenceEquals(info.Parameter, ProbeParameter.None) && !ReferenceEquals(info.Parameter, ProbeParameter.Any))
+        {
+            // A probe taking one of a fixed set of words describes itself by them.
+            names.AddRange(info.Parameter.Description.Split(", ").Select(word => info.Name + ":" + word));
+        }
+        return names;
+    }).ToList();
 
     /// <summary>
     /// The probe a compiled weave was stated from, rebuilt from its public parts, so a mechanism is tested on the graph
