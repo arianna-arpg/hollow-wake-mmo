@@ -5,8 +5,8 @@ using Xunit;
 
 namespace HollowWake.Core.Tests;
 
-// Review reproducer: copy into the core test project to demonstrate the open finding.
-// Kept outside the passing suite until the runtime correction lands.
+// Historical review reproducer: both cases failed at b7709fd, before the healing guard.
+// HealPipelineTests now covers both paths plus potency and glyph modifiers in the passing suite.
 public class MorphReviewProbeTests
 {
     [Theory]
