@@ -1,0 +1,29 @@
+{
+  "started": "2026-10-18T20:26:55.059Z",
+  "root": "C:\\Users\\John\\.codex\\worktrees\\undead-entity-foundation\\MMOARPG",
+  "directory": "C:\\Users\\John\\.codex\\worktrees\\undead-entity-foundation\\MMOARPG\\artifacts\\testing\\run-Oqn7Cj",
+  "suite": "all",
+  "status": "failed",
+  "stages": [
+    {
+      "name": "smoke-web",
+      "status": "failed",
+      "started": "2026-10-18T20:26:56.380Z",
+      "code": 1,
+      "signal": null,
+      "error": "smoke-web failed; see smoke-web.log",
+      "finished": "2026-10-18T20:28:18.550Z"
+    }
+  ],
+  "nativeRendering": "not covered by headless mode",
+  "godot": "C:\\Users\\John\\AppData\\Local\\Microsoft\\WinGet\\Packages\\GodotEngine.GodotEngine.Mono_Microsoft.Winget.Source_8wekyb3d8bbwe\\Godot_v4.7.2-stable_mono_win64\\Godot_v4.7.2-stable_mono_win64.exe",
+  "server": {
+    "tcp": 50127,
+    "url": "http://127.0.0.1:50128",
+    "name": "harness-run-Oqn7Cj",
+    "data": "C:\\Users\\John\\.codex\\worktrees\\undead-entity-foundation\\MMOARPG\\artifacts\\testing\\run-Oqn7Cj\\data"
+  },
+  "error": "smoke-web failed; see smoke-web.log",
+  "cleanupErrors": [],
+  "finished": "2026-10-18T20:28:19.009Z"
+}

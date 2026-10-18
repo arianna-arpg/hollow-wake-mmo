@@ -96,3 +96,19 @@ Source `0ae9ec326a5c86ee58912013d31417fc05c4eeee`: browser unit tests 291 pass, 
 Fresh run-yVBA1c card and grayscale frames were inspected: both show interface/nameplates over a flat background, with no world terrain or bodies. This confirms the retained inherited blank-world defect on #34; behavioral smoke is not visual clearance. The separately committed #37 renderer correction 30f6c91 is the integration fix and will be rechecked after importing this foundation. No native pixel verification is claimed.
 
 These functional gates do not resolve the retained pre-main performance misses or establish a post-main timing pass. No benchmark was run during this integration.
+
+## #37 main integration gates
+
+Source `4185c7fdbc8e057d35b78fc9b9587642f4f7183d`: solution build zero warnings/errors; all core 2780, server 59 and client 134 tests pass. Validation is zero errors/warnings; load and the skeleton/zombie duel pass. The generated frozen-literal keys exactly equal the reviewed fixture; full census and keys are retained with these gates under `experiments/entity-review/evidence/37-main-*`. This verifies functional integration, not performance after main. Earlier benchmark misses remain open; no timing run or budget change accompanied these gates.
+
+Release tools build with zero warnings/errors and enforce all seven recorded Windows replay hashes unchanged from the reviewed baseline. The three inherited proving-band breaches remain open as documented above; this replay pass does not establish balance clearance.
+
+A fresh #37 Release proving-pair run exits 1 on the same three inherited win ceilings; its entire JSON equals the retained #34 report, including outcomes, mechanisms, hashes and breaches. The report is retained as `37-main-proving.*`. No numeric bands or content changed.
+
+## #37 moving-villager smoke correction
+
+The first combined private browser run `run-Oqn7Cj` at runtime `4185c7f`/evidence `bee9c90` fails 1 of 31 checks: the villager conversation. The script reports arrival, waits 400 ms and aims before clicking, but the server rejects `Interact: too_far`. The world/card pixel assertion and all other browser checks pass. Native/probe stages do not run after this failure. Teardown is clean. The initial failure is retained as `37-main-interaction-first.*`.
+
+One read-only instrumented diagnostic run `run-6XhOk3` reproduces the same failure, retained as `37-main-interaction-diagnostic.*`. The requested, hovered and actual wire target all equal `4294969852` (Marcher). Immediately before the click the hero is at (129.10, 126.47) and villager at (132.64, 124.83), approximately 3.90 m apart; after sending it the villager is at (132.85, 124.68). The previous arrival predicate was <=1.6 m. Thus the moving villager had left the arrival range during the fixed delay/aiming; this is not a wrong-entity pick or a reason to relax server reach.
+
+The narrowly owned smoke correction removes the fixed wait and re-observes target position, hover identity and visibility after aiming, continuing the approach within the same original 45-second deadline until a nearby click is possible. It sends a single interaction, still requiring the real dialogue response. Read-only wire-target diagnostics remain for future failures. Three deterministic regressions cover movement during aiming, a different hovered body with bounded timeout, and a failed approach/disappearing target. They run with the normal browser test command (320 pass). Server rules, runtime, content, interaction reach and all existing success criteria are unchanged. The corrected full private run is recorded separately below; neither retained failure is overwritten or represented as a pass.
