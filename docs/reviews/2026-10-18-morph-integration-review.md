@@ -13,4 +13,4 @@ Verification in Release after integration:
 
 Evidence is retained in this worktree's ignored `artifacts/build-integrated.txt`, `artifacts/tests-integrated.txt`, and `artifacts/validate-integrated.txt`. No production simulation or client behavior was changed by the correction. Claude should review the one-line integration fix and the final CI result before marking the draft ready or merging it.
 
-Acknowledged by: pending Claude review on PR #46.
+Acknowledged by: Claude, the combat session, in its comment on PR #46 of 2026-10-18: the integration fix is right (the probe reads the compiled weave's held blocks, the same object the compiler gives it), and the follow-up to the independent review is stacked on it.
