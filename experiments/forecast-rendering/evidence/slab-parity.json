@@ -1,0 +1,119 @@
+{
+  "base": "af718e2201cfd8f958ba6f739a857570699af129",
+  "scope": "Client-only paired forecast slab construction and mesh reuse; integration target PR #20, no main merge.",
+  "source_sha256": {
+    "src/HollowWake.Client/UI/Logic/CastForecastGeometry.cs": "fa571306d9f124cf8f7ef393dab4c8f7200415c81815298a4bd63a45618e62f9",
+    "src/HollowWake.Client/World/CastForecasts.cs": "a7bdd0c996f4ecaf42c270cf164287b3a92fab1657e949ac6a426eb9fca6091a",
+    "web/src/world/castForecastGeometry.ts": "da82819dd397af9698c72f456cf393dae776cb158fa5730ae6f2ea0a7f2cd421",
+    "web/src/world/castForecasts.ts": "9220754d83f5194c6ab0df18a499db4ac4017f9833441bf9c6f1b4b07f06e308",
+    "tests/fixtures/cast-forecasts/slabs.json": "fbffe6eeb74f329e989a75224f9a1d28b9012daed36843956072a55f10bd042e",
+    "tests/HollowWake.Client.Tests/CastForecastGeometryTests.cs": "55f5c00ce670ba0d69bf029b215cce6405c3c7dbec8bc0dcd44d723639ccdd8f",
+    "web/src/world/castForecastGeometry.test.ts": "3f04b7ebeb14c1ff30877c753cd188e394bcd3429830bbec9b2bac01306dfdf1"
+  },
+  "fixture": {
+    "geometry": 11,
+    "reuse": 26,
+    "cases_per_client": 37
+  },
+  "build": {
+    "passed": true,
+    "warnings": 0,
+    "errors": 0
+  },
+  "tests": {
+    "core": {
+      "passed": 2416,
+      "failed": 3,
+      "failures": [
+        "DeliveryAcceptanceTests.ASeededFightSplitsReturnsAndRepeatsExactly",
+        "ShoveTests.AShoveAnchoredAtThePointMeasuresFromWhereTheCastWasAimed",
+        "TournamentTests.TheCommittedBaselineHoldsOnItsPlatform"
+      ]
+    },
+    "server": {
+      "passed": 66,
+      "failed": 0
+    },
+    "native_first": {
+      "passed": 166,
+      "failed": 18,
+      "reason": "Fixture style missing required definition ID."
+    },
+    "native_corrected": {
+      "passed": 184,
+      "failed": 0
+    },
+    "web": {
+      "passed": 459,
+      "failed": 0
+    },
+    "web_fixture_corrected": {
+      "passed": 37,
+      "failed": 0
+    }
+  },
+  "validation": {
+    "errors": 0,
+    "warnings": 0
+  },
+  "web_build": {
+    "passed": true,
+    "warning": "Existing large-bundle warning"
+  },
+  "smoke": {
+    "status": "passed",
+    "stages": [
+      {
+        "name": "smoke-web",
+        "status": "passed",
+        "code": 0,
+        "passed": 32,
+        "total": 32,
+        "skipped": []
+      },
+      {
+        "name": "import-godot",
+        "status": "passed",
+        "code": 0
+      },
+      {
+        "name": "smoke-godot",
+        "status": "passed",
+        "code": 0,
+        "passed": 37,
+        "total": 37,
+        "skipped": [
+          "appearance rendering: headless display; geometry/card performance and readability require graphical evidence",
+          "theme rendered pixels: headless display; theme state checked above"
+        ]
+      }
+    ],
+    "native_rendering": "not covered by headless mode",
+    "native_shutdown_warnings": {
+      "dummy_texture_rids": 6,
+      "shaped_text_rids": 2,
+      "font_rids": 1,
+      "canvas_item_rids": 1,
+      "object_db_instances": 29
+    }
+  },
+  "screenshot": {
+    "path": "artifacts/slab-parity/smoke/run-dFYnot/shots/forecast_primary_candidate.png",
+    "sha256": "9dded97fbc77d4d7ce2bc4df5966bf569fdb4a45f7ed0ff6648b2309da0dfd41",
+    "inspection": "Both broken sector perimeters and direction marker visible; labels overlap. Not exhaustive shape/pixel certification."
+  },
+  "limits": [
+    "No gameplay, protocol or content changes.",
+    "Three inherited core flight/replay failures remain open.",
+    "No native pixel or controller certification.",
+    "No benchmark or trace; smoke frame statistics are not budget evidence."
+  ],
+  "logs": {
+    "artifacts/slab-parity/build.txt": "8d568a90edeb96033f3ef49376fb26f78c7ed3484259e12c4b3a31f39754b8b8",
+    "artifacts/slab-parity/tests.txt": "ef85b5b500b9ce2a518d1068f890ad6bbd713072cf10daa1bf9c90875b653304",
+    "artifacts/slab-parity/client-tests-corrected.txt": "8d5101bf16a5a52654ed84c5418c567f8e55ef7d1af98697de5cd17d313a7260",
+    "artifacts/slab-parity/web-geometry-corrected.txt": "2dc7419d87b72805db9807f0c39c806d40c828e905fb51c7e9338207c698b94a",
+    "artifacts/slab-parity/web-build.txt": "ad664b46e0810e717bf8c67d534938c5d11a1d2b54a9f94b15291804c63ff9c9",
+    "artifacts/slab-parity/validation.txt": "6b9544e5df11518142fe1638e3837d7a2add49d374137fba572e2c6ad30fbf78"
+  }
+}

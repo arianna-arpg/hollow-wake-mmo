@@ -1,0 +1,450 @@
+{
+  "description": "Hand-specified local core-frame strokes. Each six-number segment is [ax, ay, az, bx, by, bz]. World transform and lift are excluded. Zero-length markers are retained; renderer triangulation drops them. Small tessellation settings keep the cardinal-circle fixture exact; production settings are unchanged.",
+  "style": {"id":"slab-fixture","segments":2,"max_segments":256,"max_chord_error":2,"dash_fraction":0.5,"direction_size":2,"height_marker_size":0.25},
+  "geometry": [
+    {
+      "name": "elevated solid slab with open direction",
+      "region": {"node":"root","shape":"square","size":{"radius":2},"x":7,"y":-3,"z":10,"heading":0.7,"anchor":"source","height_tolerance":2,"center_allowance":0,"target_test":"body","bottom":11,"top":13,"requires_line_of_sight":true,"has_requirement":false,"has_target_limit":true,"viewer_eligibility":"candidate"},
+      "committed": false,
+      "expected_segments": [
+        [0,-1,1,2,0,1],
+        [2,0,1,0,1,1],
+        [-2,-2,1,0,-2,1],
+        [2,-2,1,2,0,1],
+        [2,2,1,0,2,1],
+        [-2,2,1,-2,0,1],
+        [-2,-2,3,0,-2,3],
+        [2,-2,3,2,0,3],
+        [2,2,3,0,2,3],
+        [-2,2,3,-2,0,3],
+        [-2,-2,1,-2,-2,1.25],
+        [-2,-2,2.75,-2,-2,3],
+        [2,-2,1,2,-2,1.25],
+        [2,-2,2.75,2,-2,3],
+        [2,2,1,2,2,1.25],
+        [2,2,2.75,2,2,3],
+        [-2,2,1,-2,2,1.25],
+        [-2,2,2.75,-2,2,3]
+      ]
+    },
+    {
+      "name": "elevated hollow slab with committed direction",
+      "region": {"node":"root","shape":"square","size":{"radius":2,"inner":0.5},"x":7,"y":-3,"z":10,"heading":0.7,"anchor":"source","height_tolerance":2,"center_allowance":0,"target_test":"body","bottom":11,"top":13,"requires_line_of_sight":true,"has_requirement":false,"has_target_limit":true,"viewer_eligibility":"candidate"},
+      "committed": true,
+      "expected_segments": [
+        [0,-1,1,2,0,1],
+        [2,0,1,0,1,1],
+        [0,1,1,0,-1,1],
+        [-2,-2,1,0,-2,1],
+        [2,-2,1,2,0,1],
+        [2,2,1,0,2,1],
+        [-2,2,1,-2,0,1],
+        [-0.5,-0.5,1,-0.5,0,1],
+        [-0.5,0.5,1,0,0.5,1],
+        [0.5,0.5,1,0.5,0,1],
+        [0.5,-0.5,1,0,-0.5,1],
+        [-2,-2,3,0,-2,3],
+        [2,-2,3,2,0,3],
+        [2,2,3,0,2,3],
+        [-2,2,3,-2,0,3],
+        [-0.5,-0.5,3,-0.5,0,3],
+        [-0.5,0.5,3,0,0.5,3],
+        [0.5,0.5,3,0.5,0,3],
+        [0.5,-0.5,3,0,-0.5,3],
+        [-2,-2,1,-2,-2,1.25],
+        [-2,-2,2.75,-2,-2,3],
+        [2,-2,1,2,-2,1.25],
+        [2,-2,2.75,2,-2,3],
+        [2,2,1,2,2,1.25],
+        [2,2,2.75,2,2,3],
+        [-2,2,1,-2,2,1.25],
+        [-2,2,2.75,-2,2,3]
+      ]
+    },
+    {
+      "name": "elevated hollow slab with open direction",
+      "region": {"node":"root","shape":"square","size":{"radius":2,"inner":0.5},"x":7,"y":-3,"z":10,"heading":0.7,"anchor":"source","height_tolerance":2,"center_allowance":0,"target_test":"body","bottom":11,"top":13,"requires_line_of_sight":true,"has_requirement":false,"has_target_limit":true,"viewer_eligibility":"candidate"},
+      "committed": false,
+      "expected_segments": [
+        [0,-1,1,2,0,1],
+        [2,0,1,0,1,1],
+        [-2,-2,1,0,-2,1],
+        [2,-2,1,2,0,1],
+        [2,2,1,0,2,1],
+        [-2,2,1,-2,0,1],
+        [-0.5,-0.5,1,-0.5,0,1],
+        [-0.5,0.5,1,0,0.5,1],
+        [0.5,0.5,1,0.5,0,1],
+        [0.5,-0.5,1,0,-0.5,1],
+        [-2,-2,3,0,-2,3],
+        [2,-2,3,2,0,3],
+        [2,2,3,0,2,3],
+        [-2,2,3,-2,0,3],
+        [-0.5,-0.5,3,-0.5,0,3],
+        [-0.5,0.5,3,0,0.5,3],
+        [0.5,0.5,3,0.5,0,3],
+        [0.5,-0.5,3,0,-0.5,3],
+        [-2,-2,1,-2,-2,1.25],
+        [-2,-2,2.75,-2,-2,3],
+        [2,-2,1,2,-2,1.25],
+        [2,-2,2.75,2,-2,3],
+        [2,2,1,2,2,1.25],
+        [2,2,2.75,2,2,3],
+        [-2,2,1,-2,2,1.25],
+        [-2,2,2.75,-2,2,3]
+      ]
+    },
+    {
+      "name": "zero thickness has one perimeter per loop",
+      "region": {"node":"root","shape":"square","size":{"radius":2,"inner":0.5},"x":7,"y":-3,"z":10,"heading":0.7,"anchor":"source","height_tolerance":2,"center_allowance":0,"target_test":"body","bottom":12,"top":12,"requires_line_of_sight":true,"has_requirement":false,"has_target_limit":true,"viewer_eligibility":"candidate"},
+      "committed": true,
+      "expected_segments": [
+        [0,-1,2,2,0,2],
+        [2,0,2,0,1,2],
+        [0,1,2,0,-1,2],
+        [-2,-2,2,0,-2,2],
+        [2,-2,2,2,0,2],
+        [2,2,2,0,2,2],
+        [-2,2,2,-2,0,2],
+        [-0.5,-0.5,2,-0.5,0,2],
+        [-0.5,0.5,2,0,0.5,2],
+        [0.5,0.5,2,0.5,0,2],
+        [0.5,-0.5,2,0,-0.5,2],
+        [-2,-2,2,-2,-2,2],
+        [-2,-2,2,-2,-2,2],
+        [2,-2,2,2,-2,2],
+        [2,-2,2,2,-2,2],
+        [2,2,2,2,2,2],
+        [2,2,2,2,2,2],
+        [-2,2,2,-2,2,2],
+        [-2,2,2,-2,2,2]
+      ]
+    },
+    {
+      "name": "thin slab clamps vertical markers to half height",
+      "region": {"node":"root","shape":"square","size":{"radius":2,"inner":0.5},"x":7,"y":-3,"z":10,"heading":0.7,"anchor":"source","height_tolerance":2,"center_allowance":0,"target_test":"body","bottom":9,"top":9.25,"requires_line_of_sight":true,"has_requirement":false,"has_target_limit":true,"viewer_eligibility":"candidate"},
+      "committed": false,
+      "expected_segments": [
+        [0,-1,-1,2,0,-1],
+        [2,0,-1,0,1,-1],
+        [-2,-2,-1,0,-2,-1],
+        [2,-2,-1,2,0,-1],
+        [2,2,-1,0,2,-1],
+        [-2,2,-1,-2,0,-1],
+        [-0.5,-0.5,-1,-0.5,0,-1],
+        [-0.5,0.5,-1,0,0.5,-1],
+        [0.5,0.5,-1,0.5,0,-1],
+        [0.5,-0.5,-1,0,-0.5,-1],
+        [-2,-2,-0.75,0,-2,-0.75],
+        [2,-2,-0.75,2,0,-0.75],
+        [2,2,-0.75,0,2,-0.75],
+        [-2,2,-0.75,-2,0,-0.75],
+        [-0.5,-0.5,-0.75,-0.5,0,-0.75],
+        [-0.5,0.5,-0.75,0,0.5,-0.75],
+        [0.5,0.5,-0.75,0.5,0,-0.75],
+        [0.5,-0.5,-0.75,0,-0.5,-0.75],
+        [-2,-2,-1,-2,-2,-0.875],
+        [-2,-2,-0.875,-2,-2,-0.75],
+        [2,-2,-1,2,-2,-0.875],
+        [2,-2,-0.875,2,-2,-0.75],
+        [2,2,-1,2,2,-0.875],
+        [2,2,-0.875,2,2,-0.75],
+        [-2,2,-1,-2,2,-0.875],
+        [-2,2,-0.875,-2,2,-0.75]
+      ]
+    },
+    {
+      "name": "legacy center keeps one ground perimeter and tolerance markers",
+      "region": {"node":"root","shape":"square","size":{"radius":2,"inner":0.5},"x":7,"y":-3,"z":10,"heading":0.7,"anchor":"source","height_tolerance":2,"center_allowance":0,"target_test":"center","requires_line_of_sight":true,"has_requirement":false,"has_target_limit":true,"viewer_eligibility":"candidate"},
+      "committed": true,
+      "expected_segments": [
+        [0,-1,0,2,0,0],
+        [2,0,0,0,1,0],
+        [0,1,0,0,-1,0],
+        [-2,-2,0,0,-2,0],
+        [2,-2,0,2,0,0],
+        [2,2,0,0,2,0],
+        [-2,2,0,-2,0,0],
+        [-0.5,-0.5,0,-0.5,0,0],
+        [-0.5,0.5,0,0,0.5,0],
+        [0.5,0.5,0,0.5,0,0],
+        [0.5,-0.5,0,0,-0.5,0],
+        [-2,-2,-2,-2,-2,-1.75],
+        [-2,-2,1.75,-2,-2,2],
+        [2,-2,-2,2,-2,-1.75],
+        [2,-2,1.75,2,-2,2],
+        [2,2,-2,2,2,-1.75],
+        [2,2,1.75,2,2,2],
+        [-2,2,-2,-2,2,-1.75],
+        [-2,2,1.75,-2,2,2]
+      ]
+    },
+    {
+      "name": "curved hollow slab at cardinal samples",
+      "region": {"node":"root","shape":"circle","size":{"radius":2,"inner":0.5},"x":7,"y":-3,"z":10,"heading":0.7,"anchor":"source","height_tolerance":2,"center_allowance":0,"target_test":"body","bottom":9,"top":12,"requires_line_of_sight":true,"has_requirement":false,"has_target_limit":true,"viewer_eligibility":"candidate"},
+      "committed": false,
+      "expected_segments": [
+        [0,-1,-1,2,0,-1],
+        [2,0,-1,0,1,-1],
+        [2,0,-1,1,1,-1],
+        [0,2,-1,-1,1,-1],
+        [-2,0,-1,-1,-1,-1],
+        [0,-2,-1,1,-1,-1],
+        [0,-0.5,-1,-0.25,-0.25,-1],
+        [-0.5,0,-1,-0.25,0.25,-1],
+        [0,0.5,-1,0.25,0.25,-1],
+        [0.5,0,-1,0.25,-0.25,-1],
+        [2,0,2,1,1,2],
+        [0,2,2,-1,1,2],
+        [-2,0,2,-1,-1,2],
+        [0,-2,2,1,-1,2],
+        [0,-0.5,2,-0.25,-0.25,2],
+        [-0.5,0,2,-0.25,0.25,2],
+        [0,0.5,2,0.25,0.25,2],
+        [0.5,0,2,0.25,-0.25,2],
+        [2,0,-1,2,0,-0.75],
+        [2,0,1.75,2,0,2],
+        [0,2,-1,0,2,-0.75],
+        [0,2,1.75,0,2,2],
+        [-2,0,-1,-2,0,-0.75],
+        [-2,0,1.75,-2,0,2],
+        [0,-2,-1,0,-2,-0.75],
+        [0,-2,1.75,0,-2,2]
+      ]
+    },
+    {
+      "name": "reversed body bounds decline",
+      "region": {"node":"root","shape":"square","size":{"radius":2,"inner":0.5},"x":7,"y":-3,"z":10,"heading":0.7,"anchor":"source","height_tolerance":2,"center_allowance":0,"target_test":"body","bottom":14,"top":13,"requires_line_of_sight":true,"has_requirement":false,"has_target_limit":true,"viewer_eligibility":"candidate"},
+      "committed": true,
+      "expected_segments": []
+    },
+    {
+      "name": "missing body bound declines",
+      "region": {"node":"root","shape":"square","size":{"radius":2,"inner":0.5},"x":7,"y":-3,"z":10,"heading":0.7,"anchor":"source","height_tolerance":2,"center_allowance":0,"target_test":"body","bottom":11,"requires_line_of_sight":true,"has_requirement":false,"has_target_limit":true,"viewer_eligibility":"candidate"},
+      "committed": true,
+      "expected_segments": []
+    },
+    {
+      "name": "unsupported contact mode declines",
+      "region": {"node":"root","shape":"square","size":{"radius":2,"inner":0.5},"x":7,"y":-3,"z":10,"heading":0.7,"anchor":"source","height_tolerance":2,"center_allowance":0,"target_test":"future","bottom":11,"top":13,"requires_line_of_sight":true,"has_requirement":false,"has_target_limit":true,"viewer_eligibility":"candidate"},
+      "committed": true,
+      "expected_segments": []
+    },
+    {
+      "name": "over budget curve declines",
+      "region": {"node":"root","shape":"circle","size":{"radius":1000000},"x":7,"y":-3,"z":10,"heading":0.7,"anchor":"source","height_tolerance":2,"center_allowance":0,"target_test":"body","bottom":11,"top":13,"requires_line_of_sight":true,"has_requirement":false,"has_target_limit":true,"viewer_eligibility":"candidate"},
+      "committed": true,
+      "expected_segments": []
+    }
+  ],
+  "cache": [
+    {
+      "name": "identical independently decoded region",
+      "before": {"node":"root","shape":"square","size":{"radius":2,"inner":0.5},"x":7,"y":-3,"z":10,"heading":0.7,"anchor":"source","height_tolerance":2,"center_allowance":0,"target_test":"body","bottom":11,"top":13,"requires_line_of_sight":true,"has_requirement":false,"has_target_limit":true,"viewer_eligibility":"candidate"},
+      "before_committed": true,
+      "after": {"node":"root","shape":"square","size":{"radius":2,"inner":0.5},"x":7,"y":-3,"z":10,"heading":0.7,"anchor":"source","height_tolerance":2,"center_allowance":0,"target_test":"body","bottom":11,"top":13,"requires_line_of_sight":true,"has_requirement":false,"has_target_limit":true,"viewer_eligibility":"candidate"},
+      "after_committed": true,
+      "reuse": true
+    },
+    {
+      "name": "horizontal translation",
+      "before": {"node":"root","shape":"square","size":{"radius":2,"inner":0.5},"x":7,"y":-3,"z":10,"heading":0.7,"anchor":"source","height_tolerance":2,"center_allowance":0,"target_test":"body","bottom":11,"top":13,"requires_line_of_sight":true,"has_requirement":false,"has_target_limit":true,"viewer_eligibility":"candidate"},
+      "before_committed": true,
+      "after": {"node":"root","shape":"square","size":{"radius":2,"inner":0.5},"x":40,"y":26,"z":10,"heading":0.7,"anchor":"source","height_tolerance":2,"center_allowance":0,"target_test":"body","bottom":11,"top":13,"requires_line_of_sight":true,"has_requirement":false,"has_target_limit":true,"viewer_eligibility":"candidate"},
+      "after_committed": true,
+      "reuse": true
+    },
+    {
+      "name": "heading only",
+      "before": {"node":"root","shape":"square","size":{"radius":2,"inner":0.5},"x":7,"y":-3,"z":10,"heading":0.7,"anchor":"source","height_tolerance":2,"center_allowance":0,"target_test":"body","bottom":11,"top":13,"requires_line_of_sight":true,"has_requirement":false,"has_target_limit":true,"viewer_eligibility":"candidate"},
+      "before_committed": true,
+      "after": {"node":"root","shape":"square","size":{"radius":2,"inner":0.5},"x":7,"y":-3,"z":10,"heading":2.5,"anchor":"source","height_tolerance":2,"center_allowance":0,"target_test":"body","bottom":11,"top":13,"requires_line_of_sight":true,"has_requirement":false,"has_target_limit":true,"viewer_eligibility":"candidate"},
+      "after_committed": true,
+      "reuse": true
+    },
+    {
+      "name": "full translation and heading with slab",
+      "before": {"node":"root","shape":"square","size":{"radius":2,"inner":0.5},"x":7,"y":-3,"z":10,"heading":0.7,"anchor":"source","height_tolerance":2,"center_allowance":0,"target_test":"body","bottom":11,"top":13,"requires_line_of_sight":true,"has_requirement":false,"has_target_limit":true,"viewer_eligibility":"candidate"},
+      "before_committed": true,
+      "after": {"node":"root","shape":"square","size":{"radius":2,"inner":0.5},"x":40,"y":26,"z":30,"heading":2.5,"anchor":"source","height_tolerance":2,"center_allowance":0,"target_test":"body","bottom":31,"top":33,"requires_line_of_sight":true,"has_requirement":false,"has_target_limit":true,"viewer_eligibility":"candidate"},
+      "after_committed": true,
+      "reuse": true
+    },
+    {
+      "name": "lower local bound changes",
+      "before": {"node":"root","shape":"square","size":{"radius":2,"inner":0.5},"x":7,"y":-3,"z":10,"heading":0.7,"anchor":"source","height_tolerance":2,"center_allowance":0,"target_test":"body","bottom":11,"top":13,"requires_line_of_sight":true,"has_requirement":false,"has_target_limit":true,"viewer_eligibility":"candidate"},
+      "before_committed": true,
+      "after": {"node":"root","shape":"square","size":{"radius":2,"inner":0.5},"x":7,"y":-3,"z":10,"heading":0.7,"anchor":"source","height_tolerance":2,"center_allowance":0,"target_test":"body","bottom":10.5,"top":13,"requires_line_of_sight":true,"has_requirement":false,"has_target_limit":true,"viewer_eligibility":"candidate"},
+      "after_committed": true,
+      "reuse": false
+    },
+    {
+      "name": "upper local bound changes",
+      "before": {"node":"root","shape":"square","size":{"radius":2,"inner":0.5},"x":7,"y":-3,"z":10,"heading":0.7,"anchor":"source","height_tolerance":2,"center_allowance":0,"target_test":"body","bottom":11,"top":13,"requires_line_of_sight":true,"has_requirement":false,"has_target_limit":true,"viewer_eligibility":"candidate"},
+      "before_committed": true,
+      "after": {"node":"root","shape":"square","size":{"radius":2,"inner":0.5},"x":7,"y":-3,"z":10,"heading":0.7,"anchor":"source","height_tolerance":2,"center_allowance":0,"target_test":"body","bottom":11,"top":14,"requires_line_of_sight":true,"has_requirement":false,"has_target_limit":true,"viewer_eligibility":"candidate"},
+      "after_committed": true,
+      "reuse": false
+    },
+    {
+      "name": "same thickness moves within local frame",
+      "before": {"node":"root","shape":"square","size":{"radius":2,"inner":0.5},"x":7,"y":-3,"z":10,"heading":0.7,"anchor":"source","height_tolerance":2,"center_allowance":0,"target_test":"body","bottom":11,"top":13,"requires_line_of_sight":true,"has_requirement":false,"has_target_limit":true,"viewer_eligibility":"candidate"},
+      "before_committed": true,
+      "after": {"node":"root","shape":"square","size":{"radius":2,"inner":0.5},"x":7,"y":-3,"z":10,"heading":0.7,"anchor":"source","height_tolerance":2,"center_allowance":0,"target_test":"body","bottom":12,"top":14,"requires_line_of_sight":true,"has_requirement":false,"has_target_limit":true,"viewer_eligibility":"candidate"},
+      "after_committed": true,
+      "reuse": false
+    },
+    {
+      "name": "anchor elevation alone changes local bounds",
+      "before": {"node":"root","shape":"square","size":{"radius":2,"inner":0.5},"x":7,"y":-3,"z":10,"heading":0.7,"anchor":"source","height_tolerance":2,"center_allowance":0,"target_test":"body","bottom":11,"top":13,"requires_line_of_sight":true,"has_requirement":false,"has_target_limit":true,"viewer_eligibility":"candidate"},
+      "before_committed": true,
+      "after": {"node":"root","shape":"square","size":{"radius":2,"inner":0.5},"x":7,"y":-3,"z":11,"heading":0.7,"anchor":"source","height_tolerance":2,"center_allowance":0,"target_test":"body","bottom":11,"top":13,"requires_line_of_sight":true,"has_requirement":false,"has_target_limit":true,"viewer_eligibility":"candidate"},
+      "after_committed": true,
+      "reuse": false
+    },
+    {
+      "name": "slab collapses to zero thickness",
+      "before": {"node":"root","shape":"square","size":{"radius":2,"inner":0.5},"x":7,"y":-3,"z":10,"heading":0.7,"anchor":"source","height_tolerance":2,"center_allowance":0,"target_test":"body","bottom":11,"top":13,"requires_line_of_sight":true,"has_requirement":false,"has_target_limit":true,"viewer_eligibility":"candidate"},
+      "before_committed": true,
+      "after": {"node":"root","shape":"square","size":{"radius":2,"inner":0.5},"x":7,"y":-3,"z":10,"heading":0.7,"anchor":"source","height_tolerance":2,"center_allowance":0,"target_test":"body","bottom":11,"top":11,"requires_line_of_sight":true,"has_requirement":false,"has_target_limit":true,"viewer_eligibility":"candidate"},
+      "after_committed": true,
+      "reuse": false
+    },
+    {
+      "name": "body ignores unused center tolerance",
+      "before": {"node":"root","shape":"square","size":{"radius":2,"inner":0.5},"x":7,"y":-3,"z":10,"heading":0.7,"anchor":"source","height_tolerance":2,"center_allowance":0,"target_test":"body","bottom":11,"top":13,"requires_line_of_sight":true,"has_requirement":false,"has_target_limit":true,"viewer_eligibility":"candidate"},
+      "before_committed": true,
+      "after": {"node":"root","shape":"square","size":{"radius":2,"inner":0.5},"x":7,"y":-3,"z":10,"heading":0.7,"anchor":"source","height_tolerance":99,"center_allowance":0,"target_test":"body","bottom":11,"top":13,"requires_line_of_sight":true,"has_requirement":false,"has_target_limit":true,"viewer_eligibility":"candidate"},
+      "after_committed": true,
+      "reuse": true
+    },
+    {
+      "name": "contact mode changes",
+      "before": {"node":"root","shape":"square","size":{"radius":2,"inner":0.5},"x":7,"y":-3,"z":10,"heading":0.7,"anchor":"source","height_tolerance":2,"center_allowance":0,"target_test":"body","bottom":11,"top":13,"requires_line_of_sight":true,"has_requirement":false,"has_target_limit":true,"viewer_eligibility":"candidate"},
+      "before_committed": true,
+      "after": {"node":"root","shape":"square","size":{"radius":2,"inner":0.5},"x":7,"y":-3,"z":10,"heading":0.7,"anchor":"source","height_tolerance":2,"center_allowance":0,"target_test":"center","bottom":11,"top":13,"requires_line_of_sight":true,"has_requirement":false,"has_target_limit":true,"viewer_eligibility":"candidate"},
+      "after_committed": true,
+      "reuse": false
+    },
+    {
+      "name": "commitment changes",
+      "before": {"node":"root","shape":"square","size":{"radius":2,"inner":0.5},"x":7,"y":-3,"z":10,"heading":0.7,"anchor":"source","height_tolerance":2,"center_allowance":0,"target_test":"body","bottom":11,"top":13,"requires_line_of_sight":true,"has_requirement":false,"has_target_limit":true,"viewer_eligibility":"candidate"},
+      "before_committed": true,
+      "after": {"node":"root","shape":"square","size":{"radius":2,"inner":0.5},"x":7,"y":-3,"z":10,"heading":0.7,"anchor":"source","height_tolerance":2,"center_allowance":0,"target_test":"body","bottom":11,"top":13,"requires_line_of_sight":true,"has_requirement":false,"has_target_limit":true,"viewer_eligibility":"candidate"},
+      "after_committed": false,
+      "reuse": false
+    },
+    {
+      "name": "eligibility color changes",
+      "before": {"node":"root","shape":"square","size":{"radius":2,"inner":0.5},"x":7,"y":-3,"z":10,"heading":0.7,"anchor":"source","height_tolerance":2,"center_allowance":0,"target_test":"body","bottom":11,"top":13,"requires_line_of_sight":true,"has_requirement":false,"has_target_limit":true,"viewer_eligibility":"candidate"},
+      "before_committed": true,
+      "after": {"node":"root","shape":"square","size":{"radius":2,"inner":0.5},"x":7,"y":-3,"z":10,"heading":0.7,"anchor":"source","height_tolerance":2,"center_allowance":0,"target_test":"body","bottom":11,"top":13,"requires_line_of_sight":true,"has_requirement":false,"has_target_limit":true,"viewer_eligibility":"ineligible"},
+      "after_committed": true,
+      "reuse": false
+    },
+    {
+      "name": "shape changes",
+      "before": {"node":"root","shape":"square","size":{"radius":2,"inner":0.5},"x":7,"y":-3,"z":10,"heading":0.7,"anchor":"source","height_tolerance":2,"center_allowance":0,"target_test":"body","bottom":11,"top":13,"requires_line_of_sight":true,"has_requirement":false,"has_target_limit":true,"viewer_eligibility":"candidate"},
+      "before_committed": true,
+      "after": {"node":"root","shape":"circle","size":{"radius":2,"inner":0.5},"x":7,"y":-3,"z":10,"heading":0.7,"anchor":"source","height_tolerance":2,"center_allowance":0,"target_test":"body","bottom":11,"top":13,"requires_line_of_sight":true,"has_requirement":false,"has_target_limit":true,"viewer_eligibility":"candidate"},
+      "after_committed": true,
+      "reuse": false
+    },
+    {
+      "name": "radius changes",
+      "before": {"node":"root","shape":"square","size":{"radius":2,"inner":0.5},"x":7,"y":-3,"z":10,"heading":0.7,"anchor":"source","height_tolerance":2,"center_allowance":0,"target_test":"body","bottom":11,"top":13,"requires_line_of_sight":true,"has_requirement":false,"has_target_limit":true,"viewer_eligibility":"candidate"},
+      "before_committed": true,
+      "after": {"node":"root","shape":"square","size":{"radius":3,"inner":0.5},"x":7,"y":-3,"z":10,"heading":0.7,"anchor":"source","height_tolerance":2,"center_allowance":0,"target_test":"body","bottom":11,"top":13,"requires_line_of_sight":true,"has_requirement":false,"has_target_limit":true,"viewer_eligibility":"candidate"},
+      "after_committed": true,
+      "reuse": false
+    },
+    {
+      "name": "inner changes",
+      "before": {"node":"root","shape":"square","size":{"radius":2,"inner":0.5},"x":7,"y":-3,"z":10,"heading":0.7,"anchor":"source","height_tolerance":2,"center_allowance":0,"target_test":"body","bottom":11,"top":13,"requires_line_of_sight":true,"has_requirement":false,"has_target_limit":true,"viewer_eligibility":"candidate"},
+      "before_committed": true,
+      "after": {"node":"root","shape":"square","size":{"radius":2,"inner":1},"x":7,"y":-3,"z":10,"heading":0.7,"anchor":"source","height_tolerance":2,"center_allowance":0,"target_test":"body","bottom":11,"top":13,"requires_line_of_sight":true,"has_requirement":false,"has_target_limit":true,"viewer_eligibility":"candidate"},
+      "after_committed": true,
+      "reuse": false
+    },
+    {
+      "name": "angle changes",
+      "before": {"node":"root","shape":"square","size":{"radius":2,"inner":0.5},"x":7,"y":-3,"z":10,"heading":0.7,"anchor":"source","height_tolerance":2,"center_allowance":0,"target_test":"body","bottom":11,"top":13,"requires_line_of_sight":true,"has_requirement":false,"has_target_limit":true,"viewer_eligibility":"candidate"},
+      "before_committed": true,
+      "after": {"node":"root","shape":"square","size":{"radius":2,"inner":0.5,"angle":1.5},"x":7,"y":-3,"z":10,"heading":0.7,"anchor":"source","height_tolerance":2,"center_allowance":0,"target_test":"body","bottom":11,"top":13,"requires_line_of_sight":true,"has_requirement":false,"has_target_limit":true,"viewer_eligibility":"candidate"},
+      "after_committed": true,
+      "reuse": false
+    },
+    {
+      "name": "width changes",
+      "before": {"node":"root","shape":"square","size":{"radius":2,"inner":0.5},"x":7,"y":-3,"z":10,"heading":0.7,"anchor":"source","height_tolerance":2,"center_allowance":0,"target_test":"body","bottom":11,"top":13,"requires_line_of_sight":true,"has_requirement":false,"has_target_limit":true,"viewer_eligibility":"candidate"},
+      "before_committed": true,
+      "after": {"node":"root","shape":"square","size":{"radius":2,"inner":0.5,"width":1},"x":7,"y":-3,"z":10,"heading":0.7,"anchor":"source","height_tolerance":2,"center_allowance":0,"target_test":"body","bottom":11,"top":13,"requires_line_of_sight":true,"has_requirement":false,"has_target_limit":true,"viewer_eligibility":"candidate"},
+      "after_committed": true,
+      "reuse": false
+    },
+    {
+      "name": "curvature changes",
+      "before": {"node":"root","shape":"square","size":{"radius":2,"inner":0.5},"x":7,"y":-3,"z":10,"heading":0.7,"anchor":"source","height_tolerance":2,"center_allowance":0,"target_test":"body","bottom":11,"top":13,"requires_line_of_sight":true,"has_requirement":false,"has_target_limit":true,"viewer_eligibility":"candidate"},
+      "before_committed": true,
+      "after": {"node":"root","shape":"square","size":{"radius":2,"inner":0.5,"curvature":1},"x":7,"y":-3,"z":10,"heading":0.7,"anchor":"source","height_tolerance":2,"center_allowance":0,"target_test":"body","bottom":11,"top":13,"requires_line_of_sight":true,"has_requirement":false,"has_target_limit":true,"viewer_eligibility":"candidate"},
+      "after_committed": true,
+      "reuse": false
+    },
+    {
+      "name": "center allowance changes",
+      "before": {"node":"root","shape":"square","size":{"radius":2,"inner":0.5},"x":7,"y":-3,"z":10,"heading":0.7,"anchor":"source","height_tolerance":2,"center_allowance":0,"target_test":"body","bottom":11,"top":13,"requires_line_of_sight":true,"has_requirement":false,"has_target_limit":true,"viewer_eligibility":"candidate"},
+      "before_committed": true,
+      "after": {"node":"root","shape":"square","size":{"radius":2,"inner":0.5},"x":7,"y":-3,"z":10,"heading":0.7,"anchor":"source","height_tolerance":2,"center_allowance":0.2,"target_test":"body","bottom":11,"top":13,"requires_line_of_sight":true,"has_requirement":false,"has_target_limit":true,"viewer_eligibility":"candidate"},
+      "after_committed": true,
+      "reuse": false
+    },
+    {
+      "name": "nonvisual selection metadata changes",
+      "before": {"node":"root","shape":"square","size":{"radius":2,"inner":0.5},"x":7,"y":-3,"z":10,"heading":0.7,"anchor":"source","height_tolerance":2,"center_allowance":0,"target_test":"body","bottom":11,"top":13,"requires_line_of_sight":true,"has_requirement":false,"has_target_limit":true,"viewer_eligibility":"candidate"},
+      "before_committed": true,
+      "after": {"node":"another","shape":"square","size":{"radius":2,"inner":0.5},"x":7,"y":-3,"z":10,"heading":0.7,"anchor":"point","height_tolerance":2,"center_allowance":0,"target_test":"body","bottom":11,"top":13,"requires_line_of_sight":false,"has_requirement":true,"has_target_limit":false,"viewer_eligibility":"candidate"},
+      "after_committed": true,
+      "reuse": true
+    },
+    {
+      "name": "center tolerance changes",
+      "before": {"node":"root","shape":"square","size":{"radius":2,"inner":0.5},"x":7,"y":-3,"z":10,"heading":0.7,"anchor":"source","height_tolerance":2,"center_allowance":0,"target_test":"center","requires_line_of_sight":true,"has_requirement":false,"has_target_limit":true,"viewer_eligibility":"candidate"},
+      "before_committed": true,
+      "after": {"node":"root","shape":"square","size":{"radius":2,"inner":0.5},"x":7,"y":-3,"z":10,"heading":0.7,"anchor":"source","height_tolerance":3,"center_allowance":0,"target_test":"center","requires_line_of_sight":true,"has_requirement":false,"has_target_limit":true,"viewer_eligibility":"candidate"},
+      "after_committed": true,
+      "reuse": false
+    },
+    {
+      "name": "center translates vertically",
+      "before": {"node":"root","shape":"square","size":{"radius":2,"inner":0.5},"x":7,"y":-3,"z":10,"heading":0.7,"anchor":"source","height_tolerance":2,"center_allowance":0,"target_test":"center","requires_line_of_sight":true,"has_requirement":false,"has_target_limit":true,"viewer_eligibility":"candidate"},
+      "before_committed": true,
+      "after": {"node":"root","shape":"square","size":{"radius":2,"inner":0.5},"x":7,"y":-3,"z":20,"heading":0.7,"anchor":"source","height_tolerance":2,"center_allowance":0,"target_test":"center","requires_line_of_sight":true,"has_requirement":false,"has_target_limit":true,"viewer_eligibility":"candidate"},
+      "after_committed": true,
+      "reuse": true
+    },
+    {
+      "name": "first usable region builds",
+      "before": null,
+      "before_committed": false,
+      "after": {"node":"root","shape":"square","size":{"radius":2,"inner":0.5},"x":7,"y":-3,"z":10,"heading":0.7,"anchor":"source","height_tolerance":2,"center_allowance":0,"target_test":"body","bottom":11,"top":13,"requires_line_of_sight":true,"has_requirement":false,"has_target_limit":true,"viewer_eligibility":"candidate"},
+      "after_committed": true,
+      "reuse": false
+    },
+    {
+      "name": "lost coverage removes geometry",
+      "before": {"node":"root","shape":"square","size":{"radius":2,"inner":0.5},"x":7,"y":-3,"z":10,"heading":0.7,"anchor":"source","height_tolerance":2,"center_allowance":0,"target_test":"body","bottom":11,"top":13,"requires_line_of_sight":true,"has_requirement":false,"has_target_limit":true,"viewer_eligibility":"candidate"},
+      "before_committed": true,
+      "after": null,
+      "after_committed": true,
+      "reuse": false
+    },
+    {
+      "name": "absent coverage stays empty",
+      "before": null,
+      "before_committed": false,
+      "after": null,
+      "after_committed": true,
+      "reuse": true
+    }
+  ]
+}
