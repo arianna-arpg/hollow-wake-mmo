@@ -52,12 +52,22 @@ $environment = [ordered]@{
     ProductVersion = $productVersion; ExecutableSha256 = (Get-FileHash -LiteralPath $dll -Algorithm SHA256).Hash
     Runtime = (& dotnet --version); Arguments = $arguments; Worktree = $taskRoot
     Scope = 'One instrumented default tick workload; fixed 30s trace duration, 45s process watchdog, no retry. Not budget evidence.'
+    TerminationWaitMs = 10000; OutputDrainWaitMs = 5000
     SchedulerLimit = 'Managed thread-time samples cannot establish OS scheduling. WithScheduler records bounded machine-wide scheduler metadata locally and filters analysis to the owned benchmark.'
 }
 $environment | ConvertTo-Json -Depth 5 | Set-Content -LiteralPath (Join-Path $out 'environment.json')
 $wprStarted = $false
 $process = $null
 $exitCode = -1
+$timedOut = $false
+$processExited = $false
+$outputComplete = $false
+$failure = $null
+$stdoutFile = $null
+$stderrFile = $null
+$stdout = $null
+$stderr = $null
+$outputCancellation = [Threading.CancellationTokenSource]::new()
 $cleanupFailures = [Collections.Generic.List[string]]::new()
 try {
     if ($Mode -eq 'WithScheduler') {
@@ -74,19 +84,44 @@ try {
     $start.RedirectStandardError = $true
     foreach ($argument in $arguments) { $start.ArgumentList.Add($argument) }
     $process = [Diagnostics.Process]::Start($start)
-    $stdout = $process.StandardOutput.ReadToEndAsync()
-    $stderr = $process.StandardError.ReadToEndAsync()
-    $finished = $process.WaitForExit(45000)
-    if (!$finished) { $process.Kill($true); $process.WaitForExit() }
-    [IO.File]::WriteAllText((Join-Path $out 'console.txt'), $stdout.GetAwaiter().GetResult())
-    [IO.File]::WriteAllText((Join-Path $out 'stderr.txt'), $stderr.GetAwaiter().GetResult())
+    # Stream first output to disk as it arrives; a stuck pipe must not strand it in ReadToEndAsync.
+    $stdoutFile = [IO.FileStream]::new((Join-Path $out 'console.txt'), [IO.FileMode]::CreateNew, [IO.FileAccess]::Write, [IO.FileShare]::Read, 8192, $true)
+    $stderrFile = [IO.FileStream]::new((Join-Path $out 'stderr.txt'), [IO.FileMode]::CreateNew, [IO.FileAccess]::Write, [IO.FileShare]::Read, 8192, $true)
+    $stdout = $process.StandardOutput.BaseStream.CopyToAsync($stdoutFile, 8192, $outputCancellation.Token)
+    $stderr = $process.StandardError.BaseStream.CopyToAsync($stderrFile, 8192, $outputCancellation.Token)
+    $processExited = $process.WaitForExit(45000)
+    if (!$processExited) { $timedOut = $true; throw 'Capture watchdog expired; partial evidence retained, no retry' }
     $exitCode = $process.ExitCode
-    if (!$finished) { throw 'Capture watchdog expired; partial evidence retained, no retry' }
     if ($exitCode -ne 0) { throw 'Capture failed; preserve its first output without retry' }
+} catch {
+    $failure = $_.Exception.Message
 } finally {
     try {
-        if ($null -ne $process -and !$process.HasExited) { $process.Kill($true); $process.WaitForExit() }
+        if ($null -ne $process) {
+            if (!$process.HasExited) {
+                # One termination attempt, with one bounded wait; never retry it in another path.
+                $process.Kill($true)
+                if (!$process.WaitForExit(10000)) { throw 'Owned process did not exit within 10 seconds of termination' }
+            }
+            $processExited = $process.HasExited
+            if ($processExited) { $exitCode = $process.ExitCode }
+        }
     } catch { $cleanupFailures.Add('Owned process cleanup: ' + $_.Exception.Message) }
+    try {
+        if ($null -ne $stdout -and $null -ne $stderr) {
+            $drains = [Threading.Tasks.Task]::WhenAll([Threading.Tasks.Task[]]@($stdout, $stderr))
+            $outputComplete = $drains.Wait(5000)
+            if (!$outputComplete) { throw 'Output pipes did not drain within 5 seconds; partial files retained' }
+        } elseif ($null -ne $process) { throw 'Output collection did not fully initialize; partial files retained' }
+    } catch { $cleanupFailures.Add('Output collection: ' + $_.Exception.Message) }
+    if (!$outputComplete) { $outputCancellation.Cancel() }
+    # Never wait on incomplete copy tasks after cancellation. Closing owned streams releases their handles.
+    foreach ($stream in @($stdoutFile, $stderrFile)) {
+        if ($null -ne $stream) {
+            try { $stream.Dispose() } catch { $cleanupFailures.Add('Output file close: ' + $_.Exception.Message) }
+        }
+    }
+    $outputCancellation.Dispose()
     if ($wprStarted) {
         & wpr -stop $scheduler -instancename $sessionName > (Join-Path $out 'wpr-stop.txt')
         if ($LASTEXITCODE -ne 0) {
@@ -97,16 +132,20 @@ try {
         }
     }
     if ($null -ne $process) { $process.Dispose() }
-    [pscustomobject]@{ ExitCode = $exitCode; Utc = [DateTime]::UtcNow.ToString('o'); Mode = $Mode; CleanupFailures = @($cleanupFailures) } |
+    [pscustomobject]@{ ExitCode = $exitCode; TimedOut = $timedOut; ProcessExited = $processExited; OutputComplete = $outputComplete; Failure = $failure;
+        TerminationWaitMs = 10000; OutputDrainWaitMs = 5000; Utc = [DateTime]::UtcNow.ToString('o'); Mode = $Mode; CleanupFailures = @($cleanupFailures) } |
         ConvertTo-Json | Set-Content -LiteralPath (Join-Path $out 'completion.json')
     Get-ChildItem -LiteralPath $out -File | ForEach-Object {
-        [pscustomobject]@{ File = $_.Name; Bytes = $_.Length; Sha256 = (Get-FileHash -LiteralPath $_.FullName -Algorithm SHA256).Hash }
+        # Do not hash potentially growing/locked raw files when the process or output did not finish.
+        $hash = if ($processExited -and $outputComplete) { (Get-FileHash -LiteralPath $_.FullName -Algorithm SHA256).Hash } else { $null }
+        [pscustomobject]@{ File = $_.Name; Bytes = $_.Length; Sha256 = $hash; Complete = ($processExited -and $outputComplete) }
     } | ConvertTo-Json | Set-Content -LiteralPath (Join-Path $out 'hashes.json')
-    if ($cleanupFailures.Count -eq 0) {
+    if ($cleanupFailures.Count -eq 0 -and $processExited) {
         Write-Output 'STOPPED: owned tracing processes have exited. Preserve raw evidence locally; analyze before any further measurement.'
     } else { Write-Output 'ATTENTION: owned capture cleanup is incomplete; inspect the retained completion record before releasing the window.' }
 }
 if ($cleanupFailures.Count) { throw 'Capture cleanup is incomplete' }
+if ($failure) { throw $failure }
 if ($exitCode -ne 0) { throw 'Capture or scheduler save failed; evidence is incomplete' }
 $report = Get-Content -LiteralPath $frames -Raw | ConvertFrom-Json
 if ($report.SchemaVersion -lt 2 -or $report.Samples.Count -ne 800 -or $report.Phases.Count -ne 4) { throw 'Incomplete frame evidence; no retry' }
