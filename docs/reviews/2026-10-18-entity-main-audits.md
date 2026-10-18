@@ -66,3 +66,19 @@ Source `921ba9e93beacf608985cf21dcdca47fed6c63e8`: solution build zero warnings/
 ## #34 complete hit-body and main reconciliation
 
 Fauna consumes complete #36 `c07b6df017ac9c7f9a854db836d5689e70debe16`, which includes the validated #33 `80dcac71e6de2d561cd79d58755b34433ffd0e81` and the complete prior hit-body lineage. This follows the agreed forward order #33 -> #36 -> #34, with no backward fauna merge or partial runtime picks. The sole conflict is the entity contract's anatomy sentence; the incoming explicit navigation-radius independence is retained alongside the fauna sections. AI documentation merges both main's intent contract and provisional wildlife assignments. No fauna dimensions, visuals, kits, population content, anatomy implementation or generation-golden constant is changed by the reconciliation itself. Main's existing shared runtime changes are included. Functional gates begin only after the coordinator releases the short diagnostic window.
+
+## #34 intentional wildlife replay baseline
+
+The first combined suite at `2bf403c` failed only the newly introduced main replay gate: three standard pairings involving the wolf/boar bodies intentionally reauthored in the existing fauna pass. All other 2,288 core tests, 59 server and 133 client tests pass; the original failure is retained as `34-main-tests-before-replay-update.txt`. No numeric content or runtime was changed to resolve it.
+
+Causal check, same Debug runtime/source and Windows platform, ten seeds and a sixty-second cap throughout: exact archived #36 `c07b6df` content reproduces all seven inherited hashes. Current fauna content changes only the three rows below. A temporary final-content overlay replacing only wolf and boar with their exact old definitions restores all seven inherited hashes. This isolates the changes to those two already-authored patterns, rather than an unexamined main/runtime regression. The updated patterns include explicit height/radius/materials, fauna resource bases and poise (wolf 18, boar 40); both now emit poise-breaking/rearming statuses. The counterfactual isolates the whole patterns, not each property's individual contribution. Other four pairing hashes, seed count, cap and platform remain unchanged, including the prior #36 projectile baselines where unaffected.
+
+| Pairing | Before hash | Fauna hash | Median time before -> after |
+| --- | --- | --- | --- |
+| `loosed_kindler:boar` | `ae3a86f086814949` | `e59288fd8b0152b9` | 6.7 -> 6.65 s |
+| `loosed_skirmisher:boar` | `7dd259e21c8ac0e8` | `1f6c4b594340b306` | 7.6 -> 8.7 s |
+| `wolf:hob` | `043fb9358749be95` | `ef8f11679dddfa70` | 14.8 -> 14.8 s |
+
+Winner/draw rates for these three pairings are unchanged. All seven standard runs and the counterfactual contain zero simulation warnings/errors. Full reports and text output are retained in `34-main-replay-*`. The evaluation contract permits a reviewed baseline change for intentional content changes; only these three proven hashes are updated.
+
+The required proving-pair comparison is also retained, in `34-main-proving-*`. Its entire before/after JSON is identical, including mechanisms, trace hashes, outcomes and breaches. Both runs fail the pre-existing 0.8 win ceiling for the bulwark, plaguer and pitfighter, each winning ten of ten. These inherited balance breaches are not claimed passed or attributed to fauna; no bands or runtime were relaxed. Release replay and the full suite will now verify the narrowly updated baseline. The shared snapshot/planning timing misses remain separate and open.
