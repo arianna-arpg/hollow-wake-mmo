@@ -1,0 +1,23 @@
+{
+  "Source": "e614bb3bcf96341ee04d21634649b144d2e06181",
+  "Run": "artifacts/forecast-rereview/final-client/run-Yb6fyj",
+  "InspectedBy": "Codex via local image viewer",
+  "BrowserPixels": [
+    {
+      "File": "forecast_primary_candidate.png",
+      "SHA256": "A91458C932E4C5AC343F0F6B246CBCF9354063F32712B0C2BBA9B9F86AAC5D86",
+      "Width": 1280,
+      "Height": 800,
+      "Observation": "Primary circle and sector boundaries and cast panels are visible in the full canvas. Crowded labels and foreground foliage still limit final scene readability."
+    },
+    {
+      "File": "cast_cue_release.png",
+      "SHA256": "5391CE489631A721E3A24078DCB1BBB464ABBB278B99212D426799AC3504B252",
+      "Width": 1280,
+      "Height": 800,
+      "Observation": "Confirmed release frame and common cast panel are present; the capture is a single frame and does not establish complete animation quality."
+    }
+  ],
+  "NativePixels": "Not covered; headless Godot",
+  "Limits": "Functional shared forecasting evidence; not final art, crowd readability or controller certification. PNGs remain in the local ignored run directory."
+}
