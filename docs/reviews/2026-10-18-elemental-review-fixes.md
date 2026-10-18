@@ -1,5 +1,7 @@
 # Elemental review corrections
 
+Historical checkpoint through `9f04932`. The later shared bounded-search and explicit-level integration is recorded in [the follow-up review](2026-10-18-elemental-bounded-search-integration.md). Its restored resident levels and changed quest offers supersede the level-dependent claims and performance clearance below. Original measurements remain intact.
+
 Scope claimed before edits for PR #40, responding to Claude's review of `b29e67c` at https://github.com/arianna-arpg/hollow-wake-mmo/pull/40#issuecomment-6246008360.
 
 Current integration checkpoint: #40 consumes the complete corrected #34 `26c50de03c62f434c517564906a54c0287b281ce` through merge `2c7c611`. That base includes corrected #31-33 and full #36 `724c5ed`. Elemental-only acceptance adjustments are `f3b491a`; reviewed generation snapshots are `2b485e1`. Full Release CI passes Core 2297, client 121 and server 48, including all 160 elemental cases. Shared card-renderer fix `30f6c91` from #37 is consumed as `1528f2c`; browser 284 tests, its build and a fresh pixel-aware browser smoke 31/31 pass. Native state checks pass 26/26. Controlled first-sample performance meets the published time/size caps; the unchanged nonzero expression-allocation counter is recorded below. This PR remains draft pending shared-stack integration and Claude rereview.

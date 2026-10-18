@@ -25,6 +25,7 @@
       "inhabitants": [
         {
           "pattern": "cinderling",
+          "use_site_level": true,
           "density": 1,
           "pack_size": [
             1,
@@ -37,6 +38,7 @@
         },
         {
           "pattern": "emberwisp",
+          "use_site_level": true,
           "density": 1,
           "pack_size": [
             1,
@@ -49,6 +51,7 @@
         },
         {
           "pattern": "ember_elemental",
+          "use_site_level": true,
           "density": 1,
           "pack_size": [
             1,
@@ -93,6 +96,7 @@
       "inhabitants": [
         {
           "pattern": "tide_surge",
+          "use_site_level": true,
           "density": 1,
           "pack_size": [
             1,
@@ -137,6 +141,7 @@
       "inhabitants": [
         {
           "pattern": "rime_star",
+          "use_site_level": true,
           "density": 1,
           "pack_size": [
             1,
@@ -149,6 +154,7 @@
         },
         {
           "pattern": "frost_elemental",
+          "use_site_level": true,
           "density": 1,
           "pack_size": [
             1,
@@ -193,6 +199,7 @@
       "inhabitants": [
         {
           "pattern": "gale_elemental",
+          "use_site_level": true,
           "density": 1,
           "pack_size": [
             1,
@@ -205,6 +212,7 @@
         },
         {
           "pattern": "storm_confluence",
+          "use_site_level": true,
           "density": 1,
           "pack_size": [
             1,
@@ -249,6 +257,7 @@
       "inhabitants": [
         {
           "pattern": "silt_crawler",
+          "use_site_level": true,
           "density": 1,
           "pack_size": [
             1,
@@ -261,6 +270,7 @@
         },
         {
           "pattern": "geode_shellback",
+          "use_site_level": true,
           "density": 1,
           "pack_size": [
             1,
@@ -306,6 +316,7 @@
       "inhabitants": [
         {
           "pattern": "bloom_spore",
+          "use_site_level": true,
           "density": 1,
           "pack_size": [
             1,
@@ -350,6 +361,7 @@
       "inhabitants": [
         {
           "pattern": "lumen_wisp",
+          "use_site_level": true,
           "density": 1,
           "pack_size": [
             1,
@@ -362,6 +374,7 @@
         },
         {
           "pattern": "mind_knot",
+          "use_site_level": true,
           "density": 1,
           "pack_size": [
             1,
@@ -374,6 +387,7 @@
         },
         {
           "pattern": "triune_elemental",
+          "use_site_level": true,
           "density": 1,
           "pack_size": [
             1,
@@ -418,6 +432,7 @@
       "inhabitants": [
         {
           "pattern": "umbra_drift",
+          "use_site_level": true,
           "density": 1,
           "pack_size": [
             1,
@@ -430,6 +445,7 @@
         },
         {
           "pattern": "void_ravel",
+          "use_site_level": true,
           "density": 1,
           "pack_size": [
             1,

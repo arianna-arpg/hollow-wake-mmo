@@ -1,0 +1,9 @@
+TEST evidence: <worktree>\experiments\elementals\artifacts\bounded-smoke\run-uzwrsN
+TEST build-server; evidence: <worktree>\experiments\elementals\artifacts\bounded-smoke\run-uzwrsN
+TEST typecheck-web; evidence: <worktree>\experiments\elementals\artifacts\bounded-smoke\run-uzwrsN
+TEST build-web; evidence: <worktree>\experiments\elementals\artifacts\bounded-smoke\run-uzwrsN
+TEST build-godot; evidence: <worktree>\experiments\elementals\artifacts\bounded-smoke\run-uzwrsN
+TEST smoke-web; evidence: <worktree>\experiments\elementals\artifacts\bounded-smoke\run-uzwrsN
+TEST import-godot; evidence: <worktree>\experiments\elementals\artifacts\bounded-smoke\run-uzwrsN
+TEST smoke-godot; evidence: <worktree>\experiments\elementals\artifacts\bounded-smoke\run-uzwrsN
+TEST PASSED; report: <worktree>\experiments\elementals\artifacts\bounded-smoke\run-uzwrsN\result.json

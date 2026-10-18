@@ -1,0 +1,94 @@
+Shared bounded-search and explicit-level integration audit
+Before: preserved Release runtime from 4b7d0aa (source unchanged at 9f04932); exact 9f04932 content.
+Before Core DLL SHA256: B8D8ED2CBE56506A18ACF6907DCDDED0558B81610AC7D50505CDF359DA3FD159.
+After: b1dd4d9 + 097c526 + 192e073 on the elemental branch, with explicit elemental use_site_level.
+Seed aureth. All eight zones retain site identities/levels and per-pattern spawn/body counts.
+
+Zone 0_0: 115 spawners / 293 initial bodies, unchanged.
+before quests: 4
+  gen.poi.0_0.hamlet.128.128.clear_knot.0 L1: reach:poi.0_0.knot.200.60; kill:cinder_imp
+  gen.poi.0_0.hamlet.128.128.gather_floss.1 L1: collect:thread_floss
+  gen.poi.0_0.hamlet.128.128.cull_beasts.2 L1: kill:hob
+  gen.poi.0_0.hamlet.128.128.scout_ruin.3 L1: discover:poi.1_1.ruin.305.334
+after quests: 3
+  gen.poi.0_0.hamlet.128.128.gather_floss.1 L1: collect:thread_floss
+  gen.poi.0_0.hamlet.128.128.cull_beasts.2 L1: kill:hob
+  gen.poi.0_0.hamlet.128.128.scout_ruin.3 L1: discover:poi.0_1.ruin.213.450
+cinder_imp at poi.0_0.knot.200.60: explicit=3, effective=3, points=2, bodies=4 -> explicit=pattern, effective=4, points=2, bodies=4
+quartermaster at poi.0_0.hamlet.128.128: explicit=1, effective=1, points=1, bodies=1 | explicit=pattern, effective=5, points=1, bodies=1 -> explicit=pattern, effective=5, points=2, bodies=2
+remnant_shade at poi.0_0.knot.200.60: explicit=3, effective=3, points=1, bodies=4 -> explicit=pattern, effective=2, points=1, bodies=4
+spindlewatch_guard at poi.0_0.hamlet.128.128: explicit=1, effective=1, points=2, bodies=2 | explicit=pattern, effective=5, points=2, bodies=2 -> explicit=pattern, effective=5, points=4, bodies=4
+tangle at poi.0_0.knot.200.60: explicit=3, effective=3, points=1, bodies=1 -> explicit=pattern, effective=6, points=1, bodies=1
+villager at poi.0_0.hamlet.128.128: explicit=1, effective=1, points=3, bodies=3 -> explicit=pattern, effective=1, points=3, bodies=3
+
+Zone 1_0: 122 spawners / 339 initial bodies, unchanged.
+before quests: 0
+after quests: 0
+goblin_scavenger at poi.1_0.orc_chaincamp.431.198: explicit=8, effective=8, points=1, bodies=1 -> explicit=pattern, effective=1, points=1, bodies=1
+goblin_skirmisher at poi.1_0.orc_muster.291.217: explicit=5, effective=5, points=1, bodies=1 -> explicit=pattern, effective=2, points=1, bodies=1
+orc_ashcaller at poi.1_0.orc_chaincamp.431.198: explicit=8, effective=8, points=1, bodies=1 -> explicit=pattern, effective=8, points=1, bodies=1
+orc_grunt at poi.1_0.orc_muster.291.217: explicit=5, effective=5, points=1, bodies=1 -> explicit=pattern, effective=4, points=1, bodies=1
+skeleton_archer at poi.1_0.ossuary.421.38: explicit=3, effective=3, points=1, bodies=1 -> explicit=pattern, effective=3, points=1, bodies=1
+skeleton_warrior at poi.1_0.ossuary.421.38: explicit=3, effective=3, points=2, bodies=5 -> explicit=pattern, effective=3, points=2, bodies=5
+
+Zone 0_-1: 171 spawners / 403 initial bodies, unchanged.
+before quests: 0
+after quests: 0
+cinder_imp at poi.0_-1.knot.176.-74: explicit=7, effective=7, points=2, bodies=5 -> explicit=pattern, effective=4, points=2, bodies=5
+cinder_imp at poi.0_-1.knot.185.-214: explicit=7, effective=7, points=2, bodies=6 -> explicit=pattern, effective=4, points=2, bodies=6
+cinder_imp at poi.0_-1.knot.41.-37: explicit=7, effective=7, points=2, bodies=4 -> explicit=pattern, effective=4, points=2, bodies=4
+remnant_shade at poi.0_-1.knot.176.-74: explicit=7, effective=7, points=1, bodies=4 -> explicit=pattern, effective=2, points=1, bodies=4
+remnant_shade at poi.0_-1.knot.185.-214: explicit=7, effective=7, points=1, bodies=2 -> explicit=pattern, effective=2, points=1, bodies=2
+remnant_shade at poi.0_-1.knot.41.-37: explicit=7, effective=7, points=1, bodies=4 -> explicit=pattern, effective=2, points=1, bodies=4
+tangle at poi.0_-1.knot.176.-74: explicit=7, effective=7, points=1, bodies=1 -> explicit=pattern, effective=6, points=1, bodies=1
+tangle at poi.0_-1.knot.185.-214: explicit=7, effective=7, points=1, bodies=1 -> explicit=pattern, effective=6, points=1, bodies=1
+tangle at poi.0_-1.knot.41.-37: explicit=7, effective=7, points=1, bodies=1 -> explicit=pattern, effective=6, points=1, bodies=1
+
+Zone 3_2: 146 spawners / 392 initial bodies, unchanged.
+before quests: 0
+after quests: 0
+barrow_wight at poi.3_2.ruin.890.658: explicit=2, effective=2, points=2, bodies=3 -> explicit=pattern, effective=3, points=2, bodies=3
+cinder_imp at poi.3_2.knot.965.744: explicit=3, effective=3, points=2, bodies=5 -> explicit=pattern, effective=4, points=2, bodies=5
+remnant_shade at poi.3_2.knot.965.744: explicit=3, effective=3, points=1, bodies=3 -> explicit=pattern, effective=2, points=1, bodies=3
+remnant_shade at poi.3_2.ruin.890.658: explicit=2, effective=2, points=1, bodies=2 -> explicit=pattern, effective=2, points=1, bodies=2
+tangle at poi.3_2.knot.965.744: explicit=3, effective=3, points=1, bodies=1 -> explicit=pattern, effective=6, points=1, bodies=1
+
+Zone -1_0: 153 spawners / 399 initial bodies, unchanged.
+before quests: 0
+after quests: 0
+barrow_wight at poi.-1_0.ruin.-218.235: explicit=7, effective=7, points=2, bodies=2 -> explicit=pattern, effective=3, points=2, bodies=2
+barrow_wight at poi.-1_0.ruin.-42.229: explicit=7, effective=7, points=2, bodies=4 -> explicit=pattern, effective=3, points=2, bodies=4
+cinder_imp at poi.-1_0.kiln.-56.100: explicit=8, effective=8, points=3, bodies=8 -> explicit=pattern, effective=4, points=3, bodies=8
+remnant_shade at poi.-1_0.ruin.-218.235: explicit=7, effective=7, points=1, bodies=3 -> explicit=pattern, effective=2, points=1, bodies=3
+remnant_shade at poi.-1_0.ruin.-42.229: explicit=7, effective=7, points=1, bodies=2 -> explicit=pattern, effective=2, points=1, bodies=2
+
+Zone -1_1: 169 spawners / 421 initial bodies, unchanged.
+before quests: 0
+after quests: 0
+barrow_wight at poi.-1_1.ruin.-198.436: explicit=7, effective=7, points=2, bodies=4 -> explicit=pattern, effective=3, points=2, bodies=4
+cinder_imp at poi.-1_1.knot.-234.294: explicit=8, effective=8, points=2, bodies=5 -> explicit=pattern, effective=4, points=2, bodies=5
+cinder_imp at poi.-1_1.knot.-34.419: explicit=8, effective=8, points=2, bodies=4 -> explicit=pattern, effective=4, points=2, bodies=4
+remnant_shade at poi.-1_1.knot.-234.294: explicit=8, effective=8, points=1, bodies=4 -> explicit=pattern, effective=2, points=1, bodies=4
+remnant_shade at poi.-1_1.knot.-34.419: explicit=8, effective=8, points=1, bodies=4 -> explicit=pattern, effective=2, points=1, bodies=4
+remnant_shade at poi.-1_1.ruin.-198.436: explicit=7, effective=7, points=1, bodies=3 -> explicit=pattern, effective=2, points=1, bodies=3
+tangle at poi.-1_1.knot.-234.294: explicit=8, effective=8, points=1, bodies=1 -> explicit=pattern, effective=6, points=1, bodies=1
+tangle at poi.-1_1.knot.-34.419: explicit=8, effective=8, points=1, bodies=1 -> explicit=pattern, effective=6, points=1, bodies=1
+
+Zone 2_1: 139 spawners / 378 initial bodies, unchanged.
+before quests: 0
+after quests: 0
+barrow_wight at poi.2_1.ruin.535.288: explicit=2, effective=2, points=2, bodies=3 -> explicit=pattern, effective=3, points=2, bodies=3
+barrow_wight at poi.2_1.ruin.652.443: explicit=2, effective=2, points=2, bodies=4 -> explicit=pattern, effective=3, points=2, bodies=4
+goblin_sapper at poi.2_1.scrap_fort.744.285: explicit=6, effective=6, points=1, bodies=1 -> explicit=pattern, effective=5, points=1, bodies=1
+remnant_shade at poi.2_1.ruin.535.288: explicit=2, effective=2, points=1, bodies=2 -> explicit=pattern, effective=2, points=1, bodies=2
+remnant_shade at poi.2_1.ruin.652.443: explicit=2, effective=2, points=1, bodies=2 -> explicit=pattern, effective=2, points=1, bodies=2
+warg at poi.2_1.scrap_fort.744.285: explicit=6, effective=6, points=1, bodies=2 -> explicit=pattern, effective=6, points=1, bodies=2
+
+Zone 3_1: 134 spawners / 346 initial bodies, unchanged.
+before quests: 0
+after quests: 0
+cinder_imp at poi.3_1.knot.945.437: explicit=3, effective=3, points=2, bodies=4 -> explicit=pattern, effective=4, points=2, bodies=4
+gnasher_whelp at poi.3_1.gnasher_pen.789.283: explicit=5, effective=5, points=1, bodies=1 -> explicit=pattern, effective=1, points=1, bodies=1
+reed_gnasher at poi.3_1.gnasher_pen.789.283: explicit=5, effective=5, points=1, bodies=1 -> explicit=pattern, effective=3, points=1, bodies=1
+remnant_shade at poi.3_1.knot.945.437: explicit=3, effective=3, points=1, bodies=2 -> explicit=pattern, effective=2, points=1, bodies=2
+tangle at poi.3_1.knot.945.437: explicit=3, effective=3, points=1, bodies=1 -> explicit=pattern, effective=6, points=1, bodies=1

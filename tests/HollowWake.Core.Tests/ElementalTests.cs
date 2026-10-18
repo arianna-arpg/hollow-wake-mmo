@@ -10,6 +10,7 @@ using HollowWake.Core.Movement;
 using HollowWake.Core.Minions;
 using HollowWake.Core.Patterns;
 using HollowWake.Core.Sim;
+using HollowWake.Core.Territory;
 using HollowWake.Core.Weaves;
 using HollowWake.Core.World;
 using HollowWake.Core.WorldGen;
@@ -159,6 +160,33 @@ public class ElementalTests(ITestOutputHelper output)
             }
         foreach(var (site,count) in populations)output.WriteLine($"Natural site count {site}: {count}");
         foreach(var site in Sites())Assert.Contains((string)site[0],found);
+    }
+
+    [Theory, MemberData(nameof(Sites))]
+    public void ManifestationResidentsKeepExplicitSiteLevelAtBirthAndRespawn(string siteId)
+    {
+        var content = ContentRegistry.Load(new[] { CoreContent.FindContentDir() }, out _);
+        content.With(new RegionOverrideDef { Id = "hallows_home", X = 0, Y = 0, Archetype = "hallows", Level = 25 });
+        content.With(new ZoneOverrideDef { Id = "ninewells", X = 0, Y = 0,
+            Pois = { new PoiPlacement { Poi = siteId, X = 50, Y = 50 } } });
+        var generator = new WorldGenerator(content, Rng.Hash64("unbound-sites"));
+        var sim = ZoneBuilder.CreateZone(content, generator, new WorldState(new GenerationOverlays()), new ZoneCoord(0, 0));
+        ZoneBuilder.LoadZone(sim);
+        var spawners = sim.World.Query<Spawner>().Select(s => s.C1)
+            .Where(s => s.Group?.Contains(siteId, StringComparison.Ordinal) == true).ToArray();
+        Assert.Equal(content.Require<PoiDef>(siteId).Inhabitants.Count, spawners.Length);
+        sim.Tick();
+        foreach (var spawner in spawners)
+        {
+            Assert.Equal(25, spawner.Level);
+            var first = Assert.Single(spawner.Alive);
+            Assert.Equal(25, sim.World.Get<Stats>(first)!.Level);
+            sim.Service<DeathService>().Kill(sim, first, Entity.None);
+            spawner.RespawnAt = sim.Clock.Time;
+        }
+        sim.Tick();
+        Assert.All(spawners, s => Assert.Equal(25, sim.World.Get<Stats>(Assert.Single(s.Alive))!.Level));
+        output.WriteLine($"{siteId}: {spawners.Length} resident patterns retain level 25 through birth and respawn.");
     }
 
     [Theory, MemberData(nameof(Bodies))]

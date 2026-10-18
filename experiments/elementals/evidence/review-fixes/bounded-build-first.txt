@@ -1,0 +1,20 @@
+  Determining projects to restore...
+  All projects are up-to-date for restore.
+  HollowWake.Core -> <worktree>\src\HollowWake.Core\bin\Release\net8.0\HollowWake.Core.dll
+  HollowWake.Protocol -> <worktree>\src\HollowWake.Protocol\bin\Release\net8.0\HollowWake.Protocol.dll
+<worktree>\tests\HollowWake.Core.Tests\ElementalTests.cs(172,66): error CS0246: The type or namespace name 'WorldState' could not be found (are you missing a using directive or an assembly reference?) [<worktree>\tests\HollowWake.Core.Tests\HollowWake.Core.Tests.csproj]
+  HollowWake.Server -> <worktree>\src\HollowWake.Server\bin\Release\net10.0\HollowWake.Server.dll
+  HollowWake.Client.Tests -> <worktree>\tests\HollowWake.Client.Tests\bin\Release\net10.0\HollowWake.Client.Tests.dll
+  HollowWake.Server.Host -> <worktree>\src\HollowWake.Server.Host\bin\Release\net10.0\hollowwake-server.dll
+  HollowWake.Server.Host.Brutal -> <worktree>\src\HollowWake.Server.Host.Brutal\bin\Release\net10.0\hollowwake-server-brutal.dll
+  HollowWake.Server.Tests -> <worktree>\tests\HollowWake.Server.Tests\bin\Release\net10.0\HollowWake.Server.Tests.dll
+  HollowWake.Tools -> <worktree>\src\HollowWake.Tools\bin\Release\net10.0\hollowwake.dll
+  HollowWake.Client -> <worktree>\src\HollowWake.Client\.godot\mono\temp\bin\Debug\HollowWake.Client.dll
+
+Build FAILED.
+
+<worktree>\tests\HollowWake.Core.Tests\ElementalTests.cs(172,66): error CS0246: The type or namespace name 'WorldState' could not be found (are you missing a using directive or an assembly reference?) [<worktree>\tests\HollowWake.Core.Tests\HollowWake.Core.Tests.csproj]
+    0 Warning(s)
+    1 Error(s)
+
+Time Elapsed 00:00:04.42

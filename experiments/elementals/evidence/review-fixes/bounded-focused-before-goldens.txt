@@ -1,0 +1,283 @@
+Test run for <worktree>\tests\HollowWake.Core.Tests\bin\Release\net10.0\HollowWake.Core.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v3.1.5+1b188a7b0a (64-bit .NET 10.0.13)
+[xUnit.net 00:00:00.47]   Discovering: HollowWake.Core.Tests
+[xUnit.net 00:00:03.93]   Discovered:  HollowWake.Core.Tests
+[xUnit.net 00:00:04.03]   Starting:    HollowWake.Core.Tests
+  Passed HollowWake.Core.Tests.ElementalDisplacementTests.EveryAuthoredBodyRespectsTheSharedShoveCeiling(pattern: "storm_confluence") [80 ms]
+  Passed HollowWake.Core.Tests.ElementalDisplacementTests.EveryAuthoredBodyRespectsTheSharedShoveCeiling(pattern: "umbra_drift") [6 ms]
+  Passed HollowWake.Core.Tests.ElementalDisplacementTests.EveryAuthoredBodyRespectsTheSharedShoveCeiling(pattern: "bloom_spore") [4 ms]
+  Passed HollowWake.Core.Tests.ElementalDisplacementTests.EveryAuthoredBodyRespectsTheSharedShoveCeiling(pattern: "void_ravel") [4 ms]
+  Passed HollowWake.Core.Tests.ElementalDisplacementTests.EveryAuthoredBodyRespectsTheSharedShoveCeiling(pattern: "gale_elemental") [4 ms]
+  Passed HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(pattern: "geode_shellback", relief: 0.5) [130 ms]
+  Passed HollowWake.Core.Tests.ElementalDisplacementTests.EveryAuthoredBodyRespectsTheSharedShoveCeiling(pattern: "frost_elemental") [17 ms]
+  Passed HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(pattern: "mind_knot", relief: 0) [17 ms]
+  Passed HollowWake.Core.Tests.ElementalDisplacementTests.EveryAuthoredBodyRespectsTheSharedShoveCeiling(pattern: "tide_surge") [5 ms]
+  Passed HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(pattern: "bloom_spore", relief: 0.5) [5 ms]
+  Passed HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(pattern: "geode_shellback", relief: 0) [4 ms]
+  Passed HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(pattern: "triune_elemental", relief: -0.5) [7 ms]
+  Passed HollowWake.Core.Tests.ElementalDisplacementTests.EveryAuthoredBodyRespectsTheSharedShoveCeiling(pattern: "silt_crawler") [17 ms]
+  Passed HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(pattern: "tide_surge", relief: 0) [25 ms]
+  Passed HollowWake.Core.Tests.ElementalDisplacementTests.EveryAuthoredBodyRespectsTheSharedShoveCeiling(pattern: "rime_star") [23 ms]
+  Passed HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(pattern: "rime_star", relief: -0.5) [6 ms]
+  Passed HollowWake.Core.Tests.ElementalDisplacementTests.EveryAuthoredBodyRespectsTheSharedShoveCeiling(pattern: "geode_shellback") [5 ms]
+  Passed HollowWake.Core.Tests.ElementalDisplacementTests.EveryAuthoredBodyRespectsTheSharedShoveCeiling(pattern: "lumen_wisp") [4 ms]
+  Passed HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(pattern: "cinderling", relief: 0.5) [6 ms]
+  Passed HollowWake.Core.Tests.ElementalTests.CompleteKitsFightUsingNativeFactionAndDirectDamageTestsMitigation(pattern: "cinderling") [207 ms]
+  Passed HollowWake.Core.Tests.ElementalDisplacementTests.EveryAuthoredBodyRespectsTheSharedShoveCeiling(pattern: "mind_knot") [11 ms]
+  Passed HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(pattern: "gale_elemental", relief: 0.5) [10 ms]
+  Passed HollowWake.Core.Tests.ElementalDisplacementTests.EveryAuthoredBodyRespectsTheSharedShoveCeiling(pattern: "cinderling") [6 ms]
+  Passed HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(pattern: "bloom_spore", relief: -0.5) [7 ms]
+  Passed HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(pattern: "tide_surge", relief: 0.5) [6 ms]
+  Passed HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(pattern: "emberwisp", relief: -0.5) [4 ms]
+  Passed HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(pattern: "umbra_drift", relief: -0.5) [4 ms]
+  Passed HollowWake.Core.Tests.ElementalDisplacementTests.EveryAuthoredBodyRespectsTheSharedShoveCeiling(pattern: "emberwisp") [27 ms]
+  Passed HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(pattern: "cinderling", relief: 0) [14 ms]
+  Passed HollowWake.Core.Tests.ElementalDisplacementTests.EveryAuthoredBodyRespectsTheSharedShoveCeiling(pattern: "ember_elemental") [5 ms]
+  Passed HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(pattern: "frost_elemental", relief: 0) [5 ms]
+  Passed HollowWake.Core.Tests.ElementalDisplacementTests.EveryAuthoredBodyRespectsTheSharedShoveCeiling(pattern: "triune_elemental") [5 ms]
+  Passed HollowWake.Core.Tests.ElementalTests.CompleteKitsFightUsingNativeFactionAndDirectDamageTestsMitigation(pattern: "lumen_wisp") [54 ms]
+  Passed HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(pattern: "void_ravel", relief: 0) [4 ms]
+  Passed HollowWake.Core.Tests.ElementalDisplacementTests.ALightElementalCannotTunnelThroughAPlacedWall [3 ms]
+  Passed HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(pattern: "umbra_drift", relief: 0.5) [12 ms]
+  Passed HollowWake.Core.Tests.ElementalDisplacementTests.ARealShoveDoesNotThrowAnEmberwispBeyondItsHomeLeash(attack: "bash") [13 ms]
+  Passed HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(pattern: "frost_elemental", relief: -0.5) [5 ms]
+  Passed HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(pattern: "silt_crawler", relief: 0) [4 ms]
+  Passed HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(pattern: "rime_star", relief: 0) [7 ms]
+  Passed HollowWake.Core.Tests.ElementalDisplacementTests.ARealShoveDoesNotThrowAnEmberwispBeyondItsHomeLeash(attack: "winters_sweep") [14 ms]
+  Passed HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(pattern: "ember_elemental", relief: 0.5) [22 ms]
+  Passed HollowWake.Core.Tests.ElementalTests.CompleteKitsFightUsingNativeFactionAndDirectDamageTestsMitigation(pattern: "mind_knot") [61 ms]
+  Passed HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(pattern: "mind_knot", relief: -0.5) [12 ms]
+  Passed HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(pattern: "lumen_wisp", relief: 0.5) [28 ms]
+  Passed HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(pattern: "rime_star", relief: 0.5) [20 ms]
+  Passed HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(pattern: "geode_shellback", relief: -0.5) [5 ms]
+  Passed HollowWake.Core.Tests.ElementalTests.CompleteKitsFightUsingNativeFactionAndDirectDamageTestsMitigation(pattern: "rime_star") [58 ms]
+  Passed HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(pattern: "mind_knot", relief: 0.5) [26 ms]
+  Passed HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(pattern: "tide_surge", relief: -0.5) [8 ms]
+  Passed HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(pattern: "storm_confluence", relief: -0.5) [6 ms]
+  Passed HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(pattern: "ember_elemental", relief: -0.5) [23 ms]
+  Passed HollowWake.Core.Tests.EntityPopulationTests.LegacyResidentsKeepTheirAuthoredLevels(x: 0, y: -1, pattern: "remnant_shade", level: 2) [447 ms]
+  Passed HollowWake.Core.Tests.ElementalTests.CompleteKitsFightUsingNativeFactionAndDirectDamageTestsMitigation(pattern: "gale_elemental") [65 ms]
+  Passed HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(pattern: "bloom_spore", relief: 0) [7 ms]
+  Passed HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(pattern: "emberwisp", relief: 0) [3 ms]
+  Passed HollowWake.Core.Tests.SpawnFactQueryTests.PopulationFactsMatchFullChunksWithAndAfterOverlays(x: 0, y: -1) [458 ms]
+  Passed HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(pattern: "frost_elemental", relief: 0.5) [17 ms]
+  Passed HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(pattern: "gale_elemental", relief: -0.5) [4 ms]
+  Passed HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(pattern: "gale_elemental", relief: 0) [4 ms]
+  Passed HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(pattern: "silt_crawler", relief: 0.5) [4 ms]
+  Passed HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(pattern: "lumen_wisp", relief: -0.5) [4 ms]
+  Passed HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(pattern: "triune_elemental", relief: 0.5) [6 ms]
+  Passed HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(pattern: "void_ravel", relief: -0.5) [25 ms]
+  Passed HollowWake.Core.Tests.ElementalTests.CompleteKitsFightUsingNativeFactionAndDirectDamageTestsMitigation(pattern: "triune_elemental") [51 ms]
+  Passed HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(pattern: "lumen_wisp", relief: 0) [4 ms]
+  Passed HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(pattern: "storm_confluence", relief: 0) [4 ms]
+  Passed HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(pattern: "emberwisp", relief: 0.5) [3 ms]
+  Passed HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(pattern: "ember_elemental", relief: 0) [5 ms]
+  Passed HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(pattern: "cinderling", relief: -0.5) [5 ms]
+  Passed HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(pattern: "storm_confluence", relief: 0.5) [31 ms]
+  Passed HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(pattern: "silt_crawler", relief: -0.5) [10 ms]
+  Passed HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(pattern: "void_ravel", relief: 0.5) [4 ms]
+  Passed HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(pattern: "umbra_drift", relief: 0) [4 ms]
+  Passed HollowWake.Core.Tests.ElementalTests.CompleteKitsFightUsingNativeFactionAndDirectDamageTestsMitigation(pattern: "void_ravel") [79 ms]
+  Passed HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(pattern: "triune_elemental", relief: 0) [6 ms]
+  Passed HollowWake.Core.Tests.ElementalTests.CompleteKitsFightUsingNativeFactionAndDirectDamageTestsMitigation(pattern: "tide_surge") [38 ms]
+  Passed HollowWake.Core.Tests.ElementalTests.CompleteKitsFightUsingNativeFactionAndDirectDamageTestsMitigation(pattern: "frost_elemental") [47 ms]
+  Passed HollowWake.Core.Tests.ElementalTests.CompleteKitsFightUsingNativeFactionAndDirectDamageTestsMitigation(pattern: "silt_crawler") [44 ms]
+  Passed HollowWake.Core.Tests.ElementalTests.CompleteKitsFightUsingNativeFactionAndDirectDamageTestsMitigation(pattern: "storm_confluence") [32 ms]
+  Passed HollowWake.Core.Tests.EntityPopulationTests.LegacyResidentsKeepTheirAuthoredLevels(x: 0, y: 0, pattern: "spindlewatch_guard", level: 5) [340 ms]
+  Passed HollowWake.Core.Tests.ElementalTests.CompleteKitsFightUsingNativeFactionAndDirectDamageTestsMitigation(pattern: "umbra_drift") [48 ms]
+  Passed HollowWake.Core.Tests.SpawnFactQueryTests.PopulationFactsMatchFullChunksWithAndAfterOverlays(x: 1, y: 0) [404 ms]
+  Passed HollowWake.Core.Tests.ElementalTests.CompleteKitsFightUsingNativeFactionAndDirectDamageTestsMitigation(pattern: "geode_shellback") [48 ms]
+  Passed HollowWake.Core.Tests.ElementalTests.CompleteKitsFightUsingNativeFactionAndDirectDamageTestsMitigation(pattern: "ember_elemental") [59 ms]
+  Passed HollowWake.Core.Tests.ElementalTests.CompleteKitsFightUsingNativeFactionAndDirectDamageTestsMitigation(pattern: "emberwisp") [87 ms]
+  Passed HollowWake.Core.Tests.ElementalTests.CompleteKitsFightUsingNativeFactionAndDirectDamageTestsMitigation(pattern: "bloom_spore") [61 ms]
+  Passed HollowWake.Core.Tests.EntityPopulationTests.LegacyResidentsKeepTheirAuthoredLevels(x: 0, y: 0, pattern: "tangle", level: 6) [290 ms]
+  Passed HollowWake.Core.Tests.ElementalTests.EveryAssignedSkillDealsDamageThroughAiAndKeepsActing(pattern: "mind_knot", preset: "mind_lash") [171 ms]
+  Passed HollowWake.Core.Tests.SpawnFactQueryTests.PopulationFactsMatchFullChunksWithAndAfterOverlays(x: 0, y: 0) [383 ms]
+  Passed HollowWake.Core.Tests.ElementalTests.EveryAssignedSkillDealsDamageThroughAiAndKeepsActing(pattern: "storm_confluence", preset: "storm_bolt") [162 ms]
+  Passed HollowWake.Core.Tests.ElementalTests.EveryAssignedSkillDealsDamageThroughAiAndKeepsActing(pattern: "umbra_drift", preset: "shade_bolt") [183 ms]
+  Passed HollowWake.Core.Tests.WorldGenGoldenTests.ClimateSamplesMatchGoldenHash [1 s]
+[xUnit.net 00:00:05.88]       zone(0,-1) info and chunks: expected BED451948F4FF6AD D785D8F084A1F919, generated BED451948F4FF6AD 2AFA9EE5AA75F409. Generation output changed; update the constant only if that was intended.
+[xUnit.net 00:00:05.88]       Stack Trace:
+[xUnit.net 00:00:05.88]         <worktree>\tests\HollowWake.Core.Tests\WorldGenGoldenTests.cs(165,0): at HollowWake.Core.Tests.WorldGenGoldenTests.Golden(String what, String expected, String actual)
+[xUnit.net 00:00:05.88]         <worktree>\tests\HollowWake.Core.Tests\WorldGenGoldenTests.cs(56,0): at HollowWake.Core.Tests.WorldGenGoldenTests.ZoneMatchesGoldenHashes(Int32 x, Int32 y, String infoHash, String chunksHash)
+[xUnit.net 00:00:05.88]     HollowWake.Core.Tests.WorldGenGoldenTests.ZoneMatchesGoldenHashes(x: 0, y: -1, infoHash: "BED451948F4FF6AD", chunksHash: "D785D8F084A1F919") [FAIL]
+[xUnit.net 00:00:05.88]            at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+[xUnit.net 00:00:05.88]            at System.Reflection.MethodBaseInvoker.InvokeDirectByRefWithFewArgs(Object obj, Span`1 copyOfArgs, BindingFlags invokeAttr)
+[xUnit.net 00:00:05.96]     HollowWake.Core.Tests.WorldGenGoldenTests.ZoneMatchesGoldenHashes(x: 1, y: 0, infoHash: "535B02D1C10CB22D", chunksHash: "DF735AA7610989B3") [FAIL]
+[xUnit.net 00:00:05.96]       zone(1,0) info and chunks: expected 535B02D1C10CB22D DF735AA7610989B3, generated 535B02D1C10CB22D 0E386FE1D6659BC0. Generation output changed; update the constant only if that was intended.
+[xUnit.net 00:00:05.96]       Stack Trace:
+[xUnit.net 00:00:05.96]         <worktree>\tests\HollowWake.Core.Tests\WorldGenGoldenTests.cs(165,0): at HollowWake.Core.Tests.WorldGenGoldenTests.Golden(String what, String expected, String actual)
+[xUnit.net 00:00:05.96]         <worktree>\tests\HollowWake.Core.Tests\WorldGenGoldenTests.cs(56,0): at HollowWake.Core.Tests.WorldGenGoldenTests.ZoneMatchesGoldenHashes(Int32 x, Int32 y, String infoHash, String chunksHash)
+[xUnit.net 00:00:05.96]            at InvokeStub_WorldGenGoldenTests.ZoneMatchesGoldenHashes(Object, Span`1)
+[xUnit.net 00:00:05.96]            at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Passed HollowWake.Core.Tests.LocalPopulationSearchTests.BudgetLimitsDistantOffersWithoutWeakeningSpawnLevelOrRadius(chunks: 0, siteLevel: 1, reach: 160, offered: False) [1 s]
+  Passed HollowWake.Core.Tests.SpawnFactQueryTests.PopulationFactsMatchFullChunksWithAndAfterOverlays(x: 3, y: 2) [430 ms]
+  Passed HollowWake.Core.Tests.ElementalTests.EveryAssignedSkillDealsDamageThroughAiAndKeepsActing(pattern: "frost_elemental", preset: "ice_spear") [175 ms]
+  Failed HollowWake.Core.Tests.WorldGenGoldenTests.ZoneMatchesGoldenHashes(x: 0, y: -1, infoHash: "BED451948F4FF6AD", chunksHash: "D785D8F084A1F919") [119 ms]
+  Error Message:
+   zone(0,-1) info and chunks: expected BED451948F4FF6AD D785D8F084A1F919, generated BED451948F4FF6AD 2AFA9EE5AA75F409. Generation output changed; update the constant only if that was intended.
+  Stack Trace:
+     at HollowWake.Core.Tests.WorldGenGoldenTests.Golden(String what, String expected, String actual) in <worktree>\tests\HollowWake.Core.Tests\WorldGenGoldenTests.cs:line 165
+   at HollowWake.Core.Tests.WorldGenGoldenTests.ZoneMatchesGoldenHashes(Int32 x, Int32 y, String infoHash, String chunksHash) in <worktree>\tests\HollowWake.Core.Tests\WorldGenGoldenTests.cs:line 56
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeDirectByRefWithFewArgs(Object obj, Span`1 copyOfArgs, BindingFlags invokeAttr)
+  Passed HollowWake.Core.Tests.ElementalTests.EveryAssignedSkillDealsDamageThroughAiAndKeepsActing(pattern: "ember_elemental", preset: "ember_blast") [96 ms]
+  Failed HollowWake.Core.Tests.WorldGenGoldenTests.ZoneMatchesGoldenHashes(x: 1, y: 0, infoHash: "535B02D1C10CB22D", chunksHash: "DF735AA7610989B3") [84 ms]
+  Error Message:
+   zone(1,0) info and chunks: expected 535B02D1C10CB22D DF735AA7610989B3, generated 535B02D1C10CB22D 0E386FE1D6659BC0. Generation output changed; update the constant only if that was intended.
+  Stack Trace:
+     at HollowWake.Core.Tests.WorldGenGoldenTests.Golden(String what, String expected, String actual) in <worktree>\tests\HollowWake.Core.Tests\WorldGenGoldenTests.cs:line 165
+   at HollowWake.Core.Tests.WorldGenGoldenTests.ZoneMatchesGoldenHashes(Int32 x, Int32 y, String infoHash, String chunksHash) in <worktree>\tests\HollowWake.Core.Tests\WorldGenGoldenTests.cs:line 56
+   at InvokeStub_WorldGenGoldenTests.ZoneMatchesGoldenHashes(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Passed HollowWake.Core.Tests.ElementalReviewTests.ScoutRuinNeverSelectsACloserManifestation [1 s]
+  Passed HollowWake.Core.Tests.ElementalReviewTests.ManifestationSitesHaveTheirOwnBudgetAndNoHumanStampRewards(id: "tide_memory") [1 ms]
+  Passed HollowWake.Core.Tests.ElementalReviewTests.ManifestationSitesHaveTheirOwnBudgetAndNoHumanStampRewards(id: "mineral_wake") [< 1 ms]
+  Passed HollowWake.Core.Tests.ElementalReviewTests.ManifestationSitesHaveTheirOwnBudgetAndNoHumanStampRewards(id: "rime_bloom") [< 1 ms]
+  Passed HollowWake.Core.Tests.ElementalReviewTests.ManifestationSitesHaveTheirOwnBudgetAndNoHumanStampRewards(id: "storm_eye") [< 1 ms]
+  Passed HollowWake.Core.Tests.ElementalReviewTests.ManifestationSitesHaveTheirOwnBudgetAndNoHumanStampRewards(id: "unbound_refraction") [< 1 ms]
+  Passed HollowWake.Core.Tests.ElementalReviewTests.ManifestationSitesHaveTheirOwnBudgetAndNoHumanStampRewards(id: "bloom_exhalation") [< 1 ms]
+  Passed HollowWake.Core.Tests.ElementalReviewTests.ManifestationSitesHaveTheirOwnBudgetAndNoHumanStampRewards(id: "ember_seam") [< 1 ms]
+  Passed HollowWake.Core.Tests.ElementalReviewTests.ManifestationSitesHaveTheirOwnBudgetAndNoHumanStampRewards(id: "selvage_rent") [< 1 ms]
+  Passed HollowWake.Core.Tests.ElementalReviewTests.LoosedAndElementalAiBothDealDamageWithoutFactionOverrides [31 ms]
+[xUnit.net 00:00:06.05]     HollowWake.Core.Tests.WorldGenGoldenTests.ZoneMatchesGoldenHashes(x: 3, y: 2, infoHash: "2B931093C9DDE5E2", chunksHash: "8C46ACF595DB3A42") [FAIL]
+[xUnit.net 00:00:06.05]       zone(3,2) info and chunks: expected 2B931093C9DDE5E2 8C46ACF595DB3A42, generated 2B931093C9DDE5E2 B927209C7C70E524. Generation output changed; update the constant only if that was intended.
+[xUnit.net 00:00:06.05]       Stack Trace:
+[xUnit.net 00:00:06.05]         <worktree>\tests\HollowWake.Core.Tests\WorldGenGoldenTests.cs(165,0): at HollowWake.Core.Tests.WorldGenGoldenTests.Golden(String what, String expected, String actual)
+[xUnit.net 00:00:06.05]         <worktree>\tests\HollowWake.Core.Tests\WorldGenGoldenTests.cs(56,0): at HollowWake.Core.Tests.WorldGenGoldenTests.ZoneMatchesGoldenHashes(Int32 x, Int32 y, String infoHash, String chunksHash)
+[xUnit.net 00:00:06.05]            at InvokeStub_WorldGenGoldenTests.ZoneMatchesGoldenHashes(Object, Span`1)
+[xUnit.net 00:00:06.05]            at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:06.16]     HollowWake.Core.Tests.WorldGenGoldenTests.ZoneMatchesGoldenHashes(x: 0, y: 0, infoHash: "678462695CF5FCF1", chunksHash: "384BA03BE0D34C0A") [FAIL]
+[xUnit.net 00:00:06.16]       zone(0,0) info and chunks: expected 678462695CF5FCF1 384BA03BE0D34C0A, generated 6F31BE10B412E1B0 38740F7C0C66C2F6. Generation output changed; update the constant only if that was intended.
+[xUnit.net 00:00:06.16]       Stack Trace:
+[xUnit.net 00:00:06.16]         <worktree>\tests\HollowWake.Core.Tests\WorldGenGoldenTests.cs(165,0): at HollowWake.Core.Tests.WorldGenGoldenTests.Golden(String what, String expected, String actual)
+[xUnit.net 00:00:06.16]         <worktree>\tests\HollowWake.Core.Tests\WorldGenGoldenTests.cs(56,0): at HollowWake.Core.Tests.WorldGenGoldenTests.ZoneMatchesGoldenHashes(Int32 x, Int32 y, String infoHash, String chunksHash)
+[xUnit.net 00:00:06.16]            at InvokeStub_WorldGenGoldenTests.ZoneMatchesGoldenHashes(Object, Span`1)
+[xUnit.net 00:00:06.16]            at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Passed HollowWake.Core.Tests.ElementalReviewTests.NativeFactionStancesAreReciprocalIncludingTheLoosed [7 ms]
+  Passed HollowWake.Core.Tests.ElementalTests.EveryAssignedSkillDealsDamageThroughAiAndKeepsActing(pattern: "umbra_drift", preset: "umbra_field") [81 ms]
+  Failed HollowWake.Core.Tests.WorldGenGoldenTests.ZoneMatchesGoldenHashes(x: 3, y: 2, infoHash: "2B931093C9DDE5E2", chunksHash: "8C46ACF595DB3A42") [92 ms]
+  Error Message:
+   zone(3,2) info and chunks: expected 2B931093C9DDE5E2 8C46ACF595DB3A42, generated 2B931093C9DDE5E2 B927209C7C70E524. Generation output changed; update the constant only if that was intended.
+  Stack Trace:
+     at HollowWake.Core.Tests.WorldGenGoldenTests.Golden(String what, String expected, String actual) in <worktree>\tests\HollowWake.Core.Tests\WorldGenGoldenTests.cs:line 165
+   at HollowWake.Core.Tests.WorldGenGoldenTests.ZoneMatchesGoldenHashes(Int32 x, Int32 y, String infoHash, String chunksHash) in <worktree>\tests\HollowWake.Core.Tests\WorldGenGoldenTests.cs:line 56
+   at InvokeStub_WorldGenGoldenTests.ZoneMatchesGoldenHashes(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Passed HollowWake.Core.Tests.ElementalTests.EveryAssignedSkillDealsDamageThroughAiAndKeepsActing(pattern: "cinderling", preset: "ember_strike") [123 ms]
+  Failed HollowWake.Core.Tests.WorldGenGoldenTests.ZoneMatchesGoldenHashes(x: 0, y: 0, infoHash: "678462695CF5FCF1", chunksHash: "384BA03BE0D34C0A") [106 ms]
+  Error Message:
+   zone(0,0) info and chunks: expected 678462695CF5FCF1 384BA03BE0D34C0A, generated 6F31BE10B412E1B0 38740F7C0C66C2F6. Generation output changed; update the constant only if that was intended.
+  Stack Trace:
+     at HollowWake.Core.Tests.WorldGenGoldenTests.Golden(String what, String expected, String actual) in <worktree>\tests\HollowWake.Core.Tests\WorldGenGoldenTests.cs:line 165
+   at HollowWake.Core.Tests.WorldGenGoldenTests.ZoneMatchesGoldenHashes(Int32 x, Int32 y, String infoHash, String chunksHash) in <worktree>\tests\HollowWake.Core.Tests\WorldGenGoldenTests.cs:line 56
+   at InvokeStub_WorldGenGoldenTests.ZoneMatchesGoldenHashes(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Passed HollowWake.Core.Tests.WorldGenGoldenTests.StartZoneIsTheOrigin [3 ms]
+  Passed HollowWake.Core.Tests.EntityPopulationTests.NaturalSitesRequireEligibleInhabitants(level: 8, eligible: True) [1 s]
+[xUnit.net 00:00:06.41]     HollowWake.Core.Tests.WorldGenGoldenTests.OverlaidWorldMatchesGoldenHash [FAIL]
+[xUnit.net 00:00:06.41]       overlaid world: expected 886D1257CEFE92E1, generated B532F6AA2C0EE744. Generation output changed; update the constant only if that was intended.
+[xUnit.net 00:00:06.41]       Stack Trace:
+[xUnit.net 00:00:06.41]         <worktree>\tests\HollowWake.Core.Tests\WorldGenGoldenTests.cs(165,0): at HollowWake.Core.Tests.WorldGenGoldenTests.Golden(String what, String expected, String actual)
+[xUnit.net 00:00:06.41]         <worktree>\tests\HollowWake.Core.Tests\WorldGenGoldenTests.cs(104,0): at HollowWake.Core.Tests.WorldGenGoldenTests.OverlaidWorldMatchesGoldenHash()
+[xUnit.net 00:00:06.41]            at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+[xUnit.net 00:00:06.41]            at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Passed HollowWake.Core.Tests.ElementalTests.EveryAssignedSkillDealsDamageThroughAiAndKeepsActing(pattern: "void_ravel", preset: "unmaking_pulse") [104 ms]
+  Passed HollowWake.Core.Tests.ElementalTests.EveryAssignedSkillDealsDamageThroughAiAndKeepsActing(pattern: "lumen_wisp", preset: "lumen_presence") [105 ms]
+  Failed HollowWake.Core.Tests.WorldGenGoldenTests.OverlaidWorldMatchesGoldenHash [250 ms]
+  Error Message:
+   overlaid world: expected 886D1257CEFE92E1, generated B532F6AA2C0EE744. Generation output changed; update the constant only if that was intended.
+  Stack Trace:
+     at HollowWake.Core.Tests.WorldGenGoldenTests.Golden(String what, String expected, String actual) in <worktree>\tests\HollowWake.Core.Tests\WorldGenGoldenTests.cs:line 165
+   at HollowWake.Core.Tests.WorldGenGoldenTests.OverlaidWorldMatchesGoldenHash() in <worktree>\tests\HollowWake.Core.Tests\WorldGenGoldenTests.cs:line 104
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Passed HollowWake.Core.Tests.ElementalTests.EveryAssignedSkillDealsDamageThroughAiAndKeepsActing(pattern: "silt_crawler", preset: "claw") [97 ms]
+  Passed HollowWake.Core.Tests.ElementalTests.EveryAssignedSkillDealsDamageThroughAiAndKeepsActing(pattern: "storm_confluence", preset: "storm_nova") [133 ms]
+  Passed HollowWake.Core.Tests.LocalPopulationSearchTests.BudgetLimitsDistantOffersWithoutWeakeningSpawnLevelOrRadius(chunks: 64, siteLevel: 9, reach: 160, offered: False) [903 ms]
+  Passed HollowWake.Core.Tests.ElementalTests.EveryAssignedSkillDealsDamageThroughAiAndKeepsActing(pattern: "geode_shellback", preset: "warden_slam") [113 ms]
+  Passed HollowWake.Core.Tests.ElementalTests.EveryAssignedSkillDealsDamageThroughAiAndKeepsActing(pattern: "gale_elemental", preset: "storm_nova") [79 ms]
+  Passed HollowWake.Core.Tests.ElementalTests.EveryAssignedSkillDealsDamageThroughAiAndKeepsActing(pattern: "rime_star", preset: "tide_bolt") [142 ms]
+  Passed HollowWake.Core.Tests.ElementalTests.EveryAssignedSkillDealsDamageThroughAiAndKeepsActing(pattern: "triune_elemental", preset: "tide_bolt") [113 ms]
+  Passed HollowWake.Core.Tests.EntityPopulationTests.NaturalSitesRequireEligibleInhabitants(level: 1, eligible: False) [824 ms]
+  Passed HollowWake.Core.Tests.EntityPopulationTests.EveryEntityHabitatHasAMatchingPopulationReference(template: "undead_body") [2 ms]
+  Passed HollowWake.Core.Tests.EntityPopulationTests.EveryEntityHabitatHasAMatchingPopulationReference(template: "orc_body") [< 1 ms]
+  Passed HollowWake.Core.Tests.EntityPopulationTests.EveryEntityHabitatHasAMatchingPopulationReference(template: "fauna_body") [< 1 ms]
+  Passed HollowWake.Core.Tests.EntityPopulationTests.EveryEntityHabitatHasAMatchingPopulationReference(template: "goblinkin_body") [< 1 ms]
+  Passed HollowWake.Core.Tests.EntityPopulationTests.GeneratedCombatTargetsExistNearbyAndRespectQuestLevel(x: 0, y: -1) [4 ms]
+  Passed HollowWake.Core.Tests.EntityPopulationTests.GeneratedCombatTargetsExistNearbyAndRespectQuestLevel(x: 3, y: 2) [4 ms]
+  Passed HollowWake.Core.Tests.EntityPopulationTests.GeneratedCombatTargetsExistNearbyAndRespectQuestLevel(x: 1, y: 0) [2 ms]
+  Passed HollowWake.Core.Tests.EntityPopulationTests.GeneratedCombatTargetsExistNearbyAndRespectQuestLevel(x: 0, y: 0) [10 ms]
+  Passed HollowWake.Core.Tests.ElementalTests.EveryAssignedSkillDealsDamageThroughAiAndKeepsActing(pattern: "frost_elemental", preset: "tide_bolt") [96 ms]
+  Passed HollowWake.Core.Tests.ElementalTests.EveryAssignedSkillDealsDamageThroughAiAndKeepsActing(pattern: "ember_elemental", preset: "ember_bolt") [126 ms]
+  Passed HollowWake.Core.Tests.ElementalTests.EveryAssignedSkillDealsDamageThroughAiAndKeepsActing(pattern: "triune_elemental", preset: "storm_bolt") [122 ms]
+  Passed HollowWake.Core.Tests.LocalPopulationSearchTests.BudgetLimitsDistantOffersWithoutWeakeningSpawnLevelOrRadius(chunks: 64, siteLevel: 1, reach: 40, offered: False) [775 ms]
+  Passed HollowWake.Core.Tests.ElementalTests.EveryAssignedSkillDealsDamageThroughAiAndKeepsActing(pattern: "triune_elemental", preset: "ember_bolt") [115 ms]
+  Passed HollowWake.Core.Tests.ElementalTests.EveryAssignedSkillDealsDamageThroughAiAndKeepsActing(pattern: "emberwisp", preset: "cinder_spit") [111 ms]
+  Passed HollowWake.Core.Tests.ElementalTests.EveryAssignedSkillDealsDamageThroughAiAndKeepsActing(pattern: "bloom_spore", preset: "venom_spit") [108 ms]
+  Passed HollowWake.Core.Tests.ElementalTests.EveryAssignedSkillDealsDamageThroughAiAndKeepsActing(pattern: "void_ravel", preset: "void_lash") [94 ms]
+  Passed HollowWake.Core.Tests.ElementalTests.EveryAssignedSkillDealsDamageThroughAiAndKeepsActing(pattern: "tide_surge", preset: "brine_bolt") [90 ms]
+  Passed HollowWake.Core.Tests.ElementalTests.PhysicalBodiesHaveHonestClassifiersRewardsAndHabitatReferences(pattern: "rime_star") [2 ms]
+  Passed HollowWake.Core.Tests.ElementalTests.PhysicalBodiesHaveHonestClassifiersRewardsAndHabitatReferences(pattern: "umbra_drift") [< 1 ms]
+  Passed HollowWake.Core.Tests.ElementalTests.PhysicalBodiesHaveHonestClassifiersRewardsAndHabitatReferences(pattern: "geode_shellback") [< 1 ms]
+  Passed HollowWake.Core.Tests.ElementalTests.PhysicalBodiesHaveHonestClassifiersRewardsAndHabitatReferences(pattern: "frost_elemental") [< 1 ms]
+  Passed HollowWake.Core.Tests.ElementalTests.PhysicalBodiesHaveHonestClassifiersRewardsAndHabitatReferences(pattern: "tide_surge") [< 1 ms]
+  Passed HollowWake.Core.Tests.ElementalTests.PhysicalBodiesHaveHonestClassifiersRewardsAndHabitatReferences(pattern: "storm_confluence") [< 1 ms]
+  Passed HollowWake.Core.Tests.ElementalTests.PhysicalBodiesHaveHonestClassifiersRewardsAndHabitatReferences(pattern: "triune_elemental") [< 1 ms]
+  Passed HollowWake.Core.Tests.ElementalTests.PhysicalBodiesHaveHonestClassifiersRewardsAndHabitatReferences(pattern: "ember_elemental") [< 1 ms]
+  Passed HollowWake.Core.Tests.ElementalTests.PhysicalBodiesHaveHonestClassifiersRewardsAndHabitatReferences(pattern: "lumen_wisp") [< 1 ms]
+  Passed HollowWake.Core.Tests.ElementalTests.PhysicalBodiesHaveHonestClassifiersRewardsAndHabitatReferences(pattern: "bloom_spore") [< 1 ms]
+  Passed HollowWake.Core.Tests.ElementalTests.PhysicalBodiesHaveHonestClassifiersRewardsAndHabitatReferences(pattern: "silt_crawler") [1 ms]
+  Passed HollowWake.Core.Tests.ElementalTests.PhysicalBodiesHaveHonestClassifiersRewardsAndHabitatReferences(pattern: "void_ravel") [< 1 ms]
+  Passed HollowWake.Core.Tests.ElementalTests.PhysicalBodiesHaveHonestClassifiersRewardsAndHabitatReferences(pattern: "gale_elemental") [< 1 ms]
+  Passed HollowWake.Core.Tests.ElementalTests.PhysicalBodiesHaveHonestClassifiersRewardsAndHabitatReferences(pattern: "mind_knot") [< 1 ms]
+  Passed HollowWake.Core.Tests.ElementalTests.PhysicalBodiesHaveHonestClassifiersRewardsAndHabitatReferences(pattern: "cinderling") [< 1 ms]
+  Passed HollowWake.Core.Tests.ElementalTests.PhysicalBodiesHaveHonestClassifiersRewardsAndHabitatReferences(pattern: "emberwisp") [1 ms]
+  Passed HollowWake.Core.Tests.ElementalTests.BoundBodiesUseOwnerAllegianceLoseWildRewardsAndLeaveNoCorpse(pattern: "cinderling") [32 ms]
+  Passed HollowWake.Core.Tests.ElementalTests.BoundBodiesUseOwnerAllegianceLoseWildRewardsAndLeaveNoCorpse(pattern: "lumen_wisp") [2 ms]
+  Passed HollowWake.Core.Tests.ElementalTests.BoundBodiesUseOwnerAllegianceLoseWildRewardsAndLeaveNoCorpse(pattern: "ember_elemental") [3 ms]
+  Passed HollowWake.Core.Tests.ElementalTests.BoundBodiesUseOwnerAllegianceLoseWildRewardsAndLeaveNoCorpse(pattern: "tide_surge") [2 ms]
+  Passed HollowWake.Core.Tests.ElementalTests.BoundBodiesUseOwnerAllegianceLoseWildRewardsAndLeaveNoCorpse(pattern: "umbra_drift") [3 ms]
+  Passed HollowWake.Core.Tests.ElementalTests.BoundBodiesUseOwnerAllegianceLoseWildRewardsAndLeaveNoCorpse(pattern: "silt_crawler") [2 ms]
+  Passed HollowWake.Core.Tests.ElementalTests.BoundBodiesUseOwnerAllegianceLoseWildRewardsAndLeaveNoCorpse(pattern: "mind_knot") [6 ms]
+  Passed HollowWake.Core.Tests.ElementalTests.BoundBodiesUseOwnerAllegianceLoseWildRewardsAndLeaveNoCorpse(pattern: "storm_confluence") [2 ms]
+  Passed HollowWake.Core.Tests.ElementalTests.BoundBodiesUseOwnerAllegianceLoseWildRewardsAndLeaveNoCorpse(pattern: "geode_shellback") [2 ms]
+  Passed HollowWake.Core.Tests.ElementalTests.BoundBodiesUseOwnerAllegianceLoseWildRewardsAndLeaveNoCorpse(pattern: "void_ravel") [34 ms]
+  Passed HollowWake.Core.Tests.ElementalTests.BoundBodiesUseOwnerAllegianceLoseWildRewardsAndLeaveNoCorpse(pattern: "frost_elemental") [2 ms]
+  Passed HollowWake.Core.Tests.ElementalTests.BoundBodiesUseOwnerAllegianceLoseWildRewardsAndLeaveNoCorpse(pattern: "bloom_spore") [3 ms]
+  Passed HollowWake.Core.Tests.ElementalTests.BoundBodiesUseOwnerAllegianceLoseWildRewardsAndLeaveNoCorpse(pattern: "triune_elemental") [1 ms]
+  Passed HollowWake.Core.Tests.ElementalTests.BoundBodiesUseOwnerAllegianceLoseWildRewardsAndLeaveNoCorpse(pattern: "rime_star") [2 ms]
+  Passed HollowWake.Core.Tests.ElementalTests.BoundBodiesUseOwnerAllegianceLoseWildRewardsAndLeaveNoCorpse(pattern: "gale_elemental") [1 ms]
+  Passed HollowWake.Core.Tests.ElementalTests.BoundBodiesUseOwnerAllegianceLoseWildRewardsAndLeaveNoCorpse(pattern: "emberwisp") [2 ms]
+  Passed HollowWake.Core.Tests.EntityPopulationTests.BothSiteSpawnPathsPreservePatternLevelUnlessExplicitlyScaled(useSiteLevel: True) [1 s]
+  Passed HollowWake.Core.Tests.LocalPopulationSearchTests.BudgetLimitsDistantOffersWithoutWeakeningSpawnLevelOrRadius(chunks: 1, siteLevel: 1, reach: 160, offered: False) [840 ms]
+  Passed HollowWake.Core.Tests.LocalPopulationSearchTests.BudgetLimitsDistantOffersWithoutWeakeningSpawnLevelOrRadius(chunks: 64, siteLevel: 1, reach: 160, offered: True) [989 ms]
+  Passed HollowWake.Core.Tests.ElementalTests.ManifestationResidentsKeepExplicitSiteLevelAtBirthAndRespawn(siteId: "rime_bloom") [1 s]
+  Passed HollowWake.Core.Tests.EntityPopulationTests.BothSiteSpawnPathsPreservePatternLevelUnlessExplicitlyScaled(useSiteLevel: False) [2 s]
+  Passed HollowWake.Core.Tests.LocalPopulationSearchTests.CachedDistantResidentCannotExtendAnotherSlotsBudget [1 s]
+  Passed HollowWake.Core.Tests.ElementalTests.ManifestationResidentsKeepExplicitSiteLevelAtBirthAndRespawn(siteId: "bloom_exhalation") [1 s]
+  Passed HollowWake.Core.Tests.ElementalTests.ManifestationResidentsKeepExplicitSiteLevelAtBirthAndRespawn(siteId: "selvage_rent") [883 ms]
+  Passed HollowWake.Core.Tests.ElementalTests.ManifestationResidentsKeepExplicitSiteLevelAtBirthAndRespawn(siteId: "mineral_wake") [569 ms]
+  Passed HollowWake.Core.Tests.ElementalTests.ManifestationResidentsKeepExplicitSiteLevelAtBirthAndRespawn(siteId: "tide_memory") [598 ms]
+  Passed HollowWake.Core.Tests.ElementalTests.ManifestationResidentsKeepExplicitSiteLevelAtBirthAndRespawn(siteId: "storm_eye") [625 ms]
+  Passed HollowWake.Core.Tests.ElementalTests.ManifestationResidentsKeepExplicitSiteLevelAtBirthAndRespawn(siteId: "unbound_refraction") [610 ms]
+  Passed HollowWake.Core.Tests.ElementalTests.ManifestationResidentsKeepExplicitSiteLevelAtBirthAndRespawn(siteId: "ember_seam") [587 ms]
+  Passed HollowWake.Core.Tests.ElementalTests.SparseSitesGenerateResidentsAtTheirLevelAndReplayExactly(siteId: "ember_seam") [1 s]
+  Passed HollowWake.Core.Tests.ElementalTests.SparseSitesGenerateResidentsAtTheirLevelAndReplayExactly(siteId: "selvage_rent") [1 s]
+  Passed HollowWake.Core.Tests.ElementalTests.SparseSitesGenerateResidentsAtTheirLevelAndReplayExactly(siteId: "bloom_exhalation") [1 s]
+  Passed HollowWake.Core.Tests.ElementalTests.SparseSitesGenerateResidentsAtTheirLevelAndReplayExactly(siteId: "unbound_refraction") [1 s]
+  Passed HollowWake.Core.Tests.ElementalTests.SparseSitesGenerateResidentsAtTheirLevelAndReplayExactly(siteId: "rime_bloom") [1 s]
+  Passed HollowWake.Core.Tests.ElementalTests.SparseSitesGenerateResidentsAtTheirLevelAndReplayExactly(siteId: "tide_memory") [1 s]
+  Passed HollowWake.Core.Tests.ElementalTests.SparseSitesGenerateResidentsAtTheirLevelAndReplayExactly(siteId: "mineral_wake") [898 ms]
+  Passed HollowWake.Core.Tests.ElementalTests.SparseSitesGenerateResidentsAtTheirLevelAndReplayExactly(siteId: "storm_eye") [1 s]
+  Passed HollowWake.Core.Tests.ElementalTests.ReviewedWorldPopulationAuditSeparatesManifestationsFromTheBase [825 ms]
+  Passed HollowWake.Core.Tests.ElementalTests.MaterialDensityAndPoiseProduceDistinctMassAndBoundedShoveTravel [46 ms]
+[xUnit.net 00:00:26.46]   Finished:    HollowWake.Core.Tests
+  Passed HollowWake.Core.Tests.ElementalTests.ExistingWorldBudgetsCanSelectUnboundSitesNaturally [1 s]
+
+Test Run Failed.
+Total tests: 200
+     Passed: 195
+     Failed: 5
+ Total time: 27.8624 Seconds
