@@ -41,7 +41,12 @@ public sealed class Stats : IComponent, IExprScope
     public List<string> Passives { get; } = new();
 
     /// <summary>Entity tags (pattern, rarity, faction) exposed to <c>has()</c> and victim scopes.</summary>
-    public TagSet Tags { get; set; } = TagSet.Empty;
+    private TagSet _tags = TagSet.Empty;
+    public TagSet Tags
+    {
+        get => _tags;
+        set { if (!ReferenceEquals(_tags, value)) { _tags = value; Attributes.Touch(); } }
+    }
 
     /// <summary>Extra scope the owner mounts under names such as "weave", "target".</summary>
     public ScopeOverlay? Mounted;
@@ -612,4 +617,3 @@ public static class Trades
         return list.ToArray();
     });
 }
-

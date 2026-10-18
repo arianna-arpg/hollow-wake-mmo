@@ -28,6 +28,7 @@ Budgets are for the benchmark's default zone run in Release on a development mac
 | snapshot.build | at most 1 ms per player | Ten snapshots a second per player |
 | snapshot.bytes | at most 30 KB per player per snapshot | Full states are the fallback for a client that does not negotiate deltas; in a melee of hundreds of monsters their life, stamina and cast progress change every snapshot |
 | snapshot.delta.bytes | at most 10 KB per player per snapshot | Every shipped client negotiates deltas, so this is the number players feel |
+| worldgen.zone.plan | at most 40 ms | Bounds synchronous zone planning, including local quest population inspection |
 | worldgen.chunk | at most 4 ms and 400 KB | Zones load in well under a second; clients stream without hitches |
 | attribute.apply.extra | at most 500 ns and 200 bytes | Every hit folds damage several times |
 | expression.evaluate | at most 150 ns, no allocation for small calls | Formulas run everywhere |

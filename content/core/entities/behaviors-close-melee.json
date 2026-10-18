@@ -2,7 +2,7 @@
   "kind": "behaviors",
   "entries": [
     {
-      "id": "orc_press",
+      "id": "close_melee",
       "initial": "idle",
       "tick_interval": 0.25,
       "aggro_range": 12,
