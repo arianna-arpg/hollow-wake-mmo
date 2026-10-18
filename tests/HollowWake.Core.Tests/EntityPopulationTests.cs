@@ -47,7 +47,7 @@ public class EntityPopulationTests
         content.With(content.Require<PoiDef>("ossuary") with
         {
             Id = "test_site", Weight = 100, Level = 0, Slope = null, MinSpacing = 30,
-            Inhabitants = new() { new SpawnSpec { Pattern = "skeleton_warrior", Level = new Window { Min = 5 } } },
+            Inhabitants = new() { new SpawnSpec { Pattern = "skeleton_warrior", UseSiteLevel = true, Level = new Window { Min = 5 } } },
         });
         content.With(new RegionOverrideDef { Id = "hallows_home", X = 0, Y = 0, Archetype = "hallows", Level = level });
         content.With(new ZoneOverrideDef { Id = "ninewells", X = 0, Y = 0 });
@@ -62,28 +62,55 @@ public class EntityPopulationTests
         }
     }
 
-    [Fact]
-    public void SiteLevelReachesInitialAndRespawnedResidents()
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public void BothSiteSpawnPathsPreservePatternLevelUnlessExplicitlyScaled(bool useSiteLevel)
     {
         var content = ContentRegistry.Load(new[] { CoreContent.FindContentDir() }, out _);
         content.With(new RegionOverrideDef { Id = "hallows_home", X = 0, Y = 0, Archetype = "hallows", Level = 8 });
+        content.With(new LandmarkDef { Id = "level_marker", Rows = { "S" }, Legend = { ["S"] = new LegendCell { Spawn = "skeleton_warrior", UseSiteLevel = useSiteLevel } } });
+        content.With(new PoiDef { Id = "level_site", Weight = 0, Level = 2, Landmarks = { "level_marker" }, Inhabitants = { new SpawnSpec { Pattern = "skeleton_warrior", UseSiteLevel = useSiteLevel } } });
         content.With(new ZoneOverrideDef { Id = "ninewells", X = 0, Y = 0,
-            Pois = { new PoiPlacement { Poi = "ossuary", X = 50, Y = 50 } } });
+            Pois = { new PoiPlacement { Poi = "level_site", X = 50, Y = 50 } } });
         var generator = new WorldGenerator(content, Rng.Hash64("aureth"));
-        var zone = new ZoneCoord(0, 0);
-        var sim = ZoneBuilder.CreateZone(content, generator, new WorldState(new GenerationOverlays()), zone);
+        var sim = ZoneBuilder.CreateZone(content, generator, new WorldState(new GenerationOverlays()), new ZoneCoord(0, 0));
         ZoneBuilder.LoadZone(sim);
-        var spawner = sim.World.Query<Spawner>().First(s => s.C1.Group?.Contains("ossuary", StringComparison.Ordinal) == true && s.C1.Pattern == "skeleton_warrior");
-        Assert.Equal(10, spawner.C1.Level);
+        var spawners = sim.World.Query<Spawner>().Where(s => s.C1.Group?.Contains("level_site", StringComparison.Ordinal) == true).Select(s => s.C1).ToArray();
+        Assert.Equal(2, spawners.Length);
+        var expected = useSiteLevel ? 10 : content.Require<PatternDef>("skeleton_warrior").Level;
+        Assert.All(spawners, spawner => Assert.Equal(useSiteLevel ? (int?)10 : null, spawner.Level));
         sim.Tick();
-        var first = spawner.C1.Alive[0];
-        Assert.Equal(10, sim.World.Get<Stats>(first)!.Level);
-        Assert.True(sim.World.Get<Stats>(first)!.ResourceMax("life") > 100);
-        sim.Service<DeathService>().Kill(sim, first, Entity.None);
-        spawner.C1.RespawnAt = sim.Clock.Time;
+        foreach (var spawner in spawners)
+        {
+            var first = Assert.Single(spawner.Alive);
+            Assert.Equal(expected, sim.World.Get<Stats>(first)!.Level);
+            sim.Service<DeathService>().Kill(sim, first, Entity.None);
+            spawner.RespawnAt = sim.Clock.Time;
+        }
         sim.Tick();
-        Assert.DoesNotContain(first, spawner.C1.Alive);
-        Assert.All(spawner.C1.Alive, e => Assert.Equal(10, sim.World.Get<Stats>(e)!.Level));
+        Assert.All(spawners, spawner => Assert.Equal(expected, sim.World.Get<Stats>(Assert.Single(spawner.Alive))!.Level));
+    }
+
+    [Theory]
+    [InlineData(0, 0, "spindlewatch_guard", 5)]
+    [InlineData(0, 0, "tangle", 6)]
+    [InlineData(0, -1, "remnant_shade", 2)]
+    public void LegacyResidentsKeepTheirAuthoredLevels(int x, int y, string pattern, int level)
+    {
+        var content = CoreContent.Registry;
+        var generator = new WorldGenerator(content, Rng.Hash64("aureth"));
+        var sim = ZoneBuilder.CreateZone(content, generator, new WorldState(new GenerationOverlays()), new ZoneCoord(x, y));
+        ZoneBuilder.LoadZone(sim);
+        var spawners = sim.World.Query<Spawner>().Select(s => s.C1).Where(s => s.Pattern == pattern && s.Group is not null).ToArray();
+        Assert.NotEmpty(spawners);
+        Assert.All(spawners, s => Assert.Null(s.Level));
+        sim.Tick();
+        foreach (var spawner in spawners)
+        {
+            Assert.NotEmpty(spawner.Alive);
+            Assert.All(spawner.Alive, e => Assert.Equal(level, sim.World.Get<Stats>(e)!.Level));
+        }
     }
 
     [Theory]

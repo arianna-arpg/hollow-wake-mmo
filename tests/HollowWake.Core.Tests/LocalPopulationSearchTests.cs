@@ -51,7 +51,7 @@ public class LocalPopulationSearchTests
         content.With(new PoiDef
         {
             Id = "budget_site", Weight = 0, Level = siteLevel - 1,
-            Inhabitants = { new SpawnSpec { Pattern = "budget_target" } },
+            Inhabitants = { new SpawnSpec { Pattern = "budget_target", UseSiteLevel = true } },
         });
         content.With(new RegionOverrideDef { Id = "hallows_home", X = 0, Y = 0, Archetype = "hallows", Level = 1 });
         content.With(new ZoneOverrideDef
