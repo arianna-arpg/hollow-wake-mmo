@@ -49,3 +49,29 @@ Queue-only functional verification: clean Release build, 756 core tests, 52 serv
 Source `268ab10` additionally integrates #20's additive allocation instrument `d3982f6`. It leaves gameplay/client code unchanged and preserves the historical whole-process expression counter. Final Release build is clean and all 1,054 solution tests pass (864 core, 58 server, 132 client); validation remains 0/0 and all seven replay hashes remain identical to the inherited baseline. One coordinated Release measurement will be reported for this exact source; no repeated pass-seeking samples are requested. #54's separate Aim property and negative-heal finding remain outside this stack.
 
 Acknowledged by: pending Claude review on PR #50. The owner decision is resolved; the queue and combined release corrections await review and final performance acceptance.
+
+## Final first-result performance sample
+
+The one coordinated default Release run on runtime source `268ab10`, measured at documentation head `f475eaf`, ran at Normal priority on 2026-10-18 after the other owners confirmed stopped. The invocation was `dotnet src/HollowWake.Tools/bin/Release/net10.0/hollowwake.dll bench --json`. Every row is retained in [the raw result](../../experiments/combat-grammar/review/construct-final-bench.json), with [binary provenance](../../experiments/combat-grammar/review/construct-final-bench-preflight.json) and [run metadata](../../experiments/combat-grammar/review/construct-final-bench-run.json). No repeat was taken.
+
+| Measure | First result | Budget / assessment |
+|---|---:|---|
+| Tick p95 | 13.6169 ms | 25 ms, passes |
+| Tick allocation | 70.470391 KB | 2 MB, passes |
+| Behavior | 2.905159 ms / 22.4 KB | 3 ms / 1 MB, passes with limited time headroom |
+| Snapshot build | 1.014923 ms | 1 ms, **misses** |
+| Combined snapshot build | 1.159832 ms | same 1 ms, **misses** |
+| Full snapshot | 29.658721 KB | 30 KB; 0.341279 KB headroom |
+| Delta snapshot | 9.326582 KB | 10 KB; 0.673418 KB headroom |
+| Combined snapshot traffic | 8.448813 KB | 10 KB, passes |
+| Chunk | 0.728134 ms / 14.316284 KB | 4 ms / 400 KB, passes |
+| Damage fold | 368.5 ns / 0.1344 B | 500 ns / 200 B, passes |
+| Expression time | 113.737 ns | 150 ns, passes |
+| Expression legacy process allocation | 0.0168 B | retained nonzero diagnostic |
+| Expression fixed calling-thread / companion process sample | 0 / 0 B | warmed small-call instrument; measurement-contract clarification awaits Claude |
+| Zone planning | 19.7213 ms | reported; no entity-stack planning target imported |
+| System errors | 0 | passes |
+
+Forecasts observed 1,852 active casts; their incremental build was 0.2951595 ms, with 1.284521 KB traffic and 8.913438 KB allocation. The combined group includes actual entity/interface/forecast encoding; sequential group averages are not added together. The default workload includes no constructs, so it does not certify construct-heavy scaling or the retained-queue memory bound under indefinitely inactive actions.
+
+**Performance acceptance remains open.** Both snapshot time misses are retained, with no change to the 1 ms budget. The forecasting owner is investigating the common measurement and snapshot path; no branch-specific cause or contention explanation has been established. Functional and hosted checks pass, but this request stays draft for that issue and Claude review of Codex's corrections.
