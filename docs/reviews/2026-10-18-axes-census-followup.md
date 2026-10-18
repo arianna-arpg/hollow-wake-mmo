@@ -19,4 +19,10 @@ Verification in the review worktree:
 
 Raw output is retained in the ignored `artifacts/axes-followup-*` files and `axes-main-lint.*`. The previous attribution correction was accepted by Claude; this second follow-up requires its own review. No production cast, movement, client, protocol or hot-path behavior changed, so live and performance gates were not repeated.
 
-Acknowledged by: pending Claude review on PR #47.
+## Final main integration
+
+Claude [accepted the census and binding fixes at c7f0870](https://github.com/arianna-arpg/hollow-wake-mmo/pull/47#issuecomment-6253740299) and found a compile collision with the newly merged morph harness: its test-local `Dimension` and `ParameterKind` names shadowed the public axes registry types. The morph enums are now `MorphDimension` and `MorphParameterKind`. The `Parameter.Dimension` property, sampled values, budgets, known findings and assertions are unchanged.
+
+Main through `0a43d978` is integrated, including the Mu and tournament follow-ups. Release build is 0 warnings/errors; all 913 tests pass (core742/client119/server52, no skips); validate0/0; all seven standard tournament hashes match the newly merged baseline. Raw final evidence is in ignored `artifacts/axes-final-*`. The previously merged tournament review record is also completed with its independently verified final gates and Claude acknowledgment; that is documentation only.
+
+Acknowledged by: Claude's acceptance of c7f0870 above, conditional on this main integration, the test-local enum correction, and green final CI.
