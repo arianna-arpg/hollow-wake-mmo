@@ -1,0 +1,35 @@
+{
+  "Source": "ec144c3df03252fa88d97e3931f1f2366d28b586",
+  "RuntimeSource": "6a65ed186ce17ce7edaebf5681034e4041ef619f",
+  "BaselineGenerationSource": "71ad34f7ace9240a3be7aef5c099f8d1f09f9967",
+  "ProcessId": 125680,
+  "Priority": "Normal",
+  "Arguments": [
+    "C:\\Users\\John\\.codex\\worktrees\\undead-entity-foundation\\MMOARPG\\artifacts\\entity31-planning-before-runtime\\hollowwake.dll",
+    "bench",
+    "--only",
+    "worldgen",
+    "--json",
+    "--content",
+    "artifacts/entity31-planning-before-content/content/core"
+  ],
+  "StartedUtc": "2026-10-18T19:16:07.9277079Z",
+  "Binaries": [
+    {
+      "Path": "C:\\Users\\John\\.codex\\worktrees\\undead-entity-foundation\\MMOARPG\\artifacts\\entity31-planning-before-runtime\\HollowWake.Core.dll",
+      "Hash": "BB3D952FA70817659EFA1EAD6D9908FF397820F287B460FC0230EB210AFAE71F"
+    },
+    {
+      "Path": "C:\\Users\\John\\.codex\\worktrees\\undead-entity-foundation\\MMOARPG\\artifacts\\entity31-planning-before-runtime\\hollowwake.dll",
+      "Hash": "56FC32026A5343538D46F24479589F058FE432CE472D692850BBC4462FCF202F"
+    },
+    {
+      "Path": "C:\\Users\\John\\.codex\\worktrees\\undead-entity-foundation\\MMOARPG\\artifacts\\entity31-planning-before-runtime\\HollowWake.Protocol.dll",
+      "Hash": "58A527A4C53B247384FB7F2BFDE82FCF45DC1D345320E10F586BCAF3B98D8953"
+    },
+    {
+      "Path": "C:\\Users\\John\\.codex\\worktrees\\undead-entity-foundation\\MMOARPG\\artifacts\\entity31-planning-before-runtime\\HollowWake.Server.dll",
+      "Hash": "59FA2F70C9B641EE9CA9642B88D1F9904EFFEF659CDD3FA8598B40B59ECD78C7"
+    }
+  ]
+}

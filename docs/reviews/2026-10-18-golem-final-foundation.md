@@ -22,6 +22,12 @@ Debug solution and Release tools builds have zero warnings/errors. Full tests pa
 
 The private background harness passes browser 31/31 and native 26/26 with no cleanup errors. Card and combat screenshots were visually inspected and retain terrain/bodies; the nonblank-world assertion records 18.57% dominant color and 171 bins. Guards/quartermasters visibly use their restored level 5. Native pixels and controller input remain untested, and the headless shutdown resource/object leak diagnostics remain in the log.
 
+## Validated base ancestry
+
+After minimal integration, the coordinator confirmed complete #34 tip `745015e5a0849a201e6857e47c9e23435618fb0a` for ancestry reconciliation. Merge it while preserving this branch's independently audited goldens and explicit golem opt-in content. Retain both shared historical review records in their complete newer form, including #34's original 228 B/tick allocation-test failure, isolated pass and unchanged-suite retry. The cause remains unestablished; this branch does not erase or explain away that evidence.
+
+After resolving the four documentation/golden conflicts, `git diff --exit-code a21a58d -- src content tests web scripts Directory.Build.props Directory.Build.targets Directory.Packages.props HollowWake.sln` reports no differences. The application and test inputs are unchanged from the completed functional run. Retain the already-tested Release binary without rebuilding, as requested by the coordinator; merged additions are review/evidence history.
+
 New coordinated performance measurements pending. Earlier #39 tick/snapshot/plan figures are historical because restored legacy levels change the workload. Keep #39 draft for Claude rereview and later complete reviewed-main integration; the tournament/#20 checks still belong to that later combination.
 
 Acknowledged by: pending Claude rereview.
