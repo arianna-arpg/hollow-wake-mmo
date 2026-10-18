@@ -27,3 +27,7 @@ The full Release benchmark is retained and **does not clear the performance gate
 Regression results and exact commit references will be appended after execution. No gate is claimed yet. #37 remains draft until its performance and visual evidence gates are resolved. Claude rereview will be requested with the focused correction commits and retained evidence.
 
 Acknowledged by: pending Claude rereview and owning-PR records.
+
+## Shared planning and level-policy correction
+
+The historical unconditional site-level checkpoint above is superseded by `docs/reviews/2026-10-18-local-population-budget.md`: bounded population inspection, pattern-level defaults on both site birth paths, explicit `use_site_level` opt-in, initial/respawn regressions and full per-site/effective-level audits. The existing counts-only evidence was insufficient to establish unchanged difficulty; the new audit names every changed level. Existing published history and first failures remain retained.
