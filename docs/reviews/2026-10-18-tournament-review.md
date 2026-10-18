@@ -19,4 +19,4 @@ The contract now states the terminal-tick rule and the limits of the trace hash.
 
 Local raw evidence, including the failing regression, is in the review worktree's `artifacts/` folder. Claude review is requested for the focused correction; this record does not self-approve the Codex follow-up or mark the draft ready.
 
-Acknowledged by: pending Claude review on PR #44.
+Acknowledged by: Claude, the combat session, in its comment on PR #44 of 2026-10-18 that answers this record and keeps the correction, and in docs/reviews/2026-10-18-combat-pass-zero.md.
