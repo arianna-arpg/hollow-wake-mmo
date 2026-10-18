@@ -1,0 +1,194 @@
+{
+  "source": {
+    "repository": "arianna-arpg/arpg-game-world",
+    "revision": "118b510f8b5bfb781163c5bc13ea4908f698e75b"
+  },
+  "reviewed": [
+    "src/data/monsters.ts: stone_golem, vault_golem, bauble_golem",
+    "src/data/golemLooks.ts",
+    "src/data/golemGlyphs.ts",
+    "src/data/looks.ts: vault_golem, bauble_golem",
+    "docs/render/golems.md",
+    "balance/reports/golems-comparison.png"
+  ],
+  "bodies": [
+    {
+      "id": "clay_golem",
+      "source": {
+        "repository": "arianna-arpg/arpg-game-world",
+        "revision": "118b510f8b5bfb781163c5bc13ea4908f698e75b",
+        "inspiration": "assembled stone body grammar; original material adaptation"
+      },
+      "translation": "Existing ordinary weave kit; no material-specific attack engine.",
+      "ai": {
+        "current": "golem_guard",
+        "status": "provisional content scaffolding",
+        "deferred": [
+          "bounded sensing and memory",
+          "coordinated guarding",
+          "repair and reassembly",
+          "forecast-aware choice of shove and target mass"
+        ]
+      }
+    },
+    {
+      "id": "quarry_golem",
+      "source": {
+        "repository": "arianna-arpg/arpg-game-world",
+        "revision": "118b510f8b5bfb781163c5bc13ea4908f698e75b",
+        "id": "stone_golem",
+        "look": "golem_stone_assembled"
+      },
+      "translation": "Ground Slam retained; Warden Slam replaces claw.",
+      "ai": {
+        "current": "golem_guard",
+        "status": "provisional content scaffolding",
+        "deferred": [
+          "bounded sensing and memory",
+          "coordinated guarding",
+          "repair and reassembly",
+          "forecast-aware choice of shove and target mass"
+        ]
+      }
+    },
+    {
+      "id": "iron_golem",
+      "source": {
+        "repository": "arianna-arpg/arpg-game-world",
+        "revision": "118b510f8b5bfb781163c5bc13ea4908f698e75b",
+        "inspiration": "assembled stone body grammar; original material adaptation"
+      },
+      "translation": "Existing ordinary weave kit; no material-specific attack engine.",
+      "ai": {
+        "current": "golem_guard",
+        "status": "provisional content scaffolding",
+        "deferred": [
+          "bounded sensing and memory",
+          "coordinated guarding",
+          "repair and reassembly",
+          "forecast-aware choice of shove and target mass"
+        ]
+      }
+    },
+    {
+      "id": "crystal_golem",
+      "source": {
+        "repository": "arianna-arpg/arpg-game-world",
+        "revision": "118b510f8b5bfb781163c5bc13ea4908f698e75b",
+        "inspiration": "assembled stone body grammar; original material adaptation"
+      },
+      "translation": "Existing ordinary weave kit; no material-specific attack engine.",
+      "ai": {
+        "current": "aggressive_ranged",
+        "status": "provisional content scaffolding",
+        "deferred": [
+          "bounded sensing and memory",
+          "coordinated guarding",
+          "repair and reassembly",
+          "forecast-aware choice of shove and target mass"
+        ]
+      }
+    },
+    {
+      "id": "timber_golem",
+      "source": {
+        "repository": "arianna-arpg/arpg-game-world",
+        "revision": "118b510f8b5bfb781163c5bc13ea4908f698e75b",
+        "inspiration": "assembled stone body grammar; original material adaptation"
+      },
+      "translation": "Existing ordinary weave kit; no material-specific attack engine.",
+      "ai": {
+        "current": "golem_guard",
+        "status": "provisional content scaffolding",
+        "deferred": [
+          "bounded sensing and memory",
+          "coordinated guarding",
+          "repair and reassembly",
+          "forecast-aware choice of shove and target mass"
+        ]
+      }
+    },
+    {
+      "id": "kiln_golem",
+      "source": {
+        "repository": "arianna-arpg/arpg-game-world",
+        "revision": "118b510f8b5bfb781163c5bc13ea4908f698e75b",
+        "inspiration": "assembled stone body grammar; original material adaptation"
+      },
+      "translation": "Existing ordinary weave kit; no material-specific attack engine.",
+      "ai": {
+        "current": "golem_guard",
+        "status": "provisional content scaffolding",
+        "deferred": [
+          "bounded sensing and memory",
+          "coordinated guarding",
+          "repair and reassembly",
+          "forecast-aware choice of shove and target mass"
+        ]
+      }
+    },
+    {
+      "id": "vault_golem",
+      "source": {
+        "repository": "arianna-arpg/arpg-game-world",
+        "revision": "118b510f8b5bfb781163c5bc13ea4908f698e75b",
+        "id": "vault_golem",
+        "look": "vault_golem"
+      },
+      "translation": "Heavy Strike retained; Iron Ward, bleed resistance and wage/death economies deferred.",
+      "ai": {
+        "current": "golem_guard",
+        "status": "provisional content scaffolding",
+        "deferred": [
+          "bounded sensing and memory",
+          "coordinated guarding",
+          "repair and reassembly",
+          "forecast-aware choice of shove and target mass"
+        ]
+      }
+    },
+    {
+      "id": "bauble_golem",
+      "source": {
+        "repository": "arianna-arpg/arpg-game-world",
+        "revision": "118b510f8b5bfb781163c5bc13ea4908f698e75b",
+        "id": "bauble_golem",
+        "look": "bauble_golem"
+      },
+      "translation": "Existing ordinary weave kit; no material-specific attack engine.",
+      "ai": {
+        "current": "golem_guard",
+        "status": "provisional content scaffolding",
+        "deferred": [
+          "bounded sensing and memory",
+          "coordinated guarding",
+          "repair and reassembly",
+          "forecast-aware choice of shove and target mass"
+        ]
+      }
+    },
+    {
+      "id": "stone_warden",
+      "source": {
+        "repository": "arianna-arpg/arpg-game-world",
+        "revision": "118b510f8b5bfb781163c5bc13ea4908f698e75b",
+        "id": "stone_golem",
+        "look": "golem_stone_assembled"
+      },
+      "translation": "Existing ID, faction, dimensions, combat stats, reduction and bind contract preserved. Gains explicit physical mass and shared resource pools; remains reward-free and summon-only.",
+      "ai": {
+        "current": "minion_melee",
+        "status": "provisional existing owner/order behavior",
+        "deferred": [
+          "bodyguard interception",
+          "forecast-aware mass use"
+        ]
+      }
+    }
+  ],
+  "excluded": [
+    "bone_golem remains undead-owned",
+    "free-form fire/ice/storm bodies remain elemental-owned",
+    "blood golem deferred; biological construct belongs with its reviewed combat and material contract"
+  ]
+}

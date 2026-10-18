@@ -1,0 +1,848 @@
+{
+  "kind": "patterns",
+  "entries": [
+    {
+      "id": "golem_body",
+      "name": "Assembled golem template",
+      "extends": "creature",
+      "faction": "unbound_constructs",
+      "tags": [
+        "construct",
+        "golem",
+        "no_corpse"
+      ],
+      "components": {
+        "stats": {
+          "attributes": {
+            "stamina.max": 100,
+            "stamina.regen": 16,
+            "mana.max": 80,
+            "mana.regen": 12
+          }
+        },
+        "statuses": {}
+      }
+    },
+    {
+      "id": "clay_golem",
+      "name": "Clay Golem",
+      "extends": "golem_body",
+      "faction": "unbound_constructs",
+      "level": 4,
+      "height": 1.8,
+      "radius": 0.475,
+      "tags": [
+        "construct",
+        "golem",
+        "monster",
+        "summonable",
+        "no_corpse",
+        "family.golem",
+        "body.clay",
+        "assembly.moulded",
+        "locomotion.ground",
+        "size.medium",
+        "habitat.golem_kiln",
+        "role.bruiser",
+        "melee"
+      ],
+      "components": {
+        "physical": {
+          "width": 0.95,
+          "depth": 0.65,
+          "height": 1.8,
+          "fill": 0.32,
+          "heft": 1,
+          "materials": [
+            {
+              "material": "golem_clay",
+              "fraction": 1
+            }
+          ]
+        },
+        "stats": {
+          "attributes": {
+            "life.max": 145,
+            "might": 16,
+            "grace": 5,
+            "will": 6,
+            "vigor": 14,
+            "move.speed": 3.4,
+            "weapon.damage.min": 12,
+            "weapon.damage.max": 18,
+            "weapon.attack.time": 1.35,
+            "armor": 20,
+            "poise.max": 15
+          }
+        },
+        "weaves": {
+          "list": [
+            "heavy_strike",
+            "strike"
+          ]
+        },
+        "behavior": {
+          "id": "golem_guard"
+        },
+        "drops": {
+          "table": "golem_salvage",
+          "xp": "16 + level * 7",
+          "chance": 0.8
+        }
+      },
+      "meta": {
+        "prototype": {
+          "repository": "arianna-arpg/arpg-game-world",
+          "revision": "118b510f8b5bfb781163c5bc13ea4908f698e75b",
+          "inspiration": "assembled stone body grammar; original material adaptation"
+        },
+        "adaptation": true,
+        "materials": "Physical mixture determines mass only. Palette, luminous seams and surface markings grant no resistance or immunity.",
+        "combat_translation": "Existing ordinary weave kit; no material-specific attack engine.",
+        "ai_handoff": {
+          "current": "golem_guard",
+          "status": "provisional content scaffolding",
+          "deferred": [
+            "bounded sensing and memory",
+            "coordinated guarding",
+            "repair and reassembly",
+            "forecast-aware choice of shove and target mass"
+          ]
+        }
+      }
+    },
+    {
+      "id": "quarry_golem",
+      "name": "Quarry Golem",
+      "extends": "golem_body",
+      "faction": "unbound_constructs",
+      "level": 6,
+      "height": 2.5,
+      "radius": 0.75,
+      "tags": [
+        "construct",
+        "golem",
+        "monster",
+        "summonable",
+        "no_corpse",
+        "family.golem",
+        "body.stone",
+        "assembly.quarried",
+        "locomotion.ground",
+        "size.large",
+        "habitat.golem_quarry",
+        "role.bruiser",
+        "melee"
+      ],
+      "components": {
+        "physical": {
+          "width": 1.5,
+          "depth": 0.95,
+          "height": 2.5,
+          "fill": 0.32,
+          "heft": 1,
+          "materials": [
+            {
+              "material": "stone",
+              "fraction": 0.97
+            },
+            {
+              "material": "iron",
+              "fraction": 0.03
+            }
+          ]
+        },
+        "stats": {
+          "attributes": {
+            "life.max": 240,
+            "might": 18,
+            "grace": 5,
+            "will": 6,
+            "vigor": 14,
+            "move.speed": 2.8,
+            "weapon.damage.min": 17,
+            "weapon.damage.max": 25,
+            "weapon.attack.time": 1.35,
+            "armor": 55,
+            "poise.max": 40
+          }
+        },
+        "weaves": {
+          "list": [
+            "ground_slam",
+            "warden_slam"
+          ]
+        },
+        "behavior": {
+          "id": "golem_guard"
+        },
+        "drops": {
+          "table": "golem_salvage",
+          "xp": "16 + level * 7",
+          "chance": 0.8
+        }
+      },
+      "meta": {
+        "prototype": {
+          "repository": "arianna-arpg/arpg-game-world",
+          "revision": "118b510f8b5bfb781163c5bc13ea4908f698e75b",
+          "id": "stone_golem",
+          "look": "golem_stone_assembled"
+        },
+        "adaptation": true,
+        "materials": "Physical mixture determines mass only. Palette, luminous seams and surface markings grant no resistance or immunity.",
+        "combat_translation": "Ground Slam retained; Warden Slam replaces claw.",
+        "ai_handoff": {
+          "current": "golem_guard",
+          "status": "provisional content scaffolding",
+          "deferred": [
+            "bounded sensing and memory",
+            "coordinated guarding",
+            "repair and reassembly",
+            "forecast-aware choice of shove and target mass"
+          ]
+        }
+      }
+    },
+    {
+      "id": "iron_golem",
+      "name": "Iron Golem",
+      "extends": "golem_body",
+      "faction": "unbound_constructs",
+      "level": 9,
+      "height": 2.7,
+      "radius": 0.75,
+      "tags": [
+        "construct",
+        "golem",
+        "monster",
+        "summonable",
+        "no_corpse",
+        "family.golem",
+        "body.iron",
+        "assembly.riveted",
+        "locomotion.ground",
+        "size.large",
+        "habitat.golem_foundry",
+        "role.bruiser",
+        "melee"
+      ],
+      "components": {
+        "physical": {
+          "width": 1.5,
+          "depth": 0.95,
+          "height": 2.7,
+          "fill": 0.22,
+          "heft": 1,
+          "materials": [
+            {
+              "material": "iron",
+              "fraction": 0.95
+            },
+            {
+              "material": "wood",
+              "fraction": 0.05
+            }
+          ]
+        },
+        "stats": {
+          "attributes": {
+            "life.max": 340,
+            "might": 21,
+            "grace": 5,
+            "will": 6,
+            "vigor": 14,
+            "move.speed": 2.6,
+            "weapon.damage.min": 20,
+            "weapon.damage.max": 30,
+            "weapon.attack.time": 1.35,
+            "armor": 90,
+            "poise.max": 65
+          }
+        },
+        "weaves": {
+          "list": [
+            "heavy_strike",
+            "cleave"
+          ]
+        },
+        "behavior": {
+          "id": "golem_guard"
+        },
+        "drops": {
+          "table": "golem_salvage",
+          "xp": "16 + level * 7",
+          "chance": 0.8
+        }
+      },
+      "meta": {
+        "prototype": {
+          "repository": "arianna-arpg/arpg-game-world",
+          "revision": "118b510f8b5bfb781163c5bc13ea4908f698e75b",
+          "inspiration": "assembled stone body grammar; original material adaptation"
+        },
+        "adaptation": true,
+        "materials": "Physical mixture determines mass only. Palette, luminous seams and surface markings grant no resistance or immunity.",
+        "combat_translation": "Existing ordinary weave kit; no material-specific attack engine.",
+        "ai_handoff": {
+          "current": "golem_guard",
+          "status": "provisional content scaffolding",
+          "deferred": [
+            "bounded sensing and memory",
+            "coordinated guarding",
+            "repair and reassembly",
+            "forecast-aware choice of shove and target mass"
+          ]
+        }
+      }
+    },
+    {
+      "id": "crystal_golem",
+      "name": "Crystal Golem",
+      "extends": "golem_body",
+      "faction": "unbound_constructs",
+      "level": 8,
+      "height": 2.35,
+      "radius": 0.525,
+      "tags": [
+        "construct",
+        "golem",
+        "monster",
+        "summonable",
+        "no_corpse",
+        "family.golem",
+        "body.quartz",
+        "assembly.faceted",
+        "locomotion.ground",
+        "size.large",
+        "habitat.golem_quarry",
+        "role.artillery",
+        "ranged"
+      ],
+      "components": {
+        "physical": {
+          "width": 1.05,
+          "depth": 0.66,
+          "height": 2.35,
+          "fill": 0.27,
+          "heft": 1,
+          "materials": [
+            {
+              "material": "golem_quartz",
+              "fraction": 0.96
+            },
+            {
+              "material": "stone",
+              "fraction": 0.04
+            }
+          ]
+        },
+        "stats": {
+          "attributes": {
+            "life.max": 175,
+            "might": 20,
+            "grace": 5,
+            "will": 18,
+            "vigor": 14,
+            "move.speed": 3.6,
+            "weapon.damage.min": 10,
+            "weapon.damage.max": 16,
+            "weapon.attack.time": 1.35,
+            "armor": 35,
+            "poise.max": 24
+          }
+        },
+        "weaves": {
+          "list": [
+            "stone_blast"
+          ]
+        },
+        "behavior": {
+          "id": "aggressive_ranged"
+        },
+        "drops": {
+          "table": "golem_salvage",
+          "xp": "16 + level * 7",
+          "chance": 0.8
+        }
+      },
+      "meta": {
+        "prototype": {
+          "repository": "arianna-arpg/arpg-game-world",
+          "revision": "118b510f8b5bfb781163c5bc13ea4908f698e75b",
+          "inspiration": "assembled stone body grammar; original material adaptation"
+        },
+        "adaptation": true,
+        "materials": "Physical mixture determines mass only. Palette, luminous seams and surface markings grant no resistance or immunity.",
+        "combat_translation": "Existing ordinary weave kit; no material-specific attack engine.",
+        "ai_handoff": {
+          "current": "aggressive_ranged",
+          "status": "provisional content scaffolding",
+          "deferred": [
+            "bounded sensing and memory",
+            "coordinated guarding",
+            "repair and reassembly",
+            "forecast-aware choice of shove and target mass"
+          ]
+        }
+      }
+    },
+    {
+      "id": "timber_golem",
+      "name": "Timber Golem",
+      "extends": "golem_body",
+      "faction": "unbound_constructs",
+      "level": 5,
+      "height": 2.65,
+      "radius": 0.625,
+      "tags": [
+        "construct",
+        "golem",
+        "monster",
+        "summonable",
+        "no_corpse",
+        "family.golem",
+        "body.wood",
+        "assembly.lashed",
+        "locomotion.ground",
+        "size.large",
+        "habitat.golem_sawmill",
+        "role.bruiser",
+        "melee"
+      ],
+      "components": {
+        "physical": {
+          "width": 1.25,
+          "depth": 0.75,
+          "height": 2.65,
+          "fill": 0.14,
+          "heft": 1,
+          "materials": [
+            {
+              "material": "wood",
+              "fraction": 0.94
+            },
+            {
+              "material": "iron",
+              "fraction": 0.06
+            }
+          ]
+        },
+        "stats": {
+          "attributes": {
+            "life.max": 190,
+            "might": 17,
+            "grace": 5,
+            "will": 6,
+            "vigor": 14,
+            "move.speed": 3.7,
+            "weapon.damage.min": 13,
+            "weapon.damage.max": 20,
+            "weapon.attack.time": 1.35,
+            "armor": 25,
+            "poise.max": 25
+          }
+        },
+        "weaves": {
+          "list": [
+            "heavy_strike",
+            "cleave"
+          ]
+        },
+        "behavior": {
+          "id": "golem_guard"
+        },
+        "drops": {
+          "table": "golem_salvage",
+          "xp": "16 + level * 7",
+          "chance": 0.8
+        }
+      },
+      "meta": {
+        "prototype": {
+          "repository": "arianna-arpg/arpg-game-world",
+          "revision": "118b510f8b5bfb781163c5bc13ea4908f698e75b",
+          "inspiration": "assembled stone body grammar; original material adaptation"
+        },
+        "adaptation": true,
+        "materials": "Physical mixture determines mass only. Palette, luminous seams and surface markings grant no resistance or immunity.",
+        "combat_translation": "Existing ordinary weave kit; no material-specific attack engine.",
+        "ai_handoff": {
+          "current": "golem_guard",
+          "status": "provisional content scaffolding",
+          "deferred": [
+            "bounded sensing and memory",
+            "coordinated guarding",
+            "repair and reassembly",
+            "forecast-aware choice of shove and target mass"
+          ]
+        }
+      }
+    },
+    {
+      "id": "kiln_golem",
+      "name": "Kiln Golem",
+      "extends": "golem_body",
+      "faction": "unbound_constructs",
+      "level": 5,
+      "height": 1.65,
+      "radius": 0.55,
+      "tags": [
+        "construct",
+        "golem",
+        "monster",
+        "summonable",
+        "no_corpse",
+        "family.golem",
+        "body.ceramic",
+        "assembly.fired",
+        "locomotion.ground",
+        "size.medium",
+        "habitat.golem_kiln",
+        "role.bruiser",
+        "melee"
+      ],
+      "components": {
+        "physical": {
+          "width": 1.1,
+          "depth": 0.8,
+          "height": 1.65,
+          "fill": 0.23,
+          "heft": 1,
+          "materials": [
+            {
+              "material": "golem_ceramic",
+              "fraction": 0.92
+            },
+            {
+              "material": "iron",
+              "fraction": 0.08
+            }
+          ]
+        },
+        "stats": {
+          "attributes": {
+            "life.max": 160,
+            "might": 17,
+            "grace": 5,
+            "will": 6,
+            "vigor": 14,
+            "move.speed": 3,
+            "weapon.damage.min": 11,
+            "weapon.damage.max": 18,
+            "weapon.attack.time": 1.35,
+            "armor": 40,
+            "poise.max": 22
+          }
+        },
+        "weaves": {
+          "list": [
+            "warden_slam"
+          ]
+        },
+        "behavior": {
+          "id": "golem_guard"
+        },
+        "drops": {
+          "table": "golem_salvage",
+          "xp": "16 + level * 7",
+          "chance": 0.8
+        }
+      },
+      "meta": {
+        "prototype": {
+          "repository": "arianna-arpg/arpg-game-world",
+          "revision": "118b510f8b5bfb781163c5bc13ea4908f698e75b",
+          "inspiration": "assembled stone body grammar; original material adaptation"
+        },
+        "adaptation": true,
+        "materials": "Physical mixture determines mass only. Palette, luminous seams and surface markings grant no resistance or immunity.",
+        "combat_translation": "Existing ordinary weave kit; no material-specific attack engine.",
+        "ai_handoff": {
+          "current": "golem_guard",
+          "status": "provisional content scaffolding",
+          "deferred": [
+            "bounded sensing and memory",
+            "coordinated guarding",
+            "repair and reassembly",
+            "forecast-aware choice of shove and target mass"
+          ]
+        }
+      }
+    },
+    {
+      "id": "vault_golem",
+      "name": "Vault Golem",
+      "extends": "golem_body",
+      "faction": "unbound_constructs",
+      "level": 10,
+      "height": 2.15,
+      "radius": 0.7,
+      "tags": [
+        "construct",
+        "golem",
+        "monster",
+        "summonable",
+        "no_corpse",
+        "family.golem",
+        "body.stone",
+        "assembly.vaulted",
+        "locomotion.ground",
+        "size.medium",
+        "habitat.golem_foundry",
+        "role.bruiser",
+        "melee"
+      ],
+      "components": {
+        "physical": {
+          "width": 1.4,
+          "depth": 1.05,
+          "height": 2.15,
+          "fill": 0.32,
+          "heft": 1,
+          "materials": [
+            {
+              "material": "stone",
+              "fraction": 0.72
+            },
+            {
+              "material": "iron",
+              "fraction": 0.28
+            }
+          ]
+        },
+        "stats": {
+          "attributes": {
+            "life.max": 320,
+            "might": 22,
+            "grace": 5,
+            "will": 6,
+            "vigor": 14,
+            "move.speed": 2.4,
+            "weapon.damage.min": 18,
+            "weapon.damage.max": 28,
+            "weapon.attack.time": 1.35,
+            "armor": 70,
+            "poise.max": 55
+          }
+        },
+        "weaves": {
+          "list": [
+            "heavy_strike"
+          ]
+        },
+        "behavior": {
+          "id": "golem_guard"
+        },
+        "drops": {
+          "table": "golem_vault_drops",
+          "xp": "16 + level * 7",
+          "chance": 0.8
+        }
+      },
+      "meta": {
+        "prototype": {
+          "repository": "arianna-arpg/arpg-game-world",
+          "revision": "118b510f8b5bfb781163c5bc13ea4908f698e75b",
+          "id": "vault_golem",
+          "look": "vault_golem"
+        },
+        "adaptation": true,
+        "materials": "Physical mixture determines mass only. Palette, luminous seams and surface markings grant no resistance or immunity.",
+        "combat_translation": "Heavy Strike retained; Iron Ward, bleed resistance and wage/death economies deferred.",
+        "ai_handoff": {
+          "current": "golem_guard",
+          "status": "provisional content scaffolding",
+          "deferred": [
+            "bounded sensing and memory",
+            "coordinated guarding",
+            "repair and reassembly",
+            "forecast-aware choice of shove and target mass"
+          ]
+        }
+      }
+    },
+    {
+      "id": "bauble_golem",
+      "name": "Bauble Golem",
+      "extends": "golem_body",
+      "faction": "unbound_constructs",
+      "level": 7,
+      "height": 1.95,
+      "radius": 0.64,
+      "tags": [
+        "construct",
+        "golem",
+        "monster",
+        "summonable",
+        "no_corpse",
+        "family.golem",
+        "body.iron",
+        "assembly.salvaged",
+        "locomotion.ground",
+        "size.medium",
+        "habitat.golem_sawmill",
+        "role.bruiser",
+        "melee"
+      ],
+      "components": {
+        "physical": {
+          "width": 1.28,
+          "depth": 0.8,
+          "height": 1.95,
+          "fill": 0.19,
+          "heft": 1,
+          "materials": [
+            {
+              "material": "iron",
+              "fraction": 0.45
+            },
+            {
+              "material": "golem_brass",
+              "fraction": 0.2
+            },
+            {
+              "material": "wood",
+              "fraction": 0.35
+            }
+          ]
+        },
+        "stats": {
+          "attributes": {
+            "life.max": 220,
+            "might": 19,
+            "grace": 5,
+            "will": 6,
+            "vigor": 14,
+            "move.speed": 3.1,
+            "weapon.damage.min": 14,
+            "weapon.damage.max": 22,
+            "weapon.attack.time": 1.35,
+            "armor": 40,
+            "poise.max": 30
+          }
+        },
+        "weaves": {
+          "list": [
+            "heavy_strike",
+            "strike"
+          ]
+        },
+        "behavior": {
+          "id": "golem_guard"
+        },
+        "drops": {
+          "table": "golem_salvage",
+          "xp": "16 + level * 7",
+          "chance": 0.8
+        }
+      },
+      "meta": {
+        "prototype": {
+          "repository": "arianna-arpg/arpg-game-world",
+          "revision": "118b510f8b5bfb781163c5bc13ea4908f698e75b",
+          "id": "bauble_golem",
+          "look": "bauble_golem"
+        },
+        "adaptation": true,
+        "materials": "Physical mixture determines mass only. Palette, luminous seams and surface markings grant no resistance or immunity.",
+        "combat_translation": "Existing ordinary weave kit; no material-specific attack engine.",
+        "ai_handoff": {
+          "current": "golem_guard",
+          "status": "provisional content scaffolding",
+          "deferred": [
+            "bounded sensing and memory",
+            "coordinated guarding",
+            "repair and reassembly",
+            "forecast-aware choice of shove and target mass"
+          ]
+        }
+      }
+    },
+    {
+      "id": "stone_warden",
+      "name": "Stone Warden",
+      "extends": "golem_body",
+      "tags": [
+        "stone",
+        "warden",
+        "golem",
+        "summonable",
+        "no_corpse",
+        "construct",
+        "family.golem",
+        "body.stone",
+        "assembly.quarried",
+        "role.guardian",
+        "size.large",
+        "locomotion.ground",
+        "habitat.bound_service"
+      ],
+      "faction": "players",
+      "level": 3,
+      "radius": 0.7,
+      "height": 2.2,
+      "components": {
+        "physical": {
+          "width": 1.4,
+          "depth": 0.85,
+          "height": 2.2,
+          "fill": 0.28,
+          "heft": 1,
+          "materials": [
+            {
+              "material": "stone",
+              "fraction": 1
+            }
+          ]
+        },
+        "stats": {
+          "attributes": {
+            "might": 16,
+            "grace": 5,
+            "will": 4,
+            "vigor": 18,
+            "move.speed": 4.2,
+            "armor": 40,
+            "weapon.damage.min": 7,
+            "weapon.damage.max": 12,
+            "weapon.attack.time": 1.3
+          },
+          "modifiers": [
+            {
+              "attribute": "damage.taken",
+              "form": "more",
+              "value": -0.1
+            }
+          ]
+        },
+        "weaves": {
+          "list": [
+            "warden_slam"
+          ]
+        },
+        "behavior": {
+          "id": "minion_melee"
+        }
+      },
+      "meta": {
+        "prototype": {
+          "repository": "arianna-arpg/arpg-game-world",
+          "revision": "118b510f8b5bfb781163c5bc13ea4908f698e75b",
+          "id": "stone_golem",
+          "look": "golem_stone_assembled"
+        },
+        "compatibility": "Existing ID, faction, dimensions, combat stats, reduction and bind contract preserved. Gains explicit physical mass and shared resource pools; remains reward-free and summon-only.",
+        "materials": "Existing global 10% damage reduction is an authored modifier, not an automatic stone immunity.",
+        "ai_handoff": {
+          "current": "minion_melee",
+          "status": "provisional existing owner/order behavior",
+          "deferred": [
+            "bodyguard interception",
+            "forecast-aware mass use"
+          ]
+        }
+      }
+    }
+  ]
+}

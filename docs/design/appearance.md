@@ -78,3 +78,9 @@ Gnasher features include tusks, crest, spots, flank plates and an empty saddle. 
 ### Wildlife anatomy
 
 The fauna quadruped, ground-bird and crab families register in both clients. Breadth and depth follow each physical profile; leg, head, tail, ear, beak and claw proportions plus optional anatomical features distinguish silhouettes. Quadrupeds use the existing four-legged rig, birds the biped rig with folded wing parts, and crabs the crawler rig. This supplies shared procedural poses, not species-specific animation or new locomotion. Body height is nominal stature; ears, antlers and crests may exceed it as decoration. Rendered dimensions are not damage volumes. Paired plan fixtures, grayscale/camera previews and a single-scale lineup check translation and continuity.
+
+### Constructed assemblies
+
+The paired `assembled_golem` family composes blocks, vessels, prisms, timber bundles and salvage on the shared biped rig. Breadth and depth follow authoritative profiles; leg fraction, arm reach, head and fist proportions are content values. Assembly features change the torso and limbs as well as decoration, so material variants remain readable without color. Palettes, luminous seams, rivets, handles, branches and vault fittings are presentation only. Decorative crowns and struts may exceed nominal stature and never feed mass or collision.
+
+Golem previews retain the adult player and skeleton reference and half-height ordinary Goblin at one world scale. Geometry uses deterministic palette variation with size jitter disabled. The reviewed golem fixture checks both clients' bones, parts and sockets, while private browser captures cover isometric, low-angle and grayscale walk poses. Native headless evidence does not claim renderer coverage.

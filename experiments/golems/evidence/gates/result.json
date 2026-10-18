@@ -1,0 +1,10 @@
+{
+  "base": "90cb7fcb5eec97a6ad438c10f7b564f1dfa88790",
+  "build": {"errors": 0, "inheritedWarnings": 3},
+  "tests": {"core": 752, "client": 116, "server": 39, "web": 263, "porter": 10, "focusedGolem": 40, "failed": 0},
+  "validate": {"errors": 0, "warnings": 0},
+  "smoke": {"web": "29/29", "native": "25/25", "nativePixels": "not covered", "cleanupErrors": []},
+  "geometry": {"bodies": 9, "nativeBrowserFixture": "passed", "galleryErrors": [], "maxTriangles": 624},
+  "releaseFinal": {"log": "bench-post-smoke.txt", "tickP95Ms": 12.575, "behaviorMs": 1.876, "snapshotBuildMs": 0.875, "snapshotKB": 27.234, "deltaKB": 8.738, "systemErrors": 0},
+  "limits": ["Shared-host timing varies; earlier over-budget runs retained.", "Native headless does not render pixels; existing engine-exit leaks remain.", "AI is replaceable content scaffolding; no repair, formations or material immunity."]
+}

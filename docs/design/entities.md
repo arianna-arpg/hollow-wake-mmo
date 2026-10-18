@@ -40,6 +40,12 @@ Related contracts: [minions](minions.md), [AI](ai.md), [appearance](appearance.m
 
 Physical creatures use the registered [physical body contract](physical-bodies.md) for dimensions, material density, mass and displacement. Allegiance is independent of species: warband beasts can share their handlers' faction without reclassifying unrelated wildlife.
 
+## Assembled golems
+
+Mobile golems are creatures with constructed bodies, distinct from deployed stationary devices. Their material mixture supplies mass, and their ordinary armor, poise and modifiers supply combat defenses. A stone, metal, crystal or ceramic surface does not imply elemental resistance, bleed immunity, repair or heat damage. The `assembly.*` classifier describes construction independently of `body.*` material and `family.golem`.
+
+Unbound works use sparse point-of-interest populations with level windows. A legacy summon-only body may instead name bound service as its habitat when a real summoning preset supplies that path. Its player allegiance and lack of encounter rewards stay explicit. Shared summon pools can reuse wild golem patterns through the ordinary owner, behavior, reservation, respawn and exclusive-group mechanisms; the common summon path removes wild rewards. Material-specific tactics and reconstruction remain authoring intent until separately reviewed AI or combat mechanisms support them.
+
 ## Stature and warband identity
 
 The player is the reference adult stature. Ordinary skeletal humanoids share that authoritative height; ordinary Goblins are roughly half as tall. Hobgoblins and exceptional brutes remain intermediate, while Orcs are adult-height or taller with substantially broader bodies. Rare and summoned scaling still uses the existing authoritative transform. Appearance-only scale jitter is disabled on the standard player and skeleton looks and profiled warband bodies; palette variation remains.

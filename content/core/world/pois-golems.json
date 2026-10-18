@@ -1,0 +1,228 @@
+{
+  "kind": "pois",
+  "entries": [
+    {
+      "id": "golem_kiln",
+      "name": "Abandoned Kiln",
+      "tags": [
+        "ruin",
+        "landmark",
+        "golem_site"
+      ],
+      "weight": 0.35,
+      "radius": 10,
+      "min_spacing": 180,
+      "slope": {
+        "max": 0.55
+      },
+      "biomes": [
+        "meadow",
+        "heath",
+        "marsh"
+      ],
+      "landmarks": [
+        "ruin_walls"
+      ],
+      "level": 2,
+      "inhabitants": [
+        {
+          "pattern": "clay_golem",
+          "density": 1,
+          "pack_size": [
+            1,
+            1
+          ],
+          "respawn": 600,
+          "level": {
+            "min": 4
+          }
+        },
+        {
+          "pattern": "kiln_golem",
+          "density": 1,
+          "pack_size": [
+            1,
+            1
+          ],
+          "respawn": 600,
+          "level": {
+            "min": 5
+          }
+        }
+      ],
+      "names": [
+        "Abandoned Kiln"
+      ],
+      "meta": {
+        "population": "Sparse single-body packs at material-appropriate works. No broader biome churn."
+      }
+    },
+    {
+      "id": "golem_quarry",
+      "name": "Silent Quarry",
+      "tags": [
+        "ruin",
+        "landmark",
+        "golem_site"
+      ],
+      "weight": 0.35,
+      "radius": 10,
+      "min_spacing": 180,
+      "slope": {
+        "max": 0.55
+      },
+      "biomes": [
+        "highland",
+        "heath",
+        "scrub"
+      ],
+      "landmarks": [
+        "ruin_walls"
+      ],
+      "level": 4,
+      "inhabitants": [
+        {
+          "pattern": "quarry_golem",
+          "density": 1,
+          "pack_size": [
+            1,
+            1
+          ],
+          "respawn": 600,
+          "level": {
+            "min": 6
+          }
+        },
+        {
+          "pattern": "crystal_golem",
+          "density": 1,
+          "pack_size": [
+            1,
+            1
+          ],
+          "respawn": 600,
+          "level": {
+            "min": 8
+          }
+        }
+      ],
+      "names": [
+        "Silent Quarry"
+      ],
+      "meta": {
+        "population": "Sparse single-body packs at material-appropriate works. No broader biome churn."
+      }
+    },
+    {
+      "id": "golem_foundry",
+      "name": "Sealed Foundry",
+      "tags": [
+        "ruin",
+        "landmark",
+        "golem_site"
+      ],
+      "weight": 0.35,
+      "radius": 10,
+      "min_spacing": 180,
+      "slope": {
+        "max": 0.55
+      },
+      "biomes": [
+        "highland",
+        "hollowed",
+        "cinderwaste"
+      ],
+      "landmarks": [
+        "ruin_walls"
+      ],
+      "level": 6,
+      "inhabitants": [
+        {
+          "pattern": "iron_golem",
+          "density": 1,
+          "pack_size": [
+            1,
+            1
+          ],
+          "respawn": 600,
+          "level": {
+            "min": 9
+          }
+        },
+        {
+          "pattern": "vault_golem",
+          "density": 1,
+          "pack_size": [
+            1,
+            1
+          ],
+          "respawn": 600,
+          "level": {
+            "min": 10
+          }
+        }
+      ],
+      "names": [
+        "Sealed Foundry"
+      ],
+      "meta": {
+        "population": "Sparse single-body packs at material-appropriate works. No broader biome churn."
+      }
+    },
+    {
+      "id": "golem_sawmill",
+      "name": "Forgotten Sawmill",
+      "tags": [
+        "ruin",
+        "landmark",
+        "golem_site"
+      ],
+      "weight": 0.35,
+      "radius": 10,
+      "min_spacing": 180,
+      "slope": {
+        "max": 0.55
+      },
+      "biomes": [
+        "forest",
+        "deep_forest"
+      ],
+      "landmarks": [
+        "camp_ring"
+      ],
+      "level": 3,
+      "inhabitants": [
+        {
+          "pattern": "timber_golem",
+          "density": 1,
+          "pack_size": [
+            1,
+            1
+          ],
+          "respawn": 600,
+          "level": {
+            "min": 5
+          }
+        },
+        {
+          "pattern": "bauble_golem",
+          "density": 1,
+          "pack_size": [
+            1,
+            1
+          ],
+          "respawn": 600,
+          "level": {
+            "min": 7
+          }
+        }
+      ],
+      "names": [
+        "Forgotten Sawmill"
+      ],
+      "meta": {
+        "population": "Sparse single-body packs at material-appropriate works. No broader biome churn."
+      }
+    }
+  ]
+}

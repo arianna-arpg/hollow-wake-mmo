@@ -1,0 +1,57 @@
+{
+  "kind": "loot",
+  "entries": [
+    {
+      "id": "golem_salvage",
+      "rolls": [
+        {
+          "count": 1,
+          "entries": [
+            {
+              "kind": "currency",
+              "currency": "shards",
+              "weight": 6,
+              "amount": [
+                2,
+                5
+              ]
+            },
+            {
+              "kind": "table",
+              "table": "world_common",
+              "weight": 3
+            },
+            {
+              "kind": "nothing",
+              "weight": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "golem_vault_drops",
+      "rolls": [
+        {
+          "count": 2,
+          "entries": [
+            {
+              "kind": "currency",
+              "currency": "shards",
+              "weight": 7,
+              "amount": [
+                3,
+                7
+              ]
+            },
+            {
+              "kind": "table",
+              "table": "world_common",
+              "weight": 3
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

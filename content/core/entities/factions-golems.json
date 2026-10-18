@@ -1,0 +1,19 @@
+{
+  "kind": "factions",
+  "entries": [
+    {
+      "id": "unbound_constructs",
+      "name": "The Unbound Works",
+      "color": "#a79b75",
+      "default": "neutral",
+      "relations": {
+        "unbound_constructs": "allied",
+        "players": "hostile",
+        "lantern_chancery": "hostile",
+        "weftmarch_compact": "hostile",
+        "longwake_company": "hostile",
+        "mended_thread": "hostile"
+      }
+    }
+  ]
+}

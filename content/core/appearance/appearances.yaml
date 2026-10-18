@@ -243,13 +243,6 @@ entries:
     shape: { head: 1.3, neck: 0.4, torso: 0.8, legs: 0.7, arms: 1.1, width: 0.9, stance: 1.1 }
     palette: { skin: "#71816c", hair: "#a5c58b", cloth: "#5f7a46", cloth2: "#3f5a30", leather: "#4a5a3a", metal: "#71816c", accent: "#a5c58b", eyes: "#eee9da" }
     features: [leaf_crown]
-  - id: stone_warden
-    body: biped
-    shape: { head: 0.8, neck: 0.3, torso: 1.2, legs: 0.9, arms: 1.25, width: 1.35, shoulders: 1.4, blocky: 1, stance: 1.3 }
-    palette: { skin: "#8a8070", hair: "#8a8070", cloth: "#6e6658", cloth2: "#524c42", leather: "#524c42", metal: "#b89a67", accent: "#c5ae82", eyes: "#eee0a3" }
-    features: [runes]
-    variation: { hue: 0.01, value: 0.06, scale: 0.04 }
-    card: never
   - id: ember_totem
     body: totem
     shape: { width: 1, faces: 3, crown: 1 }

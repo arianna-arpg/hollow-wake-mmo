@@ -1,0 +1,237 @@
+[
+  {
+    "zone": "zone(0,0)",
+    "removedNearby": [
+      "poi.-1_1.knot.-34.419: knot, a Skyfall, -34.5,419.5, height=20.802034, level=8",
+      "poi.0_1.orc_chaincamp.125.310: orc_chaincamp, Chainkeeper Camp, 125.5,310.5, height=21.279917, level=8",
+      "poi.1_1.scrap_fort.305.334: scrap_fort, Scrap Fort, 305.5,334.5, height=15.7689905, level=6",
+      "poi.1_1.shrine.320.471: shrine, Nine Candles, 320.5,471.5, height=17.761671, level=1",
+      "poi.1_1.shrine.393.475: shrine, the Stitch Shrine, 393.5,475.5, height=16.314405, level=1"
+    ],
+    "addedNearby": [
+      "poi.-1_1.kiln.-34.419: kiln, the Red Kiln, -34.5,419.5, height=20.802034, level=8",
+      "poi.0_1.knot.125.310: knot, a Skyfall, 125.5,310.5, height=21.279917, level=3",
+      "poi.1_1.ruin.305.334: ruin, the Fallen Hall, 305.5,334.5, height=15.7689905, level=2",
+      "poi.1_1.shrine.301.460: shrine, Nine Candles, 301.5,460.5, height=17.630234, level=1",
+      "poi.1_1.ruin.393.475: ruin, Barrowgate, 393.5,475.5, height=16.314405, level=2"
+    ],
+    "questsBefore": [
+      {
+        "Id": "gen.poi.0_0.hamlet.128.128.clear_knot.0",
+        "Name": "The Hob\u0027s Hollow",
+        "Description": "A Knot has tangled near Ninewells. Walk into it and unmake what crawled out.",
+        "Objectives": [
+          {
+            "Id": "reach",
+            "Type": "reach",
+            "Target": null,
+            "Tags": [],
+            "Count": 1,
+            "Zone": null,
+            "Poi": "poi.0_0.knot.200.60",
+            "Text": "Find Hob\u0027s Hollow",
+            "Optional": false
+          },
+          {
+            "Id": "cull",
+            "Type": "kill",
+            "Target": "cinder_imp",
+            "Tags": [],
+            "Count": 6,
+            "Zone": null,
+            "Poi": null,
+            "Text": "Unmake six Cinder Imp",
+            "Optional": false
+          }
+        ]
+      },
+      {
+        "Id": "gen.poi.0_0.hamlet.128.128.gather_floss.1",
+        "Name": "Loose Threads",
+        "Description": "The weavers of Ninewells want floss and the hedgerows are full of it.",
+        "Objectives": [
+          {
+            "Id": "gather",
+            "Type": "collect",
+            "Target": "thread_floss",
+            "Tags": [],
+            "Count": 5,
+            "Zone": null,
+            "Poi": null,
+            "Text": "Gather five Thread Floss",
+            "Optional": false
+          }
+        ]
+      },
+      {
+        "Id": "gen.poi.0_0.hamlet.128.128.cull_beasts.2",
+        "Name": "Teeth in the Hedge",
+        "Description": "Beasts press on Ninewells.",
+        "Objectives": [
+          {
+            "Id": "cull",
+            "Type": "kill",
+            "Target": "wolverine",
+            "Tags": [],
+            "Count": 8,
+            "Zone": null,
+            "Poi": null,
+            "Text": "Cull eight Wolverine",
+            "Optional": false
+          }
+        ]
+      },
+      {
+        "Id": "gen.poi.0_0.hamlet.128.128.scout_ruin.3",
+        "Name": "What Stands at Chainkeeper Camp",
+        "Description": "No one from Ninewells has walked to Chainkeeper Camp in years.",
+        "Objectives": [
+          {
+            "Id": "find",
+            "Type": "discover",
+            "Target": null,
+            "Tags": [],
+            "Count": 1,
+            "Zone": null,
+            "Poi": "poi.0_1.orc_chaincamp.125.310",
+            "Text": "Find Chainkeeper Camp",
+            "Optional": false
+          }
+        ]
+      }
+    ],
+    "questsAfter": [
+      {
+        "Id": "gen.poi.0_0.hamlet.128.128.clear_knot.0",
+        "Name": "The Hob\u0027s Hollow",
+        "Description": "A Knot has tangled near Ninewells. Walk into it and unmake what crawled out.",
+        "Objectives": [
+          {
+            "Id": "reach",
+            "Type": "reach",
+            "Target": null,
+            "Tags": [],
+            "Count": 1,
+            "Zone": null,
+            "Poi": "poi.0_0.knot.200.60",
+            "Text": "Find Hob\u0027s Hollow",
+            "Optional": false
+          },
+          {
+            "Id": "cull",
+            "Type": "kill",
+            "Target": "cinder_imp",
+            "Tags": [],
+            "Count": 6,
+            "Zone": null,
+            "Poi": null,
+            "Text": "Unmake six Cinder Imp",
+            "Optional": false
+          }
+        ]
+      },
+      {
+        "Id": "gen.poi.0_0.hamlet.128.128.gather_floss.1",
+        "Name": "Loose Threads",
+        "Description": "The weavers of Ninewells want floss and the hedgerows are full of it.",
+        "Objectives": [
+          {
+            "Id": "gather",
+            "Type": "collect",
+            "Target": "thread_floss",
+            "Tags": [],
+            "Count": 5,
+            "Zone": null,
+            "Poi": null,
+            "Text": "Gather five Thread Floss",
+            "Optional": false
+          }
+        ]
+      },
+      {
+        "Id": "gen.poi.0_0.hamlet.128.128.cull_beasts.2",
+        "Name": "Teeth in the Hedge",
+        "Description": "Beasts press on Ninewells.",
+        "Objectives": [
+          {
+            "Id": "cull",
+            "Type": "kill",
+            "Target": "wolverine",
+            "Tags": [],
+            "Count": 8,
+            "Zone": null,
+            "Poi": null,
+            "Text": "Cull eight Wolverine",
+            "Optional": false
+          }
+        ]
+      },
+      {
+        "Id": "gen.poi.0_0.hamlet.128.128.scout_ruin.3",
+        "Name": "What Stands at the Unquiet House",
+        "Description": "No one from Ninewells has walked to the Unquiet House in years.",
+        "Objectives": [
+          {
+            "Id": "find",
+            "Type": "discover",
+            "Target": null,
+            "Tags": [],
+            "Count": 1,
+            "Zone": null,
+            "Poi": "poi.1_0.ossuary.291.217",
+            "Text": "Find the Unquiet House",
+            "Optional": false
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "zone": "zone(1,0)",
+    "removedNearby": [
+      "poi.0_1.orc_chaincamp.125.310: orc_chaincamp, Chainkeeper Camp, 125.5,310.5, height=21.279917, level=8",
+      "poi.1_1.scrap_fort.305.334: scrap_fort, Scrap Fort, 305.5,334.5, height=15.7689905, level=6",
+      "poi.1_1.shrine.320.471: shrine, Nine Candles, 320.5,471.5, height=17.761671, level=1",
+      "poi.1_1.shrine.393.475: shrine, the Stitch Shrine, 393.5,475.5, height=16.314405, level=1"
+    ],
+    "addedNearby": [
+      "poi.0_1.knot.125.310: knot, a Skyfall, 125.5,310.5, height=21.279917, level=3",
+      "poi.1_1.ruin.305.334: ruin, the Fallen Hall, 305.5,334.5, height=15.7689905, level=2",
+      "poi.1_1.shrine.301.460: shrine, Nine Candles, 301.5,460.5, height=17.630234, level=1",
+      "poi.1_1.ruin.393.475: ruin, Barrowgate, 393.5,475.5, height=16.314405, level=2"
+    ],
+    "questsBefore": [],
+    "questsAfter": []
+  },
+  {
+    "zone": "zone(0,-1)",
+    "removedNearby": [],
+    "addedNearby": [],
+    "questsBefore": [],
+    "questsAfter": []
+  },
+  {
+    "zone": "zone(3,2)",
+    "removedNearby": [
+      "poi.3_1.grave_court.789.283: grave_court, the Silent Faculty, 789.5,283.5, height=5.164064, level=5",
+      "poi.2_2.gnasher_pen.658.694: gnasher_pen, Gnasher Pens, 658.5,694.5, height=11.465487, level=5",
+      "poi.2_2.shrine.661.548: shrine, the Hedge Shrine, 661.5,548.5, height=6.0695996, level=1",
+      "poi.2_2.shrine.551.584: shrine, Nine Candles, 551.5,584.5, height=13.125869, level=1",
+      "poi.4_2.grove.1126.602: grove, the Hush Grove, 1126.5,602.5, height=6.3404408, level=1",
+      "poi.4_2.ruin.1233.580: ruin, the Last Stitch, 1233.5,580.5, height=2.278917, level=2",
+      "poi.2_3.ruin.619.1001: ruin, Barrowgate, 619.5,1001.5, height=13.541783, level=2",
+      "poi.2_3.ruin.709.983: ruin, the Sunken Lantern, 709.5,983.5, height=12.80708, level=2",
+      "poi.2_3.knot.537.885: knot, a Thinning, 537.5,885.5, height=12.478579, level=3"
+    ],
+    "addedNearby": [
+      "poi.3_1.golem_sawmill.789.283: golem_sawmill, Forgotten Sawmill, 789.5,283.5, height=5.164064, level=4",
+      "poi.2_2.golem_sawmill.658.694: golem_sawmill, Forgotten Sawmill, 658.5,694.5, height=11.465487, level=4",
+      "poi.4_2.grave_court.1126.602: grave_court, the Last Lesson, 1126.5,602.5, height=6.3404408, level=5",
+      "poi.2_3.ossuary.619.1001: ossuary, the Bone Vault, 619.5,1001.5, height=13.541783, level=3",
+      "poi.2_3.knot.537.885: knot, the Drowning, 537.5,885.5, height=12.478579, level=3",
+      "poi.2_3.ossuary.744.964: ossuary, the Bone Vault, 744.5,964.5, height=13.776743, level=3"
+    ],
+    "questsBefore": [],
+    "questsAfter": []
+  }
+]

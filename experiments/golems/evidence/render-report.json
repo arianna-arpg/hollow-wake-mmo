@@ -1,0 +1,77 @@
+{
+  "errors": [],
+  "bodies": [
+    {
+      "id": "clay_golem",
+      "body": "assembled_golem",
+      "rig": "biped",
+      "parts": 22,
+      "triangles": 452,
+      "height": 1.8
+    },
+    {
+      "id": "quarry_golem",
+      "body": "assembled_golem",
+      "rig": "biped",
+      "parts": 26,
+      "triangles": 336,
+      "height": 2.5069958971369433
+    },
+    {
+      "id": "iron_golem",
+      "body": "assembled_golem",
+      "rig": "biped",
+      "parts": 35,
+      "triangles": 516,
+      "height": 2.8080000000000003
+    },
+    {
+      "id": "crystal_golem",
+      "body": "assembled_golem",
+      "rig": "biped",
+      "parts": 28,
+      "triangles": 320,
+      "height": 2.6085
+    },
+    {
+      "id": "timber_golem",
+      "body": "assembled_golem",
+      "rig": "biped",
+      "parts": 31,
+      "triangles": 624,
+      "height": 3.122591392890363
+    },
+    {
+      "id": "kiln_golem",
+      "body": "assembled_golem",
+      "rig": "biped",
+      "parts": 30,
+      "triangles": 564,
+      "height": 1.65
+    },
+    {
+      "id": "vault_golem",
+      "body": "assembled_golem",
+      "rig": "biped",
+      "parts": 33,
+      "triangles": 488,
+      "height": 2.23086242636057
+    },
+    {
+      "id": "bauble_golem",
+      "body": "assembled_golem",
+      "rig": "biped",
+      "parts": 31,
+      "triangles": 428,
+      "height": 1.95
+    },
+    {
+      "id": "stone_warden",
+      "body": "assembled_golem",
+      "rig": "biped",
+      "parts": 27,
+      "triangles": 348,
+      "height": 2.3430000000000004
+    }
+  ]
+}

@@ -94,21 +94,6 @@ entries:
       behavior: { id: aggressive_ranged }
       drops: { table: undead_drops, xp: "8 + level * 4", chance: 0.4 }
 
-  - id: stone_warden
-    name: Stone Warden
-    extends: creature
-    tags: [stone, warden, golem, summonable, no_corpse]
-    faction: players
-    level: 3
-    radius: 0.7
-    height: 2.2
-    components:
-      stats:
-        attributes: { might: 16, grace: 5, will: 4, vigor: 18, move.speed: 4.2, armor: 40, weapon.damage.min: 7, weapon.damage.max: 12, weapon.attack.time: 1.3 }
-        modifiers: [ { attribute: damage.taken, form: more, value: -0.1 } ]
-      weaves: { list: [warden_slam] }
-      behavior: { id: minion_melee }
-
   # ---- constructs: devices deploys place. They stand where they were put and think with device behaviors.
   - id: device
     name: Device

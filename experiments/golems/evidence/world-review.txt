@@ -1,0 +1,30 @@
+Base: PR #34 / 90cb7fcb5eec97a6ad438c10f7b564f1dfa88790. Seed: aureth.
+
+Reviewed before/after local maps for zones (0,0), (1,0), (0,-1), (3,2).
+All four local terrain/chunk hashes stay unchanged. Local POIs stay unchanged.
+Only visible quest-text change: Ninewells scouting switches from Chainkeeper
+Camp to the Unquiet House. Cull targets and other quests are unchanged.
+
+World info hashes also include PoisAround, not only local sites. The dedicated
+WorldEvidence probe loads archived base content and current content with the
+same generator. world-neighbors.json records complete removed/added neighbor
+lists and quest definitions. Adding eligible POI candidates changes weighted
+selection and later spacing, including existing sites that are not golems.
+The surrounding changes include new sawmills at (789.5,283.5) and
+(658.5,694.5), and displacement of nearby warband/undead/shrine candidates.
+Zone (0,-1) has no neighbor, quest, info or chunk changes.
+
+Accepted golden changes:
+(0,0) info 7EA79EBAD31156E2 -> A975CEC42D2B310F; chunks B4967CED570DD0B6 unchanged.
+(1,0) info 5DD57952BE997040 -> B1165AE2155D27CE; chunks 719165F3D645E5F0 unchanged.
+(3,2) info 7395A7B7D40E67D9 -> D56330D79E72BE3B; chunks 15C99D20020E2BF4 unchanged.
+Overlay aggregate 43DEFDD2C3C767CE -> FBF3EE3DF4583601.
+Climate/region golden stays 999D90D6110B1CDD.
+
+Natural selection witnesses from the focused test:
+sawmill zone(6,-10), (1638.5,-2342.5), level 12.
+kiln zone(10,-9), (2756.5,-2168.5), level 15.
+quarry zone(-12,-8), (-2893.5,-1831.5), level 15.
+foundry zone(-8,-4), (-1901.5,-999.5), level 15.
+Separate pinned-site tests prove every inhabitant actually generates, respects
+its level window, uses a single-body pack and replays exactly.

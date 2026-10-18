@@ -1,0 +1,37 @@
+{
+  "kind": "body_materials",
+  "entries": [
+    {
+      "id": "golem_clay",
+      "name": "Packed clay",
+      "density": 1800,
+      "meta": {
+        "basis": "Authored effective density for assembled bodies; no automatic resistance."
+      }
+    },
+    {
+      "id": "golem_ceramic",
+      "name": "Fired ceramic",
+      "density": 2300,
+      "meta": {
+        "basis": "Authored effective density for assembled bodies; no automatic resistance."
+      }
+    },
+    {
+      "id": "golem_quartz",
+      "name": "Quartz crystal",
+      "density": 2650,
+      "meta": {
+        "basis": "Authored effective density for assembled bodies; no automatic resistance."
+      }
+    },
+    {
+      "id": "golem_brass",
+      "name": "Brass fittings",
+      "density": 8500,
+      "meta": {
+        "basis": "Authored effective density for assembled bodies; no automatic resistance."
+      }
+    }
+  ]
+}

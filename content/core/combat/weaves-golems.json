@@ -1,0 +1,76 @@
+{
+  "kind": "weaves",
+  "entries": [
+    {
+      "id": "bind_salvaged_golem",
+      "name": "Bind Salvaged Golem",
+      "form": "bind",
+      "threads": [
+        "stone"
+      ],
+      "color": "#a79b75",
+      "description": "Bind one assembled guardian from the abandoned works. Shares the Warden slot, reserves mana and reforms after falling.",
+      "effects": [
+        {
+          "type": "summon",
+          "pool": [
+            {
+              "pattern": "clay_golem",
+              "weight": 1,
+              "behavior": "minion_melee"
+            },
+            {
+              "pattern": "quarry_golem",
+              "weight": 1,
+              "behavior": "minion_melee"
+            },
+            {
+              "pattern": "iron_golem",
+              "weight": 1,
+              "behavior": "minion_melee"
+            },
+            {
+              "pattern": "crystal_golem",
+              "weight": 1,
+              "behavior": "minion_ranged"
+            },
+            {
+              "pattern": "timber_golem",
+              "weight": 1,
+              "behavior": "minion_melee"
+            },
+            {
+              "pattern": "kiln_golem",
+              "weight": 1,
+              "behavior": "minion_melee"
+            },
+            {
+              "pattern": "vault_golem",
+              "weight": 1,
+              "behavior": "minion_melee"
+            },
+            {
+              "pattern": "bauble_golem",
+              "weight": 1,
+              "behavior": "minion_melee"
+            }
+          ],
+          "count": 1,
+          "max_active": 1,
+          "group": "salvaged_golem",
+          "pool_group": "warden",
+          "exclusive_group": "warden",
+          "contract": {
+            "reserve": {
+              "mana": 30
+            },
+            "respawn": 8
+          }
+        }
+      ],
+      "meta": {
+        "adaptation": "Existing pool, contract and exclusive-group mechanics only. Wild drops and experience are removed by the shared summon path."
+      }
+    }
+  ]
+}

@@ -1,0 +1,316 @@
+{
+  "kind": "ui_appearances",
+  "entries": [
+    {
+      "id": "clay_golem",
+      "name": "Clay Golem",
+      "body": "assembled_golem",
+      "shape": {
+        "breadth": 0.5277777777777778,
+        "depth": 0.3611111111111111,
+        "legs": 0.32,
+        "arms": 1.1,
+        "head": 1,
+        "fists": 1
+      },
+      "palette": {
+        "body": "#a77250",
+        "edge": "#d5c8a4",
+        "joint": "#302f2d",
+        "metal": "#645d4d",
+        "core": "#e9dba2"
+      },
+      "features": [
+        "round",
+        "thumbprints"
+      ],
+      "variation": {
+        "hue": 0.015,
+        "value": 0.04,
+        "scale": 0
+      },
+      "card": "never",
+      "meta": {
+        "material_presentation": "Visual surface only; no damage resistance or immunity is inferred.",
+        "prototype_look": null
+      }
+    },
+    {
+      "id": "quarry_golem",
+      "name": "Quarry Golem",
+      "body": "assembled_golem",
+      "shape": {
+        "breadth": 0.6,
+        "depth": 0.38,
+        "legs": 0.29,
+        "arms": 1.15,
+        "head": 1,
+        "fists": 1
+      },
+      "palette": {
+        "body": "#8e968b",
+        "edge": "#d5c8a4",
+        "joint": "#302f2d",
+        "metal": "#645d4d",
+        "core": "#e9dba2"
+      },
+      "features": [
+        "blocks",
+        "runestones"
+      ],
+      "variation": {
+        "hue": 0.015,
+        "value": 0.04,
+        "scale": 0
+      },
+      "card": "never",
+      "meta": {
+        "material_presentation": "Visual surface only; no damage resistance or immunity is inferred.",
+        "prototype_look": "golem_stone_assembled"
+      }
+    },
+    {
+      "id": "iron_golem",
+      "name": "Iron Golem",
+      "body": "assembled_golem",
+      "shape": {
+        "breadth": 0.5555555555555555,
+        "depth": 0.3518518518518518,
+        "legs": 0.34,
+        "arms": 1,
+        "head": 1,
+        "fists": 1.25
+      },
+      "palette": {
+        "body": "#78868d",
+        "edge": "#c1c9c7",
+        "joint": "#302f2d",
+        "metal": "#645d4d",
+        "core": "#e9dba2"
+      },
+      "features": [
+        "plates",
+        "rivets",
+        "chimneys"
+      ],
+      "variation": {
+        "hue": 0.015,
+        "value": 0.04,
+        "scale": 0
+      },
+      "card": "never",
+      "meta": {
+        "material_presentation": "Visual surface only; no damage resistance or immunity is inferred.",
+        "prototype_look": null
+      }
+    },
+    {
+      "id": "crystal_golem",
+      "name": "Crystal Golem",
+      "body": "assembled_golem",
+      "shape": {
+        "breadth": 0.44680851063829785,
+        "depth": 0.28085106382978725,
+        "legs": 0.39,
+        "arms": 0.9,
+        "head": 1,
+        "fists": 1
+      },
+      "palette": {
+        "body": "#9cbed0",
+        "edge": "#d5c8a4",
+        "joint": "#302f2d",
+        "metal": "#645d4d",
+        "core": "#e9dba2"
+      },
+      "features": [
+        "prisms",
+        "crown"
+      ],
+      "variation": {
+        "hue": 0.015,
+        "value": 0.04,
+        "scale": 0
+      },
+      "card": "never",
+      "meta": {
+        "material_presentation": "Visual surface only; no damage resistance or immunity is inferred.",
+        "prototype_look": null
+      }
+    },
+    {
+      "id": "timber_golem",
+      "name": "Timber Golem",
+      "body": "assembled_golem",
+      "shape": {
+        "breadth": 0.4716981132075472,
+        "depth": 0.2830188679245283,
+        "legs": 0.42,
+        "arms": 1.24,
+        "head": 1,
+        "fists": 1
+      },
+      "palette": {
+        "body": "#866043",
+        "edge": "#d5c8a4",
+        "joint": "#302f2d",
+        "metal": "#645d4d",
+        "core": "#e9dba2"
+      },
+      "features": [
+        "logs",
+        "branches",
+        "bindings"
+      ],
+      "variation": {
+        "hue": 0.015,
+        "value": 0.04,
+        "scale": 0
+      },
+      "card": "never",
+      "meta": {
+        "material_presentation": "Visual surface only; no damage resistance or immunity is inferred.",
+        "prototype_look": null
+      }
+    },
+    {
+      "id": "kiln_golem",
+      "name": "Kiln Golem",
+      "body": "assembled_golem",
+      "shape": {
+        "breadth": 0.6666666666666667,
+        "depth": 0.4848484848484849,
+        "legs": 0.26,
+        "arms": 0.85,
+        "head": 1,
+        "fists": 1
+      },
+      "palette": {
+        "body": "#c79b79",
+        "edge": "#d5c8a4",
+        "joint": "#302f2d",
+        "metal": "#645d4d",
+        "core": "#e9dba2"
+      },
+      "features": [
+        "vessel",
+        "handles",
+        "glaze"
+      ],
+      "variation": {
+        "hue": 0.015,
+        "value": 0.04,
+        "scale": 0
+      },
+      "card": "never",
+      "meta": {
+        "material_presentation": "Visual surface only; no damage resistance or immunity is inferred.",
+        "prototype_look": null
+      }
+    },
+    {
+      "id": "vault_golem",
+      "name": "Vault Golem",
+      "body": "assembled_golem",
+      "shape": {
+        "breadth": 0.6511627906976744,
+        "depth": 0.48837209302325585,
+        "legs": 0.27,
+        "arms": 0.95,
+        "head": 0.7,
+        "fists": 1
+      },
+      "palette": {
+        "body": "#9a8c6a",
+        "edge": "#d5c8a4",
+        "joint": "#302f2d",
+        "metal": "#645d4d",
+        "core": "#e9dba2"
+      },
+      "features": [
+        "blocks",
+        "vault",
+        "rivets"
+      ],
+      "variation": {
+        "hue": 0.015,
+        "value": 0.04,
+        "scale": 0
+      },
+      "card": "never",
+      "meta": {
+        "material_presentation": "Visual surface only; no damage resistance or immunity is inferred.",
+        "prototype_look": "vault_golem"
+      }
+    },
+    {
+      "id": "bauble_golem",
+      "name": "Bauble Golem",
+      "body": "assembled_golem",
+      "shape": {
+        "breadth": 0.6564102564102564,
+        "depth": 0.4102564102564103,
+        "legs": 0.31,
+        "arms": 1.2,
+        "head": 1,
+        "fists": 1
+      },
+      "palette": {
+        "body": "#998351",
+        "edge": "#d5c8a4",
+        "joint": "#302f2d",
+        "metal": "#645d4d",
+        "core": "#e9dba2"
+      },
+      "features": [
+        "scrap",
+        "chains",
+        "trinkets"
+      ],
+      "variation": {
+        "hue": 0.015,
+        "value": 0.04,
+        "scale": 0
+      },
+      "card": "never",
+      "meta": {
+        "material_presentation": "Visual surface only; no damage resistance or immunity is inferred.",
+        "prototype_look": "bauble_golem"
+      }
+    },
+    {
+      "id": "stone_warden",
+      "name": "Stone Warden",
+      "body": "assembled_golem",
+      "shape": {
+        "breadth": 0.6363636363636362,
+        "depth": 0.3863636363636363,
+        "legs": 0.33,
+        "arms": 1.05,
+        "head": 1,
+        "fists": 1
+      },
+      "palette": {
+        "body": "#8a8070",
+        "edge": "#c5ae82",
+        "joint": "#393d37",
+        "metal": "#706951",
+        "core": "#eee0a3"
+      },
+      "features": [
+        "blocks",
+        "runestones",
+        "crest"
+      ],
+      "variation": {
+        "hue": 0.01,
+        "value": 0.04,
+        "scale": 0
+      },
+      "card": "never",
+      "meta": {
+        "prototype_look": "golem_stone_assembled"
+      }
+    }
+  ]
+}

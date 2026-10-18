@@ -1,0 +1,192 @@
+  Determining projects to restore...
+  All projects are up-to-date for restore.
+  HollowWake.Core -> C:\Users\John\.codex\worktrees\golem-construct-foundation\MMOARPG\src\HollowWake.Core\bin\Debug\net8.0\HollowWake.Core.dll
+C:\Users\John\.codex\worktrees\golem-construct-foundation\MMOARPG\tests\HollowWake.Core.Tests\PortedProjectileTests.cs(254,19): warning xUnit2031: Do not use a Where clause to filter before calling Assert.Single. Use the overload of Assert.Single that accepts a filtering function. (https://xunit.net/xunit.analyzers/rules/xUnit2031) [C:\Users\John\.codex\worktrees\golem-construct-foundation\MMOARPG\tests\HollowWake.Core.Tests\HollowWake.Core.Tests.csproj]
+C:\Users\John\.codex\worktrees\golem-construct-foundation\MMOARPG\tests\HollowWake.Core.Tests\PortedProjectileTests.cs(267,9): warning xUnit2031: Do not use a Where clause to filter before calling Assert.Single. Use the overload of Assert.Single that accepts a filtering function. (https://xunit.net/xunit.analyzers/rules/xUnit2031) [C:\Users\John\.codex\worktrees\golem-construct-foundation\MMOARPG\tests\HollowWake.Core.Tests\HollowWake.Core.Tests.csproj]
+C:\Users\John\.codex\worktrees\golem-construct-foundation\MMOARPG\tests\HollowWake.Core.Tests\PortedProjectileTests.cs(280,9): warning xUnit2031: Do not use a Where clause to filter before calling Assert.Single. Use the overload of Assert.Single that accepts a filtering function. (https://xunit.net/xunit.analyzers/rules/xUnit2031) [C:\Users\John\.codex\worktrees\golem-construct-foundation\MMOARPG\tests\HollowWake.Core.Tests\HollowWake.Core.Tests.csproj]
+  HollowWake.Core.Tests -> C:\Users\John\.codex\worktrees\golem-construct-foundation\MMOARPG\tests\HollowWake.Core.Tests\bin\Debug\net10.0\HollowWake.Core.Tests.dll
+Test run for C:\Users\John\.codex\worktrees\golem-construct-foundation\MMOARPG\tests\HollowWake.Core.Tests\bin\Debug\net10.0\HollowWake.Core.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+C:\Users\John\.codex\worktrees\golem-construct-foundation\MMOARPG\tests\HollowWake.Core.Tests\bin\Debug\net10.0\HollowWake.Core.Tests.dll
+[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v3.1.5+1b188a7b0a (64-bit .NET 10.0.13)
+[xUnit.net 00:00:00.10]   Discovering: HollowWake.Core.Tests
+[xUnit.net 00:00:01.26]   Discovered:  HollowWake.Core.Tests
+[xUnit.net 00:00:01.30]   Starting:    HollowWake.Core.Tests
+  Passed HollowWake.Core.Tests.GolemContentTests.EverySiteCanBeChosenNaturallyInItsAuthoredBiome [139 ms]
+  Standard Output Messages:
+ golem_sawmill: zone(6,-10), at (1638.5,-2342.5), level 12
+ golem_kiln: zone(10,-9), at (2756.5,-2168.5), level 15
+ golem_quarry: zone(-12,-8), at (-2893.5,-1831.5), level 15
+ golem_foundry: zone(-8,-4), at (-1901.5,-999.5), level 15
+
+
+  Passed HollowWake.Core.Tests.GolemContentTests.EveryAssignedAttackActuallyLandsThroughOrdinaryAiAndReplays(pattern: "iron_golem", skill: "cleave") [587 ms]
+  Standard Output Messages:
+ iron_golem/cleave: 10 hits, 318.74 damage
+ iron_golem/cleave: 10 hits, 318.74 damage
+
+
+  Passed HollowWake.Core.Tests.GolemContentTests.EveryAssignedAttackActuallyLandsThroughOrdinaryAiAndReplays(pattern: "quarry_golem", skill: "warden_slam") [27 ms]
+  Standard Output Messages:
+ quarry_golem/warden_slam: 10 hits, 331.47 damage
+ quarry_golem/warden_slam: 10 hits, 331.47 damage
+
+
+  Passed HollowWake.Core.Tests.GolemContentTests.EveryAssignedAttackActuallyLandsThroughOrdinaryAiAndReplays(pattern: "clay_golem", skill: "strike") [30 ms]
+  Standard Output Messages:
+ clay_golem/strike: 14 hits, 295.05 damage
+ clay_golem/strike: 14 hits, 295.05 damage
+
+
+  Passed HollowWake.Core.Tests.GolemContentTests.EveryAssignedAttackActuallyLandsThroughOrdinaryAiAndReplays(pattern: "bauble_golem", skill: "strike") [28 ms]
+  Standard Output Messages:
+ bauble_golem/strike: 14 hits, 383.15 damage
+ bauble_golem/strike: 14 hits, 383.15 damage
+
+
+  Passed HollowWake.Core.Tests.GolemContentTests.EveryAssignedAttackActuallyLandsThroughOrdinaryAiAndReplays(pattern: "crystal_golem", skill: "stone_blast") [50 ms]
+  Standard Output Messages:
+ crystal_golem/stone_blast: 42 hits, 915.31 damage
+ crystal_golem/stone_blast: 42 hits, 915.31 damage
+
+
+  Passed HollowWake.Core.Tests.GolemContentTests.EveryAssignedAttackActuallyLandsThroughOrdinaryAiAndReplays(pattern: "bauble_golem", skill: "heavy_strike") [35 ms]
+  Standard Output Messages:
+ bauble_golem/heavy_strike: 3 hits, 156.76 damage
+ bauble_golem/heavy_strike: 3 hits, 156.76 damage
+
+
+  Passed HollowWake.Core.Tests.GolemContentTests.EveryAssignedAttackActuallyLandsThroughOrdinaryAiAndReplays(pattern: "clay_golem", skill: "heavy_strike") [23 ms]
+  Standard Output Messages:
+ clay_golem/heavy_strike: 3 hits, 151.03 damage
+ clay_golem/heavy_strike: 3 hits, 151.03 damage
+
+
+  Passed HollowWake.Core.Tests.GolemContentTests.EveryAssignedAttackActuallyLandsThroughOrdinaryAiAndReplays(pattern: "kiln_golem", skill: "warden_slam") [26 ms]
+  Standard Output Messages:
+ kiln_golem/warden_slam: 11 hits, 245.72 damage
+ kiln_golem/warden_slam: 11 hits, 245.72 damage
+
+
+  Passed HollowWake.Core.Tests.GolemContentTests.EveryAssignedAttackActuallyLandsThroughOrdinaryAiAndReplays(pattern: "timber_golem", skill: "cleave") [29 ms]
+  Standard Output Messages:
+ timber_golem/cleave: 21 hits, 255.96 damage
+ timber_golem/cleave: 21 hits, 255.96 damage
+
+
+  Passed HollowWake.Core.Tests.GolemContentTests.EveryAssignedAttackActuallyLandsThroughOrdinaryAiAndReplays(pattern: "quarry_golem", skill: "ground_slam") [24 ms]
+  Standard Output Messages:
+ quarry_golem/ground_slam: 3 hits, 148.79 damage
+ quarry_golem/ground_slam: 3 hits, 148.79 damage
+
+
+  Passed HollowWake.Core.Tests.GolemContentTests.EveryAssignedAttackActuallyLandsThroughOrdinaryAiAndReplays(pattern: "iron_golem", skill: "heavy_strike") [22 ms]
+  Standard Output Messages:
+ iron_golem/heavy_strike: 3 hits, 221.42 damage
+ iron_golem/heavy_strike: 3 hits, 221.42 damage
+
+
+  Passed HollowWake.Core.Tests.GolemContentTests.EveryAssignedAttackActuallyLandsThroughOrdinaryAiAndReplays(pattern: "vault_golem", skill: "heavy_strike") [28 ms]
+  Standard Output Messages:
+ vault_golem/heavy_strike: 3 hits, 255.41 damage
+ vault_golem/heavy_strike: 3 hits, 255.41 damage
+
+
+  Passed HollowWake.Core.Tests.GolemContentTests.EveryAssignedAttackActuallyLandsThroughOrdinaryAiAndReplays(pattern: "timber_golem", skill: "heavy_strike") [20 ms]
+  Standard Output Messages:
+ timber_golem/heavy_strike: 3 hits, 164.30 damage
+ timber_golem/heavy_strike: 3 hits, 164.30 damage
+
+
+  Passed HollowWake.Core.Tests.GolemContentTests.HabitatsHaveRealReferencesAndTheLegacyWardenStaysSummonOnly(pattern: "clay_golem") [2 ms]
+  Passed HollowWake.Core.Tests.GolemContentTests.HabitatsHaveRealReferencesAndTheLegacyWardenStaysSummonOnly(pattern: "stone_warden") [400 ms]
+  Passed HollowWake.Core.Tests.GolemContentTests.HabitatsHaveRealReferencesAndTheLegacyWardenStaysSummonOnly(pattern: "bauble_golem") [< 1 ms]
+  Passed HollowWake.Core.Tests.GolemContentTests.HabitatsHaveRealReferencesAndTheLegacyWardenStaysSummonOnly(pattern: "timber_golem") [< 1 ms]
+  Passed HollowWake.Core.Tests.GolemContentTests.HabitatsHaveRealReferencesAndTheLegacyWardenStaysSummonOnly(pattern: "iron_golem") [< 1 ms]
+  Passed HollowWake.Core.Tests.GolemContentTests.HabitatsHaveRealReferencesAndTheLegacyWardenStaysSummonOnly(pattern: "kiln_golem") [< 1 ms]
+  Passed HollowWake.Core.Tests.GolemContentTests.HabitatsHaveRealReferencesAndTheLegacyWardenStaysSummonOnly(pattern: "vault_golem") [< 1 ms]
+  Passed HollowWake.Core.Tests.GolemContentTests.HabitatsHaveRealReferencesAndTheLegacyWardenStaysSummonOnly(pattern: "crystal_golem") [< 1 ms]
+  Passed HollowWake.Core.Tests.GolemContentTests.HabitatsHaveRealReferencesAndTheLegacyWardenStaysSummonOnly(pattern: "quarry_golem") [< 1 ms]
+  Passed HollowWake.Core.Tests.GolemContentTests.PhysicalAssembliesHaveClassifiersMassAndMatchingPresentation(pattern: "kiln_golem") [10 ms]
+  Standard Output Messages:
+ kiln_golem: 915.050 kg
+
+
+  Passed HollowWake.Core.Tests.GolemContentTests.PhysicalAssembliesHaveClassifiersMassAndMatchingPresentation(pattern: "clay_golem") [< 1 ms]
+  Standard Output Messages:
+ clay_golem: 640.224 kg
+
+
+  Passed HollowWake.Core.Tests.GolemContentTests.PhysicalAssembliesHaveClassifiersMassAndMatchingPresentation(pattern: "iron_golem") [< 1 ms]
+  Standard Output Messages:
+ iron_golem: 6299.704 kg
+
+
+  Passed HollowWake.Core.Tests.GolemContentTests.PhysicalAssembliesHaveClassifiersMassAndMatchingPresentation(pattern: "bauble_golem") [< 1 ms]
+  Standard Output Messages:
+ bauble_golem: 2062.944 kg
+
+
+  Passed HollowWake.Core.Tests.GolemContentTests.PhysicalAssembliesHaveClassifiersMassAndMatchingPresentation(pattern: "crystal_golem") [< 1 ms]
+  Standard Output Messages:
+ crystal_golem: 1164.348 kg
+
+
+  Passed HollowWake.Core.Tests.GolemContentTests.PhysicalAssembliesHaveClassifiersMassAndMatchingPresentation(pattern: "stone_warden") [< 1 ms]
+  Standard Output Messages:
+ stone_warden: 1905.904 kg
+
+
+  Passed HollowWake.Core.Tests.GolemContentTests.PhysicalAssembliesHaveClassifiersMassAndMatchingPresentation(pattern: "vault_golem") [< 1 ms]
+  Standard Output Messages:
+ vault_golem: 4102.076 kg
+
+
+  Passed HollowWake.Core.Tests.GolemContentTests.PhysicalAssembliesHaveClassifiersMassAndMatchingPresentation(pattern: "quarry_golem") [< 1 ms]
+  Standard Output Messages:
+ quarry_golem: 3141.840 kg
+
+
+  Passed HollowWake.Core.Tests.GolemContentTests.PhysicalAssembliesHaveClassifiersMassAndMatchingPresentation(pattern: "timber_golem") [< 1 ms]
+  Standard Output Messages:
+ timber_golem: 375.290 kg
+
+
+  Passed HollowWake.Core.Tests.GolemContentTests.AuthoredSitesPopulateAtTheirLevelAndReplay(site: "golem_foundry") [1 s]
+  Standard Output Messages:
+ golem_foundry: iron_golem:44.179447:55.680622:1, vault_golem:52.364075:41.888573:1
+
+
+  Passed HollowWake.Core.Tests.GolemContentTests.AuthoredSitesPopulateAtTheirLevelAndReplay(site: "golem_sawmill") [3 s]
+  Standard Output Messages:
+ golem_sawmill: timber_golem:54.899624:48.684113:1, bauble_golem:47.152977:48.430607:1
+
+
+  Passed HollowWake.Core.Tests.GolemContentTests.AuthoredSitesPopulateAtTheirLevelAndReplay(site: "golem_quarry") [1 s]
+  Standard Output Messages:
+ golem_quarry: quarry_golem:55.13313:51.11321:1, crystal_golem:53.408638:45.871494:1
+
+
+  Passed HollowWake.Core.Tests.GolemContentTests.AuthoredSitesPopulateAtTheirLevelAndReplay(site: "golem_kiln") [1 s]
+  Standard Output Messages:
+ golem_kiln: clay_golem:47.721615:46.319916:1, kiln_golem:51.433563:51.789024:1
+
+
+  Passed HollowWake.Core.Tests.GolemContentTests.TimberClayStoneAndIronHaveMeaningfullyDifferentShoveResponses [18 ms]
+  Standard Output Messages:
+ timber_golem: mass=375.290 kg, shove=1.275963 m
+ clay_golem: mass=640.224 kg, shove=0.812630 m
+ quarry_golem: mass=3141.840 kg, shove=0.096182 m
+ iron_golem: mass=6299.704 kg, shove=0.018816 m
+ iron_golem: mass=6299.704 kg, shove=0.018816 m
+
+
+[xUnit.net 00:00:12.29]   Finished:    HollowWake.Core.Tests
+  Passed HollowWake.Core.Tests.GolemContentTests.MixedKitsStillCloseAndDamageWithoutAnIsolatedSlot [170 ms]
+  Passed HollowWake.Core.Tests.GolemContentTests.SalvagePoolReusesAllBodiesWithOwnerAllegianceAndNoFarmableRewards [692 ms]
+  Passed HollowWake.Core.Tests.GolemContentTests.SalvageContractRespawnsAndExcludesBothLegacyWardenContracts [27 ms]
+
+Test Run Successful.
+Total tests: 40
+     Passed: 40
+ Total time: 13.1836 Seconds

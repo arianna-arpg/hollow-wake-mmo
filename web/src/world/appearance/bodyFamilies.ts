@@ -1,3 +1,4 @@
+import { assembledGolem } from './golemFamilies';
 import { faunaQuadruped, faunaBird, faunaCrab } from './faunaFamilies';
 import { orc } from './orcFamilies';
 import { goblinkin, gnasher, warbeast } from './goblinkinFamilies';
@@ -750,6 +751,7 @@ function drop(b: BodyBuild): void {
 }
 
 export const BODY_FAMILIES: Record<string, Builder> = {
+  assembled_golem: assembledGolem,
   fauna_quadruped: faunaQuadruped,
   fauna_bird: faunaBird,
   fauna_crab: faunaCrab,

@@ -1,0 +1,62 @@
+[
+  {
+    "id": "holdfast",
+    "authoritativeHeight": 1.8,
+    "modelHeight": 1.7334
+  },
+  {
+    "id": "skeleton_warrior",
+    "authoritativeHeight": 1.8,
+    "modelHeight": 1.7128800000000002
+  },
+  {
+    "id": "goblin_skirmisher",
+    "authoritativeHeight": 0.9,
+    "modelHeight": 0.9319047680409906
+  },
+  {
+    "id": "clay_golem",
+    "authoritativeHeight": 1.8,
+    "modelHeight": 1.8
+  },
+  {
+    "id": "quarry_golem",
+    "authoritativeHeight": 2.5,
+    "modelHeight": 2.5069958971369433
+  },
+  {
+    "id": "iron_golem",
+    "authoritativeHeight": 2.7,
+    "modelHeight": 2.8080000000000003
+  },
+  {
+    "id": "crystal_golem",
+    "authoritativeHeight": 2.35,
+    "modelHeight": 2.6085
+  },
+  {
+    "id": "timber_golem",
+    "authoritativeHeight": 2.65,
+    "modelHeight": 3.122591392890363
+  },
+  {
+    "id": "kiln_golem",
+    "authoritativeHeight": 1.65,
+    "modelHeight": 1.65
+  },
+  {
+    "id": "vault_golem",
+    "authoritativeHeight": 2.15,
+    "modelHeight": 2.23086242636057
+  },
+  {
+    "id": "bauble_golem",
+    "authoritativeHeight": 1.95,
+    "modelHeight": 1.95
+  },
+  {
+    "id": "stone_warden",
+    "authoritativeHeight": 2.2,
+    "modelHeight": 2.3430000000000004
+  }
+]
