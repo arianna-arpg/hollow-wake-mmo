@@ -8,7 +8,7 @@ Main merged automatically without conflicts. Its existing movement/AI, entry, ic
 
 The integration is prepared in a separate managed worktree. The final #37 source/content `ce3bcf569fb27426991ec69931c950e6951c74e1`, evidence head `c6e117a362b552f9865155789fdf020d979f97d2`, and its built outputs remain untouched for the serialized benchmark window. No builds, tests or benchmarks have run for this main integration yet. Full combined gates will run after the coordinator releases heavy work; no pass or merge acceptance is claimed.
 
-Acknowledged by: pending Claude review.
+Acknowledged by: [Claude rereview of #31 at 749e99b](https://github.com/arianna-arpg/hollow-wake-mmo/pull/31#issuecomment-6255391549); the newly named census table and paired timing are recorded separately for final review.
 
 ## Audit-only repair
 
