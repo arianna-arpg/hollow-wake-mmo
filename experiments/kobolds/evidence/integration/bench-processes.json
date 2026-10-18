@@ -1,0 +1,40 @@
+[
+  {
+    "name": "bench-default",
+    "sourceHead": "253baa24f2f135d03497b429631aa0c59734f9cb",
+    "foundation": "26c50de03c62f434c517564906a54c0287b281ce",
+    "priority": "Normal",
+    "processId": 114856,
+    "startedUtc": "2026-10-18T18:39:51.1725717Z",
+    "endedUtc": "2026-10-18T18:39:58.2718552Z",
+    "exitCode": 0,
+    "processExited": true,
+    "executable": "C:\\Program Files\\dotnet\\dotnet.exe",
+    "arguments": [
+      "C:\\Users\\John\\.codex\\worktrees\\kobold-scaleclans\\MMOARPG\\src\\HollowWake.Tools\\bin\\Release\\net10.0\\hollowwake.dll",
+      "bench",
+      "--json"
+    ],
+    "coordination": "Explicit #38 quiet window after #20/#37/#39/#40 and coordinator stopped heavy work."
+  },
+  {
+    "name": "bench-hit-bodies",
+    "sourceHead": "253baa24f2f135d03497b429631aa0c59734f9cb",
+    "foundation": "26c50de03c62f434c517564906a54c0287b281ce",
+    "priority": "Normal",
+    "processId": 25368,
+    "startedUtc": "2026-10-18T18:39:58.3663435Z",
+    "endedUtc": "2026-10-18T18:40:00.4312679Z",
+    "exitCode": 0,
+    "processExited": true,
+    "executable": "C:\\Program Files\\dotnet\\dotnet.exe",
+    "arguments": [
+      "C:\\Users\\John\\.codex\\worktrees\\kobold-scaleclans\\MMOARPG\\src\\HollowWake.Tools\\bin\\Release\\net10.0\\hollowwake.dll",
+      "bench",
+      "--only",
+      "hit-bodies",
+      "--json"
+    ],
+    "coordination": "Explicit #38 quiet window after #20/#37/#39/#40 and coordinator stopped heavy work."
+  }
+]

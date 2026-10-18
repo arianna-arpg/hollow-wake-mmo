@@ -1,0 +1,105 @@
+{
+  "sourceHead": "253baa24f2f135d03497b429631aa0c59734f9cb",
+  "budgets": [
+    {
+      "name": "zone.tick.p95",
+      "value": 9.8209,
+      "unit": "ms/tick",
+      "ceiling": 25,
+      "withinCeiling": true,
+      "note": "95th percentile"
+    },
+    {
+      "name": "zone.tick.alloc",
+      "value": 75.79740885416666,
+      "unit": "KB/tick",
+      "ceiling": 2048,
+      "withinCeiling": true,
+      "note": "gen0 collections 4"
+    },
+    {
+      "name": "system.behavior",
+      "value": 1.6843339999999987,
+      "unit": "ms/tick",
+      "ceiling": 3,
+      "withinCeiling": true,
+      "note": "22.8 KB/tick allocated"
+    },
+    {
+      "name": "snapshot.build",
+      "value": 0.8908119999999994,
+      "unit": "ms/player",
+      "ceiling": 1,
+      "withinCeiling": true,
+      "note": "441 known entities per player; build and encode"
+    },
+    {
+      "name": "snapshot.bytes",
+      "value": 29.2958349609375,
+      "unit": "KB/player",
+      "ceiling": 30,
+      "withinCeiling": true,
+      "note": "changed entities as full states plus self state, steady state, JSON"
+    },
+    {
+      "name": "snapshot.delta.bytes",
+      "value": 8.889853515625,
+      "unit": "KB/player",
+      "ceiling": 10,
+      "withinCeiling": true,
+      "note": "changed entities as deltas plus self state, steady state, JSON"
+    },
+    {
+      "name": "worldgen.chunk",
+      "value": 0.52531875,
+      "unit": "ms/chunk",
+      "ceiling": 4,
+      "withinCeiling": true,
+      "note": "64 chunks, 65536 cells"
+    },
+    {
+      "name": "worldgen.chunk.alloc",
+      "value": 14.335205078125,
+      "unit": "KB/chunk",
+      "ceiling": 400,
+      "withinCeiling": true,
+      "note": "allocation per generated chunk"
+    },
+    {
+      "name": "attribute.apply.extra",
+      "value": 442.6085,
+      "unit": "ns/op",
+      "ceiling": 500,
+      "withinCeiling": true,
+      "note": "damage fold with weave extras (never cached)"
+    },
+    {
+      "name": "attribute.apply.alloc",
+      "value": 0.1392,
+      "unit": "bytes/op",
+      "ceiling": 200,
+      "withinCeiling": true,
+      "note": "allocation per damage fold"
+    },
+    {
+      "name": "expression.evaluate",
+      "value": 119.1071,
+      "unit": "ns/eval",
+      "ceiling": 150,
+      "withinCeiling": true,
+      "note": "four formulas, checksum 57948161"
+    },
+    {
+      "name": "expression.alloc",
+      "value": 0.0168,
+      "unit": "bytes/eval",
+      "ceiling": 0,
+      "withinCeiling": false,
+      "note": "lerp with rand()"
+    }
+  ],
+  "behaviorAllocationKB": 22.8,
+  "behaviorAllocationCeilingKB": 1024,
+  "fullSnapshotHeadroomKB": 0.7041650390624987,
+  "literalZeroNote": "expression.alloc=0.0168 B/eval matches the independently published 26c50de and 724c5ed process-wide counters. Literal zero is not claimed; no budget threshold was changed."
+}

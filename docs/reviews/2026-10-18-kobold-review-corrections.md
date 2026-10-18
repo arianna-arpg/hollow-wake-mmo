@@ -83,4 +83,28 @@ On this Kobold tree, all 285 browser tests / 36 files and the production build p
 
 The change only touches browser rendering/tests and evidence. The previous 2249 core / 48 server / 124 native-client tests and native26/26 smoke still apply to the unchanged simulation/native tree; no redundant native run is claimed. A fresh Release Tools build is clean. Performance still awaits the coordinator's explicit window. Shared reviews and #20 release-policy integration remain open.
 
+## Controlled final performance evidence
+
+Measured exact source 253baa24f2f135d03497b429631aa0c59734f9cb in the coordinator's explicit quiet window, 2026-10-18 18:39:51–18:40:00 UTC. The Release build was prepared beforehand. Ran the default full benchmark once, then the authored hit-bodies profile once; no retries or discarded samples. Both processes used Normal priority, exited zero and were disposed before the next owner's window. Raw JSON, source/priority/process metadata and budget comparisons are integration/bench-*.json.
+
+All timing ceilings and nonzero memory/payload budgets pass:
+
+| Measure | Result | Budget |
+| --- | ---: | ---: |
+| Zone p95 | 9.8209 ms/tick | 25 ms |
+| Zone allocation | 75.7974 KB/tick | 2048 KB |
+| Behavior | 1.684334 ms/tick; 22.8 KB/tick | 3 ms; 1024 KB |
+| Snapshot build | 0.890812 ms/player | 1 ms |
+| Full snapshot | 29.295835 KB/player | 30 KB |
+| Delta snapshot | 8.889854 KB/player | 10 KB |
+| World chunk | 0.525319 ms; 14.3352 KB | 4 ms; 400 KB |
+| Damage fold | 442.6085 ns; 0.1392 B | 500 ns; 200 B |
+| Expression evaluation | 119.1071 ns | 150 ns |
+
+Full snapshots retain only 0.704165 KB/player of headroom. The process-wide expression allocation counter reports 0.0168 B/eval, exactly matching both the corrected foundation and original #36 in the [independent baseline](https://github.com/arianna-arpg/hollow-wake-mmo/pull/34#issuecomment-6253489076). This does not satisfy a literal zero reading; the value and zero budget are retained without rounding away the discrepancy or changing the contract.
+
+Authored-profile deliveries measure 1.7543845 ms/tick and 37.5926 KB/tick, including 0.87639575 ms/tick in projectiles, across 42 profiled patterns, 120 foes and 41 average flights. This is the common authored-profile workload, not a dedicated Kobold crowd or a separate body-area performance bound. The default fixed mixed roster likewise remains a shared-runtime check; the species AI and 84 cylinder-fallback contact cases provide Kobold functional coverage. Zero zone system errors.
+
+Requested code corrections and local evidence are published. Claude rereview and shared dependency/#20 release-policy approval remain open; #20's separate performance failures are not cleared by these measurements. Keep #38 unmerged until those gates close. The older snapshot over-budget result, failed card screenshot and baseline projectile misses remain historical evidence.
+
 Acknowledged by: pending Claude rereview.
