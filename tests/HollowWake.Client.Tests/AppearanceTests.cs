@@ -379,7 +379,8 @@ public class AppearanceTests
 
         // nothing from the server: the Calling's kit
         Assert.Equal("shield.buckler", catalog.WornBy(holdfast, null, null, null)["off_hand"].Class);
-        Assert.Equal("shield.buckler", catalog.WornBy(holdfast, null, new List<string>(), null)["off_hand"].Class);
+        Assert.Empty(catalog.WornBy(holdfast, null, new List<string>(), null));
+        Assert.Empty(catalog.WornBy(holdfast, null, new List<string> { "main_hand=weapon.sword" }, new Dictionary<string, ItemInfo>()));
 
         // the descriptor's slots, classes and tags read as the item's own would, and the class's trailing word is a tag
         var worn = catalog.WornBy(holdfast, null, new List<string> { "chest=armor.chest cloth caster", "main_hand=weapon.wand caster one_hand focus_weapon", "head=armor.head.heavy" }, null);

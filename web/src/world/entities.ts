@@ -115,9 +115,9 @@ function shapeFor(s: EntityState, palette: EntityPaletteSettings): ShapeBody {
   };
 }
 
-/** What a state says a player wears, as one string, so a change of gear rebuilds the body; absent and empty read the same. */
+/** What a state says a player wears; presence also changes the body when legacy defaults become an empty outfit. */
 export function appearanceKey(s: EntityState): string {
-  return s.appearance === undefined ? '' : s.appearance.join('|');
+  return s.appearance === undefined ? '' : `:${s.appearance.join('|')}`;
 }
 
 /** The label line over a body, as the desktop client writes it. */
@@ -438,7 +438,7 @@ export class EntityView {
 
   private equipmentKey(): string {
     const equipment = this.layer.appearance.selfEquipment?.();
-    return equipment ? Object.entries(equipment).sort(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0)).map(([slot, item]) => `${slot}:${item.base}`).join(',') : '';
+    return equipment ? ':' + Object.entries(equipment).sort(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0)).map(([slot, item]) => `${slot}:${item.base}`).join(',') : '';
   }
 
   /** The self's worn gear changed: its body is built again with it. */

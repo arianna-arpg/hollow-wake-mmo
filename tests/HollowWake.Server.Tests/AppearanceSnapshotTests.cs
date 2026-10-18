@@ -71,14 +71,15 @@ public class AppearanceSnapshotTests
         var again = Body(sim, player: true, ("off_hand", "buckler"), ("chest", "leather_jerkin"), ("main_hand", "short_sword"));
         Assert.Equal(state.Appearance, Snapshots.Capture(sim, again).Appearance);
 
-        // nothing worn: nothing on the wire
+        // nothing worn: a present empty descriptor, distinct from an older server
         var bare = Snapshots.Capture(sim, Body(sim, player: true));
-        Assert.Null(bare.Appearance);
-        Assert.DoesNotContain("appearance", MessageSerializer.ToJson(new EntitySpawnMsg(bare)));
+        Assert.NotNull(bare.Appearance);
+        Assert.Empty(bare.Appearance!);
+        Assert.Contains("\"appearance\":[]", MessageSerializer.ToJson(new EntitySpawnMsg(bare)));
         // a monster's pattern says what it wears; the wire never does
         Assert.Null(Snapshots.Capture(sim, Body(sim, player: false, ("main_hand", "short_sword"))).Appearance);
         // a base content does not know draws nothing
-        Assert.Null(Snapshots.Capture(sim, Body(sim, player: true, ("main_hand", "no_such_item"))).Appearance);
+        Assert.Empty(Snapshots.Capture(sim, Body(sim, player: true, ("main_hand", "no_such_item"))).Appearance!);
     }
 
     [Fact]
@@ -111,17 +112,38 @@ public class AppearanceSnapshotTests
         Assert.NotEqual(dressed, Snapshots.Fingerprint(sim, wren));
         Assert.Contains(Snapshots.Capture(sim, wren).Appearance!, a => a.StartsWith("main_hand=weapon.axe", StringComparison.Ordinal));
 
-        // the last piece off: an empty list on the wire, and the state then carries none
+        // the last piece off: the full state and delta both preserve an empty list
         equipment.BySlot.Clear();
         var bare = Snapshots.Capture(sim, wren);
-        Assert.Null(bare.Appearance);
+        Assert.NotNull(bare.Appearance);
+        Assert.Empty(bare.Appearance!);
         var undressed = Snapshots.Delta(state, bare, out empty)!;
         Assert.False(empty);
         Assert.NotNull(undressed.Appearance);
         Assert.Empty(undressed.Appearance!);
         Assert.Contains("\"appearance\":[]", MessageSerializer.ToJson(new EntityDeltaMsg(new List<EntityDelta> { undressed }, 1)));
-        Assert.Null(undressed.ApplyTo(state).Appearance);
+        Assert.NotNull(undressed.ApplyTo(state).Appearance);
+        Assert.Empty(undressed.ApplyTo(state).Appearance!);
         // the fingerprint is a function of what a viewer sees: another body in the same place with the same gear hashes the same
         Assert.Equal(before, Snapshots.Fingerprint(sim, Body(sim, player: true, ("main_hand", "short_sword"))));
+    }
+
+    [Fact]
+    public void AppearancePresenceSurvivesFullStatesAndDeltas()
+    {
+        var sim = Arena();
+        var bare = Snapshots.Capture(sim, Body(sim, player: true));
+        var legacy = bare with { Appearance = null };
+        var delta = Snapshots.Delta(legacy, bare, out var empty);
+        Assert.NotNull(delta);
+        Assert.False(empty);
+        Assert.NotNull(delta!.Appearance);
+        Assert.Empty(delta.Appearance!);
+        Assert.Equal(bare.Appearance, delta.ApplyTo(legacy).Appearance);
+        // A delta's absent field means unchanged; returning to absence requires a full state.
+        Assert.Null(Snapshots.Delta(bare, legacy, out empty));
+        Assert.False(empty);
+        Assert.Contains("\"appearance\":[]", MessageSerializer.ToJson(new EntityUpdateMsg(new List<EntityState> { bare }, 1)));
+        Assert.DoesNotContain("appearance", MessageSerializer.ToJson(new EntitySpawnMsg(legacy)));
     }
 }

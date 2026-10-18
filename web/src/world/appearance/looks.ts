@@ -373,12 +373,11 @@ export class AppearanceCatalog {
 
   /**
    * What a body wears, in order of preference: the owner's own equipment (the self's body, from its self state), the
-   * public descriptor the server sends for a player (EntityState.appearance), else the defaults of defaultGear. A
-   * descriptor that names nothing falls to the defaults, as does a state without one: the server omits it when nothing
-   * is worn, and a server that predates it never sends one.
+   * public descriptor the server sends for a player (EntityState.appearance), else the defaults of defaultGear.
+   * Present equipment or a descriptor is authoritative even when empty. Only absence falls back to defaults.
    */
   wornBy(body: AppearanceDef, patternId: string | null | undefined, appearance: readonly string[] | undefined, selfEquipment: Record<string, ItemInfo> | undefined): Map<string, ItemLook> {
-    if (selfEquipment && Object.keys(selfEquipment).length > 0) {
+    if (selfEquipment !== undefined) {
       const own = new Map<string, ItemLook>();
       for (const [slot, item] of Object.entries(selfEquipment)) {
         const fromBase = this.itemLook(item.base);
@@ -386,11 +385,8 @@ export class AppearanceCatalog {
       }
       return own;
     }
-    if (appearance && appearance.length > 0) {
-      const worn = wornFromDescriptor(appearance);
-      if (worn.size > 0) {
-        return worn;
-      }
+    if (appearance !== undefined) {
+      return wornFromDescriptor(appearance);
     }
     return this.defaultGear(body, patternId);
   }

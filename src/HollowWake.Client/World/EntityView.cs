@@ -304,7 +304,7 @@ public partial class EntityView : Node3D
     private static string EquipmentKey(AppearanceService service)
     {
         var equipment = service.SelfEquipment?.Invoke();
-        return equipment is null ? "" : string.Join(",", equipment.OrderBy(e => e.Key, StringComparer.Ordinal).Select(e => $"{e.Key}:{e.Value.Base}"));
+        return equipment is null ? "" : ":" + string.Join(",", equipment.OrderBy(e => e.Key, StringComparer.Ordinal).Select(e => $"{e.Key}:{e.Value.Base}"));
     }
 
     /// <summary>The self's worn gear changed: its body is built again with it.</summary>

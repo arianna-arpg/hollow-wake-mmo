@@ -815,6 +815,27 @@ public class LoopbackTests
         // A change on an entity's refresh tick goes out as a full state instead; the two changes are nearer than the cadence, so at least one rode a delta.
         Assert.True(deltasOff + deltasOn >= 1, "neither change of gear reached the delta viewer as a delta");
         _output.WriteLine($"spawned wearing {string.Join(", ", seen.Appearance)}; {deltasOff} delta(s) taking the wand off, {deltasOn} putting it back");
+
+        // Taking every piece off remains authoritative for existing viewers and a newly joined viewer.
+        viewerInbox.Clear();
+        plainInbox.Clear();
+        wearerInbox.Clear();
+        foreach (var slot in wornSlots)
+        {
+            wearer.Send(new UnequipMsg(slot));
+            Step(server, 12, (viewer, viewerInbox), (plain, plainInbox), (wearer, wearerInbox));
+        }
+        Assert.DoesNotContain(wearerInbox, m => m is IntentRejectedMsg);
+        var naked = LastAppearanceSeen(viewerInbox, wearerEnter.EntityKey, out _);
+        Assert.NotNull(naked);
+        Assert.Empty(naked!);
+        var plainNaked = LastAppearanceSeen(plainInbox, wearerEnter.EntityKey, out _);
+        Assert.NotNull(plainNaked);
+        Assert.Empty(plainNaked!);
+        var (_, _, _, lateReplies, _) = Enter(server, transport, "late", "Reed");
+        var nakedSpawn = Assert.Single(lateReplies.OfType<EntitySpawnMsg>(), s => s.State.Key == wearerEnter.EntityKey).State;
+        Assert.NotNull(nakedSpawn.Appearance);
+        Assert.Empty(nakedSpawn.Appearance!);
     }
 
     [Fact]

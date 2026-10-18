@@ -241,12 +241,12 @@ public sealed class AppearanceCatalog
     /// <summary>
     /// What a body wears, in order of preference: the owner's own equipment (the self's body, from its self state),
     /// the public descriptor the server sends for a player (<see cref="EntityState.Appearance"/>), else the defaults
-    /// of <see cref="DefaultGear"/>. A descriptor that names nothing falls to the defaults, as does a state without
-    /// one: the server omits it when nothing is worn, and a server that predates it never sends one.
+    /// of <see cref="DefaultGear"/>. Present equipment or a descriptor is authoritative even when empty.
+    /// Only absence falls back to defaults, as for a server that predates the descriptor.
     /// </summary>
     public IReadOnlyDictionary<string, (string? Class, IEnumerable<string> Tags)> WornBy(AppearanceDef body, string? patternId, IReadOnlyList<string>? appearance, IReadOnlyDictionary<string, ItemInfo>? selfEquipment)
     {
-        if (selfEquipment is { Count: > 0 })
+        if (selfEquipment is not null)
         {
             var own = new Dictionary<string, (string? Class, IEnumerable<string> Tags)>(StringComparer.Ordinal);
             foreach (var (slot, item) in selfEquipment)
@@ -256,13 +256,9 @@ public sealed class AppearanceCatalog
             }
             return own;
         }
-        if (appearance is { Count: > 0 })
+        if (appearance is not null)
         {
-            var worn = WornFromDescriptor(appearance);
-            if (worn.Count > 0)
-            {
-                return worn;
-            }
+            return WornFromDescriptor(appearance);
         }
         return DefaultGear(body, patternId);
     }

@@ -204,18 +204,16 @@ public static class Snapshots
 
     // ------------------------------------------------------------ appearance
 
-    private static readonly List<string> NoStrings = new();
-
     /// <summary>
     /// What a player wears as others see it: one entry per worn slot, <c>slot=class tag tag ...</c> from the item
-    /// base's class and tags, sorted by slot so two captures of the same gear read the same. Null when nothing is
+    /// base's class and tags, sorted by slot so two captures of the same gear read the same. Empty when nothing is
     /// worn. Only players carry it; a monster's pattern says what it wears.
     /// </summary>
-    public static List<string>? AppearanceOf(ContentRegistry content, Equipment? equipment)
+    public static List<string> AppearanceOf(ContentRegistry content, Equipment? equipment)
     {
         if (equipment is null || equipment.BySlot.Count == 0)
         {
-            return null;
+            return new List<string>();
         }
         var list = new List<string>(equipment.BySlot.Count);
         foreach (var (slot, item) in equipment.BySlot)
@@ -225,10 +223,6 @@ public static class Snapshots
                 continue;
             }
             list.Add(b.Tags.IsEmpty ? slot + "=" + b.Class : slot + "=" + b.Class + " " + string.Join(' ', b.Tags.Items));
-        }
-        if (list.Count == 0)
-        {
-            return null;
         }
         list.Sort(StringComparer.Ordinal);
         return list;
@@ -426,6 +420,7 @@ public static class Snapshots
     {
         empty = false;
         if (last.Key != next.Key || last.IsPlayer != next.IsPlayer || last.Static != next.Static
+            || (last.Appearance is not null && next.Appearance is null)
             || !SameKeys(last.Resources, next.Resources) || !SameKeys(last.ResourceMax, next.ResourceMax))
         {
             return null;
@@ -485,7 +480,9 @@ public static class Snapshots
         var flags = SameSet(last.Flags, next.Flags) ? null : next.Flags;
         var statuses = SameSequence(last.Statuses, next.Statuses) ? null : next.Statuses;
         // What a player wears travels whole, and an empty list when the last piece comes off.
-        var appearance = SameSequence(last.Appearance ?? NoStrings, next.Appearance ?? NoStrings) ? null : next.Appearance ?? new List<string>();
+        var appearance = ReferenceEquals(last.Appearance, next.Appearance)
+            || (last.Appearance is not null && next.Appearance is not null && SameSequence(last.Appearance, next.Appearance))
+            ? null : next.Appearance;
         changes += (resources is null ? 0 : 1) + (maxes is null ? 0 : 1) + (flags is null ? 0 : 1) + (statuses is null ? 0 : 1) + (appearance is null ? 0 : 1);
         int? level = null;
         if (last.Level != next.Level)

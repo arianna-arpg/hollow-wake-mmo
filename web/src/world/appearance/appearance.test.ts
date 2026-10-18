@@ -73,7 +73,8 @@ describe('appearance catalog', () => {
     const holdfast = catalog.resolve('holdfast', null)!;
     // nothing from the server: the Calling's kit
     expect(catalog.wornBy(holdfast, null, undefined, undefined).get('off_hand')?.itemClass).toBe('shield.buckler');
-    expect(catalog.wornBy(holdfast, null, [], undefined).get('off_hand')?.itemClass).toBe('shield.buckler');
+    expect(catalog.wornBy(holdfast, null, [], undefined).size).toBe(0);
+    expect(catalog.wornBy(holdfast, null, ['main_hand=weapon.sword'], {}).size).toBe(0);
     // the descriptor's slots, classes and tags read as the item's own would, and the class's trailing word is a tag
     const worn = catalog.wornBy(holdfast, null, ['chest=armor.chest cloth caster', 'main_hand=weapon.wand caster one_hand focus_weapon', 'head=armor.head.heavy'], undefined);
     expect([...worn.keys()].sort()).toEqual(['chest', 'head', 'main_hand']);

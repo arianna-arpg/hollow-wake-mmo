@@ -239,19 +239,13 @@ public sealed record EntityState
     /// <summary>For a body with a lifetime (a telegraph mark, a timed summon): the server time it lands or ends.</summary>
     public double? Until { get; init; }
 
-    private readonly List<string>? _appearance;
-
     /// <summary>
     /// For a player, what it wears as others see it: one entry per worn slot, <c>slot=class tag tag ...</c> (the
     /// item's class and the tags of its base, never the item itself), sorted by slot. The server derives it from
-    /// the worn items and sends it on spawn and whenever the equipment changes. Omitted from the wire when nothing
-    /// is worn, and never set on monsters, whose patterns say what they wear.
+    /// the worn items and sends it on spawn and whenever the equipment changes. Empty means nothing is worn;
+    /// absent means unavailable (an older server, or a nonplayer whose pattern says what it wears).
     /// </summary>
-    public List<string>? Appearance
-    {
-        get => _appearance is { Count: > 0 } ? _appearance : null;
-        init => _appearance = value;
-    }
+    public List<string>? Appearance { get; init; }
 }
 
 /// <summary>
