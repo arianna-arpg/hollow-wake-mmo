@@ -317,7 +317,7 @@ public sealed class MinionSystem : SimSystem
         if (sim.World.TryGet<Identity>(e, out var identity))
         {
             identity.Owner = owner;
-            identity.Faction = sim.World.Get<Identity>(owner)?.Faction;
+            identity.Faction = Relations.FactionOf(sim, owner);
         }
     }
 

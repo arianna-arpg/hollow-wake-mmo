@@ -78,6 +78,12 @@ public sealed record QuestSlot
     /// <summary>Maximum distance in cells from the giver's point of interest.</summary>
     public double Within { get; init; } = 256;
     public bool Hub { get; init; }
+    /// <summary>Eligible target level minus this quest's level; omitted means unrestricted.</summary>
+    [JsonPropertyName("level_delta")]
+    public Window? LevelDelta { get; init; }
+    /// <summary>Pattern slots must resolve to an actual nearby generated spawn point.</summary>
+    [JsonPropertyName("local_population")]
+    public bool LocalPopulation { get; init; }
 }
 
 public sealed record ItemRequirement

@@ -23,7 +23,7 @@ import { BodyMesh, type BodyView } from './appearance/bodyMesh';
 import type { BodyPlan } from './appearance/bodyPlan';
 import { CardAtlas, CardBaker, CardView } from './appearance/cards';
 import { lay, wear } from './appearance/gearFamilies';
-import { AppearanceCatalog, type AppearanceDef, type ItemLook } from './appearance/looks';
+import { AppearanceCatalog, type AppearanceDef } from './appearance/looks';
 import { ContactMark, markStyle } from './appearance/marks';
 import { linearColor } from './colors';
 import { toThree, type CorePoint } from './coords';
@@ -116,6 +116,11 @@ function shapeFor(s: EntityState, palette: EntityPaletteSettings, precise = fals
   };
 }
 
+/** What a state says a player wears; presence also changes the body when legacy defaults become an empty outfit. */
+export function appearanceKey(s: EntityState): string {
+  return s.appearance === undefined ? '' : `:${s.appearance.join('|')}`;
+}
+
 /** The label line over a body, as the desktop client writes it. */
 export function titleFor(s: EntityState): string {
   let title = s.name;
@@ -180,7 +185,10 @@ export class AppearanceService {
     return this.catalog.resolve(s.look ?? s.pattern, s.pattern);
   }
 
-  /** A built plan for an entity with the gear it wears: the self's own equipment, a monster's grants, a Calling's kit. */
+  /**
+   * A built plan for an entity with the gear it wears: the self's own equipment, another player's public appearance
+   * from the wire, a monster's grants, a Calling's kit (AppearanceCatalog.wornBy).
+   */
   planFor(s: EntityState, look: AppearanceDef, isSelf: boolean, key: number | string): { plan: BodyPlan; gearKey: string } {
     const plan = buildBody(look, key, s.height, s.radius);
     let gearKey = look.id;
@@ -192,15 +200,7 @@ export class AppearanceService {
         gearKey += `+${gear.id}`;
       }
     } else if (plan.sockets.size > 0) {
-      const worn = new Map<string, ItemLook>(this.catalog.defaultGear(look, s.pattern));
-      const equipment = isSelf ? this.selfEquipment?.() : undefined;
-      if (equipment) {
-        worn.clear();
-        for (const [slot, item] of Object.entries(equipment)) {
-          const fromBase = this.catalog.itemLook(item.base);
-          worn.set(slot, { itemClass: item.class ?? fromBase?.itemClass ?? null, tags: fromBase?.tags ?? [] });
-        }
-      }
+      const worn = this.catalog.wornBy(look, s.pattern, s.is_player ? s.appearance : undefined, isSelf ? this.selfEquipment?.() : undefined);
       for (const slot of [...worn.keys()].sort()) {
         const item = worn.get(slot)!;
         const gear = this.catalog.gearFor(slot, item.itemClass, item.tags);
@@ -357,7 +357,8 @@ export class EntityView {
       this.bornServer = this.layer.serverNow;
     }
     const rebuild = snap || state.look !== previous.look || Math.abs(state.height - previous.height) > 0.01 || (state.interactable == null) !== (previous.interactable == null)
-      || state.shape !== previous.shape || JSON.stringify(state.shape_size) !== JSON.stringify(previous.shape_size) || state.faction !== previous.faction;
+      || state.shape !== previous.shape || JSON.stringify(state.shape_size) !== JSON.stringify(previous.shape_size) || state.faction !== previous.faction
+      || appearanceKey(state) !== appearanceKey(previous);
     if (rebuild) {
       this.rebuild();
     }
@@ -439,7 +440,7 @@ export class EntityView {
 
   private equipmentKey(): string {
     const equipment = this.layer.appearance.selfEquipment?.();
-    return equipment ? Object.entries(equipment).sort(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0)).map(([slot, item]) => `${slot}:${item.base}`).join(',') : '';
+    return equipment ? ':' + Object.entries(equipment).sort(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0)).map(([slot, item]) => `${slot}:${item.base}`).join(',') : '';
   }
 
   /** The self's worn gear changed: its body is built again with it. */

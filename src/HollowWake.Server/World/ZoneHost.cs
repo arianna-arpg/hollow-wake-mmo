@@ -50,7 +50,7 @@ public sealed class ZoneHost
         var seedText = config.Seed ?? content.Rules.Text("world.seed", "aureth");
         var overlays = new GenerationOverlays();
         Generator = new WorldGenerator(content, Rng.Hash64(seedText), overlays);
-        World = new WorldState(overlays);
+        World = new WorldState(overlays, content.Rules);
         _chunks = new PersistentChunkProvider(Generator, worldStore);
         Restore();
         _nextEventAt = config.WorldEventIntervalSeconds;
@@ -129,7 +129,7 @@ public sealed class ZoneHost
         zone.Add(session);
         session.State = SessionState.InWorld;
         var t = zone.Sim.World.Get<Transform>(session.Entity)!;
-        session.Send(new EnterWorldMsg(sheet.Id, session.Entity.Key, zone.Key, t.Position.X, t.Position.Y, t.Position.Z, WorldInfo(), zone.Sim.Clock.Time, _config.TickRate));
+        session.Send(EnterWorld(sheet.Id, session.Entity.Key, zone, t.Position));
         session.Send(new ZoneChangedMsg(zone.Key, zone.Info.Name, zone.Info.Level, zone.Info.Safe));
         foreach (var chunk in zone.ModifiedChunks())
         {
@@ -188,7 +188,7 @@ public sealed class ZoneHost
         }
         zone.Add(session);
         var pos = zone.Sim.World.Get<Transform>(session.Entity)!.Position;
-        session.Send(new EnterWorldMsg(session.Character.Id, session.Entity.Key, zone.Key, pos.X, pos.Y, pos.Z, WorldInfo(), zone.Sim.Clock.Time, _config.TickRate));
+        session.Send(EnterWorld(session.Character.Id, session.Entity.Key, zone, pos));
         session.Send(new ZoneChangedMsg(zone.Key, zone.Info.Name, zone.Info.Level, zone.Info.Safe));
         foreach (var chunk in zone.ModifiedChunks())
         {
@@ -196,6 +196,14 @@ public sealed class ZoneHost
         }
         _log.LogInformation("{Session} crossed from {From} to {To}", session, from.Coord, zone.Coord);
     }
+
+    /// <summary>What a client is told on entering a zone: where it stands, the world to generate, the zone's clock, and the world's day.</summary>
+    private EnterWorldMsg EnterWorld(string characterId, long entityKey, ZoneInstance zone, Vector3 at) =>
+        new(characterId, entityKey, zone.Key, at.X, at.Y, at.Z, WorldInfo(), zone.Sim.Clock.Time, _config.TickRate)
+        {
+            DayLength = World.DayLengthSeconds,
+            TimeOfDay = Snapshots.TimeOfDay(World),
+        };
 
     public WorldInfo WorldInfo()
     {

@@ -38,10 +38,10 @@ public class WorldGenGoldenTests
 
     // Fauna tables plus sparse elemental sites: reviewed maps and neighboring-plan audit in experiments/elementals/evidence.
     [Theory]
-    [InlineData(0, 0, "7EA79EBAD31156E2", "B4967CED570DD0B6")]
-    [InlineData(1, 0, "5DD57952BE997040", "719165F3D645E5F0")]
-    [InlineData(0, -1, "330979854289527A", "44FDA182BF6A81C9")]
-    [InlineData(3, 2, "0CC30AA46F8AF08C", "15C99D20020E2BF4")]
+    [InlineData(0, 0, "782ED5BB68A34BFC", "8433D43E324E8475")]
+    [InlineData(1, 0, "BC141514C90FA4F3", "3F6B85E3829DCA19")]
+    [InlineData(0, -1, "1958D6A42DDD64E1", "04FB8C3BEEEC74A9")]
+    [InlineData(3, 2, "42C2BAE7451AAA64", "5E2CAF8F8F08C156")]
     public void ZoneMatchesGoldenHashes(int x, int y, string infoHash, string chunksHash)
     {
         var g = new WorldGenerator(Registry.Value, Rng.Hash64(Seed));
@@ -101,7 +101,7 @@ public class WorldGenGoldenTests
         {
             HashPoint(h, g, 40 + i * 0.83, 20 + i * 0.61, i % 20 == 0);
         }
-        Golden("overlaid world", "43DEFDD2C3C767CE", h.Hex);
+        Golden("overlaid world", "669CE6FEC6ADC842", h.Hex);
 
         // Removing an overlay must regenerate exactly what a generator that never had it produces.
         overlays.Remove("fount");
@@ -334,6 +334,7 @@ public class WorldGenGoldenTests
             h.I32(s.PackSize);
             h.F64(s.RespawnSeconds);
             h.Str(s.Group);
+            h.I32(s.Level ?? 0);
         }
         h.I32(c.Flora.Count);
         foreach (var f in c.Flora)

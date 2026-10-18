@@ -173,7 +173,7 @@ public sealed partial class WeaveRuntime
             {
                 busy |= UpkeepStill(sim, caster, slot, weave, still, stats, dt);
             }
-            if (weave.Form.Channel?.Brim is { } brim)
+            if (weave.Channel?.Brim is { } brim)
             {
                 // A brim being held fills instead; the book stays listed so it decays once the hold ends,
                 // however it ends.

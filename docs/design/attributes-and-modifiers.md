@@ -49,6 +49,12 @@ Every modifier has a source string. Items use `item:{uid}`, passives `passive:{i
 
 A resource's usable maximum is its maximum attribute less `{resource}.reserved` (never below zero), mirrored into the gauge `reserved.{resource}`. A body holds a resource only where it has a maximum for it (life always): filling resources leaves out pools without one, and setting one the body lacks and has no maximum for leaves it out.
 
+## Physical inputs
+
+The `mass` definition reads physical volume, fill, heft and material-density gauges when a profile exists, otherwise its legacy default. These are inputs to the ordinary formula, not an externally based second mass query. Explicit mass bases take precedence. Resize notifications and tag changes invalidate caches; links and expressions see the same canonical value. Default queries remain unscoped for every body; owner-tag conditions use `has()`.
+
+`shove.authority` is the ordinary force multiplier, including weave modifiers where the effect has a weave. The shared physicality rule clamps the complete shove scale after this fold. See [physical bodies](physical-bodies.md) for anchor pools, source identity, continuous fields and missing-profile behavior.
+
 ## Invariants
 
 - Cycles between formulas throw; validation catches them at load where possible.

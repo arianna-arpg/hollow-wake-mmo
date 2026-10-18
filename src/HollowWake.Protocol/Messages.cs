@@ -171,7 +171,18 @@ public sealed record LoginResultMsg(bool Ok, string? AccountId, string? Error) :
 public sealed record CharacterSummary(string Id, string Name, string Calling, int Level, string Zone);
 public sealed record CharacterListMsg(List<CharacterSummary> Characters, List<string> Callings) : Message;
 public sealed record ErrorMsg(string Code, string Text) : Message;
-public sealed record EnterWorldMsg(string CharacterId, long EntityKey, string Zone, float X, float Y, float Z, WorldInfo World, double ServerTime, int TickRate) : Message;
+public sealed record EnterWorldMsg(string CharacterId, long EntityKey, string Zone, float X, float Y, float Z, WorldInfo World, double ServerTime, int TickRate) : Message
+{
+    /// <summary>How long the world's day lasts, in seconds of world time (the rule landscape.day_length_seconds).</summary>
+    public double? DayLength { get; init; }
+
+    /// <summary>
+    /// The fraction of the world's day as of this message, from zero at midnight through a half at noon, the same in
+    /// every zone. Absent from a server that predates it, which leaves a client to fold the zone clock by its content's day.
+    /// </summary>
+    public double? TimeOfDay { get; init; }
+}
+
 public sealed record ZoneChangedMsg(string Zone, string ZoneName, int Level, bool Safe) : Message;
 
 public sealed record EntityState
@@ -230,6 +241,14 @@ public sealed record EntityState
 
     /// <summary>For a body with a lifetime (a telegraph mark, a timed summon): the server time it lands or ends.</summary>
     public double? Until { get; init; }
+
+    /// <summary>
+    /// For a player, what it wears as others see it: one entry per worn slot, <c>slot=class tag tag ...</c> (the
+    /// item's class and the tags of its base, never the item itself), sorted by slot. The server derives it from
+    /// the worn items and sends it on spawn and whenever the equipment changes. Empty means nothing is worn;
+    /// absent means unavailable (an older server, or a nonplayer whose pattern says what it wears).
+    /// </summary>
+    public List<string>? Appearance { get; init; }
 }
 
 /// <summary>
@@ -303,6 +322,9 @@ public sealed record EntityDelta
     public float? Heading { get; init; }
     public float? Spin { get; init; }
 
+    /// <summary>What a player wears (<see cref="EntityState.Appearance"/>), whole, when it changed; empty when nothing is worn any more.</summary>
+    public List<string>? Appearance { get; init; }
+
     /// <summary>What a client does with a delta: the known state with every field the delta carries replaced.</summary>
     public EntityState ApplyTo(EntityState state)
     {
@@ -351,6 +373,7 @@ public sealed record EntityDelta
             ShapeSize = Shape is "" ? null : ShapeSize ?? state.ShapeSize,
             Heading = Heading ?? state.Heading,
             Spin = Spin ?? state.Spin,
+            Appearance = Appearance ?? state.Appearance,
         };
     }
 }
@@ -413,6 +436,12 @@ public sealed record SelfStateMsg
     List<string> Holdings
 ) : Message
 {
+    /// <summary>
+    /// The fraction of the world's day as of this state (see <see cref="EnterWorldMsg.TimeOfDay"/>), on the self
+    /// state's cadence, so a client's sky keeps the server's day. Absent from a server that predates it.
+    /// </summary>
+    public double? TimeOfDay { get; init; }
+
     // The cluster's fields. Sent to clients that negotiated the interface feature, and omitted when empty.
 
     /// <summary>Per resource, the amount held back by toggles and contracts: drawn as a darkened cap on its orb.</summary>
