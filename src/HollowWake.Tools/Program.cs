@@ -225,6 +225,8 @@ switch (command)
         }
         return 0;
     }
+    case "tournament":
+        return TournamentCommand.Run(LoadContent(false), Opt, Flag);
     case "weave":
         return WeaveReport.Run(LoadContent(false), rest.FirstOrDefault(a => !a.StartsWith("--")), Opt);
     case "passives":
