@@ -15,12 +15,18 @@ namespace HollowWake.Tools;
 /// <c>hollowwake weave</c>: compiles a preset or a composed weave the way the server would and prints what
 /// the compiler made of it: level, the held-mode blocks it carries and where each came from, tags, declared
 /// and probed mechanisms, active and dormant glyphs with their reasons, modifiers, the patched effect graph,
-/// and preview numbers for a sample caster.
+/// and preview numbers for a sample caster. With <c>--axes</c> it prints the weave on the combat grammar's
+/// nine dimensions instead (<see cref="AxisReport"/>), and with <c>--axes --all</c> the census of every form
+/// and preset, per dimension, with <c>--json</c> writing every value.
 /// </summary>
 public static class WeaveReport
 {
-    public static int Run(ContentRegistry content, string? id, Func<string, string, string> opt)
+    public static int Run(ContentRegistry content, string? id, Func<string, string, string> opt, Func<string, bool> flag)
     {
+        if (flag("axes") && flag("all"))
+        {
+            return AxesOfAll(content, opt("json", ""));
+        }
         id ??= "ember_bolt";
         var threads = Split(opt("threads", ""));
         var glyphs = Split(opt("glyphs", "")).Select(GlyphRef.Parse).ToList();
@@ -37,6 +43,11 @@ public static class WeaveReport
             return 1;
         }
         var w = weave!;
+        if (flag("axes"))
+        {
+            PrintAxes(w, content);
+            return 0;
+        }
         Console.WriteLine($"{w.Name} ({w.Key})  level {w.Level}{(w.LevelBonus != 0 ? $" ({spec.Level} + {w.LevelBonus} from glyphs)" : "")}");
         Console.WriteLine($"form        {w.Form.Id}: {w.CastMode.ToString().ToLowerInvariant()}, targeting {w.Targeting.ToString().ToLowerInvariant()}, scope {w.CastScope}");
         foreach (var (block, source) in w.HeldBlocks.Sources())
@@ -94,6 +105,126 @@ public static class WeaveReport
     }
 
     private static List<string> Split(string text) => text.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries).ToList();
+
+    // ------------------------------------------------------------ --axes
+
+    /// <summary>The weave on the nine dimensions, one axis a line, then its frozen literals and the words that hide a number.</summary>
+    private static void PrintAxes(CompiledWeave w, ContentRegistry content)
+    {
+        var values = AxisReport.Of(w, content);
+        var dimensions = values.Select(v => v.Dimension).Distinct().Count();
+        Console.WriteLine($"{w.Name} ({w.Key})  level {w.Level}: {values.Count} axes on {dimensions} of the nine dimensions");
+        foreach (var dimension in Enum.GetValues<Dimension>())
+        {
+            var group = values.Where(v => v.Dimension == dimension).ToList();
+            if (group.Count == 0)
+            {
+                continue;
+            }
+            Console.WriteLine(AxisValue.DimensionName(dimension));
+            foreach (var v in group)
+            {
+                Console.WriteLine($"  {v.Name,-36} {v.Text,-12} {v.Unit,-10} {Lower(v.Source),-10} {v.Path}{(v.Detail is { } d ? $"  ({d})" : "")}");
+            }
+        }
+        var literals = AxisReport.Literals(values);
+        Console.WriteLine($"literals    {literals.Count} frozen: literal numbers no modifier reaches");
+        foreach (var v in literals)
+        {
+            var door = v.Attribute is { } a ? "write weave." + a : "no attribute reaches it";
+            Console.WriteLine($"  {v.Name,-36} {v.Text,-12} {v.Unit,-10} {v.Path}  ({v.Effect}.{v.Parameter}; {door})");
+        }
+        var hiding = values.Where(v => v.HidesNumber).ToList();
+        if (hiding.Count > 0)
+        {
+            Console.WriteLine($"words       {hiding.Count} that stand for a number");
+            foreach (var v in hiding)
+            {
+                Console.WriteLine($"  {v.Name,-36} {v.Text,-12} {v.Path}  ({v.Effect}.{v.Parameter})");
+            }
+        }
+    }
+
+    /// <summary>The census over every form and preset: per dimension how many weaves state it, their axes, literals and rules.</summary>
+    private static int AxesOfAll(ContentRegistry content, string json)
+    {
+        var all = AxisReport.OfAll(content);
+        var compiled = all.Where(a => a.Error is null).ToList();
+        Console.WriteLine($"{all.Count} weaves: {compiled.Count(a => a.Kind == "form")} forms and {compiled.Count(a => a.Kind == "preset")} presets placed, {all.Count - compiled.Count} did not compile");
+        Console.WriteLine($"  {"dimension",-12} {"weaves",7} {"axes",7} {"literals",9} {"rules",7}");
+        foreach (var dimension in Enum.GetValues<Dimension>())
+        {
+            var stating = compiled.Count(a => a.Values.Any(v => v.Dimension == dimension));
+            var axes = compiled.Sum(a => a.Values.Count(v => v.Dimension == dimension));
+            var literals = compiled.Sum(a => a.Values.Count(v => v.Dimension == dimension && v.Frozen));
+            var fromRules = compiled.Sum(a => a.Values.Count(v => v.Dimension == dimension && v.Source == AxisSource.Rule));
+            Console.WriteLine($"  {AxisValue.DimensionName(dimension),-12} {stating,7} {axes,7} {literals,9} {fromRules,7}");
+        }
+        var frozen = compiled.SelectMany(a => a.Values.Where(v => v.Frozen)).ToList();
+        Console.WriteLine($"literals    {frozen.Count} in {compiled.Count(a => a.Values.Any(v => v.Frozen))} weaves, most often");
+        foreach (var group in frozen.GroupBy(v => $"{v.Effect}.{v.Parameter}").OrderByDescending(g => g.Count()).ThenBy(g => g.Key, StringComparer.Ordinal).Take(20))
+        {
+            var door = group.First().Attribute is { } a ? "weave." + a : "no attribute";
+            Console.WriteLine($"  {group.Key,-32} {group.Count(),6}  {group.First().Name} ({door})");
+        }
+        var rules = compiled.SelectMany(a => a.Values.Where(v => v.Source == AxisSource.Rule)).GroupBy(v => v.Detail ?? "").OrderByDescending(g => g.Count()).ThenBy(g => g.Key, StringComparer.Ordinal).ToList();
+        Console.WriteLine($"rules       {rules.Count} read where a graph or block gives nothing");
+        foreach (var group in rules)
+        {
+            Console.WriteLine($"  {group.Key,-32} {group.Count(),6}  {group.First().Name}");
+        }
+        var hiding = compiled.SelectMany(a => a.Values.Where(v => v.HidesNumber)).GroupBy(v => $"{v.Effect}.{v.Parameter}").OrderByDescending(g => g.Count()).ThenBy(g => g.Key, StringComparer.Ordinal).ToList();
+        Console.WriteLine($"words       {hiding.Sum(g => g.Count())} that stand for a number");
+        foreach (var group in hiding)
+        {
+            Console.WriteLine($"  {group.Key,-32} {group.Count(),6}  {string.Join(", ", group.Select(v => v.Text).Distinct().OrderBy(t => t, StringComparer.Ordinal))}");
+        }
+        foreach (var failed in all.Where(a => a.Error is not null))
+        {
+            Console.WriteLine($"not placed  {failed.Kind} {failed.Id}: {failed.Error}");
+        }
+        if (json.Length > 0)
+        {
+            var path = Path.GetFullPath(json);
+            Directory.CreateDirectory(Path.GetDirectoryName(path)!);
+            File.WriteAllText(path, AxesJson(all).ToJsonString(new System.Text.Json.JsonSerializerOptions { WriteIndented = true, Encoder = Plain.Encoder }) + "\n");
+            Console.WriteLine($"wrote {path}");
+        }
+        return 0;
+    }
+
+    private static JsonArray AxesJson(IReadOnlyList<WeaveAxes> all)
+    {
+        var weaves = new JsonArray();
+        foreach (var weave in all)
+        {
+            var values = new JsonArray();
+            foreach (var v in weave.Values)
+            {
+                values.Add(new JsonObject
+                {
+                    ["dimension"] = AxisValue.DimensionName(v.Dimension),
+                    ["name"] = v.Name,
+                    ["number"] = v.Number,
+                    ["word"] = v.Word,
+                    ["unit"] = v.Unit,
+                    ["source"] = Lower(v.Source),
+                    ["path"] = v.Path,
+                    ["attribute"] = v.Attribute,
+                    ["multiplied"] = v.Multiplied,
+                    ["effect"] = v.Effect,
+                    ["parameter"] = v.Parameter,
+                    ["detail"] = v.Detail,
+                    ["frozen"] = v.Frozen,
+                    ["hides_number"] = v.HidesNumber,
+                });
+            }
+            weaves.Add(new JsonObject { ["id"] = weave.Id, ["kind"] = weave.Kind, ["error"] = weave.Error, ["values"] = values });
+        }
+        return weaves;
+    }
+
+    private static string Lower(AxisSource source) => source.ToString().ToLowerInvariant();
 
     // Formulas print as written: no escaping of characters such as '+'.
     private static readonly System.Text.Json.JsonSerializerOptions Plain = new() { Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping };

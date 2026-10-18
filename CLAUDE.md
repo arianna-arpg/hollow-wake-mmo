@@ -44,6 +44,7 @@ dotnet run --project src/HollowWake.Tools -- validate          # content must re
 dotnet run --project src/HollowWake.Tools -- load --x 0 --y 0  # headless zone smoke
 dotnet run --project src/HollowWake.Tools -- fight a b         # headless duel with event trace
 dotnet run --project src/HollowWake.Tools -- weave ember_bolt  # what the compiler makes of a weave: tags, mechanisms, dormant glyphs, graph
+dotnet run --project src/HollowWake.Tools -- weave ember_bolt --axes  # the weave on the grammar's nine dimensions, who stated each axis, its frozen literals; --axes --all [--json FILE] for every form and preset
 dotnet run --project src/HollowWake.Tools -- passives          # lint the passive constellation: orphans, unreachable nodes, route costs
 dotnet run --project src/HollowWake.Server.Host                # run the server (TCP 7777; WebSocket and the web client on 7778)
 dotnet run --project src/HollowWake.Tools -- probe             # connect to a running server over TCP and exercise it

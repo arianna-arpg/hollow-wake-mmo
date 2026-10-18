@@ -226,7 +226,7 @@ switch (command)
         return 0;
     }
     case "weave":
-        return WeaveReport.Run(LoadContent(false), rest.FirstOrDefault(a => !a.StartsWith("--")), Opt);
+        return WeaveReport.Run(LoadContent(false), rest.FirstOrDefault(a => !a.StartsWith("--")), Opt, Flag);
     case "passives":
         return PassiveLint.Run(LoadContent(false), Flag("verbose"));
     case "bench":
@@ -293,6 +293,11 @@ switch (command)
               fight <pattern> <pattern> [--seconds n] [--seed s]   simulate a duel in an arena
               weave <preset|form> [--threads a,b] [--glyphs g,g@level] [--level n] [--calling c] [--caster-level n]
                                                   compile a weave: tags, mechanisms, dormant glyphs, graph, preview numbers
+              weave <preset|form> --axes [--threads a,b] [--glyphs g,g@level] [--level n]
+                                                  the weave on the combat grammar's nine dimensions: each axis, its unit,
+                                                  who stated it and where; then its frozen literals
+              weave --axes --all [--json file]    every form and preset placed: per dimension how many state it, the
+                                                  literal baseline, the rules read; the file gets every value
               passives [--verbose]                lint the constellations: broken links, orphans, unreachable nodes, route costs
               protocol-ts [--out file] [--check]  write (or check) the web client's TypeScript message types
               probe [--host h] [--port n] [--account a] [--seconds s] [--deltas] [--interface] [--features a,b]
