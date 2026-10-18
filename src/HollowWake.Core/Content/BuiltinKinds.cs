@@ -444,6 +444,7 @@ internal static class BuiltinKinds
         Kinds.DeliveryKinds.Register();
         Kinds.MinionKinds.Register();
         Kinds.CombatKinds.Register();
+        Kinds.EvaluationKinds.Register();
         Kinds.ProgressionKinds.Register();
         Kinds.InterfaceKinds.Register();
         // Effect parameters are checked in every kind's effect lists, so these come once all kinds exist.
