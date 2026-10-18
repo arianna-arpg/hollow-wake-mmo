@@ -1,4 +1,5 @@
 using System.Text.Json.Nodes;
+using HollowWake.Core.Content;
 using HollowWake.Core.Definitions;
 using HollowWake.Core.Effects;
 using HollowWake.Core.Weaves;
@@ -140,6 +141,61 @@ public class SignatureGrammarTests
         "timing.pulses",
         "timing.telegraph",
     };
+
+    /// <summary>
+    /// Parameters the bindings declare as naming content (a status, a pattern, a weave, an item) that their handler's
+    /// signature does not declare with <see cref="EffectSignature.Refers"/>, so validation does not check the names
+    /// and the binding states the kind itself. A reference the signature declares is removed from this list; a new
+    /// one fails the test.
+    /// </summary>
+    private static readonly string[] UndeclaredReferences =
+    {
+        "cast.weave",
+        "deploy.behavior",
+        "deploy.pattern",
+        "deploy.pool",
+        "grant_item.item",
+        "grant_item.table",
+        "minion_cast.weave",
+        "move.status",
+        "move_status.status",
+        "move_status.statuses",
+        "spread_status.status",
+        "spread_status.statuses",
+        "summon.behavior",
+        "summon.pattern",
+        "summon.pool",
+    };
+
+    [Fact]
+    public void TheReferencesAreTheSignaturesBarTheBaseline()
+    {
+        _ = CoreContent.Registry;
+        var effects = EffectRegistry.Shared;
+        // Every parameter a signature declares as naming content is bound as a reference to the same kind.
+        foreach (var type in effects.Types)
+        {
+            Assert.True(effects.TryGetSignature(type, out var signature));
+            foreach (var (kind, parameter) in signature.References)
+            {
+                var binding = Assert.Single(AxisBindings.Of(type, parameter));
+                Assert.True(binding.Kind == ParameterKind.Node && binding.Node == NodeShape.Reference && binding.Registry == kind,
+                    $"{type}.{parameter} names {kind} in its signature but is bound as {binding.Kind} {binding.Node} {binding.Registry}");
+            }
+        }
+        // Every reference names a content kind by its registered name; those no signature declares are the baseline.
+        var undeclared = new List<string>();
+        foreach (var binding in AxisBindings.All.Where(b => b.Kind == ParameterKind.Node && b.Node == NodeShape.Reference))
+        {
+            Assert.True(binding.Registry is { } kind && ContentKinds.TryGet(kind, out _), $"{binding.Type}.{binding.Parameter} names no content kind ({binding.Registry})");
+            Assert.True(effects.TryGetSignature(binding.Type, out var signature));
+            if (!signature.References.Contains((binding.Registry!, binding.Parameter)))
+            {
+                undeclared.Add($"{binding.Type}.{binding.Parameter}");
+            }
+        }
+        Baseline("references the signatures do not declare", UndeclaredReferences, undeclared);
+    }
 
     [Fact]
     public void TheParametersBoundAsFlagsAreTheBaseline()

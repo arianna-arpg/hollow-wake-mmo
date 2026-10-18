@@ -1,4 +1,5 @@
 using System.Collections.Concurrent;
+using HollowWake.Core.Ai;
 using HollowWake.Core.Effects;
 using HollowWake.Core.Effects.Handlers;
 using HollowWake.Core.Expressions;
@@ -174,7 +175,11 @@ public sealed record AxisBinding
     /// <summary>The axis name within the dimension, when it is not the parameter's: one mechanism, one name.</summary>
     public string? Name { get; init; }
     public NodeShape Node { get; init; }
-    /// <summary>For a choice or a reference, the registry its words come from: <c>shapes</c>, <c>filters</c>, <c>picks</c>, <c>statuses</c> ...</summary>
+    /// <summary>
+    /// For a choice, the registry its words come from (<c>shapes</c>, <c>filters</c>, <c>picks</c> ...); for a
+    /// reference, the content kind it names (<c>statuses</c>, <c>patterns</c>, <c>weaves</c> ...), as the handler's
+    /// signature declares it where it does.
+    /// </summary>
     public string? Registry { get; init; }
     /// <summary>For a choice with a fixed vocabulary, its words.</summary>
     public IReadOnlyList<string>? Words { get; init; }
@@ -227,9 +232,7 @@ public static class AxisBindings
     private static readonly ConcurrentDictionary<string, Func<string, double?>> Properties = new(StringComparer.Ordinal);
     private static WeaveAttributeBinding[] _attributeOrder = Array.Empty<WeaveAttributeBinding>();
 
-    /// <summary>The relation words a delivery's <c>filter</c> takes (EffectHelpers.Passes).</summary>
-    private static readonly string[] Relations = { "enemy", "ally", "ally_or_self", "self", "not_self", "all" };
-    /// <summary>The relation words the status transfers take.</summary>
+    /// <summary>The relation words the status transfers take, their own rather than the filter registry's.</summary>
     private static readonly string[] Sides = { "allies", "enemies", "any" };
     private static readonly string[] StatusKinds = { "harmful", "beneficial", "any" };
     private static readonly string[] Occlusions = { "blocked", "free" };
@@ -241,7 +244,8 @@ public static class AxisBindings
         Vocabulary("curves", () => Curves.Names);
         Vocabulary("target kinds", () => TargetKinds.All.Select(k => k.Name));
         Vocabulary("trigger kinds", () => TriggerKinds.All.Select(k => k.Name));
-        Vocabulary("filters", () => Relations);
+        Vocabulary("filters", () => Filters.Names);
+        Vocabulary("commands", () => MinionCommands.Names);
         ShapeProperties();
 
         Deliveries();
@@ -470,6 +474,18 @@ public static class AxisBindings
             Name = name,
         });
 
+    /// <summary>
+    /// Declares a parameter that names content (a status, a pattern, a weave): of the kind the handler's signature
+    /// declares for it with <see cref="EffectSignature.Refers"/>, else of the kind given here, until the signature
+    /// declares it too; a signature test holds those it does not at their baseline.
+    /// </summary>
+    private static void Reference(string type, string parameter, string? kind = null, Dimension? dimension = null, string? readBy = null, string? name = null) =>
+        NodeOf(type, parameter, NodeShape.Reference, dimension, SignatureKind(type, parameter) ?? kind, readBy, name);
+
+    /// <summary>The content kind a built-in handler's signature says a parameter names, or null.</summary>
+    private static string? SignatureKind(string type, string parameter) =>
+        EffectRegistry.Shared.TryGetSignature(type, out var signature) ? signature.References.FirstOrDefault(r => r.Parameter == parameter).Kind : null;
+
     private static void Effects(string type, params string[] parameters)
     {
         foreach (var parameter in parameters)
@@ -540,7 +556,7 @@ public static class AxisBindings
         Scaled("area", "angle", Geometry, Degrees, "area.angle", when: "shape:angle");
         Axis("area", "width", Geometry, Units, "area.width", when: "shape:width", fallbackWhen: "shape:width_share", factorOf: "shape:width_share");
         Axis("area", "inner", Geometry, Fraction);
-        Choice("area", "filter", Targeting, "enemy", Relations, "filters");
+        Choice("area", "filter", Targeting, "enemy", registry: "filters");
         Choice("area", "center", Geometry, "focus", new[] { "focus", "source", "point" });
         Axis("area", "max_targets", Targeting, Count);
         FlagOf("area", "include_center", Targeting, @default: true);
@@ -620,7 +636,7 @@ public static class AxisBindings
         // chain
         Axis("chain", "count", Kinematics, Count, "chain.count", 0, name: "chains");
         Axis("chain", "range", Geometry, Units, @default: 6, name: "chain_range");
-        Choice("chain", "filter", Targeting, "enemy", Relations, "filters");
+        Choice("chain", "filter", Targeting, "enemy", registry: "filters");
         Choice("chain", "pick", Targeting, "nearest", registry: "picks");
         Effects("chain", "effects");
 
@@ -628,7 +644,7 @@ public static class AxisBindings
         Axis("field", "radius", Geometry, Units, "area.radius", 2);
         Axis("field", "duration", Timing, Seconds, "duration", 4);
         Axis("field", "interval", Timing, Seconds, @default: 0.5);
-        Choice("field", "filter", Targeting, "enemy", Relations, "filters");
+        Choice("field", "filter", Targeting, "enemy", registry: "filters");
         Keys("field", null, "look", "exclusive");
         FlagOf("field", "follow", Kinematics);
         Choice("field", "shape", Geometry, "circle", registry: "shapes");
@@ -648,7 +664,7 @@ public static class AxisBindings
         FlagOf("field", "hit_once", Targeting);
         FlagOf("field", "rearm_on_exit", Targeting);
         NodeOf("field", "domain", NodeShape.Modifiers);
-        Choice("field", "domain_filter", Targeting, null, Relations, "filters");
+        Choice("field", "domain_filter", Targeting, null, registry: "filters");
         FlagOf("field", "segments", Geometry);
         Axis("field", "segments.count", Geometry, Count, @default: 1);
         Axis("field", "segments.spacing", Geometry, Units, @default: 2);
@@ -664,9 +680,9 @@ public static class AxisBindings
         // A toggled aura with no written duration lasts until it is turned off; a written one is read either way.
         Axis("aura", "duration", Timing, Seconds, "duration", 4, fallbackWhen: "toggle=false");
         Axis("aura", "interval", Timing, Seconds, @default: 1);
-        Choice("aura", "filter", Targeting, "enemy", Relations, "filters");
+        Choice("aura", "filter", Targeting, "enemy", registry: "filters");
         NodeOf("aura", "domain", NodeShape.Modifiers);
-        Choice("aura", "domain_filter", Targeting, "ally_or_self", Relations, "filters");
+        Choice("aura", "domain_filter", Targeting, "ally_or_self", registry: "filters");
         Keys("aura", null, "key", "look");
         FlagOf("aura", "toggle", Timing);
         Choice("aura", "occlusion", Geometry, "blocked", Occlusions, hidesNumber: true);
@@ -686,7 +702,7 @@ public static class AxisBindings
         Axis("scatter", "jitter", Geometry, Units, @default: 0);
         Axis("scatter", "telegraph", Timing, Seconds, @default: 0);
         Axis("scatter", "telegraph_radius", Geometry, Units, "area.radius", 2);
-        Choice("scatter", "filter", Targeting, "enemy", Relations, "filters");
+        Choice("scatter", "filter", Targeting, "enemy", registry: "filters");
         Effects("scatter", "effects");
 
         // cascade
@@ -704,7 +720,7 @@ public static class AxisBindings
         Axis("tether", "width", Geometry, Units, @default: 1);
         Axis("tether", "duration", Timing, Seconds, "duration", 4);
         Axis("tether", "interval", Timing, Seconds, @default: 0.5);
-        Choice("tether", "filter", Targeting, "enemy", Relations, "filters");
+        Choice("tether", "filter", Targeting, "enemy", registry: "filters");
         Axis("tether", "max_length", Geometry, Units);
         Keys("tether", null, "look");
         Effects("tether", "pulse", "on_end");
@@ -732,10 +748,10 @@ public static class AxisBindings
         Axis("move", "distance", Kinematics, Units, @default: 4, when: "kind!=knockback|buffet");
         Choice("move", "who", Targeting, null, new[] { "source", "target" });
         Choice("move", "anchor", Geometry, "from", new[] { "from", "caster", "point" });
-        NodeOf("move", "status", NodeShape.Reference, registry: "statuses", readBy: "statuses");
+        Reference("move", "status", "statuses", readBy: "statuses");
         Axis("move", "speed", Kinematics, UnitsPerSecond);
         Axis("move", "width", Geometry, Units, @default: 1.5);
-        Choice("move", "filter", Targeting, "enemy", Relations, "filters");
+        Choice("move", "filter", Targeting, "enemy", registry: "filters");
         FlagOf("move", "phase", Kinematics);
         Axis("move", "air_time", Timing, Seconds, @default: 0.6, when: "kind=leap");
         Axis("move", "arc", Kinematics, Units, @default: 2, when: "kind=leap");
@@ -787,7 +803,7 @@ public static class AxisBindings
 
     private static void Statuses()
     {
-        NodeOf("apply_status", "status", NodeShape.Reference, registry: "statuses", readBy: "statuses");
+        Reference("apply_status", "status", readBy: "statuses");
         // The status service scales a duration by the applier's effect.duration, read on the applier's own stack without
         // the weave's modifiers, and a harmful one by the bearer's status.resistance, a defense as resistances are to damage.
         Scaled("apply_status", "duration", Payload, Seconds, "effect.duration", fold: AttributeFold.Caster);
@@ -802,7 +818,7 @@ public static class AxisBindings
         Axis("apply_status", "max_targets", Targeting, Count);
         Effects("apply_status", StatusHandlers.OnStatusTick, StatusHandlers.OnStatusExpire);
 
-        NodeOf("remove_status", "status", NodeShape.Reference, registry: "statuses", readBy: "statuses");
+        Reference("remove_status", "status", readBy: "statuses");
         Keys("remove_status", "statuses", "tags");
         Axis("remove_status", "count", Payload, Count, name: "removals");
         FlagOf("remove_status", "self", Targeting);
@@ -817,7 +833,7 @@ public static class AxisBindings
         FlagOf("modify", "self", Targeting);
         Keys("modify", null, "key");
 
-        Choice("charge", "id", null, registry: "charges", readBy: "statuses");
+        Reference("charge", "id", readBy: "statuses");
         Axis("charge", "gain", Economy, Count, name: "charge.gain");
         Axis("charge", "max", Economy, Count, name: "charge.max");
         Axis("charge", "spend", Economy, Count, name: "charge.spend");
@@ -827,8 +843,8 @@ public static class AxisBindings
 
         foreach (var transfer in new[] { "consume_status", "spread_status", "move_status" })
         {
-            NodeOf(transfer, "status", NodeShape.Reference, registry: "statuses", readBy: "statuses");
-            NodeOf(transfer, "statuses", NodeShape.Reference, registry: "statuses", readBy: "statuses");
+            Reference(transfer, "status", "statuses", readBy: "statuses");
+            Reference(transfer, "statuses", "statuses", readBy: "statuses");
             Keys(transfer, "statuses", "tags");
             Choice(transfer, "kind", Targeting, "harmful", StatusKinds);
         }
@@ -849,7 +865,7 @@ public static class AxisBindings
         Axis("move_status", "count", Payload, Count, name: "statuses_moved");
         Axis("move_status", "splash", Payload, Fraction);
 
-        NodeOf("rupture", "status", NodeShape.Reference, registry: "statuses", readBy: "statuses");
+        Reference("rupture", "status", readBy: "statuses");
         Axis("rupture", "fraction", Payload, Fraction, @default: 1);
         Axis("rupture", "scale", Payload, Fraction, @default: 1);
         FlagOf("rupture", "self", Targeting);
@@ -861,8 +877,8 @@ public static class AxisBindings
     {
         foreach (var type in new[] { "summon", "deploy" })
         {
-            NodeOf(type, "pattern", NodeShape.Reference, Agency, registry: "patterns", readBy: "summons", name: type);
-            NodeOf(type, "pool", NodeShape.Reference, Agency, registry: "patterns", readBy: "summons", name: type);
+            Reference(type, "pattern", "patterns", Agency, "summons", type);
+            Reference(type, "pool", "patterns", Agency, "summons", type);
             Keys(type, null, "group", "pool_group", "exclusive_group");
             Axis(type, "count", Agency, Count, "summon.count", name: "bodies");
             Axis(type, "max_active", Agency, Count, "summon.max");
@@ -873,7 +889,7 @@ public static class AxisBindings
             Axis(type, "place.radius", Geometry, Units);
             Axis(type, "place.scatter", Geometry, Units, name: "place.radius");
             Axis(type, "place.spacing", Geometry, Units);
-            NodeOf(type, "behavior", NodeShape.Reference, Agency, registry: "behaviors");
+            Reference(type, "behavior", "behaviors", Agency);
             FlagOf(type, "inherit", Agency, @default: type == "summon");
             NodeOf(type, "decay", NodeShape.Block);
             Axis(type, "decay.delay", Agency, Seconds, @default: 0);
@@ -904,7 +920,7 @@ public static class AxisBindings
         Choice("deploy", "intercept.mode", Kinematics, "dissolve", new[] { "dissolve", "deflect", "slow" }, hidesNumber: true);
         Axis("deploy", "intercept.slow", Kinematics, Fraction, @default: 0.35);
 
-        NodeOf("spawn", "pattern", NodeShape.Reference, Agency, registry: "patterns", readBy: "summons", name: "spawn");
+        Reference("spawn", "pattern", dimension: Agency, readBy: "summons", name: "spawn");
         Axis("spawn", "count", Agency, Count, @default: 1, name: "bodies");
         Axis("spawn", "lifetime", Agency, Seconds);
         FlagOf("spawn", "as_corpse", Agency);
@@ -928,7 +944,7 @@ public static class AxisBindings
         Axis("command_minions", "discipline", Agency, Fraction);
         Keys("command_minions", null, "group");
 
-        NodeOf("minion_cast", "weave", NodeShape.Reference, Agency, registry: "weaves", readBy: "summons", name: "minion_cast");
+        Reference("minion_cast", "weave", "weaves", Agency, "summons", "minion_cast");
         Choice("minion_cast", "at", Targeting, "point", new[] { "point", "enemy" });
         Axis("minion_cast", "range", Targeting, Units, rule: "minions.cast_range", @default: 11);
         Keys("minion_cast", null, "group");
@@ -962,7 +978,7 @@ public static class AxisBindings
 
     private static void Casting()
     {
-        NodeOf("cast", "weave", NodeShape.Reference, Causality, registry: "weaves", readBy: "triggers", name: "sequel");
+        Reference("cast", "weave", "weaves", Causality, "triggers", "sequel");
         Choice("cast", "at", Targeting, "point", new[] { "point", "target", "caster" });
         Choice("cast", "aim", Geometry, "onward", new[] { "onward", "out", "random", "rotating" }, hidesNumber: true);
         Axis("cast", "turn", Geometry, Degrees, @default: 45, when: "aim=rotating");
@@ -992,9 +1008,9 @@ public static class AxisBindings
     private static void Utility()
     {
         Keys("event", null, "name", "data");
-        NodeOf("grant_item", "item", NodeShape.Reference, Payload, registry: "items");
-        NodeOf("grant_item", "table", NodeShape.Reference, Payload, registry: "loot tables");
-        Choice("grant_item", "rarity", Payload, registry: "rarities");
+        Reference("grant_item", "item", "items", Payload);
+        Reference("grant_item", "table", "loot", Payload);
+        Choice("grant_item", "rarity", Payload, registry: "item_rarities");
         Axis("grant_item", "count", Payload, Count, @default: 1, name: "items");
         Axis("grant_xp", "amount", Payload, Count, @default: 10, name: "xp");
         Keys("log", null, "text");
