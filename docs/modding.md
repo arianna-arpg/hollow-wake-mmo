@@ -89,7 +89,7 @@ effects:
 
 A code mod is a .NET assembly that references `HollowWake.Core` and, before the server loads content, registers what it adds:
 
-- `ContentKinds.Register<MyDef>("my_kind", validator)` for a new definition kind; `ContentKinds.AddValidator<FormDef>(validator)` to validate fields of an existing kind.
+- `ContentKinds.Register<MyDef>("my_kind", validate: validator, validateCollection: collectionValidator)` for a new definition kind. Both callbacks are optional. `ContentKinds.AddValidator<FormDef>(validator)` appends a per-definition check to an existing kind.
 - `EffectRegistry.Register(new MyEffectHandler())` for a new effect type; give it an `EffectSignature` so glyph patches and hooks can reach it.
 - `MechanismRegistry.Register("my_mechanism", probe)` for a mechanism probe glyphs can require.
 - `HitStages.Register(new MyStage())` for a hit stage, placed by rule `combat.stages`.
@@ -104,6 +104,18 @@ A code mod is a .NET assembly that references `HollowWake.Core` and, before the 
 - `ProcedureRegistry.Register(new MyProcedure())` for a new crafting minigame.
 - `ExprFunctions.Register("fn", min, max, impl)` for a new expression function.
 - `ScopeNames.Declare("name")` so validation knows a new scope variable.
+
+A per-definition validator receives `(definition, context)`; a collection validator receives only `context` and reads `context.Registry` to check the catalog as a whole. For example, a mod that requires its catalog even when it is absent can register:
+
+```csharp
+ContentKinds.Register<MyDef>("my_kind", validateCollection: context =>
+{
+    if (context.Registry.Count<MyDef>() == 0)
+        context.Error("At least one my_kind entry is required.");
+});
+```
+
+Collection checks run once per registered kind after all per-definition checks, even when no files supplied that kind or an overlay removed its last entry. Their context has the kind name, an empty entry id and no single origin. Check for the relevant catalog or dependency if your mod supports partial tooling packs; absence does not suppress the callback. Re-registering an existing kind replaces its binding and validators, whereas `AddValidator` appends only a per-definition check. Both passes turn callback exceptions into reported errors and strict loading rejects errors. See the [content contract](design/content-and-expressions.md#definition-and-collection-validation) for the complete load order and construction-helper exceptions.
 
 The movement-plan cache moved from `Behavior` to `Motion`: `PlanGoal`, `PlannedAt`, `Planned` and `PlanFailed`. A compiled mod that referenced the old behavior fields must update those accesses and rebuild. Content-only behaviors do not need migration.
 
