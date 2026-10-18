@@ -6,18 +6,18 @@ using HollowWake.Core.Territory;
 
 namespace HollowWake.Core.Systems.Intents;
 
-/// <summary>Interacting, quests, founts, decrees and structures, respawning, and orders to minions.</summary>
+/// <summary>Interacting, quests, founts, decrees, structures and respawning, which are players' only, and orders to minions, which any owner may give.</summary>
 public static class WorldIntentHandlers
 {
     public static void Register(IntentHandlers handlers)
     {
-        handlers.Register<InteractIntent>(Interact);
-        handlers.Register<AcceptQuestIntent>(AcceptQuest);
-        handlers.Register<TurnInQuestIntent>(TurnInQuest);
-        handlers.Register<BindFountIntent>(BindFount);
-        handlers.Register<EnactDecreeIntent>(EnactDecree);
-        handlers.Register<BuildStructureIntent>(BuildStructure);
-        handlers.Register<RespawnIntent>(Respawn, whileDead: true);
+        handlers.Register<InteractIntent>(Interact, playerOnly: true);
+        handlers.Register<AcceptQuestIntent>(AcceptQuest, playerOnly: true);
+        handlers.Register<TurnInQuestIntent>(TurnInQuest, playerOnly: true);
+        handlers.Register<BindFountIntent>(BindFount, playerOnly: true);
+        handlers.Register<EnactDecreeIntent>(EnactDecree, playerOnly: true);
+        handlers.Register<BuildStructureIntent>(BuildStructure, playerOnly: true);
+        handlers.Register<RespawnIntent>(Respawn, whileDead: true, playerOnly: true);
         handlers.Register<CommandMinionsIntent>(CommandMinions);
         // Conversations and world panes have their own file; the registry's default set reaches them through here.
         DialogueIntentHandlers.Register(handlers);

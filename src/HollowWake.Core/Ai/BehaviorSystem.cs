@@ -8,19 +8,28 @@ using HollowWake.Core.Content;
 using HollowWake.Core.Definitions;
 using HollowWake.Core.Ecs;
 using HollowWake.Core.Expressions;
+using HollowWake.Core.Intents;
 using HollowWake.Core.Minions;
-using HollowWake.Core.Movement;
-using HollowWake.Core.Patterns;
 using HollowWake.Core.Sim;
+using HollowWake.Core.Systems;
 using HollowWake.Core.Tags;
 using HollowWake.Core.Weaves;
-using HollowWake.Core.World;
 
 namespace HollowWake.Core.Ai;
 
-/// <summary>What an AI action sees when it runs.</summary>
-public sealed class AiContext
+/// <summary>
+/// What an AI action sees when it runs, and the sender it acts as: actions change the simulation through the
+/// intents a player sends (<see cref="AiIntents.Send"/>), and each refusal is recorded here for the think. The
+/// world rules a body is under, which no intent asks for, are named in <see cref="AiActions"/>.
+/// </summary>
+public sealed class AiContext : IIntentSender
 {
+    private IExprScope? _scope;
+    private Maths.Rng? _rng;
+    private IntentHandlers? _handlers;
+    private List<AiRefusal>? _refusals;
+    private string? _sendRefusal;
+
     public required Simulation Sim { get; init; }
     public required Entity Entity { get; init; }
     public required Behavior Behavior { get; init; }
@@ -28,28 +37,82 @@ public sealed class AiContext
     public required Transform Transform { get; init; }
     public required Motion Motion { get; init; }
     public required Stats Stats { get; init; }
-    public required IExprScope Scope { get; init; }
-    public required Maths.Rng Rng { get; init; }
 
-    /// <summary>How movement actions plan this think: the move rules the behavior system read for the tick.</summary>
-    internal AiNavigation Navigation { get; init; } = AiNavigation.Defaults;
+    /// <summary>The perception the think reads, measured when it starts; the body's own stats until then.</summary>
+    public IExprScope Scope
+    {
+        get => _scope ?? Stats;
+        init => _scope = value;
+    }
+
+    /// <summary>The think's random stream (the entity's <c>ai</c> stream of the tick), made when an action first rolls.</summary>
+    public Maths.Rng Rng
+    {
+        get => _rng ??= Sim.RngFor(Entity, "ai");
+        init => _rng = value;
+    }
+
+    /// <summary>The intent handlers the AI acts through: the simulation's own unless given.</summary>
+    public IntentHandlers Handlers
+    {
+        get => _handlers ??= IntentHandlers.Of(Sim);
+        init => _handlers = value;
+    }
+
+    /// <summary>
+    /// The intents this think sent that their handlers refused, with the reasons, in the order sent. Valid only
+    /// during the think: the behavior system lends every think the same list and clears it before the next, so a
+    /// reader that needs the refusals later (the think's decision record) copies them before the think ends.
+    /// </summary>
+    public IReadOnlyList<AiRefusal> Refusals => _refusals is null ? Array.Empty<AiRefusal>() : _refusals;
+
+    /// <summary>
+    /// Where the think records its refusals: a list the behavior system clears before each think and lends to
+    /// it, so recording allocates nothing; a context built elsewhere makes its own on its first refusal.
+    /// </summary>
+    internal List<AiRefusal>? RefusalLog
+    {
+        get => _refusals;
+        init => _refusals = value;
+    }
 
     public Transform? TargetTransform => Sim.World.Get<Transform>(Behavior.Target);
     public bool HasTarget => !Behavior.Target.IsNone && Sim.World.IsAlive(Behavior.Target) && !Sim.World.Has<Dead>(Behavior.Target);
 
     public double Num(JsonObject p, string key, double fallback) => Content.JsonNum.TryDouble(p[key], out var d) ? d : (p[key] is JsonValue sv && sv.TryGetValue<string>(out var s) && Expr.TryParse(s, out var e, out _) ? e!.Evaluate(Scope) : fallback);
     public string? Str(JsonObject p, string key) => p[key] is JsonValue v && v.TryGetValue<string>(out var s) ? s : null;
+
+    /// <summary>Puts the think's perception in place once it is measured.</summary>
+    internal void Perceive(IExprScope scope) => _scope = scope;
+
+    /// <summary>Starts a send: the refusal of the last one is forgotten (it stays in <see cref="Refusals"/>).</summary>
+    internal void BeginSend() => _sendRefusal = null;
+
+    /// <summary>The refusal the current send met, or null.</summary>
+    internal string? SendRefusal => _sendRefusal;
+
+    void IIntentSender.Refused(IIntent intent, string reason)
+    {
+        _sendRefusal = reason;
+        (_refusals ??= new List<AiRefusal>()).Add(new AiRefusal(intent, reason));
+    }
 }
 
-/// <summary>Registry of AI actions. Behaviors in content compose these by name.</summary>
+/// <summary>
+/// Registry of AI actions. Behaviors in content compose these by name. An action reads the AI's perception and
+/// writes its own mind (its target, its memory, its order), and acts on the simulation by sending intents
+/// through <see cref="AiIntents"/>, as a player would. The few world rules a body is under rather than asks for
+/// are named where they happen: facing its target (see <see cref="FaceTarget"/>), a minion's leash recall and a
+/// spent trap's going; and the device actions still fire their weaves through <c>ConstructCasting</c>.
+/// </summary>
 public static class AiActions
 {
     private static readonly Dictionary<string, Action<AiContext, JsonObject>> Actions = new(StringComparer.Ordinal);
 
     static AiActions()
     {
-        Register("idle", (c, p) => c.Motion.Stop());
-        Register("stop", (c, p) => c.Motion.Stop());
+        Register("idle", (c, p) => AiIntents.Send(c, AiIntents.Stop));
+        Register("stop", (c, p) => AiIntents.Send(c, AiIntents.Stop));
         Register("drop_target", (c, p) => c.Behavior.Target = Entity.None);
         Register("acquire_target", (c, p) =>
         {
@@ -118,9 +181,9 @@ public static class AiActions
             var ang = c.Rng.NextDouble() * Math.PI * 2;
             var dist = c.Rng.Range(1.0, radius);
             var dest = c.Behavior.Home + new Vector3((float)(Math.Cos(ang) * dist), (float)(Math.Sin(ang) * dist), 0);
-            SetDestination(c, dest, 0.3f);
+            MoveTo(c, dest, 0.3f);
         });
-        Register("return_home", (c, p) => SetDestination(c, c.Behavior.Home, 0.5f));
+        Register("return_home", (c, p) => MoveTo(c, c.Behavior.Home, 0.5f));
         Register("flee", (c, p) =>
         {
             if (c.TargetTransform is not { } tt)
@@ -133,13 +196,13 @@ public static class AiActions
                 away = Vector2.UnitX;
             }
             away = Vector2.Normalize(away) * (float)c.Num(p, "distance", 8);
-            SetDestination(c, c.Transform.Position + new Vector3(away.X, away.Y, 0), 0.5f);
+            MoveTo(c, c.Transform.Position + new Vector3(away.X, away.Y, 0), 0.5f);
         });
         Register("face_target", (c, p) =>
         {
             if (c.TargetTransform is { } tt)
             {
-                c.Transform.Face(tt.Position);
+                FaceTarget(c, tt);
             }
         });
         Register("use_weave", (c, p) =>
@@ -157,7 +220,7 @@ public static class AiActions
             var onSelf = (c.Str(p, "target") ?? "target") == "self";
             var target = onSelf || !c.HasTarget ? c.Entity : c.Behavior.Target;
             var point = c.TargetTransform?.Position ?? c.Transform.Position;
-            c.Sim.Service<WeaveRuntime>().TryBegin(c.Sim, c.Entity, slot, target, point, Vector2.Zero, out _);
+            AiIntents.Send(c, new UseWeaveIntent(book.Slots.IndexOf(slot), target, point, Vector2.Zero));
         });
         Register("remember", (c, p) =>
         {
@@ -167,7 +230,6 @@ public static class AiActions
                 c.Behavior.Memory[key] = c.Num(p, "value", c.Sim.Clock.Time);
             }
         });
-        Register("heal_self", (c, p) => c.Stats.AddResource("life", c.Num(p, "amount", 1)));
         MinionActions.Register();
     }
 
@@ -176,8 +238,19 @@ public static class AiActions
 
     public static void Register(string name, Action<AiContext, JsonObject> action) => Actions[name] = action;
 
-    /// <summary>Moves toward a point under the shared planning policy (see <see cref="SetDestination"/>).</summary>
-    internal static void MoveTo(AiContext c, Vector3 destination, float stop) => SetDestination(c, destination, stop);
+    /// <summary>
+    /// Walks toward a point as a destination sent again every think (<see cref="MoveToIntent.KeepPlan"/>), so the
+    /// move-to handler keeps a plan that still serves; see <see cref="Movement.MovePlanner"/>. A plan already
+    /// leading to this very point that still stands is left as it is, since sending it again would change nothing.
+    /// </summary>
+    internal static IntentOutcome MoveTo(AiContext c, Vector3 destination, float stop)
+    {
+        if (Movement.MovePlanner.Of(c.Sim).Stands(c.Sim, c.Motion, destination, stop))
+        {
+            return default;
+        }
+        return AiIntents.Send(c, new MoveToIntent(destination) { Stop = stop, KeepPlan = true });
+    }
 
     /// <summary>Closes on the target until within <paramref name="stop"/>, then stops and faces it.</summary>
     internal static void ChaseTo(AiContext c, Transform tt, float stop)
@@ -185,22 +258,29 @@ public static class AiActions
         var dist = c.Transform.GroundDistanceTo(tt.Position);
         if (dist <= stop)
         {
-            c.Motion.Stop();
-            c.Transform.Face(tt.Position);
+            AiIntents.Send(c, AiIntents.Stop);
+            FaceTarget(c, tt);
             return;
         }
-        SetDestination(c, tt.Position, stop);
+        MoveTo(c, tt.Position, stop);
     }
 
-    /// <summary>Casts the weave the AI's hints choose at its target, through the shared runtime; true when a cast began.</summary>
+    /// <summary>
+    /// Turns the body toward its target at once: a rule of the simulation the behavior system applies, as the
+    /// leash recall and a spent trap's going are, not an intent; facing is not something a client asks for. A
+    /// turn rate, and the movement locks of a held cast holding the body's facing, are deferred: either would
+    /// move duels with roots and guards in them.
+    /// </summary>
+    private static void FaceTarget(AiContext c, Transform tt) => c.Transform.Face(tt.Position);
+
+    /// <summary>Casts the weave the AI's hints choose at its target, as a player presses its key; true when a cast began.</summary>
     internal static bool AttackTarget(AiContext c)
     {
         if (!c.HasTarget)
         {
             return false;
         }
-        var runtime = c.Sim.Service<WeaveRuntime>();
-        var choice = runtime.ChooseForAi(c.Sim, c.Entity, c.Behavior.Target, c.Scope);
+        var choice = c.Sim.Service<WeaveRuntime>().ChooseForAi(c.Sim, c.Entity, c.Behavior.Target, c.Scope);
         if (choice is null)
         {
             return false;
@@ -209,9 +289,10 @@ public static class AiActions
         var tt = c.TargetTransform!;
         var dir = new Vector2(tt.Position.X - c.Transform.Position.X, tt.Position.Y - c.Transform.Position.Y);
         var target = weave.Targeting is Targeting.Self or Targeting.Ally ? c.Entity : c.Behavior.Target;
-        if (runtime.TryBegin(c.Sim, c.Entity, slot, target, tt.Position, dir, out _))
+        var seat = c.Sim.World.Get<WeaveBook>(c.Entity)!.Slots.IndexOf(slot);
+        if (AiIntents.Send(c, new UseWeaveIntent(seat, target, tt.Position, dir)).Accepted)
         {
-            c.Motion.Stop();
+            AiIntents.Send(c, AiIntents.Stop);
             return true;
         }
         return false;
@@ -246,125 +327,6 @@ public static class AiActions
             }
         }
         return false;
-    }
-
-    /// <summary>
-    /// Moves the AI toward a destination, re-planning only when it must: when it has no path or move
-    /// target left, when the destination has moved more than <c>move.ai_repath_distance</c> from the planned
-    /// goal, or when the plan is older than <c>move.ai_repath_seconds</c>. A new plan walks straight when the
-    /// segment is clear; otherwise it searches with the AI node budget. When a search cannot bring the AI
-    /// closer (no step, or a partial path that ends no nearer the goal), the AI follows what it found and
-    /// then walks straight at the goal, and does not search for that goal again until the plan is renewed:
-    /// an unreachable target costs one search per renewal instead of one per think.
-    /// </summary>
-    private static void SetDestination(AiContext c, Vector3 dest, float stop)
-    {
-        var nav = c.Navigation;
-        var b = c.Behavior;
-        var m = c.Motion;
-        m.StopDistance = stop;
-        if (b.Planned && c.Sim.Clock.Time - b.PlannedAt < nav.RepathSeconds && GroundDistance(b.PlanGoal, dest) <= nav.RepathDistance)
-        {
-            if (m.Path.Count > 0 || m.MoveTarget is not null)
-            {
-                return;
-            }
-            if (b.PlanFailed)
-            {
-                m.MoveTarget = dest;
-                return;
-            }
-        }
-        b.Planned = true;
-        b.PlanGoal = dest;
-        b.PlannedAt = c.Sim.Clock.Time;
-        b.PlanFailed = false;
-        var pathfinder = c.Sim.Service<Pathfinder>();
-        var from = c.Transform.Position;
-        if (nav.CanWalkStraight(c.Sim, pathfinder, from, dest))
-        {
-            m.Path.Clear();
-            m.MoveTarget = dest;
-            return;
-        }
-        switch (pathfinder.FindPath(from, dest, m.Path, nav.MaxNodes))
-        {
-            case PathResult.None:
-                m.MoveTarget = dest;
-                b.PlanFailed = true;
-                break;
-            case PathResult.Partial:
-                // Progress means ending at least a cell nearer the goal than the search started.
-                b.PlanFailed = GroundDistance(m.Path[^1], dest) > GroundDistance(from, dest) - 1;
-                break;
-        }
-    }
-
-    private static float GroundDistance(Vector3 a, Vector3 b)
-    {
-        var dx = a.X - b.X;
-        var dy = a.Y - b.Y;
-        return MathF.Sqrt(dx * dx + dy * dy);
-    }
-}
-
-/// <summary>The move rules AI planning reads, refreshed once per behavior update, and the straight-walk check.</summary>
-internal sealed class AiNavigation
-{
-    public static readonly AiNavigation Defaults = new();
-
-    /// <summary>Spacing of the straight-walk samples: about a walker's step per tick.</summary>
-    private const float StraightStep = 0.25f;
-
-    public double RepathSeconds = 1.5;
-    public double RepathDistance = 2;
-    public int MaxNodes = 500;
-    public double StepUp = 0.6;
-    public double MaxDrop = 3;
-
-    public void Read(Rules rules)
-    {
-        RepathSeconds = rules.Number("move.ai_repath_seconds", 1.5);
-        RepathDistance = rules.Number("move.ai_repath_distance", 2);
-        MaxNodes = (int)rules.Number("move.ai_path_max_nodes", 500);
-        StepUp = rules.Number("move.step_up", 0.6);
-        MaxDrop = rules.Number("move.max_drop", 3);
-    }
-
-    /// <summary>
-    /// Whether walking straight from one point to another works: every sample along the segment can be
-    /// occupied as the movement system judges it, no step drops further than <c>move.max_drop</c>, and no
-    /// cell crossed costs more than plain ground (so dear ground such as bog still goes to the pathfinder).
-    /// </summary>
-    public bool CanWalkStraight(Simulation sim, Pathfinder pathfinder, Vector3 from, Vector3 to)
-    {
-        var dx = to.X - from.X;
-        var dy = to.Y - from.Y;
-        var steps = (int)MathF.Ceiling(MathF.Sqrt(dx * dx + dy * dy) / StraightStep);
-        var blocked = sim.TryService<BlockedCells>(out var bc) ? bc : null;
-        double feet = from.Z;
-        var cell = CellCoord.Of(from.X, from.Y);
-        for (var i = 1; i <= steps; i++)
-        {
-            var f = i / (float)steps;
-            var x = from.X + dx * f;
-            var y = from.Y + dy * f;
-            if (!MovementSystem.CanOccupy(sim, blocked, x, y, feet, StepUp, out var ground) || feet - ground.Height > MaxDrop)
-            {
-                return false;
-            }
-            var at = CellCoord.Of(x, y);
-            if (at != cell)
-            {
-                if (pathfinder.CellCost(at) > 1)
-                {
-                    return false;
-                }
-                cell = at;
-            }
-            feet = ground.Height;
-        }
-        return true;
     }
 }
 
@@ -509,14 +471,16 @@ internal sealed class PerceptionScope : IExprScope
 
 /// <summary>
 /// Runs data-driven state machines. Each think: evaluate the current state's transitions against the
-/// perception scope, switch if one fires (running exit and enter actions), then run tick actions.
+/// perception scope, switch if one fires (running exit and enter actions), then run tick actions. What the
+/// actions do to the simulation leaves through intents (<see cref="AiIntents"/>).
 /// </summary>
 public sealed class BehaviorSystem : SimSystem
 {
     /// <summary>Each state's transitions, highest priority first (stable for equal priorities), ordered once.</summary>
     private static readonly ConditionalWeakTable<BehaviorState, BehaviorTransition[]> OrderedTransitions = new();
 
-    private readonly AiNavigation _navigation = new();
+    /// <summary>The refusals of the think under way, lent to its context and cleared before the next.</summary>
+    private readonly List<AiRefusal> _refusals = new();
 
     public override string Name => "behavior";
     public override SimPhase Phase => SimPhase.Think;
@@ -524,7 +488,7 @@ public sealed class BehaviorSystem : SimSystem
     public override void Update(Simulation sim)
     {
         var now = sim.Clock.Time;
-        _navigation.Read(sim.Content.Rules);
+        var handlers = IntentHandlers.Of(sim);
         // The loop stays small and the think lives in its own method, so the runtime can optimize a
         // long-running update without recompiling the whole think in the middle of a tick.
         foreach (var (e, b, t, m) in sim.World.Query<Behavior, Transform, Motion>())
@@ -533,11 +497,11 @@ public sealed class BehaviorSystem : SimSystem
             {
                 continue;
             }
-            Think(sim, now, e, b, t, m);
+            Think(sim, now, e, b, t, m, handlers);
         }
     }
 
-    private void Think(Simulation sim, double now, Entity e, Behavior b, Transform t, Motion m)
+    private void Think(Simulation sim, double now, Entity e, Behavior b, Transform t, Motion m, IntentHandlers handlers)
     {
         // The dead do not think, nor do bodies dismissed earlier this tick that the world has yet to flush.
         if (sim.World.Has<Dead>(e) || sim.World.IsDeferredDestroy(e))
@@ -553,13 +517,15 @@ public sealed class BehaviorSystem : SimSystem
             return;
         }
         b.NextThinkAt = now + Math.Max(sim.Clock.Dt, def.TickInterval);
+        _refusals.Clear();
+        var ctx = new AiContext { Sim = sim, Entity = e, Behavior = b, Def = def, Transform = t, Motion = m, Stats = stats, Handlers = handlers, RefusalLog = _refusals };
         if (stats.HasFlag("stunned") || stats.HasFlag("frozen"))
         {
-            m.Stop();
+            AiIntents.Send(ctx, AiIntents.Stop);
             return;
         }
         var scope = BuildScope(sim, e, b, def, t, stats);
-        var ctx = new AiContext { Sim = sim, Entity = e, Behavior = b, Def = def, Transform = t, Motion = m, Stats = stats, Scope = scope, Rng = sim.RngFor(e, "ai"), Navigation = _navigation };
+        ctx.Perceive(scope);
         if (b.State.Length == 0 || !def.States.ContainsKey(b.State))
         {
             b.State = def.Initial;
