@@ -42,7 +42,7 @@ internal sealed class MoveHandler : IEffectHandler
 
     public string Type => "move";
 
-    public EffectSignature Signature { get; } = EffectSignature.Of("kind", "distance", "who", "status", "speed", "width", "filter", "phase", "air_time", "arc", "delay", "behind", "mark", "travel", "telegraph")
+    public EffectSignature Signature { get; } = EffectSignature.Of("kind", "distance", "who", "anchor", "status", "speed", "width", "filter", "phase", "air_time", "arc", "delay", "behind", "mark", "travel", "telegraph")
         .Hook(DeliveryHooks.OnCollide, "on_collide")
         .Hook(EffectHooks.OnHit, "on_contact")
         .Hook(DeliveryHooks.OnTravel, "on_travel")
@@ -59,6 +59,7 @@ internal sealed class MoveHandler : IEffectHandler
             Kind = kind,
             Distance = ctx.ExprOf(p["distance"], Expr.Constant(4))!,
             OnTarget = ctx.ChoiceOf(p["who"], "who", shove ? "target" : "source", "source", "target") == "target",
+            Anchor = ctx.ChoiceOf(p["anchor"], "anchor", "from", "from", "caster", "point"),
             Status = ctx.StringOf(p["status"]),
             Speed = ctx.ExprOf(p["speed"]),
             Width = ctx.ExprOf(p["width"], Expr.Constant(1.5))!,
@@ -84,6 +85,7 @@ internal sealed class MoveHandler : IEffectHandler
         public string Kind = "teleport";
         public required Expr Distance;
         public bool OnTarget;
+        public string Anchor = "from";
         public string? Status;
         public Expr? Speed;
         public required Expr Width;
@@ -142,7 +144,14 @@ internal sealed class MoveHandler : IEffectHandler
                 return;
             }
             var distance = (float)ctx.Eval(Distance, 4);
-            var source = ctx.From ?? ctx.SourceTransform?.Position ?? ctx.Point;
+            // What the shove measures from: where the effect acts (a flight's hit point, a field's center), the
+            // caster's own position (a hook on a flight reeling its catch home), or the aim point.
+            var source = Anchor switch
+            {
+                "caster" => ctx.SourceTransform?.Position ?? ctx.From ?? ctx.Point,
+                "point" => ctx.Point,
+                _ => ctx.From ?? ctx.SourceTransform?.Position ?? ctx.Point,
+            };
             Vector2 direction;
             switch (Kind)
             {
