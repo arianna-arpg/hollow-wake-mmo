@@ -1,10 +1,10 @@
 using System.Numerics;
 using HollowWake.Core.Intents;
-using HollowWake.Core.World;
+using HollowWake.Core.Movement;
 
 namespace HollowWake.Core.Systems.Intents;
 
-/// <summary>Walking to a point, steering by direction, stopping and jumping.</summary>
+/// <summary>Walking to a point, steering by direction, stopping, jumping and facing: any mover may send them.</summary>
 public static class MovementIntentHandlers
 {
     public static void Register(IntentHandlers handlers)
@@ -13,8 +13,10 @@ public static class MovementIntentHandlers
         handlers.Register<MoveDirIntent>(MoveDir);
         handlers.Register<StopIntent>(Stop);
         handlers.Register<JumpIntent>(Jump);
+        handlers.Register<FaceIntent>(Face);
     }
 
+    /// <summary>Plans the walk under the shared policy of <see cref="MovePlanner"/>, for a click and a chase alike.</summary>
     private static void MoveTo(in IntentContext ctx, MoveToIntent m)
     {
         var motion = ctx.Motion;
@@ -24,19 +26,13 @@ public static class MovementIntentHandlers
             ctx.Reject("unknown_intent");
             return;
         }
-        var target = ctx.Sim.Terrain.SnapToGround(m.Point, 3);
-        var path = ctx.Sim.Service<Pathfinder>().FindPath(transform.Position, target);
-        motion.MoveDir = Vector2.Zero;
-        motion.Path.Clear();
-        if (path.Count > 0)
+        if (!Finite(m.Point))
         {
-            motion.Path.AddRange(path);
-            motion.StopDistance = 0.3f;
+            ctx.Reject("bad_point");
+            return;
         }
-        else
-        {
-            motion.MoveTarget = target;
-        }
+        var stop = m.Stop is { } s && float.IsFinite(s) ? Math.Max(0f, s) : MovePlanner.DefaultStop;
+        MovePlanner.Of(ctx.Sim).Plan(ctx.Sim, transform, motion, m.Point, stop, m.KeepPlan);
     }
 
     private static void MoveDir(in IntentContext ctx, MoveDirIntent d)
@@ -70,4 +66,26 @@ public static class MovementIntentHandlers
         }
         motion.JumpRequested = true;
     }
+
+    /// <summary>
+    /// Turns the sender toward a point at once. Nothing refuses it while a cast runs, as nothing refused the AI's
+    /// facing before it was an intent, so a raised guard's arc turns with the body; a turn rate for held casts
+    /// would be a rule checked here.
+    /// </summary>
+    private static void Face(in IntentContext ctx, FaceIntent f)
+    {
+        if (ctx.Transform is not { } transform)
+        {
+            ctx.Reject("unknown_intent");
+            return;
+        }
+        if (!Finite(f.Point))
+        {
+            ctx.Reject("bad_point");
+            return;
+        }
+        transform.Face(f.Point);
+    }
+
+    private static bool Finite(Vector3 p) => float.IsFinite(p.X) && float.IsFinite(p.Y) && float.IsFinite(p.Z);
 }

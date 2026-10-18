@@ -8,7 +8,13 @@ Each think builds a scope over the entity's stats with: `has_target`, `target_di
 
 ## Actions
 
-A registry: `idle`, `stop`, `acquire_target` (nearest hostile within range, preferring recent attackers, passing over bodies wearing any of its `ignore` tags), `drop_target`, `chase` (path toward the target, stopping at a range), `attack` (choose a ready weave by the forms' AI hints and cast it through the shared runtime), `wander`, `return_home`, `flee`, `face_target`, `use_weave`, `remember`, `heal_self`. Minions add `follow_owner`, `assist_owner`, `return_to_owner` (with a leash recall that teleports a minion that strayed too far or stopped making headway) and `obey_command`; constructs add `construct_cast`, `spring` and `echo_owner`. Their parameters and rules are in `docs/design/minions.md`. New actions register from code; validation refuses a behavior naming an action the registry lacks.
+A registry: `idle`, `stop`, `acquire_target` (nearest hostile within range, preferring recent attackers, passing over bodies wearing any of its `ignore` tags), `drop_target`, `chase` (path toward the target, stopping at a range), `attack` (choose a ready weave by the forms' AI hints and cast it as a player presses its key), `wander`, `return_home`, `flee`, `face_target`, `use_weave`, `remember`. Minions add `follow_owner`, `assist_owner`, `return_to_owner` (with a leash recall that teleports a minion that strayed too far or stopped making headway) and `obey_command`; constructs add `construct_cast`, `spring` and `echo_owner`. Their parameters and rules are in `docs/design/minions.md`. New actions register from code and act through intents (below); validation refuses a behavior naming an action the registry lacks.
+
+## Acting through intents
+
+An action reads perception and writes the AI's own mind (its target, memory, order and pace), and changes the simulation only by sending the intents a player sends, so an AI body can do nothing a player could not ask for and every rule a handler checks applies to it. `AiIntents.Send(context, intent)` dispatches an intent at once, during the think, through the simulation's `IntentHandlers` with a context built for the actor; it is never queued, since a queued intent would act a tick late, after the input phase. The outcome is accepted, or refused with the handler's reason, and each refusal is recorded on the think's context (`AiContext.Refusals`) for the decision record; it is not published, so no client hears of an AI's refusals, and a refused intent is never replaced by a direct write. Walking leaves as `MoveToIntent` (with the action's stop distance, as a destination sent again every think), stopping as `StopIntent`, turning as `FaceIntent`, casting as `UseWeaveIntent`, constructs included (see [minions.md](minions.md)).
+
+What stays a service call is a world rule a body is under rather than something it does, which no intent asks for: a minion's leash recall teleports it (`MinionService.Teleport`), a spent trap goes (`MinionService.Dismiss`), and an echo carries copies of its owner's weaves in its own book (`ConstructCasting.Mirror`).
 
 ## Orders
 
@@ -16,13 +22,13 @@ An order is a `MinionOrder` on the behavior: the command it came from, the kind 
 
 ## Moving
 
-The movement actions (`chase`, `wander`, `return_home`, `flee`, and the minion actions that walk) share one planning policy, built to remove work rather than repeat it:
+The movement actions (`chase`, `wander`, `return_home`, `flee`, and the minion actions that walk) send `MoveToIntent`, and its handler plans every mover's walk the same way, a player's click included (`Movement/MovePlanner.cs`), built to remove work rather than repeat it:
 
-- A plan is kept while it lasts. The AI plans again only when its path or move target has run out, when the destination has moved more than `move.ai_repath_distance` from the goal it planned for, or when the plan is older than `move.ai_repath_seconds`.
-- A new plan walks straight when it can: the segment is sampled about a step per tick apart with the movement system's own occupancy check, no step drops further than `move.max_drop`, and no cell crossed costs more than plain ground. Otherwise the pathfinder searches with the AI budget, `move.ai_path_max_nodes`.
-- A search that cannot bring the AI closer (no step at all, or a partial path ending no nearer the goal) is not repeated for that goal until the plan is renewed; meanwhile the AI follows what it found, then walks straight at the goal. An unreachable target costs one search per renewal, not one per think.
+- A new plan walks straight when it can: the segment is sampled about a step per tick apart with the movement system's own occupancy check, no step drops further than `move.max_drop`, and no cell crossed costs more than plain ground. Otherwise the pathfinder searches.
+- A search that cannot bring the mover closer (no step at all, or a partial path ending no nearer the goal) leaves it following what it found, then walking straight at the goal.
+- The AI sends its destination again every think, marked `KeepPlan`, so a plan is kept while it lasts: the handler plans again only when the path or move target has run out, when the destination has moved more than `move.ai_repath_distance` from the goal it planned for, or when the plan is older than `move.ai_repath_seconds`. Such a plan searches on the smaller budget `move.ai_path_max_nodes`, since it is renewed anyway, and a search that failed is not repeated for that goal until the plan is renewed, so an unreachable target costs one search per renewal, not one per think. A click is planned afresh every time, on the pathfinder's own budget `move.path_max_nodes`.
 
-The plan is a cache on `Behavior` (`PlanGoal`, `PlannedAt`, `Planned`, `PlanFailed`); nothing outside the behavior system reads it, except that a teleport drops it.
+The plan is a cache on `Motion` (`PlanGoal`, `PlannedAt`, `Planned`, `PlanFailed`), kept by the move-to handler; a teleport or an order drops it.
 
 ## Weave choice
 

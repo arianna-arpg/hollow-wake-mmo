@@ -952,7 +952,9 @@ public sealed partial class WeaveRuntime
     /// <summary>
     /// Runs a list of a weave's effects for a cast: the context aims at the cast's live target or point, its
     /// random stream comes from the caster, the weave, the tick and the cast's beat, and the cast variables
-    /// are set on it. Returns the context, or null when the caster is gone.
+    /// are set on it. The effects run as the cast's origin (see <see cref="OriginOf"/>): the caster, or the
+    /// body whose numbers and credit it casts with, from where the caster stands. Returns the context, or
+    /// null when the caster is gone.
     /// </summary>
     internal EffectContext? Run(Simulation sim, Entity caster, Stats stats, CastState state, CompiledWeave weave, IReadOnlyList<CompiledEffect> effects, int depth, bool publishCast, in CastVarValues vars, double damageScale = 1, string rngPrefix = "weave:", long rngNumber = -1)
     {
@@ -961,13 +963,14 @@ public sealed partial class WeaveRuntime
         {
             target = Entity.None;
         }
+        var origin = OriginOf(sim, caster, state.Slot, out var originScale);
         // Publish before executing: immediate contacts must follow their confirmed release on the wire.
         if (publishCast && effects.Count > 0) Present(sim, caster, state, weave, "release");
         var ctx = new EffectContext
         {
             CastId = state.CastId,
             Sim = sim,
-            Source = caster,
+            Source = origin,
             Target = target,
             Point = target.IsNone ? state.Point : (sim.World.Get<Transform>(target)?.Position ?? state.Point),
             Direction = state.Direction,
@@ -975,9 +978,10 @@ public sealed partial class WeaveRuntime
             Tags = weave.Tags,
             Rng = RngStreams.For(sim, caster, rngPrefix, weave.Key, rngNumber < 0 ? state.Pulses : rngNumber),
             Potency = 1,
-            DamageScale = damageScale,
+            DamageScale = damageScale * originScale,
             Depth = depth,
             Slot = state.Slot,
+            From = origin == caster ? null : sim.World.Get<Transform>(caster)?.Position,
         };
         vars.WriteTo(ctx.Vars);
         var now = sim.Clock.Time;
@@ -996,6 +1000,32 @@ public sealed partial class WeaveRuntime
             }
         }
         return ctx;
+    }
+
+    /// <summary>
+    /// Who a cast's effects run as, and the share of damage they deal: the seat's own origin when it has one (an
+    /// echo's copy of its owner's weave), else the caster's owner when the caster is a construct that inherits
+    /// its caster, else the caster at full strength. An origin that is gone or has no stats leaves the caster.
+    /// The cast stays the caster's either way: it pays, it is timed and validated, and it raises the events.
+    /// </summary>
+    internal static Entity OriginOf(Simulation sim, Entity caster, WeaveSlot? slot, out double damageScale)
+    {
+        damageScale = 1;
+        Entity origin;
+        if (slot?.Origin is { } seat)
+        {
+            origin = seat.Source;
+            damageScale = seat.DamageScale;
+        }
+        else if (sim.World.TryGet<Minion>(caster, out var minion) && minion.InheritCaster)
+        {
+            origin = minion.Owner;
+        }
+        else
+        {
+            return caster;
+        }
+        return !origin.IsNone && sim.World.IsAlive(origin) && sim.World.Has<Stats>(origin) ? origin : caster;
     }
 
     /// <summary>

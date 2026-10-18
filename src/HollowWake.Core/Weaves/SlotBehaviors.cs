@@ -351,7 +351,8 @@ public sealed partial class WeaveRuntime
     /// <summary>
     /// Casts a preset as the <c>cast</c> effect does: free of cost and cooldown, at the host's level with the
     /// host's tags joined, one deeper, at the host's target when it lives or else its point, with the host
-    /// slot as the context's slot and the host weave as its host.
+    /// slot as the context's slot and the host weave as its host, and as the host cast's origin (see
+    /// <see cref="OriginOf"/>).
     /// </summary>
     internal void CastPreset(Simulation sim, Entity caster, string preset, CompiledWeave host, WeaveSlot? slot, Entity target, Vector3 point, Vector2 direction, int depth, string rngPrefix, long number)
     {
@@ -368,10 +369,11 @@ public sealed partial class WeaveRuntime
         {
             point = tt.Position;
         }
+        var origin = OriginOf(sim, caster, slot, out var originScale);
         var ctx = new EffectContext
         {
             Sim = sim,
-            Source = caster,
+            Source = origin,
             Target = target,
             Point = point,
             Direction = direction,
@@ -379,8 +381,10 @@ public sealed partial class WeaveRuntime
             Tags = weave.Tags.Union(hostTags),
             Depth = depth,
             Rng = RngStreams.For(sim, caster, rngPrefix, weave.Key, number),
+            DamageScale = originScale,
             Slot = slot,
             Host = host.Root,
+            From = origin == caster ? null : sim.World.Get<Transform>(caster)?.Position,
         };
         CompiledEffect.ExecuteAll(weave.Effects, ctx);
     }

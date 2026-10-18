@@ -534,16 +534,16 @@ public class AiNavigationTests
         Wall(sim, 14, 2, 18);
         var b = sim.World.Get<Behavior>(h)!;
         var m = sim.World.Get<Motion>(h)!;
-        Assert.True(RunUntil(sim, 2, () => b.State == "chase" && b.Planned && m.Path.Count > 0), "no path was planned around the wall");
-        var plannedAt = b.PlannedAt;
+        Assert.True(RunUntil(sim, 2, () => b.State == "chase" && m.Planned && m.Path.Count > 0), "no path was planned around the wall");
+        var plannedAt = m.PlannedAt;
         var repath = CoreContent.Registry.Rules.Number("move.ai_repath_seconds", 1.5);
         // Many thinks pass while the target stands still and the path lasts: no new search.
         sim.RunSeconds(repath * 0.6);
         Assert.True(m.Path.Count > 0, "the detour should still be under way");
-        Assert.Equal(plannedAt, b.PlannedAt);
+        Assert.Equal(plannedAt, m.PlannedAt);
         // A plan older than the repath interval is renewed.
         sim.RunSeconds(repath * 0.6);
-        Assert.True(b.PlannedAt > plannedAt, "the plan was never renewed");
+        Assert.True(m.PlannedAt > plannedAt, "the plan was never renewed");
     }
 
     [Fact]
@@ -559,13 +559,14 @@ public class AiNavigationTests
         Wall(sim, 18, 9, 11);
         Wall(sim, 22, 9, 11);
         var b = sim.World.Get<Behavior>(h)!;
-        Assert.True(RunUntil(sim, 8, () => b.State == "chase" && b.PlanFailed), "the wolf never concluded the prey was out of reach");
-        var plannedAt = b.PlannedAt;
+        var m = sim.World.Get<Motion>(h)!;
+        Assert.True(RunUntil(sim, 8, () => b.State == "chase" && m.PlanFailed), "the wolf never concluded the prey was out of reach");
+        var plannedAt = m.PlannedAt;
         var repath = CoreContent.Registry.Rules.Number("move.ai_repath_seconds", 1.5);
         sim.RunSeconds(repath * 0.6);
-        Assert.Equal(plannedAt, b.PlannedAt);
+        Assert.Equal(plannedAt, m.PlannedAt);
         sim.RunSeconds(repath * 0.6);
-        Assert.True(b.PlannedAt > plannedAt, "the plan was never renewed");
+        Assert.True(m.PlannedAt > plannedAt, "the plan was never renewed");
         var t = sim.World.Get<Transform>(h)!;
         Assert.False(t.Position.X >= 18 && t.Position.X < 23 && t.Position.Y >= 8 && t.Position.Y < 13, "the wolf got into the pen");
     }
@@ -575,13 +576,14 @@ public class AiNavigationTests
     {
         var (sim, h, p) = Arena("wolf", new Vector3(10.5f, 10.5f, 0), new Vector3(17.5f, 10.5f, 0));
         var b = sim.World.Get<Behavior>(h)!;
-        Assert.True(RunUntil(sim, 2, () => b.State == "chase" && b.Planned), "the wolf never planned a chase");
+        var m = sim.World.Get<Motion>(h)!;
+        Assert.True(RunUntil(sim, 2, () => b.State == "chase" && m.Planned), "the wolf never planned a chase");
         // The prey leaps well beyond the planned goal: the next think plans toward where it is now.
         var pt = sim.World.Get<Transform>(p)!;
         pt.Position = new Vector3(16.5f, 3.5f, 0);
         sim.Spatial.Update(p, pt.Position);
         sim.RunSeconds(0.3);
-        Assert.True(Vector2.Distance(new Vector2(b.PlanGoal.X, b.PlanGoal.Y), new Vector2(pt.Position.X, pt.Position.Y)) < 0.01f, $"still heading for {b.PlanGoal}");
+        Assert.True(Vector2.Distance(new Vector2(m.PlanGoal.X, m.PlanGoal.Y), new Vector2(pt.Position.X, pt.Position.Y)) < 0.01f, $"still heading for {m.PlanGoal}");
         var hit = HitBy(sim, h, p);
         Assert.True(RunUntil(sim, 10, hit), "the wolf never caught up with the moved prey");
         var t = sim.World.Get<Transform>(h)!;

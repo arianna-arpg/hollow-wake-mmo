@@ -73,7 +73,9 @@ public class ConstructTests
         Assert.False(arena.Hit(arena.Owner, foe));
         Assert.True(arena.Sim.World.IsAlive(trap));
         arena.Move(foe, point + new Vector3(1, 0, 0));
-        arena.Sim.RunSeconds(0.5);
+        // The snare's burst is a blast, begun like any weave: it lands once its cast time has passed, and the
+        // trap goes when that cast is over.
+        arena.Sim.RunSeconds(1.5);
         Assert.True(arena.Hit(arena.Owner, foe), "the snare never sprang");
         Assert.Empty(arena.Minions("snares"));
         var hits = arena.Events.OfType<DamageDealt>().Count(d => d.Target == foe && d.Total > 0 && !d.Tags.Has("dot"));
@@ -117,6 +119,8 @@ public class ConstructTests
     public void AnEchoReplaysItsOwnersCastsAtHalfStrength()
     {
         var arena = Arena();
+        // The two hits compare like with like whatever each cast rolls: the replay rolls on the echo's own cast stream.
+        arena.OwnerStats.Attributes.Add(new Modifier { Attribute = "crit.chance", Form = ModifierForm.Override, Value = 0, Source = "test" });
         var foe = arena.Foe("tangle", arena.OwnerAt.Position + new Vector3(9, 0, 0));
         arena.Cast(arena.Learn("shade_echo"), point: arena.OwnerAt.Position);
         var echo = arena.Minions("echoes").Single();
