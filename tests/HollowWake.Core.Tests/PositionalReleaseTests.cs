@@ -400,4 +400,93 @@ public class PositionalReleaseTests
         // ChooseForAi already creates a 56-byte seeded choice stream per call. Observation adds none.
         Assert.True(bytes < count * 80, $"AI primary-area queries allocated {(double)bytes / count:0.###} bytes/call.");
     }
+
+    [Fact]
+    public void NestedAiObservationCannotRebindItsOuterSamplesScope()
+    {
+        var registry = ContentRegistry.Load(new[] { CoreContent.FindContentDir() }, out _);
+        registry.With(new FactionDef { Id = "red", Relations = { ["blue"] = Stance.Hostile } });
+        registry.With(new FactionDef { Id = "blue", Relations = { ["red"] = Stance.Hostile } });
+        const string function = "t_ai_nested_observation";
+        var inner = CastForecastContent.Arena(3);
+        inner.Book.Slots.Clear();
+        CastForecastContent.Slot(inner, "forecast_live_ai");
+        inner.EnemyStats.Resources["mana"] = 0;
+        var calls = 0;
+        // Deliberate reentrancy injection to exercise storage ownership, not a production pure function.
+        ExprFunctions.Register(function, 1, 1, values =>
+        {
+            calls++;
+            Assert.Null(inner.Runtime.ChooseForAi(inner.Sim, inner.Caster, inner.Enemy));
+            return values[0];
+        }, previewSafe: true);
+        try
+        {
+            registry.With(CastForecastContent.Registry.Get<FormDef>("forecast_timed")! with
+            {
+                Id = "nested_observation", Effects = new() { CastForecastContent.Area("2 + " + function + "(0) + time + target.mana / 100") },
+            });
+            var outer = CastingArena.Create(distance: 5, registry: registry);
+            outer.Book.Slots.Clear();
+            outer.Slot(new WeaveSpec { Form = "nested_observation" });
+            outer.EnemyStats.Resources["mana"] = 200;
+            for (var i = 0; i < 40; i++) outer.Sim.Clock.Advance();
+            for (var i = 0; i < 12; i++)
+                Assert.NotNull(outer.Runtime.ChooseForAi(outer.Sim, outer.Caster, outer.Enemy));
+            Assert.Equal(12, calls);
+        }
+        finally { ExprFunctions.Register(function, 1, 1, values => values[0], previewSafe: true); }
+    }
+
+    [Fact]
+    public void PublicProviderCanRetainItsContextAcrossLaterAiObservations()
+    {
+        var registry = ContentRegistry.Load(new[] { CoreContent.FindContentDir() }, out _);
+        registry.With(CastForecastContent.Registry.Get<FormDef>("forecast_timed")! with
+        {
+            Id = "retained_observation", Effects = new() { CastForecastContent.Spec("""{"type":"t_retained_observation"}""") },
+        });
+        var a = CastingArena.Create(distance: 3, registry: registry);
+        var provider = new RetainingObservation();
+        a.Sim.Service<EffectRegistry>().Register(provider);
+        a.Book.Slots.Clear();
+        a.Slot(new WeaveSpec { Form = "retained_observation" });
+        Assert.NotNull(a.Runtime.ChooseForAi(a.Sim, a.Caster, a.Enemy));
+        var first = Assert.Single(provider.Contexts);
+        Assert.True(first.Scope.TryResolve("time", out var firstTime));
+        var firstPoint = first.Point;
+        for (var i = 0; i < 20; i++) a.Sim.Clock.Advance();
+        CastForecastContent.Move(a, a.Enemy, new(14, 10, 0));
+        Assert.NotNull(a.Runtime.ChooseForAi(a.Sim, a.Caster, a.Enemy));
+        Assert.NotSame(first, provider.Contexts[1]);
+        var other = CastForecastContent.Arena(1.5f);
+        other.Book.Slots.Clear();
+        other.Slot("strike");
+        Assert.NotNull(other.Runtime.ChooseForAi(other.Sim, other.Caster, other.Enemy));
+        Assert.Same(a.Sim, first.Sim);
+        Assert.Equal(a.Caster, first.Source);
+        Assert.Equal(firstPoint, first.Point);
+        Assert.True(first.Scope.TryResolve("time", out var retainedTime));
+        Assert.Equal(firstTime, retainedTime);
+        Assert.True(provider.Contexts[1].Scope.TryResolve("time", out var laterTime));
+        Assert.True(laterTime > firstTime);
+    }
+
+    private sealed class RetainingObservation : IEffectHandler
+    {
+        public string Type => "t_retained_observation";
+        public List<EffectContext> Contexts { get; } = new();
+        public CompiledEffect Compile(System.Text.Json.Nodes.JsonObject parameters, EffectCompileContext context)
+            => new Effect(Contexts) { Type = Type };
+
+        private sealed class Effect(List<EffectContext> contexts) : CompiledEffect, IDeliveryPlanSource
+        {
+            public override void Execute(EffectContext context) => throw new InvalidOperationException("Observation executed an effect.");
+            public DeliveryForecast DescribeDelivery(EffectContext context)
+            {
+                contexts.Add(context);
+                return DeliveryForecast.Unavailable("test_provider");
+            }
+        }
+    }
 }
