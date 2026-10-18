@@ -1,10 +1,26 @@
-# Evaluation rules: the bands a matched pairing must stay inside in a seeded tournament (docs/design/evaluation.md).
-# Times are seconds; rates and floors are fractions. Bands are for pairings built to be even, such as the proving
-# pairs; an uneven pairing is measured but not banded.
+# Evaluation rules: the pairings a seeded tournament fights and the bands a matched pairing must stay inside
+# (docs/design/evaluation.md). Times are seconds; rates and floors are fractions. Bands are for pairings built to be
+# even, such as the proving pairs; an uneven pairing is measured but not banded.
 kind: rules
 entries:
   - id: evaluation
     values:
+      # The proving pairs, each written a:b with two pattern ids: matched pairings built to be even, which a
+      # tournament fights unless told otherwise.
+      proving_pairs:
+        - "proving_reaver:proving_bulwark"
+        - "proving_hexer:proving_plaguer"
+        - "proving_pitfighter:proving_mower"
+        - "proving_fletcher:proving_evoker"
+      # The standard duels, written the same way: the pairings whose seeded traces are the determinism baseline
+      # (tournament --standard; the recorded hashes are experiments/combat-grammar/baselines/standard-duels.json).
+      standard_duels:
+        - "wolf:hob"
+        - "loosed_skirmisher:hob"
+        - "loosed_skirmisher:boar"
+        - "loosed_kindler:boar"
+        - "tide_channeler:spark_duelist"
+        - "proving_reaver:proving_bulwark"
       # The median time to kill over the fights that ended.
       ttk_min: 5
       ttk_max: 45

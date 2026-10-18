@@ -2,14 +2,15 @@ using System.Text.Json.Nodes;
 using HollowWake.Core.Combat;
 using HollowWake.Core.Combat.Stages;
 using HollowWake.Core.Definitions;
+using HollowWake.Core.Evaluation;
 using HollowWake.Core.Sim;
 
 namespace HollowWake.Core.Content.Kinds;
 
 /// <summary>
 /// Content for combat: status fields beyond the core, charge kinds, procs, and the hit pipeline's rules (stage
-/// order and skips, victim tags, pools and their rules) and the proc rules. Registers the trigger kinds the
-/// combat package raises and the names its effects set, then adds validators to the existing kinds.
+/// order and skips, victim tags, pools and their rules), the proc rules and the evaluation pairings. Registers the
+/// trigger kinds the combat package raises and the names its effects set, then adds validators to the existing kinds.
 /// </summary>
 internal static class CombatKinds
 {
@@ -169,6 +170,11 @@ internal static class CombatKinds
         if (d.Id == "attributes")
         {
             TradeRules(d, c);
+            return;
+        }
+        if (d.Id == "evaluation")
+        {
+            EvaluationRules(c);
             return;
         }
         if (d.Id != "combat")
@@ -331,5 +337,29 @@ internal static class CombatKinds
             }
         }
         _ = d;
+    }
+
+    /// <summary>The proving pairs and the standard duels are pairings written a:b of patterns that exist.</summary>
+    private static void EvaluationRules(ValidationContext c)
+    {
+        foreach (var rule in new[] { Pairing.ProvingPairs, Pairing.StandardDuels })
+        {
+            var field = rule["evaluation.".Length..];
+            foreach (var text in c.Registry.Rules.Strings(rule))
+            {
+                Pairing pairing;
+                try
+                {
+                    pairing = Pairing.Parse(text);
+                }
+                catch (ArgumentException ex)
+                {
+                    c.Error($"{field}: {ex.Message}");
+                    continue;
+                }
+                c.Ref<PatternDef>(pairing.A, field);
+                c.Ref<PatternDef>(pairing.B, field);
+            }
+        }
     }
 }
