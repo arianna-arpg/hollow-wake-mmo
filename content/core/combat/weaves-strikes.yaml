@@ -79,7 +79,7 @@ entries:
           - { type: charge, id: fury, gain: 1, max: 5, self: true }
   - id: tide_lash
     name: "Tide Lash"
-    description: "A melee strike of physical and cold damage in front of you, with a 45% chance to leave the victim sodden and slowed."
+    description: "A melee strike of physical and cold damage in front of you."
     form: swing
     threads: [stone, tide]
     color: "#6ac8d8"
@@ -121,7 +121,7 @@ entries:
             tags: [hit]
   - id: hellfire_lash
     name: "Hellfire Lash"
-    description: "Cracks a burning whip in a long, shallow arc in front of you: 50% chance to SEAR, halving the victim's healing while it lasts, and 9% chance to set them burning."
+    description: "Cracks a burning whip in a long, shallow arc in front of you: 50% chance to SEAR, halving the victim's healing while it lasts, and 25% chance to set them burning."
     form: swing
     threads: [ember]
     color: "#ff5a3a"
@@ -193,7 +193,7 @@ entries:
           - { type: apply_status, status: bleeding, chance: 0.35, magnitude: "last_damage * 0.35" }
   - id: zeal
     name: Zeal
-    description: "A consecrated melee arc of physical and fire damage that feeds on the press: 5% more damage per point of nearby crowd power (bosses count for many), and each point grants a stack of 2% increased attack speed for 6 seconds, up to 10 stacks."
+    description: "A consecrated melee arc of physical and fire damage."
     form: swing
     threads: [stone, ember]
     color: "#ffd24a"
@@ -287,7 +287,7 @@ entries:
 
   - id: static_strike
     name: "Static Strike"
-    description: "Strike in a wide melee arc, dealing physical and lightning damage; each hit banks a STATIC charge, up to 6. On a steady 0.7-second beat, one banked charge leaps to the nearest enemy as a bolt dealing 55% of the hit's damage. Blows have a 20% chance to shock."
+    description: "Strike in a wide melee arc, dealing physical and lightning damage; each hit banks a STATIC charge, up to 6. While Static Charged lasts, a charge is spent every 0.7 seconds to discharge at the nearest enemy in reach, rolling 55% weapon damage as lightning. Blows have a 20% chance to shock."
     form: swing
     threads: [stone, storm]
     color: "#ffe94a"
@@ -414,7 +414,7 @@ entries:
     gates: ["has(\"recently_hurt\")"]
   - id: sunder_maul
     name: "Sunder Maul"
-    description: "A slow overhead blow built to break stances rather than bodies: it deals 150% more poise damage, and the SUNDERED it inflicts lasts 50% longer. Pairs with The Verdict, the execute that spends a broken stance."
+    description: "A slow overhead blow built to break stances rather than bodies: it deals 150% more poise damage."
     form: swing
     threads: [stone]
     color: "#c8a058"
@@ -458,7 +458,7 @@ entries:
           - { type: move, kind: knockback, distance: 1.25 }
   - id: severing_lash
     name: "Severing Lash"
-    description: "A long whip-crack that ignores 60% of the target's insight and carries 30% increased accuracy. Half of all hits leave the victim REELING: insight stops replenishing while it lasts."
+    description: "A long whip-crack with 30% increased accuracy. Half of all hits leave the victim REELING: insight stops replenishing while it lasts."
     form: swing
     threads: [stone]
     color: "#c8a8e8"
@@ -849,7 +849,7 @@ entries:
     uses: { max: 3, recharge: 5 }
   - id: siphon_strike
     name: "Siphon Strike"
-    description: "Sweep a wide melee arc in front of you: every enemy struck sheds an orb of 7 mana that homes back to you. The caster's generator: swing to drink."
+    description: "Sweep a wide melee arc in front of you without a stamina cost."
     form: swing
     threads: [stone]
     color: "#5a8ae8"
@@ -870,7 +870,7 @@ entries:
             tags: [hit]
   - id: forgebound
     name: Forgebound
-    description: "A melee smash in a wide arc in front of you: each enemy struck has a 30% chance to conscript an animated weapon that fights beside you, up to 3 at once."
+    description: "A melee smash in a wide arc in front of you."
     form: swing
     threads: [stone]
     color: "#d8b06a"
@@ -1041,7 +1041,7 @@ entries:
       modifiers: [{ attribute: damage, form: increased, value: 0.06 }, { attribute: poise.damage, form: increased, value: 0.08 }]
   - id: tempest_gathering
     name: "Tempest Gathering"
-    description: "Each swing cuts an arc of physical and lightning damage and banks 1 Storm charge, up to 8. On a clock that quickens as the bank fills, a charge leaps free as a bolt at 55% of the swing's damage toward the nearest enemy; stop swinging and the stored storm spends itself dry."
+    description: "Each swing cuts an arc of physical and lightning damage and banks 1 Storm charge, up to 8. While Storm Charged lasts, a charge is spent every 0.6 seconds to discharge at the nearest enemy in reach, rolling 55% weapon damage as lightning."
     form: swing
     threads: [stone, storm]
     color: "#c8e84a"
@@ -1194,7 +1194,7 @@ entries:
           - { type: move, kind: knockback, distance: 8.13 }
   - id: devouring_maw
     name: "Devouring Maw"
-    description: "A close bite of physical damage: every strike shakes loose a bead of life that homes back to the biter unless its owner outruns it. What the teeth take, they KEEP."
+    description: "A close bite of physical damage without a stamina cost."
     form: swing
     threads: [stone]
     color: "#a04a5a"
@@ -1237,7 +1237,7 @@ entries:
           - { type: apply_status, status: ensnared, chance: 0.3 }
   - id: lancing_flurry
     name: "Lancing Flurry"
-    description: "One gathering motion, then every nearby enemy is lanced at once, each down its own straight line from your hand: up to 24 targets, every thrust with a 30% chance to inflict bleed."
+    description: "One gathering motion lances up to 24 nearby enemies at once, each with a 30% chance to bleed."
     form: whirl
     threads: [stone]
     tags: [javelin]
@@ -1326,7 +1326,7 @@ entries:
 
   - id: follow_sweep
     name: Follow-Through
-    description: "The free second half of Harvest Stroke: the blade comes around on its own in a full sweep across your front, cutting each enemy it crosses once, with a 20% chance to Bleed."
+    description: "The free second half of Harvest Stroke leaves a short-lived sector that cuts each enemy it catches once, with a 20% chance to Bleed."
     form: slam_quick
     threads: [stone]
     tags: [sweep]

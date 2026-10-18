@@ -85,7 +85,7 @@ entries:
 
   - id: storm_charged
     name: Storm Charged
-    description: A gathered storm; on a beat that quickens as the bank fills, a charge leaps free as a bolt at the nearest foe.
+    description: A gathered storm; every 0.6 seconds a charge is spent to discharge at the nearest foe in reach.
     tags: [buff, storm]
     duration: 4
     beneficial: true
