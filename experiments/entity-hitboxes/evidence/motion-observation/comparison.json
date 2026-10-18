@@ -1,0 +1,23 @@
+{
+  "SnapshotBaseline": {
+    "Passed": 7,
+    "Total": 21,
+    "Failed": 14
+  },
+  "PriorRuntime": "fda30afb81452285b5956797c63363cb7bd42b46",
+  "FinalFocused": {
+    "Server": 24,
+    "Core": 200
+  },
+  "RangeBaseline": {
+    "Passed": 1,
+    "Total": 3,
+    "Failed": 2
+  },
+  "Runtime": "b116725108a1b814bb875d408f3b17aee95bf412",
+  "ProvingHash": "6673881dfab95df6",
+  "LintDifferenceCount": 0,
+  "ProvingStructurallyEqual": true,
+  "LintAfter": 777,
+  "LintBefore": 777
+}
