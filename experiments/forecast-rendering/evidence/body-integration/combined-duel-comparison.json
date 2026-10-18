@@ -1,0 +1,128 @@
+[
+  {
+    "pair": "wolf:hob",
+    "baselineHash": "096fae942239eba7",
+    "preFlightHash": "dd79ac96e2dad61a",
+    "newHash": "dd79ac96e2dad61a",
+    "baselineWins": [
+      1,
+      0,
+      0
+    ],
+    "newWins": [
+      1,
+      0,
+      0
+    ],
+    "baselineTtk": 15.05,
+    "newTtk": 15.05
+  },
+  {
+    "pair": "loosed_skirmisher:hob",
+    "baselineHash": "299660b7acc4c95b",
+    "preFlightHash": "22682ec304eb7afc",
+    "newHash": "22682ec304eb7afc",
+    "baselineWins": [
+      1,
+      0,
+      0
+    ],
+    "newWins": [
+      1,
+      0,
+      0
+    ],
+    "baselineTtk": 5.8,
+    "newTtk": 5.8
+  },
+  {
+    "pair": "loosed_skirmisher:boar",
+    "baselineHash": "957dd0fa00d36afc",
+    "preFlightHash": "4fdaa0b46abbbd94",
+    "newHash": "4fdaa0b46abbbd94",
+    "baselineWins": [
+      1,
+      0,
+      0
+    ],
+    "newWins": [
+      1,
+      0,
+      0
+    ],
+    "baselineTtk": 7.55,
+    "newTtk": 8.7
+  },
+  {
+    "pair": "loosed_kindler:boar",
+    "baselineHash": "75b61d603d05c3f1",
+    "preFlightHash": "55f3c653d896dd06",
+    "newHash": "55f3c653d896dd06",
+    "baselineWins": [
+      1,
+      0,
+      0
+    ],
+    "newWins": [
+      1,
+      0,
+      0
+    ],
+    "baselineTtk": 6.65,
+    "newTtk": 6.55
+  },
+  {
+    "pair": "tide_channeler:spark_duelist",
+    "baselineHash": "75071943711ba3eb",
+    "preFlightHash": "fa5af5e32501a451",
+    "newHash": "fa5af5e32501a451",
+    "baselineWins": [
+      1,
+      0,
+      0
+    ],
+    "newWins": [
+      1,
+      0,
+      0
+    ],
+    "baselineTtk": 8,
+    "newTtk": 8
+  },
+  {
+    "pair": "proving_reaver:proving_bulwark",
+    "baselineHash": "afb3fac2523af03a",
+    "preFlightHash": "afb3fac2523af03a",
+    "newHash": "afb3fac2523af03a",
+    "baselineWins": [
+      0.1,
+      0.9,
+      0
+    ],
+    "newWins": [
+      0.1,
+      0.9,
+      0
+    ],
+    "baselineTtk": 33.2,
+    "newTtk": 33.2
+  },
+  {
+    "pair": "loosed_skirmisher:tide_caller",
+    "baselineHash": "d5b2b56a7491fbd1",
+    "preFlightHash": "c78c43f0835e549e",
+    "newHash": "c78c43f0835e549e",
+    "baselineWins": [
+      0.9,
+      0.1,
+      0
+    ],
+    "newWins": [
+      0.6,
+      0.3,
+      0.1
+    ],
+    "baselineTtk": 7.5,
+    "newTtk": 7.5
+  }
+]
