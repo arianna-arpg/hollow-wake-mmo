@@ -76,11 +76,7 @@ public partial class CastForecasts : Node3D
                 _drawn.Add(cast.CastId, v);
             }
             var region = !stale && CastForecastTimeline.SegmentsFor(cast.Region, _style.Segments, _style.MaxSegments, _style.MaxChordError) > 0 ? cast.Region : null;
-            if (region?.Shape != v.Region?.Shape || !Equals(region?.Size, v.Region?.Size) ||
-                region?.HeightTolerance != v.Region?.HeightTolerance || region?.CenterAllowance != v.Region?.CenterAllowance ||
-                region?.TargetTest != v.Region?.TargetTest || region?.Bottom - region?.Z != v.Region?.Bottom - v.Region?.Z ||
-                region?.Top - region?.Z != v.Region?.Top - v.Region?.Z ||
-                region?.ViewerEligibility != v.Region?.ViewerEligibility || v.Committed != cast.DirectionCommitted)
+            if (!CastForecastGeometry.SameMesh(v.Region, v.Committed, region, cast.DirectionCommitted))
             {
                 foreach (var mesh in v.Meshes) mesh.QueueFree();
                 v.Meshes = region is null ? new() : Boundary(region, cast.DirectionCommitted); v.Region = region; v.Committed = cast.DirectionCommitted;
@@ -105,34 +101,16 @@ public partial class CastForecasts : Node3D
     }
     private List<MeshInstance3D> Boundary(CastForecastRegion region, bool committed)
     {
-        var outline = CastForecastTimeline.Outline(region, CastForecastTimeline.SegmentsFor(region, _style.Segments, _style.MaxSegments, _style.MaxChordError));
-        var parts = new List<(Vector3 A, Vector3 B)>();
-        var (bottom, top) = CastForecastTimeline.VerticalBounds(region);
-        var levels = region.TargetTest == "body" ? (bottom == top ? new[] { bottom } : new[] { bottom, top }) : new[] { 0f };
-        var arrow = (float)_style.DirectionSize;
-        parts.Add((Coords.ToGodot(0, -arrow / 2, levels[0]), Coords.ToGodot(arrow, 0, levels[0])));
-        parts.Add((Coords.ToGodot(arrow, 0, levels[0]), Coords.ToGodot(0, arrow / 2, levels[0])));
-        if (committed) parts.Add((Coords.ToGodot(0, arrow / 2, levels[0]), Coords.ToGodot(0, -arrow / 2, levels[0])));
-        foreach (var level in levels) foreach (var loop in outline.Holes.Prepend(outline.Outer)) for (var i = 0; i < loop.Count; i++)
-        {
-            var a = loop[i]; var b = loop[(i + 1) % loop.Count];
-            parts.Add((Coords.ToGodot(a.X, a.Y, level), Coords.ToGodot(a.X + (b.X - a.X) * (float)_style.DashFraction, a.Y + (b.Y - a.Y) * (float)_style.DashFraction, level)));
-        }
-        for (var i = 0; i < outline.Outer.Count; i += Math.Max(1, outline.Outer.Count / 4))
-        {
-            var p = outline.Outer[i];
-            var marker = Math.Min((top - bottom) / 2, (float)_style.HeightMarkerSize);
-            parts.Add((Coords.ToGodot(p.X, p.Y, bottom), Coords.ToGodot(p.X, p.Y, bottom + marker)));
-            parts.Add((Coords.ToGodot(p.X, p.Y, top - marker), Coords.ToGodot(p.X, p.Y, top)));
-        }
+        var parts = CastForecastGeometry.Build(region, committed, _style);
         return new() { Lines(parts, region, _style.Stroke * _style.UnderlayScale, _style.UnderlayColor, 9),
             Lines(parts, region, _style.Stroke, region.ViewerEligibility == "candidate" ? _style.CandidateColor : _style.Color, 10) };
     }
-    private MeshInstance3D Lines(List<(Vector3 A, Vector3 B)> parts, CastForecastRegion region, double width, string color, int priority)
+    private MeshInstance3D Lines(List<(System.Numerics.Vector3 A, System.Numerics.Vector3 B)> parts, CastForecastRegion region, double width, string color, int priority)
     {
         var lines = new ImmediateMesh(); lines.SurfaceBegin(Mesh.PrimitiveType.Triangles);
-        foreach (var (a, b) in parts)
+        foreach (var (localA, localB) in parts)
         {
+            var a = Coords.ToGodot(localA.X, localA.Y, localA.Z); var b = Coords.ToGodot(localB.X, localB.Y, localB.Z);
             var d = b - a; if (d.IsZeroApprox()) continue;
             var axis = Math.Abs(d.Y) > .99f * d.Length() ? Vector3.Right : Vector3.Up;
             var offset = d.Cross(axis).Normalized() * (float)(width / 2);
