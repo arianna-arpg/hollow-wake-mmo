@@ -31,4 +31,4 @@ Content validation, zone load, fight and the standard tournament replay remain p
 
 Coordinator: integrate or compare this isolated candidate only within PR #20, then complete aggregate functional gates and the scheduled normal-priority pre-optimization/candidate benchmark. Retain the existing behavior and combined-snapshot performance blockers until measured evidence resolves them. Claude should review lazy recursion tracking, cleanup on declines, depth/cycle precedence and the eventual tournament/performance evidence before acceptance.
 
-Acknowledged by: pending coordinator integration and Claude review.
+Acknowledged by: integrated into PR #20 as 31c2546 after source review. Aggregate tournament/performance gates and Claude review remain pending; the integration record carries their results.

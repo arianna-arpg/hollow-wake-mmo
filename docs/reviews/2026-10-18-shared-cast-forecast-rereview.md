@@ -76,7 +76,9 @@ In the older 26b9e46 staging, the intermediate Spark Duelist/Kindler trace had f
 
 Snapshot change 7ec0529 removes repeated delta comparisons for viewers with the exact same captured previous state. It retains only one history per entity in the existing tick/precision lifetime, recomputes divergent histories, and clears on explicit invalidation. The shared messages are read-only after capture. Wire fields, precision, repair cadences, interest, cast timing and combat results are unchanged. Four new history regressions and all 58 server tests pass. SnapshotBuilder.cs and the networking contract overlap were announced on #36, #49 and #50 before integration; their body-volume and intent semantics remain separate.
 
-The pre-optimization control is published 2cc5d66 (executable source 6edc124), built in an owned disposable worktree. New timing claims await the coordinated comparison. Earlier failed measurements above remain acceptance blockers until a concrete revised source passes the existing budgets.
+Core change 31c2546 integrates the forecasting chat's 57b8a1f: constant leaf attributes no longer insert/remove recursion-path entries, while live purity, flags, dependency depth, modifiers, gauges, links and cycles remain checked per observation. The already obtained slot cache is reused inside one PreferredRange iteration. Its [handoff](2026-10-18-forecast-dependency-optimization.md) records 103 focused and 930 full tests on that isolated source. No safety result is retained between observations.
+
+The pre-optimization control is published 2cc5d66 (executable source 6edc124), built in an owned disposable worktree. The combined candidate is 31c2546. New timing claims await the coordinated comparison. Earlier failed measurements above remain acceptance blockers until a concrete revised source passes the existing budgets. A prospective merge with approved main 82e3a48 is clean and retains all three target-aware PreferredRange calls from this request; that inspection does not claim runtime verification of the combined tree.
 
 ## Integration handoffs and review request
 
