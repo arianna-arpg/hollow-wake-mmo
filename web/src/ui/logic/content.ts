@@ -1,4 +1,5 @@
 import { CONTENT_FILES } from './contentFiles';
+import { AbilityIcons } from './abilityIcons';
 import { parseYamlDocuments, type YamlValue } from './yaml';
 
 /**
@@ -122,7 +123,6 @@ export interface UiIconSet {
   accents?: Record<string, string>;
   pools: Record<string, string>;
   statuses: Record<string, string>;
-  looks: Record<string, string>;
   slots: Record<string, string>;
   fallback: string;
 }
@@ -252,7 +252,6 @@ function iconSetFrom(o: Obj): UiIconSet {
     accents: strMap(o.accents),
     pools: strMap(o.pools),
     statuses: strMap(o.statuses),
-    looks: strMap(o.looks),
     slots: strMap(o.slots),
     fallback: str(o.fallback, 'rune'),
   };
@@ -329,21 +328,6 @@ export const resolveIcon = (set: UiIconSet, icon: string | undefined | null): st
 export const forPool = (set: UiIconSet, pool: string): string => resolveIcon(set, set.pools[pool]);
 export const forStatus = (set: UiIconSet, status: string): string => resolveIcon(set, set.statuses[status]);
 export const forSlot = (set: UiIconSet, slot: string): string => resolveIcon(set, set.slots[slot]);
-
-/** A weave's glyph: its look, else a word of its key that names a look or form, else the fallback. */
-export function weaveIcon(set: UiIconSet, look: string | undefined | null, key: string | undefined | null): string {
-  if (look && set.looks[look] !== undefined) {
-    return resolveIcon(set, set.looks[look]);
-  }
-  if (key) {
-    for (const part of key.split(/[_[\]+,. ]/)) {
-      if (part && set.looks[part] !== undefined) {
-        return resolveIcon(set, set.looks[part]);
-      }
-    }
-  }
-  return set.fallback;
-}
 
 // ---------------------------------------------------------------- names from the rest of the content
 
@@ -424,6 +408,7 @@ export function statusLookOf(status: Obj): StatusLook {
 export const lookOf = (names: ContentNames, status: string): StatusLook => names.statusLooks.get(status) ?? PLAIN_LOOK;
 
 export interface ContentNames {
+  abilityIcons: AbilityIcons;
   statuses: Map<string, NamedEntry>;
   statusLooks: Map<string, StatusLook>;
   threads: NamedEntry[];
@@ -548,6 +533,7 @@ export function loadNames(kinds: Map<string, Obj[]>): ContentNames {
     realms.set(str(r.id), str(r.name, humanize(str(r.id))));
   }
   return {
+    abilityIcons: new AbilityIcons(kinds),
     statuses: new Map((kinds.get('statuses') ?? []).map((s, i) => [str(s.id), named(s, i)])),
     statusLooks: new Map((kinds.get('statuses') ?? []).map((s) => [str(s.id), statusLookOf(s)])),
     threads,

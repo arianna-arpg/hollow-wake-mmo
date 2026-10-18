@@ -1,0 +1,16 @@
+
+> hollow-wake-web@0.1.0 test
+> vitest run
+
+
+ RUN  v5.0.3 C:/Users/John/.codex/worktrees/skill-support-icons/MMOARPG/web
+
+
+ Test Files  30 passed (30)
+      Tests  203 passed (203)
+   Start at  12:44:45
+   Duration  1.72s (transform 44%, setup 40%, import 7%, tests 7%, worker 2%)
+
+  Transform  transforming modules took 8.97s · 44% of tracked time, re-done on every run
+             persist transforms across runs with fsModuleCache: true
+             learn more: https://vitest.dev/guide/improving-performance#caching-between-reruns

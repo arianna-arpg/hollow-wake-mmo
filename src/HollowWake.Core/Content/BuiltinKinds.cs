@@ -16,6 +16,7 @@ internal static class BuiltinKinds
             return;
         }
         _done = true;
+        Kinds.EntryKinds.Register();
 
         ContentKinds.Register<AttributeDef>("attributes", (d, c) =>
         {
@@ -453,6 +454,7 @@ internal static class BuiltinKinds
         Kinds.DeliveryKinds.Register();
         Kinds.MinionKinds.Register();
         Kinds.CombatKinds.Register();
+        Kinds.EvaluationKinds.Register();
         Kinds.ProgressionKinds.Register();
         Kinds.InterfaceKinds.Register();
         // Effect parameters are checked in every kind's effect lists, so these come once all kinds exist.
