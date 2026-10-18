@@ -16,7 +16,10 @@ public static class MovementIntentHandlers
         handlers.Register<FaceIntent>(Face);
     }
 
-    /// <summary>Plans the walk under the shared policy of <see cref="MovePlanner"/>, for a click and a chase alike.</summary>
+    /// <summary>
+    /// Plans the walk under the shared policy of <see cref="MovePlanner"/>, for a click and a chase alike. The
+    /// search budget goes by the sender's kind, a player's or any other actor's, never by what the intent says.
+    /// </summary>
     private static void MoveTo(in IntentContext ctx, MoveToIntent m)
     {
         var motion = ctx.Motion;
@@ -32,7 +35,7 @@ public static class MovementIntentHandlers
             return;
         }
         var stop = m.Stop is { } s && float.IsFinite(s) ? Math.Max(0f, s) : MovePlanner.DefaultStop;
-        MovePlanner.Of(ctx.Sim).Plan(ctx.Sim, transform, motion, m.Point, stop, m.KeepPlan);
+        MovePlanner.Of(ctx.Sim).Plan(ctx.Sim, transform, motion, m.Point, stop, m.KeepPlan, player: ctx.Player is not null);
     }
 
     private static void MoveDir(in IntentContext ctx, MoveDirIntent d)

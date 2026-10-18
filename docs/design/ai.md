@@ -1,6 +1,6 @@
 # AI
 
-Behaviors are state machines in content. A behavior names an initial state, a think interval, aggro and leash range expressions, and states with enter, tick and exit actions and prioritized transitions. Monsters, minions and constructs all think this way, in one behavior system; what differs is the content they run and the actions it names.
+Behaviors are state machines in content. A behavior names an initial state, a think interval, aggro and leash range expressions, and states with enter, tick and exit actions and prioritized transitions. Monsters, minions and constructs all think this way, in one behavior system; what differs is the content they run and the actions it names. Every action acts on the simulation through `AiIntents.Send`, with the same intents and the same handlers a client's intent runs through; the few world rules a body is under rather than does are named below (see Acting through intents).
 
 ## Perception
 
@@ -24,9 +24,9 @@ An order is a `MinionOrder` on the behavior: the command it came from, the kind 
 
 The movement actions (`chase`, `wander`, `return_home`, `flee`, and the minion actions that walk) send `MoveToIntent`, and its handler plans every mover's walk the same way, a player's click included (`Movement/MovePlanner.cs`), built to remove work rather than repeat it:
 
-- A new plan walks straight when it can: the segment is sampled about a step per tick apart with the movement system's own occupancy check, no step drops further than `move.max_drop`, and no cell crossed costs more than plain ground. Otherwise the pathfinder searches.
+- A new plan walks straight when it can: the segment is sampled about a step per tick apart with the movement system's own occupancy check, no step drops further than `move.max_drop`, and no cell crossed costs more than plain ground. Otherwise the pathfinder searches, on a budget the server picks by who moves: a player's on the pathfinder's own `move.path_max_nodes`, any other mover's on the smaller `move.ai_path_max_nodes`, since the AI's movers are many and renew their plans as they go.
 - A search that cannot bring the mover closer (no step at all, or a partial path ending no nearer the goal) leaves it following what it found, then walking straight at the goal.
-- The AI sends its destination again every think, marked `KeepPlan`, so a plan is kept while it lasts: the handler plans again only when the path or move target has run out, when the destination has moved more than `move.ai_repath_distance` from the goal it planned for, or when the plan is older than `move.ai_repath_seconds`. Such a plan searches on the smaller budget `move.ai_path_max_nodes`, since it is renewed anyway, and a search that failed is not repeated for that goal until the plan is renewed, so an unreachable target costs one search per renewal, not one per think. A click is planned afresh every time, on the pathfinder's own budget `move.path_max_nodes`.
+- The AI sends its destination again every think, marked `KeepPlan`, so a plan is kept while it lasts: the handler plans again only when the path or move target has run out, when the destination has moved more than `move.ai_repath_distance` from the goal it planned for, or when the plan is older than `move.ai_repath_seconds`, and a search that failed is not repeated for that goal until the plan is renewed, so an unreachable target costs one search per renewal, not one per think. A click is planned afresh every time. The flag only lets a sender keep its own plan; it never chooses the budget, so it could go on the wire without letting a client pick the AI's.
 
 The plan is a cache on `Motion` (`PlanGoal`, `PlannedAt`, `Planned`, `PlanFailed`), kept by the move-to handler; a teleport or an order drops it.
 

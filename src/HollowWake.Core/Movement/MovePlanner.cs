@@ -10,16 +10,18 @@ namespace HollowWake.Core.Movement;
 /// <summary>
 /// How a mover plans a walk to a point, for every sender of a <see cref="Intents.MoveToIntent"/>: a player's
 /// click and a monster's chase plan the same way. A new plan walks straight when the segment is clear;
-/// otherwise the pathfinder searches. When a search cannot bring the mover closer (no step, or a partial path
-/// that ends no nearer the goal), the mover follows what it found and then walks straight at the goal.
+/// otherwise the pathfinder searches, on a budget the server picks by who moves: a player's search runs on
+/// the pathfinder's own budget (<c>move.path_max_nodes</c>), any other mover's on the smaller
+/// <c>move.ai_path_max_nodes</c>, since the AI's movers are many and renew their plans as they go. When a
+/// search cannot bring the mover closer (no step, or a partial path that ends no nearer the goal), the mover
+/// follows what it found and then walks straight at the goal.
 /// <para>
 /// A destination sent again every think (<see cref="Intents.MoveToIntent.KeepPlan"/>) keeps its plan while it
 /// lasts: it is planned again only when its path or move target has run out, when the destination has moved
 /// more than <c>move.ai_repath_distance</c> from the planned goal, or when the plan is older than
-/// <c>move.ai_repath_seconds</c>; it searches on the smaller budget <c>move.ai_path_max_nodes</c>, since it
-/// will be searched again as it renews; and a search that failed is not repeated for that goal until the plan
-/// is renewed, so an unreachable target costs one search per renewal instead of one per think. A click plans
-/// afresh every time, on the pathfinder's own budget (<c>move.path_max_nodes</c>).
+/// <c>move.ai_repath_seconds</c>, and a search that failed is not repeated for that goal until the plan is
+/// renewed, so an unreachable target costs one search per renewal instead of one per think. A click plans
+/// afresh every time. The flag only lets a sender keep its own plan; it never changes the budget.
 /// </para>
 /// The plan is a cache on <see cref="Motion"/> (<see cref="Motion.PlanGoal"/>, <see cref="Motion.PlannedAt"/>,
 /// <see cref="Motion.Planned"/>, <see cref="Motion.PlanFailed"/>); a teleport or an order drops it.
@@ -35,7 +37,7 @@ public sealed class MovePlanner
     private Rules? _source;
     private double _repathSeconds = 1.5;
     private double _repathDistance = 2;
-    private int _keptNodes = 500;
+    private int _aiNodes = 500;
     private double _stepUp = 0.6;
     private double _maxDrop = 3;
 
@@ -52,10 +54,11 @@ public sealed class MovePlanner
 
     /// <summary>
     /// Plans the mover's walk to <paramref name="destination"/>, arriving within <paramref name="stop"/>. With
-    /// <paramref name="keep"/> a plan that still serves stands. A walker's goal is put on the ground; a flier
-    /// keeps the height it was given.
+    /// <paramref name="keep"/> a plan that still serves stands. A <paramref name="player"/> searches on the
+    /// pathfinder's own budget, anyone else on the AI's. A walker's goal is put on the ground; a flier keeps the
+    /// height it was given.
     /// </summary>
-    public void Plan(Simulation sim, Transform transform, Motion m, Vector3 destination, float stop, bool keep)
+    public void Plan(Simulation sim, Transform transform, Motion m, Vector3 destination, float stop, bool keep, bool player)
     {
         Read(sim.Content.Rules);
         var now = sim.Clock.Time;
@@ -86,7 +89,7 @@ public sealed class MovePlanner
             m.MoveTarget = goal;
             return;
         }
-        switch (pathfinder.FindPath(from, goal, m.Path, keep ? _keptNodes : pathfinder.MaxNodes))
+        switch (pathfinder.FindPath(from, goal, m.Path, player ? pathfinder.MaxNodes : _aiNodes))
         {
             case PathResult.None:
                 m.MoveTarget = goal;
@@ -146,7 +149,7 @@ public sealed class MovePlanner
         _source = rules;
         _repathSeconds = rules.Number("move.ai_repath_seconds", 1.5);
         _repathDistance = rules.Number("move.ai_repath_distance", 2);
-        _keptNodes = (int)rules.Number("move.ai_path_max_nodes", 500);
+        _aiNodes = (int)rules.Number("move.ai_path_max_nodes", 500);
         _stepUp = rules.Number("move.step_up", 0.6);
         _maxDrop = rules.Number("move.max_drop", 3);
     }
