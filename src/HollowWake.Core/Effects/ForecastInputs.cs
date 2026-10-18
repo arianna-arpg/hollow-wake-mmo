@@ -152,13 +152,14 @@ internal sealed class ForecastInputs : IDisposable
         if (ReferenceEquals(stats, _source) && _context.ForecastRestrictions?.Attributes.Contains(name) == true)
             return Refuse("pending_caster_modifiers");
         var key = (stats, name, extra is not null, suppliedBase, noLinks);
-        if (!_visiting.Add(key)) return Refuse("cyclic_attribute_dependency");
-        if (++_depth > 64) { _depth--; _visiting.Remove(key); return Refuse("dependency_depth"); }
+        if (_visiting.Count > 0 && _visiting.Contains(key)) return Refuse("cyclic_attribute_dependency");
+        if (++_depth > 64) { _depth--; return Refuse("dependency_depth"); }
+        var entered = false;
         try
         {
             var attributes = stats.Attributes;
             if (!suppliedBase && !attributes.TryGetBaseOverride(name, out _) &&
-                !Expression(attributes.Catalog.Get(name)?.Formula, stats)) return false;
+                !DependencyExpression(attributes.Catalog.Get(name)?.Formula)) return false;
             foreach (var modifier in attributes.ModifiersFor(name))
                 if (!Modifier(modifier)) return false;
             if (extra is not null)
@@ -172,13 +173,36 @@ internal sealed class ForecastInputs : IDisposable
             bool Modifier(Modifier modifier)
             {
                 if (!tags.HasAll(modifier.Scope)) return true;
-                if (!Expression(modifier.Condition, stats) || !Expression(modifier.ValueExpr, stats)) return false;
-                if (modifier.Gauge is { } gauge && !StatsName(stats, gauge)) return false;
-                return noLinks || modifier.Form != ModifierForm.Link || string.IsNullOrEmpty(modifier.From) ||
-                    Attribute(stats, modifier.From, tags, extra, noLinks: true);
+                if (!DependencyExpression(modifier.Condition) || !DependencyExpression(modifier.ValueExpr)) return false;
+                if (modifier.Gauge is { } gauge)
+                {
+                    EnterDependencies();
+                    if (!StatsName(stats, gauge)) return false;
+                }
+                if (noLinks || modifier.Form != ModifierForm.Link || string.IsNullOrEmpty(modifier.From)) return true;
+                EnterDependencies();
+                return Attribute(stats, modifier.From, tags, extra, noLinks: true);
             }
         }
-        finally { _depth--; _visiting.Remove(key); }
+        finally { _depth--; if (entered) _visiting.Remove(key); }
+
+        bool DependencyExpression(Expr? expression)
+        {
+            if (expression is not null && (expression.Identifiers.Count > 0 || expression.Flags.Count > 0))
+                EnterDependencies();
+            return Expression(expression, stats);
+        }
+
+        void EnterDependencies()
+        {
+            // Numeric leaves cannot recurse. Track only paths that may return to this attribute;
+            // purity, restrictions and every live dependency are still checked on each observation.
+            if (!entered)
+            {
+                _visiting.Add(key);
+                entered = true;
+            }
+        }
     }
 
     private bool ResourceStable(Stats stats) => !ReferenceEquals(stats, _source) ||

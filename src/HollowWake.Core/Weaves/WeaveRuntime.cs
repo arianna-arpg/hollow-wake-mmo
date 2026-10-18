@@ -1782,11 +1782,12 @@ public sealed partial class WeaveRuntime
             {
                 continue;
             }
-            var r = AiPreferredRange(weave, stats, CacheFor(slot, weave, stats));
+            var cache = CacheFor(slot, weave, stats);
+            var r = AiPreferredRange(weave, stats, cache);
             hasRange |= r > 0;
             // Spend the windup inside existing reach instead of stopping at the outer edge.
             // Zero is a valid approach distance: collision still prevents body overlap.
-            if (outward > 0) r = Math.Max(0, r - outward * AiAnticipation(weave, stats, CacheFor(slot, weave, stats)));
+            if (outward > 0) r = Math.Max(0, r - outward * AiAnticipation(weave, stats, cache));
             best = Math.Max(best, r);
         }
         return hasRange ? best : 1.5;
