@@ -2,8 +2,9 @@ using System.Numerics;
 using System.Text.Json.Nodes;
 using HollowWake.Core.Combat;
 using HollowWake.Core.Components;
+using HollowWake.Core.Definitions;
 using HollowWake.Core.Ecs;
-using HollowWake.Core.Effects;
+using HollowWake.Core.Intents;
 using HollowWake.Core.Maths;
 using HollowWake.Core.Minions;
 using HollowWake.Core.Sim;
@@ -174,13 +175,14 @@ public static class MinionCommands
 /// <summary>
 /// The AI actions minions and constructs compose in content: following and assisting their owner, heeling
 /// home on a leash, obeying orders, and the device actions constructs use to cast with their owner's
-/// numbers, spring on what comes near and echo their owner's casts. Walking leaves through the intents any
-/// actor sends; the leash recall's teleport and a spent trap's going are world rules no intent asks for, so
-/// they stay service calls. The device actions still fire their weaves through <see cref="ConstructCasting"/>,
-/// the one place the AI runs effects itself.
+/// numbers, spring on what comes near and echo their owner's casts. Walking and a device's casting leave
+/// through the intents any actor sends; the leash recall's teleport, a spent trap's going and an echo's replay
+/// of a use its owner paid for are world rules no intent asks for, so they stay service calls.
 /// </summary>
 internal static class MinionActions
 {
+    private const string EchoAction = "echo_owner";
+
     public static void Register()
     {
         AiActions.Register("follow_owner", FollowOwner);
@@ -189,7 +191,20 @@ internal static class MinionActions
         AiActions.Register("obey_command", ObeyCommand);
         AiActions.Register("construct_cast", ConstructCast);
         AiActions.Register("spring", Spring);
-        AiActions.Register("echo_owner", EchoOwner);
+        AiActions.Register(EchoAction, EchoOwner);
+    }
+
+    /// <summary>Read the behavior's action graph once at birth, without naming any pattern or weave.</summary>
+    internal static bool ObservesOwnerCasts(Simulation sim, Entity entity)
+    {
+        if (!sim.World.TryGet<Behavior>(entity, out var behavior)
+            || sim.Content.Get<BehaviorDef>(behavior.BehaviorId) is not { } definition) return false;
+        foreach (var state in definition.States.Values)
+        {
+            if (state.Enter.Any(a => a.Type == EchoAction) || state.Tick.Any(a => a.Type == EchoAction)
+                || state.Exit.Any(a => a.Type == EchoAction)) return true;
+        }
+        return false;
     }
 
     /// <summary>The minion's living owner and where it stands.</summary>
@@ -326,108 +341,116 @@ internal static class MinionActions
         }
     }
 
-    /// <summary><c>construct_cast {weave}</c>: fires a ready weave of the construct (or the named one) at its target.</summary>
+    /// <summary><c>construct_cast {weave}</c>: begins a ready weave of the construct (or the named one) at its target.</summary>
     private static void ConstructCast(AiContext c, JsonObject p)
     {
         if (!c.HasTarget)
         {
             return;
         }
-        ConstructCasting.CastAt(c.Sim, c.Entity, c.Str(p, "weave"), c.Behavior.Target);
+        ConstructCasting.CastAt(c, c.Str(p, "weave"), c.Behavior.Target);
     }
 
+    /// <summary>The memory a trap keeps once it has sprung: when it did.</summary>
+    private const string Sprung = "sprung";
+
     /// <summary>
-    /// <c>spring {radius, weave, consume}</c>: a trap. When a foe comes within <c>radius</c>, fires its weave at
-    /// it; with <c>consume</c> (the default) the trap is spent.
+    /// <c>spring {radius, weave, consume}</c>: a trap. When a foe comes within <c>radius</c>, begins its weave at
+    /// it; with <c>consume</c> (the default) the trap is spent, and goes once that cast is over: at once for an
+    /// instant weave, as the shipped snare's is, after its cast time otherwise. A spent trap's going is a world
+    /// rule, not something it asks for, so it stays a service call.
     /// </summary>
     private static void Spring(AiContext c, JsonObject p)
     {
+        var consume = Flag(p, "consume", true);
+        if (consume && c.Behavior.Memory.ContainsKey(Sprung))
+        {
+            if (c.Sim.World.Get<WeaveBook>(c.Entity)?.Casting is null)
+            {
+                MinionService.Of(c.Sim).Dismiss(c.Entity);
+            }
+            return;
+        }
         var foe = MinionCommands.NearestFoe(c.Sim, c.Entity, c.Transform.Position, (float)c.Num(p, "radius", 1.5));
         if (foe.IsNone)
         {
             return;
         }
         c.Behavior.Target = foe;
-        if (ConstructCasting.CastAt(c.Sim, c.Entity, c.Str(p, "weave"), foe) && Flag(p, "consume", true))
+        if (!ConstructCasting.CastAt(c, c.Str(p, "weave"), foe) || !consume)
         {
-            // A spent trap's going is a world rule, not something it asks for, so it stays a service call.
-            MinionService.Of(c.Sim).Dismiss(c.Entity);
+            return;
         }
+        if (c.Sim.World.Get<WeaveBook>(c.Entity)?.Casting is null)
+        {
+            MinionService.Of(c.Sim).Dismiss(c.Entity);
+            return;
+        }
+        c.Behavior.Memory[Sprung] = c.Sim.Clock.Time;
     }
 
     /// <summary>
-    /// <c>echo_owner {damage_scale}</c>: an echo replays each weave its owner casts after it appeared, from where
-    /// the echo stands, with the owner's numbers and credit, its damage scaled. Summons and movement are not replayed.
+    /// <c>echo_owner {damage_scale}</c>: replay eligible owner resolutions captured since birth, with the owner's
+    /// numbers and credit, from the echo's position. Content's echo exclusions determine eligibility. Replays
+    /// run the captured payload and cast variables without paying again or beginning a new cast bar.
     /// </summary>
     private static void EchoOwner(AiContext c, JsonObject p)
     {
-        if (!OwnerOf(c, out var owner, out _) || !c.Sim.World.TryGet<Minion>(c.Entity, out var minion) || !c.Sim.TryService<MinionService>(out var service))
+        if (!OwnerOf(c, out var owner, out _) || MinionService.Of(c.Sim).CancelIncapacitatedEcho(c.Entity)
+            || !c.Sim.World.TryGet<Minion>(c.Entity, out var minion)
+            || minion.PendingOwnerCasts is not { Count: > 0 } pending)
         {
             return;
         }
-        if (!service.LastCast(owner, out var count, out var key, out var point, out var target))
+        var runtime = c.Sim.Service<WeaveRuntime>();
+        // A replay may trigger more owner uses. Those wait for the next think rather than extending this loop.
+        var count = pending.Count;
+        for (var i = 0; i < count && pending.TryDequeue(out var use); i++)
         {
-            minion.EchoedCast = 0;
-            return;
+            var rng = c.Sim.RngFor(c.Entity, "construct:" + use.Weave.Key);
+            // Preserve the existing single-replay stream; additional uses in this think get distinct seeded streams.
+            if (i > 0) rng = new Rng(Rng.Combine(rng.Seed, (ulong)use.Sequence));
+            runtime.Replay(c.Sim, c.Entity, owner, use.Weave, use.Effects, use.Variables,
+                use.Target, use.Point, c.Num(p, "damage_scale", 0.5), rng);
         }
-        if (minion.EchoedCast < 0)
-        {
-            minion.EchoedCast = count;
-            return;
-        }
-        if (count == minion.EchoedCast || key is null)
-        {
-            return;
-        }
-        minion.EchoedCast = count;
-        if (!c.Sim.World.TryGet<WeaveBook>(owner, out var book) || book.Find(key) is not { } slot)
-        {
-            return;
-        }
-        var weave = c.Sim.Service<WeaveRuntime>().Resolve(c.Sim, slot, out _);
-        if (weave is null || weave.Tags.Has("summon") || weave.Tags.Has("movement") || weave.HasMechanism("summon") || weave.HasMechanism("displaces"))
-        {
-            return;
-        }
-        var aim = !target.IsNone && c.Sim.World.IsAlive(target) && !c.Sim.World.Has<Dead>(target) ? target : Entity.None;
-        ConstructCasting.Fire(c.Sim, c.Entity, owner, weave, aim, point, c.Num(p, "damage_scale", 0.5), cooldownSlot: null);
     }
 
     private static bool Flag(JsonObject p, string key, bool fallback) => p[key] is JsonValue v && v.TryGetValue<bool>(out var b) ? b : fallback;
 }
 
 /// <summary>
-/// How constructs cast: free of cost, on their own clocks, from where they stand. A construct that inherits
-/// its caster casts with its owner as the source, so its numbers are the owner's and its kills credit the
-/// owner; any other construct casts as itself. Either way the cast is the construct's (it raises the
-/// <see cref="WeaveCast"/>), and the weave's cooldown, its cast time or <c>minions.construct_interval</c>,
-/// whichever is longest, passes before the same weave fires again. This is the one place the AI still runs a
-/// weave's effects itself, past the runtime's costs, cast times and checks, rather than sending a cast intent.
+/// How devices cast: each use is a real one, begun by the intent any caster sends (<see cref="UseWeaveIntent"/>,
+/// through <see cref="AiIntents"/>), so the weave runtime validates and times it as it does a player's: its uses,
+/// charges, gates, target, cooldown and cast time all apply, and its cost is paid through the ordinary costs (the
+/// shipped devices cast free because their pattern folds every cost to nothing, not because code skips it). A
+/// construct that inherits its caster casts with its owner as the origin (the runtime's <c>OriginOf</c>): the
+/// effects carry the owner's numbers and credit, from where the construct stands, while the reach, the cast time
+/// and the cooldown are the construct's own. A device begins each weave at most once per
+/// <c>minions.construct_interval</c>, a pace it keeps on its own clock.
 /// </summary>
 internal static class ConstructCasting
 {
-    /// <summary>Fires a ready weave of the construct (the named one when given) that reaches the target; false when none does.</summary>
-    public static bool CastAt(Simulation sim, Entity construct, string? weaveKey, Entity target)
+    /// <summary>Begins a ready weave of the construct (the named one when given) that reaches the target; false when none began.</summary>
+    public static bool CastAt(AiContext c, string? weaveKey, Entity target)
     {
-        if (!sim.World.TryGet<WeaveBook>(construct, out var book) || !sim.World.TryGet<Transform>(construct, out var ct))
-        {
-            return false;
-        }
-        var source = SourceOf(sim, construct);
-        if (!sim.World.TryGet<Stats>(source, out var stats))
+        var sim = c.Sim;
+        if (!sim.World.TryGet<WeaveBook>(c.Entity, out var book))
         {
             return false;
         }
         var runtime = sim.Service<WeaveRuntime>();
         var now = sim.Clock.Time;
         var tt = sim.World.Get<Transform>(target);
-        foreach (var slot in book.Slots)
+        var at = tt?.Position ?? c.Transform.Position;
+        var paced = c.Behavior.PacedUntil;
+        for (var i = 0; i < book.Slots.Count; i++)
         {
+            var slot = book.Slots[i];
             if (weaveKey is not null && slot.Key != weaveKey && slot.Spec.Preset != weaveKey)
             {
                 continue;
             }
-            if (!book.IsReady(slot, now))
+            if (!book.IsReady(slot, now) || (paced is not null && paced.TryGetValue(slot.Key, out var until) && now < until))
             {
                 continue;
             }
@@ -436,56 +459,24 @@ internal static class ConstructCasting
             {
                 continue;
             }
-            var range = weave.Range(stats);
-            if (tt is not null && range > 0 && ct.GroundDistanceTo(tt.Position) > range + tt.Radius + ct.Radius)
+            var range = weave.Range(c.Stats);
+            if (tt is not null && range > 0 && c.Transform.GroundDistanceTo(tt.Position) > range + tt.Radius + c.Transform.Radius)
             {
                 continue;
             }
-            Fire(sim, construct, source, weave, target, tt?.Position ?? ct.Position, 1, slot);
-            return true;
+            if (AiIntents.Send(c, new UseWeaveIntent(i, target, at, Toward(c.Transform, at))).Accepted)
+            {
+                (c.Behavior.PacedUntil ??= new Dictionary<string, double>(StringComparer.Ordinal))[slot.Key] = now + sim.Content.Rules.Number("minions.construct_interval", 1);
+                return true;
+            }
         }
         return false;
     }
 
-    /// <summary>Who a construct's casts come from: its owner when it inherits its caster, else itself.</summary>
-    public static Entity SourceOf(Simulation sim, Entity construct) =>
-        sim.World.TryGet<Minion>(construct, out var m) && m.InheritCaster && !m.Owner.IsNone && sim.World.IsAlive(m.Owner) && sim.World.Has<Stats>(m.Owner)
-            ? m.Owner
-            : construct;
-
-    /// <summary>Runs a weave from the construct's position with <paramref name="source"/>'s numbers, and starts its clock on the slot when one is given.</summary>
-    public static void Fire(Simulation sim, Entity construct, Entity source, CompiledWeave weave, Entity target, Vector3 point, double damageScale, WeaveSlot? cooldownSlot)
+    /// <summary>The unit direction from a body to a point; the body's facing when the point is under it.</summary>
+    private static Vector2 Toward(Transform from, Vector3 at)
     {
-        if (!sim.World.TryGet<Transform>(construct, out var ct) || !sim.World.TryGet<Stats>(source, out var stats))
-        {
-            return;
-        }
-        var now = sim.Clock.Time;
-        if (cooldownSlot is not null && sim.World.TryGet<WeaveBook>(construct, out var book))
-        {
-            var recovery = Math.Max(0.1, stats.Attributes.Get("cooldown.recovery", stats, weave.Tags, weave.Modifiers));
-            var cast = sim.Service<WeaveRuntime>().CastDuration(weave, stats);
-            var wait = Math.Max(weave.Cooldown(stats) / recovery, Math.Max(cast, sim.Content.Rules.Number("minions.construct_interval", 1)));
-            book.ReadyAt[cooldownSlot.Key] = now + wait;
-        }
-        var at = !target.IsNone && sim.World.TryGet<Transform>(target, out var tt) ? tt.Position : point;
-        ct.Face(at);
-        var direction = new Vector2(at.X - ct.Position.X, at.Y - ct.Position.Y);
-        direction = direction.LengthSquared() > 0.0001f ? Vector2.Normalize(direction) : ct.Forward;
-        var ctx = new EffectContext
-        {
-            Sim = sim,
-            Source = source,
-            Target = target,
-            Point = at,
-            Direction = direction,
-            Weave = weave,
-            Tags = weave.Tags,
-            Rng = sim.RngFor(construct, "construct:" + weave.Key),
-            DamageScale = damageScale,
-            From = source == construct ? null : ct.Position,
-        };
-        CompiledEffect.ExecuteAll(weave.Effects, ctx);
-        sim.Events.Publish(new WeaveCast(construct, weave.Key, target, at, weave.Tags) { Tick = sim.Clock.Tick });
+        var direction = new Vector2(at.X - from.Position.X, at.Y - from.Position.Y);
+        return direction.LengthSquared() > 0.0001f ? Vector2.Normalize(direction) : from.Forward;
     }
 }

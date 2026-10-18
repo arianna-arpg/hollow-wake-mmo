@@ -1,16 +1,21 @@
 using System.Numerics;
 using System.Text.Json.Nodes;
 using System.Text.RegularExpressions;
+using HollowWake.Core.Ai;
 using HollowWake.Core.Attributes;
 using HollowWake.Core.Components;
 using HollowWake.Core.Content;
 using HollowWake.Core.Ecs;
+using HollowWake.Core.Effects;
 using HollowWake.Core.Maths;
 using HollowWake.Core.Sim;
 using HollowWake.Core.Tags;
 using HollowWake.Core.Weaves;
 
 namespace HollowWake.Core.Minions;
+
+internal readonly record struct OwnerCast(long Sequence, CompiledWeave Weave, IReadOnlyList<CompiledEffect> Effects,
+    CastVariableSnapshot? Variables, Vector3 Point, Entity Target);
 
 /// <summary>
 /// The minions of one simulation: birth order, what each owner is fighting (so minions can assist), what
@@ -28,9 +33,7 @@ public sealed class MinionService
         public Entity Attacker = Entity.None;
         public double AttackedAt = double.NegativeInfinity;
         public long Casts;
-        public string? LastWeave;
-        public Vector3 LastPoint;
-        public Entity LastCastTarget = Entity.None;
+        public List<Entity>? Echoes;
         public bool PresenceDirty;
     }
 
@@ -42,6 +45,8 @@ public sealed class MinionService
     private InheritRule[]? _inherit;
     private Dictionary<string, CommandDef>? _commands;
     private long _sequence;
+    private string[]? _echoExcludedTags;
+    private string[]? _echoExcludedMechanisms;
 
     private static readonly Comparison<(long Sequence, Entity Entity)> BySequence = static (a, b) => a.Sequence.CompareTo(b.Sequence);
 
@@ -50,9 +55,11 @@ public sealed class MinionService
         _sim = sim;
         sim.Events.Subscribe<DamageDealt>(OnDamage);
         sim.Events.Subscribe<WeaveCast>(OnCast);
+        sim.Events.Subscribe<MinionSummoned>(OnSummoned);
         sim.Events.Subscribe<EntityDied>(OnDied);
         sim.Events.Subscribe<EntityDespawned>(OnDespawned);
         sim.Events.Subscribe<MinionCommandRequested>(OnCommandRequested);
+        sim.Events.Subscribe<StatusApplied>(s => CancelIncapacitatedEcho(s.Target));
     }
 
     /// <summary>The simulation's minion service, created on first use where the composition root did not register one.</summary>
@@ -181,22 +188,29 @@ public sealed class MinionService
         return Entity.None;
     }
 
-    /// <summary>How many weaves the owner has cast while tracked, and the last one: what an echo replays.</summary>
-    internal bool LastCast(Entity owner, out long count, out string? weave, out Vector3 point, out Entity target)
+    /// <summary>Subscribe at birth, before the first think: only behaviors declaring the registered echo action retain uses.</summary>
+    private void OnSummoned(MinionSummoned born)
     {
-        if (_owners.TryGetValue(owner, out var state) && state.LastWeave is not null)
+        if (_owners.TryGetValue(born.Owner, out var state)
+            && _sim.World.TryGet<Minion>(born.Minion, out var minion)
+            && MinionActions.ObservesOwnerCasts(_sim, born.Minion))
         {
-            count = state.Casts;
-            weave = state.LastWeave;
-            point = state.LastPoint;
-            target = state.LastCastTarget;
-            return true;
+            minion.PendingOwnerCasts = new Queue<OwnerCast>();
+            (state.Echoes ??= new List<Entity>()).Add(born.Minion);
         }
-        count = 0;
-        weave = null;
-        point = default;
-        target = Entity.None;
-        return false;
+    }
+
+    private void ForgetEcho(Entity entity)
+    {
+        if (_sim.World.TryGet<Minion>(entity, out var minion))
+        {
+            minion.PendingOwnerCasts?.Clear();
+            if (_owners.TryGetValue(minion.Owner, out var state)) state.Echoes?.Remove(entity);
+        }
+        if (_owners.TryGetValue(entity, out var owner) && owner.Echoes is { } echoes)
+        {
+            foreach (var echo in echoes) _sim.World.Get<Minion>(echo)?.PendingOwnerCasts?.Clear();
+        }
     }
 
     private double AssistMemory => _sim.Content.Rules.Number("minions.assist_memory", 4);
@@ -492,9 +506,16 @@ public sealed class MinionService
             return;
         }
         state.Casts++;
-        state.LastWeave = w.Weave;
-        state.LastPoint = w.Point;
-        state.LastCastTarget = w.Target;
+        if (state.Echoes is { Count: > 0 } echoes && w.Resolved is { } weave && w.ResolvedEffects is { } effects
+            && Valid(w.Caster) && EchoEligible(weave))
+        {
+            var use = new OwnerCast(state.Casts, weave, effects, w.ResolvedVariables, w.Point, w.Target);
+            foreach (var echo in echoes)
+            {
+                if (Valid(echo) && !CancelIncapacitatedEcho(echo))
+                    _sim.World.Get<Minion>(echo)?.PendingOwnerCasts?.Enqueue(use);
+            }
+        }
         if (!w.Target.IsNone && w.Target != w.Caster && Combat.Relations.IsHostile(_sim, w.Caster, w.Target))
         {
             state.Target = w.Target;
@@ -502,8 +523,28 @@ public sealed class MinionService
         }
     }
 
+    private bool EchoEligible(CompiledWeave weave)
+    {
+        _echoExcludedTags ??= _sim.Content.Rules.Strings("minions.echo_excluded_tags").ToArray();
+        _echoExcludedMechanisms ??= _sim.Content.Rules.Strings("minions.echo_excluded_mechanisms").ToArray();
+        foreach (var tag in _echoExcludedTags) if (weave.Tags.Has(tag)) return false;
+        foreach (var mechanism in _echoExcludedMechanisms) if (weave.HasMechanism(mechanism)) return false;
+        return true;
+    }
+
+    /// <summary>Cancel immediately on a disabling status, including one that expires before the next think.</summary>
+    internal bool CancelIncapacitatedEcho(Entity echo)
+    {
+        if (_sim.World.Get<Minion>(echo)?.PendingOwnerCasts is not { } pending
+            || _sim.World.Get<Stats>(echo) is not { } stats
+            || !stats.HasFlag("stunned") && !stats.HasFlag("frozen")) return false;
+        pending.Clear();
+        return true;
+    }
+
     private void OnDied(EntityDied d)
     {
+        ForgetEcho(d.Entity);
         if (!_sim.World.TryGet<Minion>(d.Entity, out var m))
         {
             return;
@@ -522,6 +563,7 @@ public sealed class MinionService
 
     private void OnDespawned(EntityDespawned d)
     {
+        ForgetEcho(d.Entity);
         if (_sim.World.TryGet<Minion>(d.Entity, out var m) && _owners.TryGetValue(m.Owner, out var ownerState))
         {
             ownerState.PresenceDirty = true;

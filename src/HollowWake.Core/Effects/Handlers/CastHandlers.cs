@@ -414,6 +414,7 @@ internal sealed class CastHandler : IEffectHandler
             var cast = new EffectContext
             {
                 CastId = ctx.CastId,
+                CastSource = ctx.CastSource,
                 Sim = ctx.Sim,
                 Origin = ctx.Origin,
                 Source = ctx.Source,

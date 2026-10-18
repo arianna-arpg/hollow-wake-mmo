@@ -81,10 +81,11 @@ public static class ReleaseTargets
 
     internal static void Miss(EffectContext context, string reason, bool emitted = false)
     {
-        context.Sim.Events.Publish(new WeaveMissed(context.Source, context.Slot?.Key ?? "", context.Weave?.Key ?? "", context.Target, reason)
+        var caster = context.CastSource.IsNone ? context.Source : context.CastSource;
+        context.Sim.Events.Publish(new WeaveMissed(caster, context.Slot?.Key ?? "", context.Weave?.Key ?? "", context.Target, reason)
             { CastId = context.CastId, Tick = context.Sim.Clock.Tick, Depth = context.Depth });
         if (context.Sim.EmitCastPresentation && context.Weave is { } weave)
-            context.Sim.Events.Publish(new CastPresentationEvent(context.CastId, "miss", context.Source, context.Target,
+            context.Sim.Events.Publish(new CastPresentationEvent(context.CastId, "miss", caster, context.Target,
                 weave.Key, weave.Name, CastPresentationEvent.ModeName(weave.CastMode), context.Tags,
                 context.From ?? context.SourceTransform?.Position ?? context.Point, context.Point, context.Sim.Clock.Time, 0,
                 context.Sim.Clock.Time, emitted, reason) { Tick = context.Sim.Clock.Tick, Mechanisms = weave.Mechanisms, Outcome = true });

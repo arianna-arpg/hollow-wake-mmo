@@ -1,0 +1,14 @@
+{
+  "source": "cc0e1d4e07d7fcd835690a5c2f0246af275ebfc0",
+  "test": "ConstructUseRangeTests.AnInheritingDevicesUseKeepsItsOwnReleaseRange",
+  "configuration": "Release",
+  "platform": "win-x64",
+  "status": "historical reproduction before correction; both cases failed",
+  "targetDistanceAtBegin": 1,
+  "targetDistanceAtRelease": 8,
+  "castSeconds": 0.25,
+  "cases": [
+    { "deviceRange": 12, "ownerRange": 2, "expectedPayloads": 1, "observedPayloads": 0 },
+    { "deviceRange": 2, "ownerRange": 12, "expectedPayloads": 0, "observedPayloads": 1 }
+  ]
+}

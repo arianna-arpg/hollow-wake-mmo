@@ -42,6 +42,7 @@ form presence effects[0].interval
 form ripple effects[0].interval
 form ripple effects[0].scale_step
 form ripple effects[0].step
+form snare_blast effects[0].effects[1].chance
 form storm effects[0].interval
 form storm effects[0].jitter
 form storm effects[0].radius

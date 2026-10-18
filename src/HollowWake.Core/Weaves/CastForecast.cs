@@ -129,9 +129,11 @@ public sealed partial class WeaveRuntime
             foreach (var modifier in stats.Attributes.AllModifiers)
                 if (modifier.Source == removedSource) (changingAttributes ??= new(StringComparer.Ordinal)).Add(modifier.Attribute);
         var view = local is { Count: > 0 } ? weave.Root.WithModifiers(Combined(weave.Root.Modifiers, local)) : weave;
+        var (origin, payloadFrom) = PayloadOrigin(sim, caster);
         var context = new EffectContext
         {
-            CastId = cast.CastId, Sim = sim, Source = caster, Target = target, Point = point,
+            CastId = cast.CastId, CastSource = caster, Sim = sim, Source = origin, Origin = origin,
+            From = payloadFrom, Target = target, Point = point,
             AimOffset = aimOffset,
             Direction = direction, Weave = view, Tags = view.Tags, Rng = new Rng(0), Slot = cast.Slot,
             ForecastRestrictions = new ForecastRestrictions(changingAttributes ?? NoChangingAttributes, changingFlags ?? CastChangingFlags,

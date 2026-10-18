@@ -931,35 +931,50 @@ public sealed partial class WeaveRuntime
     /// <summary>
     /// Runs a list of a weave's effects for a cast: the context aims at the cast's live target or point, its
     /// random stream comes from the caster, the weave, the tick and the cast's beat, and the cast variables
-    /// are set on it. Returns the context, or null when the caster is gone.
+    /// are set on it. The effects run as the cast's origin (see <see cref="OriginOf"/>), from where the caster
+    /// stands. Returns the context, or null when the caster is gone.
     /// </summary>
     internal EffectContext? Run(Simulation sim, Entity caster, Stats stats, CastState state, CompiledWeave weave, IReadOnlyList<CompiledEffect> effects, int depth, bool publishCast, in CastVarValues vars, double damageScale = 1, string rngPrefix = "weave:", long rngNumber = -1)
     {
         // Instant and nested runtime applications need identity before constructing their payload context.
         if (state.CastId == 0) state.CastId = ++_nextCastId;
         var target = state.Target;
-        var ctx = new EffectContext
+        var (origin, payloadFrom) = PayloadOrigin(sim, caster);
+        var rng = RngStreams.For(sim, caster, rngPrefix, weave.Key, rngNumber < 0 ? state.Pulses : rngNumber);
+        EffectContext ContextFor(Entity source, Vector3? from = null) => new()
         {
             CastId = state.CastId,
+            CastSource = caster,
             Sim = sim,
-            Source = caster,
+            Origin = origin,
+            Source = source,
             Target = target,
             Point = target.IsNone ? state.Point : (sim.World.Get<Transform>(target)?.Position ?? state.Point),
             AimOffset = state.AimOffset,
             Direction = state.Direction,
             Weave = weave,
             Tags = weave.Tags,
-            Rng = RngStreams.For(sim, caster, rngPrefix, weave.Key, rngNumber < 0 ? state.Pulses : rngNumber),
+            Rng = rng,
             Potency = 1,
             DamageScale = damageScale,
             Depth = depth,
             Slot = state.Slot,
+            From = from,
         };
+        // A paid use checks the physical caster's reach, body and target gates. Only its effects inherit
+        // the owner's numbers and credit; a free echo replay has its separate owner-use context.
+        var ctx = ContextFor(caster);
         vars.WriteTo(ctx.Vars);
         if (!ReleaseTargets.Check(ctx, out var miss))
         {
             ReleaseTargets.Miss(ctx, miss);
             return null;
+        }
+        if (origin != caster)
+        {
+            var inherited = ContextFor(origin, payloadFrom);
+            foreach (var (key, value) in ctx.Vars) inherited.Vars[key] = value;
+            ctx = inherited;
         }
         // Release precedes immediate contacts. Delivery selectors may use a dead aim body as a placement.
         if (publishCast && effects.Count > 0) Present(sim, caster, state, weave, "release");
@@ -972,13 +987,35 @@ public sealed partial class WeaveRuntime
         CompiledEffect.ExecuteAll(effects, ctx);
         if (publishCast)
         {
-            sim.Events.Publish(new WeaveCast(caster, weave.Key, target, ctx.Point, weave.Tags) { Tick = sim.Clock.Tick });
+            sim.Events.Publish(new WeaveCast(caster, weave.Key, target, ctx.Point, weave.Tags)
+            {
+                Tick = sim.Clock.Tick, Resolved = weave, ResolvedEffects = effects, ResolvedVariables = vars.Snapshot(),
+            });
             if (sim.World.TryGet<WeaveBook>(caster, out var book))
             {
                 book.RecordCast(weave.Key, RulesOf(sim).RecentCasts);
             }
         }
         return ctx;
+    }
+
+    /// <summary>
+    /// Who a cast's effects run as: the caster's owner when the caster is a construct that inherits its caster
+    /// and the owner lives with stats, else the caster. The cast stays the caster's either way: it is paid,
+    /// validated, reached and timed by the caster's own numbers, and it raises the events; only its effects
+    /// carry the owner's numbers and credit.
+    /// </summary>
+    internal static Entity OriginOf(Simulation sim, Entity caster) =>
+        sim.World.TryGet<Minion>(caster, out var minion) && minion.InheritCaster && !minion.Owner.IsNone
+            && sim.World.IsAlive(minion.Owner) && sim.World.Has<Stats>(minion.Owner)
+            ? minion.Owner
+            : caster;
+
+    /// <summary>Pure payload attribution and placement shared by paid execution and forecast observation.</summary>
+    internal static (Entity Source, Vector3? From) PayloadOrigin(Simulation sim, Entity caster)
+    {
+        var source = OriginOf(sim, caster);
+        return (source, source == caster ? null : sim.World.Get<Transform>(caster)?.Position);
     }
 
     /// <summary>
@@ -1854,6 +1891,12 @@ internal struct CastVarValues
     public double? GuardAbsorbed;
     public double? Persist;
 
+    // Ordinary casts carry no cast variables, so they need no extra allocation. Held/triggered uses retain
+    // their inputs by value, not the payload's mutable dictionary (which also contains damage rolls).
+    public readonly CastVariableSnapshot? Snapshot() => Held is null && Fill is null && Stage is null
+        && ChargesSpent is null && UsesSpent is null && TriggerPower is null && TriggerAmount is null
+        && RepeatIndex is null && GuardAbsorbed is null && Persist is null ? null : new(this);
+
     public readonly void WriteTo(Dictionary<string, double> vars)
     {
         Write(vars, CastVars.Held, Held);
@@ -1876,6 +1919,8 @@ internal struct CastVarValues
         }
     }
 }
+
+internal sealed record CastVariableSnapshot(CastVarValues Values);
 
 /// <summary>
 /// Random streams for casts, derived from the simulation seed, the entity, the tick and a salt, exactly as
