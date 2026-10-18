@@ -28,4 +28,29 @@ The audit now records explicit and effective level, pattern, owning site, spawn 
 
 No shipped spawn opts into scaling in this correction. New content may choose it explicitly in either path, and both are exercised by tests. The planning benchmark remains queued pending a coordinator-granted quiet window. No downstream owner should consume an unvalidated timing claim.
 
+## First controlled planning pair: target missed
+
+The granted quiet window ran exactly one serial worldgen-only pair at Normal priority, baseline then candidate. Baseline: preserved6a65ed1 Release runtime whose entire WorldGen source is identical to71ad34f, with exact71ad34f archived content. Candidate: clean f12ea18 Release/current content. Arguments, hashes, source identities and raw results are retained under `31-bound-bench-*`; both processes exited zero. No reruns or discarded samples.
+
+| Measure | Baseline | Candidate |
+| --- | ---: | ---: |
+| worldgen.zone.plan (ms) | 63.5384 | 56.7857 |
+| worldgen.chunk (ms) | 0.590186 | 0.495100 |
+| worldgen.chunk.alloc (KB) | 14.126465 | 14.126465 |
+| generated offers | 4 | 3 |
+
+The40ms planning target **fails**. Bounding the scan reduces worst-case work but is insufficient on the measured default seed. The correction remains draft and will not propagate as performance-cleared. Further work must remove unnecessary population-query generation through shared passes and prove actual spawn equivalence; no budget is relaxed. This is a worldgen-only comparison, not a new tick/snapshot claim for the changed resident levels.
+
+## Shared spawn-fact query ownership
+
+Following the retained missed target, #31 adds `WorldGenerator.GenerateSpawnFacts` through the existing terrain, landmark and spawn passes. It omits flora placement, whose separate random stream and results are never read by spawning. Normal chunk generation still runs every pass unchanged. The planner continues to cache exact spawn facts and apply the same bounded eligibility query. Reference-chunk equivalence checks cover active overlays and their removal; existing world goldens must remain unchanged. This is an optimization, not another quest/population policy change.
+
+The query also rejects impossible candidate chunks before materializing terrain. Its conservative union includes every biome/table reference admitted by regional level, site inhabitants at the chunk center, and overlapping landmark spawn references. It consumes no RNG and cannot offer anything itself. Positive candidates still use exact shared spawn passes; rejected chunks are not cached across species sets. Existing per-slot inspected-chunk limits still count these rejections. Full-chunk equivalence cases also assert no generated pattern is falsely rejected across overlays and their removal.
+
+## Spawn-query functional checkpoint
+
+The shared spawn-fact query and conservative precheck pass solution/Release builds with zero warnings/errors; full tests core664/server44/client115; validation zero errors/warnings; load and duel. All existing generation goldens are unchanged by this optimization. The four new parameterized cases compare512 exact chunk-population arrays across four zones with overlays active and then removed; every actually generated pattern must pass the conservative precheck, while an absent fixture is rejected. Full chunks still produce flora normally. Intermediate flora-only results and final precheck results are separately retained under `31-facts-*` and `31-query-*`.
+
+A new controlled planning comparison is required because the source changed. The prior56.7857ms failure remains retained; it is not replaced or hidden by a new passing sample. No performance verdict is claimed yet for this implementation.
+
 Acknowledged by: pending Claude rereview.

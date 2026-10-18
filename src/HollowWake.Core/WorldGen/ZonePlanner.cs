@@ -485,12 +485,17 @@ public sealed class ZonePlanner
         chunks.Sort((a, b) => a.Distance != b.Distance ? a.Distance.CompareTo(b.Distance)
             : a.Coord.Y != b.Coord.Y ? a.Coord.Y.CompareTo(b.Coord.Y) : a.Coord.X.CompareTo(b.Coord.X));
         var byId = candidates.ToDictionary(p => p.Id, StringComparer.Ordinal);
+        var patternIds = new HashSet<string>(byId.Keys, StringComparer.Ordinal);
         var limit = Math.Min(chunks.Count, _p.QuestPopulationChunks);
         for (var i = 0; i < limit; i++)
         {
             var coord = chunks[i].Coord;
             if (!_questPopulation.TryGetValue(coord, out var spawns))
-                _questPopulation[coord] = spawns = _gen.GenerateChunk(coord).Spawns.ToArray();
+            {
+                // A rejected chunk is not cached: another slot may ask for different species.
+                if (!_gen.CouldContainPopulation(coord, patternIds)) continue;
+                _questPopulation[coord] = spawns = _gen.GenerateSpawnFacts(coord);
+            }
             var matches = new Dictionary<string, PatternDef>(StringComparer.Ordinal);
             foreach (var spawn in spawns)
             {
