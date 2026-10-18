@@ -7,27 +7,27 @@ using HollowWake.Core.Loot;
 
 namespace HollowWake.Core.Systems.Intents;
 
-/// <summary>Picking up, equipping, unequipping and dropping items, and crafting.</summary>
+/// <summary>Picking up, equipping, unequipping and dropping items, and crafting: a character's bag and gear, so players only.</summary>
 public static class ItemIntentHandlers
 {
     public static void Register(IntentHandlers handlers)
     {
-        handlers.Register<PickUpIntent>(PickUp);
-        handlers.Register<EquipIntent>(Equip);
-        handlers.Register<UnequipIntent>(Unequip);
-        handlers.Register<DropItemIntent>(DropItem);
-        handlers.Register<CraftStartIntent>(CraftStart);
-        handlers.Register<CraftSubmitIntent>(CraftSubmit);
-        handlers.Register<MoveItemIntent>(MoveItem);
-        handlers.Register<SocketStoneIntent>(SocketStone);
-        handlers.Register<UnsocketStoneIntent>(UnsocketStone);
-        handlers.Register<LearnFormIntent>(LearnForm);
-        handlers.Register<UnlearnFormIntent>(UnlearnForm);
-        handlers.Register<BuyIntent>(Buy);
-        handlers.Register<SellIntent>(Sell);
-        handlers.Register<BuyBackIntent>(BuyBack);
-        handlers.Register<BuyPageIntent>(BuyPage);
-        handlers.Register<StationServiceIntent>(StationService);
+        handlers.Register<PickUpIntent>(PickUp, playerOnly: true);
+        handlers.Register<EquipIntent>(Equip, playerOnly: true);
+        handlers.Register<UnequipIntent>(Unequip, playerOnly: true);
+        handlers.Register<DropItemIntent>(DropItem, playerOnly: true);
+        handlers.Register<CraftStartIntent>(CraftStart, playerOnly: true);
+        handlers.Register<CraftSubmitIntent>(CraftSubmit, playerOnly: true);
+        handlers.Register<MoveItemIntent>(MoveItem, playerOnly: true);
+        handlers.Register<SocketStoneIntent>(SocketStone, playerOnly: true);
+        handlers.Register<UnsocketStoneIntent>(UnsocketStone, playerOnly: true);
+        handlers.Register<LearnFormIntent>(LearnForm, playerOnly: true);
+        handlers.Register<UnlearnFormIntent>(UnlearnForm, playerOnly: true);
+        handlers.Register<BuyIntent>(Buy, playerOnly: true);
+        handlers.Register<SellIntent>(Sell, playerOnly: true);
+        handlers.Register<BuyBackIntent>(BuyBack, playerOnly: true);
+        handlers.Register<BuyPageIntent>(BuyPage, playerOnly: true);
+        handlers.Register<StationServiceIntent>(StationService, playerOnly: true);
     }
 
     private static void BuyPage(in IntentContext ctx, BuyPageIntent b)

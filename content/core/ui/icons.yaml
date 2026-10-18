@@ -204,19 +204,6 @@ entries:
       storm_charged: bolt
       battle_trance: spiral
       ember_primed: flame
-    looks:
-      strike: blade
-      cleave: arc
-      bolt: missile
-      nova: nova
-      blast: blast
-      beam: beam
-      field: zone
-      ward: ward
-      mend: mend
-      dash: dash
-      summon: summon
-      shout: shout
     slots:
       main_hand: blade
       off_hand: shield

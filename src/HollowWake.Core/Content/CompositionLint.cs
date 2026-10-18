@@ -7,6 +7,7 @@ using System.Text.RegularExpressions;
 using HollowWake.Core.Definitions;
 using HollowWake.Core.Effects;
 using HollowWake.Core.Expressions;
+using HollowWake.Core.Weaves;
 
 namespace HollowWake.Core.Content;
 
@@ -223,82 +224,14 @@ public sealed class CompositionLint
         return Checks.Count;
     }
 
-    // ------------------------------------------------------------ the axis table
+    // ------------------------------------------------------------ shared axis bindings
 
     /// <summary>
-    /// The attribute an effect parameter falls back to when content leaves it out, keyed by (effect type, parameter).
-    /// Read from the handlers under Effects/Handlers/: the ParamOrAttr and Rate calls, the
-    /// "Field is null ? WeaveAttr(...)" defaults of scatter and cascade, the fuse's weave.Attr defaults and the
-    /// area.width default SizeOf gives a missing width. The rows read outside the handlers are kept by hand: summon and
-    /// deploy (SummonRecipe.Read in Minions/Summoning.cs reads them for both types), damage effectiveness
-    /// (DamagePipeline.AddedEffectiveness takes the node's value over the weave's damage.effectiveness for added damage)
-    /// and a charge gain's max (ChargeService.Gain caps at the holder's charge.{id}.max unless the node gives a max). An
-    /// attribute with a {parameter} placeholder is the holder's rather than the weave's, named by that parameter of the
-    /// same node. Multipliers are left out, because a literal there is still scaled by its attribute: area angle
-    /// (area.angle), projectile spread (projectile.spread), aim spread (aim.spread) and a shove's distance (knockback).
-    /// This table is replaced by AxisBindings (Weaves/AxisBindings.cs) when both land; nothing but
-    /// <see cref="FallbackAttribute"/> reads it.
-    /// </summary>
-    private static readonly Dictionary<(string Type, string Parameter), string> AxisFallbacks = new()
-    {
-        [("area", "radius")] = "area.radius",
-        [("area", "width")] = "area.width",
-        [("projectile", "count")] = "projectile.count",
-        [("projectile", "speed")] = "projectile.speed",
-        [("projectile", "range")] = "range",
-        [("projectile", "pierce")] = "projectile.pierce",
-        [("projectile", "forks")] = "projectile.forks",
-        [("projectile", "chains")] = "projectile.chain",
-        [("projectile", "rehit")] = "projectile.rehit",
-        [("projectile", "bounce")] = "projectile.bounce",
-        [("projectile", "homing")] = "projectile.homing",
-        [("projectile", "guide")] = "projectile.guide",
-        [("projectile", "erratic")] = "projectile.erratic",
-        [("projectile", "spiral")] = "projectile.spiral",
-        [("projectile", "orbit")] = "projectile.orbit",
-        [("projectile", "spin")] = "projectile.spin",
-        [("projectile", "wave")] = "projectile.wave",
-        [("projectile", "accel")] = "projectile.accel",
-        [("projectile", "recurve")] = "projectile.recurve",
-        [("projectile", "converge")] = "projectile.converge",
-        [("projectile", "shape_width")] = "area.width",
-        [("chain", "count")] = "chain.count",
-        [("field", "radius")] = "area.radius",
-        [("field", "duration")] = "duration",
-        [("field", "width")] = "area.width",
-        [("aura", "radius")] = "area.radius",
-        [("aura", "duration")] = "duration",
-        [("scatter", "count")] = "area.strikes",
-        [("scatter", "radius")] = "area.radius",
-        [("scatter", "telegraph_radius")] = "area.radius",
-        [("cascade", "count")] = "area.cascade",
-        [("cascade", "step")] = "area.radius",
-        [("tether", "duration")] = "duration",
-        [("fuse", "delay")] = "fuse.delay",
-        [("fuse", "power")] = "fuse.power",
-        // Kept by hand: SummonRecipe.Read (Minions/Summoning.cs) defaults these to weave.summon.count,
-        // weave.summon.max and weave.duration for both summon and deploy.
-        [("summon", "count")] = "summon.count",
-        [("summon", "max_active")] = "summon.max",
-        [("summon", "duration")] = "duration",
-        [("deploy", "count")] = "summon.count",
-        [("deploy", "max_active")] = "summon.max",
-        [("deploy", "lifetime")] = "duration",
-        // Kept by hand: DamagePipeline.AddedEffectiveness (Combat/DamagePipeline.cs) reads the node's effectiveness, else
-        // weave.damage.effectiveness, for the attacker's added damage.
-        [("damage", "effectiveness")] = "damage.effectiveness",
-        // Kept by hand: ChargeService.Gain (Combat/ChargeService.cs) caps a gain at the holder's charge.{id}.max, which
-        // the charge-max family gives every charge, unless the node gives its own max.
-        [("charge", "max")] = "charge.{id}.max",
-    };
-
-    /// <summary>
-    /// The attribute an effect parameter falls back to when content leaves it out; null when it has none. A
-    /// <c>{parameter}</c> placeholder (<c>charge.{id}.max</c>) marks the holder's attribute, named by that parameter.
+    /// The fallback declared by the shared axis bindings; null for channels, multipliers and parameters without
+    /// one. A {parameter} placeholder names the holder attribute through a sibling value of the same node.
     /// </summary>
     public static string? FallbackAttribute(string type, string parameter) =>
-        AxisFallbacks.TryGetValue((type, parameter), out var attribute) ? attribute : null;
-
+        AxisBindings.Of(type, parameter).FirstOrDefault(binding => binding.Role == AttributeRole.Fallback)?.Attribute;
     private static readonly Regex Placeholder = new(@"\{(\w+)\}", RegexOptions.CultureInvariant);
 
     /// <summary>An attribute with its placeholders filled from the node's parameters; a placeholder the node cannot fill stays.</summary>

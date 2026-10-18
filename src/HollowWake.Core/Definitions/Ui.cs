@@ -90,7 +90,6 @@ public sealed record UiIconSetDef : Definition
     public Dictionary<string, string> Statuses { get; init; } = new();
 
     /// <summary>Weave looks and form ids to glyphs.</summary>
-    public Dictionary<string, string> Looks { get; init; } = new();
 
     public Dictionary<string, string> Slots { get; init; } = new();
 

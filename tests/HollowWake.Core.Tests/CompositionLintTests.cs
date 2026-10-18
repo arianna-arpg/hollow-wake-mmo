@@ -2,6 +2,7 @@ using System.Text.Json.Nodes;
 using System.Text.RegularExpressions;
 using HollowWake.Core.Content;
 using HollowWake.Core.Effects;
+using HollowWake.Core.Weaves;
 using Xunit;
 
 namespace HollowWake.Core.Tests;
@@ -509,7 +510,7 @@ public sealed class LintForms
     private static readonly Regex SizeOfWidth = new(@"SizeOf\(ctx,[^,]+,[^,]+,[^,]+,\s*(?<field>\w+)");
 
     [Fact]
-    public void The_axis_table_has_every_fallback_the_handlers_read()
+    public void The_axis_bindings_have_every_fallback_the_handlers_read()
     {
         var attributes = CoreContent.Registry.Attributes;
         var derived = new HashSet<(string Type, string Parameter, string Attribute)>();
@@ -549,8 +550,8 @@ public sealed class LintForms
         Assert.Contains(("field", "width", "area.width"), derived);
         foreach (var (type, parameter, attribute) in derived)
         {
-            var table = CompositionLint.FallbackAttribute(type, parameter);
-            Assert.True(table == attribute, $"'{type}.{parameter}' falls back to '{attribute}' in its handler, but the lint's axis table has '{table ?? "nothing"}'.");
+            Assert.Contains(AxisBindings.Of(type, parameter), binding => binding.Role == AttributeRole.Fallback && binding.Attribute == attribute);
+            Assert.Equal(attribute, CompositionLint.FallbackAttribute(type, parameter));
         }
     }
 

@@ -1,0 +1,17 @@
+Godot Engine v4.7.2.stable.mono.official.ed1daf0bf - https://godotengine.org
+
+ICON RASTER PASS headless display isolation
+ICON RASTER PASS control: raw eight-digit fill becomes black
+ICON RASTER PASS Godot ToHtml dormant tone retains visible RGB: pixel 77736cff expected 77736cff
+ICON RASTER PASS authored eight-digit palette preserves alpha: pixel 11335580 expected 12345680
+ICON RASTER PASS translucent dormant tone preserves alpha: pixel 77736b80 expected 77736c80
+ICON RASTER PASS fully transparent palette remains transparent
+ICON RASTER PASS etched_stone-volley: RGBA and RGB raster pixels identical
+ICON RASTER PASS etched_stone-volley: visible theme-painted pixels (1142)
+ICON RASTER PASS etched_stone-umbra-dash: RGBA and RGB raster pixels identical
+ICON RASTER PASS etched_stone-umbra-dash: visible theme-painted pixels (1668)
+ICON RASTER PASS runic_brass-volley: RGBA and RGB raster pixels identical
+ICON RASTER PASS runic_brass-volley: visible theme-painted pixels (1142)
+ICON RASTER PASS runic_brass-umbra-dash: RGBA and RGB raster pixels identical
+ICON RASTER PASS runic_brass-umbra-dash: visible theme-painted pixels (1665)
+ICON RASTER DONE 14/14 passed; CPU SVG pixels only, no graphical UI coverage

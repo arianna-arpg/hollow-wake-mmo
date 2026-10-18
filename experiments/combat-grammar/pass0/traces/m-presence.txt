@@ -1,0 +1,61 @@
+== proving_evoker (A) vs proving_pitfighter (B), seed mech, 30 s kitA=lumen_presence,frozen_orb
+      3  A cast frozen_orb
+      9  A cast lumen_presence
+     15  A dealt damage events
+      3  A started frozen_orb
+      3  B cast frenzy
+      2  B cast haymaker
+      1  B cast one_two
+      1  B dealt damage events
+      1  B interrupted frenzy
+      4  B started frenzy
+      2  B started haymaker
+      1  B started one_two
+-- ticks by state (20 per second)
+      8  A state , free
+     10  A state engage, casting Cast
+     60  A state engage, free
+    226  A state idle, free
+     44  A state kite, casting Cast
+    131  A state kite, free
+    121  A state return, free
+      3  B state , free
+     91  B state chase, casting Cast
+    154  B state chase, free
+      5  B state idle, free
+-- A walked 71.1 units
+-- B walked 30.5 units
+-- life A 145/148  B gone
+-- timeline
+  t=0.05 A (10.00,10.00)  | B (14.00,10.00)  | dist 4.00
+  t=1.00 A (10.00,10.00) kite casting=frozen_orb(Cast) | B (11.40,10.00) chase casting=haymaker(Cast) | dist 1.40
+  t=2.00 A (4.36,10.00) engage | B (10.44,10.00) chase | dist 6.08
+  t=3.00 A (3.59,10.00) engage | B (6.38,10.00) chase | dist 2.79
+  t=4.00 A (0.59,10.00) kite | B (4.71,10.00) chase | dist 4.12
+  t=5.00 A (-3.16,10.00) kite | B (-0.07,10.00) chase | dist 3.09
+  t=6.00 A (-5.16,10.00) kite casting=frozen_orb(Cast) | B (-3.74,10.00) chase casting=haymaker(Cast) | dist 1.42
+  t=7.00 A (-10.79,10.00) kite | B (-4.66,10.00) chase | dist 6.14
+  t=8.00 A (-11.56,10.00) kite | B (-8.81,10.00) chase | dist 2.76
+  t=9.00 A (-13.31,10.00) kite | B (-9.90,10.00) chase casting=frenzy(Cast) | dist 3.41
+  t=10.00 A (-15.31,10.00) engage | B (-12.74,10.00) chase | dist 2.57
+  t=11.00 A (-17.81,10.00) kite casting=frozen_orb(Cast) | B (-14.18,10.00) chase | dist 3.64
+  t=12.00 A (-18.81,10.00) kite | B (-16.52,10.00) chase casting=frenzy(Cast) | dist 2.30
+  t=12.70 B died
+  t=13.00 A (-20.31,10.00) return | B dead | dist 3.80
+  t=14.00 A (-15.31,10.00) return | B dead | dist 1.20
+  t=15.00 A (-10.31,10.00) return | B dead | dist 6.20
+  t=16.00 A (-5.31,10.00) return | B dead | dist 11.20
+  t=17.00 A (-0.31,10.00) return | B dead | dist 16.20
+  t=18.00 A (4.69,10.00) return | B dead | dist 21.20
+  t=19.00 A (9.69,10.00) idle | B dead | dist 26.20
+  t=20.00 A (9.69,10.00) idle | B dead | dist 26.20
+  t=21.00 A (9.91,8.27) idle | B dead | dist 26.49
+  t=22.00 A (9.91,8.27) idle | B dead | dist 26.49
+  t=23.00 A (9.91,8.27) idle | B dead | dist 26.49
+  t=24.00 A (9.91,8.27) idle | B dead | dist 26.49
+  t=25.00 A (9.91,8.27) idle | B dead | dist -1.00
+  t=26.00 A (9.91,8.27) idle | B dead | dist -1.00
+  t=27.00 A (8.97,9.43) idle | B dead | dist -1.00
+  t=28.00 A (8.81,9.63) idle | B dead | dist -1.00
+  t=29.00 A (12.76,10.27) idle | B dead | dist -1.00
+  t=30.00 A (12.10,10.91) idle | B dead | dist -1.00

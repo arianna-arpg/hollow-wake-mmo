@@ -74,6 +74,18 @@ public sealed class Motion : IComponent
     /// <summary>A movement over time that overrides walking while it lasts (a dash, a leap); null when none.</summary>
     public Displacement? Displacement;
 
+    // The plan the move-to handler made last (see Movement.MovePlanner), kept between intents. A cache, not
+    // state worth saving.
+
+    /// <summary>Where the current plan leads. Meaningful while <see cref="Planned"/> is set.</summary>
+    public Vector3 PlanGoal;
+    /// <summary>When the current plan was made; a kept plan is renewed after <c>move.ai_repath_seconds</c>.</summary>
+    public double PlannedAt = double.NegativeInfinity;
+    /// <summary>The path or move target was planned toward <see cref="PlanGoal"/>; a teleport or an order clears it.</summary>
+    public bool Planned;
+    /// <summary>The last search for <see cref="PlanGoal"/> could not bring the mover closer; once what it found runs out, a kept plan walks straight at the goal until a renewal.</summary>
+    public bool PlanFailed;
+
     public void Stop()
     {
         MoveDir = Vector2.Zero;

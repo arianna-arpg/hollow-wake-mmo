@@ -6,14 +6,14 @@ using HollowWake.Core.Items;
 
 namespace HollowWake.Core.Systems.Intents;
 
-/// <summary>Choosing lines in a conversation, ending it, and closing the world panes a conversation or an entity opened.</summary>
+/// <summary>Choosing lines in a conversation, ending it, and closing the world panes a conversation or an entity opened: a session's panes, so players only.</summary>
 public static class DialogueIntentHandlers
 {
     public static void Register(IntentHandlers handlers)
     {
-        handlers.Register<ChooseDialogueIntent>(Choose);
-        handlers.Register<CloseDialogueIntent>(CloseDialogue, whileDead: true);
-        handlers.Register<ClosePaneIntent>(ClosePane, whileDead: true);
+        handlers.Register<ChooseDialogueIntent>(Choose, playerOnly: true);
+        handlers.Register<CloseDialogueIntent>(CloseDialogue, whileDead: true, playerOnly: true);
+        handlers.Register<ClosePaneIntent>(ClosePane, whileDead: true, playerOnly: true);
     }
 
     private static void Choose(in IntentContext ctx, ChooseDialogueIntent c)
