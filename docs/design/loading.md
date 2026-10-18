@@ -34,7 +34,7 @@ Startup covers content/client preparation. Character entry and authoritative wor
 
 Retry restarts local preparation and its timeout. The reliable connection still owns the original character-selection delivery; retry does not send a duplicate selection while its response is delayed. Cancellation closes the connection, discards pending entry, and returns to login. Old socket callbacks cannot install cancelled world data into the next connection.
 
-The cover clears movement, blocks gameplay input and owns focus. Browser siblings are inert, then restored to their previous state. Keys and controller inputs held across completion are quarantined until release or neutral. Retry/cancel retain keyboard and touch access. Hiding the browser or losing native window focus pauses toy advancement. This does not pause the authoritative server or promise invulnerability during preparation.
+The cover clears movement, blocks gameplay input and owns focus. Browser siblings are inert, then restored to their previous state. Keys and controller inputs held across completion are quarantined until release or neutral. Retry/cancel retain keyboard and touch access. Controller confirmation requires the client window or document to have focus; button edges are still tracked while unfocused so a held press cannot activate a button on return. Hiding the browser or losing native window focus pauses toy advancement. This does not pause the authoritative server or promise invulnerability during preparation.
 
 ## Verification
 

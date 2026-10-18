@@ -205,7 +205,7 @@ public partial class LoadingScreen : CanvasLayer
                 - (Input.IsJoyButtonPressed(pad, down ? JoyButton.DpadLeft : JoyButton.DpadUp) ? 1 : 0);
             if (Math.Abs(stick) > Spec.Controls.Deadzone || dpad != 0) { axis = dpad != 0 ? dpad : stick; _pointer = null; }
             var confirm = Input.IsJoyButtonPressed(pad, JoyButton.A);
-            if (confirm && !_padConfirm) (Session.Retry ?? Session.Cancel)?.Invoke();
+            if (GetWindow().HasFocus() && confirm && !_padConfirm) (Session.Retry ?? Session.Cancel)?.Invoke();
             _padConfirm = confirm;
         }
         if (!Active) return;
