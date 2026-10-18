@@ -89,7 +89,7 @@ The pre-optimization control 2cc5d66 and candidate both received the same approv
 | Delta traffic | 9.326582 KB | 9.326582 KB | 10 KB |
 | Combined traffic | 8.448813 KB | 8.448813 KB | 10 KB |
 
-All snapshot traffic, active forecast observation counts and end-entity counts match. Behavior is slower in this sample, so no causal AI speedup is claimed; the speculative path-tracking change was removed. Both samples report expression allocation 0.0168 B/evaluation rather than literal zero. That inherited process-wide reading is retained, not rounded away or called a zero-allocation pass. Final source timing after the removal remains pending.
+All snapshot traffic, active forecast observation counts and end-entity counts match. Behavior is slower in this sample, so no causal AI speedup is claimed; the speculative path-tracking change was removed. Both samples report expression allocation 0.0168 B/evaluation rather than literal zero. That inherited process-wide reading is retained, not rounded away or called a zero-allocation pass. Final source timing after the removal is recorded below.
 
 ### Approved main fixture compatibility
 
@@ -99,11 +99,38 @@ Two morph sensitivity checks added on main incorrectly expected nearest and aime
 
 Source 97ffd12 builds without warnings/errors and passes all 994 .NET tests (804 core, 58 server, 132 client). Content validates 0/0, zone load runs 200 ticks, the proving fight runs, protocol generation is current, and the standard tournament hashes replay identically without regeneration. The private forecast/delta/interface probe finishes PROBE OK and its server exits0. Its earlier helper attempts failed on Windows log sharing, an initially empty log, and an overlong test account name; all owned servers stopped cleanly and no production change was made to pass the probe. The final performance comparison is still pending.
 
+### Tournament-format and entry follow-up integration
+
+Approved main 0a43d97 (#51 and #52) is merged in 1c59d61. The single conflict was the Windows tournament baseline. #52 explicitly widens float trace inputs to double before hundredth formatting and canonicalizes rounded negative zero; it changes the trace representation, not combat resolution. The preserved before/after standard reports compare equal in every JSON field except trace Hash, recursively, across all seven pairs and ten seeds. Only loosed_skirmisher:hob, loosed_skirmisher:boar and loosed_skirmisher:tide_caller change their hashes. `trace52-comparison.json` retains the exact old/new values. The baseline was then regenerated on win-x64 and checked successfully; incoming main's unrelated combat hashes were not substituted.
+
+Source 1c59d61 passes a clean Release solution build and all 1,012 .NET tests (822 core, 58 server, 132 client). The browser's 322 tests and production build pass. Evidence uses the trace52 prefix; earlier cost files remain tied to 97ffd12. The matched pre-optimization control also received 0a43d97 as 271e82d, builds cleanly, and replays the same final baseline identically. Its only runtime differences from 1c59d61 are SnapshotBuilder delta reuse and the single PreferredRange cache reuse. Neither #47 nor the later #54 aim-context proposal is included in these measured sources.
+
+### Final matched performance window
+
+After #31's measurement finished, the coordinator explicitly granted one serial full Release pair, with other participating owners quiet. The already-built control 271e82d and candidate 1c59d61 each ran once at Normal priority. Both exited 0 before the window was released. Raw cost-final bench/environment/comparison files retain every row. No budget, workload, precision, cadence or protocol setting changed.
+
+| Measure | Control | Candidate | Existing limit |
+|---|---:|---:|---:|
+| Tick p95 | 10.224300 ms | 10.282400 ms | 25 ms |
+| Behavior | 2.265436 ms | 2.271492 ms | 3 ms |
+| Full snapshot | 0.749739 ms | 0.755977 ms | 1 ms |
+| Delta snapshot | 0.641659 ms | 0.558974 ms | 1 ms |
+| Interface snapshot | 0.756417 ms | 0.734132 ms | 1 ms |
+| Combined snapshot | 0.814359 ms | 0.763977 ms | 1 ms |
+| Full traffic | 29.658721 KB | 29.658721 KB | 30 KB |
+| Delta traffic | 9.326582 KB | 9.326582 KB | 10 KB |
+| Combined traffic | 8.448813 KB | 8.448813 KB | 10 KB |
+| Combined allocation | 60.464609 KB | 52.303867 KB | diagnostic |
+| Expression allocation | 0.016800 B/eval | 0.013920 B/eval | zero |
+
+Every timing and nonzero allocation/traffic ceiling passes in this sample. The literal-zero expression-allocation gate does not. These are the unmodified benchmark's process-wide counters, while the existing steady-state current-thread regression passes; that distinction is not a waiver or a proven attribution of the residual bytes. Keep it open for Claude review. No causal AI speedup is claimed. Snapshot allocation falls by about 13.5%; traffic, 1,852 forecast observations and end-entity counts match exactly, with zero simulation errors. This is the default workload on this development machine, not crowd, minimum-hardware or visual-production certification.
+
 ## Integration handoffs and review request
 
 - #36: consume its full corrected foundation, not correction 724c5ed alone. Preserve this request's compiled release/miss policy, author contact: body consistently on all three selectors introduced here (strike, measured_strike and bash), and preserve sampled CastState/EffectContext AimOffset for projectile elevation. The corrected full entity dependency is now #34 at 26c50de, including #36 through e383ffb; it remains a separately reviewed draft. Its removed private stored-target gate must not return. Repeat the species/relief matrix on the combined head and verify forecast viewer eligibility through the same resulting contact predicate.
 - #49: pass the current target into PreferredRange while preserving its intent-dispatch and movement-plan seam. File overlap was recorded on both requests before edits.
 - #50: echo replay resolves the owner's paid use through ReleaseTargets.Execute after its final context is built, from the echo's actual origin. No new cost or echo-specific bypass. Origin/range/wall and selected-recipient regressions belong on the combined head. Also verify that proxy misses close the same physical caster/cast identity that started its presentation, independently of owner attribution for stats and damage; the context origin alone is not that identity. Handoff: https://github.com/arianna-arpg/hollow-wake-mmo/pull/50#issuecomment-6253135942.
+- #54: preserve its proposed original-cast EffectContext.Aim separately from the current delivery Point when that reviewed change is integrated. WithTarget and EffectHelpers.At must retain it, while an explicit aim transformation may rotate it. This measured source does not include #54 or claim combined move-anchor coverage; do not introduce a private release-context bypass when reconciling it.
 
 Claude: rereview the compiled release contract, after_damage packet semantics, intentional melee/area composition expansion, approach comparisons and combined snapshot budget. No merge or final visual-production certification is claimed. Headless native evidence covers behavior, not rendered pixels or controllers.
 

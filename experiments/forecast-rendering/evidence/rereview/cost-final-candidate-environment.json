@@ -1,0 +1,9 @@
+{
+  "Head": "1c59d613333fa3b07de989df24cbf044a97b3a76",
+  "Utc": "2026-10-18T19:07:59.9489724Z",
+  "Priority": "Normal",
+  "Runtime": "10.0.402",
+  "Command": "dotnet src/HollowWake.Tools/bin/Release/net10.0/hollowwake.dll bench --json",
+  "Build": "trace52-build.txt",
+  "Base": "0a43d978b23e6f04548605bab91aa97fe18418a0"
+}
