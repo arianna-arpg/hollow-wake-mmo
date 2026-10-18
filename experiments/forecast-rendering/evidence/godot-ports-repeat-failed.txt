@@ -1,0 +1,56 @@
+Godot Engine v4.7.2.stable.mono.official.ed1daf0bf - https://godotengine.org
+Vulkan 1.3.280 - Forward+ - Using Device #0: NVIDIA - NVIDIA GeForce RTX 3090
+
+content loaded from <worktree>\content\core: 0 errors, 0 warnings
+server 127.0.0.1:18077 from the command line
+server granted features: cast_cues, cast_forecast_v1, entity_delta, interface
+SMOKE ok   connect and log in: Logged in. Pick a character.
+SMOKE ok   create character: Smoke the holdfast
+SMOKE ok   enter world: Smoke at 129.5, 111.0, 14.7
+SMOKE ok   terrain built: 49 chunks in 0.5s, 311 entities in view, 41 fps
+SMOKE shot <worktree>/artifacts/forecast-review/cleave-ports-repeat-godot\01_isometric.png: Ok
+SMOKE FAIL wasd move: moved 0.0 units
+SMOKE FAIL jump: rose 0.00 units
+SMOKE ok   click to move: tried (5,0) 0.0  (0,5) 5.2
+SMOKE ok   quartermaster offers quests: reached=True at 1.0 units, F interacted with Quartermaster (quest_giver) at 1.3, panel shown=True
+SMOKE shot <worktree>/artifacts/forecast-review/cleave-ports-repeat-godot\02_quest_offer.png: Ok
+SMOKE shot <worktree>/artifacts/forecast-review/cleave-ports-repeat-godot\03_third_person.png: Ok
+SMOKE ok   camera toggle: Isometric -> switched -> Isometric
+SMOKE ok   camera rotate: Q turned yes, E turned back yes
+SMOKE shot <worktree>/artifacts/forecast-review/cleave-ports-repeat-godot\04_sheet.png: Ok
+SMOKE ok   character sheet: opened=True closed=True
+SMOKE shot <worktree>/artifacts/forecast-review/cleave-ports-repeat-godot\06_core_pane.png: Ok
+SMOKE ok   core pane: open=True, bag 2 items on 12x5, 9 doll slots, wallet 3, interface=True
+SMOKE shot <worktree>/artifacts/forecast-review/cleave-ports-repeat-godot\07_page_weaves.png: Ok
+SMOKE shot <worktree>/artifacts/forecast-review/cleave-ports-repeat-godot\07_page_passives.png: Ok
+SMOKE shot <worktree>/artifacts/forecast-review/cleave-ports-repeat-godot\07_page_reliquary.png: Ok
+SMOKE shot <worktree>/artifacts/forecast-review/cleave-ports-repeat-godot\07_page_stash.png: Ok
+SMOKE shot <worktree>/artifacts/forecast-review/cleave-ports-repeat-godot\07_page_character.png: Ok
+SMOKE ok   ribbon pages: weaves=shown, passives=shown, reliquary=shown, stash=shown, character=shown
+SMOKE FAIL escape closes the core pane last: core open=True
+SMOKE shot <worktree>/artifacts/forecast-review/cleave-ports-repeat-godot\08_dialogue.png: Ok
+SMOKE ok   talk to a villager: reached=True, Marcher: "Weft hold you, stranger." with 2 choices, chose "Any news?" (answered=True)
+SMOKE FAIL script: Cannot access a disposed object.
+Object name: 'HollowWake.Client.UI.WorldPanes.DialoguePane'.
+SMOKE SUMMARY
+SMOKE PASS connect and log in: Logged in. Pick a character.
+SMOKE PASS create character: Smoke the holdfast
+SMOKE PASS enter world: Smoke at 129.5, 111.0, 14.7
+SMOKE PASS terrain built: 49 chunks in 0.5s, 311 entities in view, 41 fps
+SMOKE FAIL wasd move: moved 0.0 units
+SMOKE FAIL jump: rose 0.00 units
+SMOKE PASS click to move: tried (5,0) 0.0  (0,5) 5.2
+SMOKE PASS quartermaster offers quests: reached=True at 1.0 units, F interacted with Quartermaster (quest_giver) at 1.3, panel shown=True
+SMOKE PASS camera toggle: Isometric -> switched -> Isometric
+SMOKE PASS camera rotate: Q turned yes, E turned back yes
+SMOKE PASS character sheet: opened=True closed=True
+SMOKE PASS core pane: open=True, bag 2 items on 12x5, 9 doll slots, wallet 3, interface=True
+SMOKE PASS ribbon pages: weaves=shown, passives=shown, reliquary=shown, stash=shown, character=shown
+SMOKE FAIL escape closes the core pane last: core open=True
+SMOKE PASS talk to a villager: reached=True, Marcher: "Weft hold you, stranger." with 2 choices, chose "Any news?" (answered=True)
+SMOKE FAIL script: Cannot access a disposed object.
+Object name: 'HollowWake.Client.UI.WorldPanes.DialoguePane'.
+SMOKE DONE 12/16 passed in 23.6s; 115 fps at the end with 49 chunks and 302 entities
+ERROR: 23 RID allocations of type 'N10RendererRD14TextureStorage7TextureE' were leaked at exit.
+ERROR: 511 RID allocations of type 'PN18TextServerAdvanced22ShapedTextDataAdvancedE' were leaked at exit.
+ERROR: 3 RID allocations of type 'PN18TextServerAdvanced12FontAdvancedE' were leaked at exit.

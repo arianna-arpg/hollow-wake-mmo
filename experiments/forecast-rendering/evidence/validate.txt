@@ -1,11 +1,11 @@
 
 affixes                 22
-attribute_families      15
-attributes            1058
+attribute_families      16
+attributes            1426
 behaviors               10
 biomes                  12
 callings                 6
-charges                  3
+charges                 19
 containers               1
 currencies               3
 decrees                  5
@@ -23,7 +23,7 @@ monster_rarities         5
 passive_choices          5
 passive_realms           2
 passives                57
-patterns                51
+patterns                53
 pois                    10
 procedures               3
 procs                    6
@@ -37,7 +37,7 @@ rules                   21
 slots                    9
 stashes                  2
 station_services         6
-statuses                44
+statuses               112
 structures               4
 tags                    22
 threads                  9
@@ -52,7 +52,7 @@ ui_sheets                1
 ui_themes                2
 uniques                  4
 vendors                  1
-weaves                  79
+weaves                  83
 world_events             5
 zone_overrides           1
 

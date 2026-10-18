@@ -213,11 +213,20 @@ async function corePaneAndPages() {
     shown.push(`${id}=${ok ? 'shown' : 'not shown'}`);
   }
   record('ribbon pages', ['weaves', 'passives', 'character'].every((id) => shown.includes(`${id}=shown`)), shown.join(', '));
+  const escapeState = (u) => JSON.stringify({ core: u.coreOpen, options: u.optionsOpen, tray: u.trayOpen, pages: u.shownPages, world: u.worldPanes });
+  const escapeSteps = [];
   for (let i = 0; i < 8 && (await ui()).coreOpen; i++) {
+    const before = escapeState(await ui());
     await page.keyboard.press('Escape');
+    // Wait for the observed transition before another press; a busy renderer/server can lag
+    // the old fixed delay. Keep the same bounded steps and require all panes to actually close.
+    const changed = await until(async () => escapeState(await ui()) !== before, 2000);
+    escapeSteps.push({ before, after: escapeState(await ui()), changed });
     await sleep(150);
   }
-  record('escape closes the core pane last', !(await ui()).coreOpen && !(await ui()).optionsOpen, `core open=${(await ui()).coreOpen}`);
+  const closed = !(await ui()).coreOpen && !(await ui()).optionsOpen;
+  const focus = closed ? '' : await hw(() => `${document.activeElement?.tagName}#${document.activeElement?.id}`);
+  record('escape closes the core pane last', closed, `core open=${(await ui()).coreOpen}${closed ? '' : `; focus=${focus}; transitions=${JSON.stringify(escapeSteps)}`}`);
 }
 
 /** A villager: walk up, click it, read its line and answer the first open choice. */

@@ -122,6 +122,9 @@ public partial class Smoke : Node
         var t0 = Now;
         var built = await Until(() => _main.World.BuiltChunks > 0 && _main.World.PendingChunks == 0, 90);
         Record("terrain built", built, $"{_main.World.BuiltChunks} chunks in {Now - t0:0.0}s, {_main.World.Entities.Count} entities in view, {Engine.GetFramesPerSecond()} fps");
+        var ready = await Until(() => !_main.Loading.BlocksWorldInput, 20);
+        Record("world input ready", ready, $"loading={_main.Loading.Active}, blocked={_main.Loading.BlocksWorldInput}, chat={_main.Hud.ChatFocused}");
+        if (!ready) return;
         await Wait(1.0);
         await Shot("01_isometric.png");
 
@@ -356,8 +359,7 @@ public partial class Smoke : Node
         // Escape closes the pages, then the core pane.
         for (var i = 0; i < pages.Count + 2 && hud.CoreOpen; i++)
         {
-            Tap(Key.Escape);
-            await Wait(0.15);
+            await EscapeAndWait();
         }
         Record("escape closes the core pane last", !hud.CoreOpen, $"core open={hud.CoreOpen}");
     }
@@ -440,12 +442,15 @@ public partial class Smoke : Node
                 await Until(Opened, 6);
             }
             // A trader that talks first: bring its conversation to the front and ask to trade, as a player would.
-            if (!hud.HasWorldPane("vendor") && hud.FrontView<UI.WorldPanes.DialoguePane>() is { State: { } talk } dialogue)
+            if (!hud.HasWorldPane("vendor") && hud.FrontView<UI.WorldPanes.DialoguePane>() is { State: { } talk })
             {
                 hud.Workspace.SelectTab($"dialogue:{talk.Source}");
                 await Wait(0.3);
-                var index = talk.Choices.FindIndex(c => c.Id == "trade" && c.Enabled);
-                var button = index < 0 ? null : dialogue.FindChildren("*", "Button", true, false).OfType<Button>().FirstOrDefault(b => b.Text.StartsWith($"{index + 1}. ", StringComparison.Ordinal));
+                // Layout/restyling or a server close may replace the view during the await.
+                var dialogue = hud.FrontView<UI.WorldPanes.DialoguePane>();
+                var current = dialogue?.State;
+                var index = current?.Source == vendor.Key ? current.Choices.FindIndex(c => c.Id == "trade" && c.Enabled) : -1;
+                var button = index < 0 || !GodotObject.IsInstanceValid(dialogue) ? null : dialogue!.FindChildren("*", "Button", true, false).OfType<Button>().FirstOrDefault(b => b.Text.StartsWith($"{index + 1}. ", StringComparison.Ordinal));
                 if (button is not null)
                 {
                     await Click(ScreenCenter(button));
@@ -595,9 +600,23 @@ public partial class Smoke : Node
         var hud = _main.Hud;
         for (var i = 0; i < 8 && (hud.CoreOpen || hud.Workspace.Book.Leaves.Count > 0); i++)
         {
-            Tap(Key.Escape);
-            await Wait(0.15);
+            await EscapeAndWait();
         }
+    }
+
+    private string WorkspaceState()
+    {
+        var hud = _main.Hud;
+        return $"core={hud.CoreOpen}, tray={hud.Workspace.TrayOpen}, front={hud.Workspace.Book.Active()?.Id}, leaves={string.Join(',', hud.Workspace.Book.Leaves.Select(l => l.Id))}";
+    }
+
+    private async Task EscapeAndWait()
+    {
+        var before = WorkspaceState();
+        Tap(Key.Escape);
+        if (!await Until(() => WorkspaceState() != before, 2))
+            GD.Print($"SMOKE escape unchanged: {before}; loading={_main.Loading.BlocksWorldInput}, focus={GetViewport().GuiGetFocusOwner()?.GetType().Name}, chat={_main.Hud.ChatFocused}");
+        await Wait(0.15);
     }
 
     /// <summary>Types into the Options search field; the rows narrow to the matching entries of every page.</summary>
