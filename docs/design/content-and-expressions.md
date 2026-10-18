@@ -4,7 +4,7 @@ See `docs/modding.md` for the authoring guide. This is the contract.
 
 ## Loading
 
-`ContentRegistry.Load(layers)` reads every YAML and JSON file in each layer directory in path order, merges entries by kind and id across layers (replace, patch, remove), binds each entry to its kind's record type through the content JSON conventions, expands attribute families into attributes, builds the attribute catalog and the rules, then runs every validator of every kind with a context that can resolve references to any other kind. A kind's own validator comes first; areas that add fields to a kind add their validators with `ContentKinds.AddValidator`. The report carries errors and warnings with origins. Strict loading throws on errors.
+`ContentRegistry.Load(layers)` reads every YAML and JSON file in each layer directory in path order, merges entries by kind and id across layers (replace, patch, remove), binds each entry to its kind's record type through the content JSON conventions, expands attribute families into attributes, builds the attribute catalog and the rules, then runs every validator of every kind with a context that can resolve references to any other kind. A kind's own validator comes first; areas that add fields to a kind add their validators with `ContentKinds.AddValidator`. The report carries errors and warnings with origins. Strict loading throws on errors. A layer defines an id once: a second definition of the same kind and id within one layer warns and replaces the first, since only a later layer is meant to replace or patch an earlier one.
 
 ## Conventions
 

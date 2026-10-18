@@ -164,8 +164,55 @@ public static class WeaveValidation
                     c.Warn($"'{at}' effect '{type}' has parameter '{key}', which it does not read.");
                 }
             }
+            foreach (var (kind, parameter) in signature.References)
+            {
+                Reference(c, kind, parameter, parameters[parameter], at, type);
+            }
+            foreach (var name in FilterParameters)
+            {
+                if (signature.Accepts(name) && parameters[name] is JsonValue fv && fv.TryGetValue<string>(out var word) && !Filters.Has(word))
+                {
+                    c.Error($"'{at}' effect '{type}' names unknown filter '{word}' in '{name}'; known filters are {string.Join(", ", Filters.Names)}.");
+                }
+            }
         }
         Nested(parameters, c, at);
+    }
+
+    /// <summary>The parameters whose words name a filter, read by <see cref="Filters"/> wherever a handler reaches bodies.</summary>
+    private static readonly string[] FilterParameters = { "filter", "domain_filter" };
+
+    /// <summary>
+    /// A parameter the signature says names content of a kind: each string in it (one, or a list) must be a
+    /// known id of that kind, unless it is a <c>$</c> variable the compiler resolves.
+    /// </summary>
+    private static void Reference(ValidationContext c, string kind, string parameter, JsonNode? value, string at, string type)
+    {
+        switch (value)
+        {
+            case JsonValue one when one.TryGetValue<string>(out var id):
+                Check(id);
+                break;
+            case JsonArray many:
+                foreach (var item in many)
+                {
+                    if (item is JsonValue v && v.TryGetValue<string>(out var id))
+                    {
+                        Check(id);
+                    }
+                }
+                break;
+        }
+
+        void Check(string id)
+        {
+            if (id.StartsWith('$') || c.Registry.HasOfKind(kind, id))
+            {
+                return;
+            }
+            var what = kind.EndsWith("ses", StringComparison.Ordinal) ? kind[..^2] : kind.EndsWith("s", StringComparison.Ordinal) ? kind[..^1] : kind;
+            c.Error($"'{at}' effect '{type}' names unknown {what} '{id}' in '{parameter}'.");
+        }
     }
 
     private static void Nested(JsonObject node, ValidationContext c, string at)
