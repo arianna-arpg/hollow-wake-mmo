@@ -152,6 +152,7 @@ public class MorphTests
         var examined = layer.Morph[name].Where(p => Compiles(layer, p)).Select(p => new View(p, layer.Content)).ToList();
         var drains = new List<View>();
         var refused = 0;
+        var healRefused = 0;
         foreach (var view in examined)
         {
             var point = view.Point;
@@ -168,12 +169,13 @@ public class MorphTests
             {
                 drains.Add(view);
                 refused += first.Refused;
+                healRefused += first.HealRefused;
             }
         }
-        if (drains.Count > 0 && refused == 0)
+        if (drains.Count > 0 && (refused == 0 || healRefused == 0))
         {
             violations.Add(new Violation(drains[0].Point, drains[0], "pipeline",
-                $"{drains.Count} sampled points carry a drain, but no drain was refused: none reached a body, or the refusal went unsaid, so the pipeline check saw no drain"));
+                $"{drains.Count} sampled points carry both drains, but resource refusals={refused} and heal refusals={healRefused}: each sibling must reach a body and report its refusal"));
         }
         Settle(name, examined, violations, "deterministic", "pipeline", "bounded", "terminates", "left behind", "pays", "depth", "timing", "runs");
     }

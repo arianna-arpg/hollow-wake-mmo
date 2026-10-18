@@ -243,13 +243,16 @@ public class HitStageTests
         Assert.Equal(45, caster.Resource("mana"), 6);
     }
 
-    [Fact]
-    public void ValidationRefusesALiteralLifeDecreaseOnAResourceEffect()
+    [Theory]
+    [InlineData("resource")]
+    [InlineData("heal")]
+    public void ValidationRefusesALiteralLifeDecreaseOnADirectWriter(string type)
     {
         var dir = Path.Combine(Path.GetTempPath(), "hollowwake-drain-" + Guid.NewGuid().ToString("N"));
         Directory.CreateDirectory(dir);
         try
         {
+            File.WriteAllText(Path.Combine(dir, "resources.yaml"), "kind: resources\nentries:\n  - { id: t_vitality, max: life.max, lethal: true }\n");
             File.WriteAllText(Path.Combine(dir, "weaves.yaml"), string.Join("\n",
                 "kind: weaves",
                 "entries:",
@@ -258,11 +261,15 @@ public class HitStageTests
                 "  - { id: t_drain_formula, name: Drain, form: slam_quick, effects: [ { type: resource, resource: life, amount: \"-min(5, target.life)\" } ] }",
                 "  - { id: t_spend_mana, name: Spend, form: slam_quick, effects: [ { type: resource, resource: mana, amount: -5 } ] }",
                 "  - { id: t_give_life, name: Give, form: slam_quick, effects: [ { type: resource, resource: life, amount: 5 } ] }",
-                ""));
+                "  - { id: t_drain_custom, name: Drain, form: slam_quick, effects: [ { type: resource, resource: t_vitality, amount: -5 } ] }",
+                "  - { id: t_drain_default, name: Drain, form: slam_quick, effects: [ { type: resource, amount: -5 } ] }",
+                "").Replace("type: resource", $"type: {type}", StringComparison.Ordinal));
             ContentRegistry.Load(new[] { CoreContent.FindContentDir(), dir }, out var report);
             var errors = report.Errors.Select(e => $"{e.Id}: {e.Message}").ToList();
             Assert.Contains(errors, e => e.StartsWith("t_drain_number") && e.Contains("'damage'"));
             Assert.Contains(errors, e => e.StartsWith("t_drain_text") && e.Contains("'damage'"));
+            Assert.Contains(errors, e => e.StartsWith("t_drain_custom") && e.Contains("'damage'"));
+            Assert.Equal(type == "heal", errors.Any(e => e.StartsWith("t_drain_default") && e.Contains("'damage'")));
             // A formula is refused when it runs, not at load; other resources may fall, and life may rise.
             Assert.DoesNotContain(errors, e => e.StartsWith("t_drain_formula") || e.StartsWith("t_spend_mana") || e.StartsWith("t_give_life"));
         }

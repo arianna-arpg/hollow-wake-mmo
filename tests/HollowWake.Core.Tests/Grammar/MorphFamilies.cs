@@ -1105,11 +1105,11 @@ internal static class Riders
     public const int Drained = 5;
 
     /// <summary>
-    /// A drain: the resource effect told to lower the reached body's life, by a formula, since validation refuses a
+    /// A drain: either direct resource writer told to lower the reached body's life, by a formula, since validation refuses a
     /// literal. The handler refuses it (life falls only through the damage ladder) and logs the refusal, so the run
     /// loses no life to it; were the refusal lost, the pipeline check would see the life it takes with no hit.
     /// </summary>
-    public static JsonObject Drain() => new() { ["type"] = "resource", ["resource"] = "life", ["amount"] = $"-min({Drained}, target.life)" };
+    public static JsonObject Drain(string type) => new() { ["type"] = type, ["resource"] = "life", ["amount"] = $"-min({Drained}, target.life)" };
 
     /// <summary>A status rider: a marker of the depth it is applied at, then the marking status, whose every tick runs a marker of the depth the tick runs at.</summary>
     public static JsonObject[] Status() => new[]
@@ -1141,7 +1141,7 @@ internal static class Riders
     {
         Rider.Damage => new JsonArray(Damage(list.Name)),
         Rider.Marker => new JsonArray(Marker(list.Name)),
-        Rider.Drain => new JsonArray(Drain()),
+        Rider.Drain => new JsonArray(Drain("resource"), Drain("heal")),
         Rider.Status => new JsonArray(Status()),
         Rider.Cast => new JsonArray(Cast()),
         _ => new JsonArray(Burst(list.Name)),
