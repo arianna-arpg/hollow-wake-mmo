@@ -7,4 +7,3 @@ entities seen: 355 (Pine, Oak, Boulder, Fallen Ash, Shrub, Fern, Floss Knot, Hob
 chat: Probe: probe says hello
 interface: bag 12x5 with 1 items, 3 worn; 4 of 8 weave seats filled; 1 passives, points passive 0, devotion 0, vocation 0; pages inventory, weaves, passives, reliquary, stash (sealed), stash (sealed), character, options
 PROBE OK (walked south)
-
