@@ -56,7 +56,7 @@ public sealed class DayCycle
             return;
         }
         var length = lengthSeconds ?? Server?.LengthSeconds ?? LengthSeconds;
-        Server = new ServerDay(Math.Max(1, length), Wrap(f), atServerTime);
+        Server = new ServerDay(Math.Max(0, length), Wrap(f), atServerTime);
     }
 
     /// <summary>Forgets the server's day, as on entering a world: the next message that carries one sets it again, and until then the clock folds.</summary>
@@ -71,6 +71,10 @@ public sealed class DayCycle
     {
         if (Server is { } s)
         {
+            if (s.LengthSeconds <= 0)
+            {
+                return (float)s.Fraction;
+            }
             return (float)Wrap(s.Fraction + (serverTime - s.AtServerTime) / s.LengthSeconds);
         }
         return (float)Wrap(serverTime / LengthSeconds + _def.Day.Start);

@@ -217,6 +217,18 @@ describe('surfaces and the day', () => {
     expect(day.at(0).sky).toEqual(day.at(1).sky);
   });
 
+  it('holds a stopped server day and preserves a subsecond day rate', () => {
+    const day = new DayCycle(catalog.world);
+    for (const length of [0, -1]) {
+      day.observeServer(length, 0.5, 100);
+      expect(day.timeOfDay(100.25)).toBeCloseTo(0.5, 4);
+      day.observeServer(undefined, 0.5, 200);
+      expect(day.timeOfDay(200.25)).toBeCloseTo(0.5, 4);
+    }
+    day.observeServer(0.5, 0.25, 300);
+    expect(day.timeOfDay(300.25)).toBeCloseTo(0.75, 4);
+  });
+
   it('follows the server day when it says and folds the clock otherwise', () => {
     const day = new DayCycle(catalog.world);
     expect(day.server).toBeNull();

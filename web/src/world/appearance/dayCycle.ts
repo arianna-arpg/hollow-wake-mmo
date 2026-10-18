@@ -129,7 +129,7 @@ export class DayCycle {
       return;
     }
     const length = lengthSeconds ?? this.server?.lengthSeconds ?? this.lengthSeconds;
-    this.server = { lengthSeconds: Math.max(1, length), fraction: wrap(fraction), atServerTime };
+    this.server = { lengthSeconds: Math.max(0, length), fraction: wrap(fraction), atServerTime };
   }
 
   /** Forgets the server's day, as on entering a world: the next message that carries one sets it again, and until then the clock folds. */
@@ -145,6 +145,7 @@ export class DayCycle {
   timeOfDay(serverTime: number): number {
     const s = this.server;
     if (s !== null) {
+      if (s.lengthSeconds <= 0) return s.fraction;
       return wrap(s.fraction + (serverTime - s.atServerTime) / s.lengthSeconds);
     }
     return wrap(serverTime / this.lengthSeconds + this.start);

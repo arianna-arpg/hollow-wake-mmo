@@ -372,6 +372,21 @@ public class AppearanceTests
     }
 
     [Fact]
+    public void AStoppedServerDayStaysStillAndAShortDayKeepsItsRate()
+    {
+        var day = new DayCycle(Catalog().World);
+        foreach (var length in new[] { 0.0, -1.0 })
+        {
+            day.ObserveServer(length, 0.5, 100);
+            Assert.Equal(0.5f, day.TimeOfDay(100.25), 4);
+            day.ObserveServer(null, 0.5, 200);
+            Assert.Equal(0.5f, day.TimeOfDay(200.25), 4);
+        }
+        day.ObserveServer(0.5, 0.25, 300);
+        Assert.Equal(0.75f, day.TimeOfDay(300.25), 4);
+    }
+
+    [Fact]
     public void OtherPlayersWearWhatTheWireSays()
     {
         var catalog = Catalog();
