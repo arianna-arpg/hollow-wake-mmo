@@ -560,6 +560,7 @@ public partial class Main : Node3D
                 _hud.InWorld = true;
                 _hud.Visible = true;
                 _hud.Hero.ObserveServerTime(enter.ServerTime, LocalNow);
+                _world.ObserveDay(enter.DayLength, enter.TimeOfDay, enter.ServerTime, entering: true);
                 _camera.Follow(Coords.ToGodot(enter.X, enter.Y, enter.Z));
                 _hud.Log($"[color=#{_hud.Skin.Notice("quest").ToHtml(false)}]Entered the world at {enter.X:0}, {enter.Y:0} (zone {Hud.Escape(enter.Zone)}).[/color]");
                 break;
@@ -589,6 +590,10 @@ public partial class Main : Node3D
                 break;
             case SelfStateMsg self:
                 _hud.ApplySelf(self);
+                if (_hud.Hero.HasServerClock)
+                {
+                    _world.ObserveDay(null, self.TimeOfDay, _hud.Hero.ServerNow(LocalNow));
+                }
                 break;
             case WeaveSlotsMsg slots:
                 _hud.ApplySlots(slots);
