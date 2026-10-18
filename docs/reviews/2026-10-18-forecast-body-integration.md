@@ -102,4 +102,3 @@ Salvos and authored guided flights now obtain live input from the physical CastS
 
 The isolated correction is published for #50's event/queue/replay owner. That owner still must capture and forward the frozen center/offset and preserve Target=None for committed directions. Those event and queue files were not edited here. Exact-source follow-up review, complete #34 integration, fresh final client checks and performance acceptance remain outstanding. No benchmark or trace ran.
 Acknowledged by: pending Claude review of the combined correction.
-
