@@ -1,0 +1,20 @@
+{
+  "configuration": "Release",
+  "startedUtc": "2026-10-18T19:45:58.9869900Z",
+  "name": "hit-bodies",
+  "binaryBuiltFromCommit": "b6b3e3018beb47a1b4118337b7cc5962d587eff8",
+  "pid": 115104,
+  "exitCode": 0,
+  "priority": "Normal",
+  "conditions": "Coordinator-reserved quiet window; first sample retained. Earlier level-dependent samples are historical.",
+  "finishedUtc": "2026-10-18T19:46:01.2562165Z",
+  "ancestryEquivalence": "foundation-ancestry-equivalence.json",
+  "sourceCommit": "50f7dd639d95ade50b04987aa6f835cfef3f8304",
+  "arguments": [
+    "src/HollowWake.Tools/bin/Release/net10.0/hollowwake.dll",
+    "bench",
+    "--only",
+    "hit-bodies",
+    "--json"
+  ]
+}

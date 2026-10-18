@@ -1,0 +1,33 @@
+Controlled first samples after bounded search and restored resident levels
+
+Source: 50f7dd639d95ade50b04987aa6f835cfef3f8304.
+Retained Release binary built from b6b3e3018beb47a1b4118337b7cc5962d587eff8; exact input/output equivalence is recorded in foundation-ancestry-equivalence.json.
+Coordinator granted START after #39 STOPPED. Exactly one full default and one authored hit-body profile ran serially at Normal priority. No repeat or extra worldgen-only process ran.
+Default PID 84840: 2026-10-18T19:45:51.9330470Z to 2026-10-18T19:45:58.9390792Z, exit 0.
+Authored profile PID 115104: 2026-10-18T19:45:58.9869900Z to 2026-10-18T19:46:01.2562165Z, exit 0.
+Both processes stopped before the coordinator released #37's window.
+
+Default gates (raw values are retained in bounded-bench-default.json):
+worldgen.zone.plan: 35.962 ms <= proposed 40 ms target. This remains above Claude's earlier 21-23 ms main reference; no main-equivalence claim.
+zone.tick.p95: 9.7455 ms <= 25 ms.
+zone.tick.alloc: 75.88572916666666 KB/tick <= 2 MB.
+system.behavior: 1.576412833333334 ms/tick <= 3 ms; reported 22.9 KB/tick <= 1 MB.
+snapshot.build: 1.2223919999999997 ms/player > 1 ms. FAIL by 0.222392 ms/player (22.2392%).
+snapshot.bytes: 28.851884765625 KB/player <= 30 KB; headroom 1.148115234375 KB.
+snapshot.delta.bytes: 8.8819482421875 KB/player <= 10 KB.
+worldgen.chunk: 0.5729484375 ms/chunk <= 4 ms.
+worldgen.chunk.alloc: 14.330810546875 KB/chunk <= 400 KB.
+attribute.apply.extra: 337.72799999999995 ns/op <= 500 ns.
+attribute.apply.alloc: 0.1392 bytes/op <= 200 bytes.
+expression.evaluate: 101.5167 ns/eval <= 150 ns.
+expression.alloc: original process-wide counter 0.0168 bytes/eval, nonzero and equal to the preserved earlier result. No literal-zero allocation pass; no alternate counter or separate expression process substitutes for this row.
+zone.errors: 0.
+
+Authored hit-body workload (42 profiled patterns, 120 foes, 41 flights in the air on average):
+deliveries.tick: 1.8693655 ms/tick.
+deliveries.projectiles: 0.9193659999999992 ms/tick.
+deliveries.fields: 0.11425274999999996 ms/tick.
+deliveries.tick.alloc: 37.59271484375 KB/tick.
+This is the shared authored-body workload, not elemental-specific volumes. Elemental actual-flight acceptance remains the 48-case matrix against the shipped fallback bodies with unchanged dimensions.
+
+Verdict: performance is not cleared. The first snapshot-build miss and original expression counter remain recorded. No cause for the snapshot miss is asserted. Earlier level-dependent measurements remain historical. #34's separate 228 bytes/tick allocation failure and isolated/full retry passes are preserved with cause unestablished. Functional gates remain independently passing; the PR stays draft for performance/shared-stack review and Claude rereview.
