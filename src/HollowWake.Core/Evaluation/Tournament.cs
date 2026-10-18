@@ -291,9 +291,10 @@ public sealed record TraceBaseline(int Seeds, double Seconds, string? Platform, 
 
 /// <summary>
 /// Seeded duels across pairings, measured from the events the simulation publishes: time to kill, win and draw
-/// rates, damage, casts, the seats and the mechanisms each side used, and life left. Every fight runs
-/// in its own arena from a seed derived from the pairing and the fight's index, so the same run gives the same
-/// report, and nothing here reads a body's pattern beyond its name.
+/// rates, damage, casts, the seats and the mechanisms each side used, and life left. Every fight runs in its own arena
+/// from a seed derived from the pairing and the fight's index, so the same run gives the same report on the same
+/// platform. From a body it reads only its pattern's name, its book (the kit), its stats (life left), its life and
+/// position (the trace's last line) and the owner links kill credit follows; it writes only its facing at spawn.
 /// </summary>
 public static class Tournament
 {
