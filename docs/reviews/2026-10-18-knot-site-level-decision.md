@@ -89,3 +89,7 @@ The before maps and population audit use that exact committed source. After maps
 | 3_2 | poi.3_2.knot.965.744 | tangle | 1 | 6 | 3 |
 
 All changed rows previously had null explicit level; they now store the site level. Exact before/after maps, quests and population JSON are under `33-sitelevel-*`. Golden replacements: `{"6401AD38AFEB12E9": "FE239499AF4B1519", "C54EA309DEC80391": "04FB8C3BEEEC74A9", "A93A852778DA4EDC": "B7AF6323F6B6FF7C", "A139CE651C83EDD9": "121AD753877E2211"}`. Climate and zone-info hashes are unchanged in this narrow policy delta. Ninewells continues to offer Clear the Knot targeting its actual Cinder Imps; the earlier restoration audit names the contrast with the omitted-offer branch and actual main.
+
+### #33 final functional verification
+
+Source `52b4a5ca8ca9d88c732a7b9d5b2651c88b786dca` over previous `e92de2270a9c39497a842d9ba063efeb56b04d2b`, consuming complete parent `0889234432baa51e6d27ee66aa52a9a46aa72d07`. Solution and Release builds: zero warnings/errors; core 900, server 53, client 130 pass. Validation0/0, load/duel and seven Release Windows replay hashes pass without changing the combat fixture. The exact 499-key grammar census is unchanged. Full proving JSON equals the preceding same-branch post54 report, including its four inherited win-ceiling failures; the balance gate remains failed. Only the Knot site-level policy and foe-window content differ, exactly matching `3a44b85`; pattern combat stats, other population policies and geometry are unchanged. No timing run or main merge. Claude rereview requested.
