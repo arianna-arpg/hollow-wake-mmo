@@ -1,0 +1,109 @@
+  HollowWake.Core -> C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\src\HollowWake.Core\bin\Debug\net8.0\HollowWake.Core.dll
+  HollowWake.Protocol -> C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\src\HollowWake.Protocol\bin\Debug\net8.0\HollowWake.Protocol.dll
+  HollowWake.Server -> C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\src\HollowWake.Server\bin\Debug\net10.0\HollowWake.Server.dll
+  HollowWake.Tools -> C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\src\HollowWake.Tools\bin\Debug\net10.0\hollowwake.dll
+  HollowWake.Core.Tests -> C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\bin\Debug\net10.0\HollowWake.Core.Tests.dll
+Test run for C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\bin\Debug\net10.0\HollowWake.Core.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+[xUnit.net 00:00:02.03]     HollowWake.Core.Tests.AimWrapperElevationTests.BearingTurnsBodyOffsetsAndKeepsTheInheritedLaunchAnchor(retainedTarget: True) [FAIL]
+[xUnit.net 00:00:02.05]     HollowWake.Core.Tests.AimWrapperElevationTests.BearingTurnsBodyOffsetsAndKeepsTheInheritedLaunchAnchor(retainedTarget: False) [FAIL]
+[xUnit.net 00:00:02.10]     HollowWake.Core.Tests.AimWrapperElevationTests.IdentityBearingSupportStillHitsTheBodyAboveAStep(retainedTarget: True, wrapped: True) [FAIL]
+[xUnit.net 00:00:02.10]     HollowWake.Core.Tests.AimWrapperElevationTests.IdentityBearingSupportStillHitsTheBodyAboveAStep(retainedTarget: False, wrapped: True) [FAIL]
+[xUnit.net 00:00:02.11]     HollowWake.Core.Tests.AimWrapperElevationTests.TurningTheBearingPreservesSampledOrRetainedBodyElevation(retainedTarget: True, degrees: -30) [FAIL]
+[xUnit.net 00:00:02.11]     HollowWake.Core.Tests.AimWrapperElevationTests.TurningTheBearingPreservesSampledOrRetainedBodyElevation(retainedTarget: True, degrees: 0) [FAIL]
+[xUnit.net 00:00:02.11]     HollowWake.Core.Tests.AimWrapperElevationTests.TurningTheBearingPreservesSampledOrRetainedBodyElevation(retainedTarget: False, degrees: 0) [FAIL]
+  Failed HollowWake.Core.Tests.AimWrapperElevationTests.BearingTurnsBodyOffsetsAndKeepsTheInheritedLaunchAnchor(retainedTarget: True) [66 ms]
+  Error Message:
+   Assert.Equal() Failure: Values are not within 5 decimal places
+Expected: 0.75304 (rounded from 0.753037453)
+Actual:   0 (rounded from 0)
+  Stack Trace:
+     at HollowWake.Core.Tests.AimWrapperElevationTests.BearingTurnsBodyOffsetsAndKeepsTheInheritedLaunchAnchor(Boolean retainedTarget) in C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\AimWrapperElevationTests.cs:line 100
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeDirectByRefWithFewArgs(Object obj, Span`1 copyOfArgs, BindingFlags invokeAttr)
+  Failed HollowWake.Core.Tests.AimWrapperElevationTests.BearingTurnsBodyOffsetsAndKeepsTheInheritedLaunchAnchor(retainedTarget: False) [< 1 ms]
+  Error Message:
+   Assert.Equal() Failure: Values are not within 5 decimal places
+Expected: 0.75304 (rounded from 0.753037453)
+Actual:   0 (rounded from 0)
+  Stack Trace:
+     at HollowWake.Core.Tests.AimWrapperElevationTests.BearingTurnsBodyOffsetsAndKeepsTheInheritedLaunchAnchor(Boolean retainedTarget) in C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\AimWrapperElevationTests.cs:line 100
+   at InvokeStub_AimWrapperElevationTests.BearingTurnsBodyOffsetsAndKeepsTheInheritedLaunchAnchor(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithOneArg(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Failed HollowWake.Core.Tests.AimWrapperElevationTests.IdentityBearingSupportStillHitsTheBodyAboveAStep(retainedTarget: True, wrapped: True) [4 ms]
+  Error Message:
+   Assert.Contains() Failure: Item not found in collection
+Collection: []
+Not found:  E1.1
+  Stack Trace:
+     at HollowWake.Core.Tests.AimWrapperElevationTests.IdentityBearingSupportStillHitsTheBodyAboveAStep(Boolean retainedTarget, Boolean wrapped) in C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\AimWrapperElevationTests.cs:line 73
+   at InvokeStub_AimWrapperElevationTests.IdentityBearingSupportStillHitsTheBodyAboveAStep(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Failed HollowWake.Core.Tests.AimWrapperElevationTests.IdentityBearingSupportStillHitsTheBodyAboveAStep(retainedTarget: False, wrapped: True) [2 ms]
+  Error Message:
+   Assert.Contains() Failure: Item not found in collection
+Collection: []
+Not found:  E1.1
+  Stack Trace:
+     at HollowWake.Core.Tests.AimWrapperElevationTests.IdentityBearingSupportStillHitsTheBodyAboveAStep(Boolean retainedTarget, Boolean wrapped) in C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\AimWrapperElevationTests.cs:line 73
+   at InvokeStub_AimWrapperElevationTests.IdentityBearingSupportStillHitsTheBodyAboveAStep(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Failed HollowWake.Core.Tests.AimWrapperElevationTests.TurningTheBearingPreservesSampledOrRetainedBodyElevation(retainedTarget: True, degrees: -30) [3 ms]
+  Error Message:
+   Assert.Equal() Failure: Values are not within 5 decimal places
+Expected: 3.75 (rounded from 3.75)
+Actual:   0 (rounded from 0)
+  Stack Trace:
+     at HollowWake.Core.Tests.AimWrapperElevationTests.TurningTheBearingPreservesSampledOrRetainedBodyElevation(Boolean retainedTarget, Int32 degrees) in C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\AimWrapperElevationTests.cs:line 43
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeDirectByRefWithFewArgs(Object obj, Span`1 copyOfArgs, BindingFlags invokeAttr)
+  Failed HollowWake.Core.Tests.AimWrapperElevationTests.TurningTheBearingPreservesSampledOrRetainedBodyElevation(retainedTarget: True, degrees: 0) [< 1 ms]
+  Error Message:
+   Assert.Equal() Failure: Values are not within 5 decimal places
+Expected: 3.75 (rounded from 3.75)
+Actual:   0 (rounded from 0)
+  Stack Trace:
+     at HollowWake.Core.Tests.AimWrapperElevationTests.TurningTheBearingPreservesSampledOrRetainedBodyElevation(Boolean retainedTarget, Int32 degrees) in C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\AimWrapperElevationTests.cs:line 43
+   at InvokeStub_AimWrapperElevationTests.TurningTheBearingPreservesSampledOrRetainedBodyElevation(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Failed HollowWake.Core.Tests.AimWrapperElevationTests.TurningTheBearingPreservesSampledOrRetainedBodyElevation(retainedTarget: False, degrees: 0) [< 1 ms]
+  Error Message:
+   Assert.Equal() Failure: Values are not within 5 decimal places
+Expected: 3.75 (rounded from 3.75)
+Actual:   0 (rounded from 0)
+  Stack Trace:
+     at HollowWake.Core.Tests.AimWrapperElevationTests.TurningTheBearingPreservesSampledOrRetainedBodyElevation(Boolean retainedTarget, Int32 degrees) in C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\AimWrapperElevationTests.cs:line 43
+   at InvokeStub_AimWrapperElevationTests.TurningTheBearingPreservesSampledOrRetainedBodyElevation(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:02.11]     HollowWake.Core.Tests.AimWrapperElevationTests.TurningTheBearingPreservesSampledOrRetainedBodyElevation(retainedTarget: True, degrees: 30) [FAIL]
+[xUnit.net 00:00:02.11]     HollowWake.Core.Tests.AimWrapperElevationTests.TurningTheBearingPreservesSampledOrRetainedBodyElevation(retainedTarget: False, degrees: 30) [FAIL]
+[xUnit.net 00:00:02.12]     HollowWake.Core.Tests.AimWrapperElevationTests.TurningTheBearingPreservesSampledOrRetainedBodyElevation(retainedTarget: False, degrees: -30) [FAIL]
+  Failed HollowWake.Core.Tests.AimWrapperElevationTests.TurningTheBearingPreservesSampledOrRetainedBodyElevation(retainedTarget: True, degrees: 30) [< 1 ms]
+  Error Message:
+   Assert.Equal() Failure: Values are not within 5 decimal places
+Expected: 3.75 (rounded from 3.75)
+Actual:   0 (rounded from 0)
+  Stack Trace:
+     at HollowWake.Core.Tests.AimWrapperElevationTests.TurningTheBearingPreservesSampledOrRetainedBodyElevation(Boolean retainedTarget, Int32 degrees) in C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\AimWrapperElevationTests.cs:line 43
+   at InvokeStub_AimWrapperElevationTests.TurningTheBearingPreservesSampledOrRetainedBodyElevation(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Failed HollowWake.Core.Tests.AimWrapperElevationTests.TurningTheBearingPreservesSampledOrRetainedBodyElevation(retainedTarget: False, degrees: 30) [< 1 ms]
+  Error Message:
+   Assert.Equal() Failure: Values are not within 5 decimal places
+Expected: 3.75 (rounded from 3.75)
+Actual:   0 (rounded from 0)
+  Stack Trace:
+     at HollowWake.Core.Tests.AimWrapperElevationTests.TurningTheBearingPreservesSampledOrRetainedBodyElevation(Boolean retainedTarget, Int32 degrees) in C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\AimWrapperElevationTests.cs:line 43
+   at InvokeStub_AimWrapperElevationTests.TurningTheBearingPreservesSampledOrRetainedBodyElevation(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Failed HollowWake.Core.Tests.AimWrapperElevationTests.TurningTheBearingPreservesSampledOrRetainedBodyElevation(retainedTarget: False, degrees: -30) [< 1 ms]
+  Error Message:
+   Assert.Equal() Failure: Values are not within 5 decimal places
+Expected: 3.75 (rounded from 3.75)
+Actual:   0 (rounded from 0)
+  Stack Trace:
+     at HollowWake.Core.Tests.AimWrapperElevationTests.TurningTheBearingPreservesSampledOrRetainedBodyElevation(Boolean retainedTarget, Int32 degrees) in C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\AimWrapperElevationTests.cs:line 43
+   at InvokeStub_AimWrapperElevationTests.TurningTheBearingPreservesSampledOrRetainedBodyElevation(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+
+Failed!  - Failed:    10, Passed:     3, Skipped:     0, Total:    13, Duration: 158 ms - HollowWake.Core.Tests.dll (net10.0)

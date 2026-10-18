@@ -37,20 +37,8 @@ public class MorphTests
         return data;
     }
 
-    private static bool OnNode(View v, string parameter) => v.Sets(parameter) && !v.Point.ViaAttribute.Contains(parameter);
-
-    /// <summary>A summon or deploy that raises more bodies in one press than its group may hold.</summary>
-    private static bool CountPastCap(View v) =>
-        Math.Clamp(Math.Round(v.Num("count")), 1, v.Rule("minions.max_per_cast", 32)) > Math.Max(1, Math.Round(v.Num("max_active")));
-
-    /// <summary>A summon or deploy that raises its bodies for good (a lifetime of zero; the attribute floors a duration above zero).</summary>
-    private static bool ForGood(View v) => v.Num(v.Point.Family.Name == "summon" ? "duration" : "lifetime") <= 0;
-
     /// <summary>The run moved bodies of the crowd: a shove that moves nothing is not the anchor finding.</summary>
     private static bool Displaced(Violation v) => v.Outcome is { Moved: > 0 };
-
-    private const string OnePressUncapped =
-        "SummonRecipe.Wave asks MinionService.MakeRoom to fit a cast's bodies, and MakeRoom dismisses only bodies already standing: it never caps the cast's own count, so one summon or deploy whose count passes max_active stands every body it raises, though minions.md says past the capacity the oldest bodies are dismissed";
 
     /// <summary>
     /// Defects the morph test found and keeps finding, and what it lists as exempt: each matches violations of one
@@ -59,26 +47,6 @@ public class MorphTests
     /// </summary>
     internal static readonly Finding[] Known =
     {
-        new("projectile", "states", "'chain' does not hold though chains",
-            "the chain probe (Weaves/Probes/DeliveryProbes.cs) reads only the weave attribute projectile.chain, never a projectile node's chains parameter, though the trajectory probes read both")
-        {
-            When = v => OnNode(v, "chains"),
-        },
-        new("projectile", "states", "'flight:children' does not hold though forks",
-            "flight:children (Weaves/Mechanisms.cs) reads only the weave attribute projectile.forks, never a projectile node's forks parameter")
-        {
-            When = v => OnNode(v, "forks"),
-        },
-        new("projectile", "states", "'flight:spends' holds though rehit",
-            "flight:spends (Weaves/Mechanisms.cs) is the absence of the weave attribute projectile.rehit and never sees a projectile node's rehit parameter, so a flight that never ends on a hit still says its hits spend it")
-        {
-            When = v => OnNode(v, "rehit"),
-        },
-        new("projectile", "states", "'trajectory' does not hold though",
-            "WeaveProbe.Raises counts only positive bases and modifiers, so a kinematic axis set negative on the weave (a slowing accel, a recurve or spiral the other way) is not stated; shipped lava_glob sheds speed through projectile.accel -5.8")
-        {
-            When = v => Families.Trajectory.All(a => v.Num(a, 0) == 0 || (v.Num(a, 0) < 0 && !OnNode(v, a))),
-        },
         new("projectile", "doors", "through projectile.count holds 20, where the node holds 64",
             "projectile.count's catalog stops at 20 (attributes.yaml) where the handler clamps a node's count at 64 (DeliveryHandlers.cs): one axis clamps differently through its two doors, against the grammar's rule 1 (one mechanism, one door)"),
         new("projectile", "doors", "through projectile.speed holds 1, where the node holds 0.5",
@@ -90,35 +58,10 @@ public class MorphTests
         {
             When = Families.SalvoDrifts,
         },
-        new("move", "sensitive", "choice 'anchor': 'from' and 'point' show the crowd the same",
-            "inside a hit list the context's point is the struck body (EffectContext.WithTarget moves it there), so anchor point measures from the body itself and the shove runs along the facing; areas and fields set no from, so anchor from measures from the caster. For bodies on the aim line beyond the caster all three anchors push the same way; deliveries.md says point is the aim point and from a field's center")
-        {
-            Shows = Displaced,
-        },
-        new("move", "sensitive", "choice 'anchor': 'caster' and 'point' show the crowd the same",
-            "the anchor finding above, seen from the caster: point measures from the struck body, and for bodies on the aim line beyond the caster that pushes them the way the caster's position does")
-        {
-            Shows = Displaced,
-        },
         new("move", "sensitive", "choice 'anchor': 'from' and 'caster' show the crowd the same",
-            "an area sets no from on its hit list (nor does a field on its pulse), so anchor from measures from the caster, where deliveries.md says from is where the effect acts")
+            "an area sets no from on its hit list (nor does a field on its pulse), so anchor from measures from the caster, where deliveries.md says from is where the effect acts. Parked: an area builds its hit contexts in DeliveryHandlers.cs, held by an open Codex request, and a field's from also steers the guard stage's arc and where nested deliveries start, so both change together")
         {
             Shows = Displaced,
-        },
-        new("summon", "bounded", "stood at once, past the cap", OnePressUncapped) { When = CountPastCap },
-        new("deploy", "bounded", "stood at once, past the cap", OnePressUncapped) { When = CountPastCap },
-        new("summon", "left behind", "past its owner's cap", OnePressUncapped + "; raised for good, those bodies stand past the cap to the end")
-        {
-            When = v => CountPastCap(v) && ForGood(v),
-        },
-        new("deploy", "left behind", "past its owner's cap", OnePressUncapped + "; raised for good, those bodies stand past the cap to the end")
-        {
-            When = v => CountPastCap(v) && ForGood(v),
-        },
-        new("area", "pipeline", "with no DamageDealt on it",
-            "the resource effect takes life with no hit: it adds to the resource directly (DamageHandlers.cs ResourceHandler), so a drain on a struck body lowers its life outside the stage ladder; the grammar's invariant 1 names it as the baseline exception")
-        {
-            When = v => v.Fills("effects+drain"),
         },
         new("area", "depth", "status ticks restart the depth",
             "a status runs its tick effects and the applier's tick riders in a context at depth 0 (StatusService.cs Execute), whatever depth applied it; rule 8's baseline")
@@ -134,11 +77,6 @@ public class MorphTests
             "a cast raises the cast trigger kind at depth 0 (Sim/Triggers.cs OnCast: WeaveCast carries no depth), so a proc answering a triggered use's cast runs at depth 1 whatever depth the use ran at; the runtime lifts its own triggered seats by the depth it keeps while a triggered cast resolves, but procs and status hooks read the event's; rule 8's baseline")
         {
             When = v => v.Fills(MorphLayer.Relay),
-        },
-        new("deploy", "states", "'construct:massed' does not hold though count",
-            "construct:massed (Weaves/Mechanisms.cs Construct) reads only a deploy or spawn node's count, never the weave attribute summon.count that a deploy's count falls back to")
-        {
-            When = v => !OnNode(v, "count") && Math.Round(v.Num("count")) > 1,
         },
         new(Finding.AnyFamily, "states", "'landing' does not hold though",
             "the landing probe (Weaves/Mechanisms.cs) holds only for a projectile's gravity or a node carrying an on_land list, so a leap, a field placed after a delay or a telegraphed strike that carries none is never stated as landing, though the probe's own description names lobbed flights, leaps and delayed placements")
@@ -199,7 +137,12 @@ public class MorphTests
         Settle(name, examined, violations, "validates", "compiles", "states");
     }
 
-    /// <summary>Each sampled point, pressed: deterministic, one damage pipeline, bounded, terminating, nothing left behind, paying before it resolves, keeping the depth, on time, and nothing logged.</summary>
+    /// <summary>
+    /// Each sampled point, pressed: deterministic, one damage pipeline, bounded, terminating, nothing left behind, paying
+    /// before it resolves, keeping the depth, on time, and nothing logged but the refusal of a drain it carries. Where the
+    /// family samples drains, some drain must have reached a body and been refused, so the pipeline check saw the effect
+    /// that could step around the ladder.
+    /// </summary>
     [Theory]
     [MemberData(nameof(FamilyNames))]
     public void EverySampledPointHoldsTheInvariants(string name)
@@ -207,6 +150,9 @@ public class MorphTests
         var layer = MorphLayer.Shared;
         var violations = new List<Violation>();
         var examined = layer.Morph[name].Where(p => Compiles(layer, p)).Select(p => new View(p, layer.Content)).ToList();
+        var drains = new List<View>();
+        var refused = 0;
+        var healRefused = 0;
         foreach (var view in examined)
         {
             var point = view.Point;
@@ -219,6 +165,17 @@ public class MorphTests
                 broken.Add(("deterministic", where));
             }
             violations.AddRange(broken.Select(b => new Violation(point, view, b.Invariant, b.Message)));
+            if (point.Family.Lists.Any(l => l.Rider == Rider.Drain && point.Lists.Contains(l.Key)))
+            {
+                drains.Add(view);
+                refused += first.Refused;
+                healRefused += first.HealRefused;
+            }
+        }
+        if (drains.Count > 0 && (refused == 0 || healRefused == 0))
+        {
+            violations.Add(new Violation(drains[0].Point, drains[0], "pipeline",
+                $"{drains.Count} sampled points carry both drains, but resource refusals={refused} and heal refusals={healRefused}: each sibling must reach a body and report its refusal"));
         }
         Settle(name, examined, violations, "deterministic", "pipeline", "bounded", "terminates", "left behind", "pays", "depth", "timing", "runs");
     }
