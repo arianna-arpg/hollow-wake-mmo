@@ -95,6 +95,34 @@ entries:
     shape: { shoulders: 1.1, arms: 1.05 }
     palette: { skin: "#c8a07c", hair: "#3a2c22", cloth: "#7a4a3a", cloth2: "#4a2e28", leather: "#4a3a2e", metal: "#8c8c90", accent: "#b89a67", eyes: "#2a2622" }
     gear: { main_hand: weapon.axe, chest: armor.chest.medium }
+  - id: proving_hexer
+    match: [proving, hexer]
+    priority: 5
+    body: biped
+    shape: { width: 0.92 }
+    palette: { skin: "#b8a098", hair: "#302638", cloth: "#493454", cloth2: "#2c2336", leather: "#4a3a42", metal: "#8c8498", accent: "#ba86d4", eyes: "#ba86d4" }
+    gear: { main_hand: weapon.wand, chest: armor.chest.cloth, head: armor.head.cloth }
+  - id: proving_plaguer
+    match: [proving, plaguer]
+    priority: 5
+    body: biped
+    shape: { width: 0.95, hunch: 0.1 }
+    palette: { skin: "#b0a88a", hair: "#303428", cloth: "#4a5238", cloth2: "#2b3426", leather: "#454236", metal: "#858976", accent: "#b6cb78", eyes: "#b6cb78" }
+    gear: { main_hand: weapon.staff, chest: armor.chest.cloth, head: armor.head.cloth }
+  - id: proving_pitfighter
+    match: [proving, pitfighter]
+    priority: 5
+    body: biped
+    shape: { shoulders: 1.15, arms: 1.1 }
+    palette: { skin: "#c8a07c", hair: "#3a2c22", cloth: "#825438", cloth2: "#4a3028", leather: "#4a3a2e", metal: "#8c8c90", accent: "#d8a878", eyes: "#2a2622" }
+    gear: { chest: armor.chest.light }
+  - id: proving_mower
+    match: [proving, mower]
+    priority: 5
+    body: biped
+    shape: { shoulders: 1.05, arms: 1.1 }
+    palette: { skin: "#b8a080", hair: "#34382a", cloth: "#52623c", cloth2: "#333d2b", leather: "#4a4434", metal: "#8c9488", accent: "#9ab86a", eyes: "#2a2622" }
+    gear: { main_hand: weapon.axe, chest: armor.chest.light }
   - id: proving_bulwark
     match: [proving, bulwark]
     priority: 5

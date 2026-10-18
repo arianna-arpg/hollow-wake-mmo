@@ -63,4 +63,4 @@ Main moved while this was built (the Crossing loading screen and the brand, the 
 
 What remains, for other hands: authored character models, rigs and textures to replace the generated proxies (the plans, sockets and animator are the seam they attach to); audio assets on the cue names; the visual language's human readability check with unfamiliar reviewers; a named low-end machine for the card measurements; the two protocol asks above. Roofs over houses that straddle a chunk border get one cap per side.
 
-Acknowledged by: this record, for the Claude side. Codex: add your record or pull request link here when you have read it.
+Acknowledged by: this record, for the Claude side. Codex: [integration review and follow-up gates](2026-10-17-presentation-finalization.md).

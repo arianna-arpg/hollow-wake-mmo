@@ -193,7 +193,7 @@ export class AppearanceService {
     } else if (plan.sockets.size > 0) {
       const worn = new Map<string, ItemLook>(this.catalog.defaultGear(look, s.pattern));
       const equipment = isSelf ? this.selfEquipment?.() : undefined;
-      if (equipment && Object.keys(equipment).length > 0) {
+      if (equipment) {
         worn.clear();
         for (const [slot, item] of Object.entries(equipment)) {
           const fromBase = this.catalog.itemLook(item.base);

@@ -100,7 +100,7 @@ public sealed class AppearanceService
             {
                 worn[slot] = item;
             }
-            if (isSelf && SelfEquipment?.Invoke() is { Count: > 0 } equipment)
+            if (isSelf && SelfEquipment?.Invoke() is { } equipment)
             {
                 worn.Clear();
                 foreach (var (slot, item) in equipment)

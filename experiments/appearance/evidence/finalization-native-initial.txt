@@ -1,0 +1,72 @@
+Godot Engine v4.7.2.stable.mono.official.ed1daf0bf - https://godotengine.org
+Vulkan 1.3.280 - Forward+ - Using Device #0: NVIDIA - NVIDIA GeForce RTX 3090
+
+content loaded from D:\Games\MMOARPG\artifacts\pr-9-finalize\content\core: 0 errors, 0 warnings
+server 127.0.0.1:19177 from the command line
+server granted features: cast_cues, entity_delta, interface
+SMOKE ok   connect and log in: Logged in. Pick a character.
+SMOKE ok   create character: Smoke the kindler
+SMOKE ok   enter world: Smoke at 129.5, 111.0, 14.7
+SMOKE ok   terrain built: 49 chunks in 1.1s, 308 entities in view, 10 fps
+SMOKE shot D:\Games\MMOARPG\artifacts\pr-9-finalize\artifacts\pr9-focus-final/godot\01_isometric.png: Ok
+SMOKE measure geometry: 65 fps, frame ms p50 16.00 p95 19.00 max 22.00; 692 draw calls, 154810 primitives, 2629 objects; 309 bodies (0 cards, 52782 body triangles), 0 atlases 0.00 MiB; texture memory 149.2 MiB, video memory 211.2 MiB; 309 entities, 49 chunks
+SMOKE ok   bodies as geometry: geometry: 65 fps, frame ms p50 16.00 p95 19.00 max 22.00; 692 draw calls, 154810 primitives, 2629 objects; 309 bodies (0 cards, 52782 body triangles), 0 atlases 0.00 MiB; texture memory 149.2 MiB, video memory 211.2 MiB; 309 entities, 49 chunks
+SMOKE measure geometry, no shadows: 88 fps, frame ms p50 11.00 p95 15.00 max 16.00; 663 draw calls, 79816 primitives, 2600 objects; 309 bodies (0 cards, 52668 body triangles), 0 atlases 0.00 MiB; texture memory 149.2 MiB, video memory 211.2 MiB; 309 entities, 49 chunks
+SMOKE ok   bodies without shadows: geometry, no shadows: 88 fps, frame ms p50 11.00 p95 15.00 max 16.00; 663 draw calls, 79816 primitives, 2600 objects; 309 bodies (0 cards, 52668 body triangles), 0 atlases 0.00 MiB; texture memory 149.2 MiB, video memory 211.2 MiB; 309 entities, 49 chunks
+SMOKE measure cards: 70 fps, frame ms p50 14.00 p95 18.00 max 20.00; 568 draw calls, 115068 primitives, 2469 objects; 307 bodies (222 cards, 14140 body triangles), 18 atlases 10.27 MiB; texture memory 163.3 MiB, video memory 227.9 MiB; 307 entities, 49 chunks
+SMOKE shot D:\Games\MMOARPG\artifacts\pr-9-finalize\artifacts\pr9-focus-final/godot\16_cards.png: Ok
+SMOKE ok   bodies as cards: cards: 70 fps, frame ms p50 14.00 p95 18.00 max 20.00; 568 draw calls, 115068 primitives, 2469 objects; 307 bodies (222 cards, 14140 body triangles), 18 atlases 10.27 MiB; texture memory 163.3 MiB, video memory 227.9 MiB; 307 entities, 49 chunks
+SMOKE shot D:\Games\MMOARPG\artifacts\pr-9-finalize\artifacts\pr9-focus-final/godot\17_grayscale.png: Ok
+SMOKE shot D:\Games\MMOARPG\artifacts\pr-9-finalize\artifacts\pr9-focus-final/godot\18_reduced_motion.png: Ok
+SMOKE shot D:\Games\MMOARPG\artifacts\pr-9-finalize\artifacts\pr9-focus-final/godot\19_night.png: Ok
+SMOKE shot D:\Games\MMOARPG\artifacts\pr-9-finalize\artifacts\pr9-focus-final/godot\20_evening.png: Ok
+SMOKE ok   day cycle: night at 0.04 of the day, evening at 0.77, the server's day at 0.36
+SMOKE ok   wasd move: moved 7.5 units (rejected: Interact: too_far)
+SMOKE ok   jump: rose 0.83 units
+SMOKE ok   click to move: tried (5,0) 4.9
+SMOKE ok   quartermaster offers quests: reached=True at 1.1 units, F interacted with Quartermaster (quest_giver) at 1.1, panel shown=True
+SMOKE shot D:\Games\MMOARPG\artifacts\pr-9-finalize\artifacts\pr9-focus-final/godot\02_quest_offer.png: Ok
+SMOKE shot D:\Games\MMOARPG\artifacts\pr-9-finalize\artifacts\pr9-focus-final/godot\03_third_person.png: Ok
+SMOKE ok   camera toggle: Isometric -> switched -> Isometric
+SMOKE ok   camera rotate: Q turned yes, E turned back yes
+SMOKE shot D:\Games\MMOARPG\artifacts\pr-9-finalize\artifacts\pr9-focus-final/godot\04_sheet.png: Ok
+SMOKE FAIL character sheet: opened=False closed=False
+SMOKE shot D:\Games\MMOARPG\artifacts\pr-9-finalize\artifacts\pr9-focus-final/godot\06_core_pane.png: Ok
+SMOKE ok   core pane: open=True, bag 2 items on 12x5, 9 doll slots, wallet 3, interface=True
+SMOKE shot D:\Games\MMOARPG\artifacts\pr-9-finalize\artifacts\pr9-focus-final/godot\07_page_weaves.png: Ok
+SMOKE shot D:\Games\MMOARPG\artifacts\pr-9-finalize\artifacts\pr9-focus-final/godot\07_page_passives.png: Ok
+SMOKE shot D:\Games\MMOARPG\artifacts\pr-9-finalize\artifacts\pr9-focus-final/godot\07_page_reliquary.png: Ok
+SMOKE shot D:\Games\MMOARPG\artifacts\pr-9-finalize\artifacts\pr9-focus-final/godot\07_page_stash.png: Ok
+SMOKE shot D:\Games\MMOARPG\artifacts\pr-9-finalize\artifacts\pr9-focus-final/godot\07_page_character.png: Ok
+SMOKE ok   ribbon pages: weaves=shown, passives=shown, reliquary=shown, stash=shown, character=shown
+SMOKE FAIL escape closes the core pane last: core open=True
+SMOKE shot D:\Games\MMOARPG\artifacts\pr-9-finalize\artifacts\pr9-focus-final/godot\08_dialogue.png: Ok
+SMOKE ok   talk to a villager: reached=True, Marcher: "Weft hold you, stranger." with 2 choices, chose "Any news?" (answered=True)
+SMOKE FAIL script: Cannot access a disposed object.
+Object name: 'HollowWake.Client.UI.WorldPanes.DialoguePane'.
+SMOKE SUMMARY
+SMOKE PASS connect and log in: Logged in. Pick a character.
+SMOKE PASS create character: Smoke the kindler
+SMOKE PASS enter world: Smoke at 129.5, 111.0, 14.7
+SMOKE PASS terrain built: 49 chunks in 1.1s, 308 entities in view, 10 fps
+SMOKE PASS bodies as geometry: geometry: 65 fps, frame ms p50 16.00 p95 19.00 max 22.00; 692 draw calls, 154810 primitives, 2629 objects; 309 bodies (0 cards, 52782 body triangles), 0 atlases 0.00 MiB; texture memory 149.2 MiB, video memory 211.2 MiB; 309 entities, 49 chunks
+SMOKE PASS bodies without shadows: geometry, no shadows: 88 fps, frame ms p50 11.00 p95 15.00 max 16.00; 663 draw calls, 79816 primitives, 2600 objects; 309 bodies (0 cards, 52668 body triangles), 0 atlases 0.00 MiB; texture memory 149.2 MiB, video memory 211.2 MiB; 309 entities, 49 chunks
+SMOKE PASS bodies as cards: cards: 70 fps, frame ms p50 14.00 p95 18.00 max 20.00; 568 draw calls, 115068 primitives, 2469 objects; 307 bodies (222 cards, 14140 body triangles), 18 atlases 10.27 MiB; texture memory 163.3 MiB, video memory 227.9 MiB; 307 entities, 49 chunks
+SMOKE PASS day cycle: night at 0.04 of the day, evening at 0.77, the server's day at 0.36
+SMOKE PASS wasd move: moved 7.5 units (rejected: Interact: too_far)
+SMOKE PASS jump: rose 0.83 units
+SMOKE PASS click to move: tried (5,0) 4.9
+SMOKE PASS quartermaster offers quests: reached=True at 1.1 units, F interacted with Quartermaster (quest_giver) at 1.1, panel shown=True
+SMOKE PASS camera toggle: Isometric -> switched -> Isometric
+SMOKE PASS camera rotate: Q turned yes, E turned back yes
+SMOKE FAIL character sheet: opened=False closed=False
+SMOKE PASS core pane: open=True, bag 2 items on 12x5, 9 doll slots, wallet 3, interface=True
+SMOKE PASS ribbon pages: weaves=shown, passives=shown, reliquary=shown, stash=shown, character=shown
+SMOKE FAIL escape closes the core pane last: core open=True
+SMOKE PASS talk to a villager: reached=True, Marcher: "Weft hold you, stranger." with 2 choices, chose "Any news?" (answered=True)
+SMOKE FAIL script: Cannot access a disposed object.
+Object name: 'HollowWake.Client.UI.WorldPanes.DialoguePane'.
+SMOKE DONE 17/20 passed in 42.3s; 71 fps at the end with 56 chunks and 298 entities
+ERROR: 23 RID allocations of type 'N10RendererRD14TextureStorage7TextureE' were leaked at exit.
+ERROR: 517 RID allocations of type 'PN18TextServerAdvanced22ShapedTextDataAdvancedE' were leaked at exit.
+ERROR: 3 RID allocations of type 'PN18TextServerAdvanced12FontAdvancedE' were leaked at exit.

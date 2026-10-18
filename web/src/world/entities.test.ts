@@ -1,7 +1,9 @@
 import { describe, expect, it } from 'vitest';
 import { DEFAULTS } from '../config';
 import type { EntityState } from '../net/protocol';
-import { isShaped, shapeColor, titleFor } from './entities';
+import { isShaped, shapeColor, titleFor, AppearanceService } from './entities';
+import { bundledKinds } from '../ui/logic/content';
+import { buildBody } from './appearance/bodyFamilies';
 
 const palette = DEFAULTS.entities;
 
@@ -13,6 +15,20 @@ function entity(over: Partial<EntityState>): EntityState {
 }
 
 describe('entity bodies', () => {
+  it('draws an explicitly empty self equipment list without default gear', () => {
+    // Plan construction is pure; this test does not ask the baker to use a renderer.
+    const service = new AppearanceService(bundledKinds(), null!);
+    const state = entity({ look: 'holdfast', is_player: true });
+    const look = service.lookFor(state)!;
+    const fallback = service.planFor(state, look, false, state.key);
+    expect(fallback.gearKey).toContain('+');
+    service.selfEquipment = () => ({});
+    const self = service.planFor(state, look, true, state.key);
+    expect(self.gearKey).toBe(look.id);
+    expect(self.plan.parts.length).toBe(buildBody(look, state.key, state.height, state.radius).parts.length);
+    expect(service.planFor(state, look, false, state.key).gearKey).toBe(fallback.gearKey);
+  });
+
   it('draws deliveries with a shape as shapes and everything else as a built body', () => {
     expect(isShaped(entity({ look: 'telegraph' }))).toBe(true);
     expect(isShaped(entity({ look: 'projectile', shape: 'line', shape_size: { radius: 3, width: 0.5 } }))).toBe(true);
