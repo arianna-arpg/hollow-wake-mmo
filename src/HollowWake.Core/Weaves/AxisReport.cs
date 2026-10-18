@@ -15,7 +15,7 @@ public enum AxisSource
 {
     /// <summary>The weave attribute folded with the weave's own bases and modifiers.</summary>
     Attribute,
-    /// <summary>A number the form's or preset's graph writes: a frozen axis unless an attribute multiplies it.</summary>
+    /// <summary>A number the form's or preset's graph writes: a frozen axis unless an attribute multiplies or channels it.</summary>
     Literal,
     /// <summary>A formula the form's or preset's graph writes.</summary>
     Expression,
@@ -49,9 +49,12 @@ public sealed record AxisValue
     public required string Unit { get; init; }
     public required AxisSource Source { get; init; }
     public required string Path { get; init; }
-    /// <summary>The weave attribute behind the value: folded into it, multiplying it, or (for a literal) the one the parameter falls back to.</summary>
+    /// <summary>The attribute behind the value: folded into it, multiplying it, the channel it passes through, or (for a literal) the one the parameter falls back to.</summary>
     public string? Attribute { get; init; }
-    /// <summary>An attribute multiplies the number, so a modifier reaches it even where the graph writes a literal.</summary>
+    /// <summary>
+    /// An attribute multiplies the number or the number passes through an attribute's modifiers (a channel such
+    /// as <c>damage</c>), so a modifier reaches it even where the graph writes a literal.
+    /// </summary>
     public bool Multiplied { get; init; }
     /// <summary>The effect type the value is a parameter of, for values read from the graph.</summary>
     public string? Effect { get; init; }
@@ -62,7 +65,7 @@ public sealed record AxisValue
     /// <summary>A word that stands for a number: the grammar's target is an axis with a style word.</summary>
     public bool HidesNumber { get; init; }
 
-    /// <summary>A literal number no attribute multiplies: a frozen axis, no modifier reaches it.</summary>
+    /// <summary>A literal number no attribute multiplies or channels: a frozen axis, no modifier reaches it.</summary>
     public bool Frozen => Source == AxisSource.Literal && Number is not null && !Multiplied;
 
     /// <summary>The value as text: the number to three places, else the word.</summary>
@@ -202,6 +205,23 @@ public sealed class AxisReading
         {
             var value = baseValue is { } b ? Weave.Attr(Holder, attribute, b) : Weave.Attr(Holder, attribute);
             return double.IsFinite(value) ? value : null;
+        }
+        catch (Exception e) when (e is ExprEvalException or AttributeCycleException or ArithmeticException or ArgumentException)
+        {
+            return null;
+        }
+    }
+
+    /// <summary>
+    /// A number passed through an attribute's modifier stack on the holder under the weave's tags, the weave's
+    /// modifiers joining, as an amount passes through the <c>damage</c> channel; null when it cannot be read here.
+    /// </summary>
+    public double? Channel(string attribute, double value)
+    {
+        try
+        {
+            var through = Holder.Attributes.Apply(attribute, value, Holder, Weave.Tags, Weave.Modifiers);
+            return double.IsFinite(through) ? through : null;
         }
         catch (Exception e) when (e is ExprEvalException or AttributeCycleException or ArithmeticException or ArgumentException)
         {

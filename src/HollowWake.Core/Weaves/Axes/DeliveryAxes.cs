@@ -138,14 +138,14 @@ internal static class DeliveryAxes
             word = reading.Words(json);
             nature = AxisSource.Literal;
         }
-        if (binding.Role == AttributeRole.Multiplier && binding.Attribute is { } scale)
+        if (binding.Role is AttributeRole.Multiplier or AttributeRole.Channel && binding.Attribute is { } scale)
         {
             attribute = scale;
             multiplied = true;
-            if (number is { } written && reading.Fold(scale) is { } factor)
+            if (number is { } written && Reach(reading, binding, scale, written) is { } reached)
             {
-                detail = Join(detail, $"{AxisReport.Format(written)} x {scale}");
-                number = written * factor;
+                detail = Join(detail, reached.Detail);
+                number = reached.Number;
             }
         }
         var source = nature;
@@ -201,17 +201,18 @@ internal static class DeliveryAxes
                 Detail = node.AddedBy,
             };
         }
-        if (binding.Attribute is { } attribute && binding.Role != AttributeRole.None && reading.Mentions(attribute))
+        // Only the weave's own fold is the weave's statement: a stack the handler reads elsewhere is the caster's, not the weave's.
+        if (binding.Attribute is { } attribute && binding.Role != AttributeRole.None && binding.Fold == AttributeFold.Weave && reading.Mentions(attribute))
         {
             if (binding.Role == AttributeRole.Fallback)
             {
                 number = reading.Fold(attribute) * binding.Factor;
                 detail = binding.Factor == 1 ? "falls back to " + attribute : $"{AxisReport.Format(binding.Factor)} x {attribute}";
             }
-            else if (binding.Default is { } @default && reading.Fold(attribute) is { } factor)
+            else if (binding.Default is { } @default && Reach(reading, binding, attribute, @default) is { } reached)
             {
-                number = @default * factor;
-                detail = $"{AxisReport.Format(@default)} x {attribute}";
+                number = reached.Number;
+                detail = reached.Detail;
                 multiplied = true;
             }
             else
@@ -253,6 +254,25 @@ internal static class DeliveryAxes
             Parameter = binding.Parameter,
             Detail = detail,
         };
+    }
+
+    /// <summary>
+    /// A number as the attribute of a multiplier or a channel reaches it: times the weave's fold of a multiplier,
+    /// through the weave's modifiers on a channel; as written where the stack is the caster's own, which the
+    /// holder has none of.
+    /// </summary>
+    private static (double Number, string Detail)? Reach(AxisReading reading, AxisBinding binding, string attribute, double value)
+    {
+        var text = AxisReport.Format(value);
+        if (binding.Fold == AttributeFold.Caster)
+        {
+            return (value, $"{text} x {attribute} on the caster's own stack");
+        }
+        if (binding.Role == AttributeRole.Channel)
+        {
+            return reading.Channel(attribute, value) is { } through ? (through, $"{text} through {attribute}") : null;
+        }
+        return reading.Fold(attribute) is { } factor ? (value * factor, $"{text} x {attribute}") : null;
     }
 
     private static string? Join(string? a, string? b) => string.IsNullOrEmpty(a) ? b : string.IsNullOrEmpty(b) ? a : a + "; " + b;

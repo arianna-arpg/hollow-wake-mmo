@@ -27,7 +27,7 @@ entries:
     targeting: enemy
     cast_mode: instant
     min_threads: 0
-    attributes: { range: 12, projectile.speed: 18, area.radius: 2 }
+    attributes: { range: 12, projectile.speed: 18, area.radius: 2, projectile.spread: 1 }
     effects:
       - type: projectile
         radius: 0.3
@@ -39,6 +39,7 @@ entries:
             angle: 90
             radius: "weave.area.radius"
             effects: [ { type: damage, amount: 2, threads: [ember] } ]
+          - { type: apply_status, status: burning, duration: 3 }
 ---
 kind: weaves
 entries:
@@ -122,7 +123,20 @@ entries:
         // A written speed freezes an axis content could leave to the weave: the literal names the attribute it shadows.
         var speed = Assert.Single(literals, v => v.Name == "kinematics.speed");
         Assert.Equal((20.0, "projectile.speed"), (speed.Number, speed.Attribute));
-        Assert.Contains(literals, v => v.Name == "payload.amount" && v.Number == 5);
+
+        // A written amount passes through the attacker's damage channel, so a modifier reaches it: it is not frozen.
+        var amount = Assert.Single(values, v => v.Name == "payload.amount" && v.Path == "effects[0].on_hit[0].amount");
+        Assert.Equal((5.0, "damage", true), (amount.Number, amount.Attribute, amount.Multiplied));
+        Assert.DoesNotContain(literals, v => v.Name == "payload.amount");
+
+        // A written status duration is scaled by the applier's effect.duration, read on the caster's own stack.
+        var duration = Assert.Single(values, v => v.Name == "payload.duration");
+        Assert.Equal((3.0, "effect.duration", true), (duration.Number, duration.Attribute, duration.Multiplied));
+        Assert.Contains("caster's own stack", duration.Detail);
+        Assert.DoesNotContain(literals, v => v.Name == "payload.duration");
+
+        // An aimed fan's spreads are read only where the flight has one, though the weave states projectile.spread.
+        Assert.DoesNotContain(values, v => v.Parameter is { } p && p.StartsWith("spread_by_aim", StringComparison.Ordinal));
 
         // The area's angle is written too, but the weave's area.angle multiplies it, so a modifier still reaches it.
         var angle = Assert.Single(values, v => v.Name == "geometry.angle");

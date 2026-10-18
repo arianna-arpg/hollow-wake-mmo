@@ -65,6 +65,25 @@ public enum AttributeRole
     Fallback,
     /// <summary>The attribute multiplies the parameter, written or not, so a modifier reaches even a written number.</summary>
     Multiplier,
+    /// <summary>
+    /// The parameter passes through the attribute's modifier stack, written or not, the way an amount of damage
+    /// passes through <c>damage</c> and a heal through <c>healing</c>: the attribute's base plays no part (both
+    /// are zero), its flats, increases and mores do, so a modifier reaches even a written number.
+    /// </summary>
+    Channel,
+}
+
+/// <summary>Whose stack a binding's attribute is folded on when the handler reads it.</summary>
+public enum AttributeFold
+{
+    /// <summary>The weave's fold: the caster's stack with the weave's bases and modifiers, under the weave's tags.</summary>
+    Weave,
+    /// <summary>
+    /// The caster's own stack under the weave's tags, without the weave's bases and modifiers: a glyph's or a
+    /// passive's modifier on the caster reaches it, a modifier the weave carries does not (an applier's
+    /// <c>effect.duration</c>, read by the status service).
+    /// </summary>
+    Caster,
 }
 
 /// <summary>
@@ -104,8 +123,9 @@ public static class AxisUnits
 
 /// <summary>
 /// One declaration: what an effect type's parameter is (an axis, a node, a choice or a flag), the dimension it
-/// places a value on, its unit, the weave attribute it falls back to or is multiplied by, the rule the handler
-/// reads when the graph gives nothing, and for a choice the vocabulary its words come from. A parameter with a
+/// places a value on, its unit, the attribute it falls back to, is multiplied by or passes through and whose
+/// stack that is, the rule the handler reads when the graph gives nothing, and for a choice the vocabulary its
+/// words come from. A parameter with a
 /// dot is a field inside a block (<c>place.range</c>); <c>*</c> stands for each key of a map
 /// (<c>amounts.*</c>) and <c>[]</c> for each element of a list (<c>choices[].weight</c>). An implicit binding
 /// names a number the handler or its system reads with no parameter of its own (a fork's angle, an area's
@@ -121,6 +141,8 @@ public sealed record AxisBinding
     public string Unit { get; init; } = Word;
     public string? Attribute { get; init; }
     public AttributeRole Role { get; init; }
+    /// <summary>Whose stack the attribute is folded on: the weave's, unless the handler reads the caster's own.</summary>
+    public AttributeFold Fold { get; init; }
     /// <summary>What a fallback attribute is multiplied by: a storm's disc is twice the weave's area radius.</summary>
     public double Factor { get; init; } = 1;
     /// <summary>The number the handler uses when neither the graph nor the attribute or rule gives one.</summary>
@@ -336,7 +358,7 @@ public static class AxisBindings
             Name = name,
         });
 
-    private static void Scaled(string type, string parameter, Dimension dimension, string unit, string attribute, double? @default = null, string? when = null, string? name = null) =>
+    private static void Scaled(string type, string parameter, Dimension dimension, string unit, string attribute, double? @default = null, string? when = null, string? name = null, AttributeFold fold = AttributeFold.Weave) =>
         Register(new AxisBinding
         {
             Type = type,
@@ -346,8 +368,24 @@ public static class AxisBindings
             Unit = unit,
             Attribute = attribute,
             Role = AttributeRole.Multiplier,
+            Fold = fold,
             Default = @default,
             When = when,
+            Name = name,
+        });
+
+    /// <summary>An axis that passes through an attribute's modifier stack (<see cref="AttributeRole.Channel"/>): an amount of damage or healing.</summary>
+    private static void Channel(string type, string parameter, Dimension dimension, string unit, string attribute, double? @default = null, string? name = null) =>
+        Register(new AxisBinding
+        {
+            Type = type,
+            Parameter = parameter,
+            Kind = ParameterKind.Axis,
+            Dimension = dimension,
+            Unit = unit,
+            Attribute = attribute,
+            Role = AttributeRole.Channel,
+            Default = @default,
             Name = name,
         });
 
@@ -489,8 +527,9 @@ public static class AxisBindings
         Axis("projectile", "volley_spacing", Geometry, Units, @default: 0.6, when: "fire=volley");
         Axis("projectile", "ring_jitter", Geometry, Degrees, @default: 0, when: "fire=ring");
         FlagOf("projectile", "spread_by_aim", Geometry);
-        Axis("projectile", "spread_by_aim.near", Geometry, Degrees, @default: 15);
-        Axis("projectile", "spread_by_aim.far", Geometry, Degrees, @default: 15);
+        // An aimed fan's near and far spreads replace the spread, and the weave's projectile.spread scales them as it does the spread.
+        Scaled("projectile", "spread_by_aim.near", Geometry, Degrees, "projectile.spread", 15, when: "spread_by_aim");
+        Scaled("projectile", "spread_by_aim.far", Geometry, Degrees, "projectile.spread", 15, when: "spread_by_aim");
         Axis("projectile", "spread_by_aim.range", Geometry, Units, @default: 10);
         Choice("projectile", "origin", Geometry, "caster", new[] { "caster", "point" }, hidesNumber: true);
         Axis("projectile", "origin_range", Geometry, Units, when: "origin=point");
@@ -666,8 +705,9 @@ public static class AxisBindings
 
     private static void Payloads()
     {
-        Axis("damage", "amount", Payload, Resource, @default: 10);
-        Axis("damage", "amounts.*", Payload, Resource, name: "amount.*");
+        // Every amount passes through the attacker's damage stack, the weave's modifiers joining, in the damage pipeline.
+        Channel("damage", "amount", Payload, Resource, "damage", 10);
+        Channel("damage", "amounts.*", Payload, Resource, "damage", name: "amount.*");
         Choice("damage", "threads", Payload, registry: "threads");
         Choice("damage", "tags", Payload);
         FlagOf("damage", "can_crit", Payload, @default: true);
@@ -676,7 +716,7 @@ public static class AxisBindings
         Axis("damage", "leech", Payload, Fraction);
         Effects("damage", "on_kill");
 
-        Axis("heal", "amount", Payload, Resource, @default: 10);
+        Channel("heal", "amount", Payload, Resource, "healing", 10);
         Choice("heal", "resource", Payload, "life", registry: "resources");
         Choice("heal", "tags", Payload);
         FlagOf("heal", "self", Targeting);
@@ -692,7 +732,9 @@ public static class AxisBindings
     private static void Statuses()
     {
         NodeOf("apply_status", "status", NodeShape.Reference, registry: "statuses", readBy: "statuses");
-        Axis("apply_status", "duration", Payload, Seconds);
+        // The status service scales a duration by the applier's effect.duration, read on the applier's own stack without
+        // the weave's modifiers, and a harmful one by the bearer's status.resistance, a defense as resistances are to damage.
+        Scaled("apply_status", "duration", Payload, Seconds, "effect.duration", fold: AttributeFold.Caster);
         FlagOf("apply_status", "fixed_duration", Payload, unit: Seconds);
         Axis("apply_status", "chance", Payload, Fraction, @default: 1);
         Axis("apply_status", "stacks", Payload, Count, @default: 1);
