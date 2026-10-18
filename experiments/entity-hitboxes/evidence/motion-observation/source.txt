@@ -1,0 +1,27 @@
+Runtime: b116725108a1b814bb875d408f3b17aee95bf412
+Prior publication: 26a60dfd1868ef4dff7a441aef01f63b459f7099
+Shared snapshot ownership and source findings:
+https://github.com/arianna-arpg/hollow-wake-mmo/pull/36#issuecomment-6256434243
+
+Commands from precise-entity-hitboxes:
+dotnet build HollowWake.sln --no-restore
+dotnet build src/HollowWake.Tools -c Release --no-restore
+dotnet test HollowWake.sln --no-build --no-restore
+dotnet test tests/HollowWake.Server.Tests/HollowWake.Server.Tests.csproj --no-restore --filter FullyQualifiedName~DeliverySnapshotTests --logger "console;verbosity=normal"
+dotnet test tests/HollowWake.Core.Tests/HollowWake.Core.Tests.csproj --no-restore --filter "FullyQualifiedName~FreeShotGroundFloorTests|FullyQualifiedName~ProjectileLaunchRegressionTests|FullyQualifiedName~AimWrapperElevationTests" --logger "console;verbosity=normal"
+dotnet src/HollowWake.Tools/bin/Release/net10.0/hollowwake.dll validate
+dotnet src/HollowWake.Tools/bin/Release/net10.0/hollowwake.dll load --x 0 --y 0
+dotnet src/HollowWake.Tools/bin/Release/net10.0/hollowwake.dll protocol-ts --check
+dotnet src/HollowWake.Tools/bin/Release/net10.0/hollowwake.dll tournament --standard --check-hashes experiments/combat-grammar/baselines/standard-duels.json
+dotnet src/HollowWake.Tools/bin/Release/net10.0/hollowwake.dll tournament --pairs proving_reaver:proving_bulwark,proving_hexer:proving_plaguer,proving_pitfighter:proving_mower,proving_fletcher:proving_evoker --seeds 10 --seconds 60 --bands --out experiments/entity-hitboxes/artifacts/motion-observation/proving.json
+dotnet src/HollowWake.Tools/bin/Release/net10.0/hollowwake.dll lint --json experiments/entity-hitboxes/artifacts/motion-observation/lint.json
+npm --prefix web test
+node scripts/test-background.mjs --suite all --no-build --out experiments/entity-hitboxes/artifacts/motion-observation/smoke
+dotnet src/HollowWake.Tools/bin/Release/net10.0/hollowwake.dll probe --host 127.0.0.1 --port 59655 --account motion-observation-probe --seconds 6 --features entity_delta,interface,entry_flow,cast_cues,hit_bodies_v2,projectile_slabs_v1
+
+Probe used only this run's private server, after GET /ws verified service hollow-wake and name harness-run-zUtxqe.
+No benchmark, performance trace or new seeded gameplay event log was run.
+No new baseline was recorded.
+Own pre-fix failures remain under ignored artifacts/motion-observation/snapshot-before.txt and range-before.txt.
+Intermediate test-fixture collection equality and rounding failures are preserved separately.
+The peer's blocked raw payload was not copied into this evidence.

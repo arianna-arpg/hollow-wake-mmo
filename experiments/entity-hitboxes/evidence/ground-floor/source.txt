@@ -1,0 +1,41 @@
+Runtime: fda30afb81452285b5956797c63363cb7bd42b46
+Previous published source: 01b2884c3ddc61c0b617c9062a7e36b575d94551
+Platform: Windows x64
+Review: https://github.com/arianna-arpg/hollow-wake-mmo/pull/36#issuecomment-6255777391
+Owner decision: https://github.com/arianna-arpg/hollow-wake-mmo/pull/36#issuecomment-6255794640
+
+Commands (from precise-entity-hitboxes worktree):
+dotnet build HollowWake.sln --no-restore
+dotnet build src/HollowWake.Tools -c Release --no-restore
+dotnet test HollowWake.sln --no-build --no-restore
+dotnet test tests/HollowWake.Core.Tests/HollowWake.Core.Tests.csproj --no-build --no-restore --filter "FullyQualifiedName~FreeShotGroundFloorTests|FullyQualifiedName~ProjectileLaunchRegressionTests|FullyQualifiedName~AimWrapperElevationTests" --logger "console;verbosity=normal"
+dotnet src/HollowWake.Tools/bin/Release/net10.0/hollowwake.dll validate
+dotnet src/HollowWake.Tools/bin/Release/net10.0/hollowwake.dll load --x 0 --y 0
+dotnet src/HollowWake.Tools/bin/Release/net10.0/hollowwake.dll tournament --standard --check-hashes experiments/combat-grammar/baselines/standard-duels.json
+dotnet src/HollowWake.Tools/bin/Release/net10.0/hollowwake.dll tournament --standard --hashes --out experiments/combat-grammar/baselines/standard-duels.json
+dotnet src/HollowWake.Tools/bin/Release/net10.0/hollowwake.dll tournament --pairs proving_reaver:proving_bulwark,proving_hexer:proving_plaguer,proving_pitfighter:proving_mower,proving_fletcher:proving_evoker --seeds 10 --seconds 60 --bands --out experiments/entity-hitboxes/artifacts/ground-floor/proving.json
+dotnet src/HollowWake.Tools/bin/Release/net10.0/hollowwake.dll weave --axes --all --literals experiments/entity-hitboxes/artifacts/ground-floor/literals.txt
+dotnet src/HollowWake.Tools/bin/Release/net10.0/hollowwake.dll lint --json experiments/entity-hitboxes/artifacts/ground-floor/lint.json
+npm --prefix web test
+npm --prefix web run build
+node scripts/test-background.mjs --suite all --no-build --out experiments/entity-hitboxes/artifacts/ground-floor/smoke
+
+Counterfactuals: only four owned runtime files were temporarily changed and restored in finally.
+before: those four files read verbatim with git show 01b2884:<path>.
+floor-only: final source minus the Returns(p) block in the successful pierce branch.
+return-only: final source with FreeGroundAim returning false.
+Paths under src/HollowWake.Core: Effects/ProjectileAims.cs, Effects/Handlers/DeliveryHandlers.cs, Effects/ProjectileComponents.cs, Systems/ProjectileSystem.cs.
+Each: dotnet build src/HollowWake.Tools -c Release --no-restore -o experiments/entity-hitboxes/artifacts/ground-floor/counterfactual-<variant>
+Each: tournament --standard --check-hashes <before or corrected baseline> --out report-<variant>.json
+before/floor-only match all seven old hashes; return-only matches all seven final hashes.
+The content floor rule is present in all variants but unused by original code.
+Final sources restored byte for byte; Release rebuilt after these checks.
+
+Seeded functional event logs:
+fight loosed_skirmisher hob --seed tournament:loosed_skirmisher:hob:0 --seconds 60 --lines 10000
+fight loosed_skirmisher boar --seed tournament:loosed_skirmisher:boar:1 --seconds 60 --lines 10000
+These are gameplay-event logs requested by the coordinator, not performance traces.
+No benchmark or performance trace ran.
+
+Complete raw reports, intermediate fixture precision failure, original stale-ledger assertions, initial hash mismatch, counterfactual binaries and screenshots stay ignored under experiments/entity-hitboxes/artifacts/ground-floor.
+Committed logs normalize line endings and trailing whitespace only.
