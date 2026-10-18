@@ -69,6 +69,22 @@ public class WeaveCompilerTests
             })
             .With(new FormDef { Id = "t_channel", CastMode = CastMode.Channel, Effects = { Spec("{\"type\": \"log\", \"text\": \"pulse\"}") }, MinThreads = 0 })
             .With(new FormDef { Id = "t_charge", CastMode = CastMode.Charge, Effects = { Spec("{\"type\": \"log\", \"text\": \"release\"}") }, MinThreads = 0 })
+            // A preset with tags, a declared mechanism and casting behaviors of its own, between its form and its glyphs.
+            .With(new WeaveDef
+            {
+                Id = "t_preset",
+                Form = "bolt",
+                Threads = { "ember" },
+                Tags = TagSet.Of("curse", "javelin"),
+                Mechanisms = TagSet.Of("t_declared"),
+                Uses = new UsesSpec { Max = 2 },
+                Gates = { HollowWake.Core.Expressions.Expr.Parse("life_pct > 0.1") },
+                MetaAction = new MetaSpec { Weave = "ember_blast", Label = "Burst" },
+                EquipModifiers = { new Modifier { Attribute = "armor", Form = ModifierForm.Flat, Value = 3 } },
+            })
+            .With(new GlyphDef { Id = "t_bank", Uses = new UsesSpec { Max = 5 } })
+            .With(new GlyphDef { Id = "t_needs_meta", RequiresMechanisms = TagSet.Of("meta") })
+            .With(new GlyphDef { Id = "t_needs_curse", Requires = TagSet.Of("curse") })
             .With(new FactionDef { Id = "red", Relations = { ["blue"] = Stance.Hostile } })
             .With(new FactionDef { Id = "blue", Relations = { ["red"] = Stance.Hostile } });
         return registry;
@@ -243,6 +259,74 @@ public class WeaveCompilerTests
         var misfit = Assert.Single(tide.Dormant);
         Assert.Equal("t_needs_burning", misfit.Glyph.Id);
         Assert.Contains("affliction:burning", misfit.Reason);
+    }
+
+    [Fact]
+    public void PresetsCarryTagsMechanismsAndBehaviorsBetweenFormAndGlyphs()
+    {
+        var compiler = Compiler();
+        var weave = compiler.Compile(new WeaveSpec { Preset = "t_preset" });
+        Assert.True(weave.Tags.Has("curse"));
+        Assert.True(weave.Tags.Has("javelin"));
+        Assert.True(weave.Tags.Has("preset.t_preset"));
+        Assert.True(weave.Tags.Has("form.bolt"));
+        Assert.True(weave.DeclaredMechanisms.Has("t_declared"));
+        Assert.True(weave.Mechanisms.Has("meta"));
+        Assert.Equal(2, weave.Casting.Uses!.Max);
+        Assert.Single(weave.Casting.Gates);
+        Assert.Equal("ember_blast", Assert.Single(weave.Casting.Metas).Weave);
+        Assert.Equal("armor", Assert.Single(weave.Casting.EquipModifiers).Attribute);
+
+        // A glyph's bank wins over the preset's; the preset's tags and meta lift glyph gates.
+        var banked = compiler.Compile(new WeaveSpec { Preset = "t_preset", Glyphs = { "t_bank", "t_needs_meta", "t_needs_curse" } });
+        Assert.True(banked.Fits);
+        Assert.Equal(5, banked.Casting.Uses!.Max);
+        Assert.Equal(3, banked.GlyphRefs.Count);
+
+        // Without the preset the same form carries none of it.
+        var bare = compiler.Compile(Bolt());
+        Assert.False(bare.Tags.Has("curse"));
+        Assert.Null(bare.Casting.Uses);
+        Assert.Empty(bare.Casting.Metas);
+        var misfit = compiler.Compile(Bolt("t_needs_curse"), GlyphFit.Dormant);
+        Assert.Single(misfit.Dormant);
+    }
+
+    [Fact]
+    public void ValidationChecksAPresetsBehaviorsLikeAGlyphs()
+    {
+        var dir = Path.Combine(Path.GetTempPath(), "hollowwake-preset-" + Guid.NewGuid().ToString("N"));
+        Directory.CreateDirectory(dir);
+        try
+        {
+            File.WriteAllText(Path.Combine(dir, "weaves.yaml"), string.Join("\n",
+                "kind: weaves",
+                "entries:",
+                "  - id: bad_trigger",
+                "    form: bolt",
+                "    threads: [ember]",
+                "    trigger: { on: sneeze }",
+                "  - id: bad_meta",
+                "    form: bolt",
+                "    threads: [ember]",
+                "    meta_action: { weave: no_such_weave, label: x }",
+                "  - id: good_preset",
+                "    form: bolt",
+                "    threads: [ember]",
+                "    tags: [curse]",
+                "    uses: { max: 2, recharge: 3 }",
+                "    gates: ['life_pct > 0.1']",
+                ""));
+            ContentRegistry.Load(new[] { CoreContent.FindContentDir(), dir }, out var report);
+            var errors = report.Errors.Select(e => $"{e.Id}: {e.Message}").ToList();
+            Assert.Contains(errors, e => e.StartsWith("bad_trigger") && e.Contains("sneeze"));
+            Assert.Contains(errors, e => e.StartsWith("bad_meta") && e.Contains("no_such_weave"));
+            Assert.DoesNotContain(errors, e => e.StartsWith("good_preset"));
+        }
+        finally
+        {
+            Directory.Delete(dir, recursive: true);
+        }
     }
 
     [Fact]

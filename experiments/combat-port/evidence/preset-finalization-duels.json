@@ -1,0 +1,37 @@
+[
+  {
+    "First": "loosed_kindler",
+    "Second": "boar",
+    "Seconds": "10",
+    "Sha256": "8CE22EA7521959FEF67D57E344BB33CAC910085017D4DF15D70D626010E07B68",
+    "Identical": true
+  },
+  {
+    "First": "wolf",
+    "Second": "hob",
+    "Seconds": "20",
+    "Sha256": "DD14C3EA6081379F931B54A16D766990986599C9523434C64F2016687501DAC4",
+    "Identical": true
+  },
+  {
+    "First": "proving_reaver",
+    "Second": "proving_bulwark",
+    "Seconds": "30",
+    "Sha256": "4D75E2D915FECF7E9836392793756F628FB78B9C6D74BDAD85DC29637737E52D",
+    "Identical": true
+  },
+  {
+    "First": "tide_channeler",
+    "Second": "spark_duelist",
+    "Seconds": "30",
+    "Sha256": "C0E72EA059D3A17FA97673F1C3B2D05BD7C14A7F5286BB4220A7B24D45E0DC1F",
+    "Identical": true
+  },
+  {
+    "First": "loosed_skirmisher",
+    "Second": "tide_caller",
+    "Seconds": "30",
+    "Sha256": "EC73204725072D46B6744E69C62C0C1054A02209F186846691C897BE025A38D9",
+    "Identical": true
+  }
+]
