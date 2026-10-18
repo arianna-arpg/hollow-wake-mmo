@@ -88,3 +88,11 @@ The required proving-pair comparison is also retained, in `34-main-proving-*`. I
 Source `0ffa92049b817c3279593005f6ac9aff23404277`: solution build zero warnings/errors; all core 2289, server 59 and client 133 tests pass. Validation is zero errors/warnings; load and the skeleton/zombie duel pass. The generated frozen-literal keys exactly equal the reviewed fixture; full census and keys are retained with these gates under `experiments/entity-review/evidence/34-main-*`. This verifies functional integration, not performance after main. Earlier benchmark misses remain open; no timing run or budget change accompanied these gates.
 
 Release tools build with zero warnings/errors and enforce all seven recorded Windows replay hashes unchanged from the reviewed baseline. The three inherited proving-band breaches remain open as documented above; this replay pass does not establish balance clearance.
+
+## #34 combined client and transport verification
+
+Source `0ae9ec326a5c86ee58912013d31417fc05c4eeee`: browser unit tests 291 pass, production browser build and porter tests pass, generated protocol is current. Private `run-yVBA1c` passes browser 30/30 and native 36/36; teardown is clean. Native rendered pixels remain explicitly skipped; complete headless output, including exit diagnostics, is retained. The isolated TCP probe passes with all six requested features granted. The production build retains its existing large-chunk advisory.
+
+Fresh run-yVBA1c card and grayscale frames were inspected: both show interface/nameplates over a flat background, with no world terrain or bodies. This confirms the retained inherited blank-world defect on #34; behavioral smoke is not visual clearance. The separately committed #37 renderer correction 30f6c91 is the integration fix and will be rechecked after importing this foundation. No native pixel verification is claimed.
+
+These functional gates do not resolve the retained pre-main performance misses or establish a post-main timing pass. No benchmark was run during this integration.
