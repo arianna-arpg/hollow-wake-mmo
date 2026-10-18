@@ -167,6 +167,8 @@ public sealed record WeaveSlotsMsg(List<WeaveSeatInfo> Seats) : Message;
 /// </summary>
 public sealed record WeaveSeatInfo(int Slot, string? Key, string? Form, string Name, int Level, int Sockets, List<SeatGlyphInfo> Glyphs, double ReadyIn, double Cooldown, List<PreviewLineInfo> Preview)
 {
+    /// <summary>The authored preset, distinct from a freely composed form, for client presentation.</summary>
+    public string? Preset { get; init; }
     public string? Icon { get; init; }
     /// <summary>Why the weave as a whole cannot be used, or null when it can.</summary>
     public string? Dormant { get; init; }
@@ -214,6 +216,8 @@ public sealed record SeatGlyphInfo(int Socket, string Id, string Name, int Level
 /// <summary>A face a slot can show: a label and an icon.</summary>
 public sealed record FaceInfo(string Label)
 {
+    public string? Weave { get; init; }
+    public string? Form { get; init; }
     public string? Icon { get; init; }
 }
 
@@ -289,7 +293,11 @@ public sealed record ItemGlyphInfo(string Id, string Name, int Level)
 }
 
 /// <summary>What a form item teaches: the form, its level and the sockets it gives a weave slot.</summary>
-public sealed record ItemFormInfo(string Id, string Name, int Level, int Sockets);
+public sealed record ItemFormInfo(string Id, string Name, int Level, int Sockets)
+{
+    /// <summary>A preset memory's identity; null for a plain form memory.</summary>
+    public string? Weave { get; init; }
+}
 
 /// <summary>
 /// How a stone fits a weave slot: <c>fits</c>, <c>misfit</c> (it would sit dormant, with the reason),

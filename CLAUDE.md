@@ -55,6 +55,7 @@ dotnet run --project src/HollowWake.Tools -- tournament --standard --hashes --ou
 dotnet run --project src/HollowWake.Tools -- tournament --standard --check-hashes experiments/combat-grammar/baselines/standard-duels.json   # the standard duels against that baseline: prints identical or names each pairing that changed, and fails
 godot --path src/HollowWake.Client -- --smoke --shots DIR      # scripted client play-through against a running server (Godot 4.7 .NET)
 dotnet run --project src/HollowWake.Tools -- protocol-ts       # regenerate web/src/net/protocol.ts after changing a message
+node scripts/import-ability-icons.mjs <prototype-checkout> <revision> # regenerate only bound prototype artwork; see docs/design/ui.md
 node --test scripts/port/port-prototype.test.mjs              # the prototype porting script on a synthetic snapshot (see docs/design/parity/port-ledger.md to run it)
 npm --prefix web ci && npm --prefix web run build              # build the web client into web/dist (Node 22)
 npm --prefix web test                                          # web client unit tests
