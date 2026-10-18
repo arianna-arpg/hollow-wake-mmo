@@ -1,5 +1,7 @@
 # Elemental integration of the complete main-based foundation
 
+Historical checkpoint at `ce4c992`. The [final reviewed foundation integration](2026-10-18-elemental-final-foundation.md) records the subsequent contact/placement and Knot-offer corrections. Its fresh evidence supersedes current-source functional claims here; the old measurements and open findings are preserved.
+
 At the coordinator's direction, PR #40 integrates complete validated #34 `3d339d2ac71af6ac8bcff8e4f767e1f7c44ce2d8`, including main's movement/AI, entry, grammar and evaluation changes, corrected #33 `80dcac7`, complete reconciled #36 `c07b6df`, #34 runtime `2bf403c` and its narrowly reviewed replay fixture `0ffa920`. This is a runtime change from measured elemental source `50f7dd6`; previous timing remains pre-main evidence, including snapshot 1.222392 ms/player against 1 ms and the original process-wide expression allocation counter 0.0168 bytes/eval. No post-main performance clearance or new benchmark is claimed.
 
 The merge is conflict-free. Elemental content, explicit `use_site_level` opt-ins, own audited world goldens and isolated shared card-renderer correction `30f6c91` are retained. The incoming upstream audit preserves the original allocation failure/retry records, and the three proving-pair balance breaches (bulwark, plaguer and pitfighter ten wins from ten against 80% ceilings) remain open. No band, combat number or runtime workaround is authorized by this integration.
