@@ -1,6 +1,6 @@
 # Entity integration of the reviewed combat foundation
 
-Main `17ca2f13a4c193d4b65d99ca4545aae267581092` includes reciprocally reviewed #54. Propagation follows #31 -> #32 -> #33 -> #36 -> #34 -> #37, preserving each complete dependency. Entity combat/appearance content, numeric values, dimensions, physical estimates and existing audit allowances are not changed by these merges. The separate starter quest correction `7d3518b` is reviewed in `2026-10-18-starter-knot-restoration.md`: Knot foes search around the resolved destination with their original authored levels and unchanged chunk/radius bounds. The existing `raise_as` binding/fixture and reviewed heal guard, common probe fallbacks, original Aim propagation and capacity clamp before corpse selection/birth riders must all remain.
+Main `17ca2f13a4c193d4b65d99ca4545aae267581092` includes reciprocally reviewed #54. Propagation follows #31 -> #32 -> #33 -> #36 -> #34 -> #37, preserving each complete dependency. Entity combat/appearance content, numeric values, dimensions, physical estimates and existing audit allowances are not changed by these merges. The separate starter quest correction `7d3518b` is reviewed in `2026-10-18-starter-knot-restoration.md`: That checkpoint searched around the resolved destination with unchanged chunk/radius bounds. Its original-level policy is superseded by the owner-selected site-level opt-ins in `2026-10-18-knot-site-level-decision.md`. The existing `raise_as` binding/fixture and reviewed heal guard, common probe fallbacks, original Aim propagation and capacity clamp before corpse selection/birth riders must all remain.
 
 No new timing sample accompanies this integration. Retained performance misses, proposed planning target, nonzero process-wide allocation readings and inherited proving-band failures remain open. Previous samples do not certify this changed runtime. Native pixel coverage remains separate from headless checks.
 
@@ -11,6 +11,8 @@ Source `7d3518bed4ac4e92496a501ceb07444fedf4b23b` combines complete parent `17ca
 The full fresh proving JSON equals the exact archived same-branch pre-54 report at `6cc542644e1d7806d8b10e3cd9c6dd24749a0f12`, including outcomes, mechanisms, trace hashes and all 4 inherited win-ceiling breaches: proving_bulwark wins 10 of 10, above the ceiling 0.8; proving_plaguer wins 10 of 10, above the ceiling 0.8; proving_pitfighter wins 10 of 10, above the ceiling 0.8; proving_evoker wins 9 of 10, above the ceiling 0.8. It exits 1 and contains zero simulation warnings/errors. The balance gate is explicitly not passed. This comparison uses the actual previous source, not a later stack with different hit bodies. Source inspection confirms `raise_as` remains registered and capacity is clamped before corpse selection and room/birth processing. Full logs are retained as `31-post54-*` and `31-pre54-*`.
 
 Claude rereview requested for this combined source. No local performance claim or merge to main is made. Combined client/transport verification is retained downstream where the complete contact foundation is present.
+
+Acknowledged by: [Claude rereview of #31 at 749e99b](https://github.com/arianna-arpg/hollow-wake-mmo/pull/31#issuecomment-6255391549) accepts the Knot implementation; the contract follow-up and paired timing remain pending final review.
 
 ## #32 combined source
 
