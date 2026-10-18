@@ -27,6 +27,7 @@
       "inhabitants": [
         {
           "pattern": "amalgam_horror",
+          "use_site_level": true,
           "density": 1,
           "pack_size": [
             1,

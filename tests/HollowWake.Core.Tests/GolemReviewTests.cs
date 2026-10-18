@@ -4,6 +4,7 @@ using HollowWake.Core.Combat;
 using HollowWake.Core.Components;
 using HollowWake.Core.Content;
 using HollowWake.Core.Definitions;
+using HollowWake.Core.Ecs;
 using HollowWake.Core.Maths;
 using HollowWake.Core.Movement;
 using HollowWake.Core.Patterns;
@@ -24,12 +25,13 @@ public class GolemReviewTests(ITestOutputHelper output)
     [InlineData("golem_foundry")]
     [InlineData("golem_sawmill")]
     [InlineData("amalgam_suture_works")]
-    public void LoadedWorksHaveLivingResidentsAtTheSiteLevel(string site)
+    public void LoadedWorksExplicitlyKeepSiteLevelThroughBirthAndRespawn(string site)
     {
         foreach (var regionLevel in new[] { 1, 21 })
         {
             var content = ContentRegistry.Load(new[] { CoreContent.FindContentDir() }, out _);
             var def = content.Require<PoiDef>(site);
+            Assert.All(def.Inhabitants, inhabitant => Assert.True(inhabitant.UseSiteLevel));
             content.With(new RegionOverrideDef { Id = "hallows_home", X = 0, Y = 0, Archetype = "hallows", Level = regionLevel, Faction = "weftmarch_compact" });
             content.With(new ZoneOverrideDef { Id = "ninewells", X = 0, Y = 0, Pois = { new PoiPlacement { Poi = site, X = 50, Y = 50 } } });
             var generator = new WorldGenerator(content, Rng.Hash64("golem-residents"));
@@ -39,7 +41,17 @@ public class GolemReviewTests(ITestOutputHelper output)
             Assert.NotEmpty(spawners);
             var residents = spawners.SelectMany(s => s.C1.Alive).ToArray(); Assert.NotEmpty(residents);
             Assert.All(residents, e => Assert.Equal(regionLevel + def.Level, sim.World.Get<Stats>(e)!.Level));
-            output.WriteLine($"{site}: region {regionLevel}, {residents.Length} living residents at site level {regionLevel + def.Level}");
+            foreach (var resident in residents) sim.Service<DeathService>().Kill(sim, resident, Entity.None);
+            foreach (var spawner in spawners) spawner.C1.RespawnAt = sim.Clock.Time;
+            sim.Tick();
+            var replacements = spawners.SelectMany(s => s.C1.Alive).ToArray();
+            Assert.Equal(residents.Length, replacements.Length);
+            Assert.All(replacements, e =>
+            {
+                Assert.DoesNotContain(e, residents);
+                Assert.Equal(regionLevel + def.Level, sim.World.Get<Stats>(e)!.Level);
+            });
+            output.WriteLine($"{site}: region {regionLevel}, {residents.Length} initial and respawned residents at explicit site level {regionLevel + def.Level}");
         }
     }
 

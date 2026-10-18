@@ -1,0 +1,38 @@
+0_0: sites unchanged=true; population counts unchanged=true
+Quest offers before: [{"Id":"gen.poi.0_0.hamlet.128.128.clear_knot.0","Level":1,"Targets":[{"Type":"reach","Target":null,"Poi":"poi.0_0.knot.200.60"},{"Type":"kill","Target":"cinder_imp","Poi":null}]},{"Id":"gen.poi.0_0.hamlet.128.128.gather_floss.1","Level":1,"Targets":[{"Type":"collect","Target":"thread_floss","Poi":null}]},{"Id":"gen.poi.0_0.hamlet.128.128.cull_beasts.2","Level":1,"Targets":[{"Type":"kill","Target":"hob","Poi":null}]},{"Id":"gen.poi.0_0.hamlet.128.128.scout_ruin.3","Level":1,"Targets":[{"Type":"discover","Target":null,"Poi":"poi.1_1.ruin.305.334"}]}]
+Quest offers after: [{"Id":"gen.poi.0_0.hamlet.128.128.gather_floss.1","Level":1,"Targets":[{"Type":"collect","Target":"thread_floss","Poi":null}]},{"Id":"gen.poi.0_0.hamlet.128.128.cull_beasts.2","Level":1,"Targets":[{"Type":"kill","Target":"hob","Poi":null}]},{"Id":"gen.poi.0_0.hamlet.128.128.scout_ruin.3","Level":1,"Targets":[{"Type":"discover","Target":null,"Poi":"poi.0_1.ruin.213.450"}]}]
+cinder_imp / poi.0_0.knot.200.60: 4 bodies at level 3 (explicit 3) -> 4 bodies at level 4 (explicit null)
+quartermaster / poi.0_0.hamlet.128.128: 1 bodies at level 1 (explicit 1); 1 bodies at level 5 (explicit null) -> 2 bodies at level 5 (explicit null)
+remnant_shade / poi.0_0.knot.200.60: 4 bodies at level 3 (explicit 3) -> 4 bodies at level 2 (explicit null)
+spindlewatch_guard / poi.0_0.hamlet.128.128: 2 bodies at level 1 (explicit 1); 2 bodies at level 5 (explicit null) -> 4 bodies at level 5 (explicit null)
+tangle / poi.0_0.knot.200.60: 1 bodies at level 3 (explicit 3) -> 1 bodies at level 6 (explicit null)
+villager / poi.0_0.hamlet.128.128: 3 bodies at level 1 (explicit 1) -> 3 bodies at level 1 (explicit null)
+1_0: sites unchanged=true; population counts unchanged=true
+Quest offers before: []
+Quest offers after: []
+goblin_scavenger / poi.1_0.orc_chaincamp.431.198: 1 bodies at level 8 (explicit 8) -> 1 bodies at level 1 (explicit null)
+goblin_skirmisher / poi.1_0.orc_muster.291.217: 1 bodies at level 5 (explicit 5) -> 1 bodies at level 2 (explicit null)
+orc_ashcaller / poi.1_0.orc_chaincamp.431.198: 1 bodies at level 8 (explicit 8) -> 1 bodies at level 8 (explicit null)
+orc_grunt / poi.1_0.orc_muster.291.217: 1 bodies at level 5 (explicit 5) -> 1 bodies at level 4 (explicit null)
+skeleton_archer / poi.1_0.ossuary.421.38: 1 bodies at level 3 (explicit 3) -> 1 bodies at level 3 (explicit null)
+skeleton_warrior / poi.1_0.ossuary.421.38: 5 bodies at level 3 (explicit 3) -> 5 bodies at level 3 (explicit null)
+0_-1: sites unchanged=true; population counts unchanged=true
+Quest offers before: []
+Quest offers after: []
+cinder_imp / poi.0_-1.knot.176.-74: 5 bodies at level 7 (explicit 7) -> 5 bodies at level 4 (explicit null)
+cinder_imp / poi.0_-1.knot.185.-214: 6 bodies at level 7 (explicit 7) -> 6 bodies at level 4 (explicit null)
+cinder_imp / poi.0_-1.knot.41.-37: 4 bodies at level 7 (explicit 7) -> 4 bodies at level 4 (explicit null)
+remnant_shade / poi.0_-1.knot.176.-74: 4 bodies at level 7 (explicit 7) -> 4 bodies at level 2 (explicit null)
+remnant_shade / poi.0_-1.knot.185.-214: 2 bodies at level 7 (explicit 7) -> 2 bodies at level 2 (explicit null)
+remnant_shade / poi.0_-1.knot.41.-37: 4 bodies at level 7 (explicit 7) -> 4 bodies at level 2 (explicit null)
+tangle / poi.0_-1.knot.176.-74: 1 bodies at level 7 (explicit 7) -> 1 bodies at level 6 (explicit null)
+tangle / poi.0_-1.knot.185.-214: 1 bodies at level 7 (explicit 7) -> 1 bodies at level 6 (explicit null)
+tangle / poi.0_-1.knot.41.-37: 1 bodies at level 7 (explicit 7) -> 1 bodies at level 6 (explicit null)
+3_2: sites unchanged=true; population counts unchanged=true
+Quest offers before: []
+Quest offers after: []
+barrow_wight / poi.3_2.ruin.890.658: 3 bodies at level 2 (explicit 2) -> 3 bodies at level 3 (explicit null)
+cinder_imp / poi.3_2.knot.965.744: 5 bodies at level 3 (explicit 3) -> 5 bodies at level 4 (explicit null)
+remnant_shade / poi.3_2.knot.965.744: 3 bodies at level 3 (explicit 3) -> 3 bodies at level 2 (explicit null)
+remnant_shade / poi.3_2.ruin.890.658: 2 bodies at level 2 (explicit 2) -> 2 bodies at level 2 (explicit null)
+tangle / poi.3_2.knot.965.744: 1 bodies at level 3 (explicit 3) -> 1 bodies at level 6 (explicit null)

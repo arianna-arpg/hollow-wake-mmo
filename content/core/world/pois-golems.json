@@ -27,6 +27,7 @@
       "inhabitants": [
         {
           "pattern": "clay_golem",
+          "use_site_level": true,
           "density": 1,
           "pack_size": [
             1,
@@ -39,6 +40,7 @@
         },
         {
           "pattern": "kiln_golem",
+          "use_site_level": true,
           "density": 1,
           "pack_size": [
             1,
@@ -88,6 +90,7 @@
       "inhabitants": [
         {
           "pattern": "quarry_golem",
+          "use_site_level": true,
           "density": 1,
           "pack_size": [
             1,
@@ -100,6 +103,7 @@
         },
         {
           "pattern": "crystal_golem",
+          "use_site_level": true,
           "density": 1,
           "pack_size": [
             1,
@@ -148,6 +152,7 @@
       "inhabitants": [
         {
           "pattern": "iron_golem",
+          "use_site_level": true,
           "density": 1,
           "pack_size": [
             1,
@@ -160,6 +165,7 @@
         },
         {
           "pattern": "vault_golem",
+          "use_site_level": true,
           "density": 1,
           "pack_size": [
             1,
@@ -208,6 +214,7 @@
       "inhabitants": [
         {
           "pattern": "timber_golem",
+          "use_site_level": true,
           "density": 1,
           "pack_size": [
             1,
@@ -220,6 +227,7 @@
         },
         {
           "pattern": "bauble_golem",
+          "use_site_level": true,
           "density": 1,
           "pack_size": [
             1,
