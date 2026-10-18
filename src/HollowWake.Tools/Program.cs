@@ -245,7 +245,7 @@ switch (command)
     case "tournament":
         return TournamentCommand.Run(LoadContent(false), rest, Console.Out);
     case "weave":
-        return WeaveReport.Run(LoadContent(false), rest.FirstOrDefault(a => !a.StartsWith("--")), Opt);
+        return WeaveReport.Run(LoadContent(false), rest.FirstOrDefault(a => !a.StartsWith("--")), Opt, Flag);
     case "passives":
         return PassiveLint.Run(LoadContent(false), Flag("verbose"));
     case "lint":
@@ -317,6 +317,13 @@ switch (command)
                                                   unknown or valueless option with one line
               weave <preset|form> [--threads a,b] [--glyphs g,g@level] [--level n] [--calling c] [--caster-level n]
                                                   compile a weave: tags, mechanisms, dormant glyphs, graph, preview numbers
+              weave <preset|form> --axes [--threads a,b] [--glyphs g,g@level] [--level n]
+                                                  the weave on the combat grammar's nine dimensions: each axis, its unit,
+                                                  who stated it and where; then its frozen literals
+              weave --axes --all [--json file] [--literals file]
+                                                  every form, preset and glyph placed: per dimension how many state it,
+                                                  the literals and the distinct ones, the rules read; --json gets every
+                                                  value, --literals the frozen-literal baseline
               passives [--verbose]                lint the constellations: broken links, orphans, unreachable nodes, route costs
               lint [--json file] [--baseline file] [--code dir] [--no-code] [--copies n] [--check prefix]
                                                   composition lint: one-use forms, single-use parameters, frozen axes,

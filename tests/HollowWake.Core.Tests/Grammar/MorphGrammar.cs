@@ -8,7 +8,7 @@ using HollowWake.Core.Maths;
 namespace HollowWake.Core.Tests.Grammar;
 
 /// <summary>The nine dimensions of the combat grammar: each decides one thing about a cast, through the axes and choices inside it.</summary>
-internal enum Dimension
+internal enum MorphDimension
 {
     Geometry,
     Kinematics,
@@ -22,7 +22,7 @@ internal enum Dimension
 }
 
 /// <summary>An axis is one quantity with a unit inside a dimension; a choice is one word of a registered set.</summary>
-internal enum ParameterKind
+internal enum MorphParameterKind
 {
     Axis,
     Choice,
@@ -35,7 +35,7 @@ internal enum ParameterKind
 /// applies. A parameter with an <see cref="Attribute"/> falls back to that weave attribute when the node leaves it out,
 /// so a point may set it there instead; an <see cref="AttributeOnly"/> axis is reached only through the attribute.
 /// </summary>
-internal sealed record Parameter(string Name, ParameterKind Kind, Dimension Dimension)
+internal sealed record Parameter(string Name, MorphParameterKind Kind, MorphDimension Dimension)
 {
     public string Unit { get; init; } = "";
     public double Low { get; init; }
@@ -76,22 +76,22 @@ internal sealed record Parameter(string Name, ParameterKind Kind, Dimension Dime
 
     public string Source { get; init; } = "";
 
-    public static Parameter Axis(string name, Dimension dimension, string unit, double low, double high, string source) =>
-        new(name, ParameterKind.Axis, dimension) { Unit = unit, Low = low, High = high, Source = source };
+    public static Parameter Axis(string name, MorphDimension dimension, string unit, double low, double high, string source) =>
+        new(name, MorphParameterKind.Axis, dimension) { Unit = unit, Low = low, High = high, Source = source };
 
-    public static Parameter Count(string name, Dimension dimension, string unit, int low, int high, string source) =>
-        new(name, ParameterKind.Axis, dimension) { Unit = unit, Low = low, High = high, Whole = true, Source = source };
+    public static Parameter Count(string name, MorphDimension dimension, string unit, int low, int high, string source) =>
+        new(name, MorphParameterKind.Axis, dimension) { Unit = unit, Low = low, High = high, Whole = true, Source = source };
 
-    public static Parameter Choice(string name, Dimension dimension, IEnumerable<string> words, string source) =>
-        new(name, ParameterKind.Choice, dimension) { Words = words.ToArray(), Source = source };
+    public static Parameter Choice(string name, MorphDimension dimension, IEnumerable<string> words, string source) =>
+        new(name, MorphParameterKind.Choice, dimension) { Words = words.ToArray(), Source = source };
 
     /// <summary>"axis 'speed'" or "choice 'shape'", for messages.</summary>
-    public string Describe => $"{(Kind == ParameterKind.Axis ? "axis" : "choice")} '{Name}'";
+    public string Describe => $"{(Kind == MorphParameterKind.Axis ? "axis" : "choice")} '{Name}'";
 
     /// <summary>One value of the parameter, drawn on the stream.</summary>
     public object Draw(Rng rng)
     {
-        if (Kind == ParameterKind.Choice)
+        if (Kind == MorphParameterKind.Choice)
         {
             return Words[rng.Next(Words.Length)];
         }
@@ -101,12 +101,12 @@ internal sealed record Parameter(string Name, ParameterKind Kind, Dimension Dime
     }
 
     /// <summary>The values the sensitivity check runs: the range's ends (or its pair), or every word.</summary>
-    public IReadOnlyList<object> Probes() => Kind == ParameterKind.Choice
+    public IReadOnlyList<object> Probes() => Kind == MorphParameterKind.Choice
         ? Words
         : Pair is { } pair ? new[] { pair.Low, pair.High } : new object[] { Low, High };
 
     /// <summary>Whether a value of the parameter draws on the cast's random stream: a rolling word, or a rolling axis away from zero.</summary>
-    public bool RollsAt(object value) => Kind == ParameterKind.Choice
+    public bool RollsAt(object value) => Kind == MorphParameterKind.Choice
         ? value is string word && Rolling.Contains(word)
         : Rolls && Convert.ToDouble(value, CultureInfo.InvariantCulture) != 0;
 }

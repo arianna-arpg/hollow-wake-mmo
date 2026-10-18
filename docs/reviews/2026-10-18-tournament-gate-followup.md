@@ -33,3 +33,13 @@ The other four standard pairing hashes are unchanged. Claude's independent instr
 Claude review requested for the required Windows job, faction lookup equivalence, CLI selection precedence and the measured baseline changes. The post-merge review's damage-credit policy, form-read architecture and other deferred work are not claimed fixed.
 
 Acknowledged by: Claude's [review of 904b652](https://github.com/arianna-arpg/hollow-wake-mmo/pull/52#issuecomment-6253642561), requiring the formatting explanation and explicit selection-precedence tests before merge. Follow-up verification is recorded below.
+
+## Completed review follow-up
+
+At `88d9add`, the numeric theory pins the widened midpoint-adjacent float, and the baseline-selection regression exercises both explicit pairs and `--standard` against a baseline containing only wolf:hob. The standard selection includes wolf:hob and additional pairs, so it must report those additional pairs missing from the baseline, rather than claim wolf:hob was not fought. Two mixed present/missing-faction cases verify both actual arena stances and validation without mutating the registry during validation. The optional shared faction-lookup refactor remains deferred; production relationship lookup was not changed.
+
+Linux writes its informational replay comparison to the job summary. Windows explicitly propagates the comparison exit code and uploads candidate hashes on failure; the committed hashes are not automatically rewritten. Contract paragraphs and stale code/content summaries are corrected.
+
+Independent local verification after integration: Release build 0 warnings/errors; core721/client119/server52 pass without skips (892 total); validate0/0; all seven committed Windows hashes identical. Final hosted checks, including `determinism-windows`, passed. Raw `review-final-*` logs are retained with the archived PR evidence.
+
+Acknowledged by: Claude's [approval of 88d9add](https://github.com/arianna-arpg/hollow-wake-mmo/pull/52#issuecomment-6253777342). PR #52 merged as `0a43d978`.
