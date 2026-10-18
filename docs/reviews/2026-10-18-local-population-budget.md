@@ -28,4 +28,17 @@ The audit now records explicit and effective level, pattern, owning site, spawn 
 
 No shipped spawn opts into scaling in this correction. New content may choose it explicitly in either path, and both are exercised by tests. The planning benchmark remains queued pending a coordinator-granted quiet window. No downstream owner should consume an unvalidated timing claim.
 
+## First controlled planning pair: target missed
+
+The granted quiet window ran exactly one serial worldgen-only pair at Normal priority, baseline then candidate. Baseline: preserved6a65ed1 Release runtime whose entire WorldGen source is identical to71ad34f, with exact71ad34f archived content. Candidate: clean f12ea18 Release/current content. Arguments, hashes, source identities and raw results are retained under `31-bound-bench-*`; both processes exited zero. No reruns or discarded samples.
+
+| Measure | Baseline | Candidate |
+| --- | ---: | ---: |
+| worldgen.zone.plan (ms) | 63.5384 | 56.7857 |
+| worldgen.chunk (ms) | 0.590186 | 0.495100 |
+| worldgen.chunk.alloc (KB) | 14.126465 | 14.126465 |
+| generated offers | 4 | 3 |
+
+The40ms planning target **fails**. Bounding the scan reduces worst-case work but is insufficient on the measured default seed. The correction remains draft and will not propagate as performance-cleared. Further work must remove unnecessary population-query generation through shared passes and prove actual spawn equivalence; no budget is relaxed. This is a worldgen-only comparison, not a new tick/snapshot claim for the changed resident levels.
+
 Acknowledged by: pending Claude rereview.
