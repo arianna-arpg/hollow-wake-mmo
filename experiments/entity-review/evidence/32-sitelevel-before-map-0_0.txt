@@ -1,0 +1,73 @@
+zone(0,0) Ninewells: region the Hallows (hallows), level 1, safe False, start True
+  poi hamlet     Ninewells                at (129,129) h=16.4 landmark=ninewells faction=weftmarch_compact
+  poi fount      The Wellmother           at (151,135) h=15.1 landmark=fount_ring faction=weftmarch_compact
+  poi shrine     The Hedge Shrine         at (91,171) h=21.0 landmark=shrine_ring faction=weftmarch_compact
+  poi knot       Hob's Hollow             at (201,61) h=14.2 landmark=knot_stones faction=weftmarch_compact
+  quest gen.poi.0_0.hamlet.128.128.clear_knot.0: The Hob's Hollow [L1] Find Hob's Hollow; Unmake six Cinder Imp
+  quest gen.poi.0_0.hamlet.128.128.gather_floss.1: Loose Threads [L1] Gather five Thread Floss
+  quest gen.poi.0_0.hamlet.128.128.cull_beasts.2: Teeth in the Hedge [L1] Cull eight Hob
+  quest gen.poi.0_0.hamlet.128.128.scout_ruin.3: What Stands at the Unquiet House [L1] Find the Unquiet House
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^FFFFFFFFFFFFFFF
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^FFFFFFFFFFFFFFF
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^FFFFFFFFFFFFFF
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^FFFFFFFFFFFFFF
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^FFFFFFFFFFFFFF
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^FFFFFFFFFFFFF
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^FFFFFFFFFFFFF
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^FFFFFFFFFFFF
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^FFFFFFFFFFFF
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^FFFFFFFFFFF
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^FFFFFFFFFF
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^FFFFFFFFFF
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^TTTFFFFFFFFF
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^TTTTTFFFFFFFF
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^TTTTTTTFFFFFFF
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^TTTTTTTTTFFFFFF
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^TTTTTTTTTTFFFFF
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^TTTTTTTTTTFFFF
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^TTTTTTTTTTTTFF
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^TTTTTTTTTTTTTTF
+^^^^^^^^^^^^^^^^^^^^^^SS^^^^^^^^^^^^^^^^^TT^^^^^TTTTTTTTTTTTTTTT
+^^^^^^^^^^^^^^^^^^^^^^SS^^^^^^^^^^^^^^^^TTTTTT^TTTTTTTTTTTTTTTTT
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^TTTTTTTTTTTTTTTTTTTTTTTT
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^TTTTTTTTTTTTTTTTTTTTTTT
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^TTTTTTTTTTTTTTTTTTTTTTTT
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^TTTTTTTTTTTTTTTTTTTTTTTT
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^TTTTTTTTTTTTTTTTTTTTTTTTT
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^TTTTTTTTTTTTTTTTTTTTTTTTTTT
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^TTTTTTTTTTTTTTTTTTTTTTTTTTTT
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^TTTFFTTTTTTTTTTTTTTTTTTTTTTTTT
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^TTFFTTTTTTTTTTTTTTTTTTTTTTTTT
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^HH^TTTTTTTTTTTTTTTTTTTTTTTTTTTTTT
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^HH^TTTTTTTTTTTTTTTTTTTTTTTTTTTTTT
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^TTTTTTTTTTTTTTTTTTTTKKTTTTTTTTTTT^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^TTTTTTTTTTTTTTTTTTTKKTTTTTTTTTT^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^TTTTTTTTTTTTTTTTTTTTTTTTTTTTT^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^TTTTTTTTTTTTTTTTTTTTTTTTT^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^TTTTTTT^TTTTTTTTTTTTTTT^TTTT
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^TT^^^^TTTTTTTTTTTTTT^^TTTT
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^TTTTTTTTT^TTTTT
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^TTTTTTTTTTTTTT
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^TTTTTTTT^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^TTTTT^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^TTTT^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^TTTTT^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^TTTT^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^TT^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

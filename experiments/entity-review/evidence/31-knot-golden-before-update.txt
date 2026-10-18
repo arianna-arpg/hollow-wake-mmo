@@ -1,0 +1,22 @@
+Test run for C:\Users\John\.codex\worktrees\entity-main-audit\MMOARPG\tests\HollowWake.Core.Tests\bin\Debug\net10.0\HollowWake.Core.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+[xUnit.net 00:00:03.10]     HollowWake.Core.Tests.WorldGenGoldenTests.ZoneMatchesGoldenHashes(x: 0, y: 0, infoHash: "BAD05CC204F5A9DC", chunksHash: "20BCBB252116A13A") [FAIL]
+  Failed HollowWake.Core.Tests.WorldGenGoldenTests.ZoneMatchesGoldenHashes(x: 0, y: 0, infoHash: "BAD05CC204F5A9DC", chunksHash: "20BCBB252116A13A") [306 ms]
+  Error Message:
+   zone(0,0) info and chunks: expected BAD05CC204F5A9DC 20BCBB252116A13A, generated 0CA8824E9BBCEB25 20BCBB252116A13A. Generation output changed; update the constant only if that was intended.
+  Stack Trace:
+     at HollowWake.Core.Tests.WorldGenGoldenTests.Golden(String what, String expected, String actual) in C:\Users\John\.codex\worktrees\entity-main-audit\MMOARPG\tests\HollowWake.Core.Tests\WorldGenGoldenTests.cs:line 165
+   at HollowWake.Core.Tests.WorldGenGoldenTests.ZoneMatchesGoldenHashes(Int32 x, Int32 y, String infoHash, String chunksHash) in C:\Users\John\.codex\worktrees\entity-main-audit\MMOARPG\tests\HollowWake.Core.Tests\WorldGenGoldenTests.cs:line 56
+   at InvokeStub_WorldGenGoldenTests.ZoneMatchesGoldenHashes(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:03.79]     HollowWake.Core.Tests.WorldGenGoldenTests.OverlaidWorldMatchesGoldenHash [FAIL]
+  Failed HollowWake.Core.Tests.WorldGenGoldenTests.OverlaidWorldMatchesGoldenHash [688 ms]
+  Error Message:
+   overlaid world: expected 1B7BB1180ED94764, generated 0C972378F3EEFF45. Generation output changed; update the constant only if that was intended.
+  Stack Trace:
+     at HollowWake.Core.Tests.WorldGenGoldenTests.Golden(String what, String expected, String actual) in C:\Users\John\.codex\worktrees\entity-main-audit\MMOARPG\tests\HollowWake.Core.Tests\WorldGenGoldenTests.cs:line 165
+   at HollowWake.Core.Tests.WorldGenGoldenTests.OverlaidWorldMatchesGoldenHash() in C:\Users\John\.codex\worktrees\entity-main-audit\MMOARPG\tests\HollowWake.Core.Tests\WorldGenGoldenTests.cs:line 104
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+
+Failed!  - Failed:     2, Passed:    36, Skipped:     0, Total:    38, Duration: 4 s - HollowWake.Core.Tests.dll (net10.0)

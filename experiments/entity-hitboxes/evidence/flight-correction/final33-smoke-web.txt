@@ -1,0 +1,66 @@
+SMOKE input: page-local keyboard and pointer; physical controllers isolated
+SMOKE ok   connect and log in: Logged in. Pick a character. (features: projectile_slabs_v1, entry_flow, cast_cues, entity_delta, interface)
+SMOKE ok   create character: Smoke the holdfast
+SMOKE ok   enter world: Smoke at 129.5, 111.0, 14.7
+SMOKE ok   terrain built: 49 chunks (81 requested) in 0.8s, 308 entities in view
+SMOKE measure geometry: 239 fps, frame ms p50 4.10 p95 4.80 max 10.30, 2.56 ms of work per frame; 401 draw calls, 150706 triangles; 307 bodies (0 cards, 51770 body triangles), 0 atlases 0.00 MiB, 0 textures; 307 entities, 49 chunks
+SMOKE ok   bodies as geometry: geometry: 239 fps, frame ms p50 4.10 p95 4.80 max 10.30, 2.56 ms of work per frame; 401 draw calls, 150706 triangles; 307 bodies (0 cards, 51770 body triangles), 0 atlases 0.00 MiB, 0 textures; 307 entities, 49 chunks
+SMOKE measure geometry, no shadows: 240 fps, frame ms p50 4.20 p95 4.80 max 8.40, 2.45 ms of work per frame; 384 draw calls, 149430 triangles; 307 bodies (0 cards, 51770 body triangles), 0 atlases 0.00 MiB, 0 textures; 307 entities, 49 chunks
+SMOKE ok   bodies without shadows: geometry, no shadows: 240 fps, frame ms p50 4.20 p95 4.80 max 8.40, 2.45 ms of work per frame; 384 draw calls, 149430 triangles; 307 bodies (0 cards, 51770 body triangles), 0 atlases 0.00 MiB, 0 textures; 307 entities, 49 chunks
+SMOKE measure cards: 240 fps, frame ms p50 4.20 p95 4.80 max 9.40, 1.98 ms of work per frame; 289 draw calls, 133076 triangles; 305 bodies (220 cards, 14136 body triangles), 17 atlases 9.86 MiB, 17 textures; 305 entities, 49 chunks
+SMOKE ok   bodies as cards: cards: 240 fps, frame ms p50 4.20 p95 4.80 max 9.40, 1.98 ms of work per frame; 289 draw calls, 133076 triangles; 305 bodies (220 cards, 14136 body triangles), 17 atlases 9.86 MiB, 17 textures; 305 entities, 49 chunks
+SMOKE ok   day cycle: night at 0.04 of the day, evening at 0.77, the server's day at 0.31
+SMOKE ok   server day: the sky follows the day the server reported, at 0.31
+SMOKE ok   wasd move: moved 7.7 units
+SMOKE ok   jump: rose 0.98 units
+SMOKE ok   click to move: tried (5,0) 4.8
+SMOKE ok   quartermaster offers quests: reached=true, F interacted with Marcher (talk) at 0.4, then clicked the quartermaster, panel shown=true with 5 entries
+SMOKE ok   escape closes the quest panel: quests visible=false
+SMOKE ok   camera toggle: isometric -> switched -> isometric
+SMOKE ok   camera rotate: Q turned yes, E turned back yes
+SMOKE ok   character sheet: opened=true closed=true
+SMOKE ok   chat: echoed by the zone
+SMOKE ok   core pane: open=true, 1 bag items, 9 doll slots, 3 wallet chips, ribbons weaves passives reliquary stash character
+SMOKE ok   ribbon pages: weaves=shown, passives=shown, character=shown, reliquary=shown, stash=shown
+SMOKE ok   escape closes the core pane last: core open=false
+SMOKE ok   talk to a villager: reached=true, Marcher: "Weft hold you, stranger.", chose "1. Any news?" (answered=true)
+SMOKE ok   trade with a vendor: reached=true, vendor open=true, 8 stock rows, nothing the hero can afford
+SMOKE ok   options open: open=true, 10 rows
+SMOKE ok   options switch the theme: theme runic_brass, frame stone -> brass
+SMOKE ok   options rebind a key: camera switch on B=true, B turned the camera=true
+SMOKE ok   options scale the interface: scale 1.25, cluster 908 -> 1135 px wide, panes above the cluster=true
+SMOKE ok   options reset a group: theme etched_stone, scale 1
+SMOKE ok   weaves on a hob: reached=true hovered Hob [1]; slots 1; hits dealt=1, last on Hob
+SMOKE ok   no page errors: none
+SMOKE SUMMARY
+SMOKE PASS connect and log in: Logged in. Pick a character. (features: projectile_slabs_v1, entry_flow, cast_cues, entity_delta, interface)
+SMOKE PASS create character: Smoke the holdfast
+SMOKE PASS enter world: Smoke at 129.5, 111.0, 14.7
+SMOKE PASS terrain built: 49 chunks (81 requested) in 0.8s, 308 entities in view
+SMOKE PASS bodies as geometry: geometry: 239 fps, frame ms p50 4.10 p95 4.80 max 10.30, 2.56 ms of work per frame; 401 draw calls, 150706 triangles; 307 bodies (0 cards, 51770 body triangles), 0 atlases 0.00 MiB, 0 textures; 307 entities, 49 chunks
+SMOKE PASS bodies without shadows: geometry, no shadows: 240 fps, frame ms p50 4.20 p95 4.80 max 8.40, 2.45 ms of work per frame; 384 draw calls, 149430 triangles; 307 bodies (0 cards, 51770 body triangles), 0 atlases 0.00 MiB, 0 textures; 307 entities, 49 chunks
+SMOKE PASS bodies as cards: cards: 240 fps, frame ms p50 4.20 p95 4.80 max 9.40, 1.98 ms of work per frame; 289 draw calls, 133076 triangles; 305 bodies (220 cards, 14136 body triangles), 17 atlases 9.86 MiB, 17 textures; 305 entities, 49 chunks
+SMOKE PASS day cycle: night at 0.04 of the day, evening at 0.77, the server's day at 0.31
+SMOKE PASS server day: the sky follows the day the server reported, at 0.31
+SMOKE PASS wasd move: moved 7.7 units
+SMOKE PASS jump: rose 0.98 units
+SMOKE PASS click to move: tried (5,0) 4.8
+SMOKE PASS quartermaster offers quests: reached=true, F interacted with Marcher (talk) at 0.4, then clicked the quartermaster, panel shown=true with 5 entries
+SMOKE PASS escape closes the quest panel: quests visible=false
+SMOKE PASS camera toggle: isometric -> switched -> isometric
+SMOKE PASS camera rotate: Q turned yes, E turned back yes
+SMOKE PASS character sheet: opened=true closed=true
+SMOKE PASS chat: echoed by the zone
+SMOKE PASS core pane: open=true, 1 bag items, 9 doll slots, 3 wallet chips, ribbons weaves passives reliquary stash character
+SMOKE PASS ribbon pages: weaves=shown, passives=shown, character=shown, reliquary=shown, stash=shown
+SMOKE PASS escape closes the core pane last: core open=false
+SMOKE PASS talk to a villager: reached=true, Marcher: "Weft hold you, stranger.", chose "1. Any news?" (answered=true)
+SMOKE PASS trade with a vendor: reached=true, vendor open=true, 8 stock rows, nothing the hero can afford
+SMOKE PASS options open: open=true, 10 rows
+SMOKE PASS options switch the theme: theme runic_brass, frame stone -> brass
+SMOKE PASS options rebind a key: camera switch on B=true, B turned the camera=true
+SMOKE PASS options scale the interface: scale 1.25, cluster 908 -> 1135 px wide, panes above the cluster=true
+SMOKE PASS options reset a group: theme etched_stone, scale 1
+SMOKE PASS weaves on a hob: reached=true hovered Hob [1]; slots 1; hits dealt=1, last on Hob
+SMOKE PASS no page errors: none
+SMOKE DONE 30/30 passed in 81.7s; 206 fps, 3.7 ms of work per frame, 63 chunks and 297 entities at the end; shots in C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\experiments\entity-hitboxes\artifacts\flight-correction\final33-smoke\run-i2p30g\shots

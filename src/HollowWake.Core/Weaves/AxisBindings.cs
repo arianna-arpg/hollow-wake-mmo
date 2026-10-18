@@ -310,6 +310,13 @@ public static class AxisBindings
     /// <summary>The bindings of one parameter of a type (more than one where a condition picks between them).</summary>
     public static IReadOnlyList<AxisBinding> Of(string type, string parameter) => For(type).Where(b => b.Parameter == parameter).ToArray();
 
+    /// <summary>
+    /// The binding through which a parameter of a type falls back to a weave attribute when the graph writes no value;
+    /// null for channels, multipliers and parameters without one. The composition lint and the mechanism probes read
+    /// a parameter's attribute door here.
+    /// </summary>
+    public static AxisBinding? FallbackOf(string type, string parameter) => Of(type, parameter).FirstOrDefault(b => b.Role == AttributeRole.Fallback);
+
     /// <summary>Whether a parameter of a type is declared, by itself or as the block holding declared fields.</summary>
     public static bool Declares(string type, string parameter) => For(type).Any(b => !b.Implicit && b.Top == parameter);
 

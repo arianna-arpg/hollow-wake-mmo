@@ -1,0 +1,9 @@
+All reports: Windows, ten seeds, sixty-second cap. Before=#36 c07b6df; after=flight correction before #54 merge; main=17ca2f1.
+PAIR | main hash -> #36 hash | main/#36 A win | main/#36 median TTK | correction hash changed
+wolf:hob | 043fb9358749be95 -> 043fb9358749be95 | 1/1 | 14.8/14.8 | False
+loosed_skirmisher:hob | 8375b6721ef21310 -> 0d9d4a3110181c7a | 1/1 | 5.85/5.85 | False
+loosed_skirmisher:boar | 79899296f1748715 -> 7dd259e21c8ac0e8 | 1/1 | 7.6/7.6 | False
+loosed_kindler:boar | 358e00d82eb1c502 -> ae3a86f086814949 | 1/1 | 6.7/6.7 | False
+tide_channeler:spark_duelist | 5ced4d2a7a46046c -> 5ced4d2a7a46046c | 1/1 | 8/8 | False
+proving_reaver:proving_bulwark | 50eb1c4e00513d6a -> 50eb1c4e00513d6a | 0/0 | 36.45/36.45 | False
+loosed_skirmisher:tide_caller | d5b2b56a7491fbd1 -> c78c43f0835e549e | 0.9/0.6 | 7.5/7.5 | False

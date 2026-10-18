@@ -1,0 +1,71 @@
+  Determining projects to restore...
+  All projects are up-to-date for restore.
+  HollowWake.Core -> <worktree>\src\HollowWake.Core\bin\Release\net8.0\HollowWake.Core.dll
+  HollowWake.Protocol -> <worktree>\src\HollowWake.Protocol\bin\Release\net8.0\HollowWake.Protocol.dll
+  HollowWake.Server -> <worktree>\src\HollowWake.Server\bin\Release\net10.0\HollowWake.Server.dll
+  HollowWake.Tools -> <worktree>\src\HollowWake.Tools\bin\Release\net10.0\hollowwake.dll
+  HollowWake.Core.Tests -> <worktree>\tests\HollowWake.Core.Tests\bin\Release\net10.0\HollowWake.Core.Tests.dll
+Test run for <worktree>\tests\HollowWake.Core.Tests\bin\Release\net10.0\HollowWake.Core.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+[xUnit.net 00:00:01.98]     HollowWake.Core.Tests.AimWrapperElevationTests.TurningTheBearingPreservesSampledOrRetainedBodyElevation(retainedTarget: True, degrees: -30) [FAIL]
+[xUnit.net 00:00:01.99]     HollowWake.Core.Tests.AimWrapperElevationTests.TurningTheBearingPreservesSampledOrRetainedBodyElevation(retainedTarget: True, degrees: 0) [FAIL]
+[xUnit.net 00:00:01.99]     HollowWake.Core.Tests.AimWrapperElevationTests.TurningTheBearingPreservesSampledOrRetainedBodyElevation(retainedTarget: False, degrees: 0) [FAIL]
+[xUnit.net 00:00:01.99]     HollowWake.Core.Tests.AimWrapperElevationTests.TurningTheBearingPreservesSampledOrRetainedBodyElevation(retainedTarget: True, degrees: 30) [FAIL]
+[xUnit.net 00:00:01.99]     HollowWake.Core.Tests.AimWrapperElevationTests.TurningTheBearingPreservesSampledOrRetainedBodyElevation(retainedTarget: False, degrees: 30) [FAIL]
+[xUnit.net 00:00:01.99]     HollowWake.Core.Tests.AimWrapperElevationTests.TurningTheBearingPreservesSampledOrRetainedBodyElevation(retainedTarget: False, degrees: -30) [FAIL]
+  Failed HollowWake.Core.Tests.AimWrapperElevationTests.TurningTheBearingPreservesSampledOrRetainedBodyElevation(retainedTarget: True, degrees: -30) [60 ms]
+  Error Message:
+   Assert.Equal() Failure: Values are not within 5 decimal places
+Expected: 3.75 (rounded from 3.75)
+Actual:   0 (rounded from 0)
+  Stack Trace:
+     at HollowWake.Core.Tests.AimWrapperElevationTests.TurningTheBearingPreservesSampledOrRetainedBodyElevation(Boolean retainedTarget, Int32 degrees) in <worktree>\tests\HollowWake.Core.Tests\AimWrapperElevationTests.cs:line 41
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeDirectByRefWithFewArgs(Object obj, Span`1 copyOfArgs, BindingFlags invokeAttr)
+  Failed HollowWake.Core.Tests.AimWrapperElevationTests.TurningTheBearingPreservesSampledOrRetainedBodyElevation(retainedTarget: True, degrees: 0) [< 1 ms]
+  Error Message:
+   Assert.Equal() Failure: Values are not within 5 decimal places
+Expected: 3.75 (rounded from 3.75)
+Actual:   0 (rounded from 0)
+  Stack Trace:
+     at HollowWake.Core.Tests.AimWrapperElevationTests.TurningTheBearingPreservesSampledOrRetainedBodyElevation(Boolean retainedTarget, Int32 degrees) in <worktree>\tests\HollowWake.Core.Tests\AimWrapperElevationTests.cs:line 41
+   at InvokeStub_AimWrapperElevationTests.TurningTheBearingPreservesSampledOrRetainedBodyElevation(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Failed HollowWake.Core.Tests.AimWrapperElevationTests.TurningTheBearingPreservesSampledOrRetainedBodyElevation(retainedTarget: False, degrees: 0) [< 1 ms]
+  Error Message:
+   Assert.Equal() Failure: Values are not within 5 decimal places
+Expected: 3.75 (rounded from 3.75)
+Actual:   0 (rounded from 0)
+  Stack Trace:
+     at HollowWake.Core.Tests.AimWrapperElevationTests.TurningTheBearingPreservesSampledOrRetainedBodyElevation(Boolean retainedTarget, Int32 degrees) in <worktree>\tests\HollowWake.Core.Tests\AimWrapperElevationTests.cs:line 41
+   at InvokeStub_AimWrapperElevationTests.TurningTheBearingPreservesSampledOrRetainedBodyElevation(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Failed HollowWake.Core.Tests.AimWrapperElevationTests.TurningTheBearingPreservesSampledOrRetainedBodyElevation(retainedTarget: True, degrees: 30) [< 1 ms]
+  Error Message:
+   Assert.Equal() Failure: Values are not within 5 decimal places
+Expected: 3.75 (rounded from 3.75)
+Actual:   0 (rounded from 0)
+  Stack Trace:
+     at HollowWake.Core.Tests.AimWrapperElevationTests.TurningTheBearingPreservesSampledOrRetainedBodyElevation(Boolean retainedTarget, Int32 degrees) in <worktree>\tests\HollowWake.Core.Tests\AimWrapperElevationTests.cs:line 41
+   at InvokeStub_AimWrapperElevationTests.TurningTheBearingPreservesSampledOrRetainedBodyElevation(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Failed HollowWake.Core.Tests.AimWrapperElevationTests.TurningTheBearingPreservesSampledOrRetainedBodyElevation(retainedTarget: False, degrees: 30) [< 1 ms]
+  Error Message:
+   Assert.Equal() Failure: Values are not within 5 decimal places
+Expected: 3.75 (rounded from 3.75)
+Actual:   0 (rounded from 0)
+  Stack Trace:
+     at HollowWake.Core.Tests.AimWrapperElevationTests.TurningTheBearingPreservesSampledOrRetainedBodyElevation(Boolean retainedTarget, Int32 degrees) in <worktree>\tests\HollowWake.Core.Tests\AimWrapperElevationTests.cs:line 41
+   at InvokeStub_AimWrapperElevationTests.TurningTheBearingPreservesSampledOrRetainedBodyElevation(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Failed HollowWake.Core.Tests.AimWrapperElevationTests.TurningTheBearingPreservesSampledOrRetainedBodyElevation(retainedTarget: False, degrees: -30) [< 1 ms]
+  Error Message:
+   Assert.Equal() Failure: Values are not within 5 decimal places
+Expected: 3.75 (rounded from 3.75)
+Actual:   0 (rounded from 0)
+  Stack Trace:
+     at HollowWake.Core.Tests.AimWrapperElevationTests.TurningTheBearingPreservesSampledOrRetainedBodyElevation(Boolean retainedTarget, Int32 degrees) in <worktree>\tests\HollowWake.Core.Tests\AimWrapperElevationTests.cs:line 41
+   at InvokeStub_AimWrapperElevationTests.TurningTheBearingPreservesSampledOrRetainedBodyElevation(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+
+Failed!  - Failed:     6, Passed:     0, Skipped:     0, Total:     6, Duration: 74 ms - HollowWake.Core.Tests.dll (net10.0)

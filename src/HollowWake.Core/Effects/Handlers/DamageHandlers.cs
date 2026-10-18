@@ -1,6 +1,10 @@
+using System.Collections.Concurrent;
+using System.Globalization;
 using System.Text.Json.Nodes;
 using HollowWake.Core.Combat;
 using HollowWake.Core.Components;
+using HollowWake.Core.Content;
+using HollowWake.Core.Definitions;
 using HollowWake.Core.Expressions;
 using HollowWake.Core.Sim;
 using HollowWake.Core.Tags;
@@ -183,7 +187,8 @@ internal sealed class HealHandler : IEffectHandler
 {
     public string Type => "heal";
 
-    public EffectSignature Signature { get; } = EffectSignature.Of("amount", "resource", "tags", "self", "exclude_self");
+    public EffectSignature Signature { get; } = EffectSignature.Of("amount", "resource", "tags", "self", "exclude_self")
+        .Checking((p, content) => LethalResourceGuard.Validate(p, content, "life"));
 
     public CompiledEffect Compile(JsonObject p, EffectCompileContext ctx) => new Effect
     {
@@ -202,6 +207,7 @@ internal sealed class HealHandler : IEffectHandler
         public TagSet Tags = TagSet.Empty;
         public bool Self;
         public bool ExcludeSelf;
+        private readonly LethalResourceGuard _guard = new();
 
         public override void Execute(EffectContext ctx)
         {
@@ -219,6 +225,11 @@ internal sealed class HealHandler : IEffectHandler
             {
                 amount = src.Attributes.Apply("healing", amount, src, ctx.Tags.Union(Tags), ctx.Weave?.Modifiers);
             }
+            // The final fold can turn a positive base into a drain. Check after potency and every modifier.
+            if (_guard.Refuses(ctx, Type, Resource, amount))
+            {
+                return;
+            }
             var healed = stats.AddResource(Resource, amount);
             if (healed > 0)
             {
@@ -229,31 +240,98 @@ internal sealed class HealHandler : IEffectHandler
     }
 }
 
-/// <summary><c>resource</c>: adds an amount of a resource to the target (the source when there is none); <c>self</c> gives it to the source.</summary>
+/// <summary>
+/// <c>resource</c>: adds an amount of a resource to the target (the source when there is none); <c>self</c> gives it
+/// to the source. It never lowers a lethal resource (life): a body loses life only through the damage ladder, so a
+/// decrease of it is a <c>damage</c> effect. Validation refuses a literal one, and one a formula reaches is refused
+/// when it runs and logged once per weave.
+/// </summary>
 internal sealed class ResourceHandler : IEffectHandler
 {
+    private const string DefaultResource = "mana";
+
     public string Type => "resource";
 
-    public EffectSignature Signature { get; } = EffectSignature.Of("amount", "resource", "self");
+    public EffectSignature Signature { get; } = EffectSignature.Of("amount", "resource", "self")
+        .Checking((p, content) => LethalResourceGuard.Validate(p, content, DefaultResource));
 
     public CompiledEffect Compile(JsonObject p, EffectCompileContext ctx) => new Effect
     {
         Type = Type,
         Amount = ctx.ExprOf(p["amount"], Expr.Constant(10))!,
-        Resource = ctx.StringOf(p["resource"]) ?? "mana",
+        Resource = ctx.StringOf(p["resource"]) ?? DefaultResource,
         Self = ctx.BoolOf(p["self"], false),
     };
 
     private sealed class Effect : CompiledEffect
     {
         public required Expr Amount;
-        public string Resource = "mana";
+        public string Resource = DefaultResource;
         public bool Self;
+        private readonly LethalResourceGuard _guard = new();
 
         public override void Execute(EffectContext ctx)
         {
             var target = Self || ctx.Target.IsNone ? ctx.Source : ctx.Target;
-            ctx.Sim.World.Get<Stats>(target)?.AddResource(Resource, ctx.Eval(Amount) * ctx.Potency);
+            if (ctx.Sim.World.Get<Stats>(target) is not { } stats)
+            {
+                return;
+            }
+            var amount = ctx.Eval(Amount) * ctx.Potency;
+            if (!_guard.Refuses(ctx, Type, Resource, amount))
+            {
+                stats.AddResource(Resource, amount);
+            }
         }
+    }
+}
+
+/// <summary>Direct resource writers share the content-defined lethal-resource boundary.</summary>
+internal sealed class LethalResourceGuard
+{
+    // Allocated only for an actual refusal, once per compiled effect; content is shared across simulations.
+    private ConcurrentDictionary<string, bool>? _refused;
+
+    private static bool Lethal(ContentRegistry content, string resource) => content.Get<ResourceDef>(resource)?.Lethal == true;
+
+    /// <summary>Refuses an amount written as a negative number, or a formula that is one, of a lethal resource.</summary>
+    public static string? Validate(JsonObject p, ContentRegistry content, string defaultResource)
+    {
+        var resource = JsonNum.StringOf(p["resource"]) ?? defaultResource;
+        if (!Lethal(content, resource) || p["amount"] is not { } amount)
+        {
+            return null;
+        }
+        double value;
+        if (JsonNum.StringOf(amount) is { } text)
+        {
+            if (!Expr.TryParse(text, out var expr, out _) || !expr!.IsConstant)
+            {
+                return null;
+            }
+            value = expr.ConstantValue;
+        }
+        else if (!JsonNum.TryDouble(amount, out value))
+        {
+            return null;
+        }
+        return value < 0
+            ? $"lowers {resource} by {(-value).ToString("0.###", CultureInfo.InvariantCulture)}, but {resource} falls only through the damage ladder: write a 'damage' effect instead"
+            : null;
+    }
+
+    public bool Refuses(EffectContext ctx, string type, string resource, double amount)
+    {
+        if (!(amount < 0) || !Lethal(ctx.Sim.Content, resource))
+        {
+            return false;
+        }
+        var weave = ctx.Weave?.Key ?? "none";
+        var refused = LazyInitializer.EnsureInitialized(ref _refused, () => new ConcurrentDictionary<string, bool>(StringComparer.Ordinal));
+        if (refused.TryAdd(weave, true))
+        {
+            ctx.Sim.Log.Warn($"the {type} effect of weave '{weave}' would lower {resource} by {(-amount).ToString("0.###", CultureInfo.InvariantCulture)}; refused, since {resource} falls only through the damage ladder: a decrease of it is a damage effect");
+        }
+        return true;
     }
 }

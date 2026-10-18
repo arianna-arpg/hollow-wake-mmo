@@ -1,0 +1,367 @@
+  Determining projects to restore...
+  All projects are up-to-date for restore.
+  HollowWake.Core -> C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\src\HollowWake.Core\bin\Debug\net8.0\HollowWake.Core.dll
+  HollowWake.Protocol -> C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\src\HollowWake.Protocol\bin\Debug\net8.0\HollowWake.Protocol.dll
+  HollowWake.Server -> C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\src\HollowWake.Server\bin\Debug\net10.0\HollowWake.Server.dll
+  HollowWake.Tools -> C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\src\HollowWake.Tools\bin\Debug\net10.0\hollowwake.dll
+  HollowWake.Core.Tests -> C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\bin\Debug\net10.0\HollowWake.Core.Tests.dll
+Test run for C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\bin\Debug\net10.0\HollowWake.Core.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v3.1.5+1b188a7b0a (64-bit .NET 10.0.13)
+[xUnit.net 00:00:00.09]   Discovering: HollowWake.Core.Tests
+[xUnit.net 00:00:01.73]   Discovered:  HollowWake.Core.Tests
+[xUnit.net 00:00:01.77]   Starting:    HollowWake.Core.Tests
+  Passed HollowWake.Core.Tests.ProjectileLaunchRegressionTests.EmptyGroundDirectionPressTravelsItsAuthoredRange(preset: "firebolt", cursorDistance: 3) [113 ms]
+  Passed HollowWake.Core.Tests.ProjectileLaunchRegressionTests.EmptyGroundDirectionPressTravelsItsAuthoredRange(preset: "piercing_arrow", cursorDistance: 1) [3 ms]
+  Passed HollowWake.Core.Tests.ProjectileLaunchRegressionTests.EmptyGroundDirectionPressTravelsItsAuthoredRange(preset: "piercing_arrow", cursorDistance: 3) [2 ms]
+  Passed HollowWake.Core.Tests.ProjectileLaunchRegressionTests.EmptyGroundDirectionPressTravelsItsAuthoredRange(preset: "firebolt", cursorDistance: 1) [2 ms]
+  Passed HollowWake.Core.Tests.ProjectileLaunchRegressionTests.EmptyGroundDirectionPressTravelsItsAuthoredRange(preset: "piercing_arrow", cursorDistance: 8) [2 ms]
+  Passed HollowWake.Core.Tests.ProjectileLaunchRegressionTests.EmptyGroundDirectionPressTravelsItsAuthoredRange(preset: "firebolt", cursorDistance: 8) [2 ms]
+  Passed HollowWake.Core.Tests.ProjectileLaunchRegressionTests.EmptyGroundDirectionCanStrikeABodyBeyondTheCursor [23 ms]
+  Passed HollowWake.Core.Tests.ProjectileLaunchRegressionTests.NestedFlightsKeepTheirEmissionHeightAndReachHumanoids(path: "on_travel", ground: 0.5, pattern: "skeleton_warrior") [14 ms]
+  Passed HollowWake.Core.Tests.ProjectileLaunchRegressionTests.NestedFlightsKeepTheirEmissionHeightAndReachHumanoids(path: "on_travel", ground: -0.5, pattern: "hob") [2 ms]
+[xUnit.net 00:00:02.01]     HollowWake.Core.Tests.ProjectileLaunchRegressionTests.NestedFlightsKeepTheirEmissionHeightAndReachHumanoids(path: "salvo", ground: -0.5, pattern: "skeleton_warrior") [FAIL]
+[xUnit.net 00:00:02.01]       Assert.All() Failure: 4 out of 8 items in the collection did not pass.
+[xUnit.net 00:00:02.01]       [1]: Item:  Projectile { Accel = 0, AimPoint = <10.400002, 10, 0.39999998>, Amplitude = 0.600000024, BornAt = 0.35000000000000003, Bounces = 0, ··· }
+[xUnit.net 00:00:02.01]            Error: Assert.Equal() Failure: Values are not within 4 decimal places
+[xUnit.net 00:00:02.01]                   Expected: 0.4 (rounded from 0.399999976)
+[xUnit.net 00:00:02.01]                   Actual:   -0.5 (rounded from -0.5)
+[xUnit.net 00:00:02.01]       [3]: Item:  Projectile { Accel = 0, AimPoint = <10.800003, 10, 0.39999998>, Amplitude = 0.600000024, BornAt = 0.55000000000000004, Bounces = 0, ··· }
+[xUnit.net 00:00:02.01]            Error: Assert.Equal() Failure: Values are not within 4 decimal places
+[xUnit.net 00:00:02.01]                   Expected: 0.4 (rounded from 0.399999976)
+[xUnit.net 00:00:02.01]                   Actual:   -0.5 (rounded from -0.5)
+[xUnit.net 00:00:02.01]       [5]: Item:  Projectile { Accel = 0, AimPoint = <11.200005, 10, 0.39999998>, Amplitude = 0.600000024, BornAt = 0.75, Bounces = 0, ··· }
+[xUnit.net 00:00:02.01]            Error: Assert.Equal() Failure: Values are not within 4 decimal places
+[xUnit.net 00:00:02.01]                   Expected: 0.4 (rounded from 0.399999976)
+[xUnit.net 00:00:02.01]                   Actual:   -0.5 (rounded from -0.5)
+[xUnit.net 00:00:02.01]       [7]: Item:  Projectile { Accel = 0, AimPoint = <11.600006, 10, 0.39999998>, Amplitude = 0.600000024, BornAt = 0.95000000000000007, Bounces = 0, ··· }
+[xUnit.net 00:00:02.01]            Error: Assert.Equal() Failure: Values are not within 4 decimal places
+[xUnit.net 00:00:02.01]                   Expected: 0.4 (rounded from 0.399999976)
+[xUnit.net 00:00:02.01]                   Actual:   -0.5 (rounded from -0.5)
+[xUnit.net 00:00:02.01]       Stack Trace:
+[xUnit.net 00:00:02.01]         C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\ProjectileLaunchRegressionTests.cs(75,0): at HollowWake.Core.Tests.ProjectileLaunchRegressionTests.NestedFlightsKeepTheirEmissionHeightAndReachHumanoids(String path, Single ground, String pattern)
+[xUnit.net 00:00:02.01]            at InvokeStub_ProjectileLaunchRegressionTests.NestedFlightsKeepTheirEmissionHeightAndReachHumanoids(Object, Span`1)
+[xUnit.net 00:00:02.01]            at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:02.01]       Output:
+[xUnit.net 00:00:02.01]         salvo/skeleton_warrior, ground -0.5: 8 children, heights 0.400,-0.500,0.400,-0.500,0.400,-0.500,0.400,-0.500
+  Passed HollowWake.Core.Tests.ProjectileLaunchRegressionTests.NestedFlightsKeepTheirEmissionHeightAndReachHumanoids(path: "cascade", ground: 0.5, pattern: "skeleton_warrior") [7 ms]
+  Passed HollowWake.Core.Tests.ProjectileLaunchRegressionTests.NestedFlightsKeepTheirEmissionHeightAndReachHumanoids(path: "cascade", ground: -0.5, pattern: "skeleton_warrior") [2 ms]
+  Passed HollowWake.Core.Tests.ProjectileLaunchRegressionTests.NestedFlightsKeepTheirEmissionHeightAndReachHumanoids(path: "cascade", ground: -0.5, pattern: "hob") [2 ms]
+  Passed HollowWake.Core.Tests.ProjectileLaunchRegressionTests.NestedFlightsKeepTheirEmissionHeightAndReachHumanoids(path: "delay", ground: 0.5, pattern: "hob") [10 ms]
+  Passed HollowWake.Core.Tests.ProjectileLaunchRegressionTests.NestedFlightsKeepTheirEmissionHeightAndReachHumanoids(path: "on_tick", ground: 0.5, pattern: "skeleton_warrior") [2 ms]
+  Failed HollowWake.Core.Tests.ProjectileLaunchRegressionTests.NestedFlightsKeepTheirEmissionHeightAndReachHumanoids(path: "salvo", ground: -0.5, pattern: "skeleton_warrior") [12 ms]
+  Error Message:
+   Assert.All() Failure: 4 out of 8 items in the collection did not pass.
+[1]: Item:  Projectile { Accel = 0, AimPoint = <10.400002, 10, 0.39999998>, Amplitude = 0.600000024, BornAt = 0.35000000000000003, Bounces = 0, ··· }
+     Error: Assert.Equal() Failure: Values are not within 4 decimal places
+            Expected: 0.4 (rounded from 0.399999976)
+            Actual:   -0.5 (rounded from -0.5)
+[3]: Item:  Projectile { Accel = 0, AimPoint = <10.800003, 10, 0.39999998>, Amplitude = 0.600000024, BornAt = 0.55000000000000004, Bounces = 0, ··· }
+     Error: Assert.Equal() Failure: Values are not within 4 decimal places
+            Expected: 0.4 (rounded from 0.399999976)
+            Actual:   -0.5 (rounded from -0.5)
+[5]: Item:  Projectile { Accel = 0, AimPoint = <11.200005, 10, 0.39999998>, Amplitude = 0.600000024, BornAt = 0.75, Bounces = 0, ··· }
+     Error: Assert.Equal() Failure: Values are not within 4 decimal places
+            Expected: 0.4 (rounded from 0.399999976)
+            Actual:   -0.5 (rounded from -0.5)
+[7]: Item:  Projectile { Accel = 0, AimPoint = <11.600006, 10, 0.39999998>, Amplitude = 0.600000024, BornAt = 0.95000000000000007, Bounces = 0, ··· }
+     Error: Assert.Equal() Failure: Values are not within 4 decimal places
+            Expected: 0.4 (rounded from 0.399999976)
+            Actual:   -0.5 (rounded from -0.5)
+  Stack Trace:
+     at HollowWake.Core.Tests.ProjectileLaunchRegressionTests.NestedFlightsKeepTheirEmissionHeightAndReachHumanoids(String path, Single ground, String pattern) in C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\ProjectileLaunchRegressionTests.cs:line 75
+   at InvokeStub_ProjectileLaunchRegressionTests.NestedFlightsKeepTheirEmissionHeightAndReachHumanoids(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Standard Output Messages:
+ salvo/skeleton_warrior, ground -0.5: 8 children, heights 0.400,-0.500,0.400,-0.500,0.400,-0.500,0.400,-0.500
+
+
+  Passed HollowWake.Core.Tests.ProjectileLaunchRegressionTests.NestedFlightsKeepTheirEmissionHeightAndReachHumanoids(path: "delay", ground: -0.5, pattern: "hob") [2 ms]
+  Passed HollowWake.Core.Tests.ProjectileLaunchRegressionTests.NestedFlightsKeepTheirEmissionHeightAndReachHumanoids(path: "delay", ground: 0, pattern: "skeleton_warrior") [2 ms]
+  Passed HollowWake.Core.Tests.ProjectileLaunchRegressionTests.NestedFlightsKeepTheirEmissionHeightAndReachHumanoids(path: "cast", ground: 0.5, pattern: "hob") [11 ms]
+[xUnit.net 00:00:02.04]     HollowWake.Core.Tests.ProjectileLaunchRegressionTests.NestedFlightsKeepTheirEmissionHeightAndReachHumanoids(path: "salvo", ground: 0, pattern: "hob") [FAIL]
+[xUnit.net 00:00:02.04]       Assert.All() Failure: 4 out of 8 items in the collection did not pass.
+[xUnit.net 00:00:02.04]       [1]: Item:  Projectile { Accel = 0, AimPoint = <10.400002, 10, 0.9>, Amplitude = 0.600000024, BornAt = 0.35000000000000003, Bounces = 0, ··· }
+[xUnit.net 00:00:02.04]            Error: Assert.Equal() Failure: Values are not within 4 decimal places
+[xUnit.net 00:00:02.04]                   Expected: 0.9 (rounded from 0.899999976)
+[xUnit.net 00:00:02.04]                   Actual:   0 (rounded from 0)
+[xUnit.net 00:00:02.04]       [3]: Item:  Projectile { Accel = 0, AimPoint = <10.800003, 10, 0.9>, Amplitude = 0.600000024, BornAt = 0.55000000000000004, Bounces = 0, ··· }
+[xUnit.net 00:00:02.04]            Error: Assert.Equal() Failure: Values are not within 4 decimal places
+[xUnit.net 00:00:02.04]                   Expected: 0.9 (rounded from 0.899999976)
+[xUnit.net 00:00:02.04]                   Actual:   0 (rounded from 0)
+[xUnit.net 00:00:02.04]       [5]: Item:  Projectile { Accel = 0, AimPoint = <11.200005, 10, 0.9>, Amplitude = 0.600000024, BornAt = 0.75, Bounces = 0, ··· }
+[xUnit.net 00:00:02.04]            Error: Assert.Equal() Failure: Values are not within 4 decimal places
+[xUnit.net 00:00:02.04]                   Expected: 0.9 (rounded from 0.899999976)
+[xUnit.net 00:00:02.04]                   Actual:   0 (rounded from 0)
+[xUnit.net 00:00:02.04]       [7]: Item:  Projectile { Accel = 0, AimPoint = <11.600006, 10, 0.9>, Amplitude = 0.600000024, BornAt = 0.95000000000000007, Bounces = 0, ··· }
+[xUnit.net 00:00:02.04]            Error: Assert.Equal() Failure: Values are not within 4 decimal places
+[xUnit.net 00:00:02.04]                   Expected: 0.9 (rounded from 0.899999976)
+[xUnit.net 00:00:02.04]                   Actual:   0 (rounded from 0)
+[xUnit.net 00:00:02.04]       Stack Trace:
+[xUnit.net 00:00:02.04]         C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\ProjectileLaunchRegressionTests.cs(75,0): at HollowWake.Core.Tests.ProjectileLaunchRegressionTests.NestedFlightsKeepTheirEmissionHeightAndReachHumanoids(String path, Single ground, String pattern)
+[xUnit.net 00:00:02.04]            at InvokeStub_ProjectileLaunchRegressionTests.NestedFlightsKeepTheirEmissionHeightAndReachHumanoids(Object, Span`1)
+[xUnit.net 00:00:02.04]            at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:02.04]       Output:
+[xUnit.net 00:00:02.04]         salvo/hob, ground 0: 8 children, heights 0.900,0.000,0.900,0.000,0.900,0.000,0.900,0.000
+  Passed HollowWake.Core.Tests.ProjectileLaunchRegressionTests.NestedFlightsKeepTheirEmissionHeightAndReachHumanoids(path: "on_tick", ground: 0, pattern: "skeleton_warrior") [2 ms]
+  Passed HollowWake.Core.Tests.ProjectileLaunchRegressionTests.NestedFlightsKeepTheirEmissionHeightAndReachHumanoids(path: "delay", ground: -0.5, pattern: "skeleton_warrior") [2 ms]
+  Passed HollowWake.Core.Tests.ProjectileLaunchRegressionTests.NestedFlightsKeepTheirEmissionHeightAndReachHumanoids(path: "on_tick", ground: -0.5, pattern: "hob") [2 ms]
+  Passed HollowWake.Core.Tests.ProjectileLaunchRegressionTests.NestedFlightsKeepTheirEmissionHeightAndReachHumanoids(path: "on_travel", ground: 0, pattern: "hob") [2 ms]
+  Passed HollowWake.Core.Tests.ProjectileLaunchRegressionTests.NestedFlightsKeepTheirEmissionHeightAndReachHumanoids(path: "on_travel", ground: -0.5, pattern: "skeleton_warrior") [2 ms]
+  Failed HollowWake.Core.Tests.ProjectileLaunchRegressionTests.NestedFlightsKeepTheirEmissionHeightAndReachHumanoids(path: "salvo", ground: 0, pattern: "hob") [3 ms]
+  Error Message:
+   Assert.All() Failure: 4 out of 8 items in the collection did not pass.
+[1]: Item:  Projectile { Accel = 0, AimPoint = <10.400002, 10, 0.9>, Amplitude = 0.600000024, BornAt = 0.35000000000000003, Bounces = 0, ··· }
+     Error: Assert.Equal() Failure: Values are not within 4 decimal places
+            Expected: 0.9 (rounded from 0.899999976)
+            Actual:   0 (rounded from 0)
+[3]: Item:  Projectile { Accel = 0, AimPoint = <10.800003, 10, 0.9>, Amplitude = 0.600000024, BornAt = 0.55000000000000004, Bounces = 0, ··· }
+     Error: Assert.Equal() Failure: Values are not within 4 decimal places
+            Expected: 0.9 (rounded from 0.899999976)
+            Actual:   0 (rounded from 0)
+[5]: Item:  Projectile { Accel = 0, AimPoint = <11.200005, 10, 0.9>, Amplitude = 0.600000024, BornAt = 0.75, Bounces = 0, ··· }
+     Error: Assert.Equal() Failure: Values are not within 4 decimal places
+            Expected: 0.9 (rounded from 0.899999976)
+            Actual:   0 (rounded from 0)
+[7]: Item:  Projectile { Accel = 0, AimPoint = <11.600006, 10, 0.9>, Amplitude = 0.600000024, BornAt = 0.95000000000000007, Bounces = 0, ··· }
+     Error: Assert.Equal() Failure: Values are not within 4 decimal places
+            Expected: 0.9 (rounded from 0.899999976)
+            Actual:   0 (rounded from 0)
+  Stack Trace:
+     at HollowWake.Core.Tests.ProjectileLaunchRegressionTests.NestedFlightsKeepTheirEmissionHeightAndReachHumanoids(String path, Single ground, String pattern) in C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\ProjectileLaunchRegressionTests.cs:line 75
+   at InvokeStub_ProjectileLaunchRegressionTests.NestedFlightsKeepTheirEmissionHeightAndReachHumanoids(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Standard Output Messages:
+ salvo/hob, ground 0: 8 children, heights 0.900,0.000,0.900,0.000,0.900,0.000,0.900,0.000
+
+
+  Passed HollowWake.Core.Tests.ProjectileLaunchRegressionTests.NestedFlightsKeepTheirEmissionHeightAndReachHumanoids(path: "on_tick", ground: -0.5, pattern: "skeleton_warrior") [2 ms]
+  Passed HollowWake.Core.Tests.ProjectileLaunchRegressionTests.NestedFlightsKeepTheirEmissionHeightAndReachHumanoids(path: "on_tick", ground: 0.5, pattern: "hob") [2 ms]
+  Passed HollowWake.Core.Tests.ProjectileLaunchRegressionTests.NestedFlightsKeepTheirEmissionHeightAndReachHumanoids(path: "on_travel", ground: 0.5, pattern: "hob") [2 ms]
+[xUnit.net 00:00:02.05]     HollowWake.Core.Tests.ProjectileLaunchRegressionTests.NestedFlightsKeepTheirEmissionHeightAndReachHumanoids(path: "salvo", ground: 0.5, pattern: "hob") [FAIL]
+[xUnit.net 00:00:02.05]       Assert.All() Failure: 4 out of 8 items in the collection did not pass.
+[xUnit.net 00:00:02.05]       [1]: Item:  Projectile { Accel = 0, AimPoint = <10.400002, 10, 1.4>, Amplitude = 0.600000024, BornAt = 0.35000000000000003, Bounces = 0, ··· }
+[xUnit.net 00:00:02.05]            Error: Assert.Equal() Failure: Values are not within 4 decimal places
+[xUnit.net 00:00:02.05]                   Expected: 1.4 (rounded from 1.39999998)
+[xUnit.net 00:00:02.05]                   Actual:   0.5 (rounded from 0.5)
+[xUnit.net 00:00:02.05]       [3]: Item:  Projectile { Accel = 0, AimPoint = <10.800003, 10, 1.4>, Amplitude = 0.600000024, BornAt = 0.55000000000000004, Bounces = 0, ··· }
+[xUnit.net 00:00:02.05]            Error: Assert.Equal() Failure: Values are not within 4 decimal places
+[xUnit.net 00:00:02.05]                   Expected: 1.4 (rounded from 1.39999998)
+[xUnit.net 00:00:02.05]                   Actual:   0.5 (rounded from 0.5)
+[xUnit.net 00:00:02.05]       [5]: Item:  Projectile { Accel = 0, AimPoint = <11.200005, 10, 1.4>, Amplitude = 0.600000024, BornAt = 0.75, Bounces = 0, ··· }
+[xUnit.net 00:00:02.05]            Error: Assert.Equal() Failure: Values are not within 4 decimal places
+[xUnit.net 00:00:02.05]                   Expected: 1.4 (rounded from 1.39999998)
+[xUnit.net 00:00:02.05]                   Actual:   0.5 (rounded from 0.5)
+[xUnit.net 00:00:02.05]       [7]: Item:  Projectile { Accel = 0, AimPoint = <11.600006, 10, 1.4>, Amplitude = 0.600000024, BornAt = 0.95000000000000007, Bounces = 0, ··· }
+[xUnit.net 00:00:02.05]            Error: Assert.Equal() Failure: Values are not within 4 decimal places
+[xUnit.net 00:00:02.05]                   Expected: 1.4 (rounded from 1.39999998)
+[xUnit.net 00:00:02.05]                   Actual:   0.5 (rounded from 0.5)
+[xUnit.net 00:00:02.05]       Stack Trace:
+[xUnit.net 00:00:02.05]         C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\ProjectileLaunchRegressionTests.cs(75,0): at HollowWake.Core.Tests.ProjectileLaunchRegressionTests.NestedFlightsKeepTheirEmissionHeightAndReachHumanoids(String path, Single ground, String pattern)
+[xUnit.net 00:00:02.05]            at InvokeStub_ProjectileLaunchRegressionTests.NestedFlightsKeepTheirEmissionHeightAndReachHumanoids(Object, Span`1)
+[xUnit.net 00:00:02.05]            at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:02.05]       Output:
+[xUnit.net 00:00:02.05]         salvo/hob, ground 0.5: 8 children, heights 1.400,0.500,1.400,0.500,1.400,0.500,1.400,0.500
+[xUnit.net 00:00:02.07]     HollowWake.Core.Tests.ProjectileLaunchRegressionTests.NestedFlightsKeepTheirEmissionHeightAndReachHumanoids(path: "salvo", ground: 0, pattern: "skeleton_warrior") [FAIL]
+[xUnit.net 00:00:02.07]       Assert.All() Failure: 4 out of 8 items in the collection did not pass.
+[xUnit.net 00:00:02.07]       [1]: Item:  Projectile { Accel = 0, AimPoint = <10.400002, 10, 0.9>, Amplitude = 0.600000024, BornAt = 0.35000000000000003, Bounces = 0, ··· }
+[xUnit.net 00:00:02.07]            Error: Assert.Equal() Failure: Values are not within 4 decimal places
+[xUnit.net 00:00:02.07]                   Expected: 0.9 (rounded from 0.899999976)
+[xUnit.net 00:00:02.07]                   Actual:   0 (rounded from 0)
+[xUnit.net 00:00:02.07]       [3]: Item:  Projectile { Accel = 0, AimPoint = <10.800003, 10, 0.9>, Amplitude = 0.600000024, BornAt = 0.55000000000000004, Bounces = 0, ··· }
+[xUnit.net 00:00:02.07]            Error: Assert.Equal() Failure: Values are not within 4 decimal places
+[xUnit.net 00:00:02.07]                   Expected: 0.9 (rounded from 0.899999976)
+[xUnit.net 00:00:02.07]                   Actual:   0 (rounded from 0)
+[xUnit.net 00:00:02.07]       [5]: Item:  Projectile { Accel = 0, AimPoint = <11.200005, 10, 0.9>, Amplitude = 0.600000024, BornAt = 0.75, Bounces = 0, ··· }
+[xUnit.net 00:00:02.07]            Error: Assert.Equal() Failure: Values are not within 4 decimal places
+[xUnit.net 00:00:02.07]                   Expected: 0.9 (rounded from 0.899999976)
+[xUnit.net 00:00:02.07]                   Actual:   0 (rounded from 0)
+[xUnit.net 00:00:02.07]       [7]: Item:  Projectile { Accel = 0, AimPoint = <11.600006, 10, 0.9>, Amplitude = 0.600000024, BornAt = 0.95000000000000007, Bounces = 0, ··· }
+[xUnit.net 00:00:02.07]            Error: Assert.Equal() Failure: Values are not within 4 decimal places
+[xUnit.net 00:00:02.07]                   Expected: 0.9 (rounded from 0.899999976)
+[xUnit.net 00:00:02.07]                   Actual:   0 (rounded from 0)
+[xUnit.net 00:00:02.07]       Stack Trace:
+[xUnit.net 00:00:02.07]         C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\ProjectileLaunchRegressionTests.cs(75,0): at HollowWake.Core.Tests.ProjectileLaunchRegressionTests.NestedFlightsKeepTheirEmissionHeightAndReachHumanoids(String path, Single ground, String pattern)
+[xUnit.net 00:00:02.07]            at InvokeStub_ProjectileLaunchRegressionTests.NestedFlightsKeepTheirEmissionHeightAndReachHumanoids(Object, Span`1)
+[xUnit.net 00:00:02.07]            at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:02.07]       Output:
+[xUnit.net 00:00:02.07]         salvo/skeleton_warrior, ground 0: 8 children, heights 0.900,0.000,0.900,0.000,0.900,0.000,0.900,0.000
+[xUnit.net 00:00:02.07]     HollowWake.Core.Tests.ProjectileLaunchRegressionTests.NestedFlightsKeepTheirEmissionHeightAndReachHumanoids(path: "salvo", ground: 0.5, pattern: "skeleton_warrior") [FAIL]
+[xUnit.net 00:00:02.07]       Assert.All() Failure: 4 out of 8 items in the collection did not pass.
+[xUnit.net 00:00:02.07]       [1]: Item:  Projectile { Accel = 0, AimPoint = <10.400002, 10, 1.4>, Amplitude = 0.600000024, BornAt = 0.35000000000000003, Bounces = 0, ··· }
+[xUnit.net 00:00:02.07]            Error: Assert.Equal() Failure: Values are not within 4 decimal places
+[xUnit.net 00:00:02.07]                   Expected: 1.4 (rounded from 1.39999998)
+[xUnit.net 00:00:02.07]                   Actual:   0.5 (rounded from 0.5)
+[xUnit.net 00:00:02.07]       [3]: Item:  Projectile { Accel = 0, AimPoint = <10.800003, 10, 1.4>, Amplitude = 0.600000024, BornAt = 0.55000000000000004, Bounces = 0, ··· }
+[xUnit.net 00:00:02.07]            Error: Assert.Equal() Failure: Values are not within 4 decimal places
+[xUnit.net 00:00:02.07]                   Expected: 1.4 (rounded from 1.39999998)
+[xUnit.net 00:00:02.07]                   Actual:   0.5 (rounded from 0.5)
+[xUnit.net 00:00:02.07]       [5]: Item:  Projectile { Accel = 0, AimPoint = <11.200005, 10, 1.4>, Amplitude = 0.600000024, BornAt = 0.75, Bounces = 0, ··· }
+[xUnit.net 00:00:02.07]            Error: Assert.Equal() Failure: Values are not within 4 decimal places
+[xUnit.net 00:00:02.07]                   Expected: 1.4 (rounded from 1.39999998)
+[xUnit.net 00:00:02.07]                   Actual:   0.5 (rounded from 0.5)
+[xUnit.net 00:00:02.07]       [7]: Item:  Projectile { Accel = 0, AimPoint = <11.600006, 10, 1.4>, Amplitude = 0.600000024, BornAt = 0.95000000000000007, Bounces = 0, ··· }
+[xUnit.net 00:00:02.07]            Error: Assert.Equal() Failure: Values are not within 4 decimal places
+[xUnit.net 00:00:02.07]                   Expected: 1.4 (rounded from 1.39999998)
+[xUnit.net 00:00:02.07]                   Actual:   0.5 (rounded from 0.5)
+[xUnit.net 00:00:02.07]       Stack Trace:
+[xUnit.net 00:00:02.07]         C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\ProjectileLaunchRegressionTests.cs(75,0): at HollowWake.Core.Tests.ProjectileLaunchRegressionTests.NestedFlightsKeepTheirEmissionHeightAndReachHumanoids(String path, Single ground, String pattern)
+[xUnit.net 00:00:02.07]            at InvokeStub_ProjectileLaunchRegressionTests.NestedFlightsKeepTheirEmissionHeightAndReachHumanoids(Object, Span`1)
+[xUnit.net 00:00:02.07]            at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:02.07]       Output:
+[xUnit.net 00:00:02.07]         salvo/skeleton_warrior, ground 0.5: 8 children, heights 1.400,0.500,1.400,0.500,1.400,0.500,1.400,0.500
+  Passed HollowWake.Core.Tests.ProjectileLaunchRegressionTests.NestedFlightsKeepTheirEmissionHeightAndReachHumanoids(path: "on_tick", ground: 0, pattern: "hob") [3 ms]
+  Failed HollowWake.Core.Tests.ProjectileLaunchRegressionTests.NestedFlightsKeepTheirEmissionHeightAndReachHumanoids(path: "salvo", ground: 0.5, pattern: "hob") [2 ms]
+  Error Message:
+   Assert.All() Failure: 4 out of 8 items in the collection did not pass.
+[1]: Item:  Projectile { Accel = 0, AimPoint = <10.400002, 10, 1.4>, Amplitude = 0.600000024, BornAt = 0.35000000000000003, Bounces = 0, ··· }
+     Error: Assert.Equal() Failure: Values are not within 4 decimal places
+            Expected: 1.4 (rounded from 1.39999998)
+            Actual:   0.5 (rounded from 0.5)
+[3]: Item:  Projectile { Accel = 0, AimPoint = <10.800003, 10, 1.4>, Amplitude = 0.600000024, BornAt = 0.55000000000000004, Bounces = 0, ··· }
+     Error: Assert.Equal() Failure: Values are not within 4 decimal places
+            Expected: 1.4 (rounded from 1.39999998)
+            Actual:   0.5 (rounded from 0.5)
+[5]: Item:  Projectile { Accel = 0, AimPoint = <11.200005, 10, 1.4>, Amplitude = 0.600000024, BornAt = 0.75, Bounces = 0, ··· }
+     Error: Assert.Equal() Failure: Values are not within 4 decimal places
+            Expected: 1.4 (rounded from 1.39999998)
+            Actual:   0.5 (rounded from 0.5)
+[7]: Item:  Projectile { Accel = 0, AimPoint = <11.600006, 10, 1.4>, Amplitude = 0.600000024, BornAt = 0.95000000000000007, Bounces = 0, ··· }
+     Error: Assert.Equal() Failure: Values are not within 4 decimal places
+            Expected: 1.4 (rounded from 1.39999998)
+            Actual:   0.5 (rounded from 0.5)
+  Stack Trace:
+     at HollowWake.Core.Tests.ProjectileLaunchRegressionTests.NestedFlightsKeepTheirEmissionHeightAndReachHumanoids(String path, Single ground, String pattern) in C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\ProjectileLaunchRegressionTests.cs:line 75
+   at InvokeStub_ProjectileLaunchRegressionTests.NestedFlightsKeepTheirEmissionHeightAndReachHumanoids(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Standard Output Messages:
+ salvo/hob, ground 0.5: 8 children, heights 1.400,0.500,1.400,0.500,1.400,0.500,1.400,0.500
+
+
+  Passed HollowWake.Core.Tests.ProjectileLaunchRegressionTests.NestedFlightsKeepTheirEmissionHeightAndReachHumanoids(path: "cast", ground: 0, pattern: "skeleton_warrior") [4 ms]
+  Passed HollowWake.Core.Tests.ProjectileLaunchRegressionTests.NestedFlightsKeepTheirEmissionHeightAndReachHumanoids(path: "cast", ground: 0.5, pattern: "skeleton_warrior") [3 ms]
+  Passed HollowWake.Core.Tests.ProjectileLaunchRegressionTests.NestedFlightsKeepTheirEmissionHeightAndReachHumanoids(path: "cast", ground: -0.5, pattern: "hob") [3 ms]
+  Passed HollowWake.Core.Tests.ProjectileLaunchRegressionTests.NestedFlightsKeepTheirEmissionHeightAndReachHumanoids(path: "delay", ground: 0, pattern: "hob") [2 ms]
+  Failed HollowWake.Core.Tests.ProjectileLaunchRegressionTests.NestedFlightsKeepTheirEmissionHeightAndReachHumanoids(path: "salvo", ground: 0, pattern: "skeleton_warrior") [3 ms]
+  Error Message:
+   Assert.All() Failure: 4 out of 8 items in the collection did not pass.
+[1]: Item:  Projectile { Accel = 0, AimPoint = <10.400002, 10, 0.9>, Amplitude = 0.600000024, BornAt = 0.35000000000000003, Bounces = 0, ··· }
+     Error: Assert.Equal() Failure: Values are not within 4 decimal places
+            Expected: 0.9 (rounded from 0.899999976)
+            Actual:   0 (rounded from 0)
+[3]: Item:  Projectile { Accel = 0, AimPoint = <10.800003, 10, 0.9>, Amplitude = 0.600000024, BornAt = 0.55000000000000004, Bounces = 0, ··· }
+     Error: Assert.Equal() Failure: Values are not within 4 decimal places
+            Expected: 0.9 (rounded from 0.899999976)
+            Actual:   0 (rounded from 0)
+[5]: Item:  Projectile { Accel = 0, AimPoint = <11.200005, 10, 0.9>, Amplitude = 0.600000024, BornAt = 0.75, Bounces = 0, ··· }
+     Error: Assert.Equal() Failure: Values are not within 4 decimal places
+            Expected: 0.9 (rounded from 0.899999976)
+            Actual:   0 (rounded from 0)
+[7]: Item:  Projectile { Accel = 0, AimPoint = <11.600006, 10, 0.9>, Amplitude = 0.600000024, BornAt = 0.95000000000000007, Bounces = 0, ··· }
+     Error: Assert.Equal() Failure: Values are not within 4 decimal places
+            Expected: 0.9 (rounded from 0.899999976)
+            Actual:   0 (rounded from 0)
+  Stack Trace:
+     at HollowWake.Core.Tests.ProjectileLaunchRegressionTests.NestedFlightsKeepTheirEmissionHeightAndReachHumanoids(String path, Single ground, String pattern) in C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\ProjectileLaunchRegressionTests.cs:line 75
+   at InvokeStub_ProjectileLaunchRegressionTests.NestedFlightsKeepTheirEmissionHeightAndReachHumanoids(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Standard Output Messages:
+ salvo/skeleton_warrior, ground 0: 8 children, heights 0.900,0.000,0.900,0.000,0.900,0.000,0.900,0.000
+
+
+  Failed HollowWake.Core.Tests.ProjectileLaunchRegressionTests.NestedFlightsKeepTheirEmissionHeightAndReachHumanoids(path: "salvo", ground: 0.5, pattern: "skeleton_warrior") [3 ms]
+  Error Message:
+   Assert.All() Failure: 4 out of 8 items in the collection did not pass.
+[1]: Item:  Projectile { Accel = 0, AimPoint = <10.400002, 10, 1.4>, Amplitude = 0.600000024, BornAt = 0.35000000000000003, Bounces = 0, ··· }
+     Error: Assert.Equal() Failure: Values are not within 4 decimal places
+            Expected: 1.4 (rounded from 1.39999998)
+            Actual:   0.5 (rounded from 0.5)
+[3]: Item:  Projectile { Accel = 0, AimPoint = <10.800003, 10, 1.4>, Amplitude = 0.600000024, BornAt = 0.55000000000000004, Bounces = 0, ··· }
+     Error: Assert.Equal() Failure: Values are not within 4 decimal places
+            Expected: 1.4 (rounded from 1.39999998)
+            Actual:   0.5 (rounded from 0.5)
+[5]: Item:  Projectile { Accel = 0, AimPoint = <11.200005, 10, 1.4>, Amplitude = 0.600000024, BornAt = 0.75, Bounces = 0, ··· }
+     Error: Assert.Equal() Failure: Values are not within 4 decimal places
+            Expected: 1.4 (rounded from 1.39999998)
+            Actual:   0.5 (rounded from 0.5)
+[7]: Item:  Projectile { Accel = 0, AimPoint = <11.600006, 10, 1.4>, Amplitude = 0.600000024, BornAt = 0.95000000000000007, Bounces = 0, ··· }
+     Error: Assert.Equal() Failure: Values are not within 4 decimal places
+            Expected: 1.4 (rounded from 1.39999998)
+            Actual:   0.5 (rounded from 0.5)
+  Stack Trace:
+     at HollowWake.Core.Tests.ProjectileLaunchRegressionTests.NestedFlightsKeepTheirEmissionHeightAndReachHumanoids(String path, Single ground, String pattern) in C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\ProjectileLaunchRegressionTests.cs:line 75
+   at InvokeStub_ProjectileLaunchRegressionTests.NestedFlightsKeepTheirEmissionHeightAndReachHumanoids(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Standard Output Messages:
+ salvo/skeleton_warrior, ground 0.5: 8 children, heights 1.400,0.500,1.400,0.500,1.400,0.500,1.400,0.500
+
+
+  Passed HollowWake.Core.Tests.ProjectileLaunchRegressionTests.NestedFlightsKeepTheirEmissionHeightAndReachHumanoids(path: "delay", ground: 0.5, pattern: "skeleton_warrior") [2 ms]
+[xUnit.net 00:00:02.10]     HollowWake.Core.Tests.ProjectileLaunchRegressionTests.NestedFlightsKeepTheirEmissionHeightAndReachHumanoids(path: "salvo", ground: -0.5, pattern: "hob") [FAIL]
+[xUnit.net 00:00:02.10]       Assert.All() Failure: 4 out of 8 items in the collection did not pass.
+[xUnit.net 00:00:02.10]       [1]: Item:  Projectile { Accel = 0, AimPoint = <10.400002, 10, 0.39999998>, Amplitude = 0.600000024, BornAt = 0.35000000000000003, Bounces = 0, ··· }
+[xUnit.net 00:00:02.10]            Error: Assert.Equal() Failure: Values are not within 4 decimal places
+[xUnit.net 00:00:02.10]                   Expected: 0.4 (rounded from 0.399999976)
+[xUnit.net 00:00:02.10]                   Actual:   -0.5 (rounded from -0.5)
+[xUnit.net 00:00:02.10]       [3]: Item:  Projectile { Accel = 0, AimPoint = <10.800003, 10, 0.39999998>, Amplitude = 0.600000024, BornAt = 0.55000000000000004, Bounces = 0, ··· }
+[xUnit.net 00:00:02.10]            Error: Assert.Equal() Failure: Values are not within 4 decimal places
+[xUnit.net 00:00:02.10]                   Expected: 0.4 (rounded from 0.399999976)
+[xUnit.net 00:00:02.10]                   Actual:   -0.5 (rounded from -0.5)
+[xUnit.net 00:00:02.10]       [5]: Item:  Projectile { Accel = 0, AimPoint = <11.200005, 10, 0.39999998>, Amplitude = 0.600000024, BornAt = 0.75, Bounces = 0, ··· }
+[xUnit.net 00:00:02.10]            Error: Assert.Equal() Failure: Values are not within 4 decimal places
+[xUnit.net 00:00:02.10]                   Expected: 0.4 (rounded from 0.399999976)
+[xUnit.net 00:00:02.10]                   Actual:   -0.5 (rounded from -0.5)
+[xUnit.net 00:00:02.10]       [7]: Item:  Projectile { Accel = 0, AimPoint = <11.600006, 10, 0.39999998>, Amplitude = 0.600000024, BornAt = 0.95000000000000007, Bounces = 0, ··· }
+[xUnit.net 00:00:02.10]            Error: Assert.Equal() Failure: Values are not within 4 decimal places
+[xUnit.net 00:00:02.10]                   Expected: 0.4 (rounded from 0.399999976)
+[xUnit.net 00:00:02.10]                   Actual:   -0.5 (rounded from -0.5)
+[xUnit.net 00:00:02.10]       Stack Trace:
+[xUnit.net 00:00:02.10]         C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\ProjectileLaunchRegressionTests.cs(75,0): at HollowWake.Core.Tests.ProjectileLaunchRegressionTests.NestedFlightsKeepTheirEmissionHeightAndReachHumanoids(String path, Single ground, String pattern)
+[xUnit.net 00:00:02.10]            at InvokeStub_ProjectileLaunchRegressionTests.NestedFlightsKeepTheirEmissionHeightAndReachHumanoids(Object, Span`1)
+[xUnit.net 00:00:02.10]            at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:02.10]       Output:
+[xUnit.net 00:00:02.10]         salvo/hob, ground -0.5: 8 children, heights 0.400,-0.500,0.400,-0.500,0.400,-0.500,0.400,-0.500
+  Passed HollowWake.Core.Tests.ProjectileLaunchRegressionTests.NestedFlightsKeepTheirEmissionHeightAndReachHumanoids(path: "cast", ground: 0, pattern: "hob") [3 ms]
+  Passed HollowWake.Core.Tests.ProjectileLaunchRegressionTests.NestedFlightsKeepTheirEmissionHeightAndReachHumanoids(path: "cascade", ground: 0, pattern: "skeleton_warrior") [2 ms]
+  Passed HollowWake.Core.Tests.ProjectileLaunchRegressionTests.NestedFlightsKeepTheirEmissionHeightAndReachHumanoids(path: "cascade", ground: 0.5, pattern: "hob") [2 ms]
+  Passed HollowWake.Core.Tests.ProjectileLaunchRegressionTests.NestedFlightsKeepTheirEmissionHeightAndReachHumanoids(path: "cast", ground: -0.5, pattern: "skeleton_warrior") [5 ms]
+  Passed HollowWake.Core.Tests.ProjectileLaunchRegressionTests.NestedFlightsKeepTheirEmissionHeightAndReachHumanoids(path: "on_travel", ground: 0, pattern: "skeleton_warrior") [2 ms]
+  Passed HollowWake.Core.Tests.ProjectileLaunchRegressionTests.NestedFlightsKeepTheirEmissionHeightAndReachHumanoids(path: "cascade", ground: 0, pattern: "hob") [2 ms]
+  Failed HollowWake.Core.Tests.ProjectileLaunchRegressionTests.NestedFlightsKeepTheirEmissionHeightAndReachHumanoids(path: "salvo", ground: -0.5, pattern: "hob") [5 ms]
+  Error Message:
+   Assert.All() Failure: 4 out of 8 items in the collection did not pass.
+[1]: Item:  Projectile { Accel = 0, AimPoint = <10.400002, 10, 0.39999998>, Amplitude = 0.600000024, BornAt = 0.35000000000000003, Bounces = 0, ··· }
+     Error: Assert.Equal() Failure: Values are not within 4 decimal places
+            Expected: 0.4 (rounded from 0.399999976)
+            Actual:   -0.5 (rounded from -0.5)
+[3]: Item:  Projectile { Accel = 0, AimPoint = <10.800003, 10, 0.39999998>, Amplitude = 0.600000024, BornAt = 0.55000000000000004, Bounces = 0, ··· }
+     Error: Assert.Equal() Failure: Values are not within 4 decimal places
+            Expected: 0.4 (rounded from 0.399999976)
+            Actual:   -0.5 (rounded from -0.5)
+[5]: Item:  Projectile { Accel = 0, AimPoint = <11.200005, 10, 0.39999998>, Amplitude = 0.600000024, BornAt = 0.75, Bounces = 0, ··· }
+     Error: Assert.Equal() Failure: Values are not within 4 decimal places
+            Expected: 0.4 (rounded from 0.399999976)
+            Actual:   -0.5 (rounded from -0.5)
+[7]: Item:  Projectile { Accel = 0, AimPoint = <11.600006, 10, 0.39999998>, Amplitude = 0.600000024, BornAt = 0.95000000000000007, Bounces = 0, ··· }
+     Error: Assert.Equal() Failure: Values are not within 4 decimal places
+            Expected: 0.4 (rounded from 0.399999976)
+            Actual:   -0.5 (rounded from -0.5)
+  Stack Trace:
+     at HollowWake.Core.Tests.ProjectileLaunchRegressionTests.NestedFlightsKeepTheirEmissionHeightAndReachHumanoids(String path, Single ground, String pattern) in C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\ProjectileLaunchRegressionTests.cs:line 75
+   at InvokeStub_ProjectileLaunchRegressionTests.NestedFlightsKeepTheirEmissionHeightAndReachHumanoids(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Standard Output Messages:
+ salvo/hob, ground -0.5: 8 children, heights 0.400,-0.500,0.400,-0.500,0.400,-0.500,0.400,-0.500
+
+
+  Passed HollowWake.Core.Tests.ProjectileLaunchRegressionTests.ExplicitElevationChoicesRemainAvailable(aim: "point", verticalSign: -1) [2 ms]
+  Passed HollowWake.Core.Tests.ProjectileLaunchRegressionTests.ExplicitElevationChoicesRemainAvailable(aim: "horizontal", verticalSign: 0) [< 1 ms]
+[xUnit.net 00:00:02.14]   Finished:    HollowWake.Core.Tests
+  Passed HollowWake.Core.Tests.ProjectileLaunchRegressionTests.AuthoredOrbsShedChildrenAtTheParentHeightAndHitBodies(preset: "tide_orb") [15 ms]
+  Passed HollowWake.Core.Tests.ProjectileLaunchRegressionTests.AuthoredOrbsShedChildrenAtTheParentHeightAndHitBodies(preset: "frozen_orb") [14 ms]
+
+Test Run Failed.
+Total tests: 47
+     Passed: 41
+     Failed: 6
+ Total time: 3.0313 Seconds

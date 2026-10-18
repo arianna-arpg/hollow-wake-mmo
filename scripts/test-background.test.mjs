@@ -16,6 +16,36 @@ async function workspace(t) {
   return dir;
 }
 
+async function assertLinuxDescendantExited(pid, readStat = readFile) {
+  // A killed descendant can briefly remain as a zombie until its new parent reaps it.
+  const status = await readStat(`/proc/${pid}/stat`, 'utf8').catch(error => {
+    // /proc can disappear before open (ENOENT) or while the file is being read (ESRCH).
+    if (error.code !== 'ENOENT' && error.code !== 'ESRCH') throw error;
+    return null;
+  });
+  assert.ok(status === null || /\) Z /.test(status), 'descendant exited');
+}
+
+test('Linux descendant check accepts absent or zombie processes and preserves other failures', async () => {
+  for (const code of ['ENOENT', 'ESRCH']) {
+    await assertLinuxDescendantExited(123, async (path, encoding) => {
+      assert.equal(path, '/proc/123/stat');
+      assert.equal(encoding, 'utf8');
+      throw Object.assign(new Error('process disappeared'), { code });
+    });
+  }
+  await assertLinuxDescendantExited(123, async () => '123 (node) Z 1 0 0');
+  for (const state of ['R', 'S', 'D', 'T']) {
+    await assert.rejects(assertLinuxDescendantExited(123, async () => `123 (node) ${state} 1 0 0`),
+      { code: 'ERR_ASSERTION', message: 'descendant exited' });
+  }
+  for (const code of ['EACCES', 'EPERM', 'EIO', undefined]) {
+    const error = Object.assign(new Error('unexpected read failure'), { code });
+    await assert.rejects(assertLinuxDescendantExited(123, async () => { throw error; }),
+      actual => actual === error);
+  }
+});
+
 test('both suites enforce background input and reject headed or unbounded runs', () => {
   const opts = options([]);
   const context = { url: 'http://127.0.0.1:43210', tcp: 43211, directory: 'evidence', id: 'private-test' };
@@ -109,13 +139,8 @@ test('timeout stops the owned process and its descendant without stopping a neig
     assert.ok(pid > 0, 'descendant started');
     await assert.rejects(waitProcess(run, 200), /timed out/);
     assert.equal(run.done, true);
-    // A killed descendant can briefly remain as a zombie on Linux until its new parent reaps it.
     if (process.platform === 'linux') {
-      const status = await readFile(`/proc/${pid}/stat`, 'utf8').catch(error => {
-        if (error.code !== 'ENOENT') throw error;
-        return null;
-      });
-      assert.ok(status === null || /\) Z /.test(status), 'descendant exited');
+      await assertLinuxDescendantExited(pid);
     } else assert.throws(() => process.kill(pid, 0), { code: 'ESRCH' });
     assert.doesNotThrow(() => process.kill(neighbour.child.pid, 0));
   } finally {

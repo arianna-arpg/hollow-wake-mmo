@@ -1,0 +1,10 @@
+  HollowWake.Core -> C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\src\HollowWake.Core\bin\Release\net8.0\HollowWake.Core.dll
+  HollowWake.Protocol -> C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\src\HollowWake.Protocol\bin\Release\net8.0\HollowWake.Protocol.dll
+  HollowWake.Server -> C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\src\HollowWake.Server\bin\Release\net10.0\HollowWake.Server.dll
+  HollowWake.Tools -> C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\src\HollowWake.Tools\bin\Release\net10.0\hollowwake.dll
+
+Build succeeded.
+    0 Warning(s)
+    0 Error(s)
+
+Time Elapsed 00:00:03.73
