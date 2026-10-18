@@ -2,9 +2,6 @@
 # one a line, keyed by who wrote it (a form, a preset or a glyph) and where in their own definition. Written by
 # hollowwake weave --axes --all --literals tests/fixtures/grammar/frozen-literals.txt; the axis report tests hold
 # the core content to it, so a new literal fails them and a literal resolved is removed by writing the file again.
-# The 21 pre-existing undead preset keys from #31 are reviewed in
-# docs/reviews/2026-10-18-entity-main-audits.md; no content values or audit rules changed.
-# #32 pre-main content additions are reviewed individually in docs/reviews/2026-10-18-entity-main-audits.md.
 form binding effects[0].interval
 form binding effects[0].max_length
 form binding effects[0].width
@@ -104,6 +101,10 @@ preset beguile effects[0].on_hit[2].chance
 preset beguile effects[0].radius
 preset bind_remnant_court effects[0].contract.respawn
 preset bind_remnant_court effects[0].place.radius
+preset bind_salvaged_golem effects[0].contract.reserve.mana
+preset bind_salvaged_golem effects[0].contract.respawn
+preset bind_salvaged_golem effects[0].count
+preset bind_salvaged_golem effects[0].max_active
 preset bind_stone_warden effects[0].contract.reserve.mana
 preset bind_stone_warden effects[0].contract.respawn
 preset bind_stone_warden effects[0].count
@@ -430,16 +431,36 @@ preset static_strike effects[0].effects[3].chance
 preset summon_abomination effects[0].duration
 preset summon_barrow_hound effects[0].duration
 preset summon_blade_wraith effects[0].duration
+preset summon_blood_golem effects[0].contract.reserve.mana
+preset summon_blood_golem effects[0].contract.respawn
+preset summon_blood_golem effects[0].count
+preset summon_blood_golem effects[0].max_active
 preset summon_bone_golem effects[0].contract.reserve.mana
 preset summon_bone_golem effects[0].contract.respawn
 preset summon_bone_golem effects[0].count
 preset summon_bone_golem effects[0].max_active
+preset summon_fire_golem effects[0].contract.reserve.mana
+preset summon_fire_golem effects[0].contract.respawn
+preset summon_fire_golem effects[0].count
+preset summon_fire_golem effects[0].max_active
+preset summon_ice_golem effects[0].contract.reserve.mana
+preset summon_ice_golem effects[0].contract.respawn
+preset summon_ice_golem effects[0].count
+preset summon_ice_golem effects[0].max_active
+preset summon_lightning_golem effects[0].contract.reserve.mana
+preset summon_lightning_golem effects[0].contract.respawn
+preset summon_lightning_golem effects[0].count
+preset summon_lightning_golem effects[0].max_active
 preset summon_ossuary_lich effects[0].duration
 preset summon_skeletal_duelist effects[0].duration
 preset summon_skeletal_mages effects[0].duration
 preset summon_skeletal_sentinel effects[0].duration
 preset summon_skeleton effects[0].duration
 preset summon_skeleton_archer effects[0].duration
+preset summon_stone_golem effects[0].contract.reserve.mana
+preset summon_stone_golem effects[0].contract.respawn
+preset summon_stone_golem effects[0].count
+preset summon_stone_golem effects[0].max_active
 preset summon_wraith effects[0].decay.delay
 preset summon_wraith effects[0].decay.fraction
 preset summon_wraith effects[0].decay.growth

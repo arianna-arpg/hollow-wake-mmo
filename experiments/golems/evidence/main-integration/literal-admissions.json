@@ -1,0 +1,212 @@
+{
+  "source": "2360d2eebfdf5a5b9ba4932bd3422705452581df",
+  "inherited": 499,
+  "current": 523,
+  "removed": [],
+  "blobs": [
+    {
+      "file": "content/core/combat/weaves-golems.json",
+      "before": "f3b5d1e72f8aa936d1598e48829794aa4131984c",
+      "after": "f3b5d1e72f8aa936d1598e48829794aa4131984c"
+    },
+    {
+      "file": "content/core/combat/weaves-golem-prototype.json",
+      "before": "23e17335da62308f2863fe454164584350cd0ad2",
+      "after": "23e17335da62308f2863fe454164584350cd0ad2"
+    }
+  ],
+  "admissions": [
+    {
+      "key": "preset bind_salvaged_golem effects[0].contract.reserve.mana",
+      "value": 30,
+      "file": "content/core/combat/weaves-golems.json",
+      "axis": "economy.reserve.mana",
+      "unit": "resource",
+      "attribute": null
+    },
+    {
+      "key": "preset bind_salvaged_golem effects[0].contract.respawn",
+      "value": 8,
+      "file": "content/core/combat/weaves-golems.json",
+      "axis": "timing.respawn",
+      "unit": "s",
+      "attribute": null
+    },
+    {
+      "key": "preset bind_salvaged_golem effects[0].count",
+      "value": 1,
+      "file": "content/core/combat/weaves-golems.json",
+      "axis": "agency.bodies",
+      "unit": "count",
+      "attribute": "summon.count"
+    },
+    {
+      "key": "preset bind_salvaged_golem effects[0].max_active",
+      "value": 1,
+      "file": "content/core/combat/weaves-golems.json",
+      "axis": "agency.max_active",
+      "unit": "count",
+      "attribute": "summon.max"
+    },
+    {
+      "key": "preset summon_blood_golem effects[0].contract.reserve.mana",
+      "value": 30,
+      "file": "content/core/combat/weaves-golem-prototype.json",
+      "axis": "economy.reserve.mana",
+      "unit": "resource",
+      "attribute": null
+    },
+    {
+      "key": "preset summon_blood_golem effects[0].contract.respawn",
+      "value": 8,
+      "file": "content/core/combat/weaves-golem-prototype.json",
+      "axis": "timing.respawn",
+      "unit": "s",
+      "attribute": null
+    },
+    {
+      "key": "preset summon_blood_golem effects[0].count",
+      "value": 1,
+      "file": "content/core/combat/weaves-golem-prototype.json",
+      "axis": "agency.bodies",
+      "unit": "count",
+      "attribute": "summon.count"
+    },
+    {
+      "key": "preset summon_blood_golem effects[0].max_active",
+      "value": 1,
+      "file": "content/core/combat/weaves-golem-prototype.json",
+      "axis": "agency.max_active",
+      "unit": "count",
+      "attribute": "summon.max"
+    },
+    {
+      "key": "preset summon_fire_golem effects[0].contract.reserve.mana",
+      "value": 30,
+      "file": "content/core/combat/weaves-golem-prototype.json",
+      "axis": "economy.reserve.mana",
+      "unit": "resource",
+      "attribute": null
+    },
+    {
+      "key": "preset summon_fire_golem effects[0].contract.respawn",
+      "value": 8,
+      "file": "content/core/combat/weaves-golem-prototype.json",
+      "axis": "timing.respawn",
+      "unit": "s",
+      "attribute": null
+    },
+    {
+      "key": "preset summon_fire_golem effects[0].count",
+      "value": 1,
+      "file": "content/core/combat/weaves-golem-prototype.json",
+      "axis": "agency.bodies",
+      "unit": "count",
+      "attribute": "summon.count"
+    },
+    {
+      "key": "preset summon_fire_golem effects[0].max_active",
+      "value": 1,
+      "file": "content/core/combat/weaves-golem-prototype.json",
+      "axis": "agency.max_active",
+      "unit": "count",
+      "attribute": "summon.max"
+    },
+    {
+      "key": "preset summon_ice_golem effects[0].contract.reserve.mana",
+      "value": 30,
+      "file": "content/core/combat/weaves-golem-prototype.json",
+      "axis": "economy.reserve.mana",
+      "unit": "resource",
+      "attribute": null
+    },
+    {
+      "key": "preset summon_ice_golem effects[0].contract.respawn",
+      "value": 8,
+      "file": "content/core/combat/weaves-golem-prototype.json",
+      "axis": "timing.respawn",
+      "unit": "s",
+      "attribute": null
+    },
+    {
+      "key": "preset summon_ice_golem effects[0].count",
+      "value": 1,
+      "file": "content/core/combat/weaves-golem-prototype.json",
+      "axis": "agency.bodies",
+      "unit": "count",
+      "attribute": "summon.count"
+    },
+    {
+      "key": "preset summon_ice_golem effects[0].max_active",
+      "value": 1,
+      "file": "content/core/combat/weaves-golem-prototype.json",
+      "axis": "agency.max_active",
+      "unit": "count",
+      "attribute": "summon.max"
+    },
+    {
+      "key": "preset summon_lightning_golem effects[0].contract.reserve.mana",
+      "value": 30,
+      "file": "content/core/combat/weaves-golem-prototype.json",
+      "axis": "economy.reserve.mana",
+      "unit": "resource",
+      "attribute": null
+    },
+    {
+      "key": "preset summon_lightning_golem effects[0].contract.respawn",
+      "value": 8,
+      "file": "content/core/combat/weaves-golem-prototype.json",
+      "axis": "timing.respawn",
+      "unit": "s",
+      "attribute": null
+    },
+    {
+      "key": "preset summon_lightning_golem effects[0].count",
+      "value": 1,
+      "file": "content/core/combat/weaves-golem-prototype.json",
+      "axis": "agency.bodies",
+      "unit": "count",
+      "attribute": "summon.count"
+    },
+    {
+      "key": "preset summon_lightning_golem effects[0].max_active",
+      "value": 1,
+      "file": "content/core/combat/weaves-golem-prototype.json",
+      "axis": "agency.max_active",
+      "unit": "count",
+      "attribute": "summon.max"
+    },
+    {
+      "key": "preset summon_stone_golem effects[0].contract.reserve.mana",
+      "value": 30,
+      "file": "content/core/combat/weaves-golem-prototype.json",
+      "axis": "economy.reserve.mana",
+      "unit": "resource",
+      "attribute": null
+    },
+    {
+      "key": "preset summon_stone_golem effects[0].contract.respawn",
+      "value": 8,
+      "file": "content/core/combat/weaves-golem-prototype.json",
+      "axis": "timing.respawn",
+      "unit": "s",
+      "attribute": null
+    },
+    {
+      "key": "preset summon_stone_golem effects[0].count",
+      "value": 1,
+      "file": "content/core/combat/weaves-golem-prototype.json",
+      "axis": "agency.bodies",
+      "unit": "count",
+      "attribute": "summon.count"
+    },
+    {
+      "key": "preset summon_stone_golem effects[0].max_active",
+      "value": 1,
+      "file": "content/core/combat/weaves-golem-prototype.json",
+      "axis": "agency.max_active",
+      "unit": "count",
+      "attribute": "summon.max"
+    }
+  ]
+}
