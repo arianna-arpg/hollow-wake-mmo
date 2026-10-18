@@ -14,7 +14,9 @@
         "longwake_company": "hostile",
         "mended_thread": "hostile",
         "remnant": "hostile",
-        "tangled": "hostile"
+        "tangled": "hostile",
+        "wilds": "hostile",
+        "the_loosed": "hostile"
       }
     }
   ]

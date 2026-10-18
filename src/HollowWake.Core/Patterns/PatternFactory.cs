@@ -261,10 +261,12 @@ public sealed class PatternFactory
         {
             var profile = c.Bind<PhysicalBodySpec>();
             var density = profile.Materials.Sum(s => s.Fraction * c.Sim.Content.Require<BodyMaterialDef>(s.Material).Density);
-            c.Sim.World.Add(c.Entity, new PhysicalBody { Profile = profile, Density = density });
+            var body = c.Sim.World.Add(c.Entity, new PhysicalBody { Profile = profile, Density = density });
             var transform = c.Sim.World.Get<Transform>(c.Entity)!;
             transform.Radius = (float)(Math.Max(profile.Width, profile.Depth) / 2);
             transform.Height = (float)profile.Height;
+            var stats = c.Sim.World.Get<Stats>(c.Entity) ?? c.Sim.World.Add(c.Entity, new Stats(c.Sim.Content));
+            Movement.Physicality.Bind(stats, body, transform);
         });
         Register("motion", c =>
         {

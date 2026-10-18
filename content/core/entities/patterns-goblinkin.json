@@ -229,7 +229,7 @@
         "body.flesh",
         "family.goblin",
         "role.caster",
-        "habitat.warren",
+        "habitat.warren_encampment",
         "humanoid",
         "ranged",
         "size.small",
@@ -370,7 +370,7 @@
         "body.flesh",
         "family.goblin",
         "role.bruiser",
-        "habitat.warren",
+        "habitat.warren_encampment",
         "humanoid",
         "melee",
         "size.medium"
@@ -436,7 +436,7 @@
         "body.flesh",
         "family.goblin",
         "role.commander",
-        "habitat.warren",
+        "habitat.warren_encampment",
         "humanoid",
         "melee",
         "size.medium"
@@ -481,7 +481,7 @@
           ]
         },
         "behavior": {
-          "id": "guard"
+          "id": "close_melee"
         },
         "drops": {
           "table": "goblinkin_drops",
@@ -547,7 +547,7 @@
           ]
         },
         "behavior": {
-          "id": "guard"
+          "id": "close_melee"
         },
         "drops": {
           "table": "goblinkin_drops",
@@ -619,7 +619,7 @@
           ]
         },
         "behavior": {
-          "id": "guard"
+          "id": "close_melee"
         },
         "drops": {
           "table": "goblinkin_drops",
@@ -711,7 +711,7 @@
         "body.flesh",
         "family.troll",
         "role.juggernaut",
-        "habitat.highlands",
+        "habitat.troll_toll",
         "humanoid",
         "melee",
         "size.large"
@@ -778,7 +778,7 @@
         "body.flesh",
         "family.troll",
         "role.guardian",
-        "habitat.crossing",
+        "habitat.troll_toll",
         "humanoid",
         "melee",
         "size.large"
@@ -824,7 +824,7 @@
           ]
         },
         "behavior": {
-          "id": "guard"
+          "id": "close_melee"
         },
         "drops": {
           "table": "goblinkin_drops",
@@ -896,7 +896,7 @@
           ]
         },
         "behavior": {
-          "id": "guard"
+          "id": "close_melee"
         },
         "drops": {
           "table": "goblinkin_drops",
@@ -922,7 +922,7 @@
         "body.flesh",
         "family.gnasher",
         "role.swarm",
-        "habitat.warren",
+        "habitat.warren_encampment",
         "beast",
         "melee",
         "size.tiny",
@@ -988,7 +988,7 @@
         "body.flesh",
         "family.gnasher",
         "role.biter",
-        "habitat.warren",
+        "habitat.warren_encampment",
         "beast",
         "melee",
         "size.small",

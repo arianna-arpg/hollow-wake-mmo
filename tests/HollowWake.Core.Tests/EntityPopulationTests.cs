@@ -16,15 +16,17 @@ namespace HollowWake.Core.Tests;
 
 public class EntityPopulationTests
 {
-    [Fact]
-    public void EveryUndeadHabitatHasAMatchingPopulationReference()
+    [Theory]
+    [InlineData("undead_body")]
+    [InlineData("goblinkin_body")]
+    public void EveryEntityHabitatHasAMatchingPopulationReference(string template)
     {
         var content = CoreContent.Registry;
-        foreach (var body in content.Each<PatternDef>().Where(p => p.Extends == "undead_body"))
+        foreach (var body in content.Each<PatternDef>().Where(p => p.Extends == template))
         foreach (var tag in body.Tags.Where(t => t.StartsWith("habitat.", StringComparison.Ordinal)))
         {
             var habitat = tag["habitat.".Length..];
-            var poiMatch = content.Each<PoiDef>().Any(p => (p.Tags.Has(habitat) || p.Biomes.Has(habitat))
+            var poiMatch = content.Each<PoiDef>().Any(p => (p.Id == habitat || p.Tags.Has(habitat) || p.Biomes.Has(habitat))
                 && p.Inhabitants.Any(s => s.Pattern == body.Id));
             var biomeMatch = content.Each<BiomeDef>().Any(b => (b.Id == habitat || b.Tags.Has(habitat))
                 && b.Spawns.Concat(b.SpawnTables.SelectMany(id => content.Require<SpawnTableDef>(id).Spawns))

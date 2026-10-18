@@ -1,6 +1,7 @@
 using System.Numerics;
 using HollowWake.Core.Attributes;
 using HollowWake.Core.Components;
+using HollowWake.Core.Movement;
 using HollowWake.Core.Combat;
 using HollowWake.Core.Content;
 using HollowWake.Core.Ecs;
@@ -361,8 +362,13 @@ public sealed class FieldSystem : SimSystem
                 {
                     continue;
                 }
-                var amount = f.Pull > 0 ? Math.Min(f.Pull * dt, distance - 0.3f) : f.Pull * dt;
-                DisplacementSystem.Nudge(sim, body, bt, to / distance * amount);
+                if (sim.World.Get<Stats>(body)?.HasFlag("immovable") == true) continue;
+                var sourceStats = f.Context.SourceStats;
+                var authority = sourceStats is null ? 1 : f.Context.Weave?.Attr(sourceStats, "shove.authority")
+                    ?? sourceStats.Get("shove.authority", f.Context.Tags);
+                var pull = f.Pull * Physicality.ShoveScale(sim, f.Context.Source, body, authority);
+                var amount = pull > 0 ? Math.Min(pull * dt, distance - 0.3f) : pull * dt;
+                DisplacementSystem.Nudge(sim, body, bt, to / distance * (float)amount);
             }
         }
     }

@@ -7,8 +7,9 @@
       "category": "defense",
       "base": 80,
       "min": 0.1,
-      "description": "Mass in kilograms. Physical bodies supply a volume-and-material base to the common modifier fold.",
-      "hidden": true
+      "description": "Mass in kilograms through the normal attribute fold. Geometry supplies formula inputs; explicit base overrides take precedence.",
+      "hidden": true,
+      "formula": "if(gauge.physical.present > 0, gauge.physical.volume * gauge.physical.fill * gauge.physical.heft * gauge.physical.density, 80)"
     },
     {
       "id": "shove.authority",
@@ -16,7 +17,7 @@
       "category": "offense",
       "base": 1,
       "min": 0,
-      "description": "Multiplies the force of knockback, pull and buffet after the pusher mass term."
+      "description": "Multiplies pushing force before the common final shove-scale ceiling."
     }
   ]
 }

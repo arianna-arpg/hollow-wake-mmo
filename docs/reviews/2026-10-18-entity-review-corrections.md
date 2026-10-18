@@ -22,6 +22,18 @@ Verification on the correction tree (merged main 26b9e46, merge parent 21514c0):
 
 The full Release benchmark is retained and **does not clear the performance gate**: snapshot.build 3.826 ms/player, behavior 4.138 ms/tick, tick p95 25.954 ms, attribute.apply.extra 1340.541 ns and expression.evaluate 417.317 ns exceed their budgets. Allocation and worldgen.chunk remain within budget; zero simulation errors. A controlled baseline comparison and further profiling are required, not an assertion that concurrent load excuses the numbers. Keep the correction stack in draft until resolved.
 
+## #32 implementation scope refinement
+
+Canonical mass uses the existing `mass` formula and geometry input gauges, not a new modifier-engine layer. Transform dimension notifications and `Stats.Tags` cache invalidation are shared changes. Field pull now follows the same physicality policy as impulses; its identity-faction correction from #31 remains intact. The final rule ceiling is `physicality.shove_scale_max` (currently 3), applied after force multipliers and victim resistance. Grid traversal visits every crossed cell; it intentionally retains center-based movement clearance while #36 owns anatomical contact.
+
+The shared `close_melee` behavior is content only. Goblinkin leader bindings move onto it, Troll habitat claims now name their actual toll site, and explicit wilds/the_loosed relations remove direction-dependent faction defaults. The natural-site eligibility guard from #31 prevents a low-level empty Toll without lowering its resident gates.
+
+## #32 correction checkpoint
+
+On the merged correction tree, solution build passed with zero warnings/errors; core697/client116/server44 passed. A final mass-profile-presence refinement preserves the mass floor when a live height reaches zero; the subsequent focused physicality/Goblinkin/population/golden suite passed 63 tests, including its new regression. Validation reports zero errors/warnings; load and Goblin Chief duel pass. Full browser/private-smoke and Release performance will be rerun on the combined downstream tree; this checkpoint is not a cleared release gate.
+
+The recorded four-zone population audit includes every pattern's point/body counts. The eligibility change reshuffles zone 1_0's candidate choices even though its old selected sites were not Tolls: rejecting an ineligible candidate changes weighted selection. Other reference-zone population counts stay unchanged. The origin cull now names a present hob; downstream fauna classifiers replace that provisional cull vocabulary. Records and golden mismatch output are under `experiments/entity-review/evidence/32-*`.
+
 ## Verification and handoff
 
 Regression results and exact commit references will be appended after execution. No gate is claimed yet. #37 remains draft until its performance and visual evidence gates are resolved. Claude rereview will be requested with the focused correction commits and retained evidence.

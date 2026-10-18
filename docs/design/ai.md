@@ -29,3 +29,7 @@ The plan is a cache on `Behavior` (`PlanGoal`, `PlannedAt`, `Planned`, `PlanFail
 `WeaveRuntime.ChooseForAi` filters the entity's weaves by readiness, cost, range and the hint's `when` expression, skipping triggered weaves, toggles that are on, empty banks and failed gates, then weights by the hint. `PreferredRange` is the longest hinted range, used by `chase` and perception.
 
 Taunts set the target and a memory timestamp the behaviors read as `taunted`.
+
+## Temporary close-combat content
+
+`close_melee` is a reusable behavior for kits that must close despite a longer-ranged secondary skill. It explicitly supplies the chase stop distance and keeps ordinary acquire/attack/return actions. Goblinkin leaders opt into it; downstream faction kits can reuse the same definition. Other behaviors retain their own policy and PreferredRange remains the longest hinted range. The stop distance currently follows the existing center-distance movement convention; future contact-aware AI must revisit that contract together with collision clearance. This is replaceable content scaffolding, not the planned tactical AI engine.
