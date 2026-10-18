@@ -21,6 +21,7 @@ entries:
         - "loosed_kindler:boar"
         - "tide_channeler:spark_duelist"
         - "proving_reaver:proving_bulwark"
+        - "loosed_skirmisher:tide_caller"
       # The median time to kill over the fights that ended.
       ttk_min: 5
       ttk_max: 45

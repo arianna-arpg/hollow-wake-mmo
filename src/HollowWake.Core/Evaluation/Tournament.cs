@@ -3,6 +3,7 @@ using System.Numerics;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using HollowWake.Core.Combat;
 using HollowWake.Core.Components;
 using HollowWake.Core.Content;
 using HollowWake.Core.Definitions;
@@ -22,15 +23,18 @@ public sealed record Pairing(string A, string B)
     /// <summary>The rule listing the standard duels: the pairings whose seeded traces are the determinism baseline.</summary>
     public const string StandardDuels = "evaluation.standard_duels";
 
-    /// <summary>Parses <c>a:b</c>.</summary>
+    /// <summary>Parses <c>a:b</c>, trimmed; both names must be there once the spaces around them are gone.</summary>
     public static Pairing Parse(string text)
     {
-        var i = text.IndexOf(':');
-        if (i <= 0 || i == text.Length - 1)
+        var trimmed = text.Trim();
+        var i = trimmed.IndexOf(':');
+        var a = i < 0 ? "" : trimmed[..i].Trim();
+        var b = i < 0 ? "" : trimmed[(i + 1)..].Trim();
+        if (a.Length == 0 || b.Length == 0)
         {
             throw new ArgumentException($"a pairing is written a:b, not '{text}'.");
         }
-        return new Pairing(text[..i].Trim(), text[(i + 1)..].Trim());
+        return new Pairing(a, b);
     }
 
     /// <summary>The pairings a rule lists, each written <c>a:b</c>: <see cref="ProvingPairs"/> or <see cref="StandardDuels"/>.</summary>
@@ -56,9 +60,14 @@ public sealed record Bands(double TtkMin, double TtkMax, double WinRateCeiling, 
 }
 
 /// <summary>
-/// One side of one fight: what it dealt, cast and used. <c>Kit</c> is how many weaves its book holds, so distinct
-/// weaves over kit is the share of its kit it used; <c>Spread</c> is how evenly it spread its casts over the weaves it
-/// did cast, one being even.
+/// One side of one fight: what it dealt, cast and used. A side is its body and whatever it owns, its minions,
+/// constructs, projectiles and fields, found up the owner chain the way kill credit is
+/// (<see cref="DeathService.CreditTarget"/>), so damage, hits, crits, casts and statuses count whichever of them did
+/// them and a summoner's kit is measured as its kit. A hit is any application of damage that was not evaded, blocked
+/// ones included. <c>Kit</c> is how many weaves its body's book holds; <c>Weaves</c> are the weaves its body cast and
+/// those of its book that anything it owns cast, so distinct weaves over kit is the share of its kit it used, and a
+/// minion's own weaves count as casts but not as its owner's kit. <c>Spread</c> is how evenly those casts fell over
+/// the weaves cast, one being even.
 /// </summary>
 public sealed record Side(
     string Pattern,
@@ -116,6 +125,33 @@ public sealed record TournamentReport(int Seeds, double Seconds, string Hash, Ba
     public bool Passed => Pairs.All(p => p.Breaches.Count == 0);
 
     public string ToJson() => JsonSerializer.Serialize(this, Json);
+
+    /// <summary>The report as the command prints it: a row per pairing, what each side used and the bands it broke, numbers in the invariant culture.</summary>
+    public IEnumerable<string> Table()
+    {
+        yield return $"{"pairing",-44} {"fights",6} {"a wins",7} {"b wins",7} {"draws",6} {"ttk med",8} {"low",6} {"high",6} {"kit a",6} {"kit b",6} {"spr a",6} {"spr b",6}";
+        foreach (var p in Pairs)
+        {
+            yield return FormattableString.Invariant($"{p.A + " v " + p.B,-44} {p.Fights,6} {p.WinRateA,7:0.00} {p.WinRateB,7:0.00} {p.DrawRate,6:0.00} {p.TtkMedian,8:0.#} {p.TtkLow,6:0.#} {p.TtkHigh,6:0.#} {p.VarietyA,6:0.00} {p.VarietyB,6:0.00} {p.SpreadA,6:0.00} {p.SpreadB,6:0.00}");
+            yield return $"    {p.A}: {string.Join(" ", p.WeavesA)} | {string.Join(" ", p.MechanismsA)}";
+            yield return $"    {p.B}: {string.Join(" ", p.WeavesB)} | {string.Join(" ", p.MechanismsB)}";
+            foreach (var breach in p.Breaches)
+            {
+                yield return $"    BREACH {breach}";
+            }
+        }
+    }
+
+    /// <summary>The trace hashes as the command prints them: one line per pairing keyed <c>a:b</c>, then the run's.</summary>
+    public IEnumerable<string> HashLines()
+    {
+        yield return FormattableString.Invariant($"trace hashes over {Seeds} seeds of {Seconds:0.#} s");
+        foreach (var p in Pairs)
+        {
+            yield return $"    {new Pairing(p.A, p.B).ToString(),-44} {p.Hash}";
+        }
+        yield return $"    {"run",-44} {Hash}";
+    }
 }
 
 /// <summary>
@@ -141,7 +177,9 @@ public sealed record TraceBaseline(int Seeds, double Seconds, IReadOnlyDictionar
     public string ToJson() => JsonSerializer.Serialize(this, Json).Replace("\r\n", "\n") + "\n";
 
     public static TraceBaseline FromJson(string json) =>
-        JsonSerializer.Deserialize<TraceBaseline>(json, Json) ?? throw new InvalidDataException("a trace baseline is a JSON object.");
+        JsonSerializer.Deserialize<TraceBaseline>(json, Json) is { Hashes: not null } baseline
+            ? baseline
+            : throw new InvalidDataException("a trace baseline is a JSON object with Seeds, Seconds and Hashes.");
 
     /// <summary>
     /// Every way a run differs from this baseline, one line each: a different number of seeds or cap, a pairing
@@ -191,11 +229,19 @@ public static class Tournament
     private static readonly Vector3 SpawnA = new(10, 10, 0);
     private static readonly Vector3 SpawnB = new(14, 10, 0);
 
+    /// <summary>Fights every pairing <paramref name="seeds"/> times, after checking every pattern they name exists, so a bad pairing fails before any fight.</summary>
     public static TournamentReport Run(ContentRegistry content, IReadOnlyList<Pairing> pairings, int seeds, double seconds, bool checkBands)
     {
         if (seeds < 1)
         {
             throw new ArgumentOutOfRangeException(nameof(seeds), "a tournament needs at least one seed.");
+        }
+        foreach (var pairing in pairings)
+        {
+            if (Refusal(content, pairing) is { } why)
+            {
+                throw new ArgumentException(why);
+            }
         }
         var bands = Bands.Of(content);
         var fights = new List<Fight>();
@@ -213,6 +259,19 @@ public static class Tournament
         return new TournamentReport(seeds, seconds, Fold(pairs.Select(p => p.Hash)), bands, pairs, fights);
     }
 
+    /// <summary>Why a pairing cannot be fought, naming it and the pattern no definition carries; null when it can.</summary>
+    public static string? Refusal(ContentRegistry content, Pairing pairing)
+    {
+        foreach (var pattern in new[] { pairing.A, pairing.B })
+        {
+            if (!content.Has<PatternDef>(pattern))
+            {
+                return $"pairing {pairing} names unknown pattern '{pattern}'";
+            }
+        }
+        return null;
+    }
+
     /// <summary>Folds hashes in order into one: the FNV-1a hash of their lines.</summary>
     private static string Fold(IEnumerable<string> hashes) => Hex(Rng.Hash64(string.Join("\n", hashes)));
 
@@ -225,9 +284,17 @@ public static class Tournament
     /// </summary>
     public static Fight Duel(ContentRegistry content, Pairing pairing, int index, double seconds)
     {
-        var seed = Rng.Hash64($"tournament:{pairing.A}:{pairing.B}:{index}");
-        // The two sides fight under the same two factions the fight tool and the tests use.
-        content.With(new FactionDef { Id = "red", Relations = { ["blue"] = Stance.Hostile } }).With(new FactionDef { Id = "blue", Relations = { ["red"] = Stance.Hostile } });
+        var seed = Rng.Hash64(FormattableString.Invariant($"tournament:{pairing.A}:{pairing.B}:{index}"));
+        // The two sides fight under the same two factions the fight tool and the tests use, added only where the
+        // registry lacks them, so a registry shared with other work is not written on every fight.
+        if (!content.Has<FactionDef>("red"))
+        {
+            content.With(new FactionDef { Id = "red", Relations = { ["blue"] = Stance.Hostile } });
+        }
+        if (!content.Has<FactionDef>("blue"))
+        {
+            content.With(new FactionDef { Id = "blue", Relations = { ["red"] = Stance.Hostile } });
+        }
         var sim = ZoneBuilder.CreateArena(content, seed);
         var factory = sim.Service<PatternFactory>();
         // The trace listens before the spawns, so the log opens with them.
@@ -238,12 +305,15 @@ public static class Tournament
         {
             throw new InvalidOperationException($"a pairing names an unknown pattern: {pairing.A} or {pairing.B}.");
         }
-        var tallies = new Dictionary<long, Tally> { [a.Key] = new(), [b.Key] = new() };
+        var tallies = new Dictionary<long, Tally> { [a.Key] = new(a), [b.Key] = new(b) };
+        // Whatever a side owns works for it: credit climbs the owner chain from a minion, construct, projectile or
+        // field the way kill credit does.
+        Tally? Credit(Entity e) => tallies.TryGetValue(DeathService.CreditTarget(sim, e).Key, out var t) ? t : null;
         double? ended = null;
         var outcome = "draw";
         sim.Events.Subscribe<DamageDealt>(d =>
         {
-            if (!d.Evaded && tallies.TryGetValue(d.Source.Key, out var t))
+            if (!d.Evaded && Credit(d.Source) is { } t)
             {
                 t.Damage += d.Total;
                 t.Hits++;
@@ -255,15 +325,19 @@ public static class Tournament
         });
         sim.Events.Subscribe<WeaveCast>(w =>
         {
-            if (tallies.TryGetValue(w.Caster.Key, out var t))
+            if (Credit(w.Caster) is { } t)
             {
                 t.Casts++;
-                t.Weaves.Add(w.Weave);
+                // Its weaves are its kit's: what its body cast, and what anything it owns cast from its body's book.
+                if (w.Caster == t.Body || sim.World.Get<WeaveBook>(t.Body)?.Slots.Any(s => s.Key == w.Weave) == true)
+                {
+                    t.Weaves.Add(w.Weave);
+                }
             }
         });
         sim.Events.Subscribe<StatusApplied>(s =>
         {
-            if (tallies.TryGetValue(s.Source.Key, out var t))
+            if (Credit(s.Source) is { } t)
             {
                 t.Statuses.Add(s.Status);
             }
@@ -331,29 +405,30 @@ public static class Tournament
         var breaches = new List<string>();
         if (checkBands)
         {
+            // Breaches are written in the invariant culture, whatever culture the host runs in.
             if ((double)winsA / n > bands.WinRateCeiling)
             {
-                breaches.Add($"{pairing.A} wins {winsA} of {n}, above the ceiling {bands.WinRateCeiling:0.##}");
+                breaches.Add(FormattableString.Invariant($"{pairing.A} wins {winsA} of {n}, above the ceiling {bands.WinRateCeiling:0.##}"));
             }
             if ((double)winsB / n > bands.WinRateCeiling)
             {
-                breaches.Add($"{pairing.B} wins {winsB} of {n}, above the ceiling {bands.WinRateCeiling:0.##}");
+                breaches.Add(FormattableString.Invariant($"{pairing.B} wins {winsB} of {n}, above the ceiling {bands.WinRateCeiling:0.##}"));
             }
             if ((double)draws / n > bands.DrawCeiling)
             {
-                breaches.Add($"{draws} of {n} fights are draws, above the ceiling {bands.DrawCeiling:0.##}");
+                breaches.Add(FormattableString.Invariant($"{draws} of {n} fights are draws, above the ceiling {bands.DrawCeiling:0.##}"));
             }
             if (ttk.Count > 0 && (median < bands.TtkMin || median > bands.TtkMax))
             {
-                breaches.Add($"the median time to kill {median:0.#} s is outside {bands.TtkMin:0.#} to {bands.TtkMax:0.#} s");
+                breaches.Add(FormattableString.Invariant($"the median time to kill {median:0.#} s is outside {bands.TtkMin:0.#} to {bands.TtkMax:0.#} s"));
             }
             if (varietyA < bands.VarietyFloor)
             {
-                breaches.Add($"{pairing.A} uses {varietyA:0.##} of its kit, below the floor {bands.VarietyFloor:0.##}");
+                breaches.Add(FormattableString.Invariant($"{pairing.A} uses {varietyA:0.##} of its kit, below the floor {bands.VarietyFloor:0.##}"));
             }
             if (varietyB < bands.VarietyFloor)
             {
-                breaches.Add($"{pairing.B} uses {varietyB:0.##} of its kit, below the floor {bands.VarietyFloor:0.##}");
+                breaches.Add(FormattableString.Invariant($"{pairing.B} uses {varietyB:0.##} of its kit, below the floor {bands.VarietyFloor:0.##}"));
             }
         }
         return new PairReport(pairing.A, pairing.B, n, Fold(fights.OrderBy(f => f.Index).Select(f => f.Hash)), Round((double)winsA / n), Round((double)winsB / n), Round((double)draws / n),
@@ -390,8 +465,10 @@ public static class Tournament
 
     private static double Round(double v) => Math.Round(v, 3);
 
-    private sealed class Tally
+    private sealed class Tally(Entity body)
     {
+        /// <summary>The side's body: what owns everything credited here, and whose book is its kit.</summary>
+        public readonly Entity Body = body;
         public double Damage;
         public int Hits;
         public int Crits;
