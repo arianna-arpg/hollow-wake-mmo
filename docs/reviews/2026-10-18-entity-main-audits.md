@@ -41,3 +41,7 @@ The following 21 keys are reviewed additions to the census of numbers already au
 | `preset summon_wraith effects[0].duration` | `0` | Existing no-timed-expiry sentinel; decay still removes life. |
 
 `AxisBindings` is consumed by the axis readers, composition lint and CLI report, not by the simulation execution path. The audit repair itself is reporting/test/fixture/documentation-only relative to `44a8015`. The full merge with main still includes runtime changes; therefore older #31/#37 timing cannot certify the merged tree. The retained #37 measurement remains evidence only for its exact pre-integration source/content and binary hashes. Full gates and a regenerated census equality check remain pending until heavy work is released.
+
+## #31 main integration gates
+
+Source `a8a52b9770e01ef9156b2bfbf0aa02bb4d41bb8d`: solution build zero warnings/errors; all core 801, server 53 and client 128 tests pass. Validation is zero errors/warnings; load and the skeleton/zombie duel pass. The generated frozen-literal keys exactly equal the reviewed fixture; full census and keys are retained with these gates under `experiments/entity-review/evidence/31-main-*`. This verifies functional integration, not performance after main. Earlier benchmark misses remain open; no timing run or budget change accompanied these gates.
