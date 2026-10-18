@@ -1,8 +1,9 @@
-Code: 73ecf64, integrated review head b1b6a4b; later commits record reviews/evidence only.
-Fresh local server data and accounts for spell and melee; normal client inputs.
-Browser spell 27/27; native spell 24/24; browser melee 26/26; native melee 23/23.
-Both live TCP probes passed; native startup resources imported before these final runs.
-forecast godot stderr: 0 bytes
-forecast server stderr: 0 bytes
-cleave godot stderr: 0 bytes
-cleave server stderr: 0 bytes
+Source c1e22fc, with forecast geometry 73ecf64 and main 91f234f (#14/#15/#17).
+Final shared-runner checks: browser spell 27/27, melee 26/26; native HEADLESS spell 26/26, melee 25/25.
+Native headless runs verify behavior, lifecycle and zero physical controllers; they explicitly skip rendered theme pixels and produce no native screenshots.
+Fresh server data, accounts, ports and native profiles per run. Browser physical controllers isolated; normal scripted keyboard/pointer inputs remain.
+Native graphical spell 24/24 on combined main 3b3c90e retained in godot-spell-rendered.txt and godot-spell.png.
+Native graphical melee 23/23 on geometry 73ecf64/b1b6a4b retained in godot-melee-rendered.txt and godot-cleave.png (before main ports).
+Final browser captures use c1e22fc. They and native captures are unedited placeholder-art evidence, not final appearance or crowd-readability acceptance.
+Background loading focus regression 37/37; runner lifecycle/command tests 9/9. TCP probe passed.
+Failed attempts remain: browser-melee-repeat-failed, godot-melee-repeat-failed, godot-ports-repeat-failed/errors, godot-loading-cancelled.
