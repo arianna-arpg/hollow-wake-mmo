@@ -6,9 +6,9 @@ Hand-authored quests live in `quests` with a giver (a pattern id or a point-of-i
 
 ## Generated target eligibility
 
-A slot's optional `level_delta: {min, max}` bounds target level minus quest level (giver level plus template offset). POI slots use the site's effective level. Pattern slots with `local_population: true` use actual generated spawn points within `within` of the giver, checking the site's spawn level or the roaming pattern's level. Chunks are searched nearest first with stable coordinate ties; matching species in the first qualifying chunk are sorted before the seeded selection. This favors nearby available targets, rather than sampling every species globally. If nothing qualifies, the template produces no offer.
+A slot's optional `level_delta: {min, max}` bounds target level minus quest level (giver level plus template offset). POI slots use the site's effective level. Pattern slots with `local_population: true` use actual generated spawn points within `within` of the giver, checking an explicitly site-scaled spawn's level or otherwise its pattern's level. Chunks are searched nearest first with stable coordinate ties; matching species in the first qualifying chunk are sorted before the seeded selection. This favors nearby available targets, rather than sampling every species globally. Each slot inspects at most `world.gen.quest_population_chunks` nearest chunks, counting cached chunks as well. If nothing qualifies before that limit, the template produces no offer, even when a qualifying population may exist farther away inside `within`. The limit bounds synchronous planning work; it never allows an absent, out-of-radius or wrong-level target.
 
-Population inspection uses the normal terrain/landmark/flora/spawn pipeline and independent chunk RNG, without recursively planning zone quests. The planner reuses spawn facts for adjacent slots during one planning run. Shipped combat and scouting templates opt into level windows; creature culls and knot foes also require a local population. These are content constraints, not hard-coded creature or faction exceptions.
+Population inspection reuses the normal terrain, landmark and spawn passes and independent chunk RNG; it skips flora placement, which has its own random stream and is never read by spawning, without recursively planning zone quests. A conservative precheck skips a chunk only when no level-eligible biome/table reference or resident/overlapping landmark can name any candidate pattern. Passing that precheck is never proof of presence: the exact spawn query still runs. A skipped result is not cached across candidate sets. The planner reuses spawn facts for adjacent slots during one planning run. Shipped combat and scouting templates opt into level windows; creature culls and knot foes also require a local population. These are content constraints, not hard-coded creature or faction exceptions.
 
 ## Objectives
 
@@ -20,4 +20,4 @@ Opening a quest giver raises `QuestsOffered` with offers (matching giver, prereq
 
 ## Rules used
 
-`quests.max_active`, `quests.level_slack`. Rewards' experience expressions read `level` and `quest_level`.
+`quests.max_active`, `quests.level_slack`, `world.gen.quest_population_chunks` (zero disables local-population offers). Rewards' experience expressions read `level` and `quest_level`.

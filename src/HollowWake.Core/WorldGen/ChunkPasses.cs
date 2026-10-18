@@ -253,7 +253,7 @@ public sealed class ChunkPasses
                 }
                 if (cell.Spawn is not null)
                 {
-                    chunk.Spawns.Add(new SpawnPoint(cell.Spawn, wx + 0.5f, wy + 0.5f, 1, 300, poi.Id));
+                    chunk.Spawns.Add(new SpawnPoint(cell.Spawn, wx + 0.5f, wy + 0.5f, 1, 300, poi.Id) { Level = cell.UseSiteLevel ? poi.Level : null });
                 }
                 stampedAny = true;
             }
@@ -442,7 +442,7 @@ public sealed class ChunkPasses
                     var ang = prng.NextDouble() * Math.PI * 2;
                     var dist = prng.Range(1.0, Math.Max(1.5, poi.Def.Radius - 1));
                     var pack = prng.Range((int)spec.PackSize[0], (int)spec.PackSize[Math.Min(1, spec.PackSize.Length - 1)]);
-                    chunk.Spawns.Add(new SpawnPoint(spec.Pattern, (float)(poi.X + Math.Cos(ang) * dist), (float)(poi.Y + Math.Sin(ang) * dist), Math.Max(1, pack), spec.Respawn, poi.Id) { Level = poi.Level });
+                    chunk.Spawns.Add(new SpawnPoint(spec.Pattern, (float)(poi.X + Math.Cos(ang) * dist), (float)(poi.Y + Math.Sin(ang) * dist), Math.Max(1, pack), spec.Respawn, poi.Id) { Level = spec.UseSiteLevel ? poi.Level : null });
                 }
             }
         }

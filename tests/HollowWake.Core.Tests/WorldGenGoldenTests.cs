@@ -38,10 +38,10 @@ public class WorldGenGoldenTests
 
     // Wildlife spawn tables and cull candidates: reviewed maps in experiments/fauna/evidence.
     [Theory]
-    [InlineData(0, 0, "033B8E3528AB9828", "384BA03BE0D34C0A")]
-    [InlineData(1, 0, "767BE9395B9E34DB", "DF735AA7610989B3")]
-    [InlineData(0, -1, "8AD7370958FA7D7B", "D785D8F084A1F919")]
-    [InlineData(3, 2, "BAFEA2C1CCA0DEC0", "8C46ACF595DB3A42")]
+    [InlineData(0, 0, "61E85F6A8D370ECD", "38740F7C0C66C2F6")]
+    [InlineData(1, 0, "767BE9395B9E34DB", "0E386FE1D6659BC0")]
+    [InlineData(0, -1, "8AD7370958FA7D7B", "2AFA9EE5AA75F409")]
+    [InlineData(3, 2, "BAFEA2C1CCA0DEC0", "B927209C7C70E524")]
     public void ZoneMatchesGoldenHashes(int x, int y, string infoHash, string chunksHash)
     {
         var g = new WorldGenerator(Registry.Value, Rng.Hash64(Seed));
@@ -101,7 +101,7 @@ public class WorldGenGoldenTests
         {
             HashPoint(h, g, 40 + i * 0.83, 20 + i * 0.61, i % 20 == 0);
         }
-        Golden("overlaid world", "6FD0F6CF80B497A4", h.Hex);
+        Golden("overlaid world", "D73C9609C2195939", h.Hex);
 
         // Removing an overlay must regenerate exactly what a generator that never had it produces.
         overlays.Remove("fount");
