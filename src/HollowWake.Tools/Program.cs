@@ -5,6 +5,7 @@ using HollowWake.Core;
 using HollowWake.Core.Components;
 using HollowWake.Core.Content;
 using HollowWake.Core.Definitions;
+using HollowWake.Core.Evaluation;
 using HollowWake.Core.Expressions;
 using HollowWake.Core.Items;
 using HollowWake.Core.Maths;
@@ -190,16 +191,32 @@ switch (command)
     case "fight":
     {
         var registry = LoadContent(false);
-        var sim = ZoneBuilder.CreateArena(registry, Rng.Hash64(Opt("seed", "fight")));
-        var log = new ListSimLog();
-        sim.Log = log;
-        var factory = sim.Service<PatternFactory>();
         var a = rest.Count > 0 && !rest[0].StartsWith("--") ? rest[0] : "wolf";
         var b = rest.Count > 1 && !rest[1].StartsWith("--") ? rest[1] : "hob";
+        var pairing = new Pairing(a, b);
+        if (Tournament.Refusal(registry, pairing) is { } refusal)
+        {
+            Console.WriteLine(refusal);
+            return 1;
+        }
+        try
+        {
+            Tournament.RulesOf(registry, checkBands: false);
+        }
+        catch (InvalidDataException ex)
+        {
+            Console.WriteLine(ex.Message);
+            return 1;
+        }
+        // A duel is staged as the tournament stages one, and a tournament fight's seed text (tournament:a:b:i)
+        // stages that fight: the same arena and the same side spawning first.
+        var seedText = Opt("seed", "fight");
+        var bFirst = Tournament.TryReadSeed(seedText, out var fought, out var index) && fought == pairing && Tournament.BFirst(index);
+        var sim = ZoneBuilder.CreateArena(registry, Rng.Hash64(seedText));
+        var log = new ListSimLog();
+        sim.Log = log;
         var seconds = double.Parse(Opt("seconds", "30"));
-        var ea = factory.Spawn(sim, a, new Vector3(10, 10, 0), new SpawnOptions { Faction = "red" });
-        var eb = factory.Spawn(sim, b, new Vector3(14, 10, 0), new SpawnOptions { Faction = "blue" });
-        registry.With(new FactionDef { Id = "red", Relations = { ["blue"] = Stance.Hostile } }).With(new FactionDef { Id = "blue", Relations = { ["red"] = Stance.Hostile } });
+        var (ea, eb) = Tournament.Spawn(sim, pairing, bFirst);
         var events = new List<string>();
         sim.Events.Subscribe<DamageDealt>(d => events.Add($"t={sim.Clock.Time:0.00} {sim.World.Get<Identity>(d.Source)} hit {sim.World.Get<Identity>(d.Target)} for {d.Total:0.#}{(d.Crit ? " crit" : "")}{(d.Evaded ? " evaded" : "")}"));
         sim.Events.Subscribe<EntityDied>(d => events.Add($"t={sim.Clock.Time:0.00} {sim.World.Get<Identity>(d.Entity)} died"));
@@ -225,6 +242,8 @@ switch (command)
         }
         return 0;
     }
+    case "tournament":
+        return TournamentCommand.Run(LoadContent(false), rest, Console.Out);
     case "weave":
         return WeaveReport.Run(LoadContent(false), rest.FirstOrDefault(a => !a.StartsWith("--")), Opt);
     case "passives":
@@ -293,6 +312,9 @@ switch (command)
               world [--radius n] [--seed s]       print the region grid around the origin
               load --x n --y n [--ticks n]        build a zone simulation and run it headless
               fight <pattern> <pattern> [--seconds n] [--seed s]   simulate a duel in an arena
+              tournament [--pairs a:b,c:d | --standard] [--seeds n] [--seconds s] [--bands] [--hashes] [--out file] [--check-hashes file]
+                                                  seeded duels measured and banded (docs/design/evaluation.md); refuses an
+                                                  unknown or valueless option with one line
               weave <preset|form> [--threads a,b] [--glyphs g,g@level] [--level n] [--calling c] [--caster-level n]
                                                   compile a weave: tags, mechanisms, dormant glyphs, graph, preview numbers
               passives [--verbose]                lint the constellations: broken links, orphans, unreachable nodes, route costs

@@ -29,3 +29,7 @@ The plan is a cache on `Behavior` (`PlanGoal`, `PlannedAt`, `Planned`, `PlanFail
 `WeaveRuntime.ChooseForAi` filters the entity's weaves by readiness, cost, range and the hint's `when` expression, skipping triggered weaves, toggles that are on, empty banks and failed gates, then weights by the hint. `PreferredRange` is the longest hinted range, used by `chase` and perception.
 
 Taunts set the target and a memory timestamp the behaviors read as `taunted`.
+
+## The AI as a player
+
+What any AI in this engine must and must not be, whatever runs it, is stated in [combat-grammar.md](combat-grammar.md): its inputs are what a client could show and what the compiled weave states, its outputs are the intents a client sends, its decisions are registered affordances, perception names and considerations bound by doctrines authored as content, and every decision publishes an event that explains it. The behavior machine above stays the outer mode machine; each piece of that section replaces what it supersedes here as it lands.

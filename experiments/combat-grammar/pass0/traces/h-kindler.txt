@@ -1,0 +1,146 @@
+== loosed_kindler (A) vs boar (B), seed fight, 30 s
+      9  A cast cinder_spit
+     17  A dealt damage events
+      9  A started cinder_spit
+      4  B cast gore
+      2  B dealt damage events
+      5  B started gore
+-- ticks by state (20 per second)
+      8  A state , free
+     65  A state engage, casting Cast
+     15  A state engage, free
+    457  A state idle, free
+     37  A state kite, casting Cast
+      8  A state kite, free
+      7  A state return, casting Cast
+      3  A state return, free
+      3  B state , free
+    116  B state chase, casting Cast
+      9  B state chase, free
+      5  B state idle, free
+-- A walked 19.4 units
+-- B walked 2.2 units
+-- life A 112/112  B gone
+-- timeline
+  t=0.05 A (10.00,10.00)  | B (14.00,10.00)  | dist 4.00
+  t=0.25 A (10.00,10.00)  | B (14.00,10.00) idle | dist 4.00
+  t=0.50 A (10.00,10.00) idle | B (13.50,10.00) chase | dist 3.50
+  t=0.75 A (10.00,10.00) engage casting=cinder_spit(Cast) | B (12.75,10.00) chase casting=gore(Cast) | dist 2.75
+  t=1.00 A (10.00,10.00) engage casting=cinder_spit(Cast) | B (12.75,10.00) chase casting=gore(Cast) | dist 2.75
+  t=1.25 A (10.00,10.00) engage casting=cinder_spit(Cast) | B (12.75,10.00) chase casting=gore(Cast) | dist 2.75
+  t=1.50 A (10.00,10.00) engage casting=cinder_spit(Cast) | B (12.75,10.00) chase casting=gore(Cast) | dist 2.75
+  t=1.75 A (10.00,10.00) engage casting=cinder_spit(Cast) | B (12.75,10.00) chase casting=gore(Cast) | dist 2.75
+  t=2.00 A (10.00,10.00) engage casting=cinder_spit(Cast) | B (12.75,10.00) chase casting=gore(Cast) | dist 2.75
+  t=2.25 A (10.00,10.00) engage casting=cinder_spit(Cast) | B (12.50,10.00) chase casting=gore(Cast) | dist 2.50
+  t=2.50 A (10.00,10.00) engage casting=cinder_spit(Cast) | B (12.50,10.00) chase casting=gore(Cast) | dist 2.50
+  t=2.75 A (10.00,10.00) engage casting=cinder_spit(Cast) | B (12.50,10.00) chase casting=gore(Cast) | dist 2.50
+  t=3.00 A (10.00,10.00) engage casting=cinder_spit(Cast) | B (12.50,10.00) chase casting=gore(Cast) | dist 2.50
+  t=3.25 A (10.00,10.00) engage casting=cinder_spit(Cast) | B (12.50,10.00) chase casting=gore(Cast) | dist 2.50
+  t=3.50 A (10.00,10.00) engage casting=cinder_spit(Cast) | B (12.50,10.00) chase casting=gore(Cast) | dist 2.50
+  t=3.75 A (10.00,10.00) kite casting=cinder_spit(Cast) | B (12.25,10.00) chase casting=gore(Cast) | dist 2.25
+  t=4.00 A (10.00,10.00) kite casting=cinder_spit(Cast) | B (12.25,10.00) chase casting=gore(Cast) | dist 2.25
+  t=4.25 A (10.00,10.00) kite casting=cinder_spit(Cast) | B (12.25,10.00) chase casting=gore(Cast) | dist 2.25
+  t=4.50 A (9.52,10.00) kite casting=cinder_spit(Cast) | B (12.25,10.00) chase casting=gore(Cast) | dist 2.73
+  t=4.75 A (9.52,10.00) kite casting=cinder_spit(Cast) | B (12.25,10.00) chase casting=gore(Cast) | dist 2.73
+  t=5.00 A (9.52,10.00) kite casting=cinder_spit(Cast) | B (12.25,10.00) chase casting=gore(Cast) | dist 2.73
+  t=5.25 A (8.80,10.00) kite casting=cinder_spit(Cast) | B (12.00,10.00) chase casting=gore(Cast) | dist 3.20
+  t=5.50 A (8.80,10.00) kite casting=cinder_spit(Cast) | B (12.00,10.00) chase casting=gore(Cast) | dist 3.20
+  t=5.75 A (8.80,10.00) kite casting=cinder_spit(Cast) | B (12.00,10.00) chase casting=gore(Cast) | dist 3.20
+  t=6.00 A (8.08,10.00) engage casting=cinder_spit(Cast) | B (12.00,10.00) chase casting=gore(Cast) | dist 3.92
+  t=6.25 A (8.08,10.00) engage casting=cinder_spit(Cast) | B (12.00,10.00) chase casting=gore(Cast) | dist 3.92
+  t=6.50 A (8.08,10.00) engage casting=cinder_spit(Cast) | B (12.00,10.00) chase casting=gore(Cast) | dist 3.92
+  t=6.70 B died
+  t=6.75 A (8.08,10.00) engage casting=cinder_spit(Cast) | B dead | dist 3.67
+  t=7.00 A (8.08,10.00) return casting=cinder_spit(Cast) | B dead | dist 3.67
+  t=7.25 A (8.08,10.00) return casting=cinder_spit(Cast) | B dead | dist 3.67
+  t=7.50 A (9.28,10.00) idle | B dead | dist 2.47
+  t=7.75 A (9.52,10.00) idle | B dead | dist 2.23
+  t=8.00 A (9.52,10.00) idle | B dead | dist 2.23
+  t=8.25 A (9.52,10.00) idle | B dead | dist 2.23
+  t=8.50 A (9.52,10.00) idle | B dead | dist 2.23
+  t=8.75 A (9.52,10.00) idle | B dead | dist 2.23
+  t=9.00 A (9.52,10.00) idle | B dead | dist 2.23
+  t=9.25 A (9.52,10.00) idle | B dead | dist 2.23
+  t=9.50 A (9.52,10.00) idle | B dead | dist 2.23
+  t=9.75 A (9.52,10.00) idle | B dead | dist 2.23
+  t=10.00 A (9.52,10.00) idle | B dead | dist 2.23
+  t=10.25 A (9.52,10.00) idle | B dead | dist 2.23
+  t=10.50 A (9.52,10.00) idle | B dead | dist 2.23
+  t=10.75 A (9.17,10.32) idle | B dead | dist 2.60
+  t=11.00 A (8.81,10.65) idle | B dead | dist 3.01
+  t=11.25 A (8.81,10.65) idle | B dead | dist 3.01
+  t=11.50 A (8.81,10.65) idle | B dead | dist 3.01
+  t=11.75 A (8.81,10.65) idle | B dead | dist 3.01
+  t=12.00 A (8.69,10.19) idle | B dead | dist 3.07
+  t=12.25 A (8.50,9.49) idle | B dead | dist 3.29
+  t=12.50 A (8.50,9.49) idle | B dead | dist 3.29
+  t=12.75 A (8.50,9.49) idle | B dead | dist 3.29
+  t=13.00 A (8.50,9.49) idle | B dead | dist 3.29
+  t=13.25 A (8.97,9.56) idle | B dead | dist 2.81
+  t=13.50 A (10.16,9.74) idle | B dead | dist 1.61
+  t=13.75 A (11.35,9.93) idle | B dead | dist 0.41
+  t=14.00 A (11.35,9.93) idle | B dead | dist 0.41
+  t=14.25 A (11.35,9.93) idle | B dead | dist 0.41
+  t=14.50 A (11.35,9.93) idle | B dead | dist 0.41
+  t=14.75 A (11.35,9.93) idle | B dead | dist 0.41
+  t=15.00 A (11.35,9.93) idle | B dead | dist 0.41
+  t=15.25 A (11.01,10.27) idle | B dead | dist 0.78
+  t=15.50 A (10.35,10.96) idle | B dead | dist 1.70
+  t=15.75 A (9.87,10.89) idle | B dead | dist 2.07
+  t=16.00 A (8.69,10.70) idle | B dead | dist 3.14
+  t=16.25 A (7.50,10.50) idle | B dead | dist 4.28
+  t=16.50 A (6.32,10.31) idle | B dead | dist 5.44
+  t=16.75 A (6.32,10.31) idle | B dead | dist 5.44
+  t=17.00 A (6.32,10.31) idle | B dead | dist 5.44
+  t=17.25 A (6.32,10.31) idle | B dead | dist 5.44
+  t=17.50 A (6.32,10.31) idle | B dead | dist 5.44
+  t=17.75 A (6.32,10.31) idle | B dead | dist 5.44
+  t=18.00 A (6.32,10.31) idle | B dead | dist 5.44
+  t=18.25 A (6.32,10.31) idle | B dead | dist 5.44
+  t=18.50 A (6.32,10.31) idle | B dead | dist 5.44
+  t=18.75 A (6.32,10.31) idle | B dead | dist -1.00
+  t=19.00 A (6.32,10.31) idle | B dead | dist -1.00
+  t=19.25 A (6.32,10.31) idle | B dead | dist -1.00
+  t=19.50 A (6.32,10.31) idle | B dead | dist -1.00
+  t=19.75 A (6.32,10.31) idle | B dead | dist -1.00
+  t=20.00 A (6.32,10.31) idle | B dead | dist -1.00
+  t=20.25 A (6.32,10.31) idle | B dead | dist -1.00
+  t=20.50 A (6.32,10.31) idle | B dead | dist -1.00
+  t=20.75 A (6.32,10.31) idle | B dead | dist -1.00
+  t=21.00 A (6.32,10.31) idle | B dead | dist -1.00
+  t=21.25 A (6.32,10.31) idle | B dead | dist -1.00
+  t=21.50 A (6.32,10.31) idle | B dead | dist -1.00
+  t=21.75 A (6.32,10.31) idle | B dead | dist -1.00
+  t=22.00 A (6.32,10.31) idle | B dead | dist -1.00
+  t=22.25 A (6.54,10.21) idle | B dead | dist -1.00
+  t=22.50 A (7.62,9.70) idle | B dead | dist -1.00
+  t=22.75 A (8.71,9.19) idle | B dead | dist -1.00
+  t=23.00 A (9.14,8.98) idle | B dead | dist -1.00
+  t=23.25 A (8.92,9.07) idle | B dead | dist -1.00
+  t=23.50 A (7.80,9.51) idle | B dead | dist -1.00
+  t=23.75 A (7.13,9.77) idle | B dead | dist -1.00
+  t=24.00 A (7.13,9.77) idle | B dead | dist -1.00
+  t=24.25 A (7.13,9.77) idle | B dead | dist -1.00
+  t=24.50 A (6.90,9.83) idle | B dead | dist -1.00
+  t=24.75 A (6.90,9.83) idle | B dead | dist -1.00
+  t=25.00 A (6.90,9.83) idle | B dead | dist -1.00
+  t=25.25 A (6.90,9.83) idle | B dead | dist -1.00
+  t=25.50 A (6.90,9.83) idle | B dead | dist -1.00
+  t=25.75 A (6.90,9.83) idle | B dead | dist -1.00
+  t=26.00 A (6.90,9.83) idle | B dead | dist -1.00
+  t=26.25 A (6.90,9.83) idle | B dead | dist -1.00
+  t=26.50 A (6.90,9.83) idle | B dead | dist -1.00
+  t=26.75 A (6.90,9.83) idle | B dead | dist -1.00
+  t=27.00 A (6.90,9.83) idle | B dead | dist -1.00
+  t=27.25 A (6.90,9.83) idle | B dead | dist -1.00
+  t=27.50 A (6.90,9.83) idle | B dead | dist -1.00
+  t=27.75 A (6.90,9.83) idle | B dead | dist -1.00
+  t=28.00 A (6.90,9.83) idle | B dead | dist -1.00
+  t=28.25 A (6.90,9.83) idle | B dead | dist -1.00
+  t=28.50 A (6.90,9.83) idle | B dead | dist -1.00
+  t=28.75 A (6.90,9.83) idle | B dead | dist -1.00
+  t=29.00 A (6.90,9.83) idle | B dead | dist -1.00
+  t=29.25 A (6.90,9.83) idle | B dead | dist -1.00
+  t=29.50 A (6.90,9.83) idle | B dead | dist -1.00
+  t=29.75 A (6.90,9.83) idle | B dead | dist -1.00
+  t=30.00 A (6.90,9.83) idle | B dead | dist -1.00
