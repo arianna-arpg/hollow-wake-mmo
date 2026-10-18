@@ -63,6 +63,8 @@ internal static class InterfaceKinds
         ContentKinds.Register<UiSheetDef>("ui_sheets", Sheet);
         ContentKinds.Register<UiOptionPageDef>("ui_options", OptionPage);
         ContentKinds.Register<InputActionDef>("input_actions", InputAction);
+        // What the clients draw the world with: appearances, surfaces, the day and the motion timings.
+        AppearanceKinds.Register();
     }
 
     /// <summary>Whether a key name is one the clients bind: a letter, a digit or a named key, with modifiers.</summary>

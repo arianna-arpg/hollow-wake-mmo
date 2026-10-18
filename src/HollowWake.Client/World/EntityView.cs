@@ -1,14 +1,19 @@
 using Godot;
+using HollowWake.Client.World.Appearance;
+using HollowWake.Client.World.Logic;
+using HollowWake.Core.Definitions;
 using HollowWake.Protocol;
 
 namespace HollowWake.Client.World;
 
 /// <summary>
-/// A placeholder body for a server entity: a capsule, box, sphere or cylinder by what it is, a name
-/// and a life bar above it, and smoothing between snapshots. A projectile, area or field the server names a
-/// shape for is drawn as that shape (a slab for a projectile, a flat mark for the rest), facing its heading
-/// and turned by its spin; a telegraph is a ground mark that fades in, breathes, and fades out when its strike
-/// lands. Looks are a presentation concern; swapping this for models and animation does not touch anything else.
+/// A server entity as drawn: a built body from the appearance content (painted geometry or a directional card,
+/// chosen through the bodies option and the camera) posed by the shared animator from the state the server
+/// sends, a contact mark on the ground, a name and a life bar above it, and smoothing between snapshots.
+/// A projectile, area or field the server names a shape for is drawn as that shape (a slab for a projectile, a
+/// flat mark for the rest), facing its heading and turned by its spin; a telegraph is a ground mark that fades
+/// in, breathes, and fades out when its strike lands. Nothing here decides anything: every pose and flash
+/// follows a fact on the wire.
 /// </summary>
 public partial class EntityView : Node3D
 {
@@ -29,8 +34,25 @@ public partial class EntityView : Node3D
     /// <summary>The server's clock now as the client estimates it, or null before it knows; marks that end at a server time read it.</summary>
     public static Func<double?>? ServerNow { get; set; }
 
+    /// <summary>The appearance pipeline every view draws with; null draws plain blocks.</summary>
+    public static AppearanceService? Appearance { get; set; }
+
+    /// <summary>Where the hero stands, for the reach prop labels show within.</summary>
+    public static Func<Vector3?>? HeroPosition { get; set; }
+
+    /// <summary>The entity under the cursor, whose label always shows.</summary>
+    public static long HoveredKey { get; set; }
+
+    /// <summary>The self's cast as the interface knows it (mode and progress), richer than the entity state's.</summary>
+    public static Func<(string Mode, float Progress)?>? SelfCast { get; set; }
+
+    /// <summary>Where the animator's moments go as sound cues: a footstep on a surface, a swing, a death. Null raises none.</summary>
+    public static Action<string, string?, Vector3>? Cue { get; set; }
+
+    /// <summary>The surface tag under a world point (grass, sand, stone ...), for the footstep variant; null when unknown.</summary>
+    public static Func<Vector3, string?>? SurfaceAt { get; set; }
+
     private MeshInstance3D _mesh = null!;
-    private MeshInstance3D _canopy = null!;
     private Label3D _label = null!;
     private Node3D _overlay = null!;
     private MeshInstance3D _lifeBar = null!;
@@ -40,9 +62,41 @@ public partial class EntityView : Node3D
     private float _targetYaw;
     private double _lastUpdate;
 
+    // the built body
+    private IBodyView? _body;
+    private BodyPlan? _plan;
+    private AppearanceDef? _look;
+    private string _gearKey = "";
+    private CardAtlas? _atlas;
+    private ContactMark? _contact;
+    private readonly VisualState _visual = new();
+    private readonly Pose _pose = new();
+    private Vector3 _lastDrawn;
+    private bool _hasDrawn;
+    private float _speed;
+    private double _releasedAt = double.NegativeInfinity;
+    private double _hitAt = double.NegativeInfinity;
+    private float _hitStrength;
+    private float _hitFrom = float.NaN;
+    private double _diedAt = double.NegativeInfinity;
+    private bool _wasCasting;
+    private bool _wasDead;
+    private bool _settled;
+    private string _selfEquipmentKey = "";
+    private float _labelAlpha = 1;
+
     public long Key { get; }
     public EntityState State { get; private set; }
     public bool IsSelf { get; }
+
+    /// <summary>Triangles the body draws, for the measurement line.</summary>
+    public int Triangles => _body?.Triangles ?? 0;
+
+    /// <summary>Whether the body is drawn as a card this frame.</summary>
+    public bool IsCard => _body is CardNode;
+
+    /// <summary>The drawn body's height, for labels and picking.</summary>
+    public float DrawnHeight => _plan?.Height ?? State.Height;
 
     public EntityView(EntityState state, bool isSelf)
     {
@@ -54,12 +108,10 @@ public partial class EntityView : Node3D
 
     public override void _Ready()
     {
-        _mesh = new MeshInstance3D { Name = "body" };
+        _mesh = new MeshInstance3D { Name = "shape", Visible = false };
         AddChild(_mesh);
         _fill = new MeshInstance3D { Name = "fill", Visible = false, CastShadow = GeometryInstance3D.ShadowCastingSetting.Off };
         AddChild(_fill);
-        _canopy = new MeshInstance3D { Name = "canopy", Visible = false };
-        AddChild(_canopy);
         _label = new Label3D
         {
             Name = "label",
@@ -123,18 +175,20 @@ public partial class EntityView : Node3D
     /// <summary>The world no longer holds this view; it frees itself once faded.</summary>
     private bool _released;
 
-    /// <summary>The body's turn about the vertical: a shape faces its heading (else the yaw) plus its spin; a body its yaw.</summary>
-    private float Facing(EntityState s) => _shaped ? (s.Heading ?? s.Yaw) + (s.Spin ?? 0) : -s.Yaw + Mathf.Pi / 2;
+    /// <summary>The body's turn about the vertical: a shape faces its heading (else the yaw) plus its spin; a body faces its yaw, forward along its x.</summary>
+    private float Facing(EntityState s) => _shaped ? (s.Heading ?? s.Yaw) + (s.Spin ?? 0) : s.Yaw;
 
     /// <summary>A shaped body: the delivery's shape as a slab (a projectile) or a flat mark (an area, a field, a telegraph).</summary>
     private void BuildShape(EntityState s, string look)
     {
         PickSize = null;
+        DropBody();
         var size = s.ShapeSize;
         var spec = UI.Logic.ShapeOutline.SpecOf(s.Shape ?? "circle", size?.Radius, size?.Angle, size?.Width, size?.Inner, Mathf.Max(0.1f, s.Radius), size?.Curvature);
         var telegraph = look == "telegraph";
         var projectile = !telegraph && (look == "projectile" || s.Pattern == "projectile");
         var thickness = projectile ? Mathf.Clamp(s.Height * 0.4f, 0.12f, 0.4f) : 0f;
+        _mesh.Visible = true;
         _mesh.Mesh = ShapeMesh.Build(UI.Logic.ShapeOutline.RegionOf(spec), thickness);
         var color = telegraph ? new Color(1f, 0.35f, 0.21f) : ColorFor(s);
         var alpha = telegraph ? 0.5f : projectile ? 1f : 0.35f;
@@ -171,10 +225,22 @@ public partial class EntityView : Node3D
         {
             _fillMaterial = null;
         }
-        _canopy.Visible = false;
         _label.Position = new Vector3(0, s.Height + 0.5f, 0);
         _overlay.Visible = false;
         RefreshLabel();
+    }
+
+    private void DropBody()
+    {
+        _body?.Release();
+        _body = null;
+        _plan = null;
+        _atlas = null;
+        if (_contact is not null)
+        {
+            _contact.QueueFree();
+            _contact = null;
+        }
     }
 
     private void Rebuild()
@@ -189,85 +255,76 @@ public partial class EntityView : Node3D
         }
         _fade = null;
         _fill.Visible = false;
-        _mesh.CastShadow = GeometryInstance3D.ShadowCastingSetting.On;
-        Mesh mesh;
-        var color = ColorFor(s);
-        if (look.StartsWith("drop:", StringComparison.Ordinal))
+        _mesh.Visible = false;
+        DropBody();
+        var service = Appearance;
+        _look = service?.LookFor(s) ?? new AppearanceDef { Id = "block", Body = "block" };
+        if (service is not null)
         {
-            mesh = new CylinderMesh { TopRadius = 0.25f, BottomRadius = 0.25f, Height = 0.25f };
-            PickSize = (0.25f, 0.25f);
-        }
-        else if (look == "projectile" || s.Pattern == "projectile")
-        {
-            mesh = new SphereMesh { Radius = Mathf.Max(0.15f, s.Radius * 0.6f), Height = Mathf.Max(0.3f, s.Radius * 1.2f) };
-            PickSize = null;
-        }
-        else if (look == "field")
-        {
-            mesh = new CylinderMesh { TopRadius = s.Radius, BottomRadius = s.Radius, Height = 0.1f };
-            color = new Color(color, 0.35f);
-            PickSize = null;
-        }
-        else if (look.StartsWith("poi:", StringComparison.Ordinal))
-        {
-            // A marker's radius is its whole place; it picks by the pillar drawn.
-            mesh = new CylinderMesh { TopRadius = 0.15f, BottomRadius = 0.6f, Height = 3.5f };
-            PickSize = (0.6f, 3.5f);
-        }
-        else if (look == "fount")
-        {
-            mesh = new CylinderMesh { TopRadius = 0.2f, BottomRadius = 1.0f, Height = s.Height };
-            PickSize = (1f, s.Height);
-        }
-        else if (s.Interactable is not null && s.Resources.Count == 0)
-        {
-            mesh = new BoxMesh { Size = new Vector3(s.Radius * 2, s.Height, s.Radius * 2) };
-            PickSize = (Mathf.Max(0.2f, s.Radius), Mathf.Max(0.2f, s.Height));
-        }
-        else if (s.Resources.Count == 0 && IsTree(look))
-        {
-            // Trees: a trunk with a round canopy on top, so tall flora reads as a tree and not a pillar.
-            var trunk = Mathf.Max(0.25f, s.Radius * 0.6f);
-            mesh = new BoxMesh { Size = new Vector3(trunk, s.Height * 0.6f, trunk) };
-            var canopy = Mathf.Clamp(s.Height * 0.28f, 0.8f, 4f);
-            _canopy.Mesh = new SphereMesh { Radius = canopy, Height = canopy * 2f, RadialSegments = 12, Rings = 6 };
-            _canopy.Position = new Vector3(0, s.Height - canopy, 0);
-            _canopy.MaterialOverride = new StandardMaterial3D { AlbedoColor = color, Roughness = 0.9f };
-            _canopy.Visible = true;
-            color = new Color(0.42f, 0.3f, 0.2f);
-            PickSize = (canopy, s.Height);
-        }
-        else if (s.Resources.Count == 0)
-        {
-            // other flora and props: a block the size the simulation uses
-            mesh = new BoxMesh { Size = new Vector3(Mathf.Max(0.3f, s.Radius * 1.4f), s.Height, Mathf.Max(0.3f, s.Radius * 1.4f)) };
-            PickSize = (Mathf.Max(0.3f, s.Radius * 1.4f) / 2, s.Height);
+            _plan = service.PlanFor(s, _look, IsSelf, out _gearKey);
+            _selfEquipmentKey = IsSelf ? EquipmentKey(service) : "";
         }
         else
         {
-            mesh = new CapsuleMesh { Radius = Mathf.Max(0.2f, s.Radius), Height = Mathf.Max(0.6f, s.Height) };
-            PickSize = (Mathf.Max(0.2f, s.Radius), Mathf.Max(0.6f, s.Height));
+            _plan = BodyFamilies.Build(_look, s.Key, s.Height, s.Radius);
+            _gearKey = _look.Id;
         }
-        if (!(s.Resources.Count == 0 && IsTree(look)))
+        _visual.Rig = _plan.Rig;
+        _visual.Swings = _plan.Swings;
+        _visual.Height = _plan.Height;
+        _visual.Hover = _plan.Hover;
+        _visual.Key = s.Key;
+        var geometry = new BodyNode(_plan);
+        AddChild(geometry);
+        geometry.SetShadows(service?.Shadows ?? true);
+        _body = geometry;
+        // the body stands at the hover height, the shape is picked by the drawn size
+        var isDrop = look.StartsWith("drop:", StringComparison.Ordinal);
+        PickSize = _look.Body is "orb" ? null : (Mathf.Max(0.3f, _plan.Width * 0.5f), Mathf.Max(0.3f, _plan.Height + _plan.Hover));
+        var creature = s.Resources.Count > 0;
+        if (creature || isDrop || s.Interactable is not null || _plan.Rig == "tree")
         {
-            _canopy.Visible = false;
+            var relation = service?.Catalog.RelationOf(s.Faction) ?? "neutral";
+            var contact = service?.Motion.Contact ?? new ContactLook();
+            var style = !creature || IsSelf ? "plain" : relation is "hostile" ? contact.Hostile : relation is "friendly" or "allied" ? contact.Friendly : contact.Neutral;
+            if (style != "none")
+            {
+                var size = isDrop ? 0.9f : Mathf.Clamp(Mathf.Max(_plan.Width, 0.5f) * (_plan.Rig == "tree" ? 0.5f : 1.25f), 0.5f, 4f);
+                _contact = new ContactMark(size, ContactMark.StyleOf(style));
+                AddChild(_contact);
+                _contact.SetFade(creature ? 1f : 0.55f);
+            }
         }
-        _mesh.Mesh = mesh;
-        _mesh.MaterialOverride = new StandardMaterial3D
-        {
-            AlbedoColor = color,
-            Transparency = color.A < 1 ? BaseMaterial3D.TransparencyEnum.Alpha : BaseMaterial3D.TransparencyEnum.Disabled,
-            Roughness = 0.8f,
-        };
-        _mesh.Position = new Vector3(0, mesh is CapsuleMesh ? Mathf.Max(0.6f, s.Height) * 0.5f : mesh is CylinderMesh cyl ? cyl.Height * 0.5f : mesh is BoxMesh box ? box.Size.Y * 0.5f : s.Height * 0.5f, 0);
-        _label.Position = new Vector3(0, s.Height + 0.5f, 0);
-        _overlay.Position = new Vector3(0, s.Height + 0.25f, 0);
-        _overlay.Visible = s.Resources.ContainsKey("life") && s.Interactable is null;
+        _label.Position = new Vector3(0, _plan.Height + _plan.Hover + 0.45f, 0);
+        _overlay.Position = new Vector3(0, _plan.Height + _plan.Hover + 0.22f, 0);
+        _overlay.Visible = creature && s.Interactable is null;
         RefreshLabel();
+    }
+
+    private static string EquipmentKey(AppearanceService service)
+    {
+        var equipment = service.SelfEquipment?.Invoke();
+        return equipment is null ? "" : string.Join(",", equipment.OrderBy(e => e.Key, StringComparer.Ordinal).Select(e => $"{e.Key}:{e.Value.Base}"));
+    }
+
+    /// <summary>The self's worn gear changed: its body is built again with it.</summary>
+    public void RefreshEquipment()
+    {
+        if (!IsSelf || _shaped || Appearance is null || !IsNodeReady())
+        {
+            return;
+        }
+        if (EquipmentKey(Appearance) != _selfEquipmentKey)
+        {
+            Rebuild();
+        }
     }
 
     /// <summary>Whether interactable props wear their names (the names over props option); creatures always do.</summary>
     public static bool PropLabels { get; set; } = true;
+
+    /// <summary>How near the hero a prop must be for its name to show, in world units; zero shows them all.</summary>
+    public static float PropLabelReach { get; set; } = 7f;
 
     public void RefreshLabel()
     {
@@ -279,8 +336,6 @@ public partial class EntityView : Node3D
         _label.Visible = s.Resources.Count > 0 || (s.Interactable is not null && PropLabels);
     }
 
-    private static bool IsTree(string look) => look.Contains("oak") || look.Contains("pine") || look.Contains("birch") || look.Contains("tree");
-
     private static Color ColorFor(EntityState s)
     {
         if (s.IsPlayer)
@@ -288,48 +343,47 @@ public partial class EntityView : Node3D
             return new Color(0.35f, 0.75f, 0.95f);
         }
         var look = s.Look ?? s.Pattern ?? "";
-        if (look.StartsWith("drop:", StringComparison.Ordinal))
-        {
-            return s.Rarity switch { "magic" => new Color(0.4f, 0.6f, 1f), "rare" => new Color(1f, 0.83f, 0.3f), "unique" => new Color(0.9f, 0.4f, 0.2f), _ => new Color(0.85f, 0.85f, 0.8f) };
-        }
-        if (look == "projectile")
-        {
-            return new Color(1f, 0.6f, 0.2f);
-        }
         if (look == "field")
         {
             return new Color(0.5f, 0.3f, 0.7f);
         }
-        if (look.StartsWith("poi:", StringComparison.Ordinal))
+        if (look.Length > 0 && look[0] == '#' && Color.HtmlIsValid(look))
         {
-            return new Color(0.95f, 0.9f, 0.5f);
-        }
-        if (look == "fount")
-        {
-            return new Color(0.6f, 0.9f, 1f);
-        }
-        if (s.Resources.Count == 0)
-        {
-            return look.Contains("oak") || look.Contains("pine") || look.Contains("birch") || look.Contains("tree") ? new Color(0.2f, 0.45f, 0.2f)
-                : look.Contains("boulder") || look.Contains("stone") || look.Contains("vein") ? new Color(0.5f, 0.5f, 0.5f)
-                : look.Contains("anvil") || look.Contains("loom") ? new Color(0.6f, 0.4f, 0.25f)
-                : new Color(0.35f, 0.55f, 0.3f);
+            // a flight without a shape of its own wears its Thread's colour
+            return Color.FromHtml(look);
         }
         return s.Faction switch
         {
             "players" => new Color(0.4f, 0.8f, 0.6f),
-            "weftmarch_compact" or "lantern_chancery" or "mended_thread" => new Color(0.75f, 0.75f, 0.45f),
             "the_loosed" => new Color(0.8f, 0.3f, 0.3f),
             "tangled" => new Color(0.35f, 0.2f, 0.45f),
             "remnant" => new Color(0.45f, 0.4f, 0.6f),
-            _ => s.Rarity switch { "magic" => new Color(0.5f, 0.6f, 1f), "rare" => new Color(1f, 0.8f, 0.3f), "champion" => new Color(1f, 0.55f, 0.25f), _ => new Color(0.7f, 0.5f, 0.35f) },
+            _ => new Color(1f, 0.6f, 0.2f),
         };
     }
 
     public void Apply(EntityState state, bool snap)
     {
-        var rebuild = state.Look != State.Look || state.Dead != State.Dead || Math.Abs(state.Height - State.Height) > 0.01f || state.Interactable is null != State.Interactable is null
-            || state.Shape != State.Shape || state.ShapeSize != State.ShapeSize;
+        var rebuild = state.Look != State.Look || Math.Abs(state.Height - State.Height) > 0.01f || state.Interactable is null != State.Interactable is null
+            || state.Shape != State.Shape || state.ShapeSize != State.ShapeSize || state.Faction != State.Faction;
+        var now = ServerNow?.Invoke() ?? Time.GetTicksMsec() / 1000.0;
+        if (state.Casting is null && State.Casting is not null)
+        {
+            _releasedAt = now;
+        }
+        if (state.Dead && !State.Dead)
+        {
+            _diedAt = now;
+        }
+        else if (!state.Dead && State.Dead)
+        {
+            _diedAt = double.NegativeInfinity;
+        }
+        if (snap && state.Dead)
+        {
+            // a corpse first seen dead has lain there a while
+            _diedAt = Math.Min(_diedAt, now - 5);
+        }
         State = state;
         _targetPosition = Coords.ToGodot(state.X, state.Y, state.Z);
         _velocity = Coords.ToGodot(state.VX, state.VY, state.VZ);
@@ -348,12 +402,44 @@ public partial class EntityView : Node3D
         {
             GlobalPosition = _targetPosition;
             Rotation = new Vector3(0, _targetYaw, 0);
+            _lastDrawn = _targetPosition;
+            _hasDrawn = true;
         }
         if (!IsNodeReady())
         {
             return;
         }
         RefreshOverlay();
+    }
+
+    /// <summary>A blow landed on this body: the animator flinches it away from where it came and flashes it.</summary>
+    public void Hit(double amount, Vector3? fromGodot)
+    {
+        var now = ServerNow?.Invoke() ?? Time.GetTicksMsec() / 1000.0;
+        _hitAt = now;
+        Cue?.Invoke("hit", _plan?.Rig, GlobalPosition);
+        var max = State.ResourceMax.TryGetValue("life", out var m) && m > 0 ? m : 100f;
+        _hitStrength = Mathf.Clamp((float)(amount / max) * 4f, 0.25f, 1f);
+        if (fromGodot is { } from)
+        {
+            var d = from - GlobalPosition;
+            var toSource = MathF.Atan2(-d.Z, d.X);
+            _hitFrom = Mathf.Wrap(toSource - Rotation.Y, -MathF.PI, MathF.PI);
+        }
+        else
+        {
+            _hitFrom = float.NaN;
+        }
+    }
+
+    /// <summary>This body landed a blow: its swing comes through now even if the snapshot missed the cast.</summary>
+    public void Struck()
+    {
+        if (!_wasCasting)
+        {
+            _releasedAt = ServerNow?.Invoke() ?? Time.GetTicksMsec() / 1000.0;
+        }
+        Cue?.Invoke("swing", _plan?.Swings == true ? "weapon" : _plan?.Rig, GlobalPosition);
     }
 
     private void RefreshOverlay()
@@ -383,7 +469,10 @@ public partial class EntityView : Node3D
             var frac = Mathf.Clamp(life / max, 0f, 1f);
             _lifeBar.Scale = new Vector3(Mathf.Max(0.001f, frac), 1, 1);
         }
-        _mesh.Transparency = s.Dead ? 0.6f : 0f;
+        if (_shaped)
+        {
+            _mesh.Transparency = s.Dead ? 0.6f : 0f;
+        }
     }
 
     public override void _Process(double delta)
@@ -439,5 +528,151 @@ public partial class EntityView : Node3D
                 _overlay.GlobalBasis = camera.GlobalBasis;
             }
         }
+        if (_body is not null && _plan is not null)
+        {
+            AnimateBody(dt);
+        }
+        PlaceLabel(dt);
     }
+
+    /// <summary>Feeds the animator the body's state and applies the pose; swaps the representation when the camera asks.</summary>
+    private void AnimateBody(float dt)
+    {
+        var service = Appearance;
+        var s = State;
+        var serverNow = ServerNow?.Invoke() ?? Time.GetTicksMsec() / 1000.0;
+        // a settled static prop (a rock, a chest, a marker) keeps its pose until something happens to it
+        if (_plan!.Rig == "static" && !s.Dead && serverNow - _hitAt > 1 && _settled)
+        {
+            ChooseRepresentation(service);
+            return;
+        }
+        _settled = _plan.Rig == "static";
+        // the walk cycle follows the distance the drawn body moved
+        var drawn = GlobalPosition;
+        if (_hasDrawn)
+        {
+            var moved = drawn - _lastDrawn;
+            moved.Y = 0;
+            var distance = moved.Length();
+            var speed = dt > 1e-4f ? distance / dt : 0;
+            _speed += (speed - _speed) * Mathf.Min(1f, dt * 10f);
+            var stride = (service?.Motion.Walk("stride", 1.5f) ?? 1.5f) * Mathf.Clamp(_plan!.Height / 1.8f, 0.4f, 2.5f);
+            var before = _visual.WalkPhase;
+            _visual.WalkPhase = Mathf.PosMod(_visual.WalkPhase + distance / Mathf.Max(0.2f, stride) * MathF.PI * 2, MathF.PI * 2);
+            // a foot plants each half cycle: the footstep cue, with the surface underfoot as its variant
+            if (_speed > 0.5f && s.Grounded && !s.Dead && _plan.Rig is "biped" or "quadruped" && (int)(before / MathF.PI) != (int)(_visual.WalkPhase / MathF.PI))
+            {
+                Cue?.Invoke("footstep", SurfaceAt?.Invoke(drawn), drawn);
+            }
+            // a lean into acceleration, read from the drawn motion
+            var forward = new Vector3(Mathf.Cos(Rotation.Y), 0, -Mathf.Sin(Rotation.Y));
+            var along = dt > 1e-4f ? moved.Dot(forward) / dt : 0;
+            var target = Mathf.Clamp((along - _speed) * 2f, -8f, 8f);
+            _visual.LeanForward += (target - _visual.LeanForward) * Mathf.Min(1f, dt * 6f);
+        }
+        _lastDrawn = drawn;
+        _hasDrawn = true;
+        _visual.Speed = _speed;
+        _visual.Time = serverNow;
+        _visual.Grounded = s.Grounded;
+        _visual.Leaping = s.Flags.Contains("leaping");
+        _visual.Dashing = s.Flags.Contains("dashing");
+        _visual.Dead = s.Dead;
+        _visual.DeadFor = s.Dead ? (float)Math.Max(0, serverNow - _diedAt) : 0;
+        if (s.Dead && !_wasDead)
+        {
+            Cue?.Invoke("death", _plan!.Rig, drawn);
+        }
+        _wasDead = s.Dead;
+        var casting = s.Casting is { Length: > 0 };
+        var mode = "cast";
+        var progress = s.CastProgress;
+        if (IsSelf && SelfCast?.Invoke() is { } own)
+        {
+            casting = true;
+            mode = own.Mode;
+            progress = own.Progress;
+        }
+        _visual.Casting = casting;
+        _visual.CastMode = mode;
+        _visual.CastProgress = progress;
+        _wasCasting = casting;
+        _visual.ReleaseAge = (float)Math.Max(0, serverNow - _releasedAt);
+        _visual.HitAge = (float)Math.Max(0, serverNow - _hitAt);
+        _visual.HitStrength = _hitStrength;
+        _visual.HitFrom = _hitFrom;
+        _visual.ReducedMotion = UI.Motion.Reduced;
+        Animator.Animate(_visual, service?.Motion ?? new MotionLook(new MotionLookDef { Id = "none" }), _pose);
+        ChooseRepresentation(service);
+        _body!.Apply(_pose);
+        _contact?.SetFade((s.Resources.Count > 0 ? 1f : 0.55f) * _pose.Opacity);
+    }
+
+    /// <summary>Geometry or a card, as the bodies option and the camera decide; a card waits for its atlas.</summary>
+    private void ChooseRepresentation(AppearanceService? service)
+    {
+        if (service is null || _plan is null || _look is null)
+        {
+            return;
+        }
+        var isCard = _body is CardNode;
+        var wantCard = service.WantsCard(_look.Card, isCard, _plan.Height);
+        if (wantCard && !isCard)
+        {
+            var look = _look;
+            var state = State;
+            _atlas ??= service.AtlasFor(_gearKey, () =>
+            {
+                var plain = look with { Variation = new AppearanceVariation { Hue = 0, Value = 0, Scale = 0 } };
+                return service.PlanFor(state with { Key = 0 }, plain, IsSelf, out _);
+            });
+            if (_atlas.Ready)
+            {
+                _body!.Release();
+                _body = new CardNode(_plan, _atlas, _plan.Height / Mathf.Max(0.1f, _atlas.Height));
+                AddChild((Node)_body);
+            }
+        }
+        else if (!wantCard && isCard)
+        {
+            _body!.Release();
+            var geometry = new BodyNode(_plan);
+            AddChild(geometry);
+            geometry.SetShadows(service.Shadows);
+            _body = geometry;
+        }
+    }
+
+    /// <summary>A creature's name always shows; a prop's shows under the cursor or within reach of the hero, fading in and out.</summary>
+    private void PlaceLabel(float dt)
+    {
+        var s = State;
+        if (s.Resources.Count > 0 || s.Interactable is null || !PropLabels)
+        {
+            return;
+        }
+        var near = HoveredKey == Key;
+        if (!near && PropLabelReach <= 0)
+        {
+            near = true;
+        }
+        else if (!near && HeroPosition?.Invoke() is { } hero)
+        {
+            var d = hero - GlobalPosition;
+            d.Y = 0;
+            near = d.Length() <= PropLabelReach;
+        }
+        var target = near ? 1f : 0f;
+        _labelAlpha += (target - _labelAlpha) * Mathf.Min(1f, dt * 6f);
+        var shown = _labelAlpha > 0.02f;
+        _label.Visible = shown;
+        if (shown)
+        {
+            _label.Modulate = _label.Modulate with { A = _labelAlpha };
+            _label.OutlineModulate = _label.OutlineModulate with { A = _labelAlpha };
+        }
+    }
+
+    public void SetShadows(bool on) => _body?.SetShadows(on);
 }

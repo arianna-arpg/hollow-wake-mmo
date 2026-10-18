@@ -59,6 +59,11 @@
         </div>
 
         <div class="status" id="status">
+          <label class="field" for="build-select">
+            <span class="label">Game build</span>
+            <select id="build-select"><option value="">Latest on this channel</option></select>
+            <span id="build-note" class="hint">Choose a release, or follow the latest build.</span>
+          </label>
           <dl class="versions">
             <dt class="label">Installed</dt><dd id="installed-version" class="version">none</dd>
             <dt class="label">Available</dt><dd id="remote-version" class="version">...</dd>
@@ -73,7 +78,7 @@
         </div>
 
         <div class="actions">
-          <button id="primary" class="primary" type="button">Play</button>
+          <button id="primary" class="primary" type="button" autofocus>Play</button>
           <div class="secondary-actions">
             <button id="secondary" type="button" class="link" hidden></button>
             <button id="check" type="button" class="link">Check for updates</button>

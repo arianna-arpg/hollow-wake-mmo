@@ -1,7 +1,10 @@
 using System.Numerics;
+using HollowWake.Core.Attributes;
 using HollowWake.Core.Combat;
 using HollowWake.Core.Components;
 using HollowWake.Core.Content;
+using HollowWake.Core.Definitions;
+using HollowWake.Core.Maths;
 using HollowWake.Core.Patterns;
 using HollowWake.Core.Sim;
 using Xunit;
@@ -128,12 +131,54 @@ public class PortedStatusTests
         Assert.Equal(3, bench.AttackerStats.Gauge("charge.frenzy"), 6);
     }
 
+    [Theory]
+    [InlineData("rage", false)]
+    [InlineData("frenzy", false)]
+    [InlineData("communion", false)]
+    [InlineData("bloodlust", true)]
+    public void ThePortedChargesGrantTheirModifiersPerChargeHeld(string kind, bool onlyWhileDraining)
+    {
+        var bench = CombatBench.Create();
+        var stats = bench.AttackerStats;
+        var lines = bench.Sim.Content.Get<ChargeDef>(kind)!.Modifiers;
+        Assert.NotEmpty(lines);
+        Assert.All(lines, m => Assert.True(m.Form is ModifierForm.Flat or ModifierForm.Increased, $"{kind}: {m}"));
+        // What each line adds where its scope holds, read from the content so retuning cannot break the test.
+        double Part(Modifier m)
+        {
+            var fold = stats.Attributes.Explain(m.Attribute, stats, m.Scope);
+            return m.Form == ModifierForm.Flat ? fold.Flat : fold.Increased;
+        }
+        void Unchanged(List<double> expected)
+        {
+            for (var i = 0; i < lines.Count; i++)
+            {
+                Assert.Equal(expected[i], Part(lines[i]), 9);
+            }
+        }
+        var before = lines.Select(Part).ToList();
+        bench.Run($$"""{"type": "charge", "id": "{{kind}}", "gain": 2, "self": true}""");
+        if (onlyWhileDraining)
+        {
+            // A banked thirst grants nothing until a drain burns it down.
+            Unchanged(before);
+            bench.Run($$"""{"type": "charge", "id": "{{kind}}", "drain": 0.5, "self": true}""");
+        }
+        for (var i = 0; i < lines.Count; i++)
+        {
+            Assert.Equal(before[i] + 2 * lines[i].Value, Part(lines[i]), 9);
+        }
+        bench.Run($$"""{"type": "charge", "id": "{{kind}}", "all": true, "self": true}""");
+        Unchanged(before);
+        Assert.False(stats.Attributes.HasSource("charge:" + kind));
+    }
+
     [Fact]
     public void TheHexerAndThePlaguerTellTheSameStoryTwice()
     {
         List<string> Duel()
         {
-            var sim = ZoneBuilder.CreateArena(CoreContent.Registry, 23);
+            var sim = ZoneBuilder.CreateArena(CoreContent.Registry, Rng.Hash64("roster"));
             var factory = sim.Service<PatternFactory>();
             factory.Spawn(sim, "proving_hexer", new Vector3(10, 10, 0), new SpawnOptions { Faction = "red" });
             factory.Spawn(sim, "proving_plaguer", new Vector3(14, 10, 0), new SpawnOptions { Faction = "blue" });

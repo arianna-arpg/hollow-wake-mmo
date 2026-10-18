@@ -13,6 +13,7 @@ export interface Settings {
   channel: Channel;
   developer: boolean;
   autoUpdate: boolean;
+  releaseTag: string | null;
   token: StoredToken | null;
 }
 
@@ -32,6 +33,7 @@ export const DEFAULT_SETTINGS: Readonly<Settings> = Object.freeze({
   channel: 'stable',
   developer: false,
   autoUpdate: true,
+  releaseTag: null,
   token: null,
 });
 
@@ -60,6 +62,7 @@ export async function loadSettings(file: string): Promise<Settings> {
     channel,
     developer: data['developer'] === true,
     autoUpdate: data['autoUpdate'] !== false,
+    releaseTag: typeof data['releaseTag'] === 'string' && /^v?\d+\.\d+\.\d+(?:-[A-Za-z0-9.-]+)?$/.test(data['releaseTag']) ? data['releaseTag'] : null,
     token,
   };
 }

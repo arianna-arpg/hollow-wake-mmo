@@ -18,6 +18,7 @@ public static class SummonHandlers
         r.Register(new DeployHandler());
         r.Register(new SpawnHandler());
         r.Register(new GatherCorpsesHandler());
+        r.Register(new ConsumeCorpseHandler());
     }
 
     /// <summary>The hook a summon's and a deploy's birth effects answer to: they run on each body as it is born.</summary>
@@ -181,6 +182,52 @@ internal sealed class GatherCorpsesHandler : IEffectHandler
                 service.Teleport(found[i], pile, pile + new Vector3((float)(Math.Cos(ang) * r), (float)(Math.Sin(ang) * r), 0));
             }
             service.ReturnList(found);
+        }
+    }
+}
+
+/// <summary>
+/// <c>consume_corpse {radius}</c>: spends the corpse a cast chose without raising it, for weaves that burn or
+/// hook the dead: the context's target when it still is a corpse, else the corpse lying nearest the point
+/// within <c>radius</c> (rule <c>minions.corpse_target_reach</c>). Publishes <see cref="CorpseConsumed"/>;
+/// without a corpse nothing happens.
+/// </summary>
+internal sealed class ConsumeCorpseHandler : IEffectHandler
+{
+    public string Type => "consume_corpse";
+
+    public EffectSignature Signature { get; } = EffectSignature.Of("radius");
+
+    public CompiledEffect Compile(JsonObject p, EffectCompileContext ctx) => new Effect { Type = Type, Radius = ctx.ExprOf(p["radius"]) };
+
+    private sealed class Effect : CompiledEffect
+    {
+        public Expr? Radius;
+
+        public override void Execute(EffectContext ctx)
+        {
+            var sim = ctx.Sim;
+            var world = sim.World;
+            var corpse = Corpses.Is(world, ctx.Target) ? ctx.Target : Entity.None;
+            if (corpse.IsNone)
+            {
+                var reach = (float)(Radius is null ? sim.Content.Rules.Number("minions.corpse_target_reach", 0.5) : Math.Max(0, ctx.Eval(Radius, 0.5)));
+                var nearest = float.MaxValue;
+                foreach (var (e, _, d) in sim.Spatial.Within(ctx.Point, reach))
+                {
+                    if (d < nearest && Corpses.Is(world, e))
+                    {
+                        corpse = e;
+                        nearest = d;
+                    }
+                }
+            }
+            if (corpse.IsNone)
+            {
+                return;
+            }
+            sim.Events.Publish(new CorpseConsumed(corpse, ctx.Origin, Corpses.PatternOf(world, corpse) ?? "") { Tick = sim.Clock.Tick });
+            sim.Service<MinionService>().Dismiss(corpse);
         }
     }
 }

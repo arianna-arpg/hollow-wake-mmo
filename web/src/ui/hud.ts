@@ -302,8 +302,11 @@ export class Hud implements ItemHost {
     this.line(`[${channel}]: ${text}`, 'chat', from);
   }
 
-  /** Combat text above the hero: hits it lands, hits it takes, heals, as the options allow. */
-  combatText(kind: string, amount: number, crit: boolean, takenBySelf: boolean): void {
+  /**
+   * Combat text above the hero: hits it lands, hits it takes, heals, as the options allow. The weight (zero to
+   * one) is how large the blow was against its target's life, which sizes the number.
+   */
+  combatText(kind: string, amount: number, crit: boolean, takenBySelf: boolean, weight = 0): void {
     if (!this.settings.toggle('combat_text', true)) {
       return;
     }
@@ -317,7 +320,8 @@ export class Hud implements ItemHost {
       : takenBySelf ? css(lighten(s.fill('life'), 0.25))
       : big ? css(lighten(s.surface('accent'), 0.2))
       : '#ffffff';
-    this.notices.float(big ? `${text}!` : text, color, this.clock(), big);
+    this.notices.reducedMotion = this.settings.toggle('reduce_motion');
+    this.notices.float(big ? `${text}!` : text, color, this.clock(), big, weight);
   }
 
   showQuestOffers(offers: QuestOffersMsg): void {

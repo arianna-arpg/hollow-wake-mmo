@@ -34,11 +34,13 @@ Startup covers content/client preparation. Character entry and authoritative wor
 
 Retry restarts local preparation and its timeout. The reliable connection still owns the original character-selection delivery; retry does not send a duplicate selection while its response is delayed. Cancellation closes the connection, discards pending entry, and returns to login. Old socket callbacks cannot install cancelled world data into the next connection.
 
-The cover clears movement, blocks gameplay input and owns focus. Browser siblings are inert, then restored to their previous state. Keys and controller inputs held across completion are quarantined until release or neutral. Retry/cancel retain keyboard and touch access. Hiding the browser or losing native window focus pauses toy advancement. This does not pause the authoritative server or promise invulnerability during preparation.
+The cover clears movement, blocks gameplay input and owns focus. Browser siblings are inert, then restored to their previous state. Keys and controller inputs held across completion are quarantined until release or neutral. Retry/cancel retain keyboard and touch access. Controller confirmation requires the client window or document to have focus; button edges are still tracked while unfocused so a held press cannot activate a button on return. A scripted play-through that unbinds controllers (`--isolated-input`) hides them from the cover as well, because a controller in use by another application on the same machine would otherwise cancel its entry. Hiding the browser or losing native window focus pauses toy advancement. This does not pause the authoritative server or promise invulnerability during preparation.
 
 ## Verification
 
 `scripts/loading-reference.mjs <prototype-checkout>` extracts and runs the original model from the pinned commit to regenerate `tests/fixtures/loading-reference.json`. The C# and TypeScript tests compare their full courses against these independent reference traces, including gate geometry. Do not generate the baseline from either port.
+
+Automatic quick play uses the same entry handlers and leases as manual selection. It starts after content initialization, and reports readiness only after the hero and nearby terrain are available and the Crossing closes. A first or ambiguous account still stops at character creation/selection.
 
 The normal client and browser smoke courses verify world entry and gameplay after the cover. Additional checks:
 
@@ -52,5 +54,7 @@ node scripts/loading-entry-smoke.mjs --url http://127.0.0.1:17880 --server ws://
 ```
 
 The browser loading course exercises every direction and input family, stale leases, progress, retry, held-input release, focus restoration, portrait layout and reduced motion. The entry course delays actual server frames, cancels them, reconnects, times out, retries, and completes when terrain arrives. The native loading course captures every direction and exercises lease failure/retry/cancel through the real cover. `--loading-preview down|left|right` and `?loadingPreview=down|left|right` allow manual inspection without slowing ordinary loads.
+
+The combined startup checks under `experiments/launcher-quick-play/` exercise quick play against delayed real server traffic. `verify-crossing-startup.mjs` covers browser boot, first-character creation, remembered resume, cancellation and input release. `verify-native-startup.mjs --godot PATH` (or `--executable PATH`) invokes `--quick-play-smoke` to observe real character selection, loading, terrain readiness and subsequent movement. `verify-launcher.mjs --packaged --feed FEED_DIRECTORY --server HOST:PORT --entry` checks the installed archive through the normal Play and immediate-launch paths; seed a sole character for the development account on an isolated test server first. The browser quick-play check accepts `--url`, the native check accepts `--port`, and both accept `--output` so verification can use separate servers and capture folders while a playtest stays running. The general browser smoke accepts --no-physical-gamepads to isolate its keyboard/mouse course from connected controllers; controller behavior remains covered separately by explicit pad states in the loading course.
 
 Packaging uses `--boot-check` and requires both successful exit and `BOOT PASS`, after validated content and client initialization. The PR release dry run verifies exported assets, bootstrap JSON, and launcher packaging.

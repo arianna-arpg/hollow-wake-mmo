@@ -1,0 +1,1350 @@
+# Strikes and melee: the prototype's blows ported as presets on the swing, whirl, sweep and thrust shells
+# (forms-shells.yaml). Each preset carries its graph: a sector swept from the attacker's edge (area.angle scales
+# the arc), a ring, a cone or a thrust, the weapon's dice times the preset's damage.effectiveness, and the riders
+# the prototype gave it. The port ledger (docs/design/parity/port-ledger.md) says what each one was and what
+# changed. The core Cleave form stands for the prototype's Cleave.
+kind: weaves
+entries:
+  - id: heavy_strike
+    name: "Heavy Strike"
+    description: "A crushing melee blow: 35% chance to stun, and the victim is knocked back."
+    form: swing
+    threads: [stone]
+    color: "#e09040"
+    attributes:
+      cast.time: 0.9
+      cooldown.base: 2.5
+      cost.base.stamina: 12
+      damage.effectiveness: 2.22
+      range: 1.56
+      area.angle: 0.6
+    ai: { role: damage, preferred_range: 1.72, weight: 3 }
+    effects:
+      - type: area
+        shape: sector
+        angle: 100
+        radius: weave.range
+        center: source
+        reach: edge
+        filter: enemy
+        effects:
+          - type: damage
+            threads: $threads
+            amount: "lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power"
+            tags: [hit]
+          - { type: apply_status, status: stunned, chance: 0.35 }
+          - { type: move, kind: knockback, distance: 2.81 }
+  - id: ground_slam
+    name: "Ground Slam"
+    description: "Slam the earth to deal physical damage in a nova around you: 30% chance to stun everything caught."
+    form: whirl
+    threads: [stone]
+    color: "#b8865a"
+    attributes: { cast.time: 0.9, cooldown.base: 4, cost.base.stamina: 21, damage.effectiveness: 1.67, area.radius: 2.97 }
+    ai: { role: damage, preferred_range: 2.5, weight: 3 }
+    effects:
+      - type: area
+        shape: circle
+        radius: weave.area.radius
+        center: source
+        filter: enemy
+        effects:
+          - type: damage
+            threads: $threads
+            amount: "lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power"
+            tags: [hit]
+          - { type: apply_status, status: stunned, chance: 0.3 }
+  - id: frenzy
+    name: Frenzy
+    description: "A rapid melee strike of physical damage. Each hit grants a fury charge and stacks a 6-second buff of 8% increased attack speed and 6% increased damage, up to 5 stacks of each."
+    form: swing
+    threads: [stone]
+    color: "#e05545"
+    attributes: { cast.time: 0.6, cost.base.stamina: 9, damage.effectiveness: 0.83, range: 1.56, area.angle: 0.9 }
+    ai: { role: damage, preferred_range: 1.72, weight: 2 }
+    effects:
+      - type: area
+        shape: sector
+        angle: 100
+        radius: weave.range
+        center: source
+        reach: edge
+        filter: enemy
+        effects:
+          - type: damage
+            threads: $threads
+            amount: "lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power"
+            tags: [hit]
+          - { type: apply_status, status: frenzy, duration: 6, to: self }
+          - { type: charge, id: fury, gain: 1, max: 5, self: true }
+  - id: tide_lash
+    name: "Tide Lash"
+    description: "A melee strike of physical and cold damage in front of you."
+    form: swing
+    threads: [stone, tide]
+    color: "#6ac8d8"
+    attributes: { cast.time: 0.5, cost.base.stamina: 0, damage.effectiveness: 1.22, range: 1.81, area.angle: 0.8 }
+    ai: { role: damage, preferred_range: 1.72, weight: 2 }
+    effects:
+      - type: area
+        shape: sector
+        angle: 100
+        radius: weave.range
+        center: source
+        reach: edge
+        filter: enemy
+        effects:
+          - type: damage
+            threads: $threads
+            amount: "lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power"
+            tags: [hit]
+  - id: mirage_knife
+    name: "Mirage Knife"
+    description: "A quick melee cut in front of you dealing physical and fire damage. Heat-bent light sets the hand a stride from where the blade lands."
+    form: swing
+    threads: [stone, ember]
+    color: "#e8d8a8"
+    attributes: { cast.time: 0.42, cost.base.stamina: 12, damage.effectiveness: 1.39, range: 1.88, area.angle: 0.7 }
+    ai: { role: damage, preferred_range: 1.72, weight: 2 }
+    effects:
+      - type: area
+        shape: sector
+        angle: 100
+        radius: weave.range
+        center: source
+        reach: edge
+        filter: enemy
+        effects:
+          - type: damage
+            threads: $threads
+            amount: "lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power"
+            tags: [hit]
+  - id: hellfire_lash
+    name: "Hellfire Lash"
+    description: "Cracks a burning whip in a long, shallow arc in front of you: 50% chance to SEAR, halving the victim's healing while it lasts, and 25% chance to set them burning."
+    form: swing
+    threads: [ember]
+    color: "#ff5a3a"
+    attributes:
+      cast.time: 0.75
+      cooldown.base: 1.2
+      cost.base.stamina: 15
+      damage.effectiveness: 1.33
+      range: 3.28
+      area.angle: 0.7
+    ai: { role: damage, preferred_range: 3.13, weight: 3 }
+    effects:
+      - type: area
+        shape: sector
+        angle: 100
+        radius: weave.range
+        center: source
+        reach: edge
+        filter: enemy
+        effects:
+          - type: damage
+            threads: $threads
+            amount: "lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power"
+            tags: [hit]
+          - { type: apply_status, status: seared, chance: 0.5 }
+          - { type: apply_status, status: burning, chance: 0.25, magnitude: "last_damage * 0.3" }
+  - id: gore_rend
+    name: "Gore Rend"
+    description: "Rips one deep, ragged melee wound: 60% chance to open a HEMORRHAGE, a long slow bleed that POPS a share of whatever it is still owed when reopened."
+    form: swing
+    threads: [stone]
+    color: "#c03a4a"
+    attributes: { cast.time: 0.8, cooldown.base: 2, cost.base.stamina: 9, damage.effectiveness: 1.72, range: 1.88, area.angle: 0.9 }
+    ai: { role: damage, preferred_range: 1.88, weight: 3 }
+    effects:
+      - type: area
+        shape: sector
+        angle: 100
+        radius: weave.range
+        center: source
+        reach: edge
+        filter: enemy
+        effects:
+          - type: damage
+            threads: $threads
+            amount: "lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power"
+            tags: [hit]
+          - { type: apply_status, status: hemorrhage, chance: 0.6, magnitude: "last_damage * 0.5" }
+  - id: machete_arc
+    name: "Machete Arc"
+    description: "Sweeps a wide, workmanlike cut across a broad cone in front of you, with a 35% chance to open a bleed. Brush, vines and whatever hides in them all part the same way."
+    form: sweep
+    threads: [stone]
+    color: "#9ac86a"
+    attributes: { cast.time: 0.55, cost.base.stamina: 12, damage.effectiveness: 1.33, range: 2.88, area.angle: 1.83 }
+    ai: { role: damage, preferred_range: 2.66, weight: 2 }
+    effects:
+      - type: area
+        shape: sector
+        angle: 60
+        radius: weave.range
+        center: source
+        filter: enemy
+        effects:
+          - type: damage
+            threads: $threads
+            amount: "lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power"
+            tags: [hit]
+          - { type: apply_status, status: bleeding, chance: 0.35, magnitude: "last_damage * 0.35" }
+  - id: zeal
+    name: Zeal
+    description: "A consecrated melee arc of physical and fire damage."
+    form: swing
+    threads: [stone, ember]
+    color: "#ffd24a"
+    attributes: { cast.time: 0.55, cost.base.stamina: 21, damage.effectiveness: 2.11, range: 2.88, area.angle: 1.3 }
+    ai: { role: damage, preferred_range: 2.81, weight: 2 }
+    effects:
+      - type: area
+        shape: sector
+        angle: 100
+        radius: weave.range
+        center: source
+        reach: edge
+        filter: enemy
+        effects:
+          - type: damage
+            threads: $threads
+            amount: "lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power"
+            tags: [hit]
+  - id: zanshin_cut
+    name: "Zanshin Cut"
+    description: "A disciplined melee slash. Every third cut settles the mind: your next melee blow within 8 seconds opens a guaranteed bleed at 2.5 times normal strength."
+    form: swing
+    threads: [stone]
+    color: "#d8d0c0"
+    attributes: { cast.time: 0.5, cost.base.stamina: 12, damage.effectiveness: 1.44, range: 3, area.angle: 1 }
+    ai: { role: damage, preferred_range: 2.88, weight: 2 }
+    effects:
+      - type: area
+        shape: sector
+        angle: 100
+        radius: weave.range
+        center: source
+        reach: edge
+        filter: enemy
+        effects:
+          - type: damage
+            threads: $threads
+            amount: "lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power"
+            tags: [hit]
+    cycle: { count: 3, effects: [{ type: apply_status, status: zanshin, duration: 8, to: self }] }
+  - id: surgical_strike
+    name: "Surgical Strike"
+    description: "A precise sweeping cut that connects only at the very TIP of its arc: enemies too close are passed over. Landed cuts have a 35% chance to open a bleed."
+    form: sweep
+    threads: [stone]
+    color: "#d8e0e8"
+    attributes: { cast.time: 0.85, cost.base.stamina: 18, damage.effectiveness: 3.11, range: 4.69, area.angle: 0.92 }
+    ai: { role: damage, preferred_range: 4.38, weight: 2 }
+    effects:
+      - type: area
+        shape: sector
+        angle: 60
+        radius: weave.range
+        center: source
+        inner: 0.72
+        filter: enemy
+        effects:
+          - type: damage
+            threads: $threads
+            amount: "lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power"
+            tags: [hit]
+          - { type: apply_status, status: bleeding, chance: 0.35, magnitude: "last_damage * 1" }
+  - id: buckler_strike
+    name: "Buckler Strike"
+    description: "The swashbuckler's double cut: a sweeping strike to one flank, a beat, then the answering cut to the other. Multistrike repeats the whole figure."
+    form: swing
+    threads: [stone]
+    color: "#7ac8d8"
+    attributes: { cast.move: 0.35, cast.time: 0.45, cost.base.stamina: 18, damage.effectiveness: 1.28, range: 3.75, area.angle: 1 }
+    ai: { role: damage, preferred_range: 3.13, weight: 2 }
+    effects:
+      - type: repeat
+        times: 2
+        interval: 0.2
+        effects:
+          - type: aim
+            sequence: [-70, 70]
+            effects:
+              - type: area
+                shape: sector
+                angle: 100
+                radius: weave.range
+                center: source
+                reach: edge
+                filter: enemy
+                effects:
+                  - type: damage
+                    threads: $threads
+                    amount: "lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power"
+                    tags: [hit]
+
+  - id: static_strike
+    name: "Static Strike"
+    description: "Strike in a wide melee arc, dealing physical and lightning damage; each hit banks a STATIC charge, up to 6. While Static Charged lasts, a charge is spent every 0.7 seconds to discharge at the nearest enemy in reach, rolling 55% weapon damage as lightning. Blows have a 20% chance to shock."
+    form: swing
+    threads: [stone, storm]
+    color: "#ffe94a"
+    attributes: { cast.time: 0.55, cost.base.stamina: 12, damage.effectiveness: 1.78, range: 1.72, area.angle: 1 }
+    ai: { role: damage, preferred_range: 1.88, weight: 2 }
+    effects:
+      - type: area
+        shape: sector
+        angle: 100
+        radius: weave.range
+        center: source
+        reach: edge
+        filter: enemy
+        effects:
+          - type: damage
+            threads: $threads
+            amount: "lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power"
+            tags: [hit]
+          - { type: charge, id: static, gain: 1, max: 6, self: true }
+          - { type: apply_status, status: static_charged, duration: 4, to: self }
+          - { type: apply_status, status: shocked, chance: 0.2 }
+  - id: rend
+    name: Rend
+    description: "Slash in a melee arc in front of you, dealing physical damage: 70% chance to leave the wound bleeding."
+    form: swing
+    threads: [stone]
+    color: "#e05545"
+    attributes: { cast.time: 0.6, cost.base.stamina: 9, damage.effectiveness: 0.83, range: 1.56, area.angle: 0.9 }
+    ai: { role: damage, preferred_range: 1.72, weight: 2 }
+    effects:
+      - type: area
+        shape: sector
+        angle: 100
+        radius: weave.range
+        center: source
+        reach: edge
+        filter: enemy
+        effects:
+          - type: damage
+            threads: $threads
+            amount: "lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power"
+            tags: [hit]
+          - { type: apply_status, status: bleeding, chance: 0.7, magnitude: "last_damage * 0.4" }
+  - id: bloodlet
+    name: Bloodlet
+    description: "Open veins in a ring around you: every creature caught, yourself included, suffers a heavy bleed but almost no immediate harm."
+    form: whirl
+    threads: [stone]
+    color: "#a83040"
+    attributes: { cast.time: 0.6, cooldown.base: 3, cost.base.stamina: 18, damage.effectiveness: 0.44, area.radius: 3.28 }
+    ai: { role: damage, preferred_range: 4, weight: 1 }
+    effects:
+      - type: area
+        shape: circle
+        radius: weave.area.radius
+        center: source
+        filter: all
+        effects:
+          - type: damage
+            threads: $threads
+            amount: "lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power"
+            tags: [hit]
+          - { type: apply_status, status: bleeding, chance: 1, magnitude: "last_damage * 1.4" }
+  - id: eviscerate
+    name: Eviscerate
+    description: "Usable only on a BLEEDING enemy: rip the wound open, consuming the bleed to deal ALL its remaining damage at once, plus a vicious strike."
+    form: thrust_wounded
+    threads: [stone]
+    color: "#d04050"
+    attributes: { cast.time: 0.7, cooldown.base: 2, cost.base.stamina: 21, damage.effectiveness: 2.33, range: 4.69 }
+    ai: { role: damage, preferred_range: 1.88, weight: 3 }
+    effects:
+      - { type: rupture, status: bleeding, fraction: 1 }
+      - type: damage
+        threads: $threads
+        amount: "lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power"
+        tags: [hit]
+  - id: reckoning
+    name: Reckoning
+    description: "A heavy melee blow that consumes ALL Fury charges (built by Frenzy): 25% more damage per charge consumed, plus a 30% chance to stun. It swings without charges too, at no bonus."
+    form: swing
+    threads: [stone]
+    color: "#e87838"
+    attributes: { cast.time: 0.85, cooldown.base: 1.5, cost.base.stamina: 24, damage.effectiveness: 2.56, range: 1.88, area.angle: 1 }
+    ai: { role: damage, preferred_range: 1.88, weight: 1 }
+    effects:
+      - type: area
+        shape: sector
+        angle: 100
+        radius: weave.range
+        center: source
+        reach: edge
+        filter: enemy
+        effects:
+          - type: damage
+            threads: $threads
+            amount: "lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power"
+            tags: [hit]
+          - { type: apply_status, status: stunned, chance: 0.3 }
+    spend: { charge: fury, all: true, optional: true, scales: [{ attribute: damage, form: more, per_charge: 0.25 }] }
+  - id: reprisal
+    name: Reprisal
+    description: "Usable only within 3 seconds of taking damage: a heavy answering arc in front of you with a 35% chance to stun, knocking the victims back."
+    form: swing
+    threads: [stone]
+    color: "#d8b070"
+    attributes: { cast.time: 0.55, cooldown.base: 6, cost.base.stamina: 30, damage.effectiveness: 3.67, range: 3.28, area.angle: 1.2 }
+    ai: { role: damage, preferred_range: 3.13, weight: 2 }
+    effects:
+      - type: area
+        shape: sector
+        angle: 100
+        radius: weave.range
+        center: source
+        reach: edge
+        filter: enemy
+        effects:
+          - type: damage
+            threads: $threads
+            amount: "lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power"
+            tags: [hit]
+          - { type: apply_status, status: stunned, chance: 0.35 }
+          - { type: move, kind: knockback, distance: 0.94 }
+    gates: ["has(\"recently_hurt\")"]
+  - id: sunder_maul
+    name: "Sunder Maul"
+    description: "A slow overhead blow built to break stances rather than bodies: it deals 150% more poise damage."
+    form: swing
+    threads: [stone]
+    color: "#c8a058"
+    attributes: { cast.time: 0.7, cooldown.base: 3, cost.base.stamina: 18, damage.effectiveness: 2.11, range: 3.13, area.angle: 0.9 }
+    modifiers: [{ attribute: poise.damage, form: more, value: 1.5 }]
+    ai: { role: damage, preferred_range: 2.97, weight: 2 }
+    effects:
+      - type: area
+        shape: sector
+        angle: 100
+        radius: weave.range
+        center: source
+        reach: edge
+        filter: enemy
+        effects:
+          - type: damage
+            threads: $threads
+            amount: "lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power"
+            tags: [hit]
+  - id: verdict
+    name: "The Verdict"
+    description: "An execute, usable only on a SUNDERED target: the blow adds 150% of the victim's maximum poise as flat damage and knocks them back. Break the stance first, then pass sentence; longer Sundered duration widens the window. Enemies carry this verdict too."
+    form: swing_sentence
+    threads: [stone]
+    color: "#e84a3a"
+    attributes: { cast.time: 0.55, cooldown.base: 8, cost.base.stamina: 30, damage.effectiveness: 3, range: 3.44, area.angle: 0.6 }
+    ai: { role: damage, preferred_range: 3.28, weight: 3 }
+    effects:
+      - type: area
+        shape: sector
+        angle: 100
+        radius: weave.range
+        center: source
+        reach: edge
+        filter: enemy
+        effects:
+          - type: damage
+            threads: $threads
+            amount: "lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power + target.poise.max * 1.5"
+            tags: [hit]
+          - { type: move, kind: knockback, distance: 1.25 }
+  - id: severing_lash
+    name: "Severing Lash"
+    description: "A long whip-crack with 30% increased accuracy. Half of all hits leave the victim REELING: insight stops replenishing while it lasts."
+    form: swing
+    threads: [stone]
+    color: "#c8a8e8"
+    attributes:
+      cast.time: 0.45
+      cooldown.base: 2.5
+      cost.base.stamina: 24
+      damage.effectiveness: 1.78
+      range: 4.53
+      area.angle: 0.4
+    modifiers: [{ attribute: accuracy, form: increased, value: 0.3 }]
+    ai: { role: damage, preferred_range: 4.38, weight: 2 }
+    effects:
+      - type: area
+        shape: sector
+        angle: 100
+        radius: weave.range
+        center: source
+        reach: edge
+        filter: enemy
+        effects:
+          - type: damage
+            threads: $threads
+            amount: "lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power"
+            tags: [hit]
+          - { type: apply_status, status: reeling, chance: 0.5 }
+  - id: thousand_cuts
+    name: "Thousand Cuts"
+    description: "Every cut grants this skill 5% increased damage and 5% increased attack speed, stacking up to 8 times. Pause and the stacks peel away one at a time after 2.2 seconds; the ramp belongs to this blade alone."
+    form: swing
+    threads: [stone]
+    color: "#e8d8c0"
+    attributes: { cast.time: 0.42, cost.base.stamina: 15, damage.effectiveness: 1.06, range: 2.75, area.angle: 0.7 }
+    ai: { role: damage, preferred_range: 2.66, weight: 2 }
+    effects:
+      - type: area
+        shape: sector
+        angle: 100
+        radius: weave.range
+        center: source
+        reach: edge
+        filter: enemy
+        effects:
+          - type: damage
+            threads: $threads
+            amount: "lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power"
+            tags: [hit]
+    self_stack:
+      max: 8
+      duration: 2.2
+      decay: 0.5
+      modifiers: [{ attribute: damage, form: increased, value: 0.05 }, { attribute: attack.speed, form: increased, value: 0.05 }]
+  - id: backstab
+    name: Backstab
+    description: "A precise melee thrust that deals 150% more damage from behind the target, with a 35% chance to open a bleed. Pairs viciously with Shadow Step."
+    form: swing
+    threads: [stone]
+    color: "#b8a8e8"
+    attributes:
+      cast.time: 0.5
+      cooldown.base: 1.2
+      cost.base.stamina: 24
+      damage.effectiveness: 1.56
+      range: 1.31
+      area.angle: 0.9
+    modifiers: [{ attribute: damage, form: more, value: 1.5, scope: [vs.behind] }]
+    ai: { role: damage, preferred_range: 1.63, weight: 3 }
+    effects:
+      - type: area
+        shape: sector
+        angle: 100
+        radius: weave.range
+        center: source
+        reach: edge
+        filter: enemy
+        effects:
+          - type: damage
+            threads: $threads
+            amount: "lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power"
+            tags: [hit]
+          - { type: apply_status, status: bleeding, chance: 0.35, magnitude: "last_damage * 0.4" }
+  - id: acid_spray
+    name: "Acid Spray"
+    description: "Vomit a fan of caustic bile: chaos damage in a cone, a 60% chance to poison everything it coats, and a 25% chance to inflict armor-eating agony."
+    form: sweep
+    threads: [void]
+    color: "#9ec83a"
+    attributes: { cast.time: 0.6, cooldown.base: 2, cost.base.stamina: 27, damage.effectiveness: 1.06, range: 4.69, area.angle: 1.17 }
+    ai: { role: damage, preferred_range: 4.38, weight: 2 }
+    effects:
+      - type: area
+        shape: sector
+        angle: 60
+        radius: weave.range
+        center: source
+        filter: enemy
+        effects:
+          - type: damage
+            threads: $threads
+            amount: "lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power"
+            tags: [hit]
+          - { type: apply_status, status: poison, chance: 0.6, magnitude: "last_damage * 0.35" }
+          - { type: apply_status, status: agony, chance: 0.25 }
+  - id: skewer
+    name: Skewer
+    description: "A driving melee thrust that leaves steel behind: 35% of the blow's physical damage lodges in the wound as a spearhead, and your next hit drives it through as its own separate blow. Stack the steel, then knock it home."
+    form: swing
+    threads: [stone]
+    color: "#c8ccd8"
+    attributes: { cast.time: 0.5, cost.base.stamina: 18, damage.effectiveness: 1.67, range: 3.13, area.angle: 0.4 }
+    ai: { role: damage, preferred_range: 2.97, weight: 2 }
+    effects:
+      - type: area
+        shape: sector
+        angle: 100
+        radius: weave.range
+        center: source
+        reach: edge
+        filter: enemy
+        effects:
+          - type: damage
+            threads: $threads
+            amount: "lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power"
+            tags: [hit]
+          - { type: apply_status, status: impaled, magnitude: "last_damage * 0.35" }
+
+  - id: scythe_sweep
+    name: "Mower's Arc"
+    description: "Three quick scythe arcs swing left, center, then right, sweeping side to side across your front instead of punching one cone forward. Each arc has a 25% chance to leave victims bleeding."
+    form: swing
+    threads: [stone]
+    color: "#9ab86a"
+    attributes:
+      cast.time: 0.55
+      cooldown.base: 1.5
+      cost.base.stamina: 24
+      damage.effectiveness: 1.11
+      range: 2.97
+      area.angle: 0.85
+    ai: { role: damage, preferred_range: 2.81, weight: 2 }
+    effects:
+      - type: repeat
+        times: 3
+        interval: 0.12
+        effects:
+          - type: aim
+            sequence: [-45, 0, 45]
+            effects:
+              - type: area
+                shape: sector
+                angle: 100
+                radius: weave.range
+                center: source
+                reach: edge
+                filter: enemy
+                effects:
+                  - type: damage
+                    threads: $threads
+                    amount: "lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power"
+                    tags: [hit]
+                  - { type: apply_status, status: bleeding, chance: 0.25, magnitude: "last_damage * 0.3" }
+
+  - id: execution
+    name: Execution
+    description: "One falling melee blow that consumes every stack of VULNERABLE on the target, dealing 45% more damage per stack consumed. Five wounds opened, one verdict through them all."
+    form: swing
+    threads: [stone]
+    color: "#d878b0"
+    attributes: { cast.time: 0.85, cooldown.base: 3, cost.base.stamina: 27, damage.effectiveness: 2.78, range: 1.88, area.angle: 0.7 }
+    ai: { role: damage, preferred_range: 2.03, weight: 2 }
+    effects:
+      - type: area
+        shape: sector
+        angle: 100
+        radius: weave.range
+        center: source
+        reach: edge
+        filter: enemy
+        effects:
+          - { type: consume_status, status: vulnerable, as: wounds }
+          - type: damage
+            threads: $threads
+            amount: "lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power * (1 + 0.45 * wounds)"
+            tags: [hit]
+  - id: toppling_stroke
+    name: "Toppling Stroke"
+    description: "Swing a wide, deliberate demolition arc that hits like falling masonry: 30% chance to leave survivors staggering SUNDERED. Best delivered beside your own rampart, where the argument has walls."
+    form: swing
+    threads: [stone]
+    color: "#a8a090"
+    attributes: { cast.time: 0.55, cooldown.base: 3, cost.base.stamina: 27, damage.effectiveness: 2, range: 2.97, area.angle: 1.3 }
+    ai: { role: damage, preferred_range: 2.81, weight: 2 }
+    effects:
+      - type: area
+        shape: sector
+        angle: 100
+        radius: weave.range
+        center: source
+        reach: edge
+        filter: enemy
+        effects:
+          - type: damage
+            threads: $threads
+            amount: "lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power"
+            tags: [hit]
+          - { type: apply_status, status: sundered, chance: 0.3 }
+  - id: tuning_strike
+    name: "Tuning Strike"
+    description: "Strike the body like a bell: the blow leaves its victim ATTUNED to fire, cold or lightning, one of the three at roughly even odds. An attuned body reads as kin to its own element and as prey to you. A Resonator never asks what something is: they strike, and it says."
+    form: swing
+    threads: [stone]
+    tags: [duration]
+    color: "#b0d8c8"
+    attributes: { cast.time: 0.45, cost.base.stamina: 21, damage.effectiveness: 1.17, range: 2.66, area.angle: 0.85 }
+    ai: { role: damage, preferred_range: 2.5, weight: 2 }
+    effects:
+      - type: area
+        shape: sector
+        angle: 100
+        radius: weave.range
+        center: source
+        reach: edge
+        filter: enemy
+        effects:
+          - type: damage
+            threads: $threads
+            amount: "lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power"
+            tags: [hit]
+          - type: random
+            choices:
+              - { weight: 1, effects: [{ type: apply_status, status: attuned_ember }] }
+              - { weight: 1, effects: [{ type: apply_status, status: attuned_tide }] }
+              - { weight: 1, effects: [{ type: apply_status, status: attuned_storm }] }
+  - id: sanctified_strike
+    name: "Sanctified Strike"
+    description: "Sweep a wide melee arc: enemies in it take physical and fire damage, and allies standing among them are mended for a small amount plus 2% of their maximum life. Everyone but you: the burden is the point."
+    form: swing
+    threads: [stone, ember]
+    tags: [heal]
+    color: "#f0e0a0"
+    attributes: { cast.time: 0.7, cost.base.stamina: 21, damage.effectiveness: 1.72, range: 1.94, area.angle: 1.3 }
+    ai: { role: damage, preferred_range: 2.03, weight: 2 }
+    effects:
+      - type: area
+        shape: sector
+        angle: 100
+        radius: weave.range
+        center: source
+        reach: edge
+        filter: enemy
+        effects:
+          - type: damage
+            threads: $threads
+            amount: "lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power"
+            tags: [hit]
+      - type: area
+        shape: sector
+        angle: 100
+        radius: weave.range
+        center: source
+        reach: edge
+        filter: ally
+        effects:
+          - { type: heal, amount: "7 + target.life.max * 0.02", resource: life, exclude_self: true }
+
+  - id: talon_rake
+    name: "Talon Rake"
+    description: "A quick raking strike in a wide arc in front of you; every hit has a 50% chance to open a bleeding wound."
+    form: swing
+    threads: [stone]
+    color: "#c88a4a"
+    attributes: { cast.time: 0.55, cooldown.base: 0.8, cost.base.stamina: 6, damage.effectiveness: 0.89, range: 2.03, area.angle: 1 }
+    ai: { role: damage, preferred_range: 2.03, weight: 2 }
+    effects:
+      - type: area
+        shape: sector
+        angle: 100
+        radius: weave.range
+        center: source
+        reach: edge
+        filter: enemy
+        effects:
+          - type: damage
+            threads: $threads
+            amount: "lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power"
+            tags: [hit]
+          - { type: apply_status, status: bleeding, chance: 0.5, magnitude: "last_damage * 0.4" }
+  - id: lash_roots
+    name: "Lashing Roots"
+    description: "A whipping fan of green-wood switches in an arc in front of you: 80% chance to ENSNARE the caught for 1.4 seconds so they wade as if through briar, and a 25% chance to open a bleed."
+    form: swing
+    threads: [stone]
+    color: "#7fae4a"
+    attributes: { cast.time: 0.75, cooldown.base: 1.6, cost.base.stamina: 12, damage.effectiveness: 1.17, range: 2.34, area.angle: 1 }
+    ai: { role: damage, preferred_range: 2.34, weight: 3 }
+    effects:
+      - type: area
+        shape: sector
+        angle: 100
+        radius: weave.range
+        center: source
+        reach: edge
+        filter: enemy
+        effects:
+          - type: damage
+            threads: $threads
+            amount: "lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power"
+            tags: [hit]
+          - { type: apply_status, status: ensnared, chance: 0.8, fixed_duration: 1.4 }
+          - { type: apply_status, status: bleeding, chance: 0.25, magnitude: "last_damage * 0.3" }
+  - id: whirling_reap
+    name: "Whirling Reap"
+    description: "One press, one full turn: six melee arcs walk the blade all the way around you, striking everything in the circle with physical damage."
+    form: swing
+    threads: [stone]
+    color: "#c8a05e"
+    attributes:
+      cast.time: 0.65
+      cooldown.base: 2.5
+      cost.base.stamina: 30
+      damage.effectiveness: 1.11
+      range: 1.94
+      area.angle: 1.1
+    ai: { role: damage, preferred_range: 2.19, weight: 2 }
+    effects:
+      - type: repeat
+        times: 6
+        interval: 0.08
+        effects:
+          - type: aim
+            sequence: [0, 60, 120, 180, 240, 300]
+            effects:
+              - type: area
+                shape: sector
+                angle: 100
+                radius: weave.range
+                center: source
+                reach: edge
+                filter: enemy
+                effects:
+                  - type: damage
+                    threads: $threads
+                    amount: "lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power"
+                    tags: [hit]
+
+  - id: winters_sweep
+    name: "Winter's Sweep"
+    description: "Drive a ring of frost outward around you, dealing cold and physical damage: everything struck is chilled and hurled away. On glare ice a shove keeps travelling; the ground is the other half of this blow."
+    form: whirl
+    threads: [tide, stone]
+    color: "#bfe8ff"
+    attributes: { cast.time: 1.15, cooldown.base: 9, cost.base.stamina: 60, damage.effectiveness: 2.39, area.radius: 5.47 }
+    ai: { role: damage, preferred_range: 4.84, weight: 3 }
+    effects:
+      - type: area
+        shape: circle
+        radius: weave.area.radius
+        center: source
+        filter: enemy
+        effects:
+          - type: damage
+            threads: $threads
+            amount: "lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power"
+            tags: [hit]
+          - { type: apply_status, status: chilled, chance: 1 }
+          - { type: move, kind: knockback, distance: 5.94 }
+  - id: zealots_cadence
+    name: "Zealot's Cadence"
+    description: "A wide, committed melee swing paid from a bank of 3 charges: spend them down to empty, then one restores every 5 seconds. Gems and passives can add charges and quicken the refill."
+    form: swing
+    threads: [stone]
+    color: "#e8c05a"
+    attributes: { cast.time: 0.55, cost.base.stamina: 0, damage.effectiveness: 1.89, range: 1.94, area.angle: 1.4 }
+    ai: { role: damage, preferred_range: 2.03, weight: 2 }
+    effects:
+      - type: area
+        shape: sector
+        angle: 100
+        radius: weave.range
+        center: source
+        reach: edge
+        filter: enemy
+        effects:
+          - type: damage
+            threads: $threads
+            amount: "lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power"
+            tags: [hit]
+    uses: { max: 3, recharge: 5 }
+  - id: siphon_strike
+    name: "Siphon Strike"
+    description: "Sweep a wide melee arc in front of you without a stamina cost."
+    form: swing
+    threads: [stone]
+    color: "#5a8ae8"
+    attributes: { cast.time: 0.6, cost.base.stamina: 0, damage.effectiveness: 1.11, range: 1.81, area.angle: 1.2 }
+    ai: { role: damage, preferred_range: 1.88, weight: 2 }
+    effects:
+      - type: area
+        shape: sector
+        angle: 100
+        radius: weave.range
+        center: source
+        reach: edge
+        filter: enemy
+        effects:
+          - type: damage
+            threads: $threads
+            amount: "lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power"
+            tags: [hit]
+  - id: forgebound
+    name: Forgebound
+    description: "A melee smash in a wide arc in front of you."
+    form: swing
+    threads: [stone]
+    color: "#d8b06a"
+    attributes: { cast.time: 0.65, cost.base.stamina: 18, damage.effectiveness: 1.56, range: 1.94, area.angle: 1.2 }
+    ai: { role: damage, preferred_range: 2.03, weight: 2 }
+    effects:
+      - type: area
+        shape: sector
+        angle: 100
+        radius: weave.range
+        center: source
+        reach: edge
+        filter: enemy
+        effects:
+          - type: damage
+            threads: $threads
+            amount: "lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power"
+            tags: [hit]
+  - id: harvest_stroke
+    name: "Harvest Stroke"
+    description: "A hard straight cut to drop the nearest, with a 30% chance to Bleed. A beat later the blade comes all the way around on its own: a full sweep across your front, free. Strike; the harvest follows."
+    form: swing
+    threads: [stone]
+    color: "#c88ae0"
+    attributes:
+      cast.time: 0.55
+      cooldown.base: 2.2
+      cost.base.stamina: 33
+      damage.effectiveness: 1.94
+      range: 2.97
+      area.angle: 0.7
+    ai: { role: damage, preferred_range: 2.81, weight: 2 }
+    effects:
+      - type: area
+        shape: sector
+        angle: 100
+        radius: weave.range
+        center: source
+        reach: edge
+        filter: enemy
+        effects:
+          - type: damage
+            threads: $threads
+            amount: "lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power"
+            tags: [hit]
+          - { type: apply_status, status: bleeding, chance: 0.3, magnitude: "last_damage * 0.3" }
+    follow_up: { weave: follow_sweep, delay: 0.4, chance: 1 }
+  - id: piledriver
+    name: Piledriver
+    description: "One blow, placed like a foundation: a slow crushing melee strike that banks 2 Fury (to a cap of 5), deals 50% more poise damage, and has a 15% chance to stun. Bank with this, spend with Reckoning."
+    form: swing
+    threads: [stone]
+    color: "#88b8e0"
+    attributes: { cast.time: 0.85, cost.base.stamina: 15, damage.effectiveness: 2, range: 1.72, area.angle: 0.6 }
+    modifiers: [{ attribute: poise.damage, form: more, value: 0.5 }]
+    ai: { role: damage, preferred_range: 1.88, weight: 2 }
+    effects:
+      - type: area
+        shape: sector
+        angle: 100
+        radius: weave.range
+        center: source
+        reach: edge
+        filter: enemy
+        effects:
+          - type: damage
+            threads: $threads
+            amount: "lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power"
+            tags: [hit]
+          - { type: charge, id: fury, gain: 2, max: 5, self: true }
+          - { type: apply_status, status: stunned, chance: 0.15 }
+  - id: one_two
+    name: One-Two
+    description: "Work the jab: a fast melee strike that banks 1 Fury per hit (to a cap of 5). Jab twice in rhythm and the third press within 2 seconds throws the CROSS JAB: a heavier sweep across the front of you that lands stunning. The pit's arithmetic: one, two, three."
+    form: swing
+    threads: [stone]
+    color: "#d8a878"
+    attributes: { cast.time: 0.35, cost.base.stamina: 6, damage.effectiveness: 0.89, range: 1.44, area.angle: 0.5 }
+    ai: { role: damage, preferred_range: 1.56, weight: 2 }
+    effects:
+      - type: area
+        shape: sector
+        angle: 100
+        radius: weave.range
+        center: source
+        reach: edge
+        filter: enemy
+        effects:
+          - type: damage
+            threads: $threads
+            amount: "lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power"
+            tags: [hit]
+          - { type: charge, id: fury, gain: 1, max: 5, self: true }
+    chain: { steps: [one_two, cross_jab], window: 2 }
+  - id: cross_jab
+    name: "Cross Jab"
+    description: "The third beat of the One-Two: a heavier rear-hand punch that sweeps across the front of you as a strip rather than a wedge, striking everything in its path and stunning whatever it lands on. Banks 1 Fury per hit."
+    form: swing
+    threads: [stone]
+    color: "#f0c088"
+    attributes: { cast.time: 0.4, cost.base.stamina: 9, damage.effectiveness: 1.56, range: 1.63 }
+    ai: { role: damage, preferred_range: 1.63, weight: 1 }
+    effects:
+      - type: area
+        shape: bar
+        radius: weave.range
+        width: 1
+        center: source
+        reach: edge
+        filter: enemy
+        effects:
+          - type: damage
+            threads: $threads
+            amount: "lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power"
+            tags: [hit]
+          - { type: charge, id: fury, gain: 1, max: 5, self: true }
+          - { type: apply_status, status: stunned, chance: 1 }
+  - id: haymaker
+    name: Haymaker
+    description: "Load the hips and swing: a wound-up melee hook that spends every banked Fury, each charge spent adding 15% damage, and knocks the victim flying back across the pit, with a 25% chance to stun and 35% more poise damage. The knockout is optional; the flight is not."
+    form: swing
+    threads: [stone]
+    color: "#e08858"
+    attributes: { cast.time: 0.8, cooldown.base: 2, cost.base.stamina: 21, damage.effectiveness: 2.33, range: 1.56, area.angle: 0.4 }
+    modifiers: [{ attribute: poise.damage, form: more, value: 0.35 }]
+    ai: { role: damage, preferred_range: 1.72, weight: 2 }
+    effects:
+      - type: area
+        shape: sector
+        angle: 100
+        radius: weave.range
+        center: source
+        reach: edge
+        filter: enemy
+        effects:
+          - type: damage
+            threads: $threads
+            amount: "lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power"
+            tags: [hit]
+          - { type: move, kind: knockback, distance: 5.94 }
+          - { type: apply_status, status: stunned, chance: 0.25 }
+    spend: { charge: fury, all: true, optional: true, scales: [{ attribute: damage, form: more, per_charge: 0.15 }] }
+  - id: mantra_strike
+    name: "Mantra Strike"
+    description: "An open-palm melee strike that settles deeper with repetition: each hit stacks 6% increased damage and 8% increased poise damage for this skill alone, up to 6 stacks, and the stacks peel away one at a time once the rhythm rests. Not fury. Practice."
+    form: swing
+    threads: [stone]
+    color: "#e8e0c8"
+    attributes: { cast.time: 0.5, cost.base.stamina: 9, damage.effectiveness: 1.33, range: 1.56, area.angle: 0.6 }
+    ai: { role: damage, preferred_range: 1.72, weight: 2 }
+    effects:
+      - type: area
+        shape: sector
+        angle: 100
+        radius: weave.range
+        center: source
+        reach: edge
+        filter: enemy
+        effects:
+          - type: damage
+            threads: $threads
+            amount: "lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power"
+            tags: [hit]
+    self_stack:
+      max: 6
+      duration: 2.5
+      decay: 0.5
+      modifiers: [{ attribute: damage, form: increased, value: 0.06 }, { attribute: poise.damage, form: increased, value: 0.08 }]
+  - id: tempest_gathering
+    name: "Tempest Gathering"
+    description: "Each swing cuts an arc of physical and lightning damage and banks 1 Storm charge, up to 8. While Storm Charged lasts, a charge is spent every 0.6 seconds to discharge at the nearest enemy in reach, rolling 55% weapon damage as lightning."
+    form: swing
+    threads: [stone, storm]
+    color: "#c8e84a"
+    attributes: { cast.time: 0.55, cost.base.stamina: 9, damage.effectiveness: 1.5, range: 1.75, area.angle: 1 }
+    ai: { role: damage, preferred_range: 1.88, weight: 2 }
+    effects:
+      - type: area
+        shape: sector
+        angle: 100
+        radius: weave.range
+        center: source
+        reach: edge
+        filter: enemy
+        effects:
+          - type: damage
+            threads: $threads
+            amount: "lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power"
+            tags: [hit]
+          - { type: charge, id: storm, gain: 1, max: 8, self: true }
+          - { type: apply_status, status: storm_charged, duration: 4, to: self }
+  - id: trisect
+    name: Trisect
+    description: "One button, three cuts: the opener flows into the wider BISECT, and a third press in rhythm closes the TRISECT, a full circle of steel at double weight. Each follow-up must come within 2 seconds or the figure resets."
+    form: swing
+    threads: [stone]
+    color: "#d8b87a"
+    attributes: { cast.time: 0.5, cost.base.stamina: 9, damage.effectiveness: 1.11, range: 1.72, area.angle: 0.9 }
+    ai: { role: damage, preferred_range: 1.81, weight: 2 }
+    effects:
+      - type: area
+        shape: sector
+        angle: 100
+        radius: weave.range
+        center: source
+        reach: edge
+        filter: enemy
+        effects:
+          - type: damage
+            threads: $threads
+            amount: "lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power"
+            tags: [hit]
+    chain: { steps: [bisect_cut, trisect_finisher], window: 2 }
+  - id: bisect_cut
+    name: Bisect
+    description: "The answering cut of the Trisect figure: a wider melee arc that lands harder than the opener."
+    form: swing
+    threads: [stone]
+    color: "#d8c88a"
+    attributes: { cast.time: 0.45, cost.base.stamina: 9, damage.effectiveness: 1.39, range: 1.81, area.angle: 1.4 }
+    ai: { role: damage, preferred_range: 1.81, weight: 1 }
+    effects:
+      - type: area
+        shape: sector
+        angle: 100
+        radius: weave.range
+        center: source
+        reach: edge
+        filter: enemy
+        effects:
+          - type: damage
+            threads: $threads
+            amount: "lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power"
+            tags: [hit]
+  - id: trisect_finisher
+    name: Trisect
+    description: "The closing figure of the Trisect chain: a full circle of steel around you at roughly double the opener's weight, knocking enemies back."
+    form: swing
+    threads: [stone]
+    color: "#e8d89a"
+    attributes: { cast.time: 0.55, cost.base.stamina: 12, damage.effectiveness: 2.22, range: 1.88 }
+    ai: { role: damage, preferred_range: 1.88, weight: 1 }
+    effects:
+      - type: area
+        shape: circle
+        radius: weave.range
+        center: source
+        reach: edge
+        filter: enemy
+        effects:
+          - type: damage
+            threads: $threads
+            amount: "lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power"
+            tags: [hit]
+          - { type: move, kind: knockback, distance: 1.88 }
+  - id: carve
+    name: Carve
+    description: "Every landed swing stacks fervor: 5% increased attack damage and 2% increased attack speed per stack, up to 8. Stacks fade after 2.2 seconds, but any fresh cut refreshes the entire pile."
+    form: swing
+    threads: [stone]
+    color: "#c89058"
+    attributes: { cast.time: 0.5, cost.base.stamina: 9, damage.effectiveness: 1, range: 1.72, area.angle: 1 }
+    ai: { role: damage, preferred_range: 1.81, weight: 2 }
+    effects:
+      - type: area
+        shape: sector
+        angle: 100
+        radius: weave.range
+        center: source
+        reach: edge
+        filter: enemy
+        effects:
+          - type: damage
+            threads: $threads
+            amount: "lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power"
+            tags: [hit]
+          - { type: apply_status, status: carve, duration: 2.2, to: self }
+  - id: deep_carve
+    name: "Deep Carve"
+    description: "The patient inverse of Carve: each hit adds a stack of 4% increased attack damage, up to 12, and every stack burns down its own 4.5 second clock. Nothing refreshes; old cuts close as new ones open, and steady pressure holds the deepest pile."
+    form: swing
+    threads: [stone]
+    color: "#a87848"
+    attributes: { cast.time: 0.6, cost.base.stamina: 12, damage.effectiveness: 1.28, range: 1.72, area.angle: 1 }
+    ai: { role: damage, preferred_range: 1.81, weight: 2 }
+    effects:
+      - type: area
+        shape: sector
+        angle: 100
+        radius: weave.range
+        center: source
+        reach: edge
+        filter: enemy
+        effects:
+          - type: damage
+            threads: $threads
+            amount: "lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power"
+            tags: [hit]
+          - { type: apply_status, status: deep_carve, duration: 4.5, to: self }
+  - id: caul_lash
+    name: "Caul Lash"
+    description: "A rooted appendage unknots and SWATS in a long, patient arc, dealing physical damage and shoving whatever it catches away. The ground was never just ground."
+    form: swing
+    threads: [stone]
+    color: "#8a6ab0"
+    attributes: { cast.time: 0.85, cooldown.base: 2.6, cost.base.stamina: 0, damage.effectiveness: 2, range: 3.69, area.angle: 1.5 }
+    ai: { role: damage, preferred_range: 3.69, weight: 3 }
+    effects:
+      - type: area
+        shape: sector
+        angle: 100
+        radius: weave.range
+        center: source
+        reach: edge
+        filter: enemy
+        effects:
+          - type: damage
+            threads: $threads
+            amount: "lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power"
+            tags: [hit]
+          - { type: move, kind: knockback, distance: 8.13 }
+  - id: devouring_maw
+    name: "Devouring Maw"
+    description: "A close bite of physical damage without a stamina cost."
+    form: swing
+    threads: [stone]
+    color: "#a04a5a"
+    attributes: { cast.time: 0.6, cooldown.base: 1.6, cost.base.stamina: 0, damage.effectiveness: 2.33, range: 2, area.angle: 1 }
+    ai: { role: damage, preferred_range: 2, weight: 4 }
+    effects:
+      - type: area
+        shape: sector
+        angle: 100
+        radius: weave.range
+        center: source
+        reach: edge
+        filter: enemy
+        effects:
+          - type: damage
+            threads: $threads
+            amount: "lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power"
+            tags: [hit]
+  - id: tendril_lash
+    name: "Tendril Lash"
+    description: "Lash a wide, far-reaching melee arc of living cord: physical and chaos damage, with a 30% chance to ensnare what it stripes. Your arm remembers being something longer."
+    form: swing
+    threads: [stone, void]
+    color: "#8a6ab0"
+    attributes: { cast.time: 0.75, cost.base.stamina: 12, damage.effectiveness: 2.06, range: 4.06, area.angle: 1.6 }
+    ai: { role: damage, preferred_range: 4.06, weight: 3 }
+    effects:
+      - type: area
+        shape: sector
+        angle: 100
+        radius: weave.range
+        center: source
+        reach: edge
+        filter: enemy
+        effects:
+          - type: damage
+            threads: $threads
+            amount: "lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power"
+            tags: [hit]
+          - { type: apply_status, status: ensnared, chance: 0.3 }
+  - id: lancing_flurry
+    name: "Lancing Flurry"
+    description: "One gathering motion lances up to 24 nearby enemies at once, each with a 30% chance to bleed."
+    form: whirl
+    threads: [stone]
+    tags: [javelin]
+    color: "#d8c8a0"
+    attributes: { cast.time: 0.5, cooldown.base: 3, cost.base.stamina: 36, damage.effectiveness: 1.72, area.radius: 7.19 }
+    ai: { role: damage, preferred_range: 6.25, weight: 2 }
+    effects:
+      - type: area
+        shape: circle
+        radius: weave.area.radius
+        center: source
+        filter: enemy
+        max_targets: 24
+        pick: nearest
+        effects:
+          - type: damage
+            threads: $threads
+            amount: "lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power"
+            tags: [hit]
+          - { type: apply_status, status: bleeding, chance: 0.3, magnitude: "last_damage * 0.35" }
+  - id: bastion_thrust
+    name: "Bastion Thrust"
+    description: "A committed lance thrust down one razor-narrow line, reaching well past your shoulder: 35% chance to inflict bleed. It thrusts cleanly around a raised guard without lowering it: the greatshield-and-spear discipline on its own button."
+    form: sweep_quick
+    threads: [stone]
+    tags: [javelin, instant]
+    color: "#d0c0a0"
+    attributes: { cooldown.base: 1.2, cost.base.stamina: 18, damage.effectiveness: 2.33, range: 4.22, area.angle: 0.2 }
+    ai: { role: damage, preferred_range: 3.75, weight: 2 }
+    effects:
+      - type: area
+        shape: sector
+        angle: 60
+        radius: weave.range
+        center: source
+        filter: enemy
+        effects:
+          - type: damage
+            threads: $threads
+            amount: "lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power"
+            tags: [hit]
+          - { type: apply_status, status: bleeding, chance: 0.35, magnitude: "last_damage * 0.4" }
+  - id: scalding_lash
+    name: "Scalding Lash"
+    description: "Whip an arc of boiling water across everything in front of you: fire damage and a scald that BANKS — every scald you land adds to the same wound instead of replacing it, and it bites half again as hard on a WET target."
+    form: sweep
+    threads: [ember]
+    color: "#9fe4ea"
+    attributes: { cast.time: 0.55, cost.base.stamina: 18, damage.effectiveness: 1.17, range: 3.75, area.angle: 1.25 }
+    ai: { role: damage, preferred_range: 3.44, weight: 2 }
+    effects:
+      - type: area
+        shape: sector
+        angle: 60
+        radius: weave.range
+        center: source
+        filter: enemy
+        effects:
+          - type: damage
+            threads: $threads
+            amount: "lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power"
+            tags: [hit]
+          - { type: apply_status, status: scalding, chance: 1, magnitude: "last_damage * 0.5" }
+  - id: gale_lash
+    name: "Gale Lash"
+    description: "Crack a flat whip of compressed air in a cone before you, dealing physical damage: struck enemies are knocked back, with a 35% chance to leave them winded. A shove past an edge lets the sky finish the fight."
+    form: sweep
+    threads: [stone]
+    color: "#dce8f4"
+    attributes: { cast.time: 0.7, cost.base.stamina: 21, damage.effectiveness: 1.33, range: 6.25, area.angle: 1.17 }
+    ai: { role: damage, preferred_range: 5.63, weight: 2 }
+    effects:
+      - type: area
+        shape: sector
+        angle: 60
+        radius: weave.range
+        center: source
+        filter: enemy
+        effects:
+          - type: damage
+            threads: $threads
+            amount: "lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power"
+            tags: [hit]
+          - { type: move, kind: knockback, distance: 1.88 }
+          - { type: apply_status, status: winded, chance: 0.35 }
+
+  - id: follow_sweep
+    name: Follow-Through
+    description: "The free second half of Harvest Stroke leaves a short-lived sector that cuts each enemy it catches once, with a 20% chance to Bleed."
+    form: slam_quick
+    threads: [stone]
+    tags: [sweep]
+    color: "#b880d8"
+    attributes: { cost.base.stamina: 0, damage.effectiveness: 1.11, range: 0, area.radius: 3.91, duration: 0.8 }
+    ai: { role: damage, preferred_range: 2, weight: 0 }
+    effects:
+      - type: field
+        radius: weave.area.radius
+        duration: weave.duration
+        interval: 0.18
+        shape: sector
+        angle: 75
+        hit_once: true
+        pulse:
+          - type: damage
+            threads: $threads
+            amount: "lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power"
+            tags: [hit]
+            can_crit: false
+          - { type: apply_status, status: bleeding, chance: 0.2, magnitude: "last_damage * 0.25" }

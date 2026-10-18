@@ -4,7 +4,9 @@ using HollowWake.Client.Camera;
 using HollowWake.Client.Net;
 using HollowWake.Client.UI;
 using HollowWake.Client.UI.Logic;
+using HollowWake.Client.UI.Overlay;
 using HollowWake.Client.World;
+using HollowWake.Client.World.Appearance;
 using HollowWake.Core.Content;
 using HollowWake.Protocol;
 
@@ -22,6 +24,8 @@ public partial class Main : Node3D
     private ContentRegistry _content = null!;
     private CastVisuals _castVisuals = null!;
     private ClientWorld _world = null!;
+    private AppearanceService _appearance = null!;
+    private ScreenFilter _filter = null!;
     private CameraRig _camera = null!;
     private Hud _hud = null!;
     private LoginPanel _login = null!;
@@ -38,6 +42,7 @@ public partial class Main : Node3D
 
     // Read by the scripted smoke run (Dev/Smoke.cs) and the mockup (Dev/Mockup.cs); nothing else should need these.
     internal ClientWorld World => _world;
+    internal AppearanceService Appearance => _appearance;
     internal CameraRig Rig => _camera;
     internal Hud Hud => _hud;
     internal LoginPanel Login => _login;
@@ -55,6 +60,8 @@ public partial class Main : Node3D
     internal string LastRejectedIntent { get; private set; } = "";
     internal ContentRegistry Content => _content;
     internal Settings Settings => _settings;
+    // The scripted smoke owns a virtual pointer; a graphical display otherwise queries the OS cursor.
+    internal Vector2? SmokePointer { get; set; }
 
     internal string TakeRejected()
     {
@@ -94,8 +101,16 @@ public partial class Main : Node3D
             var args = OS.GetCmdlineUserArgs();
             if (args.Contains("--boot-check")) { GD.Print("BOOT PASS"); GetTree().Quit(); return; }
             if (args.Contains("--loading-smoke")) { AddChild(new Dev.LoadingSmoke(this, args)); return; }
+            if (args.Contains("--quick-play-smoke"))
+            {
+                AddChild(new Dev.QuickPlaySmoke(this, args));
+                AddChild(new Dev.QuickPlay(this, args));
+                return;
+            }
             if (Arg(args, "--loading-preview") is { } direction && direction is "down" or "left" or "right")
                 _loading.Begin(spec.Text("boot"), cancel: () => _loading.Close(), direction: direction);
+            else if (args.Contains("--quick-play") && !args.Contains("--smoke") && !args.Contains("--mockup"))
+                AddChild(new Dev.QuickPlay(this, args) { Name = "QuickPlay" });
         }
         catch (Exception ex)
         {
@@ -175,9 +190,22 @@ public partial class Main : Node3D
             _content.Each<HollowWake.Core.Definitions.ThreadDef>()));
         AddChild(_castVisuals);
         AddChild(_world);
+        // The appearance pipeline: looks, bodies, cards, the day and the motion timings, all from content.
+        _appearance = new AppearanceService(_content, _world.Baker);
+        _world.UseAppearance(_appearance);
         _camera = new CameraRig { Name = "CameraRig" };
         AddChild(_camera);
+        var feel = _appearance.Motion;
+        _camera.FollowIso = feel.Camera("follow_iso", 10);
+        _camera.FollowThird = feel.Camera("follow_third", 14);
+        _camera.ZoomEase = feel.Camera("zoom_ease", 9);
+        _camera.ShakeSeconds = feel.Camera("shake_time", 0.28f);
+        _camera.ShakeRate = feel.Camera("shake_rate", 28);
+        _filter = new ScreenFilter();
+        AddChild(_filter);
         _hud = new Hud(UiContent.Load(Raw), ContentNames.Load(Raw), _settings, Fact) { Name = "Hud", Visible = false };
+        _appearance.SelfEquipment = () => _hud.Hero.Equipment;
+        EntityView.SelfCast = () => _hud.Hero.Cast is { } cast ? (cast.Mode, (float)cast.Progress) : null;
         _hud.Send += message => _net.Send(message);
         _hud.SlotPressed += slot => UseSlot(slot);
         _hud.HeroScreen = HeroScreen;
@@ -253,6 +281,22 @@ public partial class Main : Node3D
         _appliers["shadows"] = () => _world.SetShadows(_settings.Toggle("shadows", true));
         _appliers["fog"] = () => _world.SetFog(_settings.Toggle("fog", true));
         _appliers["prop_labels"] = () => _world.SetPropLabels(_settings.Toggle("prop_labels", true));
+        _appliers["bodies"] = () =>
+        {
+            _appearance.Mode = _settings.Text("bodies") switch { "geometry" => BodiesMode.Geometry, "cards" => BodiesMode.Cards, _ => BodiesMode.Auto };
+        };
+        _appliers["water_detail"] = () => TerrainMesh.SetWaterDetail(_settings.Toggle("water_detail", true));
+        _appliers["foliage_density"] = () => _world.FoliageDensity = (float)_settings.Number("foliage_density", 1);
+        _appliers["screen_shake"] = () => _camera.ShakeEnabled = _settings.Toggle("screen_shake", true);
+        _appliers["reduce_motion"] = () =>
+        {
+            _camera.ReducedMotion = _settings.Toggle("reduce_motion");
+            _appearance.ReducedMotion = _settings.Toggle("reduce_motion");
+        };
+        _appliers["grayscale"] = () => _filter.Grayscale = _settings.Toggle("grayscale");
+        void Day() => _world.DayOverride = _settings.Toggle("day_lock") ? (float)(_settings.Number("day_time", 12) / 24.0) : null;
+        _appliers["day_lock"] = Day;
+        _appliers["day_time"] = Day;
         _appliers["master_volume"] = () => AudioServer.SetBusVolumeDb(0, Mathf.LinearToDb((float)_settings.Number("master_volume", 80) / 100f));
         if (DisplayServer.GetName() != "headless")
         {
@@ -440,6 +484,11 @@ public partial class Main : Node3D
                 _camera.Follow(self.GlobalPosition);
                 _world.Stream(Coords.ToCore(self.GlobalPosition));
             }
+            _world.ObserveCamera(_camera.Mode == CameraMode.Isometric, _camera.OrthoSize, _camera.YawNow);
+            if (_hud.Hero.HasServerClock)
+            {
+                _world.ObserveServerTime(_hud.Hero.ServerNow(LocalNow));
+            }
             _hud.SetSelfEntity(self?.State);
             if (!_loading.BlocksWorldInput) { HandleMovementInput(); UpdateHover(); }
             var now = Time.GetTicksMsec() / 1000.0;
@@ -537,6 +586,7 @@ public partial class Main : Node3D
             case InventoryStateMsg inventory:
                 InventoryStates++;
                 _hud.ApplyInventory(inventory);
+                _world.RefreshSelfEquipment();
                 break;
             case PassiveStateMsg passives:
                 _hud.ApplyPassives(passives);
@@ -595,12 +645,26 @@ public partial class Main : Node3D
 
     private void ShowCombat(CombatEventMsg c)
     {
+        // every body in view reacts: the struck flinch and flash, the strikers' swings come through
+        _world.CombatHit(c);
         if (c.Source != _world.SelfKey && c.Target != _world.SelfKey)
         {
             return;
         }
+        var targetView = _world.Entities.GetValueOrDefault(c.Target);
         var source = _world.Entities.GetValueOrDefault(c.Source)?.State.Name ?? "?";
-        var target = _world.Entities.GetValueOrDefault(c.Target)?.State.Name ?? "?";
+        var target = targetView?.State.Name ?? "?";
+        var feel = _appearance.Motion;
+        if (c.Target == _world.SelfKey && c.Kind == "damage")
+        {
+            _camera.Shake(c.Crit ? feel.Camera("shake_crit", 0.25f) : feel.Camera("shake_hit", 0.12f));
+        }
+        else if (c.Source == _world.SelfKey && c.Kind == "death")
+        {
+            _camera.Shake(feel.Camera("shake_death", 0.35f));
+        }
+        var maxLife = targetView?.State.ResourceMax.GetValueOrDefault("life") ?? 0;
+        var weight = maxLife > 0 && c.Kind is "damage" or "heal" ? Mathf.Clamp((float)(c.Amount / maxLife) / Mathf.Max(0.01f, feel.CombatText("heavy_fraction", 0.12f)), 0f, 1f) : 0f;
         var text = c.Kind switch
         {
             "damage" => $"{source} hits {target} for {c.Amount:0}{(c.Crit ? " (crit)" : "")}",
@@ -612,7 +676,7 @@ public partial class Main : Node3D
             _ => c.Kind,
         };
         _hud.Log($"[color=#{_hud.Skin.S("ink_muted").ToHtml(false)}]{Hud.Escape(text)}[/color]");
-        _hud.CombatText(c.Kind, c.Amount, c.Crit, c.Source == _world.SelfKey, c.Target == _world.SelfKey);
+        _hud.CombatText(c.Kind, c.Amount, c.Crit, c.Source == _world.SelfKey, c.Target == _world.SelfKey, weight);
         CombatLines++;
     }
 
@@ -754,7 +818,7 @@ public partial class Main : Node3D
 
     private (Vector3 Origin, Vector3 Direction) MouseRay()
     {
-        var mouse = GetViewport().GetMousePosition();
+        var mouse = SmokePointer ?? GetViewport().GetMousePosition();
         return (_camera.Camera.ProjectRayOrigin(mouse), _camera.Camera.ProjectRayNormal(mouse));
     }
 
@@ -763,6 +827,7 @@ public partial class Main : Node3D
         var (origin, direction) = MouseRay();
         _hovered = _world.PickEntity(origin, direction);
         _hoveredKey = _hovered?.Key ?? 0;
+        EntityView.HoveredKey = _hoveredKey;
         _hud.SetTarget(_hovered?.State);
     }
 

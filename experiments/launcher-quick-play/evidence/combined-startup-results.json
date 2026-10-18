@@ -1,0 +1,49 @@
+{
+  "integratedMain": "6feec67",
+  "gameVersion": "0.1.1-combined.2",
+  "windowsArchive": {
+    "file": "HollowWakeMMO-client-0.1.1-combined.2-windows-x64.zip",
+    "size": 74787975,
+    "sha256": "453f8b916bc75c849f94e95faebddd555808fdd6bf1aabbe3bba20b16209d94a",
+    "executable": "HollowWakeMMO.exe"
+  },
+  "local": {
+    "portConflict": "Reported failure without killing the unrelated listener",
+    "warmPreparationMilliseconds": 160,
+    "liveBuild": "Full solution rebuild succeeds while the same managed server stays running",
+    "shutdown": "Lease removal requests the server save/shutdown path and clears the owned record",
+    "hostExitCode": 0
+  },
+  "browser": {
+    "boot": "Crossing appears while the client module loads; quick login then waits for first-time creation",
+    "entry": "Automatic selection shows a playable Crossing, waits for hero and terrain, quarantines held input, then accepts fresh gameplay input",
+    "resume": "Remembered resume, cancel, ignored late frames and explicit reconnect all use the same loading lifecycle",
+    "pageErrors": []
+  },
+  "exportedGame": {
+    "selections": 1,
+    "result": "Automatic character resume, visible Crossing during delayed entry, terrain readiness and subsequent gameplay movement passed",
+    "client": "exported"
+  },
+  "packagedLauncher": {
+    "feed": "0.1.1-combined.2",
+    "brandArtwork": "Packaged launcher renders the shared insignia and bundles byte-identical PNG/ICO assets",
+    "selectionRace": "Changing selection invalidates the previous release before asynchronous settings persistence",
+    "selectedInstall": "Pinned older release downloaded, verified and installed",
+    "concurrentPlay": "Play works during download, duplicate Play spawns once, running build survives install",
+    "play": "Installed combined client resumed its character through the Crossing and reached real world readiness",
+    "shortcutMilliseconds": 1844,
+    "shortcut": "Installed game starts before the deliberately stalled feed answers",
+    "shortcutEntry": "Installed combined client resumed its character through the Crossing and reached real world readiness"
+  },
+  "nativeFullSmoke": "SMOKE DONE 22/22 passed in 45.9s; 141 fps at the end with 63 chunks and 294 entities",
+  "browserFullSmoke": "25/25 passed; no page errors; combined-final-web",
+  "automatedTests": {
+    "core": 491,
+    "server": 36,
+    "client": 87,
+    "web": 144,
+    "launcher": 33,
+    "localHelper": 2
+  }
+}

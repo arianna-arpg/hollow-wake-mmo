@@ -19,6 +19,7 @@ interface SettingsView {
   channel: Channel;
   developer: boolean;
   autoUpdate: boolean;
+  releaseTag: string | null;
   token: TokenView;
 }
 
@@ -62,6 +63,7 @@ interface TaskView {
 }
 
 interface GameView {
+  starting: boolean;
   running: boolean;
   pid: number | null;
   lastExit: string | null;
@@ -91,6 +93,8 @@ interface SelfUpdateView {
 }
 
 interface LauncherState {
+  builds: BuildChoice[];
+  buildsError: string | null;
   launcherVersion: string;
   platform: string;
   dataDir: string;
@@ -121,6 +125,7 @@ interface Outcome {
 
 /** What the preload script exposes to the page as window.launcher. */
 interface LauncherApi {
+  selectBuild(tag: string | null): Promise<Outcome>;
   getState(): Promise<LauncherState>;
   getLog(): Promise<LogLine[]>;
   onState(listener: (state: LauncherState) => void): void;
@@ -139,6 +144,12 @@ interface LauncherApi {
   openDataFolder(): Promise<void>;
   applyLauncherUpdate(): Promise<void>;
   quit(): Promise<void>;
+}
+
+interface BuildChoice {
+  tag: string;
+  version: string;
+  channel: Channel;
 }
 
 interface Window {

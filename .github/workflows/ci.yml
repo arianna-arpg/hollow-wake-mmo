@@ -43,6 +43,8 @@ jobs:
           node-version: 24
           cache: npm
           cache-dependency-path: launcher/package-lock.json
+      - name: Background testing runner lifecycle
+        run: node --test ../scripts/test-background.test.mjs
       - run: npm ci
         env:
           ELECTRON_SKIP_BINARY_DOWNLOAD: '1'
@@ -52,6 +54,8 @@ jobs:
         run: npm run build
       - name: Unit tests (feed, verified download, extraction, install)
         run: npm test
+      - name: Local startup cache and configuration
+        run: node --test ../scripts/play-local.test.mjs
 
   docker:
     runs-on: ubuntu-latest

@@ -22,6 +22,8 @@ mkdirSync(outDir, { recursive: true });
 // ---------------------------------------------------------------- helpers
 
 const u = v => +(v / T.UNIT).toFixed(2);
+const deg = r => Math.round(r * 180 / Math.PI);
+const tenth = v => Math.round(v * 10) / 10;
 const r2 = v => +(+v).toFixed(3);
 const mean = ([lo, hi]) => (lo + hi) / 2;
 const title = id => id.split('_').map(w => w ? w[0].toUpperCase() + w.slice(1) : w).join(' ');
@@ -370,7 +372,10 @@ function riderOf(e, k, ctx) {
       return n;
     }
     case 'knockback': return { type: 'move', kind: e.mode === 'buffet' ? 'buffet' : 'knockback', distance: u(e.strength) };
-    case 'pull': return e.stun ? [{ type: 'move', kind: 'pull', distance: 8 }, { type: 'apply_status', status: 'stunned', duration: e.stun }] : { type: 'move', kind: 'pull', distance: 8 };
+    case 'pull': {
+      const pull = { type: 'move', kind: 'pull', distance: 8, anchor: k.delivery?.type === 'projectile' ? 'caster' : undefined };
+      return e.stun ? [pull, { type: 'apply_status', status: 'stunned', duration: e.stun }] : pull;
+    }
     case 'buff': return buffStatus(e, k, ctx);
     case 'heal': {
       const parts = [];
@@ -413,8 +418,8 @@ function riderOf(e, k, ctx) {
     case 'minionCast': return { type: 'minion_cast', weave: e.skillId, at: e.at === 'enemy' ? 'enemy' : 'point' };
     case 'detonateMinions': { ctx.notes.push('minions explode through consume_minion rather than a self-destruct charge'); return { type: 'consume_minion', count: 99, pick: 'nearest', radius: 20, effects: [{ type: 'area', radius: 2.5, center: 'point', filter: 'enemy', effects: [{ type: 'damage', amount: `consumed_life_max * ${e.fraction}`, threads: '$threads' }] }] }; }
     case 'spawnCorpse': return { type: 'spawn', pattern: patternOf(e.monsterId, ctx), count: e.count, as_corpse: true };
-    case 'spawnZone': return { type: 'field', radius: u(e.radius), duration: e.duration, interval: e.tickInterval ?? 0.5, center: 'focus', pulse: [damageNode(k, { ...ctx, scale: e.damageScale ?? 1, noCrit: true })].filter(Boolean) };
-    case 'birth': { ctx.notes.push('a birth becomes a spawn of our pattern'); return { type: 'spawn', pattern: patternOf(e.monsterId ?? e.pool?.[0]?.id ?? 'sprig', ctx), count: e.count ?? 1, lifetime: e.duration ?? 20 }; }
+    case 'spawnZone': return { type: 'field', radius: u(e.radius), duration: e.duration, interval: e.tickInterval ?? 0.5, pulse: [damageNode(k, { ...ctx, scale: e.damageScale ?? 1, noCrit: true })].filter(Boolean) };
+    case 'birth': { ctx.notes.push('a birth becomes a summon of our pattern'); const pattern = patternOf(e.monsterId ?? e.pool?.[0]?.id ?? 'sprig', ctx); return { type: 'summon', pattern, count: e.count ?? 1, duration: e.duration ?? 20, max_active: e.max ?? e.cap ?? 2, group: pattern }; }
     case 'shatterConstructs': return { type: 'detonate', tags: ['construct'], radius: e.radius ? u(e.radius) : undefined, effects: [{ type: 'area', radius: 2.5, center: 'point', filter: 'enemy', effects: [{ type: 'damage', amount: `body_life_max * ${e.fraction}`, threads: '$threads' }] }] };
     default:
       if (T.BLOCKED_EFFECTS[e.type]) { ctx.blocked.push(`${e.type}: ${T.BLOCKED_EFFECTS[e.type]}`); bump(report.blockedEffects, e.type); }
@@ -512,20 +517,36 @@ function graphOf(k, ctx) {
       if (d.rehit) ctx.attrs['projectile.rehit'] = d.rehit;
       if (d.spreadByAim) n.spread_by_aim = { near: d.spreadByAim.near, far: d.spreadByAim.far, range: u(d.spreadByAim.range) };
       if (d.occlusion === 'free') n.occlusion = 'free';
+      // The prototype turns in radians a second and ours in degrees; its erratic adds a uniform turn of up to
+      // five times its rate a second at sixty frames, which 2.9 times its rate matches at our twenty ticks; an orbit's rate is the flight's speed over its radius; accel is a fraction
+      // of the speed a second; a weave of w sways w / pi times a second; a zigzag swings every interval seconds.
       const tr = d.trajectory ?? {};
-      for (const axis of ['homing', 'guide', 'erratic', 'spiral', 'orbit', 'spin', 'accel', 'bounce']) if (tr[axis]) ctx.attrs[`projectile.${axis}`] = axis === 'accel' ? u(tr[axis]) : tr[axis];
-      if (tr.weave) ctx.attrs['projectile.wave'] = tr.weave;
+      const speed = u(d.speed);
+      if (tr.homing) ctx.attrs['projectile.homing'] = deg(tr.homing);
+      if (tr.guide) ctx.attrs['projectile.guide'] = deg(tr.guide);
+      if (tr.erratic) ctx.attrs['projectile.erratic'] = deg(tr.erratic * 2.9);
+      if (tr.spin) ctx.attrs['projectile.spin'] = deg(tr.spin);
+      if (tr.orbit) ctx.attrs['projectile.orbit'] = deg(tr.orbit * speed / u(tr.orbitRadius ?? 50));
+      else if (tr.spiral) ctx.attrs['projectile.spiral'] = deg(tr.spiral);
+      if (tr.orbit && tr.spiral) ctx.notes.push('an orbit that also spirals keeps the orbit');
+      if (tr.accel) ctx.attrs['projectile.accel'] = tenth(tr.accel * speed);
+      if (tr.bounce) ctx.attrs['projectile.bounce'] = tr.bounce;
+      if (tr.weave) ctx.attrs['projectile.wave'] = tenth(tr.weave / Math.PI);
       if (tr.amplitude) n.amplitude = u(tr.amplitude);
       if (tr.orbitRadius) n.orbit_radius = u(tr.orbitRadius);
-      if (tr.zigzag) { n.zigzag = tr.zigzag.angleDeg; n.zigzag_every = u(tr.zigzag.interval); if (tr.zigzag.shed) ctx.notes.push('zigzag shards dropped'); }
-      if (tr.recurve) ctx.attrs['projectile.recurve'] = Math.round(tr.recurve.chance * 90);
-      if (tr.arcTo) ctx.attrs['projectile.converge'] = tr.arcTo;
+      if (tr.zigzag) { n.zigzag = tr.zigzag.angleDeg; n.zigzag_every = tenth(tr.zigzag.interval * speed); if (tr.zigzag.shed) ctx.notes.push('zigzag shards dropped'); }
+      if (tr.recurve) { ctx.attrs['projectile.rehit'] = ctx.attrs['projectile.rehit'] ?? 0.7; ctx.notes.push('the recurve is a rehit on the homing, not a chance that decays'); }
+      if (tr.arcTo) ctx.attrs['projectile.converge'] = deg(tr.arcTo);
       if (tr.selectivePierce) ctx.notes.push('selective pierce dropped');
       if (tr.caromOnHit) ctx.blocked.push('carom on hit (row B25, carom is later)');
       if (tr.frameBounce) ctx.notes.push('frame bounces are rejected (question Q10)');
       n.on_hit = hits;
       const ends = [];
-      if (d.explode) ends.push({ type: 'area', radius: u(d.explode.radius), center: 'point', filter: 'enemy', effects: [damageNode(k, { ...ctx, scale: d.explode.damageScale ?? 0.6 })].filter(Boolean) });
+      if (d.explode) {
+        const burst = { type: 'area', radius: u(d.explode.radius), center: 'point', filter: 'enemy', effects: [damageNode(k, { ...ctx, scale: d.explode.damageScale ?? 0.6 })].filter(Boolean) };
+        hits.push({ ...burst, include_center: false });
+        n.on_expire = [burst];
+      }
       if (d.endZone) ends.push({ type: 'field', radius: u(d.endZone.radius), duration: d.endZone.duration, interval: d.endZone.tickInterval ?? 0.5, seek: d.endZone.seek ? u(d.endZone.seek.speed) : undefined, pulse: [damageNode(k, { ...ctx, scale: d.endZone.damageScale ?? 0.5, noCrit: true })].filter(Boolean) });
       if (d.sequel) ends.push({ type: 'cast', weave: d.sequel.skillId, at: 'point', damage_scale: d.sequel.damageScale ?? 1 });
       if (ends.length) n.on_end = ends;
@@ -547,7 +568,7 @@ function graphOf(k, ctx) {
       const impact = { type: 'area', shape: d.shape === 'sector' ? 'sector' : d.shape ?? undefined, angle: d.arcDeg, radius: 'weave.area.radius', center: 'point', filter: 'enemy', effects: hits };
       if (d.lingerDuration) {
         ctx.attrs.duration = d.lingerDuration;
-        const f = { type: 'field', radius: 'weave.area.radius', duration: 'weave.duration', interval: d.tickInterval ?? 0.5, center: 'point' };
+        const f = { type: 'field', radius: 'weave.area.radius', duration: 'weave.duration', interval: d.tickInterval ?? 0.5 };
         if (d.shape && d.shape !== 'circle') { f.shape = d.shape; if (d.arcDeg) f.angle = d.arcDeg; }
         if (d.delay) f.delay = d.delay;
         if (d.exposure) f.exposure = d.exposure;
@@ -806,8 +827,16 @@ function formParts(k, ctx) {
   }
   if (k.useCharges) {
     const uc = k.useCharges;
+    // A magazine's refill is the skill's own cooldown there, so the cooldown moves into the bank; a bank that
+    // names no clock is manual ammunition, refilled only by its reload.
     const uses = { max: uc.max, recharge: uc.recharge };
-    if (uc.magazine) uses.magazine = uc.magazine === true ? true : { refill: uc.magazine.refill, drip: uc.magazine.drip };
+    if (uc.magazine) {
+      uses.magazine = { refill: k.cooldown || undefined, drip: uc.magazine !== true && uc.magazine.drip ? true : undefined };
+      if (uc.magazine !== true && uc.magazine.refill) ctx.notes.push(`the magazine refills ${uc.magazine.refill} rounds a reload there; here it fills on the reload clock`);
+      if (uc.magazine === true) ctx.magazineClock = true;
+    } else if (uc.recharge === undefined && !uc.empower) {
+      uses.manual = true;
+    }
     if (uc.empower) uses.empower = uc.empower;
     if (uc.still) uses.still = { bleed: uc.still.bleed };
     if (uc.ventAll) uses.vent_all = true;
@@ -824,7 +853,7 @@ function formParts(k, ctx) {
     if (scales.length) spend.scales = scales;
     ctx.behaviors.spend = Object.fromEntries(Object.entries(spend).filter(([, v]) => v !== undefined));
   }
-  if (k.convert) ctx.behaviors.convert = { when: k.convert.when, weave: k.convert.skillId, __note: `convert rule '${k.convert.when}' becomes an expression by hand` };
+  if (k.convert) ctx.behaviors.convert = k.convert.when === 'chargesEmpty' ? { when: 'slot.uses < 1', weave: k.convert.skillId } : { when: k.convert.when, weave: k.convert.skillId, __note: `convert rule '${k.convert.when}' becomes an expression by hand` };
   if (k.meta) ctx.behaviors.meta_action = { weave: k.meta.skillId, label: k.meta.label };
   if (k.followUp) ctx.behaviors.follow_up = { weave: k.followUp.skillId, delay: k.followUp.delay, chance: k.followUp.chance };
   if (k.comboChain) ctx.behaviors.chain = { steps: k.comboChain.skills, window: k.comboChain.window };
@@ -849,6 +878,7 @@ function formParts(k, ctx) {
     else ctx.notes.push(why);
   }
   if (k.innateMods) ctx.modifiers.push(...modsOf(k.innateMods, ctx));
+  if (ctx.dropped.length) ctx.notes.push(`innate modifiers not carried: ${ctx.dropped.join(', ')}`);
   if (k.ultimate) parts.tags.push('ultimate');
   return parts;
 }
@@ -863,14 +893,14 @@ for (const k of Object.values(skills)) {
     ledgerSkills.push({ id: k.id, name: k.name, family, ours: '', mechanism: `${k.delivery?.type} kit skill`, status: 'not ported', note: 'a monster kit skill (noDrop); its monster is not in this port and the bestiary port brings its kit', proof: '' });
     continue;
   }
-  const ctx = { attack: (k.tags ?? []).includes('attack'), notes: [], blocked: [], seams: [], attrs: {}, modifiers: [], behaviors: {} };
+  const ctx = { attack: (k.tags ?? []).includes('attack'), notes: [], blocked: [], seams: [], attrs: {}, modifiers: [], behaviors: {}, dropped: [] };
   const { threads, dropped: droppedThreads, types } = threadsOf(k);
   if (droppedThreads.length) ctx.notes.push(`a third damage type (${droppedThreads.join(', ')}) is folded into the first two`);
   const base = { melee: 'swing', projectile: ctx.attack ? 'shot' : 'missile', nova: ctx.attack ? 'whirl' : 'burst', cone: ctx.attack ? 'sweep' : 'breath', target: ctx.attack ? 'thrust' : 'smite', ground: ctx.attack ? 'slam' : 'lay', storm: ctx.attack ? 'barrage' : 'hail', self: ctx.attack ? 'cry' : 'boon', dash: 'stride', leap: 'vault', blink: 'flicker', mark: 'waymark', summon: k.delivery.persistent ? 'pact' : 'call', construct: ['trap', 'mine', 'pod'].includes(k.delivery.kind) ? 'trap' : 'plant', aura: 'mantle', detonate: 'spark', detonateProjectile: 'spark', carom: 'carom' }[k.delivery.type] ?? 'rite';
   const graph = graphOf(k, ctx);
   const parts = formParts(k, ctx);
   const formId = shell(base, k, parts, aiOf(k, family, 6).role);
-  const attrs = { 'cast.time': k.useTime || undefined, 'cooldown.base': k.cooldown || undefined };
+  const attrs = { 'cast.time': k.useTime || undefined, 'cooldown.base': ctx.magazineClock ? undefined : (k.cooldown || undefined) };
   const resource = ctx.attack ? 'stamina' : 'mana';
   attrs[`cost.base.${resource}`] = ctx.attack ? k.manaCost * 3 : k.manaCost;
   if (k.lifeCost) attrs['cost.base.life'] = k.lifeCost;
@@ -929,7 +959,7 @@ const GRAFTS = {
   chargeCost: (g, s) => { const c = s.chargeCost; g.spend = { charge: c.charge, amount: c.amount === 'all' ? undefined : c.amount, all: c.amount === 'all' || undefined, optional: c.optional, scales: c.damagePerCharge ? [{ attribute: 'damage', form: 'more', per_charge: c.damagePerCharge }] : undefined }; },
   aim: (g, s) => { const a = s.aim; (g.patches ??= []).push({ type: 'area', where: 'root', wrap: a.sequence ? { type: 'aim', sequence: a.sequence.steps } : { type: 'aim', spread: a.random.spreadDeg, offset: a.random.offsetDeg }, mode: 'first' }); },
   useChargeGraft: (g, s) => { const c = s.useChargeGraft; g.uses = { max: c.rounds, recharge: c.recharge, empower: c.empower, still: c.still }; },
-  munition: (g, s) => { g.uses = { max: s.munition.rounds, recharge: 0 }; g.convert = { when: 'slot.uses < 1', weave: s.munition.reloadSkillId ?? 'quiver_restring' }; },
+  munition: (g, s) => { g.uses = { max: s.munition.rounds, manual: true }; g.convert = { when: 'slot.uses < 1', weave: s.munition.reloadSkillId ?? 'quiver_restring' }; },
   gate: (g, s) => { if (s.gate.guard) g.gates = ['has("guarding")']; },
   selfStack: (g, s, ctx) => { g.self_stack = { max: s.selfStack.maxStacks, duration: s.selfStack.duration, modifiers: modsOf(s.selfStack.mods, ctx) }; },
   fuse: (g, s) => { (g.patches ??= []).push({ type: 'damage', wrap: { type: 'fuse', delay: s.fuse.delay } }); },

@@ -416,6 +416,37 @@ public class CastModeTests
         Assert.Equal(slot.Key, arena.Runtime.FaceOf(arena.Sim, arena.Caster, slot)!.Key);
     }
 
+    [Theory]
+    [InlineData("t_manual")]
+    [InlineData("t_manual_mag")]
+    [InlineData("t_manual_drip")]
+    [InlineData("t_manual_still")]
+    public void AManualBankNeverRecoversOnItsOwn(string form)
+    {
+        var arena = CastingArena.Create();
+        var slot = arena.Slot(form);
+        arena.Begin(slot);
+        arena.RunSeconds(2);
+        Assert.Equal(1, arena.Runtime.Uses(arena.Sim, arena.Caster, slot, out _));
+        // Moving cannot drain a manual bank even if content also carries a still-bank spec.
+        arena.Sim.World.Get<Motion>(arena.Caster)!.MoveDir = Vector2.UnitY;
+        arena.RunSeconds(2);
+        Assert.Equal(1, arena.Runtime.Uses(arena.Sim, arena.Caster, slot, out _));
+        arena.Sim.World.Get<Motion>(arena.Caster)!.MoveDir = Vector2.Zero;
+        arena.Begin(slot);
+        Assert.Equal(0, arena.Runtime.Uses(arena.Sim, arena.Caster, slot, out var max));
+        Assert.Equal(2, max);
+        // No cooldown, no recharge: a trickle bank would be full again at once. A manual one stays empty.
+        arena.RunSeconds(30);
+        Assert.Equal(0, arena.Runtime.Uses(arena.Sim, arena.Caster, slot, out _));
+        Assert.Equal("quiver_restring", arena.Runtime.FaceOf(arena.Sim, arena.Caster, slot)!.Key);
+        // Only its reload puts uses back.
+        arena.Begin(slot);
+        arena.RunSeconds(1);
+        Assert.Equal(2, arena.Runtime.Uses(arena.Sim, arena.Caster, slot, out _));
+        Assert.Equal(slot.Key, arena.Runtime.FaceOf(arena.Sim, arena.Caster, slot)!.Key);
+    }
+
     // ------------------------------------------------------------ gates, costs, spends
 
     [Fact]

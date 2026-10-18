@@ -1,22 +1,25 @@
 # Playing in a GitHub Codespace
 
-A codespace runs the server and serves the web client from GitHub's machines, so the game can be tried with nothing installed but a browser. The repository's dev container (`.devcontainer/devcontainer.json`) is a .NET 10 image with Node 22; creating the codespace builds the solution and the web client once.
+A codespace runs the server and serves the web client from GitHub's machines, so the game can be tried with nothing installed but a browser. The repository's dev container (`.devcontainer/devcontainer.json`) prepares the web client and server, then starts them on creation and resume through `node scripts/play-local.mjs --browser --no-open`. Unchanged builds are reused.
+
+The helper is verified locally. Automatic cloud provisioning, detached-process survival after the hooks, and forwarded-port opening remain unverified in a live Codespace; use the manual command below if those hooks do not complete.
 
 ## Play
 
-1. On the repository page choose **Code**, **Codespaces**, **Create codespace on main** (or on any branch). The first start takes a few minutes while the solution and the web client build.
-2. In the codespace terminal run:
+1. Use **Play a branch** on the Pages login screen, or the repository's **Code**, **Codespaces** menu. The link offers an existing Codespace for that branch when available. First setup takes a few minutes.
+2. Wait for the forwarded browser port to open. The startup helper prepares the selected branch's server and client together. If the browser did not open, use **Open in Browser** on port 7778 in the Ports panel. The startup output also prints a link with `?play=1` for automatic login and character resume. To start it manually after stopping it, run:
 
    ```bash
-   scripts/codespace-play.sh
+   node scripts/play-local.mjs --browser --no-open
    ```
 
-   It builds the web client if needed and starts the server: TCP on port 7777 for the desktop client, and on port 7778 the WebSocket game socket plus the web client itself. It prints the web client's address, `https://<codespace-name>-7778.app.github.dev/`.
-3. Make port 7778 public: in the **Ports** panel, right-click port 7778 (labelled *Web client and WebSocket*), choose **Port Visibility**, **Public**. `scripts/codespace-play.sh --public` asks the GitHub CLI to do this for you. Anyone with the address can then reach the server, so switch it back to private, or stop the codespace, when you are done.
-4. Open the address in a browser. The page is served by the game server, so it fills in its own address; press **Connect**.
-5. Log in with any account name (development auth creates accounts on first use), create a character and press **Enter the Weft**.
+   `node scripts/play-local.mjs --stop` requests a save and shutdown. Do not start the legacy foreground script while the managed server owns these ports.
+3. Keep the forwarded port private for your own playtest. To invite others or connect from the separate Pages origin, make port 7778 public in **Ports**, **Port Visibility**, **Public**, then return it to private when done.
+4. The page fills in its own server address. Press **Connect**, or use the `?play=1` link to connect automatically. Create a character on the first visit; quick play resumes the remembered character on later visits.
 
 Other people can join with the same address while the port is public and the codespace runs.
+
+The selected branch must include this startup configuration for automatic preparation. Older branches still use their own dev-container instructions and `scripts/codespace-play.sh`. GitHub's [branch and resume links](https://docs.github.com/en/codespaces/setting-up-your-project-for-codespaces/setting-up-your-repository/facilitating-quick-creation-and-resumption-of-codespaces) keep each playtest attached to its chosen branch.
 
 ## With the client on GitHub Pages
 

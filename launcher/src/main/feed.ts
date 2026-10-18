@@ -28,6 +28,8 @@ export interface FeedConfig {
   token: string | null;
   userAgent: string;
   timeoutMs: number;
+  /** An explicitly pinned release; null follows the selected channel. */
+  tag?: string | null;
 }
 
 /** How to fetch one file: the URL plus the headers it needs (auth only ever goes to the API host). */
@@ -83,14 +85,17 @@ export async function resolveRelease(cfg: FeedConfig, channel: Channel, fetchImp
   if (cfg.override) {
     return resolveOverride(cfg, fetchImpl);
   }
-  const releases = await listReleases(cfg, channel, fetchImpl);
+  const releases = cfg.tag
+    ? [parseJson((await apiGet(cfg, `${cfg.api}/repos/${cfg.owner}/${cfg.repo}/releases/tags/${encodeURIComponent(cfg.tag)}`, fetchImpl)).text, 'the selected release') as GitHubRelease]
+    : await listReleases(cfg, channel, fetchImpl);
   const candidates = releases
-    .filter((r) => !r.draft && (channel === 'nightly' || !r.prerelease))
+    .filter((r) => !r.draft && (cfg.tag ? r.tag_name === cfg.tag : channel === 'nightly' || !r.prerelease))
     .map((r) => ({ release: r, version: parseVersion(r.tag_name), manifest: findAsset(r, MANIFEST_ASSET) }))
     .filter((c): c is { release: GitHubRelease; version: string; manifest: GitHubAsset } => c.version !== null && c.manifest !== null)
     .sort((a, b) => compareVersions(b.version, a.version));
   const best = candidates[0];
   if (!best) {
+    if (cfg.tag) throw new FeedError('no-release', `Selected release ${cfg.tag} is unavailable or has no complete game build.`, 'Choose Latest on this channel or another published build.');
     throw new FeedError(
       'no-release',
       channel === 'stable' ? 'No stable release with a game build has been published yet.' : 'No release with a game build has been published yet.',
@@ -99,6 +104,9 @@ export async function resolveRelease(cfg: FeedConfig, channel: Channel, fetchImp
   }
   const text = await fetchFile(cfg, assetDownload(cfg, best.manifest), fetchImpl, 'manifest.json');
   const manifest = parseManifestText(text, best.release.tag_name);
+  if (cfg.tag && manifest.version !== parseVersion(cfg.tag)) {
+    throw new FeedError('bad-release', 'The selected release tag does not match its manifest version.');
+  }
   const archives: Record<string, Download> = {};
   for (const [key, build] of Object.entries(manifest.platforms)) {
     const asset = findAsset(best.release, build.file);
@@ -135,6 +143,15 @@ async function resolveOverride(cfg: FeedConfig, fetchImpl: FetchLike): Promise<F
     archives[key] = { url: (build.url ? toUrl(build.url) : toUrl(build.file, manifestUrl)).href, headers: {} };
   }
   return { manifest, tag: null, pageUrl: null, publishedAt: manifest.publishedAt, prerelease: manifest.channel === 'nightly', archives };
+}
+
+/** Recent published builds with complete manifests. Platform suitability is checked after selection. */
+export async function listBuilds(cfg: FeedConfig, channel: Channel, fetchImpl: FetchLike): Promise<BuildChoice[]> {
+  if (cfg.override) return [];
+  const releases = await listReleases(cfg, 'nightly', fetchImpl);
+  return releases.filter(r => !r.draft && (channel === 'nightly' || !r.prerelease) && parseVersion(r.tag_name) && findAsset(r, MANIFEST_ASSET))
+    .map(r => ({ tag: r.tag_name, version: parseVersion(r.tag_name)!, channel: r.prerelease ? 'nightly' as const : 'stable' as const }))
+    .sort((a, b) => compareVersions(b.version, a.version));
 }
 
 async function listReleases(cfg: FeedConfig, channel: Channel, fetchImpl: FetchLike): Promise<GitHubRelease[]> {
