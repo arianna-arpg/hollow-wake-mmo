@@ -2,7 +2,7 @@
 
 Scope claimed before edits for PR #40, responding to Claude's review of `b29e67c` at https://github.com/arianna-arpg/hollow-wake-mmo/pull/40#issuecomment-6246008360.
 
-Current integration checkpoint: #40 consumes the complete corrected #34 `26c50de03c62f434c517564906a54c0287b281ce` through merge `2c7c611`. That base includes corrected #31-33 and full #36 `724c5ed`. Elemental-only acceptance adjustments are `f3b491a`; reviewed generation snapshots are `2b485e1`. Full Release CI passes Core 2297, client 121 and server 48; browser 280 tests and both builds pass. All 160 elemental cases are included. Private state checks pass browser 30/30 and native 26/26; screenshot inspection confirms an inherited blank-world defect in browser card mode. The shared owner has that report. Controlled performance and the shared pixel correction remain open, so this PR stays draft.
+Current integration checkpoint: #40 consumes the complete corrected #34 `26c50de03c62f434c517564906a54c0287b281ce` through merge `2c7c611`. That base includes corrected #31-33 and full #36 `724c5ed`. Elemental-only acceptance adjustments are `f3b491a`; reviewed generation snapshots are `2b485e1`. Full Release CI passes Core 2297, client 121 and server 48, including all 160 elemental cases. Shared card-renderer fix `30f6c91` from #37 is consumed as `1528f2c`; browser 284 tests, its build and a fresh pixel-aware browser smoke 31/31 pass. Native state checks pass 26/26. Controlled performance remains open, so this PR stays draft pending that gate and shared review.
 
 This pass owns elemental content, its paired builders, tests and evidence. Shared edits are limited to an additive manifestation budget in `content/core/world/regions.yaml`, the entity/appearance contracts, and reviewed generation goldens. The owning entity chat has been notified before editing those integration points. PRs #31-34 own mass/shove and placement corrections; #36 and #20 own the common projectile/contact/forecast solution. This pass will consume their published fixes and will not duplicate shared runtime changes or increase creature heights to conceal missed projectiles.
 
@@ -12,7 +12,7 @@ Sites now have zero level offset and retain their resident minimum levels. They 
 
 Existing silhouettes and nominal dimensions are retained. The unused `torn` flag is removed, and a single prism now hangs from the central head bone rather than a left arm; both clients and the shared fixture changed together. Palette slots use presentation-role names. Refreshed camera/grayscale images retain the common-scale lineup; separate actual casting poses show the centered Lumen and Mind cores. Bounds evidence now includes measured rest-geometry min/max in addition to the existing conservative plan height and authoritative stature.
 
-Previous logs and review records describe the original head, including its defects. New evidence will be labeled by revision and actual mechanism tested. A direct damage-effect test proves mitigation, not projectile contact. Shared shove bounds and projectile coverage remain open until the owning base lands and these regressions pass against it.
+Previous logs and review records describe the original head, including its defects. Evidence below is labeled by revision and actual mechanism tested. A direct damage-effect test proves mitigation, not projectile contact. The later shared-base sections record the passing shove and projectile regressions.
 
 ## Interim evidence on the original shared runtime
 
@@ -25,13 +25,13 @@ This is not the final gate report. `experiments/elementals/evidence/review-fixes
 - Three real displacement regressions fail on the old shared runtime: Bash moves Emberwisp 47.49866 m and Winter's Sweep moves it 94.08607 m, both beyond its 45 m home leash. A 4-unit shove from x=30 tunnels through a placed wall at x=32 and ends at x=93.34717. These fixtures await the shared ceiling and swept-collision correction; elemental mass and dimensions are unchanged.
 - Full browser tests: 270 pass; browser build and native appearance parity pass. Content validation: 0 errors/warnings. Original source-renderer reference remains unchanged. Logs normalize local machine prefixes; historical measurements retain their original values.
 
-Pending before rereview: consume the published corrected #34 and common contact base; pin the shared shove ceiling with the elemental roster; pass the projectile and natural-site regressions; review current generation goldens; rerun full applicable gates, private smokes and Release performance; then update this record and PR #40 with exact dependency commits.
+At this interim checkpoint the shared base, shove ceiling, natural-site regression, generation review and final gates were still pending. The later sections report their verification against the published corrections.
 
 ## Combined contact acceptance
 
 The temporary branch `codex/elemental-shared-review-checks` merges elemental content `b4f558f` with the complete #36 branch at `724c5ed`; its merge is `cb4e321`. It is validation evidence, not the content PR's dependency base. On that combination, `ElementalProjectileTests` passes 48/48 real Ember Bolt cases, including all five old misses, with dimensions unchanged. Another 91 content and sustained-AI cases pass, explicitly excluding the natural-placement and mass-travel cases that still need corrected #34. Logs are `projectile-after-hitbox-724c5ed.txt` and `kits-after-hitbox-724c5ed.txt` under the review-fixes evidence directory.
 
-The coordinator's integration direction is to keep #40 draft and based on corrected #34, then merge main and retarget only after the corrected foundation and reviewed #36 land there. #20 owns its release policy and still requires shared integration review. No #36 runtime has been copied into this content branch, and no merge is authorized by this record. Full combined gates and the corrected foundation SHA remain pending.
+The coordinator's integration direction is to keep #40 draft and based on corrected #34, then merge main and retarget only after the corrected foundation and reviewed #36 land there. #20 owns its release policy and still requires shared integration review. No competing #36 runtime was added to the elemental diff, and no merge is authorized by this record. Full combined gates and the corrected foundation SHA were still pending at this intermediate checkpoint.
 
 ## Combined physics and placement acceptance
 
@@ -39,7 +39,7 @@ Temporary merge `973a536` adds published #32 `a96307e` to the combined contact b
 
 All 19 displacement cases pass: every body stays at or below the 12 m bound for a 4-unit shove; Emberwisp travels 8.96672 m under Bash and 17.77583 m under Winter's Sweep, and stops at x=31.99990 before the blocked x=32 cell. Canonical mass agrees with the attribute lookup. The first combined run correctly exposed two stale fixture assumptions: capped light bodies can tie in travel, and center/cell collision stops within a millimeter of a boundary. Tests now preserve mass ordering and heavy-body resistance while accepting cap ties, and require the center to remain strictly before the blocked cell. The original failed run remains in `elementals-combined-physics.txt`; the passing 21-case shove/natural subset is `shove-and-natural-combined.txt`.
 
-The generic placement fix rejects empty low-level sites. A separate content issue remained: the unchanged default-seed [-48,48] search found no Ember Seam under the new dedicated budget. Raising only its site weight from 0.22 to 0.8 yields three seams in its original cinderwaste/scrub habitats; the other seven manifestation counts remain 6/87/91/71/13/2/7 in content order. The common budget and other site weights are unchanged. Both counts are retained. Full gates and final generation goldens still await corrected #34.
+The generic placement fix rejects empty low-level sites. A separate content issue remained: the unchanged default-seed [-48,48] search found no Ember Seam under the new dedicated budget. Raising only its site weight from 0.22 to 0.8 yields three seams in its original cinderwaste/scrub habitats; the other seven manifestation counts remain 6/87/91/71/13/2/7 in content order. The common budget and other site weights are unchanged. Both counts are retained. This sample preceded consumption of final corrected #34.
 
 ## Final functional evidence
 
@@ -50,5 +50,11 @@ The four reference zones retain identical local maps, chunk hashes, initial popu
 Local validate reports 0/0; a 200-tick load, the elemental duel, current protocol check and ten prototype-port tests pass. The private TCP probe grants hit_bodies_v2, projectile_slabs_v1, entity_delta and interface, receives the anatomy catalog and completes movement/interface checks. The browser build retains its existing chunk-size advisory. Production body-plan parity and the inspected elemental gallery remain unchanged by the shared runtime integration.
 
 Private run `run-6SAVKY` passes browser 30/30 and native 26/26 with no cleanup errors. Native rendering and theme pixels are explicitly skipped; existing native shutdown allocation warnings are retained. The initial browser isometric capture renders terrain and bodies, but `16_cards.png` and the subsequent grayscale frame lose the world while retaining labels/UI. `card-mode-inherited-blank.png` preserves that failure. State-check success does not clear this visual defect. It is reported to the shared rendering owner and coordinator; this content PR does not add a competing renderer patch.
+
+## Shared card correction verified
+
+The owner supplied the isolated shared renderer commit `30f6c91a12815548be2169f666f6507facb8c56d` from #37, consumed with provenance as `1528f2c`. It has no Gnoll/Beastkin content dependency. This PR carries that shared presentation commit until integration puts it on the common base; it does not implement a separate fix. The owner's [card renderer record](2026-10-18-card-renderer-state.md) explains viewport/scissor, DPI and exception-safe state restoration.
+
+Browser tests now pass 284/284 and the build passes. Fresh private browser run `run-X9yJfV` passes 31/31, including the added nonblank-world screenshot assertion (largest color region 18.59%, 172 bins, 55,296 samples). Its card and grayscale frames were visually inspected: terrain and bodies render correctly. `smoke-web-card-fix.txt` and `smoke-result-card-fix.json` retain the exact run. The earlier failure capture remains as before evidence. Native code did not change; the completed 26/26 native state run remains applicable, with native pixels still untested.
 
 Acknowledged by: pending Claude rereview.

@@ -1,0 +1,3 @@
+TEST evidence: <worktree>\experiments\elementals\artifacts\background-card-fix\run-X9yJfV
+TEST smoke-web; evidence: <worktree>\experiments\elementals\artifacts\background-card-fix\run-X9yJfV
+TEST PASSED; report: <worktree>\experiments\elementals\artifacts\background-card-fix\run-X9yJfV\result.json

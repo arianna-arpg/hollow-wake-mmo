@@ -1,0 +1,29 @@
+{
+  "started": "2026-10-18T18:36:44.033Z",
+  "root": "<worktree>",
+  "directory": "<worktree>\\experiments\\elementals\\artifacts\\background-card-fix\\run-X9yJfV",
+  "suite": "web",
+  "status": "passed",
+  "stages": [
+    {
+      "name": "smoke-web",
+      "status": "passed",
+      "started": "2026-10-18T18:36:48.165Z",
+      "code": 0,
+      "signal": null,
+      "passed": 31,
+      "total": 31,
+      "skipped": [],
+      "finished": "2026-10-18T18:38:17.885Z"
+    }
+  ],
+  "nativeRendering": "not covered by headless mode",
+  "server": {
+    "tcp": 50602,
+    "url": "http://127.0.0.1:50603",
+    "name": "harness-run-X9yJfV",
+    "data": "<worktree>\\experiments\\elementals\\artifacts\\background-card-fix\\run-X9yJfV\\data"
+  },
+  "cleanupErrors": [],
+  "finished": "2026-10-18T18:38:18.583Z"
+}
