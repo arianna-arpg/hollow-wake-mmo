@@ -226,6 +226,7 @@ public partial class Smoke : Node
         await OptionsSteps();
 
         if (_args.Contains("--flame")) await FlameSequence();
+        if (_args.Contains("--forecasts")) await ForecastSequence();
 
         // Weaves: walk to the nearest hob, hover it and press 1 to 4 until a combat line shows.
         var hob = Nearest(e => e.State.Pattern is not null && e.State.Pattern.StartsWith("hob", StringComparison.Ordinal) && !e.State.Dead);
@@ -236,12 +237,12 @@ public partial class Smoke : Node
         else
         {
             var reached = await TravelTo(() => (hob.State.X, hob.State.Y), 2.2f, 60);
-            var lines0 = _main.CombatLines;
+            var lines0 = _main.HitsDealt;
             var hovered = false;
             var used = "";
-            for (var round = 0; round < 3 && _main.CombatLines == lines0; round++)
+            for (var round = 0; round < 3 && _main.HitsDealt == lines0; round++)
             {
-                for (var slot = 1; slot <= 4 && _main.CombatLines == lines0; slot++)
+                for (var slot = 1; slot <= 4 && _main.HitsDealt == lines0; slot++)
                 {
                     await Hover(hob);
                     hovered |= _main.HoveredKey != 0;
@@ -250,8 +251,8 @@ public partial class Smoke : Node
                     await Wait(1.0);
                 }
             }
-            var fought = await Until(() => _main.CombatLines > lines0, 6);
-            Record("weaves on a hob", fought, $"reached={reached} hovered={hovered} slots {used} combat lines={_main.CombatLines - lines0}{Rejected()}");
+            var fought = await Until(() => _main.HitsDealt > lines0, 6);
+            Record("weaves on a hob", fought, $"reached={reached} hovered={hovered} slots {used} hits dealt={_main.HitsDealt - lines0}{Rejected()}");
             await Shot("05_combat.png");
             if (Self?.State.Dead == true)
             {
@@ -268,6 +269,26 @@ public partial class Smoke : Node
     {
         var i = Array.IndexOf(_args, key);
         return i >= 0 && i + 1 < _args.Length ? _args[i + 1] : null;
+    }
+
+    private async Task ForecastSequence()
+    {
+        var seen = new HashSet<string>();
+        for (var attempt = 0; attempt < 3 && !seen.Contains("primary_candidate"); attempt++)
+        {
+            var target = Nearest(e => e.State.Pattern?.StartsWith("hob", StringComparison.Ordinal) == true && !e.State.Dead);
+            if (target is null) break;
+            await TravelTo(() => (target.State.X, target.State.Y), 3f, 45);
+            await Hover(target); Tap(Key.Key2);
+            var until = Now + 3;
+            while (Now < until)
+            {
+                foreach (var c in _main.Forecasts.Timeline.Active.ToArray())
+                    if (c.Source == Self?.Key && seen.Add(c.Coverage)) await Shot($"forecast_{c.Coverage}.png");
+                await Frame();
+            }
+        }
+        Record("shared cast forecast", seen.Contains("primary_candidate"), $"coverage={string.Join(',', seen)}; baselines={_main.ForecastsReceived}");
     }
 
     private async Task FlameSequence()

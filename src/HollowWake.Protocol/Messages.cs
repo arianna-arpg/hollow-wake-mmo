@@ -77,6 +77,7 @@ namespace HollowWake.Protocol;
 [JsonDerivedType(typeof(SelfStateMsg), "self_state")]
 [JsonDerivedType(typeof(CombatEventMsg), "combat_event")]
 [JsonDerivedType(typeof(CastCueMsg), "cast_cue")]
+[JsonDerivedType(typeof(CastForecastMsg), "cast_forecast")]
 [JsonDerivedType(typeof(ChatBroadcastMsg), "chat_broadcast")]
 [JsonDerivedType(typeof(NoticeMsg), "notice")]
 [JsonDerivedType(typeof(QuestOffersMsg), "quest_offers")]
@@ -170,7 +171,7 @@ public sealed record LoginResultMsg(bool Ok, string? AccountId, string? Error) :
 public sealed record CharacterSummary(string Id, string Name, string Calling, int Level, string Zone);
 public sealed record CharacterListMsg(List<CharacterSummary> Characters, List<string> Callings) : Message;
 public sealed record ErrorMsg(string Code, string Text) : Message;
-public sealed record EnterWorldMsg(string CharacterId, long EntityKey, string Zone, float X, float Y, float Z, WorldInfo World, double ServerTime, int TickRate) : Message;
+public sealed record EnterWorldMsg(string CharacterId, long EntityKey, string Zone, float X, float Y, float Z, WorldInfo World, double ServerTime, int TickRate) : Message { public string? ForecastEpoch { get; init; } }
 public sealed record ZoneChangedMsg(string Zone, string ZoneName, int Level, bool Safe) : Message;
 
 public sealed record EntityState
@@ -451,6 +452,7 @@ public sealed record DisconnectMsg(string Reason) : Message;
 public static class ProtocolInfo
 {
     public const string CastCuesFeature = "cast_cues";
+    public const string CastForecastFeature = "cast_forecast_v1";
     public const int Version = 1;
 
     /// <summary>Hello feature: the client applies <see cref="EntityDeltaMsg"/>, so changes may be sent as deltas.</summary>

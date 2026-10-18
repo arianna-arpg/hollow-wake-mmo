@@ -1,0 +1,6 @@
+entered zone 0_0 at (129.5, 111.0, 14.7); seed 10175781948776629366; tick 20
+messages: EntitySpawnMsg=353, EntityUpdateMsg=74, EntityDespawnMsg=61, SelfStateMsg=4, CharacterListMsg=2, WelcomeMsg=1, LoginResultMsg=1, EnterWorldMsg=1, ZoneChangedMsg=1, ChatBroadcastMsg=1
+self updates: 38; last position (129.5, 96.0, 15.5)
+entities seen: 353 (Pine, Oak, Boulder, Fallen Ash, Shrub, Fern, Hob, Floss Knot, Iron Vein, Lingering Ironhide Swift Frenzied Hob, Vigorous Ironhide Savage Hob, Grove Stag)
+chat: Probe: probe says hello
+PROBE OK (walked south)

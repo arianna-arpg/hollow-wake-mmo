@@ -46,6 +46,16 @@ public partial class InterfaceProtocolTests
     {
         yield return new CastCueMsg(9, 7, "release", 1, 2, "ember_bolt", "Flame Bolt", "cast",
             new List<string> { "ember", "spell" }, 12, 11, 1, 1, 2, 3, 4, 5, 6, true, "confirmed");
+        yield return new CastForecastMsg("zone-epoch", 10, 12, 12.5, new()
+        {
+            new() { CastId = 7, Source = 1, Name = "Cleave", Mode = "charge", StartedAt = 11,
+                NextEmissionStartedAt = 12, NextEmissionAt = 13, ReadyAt = 12.5, MaxHoldEndsAt = 15, EmissionOrdinal = 2,
+                DirectionPolicy = "aim_on_release", DirectionCommitted = false, X = 1, Y = 2, Z = 3,
+                Coverage = "primary_candidate", UnavailableReason = "sample reason",
+                Region = new() { Node = "root", Shape = "cone", Size = new() { Radius = 3, Angle = 1.2f, Width = 1, Inner = .5f, Curvature = 1 },
+                    X = 1, Y = 2, Z = 3, Heading = .5f, Anchor = "source", HeightTolerance = 4,
+                    TargetTest = "center", RequiresLineOfSight = true, HasRequirement = true, HasTargetLimit = true, ViewerEligibility = "candidate" } },
+        }, 2) { Retained = new() { new(6, 9) } };
         var item = Card(9);
         var quest = new QuestInfo("q", "Quest", "active", new List<string> { "Slay" }, new List<int> { 1 }, new List<int> { 3 }, "quartermaster", 2);
         var state = new EntityState { Key = 5L << 32 | 3, Name = "Hob", Pattern = "hob", Look = "hob", Faction = "the_loosed", Rarity = "magic", Interactable = "talk", Casting = "Ember", VX = 1, Static = true, Resources = { ["life"] = 3 }, ResourceMax = { ["life"] = 9 }, Flags = { "monster" }, Statuses = { "burning" }, Shape = "cone", ShapeSize = new ShapeSizeInfo { Radius = 3, Angle = 1.2f, Width = 1, Inner = 0.5f, Curvature = 1 }, Heading = 0.5f, Spin = 0.25f, Until = 12.5 };
@@ -110,7 +120,7 @@ public partial class InterfaceProtocolTests
         yield return new LoginResultMsg(true, "tester", "none");
         yield return new CharacterListMsg(new List<CharacterSummary> { new("c1", "Wren", "kindler", 2, "0_0") }, new List<string> { "kindler" });
         yield return new ErrorMsg("code", "text");
-        yield return new EnterWorldMsg("c1", 3, "0_0", 1, 2, 3, new WorldInfo(ulong.MaxValue, 32, 8, 8, new List<OverlayInfo> { new("o", true, new List<int[]> { new[] { 0, 0 } }, new List<int[]>(), new double[] { 1, 2, 3 }, new Dictionary<string, double> { ["bloom"] = 1 }, 1) }, "abc"), 0, 20);
+        yield return new EnterWorldMsg("c1", 3, "0_0", 1, 2, 3, new WorldInfo(ulong.MaxValue, 32, 8, 8, new List<OverlayInfo> { new("o", true, new List<int[]> { new[] { 0, 0 } }, new List<int[]>(), new double[] { 1, 2, 3 }, new Dictionary<string, double> { ["bloom"] = 1 }, 1) }, "abc"), 0, 20) { ForecastEpoch = "zone-epoch" };
         yield return new ZoneChangedMsg("0_0", "Ninewells", 1, true);
         yield return new EntitySpawnMsg(state);
         yield return new EntityUpdateMsg(new List<EntityState> { state with { Static = false } }, 12.5);

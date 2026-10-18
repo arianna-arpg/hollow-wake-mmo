@@ -180,7 +180,7 @@ export function shapeFor(s: EntityState, palette: EntityPaletteSettings): BodySh
 }
 
 /** The label line over a body, as the desktop client writes it. */
-export function titleFor(s: EntityState): string {
+export function titleFor(s: EntityState, showCasting = true): string {
   let title = s.name;
   if (s.level > 0 && hasResources(s) && !s.is_player) {
     title = `${s.name} [${s.level}]`;
@@ -188,7 +188,7 @@ export function titleFor(s: EntityState): string {
   if (s.dead) {
     title += ' (dead)';
   }
-  if (s.casting != null) {
+  if (showCasting && s.casting != null) {
     title += `  ${s.casting} ${Math.floor(s.cast_progress * 100)}%`;
   }
   return title;
@@ -358,7 +358,7 @@ export class EntityView {
       this.label.style.display = 'none';
       return;
     }
-    this.nameEl.textContent = titleFor(s);
+    this.nameEl.textContent = titleFor(s, this.layer.showLegacyCast);
     this.statusEl.textContent = s.statuses.join(' ');
     this.statusEl.style.display = s.statuses.length > 0 ? '' : 'none';
     this.label.style.color = s.dead ? palette.labelColors.dead ?? palette.labelDefault
@@ -452,6 +452,7 @@ export class EntityView {
 }
 
 export class EntityLayer {
+  showLegacyCast = true;
   readonly group = new Group();
   readonly views = new Map<Int64, EntityView>();
   selfKey: Int64 | null = null;

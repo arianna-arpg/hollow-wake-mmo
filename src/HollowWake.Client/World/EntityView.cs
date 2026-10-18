@@ -12,6 +12,7 @@ namespace HollowWake.Client.World;
 /// </summary>
 public partial class EntityView : Node3D
 {
+    public static bool ShowLegacyCast { get; set; } = true;
     private const float BarWidth = 1.2f;
 
     /// <summary>How long a telegraph takes to fade once its strike lands.</summary>
@@ -368,7 +369,7 @@ public partial class EntityView : Node3D
         {
             title += " (dead)";
         }
-        if (s.Casting is not null)
+        if (ShowLegacyCast && s.Casting is not null)
         {
             title += $"  {s.Casting} {(int)(s.CastProgress * 100)}%";
         }

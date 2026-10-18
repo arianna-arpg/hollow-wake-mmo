@@ -20,6 +20,10 @@ public partial class Main : Node3D
     private readonly Dictionary<string, Action> _appliers = new(StringComparer.Ordinal);
     private ContentRegistry _content = null!;
     private CastVisuals _castVisuals = null!;
+    private CastForecasts _forecasts = null!;
+    internal CastForecasts Forecasts => _forecasts;
+    internal int ForecastsReceived { get; private set; }
+    internal int HitsDealt { get; private set; }
     private ClientWorld _world = null!;
     private CameraRig _camera = null!;
     private Hud _hud = null!;
@@ -87,6 +91,8 @@ public partial class Main : Node3D
                 ?? new HollowWake.Core.Definitions.CastVisualsDef { Id = "fallback" },
             _content.Each<HollowWake.Core.Definitions.ThreadDef>()));
         AddChild(_castVisuals);
+        _forecasts = new CastForecasts(_world, _content.Each<HollowWake.Core.Definitions.CastForecastStyleDef>().FirstOrDefault() ?? new HollowWake.Core.Definitions.CastForecastStyleDef { Id = "fallback" });
+        AddChild(_forecasts);
         AddChild(_world);
         _camera = new CameraRig { Name = "CameraRig" };
         AddChild(_camera);
@@ -305,7 +311,7 @@ public partial class Main : Node3D
         }
         // The client applies entity deltas; --full-states asks for full entity states only (for comparison and debugging).
         // It always draws the interface, so it asks for the interface's states.
-        var features = new List<string> { ProtocolInfo.InterfaceFeature, ProtocolInfo.CastCuesFeature };
+        var features = new List<string> { ProtocolInfo.InterfaceFeature, ProtocolInfo.CastCuesFeature, ProtocolInfo.CastForecastFeature };
         if (!OS.GetCmdlineUserArgs().Contains("--full-states") && _settings.Text("snapshot_stream") != "full")
         {
             features.Insert(0, ProtocolInfo.EntityDeltaFeature);
@@ -326,6 +332,7 @@ public partial class Main : Node3D
         _login.SetStatus("Disconnected: " + reason);
         _world.ClearEntities();
         _castVisuals.Clear();
+        _forecasts.Clear();
     }
 
     public override void _Process(double delta)
@@ -336,6 +343,7 @@ public partial class Main : Node3D
             Handle(message);
         }
         _castVisuals.Advance(_hud.Hero.ServerNow(LocalNow), _settings.Toggle("reduce_motion"));
+        _forecasts.Advance(_hud.Hero.ServerNow(LocalNow));
         if (_inWorld)
         {
             var self = _world.Self;
@@ -366,6 +374,7 @@ public partial class Main : Node3D
         switch (message)
         {
             case WelcomeMsg w:
+                EntityView.ShowLegacyCast = w.Features?.Contains(ProtocolInfo.CastForecastFeature) != true;
                 _login.SetStatus($"Connected to {w.ServerName}: {w.Motd}");
                 _hud.Hero.Interface = w.Features?.Contains(ProtocolInfo.InterfaceFeature) == true;
                 GD.Print($"server granted features: {(w.Features is null ? "none" : string.Join(", ", w.Features))}");
@@ -388,12 +397,13 @@ public partial class Main : Node3D
                 _world.ApplyWorldInfo(enter.World);
                 _world.ClearEntities();
                 _castVisuals.Clear();
+                _forecasts.Clear(enter.ForecastEpoch);
                 _world.SelfKey = enter.EntityKey;
                 _inWorld = true;
                 _login.Visible = false;
                 _hud.InWorld = true;
                 _hud.Visible = true;
-                _hud.Hero.ObserveServerTime(enter.ServerTime, LocalNow);
+                _hud.Hero.ResetServerClock(enter.ServerTime, LocalNow);
                 _camera.Follow(Coords.ToGodot(enter.X, enter.Y, enter.Z));
                 _hud.Log($"[color=#{_hud.Skin.Notice("quest").ToHtml(false)}]Entered the world at {enter.X:0}, {enter.Y:0} (zone {Hud.Escape(enter.Zone)}).[/color]");
                 break;
@@ -419,6 +429,7 @@ public partial class Main : Node3D
                 break;
             case EntityDespawnMsg d:
                 _castVisuals.Timeline.RemoveEntity(d.Key);
+                _forecasts.Timeline.RemoveEntity(d.Key);
                 _world.Despawn(d.Key);
                 break;
             case SelfStateMsg self:
@@ -451,8 +462,13 @@ public partial class Main : Node3D
             case CombatEventMsg c:
                 ShowCombat(c);
                 break;
+            case CastForecastMsg forecast:
+                ForecastsReceived++;
+                if (_forecasts.Timeline.Receive(forecast)) _hud.Hero.ObserveServerTime(forecast.ServerTime, LocalNow);
+                break;
             case CastCueMsg cue:
                 CastCuesReceived++;
+                _forecasts.Timeline.Lifecycle(cue);
                 _hud.Hero.ObserveServerTime(cue.ServerTime, LocalNow);
                 _castVisuals.Receive(cue, _hud.Hero.ServerNow(LocalNow));
                 break;
@@ -500,6 +516,7 @@ public partial class Main : Node3D
             "evade" => $"{target} evades {source}",
             "block" => $"{target} blocks {source}",
             "heal" => $"{source} heals {target} for {c.Amount:0}",
+            "miss" => $"{source} misses {target}: {c.Status?.Replace('_', ' ')}",
             "status" => $"{target} is {c.Status}",
             "death" => $"{target} dies",
             _ => c.Kind,
@@ -507,6 +524,7 @@ public partial class Main : Node3D
         _hud.Log($"[color=#{_hud.Skin.S("ink_muted").ToHtml(false)}]{Hud.Escape(text)}[/color]");
         _hud.CombatText(c.Kind, c.Amount, c.Crit, c.Source == _world.SelfKey, c.Target == _world.SelfKey);
         CombatLines++;
+        if (c.Kind == "damage" && c.Source == _world.SelfKey) HitsDealt++;
     }
 
     // ------------------------------------------------------------ input
