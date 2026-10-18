@@ -127,9 +127,10 @@ public static class WeaveValidation
     /// <summary>
     /// Warns about what a list of effects would silently ignore: a parameter its type does not read (its
     /// <see cref="EffectSignature"/> says what it reads; types that declare nothing are not checked), and in
-    /// nested lists an effect type nobody registered. Nested lists are found wherever a parameter holds a list
-    /// of objects naming a <c>type</c>, at any depth. Specs <paramref name="skip"/> accepts (dialogue
-    /// actions, say) are left to their own checks; top-level unknown types are left to the caller.
+    /// nested lists an effect type nobody registered; and refuses a node its type's own checks refuse. Nested
+    /// lists are found wherever a parameter holds a list of objects naming a <c>type</c>, at any depth. Specs
+    /// <paramref name="skip"/> accepts (dialogue actions, say) are left to their own checks; top-level unknown
+    /// types are left to the caller.
     /// </summary>
     public static void EffectParams(IEnumerable<TypedSpec>? specs, ValidationContext c, string field, Func<string, bool>? skip = null)
     {
@@ -152,16 +153,26 @@ public static class WeaveValidation
         }
     }
 
-    /// <summary>The parameters of one effect node, then the lists nested in them.</summary>
+    /// <summary>The parameters of one effect node and its type's own checks, then the lists nested in them.</summary>
     private static void Node(string type, JsonObject parameters, ValidationContext c, string at)
     {
-        if (EffectRegistry.Shared.TryGetSignature(type, out var signature) && !signature.IsOpen)
+        if (EffectRegistry.Shared.TryGetSignature(type, out var signature))
         {
-            foreach (var (key, _) in parameters)
+            if (!signature.IsOpen)
             {
-                if (key != "type" && !signature.Accepts(key))
+                foreach (var (key, _) in parameters)
                 {
-                    c.Warn($"'{at}' effect '{type}' has parameter '{key}', which it does not read.");
+                    if (key != "type" && !signature.Accepts(key))
+                    {
+                        c.Warn($"'{at}' effect '{type}' has parameter '{key}', which it does not read.");
+                    }
+                }
+            }
+            foreach (var check in signature.Checks)
+            {
+                if (check(parameters, c.Registry) is { } problem)
+                {
+                    c.Error($"'{at}' effect '{type}' {problem}.");
                 }
             }
             foreach (var (kind, parameter) in signature.References)

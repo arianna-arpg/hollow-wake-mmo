@@ -250,6 +250,48 @@ public class ShoveTests
     }
 
     [Fact]
+    public void AShoveAnchoredAtThePointMeasuresFromWhereTheCastWasAimed()
+    {
+        // An area aimed between two bodies: the hit moves the context's point onto each struck body, but the aim
+        // stays, so a knockback anchored at the point throws each body away from the aim, the near one back toward
+        // the caster; anchored at the caster, both go the same way.
+        Vector3[] Knock(string anchor)
+        {
+            var arena = DeliveryArena.Create();
+            var near = arena.Body(14, 10);
+            var far = arena.Body(18, 10);
+            arena.Run("{\"type\": \"area\", \"radius\": 3, \"effects\": [{\"type\": \"move\", \"kind\": \"knockback\", \"distance\": 2, \"anchor\": \"" + anchor + "\"}]}", new Vector3(16, 10, 0));
+            arena.Tick(40);
+            return new[] { At(arena, near), At(arena, far) };
+        }
+        var fromPoint = Knock("point");
+        Assert.Equal(12, fromPoint[0].X, 0);
+        Assert.Equal(20, fromPoint[1].X, 0);
+        var fromCaster = Knock("caster");
+        Assert.Equal(16, fromCaster[0].X, 0);
+        Assert.Equal(20, fromCaster[1].X, 0);
+        // A flight aimed short of a body flies on and strikes it; a pull anchored at the point draws the catch back
+        // toward where the cast was aimed, stopping a unit short.
+        var arena = DeliveryArena.Create();
+        var boar = arena.Body(16, 10);
+        arena.Run("{\"type\": \"projectile\", \"speed\": 20, \"range\": 10, \"on_hit\": [{\"type\": \"move\", \"kind\": \"pull\", \"distance\": 8, \"anchor\": \"point\"}]}", new Vector3(13, 10, 0), direction: Vector2.UnitX);
+        arena.Tick(40);
+        Assert.Equal(14, At(arena, boar).X, 0);
+        Assert.Equal(10, At(arena, boar).Y, 3);
+        // An aim a quarter turn round turns where the cast is aimed: the area lands north of the caster, and a shove
+        // anchored at the point measures from the turned point, throwing the near body back south and the far one on.
+        var turned = DeliveryArena.Create();
+        var near = turned.Body(10, 14);
+        var far = turned.Body(10, 18);
+        turned.Run("{\"type\": \"aim\", \"offset\": 90, \"effects\": [{\"type\": \"area\", \"radius\": 3, \"effects\": [{\"type\": \"move\", \"kind\": \"knockback\", \"distance\": 2, \"anchor\": \"point\"}]}]}", new Vector3(16, 10, 0), direction: Vector2.UnitX);
+        turned.Tick(40);
+        Assert.Equal(10, At(turned, near).X, 0);
+        Assert.Equal(12, At(turned, near).Y, 0);
+        Assert.Equal(10, At(turned, far).X, 0);
+        Assert.Equal(20, At(turned, far).Y, 0);
+    }
+
+    [Fact]
     public void ImmovableBodiesAreNotShoved()
     {
         var arena = DeliveryArena.Create();
