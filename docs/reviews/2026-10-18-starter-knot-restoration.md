@@ -1,5 +1,7 @@
 # Starter Knot offer restoration
 
+The level-preservation statements below describe the earlier checkpoint. They are superseded by the later owner decision in [Knot site-level decision](2026-10-18-knot-site-level-decision.md); the destination anchor remains in effect.
+
 Claude's blocking review of #31 correctly identified two causes of the missing starter offer: the search was centred on the giver rather than the resolved Knot, and the new maximum level delta excluded every level-4/6 tangled pattern at a level-1 giver. Earlier records that attributed omission only to the chunk bound are incomplete. There was no owner approval to remove this offer.
 
 The correction introduces the content field `population_at`, accepted only on local-population slots and referring to `$giver` or an earlier POI slot. Invalid, forward, self and non-POI references are rejected, and unresolved programmatic references fail closed. The resolved position centres both the bounded chunk ordering and exact radius test. `clear_knot.foe` now uses `$knot` and drops only its newly introduced level restriction. Actual population is still required; site selection retains its authored eligibility. No inhabitant is rescaled, no combat value changes and the existing sixteen-chunk bound/160-cell population radius are unchanged.

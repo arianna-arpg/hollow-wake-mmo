@@ -82,9 +82,9 @@ entries:
     landmarks: [knot_stones]
     level: 2
     inhabitants:
-      - { pattern: cinder_imp, density: 2, pack_size: [2, 3], respawn: 180 }
-      - { pattern: remnant_shade, density: 1, pack_size: [2, 4], respawn: 180 }
-      - { pattern: tangle, density: 1, pack_size: [1, 1], respawn: 900 }
+      - { pattern: cinder_imp, density: 2, pack_size: [2, 3], respawn: 180, use_site_level: true }
+      - { pattern: remnant_shade, density: 1, pack_size: [2, 4], respawn: 180, use_site_level: true }
+      - { pattern: tangle, density: 1, pack_size: [1, 1], respawn: 900, use_site_level: true }
     names: [a Tangle, a Snarl, a Thinning, a Burl, the Hob Hollow, the Drowning, a Kiln Knot, a Skyfall]
 
   - id: grove

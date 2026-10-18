@@ -36,12 +36,12 @@ public class WorldGenGoldenTests
         Assert.Equal(new ZoneCoord(0, 0), g.StartZone());
     }
 
-    // Orc site expansion: reviewed before/after maps in experiments/orc-warbands/evidence.
+    // Site-level policy: exact before/after maps and levels in experiments/entity-review/evidence/33-sitelevel-*.
     [Theory]
-    [InlineData(0, 0, "033B8E3528AB9828", "6401AD38AFEB12E9")]
+    [InlineData(0, 0, "033B8E3528AB9828", "FE239499AF4B1519")]
     [InlineData(1, 0, "767BE9395B9E34DB", "1C70BEDC290992E0")]
-    [InlineData(0, -1, "8AD7370958FA7D7B", "C54EA309DEC80391")]
-    [InlineData(3, 2, "BAFEA2C1CCA0DEC0", "A93A852778DA4EDC")]
+    [InlineData(0, -1, "8AD7370958FA7D7B", "04FB8C3BEEEC74A9")]
+    [InlineData(3, 2, "BAFEA2C1CCA0DEC0", "B7AF6323F6B6FF7C")]
     public void ZoneMatchesGoldenHashes(int x, int y, string infoHash, string chunksHash)
     {
         var g = new WorldGenerator(Registry.Value, Rng.Hash64(Seed));
@@ -101,7 +101,7 @@ public class WorldGenGoldenTests
         {
             HashPoint(h, g, 40 + i * 0.83, 20 + i * 0.61, i % 20 == 0);
         }
-        Golden("overlaid world", "A139CE651C83EDD9", h.Hex);
+        Golden("overlaid world", "121AD753877E2211", h.Hex);
 
         // Removing an overlay must regenerate exactly what a generator that never had it produces.
         overlays.Remove("fount");
