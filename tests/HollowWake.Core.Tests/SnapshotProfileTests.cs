@@ -1,4 +1,7 @@
 using System.Numerics;
+using System.Collections.Concurrent;
+using System.Diagnostics;
+using System.Diagnostics.Tracing;
 using System.Text.Json;
 using HollowWake.Core.Characters;
 using HollowWake.Core.Components;
@@ -79,6 +82,16 @@ public sealed class SnapshotProfileTests
             Assert.Equal(frame.Panels.Messages, frame.PanelEncoding.Messages);
             Assert.Equal(extra ? 3 : 0, frame.Observations);
             Assert.Equal(extra ? "test-extra" : null, frame.Extension);
+            Assert.True(frame.Total.StartTimestamp > 0);
+            Assert.True(frame.Total.EndTimestamp >= frame.Total.StartTimestamp);
+            Assert.Equal(Stopwatch.GetElapsedTime(frame.Total.StartTimestamp, frame.Total.EndTimestamp).TotalMilliseconds, frame.Total.Milliseconds);
+            foreach (var stage in new[] { frame.Entities, frame.Self, frame.Panels, frame.EntityEncoding,
+                         frame.SelfEncoding, frame.PanelEncoding, frame.ExtensionCapture, frame.ExtensionEncoding })
+            {
+                if (stage.StartTimestamp == 0) { Assert.Equal(default, stage); continue; }
+                Assert.InRange(stage.StartTimestamp, frame.Total.StartTimestamp, frame.Total.EndTimestamp);
+                Assert.InRange(stage.EndTimestamp, stage.StartTimestamp, frame.Total.EndTimestamp);
+            }
             Assert.Equal(round % 5 == 0, frame.SelfDue);
             if (!frame.SelfDue) Assert.Equal(default, frame.Self);
             if (!panels) Assert.Equal(default, frame.Panels);
@@ -155,6 +168,46 @@ public sealed class SnapshotProfileTests
     [InlineData("unused.json", "expressions")]
     public void InvalidInvocationFailsBeforeAnyMeasurement(string path, string only) =>
         Assert.Throws<ArgumentException>(() => new SnapshotProfile(path, only));
+
+    [Fact]
+    public void TraceMarkerCorrelatesOneCompletedFrameWithoutActorOrMachineDetails()
+    {
+        using var listener = new Markers();
+        var (sim, hero, _) = Scene();
+        using var profile = new SnapshotProfile(Path.Combine(Path.GetTempPath(), Guid.NewGuid() + ".json"), "tick");
+        profile.Prepare(new SnapshotProfile.Workload("test", 0, 1, 0, 0, false, 1));
+        var view = new SnapshotView();
+        profile.BeginPhase("correlation-test", sim.Clock.Tick, new[] { view });
+        var frame = profile.Measure(sim, new SnapshotBuilder(sim, 48), view, hero, new(), 0, 0, null, out _);
+        profile.EndPhase(sim.Clock.Tick);
+        Assert.Empty(listener.Errors);
+        var marker = Assert.Single(listener.Values, v => (string)v[1]! == "correlation-test");
+        Assert.Equal(8, marker.Length);
+        Assert.Equal(0, marker[0]);
+        Assert.Equal(frame.Round, marker[2]);
+        Assert.Equal(frame.ViewerIndex, marker[3]);
+        Assert.Equal(frame.Tick, marker[4]);
+        Assert.Equal(frame.Total.StartTimestamp, marker[5]);
+        Assert.Equal(frame.Total.EndTimestamp, marker[6]);
+        Assert.Equal(frame.TraceAnchorBefore, marker[7]);
+        Assert.True(frame.TraceAnchorBefore >= frame.Total.EndTimestamp);
+        Assert.True(frame.TraceAnchorAfter >= frame.TraceAnchorBefore);
+    }
+
+    private sealed class Markers : EventListener
+    {
+        public ConcurrentQueue<object?[]> Values { get; } = new();
+        public ConcurrentQueue<string> Errors { get; } = new();
+        protected override void OnEventSourceCreated(EventSource eventSource)
+        {
+            if (eventSource.Name == SnapshotProfileTrace.ProviderName) EnableEvents(eventSource, EventLevel.Informational);
+        }
+        protected override void OnEventWritten(EventWrittenEventArgs eventData)
+        {
+            if (eventData.EventId == 0) Errors?.Enqueue(eventData.Payload is null ? "EventSource error" : string.Join(" ", eventData.Payload));
+            else if (eventData.EventId == 1) Values?.Enqueue(eventData.Payload!.ToArray());
+        }
+    }
 
     private sealed class ExtraStream : ISnapshotProfileExtension
     {

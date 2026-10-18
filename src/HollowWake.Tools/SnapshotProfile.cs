@@ -25,7 +25,8 @@ public readonly record struct SnapshotProfileExtra(Message Message, int Observat
 /// </summary>
 public sealed class SnapshotProfile : IDisposable
 {
-    public readonly record struct Cost(double Milliseconds, long AllocatedBytes, int Messages = 0, long EncodedBytes = 0);
+    public readonly record struct Cost(double Milliseconds, long AllocatedBytes, int Messages = 0, long EncodedBytes = 0,
+        long StartTimestamp = 0, long EndTimestamp = 0);
     public readonly record struct Collections(int Gen0, int Gen1, int Gen2)
     {
         public static Collections Read() => new(GC.CollectionCount(0), GC.CollectionCount(1), GC.CollectionCount(2));
@@ -43,7 +44,7 @@ public sealed class SnapshotProfile : IDisposable
         bool SelfDue, bool Deltas, bool Interface, Cost Total, Cost Entities, Cost Self, Cost Panels,
         Cost EntityEncoding, Cost SelfEncoding, Cost PanelEncoding,
         string? Extension, Cost ExtensionCapture, Cost ExtensionEncoding, int Observations,
-        Counts Emitted, Collections Gc);
+        Counts Emitted, Collections Gc, long TraceAnchorBefore = 0, long TraceAnchorAfter = 0);
     public sealed record Phase(string Name, long FirstTick, long LastTick, int FirstSample, int Samples,
         double WallMilliseconds, double ProcessCpuMilliseconds, Collections Gc, SnapshotSettings[] Settings);
     public sealed record Workload(string Seed, int Monsters, int Players, int Ticks, int Minions, bool CastCues, int SnapshotsPerPhase);
@@ -86,6 +87,7 @@ public sealed class SnapshotProfile : IDisposable
         var mark = Mark.Read();
         _ = mark.Finish();
         _ = Collections.Read();
+        _ = SnapshotProfileTrace.Log;
     }
 
     public void BeginPhase(string name, long tick, IReadOnlyList<SnapshotView> views)
@@ -170,6 +172,15 @@ public sealed class SnapshotProfile : IDisposable
             selfDue, view.SendDeltas, view.SendInterface, total, entities, self, panels,
             entityEncoding, selfEncoding, panelEncoding, extension?.Name, extraCapture, extraEncoding, observations,
             Counts.Read(view).Since(countsBefore), gc);
+        // Outside the measured interval, optional trace correlation carries only diagnostic identities.
+        // Event headers supply the native thread identity; timestamps use the same clock as every stage.
+        if (SnapshotProfileTrace.Log.IsEnabled())
+        {
+            var anchor = Stopwatch.GetTimestamp();
+            SnapshotProfileTrace.Log.FrameCompleted(_count, _phase, round, viewerIndex, sim.Clock.Tick,
+                total.StartTimestamp, total.EndTimestamp, anchor);
+            frame = frame with { TraceAnchorBefore = anchor, TraceAnchorAfter = Stopwatch.GetTimestamp() };
+        }
         _frames[_count++] = frame;
         return frame;
     }
@@ -188,9 +199,10 @@ public sealed class SnapshotProfile : IDisposable
         public static Mark Read() => new(GC.GetAllocatedBytesForCurrentThread(), Stopwatch.GetTimestamp());
         public Cost Finish(int messages = 0, long bytes = 0)
         {
-            var elapsed = Stopwatch.GetElapsedTime(Timestamp).TotalMilliseconds;
+            var end = Stopwatch.GetTimestamp();
+            var elapsed = Stopwatch.GetElapsedTime(Timestamp, end).TotalMilliseconds;
             var allocated = GC.GetAllocatedBytesForCurrentThread() - AllocatedBytes;
-            return new Cost(elapsed, allocated, messages, bytes);
+            return new Cost(elapsed, allocated, messages, bytes, Timestamp, end);
         }
     }
 
@@ -200,7 +212,7 @@ public sealed class SnapshotProfile : IDisposable
         using var stream = new FileStream(_path, FileMode.CreateNew, FileAccess.Write, FileShare.Read);
         JsonSerializer.Serialize(stream, new
         {
-            SchemaVersion = 1,
+            SchemaVersion = 2,
             DiagnosticOnly = true,
             Limitations = new[]
             {
@@ -208,6 +220,7 @@ public sealed class SnapshotProfile : IDisposable
                 "Phases advance sequential simulation stretches. Viewer order and cache sharing are preserved.",
                 "Phase wall/process CPU and GC include intervening simulation ticks and probe work, not just snapshot capture.",
                 "GC counts are process-wide; CPU/wall ratios do not establish contention or its cause.",
+                "Stage timestamps use Stopwatch.Frequency. Optional FrameCompleted trace markers run after the measured interval; their overhead still affects the process and later samples.",
                 "Build messages and encoding messages describe the same payloads; do not double-count them. Updates/deltas count entity states."
             },
             Environment = new { Runtime = RuntimeInformation.FrameworkDescription, Architecture = RuntimeInformation.ProcessArchitecture.ToString(),

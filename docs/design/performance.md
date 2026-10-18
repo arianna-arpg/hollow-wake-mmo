@@ -46,6 +46,10 @@ For snapshot attribution, `hollowwake bench --only tick --snapshot-profile <new-
 
 All probe overhead remains included in diagnostic totals, with no estimated subtraction. The preallocated record buffer is sized before the run. Calling-thread allocation counters cover each stage; phase wall time, process CPU and GC also cover intervening simulation ticks and probe work. These contexts cannot establish contention or its cause. Preserve the first ordinary budget result alongside the diagnostic; the diagnostic does not replace it or certify a budget pass. Phases sample different simulation stretches, and viewers share caches in their existing order, so neither phase means nor viewer means alone establish a causal regression. Use a coordinated quiet window for a single fixed-source diagnostic and investigate its evidence before deciding whether another measurement is warranted.
 
+Profile schema 2 adds monotonic start/end timestamps to measured stages. When the `HollowWake-SnapshotProfile` EventSource is enabled, one completed-frame marker relates those timestamps to the trace's native thread and time. The marker runs after the measured frame, and its before/after timestamps bound correlation uncertainty; its process overhead can affect later frames and is not subtracted. The optional source is Tools-only and never participates in gameplay. Older raw profiles retain their original schema.
+
+The bounded [trace preparation](../../experiments/forecast-rendering/snapshot-trace-plan.md) combines process-scoped managed stacks, compilation/GC/wait events and, when an elevated Windows session is available, a limited scheduler recording. Managed thread-time sampling alone does not prove CPU use, preemption or external contention. Keep raw binary traces, process identities and absolute machine paths in ignored local evidence with hashes; publish only inspected, sanitized summaries. A capture is diagnostic evidence on its exact validated source, never a replacement for the first ordinary budget result.
+
 ## Rules of the road
 
 - Measure first; keep the benchmark honest; add a benchmark group when a new hot path appears.

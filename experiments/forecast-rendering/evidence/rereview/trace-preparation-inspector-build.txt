@@ -1,0 +1,11 @@
+  HollowWake.Core -> <worktree>\src\HollowWake.Core\bin\Release\net8.0\HollowWake.Core.dll
+  HollowWake.Protocol -> <worktree>\src\HollowWake.Protocol\bin\Release\net8.0\HollowWake.Protocol.dll
+  HollowWake.Server -> <worktree>\src\HollowWake.Server\bin\Release\net10.0\HollowWake.Server.dll
+  HollowWake.Tools -> <worktree>\src\HollowWake.Tools\bin\Release\net10.0\hollowwake.dll
+  TraceTools -> <worktree>\experiments\forecast-rendering\trace-tools\bin\Release\net10.0\TraceTools.dll
+
+Build succeeded.
+    0 Warning(s)
+    0 Error(s)
+
+Time Elapsed 00:00:03.05
