@@ -51,6 +51,16 @@ public partial class Smoke : Node
             }
         }
         _started = Now;
+        // A headless window never receives the operating system's mouse-enter notification.
+        // Without it GUI clicks fall through to world input even when their coordinates hit a control.
+        if (DisplayServer.GetName() == "headless")
+        {
+            GetWindow().Size = new Vector2I(
+                (int)ProjectSettings.GetSetting("display/window/size/viewport_width"),
+                (int)ProjectSettings.GetSetting("display/window/size/viewport_height"));
+            GetViewport().NotifyMouseEntered();
+        }
+        GD.Print($"SMOKE viewport {GetViewport().GetVisibleRect()}, window {GetWindow().Size}");
         _ = Run();
     }
 
@@ -507,7 +517,8 @@ public partial class Smoke : Node
         }
 
         // The theme: pick the other direction in the theme row's list; the cluster redraws in it.
-        var before = SamplePixel(hud.ClusterRect);
+        var rendered = DisplayServer.GetName() != "headless";
+        var before = rendered ? SamplePixel(hud.ClusterRect) : "not rendered";
         var themeRow = Pane()?.RowOf("theme");
         var picker = themeRow?.FindChildren("*", "OptionButton", true, false).OfType<OptionButton>().FirstOrDefault();
         var other = 0;
@@ -525,10 +536,14 @@ public partial class Smoke : Node
         }
         await Wait(0.6);
         var themed = _main.Hud.Skin.T.Id;
-        var after = SamplePixel(_main.Hud.ClusterRect);
+        var after = rendered ? SamplePixel(_main.Hud.ClusterRect) : "not rendered";
         await Shot("12_theme.png");
-        Record("options switch the theme", picker is not null && themed != "etched_stone" && before != after,
+        Record("options switch the theme", picker is not null && themed != "etched_stone" && (!rendered || before != after),
             $"theme {themed}, cluster pixel {before} -> {after}");
+        if (!rendered)
+        {
+            GD.Print("SMOKE SKIP theme rendered pixels: headless display; theme state checked above");
+        }
 
         // A key: find the camera switch by searching, rebind it to B through its row, use it, and see the camera turn.
         await ShowOptionsPage("controls");
@@ -719,10 +734,23 @@ public partial class Smoke : Node
         Input.ParseInputEvent(new InputEventKey { Keycode = key, PhysicalKeycode = key, Pressed = false });
     }
 
-    /// <summary>Moves the cursor to a viewport point and clicks the left button there.</summary>
+    /// <summary>Moves the client's virtual pointer without touching the operating system cursor.</summary>
+    private void Point(Vector2 screen)
+    {
+        var previous = _main.SmokePointer ?? GetViewport().GetMousePosition();
+        _main.SmokePointer = screen;
+        Input.ParseInputEvent(new InputEventMouseMotion
+        {
+            Position = screen,
+            GlobalPosition = screen,
+            Relative = screen - previous,
+        });
+    }
+
+    /// <summary>Points and clicks inside the client, including with the headless display driver.</summary>
     private async Task Click(Vector2 screen)
     {
-        Input.WarpMouse(screen);
+        Point(screen);
         await Frame();
         await Frame();
         Input.ParseInputEvent(new InputEventMouseButton { ButtonIndex = MouseButton.Left, Pressed = true, Position = screen, GlobalPosition = screen });
@@ -731,7 +759,7 @@ public partial class Smoke : Node
 
     private async Task Hover(EntityView view)
     {
-        Input.WarpMouse(Screen(view.GlobalPosition + new Vector3(0, view.State.Height * 0.5f, 0)));
+        Point(Screen(view.GlobalPosition + new Vector3(0, view.State.Height * 0.5f, 0)));
         await Frame();
         await Frame();
     }
