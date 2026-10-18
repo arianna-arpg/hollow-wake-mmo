@@ -16,6 +16,8 @@ The foundation must stay pristine as the game scales, so performance is measured
 
 `--only <group>` runs one group; `--monsters`, `--players`, `--ticks` and `--minions` (pooled summons per player, so minions think, follow and fight) size the zone run; `--json` emits results for machines.
 
+Expression allocation has explicitly different scopes. The historical `expression.alloc` row retains its original whole-process counter and loop; keep its nonzero readings when comparing old records. `expression.alloc.calling_thread` measures allocations on the synchronous evaluator's thread after a fixed forty warmup loops of the exact sample delegate, then one measured loop of one hundred thousand evaluations. `expression.alloc.sample_process` records whole-process allocation over that same new sample, including other runtime threads. No sample is retried or chosen for being zero, and no estimated overhead is subtracted. The zero-allocation small-call contract applies to the warmed calling-thread sample; runtime bookkeeping on that thread is still counted and a nonzero result must be reported and investigated. The process rows remain diagnostics and must not be relabeled as zero or omitted. These counters do not certify asynchronous/custom functions that allocate on other threads.
+
 ## Budgets
 
 Budgets are for the benchmark's default zone run in Release on a development machine, per server tick at 20 Hz.

@@ -171,7 +171,26 @@ public static class Bench
         {
             formulas[1].Evaluate(scope);
         }
-        yield return new Result("expression.alloc", (GC.GetTotalAllocatedBytes(true) - before) / 100_000.0, "bytes/eval", "lerp with rand()");
+        yield return new Result("expression.alloc", (GC.GetTotalAllocatedBytes(true) - before) / 100_000.0, "bytes/eval", "legacy whole-process counter; lerp with rand()");
+        // Retain the historical process-wide row above. This distinct sample warms its exact delegate/loop
+        // a fixed number of times, then records both counters once, including any remaining runtime noise.
+        const int allocationCalls = 100_000;
+        Action allocationWork = () =>
+        {
+            for (var i = 0; i < allocationCalls; i++)
+            {
+                formulas[1].Evaluate(scope);
+            }
+        };
+        for (var round = 0; round < 40; round++)
+        {
+            allocationWork();
+        }
+        Settle();
+        var allocation = AllocationSample.Capture(allocationWork);
+        const string allocationNote = "lerp with rand(); 40 fixed warmup loops, one 100000-evaluation sample; no retries or overhead subtraction";
+        yield return new Result("expression.alloc.calling_thread", allocation.CallingThreadBytes / (double)allocationCalls, "bytes/eval", allocationNote);
+        yield return new Result("expression.alloc.sample_process", allocation.ProcessBytes / (double)allocationCalls, "bytes/eval", "whole-process companion to calling_thread; " + allocationNote);
         for (var i = 0; i < 2_000; i++)
         {
             Expr.Parse("40 + level * 10 + vigor * 4");
