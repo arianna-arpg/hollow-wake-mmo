@@ -50,9 +50,9 @@ public static class Bench
         {
             results.AddRange(Tick(content, opt("seed", "aureth"), int.Parse(opt("monsters", "300")), int.Parse(opt("players", "4")), int.Parse(opt("ticks", "600")), int.Parse(opt("minions", "0")), bool.Parse(opt("cast-cues", "false"))));
         }
-        if (only is "" or "deliveries")
+        if (only is "" or "deliveries" or "hit-bodies")
         {
-            results.AddRange(BenchDeliveries.Run(content));
+            results.AddRange(BenchDeliveries.Run(content, profiled: only == "hit-bodies"));
         }
         if (json)
         {

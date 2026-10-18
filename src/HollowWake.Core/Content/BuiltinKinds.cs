@@ -199,6 +199,7 @@ internal static class BuiltinKinds
             }
         });
         Kinds.PhysicalKinds.Register();
+        Kinds.HitBodyKinds.Register();
         ContentKinds.Register<BehaviorDef>("behaviors", (d, c) =>
         {
             if (!d.States.ContainsKey(d.Initial))

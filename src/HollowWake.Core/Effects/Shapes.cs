@@ -33,6 +33,7 @@ public abstract class Shape
 
     /// <summary>False when the shape is the same whichever way it faces (a circle), so its facing need not be worked out.</summary>
     public virtual bool Turns => true;
+    public virtual bool Circular => false;
 
     /// <summary>The full angle in degrees the shape takes when content names none.</summary>
     public virtual float DefaultAngle => 90f;
@@ -61,6 +62,32 @@ public abstract class Shape
 
     /// <summary>Signed distance across the facing, positive to the left.</summary>
     protected static float Across(Vector2 to, Vector2 facing) => facing.X * to.Y - facing.Y * to.X;
+
+    protected static bool Rectangle(float x, float y, float lowX, float highX, float halfY, float pad)
+    {
+        var dx = MathF.Max(0, MathF.Max(lowX - x, x - highX));
+        var dy = MathF.Max(0, MathF.Abs(y) - halfY);
+        return dx * dx + dy * dy <= pad * pad;
+    }
+
+    protected static float SegmentDistance(Vector2 p, Vector2 a, Vector2 b)
+    {
+        var delta = b - a;
+        if (delta.LengthSquared() == 0) return Vector2.DistanceSquared(p, a);
+        return Vector2.DistanceSquared(p, a + delta * Math.Clamp(Vector2.Dot(p - a, delta) / delta.LengthSquared(), 0, 1));
+    }
+
+    // Exact distance to an annular sector, including its rounded contact at both radial corners.
+    protected static bool AnnularSector(float x, float y, float inner, float outer, float angle, float pad)
+    {
+        var half = Math.Clamp(angle, 0, 360) * MathF.PI / 360;
+        var bearing = MathF.Atan2(MathF.Abs(y), x);
+        var length = MathF.Sqrt(x * x + y * y);
+        if (bearing <= half)
+            return MathF.Max(0, MathF.Max(inner - length, length - outer)) <= pad;
+        var edge = new Vector2(MathF.Cos(half), MathF.Sin(half));
+        return SegmentDistance(new(x, MathF.Abs(y)), edge * inner, edge * outer) <= pad * pad;
+    }
 
     public override string ToString() => Name;
 }
@@ -111,6 +138,7 @@ public static class Shapes
         public override string Name => "circle";
 
         public override bool Turns => false;
+        public override bool Circular => true;
 
         public override float Reach(in ShapeSize size) => size.Radius;
 
@@ -138,8 +166,7 @@ public static class Shapes
         {
             var x = MathF.Abs(Along(to, facing));
             var y = MathF.Abs(Across(to, facing));
-            var outer = size.Radius + pad;
-            if (x > outer || y > outer)
+            if (!Rectangle(x, y, -size.Radius, size.Radius, size.Radius, pad))
             {
                 return false;
             }
@@ -162,8 +189,13 @@ public static class Shapes
             var x = Along(to, facing);
             var y = Across(to, facing);
             // The three edges lie half the radius from the center, their outward normals at 180, 60 and -60 degrees.
-            var limit = size.Radius * 0.5f + pad;
-            return -x <= limit && 0.5f * x + HalfRoot3 * y <= limit && 0.5f * x - HalfRoot3 * y <= limit;
+            var limit = size.Radius * 0.5f;
+            if (-x <= limit && 0.5f * x + HalfRoot3 * y <= limit && 0.5f * x - HalfRoot3 * y <= limit) return true;
+            var p = new Vector2(x, y);
+            var a = new Vector2(size.Radius, 0);
+            var b = new Vector2(-limit, size.Radius * HalfRoot3);
+            var c = new Vector2(-limit, -size.Radius * HalfRoot3);
+            return MathF.Min(SegmentDistance(p, a, b), MathF.Min(SegmentDistance(p, b, c), SegmentDistance(p, c, a))) <= pad * pad;
         }
     }
 
@@ -188,30 +220,7 @@ public static class Shapes
 
         public override bool Contains(in ShapeSize size, Vector2 to, Vector2 facing, float pad)
         {
-            var d2 = to.LengthSquared();
-            var outer = size.Radius + pad;
-            if (d2 > outer * outer)
-            {
-                return false;
-            }
-            var inner = size.Inner * size.Radius - pad;
-            if (inner > 0 && d2 < inner * inner)
-            {
-                return false;
-            }
-            if (d2 < 0.01f)
-            {
-                return true;
-            }
-            var half = MathF.PI * size.Angle / 360f;
-            var angle = MathF.Acos(Math.Clamp(Vector2.Dot(Vector2.Normalize(to), facing), -1f, 1f));
-            if (angle <= half)
-            {
-                return true;
-            }
-            // A body beside the edge still touches it when its radius reaches across.
-            var excess = angle - half;
-            return pad > 0 && excess < MathF.PI / 2 && MathF.Sqrt(d2) * MathF.Sin(excess) <= pad;
+            return AnnularSector(Along(to, facing), Across(to, facing), size.Inner * size.Radius, size.Radius, size.Angle, pad);
         }
     }
 
@@ -249,12 +258,7 @@ public static class Shapes
 
         public override bool Contains(in ShapeSize size, Vector2 to, Vector2 facing, float pad)
         {
-            var along = Along(to, facing);
-            if (along < size.Inner * size.Radius - pad || along > size.Radius + pad)
-            {
-                return false;
-            }
-            return MathF.Abs(Across(to, facing)) <= size.Width * 0.5f + pad;
+            return Rectangle(Along(to, facing), Across(to, facing), size.Inner * size.Radius, size.Radius, size.Width * 0.5f, pad);
         }
     }
 
@@ -284,7 +288,7 @@ public static class Shapes
         }
 
         public override bool Contains(in ShapeSize size, Vector2 to, Vector2 facing, float pad) =>
-            MathF.Abs(Along(to, facing)) <= size.Width * 0.5f + pad && MathF.Abs(Across(to, facing)) <= size.Radius + pad;
+            Rectangle(Along(to, facing), Across(to, facing), -size.Width * 0.5f, size.Width * 0.5f, size.Radius, pad);
     }
 
     /// <summary>
@@ -328,14 +332,7 @@ public static class Shapes
             var bend = size.Radius * _curvature;
             var x = Along(to, facing) + bend;
             var y = Across(to, facing);
-            var d = MathF.Sqrt(x * x + y * y);
-            if (MathF.Abs(d - bend) > size.Width * 0.5f + pad)
-            {
-                return false;
-            }
-            var angle = MathF.Atan2(MathF.Abs(y), x);
-            var excess = angle - MathF.PI * size.Angle / 360f;
-            return excess <= 0 || excess * bend <= pad;
+            return AnnularSector(x, y, MathF.Max(0, bend - size.Width * 0.5f), bend + size.Width * 0.5f, size.Angle, pad);
         }
     }
 }

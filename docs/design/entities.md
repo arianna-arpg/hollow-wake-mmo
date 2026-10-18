@@ -52,6 +52,8 @@ Grafted biological constructs use their own family and encounter allegiance. A f
 
 ## Stature and warband identity
 
+Patterns may bind simulation damage anatomy through `hit_body`, independently of physical mass and conservative movement clearance. Owned bodies retain the same profile as wild bodies. Live radius and height scale its parts; neither allegiance nor appearance selects collision. See [damage anatomy](physical-bodies.md#damage-anatomy).
+
 The player is the reference adult stature. Ordinary skeletal humanoids share that authoritative height; ordinary Goblins are roughly half as tall. Hobgoblins and exceptional brutes remain intermediate, while Orcs are adult-height or taller with substantially broader bodies. Rare and summoned scaling still uses the existing authoritative transform. Appearance-only scale jitter is disabled on the standard player and skeleton looks and profiled warband bodies; palette variation remains.
 
 Species and allegiance are independent. Orc and Goblin warbands can be allied and share a site's inhabitants without losing their native factions. An overseer, slaver or commander role describes the authored encounter and combat kit, not a newly implemented capture, ownership or command system. Melee leaders close to a content-authored distance independent of their longer-range rally weave, so support skills cannot strand them outside their damaging attack's reach.
