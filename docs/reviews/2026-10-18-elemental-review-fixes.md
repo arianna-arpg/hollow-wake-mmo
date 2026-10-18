@@ -25,4 +25,10 @@ This is not the final gate report. `experiments/elementals/evidence/review-fixes
 
 Pending before rereview: consume the published corrected #34 and common contact base; pin the shared shove ceiling with the elemental roster; pass the projectile and natural-site regressions; review current generation goldens; rerun full applicable gates, private smokes and Release performance; then update this record and PR #40 with exact dependency commits.
 
+## Combined contact acceptance
+
+The temporary branch `codex/elemental-shared-review-checks` merges elemental content `b4f558f` with the complete #36 branch at `724c5ed`; its merge is `cb4e321`. It is validation evidence, not the content PR's dependency base. On that combination, `ElementalProjectileTests` passes 48/48 real Ember Bolt cases, including all five old misses, with dimensions unchanged. Another 91 content and sustained-AI cases pass, explicitly excluding the natural-placement and mass-travel cases that still need corrected #34. Logs are `projectile-after-hitbox-724c5ed.txt` and `kits-after-hitbox-724c5ed.txt` under the review-fixes evidence directory.
+
+The coordinator's integration direction is to keep #40 draft and based on corrected #34, then merge main and retarget only after the corrected foundation and reviewed #36 land there. #20 owns its release policy and still requires shared integration review. No #36 runtime has been copied into this content branch, and no merge is authorized by this record. Full combined gates and the corrected foundation SHA remain pending.
+
 Acknowledged by: pending Claude rereview.

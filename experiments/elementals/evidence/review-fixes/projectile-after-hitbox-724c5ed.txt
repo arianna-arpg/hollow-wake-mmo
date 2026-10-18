@@ -1,0 +1,260 @@
+  Determining projects to restore...
+  All projects are up-to-date for restore.
+  HollowWake.Core -> <worktree>\src\HollowWake.Core\bin\Debug\net8.0\HollowWake.Core.dll
+<worktree>\tests\HollowWake.Core.Tests\PortedProjectileTests.cs(254,19): warning xUnit2031: Do not use a Where clause to filter before calling Assert.Single. Use the overload of Assert.Single that accepts a filtering function. (https://xunit.net/xunit.analyzers/rules/xUnit2031) [<worktree>\tests\HollowWake.Core.Tests\HollowWake.Core.Tests.csproj]
+<worktree>\tests\HollowWake.Core.Tests\PortedProjectileTests.cs(267,9): warning xUnit2031: Do not use a Where clause to filter before calling Assert.Single. Use the overload of Assert.Single that accepts a filtering function. (https://xunit.net/xunit.analyzers/rules/xUnit2031) [<worktree>\tests\HollowWake.Core.Tests\HollowWake.Core.Tests.csproj]
+<worktree>\tests\HollowWake.Core.Tests\PortedProjectileTests.cs(280,9): warning xUnit2031: Do not use a Where clause to filter before calling Assert.Single. Use the overload of Assert.Single that accepts a filtering function. (https://xunit.net/xunit.analyzers/rules/xUnit2031) [<worktree>\tests\HollowWake.Core.Tests\HollowWake.Core.Tests.csproj]
+  HollowWake.Core.Tests -> <worktree>\tests\HollowWake.Core.Tests\bin\Debug\net10.0\HollowWake.Core.Tests.dll
+Test run for <worktree>\tests\HollowWake.Core.Tests\bin\Debug\net10.0\HollowWake.Core.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+<worktree>\tests\HollowWake.Core.Tests\bin\Debug\net10.0\HollowWake.Core.Tests.dll
+[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v3.1.5+1b188a7b0a (64-bit .NET 10.0.13)
+[xUnit.net 00:00:00.22]   Discovering: HollowWake.Core.Tests
+[xUnit.net 00:00:03.02]   Discovered:  HollowWake.Core.Tests
+[xUnit.net 00:00:03.08]   Starting:    HollowWake.Core.Tests
+  Passed HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(pattern: "geode_shellback", relief: 0.5) [119 ms]
+  Standard Output Messages:
+ geode_shellback: relief=0.5, authored height=1.3, flights=1, hits=1
+
+
+  Passed HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(pattern: "mind_knot", relief: 0) [15 ms]
+  Standard Output Messages:
+ mind_knot: relief=0, authored height=1.55, flights=1, hits=1
+
+
+  Passed HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(pattern: "bloom_spore", relief: 0.5) [5 ms]
+  Standard Output Messages:
+ bloom_spore: relief=0.5, authored height=1.25, flights=1, hits=1
+
+
+  Passed HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(pattern: "geode_shellback", relief: 0) [4 ms]
+  Standard Output Messages:
+ geode_shellback: relief=0, authored height=1.3, flights=1, hits=1
+
+
+  Passed HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(pattern: "triune_elemental", relief: -0.5) [5 ms]
+  Standard Output Messages:
+ triune_elemental: relief=-0.5, authored height=2.5, flights=1, hits=1
+
+
+  Passed HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(pattern: "tide_surge", relief: 0) [6 ms]
+  Standard Output Messages:
+ tide_surge: relief=0, authored height=1.35, flights=1, hits=1
+
+
+  Passed HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(pattern: "rime_star", relief: -0.5) [5 ms]
+  Standard Output Messages:
+ rime_star: relief=-0.5, authored height=0.72, flights=1, hits=1
+
+
+  Passed HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(pattern: "cinderling", relief: 0.5) [6 ms]
+  Standard Output Messages:
+ cinderling: relief=0.5, authored height=0.42, flights=1, hits=1
+
+
+  Passed HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(pattern: "gale_elemental", relief: 0.5) [4 ms]
+  Standard Output Messages:
+ gale_elemental: relief=0.5, authored height=1.55, flights=1, hits=1
+
+
+  Passed HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(pattern: "bloom_spore", relief: -0.5) [11 ms]
+  Standard Output Messages:
+ bloom_spore: relief=-0.5, authored height=1.25, flights=1, hits=1
+
+
+  Passed HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(pattern: "tide_surge", relief: 0.5) [5 ms]
+  Standard Output Messages:
+ tide_surge: relief=0.5, authored height=1.35, flights=1, hits=1
+
+
+  Passed HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(pattern: "emberwisp", relief: -0.5) [3 ms]
+  Standard Output Messages:
+ emberwisp: relief=-0.5, authored height=0.85, flights=1, hits=1
+
+
+  Passed HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(pattern: "umbra_drift", relief: -0.5) [6 ms]
+  Standard Output Messages:
+ umbra_drift: relief=-0.5, authored height=1.8, flights=1, hits=1
+
+
+  Passed HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(pattern: "cinderling", relief: 0) [6 ms]
+  Standard Output Messages:
+ cinderling: relief=0, authored height=0.42, flights=1, hits=1
+
+
+  Passed HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(pattern: "frost_elemental", relief: 0) [4 ms]
+  Standard Output Messages:
+ frost_elemental: relief=0, authored height=1.85, flights=1, hits=1
+
+
+  Passed HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(pattern: "void_ravel", relief: 0) [4 ms]
+  Standard Output Messages:
+ void_ravel: relief=0, authored height=1.9, flights=1, hits=1
+
+
+  Passed HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(pattern: "umbra_drift", relief: 0.5) [4 ms]
+  Standard Output Messages:
+ umbra_drift: relief=0.5, authored height=1.8, flights=1, hits=1
+
+
+  Passed HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(pattern: "frost_elemental", relief: -0.5) [4 ms]
+  Standard Output Messages:
+ frost_elemental: relief=-0.5, authored height=1.85, flights=1, hits=1
+
+
+  Passed HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(pattern: "silt_crawler", relief: 0) [4 ms]
+  Standard Output Messages:
+ silt_crawler: relief=0, authored height=0.75, flights=1, hits=1
+
+
+  Passed HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(pattern: "rime_star", relief: 0) [16 ms]
+  Standard Output Messages:
+ rime_star: relief=0, authored height=0.72, flights=1, hits=1
+
+
+  Passed HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(pattern: "ember_elemental", relief: 0.5) [4 ms]
+  Standard Output Messages:
+ ember_elemental: relief=0.5, authored height=1.95, flights=1, hits=1
+
+
+  Passed HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(pattern: "mind_knot", relief: -0.5) [5 ms]
+  Standard Output Messages:
+ mind_knot: relief=-0.5, authored height=1.55, flights=1, hits=1
+
+
+  Passed HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(pattern: "lumen_wisp", relief: 0.5) [4 ms]
+  Standard Output Messages:
+ lumen_wisp: relief=0.5, authored height=1.1, flights=1, hits=1
+
+
+  Passed HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(pattern: "rime_star", relief: 0.5) [5 ms]
+  Standard Output Messages:
+ rime_star: relief=0.5, authored height=0.72, flights=1, hits=1
+
+
+  Passed HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(pattern: "geode_shellback", relief: -0.5) [2 ms]
+  Standard Output Messages:
+ geode_shellback: relief=-0.5, authored height=1.3, flights=1, hits=1
+
+
+  Passed HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(pattern: "mind_knot", relief: 0.5) [7 ms]
+  Standard Output Messages:
+ mind_knot: relief=0.5, authored height=1.55, flights=1, hits=1
+
+
+  Passed HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(pattern: "tide_surge", relief: -0.5) [6 ms]
+  Standard Output Messages:
+ tide_surge: relief=-0.5, authored height=1.35, flights=1, hits=1
+
+
+  Passed HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(pattern: "storm_confluence", relief: -0.5) [3 ms]
+  Standard Output Messages:
+ storm_confluence: relief=-0.5, authored height=2.3, flights=1, hits=1
+
+
+  Passed HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(pattern: "ember_elemental", relief: -0.5) [6 ms]
+  Standard Output Messages:
+ ember_elemental: relief=-0.5, authored height=1.95, flights=1, hits=1
+
+
+  Passed HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(pattern: "bloom_spore", relief: 0) [8 ms]
+  Standard Output Messages:
+ bloom_spore: relief=0, authored height=1.25, flights=1, hits=1
+
+
+  Passed HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(pattern: "emberwisp", relief: 0) [3 ms]
+  Standard Output Messages:
+ emberwisp: relief=0, authored height=0.85, flights=1, hits=1
+
+
+  Passed HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(pattern: "frost_elemental", relief: 0.5) [4 ms]
+  Standard Output Messages:
+ frost_elemental: relief=0.5, authored height=1.85, flights=1, hits=1
+
+
+  Passed HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(pattern: "gale_elemental", relief: -0.5) [3 ms]
+  Standard Output Messages:
+ gale_elemental: relief=-0.5, authored height=1.55, flights=1, hits=1
+
+
+  Passed HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(pattern: "gale_elemental", relief: 0) [4 ms]
+  Standard Output Messages:
+ gale_elemental: relief=0, authored height=1.55, flights=1, hits=1
+
+
+  Passed HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(pattern: "silt_crawler", relief: 0.5) [3 ms]
+  Standard Output Messages:
+ silt_crawler: relief=0.5, authored height=0.75, flights=1, hits=1
+
+
+  Passed HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(pattern: "lumen_wisp", relief: -0.5) [3 ms]
+  Standard Output Messages:
+ lumen_wisp: relief=-0.5, authored height=1.1, flights=1, hits=1
+
+
+  Passed HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(pattern: "triune_elemental", relief: 0.5) [3 ms]
+  Standard Output Messages:
+ triune_elemental: relief=0.5, authored height=2.5, flights=1, hits=1
+
+
+  Passed HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(pattern: "void_ravel", relief: -0.5) [4 ms]
+  Standard Output Messages:
+ void_ravel: relief=-0.5, authored height=1.9, flights=1, hits=1
+
+
+  Passed HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(pattern: "lumen_wisp", relief: 0) [3 ms]
+  Standard Output Messages:
+ lumen_wisp: relief=0, authored height=1.1, flights=1, hits=1
+
+
+  Passed HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(pattern: "storm_confluence", relief: 0) [5 ms]
+  Standard Output Messages:
+ storm_confluence: relief=0, authored height=2.3, flights=1, hits=1
+
+
+  Passed HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(pattern: "emberwisp", relief: 0.5) [3 ms]
+  Standard Output Messages:
+ emberwisp: relief=0.5, authored height=0.85, flights=1, hits=1
+
+
+  Passed HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(pattern: "ember_elemental", relief: 0) [6 ms]
+  Standard Output Messages:
+ ember_elemental: relief=0, authored height=1.95, flights=1, hits=1
+
+
+  Passed HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(pattern: "cinderling", relief: -0.5) [7 ms]
+  Standard Output Messages:
+ cinderling: relief=-0.5, authored height=0.42, flights=1, hits=1
+
+
+  Passed HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(pattern: "storm_confluence", relief: 0.5) [5 ms]
+  Standard Output Messages:
+ storm_confluence: relief=0.5, authored height=2.3, flights=1, hits=1
+
+
+  Passed HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(pattern: "silt_crawler", relief: -0.5) [3 ms]
+  Standard Output Messages:
+ silt_crawler: relief=-0.5, authored height=0.75, flights=1, hits=1
+
+
+[xUnit.net 00:00:03.51]   Finished:    HollowWake.Core.Tests
+  Passed HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(pattern: "void_ravel", relief: 0.5) [4 ms]
+  Standard Output Messages:
+ void_ravel: relief=0.5, authored height=1.9, flights=1, hits=1
+
+
+  Passed HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(pattern: "umbra_drift", relief: 0) [5 ms]
+  Standard Output Messages:
+ umbra_drift: relief=0, authored height=1.8, flights=1, hits=1
+
+
+  Passed HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(pattern: "triune_elemental", relief: 0) [4 ms]
+  Standard Output Messages:
+ triune_elemental: relief=0, authored height=2.5, flights=1, hits=1
+
+
+
+Test Run Successful.
+Total tests: 48
+     Passed: 48
+ Total time: 4.7253 Seconds
