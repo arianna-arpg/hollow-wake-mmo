@@ -1,0 +1,12 @@
+{
+  "Seeds": 3,
+  "Seconds": 60,
+  "Hashes": {
+    "loosed_kindler:boar": "8d5d3668ee660258",
+    "loosed_skirmisher:boar": "bcba7a2d516583db",
+    "loosed_skirmisher:hob": "38a943e3db03b50a",
+    "proving_reaver:proving_bulwark": "dd6a78ab787c7e27",
+    "tide_channeler:spark_duelist": "98201efef016e207",
+    "wolf:hob": "b3b5e0f15a7e40b6"
+  }
+}

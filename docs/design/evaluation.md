@@ -1,8 +1,12 @@
-# Evaluation: tournaments, metrics and bands
+# Evaluation: tournaments, metrics, bands and trace hashes
 
-Combat is measured, not asserted. The evaluation harness runs seeded duels across pairings of patterns and reports what the simulation's own events say happened: who won and when, what each side dealt, cast and used, and how varied its casting was. Designers keep the bands a matched pairing must stay inside as content, and gates keep the reports as evidence beside the benchmark rows.
+Combat is measured, not asserted. The evaluation harness runs seeded duels across pairings of patterns and reports what the simulation's own events say happened: who won and when, what each side dealt, cast and used, and how varied its casting was. Designers keep the pairings and the bands a matched pairing must stay inside as content, gates keep the reports as evidence beside the benchmark rows, and every fight's event log is hashed so a change that should leave the fights alone can show it did.
 
-Code: `src/HollowWake.Core/Evaluation/Tournament.cs` (the runner and the report records), `src/HollowWake.Tools/TournamentCommand.cs` (the `hollowwake tournament` command). Rules live in group `evaluation`.
+Code: `src/HollowWake.Core/Evaluation/Tournament.cs` (the runner, the report records and the trace baseline), `src/HollowWake.Tools/TournamentCommand.cs` (the `hollowwake tournament` command). Rules live in group `evaluation`. The recorded baseline is `experiments/combat-grammar/baselines/standard-duels.json`.
+
+## Pairings
+
+Rules group `evaluation` lists the pairings, each written `a:b` with two pattern ids. `proving_pairs` are matched pairings built to be even, the ones a tournament fights unless told otherwise and the ones the bands are for. `standard_duels` are the pairings whose seeded traces are the determinism baseline; `--standard` fights them. `--pairs a:b,c:d` names other pairings for one run and overrides both. Validation refuses a listed pairing not written `a:b` or naming a pattern no definition carries, and a later layer replaces either list like any other rule.
 
 ## What a fight is
 
@@ -10,17 +14,31 @@ A fight is one pairing in a fresh arena (`ZoneBuilder.CreateArena`) seeded from 
 
 ## What a report holds
 
-Per fight, per side: damage dealt, hits and crits, casts, the distinct weaves cast and their mechanisms, the size of its kit, the spread of its casts, the statuses applied, and the fraction of life left. Per pairing: win rates for each side and the draw rate, the median and quartiles of time to kill over the fights that ended, each side's variety (the share of its kit it cast, averaged over fights) and spread (how evenly its casts fell over the weaves it did cast, the entropy of their shares over the most it could be), the union of weaves and mechanisms each side used, and the bands it broke. The whole report serializes to JSON (`--out`), so a pull request can keep it under the evidence folder.
+Per fight: its outcome, when it ended, its trace hash, and per side the damage dealt, hits and crits, casts, the distinct weaves cast and their mechanisms, the size of its kit, the spread of its casts, the statuses applied, and the fraction of life left. Per pairing: its trace hash, win rates for each side and the draw rate, the median and quartiles of time to kill over the fights that ended, each side's variety (the share of its kit it cast, averaged over fights) and spread (how evenly its casts fell over the weaves it did cast, the entropy of their shares over the most it could be), the union of weaves and mechanisms each side used, and the bands it broke. Per run: a trace hash over its pairings. The whole report serializes to JSON (`--out`), so a pull request can keep it under the evidence folder.
 
 ## Bands
 
 Rules group `evaluation` holds the bands a matched pairing must stay inside: `ttk_min` and `ttk_max` for the median time to kill, `win_rate_ceiling` for either side's share of wins, `draw_ceiling` for the share of fights that end in a draw, and `variety_floor` for the share of its kit each side must use. With `--bands` the command names every breach and fails. Bands are for pairings built to be even, such as the proving pairs; an uneven pairing is measured but not banded.
+
+## Trace hashes
+
+A fight's hash is the 64-bit FNV-1a hash (`Rng.Hash64`) of its ordered event log, written as sixteen hex digits. The log holds one line per event in the order the simulation published it, each opening with its tick: every `EntitySpawned` (what and where, the two bodies included) and `EntityDespawned`, every `WeaveCast` (caster, weave, target, aimed point), every `DamageDealt` (source, target, amount, and whether it was a crit, evaded or blocked), every `StatusApplied` (source, target, status, stacks, duration) and every `EntityDied` (body, killer), then a last line with the outcome. The two bodies are named `a` and `b`; anything else is named by its pattern, or its name when it has none (a projectile, a field), marked with the side that owns it. So the hash follows what the fight did, not how the world numbered its entities. Amounts, durations and positions are written to hundredths in the invariant culture, so the same fight gives the same hash on every machine.
+
+A pairing's hash folds its fights' hashes in seed order, and a run's folds its pairings' in the order they ran. A pairing's hash depends only on its patterns, the content, the code, the number of seeds and the cap, never on what else ran in the same process.
+
+## The determinism baseline
+
+The standard duels' hashes are recorded in `experiments/combat-grammar/baselines/standard-duels.json`: the seeds and the cap they were fought with, and each pairing's hash keyed `a:b`, sorted so a review can diff it. `--hashes` prints the hashes after the table, and with `--out` writes them in that shape instead of the full report. `--check-hashes FILE` fights the selected pairings against such a file, with its seeds and cap unless the command names others, then prints `hashes: identical` or one line per difference (a pairing whose hash changed, one the file does not hold, one it holds that the run did not fight, a different number of seeds or cap) and fails.
+
+A change that should not move a fight checks the standard duels against the baseline and stays identical. A change that does move one regenerates the file in the same pull request and names the change, and the pairings it moved, in its review record.
 
 ## Using it
 
 ```bash
 dotnet run --project src/HollowWake.Tools -- tournament                                   # the proving pairs, ten seeds, sixty seconds
 dotnet run --project src/HollowWake.Tools -- tournament --pairs wolf:hob,proving_reaver:proving_bulwark --seeds 20 --seconds 45 --bands --out report.json
+dotnet run --project src/HollowWake.Tools -- tournament --standard --seeds 3 --seconds 60 --hashes --out experiments/combat-grammar/baselines/standard-duels.json
+dotnet run --project src/HollowWake.Tools -- tournament --standard --check-hashes experiments/combat-grammar/baselines/standard-duels.json
 ```
 
 A gate on a content or AI change runs the proving pairs with bands, keeps the JSON, and compares the mechanisms each side used before and after: a doctrine or a weave that never shows in a report is not proven to work. The report is not a playtest: a human rubric and recorded sessions say whether the fights are good, the harness only says whether they stay inside what the designers wrote down.
