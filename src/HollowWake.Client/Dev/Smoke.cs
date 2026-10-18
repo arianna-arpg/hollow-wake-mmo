@@ -9,7 +9,8 @@ namespace HollowWake.Client.Dev;
 /// keyboard: connect, enter the world, then exercise held movement, jumping, click-to-move, the
 /// quest giver, both cameras, the sheet and weaves on a hob. Input goes through the same input map
 /// and handlers a player uses, and screenshots are saved along the way. Start it with user arguments:
-/// <c>godot --path src/HollowWake.Client -- --smoke [--shots DIR] [--account NAME] [--host H] [--port P]</c>.
+/// <c>godot --path src/HollowWake.Client -- --smoke [--shots DIR] [--account NAME] [--host H] [--port P] [--isolated-input]</c>.
+/// With <c>--isolated-input</c> no controller is bound, so a controller in use elsewhere on the machine cannot act in the play-through.
 /// Prints one SMOKE PASS or FAIL line per check and exits non-zero when any check fails.
 /// </summary>
 public partial class Smoke : Node
@@ -49,6 +50,12 @@ public partial class Smoke : Node
                     _port = int.TryParse(_args[i + 1], out var p) ? p : _port;
                     break;
             }
+        }
+        if (_args.Contains("--isolated-input"))
+        {
+            InputSetup.IgnorePads = true;
+            InputSetup.Apply(_main.Settings);
+            GD.Print("SMOKE input: scripted keys and pointer; physical controllers unbound");
         }
         _started = Now;
         // A headless window never receives the operating system's mouse-enter notification.
