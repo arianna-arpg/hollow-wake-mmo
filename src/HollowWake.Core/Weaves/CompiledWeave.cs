@@ -611,6 +611,12 @@ public sealed class WeaveCompiler
         }
         var castScope = CastScopes.For(form);
         var baseTags = form.Tags.With("weave", "form." + form.Id);
+        if (preset is not null)
+        {
+            // A preset's own tags join its form's, and preset.{id} names it, so modifiers, procs and glyph
+            // gates can scope by the preset the way they scope by the form.
+            baseTags = baseTags.Union(preset.Tags).With("preset." + preset.Id);
+        }
         foreach (var t in threads)
         {
             baseTags = baseTags.Union(t.Tags).With(t.Id, "thread." + t.Id);
@@ -803,7 +809,7 @@ public sealed class WeaveCompiler
             LevelBonus = state.LevelBonus,
             Specs = specs,
             CooldownAt = preset?.CooldownAt ?? form.CooldownAt,
-            Casting = CastingOf(form, activeGlyphs, release, bash, deactivate, cycle),
+            Casting = CastingOf(form, preset, activeGlyphs, release, bash, deactivate, cycle),
             Probe = state.Probe,
         };
     }
@@ -811,8 +817,8 @@ public sealed class WeaveCompiler
     private IReadOnlyList<CompiledEffect> Section(WeaveGraph graph, string section, EffectCompileContext ctx) =>
         graph.HasSection(section) ? _effects.CompileAll(graph.ToSpecs(section), ctx).ToArray() : Array.Empty<CompiledEffect>();
 
-    /// <summary>The casting fields of the form and the active glyphs, combined.</summary>
-    private static WeaveCasting CastingOf(FormDef form, List<GlyphDef> glyphs, IReadOnlyList<CompiledEffect> release, IReadOnlyList<CompiledEffect> bash, IReadOnlyList<CompiledEffect> deactivate, IReadOnlyList<CompiledEffect> cycle)
+    /// <summary>The casting fields of the form, the preset and the active glyphs, combined.</summary>
+    private static WeaveCasting CastingOf(FormDef form, WeaveDef? preset, List<GlyphDef> glyphs, IReadOnlyList<CompiledEffect> release, IReadOnlyList<CompiledEffect> bash, IReadOnlyList<CompiledEffect> deactivate, IReadOnlyList<CompiledEffect> cycle)
     {
         var triggers = new List<WeaveTrigger>();
         var gates = new List<Expr>(form.Gates);
@@ -830,6 +836,25 @@ public sealed class WeaveCompiler
         if (form.FollowUp is { } formFollow)
         {
             followUps.Add(formFollow);
+        }
+        // The preset's behaviors sit between the form's and the glyphs': its additive ones follow the form's,
+        // and where one of a kind is held it wins over the form and yields to the first active glyph.
+        if (preset is not null)
+        {
+            if (preset.Trigger is { } presetTrigger)
+            {
+                triggers.Add(new WeaveTrigger(presetTrigger, KindOf(presetTrigger, preset.Id), "preset", triggers.Count));
+            }
+            gates.AddRange(preset.Gates);
+            if (preset.MetaAction is { } presetMeta)
+            {
+                metas.Add(presetMeta);
+            }
+            if (preset.FollowUp is { } presetFollow)
+            {
+                followUps.Add(presetFollow);
+            }
+            equip.AddRange(preset.EquipModifiers);
         }
         UsesSpec? uses = null;
         SpendSpec? spend = null;
@@ -860,9 +885,14 @@ public sealed class WeaveCompiler
             selfStack ??= g.SelfStack;
             chain ??= g.Chain;
         }
+        uses ??= preset?.Uses ?? form.Uses;
+        spend ??= preset?.Spend ?? form.Spend;
+        convert ??= preset?.Convert ?? form.Convert;
+        cycleSpec ??= preset?.Cycle ?? form.Cycle;
+        selfStack ??= preset?.SelfStack ?? form.SelfStack;
+        chain ??= preset?.Chain ?? form.Chain;
         var nothing = triggers.Count == 0 && gates.Count == 0 && metas.Count == 0 && followUps.Count == 0 && equip.Count == 0
-            && uses is null && form.Uses is null && spend is null && form.Spend is null && convert is null && form.Convert is null
-            && cycleSpec is null && form.Cycle is null && selfStack is null && form.SelfStack is null && chain is null && form.Chain is null
+            && uses is null && spend is null && convert is null && cycleSpec is null && selfStack is null && chain is null
             && release.Count == 0 && bash.Count == 0 && deactivate.Count == 0 && cycle.Count == 0;
         if (nothing)
         {
@@ -872,14 +902,14 @@ public sealed class WeaveCompiler
         {
             Triggers = triggers,
             Gates = gates,
-            Uses = uses ?? form.Uses,
-            Spend = spend ?? form.Spend,
-            Convert = convert ?? form.Convert,
+            Uses = uses,
+            Spend = spend,
+            Convert = convert,
             Metas = metas,
             FollowUps = followUps,
-            Cycle = cycleSpec ?? form.Cycle,
-            SelfStack = selfStack ?? form.SelfStack,
-            Chain = chain ?? form.Chain,
+            Cycle = cycleSpec,
+            SelfStack = selfStack,
+            Chain = chain,
             EquipModifiers = equip,
             Release = release,
             Bash = bash,
@@ -895,7 +925,7 @@ public sealed class WeaveCompiler
     private Evaluation Evaluate(WeaveDef? preset, FormDef form, List<ThreadDef> threads, TagSet baseTags, Dictionary<string, double> bases, List<Socketed> glyphs, bool[] active, List<TreeRank> tree, bool[] riding)
     {
         var tags = baseTags;
-        var declared = form.Mechanisms;
+        var declared = preset is null ? form.Mechanisms : form.Mechanisms.Union(preset.Mechanisms);
         // Tags and mechanisms from every active glyph are visible to every gate: a glyph may enable another.
         for (var i = 0; i < glyphs.Count; i++)
         {
@@ -996,9 +1026,9 @@ public sealed class WeaveCompiler
                 graph.Add(s, patchable: true, WeaveSections.Deactivate);
             }
         }
-        // The first active glyph's cycle wins over the form's.
+        // The first active glyph's cycle wins over the preset's, and the preset's over the form's.
         var cycleFromGlyph = activeDefs.Find(g => g.Cycle is not null)?.Cycle;
-        if ((cycleFromGlyph ?? form.Cycle) is { } cycle)
+        if ((cycleFromGlyph ?? preset?.Cycle ?? form.Cycle) is { } cycle)
         {
             foreach (var s in cycle.Effects)
             {
@@ -1087,6 +1117,7 @@ public sealed class WeaveCompiler
         {
             Content = _content,
             Form = form,
+            Preset = preset,
             Threads = threads,
             Tags = tags,
             Declared = declared,
