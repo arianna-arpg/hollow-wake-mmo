@@ -18,7 +18,7 @@
     },
     "cast_lifecycle": {
       "status": "partial",
-      "coverage": "All current runtime cast modes use shared start/release/end/interrupt identity. Thread templates and composed layers are implemented. Original readiness clocks, staged timing glyphs and mode-specific progress artwork still require shared state adapters; do not infer a repeating channel completion from its interval.",
+      "coverage": "Current active casts share confirmed lifecycle identity and authoritative readiness, emission and channel-beat clocks in both clients. Thread templates and composed layers are implemented. Original unported cast mechanics, staged timing glyphs and mode-specific progress artwork remain migration work; readiness and beat deadlines never imply release.",
       "cast_modes": ["cast", "channel", "charge", "concentration", "guard", "multitude", "overcharge", "perfect", "timed"],
       "skill_fields": ["castCycle", "castMode", "castMove", "channel", "chargeUp", "concentration", "gauge", "guard", "pool", "recoveryCues", "reflex", "requiresGuard", "timing", "usableWhileGuarding", "useCharges", "useTime"],
       "support_fields": ["cadence", "guardBash", "guardCast", "overcharge", "strikeTiming", "useChargeGraft"],
@@ -48,7 +48,7 @@
     },
     "delivery_and_forecast": {
       "status": "partial",
-      "coverage": "Authoritative projectile/field entities already carry world state, and body accents can layer compiled mechanism capabilities. Exact swept shapes, committed/live aim, ground warnings and attack voice assets require the shared resolved-plan forecasting work. Cosmetic rings are never hit bounds.",
+      "coverage": "Authoritative projectile/field entities carry world state. Supported area roots share resolved candidate geometry, committed/live aim policy, modifiers and conditional height/LOS semantics between combat and both clients. Unknown delivery graphs remain spatially unavailable. Swept travel, secondary placements, dependent wrappers, surface clipping and authored attack voices remain shared-family work. Cosmetic rings are never hit bounds.",
       "deliveries": ["aura", "carom", "cone", "detonate", "detonateProjectile", "ground", "mark", "melee", "nova", "projectile", "self", "storm", "target"],
       "effects": ["spawnZone", "terrain"],
       "skill_fields": ["aim", "delivery", "targeting"],

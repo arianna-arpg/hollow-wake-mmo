@@ -1,0 +1,73 @@
+Godot Engine v4.7.2.stable.mono.official.ed1daf0bf - https://godotengine.org
+Vulkan 1.3.280 - Forward+ - Using Device #0: NVIDIA - NVIDIA GeForce RTX 3090
+
+content loaded from <worktree>\content\core: 0 errors, 0 warnings
+server 127.0.0.1:18077 from the command line
+server granted features: cast_cues, cast_forecast_v1, entity_delta, interface
+SMOKE ok   connect and log in: Logged in. Pick a character.
+SMOKE ok   create character: Smoke the holdfast
+SMOKE ok   enter world: Smoke at 129.5, 111.0, 14.7
+SMOKE ok   terrain built: 49 chunks in 0.4s, 309 entities in view, 72 fps
+SMOKE shot <worktree>/artifacts/forecast-review/cleave-final4-godot\01_isometric.png: Ok
+SMOKE ok   wasd move: moved 7.0 units
+SMOKE ok   jump: rose 0.98 units
+SMOKE ok   click to move: tried (5,0) 11.5
+SMOKE ok   quartermaster offers quests: reached=True at 1.1 units, F interacted with Quartermaster (quest_giver) at 1.1, panel shown=True
+SMOKE shot <worktree>/artifacts/forecast-review/cleave-final4-godot\02_quest_offer.png: Ok
+SMOKE shot <worktree>/artifacts/forecast-review/cleave-final4-godot\03_third_person.png: Ok
+SMOKE ok   camera toggle: Isometric -> switched -> Isometric
+SMOKE ok   camera rotate: Q turned yes, E turned back yes
+SMOKE shot <worktree>/artifacts/forecast-review/cleave-final4-godot\04_sheet.png: Ok
+SMOKE ok   character sheet: opened=True closed=True
+SMOKE shot <worktree>/artifacts/forecast-review/cleave-final4-godot\06_core_pane.png: Ok
+SMOKE ok   core pane: open=True, bag 1 items on 12x5, 9 doll slots, wallet 3, interface=True
+SMOKE shot <worktree>/artifacts/forecast-review/cleave-final4-godot\07_page_weaves.png: Ok
+SMOKE shot <worktree>/artifacts/forecast-review/cleave-final4-godot\07_page_passives.png: Ok
+SMOKE shot <worktree>/artifacts/forecast-review/cleave-final4-godot\07_page_reliquary.png: Ok
+SMOKE shot <worktree>/artifacts/forecast-review/cleave-final4-godot\07_page_stash.png: Ok
+SMOKE shot <worktree>/artifacts/forecast-review/cleave-final4-godot\07_page_character.png: Ok
+SMOKE ok   ribbon pages: weaves=shown, passives=shown, reliquary=shown, stash=shown, character=shown
+SMOKE ok   escape closes the core pane last: core open=False
+SMOKE shot <worktree>/artifacts/forecast-review/cleave-final4-godot\08_dialogue.png: Ok
+SMOKE ok   talk to a villager: reached=True, Marcher: "Weft hold you, stranger." with 2 choices, chose "Any news?" (answered=True)
+SMOKE shot <worktree>/artifacts/forecast-review/cleave-final4-godot\09_vendor.png: Ok
+SMOKE FAIL trade with a vendor: no vendor_state arrived
+SMOKE shot <worktree>/artifacts/forecast-review/cleave-final4-godot\11_options.png: Ok
+SMOKE ok   options open: open=True, page interface, 10 rows
+SMOKE shot <worktree>/artifacts/forecast-review/cleave-final4-godot\12_theme.png: Ok
+SMOKE ok   options switch the theme: theme runic_brass, cluster pixel 131110 -> bc954f
+SMOKE shot <worktree>/artifacts/forecast-review/cleave-final4-godot\13_rebound.png: Ok
+SMOKE ok   options rebind a key: camera switch on B=True, B turned the camera=True
+SMOKE shot <worktree>/artifacts/forecast-review/cleave-final4-godot\14_scale.png: Ok
+SMOKE ok   options scale the interface: scale 1.25, cluster 908 -> 1135 px wide, panes above the cluster=True
+SMOKE shot <worktree>/artifacts/forecast-review/cleave-final4-godot\15_reset.png: Ok
+SMOKE ok   options reset a group: theme etched_stone, scale 1.00
+SMOKE shot <worktree>/artifacts/forecast-review/cleave-final4-godot\forecast_primary_candidate.png: Ok
+SMOKE ok   shared cast forecast: coverage=primary_candidate; baselines=369
+SMOKE FAIL weaves on a hob: reached=True hovered=True slots 123412341234 hits dealt=0 (rejected: UseWeave: busy)
+SMOKE shot <worktree>/artifacts/forecast-review/cleave-final4-godot\05_combat.png: Ok
+SMOKE SUMMARY
+SMOKE PASS connect and log in: Logged in. Pick a character.
+SMOKE PASS create character: Smoke the holdfast
+SMOKE PASS enter world: Smoke at 129.5, 111.0, 14.7
+SMOKE PASS terrain built: 49 chunks in 0.4s, 309 entities in view, 72 fps
+SMOKE PASS wasd move: moved 7.0 units
+SMOKE PASS jump: rose 0.98 units
+SMOKE PASS click to move: tried (5,0) 11.5
+SMOKE PASS quartermaster offers quests: reached=True at 1.1 units, F interacted with Quartermaster (quest_giver) at 1.1, panel shown=True
+SMOKE PASS camera toggle: Isometric -> switched -> Isometric
+SMOKE PASS camera rotate: Q turned yes, E turned back yes
+SMOKE PASS character sheet: opened=True closed=True
+SMOKE PASS core pane: open=True, bag 1 items on 12x5, 9 doll slots, wallet 3, interface=True
+SMOKE PASS ribbon pages: weaves=shown, passives=shown, reliquary=shown, stash=shown, character=shown
+SMOKE PASS escape closes the core pane last: core open=False
+SMOKE PASS talk to a villager: reached=True, Marcher: "Weft hold you, stranger." with 2 choices, chose "Any news?" (answered=True)
+SMOKE FAIL trade with a vendor: no vendor_state arrived
+SMOKE PASS options open: open=True, page interface, 10 rows
+SMOKE PASS options switch the theme: theme runic_brass, cluster pixel 131110 -> bc954f
+SMOKE PASS options rebind a key: camera switch on B=True, B turned the camera=True
+SMOKE PASS options scale the interface: scale 1.25, cluster 908 -> 1135 px wide, panes above the cluster=True
+SMOKE PASS options reset a group: theme etched_stone, scale 1.00
+SMOKE PASS shared cast forecast: coverage=primary_candidate; baselines=369
+SMOKE FAIL weaves on a hob: reached=True hovered=True slots 123412341234 hits dealt=0 (rejected: UseWeave: busy)
+SMOKE DONE 21/23 passed in 56.0s; 122 fps at the end with 64 chunks and 281 entities

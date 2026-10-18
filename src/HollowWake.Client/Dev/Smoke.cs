@@ -228,7 +228,8 @@ public partial class Smoke : Node
         if (_args.Contains("--cast-cues")) await CastCueSequence();
         if (_args.Contains("--forecasts")) await ForecastSequence();
 
-        // Weaves: walk to the nearest hob, hover it and press 1 to 4 until a combat line shows.
+        // Use the smoke calling's attack slots, approaching again between attempts. Cycling utility
+        // slots can enter an indefinite guard; a miss must never count as the required landed hit.
         var hob = Nearest(e => e.State.Pattern is not null && e.State.Pattern.StartsWith("hob", StringComparison.Ordinal) && !e.State.Dead);
         if (hob is null)
         {
@@ -236,20 +237,25 @@ public partial class Smoke : Node
         }
         else
         {
-            var reached = await TravelTo(() => (hob.State.X, hob.State.Y), 2.2f, 60);
+            var reached = false;
             var lines0 = _main.HitsDealt;
             var hovered = false;
             var used = "";
-            for (var round = 0; round < 3 && _main.HitsDealt == lines0; round++)
+            for (var attempt = 0; attempt < 10 && _main.HitsDealt == lines0; attempt++)
             {
-                for (var slot = 1; slot <= 4 && _main.HitsDealt == lines0; slot++)
+                if (Self?.State.Dead == true) { Tap(Key.R); await Wait(1.0); }
+                if (hob.State.Dead || !_main.World.Entities.ContainsKey(hob.Key))
                 {
-                    await Hover(hob);
-                    hovered |= _main.HoveredKey != 0;
-                    Tap(Key.Key0 + slot);
-                    used += slot;
-                    await Wait(1.0);
+                    hob = Nearest(e => e.State.Pattern?.StartsWith("hob", StringComparison.Ordinal) == true && !e.State.Dead);
+                    if (hob is null) break;
                 }
+                reached |= await TravelTo(() => (hob.State.X, hob.State.Y), 2f, 15);
+                await Hover(hob);
+                hovered |= _main.HoveredKey == hob.Key;
+                var slot = attempt % 2 + 1;
+                Tap(Key.Key0 + slot);
+                used += slot;
+                await Wait(1.0);
             }
             var fought = await Until(() => _main.HitsDealt > lines0, 6);
             Record("weaves on a hob", fought, $"reached={reached} hovered={hovered} slots {used} hits dealt={_main.HitsDealt - lines0}{Rejected()}");
@@ -420,10 +426,19 @@ public partial class Smoke : Node
             }
             await TravelTo(() => (vendor.State.X, vendor.State.Y), 1.4f, 45);
             await Wait(0.4);
+            await CloseEverything();
             var states = _main.VendorStates;
             var talks = _main.DialogueStates;
-            await Click(Screen(vendor.GlobalPosition + new Vector3(0, vendor.State.Height * 0.5f, 0)));
-            await Until(() => (_main.VendorStates > states && hud.HasWorldPane("vendor")) || (_main.DialogueStates > talks && hud.HasWorldPane("dialogue")), 6);
+            bool Opened() => (_main.VendorStates > states && hud.FrontView<UI.WorldPanes.VendorPane>()?.State?.Source == vendor.Key) ||
+                (_main.DialogueStates > talks && hud.FrontView<UI.WorldPanes.DialoguePane>()?.State?.Source == vendor.Key);
+            Tap(Key.F);
+            if (!await Until(Opened, 4))
+            {
+                await CloseEverything();
+                await Hover(vendor);
+                await Click(Screen(vendor.GlobalPosition + new Vector3(0, vendor.State.Height * 0.5f, 0)));
+                await Until(Opened, 6);
+            }
             // A trader that talks first: bring its conversation to the front and ask to trade, as a player would.
             if (!hud.HasWorldPane("vendor") && hud.FrontView<UI.WorldPanes.DialoguePane>() is { State: { } talk } dialogue)
             {

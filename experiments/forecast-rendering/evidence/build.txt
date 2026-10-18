@@ -3,9 +3,9 @@
   HollowWake.Core.Tests -> <worktree>\tests\HollowWake.Core.Tests\bin\Release\net10.0\HollowWake.Core.Tests.dll
   HollowWake.Server -> <worktree>\src\HollowWake.Server\bin\Release\net10.0\HollowWake.Server.dll
   HollowWake.Client.Tests -> <worktree>\tests\HollowWake.Client.Tests\bin\Release\net10.0\HollowWake.Client.Tests.dll
+  HollowWake.Server.Host -> <worktree>\src\HollowWake.Server.Host\bin\Release\net10.0\hollowwake-server.dll
   HollowWake.Server.Host.Brutal -> <worktree>\src\HollowWake.Server.Host.Brutal\bin\Release\net10.0\hollowwake-server-brutal.dll
   HollowWake.Client -> <worktree>\src\HollowWake.Client\.godot\mono\temp\bin\Debug\HollowWake.Client.dll
-  HollowWake.Server.Host -> <worktree>\src\HollowWake.Server.Host\bin\Release\net10.0\hollowwake-server.dll
   HollowWake.Server.Tests -> <worktree>\tests\HollowWake.Server.Tests\bin\Release\net10.0\HollowWake.Server.Tests.dll
   HollowWake.Tools -> <worktree>\src\HollowWake.Tools\bin\Release\net10.0\hollowwake.dll
 
@@ -13,4 +13,4 @@ Build succeeded.
     0 Warning(s)
     0 Error(s)
 
-Time Elapsed 00:00:04.88
+Time Elapsed 00:00:03.83

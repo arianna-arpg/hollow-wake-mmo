@@ -45,6 +45,7 @@ ui_cast_forecasts        1
 ui_cast_visuals          1
 ui_icon_sets             1
 ui_layouts               1
+ui_loading_screens       1
 ui_options               7
 ui_pages                 7
 ui_sheets                1
