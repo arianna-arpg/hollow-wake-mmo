@@ -83,7 +83,7 @@ effects:
           - { type: damage, amount: "weave.base_damage * spell.power * 0.7", threads: $threads }
 ```
 
-`$threads` resolves to the weave's Threads, `$thread_status` to the first Thread's status. `hollowwake schema` does not list effect parameters; the handlers in `HollowWake.Core/Effects/Handlers/` (one file per family) are the reference, and each declares the parameters it reads in its `EffectSignature`. `hollowwake weave <id>` prints what the compiler makes of a weave.
+`$threads` resolves to the weave's Threads, `$thread_status` to the first Thread's status. `hollowwake schema` does not list effect parameters; the handlers in `HollowWake.Core/Effects/Handlers/` (one file per family) are the reference, and each declares the parameters it reads in its `EffectSignature`, while what each parameter is in the combat grammar (an axis with its unit and the attribute behind it, a node, a choice from a vocabulary, or a flag) is declared in `AxisBindings` beside the compiler, where a code mod declares its own handlers' parameters too. `hollowwake weave <id>` prints what the compiler makes of a weave, and `--axes` places it on the grammar's dimensions.
 
 ## Code mods
 
