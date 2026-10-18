@@ -155,7 +155,7 @@ A new axis is added end to end, or not at all: an attribute with a base, a unit 
 Every combat change shows, beyond the gates of `CLAUDE.md`, in its pull request and its review record:
 
 - `hollowwake validate` with no errors and no new warnings;
-- the standard duels (`hollowwake tournament --standard --hashes`) identical to the recorded baseline, or the record naming each changed trace and the rule it serves;
+- the standard duels (`hollowwake tournament --standard --check-hashes` against the committed baseline) identical to the recorded baseline, or the record naming each changed trace and the rule it serves;
 - the morph test passing, with any new axis added to its tables;
 - the linter adding no smell beyond its baseline, or the record naming each one it adds and why;
 - the proving pairs breaking no band they did not break before, with the mechanisms each side used before and after;
