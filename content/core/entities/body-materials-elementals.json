@@ -1,0 +1,30 @@
+{
+  "kind": "body_materials",
+  "entries": [
+    {
+      "id": "ember_coal",
+      "name": "Live ember coal",
+      "density": 450
+    },
+    {
+      "id": "elemental_water",
+      "name": "Bound water",
+      "density": 1000
+    },
+    {
+      "id": "elemental_ice",
+      "name": "Bound ice",
+      "density": 917
+    },
+    {
+      "id": "elemental_silt",
+      "name": "Loose bound sediment",
+      "density": 1700
+    },
+    {
+      "id": "elemental_crystal",
+      "name": "Bound mineral crystal",
+      "density": 2500
+    }
+  ]
+}

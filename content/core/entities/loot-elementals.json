@@ -1,0 +1,42 @@
+{
+  "kind": "loot",
+  "entries": [
+    {
+      "id": "elemental_residue",
+      "rolls": [
+        {
+          "count": 1,
+          "entries": [
+            {
+              "weight": 45,
+              "kind": "currency",
+              "currency": "residue",
+              "amount": [
+                1,
+                2
+              ]
+            },
+            {
+              "weight": 25,
+              "kind": "item",
+              "item": "thread_floss",
+              "amount": [
+                1,
+                2
+              ]
+            },
+            {
+              "weight": 15,
+              "kind": "table",
+              "table": "world_common"
+            },
+            {
+              "weight": 15,
+              "kind": "nothing"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,32 @@
+  Determining projects to restore...
+  All projects are up-to-date for restore.
+  HollowWake.Core -> C:\Users\John\.codex\worktrees\elemental-entity-foundation\MMOARPG\src\HollowWake.Core\bin\Debug\net8.0\HollowWake.Core.dll
+C:\Users\John\.codex\worktrees\elemental-entity-foundation\MMOARPG\tests\HollowWake.Core.Tests\PortedProjectileTests.cs(254,19): warning xUnit2031: Do not use a Where clause to filter before calling Assert.Single. Use the overload of Assert.Single that accepts a filtering function. (https://xunit.net/xunit.analyzers/rules/xUnit2031) [C:\Users\John\.codex\worktrees\elemental-entity-foundation\MMOARPG\tests\HollowWake.Core.Tests\HollowWake.Core.Tests.csproj]
+C:\Users\John\.codex\worktrees\elemental-entity-foundation\MMOARPG\tests\HollowWake.Core.Tests\PortedProjectileTests.cs(267,9): warning xUnit2031: Do not use a Where clause to filter before calling Assert.Single. Use the overload of Assert.Single that accepts a filtering function. (https://xunit.net/xunit.analyzers/rules/xUnit2031) [C:\Users\John\.codex\worktrees\elemental-entity-foundation\MMOARPG\tests\HollowWake.Core.Tests\HollowWake.Core.Tests.csproj]
+C:\Users\John\.codex\worktrees\elemental-entity-foundation\MMOARPG\tests\HollowWake.Core.Tests\PortedProjectileTests.cs(280,9): warning xUnit2031: Do not use a Where clause to filter before calling Assert.Single. Use the overload of Assert.Single that accepts a filtering function. (https://xunit.net/xunit.analyzers/rules/xUnit2031) [C:\Users\John\.codex\worktrees\elemental-entity-foundation\MMOARPG\tests\HollowWake.Core.Tests\HollowWake.Core.Tests.csproj]
+  HollowWake.Core.Tests -> C:\Users\John\.codex\worktrees\elemental-entity-foundation\MMOARPG\tests\HollowWake.Core.Tests\bin\Debug\net10.0\HollowWake.Core.Tests.dll
+Test run for C:\Users\John\.codex\worktrees\elemental-entity-foundation\MMOARPG\tests\HollowWake.Core.Tests\bin\Debug\net10.0\HollowWake.Core.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+C:\Users\John\.codex\worktrees\elemental-entity-foundation\MMOARPG\tests\HollowWake.Core.Tests\bin\Debug\net10.0\HollowWake.Core.Tests.dll
+[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v3.1.5+1b188a7b0a (64-bit .NET 10.0.13)
+[xUnit.net 00:00:00.12]   Discovering: HollowWake.Core.Tests
+[xUnit.net 00:00:01.85]   Discovered:  HollowWake.Core.Tests
+[xUnit.net 00:00:01.87]   Starting:    HollowWake.Core.Tests
+[xUnit.net 00:00:06.16]   Finished:    HollowWake.Core.Tests
+  Passed HollowWake.Core.Tests.ElementalTests.ExistingWorldBudgetsCanSelectUnboundSitesNaturally [4 s]
+  Standard Output Messages:
+ -48,-48: mineral_wake at -12211.5,-12083.5, biome=alpine, site level=37
+ 1,-48: storm_eye at 297.5,-12060.5, biome=alpine, site level=34
+ 21,-48: rime_bloom at 5590.5,-12221.5, biome=highland, site level=45
+ 4,-41: unbound_refraction at 1132.5,-10455.5, biome=highland, site level=34
+ 5,-41: selvage_rent at 1349.5,-10448.5, biome=hollowed, site level=36
+ 0,-17: bloom_exhalation at 232.5,-4249.5, biome=deep_forest, site level=17
+ -20,-8: ember_seam at -5065.5,-1888.5, biome=cinderwaste, site level=16
+ 25,-8: tide_memory at 6564.5,-2007.5, biome=shore, site level=16
+
+
+
+Test Run Successful.
+Total tests: 1
+     Passed: 1
+ Total time: 7.0832 Seconds

@@ -36,12 +36,12 @@ public class WorldGenGoldenTests
         Assert.Equal(new ZoneCoord(0, 0), g.StartZone());
     }
 
-    // Wildlife spawn tables and cull candidates: reviewed maps in experiments/fauna/evidence.
+    // Fauna tables plus sparse elemental sites: reviewed maps and neighboring-plan audit in experiments/elementals/evidence.
     [Theory]
     [InlineData(0, 0, "7EA79EBAD31156E2", "B4967CED570DD0B6")]
     [InlineData(1, 0, "5DD57952BE997040", "719165F3D645E5F0")]
     [InlineData(0, -1, "330979854289527A", "44FDA182BF6A81C9")]
-    [InlineData(3, 2, "7395A7B7D40E67D9", "15C99D20020E2BF4")]
+    [InlineData(3, 2, "0CC30AA46F8AF08C", "15C99D20020E2BF4")]
     public void ZoneMatchesGoldenHashes(int x, int y, string infoHash, string chunksHash)
     {
         var g = new WorldGenerator(Registry.Value, Rng.Hash64(Seed));

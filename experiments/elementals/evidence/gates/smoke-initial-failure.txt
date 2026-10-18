@@ -1,0 +1,32 @@
+SMOKE input: page-local keyboard and pointer; physical controllers isolated
+SMOKE ok   connect and log in: Logged in. Pick a character. (features: cast_cues, entity_delta, interface)
+SMOKE ok   create character: Smoke the holdfast
+SMOKE ok   enter world: Smoke at 129.5, 111.0, 14.7
+SMOKE ok   terrain built: 49 chunks (81 requested) in 0.9s, 314 entities in view
+SMOKE measure geometry: 227 fps, frame ms p50 4.20 p95 6.00 max 8.60, 3.67 ms of work per frame; 373 draw calls, 148654 triangles; 314 bodies (0 cards, 56140 body triangles), 0 atlases 0.00 MiB, 0 textures; 314 entities, 49 chunks
+SMOKE ok   bodies as geometry: geometry: 227 fps, frame ms p50 4.20 p95 6.00 max 8.60, 3.67 ms of work per frame; 373 draw calls, 148654 triangles; 314 bodies (0 cards, 56140 body triangles), 0 atlases 0.00 MiB, 0 textures; 314 entities, 49 chunks
+SMOKE measure geometry, no shadows: 176 fps, frame ms p50 5.70 p95 7.30 max 11.70, 4.54 ms of work per frame; 373 draw calls, 148654 triangles; 312 bodies (0 cards, 54948 body triangles), 0 atlases 0.00 MiB, 0 textures; 312 entities, 49 chunks
+SMOKE ok   bodies without shadows: geometry, no shadows: 176 fps, frame ms p50 5.70 p95 7.30 max 11.70, 4.54 ms of work per frame; 373 draw calls, 148654 triangles; 312 bodies (0 cards, 54948 body triangles), 0 atlases 0.00 MiB, 0 textures; 312 entities, 49 chunks
+SMOKE measure cards: 235 fps, frame ms p50 4.20 p95 5.30 max 10.40, 3.23 ms of work per frame; 286 draw calls, 133300 triangles; 315 bodies (230 cards, 14156 body triangles), 17 atlases 9.99 MiB, 17 textures; 315 entities, 49 chunks
+SMOKE ok   bodies as cards: cards: 235 fps, frame ms p50 4.20 p95 5.30 max 10.40, 3.23 ms of work per frame; 286 draw calls, 133300 triangles; 315 bodies (230 cards, 14156 body triangles), 17 atlases 9.99 MiB, 17 textures; 315 entities, 49 chunks
+SMOKE ok   day cycle: night at 0.04 of the day, evening at 0.77, the server's day at 0.31
+SMOKE ok   wasd move: moved 7.7 units
+SMOKE ok   jump: rose 0.99 units
+SMOKE ok   click to move: tried (5,0) 4.8
+SMOKE FAIL script: page.evaluate: Target page, context or browser has been closed
+SMOKE ok   no page errors: none
+SMOKE SUMMARY
+SMOKE PASS connect and log in: Logged in. Pick a character. (features: cast_cues, entity_delta, interface)
+SMOKE PASS create character: Smoke the holdfast
+SMOKE PASS enter world: Smoke at 129.5, 111.0, 14.7
+SMOKE PASS terrain built: 49 chunks (81 requested) in 0.9s, 314 entities in view
+SMOKE PASS bodies as geometry: geometry: 227 fps, frame ms p50 4.20 p95 6.00 max 8.60, 3.67 ms of work per frame; 373 draw calls, 148654 triangles; 314 bodies (0 cards, 56140 body triangles), 0 atlases 0.00 MiB, 0 textures; 314 entities, 49 chunks
+SMOKE PASS bodies without shadows: geometry, no shadows: 176 fps, frame ms p50 5.70 p95 7.30 max 11.70, 4.54 ms of work per frame; 373 draw calls, 148654 triangles; 312 bodies (0 cards, 54948 body triangles), 0 atlases 0.00 MiB, 0 textures; 312 entities, 49 chunks
+SMOKE PASS bodies as cards: cards: 235 fps, frame ms p50 4.20 p95 5.30 max 10.40, 3.23 ms of work per frame; 286 draw calls, 133300 triangles; 315 bodies (230 cards, 14156 body triangles), 17 atlases 9.99 MiB, 17 textures; 315 entities, 49 chunks
+SMOKE PASS day cycle: night at 0.04 of the day, evening at 0.77, the server's day at 0.31
+SMOKE PASS wasd move: moved 7.7 units
+SMOKE PASS jump: rose 0.99 units
+SMOKE PASS click to move: tried (5,0) 4.8
+SMOKE FAIL script: page.evaluate: Target page, context or browser has been closed
+SMOKE PASS no page errors: none
+SMOKE DONE 12/13 passed in 26.8s; 0 fps, ? ms of work per frame, ? chunks and ? entities at the end; shots in C:\Users\John\.codex\worktrees\elemental-entity-foundation\MMOARPG\experiments\elementals\artifacts\background\run-6z5q08\shots

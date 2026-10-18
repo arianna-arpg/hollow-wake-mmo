@@ -1,0 +1,446 @@
+{
+  "kind": "pois",
+  "entries": [
+    {
+      "id": "ember_seam",
+      "name": "Ashlight Seam",
+      "tags": [
+        "ruin",
+        "landmark",
+        "elemental"
+      ],
+      "weight": 0.22,
+      "radius": 9,
+      "min_spacing": 180,
+      "slope": {
+        "max": 0.75
+      },
+      "biomes": [
+        "cinderwaste",
+        "scrub"
+      ],
+      "landmarks": [
+        "camp_ring"
+      ],
+      "level": 3,
+      "inhabitants": [
+        {
+          "pattern": "cinderling",
+          "density": 1,
+          "pack_size": [
+            1,
+            1
+          ],
+          "respawn": 420,
+          "level": {
+            "min": 3
+          }
+        },
+        {
+          "pattern": "emberwisp",
+          "density": 1,
+          "pack_size": [
+            1,
+            1
+          ],
+          "respawn": 420,
+          "level": {
+            "min": 4
+          }
+        },
+        {
+          "pattern": "ember_elemental",
+          "density": 1,
+          "pack_size": [
+            1,
+            1
+          ],
+          "respawn": 420,
+          "level": {
+            "min": 7
+          }
+        }
+      ],
+      "names": [
+        "Ashlight Seam"
+      ],
+      "meta": {
+        "population": "Sparse unbound manifestation inside the existing ruin budget. Level is the site offset; inhabitants keep their own minimum."
+      }
+    },
+    {
+      "id": "tide_memory",
+      "name": "Pool of Returning Rain",
+      "tags": [
+        "ruin",
+        "landmark",
+        "elemental"
+      ],
+      "weight": 0.22,
+      "radius": 9,
+      "min_spacing": 180,
+      "slope": {
+        "max": 0.75
+      },
+      "biomes": [
+        "shore",
+        "marsh"
+      ],
+      "landmarks": [
+        "shrine_ring"
+      ],
+      "level": 3,
+      "inhabitants": [
+        {
+          "pattern": "tide_surge",
+          "density": 1,
+          "pack_size": [
+            1,
+            1
+          ],
+          "respawn": 420,
+          "level": {
+            "min": 4
+          }
+        }
+      ],
+      "names": [
+        "Pool of Returning Rain"
+      ],
+      "meta": {
+        "population": "Sparse unbound manifestation inside the existing ruin budget. Level is the site offset; inhabitants keep their own minimum."
+      }
+    },
+    {
+      "id": "rime_bloom",
+      "name": "Rime Bloom",
+      "tags": [
+        "ruin",
+        "landmark",
+        "elemental"
+      ],
+      "weight": 0.22,
+      "radius": 9,
+      "min_spacing": 180,
+      "slope": {
+        "max": 0.75
+      },
+      "biomes": [
+        "alpine",
+        "highland"
+      ],
+      "landmarks": [
+        "shrine_ring"
+      ],
+      "level": 6,
+      "inhabitants": [
+        {
+          "pattern": "rime_star",
+          "density": 1,
+          "pack_size": [
+            1,
+            1
+          ],
+          "respawn": 420,
+          "level": {
+            "min": 6
+          }
+        },
+        {
+          "pattern": "frost_elemental",
+          "density": 1,
+          "pack_size": [
+            1,
+            1
+          ],
+          "respawn": 420,
+          "level": {
+            "min": 9
+          }
+        }
+      ],
+      "names": [
+        "Rime Bloom"
+      ],
+      "meta": {
+        "population": "Sparse unbound manifestation inside the existing ruin budget. Level is the site offset; inhabitants keep their own minimum."
+      }
+    },
+    {
+      "id": "storm_eye",
+      "name": "The Still Eye",
+      "tags": [
+        "ruin",
+        "landmark",
+        "elemental"
+      ],
+      "weight": 0.22,
+      "radius": 9,
+      "min_spacing": 180,
+      "slope": {
+        "max": 0.75
+      },
+      "biomes": [
+        "highland",
+        "heath"
+      ],
+      "landmarks": [
+        "shrine_ring"
+      ],
+      "level": 5,
+      "inhabitants": [
+        {
+          "pattern": "gale_elemental",
+          "density": 1,
+          "pack_size": [
+            1,
+            1
+          ],
+          "respawn": 420,
+          "level": {
+            "min": 6
+          }
+        },
+        {
+          "pattern": "storm_confluence",
+          "density": 1,
+          "pack_size": [
+            1,
+            1
+          ],
+          "respawn": 420,
+          "level": {
+            "min": 12
+          }
+        }
+      ],
+      "names": [
+        "The Still Eye"
+      ],
+      "meta": {
+        "population": "Sparse unbound manifestation inside the existing ruin budget. Level is the site offset; inhabitants keep their own minimum."
+      }
+    },
+    {
+      "id": "mineral_wake",
+      "name": "Unhewn Wake",
+      "tags": [
+        "ruin",
+        "landmark",
+        "elemental"
+      ],
+      "weight": 0.22,
+      "radius": 9,
+      "min_spacing": 180,
+      "slope": {
+        "max": 0.75
+      },
+      "biomes": [
+        "highland",
+        "scrub"
+      ],
+      "landmarks": [
+        "ruin_walls"
+      ],
+      "level": 4,
+      "inhabitants": [
+        {
+          "pattern": "silt_crawler",
+          "density": 1,
+          "pack_size": [
+            1,
+            1
+          ],
+          "respawn": 420,
+          "level": {
+            "min": 5
+          }
+        },
+        {
+          "pattern": "geode_shellback",
+          "density": 1,
+          "pack_size": [
+            1,
+            1
+          ],
+          "respawn": 420,
+          "level": {
+            "min": 10
+          }
+        }
+      ],
+      "names": [
+        "Unhewn Wake"
+      ],
+      "meta": {
+        "population": "Sparse unbound manifestation inside the existing ruin budget. Level is the site offset; inhabitants keep their own minimum."
+      }
+    },
+    {
+      "id": "bloom_exhalation",
+      "name": "The Breathing Glade",
+      "tags": [
+        "ruin",
+        "landmark",
+        "elemental"
+      ],
+      "weight": 0.22,
+      "radius": 9,
+      "min_spacing": 180,
+      "slope": {
+        "max": 0.75
+      },
+      "biomes": [
+        "forest",
+        "deep_forest",
+        "marsh"
+      ],
+      "landmarks": [
+        "shrine_ring"
+      ],
+      "level": 4,
+      "inhabitants": [
+        {
+          "pattern": "bloom_spore",
+          "density": 1,
+          "pack_size": [
+            1,
+            1
+          ],
+          "respawn": 420,
+          "level": {
+            "min": 6
+          }
+        }
+      ],
+      "names": [
+        "The Breathing Glade"
+      ],
+      "meta": {
+        "population": "Sparse unbound manifestation inside the existing ruin budget. Level is the site offset; inhabitants keep their own minimum."
+      }
+    },
+    {
+      "id": "unbound_refraction",
+      "name": "Unbound Refraction",
+      "tags": [
+        "ruin",
+        "landmark",
+        "elemental"
+      ],
+      "weight": 0.22,
+      "radius": 9,
+      "min_spacing": 180,
+      "slope": {
+        "max": 0.75
+      },
+      "biomes": [
+        "heath",
+        "hollowed"
+      ],
+      "landmarks": [
+        "shrine_ring"
+      ],
+      "level": 5,
+      "inhabitants": [
+        {
+          "pattern": "lumen_wisp",
+          "density": 1,
+          "pack_size": [
+            1,
+            1
+          ],
+          "respawn": 420,
+          "level": {
+            "min": 5
+          }
+        },
+        {
+          "pattern": "mind_knot",
+          "density": 1,
+          "pack_size": [
+            1,
+            1
+          ],
+          "respawn": 420,
+          "level": {
+            "min": 9
+          }
+        },
+        {
+          "pattern": "triune_elemental",
+          "density": 1,
+          "pack_size": [
+            1,
+            1
+          ],
+          "respawn": 420,
+          "level": {
+            "min": 16
+          }
+        }
+      ],
+      "names": [
+        "Unbound Refraction"
+      ],
+      "meta": {
+        "population": "Sparse unbound manifestation inside the existing ruin budget. Level is the site offset; inhabitants keep their own minimum."
+      }
+    },
+    {
+      "id": "selvage_rent",
+      "name": "Loose-End Hollow",
+      "tags": [
+        "ruin",
+        "landmark",
+        "elemental"
+      ],
+      "weight": 0.22,
+      "radius": 9,
+      "min_spacing": 180,
+      "slope": {
+        "max": 0.75
+      },
+      "biomes": [
+        "hollowed",
+        "deep_forest"
+      ],
+      "landmarks": [
+        "ruin_walls"
+      ],
+      "level": 7,
+      "inhabitants": [
+        {
+          "pattern": "umbra_drift",
+          "density": 1,
+          "pack_size": [
+            1,
+            1
+          ],
+          "respawn": 420,
+          "level": {
+            "min": 8
+          }
+        },
+        {
+          "pattern": "void_ravel",
+          "density": 1,
+          "pack_size": [
+            1,
+            1
+          ],
+          "respawn": 420,
+          "level": {
+            "min": 10
+          }
+        }
+      ],
+      "names": [
+        "Loose-End Hollow"
+      ],
+      "meta": {
+        "population": "Sparse unbound manifestation inside the existing ruin budget. Level is the site offset; inhabitants keep their own minimum."
+      }
+    }
+  ]
+}

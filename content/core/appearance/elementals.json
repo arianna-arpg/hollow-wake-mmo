@@ -1,0 +1,430 @@
+{
+  "kind": "ui_appearances",
+  "entries": [
+    {
+      "id": "elemental_body",
+      "body": "elemental_prism",
+      "shape": { "breadth": 0.6, "depth": 0.5 },
+      "features": ["lattice"],
+      "palette": { "body": "#675578", "edge": "#b18ebc", "core": "#eee0f3" },
+      "variation": { "hue": 0, "value": 0, "scale": 0 }
+    },
+    {
+      "id": "cinderling",
+      "body": "elemental_flame",
+      "shape": {
+        "breadth": 1.1428571428571428,
+        "depth": 1.3095238095238098
+      },
+      "palette": {
+        "body": "#853c26",
+        "edge": "#ec8337",
+        "core": "#fff0bd"
+      },
+      "features": [
+        "feet"
+      ],
+      "variation": {
+        "hue": 0,
+        "value": 0.02,
+        "scale": 0
+      },
+      "card": "allow",
+      "meta": {
+        "prototype_look": "cinderling",
+        "adaptation": "Coal mound with stub feet and low flame tongues; no lava immunity or fire-spawn hooks."
+      }
+    },
+    {
+      "id": "emberwisp",
+      "body": "elemental_flame",
+      "shape": {
+        "breadth": 0.6470588235294118,
+        "depth": 0.5882352941176471
+      },
+      "palette": {
+        "body": "#853c26",
+        "edge": "#ec8337",
+        "core": "#fff0bd"
+      },
+      "features": [
+        "streamers"
+      ],
+      "variation": {
+        "hue": 0,
+        "value": 0.02,
+        "scale": 0
+      },
+      "card": "allow",
+      "meta": {
+        "prototype_look": "emberwisp",
+        "adaptation": "Teardrop coal core and streaming tongues; all movement stays ground-bound."
+      }
+    },
+    {
+      "id": "ember_elemental",
+      "body": "elemental_flame",
+      "shape": {
+        "breadth": 0.48717948717948717,
+        "depth": 0.36923076923076925
+      },
+      "palette": {
+        "body": "#853c26",
+        "edge": "#ec8337",
+        "core": "#fff0bd"
+      },
+      "features": [
+        "forks"
+      ],
+      "variation": {
+        "hue": 0,
+        "value": 0.02,
+        "scale": 0
+      },
+      "card": "allow",
+      "meta": {
+        "prototype_look": "flame_elemental",
+        "adaptation": "Forked rising fire crown replaces the flat flame disc; no cinder swarm."
+      }
+    },
+    {
+      "id": "tide_surge",
+      "body": "elemental_surge",
+      "shape": {
+        "breadth": 0.9259259259259258,
+        "depth": 0.7037037037037036
+      },
+      "palette": {
+        "body": "#3d7e97",
+        "edge": "#a9d9df",
+        "core": "#e6faff"
+      },
+      "features": [],
+      "variation": {
+        "hue": 0,
+        "value": 0.02,
+        "scale": 0
+      },
+      "card": "allow",
+      "meta": {
+        "prototype_look": null,
+        "adaptation": "Curled wave with a hollow crest, splash fins and basal pool; new lore-derived adaptation, no swimming."
+      }
+    },
+    {
+      "id": "rime_star",
+      "body": "elemental_shard",
+      "shape": {
+        "breadth": 1.1388888888888888,
+        "depth": 1.1388888888888888
+      },
+      "palette": {
+        "body": "#3d7e97",
+        "edge": "#a9d9df",
+        "core": "#e6faff"
+      },
+      "features": [
+        "radial"
+      ],
+      "variation": {
+        "hue": 0,
+        "value": 0.02,
+        "scale": 0
+      },
+      "card": "allow",
+      "meta": {
+        "prototype_look": null,
+        "adaptation": "Low radial ice bloom with a central spear; new Tide adaptation."
+      }
+    },
+    {
+      "id": "frost_elemental",
+      "body": "elemental_shard",
+      "shape": {
+        "breadth": 0.5675675675675675,
+        "depth": 0.45945945945945943
+      },
+      "palette": {
+        "body": "#3d7e97",
+        "edge": "#a9d9df",
+        "core": "#e6faff"
+      },
+      "features": [
+        "crown"
+      ],
+      "variation": {
+        "hue": 0,
+        "value": 0.02,
+        "scale": 0
+      },
+      "card": "allow",
+      "meta": {
+        "prototype_look": "frost_elemental",
+        "adaptation": "Tall splinter fan with downward icicles; Tide replaces prototype cold vocabulary."
+      }
+    },
+    {
+      "id": "gale_elemental",
+      "body": "elemental_vortex",
+      "shape": {
+        "breadth": 0.6451612903225806,
+        "depth": 0.6451612903225806
+      },
+      "palette": {
+        "body": "#49566c",
+        "edge": "#a2b9d3",
+        "core": "#f2f2e4"
+      },
+      "features": [
+        "ribbons"
+      ],
+      "variation": {
+        "hue": 0,
+        "value": 0.02,
+        "scale": 0
+      },
+      "card": "allow",
+      "meta": {
+        "prototype_look": "gale_elemental",
+        "adaptation": "Open widening spiral and trailing air ribbons; no flanking, stun scheduling or flight."
+      }
+    },
+    {
+      "id": "storm_confluence",
+      "body": "elemental_vortex",
+      "shape": {
+        "breadth": 0.6521739130434783,
+        "depth": 0.5652173913043479
+      },
+      "palette": {
+        "body": "#49566c",
+        "edge": "#a2b9d3",
+        "core": "#f2f2e4"
+      },
+      "features": [
+        "forks"
+      ],
+      "variation": {
+        "hue": 0,
+        "value": 0.02,
+        "scale": 0
+      },
+      "card": "allow",
+      "meta": {
+        "prototype_look": null,
+        "adaptation": "Wide stacked storm loops and forked discharge spines; new Storm adaptation."
+      }
+    },
+    {
+      "id": "silt_crawler",
+      "body": "elemental_mound",
+      "shape": {
+        "breadth": 1.5333333333333332,
+        "depth": 2.1333333333333333
+      },
+      "palette": {
+        "body": "#635d52",
+        "edge": "#a19380",
+        "core": "#c4dce1"
+      },
+      "features": [
+        "lobes"
+      ],
+      "variation": {
+        "hue": 0,
+        "value": 0.02,
+        "scale": 0
+      },
+      "card": "allow",
+      "meta": {
+        "prototype_look": null,
+        "adaptation": "Loose earth slug with overlapping sediment lobes; unassembled mineral body, no split or trample."
+      }
+    },
+    {
+      "id": "geode_shellback",
+      "body": "elemental_mound",
+      "shape": {
+        "breadth": 1.2692307692307692,
+        "depth": 1.5
+      },
+      "palette": {
+        "body": "#635d52",
+        "edge": "#a19380",
+        "core": "#c4dce1"
+      },
+      "features": [
+        "geode"
+      ],
+      "variation": {
+        "hue": 0,
+        "value": 0.02,
+        "scale": 0
+      },
+      "card": "allow",
+      "meta": {
+        "prototype_look": "geode_shellback",
+        "adaptation": "Low hollow geode with faceted rim and live core; armor and poise, no prototype energy shield shell cycle."
+      }
+    },
+    {
+      "id": "bloom_spore",
+      "body": "elemental_veil",
+      "shape": {
+        "breadth": 0.8800000000000001,
+        "depth": 0.6799999999999999
+      },
+      "palette": {
+        "body": "#576b45",
+        "edge": "#a7bb7a",
+        "core": "#f3d3a8"
+      },
+      "features": [
+        "petals"
+      ],
+      "variation": {
+        "hue": 0,
+        "value": 0.02,
+        "scale": 0
+      },
+      "card": "allow",
+      "meta": {
+        "prototype_look": null,
+        "adaptation": "Bell-shaped spore mantle and dangling roots; new Bloom adaptation, no healing aura or poison immunity."
+      }
+    },
+    {
+      "id": "umbra_drift",
+      "body": "elemental_veil",
+      "shape": {
+        "breadth": 0.5,
+        "depth": 0.38888888888888884
+      },
+      "palette": {
+        "body": "#373249",
+        "edge": "#766785",
+        "core": "#bdb4d0"
+      },
+      "features": [
+        "torn"
+      ],
+      "variation": {
+        "hue": 0,
+        "value": 0.02,
+        "scale": 0
+      },
+      "card": "allow",
+      "meta": {
+        "prototype_look": null,
+        "adaptation": "Open shroud of shadow ribbons, no flesh or undead classification; no phasing."
+      }
+    },
+    {
+      "id": "lumen_wisp",
+      "body": "elemental_prism",
+      "shape": {
+        "breadth": 0.6545454545454544,
+        "depth": 0.6545454545454544
+      },
+      "palette": {
+        "body": "#9e8959",
+        "edge": "#e6d39a",
+        "core": "#fff5d5"
+      },
+      "features": [
+        "halo"
+      ],
+      "variation": {
+        "hue": 0,
+        "value": 0.02,
+        "scale": 0
+      },
+      "card": "allow",
+      "meta": {
+        "prototype_look": "gale_elemental",
+        "adaptation": "Existing Lumen Presence aura; no shield shred."
+      }
+    },
+    {
+      "id": "mind_knot",
+      "body": "elemental_prism",
+      "shape": {
+        "breadth": 0.7419354838709676,
+        "depth": 0.6129032258064515
+      },
+      "palette": {
+        "body": "#675578",
+        "edge": "#b18ebc",
+        "core": "#eee0f3"
+      },
+      "features": [
+        "lattice"
+      ],
+      "variation": {
+        "hue": 0,
+        "value": 0.02,
+        "scale": 0
+      },
+      "card": "allow",
+      "meta": {
+        "prototype_look": null,
+        "adaptation": "Folded diamond cage around a small thought kernel; new Mind adaptation, no mind-control or prediction."
+      }
+    },
+    {
+      "id": "void_ravel",
+      "body": "elemental_vortex",
+      "shape": {
+        "breadth": 0.5526315789473685,
+        "depth": 0.4473684210526316
+      },
+      "palette": {
+        "body": "#2b2634",
+        "edge": "#94839c",
+        "core": "#c7b6d6"
+      },
+      "features": [
+        "broken"
+      ],
+      "variation": {
+        "hue": 0,
+        "value": 0.02,
+        "scale": 0
+      },
+      "card": "allow",
+      "meta": {
+        "prototype_look": null,
+        "adaptation": "Broken loop fragments and an empty center, no portal, teleport or immunity."
+      }
+    },
+    {
+      "id": "triune_elemental",
+      "body": "elemental_prism",
+      "shape": {
+        "breadth": 0.64,
+        "depth": 0.52
+      },
+      "palette": {
+        "body": "#675578",
+        "edge": "#b18ebc",
+        "core": "#eee0f3",
+        "ember": "#efb06d",
+        "tide": "#b5e4e4",
+        "storm": "#b6a1d6"
+      },
+      "features": [
+        "triune"
+      ],
+      "variation": {
+        "hue": 0,
+        "value": 0.02,
+        "scale": 0
+      },
+      "card": "allow",
+      "meta": {
+        "prototype_look": "triune_elemental",
+        "adaptation": "Three separately posed cores inside a prism. Existing bolts substitute for shatterchord; no reactive attunement or encounter phases."
+      }
+    }
+  ]
+}

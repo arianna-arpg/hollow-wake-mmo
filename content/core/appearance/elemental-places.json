@@ -1,0 +1,101 @@
+{
+  "kind": "ui_appearances",
+  "entries": [
+    {
+      "id": "poi:ember_seam",
+      "body": "marker",
+      "shape": {
+        "height": 1.1,
+        "cap": 0.7
+      },
+      "palette": {
+        "stone": "#6d7777",
+        "accent": "#b7c9ca"
+      }
+    },
+    {
+      "id": "poi:tide_memory",
+      "body": "marker",
+      "shape": {
+        "height": 1.1,
+        "cap": 0.7
+      },
+      "palette": {
+        "stone": "#6d7777",
+        "accent": "#b7c9ca"
+      }
+    },
+    {
+      "id": "poi:rime_bloom",
+      "body": "marker",
+      "shape": {
+        "height": 1.1,
+        "cap": 0.7
+      },
+      "palette": {
+        "stone": "#6d7777",
+        "accent": "#b7c9ca"
+      }
+    },
+    {
+      "id": "poi:storm_eye",
+      "body": "marker",
+      "shape": {
+        "height": 1.1,
+        "cap": 0.7
+      },
+      "palette": {
+        "stone": "#6d7777",
+        "accent": "#b7c9ca"
+      }
+    },
+    {
+      "id": "poi:mineral_wake",
+      "body": "marker",
+      "shape": {
+        "height": 1.1,
+        "cap": 0.7
+      },
+      "palette": {
+        "stone": "#6d7777",
+        "accent": "#b7c9ca"
+      }
+    },
+    {
+      "id": "poi:bloom_exhalation",
+      "body": "marker",
+      "shape": {
+        "height": 1.1,
+        "cap": 0.7
+      },
+      "palette": {
+        "stone": "#6d7777",
+        "accent": "#b7c9ca"
+      }
+    },
+    {
+      "id": "poi:unbound_refraction",
+      "body": "marker",
+      "shape": {
+        "height": 1.1,
+        "cap": 0.7
+      },
+      "palette": {
+        "stone": "#6d7777",
+        "accent": "#b7c9ca"
+      }
+    },
+    {
+      "id": "poi:selvage_rent",
+      "body": "marker",
+      "shape": {
+        "height": 1.1,
+        "cap": 0.7
+      },
+      "palette": {
+        "stone": "#6d7777",
+        "accent": "#b7c9ca"
+      }
+    }
+  ]
+}

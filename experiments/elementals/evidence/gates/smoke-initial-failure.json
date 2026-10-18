@@ -1,0 +1,29 @@
+{
+  "started": "2026-10-18T04:10:50.412Z",
+  "root": "C:\\Users\\John\\.codex\\worktrees\\elemental-entity-foundation\\MMOARPG",
+  "directory": "C:\\Users\\John\\.codex\\worktrees\\elemental-entity-foundation\\MMOARPG\\experiments\\elementals\\artifacts\\background\\run-6z5q08",
+  "suite": "all",
+  "status": "failed",
+  "stages": [
+    {
+      "name": "smoke-web",
+      "status": "failed",
+      "started": "2026-10-18T04:10:51.746Z",
+      "code": 1,
+      "signal": null,
+      "error": "smoke-web failed; see smoke-web.log",
+      "finished": "2026-10-18T04:11:19.371Z"
+    }
+  ],
+  "nativeRendering": "not covered by headless mode",
+  "godot": "C:\\Users\\John\\AppData\\Local\\Microsoft\\WinGet\\Packages\\GodotEngine.GodotEngine.Mono_Microsoft.Winget.Source_8wekyb3d8bbwe\\Godot_v4.7.2-stable_mono_win64\\Godot_v4.7.2-stable_mono_win64.exe",
+  "server": {
+    "tcp": 63099,
+    "url": "http://127.0.0.1:63100",
+    "name": "harness-run-6z5q08",
+    "data": "C:\\Users\\John\\.codex\\worktrees\\elemental-entity-foundation\\MMOARPG\\experiments\\elementals\\artifacts\\background\\run-6z5q08\\data"
+  },
+  "error": "smoke-web failed; see smoke-web.log",
+  "cleanupErrors": [],
+  "finished": "2026-10-18T04:11:19.693Z"
+}

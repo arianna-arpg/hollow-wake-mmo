@@ -1,0 +1,1460 @@
+{
+  "kind": "patterns",
+  "entries": [
+    {
+      "id": "elemental_body",
+      "name": "Unbound elemental body template",
+      "extends": "creature",
+      "faction": "unbound_elements",
+      "tags": [
+        "elemental",
+        "monster",
+        "no_corpse",
+        "summonable"
+      ],
+      "components": {
+        "stats": {
+          "attributes": {
+            "mana.max": 140,
+            "mana.regen": 18,
+            "stamina.max": 100,
+            "stamina.regen": 15
+          }
+        },
+        "statuses": {}
+      }
+    },
+    {
+      "id": "cinderling",
+      "name": "Cinderling",
+      "extends": "elemental_body",
+      "faction": "unbound_elements",
+      "tags": [
+        "elemental",
+        "monster",
+        "summonable",
+        "no_corpse",
+        "thread.ember",
+        "body.ember_coal",
+        "family.flame",
+        "locomotion.ground",
+        "size.small",
+        "role.close_combat",
+        "habitat.ember_seam",
+        "habitat.cinderwaste",
+        "habitat.scrub"
+      ],
+      "level": 3,
+      "radius": 0.275,
+      "height": 0.42,
+      "components": {
+        "physical": {
+          "width": 0.48,
+          "depth": 0.55,
+          "height": 0.42,
+          "fill": 0.24,
+          "heft": 1,
+          "materials": [
+            {
+              "material": "ember_coal",
+              "fraction": 1
+            }
+          ]
+        },
+        "stats": {
+          "attributes": {
+            "life.max": "28 + level * 9",
+            "move.speed": 5.4,
+            "will": 12,
+            "might": 12,
+            "accuracy": 120,
+            "weapon.damage.min": 10,
+            "weapon.damage.max": 17,
+            "weapon.attack.time": 1.1,
+            "poise.max": 3,
+            "armor": 0,
+            "resist.ember": 0.35,
+            "resist.tide": -0.15
+          }
+        },
+        "weaves": {
+          "list": [
+            "ember_strike"
+          ]
+        },
+        "behavior": {
+          "id": "aggressive_melee"
+        },
+        "drops": {
+          "table": "elemental_residue",
+          "xp": "16 + level * 5",
+          "chance": 0.65
+        }
+      },
+      "meta": {
+        "prototype": {
+          "repository": "arianna-arpg/arpg-game-world",
+          "revision": "118b510f8b5bfb781163c5bc13ea4908f698e75b",
+          "id": "cinderling",
+          "look": "cinderling"
+        },
+        "adaptation": "Coal mound with stub feet and low flame tongues; no lava immunity or fire-spawn hooks.",
+        "ai_handoff": {
+          "current": "aggressive_melee",
+          "status": "provisional content scaffolding",
+          "deferred": [
+            "element-aware tactical decisions",
+            "bounded sensory memory",
+            "group action coordination"
+          ],
+          "constraints": [
+            "ground movement",
+            "ordinary collision",
+            "no material-granted immunity",
+            "no phasing"
+          ]
+        }
+      }
+    },
+    {
+      "id": "emberwisp",
+      "name": "Emberwisp",
+      "extends": "elemental_body",
+      "faction": "unbound_elements",
+      "tags": [
+        "elemental",
+        "monster",
+        "summonable",
+        "no_corpse",
+        "thread.ember",
+        "body.ethereal",
+        "family.flame",
+        "locomotion.ground",
+        "size.small",
+        "role.caster",
+        "habitat.ember_seam",
+        "habitat.cinderwaste",
+        "habitat.scrub"
+      ],
+      "level": 4,
+      "radius": 0.275,
+      "height": 0.85,
+      "components": {
+        "physical": {
+          "width": 0.55,
+          "depth": 0.5,
+          "height": 0.85,
+          "fill": 0.18,
+          "heft": 1,
+          "materials": [
+            {
+              "material": "ethereal",
+              "fraction": 1
+            }
+          ]
+        },
+        "stats": {
+          "attributes": {
+            "life.max": "38 + level * 9",
+            "move.speed": 5.2,
+            "will": 12,
+            "might": 12,
+            "accuracy": 120,
+            "weapon.damage.min": 10,
+            "weapon.damage.max": 17,
+            "weapon.attack.time": 1.1,
+            "poise.max": 0,
+            "armor": 0,
+            "resist.ember": 0.35,
+            "resist.tide": -0.15
+          }
+        },
+        "weaves": {
+          "list": [
+            "cinder_spit"
+          ]
+        },
+        "behavior": {
+          "id": "aggressive_ranged"
+        },
+        "drops": {
+          "table": "elemental_residue",
+          "xp": "18 + level * 5",
+          "chance": 0.65
+        }
+      },
+      "meta": {
+        "prototype": {
+          "repository": "arianna-arpg/arpg-game-world",
+          "revision": "118b510f8b5bfb781163c5bc13ea4908f698e75b",
+          "id": "emberwisp",
+          "look": "emberwisp"
+        },
+        "adaptation": "Teardrop coal core and streaming tongues; all movement stays ground-bound.",
+        "ai_handoff": {
+          "current": "aggressive_ranged",
+          "status": "provisional content scaffolding",
+          "deferred": [
+            "element-aware tactical decisions",
+            "bounded sensory memory",
+            "group action coordination"
+          ],
+          "constraints": [
+            "ground movement",
+            "ordinary collision",
+            "no material-granted immunity",
+            "no phasing"
+          ]
+        }
+      }
+    },
+    {
+      "id": "ember_elemental",
+      "name": "Ember Elemental",
+      "extends": "elemental_body",
+      "faction": "unbound_elements",
+      "tags": [
+        "elemental",
+        "monster",
+        "summonable",
+        "no_corpse",
+        "thread.ember",
+        "body.ethereal",
+        "family.flame",
+        "locomotion.ground",
+        "size.medium",
+        "role.caster",
+        "habitat.ember_seam",
+        "habitat.cinderwaste",
+        "habitat.scrub"
+      ],
+      "level": 7,
+      "radius": 0.475,
+      "height": 1.95,
+      "components": {
+        "physical": {
+          "width": 0.95,
+          "depth": 0.72,
+          "height": 1.95,
+          "fill": 0.2,
+          "heft": 1,
+          "materials": [
+            {
+              "material": "ethereal",
+              "fraction": 1
+            }
+          ]
+        },
+        "stats": {
+          "attributes": {
+            "life.max": "90 + level * 9",
+            "move.speed": 4.8,
+            "will": 12,
+            "might": 12,
+            "accuracy": 120,
+            "weapon.damage.min": 10,
+            "weapon.damage.max": 17,
+            "weapon.attack.time": 1.1,
+            "poise.max": 8,
+            "armor": 0,
+            "resist.ember": 0.35,
+            "resist.tide": -0.15
+          }
+        },
+        "weaves": {
+          "list": [
+            "ember_bolt",
+            "ember_blast"
+          ]
+        },
+        "behavior": {
+          "id": "aggressive_ranged"
+        },
+        "drops": {
+          "table": "elemental_residue",
+          "xp": "24 + level * 5",
+          "chance": 0.65
+        }
+      },
+      "meta": {
+        "prototype": {
+          "repository": "arianna-arpg/arpg-game-world",
+          "revision": "118b510f8b5bfb781163c5bc13ea4908f698e75b",
+          "id": "ember_elemental",
+          "look": "flame_elemental"
+        },
+        "adaptation": "Forked rising fire crown replaces the flat flame disc; no cinder swarm.",
+        "ai_handoff": {
+          "current": "aggressive_ranged",
+          "status": "provisional content scaffolding",
+          "deferred": [
+            "element-aware tactical decisions",
+            "bounded sensory memory",
+            "group action coordination"
+          ],
+          "constraints": [
+            "ground movement",
+            "ordinary collision",
+            "no material-granted immunity",
+            "no phasing"
+          ]
+        }
+      }
+    },
+    {
+      "id": "tide_surge",
+      "name": "Tide Surge",
+      "extends": "elemental_body",
+      "faction": "unbound_elements",
+      "tags": [
+        "elemental",
+        "monster",
+        "summonable",
+        "no_corpse",
+        "thread.tide",
+        "body.water",
+        "family.surge",
+        "locomotion.ground",
+        "size.medium",
+        "role.caster",
+        "habitat.tide_memory",
+        "habitat.shore",
+        "habitat.marsh"
+      ],
+      "level": 4,
+      "radius": 0.625,
+      "height": 1.35,
+      "components": {
+        "physical": {
+          "width": 1.25,
+          "depth": 0.95,
+          "height": 1.35,
+          "fill": 0.35,
+          "heft": 1,
+          "materials": [
+            {
+              "material": "elemental_water",
+              "fraction": 1
+            }
+          ]
+        },
+        "stats": {
+          "attributes": {
+            "life.max": "90 + level * 9",
+            "move.speed": 3.8,
+            "will": 12,
+            "might": 12,
+            "accuracy": 120,
+            "weapon.damage.min": 10,
+            "weapon.damage.max": 17,
+            "weapon.attack.time": 1.1,
+            "poise.max": 15,
+            "armor": 0,
+            "resist.tide": 0.35,
+            "resist.ember": -0.15
+          }
+        },
+        "weaves": {
+          "list": [
+            "brine_bolt"
+          ]
+        },
+        "behavior": {
+          "id": "aggressive_ranged"
+        },
+        "drops": {
+          "table": "elemental_residue",
+          "xp": "18 + level * 5",
+          "chance": 0.65
+        }
+      },
+      "meta": {
+        "prototype": null,
+        "adaptation": "Curled wave with a hollow crest, splash fins and basal pool; new lore-derived adaptation, no swimming.",
+        "ai_handoff": {
+          "current": "aggressive_ranged",
+          "status": "provisional content scaffolding",
+          "deferred": [
+            "element-aware tactical decisions",
+            "bounded sensory memory",
+            "group action coordination"
+          ],
+          "constraints": [
+            "ground movement",
+            "ordinary collision",
+            "no material-granted immunity",
+            "no phasing"
+          ]
+        }
+      }
+    },
+    {
+      "id": "rime_star",
+      "name": "Rime Star",
+      "extends": "elemental_body",
+      "faction": "unbound_elements",
+      "tags": [
+        "elemental",
+        "monster",
+        "summonable",
+        "no_corpse",
+        "thread.tide",
+        "body.ice",
+        "family.shard",
+        "locomotion.ground",
+        "size.small",
+        "role.caster",
+        "habitat.rime_bloom",
+        "habitat.alpine",
+        "habitat.highland"
+      ],
+      "level": 6,
+      "radius": 0.41,
+      "height": 0.72,
+      "components": {
+        "physical": {
+          "width": 0.82,
+          "depth": 0.82,
+          "height": 0.72,
+          "fill": 0.23,
+          "heft": 1,
+          "materials": [
+            {
+              "material": "elemental_ice",
+              "fraction": 1
+            }
+          ]
+        },
+        "stats": {
+          "attributes": {
+            "life.max": "55 + level * 9",
+            "move.speed": 4,
+            "will": 12,
+            "might": 12,
+            "accuracy": 120,
+            "weapon.damage.min": 10,
+            "weapon.damage.max": 17,
+            "weapon.attack.time": 1.1,
+            "poise.max": 8,
+            "armor": 0,
+            "resist.tide": 0.35,
+            "resist.ember": -0.15
+          }
+        },
+        "weaves": {
+          "list": [
+            "tide_bolt"
+          ]
+        },
+        "behavior": {
+          "id": "aggressive_ranged"
+        },
+        "drops": {
+          "table": "elemental_residue",
+          "xp": "22 + level * 5",
+          "chance": 0.65
+        }
+      },
+      "meta": {
+        "prototype": null,
+        "adaptation": "Low radial ice bloom with a central spear; new Tide adaptation.",
+        "ai_handoff": {
+          "current": "aggressive_ranged",
+          "status": "provisional content scaffolding",
+          "deferred": [
+            "element-aware tactical decisions",
+            "bounded sensory memory",
+            "group action coordination"
+          ],
+          "constraints": [
+            "ground movement",
+            "ordinary collision",
+            "no material-granted immunity",
+            "no phasing"
+          ]
+        }
+      }
+    },
+    {
+      "id": "frost_elemental",
+      "name": "Frost Elemental",
+      "extends": "elemental_body",
+      "faction": "unbound_elements",
+      "tags": [
+        "elemental",
+        "monster",
+        "summonable",
+        "no_corpse",
+        "thread.tide",
+        "body.ice",
+        "family.shard",
+        "locomotion.ground",
+        "size.medium",
+        "role.caster",
+        "habitat.rime_bloom",
+        "habitat.alpine",
+        "habitat.highland"
+      ],
+      "level": 9,
+      "radius": 0.525,
+      "height": 1.85,
+      "components": {
+        "physical": {
+          "width": 1.05,
+          "depth": 0.85,
+          "height": 1.85,
+          "fill": 0.24,
+          "heft": 1,
+          "materials": [
+            {
+              "material": "elemental_ice",
+              "fraction": 1
+            }
+          ]
+        },
+        "stats": {
+          "attributes": {
+            "life.max": "110 + level * 9",
+            "move.speed": 3.4,
+            "will": 12,
+            "might": 12,
+            "accuracy": 120,
+            "weapon.damage.min": 10,
+            "weapon.damage.max": 17,
+            "weapon.attack.time": 1.1,
+            "poise.max": 26,
+            "armor": 0,
+            "resist.tide": 0.35,
+            "resist.ember": -0.15
+          }
+        },
+        "weaves": {
+          "list": [
+            "tide_bolt",
+            "ice_spear"
+          ]
+        },
+        "behavior": {
+          "id": "aggressive_ranged"
+        },
+        "drops": {
+          "table": "elemental_residue",
+          "xp": "28 + level * 5",
+          "chance": 0.65
+        }
+      },
+      "meta": {
+        "prototype": {
+          "repository": "arianna-arpg/arpg-game-world",
+          "revision": "118b510f8b5bfb781163c5bc13ea4908f698e75b",
+          "id": "frost_elemental",
+          "look": "frost_elemental"
+        },
+        "adaptation": "Tall splinter fan with downward icicles; Tide replaces prototype cold vocabulary.",
+        "ai_handoff": {
+          "current": "aggressive_ranged",
+          "status": "provisional content scaffolding",
+          "deferred": [
+            "element-aware tactical decisions",
+            "bounded sensory memory",
+            "group action coordination"
+          ],
+          "constraints": [
+            "ground movement",
+            "ordinary collision",
+            "no material-granted immunity",
+            "no phasing"
+          ]
+        }
+      }
+    },
+    {
+      "id": "gale_elemental",
+      "name": "Gale Elemental",
+      "extends": "elemental_body",
+      "faction": "unbound_elements",
+      "tags": [
+        "elemental",
+        "monster",
+        "summonable",
+        "no_corpse",
+        "thread.storm",
+        "body.ethereal",
+        "family.vortex",
+        "locomotion.ground",
+        "size.medium",
+        "role.close_combat",
+        "habitat.storm_eye",
+        "habitat.highland",
+        "habitat.heath"
+      ],
+      "level": 6,
+      "radius": 0.5,
+      "height": 1.55,
+      "components": {
+        "physical": {
+          "width": 1,
+          "depth": 1,
+          "height": 1.55,
+          "fill": 0.12,
+          "heft": 1,
+          "materials": [
+            {
+              "material": "ethereal",
+              "fraction": 1
+            }
+          ]
+        },
+        "stats": {
+          "attributes": {
+            "life.max": "75 + level * 9",
+            "move.speed": 5.5,
+            "will": 12,
+            "might": 12,
+            "accuracy": 120,
+            "weapon.damage.min": 10,
+            "weapon.damage.max": 17,
+            "weapon.attack.time": 1.1,
+            "poise.max": 0,
+            "armor": 0,
+            "resist.storm": 0.35
+          }
+        },
+        "weaves": {
+          "list": [
+            "storm_nova"
+          ]
+        },
+        "behavior": {
+          "id": "aggressive_melee"
+        },
+        "drops": {
+          "table": "elemental_residue",
+          "xp": "22 + level * 5",
+          "chance": 0.65
+        }
+      },
+      "meta": {
+        "prototype": {
+          "repository": "arianna-arpg/arpg-game-world",
+          "revision": "118b510f8b5bfb781163c5bc13ea4908f698e75b",
+          "id": "gale_elemental",
+          "look": "gale_elemental"
+        },
+        "adaptation": "Open widening spiral and trailing air ribbons; no flanking, stun scheduling or flight.",
+        "ai_handoff": {
+          "current": "aggressive_melee",
+          "status": "provisional content scaffolding",
+          "deferred": [
+            "element-aware tactical decisions",
+            "bounded sensory memory",
+            "group action coordination"
+          ],
+          "constraints": [
+            "ground movement",
+            "ordinary collision",
+            "no material-granted immunity",
+            "no phasing"
+          ]
+        }
+      }
+    },
+    {
+      "id": "storm_confluence",
+      "name": "Storm Confluence",
+      "extends": "elemental_body",
+      "faction": "unbound_elements",
+      "tags": [
+        "elemental",
+        "monster",
+        "summonable",
+        "no_corpse",
+        "thread.storm",
+        "body.ethereal",
+        "family.vortex",
+        "locomotion.ground",
+        "size.large",
+        "role.caster",
+        "habitat.storm_eye",
+        "habitat.highland",
+        "habitat.heath"
+      ],
+      "level": 12,
+      "radius": 0.75,
+      "height": 2.3,
+      "components": {
+        "physical": {
+          "width": 1.5,
+          "depth": 1.3,
+          "height": 2.3,
+          "fill": 0.16,
+          "heft": 1,
+          "materials": [
+            {
+              "material": "ethereal",
+              "fraction": 1
+            }
+          ]
+        },
+        "stats": {
+          "attributes": {
+            "life.max": "170 + level * 9",
+            "move.speed": 3.6,
+            "will": 12,
+            "might": 12,
+            "accuracy": 120,
+            "weapon.damage.min": 10,
+            "weapon.damage.max": 17,
+            "weapon.attack.time": 1.1,
+            "poise.max": 20,
+            "armor": 0,
+            "resist.storm": 0.35
+          }
+        },
+        "weaves": {
+          "list": [
+            "storm_bolt",
+            "storm_nova"
+          ]
+        },
+        "behavior": {
+          "id": "aggressive_ranged"
+        },
+        "drops": {
+          "table": "elemental_residue",
+          "xp": "34 + level * 5",
+          "chance": 0.65
+        }
+      },
+      "meta": {
+        "prototype": null,
+        "adaptation": "Wide stacked storm loops and forked discharge spines; new Storm adaptation.",
+        "ai_handoff": {
+          "current": "aggressive_ranged",
+          "status": "provisional content scaffolding",
+          "deferred": [
+            "element-aware tactical decisions",
+            "bounded sensory memory",
+            "group action coordination"
+          ],
+          "constraints": [
+            "ground movement",
+            "ordinary collision",
+            "no material-granted immunity",
+            "no phasing"
+          ]
+        }
+      }
+    },
+    {
+      "id": "silt_crawler",
+      "name": "Silt Crawler",
+      "extends": "elemental_body",
+      "faction": "unbound_elements",
+      "tags": [
+        "elemental",
+        "monster",
+        "summonable",
+        "no_corpse",
+        "thread.stone",
+        "body.silt",
+        "family.mound",
+        "locomotion.ground",
+        "size.small",
+        "role.close_combat",
+        "habitat.mineral_wake",
+        "habitat.highland",
+        "habitat.scrub"
+      ],
+      "level": 5,
+      "radius": 0.8,
+      "height": 0.75,
+      "components": {
+        "physical": {
+          "width": 1.15,
+          "depth": 1.6,
+          "height": 0.75,
+          "fill": 0.4,
+          "heft": 1,
+          "materials": [
+            {
+              "material": "elemental_silt",
+              "fraction": 1
+            }
+          ]
+        },
+        "stats": {
+          "attributes": {
+            "life.max": "120 + level * 9",
+            "move.speed": 2.8,
+            "will": 12,
+            "might": 12,
+            "accuracy": 120,
+            "weapon.damage.min": 10,
+            "weapon.damage.max": 17,
+            "weapon.attack.time": 1.1,
+            "poise.max": 25,
+            "armor": 20
+          }
+        },
+        "weaves": {
+          "list": [
+            "claw"
+          ]
+        },
+        "behavior": {
+          "id": "aggressive_melee"
+        },
+        "drops": {
+          "table": "elemental_residue",
+          "xp": "20 + level * 5",
+          "chance": 0.65
+        }
+      },
+      "meta": {
+        "prototype": null,
+        "adaptation": "Loose earth slug with overlapping sediment lobes; unassembled mineral body, no split or trample.",
+        "ai_handoff": {
+          "current": "aggressive_melee",
+          "status": "provisional content scaffolding",
+          "deferred": [
+            "element-aware tactical decisions",
+            "bounded sensory memory",
+            "group action coordination"
+          ],
+          "constraints": [
+            "ground movement",
+            "ordinary collision",
+            "no material-granted immunity",
+            "no phasing"
+          ]
+        }
+      }
+    },
+    {
+      "id": "geode_shellback",
+      "name": "Geode Shellback",
+      "extends": "elemental_body",
+      "faction": "unbound_elements",
+      "tags": [
+        "elemental",
+        "monster",
+        "summonable",
+        "no_corpse",
+        "thread.stone",
+        "body.crystal",
+        "family.mound",
+        "locomotion.ground",
+        "size.medium",
+        "role.close_combat",
+        "habitat.mineral_wake",
+        "habitat.highland",
+        "habitat.scrub"
+      ],
+      "level": 10,
+      "radius": 0.975,
+      "height": 1.3,
+      "components": {
+        "physical": {
+          "width": 1.65,
+          "depth": 1.95,
+          "height": 1.3,
+          "fill": 0.28,
+          "heft": 1,
+          "materials": [
+            {
+              "material": "elemental_crystal",
+              "fraction": 1
+            }
+          ]
+        },
+        "stats": {
+          "attributes": {
+            "life.max": "165 + level * 9",
+            "move.speed": 2.6,
+            "will": 12,
+            "might": 12,
+            "accuracy": 120,
+            "weapon.damage.min": 10,
+            "weapon.damage.max": 17,
+            "weapon.attack.time": 1.1,
+            "poise.max": 45,
+            "armor": 26
+          }
+        },
+        "weaves": {
+          "list": [
+            "warden_slam"
+          ]
+        },
+        "behavior": {
+          "id": "aggressive_melee"
+        },
+        "drops": {
+          "table": "elemental_residue",
+          "xp": "30 + level * 5",
+          "chance": 0.65
+        }
+      },
+      "meta": {
+        "prototype": {
+          "repository": "arianna-arpg/arpg-game-world",
+          "revision": "118b510f8b5bfb781163c5bc13ea4908f698e75b",
+          "id": "geode_shellback",
+          "look": "geode_shellback"
+        },
+        "adaptation": "Low hollow geode with faceted rim and live core; armor and poise, no prototype energy shield shell cycle.",
+        "ai_handoff": {
+          "current": "aggressive_melee",
+          "status": "provisional content scaffolding",
+          "deferred": [
+            "element-aware tactical decisions",
+            "bounded sensory memory",
+            "group action coordination"
+          ],
+          "constraints": [
+            "ground movement",
+            "ordinary collision",
+            "no material-granted immunity",
+            "no phasing"
+          ]
+        }
+      }
+    },
+    {
+      "id": "bloom_spore",
+      "name": "Bloom Spore",
+      "extends": "elemental_body",
+      "faction": "unbound_elements",
+      "tags": [
+        "elemental",
+        "monster",
+        "summonable",
+        "no_corpse",
+        "thread.bloom",
+        "body.ethereal",
+        "family.veil",
+        "locomotion.ground",
+        "size.medium",
+        "role.caster",
+        "habitat.bloom_exhalation",
+        "habitat.forest",
+        "habitat.deep_forest",
+        "habitat.marsh"
+      ],
+      "level": 6,
+      "radius": 0.55,
+      "height": 1.25,
+      "components": {
+        "physical": {
+          "width": 1.1,
+          "depth": 0.85,
+          "height": 1.25,
+          "fill": 0.18,
+          "heft": 1,
+          "materials": [
+            {
+              "material": "ethereal",
+              "fraction": 1
+            }
+          ]
+        },
+        "stats": {
+          "attributes": {
+            "life.max": "85 + level * 9",
+            "move.speed": 3.4,
+            "will": 12,
+            "might": 12,
+            "accuracy": 120,
+            "weapon.damage.min": 10,
+            "weapon.damage.max": 17,
+            "weapon.attack.time": 1.1,
+            "poise.max": 5,
+            "armor": 0,
+            "resist.bloom": 0.35
+          }
+        },
+        "weaves": {
+          "list": [
+            "venom_spit"
+          ]
+        },
+        "behavior": {
+          "id": "aggressive_ranged"
+        },
+        "drops": {
+          "table": "elemental_residue",
+          "xp": "22 + level * 5",
+          "chance": 0.65
+        }
+      },
+      "meta": {
+        "prototype": null,
+        "adaptation": "Bell-shaped spore mantle and dangling roots; new Bloom adaptation, no healing aura or poison immunity.",
+        "ai_handoff": {
+          "current": "aggressive_ranged",
+          "status": "provisional content scaffolding",
+          "deferred": [
+            "element-aware tactical decisions",
+            "bounded sensory memory",
+            "group action coordination"
+          ],
+          "constraints": [
+            "ground movement",
+            "ordinary collision",
+            "no material-granted immunity",
+            "no phasing"
+          ]
+        }
+      }
+    },
+    {
+      "id": "umbra_drift",
+      "name": "Umbra Drift",
+      "extends": "elemental_body",
+      "faction": "unbound_elements",
+      "tags": [
+        "elemental",
+        "monster",
+        "summonable",
+        "no_corpse",
+        "thread.umbra",
+        "body.ethereal",
+        "family.veil",
+        "locomotion.ground",
+        "size.medium",
+        "role.caster",
+        "habitat.selvage_rent",
+        "habitat.hollowed",
+        "habitat.deep_forest"
+      ],
+      "level": 8,
+      "radius": 0.45,
+      "height": 1.8,
+      "components": {
+        "physical": {
+          "width": 0.9,
+          "depth": 0.7,
+          "height": 1.8,
+          "fill": 0.14,
+          "heft": 1,
+          "materials": [
+            {
+              "material": "ethereal",
+              "fraction": 1
+            }
+          ]
+        },
+        "stats": {
+          "attributes": {
+            "life.max": "85 + level * 9",
+            "move.speed": 4.2,
+            "will": 12,
+            "might": 12,
+            "accuracy": 120,
+            "weapon.damage.min": 10,
+            "weapon.damage.max": 17,
+            "weapon.attack.time": 1.1,
+            "poise.max": 0,
+            "armor": 0,
+            "resist.umbra": 0.35
+          }
+        },
+        "weaves": {
+          "list": [
+            "shade_bolt",
+            "umbra_field"
+          ]
+        },
+        "behavior": {
+          "id": "aggressive_ranged"
+        },
+        "drops": {
+          "table": "elemental_residue",
+          "xp": "26 + level * 5",
+          "chance": 0.65
+        }
+      },
+      "meta": {
+        "prototype": null,
+        "adaptation": "Open shroud of shadow ribbons, no flesh or undead classification; no phasing.",
+        "ai_handoff": {
+          "current": "aggressive_ranged",
+          "status": "provisional content scaffolding",
+          "deferred": [
+            "element-aware tactical decisions",
+            "bounded sensory memory",
+            "group action coordination"
+          ],
+          "constraints": [
+            "ground movement",
+            "ordinary collision",
+            "no material-granted immunity",
+            "no phasing"
+          ]
+        }
+      }
+    },
+    {
+      "id": "lumen_wisp",
+      "name": "Lumen Wisp",
+      "extends": "elemental_body",
+      "faction": "unbound_elements",
+      "tags": [
+        "elemental",
+        "monster",
+        "summonable",
+        "no_corpse",
+        "thread.lumen",
+        "body.ethereal",
+        "family.prism",
+        "locomotion.ground",
+        "size.medium",
+        "role.aura",
+        "habitat.unbound_refraction",
+        "habitat.heath",
+        "habitat.hollowed"
+      ],
+      "level": 5,
+      "radius": 0.36,
+      "height": 1.1,
+      "components": {
+        "physical": {
+          "width": 0.72,
+          "depth": 0.72,
+          "height": 1.1,
+          "fill": 0.16,
+          "heft": 1,
+          "materials": [
+            {
+              "material": "ethereal",
+              "fraction": 1
+            }
+          ]
+        },
+        "stats": {
+          "attributes": {
+            "life.max": "52 + level * 9",
+            "move.speed": 4.7,
+            "will": 12,
+            "might": 12,
+            "accuracy": 120,
+            "weapon.damage.min": 10,
+            "weapon.damage.max": 17,
+            "weapon.attack.time": 1.1,
+            "poise.max": 0,
+            "armor": 0,
+            "resist.lumen": 0.35
+          }
+        },
+        "weaves": {
+          "list": [
+            "lumen_presence"
+          ]
+        },
+        "behavior": {
+          "id": "aggressive_melee"
+        },
+        "drops": {
+          "table": "elemental_residue",
+          "xp": "20 + level * 5",
+          "chance": 0.65
+        }
+      },
+      "meta": {
+        "prototype": {
+          "repository": "arianna-arpg/arpg-game-world",
+          "revision": "118b510f8b5bfb781163c5bc13ea4908f698e75b",
+          "id": "lumen_wisp",
+          "look": "gale_elemental"
+        },
+        "adaptation": "Axial light spindle and horizontal ray spokes. Existing Lumen Presence replaces the prototype lightning spark with a close-range aura; no shield shred.",
+        "ai_handoff": {
+          "current": "aggressive_melee",
+          "status": "provisional content scaffolding",
+          "deferred": [
+            "element-aware tactical decisions",
+            "bounded sensory memory",
+            "group action coordination"
+          ],
+          "constraints": [
+            "ground movement",
+            "ordinary collision",
+            "no material-granted immunity",
+            "no phasing"
+          ]
+        }
+      }
+    },
+    {
+      "id": "mind_knot",
+      "name": "Mind Knot",
+      "extends": "elemental_body",
+      "faction": "unbound_elements",
+      "tags": [
+        "elemental",
+        "monster",
+        "summonable",
+        "no_corpse",
+        "thread.mind",
+        "body.crystal",
+        "family.prism",
+        "locomotion.ground",
+        "size.medium",
+        "role.caster",
+        "habitat.unbound_refraction",
+        "habitat.heath",
+        "habitat.hollowed"
+      ],
+      "level": 9,
+      "radius": 0.575,
+      "height": 1.55,
+      "components": {
+        "physical": {
+          "width": 1.15,
+          "depth": 0.95,
+          "height": 1.55,
+          "fill": 0.2,
+          "heft": 1,
+          "materials": [
+            {
+              "material": "elemental_crystal",
+              "fraction": 1
+            }
+          ]
+        },
+        "stats": {
+          "attributes": {
+            "life.max": "100 + level * 9",
+            "move.speed": 3.7,
+            "will": 12,
+            "might": 12,
+            "accuracy": 120,
+            "weapon.damage.min": 10,
+            "weapon.damage.max": 17,
+            "weapon.attack.time": 1.1,
+            "poise.max": 12,
+            "armor": 26,
+            "resist.mind": 0.35
+          }
+        },
+        "weaves": {
+          "list": [
+            "mind_lash"
+          ]
+        },
+        "behavior": {
+          "id": "aggressive_ranged"
+        },
+        "drops": {
+          "table": "elemental_residue",
+          "xp": "28 + level * 5",
+          "chance": 0.65
+        }
+      },
+      "meta": {
+        "prototype": null,
+        "adaptation": "Folded diamond cage around a small thought kernel; new Mind adaptation, no mind-control or prediction.",
+        "ai_handoff": {
+          "current": "aggressive_ranged",
+          "status": "provisional content scaffolding",
+          "deferred": [
+            "element-aware tactical decisions",
+            "bounded sensory memory",
+            "group action coordination"
+          ],
+          "constraints": [
+            "ground movement",
+            "ordinary collision",
+            "no material-granted immunity",
+            "no phasing"
+          ]
+        }
+      }
+    },
+    {
+      "id": "void_ravel",
+      "name": "Void Ravel",
+      "extends": "elemental_body",
+      "faction": "unbound_elements",
+      "tags": [
+        "elemental",
+        "monster",
+        "summonable",
+        "no_corpse",
+        "thread.void",
+        "body.ethereal",
+        "family.vortex",
+        "locomotion.ground",
+        "size.medium",
+        "role.caster",
+        "habitat.selvage_rent",
+        "habitat.hollowed",
+        "habitat.deep_forest"
+      ],
+      "level": 10,
+      "radius": 0.525,
+      "height": 1.9,
+      "components": {
+        "physical": {
+          "width": 1.05,
+          "depth": 0.85,
+          "height": 1.9,
+          "fill": 0.13,
+          "heft": 1,
+          "materials": [
+            {
+              "material": "ethereal",
+              "fraction": 1
+            }
+          ]
+        },
+        "stats": {
+          "attributes": {
+            "life.max": "120 + level * 9",
+            "move.speed": 4,
+            "will": 12,
+            "might": 12,
+            "accuracy": 120,
+            "weapon.damage.min": 10,
+            "weapon.damage.max": 17,
+            "weapon.attack.time": 1.1,
+            "poise.max": 0,
+            "armor": 0,
+            "resist.void": 0.35
+          }
+        },
+        "weaves": {
+          "list": [
+            "void_lash",
+            "unmaking_pulse"
+          ]
+        },
+        "behavior": {
+          "id": "aggressive_ranged"
+        },
+        "drops": {
+          "table": "elemental_residue",
+          "xp": "30 + level * 5",
+          "chance": 0.65
+        }
+      },
+      "meta": {
+        "prototype": null,
+        "adaptation": "Broken loop fragments and an empty center, no portal, teleport or immunity.",
+        "ai_handoff": {
+          "current": "aggressive_ranged",
+          "status": "provisional content scaffolding",
+          "deferred": [
+            "element-aware tactical decisions",
+            "bounded sensory memory",
+            "group action coordination"
+          ],
+          "constraints": [
+            "ground movement",
+            "ordinary collision",
+            "no material-granted immunity",
+            "no phasing"
+          ]
+        }
+      }
+    },
+    {
+      "id": "triune_elemental",
+      "name": "Triune Elemental",
+      "extends": "elemental_body",
+      "faction": "unbound_elements",
+      "tags": [
+        "elemental",
+        "monster",
+        "summonable",
+        "no_corpse",
+        "thread.mind",
+        "body.crystal",
+        "family.prism",
+        "locomotion.ground",
+        "size.large",
+        "role.caster",
+        "habitat.unbound_refraction",
+        "habitat.heath",
+        "habitat.hollowed",
+        "thread.ember",
+        "thread.tide",
+        "thread.storm",
+        "role.champion"
+      ],
+      "level": 16,
+      "radius": 0.8,
+      "height": 2.5,
+      "components": {
+        "physical": {
+          "width": 1.6,
+          "depth": 1.3,
+          "height": 2.5,
+          "fill": 0.16,
+          "heft": 1,
+          "materials": [
+            {
+              "material": "elemental_crystal",
+              "fraction": 1
+            }
+          ]
+        },
+        "stats": {
+          "attributes": {
+            "life.max": "240 + level * 9",
+            "move.speed": 3.4,
+            "will": 12,
+            "might": 12,
+            "accuracy": 120,
+            "weapon.damage.min": 10,
+            "weapon.damage.max": 17,
+            "weapon.attack.time": 1.1,
+            "poise.max": 32,
+            "armor": 26,
+            "resist.mind": 0.35
+          }
+        },
+        "weaves": {
+          "list": [
+            "ember_bolt",
+            "tide_bolt",
+            "storm_bolt"
+          ]
+        },
+        "behavior": {
+          "id": "aggressive_ranged"
+        },
+        "drops": {
+          "table": "elemental_residue",
+          "xp": "42 + level * 5",
+          "chance": 0.65
+        }
+      },
+      "meta": {
+        "prototype": {
+          "repository": "arianna-arpg/arpg-game-world",
+          "revision": "118b510f8b5bfb781163c5bc13ea4908f698e75b",
+          "id": "triune_elemental",
+          "look": "triune_elemental"
+        },
+        "adaptation": "Three separately posed cores inside a prism. Existing bolts substitute for shatterchord; no reactive attunement or encounter phases.",
+        "ai_handoff": {
+          "current": "aggressive_ranged",
+          "status": "provisional content scaffolding",
+          "deferred": [
+            "element-aware tactical decisions",
+            "bounded sensory memory",
+            "group action coordination"
+          ],
+          "constraints": [
+            "ground movement",
+            "ordinary collision",
+            "no material-granted immunity",
+            "no phasing"
+          ]
+        }
+      }
+    }
+  ]
+}

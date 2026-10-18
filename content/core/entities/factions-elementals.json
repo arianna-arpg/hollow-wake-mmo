@@ -1,0 +1,20 @@
+{
+  "kind": "factions",
+  "entries": [
+    {
+      "id": "unbound_elements",
+      "name": "The Unbound Elements",
+      "color": "#8eafbd",
+      "default": "neutral",
+      "relations": {
+        "unbound_elements": "allied",
+        "players": "hostile",
+        "tangled": "hostile",
+        "remnant": "hostile",
+        "wilds": "neutral",
+        "goblinkin": "neutral",
+        "orc_warbands": "neutral"
+      }
+    }
+  ]
+}

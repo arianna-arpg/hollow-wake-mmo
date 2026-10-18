@@ -1,0 +1,291 @@
+{
+  "repository": "arianna-arpg/arpg-game-world",
+  "revision": "118b510f8b5bfb781163c5bc13ea4908f698e75b",
+  "sources": [
+    "src/data/monsters.ts",
+    "src/data/looks.ts",
+    "src/render/vis/body.ts"
+  ],
+  "lore": "docs/lore/cosmology.md",
+  "entries": [
+    {
+      "id": "cinderling",
+      "source": "cinderling",
+      "sourceLook": "cinderling",
+      "thread": "ember",
+      "height": 0.42,
+      "width": 0.48,
+      "depth": 0.55,
+      "material": "ember_coal",
+      "fill": 0.24,
+      "kits": [
+        "ember_strike"
+      ],
+      "currentBehavior": "aggressive_melee",
+      "habitat": "ember_seam",
+      "translation": "Coal mound with stub feet and low flame tongues; no lava immunity or fire-spawn hooks."
+    },
+    {
+      "id": "emberwisp",
+      "source": "emberwisp",
+      "sourceLook": "emberwisp",
+      "thread": "ember",
+      "height": 0.85,
+      "width": 0.55,
+      "depth": 0.5,
+      "material": "ethereal",
+      "fill": 0.18,
+      "kits": [
+        "cinder_spit"
+      ],
+      "currentBehavior": "aggressive_ranged",
+      "habitat": "ember_seam",
+      "translation": "Teardrop coal core and streaming tongues; all movement stays ground-bound."
+    },
+    {
+      "id": "ember_elemental",
+      "source": "ember_elemental",
+      "sourceLook": "flame_elemental",
+      "thread": "ember",
+      "height": 1.95,
+      "width": 0.95,
+      "depth": 0.72,
+      "material": "ethereal",
+      "fill": 0.2,
+      "kits": [
+        "ember_bolt",
+        "ember_blast"
+      ],
+      "currentBehavior": "aggressive_ranged",
+      "habitat": "ember_seam",
+      "translation": "Forked rising fire crown replaces the flat flame disc; no cinder swarm."
+    },
+    {
+      "id": "tide_surge",
+      "source": "new lore adaptation",
+      "sourceLook": null,
+      "thread": "tide",
+      "height": 1.35,
+      "width": 1.25,
+      "depth": 0.95,
+      "material": "elemental_water",
+      "fill": 0.35,
+      "kits": [
+        "brine_bolt"
+      ],
+      "currentBehavior": "aggressive_ranged",
+      "habitat": "tide_memory",
+      "translation": "Curled wave with a hollow crest, splash fins and basal pool; new lore-derived adaptation, no swimming."
+    },
+    {
+      "id": "rime_star",
+      "source": "new lore adaptation",
+      "sourceLook": null,
+      "thread": "tide",
+      "height": 0.72,
+      "width": 0.82,
+      "depth": 0.82,
+      "material": "elemental_ice",
+      "fill": 0.23,
+      "kits": [
+        "tide_bolt"
+      ],
+      "currentBehavior": "aggressive_ranged",
+      "habitat": "rime_bloom",
+      "translation": "Low radial ice bloom with a central spear; new Tide adaptation."
+    },
+    {
+      "id": "frost_elemental",
+      "source": "frost_elemental",
+      "sourceLook": "frost_elemental",
+      "thread": "tide",
+      "height": 1.85,
+      "width": 1.05,
+      "depth": 0.85,
+      "material": "elemental_ice",
+      "fill": 0.24,
+      "kits": [
+        "tide_bolt",
+        "ice_spear"
+      ],
+      "currentBehavior": "aggressive_ranged",
+      "habitat": "rime_bloom",
+      "translation": "Tall splinter fan with downward icicles; Tide replaces prototype cold vocabulary."
+    },
+    {
+      "id": "gale_elemental",
+      "source": "gale_elemental",
+      "sourceLook": "gale_elemental",
+      "thread": "storm",
+      "height": 1.55,
+      "width": 1,
+      "depth": 1,
+      "material": "ethereal",
+      "fill": 0.12,
+      "kits": [
+        "storm_nova"
+      ],
+      "currentBehavior": "aggressive_melee",
+      "habitat": "storm_eye",
+      "translation": "Open widening spiral and trailing air ribbons; no flanking, stun scheduling or flight."
+    },
+    {
+      "id": "storm_confluence",
+      "source": "new lore adaptation",
+      "sourceLook": null,
+      "thread": "storm",
+      "height": 2.3,
+      "width": 1.5,
+      "depth": 1.3,
+      "material": "ethereal",
+      "fill": 0.16,
+      "kits": [
+        "storm_bolt",
+        "storm_nova"
+      ],
+      "currentBehavior": "aggressive_ranged",
+      "habitat": "storm_eye",
+      "translation": "Wide stacked storm loops and forked discharge spines; new Storm adaptation."
+    },
+    {
+      "id": "silt_crawler",
+      "source": "new lore adaptation",
+      "sourceLook": null,
+      "thread": "stone",
+      "height": 0.75,
+      "width": 1.15,
+      "depth": 1.6,
+      "material": "elemental_silt",
+      "fill": 0.4,
+      "kits": [
+        "claw"
+      ],
+      "currentBehavior": "aggressive_melee",
+      "habitat": "mineral_wake",
+      "translation": "Loose earth slug with overlapping sediment lobes; unassembled mineral body, no split or trample."
+    },
+    {
+      "id": "geode_shellback",
+      "source": "geode_shellback",
+      "sourceLook": "geode_shellback",
+      "thread": "stone",
+      "height": 1.3,
+      "width": 1.65,
+      "depth": 1.95,
+      "material": "elemental_crystal",
+      "fill": 0.28,
+      "kits": [
+        "warden_slam"
+      ],
+      "currentBehavior": "aggressive_melee",
+      "habitat": "mineral_wake",
+      "translation": "Low hollow geode with faceted rim and live core; armor and poise, no prototype energy shield shell cycle."
+    },
+    {
+      "id": "bloom_spore",
+      "source": "new lore adaptation",
+      "sourceLook": null,
+      "thread": "bloom",
+      "height": 1.25,
+      "width": 1.1,
+      "depth": 0.85,
+      "material": "ethereal",
+      "fill": 0.18,
+      "kits": [
+        "venom_spit"
+      ],
+      "currentBehavior": "aggressive_ranged",
+      "habitat": "bloom_exhalation",
+      "translation": "Bell-shaped spore mantle and dangling roots; new Bloom adaptation, no healing aura or poison immunity."
+    },
+    {
+      "id": "umbra_drift",
+      "source": "new lore adaptation",
+      "sourceLook": null,
+      "thread": "umbra",
+      "height": 1.8,
+      "width": 0.9,
+      "depth": 0.7,
+      "material": "ethereal",
+      "fill": 0.14,
+      "kits": [
+        "shade_bolt",
+        "umbra_field"
+      ],
+      "currentBehavior": "aggressive_ranged",
+      "habitat": "selvage_rent",
+      "translation": "Open shroud of shadow ribbons, no flesh or undead classification; no phasing."
+    },
+    {
+      "id": "lumen_wisp",
+      "source": "lumen_wisp",
+      "sourceLook": "gale_elemental",
+      "thread": "lumen",
+      "height": 1.1,
+      "width": 0.72,
+      "depth": 0.72,
+      "material": "ethereal",
+      "fill": 0.16,
+      "kits": [
+        "lumen_presence"
+      ],
+      "currentBehavior": "aggressive_melee",
+      "habitat": "unbound_refraction",
+      "translation": "Axial light spindle and horizontal ray spokes. Existing Lumen Presence replaces the prototype lightning spark with a close-range aura; no shield shred."
+    },
+    {
+      "id": "mind_knot",
+      "source": "new lore adaptation",
+      "sourceLook": null,
+      "thread": "mind",
+      "height": 1.55,
+      "width": 1.15,
+      "depth": 0.95,
+      "material": "elemental_crystal",
+      "fill": 0.2,
+      "kits": [
+        "mind_lash"
+      ],
+      "currentBehavior": "aggressive_ranged",
+      "habitat": "unbound_refraction",
+      "translation": "Folded diamond cage around a small thought kernel; new Mind adaptation, no mind-control or prediction."
+    },
+    {
+      "id": "void_ravel",
+      "source": "new lore adaptation",
+      "sourceLook": null,
+      "thread": "void",
+      "height": 1.9,
+      "width": 1.05,
+      "depth": 0.85,
+      "material": "ethereal",
+      "fill": 0.13,
+      "kits": [
+        "void_lash",
+        "unmaking_pulse"
+      ],
+      "currentBehavior": "aggressive_ranged",
+      "habitat": "selvage_rent",
+      "translation": "Broken loop fragments and an empty center, no portal, teleport or immunity."
+    },
+    {
+      "id": "triune_elemental",
+      "source": "triune_elemental",
+      "sourceLook": "triune_elemental",
+      "thread": "mind",
+      "height": 2.5,
+      "width": 1.6,
+      "depth": 1.3,
+      "material": "elemental_crystal",
+      "fill": 0.16,
+      "kits": [
+        "ember_bolt",
+        "tide_bolt",
+        "storm_bolt"
+      ],
+      "currentBehavior": "aggressive_ranged",
+      "habitat": "unbound_refraction",
+      "translation": "Three separately posed cores inside a prism. Existing bolts substitute for shatterchord; no reactive attunement or encounter phases."
+    }
+  ]
+}

@@ -1,3 +1,4 @@
+import { elementalFlame, elementalSurge, elementalShard, elementalVortex, elementalMound, elementalVeil, elementalPrism } from './elementalFamilies';
 import { faunaQuadruped, faunaBird, faunaCrab } from './faunaFamilies';
 import { orc } from './orcFamilies';
 import { goblinkin, gnasher, warbeast } from './goblinkinFamilies';
@@ -750,6 +751,13 @@ function drop(b: BodyBuild): void {
 }
 
 export const BODY_FAMILIES: Record<string, Builder> = {
+  elemental_flame: elementalFlame,
+  elemental_surge: elementalSurge,
+  elemental_shard: elementalShard,
+  elemental_vortex: elementalVortex,
+  elemental_mound: elementalMound,
+  elemental_veil: elementalVeil,
+  elemental_prism: elementalPrism,
   fauna_quadruped: faunaQuadruped,
   fauna_bird: faunaBird,
   fauna_crab: faunaCrab,

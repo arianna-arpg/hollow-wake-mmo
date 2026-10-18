@@ -1,0 +1,43 @@
+Seed: aureth. Base: fauna PR #34, 90cb7fcb5eec97a6ad438c10f7b564f1dfa88790.
+
+Reviewed zone maps: (0,0), (1,0), (0,-1), (3,2).
+The corresponding world-before-* and world-after-* maps are identical within
+their own zones. The before/after test also compares those local POI plans.
+All four chunk hashes and the climate and overlay goldens remain unchanged.
+
+Only zone (3,2)'s info hash changes:
+  7395A7B7D40E67D9 -> 0CC30AA46F8AF08C
+  chunk hash remains 15C99D20020E2BF4
+
+The info hash includes neighboring POIs. New elemental POIs join the existing
+ruin candidate budget with weight 0.22, radius 9 and kind spacing 180.
+Adding a candidate can change a weighted pick without selecting that candidate.
+The native test reconstructs the old catalog by removing only the eight new
+elemental POIs, then compares local and neighboring plans at the same seed.
+Detailed output is in gates/elemental-tests.txt:
+
+Removed from the neighboring set:
+  zone(3,1) grave_court at 789.5,283.5, the Silent Faculty, L5
+  zone(4,2) grove at 1126.5,602.5, the Hush Grove, L1
+  zone(4,2) ruin at 1233.5,580.5, the Last Stitch, L2
+  zone(2,3) ruin at 619.5,1001.5, Barrowgate, L2
+  zone(2,3) ruin at 709.5,983.5, the Sunken Lantern, L2
+  zone(2,3) knot at 537.5,885.5, a Thinning, L3
+
+Added to the neighboring set:
+  zone(3,1) gnasher_pen at 789.5,283.5, Gnasher Pens, L5
+  zone(4,2) grave_court at 1126.5,602.5, the Last Lesson, L5
+  zone(2,3) ossuary at 619.5,1001.5, the Bone Vault, L3
+  zone(2,3) knot at 537.5,885.5, the Drowning, L3
+  zone(2,3) ossuary at 744.5,964.5, the Bone Vault, L3
+
+gates/natural-sites.txt records all eight elemental kinds occurring naturally
+within zones [-48,48] on both axes. Each placement's biome is checked in its
+cell footprint because the existing planner tests the unsnapped candidate
+before storing a cell-center position. One unbound_refraction center falls
+on the highland side of a boundary with an eligible neighboring biome.
+Pinned-site tests separately confirm all inhabitants, minimum levels and
+repeatable positions. No world-generation runtime or biome vocabulary changed.
+
+Integration: recompute only reviewed combined goldens after other entity
+branches merge; do not blindly retain this hash over another population pass.

@@ -78,3 +78,9 @@ Gnasher features include tusks, crest, spots, flank plates and an empty saddle. 
 ### Wildlife anatomy
 
 The fauna quadruped, ground-bird and crab families register in both clients. Breadth and depth follow each physical profile; leg, head, tail, ear, beak and claw proportions plus optional anatomical features distinguish silhouettes. Quadrupeds use the existing four-legged rig, birds the biped rig with folded wing parts, and crabs the crawler rig. This supplies shared procedural poses, not species-specific animation or new locomotion. Body height is nominal stature; ears, antlers and crests may exceed it as decoration. Rendered dimensions are not damage volumes. Paired plan fixtures, grayscale/camera previews and a single-scale lineup check translation and continuity.
+
+### Free-form elemental bodies
+
+The paired elemental families compose flames, curled waves, ice shards, open wind loops, sediment mounds, hanging veils and faceted prisms. Features distinguish bodies within a family, and breadth/depth ratios follow their physical profiles. The wisp and crawler rigs supply existing pose cues; a suspended-looking part is presentation above a ground-moving body. Palette and unlit core parts never supply resistance, immunity or damage type. Open space between parts does not imply precise hit volumes or phasing.
+
+The elemental fixture pins full native/browser plans, and its gallery compares every body against the adult player and skeleton plus a half-height Goblin at one common scale. Individual cards, a lower camera and grayscale movement poses check shape independently of color. Nominal profile height and renderer bounds are reported separately; decorative turns can extend the conservative rendering bounds. Native headless checks cover behavior, with native pixels still requiring an isolated graphical session.

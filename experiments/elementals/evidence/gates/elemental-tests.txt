@@ -1,0 +1,279 @@
+  Determining projects to restore...
+  All projects are up-to-date for restore.
+  HollowWake.Core -> C:\Users\John\.codex\worktrees\elemental-entity-foundation\MMOARPG\src\HollowWake.Core\bin\Debug\net8.0\HollowWake.Core.dll
+C:\Users\John\.codex\worktrees\elemental-entity-foundation\MMOARPG\tests\HollowWake.Core.Tests\PortedProjectileTests.cs(254,19): warning xUnit2031: Do not use a Where clause to filter before calling Assert.Single. Use the overload of Assert.Single that accepts a filtering function. (https://xunit.net/xunit.analyzers/rules/xUnit2031) [C:\Users\John\.codex\worktrees\elemental-entity-foundation\MMOARPG\tests\HollowWake.Core.Tests\HollowWake.Core.Tests.csproj]
+C:\Users\John\.codex\worktrees\elemental-entity-foundation\MMOARPG\tests\HollowWake.Core.Tests\PortedProjectileTests.cs(267,9): warning xUnit2031: Do not use a Where clause to filter before calling Assert.Single. Use the overload of Assert.Single that accepts a filtering function. (https://xunit.net/xunit.analyzers/rules/xUnit2031) [C:\Users\John\.codex\worktrees\elemental-entity-foundation\MMOARPG\tests\HollowWake.Core.Tests\HollowWake.Core.Tests.csproj]
+C:\Users\John\.codex\worktrees\elemental-entity-foundation\MMOARPG\tests\HollowWake.Core.Tests\PortedProjectileTests.cs(280,9): warning xUnit2031: Do not use a Where clause to filter before calling Assert.Single. Use the overload of Assert.Single that accepts a filtering function. (https://xunit.net/xunit.analyzers/rules/xUnit2031) [C:\Users\John\.codex\worktrees\elemental-entity-foundation\MMOARPG\tests\HollowWake.Core.Tests\HollowWake.Core.Tests.csproj]
+  HollowWake.Core.Tests -> C:\Users\John\.codex\worktrees\elemental-entity-foundation\MMOARPG\tests\HollowWake.Core.Tests\bin\Debug\net10.0\HollowWake.Core.Tests.dll
+Test run for C:\Users\John\.codex\worktrees\elemental-entity-foundation\MMOARPG\tests\HollowWake.Core.Tests\bin\Debug\net10.0\HollowWake.Core.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+C:\Users\John\.codex\worktrees\elemental-entity-foundation\MMOARPG\tests\HollowWake.Core.Tests\bin\Debug\net10.0\HollowWake.Core.Tests.dll
+[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v3.1.5+1b188a7b0a (64-bit .NET 10.0.13)
+[xUnit.net 00:00:00.09]   Discovering: HollowWake.Core.Tests
+[xUnit.net 00:00:01.75]   Discovered:  HollowWake.Core.Tests
+[xUnit.net 00:00:01.80]   Starting:    HollowWake.Core.Tests
+  Passed HollowWake.Core.Tests.ElementalTests.EveryAssignedSkillDealsDamageThroughAiAndKeepsActing(pattern: "mind_knot", preset: "mind_lash") [182 ms]
+  Standard Output Messages:
+ mind_knot/mind_lash: early hits=19, late hits=40; exact repeat.
+
+
+  Passed HollowWake.Core.Tests.ElementalTests.EveryAssignedSkillDealsDamageThroughAiAndKeepsActing(pattern: "storm_confluence", preset: "storm_bolt") [94 ms]
+  Standard Output Messages:
+ storm_confluence/storm_bolt: early hits=19, late hits=40; exact repeat.
+
+
+  Passed HollowWake.Core.Tests.ElementalTests.EveryAssignedSkillDealsDamageThroughAiAndKeepsActing(pattern: "umbra_drift", preset: "shade_bolt") [67 ms]
+  Standard Output Messages:
+ umbra_drift/shade_bolt: early hits=19, late hits=40; exact repeat.
+
+
+  Passed HollowWake.Core.Tests.ElementalTests.EveryAssignedSkillDealsDamageThroughAiAndKeepsActing(pattern: "frost_elemental", preset: "ice_spear") [68 ms]
+  Standard Output Messages:
+ frost_elemental/ice_spear: early hits=19, late hits=40; exact repeat.
+
+
+  Passed HollowWake.Core.Tests.ElementalTests.EveryAssignedSkillDealsDamageThroughAiAndKeepsActing(pattern: "ember_elemental", preset: "ember_blast") [69 ms]
+  Standard Output Messages:
+ ember_elemental/ember_blast: early hits=23, late hits=59; exact repeat.
+
+
+  Passed HollowWake.Core.Tests.ElementalTests.EveryAssignedSkillDealsDamageThroughAiAndKeepsActing(pattern: "umbra_drift", preset: "umbra_field") [56 ms]
+  Standard Output Messages:
+ umbra_drift/umbra_field: early hits=20, late hits=43; exact repeat.
+
+
+  Passed HollowWake.Core.Tests.ElementalTests.EveryAssignedSkillDealsDamageThroughAiAndKeepsActing(pattern: "cinderling", preset: "ember_strike") [53 ms]
+  Standard Output Messages:
+ cinderling/ember_strike: early hits=17, late hits=27; exact repeat.
+
+
+  Passed HollowWake.Core.Tests.ElementalTests.EveryAssignedSkillDealsDamageThroughAiAndKeepsActing(pattern: "void_ravel", preset: "unmaking_pulse") [64 ms]
+  Standard Output Messages:
+ void_ravel/unmaking_pulse: early hits=12, late hits=24; exact repeat.
+
+
+  Passed HollowWake.Core.Tests.ElementalTests.EveryAssignedSkillDealsDamageThroughAiAndKeepsActing(pattern: "lumen_wisp", preset: "lumen_presence") [46 ms]
+  Standard Output Messages:
+ lumen_wisp/lumen_presence: early hits=8, late hits=15; exact repeat.
+
+
+  Passed HollowWake.Core.Tests.ElementalTests.EveryAssignedSkillDealsDamageThroughAiAndKeepsActing(pattern: "silt_crawler", preset: "claw") [44 ms]
+  Standard Output Messages:
+ silt_crawler/claw: early hits=9, late hits=23; exact repeat.
+
+
+  Passed HollowWake.Core.Tests.ElementalTests.EveryAssignedSkillDealsDamageThroughAiAndKeepsActing(pattern: "storm_confluence", preset: "storm_nova") [62 ms]
+  Standard Output Messages:
+ storm_confluence/storm_nova: early hits=12, late hits=27; exact repeat.
+
+
+  Passed HollowWake.Core.Tests.ElementalTests.EveryAssignedSkillDealsDamageThroughAiAndKeepsActing(pattern: "geode_shellback", preset: "warden_slam") [83 ms]
+  Standard Output Messages:
+ geode_shellback/warden_slam: early hits=13, late hits=26; exact repeat.
+
+
+  Passed HollowWake.Core.Tests.ElementalTests.EveryAssignedSkillDealsDamageThroughAiAndKeepsActing(pattern: "gale_elemental", preset: "storm_nova") [71 ms]
+  Standard Output Messages:
+ gale_elemental/storm_nova: early hits=14, late hits=30; exact repeat.
+
+
+  Passed HollowWake.Core.Tests.ElementalTests.EveryAssignedSkillDealsDamageThroughAiAndKeepsActing(pattern: "rime_star", preset: "tide_bolt") [301 ms]
+  Standard Output Messages:
+ rime_star/tide_bolt: early hits=19, late hits=40; exact repeat.
+
+
+  Passed HollowWake.Core.Tests.ElementalTests.EveryAssignedSkillDealsDamageThroughAiAndKeepsActing(pattern: "triune_elemental", preset: "tide_bolt") [176 ms]
+  Standard Output Messages:
+ triune_elemental/tide_bolt: early hits=19, late hits=40; exact repeat.
+
+
+  Passed HollowWake.Core.Tests.ElementalTests.EveryAssignedSkillDealsDamageThroughAiAndKeepsActing(pattern: "frost_elemental", preset: "tide_bolt") [60 ms]
+  Standard Output Messages:
+ frost_elemental/tide_bolt: early hits=19, late hits=40; exact repeat.
+
+
+  Passed HollowWake.Core.Tests.ElementalTests.EveryAssignedSkillDealsDamageThroughAiAndKeepsActing(pattern: "ember_elemental", preset: "ember_bolt") [79 ms]
+  Standard Output Messages:
+ ember_elemental/ember_bolt: early hits=36, late hits=84; exact repeat.
+
+
+  Passed HollowWake.Core.Tests.ElementalTests.EveryAssignedSkillDealsDamageThroughAiAndKeepsActing(pattern: "triune_elemental", preset: "storm_bolt") [69 ms]
+  Standard Output Messages:
+ triune_elemental/storm_bolt: early hits=19, late hits=40; exact repeat.
+
+
+  Passed HollowWake.Core.Tests.ElementalTests.EveryAssignedSkillDealsDamageThroughAiAndKeepsActing(pattern: "triune_elemental", preset: "ember_bolt") [67 ms]
+  Standard Output Messages:
+ triune_elemental/ember_bolt: early hits=27, late hits=75; exact repeat.
+
+
+  Passed HollowWake.Core.Tests.ElementalTests.EveryAssignedSkillDealsDamageThroughAiAndKeepsActing(pattern: "emberwisp", preset: "cinder_spit") [69 ms]
+  Standard Output Messages:
+ emberwisp/cinder_spit: early hits=27, late hits=76; exact repeat.
+
+
+  Passed HollowWake.Core.Tests.ElementalTests.EveryAssignedSkillDealsDamageThroughAiAndKeepsActing(pattern: "bloom_spore", preset: "venom_spit") [72 ms]
+  Standard Output Messages:
+ bloom_spore/venom_spit: early hits=29, late hits=62; exact repeat.
+
+
+  Passed HollowWake.Core.Tests.ElementalTests.EveryAssignedSkillDealsDamageThroughAiAndKeepsActing(pattern: "void_ravel", preset: "void_lash") [71 ms]
+  Standard Output Messages:
+ void_ravel/void_lash: early hits=19, late hits=40; exact repeat.
+
+
+  Passed HollowWake.Core.Tests.ElementalTests.EveryAssignedSkillDealsDamageThroughAiAndKeepsActing(pattern: "tide_surge", preset: "brine_bolt") [79 ms]
+  Standard Output Messages:
+ tide_surge/brine_bolt: early hits=19, late hits=40; exact repeat.
+
+
+  Passed HollowWake.Core.Tests.ElementalTests.PhysicalBodiesHaveHonestClassifiersRewardsAndHabitatReferences(pattern: "rime_star") [484 ms]
+  Passed HollowWake.Core.Tests.ElementalTests.PhysicalBodiesHaveHonestClassifiersRewardsAndHabitatReferences(pattern: "umbra_drift") [< 1 ms]
+  Passed HollowWake.Core.Tests.ElementalTests.PhysicalBodiesHaveHonestClassifiersRewardsAndHabitatReferences(pattern: "geode_shellback") [< 1 ms]
+  Passed HollowWake.Core.Tests.ElementalTests.PhysicalBodiesHaveHonestClassifiersRewardsAndHabitatReferences(pattern: "frost_elemental") [4 ms]
+  Passed HollowWake.Core.Tests.ElementalTests.PhysicalBodiesHaveHonestClassifiersRewardsAndHabitatReferences(pattern: "tide_surge") [< 1 ms]
+  Passed HollowWake.Core.Tests.ElementalTests.PhysicalBodiesHaveHonestClassifiersRewardsAndHabitatReferences(pattern: "storm_confluence") [< 1 ms]
+  Passed HollowWake.Core.Tests.ElementalTests.PhysicalBodiesHaveHonestClassifiersRewardsAndHabitatReferences(pattern: "triune_elemental") [< 1 ms]
+  Passed HollowWake.Core.Tests.ElementalTests.PhysicalBodiesHaveHonestClassifiersRewardsAndHabitatReferences(pattern: "ember_elemental") [< 1 ms]
+  Passed HollowWake.Core.Tests.ElementalTests.PhysicalBodiesHaveHonestClassifiersRewardsAndHabitatReferences(pattern: "lumen_wisp") [< 1 ms]
+  Passed HollowWake.Core.Tests.ElementalTests.PhysicalBodiesHaveHonestClassifiersRewardsAndHabitatReferences(pattern: "bloom_spore") [1 ms]
+  Passed HollowWake.Core.Tests.ElementalTests.PhysicalBodiesHaveHonestClassifiersRewardsAndHabitatReferences(pattern: "silt_crawler") [< 1 ms]
+  Passed HollowWake.Core.Tests.ElementalTests.PhysicalBodiesHaveHonestClassifiersRewardsAndHabitatReferences(pattern: "void_ravel") [< 1 ms]
+  Passed HollowWake.Core.Tests.ElementalTests.PhysicalBodiesHaveHonestClassifiersRewardsAndHabitatReferences(pattern: "gale_elemental") [< 1 ms]
+  Passed HollowWake.Core.Tests.ElementalTests.PhysicalBodiesHaveHonestClassifiersRewardsAndHabitatReferences(pattern: "mind_knot") [< 1 ms]
+  Passed HollowWake.Core.Tests.ElementalTests.PhysicalBodiesHaveHonestClassifiersRewardsAndHabitatReferences(pattern: "cinderling") [< 1 ms]
+  Passed HollowWake.Core.Tests.ElementalTests.PhysicalBodiesHaveHonestClassifiersRewardsAndHabitatReferences(pattern: "emberwisp") [< 1 ms]
+  Passed HollowWake.Core.Tests.ElementalTests.BoundBodiesUseOwnerAllegianceLoseWildRewardsAndLeaveNoCorpse(pattern: "cinderling") [39 ms]
+  Passed HollowWake.Core.Tests.ElementalTests.BoundBodiesUseOwnerAllegianceLoseWildRewardsAndLeaveNoCorpse(pattern: "lumen_wisp") [2 ms]
+  Passed HollowWake.Core.Tests.ElementalTests.BoundBodiesUseOwnerAllegianceLoseWildRewardsAndLeaveNoCorpse(pattern: "ember_elemental") [2 ms]
+  Passed HollowWake.Core.Tests.ElementalTests.BoundBodiesUseOwnerAllegianceLoseWildRewardsAndLeaveNoCorpse(pattern: "tide_surge") [2 ms]
+  Passed HollowWake.Core.Tests.ElementalTests.BoundBodiesUseOwnerAllegianceLoseWildRewardsAndLeaveNoCorpse(pattern: "umbra_drift") [2 ms]
+  Passed HollowWake.Core.Tests.ElementalTests.BoundBodiesUseOwnerAllegianceLoseWildRewardsAndLeaveNoCorpse(pattern: "silt_crawler") [2 ms]
+  Passed HollowWake.Core.Tests.ElementalTests.BoundBodiesUseOwnerAllegianceLoseWildRewardsAndLeaveNoCorpse(pattern: "mind_knot") [1 ms]
+  Passed HollowWake.Core.Tests.ElementalTests.BoundBodiesUseOwnerAllegianceLoseWildRewardsAndLeaveNoCorpse(pattern: "storm_confluence") [2 ms]
+  Passed HollowWake.Core.Tests.ElementalTests.BoundBodiesUseOwnerAllegianceLoseWildRewardsAndLeaveNoCorpse(pattern: "geode_shellback") [1 ms]
+  Passed HollowWake.Core.Tests.ElementalTests.BoundBodiesUseOwnerAllegianceLoseWildRewardsAndLeaveNoCorpse(pattern: "void_ravel") [1 ms]
+  Passed HollowWake.Core.Tests.ElementalTests.BoundBodiesUseOwnerAllegianceLoseWildRewardsAndLeaveNoCorpse(pattern: "frost_elemental") [1 ms]
+  Passed HollowWake.Core.Tests.ElementalTests.BoundBodiesUseOwnerAllegianceLoseWildRewardsAndLeaveNoCorpse(pattern: "bloom_spore") [1 ms]
+  Passed HollowWake.Core.Tests.ElementalTests.BoundBodiesUseOwnerAllegianceLoseWildRewardsAndLeaveNoCorpse(pattern: "triune_elemental") [1 ms]
+  Passed HollowWake.Core.Tests.ElementalTests.BoundBodiesUseOwnerAllegianceLoseWildRewardsAndLeaveNoCorpse(pattern: "rime_star") [1 ms]
+  Passed HollowWake.Core.Tests.ElementalTests.BoundBodiesUseOwnerAllegianceLoseWildRewardsAndLeaveNoCorpse(pattern: "gale_elemental") [1 ms]
+  Passed HollowWake.Core.Tests.ElementalTests.BoundBodiesUseOwnerAllegianceLoseWildRewardsAndLeaveNoCorpse(pattern: "emberwisp") [1 ms]
+  Passed HollowWake.Core.Tests.ElementalTests.CompleteKitsFightUsingNativeFactionAndRemainDamageable(pattern: "emberwisp") [22 ms]
+  Passed HollowWake.Core.Tests.ElementalTests.CompleteKitsFightUsingNativeFactionAndRemainDamageable(pattern: "geode_shellback") [21 ms]
+  Passed HollowWake.Core.Tests.ElementalTests.CompleteKitsFightUsingNativeFactionAndRemainDamageable(pattern: "rime_star") [21 ms]
+  Passed HollowWake.Core.Tests.ElementalTests.CompleteKitsFightUsingNativeFactionAndRemainDamageable(pattern: "storm_confluence") [31 ms]
+  Passed HollowWake.Core.Tests.ElementalTests.CompleteKitsFightUsingNativeFactionAndRemainDamageable(pattern: "void_ravel") [22 ms]
+  Passed HollowWake.Core.Tests.ElementalTests.CompleteKitsFightUsingNativeFactionAndRemainDamageable(pattern: "silt_crawler") [24 ms]
+  Passed HollowWake.Core.Tests.ElementalTests.CompleteKitsFightUsingNativeFactionAndRemainDamageable(pattern: "umbra_drift") [29 ms]
+  Passed HollowWake.Core.Tests.ElementalTests.CompleteKitsFightUsingNativeFactionAndRemainDamageable(pattern: "mind_knot") [23 ms]
+  Passed HollowWake.Core.Tests.ElementalTests.CompleteKitsFightUsingNativeFactionAndRemainDamageable(pattern: "ember_elemental") [26 ms]
+  Passed HollowWake.Core.Tests.ElementalTests.CompleteKitsFightUsingNativeFactionAndRemainDamageable(pattern: "bloom_spore") [28 ms]
+  Passed HollowWake.Core.Tests.ElementalTests.CompleteKitsFightUsingNativeFactionAndRemainDamageable(pattern: "lumen_wisp") [21 ms]
+  Passed HollowWake.Core.Tests.ElementalTests.CompleteKitsFightUsingNativeFactionAndRemainDamageable(pattern: "frost_elemental") [36 ms]
+  Passed HollowWake.Core.Tests.ElementalTests.CompleteKitsFightUsingNativeFactionAndRemainDamageable(pattern: "tide_surge") [27 ms]
+  Passed HollowWake.Core.Tests.ElementalTests.CompleteKitsFightUsingNativeFactionAndRemainDamageable(pattern: "cinderling") [30 ms]
+  Passed HollowWake.Core.Tests.ElementalTests.CompleteKitsFightUsingNativeFactionAndRemainDamageable(pattern: "gale_elemental") [26 ms]
+  Passed HollowWake.Core.Tests.ElementalTests.CompleteKitsFightUsingNativeFactionAndRemainDamageable(pattern: "triune_elemental") [38 ms]
+  Passed HollowWake.Core.Tests.ElementalTests.SparseSitesGenerateResidentsAtTheirLevelAndReplayExactly(siteId: "ember_seam") [2 s]
+  Standard Output Messages:
+ ember_seam: cinderling:44.666477:55.68054:1 | emberwisp:50.751812:49.010567:1 | ember_elemental:45.649975:49.52782:1
+
+
+  Passed HollowWake.Core.Tests.ElementalTests.SparseSitesGenerateResidentsAtTheirLevelAndReplayExactly(siteId: "selvage_rent") [1 s]
+  Standard Output Messages:
+ selvage_rent: ruin_chest:47.5:52.5:1 | umbra_drift:49.554195:49.819283:1 | void_ravel:56.5662:49.621235:1
+
+
+  Passed HollowWake.Core.Tests.ElementalTests.SparseSitesGenerateResidentsAtTheirLevelAndReplayExactly(siteId: "bloom_exhalation") [1 s]
+  Standard Output Messages:
+ bloom_exhalation: shrine_stone:49.5:50.5:1 | bloom_spore:52.085102:47.802574:1
+
+
+  Passed HollowWake.Core.Tests.ElementalTests.SparseSitesGenerateResidentsAtTheirLevelAndReplayExactly(siteId: "unbound_refraction") [1 s]
+  Standard Output Messages:
+ unbound_refraction: shrine_stone:49.5:50.5:1 | lumen_wisp:56.064217:54.459866:1 | mind_knot:52.7018:48.826218:1 | triune_elemental:50.70997:49.20754:1
+
+
+  Passed HollowWake.Core.Tests.ElementalTests.SparseSitesGenerateResidentsAtTheirLevelAndReplayExactly(siteId: "rime_bloom") [1 s]
+  Standard Output Messages:
+ rime_bloom: shrine_stone:49.5:50.5:1 | rime_star:50.81909:48.363472:1 | frost_elemental:43.318314:53.30541:1
+
+
+  Passed HollowWake.Core.Tests.ElementalTests.SparseSitesGenerateResidentsAtTheirLevelAndReplayExactly(siteId: "tide_memory") [1 s]
+  Standard Output Messages:
+ tide_memory: shrine_stone:49.5:50.5:1 | tide_surge:49.413788:53.157017:1
+
+
+  Passed HollowWake.Core.Tests.ElementalTests.SparseSitesGenerateResidentsAtTheirLevelAndReplayExactly(siteId: "mineral_wake") [1 s]
+  Standard Output Messages:
+ mineral_wake: ruin_chest:47.5:52.5:1 | silt_crawler:46.521503:48.677444:1 | geode_shellback:50.245083:56.869328:1
+
+
+[xUnit.net 00:00:16.50]   Finished:    HollowWake.Core.Tests
+  Passed HollowWake.Core.Tests.ElementalTests.SparseSitesGenerateResidentsAtTheirLevelAndReplayExactly(siteId: "storm_eye") [1 s]
+  Standard Output Messages:
+ storm_eye: shrine_stone:49.5:50.5:1 | gale_elemental:48.272236:45.612404:1 | storm_confluence:43.22715:49.155903:1
+
+
+  Passed HollowWake.Core.Tests.ElementalTests.ReviewedLocalZonesKeepTheirPlansWhileNeighborSitesJoinTheRuinBudget [192 ms]
+  Standard Output Messages:
+ zone(3,2) neighbor removed: zone(3,1):grave_court:789.5:283.5:ruin_walls:the Silent Faculty:L5
+ zone(3,2) neighbor removed: zone(4,2):grove:1126.5:602.5:grove_ring:the Hush Grove:L1
+ zone(3,2) neighbor removed: zone(4,2):ruin:1233.5:580.5:barrow:the Last Stitch:L2
+ zone(3,2) neighbor removed: zone(2,3):ruin:619.5:1001.5:ruin_walls:Barrowgate:L2
+ zone(3,2) neighbor removed: zone(2,3):ruin:709.5:983.5:ruin_walls:the Sunken Lantern:L2
+ zone(3,2) neighbor removed: zone(2,3):knot:537.5:885.5:knot_stones:a Thinning:L3
+ zone(3,2) neighbor added: zone(3,1):gnasher_pen:789.5:283.5:camp_ring:Gnasher Pens:L5
+ zone(3,2) neighbor added: zone(4,2):grave_court:1126.5:602.5:ruin_walls:the Last Lesson:L5
+ zone(3,2) neighbor added: zone(2,3):ossuary:619.5:1001.5:barrow:the Bone Vault:L3
+ zone(3,2) neighbor added: zone(2,3):knot:537.5:885.5:knot_stones:the Drowning:L3
+ zone(3,2) neighbor added: zone(2,3):ossuary:744.5:964.5:barrow:the Bone Vault:L3
+
+
+  Passed HollowWake.Core.Tests.ElementalTests.MaterialDensityAndPoiseProduceDistinctMassAndRealShoveTravel [31 ms]
+  Standard Output Messages:
+ cinderling: mass=11.975 kg, shove=25.75082 m
+ emberwisp: mass=5.049 kg, shove=63.34717 m
+ ember_elemental: mass=32.011 kg, shove=9.08716 m
+ tide_surge: mass=561.094 kg, shove=0.43947 m
+ rime_star: mass=102.107 kg, shove=2.82434 m
+ frost_elemental: mass=363.380 kg, shove=0.63039 m
+ gale_elemental: mass=22.320 kg, shove=14.30138 m
+ storm_confluence: mass=86.112 kg, shove=2.96006 m
+ silt_crawler: mass=938.400 kg, shove=0.22681 m
+ geode_shellback: mass=2927.925 kg, shove=0.03908 m
+ bloom_spore: mass=25.245 kg, shove=11.91406 m
+ umbra_drift: mass=19.051 kg, shove=16.75521 m
+ lumen_wisp: mass=10.949 kg, shove=29.19490 m
+ mind_knot: mass=846.687 kg, shove=0.28566 m
+ void_ravel: mass=26.454 kg, shove=12.05188 m
+ triune_elemental: mass=2080.000 kg, shove=0.07768 m
+
+
+  Passed HollowWake.Core.Tests.ElementalTests.ExistingWorldBudgetsCanSelectUnboundSitesNaturally [354 ms]
+  Standard Output Messages:
+ 12,-12: unbound_refraction at 3155.5,-3014.5, biome=hollowed, site level=18
+ -9,-9: mineral_wake at -2222.5,-2262.5, biome=highland, site level=13
+ -3,-9: unbound_refraction at -601.5,-2166.5, biome=hollowed, site level=14
+ -9,-7: rime_bloom at -2205.5,-1742.5, biome=alpine, site level=17
+ -12,-6: storm_eye at -2858.5,-1388.5, biome=alpine, site level=16
+ -6,2: storm_eye at -1395.5,723.5, biome=alpine, site level=11
+ -1,5: rime_bloom at -134.5,1503.5, biome=highland, site level=12
+ 12,6: tide_memory at 3246.5,1659.5, biome=marsh, site level=7
+ 2,7: rime_bloom at 571.5,1858.5, biome=highland, site level=7
+ -8,8: storm_eye at -2023.5,2232.5, biome=highland, site level=14
+ 5,8: rime_bloom at 1341.5,2233.5, biome=highland, site level=14
+ 4,10: storm_eye at 1240.5,2591.5, biome=alpine, site level=13
+ 8,10: storm_eye at 2069.5,2781.5, biome=highland, site level=14
+ -1,11: rime_bloom at -78.5,2962.5, biome=highland, site level=15
+ 3,11: rime_bloom at 843.5,2962.5, biome=highland, site level=14
+ 7,11: mineral_wake at 1918.5,3013.5, biome=alpine, site level=12
+ 3,12: storm_eye at 788.5,3299.5, biome=highland, site level=13
+
+
+
+Test Run Successful.
+Total tests: 82
+     Passed: 82
+ Total time: 17.3411 Seconds

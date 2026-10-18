@@ -51,6 +51,13 @@ public static class BodyFamilies
 {
     public static readonly IReadOnlyDictionary<string, Action<BodyBuild>> Builders = new Dictionary<string, Action<BodyBuild>>(StringComparer.Ordinal)
     {
+        ["elemental_flame"] = ElementalFamilies.Flame,
+        ["elemental_surge"] = ElementalFamilies.Surge,
+        ["elemental_shard"] = ElementalFamilies.Shard,
+        ["elemental_vortex"] = ElementalFamilies.Vortex,
+        ["elemental_mound"] = ElementalFamilies.Mound,
+        ["elemental_veil"] = ElementalFamilies.Veil,
+        ["elemental_prism"] = ElementalFamilies.Prism,
         ["fauna_quadruped"] = FaunaFamilies.Quadruped,
         ["fauna_bird"] = FaunaFamilies.Bird,
         ["fauna_crab"] = FaunaFamilies.Crab,

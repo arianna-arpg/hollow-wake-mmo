@@ -1,0 +1,97 @@
+[
+  {
+    "id": "holdfast",
+    "authoritativeHeight": 1.8,
+    "modelHeight": 1.7334
+  },
+  {
+    "id": "skeleton_warrior",
+    "authoritativeHeight": 1.8,
+    "modelHeight": 1.7128800000000002
+  },
+  {
+    "id": "goblin_skirmisher",
+    "authoritativeHeight": 0.9,
+    "modelHeight": 0.9319047680409906
+  },
+  {
+    "id": "cinderling",
+    "authoritativeHeight": 0.42,
+    "modelHeight": 0.443678389083094
+  },
+  {
+    "id": "emberwisp",
+    "authoritativeHeight": 0.85,
+    "modelHeight": 0.85
+  },
+  {
+    "id": "ember_elemental",
+    "authoritativeHeight": 1.95,
+    "modelHeight": 1.95
+  },
+  {
+    "id": "tide_surge",
+    "authoritativeHeight": 1.35,
+    "modelHeight": 1.35
+  },
+  {
+    "id": "rime_star",
+    "authoritativeHeight": 0.72,
+    "modelHeight": 0.72
+  },
+  {
+    "id": "frost_elemental",
+    "authoritativeHeight": 1.85,
+    "modelHeight": 1.85
+  },
+  {
+    "id": "gale_elemental",
+    "authoritativeHeight": 1.55,
+    "modelHeight": 1.55
+  },
+  {
+    "id": "storm_confluence",
+    "authoritativeHeight": 2.3,
+    "modelHeight": 2.3
+  },
+  {
+    "id": "silt_crawler",
+    "authoritativeHeight": 0.75,
+    "modelHeight": 0.75
+  },
+  {
+    "id": "geode_shellback",
+    "authoritativeHeight": 1.3,
+    "modelHeight": 1.3
+  },
+  {
+    "id": "bloom_spore",
+    "authoritativeHeight": 1.25,
+    "modelHeight": 1.25
+  },
+  {
+    "id": "umbra_drift",
+    "authoritativeHeight": 1.8,
+    "modelHeight": 1.8
+  },
+  {
+    "id": "lumen_wisp",
+    "authoritativeHeight": 1.1,
+    "modelHeight": 1.1
+  },
+  {
+    "id": "mind_knot",
+    "authoritativeHeight": 1.55,
+    "modelHeight": 1.55
+  },
+  {
+    "id": "void_ravel",
+    "authoritativeHeight": 1.9,
+    "modelHeight": 1.9
+  },
+  {
+    "id": "triune_elemental",
+    "authoritativeHeight": 2.5,
+    "modelHeight": 2.5
+  }
+]
