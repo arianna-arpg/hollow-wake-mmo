@@ -16,6 +16,20 @@ The origin Knot's four imps, four shades and one tangle now use site level 3 ins
 
 The first focused run retains four intended golden failures and 434 passes (438 total), including all golem cases. After inspecting the audit, update only origin info/chunks to `4BFB77C7FB773A38`/`B04153F9629D9BAE`, zone(0,-1) chunks to `D785D8F084A1F919`, zone(3,2) chunks to `8711D19C4613D904`, and the overlaid-world hash to `805116FF4B6EE539`. The other zone-info/chunk values and climate hash `999D90D6110B1CDD` remain unchanged. This branch's origin-info and overlay hashes differ from #34's and are not copied from it.
 
-Final functional and client verification on this new runtime is pending. Retain all first failures. No performance sample, trace capture, budget relaxation, main merge or separate #20/#50 combined acceptance is part of this pass. Earlier timings, including the 43.9282 ms planning miss, remain evidence only for their exact sources.
+## Complete-source verification
+
+Tested source `a273622adae54ba2eb22733f8802310d8d54b5bb` changes only the independently audited goldens and review evidence after merge `0e9e95f`. Debug solution and Release tools builds report zero warnings/errors. The full suite passes core 2,842, server 59 and client 135, with no exclusions/skips; all existing golem cases and the shared launch/placement/contact regressions are included. Browser tests pass 313/313, porter 10/10 and lifecycle tests 10/10. The production browser build retains its existing size advisory.
+
+Validation reports zero errors/warnings. The generated protocol is unchanged and the exact frozen-literal census equals all 523 reviewed keys, with no additions/removals. The origin loads for 200 ticks with four offers, and the Amalgamation/Stone duel completes. All seven standard Windows Release hashes match the reviewed baseline with the same seeds, cap and platform. No replay expectation was changed locally.
+
+Exact archived golem content from `5043110` and current content run the proving pairs under the same new Release runtime. Their entire JSON reports are identical, including mechanisms, outcomes and breaches, and equal the retained prior report. Both runs exit one for the inherited bulwark, plaguer and pitfighter 10/10 wins against the 80% ceiling. These remain balance failures; no band or numeric content was changed to clear them. Raw and repository-normalized report hashes are recorded separately in `proving-comparison.json`.
+
+The fresh six-feature TCP probe passes. Private complete-source run `run-6zDkjL` passes browser 31/31 and native 36/36 with no cleanup errors. The browser receives and answers the villager dialogue. Card and grayscale screenshots were visually inspected and show terrain and bodies; the nonblank-world assertion records 18.43% dominant color and 169 bins. Native rendered pixels and physical controller input remain untested, and the retained headless output includes RID/ObjectDB shutdown leak diagnostics. No repeat of a completed broad gate was needed.
+
+Against incoming `c3099a8`, the only Core source delta is registration of the assembled appearance family; the shared simulation, protocol, server and tools implementations are retained intact. Golem/Amalgamation patterns and sites are unchanged from `5043110`. All owned private test/server sessions have completed; generated untracked Godot UID sidecars were removed from this worktree only.
+
+## Remaining acceptance
+
+The first four golden failures remain with the audit; earlier integration and performance failures retain their original records. No performance sample, trace capture, budget relaxation, standalone main merge or separate #20/#50 combined acceptance is part of this pass. Earlier timings, including the 43.9282 ms planning miss, remain evidence only for their exact sources. Keep the PR draft for Claude review and coordinated performance acceptance. Hosted checks for the final published head are not yet claimed passed.
 
 Acknowledged by: pending Claude review of this complete integration.

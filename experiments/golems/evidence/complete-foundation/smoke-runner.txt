@@ -1,0 +1,5 @@
+TEST evidence: C:\Users\John\.codex\worktrees\golem-construct-foundation\MMOARPG\experiments\golems\artifacts\complete-foundation-smoke\run-6zDkjL
+TEST smoke-web; evidence: C:\Users\John\.codex\worktrees\golem-construct-foundation\MMOARPG\experiments\golems\artifacts\complete-foundation-smoke\run-6zDkjL
+TEST import-godot; evidence: C:\Users\John\.codex\worktrees\golem-construct-foundation\MMOARPG\experiments\golems\artifacts\complete-foundation-smoke\run-6zDkjL
+TEST smoke-godot; evidence: C:\Users\John\.codex\worktrees\golem-construct-foundation\MMOARPG\experiments\golems\artifacts\complete-foundation-smoke\run-6zDkjL
+TEST PASSED; report: C:\Users\John\.codex\worktrees\golem-construct-foundation\MMOARPG\experiments\golems\artifacts\complete-foundation-smoke\run-6zDkjL\result.json

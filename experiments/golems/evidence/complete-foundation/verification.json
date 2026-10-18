@@ -1,0 +1,35 @@
+{
+  "base": "c3099a8ea5c7a32fc0799c3a17cb167b2bd1231c",
+  "before": "5043110206b68bc27538e32e7f40e2b82d49b021",
+  "merge": "0e9e95f",
+  "testedSource": "a273622adae54ba2eb22733f8802310d8d54b5bb",
+  "seed": "aureth",
+  "goldensChangedOnlyAfterAudit": true,
+  "coreTests": 2842,
+  "serverTests": 59,
+  "clientTests": 135,
+  "webTests": 313,
+  "porterTests": 10,
+  "lifecycleTests": 10,
+  "frozenLiteralKeys": 523,
+  "releaseReplay": "seven standard hashes identical",
+  "provingBeforeExit": 1,
+  "provingAfterExit": 1,
+  "provingIdentical": true,
+  "performanceMeasured": false,
+  "binaries": [
+    {
+      "Path": "C:\\Users\\John\\.codex\\worktrees\\golem-construct-foundation\\MMOARPG\\src\\HollowWake.Tools\\bin\\Release\\net10.0\\hollowwake.dll",
+      "Hash": "70955DD14DABB75A4CCD624D1D8C28C99AA084F731E6E3C0E603DE1FA408937E"
+    },
+    {
+      "Path": "C:\\Users\\John\\.codex\\worktrees\\golem-construct-foundation\\MMOARPG\\src\\HollowWake.Tools\\bin\\Release\\net10.0\\HollowWake.Core.dll",
+      "Hash": "03F6A2CE698505697D2C737168E1DE9996CD8742E95DC0CEA3212CFF678484B4"
+    }
+  ],
+  "smokeRun": "run-6zDkjL",
+  "browserSmoke": 31,
+  "nativeSmoke": 36,
+  "cleanupErrors": [],
+  "nativePixelsVerified": false
+}

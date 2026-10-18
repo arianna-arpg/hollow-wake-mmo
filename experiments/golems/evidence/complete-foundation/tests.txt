@@ -1,0 +1,12 @@
+Test run for C:\Users\John\.codex\worktrees\golem-construct-foundation\MMOARPG\tests\HollowWake.Server.Tests\bin\Debug\net10.0\HollowWake.Server.Tests.dll (.NETCoreApp,Version=v10.0)
+Test run for C:\Users\John\.codex\worktrees\golem-construct-foundation\MMOARPG\tests\HollowWake.Client.Tests\bin\Debug\net10.0\HollowWake.Client.Tests.dll (.NETCoreApp,Version=v10.0)
+Test run for C:\Users\John\.codex\worktrees\golem-construct-foundation\MMOARPG\tests\HollowWake.Core.Tests\bin\Debug\net10.0\HollowWake.Core.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+A total of 1 test files matched the specified pattern.
+A total of 1 test files matched the specified pattern.
+
+Passed!  - Failed:     0, Passed:   135, Skipped:     0, Total:   135, Duration: 7 s - HollowWake.Client.Tests.dll (net10.0)
+
+Passed!  - Failed:     0, Passed:    59, Skipped:     0, Total:    59, Duration: 26 s - HollowWake.Server.Tests.dll (net10.0)
+
+Passed!  - Failed:     0, Passed:  2842, Skipped:     0, Total:  2842, Duration: 45 s - HollowWake.Core.Tests.dll (net10.0)

@@ -1,0 +1,27 @@
+0_0: sites unchanged=true; population counts unchanged=true
+Quest offers before: [{"Id":"gen.poi.0_0.hamlet.128.128.gather_floss.1","Level":1,"Targets":[{"Type":"collect","Target":"thread_floss","Poi":null}]},{"Id":"gen.poi.0_0.hamlet.128.128.cull_beasts.2","Level":1,"Targets":[{"Type":"kill","Target":"hob","Poi":null}]},{"Id":"gen.poi.0_0.hamlet.128.128.scout_ruin.3","Level":1,"Targets":[{"Type":"discover","Target":null,"Poi":"poi.0_1.ruin.213.450"}]}]
+Quest offers after: [{"Id":"gen.poi.0_0.hamlet.128.128.clear_knot.0","Level":1,"Targets":[{"Type":"reach","Target":null,"Poi":"poi.0_0.knot.200.60"},{"Type":"kill","Target":"cinder_imp","Poi":null}]},{"Id":"gen.poi.0_0.hamlet.128.128.gather_floss.1","Level":1,"Targets":[{"Type":"collect","Target":"thread_floss","Poi":null}]},{"Id":"gen.poi.0_0.hamlet.128.128.cull_beasts.2","Level":1,"Targets":[{"Type":"kill","Target":"hob","Poi":null}]},{"Id":"gen.poi.0_0.hamlet.128.128.scout_ruin.3","Level":1,"Targets":[{"Type":"discover","Target":null,"Poi":"poi.1_1.ruin.305.334"}]}]
+cinder_imp / poi.0_0.knot.200.60: 4 bodies at level 4 (explicit null) -> 4 bodies at level 3 (explicit 3)
+remnant_shade / poi.0_0.knot.200.60: 4 bodies at level 2 (explicit null) -> 4 bodies at level 3 (explicit 3)
+tangle / poi.0_0.knot.200.60: 1 bodies at level 6 (explicit null) -> 1 bodies at level 3 (explicit 3)
+1_0: sites unchanged=true; population counts unchanged=true
+Quest offers before: []
+Quest offers after: []
+0_-1: sites unchanged=true; population counts unchanged=true
+Quest offers before: []
+Quest offers after: []
+cinder_imp / poi.0_-1.knot.176.-74: 5 bodies at level 4 (explicit null) -> 5 bodies at level 7 (explicit 7)
+cinder_imp / poi.0_-1.knot.185.-214: 6 bodies at level 4 (explicit null) -> 6 bodies at level 7 (explicit 7)
+cinder_imp / poi.0_-1.knot.41.-37: 4 bodies at level 4 (explicit null) -> 4 bodies at level 7 (explicit 7)
+remnant_shade / poi.0_-1.knot.176.-74: 4 bodies at level 2 (explicit null) -> 4 bodies at level 7 (explicit 7)
+remnant_shade / poi.0_-1.knot.185.-214: 2 bodies at level 2 (explicit null) -> 2 bodies at level 7 (explicit 7)
+remnant_shade / poi.0_-1.knot.41.-37: 4 bodies at level 2 (explicit null) -> 4 bodies at level 7 (explicit 7)
+tangle / poi.0_-1.knot.176.-74: 1 bodies at level 6 (explicit null) -> 1 bodies at level 7 (explicit 7)
+tangle / poi.0_-1.knot.185.-214: 1 bodies at level 6 (explicit null) -> 1 bodies at level 7 (explicit 7)
+tangle / poi.0_-1.knot.41.-37: 1 bodies at level 6 (explicit null) -> 1 bodies at level 7 (explicit 7)
+3_2: sites unchanged=true; population counts unchanged=true
+Quest offers before: []
+Quest offers after: []
+cinder_imp / poi.3_2.knot.965.744: 5 bodies at level 4 (explicit null) -> 5 bodies at level 3 (explicit 3)
+remnant_shade / poi.3_2.knot.965.744: 3 bodies at level 2 (explicit null) -> 3 bodies at level 3 (explicit 3)
+tangle / poi.3_2.knot.965.744: 1 bodies at level 6 (explicit null) -> 1 bodies at level 3 (explicit 3)

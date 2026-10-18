@@ -1,0 +1,18 @@
+✔ Linux descendant check accepts absent or zombie processes and preserves other failures (3.5206ms)
+✔ both suites enforce background input and reject headed or unbounded runs (2.4908ms)
+✔ background browser isolates physical controllers without changing keyboard or pointer events (1.8888ms)
+✔ private config preserves gameplay settings and quotes Windows paths literally (0.6015ms)
+✔ simultaneous reservations use distinct ports (31.8613ms)
+✔ server readiness refuses an unrelated server on the selected port (468.5957ms)
+✔ a clean exit with no completed smoke summary cannot pass (1.0697ms)
+✔ process failures preserve output and return a failing status (130.7227ms)
+✔ timeout stops the owned process and its descendant without stopping a neighbour (1656.9933ms)
+✔ interruption stops an owned running process (623.4882ms)
+ℹ tests 10
+ℹ suites 0
+ℹ pass 10
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 3086.6442

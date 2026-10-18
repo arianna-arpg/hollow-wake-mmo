@@ -1,0 +1,23 @@
+
+> hollow-wake-web@0.1.0 build
+> tsc --noEmit && vite build
+
+vite v8.3.4 building client environment for production...
+transforming...
+✓ 243 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                             0.85 kB │ gzip:   0.44 kB
+dist/assets/index--A3t2PVZ.css              4.55 kB │ gzip:   1.64 kB
+dist/assets/app-Dcg-oVlt.css               38.36 kB │ gzip:   7.62 kB
+dist/assets/preload-helper-CbrIYQZu.js      8.03 kB │ gzip:   4.03 kB │ map:    23.11 kB
+dist/assets/index-DEWOlhcY.js              26.42 kB │ gzip:  10.84 kB │ map:    77.09 kB
+dist/assets/ability-icons-mVDshZSq.js     109.60 kB │ gzip:  15.03 kB │ map:     0.10 kB
+dist/assets/app-CRAaa38Z.js             1,812.59 kB │ gzip: 404.26 kB │ map: 4,236.47 kB
+
+✓ built in 1.25s
+[plugin builtin:vite-reporter]
+(!) Some chunks are larger than 1500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
