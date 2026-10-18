@@ -73,9 +73,7 @@ public class ConstructTests
         Assert.False(arena.Hit(arena.Owner, foe));
         Assert.True(arena.Sim.World.IsAlive(trap));
         arena.Move(foe, point + new Vector3(1, 0, 0));
-        // The snare's burst is a blast, begun like any weave: it lands once its cast time has passed, and the
-        // trap goes when that cast is over.
-        arena.Sim.RunSeconds(1.5);
+        arena.Sim.RunSeconds(0.5);
         Assert.True(arena.Hit(arena.Owner, foe), "the snare never sprang");
         Assert.Empty(arena.Minions("snares"));
         var hits = arena.Events.OfType<DamageDealt>().Count(d => d.Target == foe && d.Total > 0 && !d.Tags.Has("dot"));

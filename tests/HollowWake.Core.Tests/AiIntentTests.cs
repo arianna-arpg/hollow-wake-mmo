@@ -274,4 +274,33 @@ public class AiIntentTests
         sim.Tick();
         Assert.Equal(-MathF.PI / 2, t.Yaw, 3);
     }
+
+    [Fact]
+    public void TheSearchBudgetGoesByWhoMovesNotByWhatTheIntentSays()
+    {
+        var sim = ZoneBuilder.CreateArena(CoreContent.Registry, 1);
+        // A long wall between the walkers and their goal: the way round takes a search past the AI's budget.
+        for (var y = 10; y <= 70; y++)
+        {
+            var (chunk, i) = sim.Terrain.Locate(new CellCoord(17, y));
+            chunk.Flags[i] |= CellFlags.Blocked;
+        }
+        var goal = new Vector3(22.5f, 40.5f, 0);
+        var pathfinder = sim.Service<Pathfinder>();
+        var aiBudget = (long)sim.Content.Rules.Number("move.ai_path_max_nodes", 500);
+        var characters = sim.Service<CharacterFactory>();
+        var sheet = characters.Create(sim, "c-budget", "a-budget", "Budget", "holdfast", sim.Service<ItemGenerator>());
+        sheet.Position = new Vector3(12.5f, 40.5f, 0);
+        var player = sim.World.Get<Player>(characters.Materialize(sim, sheet))!;
+        // A player's walk searches on the pathfinder's own budget, even sent as the AI sends its walks.
+        var before = pathfinder.Expanded;
+        player.Intents.Enqueue(new MoveToIntent(goal) { KeepPlan = true });
+        sim.Tick();
+        Assert.True(pathfinder.Expanded - before > aiBudget, $"the player's search stopped at {pathfinder.Expanded - before} cells");
+        // A wolf's walk searches on the AI's, however it is sent.
+        var wolf = sim.Service<PatternFactory>().Spawn(sim, "wolf", new Vector3(12.5f, 44.5f, 0), new SpawnOptions { Faction = "red" });
+        before = pathfinder.Expanded;
+        Assert.True(AiIntents.Send(ContextFor(sim, wolf), new MoveToIntent(goal)).Accepted);
+        Assert.InRange(pathfinder.Expanded - before, 1, aiBudget);
+    }
 }
