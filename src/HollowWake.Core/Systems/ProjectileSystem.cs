@@ -50,9 +50,11 @@ public sealed class ProjectileSystem : SimSystem
             MinSpeed = (float)rules.Number("delivery.min_speed", 0.5);
             ReturnArrive = (float)rules.Number("delivery.return_arrive", 0.6);
             ReturnMaxSeconds = rules.Number("delivery.return_max_seconds", 6);
+            GroundFloor = (float)rules.Number("delivery.projectile_ground_floor", 0);
             Restitution = (float)rules.Number("delivery.bounce_restitution", 0.6);
         }
 
+        public readonly float GroundFloor;
         public readonly float Gravity;
         public readonly float ChainRange;
         public readonly int ForkChildren;
@@ -85,6 +87,21 @@ public sealed class ProjectileSystem : SimSystem
         }
     }
 
+    /// <summary>
+    /// Velocity of the next locally constrained step, for observation. The integrator's pitch remains
+    /// intact so a floor-following flight can descend again. Unknown terrain holds the observed pose
+    /// until an authoritative update; this query never loads terrain or changes flight state.
+    /// </summary>
+    public static Vector3 ObservedVelocity(Simulation sim, Projectile p, Vector3 at)
+    {
+        var velocity = p.Velocity;
+        if (p.GroundFloor is not { } floor || p.Spec.Gravity || p.Returning) return velocity;
+        var dt = (float)sim.Clock.Dt;
+        var next = at + velocity * dt;
+        if (!sim.Terrain.TryHeightAt(next.X, next.Y, out var ground)) return Vector3.Zero;
+        velocity.Z = (MathF.Max(next.Z, ground + floor) - at.Z) / dt;
+        return velocity;
+    }
     /// <summary>Puts a flight into the world at a point: the entity, its body, its index entry and its spawn event.</summary>
     public static Entity Spawn(Simulation sim, Projectile p, Vector3 at, Entity origin, string? look)
     {
@@ -187,6 +204,13 @@ public sealed class ProjectileSystem : SimSystem
             var offset = MathF.Sin(2 * MathF.PI * p.Wave * (float)(now - p.BornAt)) * p.Amplitude;
             at = new Vector3(next.X - MathF.Sin(p.Heading) * offset, next.Y + MathF.Cos(p.Heading) * offset, next.Z);
         }
+        // Free ground aim descends toward the cursor, then follows the content-owned floor.
+        // Clamp before sweeping bodies, so damage follows the same path the client draws.
+        if (p.GroundFloor is { } floor && !spec.Gravity && !p.Returning)
+        {
+            at.Z = MathF.Max(at.Z, sim.Terrain.HeightAt(at.X, at.Y) + floor);
+            p.Carrier.Z = at.Z;
+        }
         p.SpinAngle += p.Spin * dt;
 
         // A wall stops the flight before it can reach anything behind it: it ends against the wall, where it
@@ -205,6 +229,7 @@ public sealed class ProjectileSystem : SimSystem
             sim.Events.Publish(new ProjectileBounced(e, p.Context.Origin, at) { Tick = sim.Clock.Tick });
         }
 
+        var chainsBeforeContact = p.Chains;
         var contactTime = Strikes(sim, e, p, t.Position, at, now, in r);
         if (p.Ended)
         {
@@ -212,11 +237,11 @@ public sealed class ProjectileSystem : SimSystem
         }
         if (contactTime < 1)
         {
-            // A chain or return starts at contact; the unused part of this tick's old path is discarded.
+            // A changed trajectory starts at contact; discard the unused part of the old path.
             at = Vector3.Lerp(t.Position, at, contactTime);
             p.Carrier = at;
             p.Odometer -= flat * (1 - contactTime);
-            if (p.Returning) p.Traveled -= flat * (1 - contactTime);
+            if (p.Chains == chainsBeforeContact) p.Traveled -= flat * (1 - contactTime);
         }
 
         var ground = sim.Terrain.HeightAt(at.X, at.Y);
@@ -556,8 +581,10 @@ public sealed class ProjectileSystem : SimSystem
             var contact = Vector3.Lerp(from, at, _near[i].Time);
             var chains = p.Chains;
             var returning = p.Returning;
+            var verticalSpeed = p.Velocity.Z;
+            var groundFloor = p.GroundFloor;
             Strike(sim, e, p, other, contact, now, in r);
-            if (!p.Ended && (p.Chains != chains || p.Returning != returning))
+            if (!p.Ended && (p.Chains != chains || p.Returning != returning || p.Velocity.Z != verticalSpeed || p.GroundFloor != groundFloor))
             {
                 var time = _near[i].Time;
                 _near.Clear();
@@ -589,6 +616,12 @@ public sealed class ProjectileSystem : SimSystem
         p.HitsTaken++;
         if (p.HitsTaken <= p.Pierce)
         {
+            if (Returns(p))
+            {
+                // Survive the rest of the outward leg after piercing a low body.
+                p.Velocity.Z = MathF.Max(0, p.Velocity.Z);
+                p.GroundFloor = r.GroundFloor;
+            }
             return;
         }
         if (p.Forks > 0)
@@ -661,6 +694,7 @@ public sealed class ProjectileSystem : SimSystem
         {
             return false;
         }
+        p.GroundFloor = null;
         p.Chains--;
         p.HitsTaken = 0;
         p.Traveled = 0;
@@ -677,6 +711,7 @@ public sealed class ProjectileSystem : SimSystem
     /// <summary>Starts the way back: the ledger clears so bodies struck going out can be struck again.</summary>
     private static void Turn(Simulation sim, Entity e, Projectile p, Vector3 at, double now)
     {
+        p.GroundFloor = null;
         p.Returning = true;
         p.TurnedAt = now;
         p.Hits.Clear();

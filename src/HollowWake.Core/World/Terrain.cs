@@ -159,6 +159,36 @@ public sealed class Terrain
         return a + (b - a) * ty;
     }
 
+    /// <summary>Bilinear height from loaded chunks only; observation never loads or generates terrain.</summary>
+    public bool TryHeightAt(double x, double y, out float height)
+    {
+        var fx = x - 0.5;
+        var fy = y - 0.5;
+        var x0 = (int)Math.Floor(fx);
+        var y0 = (int)Math.Floor(fy);
+        height = 0;
+        if (!TryGroundHeight(x0, y0, out var h00) || !TryGroundHeight(x0 + 1, y0, out var h10) ||
+            !TryGroundHeight(x0, y0 + 1, out var h01) || !TryGroundHeight(x0 + 1, y0 + 1, out var h11))
+            return false;
+        var tx = (float)(fx - x0);
+        var ty = (float)(fy - y0);
+        var a = h00 + (h10 - h00) * tx;
+        var b = h01 + (h11 - h01) * tx;
+        height = a + (b - a) * ty;
+        return true;
+    }
+
+    private bool TryGroundHeight(int x, int y, out float height)
+    {
+        var cell = new CellCoord(x, y);
+        if (TryGetLoaded(Layout.ChunkOf(cell), out var chunk))
+        {
+            height = chunk.Height[Layout.LocalIndex(cell)];
+            return true;
+        }
+        height = 0;
+        return false;
+    }
     public bool IsWalkable(CellCoord cell)
     {
         var chunk = ChunkAt(cell.X, cell.Y, out int i);
