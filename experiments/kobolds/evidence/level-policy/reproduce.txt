@@ -1,0 +1,1 @@
+Reproducible world-audit project matches all recorded fields in all 16 cases. JSON line-ending differences are immaterial.

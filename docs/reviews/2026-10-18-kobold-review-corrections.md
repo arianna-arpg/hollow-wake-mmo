@@ -108,3 +108,7 @@ Authored-profile deliveries measure 1.7543845 ms/tick and 37.5926 KB/tick, inclu
 Requested code corrections and local evidence are published. Claude rereview and shared dependency/#20 release-policy approval remain open; #20's separate performance failures are not cleared by these measurements. Keep #38 unmerged until those gates close. The older snapshot over-budget result, failed card screenshot and baseline projectile misses remain historical evidence.
 
 Acknowledged by: pending Claude rereview.
+
+## Subsequent explicit level-policy correction
+
+The current follow-up is docs/reviews/2026-10-18-kobold-level-policy-followup.md. It restores original pattern-level defaults and bounds quest population searches. Earlier unconditional site-level birth/respawn claims, world goldens and performance values in this record describe their named historical heads; they are superseded for the current branch. The original logs are retained.

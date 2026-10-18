@@ -1,0 +1,2953 @@
+{
+  "beforeHead": "b793846222faa918c9c9ae4e36d4ef5a64d1899c",
+  "minimalSourceCommits": [
+    "b1dd4d9",
+    "097c526",
+    "192e073"
+  ],
+  "seed": "aureth",
+  "audit": [
+    {
+      "zone": "0_0",
+      "overlay": false,
+      "geometryUnchanged": true,
+      "populationAndPositionsUnchanged": true,
+      "sitesUnchanged": true,
+      "nearbyUnchanged": true,
+      "levelChanges": [
+        {
+          "patternAndSite": "quartermaster|poi.0_0.hamlet.128.128",
+          "before": [
+            {
+              "Pattern": "quartermaster",
+              "site": "poi.0_0.hamlet.128.128",
+              "explicitLevel": 1,
+              "effectiveLevel": 1,
+              "points": 1,
+              "bodies": 1
+            },
+            {
+              "Pattern": "quartermaster",
+              "site": "poi.0_0.hamlet.128.128",
+              "explicitLevel": null,
+              "effectiveLevel": 5,
+              "points": 1,
+              "bodies": 1
+            }
+          ],
+          "after": [
+            {
+              "Pattern": "quartermaster",
+              "site": "poi.0_0.hamlet.128.128",
+              "explicitLevel": null,
+              "effectiveLevel": 5,
+              "points": 2,
+              "bodies": 2
+            }
+          ]
+        },
+        {
+          "patternAndSite": "spindlewatch_guard|poi.0_0.hamlet.128.128",
+          "before": [
+            {
+              "Pattern": "spindlewatch_guard",
+              "site": "poi.0_0.hamlet.128.128",
+              "explicitLevel": 1,
+              "effectiveLevel": 1,
+              "points": 2,
+              "bodies": 2
+            },
+            {
+              "Pattern": "spindlewatch_guard",
+              "site": "poi.0_0.hamlet.128.128",
+              "explicitLevel": null,
+              "effectiveLevel": 5,
+              "points": 2,
+              "bodies": 2
+            }
+          ],
+          "after": [
+            {
+              "Pattern": "spindlewatch_guard",
+              "site": "poi.0_0.hamlet.128.128",
+              "explicitLevel": null,
+              "effectiveLevel": 5,
+              "points": 4,
+              "bodies": 4
+            }
+          ]
+        },
+        {
+          "patternAndSite": "villager|poi.0_0.hamlet.128.128",
+          "before": [
+            {
+              "Pattern": "villager",
+              "site": "poi.0_0.hamlet.128.128",
+              "explicitLevel": 1,
+              "effectiveLevel": 1,
+              "points": 3,
+              "bodies": 3
+            }
+          ],
+          "after": [
+            {
+              "Pattern": "villager",
+              "site": "poi.0_0.hamlet.128.128",
+              "explicitLevel": null,
+              "effectiveLevel": 1,
+              "points": 3,
+              "bodies": 3
+            }
+          ]
+        },
+        {
+          "patternAndSite": "cinder_imp|poi.0_0.knot.200.60",
+          "before": [
+            {
+              "Pattern": "cinder_imp",
+              "site": "poi.0_0.knot.200.60",
+              "explicitLevel": 3,
+              "effectiveLevel": 3,
+              "points": 2,
+              "bodies": 4
+            }
+          ],
+          "after": [
+            {
+              "Pattern": "cinder_imp",
+              "site": "poi.0_0.knot.200.60",
+              "explicitLevel": null,
+              "effectiveLevel": 4,
+              "points": 2,
+              "bodies": 4
+            }
+          ]
+        },
+        {
+          "patternAndSite": "remnant_shade|poi.0_0.knot.200.60",
+          "before": [
+            {
+              "Pattern": "remnant_shade",
+              "site": "poi.0_0.knot.200.60",
+              "explicitLevel": 3,
+              "effectiveLevel": 3,
+              "points": 1,
+              "bodies": 4
+            }
+          ],
+          "after": [
+            {
+              "Pattern": "remnant_shade",
+              "site": "poi.0_0.knot.200.60",
+              "explicitLevel": null,
+              "effectiveLevel": 2,
+              "points": 1,
+              "bodies": 4
+            }
+          ]
+        },
+        {
+          "patternAndSite": "tangle|poi.0_0.knot.200.60",
+          "before": [
+            {
+              "Pattern": "tangle",
+              "site": "poi.0_0.knot.200.60",
+              "explicitLevel": 3,
+              "effectiveLevel": 3,
+              "points": 1,
+              "bodies": 1
+            }
+          ],
+          "after": [
+            {
+              "Pattern": "tangle",
+              "site": "poi.0_0.knot.200.60",
+              "explicitLevel": null,
+              "effectiveLevel": 6,
+              "points": 1,
+              "bodies": 1
+            }
+          ]
+        }
+      ],
+      "quests": {
+        "before": [
+          {
+            "Id": "gen.poi.0_0.hamlet.128.128.clear_knot.0",
+            "Name": "The Hob's Hollow",
+            "Level": 1,
+            "objectives": [
+              {
+                "Type": "reach",
+                "Target": null,
+                "Poi": "poi.0_0.knot.200.60",
+                "Text": "Find Hob's Hollow"
+              },
+              {
+                "Type": "kill",
+                "Target": "cinder_imp",
+                "Poi": null,
+                "Text": "Unmake six Cinder Imp"
+              }
+            ]
+          },
+          {
+            "Id": "gen.poi.0_0.hamlet.128.128.gather_floss.1",
+            "Name": "Loose Threads",
+            "Level": 1,
+            "objectives": [
+              {
+                "Type": "collect",
+                "Target": "thread_floss",
+                "Poi": null,
+                "Text": "Gather five Thread Floss"
+              }
+            ]
+          },
+          {
+            "Id": "gen.poi.0_0.hamlet.128.128.cull_beasts.2",
+            "Name": "Teeth in the Hedge",
+            "Level": 1,
+            "objectives": [
+              {
+                "Type": "kill",
+                "Target": "hob",
+                "Poi": null,
+                "Text": "Cull eight Hob"
+              }
+            ]
+          },
+          {
+            "Id": "gen.poi.0_0.hamlet.128.128.scout_ruin.3",
+            "Name": "What Stands at the Fallen Hall",
+            "Level": 1,
+            "objectives": [
+              {
+                "Type": "discover",
+                "Target": null,
+                "Poi": "poi.1_1.ruin.305.334",
+                "Text": "Find the Fallen Hall"
+              }
+            ]
+          }
+        ],
+        "after": [
+          {
+            "Id": "gen.poi.0_0.hamlet.128.128.gather_floss.1",
+            "Name": "Loose Threads",
+            "Level": 1,
+            "objectives": [
+              {
+                "Type": "collect",
+                "Target": "thread_floss",
+                "Poi": null,
+                "Text": "Gather five Thread Floss"
+              }
+            ]
+          },
+          {
+            "Id": "gen.poi.0_0.hamlet.128.128.cull_beasts.2",
+            "Name": "Teeth in the Hedge",
+            "Level": 1,
+            "objectives": [
+              {
+                "Type": "kill",
+                "Target": "hob",
+                "Poi": null,
+                "Text": "Cull eight Hob"
+              }
+            ]
+          },
+          {
+            "Id": "gen.poi.0_0.hamlet.128.128.scout_ruin.3",
+            "Name": "What Stands at the Sunken Lantern",
+            "Level": 1,
+            "objectives": [
+              {
+                "Type": "discover",
+                "Target": null,
+                "Poi": "poi.0_1.ruin.213.450",
+                "Text": "Find the Sunken Lantern"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "zone": "1_0",
+      "overlay": false,
+      "geometryUnchanged": true,
+      "populationAndPositionsUnchanged": true,
+      "sitesUnchanged": true,
+      "nearbyUnchanged": true,
+      "levelChanges": [
+        {
+          "patternAndSite": "goblin_scavenger|poi.1_0.orc_chaincamp.431.198",
+          "before": [
+            {
+              "Pattern": "goblin_scavenger",
+              "site": "poi.1_0.orc_chaincamp.431.198",
+              "explicitLevel": 8,
+              "effectiveLevel": 8,
+              "points": 1,
+              "bodies": 1
+            }
+          ],
+          "after": [
+            {
+              "Pattern": "goblin_scavenger",
+              "site": "poi.1_0.orc_chaincamp.431.198",
+              "explicitLevel": null,
+              "effectiveLevel": 1,
+              "points": 1,
+              "bodies": 1
+            }
+          ]
+        },
+        {
+          "patternAndSite": "orc_ashcaller|poi.1_0.orc_chaincamp.431.198",
+          "before": [
+            {
+              "Pattern": "orc_ashcaller",
+              "site": "poi.1_0.orc_chaincamp.431.198",
+              "explicitLevel": 8,
+              "effectiveLevel": 8,
+              "points": 1,
+              "bodies": 1
+            }
+          ],
+          "after": [
+            {
+              "Pattern": "orc_ashcaller",
+              "site": "poi.1_0.orc_chaincamp.431.198",
+              "explicitLevel": null,
+              "effectiveLevel": 8,
+              "points": 1,
+              "bodies": 1
+            }
+          ]
+        },
+        {
+          "patternAndSite": "goblin_skirmisher|poi.1_0.orc_muster.291.217",
+          "before": [
+            {
+              "Pattern": "goblin_skirmisher",
+              "site": "poi.1_0.orc_muster.291.217",
+              "explicitLevel": 5,
+              "effectiveLevel": 5,
+              "points": 1,
+              "bodies": 1
+            }
+          ],
+          "after": [
+            {
+              "Pattern": "goblin_skirmisher",
+              "site": "poi.1_0.orc_muster.291.217",
+              "explicitLevel": null,
+              "effectiveLevel": 2,
+              "points": 1,
+              "bodies": 1
+            }
+          ]
+        },
+        {
+          "patternAndSite": "orc_grunt|poi.1_0.orc_muster.291.217",
+          "before": [
+            {
+              "Pattern": "orc_grunt",
+              "site": "poi.1_0.orc_muster.291.217",
+              "explicitLevel": 5,
+              "effectiveLevel": 5,
+              "points": 1,
+              "bodies": 1
+            }
+          ],
+          "after": [
+            {
+              "Pattern": "orc_grunt",
+              "site": "poi.1_0.orc_muster.291.217",
+              "explicitLevel": null,
+              "effectiveLevel": 4,
+              "points": 1,
+              "bodies": 1
+            }
+          ]
+        },
+        {
+          "patternAndSite": "skeleton_archer|poi.1_0.ossuary.421.38",
+          "before": [
+            {
+              "Pattern": "skeleton_archer",
+              "site": "poi.1_0.ossuary.421.38",
+              "explicitLevel": 3,
+              "effectiveLevel": 3,
+              "points": 1,
+              "bodies": 1
+            }
+          ],
+          "after": [
+            {
+              "Pattern": "skeleton_archer",
+              "site": "poi.1_0.ossuary.421.38",
+              "explicitLevel": null,
+              "effectiveLevel": 3,
+              "points": 1,
+              "bodies": 1
+            }
+          ]
+        },
+        {
+          "patternAndSite": "skeleton_warrior|poi.1_0.ossuary.421.38",
+          "before": [
+            {
+              "Pattern": "skeleton_warrior",
+              "site": "poi.1_0.ossuary.421.38",
+              "explicitLevel": 3,
+              "effectiveLevel": 3,
+              "points": 2,
+              "bodies": 5
+            }
+          ],
+          "after": [
+            {
+              "Pattern": "skeleton_warrior",
+              "site": "poi.1_0.ossuary.421.38",
+              "explicitLevel": null,
+              "effectiveLevel": 3,
+              "points": 2,
+              "bodies": 5
+            }
+          ]
+        }
+      ],
+      "quests": null
+    },
+    {
+      "zone": "0_-1",
+      "overlay": false,
+      "geometryUnchanged": true,
+      "populationAndPositionsUnchanged": true,
+      "sitesUnchanged": true,
+      "nearbyUnchanged": true,
+      "levelChanges": [
+        {
+          "patternAndSite": "cinder_imp|poi.0_-1.knot.176.-74",
+          "before": [
+            {
+              "Pattern": "cinder_imp",
+              "site": "poi.0_-1.knot.176.-74",
+              "explicitLevel": 7,
+              "effectiveLevel": 7,
+              "points": 2,
+              "bodies": 5
+            }
+          ],
+          "after": [
+            {
+              "Pattern": "cinder_imp",
+              "site": "poi.0_-1.knot.176.-74",
+              "explicitLevel": null,
+              "effectiveLevel": 4,
+              "points": 2,
+              "bodies": 5
+            }
+          ]
+        },
+        {
+          "patternAndSite": "remnant_shade|poi.0_-1.knot.176.-74",
+          "before": [
+            {
+              "Pattern": "remnant_shade",
+              "site": "poi.0_-1.knot.176.-74",
+              "explicitLevel": 7,
+              "effectiveLevel": 7,
+              "points": 1,
+              "bodies": 4
+            }
+          ],
+          "after": [
+            {
+              "Pattern": "remnant_shade",
+              "site": "poi.0_-1.knot.176.-74",
+              "explicitLevel": null,
+              "effectiveLevel": 2,
+              "points": 1,
+              "bodies": 4
+            }
+          ]
+        },
+        {
+          "patternAndSite": "tangle|poi.0_-1.knot.176.-74",
+          "before": [
+            {
+              "Pattern": "tangle",
+              "site": "poi.0_-1.knot.176.-74",
+              "explicitLevel": 7,
+              "effectiveLevel": 7,
+              "points": 1,
+              "bodies": 1
+            }
+          ],
+          "after": [
+            {
+              "Pattern": "tangle",
+              "site": "poi.0_-1.knot.176.-74",
+              "explicitLevel": null,
+              "effectiveLevel": 6,
+              "points": 1,
+              "bodies": 1
+            }
+          ]
+        },
+        {
+          "patternAndSite": "cinder_imp|poi.0_-1.knot.185.-214",
+          "before": [
+            {
+              "Pattern": "cinder_imp",
+              "site": "poi.0_-1.knot.185.-214",
+              "explicitLevel": 7,
+              "effectiveLevel": 7,
+              "points": 2,
+              "bodies": 6
+            }
+          ],
+          "after": [
+            {
+              "Pattern": "cinder_imp",
+              "site": "poi.0_-1.knot.185.-214",
+              "explicitLevel": null,
+              "effectiveLevel": 4,
+              "points": 2,
+              "bodies": 6
+            }
+          ]
+        },
+        {
+          "patternAndSite": "remnant_shade|poi.0_-1.knot.185.-214",
+          "before": [
+            {
+              "Pattern": "remnant_shade",
+              "site": "poi.0_-1.knot.185.-214",
+              "explicitLevel": 7,
+              "effectiveLevel": 7,
+              "points": 1,
+              "bodies": 2
+            }
+          ],
+          "after": [
+            {
+              "Pattern": "remnant_shade",
+              "site": "poi.0_-1.knot.185.-214",
+              "explicitLevel": null,
+              "effectiveLevel": 2,
+              "points": 1,
+              "bodies": 2
+            }
+          ]
+        },
+        {
+          "patternAndSite": "tangle|poi.0_-1.knot.185.-214",
+          "before": [
+            {
+              "Pattern": "tangle",
+              "site": "poi.0_-1.knot.185.-214",
+              "explicitLevel": 7,
+              "effectiveLevel": 7,
+              "points": 1,
+              "bodies": 1
+            }
+          ],
+          "after": [
+            {
+              "Pattern": "tangle",
+              "site": "poi.0_-1.knot.185.-214",
+              "explicitLevel": null,
+              "effectiveLevel": 6,
+              "points": 1,
+              "bodies": 1
+            }
+          ]
+        },
+        {
+          "patternAndSite": "cinder_imp|poi.0_-1.knot.41.-37",
+          "before": [
+            {
+              "Pattern": "cinder_imp",
+              "site": "poi.0_-1.knot.41.-37",
+              "explicitLevel": 7,
+              "effectiveLevel": 7,
+              "points": 2,
+              "bodies": 4
+            }
+          ],
+          "after": [
+            {
+              "Pattern": "cinder_imp",
+              "site": "poi.0_-1.knot.41.-37",
+              "explicitLevel": null,
+              "effectiveLevel": 4,
+              "points": 2,
+              "bodies": 4
+            }
+          ]
+        },
+        {
+          "patternAndSite": "remnant_shade|poi.0_-1.knot.41.-37",
+          "before": [
+            {
+              "Pattern": "remnant_shade",
+              "site": "poi.0_-1.knot.41.-37",
+              "explicitLevel": 7,
+              "effectiveLevel": 7,
+              "points": 1,
+              "bodies": 4
+            }
+          ],
+          "after": [
+            {
+              "Pattern": "remnant_shade",
+              "site": "poi.0_-1.knot.41.-37",
+              "explicitLevel": null,
+              "effectiveLevel": 2,
+              "points": 1,
+              "bodies": 4
+            }
+          ]
+        },
+        {
+          "patternAndSite": "tangle|poi.0_-1.knot.41.-37",
+          "before": [
+            {
+              "Pattern": "tangle",
+              "site": "poi.0_-1.knot.41.-37",
+              "explicitLevel": 7,
+              "effectiveLevel": 7,
+              "points": 1,
+              "bodies": 1
+            }
+          ],
+          "after": [
+            {
+              "Pattern": "tangle",
+              "site": "poi.0_-1.knot.41.-37",
+              "explicitLevel": null,
+              "effectiveLevel": 6,
+              "points": 1,
+              "bodies": 1
+            }
+          ]
+        }
+      ],
+      "quests": null
+    },
+    {
+      "zone": "3_2",
+      "overlay": false,
+      "geometryUnchanged": true,
+      "populationAndPositionsUnchanged": true,
+      "sitesUnchanged": true,
+      "nearbyUnchanged": true,
+      "levelChanges": [
+        {
+          "patternAndSite": "cinder_imp|poi.3_2.knot.965.744",
+          "before": [
+            {
+              "Pattern": "cinder_imp",
+              "site": "poi.3_2.knot.965.744",
+              "explicitLevel": 3,
+              "effectiveLevel": 3,
+              "points": 2,
+              "bodies": 5
+            }
+          ],
+          "after": [
+            {
+              "Pattern": "cinder_imp",
+              "site": "poi.3_2.knot.965.744",
+              "explicitLevel": null,
+              "effectiveLevel": 4,
+              "points": 2,
+              "bodies": 5
+            }
+          ]
+        },
+        {
+          "patternAndSite": "remnant_shade|poi.3_2.knot.965.744",
+          "before": [
+            {
+              "Pattern": "remnant_shade",
+              "site": "poi.3_2.knot.965.744",
+              "explicitLevel": 3,
+              "effectiveLevel": 3,
+              "points": 1,
+              "bodies": 3
+            }
+          ],
+          "after": [
+            {
+              "Pattern": "remnant_shade",
+              "site": "poi.3_2.knot.965.744",
+              "explicitLevel": null,
+              "effectiveLevel": 2,
+              "points": 1,
+              "bodies": 3
+            }
+          ]
+        },
+        {
+          "patternAndSite": "tangle|poi.3_2.knot.965.744",
+          "before": [
+            {
+              "Pattern": "tangle",
+              "site": "poi.3_2.knot.965.744",
+              "explicitLevel": 3,
+              "effectiveLevel": 3,
+              "points": 1,
+              "bodies": 1
+            }
+          ],
+          "after": [
+            {
+              "Pattern": "tangle",
+              "site": "poi.3_2.knot.965.744",
+              "explicitLevel": null,
+              "effectiveLevel": 6,
+              "points": 1,
+              "bodies": 1
+            }
+          ]
+        },
+        {
+          "patternAndSite": "barrow_wight|poi.3_2.ruin.890.658",
+          "before": [
+            {
+              "Pattern": "barrow_wight",
+              "site": "poi.3_2.ruin.890.658",
+              "explicitLevel": 2,
+              "effectiveLevel": 2,
+              "points": 2,
+              "bodies": 3
+            }
+          ],
+          "after": [
+            {
+              "Pattern": "barrow_wight",
+              "site": "poi.3_2.ruin.890.658",
+              "explicitLevel": null,
+              "effectiveLevel": 3,
+              "points": 2,
+              "bodies": 3
+            }
+          ]
+        },
+        {
+          "patternAndSite": "remnant_shade|poi.3_2.ruin.890.658",
+          "before": [
+            {
+              "Pattern": "remnant_shade",
+              "site": "poi.3_2.ruin.890.658",
+              "explicitLevel": 2,
+              "effectiveLevel": 2,
+              "points": 1,
+              "bodies": 2
+            }
+          ],
+          "after": [
+            {
+              "Pattern": "remnant_shade",
+              "site": "poi.3_2.ruin.890.658",
+              "explicitLevel": null,
+              "effectiveLevel": 2,
+              "points": 1,
+              "bodies": 2
+            }
+          ]
+        }
+      ],
+      "quests": null
+    },
+    {
+      "zone": "-15_-40",
+      "overlay": false,
+      "geometryUnchanged": true,
+      "populationAndPositionsUnchanged": true,
+      "sitesUnchanged": true,
+      "nearbyUnchanged": true,
+      "levelChanges": [
+        {
+          "patternAndSite": "kobold_cragbreaker|poi.-15_-40.kobold_scale_hold.-3654.-10123",
+          "before": [
+            {
+              "Pattern": "kobold_cragbreaker",
+              "site": "poi.-15_-40.kobold_scale_hold.-3654.-10123",
+              "explicitLevel": 35,
+              "effectiveLevel": 35,
+              "points": 1,
+              "bodies": 1
+            }
+          ],
+          "after": [
+            {
+              "Pattern": "kobold_cragbreaker",
+              "site": "poi.-15_-40.kobold_scale_hold.-3654.-10123",
+              "explicitLevel": null,
+              "effectiveLevel": 10,
+              "points": 1,
+              "bodies": 1
+            }
+          ]
+        },
+        {
+          "patternAndSite": "kobold_crestcaller|poi.-15_-40.kobold_scale_hold.-3654.-10123",
+          "before": [
+            {
+              "Pattern": "kobold_crestcaller",
+              "site": "poi.-15_-40.kobold_scale_hold.-3654.-10123",
+              "explicitLevel": 35,
+              "effectiveLevel": 35,
+              "points": 1,
+              "bodies": 1
+            }
+          ],
+          "after": [
+            {
+              "Pattern": "kobold_crestcaller",
+              "site": "poi.-15_-40.kobold_scale_hold.-3654.-10123",
+              "explicitLevel": null,
+              "effectiveLevel": 10,
+              "points": 1,
+              "bodies": 1
+            }
+          ]
+        },
+        {
+          "patternAndSite": "kobold_ironback|poi.-15_-40.kobold_scale_hold.-3654.-10123",
+          "before": [
+            {
+              "Pattern": "kobold_ironback",
+              "site": "poi.-15_-40.kobold_scale_hold.-3654.-10123",
+              "explicitLevel": 35,
+              "effectiveLevel": 35,
+              "points": 1,
+              "bodies": 1
+            }
+          ],
+          "after": [
+            {
+              "Pattern": "kobold_ironback",
+              "site": "poi.-15_-40.kobold_scale_hold.-3654.-10123",
+              "explicitLevel": null,
+              "effectiveLevel": 11,
+              "points": 1,
+              "bodies": 1
+            }
+          ]
+        },
+        {
+          "patternAndSite": "kobold_scalechief|poi.-15_-40.kobold_scale_hold.-3654.-10123",
+          "before": [
+            {
+              "Pattern": "kobold_scalechief",
+              "site": "poi.-15_-40.kobold_scale_hold.-3654.-10123",
+              "explicitLevel": 35,
+              "effectiveLevel": 35,
+              "points": 1,
+              "bodies": 1
+            }
+          ],
+          "after": [
+            {
+              "Pattern": "kobold_scalechief",
+              "site": "poi.-15_-40.kobold_scale_hold.-3654.-10123",
+              "explicitLevel": null,
+              "effectiveLevel": 15,
+              "points": 1,
+              "bodies": 1
+            }
+          ]
+        },
+        {
+          "patternAndSite": "barrow_wight|poi.-15_-40.ruin.-3788.-10093",
+          "before": [
+            {
+              "Pattern": "barrow_wight",
+              "site": "poi.-15_-40.ruin.-3788.-10093",
+              "explicitLevel": 30,
+              "effectiveLevel": 30,
+              "points": 2,
+              "bodies": 3
+            }
+          ],
+          "after": [
+            {
+              "Pattern": "barrow_wight",
+              "site": "poi.-15_-40.ruin.-3788.-10093",
+              "explicitLevel": null,
+              "effectiveLevel": 3,
+              "points": 2,
+              "bodies": 3
+            }
+          ]
+        },
+        {
+          "patternAndSite": "remnant_shade|poi.-15_-40.ruin.-3788.-10093",
+          "before": [
+            {
+              "Pattern": "remnant_shade",
+              "site": "poi.-15_-40.ruin.-3788.-10093",
+              "explicitLevel": 30,
+              "effectiveLevel": 30,
+              "points": 1,
+              "bodies": 3
+            }
+          ],
+          "after": [
+            {
+              "Pattern": "remnant_shade",
+              "site": "poi.-15_-40.ruin.-3788.-10093",
+              "explicitLevel": null,
+              "effectiveLevel": 2,
+              "points": 1,
+              "bodies": 3
+            }
+          ]
+        }
+      ],
+      "quests": null
+    },
+    {
+      "zone": "-8_-40",
+      "overlay": false,
+      "geometryUnchanged": true,
+      "populationAndPositionsUnchanged": true,
+      "sitesUnchanged": true,
+      "nearbyUnchanged": true,
+      "levelChanges": [
+        {
+          "patternAndSite": "cinder_imp|poi.-8_-40.knot.-1833.-10142",
+          "before": [
+            {
+              "Pattern": "cinder_imp",
+              "site": "poi.-8_-40.knot.-1833.-10142",
+              "explicitLevel": 27,
+              "effectiveLevel": 27,
+              "points": 2,
+              "bodies": 5
+            }
+          ],
+          "after": [
+            {
+              "Pattern": "cinder_imp",
+              "site": "poi.-8_-40.knot.-1833.-10142",
+              "explicitLevel": null,
+              "effectiveLevel": 4,
+              "points": 2,
+              "bodies": 5
+            }
+          ]
+        },
+        {
+          "patternAndSite": "remnant_shade|poi.-8_-40.knot.-1833.-10142",
+          "before": [
+            {
+              "Pattern": "remnant_shade",
+              "site": "poi.-8_-40.knot.-1833.-10142",
+              "explicitLevel": 27,
+              "effectiveLevel": 27,
+              "points": 1,
+              "bodies": 2
+            }
+          ],
+          "after": [
+            {
+              "Pattern": "remnant_shade",
+              "site": "poi.-8_-40.knot.-1833.-10142",
+              "explicitLevel": null,
+              "effectiveLevel": 2,
+              "points": 1,
+              "bodies": 2
+            }
+          ]
+        },
+        {
+          "patternAndSite": "tangle|poi.-8_-40.knot.-1833.-10142",
+          "before": [
+            {
+              "Pattern": "tangle",
+              "site": "poi.-8_-40.knot.-1833.-10142",
+              "explicitLevel": 27,
+              "effectiveLevel": 27,
+              "points": 1,
+              "bodies": 1
+            }
+          ],
+          "after": [
+            {
+              "Pattern": "tangle",
+              "site": "poi.-8_-40.knot.-1833.-10142",
+              "explicitLevel": null,
+              "effectiveLevel": 6,
+              "points": 1,
+              "bodies": 1
+            }
+          ]
+        },
+        {
+          "patternAndSite": "kobold_cragbreaker|poi.-8_-40.kobold_scale_hold.-1954.-10022",
+          "before": [
+            {
+              "Pattern": "kobold_cragbreaker",
+              "site": "poi.-8_-40.kobold_scale_hold.-1954.-10022",
+              "explicitLevel": 31,
+              "effectiveLevel": 31,
+              "points": 1,
+              "bodies": 1
+            }
+          ],
+          "after": [
+            {
+              "Pattern": "kobold_cragbreaker",
+              "site": "poi.-8_-40.kobold_scale_hold.-1954.-10022",
+              "explicitLevel": null,
+              "effectiveLevel": 10,
+              "points": 1,
+              "bodies": 1
+            }
+          ]
+        },
+        {
+          "patternAndSite": "kobold_crestcaller|poi.-8_-40.kobold_scale_hold.-1954.-10022",
+          "before": [
+            {
+              "Pattern": "kobold_crestcaller",
+              "site": "poi.-8_-40.kobold_scale_hold.-1954.-10022",
+              "explicitLevel": 31,
+              "effectiveLevel": 31,
+              "points": 1,
+              "bodies": 1
+            }
+          ],
+          "after": [
+            {
+              "Pattern": "kobold_crestcaller",
+              "site": "poi.-8_-40.kobold_scale_hold.-1954.-10022",
+              "explicitLevel": null,
+              "effectiveLevel": 10,
+              "points": 1,
+              "bodies": 1
+            }
+          ]
+        },
+        {
+          "patternAndSite": "kobold_ironback|poi.-8_-40.kobold_scale_hold.-1954.-10022",
+          "before": [
+            {
+              "Pattern": "kobold_ironback",
+              "site": "poi.-8_-40.kobold_scale_hold.-1954.-10022",
+              "explicitLevel": 31,
+              "effectiveLevel": 31,
+              "points": 1,
+              "bodies": 1
+            }
+          ],
+          "after": [
+            {
+              "Pattern": "kobold_ironback",
+              "site": "poi.-8_-40.kobold_scale_hold.-1954.-10022",
+              "explicitLevel": null,
+              "effectiveLevel": 11,
+              "points": 1,
+              "bodies": 1
+            }
+          ]
+        },
+        {
+          "patternAndSite": "kobold_scalechief|poi.-8_-40.kobold_scale_hold.-1954.-10022",
+          "before": [
+            {
+              "Pattern": "kobold_scalechief",
+              "site": "poi.-8_-40.kobold_scale_hold.-1954.-10022",
+              "explicitLevel": 31,
+              "effectiveLevel": 31,
+              "points": 1,
+              "bodies": 1
+            }
+          ],
+          "after": [
+            {
+              "Pattern": "kobold_scalechief",
+              "site": "poi.-8_-40.kobold_scale_hold.-1954.-10022",
+              "explicitLevel": null,
+              "effectiveLevel": 15,
+              "points": 1,
+              "bodies": 1
+            }
+          ]
+        },
+        {
+          "patternAndSite": "kobold_dartbow|poi.-8_-40.kobold_scrap_camp.-2012.-10019",
+          "before": [
+            {
+              "Pattern": "kobold_dartbow",
+              "site": "poi.-8_-40.kobold_scrap_camp.-2012.-10019",
+              "explicitLevel": 27,
+              "effectiveLevel": 27,
+              "points": 1,
+              "bodies": 1
+            }
+          ],
+          "after": [
+            {
+              "Pattern": "kobold_dartbow",
+              "site": "poi.-8_-40.kobold_scrap_camp.-2012.-10019",
+              "explicitLevel": null,
+              "effectiveLevel": 4,
+              "points": 1,
+              "bodies": 1
+            }
+          ]
+        },
+        {
+          "patternAndSite": "kobold_knifehand|poi.-8_-40.kobold_scrap_camp.-2012.-10019",
+          "before": [
+            {
+              "Pattern": "kobold_knifehand",
+              "site": "poi.-8_-40.kobold_scrap_camp.-2012.-10019",
+              "explicitLevel": 27,
+              "effectiveLevel": 27,
+              "points": 1,
+              "bodies": 1
+            }
+          ],
+          "after": [
+            {
+              "Pattern": "kobold_knifehand",
+              "site": "poi.-8_-40.kobold_scrap_camp.-2012.-10019",
+              "explicitLevel": null,
+              "effectiveLevel": 3,
+              "points": 1,
+              "bodies": 1
+            }
+          ]
+        },
+        {
+          "patternAndSite": "kobold_scavenger|poi.-8_-40.kobold_scrap_camp.-2012.-10019",
+          "before": [
+            {
+              "Pattern": "kobold_scavenger",
+              "site": "poi.-8_-40.kobold_scrap_camp.-2012.-10019",
+              "explicitLevel": 27,
+              "effectiveLevel": 27,
+              "points": 1,
+              "bodies": 1
+            }
+          ],
+          "after": [
+            {
+              "Pattern": "kobold_scavenger",
+              "site": "poi.-8_-40.kobold_scrap_camp.-2012.-10019",
+              "explicitLevel": null,
+              "effectiveLevel": 2,
+              "points": 1,
+              "bodies": 1
+            }
+          ]
+        },
+        {
+          "patternAndSite": "kobold_stonecaster|poi.-8_-40.kobold_scrap_camp.-2012.-10019",
+          "before": [
+            {
+              "Pattern": "kobold_stonecaster",
+              "site": "poi.-8_-40.kobold_scrap_camp.-2012.-10019",
+              "explicitLevel": 27,
+              "effectiveLevel": 27,
+              "points": 1,
+              "bodies": 1
+            }
+          ],
+          "after": [
+            {
+              "Pattern": "kobold_stonecaster",
+              "site": "poi.-8_-40.kobold_scrap_camp.-2012.-10019",
+              "explicitLevel": null,
+              "effectiveLevel": 5,
+              "points": 1,
+              "bodies": 1
+            }
+          ]
+        }
+      ],
+      "quests": null
+    },
+    {
+      "zone": "-25_-31",
+      "overlay": false,
+      "geometryUnchanged": true,
+      "populationAndPositionsUnchanged": true,
+      "sitesUnchanged": true,
+      "nearbyUnchanged": true,
+      "levelChanges": [
+        {
+          "patternAndSite": "cinder_imp|poi.-25_-31.knot.-6179.-7862",
+          "before": [
+            {
+              "Pattern": "cinder_imp",
+              "site": "poi.-25_-31.knot.-6179.-7862",
+              "explicitLevel": 23,
+              "effectiveLevel": 23,
+              "points": 2,
+              "bodies": 5
+            }
+          ],
+          "after": [
+            {
+              "Pattern": "cinder_imp",
+              "site": "poi.-25_-31.knot.-6179.-7862",
+              "explicitLevel": null,
+              "effectiveLevel": 4,
+              "points": 2,
+              "bodies": 5
+            }
+          ]
+        },
+        {
+          "patternAndSite": "remnant_shade|poi.-25_-31.knot.-6179.-7862",
+          "before": [
+            {
+              "Pattern": "remnant_shade",
+              "site": "poi.-25_-31.knot.-6179.-7862",
+              "explicitLevel": 23,
+              "effectiveLevel": 23,
+              "points": 1,
+              "bodies": 4
+            }
+          ],
+          "after": [
+            {
+              "Pattern": "remnant_shade",
+              "site": "poi.-25_-31.knot.-6179.-7862",
+              "explicitLevel": null,
+              "effectiveLevel": 2,
+              "points": 1,
+              "bodies": 4
+            }
+          ]
+        },
+        {
+          "patternAndSite": "tangle|poi.-25_-31.knot.-6179.-7862",
+          "before": [
+            {
+              "Pattern": "tangle",
+              "site": "poi.-25_-31.knot.-6179.-7862",
+              "explicitLevel": 23,
+              "effectiveLevel": 23,
+              "points": 1,
+              "bodies": 1
+            }
+          ],
+          "after": [
+            {
+              "Pattern": "tangle",
+              "site": "poi.-25_-31.knot.-6179.-7862",
+              "explicitLevel": null,
+              "effectiveLevel": 6,
+              "points": 1,
+              "bodies": 1
+            }
+          ]
+        },
+        {
+          "patternAndSite": "kobold_cinderweaver|poi.-25_-31.kobold_cinder_camp.-6178.-7721",
+          "before": [
+            {
+              "Pattern": "kobold_cinderweaver",
+              "site": "poi.-25_-31.kobold_cinder_camp.-6178.-7721",
+              "explicitLevel": 26,
+              "effectiveLevel": 26,
+              "points": 1,
+              "bodies": 1
+            }
+          ],
+          "after": [
+            {
+              "Pattern": "kobold_cinderweaver",
+              "site": "poi.-25_-31.kobold_cinder_camp.-6178.-7721",
+              "explicitLevel": null,
+              "effectiveLevel": 7,
+              "points": 1,
+              "bodies": 1
+            }
+          ]
+        },
+        {
+          "patternAndSite": "kobold_stormweaver|poi.-25_-31.kobold_cinder_camp.-6178.-7721",
+          "before": [
+            {
+              "Pattern": "kobold_stormweaver",
+              "site": "poi.-25_-31.kobold_cinder_camp.-6178.-7721",
+              "explicitLevel": 26,
+              "effectiveLevel": 26,
+              "points": 1,
+              "bodies": 1
+            }
+          ],
+          "after": [
+            {
+              "Pattern": "kobold_stormweaver",
+              "site": "poi.-25_-31.kobold_cinder_camp.-6178.-7721",
+              "explicitLevel": null,
+              "effectiveLevel": 8,
+              "points": 1,
+              "bodies": 1
+            }
+          ]
+        },
+        {
+          "patternAndSite": "kobold_tunnelguard|poi.-25_-31.kobold_cinder_camp.-6178.-7721",
+          "before": [
+            {
+              "Pattern": "kobold_tunnelguard",
+              "site": "poi.-25_-31.kobold_cinder_camp.-6178.-7721",
+              "explicitLevel": 26,
+              "effectiveLevel": 26,
+              "points": 1,
+              "bodies": 1
+            }
+          ],
+          "after": [
+            {
+              "Pattern": "kobold_tunnelguard",
+              "site": "poi.-25_-31.kobold_cinder_camp.-6178.-7721",
+              "explicitLevel": null,
+              "effectiveLevel": 6,
+              "points": 1,
+              "bodies": 1
+            }
+          ]
+        }
+      ],
+      "quests": null
+    },
+    {
+      "zone": "-7_-23",
+      "overlay": false,
+      "geometryUnchanged": true,
+      "populationAndPositionsUnchanged": true,
+      "sitesUnchanged": true,
+      "nearbyUnchanged": true,
+      "levelChanges": [
+        {
+          "patternAndSite": "kobold_rimeweaver|poi.-7_-23.kobold_reed_camp.-1728.-5729",
+          "before": [
+            {
+              "Pattern": "kobold_rimeweaver",
+              "site": "poi.-7_-23.kobold_reed_camp.-1728.-5729",
+              "explicitLevel": 16,
+              "effectiveLevel": 16,
+              "points": 1,
+              "bodies": 1
+            }
+          ],
+          "after": [
+            {
+              "Pattern": "kobold_rimeweaver",
+              "site": "poi.-7_-23.kobold_reed_camp.-1728.-5729",
+              "explicitLevel": null,
+              "effectiveLevel": 7,
+              "points": 1,
+              "bodies": 1
+            }
+          ]
+        },
+        {
+          "patternAndSite": "kobold_spearguard|poi.-7_-23.kobold_reed_camp.-1728.-5729",
+          "before": [
+            {
+              "Pattern": "kobold_spearguard",
+              "site": "poi.-7_-23.kobold_reed_camp.-1728.-5729",
+              "explicitLevel": 16,
+              "effectiveLevel": 16,
+              "points": 1,
+              "bodies": 1
+            }
+          ],
+          "after": [
+            {
+              "Pattern": "kobold_spearguard",
+              "site": "poi.-7_-23.kobold_reed_camp.-1728.-5729",
+              "explicitLevel": null,
+              "effectiveLevel": 4,
+              "points": 1,
+              "bodies": 1
+            }
+          ]
+        },
+        {
+          "patternAndSite": "kobold_venomweaver|poi.-7_-23.kobold_reed_camp.-1728.-5729",
+          "before": [
+            {
+              "Pattern": "kobold_venomweaver",
+              "site": "poi.-7_-23.kobold_reed_camp.-1728.-5729",
+              "explicitLevel": 16,
+              "effectiveLevel": 16,
+              "points": 1,
+              "bodies": 1
+            }
+          ],
+          "after": [
+            {
+              "Pattern": "kobold_venomweaver",
+              "site": "poi.-7_-23.kobold_reed_camp.-1728.-5729",
+              "explicitLevel": null,
+              "effectiveLevel": 6,
+              "points": 1,
+              "bodies": 1
+            }
+          ]
+        },
+        {
+          "patternAndSite": "kobold_rimeweaver|poi.-7_-23.kobold_reed_camp.-1751.-5754",
+          "before": [
+            {
+              "Pattern": "kobold_rimeweaver",
+              "site": "poi.-7_-23.kobold_reed_camp.-1751.-5754",
+              "explicitLevel": 16,
+              "effectiveLevel": 16,
+              "points": 1,
+              "bodies": 1
+            }
+          ],
+          "after": [
+            {
+              "Pattern": "kobold_rimeweaver",
+              "site": "poi.-7_-23.kobold_reed_camp.-1751.-5754",
+              "explicitLevel": null,
+              "effectiveLevel": 7,
+              "points": 1,
+              "bodies": 1
+            }
+          ]
+        },
+        {
+          "patternAndSite": "kobold_spearguard|poi.-7_-23.kobold_reed_camp.-1751.-5754",
+          "before": [
+            {
+              "Pattern": "kobold_spearguard",
+              "site": "poi.-7_-23.kobold_reed_camp.-1751.-5754",
+              "explicitLevel": 16,
+              "effectiveLevel": 16,
+              "points": 1,
+              "bodies": 1
+            }
+          ],
+          "after": [
+            {
+              "Pattern": "kobold_spearguard",
+              "site": "poi.-7_-23.kobold_reed_camp.-1751.-5754",
+              "explicitLevel": null,
+              "effectiveLevel": 4,
+              "points": 1,
+              "bodies": 1
+            }
+          ]
+        },
+        {
+          "patternAndSite": "kobold_venomweaver|poi.-7_-23.kobold_reed_camp.-1751.-5754",
+          "before": [
+            {
+              "Pattern": "kobold_venomweaver",
+              "site": "poi.-7_-23.kobold_reed_camp.-1751.-5754",
+              "explicitLevel": 16,
+              "effectiveLevel": 16,
+              "points": 1,
+              "bodies": 1
+            }
+          ],
+          "after": [
+            {
+              "Pattern": "kobold_venomweaver",
+              "site": "poi.-7_-23.kobold_reed_camp.-1751.-5754",
+              "explicitLevel": null,
+              "effectiveLevel": 6,
+              "points": 1,
+              "bodies": 1
+            }
+          ]
+        }
+      ],
+      "quests": null
+    },
+    {
+      "zone": "0_0",
+      "overlay": true,
+      "geometryUnchanged": true,
+      "populationAndPositionsUnchanged": true,
+      "sitesUnchanged": true,
+      "nearbyUnchanged": true,
+      "levelChanges": [
+        {
+          "patternAndSite": "quartermaster|poi.0_0.hamlet.128.128",
+          "before": [
+            {
+              "Pattern": "quartermaster",
+              "site": "poi.0_0.hamlet.128.128",
+              "explicitLevel": 1,
+              "effectiveLevel": 1,
+              "points": 1,
+              "bodies": 1
+            },
+            {
+              "Pattern": "quartermaster",
+              "site": "poi.0_0.hamlet.128.128",
+              "explicitLevel": null,
+              "effectiveLevel": 5,
+              "points": 1,
+              "bodies": 1
+            }
+          ],
+          "after": [
+            {
+              "Pattern": "quartermaster",
+              "site": "poi.0_0.hamlet.128.128",
+              "explicitLevel": null,
+              "effectiveLevel": 5,
+              "points": 2,
+              "bodies": 2
+            }
+          ]
+        },
+        {
+          "patternAndSite": "spindlewatch_guard|poi.0_0.hamlet.128.128",
+          "before": [
+            {
+              "Pattern": "spindlewatch_guard",
+              "site": "poi.0_0.hamlet.128.128",
+              "explicitLevel": 1,
+              "effectiveLevel": 1,
+              "points": 2,
+              "bodies": 2
+            },
+            {
+              "Pattern": "spindlewatch_guard",
+              "site": "poi.0_0.hamlet.128.128",
+              "explicitLevel": null,
+              "effectiveLevel": 5,
+              "points": 2,
+              "bodies": 2
+            }
+          ],
+          "after": [
+            {
+              "Pattern": "spindlewatch_guard",
+              "site": "poi.0_0.hamlet.128.128",
+              "explicitLevel": null,
+              "effectiveLevel": 5,
+              "points": 4,
+              "bodies": 4
+            }
+          ]
+        },
+        {
+          "patternAndSite": "villager|poi.0_0.hamlet.128.128",
+          "before": [
+            {
+              "Pattern": "villager",
+              "site": "poi.0_0.hamlet.128.128",
+              "explicitLevel": 1,
+              "effectiveLevel": 1,
+              "points": 3,
+              "bodies": 3
+            }
+          ],
+          "after": [
+            {
+              "Pattern": "villager",
+              "site": "poi.0_0.hamlet.128.128",
+              "explicitLevel": null,
+              "effectiveLevel": 1,
+              "points": 3,
+              "bodies": 3
+            }
+          ]
+        },
+        {
+          "patternAndSite": "cinder_imp|poi.0_0.knot.200.60",
+          "before": [
+            {
+              "Pattern": "cinder_imp",
+              "site": "poi.0_0.knot.200.60",
+              "explicitLevel": 3,
+              "effectiveLevel": 3,
+              "points": 2,
+              "bodies": 4
+            }
+          ],
+          "after": [
+            {
+              "Pattern": "cinder_imp",
+              "site": "poi.0_0.knot.200.60",
+              "explicitLevel": null,
+              "effectiveLevel": 4,
+              "points": 2,
+              "bodies": 4
+            }
+          ]
+        },
+        {
+          "patternAndSite": "remnant_shade|poi.0_0.knot.200.60",
+          "before": [
+            {
+              "Pattern": "remnant_shade",
+              "site": "poi.0_0.knot.200.60",
+              "explicitLevel": 3,
+              "effectiveLevel": 3,
+              "points": 1,
+              "bodies": 4
+            }
+          ],
+          "after": [
+            {
+              "Pattern": "remnant_shade",
+              "site": "poi.0_0.knot.200.60",
+              "explicitLevel": null,
+              "effectiveLevel": 2,
+              "points": 1,
+              "bodies": 4
+            }
+          ]
+        },
+        {
+          "patternAndSite": "tangle|poi.0_0.knot.200.60",
+          "before": [
+            {
+              "Pattern": "tangle",
+              "site": "poi.0_0.knot.200.60",
+              "explicitLevel": 3,
+              "effectiveLevel": 3,
+              "points": 1,
+              "bodies": 1
+            }
+          ],
+          "after": [
+            {
+              "Pattern": "tangle",
+              "site": "poi.0_0.knot.200.60",
+              "explicitLevel": null,
+              "effectiveLevel": 6,
+              "points": 1,
+              "bodies": 1
+            }
+          ]
+        }
+      ],
+      "quests": {
+        "before": [
+          {
+            "Id": "gen.poi.0_0.hamlet.128.128.clear_knot.0",
+            "Name": "The Hob's Hollow",
+            "Level": 1,
+            "objectives": [
+              {
+                "Type": "reach",
+                "Target": null,
+                "Poi": "poi.0_0.knot.200.60",
+                "Text": "Find Hob's Hollow"
+              },
+              {
+                "Type": "kill",
+                "Target": "cinder_imp",
+                "Poi": null,
+                "Text": "Unmake six Cinder Imp"
+              }
+            ]
+          },
+          {
+            "Id": "gen.poi.0_0.hamlet.128.128.gather_floss.1",
+            "Name": "Loose Threads",
+            "Level": 1,
+            "objectives": [
+              {
+                "Type": "collect",
+                "Target": "thread_floss",
+                "Poi": null,
+                "Text": "Gather five Thread Floss"
+              }
+            ]
+          },
+          {
+            "Id": "gen.poi.0_0.hamlet.128.128.cull_beasts.2",
+            "Name": "Teeth in the Hedge",
+            "Level": 1,
+            "objectives": [
+              {
+                "Type": "kill",
+                "Target": "grove_stag",
+                "Poi": null,
+                "Text": "Cull eight Grove Stag"
+              }
+            ]
+          },
+          {
+            "Id": "gen.poi.0_0.hamlet.128.128.scout_ruin.3",
+            "Name": "What Stands at the Fallen Hall",
+            "Level": 1,
+            "objectives": [
+              {
+                "Type": "discover",
+                "Target": null,
+                "Poi": "poi.1_1.ruin.305.334",
+                "Text": "Find the Fallen Hall"
+              }
+            ]
+          }
+        ],
+        "after": [
+          {
+            "Id": "gen.poi.0_0.hamlet.128.128.gather_floss.1",
+            "Name": "Loose Threads",
+            "Level": 1,
+            "objectives": [
+              {
+                "Type": "collect",
+                "Target": "thread_floss",
+                "Poi": null,
+                "Text": "Gather five Thread Floss"
+              }
+            ]
+          },
+          {
+            "Id": "gen.poi.0_0.hamlet.128.128.cull_beasts.2",
+            "Name": "Teeth in the Hedge",
+            "Level": 1,
+            "objectives": [
+              {
+                "Type": "kill",
+                "Target": "grove_stag",
+                "Poi": null,
+                "Text": "Cull eight Grove Stag"
+              }
+            ]
+          },
+          {
+            "Id": "gen.poi.0_0.hamlet.128.128.scout_ruin.3",
+            "Name": "What Stands at the Sunken Lantern",
+            "Level": 1,
+            "objectives": [
+              {
+                "Type": "discover",
+                "Target": null,
+                "Poi": "poi.0_1.ruin.213.450",
+                "Text": "Find the Sunken Lantern"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "zone": "1_0",
+      "overlay": true,
+      "geometryUnchanged": true,
+      "populationAndPositionsUnchanged": true,
+      "sitesUnchanged": true,
+      "nearbyUnchanged": true,
+      "levelChanges": [
+        {
+          "patternAndSite": "goblin_scavenger|poi.1_0.orc_chaincamp.431.198",
+          "before": [
+            {
+              "Pattern": "goblin_scavenger",
+              "site": "poi.1_0.orc_chaincamp.431.198",
+              "explicitLevel": 8,
+              "effectiveLevel": 8,
+              "points": 1,
+              "bodies": 1
+            }
+          ],
+          "after": [
+            {
+              "Pattern": "goblin_scavenger",
+              "site": "poi.1_0.orc_chaincamp.431.198",
+              "explicitLevel": null,
+              "effectiveLevel": 1,
+              "points": 1,
+              "bodies": 1
+            }
+          ]
+        },
+        {
+          "patternAndSite": "orc_ashcaller|poi.1_0.orc_chaincamp.431.198",
+          "before": [
+            {
+              "Pattern": "orc_ashcaller",
+              "site": "poi.1_0.orc_chaincamp.431.198",
+              "explicitLevel": 8,
+              "effectiveLevel": 8,
+              "points": 1,
+              "bodies": 1
+            }
+          ],
+          "after": [
+            {
+              "Pattern": "orc_ashcaller",
+              "site": "poi.1_0.orc_chaincamp.431.198",
+              "explicitLevel": null,
+              "effectiveLevel": 8,
+              "points": 1,
+              "bodies": 1
+            }
+          ]
+        },
+        {
+          "patternAndSite": "goblin_skirmisher|poi.1_0.orc_muster.291.217",
+          "before": [
+            {
+              "Pattern": "goblin_skirmisher",
+              "site": "poi.1_0.orc_muster.291.217",
+              "explicitLevel": 5,
+              "effectiveLevel": 5,
+              "points": 1,
+              "bodies": 1
+            }
+          ],
+          "after": [
+            {
+              "Pattern": "goblin_skirmisher",
+              "site": "poi.1_0.orc_muster.291.217",
+              "explicitLevel": null,
+              "effectiveLevel": 2,
+              "points": 1,
+              "bodies": 1
+            }
+          ]
+        },
+        {
+          "patternAndSite": "orc_grunt|poi.1_0.orc_muster.291.217",
+          "before": [
+            {
+              "Pattern": "orc_grunt",
+              "site": "poi.1_0.orc_muster.291.217",
+              "explicitLevel": 5,
+              "effectiveLevel": 5,
+              "points": 1,
+              "bodies": 1
+            }
+          ],
+          "after": [
+            {
+              "Pattern": "orc_grunt",
+              "site": "poi.1_0.orc_muster.291.217",
+              "explicitLevel": null,
+              "effectiveLevel": 4,
+              "points": 1,
+              "bodies": 1
+            }
+          ]
+        },
+        {
+          "patternAndSite": "skeleton_archer|poi.1_0.ossuary.421.38",
+          "before": [
+            {
+              "Pattern": "skeleton_archer",
+              "site": "poi.1_0.ossuary.421.38",
+              "explicitLevel": 3,
+              "effectiveLevel": 3,
+              "points": 1,
+              "bodies": 1
+            }
+          ],
+          "after": [
+            {
+              "Pattern": "skeleton_archer",
+              "site": "poi.1_0.ossuary.421.38",
+              "explicitLevel": null,
+              "effectiveLevel": 3,
+              "points": 1,
+              "bodies": 1
+            }
+          ]
+        },
+        {
+          "patternAndSite": "skeleton_warrior|poi.1_0.ossuary.421.38",
+          "before": [
+            {
+              "Pattern": "skeleton_warrior",
+              "site": "poi.1_0.ossuary.421.38",
+              "explicitLevel": 3,
+              "effectiveLevel": 3,
+              "points": 2,
+              "bodies": 5
+            }
+          ],
+          "after": [
+            {
+              "Pattern": "skeleton_warrior",
+              "site": "poi.1_0.ossuary.421.38",
+              "explicitLevel": null,
+              "effectiveLevel": 3,
+              "points": 2,
+              "bodies": 5
+            }
+          ]
+        }
+      ],
+      "quests": null
+    },
+    {
+      "zone": "0_-1",
+      "overlay": true,
+      "geometryUnchanged": true,
+      "populationAndPositionsUnchanged": true,
+      "sitesUnchanged": true,
+      "nearbyUnchanged": true,
+      "levelChanges": [
+        {
+          "patternAndSite": "cinder_imp|poi.0_-1.knot.176.-74",
+          "before": [
+            {
+              "Pattern": "cinder_imp",
+              "site": "poi.0_-1.knot.176.-74",
+              "explicitLevel": 7,
+              "effectiveLevel": 7,
+              "points": 2,
+              "bodies": 5
+            }
+          ],
+          "after": [
+            {
+              "Pattern": "cinder_imp",
+              "site": "poi.0_-1.knot.176.-74",
+              "explicitLevel": null,
+              "effectiveLevel": 4,
+              "points": 2,
+              "bodies": 5
+            }
+          ]
+        },
+        {
+          "patternAndSite": "remnant_shade|poi.0_-1.knot.176.-74",
+          "before": [
+            {
+              "Pattern": "remnant_shade",
+              "site": "poi.0_-1.knot.176.-74",
+              "explicitLevel": 7,
+              "effectiveLevel": 7,
+              "points": 1,
+              "bodies": 4
+            }
+          ],
+          "after": [
+            {
+              "Pattern": "remnant_shade",
+              "site": "poi.0_-1.knot.176.-74",
+              "explicitLevel": null,
+              "effectiveLevel": 2,
+              "points": 1,
+              "bodies": 4
+            }
+          ]
+        },
+        {
+          "patternAndSite": "tangle|poi.0_-1.knot.176.-74",
+          "before": [
+            {
+              "Pattern": "tangle",
+              "site": "poi.0_-1.knot.176.-74",
+              "explicitLevel": 7,
+              "effectiveLevel": 7,
+              "points": 1,
+              "bodies": 1
+            }
+          ],
+          "after": [
+            {
+              "Pattern": "tangle",
+              "site": "poi.0_-1.knot.176.-74",
+              "explicitLevel": null,
+              "effectiveLevel": 6,
+              "points": 1,
+              "bodies": 1
+            }
+          ]
+        },
+        {
+          "patternAndSite": "cinder_imp|poi.0_-1.knot.185.-214",
+          "before": [
+            {
+              "Pattern": "cinder_imp",
+              "site": "poi.0_-1.knot.185.-214",
+              "explicitLevel": 7,
+              "effectiveLevel": 7,
+              "points": 2,
+              "bodies": 6
+            }
+          ],
+          "after": [
+            {
+              "Pattern": "cinder_imp",
+              "site": "poi.0_-1.knot.185.-214",
+              "explicitLevel": null,
+              "effectiveLevel": 4,
+              "points": 2,
+              "bodies": 6
+            }
+          ]
+        },
+        {
+          "patternAndSite": "remnant_shade|poi.0_-1.knot.185.-214",
+          "before": [
+            {
+              "Pattern": "remnant_shade",
+              "site": "poi.0_-1.knot.185.-214",
+              "explicitLevel": 7,
+              "effectiveLevel": 7,
+              "points": 1,
+              "bodies": 2
+            }
+          ],
+          "after": [
+            {
+              "Pattern": "remnant_shade",
+              "site": "poi.0_-1.knot.185.-214",
+              "explicitLevel": null,
+              "effectiveLevel": 2,
+              "points": 1,
+              "bodies": 2
+            }
+          ]
+        },
+        {
+          "patternAndSite": "tangle|poi.0_-1.knot.185.-214",
+          "before": [
+            {
+              "Pattern": "tangle",
+              "site": "poi.0_-1.knot.185.-214",
+              "explicitLevel": 7,
+              "effectiveLevel": 7,
+              "points": 1,
+              "bodies": 1
+            }
+          ],
+          "after": [
+            {
+              "Pattern": "tangle",
+              "site": "poi.0_-1.knot.185.-214",
+              "explicitLevel": null,
+              "effectiveLevel": 6,
+              "points": 1,
+              "bodies": 1
+            }
+          ]
+        },
+        {
+          "patternAndSite": "cinder_imp|poi.0_-1.knot.41.-37",
+          "before": [
+            {
+              "Pattern": "cinder_imp",
+              "site": "poi.0_-1.knot.41.-37",
+              "explicitLevel": 7,
+              "effectiveLevel": 7,
+              "points": 2,
+              "bodies": 4
+            }
+          ],
+          "after": [
+            {
+              "Pattern": "cinder_imp",
+              "site": "poi.0_-1.knot.41.-37",
+              "explicitLevel": null,
+              "effectiveLevel": 4,
+              "points": 2,
+              "bodies": 4
+            }
+          ]
+        },
+        {
+          "patternAndSite": "remnant_shade|poi.0_-1.knot.41.-37",
+          "before": [
+            {
+              "Pattern": "remnant_shade",
+              "site": "poi.0_-1.knot.41.-37",
+              "explicitLevel": 7,
+              "effectiveLevel": 7,
+              "points": 1,
+              "bodies": 4
+            }
+          ],
+          "after": [
+            {
+              "Pattern": "remnant_shade",
+              "site": "poi.0_-1.knot.41.-37",
+              "explicitLevel": null,
+              "effectiveLevel": 2,
+              "points": 1,
+              "bodies": 4
+            }
+          ]
+        },
+        {
+          "patternAndSite": "tangle|poi.0_-1.knot.41.-37",
+          "before": [
+            {
+              "Pattern": "tangle",
+              "site": "poi.0_-1.knot.41.-37",
+              "explicitLevel": 7,
+              "effectiveLevel": 7,
+              "points": 1,
+              "bodies": 1
+            }
+          ],
+          "after": [
+            {
+              "Pattern": "tangle",
+              "site": "poi.0_-1.knot.41.-37",
+              "explicitLevel": null,
+              "effectiveLevel": 6,
+              "points": 1,
+              "bodies": 1
+            }
+          ]
+        }
+      ],
+      "quests": null
+    },
+    {
+      "zone": "3_2",
+      "overlay": true,
+      "geometryUnchanged": true,
+      "populationAndPositionsUnchanged": true,
+      "sitesUnchanged": true,
+      "nearbyUnchanged": true,
+      "levelChanges": [
+        {
+          "patternAndSite": "cinder_imp|poi.3_2.knot.965.744",
+          "before": [
+            {
+              "Pattern": "cinder_imp",
+              "site": "poi.3_2.knot.965.744",
+              "explicitLevel": 3,
+              "effectiveLevel": 3,
+              "points": 2,
+              "bodies": 5
+            }
+          ],
+          "after": [
+            {
+              "Pattern": "cinder_imp",
+              "site": "poi.3_2.knot.965.744",
+              "explicitLevel": null,
+              "effectiveLevel": 4,
+              "points": 2,
+              "bodies": 5
+            }
+          ]
+        },
+        {
+          "patternAndSite": "remnant_shade|poi.3_2.knot.965.744",
+          "before": [
+            {
+              "Pattern": "remnant_shade",
+              "site": "poi.3_2.knot.965.744",
+              "explicitLevel": 3,
+              "effectiveLevel": 3,
+              "points": 1,
+              "bodies": 3
+            }
+          ],
+          "after": [
+            {
+              "Pattern": "remnant_shade",
+              "site": "poi.3_2.knot.965.744",
+              "explicitLevel": null,
+              "effectiveLevel": 2,
+              "points": 1,
+              "bodies": 3
+            }
+          ]
+        },
+        {
+          "patternAndSite": "tangle|poi.3_2.knot.965.744",
+          "before": [
+            {
+              "Pattern": "tangle",
+              "site": "poi.3_2.knot.965.744",
+              "explicitLevel": 3,
+              "effectiveLevel": 3,
+              "points": 1,
+              "bodies": 1
+            }
+          ],
+          "after": [
+            {
+              "Pattern": "tangle",
+              "site": "poi.3_2.knot.965.744",
+              "explicitLevel": null,
+              "effectiveLevel": 6,
+              "points": 1,
+              "bodies": 1
+            }
+          ]
+        },
+        {
+          "patternAndSite": "barrow_wight|poi.3_2.ruin.890.658",
+          "before": [
+            {
+              "Pattern": "barrow_wight",
+              "site": "poi.3_2.ruin.890.658",
+              "explicitLevel": 2,
+              "effectiveLevel": 2,
+              "points": 2,
+              "bodies": 3
+            }
+          ],
+          "after": [
+            {
+              "Pattern": "barrow_wight",
+              "site": "poi.3_2.ruin.890.658",
+              "explicitLevel": null,
+              "effectiveLevel": 3,
+              "points": 2,
+              "bodies": 3
+            }
+          ]
+        },
+        {
+          "patternAndSite": "remnant_shade|poi.3_2.ruin.890.658",
+          "before": [
+            {
+              "Pattern": "remnant_shade",
+              "site": "poi.3_2.ruin.890.658",
+              "explicitLevel": 2,
+              "effectiveLevel": 2,
+              "points": 1,
+              "bodies": 2
+            }
+          ],
+          "after": [
+            {
+              "Pattern": "remnant_shade",
+              "site": "poi.3_2.ruin.890.658",
+              "explicitLevel": null,
+              "effectiveLevel": 2,
+              "points": 1,
+              "bodies": 2
+            }
+          ]
+        }
+      ],
+      "quests": null
+    },
+    {
+      "zone": "-15_-40",
+      "overlay": true,
+      "geometryUnchanged": true,
+      "populationAndPositionsUnchanged": true,
+      "sitesUnchanged": true,
+      "nearbyUnchanged": true,
+      "levelChanges": [
+        {
+          "patternAndSite": "kobold_cragbreaker|poi.-15_-40.kobold_scale_hold.-3654.-10123",
+          "before": [
+            {
+              "Pattern": "kobold_cragbreaker",
+              "site": "poi.-15_-40.kobold_scale_hold.-3654.-10123",
+              "explicitLevel": 35,
+              "effectiveLevel": 35,
+              "points": 1,
+              "bodies": 1
+            }
+          ],
+          "after": [
+            {
+              "Pattern": "kobold_cragbreaker",
+              "site": "poi.-15_-40.kobold_scale_hold.-3654.-10123",
+              "explicitLevel": null,
+              "effectiveLevel": 10,
+              "points": 1,
+              "bodies": 1
+            }
+          ]
+        },
+        {
+          "patternAndSite": "kobold_crestcaller|poi.-15_-40.kobold_scale_hold.-3654.-10123",
+          "before": [
+            {
+              "Pattern": "kobold_crestcaller",
+              "site": "poi.-15_-40.kobold_scale_hold.-3654.-10123",
+              "explicitLevel": 35,
+              "effectiveLevel": 35,
+              "points": 1,
+              "bodies": 1
+            }
+          ],
+          "after": [
+            {
+              "Pattern": "kobold_crestcaller",
+              "site": "poi.-15_-40.kobold_scale_hold.-3654.-10123",
+              "explicitLevel": null,
+              "effectiveLevel": 10,
+              "points": 1,
+              "bodies": 1
+            }
+          ]
+        },
+        {
+          "patternAndSite": "kobold_ironback|poi.-15_-40.kobold_scale_hold.-3654.-10123",
+          "before": [
+            {
+              "Pattern": "kobold_ironback",
+              "site": "poi.-15_-40.kobold_scale_hold.-3654.-10123",
+              "explicitLevel": 35,
+              "effectiveLevel": 35,
+              "points": 1,
+              "bodies": 1
+            }
+          ],
+          "after": [
+            {
+              "Pattern": "kobold_ironback",
+              "site": "poi.-15_-40.kobold_scale_hold.-3654.-10123",
+              "explicitLevel": null,
+              "effectiveLevel": 11,
+              "points": 1,
+              "bodies": 1
+            }
+          ]
+        },
+        {
+          "patternAndSite": "kobold_scalechief|poi.-15_-40.kobold_scale_hold.-3654.-10123",
+          "before": [
+            {
+              "Pattern": "kobold_scalechief",
+              "site": "poi.-15_-40.kobold_scale_hold.-3654.-10123",
+              "explicitLevel": 35,
+              "effectiveLevel": 35,
+              "points": 1,
+              "bodies": 1
+            }
+          ],
+          "after": [
+            {
+              "Pattern": "kobold_scalechief",
+              "site": "poi.-15_-40.kobold_scale_hold.-3654.-10123",
+              "explicitLevel": null,
+              "effectiveLevel": 15,
+              "points": 1,
+              "bodies": 1
+            }
+          ]
+        },
+        {
+          "patternAndSite": "barrow_wight|poi.-15_-40.ruin.-3788.-10093",
+          "before": [
+            {
+              "Pattern": "barrow_wight",
+              "site": "poi.-15_-40.ruin.-3788.-10093",
+              "explicitLevel": 30,
+              "effectiveLevel": 30,
+              "points": 2,
+              "bodies": 3
+            }
+          ],
+          "after": [
+            {
+              "Pattern": "barrow_wight",
+              "site": "poi.-15_-40.ruin.-3788.-10093",
+              "explicitLevel": null,
+              "effectiveLevel": 3,
+              "points": 2,
+              "bodies": 3
+            }
+          ]
+        },
+        {
+          "patternAndSite": "remnant_shade|poi.-15_-40.ruin.-3788.-10093",
+          "before": [
+            {
+              "Pattern": "remnant_shade",
+              "site": "poi.-15_-40.ruin.-3788.-10093",
+              "explicitLevel": 30,
+              "effectiveLevel": 30,
+              "points": 1,
+              "bodies": 3
+            }
+          ],
+          "after": [
+            {
+              "Pattern": "remnant_shade",
+              "site": "poi.-15_-40.ruin.-3788.-10093",
+              "explicitLevel": null,
+              "effectiveLevel": 2,
+              "points": 1,
+              "bodies": 3
+            }
+          ]
+        }
+      ],
+      "quests": null
+    },
+    {
+      "zone": "-8_-40",
+      "overlay": true,
+      "geometryUnchanged": true,
+      "populationAndPositionsUnchanged": true,
+      "sitesUnchanged": true,
+      "nearbyUnchanged": true,
+      "levelChanges": [
+        {
+          "patternAndSite": "cinder_imp|poi.-8_-40.knot.-1833.-10142",
+          "before": [
+            {
+              "Pattern": "cinder_imp",
+              "site": "poi.-8_-40.knot.-1833.-10142",
+              "explicitLevel": 27,
+              "effectiveLevel": 27,
+              "points": 2,
+              "bodies": 5
+            }
+          ],
+          "after": [
+            {
+              "Pattern": "cinder_imp",
+              "site": "poi.-8_-40.knot.-1833.-10142",
+              "explicitLevel": null,
+              "effectiveLevel": 4,
+              "points": 2,
+              "bodies": 5
+            }
+          ]
+        },
+        {
+          "patternAndSite": "remnant_shade|poi.-8_-40.knot.-1833.-10142",
+          "before": [
+            {
+              "Pattern": "remnant_shade",
+              "site": "poi.-8_-40.knot.-1833.-10142",
+              "explicitLevel": 27,
+              "effectiveLevel": 27,
+              "points": 1,
+              "bodies": 2
+            }
+          ],
+          "after": [
+            {
+              "Pattern": "remnant_shade",
+              "site": "poi.-8_-40.knot.-1833.-10142",
+              "explicitLevel": null,
+              "effectiveLevel": 2,
+              "points": 1,
+              "bodies": 2
+            }
+          ]
+        },
+        {
+          "patternAndSite": "tangle|poi.-8_-40.knot.-1833.-10142",
+          "before": [
+            {
+              "Pattern": "tangle",
+              "site": "poi.-8_-40.knot.-1833.-10142",
+              "explicitLevel": 27,
+              "effectiveLevel": 27,
+              "points": 1,
+              "bodies": 1
+            }
+          ],
+          "after": [
+            {
+              "Pattern": "tangle",
+              "site": "poi.-8_-40.knot.-1833.-10142",
+              "explicitLevel": null,
+              "effectiveLevel": 6,
+              "points": 1,
+              "bodies": 1
+            }
+          ]
+        },
+        {
+          "patternAndSite": "kobold_cragbreaker|poi.-8_-40.kobold_scale_hold.-1954.-10022",
+          "before": [
+            {
+              "Pattern": "kobold_cragbreaker",
+              "site": "poi.-8_-40.kobold_scale_hold.-1954.-10022",
+              "explicitLevel": 31,
+              "effectiveLevel": 31,
+              "points": 1,
+              "bodies": 1
+            }
+          ],
+          "after": [
+            {
+              "Pattern": "kobold_cragbreaker",
+              "site": "poi.-8_-40.kobold_scale_hold.-1954.-10022",
+              "explicitLevel": null,
+              "effectiveLevel": 10,
+              "points": 1,
+              "bodies": 1
+            }
+          ]
+        },
+        {
+          "patternAndSite": "kobold_crestcaller|poi.-8_-40.kobold_scale_hold.-1954.-10022",
+          "before": [
+            {
+              "Pattern": "kobold_crestcaller",
+              "site": "poi.-8_-40.kobold_scale_hold.-1954.-10022",
+              "explicitLevel": 31,
+              "effectiveLevel": 31,
+              "points": 1,
+              "bodies": 1
+            }
+          ],
+          "after": [
+            {
+              "Pattern": "kobold_crestcaller",
+              "site": "poi.-8_-40.kobold_scale_hold.-1954.-10022",
+              "explicitLevel": null,
+              "effectiveLevel": 10,
+              "points": 1,
+              "bodies": 1
+            }
+          ]
+        },
+        {
+          "patternAndSite": "kobold_ironback|poi.-8_-40.kobold_scale_hold.-1954.-10022",
+          "before": [
+            {
+              "Pattern": "kobold_ironback",
+              "site": "poi.-8_-40.kobold_scale_hold.-1954.-10022",
+              "explicitLevel": 31,
+              "effectiveLevel": 31,
+              "points": 1,
+              "bodies": 1
+            }
+          ],
+          "after": [
+            {
+              "Pattern": "kobold_ironback",
+              "site": "poi.-8_-40.kobold_scale_hold.-1954.-10022",
+              "explicitLevel": null,
+              "effectiveLevel": 11,
+              "points": 1,
+              "bodies": 1
+            }
+          ]
+        },
+        {
+          "patternAndSite": "kobold_scalechief|poi.-8_-40.kobold_scale_hold.-1954.-10022",
+          "before": [
+            {
+              "Pattern": "kobold_scalechief",
+              "site": "poi.-8_-40.kobold_scale_hold.-1954.-10022",
+              "explicitLevel": 31,
+              "effectiveLevel": 31,
+              "points": 1,
+              "bodies": 1
+            }
+          ],
+          "after": [
+            {
+              "Pattern": "kobold_scalechief",
+              "site": "poi.-8_-40.kobold_scale_hold.-1954.-10022",
+              "explicitLevel": null,
+              "effectiveLevel": 15,
+              "points": 1,
+              "bodies": 1
+            }
+          ]
+        },
+        {
+          "patternAndSite": "kobold_dartbow|poi.-8_-40.kobold_scrap_camp.-2012.-10019",
+          "before": [
+            {
+              "Pattern": "kobold_dartbow",
+              "site": "poi.-8_-40.kobold_scrap_camp.-2012.-10019",
+              "explicitLevel": 27,
+              "effectiveLevel": 27,
+              "points": 1,
+              "bodies": 1
+            }
+          ],
+          "after": [
+            {
+              "Pattern": "kobold_dartbow",
+              "site": "poi.-8_-40.kobold_scrap_camp.-2012.-10019",
+              "explicitLevel": null,
+              "effectiveLevel": 4,
+              "points": 1,
+              "bodies": 1
+            }
+          ]
+        },
+        {
+          "patternAndSite": "kobold_knifehand|poi.-8_-40.kobold_scrap_camp.-2012.-10019",
+          "before": [
+            {
+              "Pattern": "kobold_knifehand",
+              "site": "poi.-8_-40.kobold_scrap_camp.-2012.-10019",
+              "explicitLevel": 27,
+              "effectiveLevel": 27,
+              "points": 1,
+              "bodies": 1
+            }
+          ],
+          "after": [
+            {
+              "Pattern": "kobold_knifehand",
+              "site": "poi.-8_-40.kobold_scrap_camp.-2012.-10019",
+              "explicitLevel": null,
+              "effectiveLevel": 3,
+              "points": 1,
+              "bodies": 1
+            }
+          ]
+        },
+        {
+          "patternAndSite": "kobold_scavenger|poi.-8_-40.kobold_scrap_camp.-2012.-10019",
+          "before": [
+            {
+              "Pattern": "kobold_scavenger",
+              "site": "poi.-8_-40.kobold_scrap_camp.-2012.-10019",
+              "explicitLevel": 27,
+              "effectiveLevel": 27,
+              "points": 1,
+              "bodies": 1
+            }
+          ],
+          "after": [
+            {
+              "Pattern": "kobold_scavenger",
+              "site": "poi.-8_-40.kobold_scrap_camp.-2012.-10019",
+              "explicitLevel": null,
+              "effectiveLevel": 2,
+              "points": 1,
+              "bodies": 1
+            }
+          ]
+        },
+        {
+          "patternAndSite": "kobold_stonecaster|poi.-8_-40.kobold_scrap_camp.-2012.-10019",
+          "before": [
+            {
+              "Pattern": "kobold_stonecaster",
+              "site": "poi.-8_-40.kobold_scrap_camp.-2012.-10019",
+              "explicitLevel": 27,
+              "effectiveLevel": 27,
+              "points": 1,
+              "bodies": 1
+            }
+          ],
+          "after": [
+            {
+              "Pattern": "kobold_stonecaster",
+              "site": "poi.-8_-40.kobold_scrap_camp.-2012.-10019",
+              "explicitLevel": null,
+              "effectiveLevel": 5,
+              "points": 1,
+              "bodies": 1
+            }
+          ]
+        }
+      ],
+      "quests": null
+    },
+    {
+      "zone": "-25_-31",
+      "overlay": true,
+      "geometryUnchanged": true,
+      "populationAndPositionsUnchanged": true,
+      "sitesUnchanged": true,
+      "nearbyUnchanged": true,
+      "levelChanges": [
+        {
+          "patternAndSite": "cinder_imp|poi.-25_-31.knot.-6179.-7862",
+          "before": [
+            {
+              "Pattern": "cinder_imp",
+              "site": "poi.-25_-31.knot.-6179.-7862",
+              "explicitLevel": 23,
+              "effectiveLevel": 23,
+              "points": 2,
+              "bodies": 5
+            }
+          ],
+          "after": [
+            {
+              "Pattern": "cinder_imp",
+              "site": "poi.-25_-31.knot.-6179.-7862",
+              "explicitLevel": null,
+              "effectiveLevel": 4,
+              "points": 2,
+              "bodies": 5
+            }
+          ]
+        },
+        {
+          "patternAndSite": "remnant_shade|poi.-25_-31.knot.-6179.-7862",
+          "before": [
+            {
+              "Pattern": "remnant_shade",
+              "site": "poi.-25_-31.knot.-6179.-7862",
+              "explicitLevel": 23,
+              "effectiveLevel": 23,
+              "points": 1,
+              "bodies": 4
+            }
+          ],
+          "after": [
+            {
+              "Pattern": "remnant_shade",
+              "site": "poi.-25_-31.knot.-6179.-7862",
+              "explicitLevel": null,
+              "effectiveLevel": 2,
+              "points": 1,
+              "bodies": 4
+            }
+          ]
+        },
+        {
+          "patternAndSite": "tangle|poi.-25_-31.knot.-6179.-7862",
+          "before": [
+            {
+              "Pattern": "tangle",
+              "site": "poi.-25_-31.knot.-6179.-7862",
+              "explicitLevel": 23,
+              "effectiveLevel": 23,
+              "points": 1,
+              "bodies": 1
+            }
+          ],
+          "after": [
+            {
+              "Pattern": "tangle",
+              "site": "poi.-25_-31.knot.-6179.-7862",
+              "explicitLevel": null,
+              "effectiveLevel": 6,
+              "points": 1,
+              "bodies": 1
+            }
+          ]
+        },
+        {
+          "patternAndSite": "kobold_cinderweaver|poi.-25_-31.kobold_cinder_camp.-6178.-7721",
+          "before": [
+            {
+              "Pattern": "kobold_cinderweaver",
+              "site": "poi.-25_-31.kobold_cinder_camp.-6178.-7721",
+              "explicitLevel": 26,
+              "effectiveLevel": 26,
+              "points": 1,
+              "bodies": 1
+            }
+          ],
+          "after": [
+            {
+              "Pattern": "kobold_cinderweaver",
+              "site": "poi.-25_-31.kobold_cinder_camp.-6178.-7721",
+              "explicitLevel": null,
+              "effectiveLevel": 7,
+              "points": 1,
+              "bodies": 1
+            }
+          ]
+        },
+        {
+          "patternAndSite": "kobold_stormweaver|poi.-25_-31.kobold_cinder_camp.-6178.-7721",
+          "before": [
+            {
+              "Pattern": "kobold_stormweaver",
+              "site": "poi.-25_-31.kobold_cinder_camp.-6178.-7721",
+              "explicitLevel": 26,
+              "effectiveLevel": 26,
+              "points": 1,
+              "bodies": 1
+            }
+          ],
+          "after": [
+            {
+              "Pattern": "kobold_stormweaver",
+              "site": "poi.-25_-31.kobold_cinder_camp.-6178.-7721",
+              "explicitLevel": null,
+              "effectiveLevel": 8,
+              "points": 1,
+              "bodies": 1
+            }
+          ]
+        },
+        {
+          "patternAndSite": "kobold_tunnelguard|poi.-25_-31.kobold_cinder_camp.-6178.-7721",
+          "before": [
+            {
+              "Pattern": "kobold_tunnelguard",
+              "site": "poi.-25_-31.kobold_cinder_camp.-6178.-7721",
+              "explicitLevel": 26,
+              "effectiveLevel": 26,
+              "points": 1,
+              "bodies": 1
+            }
+          ],
+          "after": [
+            {
+              "Pattern": "kobold_tunnelguard",
+              "site": "poi.-25_-31.kobold_cinder_camp.-6178.-7721",
+              "explicitLevel": null,
+              "effectiveLevel": 6,
+              "points": 1,
+              "bodies": 1
+            }
+          ]
+        }
+      ],
+      "quests": null
+    },
+    {
+      "zone": "-7_-23",
+      "overlay": true,
+      "geometryUnchanged": true,
+      "populationAndPositionsUnchanged": true,
+      "sitesUnchanged": true,
+      "nearbyUnchanged": true,
+      "levelChanges": [
+        {
+          "patternAndSite": "kobold_rimeweaver|poi.-7_-23.kobold_reed_camp.-1728.-5729",
+          "before": [
+            {
+              "Pattern": "kobold_rimeweaver",
+              "site": "poi.-7_-23.kobold_reed_camp.-1728.-5729",
+              "explicitLevel": 16,
+              "effectiveLevel": 16,
+              "points": 1,
+              "bodies": 1
+            }
+          ],
+          "after": [
+            {
+              "Pattern": "kobold_rimeweaver",
+              "site": "poi.-7_-23.kobold_reed_camp.-1728.-5729",
+              "explicitLevel": null,
+              "effectiveLevel": 7,
+              "points": 1,
+              "bodies": 1
+            }
+          ]
+        },
+        {
+          "patternAndSite": "kobold_spearguard|poi.-7_-23.kobold_reed_camp.-1728.-5729",
+          "before": [
+            {
+              "Pattern": "kobold_spearguard",
+              "site": "poi.-7_-23.kobold_reed_camp.-1728.-5729",
+              "explicitLevel": 16,
+              "effectiveLevel": 16,
+              "points": 1,
+              "bodies": 1
+            }
+          ],
+          "after": [
+            {
+              "Pattern": "kobold_spearguard",
+              "site": "poi.-7_-23.kobold_reed_camp.-1728.-5729",
+              "explicitLevel": null,
+              "effectiveLevel": 4,
+              "points": 1,
+              "bodies": 1
+            }
+          ]
+        },
+        {
+          "patternAndSite": "kobold_venomweaver|poi.-7_-23.kobold_reed_camp.-1728.-5729",
+          "before": [
+            {
+              "Pattern": "kobold_venomweaver",
+              "site": "poi.-7_-23.kobold_reed_camp.-1728.-5729",
+              "explicitLevel": 16,
+              "effectiveLevel": 16,
+              "points": 1,
+              "bodies": 1
+            }
+          ],
+          "after": [
+            {
+              "Pattern": "kobold_venomweaver",
+              "site": "poi.-7_-23.kobold_reed_camp.-1728.-5729",
+              "explicitLevel": null,
+              "effectiveLevel": 6,
+              "points": 1,
+              "bodies": 1
+            }
+          ]
+        },
+        {
+          "patternAndSite": "kobold_rimeweaver|poi.-7_-23.kobold_reed_camp.-1751.-5754",
+          "before": [
+            {
+              "Pattern": "kobold_rimeweaver",
+              "site": "poi.-7_-23.kobold_reed_camp.-1751.-5754",
+              "explicitLevel": 16,
+              "effectiveLevel": 16,
+              "points": 1,
+              "bodies": 1
+            }
+          ],
+          "after": [
+            {
+              "Pattern": "kobold_rimeweaver",
+              "site": "poi.-7_-23.kobold_reed_camp.-1751.-5754",
+              "explicitLevel": null,
+              "effectiveLevel": 7,
+              "points": 1,
+              "bodies": 1
+            }
+          ]
+        },
+        {
+          "patternAndSite": "kobold_spearguard|poi.-7_-23.kobold_reed_camp.-1751.-5754",
+          "before": [
+            {
+              "Pattern": "kobold_spearguard",
+              "site": "poi.-7_-23.kobold_reed_camp.-1751.-5754",
+              "explicitLevel": 16,
+              "effectiveLevel": 16,
+              "points": 1,
+              "bodies": 1
+            }
+          ],
+          "after": [
+            {
+              "Pattern": "kobold_spearguard",
+              "site": "poi.-7_-23.kobold_reed_camp.-1751.-5754",
+              "explicitLevel": null,
+              "effectiveLevel": 4,
+              "points": 1,
+              "bodies": 1
+            }
+          ]
+        },
+        {
+          "patternAndSite": "kobold_venomweaver|poi.-7_-23.kobold_reed_camp.-1751.-5754",
+          "before": [
+            {
+              "Pattern": "kobold_venomweaver",
+              "site": "poi.-7_-23.kobold_reed_camp.-1751.-5754",
+              "explicitLevel": 16,
+              "effectiveLevel": 16,
+              "points": 1,
+              "bodies": 1
+            }
+          ],
+          "after": [
+            {
+              "Pattern": "kobold_venomweaver",
+              "site": "poi.-7_-23.kobold_reed_camp.-1751.-5754",
+              "explicitLevel": null,
+              "effectiveLevel": 6,
+              "points": 1,
+              "bodies": 1
+            }
+          ]
+        }
+      ],
+      "quests": null
+    }
+  ]
+}

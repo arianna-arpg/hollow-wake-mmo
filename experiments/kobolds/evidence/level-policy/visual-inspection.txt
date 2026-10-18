@@ -1,0 +1,4 @@
+Fresh browser card-mode screenshot inspected after explicit level-policy integration.
+Terrain, trees, hamlet geometry and creature bodies remain visible. Quartermaster and Spindlewatch Guard labels display restored pattern level 5.
+The browser smoke also asserts a nonblank card world. This capture covers the retained renderer correction, not a new Kobold appearance change.
+Native rendering remains uncovered by the headless native smoke; paired native/browser geometry fixtures remain the existing evidence.

@@ -1,0 +1,128 @@
+Test run for C:\Users\John\.codex\worktrees\kobold-scaleclans\MMOARPG\tests\HollowWake.Core.Tests\bin\Debug\net10.0\HollowWake.Core.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+C:\Users\John\.codex\worktrees\kobold-scaleclans\MMOARPG\tests\HollowWake.Core.Tests\bin\Debug\net10.0\HollowWake.Core.Tests.dll
+[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v3.1.5+1b188a7b0a (64-bit .NET 10.0.13)
+[xUnit.net 00:00:00.09]   Discovering: HollowWake.Core.Tests
+[xUnit.net 00:00:01.81]   Discovered:  HollowWake.Core.Tests
+[xUnit.net 00:00:01.85]   Starting:    HollowWake.Core.Tests
+  Passed HollowWake.Core.Tests.KoboldTests.NativeFactionHasAnExplicitReciprocalStanceForEveryShippedFaction [394 ms]
+  Passed HollowWake.Core.Tests.KoboldTests.EveryRoleHasScaledPhysicalityHabitatRewardsAndSustainedAiDamage(pattern: "kobold_venomweaver") [555 ms]
+  Standard Output Messages:
+ kobold_venomweaver: mass=29.88 kg; sustained damaging events=41
+
+
+  Passed HollowWake.Core.Tests.KoboldTests.EveryRoleHasScaledPhysicalityHabitatRewardsAndSustainedAiDamage(pattern: "kobold_tunnelguard") [22 ms]
+  Standard Output Messages:
+ kobold_tunnelguard: mass=54.13 kg; sustained damaging events=5
+
+
+  Passed HollowWake.Core.Tests.KoboldTests.EveryRoleHasScaledPhysicalityHabitatRewardsAndSustainedAiDamage(pattern: "kobold_scavenger") [18 ms]
+  Standard Output Messages:
+ kobold_scavenger: mass=19.35 kg; sustained damaging events=8
+
+
+  Passed HollowWake.Core.Tests.KoboldTests.EveryRoleHasScaledPhysicalityHabitatRewardsAndSustainedAiDamage(pattern: "kobold_knifehand") [27 ms]
+  Standard Output Messages:
+ kobold_knifehand: mass=23.89 kg; sustained damaging events=30
+
+
+  Passed HollowWake.Core.Tests.KoboldTests.EveryRoleHasScaledPhysicalityHabitatRewardsAndSustainedAiDamage(pattern: "kobold_scalechief") [21 ms]
+  Standard Output Messages:
+ kobold_scalechief: mass=134.79 kg; sustained damaging events=6
+
+
+  Passed HollowWake.Core.Tests.KoboldTests.EveryRoleHasScaledPhysicalityHabitatRewardsAndSustainedAiDamage(pattern: "kobold_ironback") [23 ms]
+  Standard Output Messages:
+ kobold_ironback: mass=148.85 kg; sustained damaging events=3
+
+
+  Passed HollowWake.Core.Tests.KoboldTests.EveryRoleHasScaledPhysicalityHabitatRewardsAndSustainedAiDamage(pattern: "kobold_dartbow") [20 ms]
+  Standard Output Messages:
+ kobold_dartbow: mass=23.74 kg; sustained damaging events=13
+
+
+  Passed HollowWake.Core.Tests.KoboldTests.EveryRoleHasScaledPhysicalityHabitatRewardsAndSustainedAiDamage(pattern: "kobold_spearguard") [17 ms]
+  Standard Output Messages:
+ kobold_spearguard: mass=33.63 kg; sustained damaging events=15
+
+
+  Passed HollowWake.Core.Tests.KoboldTests.EveryRoleHasScaledPhysicalityHabitatRewardsAndSustainedAiDamage(pattern: "kobold_stonecaster") [12 ms]
+  Standard Output Messages:
+ kobold_stonecaster: mass=31.65 kg; sustained damaging events=5
+
+
+  Passed HollowWake.Core.Tests.KoboldTests.EveryRoleHasScaledPhysicalityHabitatRewardsAndSustainedAiDamage(pattern: "kobold_stormweaver") [20 ms]
+  Standard Output Messages:
+ kobold_stormweaver: mass=35.60 kg; sustained damaging events=17
+
+
+  Passed HollowWake.Core.Tests.KoboldTests.EveryRoleHasScaledPhysicalityHabitatRewardsAndSustainedAiDamage(pattern: "kobold_rimeweaver") [19 ms]
+  Standard Output Messages:
+ kobold_rimeweaver: mass=33.75 kg; sustained damaging events=16
+
+
+  Passed HollowWake.Core.Tests.KoboldTests.EveryRoleHasScaledPhysicalityHabitatRewardsAndSustainedAiDamage(pattern: "kobold_cinderweaver") [22 ms]
+  Standard Output Messages:
+ kobold_cinderweaver: mass=31.30 kg; sustained damaging events=34
+
+
+  Passed HollowWake.Core.Tests.KoboldTests.EveryRoleHasScaledPhysicalityHabitatRewardsAndSustainedAiDamage(pattern: "kobold_cragbreaker") [11 ms]
+  Standard Output Messages:
+ kobold_cragbreaker: mass=103.06 kg; sustained damaging events=5
+
+
+  Passed HollowWake.Core.Tests.KoboldTests.EveryRoleHasScaledPhysicalityHabitatRewardsAndSustainedAiDamage(pattern: "kobold_crestcaller") [13 ms]
+  Standard Output Messages:
+ kobold_crestcaller: mass=46.02 kg; sustained damaging events=8
+
+
+  Passed HollowWake.Core.Tests.KoboldTests.SmallKoboldShoveStopsAtPlacedAndTerrainWalls(terrain: False) [11 ms]
+  Passed HollowWake.Core.Tests.KoboldTests.SmallKoboldShoveStopsAtPlacedAndTerrainWalls(terrain: True) [2 ms]
+  Passed HollowWake.Core.Tests.KoboldTests.DedicatedSitesActuallyOccurInUnmodifiedGeneratedHabitats(site: "kobold_reed_camp", x: -7, y: -23) [989 ms]
+  Standard Output Messages:
+ kobold_reed_camp: zone(-7,-23), site level 16, 3 occupied spawn points, live pattern levels 4,6,7
+ kobold_reed_camp: zone(-7,-23), site level 16, 3 occupied spawn points, live pattern levels 4,6,7
+
+
+  Passed HollowWake.Core.Tests.KoboldTests.DedicatedSitesActuallyOccurInUnmodifiedGeneratedHabitats(site: "kobold_scrap_camp", x: -8, y: -40) [600 ms]
+  Standard Output Messages:
+ kobold_scrap_camp: zone(-8,-40), site level 27, 4 occupied spawn points, live pattern levels 2,3,4,5
+
+
+  Passed HollowWake.Core.Tests.KoboldTests.DedicatedSitesActuallyOccurInUnmodifiedGeneratedHabitats(site: "kobold_scale_hold", x: -15, y: -40) [613 ms]
+  Standard Output Messages:
+ kobold_scale_hold: zone(-15,-40), site level 35, 4 occupied spawn points, live pattern levels 10,10,11,15
+
+
+  Passed HollowWake.Core.Tests.KoboldTests.DedicatedSitesActuallyOccurInUnmodifiedGeneratedHabitats(site: "kobold_cinder_camp", x: -25, y: -31) [580 ms]
+  Standard Output Messages:
+ kobold_cinder_camp: zone(-25,-31), site level 26, 3 occupied spawn points, live pattern levels 6,7,8
+
+
+  Passed HollowWake.Core.Tests.KoboldTests.HomeRegionHoldStaysPopulatedWithExplicitBirthAndRespawnLevelPolicy(useSiteLevel: True, expectedLevel: 7) [761 ms]
+  Standard Output Messages:
+ Home region hold: site 7, use_site_level=True, Tunnelguard born and respawned at level 7
+
+
+  Passed HollowWake.Core.Tests.KoboldTests.HomeRegionHoldStaysPopulatedWithExplicitBirthAndRespawnLevelPolicy(useSiteLevel: False, expectedLevel: 6) [530 ms]
+  Standard Output Messages:
+ Home region hold: site 7, use_site_level=False, Tunnelguard born and respawned at level 6
+
+
+  Passed HollowWake.Core.Tests.KoboldTests.LightAndArmoredBodiesUseCanonicalMassAndBoundedLiveShove [3 ms]
+  Standard Output Messages:
+ kobold_scavenger: canonical mass 19.349 kg, shove scale 3.000, travel 11.956 m
+ kobold_ironback: canonical mass 148.850 kg, shove scale 0.302, travel 1.175 m
+
+
+  Passed HollowWake.Core.Tests.KoboldTests.AuthoredSitesSpawnEveryEligibleRoleAndReplayWithLevelGates(site: "kobold_scrap_camp") [1 s]
+  Passed HollowWake.Core.Tests.KoboldTests.AuthoredSitesSpawnEveryEligibleRoleAndReplayWithLevelGates(site: "kobold_cinder_camp") [1 s]
+[xUnit.net 00:00:13.10]   Finished:    HollowWake.Core.Tests
+  Passed HollowWake.Core.Tests.KoboldTests.AuthoredSitesSpawnEveryEligibleRoleAndReplayWithLevelGates(site: "kobold_reed_camp") [1 s]
+  Passed HollowWake.Core.Tests.KoboldTests.AuthoredSitesSpawnEveryEligibleRoleAndReplayWithLevelGates(site: "kobold_scale_hold") [1 s]
+  Passed HollowWake.Core.Tests.KoboldTests.LoosedAndKoboldsAcquireAndDamageEachOtherWithoutAPlayerOrInjectedTarget [21 ms]
+
+Test Run Successful.
+Total tests: 29
+     Passed: 29
+ Total time: 14.0757 Seconds

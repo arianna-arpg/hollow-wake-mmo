@@ -164,7 +164,7 @@ public class KoboldTests(ITestOutputHelper output)
             var placed = Assert.Single(g.Zone(new ZoneCoord(0, 0)).Pois, p => p.Def.Id == site && p.X == 50.5 && p.Y == 50.5);
             var spawns = g.Layout.ChunksOf(new ZoneCoord(0, 0)).SelectMany(c => g.GenerateChunk(c).Spawns)
                 .Where(s => s.Group == placed.Id && s.Pattern.StartsWith("kobold_", StringComparison.Ordinal)).ToArray();
-            Assert.All(spawns, s => Assert.Equal(placed.Level, s.Level));
+            Assert.All(spawns, s => Assert.Null(s.Level));
             return spawns.Select(s => $"{s.Pattern}:{s.X}:{s.Y}:{s.PackSize}:{s.Level}").ToArray();
         }
         var high = Generate(25);
@@ -180,12 +180,17 @@ public class KoboldTests(ITestOutputHelper output)
         Assert.InRange(high.Length, 1, 4);
     }
 
-    [Fact]
-    public void HomeRegionHoldHasALevelSevenGuardAtBirthAndRespawnWithoutPrematureBosses()
+    [Theory]
+    [InlineData(false, 6)]
+    [InlineData(true, 7)]
+    public void HomeRegionHoldStaysPopulatedWithExplicitBirthAndRespawnLevelPolicy(bool useSiteLevel, int expectedLevel)
     {
         var content = ContentRegistry.Load(new[] { CoreContent.FindContentDir() }, out _);
         content.With(new RegionOverrideDef { Id = "hallows_home", X = 0, Y = 0, Archetype = "hallows", Level = 1, Faction = "weftmarch_compact" });
         content.With(new ZoneOverrideDef { Id = "ninewells", X = 0, Y = 0, Pois = { new PoiPlacement { Poi = "kobold_scale_hold", X = 50, Y = 50 } } });
+        var holdDef = content.Require<PoiDef>("kobold_scale_hold");
+        Assert.All(holdDef.Inhabitants, s => Assert.False(s.UseSiteLevel));
+        if (useSiteLevel) content.With(holdDef with { Inhabitants = holdDef.Inhabitants.Select(s => s with { UseSiteLevel = true }).ToList() });
         var generator = new WorldGenerator(content, Rng.Hash64("copper-crest-sites"));
         var sim = ZoneBuilder.CreateZone(content, generator, new WorldState(new GenerationOverlays()), new ZoneCoord(0, 0));
         var report = ZoneBuilder.LoadZone(sim);
@@ -199,17 +204,17 @@ public class KoboldTests(ITestOutputHelper output)
         Assert.False(sim.World.Has<Dead>(guard));
         Assert.Equal("kobold_tunnelguard", sim.World.Get<Identity>(guard)!.Pattern);
         Assert.Equal("kobold_scaleclans", Relations.FactionOf(sim, guard));
-        Assert.Equal(hold.Level, sim.World.Get<Stats>(guard)!.Level);
+        Assert.Equal(expectedLevel, sim.World.Get<Stats>(guard)!.Level);
         var spawner = Assert.Single(sim.World.Query<Spawner>(), p => p.C1.Alive.Contains(guard)).C1;
-        Assert.Equal(hold.Level, spawner.Level);
+        Assert.Equal(useSiteLevel ? (int?)hold.Level : null, spawner.Level);
         sim.Service<DeathService>().Kill(sim, guard, Entity.None);
         spawner.RespawnAt = sim.Clock.Time;
         sim.Tick();
         var replacement = Assert.Single(spawner.Alive);
         Assert.NotEqual(guard, replacement);
-        Assert.Equal(hold.Level, sim.World.Get<Stats>(replacement)!.Level);
+        Assert.Equal(expectedLevel, sim.World.Get<Stats>(replacement)!.Level);
         Assert.Equal("kobold_tunnelguard", sim.World.Get<Identity>(replacement)!.Pattern);
-        output.WriteLine($"Home region hold: Tunnelguard born and respawned at site level {hold.Level}");
+        output.WriteLine($"Home region hold: site {hold.Level}, use_site_level={useSiteLevel}, Tunnelguard born and respawned at level {expectedLevel}");
     }
 
     [Theory]
@@ -230,12 +235,12 @@ public class KoboldTests(ITestOutputHelper output)
             var spawns = g.Layout.ChunksOf(poi.Zone).SelectMany(c => g.GenerateChunk(c).Spawns)
                 .Where(s => s.Pattern.StartsWith("kobold_", StringComparison.Ordinal) && s.Group == poi.Id).ToArray();
             Assert.NotEmpty(spawns);
-            Assert.All(spawns, s => Assert.Equal(poi.Level, s.Level));
+            Assert.All(spawns, s => Assert.Null(s.Level));
             var residents = sim.World.Query<Spawner>().Where(p => p.C1.Group == poi.Id && p.C1.Pattern.StartsWith("kobold_", StringComparison.Ordinal))
                 .SelectMany(p => p.C1.Alive).ToArray();
             Assert.NotEmpty(residents);
-            Assert.All(residents, e => Assert.Equal(poi.Level, sim.World.Get<Stats>(e)!.Level));
-            output.WriteLine($"{site}: zone({x},{y}), at({poi.X},{poi.Y}), level {poi.Level}, {spawns.Length} occupied spawn points");
+            Assert.All(residents, e => Assert.Equal(CoreContent.Registry.Require<PatternDef>(Assert.IsType<string>(sim.World.Get<Identity>(e)!.Pattern)).Level, sim.World.Get<Stats>(e)!.Level));
+            output.WriteLine($"{site}: zone({x},{y}), site level {poi.Level}, {spawns.Length} occupied spawn points, live pattern levels {string.Join(",", residents.Select(e => sim.World.Get<Stats>(e)!.Level).Order())}");
         }
     }
 }

@@ -1,0 +1,233 @@
+  Determining projects to restore...
+  All projects are up-to-date for restore.
+  HollowWake.Core -> C:\Users\John\.codex\worktrees\kobold-scaleclans\MMOARPG\src\HollowWake.Core\bin\Debug\net8.0\HollowWake.Core.dll
+C:\Users\John\.codex\worktrees\kobold-scaleclans\MMOARPG\tests\HollowWake.Core.Tests\KoboldTests.cs(242,94): warning CS8604: Possible null reference argument for parameter 'id' in 'PatternDef ContentRegistry.Require<PatternDef>(string id)'. [C:\Users\John\.codex\worktrees\kobold-scaleclans\MMOARPG\tests\HollowWake.Core.Tests\HollowWake.Core.Tests.csproj]
+  HollowWake.Core.Tests -> C:\Users\John\.codex\worktrees\kobold-scaleclans\MMOARPG\tests\HollowWake.Core.Tests\bin\Debug\net10.0\HollowWake.Core.Tests.dll
+Test run for C:\Users\John\.codex\worktrees\kobold-scaleclans\MMOARPG\tests\HollowWake.Core.Tests\bin\Debug\net10.0\HollowWake.Core.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v3.1.5+1b188a7b0a (64-bit .NET 10.0.13)
+[xUnit.net 00:00:00.19]   Discovering: HollowWake.Core.Tests
+[xUnit.net 00:00:02.68]   Discovered:  HollowWake.Core.Tests
+[xUnit.net 00:00:02.78]   Starting:    HollowWake.Core.Tests
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_rimeweaver", relief: 0, preset: "firebolt") [312 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_venomweaver", relief: 0, preset: "piercing_arrow") [13 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_scalechief", relief: 0, preset: "piercing_arrow") [5 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_cinderweaver", relief: -0.5, preset: "firebolt") [11 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_dartbow", relief: -0.5, preset: "firebolt") [6 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_ironback", relief: 0.5, preset: "piercing_arrow") [12 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_cragbreaker", relief: -0.5, preset: "firebolt") [5 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_spearguard", relief: -0.5, preset: "piercing_arrow") [16 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_knifehand", relief: 0, preset: "firebolt") [17 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_rimeweaver", relief: -0.5, preset: "piercing_arrow") [17 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_cragbreaker", relief: 0.5, preset: "firebolt") [3 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_tunnelguard", relief: 0, preset: "firebolt") [3 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_cragbreaker", relief: 0, preset: "piercing_arrow") [8 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_venomweaver", relief: -0.5, preset: "firebolt") [6 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_scavenger", relief: 0, preset: "piercing_arrow") [4 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_venomweaver", relief: 0.5, preset: "piercing_arrow") [8 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_spearguard", relief: 0.5, preset: "piercing_arrow") [6 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_knifehand", relief: 0.5, preset: "firebolt") [19 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_knifehand", relief: -0.5, preset: "piercing_arrow") [4 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_stonecaster", relief: 0, preset: "firebolt") [22 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_tunnelguard", relief: 0, preset: "piercing_arrow") [5 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_stonecaster", relief: -0.5, preset: "firebolt") [14 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_tunnelguard", relief: -0.5, preset: "firebolt") [6 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_cinderweaver", relief: -0.5, preset: "piercing_arrow") [4 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_cragbreaker", relief: -0.5, preset: "piercing_arrow") [13 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_crestcaller", relief: -0.5, preset: "piercing_arrow") [13 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_crestcaller", relief: 0.5, preset: "piercing_arrow") [5 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_scalechief", relief: 0, preset: "firebolt") [21 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_stormweaver", relief: 0.5, preset: "firebolt") [7 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_scalechief", relief: 0.5, preset: "piercing_arrow") [6 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_rimeweaver", relief: -0.5, preset: "firebolt") [6 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_cinderweaver", relief: 0.5, preset: "firebolt") [10 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_scavenger", relief: 0.5, preset: "piercing_arrow") [7 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_crestcaller", relief: 0.5, preset: "firebolt") [4 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_stormweaver", relief: -0.5, preset: "firebolt") [10 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_stonecaster", relief: 0.5, preset: "firebolt") [9 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_stormweaver", relief: 0, preset: "firebolt") [5 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_crestcaller", relief: -0.5, preset: "firebolt") [8 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_cinderweaver", relief: 0, preset: "piercing_arrow") [4 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_ironback", relief: 0.5, preset: "firebolt") [4 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_crestcaller", relief: 0, preset: "firebolt") [5 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_ironback", relief: -0.5, preset: "piercing_arrow") [4 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_dartbow", relief: 0, preset: "piercing_arrow") [7 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_knifehand", relief: -0.5, preset: "firebolt") [6 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_cinderweaver", relief: 0.5, preset: "piercing_arrow") [7 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_scavenger", relief: 0.5, preset: "firebolt") [9 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_stormweaver", relief: -0.5, preset: "piercing_arrow") [4 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_ironback", relief: 0, preset: "firebolt") [4 ms]
+  Passed HollowWake.Core.Tests.KoboldTests.NativeFactionHasAnExplicitReciprocalStanceForEveryShippedFaction [737 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_dartbow", relief: 0.5, preset: "firebolt") [9 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_scalechief", relief: -0.5, preset: "piercing_arrow") [4 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_ironback", relief: 0, preset: "piercing_arrow") [10 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_rimeweaver", relief: 0.5, preset: "piercing_arrow") [4 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_venomweaver", relief: 0, preset: "firebolt") [5 ms]
+  Passed HollowWake.Core.Tests.LocalPopulationSearchTests.BudgetLimitsDistantOffersWithoutWeakeningSpawnLevelOrRadius(chunks: 0, siteLevel: 1, reach: 160, offered: False) [769 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_scalechief", relief: 0.5, preset: "firebolt") [12 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_spearguard", relief: 0, preset: "piercing_arrow") [5 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_stormweaver", relief: 0, preset: "piercing_arrow") [9 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_knifehand", relief: 0, preset: "piercing_arrow") [4 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_venomweaver", relief: 0.5, preset: "firebolt") [10 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_stormweaver", relief: 0.5, preset: "piercing_arrow") [3 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_cragbreaker", relief: 0.5, preset: "piercing_arrow") [4 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_stonecaster", relief: 0.5, preset: "piercing_arrow") [9 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_tunnelguard", relief: 0.5, preset: "piercing_arrow") [4 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_knifehand", relief: 0.5, preset: "piercing_arrow") [9 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_ironback", relief: -0.5, preset: "firebolt") [3 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_stonecaster", relief: 0, preset: "piercing_arrow") [4 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_venomweaver", relief: -0.5, preset: "piercing_arrow") [14 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_spearguard", relief: 0.5, preset: "firebolt") [6 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_dartbow", relief: -0.5, preset: "piercing_arrow") [3 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_cragbreaker", relief: 0, preset: "firebolt") [9 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_dartbow", relief: 0.5, preset: "piercing_arrow") [3 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_scavenger", relief: 0, preset: "firebolt") [6 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_cinderweaver", relief: 0, preset: "firebolt") [9 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_rimeweaver", relief: 0, preset: "piercing_arrow") [3 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_scavenger", relief: -0.5, preset: "firebolt") [13 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_rimeweaver", relief: 0.5, preset: "firebolt") [7 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_scalechief", relief: -0.5, preset: "firebolt") [19 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_crestcaller", relief: 0, preset: "piercing_arrow") [4 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_spearguard", relief: 0, preset: "firebolt") [19 ms]
+  Passed HollowWake.Core.Tests.EntityPopulationTests.LegacyResidentsKeepTheirAuthoredLevels(x: 0, y: -1, pattern: "remnant_shade", level: 2) [978 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_scavenger", relief: -0.5, preset: "piercing_arrow") [4 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_tunnelguard", relief: 0.5, preset: "firebolt") [5 ms]
+[xUnit.net 00:00:04.01]     HollowWake.Core.Tests.WorldGenGoldenTests.ZoneMatchesGoldenHashes(x: 1, y: 0, infoHash: "33C9B160B66B9604", chunksHash: "DF735AA7610989B3") [FAIL]
+[xUnit.net 00:00:04.01]       zone(1,0) info and chunks: expected 33C9B160B66B9604 DF735AA7610989B3, generated 33C9B160B66B9604 0E386FE1D6659BC0. Generation output changed; update the constant only if that was intended.
+[xUnit.net 00:00:04.01]       Stack Trace:
+[xUnit.net 00:00:04.01]         C:\Users\John\.codex\worktrees\kobold-scaleclans\MMOARPG\tests\HollowWake.Core.Tests\WorldGenGoldenTests.cs(165,0): at HollowWake.Core.Tests.WorldGenGoldenTests.Golden(String what, String expected, String actual)
+[xUnit.net 00:00:04.01]         C:\Users\John\.codex\worktrees\kobold-scaleclans\MMOARPG\tests\HollowWake.Core.Tests\WorldGenGoldenTests.cs(56,0): at HollowWake.Core.Tests.WorldGenGoldenTests.ZoneMatchesGoldenHashes(Int32 x, Int32 y, String infoHash, String chunksHash)
+[xUnit.net 00:00:04.01]            at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+[xUnit.net 00:00:04.01]            at System.Reflection.MethodBaseInvoker.InvokeDirectByRefWithFewArgs(Object obj, Span`1 copyOfArgs, BindingFlags invokeAttr)
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_stonecaster", relief: -0.5, preset: "piercing_arrow") [14 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_tunnelguard", relief: -0.5, preset: "piercing_arrow") [4 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_spearguard", relief: -0.5, preset: "firebolt") [25 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_dartbow", relief: 0, preset: "firebolt") [6 ms]
+  Failed HollowWake.Core.Tests.WorldGenGoldenTests.ZoneMatchesGoldenHashes(x: 1, y: 0, infoHash: "33C9B160B66B9604", chunksHash: "DF735AA7610989B3") [1 s]
+  Error Message:
+   zone(1,0) info and chunks: expected 33C9B160B66B9604 DF735AA7610989B3, generated 33C9B160B66B9604 0E386FE1D6659BC0. Generation output changed; update the constant only if that was intended.
+  Stack Trace:
+     at HollowWake.Core.Tests.WorldGenGoldenTests.Golden(String what, String expected, String actual) in C:\Users\John\.codex\worktrees\kobold-scaleclans\MMOARPG\tests\HollowWake.Core.Tests\WorldGenGoldenTests.cs:line 165
+   at HollowWake.Core.Tests.WorldGenGoldenTests.ZoneMatchesGoldenHashes(Int32 x, Int32 y, String infoHash, String chunksHash) in C:\Users\John\.codex\worktrees\kobold-scaleclans\MMOARPG\tests\HollowWake.Core.Tests\WorldGenGoldenTests.cs:line 56
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeDirectByRefWithFewArgs(Object obj, Span`1 copyOfArgs, BindingFlags invokeAttr)
+  Passed HollowWake.Core.Tests.KoboldTests.EveryRoleHasScaledPhysicalityHabitatRewardsAndSustainedAiDamage(pattern: "kobold_venomweaver") [678 ms]
+  Passed HollowWake.Core.Tests.LocalPopulationSearchTests.BudgetLimitsDistantOffersWithoutWeakeningSpawnLevelOrRadius(chunks: 64, siteLevel: 9, reach: 160, offered: False) [669 ms]
+[xUnit.net 00:00:04.42]     HollowWake.Core.Tests.WorldGenGoldenTests.ZoneMatchesGoldenHashes(x: 0, y: 0, infoHash: "D2F6FA64DD42E7B7", chunksHash: "384BA03BE0D34C0A") [FAIL]
+[xUnit.net 00:00:04.42]       zone(0,0) info and chunks: expected D2F6FA64DD42E7B7 384BA03BE0D34C0A, generated 32CA1C2FA79C8A4A 38740F7C0C66C2F6. Generation output changed; update the constant only if that was intended.
+[xUnit.net 00:00:04.42]       Stack Trace:
+[xUnit.net 00:00:04.42]         C:\Users\John\.codex\worktrees\kobold-scaleclans\MMOARPG\tests\HollowWake.Core.Tests\WorldGenGoldenTests.cs(165,0): at HollowWake.Core.Tests.WorldGenGoldenTests.Golden(String what, String expected, String actual)
+[xUnit.net 00:00:04.42]         C:\Users\John\.codex\worktrees\kobold-scaleclans\MMOARPG\tests\HollowWake.Core.Tests\WorldGenGoldenTests.cs(56,0): at HollowWake.Core.Tests.WorldGenGoldenTests.ZoneMatchesGoldenHashes(Int32 x, Int32 y, String infoHash, String chunksHash)
+[xUnit.net 00:00:04.42]            at InvokeStub_WorldGenGoldenTests.ZoneMatchesGoldenHashes(Object, Span`1)
+[xUnit.net 00:00:04.42]            at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Passed HollowWake.Core.Tests.KoboldTests.EveryRoleHasScaledPhysicalityHabitatRewardsAndSustainedAiDamage(pattern: "kobold_tunnelguard") [40 ms]
+  Passed HollowWake.Core.Tests.KoboldTests.EveryRoleHasScaledPhysicalityHabitatRewardsAndSustainedAiDamage(pattern: "kobold_scavenger") [30 ms]
+  Passed HollowWake.Core.Tests.KoboldTests.EveryRoleHasScaledPhysicalityHabitatRewardsAndSustainedAiDamage(pattern: "kobold_knifehand") [38 ms]
+  Passed HollowWake.Core.Tests.KoboldTests.EveryRoleHasScaledPhysicalityHabitatRewardsAndSustainedAiDamage(pattern: "kobold_scalechief") [27 ms]
+  Passed HollowWake.Core.Tests.KoboldTests.EveryRoleHasScaledPhysicalityHabitatRewardsAndSustainedAiDamage(pattern: "kobold_ironback") [28 ms]
+  Failed HollowWake.Core.Tests.WorldGenGoldenTests.ZoneMatchesGoldenHashes(x: 0, y: 0, infoHash: "D2F6FA64DD42E7B7", chunksHash: "384BA03BE0D34C0A") [407 ms]
+  Error Message:
+   zone(0,0) info and chunks: expected D2F6FA64DD42E7B7 384BA03BE0D34C0A, generated 32CA1C2FA79C8A4A 38740F7C0C66C2F6. Generation output changed; update the constant only if that was intended.
+  Stack Trace:
+     at HollowWake.Core.Tests.WorldGenGoldenTests.Golden(String what, String expected, String actual) in C:\Users\John\.codex\worktrees\kobold-scaleclans\MMOARPG\tests\HollowWake.Core.Tests\WorldGenGoldenTests.cs:line 165
+   at HollowWake.Core.Tests.WorldGenGoldenTests.ZoneMatchesGoldenHashes(Int32 x, Int32 y, String infoHash, String chunksHash) in C:\Users\John\.codex\worktrees\kobold-scaleclans\MMOARPG\tests\HollowWake.Core.Tests\WorldGenGoldenTests.cs:line 56
+   at InvokeStub_WorldGenGoldenTests.ZoneMatchesGoldenHashes(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Passed HollowWake.Core.Tests.KoboldTests.EveryRoleHasScaledPhysicalityHabitatRewardsAndSustainedAiDamage(pattern: "kobold_dartbow") [35 ms]
+  Passed HollowWake.Core.Tests.KoboldTests.EveryRoleHasScaledPhysicalityHabitatRewardsAndSustainedAiDamage(pattern: "kobold_spearguard") [64 ms]
+  Passed HollowWake.Core.Tests.KoboldTests.EveryRoleHasScaledPhysicalityHabitatRewardsAndSustainedAiDamage(pattern: "kobold_stonecaster") [23 ms]
+  Passed HollowWake.Core.Tests.EntityPopulationTests.LegacyResidentsKeepTheirAuthoredLevels(x: 0, y: 0, pattern: "spindlewatch_guard", level: 5) [756 ms]
+  Passed HollowWake.Core.Tests.KoboldTests.EveryRoleHasScaledPhysicalityHabitatRewardsAndSustainedAiDamage(pattern: "kobold_stormweaver") [36 ms]
+  Passed HollowWake.Core.Tests.SpawnFactQueryTests.PopulationFactsMatchFullChunksWithAndAfterOverlays(x: 0, y: -1) [1 s]
+  Passed HollowWake.Core.Tests.KoboldTests.EveryRoleHasScaledPhysicalityHabitatRewardsAndSustainedAiDamage(pattern: "kobold_rimeweaver") [81 ms]
+  Passed HollowWake.Core.Tests.KoboldTests.EveryRoleHasScaledPhysicalityHabitatRewardsAndSustainedAiDamage(pattern: "kobold_cinderweaver") [34 ms]
+  Passed HollowWake.Core.Tests.KoboldTests.EveryRoleHasScaledPhysicalityHabitatRewardsAndSustainedAiDamage(pattern: "kobold_cragbreaker") [56 ms]
+[xUnit.net 00:00:04.97]     HollowWake.Core.Tests.WorldGenGoldenTests.ZoneMatchesGoldenHashes(x: 3, y: 2, infoHash: "BAFEA2C1CCA0DEC0", chunksHash: "8C46ACF595DB3A42") [FAIL]
+[xUnit.net 00:00:04.97]       zone(3,2) info and chunks: expected BAFEA2C1CCA0DEC0 8C46ACF595DB3A42, generated BAFEA2C1CCA0DEC0 B927209C7C70E524. Generation output changed; update the constant only if that was intended.
+[xUnit.net 00:00:04.97]       Stack Trace:
+[xUnit.net 00:00:04.97]         C:\Users\John\.codex\worktrees\kobold-scaleclans\MMOARPG\tests\HollowWake.Core.Tests\WorldGenGoldenTests.cs(165,0): at HollowWake.Core.Tests.WorldGenGoldenTests.Golden(String what, String expected, String actual)
+[xUnit.net 00:00:04.97]         C:\Users\John\.codex\worktrees\kobold-scaleclans\MMOARPG\tests\HollowWake.Core.Tests\WorldGenGoldenTests.cs(56,0): at HollowWake.Core.Tests.WorldGenGoldenTests.ZoneMatchesGoldenHashes(Int32 x, Int32 y, String infoHash, String chunksHash)
+[xUnit.net 00:00:04.97]            at InvokeStub_WorldGenGoldenTests.ZoneMatchesGoldenHashes(Object, Span`1)
+[xUnit.net 00:00:04.97]            at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Passed HollowWake.Core.Tests.KoboldTests.EveryRoleHasScaledPhysicalityHabitatRewardsAndSustainedAiDamage(pattern: "kobold_crestcaller") [37 ms]
+  Passed HollowWake.Core.Tests.KoboldTests.SmallKoboldShoveStopsAtPlacedAndTerrainWalls(terrain: False) [36 ms]
+  Passed HollowWake.Core.Tests.KoboldTests.SmallKoboldShoveStopsAtPlacedAndTerrainWalls(terrain: True) [3 ms]
+  Failed HollowWake.Core.Tests.WorldGenGoldenTests.ZoneMatchesGoldenHashes(x: 3, y: 2, infoHash: "BAFEA2C1CCA0DEC0", chunksHash: "8C46ACF595DB3A42") [550 ms]
+  Error Message:
+   zone(3,2) info and chunks: expected BAFEA2C1CCA0DEC0 8C46ACF595DB3A42, generated BAFEA2C1CCA0DEC0 B927209C7C70E524. Generation output changed; update the constant only if that was intended.
+  Stack Trace:
+     at HollowWake.Core.Tests.WorldGenGoldenTests.Golden(String what, String expected, String actual) in C:\Users\John\.codex\worktrees\kobold-scaleclans\MMOARPG\tests\HollowWake.Core.Tests\WorldGenGoldenTests.cs:line 165
+   at HollowWake.Core.Tests.WorldGenGoldenTests.ZoneMatchesGoldenHashes(Int32 x, Int32 y, String infoHash, String chunksHash) in C:\Users\John\.codex\worktrees\kobold-scaleclans\MMOARPG\tests\HollowWake.Core.Tests\WorldGenGoldenTests.cs:line 56
+   at InvokeStub_WorldGenGoldenTests.ZoneMatchesGoldenHashes(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Passed HollowWake.Core.Tests.LocalPopulationSearchTests.BudgetLimitsDistantOffersWithoutWeakeningSpawnLevelOrRadius(chunks: 64, siteLevel: 1, reach: 40, offered: False) [816 ms]
+  Passed HollowWake.Core.Tests.EntityPopulationTests.LegacyResidentsKeepTheirAuthoredLevels(x: 0, y: 0, pattern: "tangle", level: 6) [834 ms]
+[xUnit.net 00:00:05.45]     HollowWake.Core.Tests.WorldGenGoldenTests.ZoneMatchesGoldenHashes(x: 0, y: -1, infoHash: "8AD7370958FA7D7B", chunksHash: "D785D8F084A1F919") [FAIL]
+[xUnit.net 00:00:05.45]       zone(0,-1) info and chunks: expected 8AD7370958FA7D7B D785D8F084A1F919, generated 8AD7370958FA7D7B 2AFA9EE5AA75F409. Generation output changed; update the constant only if that was intended.
+[xUnit.net 00:00:05.45]       Stack Trace:
+[xUnit.net 00:00:05.45]         C:\Users\John\.codex\worktrees\kobold-scaleclans\MMOARPG\tests\HollowWake.Core.Tests\WorldGenGoldenTests.cs(165,0): at HollowWake.Core.Tests.WorldGenGoldenTests.Golden(String what, String expected, String actual)
+[xUnit.net 00:00:05.45]         C:\Users\John\.codex\worktrees\kobold-scaleclans\MMOARPG\tests\HollowWake.Core.Tests\WorldGenGoldenTests.cs(56,0): at HollowWake.Core.Tests.WorldGenGoldenTests.ZoneMatchesGoldenHashes(Int32 x, Int32 y, String infoHash, String chunksHash)
+[xUnit.net 00:00:05.45]            at InvokeStub_WorldGenGoldenTests.ZoneMatchesGoldenHashes(Object, Span`1)
+[xUnit.net 00:00:05.45]            at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Failed HollowWake.Core.Tests.WorldGenGoldenTests.ZoneMatchesGoldenHashes(x: 0, y: -1, infoHash: "8AD7370958FA7D7B", chunksHash: "D785D8F084A1F919") [480 ms]
+  Error Message:
+   zone(0,-1) info and chunks: expected 8AD7370958FA7D7B D785D8F084A1F919, generated 8AD7370958FA7D7B 2AFA9EE5AA75F409. Generation output changed; update the constant only if that was intended.
+  Stack Trace:
+     at HollowWake.Core.Tests.WorldGenGoldenTests.Golden(String what, String expected, String actual) in C:\Users\John\.codex\worktrees\kobold-scaleclans\MMOARPG\tests\HollowWake.Core.Tests\WorldGenGoldenTests.cs:line 165
+   at HollowWake.Core.Tests.WorldGenGoldenTests.ZoneMatchesGoldenHashes(Int32 x, Int32 y, String infoHash, String chunksHash) in C:\Users\John\.codex\worktrees\kobold-scaleclans\MMOARPG\tests\HollowWake.Core.Tests\WorldGenGoldenTests.cs:line 56
+   at InvokeStub_WorldGenGoldenTests.ZoneMatchesGoldenHashes(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Passed HollowWake.Core.Tests.WorldGenGoldenTests.ClimateSamplesMatchGoldenHash [73 ms]
+  Passed HollowWake.Core.Tests.WorldGenGoldenTests.StartZoneIsTheOrigin [3 ms]
+  Passed HollowWake.Core.Tests.LocalPopulationSearchTests.BudgetLimitsDistantOffersWithoutWeakeningSpawnLevelOrRadius(chunks: 1, siteLevel: 1, reach: 160, offered: False) [751 ms]
+  Passed HollowWake.Core.Tests.EntityPopulationTests.NaturalSitesRequireEligibleInhabitants(level: 8, eligible: True) [657 ms]
+  Passed HollowWake.Core.Tests.SpawnFactQueryTests.PopulationFactsMatchFullChunksWithAndAfterOverlays(x: 1, y: 0) [1 s]
+[xUnit.net 00:00:06.57]     HollowWake.Core.Tests.WorldGenGoldenTests.OverlaidWorldMatchesGoldenHash [FAIL]
+[xUnit.net 00:00:06.57]       overlaid world: expected AC3C2BFA30192BBC, generated 74AA73CB8E77183E. Generation output changed; update the constant only if that was intended.
+[xUnit.net 00:00:06.57]       Stack Trace:
+[xUnit.net 00:00:06.57]         C:\Users\John\.codex\worktrees\kobold-scaleclans\MMOARPG\tests\HollowWake.Core.Tests\WorldGenGoldenTests.cs(165,0): at HollowWake.Core.Tests.WorldGenGoldenTests.Golden(String what, String expected, String actual)
+[xUnit.net 00:00:06.57]         C:\Users\John\.codex\worktrees\kobold-scaleclans\MMOARPG\tests\HollowWake.Core.Tests\WorldGenGoldenTests.cs(104,0): at HollowWake.Core.Tests.WorldGenGoldenTests.OverlaidWorldMatchesGoldenHash()
+[xUnit.net 00:00:06.57]            at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+[xUnit.net 00:00:06.57]            at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Passed HollowWake.Core.Tests.LocalPopulationSearchTests.BudgetLimitsDistantOffersWithoutWeakeningSpawnLevelOrRadius(chunks: 64, siteLevel: 1, reach: 160, offered: True) [690 ms]
+  Failed HollowWake.Core.Tests.WorldGenGoldenTests.OverlaidWorldMatchesGoldenHash [1 s]
+  Error Message:
+   overlaid world: expected AC3C2BFA30192BBC, generated 74AA73CB8E77183E. Generation output changed; update the constant only if that was intended.
+  Stack Trace:
+     at HollowWake.Core.Tests.WorldGenGoldenTests.Golden(String what, String expected, String actual) in C:\Users\John\.codex\worktrees\kobold-scaleclans\MMOARPG\tests\HollowWake.Core.Tests\WorldGenGoldenTests.cs:line 165
+   at HollowWake.Core.Tests.WorldGenGoldenTests.OverlaidWorldMatchesGoldenHash() in C:\Users\John\.codex\worktrees\kobold-scaleclans\MMOARPG\tests\HollowWake.Core.Tests\WorldGenGoldenTests.cs:line 104
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Passed HollowWake.Core.Tests.KoboldTests.DedicatedSitesActuallyOccurInUnmodifiedGeneratedHabitats(site: "kobold_reed_camp", x: -7, y: -23) [1 s]
+  Passed HollowWake.Core.Tests.EntityPopulationTests.NaturalSitesRequireEligibleInhabitants(level: 1, eligible: False) [699 ms]
+  Passed HollowWake.Core.Tests.EntityPopulationTests.EveryEntityHabitatHasAMatchingPopulationReference(template: "undead_body") [2 ms]
+  Passed HollowWake.Core.Tests.EntityPopulationTests.EveryEntityHabitatHasAMatchingPopulationReference(template: "orc_body") [< 1 ms]
+  Passed HollowWake.Core.Tests.EntityPopulationTests.EveryEntityHabitatHasAMatchingPopulationReference(template: "fauna_body") [< 1 ms]
+  Passed HollowWake.Core.Tests.EntityPopulationTests.EveryEntityHabitatHasAMatchingPopulationReference(template: "goblinkin_body") [< 1 ms]
+  Passed HollowWake.Core.Tests.EntityPopulationTests.GeneratedCombatTargetsExistNearbyAndRespectQuestLevel(x: 0, y: -1) [15 ms]
+  Passed HollowWake.Core.Tests.EntityPopulationTests.GeneratedCombatTargetsExistNearbyAndRespectQuestLevel(x: 3, y: 2) [17 ms]
+  Passed HollowWake.Core.Tests.EntityPopulationTests.GeneratedCombatTargetsExistNearbyAndRespectQuestLevel(x: 1, y: 0) [10 ms]
+  Passed HollowWake.Core.Tests.EntityPopulationTests.GeneratedCombatTargetsExistNearbyAndRespectQuestLevel(x: 0, y: 0) [50 ms]
+  Passed HollowWake.Core.Tests.LocalPopulationSearchTests.CachedDistantResidentCannotExtendAnotherSlotsBudget [721 ms]
+  Passed HollowWake.Core.Tests.KoboldTests.DedicatedSitesActuallyOccurInUnmodifiedGeneratedHabitats(site: "kobold_scrap_camp", x: -8, y: -40) [1 s]
+  Passed HollowWake.Core.Tests.SpawnFactQueryTests.PopulationFactsMatchFullChunksWithAndAfterOverlays(x: 0, y: 0) [1 s]
+  Passed HollowWake.Core.Tests.EntityPopulationTests.BothSiteSpawnPathsPreservePatternLevelUnlessExplicitlyScaled(useSiteLevel: True) [1 s]
+  Passed HollowWake.Core.Tests.KoboldTests.DedicatedSitesActuallyOccurInUnmodifiedGeneratedHabitats(site: "kobold_scale_hold", x: -15, y: -40) [1 s]
+  Passed HollowWake.Core.Tests.SpawnFactQueryTests.PopulationFactsMatchFullChunksWithAndAfterOverlays(x: 3, y: 2) [1 s]
+  Passed HollowWake.Core.Tests.EntityPopulationTests.BothSiteSpawnPathsPreservePatternLevelUnlessExplicitlyScaled(useSiteLevel: False) [1 s]
+  Passed HollowWake.Core.Tests.KoboldTests.DedicatedSitesActuallyOccurInUnmodifiedGeneratedHabitats(site: "kobold_cinder_camp", x: -25, y: -31) [1 s]
+  Passed HollowWake.Core.Tests.KoboldTests.HomeRegionHoldStaysPopulatedWithExplicitBirthAndRespawnLevelPolicy(useSiteLevel: True, expectedLevel: 7) [1 s]
+  Passed HollowWake.Core.Tests.KoboldTests.HomeRegionHoldStaysPopulatedWithExplicitBirthAndRespawnLevelPolicy(useSiteLevel: False, expectedLevel: 6) [1 s]
+  Passed HollowWake.Core.Tests.KoboldTests.LightAndArmoredBodiesUseCanonicalMassAndBoundedLiveShove [5 ms]
+  Passed HollowWake.Core.Tests.KoboldTests.AuthoredSitesSpawnEveryEligibleRoleAndReplayWithLevelGates(site: "kobold_scrap_camp") [2 s]
+  Passed HollowWake.Core.Tests.KoboldTests.AuthoredSitesSpawnEveryEligibleRoleAndReplayWithLevelGates(site: "kobold_cinder_camp") [2 s]
+  Passed HollowWake.Core.Tests.KoboldTests.AuthoredSitesSpawnEveryEligibleRoleAndReplayWithLevelGates(site: "kobold_reed_camp") [2 s]
+  Passed HollowWake.Core.Tests.KoboldTests.AuthoredSitesSpawnEveryEligibleRoleAndReplayWithLevelGates(site: "kobold_scale_hold") [2 s]
+[xUnit.net 00:00:23.23]   Finished:    HollowWake.Core.Tests
+  Passed HollowWake.Core.Tests.KoboldTests.LoosedAndKoboldsAcquireAndDamageEachOtherWithoutAPlayerOrInjectedTarget [23 ms]
+
+Test Run Failed.
+Total tests: 145
+     Passed: 140
+     Failed: 5
+ Total time: 24.6937 Seconds
