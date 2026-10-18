@@ -1824,7 +1824,7 @@ Every slice lands with a seeded duel the fight tool runs twice to the same trace
 
 ## Charges (23: ported 12, ported (difference) 5, not ported 6)
 
-| Prototype | Ours | Mechanism | Status | Note | PortedStatusTests |
+| Prototype | Ours | Mechanism | Status | Note | Proof |
 |---|---|---|---|---|---|
 | fury | fury | charge kind | ported |  | PortedStatusTests |
 | static | static | charge kind | ported |  | PortedStatusTests |
@@ -1833,15 +1833,15 @@ Every slice lands with a seeded duel the fight tool runs twice to the same trace
 | verse | verse | charge kind | ported |  | PortedStatusTests |
 | riposte | riposte | charge kind | ported |  | PortedStatusTests |
 | magma | magma | charge kind | ported |  | PortedStatusTests |
-| rage | rage | charge kind | seam | per-charge modifiers are granted by whoever uses the charge, with gauge charge.<id>; seam: charge modifiers (its per-charge haste and damage) | PortedStatusTests |
-| bloodlust | bloodlust | charge kind | seam | per-charge modifiers are granted by whoever uses the charge, with gauge charge.<id>; mods only while draining: a drain flag by hand; seam: charge modifiers (its per-charge haste, and modifiers only while draining) | PortedStatusTests |
+| rage | rage | charge kind | ported | carried as the kind's per-charge modifiers: its haste, and its damage and added Stone with attacks | PortedStatusTests.ThePortedChargesGrantTheirModifiersPerChargeHeld |
+| bloodlust | bloodlust | charge kind | ported | carried as the kind's per-charge modifiers: its haste and damage, each held only while a drain burns the bank (a condition on the gauge charge.bloodlust.drain) | PortedStatusTests.ThePortedChargesGrantTheirModifiersPerChargeHeld |
 | soul | soul | charge kind | ported |  | PortedStatusTests |
 | gyre | gyre | charge kind | ported |  | PortedStatusTests |
 | storm | storm | charge kind | ported |  | PortedStatusTests |
-| frenzy | frenzy | charge kind | seam | per-charge modifiers are granted by whoever uses the charge, with gauge charge.<id>; seam: charge modifiers (its per-charge haste) | PortedStatusTests |
+| frenzy | frenzy | charge kind | ported | carried as the kind's per-charge modifiers: its attack, cast and movement haste | PortedStatusTests.ThePortedChargesGrantTheirModifiersPerChargeHeld |
 | brew | brew | charge kind | ported |  | PortedStatusTests |
 | verdict | verdict | charge kind | ported |  | PortedStatusTests |
-| communion | communion | charge kind | seam | per-charge modifiers are granted by whoever uses the charge, with gauge charge.<id>; seam: charge modifiers (its per-charge damage) | PortedStatusTests |
+| communion | communion | charge kind | ported | carried as the kind's per-charge modifiers: its damage and minion damage | PortedStatusTests.ThePortedChargesGrantTheirModifiersPerChargeHeld |
 | flask_life | flask_life | charge kind | not ported | flask founts: the flask family is not ported | charge duel |
 | flask_mana | flask_mana | charge kind | not ported | flask founts: the flask family is not ported | charge duel |
 | flask_catalyst | flask_catalyst | charge kind | not ported | flask founts: the flask family is not ported | charge duel |

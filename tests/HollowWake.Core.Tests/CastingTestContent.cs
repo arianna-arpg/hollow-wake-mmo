@@ -14,8 +14,8 @@ using Xunit;
 namespace HollowWake.Core.Tests;
 
 /// <summary>
-/// The core content plus a layer of test forms, glyphs and presets for the cast modes (ids start with
-/// <c>t_</c>), loaded once. Numbers here are the tests' own, so tuning the shipped content cannot move them.
+/// The core content plus a layer of test forms, glyphs and presets for the cast modes and of charge kinds (ids
+/// start with <c>t_</c>), loaded once. Numbers here are the tests' own, so tuning the shipped content cannot move them.
 /// </summary>
 internal static class CastingTestContent
 {
@@ -194,6 +194,19 @@ entries:
 kind: patterns
 entries:
   - { id: t_blank, name: Blank, extends: monster, level: 1, components: { weaves: { list: [] } } }
+
+---
+kind: charges
+entries:
+  - id: t_quicken
+    duration: 4
+    decay: 1
+    modifiers:
+      - { attribute: attack.speed, form: increased, value: 0.1 }
+      - { attribute: damage, form: increased, value: 0.05, scope: [attack] }
+  - id: t_thirst
+    modifiers:
+      - { attribute: attack.speed, form: increased, value: 0.1, condition: "charge.t_thirst.drain > 0" }
 """;
 
     private static readonly Lazy<ContentRegistry> Loaded = new(() =>
