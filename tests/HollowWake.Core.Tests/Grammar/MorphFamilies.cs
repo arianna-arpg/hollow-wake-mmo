@@ -109,12 +109,12 @@ internal static class Families
             Parameter.Axis("volley_spacing", Geometry, "units", 0, 2, "shipped 0.8; a literal number") with { Default = 0.6, Absent = 0.5, Live = Map(("fire", "volley"), ("count", 3.0), ("pierce", 10.0)) },
             Parameter.Axis("ring_jitter", Geometry, "degrees", 0, 180, "shipped 15..90; a literal number") with { Default = 0.0, Absent = 0.5, Rolls = true, Live = Map(("fire", "ring"), ("count", 8.0), ("pierce", 10.0)) },
             Parameter.Choice("origin", Geometry, new[] { "caster", "point" }, "the handler's origins") with { Default = "caster", Absent = 0.5 },
-            Parameter.Axis("origin_range", Geometry, "units", 0, 20, "shipped 10.63..60; floored 0") with { Absent = 0.5, Live = Map(("origin", "point")) },
+            Parameter.Axis("origin_range", Geometry, "units", 0, 60, "shipped 10.63..60; floored 0") with { Absent = 0.5, Live = Map(("origin", "point")) },
             Parameter.Axis("duration", Timing, "seconds", 0.25, 6, "shipped 2.4..6; floored at a tick; absent, the range alone ends a flight") with { Absent = 0.5, Live = Map(("pierce", 10.0)) },
             Parameter.Choice("return", Kinematics, new[] { "none", "origin", "caster" }, "the handler's returns") with { Default = "none", Absent = 0.4, Live = Map(("origin", "point")) },
             Parameter.Count("forks", Kinematics, "forks", 0, 4, "shipped +1 as projectile.forks; no clamp, and each fork doubles the flights") with { Attribute = "projectile.forks", Absent = 0.3 },
             Parameter.Count("chains", Kinematics, "chains", 0, 5, "shipped +2 as projectile.chain; no clamp") with { Attribute = "projectile.chain", Absent = 0.3 },
-            Parameter.Axis("rehit", Kinematics, "seconds", 0, 1.5, "shipped 0.5..0.6 (0.55..999 as projectile.rehit); floored 0") with { Attribute = "projectile.rehit", Absent = 0.5 },
+            Parameter.Axis("rehit", Kinematics, "seconds", 0, 1.5, "shipped 0.5..0.6 (0.55..999 as projectile.rehit, where 999 stands for once a flight); floored 0; sampled to 1.5, since a rehit past a flight's life strikes each body once, as 999 does") with { Attribute = "projectile.rehit", Absent = 0.5 },
             Parameter.Count("bounce", Kinematics, "bounces", 0, 6, "shipped 2..6 as projectile.bounce; no clamp") with { Attribute = "projectile.bounce", Absent = 0.4 },
             Parameter.Axis("homing", Kinematics, "degrees a second", 0, 360, "shipped 15..286 as projectile.homing") with { Attribute = "projectile.homing", Absent = 0.5, Live = Map(("count", 2.0), ("spread", 120.0)) },
             Parameter.Axis("guide", Kinematics, "degrees a second", 0, 360, "shipped 126..172 as projectile.guide") with { Attribute = "projectile.guide", Absent = 0.6, Live = Map(("count", 2.0), ("spread", 120.0)) },
@@ -414,7 +414,7 @@ internal static class Families
             Parameter.Axis("width", Geometry, "units", 0.1, 8, "shipped 1 (area.width 2 by default)") with { Absent = 0.5, Live = Map(("shape", "line"), ("radius", 10.0)) },
             Parameter.Axis("inner", Geometry, "fraction of the radius", 0, 1, "shipped 0.72; the handler clamps 0..1") with { Absent = 0.6, Live = Map(("radius", 4.0)) },
             Parameter.Choice("center", Geometry, new[] { "focus", "source", "point" }, "the handler's centers") with { Absent = 0.4 },
-            Parameter.Count("max_targets", Targeting, "bodies", 0, 8, "shipped 1..24; floored 0") with { Absent = 0.5, Live = Map(("radius", 4.0)) },
+            Parameter.Count("max_targets", Targeting, "bodies", 0, 24, "shipped 1..24; floored 0") with { Absent = 0.5, Live = Map(("radius", 4.0)) },
             Parameter.Choice("pick", Targeting, PickWords, "Picks.Names") with { Default = "random", Absent = 0.5, Rolling = new[] { "random" }, Live = Map(("max_targets", 1.0), ("radius", 3.8)) },
             Parameter.Choice("reach", Geometry, new[] { "center", "edge" }, "the handler's reaches") with { Default = "center", Absent = 0.5, Live = Map(("shape", "sector"), ("radius", 1.8)) },
             Parameter.Choice("filter", Targeting, Filters, "the words EffectHelpers.Passes knows") with { Default = "enemy", Absent = 0.4, Live = Map(("center", "source"), ("radius", 5.5)) },
@@ -539,8 +539,8 @@ internal static class Families
         Attributes = Stamina(),
         Parameters = new[]
         {
-            Parameter.Axis("radius", Geometry, "units", 0.25, 6, "shipped 0.75..3.44 on the node, 1.1..9 as area.radius; no clamp in the handler") with { Attribute = "area.radius", Absent = 0.2 },
-            Parameter.Axis("duration", Timing, "seconds", 0.1, 6, "shipped 1.2..6 on the node, 0.8..600 as duration; floored at a tick") with { Attribute = "duration", Absent = 0.2 },
+            Parameter.Axis("radius", Geometry, "units", 0.25, 9, "shipped 0.75..3.44 on the node, 1.1..9 as area.radius; no clamp in the handler") with { Attribute = "area.radius", Absent = 0.2 },
+            Parameter.Axis("duration", Timing, "seconds", 0.1, 30, "shipped 1.2..6 on the node, and as duration 0.8..30 on timed casts (600 only on a toggle's status, past the run's cap); floored at a tick") with { Attribute = "duration", Absent = 0.2 },
             Parameter.Axis("interval", Timing, "seconds", 0.05, 2, "shipped 0.18..1; floored at a tick") with { Default = 0.5, Absent = 0.2 },
             Parameter.Choice("shape", Geometry, ShapeNames, "the Shapes registry") with { Default = "circle", Absent = 0.5, Live = Map(("radius", 4.0)) },
             Parameter.Axis("angle", Geometry, "degrees", 5, 360, "shipped 75, scaled by area.angle") with { Absent = 0.6, Live = Map(("shape", "sector"), ("radius", 4.0)) },
@@ -951,8 +951,8 @@ internal static class Families
         {
             Parameter.Count("count", Agency, "bodies", 1, 8, "shipped 1 to randi(4, 6) and weave.summon.count; clamped 1..rule minions.max_per_cast") with { Attribute = "summon.count", Absent = 0.2 },
             // Compared with bodies that outlast the cooldown, so the second press finds the first press's still standing.
-            Parameter.Count("max_active", Agency, "bodies", 1, 8, "shipped 1..12 and weave.summon.max; floored 1") with { Attribute = "summon.max", Absent = 0.2, Live = Map(("count", 4.0), (lifetime, 6.0)) },
-            Parameter.Axis(lifetime, Agency, "seconds", 0, 6, lifetimeSource) with { Attribute = "duration", Absent = 0.2, Zero = 0.2, Pair = (0.5, 6.0) },
+            Parameter.Count("max_active", Agency, "bodies", 1, 12, "shipped 1..12 and weave.summon.max; floored 1") with { Attribute = "summon.max", Absent = 0.2, Live = Map(("count", 4.0), (lifetime, 6.0)) },
+            Parameter.Axis(lifetime, Agency, "seconds", 0, 20, lifetimeSource) with { Attribute = "duration", Absent = 0.2, Zero = 0.2, Pair = (0.5, 6.0) },
         },
         Defaults = Map(("count", 2.0), ("max_active", 8.0), (lifetime, 2.0)),
         Lists = new[]
@@ -1018,7 +1018,7 @@ internal static class Families
         });
 
     public static readonly Family Deploy = Raising("deploy", "construct", "lifetime",
-        "shipped weave.duration; zero places a construct for good",
+        "shipped weave.duration 8..20; zero places a construct for good",
         new Dictionary<string, string>
         {
             ["pattern"] = "fixed: the crowd's dummy, which casts nothing",

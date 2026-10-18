@@ -381,7 +381,10 @@ internal sealed class View
 
     private double Bounded(string attribute, double value) => Fold(Content, attribute, value);
 
-    /// <summary>A value folded through the attribute catalog's bounds, as the weave's attribute fold reads it.</summary>
+    /// <summary>
+    /// A value folded through the attribute catalog's bounds, as the weave's attribute fold reads it: held within its
+    /// least and its most, then rounded to the catalog's decimals, halves away from zero (AttributeSet's fold).
+    /// </summary>
     public static double Fold(ContentRegistry content, string attribute, double value)
     {
         var def = content.Get<AttributeDef>(attribute);
@@ -392,6 +395,10 @@ internal sealed class View
         if (def?.Max is { } max)
         {
             value = Math.Min(max, value);
+        }
+        if (def?.Decimals is { } decimals)
+        {
+            value = Math.Round(value, Math.Clamp(decimals, 0, 10), MidpointRounding.AwayFromZero);
         }
         return value;
     }
