@@ -17,10 +17,10 @@ namespace HollowWake.Core.Tests.Grammar;
 internal sealed record CrowdBody(string Name, Vector2 At, string Faction, double Life = 1);
 
 /// <summary>
-/// The crowd scenario every point runs in: a seeded arena, the point's caster at the origin pressing its weave once,
-/// aimed east, and a fixed crowd of still dummies: nine enemies (five in a line two units apart from two units out, one
-/// of them at half life, two flanking three units north and south at four units east, and two further out, south at
-/// six units east and north at ten) and one ally of the caster beside them. The run records every event the press
+/// The crowd scenario every point runs in: a seeded arena, the point's caster at the origin pressing its weave aimed
+/// east (once, or again after the cooldown where its family asks), and a fixed crowd of still dummies: enemies in a
+/// line two units apart from two units out, one of them at half life, two flanking three units north and south at four
+/// units east, and two further out, south at six units east and north at ten; and an ally of the caster beside them. The run records every event the press
 /// causes, ticks through the point's expected lifetime and a quiet second, and checks what it may: that the press
 /// paid, that every life lost went through the one damage pipeline, that what it made ended or may stay, and that it
 /// stayed within the caps its parameters allow.

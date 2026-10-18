@@ -26,9 +26,9 @@ internal sealed record Sense(Parameter Parameter, IReadOnlyList<Point> Points, I
 internal sealed class MorphLayer
 {
     /// <summary>
-    /// Points sampled per family: sixteen keeps the whole class under about twenty seconds. A deeper sweep sets the
-    /// environment variable <c>HOLLOWWAKE_MORPH_POINTS</c>; points draw one after another from the family's stream, so
-    /// the first sixteen of a deeper sweep are these.
+    /// Points sampled per family: a few by default, to keep the default run short. A deeper sweep sets the environment
+    /// variable <c>HOLLOWWAKE_MORPH_POINTS</c>; points draw one after another from the family's stream, so a deeper
+    /// sweep begins with the default's points.
     /// </summary>
     public static int PointsPerFamily =>
         int.TryParse(Environment.GetEnvironmentVariable("HOLLOWWAKE_MORPH_POINTS"), out var n) && n > 0 ? n : 16;

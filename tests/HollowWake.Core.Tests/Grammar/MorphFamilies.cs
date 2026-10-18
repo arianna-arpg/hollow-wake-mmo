@@ -747,7 +747,7 @@ internal static class Families
         Attributes = Stamina(),
         Parameters = new[]
         {
-            // Compared up to six strikes: past the seven bodies in reach the rest fall at random, on a stream keyed by the weave.
+            // Compared up to six strikes, fewer than the enemies in reach: past them the rest fall at random, on a stream keyed by the weave.
             Parameter.Count("count", Geometry, "strikes", 0, 16, "shipped 5 as area.strikes; no clamp") with { Attribute = "area.strikes", Absent = 0.2, Pair = (0.0, 6.0) },
             Parameter.Axis("radius", Geometry, "units", 0.1, 8, "shipped 4; floored 0.1, default twice area.radius") with { Absent = 0.3 },
             Parameter.Axis("interval", Timing, "seconds", 0, 0.5, "shipped 0.15; floored 0") with { Default = 0.0, Absent = 0.4 },

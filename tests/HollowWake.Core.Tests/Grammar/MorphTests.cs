@@ -7,14 +7,15 @@ namespace HollowWake.Core.Tests.Grammar;
 
 /// <summary>
 /// The morph test: the combat grammar says a cast is a point in a product of dimensions and that the engine's invariants
-/// hold at every point. For each delivery and agency family it samples points from the family's parameter table
-/// (MorphFamilies.cs: axes, each one quantity with a unit inside a dimension, and choices) on a constant seed and
-/// compiles each as content in a scratch layer beside core (MorphLayer.cs). Every point must validate, compile strictly
-/// and state what it is as mechanisms; every sampled point, pressed once in the crowd scenario (MorphArena.cs), must run
-/// the same twice on one seed, lose no life outside the one damage pipeline, stay within the fan-out its parameters
-/// allow, leave nothing behind once its expected life is over, and pay its cost and cooldown. Then, parameter by
-/// parameter, each must move something the crowd shows, and an axis with a weave attribute behind it must show the same
-/// through the attribute as through the node. Known defects are listed in <see cref="Known"/> with their reasons; one
+/// hold at every point; this test checks them at points sampled across that space. For each delivery and agency family
+/// it samples points from the family's parameter table (MorphFamilies.cs: axes, each one quantity with a unit inside a
+/// dimension, and choices) on a constant seed and compiles each as content in a scratch layer beside core
+/// (MorphLayer.cs). Every point must validate, compile strictly and state what it is as mechanisms, both ways; every
+/// sampled point, pressed in the crowd scenario (MorphArena.cs), must run the same twice on one seed, lose no life
+/// outside the one damage pipeline, stay within the fan-out its parameters allow, end what it made within its expected
+/// life and leave nothing behind, pay before anything resolves, and keep the effect depth going down its causes. Then,
+/// parameter by parameter, each must move something the crowd shows (a choice word by word, two at a time), and an axis
+/// with a weave attribute behind it must show the same through the attribute as through the node. Known defects are listed in <see cref="Known"/> with their reasons; one
 /// that stops reproducing fails the test so the list stays honest.
 /// </summary>
 public class MorphTests
@@ -150,7 +151,7 @@ public class MorphTests
             When = v => !Families.Lands(v) && v.Fills("on_land"),
         },
         new("spawn", "left behind", "bare spawn",
-            "exempt: a spawn without a lifetime places a body with no owner's terms, so it outlives every scenario by design; a finding, not a failure")
+            "rule 7's baseline exception: the spawn effect places a body under no owner's cap, and without a lifetime keeps it for good; the grammar names it as the exception rule 7 carries until spawns raise their bodies under a cap")
         {
             When = v => !v.Sets("lifetime"),
         },
@@ -198,7 +199,7 @@ public class MorphTests
         Settle(name, examined, violations, "validates", "compiles", "states");
     }
 
-    /// <summary>Each sampled point, pressed once: deterministic, one damage pipeline, bounded, terminating, nothing left behind, paying, and nothing logged.</summary>
+    /// <summary>Each sampled point, pressed: deterministic, one damage pipeline, bounded, terminating, nothing left behind, paying before it resolves, keeping the depth, on time, and nothing logged.</summary>
     [Theory]
     [MemberData(nameof(FamilyNames))]
     public void EverySampledPointHoldsTheInvariants(string name)
