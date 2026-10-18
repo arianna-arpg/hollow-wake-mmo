@@ -114,26 +114,34 @@ export class CardBaker {
     this.camera.position.copy(centre).add(dir.clone().multiplyScalar(40));
     this.camera.lookAt(centre);
     const previousTarget = this.renderer.getRenderTarget();
-    const previousClear = this.renderer.getClearAlpha();
+    const previousColor = this.renderer.getClearColor(new Color());
+    const previousAlpha = this.renderer.getClearAlpha();
     const previousAuto = this.renderer.autoClear;
-    this.renderer.setRenderTarget(target);
-    this.renderer.setClearColor(new Color(0, 0, 0), 0);
-    this.renderer.clear();
-    this.renderer.autoClear = false;
-    for (let cell = 0; cell < CELLS; cell++) {
-      body.root.rotation.y = yaw + (cell * Math.PI * 2) / CELLS;
-      body.root.updateMatrixWorld(true);
-      this.renderer.setViewport(cell * pixels, 0, pixels, pixels);
-      this.renderer.setScissor(cell * pixels, 0, pixels, pixels);
-      this.renderer.setScissorTest(true);
-      this.renderer.render(this.scene, this.camera);
+    try {
+      this.renderer.setRenderTarget(target);
+      this.renderer.setClearColor(new Color(0, 0, 0), 0);
+      this.renderer.clear();
+      this.renderer.autoClear = false;
+      for (let cell = 0; cell < CELLS; cell++) {
+        body.root.rotation.y = yaw + (cell * Math.PI * 2) / CELLS;
+        body.root.updateMatrixWorld(true);
+        // Render-target rectangles are physical pixels and do not mutate the main canvas viewport.
+        target.viewport.set(cell * pixels, 0, pixels, pixels);
+        target.scissor.copy(target.viewport);
+        target.scissorTest = true;
+        this.renderer.setRenderTarget(target);
+        this.renderer.render(this.scene, this.camera);
+      }
+    } catch (error) {
+      target.dispose();
+      throw error;
+    } finally {
+      this.renderer.setRenderTarget(previousTarget);
+      this.renderer.setClearColor(previousColor, previousAlpha);
+      this.renderer.autoClear = previousAuto;
+      this.scene.remove(body.root);
+      body.dispose();
     }
-    this.renderer.setScissorTest(false);
-    this.renderer.autoClear = previousAuto;
-    this.renderer.setRenderTarget(previousTarget);
-    this.renderer.setClearAlpha(previousClear);
-    this.scene.remove(body.root);
-    body.dispose();
     atlas.target = target;
     atlas.height = plan.height;
     atlas.width = plan.width;
