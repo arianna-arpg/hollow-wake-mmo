@@ -1,6 +1,6 @@
 # Combat AI: constructs act through the runtime
 
-Date: 2026-10-18. Original author: the combat session (Claude); subsequent corrections: Codex. Branch `claude/combat-ai-constructs`, currently stacked on `codex/shared-cast-forecasts-integration` (#20), with main through `17ca2f1` integrated. The original intent-seam base `87ad953` and measurements below are historical. Current correction and validation evidence is in [the independent review](2026-10-18-construct-independent-review.md).
+Date: 2026-10-18. Original author: the combat session (Claude); subsequent corrections: Codex. Branch `claude/combat-ai-constructs`, targeting main with an outstanding #20 dependency and main through `17ca2f1` integrated. The original intent-seam base `87ad953` and measurements below are historical. Current correction and validation evidence is in [the independent review](2026-10-18-construct-independent-review.md).
 
 ## What changed
 
@@ -38,7 +38,7 @@ The measured normal-speed and double-speed echo scenarios are unchanged event fo
 
 ## Shared-file integration
 
-#20 is integrated in this branch through the source named in the independent review. `WeaveRuntime.Run` checks a paid device as the physical caster before switching payload credit to its owner. Echo replay preserves the captured section and variables, checks the shared release policy from the echo position, and runs without a second payment. `EffectContext.CastSource` carries physical miss attribution independently of inherited `Source` and `Origin`, including nested contexts. These additive context fields must be retained with #36's separate launch-height work. There is no unresolved intent-seam merge; #50 must be retargeted to main before #20's branch is deleted.
+#20 is integrated in this branch through the source named in the independent review. `WeaveRuntime.Run` checks a paid device as the physical caster before switching payload credit to its owner. Echo replay preserves the captured section and variables, checks the shared release policy from the echo position, and runs without a second payment. `EffectContext.CastSource` carries physical miss attribution independently of inherited `Source` and `Origin`, including nested contexts. These additive context fields must be retained with #36's separate launch-height work. There is no unresolved intent-seam merge. #50 is retargeted to main to allow hosted checks, but its older included #20 subset must not land before the complete corrected dependency is integrated and reviewed.
 ## Open
 
 - The owner decided the echo's pending replays, answering finding 2 of the combat session's re-review of `cc0e1d4` on the request: "Pending echo replays expire while the echo cannot act, so a stun counters the echo." So an inactive echo retains no pending uses: a use the owner resolves while the echo is stunned, frozen or otherwise unable to act expires rather than banking, which keeps invariant 2 (every bank caps and decays) and keeps a stun a counter to an echo. The correction now covers stun/freeze application, attempts during incapacity and recovery, including statuses shorter than a think interval. The exact human answer received by Codex was "Cancel pending replays (Recommended)" to the stun/freeze question.
