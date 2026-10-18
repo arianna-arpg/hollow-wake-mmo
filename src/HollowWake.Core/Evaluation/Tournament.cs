@@ -441,6 +441,13 @@ public static class Tournament
 
     private static string Hex(ulong hash) => hash.ToString("x16", CultureInfo.InvariantCulture);
 
+    /// <summary>A trace number formatted as double to hundredths, widening float inputs before rounding, without the sign of a rounded zero.</summary>
+    public static string TraceNumber(double value)
+    {
+        var text = value.ToString("0.##", CultureInfo.InvariantCulture);
+        return text == "-0" ? "0" : text;
+    }
+
     /// <summary>
     /// One fight of a pairing: index <paramref name="index"/> seeds it (<see cref="SeedText"/>) and decides which
     /// side spawns first (<see cref="BFirst"/>), so a pairing's fights differ and repeat. The fight's <c>Hash</c> is
@@ -712,14 +719,14 @@ public static class Tournament
         public Trace(Simulation sim)
         {
             _sim = sim;
-            sim.Events.Subscribe<EntitySpawned>(s => Line(FormattableString.Invariant($"spawn {Name(s.Entity, s.Pattern)} {s.Position.X:0.##} {s.Position.Y:0.##}")));
+            sim.Events.Subscribe<EntitySpawned>(s => Line($"spawn {Name(s.Entity, s.Pattern)} {TraceNumber(s.Position.X)} {TraceNumber(s.Position.Y)}"));
             sim.Events.Subscribe<EntityDespawned>(s => Line($"despawn {Name(s.Entity, s.Pattern)}"));
-            sim.Events.Subscribe<WeaveCast>(w => Line(FormattableString.Invariant($"cast {Name(w.Caster)} {w.Weave} {Name(w.Target)} {w.Point.X:0.##} {w.Point.Y:0.##}")));
-            sim.Events.Subscribe<WeaveReleased>(r => Line(FormattableString.Invariant($"release {Name(r.Caster)} {r.Weave} {r.Mode} {r.Reason} {(r.Fired ? "fired" : "held")} {r.Held:0.##} {r.Fill:0.##} {r.Stage}")));
+            sim.Events.Subscribe<WeaveCast>(w => Line($"cast {Name(w.Caster)} {w.Weave} {Name(w.Target)} {TraceNumber(w.Point.X)} {TraceNumber(w.Point.Y)}"));
+            sim.Events.Subscribe<WeaveReleased>(r => Line(FormattableString.Invariant($"release {Name(r.Caster)} {r.Weave} {r.Mode} {r.Reason} {(r.Fired ? "fired" : "held")} {TraceNumber(r.Held)} {TraceNumber(r.Fill)} {r.Stage}")));
             sim.Events.Subscribe<WeaveInterrupted>(i => Line($"interrupt {Name(i.Caster)} {i.Weave}"));
-            sim.Events.Subscribe<DamageDealt>(d => Line(FormattableString.Invariant($"hit {Name(d.Source)} {Name(d.Target)} {d.Total:0.##} {Marks(d)}")));
-            sim.Events.Subscribe<Healed>(h => Line(FormattableString.Invariant($"heal {Name(h.Source)} {Name(h.Target)} {h.Resource} {h.Amount:0.##}")));
-            sim.Events.Subscribe<StatusApplied>(s => Line(FormattableString.Invariant($"status {Name(s.Source)} {Name(s.Target)} {s.Status} {s.Stacks} {s.Duration:0.##}")));
+            sim.Events.Subscribe<DamageDealt>(d => Line($"hit {Name(d.Source)} {Name(d.Target)} {TraceNumber(d.Total)} {Marks(d)}"));
+            sim.Events.Subscribe<Healed>(h => Line($"heal {Name(h.Source)} {Name(h.Target)} {h.Resource} {TraceNumber(h.Amount)}"));
+            sim.Events.Subscribe<StatusApplied>(s => Line(FormattableString.Invariant($"status {Name(s.Source)} {Name(s.Target)} {s.Status} {s.Stacks} {TraceNumber(s.Duration)}")));
             sim.Events.Subscribe<EntityDied>(d => Line($"died {Name(d.Entity)} {Name(d.Killer)}"));
         }
 
@@ -730,7 +737,7 @@ public static class Tournament
         {
             var life = _sim.World.Get<Stats>(body)?.Resource("life") ?? 0;
             var at = _sim.World.Get<Transform>(body)?.Position ?? Vector3.Zero;
-            return FormattableString.Invariant($"{life:0.##} {at.X:0.##} {at.Y:0.##}");
+            return $"{TraceNumber(life)} {TraceNumber(at.X)} {TraceNumber(at.Y)}";
         }
 
         public ulong Hash() => Rng.Hash64(_log.ToString());

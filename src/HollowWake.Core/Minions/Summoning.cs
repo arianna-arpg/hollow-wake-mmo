@@ -735,7 +735,10 @@ internal sealed class SummonRecipe
             }
             b.Home = home;
             b.Target = Entity.None;
-            b.Planned = false;
+            if (sim.World.TryGet<Motion>(e, out var motion))
+            {
+                motion.Planned = false;
+            }
             return;
         }
         sim.World.Add(e, new Behavior { BehaviorId = behavior, Home = home, NextThinkAt = sim.Clock.Time });

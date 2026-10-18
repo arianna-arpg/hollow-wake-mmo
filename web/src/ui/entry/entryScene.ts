@@ -70,7 +70,9 @@ export class EntryScene {
     this.frame = requestAnimationFrame(this.tick);
   }
 
-  private active(): boolean { return this.alive && this.root.isConnected && this.root.getClientRects().length > 0 && !document.hidden && document.hasFocus() && !this.root.closest('[inert]') && !this.suspended(); }
+  // DOM focus can be prepared while the browser window is in the background; input must still wait.
+  private visible(): boolean { return this.alive && this.root.isConnected && this.root.getClientRects().length > 0 && !this.root.closest('[inert]') && !this.suspended(); }
+  private active(): boolean { return this.visible() && !document.hidden && document.hasFocus(); }
   show(list: CharacterListMsg): void {
     // Preserve the newer card when a dismissed creation request replies late.
     if (this.pending && list.request_id != null && list.request_id !== this.pending) return;
@@ -87,11 +89,11 @@ export class EntryScene {
       b.onclick = () => { this.model.open(i); this.updateCard(); }; this.roster.append(b);
     }
     this.status.textContent = this.model.seats.length ? '' : this.spec.labels.empty!;
-    if (this.active()) this.root.focus();
+    if (this.visible()) this.root.focus();
     if (wake && list.characters.some(c => c.id === wake)) this.handlers.enter(wake);
   }
 
-  focusCharacter(id: string): void { const i = this.model.seats.findIndex(s => s.choice.character === id); if (i >= 0 && this.model.opened < 0 && this.active()) (this.roster.children[i] as HTMLElement).focus(); }
+  focusCharacter(id: string): void { const i = this.model.seats.findIndex(s => s.choice.character === id); if (i >= 0 && this.model.opened < 0 && this.visible()) (this.roster.children[i] as HTMLElement).focus(); }
   error(text: string): void {
     this.notice = text; this.status.textContent = text;
     if (!this.pending) return;

@@ -38,8 +38,19 @@ internal static class EvaluationKinds
         }
         foreach (var rule in new[] { EvaluationRules.ProvingPairs, EvaluationRules.StandardDuels })
         {
-            foreach (var text in c.Registry.Rules.Strings(EvaluationRules.Path(rule)))
+            if (d.Values?[rule] is not JsonArray entries || entries.Count == 0)
             {
+                c.Error($"{rule} must be a non-empty list of pairings written a:b.");
+                continue;
+            }
+            var seen = new HashSet<Pairing>();
+            foreach (var entry in entries)
+            {
+                if (entry is not JsonValue value || !value.TryGetValue<string>(out var text))
+                {
+                    c.Error($"{rule} contains a non-string entry; every pairing is written a:b.");
+                    continue;
+                }
                 Pairing pairing;
                 try
                 {
@@ -49,6 +60,10 @@ internal static class EvaluationKinds
                 {
                     c.Error($"{rule}: {ex.Message}");
                     continue;
+                }
+                if (!seen.Add(pairing))
+                {
+                    c.Error($"{rule} repeats pairing {pairing}.");
                 }
                 c.Ref<PatternDef>(pairing.A, rule);
                 c.Ref<PatternDef>(pairing.B, rule);
@@ -96,6 +111,11 @@ internal static class EvaluationKinds
         if (factions.Count != 2 || factions.Any(f => f.Length == 0) || factions[0] == factions[1])
         {
             c.Error($"{EvaluationRules.Factions} lists the two factions a duel's sides fight under, two different ids, a's then b's, not [{string.Join(", ", factions)}].");
+        }
+        else
+        {
+            try { EvaluationRules.FactionsOf(c.Registry); }
+            catch (InvalidDataException ex) { c.Error(ex.Message); }
         }
     }
 }

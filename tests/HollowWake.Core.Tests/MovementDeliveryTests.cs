@@ -127,13 +127,7 @@ public class PlacedBlockerPlanningTests
         var into = new List<Vector3>(256);
         var from = new Vector3(1.5f, 1.5f, 0);
         var to = new Vector3(41.5f, 40.5f, 0);
-        planner.FindPath(from, to, into, 4000);
-        var before = GC.GetAllocatedBytesForCurrentThread();
-        for (var i = 0; i < 20; i++)
-        {
-            planner.FindPath(from, to, into, 4000);
-        }
-        Assert.Equal(0, GC.GetAllocatedBytesForCurrentThread() - before);
+        SteadyState.AssertAllocationFree(() => planner.FindPath(from, to, into, 4000), callsPerRound: 20);
         Assert.False(Touches(into, blocked));
     }
 

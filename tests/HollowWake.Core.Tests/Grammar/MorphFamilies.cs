@@ -39,13 +39,13 @@ internal static class Families
 
     private const string NoBodyBetween = "the crowd stands no body inside one of these shapes and outside the other";
 
-    private const Dimension Geometry = Dimension.Geometry;
-    private const Dimension Kinematics = Dimension.Kinematics;
-    private const Dimension Payload = Dimension.Payload;
-    private const Dimension Timing = Dimension.Timing;
-    private const Dimension Targeting = Dimension.Targeting;
-    private const Dimension Agency = Dimension.Agency;
-    private const Dimension Causality = Dimension.Causality;
+    private const MorphDimension Geometry = MorphDimension.Geometry;
+    private const MorphDimension Kinematics = MorphDimension.Kinematics;
+    private const MorphDimension Payload = MorphDimension.Payload;
+    private const MorphDimension Timing = MorphDimension.Timing;
+    private const MorphDimension Targeting = MorphDimension.Targeting;
+    private const MorphDimension Agency = MorphDimension.Agency;
+    private const MorphDimension Causality = MorphDimension.Causality;
 
     /// <summary>What a shell reads its cost and cooldown from, for every point: a cost to pay and a cooldown to start.</summary>
     private static Dictionary<string, double> Mana(params (string, double)[] more) => With(new() { ["cost.base.mana"] = 10, ["cooldown.base"] = 2 }, more);

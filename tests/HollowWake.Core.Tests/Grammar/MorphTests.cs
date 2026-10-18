@@ -111,7 +111,7 @@ public class MorphTests
         _output.WriteLine($"{name} on {family.Shell}, stated by '{family.Probe}': {examined.Count} points checked");
         foreach (var p in family.Parameters)
         {
-            var range = p.Kind == ParameterKind.Axis ? $"{p.Low:0.###}..{p.High:0.###} {p.Unit}" : string.Join("|", p.Words);
+            var range = p.Kind == MorphParameterKind.Axis ? $"{p.Low:0.###}..{p.High:0.###} {p.Unit}" : string.Join("|", p.Words);
             var exempt = family.Exempt.TryGetValue(p.Name, out var why) ? $"; exempt: {why}" : "";
             _output.WriteLine($"  {p.Dimension.ToString().ToLowerInvariant()} {p.Describe} {range}{(p.Attribute is null ? "" : $" (or {p.Attribute})")}: {p.Source}{exempt}");
         }
@@ -212,7 +212,7 @@ public class MorphTests
             var exempt = family.Exempt.TryGetValue(parameter.Name, out var why);
             var sample = sense.Points[0];
             var row = sense.Row is null ? "" : $" in the {sense.Row} row";
-            if (parameter.Kind == ParameterKind.Axis)
+            if (parameter.Kind == MorphParameterKind.Axis)
             {
                 var moves = !shown[0].Observables.SequenceEqual(shown[1].Observables, StringComparer.Ordinal);
                 if (!moves && !exempt)

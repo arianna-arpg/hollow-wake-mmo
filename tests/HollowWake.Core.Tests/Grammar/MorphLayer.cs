@@ -177,7 +177,7 @@ internal sealed class MorphLayer
             }
             var values = parameter.Probes();
             var points = values.Select(v => Make(v, false)).ToList();
-            var doors = parameter.Attribute is not null && !parameter.AttributeOnly && parameter.Kind == ParameterKind.Axis
+            var doors = parameter.Attribute is not null && !parameter.AttributeOnly && parameter.Kind == MorphParameterKind.Axis
                 ? values.Select(v => Make(v, true)).ToList()
                 : new List<Point>();
             // A door whose value the catalog's bounds move is compared with the node set to the value it holds.
