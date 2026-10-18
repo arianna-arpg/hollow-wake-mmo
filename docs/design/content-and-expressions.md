@@ -6,6 +6,14 @@ See `docs/modding.md` for the authoring guide. This is the contract.
 
 `ContentRegistry.Load(layers)` reads every YAML and JSON file in each layer directory in path order, merges entries by kind and id across layers (replace, patch, remove), binds each entry to its kind's record type through the content JSON conventions, expands attribute families into attributes, builds the attribute catalog and the rules, then runs every validator of every kind with a context that can resolve references to any other kind. A kind's own validator comes first; areas that add fields to a kind add their validators with `ContentKinds.AddValidator`. The report carries errors and warnings with origins. Strict loading throws on errors. A layer defines an id once: a second definition of the same kind and id within one layer warns and replaces the first, since only a later layer is meant to replace or patch an earlier one.
 
+## Definition and collection validation
+
+`ContentKinds.Register<T>(name, validate: (definition, context) => ..., validateCollection: context => ...)` registers a definition kind with optional per-definition and collection validators. `ContentKinds.AddValidator<T>` appends a per-definition validator; it does not add a collection validator. Register kinds before loading. Registering a kind again replaces its binding and both forms of validation, so it is not a way to append a check to an existing kind.
+
+`Load` and `FromRaw` run all per-definition validators after binding every kind, expanding attribute families and constructing attributes/rules. They then invoke each registered collection validator once, including kinds with no loaded entries or whose last entry an overlay removed. Collection checks can enforce required catalogs and uniqueness across entries that per-definition callbacks cannot check when the collection is empty. `ContentRegistry.Empty()` and `With()` are construction helpers for tests/tools and do not invoke either validation pass.
+
+Both callbacks receive the fully bound registry and shared report. A collection context names the kind but has an empty `Id` and null `Origin`, because there may be no single entry or source file to name. Callback exceptions become validation errors; strict loading rejects the completed report. Validators should report problems rather than modify the registry, and tolerate partial catalogs deliberately: the entry-flow check requires one default when Callings or entry flows exist, but does not require an account flow in a tooling catalog containing neither. Omitting a kind is not a way to skip its collection check.
+
 ## Conventions
 
 - Keys are snake_case; records map them by naming policy or explicit names.

@@ -1,0 +1,66 @@
+{
+  "checks": [
+    {
+      "id": "cleave",
+      "art": "prototype/skill:cleave",
+      "color": "#9c8b72",
+      "badge": null,
+      "identicalSurfaces": true
+    },
+    {
+      "id": "ember_bolt",
+      "art": "prototype/skill:firebolt",
+      "color": "#e8622a",
+      "badge": null,
+      "identicalSurfaces": true
+    },
+    {
+      "id": "tide_bolt",
+      "art": "prototype/skill:frostbolt",
+      "color": "#3aa6d8",
+      "badge": null,
+      "identicalSurfaces": true
+    },
+    {
+      "id": "rallying_shout",
+      "art": "prototype/skill:war_cry",
+      "color": "#f5e27a",
+      "badge": null,
+      "identicalSurfaces": true
+    },
+    {
+      "id": "fork",
+      "art": "prototype/support",
+      "color": "#b58cff",
+      "badge": "badge.support",
+      "identicalSurfaces": true
+    },
+    {
+      "id": "future_support",
+      "art": "prototype/support",
+      "color": "#b8b8b8",
+      "badge": "badge.support",
+      "identicalSurfaces": true
+    }
+  ],
+  "converted": {
+    "art": "prototype/skill:frostbolt",
+    "color": "#3aa6d8",
+    "badge": null
+  },
+  "composed": [
+    {
+      "thread": "ember",
+      "art": "prototype/projectile",
+      "color": "#e8622a",
+      "badge": null
+    },
+    {
+      "thread": "tide",
+      "art": "prototype/projectile",
+      "color": "#3aa6d8",
+      "badge": null
+    }
+  ],
+  "itemOverride": true
+}

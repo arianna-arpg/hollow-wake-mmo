@@ -71,10 +71,9 @@ export function abyss(ctx: CanvasRenderingContext2D, w: number, h: number,
 
 
 /** The original spirit look, composed from the shared part recipe. */
-type Painter = (ctx: CanvasRenderingContext2D, radius: number, part: WispPart, time: number) => void;
-const pal = presentation.wisp.palette;
+type Painter = (ctx: CanvasRenderingContext2D, radius: number, part: WispPart, time: number, pal: Record<string,string>) => void;
 const partPainters: Record<string, Painter> = {
-  disc(c,R) {
+  disc(c,R,_p,_t,pal) {
     const trace=()=>{ c.beginPath();c.arc(0,0,R,0,Math.PI*2); };
     trace();c.fillStyle=pal.base;c.fill();c.save();trace();c.clip();
     for(const [offset,extent,tone] of [[-.38,1.4,pal.light],[.45,1.5,pal.shadow]] as const){
@@ -84,13 +83,13 @@ const partPainters: Record<string, Painter> = {
     }
     c.restore();trace();c.strokeStyle=withAlpha(pal.outline,.75);c.lineWidth=1.6;c.stroke();
   },
-  halo(c,R) {
+  halo(c,R,_p,_t,pal) {
     for(const [alpha,width] of [[.28,Math.max(3,R*.2)],[.75,Math.max(1.2,R*.06)]]){
       c.strokeStyle=withAlpha(pal.glow,alpha);c.lineWidth=width;
       c.beginPath();c.arc(0,0,R*.8,0,Math.PI*2);c.stroke();
     }
   },
-  eyes(c,R,p) {
+  eyes(c,R,p,_t,pal) {
     const {n=2,spread=.5,dist=.72,size=.1}=p.params??{};
     for(let i=0;i<n;i++){
       const a=n===1?0:(i/(n-1)-.5)*spread*2,x=Math.cos(a)*R*dist,y=Math.sin(a)*R*dist;
@@ -101,7 +100,7 @@ const partPainters: Record<string, Painter> = {
       c.fillStyle='#ffffff';c.beginPath();c.arc(x,y,R*size*.38,0,Math.PI*2);c.fill();
     }
   },
-  wisps(c,R,p,t) {
+  wisps(c,R,p,t,pal) {
     const n=p.params?.n??3;c.lineCap='round';
     for(let i=0;i<n;i++){
       const off=(i/Math.max(1,n-1)-.5)*R*.9,sway=Math.sin(t*2.2+i*2.1)*R*.28,len=R*(1+.25*Math.sin(t*1.7+i));
@@ -110,10 +109,10 @@ const partPainters: Record<string, Painter> = {
     }
   },
 };
-export function drawWisp(ctx: CanvasRenderingContext2D, time: number): void {
-  const r=presentation.wisp.radius;
-  for(const part of presentation.wisp.parts){
+export function drawWisp(ctx: CanvasRenderingContext2D, time: number, look = presentation.wisp): void {
+  const r=look.radius;
+  for(const part of look.parts){
     ctx.save();ctx.translate((part.x??0)*r,(part.y??0)*r);
-    partPainters[part.kind]?.(ctx,r*(part.scale??1),part,time);ctx.restore();
+    partPainters[part.kind]?.(ctx,r*(part.scale??1),part,time,look.palette);ctx.restore();
   }
 }

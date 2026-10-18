@@ -14,6 +14,7 @@ public sealed class Skin
 
     public UiContent Ui { get; }
     public ContentNames Names { get; }
+    public AbilityArt Abilities { get; }
     public UiTheme T => Ui.Theme;
     public UiLayout L => Ui.Layout;
     public UiIconSet IconSet => Ui.Icons;
@@ -30,6 +31,7 @@ public sealed class Skin
     {
         Ui = ui;
         Names = names;
+        Abilities = new AbilityArt(names.AbilityIcons);
         var body = ui.Theme.Font("body");
         var title = ui.Theme.Font("title");
         var numerals = ui.Theme.Font("numerals");
