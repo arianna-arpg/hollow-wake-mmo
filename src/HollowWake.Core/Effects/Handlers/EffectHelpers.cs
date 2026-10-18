@@ -81,7 +81,7 @@ internal static class EffectHelpers
     /// when given. The aim stays the basis's unless <paramref name="aim"/> turns it; everything else is the
     /// basis's.
     /// </summary>
-    internal static EffectContext At(EffectContext basis, Entity target, Vector3 point, Vector2 direction, Vector3? from, int depth, Dictionary<string, double>? vars = null, double? damageScale = null, Vector3? aim = null, float? launchLift = null) => new()
+    internal static EffectContext At(EffectContext basis, Entity target, Vector3 point, Vector2 direction, Vector3? from, int depth, Dictionary<string, double>? vars = null, double? damageScale = null, Vector3? aim = null, float? launchLift = null, Vector3? aimOffset = null) => new()
     {
         CastId = basis.CastId,
         CastSource = basis.CastSource,
@@ -91,6 +91,7 @@ internal static class EffectHelpers
         Target = target,
         Point = point,
         Aim = aim ?? basis.Aim,
+        AimOffset = aimOffset ?? Vector3.Zero,
         Direction = direction,
         Weave = basis.Weave,
         Tags = basis.Tags,
