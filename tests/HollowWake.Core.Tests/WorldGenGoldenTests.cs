@@ -36,7 +36,7 @@ public class WorldGenGoldenTests
         Assert.Equal(new ZoneCoord(0, 0), g.StartZone());
     }
 
-    // Goblinkin site/population expansion: reviewed before/after maps in experiments/goblinkin/evidence.
+    // Site-level policy: exact before/after maps and levels in experiments/entity-review/evidence/32-sitelevel-*.
     [Theory]
     [InlineData(0, 0, "782ED5BB68A34BFC", "FE239499AF4B1519")]
     [InlineData(1, 0, "BC141514C90FA4F3", "09ED05825A4C6B50")]
