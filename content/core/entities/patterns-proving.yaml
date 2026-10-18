@@ -96,7 +96,7 @@ entries:
     radius: 0.45
     components:
       stats:
-        attributes: { might: 9, grace: 16, will: 7, vigor: 30, move.speed: 5.2, resist.storm: 0.3, resist.tide: 0.3, stamina.max: 160, stamina.regen: 14, weapon.damage.min: 9, weapon.damage.max: 15, weapon.attack.time: 1.0 }
+        attributes: { might: 9, grace: 16, will: 7, vigor: 30, move.speed: 5.2, armor: 15, stamina.max: 160, stamina.regen: 14, weapon.damage.min: 9, weapon.damage.max: 15, weapon.attack.time: 1.0 }
       weaves: { list: [gyreblade, gyre_hurl, splinter_volley, web_shot] }
       behavior: { id: aggressive_ranged }
 
@@ -109,6 +109,6 @@ entries:
     radius: 0.45
     components:
       stats:
-        attributes: { might: 6, grace: 9, will: 10, vigor: 10, move.speed: 5, mana.max: 160, weapon.damage.min: 3, weapon.damage.max: 6, weapon.attack.time: 1.0 }
+        attributes: { might: 6, grace: 9, will: 10, vigor: 12, move.speed: 5, mana.max: 160, weapon.damage.min: 3, weapon.damage.max: 6, weapon.attack.time: 1.0 }
       weaves: { list: [chain_lightning, frozen_orb, frostbolt] }
       behavior: { id: aggressive_ranged }
