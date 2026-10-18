@@ -47,8 +47,8 @@ Stack on PR #34; retain/retarget its base before deleting merged stack branches.
 
 ## Publication status
 
-Implementation committed locally as `b946d5d`. Push and PR creation are pending account authorization. The active GitHub account `JohnO312` can read this repository but has no push permission. The repository-owner account `arianna-arpg` is also connected, but automatic approval review rejected the attempted command-scoped use of its stored credential, describing that as bypassing the active account's write restriction. No token was extracted by the rejected action and no remote branch or PR was created. The owner has been asked to authorize that account specifically for the requested push and stacked PR.
+Implementation committed as `b946d5d` and published in [PR #39](https://github.com/arianna-arpg/hollow-wake-mmo/pull/39), stacked on fauna PR #34 (`codex/fauna-critter-foundation`). The owner explicitly authorized switching back to the connected `arianna-arpg` GitHub account and publishing the branch and PR, correcting an accidental selection to leave the work local. The account switch succeeded, repository push permission was verified, and the branch was pushed without rewriting history.
 
-The complete PR description is prepared locally under ignored `experiments/golems/artifacts/pr-body.md`; all source and durable evidence are committed. Do not infer a completed Claude review or successful publication from this record.
+This resolves the earlier publication blocker: `JohnO312` lacked push permission, and automatic approval review had rejected using the other account without specific authorization. No token was extracted by that rejected action. PR #39 includes the validation evidence, limitations and explicit Claude review request. All source and durable evidence are committed. Claude review is pending; no merge or deployment was performed.
 
 Acknowledged by: pending Claude review.
