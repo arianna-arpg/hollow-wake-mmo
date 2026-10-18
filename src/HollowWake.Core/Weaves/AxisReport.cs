@@ -899,10 +899,10 @@ internal static class AxisGraph
                                 set[node] = by;
                                 setAt[node] = new Dictionary<string, (string, string)>(StringComparer.Ordinal);
                             }
-                            if (by.TryAdd(parameter, label))
-                            {
-                                setAt[node][parameter] = (writer, $"{prefix}patches[{index}].set.{parameter}");
-                            }
+                            // The patcher decides whether a write wins. A default does not lock the parameter,
+                            // so a later explicit write may replace it; attribute the observed change to that write.
+                            by[parameter] = label;
+                            setAt[node][parameter] = (writer, $"{prefix}patches[{index}].set.{parameter}");
                         }
                     });
                 }
