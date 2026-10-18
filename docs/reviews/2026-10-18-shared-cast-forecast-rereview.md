@@ -1,6 +1,6 @@
 # Shared cast forecasting: review corrections, 2026-10-18
 
-This supersedes the completion claims in the historical [forecast record](2026-10-17-shared-cast-forecasts.md). PR #20 remains the owned integration request. Approved main 26b9e46 was merged in 3ca56eb; approved tournament main 6e7e241 was merged in 1072b94. Release/approach changes are 415ccb6 and 7bd30a5. The forecasting chat's rider fix 47de147 was integrated as 8ba3f27. No unmerged anatomy, AI-intent or construct branch is included.
+This supersedes the completion claims in the historical [forecast record](2026-10-17-shared-cast-forecasts.md). PR #20 remains the owned integration request. Approved main 26b9e46 was merged in 3ca56eb; approved tournament main 6e7e241 was merged in 1072b94. Release/approach changes are 415ccb6 and 7bd30a5. The forecasting chat's rider fix 47de147 was integrated as 8ba3f27. Approved entry/grammar main 8365775 was then integrated in 6edc124. Both client capability lists and both AI contract sections were preserved when resolving its three conflicts. No unmerged anatomy, AI-intent or construct branch is included.
 
 The owner chose committed, dodgeable swings with better pre-commit approach and positioning. Aim, collision reach and wall blocking do not gain forgiveness after commitment. The engine contains no spell-name dispatch.
 
@@ -28,9 +28,31 @@ The historical HitStage golden keeps its original expectation and explicitly set
 
 ## Verification and measurements
 
-The integrated Release build has zero warnings/errors; all 905 .NET tests (733 core, 45 server, 127 client) and 317 browser tests pass. Content validates with zero errors/warnings, the zone runs 200 ticks, the live probe grants all negotiated features and receives 75 forecast frames before PROBE OK, and the generated protocol matches. Background/port scripts pass 19 checks. The convergence ledger covers 948 captured skills and 457 supports across 12 families with no unclassified vocabulary, while its partial/pending families remain explicitly incomplete. Final client smoke runs and timing verification are still in progress at this source handoff. Earlier failed measurements remain evidence, never a passing gate. In particular, the pre-approach integrated full snapshot exceeded both the 1 ms and 30 KB limits; after requiring the authored approach range its bytes fell below 30 KB without changing precision, cadence or protocol defaults. Timing variance remains material. The most recent complete default run before final client checks measured behavior 2.334 ms, full snapshots 0.994 ms / 29.659 KB and combined snapshots 1.056 ms / 8.449 KB. The combined time exceeds its 1 ms budget, so this is not a passing performance gate. Approved main in the adjacent normal-priority run also exceeded full snapshot time (1.262 ms); this does not excuse the branch failure or prove its exclusive cause. Incremental forecast allocation is 8.913 KB per player over 1,852 observations. Retained evidence is under experiments/forecast-rendering/evidence/rereview.
+Final executable source: 6edc124, with approved main 8365775. Evidence lives under [the rereview directory](../../experiments/forecast-rendering/evidence/rereview).
 
-The comparison must use the same approved base and tournament staging. Original fight traces under 26b9e46 are retained as historical evidence, separate from 6e7e241's mirrored positions/facing and alternating spawn order. Changed hashes are named and rebaselined only for intentional combat changes, then checked again.
+- Release solution build: zero warnings/errors. All 919 .NET tests pass (733 core, 54 server, 132 client); 322 browser tests and the production browser build pass. The generated protocol is current.
+- Content validation: zero errors/warnings. Zone load runs 200 ticks; the final fight runs successfully. Standard tournament hashes replay identically. The fixture that replaces a selector with direct damage explicitly authors body validation; its double-knockout assertions are unchanged.
+- Refreshed private live probe: forecast/cue/delta/interface negotiation succeeds and ends PROBE OK. Background/port scripts pass 19 checks.
+- Combined entry/forecast smoke: melee 32/32 browser and 37/37 native; spell/cues 33/33 browser and 38/38 native. Each run reports no cleanup errors, real damage and forecast reception; native also verifies return to Mu. Browser images were inspected: the full canvas and primary circle/sector boundaries are visible. Crowded labels still overlap in the placeholder scene; this is functional evidence, not final readability or art acceptance. Native headless excludes rendered pixels and controllers.
+- Convergence audit: 948 captured skills and 457 supports across 12 families, with no unclassified vocabulary; partial/pending mechanisms remain explicitly incomplete.
+- Cloud CI at 6edc124 passes build/test, Docker, launcher, web build and the required aggregate check (run 39153347649). Final evidence-only commit checks are recorded on the pull request.
+
+Earlier source-handoff checks and failed measurements remain labeled in the evidence directory. The intermediate full snapshot exceeded both 1 ms and 30 KB; requiring the authored approach distance restored traffic below 30 KB without changing precision, cadence or protocol defaults. The final timing gate still fails as detailed below. The earlier 26b9e46 fight staging is kept separate from the mirrored 6e7e241 tournament staging.
+
+### Final coordinated performance window
+
+After the hitbox team completed its run, all participating engineering chats held heavy local work. Both owned benchmarks ran serially, at normal priority, with the same full Release command and no config or budget changes. Exact inputs are approved main 8365775 and source 6edc124. Both processes exited before the shared window was released. The full outputs are baseline-window-836.txt and bench-window-6ed.txt in the evidence directory.
+
+| Measure | Approved main | Revised source | Existing limit |
+|---|---:|---:|---:|
+| Tick p95 | 18.223 ms | 16.141 ms | 25 ms |
+| Behavior | 3.379 ms | 3.272 ms | 3 ms |
+| Full snapshot | 1.488 ms / 27.716 KB | 0.970 ms / 29.659 KB | 1 ms / 30 KB |
+| Delta traffic | 8.550 KB | 9.327 KB | 10 KB |
+| Combined snapshot | not instrumented on main | 1.085 ms / 8.449 KB | 1 ms / 10 KB |
+| Tick allocation | 68.225 KB | 71.096 KB | 2 MB |
+
+The branch still fails behavior and combined snapshot time. Zero simulation errors. Incremental forecasts cost 0.247 ms and 8.913 KB allocated per player over 1,852 observations. The branch passes the remaining named default budgets; main also exceeds its attribute-fold and expression-time limits in this window. Control failures neither waive the branch limits nor establish an exclusive cause. Earlier complete/intermediate samples remain recorded. No further repeated sampling was used to select a passing result. PR #20 remains draft for performance work and Claude rereview, despite its functional/CI passes.
 
 ### Same-base tournament comparison
 
@@ -52,9 +74,9 @@ In the older 26b9e46 staging, the intermediate Spark Duelist/Kindler trace had f
 
 ## Integration handoffs and review request
 
-- #36: consume its full corrected foundation, not correction 724c5ed alone. Preserve this request's compiled release/miss policy, add authored contact: body to the melee selector, and preserve sampled CastState/EffectContext AimOffset for projectile elevation. Its removed private stored-target gate must not return. Repeat the species/relief matrix on the combined head.
+- #36: consume its full corrected foundation, not correction 724c5ed alone. Preserve this request's compiled release/miss policy, author contact: body consistently on all three selectors introduced here (strike, measured_strike and bash), and preserve sampled CastState/EffectContext AimOffset for projectile elevation. The corrected full entity dependency is now #34 at 26c50de, including #36 through e383ffb; it remains a separately reviewed draft. Its removed private stored-target gate must not return. Repeat the species/relief matrix on the combined head and verify forecast viewer eligibility through the same resulting contact predicate.
 - #49: pass the current target into PreferredRange while preserving its intent-dispatch and movement-plan seam. File overlap was recorded on both requests before edits.
-- #50: echo replay resolves the owner's paid use through ReleaseTargets.Execute after its final context is built, from the echo's actual origin. No new cost or echo-specific bypass. Origin/range/wall and selected-recipient regressions belong on the combined head. Handoff: https://github.com/arianna-arpg/hollow-wake-mmo/pull/50#issuecomment-6253135942.
+- #50: echo replay resolves the owner's paid use through ReleaseTargets.Execute after its final context is built, from the echo's actual origin. No new cost or echo-specific bypass. Origin/range/wall and selected-recipient regressions belong on the combined head. Also verify that proxy misses close the same physical caster/cast identity that started its presentation, independently of owner attribution for stats and damage; the context origin alone is not that identity. Handoff: https://github.com/arianna-arpg/hollow-wake-mmo/pull/50#issuecomment-6253135942.
 
 Claude: rereview the compiled release contract, after_damage packet semantics, intentional melee/area composition expansion, approach comparisons and combined snapshot budget. No merge or final visual-production certification is claimed. Headless native evidence covers behavior, not rendered pixels or controllers.
 

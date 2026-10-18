@@ -1,0 +1,3882 @@
+{
+  "Seeds": 10,
+  "Seconds": 60,
+  "Hash": "32854e04e04c901d",
+  "BandsChecked": true,
+  "Bands": {
+    "TtkMin": 5,
+    "TtkMax": 45,
+    "WinRateCeiling": 0.8,
+    "DrawCeiling": 0.2,
+    "CoverageFloor": 0.25
+  },
+  "Pairs": [
+    {
+      "A": "proving_reaver",
+      "B": "proving_bulwark",
+      "Fights": 10,
+      "Hash": "afb3fac2523af03a",
+      "WinRateA": 0.1,
+      "WinRateB": 0.9,
+      "DrawRate": 0,
+      "TtkMedian": 33.2,
+      "TtkLow": 32.4,
+      "TtkHigh": 36.7,
+      "CoverageA": 1,
+      "CoverageB": 1,
+      "SpreadA": 1,
+      "SpreadB": 1,
+      "SeatsA": [
+        "strike[stone]\u002Brending"
+      ],
+      "SeatsB": [
+        "bite"
+      ],
+      "MechanismsA": [
+        "affliction",
+        "affliction:bleeding",
+        "area",
+        "attack",
+        "bankless",
+        "hit",
+        "melee",
+        "rupture",
+        "shape",
+        "strikes"
+      ],
+      "MechanismsB": [
+        "area",
+        "attack",
+        "bankless",
+        "hit",
+        "melee",
+        "shape",
+        "strikes"
+      ],
+      "SelfDamageA": 0,
+      "SelfDamageB": 0,
+      "SelfStatusesA": [],
+      "SelfStatusesB": [
+        "poise_broken",
+        "poise_rearming",
+        "shield_delay"
+      ],
+      "Breaches": [
+        "proving_bulwark wins 9 of 10, above the ceiling 0.8"
+      ]
+    },
+    {
+      "A": "proving_hexer",
+      "B": "proving_plaguer",
+      "Fights": 10,
+      "Hash": "3e47dcb295f4a42a",
+      "WinRateA": 0,
+      "WinRateB": 1,
+      "DrawRate": 0,
+      "TtkMedian": 6.65,
+      "TtkLow": 5.75,
+      "TtkHigh": 6.95,
+      "CoverageA": 1,
+      "CoverageB": 0.9,
+      "SpreadA": 2.7,
+      "SpreadB": 2.401,
+      "SeatsA": [
+        "hex_of_despair",
+        "maddening_rite",
+        "void_lash"
+      ],
+      "SeatsB": [
+        "ember_bolt",
+        "plague_rite",
+        "powder_rite"
+      ],
+      "MechanismsA": [
+        "affliction",
+        "area",
+        "bankless",
+        "cooldown",
+        "hit",
+        "line",
+        "shape",
+        "spell",
+        "status"
+      ],
+      "MechanismsB": [
+        "affliction",
+        "area",
+        "bankless",
+        "chain",
+        "cooldown",
+        "flight",
+        "hit",
+        "projectile",
+        "spell",
+        "status"
+      ],
+      "SelfDamageA": 0,
+      "SelfDamageB": 0,
+      "SelfStatusesA": [],
+      "SelfStatusesB": [],
+      "Breaches": [
+        "proving_plaguer wins 10 of 10, above the ceiling 0.8"
+      ]
+    },
+    {
+      "A": "proving_pitfighter",
+      "B": "proving_mower",
+      "Fights": 10,
+      "Hash": "bf61ab753773f513",
+      "WinRateA": 1,
+      "WinRateB": 0,
+      "DrawRate": 0,
+      "TtkMedian": 11.3,
+      "TtkLow": 10.15,
+      "TtkHigh": 12.6,
+      "CoverageA": 1,
+      "CoverageB": 0.375,
+      "SpreadA": 2.73,
+      "SpreadB": 1.3,
+      "SeatsA": [
+        "frenzy",
+        "haymaker",
+        "one_two"
+      ],
+      "SeatsB": [
+        "lash_roots",
+        "scythe_sweep",
+        "toppling_stroke"
+      ],
+      "MechanismsA": [
+        "affliction",
+        "area",
+        "attack",
+        "bankless",
+        "charges",
+        "cooldown",
+        "displaces",
+        "hit",
+        "melee",
+        "shape",
+        "shove",
+        "spends",
+        "status",
+        "strikes"
+      ],
+      "MechanismsB": [
+        "affliction",
+        "area",
+        "attack",
+        "bankless",
+        "cooldown",
+        "hit",
+        "melee",
+        "shape",
+        "status",
+        "strikes"
+      ],
+      "SelfDamageA": 0,
+      "SelfDamageB": 0,
+      "SelfStatusesA": [
+        "frenzy"
+      ],
+      "SelfStatusesB": [],
+      "Breaches": [
+        "proving_pitfighter wins 10 of 10, above the ceiling 0.8"
+      ]
+    },
+    {
+      "A": "proving_fletcher",
+      "B": "proving_evoker",
+      "Fights": 10,
+      "Hash": "b03e73250f1022e3",
+      "WinRateA": 0.1,
+      "WinRateB": 0.9,
+      "DrawRate": 0,
+      "TtkMedian": 7.7,
+      "TtkLow": 7.45,
+      "TtkHigh": 8.45,
+      "CoverageA": 0.925,
+      "CoverageB": 0.734,
+      "SpreadA": 3.394,
+      "SpreadB": 1.736,
+      "SeatsA": [
+        "gyre_hurl",
+        "gyreblade",
+        "splinter_volley",
+        "web_shot"
+      ],
+      "SeatsB": [
+        "chain_lightning",
+        "frostbolt",
+        "frozen_orb"
+      ],
+      "MechanismsA": [
+        "affliction",
+        "attack",
+        "bankless",
+        "charges",
+        "cooldown",
+        "flight",
+        "hit",
+        "projectile",
+        "returning",
+        "spends",
+        "status",
+        "strikes"
+      ],
+      "MechanismsB": [
+        "affliction",
+        "bankless",
+        "chain",
+        "cooldown",
+        "flight",
+        "hit",
+        "projectile",
+        "spell",
+        "status"
+      ],
+      "SelfDamageA": 0,
+      "SelfDamageB": 0,
+      "SelfStatusesA": [],
+      "SelfStatusesB": [],
+      "Breaches": [
+        "proving_evoker wins 9 of 10, above the ceiling 0.8"
+      ]
+    }
+  ],
+  "Fights": [
+    {
+      "A": "proving_reaver",
+      "B": "proving_bulwark",
+      "Index": 0,
+      "Seed": "tournament:proving_reaver:proving_bulwark:0",
+      "Outcome": "b",
+      "EndTick": 664,
+      "Seconds": 33.2,
+      "Hash": "9d0816229d3ad6eb",
+      "SideA": {
+        "Pattern": "proving_reaver",
+        "DamageDealt": 393.92,
+        "Hits": 75,
+        "Crits": 0,
+        "Casts": 15,
+        "Uses": 16,
+        "Kit": 1,
+        "Coverage": 1,
+        "Spread": 1,
+        "Seats": [
+          "strike[stone]\u002Brending"
+        ],
+        "Faces": [
+          "strike[stone]\u002Brending"
+        ],
+        "Mechanisms": [
+          "affliction",
+          "affliction:bleeding",
+          "area",
+          "attack",
+          "bankless",
+          "hit",
+          "melee",
+          "rupture",
+          "shape",
+          "strikes"
+        ],
+        "StatusesApplied": [
+          "bleeding"
+        ],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0
+      },
+      "SideB": {
+        "Pattern": "proving_bulwark",
+        "DamageDealt": 230,
+        "Hits": 32,
+        "Crits": 2,
+        "Casts": 25,
+        "Uses": 25,
+        "Kit": 1,
+        "Coverage": 1,
+        "Spread": 1,
+        "Seats": [
+          "bite"
+        ],
+        "Faces": [
+          "bite"
+        ],
+        "Mechanisms": [
+          "area",
+          "attack",
+          "bankless",
+          "hit",
+          "melee",
+          "shape",
+          "strikes"
+        ],
+        "StatusesApplied": [
+          "bleeding"
+        ],
+        "SelfDamage": 0,
+        "SelfStatuses": [
+          "poise_broken",
+          "poise_rearming",
+          "shield_delay"
+        ],
+        "LifeLeft": 0.778
+      },
+      "Warnings": [],
+      "Errors": []
+    },
+    {
+      "A": "proving_reaver",
+      "B": "proving_bulwark",
+      "Index": 1,
+      "Seed": "tournament:proving_reaver:proving_bulwark:1",
+      "Outcome": "b",
+      "EndTick": 634,
+      "Seconds": 31.7,
+      "Hash": "c461bcccfa9c7f36",
+      "SideA": {
+        "Pattern": "proving_reaver",
+        "DamageDealt": 314.75,
+        "Hits": 59,
+        "Crits": 1,
+        "Casts": 15,
+        "Uses": 16,
+        "Kit": 1,
+        "Coverage": 1,
+        "Spread": 1,
+        "Seats": [
+          "strike[stone]\u002Brending"
+        ],
+        "Faces": [
+          "strike[stone]\u002Brending"
+        ],
+        "Mechanisms": [
+          "affliction",
+          "affliction:bleeding",
+          "area",
+          "attack",
+          "bankless",
+          "hit",
+          "melee",
+          "rupture",
+          "shape",
+          "strikes"
+        ],
+        "StatusesApplied": [
+          "bleeding"
+        ],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0
+      },
+      "SideB": {
+        "Pattern": "proving_bulwark",
+        "DamageDealt": 221.35,
+        "Hits": 24,
+        "Crits": 0,
+        "Casts": 24,
+        "Uses": 24,
+        "Kit": 1,
+        "Coverage": 1,
+        "Spread": 1,
+        "Seats": [
+          "bite"
+        ],
+        "Faces": [
+          "bite"
+        ],
+        "Mechanisms": [
+          "area",
+          "attack",
+          "bankless",
+          "hit",
+          "melee",
+          "shape",
+          "strikes"
+        ],
+        "StatusesApplied": [],
+        "SelfDamage": 0,
+        "SelfStatuses": [
+          "poise_broken",
+          "poise_rearming",
+          "shield_delay"
+        ],
+        "LifeLeft": 0.775
+      },
+      "Warnings": [],
+      "Errors": []
+    },
+    {
+      "A": "proving_reaver",
+      "B": "proving_bulwark",
+      "Index": 2,
+      "Seed": "tournament:proving_reaver:proving_bulwark:2",
+      "Outcome": "b",
+      "EndTick": 729,
+      "Seconds": 36.45,
+      "Hash": "54fc6a8c44f11f2d",
+      "SideA": {
+        "Pattern": "proving_reaver",
+        "DamageDealt": 576.45,
+        "Hits": 75,
+        "Crits": 1,
+        "Casts": 17,
+        "Uses": 18,
+        "Kit": 1,
+        "Coverage": 1,
+        "Spread": 1,
+        "Seats": [
+          "strike[stone]\u002Brending"
+        ],
+        "Faces": [
+          "strike[stone]\u002Brending"
+        ],
+        "Mechanisms": [
+          "affliction",
+          "affliction:bleeding",
+          "area",
+          "attack",
+          "bankless",
+          "hit",
+          "melee",
+          "rupture",
+          "shape",
+          "strikes"
+        ],
+        "StatusesApplied": [
+          "bleeding"
+        ],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0
+      },
+      "SideB": {
+        "Pattern": "proving_bulwark",
+        "DamageDealt": 259.1,
+        "Hits": 27,
+        "Crits": 0,
+        "Casts": 28,
+        "Uses": 28,
+        "Kit": 1,
+        "Coverage": 1,
+        "Spread": 1,
+        "Seats": [
+          "bite"
+        ],
+        "Faces": [
+          "bite"
+        ],
+        "Mechanisms": [
+          "area",
+          "attack",
+          "bankless",
+          "hit",
+          "melee",
+          "shape",
+          "strikes"
+        ],
+        "StatusesApplied": [],
+        "SelfDamage": 0,
+        "SelfStatuses": [
+          "poise_broken",
+          "poise_rearming",
+          "shield_delay"
+        ],
+        "LifeLeft": 0.219
+      },
+      "Warnings": [],
+      "Errors": []
+    },
+    {
+      "A": "proving_reaver",
+      "B": "proving_bulwark",
+      "Index": 3,
+      "Seed": "tournament:proving_reaver:proving_bulwark:3",
+      "Outcome": "b",
+      "EndTick": 648,
+      "Seconds": 32.4,
+      "Hash": "ef29c05556fe48ee",
+      "SideA": {
+        "Pattern": "proving_reaver",
+        "DamageDealt": 454.37,
+        "Hits": 75,
+        "Crits": 2,
+        "Casts": 15,
+        "Uses": 16,
+        "Kit": 1,
+        "Coverage": 1,
+        "Spread": 1,
+        "Seats": [
+          "strike[stone]\u002Brending"
+        ],
+        "Faces": [
+          "strike[stone]\u002Brending"
+        ],
+        "Mechanisms": [
+          "affliction",
+          "affliction:bleeding",
+          "area",
+          "attack",
+          "bankless",
+          "hit",
+          "melee",
+          "rupture",
+          "shape",
+          "strikes"
+        ],
+        "StatusesApplied": [
+          "bleeding"
+        ],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0
+      },
+      "SideB": {
+        "Pattern": "proving_bulwark",
+        "DamageDealt": 240.02,
+        "Hits": 39,
+        "Crits": 2,
+        "Casts": 23,
+        "Uses": 23,
+        "Kit": 1,
+        "Coverage": 1,
+        "Spread": 1,
+        "Seats": [
+          "bite"
+        ],
+        "Faces": [
+          "bite"
+        ],
+        "Mechanisms": [
+          "area",
+          "attack",
+          "bankless",
+          "hit",
+          "melee",
+          "shape",
+          "strikes"
+        ],
+        "StatusesApplied": [
+          "bleeding"
+        ],
+        "SelfDamage": 0,
+        "SelfStatuses": [
+          "poise_broken",
+          "poise_rearming",
+          "shield_delay"
+        ],
+        "LifeLeft": 0.65
+      },
+      "Warnings": [],
+      "Errors": []
+    },
+    {
+      "A": "proving_reaver",
+      "B": "proving_bulwark",
+      "Index": 4,
+      "Seed": "tournament:proving_reaver:proving_bulwark:4",
+      "Outcome": "b",
+      "EndTick": 559,
+      "Seconds": 27.95,
+      "Hash": "4019456b4c341b4a",
+      "SideA": {
+        "Pattern": "proving_reaver",
+        "DamageDealt": 334.86,
+        "Hits": 60,
+        "Crits": 1,
+        "Casts": 13,
+        "Uses": 14,
+        "Kit": 1,
+        "Coverage": 1,
+        "Spread": 1,
+        "Seats": [
+          "strike[stone]\u002Brending"
+        ],
+        "Faces": [
+          "strike[stone]\u002Brending"
+        ],
+        "Mechanisms": [
+          "affliction",
+          "affliction:bleeding",
+          "area",
+          "attack",
+          "bankless",
+          "hit",
+          "melee",
+          "rupture",
+          "shape",
+          "strikes"
+        ],
+        "StatusesApplied": [
+          "bleeding"
+        ],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0
+      },
+      "SideB": {
+        "Pattern": "proving_bulwark",
+        "DamageDealt": 216.47,
+        "Hits": 31,
+        "Crits": 1,
+        "Casts": 21,
+        "Uses": 21,
+        "Kit": 1,
+        "Coverage": 1,
+        "Spread": 1,
+        "Seats": [
+          "bite"
+        ],
+        "Faces": [
+          "bite"
+        ],
+        "Mechanisms": [
+          "area",
+          "attack",
+          "bankless",
+          "hit",
+          "melee",
+          "shape",
+          "strikes"
+        ],
+        "StatusesApplied": [
+          "bleeding"
+        ],
+        "SelfDamage": 0,
+        "SelfStatuses": [
+          "poise_broken",
+          "poise_rearming",
+          "shield_delay"
+        ],
+        "LifeLeft": 0.83
+      },
+      "Warnings": [],
+      "Errors": []
+    },
+    {
+      "A": "proving_reaver",
+      "B": "proving_bulwark",
+      "Index": 5,
+      "Seed": "tournament:proving_reaver:proving_bulwark:5",
+      "Outcome": "b",
+      "EndTick": 734,
+      "Seconds": 36.7,
+      "Hash": "726d8ae4e990eff9",
+      "SideA": {
+        "Pattern": "proving_reaver",
+        "DamageDealt": 461.13,
+        "Hits": 80,
+        "Crits": 2,
+        "Casts": 17,
+        "Uses": 18,
+        "Kit": 1,
+        "Coverage": 1,
+        "Spread": 1,
+        "Seats": [
+          "strike[stone]\u002Brending"
+        ],
+        "Faces": [
+          "strike[stone]\u002Brending"
+        ],
+        "Mechanisms": [
+          "affliction",
+          "affliction:bleeding",
+          "area",
+          "attack",
+          "bankless",
+          "hit",
+          "melee",
+          "rupture",
+          "shape",
+          "strikes"
+        ],
+        "StatusesApplied": [
+          "bleeding"
+        ],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0
+      },
+      "SideB": {
+        "Pattern": "proving_bulwark",
+        "DamageDealt": 247.71,
+        "Hits": 25,
+        "Crits": 1,
+        "Casts": 26,
+        "Uses": 26,
+        "Kit": 1,
+        "Coverage": 1,
+        "Spread": 1,
+        "Seats": [
+          "bite"
+        ],
+        "Faces": [
+          "bite"
+        ],
+        "Mechanisms": [
+          "area",
+          "attack",
+          "bankless",
+          "hit",
+          "melee",
+          "shape",
+          "strikes"
+        ],
+        "StatusesApplied": [],
+        "SelfDamage": 0,
+        "SelfStatuses": [
+          "poise_broken",
+          "poise_rearming",
+          "shield_delay"
+        ],
+        "LifeLeft": 0.858
+      },
+      "Warnings": [],
+      "Errors": []
+    },
+    {
+      "A": "proving_reaver",
+      "B": "proving_bulwark",
+      "Index": 6,
+      "Seed": "tournament:proving_reaver:proving_bulwark:6",
+      "Outcome": "b",
+      "EndTick": 809,
+      "Seconds": 40.45,
+      "Hash": "dbbad335d264313b",
+      "SideA": {
+        "Pattern": "proving_reaver",
+        "DamageDealt": 649.86,
+        "Hits": 94,
+        "Crits": 2,
+        "Casts": 19,
+        "Uses": 20,
+        "Kit": 1,
+        "Coverage": 1,
+        "Spread": 1,
+        "Seats": [
+          "strike[stone]\u002Brending"
+        ],
+        "Faces": [
+          "strike[stone]\u002Brending"
+        ],
+        "Mechanisms": [
+          "affliction",
+          "affliction:bleeding",
+          "area",
+          "attack",
+          "bankless",
+          "hit",
+          "melee",
+          "rupture",
+          "shape",
+          "strikes"
+        ],
+        "StatusesApplied": [
+          "bleeding"
+        ],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0
+      },
+      "SideB": {
+        "Pattern": "proving_bulwark",
+        "DamageDealt": 272.87,
+        "Hits": 28,
+        "Crits": 1,
+        "Casts": 30,
+        "Uses": 30,
+        "Kit": 1,
+        "Coverage": 1,
+        "Spread": 1,
+        "Seats": [
+          "bite"
+        ],
+        "Faces": [
+          "bite"
+        ],
+        "Mechanisms": [
+          "area",
+          "attack",
+          "bankless",
+          "hit",
+          "melee",
+          "shape",
+          "strikes"
+        ],
+        "StatusesApplied": [],
+        "SelfDamage": 0,
+        "SelfStatuses": [
+          "poise_broken",
+          "poise_rearming",
+          "shield_delay"
+        ],
+        "LifeLeft": 0.128
+      },
+      "Warnings": [],
+      "Errors": []
+    },
+    {
+      "A": "proving_reaver",
+      "B": "proving_bulwark",
+      "Index": 7,
+      "Seed": "tournament:proving_reaver:proving_bulwark:7",
+      "Outcome": "b",
+      "EndTick": 659,
+      "Seconds": 32.95,
+      "Hash": "0feccbc6c7e79704",
+      "SideA": {
+        "Pattern": "proving_reaver",
+        "DamageDealt": 499.3,
+        "Hits": 74,
+        "Crits": 0,
+        "Casts": 15,
+        "Uses": 16,
+        "Kit": 1,
+        "Coverage": 1,
+        "Spread": 1,
+        "Seats": [
+          "strike[stone]\u002Brending"
+        ],
+        "Faces": [
+          "strike[stone]\u002Brending"
+        ],
+        "Mechanisms": [
+          "affliction",
+          "affliction:bleeding",
+          "area",
+          "attack",
+          "bankless",
+          "hit",
+          "melee",
+          "rupture",
+          "shape",
+          "strikes"
+        ],
+        "StatusesApplied": [
+          "bleeding"
+        ],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0
+      },
+      "SideB": {
+        "Pattern": "proving_bulwark",
+        "DamageDealt": 250.36,
+        "Hits": 33,
+        "Crits": 3,
+        "Casts": 24,
+        "Uses": 24,
+        "Kit": 1,
+        "Coverage": 1,
+        "Spread": 1,
+        "Seats": [
+          "bite"
+        ],
+        "Faces": [
+          "bite"
+        ],
+        "Mechanisms": [
+          "area",
+          "attack",
+          "bankless",
+          "hit",
+          "melee",
+          "shape",
+          "strikes"
+        ],
+        "StatusesApplied": [
+          "bleeding"
+        ],
+        "SelfDamage": 0,
+        "SelfStatuses": [
+          "poise_broken",
+          "poise_rearming",
+          "shield_delay"
+        ],
+        "LifeLeft": 0.511
+      },
+      "Warnings": [],
+      "Errors": []
+    },
+    {
+      "A": "proving_reaver",
+      "B": "proving_bulwark",
+      "Index": 8,
+      "Seed": "tournament:proving_reaver:proving_bulwark:8",
+      "Outcome": "b",
+      "EndTick": 734,
+      "Seconds": 36.7,
+      "Hash": "64b0d01730a25d1a",
+      "SideA": {
+        "Pattern": "proving_reaver",
+        "DamageDealt": 398.85,
+        "Hits": 70,
+        "Crits": 2,
+        "Casts": 17,
+        "Uses": 18,
+        "Kit": 1,
+        "Coverage": 1,
+        "Spread": 1,
+        "Seats": [
+          "strike[stone]\u002Brending"
+        ],
+        "Faces": [
+          "strike[stone]\u002Brending"
+        ],
+        "Mechanisms": [
+          "affliction",
+          "affliction:bleeding",
+          "area",
+          "attack",
+          "bankless",
+          "hit",
+          "melee",
+          "rupture",
+          "shape",
+          "strikes"
+        ],
+        "StatusesApplied": [
+          "bleeding"
+        ],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0
+      },
+      "SideB": {
+        "Pattern": "proving_bulwark",
+        "DamageDealt": 240.62,
+        "Hits": 25,
+        "Crits": 0,
+        "Casts": 26,
+        "Uses": 26,
+        "Kit": 1,
+        "Coverage": 1,
+        "Spread": 1,
+        "Seats": [
+          "bite"
+        ],
+        "Faces": [
+          "bite"
+        ],
+        "Mechanisms": [
+          "area",
+          "attack",
+          "bankless",
+          "hit",
+          "melee",
+          "shape",
+          "strikes"
+        ],
+        "StatusesApplied": [],
+        "SelfDamage": 0,
+        "SelfStatuses": [
+          "poise_broken",
+          "poise_rearming",
+          "shield_delay"
+        ],
+        "LifeLeft": 0.855
+      },
+      "Warnings": [],
+      "Errors": []
+    },
+    {
+      "A": "proving_reaver",
+      "B": "proving_bulwark",
+      "Index": 9,
+      "Seed": "tournament:proving_reaver:proving_bulwark:9",
+      "Outcome": "a",
+      "EndTick": 856,
+      "Seconds": 42.8,
+      "Hash": "b8ed3cd7684391fd",
+      "SideA": {
+        "Pattern": "proving_reaver",
+        "DamageDealt": 767.41,
+        "Hits": 105,
+        "Crits": 2,
+        "Casts": 21,
+        "Uses": 21,
+        "Kit": 1,
+        "Coverage": 1,
+        "Spread": 1,
+        "Seats": [
+          "strike[stone]\u002Brending"
+        ],
+        "Faces": [
+          "strike[stone]\u002Brending"
+        ],
+        "Mechanisms": [
+          "affliction",
+          "affliction:bleeding",
+          "area",
+          "attack",
+          "bankless",
+          "hit",
+          "melee",
+          "rupture",
+          "shape",
+          "strikes"
+        ],
+        "StatusesApplied": [
+          "bleeding"
+        ],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0.284
+      },
+      "SideB": {
+        "Pattern": "proving_bulwark",
+        "DamageDealt": 240.83,
+        "Hits": 26,
+        "Crits": 0,
+        "Casts": 30,
+        "Uses": 31,
+        "Kit": 1,
+        "Coverage": 1,
+        "Spread": 1,
+        "Seats": [
+          "bite"
+        ],
+        "Faces": [
+          "bite"
+        ],
+        "Mechanisms": [
+          "area",
+          "attack",
+          "bankless",
+          "hit",
+          "melee",
+          "shape",
+          "strikes"
+        ],
+        "StatusesApplied": [],
+        "SelfDamage": 0,
+        "SelfStatuses": [
+          "poise_broken",
+          "poise_rearming",
+          "shield_delay"
+        ],
+        "LifeLeft": 0
+      },
+      "Warnings": [],
+      "Errors": []
+    },
+    {
+      "A": "proving_hexer",
+      "B": "proving_plaguer",
+      "Index": 0,
+      "Seed": "tournament:proving_hexer:proving_plaguer:0",
+      "Outcome": "b",
+      "EndTick": 122,
+      "Seconds": 6.1,
+      "Hash": "99e99b57c5627885",
+      "SideA": {
+        "Pattern": "proving_hexer",
+        "DamageDealt": 106.25,
+        "Hits": 13,
+        "Crits": 1,
+        "Casts": 7,
+        "Uses": 8,
+        "Kit": 3,
+        "Coverage": 1,
+        "Spread": 2.46,
+        "Seats": [
+          "hex_of_despair",
+          "maddening_rite",
+          "void_lash"
+        ],
+        "Faces": [
+          "hex_of_despair",
+          "maddening_rite",
+          "void_lash"
+        ],
+        "Mechanisms": [
+          "affliction",
+          "area",
+          "bankless",
+          "cooldown",
+          "hit",
+          "line",
+          "shape",
+          "spell",
+          "status"
+        ],
+        "StatusesApplied": [
+          "despair",
+          "indecision",
+          "maddened",
+          "wither_agony"
+        ],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0
+      },
+      "SideB": {
+        "Pattern": "proving_plaguer",
+        "DamageDealt": 154.35,
+        "Hits": 21,
+        "Crits": 0,
+        "Casts": 7,
+        "Uses": 8,
+        "Kit": 3,
+        "Coverage": 1,
+        "Spread": 2.087,
+        "Seats": [
+          "plague_rite",
+          "powder_rite",
+          "ember_bolt"
+        ],
+        "Faces": [
+          "ember_bolt",
+          "plague_rite",
+          "powder_rite"
+        ],
+        "Mechanisms": [
+          "affliction",
+          "area",
+          "bankless",
+          "chain",
+          "cooldown",
+          "flight",
+          "hit",
+          "projectile",
+          "spell",
+          "status"
+        ],
+        "StatusesApplied": [
+          "contagion",
+          "decay",
+          "faintness",
+          "powder_charge"
+        ],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0.354
+      },
+      "Warnings": [],
+      "Errors": []
+    },
+    {
+      "A": "proving_hexer",
+      "B": "proving_plaguer",
+      "Index": 1,
+      "Seed": "tournament:proving_hexer:proving_plaguer:1",
+      "Outcome": "b",
+      "EndTick": 115,
+      "Seconds": 5.75,
+      "Hash": "0f08de4117c9c14a",
+      "SideA": {
+        "Pattern": "proving_hexer",
+        "DamageDealt": 71.75,
+        "Hits": 11,
+        "Crits": 0,
+        "Casts": 7,
+        "Uses": 7,
+        "Kit": 3,
+        "Coverage": 1,
+        "Spread": 2.942,
+        "Seats": [
+          "hex_of_despair",
+          "maddening_rite",
+          "void_lash"
+        ],
+        "Faces": [
+          "hex_of_despair",
+          "maddening_rite",
+          "void_lash"
+        ],
+        "Mechanisms": [
+          "affliction",
+          "area",
+          "bankless",
+          "cooldown",
+          "hit",
+          "line",
+          "shape",
+          "spell",
+          "status"
+        ],
+        "StatusesApplied": [
+          "despair",
+          "indecision",
+          "maddened",
+          "wither_agony"
+        ],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0
+      },
+      "SideB": {
+        "Pattern": "proving_plaguer",
+        "DamageDealt": 155,
+        "Hits": 29,
+        "Crits": 1,
+        "Casts": 6,
+        "Uses": 7,
+        "Kit": 3,
+        "Coverage": 1,
+        "Spread": 2.942,
+        "Seats": [
+          "plague_rite",
+          "powder_rite",
+          "ember_bolt"
+        ],
+        "Faces": [
+          "ember_bolt",
+          "plague_rite",
+          "powder_rite"
+        ],
+        "Mechanisms": [
+          "affliction",
+          "area",
+          "bankless",
+          "chain",
+          "cooldown",
+          "flight",
+          "hit",
+          "projectile",
+          "spell",
+          "status"
+        ],
+        "StatusesApplied": [
+          "burning",
+          "contagion",
+          "decay",
+          "faintness",
+          "powder_charge",
+          "swoon"
+        ],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0.568
+      },
+      "Warnings": [],
+      "Errors": []
+    },
+    {
+      "A": "proving_hexer",
+      "B": "proving_plaguer",
+      "Index": 2,
+      "Seed": "tournament:proving_hexer:proving_plaguer:2",
+      "Outcome": "b",
+      "EndTick": 133,
+      "Seconds": 6.65,
+      "Hash": "53f38b7e1e647bec",
+      "SideA": {
+        "Pattern": "proving_hexer",
+        "DamageDealt": 89.1,
+        "Hits": 11,
+        "Crits": 0,
+        "Casts": 8,
+        "Uses": 8,
+        "Kit": 3,
+        "Coverage": 1,
+        "Spread": 2.828,
+        "Seats": [
+          "hex_of_despair",
+          "maddening_rite",
+          "void_lash"
+        ],
+        "Faces": [
+          "hex_of_despair",
+          "maddening_rite",
+          "void_lash"
+        ],
+        "Mechanisms": [
+          "affliction",
+          "area",
+          "bankless",
+          "cooldown",
+          "hit",
+          "line",
+          "shape",
+          "spell",
+          "status"
+        ],
+        "StatusesApplied": [
+          "despair",
+          "indecision",
+          "maddened",
+          "wither_agony"
+        ],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0
+      },
+      "SideB": {
+        "Pattern": "proving_plaguer",
+        "DamageDealt": 161.85,
+        "Hits": 30,
+        "Crits": 0,
+        "Casts": 7,
+        "Uses": 8,
+        "Kit": 3,
+        "Coverage": 1,
+        "Spread": 2.46,
+        "Seats": [
+          "plague_rite",
+          "powder_rite",
+          "ember_bolt"
+        ],
+        "Faces": [
+          "ember_bolt",
+          "plague_rite",
+          "powder_rite"
+        ],
+        "Mechanisms": [
+          "affliction",
+          "area",
+          "bankless",
+          "chain",
+          "cooldown",
+          "flight",
+          "hit",
+          "projectile",
+          "spell",
+          "status"
+        ],
+        "StatusesApplied": [
+          "burning",
+          "contagion",
+          "decay",
+          "faintness",
+          "powder_charge",
+          "swoon"
+        ],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0.471
+      },
+      "Warnings": [],
+      "Errors": []
+    },
+    {
+      "A": "proving_hexer",
+      "B": "proving_plaguer",
+      "Index": 3,
+      "Seed": "tournament:proving_hexer:proving_plaguer:3",
+      "Outcome": "b",
+      "EndTick": 135,
+      "Seconds": 6.75,
+      "Hash": "cb3d7fc63c6f1806",
+      "SideA": {
+        "Pattern": "proving_hexer",
+        "DamageDealt": 120.12,
+        "Hits": 16,
+        "Crits": 0,
+        "Casts": 8,
+        "Uses": 9,
+        "Kit": 3,
+        "Coverage": 1,
+        "Spread": 2.552,
+        "Seats": [
+          "hex_of_despair",
+          "maddening_rite",
+          "void_lash"
+        ],
+        "Faces": [
+          "hex_of_despair",
+          "maddening_rite",
+          "void_lash"
+        ],
+        "Mechanisms": [
+          "affliction",
+          "area",
+          "bankless",
+          "cooldown",
+          "hit",
+          "line",
+          "shape",
+          "spell",
+          "status"
+        ],
+        "StatusesApplied": [
+          "despair",
+          "indecision",
+          "maddened",
+          "wither_agony"
+        ],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0
+      },
+      "SideB": {
+        "Pattern": "proving_plaguer",
+        "DamageDealt": 175.44,
+        "Hits": 30,
+        "Crits": 0,
+        "Casts": 8,
+        "Uses": 8,
+        "Kit": 3,
+        "Coverage": 1,
+        "Spread": 2.828,
+        "Seats": [
+          "plague_rite",
+          "powder_rite",
+          "ember_bolt"
+        ],
+        "Faces": [
+          "ember_bolt",
+          "plague_rite",
+          "powder_rite"
+        ],
+        "Mechanisms": [
+          "affliction",
+          "area",
+          "bankless",
+          "chain",
+          "cooldown",
+          "flight",
+          "hit",
+          "projectile",
+          "spell",
+          "status"
+        ],
+        "StatusesApplied": [
+          "contagion",
+          "decay",
+          "faintness",
+          "powder_charge",
+          "swoon"
+        ],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0.271
+      },
+      "Warnings": [],
+      "Errors": []
+    },
+    {
+      "A": "proving_hexer",
+      "B": "proving_plaguer",
+      "Index": 4,
+      "Seed": "tournament:proving_hexer:proving_plaguer:4",
+      "Outcome": "b",
+      "EndTick": 113,
+      "Seconds": 5.65,
+      "Hash": "738dd9f16a604dbb",
+      "SideA": {
+        "Pattern": "proving_hexer",
+        "DamageDealt": 71.75,
+        "Hits": 11,
+        "Crits": 0,
+        "Casts": 6,
+        "Uses": 7,
+        "Kit": 3,
+        "Coverage": 1,
+        "Spread": 2.942,
+        "Seats": [
+          "hex_of_despair",
+          "maddening_rite",
+          "void_lash"
+        ],
+        "Faces": [
+          "hex_of_despair",
+          "maddening_rite",
+          "void_lash"
+        ],
+        "Mechanisms": [
+          "affliction",
+          "area",
+          "bankless",
+          "cooldown",
+          "hit",
+          "line",
+          "shape",
+          "spell",
+          "status"
+        ],
+        "StatusesApplied": [
+          "despair",
+          "indecision",
+          "maddened",
+          "wither_agony"
+        ],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0
+      },
+      "SideB": {
+        "Pattern": "proving_plaguer",
+        "DamageDealt": 156.58,
+        "Hits": 23,
+        "Crits": 1,
+        "Casts": 5,
+        "Uses": 6,
+        "Kit": 3,
+        "Coverage": 1,
+        "Spread": 2.749,
+        "Seats": [
+          "plague_rite",
+          "powder_rite",
+          "ember_bolt"
+        ],
+        "Faces": [
+          "ember_bolt",
+          "plague_rite",
+          "powder_rite"
+        ],
+        "Mechanisms": [
+          "affliction",
+          "area",
+          "bankless",
+          "chain",
+          "cooldown",
+          "flight",
+          "hit",
+          "projectile",
+          "spell",
+          "status"
+        ],
+        "StatusesApplied": [
+          "burning",
+          "contagion",
+          "decay",
+          "faintness",
+          "powder_charge"
+        ],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0.569
+      },
+      "Warnings": [],
+      "Errors": []
+    },
+    {
+      "A": "proving_hexer",
+      "B": "proving_plaguer",
+      "Index": 5,
+      "Seed": "tournament:proving_hexer:proving_plaguer:5",
+      "Outcome": "b",
+      "EndTick": 139,
+      "Seconds": 6.95,
+      "Hash": "08df07ea6c095096",
+      "SideA": {
+        "Pattern": "proving_hexer",
+        "DamageDealt": 95.9,
+        "Hits": 14,
+        "Crits": 0,
+        "Casts": 8,
+        "Uses": 9,
+        "Kit": 3,
+        "Coverage": 1,
+        "Spread": 2.705,
+        "Seats": [
+          "hex_of_despair",
+          "maddening_rite",
+          "void_lash"
+        ],
+        "Faces": [
+          "hex_of_despair",
+          "maddening_rite",
+          "void_lash"
+        ],
+        "Mechanisms": [
+          "affliction",
+          "area",
+          "bankless",
+          "cooldown",
+          "hit",
+          "line",
+          "shape",
+          "spell",
+          "status"
+        ],
+        "StatusesApplied": [
+          "despair",
+          "indecision",
+          "maddened",
+          "wither_agony"
+        ],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0
+      },
+      "SideB": {
+        "Pattern": "proving_plaguer",
+        "DamageDealt": 164.56,
+        "Hits": 35,
+        "Crits": 0,
+        "Casts": 7,
+        "Uses": 8,
+        "Kit": 3,
+        "Coverage": 0.667,
+        "Spread": 1.755,
+        "Seats": [
+          "plague_rite",
+          "ember_bolt"
+        ],
+        "Faces": [
+          "ember_bolt",
+          "plague_rite"
+        ],
+        "Mechanisms": [
+          "affliction",
+          "area",
+          "bankless",
+          "chain",
+          "cooldown",
+          "flight",
+          "hit",
+          "projectile",
+          "spell",
+          "status"
+        ],
+        "StatusesApplied": [
+          "burning",
+          "contagion",
+          "decay",
+          "faintness",
+          "swoon"
+        ],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0.421
+      },
+      "Warnings": [],
+      "Errors": []
+    },
+    {
+      "A": "proving_hexer",
+      "B": "proving_plaguer",
+      "Index": 6,
+      "Seed": "tournament:proving_hexer:proving_plaguer:6",
+      "Outcome": "b",
+      "EndTick": 163,
+      "Seconds": 8.15,
+      "Hash": "a9572ab00fd76c10",
+      "SideA": {
+        "Pattern": "proving_hexer",
+        "DamageDealt": 120.45,
+        "Hits": 19,
+        "Crits": 0,
+        "Casts": 10,
+        "Uses": 11,
+        "Kit": 3,
+        "Coverage": 1,
+        "Spread": 2.705,
+        "Seats": [
+          "hex_of_despair",
+          "maddening_rite",
+          "void_lash"
+        ],
+        "Faces": [
+          "hex_of_despair",
+          "maddening_rite",
+          "void_lash"
+        ],
+        "Mechanisms": [
+          "affliction",
+          "area",
+          "bankless",
+          "cooldown",
+          "hit",
+          "line",
+          "shape",
+          "spell",
+          "status"
+        ],
+        "StatusesApplied": [
+          "despair",
+          "indecision",
+          "maddened",
+          "wither_agony"
+        ],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0
+      },
+      "SideB": {
+        "Pattern": "proving_plaguer",
+        "DamageDealt": 171.8,
+        "Hits": 29,
+        "Crits": 0,
+        "Casts": 8,
+        "Uses": 9,
+        "Kit": 3,
+        "Coverage": 0.667,
+        "Spread": 1.698,
+        "Seats": [
+          "plague_rite",
+          "ember_bolt"
+        ],
+        "Faces": [
+          "ember_bolt",
+          "plague_rite"
+        ],
+        "Mechanisms": [
+          "affliction",
+          "area",
+          "bankless",
+          "chain",
+          "cooldown",
+          "flight",
+          "hit",
+          "projectile",
+          "spell",
+          "status"
+        ],
+        "StatusesApplied": [
+          "burning",
+          "contagion",
+          "decay",
+          "faintness",
+          "swoon"
+        ],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0.277
+      },
+      "Warnings": [],
+      "Errors": []
+    },
+    {
+      "A": "proving_hexer",
+      "B": "proving_plaguer",
+      "Index": 7,
+      "Seed": "tournament:proving_hexer:proving_plaguer:7",
+      "Outcome": "b",
+      "EndTick": 153,
+      "Seconds": 7.65,
+      "Hash": "8c9d5d4acc646266",
+      "SideA": {
+        "Pattern": "proving_hexer",
+        "DamageDealt": 116.73,
+        "Hits": 16,
+        "Crits": 0,
+        "Casts": 9,
+        "Uses": 10,
+        "Kit": 3,
+        "Coverage": 1,
+        "Spread": 2.586,
+        "Seats": [
+          "hex_of_despair",
+          "maddening_rite",
+          "void_lash"
+        ],
+        "Faces": [
+          "hex_of_despair",
+          "maddening_rite",
+          "void_lash"
+        ],
+        "Mechanisms": [
+          "affliction",
+          "area",
+          "bankless",
+          "cooldown",
+          "hit",
+          "line",
+          "shape",
+          "spell",
+          "status"
+        ],
+        "StatusesApplied": [
+          "despair",
+          "indecision",
+          "maddened",
+          "wither_agony"
+        ],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0
+      },
+      "SideB": {
+        "Pattern": "proving_plaguer",
+        "DamageDealt": 182.61,
+        "Hits": 30,
+        "Crits": 0,
+        "Casts": 8,
+        "Uses": 8,
+        "Kit": 3,
+        "Coverage": 1,
+        "Spread": 2.951,
+        "Seats": [
+          "plague_rite",
+          "powder_rite",
+          "ember_bolt"
+        ],
+        "Faces": [
+          "ember_bolt",
+          "plague_rite",
+          "powder_rite"
+        ],
+        "Mechanisms": [
+          "affliction",
+          "area",
+          "bankless",
+          "chain",
+          "cooldown",
+          "flight",
+          "hit",
+          "projectile",
+          "spell",
+          "status"
+        ],
+        "StatusesApplied": [
+          "burning",
+          "contagion",
+          "decay",
+          "faintness",
+          "powder_charge",
+          "swoon"
+        ],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0.304
+      },
+      "Warnings": [],
+      "Errors": []
+    },
+    {
+      "A": "proving_hexer",
+      "B": "proving_plaguer",
+      "Index": 8,
+      "Seed": "tournament:proving_hexer:proving_plaguer:8",
+      "Outcome": "b",
+      "EndTick": 113,
+      "Seconds": 5.65,
+      "Hash": "4bf533d8587310a5",
+      "SideA": {
+        "Pattern": "proving_hexer",
+        "DamageDealt": 71.92,
+        "Hits": 11,
+        "Crits": 0,
+        "Casts": 7,
+        "Uses": 7,
+        "Kit": 3,
+        "Coverage": 1,
+        "Spread": 2.942,
+        "Seats": [
+          "hex_of_despair",
+          "maddening_rite",
+          "void_lash"
+        ],
+        "Faces": [
+          "hex_of_despair",
+          "maddening_rite",
+          "void_lash"
+        ],
+        "Mechanisms": [
+          "affliction",
+          "area",
+          "bankless",
+          "cooldown",
+          "hit",
+          "line",
+          "shape",
+          "spell",
+          "status"
+        ],
+        "StatusesApplied": [
+          "despair",
+          "indecision",
+          "maddened",
+          "wither_agony"
+        ],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0
+      },
+      "SideB": {
+        "Pattern": "proving_plaguer",
+        "DamageDealt": 166.2,
+        "Hits": 21,
+        "Crits": 1,
+        "Casts": 6,
+        "Uses": 7,
+        "Kit": 3,
+        "Coverage": 1,
+        "Spread": 2.6,
+        "Seats": [
+          "plague_rite",
+          "powder_rite",
+          "ember_bolt"
+        ],
+        "Faces": [
+          "ember_bolt",
+          "plague_rite",
+          "powder_rite"
+        ],
+        "Mechanisms": [
+          "affliction",
+          "area",
+          "bankless",
+          "chain",
+          "cooldown",
+          "flight",
+          "hit",
+          "projectile",
+          "spell",
+          "status"
+        ],
+        "StatusesApplied": [
+          "burning",
+          "contagion",
+          "decay",
+          "faintness",
+          "powder_charge"
+        ],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0.568
+      },
+      "Warnings": [],
+      "Errors": []
+    },
+    {
+      "A": "proving_hexer",
+      "B": "proving_plaguer",
+      "Index": 9,
+      "Seed": "tournament:proving_hexer:proving_plaguer:9",
+      "Outcome": "b",
+      "EndTick": 135,
+      "Seconds": 6.75,
+      "Hash": "12bf072e909dc2f5",
+      "SideA": {
+        "Pattern": "proving_hexer",
+        "DamageDealt": 114.85,
+        "Hits": 14,
+        "Crits": 0,
+        "Casts": 8,
+        "Uses": 9,
+        "Kit": 3,
+        "Coverage": 1,
+        "Spread": 2.337,
+        "Seats": [
+          "hex_of_despair",
+          "maddening_rite",
+          "void_lash"
+        ],
+        "Faces": [
+          "hex_of_despair",
+          "maddening_rite",
+          "void_lash"
+        ],
+        "Mechanisms": [
+          "affliction",
+          "area",
+          "bankless",
+          "cooldown",
+          "hit",
+          "line",
+          "shape",
+          "spell",
+          "status"
+        ],
+        "StatusesApplied": [
+          "despair",
+          "indecision",
+          "maddened",
+          "wither_agony"
+        ],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0
+      },
+      "SideB": {
+        "Pattern": "proving_plaguer",
+        "DamageDealt": 164.56,
+        "Hits": 35,
+        "Crits": 0,
+        "Casts": 7,
+        "Uses": 8,
+        "Kit": 3,
+        "Coverage": 0.667,
+        "Spread": 1.938,
+        "Seats": [
+          "plague_rite",
+          "ember_bolt"
+        ],
+        "Faces": [
+          "ember_bolt",
+          "plague_rite"
+        ],
+        "Mechanisms": [
+          "affliction",
+          "area",
+          "bankless",
+          "chain",
+          "cooldown",
+          "flight",
+          "hit",
+          "projectile",
+          "spell",
+          "status"
+        ],
+        "StatusesApplied": [
+          "burning",
+          "contagion",
+          "decay",
+          "faintness",
+          "swoon"
+        ],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0.308
+      },
+      "Warnings": [],
+      "Errors": []
+    },
+    {
+      "A": "proving_pitfighter",
+      "B": "proving_mower",
+      "Index": 0,
+      "Seed": "tournament:proving_pitfighter:proving_mower:0",
+      "Outcome": "a",
+      "EndTick": 226,
+      "Seconds": 11.3,
+      "Hash": "1d4a5c1a519e2fe4",
+      "SideA": {
+        "Pattern": "proving_pitfighter",
+        "DamageDealt": 190.07,
+        "Hits": 12,
+        "Crits": 0,
+        "Casts": 14,
+        "Uses": 14,
+        "Kit": 3,
+        "Coverage": 1,
+        "Spread": 2.294,
+        "Seats": [
+          "one_two",
+          "haymaker",
+          "frenzy"
+        ],
+        "Faces": [
+          "cross_jab",
+          "frenzy",
+          "haymaker",
+          "one_two"
+        ],
+        "Mechanisms": [
+          "affliction",
+          "area",
+          "attack",
+          "bankless",
+          "charges",
+          "cooldown",
+          "displaces",
+          "hit",
+          "melee",
+          "shape",
+          "shove",
+          "spends",
+          "status",
+          "strikes"
+        ],
+        "StatusesApplied": [
+          "stunned"
+        ],
+        "SelfDamage": 0,
+        "SelfStatuses": [
+          "frenzy"
+        ],
+        "LifeLeft": 0.63
+      },
+      "SideB": {
+        "Pattern": "proving_mower",
+        "DamageDealt": 77.08,
+        "Hits": 13,
+        "Crits": 0,
+        "Casts": 4,
+        "Uses": 4,
+        "Kit": 4,
+        "Coverage": 0.25,
+        "Spread": 1,
+        "Seats": [
+          "lash_roots"
+        ],
+        "Faces": [
+          "lash_roots"
+        ],
+        "Mechanisms": [
+          "affliction",
+          "area",
+          "attack",
+          "bankless",
+          "cooldown",
+          "hit",
+          "melee",
+          "shape",
+          "status",
+          "strikes"
+        ],
+        "StatusesApplied": [
+          "bleeding",
+          "ensnared"
+        ],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0
+      },
+      "Warnings": [],
+      "Errors": []
+    },
+    {
+      "A": "proving_pitfighter",
+      "B": "proving_mower",
+      "Index": 1,
+      "Seed": "tournament:proving_pitfighter:proving_mower:1",
+      "Outcome": "a",
+      "EndTick": 172,
+      "Seconds": 8.6,
+      "Hash": "4910b56b7f079c49",
+      "SideA": {
+        "Pattern": "proving_pitfighter",
+        "DamageDealt": 195.89,
+        "Hits": 19,
+        "Crits": 1,
+        "Casts": 10,
+        "Uses": 10,
+        "Kit": 3,
+        "Coverage": 1,
+        "Spread": 2.8,
+        "Seats": [
+          "one_two",
+          "haymaker",
+          "frenzy"
+        ],
+        "Faces": [
+          "cross_jab",
+          "frenzy",
+          "haymaker",
+          "one_two"
+        ],
+        "Mechanisms": [
+          "affliction",
+          "area",
+          "attack",
+          "bankless",
+          "charges",
+          "cooldown",
+          "displaces",
+          "hit",
+          "melee",
+          "shape",
+          "shove",
+          "spends",
+          "status",
+          "strikes"
+        ],
+        "StatusesApplied": [
+          "bleeding"
+        ],
+        "SelfDamage": 0,
+        "SelfStatuses": [
+          "frenzy"
+        ],
+        "LifeLeft": 0.854
+      },
+      "SideB": {
+        "Pattern": "proving_mower",
+        "DamageDealt": 34.45,
+        "Hits": 3,
+        "Crits": 0,
+        "Casts": 3,
+        "Uses": 3,
+        "Kit": 4,
+        "Coverage": 0.25,
+        "Spread": 1,
+        "Seats": [
+          "lash_roots"
+        ],
+        "Faces": [
+          "lash_roots"
+        ],
+        "Mechanisms": [
+          "affliction",
+          "area",
+          "attack",
+          "bankless",
+          "cooldown",
+          "hit",
+          "melee",
+          "shape",
+          "status",
+          "strikes"
+        ],
+        "StatusesApplied": [
+          "ensnared"
+        ],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0
+      },
+      "Warnings": [],
+      "Errors": []
+    },
+    {
+      "A": "proving_pitfighter",
+      "B": "proving_mower",
+      "Index": 2,
+      "Seed": "tournament:proving_pitfighter:proving_mower:2",
+      "Outcome": "a",
+      "EndTick": 265,
+      "Seconds": 13.25,
+      "Hash": "5f9b5fbd305b2912",
+      "SideA": {
+        "Pattern": "proving_pitfighter",
+        "DamageDealt": 213.75,
+        "Hits": 21,
+        "Crits": 2,
+        "Casts": 14,
+        "Uses": 14,
+        "Kit": 3,
+        "Coverage": 1,
+        "Spread": 2.814,
+        "Seats": [
+          "one_two",
+          "haymaker",
+          "frenzy"
+        ],
+        "Faces": [
+          "cross_jab",
+          "frenzy",
+          "haymaker",
+          "one_two"
+        ],
+        "Mechanisms": [
+          "affliction",
+          "area",
+          "attack",
+          "bankless",
+          "charges",
+          "cooldown",
+          "displaces",
+          "hit",
+          "melee",
+          "shape",
+          "shove",
+          "spends",
+          "status",
+          "strikes"
+        ],
+        "StatusesApplied": [
+          "bleeding"
+        ],
+        "SelfDamage": 0,
+        "SelfStatuses": [
+          "frenzy"
+        ],
+        "LifeLeft": 0.384
+      },
+      "SideB": {
+        "Pattern": "proving_mower",
+        "DamageDealt": 122.68,
+        "Hits": 22,
+        "Crits": 0,
+        "Casts": 6,
+        "Uses": 6,
+        "Kit": 4,
+        "Coverage": 0.5,
+        "Spread": 1.569,
+        "Seats": [
+          "lash_roots",
+          "toppling_stroke"
+        ],
+        "Faces": [
+          "lash_roots",
+          "toppling_stroke"
+        ],
+        "Mechanisms": [
+          "affliction",
+          "area",
+          "attack",
+          "bankless",
+          "cooldown",
+          "hit",
+          "melee",
+          "shape",
+          "status",
+          "strikes"
+        ],
+        "StatusesApplied": [
+          "bleeding",
+          "ensnared"
+        ],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0
+      },
+      "Warnings": [],
+      "Errors": []
+    },
+    {
+      "A": "proving_pitfighter",
+      "B": "proving_mower",
+      "Index": 3,
+      "Seed": "tournament:proving_pitfighter:proving_mower:3",
+      "Outcome": "a",
+      "EndTick": 214,
+      "Seconds": 10.7,
+      "Hash": "742c6805af0ebda1",
+      "SideA": {
+        "Pattern": "proving_pitfighter",
+        "DamageDealt": 190.34,
+        "Hits": 11,
+        "Crits": 0,
+        "Casts": 13,
+        "Uses": 13,
+        "Kit": 3,
+        "Coverage": 1,
+        "Spread": 2.675,
+        "Seats": [
+          "one_two",
+          "haymaker",
+          "frenzy"
+        ],
+        "Faces": [
+          "cross_jab",
+          "frenzy",
+          "haymaker",
+          "one_two"
+        ],
+        "Mechanisms": [
+          "affliction",
+          "area",
+          "attack",
+          "bankless",
+          "charges",
+          "cooldown",
+          "displaces",
+          "hit",
+          "melee",
+          "shape",
+          "shove",
+          "spends",
+          "status",
+          "strikes"
+        ],
+        "StatusesApplied": [
+          "stunned"
+        ],
+        "SelfDamage": 0,
+        "SelfStatuses": [
+          "frenzy"
+        ],
+        "LifeLeft": 0.181
+      },
+      "SideB": {
+        "Pattern": "proving_mower",
+        "DamageDealt": 153.62,
+        "Hits": 21,
+        "Crits": 1,
+        "Casts": 4,
+        "Uses": 4,
+        "Kit": 4,
+        "Coverage": 0.25,
+        "Spread": 1,
+        "Seats": [
+          "lash_roots"
+        ],
+        "Faces": [
+          "lash_roots"
+        ],
+        "Mechanisms": [
+          "affliction",
+          "area",
+          "attack",
+          "bankless",
+          "cooldown",
+          "hit",
+          "melee",
+          "shape",
+          "status",
+          "strikes"
+        ],
+        "StatusesApplied": [
+          "bleeding",
+          "ensnared"
+        ],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0
+      },
+      "Warnings": [],
+      "Errors": []
+    },
+    {
+      "A": "proving_pitfighter",
+      "B": "proving_mower",
+      "Index": 4,
+      "Seed": "tournament:proving_pitfighter:proving_mower:4",
+      "Outcome": "a",
+      "EndTick": 287,
+      "Seconds": 14.35,
+      "Hash": "646c002eb4695967",
+      "SideA": {
+        "Pattern": "proving_pitfighter",
+        "DamageDealt": 241.6,
+        "Hits": 12,
+        "Crits": 1,
+        "Casts": 14,
+        "Uses": 14,
+        "Kit": 3,
+        "Coverage": 1,
+        "Spread": 2.6,
+        "Seats": [
+          "one_two",
+          "haymaker",
+          "frenzy"
+        ],
+        "Faces": [
+          "cross_jab",
+          "frenzy",
+          "haymaker",
+          "one_two"
+        ],
+        "Mechanisms": [
+          "affliction",
+          "area",
+          "attack",
+          "bankless",
+          "charges",
+          "cooldown",
+          "displaces",
+          "hit",
+          "melee",
+          "shape",
+          "shove",
+          "spends",
+          "status",
+          "strikes"
+        ],
+        "StatusesApplied": [
+          "bleeding",
+          "stunned"
+        ],
+        "SelfDamage": 0,
+        "SelfStatuses": [
+          "frenzy"
+        ],
+        "LifeLeft": 0.834
+      },
+      "SideB": {
+        "Pattern": "proving_mower",
+        "DamageDealt": 46.33,
+        "Hits": 5,
+        "Crits": 0,
+        "Casts": 5,
+        "Uses": 5,
+        "Kit": 4,
+        "Coverage": 0.25,
+        "Spread": 1,
+        "Seats": [
+          "lash_roots"
+        ],
+        "Faces": [
+          "lash_roots"
+        ],
+        "Mechanisms": [
+          "affliction",
+          "area",
+          "attack",
+          "bankless",
+          "cooldown",
+          "hit",
+          "melee",
+          "shape",
+          "status",
+          "strikes"
+        ],
+        "StatusesApplied": [
+          "bleeding",
+          "ensnared"
+        ],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0
+      },
+      "Warnings": [],
+      "Errors": []
+    },
+    {
+      "A": "proving_pitfighter",
+      "B": "proving_mower",
+      "Index": 5,
+      "Seed": "tournament:proving_pitfighter:proving_mower:5",
+      "Outcome": "a",
+      "EndTick": 178,
+      "Seconds": 8.9,
+      "Hash": "6a18eb7a3bc89bfc",
+      "SideA": {
+        "Pattern": "proving_pitfighter",
+        "DamageDealt": 187.2,
+        "Hits": 11,
+        "Crits": 0,
+        "Casts": 11,
+        "Uses": 11,
+        "Kit": 3,
+        "Coverage": 1,
+        "Spread": 2.478,
+        "Seats": [
+          "one_two",
+          "haymaker",
+          "frenzy"
+        ],
+        "Faces": [
+          "frenzy",
+          "haymaker",
+          "one_two"
+        ],
+        "Mechanisms": [
+          "affliction",
+          "area",
+          "attack",
+          "bankless",
+          "charges",
+          "cooldown",
+          "displaces",
+          "hit",
+          "melee",
+          "shape",
+          "shove",
+          "spends",
+          "status",
+          "strikes"
+        ],
+        "StatusesApplied": [],
+        "SelfDamage": 0,
+        "SelfStatuses": [
+          "frenzy"
+        ],
+        "LifeLeft": 0.927
+      },
+      "SideB": {
+        "Pattern": "proving_mower",
+        "DamageDealt": 14.51,
+        "Hits": 1,
+        "Crits": 0,
+        "Casts": 3,
+        "Uses": 3,
+        "Kit": 4,
+        "Coverage": 0.25,
+        "Spread": 1,
+        "Seats": [
+          "lash_roots"
+        ],
+        "Faces": [
+          "lash_roots"
+        ],
+        "Mechanisms": [
+          "affliction",
+          "area",
+          "attack",
+          "bankless",
+          "cooldown",
+          "hit",
+          "melee",
+          "shape",
+          "status",
+          "strikes"
+        ],
+        "StatusesApplied": [
+          "ensnared"
+        ],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0
+      },
+      "Warnings": [],
+      "Errors": []
+    },
+    {
+      "A": "proving_pitfighter",
+      "B": "proving_mower",
+      "Index": 6,
+      "Seed": "tournament:proving_pitfighter:proving_mower:6",
+      "Outcome": "a",
+      "EndTick": 203,
+      "Seconds": 10.15,
+      "Hash": "91db1176f4aedb70",
+      "SideA": {
+        "Pattern": "proving_pitfighter",
+        "DamageDealt": 211.66,
+        "Hits": 11,
+        "Crits": 0,
+        "Casts": 12,
+        "Uses": 12,
+        "Kit": 3,
+        "Coverage": 1,
+        "Spread": 2.828,
+        "Seats": [
+          "one_two",
+          "haymaker",
+          "frenzy"
+        ],
+        "Faces": [
+          "frenzy",
+          "haymaker",
+          "one_two"
+        ],
+        "Mechanisms": [
+          "affliction",
+          "area",
+          "attack",
+          "bankless",
+          "charges",
+          "cooldown",
+          "displaces",
+          "hit",
+          "melee",
+          "shape",
+          "shove",
+          "spends",
+          "status",
+          "strikes"
+        ],
+        "StatusesApplied": [],
+        "SelfDamage": 0,
+        "SelfStatuses": [
+          "frenzy"
+        ],
+        "LifeLeft": 0.868
+      },
+      "SideB": {
+        "Pattern": "proving_mower",
+        "DamageDealt": 31.52,
+        "Hits": 3,
+        "Crits": 0,
+        "Casts": 4,
+        "Uses": 5,
+        "Kit": 4,
+        "Coverage": 0.5,
+        "Spread": 1.649,
+        "Seats": [
+          "scythe_sweep",
+          "lash_roots"
+        ],
+        "Faces": [
+          "lash_roots",
+          "scythe_sweep"
+        ],
+        "Mechanisms": [
+          "affliction",
+          "area",
+          "attack",
+          "bankless",
+          "cooldown",
+          "hit",
+          "melee",
+          "shape",
+          "status",
+          "strikes"
+        ],
+        "StatusesApplied": [
+          "ensnared"
+        ],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0
+      },
+      "Warnings": [],
+      "Errors": []
+    },
+    {
+      "A": "proving_pitfighter",
+      "B": "proving_mower",
+      "Index": 7,
+      "Seed": "tournament:proving_pitfighter:proving_mower:7",
+      "Outcome": "a",
+      "EndTick": 236,
+      "Seconds": 11.8,
+      "Hash": "d55500b77e313c59",
+      "SideA": {
+        "Pattern": "proving_pitfighter",
+        "DamageDealt": 238,
+        "Hits": 14,
+        "Crits": 0,
+        "Casts": 14,
+        "Uses": 14,
+        "Kit": 3,
+        "Coverage": 1,
+        "Spread": 2.889,
+        "Seats": [
+          "one_two",
+          "haymaker",
+          "frenzy"
+        ],
+        "Faces": [
+          "frenzy",
+          "haymaker",
+          "one_two"
+        ],
+        "Mechanisms": [
+          "affliction",
+          "area",
+          "attack",
+          "bankless",
+          "charges",
+          "cooldown",
+          "displaces",
+          "hit",
+          "melee",
+          "shape",
+          "shove",
+          "spends",
+          "status",
+          "strikes"
+        ],
+        "StatusesApplied": [],
+        "SelfDamage": 0,
+        "SelfStatuses": [
+          "frenzy"
+        ],
+        "LifeLeft": 0.506
+      },
+      "SideB": {
+        "Pattern": "proving_mower",
+        "DamageDealt": 99.4,
+        "Hits": 25,
+        "Crits": 0,
+        "Casts": 5,
+        "Uses": 6,
+        "Kit": 4,
+        "Coverage": 0.5,
+        "Spread": 1.569,
+        "Seats": [
+          "scythe_sweep",
+          "lash_roots"
+        ],
+        "Faces": [
+          "lash_roots",
+          "scythe_sweep"
+        ],
+        "Mechanisms": [
+          "affliction",
+          "area",
+          "attack",
+          "bankless",
+          "cooldown",
+          "hit",
+          "melee",
+          "shape",
+          "status",
+          "strikes"
+        ],
+        "StatusesApplied": [
+          "bleeding",
+          "ensnared"
+        ],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0
+      },
+      "Warnings": [],
+      "Errors": []
+    },
+    {
+      "A": "proving_pitfighter",
+      "B": "proving_mower",
+      "Index": 8,
+      "Seed": "tournament:proving_pitfighter:proving_mower:8",
+      "Outcome": "a",
+      "EndTick": 252,
+      "Seconds": 12.6,
+      "Hash": "2b1005d6b73c65c9",
+      "SideA": {
+        "Pattern": "proving_pitfighter",
+        "DamageDealt": 231.27,
+        "Hits": 11,
+        "Crits": 0,
+        "Casts": 13,
+        "Uses": 13,
+        "Kit": 3,
+        "Coverage": 1,
+        "Spread": 2.983,
+        "Seats": [
+          "one_two",
+          "haymaker",
+          "frenzy"
+        ],
+        "Faces": [
+          "frenzy",
+          "haymaker",
+          "one_two"
+        ],
+        "Mechanisms": [
+          "affliction",
+          "area",
+          "attack",
+          "bankless",
+          "charges",
+          "cooldown",
+          "displaces",
+          "hit",
+          "melee",
+          "shape",
+          "shove",
+          "spends",
+          "status",
+          "strikes"
+        ],
+        "StatusesApplied": [
+          "stunned"
+        ],
+        "SelfDamage": 0,
+        "SelfStatuses": [
+          "frenzy"
+        ],
+        "LifeLeft": 0.692
+      },
+      "SideB": {
+        "Pattern": "proving_mower",
+        "DamageDealt": 68.72,
+        "Hits": 14,
+        "Crits": 0,
+        "Casts": 4,
+        "Uses": 5,
+        "Kit": 4,
+        "Coverage": 0.25,
+        "Spread": 1,
+        "Seats": [
+          "lash_roots"
+        ],
+        "Faces": [
+          "lash_roots"
+        ],
+        "Mechanisms": [
+          "affliction",
+          "area",
+          "attack",
+          "bankless",
+          "cooldown",
+          "hit",
+          "melee",
+          "shape",
+          "status",
+          "strikes"
+        ],
+        "StatusesApplied": [
+          "bleeding",
+          "ensnared"
+        ],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0
+      },
+      "Warnings": [],
+      "Errors": []
+    },
+    {
+      "A": "proving_pitfighter",
+      "B": "proving_mower",
+      "Index": 9,
+      "Seed": "tournament:proving_pitfighter:proving_mower:9",
+      "Outcome": "a",
+      "EndTick": 239,
+      "Seconds": 11.95,
+      "Hash": "26d493666a61df13",
+      "SideA": {
+        "Pattern": "proving_pitfighter",
+        "DamageDealt": 190.83,
+        "Hits": 11,
+        "Crits": 0,
+        "Casts": 12,
+        "Uses": 12,
+        "Kit": 3,
+        "Coverage": 1,
+        "Spread": 2.937,
+        "Seats": [
+          "one_two",
+          "haymaker",
+          "frenzy"
+        ],
+        "Faces": [
+          "cross_jab",
+          "frenzy",
+          "haymaker",
+          "one_two"
+        ],
+        "Mechanisms": [
+          "affliction",
+          "area",
+          "attack",
+          "bankless",
+          "charges",
+          "cooldown",
+          "displaces",
+          "hit",
+          "melee",
+          "shape",
+          "shove",
+          "spends",
+          "status",
+          "strikes"
+        ],
+        "StatusesApplied": [
+          "stunned"
+        ],
+        "SelfDamage": 0,
+        "SelfStatuses": [
+          "frenzy"
+        ],
+        "LifeLeft": 0.788
+      },
+      "SideB": {
+        "Pattern": "proving_mower",
+        "DamageDealt": 51.24,
+        "Hits": 4,
+        "Crits": 0,
+        "Casts": 6,
+        "Uses": 7,
+        "Kit": 4,
+        "Coverage": 0.75,
+        "Spread": 2.217,
+        "Seats": [
+          "scythe_sweep",
+          "lash_roots",
+          "toppling_stroke"
+        ],
+        "Faces": [
+          "lash_roots",
+          "scythe_sweep",
+          "toppling_stroke"
+        ],
+        "Mechanisms": [
+          "affliction",
+          "area",
+          "attack",
+          "bankless",
+          "cooldown",
+          "hit",
+          "melee",
+          "shape",
+          "status",
+          "strikes"
+        ],
+        "StatusesApplied": [
+          "ensnared"
+        ],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0
+      },
+      "Warnings": [],
+      "Errors": []
+    },
+    {
+      "A": "proving_fletcher",
+      "B": "proving_evoker",
+      "Index": 0,
+      "Seed": "tournament:proving_fletcher:proving_evoker:0",
+      "Outcome": "b",
+      "EndTick": 157,
+      "Seconds": 7.85,
+      "Hash": "6a1fc968b476b7b9",
+      "SideA": {
+        "Pattern": "proving_fletcher",
+        "DamageDealt": 119.25,
+        "Hits": 12,
+        "Crits": 1,
+        "Casts": 6,
+        "Uses": 8,
+        "Kit": 4,
+        "Coverage": 0.75,
+        "Spread": 2.828,
+        "Seats": [
+          "gyreblade",
+          "splinter_volley",
+          "web_shot"
+        ],
+        "Faces": [
+          "gyreblade",
+          "splinter_volley",
+          "web_shot"
+        ],
+        "Mechanisms": [
+          "affliction",
+          "attack",
+          "bankless",
+          "charges",
+          "cooldown",
+          "flight",
+          "hit",
+          "projectile",
+          "returning",
+          "status",
+          "strikes"
+        ],
+        "StatusesApplied": [
+          "bleeding",
+          "rooted"
+        ],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0
+      },
+      "SideB": {
+        "Pattern": "proving_evoker",
+        "DamageDealt": 233.63,
+        "Hits": 14,
+        "Crits": 2,
+        "Casts": 9,
+        "Uses": 10,
+        "Kit": 3,
+        "Coverage": 0.667,
+        "Spread": 1.649,
+        "Seats": [
+          "chain_lightning",
+          "frozen_orb"
+        ],
+        "Faces": [
+          "chain_lightning",
+          "frozen_orb"
+        ],
+        "Mechanisms": [
+          "affliction",
+          "bankless",
+          "chain",
+          "cooldown",
+          "flight",
+          "hit",
+          "projectile",
+          "spell",
+          "status"
+        ],
+        "StatusesApplied": [
+          "chilled",
+          "frozen",
+          "shocked"
+        ],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0.244
+      },
+      "Warnings": [],
+      "Errors": []
+    },
+    {
+      "A": "proving_fletcher",
+      "B": "proving_evoker",
+      "Index": 1,
+      "Seed": "tournament:proving_fletcher:proving_evoker:1",
+      "Outcome": "b",
+      "EndTick": 149,
+      "Seconds": 7.45,
+      "Hash": "fab3c00d1fe6de65",
+      "SideA": {
+        "Pattern": "proving_fletcher",
+        "DamageDealt": 51.56,
+        "Hits": 4,
+        "Crits": 0,
+        "Casts": 6,
+        "Uses": 8,
+        "Kit": 4,
+        "Coverage": 0.75,
+        "Spread": 2.828,
+        "Seats": [
+          "gyreblade",
+          "splinter_volley",
+          "web_shot"
+        ],
+        "Faces": [
+          "gyreblade",
+          "splinter_volley",
+          "web_shot"
+        ],
+        "Mechanisms": [
+          "affliction",
+          "attack",
+          "bankless",
+          "charges",
+          "cooldown",
+          "flight",
+          "hit",
+          "projectile",
+          "returning",
+          "status",
+          "strikes"
+        ],
+        "StatusesApplied": [
+          "rooted"
+        ],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0
+      },
+      "SideB": {
+        "Pattern": "proving_evoker",
+        "DamageDealt": 243.98,
+        "Hits": 14,
+        "Crits": 0,
+        "Casts": 8,
+        "Uses": 9,
+        "Kit": 3,
+        "Coverage": 0.667,
+        "Spread": 1.698,
+        "Seats": [
+          "chain_lightning",
+          "frozen_orb"
+        ],
+        "Faces": [
+          "chain_lightning",
+          "frozen_orb"
+        ],
+        "Mechanisms": [
+          "affliction",
+          "bankless",
+          "chain",
+          "cooldown",
+          "flight",
+          "hit",
+          "projectile",
+          "spell",
+          "status"
+        ],
+        "StatusesApplied": [
+          "chilled",
+          "frozen",
+          "shocked"
+        ],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0.691
+      },
+      "Warnings": [],
+      "Errors": []
+    },
+    {
+      "A": "proving_fletcher",
+      "B": "proving_evoker",
+      "Index": 2,
+      "Seed": "tournament:proving_fletcher:proving_evoker:2",
+      "Outcome": "a",
+      "EndTick": 151,
+      "Seconds": 7.55,
+      "Hash": "a5b744c6a10fc08d",
+      "SideA": {
+        "Pattern": "proving_fletcher",
+        "DamageDealt": 168.65,
+        "Hits": 10,
+        "Crits": 0,
+        "Casts": 9,
+        "Uses": 10,
+        "Kit": 4,
+        "Coverage": 1,
+        "Spread": 3.596,
+        "Seats": [
+          "gyreblade",
+          "gyre_hurl",
+          "splinter_volley",
+          "web_shot"
+        ],
+        "Faces": [
+          "gyre_hurl",
+          "gyreblade",
+          "splinter_volley",
+          "web_shot"
+        ],
+        "Mechanisms": [
+          "affliction",
+          "attack",
+          "bankless",
+          "charges",
+          "cooldown",
+          "flight",
+          "hit",
+          "projectile",
+          "returning",
+          "spends",
+          "status",
+          "strikes"
+        ],
+        "StatusesApplied": [
+          "rooted"
+        ],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0.242
+      },
+      "SideB": {
+        "Pattern": "proving_evoker",
+        "DamageDealt": 177.78,
+        "Hits": 10,
+        "Crits": 0,
+        "Casts": 8,
+        "Uses": 9,
+        "Kit": 3,
+        "Coverage": 0.667,
+        "Spread": 1.698,
+        "Seats": [
+          "chain_lightning",
+          "frozen_orb"
+        ],
+        "Faces": [
+          "chain_lightning",
+          "frozen_orb"
+        ],
+        "Mechanisms": [
+          "affliction",
+          "bankless",
+          "chain",
+          "cooldown",
+          "flight",
+          "hit",
+          "projectile",
+          "spell",
+          "status"
+        ],
+        "StatusesApplied": [
+          "chilled",
+          "shocked"
+        ],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0
+      },
+      "Warnings": [],
+      "Errors": []
+    },
+    {
+      "A": "proving_fletcher",
+      "B": "proving_evoker",
+      "Index": 3,
+      "Seed": "tournament:proving_fletcher:proving_evoker:3",
+      "Outcome": "b",
+      "EndTick": 154,
+      "Seconds": 7.7,
+      "Hash": "22554c196266c753",
+      "SideA": {
+        "Pattern": "proving_fletcher",
+        "DamageDealt": 137.97,
+        "Hits": 14,
+        "Crits": 1,
+        "Casts": 7,
+        "Uses": 8,
+        "Kit": 4,
+        "Coverage": 1,
+        "Spread": 3.51,
+        "Seats": [
+          "gyreblade",
+          "gyre_hurl",
+          "splinter_volley",
+          "web_shot"
+        ],
+        "Faces": [
+          "gyre_hurl",
+          "gyreblade",
+          "splinter_volley",
+          "web_shot"
+        ],
+        "Mechanisms": [
+          "affliction",
+          "attack",
+          "bankless",
+          "charges",
+          "cooldown",
+          "flight",
+          "hit",
+          "projectile",
+          "returning",
+          "spends",
+          "status",
+          "strikes"
+        ],
+        "StatusesApplied": [
+          "bleeding",
+          "rooted"
+        ],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0
+      },
+      "SideB": {
+        "Pattern": "proving_evoker",
+        "DamageDealt": 233.09,
+        "Hits": 13,
+        "Crits": 1,
+        "Casts": 8,
+        "Uses": 9,
+        "Kit": 3,
+        "Coverage": 1,
+        "Spread": 2.337,
+        "Seats": [
+          "chain_lightning",
+          "frozen_orb",
+          "frostbolt"
+        ],
+        "Faces": [
+          "chain_lightning",
+          "frostbolt",
+          "frozen_orb"
+        ],
+        "Mechanisms": [
+          "affliction",
+          "bankless",
+          "chain",
+          "cooldown",
+          "flight",
+          "hit",
+          "projectile",
+          "spell",
+          "status"
+        ],
+        "StatusesApplied": [
+          "chilled",
+          "frozen",
+          "shocked"
+        ],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0.109
+      },
+      "Warnings": [],
+      "Errors": []
+    },
+    {
+      "A": "proving_fletcher",
+      "B": "proving_evoker",
+      "Index": 4,
+      "Seed": "tournament:proving_fletcher:proving_evoker:4",
+      "Outcome": "b",
+      "EndTick": 129,
+      "Seconds": 6.45,
+      "Hash": "d8d956fd00660487",
+      "SideA": {
+        "Pattern": "proving_fletcher",
+        "DamageDealt": 125.01,
+        "Hits": 7,
+        "Crits": 0,
+        "Casts": 7,
+        "Uses": 7,
+        "Kit": 4,
+        "Coverage": 1,
+        "Spread": 3.586,
+        "Seats": [
+          "gyreblade",
+          "gyre_hurl",
+          "splinter_volley",
+          "web_shot"
+        ],
+        "Faces": [
+          "gyre_hurl",
+          "gyreblade",
+          "splinter_volley",
+          "web_shot"
+        ],
+        "Mechanisms": [
+          "affliction",
+          "attack",
+          "bankless",
+          "charges",
+          "cooldown",
+          "flight",
+          "hit",
+          "projectile",
+          "returning",
+          "spends",
+          "status",
+          "strikes"
+        ],
+        "StatusesApplied": [],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0
+      },
+      "SideB": {
+        "Pattern": "proving_evoker",
+        "DamageDealt": 230.63,
+        "Hits": 12,
+        "Crits": 2,
+        "Casts": 7,
+        "Uses": 8,
+        "Kit": 3,
+        "Coverage": 0.667,
+        "Spread": 1.755,
+        "Seats": [
+          "chain_lightning",
+          "frozen_orb"
+        ],
+        "Faces": [
+          "chain_lightning",
+          "frozen_orb"
+        ],
+        "Mechanisms": [
+          "affliction",
+          "bankless",
+          "chain",
+          "cooldown",
+          "flight",
+          "hit",
+          "projectile",
+          "spell",
+          "status"
+        ],
+        "StatusesApplied": [
+          "chilled",
+          "frozen",
+          "shocked"
+        ],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0.186
+      },
+      "Warnings": [],
+      "Errors": []
+    },
+    {
+      "A": "proving_fletcher",
+      "B": "proving_evoker",
+      "Index": 5,
+      "Seed": "tournament:proving_fletcher:proving_evoker:5",
+      "Outcome": "b",
+      "EndTick": 187,
+      "Seconds": 9.35,
+      "Hash": "70ddd3fc1e7a3453",
+      "SideA": {
+        "Pattern": "proving_fletcher",
+        "DamageDealt": 113.65,
+        "Hits": 7,
+        "Crits": 0,
+        "Casts": 9,
+        "Uses": 10,
+        "Kit": 4,
+        "Coverage": 1,
+        "Spread": 3.596,
+        "Seats": [
+          "gyreblade",
+          "gyre_hurl",
+          "splinter_volley",
+          "web_shot"
+        ],
+        "Faces": [
+          "gyre_hurl",
+          "gyreblade",
+          "splinter_volley",
+          "web_shot"
+        ],
+        "Mechanisms": [
+          "affliction",
+          "attack",
+          "bankless",
+          "charges",
+          "cooldown",
+          "flight",
+          "hit",
+          "projectile",
+          "returning",
+          "spends",
+          "status",
+          "strikes"
+        ],
+        "StatusesApplied": [
+          "rooted"
+        ],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0
+      },
+      "SideB": {
+        "Pattern": "proving_evoker",
+        "DamageDealt": 249.61,
+        "Hits": 14,
+        "Crits": 0,
+        "Casts": 11,
+        "Uses": 11,
+        "Kit": 3,
+        "Coverage": 0.667,
+        "Spread": 1.356,
+        "Seats": [
+          "chain_lightning",
+          "frozen_orb"
+        ],
+        "Faces": [
+          "chain_lightning",
+          "frozen_orb"
+        ],
+        "Mechanisms": [
+          "affliction",
+          "bankless",
+          "chain",
+          "cooldown",
+          "flight",
+          "hit",
+          "projectile",
+          "spell",
+          "status"
+        ],
+        "StatusesApplied": [
+          "chilled",
+          "frozen",
+          "shocked"
+        ],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0.283
+      },
+      "Warnings": [],
+      "Errors": []
+    },
+    {
+      "A": "proving_fletcher",
+      "B": "proving_evoker",
+      "Index": 6,
+      "Seed": "tournament:proving_fletcher:proving_evoker:6",
+      "Outcome": "b",
+      "EndTick": 155,
+      "Seconds": 7.75,
+      "Hash": "1f029cc95f1fce2e",
+      "SideA": {
+        "Pattern": "proving_fletcher",
+        "DamageDealt": 113.81,
+        "Hits": 9,
+        "Crits": 0,
+        "Casts": 6,
+        "Uses": 7,
+        "Kit": 4,
+        "Coverage": 0.75,
+        "Spread": 2.942,
+        "Seats": [
+          "gyreblade",
+          "splinter_volley",
+          "web_shot"
+        ],
+        "Faces": [
+          "gyreblade",
+          "splinter_volley",
+          "web_shot"
+        ],
+        "Mechanisms": [
+          "affliction",
+          "attack",
+          "bankless",
+          "charges",
+          "cooldown",
+          "flight",
+          "hit",
+          "projectile",
+          "returning",
+          "status",
+          "strikes"
+        ],
+        "StatusesApplied": [],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0
+      },
+      "SideB": {
+        "Pattern": "proving_evoker",
+        "DamageDealt": 244.31,
+        "Hits": 13,
+        "Crits": 1,
+        "Casts": 9,
+        "Uses": 10,
+        "Kit": 3,
+        "Coverage": 0.667,
+        "Spread": 1.384,
+        "Seats": [
+          "chain_lightning",
+          "frozen_orb"
+        ],
+        "Faces": [
+          "chain_lightning",
+          "frozen_orb"
+        ],
+        "Mechanisms": [
+          "affliction",
+          "bankless",
+          "chain",
+          "cooldown",
+          "flight",
+          "hit",
+          "projectile",
+          "spell",
+          "status"
+        ],
+        "StatusesApplied": [
+          "chilled",
+          "frozen",
+          "shocked"
+        ],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0.28
+      },
+      "Warnings": [],
+      "Errors": []
+    },
+    {
+      "A": "proving_fletcher",
+      "B": "proving_evoker",
+      "Index": 7,
+      "Seed": "tournament:proving_fletcher:proving_evoker:7",
+      "Outcome": "b",
+      "EndTick": 177,
+      "Seconds": 8.85,
+      "Hash": "711be473e6bea138",
+      "SideA": {
+        "Pattern": "proving_fletcher",
+        "DamageDealt": 138.06,
+        "Hits": 8,
+        "Crits": 0,
+        "Casts": 8,
+        "Uses": 9,
+        "Kit": 4,
+        "Coverage": 1,
+        "Spread": 3.709,
+        "Seats": [
+          "gyreblade",
+          "gyre_hurl",
+          "splinter_volley",
+          "web_shot"
+        ],
+        "Faces": [
+          "gyre_hurl",
+          "gyreblade",
+          "splinter_volley",
+          "web_shot"
+        ],
+        "Mechanisms": [
+          "affliction",
+          "attack",
+          "bankless",
+          "charges",
+          "cooldown",
+          "flight",
+          "hit",
+          "projectile",
+          "returning",
+          "spends",
+          "status",
+          "strikes"
+        ],
+        "StatusesApplied": [],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0
+      },
+      "SideB": {
+        "Pattern": "proving_evoker",
+        "DamageDealt": 241.37,
+        "Hits": 14,
+        "Crits": 0,
+        "Casts": 10,
+        "Uses": 11,
+        "Kit": 3,
+        "Coverage": 1,
+        "Spread": 2.137,
+        "Seats": [
+          "chain_lightning",
+          "frozen_orb",
+          "frostbolt"
+        ],
+        "Faces": [
+          "chain_lightning",
+          "frostbolt",
+          "frozen_orb"
+        ],
+        "Mechanisms": [
+          "affliction",
+          "bankless",
+          "chain",
+          "cooldown",
+          "flight",
+          "hit",
+          "projectile",
+          "spell",
+          "status"
+        ],
+        "StatusesApplied": [
+          "chilled",
+          "frozen",
+          "shocked"
+        ],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0.123
+      },
+      "Warnings": [],
+      "Errors": []
+    },
+    {
+      "A": "proving_fletcher",
+      "B": "proving_evoker",
+      "Index": 8,
+      "Seed": "tournament:proving_fletcher:proving_evoker:8",
+      "Outcome": "b",
+      "EndTick": 149,
+      "Seconds": 7.45,
+      "Hash": "90c3ec7c0765c588",
+      "SideA": {
+        "Pattern": "proving_fletcher",
+        "DamageDealt": 126.82,
+        "Hits": 7,
+        "Crits": 1,
+        "Casts": 7,
+        "Uses": 8,
+        "Kit": 4,
+        "Coverage": 1,
+        "Spread": 3.747,
+        "Seats": [
+          "gyreblade",
+          "gyre_hurl",
+          "splinter_volley",
+          "web_shot"
+        ],
+        "Faces": [
+          "gyre_hurl",
+          "gyreblade",
+          "splinter_volley",
+          "web_shot"
+        ],
+        "Mechanisms": [
+          "affliction",
+          "attack",
+          "bankless",
+          "charges",
+          "cooldown",
+          "flight",
+          "hit",
+          "projectile",
+          "returning",
+          "spends",
+          "status",
+          "strikes"
+        ],
+        "StatusesApplied": [
+          "rooted"
+        ],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0
+      },
+      "SideB": {
+        "Pattern": "proving_evoker",
+        "DamageDealt": 247.77,
+        "Hits": 12,
+        "Crits": 2,
+        "Casts": 8,
+        "Uses": 9,
+        "Kit": 3,
+        "Coverage": 0.667,
+        "Spread": 1.698,
+        "Seats": [
+          "chain_lightning",
+          "frozen_orb"
+        ],
+        "Faces": [
+          "chain_lightning",
+          "frozen_orb"
+        ],
+        "Mechanisms": [
+          "affliction",
+          "bankless",
+          "chain",
+          "cooldown",
+          "flight",
+          "hit",
+          "projectile",
+          "spell",
+          "status"
+        ],
+        "StatusesApplied": [
+          "chilled",
+          "frozen",
+          "shocked"
+        ],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0.181
+      },
+      "Warnings": [],
+      "Errors": []
+    },
+    {
+      "A": "proving_fletcher",
+      "B": "proving_evoker",
+      "Index": 9,
+      "Seed": "tournament:proving_fletcher:proving_evoker:9",
+      "Outcome": "b",
+      "EndTick": 169,
+      "Seconds": 8.45,
+      "Hash": "7e68fd73934b36e7",
+      "SideA": {
+        "Pattern": "proving_fletcher",
+        "DamageDealt": 97.47,
+        "Hits": 10,
+        "Crits": 1,
+        "Casts": 9,
+        "Uses": 10,
+        "Kit": 4,
+        "Coverage": 1,
+        "Spread": 3.596,
+        "Seats": [
+          "gyreblade",
+          "gyre_hurl",
+          "splinter_volley",
+          "web_shot"
+        ],
+        "Faces": [
+          "gyre_hurl",
+          "gyreblade",
+          "splinter_volley",
+          "web_shot"
+        ],
+        "Mechanisms": [
+          "affliction",
+          "attack",
+          "bankless",
+          "charges",
+          "cooldown",
+          "flight",
+          "hit",
+          "projectile",
+          "returning",
+          "spends",
+          "status",
+          "strikes"
+        ],
+        "StatusesApplied": [
+          "bleeding",
+          "rooted"
+        ],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0
+      },
+      "SideB": {
+        "Pattern": "proving_evoker",
+        "DamageDealt": 244.86,
+        "Hits": 14,
+        "Crits": 1,
+        "Casts": 9,
+        "Uses": 10,
+        "Kit": 3,
+        "Coverage": 0.667,
+        "Spread": 1.649,
+        "Seats": [
+          "chain_lightning",
+          "frozen_orb"
+        ],
+        "Faces": [
+          "chain_lightning",
+          "frozen_orb"
+        ],
+        "Mechanisms": [
+          "affliction",
+          "bankless",
+          "chain",
+          "cooldown",
+          "flight",
+          "hit",
+          "projectile",
+          "spell",
+          "status"
+        ],
+        "StatusesApplied": [
+          "chilled",
+          "frozen",
+          "shocked"
+        ],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0.395
+      },
+      "Warnings": [],
+      "Errors": []
+    }
+  ],
+  "Passed": false
+}
