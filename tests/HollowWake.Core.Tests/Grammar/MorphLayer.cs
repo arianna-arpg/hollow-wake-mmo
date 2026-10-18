@@ -8,10 +8,14 @@ namespace HollowWake.Core.Tests.Grammar;
 
 /// <summary>
 /// One parameter's sensitivity points in one row (one per value compared, set on the node) and, for an axis with an
-/// attribute behind it, its door points (the same values set on the weave's attribute). <see cref="Row"/> names a
+/// attribute behind it, its door points (the same values set on the weave's attribute) and, for each door whose value
+/// the attribute catalog's bounds move, a twin: the node set to the value the door holds. <see cref="Row"/> names a
 /// further row; null is the parameter's own.
 /// </summary>
-internal sealed record Sense(Parameter Parameter, IReadOnlyList<Point> Points, IReadOnlyList<Point> Doors, string? Row = null);
+internal sealed record Sense(Parameter Parameter, IReadOnlyList<Point> Points, IReadOnlyList<Point> Doors, string? Row = null)
+{
+    public IReadOnlyList<Point?> Twins { get; init; } = Array.Empty<Point?>();
+}
 
 /// <summary>
 /// The morph test's points and the scratch content layer they compile from. Every family's sampled points and its
@@ -46,8 +50,10 @@ internal sealed class MorphLayer
     public required IReadOnlyDictionary<string, IReadOnlyList<Sense>> Sensitivity { get; init; }
 
     /// <summary>Every point of a family: sampled, sensitivity and door points.</summary>
-    public IEnumerable<Point> All(string family) =>
-        Morph[family].Concat(Sensitivity[family].SelectMany(s => s.Points.Concat(s.Doors)));
+    public IEnumerable<Point> All(string family) => Morph[family].Concat(Sensitivity[family].SelectMany(PointsOf));
+
+    /// <summary>A sense's points: its node points, its doors and the twins of the doors the catalog moves.</summary>
+    private static IEnumerable<Point> PointsOf(Sense s) => s.Points.Concat(s.Doors).Concat(s.Twins.OfType<Point>());
 
     /// <summary>The issues validation raised about a point's weave or its caster.</summary>
     public IEnumerable<ValidationIssue> IssuesOf(Point p) => Report.Issues.Where(i => i.Id == p.Id || i.Id == p.Caster);
@@ -139,9 +145,9 @@ internal sealed class MorphLayer
             .Concat(family.Rows.Select(r => (Parameter: family.Parameter(r.Parameter), r.Live, Row: (string?)r.Label)));
         foreach (var (parameter, live, row) in rows)
         {
-            Point Make(object value, bool viaAttribute)
+            Point Make(object value, bool viaAttribute, string? note = null)
             {
-                var label = $"{parameter.Name}{(viaAttribute ? "@attr" : "")}={Point.Format(value)}{(row is null ? "" : $" ({row})")}";
+                var label = $"{parameter.Name}{(viaAttribute ? "@attr" : "")}={Point.Format(value)}{(row is null ? "" : $" ({row})")}{(note is null ? "" : $" ({note})")}";
                 var p = new Point { Family = family, Id = $"morph_{family.Name}_s{k++:000}", Label = label, Seed = seed };
                 foreach (var (name, v) in family.Defaults)
                 {
@@ -167,7 +173,14 @@ internal sealed class MorphLayer
             var doors = parameter.Attribute is not null && !parameter.AttributeOnly && parameter.Kind == ParameterKind.Axis
                 ? values.Select(v => Make(v, true)).ToList()
                 : new List<Point>();
-            result.Add(new Sense(parameter, points, doors, row));
+            // A door whose value the catalog's bounds move is compared with the node set to the value it holds.
+            var twins = doors.Select(door =>
+            {
+                var value = Convert.ToDouble(door.Values[parameter.Name], CultureInfo.InvariantCulture);
+                var held = View.Fold(CoreContent.Registry, parameter.Attribute!, value);
+                return held == value ? null : Make(held, false, $"as {door.Label} holds it");
+            }).ToList();
+            result.Add(new Sense(parameter, points, doors, row) { Twins = twins });
         }
         return result;
     }
@@ -183,7 +196,7 @@ internal sealed class MorphLayer
             morph[family.Name] = Sample(family, PointsPerFamily);
             sensitivity[family.Name] = Senses(family);
         }
-        var points = morph.Values.SelectMany(p => p).Concat(sensitivity.Values.SelectMany(s => s).SelectMany(s => s.Points.Concat(s.Doors))).ToList();
+        var points = morph.Values.SelectMany(p => p).Concat(sensitivity.Values.SelectMany(s => s).SelectMany(PointsOf)).ToList();
         var dir = Path.Combine(Path.GetTempPath(), "hollowwake-morph-" + Guid.NewGuid().ToString("N"));
         Directory.CreateDirectory(dir);
         try

@@ -213,6 +213,16 @@ internal static class MorphArena
             outcome.Broke(message.Invariant, message.Message);
         }
 
+        // The family's own checks on what the run showed.
+        outcome.Launches = recorder.Launches;
+        if (point.Family.Checks is { } checks)
+        {
+            foreach (var (invariant, message) in checks(new View(point, content), outcome))
+            {
+                outcome.Broke(invariant, message);
+            }
+        }
+
         foreach (var line in log.Lines)
         {
             outcome.Broke("runs", line);
@@ -331,6 +341,9 @@ internal static class MorphArena
         /// <summary>How many of the crowd's bodies stand away from where they stood when the run ended.</summary>
         public int Moved { get; set; }
 
+        /// <summary>The ticks, from the press, at which flights were launched from where the caster stands.</summary>
+        public List<long> Launches { get; set; } = new();
+
         public void Broke(string invariant, string message) => Broken.Add((invariant, message));
     }
 
@@ -393,6 +406,9 @@ internal static class MorphArena
 
         /// <summary>Every marker in the order it ran, by its list's name, with the effect depth it ran at.</summary>
         public List<(string Name, int Depth)> Depths { get; } = new();
+
+        /// <summary>The ticks, from the press, at which flights were launched from where the caster stands (a fork's children start where it hit).</summary>
+        public List<long> Launches { get; } = new();
         public int Hits { get; private set; }
         public int MaxLive { get; private set; }
 
@@ -544,6 +560,11 @@ internal static class MorphArena
                     Made.Add(s.Entity);
                     Watch(s.Entity);
                     Add(e.Tick, $"{t} spawn {s.Entity.Key} {kind} {Pos(s.Position)}");
+                    if (kind == "projectile" && _sim.World.Get<Transform>(_caster) is { } at
+                        && Vector2.Distance(new Vector2(s.Position.X, s.Position.Y), new Vector2(at.Position.X, at.Position.Y)) < 0.01f)
+                    {
+                        Launches.Add(t);
+                    }
                     break;
                 case EntityDespawned gone:
                     if (_kinds.ContainsKey(gone.Entity))

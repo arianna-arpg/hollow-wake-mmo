@@ -75,6 +75,17 @@ public class MorphTests
         {
             When = v => Families.Trajectory.All(a => v.Num(a, 0) == 0 || (v.Num(a, 0) < 0 && !OnNode(v, a))),
         },
+        new("projectile", "doors", "through projectile.count holds 20, where the node holds 64",
+            "projectile.count's catalog stops at 20 (attributes.yaml) where the handler clamps a node's count at 64 (DeliveryHandlers.cs): one axis clamps differently through its two doors, against the grammar's rule 1 (one mechanism, one door)"),
+        new("projectile", "doors", "through projectile.speed holds 1, where the node holds 0.5",
+            "projectile.speed's catalog floors at 1 (attributes.yaml) where the handler floors a node's speed at 0.5 (DeliveryHandlers.cs): one axis clamps differently through its two doors, against rule 1"),
+        new("area", "doors", "through area.radius holds 0.25, where the node holds 0.1",
+            "area.radius's catalog floors at 0.25 (attributes.yaml) where the area handler floors a node's radius at 0.1 (DeliveryHandlers.cs): one axis clamps differently through its two doors, against rule 1"),
+        new("projectile", "timing", "the last salvo beat flew at tick",
+            "each salvo beat is scheduled from the one before (DeliveryHandlers.cs Salvo.Beat calls Later with the interval), and Later rounds each wait up to a whole tick, so a salvo whose interval is no whole number of ticks drifts late, up to a tick a beat; EffectHelpers.Later says a sum of short waits lands on the tick it names")
+        {
+            When = Families.SalvoDrifts,
+        },
         new("move", "sensitive", "choice 'anchor': 'from' and 'point' show the crowd the same",
             "inside a hit list the context's point is the struck body (EffectContext.WithTarget moves it there), so anchor point measures from the body itself and the shove runs along the facing; areas and fields set no from, so anchor from measures from the caster. For bodies on the aim line beyond the caster all three anchors push the same way; deliveries.md says point is the aim point and from a field's center")
         {
@@ -176,7 +187,7 @@ public class MorphTests
             }
             violations.AddRange(broken.Select(b => new Violation(point, view, b.Invariant, b.Message)));
         }
-        Settle(name, examined, violations, "deterministic", "pipeline", "bounded", "terminates", "left behind", "pays", "depth", "runs");
+        Settle(name, examined, violations, "deterministic", "pipeline", "bounded", "terminates", "left behind", "pays", "depth", "timing", "runs");
     }
 
     /// <summary>How many of a point's seeds a rolling value is compared over.</summary>
@@ -262,7 +273,9 @@ public class MorphTests
 
     /// <summary>
     /// An axis with a weave attribute behind it shows the same whether a value is set on the node or on the attribute,
-    /// unless the attribute catalog's bounds move the value (reported, not failed) or the axis rolls on the cast's stream.
+    /// unless the axis rolls on the cast's stream. Where the attribute catalog's bounds move the value, the two doors
+    /// clamp differently, which breaks the grammar's rule 1 (one mechanism, one door) and is reported, and the door is
+    /// compared with the node set to the value the door holds.
     /// </summary>
     [Theory]
     [MemberData(nameof(FamilyNames))]
@@ -273,28 +286,31 @@ public class MorphTests
         var examined = new List<View>();
         foreach (var sense in layer.Sensitivity[name].Where(s => s.Doors.Count > 0 && !s.Parameter.Rolls))
         {
+            var parameter = sense.Parameter;
             for (var i = 0; i < sense.Points.Count; i++)
             {
-                var node = sense.Points[i];
                 var door = sense.Doors[i];
+                var twin = sense.Twins[i];
+                var node = twin ?? sense.Points[i];
                 if (!Compiles(layer, node) || !Compiles(layer, door))
                 {
                     continue;
                 }
                 var view = new View(door, layer.Content);
                 examined.Add(view);
-                var value = Convert.ToDouble(door.Values[sense.Parameter.Name], CultureInfo.InvariantCulture);
-                if (view.Num(sense.Parameter.Name) != value)
+                var value = Convert.ToDouble(door.Values[parameter.Name], CultureInfo.InvariantCulture);
+                var held = view.Num(parameter.Name);
+                if (held != value)
                 {
-                    _output.WriteLine($"{door.Label}: {sense.Parameter.Attribute} holds {view.Num(sense.Parameter.Name):0.###} within its catalog bounds, so the door differs by design");
-                    continue;
+                    violations.Add(new Violation(door, view, "doors",
+                        $"{parameter.Describe} = {Point.Format(value)} through {parameter.Attribute} holds {Point.Format(held)}, where the node holds {Point.Format(value)}: its two doors clamp differently"));
                 }
                 var throughNode = MorphArena.Run(layer.Content, node).Observable;
                 var throughAttribute = MorphArena.Run(layer.Content, door).Observable;
                 if (throughNode != throughAttribute)
                 {
                     violations.Add(new Violation(door, view, "doors",
-                        $"{sense.Parameter.Describe} = {Point.Format(door.Values[sense.Parameter.Name])} shows '{throughAttribute}' through {sense.Parameter.Attribute} but '{throughNode}' on the node"));
+                        $"{parameter.Describe} = {Point.Format(value)} shows '{throughAttribute}' through {parameter.Attribute} but '{throughNode}' on the node ({node.Label})"));
                 }
             }
         }

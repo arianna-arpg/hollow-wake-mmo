@@ -222,6 +222,9 @@ internal sealed class Family
 
     public required Func<View, IEnumerable<Statement>> States { get; init; }
 
+    /// <summary>Checks of the family's own on what a run showed, each an invariant and what broke it.</summary>
+    public Func<View, MorphArena.Outcome, IEnumerable<(string Invariant, string Message)>>? Checks { get; init; }
+
     /// <summary>Parameters the crowd scenario cannot show, each with why. The check still runs them and fails when one moves after all.</summary>
     public IReadOnlyDictionary<string, string> Exempt { get; init; } = new Dictionary<string, string>();
 
@@ -354,10 +357,12 @@ internal sealed class View
 
     public bool Fills(string list) => Point.Lists.Contains(list);
 
+    private double Bounded(string attribute, double value) => Fold(Content, attribute, value);
+
     /// <summary>A value folded through the attribute catalog's bounds, as the weave's attribute fold reads it.</summary>
-    private double Bounded(string attribute, double value)
+    public static double Fold(ContentRegistry content, string attribute, double value)
     {
-        var def = Content.Get<AttributeDef>(attribute);
+        var def = content.Get<AttributeDef>(attribute);
         if (def?.Min is { } min)
         {
             value = Math.Max(min, value);

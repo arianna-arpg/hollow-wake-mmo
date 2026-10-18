@@ -145,6 +145,7 @@ internal static class Families
         Carrier = Root,
         Budget = ProjectileBudget,
         States = ProjectileStates,
+        Checks = SalvoBeats,
         Exempt = new Dictionary<string, string>
         {
             ["bounce"] = "flights glance only off walls, rising ground or (lobbed) the ground, and gravity is a flag the table does not sample: " + OpenArena,
@@ -221,6 +222,42 @@ internal static class Families
         var beat = Math.Max(1, Math.Ceiling(Math.Max(View.Dt, v.Num("salvo_interval", v.Rule("delivery.salvo_interval", 0.15))) * MorphArena.TicksPerSecond - 1e-6)) * View.Dt;
         var salvo = v.Word("fire") == "salvo" && count > 1 ? (count - 1) * beat : 0;
         return salvo + outward + back;
+    }
+
+    /// <summary>
+    /// A salvo's last beat, in ticks from the press: where it should land, the tick its seconds reach (a beat k
+    /// intervals out lands on the tick k intervals name, as EffectHelpers.Later promises for sums of short waits), and
+    /// where beats chained from one another land, each wait rounded up to a whole tick. Null when the point fires no
+    /// salvo of more than one flight.
+    /// </summary>
+    internal static (long Nominal, long Chained, int Beats, double Interval)? SalvoTicks(View v)
+    {
+        var count = Math.Clamp((int)Math.Round(v.Num("count")), 1, 64);
+        if (v.Word("fire") != "salvo" || count < 2)
+        {
+            return null;
+        }
+        var interval = Math.Max(View.Dt, v.Num("salvo_interval", v.Rule("delivery.salvo_interval", 0.15)));
+        long Ticks(double seconds) => Math.Max(1, (long)Math.Ceiling(seconds * MorphArena.TicksPerSecond - 1e-6));
+        var beats = count - 1;
+        return (Ticks(beats * interval), beats * Ticks(interval), beats, interval);
+    }
+
+    /// <summary>Whether a point's salvo is due to drift: its chained beats land later than its last beat's nominal tick.</summary>
+    internal static bool SalvoDrifts(View v) => SalvoTicks(v) is { } s && s.Chained > s.Nominal;
+
+    /// <summary>The last flight a salvo launches from the caster flies on the tick its beats name.</summary>
+    private static IEnumerable<(string Invariant, string Message)> SalvoBeats(View v, MorphArena.Outcome o)
+    {
+        if (SalvoTicks(v) is not { } s)
+        {
+            yield break;
+        }
+        var last = o.Launches.Count == 0 ? -1 : o.Launches.Max();
+        if (last != s.Nominal)
+        {
+            yield return ("timing", $"the last salvo beat flew at tick {last}, not on its nominal tick {s.Nominal}: {s.Beats} beats {s.Interval:0.###} s apart");
+        }
     }
 
     /// <summary>Seconds to fly a distance from a speed under a steady acceleration that never takes the speed below a floor.</summary>
