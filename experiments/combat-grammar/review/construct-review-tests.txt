@@ -1,0 +1,16 @@
+  HollowWake.Core -> D:\Games\MMOARPG\artifacts\pr-50-review\src\HollowWake.Core\bin\Release\net8.0\HollowWake.Core.dll
+  HollowWake.Core.Tests -> D:\Games\MMOARPG\artifacts\pr-50-review\tests\HollowWake.Core.Tests\bin\Release\net10.0\HollowWake.Core.Tests.dll
+Test run for D:\Games\MMOARPG\artifacts\pr-50-review\tests\HollowWake.Core.Tests\bin\Release\net10.0\HollowWake.Core.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+[xUnit.net 00:00:03.69]     HollowWake.Core.Tests.ConstructReviewTests.AnEchoRetainsPaidCastsThatArriveBetweenItsThinks [FAIL]
+  Failed HollowWake.Core.Tests.ConstructReviewTests.AnEchoRetainsPaidCastsThatArriveBetweenItsThinks [95 ms]
+  Error Message:
+   Assert.Equal() Failure: Values differ
+Expected: 40
+Actual:   18
+  Stack Trace:
+     at HollowWake.Core.Tests.ConstructReviewTests.AnEchoRetainsPaidCastsThatArriveBetweenItsThinks() in D:\Games\MMOARPG\artifacts\pr-50-review\tests\HollowWake.Core.Tests\ConstructReviewTests.cs:line 70
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+
+Failed!  - Failed:     1, Passed:     3, Skipped:     0, Total:     4, Duration: 2 s - HollowWake.Core.Tests.dll (net10.0)

@@ -26,7 +26,7 @@ The review's totem and echo probes are now tests (`ConstructScenarioTests`): the
 | Totem traces | `b911c303…` | `837978b2…` |
 | Trap: hit within half a second of a foe stepping near | yes | yes |
 
-The echo is unchanged event for event. The totem's bolt is now a use with its 0.6 second cast bar before it flies, so the first bolt waits for the totem's first think, its bar and its resolution, and ten seconds hold nine bolts instead of ten; a stun, freeze or silence can now interrupt a totem's cast like anyone's. **That cadence change is the owner's decision, open until the owner answers.** If the old cadence should stand, the bolt wants an instant form of its own as the trap has (the spit itself is shared with monsters and players), or a device rule.
+The measured normal-speed and double-speed echo scenarios are unchanged event for event. The totem's bolt is now a use with its 0.6 second cast bar before it flies, so the first bolt waits for the totem's first think, its bar and its resolution, and ten seconds hold nine bolts instead of ten; a stun, freeze or silence can now interrupt a totem's cast like anyone's. **The owner explicitly selected normal cast timing and interruptions on 2026-10-18**, accepting the measured cadence change. The independent review's high-speed echo limitation and release-policy integration requirements are recorded in [the follow-up](2026-10-18-construct-independent-review.md).
 
 ## Evidence
 
@@ -48,7 +48,7 @@ The trial merge's other conflicts (`Messages.cs`, `ZoneHost.cs`, `InterfaceProto
 
 ## Open
 
-- The totem's cadence: the owner's decision (above).
+- The owner's totem decision is resolved above. The independent review's echo replay finding and request #20 integration remain open.
 
 ## Asks of Codex
 
