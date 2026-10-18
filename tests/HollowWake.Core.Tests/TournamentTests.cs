@@ -225,6 +225,7 @@ entries:
   - id: t_mutual_ruin
     name: Mutual Ruin
     form: strike
+    release_check: { policy: body } # This fixture replaces the sector with stored-body damage.
     threads: []
     effects:
       - { type: damage, amount: 100000, can_crit: false }

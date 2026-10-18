@@ -1695,8 +1695,11 @@ public sealed partial class WeaveRuntime
                 var ahead = AiAnticipation(weave, stats, cache);
                 // A brief stop between enemy casts must not invite an edge-of-reach swing.
                 // With anticipation enabled, first attain the authored approach distance.
-                var approach = AiPreferredRange(weave, stats, cache);
-                if (ahead > 0 && approach > 0 && distance > approach) continue;
+                if (ahead > 0)
+                {
+                    var approach = AiPreferredRange(weave, stats, cache);
+                    if (approach > 0 && distance > approach) continue;
+                }
                 var predicted = tt.Position + new Vector3(velocity.X, velocity.Y, 0) * (float)ahead;
                 if (DeliveryForecasts.CandidateForAi(weave.Effects[0], sim, caster, target, tt.Position,
                     new Vector2(tt.Position.X - ct.Position.X, tt.Position.Y - ct.Position.Y), weave, predicted) == false) continue;
@@ -1794,8 +1797,12 @@ public sealed partial class WeaveRuntime
             ? hint.RangeAttribute is { } attribute ? weave.Attr(stats, attribute) : hint.PreferredRange
             : Math.Max(1.2, RangeOf(weave, stats, cache) * 0.8);
 
-    private static double AiAnticipation(CompiledWeave weave, Stats stats, WeaveSlotCache cache) =>
-        weave.CastMode == CastMode.Cast ? CastDuration(weave, stats, cache.Scope) * Math.Clamp(weave.AttrOrZero(stats, "ai.anticipation"), 0, 1) : 0;
+    private static double AiAnticipation(CompiledWeave weave, Stats stats, WeaveSlotCache cache)
+    {
+        if (weave.CastMode != CastMode.Cast) return 0;
+        var fraction = Math.Clamp(weave.AttrOrZero(stats, "ai.anticipation"), 0, 1);
+        return fraction > 0 ? CastDuration(weave, stats, cache.Scope) * fraction : 0;
+    }
 
     // ------------------------------------------------------------ trigger kinds the cast modes raise
 

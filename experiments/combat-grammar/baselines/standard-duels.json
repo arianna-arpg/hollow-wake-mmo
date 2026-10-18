@@ -3,12 +3,12 @@
   "Seconds": 60,
   "Platform": "win-x64",
   "Hashes": {
-    "loosed_kindler:boar": "358e00d82eb1c502",
-    "loosed_skirmisher:boar": "79899296f1748715",
-    "loosed_skirmisher:hob": "b01d5daeab117b19",
+    "loosed_kindler:boar": "75b61d603d05c3f1",
+    "loosed_skirmisher:boar": "8825086812a7dcfd",
+    "loosed_skirmisher:hob": "a60798285d1db19e",
     "loosed_skirmisher:tide_caller": "c66673c0240d5bf3",
-    "proving_reaver:proving_bulwark": "50eb1c4e00513d6a",
-    "tide_channeler:spark_duelist": "5ced4d2a7a46046c",
-    "wolf:hob": "f923e8631d68802d"
+    "proving_reaver:proving_bulwark": "afb3fac2523af03a",
+    "tide_channeler:spark_duelist": "75071943711ba3eb",
+    "wolf:hob": "096fae942239eba7"
   }
 }
