@@ -22,6 +22,7 @@ node experiments/elementals/render.mjs --write-fixture
 dotnet test tests/HollowWake.Core.Tests --filter FullyQualifiedName~ElementalTests
 dotnet test tests/HollowWake.Core.Tests --filter FullyQualifiedName~ElementalReviewTests
 dotnet test tests/HollowWake.Core.Tests --filter FullyQualifiedName~ElementalProjectileTests
+dotnet test tests/HollowWake.Core.Tests --filter FullyQualifiedName~ElementalDisplacementTests
 dotnet test tests/HollowWake.Client.Tests --filter FullyQualifiedName~ElementalAppearanceTests
 npm --prefix web test
 node scripts/test-background.mjs --suite all

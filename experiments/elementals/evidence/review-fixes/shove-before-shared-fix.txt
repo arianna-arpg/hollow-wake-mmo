@@ -1,0 +1,89 @@
+  Determining projects to restore...
+  All projects are up-to-date for restore.
+  HollowWake.Core -> <worktree>\src\HollowWake.Core\bin\Debug\net8.0\HollowWake.Core.dll
+<worktree>\tests\HollowWake.Core.Tests\PortedProjectileTests.cs(254,19): warning xUnit2031: Do not use a Where clause to filter before calling Assert.Single. Use the overload of Assert.Single that accepts a filtering function. (https://xunit.net/xunit.analyzers/rules/xUnit2031) [<worktree>\tests\HollowWake.Core.Tests\HollowWake.Core.Tests.csproj]
+<worktree>\tests\HollowWake.Core.Tests\PortedProjectileTests.cs(267,9): warning xUnit2031: Do not use a Where clause to filter before calling Assert.Single. Use the overload of Assert.Single that accepts a filtering function. (https://xunit.net/xunit.analyzers/rules/xUnit2031) [<worktree>\tests\HollowWake.Core.Tests\HollowWake.Core.Tests.csproj]
+<worktree>\tests\HollowWake.Core.Tests\PortedProjectileTests.cs(280,9): warning xUnit2031: Do not use a Where clause to filter before calling Assert.Single. Use the overload of Assert.Single that accepts a filtering function. (https://xunit.net/xunit.analyzers/rules/xUnit2031) [<worktree>\tests\HollowWake.Core.Tests\HollowWake.Core.Tests.csproj]
+  HollowWake.Core.Tests -> <worktree>\tests\HollowWake.Core.Tests\bin\Debug\net10.0\HollowWake.Core.Tests.dll
+Test run for <worktree>\tests\HollowWake.Core.Tests\bin\Debug\net10.0\HollowWake.Core.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+<worktree>\tests\HollowWake.Core.Tests\bin\Debug\net10.0\HollowWake.Core.Tests.dll
+[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v3.1.5+1b188a7b0a (64-bit .NET 10.0.13)
+[xUnit.net 00:00:00.30]   Discovering: HollowWake.Core.Tests
+[xUnit.net 00:00:02.43]   Discovered:  HollowWake.Core.Tests
+[xUnit.net 00:00:02.46]   Starting:    HollowWake.Core.Tests
+[xUnit.net 00:00:03.03]     HollowWake.Core.Tests.ElementalDisplacementTests.ALightElementalCannotTunnelThroughAPlacedWall [FAIL]
+[xUnit.net 00:00:03.03]       Assert.InRange() Failure: Value not in range
+[xUnit.net 00:00:03.03]       Range:  (30 - 31.998999999999999)
+[xUnit.net 00:00:03.03]       Actual: 93.34716796875
+[xUnit.net 00:00:03.03]       Stack Trace:
+[xUnit.net 00:00:03.03]         <worktree>\tests\HollowWake.Core.Tests\ElementalDisplacementTests.cs(50,0): at HollowWake.Core.Tests.ElementalDisplacementTests.ALightElementalCannotTunnelThroughAPlacedWall()
+[xUnit.net 00:00:03.03]            at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+[xUnit.net 00:00:03.03]            at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+[xUnit.net 00:00:03.03]       Output:
+[xUnit.net 00:00:03.03]         Emberwisp ended at x=93.34717; wall at x=32.
+[xUnit.net 00:00:03.08]       Assert.InRange() Failure: Value not in range
+[xUnit.net 00:00:03.08]     HollowWake.Core.Tests.ElementalDisplacementTests.ARealShoveDoesNotThrowAnEmberwispBeyondItsHomeLeash(attack: "bash") [FAIL]
+[xUnit.net 00:00:03.08]       Range:  (0.01 - 45)
+[xUnit.net 00:00:03.08]       Actual: 47.498664855957031
+[xUnit.net 00:00:03.08]       Stack Trace:
+[xUnit.net 00:00:03.08]         <worktree>\tests\HollowWake.Core.Tests\ElementalDisplacementTests.cs(36,0): at HollowWake.Core.Tests.ElementalDisplacementTests.ARealShoveDoesNotThrowAnEmberwispBeyondItsHomeLeash(String attack)
+[xUnit.net 00:00:03.08]            at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+[xUnit.net 00:00:03.08]            at System.Reflection.MethodBaseInvoker.InvokeDirectByRefWithFewArgs(Object obj, Span`1 copyOfArgs, BindingFlags invokeAttr)
+[xUnit.net 00:00:03.08]       Output:
+[xUnit.net 00:00:03.08]         bash: Emberwisp moved 47.49866 m; home leash 45.0 m.
+[xUnit.net 00:00:03.10]       Assert.InRange() Failure: Value not in range
+[xUnit.net 00:00:03.10]     HollowWake.Core.Tests.ElementalDisplacementTests.ARealShoveDoesNotThrowAnEmberwispBeyondItsHomeLeash(attack: "winters_sweep") [FAIL]
+[xUnit.net 00:00:03.10]       Range:  (0.01 - 45)
+[xUnit.net 00:00:03.10]       Actual: 94.086067199707031
+[xUnit.net 00:00:03.10]       Stack Trace:
+[xUnit.net 00:00:03.10]         <worktree>\tests\HollowWake.Core.Tests\ElementalDisplacementTests.cs(36,0): at HollowWake.Core.Tests.ElementalDisplacementTests.ARealShoveDoesNotThrowAnEmberwispBeyondItsHomeLeash(String attack)
+[xUnit.net 00:00:03.10]            at InvokeStub_ElementalDisplacementTests.ARealShoveDoesNotThrowAnEmberwispBeyondItsHomeLeash(Object, Span`1)
+[xUnit.net 00:00:03.10]            at System.Reflection.MethodBaseInvoker.InvokeWithOneArg(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:03.10]       Output:
+[xUnit.net 00:00:03.10]         winters_sweep: Emberwisp moved 94.08607 m; home leash 45.0 m.
+[xUnit.net 00:00:03.11]   Finished:    HollowWake.Core.Tests
+  Failed HollowWake.Core.Tests.ElementalDisplacementTests.ALightElementalCannotTunnelThroughAPlacedWall [519 ms]
+  Error Message:
+   Assert.InRange() Failure: Value not in range
+Range:  (30 - 31.998999999999999)
+Actual: 93.34716796875
+  Stack Trace:
+     at HollowWake.Core.Tests.ElementalDisplacementTests.ALightElementalCannotTunnelThroughAPlacedWall() in <worktree>\tests\HollowWake.Core.Tests\ElementalDisplacementTests.cs:line 50
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  Standard Output Messages:
+ Emberwisp ended at x=93.34717; wall at x=32.
+
+
+  Failed HollowWake.Core.Tests.ElementalDisplacementTests.ARealShoveDoesNotThrowAnEmberwispBeyondItsHomeLeash(attack: "bash") [50 ms]
+  Error Message:
+   Assert.InRange() Failure: Value not in range
+Range:  (0.01 - 45)
+Actual: 47.498664855957031
+  Stack Trace:
+     at HollowWake.Core.Tests.ElementalDisplacementTests.ARealShoveDoesNotThrowAnEmberwispBeyondItsHomeLeash(String attack) in <worktree>\tests\HollowWake.Core.Tests\ElementalDisplacementTests.cs:line 36
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeDirectByRefWithFewArgs(Object obj, Span`1 copyOfArgs, BindingFlags invokeAttr)
+  Standard Output Messages:
+ bash: Emberwisp moved 47.49866 m; home leash 45.0 m.
+
+
+  Failed HollowWake.Core.Tests.ElementalDisplacementTests.ARealShoveDoesNotThrowAnEmberwispBeyondItsHomeLeash(attack: "winters_sweep") [22 ms]
+  Error Message:
+   Assert.InRange() Failure: Value not in range
+Range:  (0.01 - 45)
+Actual: 94.086067199707031
+  Stack Trace:
+     at HollowWake.Core.Tests.ElementalDisplacementTests.ARealShoveDoesNotThrowAnEmberwispBeyondItsHomeLeash(String attack) in <worktree>\tests\HollowWake.Core.Tests\ElementalDisplacementTests.cs:line 36
+   at InvokeStub_ElementalDisplacementTests.ARealShoveDoesNotThrowAnEmberwispBeyondItsHomeLeash(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithOneArg(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Standard Output Messages:
+ winters_sweep: Emberwisp moved 94.08607 m; home leash 45.0 m.
+
+
+
+Test Run Failed.
+Total tests: 3
+     Failed: 3
+ Total time: 4.6436 Seconds
