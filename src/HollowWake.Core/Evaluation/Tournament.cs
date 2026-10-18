@@ -357,8 +357,9 @@ public static class Tournament
     /// <summary>
     /// One fight of a pairing: index <paramref name="index"/> seeds it (<see cref="SeedText"/>) and decides which
     /// side spawns first (<see cref="BFirst"/>), so a pairing's fights differ and repeat. The fight's <c>Hash</c> is
-    /// the FNV-1a hash (<see cref="Rng.Hash64"/>) of its ordered event log, one line per spawn, despawn, cast, hit,
-    /// status applied and death, and a last line for the end; see <see cref="Trace"/>.
+    /// the FNV-1a hash (<see cref="Rng.Hash64"/>) of its ordered event log, one line per spawn, despawn, cast,
+    /// release, interrupt, hit, heal, status applied and death, and a last line for the end with both bodies' life
+    /// and position; see <see cref="Trace"/>.
     /// </summary>
     public static Fight Duel(ContentRegistry content, Pairing pairing, int index, double seconds)
     {
@@ -544,12 +545,15 @@ public static class Tournament
     /// <summary>
     /// A fight's ordered event log, one line per event in the order the simulation published them, each opening with
     /// its tick: <c>spawn</c> (what, where) and <c>despawn</c>, <c>cast</c> (caster, weave, target, aimed point),
-    /// <c>hit</c> (source, target, amount, and c, e or b for a crit, an evasion or a block), <c>status</c> (source,
-    /// target, status, stacks, duration), <c>died</c> (body, killer), and a last <c>end</c> with the outcome. The two
-    /// bodies are named a and b; anything else is named by its pattern, or its name when it has none (a projectile, a
-    /// field), with a. or b. before it when one of the two owns it. So the hash follows what the fight did rather than
-    /// how the world numbered its entities. Amounts, durations and positions are written to hundredths in the
-    /// invariant culture, so the text, and its hash, are the same on every machine.
+    /// <c>release</c> (caster, weave, mode, reason, whether it fired, held, fill, stage) and <c>interrupt</c> (caster,
+    /// weave), <c>hit</c> (source, target, amount, and c, e or b for a crit, an evasion or a block), <c>heal</c>
+    /// (source, target, resource, amount), <c>status</c> (source, target, status, stacks, duration), <c>died</c> (body,
+    /// killer), and a last <c>end</c> with the outcome and each body's life and position, so a fight that reaches the
+    /// cap with both standing still moves its hash when they stand differently. The two bodies are named a and b;
+    /// anything else is named by its pattern, or its name when it has none (a projectile, a field), with a. or b.
+    /// before it when one of the two owns it. So the hash follows what the fight did rather than how the world
+    /// numbered its entities. Amounts, durations and positions are written to hundredths in the invariant culture, so
+    /// the text, and its hash, do not depend on the host's culture.
     /// </summary>
     private sealed class Trace
     {
@@ -566,12 +570,23 @@ public static class Tournament
             sim.Events.Subscribe<EntitySpawned>(s => Line(FormattableString.Invariant($"spawn {Name(s.Entity, s.Pattern)} {s.Position.X:0.##} {s.Position.Y:0.##}")));
             sim.Events.Subscribe<EntityDespawned>(s => Line($"despawn {Name(s.Entity, s.Pattern)}"));
             sim.Events.Subscribe<WeaveCast>(w => Line(FormattableString.Invariant($"cast {Name(w.Caster)} {w.Weave} {Name(w.Target)} {w.Point.X:0.##} {w.Point.Y:0.##}")));
+            sim.Events.Subscribe<WeaveReleased>(r => Line(FormattableString.Invariant($"release {Name(r.Caster)} {r.Weave} {r.Mode} {r.Reason} {(r.Fired ? "fired" : "held")} {r.Held:0.##} {r.Fill:0.##} {r.Stage}")));
+            sim.Events.Subscribe<WeaveInterrupted>(i => Line($"interrupt {Name(i.Caster)} {i.Weave}"));
             sim.Events.Subscribe<DamageDealt>(d => Line(FormattableString.Invariant($"hit {Name(d.Source)} {Name(d.Target)} {d.Total:0.##} {Marks(d)}")));
+            sim.Events.Subscribe<Healed>(h => Line(FormattableString.Invariant($"heal {Name(h.Source)} {Name(h.Target)} {h.Resource} {h.Amount:0.##}")));
             sim.Events.Subscribe<StatusApplied>(s => Line(FormattableString.Invariant($"status {Name(s.Source)} {Name(s.Target)} {s.Status} {s.Stacks} {s.Duration:0.##}")));
             sim.Events.Subscribe<EntityDied>(d => Line($"died {Name(d.Entity)} {Name(d.Killer)}"));
         }
 
-        public void End(string outcome) => Line($"end {outcome}");
+        /// <summary>The last line: the outcome, then each body's life and position as the fight ends.</summary>
+        public void End(string outcome) => Line($"end {outcome} a {Standing(A)} b {Standing(B)}");
+
+        private string Standing(Entity body)
+        {
+            var life = _sim.World.Get<Stats>(body)?.Resource("life") ?? 0;
+            var at = _sim.World.Get<Transform>(body)?.Position ?? Vector3.Zero;
+            return FormattableString.Invariant($"{life:0.##} {at.X:0.##} {at.Y:0.##}");
+        }
 
         public ulong Hash() => Rng.Hash64(_log.ToString());
 

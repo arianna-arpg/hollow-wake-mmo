@@ -50,6 +50,34 @@ public class TournamentTests
     }
 
     [Fact]
+    public void AFightThatReachesTheCapMovesItsHashWhenItsBodiesEndItDifferently()
+    {
+        var dir = Scratch("evaluation-regen");
+        try
+        {
+            // Three times the base life regeneration: no hit, cast or status need change, only the life the bodies keep.
+            File.WriteAllText(Path.Combine(dir, "attributes.yaml"), """
+kind: attributes
+entries:
+  - { id: life.regen, name: Life Regeneration, category: resource, base: 1.5, decimals: 2 }
+""".Replace("\r\n", "\n"));
+            var registry = ContentRegistry.Load(new[] { CoreContent.FindContentDir(), dir }, out var report);
+            Assert.Empty(report.Errors);
+            var pairing = new Pairing("proving_bulwark", "proving_bulwark");
+            var core = Tournament.Duel(CoreContent.Registry, pairing, index: 0, seconds: 20);
+            var regenerating = Tournament.Duel(registry, pairing, index: 0, seconds: 20);
+            Assert.Equal("draw", core.Outcome);
+            Assert.Equal("draw", regenerating.Outcome);
+            Assert.NotEqual(core.SideA.LifeLeft + core.SideB.LifeLeft, regenerating.SideA.LifeLeft + regenerating.SideB.LifeLeft);
+            Assert.NotEqual(core.Hash, regenerating.Hash);
+        }
+        finally
+        {
+            Directory.Delete(dir, recursive: true);
+        }
+    }
+
+    [Fact]
     public void NeitherSideIsStructurallyFirst()
     {
         // The side spawned first is created first, and so thinks and acts first on every tick: it alternates with
