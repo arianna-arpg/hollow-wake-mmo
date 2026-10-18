@@ -47,6 +47,7 @@ export class Connection {
         resolve();
       };
       socket.onmessage = (event: MessageEvent) => {
+        if (this.socket !== socket) return;
         if (!(event.data instanceof ArrayBuffer)) {
           return;
         }

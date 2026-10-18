@@ -29,6 +29,8 @@ Projectiles test bodies with the body's radius (a body whose edge touches the sh
 
 `area` strikes every body inside its shape at once and runs its `effects` (the `on_hit` hook) on each, one level deeper.
 
+Area execution resolves a `ResolvedAreaPlan` and uses its shared candidate predicate. The same resolver is available for observation through the compiled effect's `IDeliveryPlanSource` capability and `DeliveryForecasts.Describe`. This yields current primary candidate coverage only, with body-center/height, relation, exclusion and LOS semantics; requirements, capped/random selection, payloads and secondary echoes remain execution work. Unsafe or unsupported dependencies decline observation without affecting execution. See [cast forecasting](cast-forecasting.md#implemented-core-foundation) for the purity contract, live sampling and integration limits.
+
 | Parameter | Meaning |
 |---|---|
 | `shape` | a registered shape; default `circle` |

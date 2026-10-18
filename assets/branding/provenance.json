@@ -1,0 +1,12 @@
+{
+  "source": "https://github.com/arianna-arpg/arpg-game-world",
+  "commit": "118b510f",
+  "files": {
+    "icon.png": "build/icon.png",
+    "icon.ico": "build/icon.ico",
+    "favicon.ico": "public/favicon.ico",
+    "logo.svg": "site/assets/nav.js: MARK",
+    "glyphs": "src/ui/icons.ts: MENU_ICONS"
+  },
+  "regeneration": "node scripts/import-legacy-branding.mjs <prototype checkout>, then node scripts/sync-branding.mjs"
+}

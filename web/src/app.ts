@@ -1,3 +1,5 @@
+import { presentation } from './loading/content';
+import type { LoadingScreen, LoadingLease } from './loading/loadingScreen';
 import { Color, DirectionalLight, FogExp2, HemisphereLight, MathUtils, Scene, SRGBColorSpace, Vector3, WebGLRenderer } from 'three';
 import type { ClientConfig } from './config';
 import { Input } from './input/input';
@@ -66,6 +68,52 @@ export class App {
   private readonly appliers = new Map<string, () => void>();
   private width = 1;
   private height = 1;
+  private entryLease: LoadingLease | null = null;
+  private entryStarted = 0;
+  private entryPosition = { x: 0, y: 0 };
+  private entryFailed = false;
+  releaseLoadingInput(): void {
+    this.input?.releaseAll();
+    if (this.inWorld) this.send({ t: 'stop' });
+    this.lastMoveDir = [0, 0];
+  }
+  get reducedLoadingMotion(): boolean { return this.settings?.toggle('reduce_motion') ?? false; }
+
+  private beginEntry(id: string): void {
+    this.entryFailed = false;
+    this.entryStarted = performance.now() / 1000;
+    this.entryLease = this.loading.begin({ kind: 'entry', label: presentation.labels.entry, cancel: () => this.cancelEntry() });
+    this.send({ t: 'select_character', character_id: id });
+  }
+  private cancelEntry(): void {
+    this.entryLease?.finish(); this.entryLease = null;
+    this.connection.close('Loading cancelled');
+    this.closed('Loading cancelled');
+  }
+  private retryEntry(): void {
+    this.entryFailed = false;
+    this.entryStarted = performance.now() / 1000;
+    if (!this.connection.open) { this.cancelEntry(); return; }
+    this.terrain.retryPreparation();
+    // The reliable socket already owns delivery; a slow response must not select twice.
+    this.entryLease?.update({ label: presentation.labels.entry });
+  }
+  private checkEntry(now: number): void {
+    if (!this.entryLease?.current || this.entryFailed) return;
+    const progress = this.terrain.readiness(this.entryPosition.x, this.entryPosition.y, Math.min(presentation.readyRadius, this.config.world.chunkRadius));
+    const self = this.entities.self;
+    if (this.inWorld) {
+      this.entryLease.update({ label: presentation.labels.terrain, completed: progress.completed + Number(!!self), total: progress.total + 1 });
+      if (self && progress.completed === progress.total) {
+        this.entryLease.finish(); this.entryLease = null; return;
+      }
+    }
+    if (now - this.entryStarted > presentation.timeoutSeconds) {
+      this.entryFailed = true;
+      this.entryLease.fail(presentation.labels.timeout, () => this.retryEntry());
+    }
+  }
+
   inWorld = false;
   /** The zone the hero stands in, as the server names it. */
   zoneName = '';
@@ -90,7 +138,7 @@ export class App {
   /** Interface states received, by message type, for scripted checks. */
   readonly received = new Map<string, number>();
 
-  constructor(root: HTMLElement, readonly config: ClientConfig) {
+  constructor(root: HTMLElement, readonly config: ClientConfig, readonly loading: LoadingScreen) {
     const params = new URLSearchParams(window.location.search);
     this.developer = params.has('developer');
     // A profile keeps its own settings; ?fresh-settings starts it from the content's defaults (the smoke's way).
@@ -188,7 +236,7 @@ export class App {
     this.login = new LoginPanel({
       connect: (address, account, token) => void this.connect(address, account, token),
       create: (name, calling) => this.send({ t: 'create_character', name, calling }),
-      enter: (characterId) => this.send({ t: 'select_character', character_id: characterId }),
+      enter: (characterId) => this.beginEntry(characterId),
       options: () => this.hud.openOptions(),
     });
     root.append(this.login.root, this.hud.root);
@@ -393,6 +441,10 @@ export class App {
   }
 
   private closed(reason: string): void {
+    if (this.entryLease?.current) {
+      this.entryFailed = true;
+      this.entryLease.fail(reason);
+    }
     this.inWorld = false;
     this.hud.inWorld = false;
     this.hud.hero.clear();
@@ -434,6 +486,10 @@ export class App {
           console.debug(m.text);
           break;
         }
+        if (this.entryLease?.current) {
+          this.entryFailed = true;
+          this.entryLease.fail(m.text, () => this.retryEntry());
+        }
         this.hud.notice(m.text, 'error');
         this.login.setStatus(m.text);
         break;
@@ -442,6 +498,13 @@ export class App {
         this.closed(m.reason);
         break;
       case 'enter_world': {
+        if (!this.entryLease?.current && !this.inWorld) break;
+        if (!this.entryLease?.current) {
+          this.entryStarted = performance.now() / 1000;
+          this.entryLease = this.loading.begin({ kind: 'travel', label: presentation.labels.entry, cancel: () => this.cancelEntry() });
+        }
+        this.entryPosition = { x: m.x, y: m.y };
+        this.entryFailed = false;
         const key = `${m.world.chunk_size}:${m.world.content_hash}:${m.world.seed}`;
         if (key !== this.worldKey) {
           this.worldKey = key;
@@ -597,6 +660,7 @@ export class App {
 
   /** A press of one or more actions: the interface first (Escape, the book walk, the tray, pages), then the world. */
   private press(actions: readonly string[]): void {
+    if (this.loading.active || this.loading.padQuarantined) return;
     if (this.hud.press(actions)) {
       return;
     }
@@ -679,6 +743,7 @@ export class App {
   }
 
   private click(x: number, y: number): void {
+    if (this.loading.active) return;
     if (!this.inWorld) {
       return;
     }
@@ -808,7 +873,7 @@ export class App {
   private work(local: number): void {
     const dt = Math.min(0.1, Math.max(0, local - this.lastFrame));
     this.lastFrame = local;
-    this.input.pollPad();
+    if (!this.loading.active && !this.loading.padQuarantined) this.input.pollPad();
     const renderTime = this.clock.now(local) - this.config.motion.interpolationDelayMs / 1000;
     this.entities.serverNow = this.clock.now(local);
     this.appearance.isometric = this.rig.mode === 'isometric';
@@ -827,14 +892,14 @@ export class App {
       }
       this.terrain.animateWater(this.clock.now(local), bodyLight.sunDirection);
       this.hud.setSelfEntity(self?.state ?? null);
-      this.handleMovement();
-      this.updateHover();
+      if (!this.loading.active && !this.loading.padQuarantined) { this.handleMovement(); this.updateHover(); }
       if (local - this.lastPingAt > this.config.world.pingSeconds) {
         this.lastPingAt = local;
         this.send({ t: 'ping', nonce: Math.round(performance.now()) });
       }
       this.hud.netText = `${this.rtt === null ? '' : `${Math.round(this.rtt)} ms  `}${this.terrain.builtCount} chunks  ${this.entities.views.size} entities`;
     }
+    this.checkEntry(local);
     this.rig.update(dt, false, local);
     this.entities.placeLabels(this.rig.camera, this.width, this.height, dt);
     this.hud.frame(performance.now() / 1000, this.width, this.height);
@@ -888,6 +953,7 @@ export class App {
     const app = this;
     const stateOf = (v: EntityView) => ({ ...v.state, drawn: v.position });
     return {
+      get loading() { return app.loading.snapshot; },
       get inWorld() {
         return app.inWorld;
       },

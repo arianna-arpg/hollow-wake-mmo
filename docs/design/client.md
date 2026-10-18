@@ -2,6 +2,8 @@
 
 The Godot client is presentation. It never resolves gameplay. The browser client in `web/` follows the same rules with server-sent terrain; its contract is [web-client.md](web-client.md).
 
+Identity, startup and world-entry preparation follow [loading.md](loading.md). The Crossing is a client-only activity, isolated from the simulation and ordinary world input.
+
 ## World
 
 On `enter_world` the client builds a `WorldGenerator` from the seed, layout and overlays the server sent and streams chunks around the player, generating them with the same core code the server runs. Generation runs on worker threads, nearest chunk first and one chunk further out than the meshes, so that every mesh is built knowing its neighbours; meshes are built on the main thread a few per frame. Chunks the server reports as modified arrive as `chunk_data` and replace local ones; their biome and water level come from the local generation, since the wire carries only what the simulation changes.

@@ -180,6 +180,17 @@ export class TerrainView {
     this.center = null;
   }
 
+  readiness(x: number, y: number, radius: number): { completed: number; total: number } {
+    const wanted = chunksAround(this.store.chunkOf(x, y), radius);
+    return { completed: wanted.filter(c => this.meshes.has(chunkKey(c.x, c.y))).length, total: wanted.length };
+  }
+
+  retryPreparation(): void {
+    this.retryAt.clear();
+    this.inFlight.clear();
+  }
+
+  /** Forget everything (a new world layout); chunks will be requested again around the player. */
   reset(chunkSize: number): void {
     for (const key of [...this.meshes.keys()]) {
       this.dropMesh(key);
