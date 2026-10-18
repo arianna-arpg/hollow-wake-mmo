@@ -82,3 +82,9 @@ Causal check, same Debug runtime/source and Windows platform, ten seeds and a si
 Winner/draw rates for these three pairings are unchanged. All seven standard runs and the counterfactual contain zero simulation warnings/errors. Full reports and text output are retained in `34-main-replay-*`. The evaluation contract permits a reviewed baseline change for intentional content changes; only these three proven hashes are updated.
 
 The required proving-pair comparison is also retained, in `34-main-proving-*`. Its entire before/after JSON is identical, including mechanisms, trace hashes, outcomes and breaches. Both runs fail the pre-existing 0.8 win ceiling for the bulwark, plaguer and pitfighter, each winning ten of ten. These inherited balance breaches are not claimed passed or attributed to fauna; no bands or runtime were relaxed. Release replay and the full suite will now verify the narrowly updated baseline. The shared snapshot/planning timing misses remain separate and open.
+
+## #34 main integration gates
+
+Source `0ffa92049b817c3279593005f6ac9aff23404277`: solution build zero warnings/errors; all core 2289, server 59 and client 133 tests pass. Validation is zero errors/warnings; load and the skeleton/zombie duel pass. The generated frozen-literal keys exactly equal the reviewed fixture; full census and keys are retained with these gates under `experiments/entity-review/evidence/34-main-*`. This verifies functional integration, not performance after main. Earlier benchmark misses remain open; no timing run or budget change accompanied these gates.
+
+Release tools build with zero warnings/errors and enforce all seven recorded Windows replay hashes unchanged from the reviewed baseline. The three inherited proving-band breaches remain open as documented above; this replay pass does not establish balance clearance.
