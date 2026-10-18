@@ -1,0 +1,17 @@
+Complete main-based foundation integration: world audit
+Before: b6b3e30/50f7dd6-equivalent pre-main source; bounded-levels-after.json.
+After: f5c8e92, complete #34 3d339d2 plus unchanged elemental content.
+All eight parsed zone records are identical, including sites, per-pattern counts, explicit/effective levels and generated quest offers.
+0_0: 115 spawners / 293 bodies; 3 offers.
+1_0: 122 spawners / 339 bodies; 0 offers.
+0_-1: 171 spawners / 403 bodies; 0 offers.
+3_2: 146 spawners / 392 bodies; 0 offers.
+-1_0: 153 spawners / 399 bodies; 0 offers.
+-1_1: 169 spawners / 421 bodies; 0 offers.
+2_1: 139 spawners / 378 bodies; 0 offers.
+3_1: 134 spawners / 346 bodies; 0 offers.
+Map 0,0: identical.
+Map 1,0: identical.
+Map 0,-1: identical.
+Map 3,2: identical.
+Own world golden constants are retained; no refresh is warranted by this audit.

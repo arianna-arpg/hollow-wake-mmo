@@ -1,0 +1,4 @@
+Same-runtime comparison on f5c8e92: exact complete foundation 3d339d2 content versus integrated elemental content.
+Entire proving JSON is byte-identical, SHA256 b87b0e598210f0973a904e26a04a8e80990796f617c86cbac375328b1aa5475a.
+Both commands exit 1: bulwark, plaguer and pitfighter each win 10/10 against 0.8 ceilings. All prior mechanisms, traces, outcomes and breaches are retained. No band or runtime change; no balance clearance.
+Standard Windows replay passes all seven committed hashes with the inherited seeds and cap; no baseline edits.

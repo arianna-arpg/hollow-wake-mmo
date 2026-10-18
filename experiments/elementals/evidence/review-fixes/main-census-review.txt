@@ -1,0 +1,4 @@
+499 generated keys exactly match the unchanged reviewed fixture in ordinal order.
+Added keys: none. Removed keys: none. No elemental constant admission or fixture edit needed.
+Full axis report SHA256: cfe39100e9e9054c778408e8b28278e5189343e459c23aa0f320d310692f2dad.
+The full generated report is retained in ignored artifacts/main-axis-census.json; generated keys are main-census-keys.txt.
