@@ -1,0 +1,5 @@
+TEST evidence: C:\Users\John\.codex\worktrees\undead-entity-foundation\MMOARPG\artifacts\testing\run-4gmvzw
+TEST smoke-web; evidence: C:\Users\John\.codex\worktrees\undead-entity-foundation\MMOARPG\artifacts\testing\run-4gmvzw
+TEST import-godot; evidence: C:\Users\John\.codex\worktrees\undead-entity-foundation\MMOARPG\artifacts\testing\run-4gmvzw
+TEST smoke-godot; evidence: C:\Users\John\.codex\worktrees\undead-entity-foundation\MMOARPG\artifacts\testing\run-4gmvzw
+TEST PASSED; report: C:\Users\John\.codex\worktrees\undead-entity-foundation\MMOARPG\artifacts\testing\run-4gmvzw\result.json
