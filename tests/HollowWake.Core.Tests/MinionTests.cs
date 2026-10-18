@@ -28,6 +28,7 @@ internal sealed class MinionArena
             .With(Summon("t_pool", "{\"type\": \"summon\", \"pool\": [ {\"pattern\": \"remnant_shade\", \"weight\": 1}, {\"pattern\": \"sprig\", \"weight\": 1, \"tags\": [\"t_sprout\"]} ], \"count\": 8, \"max_active\": 8, \"duration\": 0, \"group\": \"t_pool\"}"))
             .With(Summon("t_cap", "{\"type\": \"summon\", \"pattern\": \"sprig\", \"count\": 1, \"max_active\": 2, \"duration\": 0, \"group\": \"t_cap\"}"))
             .With(Summon("t_overflow", "{\"type\": \"summon\", \"pattern\": \"sprig\", \"count\": 5, \"max_active\": 2, \"duration\": 0, \"group\": \"t_overflow\"}"))
+            .With(Summon("t_raise_overflow", "{\"type\": \"summon\", \"from_corpse\": true, \"count\": 5, \"max_active\": 2, \"duration\": 0, \"group\": \"t_raise_overflow\", \"on_birth\": [ {\"type\": \"event\", \"name\": \"t_born\"} ]}"))
             .With(Summon("t_shared_a", "{\"type\": \"summon\", \"pattern\": \"sprig\", \"count\": 2, \"max_active\": 3, \"duration\": 0, \"group\": \"t_a\", \"pool_group\": \"t_shared\"}"))
             .With(Summon("t_shared_b", "{\"type\": \"summon\", \"pattern\": \"remnant_shade\", \"count\": 2, \"max_active\": 3, \"duration\": 0, \"group\": \"t_b\", \"pool_group\": \"t_shared\"}"))
             .With(Summon("t_rival_a", "{\"type\": \"summon\", \"pattern\": \"sprig\", \"count\": 2, \"max_active\": 4, \"duration\": 0, \"group\": \"t_ra\", \"exclusive_group\": \"t_rivals\"}"))
@@ -255,29 +256,51 @@ public class MinionTests
     }
 
     [Theory]
-    [InlineData("t_overflow", "t_overflow", 5)]
-    [InlineData("t_totem_overflow", "t_overflow_totems", 4)]
-    public void APressPastTheCapEndsAtTheCapWithItsNewestBodies(string weave, string group, int count)
+    [InlineData("t_overflow", "t_overflow")]
+    [InlineData("t_totem_overflow", "t_overflow_totems")]
+    public void APressPastTheCapRaisesOnlyWhatTheCapHolds(string weave, string group)
     {
-        // A summon or a deploy raising more bodies in one press than its group holds (two): each body past the cap
-        // makes room as it is raised, so the press's own first bodies go as the oldest, despawned and not killed.
+        // A summon or a deploy asking for more bodies in one press than its group holds (two) raises two, so no body is
+        // born only to be dismissed. A second press dismisses the first two, despawned and not killed, and the newest
+        // two stand.
         var arena = MinionArena.Create();
         var slot = arena.Learn(weave);
         List<Entity> Raised() => arena.Events.OfType<MinionSummoned>().Where(m => m.Group == group).Select(m => m.Minion).ToList();
         arena.Cast(slot);
         var first = Raised();
-        Assert.Equal(count, first.Count);
-        Assert.Equal(first.Skip(count - 2), arena.Minions(group));
-        foreach (var gone in first.Take(count - 2))
+        Assert.Equal(2, first.Count);
+        Assert.Equal(first, arena.Minions(group));
+        Assert.DoesNotContain(arena.Events.OfType<EntityDespawned>(), d => first.Contains(d.Entity));
+        arena.Cast(slot);
+        var second = Raised().Skip(2).ToList();
+        Assert.Equal(2, second.Count);
+        Assert.Equal(second, arena.Minions(group));
+        foreach (var gone in first)
         {
             Assert.Contains(arena.Events.OfType<EntityDespawned>(), d => d.Entity == gone);
             Assert.DoesNotContain(arena.Events.OfType<EntityDied>(), d => d.Entity == gone);
         }
-        // A second press replaces the group whole with its own newest two.
-        arena.Cast(slot);
-        var second = Raised().Skip(count).ToList();
-        Assert.Equal(count, second.Count);
-        Assert.Equal(second.Skip(count - 2), arena.Minions(group));
+    }
+
+    [Fact]
+    public void ARaisePastTheCapSpendsOnlyTheCorpsesItRaises()
+    {
+        // Five corpses lie by the summoner, and a raise asks for five bodies into a group of two: it raises the two
+        // nearest, runs its birth rider twice and leaves the other three corpses lying.
+        var arena = MinionArena.Create();
+        var corpses = new List<Entity>();
+        foreach (var offset in new[] { new Vector3(1.5f, 0, 0), new Vector3(0, 2, 0), new Vector3(-2.5f, 0, 0), new Vector3(0, -3, 0), new Vector3(3.5f, 0, 0) })
+        {
+            var wolf = arena.Foe("wolf", arena.OwnerAt.Position + offset);
+            arena.Sim.Service<Combat.DeathService>().Kill(arena.Sim, wolf, arena.Owner);
+            corpses.Add(wolf);
+        }
+        Assert.All(corpses, c => Assert.True(Corpses.Is(arena.Sim.World, c)));
+        arena.Cast(arena.Learn("t_raise_overflow"));
+        Assert.Equal(2, arena.Events.OfType<MinionSummoned>().Count(m => m.Group == "t_raise_overflow"));
+        Assert.Equal(2, arena.Events.OfType<CustomEvent>().Count(e => e.Name == "t_born"));
+        Assert.Equal(corpses.Take(2), arena.Events.OfType<CorpseRaised>().Select(r => r.Corpse));
+        Assert.Equal(corpses.Skip(2), corpses.Where(c => Corpses.Is(arena.Sim.World, c) && !arena.Sim.World.IsDeferredDestroy(c)));
     }
 
     [Fact]
