@@ -10,6 +10,7 @@ using HollowWake.Core.Patterns;
 using HollowWake.Core.Sim;
 using HollowWake.Core.Tags;
 using HollowWake.Core.Weaves;
+using HollowWake.Core.Weaves.Probes;
 using Xunit;
 
 namespace HollowWake.Core.Tests;
@@ -1228,6 +1229,8 @@ public class DeliveryValidationTests
                 "  - { id: t_held_steady, name: Held Steady, form: missile_quick, threads: [ember], attributes: { projectile.accel: 3 }, effects: [ { type: projectile, accel: 0 } ] }",
                 "  - { id: t_massed, name: Massed, form: slam_quick, attributes: { summon.count: 3 }, effects: [ { type: deploy, pattern: ember_totem } ] }",
                 "  - { id: t_single, name: Single, form: slam_quick, attributes: { summon.count: 3 }, effects: [ { type: deploy, pattern: ember_totem, count: 1 } ] }",
+                "  - { id: t_still_cascade, name: Still Cascade, form: slam_quick, effects: [ { type: cascade, count: 0, effects: [ { type: area, radius: 1 } ] } ] }",
+                "  - { id: t_weave_cascade, name: Weave Cascade, form: slam_quick, attributes: { area.cascade: 2 }, effects: [ { type: cascade, effects: [ { type: area, radius: 1 } ] } ] }",
                 ""));
             var registry = ContentRegistry.Load(new[] { CoreContent.FindContentDir(), dir }, out var report);
             Assert.False(report.HasErrors, report.ToString());
@@ -1243,13 +1246,47 @@ public class DeliveryValidationTests
             Assert.False(Weave("t_held_steady").Mechanisms.Has("trajectory"));
             Assert.True(Weave("t_massed").HasMechanism("construct:massed"));
             Assert.False(Weave("t_single").HasMechanism("construct:massed"));
+            // A cascade repeats only past its first placement, by its node's count or the weave's area.cascade.
+            Assert.False(Weave("t_still_cascade").Mechanisms.Has("cascade"));
+            Assert.True(Weave("t_weave_cascade").Mechanisms.Has("cascade"));
             // Shipped: a lava glob sheds speed as it flies, through its weave's negative projectile.accel.
             Assert.True(Weave("lava_glob").Mechanisms.Has("trajectory"));
+            // Shipped: a wheel's blades never end on a hit, so returning, which needs flights their hits spend, stays dormant.
+            var wheel = compiler.Compile(new WeaveSpec { Preset = "whirling_blades", Glyphs = { GlyphRef.Parse("returning") } }, GlyphFit.Dormant);
+            Assert.False(wheel.HasMechanism("flight:spends"));
+            Assert.Contains(wheel.Dormant, d => d.Ref.Id == "returning");
         }
         finally
         {
             Directory.Delete(dir, recursive: true);
         }
+    }
+
+    [Fact]
+    public void EveryAttributeDoorAProbeOpensIsTheOneTheLintReads()
+    {
+        // The probes and the composition lint read a parameter's attribute door from one registry, so they cannot
+        // drift; a probe reads the door plainly, so no listed binding may scale its attribute or fall back only
+        // under a condition.
+        Assert.NotEmpty(ProbeBindings.All);
+        foreach (var (type, parameter) in ProbeBindings.All)
+        {
+            Assert.Equal(CompositionLint.FallbackAttribute(type, parameter), ProbeBindings.AttributeOf(type, parameter));
+            if (AxisBindings.FallbackOf(type, parameter) is { } binding)
+            {
+                Assert.Equal(1, binding.Factor);
+                Assert.Null(binding.FactorOf);
+                Assert.Null(binding.FallbackWhen);
+            }
+        }
+        Assert.Equal("projectile.chain", ProbeBindings.AttributeOf("projectile", "chains"));
+        Assert.Equal("projectile.forks", ProbeBindings.AttributeOf("projectile", "forks"));
+        Assert.Equal("projectile.rehit", ProbeBindings.AttributeOf("projectile", "rehit"));
+        Assert.Equal("projectile.accel", ProbeBindings.AttributeOf("projectile", "accel"));
+        Assert.Equal("summon.count", ProbeBindings.AttributeOf("deploy", "count"));
+        Assert.Equal("area.cascade", ProbeBindings.AttributeOf("cascade", "count"));
+        Assert.Null(ProbeBindings.AttributeOf("spawn", "count"));
+        Assert.Throws<InvalidOperationException>(() => ProbeBindings.AttributeOf("area", "radius"));
     }
 }
 

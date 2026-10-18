@@ -820,7 +820,7 @@ internal static class Families
             }
             return new Budget((1 + extra) * MorphArena.Bodies, 0, 0, seconds + View.Dt, $"{1 + extra} placements on at most {MorphArena.Bodies} bodies each");
         },
-        States = v => new[] { new Statement("cascade", true, "a cascade"), Landing(v) },
+        States = v => new[] { new Statement("cascade", Count0(v.Num("count")) >= 1, $"count {Count0(v.Num("count"))}: a cascade repeats only past its first placement"), Landing(v) },
     };
 
     // ------------------------------------------------------------ aura

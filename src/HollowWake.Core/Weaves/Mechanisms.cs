@@ -180,8 +180,8 @@ public static class MechanismRegistry
         }
         return parameter switch
         {
-            "children" => w.Nodes("projectile").Any(p => w.Holds(p, "forks", "projectile.forks", WeaveProbe.Counted) || NestedProjectile(w, p)),
-            "spends" => w.Nodes("projectile").Any(p => !w.Holds(p, "rehit", "projectile.rehit", WeaveProbe.Positive)),
+            "children" => w.Nodes("projectile").Any(p => w.Holds(p, "forks", WeaveProbe.Counted) || NestedProjectile(w, p)),
+            "spends" => w.Nodes("projectile").Any(p => !w.Holds(p, "rehit", WeaveProbe.Positive)),
             _ => true,
         };
     }
@@ -225,7 +225,7 @@ public static class MechanismRegistry
     /// <summary>A deploy's count falls back to the weave's <c>summon.count</c>; a spawn's has no attribute behind it.</summary>
     private static bool Construct(WeaveProbe w, string? parameter) => parameter switch
     {
-        "massed" => w.Holds("deploy", "count", "summon.count", Massed) || w.Holds("spawn", "count", null, Massed),
+        "massed" => w.Holds("deploy", "count", Massed) || w.Holds("spawn", "count", Massed),
         _ => Constructs(w).Any(),
     };
 
@@ -310,7 +310,9 @@ public sealed class WeaveProbe
 
     /// <summary>
     /// True when the weave itself gives an attribute a positive value: a positive base, or a modifier among
-    /// the weave's own (preset and glyph modifiers) that adds to it, flat positive or by formula.
+    /// the weave's own (preset and glyph modifiers) that adds to it, flat positive or by formula. The probes of
+    /// quantities no node writes read it (a weave's repeats, leech, use bank and levied cooldown); a quantity a node
+    /// may write as well reads both doors through <see cref="Holds(JsonObject, string, Func{double, bool})"/>.
     /// </summary>
     public bool Raises(string attribute)
     {
@@ -343,25 +345,26 @@ public sealed class WeaveProbe
 
     /// <summary>
     /// Whether a mechanism's quantity holds a value on a node through either of its two doors, the one its handler
-    /// reads: the node's parameter when the node sets it, else the weave attribute the parameter falls back to
-    /// (none when <paramref name="attribute"/> is null). A number holds when <paramref name="holds"/> says so; an
-    /// expression on the node, or a weave modifier that reads the caster, may hold any value, so it counts.
+    /// reads: the node's parameter when the node sets it, else the weave attribute the parameter falls back to, as
+    /// <see cref="ProbeBindings"/> names it (none for a parameter with no attribute behind it). A number holds when
+    /// <paramref name="holds"/> says so; an expression on the node, or a weave modifier that reads the caster, may hold
+    /// any value, so it counts.
     /// </summary>
-    public bool Holds(JsonObject node, string parameter, string? attribute, Func<double, bool> holds)
+    public bool Holds(JsonObject node, string parameter, Func<double, bool> holds)
     {
         if (node[parameter] is { } value)
         {
             return !JsonNum.TryDouble(value, out var v) || holds(v);
         }
-        return attribute is not null && (Gives(attribute) is not { } given || holds(given));
+        return ProbeBindings.AttributeOf(WeaveGraph.TypeOf(node) ?? "", parameter) is { } attribute && (Gives(attribute) is not { } given || holds(given));
     }
 
-    /// <summary>Whether some node of the type holds the quantity, as <see cref="Holds(JsonObject, string, string?, Func{double, bool})"/> reads a node.</summary>
-    public bool Holds(string type, string parameter, string? attribute, Func<double, bool> holds)
+    /// <summary>Whether some node of the type holds the quantity, as <see cref="Holds(JsonObject, string, Func{double, bool})"/> reads a node.</summary>
+    public bool Holds(string type, string parameter, Func<double, bool> holds)
     {
         foreach (var node in Nodes(type))
         {
-            if (Holds(node, parameter, attribute, holds))
+            if (Holds(node, parameter, holds))
             {
                 return true;
             }

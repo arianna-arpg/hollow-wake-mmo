@@ -27,12 +27,12 @@ internal static class DeliveryProbes
     public static void Register()
     {
         MechanismRegistry.Register("returning", static (w, _) => Returning(w), description: "projectiles that turn back to their origin or their caster");
-        MechanismRegistry.Register("homing", static (w, _) => w.Holds("projectile", "homing", "projectile.homing", WeaveProbe.Nonzero), description: "projectiles that home on bodies");
+        MechanismRegistry.Register("homing", static (w, _) => w.Holds("projectile", "homing", WeaveProbe.Nonzero), description: "projectiles that home on bodies");
         MechanismRegistry.Register("trajectory", static (w, _) => Trajectory(w), description: "projectiles that fly anything but straight: any trajectory axis");
-        MechanismRegistry.Register("chain", static (w, _) => w.Has("chain") || w.Holds("projectile", "chains", "projectile.chain", WeaveProbe.Counted), description: "hits that leap to other bodies, or projectiles that chain");
+        MechanismRegistry.Register("chain", static (w, _) => w.Has("chain") || w.Holds("projectile", "chains", WeaveProbe.Counted), description: "hits that leap to other bodies, or projectiles that chain");
         MechanismRegistry.Register("shape", static (w, p) => Shaped(w, p), ProbeParameter.OneOf(Shapes.Names.ToArray()), "deliveries drawn as a shape other than a circle, or as the named shape");
         MechanismRegistry.Register("fire", static (w, p) => Fires(w, p), ProbeParameter.OneOf("fan", "volley", "ring", "salvo"), "projectiles fired in a style other than a fan, or in the named style");
-        MechanismRegistry.Register("cascade", static (w, _) => w.Has("cascade") || w.Raises("area.cascade"), description: "placements that repeat stepping away");
+        MechanismRegistry.Register("cascade", static (w, _) => w.Holds("cascade", "count", WeaveProbe.Counted), description: "placements that repeat stepping away");
         MechanismRegistry.Register("storm", static (w, _) => w.Has("scatter"), description: "strikes scattered over a disc");
         MechanismRegistry.Register("telegraph", static (w, _) => Telegraphed(w), description: "placements marked before they land: delayed fields, telegraphed strikes");
         MechanismRegistry.Register("shove", static (w, _) => Shoves(w), description: "knockbacks, pulls and buffets that shove bodies");
@@ -74,7 +74,7 @@ internal static class DeliveryProbes
         {
             foreach (var (axis, holds) in Axes)
             {
-                if (w.Holds(node, axis, "projectile." + axis, holds))
+                if (w.Holds(node, axis, holds))
                 {
                     return true;
                 }
