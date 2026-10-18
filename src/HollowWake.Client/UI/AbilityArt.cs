@@ -7,12 +7,12 @@ namespace HollowWake.Client.UI;
 public sealed class AbilityArt
 {
     private readonly AbilityIcons _catalog;
-    private readonly Dictionary<(AbilityFace Face, int Size), LinkedListNode<((AbilityFace Face, int Size) Key, Texture2D Texture)>> _cache = new();
-    private readonly LinkedList<((AbilityFace Face, int Size) Key, Texture2D Texture)> _lru = new();
+    private readonly Dictionary<(AbilityFace Face, int Size), LinkedListNode<((AbilityFace Face, int Size) Key, Texture2D? Texture)>> _cache = new();
+    private readonly LinkedList<((AbilityFace Face, int Size) Key, Texture2D? Texture)> _lru = new();
 
     public AbilityArt(AbilityIcons catalog) => _catalog = catalog;
 
-    public void Draw(CanvasItem canvas, Rect2 rect, AbilityFace face, float alpha = 1, bool dormant = false)
+    public void Draw(CanvasItem canvas, Rect2 rect, AbilityFace face, float alpha = 1, string? tone = null)
     {
         // Canvas draw commands outlive a cache entry. Keep native resource references on the owner
         // until its next redraw, so LRU eviction cannot erase a still-visible inventory tile.
@@ -25,19 +25,21 @@ public sealed class AbilityArt
         var transform = canvas.GetGlobalTransformWithCanvas();
         var scale = Math.Max(transform.X.Length(), transform.Y.Length());
         var pixels = Math.Clamp((int)Math.Ceiling(Math.Max(rect.Size.X, rect.Size.Y) * scale), 12, _catalog.Style.MaxBakeSize);
+        if (tone is not null) face = face with { Tone = tone };
         var key = (face, pixels);
         if (!_cache.TryGetValue(key, out var node))
         {
             using var image = new Image();
             var svg = _catalog.Svg(face).Replace("viewBox=", "width=\"24\" height=\"24\" viewBox=", StringComparison.Ordinal);
-            if (image.LoadSvgFromString(svg, pixels / 24f) != Error.Ok) return;
-            node = _lru.AddLast((key, ImageTexture.CreateFromImage(image)));
+            // Cache failed bakes too, so malformed external art does not retry every redraw.
+            var texture = image.LoadSvgFromString(svg, pixels / 24f) == Error.Ok ? ImageTexture.CreateFromImage(image) : null;
+            node = _lru.AddLast((key, texture));
             _cache[key] = node;
             if (_cache.Count > _catalog.Style.CacheLimit && _lru.First is { } oldest)
             {
                 _lru.RemoveFirst();
                 _cache.Remove(oldest.Value.Key);
-                oldest.Value.Texture.Dispose();
+                oldest.Value.Texture?.Dispose();
             }
         }
         else
@@ -45,8 +47,9 @@ public sealed class AbilityArt
             _lru.Remove(node);
             _lru.AddLast(node);
         }
+        if (node.Value.Texture is null) return;
         var references = canvas.GetMeta("ability_art_textures").AsGodotArray<Texture2D>();
         if (!references.Contains(node.Value.Texture)) references.Add(node.Value.Texture);
-        canvas.DrawTextureRect(node.Value.Texture, rect, false, new Color(dormant ? .5f : 1, dormant ? .5f : 1, dormant ? .5f : 1, alpha));
+        canvas.DrawTextureRect(node.Value.Texture, rect, false, new Color(1, 1, 1, alpha));
     }
 }

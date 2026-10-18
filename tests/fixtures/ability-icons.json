@@ -1,0 +1,328 @@
+{
+  "kinds": {
+    "ui_ability_styles": [
+      {
+        "id": "default",
+        "background": "#111820",
+        "ink": "#f4ebd7",
+        "rim": "#070c12",
+        "tint_alpha": 0.16,
+        "line_width": 1.35,
+        "rim_width": 0.8,
+        "default_color": "#b8b8b8",
+        "badge_color": "#ffe3a0",
+        "badge_background": "#21182e",
+        "roles": {
+          "weave": "weaves",
+          "form": "forms",
+          "glyph": "glyphs",
+          "thread": "threads"
+        },
+        "parents": {
+          "weaves": {
+            "kind": "forms",
+            "field": "form"
+          }
+        },
+        "default_art": "picture",
+        "fallbacks": {
+          "forms": "picture",
+          "weaves": "picture",
+          "glyphs": "picture"
+        },
+        "badges": {
+          "glyphs": "badge"
+        },
+        "rules": [
+          {
+            "kinds": [
+              "forms"
+            ],
+            "art": "alternate"
+          },
+          {
+            "kinds": [
+              "forms",
+              "weaves"
+            ],
+            "tags": [
+              "melee"
+            ],
+            "art": "alternate"
+          }
+        ]
+      }
+    ],
+    "ui_ability_icons": [
+      {
+        "id": "picture",
+        "layers": [
+          {
+            "path": "M1 2L3 4",
+            "stroke": "tint",
+            "width": "1.5",
+            "transform": [
+              "1",
+              "0",
+              "0",
+              "1",
+              "2",
+              "3"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "alternate",
+        "layers": [
+          {
+            "path": "M2 3L4 5",
+            "fill": "ink"
+          }
+        ]
+      },
+      {
+        "id": "badge",
+        "layers": [
+          {
+            "path": "M0 0L2 2",
+            "fill": "ink"
+          }
+        ]
+      },
+      {
+        "id": "palette",
+        "art": "picture",
+        "color": "#badbad"
+      },
+      {
+        "id": "weaves.curated",
+        "art": "palette"
+      },
+      {
+        "id": "prototype/weaves.coincidence",
+        "art": "alternate"
+      }
+    ],
+    "forms": [
+      {
+        "id": "plain"
+      },
+      {
+        "id": "sharp",
+        "tags": [
+          "melee.precise"
+        ]
+      }
+    ],
+    "weaves": [
+      {
+        "id": "curated",
+        "form": "plain",
+        "color": "#123456"
+      },
+      {
+        "id": "custom",
+        "form": "plain",
+        "meta": {
+          "ability_icon": "palette",
+          "icon_color": "#abcdef"
+        }
+      },
+      {
+        "id": "inherited",
+        "form": "sharp"
+      },
+      {
+        "id": "coincidence",
+        "form": "plain"
+      }
+    ],
+    "glyphs": [
+      {
+        "id": "new_support",
+        "color": "#998877"
+      }
+    ],
+    "threads": [
+      {
+        "id": "ember",
+        "color": "#ee5522"
+      },
+      {
+        "id": "tide",
+        "color": "#3399dd"
+      }
+    ]
+  },
+  "cases": [
+    {
+      "name": "composed Ember seat keeps its Thread",
+      "seat": {
+        "key": "plain[]+",
+        "form": "plain"
+      },
+      "threads": [
+        "ember"
+      ],
+      "face": {
+        "art": "picture",
+        "color": "#ee5522",
+        "badge": null
+      },
+      "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect width=\"24\" height=\"24\" fill=\"#111820\"/><rect width=\"24\" height=\"24\" fill=\"#ee5522\" opacity=\"0.16\"/><g transform=\"matrix(1 0 0 1 2 3)\"><path d=\"M1 2L3 4\" fill=\"none\"/><path d=\"M1 2L3 4\" fill=\"none\" stroke=\"#070c12\" stroke-width=\"2.3\"/><path d=\"M1 2L3 4\" fill=\"none\" stroke=\"#ee5522\" stroke-width=\"1.5\"/></g></svg>"
+    },
+    {
+      "name": "composed Tide seat differs",
+      "seat": {
+        "key": "plain[]+",
+        "form": "plain"
+      },
+      "threads": [
+        "tide"
+      ],
+      "face": {
+        "art": "picture",
+        "color": "#3399dd",
+        "badge": null
+      },
+      "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect width=\"24\" height=\"24\" fill=\"#111820\"/><rect width=\"24\" height=\"24\" fill=\"#3399dd\" opacity=\"0.16\"/><g transform=\"matrix(1 0 0 1 2 3)\"><path d=\"M1 2L3 4\" fill=\"none\"/><path d=\"M1 2L3 4\" fill=\"none\" stroke=\"#070c12\" stroke-width=\"2.3\"/><path d=\"M1 2L3 4\" fill=\"none\" stroke=\"#3399dd\" stroke-width=\"1.5\"/></g></svg>"
+    },
+    {
+      "name": "first Thread is the primary palette",
+      "kind": "forms",
+      "id": "plain",
+      "threads": [
+        "tide",
+        "ember"
+      ],
+      "face": {
+        "art": "picture",
+        "color": "#3399dd",
+        "badge": null
+      },
+      "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect width=\"24\" height=\"24\" fill=\"#111820\"/><rect width=\"24\" height=\"24\" fill=\"#3399dd\" opacity=\"0.16\"/><g transform=\"matrix(1 0 0 1 2 3)\"><path d=\"M1 2L3 4\" fill=\"none\"/><path d=\"M1 2L3 4\" fill=\"none\" stroke=\"#070c12\" stroke-width=\"2.3\"/><path d=\"M1 2L3 4\" fill=\"none\" stroke=\"#3399dd\" stroke-width=\"1.5\"/></g></svg>"
+    },
+    {
+      "name": "definition color beats imported palette",
+      "kind": "weaves",
+      "id": "curated",
+      "threads": [
+        "ember"
+      ],
+      "face": {
+        "art": "picture",
+        "color": "#123456",
+        "badge": null
+      },
+      "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect width=\"24\" height=\"24\" fill=\"#111820\"/><rect width=\"24\" height=\"24\" fill=\"#123456\" opacity=\"0.16\"/><g transform=\"matrix(1 0 0 1 2 3)\"><path d=\"M1 2L3 4\" fill=\"none\"/><path d=\"M1 2L3 4\" fill=\"none\" stroke=\"#070c12\" stroke-width=\"2.3\"/><path d=\"M1 2L3 4\" fill=\"none\" stroke=\"#123456\" stroke-width=\"1.5\"/></g></svg>"
+    },
+    {
+      "name": "meta overrides definition and palette",
+      "kind": "weaves",
+      "id": "custom",
+      "face": {
+        "art": "picture",
+        "color": "#abcdef",
+        "badge": null
+      },
+      "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect width=\"24\" height=\"24\" fill=\"#111820\"/><rect width=\"24\" height=\"24\" fill=\"#abcdef\" opacity=\"0.16\"/><g transform=\"matrix(1 0 0 1 2 3)\"><path d=\"M1 2L3 4\" fill=\"none\"/><path d=\"M1 2L3 4\" fill=\"none\" stroke=\"#070c12\" stroke-width=\"2.3\"/><path d=\"M1 2L3 4\" fill=\"none\" stroke=\"#abcdef\" stroke-width=\"1.5\"/></g></svg>"
+    },
+    {
+      "name": "hierarchical parent tags choose art",
+      "kind": "weaves",
+      "id": "inherited",
+      "face": {
+        "art": "alternate",
+        "color": "#b8b8b8",
+        "badge": null
+      },
+      "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect width=\"24\" height=\"24\" fill=\"#111820\"/><rect width=\"24\" height=\"24\" fill=\"#b8b8b8\" opacity=\"0.16\"/><g><path d=\"M2 3L4 5\" fill=\"#f4ebd7\"/></g></svg>"
+    },
+    {
+      "name": "prototype ID alone does not bind",
+      "kind": "weaves",
+      "id": "coincidence",
+      "face": {
+        "art": "picture",
+        "color": "#b8b8b8",
+        "badge": null
+      },
+      "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect width=\"24\" height=\"24\" fill=\"#111820\"/><rect width=\"24\" height=\"24\" fill=\"#b8b8b8\" opacity=\"0.16\"/><g transform=\"matrix(1 0 0 1 2 3)\"><path d=\"M1 2L3 4\" fill=\"none\"/><path d=\"M1 2L3 4\" fill=\"none\" stroke=\"#070c12\" stroke-width=\"2.3\"/><path d=\"M1 2L3 4\" fill=\"none\" stroke=\"#b8b8b8\" stroke-width=\"1.5\"/></g></svg>"
+    },
+    {
+      "name": "new support retains badge",
+      "kind": "glyphs",
+      "id": "new_support",
+      "face": {
+        "art": "picture",
+        "color": "#998877",
+        "badge": "badge"
+      },
+      "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect width=\"24\" height=\"24\" fill=\"#111820\"/><rect width=\"24\" height=\"24\" fill=\"#998877\" opacity=\"0.16\"/><g transform=\"matrix(1 0 0 1 2 3)\"><path d=\"M1 2L3 4\" fill=\"none\"/><path d=\"M1 2L3 4\" fill=\"none\" stroke=\"#070c12\" stroke-width=\"2.3\"/><path d=\"M1 2L3 4\" fill=\"none\" stroke=\"#998877\" stroke-width=\"1.5\"/></g><g transform=\"scale(.34)\"><rect width=\"24\" height=\"24\" rx=\"4\" fill=\"#21182e\"/><g><path d=\"M0 0L2 2\" fill=\"#ffe3a0\"/></g></g></svg>"
+    },
+    {
+      "name": "dormant uses theme paint",
+      "kind": "glyphs",
+      "id": "new_support",
+      "tone": "#556677",
+      "face": {
+        "art": "picture",
+        "color": "#998877",
+        "badge": "badge"
+      },
+      "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect width=\"24\" height=\"24\" fill=\"#111820\"/><rect width=\"24\" height=\"24\" fill=\"#556677\" opacity=\"0.16\"/><g transform=\"matrix(1 0 0 1 2 3)\"><path d=\"M1 2L3 4\" fill=\"none\"/><path d=\"M1 2L3 4\" fill=\"none\" stroke=\"#070c12\" stroke-width=\"2.3\"/><path d=\"M1 2L3 4\" fill=\"none\" stroke=\"#556677\" stroke-width=\"1.5\"/></g><g transform=\"scale(.34)\"><rect width=\"24\" height=\"24\" rx=\"4\" fill=\"#21182e\"/><g><path d=\"M0 0L2 2\" fill=\"#556677\"/></g></g></svg>"
+    },
+    {
+      "name": "converted face has independent identity",
+      "seat": {
+        "key": "curated",
+        "form": "plain",
+        "preset": "curated",
+        "converted": {
+          "label": "Renamed",
+          "form": "sharp"
+        }
+      },
+      "threads": [
+        "tide"
+      ],
+      "face": {
+        "art": "alternate",
+        "color": "#3399dd",
+        "badge": null
+      },
+      "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect width=\"24\" height=\"24\" fill=\"#111820\"/><rect width=\"24\" height=\"24\" fill=\"#3399dd\" opacity=\"0.16\"/><g><path d=\"M2 3L4 5\" fill=\"#f4ebd7\"/></g></svg>"
+    },
+    {
+      "name": "legacy alternate hint",
+      "seat": {
+        "key": "curated",
+        "form": "plain",
+        "converted": {
+          "label": "Renamed",
+          "icon": "alternate"
+        }
+      },
+      "face": {
+        "art": "alternate",
+        "color": "#b8b8b8",
+        "badge": null
+      },
+      "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect width=\"24\" height=\"24\" fill=\"#111820\"/><rect width=\"24\" height=\"24\" fill=\"#b8b8b8\" opacity=\"0.16\"/><g><path d=\"M2 3L4 5\" fill=\"#f4ebd7\"/></g></svg>"
+    }
+  ],
+  "invalid_paths": [
+    "",
+    "L1 2",
+    "M0",
+    "M0 0L1",
+    "M0 0 R2 3",
+    "M0 0 A1 1 0 2 0 3 4",
+    "M0 0A-1 1 0 0 1 3 4",
+    "M0 0Z 2",
+    "M0,,0",
+    "M0 0 <script>",
+    "M1e999 0"
+  ]
+}

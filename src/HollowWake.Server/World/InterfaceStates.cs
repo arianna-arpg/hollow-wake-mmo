@@ -746,7 +746,7 @@ public static class InterfaceStates
         }
         var meta = metas[0];
         var def = sim.Content.Get<WeaveDef>(meta.Weave);
-        return new FaceInfo(meta.Label.Length > 0 ? meta.Label : def?.DisplayName ?? Definition.Humanize(meta.Weave)) { Icon = def?.Icon, Weave = meta.Weave, Form = def?.Form };
+        return new FaceInfo(meta.Label.Length > 0 ? meta.Label : def?.DisplayName ?? Definition.Humanize(meta.Weave)) { Icon = def?.Icon };
     }
 
     /// <summary>A slot whose toggle or contract runs (a sustained summon, an aura).</summary>

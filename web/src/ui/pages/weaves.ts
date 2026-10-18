@@ -270,7 +270,7 @@ class SeatRow implements DropTarget {
         const glyph = glyphAt(info, i);
         if (glyph !== null) {
           const dormantGlyph = glyph.dormant !== undefined && glyph.dormant !== null;
-          socket.append(abilityArt(skin, skin.names.abilityIcons.resolve('glyphs', glyph.id), 16, 'socket-art', dormantGlyph));
+          socket.append(abilityArt(skin, skin.names.abilityIcons.glyph(glyph.id), 16, 'socket-art', dormantGlyph));
         }
         sockets.append(socket);
         this.sockets.push(socket);

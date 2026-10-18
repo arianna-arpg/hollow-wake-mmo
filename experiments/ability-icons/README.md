@@ -1,7 +1,9 @@
 # Shared ability icons
 
-`scripts/import-ability-icons.mjs` extracts the pinned prototype branch into shared vector content. The exact revision and source catalog coverage are recorded in `assets/branding/ability-icons-provenance.json`. It reads Git objects without checking out or changing the prototype worktree. Regenerate with Node and the prototype's installed `tsx` dependency.
+The importer extracts artwork from the pinned prototype revision without changing that checkout. Install its pinned lockfile before regenerating. The importer writes only the reachable namespaced catalog and provenance; authored bindings and style remain separate. Adding an explicit binding makes another prototype illustration reachable on the next import.
 
-The C# `AbilityIconTests` and browser `abilityIcons.test.ts` exercise full imported-face coverage, stable item/seat identity, same-id preset/form separation, converted faces, future content and XML escaping. The protocol round-trip suite covers the additive identity fields.
+The native and browser tests consume tests/fixtures/ability-icons.json for the same identity and exact SVG expectations, including live Thread palettes, hierarchical tags, numeric strings, missing optional rule tags, badges and dormant paint. Native validation checks the fixture's malformed paths and references.
 
-Run Vite on port 8899, then `node experiments/ability-icons/render.mjs` for a focused production-renderer check. It uses the browser's actual item and seat components, compares their SVG layers and saves a gallery under ignored `artifacts/ability-icons/focused`. The native client's existing `--mockup` renders its staged inventory, supports, rack, cooldowns and dormant slots. Live full-client smokes run against a private server on separate ports. Review evidence and limitations are in `docs/reviews/2026-10-17-skill-support-icons.md`.
+Run node experiments/ability-icons/render.mjs for the focused browser check. It starts a private Vite server and headless browser, uses the production item and seat components, saves its gallery under ignored artifacts/ability-icons/focused, and closes both processes. These surface comparisons are browser evidence; the shared fixtures separately check both implementations.
+
+The background harness runs both full clients against an isolated server. Headless native smoke covers logic and explicitly skips pixels. Earlier native images are historical evidence; see the dated review-fix record for current gates and limitations.

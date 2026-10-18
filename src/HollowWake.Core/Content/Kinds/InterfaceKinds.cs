@@ -215,7 +215,6 @@ internal static class InterfaceKinds
         }
         Mapped(d.Pools, "pools");
         Mapped(d.Statuses, "statuses");
-        Mapped(d.Looks, "looks");
         Mapped(d.Slots, "slots");
         if (!d.Icons.ContainsKey(d.Fallback))
         {

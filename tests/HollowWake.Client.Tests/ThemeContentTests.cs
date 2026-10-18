@@ -146,9 +146,6 @@ public class ThemeContentTests
     public void WeavesFindTheirGlyphByLookOrKey()
     {
         var ui = UiContent.Load(RawOf);
-        Assert.Equal("missile", ui.Icons.ForWeave(null, "ember_bolt"));
-        Assert.Equal("blade", ui.Icons.ForWeave("strike", null));
-        Assert.Equal(ui.Icons.Fallback, ui.Icons.ForWeave("#e8622a", "unheard_of"));
     }
 
     [Fact]

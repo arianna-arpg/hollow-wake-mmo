@@ -56,7 +56,7 @@ public static class ItemArt
         var glyph = Glyph(skin, item);
         var side = Math.Min(r.Size.X, r.Size.Y) * 0.68f;
         var ink = (floor.Luminance > 0.5f ? rarity.Darkened(0.1f) : rarity.Lightened(0.15f)) with { A = alpha };
-        if (skin.Names.AbilityIcons.Item(item) is { } ability)
+        if (!(item.Icon is { } own && skin.Ui.Icons.Icons.ContainsKey(own)) && skin.Names.AbilityIcons.Item(item) is { } ability)
         {
             skin.Abilities.Draw(ci, new Rect2(r.GetCenter() - new Vector2(side, side) / 2, new Vector2(side, side)), ability, alpha);
         }

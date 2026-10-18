@@ -55,7 +55,7 @@ export function itemTile(skin: Skin, item: ItemInfo, glyphSize: number): HTMLEle
   tile.style.setProperty('--tile-edge', css(rarity, 0.85));
   tile.style.setProperty('--tile-ink', css(ink));
   const glyph = itemGlyph(skin, item);
-  const ability = skin.names.abilityIcons.item(item);
+  const ability = item.icon && skin.icons.icons[item.icon] !== undefined ? null : skin.names.abilityIcons.item(item);
   if (ability !== null) {
     tile.append(abilityArt(skin, ability, Math.max(10, Math.round(glyphSize)), 'tile-glyph'));
   } else if (glyph !== null) {

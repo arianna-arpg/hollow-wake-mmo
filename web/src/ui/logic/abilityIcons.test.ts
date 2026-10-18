@@ -1,5 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import { AbilityIcons } from './abilityIcons';
+import fixtures from '../../../../tests/fixtures/ability-icons.json';
+import type { FaceInfo } from '../../net/protocol';
+import { AbilityIcons, type AbilityFace } from './abilityIcons';
 import { bundledKinds, type Obj } from './content';
 import type { ItemInfo } from '../../net/protocol';
 
@@ -26,9 +28,9 @@ describe('shared ability artwork', () => {
     const icons = catalog(['forms',{id:'ember_bolt',meta:{ability_icon:'guard'}}]);
     const memory = item({id:'ember_bolt',name:'Translated',level:1,sockets:2,weave:'ember_bolt'});
     expect(icons.item(memory)).toEqual(icons.seat('ember_bolt','bolt','ember_bolt',null));
-    expect(icons.item(memory)?.art).toBe('skill:firebolt');
+    expect(icons.item(memory)?.art).toBe('prototype/skill:firebolt');
     const plain = item({...memory.form!,weave:undefined});
-    expect(icons.item(plain)?.art).toBe('guard');
+    expect(icons.item(plain)?.art).toBe('prototype/guard');
     expect(icons.item(plain)).toEqual(icons.seat('ember_bolt[]+','ember_bolt',null,null));
   });
   it('uses converted identity and preserves legacy alternate hints', () => {
@@ -41,9 +43,9 @@ describe('shared ability artwork', () => {
     const icons = catalog(['forms',{id:'new_form',name:'Not a picture key',tags:['melee']}],
       ['weaves',{id:'new_weave',form:'new_form',color:'#123456'}],
       ['glyphs',{id:'new_support',color:'#abcdef',meta:{ability_icon:'recall'}}]);
-    expect(icons.resolve('weaves','new_weave')).toEqual({art:'sweep',color:'#123456',badge:null});
-    expect(icons.resolve('glyphs','new_support')).toEqual({art:'recall',color:'#abcdef',badge:'badge.support'});
-    expect(icons.resolve('forms','misleading_fireball_name').art).toBe('arcane');
+    expect(icons.resolve('weaves','new_weave')).toEqual({art:'prototype/sweep',color:'#123456',badge:null});
+    expect(icons.resolve('glyphs','new_support')).toEqual({art:'prototype/recall',color:'#abcdef',badge:'badge.support'});
+    expect(icons.resolve('forms','misleading_fireball_name').art).toBe('prototype/arcane');
   });
   it('preserves layer transforms and escapes markup', () => {
     const icons = catalog(['ui_ability_icons',{id:'unsafe',layers:[{path:'M0 0"/><script>bad</script>',stroke:'ink',transform:[1,0,0,1,2,3]}]}]);
@@ -53,4 +55,15 @@ describe('shared ability artwork', () => {
     expect(svg).toContain('&lt;script&gt;');
     expect(svg).toContain('stroke-width="2.15"');
   });
+});
+
+describe('shared native/browser fixtures', () => {
+  const icons = new AbilityIcons(new Map(Object.entries(fixtures.kinds)) as Map<string, Obj[]>);
+  for (const c of fixtures.cases as Array<{name: string; kind?: string; id?: string; threads?: string[]; seat?: {key: string|null; form?: string; preset?: string; converted?: FaceInfo}; face: AbilityFace; tone?: string; svg: string}>) {
+    it(c.name, () => {
+      const face = c.seat ? icons.seat(c.seat.key, c.seat.form, c.seat.preset, c.seat.converted ?? null, c.threads) : icons.resolve(c.kind!, c.id, c.threads);
+      expect(face).toEqual(c.face);
+      expect(icons.svg({...face, tone:c.tone})).toBe(c.svg);
+    });
+  }
 });

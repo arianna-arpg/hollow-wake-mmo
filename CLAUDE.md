@@ -51,6 +51,7 @@ dotnet run --project src/HollowWake.Tools -- probe             # connect to a ru
 dotnet run --project src/HollowWake.Tools -c Release -- bench   # performance baseline against docs/design/performance.md budgets
 godot --path src/HollowWake.Client -- --smoke --shots DIR      # scripted client play-through against a running server (Godot 4.7 .NET)
 dotnet run --project src/HollowWake.Tools -- protocol-ts       # regenerate web/src/net/protocol.ts after changing a message
+node scripts/import-ability-icons.mjs <prototype-checkout> <revision> # regenerate only bound prototype artwork; see docs/design/ui.md
 node --test scripts/port/port-prototype.test.mjs              # the prototype porting script on a synthetic snapshot (see docs/design/parity/port-ledger.md to run it)
 npm --prefix web ci && npm --prefix web run build              # build the web client into web/dist (Node 22)
 npm --prefix web test                                          # web client unit tests

@@ -9,7 +9,7 @@ using HollowWake.Protocol;
 
 namespace HollowWake.Client.UI.Logic;
 
-public sealed record AbilityFace(string Art, string Color, string? Badge);
+public sealed record AbilityFace(string Art, string Color, string? Badge, string? Tone = null);
 
 /// <summary>One content-driven identity for item memories, sockets, rack, carry and hotbar.</summary>
 public sealed class AbilityIcons
@@ -28,68 +28,83 @@ public sealed class AbilityIcons
         }
         var style = raw("ui_ability_styles").FirstOrDefault(o => Json.Str(o["id"]) == "default");
         if (style is not null) result.Style = style.Deserialize<UiAbilityStyleDef>(ContentJson.Options)!;
-        foreach (var kind in new[] { "weaves", "forms", "glyphs" })
+        foreach (var kind in result.Style.Roles.Values.Concat(result.Style.Parents.Keys).Concat(result.Style.Parents.Values.Select(p => p.Kind))
+                     .Concat(result.Style.Fallbacks.Keys).Concat(result.Style.Rules.SelectMany(r => r.Kinds)).Distinct())
             foreach (var o in raw(kind)) result._definitions[kind + "." + Json.Str(o["id"])] = o;
         return result;
     }
 
-    public AbilityFace Resolve(string kind, string? id)
+    public AbilityFace Resolve(string kind, string? id, IReadOnlyList<string>? threads = null)
     {
         var definition = _definitions.GetValueOrDefault(kind + "." + id);
-        var explicitArt = Json.StrOrNull(definition?["meta"]?["ability_icon"]);
-        var key = explicitArt is not null && Art.ContainsKey(explicitArt) ? explicitArt
-            : Art.ContainsKey(kind + "." + id) ? kind + "." + id
-            : Style.Aliases.TryGetValue(kind, out var alias) && Art.ContainsKey(alias + "." + id) ? alias + "." + id
-            : null;
-        if (key is null)
+        var chain = new List<(string Kind, string? Id, JsonObject? Definition)>();
+        var parents = new HashSet<string>();
+        var currentKind = kind;
+        var currentId = id;
+        while (parents.Add(currentKind + "." + currentId))
         {
-            if (kind == "weaves" && definition?["form"] is { } formId && !Art.ContainsKey(Json.Str(definition?["icon"])))
-            {
-                var formFace = Resolve("forms", Json.Str(formId));
-                var ownColor = Json.StrOrNull(definition?["meta"]?["icon_color"]) ?? Json.StrOrNull(definition?["color"]);
-                return formFace with { Color = Rgba.TryParse(ownColor, out _) ? ownColor! : formFace.Color };
-            }
-            var ownIcon = Json.StrOrNull(definition?["icon"]);
-            var tags = Json.Strings(definition?["tags"]).ToHashSet(StringComparer.Ordinal);
-            if (kind == "weaves" && _definitions.TryGetValue("forms." + Json.Str(definition?["form"]), out var form))
-                tags.UnionWith(Json.Strings(form["tags"]));
-            key = ownIcon is not null && Art.ContainsKey(ownIcon) ? ownIcon
-                : Style.Rules.FirstOrDefault(r => r.Kinds.Contains(kind) && r.Tags.Any(tags.Contains))?.Art
-                  ?? Style.Fallbacks.GetValueOrDefault(kind, "arcane");
+            var current = _definitions.GetValueOrDefault(currentKind + "." + currentId);
+            chain.Add((currentKind, currentId, current));
+            if (!Style.Parents.TryGetValue(currentKind, out var parent) || Json.StrOrNull(current?[parent.Field]) is not { } parentId) break;
+            currentKind = parent.Kind;
+            currentId = parentId;
         }
-        var color = Json.StrOrNull(definition?["meta"]?["icon_color"]) ?? Json.StrOrNull(definition?["color"]);
+        var tags = chain.SelectMany(c => Json.Strings(c.Definition?["tags"])).ToHashSet(StringComparer.Ordinal);
+        var activeThreads = threads ?? Json.Strings(definition?["threads"]);
+        string? threadColor = null;
+        foreach (var thread in activeThreads)
+        {
+            tags.Add(thread);
+            var t = _definitions.GetValueOrDefault(Role("thread") + "." + thread);
+            tags.UnionWith(Json.Strings(t?["tags"]));
+            threadColor ??= Json.StrOrNull(t?["color"]);
+        }
+        string? Bound(string k, string? i, JsonObject? d)
+        {
+            var explicitArt = Json.StrOrNull(d?["meta"]?["ability_icon"]);
+            var ownIcon = Json.StrOrNull(d?["icon"]);
+            return explicitArt is not null && Art.ContainsKey(explicitArt) ? explicitArt
+                : Art.ContainsKey(k + "." + i) ? k + "." + i
+                : ownIcon is not null && Art.ContainsKey(ownIcon) ? ownIcon : null;
+        }
+        var key = Bound(kind, id, definition)
+            ?? Style.Rules.FirstOrDefault(r => r.Kinds.Contains(kind) && r.Tags.Any(t => tags.Any(tag => tag == t || tag.StartsWith(t + ".", StringComparison.Ordinal))))?.Art
+            ?? chain.Skip(1).Select(c => Bound(c.Kind, c.Id, c.Definition)).FirstOrDefault(k => k is not null)
+            ?? Style.Fallbacks.GetValueOrDefault(kind, Style.DefaultArt);
+        var color = Json.StrOrNull(definition?["meta"]?["icon_color"]) ?? Json.StrOrNull(definition?["color"]) ?? threadColor;
         string? badge = Style.Badges.GetValueOrDefault(kind);
         var seen = new HashSet<string>();
-        var first = true;
         while (seen.Add(key) && Art.TryGetValue(key, out var entry))
         {
-            // An authored face owns its palette; content meta can override it for a new identity.
-            if (first) color = Json.StrOrNull(definition?["meta"]?["icon_color"]) ?? entry.Color ?? color;
+            color ??= entry.Color;
             badge = entry.Badge ?? badge;
-            first = false;
             if (entry.Art is null) break;
             key = entry.Art;
         }
         return new AbilityFace(key, Rgba.TryParse(color, out _) ? color! : Style.DefaultColor, badge);
     }
 
-    public AbilityFace? Item(ItemInfo item) => item.Glyph is { } glyph ? Resolve("glyphs", glyph.Id)
-        : item.Form is { } form ? Resolve(form.Weave is not null ? "weaves" : "forms", form.Weave ?? form.Id) : null;
+    private string Role(string role) => Style.Roles.GetValueOrDefault(role, "");
 
-    public AbilityFace Seat(string? key, string? form, string? preset, FaceInfo? converted)
+    public AbilityFace Glyph(string id) => Resolve(Role("glyph"), id);
+
+    public AbilityFace? Item(ItemInfo item) => item.Glyph is { } glyph ? Glyph(glyph.Id)
+        : item.Form is { } form ? Resolve(Role(form.Weave is not null ? "weave" : "form"), form.Weave ?? form.Id) : null;
+
+    public AbilityFace Seat(string? key, string? form, string? preset, FaceInfo? converted, IReadOnlyList<string>? threads = null)
     {
         if (converted is not null)
         {
-            if (converted.Weave is not null) return Resolve("weaves", converted.Weave);
-            if (converted.Form is not null) return Resolve("forms", converted.Form);
+            if (converted.Weave is not null) return Resolve(Role("weave"), converted.Weave);
+            if (converted.Form is not null) return Resolve(Role("form"), converted.Form, threads);
             // Older servers provide only a visual hint. Never reuse the unconverted skill's art.
             return Direct(converted.Icon);
         }
-        return preset is not null || (key is not null && _definitions.ContainsKey("weaves." + key))
-            ? Resolve("weaves", preset ?? key) : Resolve("forms", form);
+        return preset is not null || (key is not null && _definitions.ContainsKey(Role("weave") + "." + key))
+            ? Resolve(Role("weave"), preset ?? key, threads) : Resolve(Role("form"), form, threads);
     }
 
-    private AbilityFace Direct(string? icon) => new(icon is not null && Art.ContainsKey(icon) ? icon : Style.Fallbacks.GetValueOrDefault("weaves", "arcane"), Style.DefaultColor, null);
+    private AbilityFace Direct(string? icon) => new(icon is not null && Art.ContainsKey(icon) ? icon : Style.DefaultArt, Style.DefaultColor, null);
 
     /// <summary>Restricted SVG vocabulary shared with the browser: paths, matrices and paint tokens only.</summary>
     public string Svg(AbilityFace face)
@@ -98,7 +113,7 @@ public sealed class AbilityIcons
         static string N(double n) => n.ToString("0.###############", CultureInfo.InvariantCulture);
         var s = Style;
         var b = new StringBuilder("<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\">");
-        b.Append($"<rect width=\"24\" height=\"24\" fill=\"{E(s.Background)}\"/><rect width=\"24\" height=\"24\" fill=\"{E(face.Color)}\" opacity=\"{N(s.TintAlpha)}\"/>");
+        b.Append($"<rect width=\"24\" height=\"24\" fill=\"{E(s.Background)}\"/><rect width=\"24\" height=\"24\" fill=\"{E(face.Tone ?? face.Color)}\" opacity=\"{N(s.TintAlpha)}\"/>");
         void Layers(string id, string tint, string ink, string rim)
         {
             var seen = new HashSet<string>();
@@ -115,11 +130,11 @@ public sealed class AbilityIcons
                 b.Append("</g>");
             }
         }
-        Layers(face.Art, face.Color, s.Ink, s.Rim);
+        Layers(face.Art, face.Tone ?? face.Color, face.Tone ?? s.Ink, s.Rim);
         if (face.Badge is { } badge && Art.ContainsKey(badge))
         {
             b.Append($"<g transform=\"scale(.34)\"><rect width=\"24\" height=\"24\" rx=\"4\" fill=\"{E(s.BadgeBackground)}\"/>");
-            Layers(badge, s.BadgeColor, s.BadgeColor, s.BadgeBackground);
+            Layers(badge, face.Tone ?? s.BadgeColor, face.Tone ?? s.BadgeColor, s.BadgeBackground);
             b.Append("</g>");
         }
         return b.Append("</svg>").ToString();

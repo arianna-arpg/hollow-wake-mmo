@@ -34,13 +34,21 @@ public sealed record UiAbilityStyleDef : Definition
     public string BadgeBackground { get; init; } = "#21182e";
     public Dictionary<string, string> Badges { get; init; } = new();
     public Dictionary<string, string> Fallbacks { get; init; } = new();
-    public Dictionary<string, string> Aliases { get; init; } = new();
+    public string DefaultArt { get; init; } = "";
+    public Dictionary<string, string> Roles { get; init; } = new();
+    public Dictionary<string, UiAbilityParentDef> Parents { get; init; } = new();
     public List<UiAbilityRuleDef> Rules { get; init; } = new();
 }
 
 public sealed record UiAbilityRuleDef
 {
-    public List<string> Kinds { get; init; } = new() { "weaves", "forms" };
+    public List<string> Kinds { get; init; } = new();
     public List<string> Tags { get; init; } = new();
     public string Art { get; init; } = "";
+}
+
+public sealed record UiAbilityParentDef
+{
+    public string Kind { get; init; } = "";
+    public string Field { get; init; } = "";
 }

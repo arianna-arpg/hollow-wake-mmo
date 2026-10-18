@@ -36,9 +36,9 @@ public sealed class AbilityIconTests
         var memory = new ItemInfo(1, "memory", "Renamed memory", "common", 1, 1, null, new(), new())
             { Form = new ItemFormInfo("ember_bolt", "Renamed", 1, 2) { Weave = "ember_bolt" } };
         Assert.Equal(icons.Item(memory), icons.Seat("ember_bolt", "bolt", "ember_bolt", null));
-        Assert.Equal("skill:firebolt", icons.Item(memory)!.Art);
+        Assert.Equal("prototype/skill:firebolt", icons.Item(memory)!.Art);
         var plain = memory with { Form = memory.Form! with { Weave = null } };
-        Assert.Equal("guard", icons.Item(plain)!.Art);
+        Assert.Equal("prototype/guard", icons.Item(plain)!.Art);
         Assert.Equal(icons.Item(plain), icons.Seat("ember_bolt[]+", "ember_bolt", null, null));
     }
 
@@ -58,9 +58,9 @@ public sealed class AbilityIconTests
         var icons = Catalog(("forms", "{\"id\":\"new_form\",\"name\":\"Not a picture key\",\"tags\":[\"melee\"]}"),
             ("weaves", "{\"id\":\"new_weave\",\"form\":\"new_form\",\"color\":\"#123456\"}"),
             ("glyphs", "{\"id\":\"new_support\",\"color\":\"#abcdef\",\"meta\":{\"ability_icon\":\"recall\"}}"));
-        Assert.Equal(new AbilityFace("sweep", "#123456", null), icons.Resolve("weaves", "new_weave"));
-        Assert.Equal(new AbilityFace("recall", "#abcdef", "badge.support"), icons.Resolve("glyphs", "new_support"));
-        Assert.Equal("arcane", icons.Resolve("forms", "misleading_fireball_name").Art);
+        Assert.Equal(new AbilityFace("prototype/sweep", "#123456", null), icons.Resolve("weaves", "new_weave"));
+        Assert.Equal(new AbilityFace("prototype/recall", "#abcdef", "badge.support"), icons.Resolve("glyphs", "new_support"));
+        Assert.Equal("prototype/arcane", icons.Resolve("forms", "misleading_fireball_name").Art);
         var support = new ItemInfo(1, "stone", "Name", "common", 1, 1, null, new(), new()) { Glyph = new ItemGlyphInfo("new_support", "Name", 1) };
         Assert.Equal(icons.Resolve("glyphs", "new_support"), icons.Item(support));
     }
@@ -95,5 +95,53 @@ public sealed class AbilityIconTests
         Assert.DoesNotContain("<script>", svg);
         Assert.Contains("&lt;script&gt;", svg);
         Assert.Contains("stroke-width=\"2.15\"", svg);
+    }
+
+    [Fact]
+    public void BothClientsConformToTheSharedIdentityAndSvgFixtures()
+    {
+        var path = Path.Combine(ThemeContentTests.FindContentDir(), "..", "..", "tests", "fixtures", "ability-icons.json");
+        var fixture = JsonNode.Parse(File.ReadAllText(path))!;
+        var kinds = fixture["kinds"]!.AsObject();
+        var icons = AbilityIcons.Load(kind => kinds[kind]?.AsArray().Select(n => n!.AsObject()) ?? Enumerable.Empty<JsonObject>());
+        foreach (var test in fixture["cases"]!.AsArray())
+        {
+            var threads = test!["threads"]?.AsArray().Select(n => n!.GetValue<string>()).ToArray();
+            var face = test["seat"] is { } seat
+                ? icons.Seat(Json.StrOrNull(seat["key"]), Json.StrOrNull(seat["form"]), Json.StrOrNull(seat["preset"]),
+                    seat["converted"] is { } converted ? System.Text.Json.JsonSerializer.Deserialize<FaceInfo>(converted.ToJsonString(), ContentJson.Options) : null, threads)
+                : icons.Resolve(Json.Str(test["kind"]), Json.Str(test["id"]), threads);
+            var expected = test["face"]!;
+            Assert.Equal(Json.Str(expected["art"]), face.Art);
+            Assert.Equal(Json.Str(expected["color"]), face.Color);
+            Assert.Equal(Json.StrOrNull(expected["badge"]), face.Badge);
+            Assert.Equal(Json.Str(test["svg"]), icons.Svg(face with { Tone = Json.StrOrNull(test["tone"]) }));
+        }
+    }
+
+    [Fact]
+    public void InvalidPathsBadgesKindsAndParentCyclesAreRejected()
+    {
+        var path = Path.Combine(ThemeContentTests.FindContentDir(), "..", "..", "tests", "fixtures", "ability-icons.json");
+        var fixture = JsonNode.Parse(File.ReadAllText(path))!;
+        var raw = ContentLoader.LoadRaw(new[] { ThemeContentTests.FindContentDir() }, new ValidationReport());
+        var i = 0;
+        foreach (var pathNode in fixture["invalid_paths"]!.AsArray())
+        {
+            var id = "invalid_path_" + i++;
+            var node = new JsonObject { ["id"] = id, ["layers"] = new JsonArray(new JsonObject { ["path"] = pathNode!.DeepClone(), ["stroke"] = "ink" }) };
+            raw["ui_ability_icons"][id] = new RawDefinition("ui_ability_icons", id, node, "fixture");
+        }
+        var badge = JsonNode.Parse("""{"id":"bad_badge","art":"arcane","badge":"nonexistent_badge"}""")!.AsObject();
+        raw["ui_ability_icons"]["bad_badge"] = new RawDefinition("ui_ability_icons", "bad_badge", badge, "fixture");
+        var style = raw["ui_ability_styles"]["default"].Object;
+        style["rules"]!.AsArray().Add(JsonNode.Parse("""{"kinds":["nonexistent_kind"],"art":"arcane"}"""));
+        style["parents"]!["forms"] = JsonNode.Parse("""{"kind":"weaves","field":"form"}""");
+        var report = new ValidationReport();
+        ContentRegistry.FromRaw(raw, report);
+        for (var n = 0; n < i; n++) Assert.Contains(report.Errors, e => e.Id == "invalid_path_" + n && e.Message.Contains("path"));
+        Assert.Contains(report.Errors, e => e.Id == "bad_badge" && e.Message.Contains("badge"));
+        Assert.Contains(report.Errors, e => e.Message.Contains("nonexistent_kind"));
+        Assert.Contains(report.Errors, e => e.Message.Contains("parent kinds form a cycle"));
     }
 }

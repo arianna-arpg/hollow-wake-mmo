@@ -3,6 +3,12 @@
   "commit": "5bf91b865dbce821780a6c1611e9d628af0c50f1",
   "skills": 948,
   "supports": 457,
+  "shipped_entries": 388,
+  "toolchain": {
+    "tsx": "4.23.0",
+    "esbuild": "0.25.12",
+    "node": "v24.9.0"
+  },
   "files": [
     "src/render/skillIconArt.ts",
     "src/render/skillIconCatalog.ts",

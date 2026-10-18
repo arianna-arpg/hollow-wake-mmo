@@ -1,5 +1,7 @@
 # Shared skill and support icon migration
 
+Historical record. Current fixes and measurements are in [the review-fix record](2026-10-18-skill-support-icon-review-fixes.md). The bundle advisory was introduced by this migration, not present on its main baseline.
+
 Codex claims the prototype skill/support icon migration for inventory, carries, learned seats and hotbars in both clients. Work lives in `codex/skill-support-icons`, based on main, in its own managed worktree. The root checkout and coordinator files are outside this change.
 
 The source is the illustrated catalog on the prototype's `codex/seamless-world-foundation` branch at `5bf91b865dbce821780a6c1611e9d628af0c50f1`, rather than the older initials on prototype main. The importer carries the authored paths, layer transforms, palette and support badge into shared content: 948 skill faces and 457 support faces. Presentation catalogs and rendering are generic across skills and supports; no gameplay dispatch or skill-specific renderer is introduced.
@@ -23,7 +25,7 @@ Root checkout verification: clean at `5843798` after the coordinator's merges; t
 Merged main through `32f194b` into this worktree at `a143826`, bringing the reviewed shared background harness and input synchronization. No harness or coordinator file was changed by this task.
 
 - Solution build succeeds with 0 errors and three existing xUnit2031 analyzer warnings in main's `PortedProjectileTests.cs`; the complete log is retained.
-- Solution tests: 582 Core, 38 Server and 117 Client pass (737 total). Browser tests: 187 pass. Production browser build passes, retaining the bundle-size advisory (app chunk about 2.01 MB raw / 436 KB gzip after the main integration).
+- Solution tests: 582 Core, 38 Server and 117 Client pass (737 total). Browser tests: 187 pass. Production browser build passes, including the bundle-size advisory introduced by this PR (app chunk about 2.01 MB raw / 436 KB gzip after the main integration).
 - Content validation: 0 errors, 0 warnings. Headless zone load, wolf/hob duel and live TCP interface probe pass.
 - `node scripts/test-background.mjs --suite all --no-build --out artifacts/ability-icons/integration`: browser 29/29 and native 25/25 pass, with no cleanup errors. The harness uses private ports/data and isolates input. Native headless rendering checks are explicitly skipped; the earlier graphical icon and capacity-one cache evidence remains the rendering evidence.
 - Focused production icon check passes again for all seven inventory/rack/hotbar comparisons. The updated gallery and live browser weave-page screenshot were inspected. No icon implementation or smoke assertion changed for this rerun.
@@ -34,4 +36,4 @@ The integration logs, completed runner result and focused-render report are save
 
 Please review the generic catalog/resolver and presentation aliases, converted identity and old-server fallback, vector paint parity, and native texture ownership across cache eviction. Confirm the broad catalog can serve later skill/support ports with content changes alone. The additive protocol fields contain identities only, behind the existing interface flow, and do not require a new feature or client reset. Please check the completed integration evidence alongside the retained native graphical evidence.
 
-Acknowledged by: pending Claude review.
+Acknowledged by: [Claude review](https://github.com/arianna-arpg/hollow-wake-mmo/pull/25#issuecomment-6245469833); fixes await rereview.

@@ -12,6 +12,12 @@ if (!checkout) throw new Error('usage: node scripts/import-ability-icons.mjs <pr
 const repo = resolve(checkout);
 const git = (...args) => execFileSync('git', ['-c', `safe.directory=${repo.replaceAll('\\', '/')}`, '-C', repo, ...args], { maxBuffer: 64 * 1024 * 1024 });
 const commit = git('rev-parse', revision).toString().trim();
+const lock = JSON.parse(git('show', commit + ':package-lock.json').toString());
+const expectedTsx = lock.packages['node_modules/tsx'].version;
+const installedTsx = JSON.parse(readFileSync(join(repo, 'node_modules/tsx/package.json'), 'utf8')).version;
+const expectedEsbuild = lock.packages['node_modules/esbuild'].version;
+const installedEsbuild = JSON.parse(readFileSync(join(repo, 'node_modules/esbuild/package.json'), 'utf8')).version;
+if (installedTsx !== expectedTsx || installedEsbuild !== expectedEsbuild) throw new Error('Install the pinned prototype lockfile with npm ci before importing.');
 const scratch = mkdtempSync(join(tmpdir(), 'hollow-wake-icons-'));
 try {
   writeFileSync(join(scratch, 'source.tar'), git('archive', commit, 'src'));
@@ -30,28 +36,27 @@ for(const [id, support] of Object.entries(SUPPORTS)) entries.push({id:'glyphs.'+
 writeFileSync('icons.json', JSON.stringify({entries, view:SKILL_ICON_VIEW, badge:SUPPORT_BADGE, skills:Object.keys(SKILLS).length, supports:Object.keys(SUPPORTS).length}));`;
   writeFileSync(join(scratch, 'extract.mts'), extract);
   execFileSync(process.execPath, [join(repo, 'node_modules/tsx/dist/cli.mjs'), join(scratch, 'extract.mts')], { cwd: scratch, stdio: 'inherit' });
-  const { entries, view, badge, skills, supports } = JSON.parse(readFileSync(join(scratch, 'icons.json'), 'utf8'));
+  const { entries, skills, supports } = JSON.parse(readFileSync(join(scratch, 'icons.json'), 'utf8'));
+  const namespaced = entries.map(e => ({...e, id:'prototype/'+e.id, ...(e.art ? {art:'prototype/'+e.art} : {}), ...(e.badge ? {badge:'prototype/'+e.badge} : {})}));
+  const source = new Map(namespaced.map(e => [e.id,e]));
+  const bindings = JSON.parse(readFileSync(join(root,'content/core/ui/ability-bindings.json'),'utf8')).entries;
+  const selected = new Set();
+  function visit(id) {
+    if (!id || !id.startsWith('prototype/') || selected.has(id)) return;
+    const entry = source.get(id);
+    if (!entry) throw new Error('Authored binding references missing prototype art: '+id);
+    selected.add(id); visit(entry.art); visit(entry.badge);
+  }
+  for (const entry of bindings) { visit(entry.art); visit(entry.badge); }
+  const shipped = namespaced.filter(e => selected.has(e.id));
   // JSON is content. Keep each vector entry on one line so regeneration diffs remain reviewable.
-  writeFileSync(join(root, 'content/core/ui/ability-icons.json'), '{"kind":"ui_ability_icons","entries":[\n' + entries.map(e => JSON.stringify(e)).join(',\n') + '\n]}\n');
-  writeFileSync(join(root, 'content/core/ui/ability-style.json'), JSON.stringify({kind:'ui_ability_styles', entries:[{
-    id:'default', background:view.background, ink:view.ink, rim:view.rim, tint_alpha:view.tintAlpha,
-    line_width:view.lineWidth, rim_width:view.rimWidth, cache_limit:view.cacheLimit, max_bake_size:view.maxBakeSize,
-    badge_color:badge.color, badge_background:badge.background,
-    default_color:'#b8b8b8', badges:{glyphs:'badge.support'},
-    fallbacks:{weaves:'arcane', forms:'arcane', glyphs:'support'},
-    aliases:{forms:'weaves'},
-    rules:[{tags:['guard'],art:'guard'},{tags:['warcry'],art:'rally'},{tags:['heal'],art:'heal'},
-      {tags:['movement'],art:'step'},{tags:['summon','minion'],art:'summon'},{tags:['trap','mine'],art:'trap'},
-      {tags:['construct','totem'],art:'construct'},{tags:['curse'],art:'curse'},{tags:['corpse'],art:'corpse'},
-      {tags:['aura'],art:'aura'},{tags:['storm'],art:'storm'},{tags:['melee'],art:'sweep'},
-      {tags:['ember'],art:'ember'},{tags:['tide'],art:'frost'},{tags:['storm'],art:'chain'},{tags:['projectile'],art:'projectile'}]
-  }]}, null, 2)+'\n');
+  writeFileSync(join(root, 'content/core/ui/ability-icons.json'), '{"kind":"ui_ability_icons","entries":[\n' + shipped.map(e => JSON.stringify(e)).join(',\n') + '\n]}\n');
   writeFileSync(join(root, 'assets/branding/ability-icons-provenance.json'), JSON.stringify({
-    source:'https://github.com/arianna-arpg/arpg-game-world', commit, skills, supports,
+    source:'https://github.com/arianna-arpg/arpg-game-world', commit, skills, supports, shipped_entries: shipped.length, toolchain: {tsx:expectedTsx, esbuild:expectedEsbuild, node:process.version},
     files:['src/render/skillIconArt.ts','src/render/skillIconCatalog.ts','src/render/skillIcons.ts','src/render/itemIcons.ts','src/data/skills.ts','src/data/supports.ts'],
     regeneration:`node scripts/import-ability-icons.mjs <prototype checkout> ${commit}`
   }, null, 2)+'\n');
-  console.log(`Imported ${skills} skill faces, ${supports} support faces and ${entries.length-skills-supports} vector illustrations from ${commit}.`);
+  console.log(`Imported ${shipped.length} reachable entries from ${skills} skill faces and ${supports} support faces from ${commit}.`);
 } finally {
   const rel = relative(tmpdir(), scratch);
   if (!rel.startsWith('..') && rel.startsWith('hollow-wake-icons-')) rmSync(scratch, {recursive:true, force:true});

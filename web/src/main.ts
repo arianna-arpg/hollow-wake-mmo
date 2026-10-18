@@ -22,7 +22,8 @@ const loading = new LoadingScreen(() => app?.releaseLoadingInput(), () => app?.r
 const boot = loading.begin({ kind: 'entry', label: presentation.labels.boot });
 await boot.paint();
 try {
-  const [{ App: Client }, config] = await Promise.all([import('./app'), loadConfig()]);
+  const [{ App: Client, prepareContent }, config] = await Promise.all([import('./app'), loadConfig()]);
+  await prepareContent();
   if (boot.current) {
     app = new Client(root, config, loading);
     window.hollowWake = app.probe();

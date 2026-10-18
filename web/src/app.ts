@@ -1,3 +1,4 @@
+export { preloadAbilityArtwork as prepareContent } from './ui/logic/contentFiles';
 import { presentation } from './loading/content';
 import type { LoadingScreen, LoadingLease } from './loading/loadingScreen';
 import { Color, DirectionalLight, FogExp2, HemisphereLight, MathUtils, Scene, SRGBColorSpace, Vector3, WebGLRenderer } from 'three';

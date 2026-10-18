@@ -159,7 +159,7 @@ public partial class WeaveBar : Control
                 return;
             }
             var face = seat.Converted;
-            var artwork = _skin.Names.AbilityIcons.Seat(seat.Key, seat.Info?.Form, seat.Info?.Preset, face);
+            var artwork = _skin.Names.AbilityIcons.Seat(seat.Key, seat.Info?.Form, seat.Info?.Preset, face, seat.Threads);
             var tint = seat.Threads.Count > 0 ? _skin.Thread(seat.Threads[0]) : label;
             if (dormant)
             {
@@ -169,7 +169,7 @@ public partial class WeaveBar : Control
             var iconRect = new Rect2((Size - new Vector2(iconSize, iconSize)) / 2, new Vector2(iconSize, iconSize));
             // a faint halo of the Thread behind the glyph, bright while the slot is on
             DrawCircle(Size / 2, iconSize * 0.46f, tint with { A = dormant ? 0.06f : active ? 0.32f : 0.14f }, true, -1, true);
-            _skin.Abilities.Draw(this, iconRect, artwork, dormant: dormant);
+            _skin.Abilities.Draw(this, iconRect, artwork, tone: dormant ? "#" + tint.ToHtml() : null);
             if (dormant)
             {
                 var hatch = new Color(0, 0, 0, 0.35f);
