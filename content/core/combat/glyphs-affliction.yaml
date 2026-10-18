@@ -58,8 +58,8 @@ entries:
     modifiers:
       - { attribute: damage, form: more, value: 0.5, scope: [vs.behind] }
 
-  - id: reaping
-    name: Reaping
+  - id: felling
+    name: Felling
     description: Against a foe whose poise is broken, the blow adds half of its poise as damage.
     requires: [melee]
     excludes: [area]
