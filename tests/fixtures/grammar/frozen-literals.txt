@@ -2,6 +2,8 @@
 # one a line, keyed by who wrote it (a form, a preset or a glyph) and where in their own definition. Written by
 # hollowwake weave --axes --all --literals tests/fixtures/grammar/frozen-literals.txt; the axis report tests hold
 # the core content to it, so a new literal fails them and a literal resolved is removed by writing the file again.
+# The 21 pre-existing undead preset keys from #31 are reviewed in
+# docs/reviews/2026-10-18-entity-main-audits.md; no content values or audit rules changed.
 form binding effects[0].interval
 form binding effects[0].max_length
 form binding effects[0].width
@@ -116,6 +118,7 @@ preset bloodlet effects[0].effects[1].chance
 preset blowdart effects[0].on_hit[1].chance
 preset blowdart effects[0].radius
 preset bolt_repeater effects[0].radius
+preset bone_arrow effects[0].radius
 preset bonespray effects[0].on_hit[1].chance
 preset bonespray effects[0].radius
 preset bottled_swarm effects[0].on_end[0].duration
@@ -357,8 +360,11 @@ preset pyroclast_bolt effects[0].radius
 preset radiant_lance effects[0].on_hit[1].chance
 preset radiant_lance effects[0].radius
 preset raise_barrow effects[0].duration
+preset raise_dead effects[0].duration
 preset raise_fallen effects[0].count
 preset raise_fallen effects[0].duration
+preset raise_zombie effects[0].count
+preset raise_zombie effects[0].duration
 preset reckoning effects[0].effects[1].chance
 preset reload_shells effects[0].amount
 preset rend effects[0].effects[1].chance
@@ -418,6 +424,23 @@ preset stasis_lock effects[0].radius
 preset static_strike effects[0].effects[1].gain
 preset static_strike effects[0].effects[1].max
 preset static_strike effects[0].effects[3].chance
+preset summon_abomination effects[0].duration
+preset summon_barrow_hound effects[0].duration
+preset summon_blade_wraith effects[0].duration
+preset summon_bone_golem effects[0].contract.reserve.mana
+preset summon_bone_golem effects[0].contract.respawn
+preset summon_bone_golem effects[0].count
+preset summon_bone_golem effects[0].max_active
+preset summon_ossuary_lich effects[0].duration
+preset summon_skeletal_duelist effects[0].duration
+preset summon_skeletal_mages effects[0].duration
+preset summon_skeletal_sentinel effects[0].duration
+preset summon_skeleton effects[0].duration
+preset summon_skeleton_archer effects[0].duration
+preset summon_wraith effects[0].decay.delay
+preset summon_wraith effects[0].decay.fraction
+preset summon_wraith effects[0].decay.growth
+preset summon_wraith effects[0].duration
 preset surgical_strike effects[0].effects[1].chance
 preset surgical_strike effects[0].inner
 preset talon_rake effects[0].effects[1].chance
