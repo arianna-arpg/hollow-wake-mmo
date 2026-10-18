@@ -12,21 +12,25 @@ All dimensions, fill, heft and densities are finite and positive; fill cannot ex
 
 ## Mass and modifiers
 
-`Physicality.Mass` is the authoritative geometric query:
+`Stats.Get("mass")` is the canonical mass value. `Physicality.Mass`, expression reads and links all use that ordinary attribute fold. The content formula reads geometry input gauges:
 
-`width * depth * height * fill * heft * sum(material fraction * density)`
+`volume * fill * heft * sum(material fraction * density)`
 
-The query reads live Transform radius and height relative to the rest envelope. Horizontal scaling affects both width and depth; vertical scaling affects height. Uniform rarity or summon scaling therefore changes mass with the cube of scale. The conservative cylinder collision and current movement/path clearance remain unchanged; directional box collision is future work.
+The physical binder supplies rest-envelope volume and material inputs. A Transform radius change scales both horizontal axes; a height change scales the vertical axis. A dimension-change notification updates volume and invalidates the attribute cache immediately, including rarity resizing. Uniform explicit resizing therefore changes geometric mass cubically. There is no automatically applied summon-size multiplier in this pass. Bodies without profiles use the formula's legacy base.
 
-The geometric value supplies an external base to the ordinary `mass` attribute fold, including flat, increased, more, override, links into mass, scopes and bounds. A body without a profile uses its ordinary `mass` attribute, whose content base supplies neutral reference weight. `mass` is an externally based channel like delivered damage: callers needing actual body weight must use `Physicality.Mass`; a plain attribute lookup or link from mass does not derive geometry. It is hidden from the character sheet to avoid presenting a nominal channel base as measured body weight. A future expression bridge must preserve this single fold and its cache rules.
+An authored or runtime `SetBase("mass", value)` wins over the geometric formula until cleared; ordinary flat, increased, more, override, bounds and single-hop links keep their standard meanings. Links out of mass follow the engine's no-link-chaining rule. Default mass queries use the ordinary empty query context for both profiled and legacy bodies. To condition mass on the owner's tags, use `condition: has(...)`; scoped modifiers require an explicit query context and are never silently activated only for physical profiles. Changing `Stats.Tags` invalidates cached conditions.
+
+`fill` means occupied envelope fraction. `heft` is a separate authored gameplay adjustment after material density, not another volume fraction or a physical measurement. A `size.*` classifier is an authored encounter category, not a computed mass or height threshold; numeric consumers read dimensions/mass. Partial inherited profiles must still restate matching pattern radius and height under the existing pattern contract.
 
 ## Displacement
 
-Knockback, pull and buffet share the move handler's shove path. Effective weight is mass divided by the reference mass, multiplied by remaining poise anchoring. The broken-poise flag removes that anchoring. A live pusher contributes a clamped power of its own effective weight; a missing source contributes neutral authority. The requested distance is multiplied by pusher authority and `shove.authority`, then divided by the victim's effective weight. Rule entries under `physicality` own the reference mass, floors, poise coefficient, exponent and authority limits, translated from the prototype's weight model.
+Rule expressions `physicality.weight` and `physicality.shove` own the weight and force mathematics. The configured `anchor_pool` and `anchor_broken_flag` select the anchoring resource and its broken state. The shipped policy divides mass by `reference_mass`, adds remaining poise anchoring, and floors weight at `minimum_weight`. Consequently very light unanchored bodies below that floor share the same resistance; their distinct mass remains available to other mechanics.
 
-The result enters the existing decaying impulse integrator once. Pulls still stop short of their anchor; immovable bodies still reject shoves. Dash, leap, teleport and direct velocity APIs keep their meanings. Poise changes on existing unprofiled bodies also affect anchoring, an intentional combat change. Source poise contributes to pushing authority as in the prototype.
+Knockback, pull and buffet use the effect's `Source` body as the pusher, including when a projectile, field or trap delivered the effect. They do not use delivery-entity mass or automatically climb to the credited owner. Source poise contributes to authority. The source mass exponent is bounded, then `shove.authority`, knockback's own multiplier (when applicable), and victim weight are included before the final `shove_scale_min`/`shove_scale_max` clamp. This ceiling limits the multiplier on an authored effect distance; it is not an absolute travel-distance cap. Pull clamping follows the adjustment, so caster-anchored hooks can stop short when resistance is high.
 
-This foundation does not yet implement momentum damage, body bowling, trample, mass-dependent fall damage, mounted rider aggregation, or inventory load. Ordinary walking still uses existing body avoidance. Those systems must consume this mass query rather than inventing another weight calculation.
+Continuous field pull uses the same weight/authority policy and final clamp before its per-tick anchor limit. Immovable bodies reject both impulse shoves and field pulls. The impulse integrator and field nudges traverse every crossed terrain cell, stop before a blocked cell, and preserve seeded buffet direction. This closes endpoint-only tunneling through walls, trees and placed blockers. Clearance remains the current movement center/cell model; anatomical body collision belongs to the separate hitbox work.
+
+Dash, leap, teleport and direct velocity APIs do not multiply force again. Existing unprofiled bodies intentionally gain poise anchoring. Momentum damage, bowling, trample, mass-dependent falling, mounted rider aggregation and inventory load remain future consumers of the canonical mass attribute.
 
 ## Verification
 

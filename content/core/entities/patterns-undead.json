@@ -776,7 +776,6 @@
         "family.wraith",
         "role.mage",
         "habitat.hollowed",
-        "habitat.ruin",
         "caster",
         "ranged",
         "spirit",
@@ -837,7 +836,6 @@
         "family.wraith",
         "role.skirmisher",
         "habitat.hollowed",
-        "habitat.ruin",
         "melee",
         "spirit",
         "no_corpse",
@@ -895,7 +893,6 @@
         "family.hound",
         "role.hunter",
         "habitat.deep_forest",
-        "habitat.ruin",
         "melee",
         "beast",
         "fauna"

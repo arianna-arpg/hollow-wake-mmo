@@ -339,25 +339,15 @@ public sealed class DisplacementSystem : SimSystem
         var blocked = sim.TryService<BlockedCells>(out var bc) ? bc : null;
         var stepUp = sim.Content.Rules.Number("move.step_up", 0.6);
         var from = t.Position;
-        var x = from.X + delta.X;
-        var y = from.Y + delta.Y;
-        if (!MovementSystem.CanOccupy(sim, blocked, x, y, from.Z, stepUp, out var ground))
+        var to = from + new Vector3(delta.X, delta.Y, 0);
+        if (!TraceGround(sim, blocked, from, to, stepUp, out var next) && next == from)
         {
-            if (MovementSystem.CanOccupy(sim, blocked, x, from.Y, from.Z, stepUp, out ground))
-            {
-                y = from.Y;
-            }
-            else if (MovementSystem.CanOccupy(sim, blocked, from.X, y, from.Z, stepUp, out ground))
-            {
-                x = from.X;
-            }
-            else
-            {
-                return false;
-            }
+            TraceGround(sim, blocked, from, from + new Vector3(delta.X, 0, 0), stepUp, out next);
+            if (next == from) TraceGround(sim, blocked, from, from + new Vector3(0, delta.Y, 0), stepUp, out next);
         }
-        t.Position = new Vector3(x, y, ground.Height);
-        sim.Spatial.Update(body, t.Position);
+        if (next == from) return false;
+        t.Position = next;
+        sim.Spatial.Update(body, next);
         return true;
     }
 
@@ -371,29 +361,71 @@ public sealed class DisplacementSystem : SimSystem
             return;
         }
         var from = t.Position;
-        var x = from.X + velocity.X * dt;
-        var y = from.Y + velocity.Y * dt;
-        if (!MovementSystem.CanOccupy(sim, blocked, x, y, from.Z, stepUp, out var ground))
+        var to = from + new Vector3(velocity.X * dt, velocity.Y * dt, 0);
+        var arrived = TraceGround(sim, blocked, from, to, stepUp, out var next);
+        if (next.Z < from.Z - 0.05f)
+        {
+            // Shoved off a ledge: preserve height until ordinary gravity resolves the fall.
+            next.Z = from.Z;
+            m.Grounded = false;
+        }
+        t.Position = next;
+        sim.Spatial.Update(e, next);
+        if (!arrived)
         {
             Collide(sim, e, t, m, speed, collisionSpeed);
             return;
         }
-        if (ground.Height < from.Z - 0.05f)
-        {
-            // Shoved off a ledge: keep the height and let gravity take it.
-            t.Position = new Vector3(x, y, from.Z);
-            m.Grounded = false;
-        }
-        else
-        {
-            t.Position = new Vector3(x, y, ground.Height);
-        }
-        sim.Spatial.Update(e, t.Position);
         m.Impulse *= decay;
         if (m.Impulse.X * m.Impulse.X + m.Impulse.Y * m.Impulse.Y < min * min)
         {
             Settle(m);
         }
+    }
+
+    /// <summary>
+    /// Grid traversal checks every cell crossed by the segment, including a short diagonal intersection.
+    /// Each interval samples its interior and near its exit; the endpoint is checked exactly. This is
+    /// terrain/placed-cell clearance for the current center-based movement model, not anatomical collision.
+    /// </summary>
+    private static bool TraceGround(Simulation sim, BlockedCells? blocked, Vector3 from, Vector3 to,
+        double stepUp, out Vector3 last)
+    {
+        last = from;
+        var dx = (double)to.X - from.X;
+        var dy = (double)to.Y - from.Y;
+        if (dx == 0 && dy == 0) return true;
+        var x = (int)Math.Floor(from.X);
+        var y = (int)Math.Floor(from.Y);
+        var stepX = Math.Sign(dx);
+        var stepY = Math.Sign(dy);
+        var deltaX = dx == 0 ? double.PositiveInfinity : Math.Abs(1 / dx);
+        var deltaY = dy == 0 ? double.PositiveInfinity : Math.Abs(1 / dy);
+        var nextX = dx == 0 ? double.PositiveInfinity : ((stepX > 0 ? x + 1 : x) - from.X) / dx;
+        var nextY = dy == 0 ? double.PositiveInfinity : ((stepY > 0 ? y + 1 : y) - from.Y) / dy;
+        var backoff = 0.0001 / Math.Max(1, Math.Sqrt(dx * dx + dy * dy));
+        double begin = 0;
+        while (begin < 1)
+        {
+            var end = Math.Min(1, Math.Min(nextX, nextY));
+            if (end > begin)
+            {
+                var mid = (begin + end) * 0.5;
+                var mx = (float)(from.X + dx * mid);
+                var my = (float)(from.Y + dy * mid);
+                if (!MovementSystem.CanOccupy(sim, blocked, mx, my, last.Z, stepUp, out var ground)) return false;
+                var at = end == 1 ? 1 : Math.Max(mid, end - backoff);
+                var px = (float)(from.X + dx * at);
+                var py = (float)(from.Y + dy * at);
+                if (!MovementSystem.CanOccupy(sim, blocked, px, py, ground.Height, stepUp, out ground)) return false;
+                last = new Vector3(px, py, ground.Height);
+            }
+            if (end == 1) return true;
+            if (nextX <= end) nextX += deltaX;
+            if (nextY <= end) nextY += deltaY;
+            begin = end;
+        }
+        return true;
     }
 
     private static void Settle(Motion m)
