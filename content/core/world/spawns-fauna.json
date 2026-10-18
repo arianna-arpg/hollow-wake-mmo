@@ -1,0 +1,295 @@
+{
+  "kind": "spawn_tables",
+  "entries": [
+    {
+      "id": "fauna_meadow",
+      "spawns": [
+        {
+          "pattern": "meadow_hare",
+          "density": 0.022,
+          "pack_size": [
+            1,
+            2
+          ],
+          "respawn": 240,
+          "level": {
+            "min": 1
+          }
+        },
+        {
+          "pattern": "red_fox",
+          "density": 0.014,
+          "pack_size": [
+            1,
+            1
+          ],
+          "respawn": 360,
+          "level": {
+            "min": 2
+          }
+        }
+      ]
+    },
+    {
+      "id": "fauna_alpine",
+      "spawns": [
+        {
+          "pattern": "snow_hare",
+          "density": 0.022,
+          "pack_size": [
+            1,
+            2
+          ],
+          "respawn": 240,
+          "level": {
+            "min": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "fauna_hollowed",
+      "spawns": [
+        {
+          "pattern": "gutter_rat",
+          "density": 0.022,
+          "pack_size": [
+            1,
+            2
+          ],
+          "respawn": 240,
+          "level": {
+            "min": 1
+          }
+        },
+        {
+          "pattern": "carrion_crow",
+          "density": 0.022,
+          "pack_size": [
+            1,
+            2
+          ],
+          "respawn": 240,
+          "level": {
+            "min": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "fauna_forest",
+      "spawns": [
+        {
+          "pattern": "hedgehog",
+          "density": 0.022,
+          "pack_size": [
+            1,
+            2
+          ],
+          "respawn": 240,
+          "level": {
+            "min": 1
+          }
+        },
+        {
+          "pattern": "red_fox",
+          "density": 0.014,
+          "pack_size": [
+            1,
+            1
+          ],
+          "respawn": 360,
+          "level": {
+            "min": 2
+          }
+        },
+        {
+          "pattern": "roe_deer",
+          "density": 0.014,
+          "pack_size": [
+            1,
+            1
+          ],
+          "respawn": 360,
+          "level": {
+            "min": 2
+          }
+        },
+        {
+          "pattern": "woodgrouse",
+          "density": 0.022,
+          "pack_size": [
+            1,
+            2
+          ],
+          "respawn": 240,
+          "level": {
+            "min": 2
+          }
+        }
+      ]
+    },
+    {
+      "id": "fauna_highland",
+      "spawns": [
+        {
+          "pattern": "salt_ibex",
+          "density": 0.014,
+          "pack_size": [
+            1,
+            1
+          ],
+          "respawn": 360,
+          "level": {
+            "min": 4
+          }
+        },
+        {
+          "pattern": "wolverine",
+          "density": 0.014,
+          "pack_size": [
+            1,
+            1
+          ],
+          "respawn": 360,
+          "level": {
+            "min": 5
+          }
+        }
+      ]
+    },
+    {
+      "id": "fauna_marsh",
+      "spawns": [
+        {
+          "pattern": "river_otter",
+          "density": 0.014,
+          "pack_size": [
+            1,
+            1
+          ],
+          "respawn": 360,
+          "level": {
+            "min": 2
+          }
+        },
+        {
+          "pattern": "reed_frog",
+          "density": 0.022,
+          "pack_size": [
+            1,
+            2
+          ],
+          "respawn": 240,
+          "level": {
+            "min": 1
+          }
+        },
+        {
+          "pattern": "snapping_terrapin",
+          "density": 0.014,
+          "pack_size": [
+            1,
+            1
+          ],
+          "respawn": 360,
+          "level": {
+            "min": 4
+          }
+        }
+      ]
+    },
+    {
+      "id": "fauna_deep_forest",
+      "spawns": [
+        {
+          "pattern": "lynx",
+          "density": 0.014,
+          "pack_size": [
+            1,
+            1
+          ],
+          "respawn": 360,
+          "level": {
+            "min": 5
+          }
+        },
+        {
+          "pattern": "brown_bear",
+          "density": 0.014,
+          "pack_size": [
+            1,
+            1
+          ],
+          "respawn": 360,
+          "level": {
+            "min": 8
+          }
+        }
+      ]
+    },
+    {
+      "id": "fauna_heath",
+      "spawns": [
+        {
+          "pattern": "plains_aurochs",
+          "density": 0.014,
+          "pack_size": [
+            1,
+            1
+          ],
+          "respawn": 360,
+          "level": {
+            "min": 10
+          }
+        }
+      ]
+    },
+    {
+      "id": "fauna_scrub",
+      "spawns": [
+        {
+          "pattern": "dust_quail",
+          "density": 0.022,
+          "pack_size": [
+            1,
+            2
+          ],
+          "respawn": 240,
+          "level": {
+            "min": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "fauna_shore",
+      "spawns": [
+        {
+          "pattern": "shore_crab",
+          "density": 0.022,
+          "pack_size": [
+            1,
+            2
+          ],
+          "respawn": 240,
+          "level": {
+            "min": 1
+          }
+        },
+        {
+          "pattern": "land_crab",
+          "density": 0.014,
+          "pack_size": [
+            1,
+            1
+          ],
+          "respawn": 360,
+          "level": {
+            "min": 3
+          }
+        }
+      ]
+    }
+  ]
+}

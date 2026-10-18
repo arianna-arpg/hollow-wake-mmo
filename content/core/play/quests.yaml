@@ -80,7 +80,7 @@ entries:
     weight: 3
     tags: [combat]
     slots:
-      beast: { pattern_tags: [beast] }
+      beast: { pattern_tags: [beast, quest.cull] }
     objectives:
       - { id: cull, type: kill, target: $beast, count: 8, text: "Cull eight $beast" }
     rewards:

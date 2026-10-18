@@ -1,0 +1,14 @@
+--- before-0_0
++++ after-0_0
+@@ -5,7 +5,7 @@
+   poi knot       Hob's Hollow             at (201,61) h=14.2 landmark=knot_stones faction=weftmarch_compact
+   quest gen.poi.0_0.hamlet.128.128.clear_knot.0: The Hob's Hollow [L1] Find Hob's Hollow; Unmake six Cinder Imp
+   quest gen.poi.0_0.hamlet.128.128.gather_floss.1: Loose Threads [L1] Gather five Thread Floss
+-  quest gen.poi.0_0.hamlet.128.128.cull_beasts.2: Teeth in the Hedge [L1] Cull eight Grey Wolf
++  quest gen.poi.0_0.hamlet.128.128.cull_beasts.2: Teeth in the Hedge [L1] Cull eight Wolverine
+   quest gen.poi.0_0.hamlet.128.128.scout_ruin.3: What Stands at Chainkeeper Camp [L1] Find Chainkeeper Camp
+ ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^FFFFFFFFFFFFFFF
+ ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^FFFFFFFFFFFFFFF
+zone 1_0: identical map, sites and quest text
+zone 0_-1: identical map, sites and quest text
+zone 3_2: identical map, sites and quest text

@@ -38,10 +38,16 @@ The appearance contract governs geometry, directional cards, animation and acces
 
 Related contracts: [minions](minions.md), [AI](ai.md), [appearance](appearance.md), [places](world/places.md), [networking](networking-and-persistence.md).
 
-Physical creatures use the registered [physical body contract](physical-bodies.md) for dimensions, material density, mass and displacement. Allegiance is independent of species: warband beasts can share their handlersâ€™ faction without reclassifying unrelated wildlife.
+Physical creatures use the registered [physical body contract](physical-bodies.md) for dimensions, material density, mass and displacement. Allegiance is independent of species: warband beasts can share their handlers' faction without reclassifying unrelated wildlife.
 
 ## Stature and warband identity
 
 The player is the reference adult stature. Ordinary skeletal humanoids share that authoritative height; ordinary Goblins are roughly half as tall. Hobgoblins and exceptional brutes remain intermediate, while Orcs are adult-height or taller with substantially broader bodies. Rare and summoned scaling still uses the existing authoritative transform. Appearance-only scale jitter is disabled on the standard player and skeleton looks and profiled warband bodies; palette variation remains.
 
 Species and allegiance are independent. Orc and Goblin warbands can be allied and share a site's inhabitants without losing their native factions. An overseer, slaver or commander role describes the authored encounter and combat kit, not a newly implemented capture, ownership or command system. Melee leaders close to a content-authored distance independent of their longer-range rally weave, so support skills cannot strand them outside their damaging attack's reach.
+
+## Wildlife and incidental critters
+
+Wildlife uses ordinary patterns, physical profiles and biome populations. `fauna` identifies wildlife; `ambient` and `critter` mark incidental non-attacking bodies. `prey` also lets existing minion acquisition filters pass them over. These tags do not supply ecological AI. Only eligible combat beasts opt into `quest.cull`; the cull template requires it alongside `beast`, so a shared species classifier cannot accidentally turn incidental animals or templates into kill contracts. Quest slot matching reads direct pattern tags, so that eligibility must be authored on concrete candidate definitions.
+
+Ambient bodies extend a template without drops and carry an empty weave list. Defensive wildlife can carry existing melee skills, while their current behavior remains provisional under the AI contract. Ground locomotion is explicit: visual birds, amphibians and shoreline animals do not gain flight, swimming or climbing from their appearance or habitat. Physical fill and material densities are authored game approximations, not measured anatomy.

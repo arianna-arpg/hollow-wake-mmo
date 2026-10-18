@@ -862,7 +862,8 @@
         "beast",
         "melee",
         "size.tiny",
-        "fauna"
+        "fauna",
+        "quest.cull"
       ],
       "faction": "goblinkin",
       "level": 1,
@@ -928,7 +929,8 @@
         "beast",
         "melee",
         "size.small",
-        "fauna"
+        "fauna",
+        "quest.cull"
       ],
       "faction": "goblinkin",
       "level": 4,
@@ -995,7 +997,8 @@
         "beast",
         "melee",
         "size.small",
-        "fauna"
+        "fauna",
+        "quest.cull"
       ],
       "faction": "goblinkin",
       "level": 6,

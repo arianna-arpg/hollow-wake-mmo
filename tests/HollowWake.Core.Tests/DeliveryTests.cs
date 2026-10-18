@@ -22,6 +22,10 @@ internal sealed class DeliveryArena
         var registry = ContentRegistry.Load(new[] { CoreContent.FindContentDir() }, out var report);
         Assert.False(report.HasErrors, report.ToString());
         registry
+            // Deliberately unprofiled, legacy-sized target: changing fauna balance must not change
+            // the neutral mass, poise and collision assumptions of generic delivery tests.
+            .With(new PatternDef { Id = "t_delivery_body", Extends = "monster", Radius = .55f, Height = 1.8f,
+                Components = { ["stats"] = System.Text.Json.Nodes.JsonNode.Parse("""{"attributes":{"might":13,"grace":7,"vigor":12,"move.speed":5,"armor":20,"weapon.damage.min":6,"weapon.damage.max":11,"weapon.attack.time":1.2}}""")!.AsObject() } })
             .With(new WeaveDef { Id = "t_spark", Form = "blast", Threads = { "ember" }, Effects = { Spec("{\"type\": \"event\", \"name\": \"t_spark\", \"data\": {\"depth\": \"depth\"}}") } })
             .With(new GlyphDef { Id = "t_wide", Modifiers = { new Attributes.Modifier { Attribute = "area.angle", Form = Attributes.ModifierForm.Increased, Value = 0.5 }, new Attributes.Modifier { Attribute = "melee.reach", Value = 1 } } })
             .With(new GlyphDef { Id = "t_echo", Modifiers = { new Attributes.Modifier { Attribute = "area.scatter", Value = 2 }, new Attributes.Modifier { Attribute = "area.pulses", Value = 1 } } })
@@ -52,8 +56,8 @@ internal sealed class DeliveryArena
         return arena;
     }
 
-    /// <summary>A still body: a boar of the other side, or of the caster's side.</summary>
-    public Entity Body(float x, float y, string faction = "blue", string pattern = "boar")
+    /// <summary>A still neutral test body, or an explicitly requested production pattern.</summary>
+    public Entity Body(float x, float y, string faction = "blue", string pattern = "t_delivery_body")
     {
         var e = Sim.Service<PatternFactory>().Spawn(Sim, pattern, new Vector3(x, y, 0), new SpawnOptions { Faction = faction, RollRarity = false });
         Sim.World.Remove<Behavior>(e);

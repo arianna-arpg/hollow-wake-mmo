@@ -1,3 +1,4 @@
+import { faunaQuadruped, faunaBird, faunaCrab } from './faunaFamilies';
 import { orc } from './orcFamilies';
 import { goblinkin, gnasher, warbeast } from './goblinkinFamilies';
 import { skeleton, stitched, boneQuadruped } from './anatomyFamilies';
@@ -749,6 +750,9 @@ function drop(b: BodyBuild): void {
 }
 
 export const BODY_FAMILIES: Record<string, Builder> = {
+  fauna_quadruped: faunaQuadruped,
+  fauna_bird: faunaBird,
+  fauna_crab: faunaCrab,
   orc,
   goblinkin,
   gnasher,

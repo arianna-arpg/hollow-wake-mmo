@@ -29,3 +29,7 @@ The plan is a cache on `Behavior` (`PlanGoal`, `PlannedAt`, `Planned`, `PlanFail
 `WeaveRuntime.ChooseForAi` filters the entity's weaves by readiness, cost, range and the hint's `when` expression, skipping triggered weaves, toggles that are on, empty banks and failed gates, then weights by the hint. `PreferredRange` is the longest hinted range, used by `chase` and perception.
 
 Taunts set the target and a memory timestamp the behaviors read as `taunted`.
+
+## Provisional wildlife assignments
+
+Wildlife content may use existing combat behaviors or a flee-only content state machine. A spawn pack is not coordinated AI, a predator tag is not predation, and a hostile faction does not imply every body attacks. Critters have empty weave lists and no drops; they flee perceived faction enemies without an attack state. Future sensory, tactical, social and need-based decisions require a separate reviewed contract and deterministic simulation evidence. Authoring intent under `meta` is never a simulation input. The [wildlife AI handoff](../reviews/2026-10-18-fauna-ai-handoff.md) records the proposed design questions and scenarios for Claude review.

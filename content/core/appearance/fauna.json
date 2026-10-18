@@ -1,0 +1,784 @@
+{
+  "kind": "ui_appearances",
+  "entries": [
+    {
+      "id": "meadow_hare",
+      "body": "fauna_quadruped",
+      "shape": {
+        "breadth": 0.5789473684210527,
+        "depth": 1.0526315789473684,
+        "legs": 0.28,
+        "head": 0.22,
+        "ears": 0.65,
+        "tail": 0.12,
+        "rump": 1.3
+      },
+      "palette": {
+        "hide": "#b8a082",
+        "belly": "#c7bba0",
+        "dark": "#36352f",
+        "eye": "#1c2020",
+        "horn": "#d0c7ab",
+        "accent": "#b85e43"
+      },
+      "features": [
+        "long_ears"
+      ],
+      "gear": {},
+      "card": "allow",
+      "variation": {
+        "hue": 0.015,
+        "value": 0.035,
+        "scale": 0
+      },
+      "meta": {
+        "prototype_look": "hare",
+        "translation": "Standing anatomy from prototype silhouette grammar; no flight or swimming implied."
+      }
+    },
+    {
+      "id": "snow_hare",
+      "body": "fauna_quadruped",
+      "shape": {
+        "breadth": 0.6136363636363636,
+        "depth": 1.0909090909090908,
+        "legs": 0.28,
+        "head": 0.22,
+        "ears": 0.55,
+        "tail": 0.12,
+        "rump": 1.4
+      },
+      "palette": {
+        "hide": "#d9d8cf",
+        "belly": "#c7bba0",
+        "dark": "#36352f",
+        "eye": "#1c2020",
+        "horn": "#d0c7ab",
+        "accent": "#b85e43"
+      },
+      "features": [
+        "long_ears",
+        "ruff"
+      ],
+      "gear": {},
+      "card": "allow",
+      "variation": {
+        "hue": 0.015,
+        "value": 0.035,
+        "scale": 0
+      },
+      "meta": {
+        "prototype_look": "snow_hare",
+        "translation": "Standing anatomy from prototype silhouette grammar; no flight or swimming implied."
+      }
+    },
+    {
+      "id": "gutter_rat",
+      "body": "fauna_quadruped",
+      "shape": {
+        "breadth": 0.8750000000000001,
+        "depth": 2.125,
+        "legs": 0.2,
+        "head": 0.24,
+        "ears": 0.25,
+        "tail": 0.65,
+        "rump": 1.1
+      },
+      "palette": {
+        "hide": "#8c8073",
+        "belly": "#c7bba0",
+        "dark": "#36352f",
+        "eye": "#1c2020",
+        "horn": "#d0c7ab",
+        "accent": "#b85e43"
+      },
+      "features": [
+        "round_ears",
+        "naked_tail"
+      ],
+      "gear": {},
+      "card": "allow",
+      "variation": {
+        "hue": 0.015,
+        "value": 0.035,
+        "scale": 0
+      },
+      "meta": {
+        "prototype_look": "gutter_rat",
+        "translation": "Standing anatomy from prototype silhouette grammar; no flight or swimming implied."
+      }
+    },
+    {
+      "id": "hedgehog",
+      "body": "fauna_quadruped",
+      "shape": {
+        "breadth": 1.0,
+        "depth": 1.5789473684210527,
+        "legs": 0.18,
+        "head": 0.19,
+        "ears": 0.1,
+        "tail": 0,
+        "rump": 1.2
+      },
+      "palette": {
+        "hide": "#8b7054",
+        "belly": "#c7bba0",
+        "dark": "#36352f",
+        "eye": "#1c2020",
+        "horn": "#d0c7ab",
+        "accent": "#b85e43"
+      },
+      "features": [
+        "spines"
+      ],
+      "gear": {},
+      "card": "allow",
+      "variation": {
+        "hue": 0.015,
+        "value": 0.035,
+        "scale": 0
+      },
+      "meta": {
+        "prototype_look": null,
+        "translation": "Standing anatomy from prototype silhouette grammar; no flight or swimming implied."
+      }
+    },
+    {
+      "id": "red_fox",
+      "body": "fauna_quadruped",
+      "shape": {
+        "breadth": 0.5416666666666667,
+        "depth": 1.5416666666666667,
+        "legs": 0.4,
+        "head": 0.2,
+        "snout": 0.3,
+        "ears": 0.3,
+        "tail": 0.6
+      },
+      "palette": {
+        "hide": "#b06b3d",
+        "belly": "#c7bba0",
+        "dark": "#36352f",
+        "eye": "#1c2020",
+        "horn": "#d0c7ab",
+        "accent": "#b85e43"
+      },
+      "features": [
+        "brush_tail",
+        "bib"
+      ],
+      "gear": {},
+      "card": "allow",
+      "variation": {
+        "hue": 0.015,
+        "value": 0.035,
+        "scale": 0
+      },
+      "meta": {
+        "prototype_look": "red_fox",
+        "translation": "Standing anatomy from prototype silhouette grammar; no flight or swimming implied."
+      }
+    },
+    {
+      "id": "roe_deer",
+      "body": "fauna_quadruped",
+      "shape": {
+        "breadth": 0.35714285714285715,
+        "depth": 0.8928571428571428,
+        "legs": 0.59,
+        "head": 0.17,
+        "ears": 0.28,
+        "tail": 0.1
+      },
+      "palette": {
+        "hide": "#9b7955",
+        "belly": "#c7bba0",
+        "dark": "#36352f",
+        "eye": "#1c2020",
+        "horn": "#d0c7ab",
+        "accent": "#b85e43"
+      },
+      "features": [
+        "antlers",
+        "spots",
+        "hooves"
+      ],
+      "gear": {},
+      "card": "allow",
+      "variation": {
+        "hue": 0.015,
+        "value": 0.035,
+        "scale": 0
+      },
+      "meta": {
+        "prototype_look": "roe_deer",
+        "translation": "Standing anatomy from prototype silhouette grammar; no flight or swimming implied."
+      }
+    },
+    {
+      "id": "salt_ibex",
+      "body": "fauna_quadruped",
+      "shape": {
+        "breadth": 0.44545454545454544,
+        "depth": 0.9818181818181818,
+        "legs": 0.48,
+        "head": 0.2,
+        "ears": 0.18,
+        "tail": 0.15
+      },
+      "palette": {
+        "hide": "#b4a58c",
+        "belly": "#c7bba0",
+        "dark": "#36352f",
+        "eye": "#1c2020",
+        "horn": "#d0c7ab",
+        "accent": "#b85e43"
+      },
+      "features": [
+        "swept_horns",
+        "beard",
+        "hooves"
+      ],
+      "gear": {},
+      "card": "allow",
+      "variation": {
+        "hue": 0.015,
+        "value": 0.035,
+        "scale": 0
+      },
+      "meta": {
+        "prototype_look": "salt_ibex",
+        "translation": "Standing anatomy from prototype silhouette grammar; no flight or swimming implied."
+      }
+    },
+    {
+      "id": "river_otter",
+      "body": "fauna_quadruped",
+      "shape": {
+        "breadth": 0.857142857142857,
+        "depth": 2.857142857142857,
+        "legs": 0.21,
+        "head": 0.23,
+        "snout": 0.12,
+        "ears": 0.1,
+        "tail": 0.5
+      },
+      "palette": {
+        "hide": "#795c43",
+        "belly": "#c7bba0",
+        "dark": "#36352f",
+        "eye": "#1c2020",
+        "horn": "#d0c7ab",
+        "accent": "#b85e43"
+      },
+      "features": [
+        "round_ears",
+        "bib"
+      ],
+      "gear": {},
+      "card": "allow",
+      "variation": {
+        "hue": 0.015,
+        "value": 0.035,
+        "scale": 0
+      },
+      "meta": {
+        "prototype_look": "river_otter",
+        "translation": "Standing anatomy from prototype silhouette grammar; no flight or swimming implied."
+      }
+    },
+    {
+      "id": "lynx",
+      "body": "fauna_quadruped",
+      "shape": {
+        "breadth": 0.582089552238806,
+        "depth": 1.3432835820895521,
+        "legs": 0.45,
+        "head": 0.23,
+        "snout": 0.08,
+        "ears": 0.3,
+        "tail": 0.14
+      },
+      "palette": {
+        "hide": "#a28c65",
+        "belly": "#c7bba0",
+        "dark": "#36352f",
+        "eye": "#1c2020",
+        "horn": "#d0c7ab",
+        "accent": "#b85e43"
+      },
+      "features": [
+        "tufts",
+        "spots",
+        "ruff"
+      ],
+      "gear": {},
+      "card": "allow",
+      "variation": {
+        "hue": 0.015,
+        "value": 0.035,
+        "scale": 0
+      },
+      "meta": {
+        "prototype_look": "lynx",
+        "translation": "Standing anatomy from prototype silhouette grammar; no flight or swimming implied."
+      }
+    },
+    {
+      "id": "wolverine",
+      "body": "fauna_quadruped",
+      "shape": {
+        "breadth": 0.7962962962962963,
+        "depth": 1.574074074074074,
+        "legs": 0.33,
+        "head": 0.25,
+        "snout": 0.17,
+        "ears": 0.13,
+        "tail": 0.24,
+        "rump": 1.1
+      },
+      "palette": {
+        "hide": "#59483b",
+        "belly": "#c7bba0",
+        "dark": "#36352f",
+        "eye": "#1c2020",
+        "horn": "#d0c7ab",
+        "accent": "#b85e43"
+      },
+      "features": [
+        "round_ears",
+        "stripe",
+        "ruff"
+      ],
+      "gear": {},
+      "card": "allow",
+      "variation": {
+        "hue": 0.015,
+        "value": 0.035,
+        "scale": 0
+      },
+      "meta": {
+        "prototype_look": "wolverine",
+        "translation": "Standing anatomy from prototype silhouette grammar; no flight or swimming implied."
+      }
+    },
+    {
+      "id": "brown_bear",
+      "body": "fauna_quadruped",
+      "shape": {
+        "breadth": 0.6814814814814815,
+        "depth": 1.2962962962962963,
+        "legs": 0.34,
+        "head": 0.27,
+        "snout": 0.15,
+        "ears": 0.14,
+        "tail": 0.06,
+        "rump": 1.12
+      },
+      "palette": {
+        "hide": "#75553b",
+        "belly": "#c7bba0",
+        "dark": "#36352f",
+        "eye": "#1c2020",
+        "horn": "#d0c7ab",
+        "accent": "#b85e43"
+      },
+      "features": [
+        "round_ears",
+        "hump"
+      ],
+      "gear": {},
+      "card": "allow",
+      "variation": {
+        "hue": 0.015,
+        "value": 0.035,
+        "scale": 0
+      },
+      "meta": {
+        "prototype_look": null,
+        "translation": "Standing anatomy from prototype silhouette grammar; no flight or swimming implied."
+      }
+    },
+    {
+      "id": "plains_aurochs",
+      "body": "fauna_quadruped",
+      "shape": {
+        "breadth": 0.546875,
+        "depth": 1.3541666666666667,
+        "legs": 0.38,
+        "head": 0.25,
+        "snout": 0.19,
+        "ears": 0.18,
+        "tail": 0.4,
+        "rump": 1.0
+      },
+      "palette": {
+        "hide": "#66503e",
+        "belly": "#c7bba0",
+        "dark": "#36352f",
+        "eye": "#1c2020",
+        "horn": "#d0c7ab",
+        "accent": "#b85e43"
+      },
+      "features": [
+        "horns",
+        "hump",
+        "ruff",
+        "hooves"
+      ],
+      "gear": {},
+      "card": "allow",
+      "variation": {
+        "hue": 0.015,
+        "value": 0.035,
+        "scale": 0
+      },
+      "meta": {
+        "prototype_look": "migration_aurochs",
+        "translation": "Standing anatomy from prototype silhouette grammar; no flight or swimming implied."
+      }
+    },
+    {
+      "id": "dust_quail",
+      "body": "fauna_bird",
+      "shape": {
+        "breadth": 0.8148148148148148,
+        "depth": 1.037037037037037,
+        "beak": 0.15,
+        "tail": 0.22,
+        "legs": 0.24
+      },
+      "palette": {
+        "hide": "#a68d61",
+        "belly": "#c7bba0",
+        "dark": "#36352f",
+        "eye": "#1c2020",
+        "horn": "#d0c7ab",
+        "accent": "#b85e43"
+      },
+      "features": [
+        "crest",
+        "spots"
+      ],
+      "gear": {},
+      "card": "allow",
+      "variation": {
+        "hue": 0.015,
+        "value": 0.035,
+        "scale": 0
+      },
+      "meta": {
+        "prototype_look": "dust_quail",
+        "translation": "Standing anatomy from prototype silhouette grammar; no flight or swimming implied."
+      }
+    },
+    {
+      "id": "woodgrouse",
+      "body": "fauna_bird",
+      "shape": {
+        "breadth": 0.673076923076923,
+        "depth": 0.923076923076923,
+        "beak": 0.18,
+        "tail": 0.52,
+        "legs": 0.24
+      },
+      "palette": {
+        "hide": "#625d48",
+        "belly": "#c7bba0",
+        "dark": "#36352f",
+        "eye": "#1c2020",
+        "horn": "#d0c7ab",
+        "accent": "#b85e43"
+      },
+      "features": [
+        "fan_tail",
+        "crest"
+      ],
+      "gear": {},
+      "card": "allow",
+      "variation": {
+        "hue": 0.015,
+        "value": 0.035,
+        "scale": 0
+      },
+      "meta": {
+        "prototype_look": "woodgrouse",
+        "translation": "Standing anatomy from prototype silhouette grammar; no flight or swimming implied."
+      }
+    },
+    {
+      "id": "carrion_crow",
+      "body": "fauna_bird",
+      "shape": {
+        "breadth": 0.638888888888889,
+        "depth": 1.2222222222222223,
+        "beak": 0.4,
+        "tail": 0.46,
+        "legs": 0.32
+      },
+      "palette": {
+        "hide": "#3e424a",
+        "belly": "#c7bba0",
+        "dark": "#36352f",
+        "eye": "#1c2020",
+        "horn": "#d0c7ab",
+        "accent": "#b85e43"
+      },
+      "features": [
+        "ruff"
+      ],
+      "gear": {},
+      "card": "allow",
+      "variation": {
+        "hue": 0.015,
+        "value": 0.035,
+        "scale": 0
+      },
+      "meta": {
+        "prototype_look": "carrion_crow",
+        "translation": "Standing anatomy from prototype silhouette grammar; no flight or swimming implied."
+      }
+    },
+    {
+      "id": "reed_frog",
+      "body": "fauna_quadruped",
+      "shape": {
+        "breadth": 1.1176470588235294,
+        "depth": 1.4705882352941175,
+        "legs": 0.18,
+        "head": 0.32,
+        "snout": 0.08,
+        "ears": 0,
+        "tail": 0,
+        "rump": 1.45
+      },
+      "palette": {
+        "hide": "#7e9560",
+        "belly": "#c7bba0",
+        "dark": "#36352f",
+        "eye": "#1c2020",
+        "horn": "#d0c7ab",
+        "accent": "#b85e43"
+      },
+      "features": [
+        "frog"
+      ],
+      "gear": {},
+      "card": "allow",
+      "variation": {
+        "hue": 0.015,
+        "value": 0.035,
+        "scale": 0
+      },
+      "meta": {
+        "prototype_look": "reed_frog",
+        "translation": "Standing anatomy from prototype silhouette grammar; no flight or swimming implied."
+      }
+    },
+    {
+      "id": "snapping_terrapin",
+      "body": "fauna_quadruped",
+      "shape": {
+        "breadth": 1.2941176470588234,
+        "depth": 2.0,
+        "legs": 0.17,
+        "head": 0.22,
+        "snout": 0.15,
+        "ears": 0,
+        "tail": 0.28,
+        "rump": 1.1
+      },
+      "palette": {
+        "hide": "#7b8464",
+        "belly": "#c7bba0",
+        "dark": "#36352f",
+        "eye": "#1c2020",
+        "horn": "#d0c7ab",
+        "accent": "#b85e43"
+      },
+      "features": [
+        "shell"
+      ],
+      "gear": {},
+      "card": "allow",
+      "variation": {
+        "hue": 0.015,
+        "value": 0.035,
+        "scale": 0
+      },
+      "meta": {
+        "prototype_look": "snapping_terrapin",
+        "translation": "Standing anatomy from prototype silhouette grammar; no flight or swimming implied."
+      }
+    },
+    {
+      "id": "shore_crab",
+      "body": "fauna_crab",
+      "shape": {
+        "breadth": 1.777777777777778,
+        "depth": 1.3888888888888888,
+        "claw": 1.3
+      },
+      "palette": {
+        "hide": "#bc8c65",
+        "belly": "#c7bba0",
+        "dark": "#36352f",
+        "eye": "#1c2020",
+        "horn": "#d0c7ab",
+        "accent": "#b85e43"
+      },
+      "features": [
+        "fiddler"
+      ],
+      "gear": {},
+      "card": "allow",
+      "variation": {
+        "hue": 0.015,
+        "value": 0.035,
+        "scale": 0
+      },
+      "meta": {
+        "prototype_look": "shore_crab",
+        "translation": "Standing anatomy from prototype silhouette grammar; no flight or swimming implied."
+      }
+    },
+    {
+      "id": "land_crab",
+      "body": "fauna_crab",
+      "shape": {
+        "breadth": 1.8709677419354838,
+        "depth": 1.4838709677419355,
+        "claw": 1.0
+      },
+      "palette": {
+        "hide": "#916a52",
+        "belly": "#c7bba0",
+        "dark": "#36352f",
+        "eye": "#1c2020",
+        "horn": "#d0c7ab",
+        "accent": "#b85e43"
+      },
+      "features": [],
+      "gear": {},
+      "card": "allow",
+      "variation": {
+        "hue": 0.015,
+        "value": 0.035,
+        "scale": 0
+      },
+      "meta": {
+        "prototype_look": "land_crab",
+        "translation": "Standing anatomy from prototype silhouette grammar; no flight or swimming implied."
+      }
+    },
+    {
+      "id": "wolf",
+      "body": "fauna_quadruped",
+      "shape": {
+        "breadth": 0.4883720930232558,
+        "depth": 1.4534883720930232,
+        "legs": 0.46,
+        "head": 0.22,
+        "snout": 0.28,
+        "ears": 0.23,
+        "tail": 0.4
+      },
+      "palette": {
+        "hide": "#8d8c85",
+        "belly": "#c7bba0",
+        "dark": "#36352f",
+        "eye": "#1c2020",
+        "horn": "#d0c7ab",
+        "accent": "#b85e43"
+      },
+      "features": [
+        "ruff",
+        "brush_tail"
+      ],
+      "gear": {},
+      "card": "allow",
+      "variation": {
+        "hue": 0.015,
+        "value": 0.035,
+        "scale": 0
+      },
+      "meta": {
+        "prototype_look": "plains_wolf",
+        "translation": "Standing anatomy from prototype silhouette grammar; no flight or swimming implied."
+      }
+    },
+    {
+      "id": "boar",
+      "body": "fauna_quadruped",
+      "shape": {
+        "breadth": 0.717391304347826,
+        "depth": 1.4130434782608696,
+        "legs": 0.3,
+        "head": 0.27,
+        "snout": 0.27,
+        "ears": 0.23,
+        "tail": 0.15,
+        "rump": 1.1
+      },
+      "palette": {
+        "hide": "#77604b",
+        "belly": "#c7bba0",
+        "dark": "#36352f",
+        "eye": "#1c2020",
+        "horn": "#d0c7ab",
+        "accent": "#b85e43"
+      },
+      "features": [
+        "tusks",
+        "ridge"
+      ],
+      "gear": {},
+      "card": "allow",
+      "variation": {
+        "hue": 0.015,
+        "value": 0.035,
+        "scale": 0
+      },
+      "meta": {
+        "prototype_look": "sod_boar",
+        "translation": "Standing anatomy from prototype silhouette grammar; no flight or swimming implied."
+      }
+    },
+    {
+      "id": "grove_stag",
+      "body": "fauna_quadruped",
+      "shape": {
+        "breadth": 0.37499999999999994,
+        "depth": 0.9249999999999999,
+        "legs": 0.57,
+        "head": 0.18,
+        "ears": 0.26,
+        "tail": 0.12
+      },
+      "palette": {
+        "hide": "#94724c",
+        "belly": "#c7bba0",
+        "dark": "#36352f",
+        "eye": "#1c2020",
+        "horn": "#d0c7ab",
+        "accent": "#b85e43"
+      },
+      "features": [
+        "antlers",
+        "hooves",
+        "bib"
+      ],
+      "gear": {},
+      "card": "allow",
+      "variation": {
+        "hue": 0.015,
+        "value": 0.035,
+        "scale": 0
+      },
+      "meta": {
+        "prototype_look": "roe_deer",
+        "translation": "Standing anatomy from prototype silhouette grammar; no flight or swimming implied."
+      }
+    }
+  ]
+}

@@ -898,7 +898,8 @@
         "habitat.ruin",
         "melee",
         "beast",
-        "fauna"
+        "fauna",
+        "quest.cull"
       ],
       "faction": "remnant",
       "level": 4,

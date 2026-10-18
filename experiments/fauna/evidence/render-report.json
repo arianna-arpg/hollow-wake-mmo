@@ -1,0 +1,181 @@
+{
+  "errors": [],
+  "bodies": [
+    {
+      "id": "meadow_hare",
+      "body": "fauna_quadruped",
+      "rig": "quadruped",
+      "parts": 23,
+      "triangles": 480,
+      "height": 0.5557917466292795
+    },
+    {
+      "id": "snow_hare",
+      "body": "fauna_quadruped",
+      "rig": "quadruped",
+      "parts": 24,
+      "triangles": 500,
+      "height": 0.6137265602496135
+    },
+    {
+      "id": "gutter_rat",
+      "body": "fauna_quadruped",
+      "rig": "quadruped",
+      "parts": 21,
+      "triangles": 460,
+      "height": 0.19380816490957853
+    },
+    {
+      "id": "hedgehog",
+      "body": "fauna_quadruped",
+      "rig": "quadruped",
+      "parts": 37,
+      "triangles": 592,
+      "height": 0.217307507651812
+    },
+    {
+      "id": "red_fox",
+      "body": "fauna_quadruped",
+      "rig": "quadruped",
+      "parts": 23,
+      "triangles": 480,
+      "height": 0.5874294703021711
+    },
+    {
+      "id": "roe_deer",
+      "body": "fauna_quadruped",
+      "rig": "quadruped",
+      "parts": 37,
+      "triangles": 688,
+      "height": 1.497501796041566
+    },
+    {
+      "id": "salt_ibex",
+      "body": "fauna_quadruped",
+      "rig": "quadruped",
+      "parts": 26,
+      "triangles": 522,
+      "height": 1.6231889748406987
+    },
+    {
+      "id": "river_otter",
+      "body": "fauna_quadruped",
+      "rig": "quadruped",
+      "parts": 22,
+      "triangles": 480,
+      "height": 0.3168129501329176
+    },
+    {
+      "id": "lynx",
+      "body": "fauna_quadruped",
+      "rig": "quadruped",
+      "parts": 32,
+      "triangles": 636,
+      "height": 0.88507
+    },
+    {
+      "id": "wolverine",
+      "body": "fauna_quadruped",
+      "rig": "quadruped",
+      "parts": 24,
+      "triangles": 504,
+      "height": 0.615898790806158
+    },
+    {
+      "id": "brown_bear",
+      "body": "fauna_quadruped",
+      "rig": "quadruped",
+      "parts": 22,
+      "triangles": 484,
+      "height": 1.5353660899393897
+    },
+    {
+      "id": "plains_aurochs",
+      "body": "fauna_quadruped",
+      "rig": "quadruped",
+      "parts": 25,
+      "triangles": 508,
+      "height": 2.450559102556232
+    },
+    {
+      "id": "dust_quail",
+      "body": "fauna_bird",
+      "rig": "biped",
+      "parts": 23,
+      "triangles": 334,
+      "height": 0.3271103898783671
+    },
+    {
+      "id": "woodgrouse",
+      "body": "fauna_bird",
+      "rig": "biped",
+      "parts": 17,
+      "triangles": 262,
+      "height": 0.6266159963137795
+    },
+    {
+      "id": "carrion_crow",
+      "body": "fauna_bird",
+      "rig": "biped",
+      "parts": 17,
+      "triangles": 262,
+      "height": 0.36
+    },
+    {
+      "id": "reed_frog",
+      "body": "fauna_quadruped",
+      "rig": "quadruped",
+      "parts": 22,
+      "triangles": 492,
+      "height": 0.17924800000000002
+    },
+    {
+      "id": "snapping_terrapin",
+      "body": "fauna_quadruped",
+      "rig": "quadruped",
+      "parts": 23,
+      "triangles": 528,
+      "height": 0.34
+    },
+    {
+      "id": "shore_crab",
+      "body": "fauna_crab",
+      "rig": "crawler",
+      "parts": 25,
+      "triangles": 400,
+      "height": 0.18359999999999999
+    },
+    {
+      "id": "land_crab",
+      "body": "fauna_crab",
+      "rig": "crawler",
+      "parts": 25,
+      "triangles": 400,
+      "height": 0.3162
+    },
+    {
+      "id": "wolf",
+      "body": "fauna_quadruped",
+      "rig": "quadruped",
+      "parts": 23,
+      "triangles": 480,
+      "height": 1.0118865958889525
+    },
+    {
+      "id": "boar",
+      "body": "fauna_quadruped",
+      "rig": "quadruped",
+      "parts": 29,
+      "triangles": 508,
+      "height": 1.095262732693442
+    },
+    {
+      "id": "grove_stag",
+      "body": "fauna_quadruped",
+      "rig": "quadruped",
+      "parts": 30,
+      "triangles": 548,
+      "height": 2.1392882800593798
+    }
+  ]
+}
