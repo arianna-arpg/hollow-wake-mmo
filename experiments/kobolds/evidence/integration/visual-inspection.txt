@@ -1,0 +1,6 @@
+Inspected actual screenshots from private run-WQ1ujF.
+01_isometric.png: world, entities and UI render.
+16_cards.png: world absent; sky and UI remain. This is a failed visual check despite the smoke's behavioral pass.
+Shared card-bake viewport correction is owned by the entity/#37 author, who independently reported the same defect. No complete card-mode visual acceptance is claimed here.
+Native headless pixel checks were explicitly skipped.
+Original full-resolution screenshots remain in the ignored private run directory.

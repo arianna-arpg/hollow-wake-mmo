@@ -606,7 +606,7 @@ public sealed class WorldGenerator
         var ovr = ZoneOverride(zc);
         var planner = new ZonePlanner(this);
         var quests = planner.GenerateQuests(zc, pois);
-        var level = Math.Max(1, region.Level + (ovr is not null && ovr.PlayerStart ? 0 : 0));
+        var level = PopulationLevel(zc);
         var anySafe = false;
         PoiInstance? hub = null;
         foreach (var p in pois)
@@ -653,6 +653,9 @@ public sealed class WorldGenerator
     }
 
     // ------------------------------------------------------------ chunks
+
+    /// <summary>Population difficulty independent of quest planning, avoiding recursive chunk/zone generation.</summary>
+    internal int PopulationLevel(ZoneCoord zone) => Math.Max(1, Region(Layout.RegionOf(zone)).Level);
 
     public ChunkData GenerateChunk(ChunkCoord cc)
     {

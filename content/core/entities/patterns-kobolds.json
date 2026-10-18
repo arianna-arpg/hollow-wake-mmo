@@ -88,7 +88,7 @@
           ]
         },
         "behavior": {
-          "id": "kobold_press"
+          "id": "close_melee"
         },
         "drops": {
           "table": "kobold_salvage",
@@ -162,7 +162,7 @@
           ]
         },
         "behavior": {
-          "id": "kobold_press"
+          "id": "close_melee"
         },
         "drops": {
           "table": "kobold_salvage",
@@ -605,7 +605,7 @@
           ]
         },
         "behavior": {
-          "id": "kobold_press"
+          "id": "close_melee"
         },
         "drops": {
           "table": "kobold_salvage",
@@ -827,7 +827,7 @@
           ]
         },
         "behavior": {
-          "id": "kobold_press"
+          "id": "close_melee"
         },
         "drops": {
           "table": "kobold_salvage",
@@ -900,7 +900,7 @@
           ]
         },
         "behavior": {
-          "id": "kobold_press"
+          "id": "close_melee"
         },
         "drops": {
           "table": "kobold_salvage",
@@ -974,7 +974,7 @@
           ]
         },
         "behavior": {
-          "id": "kobold_press"
+          "id": "close_melee"
         },
         "drops": {
           "table": "kobold_salvage",
@@ -1048,7 +1048,7 @@
           ]
         },
         "behavior": {
-          "id": "kobold_press"
+          "id": "close_melee"
         },
         "drops": {
           "table": "kobold_salvage",

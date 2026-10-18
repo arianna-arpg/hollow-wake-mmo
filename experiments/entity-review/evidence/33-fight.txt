@@ -1,0 +1,25 @@
+t=1.30 Orc Ravager hit Hob for 27.5
+t=1.30 Orc Ravager cast whirling_reap at
+t=1.60 Hob hit Orc Ravager for 4.2
+t=1.60 Hob cast bite at Orc Ravager
+t=1.60 Orc Ravager's poise recharging from 35.96
+t=2.65 Hob hit Orc Ravager for 3.4
+t=2.65 Hob cast bite at Orc Ravager
+t=2.75 Orc Ravager hit Hob for 24.3
+t=2.75 Orc Ravager cast cleave at
+t=3.50 Orc Ravager's poise restored to 40
+t=3.65 Hob hit Orc Ravager for 3.2
+t=3.65 Hob cast bite at Orc Ravager
+t=3.65 Orc Ravager's poise recharging from 37
+t=4.25 Orc Ravager hit Hob for 19
+t=4.25 Orc Ravager cast cleave at
+t=4.45 Orc Ravager's poise restored to 40
+t=4.60 Hob hit Orc Ravager for 2.1
+t=4.60 Hob cast bite at Orc Ravager
+t=4.60 Orc Ravager's poise recharging from 38.09
+t=5.05 Orc Ravager hit Hob for 37.4
+t=5.05 Hob died
+t=5.05 Orc Ravager cast whirling_reap at
+t=5.10 Orc Ravager's poise restored to 40
+t=17.05 despawned hob
+orc_ravager: life 224/224   hob: life /

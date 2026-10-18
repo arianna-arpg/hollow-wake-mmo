@@ -26,7 +26,7 @@ internal sealed class ChargeHandler : IEffectHandler
 {
     public string Type => "charge";
 
-    public EffectSignature Signature { get; } = EffectSignature.Of("id", "gain", "max", "spend", "all", "drain", "self");
+    public EffectSignature Signature { get; } = EffectSignature.Of("id", "gain", "max", "spend", "all", "drain", "self").Refers("charges", "id");
 
     public CompiledEffect Compile(JsonObject p, EffectCompileContext ctx) => new Effect
     {

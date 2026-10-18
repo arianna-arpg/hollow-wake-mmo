@@ -1,6 +1,0 @@
-<Project>
-  <!-- Explicit cross-PR acceptance: #38 content plus #36 delivery. Keep out of ordinary #34-based gates. -->
-  <ItemGroup Condition="'$(MSBuildProjectName)' == 'HollowWake.Core.Tests'">
-    <Compile Include="$(MSBuildThisFileDirectory)KoboldProjectileTests.cs" />
-  </ItemGroup>
-</Project>

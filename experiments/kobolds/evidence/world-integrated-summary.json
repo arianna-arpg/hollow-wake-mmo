@@ -1,0 +1,293 @@
+{
+  "baseline": "26c50de03c62f434c517564906a54c0287b281ce",
+  "seed": "aureth",
+  "changes": [
+    {
+      "zone": "0_0",
+      "overlay": false,
+      "sites": [],
+      "nearbyRemoved": [
+        "poi.-1_1.scrap_fort.-234.294",
+        "poi.0_1.orc_chaincamp.125.310"
+      ],
+      "nearbyAdded": [
+        "poi.-1_1.ruin.-234.294",
+        "poi.0_1.kobold_scale_hold.125.310"
+      ],
+      "patterns": [],
+      "quests": []
+    },
+    {
+      "zone": "1_0",
+      "overlay": false,
+      "sites": [],
+      "nearbyRemoved": [
+        "poi.2_0.scrap_fort.655.99",
+        "poi.2_0.knot.700.231",
+        "poi.2_0.knot.543.233",
+        "poi.0_1.orc_chaincamp.125.310"
+      ],
+      "nearbyAdded": [
+        "poi.2_0.ruin.655.99",
+        "poi.2_0.ruin.723.37",
+        "poi.2_0.ruin.568.142",
+        "poi.2_0.shrine.700.231",
+        "poi.0_1.kobold_scale_hold.125.310"
+      ],
+      "patterns": [],
+      "quests": []
+    },
+    {
+      "zone": "0_0",
+      "overlay": true,
+      "sites": [],
+      "nearbyRemoved": [
+        "poi.-1_1.scrap_fort.-234.294",
+        "poi.0_1.orc_chaincamp.125.310",
+        "poi.0_1.scrap_fort.213.450"
+      ],
+      "nearbyAdded": [
+        "poi.-1_1.ruin.-234.294",
+        "poi.0_1.kobold_scale_hold.125.310",
+        "poi.0_1.ruin.213.450"
+      ],
+      "patterns": [],
+      "quests": []
+    },
+    {
+      "zone": "1_0",
+      "overlay": true,
+      "sites": [],
+      "nearbyRemoved": [
+        "poi.2_0.scrap_fort.655.99",
+        "poi.2_0.knot.700.231",
+        "poi.2_0.knot.543.233",
+        "poi.0_1.orc_chaincamp.125.310",
+        "poi.0_1.scrap_fort.213.450"
+      ],
+      "nearbyAdded": [
+        "poi.2_0.ruin.655.99",
+        "poi.2_0.ruin.723.37",
+        "poi.2_0.ruin.568.142",
+        "poi.2_0.shrine.700.231",
+        "poi.0_1.kobold_scale_hold.125.310",
+        "poi.0_1.ruin.213.450"
+      ],
+      "patterns": [],
+      "quests": []
+    }
+  ],
+  "koboldSites": [
+    {
+      "zone": "-15_-40",
+      "Id": "poi.-15_-40.kobold_scale_hold.-3654.-10123",
+      "kind": "kobold_scale_hold",
+      "Name": "Copper-Crest Hold",
+      "X": -3654.5,
+      "Y": -10123.5,
+      "siteLevel": 35,
+      "Landmark": "ruin_walls",
+      "residents": [
+        {
+          "Pattern": "ruin_chest",
+          "patternLevel": 1,
+          "spawnLevel": null,
+          "PackSize": 1
+        },
+        {
+          "Pattern": "kobold_cragbreaker",
+          "patternLevel": 10,
+          "spawnLevel": 35,
+          "PackSize": 1
+        },
+        {
+          "Pattern": "kobold_ironback",
+          "patternLevel": 11,
+          "spawnLevel": 35,
+          "PackSize": 1
+        },
+        {
+          "Pattern": "kobold_crestcaller",
+          "patternLevel": 10,
+          "spawnLevel": 35,
+          "PackSize": 1
+        },
+        {
+          "Pattern": "kobold_scalechief",
+          "patternLevel": 15,
+          "spawnLevel": 35,
+          "PackSize": 1
+        }
+      ]
+    },
+    {
+      "zone": "-8_-40",
+      "Id": "poi.-8_-40.kobold_scrap_camp.-2012.-10019",
+      "kind": "kobold_scrap_camp",
+      "Name": "Scrapscale Camp",
+      "X": -2012.5,
+      "Y": -10019.5,
+      "siteLevel": 27,
+      "Landmark": "camp_ring",
+      "residents": [
+        {
+          "Pattern": "kobold_scavenger",
+          "patternLevel": 2,
+          "spawnLevel": 27,
+          "PackSize": 1
+        },
+        {
+          "Pattern": "kobold_knifehand",
+          "patternLevel": 3,
+          "spawnLevel": 27,
+          "PackSize": 1
+        },
+        {
+          "Pattern": "kobold_dartbow",
+          "patternLevel": 4,
+          "spawnLevel": 27,
+          "PackSize": 1
+        },
+        {
+          "Pattern": "kobold_stonecaster",
+          "patternLevel": 5,
+          "spawnLevel": 27,
+          "PackSize": 1
+        }
+      ]
+    },
+    {
+      "zone": "-8_-40",
+      "Id": "poi.-8_-40.kobold_scale_hold.-1954.-10022",
+      "kind": "kobold_scale_hold",
+      "Name": "Copper-Crest Hold",
+      "X": -1954.5,
+      "Y": -10022.5,
+      "siteLevel": 31,
+      "Landmark": "ruin_walls",
+      "residents": [
+        {
+          "Pattern": "ruin_chest",
+          "patternLevel": 1,
+          "spawnLevel": null,
+          "PackSize": 1
+        },
+        {
+          "Pattern": "kobold_cragbreaker",
+          "patternLevel": 10,
+          "spawnLevel": 31,
+          "PackSize": 1
+        },
+        {
+          "Pattern": "kobold_ironback",
+          "patternLevel": 11,
+          "spawnLevel": 31,
+          "PackSize": 1
+        },
+        {
+          "Pattern": "kobold_crestcaller",
+          "patternLevel": 10,
+          "spawnLevel": 31,
+          "PackSize": 1
+        },
+        {
+          "Pattern": "kobold_scalechief",
+          "patternLevel": 15,
+          "spawnLevel": 31,
+          "PackSize": 1
+        }
+      ]
+    },
+    {
+      "zone": "-25_-31",
+      "Id": "poi.-25_-31.kobold_cinder_camp.-6178.-7721",
+      "kind": "kobold_cinder_camp",
+      "Name": "Cinderplate Camp",
+      "X": -6178.5,
+      "Y": -7721.5,
+      "siteLevel": 26,
+      "Landmark": "camp_ring",
+      "residents": [
+        {
+          "Pattern": "kobold_tunnelguard",
+          "patternLevel": 6,
+          "spawnLevel": 26,
+          "PackSize": 1
+        },
+        {
+          "Pattern": "kobold_cinderweaver",
+          "patternLevel": 7,
+          "spawnLevel": 26,
+          "PackSize": 1
+        },
+        {
+          "Pattern": "kobold_stormweaver",
+          "patternLevel": 8,
+          "spawnLevel": 26,
+          "PackSize": 1
+        }
+      ]
+    },
+    {
+      "zone": "-7_-23",
+      "Id": "poi.-7_-23.kobold_reed_camp.-1751.-5754",
+      "kind": "kobold_reed_camp",
+      "Name": "Reedspine Camp",
+      "X": -1751.5,
+      "Y": -5754.5,
+      "siteLevel": 16,
+      "Landmark": "camp_ring",
+      "residents": [
+        {
+          "Pattern": "kobold_spearguard",
+          "patternLevel": 4,
+          "spawnLevel": 16,
+          "PackSize": 1
+        },
+        {
+          "Pattern": "kobold_venomweaver",
+          "patternLevel": 6,
+          "spawnLevel": 16,
+          "PackSize": 1
+        },
+        {
+          "Pattern": "kobold_rimeweaver",
+          "patternLevel": 7,
+          "spawnLevel": 16,
+          "PackSize": 1
+        }
+      ]
+    },
+    {
+      "zone": "-7_-23",
+      "Id": "poi.-7_-23.kobold_reed_camp.-1728.-5729",
+      "kind": "kobold_reed_camp",
+      "Name": "Reedspine Camp",
+      "X": -1728.5,
+      "Y": -5729.5,
+      "siteLevel": 16,
+      "Landmark": "camp_ring",
+      "residents": [
+        {
+          "Pattern": "kobold_spearguard",
+          "patternLevel": 4,
+          "spawnLevel": 16,
+          "PackSize": 1
+        },
+        {
+          "Pattern": "kobold_venomweaver",
+          "patternLevel": 6,
+          "spawnLevel": 16,
+          "PackSize": 1
+        },
+        {
+          "Pattern": "kobold_rimeweaver",
+          "patternLevel": 7,
+          "spawnLevel": 16,
+          "PackSize": 1
+        }
+      ]
+    }
+  ],
+  "scope": "Exact #34 content snapshot versus integrated Kobold content; four reference-zone deltas and natural Kobold populations. Full probe output retained in ignored artifacts."
+}

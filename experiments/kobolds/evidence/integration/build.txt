@@ -1,0 +1,18 @@
+  Determining projects to restore...
+  All projects are up-to-date for restore.
+  HollowWake.Core -> C:\Users\John\.codex\worktrees\kobold-scaleclans\MMOARPG\src\HollowWake.Core\bin\Debug\net8.0\HollowWake.Core.dll
+  HollowWake.Protocol -> C:\Users\John\.codex\worktrees\kobold-scaleclans\MMOARPG\src\HollowWake.Protocol\bin\Debug\net8.0\HollowWake.Protocol.dll
+  HollowWake.Core.Tests -> C:\Users\John\.codex\worktrees\kobold-scaleclans\MMOARPG\tests\HollowWake.Core.Tests\bin\Debug\net10.0\HollowWake.Core.Tests.dll
+  HollowWake.Server -> C:\Users\John\.codex\worktrees\kobold-scaleclans\MMOARPG\src\HollowWake.Server\bin\Debug\net10.0\HollowWake.Server.dll
+  HollowWake.Client.Tests -> C:\Users\John\.codex\worktrees\kobold-scaleclans\MMOARPG\tests\HollowWake.Client.Tests\bin\Debug\net10.0\HollowWake.Client.Tests.dll
+  HollowWake.Server.Host.Brutal -> C:\Users\John\.codex\worktrees\kobold-scaleclans\MMOARPG\src\HollowWake.Server.Host.Brutal\bin\Debug\net10.0\hollowwake-server-brutal.dll
+  HollowWake.Server.Host -> C:\Users\John\.codex\worktrees\kobold-scaleclans\MMOARPG\src\HollowWake.Server.Host\bin\Debug\net10.0\hollowwake-server.dll
+  HollowWake.Client -> C:\Users\John\.codex\worktrees\kobold-scaleclans\MMOARPG\src\HollowWake.Client\.godot\mono\temp\bin\Debug\HollowWake.Client.dll
+  HollowWake.Tools -> C:\Users\John\.codex\worktrees\kobold-scaleclans\MMOARPG\src\HollowWake.Tools\bin\Debug\net10.0\hollowwake.dll
+  HollowWake.Server.Tests -> C:\Users\John\.codex\worktrees\kobold-scaleclans\MMOARPG\tests\HollowWake.Server.Tests\bin\Debug\net10.0\HollowWake.Server.Tests.dll
+
+Build succeeded.
+    0 Warning(s)
+    0 Error(s)
+
+Time Elapsed 00:00:05.63

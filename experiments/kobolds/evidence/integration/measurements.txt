@@ -1,0 +1,45 @@
+Test run for C:\Users\John\.codex\worktrees\kobold-scaleclans\MMOARPG\tests\HollowWake.Core.Tests\bin\Debug\net10.0\HollowWake.Core.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+C:\Users\John\.codex\worktrees\kobold-scaleclans\MMOARPG\tests\HollowWake.Core.Tests\bin\Debug\net10.0\HollowWake.Core.Tests.dll
+[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v3.1.5+1b188a7b0a (64-bit .NET 10.0.13)
+[xUnit.net 00:00:00.10]   Discovering: HollowWake.Core.Tests
+[xUnit.net 00:00:02.08]   Discovered:  HollowWake.Core.Tests
+[xUnit.net 00:00:02.12]   Starting:    HollowWake.Core.Tests
+  Passed HollowWake.Core.Tests.KoboldTests.DedicatedSitesActuallyOccurInUnmodifiedGeneratedHabitats(site: "kobold_reed_camp", x: -7, y: -23) [1 s]
+  Standard Output Messages:
+ kobold_reed_camp: zone(-7,-23), at(-1751.5,-5754.5), level 16, 3 occupied spawn points
+ kobold_reed_camp: zone(-7,-23), at(-1728.5,-5729.5), level 16, 3 occupied spawn points
+
+
+  Passed HollowWake.Core.Tests.KoboldTests.DedicatedSitesActuallyOccurInUnmodifiedGeneratedHabitats(site: "kobold_scrap_camp", x: -8, y: -40) [713 ms]
+  Standard Output Messages:
+ kobold_scrap_camp: zone(-8,-40), at(-2012.5,-10019.5), level 27, 4 occupied spawn points
+
+
+  Passed HollowWake.Core.Tests.KoboldTests.DedicatedSitesActuallyOccurInUnmodifiedGeneratedHabitats(site: "kobold_scale_hold", x: -15, y: -40) [721 ms]
+  Standard Output Messages:
+ kobold_scale_hold: zone(-15,-40), at(-3654.5,-10123.5), level 35, 4 occupied spawn points
+
+
+[xUnit.net 00:00:06.47]   Finished:    HollowWake.Core.Tests
+  Passed HollowWake.Core.Tests.KoboldTests.DedicatedSitesActuallyOccurInUnmodifiedGeneratedHabitats(site: "kobold_cinder_camp", x: -25, y: -31) [669 ms]
+  Standard Output Messages:
+ kobold_cinder_camp: zone(-25,-31), at(-6178.5,-7721.5), level 26, 3 occupied spawn points
+
+
+  Passed HollowWake.Core.Tests.KoboldTests.LightAndArmoredBodiesUseCanonicalMassAndBoundedLiveShove [20 ms]
+  Standard Output Messages:
+ kobold_scavenger: canonical mass 19.349 kg, shove scale 3.000, travel 11.956 m
+ kobold_ironback: canonical mass 148.850 kg, shove scale 0.302, travel 1.175 m
+
+
+  Passed HollowWake.Core.Tests.KoboldTests.HomeRegionHoldHasALevelSevenGuardAtBirthAndRespawnWithoutPrematureBosses [832 ms]
+  Standard Output Messages:
+ Home region hold: Tunnelguard born and respawned at site level 7
+
+
+
+Test Run Successful.
+Total tests: 6
+     Passed: 6
+ Total time: 7.0396 Seconds

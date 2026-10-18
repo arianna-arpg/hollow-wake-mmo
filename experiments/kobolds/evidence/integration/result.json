@@ -1,0 +1,52 @@
+{
+  "started": "2026-10-18T18:15:39.000Z",
+  "root": "C:\\Users\\John\\.codex\\worktrees\\kobold-scaleclans\\MMOARPG",
+  "directory": "C:\\Users\\John\\.codex\\worktrees\\kobold-scaleclans\\MMOARPG\\experiments\\kobolds\\artifacts\\integrated-smoke\\run-WQ1ujF",
+  "suite": "all",
+  "status": "passed",
+  "stages": [
+    {
+      "name": "smoke-web",
+      "status": "passed",
+      "started": "2026-10-18T18:15:40.561Z",
+      "code": 0,
+      "signal": null,
+      "passed": 30,
+      "total": 30,
+      "skipped": [],
+      "finished": "2026-10-18T18:16:58.881Z"
+    },
+    {
+      "name": "import-godot",
+      "status": "passed",
+      "started": "2026-10-18T18:16:58.883Z",
+      "code": 0,
+      "signal": null,
+      "finished": "2026-10-18T18:17:05.925Z"
+    },
+    {
+      "name": "smoke-godot",
+      "status": "passed",
+      "started": "2026-10-18T18:17:05.926Z",
+      "code": 0,
+      "signal": null,
+      "passed": 26,
+      "total": 26,
+      "skipped": [
+        "appearance rendering: headless display; geometry/card performance and readability require graphical evidence",
+        "theme rendered pixels: headless display; theme state checked above"
+      ],
+      "finished": "2026-10-18T18:17:45.931Z"
+    }
+  ],
+  "nativeRendering": "not covered by headless mode",
+  "godot": "C:\\Users\\John\\AppData\\Local\\Microsoft\\WinGet\\Packages\\GodotEngine.GodotEngine.Mono_Microsoft.Winget.Source_8wekyb3d8bbwe\\Godot_v4.7.2-stable_mono_win64\\Godot_v4.7.2-stable_mono_win64.exe",
+  "server": {
+    "tcp": 62585,
+    "url": "http://127.0.0.1:62586",
+    "name": "harness-run-WQ1ujF",
+    "data": "C:\\Users\\John\\.codex\\worktrees\\kobold-scaleclans\\MMOARPG\\experiments\\kobolds\\artifacts\\integrated-smoke\\run-WQ1ujF\\data"
+  },
+  "cleanupErrors": [],
+  "finished": "2026-10-18T18:17:46.375Z"
+}

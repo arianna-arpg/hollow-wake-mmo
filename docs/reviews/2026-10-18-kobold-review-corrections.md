@@ -35,16 +35,44 @@ Evidence: `experiments/kobolds/evidence/review-gates/`.
 - Browser: 271 tests / 34 files pass; production build passes with the inherited bundle advisory. Content validation: 0 errors, 0 warnings. Protocol check current.
 - Load: 200 ticks, 2686 entities, 281 monsters. Tunnelguard/Loosed fight records damage in both directions and a resolved kill. Native-faction AI regression is the authoritative relation proof; the CLI duel alone is not.
 - Private smoke: browser 29/29 and native 25/25, cleanupErrors empty. Native pixel checks remain explicitly skipped; the final crown extraction preserves geometry and has paired fixture checks.
-- Release benchmark: zone p95 11.007 ms, average 5.797 ms, 74.517 KB/tick; behavior 2.040 ms / 23 KB; snapshot build 1.074 ms, full/delta 27.234/8.738 KB; world chunk 0.909 ms /14.531 KB; zero system errors. Relevant budgets pass on the existing mixed benchmark.
+- Release benchmark: zone p95 11.007 ms, average 5.797 ms, 74.517 KB/tick; behavior 2.040 ms / 23 KB; snapshot build 1.074 ms, full/delta 27.234/8.738 KB; world chunk 0.909 ms /14.531 KB; zero system errors. That earlier sample exceeds the 1 ms snapshot.build budget; the previous all-budgets-passing description was incorrect. Other named budgets passed. Retain the sample and measure the integrated tree separately.
 
 The normal suite is not projectile acceptance. Run `node experiments/kobolds/test-projectiles.mjs` for the separate combined-stack gate. It makes 84 real casts, testing both Firebolt and Piercing Arrow against every authored Kobold on flat and ±0.5 m target terrain. Baseline 74 pass and 10 fail: both presets miss the five shortest bodies when downhill. The runner exits 1, with no expected-miss assertion or skipped case. #36's owner confirmed that the fix depends on its shared contact/aim work and must not be cherry-picked alone into #38. The published combined stack has now been tested successfully, as recorded below; #36 remains a separate dependency.
 
-The #31–34 owner is still preparing the corrected base, including canonical mass, bounded wall-safe shove, site-born levels, quest reachability and shared `close_melee`. The old 15.219 m shove is defect evidence, not accepted behavior; revised measurements and the behavior rebinding follow that base. Claude rereview is requested for the independent changes now and the integrated evidence when available. Do not merge while these dependencies remain open.
+At this independent checkpoint, the #31–34 owner was still preparing the corrected base, including canonical mass, bounded wall-safe shove, site-born levels, quest reachability and shared `close_melee`. The old 15.219 m shove is defect evidence, not accepted behavior. The later integration section records its corrected measurements and behavior rebinding. Claude rereview is requested for the independent changes now and the integrated evidence when available. Do not merge while these dependencies remain open.
 
 ## Published projectile correction acceptance
 
 Temporarily merged #36 commit 724c5ed57d7a6082f9c485f66b8dd7001acbe2fb into clean Kobold commit 38dce3400e284b938281c64f94224db7721e2c0b and ran the committed acceptance runner. All 84 real casts passed: both presets against all fourteen unchanged bodies on flat and ±0.5 m terrain. This resolves all ten recorded downhill misses. Full output is experiments/kobolds/evidence/review-gates/projectiles-724c5ed.txt.
 
 The temporary merge was aborted successfully. No #36 runtime commit is absorbed by #38. This is acceptance of those exact combined inputs, not an assertion that the standalone #34-based branch contains the correction. Repeat this gate after the corrected entity foundation changes those inputs. #36's own review and #20 release-policy integration remain separate prerequisites.
+
+## Corrected foundation integration ownership
+
+Consuming published #34 at 26c50de03c62f434c517564906a54c0287b281ce, including full #36 at 724c5ed. This pass resolves the shared generation-golden overlap using population evidence, switches dedicated Kobold bindings to close_melee, and strengthens Kobold mass, occupied-site birth/respawn and actual-projectile regressions. The projectile matrix becomes part of the normal core suite now that the required runtime is present. No competing foundation implementation is introduced.
+
+## Integrated behavior and functional gates
+
+Published base 26c50de is now consumed in this branch, including the full #36 correction. Melee roles bind the common close_melee definition; the duplicate Kobold behavior file is removed. Actual projectile tests moved into the normal core test assembly, and the focused runner independently passes all 84 cases. Damage contact remains the explicit cylinder fallback; this pass does not claim authored compound anatomy.
+
+Canonical mass stays 19.349 kg for Scavenger and 148.850 kg for Ironback. Requested 4 m knockback now travels 11.956 m and 1.175 m, with final scale 3.000 and 0.302. The light case is bounded by 4 × the authored cap of 3; this is a multiplier ceiling, not a universal three-metre travel limit. Species tests also prove the small body stops at placed and terrain walls, emits collision and loses its impulse.
+
+The home-region Hold has a living Tunnelguard at site level 7 both initially and after a real death/respawn. Natural Hold, Scrap, Cinder and Reed residents use levels 35, 27, 26 and 16 respectively, matching their sites rather than their pattern starting levels. Exact-group low/high eligibility, reciprocal faction combat and two-window sustained AI tests pass.
+
+World audit compares an exact archived content snapshot of 26c50de against this branch with seed aureth. All four reference-zone chunks, populations and quests match that base. Only nearby site choices change at the reference zones: the northern Chainkeeper Camp becomes Copper-Crest Hold, and the named neighboring Scrap Fort/Knot choices become ruins or a shrine. The compact before/after ledger is experiments/kobolds/evidence/world-integrated-summary.json; prior world evidence remains labeled with its old inputs. Shared quest regression confirms locally available, level-qualified targets, retaining the origin's Hob cull and level-three ruin scout.
+
+Audited hashes: origin info 033B8E3528AB9828 -> D2F6FA64DD42E7B7; eastern info 767BE9395B9E34DB -> 33C9B160B66B9604; overlay 6FD0F6CF80B497A4 -> AC3C2BFA30192BBC. All four baseline chunk hashes, the other two zone-info hashes and climate remain unchanged. Spawn-level hashing from the foundation is preserved.
+
+Evidence is under experiments/kobolds/evidence/integration/:
+
+- Solution build: zero warnings/errors. Normal tests: core 2249, server 48, native client 124, all passing. This includes the 84 projectile cases and all updated generation goldens.
+- Browser: 281 tests / 35 files pass; production build passes with its existing bundle-size advisory.
+- Validation: zero errors/warnings. Load: 100 chunks, 115 spawners, 2686 entities, 281 monsters, 200 ticks. Tunnelguard/Loosed duel resolves with mutual damage. Generated protocol current. Server loopback coverage is included above.
+- Separate measurement run: 6/6 live mass/site tests; focused projectile runner 84/84.
+- Private smoke run-WQ1ujF: browser 30/30 and native 26/26, cleanupErrors empty. Native pixels explicitly skipped. Existing native shutdown allocation warnings are retained in the log.
+
+Visual inspection is not fully passing: ordinary isometric world drawing works, but switching to cards leaves sky and UI with no world. The failing screenshot is retained as integration/card-world-missing.png. The foundation owner independently identified the shared card-bake viewport bug and is fixing it in #37; this pass does not duplicate that renderer edit. Behavioral smoke passing does not close this visual defect.
+
+Performance is pending the coordinator's assigned quiet window. No benchmark was started while other owners' comparison runs were reserved. Claude rereview, shared dependency approval and the shared visual fix remain open; do not merge this checkpoint.
 
 Acknowledged by: pending Claude rereview.

@@ -3,6 +3,7 @@ using HollowWake.Core.Combat;
 using HollowWake.Core.Components;
 using HollowWake.Core.Content;
 using HollowWake.Core.Definitions;
+using HollowWake.Core.Ecs;
 using HollowWake.Core.Maths;
 using HollowWake.Core.Movement;
 using HollowWake.Core.Patterns;
@@ -94,7 +95,7 @@ public class KoboldTests(ITestOutputHelper output)
     }
 
     [Fact]
-    public void LightAndArmoredBodiesHaveMeasuredMassAndDifferentLiveShoveDistances()
+    public void LightAndArmoredBodiesUseCanonicalMassAndBoundedLiveShove()
     {
         (double mass, float travel) Push(string pattern)
         {
@@ -103,19 +104,48 @@ public class KoboldTests(ITestOutputHelper output)
             var at = a.Sim.World.Get<Transform>(e)!;
             var start = at.Position;
             var mass = Physicality.Mass(a.Sim, e);
+            Assert.Equal(mass, a.Sim.World.Get<Stats>(e)!.Get("mass"), 8);
+            var scale = Physicality.ShoveScale(a.Sim, a.Caster, e);
+            var ceiling = a.Sim.Content.Rules.Number("physicality.shove_scale_max", 0);
+            Assert.Equal(3, ceiling);
+            Assert.InRange(scale, 0, ceiling);
             a.Run("""{"type":"move","kind":"knockback","distance":4}""", start, target: e);
             a.Tick(45);
             var travel = Vector3.Distance(start, at.Position);
-            output.WriteLine($"{pattern}: {mass:F3} kg, shove travel {travel:F3} m");
+            Assert.InRange(travel, 4 * (float)scale - .2f, 4 * (float)scale + .01f);
+            Assert.InRange(travel, 0, 4 * (float)ceiling + .01f);
+            output.WriteLine($"{pattern}: canonical mass {mass:F3} kg, shove scale {scale:F3}, travel {travel:F3} m");
             return (mass, travel);
         }
         var small = Push("kobold_scavenger");
         var heavy = Push("kobold_ironback");
         Assert.InRange(small.mass, 19, 20);
         Assert.InRange(heavy.mass, 148, 150);
-        Assert.True(small.travel > heavy.travel * 4);
+        Assert.InRange(small.travel, 11.8f, 12.01f);
+        Assert.InRange(heavy.travel, 1, 1.3f);
         Assert.InRange(CoreContent.Registry.Require<PatternDef>("kobold_scavenger").Height / 1.8, .4, .5);
         Assert.Equal(1.8, CoreContent.Registry.Require<PatternDef>("skeleton_warrior").Height, 5);
+    }
+
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public void SmallKoboldShoveStopsAtPlacedAndTerrainWalls(bool terrain)
+    {
+        var a = DeliveryArena.Create();
+        var body = a.Body(30, 10.5f, pattern: "kobold_scavenger");
+        var cell = new CellCoord(32, 10);
+        if (terrain)
+        {
+            var (chunk, index) = a.Sim.Terrain.Locate(cell);
+            chunk.Flags[index] = CellFlags.Structure | CellFlags.Blocked;
+        }
+        else a.Sim.Service<BlockedCells>().Block(cell, a.Sim.World.Create());
+        a.Run("""{"type":"move","kind":"knockback","distance":4}""", new Vector3(30, 10.5f, 0), target: body);
+        a.Tick(60);
+        Assert.InRange(a.Sim.World.Get<Transform>(body)!.Position.X, 31.5f, 31.99999f);
+        Assert.Single(a.Of<BodyCollided>(), e => e.Entity == body);
+        Assert.Equal(Vector3.Zero, a.Sim.World.Get<Motion>(body)!.Impulse);
     }
 
     [Theory]
@@ -132,9 +162,10 @@ public class KoboldTests(ITestOutputHelper output)
             content.With(new ZoneOverrideDef { Id = "ninewells", X = 0, Y = 0, Pois = { new PoiPlacement { Poi = site, X = 50, Y = 50 } } });
             var g = new WorldGenerator(content, Rng.Hash64("copper-crest-sites"));
             var placed = Assert.Single(g.Zone(new ZoneCoord(0, 0)).Pois, p => p.Def.Id == site && p.X == 50.5 && p.Y == 50.5);
-            return g.Layout.ChunksOf(new ZoneCoord(0, 0)).SelectMany(c => g.GenerateChunk(c).Spawns)
-                .Where(s => s.Group == placed.Id && s.Pattern.StartsWith("kobold_", StringComparison.Ordinal))
-                .Select(s => $"{s.Pattern}:{s.X}:{s.Y}:{s.PackSize}").ToArray();
+            var spawns = g.Layout.ChunksOf(new ZoneCoord(0, 0)).SelectMany(c => g.GenerateChunk(c).Spawns)
+                .Where(s => s.Group == placed.Id && s.Pattern.StartsWith("kobold_", StringComparison.Ordinal)).ToArray();
+            Assert.All(spawns, s => Assert.Equal(placed.Level, s.Level));
+            return spawns.Select(s => $"{s.Pattern}:{s.X}:{s.Y}:{s.PackSize}:{s.Level}").ToArray();
         }
         var high = Generate(25);
         var def = CoreContent.Registry.Require<PoiDef>(site);
@@ -150,7 +181,7 @@ public class KoboldTests(ITestOutputHelper output)
     }
 
     [Fact]
-    public void HomeRegionHoldHasALiveGuardAndNoPrematureBosses()
+    public void HomeRegionHoldHasALevelSevenGuardAtBirthAndRespawnWithoutPrematureBosses()
     {
         var content = ContentRegistry.Load(new[] { CoreContent.FindContentDir() }, out _);
         content.With(new RegionOverrideDef { Id = "hallows_home", X = 0, Y = 0, Archetype = "hallows", Level = 1, Faction = "weftmarch_compact" });
@@ -168,7 +199,17 @@ public class KoboldTests(ITestOutputHelper output)
         Assert.False(sim.World.Has<Dead>(guard));
         Assert.Equal("kobold_tunnelguard", sim.World.Get<Identity>(guard)!.Pattern);
         Assert.Equal("kobold_scaleclans", Relations.FactionOf(sim, guard));
-        output.WriteLine($"Home region hold at site level {hold.Level}: live {sim.World.Get<Identity>(guard)!.Pattern}");
+        Assert.Equal(hold.Level, sim.World.Get<Stats>(guard)!.Level);
+        var spawner = Assert.Single(sim.World.Query<Spawner>(), p => p.C1.Alive.Contains(guard)).C1;
+        Assert.Equal(hold.Level, spawner.Level);
+        sim.Service<DeathService>().Kill(sim, guard, Entity.None);
+        spawner.RespawnAt = sim.Clock.Time;
+        sim.Tick();
+        var replacement = Assert.Single(spawner.Alive);
+        Assert.NotEqual(guard, replacement);
+        Assert.Equal(hold.Level, sim.World.Get<Stats>(replacement)!.Level);
+        Assert.Equal("kobold_tunnelguard", sim.World.Get<Identity>(replacement)!.Pattern);
+        output.WriteLine($"Home region hold: Tunnelguard born and respawned at site level {hold.Level}");
     }
 
     [Theory]
@@ -181,11 +222,20 @@ public class KoboldTests(ITestOutputHelper output)
         var g = new WorldGenerator(CoreContent.Registry, Rng.Hash64("aureth"));
         var sites = g.Zone(new ZoneCoord(x, y)).Pois.Where(p => p.Def.Id == site).ToArray();
         Assert.NotEmpty(sites);
+        var sim = ZoneBuilder.CreateZone(CoreContent.Registry, g, new WorldState(new GenerationOverlays()), new ZoneCoord(x, y));
+        ZoneBuilder.LoadZone(sim);
+        sim.Tick();
         foreach (var poi in sites)
         {
-        output.WriteLine($"{site}: zone({x},{y}), at({poi.X},{poi.Y}), level {poi.Level}");
-        Assert.Contains(g.Layout.ChunksOf(poi.Zone).SelectMany(c => g.GenerateChunk(c).Spawns),
-            s => s.Pattern.StartsWith("kobold_", StringComparison.Ordinal) && s.Group == poi.Id);
+            var spawns = g.Layout.ChunksOf(poi.Zone).SelectMany(c => g.GenerateChunk(c).Spawns)
+                .Where(s => s.Pattern.StartsWith("kobold_", StringComparison.Ordinal) && s.Group == poi.Id).ToArray();
+            Assert.NotEmpty(spawns);
+            Assert.All(spawns, s => Assert.Equal(poi.Level, s.Level));
+            var residents = sim.World.Query<Spawner>().Where(p => p.C1.Group == poi.Id && p.C1.Pattern.StartsWith("kobold_", StringComparison.Ordinal))
+                .SelectMany(p => p.C1.Alive).ToArray();
+            Assert.NotEmpty(residents);
+            Assert.All(residents, e => Assert.Equal(poi.Level, sim.World.Get<Stats>(e)!.Level));
+            output.WriteLine($"{site}: zone({x},{y}), at({poi.X},{poi.Y}), level {poi.Level}, {spawns.Length} occupied spawn points");
         }
     }
 }

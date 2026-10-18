@@ -36,12 +36,12 @@ public class WorldGenGoldenTests
         Assert.Equal(new ZoneCoord(0, 0), g.StartZone());
     }
 
-    // Kobold weighted choices/spacing change nearby POIs: reviewed maps and named deltas in experiments/kobolds/evidence.
+    // Corrected foundation plus Kobold choices/spacing: named nearby-site deltas in experiments/kobolds/evidence/world-integrated-summary.json.
     [Theory]
-    [InlineData(0, 0, "F2D38CBA6DA8F4FE", "B4967CED570DD0B6")]
-    [InlineData(1, 0, "7DA328DBE04A00D6", "6615F2EDE81806A7")]
-    [InlineData(0, -1, "F75575B10A717024", "44FDA182BF6A81C9")]
-    [InlineData(3, 2, "1874A91D377C8208", "15C99D20020E2BF4")]
+    [InlineData(0, 0, "D2F6FA64DD42E7B7", "384BA03BE0D34C0A")]
+    [InlineData(1, 0, "33C9B160B66B9604", "DF735AA7610989B3")]
+    [InlineData(0, -1, "8AD7370958FA7D7B", "D785D8F084A1F919")]
+    [InlineData(3, 2, "BAFEA2C1CCA0DEC0", "8C46ACF595DB3A42")]
     public void ZoneMatchesGoldenHashes(int x, int y, string infoHash, string chunksHash)
     {
         var g = new WorldGenerator(Registry.Value, Rng.Hash64(Seed));
@@ -101,7 +101,7 @@ public class WorldGenGoldenTests
         {
             HashPoint(h, g, 40 + i * 0.83, 20 + i * 0.61, i % 20 == 0);
         }
-        Golden("overlaid world", "8C8F35229AE37C99", h.Hex);
+        Golden("overlaid world", "AC3C2BFA30192BBC", h.Hex);
 
         // Removing an overlay must regenerate exactly what a generator that never had it produces.
         overlays.Remove("fount");
@@ -334,6 +334,7 @@ public class WorldGenGoldenTests
             h.I32(s.PackSize);
             h.F64(s.RespawnSeconds);
             h.Str(s.Group);
+            h.I32(s.Level ?? 0);
         }
         h.I32(c.Flora.Count);
         foreach (var f in c.Flora)

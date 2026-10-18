@@ -2,6 +2,7 @@ using HollowWake.Client.UI.Logic;
 using HollowWake.Core.Content;
 using HollowWake.Core.Definitions;
 using HollowWake.Core.Tags;
+using HollowWake.Protocol;
 
 namespace HollowWake.Client.World.Logic;
 
@@ -235,6 +236,61 @@ public sealed class AppearanceCatalog
             }
         }
         return gear;
+    }
+
+    /// <summary>
+    /// What a body wears, in order of preference: the owner's own equipment (the self's body, from its self state),
+    /// the public descriptor the server sends for a player (<see cref="EntityState.Appearance"/>), else the defaults
+    /// of <see cref="DefaultGear"/>. Present equipment or a descriptor is authoritative even when empty.
+    /// Only absence falls back to defaults, as for a server that predates the descriptor.
+    /// </summary>
+    public IReadOnlyDictionary<string, (string? Class, IEnumerable<string> Tags)> WornBy(AppearanceDef body, string? patternId, IReadOnlyList<string>? appearance, IReadOnlyDictionary<string, ItemInfo>? selfEquipment)
+    {
+        if (selfEquipment is not null)
+        {
+            var own = new Dictionary<string, (string? Class, IEnumerable<string> Tags)>(StringComparer.Ordinal);
+            foreach (var (slot, item) in selfEquipment)
+            {
+                var fromBase = ItemLook(item.Base);
+                own[slot] = (item.Class ?? fromBase?.Class, fromBase?.Tags ?? Array.Empty<string>());
+            }
+            return own;
+        }
+        if (appearance is not null)
+        {
+            return WornFromDescriptor(appearance);
+        }
+        return DefaultGear(body, patternId);
+    }
+
+    /// <summary>
+    /// The gear a public appearance descriptor says a player wears (docs/design/networking-and-persistence.md): one
+    /// entry per slot, <c>slot=class tag tag ...</c>, the class split as an entry's own gear is so its trailing word
+    /// reads as a tag. Entries without a slot or a class are skipped.
+    /// </summary>
+    public static IReadOnlyDictionary<string, (string? Class, IEnumerable<string> Tags)> WornFromDescriptor(IEnumerable<string> appearance)
+    {
+        var worn = new Dictionary<string, (string? Class, IEnumerable<string> Tags)>(StringComparer.Ordinal);
+        foreach (var entry in appearance)
+        {
+            var eq = entry.IndexOf('=');
+            if (eq <= 0)
+            {
+                continue;
+            }
+            var words = entry[(eq + 1)..].Split(' ', StringSplitOptions.RemoveEmptyEntries);
+            if (words.Length == 0)
+            {
+                continue;
+            }
+            var tags = new List<string>(SplitClass(words[0]));
+            for (var i = 1; i < words.Length; i++)
+            {
+                tags.Add(words[i]);
+            }
+            worn[entry[..eq]] = (words[0], tags);
+        }
+        return worn;
     }
 
     private IEnumerable<PatternDef> Chain(PatternDef pattern)

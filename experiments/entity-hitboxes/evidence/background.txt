@@ -1,0 +1,9 @@
+TEST evidence: C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\artifacts\testing\run-9cvP6Q
+TEST build-server; evidence: C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\artifacts\testing\run-9cvP6Q
+TEST typecheck-web; evidence: C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\artifacts\testing\run-9cvP6Q
+TEST build-web; evidence: C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\artifacts\testing\run-9cvP6Q
+TEST build-godot; evidence: C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\artifacts\testing\run-9cvP6Q
+TEST smoke-web; evidence: C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\artifacts\testing\run-9cvP6Q
+TEST import-godot; evidence: C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\artifacts\testing\run-9cvP6Q
+TEST smoke-godot; evidence: C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\artifacts\testing\run-9cvP6Q
+TEST PASSED; report: C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\artifacts\testing\run-9cvP6Q\result.json

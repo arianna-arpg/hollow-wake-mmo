@@ -14,7 +14,8 @@ import {
   type WebGLRenderer,
 } from 'three';
 import type { EntityPaletteSettings, MotionSettings } from '../config';
-import type { EntityState, Int64, ItemInfo } from '../net/protocol';
+import type { EntityState, Int64, ItemInfo, HitBodyInfo } from '../net/protocol';
+import { HitBodyDebug } from './hitBodies';
 import type { Obj } from '../ui/logic/content';
 import { animate, freshVisualState, Pose, type VisualState } from './appearance/animator';
 import { buildBody } from './appearance/bodyFamilies';
@@ -22,7 +23,7 @@ import { BodyMesh, type BodyView } from './appearance/bodyMesh';
 import type { BodyPlan } from './appearance/bodyPlan';
 import { CardAtlas, CardBaker, CardView } from './appearance/cards';
 import { lay, wear } from './appearance/gearFamilies';
-import { AppearanceCatalog, type AppearanceDef, type ItemLook } from './appearance/looks';
+import { AppearanceCatalog, type AppearanceDef } from './appearance/looks';
 import { ContactMark, markStyle } from './appearance/marks';
 import { linearColor } from './colors';
 import { toThree, type CorePoint } from './coords';
@@ -100,19 +101,24 @@ export function shapeColor(s: EntityState, palette: EntityPaletteSettings): stri
   return palette.factions[s.faction ?? ''] ?? palette.projectile;
 }
 
-function shapeFor(s: EntityState, palette: EntityPaletteSettings): ShapeBody {
+function shapeFor(s: EntityState, palette: EntityPaletteSettings, precise = false): ShapeBody {
   const look = lookOf(s);
   const spec = specOf(s.shape ?? 'circle', s.shape_size, Math.max(0.1, s.radius));
   const kind = look === 'telegraph' ? 'telegraph' : look === 'projectile' || s.pattern === 'projectile' ? 'projectile' : 'area';
-  const thickness = kind === 'projectile' ? r2(Math.min(0.4, Math.max(0.12, s.height * 0.4))) : 0;
+  const thickness = kind === 'projectile' ? (precise ? s.height : r2(Math.min(.4,Math.max(.12,s.height*.4)))) : 0;
   return {
     key: `shape:${spec.name}:${r2(spec.radius)}:${r2(spec.angle)}:${r2(spec.width)}:${r2(spec.inner)}:${thickness}`,
     build: () => shapeGeometry(spec, thickness),
     color: shapeColor(s, palette),
     opacity: kind === 'telegraph' ? palette.telegraphOpacity : kind === 'projectile' ? 1 : palette.fieldOpacity,
-    lift: kind === 'projectile' ? Math.max(0.1, s.height * 0.5) - thickness / 2 : kind === 'telegraph' ? 0.07 : 0.05,
+    lift: kind === 'projectile' ? (precise ? 0 : Math.max(.1,s.height*.5)) - thickness / 2 : kind === 'telegraph' ? 0.07 : 0.05,
     telegraph: kind === 'telegraph',
   };
+}
+
+/** What a state says a player wears; presence also changes the body when legacy defaults become an empty outfit. */
+export function appearanceKey(s: EntityState): string {
+  return s.appearance === undefined ? '' : `:${s.appearance.join('|')}`;
 }
 
 /** The label line over a body, as the desktop client writes it. */
@@ -179,7 +185,10 @@ export class AppearanceService {
     return this.catalog.resolve(s.look ?? s.pattern, s.pattern);
   }
 
-  /** A built plan for an entity with the gear it wears: the self's own equipment, a monster's grants, a Calling's kit. */
+  /**
+   * A built plan for an entity with the gear it wears: the self's own equipment, another player's public appearance
+   * from the wire, a monster's grants, a Calling's kit (AppearanceCatalog.wornBy).
+   */
   planFor(s: EntityState, look: AppearanceDef, isSelf: boolean, key: number | string): { plan: BodyPlan; gearKey: string } {
     const plan = buildBody(look, key, s.height, s.radius);
     let gearKey = look.id;
@@ -191,15 +200,7 @@ export class AppearanceService {
         gearKey += `+${gear.id}`;
       }
     } else if (plan.sockets.size > 0) {
-      const worn = new Map<string, ItemLook>(this.catalog.defaultGear(look, s.pattern));
-      const equipment = isSelf ? this.selfEquipment?.() : undefined;
-      if (equipment) {
-        worn.clear();
-        for (const [slot, item] of Object.entries(equipment)) {
-          const fromBase = this.catalog.itemLook(item.base);
-          worn.set(slot, { itemClass: item.class ?? fromBase?.itemClass ?? null, tags: fromBase?.tags ?? [] });
-        }
-      }
+      const worn = this.catalog.wornBy(look, s.pattern, s.is_player ? s.appearance : undefined, isSelf ? this.selfEquipment?.() : undefined);
       for (const slot of [...worn.keys()].sort()) {
         const item = worn.get(slot)!;
         const gear = this.catalog.gearFor(slot, item.itemClass, item.tags);
@@ -237,6 +238,7 @@ export class AppearanceService {
 }
 
 export class EntityView {
+  private hitDebug: HitBodyDebug | null = null;
   readonly root = new Group();
   readonly label: HTMLDivElement;
   private readonly nameEl: HTMLDivElement;
@@ -355,7 +357,8 @@ export class EntityView {
       this.bornServer = this.layer.serverNow;
     }
     const rebuild = snap || state.look !== previous.look || Math.abs(state.height - previous.height) > 0.01 || (state.interactable == null) !== (previous.interactable == null)
-      || state.shape !== previous.shape || JSON.stringify(state.shape_size) !== JSON.stringify(previous.shape_size) || state.faction !== previous.faction;
+      || state.shape !== previous.shape || JSON.stringify(state.shape_size) !== JSON.stringify(previous.shape_size) || state.faction !== previous.faction
+      || appearanceKey(state) !== appearanceKey(previous);
     if (rebuild) {
       this.rebuild();
     }
@@ -437,7 +440,7 @@ export class EntityView {
 
   private equipmentKey(): string {
     const equipment = this.layer.appearance.selfEquipment?.();
-    return equipment ? Object.entries(equipment).sort(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0)).map(([slot, item]) => `${slot}:${item.base}`).join(',') : '';
+    return equipment ? ':' + Object.entries(equipment).sort(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0)).map(([slot, item]) => `${slot}:${item.base}`).join(',') : '';
   }
 
   /** The self's worn gear changed: its body is built again with it. */
@@ -451,7 +454,7 @@ export class EntityView {
     const s = this.state;
     this.pickSize = null;
     this.dropBody();
-    const shape = shapeFor(s, this.layer.palette);
+    const shape = shapeFor(s, this.layer.palette, this.layer.preciseProjectileSlabs);
     const opacity = s.dead ? Math.min(shape.opacity, this.layer.palette.deadOpacity) : shape.opacity;
     let material: MeshLambertMaterial | MeshBasicMaterial = this.layer.material(shape.color, opacity);
     if (shape.telegraph) {
@@ -547,6 +550,12 @@ export class EntityView {
   }
 
   frame(dt: number, localSeconds: number, renderServerTime: number, motion: MotionSettings): void {
+    if(this.layer.showHitBodies && this.layer.hitBodyCatalog && hasResources(this.state) && !this.state.dead) {
+      if(!this.hitDebug) { this.hitDebug=new HitBodyDebug(); this.layer.group.add(this.hitDebug.group); }
+      this.hitDebug.group.visible=true;
+      this.hitDebug.update(this.state,this.layer.hitBodyCatalog);
+      this.label.title='Cyan: server hit body. Yellow: movement clearance. Missing cyan: unknown volume.';
+    } else if(this.hitDebug) this.hitDebug.group.visible=false;
     if (this.fade !== null) {
       // A telegraph fades in, breathes while its strike is coming, its fill growing from the anchor to the whole
       // mark as the server time nears its until, and fades out once it lands or its time is up.
@@ -738,6 +747,7 @@ export class EntityView {
 
   dispose(): void {
     this.label.remove();
+    this.hitDebug?.dispose();
     this.fade?.dispose();
     this.fillMaterial?.dispose();
     this.body?.dispose();
@@ -745,6 +755,9 @@ export class EntityView {
 }
 
 export class EntityLayer {
+  hitBodyCatalog: Map<string, HitBodyInfo> | null = null;
+  preciseProjectileSlabs = false;
+  showHitBodies = false;
   readonly group = new Group();
   readonly views = new Map<Int64, EntityView>();
   selfKey: Int64 | null = null;

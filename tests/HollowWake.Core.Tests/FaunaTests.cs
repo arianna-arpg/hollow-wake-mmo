@@ -73,6 +73,34 @@ public class FaunaTests
     }
 
     [Fact]
+    public void InjuredStationaryPreyReachesDefenceThroughItsOrdinaryTransitions()
+    {
+        var a=MinionArena.Create();
+        a.OwnerStats.Attributes.SetBase("life.max",100000); a.OwnerStats.FillResources();
+        var fox=a.Foe("red_fox",new Vector3(21,20,0),thinks:true);
+        var stats=a.Sim.World.Get<Stats>(fox)!;
+        stats.Attributes.SetBase("move.speed",0);
+        stats.SetResource("life",1);
+        var states=new HashSet<string>();
+        for(var i=0;i<150;i++)
+        {
+            a.Sim.Tick();
+            states.Add(a.Sim.World.Get<Behavior>(fox)!.State);
+        }
+        Assert.Contains("flee",states);
+        Assert.Contains("fight",states);
+        Assert.True(a.Hit(fox,a.Owner));
+    }
+
+    [Fact]
+    public void GroveStagRetainsAmbientRarityPolicy()
+    {
+        var tags=CoreContent.Registry.Require<PatternDef>("grove_stag").Tags;
+        Assert.True(tags.Has("ambient"));
+        Assert.False(tags.Has("monster"));
+    }
+
+    [Fact]
     public void CullContractsOptIntoCombatantsAndNeverAmbientCritters()
     {
         var tags = CoreContent.Registry.Require<QuestTemplateDef>("cull_beasts").Slots["beast"].PatternTags;
@@ -99,10 +127,11 @@ public class FaunaTests
             a.Tick(45);
             return (mass,Vector3.Distance(start,a.Sim.World.Get<Transform>(e)!.Position));
         }
-        var hare=Push("meadow_hare"); var wolf=Push("wolf"); var boar=Push("boar");
+        var hare=Push("meadow_hare"); var fox=Push("red_fox"); var wolf=Push("wolf"); var boar=Push("boar");
         var bear=Push("brown_bear"); var ox=Push("plains_aurochs");
-        Assert.True(hare.mass < wolf.mass && wolf.mass < boar.mass && boar.mass < bear.mass && bear.mass < ox.mass);
+        Assert.True(hare.mass < fox.mass && fox.mass < wolf.mass && wolf.mass < boar.mass && boar.mass < bear.mass && bear.mass < ox.mass);
         Assert.True(hare.travel > wolf.travel && wolf.travel > boar.travel && boar.travel > bear.travel && bear.travel > ox.travel);
+        Assert.True(fox.travel >= wolf.travel);
         Assert.Equal(boar,Push("boar"));
     }
 
