@@ -175,6 +175,58 @@ public class FreeShotGroundFloorTests(ITestOutputHelper output)
         }
         Assert.Fail("Expected a range-driven return after the piercing contacts.");
     }
+    [Theory]
+    [InlineData("gnasher_whelp", -.125f)]
+    [InlineData("gnasher_whelp", 0)]
+    [InlineData("gnasher_whelp", .125f)]
+    [InlineData("reed_gnasher", 0)]
+    public void FreeGlaiveKeepsDescendingAfterPiercingAnEarlierBody(string pattern, float slope)
+    {
+        var a = Arena(slope);
+        var first = a.Body(12, 10, pattern: "goblin_skirmisher");
+        var later = a.Body(15, 10, pattern: pattern);
+        foreach (var body in new[] { first, later })
+        {
+            var stats = a.Sim.World.Get<Stats>(body)!;
+            stats.Attributes.SetBase("life.max", 100000);
+            stats.FillResources();
+        }
+        var flights = Capture(a);
+        Press(a, "stone_glaive", 6);
+        var outward = new HashSet<Entity>();
+        a.Sim.Events.Subscribe<DamageDealt>(hit =>
+        {
+            if (flights.Count == 1 && !flights[0].Returning) outward.Add(hit.Target);
+        });
+        a.Tick(150);
+        var p = Assert.Single(flights);
+        output.WriteLine($"free glaive/{pattern}/{slope}: outward={string.Join(',', outward)}, raw={p.Velocity}");
+        Assert.Contains(first, outward);
+        Assert.Contains(later, outward);
+        Assert.Single(a.Events.OfType<ProjectileReturned>());
+    }
+
+    [Theory]
+    [InlineData(-.125f)]
+    [InlineData(0)]
+    [InlineData(.125f)]
+    public void HoveredGlaiveStillReturnsWhenItsTargetMovesAside(float slope)
+    {
+        var a = Arena(slope);
+        var target = a.Body(13, 10, pattern: "gnasher_whelp");
+        var flights = Capture(a);
+        Press(a, "stone_glaive", 3, target);
+        for (var i = 0; i < 40 && flights.Count == 0; i++) a.Tick();
+        var p = Assert.Single(flights);
+        var body = a.Sim.World.Get<Transform>(target)!;
+        body.Position += new Vector3(0, 4, 0);
+        a.Sim.Spatial.Update(target, body.Position);
+        a.Tick(150);
+        Assert.DoesNotContain(a.Events.OfType<DamageDealt>(), hit => hit.Target == target);
+        Assert.True(p.Traveled >= p.Range, $"Missed flight stopped at {p.Traveled} of {p.Range}");
+        Assert.Single(a.Events.OfType<ProjectileTurned>());
+        Assert.Single(a.Events.OfType<ProjectileReturned>());
+    }
     private static DeliveryArena Arena(float slope)
     {
         var a = DeliveryArena.Create(seed: 481);

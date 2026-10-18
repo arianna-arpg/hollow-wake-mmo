@@ -655,6 +655,15 @@ public sealed partial class WeaveRuntime
 
     private bool ValidateTarget(Simulation sim, Entity caster, Stats stats, CompiledWeave weave, ref Entity target, ref Vector3 point, ref Vector2 direction, out string reason)
     {
+        if (!float.IsFinite(point.X) || !float.IsFinite(point.Y) || !float.IsFinite(point.Z) ||
+            !float.IsFinite(direction.X) || !float.IsFinite(direction.Y))
+        {
+            reason = "invalid_aim";
+            return false;
+        }
+        if (weave.Targeting == Targeting.Ground) point = sim.Terrain.AimGroundAt(point);
+        else if (weave.Targeting == Targeting.Direction)
+            point = sim.World.TryGet<Transform>(target, out var focus) ? point with { Z = focus.Position.Z } : sim.Terrain.AimGroundAt(point);
         if (weave.Form.Target is { } spec)
         {
             return ValidateKind(sim, caster, stats, weave, spec, ref target, ref point, ref direction, out reason);
@@ -707,7 +716,7 @@ public sealed partial class WeaveRuntime
                         // Clamp to range instead of refusing: feels better for click casting.
                         var dir = new Vector2(point.X - ct.Position.X, point.Y - ct.Position.Y) / d;
                         point = new Vector3(ct.Position.X + dir.X * (float)range, ct.Position.Y + dir.Y * (float)range, point.Z);
-                        point = sim.Terrain.SnapToGround(point, 3);
+                        point = sim.Terrain.AimGroundAt(point);
                     }
                 }
                 return true;
@@ -1485,7 +1494,7 @@ public sealed partial class WeaveRuntime
         }
         if (book.AimPoint is { } point && weave.Targeting is Targeting.Ground or Targeting.Direction)
         {
-            cast.Point = point;
+            cast.Point = sim.Terrain.AimGroundAt(point);
             cast.AimOffset = Vector3.Zero;
             if (weave.Targeting == Targeting.Direction && (book.AimDirection is null) && sim.World.TryGet<Transform>(caster, out var t))
             {
@@ -1661,7 +1670,7 @@ public sealed partial class WeaveRuntime
                 point = new Vector3(t.Position.X + (point.X - t.Position.X) * k, t.Position.Y + (point.Y - t.Position.Y) * k, point.Z);
             }
         }
-        book.AimPoint = point;
+        book.AimPoint = sim.Terrain.AimGroundAt(point);
         book.AimDirection = direction.LengthSquared() > 1e-6f ? Vector2.Normalize(direction) : null;
         book.AimAt = now;
         if (book.Casting is { } cast)

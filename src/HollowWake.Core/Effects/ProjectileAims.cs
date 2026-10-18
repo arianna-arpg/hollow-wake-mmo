@@ -4,7 +4,7 @@ using HollowWake.Core.Combat;
 namespace HollowWake.Core.Effects;
 
 /// <summary>A registered launch aim and optional terrain-relative floor for its outward flight.</summary>
-public sealed record ProjectileAim(Func<EffectContext, Vector3?> Point, Func<EffectContext, float?>? GroundFloor = null);
+public sealed record ProjectileAim(Func<EffectContext, Vector3?> Point, Func<EffectContext, float?>? GroundFloor = null, bool ReturnGroundFloor = false);
 
 /// <summary>Authored launch elevation choices. These choose a point, never acquire or lock a victim.</summary>
 public static class ProjectileAims
@@ -13,7 +13,7 @@ public static class ProjectileAims
     {
         ["horizontal"] = new(_ => null),
         ["target"] = new(c => BodyAim(c) ?? (FreeGroundAim(c) ? c.Point : null),
-            c => FreeGroundAim(c) ? (float)c.Sim.Content.Rules.Number("delivery.projectile_ground_floor", 0) : null),
+            c => FreeGroundAim(c) ? (float)c.Sim.Content.Rules.Number("delivery.projectile_ground_floor", 0) : null, ReturnGroundFloor: true),
         ["point"] = new(c => BodyAim(c) ?? c.Point),
     };
     private static bool FreeGroundAim(EffectContext c) => c.LaunchLift is null && BodyAim(c) is null;
