@@ -32,13 +32,6 @@ public sealed class WeaveSlot
     /// <summary>Scopes the weave runtime keeps for the compiled weave and its caster. A cache, not state.</summary>
     internal Weaves.WeaveSlotCache? RuntimeCache;
 
-    /// <summary>
-    /// The body casts from this seat run as when it is not the caster, and the share of damage they deal: an
-    /// echo's copy of its owner's weave. Null for a seat that casts as its bearer (or, for a construct that
-    /// inherits its caster, as its owner).
-    /// </summary>
-    internal CastOrigin? Origin { get; init; }
-
     /// <summary>Glyphs grafted onto this seat by the caster's <c>glyph.slot{n}.{glyph}</c> attributes, as of the last arming.</summary>
     internal IReadOnlyList<GlyphRef>? Grafts;
 
@@ -63,9 +56,6 @@ public sealed class WeaveSlot
     /// </summary>
     public IReadOnlyList<Weaves.DormantGlyph> Dormant { get; internal set; } = Array.Empty<Weaves.DormantGlyph>();
 }
-
-/// <summary>Who a seat's casts run as, with that body's numbers and credit, and the share of damage they deal.</summary>
-internal readonly record struct CastOrigin(Entity Source, double DamageScale);
 
 /// <summary>The names the weave runtime keeps in <see cref="WeaveSlot.State"/>.</summary>
 public static class SlotState

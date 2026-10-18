@@ -22,6 +22,3 @@ public sealed record MoveDirIntent(Vector2 Direction) : IIntent;
 public sealed record StopIntent : IIntent;
 
 public sealed record JumpIntent : IIntent;
-
-/// <summary>Turns the sender toward a point on the ground; a point under its feet leaves the facing as it is.</summary>
-public sealed record FaceIntent(Vector3 Point) : IIntent;
