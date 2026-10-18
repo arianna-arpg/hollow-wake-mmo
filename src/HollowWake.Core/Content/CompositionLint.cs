@@ -231,7 +231,7 @@ public sealed class CompositionLint
     /// one. A {parameter} placeholder names the holder attribute through a sibling value of the same node.
     /// </summary>
     public static string? FallbackAttribute(string type, string parameter) =>
-        AxisBindings.Of(type, parameter).FirstOrDefault(binding => binding.Role == AttributeRole.Fallback)?.Attribute;
+        AxisBindings.FallbackOf(type, parameter)?.Attribute;
     private static readonly Regex Placeholder = new(@"\{(\w+)\}", RegexOptions.CultureInvariant);
 
     /// <summary>An attribute with its placeholders filled from the node's parameters; a placeholder the node cannot fill stays.</summary>

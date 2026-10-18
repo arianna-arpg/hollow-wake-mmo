@@ -1,0 +1,61 @@
+  Determining projects to restore...
+  All projects are up-to-date for restore.
+  HollowWake.Core -> <worktree>\src\HollowWake.Core\bin\Release\net8.0\HollowWake.Core.dll
+  HollowWake.Protocol -> <worktree>\src\HollowWake.Protocol\bin\Release\net8.0\HollowWake.Protocol.dll
+  HollowWake.Server -> <worktree>\src\HollowWake.Server\bin\Release\net10.0\HollowWake.Server.dll
+  HollowWake.Tools -> <worktree>\src\HollowWake.Tools\bin\Release\net10.0\hollowwake.dll
+  HollowWake.Core.Tests -> <worktree>\tests\HollowWake.Core.Tests\bin\Release\net10.0\HollowWake.Core.Tests.dll
+Test run for <worktree>\tests\HollowWake.Core.Tests\bin\Release\net10.0\HollowWake.Core.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+[xUnit.net 00:00:02.43]     HollowWake.Core.Tests.AimWrapperElevationTests.TurningRetainedAnatomyDoesNotRetargetAnAlreadyCommittedDirection(retainedTarget: True, degrees: 30) [FAIL]
+[xUnit.net 00:00:02.43]     HollowWake.Core.Tests.AimWrapperElevationTests.TurningRetainedAnatomyDoesNotRetargetAnAlreadyCommittedDirection(retainedTarget: True, degrees: -30) [FAIL]
+[xUnit.net 00:00:02.43]     HollowWake.Core.Tests.AimWrapperElevationTests.TurningRetainedAnatomyDoesNotRetargetAnAlreadyCommittedDirection(retainedTarget: True, degrees: 0) [FAIL]
+  Failed HollowWake.Core.Tests.AimWrapperElevationTests.TurningRetainedAnatomyDoesNotRetargetAnAlreadyCommittedDirection(retainedTarget: True, degrees: 30) [1 ms]
+  Error Message:
+   Assert.Equal() Failure: Values are not within 5 decimal places
+Expected: 0.74490999999999996 (rounded from 0.74491323563743761)
+Actual:   0.52359999999999995 (rounded from 0.52359879016876221)
+  Stack Trace:
+     at HollowWake.Core.Tests.AimWrapperElevationTests.TurningRetainedAnatomyDoesNotRetargetAnAlreadyCommittedDirection(Boolean retainedTarget, Int32 degrees) in <worktree>\tests\HollowWake.Core.Tests\AimWrapperElevationTests.cs:line 181
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeDirectByRefWithFewArgs(Object obj, Span`1 copyOfArgs, BindingFlags invokeAttr)
+  Failed HollowWake.Core.Tests.AimWrapperElevationTests.TurningRetainedAnatomyDoesNotRetargetAnAlreadyCommittedDirection(retainedTarget: True, degrees: -30) [< 1 ms]
+  Error Message:
+   Assert.Equal() Failure: Values are not within 5 decimal places
+Expected: -0.30227999999999999 (rounded from -0.30228431555916002)
+Actual:   -0.52359999999999995 (rounded from -0.52359879016876221)
+  Stack Trace:
+     at HollowWake.Core.Tests.AimWrapperElevationTests.TurningRetainedAnatomyDoesNotRetargetAnAlreadyCommittedDirection(Boolean retainedTarget, Int32 degrees) in <worktree>\tests\HollowWake.Core.Tests\AimWrapperElevationTests.cs:line 181
+   at InvokeStub_AimWrapperElevationTests.TurningRetainedAnatomyDoesNotRetargetAnAlreadyCommittedDirection(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Failed HollowWake.Core.Tests.AimWrapperElevationTests.TurningRetainedAnatomyDoesNotRetargetAnAlreadyCommittedDirection(retainedTarget: True, degrees: 0) [< 1 ms]
+  Error Message:
+   Assert.Equal() Failure: Values are not within 5 decimal places
+Expected: 0.22131000000000001 (rounded from 0.22131446003913879)
+Actual:   0 (rounded from 0)
+  Stack Trace:
+     at HollowWake.Core.Tests.AimWrapperElevationTests.TurningRetainedAnatomyDoesNotRetargetAnAlreadyCommittedDirection(Boolean retainedTarget, Int32 degrees) in <worktree>\tests\HollowWake.Core.Tests\AimWrapperElevationTests.cs:line 181
+   at InvokeStub_AimWrapperElevationTests.TurningRetainedAnatomyDoesNotRetargetAnAlreadyCommittedDirection(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:02.50]     HollowWake.Core.Tests.AimWrapperElevationTests.IdentitySupportHitsRetainedOffsetAnatomyLikeThePlainChild(wrapped: True, stalePoint: False) [FAIL]
+[xUnit.net 00:00:02.50]     HollowWake.Core.Tests.AimWrapperElevationTests.IdentitySupportHitsRetainedOffsetAnatomyLikeThePlainChild(wrapped: True, stalePoint: True) [FAIL]
+  Failed HollowWake.Core.Tests.AimWrapperElevationTests.IdentitySupportHitsRetainedOffsetAnatomyLikeThePlainChild(wrapped: True, stalePoint: False) [< 1 ms]
+  Error Message:
+   Assert.Equal() Failure: Values are not within 5 decimal places
+Expected: 0.22131 (rounded from 0.22131446)
+Actual:   0 (rounded from 0)
+  Stack Trace:
+     at HollowWake.Core.Tests.AimWrapperElevationTests.IdentitySupportHitsRetainedOffsetAnatomyLikeThePlainChild(Boolean wrapped, Boolean stalePoint) in <worktree>\tests\HollowWake.Core.Tests\AimWrapperElevationTests.cs:line 145
+   at InvokeStub_AimWrapperElevationTests.IdentitySupportHitsRetainedOffsetAnatomyLikeThePlainChild(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Failed HollowWake.Core.Tests.AimWrapperElevationTests.IdentitySupportHitsRetainedOffsetAnatomyLikeThePlainChild(wrapped: True, stalePoint: True) [< 1 ms]
+  Error Message:
+   Assert.Equal() Failure: Values are not within 5 decimal places
+Expected: 0.22131 (rounded from 0.22131446)
+Actual:   0 (rounded from 0)
+  Stack Trace:
+     at HollowWake.Core.Tests.AimWrapperElevationTests.IdentitySupportHitsRetainedOffsetAnatomyLikeThePlainChild(Boolean wrapped, Boolean stalePoint) in <worktree>\tests\HollowWake.Core.Tests\AimWrapperElevationTests.cs:line 145
+   at InvokeStub_AimWrapperElevationTests.IdentitySupportHitsRetainedOffsetAnatomyLikeThePlainChild(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+
+Failed!  - Failed:     5, Passed:    18, Skipped:     0, Total:    23, Duration: 163 ms - HollowWake.Core.Tests.dll (net10.0)

@@ -260,8 +260,21 @@ internal static class MorphArena
             }
         }
 
+        // A drain asks both direct resource writers to take life around the ladder; refusing each, and saying so, is the
+        // invariant holding. Every other line logged breaks the run.
+        var drains = point.Family.Lists.Any(l => l.Rider == Rider.Drain && point.Lists.Contains(l.Key));
         foreach (var line in log.Lines)
         {
+            if (drains && line.Contains("the resource effect of weave", StringComparison.Ordinal) && line.Contains("refused", StringComparison.Ordinal))
+            {
+                outcome.Refused++;
+                continue;
+            }
+            if (drains && line.Contains("the heal effect of weave", StringComparison.Ordinal) && line.Contains("refused", StringComparison.Ordinal))
+            {
+                outcome.HealRefused++;
+                continue;
+            }
             outcome.Broke("runs", line);
         }
         outcome.Hits = recorder.Hits;
@@ -381,6 +394,12 @@ internal static class MorphArena
         /// <summary>The ticks, from the press, at which flights were launched from where the caster stands.</summary>
         public List<long> Launches { get; set; } = new();
 
+        /// <summary>How many times the resource effect refused a drain the point carries, as the simulation logged it.</summary>
+        public int Refused { get; set; }
+
+        /// <summary>Counted separately so a resource refusal cannot hide an unexercised heal sibling.</summary>
+        public int HealRefused { get; set; }
+
         public void Broke(string invariant, string message) => Broken.Add((invariant, message));
     }
 
@@ -419,6 +438,7 @@ internal static class MorphArena
 
         // Who was struck, in the order of their first hits: a chain that leaps to the same bodies in another order shows it.
         private readonly List<string> _struck = new();
+        private readonly List<string> _hitTimes = new();
         private double _dealt;
         private long _first = -1;
         private long _last = -1;
@@ -692,6 +712,7 @@ internal static class MorphArena
                     if (d.Source == _caster || _made.Contains(d.Source))
                     {
                         Hits++;
+                        _hitTimes.Add($"{Who(d.Target)}@{t}");
                         _dealt += d.Total;
                         _first = _first < 0 ? t : _first;
                         _last = t;
@@ -780,7 +801,7 @@ internal static class MorphArena
         public string Observable()
         {
             var text = new StringBuilder();
-            text.Append($"struck [{string.Join(" ", _struck)}] hits {Hits} damage {_dealt.ToString("0.##", CultureInfo.InvariantCulture)} first {_first} last {_last}");
+            text.Append($"struck [{string.Join(" ", _struck)}] hit_times [{string.Join(" ", _hitTimes)}] hits {Hits} damage {_dealt.ToString("0.##", CultureInfo.InvariantCulture)} first {_first} last {_last}");
             text.Append($" | made {Made.Count} most {MaxLive} gone {_gone}");
             text.Append(" | at");
             foreach (var body in _crowd.Prepend(_caster))

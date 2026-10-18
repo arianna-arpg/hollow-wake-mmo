@@ -287,7 +287,7 @@ public sealed class ProjectileSystem : SimSystem
             for (var guard = 0; p.Odometer >= p.NextTravelAt && guard < 8 && !p.Ended; guard++)
             {
                 p.NextTravelAt += spec.TravelEvery;
-                CompiledEffect.ExecuteAll(spec.OnTravel, EffectHelpers.At(p.Context, Entity.None, at, p.Direction, at, p.Context.Depth));
+                CompiledEffect.ExecuteAll(spec.OnTravel, EffectHelpers.At(p.Context, Entity.None, at, p.Direction, at, p.Context.Depth, launchLift: 0));
             }
         }
         if (spec.OnTick.Length > 0)
@@ -295,7 +295,7 @@ public sealed class ProjectileSystem : SimSystem
             for (var guard = 0; now >= p.NextTickAt && guard < 8 && !p.Ended; guard++)
             {
                 p.NextTickAt += spec.TickInterval;
-                CompiledEffect.ExecuteAll(spec.OnTick, EffectHelpers.At(p.Context, Entity.None, at, p.Direction, at, p.Context.Depth));
+                CompiledEffect.ExecuteAll(spec.OnTick, EffectHelpers.At(p.Context, Entity.None, at, p.Direction, at, p.Context.Depth, launchLift: 0));
             }
         }
         if (p.Ended)
@@ -572,7 +572,7 @@ public sealed class ProjectileSystem : SimSystem
     {
         p.Hits.Record(other, now);
         var spec = p.Spec;
-        var hit = EffectHelpers.At(p.Context, other, at, p.Direction, at, p.Context.Depth);
+        var hit = EffectHelpers.At(p.Context, other, at, p.Direction, at, p.Context.Depth, launchLift: 0);
         CompiledEffect.ExecuteAll(spec.OnHit, hit);
         if (!p.FirstHitDone)
         {
@@ -705,7 +705,7 @@ public sealed class ProjectileSystem : SimSystem
         p.Ended = true;
         if (first is { Length: > 0 } || second is { Length: > 0 } || third is { Length: > 0 })
         {
-            var end = EffectHelpers.At(p.Context, Entity.None, at, p.Direction, at, p.Context.Depth);
+            var end = EffectHelpers.At(p.Context, Entity.None, at, p.Direction, at, p.Context.Depth, launchLift: 0);
             if (first is { Length: > 0 })
             {
                 CompiledEffect.ExecuteAll(first, end);

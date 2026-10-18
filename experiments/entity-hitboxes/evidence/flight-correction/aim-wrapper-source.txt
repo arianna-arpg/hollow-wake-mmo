@@ -1,0 +1,25 @@
+Published correction source: 8107599a73856a37d069e33c0297179a3f03cdd4
+Original scoped owner commit: 8e3a5d1be04606995cc260ff0ff68e077a11b6cb
+Final complete-source merge: a24936a805296a8fd18d2ce6f07e74cc60a78e3d
+Complete foundation followup: a3eafab043d38a3acf43d24f4c8f31c255668bd0
+Standalone before source: 46997d23fd4d73aba89ade15ca7669038f9420f9
+Commands run on corrected runtime:
+  dotnet build HollowWake.sln --no-restore
+  dotnet build src/HollowWake.Tools -c Release --no-restore
+  dotnet test HollowWake.sln --no-build --no-restore
+  dotnet test tests/HollowWake.Core.Tests/HollowWake.Core.Tests.csproj --no-build --no-restore --filter FullyQualifiedName~AimWrapperElevationTests|FullyQualifiedName~ProjectileLaunchRegressionTests
+  dotnet src/HollowWake.Tools/bin/Release/net10.0/hollowwake.dll validate
+  dotnet src/HollowWake.Tools/bin/Release/net10.0/hollowwake.dll load --x 0 --y 0
+  dotnet src/HollowWake.Tools/bin/Release/net10.0/hollowwake.dll tournament --standard --check-hashes experiments/combat-grammar/baselines/standard-duels.json
+  dotnet src/HollowWake.Tools/bin/Release/net10.0/hollowwake.dll tournament --pairs proving_reaver:proving_bulwark,proving_hexer:proving_plaguer,proving_pitfighter:proving_mower,proving_fletcher:proving_evoker --seeds 10 --seconds 60 --bands --out experiments/entity-hitboxes/artifacts/flight-correction/aim-wrapper-proving.json
+  dotnet src/HollowWake.Tools/bin/Release/net10.0/hollowwake.dll weave --axes --all --literals experiments/entity-hitboxes/artifacts/flight-correction/aim-wrapper-literals.txt
+  dotnet src/HollowWake.Tools/bin/Release/net10.0/hollowwake.dll lint --json experiments/entity-hitboxes/artifacts/flight-correction/aim-wrapper-lint.json
+  node scripts/test-background.mjs --suite all --no-build --out experiments/entity-hitboxes/artifacts/flight-correction/aim-wrapper-smoke
+After docs/test-only foundation merge:
+  dotnet test tests/HollowWake.Core.Tests/HollowWake.Core.Tests.csproj --no-restore --filter FullyQualifiedName~LocalPopulationSearchTests|FullyQualifiedName~QuestPopulationAnchorTests|FullyQualifiedName~EntityPopulationTests
+The filters above were passed as one quoted argument. Proving exits 1 for the same three inherited band failures. No baseline rewrite or new timing sample.
+Runtime tree identity before/after the docs/test merge:
+src 9853cd900d743758bdd9ed23b483637421a7f4e5 = 9853cd900d743758bdd9ed23b483637421a7f4e5
+content 9bd9827a424215f36dda98245ee028c14af4c564 = 9bd9827a424215f36dda98245ee028c14af4c564
+web b5a3908277b4fc0e43f0146a4cc2a74862fd4237 = b5a3908277b4fc0e43f0146a4cc2a74862fd4237
+scripts ad75f90583372af3dc468c5abd72f263e744b483 = ad75f90583372af3dc468c5abd72f263e744b483

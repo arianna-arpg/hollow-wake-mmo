@@ -526,25 +526,12 @@ internal sealed class ProjectileHandler : IEffectHandler
         public override void Execute(EffectContext ctx)
         {
             var sim = ctx.Sim;
-            var caster = ctx.From ?? ctx.SourceTransform?.Position ?? ctx.Point;
-            var origin = caster;
-            if (OriginAtPoint)
-            {
-                origin = ctx.Point;
-                if (OriginRange is not null)
-                {
-                    var limit = (float)Math.Max(0, ctx.Eval(OriginRange, 0));
-                    var away = new Vector2(origin.X - caster.X, origin.Y - caster.Y);
-                    if (away.Length() > limit && away.LengthSquared() > 1e-6f)
-                    {
-                        away = Vector2.Normalize(away) * limit;
-                        origin = sim.Terrain.SnapToGround(new Vector3(caster.X + away.X, caster.Y + away.Y, caster.Z), 3);
-                    }
-                }
-            }
+            // Sample the authored limit once, like the other flight numbers, including for salvos.
+            float? originLimit = OriginAtPoint && OriginRange is not null ? (float)Math.Max(0, ctx.Eval(OriginRange, 0)) : null;
+            var origin = OriginOf(ctx, originLimit);
             var count = Math.Clamp((int)Math.Round(ParamOrAttr(ctx, Count, "projectile.count", 1)), 1, 64);
             var flight = Numbers(ctx);
-            var aimPoint = !ctx.Target.IsNone && ctx.TargetTransform is { } aimed ? aimed.Position : ctx.Point;
+            var aimPoint = !ctx.Target.IsNone && ctx.TargetTransform is { } aimed ? aimed.Position : ctx.SampledTargetPoint ?? ctx.Point;
             var dir = AimFrom(ctx, origin);
             var spreadDegrees = ctx.Eval(Spread, 15);
             if (!double.IsNaN(AimNear))
@@ -583,7 +570,7 @@ internal sealed class ProjectileHandler : IEffectHandler
                     if (count > 1)
                     {
                         var interval = Math.Max(sim.Clock.Dt, SalvoInterval is null ? sim.Content.Rules.Number("delivery.salvo_interval", 0.15) : ctx.Eval(SalvoInterval, 0.15));
-                        var salvo = new Salvo(this, ctx.Fork(), flight, count - 1, interval, dir, aimPoint, sim.Clock.Time);
+                        var salvo = new Salvo(this, ctx.Fork(), flight, count - 1, interval, dir, aimPoint, sim.Clock.Time, originLimit);
                         Later(sim, interval, salvo.Beat);
                     }
                     break;
@@ -600,13 +587,32 @@ internal sealed class ProjectileHandler : IEffectHandler
             }
         }
 
-        /// <summary>Toward the target, else along the cast's direction, else toward the point, else the source's facing.</summary>
+        private Vector3 OriginOf(EffectContext ctx, float? limit)
+        {
+            var caster = ctx.From ?? ctx.SourceTransform?.Position ?? ctx.Point;
+            if (!OriginAtPoint) return caster;
+            var origin = ctx.Point;
+            var away = new Vector2(origin.X - caster.X, origin.Y - caster.Y);
+            if (limit is { } reach && away.Length() > reach && away.LengthSquared() > 1e-6f)
+            {
+                away = Vector2.Normalize(away) * reach;
+                origin = ctx.Sim.Terrain.SnapToGround(new Vector3(caster.X + away.X, caster.Y + away.Y, caster.Z), 3);
+            }
+            return origin;
+        }
+
+        /// <summary>Toward a live or sampled target, else along the cast's direction, else toward the point, else the source's facing.</summary>
         private static Vector2 AimFrom(EffectContext ctx, Vector3 origin)
         {
             Vector2 dir;
             if (!ctx.Target.IsNone && ctx.TargetTransform is { } tt)
             {
                 var aim = HitBodies.AimPoint(ctx.Sim, ctx.Target);
+                dir = new Vector2(aim.X - origin.X, aim.Y - origin.Y);
+            }
+            else if (ctx.SampledTargetPoint is { } point)
+            {
+                var aim = point + ctx.AimOffset;
                 dir = new Vector2(aim.X - origin.X, aim.Y - origin.Y);
             }
             else if (ctx.Direction.LengthSquared() > 0.001f)
@@ -670,7 +676,9 @@ internal sealed class ProjectileHandler : IEffectHandler
         public void Launch(EffectContext ctx, EffectContext? basis, in Flight f, Vector3 at, float heading, float side, Vector3 aimPoint)
         {
             var sim = ctx.Sim;
-            var lift = ctx.From is not null || OriginAtPoint ? (float)sim.Content.Rules.Number("delivery.projectile_origin_height", 1) :
+            var inheritedLift = ctx.From is not null && (!OriginAtPoint || ctx.Point == ctx.From) ? ctx.LaunchLift : null;
+            var lift = ctx.From is not null || OriginAtPoint ?
+                inheritedLift ?? (float)sim.Content.Rules.Number("delivery.projectile_origin_height", 1) :
                 HitBodies.AimPoint(sim, ctx.Source).Z - (ctx.SourceTransform?.Position.Z ?? 0);
             var start = at + new Vector3(0, 0, lift);
             var speed = f.Speed;
@@ -762,9 +770,10 @@ internal sealed class ProjectileHandler : IEffectHandler
             private readonly Vector2 _direction;
             private readonly Vector3 _point;
             private readonly double _since;
+            private readonly float? _originLimit;
             private int _left;
 
-            public Salvo(Effect effect, EffectContext ctx, Flight flight, int left, double interval, Vector2 direction, Vector3 point, double since)
+            public Salvo(Effect effect, EffectContext ctx, Flight flight, int left, double interval, Vector2 direction, Vector3 point, double since, float? originLimit)
             {
                 _effect = effect;
                 _ctx = ctx;
@@ -774,6 +783,7 @@ internal sealed class ProjectileHandler : IEffectHandler
                 _direction = direction;
                 _point = point;
                 _since = since;
+                _originLimit = originLimit;
             }
 
             public void Beat()
@@ -783,14 +793,15 @@ internal sealed class ProjectileHandler : IEffectHandler
                 {
                     return;
                 }
-                var origin = st.Position;
+                var origin = _effect.OriginOf(_ctx, _originLimit);
                 Vector2 dir;
                 var aim = _point;
                 var shot = _ctx;
                 if (LiveAim.TryGet(sim, _ctx.Source, _since, out var live, out var liveDir))
                 {
                     aim = live;
-                    shot = _ctx.WithPoint(live);
+                    shot = _ctx.WithPoint(live).WithTarget(Entity.None);
+                    origin = _effect.OriginOf(shot, _originLimit);
                     dir = new Vector2(live.X - origin.X, live.Y - origin.Y);
                     if (dir.LengthSquared() < 0.0001f)
                     {
@@ -800,7 +811,12 @@ internal sealed class ProjectileHandler : IEffectHandler
                 else if (!_ctx.Target.IsNone && sim.World.IsAlive(_ctx.Target) && !sim.World.Has<Dead>(_ctx.Target) && sim.World.TryGet<Transform>(_ctx.Target, out var tt))
                 {
                     aim = tt.Position;
-                    dir = new Vector2(aim.X - origin.X, aim.Y - origin.Y);
+                    dir = AimFrom(shot, origin);
+                }
+                else if (_ctx.SampledTargetPoint is { } sampled)
+                {
+                    aim = sampled;
+                    dir = AimFrom(shot, origin);
                 }
                 else
                 {
