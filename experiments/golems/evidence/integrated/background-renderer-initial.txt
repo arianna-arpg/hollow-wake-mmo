@@ -1,0 +1,4 @@
+TEST evidence: C:\Users\John\.codex\worktrees\golem-construct-foundation\MMOARPG\experiments\golems\artifacts\integrated-renderer-smoke\run-yLnmy6
+TEST smoke-web; evidence: C:\Users\John\.codex\worktrees\golem-construct-foundation\MMOARPG\experiments\golems\artifacts\integrated-renderer-smoke\run-yLnmy6
+TEST FAIL smoke-web failed; see smoke-web.log
+TEST FAILED; report: C:\Users\John\.codex\worktrees\golem-construct-foundation\MMOARPG\experiments\golems\artifacts\integrated-renderer-smoke\run-yLnmy6\result.json

@@ -1,0 +1,7 @@
+SMOKE input: page-local keyboard and pointer; physical controllers isolated
+SMOKE FAIL script: page.waitForFunction: Timeout 30000ms exceeded.
+SMOKE FAIL no page errors: Failed to load resource: the server responded with a status of 404 (Not Found)
+SMOKE SUMMARY
+SMOKE FAIL script: page.waitForFunction: Timeout 30000ms exceeded.
+SMOKE FAIL no page errors: Failed to load resource: the server responded with a status of 404 (Not Found)
+SMOKE DONE 0/2 passed in 33.8s; 240 fps, ? ms of work per frame, ? chunks and ? entities at the end; shots in C:\Users\John\.codex\worktrees\golem-construct-foundation\MMOARPG\experiments\golems\artifacts\integrated-renderer-smoke\run-yLnmy6\shots

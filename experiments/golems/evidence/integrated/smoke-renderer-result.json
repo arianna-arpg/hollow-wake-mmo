@@ -1,0 +1,29 @@
+{
+  "started": "2026-10-18T18:36:28.154Z",
+  "root": "C:\\Users\\John\\.codex\\worktrees\\golem-construct-foundation\\MMOARPG",
+  "directory": "C:\\Users\\John\\.codex\\worktrees\\golem-construct-foundation\\MMOARPG\\experiments\\golems\\artifacts\\integrated-renderer-smoke\\run-xF5uBz",
+  "suite": "web",
+  "status": "passed",
+  "stages": [
+    {
+      "name": "smoke-web",
+      "status": "passed",
+      "started": "2026-10-18T18:36:30.231Z",
+      "code": 0,
+      "signal": null,
+      "passed": 31,
+      "total": 31,
+      "skipped": [],
+      "finished": "2026-10-18T18:37:56.549Z"
+    }
+  ],
+  "nativeRendering": "not covered by headless mode",
+  "server": {
+    "tcp": 50493,
+    "url": "http://127.0.0.1:50494",
+    "name": "harness-run-xF5uBz",
+    "data": "C:\\Users\\John\\.codex\\worktrees\\golem-construct-foundation\\MMOARPG\\experiments\\golems\\artifacts\\integrated-renderer-smoke\\run-xF5uBz\\data"
+  },
+  "cleanupErrors": [],
+  "finished": "2026-10-18T18:37:57.098Z"
+}
