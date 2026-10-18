@@ -465,13 +465,20 @@ internal sealed class AimHandler : IEffectHandler
                     facing = Vector2.Normalize(toTarget);
                 }
             }
-            var angle = MathF.Atan2(facing.Y, facing.X) + (float)(degrees * Math.PI / 180.0);
+            var turn = (float)(degrees * Math.PI / 180.0);
+            var angle = MathF.Atan2(facing.Y, facing.X) + turn;
             var direction = new Vector2(MathF.Cos(angle), MathF.Sin(angle));
             var reach = new Vector2(ctx.Point.X - origin.X, ctx.Point.Y - origin.Y).Length();
             var point = new Vector3(origin.X + direction.X * reach, origin.Y + direction.Y * reach, ctx.Point.Z);
             var target = ctx.Target == ctx.Source ? ctx.Target : Entity.None;
+            // A bearing change releases the body lock but keeps its sampled three-dimensional aim.
+            // Rotate the body-relative offset with the point; it is not a new ground placement.
+            var offset = ctx.TargetTransform is { } aimed && ctx.Target != ctx.Source
+                ? HitBodies.AimPoint(ctx.Sim, ctx.Target) - aimed.Position : ctx.AimOffset;
+            var cosine = MathF.Cos(turn); var sine = MathF.Sin(turn);
+            var aimOffset = new Vector3(offset.X * cosine - offset.Y * sine, offset.X * sine + offset.Y * cosine, offset.Z);
             // The turned point is where the effects are aimed now.
-            ExecuteAll(Effects, At(ctx, target, point, direction, ctx.From, ctx.Depth, aim: point, launchLift: ctx.LaunchLift));
+            ExecuteAll(Effects, At(ctx, target, point, direction, ctx.From, ctx.Depth, aim: point, launchLift: ctx.LaunchLift, aimOffset: aimOffset));
         }
     }
 }
