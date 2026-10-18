@@ -15,7 +15,11 @@ public enum AxisSource
 {
     /// <summary>The weave attribute folded with the weave's own bases and modifiers.</summary>
     Attribute,
-    /// <summary>A number the form's or preset's graph writes: a frozen axis unless an attribute multiplies or channels it.</summary>
+    /// <summary>
+    /// A number or a word the form's or preset's graph writes as it stands. A number written as a constant is a
+    /// frozen axis unless an attribute multiplies or channels it, as is a glyph's under a patch or a rider (see
+    /// <see cref="AxisValue.Constant"/>).
+    /// </summary>
     Literal,
     /// <summary>A formula the form's or preset's graph writes.</summary>
     Expression,
@@ -65,8 +69,31 @@ public sealed record AxisValue
     /// <summary>A word that stands for a number: the grammar's target is an axis with a style word.</summary>
     public bool HidesNumber { get; init; }
 
-    /// <summary>A literal number no attribute multiplies or channels: a frozen axis, no modifier reaches it.</summary>
-    public bool Frozen => Source == AxisSource.Literal && Number is not null && !Multiplied;
+    /// <summary>
+    /// The number was written as a constant (a literal, a constant formula, a raw number of the cast layer) by
+    /// whoever wrote it: the form, the preset, a glyph or a tree node.
+    /// </summary>
+    public bool Constant { get; init; }
+
+    /// <summary>
+    /// Who wrote the value in content, for what a graph or the cast layer writes: <c>form bolt</c>, <c>preset
+    /// heavy_strike</c>, <c>glyph shedding</c> (a tree node is its form's). Null where nobody wrote it: a fallback,
+    /// a rule, a probe.
+    /// </summary>
+    public string? Writer { get; init; }
+
+    /// <summary>
+    /// Where the value sits in its writer's own definition, not in the compiled graph: <c>effects[0].on_hit[1].chance</c>,
+    /// <c>hooks.on_tick[0].radius</c>, <c>patches[0].wrap.count</c>, <c>guard.arc</c>. A form's literal keeps its
+    /// place in every preset on the form and under any glyph's wrapper; a glyph's on whatever form it is socketed.
+    /// </summary>
+    public string? Origin { get; init; }
+
+    /// <summary>A constant no attribute multiplies or channels: a frozen axis, no modifier reaches it, whoever wrote it.</summary>
+    public bool Frozen => Constant && Number is not null && !Multiplied;
+
+    /// <summary>The frozen axis as the literal baseline keys it: its writer and its place in the writer's definition.</summary>
+    public string? Key => Writer is null || Origin is null ? null : $"{Writer} {Origin}";
 
     /// <summary>The value as text: the number to three places, else the word.</summary>
     public string Text => Number is { } n ? AxisReport.Format(n) : Word ?? "";
@@ -83,8 +110,10 @@ public sealed record AxisValue
 public sealed class AxisNode
 {
     private readonly IReadOnlyDictionary<string, string>? _patched;
+    private readonly IReadOnlyDictionary<string, (string Writer, string Path)>? _patchedAt;
 
-    internal AxisNode(JsonObject node, string type, string path, string section, AxisSource? addedAs, string? addedBy, IReadOnlyDictionary<string, string>? patched)
+    internal AxisNode(JsonObject node, string type, string path, string section, AxisSource? addedAs, string? addedBy, IReadOnlyDictionary<string, string>? patched,
+        string? writer = null, string? origin = null, IReadOnlyDictionary<string, (string Writer, string Path)>? patchedAt = null)
     {
         Node = node;
         Type = type;
@@ -93,12 +122,37 @@ public sealed class AxisNode
         AddedAs = addedAs;
         AddedBy = addedBy;
         _patched = patched;
+        Writer = writer;
+        Origin = origin;
+        _patchedAt = patchedAt;
     }
 
     public JsonObject Node { get; }
     public string Type { get; }
     public string Path { get; }
     public string Section { get; }
+
+    /// <summary>Who wrote the node in content: <c>form bolt</c>, <c>preset ember_bolt</c>, <c>glyph shedding</c> (a tree node is its form's).</summary>
+    public string? Writer { get; }
+
+    /// <summary>Where the node sits in its writer's own definition: <c>effects[0].on_hit[1]</c>, <c>hooks.on_tick[0]</c>, <c>patches[0].wrap</c>.</summary>
+    public string? Origin { get; }
+
+    /// <summary>
+    /// Who wrote a value of the node and where in their own definition: the patch that set the parameter
+    /// (<c>patches[1].set.forks</c>), else the node's writer at the value's place inside the node.
+    /// <paramref name="valuePath"/> is the value's compiled path, under <see cref="Path"/>.
+    /// </summary>
+    public (string Writer, string Path)? OriginOf(string parameter, string valuePath)
+    {
+        var suffix = valuePath.StartsWith(Path, StringComparison.Ordinal) ? valuePath[Path.Length..] : "." + parameter;
+        if (_patchedAt is not null && _patchedAt.TryGetValue(parameter, out var at))
+        {
+            var head = "." + parameter;
+            return (at.Writer, at.Path + (suffix.StartsWith(head, StringComparison.Ordinal) ? suffix[head.Length..] : ""));
+        }
+        return Writer is null || Origin is null ? null : (Writer, Origin + suffix);
+    }
 
     /// <summary>
     /// <see cref="AxisSource.Hook"/> for a rider (a glyph's hook list, on_cast list or added effects),
@@ -346,7 +400,10 @@ public sealed class AxisReading
     };
 }
 
-/// <summary>The axis report of one weave the census compiled: a form compiled bare, or a preset; or why it did not compile.</summary>
+/// <summary>
+/// The axis report of one weave the census compiled: a form compiled bare, a preset, or a glyph on the first form
+/// it fits (its own values only); or why it was not placed.
+/// </summary>
 public sealed record WeaveAxes(string Id, string Kind, IReadOnlyList<AxisValue> Values, string? Error);
 
 /// <summary>
@@ -409,11 +466,20 @@ public static class AxisReport
     }
 
     /// <summary>
-    /// The frozen axes among a report's values: literal numbers the form's or preset's graph writes that no
-    /// attribute multiplies. Where the binding names an attribute (<see cref="AxisValue.Attribute"/>), content
-    /// can write the attribute instead; where it names none (a flight's radius today), the engine owes one.
+    /// The frozen axes among a report's values: constants a graph or the cast layer writes that no attribute
+    /// multiplies or channels, whoever wrote them (the form, the preset, a glyph). Where the binding names an
+    /// attribute (<see cref="AxisValue.Attribute"/>), content can write the attribute instead; where it names
+    /// none (a flight's radius today), the engine owes one.
     /// </summary>
     public static IReadOnlyList<AxisValue> Literals(IReadOnlyList<AxisValue> values) => values.Where(v => v.Frozen).ToArray();
+
+    /// <summary>
+    /// The literal baseline: the key of every frozen axis among the reports, each once however many weaves carry
+    /// it (a form's literal in every preset on the form, a glyph's in every weave that sockets it), in ordinal order.
+    /// </summary>
+    public static IReadOnlyList<string> LiteralKeys(IEnumerable<WeaveAxes> reports) =>
+        reports.SelectMany(r => r.Values).Where(v => v.Frozen && v.Key is not null).Select(v => v.Key!)
+            .Distinct(StringComparer.Ordinal).OrderBy(k => k, StringComparer.Ordinal).ToArray();
 
     /// <summary>The frozen axes of a compiled weave.</summary>
     public static IReadOnlyList<AxisValue> Literals(CompiledWeave weave, ContentRegistry content) => Literals(Of(weave, content));
@@ -444,55 +510,99 @@ public static class AxisReport
             ? new WeaveAxes(id, kind, Of(weave!, content), null)
             : new WeaveAxes(id, kind, Array.Empty<AxisValue>(), error);
 
+    /// <summary>
+    /// The glyphs' part of the census, so a glyph no preset sockets is counted too: each glyph, in id order, on
+    /// the first form by id it fits, active (with the first threads by id the form takes), else on the first
+    /// preset by id it fits beside the preset's own glyphs, with the values the glyph wrote (what its patches set
+    /// and created, its riders, added effects and cycle) and the cast-layer blocks it grants. A glyph's values are
+    /// keyed in its own definition, so where it lands moves none of their keys. A glyph that fits nothing carries
+    /// why and no values.
+    /// </summary>
+    public static IReadOnlyList<WeaveAxes> OfGlyphs(ContentRegistry content)
+    {
+        var compiler = new WeaveCompiler(content, EffectRegistry.Shared);
+        var threads = content.Each<ThreadDef>().Select(t => t.Id).OrderBy(t => t, StringComparer.Ordinal).ToList();
+        var forms = content.Each<FormDef>().Where(f => f.MaxGlyphs > 0).OrderBy(f => f.Id, StringComparer.Ordinal).ToList();
+        var presets = content.Each<WeaveDef>().OrderBy(p => p.Id, StringComparer.Ordinal).ToList();
+        var all = new List<WeaveAxes>();
+        foreach (var glyph in content.Each<GlyphDef>().OrderBy(g => g.Id, StringComparer.Ordinal))
+        {
+            var writer = "glyph " + glyph.Id;
+            var granted = $"glyph.{glyph.Id}.";
+            var specs = forms.Select(f => new WeaveSpec { Form = f.Id, Threads = threads.Take(Math.Max(1, f.MinThreads)).Take(f.MaxThreads).ToList(), Glyphs = { glyph.Id } })
+                .Concat(presets.Select(p => new WeaveSpec { Preset = p.Id, Glyphs = { glyph.Id } }));
+            WeaveAxes? placed = null;
+            foreach (var spec in specs)
+            {
+                if (!compiler.TryCompile(spec, out var weave, out _, GlyphFit.Dormant) || !weave!.Glyphs.Any(g => g.Id == glyph.Id))
+                {
+                    continue;
+                }
+                var own = Of(weave, content).Where(v => v.Writer == writer || v.Path.StartsWith(granted, StringComparison.Ordinal)).ToArray();
+                placed = new WeaveAxes(glyph.Id, "glyph", own, null);
+                break;
+            }
+            all.Add(placed ?? new WeaveAxes(glyph.Id, "glyph", Array.Empty<AxisValue>(), "fits no form or preset"));
+        }
+        return all;
+    }
+
     /// <summary>A number as the report prints it: up to three places, invariant.</summary>
     public static string Format(double value) => value.ToString("0.###", CultureInfo.InvariantCulture);
 }
 
 /// <summary>
 /// Walks a compiled weave's graph for the axis report: every effect node at every depth of the main list and
-/// the sections, each with its path and its provenance. Riders are the trailing entries of each hook list,
-/// which the compiler appends glyph by glyph after every patch; added effects and on_cast lists are the trailing
-/// roots of the main list. Which parameters a patch set the compiled weave does not keep, so they are found by
-/// replaying the active glyphs' and tree nodes' patches, through the compiler's own <see cref="EffectPatcher"/>,
-/// on the form's and preset's graph and reading what each one changed.
+/// the sections, each with its path, its provenance and its origin (who wrote it in content, and where in their
+/// own definition). Riders are the trailing entries of each hook list, which the compiler appends glyph by glyph
+/// after every patch; added effects and on_cast lists are the trailing roots of the main list. What the compiled
+/// weave does not keep (which nodes a patch created, which parameters it set, where a node a wrap moved came
+/// from) is found by replaying the active glyphs' and tree nodes' patches one at a time, through the compiler's
+/// own <see cref="EffectPatcher"/>, on the form's and preset's graph and its sections, and reading what each changed.
 /// </summary>
 internal static class AxisGraph
 {
     private static readonly string[] SectionOrder = { WeaveSections.Release, WeaveSections.Bash, WeaveSections.Deactivate, WeaveSections.Cycle };
 
-    /// <summary>A node's provenance as a patch replay found it: who created it, and who set which parameters.</summary>
+    /// <summary>A node of the replayed graph: who wrote it and where, the patch owner that created it, and who set which parameters where.</summary>
     private sealed class Mark
     {
-        public string? Created;
-        public Dictionary<string, string>? Set;
+        public required string Writer { get; init; }
+        public required string Origin { get; init; }
+        public string? Created { get; init; }
+        public Dictionary<string, string>? Set { get; init; }
+        public Dictionary<string, (string Writer, string Path)>? SetAt { get; init; }
     }
+
+    /// <summary>A node a glyph adds: the label it is reported under, its glyph, and its place in the glyph's definition.</summary>
+    private readonly record struct Rider(string Label, string Writer, string Origin);
 
     public static List<AxisNode> Walk(CompiledWeave weave, WeaveDef? preset)
     {
         var probe = weave.Probe;
         var effects = probe?.Graph.Effects ?? EffectRegistry.Shared;
-        var marks = ReplayPatches(weave, preset, effects);
+        var marks = Replay(weave, preset, effects);
         var riders = RiderPlan(weave.Glyphs);
         var nodes = new List<AxisNode>();
 
         // The main list: the form's and preset's effects, then the glyphs' added effects, then their on_cast lists.
         var main = weave.Specs;
         var own = weave.Form.Effects.Count + (preset?.Effects.Count ?? 0);
-        var tail = new List<(AxisSource As, string By, bool Hookable)>();
+        var tail = new List<(Rider Rider, bool Hookable)>();
         foreach (var glyph in weave.Glyphs)
         {
-            foreach (var _ in glyph.AddsEffects)
+            for (var k = 0; k < glyph.AddsEffects.Count; k++)
             {
-                tail.Add((AxisSource.Hook, $"glyph {glyph.Id} adds_effects", true));
+                tail.Add((new Rider($"glyph {glyph.Id} adds_effects", "glyph " + glyph.Id, $"adds_effects[{k}]"), true));
             }
         }
         foreach (var glyph in weave.Glyphs)
         {
             if (glyph.Hooks.TryGetValue(EffectHooks.OnCast, out var onCast))
             {
-                foreach (var _ in onCast)
+                for (var k = 0; k < onCast.Count; k++)
                 {
-                    tail.Add((AxisSource.Hook, $"glyph {glyph.Id} {EffectHooks.OnCast}", false));
+                    tail.Add((new Rider($"glyph {glyph.Id} {EffectHooks.OnCast}", "glyph " + glyph.Id, $"hooks.{EffectHooks.OnCast}[{k}]"), false));
                 }
             }
         }
@@ -502,12 +612,12 @@ internal static class AxisGraph
             var path = $"effects[{i}]";
             if (i < own || i - own >= tail.Count)
             {
-                Visit(node, path, "effects", null, null, true, marks, riders, effects, nodes);
+                Visit(node, path, "effects", null, null, true, null, null, marks, riders, effects, nodes);
             }
             else
             {
-                var (added, by, hookable) = tail[i - own];
-                Visit(node, path, "effects", added, by, hookable, marks, riders, effects, nodes);
+                var (rider, hookable) = tail[i - own];
+                Visit(node, path, "effects", AxisSource.Hook, rider.Label, hookable, rider.Writer, rider.Origin, marks, riders, effects, nodes);
             }
         }
 
@@ -526,7 +636,7 @@ internal static class AxisGraph
                 {
                     var fromGlyph = section == WeaveSections.Cycle && glyphCycle is not null;
                     Visit(WeaveGraph.ToNode(specs[i]), $"{section}[{i}]", section,
-                        fromGlyph ? AxisSource.Glyph : null, fromGlyph ? $"glyph {glyphCycle!.Id} cycle" : null, true, marks, riders, effects, nodes);
+                        fromGlyph ? AxisSource.Glyph : null, fromGlyph ? $"glyph {glyphCycle!.Id} cycle" : null, true, null, null, marks, riders, effects, nodes);
                 }
             }
         }
@@ -550,28 +660,35 @@ internal static class AxisGraph
         return plan;
     }
 
+    /// <summary>
+    /// Adds a node and what it holds. <paramref name="writer"/> and <paramref name="origin"/> are the node's as its
+    /// holder sees it; the replay's mark, where it has one, says better (a node a wrap moved keeps its own place).
+    /// </summary>
     private static void Visit(JsonObject node, string path, string section, AxisSource? addedAs, string? addedBy, bool hookable,
-        Dictionary<string, Mark> marks, List<(string Hook, string Glyph, int Count)> riders, EffectRegistry effects, List<AxisNode> into)
+        string? writer, string? origin, Dictionary<string, Mark> marks, List<(string Hook, string Glyph, int Count)> riders, EffectRegistry effects, List<AxisNode> into)
     {
         var type = WeaveGraph.TypeOf(node);
         if (type is null || !effects.TryGetSignature(type, out var signature))
         {
             return;
         }
+        // Riders joined after every patch, so the replay never saw them; everything else it did.
         Mark? mark = null;
-        if (addedAs is null && marks.TryGetValue(section + "|" + path, out var found))
+        if (addedAs is not AxisSource.Hook && marks.TryGetValue(section + "|" + path, out var found))
         {
             mark = found;
-            if (found.Created is { } creator)
+            writer = found.Writer;
+            origin = found.Origin;
+            if (addedAs is null && found.Created is { } creator)
             {
                 addedAs = AxisSource.Patch;
                 addedBy = creator;
             }
         }
-        into.Add(new AxisNode(node, type, path, section, addedAs, addedBy, mark?.Set));
+        into.Add(new AxisNode(node, type, path, section, addedAs, addedBy, mark?.Set, writer, origin, mark?.SetAt));
 
         // The riders at each hook parameter: the trailing entries, by glyph, in the order appended.
-        Dictionary<string, List<string>>? tails = null;
+        Dictionary<string, List<Rider>>? tails = null;
         if (hookable && signature.Hooks.Count > 0)
         {
             foreach (var (hook, glyph, count) in riders)
@@ -580,15 +697,15 @@ internal static class AxisGraph
                 {
                     continue;
                 }
-                tails ??= new Dictionary<string, List<string>>(StringComparer.Ordinal);
+                tails ??= new Dictionary<string, List<Rider>>(StringComparer.Ordinal);
                 if (!tails.TryGetValue(parameter, out var list))
                 {
-                    list = new List<string>();
+                    list = new List<Rider>();
                     tails[parameter] = list;
                 }
                 for (var k = 0; k < count; k++)
                 {
-                    list.Add($"glyph {glyph} {hook}");
+                    list.Add(new Rider($"glyph {glyph} {hook}", "glyph " + glyph, $"hooks.{hook}[{k}]"));
                 }
             }
         }
@@ -596,6 +713,7 @@ internal static class AxisGraph
         // which keeps its own provenance. Nothing under a rider or an on_cast list is hooked: they joined after the hooks.
         var inherited = addedAs is AxisSource.Hook or AxisSource.Glyph ? addedAs : null;
         var inheritedBy = inherited is null ? null : addedBy;
+        var holder = new Holder(path, writer, origin);
         foreach (var (parameter, value) in node)
         {
             if (parameter == "type" || value is null)
@@ -603,12 +721,19 @@ internal static class AxisGraph
                 continue;
             }
             var riderLabels = tails is not null && tails.TryGetValue(parameter, out var labels) ? labels : null;
-            Children(value, $"{path}.{parameter}", section, inherited, inheritedBy, hookable, riderLabels, marks, riders, effects, into);
+            Children(value, $"{path}.{parameter}", section, inherited, inheritedBy, hookable, riderLabels, holder, marks, riders, effects, into);
         }
     }
 
+    /// <summary>The effect node holding a value as the walk goes down: its path, and its writer and place, which what it holds extends.</summary>
+    private readonly record struct Holder(string Path, string? Writer, string? Origin)
+    {
+        /// <summary>The origin of a node at <paramref name="path"/> beneath the holder: the holder's, with the node's place under it.</summary>
+        public string? Beneath(string path) => Origin is null ? null : Origin + path[Path.Length..];
+    }
+
     private static void Children(JsonNode value, string path, string section, AxisSource? inherited, string? inheritedBy, bool hookable,
-        List<string>? riderLabels, Dictionary<string, Mark> marks, List<(string Hook, string Glyph, int Count)> riders, EffectRegistry effects, List<AxisNode> into)
+        List<Rider>? riderLabels, Holder holder, Dictionary<string, Mark> marks, List<(string Hook, string Glyph, int Count)> riders, EffectRegistry effects, List<AxisNode> into)
     {
         switch (value)
         {
@@ -626,98 +751,118 @@ internal static class AxisGraph
                     {
                         if (i >= firstRider && firstRider >= 0)
                         {
-                            Visit(element, at, section, AxisSource.Hook, riderLabels![i - firstRider], false, marks, riders, effects, into);
+                            var rider = riderLabels![i - firstRider];
+                            Visit(element, at, section, AxisSource.Hook, rider.Label, false, rider.Writer, rider.Origin, marks, riders, effects, into);
                         }
                         else
                         {
-                            Visit(element, at, section, inherited, inheritedBy, hookable, marks, riders, effects, into);
+                            Visit(element, at, section, inherited, inheritedBy, hookable, holder.Writer, holder.Beneath(at), marks, riders, effects, into);
                         }
                     }
                     else
                     {
-                        Data(element, at, section, inherited, inheritedBy, hookable, marks, riders, effects, into);
+                        Data(element, at, section, inherited, inheritedBy, hookable, holder, marks, riders, effects, into);
                     }
                 }
                 break;
             }
             case JsonObject obj when !IsEffect(obj, effects):
-                Data(obj, path, section, inherited, inheritedBy, hookable, marks, riders, effects, into);
+                Data(obj, path, section, inherited, inheritedBy, hookable, holder, marks, riders, effects, into);
                 break;
         }
     }
 
     private static void Data(JsonObject obj, string path, string section, AxisSource? inherited, string? inheritedBy, bool hookable,
-        Dictionary<string, Mark> marks, List<(string Hook, string Glyph, int Count)> riders, EffectRegistry effects, List<AxisNode> into)
+        Holder holder, Dictionary<string, Mark> marks, List<(string Hook, string Glyph, int Count)> riders, EffectRegistry effects, List<AxisNode> into)
     {
         foreach (var (key, value) in obj)
         {
             if (value is not null)
             {
-                Children(value, $"{path}.{key}", section, inherited, inheritedBy, hookable, null, marks, riders, effects, into);
+                Children(value, $"{path}.{key}", section, inherited, inheritedBy, hookable, null, holder, marks, riders, effects, into);
             }
         }
     }
 
     private static bool IsEffect(JsonObject obj, EffectRegistry effects) => WeaveGraph.TypeOf(obj) is { } type && effects.Has(type);
 
-    // ------------------------------------------------------------ patch provenance
+    // ------------------------------------------------------------ the replay: origins and patch provenance
 
     /// <summary>
-    /// Replays the patches of the active glyphs (in socket order) and of the bought tree nodes (after them), as
-    /// the compiler applied them, on a graph of the form's and preset's effects and sections, and keys what each
-    /// changed by section and path: the nodes a patch created, the parameters it set.
+    /// Builds the graph as the compiler does before any patch (the form's and preset's effects, then the sections)
+    /// with each node's writer and place in the writer's own definition, replays the patches of the active glyphs
+    /// (in socket order) and of the bought tree nodes (after them) one at a time, and keys what it found by
+    /// section and compiled path: every node's writer and origin, the nodes a patch created and where in the patch
+    /// they come from, and the parameters a patch set.
     /// </summary>
-    private static Dictionary<string, Mark> ReplayPatches(CompiledWeave weave, WeaveDef? preset, EffectRegistry effects)
+    private static Dictionary<string, Mark> Replay(CompiledWeave weave, WeaveDef? preset, EffectRegistry effects)
     {
-        var marks = new Dictionary<string, Mark>(StringComparer.Ordinal);
-        var owners = new List<(string Owner, string Label, IReadOnlyList<EffectPatch> Patches)>();
+        var form = weave.Form;
+        var formWriter = "form " + form.Id;
+        var presetWriter = preset is null ? formWriter : "preset " + preset.Id;
+        string HeldWriter(object? block, object? presetBlock) => presetBlock is not null && ReferenceEquals(block, presetBlock) ? presetWriter : formWriter;
+
+        var graph = new WeaveGraph(effects);
+        var counts = new List<(string Section, int Count)>();
+        var rootOrigins = new List<(string Writer, string Path)>();
+        void AddAll(IEnumerable<(TypedSpec Spec, string Writer, string Path)> specs, string section, bool patchable)
+        {
+            var n = 0;
+            foreach (var (spec, writer, path) in specs)
+            {
+                graph.Add(spec, patchable, section == "effects" ? null : section);
+                rootOrigins.Add((writer, path));
+                n++;
+            }
+            counts.Add((section, n));
+        }
+        static IEnumerable<(TypedSpec, string, string)> Owned(IEnumerable<TypedSpec>? specs, string writer, string field) =>
+            (specs ?? Enumerable.Empty<TypedSpec>()).Select((spec, i) => (spec, writer, $"{field}[{i}]"));
+        var glyphCycle = weave.Glyphs.FirstOrDefault(g => g.Cycle is not null);
+        AddAll(Owned(form.Effects, formWriter, "effects").Concat(Owned(preset?.Effects, presetWriter, "effects")), "effects", true);
+        AddAll(Owned(weave.Channel?.Release?.Effects, HeldWriter(weave.Channel, preset?.Channel), "channel.release.effects"), WeaveSections.Release, true);
+        AddAll(Owned(weave.Guard?.Bash?.Effects, HeldWriter(weave.Guard, preset?.Guard), "guard.bash.effects"), WeaveSections.Bash, true);
+        AddAll(Owned(form.Toggle?.OnDeactivate, formWriter, "toggle.on_deactivate"), WeaveSections.Deactivate, true);
+        AddAll(Owned((glyphCycle?.Cycle ?? preset?.Cycle ?? form.Cycle)?.Effects,
+            glyphCycle is not null ? "glyph " + glyphCycle.Id : preset?.Cycle is not null ? presetWriter : formWriter, "cycle.effects"), WeaveSections.Cycle, glyphCycle is null);
+
+        // Every node's writer and place in the writer's definition, before a patch moves anything.
+        var origins = new Dictionary<JsonObject, (string Writer, string Path)>(ReferenceEqualityComparer.Instance);
+        var r = 0;
+        foreach (var root in graph.RootNodes)
+        {
+            var (writer, path) = rootOrigins[r++];
+            Each(root, path, null, "", effects, (node, at, _, _) => origins[node] = (writer, at));
+        }
+
+        var owners = new List<(string Owner, string Label, string Writer, string Prefix, IReadOnlyList<EffectPatch> Patches)>();
         foreach (var glyph in weave.Glyphs)
         {
             if (glyph.Patches.Count > 0)
             {
-                owners.Add((glyph.Id, "glyph " + glyph.Id, glyph.Patches));
+                owners.Add((glyph.Id, "glyph " + glyph.Id, "glyph " + glyph.Id, "", glyph.Patches));
             }
         }
         foreach (var (node, _) in weave.Tree)
         {
             if (node.Patches.Count > 0)
             {
-                owners.Add(("tree:" + node.Id, "tree " + node.Id, node.Patches));
+                // A tree node is part of its form: its patches sit under the form's tree.
+                var index = form.Tree?.Nodes.FindIndex(n => n.Id == node.Id) ?? -1;
+                owners.Add(("tree:" + node.Id, "tree " + node.Id, formWriter, $"tree.nodes[{index}].", node.Patches));
             }
         }
-        if (owners.Count == 0)
-        {
-            return marks;
-        }
-
-        // The graph as the compiler builds it before any patch, section by section, counting each section's roots.
-        var graph = new WeaveGraph(effects);
-        var counts = new List<(string Section, int Count)>();
-        void AddAll(IEnumerable<TypedSpec> specs, string section, bool patchable)
-        {
-            var n = 0;
-            foreach (var spec in specs)
-            {
-                graph.Add(spec, patchable, section == "effects" ? null : section);
-                n++;
-            }
-            counts.Add((section, n));
-        }
-        AddAll(weave.Form.Effects.Concat(preset?.Effects ?? Enumerable.Empty<TypedSpec>()), "effects", true);
-        AddAll(weave.Channel?.Release?.Effects ?? Enumerable.Empty<TypedSpec>(), WeaveSections.Release, true);
-        AddAll(weave.Guard?.Bash?.Effects ?? Enumerable.Empty<TypedSpec>(), WeaveSections.Bash, true);
-        AddAll(weave.Form.Toggle?.OnDeactivate ?? Enumerable.Empty<TypedSpec>(), WeaveSections.Deactivate, true);
-        var glyphCycle = weave.Glyphs.FirstOrDefault(g => g.Cycle is not null)?.Cycle;
-        AddAll((glyphCycle ?? preset?.Cycle ?? weave.Form.Cycle)?.Effects ?? Enumerable.Empty<TypedSpec>(), WeaveSections.Cycle, glyphCycle is null);
 
         var patcher = new EffectPatcher(graph);
         var created = new Dictionary<JsonObject, string>(ReferenceEqualityComparer.Instance);
         var set = new Dictionary<JsonObject, Dictionary<string, string>>(ReferenceEqualityComparer.Instance);
-        foreach (var (owner, label, patches) in owners)
+        var setAt = new Dictionary<JsonObject, Dictionary<string, (string Writer, string Path)>>(ReferenceEqualityComparer.Instance);
+        foreach (var (owner, label, writer, prefix, patches) in owners)
         {
-            var before = Snapshot(graph);
-            foreach (var patch in patches)
+            for (var p = 0; p < patches.Count; p++)
             {
+                var patch = patches[p];
+                var before = Snapshot(graph, effects);
                 try
                 {
                     patcher.Apply(patch, owner);
@@ -726,49 +871,64 @@ internal static class AxisGraph
                 {
                     // The compiler applied the same patches without error; a replay that cannot is read as far as it went.
                 }
-            }
-            foreach (var node in graph.Nodes())
-            {
-                if (!before.TryGetValue(node, out var old))
+                var fresh = new HashSet<JsonObject>(ReferenceEqualityComparer.Instance);
+                var index = p;
+                foreach (var root in graph.RootNodes)
                 {
-                    created.TryAdd(node, label);
-                    continue;
-                }
-                foreach (var (parameter, value) in node)
-                {
-                    if (parameter == "type")
+                    Each(root, "", null, "", effects, (node, _, parent, fragment) =>
                     {
-                        continue;
-                    }
-                    var now = value?.ToJsonString();
-                    if (old.TryGetValue(parameter, out var was) && was == now)
-                    {
-                        continue;
-                    }
-                    if (!set.TryGetValue(node, out var parameters))
-                    {
-                        parameters = new Dictionary<string, string>(StringComparer.Ordinal);
-                        set[node] = parameters;
-                    }
-                    parameters.TryAdd(parameter, label);
+                        if (!before.TryGetValue(node, out var old))
+                        {
+                            // Created by this patch: inside another node it created, at its place there; else its wrapper or an item it set.
+                            created.TryAdd(node, label);
+                            fresh.Add(node);
+                            origins[node] = parent is not null && fresh.Contains(parent) && origins.TryGetValue(parent, out var outer)
+                                ? (outer.Writer, outer.Path + fragment)
+                                : (writer, prefix + FromPatch(patch, index, node, parent, fragment, before, effects));
+                            return;
+                        }
+                        foreach (var (parameter, value) in node)
+                        {
+                            if (parameter == "type" || old.TryGetValue(parameter, out var was) && was == value?.ToJsonString())
+                            {
+                                continue;
+                            }
+                            if (!set.TryGetValue(node, out var by))
+                            {
+                                by = new Dictionary<string, string>(StringComparer.Ordinal);
+                                set[node] = by;
+                                setAt[node] = new Dictionary<string, (string, string)>(StringComparer.Ordinal);
+                            }
+                            if (by.TryAdd(parameter, label))
+                            {
+                                setAt[node][parameter] = (writer, $"{prefix}patches[{index}].set.{parameter}");
+                            }
+                        }
+                    });
                 }
             }
         }
 
-        // Key the marks by the paths the walk of the compiled graph will meet: hooks only append after these.
+        // Key what was found by the paths the walk of the compiled graph will meet: hooks only append after these.
+        var marks = new Dictionary<string, Mark>(StringComparer.Ordinal);
         var roots = graph.RootNodes.ToList();
-        var r = 0;
+        var at = 0;
         foreach (var (section, count) in counts)
         {
-            for (var i = 0; i < count && r < roots.Count; i++, r++)
+            for (var i = 0; i < count && at < roots.Count; i++, at++)
             {
-                Paths(roots[r], $"{section}[{i}]", effects, (node, path) =>
+                Each(roots[at], $"{section}[{i}]", null, "", effects, (node, path, _, _) =>
                 {
-                    var hasCreator = created.TryGetValue(node, out var creator);
-                    var hasSet = set.TryGetValue(node, out var parameters);
-                    if (hasCreator || hasSet)
+                    if (origins.TryGetValue(node, out var origin))
                     {
-                        marks[section + "|" + path] = new Mark { Created = hasCreator ? creator : null, Set = hasSet ? parameters : null };
+                        marks[section + "|" + path] = new Mark
+                        {
+                            Writer = origin.Writer,
+                            Origin = origin.Path,
+                            Created = created.GetValueOrDefault(node),
+                            Set = set.GetValueOrDefault(node),
+                            SetAt = setAt.GetValueOrDefault(node),
+                        };
                     }
                 });
             }
@@ -776,35 +936,79 @@ internal static class AxisGraph
         return marks;
     }
 
-    private static Dictionary<JsonObject, Dictionary<string, string?>> Snapshot(WeaveGraph graph)
+    /// <summary>
+    /// Where in a patch a node it created comes from: the wrapper it put around a node (<c>patches[0].wrap</c>), an
+    /// item of a list it set, counted in the patch's own list (<c>patches[1].set.on_hit[0]</c>, past what the node
+    /// held before when it appends), else the patch.
+    /// </summary>
+    private static string FromPatch(EffectPatch patch, int index, JsonObject node, JsonObject? parent, string fragment,
+        Dictionary<JsonObject, Dictionary<string, string?>> before, EffectRegistry effects)
+    {
+        var at = $"patches[{index}]";
+        if (patch.Wrap is not null && WeaveGraph.TypeOf(node) is { } type && effects.TryGetSignature(type, out var signature)
+            && signature.Wraps is { } inner && node[inner] is JsonArray held && held.Any(e => e is JsonObject wrapped && before.ContainsKey(wrapped)))
+        {
+            return at + ".wrap";
+        }
+        if (parent is null || patch.Set is not { } values || fragment.Length < 2)
+        {
+            return at;
+        }
+        var end = fragment.IndexOfAny(Steps, 1);
+        var name = end < 0 ? fragment[1..] : fragment[1..end];
+        if (!values.ContainsKey(name))
+        {
+            return at;
+        }
+        if (end < 0 || fragment[end] != '[')
+        {
+            return $"{at}.set.{name}{(end < 0 ? "" : fragment[end..])}";
+        }
+        var close = fragment.IndexOf(']', end);
+        var item = int.Parse(fragment[(end + 1)..close], CultureInfo.InvariantCulture);
+        var offset = patch.EffectiveMode == PatchMode.Append && values[name] is JsonArray written && parent[name] is JsonArray now ? now.Count - written.Count : 0;
+        return $"{at}.set.{name}[{item - offset}]{fragment[(close + 1)..]}";
+    }
+
+    private static readonly char[] Steps = { '.', '[' };
+
+    /// <summary>Every effect node of the graph with its parameters as they stand, written out to compare after a patch.</summary>
+    private static Dictionary<JsonObject, Dictionary<string, string?>> Snapshot(WeaveGraph graph, EffectRegistry effects)
     {
         var snapshot = new Dictionary<JsonObject, Dictionary<string, string?>>(ReferenceEqualityComparer.Instance);
-        foreach (var node in graph.Nodes())
+        foreach (var root in graph.RootNodes)
         {
-            var parameters = new Dictionary<string, string?>(StringComparer.Ordinal);
-            foreach (var (parameter, value) in node)
+            Each(root, "", null, "", effects, (node, _, _, _) =>
             {
-                parameters[parameter] = value?.ToJsonString();
-            }
-            snapshot[node] = parameters;
+                var parameters = new Dictionary<string, string?>(StringComparer.Ordinal);
+                foreach (var (parameter, value) in node)
+                {
+                    parameters[parameter] = value?.ToJsonString();
+                }
+                snapshot[node] = parameters;
+            });
         }
         return snapshot;
     }
 
-    /// <summary>Visits the effect nodes under a root with the paths <see cref="Walk"/> gives them.</summary>
-    private static void Paths(JsonObject node, string path, EffectRegistry effects, Action<JsonObject, string> visit)
+    /// <summary>
+    /// Visits a node and the effect nodes it holds, parents first, each with its path (the walk of the compiled graph
+    /// gives the same), the effect node holding it, and its place under that node (<c>.on_hit[2]</c>, <c>.choices[0].effects[1]</c>).
+    /// </summary>
+    private static void Each(JsonObject node, string path, JsonObject? parent, string fragment, EffectRegistry effects, Action<JsonObject, string, JsonObject?, string> visit)
     {
-        visit(node, path);
+        visit(node, path, parent, fragment);
         foreach (var (parameter, value) in node)
         {
             if (parameter != "type" && value is not null)
             {
-                PathsIn(value, $"{path}.{parameter}", effects, visit);
+                Inside(value, node, $"{path}.{parameter}", "." + parameter, effects, visit);
             }
         }
     }
 
-    private static void PathsIn(JsonNode value, string path, EffectRegistry effects, Action<JsonObject, string> visit)
+    /// <summary>The effect nodes a value holds: in a list, or in the data objects (a random choice) a list or a block holds.</summary>
+    private static void Inside(JsonNode value, JsonObject holder, string path, string fragment, EffectRegistry effects, Action<JsonObject, string, JsonObject?, string> visit)
     {
         switch (value)
         {
@@ -817,7 +1021,7 @@ internal static class AxisGraph
                     }
                     if (IsEffect(element, effects))
                     {
-                        Paths(element, $"{path}[{i}]", effects, visit);
+                        Each(element, $"{path}[{i}]", holder, $"{fragment}[{i}]", effects, visit);
                     }
                     else
                     {
@@ -825,7 +1029,7 @@ internal static class AxisGraph
                         {
                             if (inner is not null)
                             {
-                                PathsIn(inner, $"{path}[{i}].{key}", effects, visit);
+                                Inside(inner, holder, $"{path}[{i}].{key}", $"{fragment}[{i}].{key}", effects, visit);
                             }
                         }
                     }
@@ -836,7 +1040,7 @@ internal static class AxisGraph
                 {
                     if (inner is not null)
                     {
-                        PathsIn(inner, $"{path}.{key}", effects, visit);
+                        Inside(inner, holder, $"{path}.{key}", $"{fragment}.{key}", effects, visit);
                     }
                 }
                 break;

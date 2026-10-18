@@ -296,8 +296,10 @@ switch (command)
               weave <preset|form> --axes [--threads a,b] [--glyphs g,g@level] [--level n]
                                                   the weave on the combat grammar's nine dimensions: each axis, its unit,
                                                   who stated it and where; then its frozen literals
-              weave --axes --all [--json file]    every form and preset placed: per dimension how many state it, the
-                                                  literal baseline, the rules read; the file gets every value
+              weave --axes --all [--json file] [--literals file]
+                                                  every form, preset and glyph placed: per dimension how many state it,
+                                                  the literals and the distinct ones, the rules read; --json gets every
+                                                  value, --literals the frozen-literal baseline
               passives [--verbose]                lint the constellations: broken links, orphans, unreachable nodes, route costs
               protocol-ts [--out file] [--check]  write (or check) the web client's TypeScript message types
               probe [--host h] [--port n] [--account a] [--seconds s] [--deltas] [--interface] [--features a,b]

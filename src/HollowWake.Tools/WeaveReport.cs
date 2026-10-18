@@ -16,8 +16,9 @@ namespace HollowWake.Tools;
 /// the compiler made of it: level, the held-mode blocks it carries and where each came from, tags, declared
 /// and probed mechanisms, active and dormant glyphs with their reasons, modifiers, the patched effect graph,
 /// and preview numbers for a sample caster. With <c>--axes</c> it prints the weave on the combat grammar's
-/// nine dimensions instead (<see cref="AxisReport"/>), and with <c>--axes --all</c> the census of every form
-/// and preset, per dimension, with <c>--json</c> writing every value.
+/// nine dimensions instead (<see cref="AxisReport"/>), and with <c>--axes --all</c> the census of every form,
+/// preset and glyph, per dimension, with <c>--json</c> writing every value and <c>--literals</c> the frozen
+/// literal baseline the axis report tests hold the content to.
 /// </summary>
 public static class WeaveReport
 {
@@ -25,7 +26,7 @@ public static class WeaveReport
     {
         if (flag("axes") && flag("all"))
         {
-            return AxesOfAll(content, opt("json", ""));
+            return AxesOfAll(content, opt("json", ""), opt("literals", ""));
         }
         id ??= "ember_bolt";
         var threads = Split(opt("threads", ""));
@@ -128,11 +129,12 @@ public static class WeaveReport
             }
         }
         var literals = AxisReport.Literals(values);
-        Console.WriteLine($"literals    {literals.Count} frozen: literal numbers no modifier reaches");
+        Console.WriteLine($"literals    {literals.Count} frozen: literal numbers no modifier reaches, each with who wrote it and where in their definition");
         foreach (var v in literals)
         {
             var door = v.Attribute is { } a ? "write weave." + a : "no attribute reaches it";
-            Console.WriteLine($"  {v.Name,-36} {v.Text,-12} {v.Unit,-10} {v.Path}  ({v.Effect}.{v.Parameter}; {door})");
+            var what = v.Effect is null ? "cast layer" : $"{v.Effect}.{v.Parameter}";
+            Console.WriteLine($"  {v.Name,-36} {v.Text,-12} {v.Unit,-10} {v.Path}  ({what}; {door}; {v.Key})");
         }
         var hiding = values.Where(v => v.HidesNumber).ToList();
         if (hiding.Count > 0)
@@ -145,24 +147,33 @@ public static class WeaveReport
         }
     }
 
-    /// <summary>The census over every form and preset: per dimension how many weaves state it, their axes, literals and rules.</summary>
-    private static int AxesOfAll(ContentRegistry content, string json)
+    /// <summary>
+    /// The census over every form and preset, and each glyph on the first form it fits: per dimension how many
+    /// weaves state it, their axes, literals (the values, and the distinct ones by who wrote them) and rules.
+    /// </summary>
+    private static int AxesOfAll(ContentRegistry content, string json, string literalsFile)
     {
         var all = AxisReport.OfAll(content);
+        var glyphs = AxisReport.OfGlyphs(content);
         var compiled = all.Where(a => a.Error is null).ToList();
-        Console.WriteLine($"{all.Count} weaves: {compiled.Count(a => a.Kind == "form")} forms and {compiled.Count(a => a.Kind == "preset")} presets placed, {all.Count - compiled.Count} did not compile");
-        Console.WriteLine($"  {"dimension",-12} {"weaves",7} {"axes",7} {"literals",9} {"rules",7}");
+        var placedGlyphs = glyphs.Where(g => g.Error is null).ToList();
+        var census = compiled.Concat(placedGlyphs).ToList();
+        Console.WriteLine($"{all.Count} weaves: {compiled.Count(a => a.Kind == "form")} forms and {compiled.Count(a => a.Kind == "preset")} presets placed, {all.Count - compiled.Count} did not compile; {placedGlyphs.Count} of {glyphs.Count} glyphs placed on the first form or preset each fits");
+        Console.WriteLine($"  {"dimension",-12} {"weaves",7} {"axes",7} {"literals",9} {"distinct",9} {"rules",7}");
         foreach (var dimension in Enum.GetValues<Dimension>())
         {
             var stating = compiled.Count(a => a.Values.Any(v => v.Dimension == dimension));
             var axes = compiled.Sum(a => a.Values.Count(v => v.Dimension == dimension));
             var literals = compiled.Sum(a => a.Values.Count(v => v.Dimension == dimension && v.Frozen));
+            var distinct = census.SelectMany(a => a.Values).Where(v => v.Dimension == dimension && v.Frozen && v.Key is not null).Select(v => v.Key).Distinct(StringComparer.Ordinal).Count();
             var fromRules = compiled.Sum(a => a.Values.Count(v => v.Dimension == dimension && v.Source == AxisSource.Rule));
-            Console.WriteLine($"  {AxisValue.DimensionName(dimension),-12} {stating,7} {axes,7} {literals,9} {fromRules,7}");
+            Console.WriteLine($"  {AxisValue.DimensionName(dimension),-12} {stating,7} {axes,7} {literals,9} {distinct,9} {fromRules,7}");
         }
         var frozen = compiled.SelectMany(a => a.Values.Where(v => v.Frozen)).ToList();
-        Console.WriteLine($"literals    {frozen.Count} in {compiled.Count(a => a.Values.Any(v => v.Frozen))} weaves, most often");
-        foreach (var group in frozen.GroupBy(v => $"{v.Effect}.{v.Parameter}").OrderByDescending(g => g.Count()).ThenBy(g => g.Key, StringComparer.Ordinal).Take(20))
+        var keys = AxisReport.LiteralKeys(census);
+        var byWriter = string.Join(", ", keys.GroupBy(k => k[..k.IndexOf(' ')]).OrderBy(g => g.Key, StringComparer.Ordinal).Select(g => $"{g.Count()} by {g.Key}s"));
+        Console.WriteLine($"literals    {frozen.Count} in {compiled.Count(a => a.Values.Any(v => v.Frozen))} weaves; {keys.Count} distinct by who wrote them ({byWriter}); most often");
+        foreach (var group in frozen.GroupBy(v => v.Effect is null ? v.Name : $"{v.Effect}.{v.Parameter}").OrderByDescending(g => g.Count()).ThenBy(g => g.Key, StringComparer.Ordinal).Take(20))
         {
             var door = group.First().Attribute is { } a ? "weave." + a : "no attribute";
             Console.WriteLine($"  {group.Key,-32} {group.Count(),6}  {group.First().Name} ({door})");
@@ -179,7 +190,7 @@ public static class WeaveReport
         {
             Console.WriteLine($"  {group.Key,-32} {group.Count(),6}  {string.Join(", ", group.Select(v => v.Text).Distinct().OrderBy(t => t, StringComparer.Ordinal))}");
         }
-        foreach (var failed in all.Where(a => a.Error is not null))
+        foreach (var failed in all.Concat(glyphs).Where(a => a.Error is not null))
         {
             Console.WriteLine($"not placed  {failed.Kind} {failed.Id}: {failed.Error}");
         }
@@ -187,11 +198,27 @@ public static class WeaveReport
         {
             var path = Path.GetFullPath(json);
             Directory.CreateDirectory(Path.GetDirectoryName(path)!);
-            File.WriteAllText(path, AxesJson(all).ToJsonString(new System.Text.Json.JsonSerializerOptions { WriteIndented = true, Encoder = Plain.Encoder }) + "\n");
+            File.WriteAllText(path, AxesJson(all.Concat(glyphs).ToList()).ToJsonString(new System.Text.Json.JsonSerializerOptions { WriteIndented = true, Encoder = Plain.Encoder }) + "\n");
+            Console.WriteLine($"wrote {path}");
+        }
+        if (literalsFile.Length > 0)
+        {
+            var path = Path.GetFullPath(literalsFile);
+            Directory.CreateDirectory(Path.GetDirectoryName(path)!);
+            File.WriteAllText(path, string.Join("\n", LiteralsHeader.Concat(keys)) + "\n");
             Console.WriteLine($"wrote {path}");
         }
         return 0;
     }
+
+    /// <summary>The literal baseline's header: what the file holds and how it is written.</summary>
+    private static readonly string[] LiteralsHeader =
+    {
+        "# The frozen literals of the content: numbers a graph or the cast layer writes as constants that no modifier reaches,",
+        "# one a line, keyed by who wrote it (a form, a preset or a glyph) and where in their own definition. Written by",
+        "# hollowwake weave --axes --all --literals tests/fixtures/grammar/frozen-literals.txt; the axis report tests hold",
+        "# the core content to it, so a new literal fails them and a literal resolved is removed by writing the file again.",
+    };
 
     private static JsonArray AxesJson(IReadOnlyList<WeaveAxes> all)
     {
@@ -215,6 +242,9 @@ public static class WeaveReport
                     ["effect"] = v.Effect,
                     ["parameter"] = v.Parameter,
                     ["detail"] = v.Detail,
+                    ["writer"] = v.Writer,
+                    ["origin"] = v.Origin,
+                    ["constant"] = v.Constant,
                     ["frozen"] = v.Frozen,
                     ["hides_number"] = v.HidesNumber,
                 });

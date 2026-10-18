@@ -122,8 +122,10 @@ entries:
         var burning = Assert.Single(values, v => v.Name == "coupling.writes.status.burning");
         Assert.Equal(("target", AxisSource.Literal), (burning.Word, burning.Source));
 
-        // The frozen axes are exactly the literals no attribute multiplies.
-        Assert.Equal(values.Where(v => v.Source == AxisSource.Literal && v.Number is not null && !v.Multiplied), AxisReport.Literals(values));
+        // The frozen axes are exactly the constants no attribute reaches, each keyed where the bolt's form wrote it.
+        Assert.Equal(values.Where(v => v.Constant && v.Number is not null && !v.Multiplied), AxisReport.Literals(values));
+        Assert.Equal(new[] { "form bolt effects[0].on_hit[1].chance", "form bolt effects[0].on_hit[2].range" },
+            AxisReport.Literals(values).Select(v => v.Key).OrderBy(k => k, StringComparer.Ordinal));
     }
 
     [Fact]
@@ -240,6 +242,7 @@ entries:
         var shape = Assert.Single(values, v => v.Name == "geometry.shape");
         Assert.Equal(("crescent", AxisSource.Patch, "effects[0].shape"), (shape.Word, shape.Source, shape.Path));
         Assert.Contains("crescent_sigil", shape.Detail);
+        Assert.Equal(("glyph crescent_sigil", "patches[0].set.shape"), (shape.Writer, shape.Origin));
         // What the patch did not touch stays the form's.
         Assert.Contains(values, v => v.Name == "geometry.center" && v.Source == AxisSource.Literal);
 
@@ -254,6 +257,9 @@ entries:
         var angle = Assert.Single(tree, v => v.Name == "geometry.angle" && v.Path == "effects[0].angle");
         Assert.Equal(AxisSource.Patch, angle.Source);
         Assert.Contains("tree broad_stream", angle.Detail);
+        // A tree node is part of its form, so what its patch writes sits in the form's tree.
+        var node = CoreContent.Registry.Get<FormDef>("torrent")!.Tree!.Nodes.FindIndex(n => n.Id == "broad_stream");
+        Assert.Equal(("form torrent", $"tree.nodes[{node}].patches[0].set.angle"), (angle.Writer, angle.Origin));
     }
 
     [Fact]
@@ -274,9 +280,61 @@ entries:
         Assert.All(values.Where(v => v.Name == "coupling.writes.status.shocked"), v => Assert.Equal(AxisSource.Hook, v.Source));
         Assert.Contains(values, v => v.Name == "coupling.writes.status.burning" && v.Source == AxisSource.Literal);
 
-        // The bolt's own flight is not a rider, and a rider's literals are its glyph's, not the bolt's frozen axes.
+        // The bolt's own flight is not a rider. A rider's literals are frozen too, and they are its glyph's: keyed in
+        // the glyph's hook list, once however many moments the hook lands on, never as the bolt's.
         Assert.Contains(values, v => v.Name == "kinematics.speed" && v.Path == "effects[0].speed" && v.Source == AxisSource.Attribute);
-        Assert.DoesNotContain(AxisReport.Literals(values), v => v.Source == AxisSource.Hook);
+        var literals = AxisReport.Literals(values);
+        Assert.All(literals.Where(v => v.Source == AxisSource.Hook), v => Assert.StartsWith("glyph ", v.Key));
+        Assert.Equal("glyph shedding hooks.on_tick[0].radius", Assert.Single(literals, v => v.Path == "effects[0].on_tick[0].radius").Key);
+        var chances = literals.Where(v => v.Key == "glyph hexing hooks.on_hit[0].chance").Select(v => v.Path).OrderBy(p => p, StringComparer.Ordinal);
+        Assert.Equal(new[] { "effects[0].on_hit[2].effects[1].chance", "effects[0].on_hit[3].chance" }, chances);
+        Assert.Contains(literals, v => v.Key == "form bolt effects[0].on_hit[1].chance" && v.Source == AxisSource.Literal);
+    }
+
+    [Fact]
+    public void ALiteralIsKeyedWhereItsWriterWroteIt()
+    {
+        var content = CoreContent.Registry;
+        var blast = new WeaveSpec { Form = "blast", Threads = { "stone" } };
+        var wrappedSpec = new WeaveSpec { Form = "blast", Threads = { "stone" }, Glyphs = { "cascading" } };
+
+        // A form's literal keeps its key under a glyph's wrapper, though the wrap moves it in the compiled graph.
+        var bare = Assert.Single(AxisReport.Literals(Report(content, blast)), v => v.Name == "payload.chance");
+        var wrapped = Report(content, wrappedSpec);
+        var moved = Assert.Single(AxisReport.Literals(wrapped), v => v.Name == "payload.chance");
+        Assert.Equal(("effects[0].effects[1].chance", "effects[0].effects[0].effects[1].chance"), (bare.Path, moved.Path));
+        Assert.Equal("form blast effects[0].effects[1].chance", bare.Key);
+        Assert.Equal(bare.Key, moved.Key);
+
+        // The wrapper's own number is the glyph's, keyed in the patch that wrapped.
+        var interval = Assert.Single(wrapped, v => v.Path == "effects[0].interval");
+        Assert.Equal(("glyph cascading patches[0].wrap.interval", AxisSource.Patch, true), (interval.Key, interval.Source, interval.Frozen));
+
+        // A glyph's literals are keyed in its own definition, whatever form it rides: shedding's on a bolt and on an orb.
+        IEnumerable<string?> Shed(string form) => AxisReport.Literals(Report(content, new WeaveSpec { Form = form, Threads = { "ember" }, Glyphs = { "shedding" } }))
+            .Where(v => v.Writer == "glyph shedding").Select(v => v.Key).Distinct().OrderBy(k => k, StringComparer.Ordinal);
+        Assert.NotEmpty(Shed("bolt"));
+        Assert.Equal(Shed("bolt"), Shed("orb"));
+
+        // A raw number of the cast layer is frozen and keyed to the block's owner: a guard's arc.
+        var arc = Assert.Single(Report(content, new WeaveSpec { Form = "bulwark", Threads = { "stone" } }), v => v.Name == "geometry.guard.arc");
+        Assert.Equal(("form bulwark guard.arc", true), (arc.Key, arc.Frozen));
+    }
+
+    [Fact]
+    public void TheFrozenLiteralsOfTheCoreContentAreTheBaseline()
+    {
+        // Every frozen literal of the forms, the presets and the glyphs, each once by who wrote it and where:
+        // tests/fixtures/grammar/frozen-literals.txt, written by hollowwake weave --axes --all --literals.
+        var content = CoreContent.Registry;
+        var now = AxisReport.LiteralKeys(AxisReport.OfAll(content).Concat(AxisReport.OfGlyphs(content)));
+        var file = Path.Combine(CoreContent.FindContentDir(), "..", "..", "tests", "fixtures", "grammar", "frozen-literals.txt");
+        var baseline = File.ReadAllLines(file).Where(line => line.Length > 0 && !line.StartsWith('#')).ToArray();
+        var added = now.Except(baseline, StringComparer.Ordinal).ToArray();
+        var gone = baseline.Except(now, StringComparer.Ordinal).ToArray();
+        Assert.True(added.Length == 0 && gone.Length == 0,
+            $"frozen literals: new, not in the baseline: [{string.Join(", ", added)}]; resolved, to remove by writing the file again: [{string.Join(", ", gone)}]");
+        Assert.Equal(baseline.OrderBy(k => k, StringComparer.Ordinal), baseline);
     }
 
     [Fact]

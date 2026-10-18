@@ -150,6 +150,8 @@ internal static class DeliveryAxes
             word = reading.Words(json);
             nature = AxisSource.Literal;
         }
+        // Written as a constant, whoever wrote it: a patch's or a rider's number is as frozen as the form's.
+        var constant = nature == AxisSource.Literal && number is not null;
         if (binding.Role is AttributeRole.Multiplier or AttributeRole.Channel && binding.Attribute is { } scale)
         {
             attribute = scale;
@@ -170,6 +172,7 @@ internal static class DeliveryAxes
         {
             return null;
         }
+        var origin = node.OriginOf(binding.Top, path);
         return new AxisValue
         {
             Dimension = dimension,
@@ -185,6 +188,9 @@ internal static class DeliveryAxes
             Parameter = binding.Parameter,
             Detail = detail,
             HidesNumber = binding.HidesNumber,
+            Constant = constant,
+            Writer = origin?.Writer,
+            Origin = origin?.Path,
         };
     }
 

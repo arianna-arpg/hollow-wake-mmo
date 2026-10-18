@@ -199,8 +199,8 @@ internal static class CastingAxes
         }
         if (over.Spark is { } spark)
         {
-            r.Add(Timing, "overcharge.spark.window", spark.Window, null, Seconds, AxisSource.Form, at + ".spark.window");
-            r.Add(Payload, "overcharge.spark.bonus", spark.Bonus, null, Fraction, AxisSource.Form, at + ".spark.bonus");
+            Raw(r, Timing, "overcharge.spark.window", spark.Window, Seconds, AxisSource.Form, at + ".spark.window", "overcharge.spark.window");
+            Raw(r, Payload, "overcharge.spark.bonus", spark.Bonus, Fraction, AxisSource.Form, at + ".spark.bonus", "overcharge.spark.bonus");
         }
     }
 
@@ -211,7 +211,7 @@ internal static class CastingAxes
             return;
         }
         var (source, at) = Held(guard, r.Preset?.Guard, "guard");
-        r.Add(Geometry, "guard.arc", guard.Arc, null, Degrees, source, at + ".arc");
+        Raw(r, Geometry, "guard.arc", guard.Arc, Degrees, source, at + ".arc", "guard.arc");
         if (guard.Pool is { } pool)
         {
             var amount = r.Evaluate(pool);
@@ -259,10 +259,10 @@ internal static class CastingAxes
         var (source, at) = Held(timing, r.Preset?.Timing, "timing");
         r.Add(Timing, "strike.kind", null, timing.Kind.ToString().ToLowerInvariant(), Word, source, at + ".kind");
         var multitude = timing.Kind == TimingKind.Multitude;
-        r.Add(Timing, "strike.window", timing.Window, null, multitude ? Count : Seconds, source, at + ".window");
+        Raw(r, Timing, "strike.window", timing.Window, multitude ? Count : Seconds, source, at + ".window", "timing.window");
         if (!multitude)
         {
-            r.Add(Payload, "strike.bonus", timing.Bonus, null, Fraction, source, at + ".bonus");
+            Raw(r, Payload, "strike.bonus", timing.Bonus, Fraction, source, at + ".bonus", "timing.bonus");
         }
     }
 
@@ -419,6 +419,24 @@ internal static class CastingAxes
             r.Add(Economy, "self_stack.decay", stack.Decay, null, Seconds, source, at + ".decay");
         }
     }
+
+    /// <summary>
+    /// A raw number of the cast layer the runtime reads as it stands, no modifier reaching it (a guard's arc, a
+    /// strike's timing window and bonus, a spark's): a frozen axis, keyed to the block's owner and the field.
+    /// </summary>
+    private static void Raw(AxisReading r, Dimension dimension, string axis, double value, string unit, AxisSource source, string path, string field) =>
+        r.Add(new AxisValue
+        {
+            Dimension = dimension,
+            Name = AxisValue.DimensionName(dimension) + "." + axis,
+            Number = value,
+            Unit = unit,
+            Source = source,
+            Path = path,
+            Constant = true,
+            Writer = source == AxisSource.Preset && r.Preset is { } preset ? "preset " + preset.Id : "form " + r.Weave.Form.Id,
+            Origin = field,
+        });
 
     private static void Rule(AxisReading r, Dimension dimension, string axis, string rule, double fallback, string unit, string path) =>
         r.Add(dimension, axis, r.Content.Rules.Number(rule, fallback), null, unit, AxisSource.Rule, path, detail: rule);
