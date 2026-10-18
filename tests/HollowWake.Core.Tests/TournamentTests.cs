@@ -78,6 +78,66 @@ entries:
     }
 
     [Fact]
+    public void ADoubleKnockoutIsADraw()
+    {
+        var dir = Scratch("evaluation-knockout");
+        try
+        {
+            // A blow that kills its target and, in the same effect run, its striker.
+            File.WriteAllText(Path.Combine(dir, "weaves.yaml"), """
+kind: weaves
+entries:
+  - id: t_mutual_ruin
+    name: Mutual Ruin
+    form: strike
+    threads: []
+    effects:
+      - { type: damage, amount: 100000, can_crit: false }
+      - type: area
+        shape: circle
+        radius: 1
+        center: source
+        filter: self
+        effects: [{ type: damage, amount: 100000, can_crit: false }]
+""".Replace("\r\n", "\n"));
+            File.WriteAllText(Path.Combine(dir, "patterns.yaml"), """
+kind: patterns
+entries:
+  - id: t_martyr
+    name: Martyr
+    extends: monster
+    tags: [humanoid]
+    level: 5
+    components:
+      stats: { attributes: { might: 10, vigor: 10, move.speed: 4.8, weapon.damage.min: 4, weapon.damage.max: 6, weapon.attack.time: 1.0 } }
+      weaves: { list: [t_mutual_ruin] }
+      behavior: { id: aggressive_melee }
+""".Replace("\r\n", "\n"));
+            var registry = ContentRegistry.Load(new[] { CoreContent.FindContentDir(), dir }, out var report);
+            Assert.Empty(report.Errors);
+            var run = Tournament.Run(registry, new[] { new Pairing("t_martyr", "hob") }, seeds: 4, seconds: 20, checkBands: false);
+            var knockouts = run.Fights.Where(f => f.SideA.LifeLeft == 0 && f.SideB.LifeLeft == 0).ToList();
+            Assert.NotEmpty(knockouts);
+            Assert.All(knockouts, f =>
+            {
+                Assert.Equal("draw", f.Outcome);
+                Assert.True(f.Seconds < 20, "a double knockout ends before the cap");
+            });
+            // A draw counts toward the draw rate and never toward the time to kill.
+            var pair = Assert.Single(run.Pairs);
+            Assert.Equal((double)run.Fights.Count(f => f.Outcome == "draw") / run.Fights.Count, pair.DrawRate, 3);
+            if (run.Fights.All(f => f.Outcome == "draw"))
+            {
+                Assert.Equal(0, pair.TtkMedian);
+            }
+        }
+        finally
+        {
+            Directory.Delete(dir, recursive: true);
+        }
+    }
+
+    [Fact]
     public void NeitherSideIsStructurallyFirst()
     {
         // The side spawned first is created first, and so thinks and acts first on every tick: it alternates with

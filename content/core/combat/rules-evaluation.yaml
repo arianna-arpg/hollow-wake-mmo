@@ -25,7 +25,8 @@ entries:
       # The median time to kill over the fights that ended.
       ttk_min: 5
       ttk_max: 45
-      # The share of fights either side may win, and the share that may end with nobody dead.
+      # The share of fights either side may win, and the share that may end in a draw: both bodies standing at the
+      # cap, or both dead after the tick the first one fell in (a double knockout).
       win_rate_ceiling: 0.8
       draw_ceiling: 0.2
       # The share of its kit each side must cast, averaged over its fights.

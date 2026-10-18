@@ -85,7 +85,9 @@ public sealed record Side(
 
 /// <summary>
 /// One seeded fight: who won (<c>a</c>, <c>b</c> or <c>draw</c>), when it ended, the hash of its ordered event log
-/// (sixteen hex digits, see <see cref="Tournament.Duel"/>), and each side's tally.
+/// (sixteen hex digits, see <see cref="Tournament.Duel"/>), and each side's tally. A fight ends at the first tick after
+/// which a body is dead, or at the cap; it is a draw when both bodies stand at the cap, or when both are dead after
+/// that tick, a double knockout, which ends before the cap.
 /// </summary>
 public sealed record Fight(string A, string B, int Index, ulong Seed, string Outcome, double Seconds, string Hash, Side SideA, Side SideB);
 
@@ -375,7 +377,8 @@ public static class Tournament
         // field the way kill credit does.
         Tally? Credit(Entity e) => tallies.TryGetValue(DeathService.CreditTarget(sim, e).Key, out var t) ? t : null;
         double? ended = null;
-        var outcome = "draw";
+        var aDied = false;
+        var bDied = false;
         sim.Events.Subscribe<DamageDealt>(d =>
         {
             if (!d.Evaded && Credit(d.Source) is { } t)
@@ -407,18 +410,22 @@ public static class Tournament
                 t.Statuses.Add(s.Status);
             }
         });
+        // The fight ends with the tick a body died in; a body that dies later in that same tick is down too, so both
+        // dead after it is a double knockout, scored a draw.
         sim.Events.Subscribe<EntityDied>(d =>
         {
-            if (ended is null && (d.Entity == a || d.Entity == b))
+            if (d.Entity == a || d.Entity == b)
             {
-                ended = sim.Clock.Time;
-                outcome = d.Entity == a ? "b" : "a";
+                ended ??= sim.Clock.Time;
+                aDied |= d.Entity == a;
+                bDied |= d.Entity == b;
             }
         });
         while (ended is null && sim.Clock.Time < seconds)
         {
             sim.Tick();
         }
+        var outcome = aDied == bDied ? "draw" : aDied ? "b" : "a";
         trace.End(outcome);
         return new Fight(pairing.A, pairing.B, index, seed, outcome, ended ?? seconds, Hex(trace.Hash()), SideOf(sim, a, pairing.A, tallies[a.Key]), SideOf(sim, b, pairing.B, tallies[b.Key]));
     }
