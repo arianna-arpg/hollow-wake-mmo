@@ -495,18 +495,21 @@ async function script() {
   let character = (await hw(() => window.hollowWake.characters())).find((c) => c.name === 'Smoke');
   if (!character) {
     const before = (await counts()).characterLists;
-    await page.fill('#login-new-name', 'Smoke');
-    if (opt('calling', '')) await page.selectOption('#login-calling', opt('calling', ''));
-    await page.click('#login-create');
+    const calling = opt('calling', '') || (await hw(() => window.hollowWake.callings()))[0];
+    await shot('00_mu.png');
+    await page.click(`[data-vessel="calling:${calling}"]`);
+    await page.fill('.entry-card input', 'Smoke');
+    await page.locator('.entry-card button').first().click();
     await until(async () => (await counts()).characterLists > before, 20000);
     character = (await hw(() => window.hollowWake.characters())).find((c) => c.name === 'Smoke');
     record('create character', Boolean(character), character ? `${character.name} the ${character.calling}` : await hw(() => window.hollowWake.status));
     if (!character) {
       return;
     }
+  } else {
+    await page.click(`[data-vessel="character:${character.id}"]`);
+    await page.locator('.entry-card button').first().click();
   }
-  await page.click(`.character[data-id="${character.id}"]`);
-  await page.click('#login-enter');
   const entered = await until(async () => hw(() => window.hollowWake.inWorld && window.hollowWake.self() !== null), 20000);
   const p = entered ? await self() : null;
   record('enter world', entered, p ? `${p.name} at ${p.x.toFixed(1)}, ${p.y.toFixed(1)}, ${p.z.toFixed(1)}` : await hw(() => window.hollowWake.status));

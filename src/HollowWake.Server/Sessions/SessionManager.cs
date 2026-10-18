@@ -134,6 +134,8 @@ public sealed class SessionManager
                 session.View.SendCastForecasts = hello.Features?.Contains(ProtocolInfo.CastForecastFeature) == true;
                 session.View.SendCastCues = hello.Features?.Contains(ProtocolInfo.CastCuesFeature) == true || session.View.SendCastForecasts;
                 var granted = new List<string>();
+                session.EntryFlow = hello.Features?.Contains(ProtocolInfo.EntryFlowFeature) == true;
+                if (session.EntryFlow) granted.Add(ProtocolInfo.EntryFlowFeature);
                 if (session.View.SendCastCues) granted.Add(ProtocolInfo.CastCuesFeature);
                 if (session.View.SendCastForecasts) granted.Add(ProtocolInfo.CastForecastFeature);
                 if (session.View.SendDeltas)
@@ -306,7 +308,17 @@ public sealed class SessionManager
         SendCharacterList(session);
     }
 
-    private void SendCharacterList(Session session)
+    private EntryFlowDef EntryFlow => _zones.Content.Each<EntryFlowDef>().Single(f => f.Default);
+
+    private bool SelectionAllowed(Session session, Account account)
+    {
+        var stage = EntryPolicy.Current(EntryFlow, Core.Tags.TagSet.From(account.EntryFacts));
+        if (stage is not null && EntryStageKinds.AllowsSelection(stage.Kind)) return true;
+        session.Error("entry_required", "Complete the account's current entry stage first.");
+        return false;
+    }
+
+    private void SendCharacterList(Session session, string? created = null, string? request = null)
     {
         var account = _accounts.Load(session.AccountId!);
         var list = new List<CharacterSummary>();
@@ -321,11 +333,21 @@ public sealed class SessionManager
                 }
             }
         }
-        session.Send(new CharacterListMsg(list, _zones.Content.Each<CallingDef>().Select(c => c.Id).ToList()));
+        var facts = Core.Tags.TagSet.From(account?.EntryFacts);
+        var choices = _zones.Content.Each<CallingDef>()
+            .Select(c => new CallingAvailability(c.Id, EntryPolicy.Available(c, facts))).ToList();
+        var stage = EntryPolicy.Current(EntryFlow, facts)!;
+        session.Send(new CharacterListMsg(list, choices.Where(c => c.Available).Select(c => c.Id).ToList()) {
+            Entry = session.EntryFlow ? new EntryState(EntryFlow.Id, stage.Id, stage.Kind, stage.Presentation,
+                (account?.Characters.Count ?? 0) < EntryFlow.CharacterLimit && EntryStageKinds.AllowsSelection(stage.Kind), choices) : null,
+            CreatedCharacterId = session.EntryFlow ? created : null,
+            RequestId = session.EntryFlow ? request : null,
+        });
     }
 
     private void CreateCharacter(Session session, CreateCharacterMsg create)
     {
+        if (session.State != SessionState.Authenticated) { session.Error("in_world", "Leave the world before creating a character."); return; }
         var name = create.Name.Trim();
         if (name.Length is < 2 or > 24 || !name.All(c => char.IsLetter(c) || c == ' ' || c == '\''))
         {
@@ -338,7 +360,13 @@ public sealed class SessionManager
             return;
         }
         var account = _accounts.Load(session.AccountId!)!;
-        if (account.Characters.Count >= 8)
+        if (!SelectionAllowed(session, account)) return;
+        if (!EntryPolicy.Available(_zones.Content.Get<CallingDef>(create.Calling)!, Core.Tags.TagSet.From(account.EntryFacts)))
+        {
+            session.Error("calling_unavailable", "This calling is not available to this account.");
+            return;
+        }
+        if (account.Characters.Count >= EntryFlow.CharacterLimit)
         {
             session.Error("too_many", "That account has enough characters.");
             return;
@@ -349,12 +377,13 @@ public sealed class SessionManager
         account.Characters.Add(sheet.Id);
         _accounts.Save(account);
         _log.LogInformation("{Session} created character {Name} ({Calling})", session, name, create.Calling);
-        SendCharacterList(session);
+        SendCharacterList(session, sheet.Id, create.RequestId);
     }
 
     private void SelectCharacter(Session session, SelectCharacterMsg select)
     {
         var account = _accounts.Load(session.AccountId!)!;
+        if (!SelectionAllowed(session, account)) return;
         if (!account.Characters.Contains(select.CharacterId))
         {
             session.Error("not_yours", "No such character on this account.");

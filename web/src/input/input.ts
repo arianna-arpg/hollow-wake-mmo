@@ -57,6 +57,7 @@ const DEAD_ZONE = 0.35;
  * field never reach the game; a capture in the Options pane takes keys before this sees them.
  */
 export class Input {
+  enabled: () => boolean = () => true;
   private readonly down = new Set<string>();
   private actions: InputAction[] = [];
   private bindings = new Map<string, Binding>();
@@ -124,7 +125,7 @@ export class Input {
   }
 
   private keyDown(e: KeyboardEvent): void {
-    if (Input.typing() || e.metaKey) {
+    if (!this.enabled() || Input.typing() || e.metaKey || (e.repeat && !this.down.has(e.code))) {
       return;
     }
     const held = this.actions.filter((a) => a.held && this.keysOf(a.id).some((k) => webCode(parseKeyName(k)) === e.code));
@@ -153,6 +154,7 @@ export class Input {
 
   /** Reads the first connected controller once a frame: held directions, and presses on the frame a button goes down. */
   pollPad(): void {
+    if (!this.enabled()) { this.heldPad.clear(); return; }
     const pads = typeof navigator.getGamepads === 'function' ? navigator.getGamepads() : [];
     const pad = [...pads].find((p) => p !== null && p.connected) ?? null;
     if (pad === null) {

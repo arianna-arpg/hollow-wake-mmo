@@ -1,6 +1,6 @@
 # Identity and the Crossing
 
-Hollow Wake's loading surface is a rewardless, playable crossing. Its reference is the loading mini-game in `arianna-arpg/arpg-game-world` at `64819bd4351001a34c92eed13b63e1f55f0c52ef`. The Mu scene with vessels is character selection and is a separate future migration.
+Hollow Wake's loading surface is a rewardless, playable crossing. Its reference is the loading mini-game in `arianna-arpg/arpg-game-world` at `64819bd4351001a34c92eed13b63e1f55f0c52ef`. The [Mu scene with vessels](entry.md) handles character selection before this Crossing.
 
 ## Identity
 
@@ -40,7 +40,7 @@ The cover clears movement, blocks gameplay input and owns focus. Browser sibling
 
 `scripts/loading-reference.mjs <prototype-checkout>` extracts and runs the original model from the pinned commit to regenerate `tests/fixtures/loading-reference.json`. The C# and TypeScript tests compare their full courses against these independent reference traces, including gate geometry. Do not generate the baseline from either port.
 
-Automatic quick play uses the same entry handlers and leases as manual selection. It starts after content initialization, and reports readiness only after the hero and nearby terrain are available and the Crossing closes. A first or ambiguous account still stops at character creation/selection.
+Quick play authenticates into [Mu](entry.md) and focuses a remembered vessel. Explicit Wake uses the same entry handlers and leases as ordinary selection, reporting readiness only after the hero and nearby terrain are available and the Crossing closes.
 
 The normal client and browser smoke courses verify world entry and gameplay after the cover. Additional checks:
 
@@ -55,6 +55,8 @@ node scripts/loading-entry-smoke.mjs --url http://127.0.0.1:17880 --server ws://
 
 The browser loading course exercises every direction and input family, stale leases, progress, retry, held-input release, focus restoration, portrait layout and reduced motion. The entry course delays actual server frames, cancels them, reconnects, times out, retries, and completes when terrain arrives. The native loading course captures every direction and exercises lease failure/retry/cancel through the real cover. `--loading-preview down|left|right` and `?loadingPreview=down|left|right` allow manual inspection without slowing ordinary loads.
 
-The combined startup checks under `experiments/launcher-quick-play/` exercise quick play against delayed real server traffic. `verify-crossing-startup.mjs` covers browser boot, first-character creation, remembered resume, cancellation and input release. `verify-native-startup.mjs --godot PATH` (or `--executable PATH`) invokes `--quick-play-smoke` to observe real character selection, loading, terrain readiness and subsequent movement. `verify-launcher.mjs --packaged --feed FEED_DIRECTORY --server HOST:PORT --entry` checks the installed archive through the normal Play and immediate-launch paths; seed a sole character for the development account on an isolated test server first. The browser quick-play check accepts `--url`, the native check accepts `--port`, and both accept `--output` so verification can use separate servers and capture folders while a playtest stays running. The general browser smoke accepts --no-physical-gamepads to isolate its keyboard/mouse course from connected controllers; controller behavior remains covered separately by explicit pad states in the loading course.
+The combined startup checks under `experiments/launcher-quick-play/` exercise quick play against delayed real server traffic. `verify-browser.mjs --url URL --output DIR` checks first creation and a reload that focuses the remembered vessel but waits for explicit Wake. `verify-crossing-startup.mjs` covers browser boot, creation, remembered Wake, cancellation and input release. `verify-native-startup.mjs --godot PATH --port PORT --output DIR` (or `--executable PATH`) defaults to headless and invokes `--quick-play-smoke` to exercise explicit Wake, loading, terrain readiness and subsequent movement, with private native settings and a bounded owned process. Rendering is explicitly skipped in headless mode. Pass `--isolated-graphical` only in an isolated graphical session to capture native pixels.
+
+The graphical launcher acceptance `verify-launcher.mjs --isolated-graphical --packaged --feed FEED_DIRECTORY --server HOST:PORT --entry` checks installation and both Play paths reaching the account entry stage without automatic world selection. It requires an isolated graphical session and a current archive. It does not claim to complete Wake; the browser and native startup courses cover that handoff. The general browser smoke accepts `--no-physical-gamepads` to isolate its keyboard/mouse course from connected controllers; controller behavior remains covered separately by explicit pad states in the loading and Mu courses.
 
 Packaging uses `--boot-check` and requires both successful exit and `BOOT PASS`, after validated content and client initialization. The PR release dry run verifies exported assets, bootstrap JSON, and launcher packaging.

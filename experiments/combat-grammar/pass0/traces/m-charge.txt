@@ -1,0 +1,72 @@
+== proving_fletcher (A) vs proving_bulwark (B), seed mech, 30 s kitA=ember_draw
+     16  A cast ember_draw
+     23  A dealt damage events
+     16  A released ember_draw (charge, full)
+     16  A started ember_draw
+     20  B cast bite
+     34  B dealt damage events
+     21  B started bite
+-- ticks by state (20 per second)
+      2  A state , free
+    111  A state engage, casting Charge
+     10  A state engage, free
+      5  A state idle, free
+    401  A state kite, casting Charge
+     40  A state kite, free
+     31  A state return, free
+      3  B state , free
+    494  B state chase, casting Cast
+     65  B state chase, free
+      5  B state idle, free
+-- A walked 18.5 units
+-- B walked 11.2 units
+-- life A 95/220  B 0/220
+-- timeline
+  t=0.05 A (10.00,10.00)  | B (14.00,10.00)  | dist 4.00
+  t=1.00 A (10.00,10.00) engage casting=ember_draw(Charge) | B (12.87,10.00) chase casting=bite(Cast) | dist 2.87
+  t=2.00 A released ember_draw mode=charge reason=full held=1.60 fill=1.00 stage=0 fired=true
+  t=2.00 A (10.00,10.00) engage | B (12.65,10.00) chase casting=bite(Cast) | dist 2.65
+  t=3.00 A (10.00,10.00) engage casting=ember_draw(Charge) | B (12.65,10.00) chase casting=bite(Cast) | dist 2.65
+  t=3.80 A released ember_draw mode=charge reason=full held=1.60 fill=1.00 stage=0 fired=true
+  t=4.00 A (9.22,10.00) kite casting=ember_draw(Charge) | B (12.42,10.00) chase casting=bite(Cast) | dist 3.20
+  t=5.00 A (9.22,10.00) kite casting=ember_draw(Charge) | B (11.30,10.00) chase casting=bite(Cast) | dist 2.08
+  t=5.55 A released ember_draw mode=charge reason=full held=1.60 fill=1.00 stage=0 fired=true
+  t=6.00 A (9.22,10.00) kite casting=ember_draw(Charge) | B (11.14,10.00) chase casting=bite(Cast) | dist 1.92
+  t=7.00 A (9.22,10.00) kite casting=ember_draw(Charge) | B (11.14,10.00) chase casting=bite(Cast) | dist 1.92
+  t=7.30 A released ember_draw mode=charge reason=full held=1.60 fill=1.00 stage=0 fired=true
+  t=8.00 A (8.44,10.00) engage casting=ember_draw(Charge) | B (10.98,10.00) chase casting=bite(Cast) | dist 2.54
+  t=9.00 A (8.44,10.00) kite casting=ember_draw(Charge) | B (10.76,10.00) chase casting=bite(Cast) | dist 2.32
+  t=9.05 A released ember_draw mode=charge reason=full held=1.60 fill=1.00 stage=0 fired=true
+  t=10.00 A (7.66,10.00) kite casting=ember_draw(Charge) | B (9.86,10.00) chase casting=bite(Cast) | dist 2.20
+  t=10.80 A released ember_draw mode=charge reason=full held=1.60 fill=1.00 stage=0 fired=true
+  t=11.00 A (7.66,10.00) kite casting=ember_draw(Charge) | B (9.86,10.00) chase casting=bite(Cast) | dist 2.20
+  t=12.00 A (7.66,10.00) kite casting=ember_draw(Charge) | B (8.96,10.00) chase casting=bite(Cast) | dist 1.30
+  t=12.55 A released ember_draw mode=charge reason=full held=1.60 fill=1.00 stage=0 fired=true
+  t=13.00 A (6.88,10.00) kite casting=ember_draw(Charge) | B (8.28,10.00) chase casting=bite(Cast) | dist 1.40
+  t=14.00 A (6.88,10.00) kite casting=ember_draw(Charge) | B (8.28,10.00) chase casting=bite(Cast) | dist 1.40
+  t=14.30 A released ember_draw mode=charge reason=full held=1.60 fill=1.00 stage=0 fired=true
+  t=15.00 A (6.10,10.00) kite casting=ember_draw(Charge) | B (8.28,10.00) chase casting=bite(Cast) | dist 2.18
+  t=16.00 A (6.10,10.00) kite casting=ember_draw(Charge) | B (7.50,10.00) chase casting=bite(Cast) | dist 1.40
+  t=16.05 A released ember_draw mode=charge reason=full held=1.60 fill=1.00 stage=0 fired=true
+  t=17.00 A (5.06,10.00) kite casting=ember_draw(Charge) | B (7.50,10.00) chase casting=bite(Cast) | dist 2.44
+  t=17.85 A released ember_draw mode=charge reason=full held=1.60 fill=1.00 stage=0 fired=true
+  t=18.00 A (4.28,10.00) engage casting=ember_draw(Charge) | B (7.05,10.00) chase casting=bite(Cast) | dist 2.77
+  t=19.00 A (4.28,10.00) kite casting=ember_draw(Charge) | B (6.37,10.00) chase casting=bite(Cast) | dist 2.09
+  t=19.60 A released ember_draw mode=charge reason=full held=1.60 fill=1.00 stage=0 fired=true
+  t=20.00 A (3.50,10.00) kite casting=ember_draw(Charge) | B (6.15,10.00) chase casting=bite(Cast) | dist 2.65
+  t=21.00 A (3.50,10.00) engage casting=ember_draw(Charge) | B (6.15,10.00) chase casting=bite(Cast) | dist 2.65
+  t=21.35 A released ember_draw mode=charge reason=full held=1.60 fill=1.00 stage=0 fired=true
+  t=22.00 A (2.72,10.00) kite casting=ember_draw(Charge) | B (5.92,10.00) chase casting=bite(Cast) | dist 3.20
+  t=23.00 A (2.72,10.00) kite casting=ember_draw(Charge) | B (4.57,10.00) chase casting=bite(Cast) | dist 1.85
+  t=23.10 A released ember_draw mode=charge reason=full held=1.60 fill=1.00 stage=0 fired=true
+  t=24.00 A (1.94,10.00) kite casting=ember_draw(Charge) | B (4.41,10.00) chase casting=bite(Cast) | dist 2.47
+  t=24.85 A released ember_draw mode=charge reason=full held=1.60 fill=1.00 stage=0 fired=true
+  t=25.00 A (1.16,10.00) kite casting=ember_draw(Charge) | B (4.41,10.00) chase casting=bite(Cast) | dist 3.25
+  t=26.00 A (1.16,10.00) kite casting=ember_draw(Charge) | B (3.29,10.00) chase casting=bite(Cast) | dist 2.13
+  t=26.60 A released ember_draw mode=charge reason=full held=1.60 fill=1.00 stage=0 fired=true
+  t=27.00 A (0.38,10.00) kite casting=ember_draw(Charge) | B (3.06,10.00) chase casting=bite(Cast) | dist 2.68
+  t=28.00 A (0.38,10.00) kite casting=ember_draw(Charge) | B (2.84,10.00) chase casting=bite(Cast) | dist 2.46
+  t=28.35 A released ember_draw mode=charge reason=full held=1.60 fill=1.00 stage=0 fired=true
+  t=28.40 B died
+  t=29.00 A (2.46,10.00) return | B dead | dist 0.38
+  t=30.00 A (7.66,10.00) return | B dead | dist 4.82

@@ -1,0 +1,33 @@
+{
+  "passed": [
+    "quick play waits in Mu with every Calling available",
+    "Mu sends no gameplay movement or casts",
+    "touch-to-drift and stillness open the correct vessel",
+    "dismissed dwell card stays closed until step-out",
+    "bound keyboard movement drifts the wisp",
+    "Options suspends Mu movement",
+    "card focus remains contained 0",
+    "card focus remains contained 1",
+    "card focus remains contained 2",
+    "card focus remains contained 3",
+    "card focus remains contained 4",
+    "card focus remains contained 5",
+    "card focus remains contained 6",
+    "card focus remains contained 7",
+    "card focus remains contained 8",
+    "card focus remains contained 9",
+    "server refusal leaves an editable card",
+    "pending creation disables duplicate submission",
+    "cancelled creation reply never wakes a character",
+    "portrait card remains on screen",
+    "leaving Mu restores the connection form",
+    "controller opens remembered vessel",
+    "explicit controller Wake completes the real loading handoff",
+    "server return routes back through the same Mu scene",
+    "returned roster remains interactive",
+    "no browser exceptions",
+    "live protocol probe",
+    "delayed startup, held input, cancellation and remembered Wake"
+  ],
+  "errors": []
+}

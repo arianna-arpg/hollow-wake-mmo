@@ -1,0 +1,45 @@
+{
+  "date": "2026-10-18",
+  "build": {
+    "command": "dotnet build HollowWake.sln --nologo",
+    "errors": 0,
+    "warnings": 0
+  },
+  "dotnetTests": {
+    "command": "dotnet test HollowWake.sln --no-build --nologo",
+    "core": 582,
+    "client": 119,
+    "server": 52,
+    "total": 753
+  },
+  "webTests": {
+    "command": "npm --prefix web test",
+    "passed": 192
+  },
+  "webBuild": "passed, see background harness build-web stage",
+  "protocol": "protocol-ts regenerated; unchanged; generated-contract test passed",
+  "content": {
+    "command": "dotnet run --project src/HollowWake.Tools --no-build -- validate",
+    "errors": 0,
+    "warnings": 0
+  },
+  "load": {
+    "command": "hollowwake load --x 0 --y 0",
+    "ticks": 200
+  },
+  "fight": {
+    "command": "hollowwake fight hob wolf",
+    "endedAt": 10.6,
+    "wolfLife": "68/96"
+  },
+  "launcher": {
+    "build": "passed",
+    "tests": 33,
+    "offlineSmoke": "SMOKE launcher PASS 0.1.0; private HOLLOWWAKE_DATA_DIR; hidden window"
+  },
+  "limitations": [
+    "Native rendered pixels not covered (headless).",
+    "Graphical installed-archive launcher acceptance updated but not run; isolated graphical session required."
+  ],
+  "productDecision": "Owner confirmed 2026-10-18: Play opens Mu and waits for explicit Wake, including remembered characters."
+}

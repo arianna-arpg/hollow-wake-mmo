@@ -37,3 +37,7 @@ The weave attribute `ai.anticipation` controls pre-commit movement estimation, f
 `PreferredRange` accepts the current target and reduces the approach stop distance by its outward travel during that interval. It never increases collision reach or widens a sector, and a started swing keeps its original direction. Body collision still limits how close an actor can get. A target too fast to catch may continue avoiding melee; the policy does not promise a hit. Players can make the same positioning and timing choices manually.
 
 The chooser rejects ordinary busy casts before expensive geometry work, preserving the runtime's instant-reflex exception. Converted and combo faces retain their existing path. The AI intent seam owns dispatch and move planning; this policy only supplies choice eligibility and preferred approach distance.
+
+## The AI as a player
+
+What any AI in this engine must and must not be, whatever runs it, is stated in [combat-grammar.md](combat-grammar.md): its inputs are what a client could show and what the compiled weave states, its outputs are the intents a client sends, its decisions are registered affordances, perception names and considerations bound by doctrines authored as content, and every decision publishes an event that explains it. The behavior machine above stays the outer mode machine; each piece of that section replaces what it supersedes here as it lands.

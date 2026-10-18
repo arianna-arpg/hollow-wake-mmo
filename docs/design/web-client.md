@@ -12,7 +12,7 @@ The login insignia and browser favicon are synchronized from `assets/branding` b
 
 ## Connecting
 
-`?play=1` opts into automatic connection after the fields are filled. It resumes the last selected character for that exact server/account, or the only character when there is no remembered choice. Empty and ambiguous character lists stay in the normal creation/selection panel. No character or Calling is invented, tokens are not persisted, and the server still authenticates and selects the character through the normal messages. The checkout's play helper opens this URL.
+`?play=1` opts into automatic connection after the fields are filled. It focuses the last selected vessel for that exact server/account, or the sole remembered life, in [Mu](entry.md). Every account waits for an explicit Wake, and new lives use the Calling vessels' name cards. No character or Calling is invented, tokens are not persisted, and the server still authenticates and selects the character through the normal messages. The checkout's play helper opens this URL.
 
 On Pages, `play-catalog.json` enables a branch picker on the login screen. The Pages workflow writes repository/branch/commit metadata and branch suggestions from git; no credential enters the bundle. A branch link opens or resumes that branch's Codespace, whose startup hook prepares and runs its matching server and client. It does not switch the already loaded Pages client's code. The field accepts new branch names even before the next Pages build refreshes the suggestions. Normal server-hosted builds ship with this catalogue disabled. Missing catalogue data leaves ordinary connection available.
 

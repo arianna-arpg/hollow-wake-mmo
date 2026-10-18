@@ -9,6 +9,7 @@ const require = createRequire(path.join(root, 'web/package.json'));
 const { _electron: electron } = require('playwright-core');
 const { serve, json } = require(path.join(root, 'launcher/dist/test/helpers.js'));
 const arg = name => { const at = process.argv.indexOf(name); return at < 0 ? null : process.argv[at + 1]; };
+assert.ok(process.argv.includes('--isolated-graphical'), 'Run this graphical launcher acceptance only in an isolated graphical session, with --isolated-graphical.');
 const feed = path.resolve(root, arg('--feed') ?? 'artifacts/quick-play/feed');
 const manifest = JSON.parse(readFileSync(path.join(feed, 'manifest.json'), 'utf8'));
 const build = manifest.platforms['windows-x64'];
@@ -62,13 +63,13 @@ const verifyEntry = async name => {
   let log = '';
   while (Date.now() < deadline) {
     if (existsSync(logFile)) log = readFileSync(logFile, 'utf8');
-    if (log.includes('QUICKPLAY READY: entered the world; Crossing complete')) break;
+    if (log.includes('QUICKPLAY ENTRY: account stage ready; awaiting player choice')) break;
     await new Promise(resolve => setTimeout(resolve, 150));
   }
   writeFileSync(path.join(output, 'launcher-' + name + '-client.log'), log);
-  assert.match(log, /QUICKPLAY READY: entered the world; Crossing complete/);
-  assert.equal(log.match(/QUICKPLAY CROSSING/g)?.length, 1, 'one real character entry per Play');
-  result[name] = 'Installed combined client resumed its character through the Crossing and reached real world readiness';
+  assert.match(log, /QUICKPLAY ENTRY: account stage ready; awaiting player choice/);
+  assert.doesNotMatch(log, /QUICKPLAY CROSSING|QUICKPLAY READY/, 'Play waits for a player choice in Mu');
+  result[name] = 'Installed client authenticated and reached the account entry stage without automatically entering the world';
 };
 const launch = async extra => {
   app = await electron.launch({ executablePath: exe, args: [...(packaged ? [] : [path.join(root, 'launcher')]), '--disable-gpu', ...extra], env });

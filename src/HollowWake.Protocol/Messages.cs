@@ -115,7 +115,10 @@ public sealed record HelloMsg(string ClientVersion, int Protocol) : Message
 }
 
 public sealed record LoginMsg(string Account, string Token) : Message;
-public sealed record CreateCharacterMsg(string Name, string Calling) : Message;
+public sealed record CreateCharacterMsg(string Name, string Calling) : Message
+{
+    public string? RequestId { get; init; }
+}
 public sealed record SelectCharacterMsg(string CharacterId) : Message;
 public sealed record LeaveWorldMsg : Message;
 public sealed record MoveDirMsg(float X, float Y) : Message;
@@ -169,7 +172,14 @@ public sealed record WelcomeMsg(string ServerVersion, int Protocol, string Serve
 
 public sealed record LoginResultMsg(bool Ok, string? AccountId, string? Error) : Message;
 public sealed record CharacterSummary(string Id, string Name, string Calling, int Level, string Zone);
-public sealed record CharacterListMsg(List<CharacterSummary> Characters, List<string> Callings) : Message;
+public sealed record CharacterListMsg(List<CharacterSummary> Characters, List<string> Callings) : Message
+{
+    public EntryState? Entry { get; init; }
+    public string? CreatedCharacterId { get; init; }
+    public string? RequestId { get; init; }
+}
+public sealed record EntryState(string Flow, string Stage, string Kind, string Presentation, bool CanCreate, List<CallingAvailability> Callings);
+public sealed record CallingAvailability(string Id, bool Available);
 public sealed record ErrorMsg(string Code, string Text) : Message;
 public sealed record EnterWorldMsg(string CharacterId, long EntityKey, string Zone, float X, float Y, float Z, WorldInfo World, double ServerTime, int TickRate) : Message
 {
@@ -482,6 +492,7 @@ public sealed record DisconnectMsg(string Reason) : Message;
 
 public static class ProtocolInfo
 {
+    public const string EntryFlowFeature = "entry_flow";
     public const string CastCuesFeature = "cast_cues";
     public const string CastForecastFeature = "cast_forecast_v1";
     public const int Version = 1;

@@ -4,6 +4,8 @@
 
 /** The protocol version the server speaks (ProtocolInfo.Version), sent in hello. */
 export const PROTOCOL_VERSION = 1;
+/** ProtocolInfo.EntryFlowFeature */
+export const ENTRY_FLOW_FEATURE = "entry_flow";
 /** ProtocolInfo.CastCuesFeature */
 export const CAST_CUES_FEATURE = "cast_cues";
 /** ProtocolInfo.CastForecastFeature */
@@ -38,6 +40,7 @@ export interface CreateCharacterMsg {
   t: "create_character";
   name: string;
   calling: string;
+  request_id?: string;
 }
 
 export interface SelectCharacterMsg {
@@ -360,6 +363,9 @@ export interface CharacterListMsg {
   t: "character_list";
   characters: CharacterSummary[];
   callings: string[];
+  entry?: EntryState;
+  created_character_id?: string;
+  request_id?: string;
 }
 
 export interface ErrorMsg {
@@ -634,6 +640,15 @@ export interface CharacterSummary {
   calling: string;
   level: number;
   zone: string;
+}
+
+export interface EntryState {
+  flow: string;
+  stage: string;
+  kind: string;
+  presentation: string;
+  can_create: boolean;
+  callings: CallingAvailability[];
 }
 
 export interface WorldInfo {
@@ -955,6 +970,11 @@ export interface StationServiceInfo {
   price?: Record<string, number>;
   enabled?: boolean;
   reason?: string;
+}
+
+export interface CallingAvailability {
+  id: string;
+  available: boolean;
 }
 
 export interface OverlayInfo {
