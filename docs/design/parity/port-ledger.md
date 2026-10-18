@@ -645,7 +645,7 @@ Every slice lands with a seeded duel the fight tool runs twice to the same trace
 
 | Prototype | Ours | Mechanism | Status | Note | Proof |
 |---|---|---|---|---|---|
-| summon_skeleton_mage | summon_skeleton_mage | preset on call: summon | ported (difference) | sum:remnant_archer<skeletal_pyromancer; sum:remnant_archer<skeletal_cryomancer; sum:remnant_archer<skeletal_stormcaller; sum:remnant_archer<skeletal_venomancer; summon.crewRules: the crew is our pattern's own kit; req; tree; grow | fight port duel: summons |
+| summon_skeleton_mage | summon_skeletal_mages | preset on call: summon | ported (difference) | dedicated entity recipe: dedicated skeletal scholar pool (also exposed as summon_skeletal_mages); provisional kit and costs; prototype progression/court upgrades remain deferred | UndeadContentTests; experiments/undead-entities/provenance.json |
 | summon_rubblekin |  | preset on pact: summon (stone) | not ported | sum:stone_warden<rubblekin; req; tree; grow; later: summon.strikeRelease (row B22, later); later: summon.escort (row B22, later) | fight port duel: summons |
 | coppice_seedfall |  | summon kit skill | not ported | kit |  |
 | heat_split | heat_split | preset on call: summon (ember) | ported (difference) | sum:shade_echo<heat_double; req; grow | fight port duel: summons |
@@ -655,13 +655,13 @@ Every slice lands with a seeded duel the fight tool runs twice to the same trace
 | invoke_lampad | invoke_lampad | preset on call: summon | seam | sum:sprig<lampad_chorister; req; grow; seam: preset tags (song, duration) | fight port duel: summons |
 | shamans_call | shamans_call | preset on call: summon | seam | sum:remnant_shade<zombie; plural targeting (several corpses) is one target here; req; grow; seam: preset tags (corpse) | fight port duel: summons |
 | summon_plaguefather | summon_plaguefather | preset on call: summon (umbra) | seam | sum:stone_warden<plaguefather; req; grow; seam: preset tags (duration); seam: preset behaviors (meta_action) | fight port duel: summons |
-| summon_skeleton | summon_skeleton | preset on call: summon | seam | sum:remnant_shade<skeleton_warrior; req; tree; grow; seam: preset behaviors (meta_action) | fight port duel: summons |
-| summon_skeleton_archer | summon_skeleton_archer | preset on call: summon | ported (difference) | sum:remnant_archer<skeleton_archer; req; tree; grow | fight port duel: summons |
+| summon_skeleton | summon_skeleton | preset on call: summon | seam | dedicated entity recipe: skeleton_warrior; provisional kit and costs; prototype progression/court upgrades remain deferred | UndeadContentTests; experiments/undead-entities/provenance.json |
+| summon_skeleton_archer | summon_skeleton_archer | preset on call: summon | ported (difference) | dedicated entity recipe: skeleton_archer; provisional kit and costs; prototype progression/court upgrades remain deferred | UndeadContentTests; experiments/undead-entities/provenance.json |
 | summon_flame_sprite | summon_flame_sprite | preset on call: summon (ember) | ported (difference) | sum:cinder_imp<flame_sprite; req; grow | fight port duel: summons |
-| raise_dead | raise_dead | preset on call: summon | seam | sum:remnant_shade<skeleton_warrior; sum:remnant_shade<zombie; req; tree; grow; seam: preset behaviors (meta_action) | fight port duel: summons |
+| raise_dead | raise_dead | preset on call: summon | seam | dedicated entity recipe: skeleton_warrior/zombie weighted pool; provisional kit and costs; prototype progression/court upgrades remain deferred | UndeadContentTests; experiments/undead-entities/provenance.json |
 | summon_sporeling | summon_sporeling | preset on call: summon | ported (difference) | sum:sprig<fungal_sporeling; req; grow | fight port duel: summons |
 | summon_stone_golem | summon_stone_golem | preset on pact: summon | ported (difference) | sum:stone_golem<stone_golem; dedicated binding in PR #39; req; grow | fight port duel: summons |
-| summon_bone_golem | summon_bone_golem | preset on pact: summon | ported (difference) | sum:stone_warden<bone_golem; req; tree; grow | fight port duel: summons |
+| summon_bone_golem | summon_bone_golem | preset on pact: summon | ported (difference) | dedicated entity recipe: bone_golem; provisional kit and costs; prototype progression/court upgrades remain deferred | UndeadContentTests; experiments/undead-entities/provenance.json |
 | bind_familiar | bind_familiar | preset on pact: summon (void) | ported (difference) | sum:remnant_archer<arcane_familiar; req; tree; grow | fight port duel: summons |
 | conjure_wisp | conjure_wisp | preset on call: summon (tide) | seam | sum:remnant_shade<spirit_wisp; req; grow; seam: preset tags (duration) | fight port duel: summons |
 | temporal_pad |  | preset on plant: deploy | not ported | req; grow; seam: preset tags (duration); later: propelling pads (a launch pad fabric this port lacks) | fight port duel: summons |
@@ -681,7 +681,7 @@ Every slice lands with a seeded duel the fight tool runs twice to the same trace
 | stone_rampart | stone_rampart | preset on plant: deploy (stone) | seam | req; tree; grow; seam: preset tags (duration) | fight port duel: summons |
 | sanctuary | sanctuary | preset on plant: deploy | seam | req; grow; seam: preset tags (duration) | fight port duel: summons |
 | repulsor_beacon | repulsor_beacon | preset on plant: deploy (storm) | seam | req; seam: preset tags (duration) | fight port duel: summons |
-| summon_blade_wraith | summon_blade_wraith | preset on call: summon (umbra+stone) | ported (difference) | sum:remnant_shade<blade_wraith; req; grow | fight port duel: summons |
+| summon_blade_wraith | summon_blade_wraith | preset on call: summon (umbra+stone) | ported (difference) | dedicated entity recipe: blade_wraith; provisional kit and costs; prototype progression/court upgrades remain deferred | UndeadContentTests; experiments/undead-entities/provenance.json |
 | summon_swarmlings | summon_swarmlings | preset on pact: summon | blocked | sum:sprig<swarmling; req; tree; grow; per-body handling is the pattern behavior; seam: preset tags (duration); seam: preset behaviors (meta_action); blocked: the hivecall contract | fight port duel: summons |
 | cast_falcon | cast_falcon | preset on pact: summon | seam | sum:wolf<hunting_falcon; req; tree; grow; seam: preset tags (duration) | fight port duel: summons |
 | tree_of_life | tree_of_life | preset on plant: deploy | seam | req; grow; seam: preset tags (heal, duration) | fight port duel: summons |
@@ -699,7 +699,7 @@ Every slice lands with a seeded duel the fight tool runs twice to the same trace
 | mirage_archer |  | preset on plant: deploy | not ported | req; thr; grow; seam: preset tags (mirage, duration); later: construct.echo (rows B16/D24, later) | fight port duel: summons |
 | shadow_clone |  | preset on plant: deploy | not ported | req; thr; tree; grow; seam: preset tags (clone, duration); later: construct.echo (rows B16/D24, later) | fight port duel: summons |
 | summon_raging_spirit | summon_raging_spirit | preset on call: summon (ember) | seam | sum:remnant_shade<raging_spirit; req; tree; grow; seam: preset tags (duration) | fight port duel: summons |
-| summon_wraith | summon_wraith | preset on call: summon (umbra) | ported (difference) | sum:remnant_shade<decay_wraith; req; tree; grow | fight port duel: summons |
+| summon_wraith | summon_wraith | preset on call: summon (umbra) | ported (difference) | dedicated entity recipe: decay_wraith; provisional kit and costs; prototype progression/court upgrades remain deferred | UndeadContentTests; experiments/undead-entities/provenance.json |
 | infernal_bombardment | infernal_bombardment | preset on call: summon (ember) | seam | sum:stone_warden<bombard_demon; req; grow; seam: preset behaviors (meta_action) | fight port duel: summons |
 | flame_core | flame_core | preset on call: summon (ember) | seam | sum:cinder_imp<flame_core; req; seam: preset tags (duration) | fight port duel: summons |
 | solar_orb | solar_orb | preset on plant: deploy (ember) | seam | req; seam: preset tags (duration) | fight port duel: summons |

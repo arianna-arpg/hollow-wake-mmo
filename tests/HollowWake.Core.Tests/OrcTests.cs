@@ -51,6 +51,12 @@ public class OrcTests
         Assert.True(Relations.IsHostile(a.Sim,a.Caster,orc));
         Assert.True(Relations.IsHostile(a.Sim,orc,a.Caster));
         Assert.True(Relations.IsHostile(a.Sim,goblin,a.Caster));
+        foreach (var faction in new[] { "wilds", "the_loosed" })
+        {
+            var other=a.Body(16,10,faction:faction);
+            Assert.True(Relations.IsHostile(a.Sim,orc,other));
+            Assert.True(Relations.IsHostile(a.Sim,other,orc));
+        }
     }
 
     [Fact]
@@ -66,9 +72,10 @@ public class OrcTests
             return (at.Height,mass,Vector3.Distance(start,at.Position));
         }
         var goblin=Push("goblin_skirmisher");var orc=Push("orc_grunt");var iron=Push("orc_bulwark");
-        Assert.Equal(1.8,CoreContent.Registry.Require<PatternDef>("skeleton_warrior").Height,5);
-        Assert.InRange(goblin.height/1.8, .45, .55);
-        Assert.InRange(orc.height/1.8, 1, 1.15);
+        var referenceHeight = CoreContent.Registry.Rules.Number("physicality.reference_height", 0);
+        Assert.Equal(referenceHeight,CoreContent.Registry.Require<PatternDef>("skeleton_warrior").Height,5);
+        Assert.InRange(goblin.height/referenceHeight, .45, .55);
+        Assert.InRange(orc.height/referenceHeight, 1, 1.15);
         Assert.True(orc.mass>goblin.mass*5);
         Assert.True(iron.mass>orc.mass);
         Assert.True(goblin.travel>orc.travel*3);

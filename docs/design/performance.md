@@ -14,6 +14,8 @@ The foundation must stay pristine as the game scales, so performance is measured
 
 `--only <group>` runs one group; `--monsters`, `--players`, `--ticks` and `--minions` (pooled summons per player, so minions think, follow and fight) size the zone run; `--json` emits results for machines.
 
+`--only hit-bodies` repeats the deliveries workload with a deterministic roster of resolved patterns carrying authored hit profiles. This exercises compound-volume contact and broad-phase bounds; the ordinary unprofiled deliveries workload is not a substitute for it.
+
 ## Budgets
 
 Budgets are for the benchmark's default zone run in Release on a development machine, per server tick at 20 Hz.

@@ -1,6 +1,6 @@
 # The Unbound Works
 
-The [prototype extension](prototype-extension.md) adds named Stone, Fire, Ice, Lightning and Blood golem contracts plus the Amalgamation encounter. Its separate gallery, fixture and evidence live beside the original pass; run `node experiments/golems/prototype-render.mjs` to reproduce them.
+The [prototype extension](prototype-extension.md) adds named Stone, Fire, Ice, Lightning and Blood golem contracts plus the Amalgamation creature. Its provisional Suture Works is not the prototype's full Bonewright encounter; the owner deferred that event and broader encounter design. Its separate gallery, fixture and evidence live beside the original pass; run `node experiments/golems/prototype-render.mjs` to reproduce them.
 
 Prototype reference: `arianna-arpg/arpg-game-world` at `118b510f8b5bfb781163c5bc13ea4908f698e75b`. Source anatomy and the existing comparison sprites were inspected read-only. `provenance.json` distinguishes direct stone/vault/bauble translations from original clay, iron, crystal, timber and ceramic adaptations.
 
@@ -10,7 +10,7 @@ The common-scale lineup uses the authoritative 1.8 m player and skeleton and 0.9
 
 Current skills are ordinary existing weaves. `golem_guard` closes to melee distance even when Ground Slam has a longer AI hint; `aggressive_ranged` serves the crystal artillery body. These are replaceable content state machines. Repair, reassembly, coordinated guarding, sensing, bodyguard interception and mass-aware tactics are deferred to the AI discussion in the fauna handoff. No collision, movement or AI runtime is changed.
 
-Stone Warden keeps its ID, player allegiance, dimensions, original combat stats, 10% reduction and existing binding. Its explicit mass and resource pools are intentional additions. The salvage pool uses the same supported Warden exclusive group as Stone Warden and Bone Golem, so only one such contract remains. Wild reward tables never survive summon birth or respawn.
+Stone Warden keeps its ID, player allegiance, dimensions, original combat/resource stats, 10% reduction and existing binding. Its explicit mass changes from the old 80 kg reference to 1,905.904 kg; construct tags and the assembled appearance without scale jitter are deliberate changes. Independent baseline tests pin its resource inheritance at levels 1, 3 and 20. The salvage pool uses the same supported Warden exclusive group as Stone Warden and Bone Golem, so only one such contract remains. Wild reward tables never survive summon birth or respawn.
 
 Evidence under `evidence/` records geometry, scale, world map changes, gates, fights and Release costs. Native behavior is tested headlessly; native pixels require an isolated graphical session and are not claimed here.
 

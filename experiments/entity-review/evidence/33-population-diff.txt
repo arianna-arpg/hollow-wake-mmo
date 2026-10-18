@@ -1,0 +1,59 @@
+Seed: aureth. Counts are spawn points / initial bodies; all reference-zone patterns are listed.
+
+Zone 0_0
+  anvil: (1, 1) -> (1, 1)
+  cairn_stone: (7, 7) -> (7, 7)
+  cinder_imp: (2, 4) -> (2, 4)
+  goblin_scavenger: (2, 6) -> (2, 6)
+  grove_stag: (8, 13) -> (8, 13)
+  hob: (80, 238) -> (80, 238)
+  loom: (1, 1) -> (1, 1)
+  passive_font: (1, 1) -> (1, 1)
+  quartermaster: (2, 2) -> (2, 2)
+  remnant_shade: (1, 4) -> (1, 4)
+  shrine_stone: (1, 1) -> (1, 1)
+  spindlewatch_guard: (4, 4) -> (4, 4)
+  stash_chest: (1, 1) -> (1, 1)
+  tangle: (1, 1) -> (1, 1)
+  villager: (3, 3) -> (3, 3)
+  Quest gen.poi.0_0.hamlet.128.128.cull_beasts.2: {"Id": "gen.poi.0_0.hamlet.128.128.cull_beasts.2", "Level": 1, "Targets": [{"Type": "kill", "Target": "wolf", "Poi": null}]} -> {"Id": "gen.poi.0_0.hamlet.128.128.cull_beasts.2", "Level": 1, "Targets": [{"Type": "kill", "Target": "hob", "Poi": null}]}
+  Quest gen.poi.0_0.hamlet.128.128.scout_ruin.3: {"Id": "gen.poi.0_0.hamlet.128.128.scout_ruin.3", "Level": 1, "Targets": [{"Type": "discover", "Target": null, "Poi": "poi.0_1.orc_chaincamp.125.310"}]} -> {"Id": "gen.poi.0_0.hamlet.128.128.scout_ruin.3", "Level": 1, "Targets": [{"Type": "discover", "Target": null, "Poi": "poi.1_1.ruin.305.334"}]}
+Zone 1_0
+  Site poi.1_0.grove.309.104: {"Id": "poi.1_0.grove.309.104", "Level": 1, "Population": 16} -> null
+  Site poi.1_0.orc_chaincamp.431.198: null -> {"Id": "poi.1_0.orc_chaincamp.431.198", "Level": 8, "Population": 2}
+  Site poi.1_0.orc_hold.431.198: {"Id": "poi.1_0.orc_hold.431.198", "Level": 8, "Population": 2} -> null
+  Site poi.1_0.orc_muster.291.217: null -> {"Id": "poi.1_0.orc_muster.291.217", "Level": 5, "Population": 2}
+  Site poi.1_0.ossuary.291.217: {"Id": "poi.1_0.ossuary.291.217", "Level": 3, "Population": 8} -> null
+  gnasher_whelp: (2, 8) -> (2, 8)
+  goblin_sapper: (1, 1) -> (0, 0)
+  goblin_scavenger: (4, 9) -> (5, 10)
+  goblin_skirmisher: (0, 0) -> (1, 1)
+  grove_stag: (26, 60) -> (24, 55)
+  hob: (80, 242) -> (80, 242)
+  oak: (10, 10) -> (0, 0)
+  orc_ashcaller: (0, 0) -> (1, 1)
+  orc_grunt: (0, 0) -> (1, 1)
+  ruin_chest: (3, 3) -> (1, 1)
+  shrine_stone: (1, 1) -> (0, 0)
+  skeleton_archer: (2, 3) -> (1, 1)
+  skeleton_warrior: (4, 10) -> (2, 5)
+Zone 0_-1
+  cairn_stone: (21, 21) -> (21, 21)
+  cinder_imp: (6, 15) -> (6, 15)
+  hob: (72, 213) -> (72, 213)
+  loosed_kindler: (18, 25) -> (18, 25)
+  remnant_shade: (3, 10) -> (3, 10)
+  tangle: (3, 3) -> (3, 3)
+  wolf: (41, 102) -> (41, 102)
+Zone 3_2
+  barrow_wight: (2, 3) -> (2, 3)
+  cairn_stone: (7, 7) -> (7, 7)
+  cinder_imp: (2, 5) -> (2, 5)
+  gnasher_whelp: (9, 47) -> (9, 47)
+  goblin_scavenger: (5, 12) -> (5, 12)
+  grove_stag: (29, 58) -> (29, 58)
+  hob: (75, 224) -> (75, 224)
+  remnant_shade: (2, 5) -> (2, 5)
+  ruin_chest: (1, 1) -> (1, 1)
+  shrine_stone: (2, 2) -> (2, 2)
+  tangle: (1, 1) -> (1, 1)

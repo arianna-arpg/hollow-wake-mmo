@@ -1,0 +1,217 @@
+[
+  {
+    "zone": "zone(0,0)",
+    "removedNearby": [
+      "poi.-1_1.knot.-34.419: knot, a Skyfall, -34.5,419.5, height=20.802034, level=8",
+      "poi.-1_1.scrap_fort.-234.294: scrap_fort, Scrap Fort, -234.5,294.5, height=20.447456, level=11"
+    ],
+    "addedNearby": [
+      "poi.-1_1.kiln.-34.419: kiln, the Red Kiln, -34.5,419.5, height=20.802034, level=8",
+      "poi.-1_1.ruin.-234.294: ruin, the Old Seam, -234.5,294.5, height=20.447456, level=7"
+    ],
+    "changedChunks": [],
+    "questsBefore": [
+      {
+        "Id": "gen.poi.0_0.hamlet.128.128.clear_knot.0",
+        "Name": "The Hob\u0027s Hollow",
+        "Description": "A Knot has tangled near Ninewells. Walk into it and unmake what crawled out.",
+        "Objectives": [
+          {
+            "Id": "reach",
+            "Type": "reach",
+            "Target": null,
+            "Tags": [],
+            "Count": 1,
+            "Zone": null,
+            "Poi": "poi.0_0.knot.200.60",
+            "Text": "Find Hob\u0027s Hollow",
+            "Optional": false
+          },
+          {
+            "Id": "cull",
+            "Type": "kill",
+            "Target": "cinder_imp",
+            "Tags": [],
+            "Count": 6,
+            "Zone": null,
+            "Poi": null,
+            "Text": "Unmake six Cinder Imp",
+            "Optional": false
+          }
+        ]
+      },
+      {
+        "Id": "gen.poi.0_0.hamlet.128.128.gather_floss.1",
+        "Name": "Loose Threads",
+        "Description": "The weavers of Ninewells want floss and the hedgerows are full of it.",
+        "Objectives": [
+          {
+            "Id": "gather",
+            "Type": "collect",
+            "Target": "thread_floss",
+            "Tags": [],
+            "Count": 5,
+            "Zone": null,
+            "Poi": null,
+            "Text": "Gather five Thread Floss",
+            "Optional": false
+          }
+        ]
+      },
+      {
+        "Id": "gen.poi.0_0.hamlet.128.128.cull_beasts.2",
+        "Name": "Teeth in the Hedge",
+        "Description": "Beasts press on Ninewells.",
+        "Objectives": [
+          {
+            "Id": "cull",
+            "Type": "kill",
+            "Target": "hob",
+            "Tags": [],
+            "Count": 8,
+            "Zone": null,
+            "Poi": null,
+            "Text": "Cull eight Hob",
+            "Optional": false
+          }
+        ]
+      },
+      {
+        "Id": "gen.poi.0_0.hamlet.128.128.scout_ruin.3",
+        "Name": "What Stands at the Fallen Hall",
+        "Description": "No one from Ninewells has walked to the Fallen Hall in years.",
+        "Objectives": [
+          {
+            "Id": "find",
+            "Type": "discover",
+            "Target": null,
+            "Tags": [],
+            "Count": 1,
+            "Zone": null,
+            "Poi": "poi.1_1.ruin.305.334",
+            "Text": "Find the Fallen Hall",
+            "Optional": false
+          }
+        ]
+      }
+    ],
+    "questsAfter": [
+      {
+        "Id": "gen.poi.0_0.hamlet.128.128.clear_knot.0",
+        "Name": "The Hob\u0027s Hollow",
+        "Description": "A Knot has tangled near Ninewells. Walk into it and unmake what crawled out.",
+        "Objectives": [
+          {
+            "Id": "reach",
+            "Type": "reach",
+            "Target": null,
+            "Tags": [],
+            "Count": 1,
+            "Zone": null,
+            "Poi": "poi.0_0.knot.200.60",
+            "Text": "Find Hob\u0027s Hollow",
+            "Optional": false
+          },
+          {
+            "Id": "cull",
+            "Type": "kill",
+            "Target": "cinder_imp",
+            "Tags": [],
+            "Count": 6,
+            "Zone": null,
+            "Poi": null,
+            "Text": "Unmake six Cinder Imp",
+            "Optional": false
+          }
+        ]
+      },
+      {
+        "Id": "gen.poi.0_0.hamlet.128.128.gather_floss.1",
+        "Name": "Loose Threads",
+        "Description": "The weavers of Ninewells want floss and the hedgerows are full of it.",
+        "Objectives": [
+          {
+            "Id": "gather",
+            "Type": "collect",
+            "Target": "thread_floss",
+            "Tags": [],
+            "Count": 5,
+            "Zone": null,
+            "Poi": null,
+            "Text": "Gather five Thread Floss",
+            "Optional": false
+          }
+        ]
+      },
+      {
+        "Id": "gen.poi.0_0.hamlet.128.128.cull_beasts.2",
+        "Name": "Teeth in the Hedge",
+        "Description": "Beasts press on Ninewells.",
+        "Objectives": [
+          {
+            "Id": "cull",
+            "Type": "kill",
+            "Target": "hob",
+            "Tags": [],
+            "Count": 8,
+            "Zone": null,
+            "Poi": null,
+            "Text": "Cull eight Hob",
+            "Optional": false
+          }
+        ]
+      },
+      {
+        "Id": "gen.poi.0_0.hamlet.128.128.scout_ruin.3",
+        "Name": "What Stands at the Fallen Hall",
+        "Description": "No one from Ninewells has walked to the Fallen Hall in years.",
+        "Objectives": [
+          {
+            "Id": "find",
+            "Type": "discover",
+            "Target": null,
+            "Tags": [],
+            "Count": 1,
+            "Zone": null,
+            "Poi": "poi.1_1.ruin.305.334",
+            "Text": "Find the Fallen Hall",
+            "Optional": false
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "zone": "zone(1,0)",
+    "removedNearby": [
+      "poi.2_0.scrap_fort.655.99: scrap_fort, Scrap Fort, 655.5,99.5, height=6.763499, level=6",
+      "poi.2_0.knot.700.231: knot, the Hob Hollow, 700.5,231.5, height=8.310078, level=3",
+      "poi.2_0.knot.543.233: knot, a Kiln Knot, 543.5,233.5, height=9.583452, level=3"
+    ],
+    "addedNearby": [
+      "poi.2_0.ruin.655.99: ruin, the Fallen Hall, 655.5,99.5, height=6.763499, level=2",
+      "poi.2_0.ruin.723.37: ruin, Barrowgate, 723.5,37.5, height=8.555705, level=2",
+      "poi.2_0.ruin.568.142: ruin, the Last Stitch, 568.5,142.5, height=10.966817, level=2",
+      "poi.2_0.shrine.700.231: shrine, the Stitch Shrine, 700.5,231.5, height=8.310078, level=1"
+    ],
+    "changedChunks": [],
+    "questsBefore": [],
+    "questsAfter": []
+  },
+  {
+    "zone": "zone(0,-1)",
+    "removedNearby": [],
+    "addedNearby": [],
+    "changedChunks": [],
+    "questsBefore": [],
+    "questsAfter": []
+  },
+  {
+    "zone": "zone(3,2)",
+    "removedNearby": [],
+    "addedNearby": [],
+    "changedChunks": [],
+    "questsBefore": [],
+    "questsAfter": []
+  }
+]

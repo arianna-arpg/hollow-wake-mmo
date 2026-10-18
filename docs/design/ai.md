@@ -33,3 +33,7 @@ Taunts set the target and a memory timestamp the behaviors read as `taunted`.
 ## Provisional wildlife assignments
 
 Wildlife content may use existing combat behaviors or a flee-only content state machine. A spawn pack is not coordinated AI, a predator tag is not predation, and a hostile faction does not imply every body attacks. Critters have empty weave lists and no drops; they flee perceived faction enemies without an attack state. Future sensory, tactical, social and need-based decisions require a separate reviewed contract and deterministic simulation evidence. Authoring intent under `meta` is never a simulation input. The [wildlife AI handoff](../reviews/2026-10-18-fauna-ai-handoff.md) records the proposed design questions and scenarios for Claude review.
+
+## Temporary close-combat content
+
+`close_melee` is a reusable behavior for kits that must close despite a longer-ranged secondary skill. It explicitly supplies the chase stop distance and keeps ordinary acquire/attack/return actions. Goblinkin leaders opt into it; downstream faction kits can reuse the same definition. Other behaviors retain their own policy and PreferredRange remains the longest hinted range. The stop distance currently follows the existing center-distance movement convention; future contact-aware AI must revisit that contract together with collision clearance. This is replaceable content scaffolding, not the planned tactical AI engine.

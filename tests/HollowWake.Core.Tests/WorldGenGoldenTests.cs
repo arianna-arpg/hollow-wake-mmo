@@ -36,12 +36,12 @@ public class WorldGenGoldenTests
         Assert.Equal(new ZoneCoord(0, 0), g.StartZone());
     }
 
-    // Golem review: regional eligibility and ordinary spacing; experiments/golems/evidence/review.
+    // Corrected shared-base integration; experiments/golems/evidence/integrated/world-review.txt.
     [Theory]
-    [InlineData(0, 0, "B4668A5E618C47CC", "B4967CED570DD0B6")]
-    [InlineData(1, 0, "FB8641E6E0F2A968", "6615F2EDE81806A7")]
-    [InlineData(0, -1, "F75575B10A717024", "44FDA182BF6A81C9")]
-    [InlineData(3, 2, "1AF0288C5B48224A", "15C99D20020E2BF4")]
+    [InlineData(0, 0, "4BFB77C7FB773A38", "384BA03BE0D34C0A")]
+    [InlineData(1, 0, "A25A95C6F14431A1", "DF735AA7610989B3")]
+    [InlineData(0, -1, "8AD7370958FA7D7B", "D785D8F084A1F919")]
+    [InlineData(3, 2, "BAFEA2C1CCA0DEC0", "8C46ACF595DB3A42")]
     public void ZoneMatchesGoldenHashes(int x, int y, string infoHash, string chunksHash)
     {
         var g = new WorldGenerator(Registry.Value, Rng.Hash64(Seed));
@@ -101,7 +101,7 @@ public class WorldGenGoldenTests
         {
             HashPoint(h, g, 40 + i * 0.83, 20 + i * 0.61, i % 20 == 0);
         }
-        Golden("overlaid world", "6FA306B417408A1D", h.Hex);
+        Golden("overlaid world", "9C0A4238742E5F1A", h.Hex);
 
         // Removing an overlay must regenerate exactly what a generator that never had it produces.
         overlays.Remove("fount");
@@ -334,6 +334,7 @@ public class WorldGenGoldenTests
             h.I32(s.PackSize);
             h.F64(s.RespawnSeconds);
             h.Str(s.Group);
+            h.I32(s.Level ?? 0);
         }
         h.I32(c.Flora.Count);
         foreach (var f in c.Flora)

@@ -296,6 +296,7 @@ public partial class Main : Node3D
         _appliers["grayscale"] = () => _filter.Grayscale = _settings.Toggle("grayscale");
         void Day() => _world.DayOverride = _settings.Toggle("day_lock") ? (float)(_settings.Number("day_time", 12) / 24.0) : null;
         _appliers["day_lock"] = Day;
+        _appliers["dev_hit_bodies"] = () => EntityView.ShowHitBodies = _settings.Toggle("dev_hit_bodies");
         _appliers["day_time"] = Day;
         _appliers["master_volume"] = () => AudioServer.SetBusVolumeDb(0, Mathf.LinearToDb((float)_settings.Number("master_volume", 80) / 100f));
         if (DisplayServer.GetName() != "headless")
@@ -433,7 +434,10 @@ public partial class Main : Node3D
         }
         // The client applies entity deltas; --full-states asks for full entity states only (for comparison and debugging).
         // It always draws the interface, so it asks for the interface's states.
-        var features = new List<string> { ProtocolInfo.InterfaceFeature, ProtocolInfo.CastCuesFeature };
+        EntityView.HitBodyCatalog = null;
+        EntityView.PreciseProjectileSlabs = false;
+        var features = new List<string> { ProtocolInfo.InterfaceFeature, ProtocolInfo.CastCuesFeature, ProtocolInfo.ProjectileSlabsFeature };
+        if (_settings.Toggle("dev_hit_bodies")) features.Add(ProtocolInfo.HitBodiesFeature);
         if (!OS.GetCmdlineUserArgs().Contains("--full-states") && _settings.Text("snapshot_stream") != "full")
         {
             features.Insert(0, ProtocolInfo.EntityDeltaFeature);
@@ -510,6 +514,7 @@ public partial class Main : Node3D
         switch (message)
         {
             case WelcomeMsg w:
+                EntityView.PreciseProjectileSlabs = w.Features?.Contains(ProtocolInfo.ProjectileSlabsFeature) == true;
                 _login.SetStatus($"Connected to {w.ServerName}: {w.Motd}");
                 _hud.Hero.Interface = w.Features?.Contains(ProtocolInfo.InterfaceFeature) == true;
                 GD.Print($"server granted features: {(w.Features is null ? "none" : string.Join(", ", w.Features))}");
@@ -533,6 +538,9 @@ public partial class Main : Node3D
             case DisconnectMsg d:
                 OnClosed(d.Reason);
                 break;
+            case HitBodiesMsg bodies:
+                EntityView.HitBodyCatalog = bodies.Bodies.ToDictionary(b => b.Id, StringComparer.Ordinal);
+                break;
             case EnterWorldMsg enter:
                 if (_entryLease?.Current != true && !_inWorld) break;
                 if (_entryLease?.Current != true)
@@ -550,6 +558,7 @@ public partial class Main : Node3D
                 _hud.InWorld = true;
                 _hud.Visible = true;
                 _hud.Hero.ObserveServerTime(enter.ServerTime, LocalNow);
+                _world.ObserveDay(enter.DayLength, enter.TimeOfDay, enter.ServerTime, entering: true);
                 _camera.Follow(Coords.ToGodot(enter.X, enter.Y, enter.Z));
                 _hud.Log($"[color=#{_hud.Skin.Notice("quest").ToHtml(false)}]Entered the world at {enter.X:0}, {enter.Y:0} (zone {Hud.Escape(enter.Zone)}).[/color]");
                 break;
@@ -579,6 +588,10 @@ public partial class Main : Node3D
                 break;
             case SelfStateMsg self:
                 _hud.ApplySelf(self);
+                if (_hud.Hero.HasServerClock)
+                {
+                    _world.ObserveDay(null, self.TimeOfDay, _hud.Hero.ServerNow(LocalNow));
+                }
                 break;
             case WeaveSlotsMsg slots:
                 _hud.ApplySlots(slots);

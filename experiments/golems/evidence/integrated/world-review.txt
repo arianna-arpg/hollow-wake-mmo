@@ -1,0 +1,23 @@
+Base: corrected #34 26c50de, including complete #36 724c5ed. Seed aureth.
+Compared archived base content and integrated golem content on the same corrected generator.
+
+All four sampled local chunk sets and quests are unchanged. Climate/region hash stays
+999D90D6110B1CDD. Neighbor selection changes alter zone-info hashes at (0,0) and (1,0).
+
+Around (0,0), Skyfall at (-34.5,419.5) becomes the Red Kiln, and Scrap Fort at
+(-234.5,294.5) becomes the Old Seam ruin. Around (1,0), Scrap Fort at (655.5,99.5)
+becomes the Fallen Hall ruin; two Knot candidates become two additional ruin
+candidates plus a shrine. Coordinates, levels and complete quest definitions are in
+world-neighbors.json. These are weighted-catalog consequences, not local terrain changes.
+
+(0,-1) and (3,2) have no sampled neighbor, quest or local chunk changes.
+
+Reviewed golden updates:
+(0,0) info 033B8E3528AB9828 -> 4BFB77C7FB773A38; chunks 384BA03BE0D34C0A unchanged.
+(1,0) info 767BE9395B9E34DB -> A25A95C6F14431A1; chunks DF735AA7610989B3 unchanged.
+Overlay 6FD0F6CF80B497A4 -> 9C0A4238742E5F1A.
+The initial-focused.txt run retains all three expected golden failures.
+
+The full integration tests now load living residents at region levels 1 and 21 with
+the authored site offsets, and all five site-level regressions pass. No dimensions
+or species kits were changed to make those tests pass.

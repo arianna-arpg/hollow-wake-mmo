@@ -48,8 +48,8 @@ public partial class InterfaceProtocolTests
             new List<string> { "ember", "spell" }, 12, 11, 1, 1, 2, 3, 4, 5, 6, true, "confirmed");
         var item = Card(9);
         var quest = new QuestInfo("q", "Quest", "active", new List<string> { "Slay" }, new List<int> { 1 }, new List<int> { 3 }, "quartermaster", 2);
-        var state = new EntityState { Key = 5L << 32 | 3, Name = "Hob", Pattern = "hob", Look = "hob", Faction = "the_loosed", Rarity = "magic", Interactable = "talk", Casting = "Ember", VX = 1, Static = true, Resources = { ["life"] = 3 }, ResourceMax = { ["life"] = 9 }, Flags = { "monster" }, Statuses = { "burning" }, Shape = "cone", ShapeSize = new ShapeSizeInfo { Radius = 3, Angle = 1.2f, Width = 1, Inner = 0.5f, Curvature = 1 }, Heading = 0.5f, Spin = 0.25f, Until = 12.5 };
-        var delta = new EntityDelta { Key = 9, Name = "Hob", Pattern = "", Look = "", X = 1, Y = 2, Z = 3, Yaw = 1, Radius = 1, Height = 2, Faction = "", Rarity = "", Level = 2, Resources = new Dictionary<string, float> { ["life"] = 2 }, ResourceMax = new Dictionary<string, float> { ["life"] = 9 }, Flags = new List<string> { "monster" }, Statuses = new List<string> { "burning" }, Interactable = "", Dead = true, Casting = "", CastProgress = 0.5f, Grounded = false, VX = 0, VY = 0, VZ = 0, Shape = "ring", ShapeSize = new ShapeSizeInfo { Radius = 2, Inner = 1 }, Heading = 1, Spin = 2 };
+        var state = new EntityState { Key = 5L << 32 | 3, Name = "Hob", Pattern = "hob", Look = "hob", Faction = "the_loosed", Rarity = "magic", Interactable = "talk", Casting = "Ember", VX = 1, Static = true, Resources = { ["life"] = 3 }, ResourceMax = { ["life"] = 9 }, Flags = { "monster" }, Statuses = { "burning" }, Shape = "cone", ShapeSize = new ShapeSizeInfo { Radius = 3, Angle = 1.2f, Width = 1, Inner = 0.5f, Curvature = 1 }, Heading = 0.5f, Spin = 0.25f, Until = 12.5, Appearance = new List<string> { "chest=armor.chest light", "main_hand=weapon.sword melee blade one_hand" } };
+        var delta = new EntityDelta { Key = 9, Name = "Hob", Pattern = "", Look = "", X = 1, Y = 2, Z = 3, Yaw = 1, Radius = 1, Height = 2, Faction = "", Rarity = "", Level = 2, Resources = new Dictionary<string, float> { ["life"] = 2 }, ResourceMax = new Dictionary<string, float> { ["life"] = 9 }, Flags = new List<string> { "monster" }, Statuses = new List<string> { "burning" }, Interactable = "", Dead = true, Casting = "", CastProgress = 0.5f, Grounded = false, VX = 0, VY = 0, VZ = 0, Shape = "ring", ShapeSize = new ShapeSizeInfo { Radius = 2, Inner = 1 }, Heading = 1, Spin = 2, Appearance = new List<string>() };
         var slotInfo = new WeaveSlotInfo(0, "ember", "Ember", "ember", 0.5, new Dictionary<string, double> { ["mana"] = 4 }, "enemy", 12);
 
         // client -> server
@@ -110,9 +110,10 @@ public partial class InterfaceProtocolTests
         yield return new LoginResultMsg(true, "tester", "none");
         yield return new CharacterListMsg(new List<CharacterSummary> { new("c1", "Wren", "kindler", 2, "0_0") }, new List<string> { "kindler" });
         yield return new ErrorMsg("code", "text");
-        yield return new EnterWorldMsg("c1", 3, "0_0", 1, 2, 3, new WorldInfo(ulong.MaxValue, 32, 8, 8, new List<OverlayInfo> { new("o", true, new List<int[]> { new[] { 0, 0 } }, new List<int[]>(), new double[] { 1, 2, 3 }, new Dictionary<string, double> { ["bloom"] = 1 }, 1) }, "abc"), 0, 20);
+        yield return new EnterWorldMsg("c1", 3, "0_0", 1, 2, 3, new WorldInfo(ulong.MaxValue, 32, 8, 8, new List<OverlayInfo> { new("o", true, new List<int[]> { new[] { 0, 0 } }, new List<int[]>(), new double[] { 1, 2, 3 }, new Dictionary<string, double> { ["bloom"] = 1 }, 1) }, "abc"), 0, 20) { DayLength = 1800, TimeOfDay = 0.3 };
         yield return new ZoneChangedMsg("0_0", "Ninewells", 1, true);
         yield return new EntitySpawnMsg(state);
+        yield return new HitBodiesMsg(new() { new("test", 0, new() { new("ellipsoid", .1f, .2f, .5f, .3f, .5f) }) });
         yield return new EntityUpdateMsg(new List<EntityState> { state with { Static = false } }, 12.5);
         yield return new EntityDeltaMsg(new List<EntityDelta> { delta }, 3.5);
         yield return new EntityDespawnMsg(9);
@@ -120,6 +121,7 @@ public partial class InterfaceProtocolTests
             new List<WeaveSlotInfo> { slotInfo }, new List<ItemInfo> { item }, 40, new Dictionary<string, ItemInfo> { ["main_hand"] = item }, new Dictionary<string, double> { ["shards"] = 3 },
             new List<QuestInfo> { quest }, new Dictionary<string, double> { ["weftmarch_compact"] = 10 }, new List<string> { "h1" })
         {
+            TimeOfDay = 0.25,
             Reserved = new Dictionary<string, double> { ["mana"] = 12 },
             Pools = new List<PoolInfo> { new("ward", "recharging") { Since = 1.5, Until = 4 } },
             Statuses = new List<StatusInfo> { new("burning", 2, 1.5, 4) },

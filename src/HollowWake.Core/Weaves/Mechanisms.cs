@@ -143,7 +143,7 @@ public static class MechanismRegistry
         Register("engagement", static (w, _) => w.Has("aura") || w.Nodes("summon").Any(n => n.ContainsKey("contract")) || IsGuard(w) || w.Form.Toggle is not null, description: "a toggle, a contract or a held guard");
         Register("displaces", static (w, _) => w.Has("move"), description: "the graph moves bodies");
         Register("channel", static (w, _) => w.Form.CastMode == CastMode.Channel, description: "a channeled cast");
-        Register("held", static (w, _) => w.Form.CastMode is CastMode.Charge or CastMode.Overcharge || (w.Form.CastMode == CastMode.Channel && w.Form.Channel?.Release is not null), description: "a held cast that releases: a charge-up, an overcharge or a channel with a release");
+        Register("held", static (w, _) => w.Form.CastMode is CastMode.Charge or CastMode.Overcharge || (w.Form.CastMode == CastMode.Channel && w.Channel?.Release is not null), description: "a held cast that releases: a charge-up, an overcharge or a channel with a release");
         Register("guard", static (w, _) => IsGuard(w), description: "a guard stance");
         Register("uses", static (w, _) => HasUses(w), description: "a bank of use charges");
         Register("bankless", static (w, _) => !HasUses(w), description: "no bank of use charges");
@@ -262,7 +262,7 @@ public static class MechanismRegistry
 
 /// <summary>
 /// What a mechanism probe reads: the weave being compiled as it stands with its active glyphs, including
-/// its patched and hooked effect graph, its form's timing, its local bases and its modifiers.
+/// its patched and hooked effect graph, its form's timing, its held-mode blocks, its local bases and its modifiers.
 /// </summary>
 public sealed class WeaveProbe
 {
@@ -270,6 +270,8 @@ public sealed class WeaveProbe
     public required FormDef Form { get; init; }
     /// <summary>The preset the weave compiles from, when it has one: probes about what presets carry (a bank, a trigger, a meta) read it.</summary>
     public WeaveDef? Preset { get; init; }
+    /// <summary>The held-mode blocks the weave casts by, each the preset's or the form's: probes read them through <see cref="Channel"/>, <see cref="Charge"/>, <see cref="Guard"/> and <see cref="Timing"/>.</summary>
+    public required HeldBlocks HeldBlocks { get; init; }
     public required IReadOnlyList<ThreadDef> Threads { get; init; }
     public required TagSet Tags { get; init; }
     /// <summary>Mechanisms the form and the active glyphs declare.</summary>
@@ -279,6 +281,18 @@ public sealed class WeaveProbe
     public required WeaveGraph Graph { get; init; }
     /// <summary>The active glyphs, in socket order: probes about what glyphs grant (a use bank, a trigger) read them.</summary>
     public IReadOnlyList<GlyphDef> Glyphs { get; init; } = Array.Empty<GlyphDef>();
+
+    /// <summary>The channel the weave holds: the preset's where it gives one, else the form's.</summary>
+    public ChannelSpec? Channel => HeldBlocks.Channel;
+
+    /// <summary>The charge-up the weave holds: the preset's where it gives one, else the form's.</summary>
+    public ChargeUpSpec? Charge => HeldBlocks.Charge;
+
+    /// <summary>The guard the weave holds: the preset's where it gives one, else the form's.</summary>
+    public GuardSpec? Guard => HeldBlocks.Guard;
+
+    /// <summary>The strike timing of the weave's cast bar: the preset's where it gives one, else the form's.</summary>
+    public TimingSpec? Timing => HeldBlocks.Timing;
 
     public IEnumerable<JsonObject> Nodes() => Graph.Nodes();
     public IEnumerable<JsonObject> Nodes(string type) => Graph.Nodes(type);

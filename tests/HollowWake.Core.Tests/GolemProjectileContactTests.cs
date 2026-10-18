@@ -10,7 +10,7 @@ using Xunit;
 
 namespace HollowWake.Core.Tests;
 
-// Copy into the core test project only on the documented combined integration branch.
+// Promoted from the supplemental fixture after the complete shared base was integrated.
 // These entity patterns currently use #36's legacy cylinder fallback, not authored anatomy.
 public class GolemProjectileContactTests
 {

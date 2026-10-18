@@ -3,6 +3,7 @@ using System.Text.Json;
 using System.Text.Json.Nodes;
 using HollowWake.Core.Attributes;
 using HollowWake.Core.Components;
+using HollowWake.Core.Combat;
 using HollowWake.Core.Content;
 using HollowWake.Core.Definitions;
 using HollowWake.Core.Ecs;
@@ -126,7 +127,7 @@ public sealed class PatternFactory
             Name = options.Name ?? def.DisplayName,
             Pattern = patternId,
             Tags = def.Tags.With("pattern." + patternId),
-            Faction = options.Faction ?? def.Faction,
+            Faction = options.Faction ?? (options.Owner.IsNone ? def.Faction : Relations.FactionOf(sim, options.Owner)),
             Owner = options.Owner,
             Look = def.Look ?? patternId,
         });
@@ -158,6 +159,7 @@ public sealed class PatternFactory
             stats.FillResources();
         }
         sim.Spatial.Update(e, snapped);
+        Combat.HitBodies.InvalidateBounds(sim);
         sim.Events.Publish(new EntitySpawned(e, patternId, snapped) { Tick = sim.Clock.Tick });
         return e;
     }
@@ -260,11 +262,17 @@ public sealed class PatternFactory
         {
             var profile = c.Bind<PhysicalBodySpec>();
             var density = profile.Materials.Sum(s => s.Fraction * c.Sim.Content.Require<BodyMaterialDef>(s.Material).Density);
-            c.Sim.World.Add(c.Entity, new PhysicalBody { Profile = profile, Density = density });
+            var body = c.Sim.World.Add(c.Entity, new PhysicalBody { Profile = profile, Density = density });
             var transform = c.Sim.World.Get<Transform>(c.Entity)!;
             transform.Radius = (float)(Math.Max(profile.Width, profile.Depth) / 2);
             transform.Height = (float)profile.Height;
+            var stats = c.Sim.World.Get<Stats>(c.Entity) ?? c.Sim.World.Add(c.Entity, new Stats(c.Sim.Content));
+            Movement.Physicality.Bind(stats, body, transform);
         });
+        Register("hit_body", c => c.Sim.World.Add(c.Entity, new Combat.HitBody
+        {
+            Definition = c.Sim.Content.Require<HitBodyDef>(c.Str("profile") ?? ""),
+        }));
         Register("motion", c =>
         {
             var m = c.Sim.World.GetOrAdd<Motion>(c.Entity);

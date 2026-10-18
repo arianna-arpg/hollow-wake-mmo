@@ -356,17 +356,14 @@
       },
       "effects": [
         {
-          "type": "consume_corpse",
-          "radius": 4
-        },
-        {
           "type": "summon",
-          "pattern": "zombie",
           "count": 1,
           "max_active": "weave.summon.max",
           "duration": 0,
           "group": "raised_zombies",
-          "behavior": "minion_melee"
+          "behavior": "minion_melee",
+          "from_corpse": "target",
+          "raise_as": "zombie"
         }
       ],
       "meta": {

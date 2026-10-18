@@ -1,6 +1,6 @@
 # Combined projectile/contact check
 
-The fixture is separate from PR #39's ordinary test project until the shared runtime dependencies are integrated. Copy `GolemProjectileContactTests.cs` into `tests/HollowWake.Core.Tests/` on an isolated combination of #39 and the **complete** #36 ref, then run `dotnet test tests/HollowWake.Core.Tests --filter FullyQualifiedName~GolemProjectileContactTests`. Never cherry-pick only #36's correction commit.
+The fixture was promoted to `tests/HollowWake.Core.Tests/GolemProjectileContactTests.cs` when PR #39 consumed corrected #34 `26c50de`, including the **complete** #36 ref. It now runs in the ordinary core suite. To run it alone: `dotnet test tests/HollowWake.Core.Tests --filter FullyQualifiedName~GolemProjectileContactTests`. Never cherry-pick only #36's correction commit.
 
 The incoming matrix covers each of the fifteen golem/Amalgamation bodies, three reliefs (-0.5, 0, +0.5 m) and seven projectile forms/presets. It drives real cast admission, projectile birth, positive damage and retained hit-ledger contact. All authored dimensions remain unchanged. These golems currently use the shared legacy feet-to-top cylinder, explicitly asserted here; this is not coverage of new per-limb anatomy. Update that label and assertion when profiles are authored under the height-normalized hit-body contract.
 
