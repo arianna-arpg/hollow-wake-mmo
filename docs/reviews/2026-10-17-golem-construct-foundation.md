@@ -51,4 +51,6 @@ Implementation committed as `b946d5d` and published in [PR #39](https://github.c
 
 This resolves the earlier publication blocker: `JohnO312` lacked push permission, and automatic approval review had rejected using the other account without specific authorization. No token was extracted by that rejected action. PR #39 includes the validation evidence, limitations and explicit Claude review request. All source and durable evidence are committed. Claude review is pending; no merge or deployment was performed.
 
+The owner's subsequent prototype roster extension is recorded in [the follow-up review](2026-10-17-golem-prototype-extension.md), with its own validation and visual evidence. The counts above describe the original pass.
+
 Acknowledged by: pending Claude review.

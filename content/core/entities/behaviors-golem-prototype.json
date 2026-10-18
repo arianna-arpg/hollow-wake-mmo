@@ -1,0 +1,112 @@
+{
+  "kind": "behaviors",
+  "entries": [
+    {
+      "id": "golem_bound_guard",
+      "initial": "follow",
+      "tick_interval": 0.25,
+      "aggro_range": 10,
+      "leash_range": 16,
+      "states": {
+        "follow": {
+          "tick": [
+            {
+              "type": "follow_owner"
+            },
+            {
+              "type": "assist_owner"
+            },
+            {
+              "type": "acquire_target",
+              "filter": "enemy",
+              "ignore": [
+                "prey"
+              ]
+            }
+          ],
+          "transitions": [
+            {
+              "to": "obey",
+              "when": "commanded",
+              "priority": 30
+            },
+            {
+              "to": "fight",
+              "when": "has_target",
+              "priority": 10
+            }
+          ]
+        },
+        "fight": {
+          "tick": [
+            {
+              "type": "assist_owner"
+            },
+            {
+              "type": "chase",
+              "stop": 1.2
+            },
+            {
+              "type": "attack"
+            }
+          ],
+          "transitions": [
+            {
+              "to": "obey",
+              "when": "commanded",
+              "priority": 30
+            },
+            {
+              "to": "heel",
+              "when": "owner_distance > leash_range",
+              "priority": 20
+            },
+            {
+              "to": "follow",
+              "when": "!has_target",
+              "priority": 10
+            }
+          ]
+        },
+        "heel": {
+          "enter": [
+            {
+              "type": "drop_target"
+            }
+          ],
+          "tick": [
+            {
+              "type": "return_to_owner"
+            }
+          ],
+          "transitions": [
+            {
+              "to": "obey",
+              "when": "commanded",
+              "priority": 30
+            },
+            {
+              "to": "follow",
+              "when": "owner_distance < 4",
+              "priority": 10
+            }
+          ]
+        },
+        "obey": {
+          "tick": [
+            {
+              "type": "obey_command"
+            }
+          ],
+          "transitions": [
+            {
+              "to": "follow",
+              "when": "!commanded",
+              "priority": 10
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

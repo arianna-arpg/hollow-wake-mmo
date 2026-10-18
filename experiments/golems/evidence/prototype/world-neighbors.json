@@ -1,0 +1,206 @@
+[
+  {
+    "zone": "zone(0,0)",
+    "removedNearby": [],
+    "addedNearby": [],
+    "questsBefore": [
+      {
+        "Id": "gen.poi.0_0.hamlet.128.128.clear_knot.0",
+        "Name": "The Hob\u0027s Hollow",
+        "Description": "A Knot has tangled near Ninewells. Walk into it and unmake what crawled out.",
+        "Objectives": [
+          {
+            "Id": "reach",
+            "Type": "reach",
+            "Target": null,
+            "Tags": [],
+            "Count": 1,
+            "Zone": null,
+            "Poi": "poi.0_0.knot.200.60",
+            "Text": "Find Hob\u0027s Hollow",
+            "Optional": false
+          },
+          {
+            "Id": "cull",
+            "Type": "kill",
+            "Target": "cinder_imp",
+            "Tags": [],
+            "Count": 6,
+            "Zone": null,
+            "Poi": null,
+            "Text": "Unmake six Cinder Imp",
+            "Optional": false
+          }
+        ]
+      },
+      {
+        "Id": "gen.poi.0_0.hamlet.128.128.gather_floss.1",
+        "Name": "Loose Threads",
+        "Description": "The weavers of Ninewells want floss and the hedgerows are full of it.",
+        "Objectives": [
+          {
+            "Id": "gather",
+            "Type": "collect",
+            "Target": "thread_floss",
+            "Tags": [],
+            "Count": 5,
+            "Zone": null,
+            "Poi": null,
+            "Text": "Gather five Thread Floss",
+            "Optional": false
+          }
+        ]
+      },
+      {
+        "Id": "gen.poi.0_0.hamlet.128.128.cull_beasts.2",
+        "Name": "Teeth in the Hedge",
+        "Description": "Beasts press on Ninewells.",
+        "Objectives": [
+          {
+            "Id": "cull",
+            "Type": "kill",
+            "Target": "wolverine",
+            "Tags": [],
+            "Count": 8,
+            "Zone": null,
+            "Poi": null,
+            "Text": "Cull eight Wolverine",
+            "Optional": false
+          }
+        ]
+      },
+      {
+        "Id": "gen.poi.0_0.hamlet.128.128.scout_ruin.3",
+        "Name": "What Stands at the Unquiet House",
+        "Description": "No one from Ninewells has walked to the Unquiet House in years.",
+        "Objectives": [
+          {
+            "Id": "find",
+            "Type": "discover",
+            "Target": null,
+            "Tags": [],
+            "Count": 1,
+            "Zone": null,
+            "Poi": "poi.1_0.ossuary.291.217",
+            "Text": "Find the Unquiet House",
+            "Optional": false
+          }
+        ]
+      }
+    ],
+    "questsAfter": [
+      {
+        "Id": "gen.poi.0_0.hamlet.128.128.clear_knot.0",
+        "Name": "The Hob\u0027s Hollow",
+        "Description": "A Knot has tangled near Ninewells. Walk into it and unmake what crawled out.",
+        "Objectives": [
+          {
+            "Id": "reach",
+            "Type": "reach",
+            "Target": null,
+            "Tags": [],
+            "Count": 1,
+            "Zone": null,
+            "Poi": "poi.0_0.knot.200.60",
+            "Text": "Find Hob\u0027s Hollow",
+            "Optional": false
+          },
+          {
+            "Id": "cull",
+            "Type": "kill",
+            "Target": "cinder_imp",
+            "Tags": [],
+            "Count": 6,
+            "Zone": null,
+            "Poi": null,
+            "Text": "Unmake six Cinder Imp",
+            "Optional": false
+          }
+        ]
+      },
+      {
+        "Id": "gen.poi.0_0.hamlet.128.128.gather_floss.1",
+        "Name": "Loose Threads",
+        "Description": "The weavers of Ninewells want floss and the hedgerows are full of it.",
+        "Objectives": [
+          {
+            "Id": "gather",
+            "Type": "collect",
+            "Target": "thread_floss",
+            "Tags": [],
+            "Count": 5,
+            "Zone": null,
+            "Poi": null,
+            "Text": "Gather five Thread Floss",
+            "Optional": false
+          }
+        ]
+      },
+      {
+        "Id": "gen.poi.0_0.hamlet.128.128.cull_beasts.2",
+        "Name": "Teeth in the Hedge",
+        "Description": "Beasts press on Ninewells.",
+        "Objectives": [
+          {
+            "Id": "cull",
+            "Type": "kill",
+            "Target": "wolverine",
+            "Tags": [],
+            "Count": 8,
+            "Zone": null,
+            "Poi": null,
+            "Text": "Cull eight Wolverine",
+            "Optional": false
+          }
+        ]
+      },
+      {
+        "Id": "gen.poi.0_0.hamlet.128.128.scout_ruin.3",
+        "Name": "What Stands at the Unquiet House",
+        "Description": "No one from Ninewells has walked to the Unquiet House in years.",
+        "Objectives": [
+          {
+            "Id": "find",
+            "Type": "discover",
+            "Target": null,
+            "Tags": [],
+            "Count": 1,
+            "Zone": null,
+            "Poi": "poi.1_0.ossuary.291.217",
+            "Text": "Find the Unquiet House",
+            "Optional": false
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "zone": "zone(1,0)",
+    "removedNearby": [],
+    "addedNearby": [],
+    "questsBefore": [],
+    "questsAfter": []
+  },
+  {
+    "zone": "zone(0,-1)",
+    "removedNearby": [],
+    "addedNearby": [],
+    "questsBefore": [],
+    "questsAfter": []
+  },
+  {
+    "zone": "zone(3,2)",
+    "removedNearby": [
+      "poi.3_1.golem_sawmill.789.283: golem_sawmill, Forgotten Sawmill, 789.5,283.5, height=5.164064, level=4",
+      "poi.2_2.golem_sawmill.658.694: golem_sawmill, Forgotten Sawmill, 658.5,694.5, height=11.465487, level=4"
+    ],
+    "addedNearby": [
+      "poi.3_1.gnasher_pen.789.283: gnasher_pen, Gnasher Pens, 789.5,283.5, height=5.164064, level=5",
+      "poi.2_2.gnasher_pen.658.694: gnasher_pen, Gnasher Pens, 658.5,694.5, height=11.465487, level=5",
+      "poi.2_2.shrine.661.548: shrine, the Hedge Shrine, 661.5,548.5, height=6.0695996, level=1",
+      "poi.2_2.shrine.551.584: shrine, Nine Candles, 551.5,584.5, height=13.125869, level=1"
+    ],
+    "questsBefore": [],
+    "questsAfter": []
+  }
+]

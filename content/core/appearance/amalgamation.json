@@ -1,0 +1,40 @@
+{
+  "kind": "ui_appearances",
+  "entries": [
+    {
+      "id": "amalgam_horror",
+      "name": "Amalgamation",
+      "body": "assembled_golem",
+      "shape": {
+        "breadth": 0.6333333333333333,
+        "depth": 0.3833333333333333,
+        "legs": 0.28,
+        "arms": 1.18,
+        "head": 0.85,
+        "fists": 1.1,
+        "arm_asymmetry": 0.25
+      },
+      "palette": {
+        "body": "#759787",
+        "edge": "#b28b87",
+        "joint": "#292e36",
+        "metal": "#cec8a5",
+        "core": "#c5e2b8"
+      },
+      "features": [
+        "grafted",
+        "sinews"
+      ],
+      "variation": {
+        "hue": 0.01,
+        "value": 0.03,
+        "scale": 0
+      },
+      "card": "never",
+      "meta": {
+        "prototype_look": "amalgam_stitched",
+        "presentation": "Grafted trunk, uneven arm masses, ribcage, stitches, spare skull and belly maw on the shared rig."
+      }
+    }
+  ]
+}

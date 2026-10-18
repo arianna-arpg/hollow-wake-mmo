@@ -1,0 +1,113 @@
+{
+  "kind": "patterns",
+  "entries": [
+    {
+      "id": "amalgam_horror",
+      "name": "Amalgamation",
+      "extends": "creature",
+      "faction": "grafted_court",
+      "level": 14,
+      "height": 3,
+      "radius": 0.95,
+      "tags": [
+        "monster",
+        "undead",
+        "construct",
+        "boss",
+        "no_corpse",
+        "family.amalgamation",
+        "body.flesh",
+        "body.bone",
+        "assembly.grafted",
+        "role.bruiser",
+        "size.large",
+        "habitat.amalgam_suture_works",
+        "locomotion.ground",
+        "melee"
+      ],
+      "components": {
+        "physical": {
+          "width": 1.9,
+          "depth": 1.15,
+          "height": 3,
+          "fill": 0.34,
+          "heft": 1,
+          "materials": [
+            {
+              "material": "flesh",
+              "fraction": 0.72
+            },
+            {
+              "material": "bone",
+              "fraction": 0.24
+            },
+            {
+              "material": "iron",
+              "fraction": 0.04
+            }
+          ]
+        },
+        "stats": {
+          "attributes": {
+            "life.max": 650,
+            "might": 24,
+            "grace": 6,
+            "will": 18,
+            "vigor": 24,
+            "move.speed": 3.2,
+            "weapon.damage.min": 20,
+            "weapon.damage.max": 30,
+            "weapon.attack.time": 1.4,
+            "armor": 35,
+            "poise.max": 65,
+            "mana.max": 180,
+            "mana.regen": 16,
+            "stamina.max": 100,
+            "stamina.regen": 16
+          },
+          "modifiers": [
+            {
+              "attribute": "resist.void",
+              "form": "flat",
+              "value": 0.4
+            }
+          ]
+        },
+        "statuses": {},
+        "weaves": {
+          "list": [
+            "heavy_strike",
+            "poison_nova"
+          ]
+        },
+        "behavior": {
+          "id": "golem_guard"
+        },
+        "drops": {
+          "table": "amalgam_relics",
+          "xp": "160 + level * 20",
+          "chance": 1
+        }
+      },
+      "meta": {
+        "prototype": {
+          "repository": "arianna-arpg/arpg-game-world",
+          "revision": "118b510f8b5bfb781163c5bc13ea4908f698e75b",
+          "id": "amalgam_horror",
+          "look": "amalgam_stitched"
+        },
+        "combat_translation": "Heavy Strike replaces claw; existing Poison Nova replaces pestilent_nova. Explicit Void resistance translates source chaos resistance.",
+        "encounter_translation": "A fixed assembled guardian at sparse Suture Works. The source Bonewright hunt, selectable graft parts, Crown promotion and part-selected rewards are deferred.",
+        "ai_handoff": {
+          "current": "golem_guard",
+          "status": "provisional existing actions",
+          "deferred": [
+            "graft-aware skill priorities",
+            "enrage phases",
+            "repair and limb reconstruction"
+          ]
+        }
+      }
+    }
+  ]
+}

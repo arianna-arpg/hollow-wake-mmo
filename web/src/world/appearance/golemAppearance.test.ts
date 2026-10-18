@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import fixture from '../../../../tests/fixtures/golems-appearance.json';
+import prototypeFixture from '../../../../tests/fixtures/golems-prototype-appearance.json';
 import { bundledKinds } from '../../ui/logic/content';
 import { AppearanceCatalog } from './looks';
 import { buildBody } from './bodyFamilies';
@@ -16,7 +17,7 @@ function same(actual: unknown, expected: unknown): void {
 }
 
 describe('golems appearance parity', () => {
-  it.each(fixture)('$id matches the shared native/browser plan including worn gear', row => {
+  it.each([...fixture, ...prototypeFixture])('$id matches the shared native/browser plan including worn gear', row => {
     const def = catalog.byIdOf(row.id)!;
     const p = buildBody(def, row.key, row.height, row.radius);
     for (const [slot, item] of catalog.defaultGear(def, row.id)) {

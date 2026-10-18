@@ -23,5 +23,6 @@ foreach (var (x,y) in new[] { (0,0),(1,0),(0,-1),(3,2) })
         questsBefore = a.Zone(zone).Quests.Select(q => new {q.Id,q.Name,q.Description,q.Objectives}),
         questsAfter = b.Zone(zone).Quests.Select(q => new {q.Id,q.Name,q.Description,q.Objectives}) });
 }
-File.WriteAllText("experiments/golems/evidence/world-neighbors.json",JsonSerializer.Serialize(report,new JsonSerializerOptions {WriteIndented=true})+"\n");
+var output = args.Length > 1 ? args[1] : "experiments/golems/evidence/world-neighbors.json";
+File.WriteAllText(output,JsonSerializer.Serialize(report,new JsonSerializerOptions {WriteIndented=true})+"\n");
 Console.WriteLine("Captured seed aureth: neighboring POIs and full quest definitions for every golden zone.");

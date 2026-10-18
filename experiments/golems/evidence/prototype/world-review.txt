@@ -1,0 +1,19 @@
+Prototype extension world review
+Base: 9d3ef741efe0154d3b0ed26d43ae16ebda8b7a6e. Seed: aureth.
+
+Adds one weighted POI candidate, amalgam_suture_works, under the existing ruin budget.
+The five bound golems remain summon-only and add no wild spawn population.
+
+Compared complete neighboring POIs and quest definitions in world-neighbors.json.
+Zones (0,0), (1,0), and (0,-1): no differences, including all Ninewells quests.
+Zone (3,2): its local chunk hash is unchanged. Nearby weighted selections change:
+  (3,1), at (789.5,283.5): Forgotten Sawmill L4 -> Gnasher Pens L5.
+  (2,2), at (658.5,694.5): Forgotten Sawmill L4 -> Gnasher Pens L5.
+  New neighboring shrines at (661.5,548.5) and (551.5,584.5), both L1.
+The changed weighted picks affect later spacing candidates. No quest change occurs.
+
+Reviewed zone-info golden (3,2): D56330D79E72BE3B -> 0CC30AA46F8AF08C.
+All four sampled local chunk hashes, the other three zone-info hashes,
+climate/region hash 999D90D6110B1CDD and overlay hash FBF3EE3DF4583601 remain unchanged.
+These local checks do not claim unchanged population throughout the world.
+Recompute combined goldens after integrating concurrent entity catalogs.

@@ -1,0 +1,173 @@
+{
+  "kind": "weaves",
+  "entries": [
+    {
+      "id": "golem_rime_nova",
+      "name": "Rime Nova",
+      "form": "nova",
+      "threads": [
+        "tide"
+      ],
+      "color": "#8ed9e8",
+      "description": "A bound ice body releases a ring of cold through the shared nova form.",
+      "meta": {
+        "translation": "Prototype frost_nova; shared existing form and status pipeline."
+      }
+    },
+    {
+      "id": "summon_stone_golem",
+      "name": "Summon Stone Golem",
+      "form": "bind",
+      "threads": [
+        "stone"
+      ],
+      "description": "Bind one stone golem. Shares the Warden slot, reserves 30 mana and reforms after eight seconds.",
+      "effects": [
+        {
+          "type": "summon",
+          "pattern": "stone_golem",
+          "count": 1,
+          "max_active": 1,
+          "group": "stone_golem",
+          "pool_group": "warden",
+          "exclusive_group": "warden",
+          "behavior": "golem_bound_guard",
+          "contract": {
+            "reserve": {
+              "mana": 30
+            },
+            "respawn": 8
+          }
+        }
+      ],
+      "meta": {
+        "prototype": "summon_stone_golem",
+        "integration": "Existing contract, owner, commands, reservation and respawn mechanisms."
+      }
+    },
+    {
+      "id": "summon_fire_golem",
+      "name": "Summon Fire Golem",
+      "form": "bind",
+      "threads": [
+        "ember"
+      ],
+      "description": "Bind one fire golem. Shares the Warden slot, reserves 30 mana and reforms after eight seconds.",
+      "effects": [
+        {
+          "type": "summon",
+          "pattern": "fire_golem",
+          "count": 1,
+          "max_active": 1,
+          "group": "fire_golem",
+          "pool_group": "warden",
+          "exclusive_group": "warden",
+          "behavior": "minion_ranged",
+          "contract": {
+            "reserve": {
+              "mana": 30
+            },
+            "respawn": 8
+          }
+        }
+      ],
+      "meta": {
+        "prototype": "summon_fire_golem",
+        "integration": "Existing contract, owner, commands, reservation and respawn mechanisms."
+      }
+    },
+    {
+      "id": "summon_ice_golem",
+      "name": "Summon Ice Golem",
+      "form": "bind",
+      "threads": [
+        "tide"
+      ],
+      "description": "Bind one ice golem. Shares the Warden slot, reserves 30 mana and reforms after eight seconds.",
+      "effects": [
+        {
+          "type": "summon",
+          "pattern": "ice_golem",
+          "count": 1,
+          "max_active": 1,
+          "group": "ice_golem",
+          "pool_group": "warden",
+          "exclusive_group": "warden",
+          "behavior": "golem_bound_guard",
+          "contract": {
+            "reserve": {
+              "mana": 30
+            },
+            "respawn": 8
+          }
+        }
+      ],
+      "meta": {
+        "prototype": "summon_ice_golem",
+        "integration": "Existing contract, owner, commands, reservation and respawn mechanisms."
+      }
+    },
+    {
+      "id": "summon_lightning_golem",
+      "name": "Summon Lightning Golem",
+      "form": "bind",
+      "threads": [
+        "storm"
+      ],
+      "description": "Bind one lightning golem. Shares the Warden slot, reserves 30 mana and reforms after eight seconds.",
+      "effects": [
+        {
+          "type": "summon",
+          "pattern": "lightning_golem",
+          "count": 1,
+          "max_active": 1,
+          "group": "lightning_golem",
+          "pool_group": "warden",
+          "exclusive_group": "warden",
+          "behavior": "golem_bound_guard",
+          "contract": {
+            "reserve": {
+              "mana": 30
+            },
+            "respawn": 8
+          }
+        }
+      ],
+      "meta": {
+        "prototype": "Original Storm adaptation",
+        "integration": "Existing contract, owner, commands, reservation and respawn mechanisms."
+      }
+    },
+    {
+      "id": "summon_blood_golem",
+      "name": "Summon Blood Golem",
+      "form": "bind",
+      "threads": [
+        "void"
+      ],
+      "description": "Bind one blood golem. Shares the Warden slot, reserves 30 mana and reforms after eight seconds.",
+      "effects": [
+        {
+          "type": "summon",
+          "pattern": "blood_golem",
+          "count": 1,
+          "max_active": 1,
+          "group": "blood_golem",
+          "pool_group": "warden",
+          "exclusive_group": "warden",
+          "behavior": "golem_bound_guard",
+          "contract": {
+            "reserve": {
+              "mana": 30
+            },
+            "respawn": 8
+          }
+        }
+      ],
+      "meta": {
+        "prototype": "summon_blood_golem",
+        "integration": "Existing contract, owner, commands, reservation and respawn mechanisms."
+      }
+    }
+  ]
+}

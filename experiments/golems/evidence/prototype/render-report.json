@@ -1,0 +1,53 @@
+{
+  "errors": [],
+  "bodies": [
+    {
+      "id": "stone_golem",
+      "body": "assembled_golem",
+      "rig": "biped",
+      "parts": 27,
+      "triangles": 356,
+      "height": 2.305405296223116
+    },
+    {
+      "id": "fire_golem",
+      "body": "assembled_golem",
+      "rig": "biped",
+      "parts": 26,
+      "triangles": 332,
+      "height": 2.453
+    },
+    {
+      "id": "ice_golem",
+      "body": "assembled_golem",
+      "rig": "biped",
+      "parts": 32,
+      "triangles": 356,
+      "height": 2.6918987179461165
+    },
+    {
+      "id": "lightning_golem",
+      "body": "assembled_golem",
+      "rig": "biped",
+      "parts": 36,
+      "triangles": 660,
+      "height": 3.05
+    },
+    {
+      "id": "blood_golem",
+      "body": "assembled_golem",
+      "rig": "biped",
+      "parts": 28,
+      "triangles": 588,
+      "height": 2.15
+    },
+    {
+      "id": "amalgam_horror",
+      "body": "assembled_golem",
+      "rig": "biped",
+      "parts": 42,
+      "triangles": 682,
+      "height": 3.154412807918087
+    }
+  ]
+}

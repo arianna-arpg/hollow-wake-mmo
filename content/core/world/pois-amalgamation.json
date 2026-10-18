@@ -1,0 +1,49 @@
+{
+  "kind": "pois",
+  "entries": [
+    {
+      "id": "amalgam_suture_works",
+      "name": "Suture Works",
+      "tags": [
+        "ruin",
+        "landmark",
+        "amalgam_site"
+      ],
+      "weight": 0.2,
+      "radius": 12,
+      "min_spacing": 220,
+      "slope": {
+        "max": 0.5
+      },
+      "biomes": [
+        "hollowed",
+        "marsh",
+        "deep_forest"
+      ],
+      "landmarks": [
+        "ruin_walls"
+      ],
+      "level": 8,
+      "inhabitants": [
+        {
+          "pattern": "amalgam_horror",
+          "density": 1,
+          "pack_size": [
+            1,
+            1
+          ],
+          "respawn": 900,
+          "level": {
+            "min": 14
+          }
+        }
+      ],
+      "names": [
+        "Suture Works"
+      ],
+      "meta": {
+        "encounter": "Single assembled guardian; fixed content adaptation, not the prototype hunt-and-graft event."
+      }
+    }
+  ]
+}

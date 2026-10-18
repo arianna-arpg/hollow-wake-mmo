@@ -1,0 +1,175 @@
+{
+  "kind": "ui_appearances",
+  "entries": [
+    {
+      "id": "stone_golem",
+      "name": "Stone Golem",
+      "body": "assembled_golem",
+      "shape": {
+        "breadth": 0.5869565217391305,
+        "depth": 0.3826086956521739,
+        "legs": 0.31,
+        "arms": 1.08,
+        "head": 0.9,
+        "fists": 1.05
+      },
+      "palette": {
+        "body": "#939086",
+        "edge": "#c9c5ae",
+        "joint": "#292c2a",
+        "metal": "#526344",
+        "core": "#cce5c2"
+      },
+      "features": [
+        "blocks",
+        "runestones",
+        "moss"
+      ],
+      "variation": {
+        "hue": 0.01,
+        "value": 0.025,
+        "scale": 0
+      },
+      "card": "never",
+      "meta": {
+        "prototype_look": "golem_stone_assembled",
+        "presentation": "Shape and glow only. Explicit modifiers on the pattern own all defenses."
+      }
+    },
+    {
+      "id": "fire_golem",
+      "name": "Fire Golem",
+      "body": "assembled_golem",
+      "shape": {
+        "breadth": 0.5,
+        "depth": 0.3272727272727272,
+        "legs": 0.31,
+        "arms": 1.08,
+        "head": 0.9,
+        "fists": 1.05
+      },
+      "palette": {
+        "body": "#dd572b",
+        "edge": "#ffbd59",
+        "joint": "#401f25",
+        "metal": "#8b3326",
+        "core": "#fff1ad"
+      },
+      "features": [
+        "kindled"
+      ],
+      "variation": {
+        "hue": 0.01,
+        "value": 0.025,
+        "scale": 0
+      },
+      "card": "never",
+      "meta": {
+        "prototype_look": "golem_fire_assembled",
+        "presentation": "Shape and glow only. Explicit modifiers on the pattern own all defenses."
+      }
+    },
+    {
+      "id": "ice_golem",
+      "name": "Ice Golem",
+      "body": "assembled_golem",
+      "shape": {
+        "breadth": 0.5,
+        "depth": 0.3,
+        "legs": 0.31,
+        "arms": 1.08,
+        "head": 0.9,
+        "fists": 0.85
+      },
+      "palette": {
+        "body": "#78b7d1",
+        "edge": "#d0edf0",
+        "joint": "#203e54",
+        "metal": "#526e91",
+        "core": "#f3ffff"
+      },
+      "features": [
+        "prisms",
+        "frost"
+      ],
+      "variation": {
+        "hue": 0.01,
+        "value": 0.025,
+        "scale": 0
+      },
+      "card": "never",
+      "meta": {
+        "prototype_look": "golem_ice_assembled",
+        "presentation": "Shape and glow only. Explicit modifiers on the pattern own all defenses."
+      }
+    },
+    {
+      "id": "lightning_golem",
+      "name": "Lightning Golem",
+      "body": "assembled_golem",
+      "shape": {
+        "breadth": 0.45999999999999996,
+        "depth": 0.304,
+        "legs": 0.37,
+        "arms": 1.08,
+        "head": 0.9,
+        "fists": 1.05
+      },
+      "palette": {
+        "body": "#657b92",
+        "edge": "#a6bfd0",
+        "joint": "#252d42",
+        "metal": "#c5aa6c",
+        "core": "#cfbcff"
+      },
+      "features": [
+        "conductors"
+      ],
+      "variation": {
+        "hue": 0.01,
+        "value": 0.025,
+        "scale": 0
+      },
+      "card": "never",
+      "meta": {
+        "prototype_look": null,
+        "presentation": "Shape and glow only. Explicit modifiers on the pattern own all defenses."
+      }
+    },
+    {
+      "id": "blood_golem",
+      "name": "Blood Golem",
+      "body": "assembled_golem",
+      "shape": {
+        "breadth": 0.6046511627906977,
+        "depth": 0.3953488372093023,
+        "legs": 0.31,
+        "arms": 1.08,
+        "head": 0.9,
+        "fists": 1.05,
+        "arm_asymmetry": 0.3
+      },
+      "palette": {
+        "body": "#9f3549",
+        "edge": "#cf7180",
+        "joint": "#3e172d",
+        "metal": "#71504d",
+        "core": "#f1a1a2"
+      },
+      "features": [
+        "clotted",
+        "sinews"
+      ],
+      "variation": {
+        "hue": 0.01,
+        "value": 0.025,
+        "scale": 0
+      },
+      "card": "never",
+      "meta": {
+        "prototype_look": "golem_blood_assembled",
+        "presentation": "Shape and glow only. Explicit modifiers on the pattern own all defenses."
+      }
+    }
+  ]
+}

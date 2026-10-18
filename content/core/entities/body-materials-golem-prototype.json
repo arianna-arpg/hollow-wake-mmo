@@ -1,0 +1,29 @@
+{
+  "kind": "body_materials",
+  "entries": [
+    {
+      "id": "golem_ice",
+      "name": "Bound ice",
+      "density": 917,
+      "meta": {
+        "basis": "Authored game estimate; only the physical mixture uses this density."
+      }
+    },
+    {
+      "id": "golem_cinder",
+      "name": "Kindled cinder matrix",
+      "density": 650,
+      "meta": {
+        "basis": "Authored game estimate; only the physical mixture uses this density."
+      }
+    },
+    {
+      "id": "golem_clot",
+      "name": "Bound blood and clot",
+      "density": 1060,
+      "meta": {
+        "basis": "Authored game estimate; only the physical mixture uses this density."
+      }
+    }
+  ]
+}

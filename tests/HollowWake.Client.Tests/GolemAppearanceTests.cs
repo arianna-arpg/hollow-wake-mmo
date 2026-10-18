@@ -7,11 +7,13 @@ namespace HollowWake.Client.Tests;
 
 public class GolemAppearanceTests
 {
-    [Fact]
-    public void NativeAndBrowserBuildTheSameReviewedPlansIncludingGear()
+    [Theory]
+    [InlineData("golems-appearance.json")]
+    [InlineData("golems-prototype-appearance.json")]
+    public void NativeAndBrowserBuildTheSameReviewedPlansIncludingGear(string file)
     {
         var root = Path.GetFullPath(Path.Combine(ThemeContentTests.FindContentDir(), "../.."));
-        using var fixture = JsonDocument.Parse(File.ReadAllText(Path.Combine(root, "tests/fixtures/golems-appearance.json")));
+        using var fixture = JsonDocument.Parse(File.ReadAllText(Path.Combine(root, "tests/fixtures", file)));
         var catalog = new AppearanceCatalog(ContentRegistry.Load(new[] { ThemeContentTests.FindContentDir() }, out _));
         foreach (var row in fixture.RootElement.EnumerateArray())
         {

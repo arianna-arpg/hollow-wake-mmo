@@ -1,0 +1,5 @@
+TEST evidence: C:\Users\John\.codex\worktrees\golem-construct-foundation\MMOARPG\experiments\golems\artifacts\prototype-smoke\run-ooNOKE
+TEST smoke-web; evidence: C:\Users\John\.codex\worktrees\golem-construct-foundation\MMOARPG\experiments\golems\artifacts\prototype-smoke\run-ooNOKE
+TEST import-godot; evidence: C:\Users\John\.codex\worktrees\golem-construct-foundation\MMOARPG\experiments\golems\artifacts\prototype-smoke\run-ooNOKE
+TEST smoke-godot; evidence: C:\Users\John\.codex\worktrees\golem-construct-foundation\MMOARPG\experiments\golems\artifacts\prototype-smoke\run-ooNOKE
+TEST PASSED; report: C:\Users\John\.codex\worktrees\golem-construct-foundation\MMOARPG\experiments\golems\artifacts\prototype-smoke\run-ooNOKE\result.json

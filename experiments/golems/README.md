@@ -1,5 +1,7 @@
 # The Unbound Works
 
+The [prototype extension](prototype-extension.md) adds named Stone, Fire, Ice, Lightning and Blood golem contracts plus the Amalgamation encounter. Its separate gallery, fixture and evidence live beside the original pass; run `node experiments/golems/prototype-render.mjs` to reproduce them.
+
 Prototype reference: `arianna-arpg/arpg-game-world` at `118b510f8b5bfb781163c5bc13ea4908f698e75b`. Source anatomy and the existing comparison sprites were inspected read-only. `provenance.json` distinguishes direct stone/vault/bauble translations from original clay, iron, crystal, timber and ceramic adaptations.
 
 Run `node experiments/golems/render.mjs` after installing the pinned web dependencies. This starts a private, headless browser and closes its own processes. Add `--write-fixture` only after deliberately reviewing changed geometry. Build caches go under ignored `artifacts/`. The gallery renders production body plans and poses, not an illustrative mockup.

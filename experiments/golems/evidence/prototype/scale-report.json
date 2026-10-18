@@ -1,0 +1,47 @@
+[
+  {
+    "id": "holdfast",
+    "authoritativeHeight": 1.8,
+    "modelHeight": 1.7334
+  },
+  {
+    "id": "skeleton_warrior",
+    "authoritativeHeight": 1.8,
+    "modelHeight": 1.7128800000000002
+  },
+  {
+    "id": "goblin_skirmisher",
+    "authoritativeHeight": 0.9,
+    "modelHeight": 0.9319047680409906
+  },
+  {
+    "id": "stone_golem",
+    "authoritativeHeight": 2.3,
+    "modelHeight": 2.305405296223116
+  },
+  {
+    "id": "fire_golem",
+    "authoritativeHeight": 2.2,
+    "modelHeight": 2.453
+  },
+  {
+    "id": "ice_golem",
+    "authoritativeHeight": 2.4,
+    "modelHeight": 2.6918987179461165
+  },
+  {
+    "id": "lightning_golem",
+    "authoritativeHeight": 2.5,
+    "modelHeight": 3.05
+  },
+  {
+    "id": "blood_golem",
+    "authoritativeHeight": 2.15,
+    "modelHeight": 2.15
+  },
+  {
+    "id": "amalgam_horror",
+    "authoritativeHeight": 3,
+    "modelHeight": 3.154412807918087
+  }
+]

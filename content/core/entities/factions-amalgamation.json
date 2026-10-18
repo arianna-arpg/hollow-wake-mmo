@@ -1,0 +1,22 @@
+{
+  "kind": "factions",
+  "entries": [
+    {
+      "id": "grafted_court",
+      "name": "The Grafted Court",
+      "color": "#8ac0a0",
+      "default": "neutral",
+      "relations": {
+        "grafted_court": "allied",
+        "players": "hostile",
+        "lantern_chancery": "hostile",
+        "weftmarch_compact": "hostile",
+        "longwake_company": "hostile",
+        "mended_thread": "hostile"
+      },
+      "meta": {
+        "translation": "Encounter allegiance only; no territory, economy or Bonewright event manager."
+      }
+    }
+  ]
+}

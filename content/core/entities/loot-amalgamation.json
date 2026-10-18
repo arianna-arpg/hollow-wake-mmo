@@ -1,0 +1,34 @@
+{
+  "kind": "loot",
+  "entries": [
+    {
+      "id": "amalgam_relics",
+      "rolls": [
+        {
+          "count": 2,
+          "entries": [
+            {
+              "kind": "currency",
+              "currency": "shards",
+              "weight": 1,
+              "amount": [
+                4,
+                8
+              ]
+            }
+          ]
+        },
+        {
+          "count": 1,
+          "entries": [
+            {
+              "kind": "table",
+              "table": "world_common",
+              "weight": 1
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

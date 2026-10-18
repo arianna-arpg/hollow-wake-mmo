@@ -46,6 +46,10 @@ Mobile golems are creatures with constructed bodies, distinct from deployed stat
 
 Unbound works use sparse point-of-interest populations with level windows. A legacy summon-only body may instead name bound service as its habitat when a real summoning preset supplies that path. Its player allegiance and lack of encounter rewards stay explicit. Shared summon pools can reuse wild golem patterns through the ordinary owner, behavior, reservation, respawn and exclusive-group mechanisms; the common summon path removes wild rewards. Material-specific tactics and reconstruction remain authoring intent until separately reviewed AI or combat mechanisms support them.
 
+Named prototype golem bindings also use the shared Warden replacement group. Elemental resistance and blood leech, when translated from a source body, are explicit pattern modifiers tested through actual hits. They are independent of material density and appearance. A bound melee guardian can use the ordinary owner/order actions with a content-authored stopping distance so its longer-range spell cannot strand its close-range kit. This adds no tactical reasoning or environmental immunity.
+
+Grafted biological constructs use their own family and encounter allegiance. A fixed Amalgamation pattern and sparse site do not imply the prototype's selectable body-part hunt, event progression or part-specific rewards; those require a separate event-system contract.
+
 ## Stature and warband identity
 
 The player is the reference adult stature. Ordinary skeletal humanoids share that authoritative height; ordinary Goblins are roughly half as tall. Hobgoblins and exceptional brutes remain intermediate, while Orcs are adult-height or taller with substantially broader bodies. Rare and summoned scaling still uses the existing authoritative transform. Appearance-only scale jitter is disabled on the standard player and skeleton looks and profiled warband bodies; palette variation remains.

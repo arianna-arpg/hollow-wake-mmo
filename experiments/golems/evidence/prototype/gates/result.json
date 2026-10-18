@@ -1,0 +1,10 @@
+{
+  "base": "9d3ef741efe0154d3b0ed26d43ae16ebda8b7a6e",
+  "build": {"errors": 0, "inheritedWarnings": 3},
+  "tests": {"core": 783, "client": 117, "server": 39, "web": 269, "focusedExtension": 31, "porter": 10, "failed": 0},
+  "validate": {"errors": 0, "warnings": 0},
+  "smoke": {"run": "run-ooNOKE", "web": "29/29", "native": "25/25", "nativePixels": "not covered", "cleanupErrors": []},
+  "geometry": {"originalPlans": 9, "newPlans": 6, "nativeBrowserFixture": "passed", "galleryErrors": [], "maxNewTriangles": 682},
+  "releaseComparison": {"log": "bench-comparison.txt", "tickP95Ms": 10.108, "behaviorMs": 1.793, "snapshotBuildMs": 0.852, "snapshotKB": 27.234, "deltaKB": 8.738, "systemErrors": 0},
+  "limits": ["Initial snapshot timing overrun and sequential base/current comparison retained.", "Native headless does not render pixels; inherited engine-exit diagnostics remain.", "Amalgamation is a fixed creature and encounter; full Bonewright hunt-and-graft event deferred.", "Lightning Golem is a new adaptation, not a source definition at the inspected revision."]
+}

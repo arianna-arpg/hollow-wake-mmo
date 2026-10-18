@@ -1,0 +1,495 @@
+{
+  "kind": "patterns",
+  "entries": [
+    {
+      "id": "stone_golem",
+      "name": "Stone Golem",
+      "extends": "creature",
+      "faction": "players",
+      "level": 5,
+      "height": 2.3,
+      "radius": 0.675,
+      "tags": [
+        "construct",
+        "golem",
+        "summonable",
+        "no_corpse",
+        "family.golem",
+        "body.stone",
+        "thread.stone",
+        "assembly.blocks",
+        "locomotion.ground",
+        "size.large",
+        "habitat.bound_service",
+        "role.guardian",
+        "melee"
+      ],
+      "components": {
+        "physical": {
+          "width": 1.35,
+          "depth": 0.88,
+          "height": 2.3,
+          "fill": 0.3,
+          "heft": 1,
+          "materials": [
+            {
+              "material": "stone",
+              "fraction": 1
+            }
+          ]
+        },
+        "stats": {
+          "attributes": {
+            "life.max": 220,
+            "might": 16,
+            "grace": 6,
+            "will": 18,
+            "vigor": 16,
+            "move.speed": 2.9,
+            "weapon.damage.min": 13,
+            "weapon.damage.max": 20,
+            "weapon.attack.time": 1.3,
+            "armor": 50,
+            "poise.max": 45,
+            "mana.max": 200,
+            "mana.regen": 14,
+            "stamina.max": 100,
+            "stamina.regen": 16
+          },
+          "modifiers": [
+            {
+              "attribute": "damage.taken",
+              "form": "more",
+              "value": -0.1
+            }
+          ]
+        },
+        "statuses": {},
+        "weaves": {
+          "list": [
+            "ground_slam",
+            "strike"
+          ]
+        },
+        "behavior": {
+          "id": "golem_bound_guard"
+        }
+      },
+      "meta": {
+        "prototype": {
+          "repository": "arianna-arpg/arpg-game-world",
+          "revision": "118b510f8b5bfb781163c5bc13ea4908f698e75b",
+          "id": "stone_golem",
+          "look": "golem_stone_assembled"
+        },
+        "combat_translation": "Ground Slam retained; Strike replaces claw. The older Stone Warden remains a separate unchanged contract.",
+        "physical_translation": "Authored effective mass of a jointed magical body; no automatic immunity, flight or phasing.",
+        "ai_handoff": {
+          "current": "golem_bound_guard",
+          "status": "provisional existing actions",
+          "deferred": [
+            "element-aware positioning",
+            "guarding and interception",
+            "reconstruction"
+          ]
+        }
+      }
+    },
+    {
+      "id": "fire_golem",
+      "name": "Fire Golem",
+      "extends": "creature",
+      "faction": "players",
+      "level": 5,
+      "height": 2.2,
+      "radius": 0.55,
+      "tags": [
+        "construct",
+        "golem",
+        "summonable",
+        "no_corpse",
+        "family.golem",
+        "body.fire",
+        "thread.ember",
+        "assembly.kindled",
+        "locomotion.ground",
+        "size.large",
+        "habitat.bound_service",
+        "role.artillery",
+        "ranged"
+      ],
+      "components": {
+        "physical": {
+          "width": 1.1,
+          "depth": 0.72,
+          "height": 2.2,
+          "fill": 0.24,
+          "heft": 1,
+          "materials": [
+            {
+              "material": "golem_cinder",
+              "fraction": 0.65
+            },
+            {
+              "material": "ethereal",
+              "fraction": 0.35
+            }
+          ]
+        },
+        "stats": {
+          "attributes": {
+            "life.max": 170,
+            "might": 16,
+            "grace": 6,
+            "will": 18,
+            "vigor": 16,
+            "move.speed": 3.7,
+            "weapon.damage.min": 13,
+            "weapon.damage.max": 20,
+            "weapon.attack.time": 1.3,
+            "armor": 20,
+            "poise.max": 18,
+            "mana.max": 200,
+            "mana.regen": 14,
+            "stamina.max": 100,
+            "stamina.regen": 16
+          },
+          "modifiers": [
+            {
+              "attribute": "resist.ember",
+              "form": "flat",
+              "value": 0.75
+            }
+          ]
+        },
+        "statuses": {},
+        "weaves": {
+          "list": [
+            "firebolt",
+            "ember_blast"
+          ]
+        },
+        "behavior": {
+          "id": "minion_ranged"
+        }
+      },
+      "meta": {
+        "prototype": {
+          "repository": "arianna-arpg/arpg-game-world",
+          "revision": "118b510f8b5bfb781163c5bc13ea4908f698e75b",
+          "id": "fire_golem",
+          "look": "golem_fire_assembled"
+        },
+        "combat_translation": "Firebolt retained; Ember Blast substitutes for flame_wave. Source lava/magma immunity is deferred.",
+        "physical_translation": "Authored effective mass of a jointed magical body; no automatic immunity, flight or phasing.",
+        "ai_handoff": {
+          "current": "minion_ranged",
+          "status": "provisional existing actions",
+          "deferred": [
+            "element-aware positioning",
+            "guarding and interception",
+            "reconstruction"
+          ]
+        }
+      }
+    },
+    {
+      "id": "ice_golem",
+      "name": "Ice Golem",
+      "extends": "creature",
+      "faction": "players",
+      "level": 5,
+      "height": 2.4,
+      "radius": 0.6,
+      "tags": [
+        "construct",
+        "golem",
+        "summonable",
+        "no_corpse",
+        "family.golem",
+        "body.ice",
+        "thread.tide",
+        "assembly.prisms",
+        "locomotion.ground",
+        "size.large",
+        "habitat.bound_service",
+        "role.guardian",
+        "melee"
+      ],
+      "components": {
+        "physical": {
+          "width": 1.2,
+          "depth": 0.72,
+          "height": 2.4,
+          "fill": 0.31,
+          "heft": 1,
+          "materials": [
+            {
+              "material": "golem_ice",
+              "fraction": 1
+            }
+          ]
+        },
+        "stats": {
+          "attributes": {
+            "life.max": 195,
+            "might": 16,
+            "grace": 6,
+            "will": 18,
+            "vigor": 16,
+            "move.speed": 3.4,
+            "weapon.damage.min": 13,
+            "weapon.damage.max": 20,
+            "weapon.attack.time": 1.3,
+            "armor": 30,
+            "poise.max": 28,
+            "mana.max": 200,
+            "mana.regen": 14,
+            "stamina.max": 100,
+            "stamina.regen": 16
+          },
+          "modifiers": [
+            {
+              "attribute": "resist.tide",
+              "form": "flat",
+              "value": 0.75
+            }
+          ]
+        },
+        "statuses": {},
+        "weaves": {
+          "list": [
+            "frostbolt",
+            "golem_rime_nova"
+          ]
+        },
+        "behavior": {
+          "id": "golem_bound_guard"
+        }
+      },
+      "meta": {
+        "prototype": {
+          "repository": "arianna-arpg/arpg-game-world",
+          "revision": "118b510f8b5bfb781163c5bc13ea4908f698e75b",
+          "id": "ice_golem",
+          "look": "golem_ice_assembled"
+        },
+        "combat_translation": "Frostbolt retained; Rime Nova uses the existing Tide nova form to translate frost_nova.",
+        "physical_translation": "Authored effective mass of a jointed magical body; no automatic immunity, flight or phasing.",
+        "ai_handoff": {
+          "current": "golem_bound_guard",
+          "status": "provisional existing actions",
+          "deferred": [
+            "element-aware positioning",
+            "guarding and interception",
+            "reconstruction"
+          ]
+        }
+      }
+    },
+    {
+      "id": "lightning_golem",
+      "name": "Lightning Golem",
+      "extends": "creature",
+      "faction": "players",
+      "level": 5,
+      "height": 2.5,
+      "radius": 0.575,
+      "tags": [
+        "construct",
+        "golem",
+        "summonable",
+        "no_corpse",
+        "family.golem",
+        "body.lightning",
+        "thread.storm",
+        "assembly.conductors",
+        "locomotion.ground",
+        "size.large",
+        "habitat.bound_service",
+        "role.guardian",
+        "melee"
+      ],
+      "components": {
+        "physical": {
+          "width": 1.15,
+          "depth": 0.76,
+          "height": 2.5,
+          "fill": 0.17,
+          "heft": 1,
+          "materials": [
+            {
+              "material": "iron",
+              "fraction": 0.35
+            },
+            {
+              "material": "golem_quartz",
+              "fraction": 0.25
+            },
+            {
+              "material": "ethereal",
+              "fraction": 0.4
+            }
+          ]
+        },
+        "stats": {
+          "attributes": {
+            "life.max": 180,
+            "might": 16,
+            "grace": 6,
+            "will": 18,
+            "vigor": 16,
+            "move.speed": 3.9,
+            "weapon.damage.min": 13,
+            "weapon.damage.max": 20,
+            "weapon.attack.time": 1.3,
+            "armor": 25,
+            "poise.max": 25,
+            "mana.max": 200,
+            "mana.regen": 14,
+            "stamina.max": 100,
+            "stamina.regen": 16
+          },
+          "modifiers": [
+            {
+              "attribute": "resist.storm",
+              "form": "flat",
+              "value": 0.6
+            }
+          ]
+        },
+        "statuses": {},
+        "weaves": {
+          "list": [
+            "storm_bolt",
+            "storm_nova"
+          ]
+        },
+        "behavior": {
+          "id": "golem_bound_guard"
+        }
+      },
+      "meta": {
+        "prototype": {
+          "repository": "arianna-arpg/arpg-game-world",
+          "revision": "118b510f8b5bfb781163c5bc13ea4908f698e75b",
+          "inspiration": "assembled golem family; new Storm adaptation"
+        },
+        "combat_translation": "Original Storm assembly inspired by the prototype family; no lightning golem definition exists in the inspected revision.",
+        "physical_translation": "Authored effective mass of a jointed magical body; no automatic immunity, flight or phasing.",
+        "ai_handoff": {
+          "current": "golem_bound_guard",
+          "status": "provisional existing actions",
+          "deferred": [
+            "element-aware positioning",
+            "guarding and interception",
+            "reconstruction"
+          ]
+        }
+      }
+    },
+    {
+      "id": "blood_golem",
+      "name": "Blood Golem",
+      "extends": "creature",
+      "faction": "players",
+      "level": 5,
+      "height": 2.15,
+      "radius": 0.65,
+      "tags": [
+        "construct",
+        "golem",
+        "summonable",
+        "no_corpse",
+        "family.golem",
+        "body.blood",
+        "thread.void",
+        "assembly.clotted",
+        "locomotion.ground",
+        "size.large",
+        "habitat.bound_service",
+        "role.guardian",
+        "melee"
+      ],
+      "components": {
+        "physical": {
+          "width": 1.3,
+          "depth": 0.85,
+          "height": 2.15,
+          "fill": 0.34,
+          "heft": 1,
+          "materials": [
+            {
+              "material": "golem_clot",
+              "fraction": 0.95
+            },
+            {
+              "material": "bone",
+              "fraction": 0.05
+            }
+          ]
+        },
+        "stats": {
+          "attributes": {
+            "life.max": 260,
+            "might": 16,
+            "grace": 6,
+            "will": 18,
+            "vigor": 16,
+            "move.speed": 3.5,
+            "weapon.damage.min": 13,
+            "weapon.damage.max": 20,
+            "weapon.attack.time": 1.3,
+            "armor": 10,
+            "poise.max": 20,
+            "mana.max": 200,
+            "mana.regen": 14,
+            "stamina.max": 100,
+            "stamina.regen": 16
+          },
+          "modifiers": [
+            {
+              "attribute": "leech.life",
+              "form": "flat",
+              "value": 0.05
+            },
+            {
+              "attribute": "resist.void",
+              "form": "flat",
+              "value": 0.4
+            }
+          ]
+        },
+        "statuses": {},
+        "weaves": {
+          "list": [
+            "strike",
+            "heavy_strike"
+          ]
+        },
+        "behavior": {
+          "id": "golem_bound_guard"
+        }
+      },
+      "meta": {
+        "prototype": {
+          "repository": "arianna-arpg/arpg-game-world",
+          "revision": "118b510f8b5bfb781163c5bc13ea4908f698e75b",
+          "id": "blood_golem",
+          "look": "golem_blood_assembled"
+        },
+        "combat_translation": "Heavy Strike and life leech retained; Strike replaces claw and Void resistance translates chaos resistance.",
+        "physical_translation": "Authored effective mass of a jointed magical body; no automatic immunity, flight or phasing.",
+        "ai_handoff": {
+          "current": "golem_bound_guard",
+          "status": "provisional existing actions",
+          "deferred": [
+            "element-aware positioning",
+            "guarding and interception",
+            "reconstruction"
+          ]
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,52 @@
+{
+  "started": "2026-10-18T04:37:17.858Z",
+  "root": "C:\\Users\\John\\.codex\\worktrees\\golem-construct-foundation\\MMOARPG",
+  "directory": "C:\\Users\\John\\.codex\\worktrees\\golem-construct-foundation\\MMOARPG\\experiments\\golems\\artifacts\\prototype-smoke\\run-ooNOKE",
+  "suite": "all",
+  "status": "passed",
+  "stages": [
+    {
+      "name": "smoke-web",
+      "status": "passed",
+      "started": "2026-10-18T04:37:19.243Z",
+      "code": 0,
+      "signal": null,
+      "passed": 29,
+      "total": 29,
+      "skipped": [],
+      "finished": "2026-10-18T04:38:37.849Z"
+    },
+    {
+      "name": "import-godot",
+      "status": "passed",
+      "started": "2026-10-18T04:38:37.850Z",
+      "code": 0,
+      "signal": null,
+      "finished": "2026-10-18T04:38:42.522Z"
+    },
+    {
+      "name": "smoke-godot",
+      "status": "passed",
+      "started": "2026-10-18T04:38:42.523Z",
+      "code": 0,
+      "signal": null,
+      "passed": 25,
+      "total": 25,
+      "skipped": [
+        "appearance rendering: headless display; geometry/card performance and readability require graphical evidence",
+        "theme rendered pixels: headless display; theme state checked above"
+      ],
+      "finished": "2026-10-18T04:39:20.732Z"
+    }
+  ],
+  "nativeRendering": "not covered by headless mode",
+  "godot": "C:\\Users\\John\\AppData\\Local\\Microsoft\\WinGet\\Packages\\GodotEngine.GodotEngine.Mono_Microsoft.Winget.Source_8wekyb3d8bbwe\\Godot_v4.7.2-stable_mono_win64\\Godot_v4.7.2-stable_mono_win64.exe",
+  "server": {
+    "tcp": 50629,
+    "url": "http://127.0.0.1:50630",
+    "name": "harness-run-ooNOKE",
+    "data": "C:\\Users\\John\\.codex\\worktrees\\golem-construct-foundation\\MMOARPG\\experiments\\golems\\artifacts\\prototype-smoke\\run-ooNOKE\\data"
+  },
+  "cleanupErrors": [],
+  "finished": "2026-10-18T04:39:21.066Z"
+}

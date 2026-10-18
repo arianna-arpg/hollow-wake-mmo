@@ -1,0 +1,142 @@
+Test run for C:\Users\John\.codex\worktrees\golem-construct-foundation\MMOARPG\tests\HollowWake.Core.Tests\bin\Debug\net10.0\HollowWake.Core.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+C:\Users\John\.codex\worktrees\golem-construct-foundation\MMOARPG\tests\HollowWake.Core.Tests\bin\Debug\net10.0\HollowWake.Core.Tests.dll
+[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v3.1.5+1b188a7b0a (64-bit .NET 10.0.13)
+[xUnit.net 00:00:00.09]   Discovering: HollowWake.Core.Tests
+[xUnit.net 00:00:01.20]   Discovered:  HollowWake.Core.Tests
+[xUnit.net 00:00:01.24]   Starting:    HollowWake.Core.Tests
+  Passed HollowWake.Core.Tests.GolemPrototypeTests.ExplicitResistanceReducesRealHitsWithoutMakingBodiesImmune(id: "fire_golem", thread: "ember", resist: 0.75) [464 ms]
+  Passed HollowWake.Core.Tests.GolemPrototypeTests.ExplicitResistanceReducesRealHitsWithoutMakingBodiesImmune(id: "ice_golem", thread: "tide", resist: 0.75) [1 ms]
+  Passed HollowWake.Core.Tests.GolemPrototypeTests.ExplicitResistanceReducesRealHitsWithoutMakingBodiesImmune(id: "amalgam_horror", thread: "void", resist: 0.40000000000000002) [< 1 ms]
+  Passed HollowWake.Core.Tests.GolemPrototypeTests.ExplicitResistanceReducesRealHitsWithoutMakingBodiesImmune(id: "blood_golem", thread: "void", resist: 0.40000000000000002) [< 1 ms]
+  Passed HollowWake.Core.Tests.GolemPrototypeTests.ExplicitResistanceReducesRealHitsWithoutMakingBodiesImmune(id: "lightning_golem", thread: "storm", resist: 0.59999999999999998) [< 1 ms]
+  Passed HollowWake.Core.Tests.GolemPrototypeTests.NewBodiesRetainDistinctMassAndShoveResponses [56 ms]
+  Standard Output Messages:
+ fire_golem: shove=2.676311 m
+ ice_golem: shove=0.779549 m
+ stone_golem: shove=0.155624 m
+
+
+  Passed HollowWake.Core.Tests.GolemPrototypeTests.ProfilesMatchActualMassAndPairedAppearance(id: "blood_golem") [8 ms]
+  Standard Output Messages:
+ blood_golem: mass=888.127 kg
+
+
+  Passed HollowWake.Core.Tests.GolemPrototypeTests.ProfilesMatchActualMassAndPairedAppearance(id: "stone_golem") [< 1 ms]
+  Standard Output Messages:
+ stone_golem: mass=2131.272 kg
+
+
+  Passed HollowWake.Core.Tests.GolemPrototypeTests.ProfilesMatchActualMassAndPairedAppearance(id: "lightning_golem") [3 ms]
+  Standard Output Messages:
+ lightning_golem: mass=1277.974 kg
+
+
+  Passed HollowWake.Core.Tests.GolemPrototypeTests.ProfilesMatchActualMassAndPairedAppearance(id: "amalgam_horror") [7 ms]
+  Standard Output Messages:
+ amalgam_horror: mass=3289.561 kg
+
+
+  Passed HollowWake.Core.Tests.GolemPrototypeTests.ProfilesMatchActualMassAndPairedAppearance(id: "fire_golem") [< 1 ms]
+  Standard Output Messages:
+ fire_golem: mass=194.243 kg
+
+
+  Passed HollowWake.Core.Tests.GolemPrototypeTests.ProfilesMatchActualMassAndPairedAppearance(id: "ice_golem") [< 1 ms]
+  Standard Output Messages:
+ ice_golem: mass=589.462 kg
+
+
+  Passed HollowWake.Core.Tests.GolemPrototypeTests.NamedContractsFightRespawnAndReplaceExistingWardensWithoutRewards(id: "stone_golem") [608 ms]
+  Passed HollowWake.Core.Tests.GolemPrototypeTests.NamedContractsFightRespawnAndReplaceExistingWardensWithoutRewards(id: "blood_golem") [37 ms]
+  Passed HollowWake.Core.Tests.GolemPrototypeTests.NamedContractsFightRespawnAndReplaceExistingWardensWithoutRewards(id: "fire_golem") [55 ms]
+  Passed HollowWake.Core.Tests.GolemPrototypeTests.NamedContractsFightRespawnAndReplaceExistingWardensWithoutRewards(id: "lightning_golem") [33 ms]
+  Passed HollowWake.Core.Tests.GolemPrototypeTests.NamedContractsFightRespawnAndReplaceExistingWardensWithoutRewards(id: "ice_golem") [33 ms]
+  Passed HollowWake.Core.Tests.GolemPrototypeTests.BloodGolemActuallyRecoversLifeFromItsAttacks [9 ms]
+  Standard Output Messages:
+ Blood leech: 7.523 life returned
+
+
+  Passed HollowWake.Core.Tests.GolemPrototypeTests.EveryAttackSustainsDamageThroughItsRealSpawnPathAndReplays(id: "ice_golem", skill: "frostbolt") [53 ms]
+  Standard Output Messages:
+ ice_golem/frostbolt: 29 hits, 430.09 damage
+ ice_golem/frostbolt: 29 hits, 430.09 damage
+
+
+  Passed HollowWake.Core.Tests.GolemPrototypeTests.EveryAttackSustainsDamageThroughItsRealSpawnPathAndReplays(id: "amalgam_horror", skill: "poison_nova") [48 ms]
+  Standard Output Messages:
+ amalgam_horror/poison_nova: 67 hits, 1052.46 damage
+ amalgam_horror/poison_nova: 67 hits, 1052.46 damage
+
+
+  Passed HollowWake.Core.Tests.GolemPrototypeTests.EveryAttackSustainsDamageThroughItsRealSpawnPathAndReplays(id: "lightning_golem", skill: "storm_bolt") [58 ms]
+  Standard Output Messages:
+ lightning_golem/storm_bolt: 32 hits, 675.42 damage
+ lightning_golem/storm_bolt: 32 hits, 675.42 damage
+
+
+  Passed HollowWake.Core.Tests.GolemPrototypeTests.EveryAttackSustainsDamageThroughItsRealSpawnPathAndReplays(id: "stone_golem", skill: "ground_slam") [38 ms]
+  Standard Output Messages:
+ stone_golem/ground_slam: 13 hits, 202.64 damage
+ stone_golem/ground_slam: 13 hits, 202.64 damage
+
+
+  Passed HollowWake.Core.Tests.GolemPrototypeTests.EveryAttackSustainsDamageThroughItsRealSpawnPathAndReplays(id: "lightning_golem", skill: "storm_nova") [42 ms]
+  Standard Output Messages:
+ lightning_golem/storm_nova: 24 hits, 709.40 damage
+ lightning_golem/storm_nova: 24 hits, 709.40 damage
+
+
+  Passed HollowWake.Core.Tests.GolemPrototypeTests.EveryAttackSustainsDamageThroughItsRealSpawnPathAndReplays(id: "blood_golem", skill: "strike") [41 ms]
+  Standard Output Messages:
+ blood_golem/strike: 15 hits, 362.78 damage
+ blood_golem/strike: 15 hits, 362.78 damage
+
+
+  Passed HollowWake.Core.Tests.GolemPrototypeTests.EveryAttackSustainsDamageThroughItsRealSpawnPathAndReplays(id: "fire_golem", skill: "ember_blast") [47 ms]
+  Standard Output Messages:
+ fire_golem/ember_blast: 43 hits, 660.78 damage
+ fire_golem/ember_blast: 43 hits, 660.78 damage
+
+
+  Passed HollowWake.Core.Tests.GolemPrototypeTests.EveryAttackSustainsDamageThroughItsRealSpawnPathAndReplays(id: "ice_golem", skill: "golem_rime_nova") [42 ms]
+  Standard Output Messages:
+ ice_golem/golem_rime_nova: 23 hits, 652.32 damage
+ ice_golem/golem_rime_nova: 23 hits, 652.32 damage
+
+
+  Passed HollowWake.Core.Tests.GolemPrototypeTests.EveryAttackSustainsDamageThroughItsRealSpawnPathAndReplays(id: "stone_golem", skill: "strike") [44 ms]
+  Standard Output Messages:
+ stone_golem/strike: 15 hits, 359.47 damage
+ stone_golem/strike: 15 hits, 359.47 damage
+
+
+  Passed HollowWake.Core.Tests.GolemPrototypeTests.EveryAttackSustainsDamageThroughItsRealSpawnPathAndReplays(id: "blood_golem", skill: "heavy_strike") [47 ms]
+  Standard Output Messages:
+ blood_golem/heavy_strike: 2 hits, 98.22 damage
+ blood_golem/heavy_strike: 2 hits, 98.22 damage
+
+
+  Passed HollowWake.Core.Tests.GolemPrototypeTests.EveryAttackSustainsDamageThroughItsRealSpawnPathAndReplays(id: "fire_golem", skill: "firebolt") [58 ms]
+  Standard Output Messages:
+ fire_golem/firebolt: 55 hits, 556.11 damage
+ fire_golem/firebolt: 55 hits, 556.11 damage
+
+
+  Passed HollowWake.Core.Tests.GolemPrototypeTests.EveryAttackSustainsDamageThroughItsRealSpawnPathAndReplays(id: "amalgam_horror", skill: "heavy_strike") [29 ms]
+  Standard Output Messages:
+ amalgam_horror/heavy_strike: 3 hits, 280.03 damage
+ amalgam_horror/heavy_strike: 3 hits, 280.03 damage
+
+
+[xUnit.net 00:00:06.30]   Finished:    HollowWake.Core.Tests
+  Passed HollowWake.Core.Tests.GolemPrototypeTests.AmalgamationSiteAppearsNaturallyAndActuallyPopulatesAtItsLevel [3 s]
+  Standard Output Messages:
+ amalgam_suture_works: zone(-32,-42), at (-8056.5,-10574.5), level 47, actual spawn points 1
+
+
+
+Test Run Successful.
+Total tests: 31
+     Passed: 31
+ Total time: 6.8013 Seconds

@@ -1,0 +1,50 @@
+  Determining projects to restore...
+  All projects are up-to-date for restore.
+  HollowWake.Core -> C:\Users\John\.codex\worktrees\golem-construct-foundation\MMOARPG\src\HollowWake.Core\bin\Debug\net8.0\HollowWake.Core.dll
+C:\Users\John\.codex\worktrees\golem-construct-foundation\MMOARPG\tests\HollowWake.Core.Tests\PortedProjectileTests.cs(254,19): warning xUnit2031: Do not use a Where clause to filter before calling Assert.Single. Use the overload of Assert.Single that accepts a filtering function. (https://xunit.net/xunit.analyzers/rules/xUnit2031) [C:\Users\John\.codex\worktrees\golem-construct-foundation\MMOARPG\tests\HollowWake.Core.Tests\HollowWake.Core.Tests.csproj]
+C:\Users\John\.codex\worktrees\golem-construct-foundation\MMOARPG\tests\HollowWake.Core.Tests\PortedProjectileTests.cs(267,9): warning xUnit2031: Do not use a Where clause to filter before calling Assert.Single. Use the overload of Assert.Single that accepts a filtering function. (https://xunit.net/xunit.analyzers/rules/xUnit2031) [C:\Users\John\.codex\worktrees\golem-construct-foundation\MMOARPG\tests\HollowWake.Core.Tests\HollowWake.Core.Tests.csproj]
+C:\Users\John\.codex\worktrees\golem-construct-foundation\MMOARPG\tests\HollowWake.Core.Tests\PortedProjectileTests.cs(280,9): warning xUnit2031: Do not use a Where clause to filter before calling Assert.Single. Use the overload of Assert.Single that accepts a filtering function. (https://xunit.net/xunit.analyzers/rules/xUnit2031) [C:\Users\John\.codex\worktrees\golem-construct-foundation\MMOARPG\tests\HollowWake.Core.Tests\HollowWake.Core.Tests.csproj]
+  HollowWake.Core.Tests -> C:\Users\John\.codex\worktrees\golem-construct-foundation\MMOARPG\tests\HollowWake.Core.Tests\bin\Debug\net10.0\HollowWake.Core.Tests.dll
+Test run for C:\Users\John\.codex\worktrees\golem-construct-foundation\MMOARPG\tests\HollowWake.Core.Tests\bin\Debug\net10.0\HollowWake.Core.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v3.1.5+1b188a7b0a (64-bit .NET 10.0.13)
+[xUnit.net 00:00:00.18]   Discovering: HollowWake.Core.Tests
+[xUnit.net 00:00:01.43]   Discovered:  HollowWake.Core.Tests
+[xUnit.net 00:00:01.46]   Starting:    HollowWake.Core.Tests
+  Passed HollowWake.Core.Tests.GolemPrototypeTests.ExplicitResistanceReducesRealHitsWithoutMakingBodiesImmune(id: "fire_golem", thread: "ember", resist: 0.75) [521 ms]
+  Passed HollowWake.Core.Tests.GolemPrototypeTests.ExplicitResistanceReducesRealHitsWithoutMakingBodiesImmune(id: "ice_golem", thread: "tide", resist: 0.75) [1 ms]
+  Passed HollowWake.Core.Tests.GolemPrototypeTests.ExplicitResistanceReducesRealHitsWithoutMakingBodiesImmune(id: "amalgam_horror", thread: "void", resist: 0.40000000000000002) [< 1 ms]
+  Passed HollowWake.Core.Tests.GolemPrototypeTests.ExplicitResistanceReducesRealHitsWithoutMakingBodiesImmune(id: "blood_golem", thread: "void", resist: 0.40000000000000002) [< 1 ms]
+  Passed HollowWake.Core.Tests.GolemPrototypeTests.ExplicitResistanceReducesRealHitsWithoutMakingBodiesImmune(id: "lightning_golem", thread: "storm", resist: 0.59999999999999998) [< 1 ms]
+  Passed HollowWake.Core.Tests.GolemPrototypeTests.NewBodiesRetainDistinctMassAndShoveResponses [51 ms]
+  Passed HollowWake.Core.Tests.GolemPrototypeTests.ProfilesMatchActualMassAndPairedAppearance(id: "blood_golem") [9 ms]
+  Passed HollowWake.Core.Tests.GolemPrototypeTests.ProfilesMatchActualMassAndPairedAppearance(id: "stone_golem") [< 1 ms]
+  Passed HollowWake.Core.Tests.GolemPrototypeTests.ProfilesMatchActualMassAndPairedAppearance(id: "lightning_golem") [2 ms]
+  Passed HollowWake.Core.Tests.GolemPrototypeTests.ProfilesMatchActualMassAndPairedAppearance(id: "amalgam_horror") [4 ms]
+  Passed HollowWake.Core.Tests.GolemPrototypeTests.ProfilesMatchActualMassAndPairedAppearance(id: "fire_golem") [< 1 ms]
+  Passed HollowWake.Core.Tests.GolemPrototypeTests.ProfilesMatchActualMassAndPairedAppearance(id: "ice_golem") [< 1 ms]
+  Passed HollowWake.Core.Tests.GolemPrototypeTests.NamedContractsFightRespawnAndReplaceExistingWardensWithoutRewards(id: "stone_golem") [566 ms]
+  Passed HollowWake.Core.Tests.GolemPrototypeTests.NamedContractsFightRespawnAndReplaceExistingWardensWithoutRewards(id: "blood_golem") [35 ms]
+  Passed HollowWake.Core.Tests.GolemPrototypeTests.NamedContractsFightRespawnAndReplaceExistingWardensWithoutRewards(id: "fire_golem") [49 ms]
+  Passed HollowWake.Core.Tests.GolemPrototypeTests.NamedContractsFightRespawnAndReplaceExistingWardensWithoutRewards(id: "lightning_golem") [41 ms]
+  Passed HollowWake.Core.Tests.GolemPrototypeTests.NamedContractsFightRespawnAndReplaceExistingWardensWithoutRewards(id: "ice_golem") [37 ms]
+  Passed HollowWake.Core.Tests.GolemPrototypeTests.BloodGolemActuallyRecoversLifeFromItsAttacks [12 ms]
+  Passed HollowWake.Core.Tests.GolemPrototypeTests.EveryAttackSustainsDamageThroughItsRealSpawnPathAndReplays(id: "ice_golem", skill: "frostbolt") [66 ms]
+  Passed HollowWake.Core.Tests.GolemPrototypeTests.EveryAttackSustainsDamageThroughItsRealSpawnPathAndReplays(id: "amalgam_horror", skill: "poison_nova") [56 ms]
+  Passed HollowWake.Core.Tests.GolemPrototypeTests.EveryAttackSustainsDamageThroughItsRealSpawnPathAndReplays(id: "lightning_golem", skill: "storm_bolt") [60 ms]
+  Passed HollowWake.Core.Tests.GolemPrototypeTests.EveryAttackSustainsDamageThroughItsRealSpawnPathAndReplays(id: "stone_golem", skill: "ground_slam") [40 ms]
+  Passed HollowWake.Core.Tests.GolemPrototypeTests.EveryAttackSustainsDamageThroughItsRealSpawnPathAndReplays(id: "lightning_golem", skill: "storm_nova") [61 ms]
+  Passed HollowWake.Core.Tests.GolemPrototypeTests.EveryAttackSustainsDamageThroughItsRealSpawnPathAndReplays(id: "blood_golem", skill: "strike") [39 ms]
+  Passed HollowWake.Core.Tests.GolemPrototypeTests.EveryAttackSustainsDamageThroughItsRealSpawnPathAndReplays(id: "fire_golem", skill: "ember_blast") [55 ms]
+  Passed HollowWake.Core.Tests.GolemPrototypeTests.EveryAttackSustainsDamageThroughItsRealSpawnPathAndReplays(id: "ice_golem", skill: "golem_rime_nova") [64 ms]
+  Passed HollowWake.Core.Tests.GolemPrototypeTests.EveryAttackSustainsDamageThroughItsRealSpawnPathAndReplays(id: "stone_golem", skill: "strike") [39 ms]
+  Passed HollowWake.Core.Tests.GolemPrototypeTests.EveryAttackSustainsDamageThroughItsRealSpawnPathAndReplays(id: "blood_golem", skill: "heavy_strike") [36 ms]
+  Passed HollowWake.Core.Tests.GolemPrototypeTests.EveryAttackSustainsDamageThroughItsRealSpawnPathAndReplays(id: "fire_golem", skill: "firebolt") [57 ms]
+  Passed HollowWake.Core.Tests.GolemPrototypeTests.EveryAttackSustainsDamageThroughItsRealSpawnPathAndReplays(id: "amalgam_horror", skill: "heavy_strike") [29 ms]
+[xUnit.net 00:00:06.64]   Finished:    HollowWake.Core.Tests
+  Passed HollowWake.Core.Tests.GolemPrototypeTests.AmalgamationSiteAppearsNaturallyAndActuallyPopulatesAtItsLevel [3 s]
+
+Test Run Successful.
+Total tests: 31
+     Passed: 31
+ Total time: 7.6141 Seconds
