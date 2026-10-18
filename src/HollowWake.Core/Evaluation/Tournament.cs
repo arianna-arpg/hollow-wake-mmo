@@ -697,7 +697,8 @@ public static class Tournament
     /// anything else is named by its pattern, or its name when it has none (a projectile, a field), with a. or b.
     /// before it when one of the two owns it. So the hash follows what the fight did rather than how the world
     /// numbered its entities. Amounts, durations and positions are written to hundredths in the invariant culture, so
-    /// the text, and its hash, do not depend on the host's culture.
+    /// the text, and its hash, do not depend on the host's culture. That normalizes formatting; it does not prove the
+    /// full floating-point state identical, here or across platforms.
     /// </summary>
     private sealed class Trace
     {
