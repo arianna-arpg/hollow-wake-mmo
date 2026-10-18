@@ -31,4 +31,12 @@ The temporary branch `codex/elemental-shared-review-checks` merges elemental con
 
 The coordinator's integration direction is to keep #40 draft and based on corrected #34, then merge main and retarget only after the corrected foundation and reviewed #36 land there. #20 owns its release policy and still requires shared integration review. No #36 runtime has been copied into this content branch, and no merge is authorized by this record. Full combined gates and the corrected foundation SHA remain pending.
 
+## Combined physics and placement acceptance
+
+Temporary merge `973a536` adds published #32 `a96307e` to the combined contact branch while corrected #34 propagates. The merge retains both the content-driven projectile height and inherited effective faction, plus the fauna quest classifier and the shared level/local-population filters. The content PR does not carry these temporary runtime resolutions.
+
+All 19 displacement cases pass: every body stays at or below the 12 m bound for a 4-unit shove; Emberwisp travels 8.96672 m under Bash and 17.77583 m under Winter's Sweep, and stops at x=31.99990 before the blocked x=32 cell. Canonical mass agrees with the attribute lookup. The first combined run correctly exposed two stale fixture assumptions: capped light bodies can tie in travel, and center/cell collision stops within a millimeter of a boundary. Tests now preserve mass ordering and heavy-body resistance while accepting cap ties, and require the center to remain strictly before the blocked cell. The original failed run remains in `elementals-combined-physics.txt`; the passing 21-case shove/natural subset is `shove-and-natural-combined.txt`.
+
+The generic placement fix rejects empty low-level sites. A separate content issue remained: the unchanged default-seed [-48,48] search found no Ember Seam under the new dedicated budget. Raising only its site weight from 0.22 to 0.8 yields three seams in its original cinderwaste/scrub habitats; the other seven manifestation counts remain 6/87/91/71/13/2/7 in content order. The common budget and other site weights are unchanged. Both counts are retained. Full gates and final generation goldens still await corrected #34.
+
 Acknowledged by: pending Claude rereview.
