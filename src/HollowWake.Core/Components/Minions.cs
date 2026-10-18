@@ -71,8 +71,8 @@ public sealed class Minion : IComponent
     /// <summary>A leash recall that teleported the body cannot do so again before this time.</summary>
     internal double RecallReadyAt;
 
-    /// <summary>The owner's cast count an echo has replayed up to; negative until the echo first looks.</summary>
-    internal long EchoedCast = -1;
+    /// <summary>Resolved owner uses awaiting this echo's next think; absent on minions without an echo action.</summary>
+    internal Queue<Minions.OwnerCast>? PendingOwnerCasts;
 }
 
 /// <summary>

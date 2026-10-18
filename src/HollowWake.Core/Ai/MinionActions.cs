@@ -2,6 +2,7 @@ using System.Numerics;
 using System.Text.Json.Nodes;
 using HollowWake.Core.Combat;
 using HollowWake.Core.Components;
+using HollowWake.Core.Definitions;
 using HollowWake.Core.Ecs;
 using HollowWake.Core.Intents;
 using HollowWake.Core.Maths;
@@ -180,6 +181,8 @@ public static class MinionCommands
 /// </summary>
 internal static class MinionActions
 {
+    private const string EchoAction = "echo_owner";
+
     public static void Register()
     {
         AiActions.Register("follow_owner", FollowOwner);
@@ -188,7 +191,20 @@ internal static class MinionActions
         AiActions.Register("obey_command", ObeyCommand);
         AiActions.Register("construct_cast", ConstructCast);
         AiActions.Register("spring", Spring);
-        AiActions.Register("echo_owner", EchoOwner);
+        AiActions.Register(EchoAction, EchoOwner);
+    }
+
+    /// <summary>Read the behavior's action graph once at birth, without naming any pattern or weave.</summary>
+    internal static bool ObservesOwnerCasts(Simulation sim, Entity entity)
+    {
+        if (!sim.World.TryGet<Behavior>(entity, out var behavior)
+            || sim.Content.Get<BehaviorDef>(behavior.BehaviorId) is not { } definition) return false;
+        foreach (var state in definition.States.Values)
+        {
+            if (state.Enter.Any(a => a.Type == EchoAction) || state.Tick.Any(a => a.Type == EchoAction)
+                || state.Exit.Any(a => a.Type == EchoAction)) return true;
+        }
+        return false;
     }
 
     /// <summary>The minion's living owner and where it stands.</summary>
@@ -375,44 +391,29 @@ internal static class MinionActions
 
     /// <summary>
     /// <c>echo_owner {damage_scale}</c>: an echo replays each weave its owner casts after it appeared, from where
-    /// the echo stands, with the owner's numbers and credit, its damage scaled. Summons and movement are not
+    /// the echo stands, with the owner's numbers and credit, its damage scaled. Summons, deployed constructs and movement are not
     /// replayed. A replay is a resolution of the use the owner paid for, not a new use, so it is no intent: it
     /// runs on the runtime's free path (<see cref="WeaveRuntime.Replay"/>), a world rule like the leash, and every
     /// cast the owner makes is replayed.
     /// </summary>
     private static void EchoOwner(AiContext c, JsonObject p)
     {
-        if (!OwnerOf(c, out var owner, out _) || !c.Sim.World.TryGet<Minion>(c.Entity, out var minion) || !c.Sim.TryService<MinionService>(out var service))
-        {
-            return;
-        }
-        if (!service.LastCast(owner, out var count, out var key, out var point, out var target))
-        {
-            minion.EchoedCast = 0;
-            return;
-        }
-        if (minion.EchoedCast < 0)
-        {
-            minion.EchoedCast = count;
-            return;
-        }
-        if (count == minion.EchoedCast || key is null)
-        {
-            return;
-        }
-        minion.EchoedCast = count;
-        if (!c.Sim.World.TryGet<WeaveBook>(owner, out var book) || book.Find(key) is not { } slot)
+        if (!OwnerOf(c, out var owner, out _) || !c.Sim.World.TryGet<Minion>(c.Entity, out var minion)
+            || minion.PendingOwnerCasts is not { Count: > 0 } pending)
         {
             return;
         }
         var runtime = c.Sim.Service<WeaveRuntime>();
-        var weave = runtime.Resolve(c.Sim, slot, out _);
-        if (weave is null || weave.Tags.Has("summon") || weave.Tags.Has("movement") || weave.HasMechanism("summon") || weave.HasMechanism("displaces"))
+        // A replay may trigger more owner uses. Those wait for the next think rather than extending this loop.
+        var count = pending.Count;
+        for (var i = 0; i < count && pending.TryDequeue(out var use); i++)
         {
-            return;
+            var aim = !use.Target.IsNone && c.Sim.World.IsAlive(use.Target) && !c.Sim.World.Has<Dead>(use.Target) ? use.Target : Entity.None;
+            var rng = c.Sim.RngFor(c.Entity, "construct:" + use.Weave.Key);
+            // Preserve the existing single-replay stream; additional uses in this think get distinct seeded streams.
+            if (i > 0) rng = new Rng(Rng.Combine(rng.Seed, (ulong)use.Sequence));
+            runtime.Replay(c.Sim, c.Entity, owner, use.Weave, aim, use.Point, c.Num(p, "damage_scale", 0.5), rng);
         }
-        var aim = !target.IsNone && c.Sim.World.IsAlive(target) && !c.Sim.World.Has<Dead>(target) ? target : Entity.None;
-        runtime.Replay(c.Sim, c.Entity, owner, weave, aim, point, c.Num(p, "damage_scale", 0.5), c.Sim.RngFor(c.Entity, "construct:" + weave.Key));
     }
 
     private static bool Flag(JsonObject p, string key, bool fallback) => p[key] is JsonValue v && v.TryGetValue<bool>(out var b) ? b : fallback;

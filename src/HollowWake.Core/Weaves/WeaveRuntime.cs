@@ -992,7 +992,7 @@ public sealed partial class WeaveRuntime
         CompiledEffect.ExecuteAll(effects, ctx);
         if (publishCast)
         {
-            sim.Events.Publish(new WeaveCast(caster, weave.Key, target, ctx.Point, weave.Tags) { Tick = sim.Clock.Tick });
+            sim.Events.Publish(new WeaveCast(caster, weave.Key, target, ctx.Point, weave.Tags) { Tick = sim.Clock.Tick, Resolved = weave });
             if (sim.World.TryGet<WeaveBook>(caster, out var book))
             {
                 book.RecordCast(weave.Key, RulesOf(sim).RecentCasts);

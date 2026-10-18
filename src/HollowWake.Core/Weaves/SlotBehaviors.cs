@@ -384,7 +384,7 @@ public sealed partial class WeaveRuntime
         var direction = new Vector2(at.X - ct.Position.X, at.Y - ct.Position.Y);
         direction = direction.LengthSquared() > 0.0001f ? Vector2.Normalize(direction) : ct.Forward;
         RunFree(sim, caster, origin, weave, weave.Tags, host: null, slot: null, target, at, direction, depth: 0, rng, damageScale);
-        sim.Events.Publish(new WeaveCast(caster, weave.Key, target, at, weave.Tags) { Tick = sim.Clock.Tick });
+        sim.Events.Publish(new WeaveCast(caster, weave.Key, target, at, weave.Tags) { Tick = sim.Clock.Tick, Resolved = weave });
     }
 
     /// <summary>
