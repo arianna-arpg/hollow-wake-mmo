@@ -37,6 +37,8 @@ A branch is a place to work, not a place to keep work. Uncommitted or unmerged w
 
 ## Reviews both ways
 
+Combat reviews include the tournament determinism check from `CLAUDE.md`: `tournament --standard --check-hashes experiments/combat-grammar/baselines/standard-duels.json` must be identical on the baseline's named platform. The required Windows CI job enforces that baseline. Records name the platform and any intentionally changed pairings; another platform records differences and verifies repeatability without replacing the baseline.
+
 A Claude session asks Codex to review its pull requests as an independent engineer; a Codex chat asks Claude the same. A good review here checks, in this order: does the change serve the vision or quietly hard-code something content could express; is the simulation still deterministic and server-authoritative; are registries used instead of switches; do the tests pin the behavior that changed; is the contract document updated; did the gates and budgets run. Findings go on the request; a summary goes in a review record when the change is large.
 
 ## Backlog and claims

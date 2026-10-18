@@ -42,12 +42,21 @@ try {
   await page.waitForFunction(() => window.hollowWake?.inWorld === true, null, { timeout: 30000 });
   result.firstRun = 'Play opens Mu; Name and Wake creates and enters the selected character';
   const start = performance.now();
+  // Model a login completing in a background window without touching OS focus.
+  await page.addInitScript(() => { window.quickPlayBackground = true; document.hasFocus = () => !window.quickPlayBackground; });
   await page.reload();
   await page.locator('.entry-roster button[data-vessel^="character:"]').waitFor();
   assert.equal(await page.evaluate(() => window.hollowWake.inWorld), false);
   assert.equal(await page.evaluate(() => document.activeElement?.getAttribute('data-vessel')?.startsWith('character:')), true);
+  const before = await page.evaluate(() => ({ x: window.hollowWake.entry.x, y: window.hollowWake.entry.y }));
+  await page.keyboard.down('KeyD'); await page.waitForTimeout(250); await page.keyboard.up('KeyD');
+  assert.deepEqual(await page.evaluate(() => ({ x: window.hollowWake.entry.x, y: window.hollowWake.entry.y })), before);
+  assert.equal(await page.evaluate(() => window.hollowWake.entry.opened), -1);
+  await page.evaluate(() => { window.quickPlayBackground = false; });
   await page.keyboard.press('Enter');
-  await page.getByRole('button', { name: 'Wake', exact: true }).click();
+  await page.getByRole('button', { name: 'Wake', exact: true }).waitFor();
+  await page.keyboard.press('Enter');
+  result.backgroundLogin = 'Remembered vessel gets DOM focus during background login; movement stays paused; Enter works after activation without a click';
   await page.waitForFunction(() => window.hollowWake?.inWorld === true && !window.hollowWake.loading.active, null, { timeout: 30000 });
   result.remembered = 'Reload focuses the remembered vessel and waits for explicit Wake';
   result.resumeMilliseconds = Math.round(performance.now() - start);
