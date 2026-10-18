@@ -23,13 +23,54 @@ public sealed class EffectContext
 {
     /// <summary>The originating cast, retained through delayed and nested deliveries.</summary>
     public long CastId { get; init; }
-    public required Simulation Sim { get; init; }
-    public Entity Source { get; init; } = Entity.None;
-    public Entity Target { get; init; } = Entity.None;
-    public Vector3 Point { get; init; }
-    public Vector2 Direction { get; init; }
-    public CompiledWeave? Weave { get; init; }
-    public TagSet Tags { get; init; } = TagSet.Empty;
+    public required Simulation Sim { get => _sim; init => _sim = value; }
+    public Entity Source { get => _source; init => _source = value; }
+    public Entity Target { get => _target; init => _target = value; }
+    public Vector3 Point { get => _point; init => _point = value; }
+    public Vector2 Direction { get => _direction; init => _direction = value; }
+    public CompiledWeave? Weave { get => _weave; init => _weave = value; }
+    public TagSet Tags { get => _tags; init => _tags = value; }
+
+    private Simulation _sim = null!;
+    private Entity _source = Entity.None;
+    private Entity _target = Entity.None;
+    private Vector3 _point;
+    private Vector2 _direction;
+    private CompiledWeave? _weave;
+    private TagSet _tags = TagSet.Empty;
+
+    // Only synchronous built-in observation borrows these contexts. Execution and public providers
+    // retain their ordinary detached lifetime. A nested query gets a different context.
+    [ThreadStatic] private static EffectContext? _observationSpare;
+
+    internal static EffectContext RentObservation(Simulation sim, Entity source, Entity target,
+        Vector3 point, Vector2 direction, CompiledWeave weave)
+    {
+        var ctx = _observationSpare ?? new EffectContext { Sim = sim, Rng = new Rng(0) };
+        _observationSpare = null;
+        ctx._sim = sim;
+        ctx._source = source;
+        ctx._target = target;
+        ctx._point = point;
+        ctx._direction = direction;
+        ctx._weave = weave;
+        ctx._tags = weave.Tags;
+        ctx._scope?.Rebind(ctx);
+        return ctx;
+    }
+
+    internal void ReturnObservation()
+    {
+        _sim = null!;
+        _source = _target = Entity.None;
+        _point = default;
+        _direction = default;
+        _weave = null;
+        _tags = TagSet.Empty;
+        Vars.Clear();
+        _scope?.ClearObservation();
+        _observationSpare = this;
+    }
 
     /// <summary>
     /// How deep in a chain this effect runs. Nested deliveries, repeats, delays and casts of other weaves
@@ -169,19 +210,36 @@ internal sealed class EffectScope : IExprScope
     private const int SuffixLimit = 4096;
     private static int _suffixCount;
 
-    private readonly Rng _rng;
-    private readonly Stats? _source;
-    private readonly Stats? _target;
-    private readonly CompiledWeave? _weave;
-    private readonly TagSet _tags;
-    private readonly bool _hasDistance;
-    private readonly double _distance;
-    private readonly double _depth;
-    private readonly double _time;
+    private Rng _rng = null!;
+    private Stats? _source;
+    private Stats? _target;
+    private CompiledWeave? _weave;
+    private TagSet _tags = TagSet.Empty;
+    private bool _hasDistance;
+    private double _distance;
+    private double _depth;
+    private double _time;
     private readonly Dictionary<string, double> _vars;
 
     public EffectScope(EffectContext ctx)
     {
+        _vars = ctx.Vars;
+        Rebind(ctx);
+    }
+
+    internal void ClearObservation()
+    {
+        _rng = null!;
+        _source = _target = null;
+        _weave = null;
+        _tags = TagSet.Empty;
+        _hasDistance = false;
+        _distance = _depth = _time = 0;
+    }
+
+    internal void Rebind(EffectContext ctx)
+    {
+        ClearObservation();
         var world = ctx.Sim.World;
         _rng = ctx.Rng;
         _source = world.Get<Stats>(ctx.Source);
@@ -195,7 +253,6 @@ internal sealed class EffectScope : IExprScope
         }
         _depth = ctx.Depth;
         _time = ctx.Sim.Clock.Time;
-        _vars = ctx.Vars;
     }
 
     public bool TryResolve(string name, out double value)

@@ -162,7 +162,7 @@ internal sealed class AreaHandler : IEffectHandler
 {
     public string Type => "area";
 
-    public EffectSignature Signature { get; } = EffectSignature.Of("shape", "radius", "angle", "width", "inner", "filter", "center", "max_targets", "include_center", "pick", "require", "reach", "occlusion", "report_miss")
+    public EffectSignature Signature { get; } = EffectSignature.Of("shape", "radius", "angle", "width", "inner", "filter", "center", "max_targets", "include_center", "pick", "require", "reach", "occlusion", "report_miss", "payload_depth")
         .Hook(EffectHooks.OnHit, "effects");
 
     public CompiledEffect Compile(JsonObject p, EffectCompileContext ctx) => new Effect
@@ -183,9 +183,10 @@ internal sealed class AreaHandler : IEffectHandler
         FromEdge = ctx.ChoiceOf(p["reach"], "reach", "center", "center", "edge") == "edge",
         Free = OcclusionFree(ctx, p["occlusion"]),
         ReportMiss = ctx.BoolOf(p["report_miss"], false),
+        PreservePayloadDepth = ctx.ChoiceOf(p["payload_depth"], "payload_depth", "next", "next", "same") == "same",
     };
 
-    private sealed class Effect : CompiledEffect, IDetachedDeliveryPlanSource
+    private sealed class Effect : CompiledEffect, IImmediateDeliveryCandidateSource
     {
         public required Shape Shape;
         public Expr? Radius;
@@ -204,6 +205,7 @@ internal sealed class AreaHandler : IEffectHandler
         /// <summary>Strikes through walls and rising ground (<c>occlusion: free</c>).</summary>
         public bool Free;
         public bool ReportMiss;
+        public bool PreservePayloadDepth;
 
         private ResolvedAreaPlan ResolvePlan(EffectContext ctx)
         {
@@ -241,23 +243,37 @@ internal sealed class AreaHandler : IEffectHandler
         }
 
         public DeliveryForecast DescribeDetachedDelivery(EffectContext ctx)
+            => TryDescribePlan(ctx, out var plan, out var reason)
+                ? new DeliveryForecast(plan, null) : DeliveryForecast.Unavailable(reason!);
+
+        public bool? IsCandidate(EffectContext ctx, Entity target, Vector3 position)
+            => TryDescribePlan(ctx, out var plan, out _) ? plan.IsCandidate(ctx, target, position) : null;
+
+        private bool TryDescribePlan(EffectContext ctx, out ResolvedAreaPlan plan, out string? reason)
         {
+            plan = default;
+            reason = null;
             using var inputs = ForecastInputs.Rent(ctx);
             if (!inputs.ParameterOrAttribute(Radius, "area.radius") || !inputs.Expression(Angle) ||
                 Shape.HasAngle && !inputs.WeaveAttribute("area.angle") ||
                 Shape.HasWidth && !inputs.ParameterOrAttribute(Width, "area.width") ||
                 !inputs.Expression(Inner) || Shape.Anchored && ctx.Tags.Has("melee") && !inputs.WeaveAttribute("melee.reach") ||
                 !Free && !inputs.WeaveAttribute("phasing"))
-                return DeliveryForecast.Unavailable(inputs.Failure ?? "unavailable_inputs");
+            {
+                reason = inputs.Failure ?? "unavailable_inputs";
+                return false;
+            }
             try
             {
-                var plan = ResolvePlan(ctx);
-                return plan.IsFinite ? new DeliveryForecast(plan, null) : DeliveryForecast.Unavailable("non_finite_geometry");
+                plan = ResolvePlan(ctx);
+                if (plan.IsFinite) return true;
+                reason = "non_finite_geometry";
             }
-            catch (ExprEvalException) { return DeliveryForecast.Unavailable("unresolved_expression"); }
-            catch (AttributeCycleException) { return DeliveryForecast.Unavailable("cyclic_attribute_dependency"); }
-            catch (ArithmeticException) { return DeliveryForecast.Unavailable("invalid_expression"); }
-            catch (ArgumentException) { return DeliveryForecast.Unavailable("invalid_expression"); }
+            catch (ExprEvalException) { reason = "unresolved_expression"; }
+            catch (AttributeCycleException) { reason = "cyclic_attribute_dependency"; }
+            catch (ArithmeticException) { reason = "invalid_expression"; }
+            catch (ArgumentException) { reason = "invalid_expression"; }
+            return false;
         }
 
         public override void Execute(EffectContext ctx)
@@ -291,7 +307,7 @@ internal sealed class AreaHandler : IEffectHandler
                 }
                 if (ReportMiss && targets.Count == 0)
                     ReleaseTargets.Miss(ctx, MissReason(ctx, plan), emitted: true);
-                var deeper = ctx.Deeper();
+                var deeper = PreservePayloadDepth ? ctx : ctx.Deeper();
                 foreach (var t in targets)
                 {
                     ExecuteAll(Effects, deeper.WithTarget(t));

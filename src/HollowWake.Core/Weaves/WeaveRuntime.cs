@@ -1678,11 +1678,8 @@ public sealed partial class WeaveRuntime
                 weave.Targeting is Targeting.Enemy or Targeting.Ground or Targeting.Direction &&
                 ct is not null && tt is not null && weave.Effects.Count == 1 && weave.Effects[0] is IDeliveryPlanSource)
             {
-                var context = new EffectContext { Sim = sim, Source = caster, Target = target,
-                    Point = tt.Position, Direction = new Vector2(tt.Position.X - ct.Position.X, tt.Position.Y - ct.Position.Y),
-                    Weave = weave, Tags = weave.Tags, Rng = new Rng(0) };
-                if (DeliveryForecasts.DescribeDetached(weave.Effects, context).PrimaryRegion is { } plan &&
-                    !plan.IsCandidate(context, target, tt.Position)) continue;
+                if (DeliveryForecasts.CandidateForAi(weave.Effects[0], sim, caster, target, tt.Position,
+                    new Vector2(tt.Position.X - ct.Position.X, tt.Position.Y - ct.Position.Y), weave) == false) continue;
             }
             // A soft minimum: closer than min_range (edge to edge) the hint weighs near_weight, and without one
             // the weave waits for room.

@@ -27,6 +27,7 @@ entries:
         max_targets: 1
         pick: aimed_nearest
         report_miss: true
+        payload_depth: same
         effects:
           - type: damage
             amount: "lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power"

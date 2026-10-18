@@ -113,6 +113,19 @@ public class ProcTests
         Assert.False(byDepth.ContainsKey(4));
     }
 
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public void ADepthPreservingAreaSelectorKeepsTheDirectBlowsEchoBudget(bool selector)
+    {
+        var bench = CombatBench.Create();
+        Grant(bench, bench.Attacker, "proc.echoing_blow");
+        const string blow = """{"type":"damage","amount":10,"threads":["stone"],"can_crit":false}""";
+        bench.Run(selector ? "{\"type\":\"area\",\"center\":\"focus\",\"radius\":2,\"max_targets\":1,\"payload_depth\":\"same\",\"effects\":[" + blow + "]}" : blow);
+        Assert.Equal(new[] { 1, 2, 3 }, bench.Events.OfType<ProcFired>().Select(p => p.Depth).ToArray());
+        Assert.Equal(3, Assert.Single(bench.Events.OfType<ProcRefused>()).Depth);
+    }
+
     [Fact]
     public void ProcsPerMinuteGrowWithTheTimeSinceTheLastCheck()
     {

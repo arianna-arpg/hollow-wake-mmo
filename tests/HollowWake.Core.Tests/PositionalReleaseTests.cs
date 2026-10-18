@@ -321,7 +321,7 @@ public class PositionalReleaseTests
         a.RunSeconds(2);
         var hit = Assert.Single(a.Of<DamageDealt>());
         Assert.Equal(a.Enemy, hit.Target);
-        Assert.Equal(1, hit.Depth); // Ordinary area payload depth; no melee-only proc-depth exception.
+        Assert.Equal(0, hit.Depth); // Authored selection preserves the original direct payload's proc budget.
         Assert.DoesNotContain(a.Of<DamageDealt>(), e => e.Target == near);
     }
 
@@ -357,5 +357,47 @@ public class PositionalReleaseTests
         Assert.Null(a.Runtime.ChooseForAi(a.Sim, a.Caster, a.Enemy));
         a.Stats.Attributes.Add(new Modifier { Attribute = "phasing", Value = 1 });
         Assert.NotNull(a.Runtime.ChooseForAi(a.Sim, a.Caster, a.Enemy));
+    }
+
+    [Fact]
+    public void AiObservationStorageDoesNotRetainAnotherArenaOrADeclinedSample()
+    {
+        var first = CastForecastContent.Arena(3);
+        first.Book.Slots.Clear();
+        CastForecastContent.Slot(first, "forecast_live_ai");
+        first.EnemyStats.Resources["mana"] = 0;
+        for (var i = 0; i < 30; i++) first.Sim.Clock.Advance();
+        Assert.NotNull(first.Runtime.ChooseForAi(first.Sim, first.Caster, first.Enemy));
+
+        var second = CastForecastContent.Arena(3);
+        second.Book.Slots.Clear();
+        var plain = CastForecastContent.Slot(second, "forecast_live_ai");
+        second.EnemyStats.Resources["mana"] = 0;
+        Assert.Null(second.Runtime.ChooseForAi(second.Sim, second.Caster, second.Enemy));
+        second.Book.Slots.Clear();
+        CastForecastContent.Slot(second, "forecast_random");
+        Assert.NotNull(second.Runtime.ChooseForAi(second.Sim, second.Caster, second.Enemy)); // Unknown preserves AI fallback.
+        second.Book.Slots.Clear();
+        second.Book.Slots.Add(plain);
+        Assert.Null(second.Runtime.ChooseForAi(second.Sim, second.Caster, second.Enemy));
+        Assert.NotNull(first.Runtime.ChooseForAi(first.Sim, first.Caster, first.Enemy));
+    }
+
+    [Fact]
+    public void RepeatedPrimaryAreaAiQueriesAllocateOnlyTheExistingChoiceRngAfterWarmup()
+    {
+        var a = CastForecastContent.Arena(1.5f);
+        a.Book.Slots.Clear();
+        a.Slot("strike");
+        for (var i = 0; i < 512; i++) a.Runtime.ChooseForAi(a.Sim, a.Caster, a.Enemy);
+        const int count = 2500;
+        var before = GC.GetAllocatedBytesForCurrentThread();
+        var selected = 0;
+        for (var i = 0; i < count; i++)
+            if (a.Runtime.ChooseForAi(a.Sim, a.Caster, a.Enemy) is not null) selected++;
+        var bytes = GC.GetAllocatedBytesForCurrentThread() - before;
+        Assert.Equal(count, selected);
+        // ChooseForAi already creates a 56-byte seeded choice stream per call. Observation adds none.
+        Assert.True(bytes < count * 80, $"AI primary-area queries allocated {(double)bytes / count:0.###} bytes/call.");
     }
 }

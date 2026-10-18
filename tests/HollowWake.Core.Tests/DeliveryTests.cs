@@ -190,6 +190,49 @@ public class ShapeTests
 /// <summary>Areas strike where their shapes are drawn, pick and require, and echo.</summary>
 public class AreaDeliveryTests
 {
+    [Theory]
+    [InlineData(null, 1)]
+    [InlineData("next", 1)]
+    [InlineData("same", 0)]
+    public void AreaPayloadDepthIsAnExplicitPolicyIndependentOfSelection(string? policy, int increment)
+    {
+        var arena = DeliveryArena.Create();
+        var target = arena.Body(11, 10);
+        var payload = """{"type":"event","name":"t_hit","data":{"depth":"depth"}}""";
+        var ctx = arena.Context(new(11, 10, 0), target: target).Fork(3);
+        arena.Effect(payload).Execute(ctx);
+        var directDepth = Assert.Single(arena.Of<CustomEvent>()).Data["depth"];
+        foreach (var selection in new[] { "", ",\"max_targets\":1,\"report_miss\":true,\"pick\":\"aimed_nearest\"" })
+        {
+            arena.Events.Clear();
+            var authored = policy is null ? "" : ",\"payload_depth\":\"" + policy + "\"";
+            var area = arena.Effect("{\"type\":\"area\",\"radius\":2,\"center\":\"source\",\"effects\":[" + payload + "]" + authored + selection + "}");
+            area.Execute(ctx);
+            Assert.Equal(directDepth + increment, Assert.Single(arena.Of<CustomEvent>()).Data["depth"]);
+        }
+        Assert.Throws<InvalidOperationException>(() => arena.Effect("""{"type":"area","payload_depth":"invalid"}"""));
+    }
+
+    [Theory]
+    [InlineData("same", 0)]
+    [InlineData("next", 1)]
+    public void AreaPayloadPolicyNeverRemovesTheDepthCostOfRealDelayedWork(string policy, int increment)
+    {
+        var arena = DeliveryArena.Create();
+        arena.Body(11, 10);
+        var payload = """{"type":"event","name":"t_hit","data":{"depth":"depth"}}""";
+        var area = "{\"type\":\"area\",\"radius\":2,\"center\":\"source\",\"payload_depth\":\"" + policy + "\",\"effects\":[" + payload + "]}";
+        var delayed = arena.Effect("{\"type\":\"delay\",\"seconds\":0.1,\"effects\":[" + area + "]}");
+        delayed.Execute(arena.Context(new(11, 10, 0)).Fork(3));
+        arena.Tick(3);
+        Assert.Equal(4 + increment, Assert.Single(arena.Of<CustomEvent>()).Data["depth"]);
+        arena.Events.Clear();
+        var limit = (int)arena.Sim.Content.Rules.Number("effects.max_depth", 12);
+        delayed.Execute(arena.Context(new(11, 10, 0)).Fork(limit));
+        arena.Tick(3);
+        Assert.Empty(arena.Of<CustomEvent>());
+    }
+
     [Fact]
     public void AnchoredShapesExtendFromTheSourceAlongTheFacing()
     {
@@ -266,13 +309,15 @@ public class AreaDeliveryTests
         Assert.Contains(arena.Of<DamageDealt>(), d => d.Target == reach);
     }
 
-    [Fact]
-    public void AftershocksAndPulsesEchoTheArea()
+    [Theory]
+    [InlineData("next", 1)]
+    [InlineData("same", 0)]
+    public void AftershocksAndPulsesEchoTheArea(string policy, int initialDepth)
     {
         var arena = DeliveryArena.Create();
         arena.Body(15, 10);
         var weave = arena.Sim.Service<WeaveCompiler>().Compile(new WeaveSpec { Form = "blast", Threads = { "ember" }, Glyphs = { GlyphRef.Parse("t_echo") } });
-        var area = arena.Effect("{\"type\": \"area\", \"radius\": 2, \"center\": \"point\", \"effects\": [{\"type\": \"event\", \"name\": \"t_hit\", \"data\": {\"depth\": \"depth\"}}]}");
+        var area = arena.Effect("{\"type\": \"area\", \"radius\": 2, \"center\": \"point\", \"payload_depth\":\"" + policy + "\", \"effects\": [{\"type\": \"event\", \"name\": \"t_hit\", \"data\": {\"depth\": \"depth\"}}]}");
         var pending = arena.Sim.Scheduler.Pending;
         area.Execute(arena.Context(new Vector3(15, 10, 0), weave: weave));
         // Struck now; two aftershocks and one pulse wait their turn.
@@ -280,9 +325,9 @@ public class AreaDeliveryTests
         Assert.Equal(3, arena.Sim.Scheduler.Pending - pending);
         arena.Tick(20);
         var hits = arena.Events.OfType<CustomEvent>().Where(e => e.Name == "t_hit").ToList();
-        Assert.Equal(1, hits[0].Data["depth"]);
+        Assert.Equal(initialDepth, hits[0].Data["depth"]);
         // The pulse strikes where the area stood, one level deeper; echoes never echo again.
-        Assert.Contains(hits.Skip(1), h => h.Data["depth"] == 2);
+        Assert.Contains(hits.Skip(1), h => h.Data["depth"] == initialDepth + 1);
         Assert.Equal(pending, arena.Sim.Scheduler.Pending);
     }
 }
