@@ -1,0 +1,62 @@
+== proving_evoker (A) vs proving_pitfighter (B), seed mech, 30 s kitA=lumen_vigil,frostbolt
+     15  A cast frostbolt
+     15  A dealt damage events
+     15  A started frostbolt
+      3  B cast frenzy
+      2  B cast haymaker
+      3  B cast one_two
+      5  B dealt damage events
+      1  B interrupted frenzy
+      1  B interrupted one_two
+      5  B started frenzy
+      2  B started haymaker
+      4  B started one_two
+-- ticks by state (20 per second)
+      8  A state , free
+     59  A state engage, casting Cast
+     11  A state engage, free
+    287  A state idle, free
+    157  A state kite, casting Cast
+     28  A state kite, free
+     50  A state return, free
+      3  B state , free
+    101  B state chase, casting Cast
+    155  B state chase, free
+      5  B state idle, free
+-- A walked 50.2 units
+-- B walked 14.2 units
+-- life A 127/148  B gone
+-- timeline
+  t=0.05 A (10.00,10.00)  | B (14.00,10.00)  | dist 4.00
+  t=1.00 A (10.00,10.00) kite casting=frostbolt(Cast) | B (11.40,10.00) chase casting=haymaker(Cast) | dist 1.40
+  t=2.00 A (4.61,10.00) engage casting=frostbolt(Cast) | B (10.68,10.00) chase | dist 6.07
+  t=3.00 A (3.84,10.00) engage casting=frostbolt(Cast) | B (6.54,10.00) chase | dist 2.70
+  t=4.00 A (3.59,10.00) kite casting=frostbolt(Cast) | B (5.67,10.00) chase casting=one_two(Cast) | dist 2.08
+  t=5.00 A (3.34,10.00) kite casting=frostbolt(Cast) | B (5.28,10.00) chase | dist 1.93
+  t=6.00 A (3.09,10.00) kite casting=frostbolt(Cast) | B (5.28,10.00) chase | dist 2.18
+  t=7.00 A (2.59,10.00) kite casting=frostbolt(Cast) | B (5.28,10.00) chase casting=haymaker(Cast) | dist 2.68
+  t=7.50 B spent 1 fury (left 0)
+  t=8.00 A (2.34,10.00) engage casting=frostbolt(Cast) | B (4.32,10.00) chase casting=frenzy(Cast) | dist 1.98
+  t=9.00 A (2.09,10.00) kite casting=frostbolt(Cast) | B (3.88,10.00) chase casting=frenzy(Cast) | dist 1.79
+  t=10.00 A (0.84,10.00) kite casting=frostbolt(Cast) | B (3.49,10.00) chase | dist 2.65
+  t=11.00 A (-0.41,10.00) engage casting=frostbolt(Cast) | B (3.49,10.00) chase | dist 3.90
+  t=12.00 A (-0.41,10.00) kite casting=frostbolt(Cast) | B (1.10,10.00) chase casting=one_two(Cast) | dist 1.51
+  t=13.00 A (-1.66,10.00) kite casting=frostbolt(Cast) | B (0.01,10.00) chase casting=one_two(Cast) | dist 1.66
+  t=13.25 B died
+  t=14.00 A (0.09,10.00) return | B dead | dist 0.31
+  t=15.00 A (5.09,10.00) return | B dead | dist 5.31
+  t=16.00 A (9.59,10.00) idle | B dead | dist 9.81
+  t=17.00 A (11.03,13.19) idle | B dead | dist 11.69
+  t=18.00 A (10.80,13.09) idle | B dead | dist 11.44
+  t=19.00 A (6.90,11.31) idle | B dead | dist 7.23
+  t=20.00 A (11.84,10.51) idle | B dead | dist 12.06
+  t=21.00 A (10.19,8.49) idle | B dead | dist 10.51
+  t=22.00 A (10.01,8.30) idle | B dead | dist 10.37
+  t=23.00 A (10.01,8.30) idle | B dead | dist 10.37
+  t=24.00 A (10.01,8.30) idle | B dead | dist 10.37
+  t=25.00 A (10.01,8.30) idle | B dead | dist 10.37
+  t=26.00 A (10.01,8.30) idle | B dead | dist -1.00
+  t=27.00 A (9.01,9.42) idle | B dead | dist -1.00
+  t=28.00 A (8.85,9.61) idle | B dead | dist -1.00
+  t=29.00 A (12.79,10.27) idle | B dead | dist -1.00
+  t=30.00 A (12.12,10.91) idle | B dead | dist -1.00

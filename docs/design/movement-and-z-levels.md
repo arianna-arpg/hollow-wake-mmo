@@ -18,7 +18,9 @@ Dashes, leaps, blinks and shoves (knockback, pull, buffet) move bodies through t
 
 ## Pathfinding
 
-A* over cells with eight neighbors, no corner cutting past blocked cells, step-up and max-drop limits, cell costs by tags (roads cheap, bog dear) and a node budget: `move.path_max_nodes` for a player's click-to-move, `move.ai_path_max_nodes` for AI movers, which also try a straight walk first and keep their plans until they go stale (see the AI contract). A failed search returns the best partial path so click-to-move still makes progress, and reports whether it reached the goal, got partway or found no step.
+A* over cells with eight neighbors, no corner cutting past blocked cells, step-up and max-drop limits, cell costs by tags (roads cheap, bog dear) and a node budget: `move.path_max_nodes` for a player's click-to-move, `move.ai_path_max_nodes` for other movers. The shared move planner first tests a straight walk for both clicks and AI destinations. That test samples at 0.25-unit spacing and takes at most the mover's node budget in samples; a longer segment goes directly to bounded pathfinding. Distant minion orders therefore search in bounded steps instead of testing the entire segment on each renewal.
+
+A destination marked `KeepPlan` can reuse its cache on `Motion` until its path runs out, its goal moves far enough, or it ages past the repath rules (see [AI](ai.md)). A client click always plans afresh. A failed search returns the best partial path and reports whether it reached the goal, got partway or found no step. With no step the mover tries walking directly toward the goal. A partial path is followed to its end; a fresh click stops there. A renewed `KeepPlan` destination can resume walking toward the goal after a partial path that made no progress, without another search until the cache expires.
 
 The pathfinder keeps its search state between searches and can write into the caller's path list, and ground queries resolve stacked surfaces without building anything, so planning and walking allocate nothing in steady state.
 

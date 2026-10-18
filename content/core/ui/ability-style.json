@@ -1,0 +1,195 @@
+{
+  "kind": "ui_ability_styles",
+  "entries": [
+    {
+      "id": "default",
+      "background": "#111820",
+      "ink": "#f4ebd7",
+      "rim": "#070c12",
+      "tint_alpha": 0.16,
+      "line_width": 1.35,
+      "rim_width": 0.8,
+      "cache_limit": 128,
+      "max_bake_size": 192,
+      "badge_color": "#ffe3a0",
+      "badge_background": "#21182e",
+      "default_color": "#b8b8b8",
+      "badges": {
+        "glyphs": "badge.support"
+      },
+      "fallbacks": {
+        "weaves": "arcane",
+        "forms": "arcane",
+        "glyphs": "support"
+      },
+      "rules": [
+        {
+          "tags": [
+            "guard"
+          ],
+          "art": "guard",
+          "kinds": [
+            "weaves",
+            "forms"
+          ]
+        },
+        {
+          "tags": [
+            "warcry"
+          ],
+          "art": "rally",
+          "kinds": [
+            "weaves",
+            "forms"
+          ]
+        },
+        {
+          "tags": [
+            "heal"
+          ],
+          "art": "heal",
+          "kinds": [
+            "weaves",
+            "forms"
+          ]
+        },
+        {
+          "tags": [
+            "movement"
+          ],
+          "art": "step",
+          "kinds": [
+            "weaves",
+            "forms"
+          ]
+        },
+        {
+          "tags": [
+            "summon",
+            "minion"
+          ],
+          "art": "summon",
+          "kinds": [
+            "weaves",
+            "forms"
+          ]
+        },
+        {
+          "tags": [
+            "trap",
+            "mine"
+          ],
+          "art": "trap",
+          "kinds": [
+            "weaves",
+            "forms"
+          ]
+        },
+        {
+          "tags": [
+            "construct",
+            "totem"
+          ],
+          "art": "construct",
+          "kinds": [
+            "weaves",
+            "forms"
+          ]
+        },
+        {
+          "tags": [
+            "curse"
+          ],
+          "art": "curse",
+          "kinds": [
+            "weaves",
+            "forms"
+          ]
+        },
+        {
+          "tags": [
+            "corpse"
+          ],
+          "art": "corpse",
+          "kinds": [
+            "weaves",
+            "forms"
+          ]
+        },
+        {
+          "tags": [
+            "aura"
+          ],
+          "art": "aura",
+          "kinds": [
+            "weaves",
+            "forms"
+          ]
+        },
+        {
+          "tags": [
+            "storm"
+          ],
+          "art": "storm",
+          "kinds": [
+            "weaves",
+            "forms"
+          ]
+        },
+        {
+          "tags": [
+            "melee"
+          ],
+          "art": "sweep",
+          "kinds": [
+            "weaves",
+            "forms"
+          ]
+        },
+        {
+          "tags": [
+            "ember"
+          ],
+          "art": "ember",
+          "kinds": [
+            "weaves",
+            "forms"
+          ]
+        },
+        {
+          "tags": [
+            "tide"
+          ],
+          "art": "frost",
+          "kinds": [
+            "weaves",
+            "forms"
+          ]
+        },
+        {
+          "tags": [
+            "projectile"
+          ],
+          "art": "projectile",
+          "kinds": [
+            "weaves",
+            "forms"
+          ]
+        }
+      ],
+      "roles": {
+        "weave": "weaves",
+        "form": "forms",
+        "glyph": "glyphs",
+        "thread": "threads"
+      },
+      "parents": {
+        "weaves": {
+          "kind": "forms",
+          "field": "form"
+        }
+      },
+      "default_art": "arcane"
+    }
+  ]
+}

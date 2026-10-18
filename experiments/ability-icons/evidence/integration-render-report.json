@@ -1,0 +1,58 @@
+{
+  "checks": [
+    {
+      "id": "cleave",
+      "art": "skill:cleave",
+      "color": "#d8b06a",
+      "badge": null,
+      "identicalSurfaces": true
+    },
+    {
+      "id": "ember_bolt",
+      "art": "skill:firebolt",
+      "color": "#e8622a",
+      "badge": null,
+      "identicalSurfaces": true
+    },
+    {
+      "id": "tide_bolt",
+      "art": "skill:frostbolt",
+      "color": "#3aa6d8",
+      "badge": null,
+      "identicalSurfaces": true
+    },
+    {
+      "id": "rallying_shout",
+      "art": "skill:war_cry",
+      "color": "#f5e27a",
+      "badge": null,
+      "identicalSurfaces": true
+    },
+    {
+      "id": "fork",
+      "art": "support",
+      "color": "#b58cff",
+      "badge": "badge.support",
+      "identicalSurfaces": true
+    },
+    {
+      "id": "forking",
+      "art": "support",
+      "color": "#a0c8a0",
+      "badge": "badge.support",
+      "identicalSurfaces": true
+    },
+    {
+      "id": "future_support",
+      "art": "support",
+      "color": "#b8b8b8",
+      "badge": "badge.support",
+      "identicalSurfaces": true
+    }
+  ],
+  "converted": {
+    "art": "skill:frostbolt",
+    "color": "#3aa6d8",
+    "badge": null
+  }
+}

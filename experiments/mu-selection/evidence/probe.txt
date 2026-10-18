@@ -1,0 +1,8 @@
+asked for features: entry_flow, interface; granted: entry_flow, interface
+entered zone 0_0 at (129.5, 111.0, 14.7); seed 10175781948776629366; tick 20; day of 1800 s at 0.306
+messages: EntitySpawnMsg=323, EntityUpdateMsg=35, EntityDespawnMsg=23, CharacterListMsg=2, SelfStateMsg=2, WelcomeMsg=1, LoginResultMsg=1, EnterWorldMsg=1, ZoneChangedMsg=1, InventoryStateMsg=1, WeaveSlotsMsg=1, PassiveStateMsg=1, PageStateMsg=1, ChatBroadcastMsg=1
+self updates: 18; last position (129.5, 106.0, 15.0)
+entities seen: 323 (Pine, Oak, Boulder, Fallen Ash, Shrub, Fern, Hob, Floss Knot, Iron Vein, Lingering Ironhide Swift Frenzied Hob, Vigorous Ironhide Savage Hob, Grove Stag)
+chat: Probe: probe says hello
+interface: bag 12x5 with 2 items, 2 worn; 4 of 8 weave seats filled; 1 passives, points passive 0, devotion 0, vocation 0; pages inventory, weaves, passives, reliquary, stash (sealed), stash (sealed), character, options
+PROBE OK (walked south)
