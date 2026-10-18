@@ -24,7 +24,7 @@ node scripts/port/port-prototype.mjs prototype.json <drafts-folder>             
 node --test scripts/port/port-prototype.test.mjs                                        # the mapping on a synthetic snapshot
 ```
 
-- **Units.** The prototype measures in screen units; ours is cells. Three anchors agree within a third: a body radius of 15 against our 0.45, a basic melee reach of 55 from the attacker's edge against Strike's 1.9, a walking pace of 200 a second against our 5. The script converts every distance, speed, radius and knockback once at 32 screen units per world unit, which keeps a 55-unit swing at 1.7, a 95-unit nova at 3.0 and a 460-unit cast at 14.4, beside the hand-authored forms. Times and angles are the same in both.
+- **Units.** The prototype measures in screen units; ours is cells. Three anchors agree within a third: a body radius of 15 against our 0.45, a basic melee reach of 55 from the attacker's edge against Strike's 1.9, a walking pace of 200 a second against our 5. The script converts every distance, speed, radius and knockback once at 32 screen units per world unit, which keeps a 55-unit swing at 1.7, a 95-unit nova at 3.0 and a 460-unit cast at 14.4, beside the hand-authored forms. Times and angles are the same in both. Trajectory axes turn in radians a second there and in degrees here; an erratic flight wanders up to five times its rate; an orbit turns at the flight's speed over its radius; a weave sways its rate over pi times a second; acceleration is a fraction of the speed a second; a zigzag swings every interval times speed units. The script converts each once.
 - **Damage types to Threads by role.** Physical is Stone, fire Ember, cold Tide, lightning Storm; chaos is Umbra where the entry's theme is decay, the grave, poison or a curse, and Void otherwise. A skill's Threads come from its damage dice, largest first, two at most; a third type folds proportionally into the first two, preserving total damage, and is noted. Attacks read the weapon's dice as our attack forms do, with `damage.effectiveness` carrying the ratio of the prototype's dice to its basic Cleave; spells carry the mean of their dice as `base_damage` and keep the spread as `lerp(lo, hi, roll)` over it. Attack costs become stamina at three times the prototype's mana cost; spell costs stay mana.
 - **Statuses to our roster.** The prototype's burn, bleed, chill, frozen, shock, stun, poison, scalded, hemorrhage, impaled, doom, vulnerable, weaken, brittle, exposed, blind, disarm, silence, rooted and taunted are the roster's burning, bleeding, chilled, frozen, shocked, stunned, poison, scalding, hemorrhage, impaled, doom, vulnerable, weakened, brittle, exposed, blinded, disarmed, silenced, rooted and taunted; the rest keep their ids as new statuses in our vocabulary, and the states of fabrics outside the port (water, clouds, vents, the fourth wall, time) are not ported. A damaging status sized from a hit reads `last_damage` times the prototype's magnitude; a status's `hitMagnitude` becomes its `combat.ailment_magnitude` rule.
 - **Stats to attributes.** Plain stats map one to one where ours has the attribute (`damage`, `effect.duration`, `area.radius`, `cast.speed`, the resistances and penetrations per Thread, `leech.life`, `on_kill.life`, `minion.damage` and the rest of the table); percent regeneration becomes a link from the maximum. Generated families map by pattern: `apply_<status>` to `status.<status>.chance`, `damageVs_<status>` to `damage` scoped by `vs.<status>`, `convert_<a>_<b>` to `convert.<a>.<b>`, `addedMin` and `addedMax` to one `added.<thread>`, `proc_<id>` to `proc.<id>`, `dotLeech_<status>` to `status.<status>.leech`, `popPower_<status>` to `status.<status>.pop`, `slotGraft_<n>_<glyph>` to `glyph.slot<n>.<glyph>`, `chargeCap_<c>` to `charge.<c>.max`, `takenAs_<a>_<b>` to `taken_as.<a>.<b>`. A stat with no attribute here (the mass and grab fabrics, orbs, flasks, stealth, luck, conduits, mirages, proc power dials) drops its line and the row says so.
@@ -38,11 +38,13 @@ Each is a reusable registered mechanism in the package that owns the files, in i
 
 | Seam | What it is | Where |
 |---|---|---|
-| preset tags and behaviors | A preset carries tags and the casting behaviors a glyph can carry (gates, a spend, a bank of uses, a convert, a meta action, worn modifiers, a follow-up, a cycle, a self stack, a combo chain, a toggle's deactivation), folded between its form and its glyphs. Without it every prototype skill with such a behavior needs a one-skill form. | the weave compiler (`Weaves/CompiledWeave.cs`, `Definitions/Combat.cs`) |
+| preset tags and behaviors | A preset carries tags and the casting behaviors a glyph can carry (gates, a spend, a bank of uses, a convert, a meta action, worn modifiers, a follow-up, a cycle, a self stack, a combo chain, a toggle's deactivation), folded between its form and its glyphs. Without it every prototype skill with such a behavior needs a one-skill form. | the weave compiler (`Weaves/CompiledWeave.cs`, `Definitions/Combat.cs`); landed |
 | cast of the host | `cast { weave: host }` runs the hosting weave's graph again at a point or a target, at a scale, so contagion re-releases, curse-on-hit strikes and fields that re-afflict compose as hooks. | the cast handlers |
 | trigger kinds | A `high_roll` trigger kind raised by hits whose roll lands in the top of their range, and proc triggers for a condition's rising edge; a `status` filter on procs that reads the event's status. | triggers, the proc service |
 | charge modifiers | Modifiers a charge kind grants its bearer per charge held, applied by the charge service with gauge `charge.<id>`, so a kind like Frenzy carries its own haste. | the charge service |
 | per-preset trees | A tree on a preset, where the prototype gave a skill its own tree; today trees belong to forms, which the rows note as a difference rather than a seam. | the weave compiler |
+| manual bank | `uses.manual`: a bank of uses that never recovers on its own; only `restore_uses` and converts refill it, as the prototype's munitions reload by hand. | the use banks (`Weaves/UseCharges.cs`); landed |
+| corpse spend | `consume_corpse { radius }` spends the corpse a cast chose without raising it, for missiles that rise from the dead; publishes `CorpseConsumed`. | the summon handlers; landed |
 
 Open rows of the parity analysis that rows wait on (`blocked:`): C11 timed terrain, C20 relocating constructs, C23 resource orbs, C26 corpse piles, C27 shattering constructs, C29 toggle ledgers, C33 recalling impales, A13 concentration casts, E15 weak spots, G17 luck, H7 conduits, D21 skill grants on items.
 
@@ -56,7 +58,7 @@ Every slice lands with a seeded duel the fight tool runs twice to the same trace
 
 ## Skills
 
-### strikes and melee (128: not ported 71, ported (difference) 38, seam 14, ported 3, blocked 2)
+### strikes and melee (128: not ported 71, ported (difference) 52, ported 3, blocked 2)
 
 | Prototype | Ours | Mechanism | Status | Note | Proof |
 |---|---|---|---|---|---|
@@ -189,7 +191,7 @@ Every slice lands with a seeded duel the fight tool runs twice to the same trace
 | soul_toll |  | melee kit skill | not ported | kit |  |
 | gale_lash | gale_lash | preset on sweep: area (stone) | ported (difference) | req; thr; grow | PortedStrikeTests; fight proving_pitfighter proving_mower |
 
-### projectiles and bows (160: not ported 61, ported (difference) 50, seam 36, blocked 6, ported 7)
+### projectiles and bows (160: ported (difference) 101, not ported 55, blocked 3, ported 1)
 
 | Prototype | Ours | Mechanism | Status | Note | Proof |
 |---|---|---|---|---|---|
@@ -220,123 +222,123 @@ Every slice lands with a seeded duel the fight tool runs twice to the same trace
 | aurora_pall |  | projectile kit skill | not ported | kit |  |
 | flask_mana_lance |  | projectile kit skill | not ported | kit |  |
 | borrowed_visage |  | projectile kit skill | not ported | kit |  |
-| glass_lance | glass_lance | preset on missile: projectile (ember+stone) | ported (difference) | req; grow | fight port duel: projectiles |
-| firebolt | firebolt | preset on missile: projectile (ember) | ported (difference) | req; tree; grow | fight port duel: projectiles |
-| cinderwisp | cinderwisp | preset on missile: projectile (ember) | ported (difference) | a birth becomes a spawn of our pattern; sum:cinder_imp<cinder_sprite; req; grow | fight port duel: projectiles |
-| unmaking_bolt | unmaking_bolt | preset on missile: projectile (void) | ported (difference) | req | fight port duel: projectiles |
-| word_of_unmaking | word_of_unmaking | preset on missile: projectile (void) | ported (difference) | req | fight port duel: projectiles |
-| frostbolt | frostbolt | preset on missile: projectile (tide) | ported (difference) | req | fight port duel: projectiles |
-| spark | spark | preset on missile: projectile (storm) | ported (difference) | req; thr | fight port duel: projectiles |
+| glass_lance | glass_lance | preset on missile: projectile (ember+stone) | ported (difference) | req; grow | PortedProjectileTests; fight proving_fletcher proving_evoker |
+| firebolt | firebolt | preset on missile: projectile (ember) | ported (difference) | req; tree; grow | PortedProjectileTests; fight proving_fletcher proving_evoker |
+| cinderwisp | cinderwisp | preset on missile: projectile (ember) | ported (difference) | a birth becomes a spawn of our pattern; sum:cinder_imp<cinder_sprite; req; grow; the imp lives 10 s with no cap on how many | PortedProjectileTests; fight proving_fletcher proving_evoker |
+| unmaking_bolt | unmaking_bolt | preset on missile: projectile (void) | ported (difference) | req | PortedProjectileTests; fight proving_fletcher proving_evoker |
+| word_of_unmaking | word_of_unmaking | preset on missile: projectile (void) | ported (difference) | req | PortedProjectileTests; fight proving_fletcher proving_evoker |
+| frostbolt | frostbolt | preset on missile: projectile (tide) | ported (difference) | req | PortedProjectileTests; fight proving_fletcher proving_evoker |
+| spark | spark | preset on missile: projectile (storm) | ported (difference) | req; thr | PortedProjectileTests; fight proving_fletcher proving_evoker |
 | spark_bolt |  | projectile kit skill | not ported | kit |  |
-| fulminate | fulminate | preset on missile: projectile (storm) | ported (difference) | req; thr; grow; inn | fight port duel: projectiles |
-| pyroclast_bolt | pyroclast_bolt | preset on missile: projectile (ember) | ported (difference) | req; grow | fight port duel: projectiles |
-| venom_bolt | venom_bolt | preset on missile: projectile (umbra) | ported (difference) | req | fight port duel: projectiles |
-| blowdart | blowdart | preset on shot: projectile (stone) | ported (difference) | req; grow | fight port duel: projectiles |
-| vine_lash | vine_lash | preset on missile: projectile (void) | ported (difference) | req; grow | fight port duel: projectiles |
+| fulminate | fulminate | preset on missile: projectile (storm) | ported (difference) | req; thr; grow; inn; its procs (short circuit, overload arc) come with the procs slice | PortedProjectileTests; fight proving_fletcher proving_evoker |
+| pyroclast_bolt | pyroclast_bolt | preset on missile: projectile (ember) | ported (difference) | req; grow; the sequel is cast at 90% through the cast node | PortedProjectileTests; fight proving_fletcher proving_evoker |
+| venom_bolt | venom_bolt | preset on missile: projectile (umbra) | ported (difference) | req | PortedProjectileTests; fight proving_fletcher proving_evoker |
+| blowdart | blowdart | preset on shot: projectile (stone) | ported (difference) | req; grow | PortedProjectileTests; fight proving_fletcher proving_evoker |
+| vine_lash | vine_lash | preset on missile: projectile (void) | ported (difference) | req; grow | PortedProjectileTests; fight proving_fletcher proving_evoker |
 | constrictor_coil |  | projectile kit skill | not ported | kit |  |
 | dart_volley |  | projectile kit skill | not ported | kit |  |
-| poison_nova | poison_nova | preset on missile: projectile (umbra) | ported (difference) | req; tree | fight port duel: projectiles |
-| versicle | versicle | preset on missile: projectile (storm+ember) | seam | req; grow; seam: preset tags (song, instant) | fight port duel: projectiles |
-| seraph_lance | seraph_lance | preset on missile: projectile (ember) | seam | req; grow; inn; seam: preset tags (javelin) | fight port duel: projectiles |
-| ruin | ruin | preset on missile: projectile (void) | blocked | req; tree; grow; blocked: life bonds (row C3 bond) | fight port duel: projectiles |
-| phantasm_bolt | phantasm_bolt | preset on missile: projectile (tide) | ported |  | fight port duel: projectiles |
-| essence_drain | essence_drain | preset on missile: projectile (umbra) | seam | req; tree; seam: preset tags (duration) | fight port duel: projectiles |
+| poison_nova | poison_nova | preset on missile: projectile (umbra) | ported (difference) | req; tree | PortedProjectileTests; fight proving_fletcher proving_evoker |
+| versicle | versicle | preset on missile: projectile (storm+ember) | ported (difference) | req; grow; the instant tag was a structural fact: a 0.3 s cast stands | PortedProjectileTests; fight proving_fletcher proving_evoker |
+| seraph_lance | seraph_lance | preset on missile: projectile (ember) | ported (difference) | req; grow; inn; its mending of allies on hit is not carried | PortedProjectileTests; fight proving_fletcher proving_evoker |
+| ruin | ruin | preset on missile: projectile (void) | ported (difference) | req; tree; grow; life bonds (row C3, open) are not carried: the bolt stands alone | PortedProjectileTests; fight proving_fletcher proving_evoker |
+| phantasm_bolt | phantasm_bolt | preset on missile: projectile (tide) | ported |  | PortedProjectileTests; fight proving_fletcher proving_evoker |
+| essence_drain | essence_drain | preset on missile: projectile (umbra) | ported (difference) | req; tree | PortedProjectileTests; fight proving_fletcher proving_evoker |
 | spectral_finger |  | projectile kit skill | not ported | kit |  |
-| volatile_cinders | volatile_cinders | preset on missile: projectile (ember) | seam | plural targeting (several corpses) is one target here; req; grow; seam: preset tags (corpse) | fight port duel: projectiles |
-| marrowhooks | marrowhooks | preset on missile: projectile (stone) | seam | plural targeting (several corpses) is one target here; req; grow; seam: preset tags (corpse) | fight port duel: projectiles |
-| hammer_of_judgment | hammer_of_judgment | preset on missile: projectile (stone) | seam | req; tree; grow; seam: preset tags (duration) | fight port duel: projectiles |
-| frozen_orb | frozen_orb | preset on missile: projectile (tide) | seam | req; grow; seam: preset tags (duration) | fight port duel: projectiles |
-| spectral_helix | spectral_helix | preset on shot: projectile (stone+tide) | ported (difference) | req | fight port duel: projectiles |
-| piercing_arrow | piercing_arrow | preset on shot: projectile (stone) | ported (difference) | req; tree | fight port duel: projectiles |
-| fan_of_blades | fan_of_blades | preset on shot: projectile (stone) | ported (difference) | req; tree | fight port duel: projectiles |
-| goad | goad | preset on shot: projectile (stone) | ported (difference) | req; tree; grow; inn | fight port duel: projectiles |
-| null_lance | null_lance | preset on missile: projectile (void) | ported (difference) | req; grow; inn | fight port duel: projectiles |
-| frost_pulse | frost_pulse | preset on missile: projectile (tide) | ported (difference) | req | fight port duel: projectiles |
-| fire_siege | fire_siege | preset on missile: projectile (ember) | ported (difference) | req | fight port duel: projectiles |
-| shockfront | shockfront | preset on shot: projectile (stone) | ported (difference) | req; tree | fight port duel: projectiles |
-| ball_lightning | ball_lightning | preset on missile: projectile (storm) | seam | req; seam: preset tags (duration) | fight port duel: projectiles |
-| chain_lightning | chain_lightning | preset on missile: projectile (storm) | ported (difference) | req; tree; inn | fight port duel: projectiles |
-| chain_pull | chain_pull | preset on shot: projectile (stone) | ported (difference) | req; tree | fight port duel: projectiles |
-| lava_glob | lava_glob | preset on missile_quick: projectile (ember) | ported |  | fight port duel: projectiles |
-| powderkeg_arrow | powderkeg_arrow | preset on shot: projectile (stone+ember) | ported (difference) | req; inn | fight port duel: projectiles |
-| orbital_blades | orbital_blades | preset on shot: projectile (stone) | seam | req; grow; seam: preset tags (duration) | fight port duel: projectiles |
+| volatile_cinders | volatile_cinders | preset on missile: projectile (ember) | ported (difference) | plural targeting (several corpses) is one target here; req; grow; needs a corpse near the point and spends it (consume_corpse); one corpse, not several | PortedProjectileTests; fight proving_fletcher proving_evoker |
+| marrowhooks | marrowhooks | preset on missile: projectile (stone) | ported (difference) | plural targeting (several corpses) is one target here; req; grow; needs a corpse near the point and spends it (consume_corpse); the hooks fan from the caster and converge on it | PortedProjectileTests; fight proving_fletcher proving_evoker |
+| hammer_of_judgment | hammer_of_judgment | preset on missile: projectile (stone) | ported (difference) | req; tree; grow; an orbit that also spirals keeps the orbit | PortedProjectileTests; fight proving_fletcher proving_evoker |
+| frozen_orb | frozen_orb | preset on missile: projectile (tide) | ported (difference) | req; grow; sheds a frostbolt every 0.18 s, turning | PortedProjectileTests; fight proving_fletcher proving_evoker |
+| spectral_helix | spectral_helix | preset on shot: projectile (stone+tide) | ported (difference) | req; sways 1.6 times a second | PortedProjectileTests; fight proving_fletcher proving_evoker |
+| piercing_arrow | piercing_arrow | preset on shot: projectile (stone) | ported (difference) | req; tree | PortedProjectileTests; fight proving_fletcher proving_evoker |
+| fan_of_blades | fan_of_blades | preset on shot: projectile (stone) | ported (difference) | req; tree | PortedProjectileTests; fight proving_fletcher proving_evoker |
+| goad | goad | preset on shot: projectile (stone) | ported (difference) | req; tree; grow; inn; threat generation is no attribute here; the taunt stands | PortedProjectileTests; fight proving_fletcher proving_evoker |
+| null_lance | null_lance | preset on missile: projectile (void) | ported (difference) | req; grow; inn; its double damage to shields is not carried; the voiding stands | PortedProjectileTests; fight proving_fletcher proving_evoker |
+| frost_pulse | frost_pulse | preset on missile: projectile (tide) | ported (difference) | req | PortedProjectileTests; fight proving_fletcher proving_evoker |
+| fire_siege | fire_siege | preset on missile: projectile (ember) | ported (difference) | req | PortedProjectileTests; fight proving_fletcher proving_evoker |
+| shockfront | shockfront | preset on shot: projectile (stone) | ported (difference) | req; tree | PortedProjectileTests; fight proving_fletcher proving_evoker |
+| ball_lightning | ball_lightning | preset on missile: projectile (storm) | ported (difference) | req | PortedProjectileTests; fight proving_fletcher proving_evoker |
+| chain_lightning | chain_lightning | preset on missile: projectile (storm) | ported (difference) | req; tree; inn; leaps through the chain node with chain.count 3, as the core bolt does | PortedProjectileTests; fight proving_fletcher proving_evoker |
+| chain_pull | chain_pull | preset on shot: projectile (stone) | ported (difference) | req; tree | PortedProjectileTests; fight proving_fletcher proving_evoker |
+| lava_glob | lava_glob | preset on missile_quick: projectile (ember) | ported (difference) | a payload the placements family looses | PortedProjectileTests; fight proving_fletcher proving_evoker |
+| powderkeg_arrow | powderkeg_arrow | preset on shot: projectile (stone+ember) | ported (difference) | req; inn | PortedProjectileTests; fight proving_fletcher proving_evoker |
+| orbital_blades | orbital_blades | preset on shot: projectile (stone) | ported (difference) | req; grow | PortedProjectileTests; fight proving_fletcher proving_evoker |
 | impale_spear |  | projectile kit skill | not ported | kit |  |
-| pinning_spear | pinning_spear | preset on shot: projectile (stone) | blocked | req; tree; seam: preset tags (duration); blocked: planting where the flight ends (an embed: row B16 constructs, authored by hand) | fight port duel: projectiles |
-| planted_banderilla | planted_banderilla | preset on shot: projectile (stone) | seam | req; tree; grow; seam: preset tags (duration) | fight port duel: projectiles |
-| thrown_ace | thrown_ace | preset on shot: projectile (storm+stone) | ported (difference) | third:ember, tide; req; tree; grow | fight port duel: projectiles |
-| stasis_lock | stasis_lock | preset on missile: projectile (void) | seam | status stasis is not ported; status temporal_drag is not ported; req; tree; grow; seam: preset tags (chrono) | fight port duel: projectiles |
-| soul_volley | soul_volley | preset on missile: projectile (umbra) | seam | req; leech on the damage node, by hand; seam: preset tags (heal) | fight port duel: projectiles |
-| splinter_volley | splinter_volley | preset on shot: projectile (stone) | ported (difference) | req; grow | fight port duel: projectiles |
+| pinning_spear | pinning_spear | preset on shot: projectile (stone) | ported (difference) | req; tree; the planted spear (row B16) is not carried | PortedProjectileTests; fight proving_fletcher proving_evoker |
+| planted_banderilla | planted_banderilla | preset on shot: projectile (stone) | ported (difference) | req; tree; grow | PortedProjectileTests; fight proving_fletcher proving_evoker |
+| thrown_ace | thrown_ace | preset on shot: projectile (storm+stone) | ported (difference) | third:ember, tide; req; tree; grow | PortedProjectileTests; fight proving_fletcher proving_evoker |
+| stasis_lock | stasis_lock | preset on missile: projectile (void) | ported (difference) | status stasis is not ported; status temporal_drag is not ported; req; tree; grow; stasis and temporal drag are not ported: a 1 s stun at 80% and a chill stand in | PortedProjectileTests; fight proving_fletcher proving_evoker |
+| soul_volley | soul_volley | preset on missile: projectile (umbra) | ported (difference) | req; leech on the damage node, by hand; leech 0.35 on the hit | PortedProjectileTests; fight proving_fletcher proving_evoker |
+| splinter_volley | splinter_volley | preset on shot: projectile (stone) | ported (difference) | req; grow | PortedProjectileTests; fight proving_fletcher proving_evoker |
 | emetic_lob |  | projectile kit skill | not ported | kit |  |
-| blinding_ichor | blinding_ichor | preset on missile: projectile (void) | ported (difference) | req; grow | fight port duel: projectiles |
-| scatterhex | scatterhex | preset on missile: projectile (umbra) | ported (difference) | req; grow | fight port duel: projectiles |
-| gut_hurl | gut_hurl | preset on missile: projectile (void+stone) | ported (difference) | req; grow | fight port duel: projectiles |
-| web_shot | web_shot | preset on shot: projectile (stone) | seam | req; grow; seam: preset tags (duration) | fight port duel: projectiles |
-| hurl_debris | hurl_debris | preset on missile: projectile (stone) | ported (difference) | req; grow | fight port duel: projectiles |
-| barrage | barrage | preset on shot: projectile (stone) | ported (difference) | req | fight port duel: projectiles |
-| cold_spot | cold_spot | preset on missile: projectile (tide) | ported (difference) | req | fight port duel: projectiles |
-| hellfire_missile | hellfire_missile | preset on missile_quick: projectile (ember) | ported |  | fight port duel: projectiles |
-| mirage_shot | mirage_shot | preset on shot: projectile (stone) | ported |  | fight port duel: projectiles |
+| blinding_ichor | blinding_ichor | preset on missile: projectile (void) | ported (difference) | req; grow | PortedProjectileTests; fight proving_fletcher proving_evoker |
+| scatterhex | scatterhex | preset on missile: projectile (umbra) | ported (difference) | req; grow | PortedProjectileTests; fight proving_fletcher proving_evoker |
+| gut_hurl | gut_hurl | preset on missile: projectile (void+stone) | ported (difference) | req; grow | PortedProjectileTests; fight proving_fletcher proving_evoker |
+| web_shot | web_shot | preset on shot: projectile (stone) | ported (difference) | req; grow | PortedProjectileTests; fight proving_fletcher proving_evoker |
+| hurl_debris | hurl_debris | preset on missile: projectile (stone) | ported (difference) | req; grow | PortedProjectileTests; fight proving_fletcher proving_evoker |
+| barrage | barrage | preset on shot: projectile (stone) | ported (difference) | req | PortedProjectileTests; fight proving_fletcher proving_evoker |
+| cold_spot | cold_spot | preset on missile: projectile (tide) | ported (difference) | req | PortedProjectileTests; fight proving_fletcher proving_evoker |
+| hellfire_missile | hellfire_missile | preset on missile_quick: projectile (ember) | ported (difference) | a construct's weave (summons family) | PortedProjectileTests; fight proving_fletcher proving_evoker |
+| mirage_shot | mirage_shot | preset on shot: projectile (stone) | ported (difference) | a construct's weave (summons family) | PortedProjectileTests; fight proving_fletcher proving_evoker |
 | shadow_shuriken |  | projectile kit skill | not ported | kit |  |
-| archon_lance | archon_lance | preset on missile: projectile (storm) | ported (difference) | req; grow; inn; pct-cost | fight port duel: projectiles |
-| maelstrom_orb | maelstrom_orb | preset on missile: projectile (storm) | seam | req; seam: preset tags (duration) | fight port duel: projectiles |
-| fireball | fireball | preset on missile: projectile (ember) | ported (difference) | req; thr | fight port duel: projectiles |
-| flame_arrow | flame_arrow | preset on missile: projectile (ember) | ported (difference) | req; tree | fight port duel: projectiles |
-| magma_glob | magma_glob | preset on missile_quick: projectile (ember) | ported |  | fight port duel: projectiles |
-| cinder_swarm | cinder_swarm | preset on missile: projectile (ember) | ported (difference) | req | fight port duel: projectiles |
-| ice_spear | ice_spear | preset on missile: projectile (tide) | ported (difference) | req | fight port duel: projectiles |
-| glacial_shard | glacial_shard | preset on missile_quick: projectile (tide) | ported |  | fight port duel: projectiles |
+| archon_lance | archon_lance | preset on missile: projectile (storm) | ported (difference) | req; grow; inn; pct-cost; the tithe of maximum mana is carried; mana spent adding damage is not | PortedProjectileTests; fight proving_fletcher proving_evoker |
+| maelstrom_orb | maelstrom_orb | preset on missile: projectile (storm) | ported (difference) | req; an orbit that also spirals keeps the orbit | PortedProjectileTests; fight proving_fletcher proving_evoker |
+| fireball | fireball | preset on missile: projectile (ember) | ported (difference) | req; thr | PortedProjectileTests; fight proving_fletcher proving_evoker |
+| flame_arrow | flame_arrow | preset on missile: projectile (ember) | ported (difference) | req; tree | PortedProjectileTests; fight proving_fletcher proving_evoker |
+| magma_glob | magma_glob | preset on missile_quick: projectile (ember) | ported (difference) | a construct's weave (summons family) | PortedProjectileTests; fight proving_fletcher proving_evoker |
+| cinder_swarm | cinder_swarm | preset on missile: projectile (ember) | ported (difference) | req | PortedProjectileTests; fight proving_fletcher proving_evoker |
+| ice_spear | ice_spear | preset on missile: projectile (tide) | ported (difference) | req; shatters into five flights on its first hit, each casting a glacial shard | PortedProjectileTests; fight proving_fletcher proving_evoker |
+| glacial_shard | glacial_shard | preset on missile_quick: projectile (tide) | ported (difference) | the ice spear's shatter payload | PortedProjectileTests; fight proving_fletcher proving_evoker |
 | shrapnel_shard |  | projectile kit skill | not ported | kit |  |
 | glimmer_pulse |  | projectile kit skill | not ported | kit |  |
-| lure_lantern |  | preset on missile: projectile | not ported | req; seam: preset tags (duration); later: lure: false attraction (row C36, later) | fight port duel: projectiles |
+| lure_lantern |  | preset on missile: projectile | blocked | req; blocked: the lure (row C36) |  |
 | gourd_toss |  | projectile kit skill | not ported | kit |  |
 | hurl_swarmpod |  | projectile kit skill | not ported | kit |  |
-| bottled_swarm |  | preset on missile: projectile (stone) | not ported | req; grow; later: litePour: lightweight swarms (row C36, later); later: throngDirect: the throng fabric (row C38, later); later: the throng fabric (row C38) | fight port duel: projectiles |
-| bolt_repeater | bolt_repeater | preset on shot: projectile (stone) | seam | req; thr; seam: preset tags (munition); seam: preset behaviors (uses) | fight port duel: projectiles |
-| scattergun | scattergun | preset on shot: projectile (stone) | seam | req; seam: preset tags (munition); seam: preset behaviors (uses, convert, meta_action) | fight port duel: projectiles |
-| arquebus | arquebus | preset on shot: projectile (stone) | seam | req; inn; seam: preset tags (munition); seam: preset behaviors (uses, convert) | fight port duel: projectiles |
-| grenado | grenado | preset on shot: projectile (ember) | seam | req; seam: preset tags (munition); seam: preset behaviors (uses) | fight port duel: projectiles |
-| bonespray | bonespray | preset on missile: projectile (stone) | ported (difference) | req; pct-cost | fight port duel: projectiles |
-| sacrament_of_ruin | sacrament_of_ruin | preset on missile: projectile (void) | ported (difference) | req | fight port duel: projectiles |
-| earthrender |  | preset on missile: projectile (stone) | not ported | req; seam: preset tags (duration, fissure); later: fissure trails (a fissure fabric this port lacks) | fight port duel: projectiles |
-| nether_spirit | nether_spirit | preset on missile_quick: projectile (umbra) | seam | seam: preset tags (duration) | fight port duel: projectiles |
-| wandering_spirits | wandering_spirits | preset on missile: projectile (umbra) | seam | req; grow; seam: preset tags (duration) | fight port duel: projectiles |
-| creeping_frost | creeping_frost | preset on missile: projectile (tide) | seam | req; grow; seam: preset tags (duration) | fight port duel: projectiles |
-| rift_shard | rift_shard | preset on missile_quick: projectile (tide) | ported |  | fight port duel: projectiles |
-| impale_lance | impale_lance | preset on shot: projectile (stone) | blocked | req; seam: preset tags (duration); blocked: planting where the flight ends (an embed: row B16 constructs, authored by hand) | fight port duel: projectiles |
-| arclight_rain | arclight_rain | preset on shot: projectile (storm+stone) | blocked | req; seam: preset tags (duration); blocked: planting where the flight ends (an embed: row B16 constructs, authored by hand) | fight port duel: projectiles |
-| voltaic_orb | voltaic_orb | preset on missile: projectile (ember+storm) | seam | req; seam: preset tags (duration) | fight port duel: projectiles |
-| beguile | beguile | preset on missile: projectile (void) | seam | req; tree; grow; seam: preset tags (duration) | fight port duel: projectiles |
+| bottled_swarm |  | preset on missile: projectile (stone) | ported (difference) | req; grow; the swarm is a spawn of four to six sprigs for 10 s where the bottle breaks; the throng (row C38) is not carried | PortedProjectileTests; fight proving_fletcher proving_evoker |
+| bolt_repeater | bolt_repeater | preset on shot: projectile (stone) | ported (difference) | req; thr; a magazine refilling on what was its cooldown | PortedProjectileTests; fight proving_fletcher proving_evoker |
+| scattergun | scattergun | preset on shot: projectile (stone) | ported (difference) | req; a manual bank (uses.manual) that only its face reloads | PortedProjectileTests; fight proving_fletcher proving_evoker |
+| arquebus | arquebus | preset on shot: projectile (stone) | ported (difference) | req; inn; a manual bank (uses.manual) that only its face reloads | PortedProjectileTests; fight proving_fletcher proving_evoker |
+| grenado | grenado | preset on shot: projectile (ember) | ported (difference) | req; a magazine refilling on what was its cooldown | PortedProjectileTests; fight proving_fletcher proving_evoker |
+| bonespray | bonespray | preset on missile: projectile (stone) | ported (difference) | req; pct-cost; the cost of 4% of current life is not carried: the spray costs nothing | PortedProjectileTests; fight proving_fletcher proving_evoker |
+| sacrament_of_ruin | sacrament_of_ruin | preset on missile: projectile (void) | ported (difference) | req | PortedProjectileTests; fight proving_fletcher proving_evoker |
+| earthrender |  | preset on missile: projectile (stone) | ported (difference) | req; the fissure is a trail of pulsing ground (fields on travel); the fissure fabric is not carried | PortedProjectileTests; fight proving_fletcher proving_evoker |
+| nether_spirit | nether_spirit | preset on missile_quick: projectile (umbra) | ported (difference) | a payload the placements family looses | PortedProjectileTests; fight proving_fletcher proving_evoker |
+| wandering_spirits | wandering_spirits | preset on missile: projectile (umbra) | ported (difference) | req; grow | PortedProjectileTests; fight proving_fletcher proving_evoker |
+| creeping_frost | creeping_frost | preset on missile: projectile (tide) | ported (difference) | req; grow | PortedProjectileTests; fight proving_fletcher proving_evoker |
+| rift_shard | rift_shard | preset on missile_quick: projectile (tide) | ported (difference) | a construct's weave (summons family) | PortedProjectileTests; fight proving_fletcher proving_evoker |
+| impale_lance | impale_lance | preset on shot: projectile (stone) | ported (difference) | req; the planted lance and its burst (row B16) are not carried: the lance flies and pierces | PortedProjectileTests; fight proving_fletcher proving_evoker |
+| arclight_rain | arclight_rain | preset on shot: projectile (storm+stone) | ported (difference) | req; the planted arrows pulse Storm around where they land for 6 s instead of beaming between each other (row B16) | PortedProjectileTests; fight proving_fletcher proving_evoker |
+| voltaic_orb | voltaic_orb | preset on missile: projectile (ember+storm) | ported (difference) | req | PortedProjectileTests; fight proving_fletcher proving_evoker |
+| beguile | beguile | preset on missile: projectile (void) | ported (difference) | req; tree; grow | PortedProjectileTests; fight proving_fletcher proving_evoker |
 | ushers_lull |  | projectile kit skill | not ported | kit |  |
 | gaff_cast |  | projectile kit skill | not ported | kit |  |
 | undertow_lash |  | projectile kit skill | not ported | kit |  |
-| gyreblade | gyreblade | preset on shot: projectile (stone) | blocked | req; blocked: catching returned blades for charges: an on_return charge, authored by hand | fight port duel: projectiles |
-| gyre_hurl | gyre_hurl | preset on shot_quick: projectile (stone) | seam | req; seam: preset behaviors (spend) | fight port duel: projectiles |
-| caroms |  | preset on shot: projectile (stone) | not ported | req; seam: preset tags (duration); later: caroming anchors (row B25, later) | fight port duel: projectiles |
-| hanging_volley |  | preset on shot: projectile (stone) | not ported | req; seam: preset tags (duration); later: caroming anchors (row B25, later) | fight port duel: projectiles |
-| heartchaser | heartchaser | preset on shot: projectile (stone) | ported (difference) | selective pierce dropped; req | fight port duel: projectiles |
-| living_barrage | living_barrage | preset on missile: projectile (stone) | seam | req; seam: preset tags (duration) | fight port duel: projectiles |
-| skittering_bolt | skittering_bolt | preset on missile: projectile (storm) | ported (difference) | zigzag shards dropped; req | fight port duel: projectiles |
-| frostcreep | frostcreep | preset on missile: projectile (tide) | seam | req; seam: preset tags (duration) | fight port duel: projectiles |
-| rimeclaw | rimeclaw | preset on missile: projectile (tide) | ported (difference) | req | fight port duel: projectiles |
-| splayshot | splayshot | preset on shot: projectile (stone) | ported (difference) | req | fight port duel: projectiles |
-| galewisp | galewisp | preset on missile: projectile (stone) | seam | req; seam: preset tags (duration) | fight port duel: projectiles |
-| wildwisp |  | preset on missile: projectile (stone) | not ported | req; seam: preset tags (duration); later: carom on hit (row B25, carom is later) | fight port duel: projectiles |
+| gyreblade | gyreblade | preset on shot: projectile (stone) | ported (difference) | req; caught on its return through on_return: a gyre charge, six at most | PortedProjectileTests; fight proving_fletcher proving_evoker |
+| gyre_hurl | gyre_hurl | preset on shot_quick: projectile (stone) | ported (difference) | req; spends every banked gyre for a blade and 5% more each; the AI hurls at two or more | PortedProjectileTests; fight proving_fletcher proving_evoker |
+| caroms |  | preset on shot: projectile (stone) | blocked | req; blocked: caroming anchors (row B25) |  |
+| hanging_volley |  | preset on shot: projectile (stone) | blocked | req; blocked: caroming anchors (row B25) |  |
+| heartchaser | heartchaser | preset on shot: projectile (stone) | ported (difference) | selective pierce dropped; req; the recurve is a steady bend, not a chance that decays | PortedProjectileTests; fight proving_fletcher proving_evoker |
+| living_barrage | living_barrage | preset on missile: projectile (stone) | ported (difference) | req | PortedProjectileTests; fight proving_fletcher proving_evoker |
+| skittering_bolt | skittering_bolt | preset on missile: projectile (storm) | ported (difference) | zigzag shards dropped; req; zigzags every 3.3 units (interval times speed) | PortedProjectileTests; fight proving_fletcher proving_evoker |
+| frostcreep | frostcreep | preset on missile: projectile (tide) | ported (difference) | req | PortedProjectileTests; fight proving_fletcher proving_evoker |
+| rimeclaw | rimeclaw | preset on missile: projectile (tide) | ported (difference) | req | PortedProjectileTests; fight proving_fletcher proving_evoker |
+| splayshot | splayshot | preset on shot: projectile (stone) | ported (difference) | req | PortedProjectileTests; fight proving_fletcher proving_evoker |
+| galewisp | galewisp | preset on missile: projectile (stone) | ported (difference) | req | PortedProjectileTests; fight proving_fletcher proving_evoker |
+| wildwisp |  | preset on missile: projectile (stone) | ported (difference) | req; bounces off the ground; the carom on hit (row B25) is not carried | PortedProjectileTests; fight proving_fletcher proving_evoker |
 | invoke_lance |  | projectile kit skill | not ported | kit |  |
 | offering_wisp |  | projectile kit skill | not ported | kit |  |
-| soulflay | soulflay | preset on missile: projectile (umbra) | seam | req; inn; seam: preset tags (duration) | fight port duel: projectiles |
-| gravewisp | gravewisp | preset on missile: projectile (umbra) | seam | req; seam: preset tags (duration) | fight port duel: projectiles |
-| voltspear | voltspear | preset on shot: projectile (storm) | seam | req; seam: preset tags (javelin) | fight port duel: projectiles |
-| blightspear | blightspear | preset on shot: projectile (umbra+stone) | seam | req; seam: preset tags (javelin, duration) | fight port duel: projectiles |
-| mirespume | mirespume | preset on missile: projectile (umbra) | seam | req; grow; seam: preset tags (duration) | fight port duel: projectiles |
-| marshlight | marshlight | preset on missile: projectile (void) | seam | req; grow; seam: preset tags (duration) | fight port duel: projectiles |
+| soulflay | soulflay | preset on missile: projectile (umbra) | ported (difference) | req; inn; ward from the damage dealt is not carried | PortedProjectileTests; fight proving_fletcher proving_evoker |
+| gravewisp | gravewisp | preset on missile: projectile (umbra) | ported (difference) | req | PortedProjectileTests; fight proving_fletcher proving_evoker |
+| voltspear | voltspear | preset on shot: projectile (storm) | ported (difference) | req | PortedProjectileTests; fight proving_fletcher proving_evoker |
+| blightspear | blightspear | preset on shot: projectile (umbra+stone) | ported (difference) | req | PortedProjectileTests; fight proving_fletcher proving_evoker |
+| mirespume | mirespume | preset on missile: projectile (umbra) | ported (difference) | req; grow | PortedProjectileTests; fight proving_fletcher proving_evoker |
+| marshlight | marshlight | preset on missile: projectile (void) | ported (difference) | req; grow | PortedProjectileTests; fight proving_fletcher proving_evoker |
 | ember_dart |  | projectile kit skill | not ported | kit |  |
-| magma_lob | magma_lob | preset on missile: projectile (ember) | seam | req; grow; seam: preset tags (duration) | fight port duel: projectiles |
-| void_hook | void_hook | preset on missile: projectile (void) | ported (difference) | req; grow | fight port duel: projectiles |
-| tongue_reel | tongue_reel | preset on shot: projectile (stone) | ported (difference) | req; grow | fight port duel: projectiles |
+| magma_lob | magma_lob | preset on missile: projectile (ember) | ported (difference) | req; grow | PortedProjectileTests; fight proving_fletcher proving_evoker |
+| void_hook | void_hook | preset on missile: projectile (void) | ported (difference) | req; grow | PortedProjectileTests; fight proving_fletcher proving_evoker |
+| tongue_reel | tongue_reel | preset on shot: projectile (stone) | ported (difference) | req; grow | PortedProjectileTests; fight proving_fletcher proving_evoker |
 | plague_reel |  | projectile kit skill | not ported | kit |  |
-| doomsayers_word | doomsayers_word | preset on missile: projectile (umbra) | ported (difference) | req; grow | fight port duel: projectiles |
-| whirlaxe | whirlaxe | preset on shot: projectile (stone) | blocked | req; seam: preset tags (duration); blocked: catching returned blades for charges: an on_return charge, authored by hand | fight port duel: projectiles |
+| doomsayers_word | doomsayers_word | preset on missile: projectile (umbra) | ported (difference) | req; grow; the Word settles for 3 s, then its hit and decay land (a delay) | PortedProjectileTests; fight proving_fletcher proving_evoker |
+| whirlaxe | whirlaxe | preset on shot: projectile (stone) | ported (difference) | req; lands as a catch spot: a field of 5 s that banks a gyre when its thrower walks over it | PortedProjectileTests; fight proving_fletcher proving_evoker |
 | sinter_lance |  | projectile kit skill | not ported | kit |  |
 | pressure_throw |  | projectile kit skill | not ported | kit |  |
 | scald_undertow |  | projectile kit skill | not ported | kit |  |
@@ -346,15 +348,15 @@ Every slice lands with a seeded duel the fight tool runs twice to the same trace
 | siren_song |  | projectile kit skill | not ported | kit |  |
 | hellchain_volley |  | projectile kit skill | not ported | kit |  |
 | static_jolt |  | projectile kit skill | not ported | kit |  |
-| feather_volley | feather_volley | preset on shot: projectile (stone) | ported (difference) | req; thr; grow | fight port duel: projectiles |
-| radiant_lance | radiant_lance | preset on shot: projectile (stone+storm) | seam | req; thr; grow; seam: preset tags (javelin) | fight port duel: projectiles |
-| gloriole | gloriole | preset on missile: projectile (ember+storm) | seam | req; thr; grow; seam: preset tags (duration) | fight port duel: projectiles |
-| aureate_lash | aureate_lash | preset on missile_quick: projectile (storm+ember) | ported (difference) | grow | fight port duel: projectiles |
-| skyhook | skyhook | preset on missile: projectile (stone+tide) | ported (difference) | req; grow | fight port duel: projectiles |
-| squall_dart | squall_dart | preset on missile: projectile (storm+stone) | ported (difference) | req; grow | fight port duel: projectiles |
+| feather_volley | feather_volley | preset on shot: projectile (stone) | ported (difference) | req; thr; grow | PortedProjectileTests; fight proving_fletcher proving_evoker |
+| radiant_lance | radiant_lance | preset on shot: projectile (stone+storm) | ported (difference) | req; thr; grow | PortedProjectileTests; fight proving_fletcher proving_evoker |
+| gloriole | gloriole | preset on missile: projectile (ember+storm) | ported (difference) | req; thr; grow | PortedProjectileTests; fight proving_fletcher proving_evoker |
+| aureate_lash | aureate_lash | preset on missile_quick: projectile (storm+ember) | ported (difference) | grow; a construct's weave (summons family) | PortedProjectileTests; fight proving_fletcher proving_evoker |
+| skyhook | skyhook | preset on missile: projectile (stone+tide) | ported (difference) | req; grow | PortedProjectileTests; fight proving_fletcher proving_evoker |
+| squall_dart | squall_dart | preset on missile: projectile (storm+stone) | ported (difference) | req; grow | PortedProjectileTests; fight proving_fletcher proving_evoker |
 | galewright_twister |  | projectile kit skill | not ported | kit |  |
 
-### spells per Thread (164: not ported 61, ported (difference) 25, seam 72, blocked 3, ported 3)
+### spells per Thread (164: seam 72, not ported 61, ported (difference) 25, blocked 3, ported 3)
 
 | Prototype | Ours | Mechanism | Status | Note | Proof |
 |---|---|---|---|---|---|
@@ -394,7 +396,7 @@ Every slice lands with a seeded duel the fight tool runs twice to the same trace
 | flame_wave | flame_wave | preset on breath: area (ember) | ported (difference) | req | fight port duel: spells |
 | doom_chant | doom_chant | preset on lay: area (umbra) | seam | req; seam: preset tags (curse, duration) | fight port duel: spells |
 | frost_nova | frost_nova | preset on burst: area (tide) | ported (difference) | req; tree | fight port duel: spells |
-| pyre_nova | pyre_nova | preset on burst: area (ember) | ported (difference) | req; contagion (authored as an on-hit cast by hand); grow | fight port duel: spells |
+| pyre_nova | pyre_nova | preset on burst: area (ember) | ported (difference) | req; contagion (authored as an on-hit cast by hand); grow; the pyroclast bolt's sequel; the spells family builds the burst shell out | PortedProjectileTests; fight proving_fletcher proving_evoker |
 | renew | renew | preset on smite_quick: apply_status | seam | req; grow; seam: preset tags (heal, buff, targeted, duration, instant) | fight port duel: spells |
 | antiphon | antiphon | preset on burst: area (ember+storm) | seam | req; grow; seam: preset tags (song); seam: preset behaviors (equip_modifiers) | fight port duel: spells |
 | hex_pulse | hex_pulse | preset on burst_quick: area (umbra) | seam | seam: preset tags (instant) | fight port duel: spells |
@@ -523,7 +525,7 @@ Every slice lands with a seeded duel the fight tool runs twice to the same trace
 | rimeglass_trace |  | nova kit skill | not ported | kit |  |
 | lattice_discharge |  | nova kit skill | not ported | kit |  |
 
-### channels and holds (63: ported (difference) 30, seam 27, blocked 2, not ported 4)
+### channels and holds (63: ported (difference) 31, seam 26, not ported 4, blocked 2)
 
 | Prototype | Ours | Mechanism | Status | Note | Proof |
 |---|---|---|---|---|---|
@@ -575,7 +577,7 @@ Every slice lands with a seeded duel the fight tool runs twice to the same trace
 | ice_shield | ice_shield | preset on boon_stance:  (tide) | seam | req; tree; grow; seam: preset tags (duration) | fight port duel: channels |
 | ice_blade | ice_blade | preset on swing_beat: area (tide) | ported (difference) | req; inn | fight port duel: channels |
 | avalanche | avalanche | preset on breath_stream: area (tide) | ported (difference) | req | fight port duel: channels |
-| reload_shells | reload_shells | preset on boon_stream: restore_uses | seam | seam: preset tags (reload, munition) | fight port duel: channels |
+| reload_shells | reload_shells | preset on boon_stream: restore_uses | ported (difference) | a held reload racking a shell a beat, held 2.2 s at most | PortedProjectileTests; fight proving_fletcher proving_evoker |
 | flickerstep | flickerstep | preset on flicker_beat: move (stone) | ported (difference) | req; grow; inn | fight port duel: channels |
 | immolation_rush | immolation_rush | preset on stride_draw: move (ember) | ported (difference) | req; inn | fight port duel: channels |
 | tornado | tornado | preset on burst_stream: area (stone) | seam | req; inn; seam: preset tags (duration) | fight port duel: channels |
@@ -591,7 +593,7 @@ Every slice lands with a seeded duel the fight tool runs twice to the same trace
 | glacier_crown | glacier_crown | preset on hail_stream: scatter (tide) | seam | channel release authored by hand from {"pulses":false,"minHold":0.6,"dmgRamp":{"per":0.28,"max":1.6}}; req; seam: preset tags (duration) | fight port duel: channels |
 | head_of_steam | head_of_steam | preset on boon_stream: restore_uses (ember) | seam | req; grow; seam: preset tags (duration) | fight port duel: channels |
 
-### auras and toggles (42: not ported 16, ported (difference) 1, seam 22, blocked 3)
+### auras and toggles (42: seam 22, not ported 16, blocked 3, ported (difference) 1)
 
 | Prototype | Ours | Mechanism | Status | Note | Proof |
 |---|---|---|---|---|---|
@@ -638,7 +640,7 @@ Every slice lands with a seeded duel the fight tool runs twice to the same trace
 | votive_ward | votive_ward | preset on mantle: aura | seam | req; grow; seam: preset tags (buff, duration, heal) | fight port duel: auras |
 | tailwind | tailwind | preset on mantle: aura | seam | req; grow; seam: preset tags (buff, duration) | fight port duel: auras |
 
-### summons and constructs (92: ported (difference) 14, not ported 31, seam 46, blocked 1)
+### summons and constructs (92: seam 46, not ported 31, ported (difference) 14, blocked 1)
 
 | Prototype | Ours | Mechanism | Status | Note | Proof |
 |---|---|---|---|---|---|
@@ -953,7 +955,7 @@ Every slice lands with a seeded duel the fight tool runs twice to the same trace
 | rain_of_knives | rain_of_knives | preset on barrage: scatter (stone) | seam | req; ult; the gauge (a charge bank by hand); tree; grow; seam: preset tags (ultimate) | fight port duel: placements |
 | litany_of_dawn | litany_of_dawn | preset on hail: scatter (ember) | seam | req; ult; tree; grow; seam: preset tags (ultimate); seam: preset behaviors (follow_up) | fight port duel: placements |
 
-### utility and defense (91: not ported 32, blocked 6, seam 51, ported (difference) 2)
+### utility and defense (91: seam 50, not ported 32, blocked 6, ported (difference) 3)
 
 | Prototype | Ours | Mechanism | Status | Note | Proof |
 |---|---|---|---|---|---|
@@ -1008,7 +1010,7 @@ Every slice lands with a seeded duel the fight tool runs twice to the same trace
 | vent_mites |  | self kit skill | not ported | kit |  |
 | vent_ticks |  | self kit skill | not ported | kit |  |
 | vent_souls |  | self kit skill | not ported | kit |  |
-| reload_powder | reload_powder | preset on boon: restore_uses | seam | seam: preset tags (reload, munition) | fight port duel: utility |
+| reload_powder | reload_powder | preset on boon: restore_uses | ported (difference) | a 1.5 s bar that fills the bank | PortedProjectileTests; fight proving_fletcher proving_evoker |
 | re_energize |  | self kit skill | not ported | kit |  |
 | life_flask | life_flask | preset on boon_quick: apply_status, apply_status, apply_status | seam | taps; thr; tree; grow; seam: preset tags (instant, buff, duration, flask); seam: preset behaviors (gates, spend, equip_modifiers) | fight port duel: utility |
 | mana_flask | mana_flask | preset on boon_quick: apply_status, apply_status | seam | taps; thr; tree; grow; seam: preset tags (instant, buff, duration, flask); seam: preset behaviors (gates, spend, equip_modifiers) | fight port duel: utility |
