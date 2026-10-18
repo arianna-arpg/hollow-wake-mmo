@@ -735,6 +735,8 @@ public sealed record GenParams
     public double PoiCell { get; init; } = 64;
     public double PoiMargin { get; init; } = 20;
     public double PoiTarget { get; init; } = 4;
+    /// <summary>Nearest chunks inspected per local-population quest slot, including cached chunks.</summary>
+    public int QuestPopulationChunks { get; init; } = 16;
     public double FlattenFalloff { get; init; } = 6;
     public double MaxWalkableSlope { get; init; } = 1.1;
     public double ShallowDepth { get; init; } = 0.6;
@@ -756,6 +758,7 @@ public sealed record GenParams
         PoiCell = r.Number("world.gen.poi_cell", 64),
         PoiMargin = r.Number("world.gen.poi_margin", 20),
         PoiTarget = r.Number("world.gen.poi_target", 4),
+        QuestPopulationChunks = (int)Math.Clamp(r.Number("world.gen.quest_population_chunks", 16), 0, int.MaxValue),
         FlattenFalloff = r.Number("world.gen.flatten_falloff", 6),
         MaxWalkableSlope = r.Number("world.gen.max_walkable_slope", 1.1),
         ShallowDepth = r.Number("world.gen.shallow_depth", 0.6),
