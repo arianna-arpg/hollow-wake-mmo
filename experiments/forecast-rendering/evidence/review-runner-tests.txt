@@ -1,0 +1,28 @@
+✔ build cache observes edits and deletions, but ignores generated output (28.8917ms)
+✔ local launch rejects ambiguous ports and invalid account values (0.7665ms)
+✔ a melee skill becomes a preset on the swing shell in world units (2.2774ms)
+✔ a projectile keeps its riders, hooks and Thread (1.688ms)
+✔ trajectory axes come out in degrees a second and banks keep their kind (1.178ms)
+✔ chaos goes to Umbra by theme and the port closure carries referenced kit skills (1.751ms)
+✔ supports become glyphs with triggers, mechanism probes and generated families (1.4758ms)
+✔ statuses map onto the roster, pops become on_reapply and time scales are not ported (2.6563ms)
+✔ procs and charges keep their payloads (2.7032ms)
+✔ structurally different shells have unique ids and presets reference them (2.6364ms)
+✔ mixed damage pairs shares with sorted Threads and preserves the folded total (2.2195ms)
+✔ both suites enforce background input and reject headed or unbounded runs (4.6804ms)
+✔ background browser isolates physical controllers without changing keyboard or pointer events (1.6865ms)
+✔ private config preserves gameplay settings and quotes Windows paths literally (0.7163ms)
+✔ simultaneous reservations use distinct ports (27.3782ms)
+✔ server readiness refuses an unrelated server on the selected port (477.42ms)
+✔ a clean exit with no completed smoke summary cannot pass (0.8938ms)
+✔ process failures preserve output and return a failing status (101.9398ms)
+✔ timeout stops the owned process and its descendant without stopping a neighbour (1486.7574ms)
+✔ interruption stops an owned running process (539.5012ms)
+ℹ tests 20
+ℹ suites 0
+ℹ pass 20
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2819.5098

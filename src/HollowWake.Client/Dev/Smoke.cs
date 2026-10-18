@@ -269,8 +269,8 @@ public partial class Smoke : Node
                     if (hob is null) break;
                 }
                 reached |= await TravelTo(() => (hob.State.X, hob.State.Y), 2f, 15);
-                // Directional casts aim at the ground under the pointer. Point near the feet while
-                // retaining body hover, rather than projecting the torso onto ground behind the foe.
+                // Directional casts aim at the ground under the pointer. Point near the feet to
+                // reduce the torso-to-ground parallax behind the foe; hover remains diagnostic.
                 await Hover(hob, heightFraction: 0.1f);
                 hovered |= _main.HoveredKey == hob.Key;
                 var slot = attempt % 2 + 1;

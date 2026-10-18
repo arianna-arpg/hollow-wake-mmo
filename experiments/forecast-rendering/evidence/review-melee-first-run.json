@@ -1,0 +1,48 @@
+{
+  "started": "2026-10-18T01:32:14.594Z",
+  "root": "<worktree>",
+  "directory": "<worktree>\\artifacts\\forecast-review\\review-melee\\run-3iyW3n",
+  "suite": "all",
+  "status": "failed",
+  "stages": [
+    {
+      "name": "smoke-web",
+      "status": "passed",
+      "started": "2026-10-18T01:32:15.924Z",
+      "code": 0,
+      "signal": null,
+      "passed": 26,
+      "total": 26,
+      "skipped": [],
+      "finished": "2026-10-18T01:33:28.119Z"
+    },
+    {
+      "name": "import-godot",
+      "status": "passed",
+      "started": "2026-10-18T01:33:28.121Z",
+      "code": 0,
+      "signal": null,
+      "finished": "2026-10-18T01:33:32.450Z"
+    },
+    {
+      "name": "smoke-godot",
+      "status": "failed",
+      "started": "2026-10-18T01:33:32.451Z",
+      "code": 1,
+      "signal": null,
+      "error": "smoke-godot failed; see smoke-godot.log",
+      "finished": "2026-10-18T01:34:29.702Z"
+    }
+  ],
+  "nativeRendering": "not covered by headless mode",
+  "godot": "C:\\Users\\John\\AppData\\Local\\Microsoft\\WinGet\\Packages\\GodotEngine.GodotEngine.Mono_Microsoft.Winget.Source_8wekyb3d8bbwe\\Godot_v4.7.2-stable_mono_win64\\Godot_v4.7.2-stable_mono_win64.exe",
+  "server": {
+    "tcp": 60059,
+    "url": "http://127.0.0.1:60060",
+    "name": "harness-run-3iyW3n",
+    "data": "<worktree>\\artifacts\\forecast-review\\review-melee\\run-3iyW3n\\data"
+  },
+  "error": "smoke-godot failed; see smoke-godot.log",
+  "cleanupErrors": [],
+  "finished": "2026-10-18T01:34:30.133Z"
+}

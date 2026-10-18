@@ -1,4 +1,13 @@
 AI primary-area query allocation probe
+Current review correction at a2dee0a / merged 03d5110:
+AI primary-area query: 2500 calls, 2500 selected, 56 bytes/call, 25.301 ms total.
+512 B/query removed versus the preceding 568 B/query implementation (90.1%).
+The remaining 56 B is ChooseForAi's existing seeded choice RNG, not observation storage.
+Synchronous built-in context/scope scratch is rebound per sample and cleared on return.
+Eligibility and dependency checks are live; external providers retain detached lifetime.
+Reentrancy, external retention, cross-arena reuse and changing input regressions pass.
+Earlier measurements follow; elapsed values are not controlled production comparisons.
+
 Command from repository root:
 dotnet run --project experiments/cast-forecast-core/AiPlanProbe.csproj -c Release
 

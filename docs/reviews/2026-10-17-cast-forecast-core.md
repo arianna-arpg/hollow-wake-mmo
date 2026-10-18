@@ -1,5 +1,7 @@
 # Live cast observation and positional release: core ownership
 
+Historical handoff below. The integrated review correction in `a2dee0a` supersedes its extra melee proc-depth consequence and 568 B/query measurement. Explicit area selectors preserve incoming depth, actual cascades still deepen, and synchronous built-in AI observation reuses cleared storage (56 B/query remains for existing AI choice RNG). See the [current integrated review and matched 30/60-second evidence](2026-10-17-shared-cast-forecasts.md) for final behavior and outstanding gates.
+
 Base: combined integration commit `1ee5388f78fcfc2e7abc1259060f10484a1e9c48`, which includes cast presentation `edb0084` and delivery-plan foundation `a9402ac`. Work is isolated in `codex/cast-forecast-core`. The owner's coordination request in the integration chat explicitly authorizes working together on shared forecasts and hitboxes in both clients. This core slice implements the [positional-hit handoff](2026-10-17-positional-hits.md) and a read-only active-cast observation API.
 
 Ownership: core runtime/definitions/validation, combat content, core tests, combat/delivery contracts and this record. The integration chat owns protocol, server routing, both clients, their configuration/tests and `cast-forecasting.md`. No changes to those files or another checkout belong here. This branch will supply commits for cherry-pick into the integration branch, not merge into main.
