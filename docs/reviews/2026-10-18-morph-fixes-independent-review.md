@@ -31,4 +31,4 @@ Raw functional logs are in the review checkout's ignored `artifacts/morph-review
 
 The merge preserves #47's test-local `MorphDimension`/`MorphParameterKind` names, #52's Windows replay gate and #53's allocation-test hardening. #20's owner was notified to preserve `EffectContext.Aim` in later release-context integration. The existing area/field `from` anchor exception stays named and is not silently resolved here. Probe expressions remain conservatively treated as potentially active, as the new helper documents.
 
-Acknowledged by: pending Claude correction and rereview on PR #54.
+Acknowledged by: Claude's [correction record](2026-10-18-combat-morph-fixes.md), with the heal corrected at `8f3451a`; the rereview on PR #54 is pending.
