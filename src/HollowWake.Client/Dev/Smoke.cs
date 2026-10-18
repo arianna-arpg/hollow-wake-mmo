@@ -256,21 +256,30 @@ public partial class Smoke : Node
             var lines0 = _main.HitsDealt;
             var hovered = false;
             var used = "";
+            bool CastIdle() => _main.Hud.Hero.Cast is null && string.IsNullOrEmpty(Self?.State.Casting);
             for (var attempt = 0; attempt < 10 && _main.HitsDealt == lines0; attempt++)
             {
                 if (Self?.State.Dead == true) { Tap(Key.R); await Wait(1.0); }
+                // Finish the preceding cast before moving or pressing another slot. Cast durations
+                // come from the equipped build; a fixed one-second retry can repeatedly report busy.
+                if (!await Until(CastIdle, 6)) break;
                 if (hob.State.Dead || !_main.World.Entities.ContainsKey(hob.Key))
                 {
                     hob = Nearest(e => e.State.Pattern?.StartsWith("hob", StringComparison.Ordinal) == true && !e.State.Dead);
                     if (hob is null) break;
                 }
                 reached |= await TravelTo(() => (hob.State.X, hob.State.Y), 2f, 15);
-                await Hover(hob);
+                // Directional casts aim at the ground under the pointer. Point near the feet while
+                // retaining body hover, rather than projecting the torso onto ground behind the foe.
+                await Hover(hob, heightFraction: 0.1f);
                 hovered |= _main.HoveredKey == hob.Key;
                 var slot = attempt % 2 + 1;
                 Tap(Key.Key0 + slot);
                 used += slot;
-                await Wait(1.0);
+                var observed = await Until(() => !CastIdle() || _main.HitsDealt > lines0, 2);
+                GD.Print($"SMOKE combat attempt {attempt + 1}: slot={slot}, observed={observed}, cast={_main.Hud.Hero.Cast?.Name ?? Self?.State.Casting ?? "none"}, distance={Flat(Pos(), new(hob.State.X, hob.State.Y, hob.State.Z)):0.00}");
+                await Until(CastIdle, 6);
+                await Wait(0.2);
             }
             var fought = await Until(() => _main.HitsDealt > lines0, 6);
             Record("weaves on a hob", fought, $"reached={reached} hovered={hovered} slots {used} hits dealt={_main.HitsDealt - lines0}{Rejected()}");
@@ -759,9 +768,9 @@ public partial class Smoke : Node
         Input.ParseInputEvent(new InputEventMouseButton { ButtonIndex = MouseButton.Left, Pressed = false, Position = screen, GlobalPosition = screen });
     }
 
-    private async Task Hover(EntityView view)
+    private async Task Hover(EntityView view, float heightFraction = 0.5f)
     {
-        Point(Screen(view.GlobalPosition + new Vector3(0, view.State.Height * 0.5f, 0)));
+        Point(Screen(view.GlobalPosition + new Vector3(0, view.State.Height * heightFraction, 0)));
         await Frame();
         await Frame();
     }
