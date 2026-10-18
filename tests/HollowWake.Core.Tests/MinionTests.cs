@@ -834,4 +834,23 @@ public class MinionTests
         Assert.True(died.Killer.IsNone);
         Assert.Single(arena.Minions("t_shades"));
     }
+
+    [Fact]
+    public void ConsumeCorpseSpendsTheCorpseACastChoseAndNothingElse()
+    {
+        var bench = CombatBench.Create(distance: 4);
+        var fallen = bench.Spawn("hob", new Vector3(14, 12, 0), "blue");
+        bench.Hit(1000, "stone", target: fallen);
+        Assert.True(Corpses.Is(bench.Sim.World, fallen));
+        // A living target is not a corpse: nothing is spent.
+        bench.Run("""{"type": "consume_corpse"}""", target: bench.Victim);
+        Assert.Empty(bench.Events.OfType<CorpseConsumed>());
+        Assert.True(Corpses.Is(bench.Sim.World, fallen));
+        // The chosen corpse is spent and announced.
+        bench.Run("""{"type": "consume_corpse"}""", target: fallen);
+        var spent = Assert.Single(bench.Events.OfType<CorpseConsumed>());
+        Assert.Equal(fallen, spent.Corpse);
+        Assert.Equal("hob", spent.Pattern);
+        Assert.True(bench.Sim.World.IsDeferredDestroy(fallen) || !bench.Sim.World.IsAlive(fallen));
+    }
 }
