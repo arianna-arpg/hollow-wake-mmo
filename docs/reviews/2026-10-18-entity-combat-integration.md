@@ -99,3 +99,11 @@ Source `bda29c7182b0a93640b8e16a1d20b49dc0d42fd3` consumes complete parent `c309
 The full fresh proving JSON equals the exact archived preceding source, including all three inherited win-ceiling breaches, outcomes, mechanisms and hashes. The command exits1; this is not a balance pass. Seven hashes do not capture vertical spawn coordinates: the inherited launch correction's detailed trace and child-contact regressions establish the actual emission-height change. No timing run or budget relaxation accompanies this source. Full gate evidence: `37-combined-*` and `37-pre54-*`. Client/transport coverage is stated separately rather than inferred from simulation checks.
 
 Claude rereview requested for the complete combined source. Historical performance misses remain open under coordinated ownership; no merge to main.
+
+## #37 combined client and transport verification
+
+Source `021f79a131a97d72fe173afabb9407680ca647e5`: browser unit tests 320 pass, production browser build and porter tests pass, generated protocol is current. Private `run-L3gBxb` passes browser 31/31 and native 36/36; teardown is clean. Native rendered pixels remain explicitly skipped; complete headless output, including exit diagnostics, is retained. The isolated TCP probe passes with all six requested features granted. The production build retains its existing large-chunk advisory.
+
+Fresh run-L3gBxb card and grayscale frames were visually inspected. Both show the full world viewport with terrain, trees, settlement geometry and character bodies beneath nameplates; the interface is visible and the grayscale world filter is apparent. The earlier blank-world renderer defect remains corrected. These origin frames verify the rendering path; the unchanged shared-scale family gallery and paired Gnoll/Beastkin fixtures supply their anatomy evidence. Native rendered pixels remain explicitly untested.
+
+These functional gates do not resolve the retained pre-main performance misses or establish a post-main timing pass. No benchmark was run during this integration.
