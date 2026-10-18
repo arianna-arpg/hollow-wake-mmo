@@ -1,0 +1,92 @@
+[
+  {
+    "run": "bench.json",
+    "zone.tick.p95": 10.1715,
+    "system.behavior": 1.9371155000000007,
+    "snapshot.build": 1.0585904999999993,
+    "snapshot.bytes": 27.2335546875,
+    "snapshot.delta.bytes": 8.7383056640625,
+    "worldgen.chunk": 0.6996125,
+    "zone.errors": 0
+  },
+  {
+    "run": "bench-baseline-comparison.json",
+    "zone.tick.p95": 12.1471,
+    "system.behavior": 1.9688378333333303,
+    "snapshot.build": 0.9813404999999993,
+    "snapshot.bytes": 27.2335546875,
+    "snapshot.delta.bytes": 8.7383056640625,
+    "worldgen.chunk": 0.843278125,
+    "zone.errors": 0
+  },
+  {
+    "run": "bench-final-comparison.json",
+    "zone.tick.p95": 11.7845,
+    "system.behavior": 1.976607166666668,
+    "snapshot.build": 1.0372160000000006,
+    "snapshot.bytes": 27.2335546875,
+    "snapshot.delta.bytes": 8.7383056640625,
+    "worldgen.chunk": 0.877953125,
+    "zone.errors": 0
+  },
+  {
+    "run": "bench-paired-baseline-1.json",
+    "zone.tick.p95": 15.3415,
+    "system.behavior": 2.152646666666664,
+    "snapshot.build": 1.0389100000000002,
+    "snapshot.bytes": 27.2335546875,
+    "snapshot.delta.bytes": 8.7383056640625,
+    "worldgen.chunk": 1.1468109375,
+    "zone.errors": 0
+  },
+  {
+    "run": "bench-paired-baseline-2.json",
+    "zone.tick.p95": 12.1391,
+    "system.behavior": 1.9095241666666665,
+    "snapshot.build": 0.9830760000000004,
+    "snapshot.bytes": 27.2335546875,
+    "snapshot.delta.bytes": 8.7383056640625,
+    "worldgen.chunk": 0.7973359375,
+    "zone.errors": 0
+  },
+  {
+    "run": "bench-paired-baseline-3.json",
+    "zone.tick.p95": 13.9995,
+    "system.behavior": 2.485639166666669,
+    "snapshot.build": 1.3286384999999998,
+    "snapshot.bytes": 27.2335546875,
+    "snapshot.delta.bytes": 8.7383056640625,
+    "worldgen.chunk": 0.8419953125,
+    "zone.errors": 0
+  },
+  {
+    "run": "bench-paired-candidate-1.json",
+    "zone.tick.p95": 13.6768,
+    "system.behavior": 2.038043833333336,
+    "snapshot.build": 1.1241339999999997,
+    "snapshot.bytes": 27.2335546875,
+    "snapshot.delta.bytes": 8.7383056640625,
+    "worldgen.chunk": 1.1309140625,
+    "zone.errors": 0
+  },
+  {
+    "run": "bench-paired-candidate-2.json",
+    "zone.tick.p95": 15.0539,
+    "system.behavior": 2.5381189999999982,
+    "snapshot.build": 1.0888299999999995,
+    "snapshot.bytes": 27.2335546875,
+    "snapshot.delta.bytes": 8.7383056640625,
+    "worldgen.chunk": 1.0012109375,
+    "zone.errors": 0
+  },
+  {
+    "run": "bench-paired-candidate-3.json",
+    "zone.tick.p95": 13.519,
+    "system.behavior": 2.2109875000000017,
+    "snapshot.build": 0.9753169999999994,
+    "snapshot.bytes": 27.2335546875,
+    "snapshot.delta.bytes": 8.7383056640625,
+    "worldgen.chunk": 1.0376375,
+    "zone.errors": 0
+  }
+]

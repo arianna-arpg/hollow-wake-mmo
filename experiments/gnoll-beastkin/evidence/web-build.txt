@@ -11,10 +11,10 @@ dist/index.html                      0.84 kB │ gzip:   0.44 kB
 dist/assets/index--A3t2PVZ.css       4.55 kB │ gzip:   1.64 kB
 dist/assets/app-RvLAIen0.css        35.77 kB │ gzip:   7.01 kB
 dist/assets/content-OEIng8U1.js      3.50 kB │ gzip:   2.01 kB │ map:    11.32 kB
-dist/assets/index-Cm5YoOjh.js       30.84 kB │ gzip:  12.54 kB │ map:    88.32 kB
-dist/assets/app-2g6Ji4RI.js      1,782.52 kB │ gzip: 388.25 kB │ map: 4,165.94 kB
+dist/assets/index-DyMU3gUN.js       30.84 kB │ gzip:  12.54 kB │ map:    88.32 kB
+dist/assets/app-B3F5GGSK.js      1,783.03 kB │ gzip: 388.30 kB │ map: 4,166.07 kB
 
-✓ built in 543ms
+✓ built in 446ms
 [plugin builtin:vite-reporter]
 (!) Some chunks are larger than 1500 kB after minification. Consider:
 - Using dynamic import() to code-split the application

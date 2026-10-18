@@ -1,0 +1,25 @@
+t=1.25 Gnoll Prowler cast rend at
+t=1.35 status poise_broken x1 on Gnoll Prowler from Gnoll Prowler
+t=1.35 Beastkin Gorer broke Gnoll Prowler's poise
+t=1.35 Beastkin Gorer hit Gnoll Prowler for 51.5
+t=1.35 status hemorrhage x1 on Gnoll Prowler from Beastkin Gorer
+t=1.35 Beastkin Gorer cast gore_rend at
+t=1.85 Beastkin Gorer hit Gnoll Prowler for 14.8
+t=2.05 Gnoll Prowler hit Beastkin Gorer for 0 evaded
+t=2.05 status bleeding x1 on Beastkin Gorer from Gnoll Prowler
+t=2.05 Gnoll Prowler cast rend at
+t=2.35 Beastkin Gorer hit Gnoll Prowler for 14.8
+t=2.45 Beastkin Gorer hit Gnoll Prowler for 86
+t=2.45 Gnoll Prowler died
+t=2.45 Beastkin Gorer cast heavy_strike at
+t=2.55 Gnoll Prowler hit Beastkin Gorer for 0
+t=3.05 Gnoll Prowler hit Beastkin Gorer for 0
+t=3.55 Gnoll Prowler hit Beastkin Gorer for 0
+t=4.10 Gnoll Prowler hit Beastkin Gorer for 0
+t=4.60 Gnoll Prowler hit Beastkin Gorer for 0
+t=5.10 Gnoll Prowler hit Beastkin Gorer for 0
+t=5.60 Gnoll Prowler hit Beastkin Gorer for 0
+t=6.10 Gnoll Prowler hit Beastkin Gorer for 0
+t=6.60 Gnoll Prowler hit Beastkin Gorer for 0
+t=14.45 despawned gnoll_prowler
+gnoll_prowler: life /   beastkin_gorer: life 265/265

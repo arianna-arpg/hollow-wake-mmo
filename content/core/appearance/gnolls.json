@@ -32,7 +32,7 @@
         "scale": 0
       },
       "meta": {
-        "prototype_look": "gnoll_prowler",
+        "prototype_look": "gnoll",
         "translation": "High scapula, paw toes, canine muzzle and exposed teeth"
       }
     },
@@ -109,7 +109,7 @@
         "scale": 0
       },
       "meta": {
-        "prototype_look": "gnoll_longshot",
+        "prototype_look": "gnoll_archer",
         "translation": "High scapula, paw toes, canine muzzle and exposed teeth"
       }
     },
@@ -146,7 +146,7 @@
         "scale": 0
       },
       "meta": {
-        "prototype_look": "gnoll_impaler",
+        "prototype_look": "gnoll",
         "translation": "High scapula, paw toes, canine muzzle and exposed teeth"
       }
     },

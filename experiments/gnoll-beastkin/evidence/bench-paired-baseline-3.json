@@ -1,0 +1,218 @@
+[
+  {
+    "Name": "attribute.get.cached",
+    "Value": 33.105500000000006,
+    "Unit": "ns/op",
+    "Note": "formula \u002B 20 modifiers, cached"
+  },
+  {
+    "Name": "attribute.get.uncached",
+    "Value": 355.33,
+    "Unit": "ns/op",
+    "Note": "40 modifiers, 4 contexts, cache cleared"
+  },
+  {
+    "Name": "attribute.apply.extra",
+    "Value": 415.9695,
+    "Unit": "ns/op",
+    "Note": "damage fold with weave extras (never cached)"
+  },
+  {
+    "Name": "attribute.apply.alloc",
+    "Value": 0.1392,
+    "Unit": "bytes/op",
+    "Note": "allocation per damage fold"
+  },
+  {
+    "Name": "expression.evaluate",
+    "Value": 135.7625,
+    "Unit": "ns/eval",
+    "Note": "four formulas, checksum 57948161"
+  },
+  {
+    "Name": "expression.alloc",
+    "Value": 0.0168,
+    "Unit": "bytes/eval",
+    "Note": "lerp with rand()"
+  },
+  {
+    "Name": "expression.parse",
+    "Value": 345.10999999999996,
+    "Unit": "ns/parse",
+    "Note": "uncached parse of a short formula"
+  },
+  {
+    "Name": "worldgen.zone.plan",
+    "Value": 28.9777,
+    "Unit": "ms",
+    "Note": "4 pois, 4 quests"
+  },
+  {
+    "Name": "worldgen.chunk",
+    "Value": 0.8419953125,
+    "Unit": "ms/chunk",
+    "Note": "64 chunks, 65536 cells"
+  },
+  {
+    "Name": "worldgen.chunk.alloc",
+    "Value": 14.5263671875,
+    "Unit": "KB/chunk",
+    "Note": "allocation per generated chunk"
+  },
+  {
+    "Name": "worldgen.sample",
+    "Value": 948.5699999999999,
+    "Unit": "ns/sample",
+    "Note": "climate sample"
+  },
+  {
+    "Name": "zone.load",
+    "Value": 111.7376,
+    "Unit": "ms",
+    "Note": "zone(0,0): 100 chunks, 4 pois, 2 founts, 115 spawners, 2269 flora, 4 quests"
+  },
+  {
+    "Name": "zone.tick.avg",
+    "Value": 7.281569333333331,
+    "Unit": "ms/tick",
+    "Note": "2694 entities at start, 2933 at end, 300 monsters, 4 players"
+  },
+  {
+    "Name": "zone.tick.p50",
+    "Value": 6.6621,
+    "Unit": "ms/tick",
+    "Note": "median"
+  },
+  {
+    "Name": "zone.tick.p95",
+    "Value": 13.9995,
+    "Unit": "ms/tick",
+    "Note": "95th percentile"
+  },
+  {
+    "Name": "zone.tick.max",
+    "Value": 23.9704,
+    "Unit": "ms/tick",
+    "Note": "worst tick"
+  },
+  {
+    "Name": "zone.tick.alloc",
+    "Value": 74.45006510416667,
+    "Unit": "KB/tick",
+    "Note": "gen0 collections 4"
+  },
+  {
+    "Name": "zone.events",
+    "Value": 19,
+    "Unit": "events",
+    "Note": "raised during the last tick"
+  },
+  {
+    "Name": "system.casting",
+    "Value": 1.2449706666666664,
+    "Unit": "ms/tick",
+    "Note": "35.6 KB/tick allocated"
+  },
+  {
+    "Name": "system.behavior",
+    "Value": 2.485639166666669,
+    "Unit": "ms/tick",
+    "Note": "23.0 KB/tick allocated"
+  },
+  {
+    "Name": "system.territory",
+    "Value": 0.058780666666666606,
+    "Unit": "ms/tick",
+    "Note": "6.2 KB/tick allocated"
+  },
+  {
+    "Name": "system.statuses",
+    "Value": 1.671678,
+    "Unit": "ms/tick",
+    "Note": "5.9 KB/tick allocated"
+  },
+  {
+    "Name": "system.quests",
+    "Value": 0.022958333333333334,
+    "Unit": "ms/tick",
+    "Note": "1.9 KB/tick allocated"
+  },
+  {
+    "Name": "system.projectiles",
+    "Value": 0.02195566666666668,
+    "Unit": "ms/tick",
+    "Note": "0.5 KB/tick allocated"
+  },
+  {
+    "Name": "zone.errors",
+    "Value": 0,
+    "Unit": "count",
+    "Note": "no system errors"
+  },
+  {
+    "Name": "snapshot.enter",
+    "Value": 164.58056640625,
+    "Unit": "KB/player",
+    "Note": "spawns and self state on entering the zone, sent once"
+  },
+  {
+    "Name": "snapshot.build",
+    "Value": 1.3286384999999998,
+    "Unit": "ms/player",
+    "Note": "422 known entities per player; build and encode"
+  },
+  {
+    "Name": "snapshot.bytes",
+    "Value": 27.2335546875,
+    "Unit": "KB/player",
+    "Note": "changed entities as full states plus self state, steady state, JSON"
+  },
+  {
+    "Name": "snapshot.delta.build",
+    "Value": 0.8470874999999998,
+    "Unit": "ms/player",
+    "Note": "the same with deltas opted in"
+  },
+  {
+    "Name": "snapshot.delta.bytes",
+    "Value": 8.7383056640625,
+    "Unit": "KB/player",
+    "Note": "changed entities as deltas plus self state, steady state, JSON"
+  },
+  {
+    "Name": "snapshot.interface.build",
+    "Value": 1.2255169999999997,
+    "Unit": "ms/player",
+    "Note": "deltas plus the interface states on change, build and encode"
+  },
+  {
+    "Name": "snapshot.interface.bytes",
+    "Value": 7.9432177734375,
+    "Unit": "KB/player",
+    "Note": "an interface client: deltas, self state with pools and casts, weave slots, inventory, passives and pages on change"
+  },
+  {
+    "Name": "deliveries.tick",
+    "Value": 0.468534,
+    "Unit": "ms/tick",
+    "Note": "33 flights in the air on average among 120 foes, casts included"
+  },
+  {
+    "Name": "deliveries.tick.alloc",
+    "Value": 38.07556640625,
+    "Unit": "KB/tick",
+    "Note": "casts, hits and effects included"
+  },
+  {
+    "Name": "deliveries.projectiles",
+    "Value": 0.19004250000000003,
+    "Unit": "ms/tick",
+    "Note": "23.5 KB/tick allocated, hits and their effects included"
+  },
+  {
+    "Name": "deliveries.fields",
+    "Value": 0.027635000000000017,
+    "Unit": "ms/tick",
+    "Note": "3.4 KB/tick allocated"
+  }
+]

@@ -260,7 +260,10 @@
     "Matron uses a melee/rally kit; ally triage and greater_mending deferred.",
     "Chaser uses skewer/pinning_spear; hanging_volley and dash coordination deferred.",
     "Ravener uses carve/deep_carve/rend; no tactical dash decision.",
-    "Bullwarden is an original minotaur expansion; Rrakhan adapts the commander silhouette."
+    "Bullwarden is an original minotaur expansion; Rrakhan adapts the commander silhouette.",
+    "Butcher omits prototype swig. Horncaller uses heavy_strike with rallying_shout instead of wake_the_scree.",
+    "Gorer emphasizes minotaur mass; Khan adds an existing ground_slam to its melee/rally kit. These are adaptations, not complete prototype ports.",
+    "Packfather adapts Rrakhan as one champion body, with heavy_strike/ground_slam/rallying_shout; detachable commander parts and crusade verbs are deferred."
   ],
   "deferred": [
     "AI overhaul and pack/herd simulation",
