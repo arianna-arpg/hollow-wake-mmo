@@ -43,6 +43,7 @@ async function pageChecks(win: BrowserWindow, version: string): Promise<string[]
     return {
       bridge: typeof window.launcher === 'object' && typeof window.launcher.play === 'function',
       primary: text('primary'),
+      buildPicker: !!document.getElementById('build-select'),
       version: text('launcher-version'),
       address: document.getElementById('address')?.value ?? null,
       channel: !!document.querySelector('[data-channel="stable"]') && !!document.querySelector('[data-channel="nightly"]'),
@@ -58,6 +59,12 @@ async function pageChecks(win: BrowserWindow, version: string): Promise<string[]
   if (!report['primary']) {
     failures.push('the primary button is missing');
   }
+  if (!report['buildPicker']) failures.push('the build picker is missing');
+  const playable = await win.webContents.executeJavaScript(`(async () => {
+    const state = await window.launcher.getState();
+    return !state.installed || document.getElementById('primary')?.textContent === 'Play';
+  })()`);
+  if (!playable) failures.push('an installed build must have a primary Play button');
   if (typeof report['version'] !== 'string' || !report['version'].includes(version)) {
     failures.push(`the page does not show launcher version ${version}`);
   }

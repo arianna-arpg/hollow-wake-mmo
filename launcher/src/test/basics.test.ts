@@ -36,6 +36,7 @@ test('decide: the big button', () => {
   assert.equal(decideAction(nightly, stable, false), 'switch', 'changing channel may move down');
   assert.equal(decideAction(stable, nightly, false), 'update');
   assert.equal(decideAction(stable, newer, true), 'busy');
+  assert.equal(decideAction(newer, stable, false, true), 'switch', 'an explicitly selected older build may be installed');
 });
 
 test('address: host, port, IPv6 and mistakes', () => {

@@ -1,6 +1,7 @@
 import './style.css';
 import type { App } from './app';
 import { loadConfig } from './config';
+import { addPlayRibbon } from './ui/playRibbon';
 import { LoadingScreen } from './loading/loadingScreen';
 import { presentation } from './loading/content';
 
@@ -25,6 +26,7 @@ try {
   if (boot.current) {
     app = new Client(root, config, loading);
     window.hollowWake = app.probe();
+    void addPlayRibbon(app.login.root.querySelector('.login-panel')!);
     app.start();
     await app.prefill();
     boot.finish();
