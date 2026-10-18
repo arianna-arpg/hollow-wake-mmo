@@ -60,3 +60,11 @@ Source `97becc4ed5f55de0a8e84dea0f6de9cd5c48dbd1`: browser unit tests 298 pass, 
 Fresh run-8cdtTL card and grayscale frames were inspected: terrain, trees, villagers, the player and wildlife are visible across the full world viewport. The previous blank-world frame is corrected; the world-pixel assertion also passes. Both screenshots and full logs are retained. Native rendered pixels remain explicitly untested.
 
 These functional gates do not resolve the retained pre-main performance misses or establish a post-main timing pass. No benchmark was run during this integration.
+
+### #34 verified simulation after the aim correction
+
+Source `26431c48a67ddd3b77811cf94363a589cdd50e69` consumes complete parent `01b2884c3ddc61c0b617c9062a7e36b575d94551`. Solution and Release tools build with zero warnings/errors; core 2412, server 59, client 133 tests pass. Validation0/0, load/duel, exact 499-key census and all seven Release Windows replay hashes pass. No replay fixture or census allowance is changed. Relative to actual preceding branch source `3d339d2ac71af6ac8bcff8e4f767e1f7c44ce2d8`, content changes are precisely the inherited projectile default-elevation rule, Knot site-level opt-ins and anchored/windowed quest slot. Every other entity, kit, shape, material and spawn table is unchanged. The complete parent also carries the independently reviewed separation of explicit placement, sampled target and body aim through nested wrappers and salvos; see `2026-10-18-aim-placement-composition.md`. This clears that scoped contact correction, not the separate combined #20/#50 acceptance work.
+
+The full fresh proving JSON equals the exact archived preceding source, including all three inherited win-ceiling breaches, outcomes, mechanisms and hashes. The command exits1; this is not a balance pass. Seven hashes do not capture vertical spawn coordinates: the inherited launch correction's detailed trace and child-contact regressions establish the actual emission-height change. No timing run or budget relaxation accompanies this source. Full gate evidence: `34-aimfinal-*` and `34-pre54-*`. Client/transport coverage is stated separately rather than inferred from simulation checks.
+
+Claude rereview requested for the complete source after the aim correction. Historical performance misses remain open under coordinated ownership; no merge to main.
