@@ -37,8 +37,14 @@ Evidence: `experiments/kobolds/evidence/review-gates/`.
 - Private smoke: browser 29/29 and native 25/25, cleanupErrors empty. Native pixel checks remain explicitly skipped; the final crown extraction preserves geometry and has paired fixture checks.
 - Release benchmark: zone p95 11.007 ms, average 5.797 ms, 74.517 KB/tick; behavior 2.040 ms / 23 KB; snapshot build 1.074 ms, full/delta 27.234/8.738 KB; world chunk 0.909 ms /14.531 KB; zero system errors. Relevant budgets pass on the existing mixed benchmark.
 
-The normal suite is not projectile acceptance. Run `node experiments/kobolds/test-projectiles.mjs` for the separate combined-stack gate. It makes 84 real casts, testing both Firebolt and Piercing Arrow against every authored Kobold on flat and ±0.5 m target terrain. Baseline 74 pass and 10 fail: both presets miss the five shortest bodies when downhill. The runner exits 1, with no expected-miss assertion or skipped case. #36's owner confirmed that the fix depends on its shared contact/aim work and must not be cherry-picked alone into #38. Keep this acceptance gate pending until the published combined stack can be tested.
+The normal suite is not projectile acceptance. Run `node experiments/kobolds/test-projectiles.mjs` for the separate combined-stack gate. It makes 84 real casts, testing both Firebolt and Piercing Arrow against every authored Kobold on flat and ±0.5 m target terrain. Baseline 74 pass and 10 fail: both presets miss the five shortest bodies when downhill. The runner exits 1, with no expected-miss assertion or skipped case. #36's owner confirmed that the fix depends on its shared contact/aim work and must not be cherry-picked alone into #38. The published combined stack has now been tested successfully, as recorded below; #36 remains a separate dependency.
 
 The #31–34 owner is still preparing the corrected base, including canonical mass, bounded wall-safe shove, site-born levels, quest reachability and shared `close_melee`. The old 15.219 m shove is defect evidence, not accepted behavior; revised measurements and the behavior rebinding follow that base. Claude rereview is requested for the independent changes now and the integrated evidence when available. Do not merge while these dependencies remain open.
+
+## Published projectile correction acceptance
+
+Temporarily merged #36 commit 724c5ed57d7a6082f9c485f66b8dd7001acbe2fb into clean Kobold commit 38dce3400e284b938281c64f94224db7721e2c0b and ran the committed acceptance runner. All 84 real casts passed: both presets against all fourteen unchanged bodies on flat and ±0.5 m terrain. This resolves all ten recorded downhill misses. Full output is experiments/kobolds/evidence/review-gates/projectiles-724c5ed.txt.
+
+The temporary merge was aborted successfully. No #36 runtime commit is absorbed by #38. This is acceptance of those exact combined inputs, not an assertion that the standalone #34-based branch contains the correction. Repeat this gate after the corrected entity foundation changes those inputs. #36's own review and #20 release-policy integration remain separate prerequisites.
 
 Acknowledged by: pending Claude rereview.

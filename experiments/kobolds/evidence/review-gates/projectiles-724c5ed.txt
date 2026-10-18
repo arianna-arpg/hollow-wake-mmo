@@ -1,0 +1,110 @@
+Temporary combined-stack projectile acceptance
+Kobold input: 38dce3400e284b938281c64f94224db7721e2c0b
+Hitbox input: 724c5ed57d7a6082f9c485f66b8dd7001acbe2fb
+Command: node experiments/kobolds/test-projectiles.mjs
+Temporary merge completed without conflicts; merge aborted successfully after this run.
+Result: 84 passed, 0 failed; all authored body dimensions preserved.
+The full #36 foundation was present only for this run and is not part of #38 history.
+  Determining projects to restore...
+  All projects are up-to-date for restore.
+  HollowWake.Core -> C:\Users\John\.codex\worktrees\kobold-scaleclans\MMOARPG\experiments\kobolds\artifacts\bin\HollowWake.Core\debug\HollowWake.Core.dll
+C:\Users\John\.codex\worktrees\kobold-scaleclans\MMOARPG\tests\HollowWake.Core.Tests\PortedProjectileTests.cs(254,19): warning xUnit2031: Do not use a Where clause to filter before calling Assert.Single. Use the overload of Assert.Single that accepts a filtering function. (https://xunit.net/xunit.analyzers/rules/xUnit2031) [C:\Users\John\.codex\worktrees\kobold-scaleclans\MMOARPG\tests\HollowWake.Core.Tests\HollowWake.Core.Tests.csproj]
+C:\Users\John\.codex\worktrees\kobold-scaleclans\MMOARPG\tests\HollowWake.Core.Tests\PortedProjectileTests.cs(267,9): warning xUnit2031: Do not use a Where clause to filter before calling Assert.Single. Use the overload of Assert.Single that accepts a filtering function. (https://xunit.net/xunit.analyzers/rules/xUnit2031) [C:\Users\John\.codex\worktrees\kobold-scaleclans\MMOARPG\tests\HollowWake.Core.Tests\HollowWake.Core.Tests.csproj]
+C:\Users\John\.codex\worktrees\kobold-scaleclans\MMOARPG\tests\HollowWake.Core.Tests\PortedProjectileTests.cs(280,9): warning xUnit2031: Do not use a Where clause to filter before calling Assert.Single. Use the overload of Assert.Single that accepts a filtering function. (https://xunit.net/xunit.analyzers/rules/xUnit2031) [C:\Users\John\.codex\worktrees\kobold-scaleclans\MMOARPG\tests\HollowWake.Core.Tests\HollowWake.Core.Tests.csproj]
+  HollowWake.Core.Tests -> C:\Users\John\.codex\worktrees\kobold-scaleclans\MMOARPG\experiments\kobolds\artifacts\bin\HollowWake.Core.Tests\debug\HollowWake.Core.Tests.dll
+Test run for C:\Users\John\.codex\worktrees\kobold-scaleclans\MMOARPG\experiments\kobolds\artifacts\bin\HollowWake.Core.Tests\debug\HollowWake.Core.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v3.1.5+1b188a7b0a (64-bit .NET 10.0.13)
+[xUnit.net 00:00:00.17]   Discovering: HollowWake.Core.Tests
+[xUnit.net 00:00:01.93]   Discovered:  HollowWake.Core.Tests
+[xUnit.net 00:00:01.98]   Starting:    HollowWake.Core.Tests
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_rimeweaver", relief: 0, preset: "firebolt") [179 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_venomweaver", relief: 0, preset: "piercing_arrow") [6 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_scalechief", relief: 0, preset: "piercing_arrow") [4 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_cinderweaver", relief: -0.5, preset: "firebolt") [5 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_dartbow", relief: -0.5, preset: "firebolt") [4 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_ironback", relief: 0.5, preset: "piercing_arrow") [3 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_cragbreaker", relief: -0.5, preset: "firebolt") [3 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_spearguard", relief: -0.5, preset: "piercing_arrow") [3 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_knifehand", relief: 0, preset: "firebolt") [4 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_rimeweaver", relief: -0.5, preset: "piercing_arrow") [3 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_cragbreaker", relief: 0.5, preset: "firebolt") [5 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_tunnelguard", relief: 0, preset: "firebolt") [3 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_cragbreaker", relief: 0, preset: "piercing_arrow") [4 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_venomweaver", relief: -0.5, preset: "firebolt") [4 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_scavenger", relief: 0, preset: "piercing_arrow") [2 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_venomweaver", relief: 0.5, preset: "piercing_arrow") [3 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_spearguard", relief: 0.5, preset: "piercing_arrow") [3 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_knifehand", relief: 0.5, preset: "firebolt") [4 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_knifehand", relief: -0.5, preset: "piercing_arrow") [4 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_stonecaster", relief: 0, preset: "firebolt") [4 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_tunnelguard", relief: 0, preset: "piercing_arrow") [3 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_stonecaster", relief: -0.5, preset: "firebolt") [4 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_tunnelguard", relief: -0.5, preset: "firebolt") [4 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_cinderweaver", relief: -0.5, preset: "piercing_arrow") [2 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_cragbreaker", relief: -0.5, preset: "piercing_arrow") [2 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_crestcaller", relief: -0.5, preset: "piercing_arrow") [3 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_crestcaller", relief: 0.5, preset: "piercing_arrow") [2 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_scalechief", relief: 0, preset: "firebolt") [3 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_stormweaver", relief: 0.5, preset: "firebolt") [5 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_scalechief", relief: 0.5, preset: "piercing_arrow") [3 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_rimeweaver", relief: -0.5, preset: "firebolt") [4 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_cinderweaver", relief: 0.5, preset: "firebolt") [3 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_scavenger", relief: 0.5, preset: "piercing_arrow") [2 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_crestcaller", relief: 0.5, preset: "firebolt") [2 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_stormweaver", relief: -0.5, preset: "firebolt") [7 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_stonecaster", relief: 0.5, preset: "firebolt") [4 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_stormweaver", relief: 0, preset: "firebolt") [4 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_crestcaller", relief: -0.5, preset: "firebolt") [2 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_cinderweaver", relief: 0, preset: "piercing_arrow") [3 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_ironback", relief: 0.5, preset: "firebolt") [2 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_crestcaller", relief: 0, preset: "firebolt") [2 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_ironback", relief: -0.5, preset: "piercing_arrow") [2 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_dartbow", relief: 0, preset: "piercing_arrow") [2 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_knifehand", relief: -0.5, preset: "firebolt") [4 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_cinderweaver", relief: 0.5, preset: "piercing_arrow") [2 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_scavenger", relief: 0.5, preset: "firebolt") [4 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_stormweaver", relief: -0.5, preset: "piercing_arrow") [3 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_ironback", relief: 0, preset: "firebolt") [4 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_dartbow", relief: 0.5, preset: "firebolt") [5 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_scalechief", relief: -0.5, preset: "piercing_arrow") [3 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_ironback", relief: 0, preset: "piercing_arrow") [3 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_rimeweaver", relief: 0.5, preset: "piercing_arrow") [4 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_venomweaver", relief: 0, preset: "firebolt") [4 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_scalechief", relief: 0.5, preset: "firebolt") [3 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_spearguard", relief: 0, preset: "piercing_arrow") [3 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_stormweaver", relief: 0, preset: "piercing_arrow") [3 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_knifehand", relief: 0, preset: "piercing_arrow") [3 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_venomweaver", relief: 0.5, preset: "firebolt") [4 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_stormweaver", relief: 0.5, preset: "piercing_arrow") [4 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_cragbreaker", relief: 0.5, preset: "piercing_arrow") [5 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_stonecaster", relief: 0.5, preset: "piercing_arrow") [3 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_tunnelguard", relief: 0.5, preset: "piercing_arrow") [3 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_knifehand", relief: 0.5, preset: "piercing_arrow") [3 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_ironback", relief: -0.5, preset: "firebolt") [3 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_stonecaster", relief: 0, preset: "piercing_arrow") [3 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_venomweaver", relief: -0.5, preset: "piercing_arrow") [3 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_spearguard", relief: 0.5, preset: "firebolt") [7 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_dartbow", relief: -0.5, preset: "piercing_arrow") [3 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_cragbreaker", relief: 0, preset: "firebolt") [3 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_dartbow", relief: 0.5, preset: "piercing_arrow") [3 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_scavenger", relief: 0, preset: "firebolt") [4 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_cinderweaver", relief: 0, preset: "firebolt") [4 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_rimeweaver", relief: 0, preset: "piercing_arrow") [4 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_scavenger", relief: -0.5, preset: "firebolt") [6 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_rimeweaver", relief: 0.5, preset: "firebolt") [4 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_scalechief", relief: -0.5, preset: "firebolt") [3 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_crestcaller", relief: 0, preset: "piercing_arrow") [5 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_spearguard", relief: 0, preset: "firebolt") [7 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_scavenger", relief: -0.5, preset: "piercing_arrow") [4 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_tunnelguard", relief: 0.5, preset: "firebolt") [6 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_stonecaster", relief: -0.5, preset: "piercing_arrow") [5 ms]
+[xUnit.net 00:00:02.56]   Finished:    HollowWake.Core.Tests
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_tunnelguard", relief: -0.5, preset: "piercing_arrow") [5 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_spearguard", relief: -0.5, preset: "firebolt") [6 ms]
+  Passed HollowWake.Core.Tests.KoboldProjectileTests.RealProjectilesReachAuthoredBodiesOnFlatGroundAndHalfUnitRelief(pattern: "kobold_dartbow", relief: 0, preset: "firebolt") [5 ms]
+
+Test Run Successful.
+Total tests: 84
+     Passed: 84
+ Total time: 3.5088 Seconds
