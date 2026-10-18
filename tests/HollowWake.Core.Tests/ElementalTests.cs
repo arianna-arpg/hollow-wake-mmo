@@ -213,10 +213,12 @@ public class ElementalTests(ITestOutputHelper output)
                 g.Layout.ChunksOf(zone).SelectMany(c=>g.GenerateChunk(c).Spawns).GroupBy(s=>s.Pattern)
                     .ToDictionary(g=>g.Key,g=>(g.Count(),g.Sum(s=>s.PackSize)));
             var original=Population(before,zone);var revised=Population(after,zone);
+            output.WriteLine($"{zone} total population: ({original.Values.Sum(p=>p.spawners)}, {original.Values.Sum(p=>p.bodies)}) -> ({revised.Values.Sum(p=>p.spawners)}, {revised.Values.Sum(p=>p.bodies)}) (spawners, initial bodies)");
             foreach(var pattern in original.Keys.Union(revised.Keys).OrderBy(id=>id,StringComparer.Ordinal))
                 output.WriteLine($"{zone} population {pattern}: {original.GetValueOrDefault(pattern)} -> {revised.GetValueOrDefault(pattern)} (spawners, initial bodies)");
-            foreach(var q in after.Zone(zone).Quests)
-                output.WriteLine($"{zone} quest {q.Id} level={q.Level}: {string.Join(";",q.Objectives.Select(o=>o.Poi??o.Target))}");
+            foreach(var (label,generator) in new[]{("before",before),("after",after)})
+                foreach(var q in generator.Zone(zone).Quests)
+                    output.WriteLine($"{zone} {label} quest {q.Id} level={q.Level}: {string.Join(";",q.Objectives.Select(o=>o.Poi??o.Target))}");
         }
     }
 }

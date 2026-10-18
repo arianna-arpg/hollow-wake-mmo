@@ -13,6 +13,24 @@ namespace HollowWake.Core.Tests;
 
 public class ElementalDisplacementTests(ITestOutputHelper output)
 {
+    [Theory, MemberData(nameof(ElementalTests.Bodies), MemberType = typeof(ElementalTests))]
+    public void EveryAuthoredBodyRespectsTheSharedShoveCeiling(string pattern)
+    {
+        var a = DeliveryArena.Create();
+        var target = a.Body(30, 10, pattern: pattern);
+        var at = a.Sim.World.Get<Transform>(target)!;
+        var start = at.Position;
+        var ceiling = a.Sim.Content.Rules.Number("physicality.shove_scale_max", double.NaN);
+        Assert.True(double.IsFinite(ceiling) && ceiling > 0, "The shared shove ceiling must be defined in content.");
+        var mass = a.Sim.World.Get<Stats>(target)!.Get("mass");
+        Assert.Equal(Math.Max(a.Sim.Content.Rules.Number("physicality.minimum_mass", 0.1), mass), Physicality.Mass(a.Sim, target));
+        a.Run("""{"type":"move","kind":"knockback","distance":4}""", start, target: target);
+        a.Tick(100);
+        var distance = Vector3.Distance(start, at.Position);
+        output.WriteLine($"{pattern}: canonical mass={mass:F5} kg, travel={distance:F5} m, bound={4 * ceiling:F2} m.");
+        Assert.InRange(distance, 0, 4 * ceiling + 0.1);
+    }
+
     [Theory]
     [InlineData("bash")]
     [InlineData("winters_sweep")]
