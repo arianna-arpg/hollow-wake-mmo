@@ -327,6 +327,7 @@ export class App {
       this.lastDayFraction = -1;
     };
     this.appliers.set('day_lock', day);
+    this.appliers.set('dev_hit_bodies', () => { this.entities.showHitBodies = this.settings.toggle('dev_hit_bodies'); });
     this.appliers.set('day_time', day);
   }
 
@@ -427,6 +428,7 @@ export class App {
     const wanted = new Set(this.config.server.features);
     wanted.add(INTERFACE_FEATURE);
     wanted.add(CAST_CUES_FEATURE);
+    wanted.add('hit_bodies_v1');
     if (full) {
       wanted.delete(ENTITY_DELTA_FEATURE);
     }
@@ -434,6 +436,7 @@ export class App {
   }
 
   private async connect(address: ServerAddress, account: string, token: string): Promise<void> {
+    this.entities.hitBodyCatalog = null;
     const url = socketUrl(address);
     this.characterKey = `hollowwake.character.${url}/${account}`;
     this.login.setBusy(true);
@@ -478,6 +481,9 @@ export class App {
   private handle(m: Message): void {
     const local = performance.now() / 1000;
     switch (m.t) {
+      case 'hit_bodies':
+        this.entities.hitBodyCatalog = new Map(m.bodies.map(b => [b.id, b]));
+        break;
       case 'welcome':
         this.features = m.features ?? [];
         this.hud.hero.interface = this.features.includes(INTERFACE_FEATURE);

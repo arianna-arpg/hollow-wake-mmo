@@ -362,6 +362,9 @@ public class TriggerTests
         var factory = sim.Service<PatternFactory>();
         var channeler = factory.Spawn(sim, "tide_channeler", new Vector3(10, 10, 0), new SpawnOptions { Faction = "red" });
         var duelist = factory.Spawn(sim, "spark_duelist", new Vector3(14, 10, 0), new SpawnOptions { Faction = "blue" });
+        // Hold the target for this proc-order acceptance case. A freely kiting channeler now
+        // leaves contact range during each melee windup, so its old guaranteed blows are misses.
+        sim.World.Get<Stats>(channeler)!.Attributes.Add(new Modifier { Attribute = "move.speed", Form = ModifierForm.Override, Value = 0 });
         var trace = new List<string>();
         sim.Events.Subscribe<ChannelPulsed>(p => trace.Add($"{p.Tick} beat {p.Pulse}"));
         sim.Events.Subscribe<WeaveReleased>(r => trace.Add($"{r.Tick} release {r.Weave} {r.Reason} {r.Fired}"));

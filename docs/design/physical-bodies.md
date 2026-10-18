@@ -10,6 +10,16 @@ The envelope excludes decorative extremities such as banners and weapon tips. `f
 
 All dimensions, fill, heft and densities are finite and positive; fill cannot exceed one. The enclosing horizontal radius is half the larger horizontal dimension, and the pattern's radius and height must match the profile. Validation checks the resolved inheritance chain, so partial child overrides cannot bypass the envelope and mixture checks.
 
+## Damage anatomy
+
+Movement clearance, damage contact and material mass are separate queries. A pattern's registered `hit_body: { profile: id }` component selects a `hit_bodies` definition. The player's profile comes from `body.player_hit_profile`. A profile is a union of volumes with an `aim` index naming the volume to aim at. Volumes have a registered `shape`, local `forward`, `left`, `up`, `radius` and `half_height`. Horizontal values multiply the live Transform radius; vertical values multiply its height. Facing rotates the horizontal offsets. Rarity and any later authoritative resizing therefore apply without rebuilding a second body or changing mass. Definitions and inherited references are validated.
+
+Built-in damage primitives are vertical cylinders and ellipsoids with circular horizontal slices. Several overlapping primitives approximate a broad or long torso; separate limbs leave actual gaps. The authored rest pose is the authority, independently of animation, mesh tessellation and decorative equipment. Banners, ears, tusks, weapons and empty saddles do not enlarge the damage body. A body without a profile falls back to its navigation cylinder, bounded vertically from its feet to its height. These are explicit approximations, not per-triangle or animated skeletal collision.
+
+`Combat.HitBodies` supplies shape contact, aim point, directional extent, reach and broad-phase bounds. `HitVolumeShapes` is the open registry, with a horizontal slice function and an opt-in convexity guarantee for continuous collision. Mods must provide a matching client diagnostic renderer for new primitive shapes; unsupported shapes are marked unavailable rather than guessed. The simulation reads no `meta` or appearance data.
+
+The developer hit-body option draws the server's profile with live size, position and facing in cyan, and navigation clearance in yellow, in both clients. It uses the authoritative snapshot pose without interpolation; animated artwork can visibly differ. Profiles arrive through the negotiated catalog described in [networking](networking-and-persistence.md), never through locally inferred mesh bounds. Shared native/browser line fixtures and the entity-hitbox gallery check the diagnostic geometry.
+
 ## Mass and modifiers
 
 `Physicality.Mass` is the authoritative geometric query:

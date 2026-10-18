@@ -23,13 +23,13 @@ A shape's proportions are a `ShapeSize`: `radius` (its main extent), `angle` (fu
 | `arc` | centered | a blade bowed forward: part of a circle centered one radius behind the anchor, angle wide as seen from that center, width thick | angle 90, width a quarter of `area.width` |
 | `wave` | centered | an arc bent half as tightly | angle 120, width a quarter of `area.width` |
 
-Projectiles test bodies with the body's radius (a body whose edge touches the shape is struck); areas and fields test body centers. Every shape reports the reach around its anchor that holds all of it, which bounds the spatial query.
+Projectiles test the authored [damage anatomy](physical-bodies.md#damage-anatomy), including the delivery's vertical slab. Round padding measures contact with shape edges and corners, not an enlarged bounding rectangle. Areas default to body centers and may explicitly opt into body contact; fields retain their center policy. Every shape reports its enclosing reach. Body-contact broad phases add live anatomy bounds, so large or resized bodies are not lost to fixed padding.
 
 ## Areas
 
 `area` strikes every body inside its shape at once and runs its `effects` (the `on_hit` hook) on each, one level deeper.
 
-Area execution resolves a `ResolvedAreaPlan` and uses its shared candidate predicate. The same resolver is available for observation through the compiled effect's `IDeliveryPlanSource` capability and `DeliveryForecasts.Describe`. This yields current primary candidate coverage only, with body-center/height, relation, exclusion and LOS semantics; requirements, capped/random selection, payloads and secondary echoes remain execution work. Unsafe or unsupported dependencies decline observation without affecting execution. See [cast forecasting](cast-forecasting.md#implemented-core-foundation) for the purity contract, live sampling and integration limits.
+Area execution resolves a `ResolvedAreaPlan` and uses its shared candidate predicate. The same resolver is available for observation through the compiled effect's `IDeliveryPlanSource` capability and `DeliveryForecasts.Describe`. This yields current primary candidate coverage only, with the selected contact/height policy, relation, exclusion and LOS semantics; requirements, capped/random selection, payloads and secondary echoes remain execution work. Unsafe or unsupported dependencies decline observation without affecting execution. See [cast forecasting](cast-forecasting.md#implemented-core-foundation) for the purity contract, live sampling and integration limits.
 
 | Parameter | Meaning |
 |---|---|
@@ -37,7 +37,9 @@ Area execution resolves a `ResolvedAreaPlan` and uses its shared candidate predi
 | `radius` | default the weave's `area.radius` |
 | `angle`, `width`, `inner` | the shape's proportions; the angle of shapes that have one is scaled by the weave's `area.angle` |
 | `center` | `focus` (the target, else the point), `source` (the cast's start, else the source's body) or `point`; default `source` for anchored shapes and `focus` for the rest |
-| `reach` | `center` (default) or `edge`: anchored shapes reach further by the source's body radius |
+| `reach` | `center` (default) or `edge`: anchored shapes reach further by the source's damage-body extent along the delivery facing |
+| `contact` | `center` (default, existing height tolerance) or `body` (intersection with authored anatomy) |
+| `height`, `elevation` | for body contact, vertical slab height (default source height) and offset above the anchor (default zero); sampled once when resolving |
 | `filter` | `enemy` (default), `ally`, `ally_or_self`, `self`, `not_self`, or `all` |
 | `include_center` | false spares the context's target |
 | `max_targets`, `pick` | over the cap, `pick` chooses: `random` (default, shuffled on the context's stream), `nearest`, `farthest`, `lowest_life`, `highest_life` (by fraction of maximum life) |
@@ -52,6 +54,10 @@ Deliveries stop at walls. A wall is a cell of a structure that cannot be walked;
 ## Projectiles
 
 `projectile` launches flights that the projectile system carries.
+
+The flight's Transform height comes from `delivery.projectile_height` and is centered on its Z coordinate, matching the slab both current clients draw. Circular flights without an inner hole sweep continuously against convex damage primitives between tick positions, ordered by first contact then entity key. This catches a tiny body between endpoints without enlarging it. Other delivery shapes retain endpoint collision. Contacts keep the existing hostility, untargetability, hit-ledger, pierce, fork, chain and return policies; chain/return transitions discard the rest of the old path and resume from the contact point next tick. Existing wall/ground checks still own obstacle handling; this is not a replacement terrain collision solver.
+
+Direct caster launches use the body's authored aim elevation; targeted, homing and chaining flights steer toward the target's aim volume, including height. A horizontal untargeted flight can pass above a small body. Explicit point or inherited effect origins retain the legacy lift through `delivery.projectile_origin_height`; nested emission-origin semantics remain a separate contract. No rendered weapon socket supplies simulation coordinates.
 
 ### Launching
 

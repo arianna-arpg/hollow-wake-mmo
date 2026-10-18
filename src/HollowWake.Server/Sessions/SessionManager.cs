@@ -133,6 +133,8 @@ public sealed class SessionManager
                 session.View.SendInterface = hello.Features?.Contains(ProtocolInfo.InterfaceFeature) == true;
                 session.View.SendCastCues = hello.Features?.Contains(ProtocolInfo.CastCuesFeature) == true;
                 var granted = new List<string>();
+                var hitBodies = hello.Features?.Contains(ProtocolInfo.HitBodiesFeature) == true;
+                if (hitBodies) granted.Add(ProtocolInfo.HitBodiesFeature);
                 if (session.View.SendCastCues) granted.Add(ProtocolInfo.CastCuesFeature);
                 if (session.View.SendDeltas)
                 {
@@ -143,6 +145,9 @@ public sealed class SessionManager
                     granted.Add(ProtocolInfo.InterfaceFeature);
                 }
                 session.Send(new WelcomeMsg(ServerInfo.Version, ProtocolInfo.Version, _config.Name, _config.Motd) { Features = granted });
+                if (hitBodies) session.Send(new HitBodiesMsg(_zones.Content.Each<HitBodyDef>().OrderBy(d => d.Id, StringComparer.Ordinal)
+                    .Select(d => new HitBodyInfo(d.Id, d.Aim, d.Volumes.Select(v => new HitVolumeInfo(
+                        v.Shape, v.Forward, v.Left, v.Up, v.Radius, v.HalfHeight)).ToList())).ToList()));
                 return;
             case PingMsg ping:
                 session.Send(new PongMsg(ping.Nonce, _zones.Elapsed));

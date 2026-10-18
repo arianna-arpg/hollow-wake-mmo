@@ -687,7 +687,7 @@ public sealed partial class WeaveRuntime
                     return false;
                 }
                 var tt = sim.World.Get<Transform>(target);
-                if (ct is not null && tt is not null && range > 0 && ct.GroundDistanceTo(tt.Position) > range + tt.Radius + ct.Radius)
+                if (!HitBodies.InReach(sim, caster, target, (float)range, weave.Tags.Has("melee")))
                 {
                     reason = "out_of_range";
                     return false;
@@ -788,7 +788,7 @@ public sealed partial class WeaveRuntime
         {
             return false;
         }
-        if (ct is not null && range > 0 && sim.World.TryGet<Transform>(candidate, out var tt) && ct.GroundDistanceTo(tt.Position) > range + tt.Radius + ct.Radius)
+        if (!HitBodies.InReach(sim, caster, candidate, (float)range, melee: false))
         {
             return false;
         }
@@ -986,7 +986,11 @@ public sealed partial class WeaveRuntime
         {
             stats.Stamp("moved", now);
         }
-        CompiledEffect.ExecuteAll(effects, ctx);
+        // A target lock is not permission to hit a body that left contact range during preparation.
+        // Directional areas retain their authored candidate policy and projectiles resolve in flight.
+        var contact = target.IsNone || !weave.Tags.Has("melee") ||
+            HitBodies.InReach(sim, caster, target, (float)weave.Range(stats), melee: true);
+        if (contact) CompiledEffect.ExecuteAll(effects, ctx);
         if (publishCast)
         {
             sim.Events.Publish(new WeaveCast(caster, weave.Key, target, ctx.Point, weave.Tags) { Tick = sim.Clock.Tick });
@@ -1706,7 +1710,8 @@ public sealed partial class WeaveRuntime
             var hint = weave.Ai;
             var range = RangeOf(weave, stats, cache);
             var radii = (tt?.Radius ?? 0) + (ct?.Radius ?? 0);
-            if (weave.Targeting is Targeting.Enemy or Targeting.Ground or Targeting.Direction && range > 0 && distance > range + radii)
+            if (weave.Targeting is Targeting.Enemy or Targeting.Ground or Targeting.Direction &&
+                !HitBodies.InReach(sim, caster, target, (float)range, weave.Tags.Has("melee")))
             {
                 continue;
             }

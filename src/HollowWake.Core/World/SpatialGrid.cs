@@ -132,6 +132,22 @@ public sealed class SpatialGrid
     public Query Within(Vector3 center, float radius, float heightTolerance = DefaultHeightTolerance) => new(this, center, radius, heightTolerance);
 
     public IEnumerable<Entity> All => _where.Keys;
+    /// <summary>Allocation-free live walk for bounds queries; do not mutate the index while enumerating.</summary>
+    public EntityWalk LiveEntities => new(this);
+    public readonly struct EntityWalk
+    {
+        private readonly SpatialGrid _grid;
+        internal EntityWalk(SpatialGrid grid) { _grid = grid; }
+        public EntityEnumerator GetEnumerator() => new(_grid);
+    }
+    public struct EntityEnumerator
+    {
+        private Dictionary<Entity, Slot>.Enumerator _entries;
+        internal EntityEnumerator(SpatialGrid grid) { _entries = grid._where.GetEnumerator(); }
+        public Entity Current => _entries.Current.Key;
+        public bool MoveNext() => _entries.MoveNext();
+        public void Dispose() => _entries.Dispose();
+    }
 
     /// <summary>A radius query; enumerate it with <c>foreach</c> or LINQ.</summary>
     public readonly struct Query : IEnumerable<(Entity Entity, Vector3 Position, float Distance)>

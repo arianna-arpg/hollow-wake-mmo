@@ -10,6 +10,10 @@ A connection becomes a session. `hello` negotiates the protocol and optional fea
 
 ## Zones and interest
 
+The optional `hit_bodies_v1` hello feature grants a reliable `hit_bodies` catalog immediately after welcome, before world entry. It contains simulation profile ids, aim indices and normalized volume recipes. An entity's additive `hit_body` field selects its profile; existing radius, height, position and yaw resolve its live geometry. Profile changes participate in snapshot fingerprints and deltas; a delta's empty string clears the profile. Old clients can ignore the additive field and receive no unknown catalog message. Clients clear the catalog when reconnecting. A missing catalog or unknown primitive cannot certify a damage outline and must show it as unavailable. The catalog is immutable for the connection's content; live content replacement requires reconnecting.
+
+For a server granting this feature, projectile height is the full collision slab height centered on the flight position. Current clients use that value instead of their legacy fixed visual thickness. Movement radii keep their existing wire meaning.
+
 The optional `cast_cues` feature adds reliable, correlated lifecycle events and ongoing-preparation reconstruction on spawn. The phase, sequence, interest and reset rules are specified in [cast-presentation.md](cast-presentation.md); it carries no client visual recipes or prospective hit regions.
 
 A `ZoneInstance` ticks its simulation and, at the snapshot rate (`snapshot_rate`), asks its `SnapshotBuilder` what each session needs to hear about the entities within its interest radius (a column: `interest_radius` on the ground plane and `snapshots.interest_height` up and down). Each session keeps a `SnapshotView` of what it has been told: the entities it knows, whether each is static, the fingerprint of the state last sent, and when each is next due a refresh. The rule is to send what changed and nothing else. Simulation events become combat events, notices, quest offers, crafting challenges and results, and intent rejections for the sessions that can see the entities involved.

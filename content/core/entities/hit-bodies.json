@@ -1,0 +1,4327 @@
+{
+  "kind": "hit_bodies",
+  "entries": [
+    {
+      "id": "humanoid",
+      "aim": 0,
+      "volumes": [
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": 0,
+          "up": 0.61,
+          "radius": 0.3675,
+          "half_height": 0.17
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": 0.23238,
+          "up": 0.61,
+          "radius": 0.23887,
+          "half_height": 0.136
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": -0.23237,
+          "up": 0.61,
+          "radius": 0.23887,
+          "half_height": 0.136
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": 0,
+          "up": 0.865,
+          "radius": 0.3375,
+          "half_height": 0.1
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": 0,
+          "up": 0.43,
+          "radius": 0.35175,
+          "half_height": 0.075
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": 0.18574,
+          "up": 0.43,
+          "radius": 0.22864,
+          "half_height": 0.06
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": -0.18574,
+          "up": 0.43,
+          "radius": 0.22864,
+          "half_height": 0.06
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": 0.6175,
+          "up": 0.57,
+          "radius": 0.14625,
+          "half_height": 0.18
+        },
+        {
+          "shape": "cylinder",
+          "forward": 0,
+          "left": 0.27625,
+          "up": 0.22,
+          "radius": 0.12188,
+          "half_height": 0.21
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": -0.6175,
+          "up": 0.57,
+          "radius": 0.14625,
+          "half_height": 0.18
+        },
+        {
+          "shape": "cylinder",
+          "forward": 0,
+          "left": -0.27625,
+          "up": 0.22,
+          "radius": 0.12188,
+          "half_height": 0.21
+        }
+      ]
+    },
+    {
+      "id": "goblin_scavenger",
+      "aim": 0,
+      "volumes": [
+        {
+          "shape": "ellipsoid",
+          "forward": -0.13091,
+          "left": 0,
+          "up": 0.53,
+          "radius": 0.58909,
+          "half_height": 0.17
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0.16364,
+          "left": 0,
+          "up": 0.886,
+          "radius": 0.351,
+          "half_height": 0.11
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0.16364,
+          "left": 0.23985,
+          "up": 0.886,
+          "radius": 0.22815,
+          "half_height": 0.088
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0.16364,
+          "left": -0.23985,
+          "up": 0.886,
+          "radius": 0.22815,
+          "half_height": 0.088
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": 0,
+          "up": 0.36,
+          "radius": 0.53182,
+          "half_height": 0.08
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": 0.78,
+          "up": 0.55,
+          "radius": 0.21,
+          "half_height": 0.17
+        },
+        {
+          "shape": "cylinder",
+          "forward": 0,
+          "left": 0.4,
+          "up": 0.18,
+          "radius": 0.18,
+          "half_height": 0.17
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": -0.78,
+          "up": 0.55,
+          "radius": 0.21,
+          "half_height": 0.17
+        },
+        {
+          "shape": "cylinder",
+          "forward": 0,
+          "left": -0.4,
+          "up": 0.18,
+          "radius": 0.18,
+          "half_height": 0.17
+        }
+      ]
+    },
+    {
+      "id": "goblin_skirmisher",
+      "aim": 0,
+      "volumes": [
+        {
+          "shape": "ellipsoid",
+          "forward": -0.12001,
+          "left": 0,
+          "up": 0.53,
+          "radius": 0.54004,
+          "half_height": 0.17
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": -0.12001,
+          "left": 0.29897,
+          "up": 0.53,
+          "radius": 0.35103,
+          "half_height": 0.136
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": -0.12001,
+          "left": -0.29897,
+          "up": 0.53,
+          "radius": 0.35103,
+          "half_height": 0.136
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0.15001,
+          "left": 0,
+          "up": 0.886,
+          "radius": 0.41013,
+          "half_height": 0.11
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0.15001,
+          "left": 0.28025,
+          "up": 0.886,
+          "radius": 0.26658,
+          "half_height": 0.088
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0.15001,
+          "left": -0.28025,
+          "up": 0.886,
+          "radius": 0.26658,
+          "half_height": 0.088
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": 0,
+          "up": 0.36,
+          "radius": 0.48754,
+          "half_height": 0.08
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": 0.2631,
+          "up": 0.36,
+          "radius": 0.3169,
+          "half_height": 0.064
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": -0.2631,
+          "up": 0.36,
+          "radius": 0.3169,
+          "half_height": 0.064
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": 0.78,
+          "up": 0.55,
+          "radius": 0.21,
+          "half_height": 0.17
+        },
+        {
+          "shape": "cylinder",
+          "forward": 0,
+          "left": 0.4,
+          "up": 0.18,
+          "radius": 0.18,
+          "half_height": 0.17
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": -0.78,
+          "up": 0.55,
+          "radius": 0.21,
+          "half_height": 0.17
+        },
+        {
+          "shape": "cylinder",
+          "forward": 0,
+          "left": -0.4,
+          "up": 0.18,
+          "radius": 0.18,
+          "half_height": 0.17
+        }
+      ]
+    },
+    {
+      "id": "goblin_slinger",
+      "aim": 0,
+      "volumes": [
+        {
+          "shape": "ellipsoid",
+          "forward": -0.11776,
+          "left": 0,
+          "up": 0.53,
+          "radius": 0.52993,
+          "half_height": 0.17
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": -0.11776,
+          "left": 0.30554,
+          "up": 0.53,
+          "radius": 0.34446,
+          "half_height": 0.136
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": -0.11776,
+          "left": -0.30554,
+          "up": 0.53,
+          "radius": 0.34446,
+          "half_height": 0.136
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0.1472,
+          "left": 0,
+          "up": 0.886,
+          "radius": 0.40351,
+          "half_height": 0.11
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0.1472,
+          "left": 0.27573,
+          "up": 0.886,
+          "radius": 0.26228,
+          "half_height": 0.088
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0.1472,
+          "left": -0.27573,
+          "up": 0.886,
+          "radius": 0.26228,
+          "half_height": 0.088
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": 0,
+          "up": 0.36,
+          "radius": 0.47841,
+          "half_height": 0.08
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": 0.26903,
+          "up": 0.36,
+          "radius": 0.31097,
+          "half_height": 0.064
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": -0.26903,
+          "up": 0.36,
+          "radius": 0.31097,
+          "half_height": 0.064
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": 0.78,
+          "up": 0.55,
+          "radius": 0.21,
+          "half_height": 0.17
+        },
+        {
+          "shape": "cylinder",
+          "forward": 0,
+          "left": 0.4,
+          "up": 0.18,
+          "radius": 0.18,
+          "half_height": 0.17
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": -0.78,
+          "up": 0.55,
+          "radius": 0.21,
+          "half_height": 0.17
+        },
+        {
+          "shape": "cylinder",
+          "forward": 0,
+          "left": -0.4,
+          "up": 0.18,
+          "radius": 0.18,
+          "half_height": 0.17
+        }
+      ]
+    },
+    {
+      "id": "goblin_shaman",
+      "aim": 0,
+      "volumes": [
+        {
+          "shape": "ellipsoid",
+          "forward": -0.11871,
+          "left": 0,
+          "up": 0.53,
+          "radius": 0.53418,
+          "half_height": 0.17
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": -0.11871,
+          "left": 0.30278,
+          "up": 0.53,
+          "radius": 0.34722,
+          "half_height": 0.136
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": -0.11871,
+          "left": -0.30278,
+          "up": 0.53,
+          "radius": 0.34722,
+          "half_height": 0.136
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0.14838,
+          "left": 0,
+          "up": 0.886,
+          "radius": 0.41517,
+          "half_height": 0.11
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0.14838,
+          "left": 0.2837,
+          "up": 0.886,
+          "radius": 0.26986,
+          "half_height": 0.088
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0.14838,
+          "left": -0.2837,
+          "up": 0.886,
+          "radius": 0.26986,
+          "half_height": 0.088
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": 0,
+          "up": 0.36,
+          "radius": 0.48224,
+          "half_height": 0.08
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": 0.26654,
+          "up": 0.36,
+          "radius": 0.31346,
+          "half_height": 0.064
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": -0.26654,
+          "up": 0.36,
+          "radius": 0.31346,
+          "half_height": 0.064
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": 0.78,
+          "up": 0.55,
+          "radius": 0.21,
+          "half_height": 0.17
+        },
+        {
+          "shape": "cylinder",
+          "forward": 0,
+          "left": 0.4,
+          "up": 0.18,
+          "radius": 0.18,
+          "half_height": 0.17
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": -0.78,
+          "up": 0.55,
+          "radius": 0.21,
+          "half_height": 0.17
+        },
+        {
+          "shape": "cylinder",
+          "forward": 0,
+          "left": -0.4,
+          "up": 0.18,
+          "radius": 0.18,
+          "half_height": 0.17
+        }
+      ]
+    },
+    {
+      "id": "goblin_sapper",
+      "aim": 0,
+      "volumes": [
+        {
+          "shape": "ellipsoid",
+          "forward": -0.16,
+          "left": 0,
+          "up": 0.53,
+          "radius": 0.65,
+          "half_height": 0.17
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0.2,
+          "left": 0,
+          "up": 0.886,
+          "radius": 0.34357,
+          "half_height": 0.11
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0.2,
+          "left": 0.23477,
+          "up": 0.886,
+          "radius": 0.22332,
+          "half_height": 0.088
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0.2,
+          "left": -0.23477,
+          "up": 0.886,
+          "radius": 0.22332,
+          "half_height": 0.088
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": 0,
+          "up": 0.36,
+          "radius": 0.58,
+          "half_height": 0.08
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": -0.273,
+          "left": 0,
+          "up": 0.36,
+          "radius": 0.377,
+          "half_height": 0.064
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0.273,
+          "left": 0,
+          "up": 0.36,
+          "radius": 0.377,
+          "half_height": 0.064
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": 0.78,
+          "up": 0.55,
+          "radius": 0.21,
+          "half_height": 0.17
+        },
+        {
+          "shape": "cylinder",
+          "forward": 0,
+          "left": 0.4,
+          "up": 0.18,
+          "radius": 0.18,
+          "half_height": 0.17
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": -0.78,
+          "up": 0.55,
+          "radius": 0.21,
+          "half_height": 0.17
+        },
+        {
+          "shape": "cylinder",
+          "forward": 0,
+          "left": -0.4,
+          "up": 0.18,
+          "radius": 0.18,
+          "half_height": 0.17
+        }
+      ]
+    },
+    {
+      "id": "goblin_brute",
+      "aim": 0,
+      "volumes": [
+        {
+          "shape": "ellipsoid",
+          "forward": -0.10196,
+          "left": 0,
+          "up": 0.53,
+          "radius": 0.45881,
+          "half_height": 0.17
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": -0.10196,
+          "left": 0.35177,
+          "up": 0.53,
+          "radius": 0.29823,
+          "half_height": 0.136
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": -0.10196,
+          "left": -0.35177,
+          "up": 0.53,
+          "radius": 0.29823,
+          "half_height": 0.136
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0.12745,
+          "left": 0,
+          "up": 0.886,
+          "radius": 0.27686,
+          "half_height": 0.11
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0.12745,
+          "left": 0.18919,
+          "up": 0.886,
+          "radius": 0.17996,
+          "half_height": 0.088
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0.12745,
+          "left": -0.18919,
+          "up": 0.886,
+          "radius": 0.17996,
+          "half_height": 0.088
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": 0,
+          "up": 0.36,
+          "radius": 0.4142,
+          "half_height": 0.08
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": 0.31077,
+          "up": 0.36,
+          "radius": 0.26923,
+          "half_height": 0.064
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": -0.31077,
+          "up": 0.36,
+          "radius": 0.26923,
+          "half_height": 0.064
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": 0.78,
+          "up": 0.55,
+          "radius": 0.21,
+          "half_height": 0.17
+        },
+        {
+          "shape": "cylinder",
+          "forward": 0,
+          "left": 0.4,
+          "up": 0.18,
+          "radius": 0.18,
+          "half_height": 0.17
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": -0.78,
+          "up": 0.55,
+          "radius": 0.21,
+          "half_height": 0.17
+        },
+        {
+          "shape": "cylinder",
+          "forward": 0,
+          "left": -0.4,
+          "up": 0.18,
+          "radius": 0.18,
+          "half_height": 0.17
+        }
+      ]
+    },
+    {
+      "id": "goblin_chief",
+      "aim": 0,
+      "volumes": [
+        {
+          "shape": "ellipsoid",
+          "forward": -0.10546,
+          "left": 0,
+          "up": 0.53,
+          "radius": 0.47457,
+          "half_height": 0.17
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": -0.10546,
+          "left": 0.34153,
+          "up": 0.53,
+          "radius": 0.30847,
+          "half_height": 0.136
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": -0.10546,
+          "left": -0.34153,
+          "up": 0.53,
+          "radius": 0.30847,
+          "half_height": 0.136
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0.13183,
+          "left": 0,
+          "up": 0.886,
+          "radius": 0.34875,
+          "half_height": 0.11
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0.13183,
+          "left": 0.23831,
+          "up": 0.886,
+          "radius": 0.22669,
+          "half_height": 0.088
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0.13183,
+          "left": -0.23831,
+          "up": 0.886,
+          "radius": 0.22669,
+          "half_height": 0.088
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": 0,
+          "up": 0.36,
+          "radius": 0.42843,
+          "half_height": 0.08
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": 0.30152,
+          "up": 0.36,
+          "radius": 0.27848,
+          "half_height": 0.064
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": -0.30152,
+          "up": 0.36,
+          "radius": 0.27848,
+          "half_height": 0.064
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": 0.78,
+          "up": 0.55,
+          "radius": 0.21,
+          "half_height": 0.17
+        },
+        {
+          "shape": "cylinder",
+          "forward": 0,
+          "left": 0.4,
+          "up": 0.18,
+          "radius": 0.18,
+          "half_height": 0.17
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": -0.78,
+          "up": 0.55,
+          "radius": 0.21,
+          "half_height": 0.17
+        },
+        {
+          "shape": "cylinder",
+          "forward": 0,
+          "left": -0.4,
+          "up": 0.18,
+          "radius": 0.18,
+          "half_height": 0.17
+        }
+      ]
+    },
+    {
+      "id": "hobgoblin_taskmaster",
+      "aim": 0,
+      "volumes": [
+        {
+          "shape": "ellipsoid",
+          "forward": -0.10667,
+          "left": 0,
+          "up": 0.53,
+          "radius": 0.48,
+          "half_height": 0.17
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": -0.10667,
+          "left": 0.338,
+          "up": 0.53,
+          "radius": 0.312,
+          "half_height": 0.136
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": -0.10667,
+          "left": -0.338,
+          "up": 0.53,
+          "radius": 0.312,
+          "half_height": 0.136
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0.13333,
+          "left": 0,
+          "up": 0.886,
+          "radius": 0.42897,
+          "half_height": 0.11
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0.13333,
+          "left": 0.29313,
+          "up": 0.886,
+          "radius": 0.27883,
+          "half_height": 0.088
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0.13333,
+          "left": -0.29313,
+          "up": 0.886,
+          "radius": 0.27883,
+          "half_height": 0.088
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": 0,
+          "up": 0.36,
+          "radius": 0.43333,
+          "half_height": 0.08
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": 0.29833,
+          "up": 0.36,
+          "radius": 0.28167,
+          "half_height": 0.064
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": -0.29833,
+          "up": 0.36,
+          "radius": 0.28167,
+          "half_height": 0.064
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": 0.78,
+          "up": 0.55,
+          "radius": 0.21,
+          "half_height": 0.17
+        },
+        {
+          "shape": "cylinder",
+          "forward": 0,
+          "left": 0.4,
+          "up": 0.18,
+          "radius": 0.18,
+          "half_height": 0.17
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": -0.78,
+          "up": 0.55,
+          "radius": 0.21,
+          "half_height": 0.17
+        },
+        {
+          "shape": "cylinder",
+          "forward": 0,
+          "left": -0.4,
+          "up": 0.18,
+          "radius": 0.18,
+          "half_height": 0.17
+        }
+      ]
+    },
+    {
+      "id": "goblin_warboss",
+      "aim": 0,
+      "volumes": [
+        {
+          "shape": "ellipsoid",
+          "forward": -0.09806,
+          "left": 0,
+          "up": 0.53,
+          "radius": 0.44127,
+          "half_height": 0.17
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": -0.09806,
+          "left": 0.36317,
+          "up": 0.53,
+          "radius": 0.28683,
+          "half_height": 0.136
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": -0.09806,
+          "left": -0.36317,
+          "up": 0.53,
+          "radius": 0.28683,
+          "half_height": 0.136
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0.12258,
+          "left": 0,
+          "up": 0.886,
+          "radius": 0.28102,
+          "half_height": 0.11
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0.12258,
+          "left": 0.19203,
+          "up": 0.886,
+          "radius": 0.18267,
+          "half_height": 0.088
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0.12258,
+          "left": -0.19203,
+          "up": 0.886,
+          "radius": 0.18267,
+          "half_height": 0.088
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": 0,
+          "up": 0.36,
+          "radius": 0.39837,
+          "half_height": 0.08
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": 0.32106,
+          "up": 0.36,
+          "radius": 0.25894,
+          "half_height": 0.064
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": -0.32106,
+          "up": 0.36,
+          "radius": 0.25894,
+          "half_height": 0.064
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": 0.78,
+          "up": 0.55,
+          "radius": 0.21,
+          "half_height": 0.17
+        },
+        {
+          "shape": "cylinder",
+          "forward": 0,
+          "left": 0.4,
+          "up": 0.18,
+          "radius": 0.18,
+          "half_height": 0.17
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": -0.78,
+          "up": 0.55,
+          "radius": 0.21,
+          "half_height": 0.17
+        },
+        {
+          "shape": "cylinder",
+          "forward": 0,
+          "left": -0.4,
+          "up": 0.18,
+          "radius": 0.18,
+          "half_height": 0.17
+        }
+      ]
+    },
+    {
+      "id": "troll_mauler",
+      "aim": 0,
+      "volumes": [
+        {
+          "shape": "ellipsoid",
+          "forward": -0.10839,
+          "left": 0,
+          "up": 0.53,
+          "radius": 0.48774,
+          "half_height": 0.17
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": -0.10839,
+          "left": 0.33297,
+          "up": 0.53,
+          "radius": 0.31703,
+          "half_height": 0.136
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": -0.10839,
+          "left": -0.33297,
+          "up": 0.53,
+          "radius": 0.31703,
+          "half_height": 0.136
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0.13548,
+          "left": 0,
+          "up": 0.886,
+          "radius": 0.33852,
+          "half_height": 0.11
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0.13548,
+          "left": 0.23132,
+          "up": 0.886,
+          "radius": 0.22004,
+          "half_height": 0.088
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0.13548,
+          "left": -0.23132,
+          "up": 0.886,
+          "radius": 0.22004,
+          "half_height": 0.088
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": 0,
+          "up": 0.36,
+          "radius": 0.44032,
+          "half_height": 0.08
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": 0.29379,
+          "up": 0.36,
+          "radius": 0.28621,
+          "half_height": 0.064
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": -0.29379,
+          "up": 0.36,
+          "radius": 0.28621,
+          "half_height": 0.064
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": 0.78,
+          "up": 0.55,
+          "radius": 0.21,
+          "half_height": 0.17
+        },
+        {
+          "shape": "cylinder",
+          "forward": 0,
+          "left": 0.4,
+          "up": 0.18,
+          "radius": 0.18,
+          "half_height": 0.17
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": -0.78,
+          "up": 0.55,
+          "radius": 0.21,
+          "half_height": 0.17
+        },
+        {
+          "shape": "cylinder",
+          "forward": 0,
+          "left": -0.4,
+          "up": 0.18,
+          "radius": 0.18,
+          "half_height": 0.17
+        }
+      ]
+    },
+    {
+      "id": "troll_bridgewarden",
+      "aim": 0,
+      "volumes": [
+        {
+          "shape": "ellipsoid",
+          "forward": -0.10105,
+          "left": 0,
+          "up": 0.53,
+          "radius": 0.45474,
+          "half_height": 0.17
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": -0.10105,
+          "left": 0.35442,
+          "up": 0.53,
+          "radius": 0.29558,
+          "half_height": 0.136
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": -0.10105,
+          "left": -0.35442,
+          "up": 0.53,
+          "radius": 0.29558,
+          "half_height": 0.136
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0.12632,
+          "left": 0,
+          "up": 0.886,
+          "radius": 0.30221,
+          "half_height": 0.11
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0.12632,
+          "left": 0.20651,
+          "up": 0.886,
+          "radius": 0.19644,
+          "half_height": 0.088
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0.12632,
+          "left": -0.20651,
+          "up": 0.886,
+          "radius": 0.19644,
+          "half_height": 0.088
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": 0,
+          "up": 0.36,
+          "radius": 0.41053,
+          "half_height": 0.08
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": 0.31316,
+          "up": 0.36,
+          "radius": 0.26684,
+          "half_height": 0.064
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": -0.31316,
+          "up": 0.36,
+          "radius": 0.26684,
+          "half_height": 0.064
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": 0.78,
+          "up": 0.55,
+          "radius": 0.21,
+          "half_height": 0.17
+        },
+        {
+          "shape": "cylinder",
+          "forward": 0,
+          "left": 0.4,
+          "up": 0.18,
+          "radius": 0.18,
+          "half_height": 0.17
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": -0.78,
+          "up": 0.55,
+          "radius": 0.21,
+          "half_height": 0.17
+        },
+        {
+          "shape": "cylinder",
+          "forward": 0,
+          "left": -0.4,
+          "up": 0.18,
+          "radius": 0.18,
+          "half_height": 0.17
+        }
+      ]
+    },
+    {
+      "id": "goblin_colossus",
+      "aim": 0,
+      "volumes": [
+        {
+          "shape": "ellipsoid",
+          "forward": -0.10588,
+          "left": 0,
+          "up": 0.53,
+          "radius": 0.47647,
+          "half_height": 0.17
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": -0.10588,
+          "left": 0.34029,
+          "up": 0.53,
+          "radius": 0.30971,
+          "half_height": 0.136
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": -0.10588,
+          "left": -0.34029,
+          "up": 0.53,
+          "radius": 0.30971,
+          "half_height": 0.136
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0.13235,
+          "left": 0,
+          "up": 0.886,
+          "radius": 0.30282,
+          "half_height": 0.11
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0.13235,
+          "left": 0.20693,
+          "up": 0.886,
+          "radius": 0.19684,
+          "half_height": 0.088
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0.13235,
+          "left": -0.20693,
+          "up": 0.886,
+          "radius": 0.19684,
+          "half_height": 0.088
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": 0,
+          "up": 0.36,
+          "radius": 0.43015,
+          "half_height": 0.08
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": 0.3004,
+          "up": 0.36,
+          "radius": 0.2796,
+          "half_height": 0.064
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": -0.3004,
+          "up": 0.36,
+          "radius": 0.2796,
+          "half_height": 0.064
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": 0.78,
+          "up": 0.55,
+          "radius": 0.21,
+          "half_height": 0.17
+        },
+        {
+          "shape": "cylinder",
+          "forward": 0,
+          "left": 0.4,
+          "up": 0.18,
+          "radius": 0.18,
+          "half_height": 0.17
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": -0.78,
+          "up": 0.55,
+          "radius": 0.21,
+          "half_height": 0.17
+        },
+        {
+          "shape": "cylinder",
+          "forward": 0,
+          "left": -0.4,
+          "up": 0.18,
+          "radius": 0.18,
+          "half_height": 0.17
+        }
+      ]
+    },
+    {
+      "id": "gnasher_whelp",
+      "aim": 0,
+      "volumes": [
+        {
+          "shape": "ellipsoid",
+          "forward": -0.12,
+          "left": 0,
+          "up": 0.6,
+          "radius": 0.8,
+          "half_height": 0.35
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0.54,
+          "left": 0,
+          "up": 0.67,
+          "radius": 0.4,
+          "half_height": 0.25
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0.54,
+          "left": 0.46,
+          "up": 0.67,
+          "radius": 0.26,
+          "half_height": 0.2
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0.54,
+          "left": -0.46,
+          "up": 0.67,
+          "radius": 0.26,
+          "half_height": 0.2
+        },
+        {
+          "shape": "cylinder",
+          "forward": -0.44,
+          "left": 0.576,
+          "up": 0.23,
+          "radius": 0.18,
+          "half_height": 0.2
+        },
+        {
+          "shape": "cylinder",
+          "forward": -0.44,
+          "left": -0.576,
+          "up": 0.23,
+          "radius": 0.18,
+          "half_height": 0.2
+        }
+      ]
+    },
+    {
+      "id": "cave_gnasher",
+      "aim": 0,
+      "volumes": [
+        {
+          "shape": "ellipsoid",
+          "forward": -0.12,
+          "left": 0,
+          "up": 0.6,
+          "radius": 0.8,
+          "half_height": 0.35
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0.54,
+          "left": 0,
+          "up": 0.67,
+          "radius": 0.4,
+          "half_height": 0.25
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0.54,
+          "left": 0.44909,
+          "up": 0.67,
+          "radius": 0.26,
+          "half_height": 0.2
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0.54,
+          "left": -0.44909,
+          "up": 0.67,
+          "radius": 0.26,
+          "half_height": 0.2
+        },
+        {
+          "shape": "cylinder",
+          "forward": -0.44,
+          "left": 0.56727,
+          "up": 0.23,
+          "radius": 0.17727,
+          "half_height": 0.2
+        },
+        {
+          "shape": "cylinder",
+          "forward": -0.44,
+          "left": -0.56727,
+          "up": 0.23,
+          "radius": 0.17727,
+          "half_height": 0.2
+        }
+      ]
+    },
+    {
+      "id": "warg",
+      "aim": 0,
+      "volumes": [
+        {
+          "shape": "ellipsoid",
+          "forward": -0.12,
+          "left": 0,
+          "up": 0.6,
+          "radius": 0.36973,
+          "half_height": 0.35
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": -0.67968,
+          "left": 0,
+          "up": 0.6,
+          "radius": 0.24032,
+          "half_height": 0.28
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0.43968,
+          "left": 0,
+          "up": 0.6,
+          "radius": 0.24032,
+          "half_height": 0.28
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0.54,
+          "left": 0,
+          "up": 0.67,
+          "radius": 0.22573,
+          "half_height": 0.175
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0.18672,
+          "left": 0,
+          "up": 0.67,
+          "radius": 0.14672,
+          "half_height": 0.14
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0.89328,
+          "left": 0,
+          "up": 0.67,
+          "radius": 0.14672,
+          "half_height": 0.14
+        },
+        {
+          "shape": "cylinder",
+          "forward": -0.44,
+          "left": 0.24908,
+          "up": 0.23,
+          "radius": 0.07784,
+          "half_height": 0.2
+        },
+        {
+          "shape": "cylinder",
+          "forward": 0.4,
+          "left": 0.23351,
+          "up": 0.26,
+          "radius": 0.07005,
+          "half_height": 0.25
+        },
+        {
+          "shape": "cylinder",
+          "forward": -0.44,
+          "left": -0.24908,
+          "up": 0.23,
+          "radius": 0.07784,
+          "half_height": 0.2
+        },
+        {
+          "shape": "cylinder",
+          "forward": 0.4,
+          "left": -0.23351,
+          "up": 0.26,
+          "radius": 0.07005,
+          "half_height": 0.25
+        }
+      ]
+    },
+    {
+      "id": "orc_grunt",
+      "aim": 0,
+      "volumes": [
+        {
+          "shape": "ellipsoid",
+          "forward": -0.09816,
+          "left": 0,
+          "up": 0.6,
+          "radius": 0.59598,
+          "half_height": 0.245
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": -0.09816,
+          "left": 0.34261,
+          "up": 0.6,
+          "radius": 0.38739,
+          "half_height": 0.196
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": -0.09816,
+          "left": -0.34261,
+          "up": 0.6,
+          "radius": 0.38739,
+          "half_height": 0.196
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": -0.22437,
+          "left": 0,
+          "up": 0.77,
+          "radius": 0.52586,
+          "half_height": 0.15
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": -0.22437,
+          "left": 0.33819,
+          "up": 0.77,
+          "radius": 0.34181,
+          "half_height": 0.12
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": -0.22437,
+          "left": -0.33819,
+          "up": 0.77,
+          "radius": 0.34181,
+          "half_height": 0.12
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0.2468,
+          "left": 0,
+          "up": 0.89,
+          "radius": 0.33655,
+          "half_height": 0.11
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0.2468,
+          "left": 0.16124,
+          "up": 0.89,
+          "radius": 0.21876,
+          "half_height": 0.088
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0.2468,
+          "left": -0.16124,
+          "up": 0.89,
+          "radius": 0.21876,
+          "half_height": 0.088
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": 0,
+          "up": 0.35,
+          "radius": 0.51885,
+          "half_height": 0.1
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": 0.26275,
+          "up": 0.35,
+          "radius": 0.33725,
+          "half_height": 0.08
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": -0.26275,
+          "up": 0.35,
+          "radius": 0.33725,
+          "half_height": 0.08
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": 0.8,
+          "up": 0.59,
+          "radius": 0.23,
+          "half_height": 0.19
+        },
+        {
+          "shape": "cylinder",
+          "forward": 0,
+          "left": 0.4,
+          "up": 0.18,
+          "radius": 0.19,
+          "half_height": 0.17
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": -0.8,
+          "up": 0.59,
+          "radius": 0.23,
+          "half_height": 0.19
+        },
+        {
+          "shape": "cylinder",
+          "forward": 0,
+          "left": -0.4,
+          "up": 0.18,
+          "radius": 0.19,
+          "half_height": 0.17
+        }
+      ]
+    },
+    {
+      "id": "orc_ravager",
+      "aim": 0,
+      "volumes": [
+        {
+          "shape": "ellipsoid",
+          "forward": -0.0913,
+          "left": 0,
+          "up": 0.6,
+          "radius": 0.55435,
+          "half_height": 0.245
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": -0.0913,
+          "left": 0.36967,
+          "up": 0.6,
+          "radius": 0.36033,
+          "half_height": 0.196
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": -0.0913,
+          "left": -0.36967,
+          "up": 0.6,
+          "radius": 0.36033,
+          "half_height": 0.196
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": -0.2087,
+          "left": 0,
+          "up": 0.77,
+          "radius": 0.48913,
+          "half_height": 0.15
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": -0.2087,
+          "left": 0.36207,
+          "up": 0.77,
+          "radius": 0.31793,
+          "half_height": 0.12
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": -0.2087,
+          "left": -0.36207,
+          "up": 0.77,
+          "radius": 0.31793,
+          "half_height": 0.12
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0.22957,
+          "left": 0,
+          "up": 0.89,
+          "radius": 0.31304,
+          "half_height": 0.11
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0.22957,
+          "left": 0.17652,
+          "up": 0.89,
+          "radius": 0.20348,
+          "half_height": 0.088
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0.22957,
+          "left": -0.17652,
+          "up": 0.89,
+          "radius": 0.20348,
+          "half_height": 0.088
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": 0,
+          "up": 0.35,
+          "radius": 0.48261,
+          "half_height": 0.1
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": 0.2863,
+          "up": 0.35,
+          "radius": 0.3137,
+          "half_height": 0.08
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": -0.2863,
+          "up": 0.35,
+          "radius": 0.3137,
+          "half_height": 0.08
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": 0.8,
+          "up": 0.59,
+          "radius": 0.23,
+          "half_height": 0.19
+        },
+        {
+          "shape": "cylinder",
+          "forward": 0,
+          "left": 0.4,
+          "up": 0.18,
+          "radius": 0.19,
+          "half_height": 0.17
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": -0.8,
+          "up": 0.59,
+          "radius": 0.23,
+          "half_height": 0.19
+        },
+        {
+          "shape": "cylinder",
+          "forward": 0,
+          "left": -0.4,
+          "up": 0.18,
+          "radius": 0.19,
+          "half_height": 0.17
+        }
+      ]
+    },
+    {
+      "id": "orc_cleaver",
+      "aim": 0,
+      "volumes": [
+        {
+          "shape": "ellipsoid",
+          "forward": -0.09333,
+          "left": 0,
+          "up": 0.6,
+          "radius": 0.56667,
+          "half_height": 0.245
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": -0.09333,
+          "left": 0.36167,
+          "up": 0.6,
+          "radius": 0.36833,
+          "half_height": 0.196
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": -0.09333,
+          "left": -0.36167,
+          "up": 0.6,
+          "radius": 0.36833,
+          "half_height": 0.196
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": -0.21333,
+          "left": 0,
+          "up": 0.77,
+          "radius": 0.5,
+          "half_height": 0.15
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": -0.21333,
+          "left": 0.355,
+          "up": 0.77,
+          "radius": 0.325,
+          "half_height": 0.12
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": -0.21333,
+          "left": -0.355,
+          "up": 0.77,
+          "radius": 0.325,
+          "half_height": 0.12
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0.23467,
+          "left": 0,
+          "up": 0.89,
+          "radius": 0.32,
+          "half_height": 0.11
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0.23467,
+          "left": 0.172,
+          "up": 0.89,
+          "radius": 0.208,
+          "half_height": 0.088
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0.23467,
+          "left": -0.172,
+          "up": 0.89,
+          "radius": 0.208,
+          "half_height": 0.088
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": 0,
+          "up": 0.35,
+          "radius": 0.49333,
+          "half_height": 0.1
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": 0.27933,
+          "up": 0.35,
+          "radius": 0.32067,
+          "half_height": 0.08
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": -0.27933,
+          "up": 0.35,
+          "radius": 0.32067,
+          "half_height": 0.08
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": 0.8,
+          "up": 0.59,
+          "radius": 0.23,
+          "half_height": 0.19
+        },
+        {
+          "shape": "cylinder",
+          "forward": 0,
+          "left": 0.4,
+          "up": 0.18,
+          "radius": 0.19,
+          "half_height": 0.17
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": -0.8,
+          "up": 0.59,
+          "radius": 0.23,
+          "half_height": 0.19
+        },
+        {
+          "shape": "cylinder",
+          "forward": 0,
+          "left": -0.4,
+          "up": 0.18,
+          "radius": 0.19,
+          "half_height": 0.17
+        }
+      ]
+    },
+    {
+      "id": "orc_bulwark",
+      "aim": 0,
+      "volumes": [
+        {
+          "shape": "ellipsoid",
+          "forward": -0.09078,
+          "left": 0,
+          "up": 0.6,
+          "radius": 0.55117,
+          "half_height": 0.245
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": -0.09078,
+          "left": 0.37174,
+          "up": 0.6,
+          "radius": 0.35826,
+          "half_height": 0.196
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": -0.09078,
+          "left": -0.37174,
+          "up": 0.6,
+          "radius": 0.35826,
+          "half_height": 0.196
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": -0.2075,
+          "left": 0,
+          "up": 0.77,
+          "radius": 0.48633,
+          "half_height": 0.15
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": -0.2075,
+          "left": 0.36389,
+          "up": 0.77,
+          "radius": 0.31611,
+          "half_height": 0.12
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": -0.2075,
+          "left": -0.36389,
+          "up": 0.77,
+          "radius": 0.31611,
+          "half_height": 0.12
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0.22825,
+          "left": 0,
+          "up": 0.89,
+          "radius": 0.31125,
+          "half_height": 0.11
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0.22825,
+          "left": 0.17769,
+          "up": 0.89,
+          "radius": 0.20231,
+          "half_height": 0.088
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0.22825,
+          "left": -0.17769,
+          "up": 0.89,
+          "radius": 0.20231,
+          "half_height": 0.088
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": 0,
+          "up": 0.35,
+          "radius": 0.47984,
+          "half_height": 0.1
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": 0.2881,
+          "up": 0.35,
+          "radius": 0.3119,
+          "half_height": 0.08
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": -0.2881,
+          "up": 0.35,
+          "radius": 0.3119,
+          "half_height": 0.08
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": 0.8,
+          "up": 0.59,
+          "radius": 0.23,
+          "half_height": 0.19
+        },
+        {
+          "shape": "cylinder",
+          "forward": 0,
+          "left": 0.4,
+          "up": 0.18,
+          "radius": 0.19,
+          "half_height": 0.17
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": -0.8,
+          "up": 0.59,
+          "radius": 0.23,
+          "half_height": 0.19
+        },
+        {
+          "shape": "cylinder",
+          "forward": 0,
+          "left": -0.4,
+          "up": 0.18,
+          "radius": 0.19,
+          "half_height": 0.17
+        }
+      ]
+    },
+    {
+      "id": "orc_shieldbreaker",
+      "aim": 0,
+      "volumes": [
+        {
+          "shape": "ellipsoid",
+          "forward": -0.09525,
+          "left": 0,
+          "up": 0.6,
+          "radius": 0.57828,
+          "half_height": 0.245
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": -0.09525,
+          "left": 0.35412,
+          "up": 0.6,
+          "radius": 0.37588,
+          "half_height": 0.196
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": -0.09525,
+          "left": -0.35412,
+          "up": 0.6,
+          "radius": 0.37588,
+          "half_height": 0.196
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": -0.2177,
+          "left": 0,
+          "up": 0.77,
+          "radius": 0.51025,
+          "half_height": 0.15
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": -0.2177,
+          "left": 0.34834,
+          "up": 0.77,
+          "radius": 0.33166,
+          "half_height": 0.12
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": -0.2177,
+          "left": -0.34834,
+          "up": 0.77,
+          "radius": 0.33166,
+          "half_height": 0.12
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0.23948,
+          "left": 0,
+          "up": 0.89,
+          "radius": 0.32656,
+          "half_height": 0.11
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0.23948,
+          "left": 0.16774,
+          "up": 0.89,
+          "radius": 0.21226,
+          "half_height": 0.088
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0.23948,
+          "left": -0.16774,
+          "up": 0.89,
+          "radius": 0.21226,
+          "half_height": 0.088
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": 0,
+          "up": 0.35,
+          "radius": 0.50344,
+          "half_height": 0.1
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": 0.27276,
+          "up": 0.35,
+          "radius": 0.32724,
+          "half_height": 0.08
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": -0.27276,
+          "up": 0.35,
+          "radius": 0.32724,
+          "half_height": 0.08
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": 0.8,
+          "up": 0.59,
+          "radius": 0.23,
+          "half_height": 0.19
+        },
+        {
+          "shape": "cylinder",
+          "forward": 0,
+          "left": 0.4,
+          "up": 0.18,
+          "radius": 0.19,
+          "half_height": 0.17
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": -0.8,
+          "up": 0.59,
+          "radius": 0.23,
+          "half_height": 0.19
+        },
+        {
+          "shape": "cylinder",
+          "forward": 0,
+          "left": -0.4,
+          "up": 0.18,
+          "radius": 0.19,
+          "half_height": 0.17
+        }
+      ]
+    },
+    {
+      "id": "orc_headhunter",
+      "aim": 0,
+      "volumes": [
+        {
+          "shape": "ellipsoid",
+          "forward": -0.09753,
+          "left": 0,
+          "up": 0.6,
+          "radius": 0.59213,
+          "half_height": 0.245
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": -0.09753,
+          "left": 0.34511,
+          "up": 0.6,
+          "radius": 0.38489,
+          "half_height": 0.196
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": -0.09753,
+          "left": -0.34511,
+          "up": 0.6,
+          "radius": 0.38489,
+          "half_height": 0.196
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": -0.22292,
+          "left": 0,
+          "up": 0.77,
+          "radius": 0.52247,
+          "half_height": 0.15
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": -0.22292,
+          "left": 0.34039,
+          "up": 0.77,
+          "radius": 0.33961,
+          "half_height": 0.12
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": -0.22292,
+          "left": -0.34039,
+          "up": 0.77,
+          "radius": 0.33961,
+          "half_height": 0.12
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0.24521,
+          "left": 0,
+          "up": 0.89,
+          "radius": 0.33438,
+          "half_height": 0.11
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0.24521,
+          "left": 0.16265,
+          "up": 0.89,
+          "radius": 0.21735,
+          "half_height": 0.088
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0.24521,
+          "left": -0.16265,
+          "up": 0.89,
+          "radius": 0.21735,
+          "half_height": 0.088
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": 0,
+          "up": 0.35,
+          "radius": 0.51551,
+          "half_height": 0.1
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": 0.26492,
+          "up": 0.35,
+          "radius": 0.33508,
+          "half_height": 0.08
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": -0.26492,
+          "up": 0.35,
+          "radius": 0.33508,
+          "half_height": 0.08
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": 0.8,
+          "up": 0.59,
+          "radius": 0.23,
+          "half_height": 0.19
+        },
+        {
+          "shape": "cylinder",
+          "forward": 0,
+          "left": 0.4,
+          "up": 0.18,
+          "radius": 0.19,
+          "half_height": 0.17
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": -0.8,
+          "up": 0.59,
+          "radius": 0.23,
+          "half_height": 0.19
+        },
+        {
+          "shape": "cylinder",
+          "forward": 0,
+          "left": -0.4,
+          "up": 0.18,
+          "radius": 0.19,
+          "half_height": 0.17
+        }
+      ]
+    },
+    {
+      "id": "orc_rockhurler",
+      "aim": 0,
+      "volumes": [
+        {
+          "shape": "ellipsoid",
+          "forward": -0.09536,
+          "left": 0,
+          "up": 0.6,
+          "radius": 0.57899,
+          "half_height": 0.245
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": -0.09536,
+          "left": 0.35366,
+          "up": 0.6,
+          "radius": 0.37634,
+          "half_height": 0.196
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": -0.09536,
+          "left": -0.35366,
+          "up": 0.6,
+          "radius": 0.37634,
+          "half_height": 0.196
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": -0.21797,
+          "left": 0,
+          "up": 0.77,
+          "radius": 0.51087,
+          "half_height": 0.15
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": -0.21797,
+          "left": 0.34793,
+          "up": 0.77,
+          "radius": 0.33207,
+          "half_height": 0.12
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": -0.21797,
+          "left": -0.34793,
+          "up": 0.77,
+          "radius": 0.33207,
+          "half_height": 0.12
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0.23977,
+          "left": 0,
+          "up": 0.89,
+          "radius": 0.32696,
+          "half_height": 0.11
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0.23977,
+          "left": 0.16748,
+          "up": 0.89,
+          "radius": 0.21252,
+          "half_height": 0.088
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0.23977,
+          "left": -0.16748,
+          "up": 0.89,
+          "radius": 0.21252,
+          "half_height": 0.088
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": 0,
+          "up": 0.35,
+          "radius": 0.50406,
+          "half_height": 0.1
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": 0.27236,
+          "up": 0.35,
+          "radius": 0.32764,
+          "half_height": 0.08
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": -0.27236,
+          "up": 0.35,
+          "radius": 0.32764,
+          "half_height": 0.08
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": 0.8,
+          "up": 0.59,
+          "radius": 0.23,
+          "half_height": 0.19
+        },
+        {
+          "shape": "cylinder",
+          "forward": 0,
+          "left": 0.4,
+          "up": 0.18,
+          "radius": 0.19,
+          "half_height": 0.17
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": -0.8,
+          "up": 0.59,
+          "radius": 0.23,
+          "half_height": 0.19
+        },
+        {
+          "shape": "cylinder",
+          "forward": 0,
+          "left": -0.4,
+          "up": 0.18,
+          "radius": 0.19,
+          "half_height": 0.17
+        }
+      ]
+    },
+    {
+      "id": "orc_ashcaller",
+      "aim": 0,
+      "volumes": [
+        {
+          "shape": "ellipsoid",
+          "forward": -0.10723,
+          "left": 0,
+          "up": 0.6,
+          "radius": 0.65106,
+          "half_height": 0.245
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": -0.10723,
+          "left": 0.30681,
+          "up": 0.6,
+          "radius": 0.42319,
+          "half_height": 0.196
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": -0.10723,
+          "left": -0.30681,
+          "up": 0.6,
+          "radius": 0.42319,
+          "half_height": 0.196
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": -0.24511,
+          "left": 0,
+          "up": 0.77,
+          "radius": 0.57447,
+          "half_height": 0.15
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": -0.24511,
+          "left": 0.3066,
+          "up": 0.77,
+          "radius": 0.3734,
+          "half_height": 0.12
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": -0.24511,
+          "left": -0.3066,
+          "up": 0.77,
+          "radius": 0.3734,
+          "half_height": 0.12
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0.26962,
+          "left": 0,
+          "up": 0.89,
+          "radius": 0.36766,
+          "half_height": 0.11
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": 0,
+          "up": 0.35,
+          "radius": 0.56681,
+          "half_height": 0.1
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": 0.8,
+          "up": 0.59,
+          "radius": 0.23,
+          "half_height": 0.19
+        },
+        {
+          "shape": "cylinder",
+          "forward": 0,
+          "left": 0.4,
+          "up": 0.18,
+          "radius": 0.19,
+          "half_height": 0.17
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": -0.8,
+          "up": 0.59,
+          "radius": 0.23,
+          "half_height": 0.19
+        },
+        {
+          "shape": "cylinder",
+          "forward": 0,
+          "left": -0.4,
+          "up": 0.18,
+          "radius": 0.19,
+          "half_height": 0.17
+        }
+      ]
+    },
+    {
+      "id": "orc_bloodchanter",
+      "aim": 0,
+      "volumes": [
+        {
+          "shape": "ellipsoid",
+          "forward": -0.09813,
+          "left": 0,
+          "up": 0.6,
+          "radius": 0.59579,
+          "half_height": 0.245
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": -0.09813,
+          "left": 0.34273,
+          "up": 0.6,
+          "radius": 0.38727,
+          "half_height": 0.196
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": -0.09813,
+          "left": -0.34273,
+          "up": 0.6,
+          "radius": 0.38727,
+          "half_height": 0.196
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": -0.2243,
+          "left": 0,
+          "up": 0.77,
+          "radius": 0.5257,
+          "half_height": 0.15
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": -0.2243,
+          "left": 0.33829,
+          "up": 0.77,
+          "radius": 0.34171,
+          "half_height": 0.12
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": -0.2243,
+          "left": -0.33829,
+          "up": 0.77,
+          "radius": 0.34171,
+          "half_height": 0.12
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0.24673,
+          "left": 0,
+          "up": 0.89,
+          "radius": 0.33645,
+          "half_height": 0.11
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0.24673,
+          "left": 0.16131,
+          "up": 0.89,
+          "radius": 0.21869,
+          "half_height": 0.088
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0.24673,
+          "left": -0.16131,
+          "up": 0.89,
+          "radius": 0.21869,
+          "half_height": 0.088
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": 0,
+          "up": 0.35,
+          "radius": 0.51869,
+          "half_height": 0.1
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": 0.26285,
+          "up": 0.35,
+          "radius": 0.33715,
+          "half_height": 0.08
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": -0.26285,
+          "up": 0.35,
+          "radius": 0.33715,
+          "half_height": 0.08
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": 0.8,
+          "up": 0.59,
+          "radius": 0.23,
+          "half_height": 0.19
+        },
+        {
+          "shape": "cylinder",
+          "forward": 0,
+          "left": 0.4,
+          "up": 0.18,
+          "radius": 0.19,
+          "half_height": 0.17
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": -0.8,
+          "up": 0.59,
+          "radius": 0.23,
+          "half_height": 0.19
+        },
+        {
+          "shape": "cylinder",
+          "forward": 0,
+          "left": -0.4,
+          "up": 0.18,
+          "radius": 0.19,
+          "half_height": 0.17
+        }
+      ]
+    },
+    {
+      "id": "orc_overseer",
+      "aim": 0,
+      "volumes": [
+        {
+          "shape": "ellipsoid",
+          "forward": -0.09625,
+          "left": 0,
+          "up": 0.6,
+          "radius": 0.58437,
+          "half_height": 0.245
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": -0.09625,
+          "left": 0.35016,
+          "up": 0.6,
+          "radius": 0.37984,
+          "half_height": 0.196
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": -0.09625,
+          "left": -0.35016,
+          "up": 0.6,
+          "radius": 0.37984,
+          "half_height": 0.196
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": -0.22,
+          "left": 0,
+          "up": 0.77,
+          "radius": 0.51563,
+          "half_height": 0.15
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": -0.22,
+          "left": 0.34484,
+          "up": 0.77,
+          "radius": 0.33516,
+          "half_height": 0.12
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": -0.22,
+          "left": -0.34484,
+          "up": 0.77,
+          "radius": 0.33516,
+          "half_height": 0.12
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0.242,
+          "left": 0,
+          "up": 0.89,
+          "radius": 0.33,
+          "half_height": 0.11
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0.242,
+          "left": 0.1655,
+          "up": 0.89,
+          "radius": 0.2145,
+          "half_height": 0.088
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0.242,
+          "left": -0.1655,
+          "up": 0.89,
+          "radius": 0.2145,
+          "half_height": 0.088
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": 0,
+          "up": 0.35,
+          "radius": 0.50875,
+          "half_height": 0.1
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": 0.26931,
+          "up": 0.35,
+          "radius": 0.33069,
+          "half_height": 0.08
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": -0.26931,
+          "up": 0.35,
+          "radius": 0.33069,
+          "half_height": 0.08
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": 0.8,
+          "up": 0.59,
+          "radius": 0.23,
+          "half_height": 0.19
+        },
+        {
+          "shape": "cylinder",
+          "forward": 0,
+          "left": 0.4,
+          "up": 0.18,
+          "radius": 0.19,
+          "half_height": 0.17
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": -0.8,
+          "up": 0.59,
+          "radius": 0.23,
+          "half_height": 0.19
+        },
+        {
+          "shape": "cylinder",
+          "forward": 0,
+          "left": -0.4,
+          "up": 0.18,
+          "radius": 0.19,
+          "half_height": 0.17
+        }
+      ]
+    },
+    {
+      "id": "orc_slaver",
+      "aim": 0,
+      "volumes": [
+        {
+          "shape": "ellipsoid",
+          "forward": -0.09567,
+          "left": 0,
+          "up": 0.6,
+          "radius": 0.58083,
+          "half_height": 0.245
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": -0.09567,
+          "left": 0.35246,
+          "up": 0.6,
+          "radius": 0.37754,
+          "half_height": 0.196
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": -0.09567,
+          "left": -0.35246,
+          "up": 0.6,
+          "radius": 0.37754,
+          "half_height": 0.196
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": -0.21867,
+          "left": 0,
+          "up": 0.77,
+          "radius": 0.5125,
+          "half_height": 0.15
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": -0.21867,
+          "left": 0.34688,
+          "up": 0.77,
+          "radius": 0.33313,
+          "half_height": 0.12
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": -0.21867,
+          "left": -0.34688,
+          "up": 0.77,
+          "radius": 0.33313,
+          "half_height": 0.12
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0.24053,
+          "left": 0,
+          "up": 0.89,
+          "radius": 0.328,
+          "half_height": 0.11
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0.24053,
+          "left": 0.1668,
+          "up": 0.89,
+          "radius": 0.2132,
+          "half_height": 0.088
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0.24053,
+          "left": -0.1668,
+          "up": 0.89,
+          "radius": 0.2132,
+          "half_height": 0.088
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": 0,
+          "up": 0.35,
+          "radius": 0.50567,
+          "half_height": 0.1
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": 0.27132,
+          "up": 0.35,
+          "radius": 0.32868,
+          "half_height": 0.08
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": -0.27132,
+          "up": 0.35,
+          "radius": 0.32868,
+          "half_height": 0.08
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": 0.8,
+          "up": 0.59,
+          "radius": 0.23,
+          "half_height": 0.19
+        },
+        {
+          "shape": "cylinder",
+          "forward": 0,
+          "left": 0.4,
+          "up": 0.18,
+          "radius": 0.19,
+          "half_height": 0.17
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": -0.8,
+          "up": 0.59,
+          "radius": 0.23,
+          "half_height": 0.19
+        },
+        {
+          "shape": "cylinder",
+          "forward": 0,
+          "left": -0.4,
+          "up": 0.18,
+          "radius": 0.19,
+          "half_height": 0.17
+        }
+      ]
+    },
+    {
+      "id": "orc_warlord",
+      "aim": 0,
+      "volumes": [
+        {
+          "shape": "ellipsoid",
+          "forward": -0.09038,
+          "left": 0,
+          "up": 0.6,
+          "radius": 0.54873,
+          "half_height": 0.245
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": -0.09038,
+          "left": 0.37332,
+          "up": 0.6,
+          "radius": 0.35668,
+          "half_height": 0.196
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": -0.09038,
+          "left": -0.37332,
+          "up": 0.6,
+          "radius": 0.35668,
+          "half_height": 0.196
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": -0.20658,
+          "left": 0,
+          "up": 0.77,
+          "radius": 0.48418,
+          "half_height": 0.15
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": -0.20658,
+          "left": 0.36528,
+          "up": 0.77,
+          "radius": 0.31472,
+          "half_height": 0.12
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": -0.20658,
+          "left": -0.36528,
+          "up": 0.77,
+          "radius": 0.31472,
+          "half_height": 0.12
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0.22724,
+          "left": 0,
+          "up": 0.89,
+          "radius": 0.30987,
+          "half_height": 0.11
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0.22724,
+          "left": 0.17858,
+          "up": 0.89,
+          "radius": 0.20142,
+          "half_height": 0.088
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0.22724,
+          "left": -0.17858,
+          "up": 0.89,
+          "radius": 0.20142,
+          "half_height": 0.088
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": 0,
+          "up": 0.35,
+          "radius": 0.47772,
+          "half_height": 0.1
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": 0.28948,
+          "up": 0.35,
+          "radius": 0.31052,
+          "half_height": 0.08
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": -0.28948,
+          "up": 0.35,
+          "radius": 0.31052,
+          "half_height": 0.08
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": 0.8,
+          "up": 0.59,
+          "radius": 0.23,
+          "half_height": 0.19
+        },
+        {
+          "shape": "cylinder",
+          "forward": 0,
+          "left": 0.4,
+          "up": 0.18,
+          "radius": 0.19,
+          "half_height": 0.17
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": -0.8,
+          "up": 0.59,
+          "radius": 0.23,
+          "half_height": 0.19
+        },
+        {
+          "shape": "cylinder",
+          "forward": 0,
+          "left": -0.4,
+          "up": 0.18,
+          "radius": 0.19,
+          "half_height": 0.17
+        }
+      ]
+    },
+    {
+      "id": "reed_gnasher",
+      "aim": 0,
+      "volumes": [
+        {
+          "shape": "ellipsoid",
+          "forward": -0.12,
+          "left": 0,
+          "up": 0.6,
+          "radius": 0.8,
+          "half_height": 0.35
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0.54,
+          "left": 0,
+          "up": 0.67,
+          "radius": 0.4,
+          "half_height": 0.25
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0.54,
+          "left": 0.42235,
+          "up": 0.67,
+          "radius": 0.26,
+          "half_height": 0.2
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0.54,
+          "left": -0.42235,
+          "up": 0.67,
+          "radius": 0.26,
+          "half_height": 0.2
+        },
+        {
+          "shape": "cylinder",
+          "forward": -0.44,
+          "left": 0.54588,
+          "up": 0.23,
+          "radius": 0.17059,
+          "half_height": 0.2
+        },
+        {
+          "shape": "cylinder",
+          "forward": -0.44,
+          "left": -0.54588,
+          "up": 0.23,
+          "radius": 0.17059,
+          "half_height": 0.2
+        }
+      ]
+    },
+    {
+      "id": "thornback_gnasher",
+      "aim": 0,
+      "volumes": [
+        {
+          "shape": "ellipsoid",
+          "forward": -0.12,
+          "left": 0,
+          "up": 0.6,
+          "radius": 0.8,
+          "half_height": 0.35
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0.54,
+          "left": 0,
+          "up": 0.67,
+          "radius": 0.4,
+          "half_height": 0.25
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0.54,
+          "left": 0.47846,
+          "up": 0.67,
+          "radius": 0.26,
+          "half_height": 0.2
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0.54,
+          "left": -0.47846,
+          "up": 0.67,
+          "radius": 0.26,
+          "half_height": 0.2
+        },
+        {
+          "shape": "cylinder",
+          "forward": -0.44,
+          "left": 0.59077,
+          "up": 0.23,
+          "radius": 0.18462,
+          "half_height": 0.2
+        },
+        {
+          "shape": "cylinder",
+          "forward": -0.44,
+          "left": -0.59077,
+          "up": 0.23,
+          "radius": 0.18462,
+          "half_height": 0.2
+        }
+      ]
+    },
+    {
+      "id": "great_gnasher",
+      "aim": 0,
+      "volumes": [
+        {
+          "shape": "ellipsoid",
+          "forward": -0.12,
+          "left": 0,
+          "up": 0.6,
+          "radius": 0.8,
+          "half_height": 0.35
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0.54,
+          "left": 0,
+          "up": 0.67,
+          "radius": 0.4,
+          "half_height": 0.25
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0.54,
+          "left": 0.46973,
+          "up": 0.67,
+          "radius": 0.26,
+          "half_height": 0.2
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0.54,
+          "left": -0.46973,
+          "up": 0.67,
+          "radius": 0.26,
+          "half_height": 0.2
+        },
+        {
+          "shape": "cylinder",
+          "forward": -0.44,
+          "left": 0.58378,
+          "up": 0.23,
+          "radius": 0.18243,
+          "half_height": 0.2
+        },
+        {
+          "shape": "cylinder",
+          "forward": -0.44,
+          "left": -0.58378,
+          "up": 0.23,
+          "radius": 0.18243,
+          "half_height": 0.2
+        }
+      ]
+    },
+    {
+      "id": "saddle_gnasher",
+      "aim": 0,
+      "volumes": [
+        {
+          "shape": "ellipsoid",
+          "forward": -0.12,
+          "left": 0,
+          "up": 0.6,
+          "radius": 0.73889,
+          "half_height": 0.35
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0.54,
+          "left": 0,
+          "up": 0.67,
+          "radius": 0.4,
+          "half_height": 0.25
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0.54,
+          "left": 0.36222,
+          "up": 0.67,
+          "radius": 0.26,
+          "half_height": 0.2
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0.54,
+          "left": -0.36222,
+          "up": 0.67,
+          "radius": 0.26,
+          "half_height": 0.2
+        },
+        {
+          "shape": "cylinder",
+          "forward": -0.44,
+          "left": 0.49778,
+          "up": 0.23,
+          "radius": 0.15556,
+          "half_height": 0.2
+        },
+        {
+          "shape": "cylinder",
+          "forward": -0.44,
+          "left": -0.49778,
+          "up": 0.23,
+          "radius": 0.15556,
+          "half_height": 0.2
+        }
+      ]
+    },
+    {
+      "id": "ironjaw_gnasher",
+      "aim": 0,
+      "volumes": [
+        {
+          "shape": "ellipsoid",
+          "forward": -0.12,
+          "left": 0,
+          "up": 0.6,
+          "radius": 0.8,
+          "half_height": 0.35
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0.54,
+          "left": 0,
+          "up": 0.67,
+          "radius": 0.4,
+          "half_height": 0.25
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0.54,
+          "left": 0.4781,
+          "up": 0.67,
+          "radius": 0.26,
+          "half_height": 0.2
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0.54,
+          "left": -0.4781,
+          "up": 0.67,
+          "radius": 0.26,
+          "half_height": 0.2
+        },
+        {
+          "shape": "cylinder",
+          "forward": -0.44,
+          "left": 0.59048,
+          "up": 0.23,
+          "radius": 0.18452,
+          "half_height": 0.2
+        },
+        {
+          "shape": "cylinder",
+          "forward": -0.44,
+          "left": -0.59048,
+          "up": 0.23,
+          "radius": 0.18452,
+          "half_height": 0.2
+        }
+      ]
+    },
+    {
+      "id": "brood_gnasher",
+      "aim": 0,
+      "volumes": [
+        {
+          "shape": "ellipsoid",
+          "forward": -0.11097,
+          "left": 0,
+          "up": 0.6,
+          "radius": 0.73978,
+          "half_height": 0.35
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": -0.11097,
+          "left": 0.46914,
+          "up": 0.6,
+          "radius": 0.48086,
+          "half_height": 0.28
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": -0.11097,
+          "left": -0.46914,
+          "up": 0.6,
+          "radius": 0.48086,
+          "half_height": 0.28
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0.49935,
+          "left": 0,
+          "up": 0.67,
+          "radius": 0.36989,
+          "half_height": 0.25
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0.49935,
+          "left": 0.55957,
+          "up": 0.67,
+          "radius": 0.24043,
+          "half_height": 0.2
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0.49935,
+          "left": -0.55957,
+          "up": 0.67,
+          "radius": 0.24043,
+          "half_height": 0.2
+        },
+        {
+          "shape": "cylinder",
+          "forward": -0.40688,
+          "left": 0.64,
+          "up": 0.23,
+          "radius": 0.2,
+          "half_height": 0.2
+        },
+        {
+          "shape": "cylinder",
+          "forward": -0.40688,
+          "left": -0.64,
+          "up": 0.23,
+          "radius": 0.2,
+          "half_height": 0.2
+        }
+      ]
+    },
+    {
+      "id": "skeleton_warrior",
+      "aim": 0,
+      "volumes": [
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": 0,
+          "up": 0.61,
+          "radius": 0.35854,
+          "half_height": 0.17
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": 0.22671,
+          "up": 0.61,
+          "radius": 0.23305,
+          "half_height": 0.136
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": -0.22671,
+          "up": 0.61,
+          "radius": 0.23305,
+          "half_height": 0.136
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": 0,
+          "up": 0.865,
+          "radius": 0.32927,
+          "half_height": 0.1
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": 0,
+          "up": 0.43,
+          "radius": 0.34317,
+          "half_height": 0.075
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": 0.18121,
+          "up": 0.43,
+          "radius": 0.22306,
+          "half_height": 0.06
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": -0.18121,
+          "up": 0.43,
+          "radius": 0.22306,
+          "half_height": 0.06
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": 0.60244,
+          "up": 0.57,
+          "radius": 0.14268,
+          "half_height": 0.18
+        },
+        {
+          "shape": "cylinder",
+          "forward": 0,
+          "left": 0.26951,
+          "up": 0.22,
+          "radius": 0.1189,
+          "half_height": 0.21
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": -0.60244,
+          "up": 0.57,
+          "radius": 0.14268,
+          "half_height": 0.18
+        },
+        {
+          "shape": "cylinder",
+          "forward": 0,
+          "left": -0.26951,
+          "up": 0.22,
+          "radius": 0.1189,
+          "half_height": 0.21
+        }
+      ]
+    },
+    {
+      "id": "skeleton_archer",
+      "aim": 0,
+      "volumes": [
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": 0,
+          "up": 0.61,
+          "radius": 0.38684,
+          "half_height": 0.17
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": 0.24461,
+          "up": 0.61,
+          "radius": 0.25145,
+          "half_height": 0.136
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": -0.24461,
+          "up": 0.61,
+          "radius": 0.25145,
+          "half_height": 0.136
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": 0,
+          "up": 0.865,
+          "radius": 0.35526,
+          "half_height": 0.1
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": 0,
+          "up": 0.43,
+          "radius": 0.37026,
+          "half_height": 0.075
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": 0.19551,
+          "up": 0.43,
+          "radius": 0.24067,
+          "half_height": 0.06
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": -0.19551,
+          "up": 0.43,
+          "radius": 0.24067,
+          "half_height": 0.06
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": 0.65,
+          "up": 0.57,
+          "radius": 0.15395,
+          "half_height": 0.18
+        },
+        {
+          "shape": "cylinder",
+          "forward": 0,
+          "left": 0.29079,
+          "up": 0.22,
+          "radius": 0.12829,
+          "half_height": 0.21
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": -0.65,
+          "up": 0.57,
+          "radius": 0.15395,
+          "half_height": 0.18
+        },
+        {
+          "shape": "cylinder",
+          "forward": 0,
+          "left": -0.29079,
+          "up": 0.22,
+          "radius": 0.12829,
+          "half_height": 0.21
+        }
+      ]
+    },
+    {
+      "id": "skeletal_pyromancer",
+      "aim": 0,
+      "volumes": [
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": 0,
+          "up": 0.61,
+          "radius": 0.38684,
+          "half_height": 0.17
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": 0.24461,
+          "up": 0.61,
+          "radius": 0.25145,
+          "half_height": 0.136
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": -0.24461,
+          "up": 0.61,
+          "radius": 0.25145,
+          "half_height": 0.136
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": 0,
+          "up": 0.865,
+          "radius": 0.35526,
+          "half_height": 0.1
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": 0,
+          "up": 0.43,
+          "radius": 0.37026,
+          "half_height": 0.075
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": 0.19551,
+          "up": 0.43,
+          "radius": 0.24067,
+          "half_height": 0.06
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": -0.19551,
+          "up": 0.43,
+          "radius": 0.24067,
+          "half_height": 0.06
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": 0.65,
+          "up": 0.57,
+          "radius": 0.15395,
+          "half_height": 0.18
+        },
+        {
+          "shape": "cylinder",
+          "forward": 0,
+          "left": 0.29079,
+          "up": 0.22,
+          "radius": 0.12829,
+          "half_height": 0.21
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": -0.65,
+          "up": 0.57,
+          "radius": 0.15395,
+          "half_height": 0.18
+        },
+        {
+          "shape": "cylinder",
+          "forward": 0,
+          "left": -0.29079,
+          "up": 0.22,
+          "radius": 0.12829,
+          "half_height": 0.21
+        }
+      ]
+    },
+    {
+      "id": "skeletal_cryomancer",
+      "aim": 0,
+      "volumes": [
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": 0,
+          "up": 0.61,
+          "radius": 0.38684,
+          "half_height": 0.17
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": 0.24461,
+          "up": 0.61,
+          "radius": 0.25145,
+          "half_height": 0.136
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": -0.24461,
+          "up": 0.61,
+          "radius": 0.25145,
+          "half_height": 0.136
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": 0,
+          "up": 0.865,
+          "radius": 0.35526,
+          "half_height": 0.1
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": 0,
+          "up": 0.43,
+          "radius": 0.37026,
+          "half_height": 0.075
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": 0.19551,
+          "up": 0.43,
+          "radius": 0.24067,
+          "half_height": 0.06
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": -0.19551,
+          "up": 0.43,
+          "radius": 0.24067,
+          "half_height": 0.06
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": 0.65,
+          "up": 0.57,
+          "radius": 0.15395,
+          "half_height": 0.18
+        },
+        {
+          "shape": "cylinder",
+          "forward": 0,
+          "left": 0.29079,
+          "up": 0.22,
+          "radius": 0.12829,
+          "half_height": 0.21
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": -0.65,
+          "up": 0.57,
+          "radius": 0.15395,
+          "half_height": 0.18
+        },
+        {
+          "shape": "cylinder",
+          "forward": 0,
+          "left": -0.29079,
+          "up": 0.22,
+          "radius": 0.12829,
+          "half_height": 0.21
+        }
+      ]
+    },
+    {
+      "id": "skeletal_stormcaller",
+      "aim": 0,
+      "volumes": [
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": 0,
+          "up": 0.61,
+          "radius": 0.38684,
+          "half_height": 0.17
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": 0.24461,
+          "up": 0.61,
+          "radius": 0.25145,
+          "half_height": 0.136
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": -0.24461,
+          "up": 0.61,
+          "radius": 0.25145,
+          "half_height": 0.136
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": 0,
+          "up": 0.865,
+          "radius": 0.35526,
+          "half_height": 0.1
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": 0,
+          "up": 0.43,
+          "radius": 0.37026,
+          "half_height": 0.075
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": 0.19551,
+          "up": 0.43,
+          "radius": 0.24067,
+          "half_height": 0.06
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": -0.19551,
+          "up": 0.43,
+          "radius": 0.24067,
+          "half_height": 0.06
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": 0.65,
+          "up": 0.57,
+          "radius": 0.15395,
+          "half_height": 0.18
+        },
+        {
+          "shape": "cylinder",
+          "forward": 0,
+          "left": 0.29079,
+          "up": 0.22,
+          "radius": 0.12829,
+          "half_height": 0.21
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": -0.65,
+          "up": 0.57,
+          "radius": 0.15395,
+          "half_height": 0.18
+        },
+        {
+          "shape": "cylinder",
+          "forward": 0,
+          "left": -0.29079,
+          "up": 0.22,
+          "radius": 0.12829,
+          "half_height": 0.21
+        }
+      ]
+    },
+    {
+      "id": "skeletal_venomancer",
+      "aim": 0,
+      "volumes": [
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": 0,
+          "up": 0.61,
+          "radius": 0.38684,
+          "half_height": 0.17
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": 0.24461,
+          "up": 0.61,
+          "radius": 0.25145,
+          "half_height": 0.136
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": -0.24461,
+          "up": 0.61,
+          "radius": 0.25145,
+          "half_height": 0.136
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": 0,
+          "up": 0.865,
+          "radius": 0.35526,
+          "half_height": 0.1
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": 0,
+          "up": 0.43,
+          "radius": 0.37026,
+          "half_height": 0.075
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": 0.19551,
+          "up": 0.43,
+          "radius": 0.24067,
+          "half_height": 0.06
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": -0.19551,
+          "up": 0.43,
+          "radius": 0.24067,
+          "half_height": 0.06
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": 0.65,
+          "up": 0.57,
+          "radius": 0.15395,
+          "half_height": 0.18
+        },
+        {
+          "shape": "cylinder",
+          "forward": 0,
+          "left": 0.29079,
+          "up": 0.22,
+          "radius": 0.12829,
+          "half_height": 0.21
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": -0.65,
+          "up": 0.57,
+          "radius": 0.15395,
+          "half_height": 0.18
+        },
+        {
+          "shape": "cylinder",
+          "forward": 0,
+          "left": -0.29079,
+          "up": 0.22,
+          "radius": 0.12829,
+          "half_height": 0.21
+        }
+      ]
+    },
+    {
+      "id": "skeletal_sentinel",
+      "aim": 0,
+      "volumes": [
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": 0,
+          "up": 0.61,
+          "radius": 0.31277,
+          "half_height": 0.17
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": 0.19777,
+          "up": 0.61,
+          "radius": 0.2033,
+          "half_height": 0.136
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": -0.19777,
+          "up": 0.61,
+          "radius": 0.2033,
+          "half_height": 0.136
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": 0,
+          "up": 0.865,
+          "radius": 0.28723,
+          "half_height": 0.1
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": 0,
+          "up": 0.43,
+          "radius": 0.29936,
+          "half_height": 0.075
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": 0.15807,
+          "up": 0.43,
+          "radius": 0.19459,
+          "half_height": 0.06
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": -0.15807,
+          "up": 0.43,
+          "radius": 0.19459,
+          "half_height": 0.06
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": 0.52553,
+          "up": 0.57,
+          "radius": 0.12447,
+          "half_height": 0.18
+        },
+        {
+          "shape": "cylinder",
+          "forward": 0,
+          "left": 0.23511,
+          "up": 0.22,
+          "radius": 0.10372,
+          "half_height": 0.21
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": -0.52553,
+          "up": 0.57,
+          "radius": 0.12447,
+          "half_height": 0.18
+        },
+        {
+          "shape": "cylinder",
+          "forward": 0,
+          "left": -0.23511,
+          "up": 0.22,
+          "radius": 0.10372,
+          "half_height": 0.21
+        }
+      ]
+    },
+    {
+      "id": "skeletal_duelist",
+      "aim": 0,
+      "volumes": [
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": 0,
+          "up": 0.61,
+          "radius": 0.38684,
+          "half_height": 0.17
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": 0.24461,
+          "up": 0.61,
+          "radius": 0.25145,
+          "half_height": 0.136
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": -0.24461,
+          "up": 0.61,
+          "radius": 0.25145,
+          "half_height": 0.136
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": 0,
+          "up": 0.865,
+          "radius": 0.35526,
+          "half_height": 0.1
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": 0,
+          "up": 0.43,
+          "radius": 0.37026,
+          "half_height": 0.075
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": 0.19551,
+          "up": 0.43,
+          "radius": 0.24067,
+          "half_height": 0.06
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": -0.19551,
+          "up": 0.43,
+          "radius": 0.24067,
+          "half_height": 0.06
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": 0.65,
+          "up": 0.57,
+          "radius": 0.15395,
+          "half_height": 0.18
+        },
+        {
+          "shape": "cylinder",
+          "forward": 0,
+          "left": 0.29079,
+          "up": 0.22,
+          "radius": 0.12829,
+          "half_height": 0.21
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": -0.65,
+          "up": 0.57,
+          "radius": 0.15395,
+          "half_height": 0.18
+        },
+        {
+          "shape": "cylinder",
+          "forward": 0,
+          "left": -0.29079,
+          "up": 0.22,
+          "radius": 0.12829,
+          "half_height": 0.21
+        }
+      ]
+    },
+    {
+      "id": "ossuary_lich",
+      "aim": 0,
+      "volumes": [
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": 0,
+          "up": 0.61,
+          "radius": 0.22615,
+          "half_height": 0.17
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": 0.143,
+          "up": 0.61,
+          "radius": 0.147,
+          "half_height": 0.136
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": -0.143,
+          "up": 0.61,
+          "radius": 0.147,
+          "half_height": 0.136
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": 0,
+          "up": 0.865,
+          "radius": 0.25385,
+          "half_height": 0.1
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": 0,
+          "up": 0.43,
+          "radius": 0.21646,
+          "half_height": 0.075
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": 0.1143,
+          "up": 0.43,
+          "radius": 0.1407,
+          "half_height": 0.06
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": -0.1143,
+          "up": 0.43,
+          "radius": 0.1407,
+          "half_height": 0.06
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": 0.38,
+          "up": 0.57,
+          "radius": 0.09,
+          "half_height": 0.18
+        },
+        {
+          "shape": "cylinder",
+          "forward": 0,
+          "left": 0.17,
+          "up": 0.22,
+          "radius": 0.075,
+          "half_height": 0.21
+        },
+        {
+          "shape": "ellipsoid",
+          "forward": 0,
+          "left": -0.38,
+          "up": 0.57,
+          "radius": 0.09,
+          "half_height": 0.18
+        },
+        {
+          "shape": "cylinder",
+          "forward": 0,
+          "left": -0.17,
+          "up": 0.22,
+          "radius": 0.075,
+          "half_height": 0.21
+        }
+      ]
+    }
+  ]
+}

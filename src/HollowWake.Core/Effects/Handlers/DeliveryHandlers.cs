@@ -156,7 +156,7 @@ internal sealed class AreaHandler : IEffectHandler
 {
     public string Type => "area";
 
-    public EffectSignature Signature { get; } = EffectSignature.Of("shape", "radius", "angle", "width", "inner", "filter", "center", "max_targets", "include_center", "pick", "require", "reach", "occlusion")
+    public EffectSignature Signature { get; } = EffectSignature.Of("shape", "radius", "angle", "width", "inner", "filter", "center", "max_targets", "include_center", "pick", "require", "reach", "occlusion", "contact", "height", "elevation")
         .Hook(EffectHooks.OnHit, "effects");
 
     public CompiledEffect Compile(JsonObject p, EffectCompileContext ctx) => new Effect
@@ -176,6 +176,9 @@ internal sealed class AreaHandler : IEffectHandler
         Require = ctx.ExprOf(p["require"]),
         FromEdge = ctx.ChoiceOf(p["reach"], "reach", "center", "center", "edge") == "edge",
         Free = OcclusionFree(ctx, p["occlusion"]),
+        BodyContact = ctx.ChoiceOf(p["contact"], "contact", "center", "center", "body") == "body",
+        Height = ctx.ExprOf(p["height"]),
+        Elevation = ctx.ExprOf(p["elevation"]),
     };
 
     private sealed class Effect : CompiledEffect, IDeliveryPlanSource
@@ -196,6 +199,9 @@ internal sealed class AreaHandler : IEffectHandler
         public bool FromEdge;
         /// <summary>Strikes through walls and rising ground (<c>occlusion: free</c>).</summary>
         public bool Free;
+        public bool BodyContact;
+        public Expr? Height;
+        public Expr? Elevation;
 
         private ResolvedAreaPlan ResolvePlan(EffectContext ctx)
         {
@@ -211,7 +217,7 @@ internal sealed class AreaHandler : IEffectHandler
             {
                 if (FromEdge)
                 {
-                    radius += ctx.SourceTransform?.Radius ?? 0;
+                    radius += HitBodies.Reach(ctx.Sim, ctx.Source, Facing(ctx));
                 }
                 if (ctx.Tags.Has("melee"))
                 {
@@ -221,8 +227,11 @@ internal sealed class AreaHandler : IEffectHandler
             var size = SizeOf(ctx, Shape, radius, Angle, Width, Inner, scaleAngle: true);
             var facing = Facing(ctx);
             var occluded = Occluded(ctx, Free);
+            var bottom = anchor.Z + (float)ctx.Eval(Elevation, 0);
+            var top = bottom + (float)Math.Max(0, ctx.Eval(Height, ctx.SourceTransform?.Height ?? 0));
             return new ResolvedAreaPlan(Shape, size, anchor, facing, CenterMode ?? (Shape.Anchored ? "source" : "focus"),
-                Filter, IncludeCenter ? Entity.None : ctx.Target, occluded, Require is not null, MaxTargets is not null);
+                Filter, IncludeCenter ? Entity.None : ctx.Target, occluded, Require is not null, MaxTargets is not null,
+                BodyContact, bottom, top);
         }
 
         public DeliveryForecast DescribeDelivery(EffectContext ctx)
@@ -235,7 +244,7 @@ internal sealed class AreaHandler : IEffectHandler
                 Shape.HasAngle && !inputs.WeaveAttribute("area.angle") ||
                 Shape.HasWidth && !inputs.ParameterOrAttribute(Width, "area.width") ||
                 !inputs.Expression(Inner) || Shape.Anchored && ctx.Tags.Has("melee") && !inputs.WeaveAttribute("melee.reach") ||
-                !Free && !inputs.WeaveAttribute("phasing"))
+                !Free && !inputs.WeaveAttribute("phasing") || !inputs.Expression(Height) || !inputs.Expression(Elevation))
                 return DeliveryForecast.Unavailable(inputs.Failure ?? "unavailable_inputs");
             try
             {
@@ -254,7 +263,9 @@ internal sealed class AreaHandler : IEffectHandler
             var targets = Rent();
             try
             {
-                foreach (var (e, pos, _) in ctx.Sim.Spatial.Within(plan.Anchor, plan.Reach, plan.HeightTolerance))
+                var bounds = plan.BodyContact ? HitBodies.Bounds(ctx.Sim) : default;
+                var height = plan.BodyContact ? MathF.Max(MathF.Abs(plan.Bottom - plan.Anchor.Z), MathF.Abs(plan.Top - plan.Anchor.Z)) + bounds.Height : plan.HeightTolerance;
+                foreach (var (e, pos, _) in ctx.Sim.Spatial.Within(plan.Anchor, plan.Reach + bounds.Radius, height))
                 {
                     if (!plan.IsCandidate(ctx, e, pos))
                     {
@@ -593,7 +604,8 @@ internal sealed class ProjectileHandler : IEffectHandler
             Vector2 dir;
             if (!ctx.Target.IsNone && ctx.TargetTransform is { } tt)
             {
-                dir = new Vector2(tt.Position.X - origin.X, tt.Position.Y - origin.Y);
+                var aim = HitBodies.AimPoint(ctx.Sim, ctx.Target);
+                dir = new Vector2(aim.X - origin.X, aim.Y - origin.Y);
             }
             else if (ctx.Direction.LengthSquared() > 0.001f)
             {
@@ -656,12 +668,19 @@ internal sealed class ProjectileHandler : IEffectHandler
         public void Launch(EffectContext ctx, EffectContext? basis, in Flight f, Vector3 at, float heading, float side, Vector3 aimPoint)
         {
             var sim = ctx.Sim;
-            var start = at + new Vector3(0, 0, 1.0f);
+            var lift = ctx.From is not null || OriginAtPoint ? (float)sim.Content.Rules.Number("delivery.projectile_origin_height", 1) :
+                HitBodies.AimPoint(sim, ctx.Source).Z - (ctx.SourceTransform?.Position.Z ?? 0);
+            var start = at + new Vector3(0, 0, lift);
             var speed = f.Speed;
             var velocity = new Vector3(MathF.Cos(heading) * speed, MathF.Sin(heading) * speed, 0);
             if (Spec.Gravity)
             {
                 velocity.Z = LobSpeed(sim, start, aimPoint, speed, f.Range);
+            }
+            else if (!ctx.Target.IsNone && sim.World.Has<Transform>(ctx.Target))
+            {
+                var aim = HitBodies.AimPoint(sim, ctx.Target);
+                velocity.Z = (aim.Z - start.Z) * speed / MathF.Max(0.01f, Vector2.Distance(new(start.X, start.Y), new(aim.X, aim.Y)));
             }
             var p = new Projectile
             {

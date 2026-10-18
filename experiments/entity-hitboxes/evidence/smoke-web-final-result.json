@@ -1,0 +1,29 @@
+{
+  "started": "2026-10-18T03:57:50.575Z",
+  "root": "C:\\Users\\John\\.codex\\worktrees\\precise-entity-hitboxes\\MMOARPG",
+  "directory": "C:\\Users\\John\\.codex\\worktrees\\precise-entity-hitboxes\\MMOARPG\\artifacts\\testing\\run-m55zD6",
+  "suite": "web",
+  "status": "passed",
+  "stages": [
+    {
+      "name": "smoke-web",
+      "status": "passed",
+      "started": "2026-10-18T03:57:52.657Z",
+      "code": 0,
+      "signal": null,
+      "passed": 29,
+      "total": 29,
+      "skipped": [],
+      "finished": "2026-10-18T03:59:16.516Z"
+    }
+  ],
+  "nativeRendering": "not covered by headless mode",
+  "server": {
+    "tcp": 59958,
+    "url": "http://127.0.0.1:59959",
+    "name": "harness-run-m55zD6",
+    "data": "C:\\Users\\John\\.codex\\worktrees\\precise-entity-hitboxes\\MMOARPG\\artifacts\\testing\\run-m55zD6\\data"
+  },
+  "cleanupErrors": [],
+  "finished": "2026-10-18T03:59:16.883Z"
+}

@@ -265,6 +265,10 @@ public sealed class PatternFactory
             transform.Radius = (float)(Math.Max(profile.Width, profile.Depth) / 2);
             transform.Height = (float)profile.Height;
         });
+        Register("hit_body", c => c.Sim.World.Add(c.Entity, new Combat.HitBody
+        {
+            Definition = c.Sim.Content.Require<HitBodyDef>(c.Str("profile") ?? ""),
+        }));
         Register("motion", c =>
         {
             var m = c.Sim.World.GetOrAdd<Motion>(c.Entity);
