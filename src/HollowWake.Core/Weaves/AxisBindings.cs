@@ -464,7 +464,7 @@ public static class AxisBindings
         }
     }
 
-    private static void FlagOf(string type, string parameter, Dimension dimension, bool @default = false, string unit = Flag, string? name = null) =>
+    private static void FlagOf(string type, string parameter, Dimension? dimension, bool @default = false, string unit = Flag, string? name = null) =>
         Register(new AxisBinding
         {
             Type = type,
@@ -589,6 +589,9 @@ public static class AxisBindings
         NodeOf("area", "require", NodeShape.Predicate, Targeting);
         Choice("area", "reach", Geometry, "center", new[] { "center", "edge" }, hidesNumber: true);
         Choice("area", "occlusion", Geometry, "blocked", Occlusions, hidesNumber: true);
+        // Outcome reporting does not change the region or payload; depth policy does affect proc causality.
+        FlagOf("area", "report_miss", null);
+        Choice("area", "payload_depth", Causality, "next", new[] { "next", "same" });
         Effects("area", "effects");
         Implicit("area", "aftershocks", Geometry, Count, attribute: "area.scatter");
         Implicit("area", "aftershock_scale", Geometry, Fraction, rule: "delivery.aftershock_scale", @default: 0.5, when: "aftershocks");
