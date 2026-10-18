@@ -53,4 +53,19 @@ The shared spawn-fact query and conservative precheck pass solution/Release buil
 
 A new controlled planning comparison is required because the source changed. The prior56.7857ms failure remains retained; it is not replaced or hidden by a new passing sample. No performance verdict is claimed yet for this implementation.
 
+## Optimized controlled pair: planning target met
+
+The next granted quiet window measured the changed implementation at exact `ec144c3df03252fa88d97e3931f1f2366d28b586`. It used the same original preserved runtime/content baseline, serial baseline then candidate, Normal priority and unchanged worldgen-only arguments. Both first samples and metadata are retained under `31-query-bench-*`; both processes exited zero. There were no reruns. The earlier bounded-only failure remains separately published.
+
+| Measure | Original baseline | Optimized candidate |
+| --- | ---: | ---: |
+| worldgen.zone.plan (ms) | 57.6400 | 36.6863 |
+| worldgen.chunk (ms) | 0.527831 | 0.579517 |
+| worldgen.chunk.alloc (KB) | 14.126465 | 14.111084 |
+| generated offers | 4 | 3 |
+
+The candidate meets the40ms planning target,4ms chunk target and400KB chunk allocation target in this controlled pair. The cap/offer tradeoff and restored legacy levels remain explicit above. Spawn-query optimization itself changes no generation goldens. These results are not substituted for a new tick/snapshot measurement after resident levels changed; older species measurements remain historical checkpoints. Claude rereview is still required before main integration.
+
+Validated minimal source commits are `b1dd4d9` (bound), `097c526` (explicit level policy) and `192e073` (shared spawn facts and conservative precheck). Branch-specific goldens/evidence are separate. Full #31 will propagate bottom-up through #32/#33/#34/#37; independent species owners can consume the minimal sequence and audit their own output.
+
 Acknowledged by: pending Claude rereview.
