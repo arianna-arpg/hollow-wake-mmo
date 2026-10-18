@@ -40,4 +40,11 @@ The app could not restore the archived entity-main-audit checkout: `The archived
 
 The exploratory diagnostic's first invocation passed build flags through to its arguments; the initial JSON and console output are retained separately. Invoking the built diagnostic directly with the correct source/output arguments reproduced the same 219/45 result. This is an evidence-command correction, not a gameplay retry.
 
-Acknowledged by: coordinator requested this scoped correction and the subsequent integration hold; independent correction review and Claude reciprocal review remain pending.
+## Independent review and helper visibility
+
+The independent scoped review of `6ca91cc` and evidence follow-up `ec9a8f0` reports 1,112 passing checks with no gameplay finding in the floor correction. Its 264 separate analytical predictions agree with all 249 contacts and 15 airborne misses. Complete peer diagnostics remain local; the coordinator owns the public review summary. This does not clear the upstream returning/layered-ground findings or the final combined integration.
+
+The review identified xUnit1013 on the public non-test helper `AssertHumanoidFreeShotContact`. This follow-up changes only that helper's accessibility to `internal`; both test callers remain in the same assembly. Production, content, clients, scripts, replay references, assertions and runtime behavior are unchanged.
+
+`dotnet build tests/HollowWake.Core.Tests/HollowWake.Core.Tests.csproj --no-restore -m:1 -nr:false -p:UseSharedCompilation=false` succeeds with zero warnings and zero errors. The log and exact one-line declaration diff are retained as `34-helper-visibility-build.txt` and `34-helper-visibility.patch` under the entity review evidence directory. Neither the 848-case runtime selection nor the independent 1,112-check review was rerun. Final integration gates and sibling propagation remain held pending complete corrected #36.
+Acknowledged by: independent scoped floor review completed at6ca91cc with the visibility cleanup above; final Claude reciprocal review remains pending under the upstream integration hold.

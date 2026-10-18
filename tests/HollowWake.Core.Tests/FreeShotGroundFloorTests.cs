@@ -27,7 +27,7 @@ public class FreeShotGroundFloorTests(ITestOutputHelper output)
     public void HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(string pattern, float slope, string preset, bool beyond)
         => AssertHumanoidFreeShotContact(pattern, slope, preset, beyond ? 8 : 4, beyond ? 1 : 6);
 
-    public void AssertHumanoidFreeShotContact(string pattern, float slope, string preset,
+    internal void AssertHumanoidFreeShotContact(string pattern, float slope, string preset,
         float distance, float cursorDistance, bool expectedHit = true)
     {
         var a = Arena(slope);
