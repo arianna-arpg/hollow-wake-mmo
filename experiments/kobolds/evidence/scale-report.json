@@ -1,0 +1,47 @@
+[
+  {
+    "id": "holdfast",
+    "authoritativeHeight": 1.8,
+    "modelHeight": 1.7334
+  },
+  {
+    "id": "skeleton_warrior",
+    "authoritativeHeight": 1.8,
+    "modelHeight": 1.7128800000000002
+  },
+  {
+    "id": "goblin_skirmisher",
+    "authoritativeHeight": 0.9,
+    "modelHeight": 0.9319047680409906
+  },
+  {
+    "id": "kobold_scavenger",
+    "authoritativeHeight": 0.82,
+    "modelHeight": 0.8486999999999999
+  },
+  {
+    "id": "kobold_knifehand",
+    "authoritativeHeight": 0.9,
+    "modelHeight": 0.9765
+  },
+  {
+    "id": "kobold_rimeweaver",
+    "authoritativeHeight": 1.05,
+    "modelHeight": 1.092
+  },
+  {
+    "id": "kobold_cragbreaker",
+    "authoritativeHeight": 1.35,
+    "modelHeight": 1.46475
+  },
+  {
+    "id": "kobold_ironback",
+    "authoritativeHeight": 1.4,
+    "modelHeight": 1.4489999999999998
+  },
+  {
+    "id": "kobold_scalechief",
+    "authoritativeHeight": 1.48,
+    "modelHeight": 1.8278000000000003
+  }
+]

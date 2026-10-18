@@ -1,0 +1,16 @@
+Base: 90cb7fcb5eec97a6ad438c10f7b564f1dfa88790, seed aureth.
+Four dedicated POIs at weight 0.35 enter existing ruin budgets. No climate, terrain generator, regional budget, biome roaming table or runtime edits.
+
+zone(0,0): authored starter sites and chunk hash unchanged. The nearby scout-ruin quest chooses Scrapscale Camp instead of Chainkeeper Camp.
+zone(1,0): the weighted choice at (432,199) changes from orc_hold/ruin_walls to orc_chaincamp/camp_ring. Other printed sites retain their coordinates. This intentionally changes the stamp and inhabitants, so its chunk hash changes.
+zone(0,-1) and zone(3,2): printed zone/map output and chunk hashes unchanged; zone-info hashes also include neighboring POIs through PoisAround, whose weighted choices change.
+Climate/region golden remains 999D90D6110B1CDD. Overlay output changes because it includes POI planning and nearby choices.
+
+Before/after maps and pre-refresh failures are retained beside this file. The focused tests prove deterministic replay and level gates for each authored site. Natural seed fixtures prove actual populated sites, without overrides:
+kobold_scale_hold zone(-15,-40) at(-3654.5,-10123.5), L35
+kobold_scrap_camp zone(-8,-40) at(-2012.5,-10019.5), L27
+kobold_cinder_camp zone(-25,-31) at(-6178.5,-7721.5), L26
+kobold_reed_camp zone(-7,-23) at(-1751.5,-5754.5), L16
+These are evidence locations, not promised nearest spawns. Each site has at most four single-member Kobold inhabitants, with existing level gates. The ruin-walls landmark also carries its existing chest.
+
+Integrating concurrent faction POIs changes weighted picks again. Reinspect and regenerate goldens on the combined tree.

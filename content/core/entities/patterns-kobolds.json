@@ -1,0 +1,1065 @@
+{
+  "kind": "patterns",
+  "entries": [
+    {
+      "id": "kobold_body",
+      "name": "Scaleclan body template",
+      "extends": "creature",
+      "faction": "kobold_scaleclans",
+      "tags": [
+        "kobold",
+        "reptile",
+        "dragonkin",
+        "humanoid",
+        "living",
+        "locomotion.ground"
+      ],
+      "components": {
+        "stats": {
+          "attributes": {
+            "might": 9,
+            "grace": 15,
+            "will": 10,
+            "stamina.max": 75,
+            "stamina.regen": 18,
+            "mana.max": 90,
+            "mana.regen": 14
+          }
+        },
+        "statuses": {}
+      }
+    },
+    {
+      "id": "kobold_scavenger",
+      "name": "Scrapscale Scavenger",
+      "extends": "kobold_body",
+      "faction": "kobold_scaleclans",
+      "tags": [
+        "monster",
+        "body.flesh",
+        "body.scaled",
+        "family.kobold",
+        "role.scavenger",
+        "melee",
+        "size.small",
+        "habitat.kobold_scrap_camp",
+        "culture.scaleclan"
+      ],
+      "level": 2,
+      "radius": 0.17,
+      "height": 0.82,
+      "components": {
+        "physical": {
+          "width": 0.34,
+          "depth": 0.32,
+          "height": 0.82,
+          "fill": 0.2,
+          "heft": 1,
+          "materials": [
+            {
+              "material": "flesh",
+              "fraction": 0.872
+            },
+            {
+              "material": "kobold_scales",
+              "fraction": 0.12
+            },
+            {
+              "material": "iron",
+              "fraction": 0.008
+            }
+          ]
+        },
+        "stats": {
+          "attributes": {
+            "life.max": "38 + (level - 1) * 5",
+            "move.speed": 5.3,
+            "weapon.damage.min": "4 + (level - 1) * 0.5",
+            "weapon.damage.max": "8 + (level - 1) * 0.8",
+            "weapon.attack.time": 0.95,
+            "poise.max": 7,
+            "armor": 2,
+            "spell.power": 1.1
+          }
+        },
+        "weaves": {
+          "list": [
+            "strike"
+          ]
+        },
+        "behavior": {
+          "id": "kobold_press"
+        },
+        "drops": {
+          "table": "kobold_salvage",
+          "xp": "10 + level * 7",
+          "chance": 0.6
+        }
+      },
+      "meta": {
+        "origin": "Original Kobold roster; reptilian anatomy informed by prototype roost_dragon at 118b510f.",
+        "ai_handoff": "Existing state machines and skills only. No flight, breath, traps, coordinated flank, mining, command hierarchy or innate resistance.",
+        "adaptation": "Role equipment is presentation; current kit supplies combat mechanics."
+      }
+    },
+    {
+      "id": "kobold_knifehand",
+      "name": "Coppercrest Knifehand",
+      "extends": "kobold_body",
+      "faction": "kobold_scaleclans",
+      "tags": [
+        "monster",
+        "body.flesh",
+        "body.scaled",
+        "family.kobold",
+        "role.skirmisher",
+        "melee",
+        "size.small",
+        "habitat.kobold_scrap_camp",
+        "culture.scaleclan"
+      ],
+      "level": 3,
+      "radius": 0.18,
+      "height": 0.9,
+      "components": {
+        "physical": {
+          "width": 0.36,
+          "depth": 0.34,
+          "height": 0.9,
+          "fill": 0.2,
+          "heft": 1,
+          "materials": [
+            {
+              "material": "flesh",
+              "fraction": 0.872
+            },
+            {
+              "material": "kobold_scales",
+              "fraction": 0.12
+            },
+            {
+              "material": "iron",
+              "fraction": 0.008
+            }
+          ]
+        },
+        "stats": {
+          "attributes": {
+            "life.max": "48 + (level - 1) * 5",
+            "move.speed": 5.7,
+            "weapon.damage.min": "4 + (level - 1) * 0.5",
+            "weapon.damage.max": "8 + (level - 1) * 0.8",
+            "weapon.attack.time": 0.95,
+            "poise.max": 9,
+            "armor": 4,
+            "spell.power": 1.1
+          }
+        },
+        "weaves": {
+          "list": [
+            "backstab",
+            "strike"
+          ]
+        },
+        "behavior": {
+          "id": "kobold_press"
+        },
+        "drops": {
+          "table": "kobold_salvage",
+          "xp": "10 + level * 7",
+          "chance": 0.6
+        }
+      },
+      "meta": {
+        "origin": "Original Kobold roster; reptilian anatomy informed by prototype roost_dragon at 118b510f.",
+        "ai_handoff": "Existing state machines and skills only. No flight, breath, traps, coordinated flank, mining, command hierarchy or innate resistance.",
+        "adaptation": "Backstab uses its existing runtime; no stealth or AI flanking guarantee."
+      }
+    },
+    {
+      "id": "kobold_dartbow",
+      "name": "Reedbow Lookout",
+      "extends": "kobold_body",
+      "faction": "kobold_scaleclans",
+      "tags": [
+        "monster",
+        "body.flesh",
+        "body.scaled",
+        "family.kobold",
+        "role.archer",
+        "ranged",
+        "size.small",
+        "habitat.kobold_scrap_camp",
+        "culture.scaleclan"
+      ],
+      "level": 4,
+      "radius": 0.175,
+      "height": 0.92,
+      "components": {
+        "physical": {
+          "width": 0.35,
+          "depth": 0.34,
+          "height": 0.92,
+          "fill": 0.2,
+          "heft": 1,
+          "materials": [
+            {
+              "material": "flesh",
+              "fraction": 0.872
+            },
+            {
+              "material": "kobold_scales",
+              "fraction": 0.12
+            },
+            {
+              "material": "iron",
+              "fraction": 0.008
+            }
+          ]
+        },
+        "stats": {
+          "attributes": {
+            "life.max": "45 + (level - 1) * 5",
+            "move.speed": 5.4,
+            "weapon.damage.min": "4 + (level - 1) * 0.5",
+            "weapon.damage.max": "8 + (level - 1) * 0.8",
+            "weapon.attack.time": 0.95,
+            "poise.max": 8,
+            "armor": 3,
+            "spell.power": 1.1
+          }
+        },
+        "weaves": {
+          "list": [
+            "piercing_arrow"
+          ]
+        },
+        "behavior": {
+          "id": "aggressive_ranged"
+        },
+        "drops": {
+          "table": "kobold_salvage",
+          "xp": "10 + level * 7",
+          "chance": 0.6
+        }
+      },
+      "meta": {
+        "origin": "Original Kobold roster; reptilian anatomy informed by prototype roost_dragon at 118b510f.",
+        "ai_handoff": "Existing state machines and skills only. No flight, breath, traps, coordinated flank, mining, command hierarchy or innate resistance.",
+        "adaptation": "Role equipment is presentation; current kit supplies combat mechanics."
+      }
+    },
+    {
+      "id": "kobold_stonecaster",
+      "name": "Scree Stonecaster",
+      "extends": "kobold_body",
+      "faction": "kobold_scaleclans",
+      "tags": [
+        "monster",
+        "body.flesh",
+        "body.scaled",
+        "family.kobold",
+        "role.artillery",
+        "ranged",
+        "size.small",
+        "habitat.kobold_scrap_camp",
+        "culture.scaleclan"
+      ],
+      "level": 5,
+      "radius": 0.2,
+      "height": 0.96,
+      "components": {
+        "physical": {
+          "width": 0.4,
+          "depth": 0.38,
+          "height": 0.96,
+          "fill": 0.2,
+          "heft": 1,
+          "materials": [
+            {
+              "material": "flesh",
+              "fraction": 0.872
+            },
+            {
+              "material": "kobold_scales",
+              "fraction": 0.12
+            },
+            {
+              "material": "iron",
+              "fraction": 0.008
+            }
+          ]
+        },
+        "stats": {
+          "attributes": {
+            "life.max": "62 + (level - 1) * 5",
+            "move.speed": 4.8,
+            "weapon.damage.min": "4 + (level - 1) * 0.5",
+            "weapon.damage.max": "8 + (level - 1) * 0.8",
+            "weapon.attack.time": 0.95,
+            "poise.max": 12,
+            "armor": 7,
+            "spell.power": 1.1
+          }
+        },
+        "weaves": {
+          "list": [
+            "hurl_debris"
+          ]
+        },
+        "behavior": {
+          "id": "aggressive_ranged"
+        },
+        "drops": {
+          "table": "kobold_salvage",
+          "xp": "10 + level * 7",
+          "chance": 0.6
+        }
+      },
+      "meta": {
+        "origin": "Original Kobold roster; reptilian anatomy informed by prototype roost_dragon at 118b510f.",
+        "ai_handoff": "Existing state machines and skills only. No flight, breath, traps, coordinated flank, mining, command hierarchy or innate resistance.",
+        "adaptation": "Hurl Debris stands for thrown salvage; no sling mechanism."
+      }
+    },
+    {
+      "id": "kobold_spearguard",
+      "name": "Reedspine Spearguard",
+      "extends": "kobold_body",
+      "faction": "kobold_scaleclans",
+      "tags": [
+        "monster",
+        "body.flesh",
+        "body.scaled",
+        "family.kobold",
+        "role.sentinel",
+        "ranged",
+        "size.small",
+        "habitat.kobold_reed_camp",
+        "culture.scaleclan"
+      ],
+      "level": 4,
+      "radius": 0.2,
+      "height": 1.02,
+      "components": {
+        "physical": {
+          "width": 0.4,
+          "depth": 0.38,
+          "height": 1.02,
+          "fill": 0.2,
+          "heft": 1,
+          "materials": [
+            {
+              "material": "flesh",
+              "fraction": 0.872
+            },
+            {
+              "material": "kobold_scales",
+              "fraction": 0.12
+            },
+            {
+              "material": "iron",
+              "fraction": 0.008
+            }
+          ]
+        },
+        "stats": {
+          "attributes": {
+            "life.max": "66 + (level - 1) * 5",
+            "move.speed": 4.8,
+            "weapon.damage.min": "4 + (level - 1) * 0.5",
+            "weapon.damage.max": "8 + (level - 1) * 0.8",
+            "weapon.attack.time": 0.95,
+            "poise.max": 16,
+            "armor": 10,
+            "spell.power": 1.1
+          }
+        },
+        "weaves": {
+          "list": [
+            "pinning_spear",
+            "strike"
+          ]
+        },
+        "behavior": {
+          "id": "aggressive_ranged"
+        },
+        "drops": {
+          "table": "kobold_salvage",
+          "xp": "10 + level * 7",
+          "chance": 0.6
+        }
+      },
+      "meta": {
+        "origin": "Original Kobold roster; reptilian anatomy informed by prototype roost_dragon at 118b510f.",
+        "ai_handoff": "Existing state machines and skills only. No flight, breath, traps, coordinated flank, mining, command hierarchy or innate resistance.",
+        "adaptation": "Role equipment is presentation; current kit supplies combat mechanics."
+      }
+    },
+    {
+      "id": "kobold_venomweaver",
+      "name": "Mireglass Weaver",
+      "extends": "kobold_body",
+      "faction": "kobold_scaleclans",
+      "tags": [
+        "monster",
+        "body.flesh",
+        "body.scaled",
+        "family.kobold",
+        "role.caster",
+        "ranged",
+        "caster",
+        "size.small",
+        "habitat.kobold_reed_camp",
+        "culture.scaleclan"
+      ],
+      "level": 6,
+      "radius": 0.19,
+      "height": 0.98,
+      "components": {
+        "physical": {
+          "width": 0.38,
+          "depth": 0.37,
+          "height": 0.98,
+          "fill": 0.2,
+          "heft": 1,
+          "materials": [
+            {
+              "material": "flesh",
+              "fraction": 0.872
+            },
+            {
+              "material": "kobold_scales",
+              "fraction": 0.12
+            },
+            {
+              "material": "iron",
+              "fraction": 0.008
+            }
+          ]
+        },
+        "stats": {
+          "attributes": {
+            "life.max": "60 + (level - 1) * 5",
+            "move.speed": 4.7,
+            "weapon.damage.min": "4 + (level - 1) * 0.5",
+            "weapon.damage.max": "8 + (level - 1) * 0.8",
+            "weapon.attack.time": 0.95,
+            "poise.max": 11,
+            "armor": 5,
+            "spell.power": 1.1
+          }
+        },
+        "weaves": {
+          "list": [
+            "venom_bolt"
+          ]
+        },
+        "behavior": {
+          "id": "aggressive_ranged"
+        },
+        "drops": {
+          "table": "kobold_salvage",
+          "xp": "10 + level * 7",
+          "chance": 0.6
+        }
+      },
+      "meta": {
+        "origin": "Original Kobold roster; reptilian anatomy informed by prototype roost_dragon at 118b510f.",
+        "ai_handoff": "Existing state machines and skills only. No flight, breath, traps, coordinated flank, mining, command hierarchy or innate resistance.",
+        "adaptation": "Hand-cast existing weave, never a breath attack."
+      }
+    },
+    {
+      "id": "kobold_rimeweaver",
+      "name": "Palecrest Rimeweaver",
+      "extends": "kobold_body",
+      "faction": "kobold_scaleclans",
+      "tags": [
+        "monster",
+        "body.flesh",
+        "body.scaled",
+        "family.kobold",
+        "role.caster",
+        "ranged",
+        "caster",
+        "size.small",
+        "habitat.kobold_reed_camp",
+        "culture.scaleclan"
+      ],
+      "level": 7,
+      "radius": 0.195,
+      "height": 1.05,
+      "components": {
+        "physical": {
+          "width": 0.39,
+          "depth": 0.38,
+          "height": 1.05,
+          "fill": 0.2,
+          "heft": 1,
+          "materials": [
+            {
+              "material": "flesh",
+              "fraction": 0.872
+            },
+            {
+              "material": "kobold_scales",
+              "fraction": 0.12
+            },
+            {
+              "material": "iron",
+              "fraction": 0.008
+            }
+          ]
+        },
+        "stats": {
+          "attributes": {
+            "life.max": "68 + (level - 1) * 5",
+            "move.speed": 4.5,
+            "weapon.damage.min": "4 + (level - 1) * 0.5",
+            "weapon.damage.max": "8 + (level - 1) * 0.8",
+            "weapon.attack.time": 0.95,
+            "poise.max": 13,
+            "armor": 7,
+            "spell.power": 1.1
+          }
+        },
+        "weaves": {
+          "list": [
+            "frostbolt"
+          ]
+        },
+        "behavior": {
+          "id": "aggressive_ranged"
+        },
+        "drops": {
+          "table": "kobold_salvage",
+          "xp": "10 + level * 7",
+          "chance": 0.6
+        }
+      },
+      "meta": {
+        "origin": "Original Kobold roster; reptilian anatomy informed by prototype roost_dragon at 118b510f.",
+        "ai_handoff": "Existing state machines and skills only. No flight, breath, traps, coordinated flank, mining, command hierarchy or innate resistance.",
+        "adaptation": "Hand-cast existing weave, never a breath attack."
+      }
+    },
+    {
+      "id": "kobold_tunnelguard",
+      "name": "Cinderplate Tunnelguard",
+      "extends": "kobold_body",
+      "faction": "kobold_scaleclans",
+      "tags": [
+        "monster",
+        "body.flesh",
+        "body.scaled",
+        "family.kobold",
+        "role.guard",
+        "melee",
+        "size.small",
+        "habitat.kobold_cinder_camp",
+        "culture.scaleclan"
+      ],
+      "level": 6,
+      "radius": 0.24,
+      "height": 1.1,
+      "components": {
+        "physical": {
+          "width": 0.48,
+          "depth": 0.42,
+          "height": 1.1,
+          "fill": 0.2,
+          "heft": 1,
+          "materials": [
+            {
+              "material": "flesh",
+              "fraction": 0.852
+            },
+            {
+              "material": "kobold_scales",
+              "fraction": 0.12
+            },
+            {
+              "material": "iron",
+              "fraction": 0.028
+            }
+          ]
+        },
+        "stats": {
+          "attributes": {
+            "life.max": "105 + (level - 1) * 5",
+            "move.speed": 4.1,
+            "weapon.damage.min": "4 + (level - 1) * 0.5",
+            "weapon.damage.max": "8 + (level - 1) * 0.8",
+            "weapon.attack.time": 0.95,
+            "poise.max": 28,
+            "armor": 28,
+            "spell.power": 1.1
+          }
+        },
+        "weaves": {
+          "list": [
+            "buckler_strike",
+            "strike"
+          ]
+        },
+        "behavior": {
+          "id": "kobold_press"
+        },
+        "drops": {
+          "table": "kobold_salvage",
+          "xp": "10 + level * 7",
+          "chance": 0.6
+        }
+      },
+      "meta": {
+        "origin": "Original Kobold roster; reptilian anatomy informed by prototype roost_dragon at 118b510f.",
+        "ai_handoff": "Existing state machines and skills only. No flight, breath, traps, coordinated flank, mining, command hierarchy or innate resistance.",
+        "adaptation": "Role equipment is presentation; current kit supplies combat mechanics."
+      }
+    },
+    {
+      "id": "kobold_cinderweaver",
+      "name": "Coalcrest Cinderweaver",
+      "extends": "kobold_body",
+      "faction": "kobold_scaleclans",
+      "tags": [
+        "monster",
+        "body.flesh",
+        "body.scaled",
+        "family.kobold",
+        "role.caster",
+        "ranged",
+        "caster",
+        "size.small",
+        "habitat.kobold_cinder_camp",
+        "culture.scaleclan"
+      ],
+      "level": 7,
+      "radius": 0.195,
+      "height": 1,
+      "components": {
+        "physical": {
+          "width": 0.39,
+          "depth": 0.37,
+          "height": 1,
+          "fill": 0.2,
+          "heft": 1,
+          "materials": [
+            {
+              "material": "flesh",
+              "fraction": 0.872
+            },
+            {
+              "material": "kobold_scales",
+              "fraction": 0.12
+            },
+            {
+              "material": "iron",
+              "fraction": 0.008
+            }
+          ]
+        },
+        "stats": {
+          "attributes": {
+            "life.max": "66 + (level - 1) * 5",
+            "move.speed": 4.6,
+            "weapon.damage.min": "4 + (level - 1) * 0.5",
+            "weapon.damage.max": "8 + (level - 1) * 0.8",
+            "weapon.attack.time": 0.95,
+            "poise.max": 12,
+            "armor": 8,
+            "spell.power": 1.1
+          }
+        },
+        "weaves": {
+          "list": [
+            "firebolt"
+          ]
+        },
+        "behavior": {
+          "id": "aggressive_ranged"
+        },
+        "drops": {
+          "table": "kobold_salvage",
+          "xp": "10 + level * 7",
+          "chance": 0.6
+        }
+      },
+      "meta": {
+        "origin": "Original Kobold roster; reptilian anatomy informed by prototype roost_dragon at 118b510f.",
+        "ai_handoff": "Existing state machines and skills only. No flight, breath, traps, coordinated flank, mining, command hierarchy or innate resistance.",
+        "adaptation": "Hand-cast existing weave, never a breath attack."
+      }
+    },
+    {
+      "id": "kobold_stormweaver",
+      "name": "Wirecrest Stormweaver",
+      "extends": "kobold_body",
+      "faction": "kobold_scaleclans",
+      "tags": [
+        "monster",
+        "body.flesh",
+        "body.scaled",
+        "family.kobold",
+        "role.caster",
+        "ranged",
+        "caster",
+        "size.small",
+        "habitat.kobold_cinder_camp",
+        "culture.scaleclan"
+      ],
+      "level": 8,
+      "radius": 0.2,
+      "height": 1.08,
+      "components": {
+        "physical": {
+          "width": 0.4,
+          "depth": 0.38,
+          "height": 1.08,
+          "fill": 0.2,
+          "heft": 1,
+          "materials": [
+            {
+              "material": "flesh",
+              "fraction": 0.872
+            },
+            {
+              "material": "kobold_scales",
+              "fraction": 0.12
+            },
+            {
+              "material": "iron",
+              "fraction": 0.008
+            }
+          ]
+        },
+        "stats": {
+          "attributes": {
+            "life.max": "76 + (level - 1) * 5",
+            "move.speed": 4.8,
+            "weapon.damage.min": "4 + (level - 1) * 0.5",
+            "weapon.damage.max": "8 + (level - 1) * 0.8",
+            "weapon.attack.time": 0.95,
+            "poise.max": 15,
+            "armor": 9,
+            "spell.power": 1.1
+          }
+        },
+        "weaves": {
+          "list": [
+            "storm_bolt"
+          ]
+        },
+        "behavior": {
+          "id": "aggressive_ranged"
+        },
+        "drops": {
+          "table": "kobold_salvage",
+          "xp": "10 + level * 7",
+          "chance": 0.6
+        }
+      },
+      "meta": {
+        "origin": "Original Kobold roster; reptilian anatomy informed by prototype roost_dragon at 118b510f.",
+        "ai_handoff": "Existing state machines and skills only. No flight, breath, traps, coordinated flank, mining, command hierarchy or innate resistance.",
+        "adaptation": "Hand-cast existing weave, never a breath attack."
+      }
+    },
+    {
+      "id": "kobold_cragbreaker",
+      "name": "Cragback Breaker",
+      "extends": "kobold_body",
+      "faction": "kobold_scaleclans",
+      "tags": [
+        "monster",
+        "body.flesh",
+        "body.scaled",
+        "family.kobold",
+        "role.breaker",
+        "melee",
+        "size.medium",
+        "habitat.kobold_scale_hold",
+        "culture.scaleclan"
+      ],
+      "level": 10,
+      "radius": 0.32,
+      "height": 1.35,
+      "components": {
+        "physical": {
+          "width": 0.64,
+          "depth": 0.5,
+          "height": 1.35,
+          "fill": 0.22,
+          "heft": 1,
+          "materials": [
+            {
+              "material": "flesh",
+              "fraction": 0.872
+            },
+            {
+              "material": "kobold_scales",
+              "fraction": 0.12
+            },
+            {
+              "material": "iron",
+              "fraction": 0.008
+            }
+          ]
+        },
+        "stats": {
+          "attributes": {
+            "life.max": "150 + (level - 1) * 5",
+            "move.speed": 3.9,
+            "weapon.damage.min": "8 + (level - 1) * 0.5",
+            "weapon.damage.max": "15 + (level - 1) * 0.8",
+            "weapon.attack.time": 1.2,
+            "poise.max": 44,
+            "armor": 24,
+            "spell.power": 1.1
+          }
+        },
+        "weaves": {
+          "list": [
+            "sunder_maul",
+            "heavy_strike"
+          ]
+        },
+        "behavior": {
+          "id": "kobold_press"
+        },
+        "drops": {
+          "table": "kobold_salvage",
+          "xp": "10 + level * 7",
+          "chance": 0.6
+        }
+      },
+      "meta": {
+        "origin": "Original Kobold roster; reptilian anatomy informed by prototype roost_dragon at 118b510f.",
+        "ai_handoff": "Existing state machines and skills only. No flight, breath, traps, coordinated flank, mining, command hierarchy or innate resistance.",
+        "adaptation": "Role equipment is presentation; current kit supplies combat mechanics."
+      }
+    },
+    {
+      "id": "kobold_ironback",
+      "name": "Ironback Bulwark",
+      "extends": "kobold_body",
+      "faction": "kobold_scaleclans",
+      "tags": [
+        "monster",
+        "body.flesh",
+        "body.scaled",
+        "family.kobold",
+        "role.guard",
+        "melee",
+        "size.medium",
+        "habitat.kobold_scale_hold",
+        "culture.scaleclan"
+      ],
+      "level": 11,
+      "radius": 0.36,
+      "height": 1.4,
+      "components": {
+        "physical": {
+          "width": 0.72,
+          "depth": 0.55,
+          "height": 1.4,
+          "fill": 0.22,
+          "heft": 1,
+          "materials": [
+            {
+              "material": "flesh",
+              "fraction": 0.852
+            },
+            {
+              "material": "kobold_scales",
+              "fraction": 0.12
+            },
+            {
+              "material": "iron",
+              "fraction": 0.028
+            }
+          ]
+        },
+        "stats": {
+          "attributes": {
+            "life.max": "190 + (level - 1) * 5",
+            "move.speed": 3.4,
+            "weapon.damage.min": "8 + (level - 1) * 0.5",
+            "weapon.damage.max": "15 + (level - 1) * 0.8",
+            "weapon.attack.time": 1.2,
+            "poise.max": 65,
+            "armor": 55,
+            "spell.power": 1.1
+          }
+        },
+        "weaves": {
+          "list": [
+            "heavy_strike"
+          ]
+        },
+        "behavior": {
+          "id": "kobold_press"
+        },
+        "drops": {
+          "table": "kobold_salvage",
+          "xp": "10 + level * 7",
+          "chance": 0.6
+        }
+      },
+      "meta": {
+        "origin": "Original Kobold roster; reptilian anatomy informed by prototype roost_dragon at 118b510f.",
+        "ai_handoff": "Existing state machines and skills only. No flight, breath, traps, coordinated flank, mining, command hierarchy or innate resistance.",
+        "adaptation": "Role equipment is presentation; current kit supplies combat mechanics."
+      }
+    },
+    {
+      "id": "kobold_crestcaller",
+      "name": "Highfrill Crestcaller",
+      "extends": "kobold_body",
+      "faction": "kobold_scaleclans",
+      "tags": [
+        "monster",
+        "body.flesh",
+        "body.scaled",
+        "family.kobold",
+        "role.support",
+        "melee",
+        "size.small",
+        "habitat.kobold_scale_hold",
+        "culture.scaleclan"
+      ],
+      "level": 10,
+      "radius": 0.225,
+      "height": 1.15,
+      "components": {
+        "physical": {
+          "width": 0.45,
+          "depth": 0.41,
+          "height": 1.15,
+          "fill": 0.2,
+          "heft": 1,
+          "materials": [
+            {
+              "material": "flesh",
+              "fraction": 0.872
+            },
+            {
+              "material": "kobold_scales",
+              "fraction": 0.12
+            },
+            {
+              "material": "iron",
+              "fraction": 0.008
+            }
+          ]
+        },
+        "stats": {
+          "attributes": {
+            "life.max": "108 + (level - 1) * 5",
+            "move.speed": 4.4,
+            "weapon.damage.min": "4 + (level - 1) * 0.5",
+            "weapon.damage.max": "8 + (level - 1) * 0.8",
+            "weapon.attack.time": 0.95,
+            "poise.max": 22,
+            "armor": 14,
+            "spell.power": 1.1
+          }
+        },
+        "weaves": {
+          "list": [
+            "rallying_shout",
+            "cleave"
+          ]
+        },
+        "behavior": {
+          "id": "kobold_press"
+        },
+        "drops": {
+          "table": "kobold_salvage",
+          "xp": "10 + level * 7",
+          "chance": 0.6
+        }
+      },
+      "meta": {
+        "origin": "Original Kobold roster; reptilian anatomy informed by prototype roost_dragon at 118b510f.",
+        "ai_handoff": "Existing state machines and skills only. No flight, breath, traps, coordinated flank, mining, command hierarchy or innate resistance.",
+        "adaptation": "Rallying Shout is an existing ally buff; no command AI."
+      }
+    },
+    {
+      "id": "kobold_scalechief",
+      "name": "Copper-Crown Scalechief",
+      "extends": "kobold_body",
+      "faction": "kobold_scaleclans",
+      "tags": [
+        "monster",
+        "body.flesh",
+        "body.scaled",
+        "family.kobold",
+        "role.commander",
+        "melee",
+        "size.medium",
+        "habitat.kobold_scale_hold",
+        "culture.scaleclan"
+      ],
+      "level": 15,
+      "radius": 0.32,
+      "height": 1.48,
+      "components": {
+        "physical": {
+          "width": 0.64,
+          "depth": 0.53,
+          "height": 1.48,
+          "fill": 0.22,
+          "heft": 1,
+          "materials": [
+            {
+              "material": "flesh",
+              "fraction": 0.852
+            },
+            {
+              "material": "kobold_scales",
+              "fraction": 0.12
+            },
+            {
+              "material": "iron",
+              "fraction": 0.028
+            }
+          ]
+        },
+        "stats": {
+          "attributes": {
+            "life.max": "220 + (level - 1) * 5",
+            "move.speed": 4,
+            "weapon.damage.min": "8 + (level - 1) * 0.5",
+            "weapon.damage.max": "15 + (level - 1) * 0.8",
+            "weapon.attack.time": 1.2,
+            "poise.max": 52,
+            "armor": 38,
+            "spell.power": 1.1
+          }
+        },
+        "weaves": {
+          "list": [
+            "rallying_shout",
+            "cleave"
+          ]
+        },
+        "behavior": {
+          "id": "kobold_press"
+        },
+        "drops": {
+          "table": "kobold_salvage",
+          "xp": "10 + level * 7",
+          "chance": 0.6
+        }
+      },
+      "meta": {
+        "origin": "Original Kobold roster; reptilian anatomy informed by prototype roost_dragon at 118b510f.",
+        "ai_handoff": "Existing state machines and skills only. No flight, breath, traps, coordinated flank, mining, command hierarchy or innate resistance.",
+        "adaptation": "Rallying Shout is an existing ally buff; no command AI."
+      }
+    }
+  ]
+}

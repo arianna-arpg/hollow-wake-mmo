@@ -1,0 +1,18 @@
+  Determining projects to restore...
+  All projects are up-to-date for restore.
+  HollowWake.Core -> C:\Users\John\.codex\worktrees\kobold-scaleclans\MMOARPG\src\HollowWake.Core\bin\Debug\net8.0\HollowWake.Core.dll
+  HollowWake.Protocol -> C:\Users\John\.codex\worktrees\kobold-scaleclans\MMOARPG\src\HollowWake.Protocol\bin\Debug\net8.0\HollowWake.Protocol.dll
+  HollowWake.Client.Tests -> C:\Users\John\.codex\worktrees\kobold-scaleclans\MMOARPG\tests\HollowWake.Client.Tests\bin\Debug\net10.0\HollowWake.Client.Tests.dll
+Test run for C:\Users\John\.codex\worktrees\kobold-scaleclans\MMOARPG\tests\HollowWake.Client.Tests\bin\Debug\net10.0\HollowWake.Client.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v3.1.5+1b188a7b0a (64-bit .NET 10.0.13)
+[xUnit.net 00:00:00.13]   Discovering: HollowWake.Client.Tests
+[xUnit.net 00:00:00.22]   Discovered:  HollowWake.Client.Tests
+[xUnit.net 00:00:00.25]   Starting:    HollowWake.Client.Tests
+[xUnit.net 00:00:01.64]   Finished:    HollowWake.Client.Tests
+  Passed HollowWake.Client.Tests.KoboldAppearanceTests.NativeAndBrowserBuildTheSameReviewedPlansIncludingGear [1 s]
+
+Test Run Successful.
+Total tests: 1
+     Passed: 1
+ Total time: 2.3271 Seconds

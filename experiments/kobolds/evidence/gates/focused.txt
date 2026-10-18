@@ -1,0 +1,183 @@
+  Determining projects to restore...
+  All projects are up-to-date for restore.
+  HollowWake.Core -> C:\Users\John\.codex\worktrees\kobold-scaleclans\MMOARPG\src\HollowWake.Core\bin\Debug\net8.0\HollowWake.Core.dll
+C:\Users\John\.codex\worktrees\kobold-scaleclans\MMOARPG\tests\HollowWake.Core.Tests\KoboldTests.cs(134,13): warning xUnit2030: Do not use Assert.NotEmpty to check if a value exists in a collection. Use Assert.Contains instead. (https://xunit.net/xunit.analyzers/rules/xUnit2030) [C:\Users\John\.codex\worktrees\kobold-scaleclans\MMOARPG\tests\HollowWake.Core.Tests\HollowWake.Core.Tests.csproj]
+C:\Users\John\.codex\worktrees\kobold-scaleclans\MMOARPG\tests\HollowWake.Core.Tests\PortedProjectileTests.cs(254,19): warning xUnit2031: Do not use a Where clause to filter before calling Assert.Single. Use the overload of Assert.Single that accepts a filtering function. (https://xunit.net/xunit.analyzers/rules/xUnit2031) [C:\Users\John\.codex\worktrees\kobold-scaleclans\MMOARPG\tests\HollowWake.Core.Tests\HollowWake.Core.Tests.csproj]
+C:\Users\John\.codex\worktrees\kobold-scaleclans\MMOARPG\tests\HollowWake.Core.Tests\PortedProjectileTests.cs(267,9): warning xUnit2031: Do not use a Where clause to filter before calling Assert.Single. Use the overload of Assert.Single that accepts a filtering function. (https://xunit.net/xunit.analyzers/rules/xUnit2031) [C:\Users\John\.codex\worktrees\kobold-scaleclans\MMOARPG\tests\HollowWake.Core.Tests\HollowWake.Core.Tests.csproj]
+C:\Users\John\.codex\worktrees\kobold-scaleclans\MMOARPG\tests\HollowWake.Core.Tests\PortedProjectileTests.cs(280,9): warning xUnit2031: Do not use a Where clause to filter before calling Assert.Single. Use the overload of Assert.Single that accepts a filtering function. (https://xunit.net/xunit.analyzers/rules/xUnit2031) [C:\Users\John\.codex\worktrees\kobold-scaleclans\MMOARPG\tests\HollowWake.Core.Tests\HollowWake.Core.Tests.csproj]
+  HollowWake.Core.Tests -> C:\Users\John\.codex\worktrees\kobold-scaleclans\MMOARPG\tests\HollowWake.Core.Tests\bin\Debug\net10.0\HollowWake.Core.Tests.dll
+Test run for C:\Users\John\.codex\worktrees\kobold-scaleclans\MMOARPG\tests\HollowWake.Core.Tests\bin\Debug\net10.0\HollowWake.Core.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v3.1.5+1b188a7b0a (64-bit .NET 10.0.13)
+[xUnit.net 00:00:00.50]   Discovering: HollowWake.Core.Tests
+[xUnit.net 00:00:02.05]   Discovered:  HollowWake.Core.Tests
+[xUnit.net 00:00:02.08]   Starting:    HollowWake.Core.Tests
+[xUnit.net 00:00:02.96]     HollowWake.Core.Tests.WorldGenGoldenTests.ZoneMatchesGoldenHashes(x: 0, y: -1, infoHash: "330979854289527A", chunksHash: "44FDA182BF6A81C9") [FAIL]
+[xUnit.net 00:00:02.96]       zone(0,-1) info and chunks: expected 330979854289527A 44FDA182BF6A81C9, generated F75575B10A717024 44FDA182BF6A81C9. Generation output changed; update the constant only if that was intended.
+[xUnit.net 00:00:02.96]       Stack Trace:
+[xUnit.net 00:00:02.96]         C:\Users\John\.codex\worktrees\kobold-scaleclans\MMOARPG\tests\HollowWake.Core.Tests\WorldGenGoldenTests.cs(165,0): at HollowWake.Core.Tests.WorldGenGoldenTests.Golden(String what, String expected, String actual)
+[xUnit.net 00:00:02.96]         C:\Users\John\.codex\worktrees\kobold-scaleclans\MMOARPG\tests\HollowWake.Core.Tests\WorldGenGoldenTests.cs(56,0): at HollowWake.Core.Tests.WorldGenGoldenTests.ZoneMatchesGoldenHashes(Int32 x, Int32 y, String infoHash, String chunksHash)
+[xUnit.net 00:00:02.96]            at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+[xUnit.net 00:00:02.96]            at System.Reflection.MethodBaseInvoker.InvokeDirectByRefWithFewArgs(Object obj, Span`1 copyOfArgs, BindingFlags invokeAttr)
+[xUnit.net 00:00:02.96]       kobold_tunnelguard never landed a hit through AI
+[xUnit.net 00:00:02.96]     HollowWake.Core.Tests.KoboldTests.EveryRoleHasScaledPhysicalityHabitatRewardsAndSustainedAiDamage(pattern: "kobold_tunnelguard") [FAIL]
+[xUnit.net 00:00:02.96]       Stack Trace:
+[xUnit.net 00:00:02.96]         C:\Users\John\.codex\worktrees\kobold-scaleclans\MMOARPG\tests\HollowWake.Core.Tests\KoboldTests.cs(47,0): at HollowWake.Core.Tests.KoboldTests.EveryRoleHasScaledPhysicalityHabitatRewardsAndSustainedAiDamage(String pattern)
+[xUnit.net 00:00:02.96]            at InvokeStub_KoboldTests.EveryRoleHasScaledPhysicalityHabitatRewardsAndSustainedAiDamage(Object, Span`1)
+[xUnit.net 00:00:02.96]            at System.Reflection.MethodBaseInvoker.InvokeWithOneArg(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:03.04]       kobold_ironback stopped dealing damage after the opening window
+[xUnit.net 00:00:03.04]     HollowWake.Core.Tests.KoboldTests.EveryRoleHasScaledPhysicalityHabitatRewardsAndSustainedAiDamage(pattern: "kobold_ironback") [FAIL]
+[xUnit.net 00:00:03.04]       Stack Trace:
+[xUnit.net 00:00:03.04]         C:\Users\John\.codex\worktrees\kobold-scaleclans\MMOARPG\tests\HollowWake.Core.Tests\KoboldTests.cs(50,0): at HollowWake.Core.Tests.KoboldTests.EveryRoleHasScaledPhysicalityHabitatRewardsAndSustainedAiDamage(String pattern)
+[xUnit.net 00:00:03.04]            at InvokeStub_KoboldTests.EveryRoleHasScaledPhysicalityHabitatRewardsAndSustainedAiDamage(Object, Span`1)
+[xUnit.net 00:00:03.04]            at System.Reflection.MethodBaseInvoker.InvokeWithOneArg(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Passed HollowWake.Core.Tests.KoboldTests.EveryRoleHasScaledPhysicalityHabitatRewardsAndSustainedAiDamage(pattern: "kobold_venomweaver") [822 ms]
+  Failed HollowWake.Core.Tests.WorldGenGoldenTests.ZoneMatchesGoldenHashes(x: 0, y: -1, infoHash: "330979854289527A", chunksHash: "44FDA182BF6A81C9") [813 ms]
+  Error Message:
+   zone(0,-1) info and chunks: expected 330979854289527A 44FDA182BF6A81C9, generated F75575B10A717024 44FDA182BF6A81C9. Generation output changed; update the constant only if that was intended.
+  Stack Trace:
+     at HollowWake.Core.Tests.WorldGenGoldenTests.Golden(String what, String expected, String actual) in C:\Users\John\.codex\worktrees\kobold-scaleclans\MMOARPG\tests\HollowWake.Core.Tests\WorldGenGoldenTests.cs:line 165
+   at HollowWake.Core.Tests.WorldGenGoldenTests.ZoneMatchesGoldenHashes(Int32 x, Int32 y, String infoHash, String chunksHash) in C:\Users\John\.codex\worktrees\kobold-scaleclans\MMOARPG\tests\HollowWake.Core.Tests\WorldGenGoldenTests.cs:line 56
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeDirectByRefWithFewArgs(Object obj, Span`1 copyOfArgs, BindingFlags invokeAttr)
+  Failed HollowWake.Core.Tests.KoboldTests.EveryRoleHasScaledPhysicalityHabitatRewardsAndSustainedAiDamage(pattern: "kobold_tunnelguard") [17 ms]
+  Error Message:
+   kobold_tunnelguard never landed a hit through AI
+  Stack Trace:
+     at HollowWake.Core.Tests.KoboldTests.EveryRoleHasScaledPhysicalityHabitatRewardsAndSustainedAiDamage(String pattern) in C:\Users\John\.codex\worktrees\kobold-scaleclans\MMOARPG\tests\HollowWake.Core.Tests\KoboldTests.cs:line 47
+   at InvokeStub_KoboldTests.EveryRoleHasScaledPhysicalityHabitatRewardsAndSustainedAiDamage(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithOneArg(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Passed HollowWake.Core.Tests.KoboldTests.EveryRoleHasScaledPhysicalityHabitatRewardsAndSustainedAiDamage(pattern: "kobold_scavenger") [24 ms]
+  Passed HollowWake.Core.Tests.KoboldTests.EveryRoleHasScaledPhysicalityHabitatRewardsAndSustainedAiDamage(pattern: "kobold_knifehand") [28 ms]
+  Passed HollowWake.Core.Tests.KoboldTests.EveryRoleHasScaledPhysicalityHabitatRewardsAndSustainedAiDamage(pattern: "kobold_scalechief") [13 ms]
+  Failed HollowWake.Core.Tests.KoboldTests.EveryRoleHasScaledPhysicalityHabitatRewardsAndSustainedAiDamage(pattern: "kobold_ironback") [19 ms]
+  Error Message:
+   kobold_ironback stopped dealing damage after the opening window
+  Stack Trace:
+     at HollowWake.Core.Tests.KoboldTests.EveryRoleHasScaledPhysicalityHabitatRewardsAndSustainedAiDamage(String pattern) in C:\Users\John\.codex\worktrees\kobold-scaleclans\MMOARPG\tests\HollowWake.Core.Tests\KoboldTests.cs:line 50
+   at InvokeStub_KoboldTests.EveryRoleHasScaledPhysicalityHabitatRewardsAndSustainedAiDamage(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithOneArg(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Passed HollowWake.Core.Tests.KoboldTests.EveryRoleHasScaledPhysicalityHabitatRewardsAndSustainedAiDamage(pattern: "kobold_dartbow") [26 ms]
+[xUnit.net 00:00:03.28]     HollowWake.Core.Tests.WorldGenGoldenTests.ZoneMatchesGoldenHashes(x: 3, y: 2, infoHash: "7395A7B7D40E67D9", chunksHash: "15C99D20020E2BF4") [FAIL]
+[xUnit.net 00:00:03.29]       zone(3,2) info and chunks: expected 7395A7B7D40E67D9 15C99D20020E2BF4, generated 1874A91D377C8208 15C99D20020E2BF4. Generation output changed; update the constant only if that was intended.
+[xUnit.net 00:00:03.29]       Stack Trace:
+[xUnit.net 00:00:03.29]         C:\Users\John\.codex\worktrees\kobold-scaleclans\MMOARPG\tests\HollowWake.Core.Tests\WorldGenGoldenTests.cs(165,0): at HollowWake.Core.Tests.WorldGenGoldenTests.Golden(String what, String expected, String actual)
+[xUnit.net 00:00:03.29]         C:\Users\John\.codex\worktrees\kobold-scaleclans\MMOARPG\tests\HollowWake.Core.Tests\WorldGenGoldenTests.cs(56,0): at HollowWake.Core.Tests.WorldGenGoldenTests.ZoneMatchesGoldenHashes(Int32 x, Int32 y, String infoHash, String chunksHash)
+[xUnit.net 00:00:03.29]            at InvokeStub_WorldGenGoldenTests.ZoneMatchesGoldenHashes(Object, Span`1)
+[xUnit.net 00:00:03.29]            at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Passed HollowWake.Core.Tests.KoboldTests.EveryRoleHasScaledPhysicalityHabitatRewardsAndSustainedAiDamage(pattern: "kobold_spearguard") [23 ms]
+  Passed HollowWake.Core.Tests.KoboldTests.EveryRoleHasScaledPhysicalityHabitatRewardsAndSustainedAiDamage(pattern: "kobold_stonecaster") [17 ms]
+  Passed HollowWake.Core.Tests.KoboldTests.EveryRoleHasScaledPhysicalityHabitatRewardsAndSustainedAiDamage(pattern: "kobold_stormweaver") [19 ms]
+  Passed HollowWake.Core.Tests.KoboldTests.EveryRoleHasScaledPhysicalityHabitatRewardsAndSustainedAiDamage(pattern: "kobold_rimeweaver") [26 ms]
+  Passed HollowWake.Core.Tests.KoboldTests.EveryRoleHasScaledPhysicalityHabitatRewardsAndSustainedAiDamage(pattern: "kobold_cinderweaver") [20 ms]
+  Passed HollowWake.Core.Tests.KoboldTests.EveryRoleHasScaledPhysicalityHabitatRewardsAndSustainedAiDamage(pattern: "kobold_cragbreaker") [17 ms]
+  Passed HollowWake.Core.Tests.KoboldTests.EveryRoleHasScaledPhysicalityHabitatRewardsAndSustainedAiDamage(pattern: "kobold_crestcaller") [21 ms]
+  Failed HollowWake.Core.Tests.WorldGenGoldenTests.ZoneMatchesGoldenHashes(x: 3, y: 2, infoHash: "7395A7B7D40E67D9", chunksHash: "15C99D20020E2BF4") [342 ms]
+  Error Message:
+   zone(3,2) info and chunks: expected 7395A7B7D40E67D9 15C99D20020E2BF4, generated 1874A91D377C8208 15C99D20020E2BF4. Generation output changed; update the constant only if that was intended.
+  Stack Trace:
+     at HollowWake.Core.Tests.WorldGenGoldenTests.Golden(String what, String expected, String actual) in C:\Users\John\.codex\worktrees\kobold-scaleclans\MMOARPG\tests\HollowWake.Core.Tests\WorldGenGoldenTests.cs:line 165
+   at HollowWake.Core.Tests.WorldGenGoldenTests.ZoneMatchesGoldenHashes(Int32 x, Int32 y, String infoHash, String chunksHash) in C:\Users\John\.codex\worktrees\kobold-scaleclans\MMOARPG\tests\HollowWake.Core.Tests\WorldGenGoldenTests.cs:line 56
+   at InvokeStub_WorldGenGoldenTests.ZoneMatchesGoldenHashes(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:03.73]     HollowWake.Core.Tests.WorldGenGoldenTests.ZoneMatchesGoldenHashes(x: 1, y: 0, infoHash: "5DD57952BE997040", chunksHash: "719165F3D645E5F0") [FAIL]
+[xUnit.net 00:00:03.73]       zone(1,0) info and chunks: expected 5DD57952BE997040 719165F3D645E5F0, generated 7DA328DBE04A00D6 6615F2EDE81806A7. Generation output changed; update the constant only if that was intended.
+[xUnit.net 00:00:03.73]       Stack Trace:
+[xUnit.net 00:00:03.73]         C:\Users\John\.codex\worktrees\kobold-scaleclans\MMOARPG\tests\HollowWake.Core.Tests\WorldGenGoldenTests.cs(165,0): at HollowWake.Core.Tests.WorldGenGoldenTests.Golden(String what, String expected, String actual)
+[xUnit.net 00:00:03.73]         C:\Users\John\.codex\worktrees\kobold-scaleclans\MMOARPG\tests\HollowWake.Core.Tests\WorldGenGoldenTests.cs(56,0): at HollowWake.Core.Tests.WorldGenGoldenTests.ZoneMatchesGoldenHashes(Int32 x, Int32 y, String infoHash, String chunksHash)
+[xUnit.net 00:00:03.73]            at InvokeStub_WorldGenGoldenTests.ZoneMatchesGoldenHashes(Object, Span`1)
+[xUnit.net 00:00:03.73]            at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:04.03]     HollowWake.Core.Tests.WorldGenGoldenTests.ZoneMatchesGoldenHashes(x: 0, y: 0, infoHash: "7EA79EBAD31156E2", chunksHash: "B4967CED570DD0B6") [FAIL]
+[xUnit.net 00:00:04.03]       zone(0,0) info and chunks: expected 7EA79EBAD31156E2 B4967CED570DD0B6, generated F895E0D2D626AB3C B4967CED570DD0B6. Generation output changed; update the constant only if that was intended.
+[xUnit.net 00:00:04.03]       Stack Trace:
+[xUnit.net 00:00:04.03]         C:\Users\John\.codex\worktrees\kobold-scaleclans\MMOARPG\tests\HollowWake.Core.Tests\WorldGenGoldenTests.cs(165,0): at HollowWake.Core.Tests.WorldGenGoldenTests.Golden(String what, String expected, String actual)
+[xUnit.net 00:00:04.03]         C:\Users\John\.codex\worktrees\kobold-scaleclans\MMOARPG\tests\HollowWake.Core.Tests\WorldGenGoldenTests.cs(56,0): at HollowWake.Core.Tests.WorldGenGoldenTests.ZoneMatchesGoldenHashes(Int32 x, Int32 y, String infoHash, String chunksHash)
+[xUnit.net 00:00:04.03]            at InvokeStub_WorldGenGoldenTests.ZoneMatchesGoldenHashes(Object, Span`1)
+[xUnit.net 00:00:04.03]            at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:04.54]     HollowWake.Core.Tests.KoboldTests.DedicatedSitesActuallyOccurInUnmodifiedGeneratedHabitats [FAIL]
+[xUnit.net 00:00:04.54]       Assert.Empty() Failure: Collection was not empty
+[xUnit.net 00:00:04.54]       Collection: ["kobold_cinder_camp"]
+[xUnit.net 00:00:04.54]       Stack Trace:
+[xUnit.net 00:00:04.54]         C:\Users\John\.codex\worktrees\kobold-scaleclans\MMOARPG\tests\HollowWake.Core.Tests\KoboldTests.cs(137,0): at HollowWake.Core.Tests.KoboldTests.DedicatedSitesActuallyOccurInUnmodifiedGeneratedHabitats()
+[xUnit.net 00:00:04.54]            at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+[xUnit.net 00:00:04.54]            at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+[xUnit.net 00:00:04.54]       Output:
+[xUnit.net 00:00:04.54]         kobold_scale_hold: zone(-9,-9), at(-2222.5,-2262.5), level 15
+[xUnit.net 00:00:04.54]         kobold_reed_camp: zone(-4,-9), at(-991.5,-2076.5), level 12
+[xUnit.net 00:00:04.54]         kobold_scrap_camp: zone(-7,-7), at(-1629.5,-1560.5), level 11
+  Failed HollowWake.Core.Tests.WorldGenGoldenTests.ZoneMatchesGoldenHashes(x: 1, y: 0, infoHash: "5DD57952BE997040", chunksHash: "719165F3D645E5F0") [441 ms]
+  Error Message:
+   zone(1,0) info and chunks: expected 5DD57952BE997040 719165F3D645E5F0, generated 7DA328DBE04A00D6 6615F2EDE81806A7. Generation output changed; update the constant only if that was intended.
+  Stack Trace:
+     at HollowWake.Core.Tests.WorldGenGoldenTests.Golden(String what, String expected, String actual) in C:\Users\John\.codex\worktrees\kobold-scaleclans\MMOARPG\tests\HollowWake.Core.Tests\WorldGenGoldenTests.cs:line 165
+   at HollowWake.Core.Tests.WorldGenGoldenTests.ZoneMatchesGoldenHashes(Int32 x, Int32 y, String infoHash, String chunksHash) in C:\Users\John\.codex\worktrees\kobold-scaleclans\MMOARPG\tests\HollowWake.Core.Tests\WorldGenGoldenTests.cs:line 56
+   at InvokeStub_WorldGenGoldenTests.ZoneMatchesGoldenHashes(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Failed HollowWake.Core.Tests.WorldGenGoldenTests.ZoneMatchesGoldenHashes(x: 0, y: 0, infoHash: "7EA79EBAD31156E2", chunksHash: "B4967CED570DD0B6") [305 ms]
+  Error Message:
+   zone(0,0) info and chunks: expected 7EA79EBAD31156E2 B4967CED570DD0B6, generated F895E0D2D626AB3C B4967CED570DD0B6. Generation output changed; update the constant only if that was intended.
+  Stack Trace:
+     at HollowWake.Core.Tests.WorldGenGoldenTests.Golden(String what, String expected, String actual) in C:\Users\John\.codex\worktrees\kobold-scaleclans\MMOARPG\tests\HollowWake.Core.Tests\WorldGenGoldenTests.cs:line 165
+   at HollowWake.Core.Tests.WorldGenGoldenTests.ZoneMatchesGoldenHashes(Int32 x, Int32 y, String infoHash, String chunksHash) in C:\Users\John\.codex\worktrees\kobold-scaleclans\MMOARPG\tests\HollowWake.Core.Tests\WorldGenGoldenTests.cs:line 56
+   at InvokeStub_WorldGenGoldenTests.ZoneMatchesGoldenHashes(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Passed HollowWake.Core.Tests.WorldGenGoldenTests.ClimateSamplesMatchGoldenHash [53 ms]
+  Passed HollowWake.Core.Tests.WorldGenGoldenTests.StartZoneIsTheOrigin [4 ms]
+  Failed HollowWake.Core.Tests.KoboldTests.DedicatedSitesActuallyOccurInUnmodifiedGeneratedHabitats [1 s]
+  Error Message:
+   Assert.Empty() Failure: Collection was not empty
+Collection: ["kobold_cinder_camp"]
+  Stack Trace:
+     at HollowWake.Core.Tests.KoboldTests.DedicatedSitesActuallyOccurInUnmodifiedGeneratedHabitats() in C:\Users\John\.codex\worktrees\kobold-scaleclans\MMOARPG\tests\HollowWake.Core.Tests\KoboldTests.cs:line 137
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  Standard Output Messages:
+ kobold_scale_hold: zone(-9,-9), at(-2222.5,-2262.5), level 15
+ kobold_reed_camp: zone(-4,-9), at(-991.5,-2076.5), level 12
+ kobold_scrap_camp: zone(-7,-7), at(-1629.5,-1560.5), level 11
+
+
+[xUnit.net 00:00:04.87]     HollowWake.Core.Tests.WorldGenGoldenTests.OverlaidWorldMatchesGoldenHash [FAIL]
+[xUnit.net 00:00:04.87]       overlaid world: expected 43DEFDD2C3C767CE, generated 1B3F4BBF3C1CE4BF. Generation output changed; update the constant only if that was intended.
+[xUnit.net 00:00:04.87]       Stack Trace:
+[xUnit.net 00:00:04.87]         C:\Users\John\.codex\worktrees\kobold-scaleclans\MMOARPG\tests\HollowWake.Core.Tests\WorldGenGoldenTests.cs(165,0): at HollowWake.Core.Tests.WorldGenGoldenTests.Golden(String what, String expected, String actual)
+[xUnit.net 00:00:04.87]         C:\Users\John\.codex\worktrees\kobold-scaleclans\MMOARPG\tests\HollowWake.Core.Tests\WorldGenGoldenTests.cs(104,0): at HollowWake.Core.Tests.WorldGenGoldenTests.OverlaidWorldMatchesGoldenHash()
+[xUnit.net 00:00:04.87]            at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+[xUnit.net 00:00:04.87]            at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Failed HollowWake.Core.Tests.WorldGenGoldenTests.OverlaidWorldMatchesGoldenHash [778 ms]
+  Error Message:
+   overlaid world: expected 43DEFDD2C3C767CE, generated 1B3F4BBF3C1CE4BF. Generation output changed; update the constant only if that was intended.
+  Stack Trace:
+     at HollowWake.Core.Tests.WorldGenGoldenTests.Golden(String what, String expected, String actual) in C:\Users\John\.codex\worktrees\kobold-scaleclans\MMOARPG\tests\HollowWake.Core.Tests\WorldGenGoldenTests.cs:line 165
+   at HollowWake.Core.Tests.WorldGenGoldenTests.OverlaidWorldMatchesGoldenHash() in C:\Users\John\.codex\worktrees\kobold-scaleclans\MMOARPG\tests\HollowWake.Core.Tests\WorldGenGoldenTests.cs:line 104
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Passed HollowWake.Core.Tests.KoboldTests.AuthoredSitesSpawnEveryEligibleRoleAndReplayWithLevelGates(site: "kobold_scrap_camp") [2 s]
+  Passed HollowWake.Core.Tests.KoboldTests.AuthoredSitesSpawnEveryEligibleRoleAndReplayWithLevelGates(site: "kobold_cinder_camp") [1 s]
+  Passed HollowWake.Core.Tests.KoboldTests.AuthoredSitesSpawnEveryEligibleRoleAndReplayWithLevelGates(site: "kobold_reed_camp") [1 s]
+[xUnit.net 00:00:11.36]     HollowWake.Core.Tests.KoboldTests.AuthoredSitesSpawnEveryEligibleRoleAndReplayWithLevelGates(site: "kobold_scale_hold") [FAIL]
+[xUnit.net 00:00:11.36]       Assert.InRange() Failure: Value not in range
+[xUnit.net 00:00:11.36]       Range:  (1 - 4)
+[xUnit.net 00:00:11.36]       Actual: 5
+[xUnit.net 00:00:11.36]       Stack Trace:
+[xUnit.net 00:00:11.36]         C:\Users\John\.codex\worktrees\kobold-scaleclans\MMOARPG\tests\HollowWake.Core.Tests\KoboldTests.cs(120,0): at HollowWake.Core.Tests.KoboldTests.AuthoredSitesSpawnEveryEligibleRoleAndReplayWithLevelGates(String site)
+[xUnit.net 00:00:11.36]            at InvokeStub_KoboldTests.AuthoredSitesSpawnEveryEligibleRoleAndReplayWithLevelGates(Object, Span`1)
+[xUnit.net 00:00:11.36]            at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:11.54]   Finished:    HollowWake.Core.Tests
+  Failed HollowWake.Core.Tests.KoboldTests.AuthoredSitesSpawnEveryEligibleRoleAndReplayWithLevelGates(site: "kobold_scale_hold") [1 s]
+  Error Message:
+   Assert.InRange() Failure: Value not in range
+Range:  (1 - 4)
+Actual: 5
+  Stack Trace:
+     at HollowWake.Core.Tests.KoboldTests.AuthoredSitesSpawnEveryEligibleRoleAndReplayWithLevelGates(String site) in C:\Users\John\.codex\worktrees\kobold-scaleclans\MMOARPG\tests\HollowWake.Core.Tests\KoboldTests.cs:line 120
+   at InvokeStub_KoboldTests.AuthoredSitesSpawnEveryEligibleRoleAndReplayWithLevelGates(Object, Span`1)
+   at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Passed HollowWake.Core.Tests.KoboldTests.NativeFactionIsHostileToPlayersAndNeutralToOtherWarbandsInBothDirections [175 ms]
+  Passed HollowWake.Core.Tests.KoboldTests.LightAndArmoredBodiesHaveMeasuredMassAndDifferentLiveShoveDistances [6 ms]
+
+Test Run Failed.
+Total tests: 28
+     Passed: 19
+     Failed: 9
+ Total time: 13.0365 Seconds

@@ -1,0 +1,567 @@
+{
+  "kind": "ui_appearances",
+  "entries": [
+    {
+      "id": "kobold_scavenger",
+      "body": "scaled_biped",
+      "shape": {
+        "breadth": 0.41463414634146345,
+        "depth": 0.3902439024390244,
+        "snout": 0.9,
+        "tail": 1,
+        "crest": 1,
+        "gear": 0.85
+      },
+      "palette": {
+        "skin": "#a47b48",
+        "scute": "#40594e",
+        "belly": "#cfbb88",
+        "cloth": "#514d47",
+        "metal": "#929897",
+        "bone": "#e6d5ad",
+        "wood": "#765942",
+        "accent": "#c7a36a",
+        "eye": "#f0d98a"
+      },
+      "features": [
+        "satchel",
+        "short_crest"
+      ],
+      "gear": {
+        "main_hand": "weapon.dagger"
+      },
+      "variation": {
+        "hue": 0.015,
+        "value": 0.035,
+        "scale": 0
+      },
+      "card": "allow",
+      "scale": 1,
+      "meta": {
+        "authoring": "Scaleclan reptilian silhouette; no biological powers implied."
+      }
+    },
+    {
+      "id": "kobold_knifehand",
+      "body": "scaled_biped",
+      "shape": {
+        "breadth": 0.39999999999999997,
+        "depth": 0.37777777777777777,
+        "snout": 1.05,
+        "tail": 1,
+        "crest": 1,
+        "gear": 0.85
+      },
+      "palette": {
+        "skin": "#b16e43",
+        "scute": "#40594e",
+        "belly": "#cfbb88",
+        "cloth": "#514d47",
+        "metal": "#929897",
+        "bone": "#e6d5ad",
+        "wood": "#765942",
+        "accent": "#c7a36a",
+        "eye": "#f0d98a"
+      },
+      "features": [
+        "twin_blades",
+        "crest"
+      ],
+      "gear": {
+        "main_hand": "weapon.dagger"
+      },
+      "variation": {
+        "hue": 0.015,
+        "value": 0.035,
+        "scale": 0
+      },
+      "card": "allow",
+      "scale": 1,
+      "meta": {
+        "authoring": "Scaleclan reptilian silhouette; no biological powers implied."
+      }
+    },
+    {
+      "id": "kobold_dartbow",
+      "body": "scaled_biped",
+      "shape": {
+        "breadth": 0.3804347826086956,
+        "depth": 0.3695652173913044,
+        "snout": 0.9,
+        "tail": 1,
+        "crest": 1,
+        "gear": 0.85
+      },
+      "palette": {
+        "skin": "#7d9363",
+        "scute": "#40594e",
+        "belly": "#cfbb88",
+        "cloth": "#514d47",
+        "metal": "#929897",
+        "bone": "#e6d5ad",
+        "wood": "#765942",
+        "accent": "#c7a36a",
+        "eye": "#f0d98a"
+      },
+      "features": [
+        "quiver",
+        "short_crest"
+      ],
+      "gear": {
+        "main_hand": "weapon.bow"
+      },
+      "variation": {
+        "hue": 0.015,
+        "value": 0.035,
+        "scale": 0
+      },
+      "card": "allow",
+      "scale": 1,
+      "meta": {
+        "authoring": "Scaleclan reptilian silhouette; no biological powers implied."
+      }
+    },
+    {
+      "id": "kobold_stonecaster",
+      "body": "scaled_biped",
+      "shape": {
+        "breadth": 0.4166666666666667,
+        "depth": 0.39583333333333337,
+        "snout": 0.9,
+        "tail": 1,
+        "crest": 1,
+        "gear": 0.85
+      },
+      "palette": {
+        "skin": "#9c8b70",
+        "scute": "#40594e",
+        "belly": "#cfbb88",
+        "cloth": "#514d47",
+        "metal": "#929897",
+        "bone": "#e6d5ad",
+        "wood": "#765942",
+        "accent": "#c7a36a",
+        "eye": "#f0d98a"
+      },
+      "features": [
+        "stonepack",
+        "crest"
+      ],
+      "gear": {},
+      "variation": {
+        "hue": 0.015,
+        "value": 0.035,
+        "scale": 0
+      },
+      "card": "allow",
+      "scale": 1,
+      "meta": {
+        "authoring": "Scaleclan reptilian silhouette; no biological powers implied."
+      }
+    },
+    {
+      "id": "kobold_spearguard",
+      "body": "scaled_biped",
+      "shape": {
+        "breadth": 0.39215686274509803,
+        "depth": 0.37254901960784315,
+        "snout": 0.9,
+        "tail": 1,
+        "crest": 1,
+        "gear": 0.85
+      },
+      "palette": {
+        "skin": "#668b7d",
+        "scute": "#40594e",
+        "belly": "#cfbb88",
+        "cloth": "#514d47",
+        "metal": "#929897",
+        "bone": "#e6d5ad",
+        "wood": "#765942",
+        "accent": "#c7a36a",
+        "eye": "#f0d98a"
+      },
+      "features": [
+        "frill",
+        "quiver"
+      ],
+      "gear": {
+        "main_hand": "weapon.spear"
+      },
+      "variation": {
+        "hue": 0.015,
+        "value": 0.035,
+        "scale": 0
+      },
+      "card": "allow",
+      "scale": 1,
+      "meta": {
+        "authoring": "Scaleclan reptilian silhouette; no biological powers implied."
+      }
+    },
+    {
+      "id": "kobold_venomweaver",
+      "body": "scaled_biped",
+      "shape": {
+        "breadth": 0.3877551020408163,
+        "depth": 0.37755102040816324,
+        "snout": 0.9,
+        "tail": 1,
+        "crest": 1,
+        "gear": 0.85
+      },
+      "palette": {
+        "skin": "#718550",
+        "scute": "#40594e",
+        "belly": "#cfbb88",
+        "cloth": "#514d47",
+        "metal": "#929897",
+        "bone": "#e6d5ad",
+        "wood": "#765942",
+        "accent": "#b9c278",
+        "eye": "#f0d98a"
+      },
+      "features": [
+        "vials",
+        "frill"
+      ],
+      "gear": {
+        "main_hand": "weapon.wand"
+      },
+      "variation": {
+        "hue": 0.015,
+        "value": 0.035,
+        "scale": 0
+      },
+      "card": "allow",
+      "scale": 1,
+      "meta": {
+        "authoring": "Scaleclan reptilian silhouette; no biological powers implied."
+      }
+    },
+    {
+      "id": "kobold_rimeweaver",
+      "body": "scaled_biped",
+      "shape": {
+        "breadth": 0.37142857142857144,
+        "depth": 0.3619047619047619,
+        "snout": 0.9,
+        "tail": 1,
+        "crest": 1,
+        "gear": 0.85
+      },
+      "palette": {
+        "skin": "#88a8b3",
+        "scute": "#40594e",
+        "belly": "#cfbb88",
+        "cloth": "#514d47",
+        "metal": "#929897",
+        "bone": "#e6d5ad",
+        "wood": "#765942",
+        "accent": "#c6e6df",
+        "eye": "#f0d98a"
+      },
+      "features": [
+        "robe",
+        "sail"
+      ],
+      "gear": {
+        "main_hand": "weapon.staff"
+      },
+      "variation": {
+        "hue": 0.015,
+        "value": 0.035,
+        "scale": 0
+      },
+      "card": "allow",
+      "scale": 1,
+      "meta": {
+        "authoring": "Scaleclan reptilian silhouette; no biological powers implied."
+      }
+    },
+    {
+      "id": "kobold_tunnelguard",
+      "body": "scaled_biped",
+      "shape": {
+        "breadth": 0.4363636363636363,
+        "depth": 0.3818181818181818,
+        "snout": 0.9,
+        "tail": 1,
+        "crest": 1,
+        "gear": 0.85
+      },
+      "palette": {
+        "skin": "#8c6855",
+        "scute": "#40594e",
+        "belly": "#cfbb88",
+        "cloth": "#514d47",
+        "metal": "#929897",
+        "bone": "#e6d5ad",
+        "wood": "#765942",
+        "accent": "#c7a36a",
+        "eye": "#f0d98a"
+      },
+      "features": [
+        "armor",
+        "short_crest"
+      ],
+      "gear": {
+        "main_hand": "weapon.sword",
+        "off_hand": "shield"
+      },
+      "variation": {
+        "hue": 0.015,
+        "value": 0.035,
+        "scale": 0
+      },
+      "card": "allow",
+      "scale": 1,
+      "meta": {
+        "authoring": "Scaleclan reptilian silhouette; no biological powers implied."
+      }
+    },
+    {
+      "id": "kobold_cinderweaver",
+      "body": "scaled_biped",
+      "shape": {
+        "breadth": 0.39,
+        "depth": 0.37,
+        "snout": 0.9,
+        "tail": 1,
+        "crest": 1,
+        "gear": 0.85
+      },
+      "palette": {
+        "skin": "#ba704e",
+        "scute": "#40594e",
+        "belly": "#cfbb88",
+        "cloth": "#514d47",
+        "metal": "#929897",
+        "bone": "#e6d5ad",
+        "wood": "#765942",
+        "accent": "#efae57",
+        "eye": "#f0d98a"
+      },
+      "features": [
+        "censer",
+        "crest"
+      ],
+      "gear": {
+        "main_hand": "weapon.wand"
+      },
+      "variation": {
+        "hue": 0.015,
+        "value": 0.035,
+        "scale": 0
+      },
+      "card": "allow",
+      "scale": 1,
+      "meta": {
+        "authoring": "Scaleclan reptilian silhouette; no biological powers implied."
+      }
+    },
+    {
+      "id": "kobold_stormweaver",
+      "body": "scaled_biped",
+      "shape": {
+        "breadth": 0.37037037037037035,
+        "depth": 0.35185185185185186,
+        "snout": 0.9,
+        "tail": 1,
+        "crest": 1,
+        "gear": 0.85
+      },
+      "palette": {
+        "skin": "#687f9a",
+        "scute": "#40594e",
+        "belly": "#cfbb88",
+        "cloth": "#514d47",
+        "metal": "#929897",
+        "bone": "#e6d5ad",
+        "wood": "#765942",
+        "accent": "#c3b9e9",
+        "eye": "#f0d98a"
+      },
+      "features": [
+        "coil_yoke",
+        "frill"
+      ],
+      "gear": {
+        "main_hand": "weapon.staff"
+      },
+      "variation": {
+        "hue": 0.015,
+        "value": 0.035,
+        "scale": 0
+      },
+      "card": "allow",
+      "scale": 1,
+      "meta": {
+        "authoring": "Scaleclan reptilian silhouette; no biological powers implied."
+      }
+    },
+    {
+      "id": "kobold_cragbreaker",
+      "body": "scaled_biped",
+      "shape": {
+        "breadth": 0.47407407407407404,
+        "depth": 0.37037037037037035,
+        "snout": 0.9,
+        "tail": 0.75,
+        "crest": 1,
+        "gear": 0.68
+      },
+      "palette": {
+        "skin": "#a38862",
+        "scute": "#40594e",
+        "belly": "#cfbb88",
+        "cloth": "#514d47",
+        "metal": "#929897",
+        "bone": "#e6d5ad",
+        "wood": "#765942",
+        "accent": "#c7a36a",
+        "eye": "#f0d98a"
+      },
+      "features": [
+        "backplates",
+        "crest"
+      ],
+      "gear": {
+        "main_hand": "weapon.maul"
+      },
+      "variation": {
+        "hue": 0.015,
+        "value": 0.035,
+        "scale": 0
+      },
+      "card": "allow",
+      "scale": 1,
+      "meta": {
+        "authoring": "Scaleclan reptilian silhouette; no biological powers implied."
+      }
+    },
+    {
+      "id": "kobold_ironback",
+      "body": "scaled_biped",
+      "shape": {
+        "breadth": 0.5142857142857143,
+        "depth": 0.3928571428571429,
+        "snout": 1.15,
+        "tail": 0.75,
+        "crest": 1,
+        "gear": 0.85
+      },
+      "palette": {
+        "skin": "#657c72",
+        "scute": "#40594e",
+        "belly": "#cfbb88",
+        "cloth": "#514d47",
+        "metal": "#929897",
+        "bone": "#e6d5ad",
+        "wood": "#765942",
+        "accent": "#c7a36a",
+        "eye": "#f0d98a"
+      },
+      "features": [
+        "armor",
+        "backplates",
+        "short_crest"
+      ],
+      "gear": {
+        "main_hand": "weapon.axe",
+        "off_hand": "shield"
+      },
+      "variation": {
+        "hue": 0.015,
+        "value": 0.035,
+        "scale": 0
+      },
+      "card": "allow",
+      "scale": 1,
+      "meta": {
+        "authoring": "Scaleclan reptilian silhouette; no biological powers implied."
+      }
+    },
+    {
+      "id": "kobold_crestcaller",
+      "body": "scaled_biped",
+      "shape": {
+        "breadth": 0.391304347826087,
+        "depth": 0.3565217391304348,
+        "snout": 0.9,
+        "tail": 1,
+        "crest": 1.35,
+        "gear": 0.85
+      },
+      "palette": {
+        "skin": "#ac9860",
+        "scute": "#40594e",
+        "belly": "#cfbb88",
+        "cloth": "#514d47",
+        "metal": "#929897",
+        "bone": "#e6d5ad",
+        "wood": "#765942",
+        "accent": "#c7a36a",
+        "eye": "#f0d98a"
+      },
+      "features": [
+        "frill",
+        "drum"
+      ],
+      "gear": {
+        "main_hand": "weapon.sword"
+      },
+      "variation": {
+        "hue": 0.015,
+        "value": 0.035,
+        "scale": 0
+      },
+      "card": "allow",
+      "scale": 1,
+      "meta": {
+        "authoring": "Scaleclan reptilian silhouette; no biological powers implied."
+      }
+    },
+    {
+      "id": "kobold_scalechief",
+      "body": "scaled_biped",
+      "shape": {
+        "breadth": 0.43243243243243246,
+        "depth": 0.3581081081081081,
+        "snout": 0.9,
+        "tail": 0.75,
+        "crest": 1,
+        "gear": 0.85
+      },
+      "palette": {
+        "skin": "#ae764a",
+        "scute": "#40594e",
+        "belly": "#cfbb88",
+        "cloth": "#514d47",
+        "metal": "#929897",
+        "bone": "#e6d5ad",
+        "wood": "#765942",
+        "accent": "#c7a36a",
+        "eye": "#f0d98a"
+      },
+      "features": [
+        "armor",
+        "crown",
+        "banner"
+      ],
+      "gear": {
+        "main_hand": "weapon.spear"
+      },
+      "variation": {
+        "hue": 0.015,
+        "value": 0.035,
+        "scale": 0
+      },
+      "card": "allow",
+      "scale": 1,
+      "meta": {
+        "authoring": "Scaleclan reptilian silhouette; no biological powers implied."
+      }
+    }
+  ]
+}

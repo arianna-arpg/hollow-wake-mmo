@@ -1,0 +1,10 @@
+{
+  "kind": "body_materials",
+  "entries": [
+    {
+      "id": "kobold_scales",
+      "name": "Kobold keratin scales",
+      "density": 1250
+    }
+  ]
+}

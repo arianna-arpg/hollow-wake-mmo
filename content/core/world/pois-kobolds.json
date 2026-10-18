@@ -1,0 +1,300 @@
+{
+  "kind": "pois",
+  "entries": [
+    {
+      "id": "kobold_scrap_camp",
+      "name": "Scrapscale Camp",
+      "tags": [
+        "ruin",
+        "landmark",
+        "kobold_scaleclans"
+      ],
+      "weight": 0.35,
+      "radius": 10,
+      "min_spacing": 160,
+      "slope": {
+        "max": 0.55
+      },
+      "biomes": [
+        "scrub",
+        "heath",
+        "highland"
+      ],
+      "landmarks": [
+        "camp_ring"
+      ],
+      "level": 2,
+      "inhabitants": [
+        {
+          "pattern": "kobold_scavenger",
+          "density": 1,
+          "pack_size": [
+            1,
+            1
+          ],
+          "respawn": 360,
+          "level": {
+            "min": 2
+          }
+        },
+        {
+          "pattern": "kobold_knifehand",
+          "density": 1,
+          "pack_size": [
+            1,
+            1
+          ],
+          "respawn": 360,
+          "level": {
+            "min": 3
+          }
+        },
+        {
+          "pattern": "kobold_dartbow",
+          "density": 1,
+          "pack_size": [
+            1,
+            1
+          ],
+          "respawn": 360,
+          "level": {
+            "min": 4
+          }
+        },
+        {
+          "pattern": "kobold_stonecaster",
+          "density": 1,
+          "pack_size": [
+            1,
+            1
+          ],
+          "respawn": 360,
+          "level": {
+            "min": 5
+          }
+        }
+      ],
+      "names": [
+        "Scrapscale Camp"
+      ],
+      "meta": {
+        "population": "Sparse ground encounters competing for the existing ruin budget. No underground traversal or ecological behavior."
+      }
+    },
+    {
+      "id": "kobold_reed_camp",
+      "name": "Reedspine Camp",
+      "tags": [
+        "ruin",
+        "landmark",
+        "kobold_scaleclans"
+      ],
+      "weight": 0.35,
+      "radius": 10,
+      "min_spacing": 160,
+      "slope": {
+        "max": 0.55
+      },
+      "biomes": [
+        "marsh",
+        "shore",
+        "forest"
+      ],
+      "landmarks": [
+        "camp_ring"
+      ],
+      "level": 3,
+      "inhabitants": [
+        {
+          "pattern": "kobold_spearguard",
+          "density": 1,
+          "pack_size": [
+            1,
+            1
+          ],
+          "respawn": 360,
+          "level": {
+            "min": 4
+          }
+        },
+        {
+          "pattern": "kobold_venomweaver",
+          "density": 1,
+          "pack_size": [
+            1,
+            1
+          ],
+          "respawn": 360,
+          "level": {
+            "min": 6
+          }
+        },
+        {
+          "pattern": "kobold_rimeweaver",
+          "density": 1,
+          "pack_size": [
+            1,
+            1
+          ],
+          "respawn": 360,
+          "level": {
+            "min": 7
+          }
+        }
+      ],
+      "names": [
+        "Reedspine Camp"
+      ],
+      "meta": {
+        "population": "Sparse ground encounters competing for the existing ruin budget. No underground traversal or ecological behavior."
+      }
+    },
+    {
+      "id": "kobold_cinder_camp",
+      "name": "Cinderplate Camp",
+      "tags": [
+        "ruin",
+        "landmark",
+        "kobold_scaleclans"
+      ],
+      "weight": 0.35,
+      "radius": 10,
+      "min_spacing": 160,
+      "slope": {
+        "max": 0.55
+      },
+      "biomes": [
+        "cinderwaste",
+        "scrub",
+        "hollowed"
+      ],
+      "landmarks": [
+        "camp_ring"
+      ],
+      "level": 5,
+      "inhabitants": [
+        {
+          "pattern": "kobold_tunnelguard",
+          "density": 1,
+          "pack_size": [
+            1,
+            1
+          ],
+          "respawn": 360,
+          "level": {
+            "min": 6
+          }
+        },
+        {
+          "pattern": "kobold_cinderweaver",
+          "density": 1,
+          "pack_size": [
+            1,
+            1
+          ],
+          "respawn": 360,
+          "level": {
+            "min": 7
+          }
+        },
+        {
+          "pattern": "kobold_stormweaver",
+          "density": 1,
+          "pack_size": [
+            1,
+            1
+          ],
+          "respawn": 360,
+          "level": {
+            "min": 8
+          }
+        }
+      ],
+      "names": [
+        "Cinderplate Camp"
+      ],
+      "meta": {
+        "population": "Sparse ground encounters competing for the existing ruin budget. No underground traversal or ecological behavior."
+      }
+    },
+    {
+      "id": "kobold_scale_hold",
+      "name": "Copper-Crest Hold",
+      "tags": [
+        "ruin",
+        "landmark",
+        "kobold_scaleclans"
+      ],
+      "weight": 0.35,
+      "radius": 10,
+      "min_spacing": 160,
+      "slope": {
+        "max": 0.55
+      },
+      "biomes": [
+        "highland",
+        "heath"
+      ],
+      "landmarks": [
+        "ruin_walls"
+      ],
+      "level": 6,
+      "inhabitants": [
+        {
+          "pattern": "kobold_cragbreaker",
+          "density": 1,
+          "pack_size": [
+            1,
+            1
+          ],
+          "respawn": 360,
+          "level": {
+            "min": 10
+          }
+        },
+        {
+          "pattern": "kobold_ironback",
+          "density": 1,
+          "pack_size": [
+            1,
+            1
+          ],
+          "respawn": 360,
+          "level": {
+            "min": 11
+          }
+        },
+        {
+          "pattern": "kobold_crestcaller",
+          "density": 1,
+          "pack_size": [
+            1,
+            1
+          ],
+          "respawn": 360,
+          "level": {
+            "min": 10
+          }
+        },
+        {
+          "pattern": "kobold_scalechief",
+          "density": 1,
+          "pack_size": [
+            1,
+            1
+          ],
+          "respawn": 360,
+          "level": {
+            "min": 15
+          }
+        }
+      ],
+      "names": [
+        "Copper-Crest Hold"
+      ],
+      "meta": {
+        "population": "Sparse ground encounters competing for the existing ruin budget. No underground traversal or ecological behavior."
+      }
+    }
+  ]
+}

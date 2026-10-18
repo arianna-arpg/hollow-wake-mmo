@@ -1,0 +1,5 @@
+TEST evidence: C:\Users\John\.codex\worktrees\kobold-scaleclans\MMOARPG\experiments\kobolds\artifacts\final-smoke\run-h311P5
+TEST smoke-web; evidence: C:\Users\John\.codex\worktrees\kobold-scaleclans\MMOARPG\experiments\kobolds\artifacts\final-smoke\run-h311P5
+TEST import-godot; evidence: C:\Users\John\.codex\worktrees\kobold-scaleclans\MMOARPG\experiments\kobolds\artifacts\final-smoke\run-h311P5
+TEST smoke-godot; evidence: C:\Users\John\.codex\worktrees\kobold-scaleclans\MMOARPG\experiments\kobolds\artifacts\final-smoke\run-h311P5
+TEST PASSED; report: C:\Users\John\.codex\worktrees\kobold-scaleclans\MMOARPG\experiments\kobolds\artifacts\final-smoke\run-h311P5\result.json

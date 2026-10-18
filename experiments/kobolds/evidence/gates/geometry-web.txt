@@ -1,0 +1,12 @@
+
+> hollow-wake-web@0.1.0 test
+> vitest run --run src/world/appearance/koboldAppearance.test.ts
+
+
+ RUN  v5.0.3 C:/Users/John/.codex/worktrees/kobold-scaleclans/MMOARPG/web
+
+
+ Test Files  1 passed (1)
+      Tests  14 passed (14)
+   Start at  23:12:59
+   Duration  1.50s (transform 64%, import 23%, tests 12%, worker 1%)

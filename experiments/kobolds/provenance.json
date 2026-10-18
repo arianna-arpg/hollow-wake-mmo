@@ -1,0 +1,148 @@
+{
+  "reference": {
+    "repository": "arianna-arpg/arpg-game-world",
+    "revision": "118b510f8b5bfb781163c5bc13ea4908f698e75b",
+    "sources": [
+      "src/data/monsters.ts:roost_dragon",
+      "src/data/monsters.ts:goblin_skirmisher",
+      "src/data/looks.ts:roost_dragon",
+      "src/data/looks.ts:cave_gnasher",
+      "src/data/looks.ts:gnasher_prodder",
+      "src/render/vis/parts.ts",
+      "src/render/vis/body.ts"
+    ],
+    "relationship": "No Kobold definitions found at reference revision. New owner-directed faction; grounded dragon scales, ridge, tail, claws and serpent head are visual reference only. The source dragon's wings, breath, resistances and hunger AI, and the Goblin's fear/morale/squad rules, are not imported."
+  },
+  "roster": [
+    {
+      "id": "kobold_scavenger",
+      "skills": [
+        "strike"
+      ],
+      "habitat": "habitat.kobold_scrap_camp",
+      "translation": "Role equipment is presentation; current kit supplies combat mechanics."
+    },
+    {
+      "id": "kobold_knifehand",
+      "skills": [
+        "backstab",
+        "strike"
+      ],
+      "habitat": "habitat.kobold_scrap_camp",
+      "translation": "Backstab uses its existing runtime; no stealth or AI flanking guarantee."
+    },
+    {
+      "id": "kobold_dartbow",
+      "skills": [
+        "piercing_arrow"
+      ],
+      "habitat": "habitat.kobold_scrap_camp",
+      "translation": "Role equipment is presentation; current kit supplies combat mechanics."
+    },
+    {
+      "id": "kobold_stonecaster",
+      "skills": [
+        "hurl_debris"
+      ],
+      "habitat": "habitat.kobold_scrap_camp",
+      "translation": "Hurl Debris stands for thrown salvage; no sling mechanism."
+    },
+    {
+      "id": "kobold_spearguard",
+      "skills": [
+        "pinning_spear",
+        "strike"
+      ],
+      "habitat": "habitat.kobold_reed_camp",
+      "translation": "Role equipment is presentation; current kit supplies combat mechanics."
+    },
+    {
+      "id": "kobold_venomweaver",
+      "skills": [
+        "venom_bolt"
+      ],
+      "habitat": "habitat.kobold_reed_camp",
+      "translation": "Hand-cast existing weave, never a breath attack."
+    },
+    {
+      "id": "kobold_rimeweaver",
+      "skills": [
+        "frostbolt"
+      ],
+      "habitat": "habitat.kobold_reed_camp",
+      "translation": "Hand-cast existing weave, never a breath attack."
+    },
+    {
+      "id": "kobold_tunnelguard",
+      "skills": [
+        "buckler_strike",
+        "strike"
+      ],
+      "habitat": "habitat.kobold_cinder_camp",
+      "translation": "Role equipment is presentation; current kit supplies combat mechanics."
+    },
+    {
+      "id": "kobold_cinderweaver",
+      "skills": [
+        "firebolt"
+      ],
+      "habitat": "habitat.kobold_cinder_camp",
+      "translation": "Hand-cast existing weave, never a breath attack."
+    },
+    {
+      "id": "kobold_stormweaver",
+      "skills": [
+        "storm_bolt"
+      ],
+      "habitat": "habitat.kobold_cinder_camp",
+      "translation": "Hand-cast existing weave, never a breath attack."
+    },
+    {
+      "id": "kobold_cragbreaker",
+      "skills": [
+        "sunder_maul",
+        "heavy_strike"
+      ],
+      "habitat": "habitat.kobold_scale_hold",
+      "translation": "Role equipment is presentation; current kit supplies combat mechanics."
+    },
+    {
+      "id": "kobold_ironback",
+      "skills": [
+        "heavy_strike"
+      ],
+      "habitat": "habitat.kobold_scale_hold",
+      "translation": "Role equipment is presentation; current kit supplies combat mechanics."
+    },
+    {
+      "id": "kobold_crestcaller",
+      "skills": [
+        "rallying_shout",
+        "cleave"
+      ],
+      "habitat": "habitat.kobold_scale_hold",
+      "translation": "Rallying Shout is an existing ally buff; no command AI."
+    },
+    {
+      "id": "kobold_scalechief",
+      "skills": [
+        "rallying_shout",
+        "cleave"
+      ],
+      "habitat": "habitat.kobold_scale_hold",
+      "translation": "Rallying Shout is an existing ally buff; no command AI."
+    }
+  ],
+  "deferred": [
+    "flight",
+    "breath attacks",
+    "traps",
+    "stealth planning",
+    "coordinated flanking",
+    "mining",
+    "burrowing",
+    "social command hierarchy",
+    "tail strikes",
+    "innate elemental resistance"
+  ]
+}

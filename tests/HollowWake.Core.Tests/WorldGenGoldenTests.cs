@@ -36,12 +36,12 @@ public class WorldGenGoldenTests
         Assert.Equal(new ZoneCoord(0, 0), g.StartZone());
     }
 
-    // Wildlife spawn tables and cull candidates: reviewed maps in experiments/fauna/evidence.
+    // Sparse Kobold POIs compete for existing ruin budgets: reviewed maps in experiments/kobolds/evidence.
     [Theory]
-    [InlineData(0, 0, "7EA79EBAD31156E2", "B4967CED570DD0B6")]
-    [InlineData(1, 0, "5DD57952BE997040", "719165F3D645E5F0")]
-    [InlineData(0, -1, "330979854289527A", "44FDA182BF6A81C9")]
-    [InlineData(3, 2, "7395A7B7D40E67D9", "15C99D20020E2BF4")]
+    [InlineData(0, 0, "F895E0D2D626AB3C", "B4967CED570DD0B6")]
+    [InlineData(1, 0, "7DA328DBE04A00D6", "6615F2EDE81806A7")]
+    [InlineData(0, -1, "F75575B10A717024", "44FDA182BF6A81C9")]
+    [InlineData(3, 2, "1874A91D377C8208", "15C99D20020E2BF4")]
     public void ZoneMatchesGoldenHashes(int x, int y, string infoHash, string chunksHash)
     {
         var g = new WorldGenerator(Registry.Value, Rng.Hash64(Seed));
@@ -101,7 +101,7 @@ public class WorldGenGoldenTests
         {
             HashPoint(h, g, 40 + i * 0.83, 20 + i * 0.61, i % 20 == 0);
         }
-        Golden("overlaid world", "43DEFDD2C3C767CE", h.Hex);
+        Golden("overlaid world", "1B3F4BBF3C1CE4BF", h.Hex);
 
         // Removing an overlay must regenerate exactly what a generator that never had it produces.
         overlays.Remove("fount");

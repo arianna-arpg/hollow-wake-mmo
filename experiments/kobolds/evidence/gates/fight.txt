@@ -1,0 +1,19 @@
+t=1.60 Coppercrest Knifehand hit Ironback Bulwark for 4.6
+t=1.60 Coppercrest Knifehand cast strike at Ironback Bulwark
+t=1.60 Ironback Bulwark's poise recharging from 60.72
+t=1.80 status poise_broken x1 on Coppercrest Knifehand from Coppercrest Knifehand
+t=1.80 Ironback Bulwark broke Coppercrest Knifehand's poise
+t=1.80 Ironback Bulwark hit Coppercrest Knifehand for 49.3
+t=1.80 Ironback Bulwark cast heavy_strike at
+t=2.20 Coppercrest Knifehand cast backstab at
+t=2.30 Ironback Bulwark's poise restored to 65
+t=3.75 status poise_rearming x1 on Coppercrest Knifehand from Coppercrest Knifehand
+t=4.95 Coppercrest Knifehand hit Ironback Bulwark for 9.9
+t=4.95 Coppercrest Knifehand cast backstab at
+t=4.95 Ironback Bulwark's poise recharging from 55.47
+t=5.30 Ironback Bulwark hit Coppercrest Knifehand for 52.8
+t=5.30 Coppercrest Knifehand died
+t=5.30 Ironback Bulwark cast heavy_strike at
+t=6.45 Ironback Bulwark's poise restored to 65
+t=17.30 despawned kobold_knifehand
+kobold_ironback: life 272/272   kobold_knifehand: life /

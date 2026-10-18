@@ -46,6 +46,12 @@ The player is the reference adult stature. Ordinary skeletal humanoids share tha
 
 Species and allegiance are independent. Orc and Goblin warbands can be allied and share a site's inhabitants without losing their native factions. An overseer, slaver or commander role describes the authored encounter and combat kit, not a newly implemented capture, ownership or command system. Melee leaders close to a content-authored distance independent of their longer-range rally weave, so support skills cannot strand them outside their damaging attack's reach.
 
+## Scaled ground bipeds
+
+Reptilian factions compose the same patterns, physical mixtures, skills and population rules as other creatures. Scales, snouts, tails, frills and crests identify anatomy; they grant no flight, breath weapon, tail strike, trap placement or innate resistance. Role labels describe the current equipment and weave kit. Melee kits that mix support or long-range hints with short attacks need a content-authored stopping distance. Current state machines are replaceable scaffolding under the AI handoff, not evidence of social tactics.
+
+Kobold sites use dedicated biome-constrained POIs within existing ruin budgets. Each inhabitant is level-gated and sparsely placed. Reusing a landmark can also place that landmark's chest; do not count it as another creature. Their material estimates include scales and worn metal, with the existing mass and shove query remaining authoritative. Decorative tails and crests do not extend the conservative collision body.
+
 ## Wildlife and incidental critters
 
 Wildlife uses ordinary patterns, physical profiles and biome populations. `fauna` identifies wildlife; `ambient` and `critter` mark incidental non-attacking bodies. `prey` also lets existing minion acquisition filters pass them over. These tags do not supply ecological AI. Only eligible combat beasts opt into `quest.cull`; the cull template requires it alongside `beast`, so a shared species classifier cannot accidentally turn incidental animals or templates into kill contracts. Quest slot matching reads direct pattern tags, so that eligibility must be authored on concrete candidate definitions.

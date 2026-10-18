@@ -1,0 +1,61 @@
+{
+  "kind": "ui_appearances",
+  "entries": [
+    {
+      "id": "poi:kobold_scrap_camp",
+      "body": "marker",
+      "shape": {
+        "height": 1.4,
+        "cap": 1
+      },
+      "palette": {
+        "stone": "#756d59",
+        "accent": "#bba166"
+      },
+      "features": [],
+      "card": "never"
+    },
+    {
+      "id": "poi:kobold_reed_camp",
+      "body": "marker",
+      "shape": {
+        "height": 1.4,
+        "cap": 1
+      },
+      "palette": {
+        "stone": "#756d59",
+        "accent": "#bba166"
+      },
+      "features": [],
+      "card": "never"
+    },
+    {
+      "id": "poi:kobold_cinder_camp",
+      "body": "marker",
+      "shape": {
+        "height": 1.4,
+        "cap": 1
+      },
+      "palette": {
+        "stone": "#756d59",
+        "accent": "#bba166"
+      },
+      "features": [],
+      "card": "never"
+    },
+    {
+      "id": "poi:kobold_scale_hold",
+      "body": "marker",
+      "shape": {
+        "height": 1.4,
+        "cap": 1
+      },
+      "palette": {
+        "stone": "#756d59",
+        "accent": "#bba166"
+      },
+      "features": [],
+      "card": "never"
+    }
+  ]
+}

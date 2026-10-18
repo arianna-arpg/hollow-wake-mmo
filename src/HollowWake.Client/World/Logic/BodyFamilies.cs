@@ -51,6 +51,7 @@ public static class BodyFamilies
 {
     public static readonly IReadOnlyDictionary<string, Action<BodyBuild>> Builders = new Dictionary<string, Action<BodyBuild>>(StringComparer.Ordinal)
     {
+        ["scaled_biped"] = ScaledBipedFamilies.ScaledBiped,
         ["fauna_quadruped"] = FaunaFamilies.Quadruped,
         ["fauna_bird"] = FaunaFamilies.Bird,
         ["fauna_crab"] = FaunaFamilies.Crab,

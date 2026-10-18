@@ -1,0 +1,24 @@
+{
+  "kind": "factions",
+  "entries": [
+    {
+      "id": "kobold_scaleclans",
+      "name": "The Copper-Crest Scaleclans",
+      "color": "#b38b55",
+      "default": "neutral",
+      "relations": {
+        "kobold_scaleclans": "allied",
+        "players": "hostile",
+        "lantern_chancery": "hostile",
+        "weftmarch_compact": "hostile",
+        "longwake_company": "hostile",
+        "mended_thread": "hostile",
+        "remnant": "hostile",
+        "tangled": "hostile",
+        "goblinkin": "neutral",
+        "orc_warbands": "neutral",
+        "wilds": "neutral"
+      }
+    }
+  ]
+}

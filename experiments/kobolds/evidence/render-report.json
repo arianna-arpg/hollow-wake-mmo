@@ -1,0 +1,117 @@
+{
+  "errors": [],
+  "bodies": [
+    {
+      "id": "kobold_scavenger",
+      "body": "scaled_biped",
+      "rig": "biped",
+      "parts": 52,
+      "triangles": 762,
+      "height": 0.8486999999999999
+    },
+    {
+      "id": "kobold_knifehand",
+      "body": "scaled_biped",
+      "rig": "biped",
+      "parts": 52,
+      "triangles": 762,
+      "height": 0.9765
+    },
+    {
+      "id": "kobold_dartbow",
+      "body": "scaled_biped",
+      "rig": "biped",
+      "parts": 55,
+      "triangles": 822,
+      "height": 0.9522
+    },
+    {
+      "id": "kobold_stonecaster",
+      "body": "scaled_biped",
+      "rig": "biped",
+      "parts": 48,
+      "triangles": 722,
+      "height": 1.0415999999999999
+    },
+    {
+      "id": "kobold_spearguard",
+      "body": "scaled_biped",
+      "rig": "biped",
+      "parts": 57,
+      "triangles": 838,
+      "height": 1.0750301595972407
+    },
+    {
+      "id": "kobold_venomweaver",
+      "body": "scaled_biped",
+      "rig": "biped",
+      "parts": 54,
+      "triangles": 830,
+      "height": 1.0325977109280078
+    },
+    {
+      "id": "kobold_rimeweaver",
+      "body": "scaled_biped",
+      "rig": "biped",
+      "parts": 47,
+      "triangles": 724,
+      "height": 1.092
+    },
+    {
+      "id": "kobold_tunnelguard",
+      "body": "scaled_biped",
+      "rig": "biped",
+      "parts": 57,
+      "triangles": 890,
+      "height": 1.1385
+    },
+    {
+      "id": "kobold_cinderweaver",
+      "body": "scaled_biped",
+      "rig": "biped",
+      "parts": 49,
+      "triangles": 746,
+      "height": 1.085
+    },
+    {
+      "id": "kobold_stormweaver",
+      "body": "scaled_biped",
+      "rig": "biped",
+      "parts": 55,
+      "triangles": 858,
+      "height": 1.2204000000000002
+    },
+    {
+      "id": "kobold_cragbreaker",
+      "body": "scaled_biped",
+      "rig": "biped",
+      "parts": 52,
+      "triangles": 770,
+      "height": 1.46475
+    },
+    {
+      "id": "kobold_ironback",
+      "body": "scaled_biped",
+      "rig": "biped",
+      "parts": 58,
+      "triangles": 910,
+      "height": 1.4489999999999998
+    },
+    {
+      "id": "kobold_crestcaller",
+      "body": "scaled_biped",
+      "rig": "biped",
+      "parts": 55,
+      "triangles": 818,
+      "height": 1.2450547855329126
+    },
+    {
+      "id": "kobold_scalechief",
+      "body": "scaled_biped",
+      "rig": "biped",
+      "parts": 53,
+      "triangles": 782,
+      "height": 1.8278000000000003
+    }
+  ]
+}
