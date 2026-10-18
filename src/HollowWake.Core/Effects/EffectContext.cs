@@ -50,6 +50,19 @@ public sealed class EffectContext
     /// </summary>
     public Vector3? From { get; init; }
 
+    /// <summary>
+    /// The point the cast was aimed at. It is the context's point until a delivery moves the point (onto a body
+    /// it struck, or to where a flight or a placement is), which keeps the aim here, so the effects of a hit can
+    /// still reach where the cast was aimed.
+    /// </summary>
+    public Vector3 Aim
+    {
+        get => _aim ?? Point;
+        init => _aim = value;
+    }
+
+    private readonly Vector3? _aim;
+
     public Dictionary<string, double> Vars { get; init; } = new(StringComparer.Ordinal);
 
     /// <summary>
@@ -95,9 +108,11 @@ public sealed class EffectContext
 
     public double Eval(Expr? expr, double fallback = 0) => expr is null ? fallback : expr.Evaluate(Scope);
 
+    /// <summary>The context of a hit on a body: the body is the target and the point moves onto it, while the aim stays where the cast was aimed.</summary>
     public EffectContext WithTarget(Entity target) => Copy(target: target, point: Sim.World.TryGet<Transform>(target, out var t) ? t.Position : Point);
 
-    public EffectContext WithPoint(Vector3 point) => Copy(point: point);
+    /// <summary>A context aimed at another point: the point and the aim move together.</summary>
+    public EffectContext WithPoint(Vector3 point) => Copy(point: point, aim: point);
 
     public EffectContext Targetless() => Copy(target: Entity.None);
 
@@ -124,7 +139,7 @@ public sealed class EffectContext
     /// <summary><see cref="Fork"/> with damage effects scaled by a further factor: a fuse's power.</summary>
     public EffectContext Fork(int deeper, double damageScale) => Copy(depth: Depth + deeper, vars: new Dictionary<string, double>(Vars, StringComparer.Ordinal), damageScale: DamageScale * damageScale);
 
-    private EffectContext Copy(Entity? source = null, Entity? target = null, Vector3? point = null, int? depth = null, Dictionary<string, double>? vars = null, TagSet? tags = null, double? damageScale = null)
+    private EffectContext Copy(Entity? source = null, Entity? target = null, Vector3? point = null, int? depth = null, Dictionary<string, double>? vars = null, TagSet? tags = null, double? damageScale = null, Vector3? aim = null)
     {
         return new EffectContext
         {
@@ -134,6 +149,7 @@ public sealed class EffectContext
             Source = source ?? Source,
             Target = target ?? Target,
             Point = point ?? Point,
+            Aim = aim ?? Aim,
             Direction = Direction,
             Weave = Weave,
             Tags = tags ?? Tags,

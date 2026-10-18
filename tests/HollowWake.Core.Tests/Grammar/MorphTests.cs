@@ -58,18 +58,8 @@ public class MorphTests
         {
             When = Families.SalvoDrifts,
         },
-        new("move", "sensitive", "choice 'anchor': 'from' and 'point' show the crowd the same",
-            "inside a hit list the context's point is the struck body (EffectContext.WithTarget moves it there), so anchor point measures from the body itself and the shove runs along the facing; areas and fields set no from, so anchor from measures from the caster. For bodies on the aim line beyond the caster all three anchors push the same way; deliveries.md says point is the aim point and from a field's center")
-        {
-            Shows = Displaced,
-        },
-        new("move", "sensitive", "choice 'anchor': 'caster' and 'point' show the crowd the same",
-            "the anchor finding above, seen from the caster: point measures from the struck body, and for bodies on the aim line beyond the caster that pushes them the way the caster's position does")
-        {
-            Shows = Displaced,
-        },
         new("move", "sensitive", "choice 'anchor': 'from' and 'caster' show the crowd the same",
-            "an area sets no from on its hit list (nor does a field on its pulse), so anchor from measures from the caster, where deliveries.md says from is where the effect acts")
+            "an area sets no from on its hit list (nor does a field on its pulse), so anchor from measures from the caster, where deliveries.md says from is where the effect acts. Parked: an area builds its hit contexts in DeliveryHandlers.cs, held by an open Codex request, and a field's from also steers the guard stage's arc and where nested deliveries start, so both change together")
         {
             Shows = Displaced,
         },

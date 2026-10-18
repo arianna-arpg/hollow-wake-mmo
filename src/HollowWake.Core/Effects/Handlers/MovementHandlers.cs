@@ -144,12 +144,13 @@ internal sealed class MoveHandler : IEffectHandler
                 return;
             }
             var distance = (float)ctx.Eval(Distance, 4);
-            // What the shove measures from: where the effect acts (a flight's hit point, a field's center), the
-            // caster's own position (a hook on a flight reeling its catch home), or the aim point.
+            // What the shove measures from: where the context's deliveries start (a flight's hit point; with none
+            // given, the caster), the caster's own position (a hook on a flight reeling its catch home), or the point
+            // the cast was aimed at, which a hit keeps when it moves the context's point onto the struck body.
             var source = Anchor switch
             {
                 "caster" => ctx.SourceTransform?.Position ?? ctx.From ?? ctx.Point,
-                "point" => ctx.Point,
+                "point" => ctx.Aim,
                 _ => ctx.From ?? ctx.SourceTransform?.Position ?? ctx.Point,
             };
             Vector2 direction;

@@ -78,9 +78,10 @@ internal static class EffectHelpers
     /// <summary>
     /// A context for work a delivery does somewhere along its way: at a point, facing a direction, struck at
     /// a body or at none, starting deliveries from <paramref name="from"/>, and with variables of its own
-    /// when given. Everything else is the basis's.
+    /// when given. The aim stays the basis's unless <paramref name="aim"/> turns it; everything else is the
+    /// basis's.
     /// </summary>
-    internal static EffectContext At(EffectContext basis, Entity target, Vector3 point, Vector2 direction, Vector3? from, int depth, Dictionary<string, double>? vars = null, double? damageScale = null) => new()
+    internal static EffectContext At(EffectContext basis, Entity target, Vector3 point, Vector2 direction, Vector3? from, int depth, Dictionary<string, double>? vars = null, double? damageScale = null, Vector3? aim = null) => new()
     {
         CastId = basis.CastId,
         Sim = basis.Sim,
@@ -88,6 +89,7 @@ internal static class EffectHelpers
         Source = basis.Source,
         Target = target,
         Point = point,
+        Aim = aim ?? basis.Aim,
         Direction = direction,
         Weave = basis.Weave,
         Tags = basis.Tags,
