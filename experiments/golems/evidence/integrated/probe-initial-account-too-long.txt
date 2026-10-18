@@ -1,0 +1,2 @@
+asked for features: hit_bodies_v2, projectile_slabs_v1, entity_delta, interface; granted: hit_bodies_v2, projectile_slabs_v1, entity_delta, interface
+no character list; got WelcomeMsg, HitBodiesMsg, LoginResultMsg

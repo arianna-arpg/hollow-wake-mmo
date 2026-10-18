@@ -10,7 +10,17 @@ The promoted projectile fixture now lives in `tests/HollowWake.Core.Tests/GolemP
 
 Before refreshing those three hashes, `WorldEvidence` compared archived base content against golem content on the same corrected generator. All four sampled local chunk sets and quests are unchanged; the weighted catalog changes neighboring site selection at (0,0) and (1,0). The exact locations and hashes are recorded in `experiments/golems/evidence/integrated/world-review.txt` and `world-neighbors.json`. Climate, the other two zone samples and all local chunk hashes remain unchanged.
 
-Full combined gates and performance evidence pending below. Performance runs are serialized with the other owning chats at normal process priority.
+Functional gates target integration commit `ad310a2b3047b366da9ad32798beea5cff5145e3`:
+
+- Full solution build: zero warnings/errors. Full local suite: 2,567 core, 122 client and 48 server tests pass, with no exclusions or skips. The online build/test check independently passed the same counts.
+- Browser: 279 tests pass and production build passes with the existing bundle-size advisory. Content validation: zero errors/warnings. Generated TypeScript protocol is current.
+- Porter: ten original tests plus the dedicated golem mapping regression pass. Origin loads 200 ticks and the Amalgamation/Stone combat trace completes; actual owner-bound summoning is covered by the core regressions rather than the CLI's ownerless arena.
+- The private TCP probe negotiates `hit_bodies_v2`, `projectile_slabs_v1`, `entity_delta` and `interface`, enters the world, moves and receives interface/chat state. Its initial helper used an account name over the server's 32-character limit; that rejected login is retained separately. Shortening the temporary account name fixes the helper; no product change was needed.
+
+- Private background smoke: browser 30/30 and native 26/26 behavioral checks pass, with no cleanup errors. Native rendering/theme pixels are explicitly skipped; Godot reports resource/object leaks during shutdown, retained in the log, so this is not a zero-diagnostic native run.
+- **Browser pixel clearance fails.** Initial geometry visibly renders the world, but the card-mode capture and later combat capture show sky plus DOM labels with the terrain/bodies absent. `cards-render-failure.png` and `combat-render-failure.png` preserve this despite the behavioral runner's passing summary. The shared renderer owner and coordinator have the evidence; do not treat smoke counters or the isolated golem galleries as a successful integrated card-rendering gate.
+
+Release tools build with zero warnings/errors. Performance evidence pending below; runs are serialized with the other owning chats at normal process priority.
 
 ## Integration limits
 
