@@ -278,6 +278,17 @@ public class ShoveTests
         arena.Tick(40);
         Assert.Equal(14, At(arena, boar).X, 0);
         Assert.Equal(10, At(arena, boar).Y, 3);
+        // An aim a quarter turn round turns where the cast is aimed: the area lands north of the caster, and a shove
+        // anchored at the point measures from the turned point, throwing the near body back south and the far one on.
+        var turned = DeliveryArena.Create();
+        var near = turned.Body(10, 14);
+        var far = turned.Body(10, 18);
+        turned.Run("{\"type\": \"aim\", \"offset\": 90, \"effects\": [{\"type\": \"area\", \"radius\": 3, \"effects\": [{\"type\": \"move\", \"kind\": \"knockback\", \"distance\": 2, \"anchor\": \"point\"}]}]}", new Vector3(16, 10, 0), direction: Vector2.UnitX);
+        turned.Tick(40);
+        Assert.Equal(10, At(turned, near).X, 0);
+        Assert.Equal(12, At(turned, near).Y, 0);
+        Assert.Equal(10, At(turned, far).X, 0);
+        Assert.Equal(20, At(turned, far).Y, 0);
     }
 
     [Fact]
