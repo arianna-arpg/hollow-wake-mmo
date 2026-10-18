@@ -87,6 +87,78 @@ public class TournamentTests
     }
 
     [Fact]
+    public void APairingsHashIgnoresWhatElseRan()
+    {
+        var pairing = new Pairing("wolf", "hob");
+        var alone = Tournament.Run(CoreContent.Registry, new[] { pairing }, seeds: 2, seconds: 20, checkBands: false);
+        // Other pairings before and after it, in either order, in the same process and registry.
+        var others = new[] { new Pairing("loosed_kindler", "boar"), pairing, new Pairing("proving_reaver", "proving_bulwark") };
+        var among = Tournament.Run(CoreContent.Registry, others, seeds: 2, seconds: 20, checkBands: false);
+        var reversed = Tournament.Run(CoreContent.Registry, others.Reverse().ToArray(), seeds: 2, seconds: 20, checkBands: false);
+        string HashOf(TournamentReport report) => report.Pairs.Single(p => p.A == pairing.A && p.B == pairing.B).Hash;
+        Assert.Equal(HashOf(alone), HashOf(among));
+        Assert.Equal(HashOf(alone), HashOf(reversed));
+        // The run's own hash folds its pairings in the order they ran, so it does follow the order.
+        Assert.NotEqual(among.Hash, reversed.Hash);
+    }
+
+    [Fact]
+    public void TheCommandsExitCodeSaysWhetherWhatItCheckedHeld()
+    {
+        var dir = Scratch("evaluation-command");
+        try
+        {
+            // Nothing asked to be checked: the fights run and the command passes.
+            var (code, lines) = Command(CoreContent.Registry, "--pairs", "wolf:hob", "--seeds", "1", "--seconds", "5");
+            Assert.Equal(0, code);
+            Assert.StartsWith("pairing", lines[0], StringComparison.Ordinal);
+
+            // A baseline written, then checked: identical passes, a changed hash fails naming it.
+            var baselinePath = Path.Combine(dir, "baseline.json");
+            (code, _) = Command(CoreContent.Registry, "--pairs", "wolf:hob", "--seeds", "1", "--seconds", "5", "--hashes", "--out", baselinePath);
+            Assert.Equal(0, code);
+            var written = TraceBaseline.FromJson(File.ReadAllText(baselinePath));
+            Assert.Equal(TraceBaseline.CurrentPlatform, written.Platform);
+            (code, lines) = Command(CoreContent.Registry, "--pairs", "wolf:hob", "--check-hashes", baselinePath);
+            Assert.Equal(0, code);
+            Assert.Contains($"hashes: identical to {baselinePath}", lines);
+            File.WriteAllText(baselinePath, (written with { Hashes = new Dictionary<string, string> { ["wolf:hob"] = "0000000000000000" } }).ToJson());
+            (code, lines) = Command(CoreContent.Registry, "--pairs", "wolf:hob", "--check-hashes", baselinePath);
+            Assert.Equal(1, code);
+            Assert.Contains($"hashes: CHANGED against {baselinePath}", lines);
+            Assert.Contains(lines, line => line.Trim().StartsWith("wolf:hob changed from 0000000000000000", StringComparison.Ordinal));
+
+            // A band broken under --bands fails: one fight cannot sit inside every band.
+            (code, lines) = Command(CoreContent.Registry, "--pairs", "hob:proving_bulwark", "--seeds", "1", "--seconds", "8", "--bands");
+            Assert.Equal(1, code);
+            Assert.Equal("bands: FAIL", lines[^1]);
+
+            // An error the simulation logged fails the command, which names the first.
+            File.WriteAllText(Path.Combine(dir, "patterns.yaml"), """
+kind: patterns
+entries:
+  - id: t_garbled
+    name: Garbled
+    extends: monster
+    tags: [humanoid]
+    level: 5
+    components:
+      stats: { attributes: { might: 10, vigor: 10, move.speed: 4.8 } }
+      weaves: { list: [5] }
+      behavior: { id: aggressive_melee }
+""".Replace("\r\n", "\n"));
+            var garbled = ContentRegistry.Load(new[] { CoreContent.FindContentDir(), dir }, out _);
+            (code, lines) = Command(garbled, "--pairs", "t_garbled:hob", "--seeds", "1", "--seconds", "2");
+            Assert.Equal(1, code);
+            Assert.StartsWith("errors: the simulation logged an error, the first in t_garbled:hob fight 0: pattern 't_garbled' component 'weaves' failed to bind", lines[^1], StringComparison.Ordinal);
+        }
+        finally
+        {
+            Directory.Delete(dir, recursive: true);
+        }
+    }
+
+    [Fact]
     public void TheSamePairingAndSeedGiveTheSameTraceHash()
     {
         var pairing = new Pairing("wolf", "hob");
