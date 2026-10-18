@@ -132,6 +132,9 @@ public partial class Smoke : Node
         var t0 = Now;
         var built = await Until(() => _main.World.BuiltChunks > 0 && _main.World.PendingChunks == 0, 90);
         Record("terrain built", built, $"{_main.World.BuiltChunks} chunks in {Now - t0:0.0}s, {_main.World.Entities.Count} entities in view, {Engine.GetFramesPerSecond()} fps");
+        var ready = await Until(() => !_main.Loading.BlocksWorldInput, 20);
+        Record("world input ready", ready, $"loading={_main.Loading.Active}, blocked={_main.Loading.BlocksWorldInput}, chat={_main.Hud.ChatFocused}");
+        if (!ready) return;
         await Wait(1.0);
         await Shot("01_isometric.png");
         await LookStages();
@@ -284,29 +287,36 @@ public partial class Smoke : Node
     {
         var world = _main.World;
         var settings = _main.Settings;
-        var geometry = await Measure("geometry");
-        Record("bodies as geometry", geometry.Bodies > 0 && geometry.P95 < 50, geometry.Line);
-        settings.Set("shadows", System.Text.Json.Nodes.JsonValue.Create(false));
-        await Wait(0.3);
-        var unshadowed = await Measure("geometry, no shadows");
-        settings.Set("shadows", System.Text.Json.Nodes.JsonValue.Create(true));
-        Record("bodies without shadows", unshadowed.Bodies > 0, unshadowed.Line);
-        settings.Set("bodies", System.Text.Json.Nodes.JsonValue.Create("cards"));
-        var baked = await Until(() => world.Appearance?.Baker.Pending == 0 && world.BodyCounts.Cards > 0, 20);
-        await Wait(0.5);
-        var cards = await Measure("cards");
-        await Shot("16_cards.png");
-        Record("bodies as cards", baked && cards.Cards > 0 && cards.P95 < 50, cards.Line);
-        settings.Set("bodies", System.Text.Json.Nodes.JsonValue.Create("auto"));
-        await Wait(0.3);
-        settings.Set("grayscale", System.Text.Json.Nodes.JsonValue.Create(true));
-        await Wait(0.3);
-        await Shot("17_grayscale.png");
-        settings.Set("grayscale", System.Text.Json.Nodes.JsonValue.Create(false));
-        settings.Set("reduce_motion", System.Text.Json.Nodes.JsonValue.Create(true));
-        await Wait(0.3);
-        await Shot("18_reduced_motion.png");
-        settings.Set("reduce_motion", System.Text.Json.Nodes.JsonValue.Create(false));
+        if (DisplayServer.GetName() == "headless")
+        {
+            GD.Print("SMOKE SKIP appearance rendering: headless display; geometry/card performance and readability require graphical evidence");
+        }
+        else
+        {
+            var geometry = await Measure("geometry");
+            Record("bodies as geometry", geometry.Bodies > 0 && geometry.P95 < 50, geometry.Line);
+            settings.Set("shadows", System.Text.Json.Nodes.JsonValue.Create(false));
+            await Wait(0.3);
+            var unshadowed = await Measure("geometry, no shadows");
+            settings.Set("shadows", System.Text.Json.Nodes.JsonValue.Create(true));
+            Record("bodies without shadows", unshadowed.Bodies > 0, unshadowed.Line);
+            settings.Set("bodies", System.Text.Json.Nodes.JsonValue.Create("cards"));
+            var baked = await Until(() => world.Appearance?.Baker.Pending == 0 && world.BodyCounts.Cards > 0, 20);
+            await Wait(0.5);
+            var cards = await Measure("cards");
+            await Shot("16_cards.png");
+            Record("bodies as cards", baked && cards.Cards > 0 && cards.P95 < 50, cards.Line);
+            settings.Set("bodies", System.Text.Json.Nodes.JsonValue.Create("auto"));
+            await Wait(0.3);
+            settings.Set("grayscale", System.Text.Json.Nodes.JsonValue.Create(true));
+            await Wait(0.3);
+            await Shot("17_grayscale.png");
+            settings.Set("grayscale", System.Text.Json.Nodes.JsonValue.Create(false));
+            settings.Set("reduce_motion", System.Text.Json.Nodes.JsonValue.Create(true));
+            await Wait(0.3);
+            await Shot("18_reduced_motion.png");
+            settings.Set("reduce_motion", System.Text.Json.Nodes.JsonValue.Create(false));
+        }
         settings.Set("day_lock", System.Text.Json.Nodes.JsonValue.Create(true));
         settings.Set("day_time", System.Text.Json.Nodes.JsonValue.Create(1.0));
         await Wait(0.4);
@@ -420,8 +430,7 @@ public partial class Smoke : Node
         // Escape closes the pages, then the core pane.
         for (var i = 0; i < pages.Count + 2 && hud.CoreOpen; i++)
         {
-            Tap(Key.Escape);
-            await Wait(0.15);
+            await EscapeAndWait();
         }
         Record("escape closes the core pane last", !hud.CoreOpen, $"core open={hud.CoreOpen}");
     }
@@ -495,12 +504,15 @@ public partial class Smoke : Node
             await Click(Screen(vendor.GlobalPosition + new Vector3(0, vendor.State.Height * 0.5f, 0)));
             await Until(() => (_main.VendorStates > states && hud.HasWorldPane("vendor")) || (_main.DialogueStates > talks && hud.HasWorldPane("dialogue")), 6);
             // A trader that talks first: bring its conversation to the front and ask to trade, as a player would.
-            if (!hud.HasWorldPane("vendor") && hud.FrontView<UI.WorldPanes.DialoguePane>() is { State: { } talk } dialogue)
+            if (!hud.HasWorldPane("vendor") && hud.FrontView<UI.WorldPanes.DialoguePane>() is { State: { } talk })
             {
                 hud.Workspace.SelectTab($"dialogue:{talk.Source}");
                 await Wait(0.3);
-                var index = talk.Choices.FindIndex(c => c.Id == "trade" && c.Enabled);
-                var button = index < 0 ? null : dialogue.FindChildren("*", "Button", true, false).OfType<Button>().FirstOrDefault(b => b.Text.StartsWith($"{index + 1}. ", StringComparison.Ordinal));
+                // Layout/restyling or a server close may replace the view during the await.
+                var dialogue = hud.FrontView<UI.WorldPanes.DialoguePane>();
+                var current = dialogue?.State;
+                var index = current?.Source == vendor.Key ? current.Choices.FindIndex(c => c.Id == "trade" && c.Enabled) : -1;
+                var button = index < 0 || !GodotObject.IsInstanceValid(dialogue) ? null : dialogue!.FindChildren("*", "Button", true, false).OfType<Button>().FirstOrDefault(b => b.Text.StartsWith($"{index + 1}. ", StringComparison.Ordinal));
                 if (button is not null)
                 {
                     await Click(ScreenCenter(button));
@@ -655,9 +667,23 @@ public partial class Smoke : Node
         var hud = _main.Hud;
         for (var i = 0; i < 8 && (hud.CoreOpen || hud.Workspace.Book.Leaves.Count > 0); i++)
         {
-            Tap(Key.Escape);
-            await Wait(0.15);
+            await EscapeAndWait();
         }
+    }
+
+    private string WorkspaceState()
+    {
+        var hud = _main.Hud;
+        return $"core={hud.CoreOpen}, tray={hud.Workspace.TrayOpen}, front={hud.Workspace.Book.Active()?.Id}, leaves={string.Join(',', hud.Workspace.Book.Leaves.Select(l => l.Id))}";
+    }
+
+    private async Task EscapeAndWait()
+    {
+        var before = WorkspaceState();
+        Tap(Key.Escape);
+        if (!await Until(() => WorkspaceState() != before, 2))
+            GD.Print($"SMOKE escape unchanged: {before}; loading={_main.Loading.BlocksWorldInput}, focus={GetViewport().GuiGetFocusOwner()?.GetType().Name}, chat={_main.Hud.ChatFocused}");
+        await Wait(0.15);
     }
 
     /// <summary>Types into the Options search field; the rows narrow to the matching entries of every page.</summary>
