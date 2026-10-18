@@ -1,0 +1,51 @@
+== proving_pitfighter (A) vs proving_bulwark (B), seed mech, 30 s kitA=measured_cut
+     19  A cast measured_cut
+     18  A dealt damage events
+     20  A started measured_cut
+     22  B cast bite
+     21  B dealt damage events
+     23  B started bite
+-- ticks by state (20 per second)
+      1  A state , free
+    560  A state chase, casting Cast
+     34  A state chase, free
+      5  A state idle, free
+      3  B state , free
+    540  B state chase, casting Cast
+     52  B state chase, free
+      5  B state idle, free
+-- A walked 1.6 units
+-- B walked 1.4 units
+-- life A 12/172  B 220/220
+-- timeline
+  t=0.05 A (10.00,10.00)  | B (14.00,10.00)  | dist 4.00
+  t=1.00 A (11.30,10.00) chase casting=measured_cut(Cast) | B (12.87,10.00) chase casting=bite(Cast) | dist 1.57
+  t=2.00 A (11.56,10.00) chase | B (12.65,10.00) chase casting=bite(Cast) | dist 1.09
+  t=3.00 A (11.56,10.00) chase casting=measured_cut(Cast) | B (12.65,10.00) chase casting=bite(Cast) | dist 1.09
+  t=4.00 A (11.56,10.00) chase casting=measured_cut(Cast) | B (12.65,10.00) chase casting=bite(Cast) | dist 1.09
+  t=5.00 A (11.56,10.00) chase | B (12.65,10.00) chase casting=bite(Cast) | dist 1.09
+  t=6.00 A (11.56,10.00) chase casting=measured_cut(Cast) | B (12.65,10.00) chase casting=bite(Cast) | dist 1.09
+  t=7.00 A (11.56,10.00) chase casting=measured_cut(Cast) | B (12.65,10.00) chase casting=bite(Cast) | dist 1.09
+  t=8.00 A (11.56,10.00) chase casting=measured_cut(Cast) | B (12.65,10.00) chase casting=bite(Cast) | dist 1.09
+  t=9.00 A (11.56,10.00) chase casting=measured_cut(Cast) | B (12.65,10.00) chase casting=bite(Cast) | dist 1.09
+  t=10.00 A (11.56,10.00) chase casting=measured_cut(Cast) | B (12.65,10.00) chase casting=bite(Cast) | dist 1.09
+  t=11.00 A (11.56,10.00) chase casting=measured_cut(Cast) | B (12.65,10.00) chase | dist 1.09
+  t=12.00 A (11.56,10.00) chase casting=measured_cut(Cast) | B (12.65,10.00) chase casting=bite(Cast) | dist 1.09
+  t=13.00 A (11.56,10.00) chase casting=measured_cut(Cast) | B (12.65,10.00) chase casting=bite(Cast) | dist 1.09
+  t=14.00 A (11.56,10.00) chase casting=measured_cut(Cast) | B (12.65,10.00) chase | dist 1.09
+  t=15.00 A (11.56,10.00) chase casting=measured_cut(Cast) | B (12.65,10.00) chase casting=bite(Cast) | dist 1.09
+  t=16.00 A (11.56,10.00) chase casting=measured_cut(Cast) | B (12.65,10.00) chase casting=bite(Cast) | dist 1.09
+  t=17.00 A (11.56,10.00) chase casting=measured_cut(Cast) | B (12.65,10.00) chase casting=bite(Cast) | dist 1.09
+  t=18.00 A (11.56,10.00) chase casting=measured_cut(Cast) | B (12.65,10.00) chase casting=bite(Cast) | dist 1.09
+  t=19.00 A (11.56,10.00) chase casting=measured_cut(Cast) | B (12.65,10.00) chase casting=bite(Cast) | dist 1.09
+  t=20.00 A (11.56,10.00) chase casting=measured_cut(Cast) | B (12.65,10.00) chase casting=bite(Cast) | dist 1.09
+  t=21.00 A (11.56,10.00) chase casting=measured_cut(Cast) | B (12.65,10.00) chase casting=bite(Cast) | dist 1.09
+  t=22.00 A (11.56,10.00) chase casting=measured_cut(Cast) | B (12.65,10.00) chase casting=bite(Cast) | dist 1.09
+  t=23.00 A (11.56,10.00) chase casting=measured_cut(Cast) | B (12.65,10.00) chase casting=bite(Cast) | dist 1.09
+  t=24.00 A (11.56,10.00) chase casting=measured_cut(Cast) | B (12.65,10.00) chase casting=bite(Cast) | dist 1.09
+  t=25.00 A (11.56,10.00) chase casting=measured_cut(Cast) | B (12.65,10.00) chase casting=bite(Cast) | dist 1.09
+  t=26.00 A (11.56,10.00) chase casting=measured_cut(Cast) | B (12.65,10.00) chase casting=bite(Cast) | dist 1.09
+  t=27.00 A (11.56,10.00) chase casting=measured_cut(Cast) | B (12.65,10.00) chase casting=bite(Cast) | dist 1.09
+  t=28.00 A (11.56,10.00) chase casting=measured_cut(Cast) | B (12.65,10.00) chase casting=bite(Cast) | dist 1.09
+  t=29.00 A (11.56,10.00) chase casting=measured_cut(Cast) | B (12.65,10.00) chase casting=bite(Cast) | dist 1.09
+  t=30.00 A (11.56,10.00) chase casting=measured_cut(Cast) | B (12.65,10.00) chase casting=bite(Cast) | dist 1.09

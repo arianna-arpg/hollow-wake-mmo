@@ -1,0 +1,54 @@
+== loosed_kindler (A) vs proving_reaver (B), seed mech, 30 s kitA=lumen_vigil,frozen_orb
+      2  A cast frozen_orb
+     11  A dealt damage events
+      2  A started frozen_orb
+      1  B cast strike[stone]+rending
+      5  B dealt damage events
+      2  B interrupted strike[stone]+rending
+      4  B started strike[stone]+rending
+-- ticks by state (20 per second)
+      9  A state , free
+     36  A state engage, casting Cast
+    164  A state engage, free
+    386  A state idle, free
+      5  A state return, free
+      5  B state , free
+    115  B state chase, casting Cast
+     88  B state chase, free
+      5  B state idle, free
+-- A walked 28.6 units
+-- B walked 1.5 units
+-- life A 112/112  B gone
+-- timeline
+  t=0.05 A (10.00,10.00)  | B (14.00,10.00)  | dist 4.00
+  t=1.00 A (10.00,10.00) engage casting=frozen_orb(Cast) | B (12.75,10.00) chase casting=strike[stone]+rending(Cast) | dist 2.75
+  t=2.00 A (10.00,10.00) engage | B (12.75,10.00) chase casting=strike[stone]+rending(Cast) | dist 2.75
+  t=3.00 A (10.00,10.00) engage | B (12.75,10.00) chase | dist 2.75
+  t=4.00 A (10.00,10.00) engage | B (12.75,10.00) chase | dist 2.75
+  t=5.00 A (10.00,10.00) engage | B (12.75,10.00) chase casting=strike[stone]+rending(Cast) | dist 2.75
+  t=6.00 A (10.00,10.00) engage casting=frozen_orb(Cast) | B (12.75,10.00) chase casting=strike[stone]+rending(Cast) | dist 2.75
+  t=7.00 A (10.00,10.00) engage | B (12.54,10.00) chase casting=strike[stone]+rending(Cast) | dist 2.54
+  t=8.00 A (10.00,10.00) engage | B (12.54,10.00) chase | dist 2.54
+  t=9.00 A (10.00,10.00) engage | B (12.54,10.00) chase | dist 2.54
+  t=10.00 A (10.00,10.00) engage | B (12.54,10.00) chase casting=strike[stone]+rending(Cast) | dist 2.54
+  t=10.70 B died
+  t=11.00 A (10.00,10.00) idle | B dead | dist 2.54
+  t=12.00 A (10.00,10.00) idle | B dead | dist 2.54
+  t=13.00 A (10.00,10.00) idle | B dead | dist 2.54
+  t=14.00 A (10.00,10.00) idle | B dead | dist 2.54
+  t=15.00 A (9.64,11.15) idle | B dead | dist 3.12
+  t=16.00 A (9.07,12.47) idle | B dead | dist 4.26
+  t=17.00 A (11.11,11.83) idle | B dead | dist 2.32
+  t=18.00 A (11.21,7.91) idle | B dead | dist 2.48
+  t=19.00 A (7.35,10.75) idle | B dead | dist 5.25
+  t=20.00 A (6.76,11.17) idle | B dead | dist 5.89
+  t=21.00 A (8.69,9.37) idle | B dead | dist 3.90
+  t=22.00 A (9.74,8.38) idle | B dead | dist 3.23
+  t=23.00 A (9.74,8.38) idle | B dead | dist -1.00
+  t=24.00 A (9.74,8.38) idle | B dead | dist -1.00
+  t=25.00 A (9.74,8.38) idle | B dead | dist -1.00
+  t=26.00 A (9.74,8.38) idle | B dead | dist -1.00
+  t=27.00 A (8.87,9.53) idle | B dead | dist -1.00
+  t=28.00 A (8.73,9.72) idle | B dead | dist -1.00
+  t=29.00 A (12.53,10.26) idle | B dead | dist -1.00
+  t=30.00 A (12.13,10.90) idle | B dead | dist -1.00

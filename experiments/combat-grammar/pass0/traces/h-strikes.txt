@@ -1,0 +1,67 @@
+== proving_pitfighter (A) vs proving_mower (B), seed strikes, 30 s
+      2  A cast cross_jab
+      5  A cast frenzy
+      3  A cast haymaker
+      6  A cast one_two
+     21  A dealt damage events
+      2  A started cross_jab
+      5  A started frenzy
+      3  A started haymaker
+      6  A started one_two
+      4  B cast lash_roots
+      2  B cast scythe_sweep
+      1  B cast toppling_stroke
+     14  B dealt damage events
+     22  B failed verdict: no_target
+      5  B started lash_roots
+      2  B started scythe_sweep
+      1  B started toppling_stroke
+-- ticks by state (20 per second)
+      6  A state , free
+    168  A state chase, casting Cast
+     98  A state chase, free
+    283  A state idle, free
+     45  A state return, free
+      7  B state , free
+    100  B state chase, casting Cast
+    160  B state chase, free
+      5  B state idle, free
+-- A walked 50.1 units
+-- B walked 20.1 units
+-- life A 133/172  B gone
+-- timeline
+  t=0.05 A (10.00,10.00)  | B (14.00,10.00)  | dist 4.00
+  t=1.00 A (11.30,10.00) chase casting=one_two(Cast) | B (13.00,10.00) chase casting=lash_roots(Cast) | dist 1.70
+  t=2.00 A (11.56,10.00) chase casting=one_two(Cast) | B (13.00,10.00) chase | dist 1.44
+  t=3.00 A (11.56,10.00) chase casting=haymaker(Cast) | B (13.00,10.00) chase casting=scythe_sweep(Cast) | dist 1.44
+  t=3.60 A spent 2 fury (left 0)
+  t=4.00 A (12.60,10.00) chase | B (17.03,10.00) chase | dist 4.43
+  t=5.00 A (14.68,10.00) chase casting=frenzy(Cast) | B (16.41,10.00) chase | dist 1.73
+  t=6.00 A (14.84,10.00) chase casting=haymaker(Cast) | B (16.41,10.00) chase casting=toppling_stroke(Cast) | dist 1.57
+  t=6.55 A spent 1 fury (left 0)
+  t=7.00 A (16.14,10.00) chase | B (22.24,10.00) chase casting=scythe_sweep(Cast) | dist 6.10
+  t=8.00 A (19.00,10.00) chase casting=frenzy(Cast) | B (20.31,10.00) chase casting=lash_roots(Cast) | dist 1.32
+  t=9.00 A (19.00,10.00) chase | B (20.31,10.00) chase | dist 1.32
+  t=9.80 A spent 2 fury (left 0)
+  t=10.00 A (19.78,10.00) chase | B (24.95,10.00) chase | dist 5.17
+  t=11.00 A (22.38,10.00) chase casting=frenzy(Cast) | B (23.72,10.00) chase casting=lash_roots(Cast) | dist 1.35
+  t=12.00 A (22.38,10.00) chase | B (23.72,10.00) chase | dist 1.35
+  t=13.00 A (22.38,10.00) chase | B (23.72,10.00) chase | dist 1.35
+  t=13.65 B died
+  t=14.00 A (21.60,10.00) return | B dead | dist 2.13
+  t=15.00 A (16.40,10.00) return | B dead | dist 7.33
+  t=16.00 A (11.20,10.00) return | B dead | dist 12.53
+  t=17.00 A (10.42,10.00) idle | B dead | dist 13.31
+  t=18.00 A (12.18,11.53) idle | B dead | dist 11.64
+  t=19.00 A (12.18,11.53) idle | B dead | dist 11.64
+  t=20.00 A (8.78,8.32) idle | B dead | dist 15.04
+  t=21.00 A (7.27,6.90) idle | B dead | dist 16.75
+  t=22.00 A (7.27,6.90) idle | B dead | dist 16.75
+  t=23.00 A (6.31,9.31) idle | B dead | dist 17.43
+  t=24.00 A (10.13,12.02) idle | B dead | dist 13.74
+  t=25.00 A (8.36,10.10) idle | B dead | dist 15.36
+  t=26.00 A (8.20,10.86) idle | B dead | dist -1.00
+  t=27.00 A (7.86,12.39) idle | B dead | dist -1.00
+  t=28.00 A (10.09,9.18) idle | B dead | dist -1.00
+  t=29.00 A (10.09,9.18) idle | B dead | dist -1.00
+  t=30.00 A (10.09,9.18) idle | B dead | dist -1.00
