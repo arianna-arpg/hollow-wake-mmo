@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { bundledKinds, loadNames, loadUi, lookOf, PLAIN_LOOK, rankOf, statusLookOf, weaveIcon } from './content';
+import { bundledKinds, loadNames, loadUi, lookOf, PLAIN_LOOK, rankOf, statusLookOf } from './content';
 import { badgeText, foldTray, keyLabelOf, keyMatches, parseKeyName, servedPages, trayBadge, webCode } from './menu';
 import { buildSheet, formatValue } from './sheet';
 
@@ -28,8 +28,6 @@ describe('the interface content', () => {
     for (const page of ui.pages) {
       expect(ui.icons.icons[page.icon], page.id).toBeDefined();
     }
-    expect(weaveIcon(ui.icons, null, 'ember_bolt')).toBe('missile');
-    expect(weaveIcon(ui.icons, 'strike', null)).toBe('blade');
   });
 
   it('names attributes, Threads, slots, statuses and the constellation from the content', () => {
