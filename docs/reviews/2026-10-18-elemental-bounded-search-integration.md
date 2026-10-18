@@ -20,4 +20,12 @@ Fresh private run `run-uzwrsN` passes browser 31/31 and native state 26/26, with
 
 Earlier level-dependent benchmarks are historical. A fresh coordinator-approved performance window is required after source and functional checks are ready. First samples and all remaining caveats will be retained. #20 release-policy integration stays separate. The PR remains draft; this record does not authorize merging.
 
+## Validated foundation ancestry
+
+The final #34 tip `745015e5a0849a201e6857e47c9e23435618fb0a` is merged to reconcile the stacked PR's ancestry. Conflicts were limited to two shared review records and the branch-specific goldens. The shared records are the complete incoming historical records; the independently audited elemental golden file is retained byte-for-byte from tested `b6b3e3018beb47a1b4118337b7cc5962d587eff8`.
+
+`foundation-ancestry-equivalence.json` records identical before/after Git trees for `src`, `content`, `tests`, `web`, `scripts`, `config`, `launcher` and `deploy`. The full staged comparison outside `docs` and `experiments` has no changed paths. Every retained Release output file has the same SHA256 before and after merging; Core is `3D2B7D065F19B2675CBDCDDC42BD462E7E4A490C55B1D8015BF48BD61D840238`. All application/test inputs are therefore unchanged, so the tested Release binary is retained without a rebuild or test rerun. The pending benchmark will use that binary with this reconciled source ancestry.
+
+The original #34 228 bytes/tick allocation failure (threshold less than 200), isolated pass and full unchanged-suite retry pass are retained verbatim in the incoming `34-final-*` evidence and shared review. Their cause remains unestablished. Incoming historical duel traces retain their original trailing spaces; their preservation is not reported as a clean whole-merge whitespace check. Elemental edits pass their scoped whitespace check. Previous level-dependent measurements remain historical, and no fresh benchmark has run at this checkpoint.
+
 Acknowledged by: pending Claude rereview.

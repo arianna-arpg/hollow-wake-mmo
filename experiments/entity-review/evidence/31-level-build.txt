@@ -1,0 +1,9 @@
+C:\Users\John\.codex\worktrees\undead-entity-foundation\MMOARPG\src\HollowWake.Core\WorldGen\ChunkPasses.cs(256,42): error CS1729: 'SpawnPoint' does not contain a constructor that takes 7 arguments [C:\Users\John\.codex\worktrees\undead-entity-foundation\MMOARPG\src\HollowWake.Core\HollowWake.Core.csproj]
+
+Build FAILED.
+
+C:\Users\John\.codex\worktrees\undead-entity-foundation\MMOARPG\src\HollowWake.Core\WorldGen\ChunkPasses.cs(256,42): error CS1729: 'SpawnPoint' does not contain a constructor that takes 7 arguments [C:\Users\John\.codex\worktrees\undead-entity-foundation\MMOARPG\src\HollowWake.Core\HollowWake.Core.csproj]
+    0 Warning(s)
+    1 Error(s)
+
+Time Elapsed 00:00:04.71

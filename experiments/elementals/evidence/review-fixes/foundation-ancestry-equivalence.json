@@ -1,0 +1,144 @@
+{
+  "testedSourceCommit": "b6b3e3018beb47a1b4118337b7cc5962d587eff8",
+  "foundationTip": "745015e5a0849a201e6857e47c9e23435618fb0a",
+  "mergedTreeBeforeEvidence": "79289e5c9d7e5f54aa8660f2c31f12f3d6a9ab56",
+  "beforeInputTrees": [
+    "040000 tree 3d860634367f6b5c5218655707e91b321e321f53\tconfig",
+    "040000 tree 708167cb996552f846918fd99c95b5549f1020c0\tcontent",
+    "040000 tree 14b6c313f53dd783f4de6410933eacdae02e8c65\tdeploy",
+    "040000 tree 033590aa99e02047868ebcfbf32af0101b120990\tlauncher",
+    "040000 tree 4215a6018d7a6d815f4a35c69498c09ac908a768\tscripts",
+    "040000 tree 75df6c81c92c5522390c9b44903b04ebda46b51e\tsrc",
+    "040000 tree 295ddeae2584d9150fc7c9ddcdc476a69316976d\ttests",
+    "040000 tree 6c00046c7b6d98af42503955b445b00398b58de1\tweb"
+  ],
+  "afterInputTrees": [
+    "040000 tree 3d860634367f6b5c5218655707e91b321e321f53\tconfig",
+    "040000 tree 708167cb996552f846918fd99c95b5549f1020c0\tcontent",
+    "040000 tree 14b6c313f53dd783f4de6410933eacdae02e8c65\tdeploy",
+    "040000 tree 033590aa99e02047868ebcfbf32af0101b120990\tlauncher",
+    "040000 tree 4215a6018d7a6d815f4a35c69498c09ac908a768\tscripts",
+    "040000 tree 75df6c81c92c5522390c9b44903b04ebda46b51e\tsrc",
+    "040000 tree 295ddeae2584d9150fc7c9ddcdc476a69316976d\ttests",
+    "040000 tree 6c00046c7b6d98af42503955b445b00398b58de1\tweb"
+  ],
+  "allChangesOutsideDocsAndExperiments": [],
+  "releaseFilesBefore": [
+    {
+      "sha256": "3D2B7D065F19B2675CBDCDDC42BD462E7E4A490C55B1D8015BF48BD61D840238",
+      "name": "HollowWake.Core.dll"
+    },
+    {
+      "sha256": "6B8F9550472EA34C7BFBC0B24F50EE5B42CD3D37335E8F8105541A03EC3D7D1C",
+      "name": "HollowWake.Core.pdb"
+    },
+    {
+      "sha256": "4230A35EEE07BC8E07BF30D27C11333F2D2941B1A62F5AA811FE334110767493",
+      "name": "hollowwake.deps.json"
+    },
+    {
+      "sha256": "D2CDB0EBAA93B9B86EF16196514B71A4A64D219B0C3D4DECDF177880732522B6",
+      "name": "hollowwake.dll"
+    },
+    {
+      "sha256": "08F24D936C1E7022135EF9B4320CECA8307B4F052C7545C78A0139D1963AEB42",
+      "name": "hollowwake.exe"
+    },
+    {
+      "sha256": "491FFF86511F3ED50864E720ADD343F68B6DF2618CD1FFFA26D058F702359AF1",
+      "name": "hollowwake.pdb"
+    },
+    {
+      "sha256": "518D550AFBA120A28CE8C626101B5584516E30709E3AD62D0C25ADF24C015CFF",
+      "name": "HollowWake.Protocol.dll"
+    },
+    {
+      "sha256": "EEFFC12234E50C8E948F082595C59528DE9BB7B6C04CAE7A8087FD52FB5D2B4C",
+      "name": "HollowWake.Protocol.pdb"
+    },
+    {
+      "sha256": "2CA90A18BAC3B48286C20ACD3C1AE4F83FA38DE5ACF4B2F8CDD277BF90DC9BD7",
+      "name": "hollowwake.runtimeconfig.json"
+    },
+    {
+      "sha256": "9796B0D8BCDB0D5E7FA18ADF849B9C47FEF96273F4AAE9D8AA8CB6DEEE494FC5",
+      "name": "HollowWake.Server.dll"
+    },
+    {
+      "sha256": "0EB21C10FF6FC79F60825AFB3D1ED9EAB9FE481AAEAF597344A3EE77936E6C8C",
+      "name": "HollowWake.Server.pdb"
+    },
+    {
+      "sha256": "7C97C4463FE0FC11D1F22F4D160B2BD2288981ADF1DE2717A6FF3FB993DDF294",
+      "name": "Microsoft.Extensions.DependencyInjection.Abstractions.dll"
+    },
+    {
+      "sha256": "A76A735B63E6EF3B0BF41FF92423CBD16103B8952E8306140A9BD650346034DC",
+      "name": "Microsoft.Extensions.Logging.Abstractions.dll"
+    },
+    {
+      "sha256": "D618138109A40E4A7250E49E2ABAD8C450E3636BEE18D7499AB231E37FA9150A",
+      "name": "YamlDotNet.dll"
+    }
+  ],
+  "releaseFilesAfter": [
+    {
+      "sha256": "3D2B7D065F19B2675CBDCDDC42BD462E7E4A490C55B1D8015BF48BD61D840238",
+      "name": "HollowWake.Core.dll"
+    },
+    {
+      "sha256": "6B8F9550472EA34C7BFBC0B24F50EE5B42CD3D37335E8F8105541A03EC3D7D1C",
+      "name": "HollowWake.Core.pdb"
+    },
+    {
+      "sha256": "4230A35EEE07BC8E07BF30D27C11333F2D2941B1A62F5AA811FE334110767493",
+      "name": "hollowwake.deps.json"
+    },
+    {
+      "sha256": "D2CDB0EBAA93B9B86EF16196514B71A4A64D219B0C3D4DECDF177880732522B6",
+      "name": "hollowwake.dll"
+    },
+    {
+      "sha256": "08F24D936C1E7022135EF9B4320CECA8307B4F052C7545C78A0139D1963AEB42",
+      "name": "hollowwake.exe"
+    },
+    {
+      "sha256": "491FFF86511F3ED50864E720ADD343F68B6DF2618CD1FFFA26D058F702359AF1",
+      "name": "hollowwake.pdb"
+    },
+    {
+      "sha256": "518D550AFBA120A28CE8C626101B5584516E30709E3AD62D0C25ADF24C015CFF",
+      "name": "HollowWake.Protocol.dll"
+    },
+    {
+      "sha256": "EEFFC12234E50C8E948F082595C59528DE9BB7B6C04CAE7A8087FD52FB5D2B4C",
+      "name": "HollowWake.Protocol.pdb"
+    },
+    {
+      "sha256": "2CA90A18BAC3B48286C20ACD3C1AE4F83FA38DE5ACF4B2F8CDD277BF90DC9BD7",
+      "name": "hollowwake.runtimeconfig.json"
+    },
+    {
+      "sha256": "9796B0D8BCDB0D5E7FA18ADF849B9C47FEF96273F4AAE9D8AA8CB6DEEE494FC5",
+      "name": "HollowWake.Server.dll"
+    },
+    {
+      "sha256": "0EB21C10FF6FC79F60825AFB3D1ED9EAB9FE481AAEAF597344A3EE77936E6C8C",
+      "name": "HollowWake.Server.pdb"
+    },
+    {
+      "sha256": "7C97C4463FE0FC11D1F22F4D160B2BD2288981ADF1DE2717A6FF3FB993DDF294",
+      "name": "Microsoft.Extensions.DependencyInjection.Abstractions.dll"
+    },
+    {
+      "sha256": "A76A735B63E6EF3B0BF41FF92423CBD16103B8952E8306140A9BD650346034DC",
+      "name": "Microsoft.Extensions.Logging.Abstractions.dll"
+    },
+    {
+      "sha256": "D618138109A40E4A7250E49E2ABAD8C450E3636BEE18D7499AB231E37FA9150A",
+      "name": "YamlDotNet.dll"
+    }
+  ],
+  "result": "Application and test inputs, own audited goldens, elemental opt-ins and Release output bytes are unchanged. No rebuild or test rerun.",
+  "allocationCaveat": "#34 first run: 228 bytes/tick against <200; isolated and full retry pass; cause unestablished. All original evidence retained unchanged."
+}
