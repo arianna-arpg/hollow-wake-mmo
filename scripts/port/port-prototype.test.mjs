@@ -27,6 +27,8 @@ const snapshot = {
     scattergun: skill('scattergun', { tags: ['attack', 'projectile', 'physical', 'munition'], manaCost: 0, useCharges: { max: 3 }, convert: { when: 'chargesEmpty', skillId: 'reload_shells' }, baseDamage: { physical: [4, 7] }, delivery: { type: 'projectile', speed: 520, radius: 5, range: 240 } }),
     bolt_repeater: skill('bolt_repeater', { tags: ['attack', 'projectile', 'physical', 'munition'], manaCost: 0, cooldown: 3.5, useCharges: { max: 8, magazine: true }, baseDamage: { physical: [7, 11] }, delivery: { type: 'projectile', speed: 640, radius: 6, range: 470 } }),
     reload_shells: skill('reload_shells', { noDrop: true, tags: ['reload', 'munition'], manaCost: 0, delivery: { type: 'self' }, effects: [{ type: 'restoreSkillCharges', amount: 1 }] }),
+    glass_lance: skill('glass_lance', { tags: ['spell', 'projectile', 'fire'], baseDamage: { physical: [6, 9], fire: [8, 13] }, innateMods: [{ stat: 'noSuchStat', kind: 'flat', value: 1 }], delivery: { type: 'projectile', speed: 680, radius: 7, range: 480 } }),
+    hook: skill('hook', { tags: ['spell', 'projectile', 'physical'], baseDamage: { physical: [5, 8] }, delivery: { type: 'projectile', speed: 600, radius: 6, range: 400 }, effects: [{ type: 'damage' }, { type: 'pull', stun: 0.3 }] }),
     ember_payload: skill('ember_payload', { noDrop: true, tags: ['spell', 'aoe', 'fire'], baseDamage: { fire: [3, 5] }, delivery: { type: 'nova', radius: 64 } }),
     hive_bite: skill('hive_bite', { noDrop: true, tags: ['attack', 'melee'], baseDamage: { physical: [1, 2] }, delivery: { type: 'melee', range: 40, arcDeg: 60 } }),
   },
@@ -80,10 +82,20 @@ test('a projectile keeps its riders, hooks and Thread', () => {
   assert.match(projectiles, /weave: ember_payload/);
 });
 
+test('bursts spare the body struck, pulls on flights anchor to the caster, and splits pair with their Threads', () => {
+  const projectiles = read('weaves-projectiles.yaml');
+  assert.match(projectiles, /id: firebolt[\s\S]*?on_hit:[\s\S]*?include_center: false[\s\S]*?on_expire:/);
+  assert.doesNotMatch(projectiles, /id: firebolt[\s\S]*?on_end:\n\s+- type: area/);
+  assert.match(projectiles, /id: hook[\s\S]*?kind: pull, distance: 8, anchor: caster/);
+  assert.match(projectiles, /id: glass_lance[\s\S]*?ember: "weave\.base_damage \* 0\.58/);
+  assert.match(projectiles, /id: glass_lance[\s\S]*?stone: "weave\.base_damage \* 0\.42/);
+  assert.match(read('port-ledger.md'), /\| glass_lance \|[^\n]*innate modifiers not carried: modifier noSuchStat/);
+});
+
 test('trajectory axes come out in degrees a second and banks keep their kind', () => {
   const projectiles = read('weaves-projectiles.yaml');
   assert.match(projectiles, /projectile\.homing: 172/);
-  assert.match(projectiles, /projectile\.erratic: 573/);
+  assert.match(projectiles, /projectile\.erratic: 332/);
   assert.match(projectiles, /projectile\.orbit: 229/);
   assert.match(projectiles, /uses: \{ max: 3, manual: true \}/);
   assert.match(projectiles, /convert: \{ when: "?slot\.uses < 1"?, weave: reload_shells \}/);

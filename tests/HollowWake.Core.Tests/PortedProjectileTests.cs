@@ -73,11 +73,16 @@ public class PortedProjectileTests
             {
                 at = bench.Sim.World.Get<Transform>(Corpse(bench, new Vector3(14, 12, 0)))!.Position;
             }
+            var flights = Flights(bench);
             if (!Begin(bench, slot, bench.Victim, at, out var reason))
             {
                 failed.Add($"{id}: {reason}");
             }
             bench.Run(1.2);
+            if (Flights(bench) == flights)
+            {
+                failed.Add($"{id}: loosed nothing");
+            }
         }
         Assert.Empty(failed);
     }
@@ -226,6 +231,57 @@ public class PortedProjectileTests
     }
 
     [Fact]
+    public void APullOnAFlightReelsTheCatchToTheCaster()
+    {
+        var bench = CombatBench.Create(attacker: "proving_evoker", victim: "proving_bulwark", distance: 7);
+        var at = bench.Sim.World.Get<Transform>(bench.Victim)!.Position;
+        var lash = Slot(bench, "vine_lash");
+        Assert.True(Begin(bench, lash, bench.Victim, at, out var reason), reason);
+        bench.Run(2.5);
+        var now = bench.Sim.World.Get<Transform>(bench.Victim)!.Position;
+        Assert.True(now.X < at.X - 3, $"the catch stayed at {now}");
+        Assert.NotNull(bench.Instance(bench.Victim, "rooted"));
+    }
+
+    [Fact]
+    public void ACinderwispsImpIsTheCastersOwn()
+    {
+        var bench = CombatBench.Create(attacker: "proving_evoker", victim: "proving_bulwark", distance: 6);
+        var at = bench.Sim.World.Get<Transform>(bench.Victim)!.Position;
+        var wisp = Slot(bench, "cinderwisp");
+        Assert.True(Begin(bench, wisp, bench.Victim, at, out var reason), reason);
+        bench.Run(2.5);
+        var imp = Assert.Single(bench.Events.OfType<EntitySpawned>().Where(e => e.Pattern == "cinder_imp")).Entity;
+        Assert.Equal(bench.Attacker, bench.Sim.World.Get<Minion>(imp)!.Owner);
+    }
+
+    [Fact]
+    public void AFireballsBurstSparesTheBodyItStruckAndCatchesItsNeighbour()
+    {
+        var bench = CombatBench.Create(attacker: "proving_evoker", victim: "proving_bulwark", distance: 6);
+        var neighbour = bench.Spawn("hob", new Vector3(17.5f, 10, 0), "blue");
+        var at = bench.Sim.World.Get<Transform>(bench.Victim)!.Position;
+        var ball = Slot(bench, "fireball");
+        Assert.True(Begin(bench, ball, bench.Victim, at, out var reason), reason);
+        bench.Run(1.6);
+        Assert.Single(bench.HitsOn(bench.Victim).Where(h => !h.Tags.Has("dot")));
+        Assert.NotEmpty(bench.HitsOn(neighbour));
+    }
+
+    [Fact]
+    public void AnIceSpearsShardsSpareTheBodyItStruckAndSprayBehindIt()
+    {
+        var bench = CombatBench.Create(attacker: "proving_evoker", victim: "proving_bulwark", distance: 6);
+        var behind = bench.Spawn("hob", new Vector3(18.5f, 10.3f, 0), "blue");
+        var at = bench.Sim.World.Get<Transform>(bench.Victim)!.Position;
+        var spear = Slot(bench, "ice_spear");
+        Assert.True(Begin(bench, spear, bench.Victim, at, out var reason), reason);
+        bench.Run(1.6);
+        Assert.Single(bench.HitsOn(bench.Victim).Where(h => !h.Tags.Has("dot")));
+        Assert.NotEmpty(bench.HitsOn(behind));
+    }
+
+    [Fact]
     public void TheFletcherAndTheEvokerTellTheSameStoryTwice()
     {
         List<string> Duel()
@@ -248,7 +304,7 @@ public class PortedProjectileTests
         Assert.Equal(first, Duel());
         Assert.Contains(first, l => l.Contains("cast gyreblade"));
         Assert.Contains(first, l => l.Contains("returned to"));
-        Assert.Contains(first, l => l.Contains("gyre"));
+        Assert.Contains(first, l => l.Contains("gained 1 gyre"));
         Assert.Contains(first, l => l.Contains("cast chain_lightning"));
         Assert.Contains(first, l => l.Contains("status shocked"));
         Assert.Contains(first, l => l.Contains("cast frozen_orb"));
@@ -256,7 +312,7 @@ public class PortedProjectileTests
         Assert.Contains(first, l => l.Contains("status frozen"));
         Assert.Contains(first, l => l.Contains("spent 2 gyre"));
         Assert.Contains(first, l => l.Contains("cast gyre_hurl"));
-        Assert.Contains(first, l => l.Contains("status rooted"));
+        Assert.Contains(first, l => l.Contains("cast web_shot"));
         Assert.Contains(first, l => l.Contains(" died "));
     }
 }
