@@ -378,7 +378,7 @@ public sealed class ProjectileSystem : SimSystem
         }
         if (p.Guide != 0)
         {
-            var aim = LiveAim.TryGet(sim, p.Context.Source, p.BornAt, out var live, out _) ? live : p.AimPoint;
+            var aim = LiveAim.TryGet(p.Context, p.BornAt, out var live, out _) ? live : p.AimPoint;
             Turn(ref p.Heading, Toward(at, aim, p.Heading), p.Guide * dt);
         }
         if (p.Converging)

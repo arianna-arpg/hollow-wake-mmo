@@ -12,8 +12,8 @@ public static class ProjectileAims
         ["target"] = BodyAim,
         ["point"] = c => BodyAim(c) ?? c.Point,
     };
-    private static Vector3? BodyAim(EffectContext c) => c.TargetTransform is not null ? HitBodies.AimPoint(c.Sim, c.Target) :
-        c.SampledTargetPoint is { } point ? point + c.AimOffset :
+    private static Vector3? BodyAim(EffectContext c) => c.SampledTargetPoint is { } point ? point + c.AimOffset :
+        c.TargetTransform is not null ? HitBodies.AimPoint(c.Sim, c.Target) :
         c.AimOffset != Vector3.Zero ? c.Point + c.AimOffset : null;
     public static IEnumerable<string> Names => Registry.Keys;
     public static void Register(string name, Func<EffectContext, Vector3?> resolve) => Registry[name] = resolve;

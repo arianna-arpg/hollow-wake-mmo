@@ -217,6 +217,10 @@ public static class DeliveryVars
 /// </summary>
 internal static class LiveAim
 {
+    /// <summary>Input belongs to the physical caster, independently of inherited stats and credit.</summary>
+    public static bool TryGet(EffectContext context, double since, out Vector3 point, out Vector2 direction) =>
+        TryGet(context.Sim, context.CastSource.IsNone ? context.Source : context.CastSource, since, out point, out direction);
+
     /// <summary>
     /// The caster's latest aim sent at or after <paramref name="since"/>. False when it sent none, in which
     /// case the caller keeps the aim the cast was made with.

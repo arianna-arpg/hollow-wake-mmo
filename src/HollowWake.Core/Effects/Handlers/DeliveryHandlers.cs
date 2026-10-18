@@ -593,7 +593,7 @@ internal sealed class ProjectileHandler : IEffectHandler
             var origin = OriginOf(ctx, originLimit);
             var count = Math.Clamp((int)Math.Round(ParamOrAttr(ctx, Count, "projectile.count", 1)), 1, 64);
             var flight = Numbers(ctx);
-            var aimPoint = !ctx.Target.IsNone && ctx.TargetTransform is { } aimed ? aimed.Position : ctx.SampledTargetPoint ?? ctx.Point;
+            var aimPoint = ctx.SampledTargetPoint ?? (!ctx.Target.IsNone && ctx.TargetTransform is { } aimed ? aimed.Position : ctx.Point);
             var dir = AimFrom(ctx, origin);
             var spreadDegrees = ctx.Eval(Spread, 15);
             if (!double.IsNaN(AimNear))
@@ -663,18 +663,18 @@ internal sealed class ProjectileHandler : IEffectHandler
             return origin;
         }
 
-        /// <summary>Toward a live or sampled target, else along the cast's direction, else toward the point, else the source's facing.</summary>
+        /// <summary>Toward an explicit frozen sample, else a live target, else along the cast's direction or point.</summary>
         private static Vector2 AimFrom(EffectContext ctx, Vector3 origin)
         {
             Vector2 dir;
-            if (!ctx.Target.IsNone && ctx.TargetTransform is { } tt)
-            {
-                var aim = HitBodies.AimPoint(ctx.Sim, ctx.Target);
-                dir = new Vector2(aim.X - origin.X, aim.Y - origin.Y);
-            }
-            else if (ctx.SampledTargetPoint is { } point)
+            if (ctx.SampledTargetPoint is { } point)
             {
                 var aim = point + ctx.AimOffset;
+                dir = new Vector2(aim.X - origin.X, aim.Y - origin.Y);
+            }
+            else if (!ctx.Target.IsNone && ctx.TargetTransform is { } tt)
+            {
+                var aim = HitBodies.AimPoint(ctx.Sim, ctx.Target);
                 dir = new Vector2(aim.X - origin.X, aim.Y - origin.Y);
             }
             else if (ctx.Direction.LengthSquared() > 0.001f)
@@ -821,7 +821,7 @@ internal sealed class ProjectileHandler : IEffectHandler
 
         /// <summary>
         /// The later shots of a salvo: one per beat, each aimed at the live aim when the caster streams one,
-        /// else at the cast's target where it now stands, else along the cast's own aim.
+        /// else at its frozen sample or live target, else along the cast's own aim.
         /// </summary>
         private sealed class Salvo
         {
@@ -859,7 +859,7 @@ internal sealed class ProjectileHandler : IEffectHandler
                 Vector2 dir;
                 var aim = _point;
                 var shot = _ctx;
-                if (LiveAim.TryGet(sim, _ctx.Source, _since, out var live, out var liveDir))
+                if (LiveAim.TryGet(_ctx, _since, out var live, out var liveDir))
                 {
                     aim = live;
                     shot = _ctx.WithPoint(live).WithTarget(Entity.None);
@@ -870,14 +870,14 @@ internal sealed class ProjectileHandler : IEffectHandler
                         dir = liveDir;
                     }
                 }
-                else if (!_ctx.Target.IsNone && sim.World.IsAlive(_ctx.Target) && !sim.World.Has<Dead>(_ctx.Target) && sim.World.TryGet<Transform>(_ctx.Target, out var tt))
-                {
-                    aim = tt.Position;
-                    dir = AimFrom(shot, origin);
-                }
                 else if (_ctx.SampledTargetPoint is { } sampled)
                 {
                     aim = sampled;
+                    dir = AimFrom(shot, origin);
+                }
+                else if (!_ctx.Target.IsNone && sim.World.IsAlive(_ctx.Target) && !sim.World.Has<Dead>(_ctx.Target) && sim.World.TryGet<Transform>(_ctx.Target, out var tt))
+                {
+                    aim = tt.Position;
                     dir = AimFrom(shot, origin);
                 }
                 else
