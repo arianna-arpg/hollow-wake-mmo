@@ -1,0 +1,117 @@
+{
+  "sourceHead": "6c20a93043a102f9688dbf9e8c56ec1a9b91a376",
+  "releaseBuildSource": "d84dfde34e0c5e48a04937290dfc8d67f4ecd452",
+  "firstResultsOnly": true,
+  "runCount": 2,
+  "establishedBudgets": [
+    {
+      "name": "zone.tick.p95",
+      "value": 8.7623,
+      "unit": "ms/tick",
+      "ceiling": 25,
+      "withinCeiling": true,
+      "note": "95th percentile"
+    },
+    {
+      "name": "zone.tick.alloc",
+      "value": 75.889375,
+      "unit": "KB/tick",
+      "ceiling": 2048,
+      "withinCeiling": true,
+      "note": "gen0 collections 4"
+    },
+    {
+      "name": "system.behavior",
+      "value": 1.4841220000000008,
+      "unit": "ms/tick",
+      "ceiling": 3,
+      "withinCeiling": true,
+      "note": "22.9 KB/tick allocated"
+    },
+    {
+      "name": "snapshot.build",
+      "value": 0.7745830000000002,
+      "unit": "ms/player",
+      "ceiling": 1,
+      "withinCeiling": true,
+      "note": "442 known entities per player; build and encode"
+    },
+    {
+      "name": "snapshot.bytes",
+      "value": 28.851884765625,
+      "unit": "KB/player",
+      "ceiling": 30,
+      "withinCeiling": true,
+      "note": "changed entities as full states plus self state, steady state, JSON"
+    },
+    {
+      "name": "snapshot.delta.bytes",
+      "value": 8.8819482421875,
+      "unit": "KB/player",
+      "ceiling": 10,
+      "withinCeiling": true,
+      "note": "changed entities as deltas plus self state, steady state, JSON"
+    },
+    {
+      "name": "worldgen.chunk",
+      "value": 0.571375,
+      "unit": "ms/chunk",
+      "ceiling": 4,
+      "withinCeiling": true,
+      "note": "64 chunks, 65536 cells"
+    },
+    {
+      "name": "worldgen.chunk.alloc",
+      "value": 14.330810546875,
+      "unit": "KB/chunk",
+      "ceiling": 400,
+      "withinCeiling": true,
+      "note": "allocation per generated chunk"
+    },
+    {
+      "name": "attribute.apply.extra",
+      "value": 347.664,
+      "unit": "ns/op",
+      "ceiling": 500,
+      "withinCeiling": true,
+      "note": "damage fold with weave extras (never cached)"
+    },
+    {
+      "name": "attribute.apply.alloc",
+      "value": 0.1392,
+      "unit": "bytes/op",
+      "ceiling": 200,
+      "withinCeiling": true,
+      "note": "allocation per damage fold"
+    },
+    {
+      "name": "expression.evaluate",
+      "value": 102.7919,
+      "unit": "ns/eval",
+      "ceiling": 150,
+      "withinCeiling": true,
+      "note": "four formulas, checksum 57948161"
+    },
+    {
+      "name": "expression.alloc",
+      "value": 0.0168,
+      "unit": "bytes/eval",
+      "ceiling": 0,
+      "withinCeiling": false,
+      "note": "lerp with rand()"
+    }
+  ],
+  "behaviorAllocationKB": 22.9,
+  "behaviorAllocationCeilingKB": 1024,
+  "fullSnapshotHeadroomKB": 1.1481152343749983,
+  "proposedPlanningTarget": {
+    "name": "worldgen.zone.plan",
+    "value": 35.858,
+    "unit": "ms",
+    "ceiling": 40,
+    "withinProposedTarget": true,
+    "note": "Proposed target is separate from established budgets; this does not establish parity with earlier roughly 21–23 ms main samples."
+  },
+  "literalZeroNote": "expression.alloc=0.0168 B/eval is the same process-wide counter as historical runs. It does not meet a literal-zero reading; no assertion or threshold is changed.",
+  "workloadNote": "Default mixed roster; authored hit-body workload uses 42 profiled patterns/120 foes. Kobolds retain cylinder fallback and are covered by functional cast tests, not this authored-profile roster."
+}

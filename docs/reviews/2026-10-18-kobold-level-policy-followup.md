@@ -36,14 +36,40 @@ Goldens were refreshed only after this audit. The initial focused run had 140 pa
 - Content validation reports zero errors/warnings. Origin load completes 100 chunks and 200 ticks, with 2686 entities, 281 monsters and three quests. The Tunnelguard/Loosed duel records damage both ways and ends with the Brigand defeated; native-faction tests remain the relation proof. Generated protocol is current.
 - Private smoke passes browser 31/31 and native 26/26, with no harness cleanup errors. The card-mode screenshot was inspected: terrain and bodies render, and restored guard/quartermaster level-five labels are visible. Native headless pixels remain uncovered; the raw native log retains engine shutdown resource-leak warnings. Browser unit tests/build remain the previously verified unchanged web source (285 tests, 36 files); this follow-up modifies no client or protocol source.
 
-The earlier performance measurements on 253baa2 are historical because resident levels changed. A fresh controlled run is required; no current performance pass is claimed yet. The shared 40 ms planning ceiling is newly proposed in the imported foundation contract. Claude's earlier main planning measurements of roughly 21–23 ms remain relevant comparison context; meeting 40 ms would not establish parity with those measurements.
+The earlier performance measurements on 253baa2 are historical because resident levels changed. The fresh controlled results below apply to the current source. The shared 40 ms planning ceiling is newly proposed in the imported foundation contract. Claude's earlier main planning measurements of roughly 21–23 ms remain relevant comparison context; meeting 40 ms does not establish parity with those measurements.
 
-Claude rereview requested after the final evidence is attached. Keep PR #38 unmerged pending the shared dependency reviews and separately coordinated release-policy gate.
+Claude rereview requested with the final functional and performance evidence. Keep PR #38 unmerged pending the shared dependency reviews and separately coordinated release-policy gate.
 
 ## Foundation ancestry reconciliation
 
 Before merging validated #34 tip 745015e5a0849a201e6857e47c9e23435618fb0a, this pass declares ownership of any shared review-note and world-golden conflict. The original three minimal changes are already present. Retain this branch's independently audited goldens and default opt-out content. Preserve upstream review records as history, including #34's first 228 B/tick allocation failure and subsequent isolated/full passes with cause unestablished. Compare every application and test input against d84dfde before reusing its tested Release binary; stop for any material source difference.
 
 Every tracked path outside docs/ and experiments/ is byte-identical to d84dfde after conflict resolution, including all application, content, client, script and test inputs. The Kobold goldens are unchanged. The tested Release binary is retained without rebuilding; ancestry-equivalence.json records its SHA-256 and source identity. All incoming historical evidence, including the unexplained allocation failure and passing retries, remains intact.
+
+## Controlled performance on the reconciled tree
+
+The coordinator granted START only after #20 stopped and the other owners were quiet. Exactly one full default Release benchmark and one authored hit-body profile ran serially at Normal priority, from 19:43:33 to 19:43:41 UTC on 2026-10-18. Both exited zero and were stopped before notifying the coordinator to release the window. There was no worldgen-only run, repeated sample or discarded result.
+
+Measured ancestry is 6c20a93043a102f9688dbf9e8c56ec1a9b91a376. The retained Release build is from tested d84dfde34e0c5e48a04937290dfc8d67f4ecd452; the ancestry merge changed no application/test inputs. Raw rows, stderr (empty), PIDs, arguments, source identities, priorities and UTC timestamps are retained in bench-default.json, bench-hit-bodies.json and bench-processes.json.
+
+| Established measure | Measured | Ceiling |
+|---|---:|---:|
+| Tick p95 | 8.7623 ms | 25 ms |
+| Tick allocation | 75.889375 KB | 2048 KB |
+| Behavior time / allocation | 1.484122 ms / 22.9 KB | 3 ms / 1024 KB |
+| Snapshot build | 0.774583 ms | 1 ms |
+| Full / delta snapshot | 28.851885 / 8.881948 KB | 30 / 10 KB |
+| Chunk time / allocation | 0.571375 ms / 14.330811 KB | 4 ms / 400 KB |
+| Damage fold time / allocation | 347.664 ns / 0.1392 B | 500 ns / 200 B |
+| Expression time | 102.7919 ns | 150 ns |
+| Expression process-wide allocation | 0.0168 B/eval | literal zero |
+
+All established timing and nonzero allocation/payload ceilings pass. Full-snapshot headroom is 1.148115 KB. The expression allocation counter remains 0.0168 B/eval, exactly the historical counter value; it does not prove literal zero allocation, and that caveat is not converted into a blanket pass. Tick average is 4.075690 ms, with zero zone system errors.
+
+Separately, planning is 35.8580 ms for four POIs and three quests, meeting the proposed 40 ms target. This single current full-run sample is not a controlled comparison with the earlier 21–23 ms main samples, nor a claimed speedup over the historical workload with different resident levels and offers.
+
+The authored hit-body profile reports 1.587422 ms/tick including casts, 37.592715 KB/tick, projectiles 0.816991 ms/tick and fields 0.1003685 ms/tick: 42 profiled patterns, 120 foes and 41 average flights. The default run is the standard mixed roster. Neither is a dedicated Kobold crowd measurement. Kobolds use the cylinder fallback, covered separately by all 84 actual cast regressions.
+
+PR #38 remains unmerged for Claude rereview and remaining dependency/release-policy coordination. This evidence publication changes no application or test inputs.
 
 Acknowledged by: pending Claude rereview.
