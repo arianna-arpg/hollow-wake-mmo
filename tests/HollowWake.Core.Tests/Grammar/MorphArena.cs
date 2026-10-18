@@ -104,43 +104,39 @@ internal static class MorphArena
         sim.Tick();
         var stats = sim.World.Get<Stats>(caster)!;
         var costs = runtime.Costs(weave, stats);
-        var before = costs.Keys.ToDictionary(r => r, stats.Resource, StringComparer.Ordinal);
         var cooldown = weave.Cooldown(stats);
         var pending = sim.Scheduler.Pending;
         var aim = Origin + new Vector3(point.Family.Aim.X, point.Family.Aim.Y, 0);
-        recorder.Arm();
-        if (!runtime.TryBegin(sim, caster, slot, Entity.None, aim, Vector2.UnitX, out var reason))
-        {
-            outcome.Broke("pays", $"the press was refused: {reason}");
-            return outcome;
-        }
-        recorder.Settle();
+        recorder.Arm(costs, book, slot, cooldown > 0);
 
-        // Pays: the cost left the caster's pools, the cooldown started, and the cast was published once.
+        // Pays: a press has paid its cost and started its cooldown before anything it causes resolves (the grammar's
+        // invariant 8). The recorder looks at the caster's pools and the slot's cooldown when the first resolution
+        // comes, or when the press returns having resolved nothing yet.
         if (!costs.Values.Any(c => c > 0))
         {
             outcome.Broke("pays", "the weave costs nothing, so its payment cannot be seen");
-        }
-        foreach (var (resource, cost) in costs)
-        {
-            var paid = before[resource] - stats.Resource(resource);
-            if (Math.Abs(paid - cost) > 1e-6)
-            {
-                outcome.Broke("pays", $"{resource} fell by {paid:0.###}, the cost is {cost:0.###}");
-            }
         }
         if (cooldown <= 0)
         {
             outcome.Broke("pays", "the weave has no cooldown to start");
         }
-        else if (book.IsReady(slot, sim.Clock.Time))
+        var presses = 0;
+        bool Press()
         {
-            outcome.Broke("pays", $"the {cooldown:0.##} s cooldown did not start");
+            recorder.Press();
+            if (!runtime.TryBegin(sim, caster, slot, Entity.None, aim, Vector2.UnitX, out var reason))
+            {
+                outcome.Broke("pays", $"the press was refused: {reason}");
+                return false;
+            }
+            presses++;
+            recorder.Pressed();
+            recorder.Settle();
+            return true;
         }
-        var casts = recorder.Casts.Count(k => k == weave.Key);
-        if (casts != 1)
+        if (!Press())
         {
-            outcome.Broke("pays", $"WeaveCast was published {casts} times for one press");
+            return outcome;
         }
 
         // Terminates: through the expected lifetime and a margin, everything the press made that was due to end is gone,
@@ -177,6 +173,25 @@ internal static class MorphArena
         if (recorder.Hits != hits || recorder.Marks.Values.Sum(m => m.Count) != marks)
         {
             outcome.Broke("terminates", $"{recorder.Hits - hits} hits and {recorder.Marks.Values.Sum(m => m.Count) - marks} markers came in the quiet second after the expected life of {budget.Seconds:0.##} s");
+        }
+
+        // Pays, over the whole run: each press paid before it resolved, the cast was published once a press, and each
+        // pool the weave costs fell once a press (a later drop is a payment the press did not make up front).
+        foreach (var message in recorder.Unpaid)
+        {
+            outcome.Broke("pays", message);
+        }
+        var casts = recorder.Casts.Count(k => k == weave.Key);
+        if (casts != presses)
+        {
+            outcome.Broke("pays", $"WeaveCast was published {casts} times for {presses} press{(presses == 1 ? "" : "es")}");
+        }
+        foreach (var (resource, drops) in recorder.Drops)
+        {
+            if (drops != presses)
+            {
+                outcome.Broke("pays", $"{resource} fell {drops} times over the run for {presses} press{(presses == 1 ? "" : "es")}");
+            }
         }
 
         // Left behind: at the end, everything the press made is gone, or is a summon or construct that its lifetime, its
@@ -412,7 +427,8 @@ internal static class MorphArena
         public int Hits { get; private set; }
         public int MaxLive { get; private set; }
 
-        public void Arm()
+        /// <summary>Starts recording, with what each press must pay up front: the costs per pool, and the slot whose cooldown it starts.</summary>
+        public void Arm(Dictionary<string, double> costs, WeaveBook book, WeaveSlot slot, bool hasCooldown)
         {
             _armed = true;
             _pressed = _sim.Clock.Tick;
@@ -420,7 +436,89 @@ internal static class MorphArena
             {
                 Watch(body);
             }
+            _resources = costs.Keys.ToArray();
+            _costs = _resources.Select(r => costs[r]).ToArray();
+            _book = book;
+            _slot = slot;
+            _hasCooldown = hasCooldown;
+            _stats = _sim.World.Get<Stats>(_caster)!;
+            _seen = _resources.Select(_stats.Resource).ToArray();
+            _before = (double[])_seen.Clone();
+            foreach (var resource in _resources)
+            {
+                Drops[resource] = 0;
+            }
         }
+
+        // ---- payment: what the caster's pools and the slot's cooldown say when a press first resolves
+
+        private string[] _resources = Array.Empty<string>();
+        private double[] _costs = Array.Empty<double>();
+        private double[] _before = Array.Empty<double>();
+        private double[] _seen = Array.Empty<double>();
+        private Stats? _stats;
+        private WeaveBook? _book;
+        private WeaveSlot? _slot;
+        private bool _hasCooldown;
+        private bool _awaiting;
+
+        /// <summary>What a press had not paid by its first resolution: a pool not yet fallen by its cost, a cooldown not yet started.</summary>
+        public List<string> Unpaid { get; } = new();
+
+        /// <summary>How many times each pool the weave costs fell over the run.</summary>
+        public Dictionary<string, int> Drops { get; } = new(StringComparer.Ordinal);
+
+        /// <summary>A press is about to be made: its payment is due by its first resolution.</summary>
+        public void Press()
+        {
+            Sample();
+            Array.Copy(_seen, _before, _seen.Length);
+            _awaiting = true;
+        }
+
+        /// <summary>The press returned: if nothing it caused has resolved yet, it must have paid by now.</summary>
+        public void Pressed() => Snapshot("when the press returned, before anything resolved");
+
+        /// <summary>Counts each fall of a pool since it was last looked at.</summary>
+        private void Sample()
+        {
+            for (var i = 0; i < _resources.Length; i++)
+            {
+                var value = _stats!.Resource(_resources[i]);
+                if (value < _seen[i] - 1e-9)
+                {
+                    Drops[_resources[i]]++;
+                }
+                _seen[i] = value;
+            }
+        }
+
+        private void Snapshot(string when)
+        {
+            if (!_awaiting)
+            {
+                return;
+            }
+            _awaiting = false;
+            Sample();
+            for (var i = 0; i < _resources.Length; i++)
+            {
+                var paid = _before[i] - _seen[i];
+                if (Math.Abs(paid - _costs[i]) > 1e-6)
+                {
+                    Unpaid.Add($"{_resources[i]} had fallen by {paid:0.###} {when}, the cost is {_costs[i]:0.###}");
+                }
+            }
+            if (_hasCooldown && _book!.IsReady(_slot!, _sim.Clock.Time))
+            {
+                Unpaid.Add($"the cooldown had not started {when}");
+            }
+        }
+
+        /// <summary>The events that are a resolution of a press: what it struck, made, moved, marked or applied.</summary>
+        private static bool Resolves(GameEvent e) => e is DamageDealt or EntitySpawned or CustomEvent or StatusApplied or DisplacementStarted or EntityMoved
+            or MinionSummoned or PlacementTelegraphed or PlacementLanded or ProjectileForked or ProjectileChained or ProjectileBounced or ProjectileTurned
+            or ProjectileReturned or BodyCollided or EntityDied or Healed;
 
         public string KindOf(Entity e) => _kinds.TryGetValue(e, out var kind) ? kind : "entity";
 
@@ -438,6 +536,7 @@ internal static class MorphArena
         /// </summary>
         public void Settle()
         {
+            Sample();
             var live = 0;
             foreach (var e in Made)
             {
@@ -528,6 +627,10 @@ internal static class MorphArena
             if (!_armed)
             {
                 return;
+            }
+            if (_awaiting && Resolves(e))
+            {
+                Snapshot("when the press's first resolution came");
             }
             var t = e.Tick - _pressed;
             switch (e)
