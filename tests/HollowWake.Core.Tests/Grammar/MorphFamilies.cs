@@ -28,6 +28,9 @@ internal static class Families
 
     private static string[] ShapeNames => Shapes.Names.ToArray();
 
+    /// <summary>The one group a summon or deploy raises its bodies into, so <c>max_active</c> counts every body.</summary>
+    private const string RaisedGroup = "morph";
+
     private const string OpenArena = "the arena is flat and open: no walls or rising ground for anything to stop at or pass through";
 
     private const string SameShape = "the Shapes registry registers the sector a second time under the name cone";
@@ -947,7 +950,8 @@ internal static class Families
         Parameters = new[]
         {
             Parameter.Count("count", Agency, "bodies", 1, 8, "shipped 1 to randi(4, 6) and weave.summon.count; clamped 1..rule minions.max_per_cast") with { Attribute = "summon.count", Absent = 0.2 },
-            Parameter.Count("max_active", Agency, "bodies", 1, 8, "shipped 1..12 and weave.summon.max; floored 1") with { Attribute = "summon.max", Absent = 0.2, Live = Map(("count", 4.0)) },
+            // Compared with bodies that outlast the cooldown, so the second press finds the first press's still standing.
+            Parameter.Count("max_active", Agency, "bodies", 1, 8, "shipped 1..12 and weave.summon.max; floored 1") with { Attribute = "summon.max", Absent = 0.2, Live = Map(("count", 4.0), (lifetime, 6.0)) },
             Parameter.Axis(lifetime, Agency, "seconds", 0, 6, lifetimeSource) with { Attribute = "duration", Absent = 0.2, Zero = 0.2, Pair = (0.5, 6.0) },
         },
         Defaults = Map(("count", 2.0), ("max_active", 8.0), (lifetime, 2.0)),
@@ -959,17 +963,21 @@ internal static class Families
         Carrier = (_, node) =>
         {
             node["pattern"] = MorphArena.Dummy;
-            node["group"] = "morph";
+            node["group"] = RaisedGroup;
             return new JsonArray(node);
         },
+        // Pressed twice, the second press after the first one's cooldown, where the cap on what stands bites.
+        Presses = 2,
+        Group = RaisedGroup,
         Budget = v =>
         {
             var count = Math.Clamp((int)Math.Round(v.Num("count")), 1, (int)v.Rule("minions.max_per_cast", 32));
             var cap = Math.Max(1, (int)Math.Round(v.Num("max_active")));
             var life = v.Num(lifetime);
-            return new Budget(0, cap, count, life > 0 ? life + View.Dt : 0, $"{count} bodies, at most {cap} at once, for {(life > 0 ? $"{life:0.##} s" : "good")}")
+            var raised = 2 * count;
+            return new Budget(0, cap, raised, life > 0 ? life + View.Dt : 0, $"{count} bodies a press over two presses, at most {cap} at once, for {(life > 0 ? $"{life:0.##} s" : "good")}")
             {
-                Markers = new Dictionary<string, double> { ["on_birth"] = count, ["on_death"] = count },
+                Markers = new Dictionary<string, double> { ["on_birth"] = raised, ["on_death"] = raised },
             };
         },
         States = v =>

@@ -121,6 +121,7 @@ internal static class MorphArena
             outcome.Broke("pays", "the weave has no cooldown to start");
         }
         var presses = 0;
+        var capacity = point.Family.Group is null ? (int?)null : (int)Math.Max(1, Math.Round(new View(point, content).Num("max_active")));
         bool Press()
         {
             recorder.Press();
@@ -132,11 +133,32 @@ internal static class MorphArena
             presses++;
             recorder.Pressed();
             recorder.Settle();
+            // A family that raises bodies under a cap stands no more of its group than the cap after any press: the
+            // service makes room for a press's bodies by dismissing the oldest, the press's own among them.
+            if (capacity is { } cap && recorder.Standing(point.Family.Group!) is var standing && standing > cap)
+            {
+                outcome.Broke("bounded", $"after press {presses}, {standing} of the group stood at once, past the cap of {cap} its owner keeps");
+            }
             return true;
         }
         if (!Press())
         {
             return outcome;
+        }
+        // A cap bites on a later press: wait out the cooldown and press again, and the window starts from the last press.
+        while (presses < point.Family.Presses)
+        {
+            var waited = 0.0;
+            while (!book.IsReady(slot, sim.Clock.Time) && waited < MaxSeconds)
+            {
+                sim.Tick();
+                recorder.Settle();
+                waited += View.Dt;
+            }
+            if (!Press())
+            {
+                return outcome;
+            }
         }
 
         // Terminates: through the expected lifetime and a margin, everything the press made that was due to end is gone,
@@ -196,7 +218,7 @@ internal static class MorphArena
 
         // Left behind: at the end, everything the press made is gone, or is a summon or construct that its lifetime, its
         // contract or its owner's cap will end. What overstayed its end was reported above.
-        foreach (var message in recorder.LeftBehind(overdue))
+        foreach (var message in recorder.LeftBehind(overdue, capacity))
         {
             outcome.Broke("left behind", message);
         }
@@ -540,10 +562,11 @@ internal static class MorphArena
         public void Settle()
         {
             Sample();
+            // What stands: alive and not dismissed this tick (a dismissed body leaves the world when the tick ends).
             var live = 0;
             foreach (var e in Made)
             {
-                if (_sim.World.IsAlive(e))
+                if (_sim.World.IsAlive(e) && !_sim.World.IsDeferredDestroy(e))
                 {
                     live++;
                 }
@@ -576,14 +599,30 @@ internal static class MorphArena
             }
         }
 
+        /// <summary>How many of the caster's raised bodies of a group stand now: alive, not fallen, not dismissed this tick.</summary>
+        public int Standing(string group)
+        {
+            var world = _sim.World;
+            var n = 0;
+            foreach (var (e, m) in world.Query<Minion>())
+            {
+                if (m.Owner == _caster && m.Group == group && !world.Has<Dead>(e) && !world.IsDeferredDestroy(e))
+                {
+                    n++;
+                }
+            }
+            return n;
+        }
+
         /// <summary>
         /// What the press made that is still here at the end, by the rule: a summon or construct may stay while something
         /// will end it, its own lifetime or contract, or its owner's cap. A body raised for good stands under its owner's
-        /// cap (every summon and deploy counts its group against <c>max_active</c>) and ends with its owner: the cap
-        /// replaces it, the owner dismisses it, or the owner falls or leaves. A group standing past its cap is the bounded
-        /// check's to report. Anything else is left behind; what overstayed its own end was already reported.
+        /// cap and ends with its owner: the cap replaces it, the owner dismisses it, or the owner falls or leaves. It
+        /// stands under the cap while its group stands no more than the capacity the summon gives its owner
+        /// (<paramref name="capacity"/>, from <c>max_active</c>); past it, the body is left behind. Anything else is left
+        /// behind; what overstayed its own end was already reported.
         /// </summary>
-        public IEnumerable<string> LeftBehind(List<Entity> overdue)
+        public IEnumerable<string> LeftBehind(List<Entity> overdue, int? capacity)
         {
             var world = _sim.World;
             var standing = Made.Where(e => world.IsAlive(e) && !overdue.Contains(e)).ToList();
@@ -595,10 +634,14 @@ internal static class MorphArena
                 if (world.TryGet<Minion>(e, out var minion))
                 {
                     var termed = double.IsFinite(minion.ExpiresAt) || minion.Contract is not null;
-                    var capped = !minion.Owner.IsNone && minion.Group is not null;
+                    var group = minion.Group is { } g ? Standing(g) : 0;
+                    var capped = !minion.Owner.IsNone && minion.Group is not null && capacity is { } cap && group <= cap;
                     if (!termed && !capped)
                     {
-                        var what = $"{(minion.Construct ? "construct" : "summon")} with no lifetime, no contract and no owner's cap";
+                        var body = minion.Construct ? "construct" : "summon";
+                        var what = capacity is { } most && minion.Group is not null
+                            ? $"{body} with no lifetime and no contract, its group standing {group} past its owner's cap of {most}"
+                            : $"{body} with no lifetime, no contract and no owner's cap";
                         minions[what] = minions.TryGetValue(what, out var n) ? n + 1 : 1;
                     }
                 }

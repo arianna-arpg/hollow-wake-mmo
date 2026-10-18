@@ -246,6 +246,12 @@ internal sealed class Family
     /// </summary>
     public double Relay { get; init; }
 
+    /// <summary>How many times the scenario presses the weave, each press after the last one's cooldown: a cap on what stands bites on a later press.</summary>
+    public int Presses { get; init; } = 1;
+
+    /// <summary>The group a family that raises bodies under a cap raises them into, its standing count held to <c>max_active</c>; null for other families.</summary>
+    public string? Group { get; init; }
+
     /// <summary>Parameters the table leaves unsampled for now (flags, nodes, presentation), each with why: a later pass turns them into axes or choices.</summary>
     public IReadOnlyDictionary<string, string> Unsampled { get; init; } = new Dictionary<string, string>();
 
