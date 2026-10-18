@@ -55,6 +55,8 @@ public partial class Main : Node3D
     internal string LastRejectedIntent { get; private set; } = "";
     internal ContentRegistry Content => _content;
     internal Settings Settings => _settings;
+    // The scripted smoke owns a virtual pointer; a graphical display otherwise queries the OS cursor.
+    internal Vector2? SmokePointer { get; set; }
 
     internal string TakeRejected()
     {
@@ -754,7 +756,7 @@ public partial class Main : Node3D
 
     private (Vector3 Origin, Vector3 Direction) MouseRay()
     {
-        var mouse = GetViewport().GetMousePosition();
+        var mouse = SmokePointer ?? GetViewport().GetMousePosition();
         return (_camera.Camera.ProjectRayOrigin(mouse), _camera.Camera.ProjectRayNormal(mouse));
     }
 

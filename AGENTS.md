@@ -13,3 +13,4 @@ The short form of the rules that matter most:
 - Open a pull request for every change to main and list the gates you ran. Ask for a Claude review in the request or in a review record; review Claude's requests the same way when asked.
 - Numbers and vocabularies live in content, behavior goes through registries, presentation lives under `meta` and is never read by the simulation, every roll comes from the seeded generator, the server decides and the client draws.
 - Keep experiments under `experiments/<topic>/` with build output ignored, and keep binary imagery small or out of the repository.
+- For routine client testing while the owner uses the machine, run `node scripts/test-background.mjs` in your worktree. See [docs/design/testing.md](docs/design/testing.md) for native headless checks and evidence. Keep automation input inside the tested process; graphical native checks need an isolated graphical session to leave the owner's desktop free.
