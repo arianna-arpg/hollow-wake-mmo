@@ -23,7 +23,7 @@ public class ElementalDisplacementTests(ITestOutputHelper output)
         var ceiling = a.Sim.Content.Rules.Number("physicality.shove_scale_max", double.NaN);
         Assert.True(double.IsFinite(ceiling) && ceiling > 0, "The shared shove ceiling must be defined in content.");
         var mass = a.Sim.World.Get<Stats>(target)!.Get("mass");
-        Assert.Equal(Math.Max(a.Sim.Content.Rules.Number("physicality.minimum_mass", 0.1), mass), Physicality.Mass(a.Sim, target));
+        Assert.Equal(mass, Physicality.Mass(a.Sim, target));
         a.Run("""{"type":"move","kind":"knockback","distance":4}""", start, target: target);
         a.Tick(100);
         var distance = Vector3.Distance(start, at.Position);
@@ -65,6 +65,6 @@ public class ElementalDisplacementTests(ITestOutputHelper output)
         a.Run("""{"type":"move","kind":"knockback","distance":4}""", at.Position, target: target);
         a.Tick(45);
         output.WriteLine($"Emberwisp ended at x={at.Position.X:F5}; wall at x=32.");
-        Assert.InRange(at.Position.X, 30, 31.999);
+        Assert.True(at.Position.X >= 30 && at.Position.X < 32, "The body's center must stop before entering the blocked cell.");
     }
 }

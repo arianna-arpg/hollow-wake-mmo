@@ -106,9 +106,10 @@ public class ElementalTests(ITestOutputHelper output)
             content.With(new RegionOverrideDef{Id="hallows_home",X=0,Y=0,Archetype="hallows",Level=level,Faction="weftmarch_compact"});
             content.With(new ZoneOverrideDef{Id="ninewells",X=0,Y=0,Pois={new PoiPlacement{Poi=siteId,X=50,Y=50}}});
             var g=new WorldGenerator(content,Rng.Hash64("unbound-sites"));
-            return g.Layout.ChunksOf(new ZoneCoord(0,0)).SelectMany(c=>g.GenerateChunk(c).Spawns)
-                .Where(s=>s.Group?.Contains(siteId,StringComparison.Ordinal)==true)
-                .Select(s=>$"{s.Pattern}:{s.X:R}:{s.Y:R}:{s.PackSize}").ToArray();
+            var spawns=g.Layout.ChunksOf(new ZoneCoord(0,0)).SelectMany(c=>g.GenerateChunk(c).Spawns)
+                .Where(s=>s.Group?.Contains(siteId,StringComparison.Ordinal)==true).ToArray();
+            Assert.All(spawns,s=>Assert.Equal(level,s.Level));
+            return spawns.Select(s=>$"{s.Pattern}:{s.X:R}:{s.Y:R}:{s.PackSize}:L{s.Level}").ToArray();
         }
         var def=CoreContent.Registry.Require<PoiDef>(siteId);
         var high=Generate(siteId,25);
@@ -128,9 +129,11 @@ public class ElementalTests(ITestOutputHelper output)
     {
         var g=new WorldGenerator(CoreContent.Registry,Rng.Hash64("aureth"));
         var found=new HashSet<string>();
+        var populations=Sites().ToDictionary(row=>(string)row[0],_=>0);
         for(var y=-48;y<=48;y++)for(var x=-48;x<=48;x++)
             foreach(var poi in g.Zone(new ZoneCoord(x,y)).Pois.Where(p=>p.Def.Tags.Has("site.manifestation")))
             {
+                populations[poi.Def.Id]++;
                 Assert.True(poi.Def.Inhabitants.Any(s => s.Level is null || s.Level.Contains(poi.Level)),
                     $"{poi.Id}: level {poi.Level} has no eligible resident.");
                 if(!found.Add(poi.Def.Id))continue;
@@ -151,8 +154,10 @@ public class ElementalTests(ITestOutputHelper output)
                     .Where(s=>s.Group==poi.Id).ToArray();
                 Assert.NotEmpty(residents);
                 Assert.All(residents, s => Assert.Contains(poi.Def.Inhabitants, r => r.Pattern==s.Pattern));
+                Assert.All(residents, s => Assert.Equal(poi.Level,s.Level));
                 output.WriteLine($"{x},{y}: {poi.Def.Id} at {poi.X:R},{poi.Y:R}, biome={biome.Id}, site level={poi.Level}");
             }
+        foreach(var (site,count) in populations)output.WriteLine($"Natural site count {site}: {count}");
         foreach(var site in Sites())Assert.Contains((string)site[0],found);
     }
 
@@ -173,7 +178,7 @@ public class ElementalTests(ITestOutputHelper output)
     }
 
     [Fact]
-    public void MaterialDensityAndPoiseProduceDistinctMassAndRealShoveTravel()
+    public void MaterialDensityAndPoiseProduceDistinctMassAndBoundedShoveTravel()
     {
         static (double mass,float distance) Push(string pattern)
         {
@@ -185,7 +190,8 @@ public class ElementalTests(ITestOutputHelper output)
         }
         var wisp=Push("emberwisp");var wind=Push("gale_elemental");var water=Push("tide_surge");var geode=Push("geode_shellback");
         Assert.True(wisp.mass<wind.mass && wind.mass<water.mass && water.mass<geode.mass);
-        Assert.True(wisp.distance>wind.distance && wind.distance>water.distance && water.distance>geode.distance);
+        // Light bodies can reach the shared cap while heavier bodies retain distinct resistance.
+        Assert.True(wisp.distance>=wind.distance && wind.distance>water.distance && water.distance>geode.distance);
         Assert.Equal(geode,Push("geode_shellback"));
         foreach(var pattern in Bodies().Select(r=>(string)r[0])){var p=Push(pattern);output.WriteLine($"{pattern}: mass={p.mass:F3} kg, shove={p.distance:F5} m");}
     }

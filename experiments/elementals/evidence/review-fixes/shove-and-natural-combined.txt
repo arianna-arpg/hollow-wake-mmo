@@ -1,0 +1,148 @@
+Test run for <worktree>\tests\HollowWake.Core.Tests\bin\Debug\net10.0\HollowWake.Core.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+<worktree>\tests\HollowWake.Core.Tests\bin\Debug\net10.0\HollowWake.Core.Tests.dll
+[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v3.1.5+1b188a7b0a (64-bit .NET 10.0.13)
+[xUnit.net 00:00:00.13]   Discovering: HollowWake.Core.Tests
+[xUnit.net 00:00:03.47]   Discovered:  HollowWake.Core.Tests
+[xUnit.net 00:00:03.52]   Starting:    HollowWake.Core.Tests
+  Passed HollowWake.Core.Tests.ElementalDisplacementTests.EveryAuthoredBodyRespectsTheSharedShoveCeiling(pattern: "storm_confluence") [68 ms]
+  Standard Output Messages:
+ storm_confluence: canonical mass=86.11200 kg, travel=2.96006 m, bound=12.00 m.
+
+
+  Passed HollowWake.Core.Tests.ElementalDisplacementTests.EveryAuthoredBodyRespectsTheSharedShoveCeiling(pattern: "umbra_drift") [5 ms]
+  Standard Output Messages:
+ umbra_drift: canonical mass=19.05120 kg, travel=11.95564 m, bound=12.00 m.
+
+
+  Passed HollowWake.Core.Tests.ElementalDisplacementTests.EveryAuthoredBodyRespectsTheSharedShoveCeiling(pattern: "bloom_spore") [5 ms]
+  Standard Output Messages:
+ bloom_spore: canonical mass=25.24500 kg, travel=11.91406 m, bound=12.00 m.
+
+
+  Passed HollowWake.Core.Tests.ElementalDisplacementTests.EveryAuthoredBodyRespectsTheSharedShoveCeiling(pattern: "void_ravel") [4 ms]
+  Standard Output Messages:
+ void_ravel: canonical mass=26.45370 kg, travel=11.95564 m, bound=12.00 m.
+
+
+  Passed HollowWake.Core.Tests.ElementalDisplacementTests.EveryAuthoredBodyRespectsTheSharedShoveCeiling(pattern: "gale_elemental") [4 ms]
+  Standard Output Messages:
+ gale_elemental: canonical mass=22.32000 kg, travel=11.95564 m, bound=12.00 m.
+
+
+  Passed HollowWake.Core.Tests.ElementalDisplacementTests.EveryAuthoredBodyRespectsTheSharedShoveCeiling(pattern: "frost_elemental") [18 ms]
+  Standard Output Messages:
+ frost_elemental: canonical mass=363.37956 kg, travel=0.63039 m, bound=12.00 m.
+
+
+  Passed HollowWake.Core.Tests.ElementalDisplacementTests.EveryAuthoredBodyRespectsTheSharedShoveCeiling(pattern: "tide_surge") [4 ms]
+  Standard Output Messages:
+ tide_surge: canonical mass=561.09376 kg, travel=0.43947 m, bound=12.00 m.
+
+
+  Passed HollowWake.Core.Tests.ElementalDisplacementTests.EveryAuthoredBodyRespectsTheSharedShoveCeiling(pattern: "silt_crawler") [4 ms]
+  Standard Output Messages:
+ silt_crawler: canonical mass=938.40003 kg, travel=0.22681 m, bound=12.00 m.
+
+
+  Passed HollowWake.Core.Tests.ElementalDisplacementTests.EveryAuthoredBodyRespectsTheSharedShoveCeiling(pattern: "rime_star") [4 ms]
+  Standard Output Messages:
+ rime_star: canonical mass=102.10744 kg, travel=2.82434 m, bound=12.00 m.
+
+
+  Passed HollowWake.Core.Tests.ElementalDisplacementTests.EveryAuthoredBodyRespectsTheSharedShoveCeiling(pattern: "geode_shellback") [4 ms]
+  Standard Output Messages:
+ geode_shellback: canonical mass=2927.92504 kg, travel=0.03908 m, bound=12.00 m.
+
+
+  Passed HollowWake.Core.Tests.ElementalDisplacementTests.EveryAuthoredBodyRespectsTheSharedShoveCeiling(pattern: "lumen_wisp") [5 ms]
+  Standard Output Messages:
+ lumen_wisp: canonical mass=10.94861 kg, travel=11.95564 m, bound=12.00 m.
+
+
+  Passed HollowWake.Core.Tests.ElementalDisplacementTests.EveryAuthoredBodyRespectsTheSharedShoveCeiling(pattern: "mind_knot") [5 ms]
+  Standard Output Messages:
+ mind_knot: canonical mass=846.68744 kg, travel=0.28566 m, bound=12.00 m.
+
+
+  Passed HollowWake.Core.Tests.ElementalDisplacementTests.EveryAuthoredBodyRespectsTheSharedShoveCeiling(pattern: "cinderling") [8 ms]
+  Standard Output Messages:
+ cinderling: canonical mass=11.97504 kg, travel=11.95564 m, bound=12.00 m.
+
+
+  Passed HollowWake.Core.Tests.ElementalTests.MaterialDensityAndPoiseProduceDistinctMassAndBoundedShoveTravel [150 ms]
+  Standard Output Messages:
+ cinderling: mass=11.975 kg, shove=11.95564 m
+ emberwisp: mass=5.049 kg, shove=11.95564 m
+ ember_elemental: mass=32.011 kg, shove=9.08716 m
+ tide_surge: mass=561.094 kg, shove=0.43947 m
+ rime_star: mass=102.107 kg, shove=2.82434 m
+ frost_elemental: mass=363.380 kg, shove=0.63039 m
+ gale_elemental: mass=22.320 kg, shove=11.95564 m
+ storm_confluence: mass=86.112 kg, shove=2.96006 m
+ silt_crawler: mass=938.400 kg, shove=0.22681 m
+ geode_shellback: mass=2927.925 kg, shove=0.03908 m
+ bloom_spore: mass=25.245 kg, shove=11.91406 m
+ umbra_drift: mass=19.051 kg, shove=11.95564 m
+ lumen_wisp: mass=10.949 kg, shove=11.95564 m
+ mind_knot: mass=846.687 kg, shove=0.28566 m
+ void_ravel: mass=26.454 kg, shove=11.95564 m
+ triune_elemental: mass=2080.000 kg, shove=0.07768 m
+
+
+  Passed HollowWake.Core.Tests.ElementalDisplacementTests.EveryAuthoredBodyRespectsTheSharedShoveCeiling(pattern: "emberwisp") [4 ms]
+  Standard Output Messages:
+ emberwisp: canonical mass=5.04900 kg, travel=11.95564 m, bound=12.00 m.
+
+
+  Passed HollowWake.Core.Tests.ElementalDisplacementTests.EveryAuthoredBodyRespectsTheSharedShoveCeiling(pattern: "ember_elemental") [5 ms]
+  Standard Output Messages:
+ ember_elemental: canonical mass=32.01120 kg, travel=9.08716 m, bound=12.00 m.
+
+
+  Passed HollowWake.Core.Tests.ElementalDisplacementTests.EveryAuthoredBodyRespectsTheSharedShoveCeiling(pattern: "triune_elemental") [6 ms]
+  Standard Output Messages:
+ triune_elemental: canonical mass=2080.00006 kg, travel=0.07768 m, bound=12.00 m.
+
+
+  Passed HollowWake.Core.Tests.ElementalDisplacementTests.ALightElementalCannotTunnelThroughAPlacedWall [7 ms]
+  Standard Output Messages:
+ Emberwisp ended at x=31.99990; wall at x=32.
+
+
+  Passed HollowWake.Core.Tests.ElementalDisplacementTests.ARealShoveDoesNotThrowAnEmberwispBeyondItsHomeLeash(attack: "bash") [58 ms]
+  Standard Output Messages:
+ bash: Emberwisp moved 8.96672 m; home leash 45.0 m.
+
+
+  Passed HollowWake.Core.Tests.ElementalDisplacementTests.ARealShoveDoesNotThrowAnEmberwispBeyondItsHomeLeash(attack: "winters_sweep") [26 ms]
+  Standard Output Messages:
+ winters_sweep: Emberwisp moved 17.77583 m; home leash 45.0 m.
+
+
+[xUnit.net 00:00:16.47]   Finished:    HollowWake.Core.Tests
+  Passed HollowWake.Core.Tests.ElementalTests.ExistingWorldBudgetsCanSelectUnboundSitesNaturally [12 s]
+  Standard Output Messages:
+ -36,-48: rime_bloom at -9151.5,-12210.5, biome=alpine, site level=29
+ -23,-48: mineral_wake at -5668.5,-12061.5, biome=alpine, site level=29
+ -48,-47: storm_eye at -12248.5,-11997.5, biome=alpine, site level=33
+ 4,-45: selvage_rent at 1205.5,-11382.5, biome=hollowed, site level=29
+ 26,-24: ember_seam at 6715.5,-6095.5, biome=cinderwaste, site level=13
+ -9,-23: bloom_exhalation at -2089.5,-5657.5, biome=forest, site level=15
+ -7,-22: tide_memory at -1598.5,-5464.5, biome=shore, site level=13
+ 12,-12: unbound_refraction at 3155.5,-3014.5, biome=hollowed, site level=13
+ Natural site count ember_seam: 3
+ Natural site count tide_memory: 6
+ Natural site count rime_bloom: 87
+ Natural site count storm_eye: 91
+ Natural site count mineral_wake: 71
+ Natural site count bloom_exhalation: 13
+ Natural site count unbound_refraction: 2
+ Natural site count selvage_rent: 7
+
+
+
+Test Run Successful.
+Total tests: 21
+     Passed: 21
+ Total time: 17.2039 Seconds

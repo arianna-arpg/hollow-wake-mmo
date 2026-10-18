@@ -1,0 +1,68 @@
+  Determining projects to restore...
+  All projects are up-to-date for restore.
+  HollowWake.Core -> <worktree>\src\HollowWake.Core\bin\Debug\net8.0\HollowWake.Core.dll
+  HollowWake.Core.Tests -> <worktree>\tests\HollowWake.Core.Tests\bin\Debug\net10.0\HollowWake.Core.Tests.dll
+Test run for <worktree>\tests\HollowWake.Core.Tests\bin\Debug\net10.0\HollowWake.Core.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+<worktree>\tests\HollowWake.Core.Tests\bin\Debug\net10.0\HollowWake.Core.Tests.dll
+[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v3.1.5+1b188a7b0a (64-bit .NET 10.0.13)
+[xUnit.net 00:00:00.17]   Discovering: HollowWake.Core.Tests
+[xUnit.net 00:00:03.08]   Discovered:  HollowWake.Core.Tests
+[xUnit.net 00:00:03.11]   Starting:    HollowWake.Core.Tests
+[xUnit.net 00:00:12.66]     HollowWake.Core.Tests.ElementalTests.ExistingWorldBudgetsCanSelectUnboundSitesNaturally [FAIL]
+[xUnit.net 00:00:12.66]       Assert.Contains() Failure: Item not found in set
+[xUnit.net 00:00:12.66]       Set:       ["rime_bloom", "mineral_wake", "storm_eye", "selvage_rent", "bloom_exhalation", ···]
+[xUnit.net 00:00:12.66]       Not found: "ember_seam"
+[xUnit.net 00:00:12.66]       Stack Trace:
+[xUnit.net 00:00:12.66]         <worktree>\tests\HollowWake.Core.Tests\ElementalTests.cs(159,0): at HollowWake.Core.Tests.ElementalTests.ExistingWorldBudgetsCanSelectUnboundSitesNaturally()
+[xUnit.net 00:00:12.66]            at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+[xUnit.net 00:00:12.66]            at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:12.66]       Output:
+[xUnit.net 00:00:12.66]         -36,-48: rime_bloom at -9151.5,-12210.5, biome=alpine, site level=29
+[xUnit.net 00:00:12.66]         -23,-48: mineral_wake at -5668.5,-12061.5, biome=alpine, site level=29
+[xUnit.net 00:00:12.66]         -48,-47: storm_eye at -12248.5,-11997.5, biome=alpine, site level=33
+[xUnit.net 00:00:12.66]         4,-45: selvage_rent at 1205.5,-11382.5, biome=hollowed, site level=29
+[xUnit.net 00:00:12.66]         -9,-23: bloom_exhalation at -2089.5,-5657.5, biome=forest, site level=15
+[xUnit.net 00:00:12.66]         -7,-22: tide_memory at -1598.5,-5464.5, biome=shore, site level=13
+[xUnit.net 00:00:12.66]         12,-12: unbound_refraction at 3155.5,-3014.5, biome=hollowed, site level=13
+[xUnit.net 00:00:12.66]         Natural site count ember_seam: 0
+[xUnit.net 00:00:12.66]         Natural site count tide_memory: 6
+[xUnit.net 00:00:12.66]         Natural site count rime_bloom: 87
+[xUnit.net 00:00:12.66]         Natural site count storm_eye: 91
+[xUnit.net 00:00:12.66]         Natural site count mineral_wake: 71
+[xUnit.net 00:00:12.66]         Natural site count bloom_exhalation: 13
+[xUnit.net 00:00:12.66]         Natural site count unbound_refraction: 2
+[xUnit.net 00:00:12.66]         Natural site count selvage_rent: 7
+[xUnit.net 00:00:12.68]   Finished:    HollowWake.Core.Tests
+  Failed HollowWake.Core.Tests.ElementalTests.ExistingWorldBudgetsCanSelectUnboundSitesNaturally [9 s]
+  Error Message:
+   Assert.Contains() Failure: Item not found in set
+Set:       ["rime_bloom", "mineral_wake", "storm_eye", "selvage_rent", "bloom_exhalation", ···]
+Not found: "ember_seam"
+  Stack Trace:
+     at HollowWake.Core.Tests.ElementalTests.ExistingWorldBudgetsCanSelectUnboundSitesNaturally() in <worktree>\tests\HollowWake.Core.Tests\ElementalTests.cs:line 159
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Standard Output Messages:
+ -36,-48: rime_bloom at -9151.5,-12210.5, biome=alpine, site level=29
+ -23,-48: mineral_wake at -5668.5,-12061.5, biome=alpine, site level=29
+ -48,-47: storm_eye at -12248.5,-11997.5, biome=alpine, site level=33
+ 4,-45: selvage_rent at 1205.5,-11382.5, biome=hollowed, site level=29
+ -9,-23: bloom_exhalation at -2089.5,-5657.5, biome=forest, site level=15
+ -7,-22: tide_memory at -1598.5,-5464.5, biome=shore, site level=13
+ 12,-12: unbound_refraction at 3155.5,-3014.5, biome=hollowed, site level=13
+ Natural site count ember_seam: 0
+ Natural site count tide_memory: 6
+ Natural site count rime_bloom: 87
+ Natural site count storm_eye: 91
+ Natural site count mineral_wake: 71
+ Natural site count bloom_exhalation: 13
+ Natural site count unbound_refraction: 2
+ Natural site count selvage_rent: 7
+
+
+
+Total tests: 1
+     Failed: 1
+Test Run Failed.
+ Total time: 14.1627 Seconds
