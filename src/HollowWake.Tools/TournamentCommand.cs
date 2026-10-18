@@ -1,4 +1,5 @@
 using System.Globalization;
+using System.Text.Json;
 using HollowWake.Core.Content;
 using HollowWake.Core.Evaluation;
 
@@ -11,53 +12,73 @@ namespace HollowWake.Tools;
 /// the evaluation bands and fails the command on a breach. <c>--hashes</c> prints each pairing's trace hash and, with
 /// <c>--out</c>, writes them as a baseline instead of the report; <c>--check-hashes FILE</c> fights against such a
 /// baseline (with its seeds and cap unless given), prints <c>identical</c> or names each pairing that changed, and
-/// fails the command on a change.
+/// fails the command on a change. Bad options, an unknown pattern, a missing baseline or output folder each stop the
+/// command with one line before any fight.
 /// </summary>
 public static class TournamentCommand
 {
     public static int Run(ContentRegistry content, Func<string, string, string> opt, Func<string, bool> flag)
     {
         var checkPath = opt("check-hashes", "");
-        var baseline = checkPath.Length > 0 ? TraceBaseline.FromJson(File.ReadAllText(checkPath)) : null;
-        var listed = opt("pairs", "");
-        var rule = flag("standard") ? Pairing.StandardDuels : Pairing.ProvingPairs;
-        var pairings = listed.Length > 0
-            ? listed.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries).Select(Pairing.Parse).ToList()
-            : Pairing.Listed(content, rule);
-        if (pairings.Count == 0)
+        TraceBaseline? baseline = null;
+        if (checkPath.Length > 0)
         {
-            Console.WriteLine($"no pairings to fight: rule {rule} lists none");
-            return 1;
+            if (!File.Exists(checkPath))
+            {
+                return Refuse($"--check-hashes: no baseline at {checkPath}");
+            }
+            try
+            {
+                baseline = TraceBaseline.FromJson(File.ReadAllText(checkPath));
+            }
+            catch (Exception ex) when (ex is JsonException or InvalidDataException or IOException or UnauthorizedAccessException)
+            {
+                return Refuse($"--check-hashes: {checkPath} is not a readable trace baseline ({ex.Message.ReplaceLineEndings(" ")})");
+            }
         }
-        var seeds = int.Parse(opt("seeds", baseline?.Seeds.ToString(CultureInfo.InvariantCulture) ?? "10"), CultureInfo.InvariantCulture);
-        var seconds = double.Parse(opt("seconds", baseline?.Seconds.ToString(CultureInfo.InvariantCulture) ?? "60"), CultureInfo.InvariantCulture);
+        if (!TryPairings(content, opt, flag, out var pairings, out var problem))
+        {
+            return Refuse(problem);
+        }
+        var seedsText = opt("seeds", baseline?.Seeds.ToString(CultureInfo.InvariantCulture) ?? "10");
+        if (!int.TryParse(seedsText, NumberStyles.Integer, CultureInfo.InvariantCulture, out var seeds) || seeds < 1)
+        {
+            return Refuse($"--seeds takes a whole number of at least 1, not '{seedsText}'");
+        }
+        var secondsText = opt("seconds", baseline?.Seconds.ToString(CultureInfo.InvariantCulture) ?? "60");
+        if (!double.TryParse(secondsText, NumberStyles.Float, CultureInfo.InvariantCulture, out var seconds) || !double.IsFinite(seconds) || seconds <= 0)
+        {
+            return Refuse($"--seconds takes a number of seconds above 0, not '{secondsText}'");
+        }
+        var outPath = opt("out", "");
+        if (outPath.Length > 0 && Path.GetDirectoryName(Path.GetFullPath(outPath)) is { } folder && !Directory.Exists(folder))
+        {
+            return Refuse($"--out: the folder {folder} does not exist");
+        }
         var bands = flag("bands");
         var hashes = flag("hashes");
         var report = Tournament.Run(content, pairings, seeds, seconds, bands);
-        Console.WriteLine($"{"pairing",-44} {"fights",6} {"a wins",7} {"b wins",7} {"draws",6} {"ttk med",8} {"low",6} {"high",6} {"kit a",6} {"kit b",6} {"spr a",6} {"spr b",6}");
-        foreach (var p in report.Pairs)
+        foreach (var line in report.Table())
         {
-            Console.WriteLine($"{p.A + " v " + p.B,-44} {p.Fights,6} {p.WinRateA,7:0.00} {p.WinRateB,7:0.00} {p.DrawRate,6:0.00} {p.TtkMedian,8:0.#} {p.TtkLow,6:0.#} {p.TtkHigh,6:0.#} {p.VarietyA,6:0.00} {p.VarietyB,6:0.00} {p.SpreadA,6:0.00} {p.SpreadB,6:0.00}");
-            Console.WriteLine($"    {p.A}: {string.Join(" ", p.WeavesA)} | {string.Join(" ", p.MechanismsA)}");
-            Console.WriteLine($"    {p.B}: {string.Join(" ", p.WeavesB)} | {string.Join(" ", p.MechanismsB)}");
-            foreach (var breach in p.Breaches)
-            {
-                Console.WriteLine($"    BREACH {breach}");
-            }
+            Console.WriteLine(line);
         }
         if (hashes)
         {
-            Console.WriteLine($"trace hashes over {report.Seeds} seeds of {report.Seconds:0.#} s");
-            foreach (var p in report.Pairs)
+            foreach (var line in report.HashLines())
             {
-                Console.WriteLine($"    {p.A + ":" + p.B,-44} {p.Hash}");
+                Console.WriteLine(line);
             }
-            Console.WriteLine($"    {"run",-44} {report.Hash}");
         }
-        var outPath = opt("out", "");
         if (outPath.Length > 0)
         {
-            File.WriteAllText(outPath, hashes ? TraceBaseline.Of(report).ToJson() : report.ToJson());
+            try
+            {
+                File.WriteAllText(outPath, hashes ? TraceBaseline.Of(report).ToJson() : report.ToJson());
+            }
+            catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+            {
+                return Refuse($"--out: could not write {outPath} ({ex.Message.ReplaceLineEndings(" ")})");
+            }
             Console.WriteLine($"wrote {outPath}");
         }
         var failed = false;
@@ -77,5 +98,77 @@ public static class TournamentCommand
             failed |= !report.Passed;
         }
         return failed ? 1 : 0;
+    }
+
+    /// <summary>
+    /// The pairings to fight: <c>--pairs</c> when given, else the rule <c>--standard</c> or the default names. An empty
+    /// entry, one not written a:b, an empty list or a pattern no definition carries is a problem naming it.
+    /// </summary>
+    private static bool TryPairings(ContentRegistry content, Func<string, string, string> opt, Func<string, bool> flag, out IReadOnlyList<Pairing> pairings, out string problem)
+    {
+        var parsed = new List<Pairing>();
+        pairings = parsed;
+        problem = "";
+        string origin;
+        if (flag("pairs"))
+        {
+            origin = "--pairs";
+            var listed = opt("pairs", "");
+            if (listed.Trim().Length == 0)
+            {
+                problem = "--pairs names no pairing; write --pairs a:b,c:d";
+                return false;
+            }
+            foreach (var entry in listed.Split(','))
+            {
+                if (entry.Trim().Length == 0)
+                {
+                    problem = $"--pairs has an empty entry in '{listed}'";
+                    return false;
+                }
+                try
+                {
+                    parsed.Add(Pairing.Parse(entry));
+                }
+                catch (ArgumentException ex)
+                {
+                    problem = $"--pairs: {ex.Message}";
+                    return false;
+                }
+            }
+        }
+        else
+        {
+            origin = flag("standard") ? Pairing.StandardDuels : Pairing.ProvingPairs;
+            try
+            {
+                parsed.AddRange(Pairing.Listed(content, origin));
+            }
+            catch (ArgumentException ex)
+            {
+                problem = $"rule {origin}: {ex.Message}";
+                return false;
+            }
+            if (parsed.Count == 0)
+            {
+                problem = $"rule {origin} lists no pairings";
+                return false;
+            }
+        }
+        foreach (var pairing in parsed)
+        {
+            if (Tournament.Refusal(content, pairing) is { } why)
+            {
+                problem = $"{origin}: {why}";
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private static int Refuse(string message)
+    {
+        Console.WriteLine(message);
+        return 1;
     }
 }

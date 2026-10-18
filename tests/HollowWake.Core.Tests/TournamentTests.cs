@@ -1,4 +1,6 @@
+using System.Globalization;
 using HollowWake.Core.Content;
+using HollowWake.Core.Definitions;
 using HollowWake.Core.Evaluation;
 using Xunit;
 
@@ -157,6 +159,103 @@ entries:
     public void APairingIsWrittenAColonB()
     {
         Assert.Equal(new Pairing("wolf", "hob"), Pairing.Parse(" wolf : hob "));
-        Assert.Throws<ArgumentException>(() => Pairing.Parse("wolf"));
+        Assert.Equal("wolf:hob", Pairing.Parse("wolf:hob").ToString());
+        foreach (var bad in new[] { "wolf", "", " ", ":hob", " :hob", "wolf:", "wolf: ", " : " })
+        {
+            Assert.Throws<ArgumentException>(() => Pairing.Parse(bad));
+        }
+    }
+
+    [Fact]
+    public void AnUnknownPatternIsRefusedBeforeAnyFight()
+    {
+        Assert.Null(Tournament.Refusal(CoreContent.Registry, new Pairing("wolf", "hob")));
+        var refusal = Tournament.Refusal(CoreContent.Registry, new Pairing("wolf", "no_such_pattern"));
+        Assert.Contains("wolf:no_such_pattern", refusal);
+        Assert.Contains("'no_such_pattern'", refusal);
+        // The known pairing listed first is not fought: the run refuses before its first fight.
+        var thrown = Assert.Throws<ArgumentException>(() => Tournament.Run(CoreContent.Registry, new[] { new Pairing("wolf", "hob"), new Pairing("wolf", "no_such_pattern") }, seeds: 1, seconds: 60, checkBands: false));
+        Assert.Contains("'no_such_pattern'", thrown.Message);
+    }
+
+    [Fact]
+    public void ADuelAddsTheTwoFactionsOnlyWhereTheRegistryLacksThem()
+    {
+        var red = CoreContent.Registry.Get<FactionDef>("red");
+        Tournament.Duel(CoreContent.Registry, new Pairing("wolf", "hob"), index: 0, seconds: 2);
+        Assert.Same(red, CoreContent.Registry.Get<FactionDef>("red"));
+
+        var fresh = ContentRegistry.Load(new[] { CoreContent.FindContentDir() }, out _);
+        Assert.False(fresh.Has<FactionDef>("red") || fresh.Has<FactionDef>("blue"));
+        Tournament.Duel(fresh, new Pairing("wolf", "hob"), index: 0, seconds: 2);
+        var added = fresh.Get<FactionDef>("red");
+        Assert.NotNull(added);
+        Assert.True(fresh.Has<FactionDef>("blue"));
+        Tournament.Duel(fresh, new Pairing("wolf", "hob"), index: 1, seconds: 2);
+        Assert.Same(added, fresh.Get<FactionDef>("red"));
+    }
+
+    [Fact]
+    public void TheReportReadsTheSameInEveryCulture()
+    {
+        var pairing = new Pairing("hob", "proving_bulwark");
+        var invariant = Tournament.Run(CoreContent.Registry, new[] { pairing }, seeds: 1, seconds: 8, checkBands: true);
+        var before = CultureInfo.CurrentCulture;
+        TournamentReport german;
+        try
+        {
+            CultureInfo.CurrentCulture = CultureInfo.GetCultureInfo("de-DE");
+            german = Tournament.Run(CoreContent.Registry, new[] { pairing }, seeds: 1, seconds: 8, checkBands: true);
+        }
+        finally
+        {
+            CultureInfo.CurrentCulture = before;
+        }
+        // The seed, the trace, the breaches and the table are written in the invariant culture inside the library.
+        Assert.Equal(invariant.Fights[0].Seed, german.Fights[0].Seed);
+        Assert.Equal(invariant.Hash, german.Hash);
+        Assert.Equal(invariant.Pairs[0].Breaches, german.Pairs[0].Breaches);
+        Assert.Equal(invariant.Table(), german.Table());
+        Assert.Equal(invariant.HashLines(), german.HashLines());
+        Assert.Contains(german.Pairs[0].Breaches, b => b.Contains("0.2", StringComparison.Ordinal) || b.Contains("0.8", StringComparison.Ordinal));
+        Assert.Contains(german.Table(), line => line.Contains("1.00", StringComparison.Ordinal));
+    }
+
+    [Fact]
+    public void ASideIsCreditedWithWhatItsMinionsDoAndItsKitStaysItsOwn()
+    {
+        var dir = Scratch("evaluation-summoner");
+        try
+        {
+            // A summoner whose body has no weave that deals damage: everything it deals, its minions dealt.
+            File.WriteAllText(Path.Combine(dir, "patterns.yaml"), """
+kind: patterns
+entries:
+  - id: t_shade_caller
+    name: Shade Caller
+    extends: monster
+    tags: [humanoid, caster]
+    level: 5
+    components:
+      stats: { attributes: { might: 6, grace: 9, will: 15, vigor: 8, move.speed: 4.8 } }
+      weaves: { list: [call_remnant] }
+      behavior: { id: aggressive_ranged }
+""".Replace("\r\n", "\n"));
+            var registry = ContentRegistry.Load(new[] { CoreContent.FindContentDir(), dir }, out var report);
+            Assert.Empty(report.Errors);
+            var fight = Tournament.Duel(registry, new Pairing("t_shade_caller", "hob"), index: 0, seconds: 30);
+            var summoner = fight.SideA;
+            Assert.True(summoner.DamageDealt > 0 && summoner.Hits > 0, "the minions' damage was not credited to their owner");
+            // Every hit is a shade's single strike and the summoning lands none, so the casts outnumber the hits only
+            // when the shades' casts are credited too.
+            Assert.True(summoner.Casts > summoner.Hits, "the minions' casts were not credited to their owner");
+            // Those casts count, but only the summoning is its kit.
+            Assert.Equal(new[] { "call_remnant" }, summoner.Weaves);
+            Assert.Equal(1, summoner.DistinctWeaves);
+        }
+        finally
+        {
+            Directory.Delete(dir, recursive: true);
+        }
     }
 }
