@@ -70,7 +70,7 @@ public static class EvaluationRules
             : throw new InvalidDataException(FormattableString.Invariant($"rule {Path(name)} is a whole number of at least 1, not {value}"));
     }
 
-    /// <summary>The two factions a duel's sides fight under, a's then b's; throws naming the rule unless it lists two different ids.</summary>
+    /// <summary>The two distinct, mutually hostile factions a duel's sides fight under; absent definitions use the arena's hostile defaults.</summary>
     public static (string A, string B) FactionsOf(ContentRegistry content)
     {
         var ids = content.Rules.Strings(Path(Factions));

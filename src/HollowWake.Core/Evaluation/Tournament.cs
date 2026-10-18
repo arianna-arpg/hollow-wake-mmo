@@ -441,7 +441,7 @@ public static class Tournament
 
     private static string Hex(ulong hash) => hash.ToString("x16", CultureInfo.InvariantCulture);
 
-    /// <summary>A trace number, written to hundredths without retaining the sign of a rounded zero.</summary>
+    /// <summary>A trace number formatted as double to hundredths, widening float inputs before rounding, without the sign of a rounded zero.</summary>
     public static string TraceNumber(double value)
     {
         var text = value.ToString("0.##", CultureInfo.InvariantCulture);

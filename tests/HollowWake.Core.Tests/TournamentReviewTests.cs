@@ -1,8 +1,10 @@
 using System.Globalization;
 using System.Text.Json.Nodes;
+using HollowWake.Core.Combat;
 using HollowWake.Core.Content;
 using HollowWake.Core.Definitions;
 using HollowWake.Core.Evaluation;
+using HollowWake.Core.Sim;
 using HollowWake.Tools;
 using Xunit;
 
@@ -16,7 +18,8 @@ public class TournamentReviewTests
     [InlineData(-0.006, "-0.01")]
     [InlineData(0.006, "0.01")]
     [InlineData(-1.25, "-1.25")]
-    public void TraceNumbersDiscardOnlyTheSignOfRoundedZero(double value, string expected)
+    [InlineData(-1.0249999f, "-1.02")]
+    public void TraceNumbersUseInvariantHundredthsAndNormalizeRoundedZero(double value, string expected)
     {
         var previous = CultureInfo.CurrentCulture;
         try
@@ -104,6 +107,44 @@ entries:
             Assert.Equal(0, TournamentCommand.Run(CoreContent.Registry, new[] { "--check-hashes", path }, output));
             Assert.Contains("hashes: identical", output.ToString());
             Assert.DoesNotContain("not in the baseline", output.ToString());
+
+            using var explicitOutput = new StringWriter();
+            Assert.Equal(1, TournamentCommand.Run(CoreContent.Registry,
+                new[] { "--pairs", "loosed_kindler:boar", "--check-hashes", path }, explicitOutput));
+            Assert.Contains("wolf:hob is in the baseline but was not fought", explicitOutput.ToString());
+            Assert.Contains("loosed_kindler:boar is not in the baseline", explicitOutput.ToString());
+
+            using var standardOutput = new StringWriter();
+            Assert.Equal(1, TournamentCommand.Run(CoreContent.Registry,
+                new[] { "--standard", "--check-hashes", path }, standardOutput));
+            // The standard set includes wolf:hob AND additional pairs; the baseline must not narrow it.
+            Assert.Contains("loosed_kindler:boar is not in the baseline", standardOutput.ToString());
+            Assert.DoesNotContain("wolf:hob is in the baseline but was not fought", standardOutput.ToString());
+        }
+        finally { Directory.Delete(directory, recursive: true); }
+    }
+
+    [Theory]
+    [InlineData("red", "blue")]
+    [InlineData("blue", "red")]
+    public void OneDefinedNeutralFactionAndOneMissingFactionMatchTheArena(string defined, string missing)
+    {
+        var directory = Scratch();
+        try
+        {
+            File.WriteAllText(Path.Combine(directory, "factions.yaml"), $$"""
+kind: factions
+entries:
+  - { id: {{defined}}, default: neutral }
+""");
+            var content = ContentRegistry.Load(new[] { CoreContent.FindContentDir(), directory }, out var report);
+            Assert.Empty(report.Errors);
+            Assert.Equal(("red", "blue"), EvaluationRules.FactionsOf(content));
+            Assert.False(content.Has<FactionDef>(missing));
+            var sim = ZoneBuilder.CreateArena(content, 9);
+            Tournament.Spawn(sim, new Pairing("wolf", "hob"), false);
+            Assert.Equal(Stance.Hostile, Relations.StanceBetween(sim, "red", "blue"));
+            Assert.Equal(Stance.Hostile, Relations.StanceBetween(sim, "blue", "red"));
         }
         finally { Directory.Delete(directory, recursive: true); }
     }

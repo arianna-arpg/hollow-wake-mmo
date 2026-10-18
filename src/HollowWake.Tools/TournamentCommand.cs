@@ -7,13 +7,14 @@ namespace HollowWake.Tools;
 
 /// <summary>
 /// <c>hollowwake tournament</c>: seeded duels across pairings, as a table and, with <c>--out</c>, as JSON. The
-/// pairings are the proving pairs rules group <c>evaluation</c> lists, its standard duels with <c>--standard</c>, or
-/// <c>--pairs a:b,c:d</c>; <c>--seeds</c> is how many fights each, <c>--seconds</c> the cap, and <c>--bands</c> checks
+/// pairings are selected by <c>--pairs a:b,c:d</c>, else <c>--standard</c>, else a checked baseline's keys, else the
+/// proving pairs rules group <c>evaluation</c> lists; <c>--seeds</c> is how many fights each, <c>--seconds</c> the cap, and <c>--bands</c> checks
 /// the evaluation bands and fails the command on a breach. <c>--hashes</c> prints each pairing's trace hash and, with
 /// <c>--out</c>, writes them as a baseline instead of the report; <c>--check-hashes FILE</c> fights against such a
 /// baseline (with its seeds and cap unless given), prints <c>identical</c> or names each pairing that changed, and
 /// fails the command on a change. An option the command does not know, one that needs a value and has none, one given
-/// twice, a word that is no option's value, a bad number, an unknown pattern, a missing baseline or output folder each
+/// twice, a word that is no option's value, a bad number, an unknown pattern, an empty or malformed baseline,
+/// a missing baseline or output folder each
 /// stop the command with one line before any fight. The table names every warning and error the simulation logged, and
 /// an error fails the command, naming the first.
 /// </summary>
