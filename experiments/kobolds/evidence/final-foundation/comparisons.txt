@@ -1,0 +1,2 @@
+Full proving JSON equals prior actual base3d/Kobold report, including inherited failures.
+Literal census exactly equals reviewed fixture: 499 keys.

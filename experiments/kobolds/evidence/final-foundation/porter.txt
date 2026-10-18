@@ -1,0 +1,18 @@
+✔ a melee skill becomes a preset on the swing shell in world units (2.1721ms)
+✔ a projectile keeps its riders, hooks and Thread (1.0958ms)
+✔ bursts spare the body struck, pulls on flights anchor to the caster, and splits pair with their Threads (2.0716ms)
+✔ trajectory axes come out in degrees a second and banks keep their kind (0.867ms)
+✔ chaos goes to Umbra by theme and the port closure carries referenced kit skills (1.5998ms)
+✔ supports become glyphs with triggers, mechanism probes and generated families (0.7609ms)
+✔ statuses map onto the roster, pops become on_reapply and time scales are not ported (1.8639ms)
+✔ procs and charges keep their payloads (2.4003ms)
+✔ structurally different shells have unique ids and presets reference them (3.0491ms)
+✔ mixed damage pairs shares with sorted Threads and preserves the folded total (2.0745ms)
+ℹ tests 10
+ℹ suites 0
+ℹ pass 10
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 232.3085

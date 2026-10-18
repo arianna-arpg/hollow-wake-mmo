@@ -1,0 +1,7 @@
+Tested application and golden source: 992a3e3a7a517c7b646136a0442f0afc7f076f3d
+Exact complete foundation: c3099a8ea5c7a32fc0799c3a17cb167b2bd1231c
+Approved Kobold content: 6c0eaa187bcfd6779a56b6823d441b84cde3296a
+Complete reviewed #36: 01b2884c3ddc61c0b617c9062a7e36b575d94551
+Main lifecycle test fix included through foundation: fa7f5f0d468737f3bd8fafdb9a9e19b198cca359
+No benchmark run.
+Committed terminal logs normalize line endings and trailing whitespace only; original outputs remain in ignored artifacts.
