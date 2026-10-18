@@ -72,6 +72,12 @@ The proving-band run fails on both approved main and this branch, with the same 
 
 In the older 26b9e46 staging, the intermediate Spark Duelist/Kindler trace had five out-of-reach strikes and no duelist damage. Requiring the authored approach distance produces four landed strikes and their follow-up damage; Kindler ends 49/112 instead of 112/112 after 20 seconds. This is diagnostic evidence for the brief-stop fix, separate from the new staging table above. It does not promise the old main outcome of 29/112 or eliminate successful retreat.
 
+## Bounded cost follow-up
+
+Snapshot change 7ec0529 removes repeated delta comparisons for viewers with the exact same captured previous state. It retains only one history per entity in the existing tick/precision lifetime, recomputes divergent histories, and clears on explicit invalidation. The shared messages are read-only after capture. Wire fields, precision, repair cadences, interest, cast timing and combat results are unchanged. Four new history regressions and all 58 server tests pass. SnapshotBuilder.cs and the networking contract overlap were announced on #36, #49 and #50 before integration; their body-volume and intent semantics remain separate.
+
+The pre-optimization control is published 2cc5d66 (executable source 6edc124), built in an owned disposable worktree. New timing claims await the coordinated comparison. Earlier failed measurements above remain acceptance blockers until a concrete revised source passes the existing budgets.
+
 ## Integration handoffs and review request
 
 - #36: consume its full corrected foundation, not correction 724c5ed alone. Preserve this request's compiled release/miss policy, author contact: body consistently on all three selectors introduced here (strike, measured_strike and bash), and preserve sampled CastState/EffectContext AimOffset for projectile elevation. The corrected full entity dependency is now #34 at 26c50de, including #36 through e383ffb; it remains a separately reviewed draft. Its removed private stored-target gate must not return. Repeat the species/relief matrix on the combined head and verify forecast viewer eligibility through the same resulting contact predicate.
