@@ -519,6 +519,7 @@ public partial class Main : Node3D
         {
             case WelcomeMsg w:
                 EntityView.ShowLegacyCast = w.Features?.Contains(ProtocolInfo.CastForecastFeature) != true;
+                EntityView.ConfirmedCastCues = w.Features?.Contains(ProtocolInfo.CastCuesFeature) == true;
                 _login.SetStatus($"Connected to {w.ServerName}: {w.Motd}");
                 _hud.Hero.Interface = w.Features?.Contains(ProtocolInfo.InterfaceFeature) == true;
                 GD.Print($"server granted features: {(w.Features is null ? "none" : string.Join(", ", w.Features))}");

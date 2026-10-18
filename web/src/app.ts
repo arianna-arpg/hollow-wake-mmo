@@ -486,6 +486,7 @@ export class App {
       case 'welcome':
         this.features = m.features ?? [];
         this.entities.showLegacyCast = !this.features.includes(CAST_FORECAST_FEATURE);
+        this.entities.confirmedCastCues = this.features.includes(CAST_CUES_FEATURE);
         this.hud.hero.interface = this.features.includes(INTERFACE_FEATURE);
         this.login.setStatus(`Connected to ${m.server_name}: ${m.motd}`);
         console.info(`server granted features: ${this.features.length > 0 ? this.features.join(', ') : 'none'}`);

@@ -15,6 +15,26 @@ const cue = (phase: string, sequence: number, extra: Partial<CastCueMsg> = {}): 
 });
 
 describe('confirmed cast presentation', () => {
+  it('validates body lifecycle once even without cosmetic profiles', () => {
+    const t = new CastCueTimeline({ ...config, profiles: [] });
+    const accepted: CastCueMsg[] = [];
+    t.onLifecycle = e => accepted.push(e);
+    const release = cue('release', 1, { fired: true });
+    expect(t.receive(release, 10)).toBe(false); // No art selected, but emission remains a fact.
+    expect(accepted).toEqual([release]);
+    t.receive(release, 10);
+    t.receive(cue('release', 2, { fired: true }), 20);
+    t.receive(cue('release', 3, { fired: true, cast_id: 0 }), 10);
+    t.receive(cue('release', 4, { fired: true, outcome: true }), 10);
+    t.receive(cue('unknown', 5), 10);
+    expect(accepted).toEqual([release]);
+    for (const phase of ['start', 'sync', 'end', 'interrupt', 'impact', 'release'])
+      t.receive(cue(phase, 6 + accepted.length), 10);
+    expect(accepted.map(e => e.phase)).toEqual(['release', 'start', 'sync', 'end', 'interrupt', 'impact', 'release']);
+    expect(accepted.filter(e => e.phase === 'release' && e.fired)).toHaveLength(1);
+    t.clear(); t.receive(release, 10);
+    expect(accepted.filter(e => e.phase === 'release' && e.fired)).toHaveLength(2);
+  });
   it('keeps a neutral fallback when a declared outcome has no matching specialization', () => {
     const t = new CastCueTimeline({ ...config, profiles: config.profiles.map(p => p.id === 'restoration' ? { ...p, match: ['unmatched'] } : p) });
     expect(t.receive(cue('heal', 1, { outcome: true, cast_id: 0, tags: ['life'] }), 10)).toBe(true);

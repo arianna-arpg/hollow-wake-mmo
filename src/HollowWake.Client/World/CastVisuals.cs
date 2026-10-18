@@ -10,7 +10,15 @@ public partial class CastVisuals : Node3D
     public CastCueTimeline Timeline { get; }
     private readonly ClientWorld _world;
     private readonly Dictionary<CastCueTimeline.Cue, MeshInstance3D> _drawn = new();
-    public CastVisuals(ClientWorld world, CastVisualsDef config) { _world = world; Timeline = new(config); }
+    public CastVisuals(ClientWorld world, CastVisualsDef config)
+    {
+        _world = world;
+        Timeline = new(config);
+        Timeline.Lifecycle += cue =>
+        {
+            if (_world.Entities.TryGetValue(cue.Source, out var body)) body.ObserveCastCue(cue);
+        };
+    }
     public void Receive(CastCueMsg cue, double now) => Timeline.Receive(cue, now);
     public void Clear() { Timeline.Clear(); Clean(); }
     private void Clean()

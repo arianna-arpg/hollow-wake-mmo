@@ -6,7 +6,7 @@ Three rules hold everywhere:
 
 - **A look is content.** `content/core/appearance/` holds four kinds, registered beside the interface kinds (`Content/Kinds/AppearanceKinds.cs`, definitions in `Definitions/Appearance.cs`): `ui_appearances` (bodies and gear), `ui_surfaces` (the drawn ground and water), `ui_world` (the day, the sky, the haze, the foliage) and `ui_motion` (animation and feedback timings). Validation names a family no client builds, a shape number no family reads, a malformed colour, a keyframe out of order.
 - **Composition over bespoke.** A body is a plan of parts on bones built by a family (biped, quadruped, tree, rock ...) from an entry's proportions, palette, features and gear. The engine knows families, never a hob. Gear is its own family on a body's sockets, so the worn weapon and armour class read on any body with hands and a chest.
-- **The server's facts, the client's pose.** Every pose follows state on the wire: the walk from the drawn motion, the swing's anticipation from the cast's progress, its release from the cast's end, the flinch from a confirmed hit, the fall from `dead`. Nothing is retimed for beauty, and seeded variation comes from the entity key, so two clients draw one body.
+- **The server's facts, the client's pose.** Every pose follows state on the wire: the walk from the drawn motion, the swing's anticipation from the cast's progress, its release from confirmed emission, the flinch from a confirmed hit, the fall from `dead`. Nothing is retimed for beauty, and seeded variation comes from the entity key, so two clients draw one body.
 
 ## Looks
 
@@ -34,7 +34,7 @@ The smokes measure both on the hamlet on entry and print the line the pull reque
 
 - **Idle**: breath on the torso, a slow look of the head, a sway, phased by the entity key.
 - **Walk**: the legs and arms swing in opposition with a phase advanced by the distance the drawn body moved over its stride (scaled by the body's height), a bob and a lean into the step; a quadruped's diagonal pairs; a lean into acceleration read from the drawn motion.
-- **Swing and cast**: with a swinging weapon in hand (a blade, an axe, a spear, a maul) the arm draws back with the cast's progress and comes through over the release time when the cast ends on the wire or the body lands a blow, then recovers; without one the hands gather and raise with the progress and thrust on release; a channel sways, a guard presents the off hand; a quadruped rears and lunges, a crawler opens and snaps its claws.
+- **Swing and cast**: with a swinging weapon in hand (a blade, an axe, a spear, a maul) the arm draws back with the cast's progress and comes through over the release time on confirmed `release` with `fired=true`, then recovers; without one the hands gather and raise with the progress and thrust on release. Channel emissions remain visible while preparation continues; neither interruption nor a later hit invents another release. Snapshot and landed-blow inference is retained only for legacy servers without `cast_cues`. A channel sways, a guard presents the off hand; a quadruped rears and lunges, a crawler opens and snaps its claws.
 - **Hit**: a flinch away from where the blow came (the striker's drawn position), a squash and a flash that decay over the hit timings, stronger for a heavier blow against the target's life.
 - **Death**: the body falls over the fall time and settles, bipeds on their back and beasts on their side, wisps sink; a corpse sinks and fades long after.
 - **Flora**: canopies sway, knots turn.

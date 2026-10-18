@@ -28,6 +28,7 @@ export interface VisualState {
   casting: boolean;
   castProgress: number;
   castMode: string;
+  /** Seconds since confirmed emission (legacy servers infer it), or a large number. */
   releaseAge: number;
   hitAge: number;
   hitStrength: number;
@@ -126,7 +127,9 @@ function swing(s: VisualState, m: MotionLook, pose: Pose): void {
   const release = Math.max(0.05, m.swing('release', 0.16));
   const recovery = Math.max(0.05, m.swing('recovery', 0.3));
   const lean = m.swing('lean', 10);
-  if (s.casting && s.castMode !== 'guard') {
+  // An emitted channel beat remains visible while its next preparation is still active.
+  const preparing = s.casting && s.releaseAge >= release + recovery;
+  if (preparing && s.castMode !== 'guard') {
     const p = s.castMode === 'channel' ? 0.6 + 0.2 * Math.sin(s.time * 8) : ease(s.castProgress);
     pose.turn('arm_r', 0, -anticipation * p, 0);
     pose.turn('arm_l', 0, -anticipation * 0.25 * p, 0);
@@ -134,7 +137,7 @@ function swing(s: VisualState, m: MotionLook, pose: Pose): void {
     pose.turn('hips', 0, lean * 0.4 * p, 0);
     return;
   }
-  if (s.casting && s.castMode === 'guard') {
+  if (preparing && s.castMode === 'guard') {
     pose.turn('arm_l', 0, -80, 20);
     pose.turn('arm_r', 0, -30, 0);
     pose.turn('hips', 0, 6, 0);
@@ -158,7 +161,7 @@ function gather(s: VisualState, m: MotionLook, pose: Pose): void {
   const gatherK = m.cast('gather', 0.6);
   const release = Math.max(0.05, m.cast('release', 0.2));
   const recovery = Math.max(0.05, m.cast('recovery', 0.35));
-  if (s.casting) {
+  if (s.casting && s.releaseAge >= release + recovery) {
     if (s.castMode === 'guard') {
       pose.turn('arm_l', 0, -90, 25);
       pose.turn('arm_r', 0, -90, -25);
@@ -249,7 +252,7 @@ function quadruped(s: VisualState, m: MotionLook, pose: Pose, t: number, phase: 
   const anticipation = m.swing('anticipation', 70) * 0.35;
   const release = Math.max(0.05, m.swing('release', 0.16));
   const recovery = Math.max(0.05, m.swing('recovery', 0.3));
-  if (s.casting) {
+  if (s.casting && s.releaseAge >= release + recovery) {
     const p = ease(s.castProgress);
     pose.turn('torso', 0, anticipation * 0.5 * p, 0);
     pose.turn('neck', 0, anticipation * 0.6 * p, 0);
@@ -296,7 +299,7 @@ function crawler(s: VisualState, m: MotionLook, pose: Pose, t: number, phase: nu
   }
   const release = Math.max(0.05, m.swing('release', 0.16));
   const recovery = Math.max(0.05, m.swing('recovery', 0.3));
-  if (s.casting) {
+  if (s.casting && s.releaseAge >= release + recovery) {
     const p = ease(s.castProgress);
     pose.turn('claw_l', 0, 0, 40 * p);
     pose.turn('claw_r', 0, 0, -40 * p);

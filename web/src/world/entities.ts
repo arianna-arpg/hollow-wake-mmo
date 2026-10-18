@@ -14,7 +14,7 @@ import {
   type WebGLRenderer,
 } from 'three';
 import type { EntityPaletteSettings, MotionSettings } from '../config';
-import type { EntityState, Int64, ItemInfo } from '../net/protocol';
+import type { CastCueMsg, EntityState, Int64, ItemInfo } from '../net/protocol';
 import type { Obj } from '../ui/logic/content';
 import { animate, freshVisualState, Pose, type VisualState } from './appearance/animator';
 import { buildBody } from './appearance/bodyFamilies';
@@ -334,7 +334,7 @@ export class EntityView {
   apply(state: EntityState, serverTime: number, localSeconds: number, snap: boolean): void {
     const previous = this.state;
     const now = this.layer.serverNow;
-    if (state.casting == null && previous.casting != null) {
+    if (!this.layer.confirmedCastCues && state.casting == null && previous.casting != null) {
       this.releasedAt = now;
     }
     if (state.dead && !previous.dead) {
@@ -512,8 +512,17 @@ export class EntityView {
     }
   }
 
-  /** This body landed a blow: its swing comes through now even if the snapshot missed the cast. */
+  /** Validated lifecycle facts drive body motion even when no cosmetic layer is selected. */
+  observeCastCue(cue: CastCueMsg): void {
+    if (cue.phase === 'start' || cue.phase === 'sync') this.releasedAt = Number.NEGATIVE_INFINITY;
+    if (cue.phase !== 'release' || !cue.fired) return;
+    this.releasedAt = cue.server_time;
+    this.layer.cue?.('swing', this.plan?.swings ? 'weapon' : this.plan?.rig ?? null, this.root.position);
+  }
+
+  /** Legacy-server fallback only; a later hit must not replay a confirmed release. */
   struck(): void {
+    if (this.layer.confirmedCastCues) return;
     if (!this.wasCasting) {
       this.releasedAt = this.layer.serverNow;
     }
@@ -746,6 +755,7 @@ export class EntityView {
 
 export class EntityLayer {
   showLegacyCast = true;
+  confirmedCastCues = false;
   readonly group = new Group();
   readonly views = new Map<Int64, EntityView>();
   selfKey: Int64 | null = null;

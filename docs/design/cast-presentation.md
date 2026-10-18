@@ -22,6 +22,8 @@ Coordinates are core X east, Y north, Z up. A release carries resolved aim; an i
 
 Clients clear sequence watermarks and decoration on world entry/disconnect, remove entity-bound cues on despawn, deduplicate sequences and expire stale flourishes. An end removes only preparation for its cast, leaving released work eligible for later contact. Both clients have repeated-reset and interruption-after-release conformance tests.
 
+Body motion consumes the accepted lifecycle before cosmetic profile selection or layer budgets. Only `release` with `fired=true` starts its release pose and swing sound. Snapshot casting removal, readiness, terminal events and later damage do not replay that emission when `cast_cues` is negotiated. A new preparation clears the previous release pose; a channel beat briefly shows its authored release/recovery motion while casting continues, then resumes preparation. The existing snapshot/damage inference remains only for legacy servers without this feature. Motion durations remain appearance content, independent of gameplay deadlines.
+
 ## Composition from content
 
 `ui_cast_visuals` is registered by the interface content family and consumed only by clients. Its budgets bound total live layers, layers per event, stale events and abandoned preparation. Profiles match all required semantic tags and compiled mechanism tags, including dot descendants. Names, weave keys and actor roles are never dispatch keys.

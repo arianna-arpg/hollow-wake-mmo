@@ -26,7 +26,7 @@ public sealed class VisualState
     public float CastProgress;
     /// <summary>cast, channel, charge, overcharge, guard or instant; empty when unknown.</summary>
     public string CastMode = "";
-    /// <summary>Seconds since the body's cast released (its casting ended), or a large number.</summary>
+    /// <summary>Seconds since confirmed emission (legacy servers infer it), or a large number.</summary>
     public float ReleaseAge = 1e9f;
     /// <summary>Seconds since the body was last hit, or a large number; and how hard, from zero to one.</summary>
     public float HitAge = 1e9f;
@@ -96,7 +96,7 @@ public sealed class Pose
 /// <summary>
 /// Procedural animation shared by both clients (docs/design/appearance.md): idle, walk, swing, cast,
 /// hit reaction and death as bone turns from the motion timings. Anticipation follows the server's cast
-/// progress and release follows the cast's end on the wire; nothing is retimed for beauty.
+/// progress and release follows confirmed emission; nothing is retimed for beauty.
 /// </summary>
 public static class Animator
 {
@@ -204,7 +204,9 @@ public static class Animator
         var release = MathF.Max(0.05f, m.Swing("release", 0.16f));
         var recovery = MathF.Max(0.05f, m.Swing("recovery", 0.3f));
         var lean = m.Swing("lean", 10);
-        if (s.Casting && s.CastMode != "guard")
+        // An emitted channel beat remains visible while its next preparation is still active.
+        var preparing = s.Casting && s.ReleaseAge >= release + recovery;
+        if (preparing && s.CastMode != "guard")
         {
             var p = s.CastMode is "channel" ? 0.6f + 0.2f * MathF.Sin((float)(s.Time * 8)) : Ease(s.CastProgress);
             pose.Turn("arm_r", 0, -anticipation * p, 0);
@@ -213,7 +215,7 @@ public static class Animator
             pose.Turn("hips", 0, lean * 0.4f * p, 0);
             return;
         }
-        if (s.Casting && s.CastMode == "guard")
+        if (preparing && s.CastMode == "guard")
         {
             // a raised guard: the off hand forward, weight back
             pose.Turn("arm_l", 0, -80, 20);
@@ -244,7 +246,7 @@ public static class Animator
         var gather = m.Cast("gather", 0.6f);
         var release = MathF.Max(0.05f, m.Cast("release", 0.2f));
         var recovery = MathF.Max(0.05f, m.Cast("recovery", 0.35f));
-        if (s.Casting)
+        if (s.Casting && s.ReleaseAge >= release + recovery)
         {
             if (s.CastMode == "guard")
             {
@@ -310,7 +312,7 @@ public static class Animator
         var anticipation = m.Swing("anticipation", 70) * 0.35f;
         var release = MathF.Max(0.05f, m.Swing("release", 0.16f));
         var recovery = MathF.Max(0.05f, m.Swing("recovery", 0.3f));
-        if (s.Casting)
+        if (s.Casting && s.ReleaseAge >= release + recovery)
         {
             var p = Ease(s.CastProgress);
             pose.Turn("torso", 0, anticipation * 0.5f * p, 0);
@@ -370,7 +372,7 @@ public static class Animator
         }
         var release = MathF.Max(0.05f, m.Swing("release", 0.16f));
         var recovery = MathF.Max(0.05f, m.Swing("recovery", 0.3f));
-        if (s.Casting)
+        if (s.Casting && s.ReleaseAge >= release + recovery)
         {
             var p = Ease(s.CastProgress);
             pose.Turn("claw_l", 0, 0, 40 * p);
