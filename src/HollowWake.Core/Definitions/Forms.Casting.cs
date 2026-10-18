@@ -397,8 +397,9 @@ public sealed record TimingSpec
 /// comes back after <c>recharge</c> seconds (divided by attribute <c>uses.rate</c>, the weave's cooldown by
 /// default). A <c>magazine</c> refills all at once when empty, or one at a time with <c>drip</c>;
 /// <c>empower</c> makes uses optional fuel that adds its modifiers; <c>still</c> recovers only while the
-/// caster stands still and bleeds uses while it moves; <c>vent_all</c> spends the whole bank on one cast;
-/// <c>steps_from_bank</c> casts once more for every extra use vented.
+/// caster stands still and bleeds uses while it moves; a <c>manual</c> bank never recovers on its own and only
+/// <c>restore_uses</c> and converts refill it (munitions reloaded by hand); <c>vent_all</c> spends the whole bank on
+/// one cast; <c>steps_from_bank</c> casts once more for every extra use vented.
 /// </summary>
 public sealed record UsesSpec
 {
@@ -407,6 +408,7 @@ public sealed record UsesSpec
     public MagazineSpec? Magazine { get; init; }
     public List<Modifier> Empower { get; init; } = new();
     public StillSpec? Still { get; init; }
+    public bool Manual { get; init; }
     [JsonPropertyName("vent_all")]
     public bool VentAll { get; init; }
     [JsonPropertyName("steps_from_bank")]

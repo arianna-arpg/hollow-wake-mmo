@@ -58,3 +58,57 @@ entries:
         attributes: { might: 7, grace: 9, will: 15, vigor: 14, move.speed: 5, mana.max: 140, weapon.damage.min: 3, weapon.damage.max: 6, weapon.attack.time: 1.0 }
       weaves: { list: [plague_rite, powder_rite, ember_bolt] }
       behavior: { id: aggressive_ranged }
+
+  # ---- strikes and melee (`hollowwake fight proving_pitfighter proving_mower`)
+  - id: proving_pitfighter
+    name: Proving Pitfighter
+    description: Works the jab into the cross, banks fury on every blow, spends it all on a haymaker and frenzies between.
+    extends: monster
+    tags: [humanoid, proving, pitfighter]
+    level: 6
+    radius: 0.5
+    components:
+      stats:
+        attributes: { might: 14, grace: 11, will: 6, vigor: 18, move.speed: 5.2, stamina.max: 160, stamina.regen: 14, weapon.damage.min: 6, weapon.damage.max: 10, weapon.attack.time: 1.0 }
+      weaves: { list: [one_two, haymaker, frenzy] }
+      behavior: { id: aggressive_melee }
+
+  - id: proving_mower
+    name: Proving Mower
+    description: Sweeps three scythe arcs, snares with lashing roots, sunders with a toppling stroke and passes the verdict on the sundered.
+    extends: monster
+    tags: [humanoid, proving, mower]
+    level: 6
+    radius: 0.5
+    components:
+      stats:
+        attributes: { might: 13, grace: 11, will: 6, vigor: 18, move.speed: 5, stamina.max: 160, stamina.regen: 14, weapon.damage.min: 6, weapon.damage.max: 10, weapon.attack.time: 1.0 }
+      weaves: { list: [scythe_sweep, lash_roots, toppling_stroke, verdict] }
+      behavior: { id: aggressive_melee }
+
+  # ---- projectiles and bows (`hollowwake fight proving_fletcher proving_evoker`)
+  - id: proving_fletcher
+    name: Proving Fletcher
+    description: Loops a gyreblade and catches it, hurls the caught blades at once, splinters its volleys and webs its foe.
+    extends: monster
+    tags: [humanoid, proving, fletcher]
+    level: 6
+    radius: 0.45
+    components:
+      stats:
+        attributes: { might: 9, grace: 16, will: 7, vigor: 30, move.speed: 5.2, resist.storm: 0.3, resist.tide: 0.3, stamina.max: 160, stamina.regen: 14, weapon.damage.min: 9, weapon.damage.max: 15, weapon.attack.time: 1.0 }
+      weaves: { list: [gyreblade, gyre_hurl, splinter_volley, web_shot] }
+      behavior: { id: aggressive_ranged }
+
+  - id: proving_evoker
+    name: Proving Evoker
+    description: Chains lightning through its foes and loops a frozen orb that sheds frostbolts as it drifts.
+    extends: monster
+    tags: [humanoid, proving, evoker]
+    level: 6
+    radius: 0.45
+    components:
+      stats:
+        attributes: { might: 6, grace: 9, will: 10, vigor: 10, move.speed: 5, mana.max: 160, weapon.damage.min: 3, weapon.damage.max: 6, weapon.attack.time: 1.0 }
+      weaves: { list: [chain_lightning, frozen_orb, frostbolt] }
+      behavior: { id: aggressive_ranged }

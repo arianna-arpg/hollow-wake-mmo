@@ -21,5 +21,6 @@ internal static class MinionProbes
     private static bool Corpse(WeaveProbe w) =>
         Summons(w).Any(n => n.ContainsKey("from_corpse"))
         || w.Nodes("spawn").Any(n => WeaveProbe.Flag(n, "as_corpse"))
-        || w.Has("gather_corpses");
+        || w.Has("gather_corpses")
+        || w.Has("consume_corpse");
 }

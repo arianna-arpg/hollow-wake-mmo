@@ -9,7 +9,7 @@ export interface BuildRef {
   channel: string;
 }
 
-export function decideAction(installed: BuildRef | null, remote: BuildRef | null, busy: boolean): PrimaryAction {
+export function decideAction(installed: BuildRef | null, remote: BuildRef | null, busy: boolean, pinned = false): PrimaryAction {
   if (busy) {
     return 'busy';
   }
@@ -23,7 +23,7 @@ export function decideAction(installed: BuildRef | null, remote: BuildRef | null
   if (order > 0) {
     return 'update';
   }
-  if (order < 0 && remote.channel !== installed.channel) {
+  if (order < 0 && (pinned || remote.channel !== installed.channel)) {
     return 'switch';
   }
   return 'play';

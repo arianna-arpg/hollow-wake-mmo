@@ -268,3 +268,14 @@ select {
   padding: 10px;
   color: var(--ink-muted, var(--muted));
 }
+
+/* Keep branch play choices with login, out of the game viewport once connected. */
+.play-ribbon { border: 1px solid var(--panel-edge); border-radius: 8px; padding: 14px; margin-bottom: 18px; background: rgba(232,199,106,.05); }
+.play-ribbon strong { color: var(--gold); }
+.play-ribbon-row { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px; align-items: center; }
+.play-ribbon-row input { flex: 1; min-width: 130px; width: 220px; padding: 8px; background: #17141f; border: 1px solid var(--panel-edge); border-radius: 4px; }
+.play-ribbon a { color: var(--gold); }
+.play-ribbon .play-branch-link { padding: 9px 12px; background: #e8c76a; color: #17141f; border-radius: 4px; text-decoration: none; font-weight: 650; }
+.play-branch-link[aria-disabled=true] { opacity: .5; pointer-events: none; }
+.play-ribbon-note { font-size: 12px; color: var(--muted); margin: 9px 0; }
+.login-panel { max-height: 95vh; overflow-y: auto; }

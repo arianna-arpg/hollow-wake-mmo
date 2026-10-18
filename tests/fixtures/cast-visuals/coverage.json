@@ -70,7 +70,7 @@
       "effects": ["birth", "commandMinions", "companionStance", "conjure", "detonateMinions", "dragCorpses", "lure", "minionCast", "possess", "possessEnd", "recallMinions", "shatterConstructs", "spawnCorpse", "tame", "throngDirect", "whistleCompanion"],
       "skill_fields": ["bondFeed", "hivecall", "minionCombat", "throng"],
       "support_fields": ["birth", "breakableGraft", "brood", "constructFx", "corpseSpawn", "devour", "dominate", "gather", "madden", "massGraft", "minionAura", "minionAuraPool", "sacrifice", "shellGraft", "summon", "tameMod", "throngSource", "turret"],
-      "current_effects": ["recall_minions", "command_minions", "minion_cast", "consume_minion", "summon", "deploy", "spawn", "gather_corpses", "taunt"]
+      "current_effects": ["recall_minions", "command_minions", "minion_cast", "consume_minion", "summon", "deploy", "spawn", "gather_corpses", "consume_corpse", "taunt"]
     },
     "effect_composition": {
       "status": "partial",

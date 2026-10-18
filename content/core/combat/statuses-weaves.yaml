@@ -1,0 +1,110 @@
+# Blessings and brands the ported weaves grant their casters: the frenzy a strike builds, the settled mind of a
+# third cut, the piles of carve and deep carve, and the banked static and storm that leap free as bolts. Each
+# is a status like any other; the weave that grants it names it in its graph.
+kind: statuses
+entries:
+  - id: frenzy
+    name: Frenzy
+    description: Quickening banked by blows; each stack a little faster and a little harder.
+    tags: [buff, stone]
+    duration: 6
+    beneficial: true
+    stack_policy: stack
+    max_stacks: 5
+    modifiers_per_stack: true
+    color: "#e05545"
+    modifiers:
+      - { attribute: attack.speed, form: increased, value: 0.08 }
+      - { attribute: damage, form: increased, value: 0.06 }
+
+  - id: zanshin
+    name: Zanshin
+    description: The settled mind of the third cut; the next melee blow that lands opens a sure, deep bleed.
+    tags: [buff, stone]
+    duration: 8
+    beneficial: true
+    stack_policy: refresh
+    color: "#d8d0c0"
+    consume_on: { event: hit, tags: [melee], count: 1 }
+    on_bearer_hit:
+      - { type: apply_status, status: bleeding, magnitude: "last_damage * 0.75", duration: 5 }
+
+  - id: carve
+    name: Carve
+    description: Fervor from landed swings; any fresh cut refreshes the whole pile.
+    tags: [buff, stone]
+    duration: 2.2
+    beneficial: true
+    stack_policy: stack
+    max_stacks: 8
+    modifiers_per_stack: true
+    color: "#c89058"
+    modifiers:
+      - { attribute: damage, form: increased, value: 0.05, scope: [attack] }
+      - { attribute: attack.speed, form: increased, value: 0.02 }
+
+  - id: deep_carve
+    name: Deep Carve
+    description: The patient pile; every stack burns down its own clock and nothing refreshes it.
+    tags: [buff, stone]
+    duration: 4.5
+    beneficial: true
+    stack_policy: stack
+    stack_clock: independent
+    max_stacks: 12
+    modifiers_per_stack: true
+    color: "#a87848"
+    modifiers:
+      - { attribute: damage, form: increased, value: 0.04, scope: [attack] }
+
+  - id: static_charged
+    name: Static Charged
+    description: Banked static; on a steady beat a charge leaps to the nearest foe as a bolt.
+    tags: [buff, storm]
+    duration: 4
+    beneficial: true
+    stack_policy: refresh
+    scales_with_potency: false
+    color: "#ffe94a"
+    tick:
+      interval: 0.7
+      effects:
+        - type: condition
+          if: "charge.static >= 1"
+          then:
+            - { type: charge, id: static, spend: 1, self: true }
+            - type: area
+              shape: circle
+              radius: 6
+              center: source
+              filter: enemy
+              max_targets: 1
+              pick: nearest
+              effects:
+                - { type: damage, amount: "lerp(weapon.damage.min, weapon.damage.max, rand()) * 0.55 * attack.power", threads: [storm], tags: [hit, discharge] }
+
+  - id: storm_charged
+    name: Storm Charged
+    description: A gathered storm; every 0.6 seconds a charge is spent to discharge at the nearest foe in reach.
+    tags: [buff, storm]
+    duration: 4
+    beneficial: true
+    stack_policy: refresh
+    scales_with_potency: false
+    color: "#c8e84a"
+    tick:
+      interval: 0.6
+      effects:
+        - type: condition
+          if: "charge.storm >= 1"
+          then:
+            - { type: charge, id: storm, spend: 1, self: true }
+            - type: area
+              shape: circle
+              radius: 6
+              center: source
+              filter: enemy
+              max_targets: 1
+              pick: nearest
+              effects:
+                - { type: damage, amount: "lerp(weapon.damage.min, weapon.damage.max, rand()) * 0.55 * attack.power", threads: [storm], tags: [hit, discharge] }
