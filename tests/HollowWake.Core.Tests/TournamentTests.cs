@@ -472,18 +472,77 @@ entries:
     [Fact]
     public void ADuelAddsTheTwoFactionsOnlyWhereTheRegistryLacksThem()
     {
-        var red = CoreContent.Registry.Get<FactionDef>("red");
+        var (factionA, factionB) = EvaluationRules.FactionsOf(CoreContent.Registry);
+        var existing = CoreContent.Registry.Get<FactionDef>(factionA);
         Tournament.Duel(CoreContent.Registry, new Pairing("wolf", "hob"), index: 0, seconds: 2);
-        Assert.Same(red, CoreContent.Registry.Get<FactionDef>("red"));
+        Assert.Same(existing, CoreContent.Registry.Get<FactionDef>(factionA));
 
         var fresh = ContentRegistry.Load(new[] { CoreContent.FindContentDir() }, out _);
-        Assert.False(fresh.Has<FactionDef>("red") || fresh.Has<FactionDef>("blue"));
+        Assert.False(fresh.Has<FactionDef>(factionA) || fresh.Has<FactionDef>(factionB));
         Tournament.Duel(fresh, new Pairing("wolf", "hob"), index: 0, seconds: 2);
-        var added = fresh.Get<FactionDef>("red");
+        var added = fresh.Get<FactionDef>(factionA);
         Assert.NotNull(added);
-        Assert.True(fresh.Has<FactionDef>("blue"));
+        Assert.Equal(Stance.Hostile, added!.Relations[factionB]);
+        Assert.True(fresh.Has<FactionDef>(factionB));
         Tournament.Duel(fresh, new Pairing("wolf", "hob"), index: 1, seconds: 2);
-        Assert.Same(added, fresh.Get<FactionDef>("red"));
+        Assert.Same(added, fresh.Get<FactionDef>(factionA));
+    }
+
+    [Fact]
+    public void HowADuelIsStagedAndARunsDefaultsAreContent()
+    {
+        var dir = Scratch("evaluation-staging");
+        try
+        {
+            File.WriteAllText(Path.Combine(dir, "rules.yaml"), """
+kind: rules
+entries:
+  - id: evaluation
+    patch: true
+    values:
+      spawn_distance: 7
+      factions: ["west_side", "east_side"]
+      seeds: 2
+      seconds: 3
+""".Replace("\r\n", "\n"));
+            var registry = ContentRegistry.Load(new[] { CoreContent.FindContentDir(), dir }, out var report);
+            Assert.Empty(report.Errors);
+            var sim = ZoneBuilder.CreateArena(registry, 1);
+            var (a, b) = Tournament.Spawn(sim, new Pairing("wolf", "hob"), bFirst: false);
+            Assert.Equal(7, Vector3.Distance(sim.World.Get<Transform>(a)!.Position, sim.World.Get<Transform>(b)!.Position), 3);
+            Assert.Equal("west_side", sim.World.Get<Identity>(a)!.Faction);
+            Assert.Equal("east_side", sim.World.Get<Identity>(b)!.Faction);
+            Assert.Equal(Stance.Hostile, registry.Get<FactionDef>("west_side")!.Relations["east_side"]);
+
+            // The command takes its seeds and cap from content when it names none.
+            var (code, lines) = Command(registry, "--pairs", "wolf:hob");
+            Assert.Equal(0, code);
+            Assert.Contains(lines, line => line.StartsWith("wolf v hob", StringComparison.Ordinal) && line.Split(' ', StringSplitOptions.RemoveEmptyEntries)[3] == "2");
+
+            // Validation refuses a staging or a default the harness could not use.
+            File.WriteAllText(Path.Combine(dir, "rules.yaml"), """
+kind: rules
+entries:
+  - id: evaluation
+    patch: true
+    values:
+      spawn_distance: 0
+      factions: ["red", "red"]
+      seeds: 2.5
+      seconds: -1
+""".Replace("\r\n", "\n"));
+            ContentRegistry.Load(new[] { CoreContent.FindContentDir(), dir }, out var refused);
+            var errors = refused.Errors.Where(e => e.Id == EvaluationRules.Group).Select(e => e.Message).ToList();
+            Assert.Contains(errors, m => m.StartsWith("spawn_distance", StringComparison.Ordinal));
+            Assert.Contains(errors, m => m.StartsWith("factions", StringComparison.Ordinal));
+            Assert.Contains(errors, m => m.StartsWith("seeds", StringComparison.Ordinal));
+            Assert.Contains(errors, m => m.StartsWith("seconds", StringComparison.Ordinal));
+            Assert.Equal(4, errors.Count);
+        }
+        finally
+        {
+            Directory.Delete(dir, recursive: true);
+        }
     }
 
     [Fact]

@@ -55,12 +55,25 @@ public static class TournamentCommand
         {
             return Refuse(output, problem);
         }
-        var seedsText = options.GetValueOrDefault("seeds") ?? baseline?.Seeds.ToString(CultureInfo.InvariantCulture) ?? "10";
+        // The seeds and the cap are the command's when it names them, else a checked baseline's, else content's: rules
+        // evaluation.seeds and evaluation.seconds.
+        string seedsText;
+        string secondsText;
+        try
+        {
+            seedsText = options.GetValueOrDefault("seeds") ?? baseline?.Seeds.ToString(CultureInfo.InvariantCulture)
+                ?? EvaluationRules.Count(content, EvaluationRules.Seeds).ToString(CultureInfo.InvariantCulture);
+            secondsText = options.GetValueOrDefault("seconds") ?? baseline?.Seconds.ToString(CultureInfo.InvariantCulture)
+                ?? EvaluationRules.Number(content, EvaluationRules.Seconds).ToString(CultureInfo.InvariantCulture);
+        }
+        catch (InvalidDataException ex)
+        {
+            return Refuse(output, ex.Message);
+        }
         if (!int.TryParse(seedsText, NumberStyles.Integer, CultureInfo.InvariantCulture, out var seeds) || seeds < 1)
         {
             return Refuse(output, $"--seeds takes a whole number of at least 1, not '{seedsText}'");
         }
-        var secondsText = options.GetValueOrDefault("seconds") ?? baseline?.Seconds.ToString(CultureInfo.InvariantCulture) ?? "60";
         if (!double.TryParse(secondsText, NumberStyles.Float, CultureInfo.InvariantCulture, out var seconds) || !double.IsFinite(seconds) || seconds <= 0)
         {
             return Refuse(output, $"--seconds takes a number of seconds above 0, not '{secondsText}'");
@@ -72,16 +85,14 @@ public static class TournamentCommand
         }
         var bands = flags.Contains("bands");
         var hashes = flags.Contains("hashes");
-        if (bands)
+        // Every rule the run reads, the staging and with --bands the bands, is read before the first fight.
+        try
         {
-            try
-            {
-                Bands.Of(content);
-            }
-            catch (InvalidDataException ex)
-            {
-                return Refuse(output, $"--bands: {ex.Message}");
-            }
+            Tournament.RulesOf(content, bands);
+        }
+        catch (InvalidDataException ex)
+        {
+            return Refuse(output, ex.Message);
         }
         var report = Tournament.Run(content, pairings, seeds, seconds, bands);
         foreach (var line in report.Table())

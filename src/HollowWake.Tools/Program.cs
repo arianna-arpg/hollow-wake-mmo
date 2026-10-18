@@ -199,6 +199,15 @@ switch (command)
             Console.WriteLine(refusal);
             return 1;
         }
+        try
+        {
+            Tournament.RulesOf(registry, checkBands: false);
+        }
+        catch (InvalidDataException ex)
+        {
+            Console.WriteLine(ex.Message);
+            return 1;
+        }
         // A duel is staged as the tournament stages one, and a tournament fight's seed text (tournament:a:b:i)
         // stages that fight: the same arena and the same side spawning first.
         var seedText = Opt("seed", "fight");

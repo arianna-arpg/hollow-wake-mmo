@@ -18,10 +18,10 @@ namespace HollowWake.Core.Evaluation;
 public sealed record Pairing(string A, string B)
 {
     /// <summary>The rule listing the proving pairs: matched pairings built to be even, which a tournament runs by default.</summary>
-    public const string ProvingPairs = "evaluation.proving_pairs";
+    public const string ProvingPairs = EvaluationRules.Group + "." + EvaluationRules.ProvingPairs;
 
     /// <summary>The rule listing the standard duels: the pairings whose seeded traces are the determinism baseline.</summary>
-    public const string StandardDuels = "evaluation.standard_duels";
+    public const string StandardDuels = EvaluationRules.Group + "." + EvaluationRules.StandardDuels;
 
     /// <summary>Parses <c>a:b</c>, trimmed; both names must be there once the spaces around them are gone.</summary>
     public static Pairing Parse(string text)
@@ -51,28 +51,14 @@ public sealed record Pairing(string A, string B)
 /// </summary>
 public sealed record Bands(double TtkMin, double TtkMax, double WinRateCeiling, double DrawCeiling, double CoverageFloor)
 {
-    /// <summary>The rules group the harness reads.</summary>
-    public const string Group = "evaluation";
-
-    /// <summary>The bands' names in rules group <c>evaluation</c>, in the order the record holds them.</summary>
-    public static readonly IReadOnlyList<string> Names = new[] { "ttk_min", "ttk_max", "win_rate_ceiling", "draw_ceiling", "coverage_floor" };
-
     /// <summary>
-    /// The bands as content writes them. The harness has no number of its own for one: a band that is missing or not a
-    /// number throws, naming it, and validation refuses such content before any run.
+    /// The bands as content writes them (<see cref="EvaluationRules.Bands"/>). The harness has no number of its own for
+    /// one: a band that is missing or not a number throws, naming it, and validation refuses such content before any run.
     /// </summary>
-    public static Bands Of(ContentRegistry content) => new(
-        Rule(content, "ttk_min"),
-        Rule(content, "ttk_max"),
-        Rule(content, "win_rate_ceiling"),
-        Rule(content, "draw_ceiling"),
-        Rule(content, "coverage_floor"));
-
-    /// <summary>A number in rules group <c>evaluation</c>; throws naming it when it is missing or not a number.</summary>
-    public static double Rule(ContentRegistry content, string name)
+    public static Bands Of(ContentRegistry content)
     {
-        var value = content.Rules.Number($"{Group}.{name}", double.NaN);
-        return double.IsNaN(value) ? throw new InvalidDataException($"rule {Group}.{name} is missing or not a number") : value;
+        var bands = EvaluationRules.Bands.Select(name => EvaluationRules.Number(content, name)).ToArray();
+        return new Bands(bands[0], bands[1], bands[2], bands[3], bands[4]);
     }
 }
 
@@ -311,9 +297,6 @@ public sealed record TraceBaseline(int Seeds, double Seconds, string? Platform, 
 /// </summary>
 public static class Tournament
 {
-    /// <summary>How far apart the two bodies spawn, in metres.</summary>
-    private const float SpawnDistance = 4;
-
     /// <summary>What a tournament's seed text opens with: <c>tournament:a:b:i</c>.</summary>
     private const string SeedPrefix = "tournament";
 
@@ -347,38 +330,40 @@ public static class Tournament
     public static bool BFirst(int index) => index % 2 == 1;
 
     /// <summary>
-    /// Spawns a pairing's two bodies for a duel: <see cref="SpawnDistance"/> apart on the east-west line through the
-    /// arena's origin, mirrored about it with a to the west, under two hostile factions added to the registry only
-    /// where it lacks them; b first when <paramref name="bFirst"/> says so. Each body is then turned toward the
-    /// other, so neither starts the fight facing away. Throws when a pattern is unknown.
+    /// Spawns a pairing's two bodies for a duel: rule <c>evaluation.spawn_distance</c> apart on the east-west line
+    /// through the arena's origin, mirrored about it with a to the west, under the two factions rule
+    /// <c>evaluation.factions</c> names, a's then b's, each added to the registry, hostile to the other, only where the
+    /// registry lacks it; b first when <paramref name="bFirst"/> says so. Each body is then turned toward the other, so
+    /// neither starts the fight facing away. Throws when a pattern is unknown or a rule is missing.
     /// </summary>
     public static (Entity A, Entity B) Spawn(Simulation sim, Pairing pairing, bool bFirst)
     {
         var content = sim.Content;
-        // The two sides fight under the same two factions the fight tool and the tests use, added only where the
-        // registry lacks them, so a registry shared with other work is not written on every fight.
-        if (!content.Has<FactionDef>("red"))
+        var half = (float)(EvaluationRules.Number(content, EvaluationRules.SpawnDistance) / 2);
+        var (factionA, factionB) = EvaluationRules.FactionsOf(content);
+        // Added only where the registry lacks them, so a registry shared with other work is not written on every fight.
+        if (!content.Has<FactionDef>(factionA))
         {
-            content.With(new FactionDef { Id = "red", Relations = { ["blue"] = Stance.Hostile } });
+            content.With(new FactionDef { Id = factionA, Relations = { [factionB] = Stance.Hostile } });
         }
-        if (!content.Has<FactionDef>("blue"))
+        if (!content.Has<FactionDef>(factionB))
         {
-            content.With(new FactionDef { Id = "blue", Relations = { ["red"] = Stance.Hostile } });
+            content.With(new FactionDef { Id = factionB, Relations = { [factionA] = Stance.Hostile } });
         }
         var factory = sim.Service<PatternFactory>();
-        var west = new Vector3(-SpawnDistance / 2, 0, 0);
-        var east = new Vector3(SpawnDistance / 2, 0, 0);
+        var west = new Vector3(-half, 0, 0);
+        var east = new Vector3(half, 0, 0);
         Entity a;
         Entity b;
         if (bFirst)
         {
-            b = factory.Spawn(sim, pairing.B, east, new SpawnOptions { Faction = "blue" });
-            a = factory.Spawn(sim, pairing.A, west, new SpawnOptions { Faction = "red" });
+            b = factory.Spawn(sim, pairing.B, east, new SpawnOptions { Faction = factionB });
+            a = factory.Spawn(sim, pairing.A, west, new SpawnOptions { Faction = factionA });
         }
         else
         {
-            a = factory.Spawn(sim, pairing.A, west, new SpawnOptions { Faction = "red" });
-            b = factory.Spawn(sim, pairing.B, east, new SpawnOptions { Faction = "blue" });
+            a = factory.Spawn(sim, pairing.A, west, new SpawnOptions { Faction = factionA });
+            b = factory.Spawn(sim, pairing.B, east, new SpawnOptions { Faction = factionB });
         }
         if (a.IsNone || b.IsNone)
         {
@@ -392,9 +377,21 @@ public static class Tournament
     }
 
     /// <summary>
-    /// Fights every pairing <paramref name="seeds"/> times, after checking every pattern they name exists and, when
-    /// <paramref name="checkBands"/> asks for them, that content writes every band, so a bad pairing or a missing band
-    /// fails before any fight.
+    /// Reads every rule a run needs before its first fight, so content that lacks one fails naming it rather than
+    /// midway: the spawn distance and the factions a duel is staged with, and the bands when the run checks them.
+    /// Returns the bands, null when the run does not check them.
+    /// </summary>
+    public static Bands? RulesOf(ContentRegistry content, bool checkBands)
+    {
+        _ = EvaluationRules.Number(content, EvaluationRules.SpawnDistance);
+        _ = EvaluationRules.FactionsOf(content);
+        return checkBands ? Bands.Of(content) : null;
+    }
+
+    /// <summary>
+    /// Fights every pairing <paramref name="seeds"/> times, after checking every pattern they name exists and that
+    /// content writes every rule the run reads (<see cref="RulesOf"/>), so a bad pairing or a missing rule fails before
+    /// any fight.
     /// </summary>
     public static TournamentReport Run(ContentRegistry content, IReadOnlyList<Pairing> pairings, int seeds, double seconds, bool checkBands)
     {
@@ -409,7 +406,7 @@ public static class Tournament
                 throw new ArgumentException(why);
             }
         }
-        var bands = checkBands ? Bands.Of(content) : null;
+        var bands = RulesOf(content, checkBands);
         var fights = new List<Fight>();
         var pairs = new List<PairReport>();
         foreach (var pairing in pairings)

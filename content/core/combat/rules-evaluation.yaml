@@ -1,6 +1,8 @@
-# Evaluation rules: the pairings a seeded tournament fights and the bands a matched pairing must stay inside
-# (docs/design/evaluation.md). Times are seconds; rates and floors are fractions. Bands are for pairings built to be
-# even, such as the proving pairs; an uneven pairing is measured but not banded.
+# Evaluation rules: the pairings a seeded tournament fights, how a duel is staged, how many fights a run takes, and
+# the bands a matched pairing must stay inside (docs/design/evaluation.md). The harness reads every one of them from
+# here and has no value of its own; validation refuses a rule it does not read. Times are seconds, distances metres;
+# rates and floors are fractions. Bands are for pairings built to be even, such as the proving pairs; an uneven
+# pairing is measured but not banded.
 kind: rules
 entries:
   - id: evaluation
@@ -22,6 +24,14 @@ entries:
         - "tide_channeler:spark_duelist"
         - "proving_reaver:proving_bulwark"
         - "loosed_skirmisher:tide_caller"
+      # How a duel is staged: the two bodies spawn this far apart, mirrored about the arena's origin, under these two
+      # factions, a's then b's, which a duel adds to the registry, hostile to each other, only where it lacks them.
+      # hollowwake fight stages its duels the same way.
+      spawn_distance: 4
+      factions: ["red", "blue"]
+      # The fights per pairing and the cap a run takes unless the command names others (or a baseline it checks).
+      seeds: 10
+      seconds: 60
       # The median time to kill over the fights that ended.
       ttk_min: 5
       ttk_max: 45

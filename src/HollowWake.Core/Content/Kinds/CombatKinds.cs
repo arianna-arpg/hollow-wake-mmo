@@ -2,15 +2,14 @@ using System.Text.Json.Nodes;
 using HollowWake.Core.Combat;
 using HollowWake.Core.Combat.Stages;
 using HollowWake.Core.Definitions;
-using HollowWake.Core.Evaluation;
 using HollowWake.Core.Sim;
 
 namespace HollowWake.Core.Content.Kinds;
 
 /// <summary>
 /// Content for combat: status fields beyond the core, charge kinds, procs, and the hit pipeline's rules (stage
-/// order and skips, victim tags, pools and their rules), the proc rules and the evaluation pairings. Registers the
-/// trigger kinds the combat package raises and the names its effects set, then adds validators to the existing kinds.
+/// order and skips, victim tags, pools and their rules) and the proc rules. Registers the trigger kinds the
+/// combat package raises and the names its effects set, then adds validators to the existing kinds.
 /// </summary>
 internal static class CombatKinds
 {
@@ -170,11 +169,6 @@ internal static class CombatKinds
         if (d.Id == "attributes")
         {
             TradeRules(d, c);
-            return;
-        }
-        if (d.Id == Bands.Group)
-        {
-            EvaluationRules(d, c);
             return;
         }
         if (d.Id != "combat")
@@ -338,71 +332,4 @@ internal static class CombatKinds
         }
         _ = d;
     }
-
-    /// <summary>
-    /// Rules group <c>evaluation</c>: every rule in it is one the harness reads, so a misspelled one is named rather than
-    /// ignored; the proving pairs and the standard duels are pairings written a:b of patterns that exist; and every band
-    /// is written, a number and in range: the time to kill from zero up with its maximum at least its minimum, the
-    /// ceilings and the floor shares from 0 to 1. The harness has no band of its own to fall back on.
-    /// </summary>
-    private static void EvaluationRules(RulesDef d, ValidationContext c)
-    {
-        var pairings = new[] { Pairing.ProvingPairs, Pairing.StandardDuels };
-        var known = pairings.Select(EvaluationField).Concat(Bands.Names).ToList();
-        foreach (var (key, _) in d.Values ?? new JsonObject())
-        {
-            if (!known.Contains(key, StringComparer.Ordinal))
-            {
-                c.Error($"'{key}' is not an evaluation rule; the harness reads {string.Join(", ", known)}.");
-            }
-        }
-        var bands = new Dictionary<string, double>(StringComparer.Ordinal);
-        foreach (var name in Bands.Names)
-        {
-            var value = c.Registry.Rules.Number($"{Bands.Group}.{name}", double.NaN);
-            if (double.IsNaN(value))
-            {
-                c.Error($"{name} is missing or not a number; every band is written in content.");
-                continue;
-            }
-            bands[name] = value;
-        }
-        if (bands.TryGetValue("ttk_min", out var least) && least < 0)
-        {
-            c.Error(FormattableString.Invariant($"ttk_min is {least}, below 0."));
-        }
-        if (bands.TryGetValue("ttk_min", out least) && bands.TryGetValue("ttk_max", out var most) && most < least)
-        {
-            c.Error(FormattableString.Invariant($"ttk_max {most} is below ttk_min {least}."));
-        }
-        foreach (var share in new[] { "win_rate_ceiling", "draw_ceiling", "coverage_floor" })
-        {
-            if (bands.TryGetValue(share, out var value) && (value < 0 || value > 1))
-            {
-                c.Error(FormattableString.Invariant($"{share} is a share from 0 to 1, not {value}."));
-            }
-        }
-        foreach (var rule in pairings)
-        {
-            var field = EvaluationField(rule);
-            foreach (var text in c.Registry.Rules.Strings(rule))
-            {
-                Pairing pairing;
-                try
-                {
-                    pairing = Pairing.Parse(text);
-                }
-                catch (ArgumentException ex)
-                {
-                    c.Error($"{field}: {ex.Message}");
-                    continue;
-                }
-                c.Ref<PatternDef>(pairing.A, field);
-                c.Ref<PatternDef>(pairing.B, field);
-            }
-        }
-    }
-
-    /// <summary>A rule's name inside group <c>evaluation</c>: <c>evaluation.proving_pairs</c> is <c>proving_pairs</c>.</summary>
-    private static string EvaluationField(string rule) => rule[(Bands.Group.Length + 1)..];
 }
