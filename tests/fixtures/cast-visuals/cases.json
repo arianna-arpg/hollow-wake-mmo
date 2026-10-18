@@ -1,0 +1,12 @@
+[
+  { "id": "new weave uses a content-only profile", "weave": "modded_wave", "name": "Unseen Skill", "phase": "release", "tags": ["tide"], "expected_profile": "mod_tide", "expected_phase": "release" },
+  { "id": "Ember name and key cannot override tags", "weave": "ember_bolt", "name": "Ember Bolt", "phase": "release", "tags": ["tide"], "expected_profile": "mod_tide", "expected_phase": "release" },
+  { "id": "conjunction wins by authored priority", "weave": "modded_swing", "name": "Unseen Swing", "phase": "release", "tags": ["melee", "tide"], "expected_profile": "mod_tide_melee", "expected_phase": "release" },
+  { "id": "every required tag must match", "weave": "cleave", "name": "Cleave", "phase": "release", "tags": ["melee"], "expected_profile": "neutral", "expected_phase": "release" },
+  { "id": "tag hierarchy matches descendants", "weave": "modded_wave", "name": "Unseen Skill", "phase": "release", "tags": ["tide.frost"], "expected_profile": "mod_tide", "expected_phase": "release" },
+  { "id": "textual prefix is not a tag descendant", "weave": "modded_wave", "name": "Unseen Skill", "phase": "release", "tags": ["tidemark"], "expected_profile": "neutral", "expected_phase": "release" },
+  { "id": "missing phase falls through to another matching profile", "weave": "modded_swing", "name": "Unseen Swing", "phase": "impact", "tags": ["tide", "melee"], "expected_profile": "mod_tide", "expected_phase": "impact" },
+  { "id": "missing recovery uses neutral", "weave": "modded_swing", "name": "Unseen Swing", "phase": "end", "fired": true, "tags": ["tide", "melee"], "expected_profile": "neutral", "expected_phase": "recovery" },
+  { "id": "unknown future vocabulary has preparation", "weave": "future_weave", "name": "Future Skill", "phase": "start", "tags": ["future.thread"], "expected_profile": "neutral", "expected_phase": "start" },
+  { "id": "Ember has no built-in renderer recipe", "weave": "ember_bolt", "name": "Ember Bolt", "phase": "release", "tags": ["ember"], "expected_profile": "neutral", "expected_phase": "release" }
+]

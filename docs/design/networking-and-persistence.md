@@ -10,6 +10,8 @@ A connection becomes a session. `hello` negotiates the protocol and optional fea
 
 ## Zones and interest
 
+The optional `cast_cues` feature adds reliable, correlated lifecycle events and ongoing-preparation reconstruction on spawn. The phase, sequence, interest and reset rules are specified in [cast-presentation.md](cast-presentation.md); it carries no client visual recipes or prospective hit regions.
+
 A `ZoneInstance` ticks its simulation and, at the snapshot rate (`snapshot_rate`), asks its `SnapshotBuilder` what each session needs to hear about the entities within its interest radius (a column: `interest_radius` on the ground plane and `snapshots.interest_height` up and down). Each session keeps a `SnapshotView` of what it has been told: the entities it knows, whether each is static, the fingerprint of the state last sent, and when each is next due a refresh. The rule is to send what changed and nothing else. Simulation events become combat events, notices, quest offers, crafting challenges and results, and intent rejections for the sessions that can see the entities involved.
 
 **Spawns and despawns.** An entity entering interest is spawned with its full state; one leaving it, or destroyed, is despawned. A spawn for a key the client already knows replaces that entity's state.

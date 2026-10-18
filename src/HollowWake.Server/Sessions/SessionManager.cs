@@ -131,7 +131,9 @@ public sealed class SessionManager
                 // Features are opt-in: a hello without them gets exactly the plain protocol.
                 session.View.SendDeltas = hello.Features?.Contains(ProtocolInfo.EntityDeltaFeature) == true;
                 session.View.SendInterface = hello.Features?.Contains(ProtocolInfo.InterfaceFeature) == true;
+                session.View.SendCastCues = hello.Features?.Contains(ProtocolInfo.CastCuesFeature) == true;
                 var granted = new List<string>();
+                if (session.View.SendCastCues) granted.Add(ProtocolInfo.CastCuesFeature);
                 if (session.View.SendDeltas)
                 {
                     granted.Add(ProtocolInfo.EntityDeltaFeature);

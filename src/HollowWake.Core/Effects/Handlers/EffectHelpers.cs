@@ -90,6 +90,7 @@ internal static class EffectHelpers
     /// </summary>
     internal static EffectContext At(EffectContext basis, Entity target, Vector3 point, Vector2 direction, Vector3? from, int depth, Dictionary<string, double>? vars = null, double? damageScale = null) => new()
     {
+        CastId = basis.CastId,
         Sim = basis.Sim,
         Origin = basis.Origin,
         Source = basis.Source,
