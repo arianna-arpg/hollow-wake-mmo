@@ -1,0 +1,20 @@
+{
+  "Seeds": 10,
+  "Seconds": 60,
+  "Platform": "win-x64",
+  "Hashes": {
+<<<<<<< HEAD
+    "loosed_kindler:boar": "e59288fd8b0152b9",
+    "loosed_skirmisher:boar": "1f6c4b594340b306",
+    "loosed_skirmisher:hob": "0d9d4a3110181c7a",
+=======
+    "loosed_kindler:boar": "ae3a86f086814949",
+    "loosed_skirmisher:boar": "cf41fad065ff7e16",
+    "loosed_skirmisher:hob": "1cf76df19ceeb296",
+>>>>>>> 23f4a5eb242abe3f4fe889c7cbcb7a98f62de515
+    "loosed_skirmisher:tide_caller": "c78c43f0835e549e",
+    "proving_reaver:proving_bulwark": "50eb1c4e00513d6a",
+    "tide_channeler:spark_duelist": "5ced4d2a7a46046c",
+    "wolf:hob": "ef8f11679dddfa70"
+  }
+}

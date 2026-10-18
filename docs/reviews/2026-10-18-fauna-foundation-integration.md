@@ -2,6 +2,8 @@
 
 Date: 2026-10-18. PR #34. Previous Fauna head `c3099a8ea5c7a32fc0799c3a17cb167b2bd1231c`.
 
+**Status: scoped review checkpoint only.** Runtime/content source `6ca91cc026998edcb5df0645fdbbff5c253f8d9d` is ready for independent review of the Fauna correction, not final foundation handoff. Claude subsequently reopened #36 in [6256607271](https://github.com/arianna-arpg/hollow-wake-mmo/pull/36#issuecomment-6256607271): returning free shots lose their downward path after a pierce, and bridge/tower shots use base terrain instead of layered walkable ground. The coordinator has paused final full-suite, client/probe gates and sibling propagation until complete corrected #36 arrives. The already committed combined replay entry is provisional and must be checked again then; no further replacement is made under this hold.
+
 ## Complete inputs and scope
 
 The combined source `346fc1fcba35079d8b3f6d2f715e895788100d45` merges complete #36 `23f4a5eb242abe3f4fe889c7cbcb7a98f62de515` (runtime `b116725108a1b814bb875d408f3b17aee95bf412`) and main `f7ef072cc322b93b628229916c5220024e74a89c`, including approved #32 occupied-start escape. #36 source clearance [6256536065](https://github.com/arianna-arpg/hollow-wake-mmo/pull/36#issuecomment-6256536065) and [handoff6256562004](https://github.com/arianna-arpg/hollow-wake-mmo/pull/36#issuecomment-6256562004) cover floor/return, hook elevation, snapshot observation and chained-pierce range. The complete incoming source is retained; no isolated correction is copied backward.
@@ -32,10 +34,10 @@ Release controlled comparisons retain complete reports:
 
 ## Evidence and handoff
 
-Fresh final combined gates, probe, smoke and screenshot inspection are recorded below after their exact source is committed. No benchmark or performance trace is authorized; no main merge or sibling propagation occurs before this complete stable handoff. The separate frozen-aim/capture additions remain owned by #20.
+Final combined gates, probe, smoke and screenshot inspection have **not** run after the scoped correction. The first full combined run and its single replay mismatch are retained as partial results. The focused correction suite and controlled Release comparisons above are the completed checks. Hosted CI on this checkpoint, if green, does not close the reopened upstream findings. No benchmark or performance trace is authorized; no main merge or sibling propagation occurs before this complete stable handoff. The separate frozen-aim/capture additions remain owned by #20.
 
 The app could not restore the archived entity-main-audit checkout: `The archived worktree snapshot is missing.` A new managed `fauna-foundation-integration` worktree was created from published Fauna source instead. Merged source `22fc19f` remains reachable on main, and all 2,846 ignored historical evidence files remain independently verified in `D:/Games/MMOARPG/artifacts/entity-main-audit-preserved-20261018-22fc19f2.zip` (SHA256 `1c451082a8f281ff7e54ec7d123c340336e97728a3c91aefd8d7e2d76136b239`) with its per-file manifest. No app internals or #37 worktree were changed.
 
 The exploratory diagnostic's first invocation passed build flags through to its arguments; the initial JSON and console output are retained separately. Invoking the built diagnostic directly with the correct source/output arguments reproduced the same 219/45 result. This is an evidence-command correction, not a gameplay retry.
 
-Acknowledged by: pending independent scoped correction review and Claude reciprocal rereview of the final combined head.
+Acknowledged by: coordinator requested this scoped correction and the subsequent integration hold; independent correction review and Claude reciprocal review remain pending.
