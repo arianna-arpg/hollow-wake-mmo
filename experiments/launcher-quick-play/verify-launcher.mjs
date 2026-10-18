@@ -4,6 +4,7 @@ import { createRequire } from 'node:module';
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { observeEntry } from './observe-entry.mjs';
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
 const require = createRequire(path.join(root, 'web/package.json'));
 const { _electron: electron } = require('playwright-core');
@@ -59,17 +60,10 @@ const waitState = async (page, predicate, timeout = 30000) => {
 const verifyEntry = async name => {
   if (!process.argv.includes('--entry')) return;
   const logFile = path.join(data, 'launcher/logs/client.log');
-  const deadline = Date.now() + 60000;
-  let log = '';
-  while (Date.now() < deadline) {
-    if (existsSync(logFile)) log = readFileSync(logFile, 'utf8');
-    if (log.includes('QUICKPLAY ENTRY: account stage ready; awaiting player choice')) break;
-    await new Promise(resolve => setTimeout(resolve, 150));
-  }
-  writeFileSync(path.join(output, 'launcher-' + name + '-client.log'), log);
-  assert.match(log, /QUICKPLAY ENTRY: account stage ready; awaiting player choice/);
-  assert.doesNotMatch(log, /QUICKPLAY CROSSING|QUICKPLAY READY/, 'Play waits for a player choice in Mu');
-  result[name] = 'Installed client authenticated and reached the account entry stage without automatically entering the world';
+  const readLog = () => existsSync(logFile) ? readFileSync(logFile, 'utf8') : '';
+  try { await observeEntry(readLog); }
+  finally { writeFileSync(path.join(output, 'launcher-' + name + '-client.log'), readLog()); }
+  result[name] = 'Installed client reached the account entry stage and waited without Crossing or world entry throughout the following three seconds';
 };
 const launch = async extra => {
   app = await electron.launch({ executablePath: exe, args: [...(packaged ? [] : [path.join(root, 'launcher')]), '--disable-gpu', ...extra], env });
