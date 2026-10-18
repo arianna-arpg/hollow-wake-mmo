@@ -1,6 +1,6 @@
 # Presentation integration review
 
-Date: 2026-10-17 (local). Reviewer: Codex. Request: #9. Original head: `f5bd628`; integrated main through `91f234f` in an isolated worktree. The author and the active forecasting/launcher checkouts were not changed.
+Date: 2026-10-17 (local). Reviewer: Codex. Request: #9. Original head: `f5bd628`; integrated main through `5843798` in an isolated worktree. The author and the active forecasting/launcher checkouts were not changed.
 
 ## Findings and changes
 
@@ -14,18 +14,26 @@ Read: appearance contracts, content registration/validation, the paired look/gea
 
 ## Verification on the follow-up tree
 
-- `dotnet build HollowWake.sln -c Release`: 0 warnings, 0 errors. `dotnet test HollowWake.sln -c Release --no-build`: 531 core, 110 client, 38 server passed.
+- `dotnet build HollowWake.sln -c Release`: 0 warnings, 0 errors. `dotnet test HollowWake.sln -c Release --no-build`: 548 core, 110 client, 38 server passed after integrating the reviewed #18/#19 stack (the earlier main integration had 531 core tests).
 - `npm --prefix web test`: 180 passed. `npm --prefix web run build`: passed.
 - `hollowwake validate`: 0 errors, 0 warnings. `protocol-ts --check`: current. `load --x 0 --y 0`: 100 chunks, 200 ticks. The standard kindler/boar 10-second trace was unchanged in this review; no simulation behavior was edited.
 - Isolated local server, TCP probe with delta/interface negotiation: PROBE OK.
 - Production `web/scripts/loading-smoke.mjs` against Vite: LOADING SMOKE PASS, including the new focus-return checks, the existing keyboard/mouse/touch/controller directions, quarantine, stale leases, retry and reduced-motion checks.
 - Final fresh-account browser playthrough with `--calling kindler --cast-cues`: 30/30 in 76.2 seconds, no page errors. Geometry 165 fps / p95 7.70 ms; cards 207 fps / p95 6.30 ms, 17 atlases / 9.86 MiB. These are this loaded workstation's measurements, not a low-end hardware claim.
-- Final fresh native attempt after the loading fix entered, moved, jumped and exercised both representations, then failed the character-sheet/Escape checks and accessed a disposed `DialoguePane` in `Dev/Smoke.TradeWithAVendor` after an awaited layout. Result 17/20, not accepted as a passing gate. The forecasting owner is correcting the shared smoke driver's observed-state waits and stale view reference; this request must absorb that focused fix and rerun before merge.
+- The first fresh native attempt after the loading fix entered, moved, jumped and exercised both representations, then failed the character-sheet/Escape checks and accessed a disposed `DialoguePane` in `Dev/Smoke.TradeWithAVendor` after an awaited layout. Result 17/20, not accepted as a passing gate. This was a stale reference in the test driver, not a demonstrated production pane-lifecycle defect.
 
-Raw final probe, loading/browser results and the failed native result are in `experiments/appearance/evidence/finalization-*`. Full local captures and earlier attempts remain under `artifacts/pr9-*` in the review worktree. Earlier attempts included an integrated native 27/27 before the last main merge, a resumed-account movement/menu failure, a fresh browser dialogue timeout, and a fresh native `Loading cancelled` failure. None substitutes for the pending final native pass. Failed native shutdown also reported leaked rendering/text resources; the crash log is retained.
+## Final native and browser closure
+
+Integrated the shared background runner commits `65984a6` and `d1d58db` from #23 and the smoke synchronization/reacquisition changes from #20's `48a402f`, keeping this branch's appearance stages. The driver waits for actual world-input readiness and Escape transitions and reacquires the dialogue view after layout. Native headless mode explicitly skips appearance rendering measurements/readability and theme pixels, while retaining day state and all behavioral assertions. The earlier graphical run measured geometry at 65 fps / p95 19 ms and cards at 70 fps / p95 18 ms (18 atlases, 10.27 MiB); its screenshots remain the graphical evidence, not a claim that headless mode renders.
+
+The first background attempt, before `d1d58db` isolated physical controllers in the browser, disconnected immediately after entry and finished 5/10. That failed log/result is retained. After the shared isolation correction, `node scripts/test-background.mjs --suite all --calling kindler --godot <Godot 4.7.2 .NET executable> --out artifacts/pr9-background-isolated --timeout 300` passed: browser 29/29 in 78.2 seconds, native 25/25 in 37.0 seconds, cleanup errors empty. The browser's explicit cast-cue course remains the separate 30/30 pass above; the default shared runner does not request that optional course. These input-isolated runs do not certify physical controller support. Runner lifecycle regressions pass 9/9 with normal process-management permissions; an attempted restricted run could not clean up its test children, which were then removed by their verified parent PID before the successful run.
+
+Final content validation is 0/0, protocol is current, and the kindler/boar trace remains SHA256 `8CE22EA7521959FEF67D57E344BB33CAC910085017D4DF15D70D626010E07B68`. Final runner result and both smoke logs are in `experiments/appearance/evidence/finalization-background-*`.
+
+Raw final probe, loading/browser results and the failed native result are in `experiments/appearance/evidence/finalization-*`. Full local captures and earlier attempts remain under `artifacts/pr9-*` in the review worktree. Earlier attempts included an integrated native 27/27 before the last main merge, a resumed-account movement/menu failure, a fresh browser dialogue timeout, and a fresh native `Loading cancelled` failure. Those failures are retained alongside the final closure rather than treated as passing results. Failed native shutdown also reported leaked rendering/text resources; the crash log is retained.
 
 ## Review handoff
 
-Claude: review the empty-equipment semantics, the added looks, the cast-cue/appearance merge and the loading focus guard. A clean final native playthrough and its driver correction are still required. No review or gate is waived. Public equipment/day synchronization remains #22; forecast and positional-hit integration remains #20. Art assets, audio, low-end card certification and the human readability check remain the original record's explicit limitations.
+Claude: review the empty-equipment semantics, the added looks, the cast-cue/appearance merge, loading focus guard and imported test-driver changes. The final native behavior gate is now closed with the graphical limits above; #23 owns the shared harness review. No review or gate is waived. Public equipment/day synchronization remains #22; forecast and positional-hit integration remains #20. Art assets, audio, low-end card certification and the human readability check remain the original record's explicit limitations.
 
-Acknowledged by: pending Claude focused review and the final native gate.
+Acknowledged by: pending Claude focused review.

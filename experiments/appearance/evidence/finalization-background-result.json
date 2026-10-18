@@ -1,0 +1,84 @@
+{
+  "started": "2026-10-18T00:59:51.848Z",
+  "root": "D:\\Games\\MMOARPG\\artifacts\\pr-9-finalize",
+  "directory": "D:\\Games\\MMOARPG\\artifacts\\pr-9-finalize\\artifacts\\pr9-background-isolated\\run-IOGMhB",
+  "suite": "all",
+  "status": "passed",
+  "stages": [
+    {
+      "name": "build-server",
+      "status": "passed",
+      "started": "2026-10-18T00:59:51.850Z",
+      "code": 0,
+      "signal": null,
+      "finished": "2026-10-18T00:59:57.221Z"
+    },
+    {
+      "name": "typecheck-web",
+      "status": "passed",
+      "started": "2026-10-18T00:59:57.222Z",
+      "code": 0,
+      "signal": null,
+      "finished": "2026-10-18T01:00:03.071Z"
+    },
+    {
+      "name": "build-web",
+      "status": "passed",
+      "started": "2026-10-18T01:00:03.072Z",
+      "code": 0,
+      "signal": null,
+      "finished": "2026-10-18T01:00:04.575Z"
+    },
+    {
+      "name": "build-godot",
+      "status": "passed",
+      "started": "2026-10-18T01:00:04.575Z",
+      "code": 0,
+      "signal": null,
+      "finished": "2026-10-18T01:00:09.451Z"
+    },
+    {
+      "name": "smoke-web",
+      "status": "passed",
+      "started": "2026-10-18T01:00:11.995Z",
+      "code": 0,
+      "signal": null,
+      "passed": 29,
+      "total": 29,
+      "skipped": [],
+      "finished": "2026-10-18T01:01:30.893Z"
+    },
+    {
+      "name": "import-godot",
+      "status": "passed",
+      "started": "2026-10-18T01:01:30.894Z",
+      "code": 0,
+      "signal": null,
+      "finished": "2026-10-18T01:01:36.790Z"
+    },
+    {
+      "name": "smoke-godot",
+      "status": "passed",
+      "started": "2026-10-18T01:01:36.791Z",
+      "code": 0,
+      "signal": null,
+      "passed": 25,
+      "total": 25,
+      "skipped": [
+        "appearance rendering: headless display; geometry/card performance and readability require graphical evidence",
+        "theme rendered pixels: headless display; theme state checked above"
+      ],
+      "finished": "2026-10-18T01:02:15.940Z"
+    }
+  ],
+  "nativeRendering": "not covered by headless mode",
+  "godot": "C:/Users/John/.codex/worktrees/launcher-quick-play/MMOARPG/artifacts/quick-play/tools/godot/Godot_v4.7.2-stable_mono_win64/Godot_v4.7.2-stable_mono_win64.exe",
+  "server": {
+    "tcp": 55083,
+    "url": "http://127.0.0.1:55084",
+    "name": "harness-run-IOGMhB",
+    "data": "D:\\Games\\MMOARPG\\artifacts\\pr-9-finalize\\artifacts\\pr9-background-isolated\\run-IOGMhB\\data"
+  },
+  "cleanupErrors": [],
+  "finished": "2026-10-18T01:02:16.223Z"
+}
