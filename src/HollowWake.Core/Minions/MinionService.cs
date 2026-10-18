@@ -15,7 +15,7 @@ using HollowWake.Core.Weaves;
 namespace HollowWake.Core.Minions;
 
 internal readonly record struct OwnerCast(long Sequence, CompiledWeave Weave, IReadOnlyList<CompiledEffect> Effects,
-    CastVariableSnapshot? Variables, Vector3 Point, Entity Target);
+    CastVariableSnapshot? Variables, Vector3 Point, Entity Target, Vector3? TargetPoint, Vector3 AimOffset, Vector2 Direction);
 
 /// <summary>
 /// The minions of one simulation: birth order, what each owner is fighting (so minions can assist), what
@@ -509,7 +509,8 @@ public sealed class MinionService
         if (state.Echoes is { Count: > 0 } echoes && w.Resolved is { } weave && w.ResolvedEffects is { } effects
             && Valid(w.Caster) && EchoEligible(weave))
         {
-            var use = new OwnerCast(state.Casts, weave, effects, w.ResolvedVariables, w.Point, w.Target);
+            var use = new OwnerCast(state.Casts, weave, effects, w.ResolvedVariables, w.Point, w.Target,
+                w.ResolvedTargetPoint, w.ResolvedAimOffset, w.ResolvedDirection);
             foreach (var echo in echoes)
             {
                 if (Valid(echo) && !CancelIncapacitatedEcho(echo))
