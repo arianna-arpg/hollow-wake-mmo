@@ -207,12 +207,80 @@ entries:
     }
 
     [Fact]
-    public void A_formula_five_definitions_write_is_copied()
+    public void A_formula_five_definitions_write_is_copied_once_per_definition()
     {
-        var copied = Single(CompositionLint.ExpressionCopied, "expression", "level * 1.37 + 0.11");
-        Assert.Contains("5 definitions", copied.Message);
+        var copies = Planted.Value.Where(f => f.Check == CompositionLint.ExpressionCopied && f.Id!.StartsWith("t_lint_copy_", StringComparison.Ordinal)).ToList();
+        Assert.Equal(new[] { "t_lint_copy_a", "t_lint_copy_b", "t_lint_copy_c", "t_lint_copy_d", "t_lint_copy_e" }, copies.Select(f => f.Id));
+        Assert.All(copies, f =>
+        {
+            Assert.Equal("statuses", f.Kind);
+            Assert.Contains("'level * 1.37 + 0.11'", f.Message);
+            Assert.Contains("5 definitions", f.Message);
+            Assert.Equal($"{CompositionLint.ExpressionCopied}|statuses|{f.Id}|on_apply[0].amount", f.Key);
+        });
         var stricter = new CompositionLint(Loaded.Value, null, Effects.Value) { CopiedThreshold = 6 }.Run();
-        Assert.DoesNotContain(stricter, f => f.Check == CompositionLint.ExpressionCopied && f.Id == "level * 1.37 + 0.11");
+        Assert.DoesNotContain(stricter, f => f.Check == CompositionLint.ExpressionCopied && f.Id!.StartsWith("t_lint_copy_", StringComparison.Ordinal));
+    }
+
+    [Fact]
+    public void The_report_is_the_same_every_run_ordered_by_check_severity_and_key()
+    {
+        var first = new CompositionLint(Loaded.Value, SourceRoot(), Effects.Value).Run();
+        var second = new CompositionLint(Loaded.Value, SourceRoot(), Effects.Value).Run();
+        Assert.Equal(first, second);
+        Assert.Equal(first.Count, first.Select(f => f.Key).Distinct(StringComparer.Ordinal).Count());
+        Assert.All(first, f => Assert.False(string.IsNullOrEmpty(f.Key)));
+        for (var i = 1; i < first.Count; i++)
+        {
+            Assert.True(Rank(first[i - 1], first[i]) < 0, $"{first[i - 1].Key} comes before {first[i].Key}");
+        }
+
+        static int Rank(CompositionFinding a, CompositionFinding b)
+        {
+            var checks = CompositionLint.Checks.ToList();
+            var byCheck = checks.IndexOf(a.Check).CompareTo(checks.IndexOf(b.Check));
+            if (byCheck != 0)
+            {
+                return byCheck;
+            }
+            var bySeverity = (a.Severity == CompositionLint.Smell ? 0 : 1).CompareTo(b.Severity == CompositionLint.Smell ? 0 : 1);
+            return bySeverity != 0 ? bySeverity : string.CompareOrdinal(a.Key, b.Key);
+        }
+    }
+
+    [Fact]
+    public void The_json_the_command_writes_holds_every_check_and_finding_in_order()
+    {
+        var findings = Planted.Value;
+        var json = CompositionLint.Json(findings, "src/HollowWake.Core", CompositionLint.DefaultCopiedThreshold);
+        Assert.DoesNotContain("\r", json);
+        var report = JsonNode.Parse(json)!.AsObject();
+        Assert.Equal("src/HollowWake.Core", report["source_root"]!.GetValue<string>());
+        Assert.Equal(CompositionLint.DefaultCopiedThreshold, report["copies"]!.GetValue<int>());
+        Assert.Equal(findings.Count(f => f.Severity == CompositionLint.Smell), report["smells"]!.GetValue<int>());
+        Assert.Equal(findings.Count(f => f.Severity == CompositionLint.Note), report["notes"]!.GetValue<int>());
+        var checks = report["checks"]!.AsArray();
+        Assert.Equal(CompositionLint.Checks, checks.Select(c => c!["check"]!.GetValue<string>()));
+        var written = checks.SelectMany(c => c!["findings"]!.AsArray()).Select(f => f!.AsObject()).ToList();
+        Assert.Equal(findings.Select(f => f.Key), written.Select(f => f["key"]!.GetValue<string>()));
+        var frozen = written.Single(f => f["key"]!.GetValue<string>() == $"{CompositionLint.AxisFrozen}|weaves|t_lint_frozen|effects[0].count");
+        Assert.Equal("smell", frozen["severity"]!.GetValue<string>());
+        Assert.Equal("weaves", frozen["kind"]!.GetValue<string>());
+        Assert.Equal("t_lint_frozen", frozen["id"]!.GetValue<string>());
+        Assert.False(frozen.ContainsKey("line"));
+        Assert.Contains("'projectile.count'", frozen["message"]!.GetValue<string>());
+    }
+
+    [Fact]
+    public void A_baseline_lists_every_key_and_names_only_findings_beyond_it()
+    {
+        var findings = Planted.Value;
+        var lines = CompositionLint.Baseline(findings).Split('\n');
+        Assert.StartsWith("#", lines[0]);
+        Assert.Equal(findings.Select(f => f.Key).OrderBy(k => k, StringComparer.Ordinal), lines.Skip(1).Where(l => l.Length > 0));
+        Assert.Empty(CompositionLint.Beyond(findings, lines));
+        var grown = findings.First(f => f.Check == CompositionLint.AxisFrozen);
+        Assert.Equal(new[] { grown }, CompositionLint.Beyond(findings, lines.Where(l => l != grown.Key)));
     }
 
     private const string SystemSource = """
@@ -388,6 +456,14 @@ public sealed class LintForms
             Assert.Contains("whole form", Assert.Single(reads, f => f.File == weaves && f.Line == LineOf(WeaveSource, "var form = ")).Message);
             Assert.Equal(4, reads.Count(f => f.File == weaves));
             Assert.DoesNotContain(reads, f => f.File == parse);
+
+            // Code keys hold the check, the file and the masked line, never the line number.
+            Assert.Equal($"{CompositionLint.CodeStringSwitch}|{system}|public static bool Stopped(Stats stats) => stats.HasFlag(§0§);", At(system, SystemSource, "HasFlag").Key);
+            // With the repository's root known, paths are relative to it whatever the working directory.
+            var scratch = Path.GetFileName(root);
+            var rooted = new CompositionLint(CoreContent.Registry, root) { RepositoryRoot = Path.GetDirectoryName(root) }.Run();
+            Assert.Contains(rooted, f => f.File == $"{scratch}/Systems/LintSample.cs" && f.Key.StartsWith($"{CompositionLint.CodeStringSwitch}|{scratch}/Systems/LintSample.cs|", StringComparison.Ordinal));
+            Assert.All(rooted.Where(f => f.Line is not null), f => Assert.StartsWith($"{scratch}/", f.File));
         }
         finally
         {
@@ -404,13 +480,19 @@ public sealed class LintForms
     [Fact]
     public void Runs_over_core_and_groups_its_report_by_check()
     {
-        var findings = new CompositionLint(CoreContent.Registry, SourceRoot()).Run();
+        var repository = Path.GetFullPath(Path.Combine(SourceRoot(), "..", ".."));
+        var findings = new CompositionLint(CoreContent.Registry, SourceRoot()) { RepositoryRoot = repository }.Run();
         Assert.All(findings, f => Assert.Contains(f.Severity, new[] { CompositionLint.Smell, CompositionLint.Note }));
         var groups = CompositionLint.ByCheck(findings);
         Assert.Equal(CompositionLint.Checks, groups.Select(g => g.Check));
         Assert.All(groups, g => Assert.All(g.Findings, f => Assert.Equal(g.Check, f.Check)));
         Assert.Equal(findings, groups.SelectMany(g => g.Findings));
         Assert.Contains(findings, f => f.Check == CompositionLint.CodeStringSwitch);
+        Assert.Equal(findings.Count, findings.Select(f => f.Key).Distinct(StringComparer.Ordinal).Count());
+        // Repository-relative paths with forward slashes: content under content/, code under src/HollowWake.Core/.
+        Assert.All(findings.Where(f => f.File is not null), f => Assert.DoesNotContain("\\", f.File));
+        Assert.All(findings.Where(f => f.File is not null && f.Line is null), f => Assert.StartsWith("content/", f.File));
+        Assert.All(findings.Where(f => f.Line is not null), f => Assert.StartsWith("src/HollowWake.Core/", f.File));
     }
 
     // How handlers read a parameter with a weave attribute behind it, as the lint's table was read from them.

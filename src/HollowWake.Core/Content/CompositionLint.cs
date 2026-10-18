@@ -1,5 +1,7 @@
 using System.Globalization;
 using System.Text;
+using System.Text.Encodings.Web;
+using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.RegularExpressions;
 using HollowWake.Core.Definitions;
@@ -10,17 +12,20 @@ namespace HollowWake.Core.Content;
 
 /// <summary>
 /// One thing the composition lint noticed: the check that found it, <c>smell</c> or <c>note</c>, what it concerns and
-/// one sentence. A content finding names a kind and an id with the file the definition came from; an effect
-/// parameter is kind <c>effect</c> with id <c>type.parameter</c>, a copied formula kind <c>expression</c> with the
-/// formula as its id. A code finding names a file under the source root and a line.
+/// one sentence. A content finding names a kind and an id with the file the definition came from; an effect parameter
+/// is kind <c>effect</c> with id <c>type.parameter</c> (or the type alone). A code finding names a file and a line.
 /// </summary>
 public sealed record CompositionFinding(string Check, string Severity, string? Kind, string? Id, string? File, int? Line, string Message)
 {
     /// <summary>Where the finding points: <c>file:line</c> for code, <c>kind/id</c> for content, as validation names definitions.</summary>
     public string Subject => Line is { } line ? $"{File}:{line}" : $"{Kind}/{Id}";
 
-    /// <summary>The order within a check, set by the lint.</summary>
-    internal string Order { get; init; } = "";
+    /// <summary>
+    /// What the finding is, without a line number, so it survives edits elsewhere: the check, kind and id, and the node
+    /// path where one applies, for content; the check, the file and the line's code with comments dropped and strings
+    /// masked, numbered <c>#2</c> on when the same text recurs in the file, for code. A baseline is a set of keys.
+    /// </summary>
+    public string Key { get; init; } = "";
 }
 
 /// <summary>
@@ -43,8 +48,8 @@ public sealed record CompositionGroup(string Check, IReadOnlyList<CompositionFin
 /// once, switches on strings in the systems, and runtime reads through a weave's form where the compiled weave should
 /// answer. It reads loaded content and, given a source root, the C# under it.
 /// It reports and never fails validation; docs/design/content-and-expressions.md says what each check means.
-/// Deterministic: findings come in check order, smells before notes, then by what they concern (copied formulas by
-/// how many definitions write them, most first).
+/// Deterministic: findings come in check order, smells before notes, then by key, and every finding's key is unique
+/// and free of line numbers, so a set of keys can serve as a baseline that may not grow.
 /// </summary>
 public sealed class CompositionLint
 {
@@ -97,9 +102,20 @@ public sealed class CompositionLint
         _effects = effects ?? EffectRegistry.Shared;
     }
 
-    /// <summary>The fewest distinct definitions whose graphs must write one formula for <c>expression.copied</c> to name it.</summary>
-    public int CopiedThreshold { get; init; } = 5;
+    /// <summary>The copy threshold unless a run sets its own: the one place the number lives.</summary>
+    public const int DefaultCopiedThreshold = 5;
 
+    /// <summary>The fewest distinct definitions whose graphs must write one formula for <c>expression.copied</c> to name it.</summary>
+    public int CopiedThreshold { get; init; } = DefaultCopiedThreshold;
+
+    /// <summary>
+    /// The repository's root, when known: file paths in findings and keys are then relative to it with forward slashes,
+    /// whatever the working directory. Without it, code paths are relative to the source root and content origins stay
+    /// as the registry gives them.
+    /// </summary>
+    public string? RepositoryRoot { get; init; }
+
+    /// <summary>Every finding, ordered by check, then smells before notes, then key.</summary>
     public IReadOnlyList<CompositionFinding> Run()
     {
         var findings = new List<CompositionFinding>();
@@ -115,7 +131,7 @@ public sealed class CompositionLint
         return findings
             .OrderBy(f => IndexOfCheck(f.Check))
             .ThenBy(f => f.Severity == Smell ? 0 : 1)
-            .ThenBy(f => f.Order, StringComparer.Ordinal)
+            .ThenBy(f => f.Key, StringComparer.Ordinal)
             .ToList();
     }
 
@@ -129,6 +145,70 @@ public sealed class CompositionLint
         var list = findings.ToList();
         var checks = Checks.Concat(list.Select(f => f.Check).Where(c => !Checks.Contains(c)).Distinct().OrderBy(c => c, StringComparer.Ordinal));
         return checks.Select(c => new CompositionGroup(c, list.Where(f => f.Check == c).ToList())).ToList();
+    }
+
+    /// <summary>
+    /// The report as <c>hollowwake lint --json</c> writes it: the source root scanned (null when the scan did not
+    /// run), the copy threshold, totals, and every check in order with its counts and findings (key, severity, kind,
+    /// id, file, line, message; absent fields left out). Indented, LF line ends.
+    /// </summary>
+    public static string Json(IReadOnlyList<CompositionFinding> findings, string? sourceRoot, int copies)
+    {
+        var groups = ByCheck(findings);
+        var report = new JsonObject
+        {
+            ["source_root"] = sourceRoot,
+            ["copies"] = copies,
+            ["smells"] = groups.Sum(g => g.Smells),
+            ["notes"] = groups.Sum(g => g.Notes),
+            ["checks"] = new JsonArray(groups.Select(g => (JsonNode)new JsonObject
+            {
+                ["check"] = g.Check,
+                ["smells"] = g.Smells,
+                ["notes"] = g.Notes,
+                ["findings"] = new JsonArray(g.Findings.Select(f => (JsonNode)JsonOf(f)).ToArray()),
+            }).ToArray()),
+        };
+        var options = new JsonSerializerOptions { WriteIndented = true, Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping };
+        return report.ToJsonString(options).Replace("\r\n", "\n") + "\n";
+    }
+
+    private static JsonObject JsonOf(CompositionFinding f)
+    {
+        var node = new JsonObject { ["key"] = f.Key, ["severity"] = f.Severity };
+        if (f.Kind is not null)
+        {
+            node["kind"] = f.Kind;
+        }
+        if (f.Id is not null)
+        {
+            node["id"] = f.Id;
+        }
+        if (f.File is not null)
+        {
+            node["file"] = f.File;
+        }
+        if (f.Line is { } line)
+        {
+            node["line"] = line;
+        }
+        node["message"] = f.Message;
+        return node;
+    }
+
+    /// <summary>A baseline file's text: a comment line, then every finding's key once, sorted, one per line.</summary>
+    public static string Baseline(IEnumerable<CompositionFinding> findings)
+    {
+        var keys = findings.Select(f => f.Key).Distinct(StringComparer.Ordinal).OrderBy(k => k, StringComparer.Ordinal);
+        return "# hollowwake lint baseline: one finding key per line; a run given this file fails on any key not listed.\n"
+            + string.Concat(keys.Select(k => k + "\n"));
+    }
+
+    /// <summary>The findings whose keys a baseline's lines do not list (blank lines and lines starting with # are skipped).</summary>
+    public static IReadOnlyList<CompositionFinding> Beyond(IEnumerable<CompositionFinding> findings, IEnumerable<string> baseline)
+    {
+        var known = new HashSet<string>(baseline.Select(l => l.Trim()).Where(l => l.Length > 0 && !l.StartsWith('#')), StringComparer.Ordinal);
+        return findings.Where(f => !known.Contains(f.Key)).ToList();
     }
 
     private static int IndexOfCheck(string check)
@@ -251,13 +331,13 @@ public sealed class CompositionLint
             var owner = new Owner(kind, form.Id);
             if (users.Count == 0)
             {
-                findings.Add(About(FormUnused, shell ? Smell : Note, owner, form.Id, shell
+                findings.Add(About(FormUnused, shell ? Smell : Note, owner, null, shell
                     ? "A shell (drop_weight 0) that no preset composes on, so nothing can cast it."
                     : "No preset composes on this form; only codices and players' own weaves reach it."));
             }
             else if (users.Count == 1)
             {
-                findings.Add(About(FormOneUse, shell ? Smell : Note, owner, form.Id, shell
+                findings.Add(About(FormOneUse, shell ? Smell : Note, owner, null, shell
                     ? $"A shell (drop_weight 0) that only preset '{users[0]}' composes on, where a shell is meant to serve every preset of its kind."
                     : $"Only preset '{users[0]}' composes on this form."));
             }
@@ -460,9 +540,8 @@ public sealed class CompositionLint
                 // A type one definition alone uses: one finding for the type rather than one per parameter it writes.
                 var only = typeUsers.Min!;
                 var parameters = written.Count == 0 ? "" : $" ({string.Join(", ", written.Select(kv => kv.Key.Parameter))})";
-                findings.Add(new CompositionFinding(ParameterSingleUse, Smell, "effect", type, _content.OriginOf(only.Kind, only.Id), null,
-                    $"Only {only.Kind}/{only.Id} uses '{type}', so no second definition reuses its parameters{parameters}.")
-                { Order = type });
+                findings.Add(AboutEffect(ParameterSingleUse, Smell, type, only,
+                    $"Only {only.Kind}/{only.Id} uses '{type}', so no second definition reuses its parameters{parameters}."));
             }
             else
             {
@@ -471,9 +550,8 @@ public sealed class CompositionLint
                     if (owners.Count == 1)
                     {
                         var only = owners.Min!;
-                        findings.Add(new CompositionFinding(ParameterSingleUse, Smell, "effect", $"{type}.{key.Parameter}", _content.OriginOf(only.Kind, only.Id), null,
-                            $"Only {only.Kind}/{only.Id} writes '{key.Parameter}' of '{type}', so no second definition reuses it.")
-                        { Order = $"{type}.{key.Parameter}" });
+                        findings.Add(AboutEffect(ParameterSingleUse, Smell, $"{type}.{key.Parameter}", only,
+                            $"Only {only.Kind}/{only.Id} writes '{key.Parameter}' of '{type}', so no second definition reuses it."));
                     }
                 }
             }
@@ -487,7 +565,7 @@ public sealed class CompositionLint
                 var message = declared.Count == 0
                     ? $"No loaded content has a '{type}' node."
                     : $"No loaded content has a '{type}' node, so none of its parameters ({string.Join(", ", declared)}) is exercised.";
-                findings.Add(new CompositionFinding(ParameterUnused, Note, "effect", type, null, null, message) { Order = type });
+                findings.Add(AboutEffect(ParameterUnused, Note, type, null, message));
                 continue;
             }
             foreach (var parameter in signature.Params.Where(p => !writers.ContainsKey((type, p))).OrderBy(p => p, StringComparer.Ordinal))
@@ -496,7 +574,7 @@ public sealed class CompositionLint
                 var message = FallbackAttribute(type, parameter) is { } attribute
                     ? $"'{type}' declares '{parameter}', which no loaded content writes, as intended: attribute '{attribute}' carries it."
                     : $"'{type}' declares '{parameter}' but no loaded content writes it.";
-                findings.Add(new CompositionFinding(ParameterUnused, Note, "effect", $"{type}.{parameter}", null, null, message) { Order = $"{type}.{parameter}" });
+                findings.Add(AboutEffect(ParameterUnused, Note, $"{type}.{parameter}", null, message));
             }
         }
     }
@@ -553,68 +631,69 @@ public sealed class CompositionLint
 
     /// <summary>
     /// <c>expression.copied</c>: one formula, the same text but for whitespace, written in the graphs of
-    /// <see cref="CopiedThreshold"/> or more distinct definitions. Bare names and constants are not formulas.
+    /// <see cref="CopiedThreshold"/> or more distinct definitions. One finding per definition carrying it, at the first
+    /// place it writes it, so another copy is another finding. Bare names and constants are not formulas.
     /// </summary>
     private void Copies(Graph graph, List<CompositionFinding> findings)
     {
-        var carriers = new Dictionary<string, (string Text, SortedSet<Owner> Owners)>(StringComparer.Ordinal);
+        var carriers = new Dictionary<string, (string Text, SortedDictionary<Owner, string> Places)>(StringComparer.Ordinal);
         foreach (var write in graph.Writes)
         {
-            foreach (var text in Texts(write.Value, write.Parameter))
+            foreach (var (path, text) in Texts(write.Value, write.Parameter, $"{write.Path}.{write.Parameter}"))
             {
                 if (!IsFormula(text))
                 {
                     continue;
                 }
-                var key = Whitespace.Replace(text, "");
-                if (!carriers.TryGetValue(key, out var entry))
+                var formula = Whitespace.Replace(text, "");
+                if (!carriers.TryGetValue(formula, out var entry))
                 {
-                    carriers[key] = entry = (Whitespace.Replace(text.Trim(), " "), new SortedSet<Owner>(OwnerOrder));
+                    carriers[formula] = entry = (Whitespace.Replace(text.Trim(), " "), new SortedDictionary<Owner, string>(OwnerOrder));
                 }
-                entry.Owners.Add(write.Owner);
+                entry.Places.TryAdd(write.Owner, path);
             }
         }
-        foreach (var (key, (text, owners)) in carriers)
+        foreach (var (text, places) in carriers.Values)
         {
-            if (owners.Count < CopiedThreshold)
+            if (places.Count < CopiedThreshold)
             {
                 continue;
             }
-            var shown = owners.Take(3).Select(o => $"{o.Kind}/{o.Id}");
-            var examples = string.Join(", ", shown) + (owners.Count > 3 ? $" and {owners.Count - 3} more" : "");
-            findings.Add(new CompositionFinding(ExpressionCopied, Smell, "expression", text, null, null,
-                $"Written in the graphs of {owners.Count} definitions ({examples}); a named basis in rules.yaml or an attribute should carry it.")
-            { Order = $"{1_000_000 - owners.Count:D7}{key}" });
+            foreach (var (owner, path) in places)
+            {
+                findings.Add(About(ExpressionCopied, Smell, owner, path,
+                    $"Writes '{text}' at {path}, a formula {places.Count} definitions copy, which a named basis in rules.yaml or an attribute should carry."));
+            }
         }
     }
 
-    /// <summary>The strings a parameter's value holds, leaving out the nodes and patches nested in it, which are writes of their own.</summary>
-    private IEnumerable<string> Texts(JsonNode? value, string key)
+    /// <summary>The strings a parameter's value holds with their paths, leaving out the nodes and patches nested in it, which are writes of their own.</summary>
+    private IEnumerable<(string Path, string Text)> Texts(JsonNode? value, string key, string path)
     {
         switch (value)
         {
             case JsonValue v when v.TryGetValue<string>(out var text):
-                yield return text;
+                yield return (path, text);
                 break;
             case JsonArray list:
-                foreach (var item in list)
+                for (var i = 0; i < list.Count; i++)
                 {
-                    if (item is JsonObject o && (EffectType(o) is not null || key == "patches" && IsPatch(o)))
+                    if (list[i] is JsonObject o && (EffectType(o) is not null || key == "patches" && IsPatch(o)))
                     {
                         continue;
                     }
-                    foreach (var text in Texts(item, key))
+                    foreach (var found in Texts(list[i], key, $"{path}[{i}]"))
                     {
-                        yield return text;
+                        yield return found;
                     }
                 }
                 break;
             case JsonObject data:
                 foreach (var (child, node) in data)
                 {
-                    foreach (var text in Texts(node, child))
+                    foreach (var found in Texts(node, child, $"{path}.{child}"))
                     {
-                        yield return text;
+                        yield return found;
                     }
                 }
                 break;
@@ -627,8 +706,30 @@ public sealed class CompositionLint
     private static bool IsFormula(string text) =>
         Expr.TryParse(text, out var expr, out _) && expr is not null && !expr.IsConstant && !BareName.IsMatch(text.Trim());
 
-    private CompositionFinding About(string check, string severity, Owner owner, string order, string message) =>
-        new(check, severity, owner.Kind, owner.Id, _content.OriginOf(owner.Kind, owner.Id), null, message) { Order = $"{owner.Kind}\u0001{owner.Id}\u0001{order}" };
+    /// <summary>A finding about a definition, keyed by the check, its kind and id, and the node path when one is given.</summary>
+    private CompositionFinding About(string check, string severity, Owner owner, string? path, string message) =>
+        new(check, severity, owner.Kind, owner.Id, Located(_content.OriginOf(owner.Kind, owner.Id)), null, message)
+        {
+            Key = path is null ? $"{check}|{owner.Kind}|{owner.Id}" : $"{check}|{owner.Kind}|{owner.Id}|{path}",
+        };
+
+    /// <summary>A finding about an effect type or one of its parameters (<c>type.parameter</c>), keyed by the check and that id.</summary>
+    private CompositionFinding AboutEffect(string check, string severity, string id, Owner? writer, string message) =>
+        new(check, severity, "effect", id, writer is null ? null : Located(_content.OriginOf(writer.Kind, writer.Id)), null, message)
+        {
+            Key = $"{check}|effect|{id}",
+        };
+
+    /// <summary>A path relative to <see cref="RepositoryRoot"/> with forward slashes, each part of a patched origin alike; as given without a root.</summary>
+    private string? Located(string? path)
+    {
+        if (path is null || RepositoryRoot is null)
+        {
+            return path;
+        }
+        var root = Path.GetFullPath(RepositoryRoot);
+        return string.Join(" + ", path.Split(" + ").Select(part => (Path.IsPathRooted(part) ? Path.GetRelativePath(root, part) : part).Replace('\\', '/')));
+    }
 
     // ------------------------------------------------------------ the code scan
 
@@ -657,18 +758,28 @@ public sealed class CompositionLint
             .Where(f => !f.Relative.Split('/').Any(part => part is "bin" or "obj"))
             .OrderBy(f => f.Relative, StringComparer.Ordinal)
             .ToList();
+        var repository = RepositoryRoot is null ? null : Path.GetFullPath(RepositoryRoot);
         foreach (var (full, relative) in files)
         {
             var lines = Lex(File.ReadAllText(full));
+            var file = repository is null ? relative : Path.GetRelativePath(repository, full).Replace('\\', '/');
+            var found = new List<CompositionFinding>();
             var inSystems = Within(relative, SystemDirectories);
-            Switches(relative, lines, inSystems, effectTypes, findings);
+            Switches(file, lines, inSystems, effectTypes, found);
             if (inSystems)
             {
-                Comparisons(relative, lines, names, findings);
+                Comparisons(file, lines, names, found);
             }
             if (Within(relative, FormReadDirectories))
             {
-                FormReads(relative, lines, findings);
+                FormReads(file, lines, found);
+            }
+            // The same text can recur in a file: number the repeats in line order so every key stays unique.
+            var seen = new Dictionary<string, int>(StringComparer.Ordinal);
+            foreach (var f in found.OrderBy(f => f.Line).ThenBy(f => IndexOfCheck(f.Check)))
+            {
+                var n = seen[f.Key] = seen.GetValueOrDefault(f.Key) + 1;
+                findings.Add(n == 1 ? f : f with { Key = $"{f.Key}#{n}" });
             }
         }
     }
@@ -822,7 +933,7 @@ public sealed class CompositionLint
                 severity = Note;
                 message = $"A switch on {strings} {Names(distinct)} outside the systems, where parsing and validation may need one; a copy of a handler's words would be the smell.";
             }
-            findings.Add(CodeFinding(file, index + 1, severity, message));
+            findings.Add(CodeFinding(CodeStringSwitch, file, lines, index, severity, message));
         }
     }
 
@@ -923,7 +1034,7 @@ public sealed class CompositionLint
             }
             var sentence = string.Join(" and ", parts);
             var carry = Plural(named.Count, "this word", "these words");
-            findings.Add(CodeFinding(file, index + 1, Smell, $"{char.ToUpperInvariant(sentence[0])}{sentence[1..]}; content or a registry should carry {carry}."));
+            findings.Add(CodeFinding(CodeStringSwitch, file, lines, index, Smell, $"{char.ToUpperInvariant(sentence[0])}{sentence[1..]}; content or a registry should carry {carry}."));
         }
     }
 
@@ -959,7 +1070,7 @@ public sealed class CompositionLint
                 parts.Add("takes the whole form");
             }
             var sentence = string.Join(" and ", parts);
-            findings.Add(CodeFinding(CodeFormRead, file, i + 1, Smell,
+            findings.Add(CodeFinding(CodeFormRead, file, lines, i, Smell,
                 $"{char.ToUpperInvariant(sentence[0])}{sentence[1..]} where the runtime should read the compiled weave, into which a preset or glyph can merge any block."));
         }
     }
@@ -971,11 +1082,12 @@ public sealed class CompositionLint
         return last.Equals("spec", StringComparison.OrdinalIgnoreCase) || last.Equals("preset", StringComparison.OrdinalIgnoreCase);
     }
 
-    private static CompositionFinding CodeFinding(string file, int line, string severity, string message) =>
-        CodeFinding(CodeStringSwitch, file, line, severity, message);
-
-    private static CompositionFinding CodeFinding(string check, string file, int line, string severity, string message) =>
-        new(check, severity, null, null, file, line, message) { Order = $"{file}\u0001{line:D6}" };
+    /// <summary>A finding on a line of code, keyed by the check, the file and the line's masked code with its whitespace collapsed.</summary>
+    private static CompositionFinding CodeFinding(string check, string file, IReadOnlyList<CodeLine> lines, int index, string severity, string message) =>
+        new(check, severity, null, null, file, index + 1, message)
+        {
+            Key = $"{check}|{file}|{Whitespace.Replace(lines[index].Code.Trim(), " ")}",
+        };
 
     private static string? OperandOf(Match m)
     {
