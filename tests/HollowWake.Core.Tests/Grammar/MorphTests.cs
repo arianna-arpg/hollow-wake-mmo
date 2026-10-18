@@ -63,11 +63,6 @@ public class MorphTests
         {
             Shows = Displaced,
         },
-        new("area", "pipeline", "with no DamageDealt on it",
-            "the resource effect takes life with no hit: it adds to the resource directly (DamageHandlers.cs ResourceHandler), so a drain on a struck body lowers its life outside the stage ladder; the grammar's invariant 1 names it as the baseline exception")
-        {
-            When = v => v.Fills("effects+drain"),
-        },
         new("area", "depth", "status ticks restart the depth",
             "a status runs its tick effects and the applier's tick riders in a context at depth 0 (StatusService.cs Execute), whatever depth applied it; rule 8's baseline")
         {
@@ -142,7 +137,12 @@ public class MorphTests
         Settle(name, examined, violations, "validates", "compiles", "states");
     }
 
-    /// <summary>Each sampled point, pressed: deterministic, one damage pipeline, bounded, terminating, nothing left behind, paying before it resolves, keeping the depth, on time, and nothing logged.</summary>
+    /// <summary>
+    /// Each sampled point, pressed: deterministic, one damage pipeline, bounded, terminating, nothing left behind, paying
+    /// before it resolves, keeping the depth, on time, and nothing logged but the refusal of a drain it carries. Where the
+    /// family samples drains, some drain must have reached a body and been refused, so the pipeline check saw the effect
+    /// that could step around the ladder.
+    /// </summary>
     [Theory]
     [MemberData(nameof(FamilyNames))]
     public void EverySampledPointHoldsTheInvariants(string name)
@@ -150,6 +150,8 @@ public class MorphTests
         var layer = MorphLayer.Shared;
         var violations = new List<Violation>();
         var examined = layer.Morph[name].Where(p => Compiles(layer, p)).Select(p => new View(p, layer.Content)).ToList();
+        var drains = new List<View>();
+        var refused = 0;
         foreach (var view in examined)
         {
             var point = view.Point;
@@ -162,6 +164,16 @@ public class MorphTests
                 broken.Add(("deterministic", where));
             }
             violations.AddRange(broken.Select(b => new Violation(point, view, b.Invariant, b.Message)));
+            if (point.Family.Lists.Any(l => l.Rider == Rider.Drain && point.Lists.Contains(l.Key)))
+            {
+                drains.Add(view);
+                refused += first.Refused;
+            }
+        }
+        if (drains.Count > 0 && refused == 0)
+        {
+            violations.Add(new Violation(drains[0].Point, drains[0], "pipeline",
+                $"{drains.Count} sampled points carry a drain, but no drain was refused: none reached a body, or the refusal went unsaid, so the pipeline check saw no drain"));
         }
         Settle(name, examined, violations, "deterministic", "pipeline", "bounded", "terminates", "left behind", "pays", "depth", "timing", "runs");
     }

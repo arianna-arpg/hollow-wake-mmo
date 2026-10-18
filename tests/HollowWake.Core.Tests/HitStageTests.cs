@@ -204,6 +204,74 @@ public class HitStageTests
         Assert.Contains(HitPlan.For(unknown.Rules).Problems, p => p.Contains("no_such_stage"));
     }
 
+    [Fact]
+    public void AResourceEffectTakesNoLifeAroundTheLadder()
+    {
+        // Life falls only through the stages: a resource effect a formula turns against a body's life changes
+        // nothing and says so once per weave, while it still moves other resources and still restores life.
+        var arena = DeliveryArena.Create();
+        var log = new ListSimLog();
+        arena.Sim.Log = log;
+        var boar = arena.Body(12, 10);
+        var stats = arena.Sim.World.Get<Stats>(boar)!;
+        var at = arena.Sim.World.Get<Transform>(boar)!.Position;
+        var blast = arena.Weave("blast");
+        var drain = arena.Effect("{\"type\": \"resource\", \"resource\": \"life\", \"amount\": \"-min(5, target.life)\"}");
+        stats.SetResource("life", stats.ResourceMax("life") - 20);
+        var life = stats.Resource("life");
+        drain.Execute(arena.Context(at, target: boar, weave: blast));
+        drain.Execute(arena.Context(at, target: boar, weave: blast));
+        Assert.Equal(life, stats.Resource("life"));
+        Assert.Empty(arena.Of<DamageDealt>());
+        var refusal = Assert.Single(log.Lines);
+        Assert.Contains($"'{blast.Key}'", refusal);
+        Assert.Contains("damage", refusal);
+        // Another weave is told once more; a caster turning it on itself loses nothing either.
+        var bolt = arena.Weave("bolt");
+        drain.Execute(arena.Context(at, target: boar, weave: bolt));
+        Assert.Equal(2, log.Lines.Count);
+        Assert.Contains($"'{bolt.Key}'", log.Lines[1]);
+        var caster = arena.Sim.World.Get<Stats>(arena.Caster)!;
+        var casterLife = caster.Resource("life");
+        arena.Effect("{\"type\": \"resource\", \"resource\": \"life\", \"amount\": \"-min(5, source.life)\", \"self\": true}").Execute(arena.Context(at, target: boar, weave: blast));
+        Assert.Equal(casterLife, caster.Resource("life"));
+        arena.Effect("{\"type\": \"resource\", \"resource\": \"life\", \"amount\": 5}").Execute(arena.Context(at, target: boar, weave: blast));
+        Assert.Equal(life + 5, stats.Resource("life"), 6);
+        caster.Attributes.Add(new Modifier { Attribute = "mana.max", Form = ModifierForm.Flat, Value = 100, Source = "test" });
+        caster.SetResource("mana", 50);
+        arena.Effect("{\"type\": \"resource\", \"resource\": \"mana\", \"amount\": -5, \"self\": true}").Execute(arena.Context(at, target: boar, weave: blast));
+        Assert.Equal(45, caster.Resource("mana"), 6);
+    }
+
+    [Fact]
+    public void ValidationRefusesALiteralLifeDecreaseOnAResourceEffect()
+    {
+        var dir = Path.Combine(Path.GetTempPath(), "hollowwake-drain-" + Guid.NewGuid().ToString("N"));
+        Directory.CreateDirectory(dir);
+        try
+        {
+            File.WriteAllText(Path.Combine(dir, "weaves.yaml"), string.Join("\n",
+                "kind: weaves",
+                "entries:",
+                "  - { id: t_drain_number, name: Drain, form: slam_quick, effects: [ { type: resource, resource: life, amount: -5 } ] }",
+                "  - { id: t_drain_text, name: Drain, form: slam_quick, effects: [ { type: area, radius: 2, effects: [ { type: resource, resource: life, amount: \"-5\" } ] } ] }",
+                "  - { id: t_drain_formula, name: Drain, form: slam_quick, effects: [ { type: resource, resource: life, amount: \"-min(5, target.life)\" } ] }",
+                "  - { id: t_spend_mana, name: Spend, form: slam_quick, effects: [ { type: resource, resource: mana, amount: -5 } ] }",
+                "  - { id: t_give_life, name: Give, form: slam_quick, effects: [ { type: resource, resource: life, amount: 5 } ] }",
+                ""));
+            ContentRegistry.Load(new[] { CoreContent.FindContentDir(), dir }, out var report);
+            var errors = report.Errors.Select(e => $"{e.Id}: {e.Message}").ToList();
+            Assert.Contains(errors, e => e.StartsWith("t_drain_number") && e.Contains("'damage'"));
+            Assert.Contains(errors, e => e.StartsWith("t_drain_text") && e.Contains("'damage'"));
+            // A formula is refused when it runs, not at load; other resources may fall, and life may rise.
+            Assert.DoesNotContain(errors, e => e.StartsWith("t_drain_formula") || e.StartsWith("t_spend_mana") || e.StartsWith("t_give_life"));
+        }
+        finally
+        {
+            Directory.Delete(dir, recursive: true);
+        }
+    }
+
     /// <summary>A test stage after damage taken: doubles what was received.</summary>
     private sealed class DoublingStage : IHitStage
     {

@@ -1,6 +1,10 @@
+using System.Collections.Concurrent;
+using System.Globalization;
 using System.Text.Json.Nodes;
 using HollowWake.Core.Combat;
 using HollowWake.Core.Components;
+using HollowWake.Core.Content;
+using HollowWake.Core.Definitions;
 using HollowWake.Core.Expressions;
 using HollowWake.Core.Sim;
 using HollowWake.Core.Tags;
@@ -229,31 +233,84 @@ internal sealed class HealHandler : IEffectHandler
     }
 }
 
-/// <summary><c>resource</c>: adds an amount of a resource to the target (the source when there is none); <c>self</c> gives it to the source.</summary>
+/// <summary>
+/// <c>resource</c>: adds an amount of a resource to the target (the source when there is none); <c>self</c> gives it
+/// to the source. It never lowers a lethal resource (life): a body loses life only through the damage ladder, so a
+/// decrease of it is a <c>damage</c> effect. Validation refuses a literal one, and one a formula reaches is refused
+/// when it runs and logged once per weave.
+/// </summary>
 internal sealed class ResourceHandler : IEffectHandler
 {
+    private const string DefaultResource = "mana";
+
     public string Type => "resource";
 
-    public EffectSignature Signature { get; } = EffectSignature.Of("amount", "resource", "self");
+    public EffectSignature Signature { get; } = EffectSignature.Of("amount", "resource", "self").Checking(LowersLethal);
 
     public CompiledEffect Compile(JsonObject p, EffectCompileContext ctx) => new Effect
     {
         Type = Type,
         Amount = ctx.ExprOf(p["amount"], Expr.Constant(10))!,
-        Resource = ctx.StringOf(p["resource"]) ?? "mana",
+        Resource = ctx.StringOf(p["resource"]) ?? DefaultResource,
         Self = ctx.BoolOf(p["self"], false),
     };
+
+    /// <summary>Whether losing all of a resource kills (life): such a resource falls only through the damage ladder.</summary>
+    private static bool Lethal(ContentRegistry content, string resource) => content.Get<ResourceDef>(resource)?.Lethal == true;
+
+    /// <summary>Refuses an amount written as a negative number, or a formula that is one, of a lethal resource.</summary>
+    private static string? LowersLethal(JsonObject p, ContentRegistry content)
+    {
+        var resource = JsonNum.StringOf(p["resource"]) ?? DefaultResource;
+        if (!Lethal(content, resource) || p["amount"] is not { } amount)
+        {
+            return null;
+        }
+        double value;
+        if (JsonNum.StringOf(amount) is { } text)
+        {
+            if (!Expr.TryParse(text, out var expr, out _) || !expr!.IsConstant)
+            {
+                return null;
+            }
+            value = expr.ConstantValue;
+        }
+        else if (!JsonNum.TryDouble(amount, out value))
+        {
+            return null;
+        }
+        return value < 0
+            ? $"lowers {resource} by {(-value).ToString("0.###", CultureInfo.InvariantCulture)}, but {resource} falls only through the damage ladder: write a 'damage' effect instead"
+            : null;
+    }
 
     private sealed class Effect : CompiledEffect
     {
         public required Expr Amount;
-        public string Resource = "mana";
+        public string Resource = DefaultResource;
         public bool Self;
+
+        // The weaves whose lethal decrease this effect already logged; it logs each once.
+        private readonly ConcurrentDictionary<string, bool> _refused = new(StringComparer.Ordinal);
 
         public override void Execute(EffectContext ctx)
         {
             var target = Self || ctx.Target.IsNone ? ctx.Source : ctx.Target;
-            ctx.Sim.World.Get<Stats>(target)?.AddResource(Resource, ctx.Eval(Amount) * ctx.Potency);
+            if (ctx.Sim.World.Get<Stats>(target) is not { } stats)
+            {
+                return;
+            }
+            var amount = ctx.Eval(Amount) * ctx.Potency;
+            if (amount < 0 && Lethal(ctx.Sim.Content, Resource))
+            {
+                var weave = ctx.Weave?.Key ?? "none";
+                if (_refused.TryAdd(weave, true))
+                {
+                    ctx.Sim.Log.Warn($"the resource effect of weave '{weave}' would lower {Resource} by {(-amount).ToString("0.###", CultureInfo.InvariantCulture)}; refused, since {Resource} falls only through the damage ladder: a decrease of it is a damage effect");
+                }
+                return;
+            }
+            stats.AddResource(Resource, amount);
         }
     }
 }
