@@ -46,31 +46,39 @@ public sealed record Pairing(string A, string B)
 
 /// <summary>
 /// The bands a matched pairing must stay inside, read from rules group <c>evaluation</c>: the median time to
-/// kill, the share of fights either side may win, the share that may end in a draw, and the share of its kit each
-/// side must use.
+/// kill, the share of fights either side may win, the share that may end in a draw, and the share of its kit's
+/// seats each side must use.
 /// </summary>
-public sealed record Bands(double TtkMin, double TtkMax, double WinRateCeiling, double DrawCeiling, double VarietyFloor)
+public sealed record Bands(double TtkMin, double TtkMax, double WinRateCeiling, double DrawCeiling, double CoverageFloor)
 {
     public static Bands Of(ContentRegistry content) => new(
         content.Rules.Number("evaluation.ttk_min", 5),
         content.Rules.Number("evaluation.ttk_max", 45),
         content.Rules.Number("evaluation.win_rate_ceiling", 0.8),
         content.Rules.Number("evaluation.draw_ceiling", 0.2),
-        content.Rules.Number("evaluation.variety_floor", 0.25));
+        content.Rules.Number("evaluation.coverage_floor", 0.25));
 }
 
 /// <summary>
 /// One side of one fight: what it dealt, cast and used. A side is its body and whatever it owns, its minions,
 /// constructs, projectiles and fields, found up the owner chain the way kill credit is
 /// (<see cref="DeathService.CreditTarget"/>), so damage, hits, crits, casts and statuses count whichever of them did
-/// them and a summoner's kit is measured as its kit. Damage, hits, crits and statuses are a side's only when the side
-/// that owns their target is another (the foe, or a body neither side owns): what a side's own sources do to itself,
-/// a status ticking on once its applier is gone (the simulation then sources the tick from its bearer), a pool
-/// breaking, a buff it lays on itself, is its <c>SelfDamage</c> and <c>SelfStatuses</c> instead. A hit is any
-/// application of damage that was not evaded, blocked ones included. <c>Kit</c> is how many weaves its body's book
-/// holds; <c>Weaves</c> are the weaves its body cast and those of its book that anything it owns cast, so distinct
-/// weaves over kit is the share of its kit it used, and a minion's own weaves count as casts but not as its owner's
-/// kit. <c>Spread</c> is how evenly those casts fell over the weaves cast, one being even.
+/// them. Damage, hits, crits and statuses are a side's only when the side that owns their target is another (the
+/// foe, or a body neither side owns): what a side's own sources do to itself, a status ticking on once its applier is
+/// gone (the simulation then sources the tick from its bearer), a pool breaking, a buff it lays on itself, is its
+/// <c>SelfDamage</c> and <c>SelfStatuses</c> instead. A hit is any application of damage that was not evaded, blocked
+/// ones included. <c>Casts</c> counts every <c>WeaveCast</c> of the side, a channel's beats and a release each one.
+/// <para>
+/// Its kit is its body's: <c>Kit</c> is the seats in the body's book. A use is a press or a trigger that starts a
+/// seat's cast, counted once however many beats, faces or releases it resolves in, against the seat that owns it:
+/// the seat holding the weave cast, or the seat whose convert or combo chain put it on as a face. <c>Uses</c> counts
+/// them, <c>Seats</c> are the seats used in book order and <c>Faces</c> the weaves those uses cast, faces included,
+/// and <c>Mechanisms</c> theirs. <c>Coverage</c> is the seats used over the kit, never above one, since every use is
+/// counted against a seat of the book; <c>Spread</c> is the effective number of seats used, the exponential of the
+/// entropy of the uses over the seats: one when every use went to one seat, the number of seats used when they shared
+/// the uses evenly, zero with no use. A minion's presses are its own, counted in the side's casts and not as uses of
+/// its owner's seats.
+/// </para>
 /// </summary>
 public sealed record Side(
     string Pattern,
@@ -78,10 +86,12 @@ public sealed record Side(
     int Hits,
     int Crits,
     int Casts,
-    int DistinctWeaves,
+    int Uses,
     int Kit,
+    double Coverage,
     double Spread,
-    IReadOnlyList<string> Weaves,
+    IReadOnlyList<string> Seats,
+    IReadOnlyList<string> Faces,
     IReadOnlyList<string> Mechanisms,
     IReadOnlyList<string> StatusesApplied,
     double SelfDamage,
@@ -98,8 +108,8 @@ public sealed record Fight(string A, string B, int Index, ulong Seed, string Out
 
 /// <summary>
 /// A pairing over its fights: its trace hash (folded over its fights' hashes in seed order), rates, the time-to-kill
-/// spread, variety, what each side used, the self-sourced damage each side took over its fights and the self-sourced
-/// statuses it bore, and the bands it broke.
+/// spread, each side's coverage and spread averaged over its fights, the seats and mechanisms each side used, the
+/// self-sourced damage each side took over its fights and the self-sourced statuses it bore, and the bands it broke.
 /// </summary>
 public sealed record PairReport(
     string A,
@@ -112,12 +122,12 @@ public sealed record PairReport(
     double TtkMedian,
     double TtkLow,
     double TtkHigh,
-    double VarietyA,
-    double VarietyB,
+    double CoverageA,
+    double CoverageB,
     double SpreadA,
     double SpreadB,
-    IReadOnlyList<string> WeavesA,
-    IReadOnlyList<string> WeavesB,
+    IReadOnlyList<string> SeatsA,
+    IReadOnlyList<string> SeatsB,
     IReadOnlyList<string> MechanismsA,
     IReadOnlyList<string> MechanismsB,
     double SelfDamageA,
@@ -141,12 +151,12 @@ public sealed record TournamentReport(int Seeds, double Seconds, string Hash, Ba
     /// <summary>The report as the command prints it: a row per pairing, what each side used and the bands it broke, numbers in the invariant culture.</summary>
     public IEnumerable<string> Table()
     {
-        yield return $"{"pairing",-44} {"fights",6} {"a wins",7} {"b wins",7} {"draws",6} {"ttk med",8} {"low",6} {"high",6} {"kit a",6} {"kit b",6} {"spr a",6} {"spr b",6}";
+        yield return $"{"pairing",-44} {"fights",6} {"a wins",7} {"b wins",7} {"draws",6} {"ttk med",8} {"low",6} {"high",6} {"cov a",6} {"cov b",6} {"spr a",6} {"spr b",6}";
         foreach (var p in Pairs)
         {
-            yield return FormattableString.Invariant($"{p.A + " v " + p.B,-44} {p.Fights,6} {p.WinRateA,7:0.00} {p.WinRateB,7:0.00} {p.DrawRate,6:0.00} {p.TtkMedian,8:0.#} {p.TtkLow,6:0.#} {p.TtkHigh,6:0.#} {p.VarietyA,6:0.00} {p.VarietyB,6:0.00} {p.SpreadA,6:0.00} {p.SpreadB,6:0.00}");
-            yield return FormattableString.Invariant($"    {p.A}: {string.Join(" ", p.WeavesA)} | {string.Join(" ", p.MechanismsA)} | self {p.SelfDamageA:0.#} {string.Join(" ", p.SelfStatusesA)}");
-            yield return FormattableString.Invariant($"    {p.B}: {string.Join(" ", p.WeavesB)} | {string.Join(" ", p.MechanismsB)} | self {p.SelfDamageB:0.#} {string.Join(" ", p.SelfStatusesB)}");
+            yield return FormattableString.Invariant($"{p.A + " v " + p.B,-44} {p.Fights,6} {p.WinRateA,7:0.00} {p.WinRateB,7:0.00} {p.DrawRate,6:0.00} {p.TtkMedian,8:0.#} {p.TtkLow,6:0.#} {p.TtkHigh,6:0.#} {p.CoverageA,6:0.00} {p.CoverageB,6:0.00} {p.SpreadA,6:0.00} {p.SpreadB,6:0.00}");
+            yield return FormattableString.Invariant($"    {p.A}: {string.Join(" ", p.SeatsA)} | {string.Join(" ", p.MechanismsA)} | self {p.SelfDamageA:0.#} {string.Join(" ", p.SelfStatusesA)}");
+            yield return FormattableString.Invariant($"    {p.B}: {string.Join(" ", p.SeatsB)} | {string.Join(" ", p.MechanismsB)} | self {p.SelfDamageB:0.#} {string.Join(" ", p.SelfStatusesB)}");
             foreach (var breach in p.Breaches)
             {
                 yield return $"    BREACH {breach}";
@@ -232,7 +242,7 @@ public sealed record TraceBaseline(int Seeds, double Seconds, IReadOnlyDictionar
 
 /// <summary>
 /// Seeded duels across pairings, measured from the events the simulation publishes: time to kill, win and draw
-/// rates, damage, casts, the distinct weaves and the mechanisms each side used, and life left. Every fight runs
+/// rates, damage, casts, the seats and the mechanisms each side used, and life left. Every fight runs
 /// in its own arena from a seed derived from the pairing and the fight's index, so the same run gives the same
 /// report, and nothing here reads a body's pattern beyond its name.
 /// </summary>
@@ -415,12 +425,28 @@ public static class Tournament
             if (Owning(w.Caster) is { } t)
             {
                 t.Casts++;
-                // Its weaves are its kit's: what its body cast, and what anything it owns cast from its body's book.
-                if (w.Caster == t.Body || sim.World.Get<WeaveBook>(t.Body)?.Slots.Any(s => s.Key == w.Weave) == true)
-                {
-                    t.Weaves.Add(w.Weave);
-                }
             }
+        });
+        // A use is read from the cast's identity, which the runtime gives once per press or trigger and every phase of
+        // that cast carries (its start, each release or beat, its end): the first sighting of an identity is the use.
+        // WeaveStarted is not that event, since an instant press resolves without one, and WeaveCast fires per beat
+        // and per face. Only the bodies' own uses are counted, against the seats of their books.
+        sim.EmitCastPresentation = true;
+        var used = new HashSet<long>();
+        sim.Events.Subscribe<CastPresentationEvent>(p =>
+        {
+            if (p.CastId == 0 || !used.Add(p.CastId) || !tallies.TryGetValue(p.Caster.Key, out var t) || sim.World.Get<WeaveBook>(p.Caster) is not { } book)
+            {
+                return;
+            }
+            var seat = SeatOf(book, p.Weave);
+            if (seat < 0)
+            {
+                return;
+            }
+            t.Uses[seat] = t.Uses.GetValueOrDefault(seat) + 1;
+            t.Faces.Add(p.Weave);
+            t.Mechanisms.UnionWith(p.Mechanisms.Items);
         });
         sim.Events.Subscribe<StatusApplied>(s =>
         {
@@ -446,35 +472,46 @@ public static class Tournament
         }
         var outcome = aDied == bDied ? "draw" : aDied ? "b" : "a";
         trace.End(outcome);
-        return new Fight(pairing.A, pairing.B, index, seed, outcome, ended ?? seconds, Hex(trace.Hash()), SideOf(sim, a, pairing.A, tallies[a.Key]), SideOf(sim, b, pairing.B, tallies[b.Key]));
+        return new Fight(pairing.A, pairing.B, index, seed, outcome, ended ?? seconds, Hex(trace.Hash()), Measure(sim, a, pairing.A, tallies[a.Key]), Measure(sim, b, pairing.B, tallies[b.Key]));
     }
 
-    private static Side SideOf(Simulation sim, Entity body, string pattern, Tally t)
+    /// <summary>
+    /// The seat of a book a use of <paramref name="key"/> belongs to: the seat holding that weave, else the seat
+    /// whose weave puts it on as a face (a convert's preset, a combo chain's step); -1 when none does. Two seats
+    /// holding one weave read as the first.
+    /// </summary>
+    private static int SeatOf(WeaveBook book, string key)
     {
-        var weaves = t.Weaves.Distinct(StringComparer.Ordinal).Order(StringComparer.Ordinal).ToList();
-        var mechanisms = new SortedSet<string>(StringComparer.Ordinal);
-        if (sim.World.Get<WeaveBook>(body) is { } book)
+        for (var i = 0; i < book.Slots.Count; i++)
         {
-            foreach (var key in weaves)
+            if (book.Slots[i].Key == key)
             {
-                var compiled = book.Slots.FirstOrDefault(s => s.Key == key)?.Compiled;
-                if (compiled is null)
-                {
-                    continue;
-                }
-                foreach (var m in compiled.Mechanisms.Items)
-                {
-                    mechanisms.Add(m);
-                }
+                return i;
             }
         }
-        var kit = sim.World.Get<WeaveBook>(body)?.Slots.Count(s => s.Compiled is not null) ?? 0;
-        var spread = Spread(t.Weaves);
+        for (var i = 0; i < book.Slots.Count; i++)
+        {
+            if (book.Slots[i].Compiled?.Casting is { } casting && (casting.Convert?.Weave == key || casting.Chain?.Steps.Contains(key) == true))
+            {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    private static Side Measure(Simulation sim, Entity body, string pattern, Tally t)
+    {
+        var book = sim.World.Get<WeaveBook>(body);
+        var kit = book?.Slots.Count ?? 0;
+        // Every use was counted against a seat of this book, so the seats used are never more than the kit.
+        var seats = Enumerable.Range(0, kit).Where(t.Uses.ContainsKey).Select(i => book!.Slots[i].Key).ToList();
+        var uses = t.Uses.Values.Sum();
+        var coverage = kit == 0 ? 0 : (double)seats.Count / kit;
         var stats = sim.World.Get<Stats>(body);
         var max = stats?.ResourceMax("life") ?? 0;
         var life = sim.World.Has<Dead>(body) || max <= 0 ? 0 : Math.Clamp(stats!.Resource("life") / max, 0, 1);
-        return new Side(pattern, Math.Round(t.Damage, 2), t.Hits, t.Crits, t.Casts, weaves.Count, kit, Math.Round(spread, 3), weaves, mechanisms.ToList(),
-            Sorted(t.Statuses), Math.Round(t.SelfDamage, 2), Sorted(t.SelfStatuses), Math.Round(life, 3));
+        return new Side(pattern, Math.Round(t.Damage, 2), t.Hits, t.Crits, t.Casts, uses, kit, Round(coverage), Round(Spread(t.Uses.Values, uses)), seats,
+            t.Faces.ToList(), t.Mechanisms.ToList(), Sorted(t.Statuses), Math.Round(t.SelfDamage, 2), Sorted(t.SelfStatuses), Round(life));
     }
 
     /// <summary>The distinct names in ordinal order.</summary>
@@ -487,14 +524,9 @@ public static class Tournament
         var winsB = fights.Count(f => f.Outcome == "b");
         var draws = n - winsA - winsB;
         var ttk = fights.Where(f => f.Outcome != "draw").Select(f => f.Seconds).Order().ToList();
-        // Variety is the share of its kit a side used, averaged over its fights.
-        var variety = (Func<Fight, Side> side) => fights.Average(f => side(f).Kit == 0 ? 0 : Math.Min(1, (double)side(f).DistinctWeaves / side(f).Kit));
-        var varietyA = variety(f => f.SideA);
-        var varietyB = variety(f => f.SideB);
-        var weavesA = fights.SelectMany(f => f.SideA.Weaves).Distinct(StringComparer.Ordinal).Order(StringComparer.Ordinal).ToList();
-        var weavesB = fights.SelectMany(f => f.SideB.Weaves).Distinct(StringComparer.Ordinal).Order(StringComparer.Ordinal).ToList();
-        var mechanismsA = fights.SelectMany(f => f.SideA.Mechanisms).Distinct(StringComparer.Ordinal).Order(StringComparer.Ordinal).ToList();
-        var mechanismsB = fights.SelectMany(f => f.SideB.Mechanisms).Distinct(StringComparer.Ordinal).Order(StringComparer.Ordinal).ToList();
+        // Coverage is the share of its kit's seats a side used, averaged over its fights.
+        var coverageA = fights.Average(f => f.SideA.Coverage);
+        var coverageB = fights.Average(f => f.SideB.Coverage);
         var median = Quantile(ttk, 0.5);
         var breaches = new List<string>();
         if (checkBands)
@@ -516,36 +548,35 @@ public static class Tournament
             {
                 breaches.Add(FormattableString.Invariant($"the median time to kill {median:0.#} s is outside {bands.TtkMin:0.#} to {bands.TtkMax:0.#} s"));
             }
-            if (varietyA < bands.VarietyFloor)
+            if (coverageA < bands.CoverageFloor)
             {
-                breaches.Add(FormattableString.Invariant($"{pairing.A} uses {varietyA:0.##} of its kit, below the floor {bands.VarietyFloor:0.##}"));
+                breaches.Add(FormattableString.Invariant($"{pairing.A} covers {coverageA:0.##} of its kit, below the floor {bands.CoverageFloor:0.##}"));
             }
-            if (varietyB < bands.VarietyFloor)
+            if (coverageB < bands.CoverageFloor)
             {
-                breaches.Add(FormattableString.Invariant($"{pairing.B} uses {varietyB:0.##} of its kit, below the floor {bands.VarietyFloor:0.##}"));
+                breaches.Add(FormattableString.Invariant($"{pairing.B} covers {coverageB:0.##} of its kit, below the floor {bands.CoverageFloor:0.##}"));
             }
         }
         return new PairReport(pairing.A, pairing.B, n, Fold(fights.OrderBy(f => f.Index).Select(f => f.Hash)), Round((double)winsA / n), Round((double)winsB / n), Round((double)draws / n),
-            Round(median), Round(Quantile(ttk, 0.25)), Round(Quantile(ttk, 0.75)), Round(varietyA), Round(varietyB), Round(fights.Average(f => f.SideA.Spread)), Round(fights.Average(f => f.SideB.Spread)),
-            weavesA, weavesB, mechanismsA, mechanismsB,
+            Round(median), Round(Quantile(ttk, 0.25)), Round(Quantile(ttk, 0.75)), Round(coverageA), Round(coverageB), Round(fights.Average(f => f.SideA.Spread)), Round(fights.Average(f => f.SideB.Spread)),
+            Sorted(fights.SelectMany(f => f.SideA.Seats)), Sorted(fights.SelectMany(f => f.SideB.Seats)),
+            Sorted(fights.SelectMany(f => f.SideA.Mechanisms)), Sorted(fights.SelectMany(f => f.SideB.Mechanisms)),
             Math.Round(fights.Sum(f => f.SideA.SelfDamage), 2), Math.Round(fights.Sum(f => f.SideB.SelfDamage), 2),
             Sorted(fights.SelectMany(f => f.SideA.SelfStatuses)), Sorted(fights.SelectMany(f => f.SideB.SelfStatuses)), breaches);
     }
 
-    /// <summary>How evenly casts spread over the weaves cast: the entropy of their shares over the most it could be; one for a single weave.</summary>
-    private static double Spread(List<string> casts)
+    /// <summary>
+    /// The effective number of seats used: the exponential of the entropy of the uses over the seats. One when every
+    /// use went to one seat, the number of seats used when they shared the uses evenly, zero with no use.
+    /// </summary>
+    private static double Spread(IEnumerable<int> usesPerSeat, int uses)
     {
-        if (casts.Count == 0)
+        if (uses == 0)
         {
             return 0;
         }
-        var counts = casts.GroupBy(w => w, StringComparer.Ordinal).Select(g => (double)g.Count()).ToList();
-        if (counts.Count == 1)
-        {
-            return 1;
-        }
-        var entropy = counts.Sum(c => { var p = c / casts.Count; return -p * Math.Log(p); });
-        return entropy / Math.Log(counts.Count);
+        var entropy = usesPerSeat.Where(c => c > 0).Sum(c => { var p = (double)c / uses; return -p * Math.Log(p); });
+        return Math.Exp(entropy);
     }
 
     /// <summary>A quantile of a sorted list by nearest rank; zero for an empty list.</summary>
@@ -569,7 +600,13 @@ public static class Tournament
         public int Hits;
         public int Crits;
         public int Casts;
-        public readonly List<string> Weaves = new();
+
+        /// <summary>The body's uses per seat of its book, by the seat's place in the book.</summary>
+        public readonly Dictionary<int, int> Uses = new();
+
+        /// <summary>The weaves the body's uses cast, faces included, and their mechanisms.</summary>
+        public readonly SortedSet<string> Faces = new(StringComparer.Ordinal);
+        public readonly SortedSet<string> Mechanisms = new(StringComparer.Ordinal);
         public readonly List<string> Statuses = new();
 
         /// <summary>Damage and statuses whose source and target both belong to this side.</summary>

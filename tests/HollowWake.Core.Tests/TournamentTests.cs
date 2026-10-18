@@ -263,9 +263,9 @@ entries:
             Assert.Contains(f.Outcome, new[] { "a", "b", "draw" });
             Assert.InRange(f.Seconds, 0, 20);
         });
-        Assert.Contains("one_two", pair.WeavesA);
+        Assert.Contains("one_two", pair.SeatsA);
         Assert.Contains("attack", pair.MechanismsA);
-        Assert.True(pair.VarietyA > 0 && pair.VarietyB > 0);
+        Assert.True(pair.CoverageA > 0 && pair.CoverageB > 0);
         Assert.Empty(pair.Breaches);
     }
 
@@ -376,14 +376,41 @@ entries:
             // Every hit is a shade's single strike and the summoning lands none, so the casts outnumber the hits only
             // when the shades' casts are credited too.
             Assert.True(summoner.Casts > summoner.Hits, "the minions' casts were not credited to their owner");
-            // Those casts count, but only the summoning is its kit.
-            Assert.Equal(new[] { "call_remnant" }, summoner.Weaves);
-            Assert.Equal(1, summoner.DistinctWeaves);
+            // Those casts count, but only the summoning is its kit, and its presses are the only uses of it.
+            Assert.Equal(new[] { "call_remnant" }, summoner.Seats);
+            Assert.Equal(1, summoner.Kit);
+            Assert.Equal(1, summoner.Coverage);
+            Assert.True(summoner.Casts > summoner.Uses, "the minions' presses were counted as uses of the summoner's seat");
         }
         finally
         {
             Directory.Delete(dir, recursive: true);
         }
+    }
+
+    [Fact]
+    public void AUseCountsOncePerPressAgainstTheSeatThatOwnsIt()
+    {
+        // A combo chain whose third press casts another weave, its face, against a channel whose one press beats again
+        // and again.
+        var run = Tournament.Run(CoreContent.Registry, new[] { new Pairing("proving_pitfighter", "tide_channeler") }, seeds: 4, seconds: 30, checkBands: false);
+        Assert.All(run.Fights, f =>
+        {
+            var pitfighter = f.SideA;
+            Assert.Equal(3, pitfighter.Kit);
+            Assert.All(pitfighter.Seats, seat => Assert.Contains(seat, new[] { "one_two", "haymaker", "frenzy" }));
+            Assert.Equal(Math.Round(pitfighter.Seats.Count / 3.0, 3), pitfighter.Coverage);
+            Assert.InRange(pitfighter.Spread, 1, pitfighter.Seats.Count);
+            var channeler = f.SideB;
+            Assert.Equal(1, channeler.Kit);
+            Assert.Equal(1, channeler.Coverage);
+            Assert.Equal(1, channeler.Spread);
+            Assert.True(channeler.Casts > channeler.Uses, "a channel's beats were counted as uses");
+        });
+        // The chain's face was pressed, and counted against the chain's seat, never as a seat of its own.
+        Assert.Contains(run.Fights, f => f.SideA.Faces.Contains("cross_jab"));
+        Assert.All(run.Fights, f => Assert.DoesNotContain("cross_jab", f.SideA.Seats));
+        Assert.All(run.Fights.Where(f => f.SideA.Faces.Contains("cross_jab")), f => Assert.Contains("one_two", f.SideA.Seats));
     }
 
     [Fact]

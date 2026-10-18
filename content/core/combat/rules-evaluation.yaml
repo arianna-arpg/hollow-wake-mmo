@@ -29,5 +29,5 @@ entries:
       # cap, or both dead after the tick the first one fell in (a double knockout).
       win_rate_ceiling: 0.8
       draw_ceiling: 0.2
-      # The share of its kit each side must cast, averaged over its fights.
-      variety_floor: 0.25
+      # The share of its kit's seats each side must use, averaged over its fights: its coverage.
+      coverage_floor: 0.25
