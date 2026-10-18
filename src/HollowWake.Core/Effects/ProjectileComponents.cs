@@ -61,7 +61,7 @@ public sealed class Projectile : IComponent
     public ProjectileSpec Spec = ProjectileSpec.Plain;
 
     // ---- motion
-    /// <summary>The world velocity of the last step, vertical speed included.</summary>
+    /// <summary>The integrator velocity before terrain-floor constraints, vertical pitch included.</summary>
     public Vector3 Velocity;
     /// <summary>Minimum outward elevation above terrain; null retains ordinary ground collision.</summary>
     public float? GroundFloor;

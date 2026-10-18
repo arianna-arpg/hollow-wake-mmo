@@ -87,6 +87,21 @@ public sealed class ProjectileSystem : SimSystem
         }
     }
 
+    /// <summary>
+    /// Velocity of the next locally constrained step, for observation. The integrator's pitch remains
+    /// intact so a floor-following flight can descend again. Unknown terrain holds the observed pose
+    /// until an authoritative update; this query never loads terrain or changes flight state.
+    /// </summary>
+    public static Vector3 ObservedVelocity(Simulation sim, Projectile p, Vector3 at)
+    {
+        var velocity = p.Velocity;
+        if (p.GroundFloor is not { } floor || p.Spec.Gravity || p.Returning) return velocity;
+        var dt = (float)sim.Clock.Dt;
+        var next = at + velocity * dt;
+        if (!sim.Terrain.TryHeightAt(next.X, next.Y, out var ground)) return Vector3.Zero;
+        velocity.Z = (MathF.Max(next.Z, ground + floor) - at.Z) / dt;
+        return velocity;
+    }
     /// <summary>Puts a flight into the world at a point: the entity, its body, its index entry and its spawn event.</summary>
     public static Entity Spawn(Simulation sim, Projectile p, Vector3 at, Entity origin, string? look)
     {
@@ -214,6 +229,7 @@ public sealed class ProjectileSystem : SimSystem
             sim.Events.Publish(new ProjectileBounced(e, p.Context.Origin, at) { Tick = sim.Clock.Tick });
         }
 
+        var chainsBeforeContact = p.Chains;
         var contactTime = Strikes(sim, e, p, t.Position, at, now, in r);
         if (p.Ended)
         {
@@ -225,7 +241,7 @@ public sealed class ProjectileSystem : SimSystem
             at = Vector3.Lerp(t.Position, at, contactTime);
             p.Carrier = at;
             p.Odometer -= flat * (1 - contactTime);
-            if (p.Returning || !p.Chasing) p.Traveled -= flat * (1 - contactTime);
+            if (p.Chains == chainsBeforeContact) p.Traveled -= flat * (1 - contactTime);
         }
 
         var ground = sim.Terrain.HeightAt(at.X, at.Y);

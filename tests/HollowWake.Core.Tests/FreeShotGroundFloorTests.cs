@@ -134,6 +134,47 @@ public class FreeShotGroundFloorTests(ITestOutputHelper output)
         kind!.Validate!(rule, new ValidationContext(content, report, "rules", "delivery", null));
         Assert.Equal(invalid, report.HasErrors);
     }
+    [Theory]
+    [InlineData(false, 4.4f)]
+    [InlineData(true, 4.4f)]
+    [InlineData(true, 20f)]
+    public void ReturningPierceCountsOnlyTheSegmentActuallyFlown(bool chain, float range)
+    {
+        var a = Arena(0);
+        var first = a.Body(12, 10);
+        if (chain)
+        {
+            a.Body(14, 10);
+            a.Body(17, 10, pattern: "gnasher_whelp");
+        }
+        a.Run("{\"type\":\"projectile\",\"speed\":15,\"range\":" + range.ToString(System.Globalization.CultureInfo.InvariantCulture) +
+            ",\"radius\":0.1,\"pierce\":1,\"chains\":" + (chain ? "1" : "0") +
+            ",\"return\":\"origin\",\"on_hit\":[{\"type\":\"event\",\"name\":\"leg_hit\"}]}",
+            new(12, 10, 0), Vector2.UnitX, first);
+        var p = a.Sim.World.Query<Projectile>().Single().C1;
+        float? legStart = chain ? null : 0;
+        var lastChains = p.Chains;
+        for (var i = 0; i < 140 && !p.Ended; i++)
+        {
+            a.Tick();
+            if (p.Chains != lastChains)
+            {
+                legStart = p.Odometer - p.Traveled;
+                lastChains = p.Chains;
+            }
+            if (legStart is { } start)
+            {
+                Assert.Equal(start, p.Odometer - p.Traveled, 4);
+                if (p.Returning)
+                {
+                    Assert.True(p.Odometer - start >= range);
+                    Assert.Equal(chain ? 3 : 1, a.Struck("leg_hit").Distinct().Count());
+                    return;
+                }
+            }
+        }
+        Assert.Fail("Expected a range-driven return after the piercing contacts.");
+    }
     private static DeliveryArena Arena(float slope)
     {
         var a = DeliveryArena.Create(seed: 481);
