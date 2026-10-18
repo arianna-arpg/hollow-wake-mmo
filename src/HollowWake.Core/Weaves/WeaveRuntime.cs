@@ -939,28 +939,39 @@ public sealed partial class WeaveRuntime
         if (state.CastId == 0) state.CastId = ++_nextCastId;
         var target = state.Target;
         var origin = OriginOf(sim, caster);
-        var ctx = new EffectContext
+        var rng = RngStreams.For(sim, caster, rngPrefix, weave.Key, rngNumber < 0 ? state.Pulses : rngNumber);
+        EffectContext ContextFor(Entity source, Vector3? from = null) => new()
         {
             CastId = state.CastId,
             Sim = sim,
-            Source = origin,
+            Origin = origin,
+            Source = source,
             Target = target,
             Point = target.IsNone ? state.Point : (sim.World.Get<Transform>(target)?.Position ?? state.Point),
             Direction = state.Direction,
             Weave = weave,
             Tags = weave.Tags,
-            Rng = RngStreams.For(sim, caster, rngPrefix, weave.Key, rngNumber < 0 ? state.Pulses : rngNumber),
+            Rng = rng,
             Potency = 1,
             DamageScale = damageScale,
             Depth = depth,
             Slot = state.Slot,
-            From = origin == caster ? null : sim.World.Get<Transform>(caster)?.Position,
+            From = from,
         };
+        // A paid use checks the physical caster's reach, body and target gates. Only its effects inherit
+        // the owner's numbers and credit; a free echo replay has its separate owner-use context.
+        var ctx = ContextFor(caster);
         vars.WriteTo(ctx.Vars);
         if (!ReleaseTargets.Check(ctx, out var miss))
         {
             ReleaseTargets.Miss(ctx, miss);
             return null;
+        }
+        if (origin != caster)
+        {
+            var inherited = ContextFor(origin, sim.World.Get<Transform>(caster)?.Position);
+            foreach (var (key, value) in ctx.Vars) inherited.Vars[key] = value;
+            ctx = inherited;
         }
         // Release precedes immediate contacts. Delivery selectors may use a dead aim body as a placement.
         if (publishCast && effects.Count > 0) Present(sim, caster, state, weave, "release");
