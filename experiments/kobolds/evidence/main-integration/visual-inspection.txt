@@ -1,0 +1,5 @@
+Card and grayscale screenshots from the fresh complete-main browser smoke were both inspected.
+Card mode shows terrain, trees, hamlet geometry and creature bodies, plus the merged ability icons; the world is not blank.
+Grayscale shows the same populated environment and bodies with the intended grayscale treatment.
+This verifies retention of the previously consumed 30f6c91 browser renderer-state correction after the new foundation merge.
+No new Kobold appearance source changed. Native rendering is untested by headless smoke; its explicit skips and exit diagnostics remain in the raw log.

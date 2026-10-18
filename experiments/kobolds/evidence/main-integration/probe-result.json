@@ -1,0 +1,22 @@
+{
+  "started": "2026-10-18T20:28:20.515Z",
+  "status": "passed",
+  "requested": [
+    "entity_delta",
+    "interface",
+    "entry_flow",
+    "cast_cues",
+    "hit_bodies_v2",
+    "projectile_slabs_v1"
+  ],
+  "granted": [
+    "hit_bodies_v2",
+    "projectile_slabs_v1",
+    "entry_flow",
+    "cast_cues",
+    "entity_delta",
+    "interface"
+  ],
+  "cleanupErrors": [],
+  "finished": "2026-10-18T20:28:30.745Z"
+}

@@ -12,6 +12,29 @@ Keep upstream's narrow three-pair wildlife replay correction and its same-runtim
 
 Required combined gates: clean solution/Release builds and tests, content validation, exact frozen-literal census, load/duel, Release Windows standard replay, proving-band comparison, generated protocol and isolated six-feature TCP probe, browser tests/build/porter, private browser/native smoke with inspected card/grayscale captures. Native rendered pixels remain untested in the headless session; keep exit diagnostics.
 
-Verification is pending below. Keep the PR unmerged for Claude and dependency review.
+Verification is recorded below. Keep the PR unmerged for Claude and dependency review.
+
+## Source reconciliation and audits
+
+Merge a1e06cda5c988fe1aa2825f42c946415c52e58a0 completed without conflicts. Kobold content, its normal-suite projectile tests, its world goldens and the browser card-renderer source/tests are unchanged from c3e099e. Shared entry/icon/protocol/runtime changes remain intact. No species-specific runtime fix or fixture adjustment was needed.
+
+The same sixteen zone/overlay audits are deeply equal before and after, including geometry, sites, nearby choices, population points/counts, explicit/effective levels and all quest fields. The original pattern-level policy and three origin offers therefore remain unchanged. No world-golden value was changed.
+
+The regenerated frozen-literal census exactly matches all 499 reviewed fixture keys. No key was added/removed, and no new literal was admitted. The entire proving-pair JSON is deeply equal to the imported #34 final report, including mechanisms, traces, outcomes and breaches. The command exits 1: bulwark, plaguer and pitfighter still each win 10/10 against their 0.8 ceiling. This is an inherited failed balance check, not a passing gate or a reason to widen a band.
+
+## Functional gates on a1e06cd
+
+- Solution and Release tools build with zero warnings/errors. Full solution tests pass on their first run: core 2402, server 59 and native client logic 137, including all 84 real Kobold projectile cases and both birth/respawn level policies.
+- Validation reports zero errors/warnings. Origin load completes 100 chunks and 200 ticks with 2686 entities, 281 monsters and three quests. The recorded Tunnelguard/Loosed duel damages both sides and defeats the Brigand.
+- Release Windows replay checks all seven inherited standard hashes and reports identical. Platform, seeds, cap and fixture are unchanged. The accepted upstream three-pair wildlife correction and its counterfactual remain intact; there is no additional Kobold replay refresh.
+- Browser tests pass 312 cases across 38 files; production build passes with the inherited large-chunk advisory. Porter tests pass 10 cases. Launcher and release packaging inputs did not change in this integration.
+- Generated protocol is current. The isolated TCP probe grants all six requested features (entity_delta, interface, entry_flow, cast_cues, hit_bodies_v2, projectile_slabs_v1), exercises movement/interface state, and reports PROBE OK with no cleanup errors.
+- Fresh private smoke passes browser 31/31 and native 36/36, with no cleanup errors. Card and grayscale screenshots were both inspected and show terrain and creature bodies; the previously consumed renderer correction is preserved. Native pixels remain untested, with explicit headless skips and shutdown resource diagnostics retained in the raw logs.
+
+Current logs and complete audits are under experiments/kobolds/evidence/main-integration/. No benchmark was run. Pre-main results at measured 6c20a93/evidence c3e099e remain historical for their exact source; they do not certify this changed runtime. Shared snapshot-path investigation and proving-band failures remain separate open work.
+
+## Handoff
+
+All owned verification processes have exited. The evidence publication changes only records and experiment evidence after source a1e06cd; it does not alter application, content or test inputs. Request Claude rereview on the complete source with these functional passes and explicit balance/performance limitations. No main merge or timing rerun is requested by this publication.
 
 Acknowledged by: pending Claude rereview.

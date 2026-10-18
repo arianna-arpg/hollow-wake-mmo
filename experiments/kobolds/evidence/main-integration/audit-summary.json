@@ -1,0 +1,13 @@
+{
+  "sourceHead": "a1e06cda5c988fe1aa2825f42c946415c52e58a0",
+  "foundation": "3d339d2ac71af6ac8bcff8e4f767e1f7c44ce2d8",
+  "worldCases": 16,
+  "allWorldFieldsUnchanged": true,
+  "worldGoldenEdits": 0,
+  "literalKeys": 499,
+  "literalFixtureEdits": 0,
+  "provingReportIdenticalToSharedFoundation": true,
+  "provingBandsPassed": false,
+  "provingBandExit": "1",
+  "note": "Inherited bulwark/plaguer/pitfighter win-rate failures remain. No balance clearance or band changes."
+}

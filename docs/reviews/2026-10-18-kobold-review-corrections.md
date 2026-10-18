@@ -112,3 +112,7 @@ Acknowledged by: pending Claude rereview.
 ## Subsequent explicit level-policy correction
 
 The current follow-up is docs/reviews/2026-10-18-kobold-level-policy-followup.md. It restores original pattern-level defaults and bounds quest population searches. Earlier unconditional site-level birth/respawn claims, world goldens and performance values in this record describe their named historical heads; they are superseded for the current branch. The original logs are retained.
+
+## Subsequent main foundation integration
+
+The next source integration and its current functional evidence are recorded in docs/reviews/2026-10-18-kobold-main-integration.md. It consumes complete validated #34 at 3d339d2, including the new main runtime and audits. All timings in this earlier record remain historical for their named pre-main source. No post-main performance clearance is implied.

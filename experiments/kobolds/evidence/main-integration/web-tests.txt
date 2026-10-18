@@ -1,0 +1,17 @@
+
+> hollow-wake-web@0.1.0 test
+> vitest run
+
+
+ RUN  v5.0.3 C:/Users/John/.codex/worktrees/kobold-scaleclans/MMOARPG/web
+
+
+ Test Files  38 passed (38)
+      Tests  312 passed (312)
+   Start at  15:27:49
+   Duration  4.33s (setup 60%, transform 30%, tests 5%, import 5%, worker 1%)
+
+  Transform  transforming modules took 18.90s · 30% of tracked time, re-done on every run
+             persist transforms across runs with fsModuleCache: true
+             learn more: https://vitest.dev/guide/improving-performance#caching-between-reruns
+

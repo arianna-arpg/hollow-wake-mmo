@@ -73,3 +73,7 @@ The authored hit-body profile reports 1.587422 ms/tick including casts, 37.59271
 PR #38 remains unmerged for Claude rereview and remaining dependency/release-policy coordination. This evidence publication changes no application or test inputs.
 
 Acknowledged by: pending Claude rereview.
+
+## Subsequent main foundation integration
+
+The next source integration and its current functional evidence are recorded in docs/reviews/2026-10-18-kobold-main-integration.md. It consumes complete validated #34 at 3d339d2, including the new main runtime and audits. All timings in this earlier record remain historical for their named pre-main source. No post-main performance clearance is implied.
