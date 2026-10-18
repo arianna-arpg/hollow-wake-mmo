@@ -40,6 +40,38 @@ public class LocalPopulationSearchTests
         Assert.Empty(planner.GenerateQuests(giver.Zone, new[] { giver }));
     }
 
+    [Theory]
+    [InlineData(0, 1, false)]
+    [InlineData(1, 1, true)]
+    [InlineData(1, 9, false)]
+    public void ResolvedPoiAnchorsTheSameBoundedSearchAndRetainsLevelEligibility(int chunks, int siteLevel, bool offered)
+    {
+        var (generator, planner, giver) = Scenario(chunks, siteLevel, 160);
+        var content = generator.Content;
+        content.With(content.Require<PoiDef>("budget_site") with { Tags = TagSet.Of("budget_site") });
+        var quest = content.Require<QuestTemplateDef>("budget_quest");
+        content.With(quest with
+        {
+            Slots = new()
+            {
+                ["site"] = new QuestSlot { PoiTags = TagSet.Of("budget_site"), Within = 160 },
+                ["target"] = quest.Slots["target"] with { PopulationAt = "$site" },
+            },
+        });
+        var quests = planner.GenerateQuests(giver.Zone, new[] { giver });
+        Assert.Equal(offered, quests.Count == 1);
+        if (offered) Assert.Equal("budget_target", Assert.Single(Assert.Single(quests).Objectives).Target);
+    }
+
+    [Fact]
+    public void InvalidProgrammaticAnchorDoesNotFallBackToTheGiver()
+    {
+        var (generator, planner, giver) = Scenario(64, 1, 160);
+        var quest = generator.Content.Require<QuestTemplateDef>("budget_quest");
+        generator.Content.With(quest with { Slots = new() { ["target"] = quest.Slots["target"] with { PopulationAt = "$missing" } } });
+        Assert.Empty(planner.GenerateQuests(giver.Zone, new[] { giver }));
+    }
+
     private static (WorldGenerator Generator, ZonePlanner Planner, PoiInstance Giver) Scenario(int chunks, int siteLevel, double reach)
     {
         var content = ContentRegistry.Load(new[] { CoreContent.FindContentDir() }, out _);

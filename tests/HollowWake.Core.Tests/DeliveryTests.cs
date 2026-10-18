@@ -10,6 +10,7 @@ using HollowWake.Core.Patterns;
 using HollowWake.Core.Sim;
 using HollowWake.Core.Tags;
 using HollowWake.Core.Weaves;
+using HollowWake.Core.Weaves.Probes;
 using Xunit;
 
 namespace HollowWake.Core.Tests;
@@ -1206,6 +1207,88 @@ public class DeliveryValidationTests
         Assert.Equal("origin", JsonNum.StringOf(returning.Specs[0].Params["return"]));
         var cascading = compiler.Compile(new WeaveSpec { Form = "nova", Threads = { "storm" }, Glyphs = { GlyphRef.Parse("cascading") } });
         Assert.Equal("cascade", cascading.Specs[0].Type);
+    }
+
+    [Fact]
+    public void ProbesReadANodesParameterAndTheWeaveAttributeBehindItAlike()
+    {
+        // A quantity has two doors, the node's parameter and the weave attribute it falls back to, and a probe sees it
+        // through the one the handler reads: a node's own value wins over the attribute, and a value that acts either
+        // way round (a flight that slows) is stated as surely as one that acts forward.
+        var dir = Path.Combine(Path.GetTempPath(), "hollowwake-doors-" + Guid.NewGuid().ToString("N"));
+        Directory.CreateDirectory(dir);
+        try
+        {
+            File.WriteAllText(Path.Combine(dir, "weaves.yaml"), string.Join("\n",
+                "kind: weaves",
+                "entries:",
+                "  - { id: t_node_chains, name: Node Chains, form: missile_quick, threads: [ember], effects: [ { type: projectile, chains: 2 } ] }",
+                "  - { id: t_node_forks, name: Node Forks, form: missile_quick, threads: [ember], effects: [ { type: projectile, forks: 1 } ] }",
+                "  - { id: t_node_rehit, name: Node Rehit, form: missile_quick, threads: [ember], effects: [ { type: projectile, rehit: 0.5 } ] }",
+                "  - { id: t_weave_rehit, name: Weave Rehit, form: missile_quick, threads: [ember], attributes: { projectile.rehit: 0.5 }, effects: [ { type: projectile } ] }",
+                "  - { id: t_plain_flight, name: Plain Flight, form: missile_quick, threads: [ember], effects: [ { type: projectile } ] }",
+                "  - { id: t_slowing, name: Slowing, form: missile_quick, threads: [ember], attributes: { projectile.accel: -4 }, effects: [ { type: projectile } ] }",
+                "  - { id: t_held_steady, name: Held Steady, form: missile_quick, threads: [ember], attributes: { projectile.accel: 3 }, effects: [ { type: projectile, accel: 0 } ] }",
+                "  - { id: t_massed, name: Massed, form: slam_quick, attributes: { summon.count: 3 }, effects: [ { type: deploy, pattern: ember_totem } ] }",
+                "  - { id: t_single, name: Single, form: slam_quick, attributes: { summon.count: 3 }, effects: [ { type: deploy, pattern: ember_totem, count: 1 } ] }",
+                "  - { id: t_still_cascade, name: Still Cascade, form: slam_quick, effects: [ { type: cascade, count: 0, effects: [ { type: area, radius: 1 } ] } ] }",
+                "  - { id: t_weave_cascade, name: Weave Cascade, form: slam_quick, attributes: { area.cascade: 2 }, effects: [ { type: cascade, effects: [ { type: area, radius: 1 } ] } ] }",
+                ""));
+            var registry = ContentRegistry.Load(new[] { CoreContent.FindContentDir(), dir }, out var report);
+            Assert.False(report.HasErrors, report.ToString());
+            var compiler = new WeaveCompiler(registry, EffectRegistry.Shared);
+            CompiledWeave Weave(string id) => compiler.Compile(new WeaveSpec { Preset = id });
+            Assert.True(Weave("t_node_chains").Mechanisms.Has("chain"));
+            Assert.True(Weave("t_node_forks").HasMechanism("flight:children"));
+            Assert.False(Weave("t_node_rehit").HasMechanism("flight:spends"));
+            Assert.False(Weave("t_weave_rehit").HasMechanism("flight:spends"));
+            Assert.True(Weave("t_plain_flight").HasMechanism("flight:spends"));
+            Assert.False(Weave("t_plain_flight").Mechanisms.Has("trajectory"));
+            Assert.True(Weave("t_slowing").Mechanisms.Has("trajectory"));
+            Assert.False(Weave("t_held_steady").Mechanisms.Has("trajectory"));
+            Assert.True(Weave("t_massed").HasMechanism("construct:massed"));
+            Assert.False(Weave("t_single").HasMechanism("construct:massed"));
+            // A cascade repeats only past its first placement, by its node's count or the weave's area.cascade.
+            Assert.False(Weave("t_still_cascade").Mechanisms.Has("cascade"));
+            Assert.True(Weave("t_weave_cascade").Mechanisms.Has("cascade"));
+            // Shipped: a lava glob sheds speed as it flies, through its weave's negative projectile.accel.
+            Assert.True(Weave("lava_glob").Mechanisms.Has("trajectory"));
+            // Shipped: a wheel's blades never end on a hit, so returning, which needs flights their hits spend, stays dormant.
+            var wheel = compiler.Compile(new WeaveSpec { Preset = "whirling_blades", Glyphs = { GlyphRef.Parse("returning") } }, GlyphFit.Dormant);
+            Assert.False(wheel.HasMechanism("flight:spends"));
+            Assert.Contains(wheel.Dormant, d => d.Ref.Id == "returning");
+        }
+        finally
+        {
+            Directory.Delete(dir, recursive: true);
+        }
+    }
+
+    [Fact]
+    public void EveryAttributeDoorAProbeOpensIsTheOneTheLintReads()
+    {
+        // The probes and the composition lint read a parameter's attribute door from one registry, so they cannot
+        // drift; a probe reads the door plainly, so no listed binding may scale its attribute or fall back only
+        // under a condition.
+        Assert.NotEmpty(ProbeBindings.All);
+        foreach (var (type, parameter) in ProbeBindings.All)
+        {
+            Assert.Equal(CompositionLint.FallbackAttribute(type, parameter), ProbeBindings.AttributeOf(type, parameter));
+            if (AxisBindings.FallbackOf(type, parameter) is { } binding)
+            {
+                Assert.Equal(1, binding.Factor);
+                Assert.Null(binding.FactorOf);
+                Assert.Null(binding.FallbackWhen);
+            }
+        }
+        Assert.Equal("projectile.chain", ProbeBindings.AttributeOf("projectile", "chains"));
+        Assert.Equal("projectile.forks", ProbeBindings.AttributeOf("projectile", "forks"));
+        Assert.Equal("projectile.rehit", ProbeBindings.AttributeOf("projectile", "rehit"));
+        Assert.Equal("projectile.accel", ProbeBindings.AttributeOf("projectile", "accel"));
+        Assert.Equal("summon.count", ProbeBindings.AttributeOf("deploy", "count"));
+        Assert.Equal("area.cascade", ProbeBindings.AttributeOf("cascade", "count"));
+        Assert.Null(ProbeBindings.AttributeOf("spawn", "count"));
+        Assert.Throws<InvalidOperationException>(() => ProbeBindings.AttributeOf("area", "radius"));
     }
 }
 

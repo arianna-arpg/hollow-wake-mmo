@@ -118,6 +118,23 @@ public class ProjectileLaunchRegressionTests(ITestOutputHelper output)
         Assert.Equal(verticalSign, Math.Sign(Assert.Single(flights).Velocity.Z));
     }
 
+    [Fact]
+    public void ExplicitPointOriginAtANewAnchorUsesItsGroundLift()
+    {
+        var a = DeliveryArena.Create();
+        var flights = Capture(a);
+        a.Effect("""{"type":"projectile","origin":"point","aim":"horizontal","range":10}""").Execute(new EffectContext
+        {
+            Sim = a.Sim,
+            Source = a.Caster,
+            Point = new Vector3(15, 10, 0),
+            From = new Vector3(12, 10, .9f),
+            LaunchLift = 0,
+            Direction = Vector2.UnitX,
+            Rng = new HollowWake.Core.Maths.Rng(481),
+        });
+        Assert.Equal(new Vector3(15, 10, 1), Assert.Single(flights).Origin);
+    }
     private static List<Projectile> Capture(DeliveryArena a)
     {
         var flights = new List<Projectile>();

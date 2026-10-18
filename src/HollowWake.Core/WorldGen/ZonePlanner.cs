@@ -329,6 +329,7 @@ public sealed class ZonePlanner
     {
         var questLevel = Math.Max(1, giver.Level + template.LevelOffset);
         var fills = new Dictionary<string, (string Id, string Name)>(StringComparer.Ordinal);
+        var filledPois = new Dictionary<string, PoiInstance>(StringComparer.Ordinal);
         var usedPois = new HashSet<string> { giver.Id };
         foreach (var kv in template.Slots)
         {
@@ -343,6 +344,7 @@ public sealed class ZonePlanner
                 }
                 usedPois.Add(pick.Id);
                 fills[slot] = (pick.Id, pick.Name);
+                filledPois[slot] = pick;
                 continue;
             }
             if (!req.PatternTags.IsEmpty)
@@ -356,7 +358,17 @@ public sealed class ZonePlanner
                         options.Add(p);
                     }
                 }
-                if (req.LocalPopulation) options = LocalPatterns(options, req, giver, questLevel);
+                if (req.LocalPopulation)
+                {
+                    var anchor = giver;
+                    if (req.PopulationAt is { } at && at != "$giver")
+                    {
+                        // Invalid/unresolved references fail closed even for programmatically supplied content.
+                        if (at.Length < 2 || at[0] != '$' || !filledPois.TryGetValue(at[1..], out var resolved)) return null;
+                        anchor = resolved;
+                    }
+                    options = LocalPatterns(options, req, anchor, questLevel);
+                }
                 if (options.Count == 0)
                 {
                     return null;
@@ -467,19 +479,19 @@ public sealed class ZonePlanner
     /// means no quest. The content-owned chunk limit includes cache hits, so slot order cannot extend
     /// the search. This consumes no placement RNG and never asks another zone to plan quests.
     /// </summary>
-    private List<PatternDef> LocalPatterns(List<PatternDef> candidates, QuestSlot req, PoiInstance giver, int questLevel)
+    private List<PatternDef> LocalPatterns(List<PatternDef> candidates, QuestSlot req, PoiInstance anchor, int questLevel)
     {
         if (candidates.Count == 0 || _p.QuestPopulationChunks <= 0) return new List<PatternDef>();
-        var first = _layout.ChunkOf(giver.X - req.Within, giver.Y - req.Within);
-        var last = _layout.ChunkOf(giver.X + req.Within, giver.Y + req.Within);
+        var first = _layout.ChunkOf(anchor.X - req.Within, anchor.Y - req.Within);
+        var last = _layout.ChunkOf(anchor.X + req.Within, anchor.Y + req.Within);
         var chunks = new List<(ChunkCoord Coord, double Distance)>();
         for (var y = first.Y; y <= last.Y; y++)
             for (var x = first.X; x <= last.X; x++)
             {
                 var coord = new ChunkCoord(x, y);
                 var origin = _layout.ChunkOrigin(coord);
-                var d = Distance(giver.X, giver.Y, Math.Clamp(giver.X, origin.X, origin.X + _layout.ChunkSize),
-                    Math.Clamp(giver.Y, origin.Y, origin.Y + _layout.ChunkSize));
+                var d = Distance(anchor.X, anchor.Y, Math.Clamp(anchor.X, origin.X, origin.X + _layout.ChunkSize),
+                    Math.Clamp(anchor.Y, origin.Y, origin.Y + _layout.ChunkSize));
                 if (d <= req.Within) chunks.Add((coord, d));
             }
         chunks.Sort((a, b) => a.Distance != b.Distance ? a.Distance.CompareTo(b.Distance)
@@ -500,7 +512,7 @@ public sealed class ZonePlanner
             foreach (var spawn in spawns)
             {
                 if (!byId.TryGetValue(spawn.Pattern, out var pattern)
-                    || Distance(giver.X, giver.Y, spawn.X, spawn.Y) > req.Within
+                    || Distance(anchor.X, anchor.Y, spawn.X, spawn.Y) > req.Within
                     || (req.LevelDelta is not null && !req.LevelDelta.Contains((spawn.Level ?? pattern.Level) - questLevel)))
                     continue;
                 matches.TryAdd(pattern.Id, pattern);

@@ -819,7 +819,7 @@ internal static class Families
             }
             return new Budget((1 + extra) * MorphArena.Bodies, 0, 0, seconds + View.Dt, $"{1 + extra} placements on at most {MorphArena.Bodies} bodies each");
         },
-        States = v => new[] { new Statement("cascade", true, "a cascade"), Landing(v) },
+        States = v => new[] { new Statement("cascade", Count0(v.Num("count")) >= 1, $"count {Count0(v.Num("count"))}: a cascade repeats only past its first placement"), Landing(v) },
     };
 
     // ------------------------------------------------------------ aura
@@ -1100,11 +1100,15 @@ internal static class Riders
         ["data"] = new JsonObject { ["depth"] = "depth" },
     };
 
-    /// <summary>The life a drain takes from the body it reaches.</summary>
-    public const double Drained = 5;
+    /// <summary>The life a drain asks to take from the body it reaches.</summary>
+    public const int Drained = 5;
 
-    /// <summary>A drain: the resource effect lowering the reached body's life directly, with no hit.</summary>
-    public static JsonObject Drain() => new() { ["type"] = "resource", ["resource"] = "life", ["amount"] = -Drained };
+    /// <summary>
+    /// A drain: either direct resource writer told to lower the reached body's life, by a formula, since validation refuses a
+    /// literal. The handler refuses it (life falls only through the damage ladder) and logs the refusal, so the run
+    /// loses no life to it; were the refusal lost, the pipeline check would see the life it takes with no hit.
+    /// </summary>
+    public static JsonObject Drain(string type) => new() { ["type"] = type, ["resource"] = "life", ["amount"] = $"-min({Drained}, target.life)" };
 
     /// <summary>A status rider: a marker of the depth it is applied at, then the marking status, whose every tick runs a marker of the depth the tick runs at.</summary>
     public static JsonObject[] Status() => new[]
@@ -1136,7 +1140,7 @@ internal static class Riders
     {
         Rider.Damage => new JsonArray(Damage(list.Name)),
         Rider.Marker => new JsonArray(Marker(list.Name)),
-        Rider.Drain => new JsonArray(Drain()),
+        Rider.Drain => new JsonArray(Drain("resource"), Drain("heal")),
         Rider.Status => new JsonArray(Status()),
         Rider.Cast => new JsonArray(Cast()),
         _ => new JsonArray(Burst(list.Name)),

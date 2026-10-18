@@ -1,0 +1,19 @@
+pairing                                      fights  a wins  b wins  draws  ttk med    low   high  cov a  cov b  spr a  spr b
+proving_reaver v proving_bulwark                 10    0.00    1.00   0.00     36.5   32.4   43.7   1.00   1.00   1.00   1.00
+    proving_reaver: strike[stone]+rending | affliction affliction:bleeding attack bankless hit melee rupture strikes | self 0
+    proving_bulwark: bite | attack bankless hit melee strikes | self 0 poise_broken poise_rearming shield_delay
+    BREACH proving_bulwark wins 10 of 10, above the ceiling 0.8
+proving_hexer v proving_plaguer                  10    0.00    1.00   0.00      6.7    5.8      7   1.00   0.90   2.70   2.40
+    proving_hexer: hex_of_despair maddening_rite void_lash | affliction area bankless cooldown hit line shape spell status | self 0
+    proving_plaguer: ember_bolt plague_rite powder_rite | affliction area bankless chain cooldown flight hit projectile spell status | self 0
+    BREACH proving_plaguer wins 10 of 10, above the ceiling 0.8
+proving_pitfighter v proving_mower               10    1.00    0.00   0.00     11.1   10.2   12.7   1.00   0.43   2.74   1.40
+    proving_pitfighter: frenzy haymaker one_two | affliction area attack bankless charges cooldown displaces hit melee shape shove spends status strikes | self 0 frenzy
+    proving_mower: lash_roots scythe_sweep toppling_stroke | affliction area attack bankless cooldown hit melee shape status strikes | self 0
+    BREACH proving_pitfighter wins 10 of 10, above the ceiling 0.8
+proving_fletcher v proving_evoker                10    0.10    0.90   0.00      7.7    7.5    8.5   0.93   0.73   3.39   1.74
+    proving_fletcher: gyre_hurl gyreblade splinter_volley web_shot | affliction attack bankless charges cooldown flight hit projectile returning spends status strikes | self 0
+    proving_evoker: chain_lightning frostbolt frozen_orb | affliction bankless chain cooldown flight hit projectile spell status | self 0
+    BREACH proving_evoker wins 9 of 10, above the ceiling 0.8
+wrote D:/Games/MMOARPG/artifacts/entity31-pre54-proving.json
+bands: FAIL
