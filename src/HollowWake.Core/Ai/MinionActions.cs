@@ -411,7 +411,7 @@ internal static class MinionActions
             // Preserve the existing single-replay stream; additional uses in this think get distinct seeded streams.
             if (i > 0) rng = new Rng(Rng.Combine(rng.Seed, (ulong)use.Sequence));
             runtime.Replay(c.Sim, c.Entity, owner, use.Weave, use.Effects, use.Variables,
-                use.Target, use.Point, c.Num(p, "damage_scale", 0.5), rng);
+                use.Target, use.Point, use.TargetPoint, use.AimOffset, use.Direction, c.Num(p, "damage_scale", 0.5), rng);
         }
     }
 

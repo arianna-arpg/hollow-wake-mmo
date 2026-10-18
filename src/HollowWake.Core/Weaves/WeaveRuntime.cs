@@ -984,12 +984,18 @@ public sealed partial class WeaveRuntime
         {
             stats.Stamp("moved", now);
         }
+        // Effects may move or remove the aim body. Queue listeners need the geometry this
+        // resolution began with, while retaining the body separately for release eligibility.
+        Vector3? resolvedTargetPoint = publishCast && ctx.Target != ctx.Source ? ctx.TargetTransform?.Position : null;
+        var resolvedAimOffset = resolvedTargetPoint is { } sampled
+            ? HitBodies.AimPoint(sim, ctx.Target) - sampled : ctx.AimOffset;
         CompiledEffect.ExecuteAll(effects, ctx);
         if (publishCast)
         {
             sim.Events.Publish(new WeaveCast(caster, weave.Key, target, ctx.Point, weave.Tags)
             {
                 Tick = sim.Clock.Tick, Resolved = weave, ResolvedEffects = effects, ResolvedVariables = vars.Snapshot(),
+                ResolvedTargetPoint = resolvedTargetPoint, ResolvedAimOffset = resolvedAimOffset, ResolvedDirection = ctx.Direction,
             });
             if (sim.World.TryGet<WeaveBook>(caster, out var book))
             {

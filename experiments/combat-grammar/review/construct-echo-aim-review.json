@@ -1,0 +1,38 @@
+{
+  "date": "2026-10-18",
+  "scope": "Resolved event to per-echo queue to Replay; shared geometry remains the reviewed 4057f79 dependency",
+  "baseline": {
+    "published_pr50": "738bad67f3c1490b1f2b241dc970d55606d6d24d",
+    "combined_parent": "0a5c8813",
+    "shared_fix_applied": "20f296b3b25ca6c8a8b3183f487e21ce07baaf85",
+    "original_regression_commit": "b92559c3"
+  },
+  "before": [
+    { "source": "738bad67", "log": "artifacts/echo-aim-before/test.txt", "failed": 2, "passed": 2, "symptom": "Moved-target replay heading 0.785398 instead of captured 0" },
+    { "source": "0a5c8813", "log": "artifacts/echo-aim-combined-before/test.txt", "failed": 2, "passed": 2, "symptom": "Same launch-direction defect" },
+    { "source": "Capture changes with corrected fixtures, before shared geometry adoption", "log": "artifacts/echo-aim-combined-after/test.txt", "failed": 8, "passed": 4, "note": "Historical directory name predates the successful shared cherry-pick; it is a BEFORE-shared result" }
+  ],
+  "final": {
+    "logs": "artifacts/echo-aim-gates-final/",
+    "release_build": { "warnings": 0, "errors": 0 },
+    "core": { "passed": 2605, "failed": 4, "skipped": 0 },
+    "server": { "passed": 66, "failed": 0, "skipped": 0 },
+    "client_logic": { "passed": 184, "failed": 0, "skipped": 0 },
+    "core_construct_cases_passed": 63,
+    "new_echo_aim_cases_passed": 12,
+    "content_validation": { "errors": 0, "warnings": 0 },
+    "load_exit": 0,
+    "fight_wolf_hob_exit": 0,
+    "standard_windows_replay_hashes": "7 identical",
+    "inherited_failures": ["zone(3,2)", "zone(0,-1)", "zone(0,0)", "overlaid world"],
+    "world_goldens_modified": false,
+    "performance_sampled": false,
+    "browser_smoke_repeated": false
+  },
+  "retained_intermediate_results": [
+    "Fixture import, release-policy and internal-property compiler/setup errors are not runtime regressions",
+    "The initial elevation fixture moved its target before summon ticks, allowing it to fall before the tested cast; corrected setup moves it after summoning",
+    "First combined broad run had the four inherited world failures plus a targeted-sector facing regression; corrected targeting distinction restores the unchanged sector test"
+  ],
+  "remaining": ["Complete final foundation integration", "Independent capture-path and Claude review", "Final combined functional gates", "Coordinated performance acceptance"]
+}

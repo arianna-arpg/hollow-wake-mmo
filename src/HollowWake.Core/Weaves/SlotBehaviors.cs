@@ -374,7 +374,8 @@ public sealed partial class WeaveRuntime
     /// the resolution is the caster's: it raises <see cref="WeaveCast"/>.
     /// </summary>
     internal void Replay(Simulation sim, Entity caster, Entity origin, CompiledWeave weave,
-        IReadOnlyList<CompiledEffect> effects, CastVariableSnapshot? variables, Entity target, Vector3 point, double damageScale, Rng rng)
+        IReadOnlyList<CompiledEffect> effects, CastVariableSnapshot? variables, Entity target, Vector3 point,
+        Vector3? targetPoint, Vector3 aimOffset, Vector2 direction, double damageScale, Rng rng)
     {
         if (!sim.World.IsAlive(caster) || sim.World.Has<Dead>(caster) || !sim.World.TryGet<Transform>(caster, out var ct)
             || !sim.World.IsAlive(origin) || !sim.World.Has<Stats>(origin))
@@ -383,13 +384,21 @@ public sealed partial class WeaveRuntime
         }
         // The owner already resolved this use. A queued replay keeps that aim; it does not track a body again.
         var at = point;
-        ct.Face(at);
-        var direction = new Vector2(at.X - ct.Position.X, at.Y - ct.Position.Y);
-        direction = direction.LengthSquared() > 0.0001f ? Vector2.Normalize(direction) : ct.Forward;
+        if (weave.Targeting == Targeting.Direction && direction.LengthSquared() > 0.0001f)
+        {
+            ct.Yaw = MathF.Atan2(direction.Y, direction.X);
+        }
+        else
+        {
+            ct.Face(at);
+            direction = new Vector2(at.X - ct.Position.X, at.Y - ct.Position.Y);
+            direction = direction.LengthSquared() > 0.0001f ? Vector2.Normalize(direction) : ct.Forward;
+        }
         var context = new EffectContext
         {
             CastId = ++_nextCastId, CastSource = caster, Sim = sim, Source = origin, Origin = origin, Target = target,
             Point = at, Direction = direction, Weave = weave, Tags = weave.Tags, Rng = rng,
+            SampledTargetPoint = targetPoint, AimOffset = aimOffset,
             DamageScale = damageScale, From = ct.Position,
         };
         variables?.Values.WriteTo(context.Vars);
@@ -402,6 +411,7 @@ public sealed partial class WeaveRuntime
         sim.Events.Publish(new WeaveCast(caster, weave.Key, target, at, weave.Tags)
         {
             Tick = sim.Clock.Tick, Resolved = weave, ResolvedEffects = effects, ResolvedVariables = variables,
+            ResolvedTargetPoint = targetPoint, ResolvedAimOffset = aimOffset, ResolvedDirection = direction,
         });
     }
 
