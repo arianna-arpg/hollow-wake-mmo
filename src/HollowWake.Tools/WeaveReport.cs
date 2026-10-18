@@ -13,8 +13,9 @@ namespace HollowWake.Tools;
 
 /// <summary>
 /// <c>hollowwake weave</c>: compiles a preset or a composed weave the way the server would and prints what
-/// the compiler made of it: level, tags, declared and probed mechanisms, active and dormant glyphs with
-/// their reasons, modifiers, the patched effect graph, and preview numbers for a sample caster.
+/// the compiler made of it: level, the held-mode blocks it carries and where each came from, tags, declared
+/// and probed mechanisms, active and dormant glyphs with their reasons, modifiers, the patched effect graph,
+/// and preview numbers for a sample caster.
 /// </summary>
 public static class WeaveReport
 {
@@ -38,6 +39,10 @@ public static class WeaveReport
         var w = weave!;
         Console.WriteLine($"{w.Name} ({w.Key})  level {w.Level}{(w.LevelBonus != 0 ? $" ({spec.Level} + {w.LevelBonus} from glyphs)" : "")}");
         Console.WriteLine($"form        {w.Form.Id}: {w.CastMode.ToString().ToLowerInvariant()}, targeting {w.Targeting.ToString().ToLowerInvariant()}, scope {w.CastScope}");
+        foreach (var (block, source) in w.HeldBlocks.Sources())
+        {
+            Console.WriteLine($"block       {block} from {source}");
+        }
         Console.WriteLine($"threads     {(w.Threads.Count == 0 ? "-" : string.Join(", ", w.Threads.Select(t => t.Id)))}");
         Console.WriteLine($"tags        {w.Tags}");
         Console.WriteLine($"declared    {w.DeclaredMechanisms}");

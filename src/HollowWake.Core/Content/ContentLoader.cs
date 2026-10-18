@@ -36,11 +36,12 @@ public static class ContentLoader
                 .OrderBy(f => f, StringComparer.Ordinal)
                 .ToList();
             var pending = new List<PendingPatch>();
+            var defined = new HashSet<string>(StringComparer.Ordinal);
             foreach (var file in files)
             {
                 foreach (var doc in ReadDocuments(file, report))
                 {
-                    ApplyDocument(doc, file, merged, pending, report);
+                    ApplyDocument(doc, file, merged, pending, defined, report);
                 }
             }
             ApplyPending(pending, merged, report);
@@ -140,7 +141,7 @@ public static class ContentLoader
         return results;
     }
 
-    private static void ApplyDocument(JsonObject doc, string origin, Dictionary<string, Dictionary<string, RawDefinition>> merged, List<PendingPatch> pending, ValidationReport report)
+    private static void ApplyDocument(JsonObject doc, string origin, Dictionary<string, Dictionary<string, RawDefinition>> merged, List<PendingPatch> pending, HashSet<string> defined, ValidationReport report)
     {
         if (!TryReadName(doc["kind"], out var kind))
         {
@@ -172,7 +173,7 @@ public static class ContentLoader
                     report.Error(kind, "", "Entry 'id' must be a non-empty string.", origin);
                     continue;
                 }
-                ApplyEntry(kind, id, obj, origin, byId, pending, report);
+                ApplyEntry(kind, id, obj, origin, byId, pending, defined, report);
             }
         }
         else if (entries is JsonObject map)
@@ -185,7 +186,7 @@ public static class ContentLoader
                     continue;
                 }
                 obj["id"] ??= kv.Key;
-                ApplyEntry(kind, kv.Key, obj, origin, byId, pending, report);
+                ApplyEntry(kind, kv.Key, obj, origin, byId, pending, defined, report);
             }
         }
         else
@@ -194,7 +195,7 @@ public static class ContentLoader
         }
     }
 
-    private static void ApplyEntry(string kind, string id, JsonObject obj, string origin, Dictionary<string, RawDefinition> byId, List<PendingPatch> pending, ValidationReport report)
+    private static void ApplyEntry(string kind, string id, JsonObject obj, string origin, Dictionary<string, RawDefinition> byId, List<PendingPatch> pending, HashSet<string> defined, ValidationReport report)
     {
         // Validate control fields before changing the object or the merged definitions. Bad authoring
         // input belongs in the report, and must not prevent valid sibling entries from being read.
@@ -225,6 +226,11 @@ public static class ContentLoader
             }
             Patch(kind, id, obj, origin, existing, byId);
             return;
+        }
+        // A layer defines an id once; only a later layer may replace or patch an earlier one.
+        if (!defined.Add(kind + "/" + id))
+        {
+            report.Warn(kind, id, "Defined twice in this layer; this file replaces the earlier definition. A later layer may replace or patch it, but one layer defines an id once.", origin);
         }
         byId[id] = new RawDefinition(kind, id, (JsonObject)obj.DeepClone(), origin);
     }

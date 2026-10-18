@@ -534,6 +534,7 @@ public sealed class EffectSignature
 {
     private readonly HashSet<string> _params;
     private readonly Dictionary<string, string> _hooks;
+    private readonly List<(string Kind, string Parameter)> _refers = new();
 
     /// <summary>A handler that declares nothing: any parameter is accepted and nothing hooks into it.</summary>
     public static readonly EffectSignature Open = new(Array.Empty<string>(), open: true);
@@ -556,6 +557,13 @@ public sealed class EffectSignature
     /// <summary>Hook name to the parameter holding that effect list.</summary>
     public IReadOnlyDictionary<string, string> Hooks => _hooks;
 
+    /// <summary>
+    /// The parameters that name content of a kind (<c>statuses</c>, <c>charges</c>, <c>patterns</c>), each a
+    /// string or a list of strings. Validation checks every name against the registry and refuses an unknown
+    /// one; a name starting with <c>$</c> is a variable the compiler resolves and is left alone.
+    /// </summary>
+    public IReadOnlyList<(string Kind, string Parameter)> References => _refers;
+
     /// <summary>For wrappers (<c>repeat</c>, <c>sequence</c>, <c>delay</c>): the list a wrap patch puts the wrapped node in.</summary>
     public string? Wraps { get; private set; }
 
@@ -574,6 +582,17 @@ public sealed class EffectSignature
     {
         _params.Add(parameter);
         Wraps = parameter;
+        return this;
+    }
+
+    /// <summary>Declares that each of <paramref name="parameters"/> names content of <paramref name="kind"/>.</summary>
+    public EffectSignature Refers(string kind, params string[] parameters)
+    {
+        foreach (var parameter in parameters)
+        {
+            _params.Add(parameter);
+            _refers.Add((kind, parameter));
+        }
         return this;
     }
 }

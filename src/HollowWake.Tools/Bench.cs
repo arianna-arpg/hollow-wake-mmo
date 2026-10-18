@@ -216,7 +216,7 @@ public static class Bench
     private static IEnumerable<Result> Tick(ContentRegistry content, string seed, int monsters, int players, int ticks, int minions, bool castCues)
     {
         var generator = new WorldGenerator(content, Rng.Hash64(seed));
-        var world = new WorldState(generator.Overlays);
+        var world = new WorldState(generator.Overlays, content.Rules);
         var log = new ListSimLog();
         var sw = Stopwatch.StartNew();
         var sim = ZoneBuilder.CreateZone(content, generator, world, generator.StartZone(), log);

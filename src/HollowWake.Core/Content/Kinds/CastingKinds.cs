@@ -11,9 +11,9 @@ namespace HollowWake.Core.Content.Kinds;
 /// <summary>
 /// Content for casting: the casting fields of forms (cast modes and their blocks, strike timing, triggers,
 /// use banks, gates, charge spends, toggles with reservation and upkeep, slot behaviors, target kinds, the
-/// cooldown clock), the casting fields of glyphs and preset overrides. Registers the cast variables and the
-/// <c>slot.</c> names as scope names, the trigger kinds the cast modes raise, and validators on the
-/// existing kinds.
+/// cooldown clock), the casting fields of glyphs and preset overrides, held-mode blocks among them (a
+/// preset's must suit its form's cast mode). Registers the cast variables and the <c>slot.</c> names as
+/// scope names, the trigger kinds the cast modes raise, and validators on the existing kinds.
 /// </summary>
 internal static class CastingKinds
 {
@@ -46,6 +46,7 @@ internal static class CastingKinds
             SelfStack(d.SelfStack, c, "self_stack");
             Chain(d.Chain, c, "chain");
             c.Modifiers(d.EquipModifiers, "equip_modifiers");
+            PresetBlocks(d, c);
         });
     }
 
@@ -87,47 +88,7 @@ internal static class CastingKinds
             {
                 c.Warn("has a channel block but its cast_mode is not channel.");
             }
-            c.Expression(channel.Interval, "channel.interval");
-            c.Expression(channel.Windup, "channel.windup");
-            c.Expression(channel.Jitter, "channel.jitter");
-            c.Expression(channel.Move, "channel.move");
-            c.Expression(channel.TurnRate, "channel.turn_rate");
-            c.Expression(channel.MaxHold, "channel.max_hold");
-            foreach (var ramp in channel.Ramps)
-            {
-                if (!Curves.Has(ramp.Curve))
-                {
-                    c.Error($"channel.ramps '{ramp.Attribute}' names unknown curve '{ramp.Curve}'; known curves are {string.Join(", ", Curves.Names)}.");
-                }
-                if (ramp.On is not ("weave" or "caster"))
-                {
-                    c.Error($"channel.ramps '{ramp.Attribute}' must be on weave or caster, not '{ramp.On}'.");
-                }
-                Declared(ramp.Attribute, c, "channel.ramps");
-            }
-            if (channel.Release is { } release)
-            {
-                WeaveValidation.Effects(release.Effects, c, "channel.release.effects");
-                c.Expression(release.MinHold, "channel.release.min_hold");
-            }
-            if (channel.Persist is { } persist)
-            {
-                c.Expression(persist.PerHeldSecond, "channel.persist.per_held_second");
-                c.Expression(persist.MaxDuration, "channel.persist.max_duration");
-                c.Expression(persist.Fade, "channel.persist.fade");
-            }
-            if (channel.Brim is { } brim)
-            {
-                c.Expression(brim.FillTime, "channel.brim.fill_time");
-                if (!Curves.Has(brim.Scale.Curve))
-                {
-                    c.Error($"channel.brim.scale names unknown curve '{brim.Scale.Curve}'.");
-                }
-                if (brim.BankAt is < 0 or > 1 || brim.MinRelease is < 0 or > 1)
-                {
-                    c.Error("channel.brim bank_at and min_release are fractions from 0 to 1.");
-                }
-            }
+            ChannelBlock(channel, c);
         }
         if (d.Charge is { } charge)
         {
@@ -135,12 +96,7 @@ internal static class CastingKinds
             {
                 c.Warn("has a charge block but its cast_mode is not charge.");
             }
-            c.Expression(charge.MaxTime, "charge.max_time");
-            c.Expression(charge.FullHold, "charge.full_hold");
-            foreach (var scale in charge.Scales)
-            {
-                Declared(scale.Attribute, c, "charge.scales");
-            }
+            ChargeBlock(charge, c);
         }
         else if (d.CastMode == CastMode.Charge)
         {
@@ -171,33 +127,7 @@ internal static class CastingKinds
             {
                 c.Warn("has a guard block but its cast_mode is not guard.");
             }
-            if (guard.Arc is <= 0 or > 360)
-            {
-                c.Error("guard.arc is in degrees, above 0 and at most 360.");
-            }
-            if (guard.Pool is null)
-            {
-                c.Warn("guard has no pool, so it absorbs nothing.");
-            }
-            c.Expression(guard.Pool, "guard.pool");
-            c.Expression(guard.Move, "guard.move");
-            c.Expression(guard.TurnRate, "guard.turn_rate");
-            c.Expression(guard.Parry, "guard.parry");
-            c.Expression(guard.MaxDuration, "guard.max_duration");
-            if (guard.Bash is { } bash)
-            {
-                WeaveValidation.Effects(bash.Effects, c, "guard.bash.effects");
-                c.Expression(bash.ArmTime, "guard.bash.arm_time");
-                if (bash.Threshold is < 0 or > 1)
-                {
-                    c.Error("guard.bash.threshold is a fraction of the pool from 0 to 1.");
-                }
-            }
-            if (guard.Pulse is { } pulse)
-            {
-                c.Ref<WeaveDef>(pulse.Weave, "guard.pulse.weave");
-                c.Expression(pulse.Interval, "guard.pulse.interval");
-            }
+            GuardBlock(guard, c);
         }
         else if (d.CastMode == CastMode.Guard)
         {
@@ -209,10 +139,7 @@ internal static class CastingKinds
             {
                 c.Warn("has strike timing but only a cast bar reads a second press.");
             }
-            if (timing.Window <= 0)
-            {
-                c.Error("timing.window must be above 0.");
-            }
+            TimingBlock(timing, c);
         }
         if (d.Trigger is not null && (d.CastMode is CastMode.Channel or CastMode.Charge or CastMode.Overcharge or CastMode.Guard || d.Toggle is not null))
         {
@@ -264,6 +191,145 @@ internal static class CastingKinds
         if (d.Tree is { } tree)
         {
             Tree(tree, c);
+        }
+    }
+
+    /// <summary>
+    /// A preset's held-mode blocks. Each replaces its form's block whole while the cast mode stays the form's,
+    /// so a block the form's mode never reads is an error (on a form, which says both, it is a warning); each
+    /// block is then checked as a form's is.
+    /// </summary>
+    private static void PresetBlocks(WeaveDef d, ValidationContext c)
+    {
+        var form = c.Registry.Get<FormDef>(d.Form);
+        if (d.Channel is { } channel)
+        {
+            Suits("channel", CastMode.Channel, form, c);
+            ChannelBlock(channel, c);
+        }
+        if (d.Charge is { } charge)
+        {
+            Suits("charge", CastMode.Charge, form, c);
+            ChargeBlock(charge, c);
+        }
+        if (d.Guard is { } guard)
+        {
+            Suits("guard", CastMode.Guard, form, c);
+            GuardBlock(guard, c);
+        }
+        if (d.Timing is { } timing)
+        {
+            Suits("timing", CastMode.Cast, form, c);
+            TimingBlock(timing, c);
+        }
+    }
+
+    /// <summary>Refuses a preset's block its form's cast mode does not read; an unknown form is refused by its reference.</summary>
+    private static void Suits(string block, CastMode mode, FormDef? form, ValidationContext c)
+    {
+        if (form is not null && form.CastMode != mode)
+        {
+            c.Error($"has a {block} block, but its form '{form.Id}' has cast_mode {ModeName(form.CastMode)}: a preset's {block} block needs a form whose cast_mode is {ModeName(mode)}.");
+        }
+    }
+
+    private static string ModeName(CastMode mode) => mode.ToString().ToLowerInvariant();
+
+    /// <summary>A channel block, a form's or a preset's: its expressions, its ramps' curves and targets, its release, persistence and brim.</summary>
+    private static void ChannelBlock(ChannelSpec channel, ValidationContext c)
+    {
+        c.Expression(channel.Interval, "channel.interval");
+        c.Expression(channel.Windup, "channel.windup");
+        c.Expression(channel.Jitter, "channel.jitter");
+        c.Expression(channel.Move, "channel.move");
+        c.Expression(channel.TurnRate, "channel.turn_rate");
+        c.Expression(channel.MaxHold, "channel.max_hold");
+        foreach (var ramp in channel.Ramps)
+        {
+            if (!Curves.Has(ramp.Curve))
+            {
+                c.Error($"channel.ramps '{ramp.Attribute}' names unknown curve '{ramp.Curve}'; known curves are {string.Join(", ", Curves.Names)}.");
+            }
+            if (ramp.On is not ("weave" or "caster"))
+            {
+                c.Error($"channel.ramps '{ramp.Attribute}' must be on weave or caster, not '{ramp.On}'.");
+            }
+            Declared(ramp.Attribute, c, "channel.ramps");
+        }
+        if (channel.Release is { } release)
+        {
+            WeaveValidation.Effects(release.Effects, c, "channel.release.effects");
+            c.Expression(release.MinHold, "channel.release.min_hold");
+        }
+        if (channel.Persist is { } persist)
+        {
+            c.Expression(persist.PerHeldSecond, "channel.persist.per_held_second");
+            c.Expression(persist.MaxDuration, "channel.persist.max_duration");
+            c.Expression(persist.Fade, "channel.persist.fade");
+        }
+        if (channel.Brim is { } brim)
+        {
+            c.Expression(brim.FillTime, "channel.brim.fill_time");
+            if (!Curves.Has(brim.Scale.Curve))
+            {
+                c.Error($"channel.brim.scale names unknown curve '{brim.Scale.Curve}'.");
+            }
+            if (brim.BankAt is < 0 or > 1 || brim.MinRelease is < 0 or > 1)
+            {
+                c.Error("channel.brim bank_at and min_release are fractions from 0 to 1.");
+            }
+        }
+    }
+
+    /// <summary>A charge-up block, a form's or a preset's: its times and the attributes it scales.</summary>
+    private static void ChargeBlock(ChargeUpSpec charge, ValidationContext c)
+    {
+        c.Expression(charge.MaxTime, "charge.max_time");
+        c.Expression(charge.FullHold, "charge.full_hold");
+        foreach (var scale in charge.Scales)
+        {
+            Declared(scale.Attribute, c, "charge.scales");
+        }
+    }
+
+    /// <summary>A guard block, a form's or a preset's: its arc, pool and times, its bash and its pulse.</summary>
+    private static void GuardBlock(GuardSpec guard, ValidationContext c)
+    {
+        if (guard.Arc is <= 0 or > 360)
+        {
+            c.Error("guard.arc is in degrees, above 0 and at most 360.");
+        }
+        if (guard.Pool is null)
+        {
+            c.Warn("guard has no pool, so it absorbs nothing.");
+        }
+        c.Expression(guard.Pool, "guard.pool");
+        c.Expression(guard.Move, "guard.move");
+        c.Expression(guard.TurnRate, "guard.turn_rate");
+        c.Expression(guard.Parry, "guard.parry");
+        c.Expression(guard.MaxDuration, "guard.max_duration");
+        if (guard.Bash is { } bash)
+        {
+            WeaveValidation.Effects(bash.Effects, c, "guard.bash.effects");
+            c.Expression(bash.ArmTime, "guard.bash.arm_time");
+            if (bash.Threshold is < 0 or > 1)
+            {
+                c.Error("guard.bash.threshold is a fraction of the pool from 0 to 1.");
+            }
+        }
+        if (guard.Pulse is { } pulse)
+        {
+            c.Ref<WeaveDef>(pulse.Weave, "guard.pulse.weave");
+            c.Expression(pulse.Interval, "guard.pulse.interval");
+        }
+    }
+
+    /// <summary>A strike timing block, a form's or a preset's: its window.</summary>
+    private static void TimingBlock(TimingSpec timing, ValidationContext c)
+    {
+        if (timing.Window <= 0)
+        {
+            c.Error("timing.window must be above 0.");
         }
     }
 

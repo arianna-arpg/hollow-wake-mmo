@@ -473,8 +473,10 @@ async function lookStages() {
   await shot('20_evening.png');
   await set('day_lock', false);
   await sleep(300);
-  const server = (await hw(() => window.hollowWake.render)).timeOfDay;
+  const served = await hw(() => window.hollowWake.render);
+  const server = served.timeOfDay;
   record('day cycle', Math.abs(night - 1 / 24) < 0.01 && Math.abs(evening - 18.5 / 24) < 0.01, `night at ${night.toFixed(2)} of the day, evening at ${evening.toFixed(2)}, the server's day at ${server.toFixed(2)}`);
+  record('server day', served.dayFromServer === true, served.dayFromServer ? `the sky follows the day the server reported, at ${server.toFixed(2)}` : 'the sky folds the zone clock: the server sent no day');
 }
 
 async function script() {

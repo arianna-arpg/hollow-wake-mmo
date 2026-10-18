@@ -46,7 +46,7 @@ public sealed partial class WeaveRuntime
             if (count > 0)
                 foreach (var modifier in stack.Modifiers) Add(modifier.Scaled(count));
         }
-        if (state.Flawless && weave.Form.Timing is { } timing && timing.Bonus != 0)
+        if (state.Flawless && weave.Timing is { } timing && timing.Bonus != 0)
             Add(new Modifier { Attribute = "damage", Form = ModifierForm.More, Value = timing.Bonus, Source = "timing" });
         return modifiers;
 

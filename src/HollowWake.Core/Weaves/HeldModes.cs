@@ -20,7 +20,7 @@ public sealed partial class WeaveRuntime
     /// </summary>
     private void RaiseGuard(Simulation sim, Entity caster, Stats stats, CastState state, CompiledWeave weave, IExprScope scope, CastingRules rules)
     {
-        var spec = weave.Form.Guard;
+        var spec = weave.Guard;
         var now = state.StartedAt;
         var pool = spec?.Pool is { } p ? Math.Max(0, p.Evaluate(scope)) : 0;
         pool *= Math.Max(0, weave.Attr(stats, "guard.strength"));
@@ -57,7 +57,7 @@ public sealed partial class WeaveRuntime
             EndHeld(sim, caster, book, stats, cast, weave, "break", release: false);
             return;
         }
-        var spec = weave.Form.Guard;
+        var spec = weave.Guard;
         if (guard.Parried && spec?.EndOnParry == true)
         {
             EndHeld(sim, caster, book, stats, cast, weave, "parry", release: true);
@@ -97,7 +97,7 @@ public sealed partial class WeaveRuntime
     /// </summary>
     private bool Bash(Simulation sim, Entity caster, Stats stats, CastState cast, CompiledWeave weave, string reason)
     {
-        if (weave.Form.Guard?.Bash is not { } bash || weave.Casting.Bash.Count == 0)
+        if (weave.Guard?.Bash is not { } bash || weave.Casting.Bash.Count == 0)
         {
             return false;
         }

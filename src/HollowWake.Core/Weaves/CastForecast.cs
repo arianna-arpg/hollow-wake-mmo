@@ -45,7 +45,7 @@ public sealed partial class WeaveRuntime
 
         var now = sim.Clock.Time;
         var held = Math.Max(0, now - cast.StartedAt);
-        var pulse = cast.Mode == CastMode.Channel && (weave.Form.Channel?.Release?.Pulses ?? true);
+        var pulse = cast.Mode == CastMode.Channel && (weave.Channel?.Release?.Pulses ?? true);
         var releaseAim = cast.Mode is CastMode.Charge or CastMode.Overcharge or CastMode.Guard || cast.Mode == CastMode.Channel && !pulse;
         var (point, direction) = releaseAim ? ReleaseAim(sim, caster, book, cast, weave) : (cast.Point, cast.Direction);
         var position = transform.Position;
@@ -67,8 +67,8 @@ public sealed partial class WeaveRuntime
         {
             case CastMode.Channel:
                 vars.Held = held;
-                if (weave.Form.Channel?.Brim is not null) vars.Fill = cast.Brim;
-                if (weave.Form.Channel is { } channel)
+                if (weave.Channel?.Brim is not null) vars.Fill = cast.Brim;
+                if (weave.Channel is { } channel)
                 {
                     if (channel.Ramps.Count > 0)
                     {
@@ -99,7 +99,7 @@ public sealed partial class WeaveRuntime
                 vars.Held = held;
                 vars.Fill = cast.Duration <= 0 ? 1 : Math.Min(1, held / cast.Duration);
                 local = new List<Modifier>();
-                AddChargeModifiers(local, weave.Form.Charge, vars.Fill.Value);
+                AddChargeModifiers(local, weave.Charge, vars.Fill.Value);
                 changingFlags.Add("charging");
                 break;
             case CastMode.Overcharge:
@@ -137,8 +137,8 @@ public sealed partial class WeaveRuntime
         vars.WriteTo(context.Vars);
         var delivery = unavailable is null ? DeliveryForecasts.DescribeDetached(effects, context) : DeliveryForecast.Unavailable(unavailable);
 
-        var tracks = cast.Mode == CastMode.Channel && weave.Form.Channel?.TrackAim == true ||
-            cast.Mode == CastMode.Guard && weave.Form.Guard?.TurnRate is not null;
+        var tracks = cast.Mode == CastMode.Channel && weave.Channel?.TrackAim == true ||
+            cast.Mode == CastMode.Guard && weave.Guard?.TurnRate is not null;
         var canAimAtRelease = releaseAim && weave.Targeting is Targeting.Direction or Targeting.Ground;
         var directionPolicy = tracks ? "track_while_held" : canAimAtRelease ? "aim_on_release" : "locked_on_start";
         double? nextEmission = cast.Mode == CastMode.Cast ? Finite(cast.StartedAt + cast.Duration) : pulse ? Finite(cast.NextChannelAt) : null;
