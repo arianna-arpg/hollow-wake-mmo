@@ -16,4 +16,10 @@ No additional actionable defect found in the inspected opt-in, hidden-target geo
 
 Read the existing client/server regressions and retained integration evidence. Current GitHub build-test, build, launcher, Docker and CI checks passed; deploy was skipped. Did not repeat full tests, live clients or heavy benchmarks while integration was finishing its native playthrough.
 
-Acknowledged by: findings sent to the integration chat; fixes and Claude review pending.
+## Recheck of the geometry corrections
+
+Rechecked code `73ecf64` at integrated head `b1b6a4be6778cc68629899d7aa7af2bce5d331cc`. Both findings above are resolved. The three original points now return combat true / forecast true. Angular coverage saturates to real circle/ring loops; the core exposes its existing squared center allowance as shape metadata, and both adapters receive its radius and clip the central region by the existing inner and outer bounds. The core comparison retains its original `0.01f` squared threshold. Arc inner radii can reach zero, full-turn offset rings use the correct center, and nonpositive angular/required-width dimensions explicitly decline forecasting.
+
+Independent isolated replays of the actual current adapters passed all 116 shared fixtures in both languages: 30 explicitly declined cases and 57,138 drawable point comparisons per client. The C# replay additionally compared each drawable point with the current combat predicate. Browser replay used Node's built-in TypeScript stripping and in-memory module loading, without modifying the integration checkout. Inspected wire propagation, finite metadata validation and mesh-rebuild invalidation for center allowance. No further actionable defect found in these corrections. Final integrated live/performance gates and Claude's gameplay review remain with the integration owner.
+
+Acknowledged by: integration chat implemented both findings; forecasting peer recheck passes at `b1b6a4b`. Claude review remains separate.
