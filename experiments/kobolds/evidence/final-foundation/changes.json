@@ -1,0 +1,6643 @@
+{
+  "beforeSource": "6c0eaa187bcfd6779a56b6823d441b84cde3296a",
+  "integratedSource": "fd4a088",
+  "foundation": "c3099a8ea5c7a32fc0799c3a17cb167b2bd1231c",
+  "checks": {
+    "all16GeometryPositionsCountsSitesAndNearbyUnchanged": true,
+    "onlyKnotLevelsChanged": true,
+    "koboldBirthLevelsUnchanged": true,
+    "all16QuestsEqualFinalBase": true
+  },
+  "foundationIntegration": [
+    {
+      "zone": "0_0",
+      "overlay": false,
+      "changes": [
+        "populations",
+        "quests"
+      ],
+      "populations": {
+        "before": [
+          {
+            "Pattern": "gnasher_whelp",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 2,
+            "bodies": 8
+          },
+          {
+            "Pattern": "goblin_scavenger",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 2,
+            "bodies": 6
+          },
+          {
+            "Pattern": "grove_stag",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 6,
+            "bodies": 11
+          },
+          {
+            "Pattern": "hedgehog",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 2,
+            "bodies": 3
+          },
+          {
+            "Pattern": "hob",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 78,
+            "bodies": 235
+          },
+          {
+            "Pattern": "anvil",
+            "site": "poi.0_0.hamlet.128.128",
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "loom",
+            "site": "poi.0_0.hamlet.128.128",
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "passive_font",
+            "site": "poi.0_0.hamlet.128.128",
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "quartermaster",
+            "site": "poi.0_0.hamlet.128.128",
+            "explicitLevel": null,
+            "effectiveLevel": 5,
+            "points": 2,
+            "bodies": 2
+          },
+          {
+            "Pattern": "spindlewatch_guard",
+            "site": "poi.0_0.hamlet.128.128",
+            "explicitLevel": null,
+            "effectiveLevel": 5,
+            "points": 4,
+            "bodies": 4
+          },
+          {
+            "Pattern": "stash_chest",
+            "site": "poi.0_0.hamlet.128.128",
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "villager",
+            "site": "poi.0_0.hamlet.128.128",
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 3,
+            "bodies": 3
+          },
+          {
+            "Pattern": "cairn_stone",
+            "site": "poi.0_0.knot.200.60",
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 7,
+            "bodies": 7
+          },
+          {
+            "Pattern": "cinder_imp",
+            "site": "poi.0_0.knot.200.60",
+            "explicitLevel": null,
+            "effectiveLevel": 4,
+            "points": 2,
+            "bodies": 4
+          },
+          {
+            "Pattern": "remnant_shade",
+            "site": "poi.0_0.knot.200.60",
+            "explicitLevel": null,
+            "effectiveLevel": 2,
+            "points": 1,
+            "bodies": 4
+          },
+          {
+            "Pattern": "tangle",
+            "site": "poi.0_0.knot.200.60",
+            "explicitLevel": null,
+            "effectiveLevel": 6,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "shrine_stone",
+            "site": "poi.0_0.shrine.90.170",
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 1,
+            "bodies": 1
+          }
+        ],
+        "after": [
+          {
+            "Pattern": "gnasher_whelp",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 2,
+            "bodies": 8
+          },
+          {
+            "Pattern": "goblin_scavenger",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 2,
+            "bodies": 6
+          },
+          {
+            "Pattern": "grove_stag",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 6,
+            "bodies": 11
+          },
+          {
+            "Pattern": "hedgehog",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 2,
+            "bodies": 3
+          },
+          {
+            "Pattern": "hob",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 78,
+            "bodies": 235
+          },
+          {
+            "Pattern": "anvil",
+            "site": "poi.0_0.hamlet.128.128",
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "loom",
+            "site": "poi.0_0.hamlet.128.128",
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "passive_font",
+            "site": "poi.0_0.hamlet.128.128",
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "quartermaster",
+            "site": "poi.0_0.hamlet.128.128",
+            "explicitLevel": null,
+            "effectiveLevel": 5,
+            "points": 2,
+            "bodies": 2
+          },
+          {
+            "Pattern": "spindlewatch_guard",
+            "site": "poi.0_0.hamlet.128.128",
+            "explicitLevel": null,
+            "effectiveLevel": 5,
+            "points": 4,
+            "bodies": 4
+          },
+          {
+            "Pattern": "stash_chest",
+            "site": "poi.0_0.hamlet.128.128",
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "villager",
+            "site": "poi.0_0.hamlet.128.128",
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 3,
+            "bodies": 3
+          },
+          {
+            "Pattern": "cairn_stone",
+            "site": "poi.0_0.knot.200.60",
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 7,
+            "bodies": 7
+          },
+          {
+            "Pattern": "cinder_imp",
+            "site": "poi.0_0.knot.200.60",
+            "explicitLevel": 3,
+            "effectiveLevel": 3,
+            "points": 2,
+            "bodies": 4
+          },
+          {
+            "Pattern": "remnant_shade",
+            "site": "poi.0_0.knot.200.60",
+            "explicitLevel": 3,
+            "effectiveLevel": 3,
+            "points": 1,
+            "bodies": 4
+          },
+          {
+            "Pattern": "tangle",
+            "site": "poi.0_0.knot.200.60",
+            "explicitLevel": 3,
+            "effectiveLevel": 3,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "shrine_stone",
+            "site": "poi.0_0.shrine.90.170",
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 1,
+            "bodies": 1
+          }
+        ]
+      },
+      "quests": {
+        "before": [
+          {
+            "Id": "gen.poi.0_0.hamlet.128.128.gather_floss.1",
+            "Name": "Loose Threads",
+            "Level": 1,
+            "objectives": [
+              {
+                "Type": "collect",
+                "Target": "thread_floss",
+                "Poi": null,
+                "Text": "Gather five Thread Floss"
+              }
+            ]
+          },
+          {
+            "Id": "gen.poi.0_0.hamlet.128.128.cull_beasts.2",
+            "Name": "Teeth in the Hedge",
+            "Level": 1,
+            "objectives": [
+              {
+                "Type": "kill",
+                "Target": "hob",
+                "Poi": null,
+                "Text": "Cull eight Hob"
+              }
+            ]
+          },
+          {
+            "Id": "gen.poi.0_0.hamlet.128.128.scout_ruin.3",
+            "Name": "What Stands at the Sunken Lantern",
+            "Level": 1,
+            "objectives": [
+              {
+                "Type": "discover",
+                "Target": null,
+                "Poi": "poi.0_1.ruin.213.450",
+                "Text": "Find the Sunken Lantern"
+              }
+            ]
+          }
+        ],
+        "after": [
+          {
+            "Id": "gen.poi.0_0.hamlet.128.128.clear_knot.0",
+            "Name": "The Hob's Hollow",
+            "Level": 1,
+            "objectives": [
+              {
+                "Type": "reach",
+                "Target": null,
+                "Poi": "poi.0_0.knot.200.60",
+                "Text": "Find Hob's Hollow"
+              },
+              {
+                "Type": "kill",
+                "Target": "cinder_imp",
+                "Poi": null,
+                "Text": "Unmake six Cinder Imp"
+              }
+            ]
+          },
+          {
+            "Id": "gen.poi.0_0.hamlet.128.128.gather_floss.1",
+            "Name": "Loose Threads",
+            "Level": 1,
+            "objectives": [
+              {
+                "Type": "collect",
+                "Target": "thread_floss",
+                "Poi": null,
+                "Text": "Gather five Thread Floss"
+              }
+            ]
+          },
+          {
+            "Id": "gen.poi.0_0.hamlet.128.128.cull_beasts.2",
+            "Name": "Teeth in the Hedge",
+            "Level": 1,
+            "objectives": [
+              {
+                "Type": "kill",
+                "Target": "hob",
+                "Poi": null,
+                "Text": "Cull eight Hob"
+              }
+            ]
+          },
+          {
+            "Id": "gen.poi.0_0.hamlet.128.128.scout_ruin.3",
+            "Name": "What Stands at the Fallen Hall",
+            "Level": 1,
+            "objectives": [
+              {
+                "Type": "discover",
+                "Target": null,
+                "Poi": "poi.1_1.ruin.305.334",
+                "Text": "Find the Fallen Hall"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "zone": "1_0",
+      "overlay": false,
+      "changes": []
+    },
+    {
+      "zone": "0_-1",
+      "overlay": false,
+      "changes": [
+        "populations"
+      ],
+      "populations": {
+        "before": [
+          {
+            "Pattern": "grove_stag",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 1,
+            "bodies": 2
+          },
+          {
+            "Pattern": "hob",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 76,
+            "bodies": 222
+          },
+          {
+            "Pattern": "loosed_kindler",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 4,
+            "points": 18,
+            "bodies": 25
+          },
+          {
+            "Pattern": "wolf",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 2,
+            "points": 41,
+            "bodies": 103
+          },
+          {
+            "Pattern": "wolverine",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 5,
+            "points": 2,
+            "bodies": 2
+          },
+          {
+            "Pattern": "cairn_stone",
+            "site": "poi.0_-1.knot.176.-74",
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 7,
+            "bodies": 7
+          },
+          {
+            "Pattern": "cinder_imp",
+            "site": "poi.0_-1.knot.176.-74",
+            "explicitLevel": null,
+            "effectiveLevel": 4,
+            "points": 2,
+            "bodies": 5
+          },
+          {
+            "Pattern": "remnant_shade",
+            "site": "poi.0_-1.knot.176.-74",
+            "explicitLevel": null,
+            "effectiveLevel": 2,
+            "points": 1,
+            "bodies": 4
+          },
+          {
+            "Pattern": "tangle",
+            "site": "poi.0_-1.knot.176.-74",
+            "explicitLevel": null,
+            "effectiveLevel": 6,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "cairn_stone",
+            "site": "poi.0_-1.knot.185.-214",
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 7,
+            "bodies": 7
+          },
+          {
+            "Pattern": "cinder_imp",
+            "site": "poi.0_-1.knot.185.-214",
+            "explicitLevel": null,
+            "effectiveLevel": 4,
+            "points": 2,
+            "bodies": 6
+          },
+          {
+            "Pattern": "remnant_shade",
+            "site": "poi.0_-1.knot.185.-214",
+            "explicitLevel": null,
+            "effectiveLevel": 2,
+            "points": 1,
+            "bodies": 2
+          },
+          {
+            "Pattern": "tangle",
+            "site": "poi.0_-1.knot.185.-214",
+            "explicitLevel": null,
+            "effectiveLevel": 6,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "cairn_stone",
+            "site": "poi.0_-1.knot.41.-37",
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 7,
+            "bodies": 7
+          },
+          {
+            "Pattern": "cinder_imp",
+            "site": "poi.0_-1.knot.41.-37",
+            "explicitLevel": null,
+            "effectiveLevel": 4,
+            "points": 2,
+            "bodies": 4
+          },
+          {
+            "Pattern": "remnant_shade",
+            "site": "poi.0_-1.knot.41.-37",
+            "explicitLevel": null,
+            "effectiveLevel": 2,
+            "points": 1,
+            "bodies": 4
+          },
+          {
+            "Pattern": "tangle",
+            "site": "poi.0_-1.knot.41.-37",
+            "explicitLevel": null,
+            "effectiveLevel": 6,
+            "points": 1,
+            "bodies": 1
+          }
+        ],
+        "after": [
+          {
+            "Pattern": "grove_stag",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 1,
+            "bodies": 2
+          },
+          {
+            "Pattern": "hob",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 76,
+            "bodies": 222
+          },
+          {
+            "Pattern": "loosed_kindler",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 4,
+            "points": 18,
+            "bodies": 25
+          },
+          {
+            "Pattern": "wolf",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 2,
+            "points": 41,
+            "bodies": 103
+          },
+          {
+            "Pattern": "wolverine",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 5,
+            "points": 2,
+            "bodies": 2
+          },
+          {
+            "Pattern": "cairn_stone",
+            "site": "poi.0_-1.knot.176.-74",
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 7,
+            "bodies": 7
+          },
+          {
+            "Pattern": "cinder_imp",
+            "site": "poi.0_-1.knot.176.-74",
+            "explicitLevel": 7,
+            "effectiveLevel": 7,
+            "points": 2,
+            "bodies": 5
+          },
+          {
+            "Pattern": "remnant_shade",
+            "site": "poi.0_-1.knot.176.-74",
+            "explicitLevel": 7,
+            "effectiveLevel": 7,
+            "points": 1,
+            "bodies": 4
+          },
+          {
+            "Pattern": "tangle",
+            "site": "poi.0_-1.knot.176.-74",
+            "explicitLevel": 7,
+            "effectiveLevel": 7,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "cairn_stone",
+            "site": "poi.0_-1.knot.185.-214",
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 7,
+            "bodies": 7
+          },
+          {
+            "Pattern": "cinder_imp",
+            "site": "poi.0_-1.knot.185.-214",
+            "explicitLevel": 7,
+            "effectiveLevel": 7,
+            "points": 2,
+            "bodies": 6
+          },
+          {
+            "Pattern": "remnant_shade",
+            "site": "poi.0_-1.knot.185.-214",
+            "explicitLevel": 7,
+            "effectiveLevel": 7,
+            "points": 1,
+            "bodies": 2
+          },
+          {
+            "Pattern": "tangle",
+            "site": "poi.0_-1.knot.185.-214",
+            "explicitLevel": 7,
+            "effectiveLevel": 7,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "cairn_stone",
+            "site": "poi.0_-1.knot.41.-37",
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 7,
+            "bodies": 7
+          },
+          {
+            "Pattern": "cinder_imp",
+            "site": "poi.0_-1.knot.41.-37",
+            "explicitLevel": 7,
+            "effectiveLevel": 7,
+            "points": 2,
+            "bodies": 4
+          },
+          {
+            "Pattern": "remnant_shade",
+            "site": "poi.0_-1.knot.41.-37",
+            "explicitLevel": 7,
+            "effectiveLevel": 7,
+            "points": 1,
+            "bodies": 4
+          },
+          {
+            "Pattern": "tangle",
+            "site": "poi.0_-1.knot.41.-37",
+            "explicitLevel": 7,
+            "effectiveLevel": 7,
+            "points": 1,
+            "bodies": 1
+          }
+        ]
+      }
+    },
+    {
+      "zone": "3_2",
+      "overlay": false,
+      "changes": [
+        "populations"
+      ],
+      "populations": {
+        "before": [
+          {
+            "Pattern": "gnasher_whelp",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 9,
+            "bodies": 47
+          },
+          {
+            "Pattern": "goblin_scavenger",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 4,
+            "bodies": 10
+          },
+          {
+            "Pattern": "grove_stag",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 30,
+            "bodies": 60
+          },
+          {
+            "Pattern": "hob",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 86,
+            "bodies": 251
+          },
+          {
+            "Pattern": "cairn_stone",
+            "site": "poi.3_2.knot.965.744",
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 7,
+            "bodies": 7
+          },
+          {
+            "Pattern": "cinder_imp",
+            "site": "poi.3_2.knot.965.744",
+            "explicitLevel": null,
+            "effectiveLevel": 4,
+            "points": 2,
+            "bodies": 5
+          },
+          {
+            "Pattern": "remnant_shade",
+            "site": "poi.3_2.knot.965.744",
+            "explicitLevel": null,
+            "effectiveLevel": 2,
+            "points": 1,
+            "bodies": 3
+          },
+          {
+            "Pattern": "tangle",
+            "site": "poi.3_2.knot.965.744",
+            "explicitLevel": null,
+            "effectiveLevel": 6,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "barrow_wight",
+            "site": "poi.3_2.ruin.890.658",
+            "explicitLevel": null,
+            "effectiveLevel": 3,
+            "points": 2,
+            "bodies": 3
+          },
+          {
+            "Pattern": "remnant_shade",
+            "site": "poi.3_2.ruin.890.658",
+            "explicitLevel": null,
+            "effectiveLevel": 2,
+            "points": 1,
+            "bodies": 2
+          },
+          {
+            "Pattern": "ruin_chest",
+            "site": "poi.3_2.ruin.890.658",
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "shrine_stone",
+            "site": "poi.3_2.shrine.918.566",
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "shrine_stone",
+            "site": "poi.3_2.shrine.998.637",
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 1,
+            "bodies": 1
+          }
+        ],
+        "after": [
+          {
+            "Pattern": "gnasher_whelp",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 9,
+            "bodies": 47
+          },
+          {
+            "Pattern": "goblin_scavenger",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 4,
+            "bodies": 10
+          },
+          {
+            "Pattern": "grove_stag",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 30,
+            "bodies": 60
+          },
+          {
+            "Pattern": "hob",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 86,
+            "bodies": 251
+          },
+          {
+            "Pattern": "cairn_stone",
+            "site": "poi.3_2.knot.965.744",
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 7,
+            "bodies": 7
+          },
+          {
+            "Pattern": "cinder_imp",
+            "site": "poi.3_2.knot.965.744",
+            "explicitLevel": 3,
+            "effectiveLevel": 3,
+            "points": 2,
+            "bodies": 5
+          },
+          {
+            "Pattern": "remnant_shade",
+            "site": "poi.3_2.knot.965.744",
+            "explicitLevel": 3,
+            "effectiveLevel": 3,
+            "points": 1,
+            "bodies": 3
+          },
+          {
+            "Pattern": "tangle",
+            "site": "poi.3_2.knot.965.744",
+            "explicitLevel": 3,
+            "effectiveLevel": 3,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "barrow_wight",
+            "site": "poi.3_2.ruin.890.658",
+            "explicitLevel": null,
+            "effectiveLevel": 3,
+            "points": 2,
+            "bodies": 3
+          },
+          {
+            "Pattern": "remnant_shade",
+            "site": "poi.3_2.ruin.890.658",
+            "explicitLevel": null,
+            "effectiveLevel": 2,
+            "points": 1,
+            "bodies": 2
+          },
+          {
+            "Pattern": "ruin_chest",
+            "site": "poi.3_2.ruin.890.658",
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "shrine_stone",
+            "site": "poi.3_2.shrine.918.566",
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "shrine_stone",
+            "site": "poi.3_2.shrine.998.637",
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 1,
+            "bodies": 1
+          }
+        ]
+      }
+    },
+    {
+      "zone": "-15_-40",
+      "overlay": false,
+      "changes": []
+    },
+    {
+      "zone": "-8_-40",
+      "overlay": false,
+      "changes": [
+        "populations"
+      ],
+      "populations": {
+        "before": [
+          {
+            "Pattern": "hob",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 75,
+            "bodies": 224
+          },
+          {
+            "Pattern": "loosed_kindler",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 4,
+            "points": 19,
+            "bodies": 29
+          },
+          {
+            "Pattern": "snow_hare",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 2,
+            "bodies": 3
+          },
+          {
+            "Pattern": "wolf",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 2,
+            "points": 39,
+            "bodies": 101
+          },
+          {
+            "Pattern": "wolverine",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 5,
+            "points": 2,
+            "bodies": 2
+          },
+          {
+            "Pattern": "cairn_stone",
+            "site": "poi.-8_-40.knot.-1833.-10142",
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 7,
+            "bodies": 7
+          },
+          {
+            "Pattern": "cinder_imp",
+            "site": "poi.-8_-40.knot.-1833.-10142",
+            "explicitLevel": null,
+            "effectiveLevel": 4,
+            "points": 2,
+            "bodies": 5
+          },
+          {
+            "Pattern": "remnant_shade",
+            "site": "poi.-8_-40.knot.-1833.-10142",
+            "explicitLevel": null,
+            "effectiveLevel": 2,
+            "points": 1,
+            "bodies": 2
+          },
+          {
+            "Pattern": "tangle",
+            "site": "poi.-8_-40.knot.-1833.-10142",
+            "explicitLevel": null,
+            "effectiveLevel": 6,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "kobold_cragbreaker",
+            "site": "poi.-8_-40.kobold_scale_hold.-1954.-10022",
+            "explicitLevel": null,
+            "effectiveLevel": 10,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "kobold_crestcaller",
+            "site": "poi.-8_-40.kobold_scale_hold.-1954.-10022",
+            "explicitLevel": null,
+            "effectiveLevel": 10,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "kobold_ironback",
+            "site": "poi.-8_-40.kobold_scale_hold.-1954.-10022",
+            "explicitLevel": null,
+            "effectiveLevel": 11,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "kobold_scalechief",
+            "site": "poi.-8_-40.kobold_scale_hold.-1954.-10022",
+            "explicitLevel": null,
+            "effectiveLevel": 15,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "ruin_chest",
+            "site": "poi.-8_-40.kobold_scale_hold.-1954.-10022",
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "kobold_dartbow",
+            "site": "poi.-8_-40.kobold_scrap_camp.-2012.-10019",
+            "explicitLevel": null,
+            "effectiveLevel": 4,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "kobold_knifehand",
+            "site": "poi.-8_-40.kobold_scrap_camp.-2012.-10019",
+            "explicitLevel": null,
+            "effectiveLevel": 3,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "kobold_scavenger",
+            "site": "poi.-8_-40.kobold_scrap_camp.-2012.-10019",
+            "explicitLevel": null,
+            "effectiveLevel": 2,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "kobold_stonecaster",
+            "site": "poi.-8_-40.kobold_scrap_camp.-2012.-10019",
+            "explicitLevel": null,
+            "effectiveLevel": 5,
+            "points": 1,
+            "bodies": 1
+          }
+        ],
+        "after": [
+          {
+            "Pattern": "hob",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 75,
+            "bodies": 224
+          },
+          {
+            "Pattern": "loosed_kindler",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 4,
+            "points": 19,
+            "bodies": 29
+          },
+          {
+            "Pattern": "snow_hare",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 2,
+            "bodies": 3
+          },
+          {
+            "Pattern": "wolf",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 2,
+            "points": 39,
+            "bodies": 101
+          },
+          {
+            "Pattern": "wolverine",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 5,
+            "points": 2,
+            "bodies": 2
+          },
+          {
+            "Pattern": "cairn_stone",
+            "site": "poi.-8_-40.knot.-1833.-10142",
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 7,
+            "bodies": 7
+          },
+          {
+            "Pattern": "cinder_imp",
+            "site": "poi.-8_-40.knot.-1833.-10142",
+            "explicitLevel": 27,
+            "effectiveLevel": 27,
+            "points": 2,
+            "bodies": 5
+          },
+          {
+            "Pattern": "remnant_shade",
+            "site": "poi.-8_-40.knot.-1833.-10142",
+            "explicitLevel": 27,
+            "effectiveLevel": 27,
+            "points": 1,
+            "bodies": 2
+          },
+          {
+            "Pattern": "tangle",
+            "site": "poi.-8_-40.knot.-1833.-10142",
+            "explicitLevel": 27,
+            "effectiveLevel": 27,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "kobold_cragbreaker",
+            "site": "poi.-8_-40.kobold_scale_hold.-1954.-10022",
+            "explicitLevel": null,
+            "effectiveLevel": 10,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "kobold_crestcaller",
+            "site": "poi.-8_-40.kobold_scale_hold.-1954.-10022",
+            "explicitLevel": null,
+            "effectiveLevel": 10,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "kobold_ironback",
+            "site": "poi.-8_-40.kobold_scale_hold.-1954.-10022",
+            "explicitLevel": null,
+            "effectiveLevel": 11,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "kobold_scalechief",
+            "site": "poi.-8_-40.kobold_scale_hold.-1954.-10022",
+            "explicitLevel": null,
+            "effectiveLevel": 15,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "ruin_chest",
+            "site": "poi.-8_-40.kobold_scale_hold.-1954.-10022",
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "kobold_dartbow",
+            "site": "poi.-8_-40.kobold_scrap_camp.-2012.-10019",
+            "explicitLevel": null,
+            "effectiveLevel": 4,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "kobold_knifehand",
+            "site": "poi.-8_-40.kobold_scrap_camp.-2012.-10019",
+            "explicitLevel": null,
+            "effectiveLevel": 3,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "kobold_scavenger",
+            "site": "poi.-8_-40.kobold_scrap_camp.-2012.-10019",
+            "explicitLevel": null,
+            "effectiveLevel": 2,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "kobold_stonecaster",
+            "site": "poi.-8_-40.kobold_scrap_camp.-2012.-10019",
+            "explicitLevel": null,
+            "effectiveLevel": 5,
+            "points": 1,
+            "bodies": 1
+          }
+        ]
+      }
+    },
+    {
+      "zone": "-25_-31",
+      "overlay": false,
+      "changes": [
+        "populations"
+      ],
+      "populations": {
+        "before": [
+          {
+            "Pattern": "blade_wraith",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 6,
+            "points": 5,
+            "bodies": 9
+          },
+          {
+            "Pattern": "decay_wraith",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 5,
+            "points": 7,
+            "bodies": 8
+          },
+          {
+            "Pattern": "gutter_rat",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 2,
+            "bodies": 3
+          },
+          {
+            "Pattern": "hob",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 79,
+            "bodies": 231
+          },
+          {
+            "Pattern": "loosed_kindler",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 4,
+            "points": 13,
+            "bodies": 17
+          },
+          {
+            "Pattern": "remnant_shade",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 2,
+            "points": 44,
+            "bodies": 142
+          },
+          {
+            "Pattern": "tangle",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 6,
+            "points": 3,
+            "bodies": 3
+          },
+          {
+            "Pattern": "wolf",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 2,
+            "points": 19,
+            "bodies": 47
+          },
+          {
+            "Pattern": "cairn_stone",
+            "site": "poi.-25_-31.knot.-6179.-7862",
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 7,
+            "bodies": 7
+          },
+          {
+            "Pattern": "cinder_imp",
+            "site": "poi.-25_-31.knot.-6179.-7862",
+            "explicitLevel": null,
+            "effectiveLevel": 4,
+            "points": 2,
+            "bodies": 5
+          },
+          {
+            "Pattern": "remnant_shade",
+            "site": "poi.-25_-31.knot.-6179.-7862",
+            "explicitLevel": null,
+            "effectiveLevel": 2,
+            "points": 1,
+            "bodies": 4
+          },
+          {
+            "Pattern": "tangle",
+            "site": "poi.-25_-31.knot.-6179.-7862",
+            "explicitLevel": null,
+            "effectiveLevel": 6,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "kobold_cinderweaver",
+            "site": "poi.-25_-31.kobold_cinder_camp.-6178.-7721",
+            "explicitLevel": null,
+            "effectiveLevel": 7,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "kobold_stormweaver",
+            "site": "poi.-25_-31.kobold_cinder_camp.-6178.-7721",
+            "explicitLevel": null,
+            "effectiveLevel": 8,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "kobold_tunnelguard",
+            "site": "poi.-25_-31.kobold_cinder_camp.-6178.-7721",
+            "explicitLevel": null,
+            "effectiveLevel": 6,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "shrine_stone",
+            "site": "poi.-25_-31.shrine.-6337.-7772",
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 1,
+            "bodies": 1
+          }
+        ],
+        "after": [
+          {
+            "Pattern": "blade_wraith",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 6,
+            "points": 5,
+            "bodies": 9
+          },
+          {
+            "Pattern": "decay_wraith",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 5,
+            "points": 7,
+            "bodies": 8
+          },
+          {
+            "Pattern": "gutter_rat",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 2,
+            "bodies": 3
+          },
+          {
+            "Pattern": "hob",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 79,
+            "bodies": 231
+          },
+          {
+            "Pattern": "loosed_kindler",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 4,
+            "points": 13,
+            "bodies": 17
+          },
+          {
+            "Pattern": "remnant_shade",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 2,
+            "points": 44,
+            "bodies": 142
+          },
+          {
+            "Pattern": "tangle",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 6,
+            "points": 3,
+            "bodies": 3
+          },
+          {
+            "Pattern": "wolf",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 2,
+            "points": 19,
+            "bodies": 47
+          },
+          {
+            "Pattern": "cairn_stone",
+            "site": "poi.-25_-31.knot.-6179.-7862",
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 7,
+            "bodies": 7
+          },
+          {
+            "Pattern": "cinder_imp",
+            "site": "poi.-25_-31.knot.-6179.-7862",
+            "explicitLevel": 23,
+            "effectiveLevel": 23,
+            "points": 2,
+            "bodies": 5
+          },
+          {
+            "Pattern": "remnant_shade",
+            "site": "poi.-25_-31.knot.-6179.-7862",
+            "explicitLevel": 23,
+            "effectiveLevel": 23,
+            "points": 1,
+            "bodies": 4
+          },
+          {
+            "Pattern": "tangle",
+            "site": "poi.-25_-31.knot.-6179.-7862",
+            "explicitLevel": 23,
+            "effectiveLevel": 23,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "kobold_cinderweaver",
+            "site": "poi.-25_-31.kobold_cinder_camp.-6178.-7721",
+            "explicitLevel": null,
+            "effectiveLevel": 7,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "kobold_stormweaver",
+            "site": "poi.-25_-31.kobold_cinder_camp.-6178.-7721",
+            "explicitLevel": null,
+            "effectiveLevel": 8,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "kobold_tunnelguard",
+            "site": "poi.-25_-31.kobold_cinder_camp.-6178.-7721",
+            "explicitLevel": null,
+            "effectiveLevel": 6,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "shrine_stone",
+            "site": "poi.-25_-31.shrine.-6337.-7772",
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 1,
+            "bodies": 1
+          }
+        ]
+      }
+    },
+    {
+      "zone": "-7_-23",
+      "overlay": false,
+      "changes": []
+    },
+    {
+      "zone": "0_0",
+      "overlay": true,
+      "changes": [
+        "populations",
+        "quests"
+      ],
+      "populations": {
+        "before": [
+          {
+            "Pattern": "gnasher_whelp",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 2,
+            "bodies": 10
+          },
+          {
+            "Pattern": "goblin_scavenger",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 1,
+            "bodies": 3
+          },
+          {
+            "Pattern": "grove_stag",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 2,
+            "bodies": 3
+          },
+          {
+            "Pattern": "hedgehog",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "hob",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 74,
+            "bodies": 226
+          },
+          {
+            "Pattern": "anvil",
+            "site": "poi.0_0.hamlet.128.128",
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "loom",
+            "site": "poi.0_0.hamlet.128.128",
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "passive_font",
+            "site": "poi.0_0.hamlet.128.128",
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "quartermaster",
+            "site": "poi.0_0.hamlet.128.128",
+            "explicitLevel": null,
+            "effectiveLevel": 5,
+            "points": 2,
+            "bodies": 2
+          },
+          {
+            "Pattern": "spindlewatch_guard",
+            "site": "poi.0_0.hamlet.128.128",
+            "explicitLevel": null,
+            "effectiveLevel": 5,
+            "points": 4,
+            "bodies": 4
+          },
+          {
+            "Pattern": "stash_chest",
+            "site": "poi.0_0.hamlet.128.128",
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "villager",
+            "site": "poi.0_0.hamlet.128.128",
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 3,
+            "bodies": 3
+          },
+          {
+            "Pattern": "cairn_stone",
+            "site": "poi.0_0.knot.200.60",
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 7,
+            "bodies": 7
+          },
+          {
+            "Pattern": "cinder_imp",
+            "site": "poi.0_0.knot.200.60",
+            "explicitLevel": null,
+            "effectiveLevel": 4,
+            "points": 2,
+            "bodies": 4
+          },
+          {
+            "Pattern": "remnant_shade",
+            "site": "poi.0_0.knot.200.60",
+            "explicitLevel": null,
+            "effectiveLevel": 2,
+            "points": 1,
+            "bodies": 4
+          },
+          {
+            "Pattern": "tangle",
+            "site": "poi.0_0.knot.200.60",
+            "explicitLevel": null,
+            "effectiveLevel": 6,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "shrine_stone",
+            "site": "poi.0_0.shrine.90.170",
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 1,
+            "bodies": 1
+          }
+        ],
+        "after": [
+          {
+            "Pattern": "gnasher_whelp",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 2,
+            "bodies": 10
+          },
+          {
+            "Pattern": "goblin_scavenger",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 1,
+            "bodies": 3
+          },
+          {
+            "Pattern": "grove_stag",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 2,
+            "bodies": 3
+          },
+          {
+            "Pattern": "hedgehog",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "hob",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 74,
+            "bodies": 226
+          },
+          {
+            "Pattern": "anvil",
+            "site": "poi.0_0.hamlet.128.128",
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "loom",
+            "site": "poi.0_0.hamlet.128.128",
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "passive_font",
+            "site": "poi.0_0.hamlet.128.128",
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "quartermaster",
+            "site": "poi.0_0.hamlet.128.128",
+            "explicitLevel": null,
+            "effectiveLevel": 5,
+            "points": 2,
+            "bodies": 2
+          },
+          {
+            "Pattern": "spindlewatch_guard",
+            "site": "poi.0_0.hamlet.128.128",
+            "explicitLevel": null,
+            "effectiveLevel": 5,
+            "points": 4,
+            "bodies": 4
+          },
+          {
+            "Pattern": "stash_chest",
+            "site": "poi.0_0.hamlet.128.128",
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "villager",
+            "site": "poi.0_0.hamlet.128.128",
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 3,
+            "bodies": 3
+          },
+          {
+            "Pattern": "cairn_stone",
+            "site": "poi.0_0.knot.200.60",
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 7,
+            "bodies": 7
+          },
+          {
+            "Pattern": "cinder_imp",
+            "site": "poi.0_0.knot.200.60",
+            "explicitLevel": 3,
+            "effectiveLevel": 3,
+            "points": 2,
+            "bodies": 4
+          },
+          {
+            "Pattern": "remnant_shade",
+            "site": "poi.0_0.knot.200.60",
+            "explicitLevel": 3,
+            "effectiveLevel": 3,
+            "points": 1,
+            "bodies": 4
+          },
+          {
+            "Pattern": "tangle",
+            "site": "poi.0_0.knot.200.60",
+            "explicitLevel": 3,
+            "effectiveLevel": 3,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "shrine_stone",
+            "site": "poi.0_0.shrine.90.170",
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 1,
+            "bodies": 1
+          }
+        ]
+      },
+      "quests": {
+        "before": [
+          {
+            "Id": "gen.poi.0_0.hamlet.128.128.gather_floss.1",
+            "Name": "Loose Threads",
+            "Level": 1,
+            "objectives": [
+              {
+                "Type": "collect",
+                "Target": "thread_floss",
+                "Poi": null,
+                "Text": "Gather five Thread Floss"
+              }
+            ]
+          },
+          {
+            "Id": "gen.poi.0_0.hamlet.128.128.cull_beasts.2",
+            "Name": "Teeth in the Hedge",
+            "Level": 1,
+            "objectives": [
+              {
+                "Type": "kill",
+                "Target": "grove_stag",
+                "Poi": null,
+                "Text": "Cull eight Grove Stag"
+              }
+            ]
+          },
+          {
+            "Id": "gen.poi.0_0.hamlet.128.128.scout_ruin.3",
+            "Name": "What Stands at the Sunken Lantern",
+            "Level": 1,
+            "objectives": [
+              {
+                "Type": "discover",
+                "Target": null,
+                "Poi": "poi.0_1.ruin.213.450",
+                "Text": "Find the Sunken Lantern"
+              }
+            ]
+          }
+        ],
+        "after": [
+          {
+            "Id": "gen.poi.0_0.hamlet.128.128.clear_knot.0",
+            "Name": "The Hob's Hollow",
+            "Level": 1,
+            "objectives": [
+              {
+                "Type": "reach",
+                "Target": null,
+                "Poi": "poi.0_0.knot.200.60",
+                "Text": "Find Hob's Hollow"
+              },
+              {
+                "Type": "kill",
+                "Target": "cinder_imp",
+                "Poi": null,
+                "Text": "Unmake six Cinder Imp"
+              }
+            ]
+          },
+          {
+            "Id": "gen.poi.0_0.hamlet.128.128.gather_floss.1",
+            "Name": "Loose Threads",
+            "Level": 1,
+            "objectives": [
+              {
+                "Type": "collect",
+                "Target": "thread_floss",
+                "Poi": null,
+                "Text": "Gather five Thread Floss"
+              }
+            ]
+          },
+          {
+            "Id": "gen.poi.0_0.hamlet.128.128.cull_beasts.2",
+            "Name": "Teeth in the Hedge",
+            "Level": 1,
+            "objectives": [
+              {
+                "Type": "kill",
+                "Target": "grove_stag",
+                "Poi": null,
+                "Text": "Cull eight Grove Stag"
+              }
+            ]
+          },
+          {
+            "Id": "gen.poi.0_0.hamlet.128.128.scout_ruin.3",
+            "Name": "What Stands at the Fallen Hall",
+            "Level": 1,
+            "objectives": [
+              {
+                "Type": "discover",
+                "Target": null,
+                "Poi": "poi.1_1.ruin.305.334",
+                "Text": "Find the Fallen Hall"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "zone": "1_0",
+      "overlay": true,
+      "changes": []
+    },
+    {
+      "zone": "0_-1",
+      "overlay": true,
+      "changes": [
+        "populations"
+      ],
+      "populations": {
+        "before": [
+          {
+            "Pattern": "hob",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 80,
+            "bodies": 239
+          },
+          {
+            "Pattern": "loosed_kindler",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 4,
+            "points": 18,
+            "bodies": 25
+          },
+          {
+            "Pattern": "remnant_shade",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 2,
+            "points": 3,
+            "bodies": 11
+          },
+          {
+            "Pattern": "wolf",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 2,
+            "points": 39,
+            "bodies": 95
+          },
+          {
+            "Pattern": "wolverine",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 5,
+            "points": 2,
+            "bodies": 2
+          },
+          {
+            "Pattern": "cairn_stone",
+            "site": "poi.0_-1.knot.176.-74",
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 7,
+            "bodies": 7
+          },
+          {
+            "Pattern": "cinder_imp",
+            "site": "poi.0_-1.knot.176.-74",
+            "explicitLevel": null,
+            "effectiveLevel": 4,
+            "points": 2,
+            "bodies": 5
+          },
+          {
+            "Pattern": "remnant_shade",
+            "site": "poi.0_-1.knot.176.-74",
+            "explicitLevel": null,
+            "effectiveLevel": 2,
+            "points": 1,
+            "bodies": 4
+          },
+          {
+            "Pattern": "tangle",
+            "site": "poi.0_-1.knot.176.-74",
+            "explicitLevel": null,
+            "effectiveLevel": 6,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "cairn_stone",
+            "site": "poi.0_-1.knot.185.-214",
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 7,
+            "bodies": 7
+          },
+          {
+            "Pattern": "cinder_imp",
+            "site": "poi.0_-1.knot.185.-214",
+            "explicitLevel": null,
+            "effectiveLevel": 4,
+            "points": 2,
+            "bodies": 6
+          },
+          {
+            "Pattern": "remnant_shade",
+            "site": "poi.0_-1.knot.185.-214",
+            "explicitLevel": null,
+            "effectiveLevel": 2,
+            "points": 1,
+            "bodies": 2
+          },
+          {
+            "Pattern": "tangle",
+            "site": "poi.0_-1.knot.185.-214",
+            "explicitLevel": null,
+            "effectiveLevel": 6,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "cairn_stone",
+            "site": "poi.0_-1.knot.41.-37",
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 7,
+            "bodies": 7
+          },
+          {
+            "Pattern": "cinder_imp",
+            "site": "poi.0_-1.knot.41.-37",
+            "explicitLevel": null,
+            "effectiveLevel": 4,
+            "points": 2,
+            "bodies": 4
+          },
+          {
+            "Pattern": "remnant_shade",
+            "site": "poi.0_-1.knot.41.-37",
+            "explicitLevel": null,
+            "effectiveLevel": 2,
+            "points": 1,
+            "bodies": 4
+          },
+          {
+            "Pattern": "tangle",
+            "site": "poi.0_-1.knot.41.-37",
+            "explicitLevel": null,
+            "effectiveLevel": 6,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "shrine_stone",
+            "site": "poi.0_-1.shrine.62.-186",
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 1,
+            "bodies": 1
+          }
+        ],
+        "after": [
+          {
+            "Pattern": "hob",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 80,
+            "bodies": 239
+          },
+          {
+            "Pattern": "loosed_kindler",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 4,
+            "points": 18,
+            "bodies": 25
+          },
+          {
+            "Pattern": "remnant_shade",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 2,
+            "points": 3,
+            "bodies": 11
+          },
+          {
+            "Pattern": "wolf",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 2,
+            "points": 39,
+            "bodies": 95
+          },
+          {
+            "Pattern": "wolverine",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 5,
+            "points": 2,
+            "bodies": 2
+          },
+          {
+            "Pattern": "cairn_stone",
+            "site": "poi.0_-1.knot.176.-74",
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 7,
+            "bodies": 7
+          },
+          {
+            "Pattern": "cinder_imp",
+            "site": "poi.0_-1.knot.176.-74",
+            "explicitLevel": 7,
+            "effectiveLevel": 7,
+            "points": 2,
+            "bodies": 5
+          },
+          {
+            "Pattern": "remnant_shade",
+            "site": "poi.0_-1.knot.176.-74",
+            "explicitLevel": 7,
+            "effectiveLevel": 7,
+            "points": 1,
+            "bodies": 4
+          },
+          {
+            "Pattern": "tangle",
+            "site": "poi.0_-1.knot.176.-74",
+            "explicitLevel": 7,
+            "effectiveLevel": 7,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "cairn_stone",
+            "site": "poi.0_-1.knot.185.-214",
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 7,
+            "bodies": 7
+          },
+          {
+            "Pattern": "cinder_imp",
+            "site": "poi.0_-1.knot.185.-214",
+            "explicitLevel": 7,
+            "effectiveLevel": 7,
+            "points": 2,
+            "bodies": 6
+          },
+          {
+            "Pattern": "remnant_shade",
+            "site": "poi.0_-1.knot.185.-214",
+            "explicitLevel": 7,
+            "effectiveLevel": 7,
+            "points": 1,
+            "bodies": 2
+          },
+          {
+            "Pattern": "tangle",
+            "site": "poi.0_-1.knot.185.-214",
+            "explicitLevel": 7,
+            "effectiveLevel": 7,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "cairn_stone",
+            "site": "poi.0_-1.knot.41.-37",
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 7,
+            "bodies": 7
+          },
+          {
+            "Pattern": "cinder_imp",
+            "site": "poi.0_-1.knot.41.-37",
+            "explicitLevel": 7,
+            "effectiveLevel": 7,
+            "points": 2,
+            "bodies": 4
+          },
+          {
+            "Pattern": "remnant_shade",
+            "site": "poi.0_-1.knot.41.-37",
+            "explicitLevel": 7,
+            "effectiveLevel": 7,
+            "points": 1,
+            "bodies": 4
+          },
+          {
+            "Pattern": "tangle",
+            "site": "poi.0_-1.knot.41.-37",
+            "explicitLevel": 7,
+            "effectiveLevel": 7,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "shrine_stone",
+            "site": "poi.0_-1.shrine.62.-186",
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 1,
+            "bodies": 1
+          }
+        ]
+      }
+    },
+    {
+      "zone": "3_2",
+      "overlay": true,
+      "changes": [
+        "populations"
+      ],
+      "populations": {
+        "before": [
+          {
+            "Pattern": "gnasher_whelp",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 9,
+            "bodies": 47
+          },
+          {
+            "Pattern": "goblin_scavenger",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 5,
+            "bodies": 13
+          },
+          {
+            "Pattern": "grove_stag",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 31,
+            "bodies": 63
+          },
+          {
+            "Pattern": "hob",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 88,
+            "bodies": 259
+          },
+          {
+            "Pattern": "cairn_stone",
+            "site": "poi.3_2.knot.965.744",
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 7,
+            "bodies": 7
+          },
+          {
+            "Pattern": "cinder_imp",
+            "site": "poi.3_2.knot.965.744",
+            "explicitLevel": null,
+            "effectiveLevel": 4,
+            "points": 2,
+            "bodies": 5
+          },
+          {
+            "Pattern": "remnant_shade",
+            "site": "poi.3_2.knot.965.744",
+            "explicitLevel": null,
+            "effectiveLevel": 2,
+            "points": 1,
+            "bodies": 3
+          },
+          {
+            "Pattern": "tangle",
+            "site": "poi.3_2.knot.965.744",
+            "explicitLevel": null,
+            "effectiveLevel": 6,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "barrow_wight",
+            "site": "poi.3_2.ruin.890.658",
+            "explicitLevel": null,
+            "effectiveLevel": 3,
+            "points": 2,
+            "bodies": 3
+          },
+          {
+            "Pattern": "remnant_shade",
+            "site": "poi.3_2.ruin.890.658",
+            "explicitLevel": null,
+            "effectiveLevel": 2,
+            "points": 1,
+            "bodies": 2
+          },
+          {
+            "Pattern": "ruin_chest",
+            "site": "poi.3_2.ruin.890.658",
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "shrine_stone",
+            "site": "poi.3_2.shrine.918.566",
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "shrine_stone",
+            "site": "poi.3_2.shrine.998.637",
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 1,
+            "bodies": 1
+          }
+        ],
+        "after": [
+          {
+            "Pattern": "gnasher_whelp",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 9,
+            "bodies": 47
+          },
+          {
+            "Pattern": "goblin_scavenger",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 5,
+            "bodies": 13
+          },
+          {
+            "Pattern": "grove_stag",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 31,
+            "bodies": 63
+          },
+          {
+            "Pattern": "hob",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 88,
+            "bodies": 259
+          },
+          {
+            "Pattern": "cairn_stone",
+            "site": "poi.3_2.knot.965.744",
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 7,
+            "bodies": 7
+          },
+          {
+            "Pattern": "cinder_imp",
+            "site": "poi.3_2.knot.965.744",
+            "explicitLevel": 3,
+            "effectiveLevel": 3,
+            "points": 2,
+            "bodies": 5
+          },
+          {
+            "Pattern": "remnant_shade",
+            "site": "poi.3_2.knot.965.744",
+            "explicitLevel": 3,
+            "effectiveLevel": 3,
+            "points": 1,
+            "bodies": 3
+          },
+          {
+            "Pattern": "tangle",
+            "site": "poi.3_2.knot.965.744",
+            "explicitLevel": 3,
+            "effectiveLevel": 3,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "barrow_wight",
+            "site": "poi.3_2.ruin.890.658",
+            "explicitLevel": null,
+            "effectiveLevel": 3,
+            "points": 2,
+            "bodies": 3
+          },
+          {
+            "Pattern": "remnant_shade",
+            "site": "poi.3_2.ruin.890.658",
+            "explicitLevel": null,
+            "effectiveLevel": 2,
+            "points": 1,
+            "bodies": 2
+          },
+          {
+            "Pattern": "ruin_chest",
+            "site": "poi.3_2.ruin.890.658",
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "shrine_stone",
+            "site": "poi.3_2.shrine.918.566",
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "shrine_stone",
+            "site": "poi.3_2.shrine.998.637",
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 1,
+            "bodies": 1
+          }
+        ]
+      }
+    },
+    {
+      "zone": "-15_-40",
+      "overlay": true,
+      "changes": []
+    },
+    {
+      "zone": "-8_-40",
+      "overlay": true,
+      "changes": [
+        "populations"
+      ],
+      "populations": {
+        "before": [
+          {
+            "Pattern": "hob",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 75,
+            "bodies": 224
+          },
+          {
+            "Pattern": "loosed_kindler",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 4,
+            "points": 19,
+            "bodies": 29
+          },
+          {
+            "Pattern": "snow_hare",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 2,
+            "bodies": 3
+          },
+          {
+            "Pattern": "wolf",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 2,
+            "points": 39,
+            "bodies": 101
+          },
+          {
+            "Pattern": "wolverine",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 5,
+            "points": 2,
+            "bodies": 2
+          },
+          {
+            "Pattern": "cairn_stone",
+            "site": "poi.-8_-40.knot.-1833.-10142",
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 7,
+            "bodies": 7
+          },
+          {
+            "Pattern": "cinder_imp",
+            "site": "poi.-8_-40.knot.-1833.-10142",
+            "explicitLevel": null,
+            "effectiveLevel": 4,
+            "points": 2,
+            "bodies": 5
+          },
+          {
+            "Pattern": "remnant_shade",
+            "site": "poi.-8_-40.knot.-1833.-10142",
+            "explicitLevel": null,
+            "effectiveLevel": 2,
+            "points": 1,
+            "bodies": 2
+          },
+          {
+            "Pattern": "tangle",
+            "site": "poi.-8_-40.knot.-1833.-10142",
+            "explicitLevel": null,
+            "effectiveLevel": 6,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "kobold_cragbreaker",
+            "site": "poi.-8_-40.kobold_scale_hold.-1954.-10022",
+            "explicitLevel": null,
+            "effectiveLevel": 10,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "kobold_crestcaller",
+            "site": "poi.-8_-40.kobold_scale_hold.-1954.-10022",
+            "explicitLevel": null,
+            "effectiveLevel": 10,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "kobold_ironback",
+            "site": "poi.-8_-40.kobold_scale_hold.-1954.-10022",
+            "explicitLevel": null,
+            "effectiveLevel": 11,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "kobold_scalechief",
+            "site": "poi.-8_-40.kobold_scale_hold.-1954.-10022",
+            "explicitLevel": null,
+            "effectiveLevel": 15,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "ruin_chest",
+            "site": "poi.-8_-40.kobold_scale_hold.-1954.-10022",
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "kobold_dartbow",
+            "site": "poi.-8_-40.kobold_scrap_camp.-2012.-10019",
+            "explicitLevel": null,
+            "effectiveLevel": 4,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "kobold_knifehand",
+            "site": "poi.-8_-40.kobold_scrap_camp.-2012.-10019",
+            "explicitLevel": null,
+            "effectiveLevel": 3,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "kobold_scavenger",
+            "site": "poi.-8_-40.kobold_scrap_camp.-2012.-10019",
+            "explicitLevel": null,
+            "effectiveLevel": 2,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "kobold_stonecaster",
+            "site": "poi.-8_-40.kobold_scrap_camp.-2012.-10019",
+            "explicitLevel": null,
+            "effectiveLevel": 5,
+            "points": 1,
+            "bodies": 1
+          }
+        ],
+        "after": [
+          {
+            "Pattern": "hob",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 75,
+            "bodies": 224
+          },
+          {
+            "Pattern": "loosed_kindler",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 4,
+            "points": 19,
+            "bodies": 29
+          },
+          {
+            "Pattern": "snow_hare",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 2,
+            "bodies": 3
+          },
+          {
+            "Pattern": "wolf",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 2,
+            "points": 39,
+            "bodies": 101
+          },
+          {
+            "Pattern": "wolverine",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 5,
+            "points": 2,
+            "bodies": 2
+          },
+          {
+            "Pattern": "cairn_stone",
+            "site": "poi.-8_-40.knot.-1833.-10142",
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 7,
+            "bodies": 7
+          },
+          {
+            "Pattern": "cinder_imp",
+            "site": "poi.-8_-40.knot.-1833.-10142",
+            "explicitLevel": 27,
+            "effectiveLevel": 27,
+            "points": 2,
+            "bodies": 5
+          },
+          {
+            "Pattern": "remnant_shade",
+            "site": "poi.-8_-40.knot.-1833.-10142",
+            "explicitLevel": 27,
+            "effectiveLevel": 27,
+            "points": 1,
+            "bodies": 2
+          },
+          {
+            "Pattern": "tangle",
+            "site": "poi.-8_-40.knot.-1833.-10142",
+            "explicitLevel": 27,
+            "effectiveLevel": 27,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "kobold_cragbreaker",
+            "site": "poi.-8_-40.kobold_scale_hold.-1954.-10022",
+            "explicitLevel": null,
+            "effectiveLevel": 10,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "kobold_crestcaller",
+            "site": "poi.-8_-40.kobold_scale_hold.-1954.-10022",
+            "explicitLevel": null,
+            "effectiveLevel": 10,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "kobold_ironback",
+            "site": "poi.-8_-40.kobold_scale_hold.-1954.-10022",
+            "explicitLevel": null,
+            "effectiveLevel": 11,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "kobold_scalechief",
+            "site": "poi.-8_-40.kobold_scale_hold.-1954.-10022",
+            "explicitLevel": null,
+            "effectiveLevel": 15,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "ruin_chest",
+            "site": "poi.-8_-40.kobold_scale_hold.-1954.-10022",
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "kobold_dartbow",
+            "site": "poi.-8_-40.kobold_scrap_camp.-2012.-10019",
+            "explicitLevel": null,
+            "effectiveLevel": 4,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "kobold_knifehand",
+            "site": "poi.-8_-40.kobold_scrap_camp.-2012.-10019",
+            "explicitLevel": null,
+            "effectiveLevel": 3,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "kobold_scavenger",
+            "site": "poi.-8_-40.kobold_scrap_camp.-2012.-10019",
+            "explicitLevel": null,
+            "effectiveLevel": 2,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "kobold_stonecaster",
+            "site": "poi.-8_-40.kobold_scrap_camp.-2012.-10019",
+            "explicitLevel": null,
+            "effectiveLevel": 5,
+            "points": 1,
+            "bodies": 1
+          }
+        ]
+      }
+    },
+    {
+      "zone": "-25_-31",
+      "overlay": true,
+      "changes": [
+        "populations"
+      ],
+      "populations": {
+        "before": [
+          {
+            "Pattern": "blade_wraith",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 6,
+            "points": 3,
+            "bodies": 6
+          },
+          {
+            "Pattern": "carrion_crow",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "decay_wraith",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 5,
+            "points": 6,
+            "bodies": 7
+          },
+          {
+            "Pattern": "gutter_rat",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 2,
+            "bodies": 3
+          },
+          {
+            "Pattern": "hob",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 80,
+            "bodies": 234
+          },
+          {
+            "Pattern": "loosed_kindler",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 4,
+            "points": 11,
+            "bodies": 15
+          },
+          {
+            "Pattern": "remnant_shade",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 2,
+            "points": 38,
+            "bodies": 127
+          },
+          {
+            "Pattern": "tangle",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 6,
+            "points": 4,
+            "bodies": 4
+          },
+          {
+            "Pattern": "wolf",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 2,
+            "points": 20,
+            "bodies": 50
+          },
+          {
+            "Pattern": "cairn_stone",
+            "site": "poi.-25_-31.knot.-6179.-7862",
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 7,
+            "bodies": 7
+          },
+          {
+            "Pattern": "cinder_imp",
+            "site": "poi.-25_-31.knot.-6179.-7862",
+            "explicitLevel": null,
+            "effectiveLevel": 4,
+            "points": 2,
+            "bodies": 5
+          },
+          {
+            "Pattern": "remnant_shade",
+            "site": "poi.-25_-31.knot.-6179.-7862",
+            "explicitLevel": null,
+            "effectiveLevel": 2,
+            "points": 1,
+            "bodies": 4
+          },
+          {
+            "Pattern": "tangle",
+            "site": "poi.-25_-31.knot.-6179.-7862",
+            "explicitLevel": null,
+            "effectiveLevel": 6,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "kobold_cinderweaver",
+            "site": "poi.-25_-31.kobold_cinder_camp.-6178.-7721",
+            "explicitLevel": null,
+            "effectiveLevel": 7,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "kobold_stormweaver",
+            "site": "poi.-25_-31.kobold_cinder_camp.-6178.-7721",
+            "explicitLevel": null,
+            "effectiveLevel": 8,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "kobold_tunnelguard",
+            "site": "poi.-25_-31.kobold_cinder_camp.-6178.-7721",
+            "explicitLevel": null,
+            "effectiveLevel": 6,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "shrine_stone",
+            "site": "poi.-25_-31.shrine.-6337.-7772",
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 1,
+            "bodies": 1
+          }
+        ],
+        "after": [
+          {
+            "Pattern": "blade_wraith",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 6,
+            "points": 3,
+            "bodies": 6
+          },
+          {
+            "Pattern": "carrion_crow",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "decay_wraith",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 5,
+            "points": 6,
+            "bodies": 7
+          },
+          {
+            "Pattern": "gutter_rat",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 2,
+            "bodies": 3
+          },
+          {
+            "Pattern": "hob",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 80,
+            "bodies": 234
+          },
+          {
+            "Pattern": "loosed_kindler",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 4,
+            "points": 11,
+            "bodies": 15
+          },
+          {
+            "Pattern": "remnant_shade",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 2,
+            "points": 38,
+            "bodies": 127
+          },
+          {
+            "Pattern": "tangle",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 6,
+            "points": 4,
+            "bodies": 4
+          },
+          {
+            "Pattern": "wolf",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 2,
+            "points": 20,
+            "bodies": 50
+          },
+          {
+            "Pattern": "cairn_stone",
+            "site": "poi.-25_-31.knot.-6179.-7862",
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 7,
+            "bodies": 7
+          },
+          {
+            "Pattern": "cinder_imp",
+            "site": "poi.-25_-31.knot.-6179.-7862",
+            "explicitLevel": 23,
+            "effectiveLevel": 23,
+            "points": 2,
+            "bodies": 5
+          },
+          {
+            "Pattern": "remnant_shade",
+            "site": "poi.-25_-31.knot.-6179.-7862",
+            "explicitLevel": 23,
+            "effectiveLevel": 23,
+            "points": 1,
+            "bodies": 4
+          },
+          {
+            "Pattern": "tangle",
+            "site": "poi.-25_-31.knot.-6179.-7862",
+            "explicitLevel": 23,
+            "effectiveLevel": 23,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "kobold_cinderweaver",
+            "site": "poi.-25_-31.kobold_cinder_camp.-6178.-7721",
+            "explicitLevel": null,
+            "effectiveLevel": 7,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "kobold_stormweaver",
+            "site": "poi.-25_-31.kobold_cinder_camp.-6178.-7721",
+            "explicitLevel": null,
+            "effectiveLevel": 8,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "kobold_tunnelguard",
+            "site": "poi.-25_-31.kobold_cinder_camp.-6178.-7721",
+            "explicitLevel": null,
+            "effectiveLevel": 6,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "shrine_stone",
+            "site": "poi.-25_-31.shrine.-6337.-7772",
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 1,
+            "bodies": 1
+          }
+        ]
+      }
+    },
+    {
+      "zone": "-7_-23",
+      "overlay": true,
+      "changes": []
+    }
+  ],
+  "exactBaseContentComparison": [
+    {
+      "zone": "0_0",
+      "overlay": false,
+      "changes": [
+        "nearby"
+      ],
+      "nearby": {
+        "before": [
+          "poi.-1_-1.troll_toll.-68.-93",
+          "poi.-1_-1.knot.-34.-229",
+          "poi.-1_-1.ruin.-234.-178",
+          "poi.0_-1.knot.176.-74",
+          "poi.0_-1.knot.41.-37",
+          "poi.0_-1.knot.185.-214",
+          "poi.1_-1.knot.408.-205",
+          "poi.1_-1.shrine.440.-29",
+          "poi.1_-1.knot.303.-30",
+          "poi.-1_0.kiln.-218.235",
+          "poi.-1_0.scrap_fort.-42.229",
+          "poi.-1_0.ruin.-46.48",
+          "poi.0_0.hamlet.128.128",
+          "poi.0_0.fount.150.134",
+          "poi.0_0.shrine.90.170",
+          "poi.0_0.knot.200.60",
+          "poi.1_0.ossuary.421.38",
+          "poi.1_0.orc_chaincamp.431.198",
+          "poi.1_0.orc_muster.291.217",
+          "poi.-1_1.knot.-34.419",
+          "poi.-1_1.grave_court.-198.436",
+          "poi.-1_1.scrap_fort.-234.294",
+          "poi.0_1.orc_chaincamp.125.310",
+          "poi.0_1.gnasher_pen.32.459",
+          "poi.0_1.ruin.213.450",
+          "poi.1_1.ossuary.489.419",
+          "poi.1_1.ruin.305.334",
+          "poi.1_1.shrine.301.460",
+          "poi.1_1.ruin.393.475"
+        ],
+        "after": [
+          "poi.-1_-1.troll_toll.-68.-93",
+          "poi.-1_-1.knot.-34.-229",
+          "poi.-1_-1.ruin.-234.-178",
+          "poi.0_-1.knot.176.-74",
+          "poi.0_-1.knot.41.-37",
+          "poi.0_-1.knot.185.-214",
+          "poi.1_-1.knot.408.-205",
+          "poi.1_-1.shrine.440.-29",
+          "poi.1_-1.knot.303.-30",
+          "poi.-1_0.kiln.-218.235",
+          "poi.-1_0.scrap_fort.-42.229",
+          "poi.-1_0.ruin.-46.48",
+          "poi.0_0.hamlet.128.128",
+          "poi.0_0.fount.150.134",
+          "poi.0_0.shrine.90.170",
+          "poi.0_0.knot.200.60",
+          "poi.1_0.ossuary.421.38",
+          "poi.1_0.orc_chaincamp.431.198",
+          "poi.1_0.orc_muster.291.217",
+          "poi.-1_1.knot.-34.419",
+          "poi.-1_1.grave_court.-198.436",
+          "poi.-1_1.ruin.-234.294",
+          "poi.0_1.kobold_scale_hold.125.310",
+          "poi.0_1.gnasher_pen.32.459",
+          "poi.0_1.ruin.213.450",
+          "poi.1_1.ossuary.489.419",
+          "poi.1_1.ruin.305.334",
+          "poi.1_1.shrine.301.460",
+          "poi.1_1.ruin.393.475"
+        ]
+      }
+    },
+    {
+      "zone": "1_0",
+      "overlay": false,
+      "changes": [
+        "nearby"
+      ],
+      "nearby": {
+        "before": [
+          "poi.0_-1.knot.176.-74",
+          "poi.0_-1.knot.41.-37",
+          "poi.0_-1.knot.185.-214",
+          "poi.1_-1.knot.408.-205",
+          "poi.1_-1.shrine.440.-29",
+          "poi.1_-1.knot.303.-30",
+          "poi.2_-1.knot.560.-117",
+          "poi.2_-1.knot.690.-147",
+          "poi.2_-1.shrine.648.-26",
+          "poi.0_0.hamlet.128.128",
+          "poi.0_0.fount.150.134",
+          "poi.0_0.shrine.90.170",
+          "poi.0_0.knot.200.60",
+          "poi.1_0.ossuary.421.38",
+          "poi.1_0.orc_chaincamp.431.198",
+          "poi.1_0.orc_muster.291.217",
+          "poi.2_0.scrap_fort.655.99",
+          "poi.2_0.knot.700.231",
+          "poi.2_0.knot.543.233",
+          "poi.0_1.orc_chaincamp.125.310",
+          "poi.0_1.gnasher_pen.32.459",
+          "poi.0_1.ruin.213.450",
+          "poi.1_1.ossuary.489.419",
+          "poi.1_1.ruin.305.334",
+          "poi.1_1.shrine.301.460",
+          "poi.1_1.ruin.393.475",
+          "poi.2_1.scrap_fort.744.285",
+          "poi.2_1.shrine.553.391",
+          "poi.2_1.ruin.652.443"
+        ],
+        "after": [
+          "poi.0_-1.knot.176.-74",
+          "poi.0_-1.knot.41.-37",
+          "poi.0_-1.knot.185.-214",
+          "poi.1_-1.knot.408.-205",
+          "poi.1_-1.shrine.440.-29",
+          "poi.1_-1.knot.303.-30",
+          "poi.2_-1.knot.560.-117",
+          "poi.2_-1.knot.690.-147",
+          "poi.2_-1.shrine.648.-26",
+          "poi.0_0.hamlet.128.128",
+          "poi.0_0.fount.150.134",
+          "poi.0_0.shrine.90.170",
+          "poi.0_0.knot.200.60",
+          "poi.1_0.ossuary.421.38",
+          "poi.1_0.orc_chaincamp.431.198",
+          "poi.1_0.orc_muster.291.217",
+          "poi.2_0.ruin.655.99",
+          "poi.2_0.ruin.723.37",
+          "poi.2_0.ruin.568.142",
+          "poi.2_0.shrine.700.231",
+          "poi.0_1.kobold_scale_hold.125.310",
+          "poi.0_1.gnasher_pen.32.459",
+          "poi.0_1.ruin.213.450",
+          "poi.1_1.ossuary.489.419",
+          "poi.1_1.ruin.305.334",
+          "poi.1_1.shrine.301.460",
+          "poi.1_1.ruin.393.475",
+          "poi.2_1.scrap_fort.744.285",
+          "poi.2_1.shrine.553.391",
+          "poi.2_1.ruin.652.443"
+        ]
+      }
+    },
+    {
+      "zone": "0_-1",
+      "overlay": false,
+      "changes": []
+    },
+    {
+      "zone": "3_2",
+      "overlay": false,
+      "changes": []
+    },
+    {
+      "zone": "-15_-40",
+      "overlay": false,
+      "changes": [
+        "geometryHash",
+        "populationWithoutLevels",
+        "sites",
+        "nearby",
+        "populations"
+      ],
+      "geometryHash": {
+        "before": "0EF8D07B783E71FD19C04B97F831D0C1EF70419D00314B45FFD514B567DA1581",
+        "after": "D4CF102B36D7CC24E8B35EC9E4EB9F7FD12ED449DA27569381238C8F583E6F47"
+      },
+      "populationWithoutLevels": {
+        "before": "48B7C830409A8E990F7A132C9075CBDE9891E3AC67E859C5E49D9F16C2BFF743",
+        "after": "5A225954EA23F762549E0C4D526ACEBEDEDBF539D243C1877BA42A1C32C6FE6A"
+      },
+      "sites": {
+        "before": [
+          {
+            "Id": "poi.-15_-40.knot.-3654.-10123",
+            "kind": "knot",
+            "Name": "a Kiln Knot",
+            "X": -3654.5,
+            "Y": -10123.5,
+            "siteLevel": 31,
+            "Landmark": "knot_stones"
+          },
+          {
+            "Id": "poi.-15_-40.scrap_fort.-3788.-10093",
+            "kind": "scrap_fort",
+            "Name": "Scrap Fort",
+            "X": -3788.5,
+            "Y": -10093.5,
+            "siteLevel": 34,
+            "Landmark": "ruin_walls"
+          }
+        ],
+        "after": [
+          {
+            "Id": "poi.-15_-40.kobold_scale_hold.-3654.-10123",
+            "kind": "kobold_scale_hold",
+            "Name": "Copper-Crest Hold",
+            "X": -3654.5,
+            "Y": -10123.5,
+            "siteLevel": 35,
+            "Landmark": "ruin_walls"
+          },
+          {
+            "Id": "poi.-15_-40.ruin.-3788.-10093",
+            "kind": "ruin",
+            "Name": "Wightsrest",
+            "X": -3788.5,
+            "Y": -10093.5,
+            "siteLevel": 30,
+            "Landmark": "barrow"
+          }
+        ]
+      },
+      "nearby": {
+        "before": [
+          "poi.-16_-41.scrap_fort.-4033.-10280",
+          "poi.-16_-41.knot.-3886.-10270",
+          "poi.-16_-41.ruin.-3921.-10405",
+          "poi.-15_-41.knot.-3779.-10275",
+          "poi.-15_-41.orc_hold.-3613.-10420",
+          "poi.-15_-41.grave_court.-3751.-10466",
+          "poi.-14_-41.knot.-3407.-10451",
+          "poi.-14_-41.ruin.-3369.-10345",
+          "poi.-14_-41.shrine.-3469.-10267",
+          "poi.-16_-40.orc_chaincamp.-3960.-10062",
+          "poi.-16_-40.shrine.-4059.-10181",
+          "poi.-15_-40.knot.-3654.-10123",
+          "poi.-15_-40.scrap_fort.-3788.-10093",
+          "poi.-14_-40.knot.-3362.-10007",
+          "poi.-14_-40.ruin.-3525.-10026",
+          "poi.-16_-39.knot.-3895.-9748",
+          "poi.-16_-39.ossuary.-3860.-9870",
+          "poi.-15_-39.ruin.-3798.-9844",
+          "poi.-15_-39.ruin.-3675.-9823",
+          "poi.-14_-39.knot.-3392.-9933",
+          "poi.-14_-39.knot.-3453.-9767"
+        ],
+        "after": [
+          "poi.-16_-41.scrap_fort.-4033.-10280",
+          "poi.-16_-41.knot.-3886.-10270",
+          "poi.-16_-41.ruin.-3921.-10405",
+          "poi.-15_-41.knot.-3779.-10275",
+          "poi.-15_-41.orc_chaincamp.-3613.-10420",
+          "poi.-15_-41.grave_court.-3751.-10466",
+          "poi.-14_-41.knot.-3407.-10451",
+          "poi.-14_-41.ruin.-3369.-10345",
+          "poi.-14_-41.shrine.-3469.-10267",
+          "poi.-16_-40.orc_chaincamp.-3960.-10062",
+          "poi.-16_-40.shrine.-4059.-10181",
+          "poi.-15_-40.kobold_scale_hold.-3654.-10123",
+          "poi.-15_-40.ruin.-3788.-10093",
+          "poi.-14_-40.knot.-3362.-10007",
+          "poi.-14_-40.ruin.-3525.-10026",
+          "poi.-16_-39.knot.-3895.-9748",
+          "poi.-16_-39.ossuary.-3860.-9870",
+          "poi.-15_-39.ruin.-3798.-9844",
+          "poi.-15_-39.ossuary.-3675.-9823",
+          "poi.-14_-39.knot.-3392.-9933",
+          "poi.-14_-39.knot.-3453.-9767"
+        ]
+      },
+      "populations": {
+        "before": [
+          {
+            "Pattern": "hob",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 82,
+            "bodies": 251
+          },
+          {
+            "Pattern": "loosed_kindler",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 4,
+            "points": 17,
+            "bodies": 26
+          },
+          {
+            "Pattern": "snow_hare",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 2,
+            "bodies": 3
+          },
+          {
+            "Pattern": "wolf",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 2,
+            "points": 43,
+            "bodies": 105
+          },
+          {
+            "Pattern": "wolverine",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 5,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "cairn_stone",
+            "site": "poi.-15_-40.knot.-3654.-10123",
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 7,
+            "bodies": 7
+          },
+          {
+            "Pattern": "cinder_imp",
+            "site": "poi.-15_-40.knot.-3654.-10123",
+            "explicitLevel": 31,
+            "effectiveLevel": 31,
+            "points": 2,
+            "bodies": 5
+          },
+          {
+            "Pattern": "remnant_shade",
+            "site": "poi.-15_-40.knot.-3654.-10123",
+            "explicitLevel": 31,
+            "effectiveLevel": 31,
+            "points": 1,
+            "bodies": 4
+          },
+          {
+            "Pattern": "tangle",
+            "site": "poi.-15_-40.knot.-3654.-10123",
+            "explicitLevel": 31,
+            "effectiveLevel": 31,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "goblin_colossus",
+            "site": "poi.-15_-40.scrap_fort.-3788.-10093",
+            "explicitLevel": null,
+            "effectiveLevel": 20,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "goblin_sapper",
+            "site": "poi.-15_-40.scrap_fort.-3788.-10093",
+            "explicitLevel": null,
+            "effectiveLevel": 5,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "goblin_warboss",
+            "site": "poi.-15_-40.scrap_fort.-3788.-10093",
+            "explicitLevel": null,
+            "effectiveLevel": 12,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "hobgoblin_taskmaster",
+            "site": "poi.-15_-40.scrap_fort.-3788.-10093",
+            "explicitLevel": null,
+            "effectiveLevel": 8,
+            "points": 1,
+            "bodies": 2
+          },
+          {
+            "Pattern": "orc_ravager",
+            "site": "poi.-15_-40.scrap_fort.-3788.-10093",
+            "explicitLevel": null,
+            "effectiveLevel": 7,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "ruin_chest",
+            "site": "poi.-15_-40.scrap_fort.-3788.-10093",
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "warg",
+            "site": "poi.-15_-40.scrap_fort.-3788.-10093",
+            "explicitLevel": null,
+            "effectiveLevel": 6,
+            "points": 1,
+            "bodies": 2
+          }
+        ],
+        "after": [
+          {
+            "Pattern": "hob",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 82,
+            "bodies": 251
+          },
+          {
+            "Pattern": "loosed_kindler",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 4,
+            "points": 17,
+            "bodies": 26
+          },
+          {
+            "Pattern": "snow_hare",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 2,
+            "bodies": 3
+          },
+          {
+            "Pattern": "wolf",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 2,
+            "points": 43,
+            "bodies": 105
+          },
+          {
+            "Pattern": "wolverine",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 5,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "kobold_cragbreaker",
+            "site": "poi.-15_-40.kobold_scale_hold.-3654.-10123",
+            "explicitLevel": null,
+            "effectiveLevel": 10,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "kobold_crestcaller",
+            "site": "poi.-15_-40.kobold_scale_hold.-3654.-10123",
+            "explicitLevel": null,
+            "effectiveLevel": 10,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "kobold_ironback",
+            "site": "poi.-15_-40.kobold_scale_hold.-3654.-10123",
+            "explicitLevel": null,
+            "effectiveLevel": 11,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "kobold_scalechief",
+            "site": "poi.-15_-40.kobold_scale_hold.-3654.-10123",
+            "explicitLevel": null,
+            "effectiveLevel": 15,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "ruin_chest",
+            "site": "poi.-15_-40.kobold_scale_hold.-3654.-10123",
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "barrow_wight",
+            "site": "poi.-15_-40.ruin.-3788.-10093",
+            "explicitLevel": null,
+            "effectiveLevel": 3,
+            "points": 2,
+            "bodies": 3
+          },
+          {
+            "Pattern": "remnant_shade",
+            "site": "poi.-15_-40.ruin.-3788.-10093",
+            "explicitLevel": null,
+            "effectiveLevel": 2,
+            "points": 1,
+            "bodies": 3
+          },
+          {
+            "Pattern": "ruin_chest",
+            "site": "poi.-15_-40.ruin.-3788.-10093",
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 1,
+            "bodies": 1
+          }
+        ]
+      }
+    },
+    {
+      "zone": "-8_-40",
+      "overlay": false,
+      "changes": [
+        "geometryHash",
+        "populationWithoutLevels",
+        "sites",
+        "nearby",
+        "populations"
+      ],
+      "geometryHash": {
+        "before": "3E1502BCA1ED894DFBF94D179639BDA3AB289A6E5CE5774CAB376304385BF690",
+        "after": "39341595A7A44F9BCB26F28E5728E1BDCBFA04D87B07E17243473203FD3D1396"
+      },
+      "populationWithoutLevels": {
+        "before": "96A8C14D01BBFE5B736758E431F2C6BFF5764003D056E46E65537CE075089427",
+        "after": "EBFC5D6F17C330015B4CE4D498AAF4658A27367DA6468A2A8801531C658D1936"
+      },
+      "sites": {
+        "before": [
+          {
+            "Id": "poi.-8_-40.orc_chaincamp.-2012.-10019",
+            "kind": "orc_chaincamp",
+            "Name": "Chainkeeper Camp",
+            "X": -2012.5,
+            "Y": -10019.5,
+            "siteLevel": 32,
+            "Landmark": "camp_ring"
+          },
+          {
+            "Id": "poi.-8_-40.knot.-1833.-10142",
+            "kind": "knot",
+            "Name": "a Snarl",
+            "X": -1833.5,
+            "Y": -10142.5,
+            "siteLevel": 27,
+            "Landmark": "knot_stones"
+          },
+          {
+            "Id": "poi.-8_-40.ossuary.-1833.-10010",
+            "kind": "ossuary",
+            "Name": "the Bone Vault",
+            "X": -1833.5,
+            "Y": -10010.5,
+            "siteLevel": 27,
+            "Landmark": "barrow"
+          }
+        ],
+        "after": [
+          {
+            "Id": "poi.-8_-40.kobold_scrap_camp.-2012.-10019",
+            "kind": "kobold_scrap_camp",
+            "Name": "Scrapscale Camp",
+            "X": -2012.5,
+            "Y": -10019.5,
+            "siteLevel": 27,
+            "Landmark": "camp_ring"
+          },
+          {
+            "Id": "poi.-8_-40.kobold_scale_hold.-1954.-10022",
+            "kind": "kobold_scale_hold",
+            "Name": "Copper-Crest Hold",
+            "X": -1954.5,
+            "Y": -10022.5,
+            "siteLevel": 31,
+            "Landmark": "ruin_walls"
+          },
+          {
+            "Id": "poi.-8_-40.knot.-1833.-10142",
+            "kind": "knot",
+            "Name": "the Hob Hollow",
+            "X": -1833.5,
+            "Y": -10142.5,
+            "siteLevel": 27,
+            "Landmark": "knot_stones"
+          }
+        ]
+      },
+      "nearby": {
+        "before": [
+          "poi.-9_-41.orc_muster.-2084.-10317",
+          "poi.-9_-41.ossuary.-2281.-10427",
+          "poi.-9_-41.ruin.-2100.-10465",
+          "poi.-8_-41.ossuary.-1990.-10274",
+          "poi.-8_-41.gnasher_pen.-1813.-10384",
+          "poi.-8_-41.knot.-2016.-10455",
+          "poi.-7_-41.knot.-1743.-10301",
+          "poi.-7_-41.knot.-1581.-10331",
+          "poi.-7_-41.warren_encampment.-1608.-10472",
+          "poi.-9_-40.orc_hold.-2070.-10138",
+          "poi.-9_-40.knot.-2278.-10107",
+          "poi.-8_-40.orc_chaincamp.-2012.-10019",
+          "poi.-8_-40.knot.-1833.-10142",
+          "poi.-8_-40.ossuary.-1833.-10010",
+          "poi.-7_-40.shrine.-1559.-10142",
+          "poi.-7_-40.knot.-1567.-10020",
+          "poi.-7_-40.ossuary.-1664.-10209",
+          "poi.-9_-39.ossuary.-2079.-9753",
+          "poi.-9_-39.knot.-2251.-9851",
+          "poi.-8_-39.orc_muster.-1945.-9789",
+          "poi.-8_-39.ossuary.-2019.-9925",
+          "poi.-8_-39.knot.-1821.-9942",
+          "poi.-7_-39.scrap_fort.-1557.-9749",
+          "poi.-7_-39.ruin.-1609.-9963",
+          "poi.-7_-39.knot.-1751.-9866"
+        ],
+        "after": [
+          "poi.-9_-41.orc_hold.-2084.-10317",
+          "poi.-9_-41.ossuary.-2281.-10427",
+          "poi.-9_-41.ruin.-2100.-10465",
+          "poi.-8_-41.ossuary.-1990.-10274",
+          "poi.-8_-41.gnasher_pen.-1813.-10384",
+          "poi.-8_-41.knot.-2016.-10455",
+          "poi.-7_-41.knot.-1743.-10301",
+          "poi.-7_-41.knot.-1581.-10331",
+          "poi.-7_-41.warren_encampment.-1608.-10472",
+          "poi.-9_-40.orc_hold.-2070.-10138",
+          "poi.-9_-40.knot.-2278.-10107",
+          "poi.-8_-40.kobold_scrap_camp.-2012.-10019",
+          "poi.-8_-40.kobold_scale_hold.-1954.-10022",
+          "poi.-8_-40.knot.-1833.-10142",
+          "poi.-7_-40.shrine.-1559.-10142",
+          "poi.-7_-40.knot.-1567.-10020",
+          "poi.-7_-40.ossuary.-1664.-10209",
+          "poi.-9_-39.ossuary.-2079.-9753",
+          "poi.-9_-39.knot.-2251.-9851",
+          "poi.-8_-39.orc_hold.-1945.-9789",
+          "poi.-8_-39.ossuary.-2019.-9925",
+          "poi.-8_-39.knot.-1821.-9942",
+          "poi.-7_-39.ruin.-1557.-9749",
+          "poi.-7_-39.ruin.-1609.-9963",
+          "poi.-7_-39.ruin.-1665.-9752"
+        ]
+      },
+      "populations": {
+        "before": [
+          {
+            "Pattern": "hob",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 75,
+            "bodies": 224
+          },
+          {
+            "Pattern": "loosed_kindler",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 4,
+            "points": 19,
+            "bodies": 29
+          },
+          {
+            "Pattern": "snow_hare",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 2,
+            "bodies": 3
+          },
+          {
+            "Pattern": "wolf",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 2,
+            "points": 39,
+            "bodies": 101
+          },
+          {
+            "Pattern": "wolverine",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 5,
+            "points": 2,
+            "bodies": 2
+          },
+          {
+            "Pattern": "cairn_stone",
+            "site": "poi.-8_-40.knot.-1833.-10142",
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 7,
+            "bodies": 7
+          },
+          {
+            "Pattern": "cinder_imp",
+            "site": "poi.-8_-40.knot.-1833.-10142",
+            "explicitLevel": 27,
+            "effectiveLevel": 27,
+            "points": 2,
+            "bodies": 5
+          },
+          {
+            "Pattern": "remnant_shade",
+            "site": "poi.-8_-40.knot.-1833.-10142",
+            "explicitLevel": 27,
+            "effectiveLevel": 27,
+            "points": 1,
+            "bodies": 2
+          },
+          {
+            "Pattern": "tangle",
+            "site": "poi.-8_-40.knot.-1833.-10142",
+            "explicitLevel": 27,
+            "effectiveLevel": 27,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "goblin_scavenger",
+            "site": "poi.-8_-40.orc_chaincamp.-2012.-10019",
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "orc_ashcaller",
+            "site": "poi.-8_-40.orc_chaincamp.-2012.-10019",
+            "explicitLevel": null,
+            "effectiveLevel": 8,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "orc_bloodchanter",
+            "site": "poi.-8_-40.orc_chaincamp.-2012.-10019",
+            "explicitLevel": null,
+            "effectiveLevel": 10,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "orc_overseer",
+            "site": "poi.-8_-40.orc_chaincamp.-2012.-10019",
+            "explicitLevel": null,
+            "effectiveLevel": 10,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "orc_slaver",
+            "site": "poi.-8_-40.orc_chaincamp.-2012.-10019",
+            "explicitLevel": null,
+            "effectiveLevel": 11,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "bone_golem",
+            "site": "poi.-8_-40.ossuary.-1833.-10010",
+            "explicitLevel": null,
+            "effectiveLevel": 7,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "ruin_chest",
+            "site": "poi.-8_-40.ossuary.-1833.-10010",
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "skeletal_duelist",
+            "site": "poi.-8_-40.ossuary.-1833.-10010",
+            "explicitLevel": null,
+            "effectiveLevel": 5,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "skeletal_sentinel",
+            "site": "poi.-8_-40.ossuary.-1833.-10010",
+            "explicitLevel": null,
+            "effectiveLevel": 5,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "skeleton_archer",
+            "site": "poi.-8_-40.ossuary.-1833.-10010",
+            "explicitLevel": null,
+            "effectiveLevel": 3,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "skeleton_warrior",
+            "site": "poi.-8_-40.ossuary.-1833.-10010",
+            "explicitLevel": null,
+            "effectiveLevel": 3,
+            "points": 2,
+            "bodies": 6
+          }
+        ],
+        "after": [
+          {
+            "Pattern": "hob",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 75,
+            "bodies": 224
+          },
+          {
+            "Pattern": "loosed_kindler",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 4,
+            "points": 19,
+            "bodies": 29
+          },
+          {
+            "Pattern": "snow_hare",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 2,
+            "bodies": 3
+          },
+          {
+            "Pattern": "wolf",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 2,
+            "points": 39,
+            "bodies": 101
+          },
+          {
+            "Pattern": "wolverine",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 5,
+            "points": 2,
+            "bodies": 2
+          },
+          {
+            "Pattern": "cairn_stone",
+            "site": "poi.-8_-40.knot.-1833.-10142",
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 7,
+            "bodies": 7
+          },
+          {
+            "Pattern": "cinder_imp",
+            "site": "poi.-8_-40.knot.-1833.-10142",
+            "explicitLevel": 27,
+            "effectiveLevel": 27,
+            "points": 2,
+            "bodies": 5
+          },
+          {
+            "Pattern": "remnant_shade",
+            "site": "poi.-8_-40.knot.-1833.-10142",
+            "explicitLevel": 27,
+            "effectiveLevel": 27,
+            "points": 1,
+            "bodies": 2
+          },
+          {
+            "Pattern": "tangle",
+            "site": "poi.-8_-40.knot.-1833.-10142",
+            "explicitLevel": 27,
+            "effectiveLevel": 27,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "kobold_cragbreaker",
+            "site": "poi.-8_-40.kobold_scale_hold.-1954.-10022",
+            "explicitLevel": null,
+            "effectiveLevel": 10,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "kobold_crestcaller",
+            "site": "poi.-8_-40.kobold_scale_hold.-1954.-10022",
+            "explicitLevel": null,
+            "effectiveLevel": 10,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "kobold_ironback",
+            "site": "poi.-8_-40.kobold_scale_hold.-1954.-10022",
+            "explicitLevel": null,
+            "effectiveLevel": 11,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "kobold_scalechief",
+            "site": "poi.-8_-40.kobold_scale_hold.-1954.-10022",
+            "explicitLevel": null,
+            "effectiveLevel": 15,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "ruin_chest",
+            "site": "poi.-8_-40.kobold_scale_hold.-1954.-10022",
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "kobold_dartbow",
+            "site": "poi.-8_-40.kobold_scrap_camp.-2012.-10019",
+            "explicitLevel": null,
+            "effectiveLevel": 4,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "kobold_knifehand",
+            "site": "poi.-8_-40.kobold_scrap_camp.-2012.-10019",
+            "explicitLevel": null,
+            "effectiveLevel": 3,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "kobold_scavenger",
+            "site": "poi.-8_-40.kobold_scrap_camp.-2012.-10019",
+            "explicitLevel": null,
+            "effectiveLevel": 2,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "kobold_stonecaster",
+            "site": "poi.-8_-40.kobold_scrap_camp.-2012.-10019",
+            "explicitLevel": null,
+            "effectiveLevel": 5,
+            "points": 1,
+            "bodies": 1
+          }
+        ]
+      }
+    },
+    {
+      "zone": "-25_-31",
+      "overlay": false,
+      "changes": [
+        "geometryHash",
+        "populationWithoutLevels",
+        "sites",
+        "nearby",
+        "populations"
+      ],
+      "geometryHash": {
+        "before": "B4681161B841BCEA0623A190C1CB7DD8AE1AA7ECB6C57D7C8E7597DC54BC8FBD",
+        "after": "2A94BA1D6E6E02659A29A54E52FC1E0117B9235CC86113172F95C8C941C47D8E"
+      },
+      "populationWithoutLevels": {
+        "before": "1CDE4B0F5FB3442E5C46E4A83279732E44D76A3D99B6A6E302673329732216E1",
+        "after": "FC061478C3FC18F58A70D0BF3044B892F77E62F675DD4DA954C71E4A5EAAAC82"
+      },
+      "sites": {
+        "before": [
+          {
+            "Id": "poi.-25_-31.knot.-6178.-7721",
+            "kind": "knot",
+            "Name": "a Thinning",
+            "X": -6178.5,
+            "Y": -7721.5,
+            "siteLevel": 23,
+            "Landmark": "knot_stones"
+          },
+          {
+            "Id": "poi.-25_-31.troll_toll.-6337.-7772",
+            "kind": "troll_toll",
+            "Name": "Troll Toll",
+            "X": -6337.5,
+            "Y": -7772.5,
+            "siteLevel": 25,
+            "Landmark": "barrow"
+          },
+          {
+            "Id": "poi.-25_-31.knot.-6179.-7862",
+            "kind": "knot",
+            "Name": "the Drowning",
+            "X": -6179.5,
+            "Y": -7862.5,
+            "siteLevel": 23,
+            "Landmark": "knot_stones"
+          }
+        ],
+        "after": [
+          {
+            "Id": "poi.-25_-31.kobold_cinder_camp.-6178.-7721",
+            "kind": "kobold_cinder_camp",
+            "Name": "Cinderplate Camp",
+            "X": -6178.5,
+            "Y": -7721.5,
+            "siteLevel": 26,
+            "Landmark": "camp_ring"
+          },
+          {
+            "Id": "poi.-25_-31.shrine.-6337.-7772",
+            "kind": "shrine",
+            "Name": "the Lantern Shrine",
+            "X": -6337.5,
+            "Y": -7772.5,
+            "siteLevel": 21,
+            "Landmark": "shrine_ring"
+          },
+          {
+            "Id": "poi.-25_-31.knot.-6179.-7862",
+            "kind": "knot",
+            "Name": "the Drowning",
+            "X": -6179.5,
+            "Y": -7862.5,
+            "siteLevel": 23,
+            "Landmark": "knot_stones"
+          }
+        ]
+      },
+      "nearby": {
+        "before": [
+          "poi.-26_-32.orc_chaincamp.-6632.-8158",
+          "poi.-26_-32.knot.-6433.-8104",
+          "poi.-26_-32.ossuary.-6461.-7972",
+          "poi.-25_-32.knot.-6308.-8058",
+          "poi.-25_-32.shrine.-6168.-8069",
+          "poi.-25_-32.shrine.-6221.-7988",
+          "poi.-24_-32.ruin.-5931.-8057",
+          "poi.-24_-32.knot.-6113.-7957",
+          "poi.-24_-32.knot.-6050.-8121",
+          "poi.-26_-31.warren_encampment.-6583.-7713",
+          "poi.-26_-31.knot.-6451.-7886",
+          "poi.-26_-31.shrine.-6614.-7865",
+          "poi.-25_-31.knot.-6178.-7721",
+          "poi.-25_-31.troll_toll.-6337.-7772",
+          "poi.-25_-31.knot.-6179.-7862",
+          "poi.-24_-31.shrine.-5980.-7871",
+          "poi.-24_-31.shrine.-6069.-7848",
+          "poi.-24_-31.knot.-5916.-7715",
+          "poi.-26_-30.shrine.-6428.-7517",
+          "poi.-26_-30.knot.-6542.-7503",
+          "poi.-26_-30.ruin.-6440.-7610",
+          "poi.-25_-30.shrine.-6224.-7455",
+          "poi.-25_-30.knot.-6341.-7464",
+          "poi.-25_-30.shrine.-6170.-7584",
+          "poi.-24_-30.orc_chaincamp.-5910.-7450",
+          "poi.-24_-30.knot.-6095.-7572",
+          "poi.-24_-30.knot.-5982.-7659"
+        ],
+        "after": [
+          "poi.-26_-32.orc_chaincamp.-6632.-8158",
+          "poi.-26_-32.knot.-6433.-8104",
+          "poi.-26_-32.ossuary.-6461.-7972",
+          "poi.-25_-32.knot.-6308.-8058",
+          "poi.-25_-32.shrine.-6168.-8069",
+          "poi.-25_-32.shrine.-6221.-7988",
+          "poi.-24_-32.ruin.-5931.-8057",
+          "poi.-24_-32.knot.-6113.-7957",
+          "poi.-24_-32.knot.-6050.-8121",
+          "poi.-26_-31.warren_encampment.-6583.-7713",
+          "poi.-26_-31.knot.-6451.-7886",
+          "poi.-26_-31.shrine.-6614.-7865",
+          "poi.-25_-31.kobold_cinder_camp.-6178.-7721",
+          "poi.-25_-31.shrine.-6337.-7772",
+          "poi.-25_-31.knot.-6179.-7862",
+          "poi.-24_-31.shrine.-5980.-7871",
+          "poi.-24_-31.shrine.-6069.-7848",
+          "poi.-24_-31.knot.-5916.-7715",
+          "poi.-26_-30.shrine.-6428.-7517",
+          "poi.-26_-30.knot.-6542.-7503",
+          "poi.-26_-30.kobold_cinder_camp.-6440.-7610",
+          "poi.-25_-30.shrine.-6224.-7455",
+          "poi.-25_-30.knot.-6341.-7464",
+          "poi.-25_-30.shrine.-6170.-7584",
+          "poi.-24_-30.orc_chaincamp.-5910.-7450",
+          "poi.-24_-30.knot.-6095.-7572",
+          "poi.-24_-30.knot.-5982.-7659"
+        ]
+      },
+      "populations": {
+        "before": [
+          {
+            "Pattern": "blade_wraith",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 6,
+            "points": 5,
+            "bodies": 9
+          },
+          {
+            "Pattern": "decay_wraith",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 5,
+            "points": 7,
+            "bodies": 8
+          },
+          {
+            "Pattern": "gutter_rat",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 2,
+            "bodies": 3
+          },
+          {
+            "Pattern": "hob",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 79,
+            "bodies": 231
+          },
+          {
+            "Pattern": "loosed_kindler",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 4,
+            "points": 13,
+            "bodies": 17
+          },
+          {
+            "Pattern": "remnant_shade",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 2,
+            "points": 44,
+            "bodies": 142
+          },
+          {
+            "Pattern": "tangle",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 6,
+            "points": 3,
+            "bodies": 3
+          },
+          {
+            "Pattern": "wolf",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 2,
+            "points": 19,
+            "bodies": 47
+          },
+          {
+            "Pattern": "cairn_stone",
+            "site": "poi.-25_-31.knot.-6178.-7721",
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 7,
+            "bodies": 7
+          },
+          {
+            "Pattern": "cinder_imp",
+            "site": "poi.-25_-31.knot.-6178.-7721",
+            "explicitLevel": 23,
+            "effectiveLevel": 23,
+            "points": 2,
+            "bodies": 4
+          },
+          {
+            "Pattern": "remnant_shade",
+            "site": "poi.-25_-31.knot.-6178.-7721",
+            "explicitLevel": 23,
+            "effectiveLevel": 23,
+            "points": 1,
+            "bodies": 4
+          },
+          {
+            "Pattern": "tangle",
+            "site": "poi.-25_-31.knot.-6178.-7721",
+            "explicitLevel": 23,
+            "effectiveLevel": 23,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "cairn_stone",
+            "site": "poi.-25_-31.knot.-6179.-7862",
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 7,
+            "bodies": 7
+          },
+          {
+            "Pattern": "cinder_imp",
+            "site": "poi.-25_-31.knot.-6179.-7862",
+            "explicitLevel": 23,
+            "effectiveLevel": 23,
+            "points": 2,
+            "bodies": 5
+          },
+          {
+            "Pattern": "remnant_shade",
+            "site": "poi.-25_-31.knot.-6179.-7862",
+            "explicitLevel": 23,
+            "effectiveLevel": 23,
+            "points": 1,
+            "bodies": 4
+          },
+          {
+            "Pattern": "tangle",
+            "site": "poi.-25_-31.knot.-6179.-7862",
+            "explicitLevel": 23,
+            "effectiveLevel": 23,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "ruin_chest",
+            "site": "poi.-25_-31.troll_toll.-6337.-7772",
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "troll_bridgewarden",
+            "site": "poi.-25_-31.troll_toll.-6337.-7772",
+            "explicitLevel": null,
+            "effectiveLevel": 12,
+            "points": 1,
+            "bodies": 2
+          },
+          {
+            "Pattern": "troll_mauler",
+            "site": "poi.-25_-31.troll_toll.-6337.-7772",
+            "explicitLevel": null,
+            "effectiveLevel": 9,
+            "points": 1,
+            "bodies": 2
+          }
+        ],
+        "after": [
+          {
+            "Pattern": "blade_wraith",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 6,
+            "points": 5,
+            "bodies": 9
+          },
+          {
+            "Pattern": "decay_wraith",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 5,
+            "points": 7,
+            "bodies": 8
+          },
+          {
+            "Pattern": "gutter_rat",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 2,
+            "bodies": 3
+          },
+          {
+            "Pattern": "hob",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 79,
+            "bodies": 231
+          },
+          {
+            "Pattern": "loosed_kindler",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 4,
+            "points": 13,
+            "bodies": 17
+          },
+          {
+            "Pattern": "remnant_shade",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 2,
+            "points": 44,
+            "bodies": 142
+          },
+          {
+            "Pattern": "tangle",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 6,
+            "points": 3,
+            "bodies": 3
+          },
+          {
+            "Pattern": "wolf",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 2,
+            "points": 19,
+            "bodies": 47
+          },
+          {
+            "Pattern": "cairn_stone",
+            "site": "poi.-25_-31.knot.-6179.-7862",
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 7,
+            "bodies": 7
+          },
+          {
+            "Pattern": "cinder_imp",
+            "site": "poi.-25_-31.knot.-6179.-7862",
+            "explicitLevel": 23,
+            "effectiveLevel": 23,
+            "points": 2,
+            "bodies": 5
+          },
+          {
+            "Pattern": "remnant_shade",
+            "site": "poi.-25_-31.knot.-6179.-7862",
+            "explicitLevel": 23,
+            "effectiveLevel": 23,
+            "points": 1,
+            "bodies": 4
+          },
+          {
+            "Pattern": "tangle",
+            "site": "poi.-25_-31.knot.-6179.-7862",
+            "explicitLevel": 23,
+            "effectiveLevel": 23,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "kobold_cinderweaver",
+            "site": "poi.-25_-31.kobold_cinder_camp.-6178.-7721",
+            "explicitLevel": null,
+            "effectiveLevel": 7,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "kobold_stormweaver",
+            "site": "poi.-25_-31.kobold_cinder_camp.-6178.-7721",
+            "explicitLevel": null,
+            "effectiveLevel": 8,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "kobold_tunnelguard",
+            "site": "poi.-25_-31.kobold_cinder_camp.-6178.-7721",
+            "explicitLevel": null,
+            "effectiveLevel": 6,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "shrine_stone",
+            "site": "poi.-25_-31.shrine.-6337.-7772",
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 1,
+            "bodies": 1
+          }
+        ]
+      }
+    },
+    {
+      "zone": "-7_-23",
+      "overlay": false,
+      "changes": [
+        "geometryHash",
+        "populationWithoutLevels",
+        "sites",
+        "nearby",
+        "populations"
+      ],
+      "geometryHash": {
+        "before": "116406B94E9CFCFDE994A4BC78493A4859B83D03F645F5C05F1C092866E6EDA0",
+        "after": "8AABC9FC522A9C06571EA72267B529C96B5BB4950EC836506F7685B57751DCAD"
+      },
+      "populationWithoutLevels": {
+        "before": "DA47DFD67EA41509BDE00FFBD3B242E631495631603E02B17196F7C77B40AF60",
+        "after": "54C47762DAA7D5758AF5BCC6A8AA2946B81DA08E789723D864E98D3106BE685F"
+      },
+      "sites": {
+        "before": [
+          {
+            "Id": "poi.-7_-23.knot.-1751.-5754",
+            "kind": "knot",
+            "Name": "the Drowning",
+            "X": -1751.5,
+            "Y": -5754.5,
+            "siteLevel": 15,
+            "Landmark": "knot_stones"
+          },
+          {
+            "Id": "poi.-7_-23.shrine.-1588.-5658",
+            "kind": "shrine",
+            "Name": "the Quiet Stone",
+            "X": -1588.5,
+            "Y": -5658.5,
+            "siteLevel": 13,
+            "Landmark": "shrine_ring"
+          },
+          {
+            "Id": "poi.-7_-23.shrine.-1598.-5756",
+            "kind": "shrine",
+            "Name": "the Quiet Stone",
+            "X": -1598.5,
+            "Y": -5756.5,
+            "siteLevel": 13,
+            "Landmark": "shrine_ring"
+          }
+        ],
+        "after": [
+          {
+            "Id": "poi.-7_-23.kobold_reed_camp.-1751.-5754",
+            "kind": "kobold_reed_camp",
+            "Name": "Reedspine Camp",
+            "X": -1751.5,
+            "Y": -5754.5,
+            "siteLevel": 16,
+            "Landmark": "camp_ring"
+          },
+          {
+            "Id": "poi.-7_-23.shrine.-1588.-5658",
+            "kind": "shrine",
+            "Name": "the Quiet Stone",
+            "X": -1588.5,
+            "Y": -5658.5,
+            "siteLevel": 13,
+            "Landmark": "shrine_ring"
+          },
+          {
+            "Id": "poi.-7_-23.shrine.-1598.-5756",
+            "kind": "shrine",
+            "Name": "the Quiet Stone",
+            "X": -1598.5,
+            "Y": -5756.5,
+            "siteLevel": 13,
+            "Landmark": "shrine_ring"
+          }
+        ]
+      },
+      "nearby": {
+        "before": [
+          "poi.-8_-24.scrap_fort.-1838.-5930",
+          "poi.-8_-24.orc_chaincamp.-1827.-6085",
+          "poi.-8_-24.knot.-1973.-5949",
+          "poi.-7_-24.orc_hold.-1725.-6076",
+          "poi.-7_-24.ruin.-1711.-5933",
+          "poi.-7_-24.ruin.-1609.-5993",
+          "poi.-6_-24.scrap_fort.-1514.-6074",
+          "poi.-6_-24.ossuary.-1324.-5915",
+          "poi.-6_-24.ruin.-1323.-6041",
+          "poi.-8_-23.knot.-1911.-5815",
+          "poi.-8_-23.ossuary.-1888.-5701",
+          "poi.-8_-23.knot.-1993.-5738",
+          "poi.-7_-23.knot.-1751.-5754",
+          "poi.-7_-23.shrine.-1588.-5658",
+          "poi.-7_-23.shrine.-1598.-5756",
+          "poi.-6_-23.ruin.-1330.-5849",
+          "poi.-6_-23.knot.-1370.-5687",
+          "poi.-6_-23.grave_court.-1478.-5781",
+          "poi.-8_-22.orc_chaincamp.-2022.-5473",
+          "poi.-8_-22.knot.-1857.-5469",
+          "poi.-8_-22.ossuary.-1871.-5581",
+          "poi.-7_-22.shrine.-1748.-5503",
+          "poi.-7_-22.shrine.-1674.-5459",
+          "poi.-7_-22.shrine.-1598.-5464",
+          "poi.-6_-22.scrap_fort.-1364.-5595"
+        ],
+        "after": [
+          "poi.-8_-24.scrap_fort.-1838.-5930",
+          "poi.-8_-24.kobold_scrap_camp.-1827.-6085",
+          "poi.-8_-24.knot.-1973.-5949",
+          "poi.-7_-24.orc_chaincamp.-1725.-6076",
+          "poi.-7_-24.ruin.-1711.-5933",
+          "poi.-7_-24.ruin.-1609.-5993",
+          "poi.-6_-24.scrap_fort.-1514.-6074",
+          "poi.-6_-24.ossuary.-1324.-5915",
+          "poi.-6_-24.ruin.-1323.-6041",
+          "poi.-8_-23.knot.-1911.-5815",
+          "poi.-8_-23.ossuary.-1888.-5701",
+          "poi.-8_-23.knot.-1993.-5738",
+          "poi.-7_-23.kobold_reed_camp.-1751.-5754",
+          "poi.-7_-23.shrine.-1588.-5658",
+          "poi.-7_-23.shrine.-1598.-5756",
+          "poi.-6_-23.ruin.-1330.-5849",
+          "poi.-6_-23.knot.-1370.-5687",
+          "poi.-6_-23.grave_court.-1478.-5781",
+          "poi.-8_-22.kobold_reed_camp.-2022.-5473",
+          "poi.-8_-22.knot.-1857.-5469",
+          "poi.-8_-22.ossuary.-1989.-5606",
+          "poi.-7_-22.shrine.-1748.-5503",
+          "poi.-7_-22.shrine.-1674.-5459",
+          "poi.-7_-22.shrine.-1598.-5464",
+          "poi.-6_-22.scrap_fort.-1364.-5595"
+        ]
+      },
+      "populations": {
+        "before": [
+          {
+            "Pattern": "cinder_imp",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 4,
+            "points": 21,
+            "bodies": 56
+          },
+          {
+            "Pattern": "goblin_scavenger",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 2,
+            "bodies": 6
+          },
+          {
+            "Pattern": "goblin_skirmisher",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 2,
+            "points": 5,
+            "bodies": 11
+          },
+          {
+            "Pattern": "goblin_slinger",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 2,
+            "points": 2,
+            "bodies": 2
+          },
+          {
+            "Pattern": "grove_stag",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 19,
+            "bodies": 43
+          },
+          {
+            "Pattern": "hedgehog",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "hob",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 81,
+            "bodies": 239
+          },
+          {
+            "Pattern": "red_fox",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 2,
+            "points": 2,
+            "bodies": 2
+          },
+          {
+            "Pattern": "roe_deer",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 2,
+            "points": 2,
+            "bodies": 2
+          },
+          {
+            "Pattern": "tide_crawler",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 4,
+            "points": 3,
+            "bodies": 5
+          },
+          {
+            "Pattern": "warg",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 6,
+            "points": 2,
+            "bodies": 4
+          },
+          {
+            "Pattern": "wolf",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 2,
+            "points": 39,
+            "bodies": 121
+          },
+          {
+            "Pattern": "woodgrouse",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 2,
+            "points": 2,
+            "bodies": 2
+          },
+          {
+            "Pattern": "cairn_stone",
+            "site": "poi.-7_-23.knot.-1751.-5754",
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 7,
+            "bodies": 7
+          },
+          {
+            "Pattern": "cinder_imp",
+            "site": "poi.-7_-23.knot.-1751.-5754",
+            "explicitLevel": 15,
+            "effectiveLevel": 15,
+            "points": 2,
+            "bodies": 5
+          },
+          {
+            "Pattern": "remnant_shade",
+            "site": "poi.-7_-23.knot.-1751.-5754",
+            "explicitLevel": 15,
+            "effectiveLevel": 15,
+            "points": 1,
+            "bodies": 3
+          },
+          {
+            "Pattern": "tangle",
+            "site": "poi.-7_-23.knot.-1751.-5754",
+            "explicitLevel": 15,
+            "effectiveLevel": 15,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "shrine_stone",
+            "site": "poi.-7_-23.shrine.-1588.-5658",
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "shrine_stone",
+            "site": "poi.-7_-23.shrine.-1598.-5756",
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 1,
+            "bodies": 1
+          }
+        ],
+        "after": [
+          {
+            "Pattern": "cinder_imp",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 4,
+            "points": 21,
+            "bodies": 56
+          },
+          {
+            "Pattern": "goblin_scavenger",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 2,
+            "bodies": 6
+          },
+          {
+            "Pattern": "goblin_skirmisher",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 2,
+            "points": 5,
+            "bodies": 11
+          },
+          {
+            "Pattern": "goblin_slinger",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 2,
+            "points": 2,
+            "bodies": 2
+          },
+          {
+            "Pattern": "grove_stag",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 19,
+            "bodies": 43
+          },
+          {
+            "Pattern": "hedgehog",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "hob",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 81,
+            "bodies": 239
+          },
+          {
+            "Pattern": "red_fox",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 2,
+            "points": 2,
+            "bodies": 2
+          },
+          {
+            "Pattern": "roe_deer",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 2,
+            "points": 2,
+            "bodies": 2
+          },
+          {
+            "Pattern": "tide_crawler",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 4,
+            "points": 3,
+            "bodies": 5
+          },
+          {
+            "Pattern": "warg",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 6,
+            "points": 2,
+            "bodies": 4
+          },
+          {
+            "Pattern": "wolf",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 2,
+            "points": 39,
+            "bodies": 121
+          },
+          {
+            "Pattern": "woodgrouse",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 2,
+            "points": 2,
+            "bodies": 2
+          },
+          {
+            "Pattern": "kobold_rimeweaver",
+            "site": "poi.-7_-23.kobold_reed_camp.-1751.-5754",
+            "explicitLevel": null,
+            "effectiveLevel": 7,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "kobold_spearguard",
+            "site": "poi.-7_-23.kobold_reed_camp.-1751.-5754",
+            "explicitLevel": null,
+            "effectiveLevel": 4,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "kobold_venomweaver",
+            "site": "poi.-7_-23.kobold_reed_camp.-1751.-5754",
+            "explicitLevel": null,
+            "effectiveLevel": 6,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "shrine_stone",
+            "site": "poi.-7_-23.shrine.-1588.-5658",
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "shrine_stone",
+            "site": "poi.-7_-23.shrine.-1598.-5756",
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 1,
+            "bodies": 1
+          }
+        ]
+      }
+    },
+    {
+      "zone": "0_0",
+      "overlay": true,
+      "changes": [
+        "nearby"
+      ],
+      "nearby": {
+        "before": [
+          "poi.-1_-1.troll_toll.-68.-93",
+          "poi.-1_-1.knot.-34.-229",
+          "poi.-1_-1.ruin.-234.-178",
+          "poi.0_-1.knot.176.-74",
+          "poi.0_-1.knot.41.-37",
+          "poi.0_-1.knot.185.-214",
+          "poi.0_-1.shrine.62.-186",
+          "poi.1_-1.knot.408.-205",
+          "poi.1_-1.shrine.440.-29",
+          "poi.1_-1.knot.303.-30",
+          "poi.-1_0.kiln.-218.235",
+          "poi.-1_0.scrap_fort.-42.229",
+          "poi.-1_0.ruin.-46.48",
+          "poi.0_0.hamlet.128.128",
+          "poi.0_0.fount.150.134",
+          "poi.0_0.shrine.90.170",
+          "poi.0_0.knot.200.60",
+          "poi.1_0.ossuary.421.38",
+          "poi.1_0.orc_chaincamp.431.198",
+          "poi.1_0.orc_muster.291.217",
+          "poi.-1_1.knot.-34.419",
+          "poi.-1_1.grave_court.-198.436",
+          "poi.-1_1.scrap_fort.-234.294",
+          "poi.0_1.orc_chaincamp.125.310",
+          "poi.0_1.gnasher_pen.32.459",
+          "poi.0_1.scrap_fort.213.450",
+          "poi.1_1.ossuary.489.419",
+          "poi.1_1.ruin.305.334",
+          "poi.1_1.shrine.301.460",
+          "poi.1_1.ruin.393.475"
+        ],
+        "after": [
+          "poi.-1_-1.troll_toll.-68.-93",
+          "poi.-1_-1.knot.-34.-229",
+          "poi.-1_-1.ruin.-234.-178",
+          "poi.0_-1.knot.176.-74",
+          "poi.0_-1.knot.41.-37",
+          "poi.0_-1.knot.185.-214",
+          "poi.0_-1.shrine.62.-186",
+          "poi.1_-1.knot.408.-205",
+          "poi.1_-1.shrine.440.-29",
+          "poi.1_-1.knot.303.-30",
+          "poi.-1_0.kiln.-218.235",
+          "poi.-1_0.scrap_fort.-42.229",
+          "poi.-1_0.ruin.-46.48",
+          "poi.0_0.hamlet.128.128",
+          "poi.0_0.fount.150.134",
+          "poi.0_0.shrine.90.170",
+          "poi.0_0.knot.200.60",
+          "poi.1_0.ossuary.421.38",
+          "poi.1_0.orc_chaincamp.431.198",
+          "poi.1_0.orc_muster.291.217",
+          "poi.-1_1.knot.-34.419",
+          "poi.-1_1.grave_court.-198.436",
+          "poi.-1_1.ruin.-234.294",
+          "poi.0_1.kobold_scale_hold.125.310",
+          "poi.0_1.gnasher_pen.32.459",
+          "poi.0_1.ruin.213.450",
+          "poi.1_1.ossuary.489.419",
+          "poi.1_1.ruin.305.334",
+          "poi.1_1.shrine.301.460",
+          "poi.1_1.ruin.393.475"
+        ]
+      }
+    },
+    {
+      "zone": "1_0",
+      "overlay": true,
+      "changes": [
+        "nearby"
+      ],
+      "nearby": {
+        "before": [
+          "poi.0_-1.knot.176.-74",
+          "poi.0_-1.knot.41.-37",
+          "poi.0_-1.knot.185.-214",
+          "poi.0_-1.shrine.62.-186",
+          "poi.1_-1.knot.408.-205",
+          "poi.1_-1.shrine.440.-29",
+          "poi.1_-1.knot.303.-30",
+          "poi.2_-1.knot.560.-117",
+          "poi.2_-1.knot.690.-147",
+          "poi.2_-1.shrine.648.-26",
+          "poi.2_-1.shrine.739.-32",
+          "poi.0_0.hamlet.128.128",
+          "poi.0_0.fount.150.134",
+          "poi.0_0.shrine.90.170",
+          "poi.0_0.knot.200.60",
+          "poi.1_0.ossuary.421.38",
+          "poi.1_0.orc_chaincamp.431.198",
+          "poi.1_0.orc_muster.291.217",
+          "poi.2_0.scrap_fort.655.99",
+          "poi.2_0.knot.700.231",
+          "poi.2_0.knot.543.233",
+          "poi.0_1.orc_chaincamp.125.310",
+          "poi.0_1.gnasher_pen.32.459",
+          "poi.0_1.scrap_fort.213.450",
+          "poi.1_1.ossuary.489.419",
+          "poi.1_1.ruin.305.334",
+          "poi.1_1.shrine.301.460",
+          "poi.1_1.ruin.393.475",
+          "poi.2_1.scrap_fort.744.285",
+          "poi.2_1.shrine.553.391",
+          "poi.2_1.ruin.652.443"
+        ],
+        "after": [
+          "poi.0_-1.knot.176.-74",
+          "poi.0_-1.knot.41.-37",
+          "poi.0_-1.knot.185.-214",
+          "poi.0_-1.shrine.62.-186",
+          "poi.1_-1.knot.408.-205",
+          "poi.1_-1.shrine.440.-29",
+          "poi.1_-1.knot.303.-30",
+          "poi.2_-1.knot.560.-117",
+          "poi.2_-1.knot.690.-147",
+          "poi.2_-1.shrine.648.-26",
+          "poi.2_-1.shrine.739.-32",
+          "poi.0_0.hamlet.128.128",
+          "poi.0_0.fount.150.134",
+          "poi.0_0.shrine.90.170",
+          "poi.0_0.knot.200.60",
+          "poi.1_0.ossuary.421.38",
+          "poi.1_0.orc_chaincamp.431.198",
+          "poi.1_0.orc_muster.291.217",
+          "poi.2_0.ruin.655.99",
+          "poi.2_0.ruin.723.37",
+          "poi.2_0.ruin.568.142",
+          "poi.2_0.shrine.700.231",
+          "poi.0_1.kobold_scale_hold.125.310",
+          "poi.0_1.gnasher_pen.32.459",
+          "poi.0_1.ruin.213.450",
+          "poi.1_1.ossuary.489.419",
+          "poi.1_1.ruin.305.334",
+          "poi.1_1.shrine.301.460",
+          "poi.1_1.ruin.393.475",
+          "poi.2_1.scrap_fort.744.285",
+          "poi.2_1.shrine.553.391",
+          "poi.2_1.ruin.652.443"
+        ]
+      }
+    },
+    {
+      "zone": "0_-1",
+      "overlay": true,
+      "changes": []
+    },
+    {
+      "zone": "3_2",
+      "overlay": true,
+      "changes": []
+    },
+    {
+      "zone": "-15_-40",
+      "overlay": true,
+      "changes": [
+        "geometryHash",
+        "populationWithoutLevels",
+        "sites",
+        "nearby",
+        "populations"
+      ],
+      "geometryHash": {
+        "before": "D3C52D54613C7357DE429413294314F0C318BE563A3A933F187503C6371977E6",
+        "after": "68A77993CECE80D3F59EFA5C033761EA24CF9692C5CD3AD490CC8FB6ECFEAB65"
+      },
+      "populationWithoutLevels": {
+        "before": "6F6DCD4444117D27F6646E6A91B92AD4EA2F455B5661FA192B3829F3E19F64D6",
+        "after": "34410FBED7E05E0ED32314D65A6451F99B1771EF6218FDA86EE2A2186762239E"
+      },
+      "sites": {
+        "before": [
+          {
+            "Id": "poi.-15_-40.knot.-3654.-10123",
+            "kind": "knot",
+            "Name": "a Kiln Knot",
+            "X": -3654.5,
+            "Y": -10123.5,
+            "siteLevel": 31,
+            "Landmark": "knot_stones"
+          },
+          {
+            "Id": "poi.-15_-40.scrap_fort.-3788.-10093",
+            "kind": "scrap_fort",
+            "Name": "Scrap Fort",
+            "X": -3788.5,
+            "Y": -10093.5,
+            "siteLevel": 34,
+            "Landmark": "ruin_walls"
+          }
+        ],
+        "after": [
+          {
+            "Id": "poi.-15_-40.kobold_scale_hold.-3654.-10123",
+            "kind": "kobold_scale_hold",
+            "Name": "Copper-Crest Hold",
+            "X": -3654.5,
+            "Y": -10123.5,
+            "siteLevel": 35,
+            "Landmark": "ruin_walls"
+          },
+          {
+            "Id": "poi.-15_-40.ruin.-3788.-10093",
+            "kind": "ruin",
+            "Name": "Wightsrest",
+            "X": -3788.5,
+            "Y": -10093.5,
+            "siteLevel": 30,
+            "Landmark": "barrow"
+          }
+        ]
+      },
+      "nearby": {
+        "before": [
+          "poi.-16_-41.scrap_fort.-4033.-10280",
+          "poi.-16_-41.knot.-3886.-10270",
+          "poi.-16_-41.ruin.-3921.-10405",
+          "poi.-15_-41.knot.-3779.-10275",
+          "poi.-15_-41.orc_hold.-3613.-10420",
+          "poi.-15_-41.grave_court.-3751.-10466",
+          "poi.-14_-41.knot.-3407.-10451",
+          "poi.-14_-41.ruin.-3369.-10345",
+          "poi.-14_-41.shrine.-3469.-10267",
+          "poi.-16_-40.orc_chaincamp.-3960.-10062",
+          "poi.-16_-40.shrine.-4059.-10181",
+          "poi.-15_-40.knot.-3654.-10123",
+          "poi.-15_-40.scrap_fort.-3788.-10093",
+          "poi.-14_-40.knot.-3362.-10007",
+          "poi.-14_-40.ruin.-3525.-10026",
+          "poi.-16_-39.knot.-3895.-9748",
+          "poi.-16_-39.ossuary.-3860.-9870",
+          "poi.-15_-39.ruin.-3798.-9844",
+          "poi.-15_-39.ruin.-3675.-9823",
+          "poi.-14_-39.knot.-3392.-9933",
+          "poi.-14_-39.knot.-3453.-9767"
+        ],
+        "after": [
+          "poi.-16_-41.scrap_fort.-4033.-10280",
+          "poi.-16_-41.knot.-3886.-10270",
+          "poi.-16_-41.ruin.-3921.-10405",
+          "poi.-15_-41.knot.-3779.-10275",
+          "poi.-15_-41.orc_chaincamp.-3613.-10420",
+          "poi.-15_-41.grave_court.-3751.-10466",
+          "poi.-14_-41.knot.-3407.-10451",
+          "poi.-14_-41.ruin.-3369.-10345",
+          "poi.-14_-41.shrine.-3469.-10267",
+          "poi.-16_-40.orc_chaincamp.-3960.-10062",
+          "poi.-16_-40.shrine.-4059.-10181",
+          "poi.-15_-40.kobold_scale_hold.-3654.-10123",
+          "poi.-15_-40.ruin.-3788.-10093",
+          "poi.-14_-40.knot.-3362.-10007",
+          "poi.-14_-40.ruin.-3525.-10026",
+          "poi.-16_-39.knot.-3895.-9748",
+          "poi.-16_-39.ossuary.-3860.-9870",
+          "poi.-15_-39.ruin.-3798.-9844",
+          "poi.-15_-39.ossuary.-3675.-9823",
+          "poi.-14_-39.knot.-3392.-9933",
+          "poi.-14_-39.knot.-3453.-9767"
+        ]
+      },
+      "populations": {
+        "before": [
+          {
+            "Pattern": "hob",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 81,
+            "bodies": 247
+          },
+          {
+            "Pattern": "loosed_kindler",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 4,
+            "points": 18,
+            "bodies": 27
+          },
+          {
+            "Pattern": "snow_hare",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 2,
+            "bodies": 3
+          },
+          {
+            "Pattern": "wolf",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 2,
+            "points": 42,
+            "bodies": 102
+          },
+          {
+            "Pattern": "wolverine",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 5,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "cairn_stone",
+            "site": "poi.-15_-40.knot.-3654.-10123",
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 7,
+            "bodies": 7
+          },
+          {
+            "Pattern": "cinder_imp",
+            "site": "poi.-15_-40.knot.-3654.-10123",
+            "explicitLevel": 31,
+            "effectiveLevel": 31,
+            "points": 2,
+            "bodies": 5
+          },
+          {
+            "Pattern": "remnant_shade",
+            "site": "poi.-15_-40.knot.-3654.-10123",
+            "explicitLevel": 31,
+            "effectiveLevel": 31,
+            "points": 1,
+            "bodies": 4
+          },
+          {
+            "Pattern": "tangle",
+            "site": "poi.-15_-40.knot.-3654.-10123",
+            "explicitLevel": 31,
+            "effectiveLevel": 31,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "goblin_colossus",
+            "site": "poi.-15_-40.scrap_fort.-3788.-10093",
+            "explicitLevel": null,
+            "effectiveLevel": 20,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "goblin_sapper",
+            "site": "poi.-15_-40.scrap_fort.-3788.-10093",
+            "explicitLevel": null,
+            "effectiveLevel": 5,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "goblin_warboss",
+            "site": "poi.-15_-40.scrap_fort.-3788.-10093",
+            "explicitLevel": null,
+            "effectiveLevel": 12,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "hobgoblin_taskmaster",
+            "site": "poi.-15_-40.scrap_fort.-3788.-10093",
+            "explicitLevel": null,
+            "effectiveLevel": 8,
+            "points": 1,
+            "bodies": 2
+          },
+          {
+            "Pattern": "orc_ravager",
+            "site": "poi.-15_-40.scrap_fort.-3788.-10093",
+            "explicitLevel": null,
+            "effectiveLevel": 7,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "ruin_chest",
+            "site": "poi.-15_-40.scrap_fort.-3788.-10093",
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "warg",
+            "site": "poi.-15_-40.scrap_fort.-3788.-10093",
+            "explicitLevel": null,
+            "effectiveLevel": 6,
+            "points": 1,
+            "bodies": 2
+          }
+        ],
+        "after": [
+          {
+            "Pattern": "hob",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 81,
+            "bodies": 247
+          },
+          {
+            "Pattern": "loosed_kindler",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 4,
+            "points": 18,
+            "bodies": 27
+          },
+          {
+            "Pattern": "snow_hare",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 2,
+            "bodies": 3
+          },
+          {
+            "Pattern": "wolf",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 2,
+            "points": 42,
+            "bodies": 102
+          },
+          {
+            "Pattern": "wolverine",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 5,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "kobold_cragbreaker",
+            "site": "poi.-15_-40.kobold_scale_hold.-3654.-10123",
+            "explicitLevel": null,
+            "effectiveLevel": 10,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "kobold_crestcaller",
+            "site": "poi.-15_-40.kobold_scale_hold.-3654.-10123",
+            "explicitLevel": null,
+            "effectiveLevel": 10,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "kobold_ironback",
+            "site": "poi.-15_-40.kobold_scale_hold.-3654.-10123",
+            "explicitLevel": null,
+            "effectiveLevel": 11,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "kobold_scalechief",
+            "site": "poi.-15_-40.kobold_scale_hold.-3654.-10123",
+            "explicitLevel": null,
+            "effectiveLevel": 15,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "ruin_chest",
+            "site": "poi.-15_-40.kobold_scale_hold.-3654.-10123",
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "barrow_wight",
+            "site": "poi.-15_-40.ruin.-3788.-10093",
+            "explicitLevel": null,
+            "effectiveLevel": 3,
+            "points": 2,
+            "bodies": 3
+          },
+          {
+            "Pattern": "remnant_shade",
+            "site": "poi.-15_-40.ruin.-3788.-10093",
+            "explicitLevel": null,
+            "effectiveLevel": 2,
+            "points": 1,
+            "bodies": 3
+          },
+          {
+            "Pattern": "ruin_chest",
+            "site": "poi.-15_-40.ruin.-3788.-10093",
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 1,
+            "bodies": 1
+          }
+        ]
+      }
+    },
+    {
+      "zone": "-8_-40",
+      "overlay": true,
+      "changes": [
+        "geometryHash",
+        "populationWithoutLevels",
+        "sites",
+        "nearby",
+        "populations"
+      ],
+      "geometryHash": {
+        "before": "E9E80642D6DAFF1535E7B9FA84D4351B6A3D5437EA5F59D709911E229093C22A",
+        "after": "A39BC3F1E5961EDB49E19EB0610F8CADFD83B233C4F9BDC311559A133A523A2A"
+      },
+      "populationWithoutLevels": {
+        "before": "96A8C14D01BBFE5B736758E431F2C6BFF5764003D056E46E65537CE075089427",
+        "after": "EBFC5D6F17C330015B4CE4D498AAF4658A27367DA6468A2A8801531C658D1936"
+      },
+      "sites": {
+        "before": [
+          {
+            "Id": "poi.-8_-40.orc_chaincamp.-2012.-10019",
+            "kind": "orc_chaincamp",
+            "Name": "Chainkeeper Camp",
+            "X": -2012.5,
+            "Y": -10019.5,
+            "siteLevel": 32,
+            "Landmark": "camp_ring"
+          },
+          {
+            "Id": "poi.-8_-40.knot.-1833.-10142",
+            "kind": "knot",
+            "Name": "a Snarl",
+            "X": -1833.5,
+            "Y": -10142.5,
+            "siteLevel": 27,
+            "Landmark": "knot_stones"
+          },
+          {
+            "Id": "poi.-8_-40.ossuary.-1833.-10010",
+            "kind": "ossuary",
+            "Name": "the Bone Vault",
+            "X": -1833.5,
+            "Y": -10010.5,
+            "siteLevel": 27,
+            "Landmark": "barrow"
+          }
+        ],
+        "after": [
+          {
+            "Id": "poi.-8_-40.kobold_scrap_camp.-2012.-10019",
+            "kind": "kobold_scrap_camp",
+            "Name": "Scrapscale Camp",
+            "X": -2012.5,
+            "Y": -10019.5,
+            "siteLevel": 27,
+            "Landmark": "camp_ring"
+          },
+          {
+            "Id": "poi.-8_-40.kobold_scale_hold.-1954.-10022",
+            "kind": "kobold_scale_hold",
+            "Name": "Copper-Crest Hold",
+            "X": -1954.5,
+            "Y": -10022.5,
+            "siteLevel": 31,
+            "Landmark": "ruin_walls"
+          },
+          {
+            "Id": "poi.-8_-40.knot.-1833.-10142",
+            "kind": "knot",
+            "Name": "the Hob Hollow",
+            "X": -1833.5,
+            "Y": -10142.5,
+            "siteLevel": 27,
+            "Landmark": "knot_stones"
+          }
+        ]
+      },
+      "nearby": {
+        "before": [
+          "poi.-9_-41.orc_muster.-2084.-10317",
+          "poi.-9_-41.ossuary.-2281.-10427",
+          "poi.-9_-41.ruin.-2100.-10465",
+          "poi.-8_-41.ossuary.-1990.-10274",
+          "poi.-8_-41.gnasher_pen.-1813.-10384",
+          "poi.-8_-41.knot.-2016.-10455",
+          "poi.-7_-41.knot.-1743.-10301",
+          "poi.-7_-41.knot.-1581.-10331",
+          "poi.-7_-41.warren_encampment.-1608.-10472",
+          "poi.-9_-40.orc_hold.-2070.-10138",
+          "poi.-9_-40.knot.-2278.-10107",
+          "poi.-8_-40.orc_chaincamp.-2012.-10019",
+          "poi.-8_-40.knot.-1833.-10142",
+          "poi.-8_-40.ossuary.-1833.-10010",
+          "poi.-7_-40.shrine.-1559.-10142",
+          "poi.-7_-40.knot.-1567.-10020",
+          "poi.-7_-40.ossuary.-1664.-10209",
+          "poi.-9_-39.ossuary.-2079.-9753",
+          "poi.-9_-39.knot.-2251.-9851",
+          "poi.-8_-39.orc_muster.-1945.-9789",
+          "poi.-8_-39.ossuary.-2019.-9925",
+          "poi.-8_-39.knot.-1821.-9942",
+          "poi.-7_-39.scrap_fort.-1557.-9749",
+          "poi.-7_-39.ruin.-1609.-9963",
+          "poi.-7_-39.knot.-1751.-9866"
+        ],
+        "after": [
+          "poi.-9_-41.orc_hold.-2084.-10317",
+          "poi.-9_-41.ossuary.-2281.-10427",
+          "poi.-9_-41.ruin.-2100.-10465",
+          "poi.-8_-41.ossuary.-1990.-10274",
+          "poi.-8_-41.gnasher_pen.-1813.-10384",
+          "poi.-8_-41.knot.-2016.-10455",
+          "poi.-7_-41.knot.-1743.-10301",
+          "poi.-7_-41.knot.-1581.-10331",
+          "poi.-7_-41.warren_encampment.-1608.-10472",
+          "poi.-9_-40.orc_hold.-2070.-10138",
+          "poi.-9_-40.knot.-2278.-10107",
+          "poi.-8_-40.kobold_scrap_camp.-2012.-10019",
+          "poi.-8_-40.kobold_scale_hold.-1954.-10022",
+          "poi.-8_-40.knot.-1833.-10142",
+          "poi.-7_-40.shrine.-1559.-10142",
+          "poi.-7_-40.knot.-1567.-10020",
+          "poi.-7_-40.ossuary.-1664.-10209",
+          "poi.-9_-39.ossuary.-2079.-9753",
+          "poi.-9_-39.knot.-2251.-9851",
+          "poi.-8_-39.orc_hold.-1945.-9789",
+          "poi.-8_-39.ossuary.-2019.-9925",
+          "poi.-8_-39.knot.-1821.-9942",
+          "poi.-7_-39.ruin.-1557.-9749",
+          "poi.-7_-39.ruin.-1609.-9963",
+          "poi.-7_-39.ruin.-1665.-9752"
+        ]
+      },
+      "populations": {
+        "before": [
+          {
+            "Pattern": "hob",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 75,
+            "bodies": 224
+          },
+          {
+            "Pattern": "loosed_kindler",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 4,
+            "points": 19,
+            "bodies": 29
+          },
+          {
+            "Pattern": "snow_hare",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 2,
+            "bodies": 3
+          },
+          {
+            "Pattern": "wolf",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 2,
+            "points": 39,
+            "bodies": 101
+          },
+          {
+            "Pattern": "wolverine",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 5,
+            "points": 2,
+            "bodies": 2
+          },
+          {
+            "Pattern": "cairn_stone",
+            "site": "poi.-8_-40.knot.-1833.-10142",
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 7,
+            "bodies": 7
+          },
+          {
+            "Pattern": "cinder_imp",
+            "site": "poi.-8_-40.knot.-1833.-10142",
+            "explicitLevel": 27,
+            "effectiveLevel": 27,
+            "points": 2,
+            "bodies": 5
+          },
+          {
+            "Pattern": "remnant_shade",
+            "site": "poi.-8_-40.knot.-1833.-10142",
+            "explicitLevel": 27,
+            "effectiveLevel": 27,
+            "points": 1,
+            "bodies": 2
+          },
+          {
+            "Pattern": "tangle",
+            "site": "poi.-8_-40.knot.-1833.-10142",
+            "explicitLevel": 27,
+            "effectiveLevel": 27,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "goblin_scavenger",
+            "site": "poi.-8_-40.orc_chaincamp.-2012.-10019",
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "orc_ashcaller",
+            "site": "poi.-8_-40.orc_chaincamp.-2012.-10019",
+            "explicitLevel": null,
+            "effectiveLevel": 8,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "orc_bloodchanter",
+            "site": "poi.-8_-40.orc_chaincamp.-2012.-10019",
+            "explicitLevel": null,
+            "effectiveLevel": 10,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "orc_overseer",
+            "site": "poi.-8_-40.orc_chaincamp.-2012.-10019",
+            "explicitLevel": null,
+            "effectiveLevel": 10,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "orc_slaver",
+            "site": "poi.-8_-40.orc_chaincamp.-2012.-10019",
+            "explicitLevel": null,
+            "effectiveLevel": 11,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "bone_golem",
+            "site": "poi.-8_-40.ossuary.-1833.-10010",
+            "explicitLevel": null,
+            "effectiveLevel": 7,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "ruin_chest",
+            "site": "poi.-8_-40.ossuary.-1833.-10010",
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "skeletal_duelist",
+            "site": "poi.-8_-40.ossuary.-1833.-10010",
+            "explicitLevel": null,
+            "effectiveLevel": 5,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "skeletal_sentinel",
+            "site": "poi.-8_-40.ossuary.-1833.-10010",
+            "explicitLevel": null,
+            "effectiveLevel": 5,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "skeleton_archer",
+            "site": "poi.-8_-40.ossuary.-1833.-10010",
+            "explicitLevel": null,
+            "effectiveLevel": 3,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "skeleton_warrior",
+            "site": "poi.-8_-40.ossuary.-1833.-10010",
+            "explicitLevel": null,
+            "effectiveLevel": 3,
+            "points": 2,
+            "bodies": 6
+          }
+        ],
+        "after": [
+          {
+            "Pattern": "hob",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 75,
+            "bodies": 224
+          },
+          {
+            "Pattern": "loosed_kindler",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 4,
+            "points": 19,
+            "bodies": 29
+          },
+          {
+            "Pattern": "snow_hare",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 2,
+            "bodies": 3
+          },
+          {
+            "Pattern": "wolf",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 2,
+            "points": 39,
+            "bodies": 101
+          },
+          {
+            "Pattern": "wolverine",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 5,
+            "points": 2,
+            "bodies": 2
+          },
+          {
+            "Pattern": "cairn_stone",
+            "site": "poi.-8_-40.knot.-1833.-10142",
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 7,
+            "bodies": 7
+          },
+          {
+            "Pattern": "cinder_imp",
+            "site": "poi.-8_-40.knot.-1833.-10142",
+            "explicitLevel": 27,
+            "effectiveLevel": 27,
+            "points": 2,
+            "bodies": 5
+          },
+          {
+            "Pattern": "remnant_shade",
+            "site": "poi.-8_-40.knot.-1833.-10142",
+            "explicitLevel": 27,
+            "effectiveLevel": 27,
+            "points": 1,
+            "bodies": 2
+          },
+          {
+            "Pattern": "tangle",
+            "site": "poi.-8_-40.knot.-1833.-10142",
+            "explicitLevel": 27,
+            "effectiveLevel": 27,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "kobold_cragbreaker",
+            "site": "poi.-8_-40.kobold_scale_hold.-1954.-10022",
+            "explicitLevel": null,
+            "effectiveLevel": 10,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "kobold_crestcaller",
+            "site": "poi.-8_-40.kobold_scale_hold.-1954.-10022",
+            "explicitLevel": null,
+            "effectiveLevel": 10,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "kobold_ironback",
+            "site": "poi.-8_-40.kobold_scale_hold.-1954.-10022",
+            "explicitLevel": null,
+            "effectiveLevel": 11,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "kobold_scalechief",
+            "site": "poi.-8_-40.kobold_scale_hold.-1954.-10022",
+            "explicitLevel": null,
+            "effectiveLevel": 15,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "ruin_chest",
+            "site": "poi.-8_-40.kobold_scale_hold.-1954.-10022",
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "kobold_dartbow",
+            "site": "poi.-8_-40.kobold_scrap_camp.-2012.-10019",
+            "explicitLevel": null,
+            "effectiveLevel": 4,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "kobold_knifehand",
+            "site": "poi.-8_-40.kobold_scrap_camp.-2012.-10019",
+            "explicitLevel": null,
+            "effectiveLevel": 3,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "kobold_scavenger",
+            "site": "poi.-8_-40.kobold_scrap_camp.-2012.-10019",
+            "explicitLevel": null,
+            "effectiveLevel": 2,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "kobold_stonecaster",
+            "site": "poi.-8_-40.kobold_scrap_camp.-2012.-10019",
+            "explicitLevel": null,
+            "effectiveLevel": 5,
+            "points": 1,
+            "bodies": 1
+          }
+        ]
+      }
+    },
+    {
+      "zone": "-25_-31",
+      "overlay": true,
+      "changes": [
+        "geometryHash",
+        "populationWithoutLevels",
+        "sites",
+        "nearby",
+        "populations"
+      ],
+      "geometryHash": {
+        "before": "D8C2AB18F7949E494F1D21A3A6F74354021CAD763F868741E3E4A58259D3268D",
+        "after": "93045CE52489DAEEB4DB38284FBD6865D1DC504BAADEC5451AA50122058DF067"
+      },
+      "populationWithoutLevels": {
+        "before": "DE0CFE85AED69D7ADA3B05155B57F4E98A3DC789F9D9E211CE5CD8D697F43E1A",
+        "after": "1ACCE662A86B6D72F27AF64E1D54BFC70B4B9B16ECEB439F88A890E5EB9ACC0D"
+      },
+      "sites": {
+        "before": [
+          {
+            "Id": "poi.-25_-31.knot.-6178.-7721",
+            "kind": "knot",
+            "Name": "a Thinning",
+            "X": -6178.5,
+            "Y": -7721.5,
+            "siteLevel": 23,
+            "Landmark": "knot_stones"
+          },
+          {
+            "Id": "poi.-25_-31.troll_toll.-6337.-7772",
+            "kind": "troll_toll",
+            "Name": "Troll Toll",
+            "X": -6337.5,
+            "Y": -7772.5,
+            "siteLevel": 25,
+            "Landmark": "barrow"
+          },
+          {
+            "Id": "poi.-25_-31.knot.-6179.-7862",
+            "kind": "knot",
+            "Name": "the Drowning",
+            "X": -6179.5,
+            "Y": -7862.5,
+            "siteLevel": 23,
+            "Landmark": "knot_stones"
+          }
+        ],
+        "after": [
+          {
+            "Id": "poi.-25_-31.kobold_cinder_camp.-6178.-7721",
+            "kind": "kobold_cinder_camp",
+            "Name": "Cinderplate Camp",
+            "X": -6178.5,
+            "Y": -7721.5,
+            "siteLevel": 26,
+            "Landmark": "camp_ring"
+          },
+          {
+            "Id": "poi.-25_-31.shrine.-6337.-7772",
+            "kind": "shrine",
+            "Name": "the Lantern Shrine",
+            "X": -6337.5,
+            "Y": -7772.5,
+            "siteLevel": 21,
+            "Landmark": "shrine_ring"
+          },
+          {
+            "Id": "poi.-25_-31.knot.-6179.-7862",
+            "kind": "knot",
+            "Name": "the Drowning",
+            "X": -6179.5,
+            "Y": -7862.5,
+            "siteLevel": 23,
+            "Landmark": "knot_stones"
+          }
+        ]
+      },
+      "nearby": {
+        "before": [
+          "poi.-26_-32.orc_chaincamp.-6632.-8158",
+          "poi.-26_-32.knot.-6433.-8104",
+          "poi.-26_-32.ossuary.-6461.-7972",
+          "poi.-25_-32.knot.-6308.-8058",
+          "poi.-25_-32.shrine.-6168.-8069",
+          "poi.-25_-32.shrine.-6221.-7988",
+          "poi.-24_-32.ruin.-5931.-8057",
+          "poi.-24_-32.knot.-6113.-7957",
+          "poi.-24_-32.knot.-6050.-8121",
+          "poi.-26_-31.warren_encampment.-6583.-7713",
+          "poi.-26_-31.knot.-6451.-7886",
+          "poi.-26_-31.shrine.-6614.-7865",
+          "poi.-25_-31.knot.-6178.-7721",
+          "poi.-25_-31.troll_toll.-6337.-7772",
+          "poi.-25_-31.knot.-6179.-7862",
+          "poi.-24_-31.shrine.-5980.-7871",
+          "poi.-24_-31.shrine.-6069.-7848",
+          "poi.-24_-31.knot.-5916.-7715",
+          "poi.-26_-30.shrine.-6428.-7517",
+          "poi.-26_-30.knot.-6542.-7503",
+          "poi.-26_-30.ruin.-6440.-7610",
+          "poi.-25_-30.shrine.-6224.-7455",
+          "poi.-25_-30.knot.-6341.-7464",
+          "poi.-25_-30.shrine.-6170.-7584",
+          "poi.-24_-30.orc_chaincamp.-5910.-7450",
+          "poi.-24_-30.knot.-6095.-7572",
+          "poi.-24_-30.knot.-5982.-7659"
+        ],
+        "after": [
+          "poi.-26_-32.orc_chaincamp.-6632.-8158",
+          "poi.-26_-32.knot.-6433.-8104",
+          "poi.-26_-32.ossuary.-6461.-7972",
+          "poi.-25_-32.knot.-6308.-8058",
+          "poi.-25_-32.shrine.-6168.-8069",
+          "poi.-25_-32.shrine.-6221.-7988",
+          "poi.-24_-32.ruin.-5931.-8057",
+          "poi.-24_-32.knot.-6113.-7957",
+          "poi.-24_-32.knot.-6050.-8121",
+          "poi.-26_-31.warren_encampment.-6583.-7713",
+          "poi.-26_-31.knot.-6451.-7886",
+          "poi.-26_-31.shrine.-6614.-7865",
+          "poi.-25_-31.kobold_cinder_camp.-6178.-7721",
+          "poi.-25_-31.shrine.-6337.-7772",
+          "poi.-25_-31.knot.-6179.-7862",
+          "poi.-24_-31.shrine.-5980.-7871",
+          "poi.-24_-31.shrine.-6069.-7848",
+          "poi.-24_-31.knot.-5916.-7715",
+          "poi.-26_-30.shrine.-6428.-7517",
+          "poi.-26_-30.knot.-6542.-7503",
+          "poi.-26_-30.kobold_cinder_camp.-6440.-7610",
+          "poi.-25_-30.shrine.-6224.-7455",
+          "poi.-25_-30.knot.-6341.-7464",
+          "poi.-25_-30.shrine.-6170.-7584",
+          "poi.-24_-30.orc_chaincamp.-5910.-7450",
+          "poi.-24_-30.knot.-6095.-7572",
+          "poi.-24_-30.knot.-5982.-7659"
+        ]
+      },
+      "populations": {
+        "before": [
+          {
+            "Pattern": "blade_wraith",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 6,
+            "points": 3,
+            "bodies": 6
+          },
+          {
+            "Pattern": "carrion_crow",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "decay_wraith",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 5,
+            "points": 6,
+            "bodies": 7
+          },
+          {
+            "Pattern": "gutter_rat",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 2,
+            "bodies": 3
+          },
+          {
+            "Pattern": "hob",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 80,
+            "bodies": 234
+          },
+          {
+            "Pattern": "loosed_kindler",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 4,
+            "points": 11,
+            "bodies": 15
+          },
+          {
+            "Pattern": "remnant_shade",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 2,
+            "points": 38,
+            "bodies": 127
+          },
+          {
+            "Pattern": "tangle",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 6,
+            "points": 4,
+            "bodies": 4
+          },
+          {
+            "Pattern": "wolf",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 2,
+            "points": 20,
+            "bodies": 50
+          },
+          {
+            "Pattern": "cairn_stone",
+            "site": "poi.-25_-31.knot.-6178.-7721",
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 7,
+            "bodies": 7
+          },
+          {
+            "Pattern": "cinder_imp",
+            "site": "poi.-25_-31.knot.-6178.-7721",
+            "explicitLevel": 23,
+            "effectiveLevel": 23,
+            "points": 2,
+            "bodies": 4
+          },
+          {
+            "Pattern": "remnant_shade",
+            "site": "poi.-25_-31.knot.-6178.-7721",
+            "explicitLevel": 23,
+            "effectiveLevel": 23,
+            "points": 1,
+            "bodies": 4
+          },
+          {
+            "Pattern": "tangle",
+            "site": "poi.-25_-31.knot.-6178.-7721",
+            "explicitLevel": 23,
+            "effectiveLevel": 23,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "cairn_stone",
+            "site": "poi.-25_-31.knot.-6179.-7862",
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 7,
+            "bodies": 7
+          },
+          {
+            "Pattern": "cinder_imp",
+            "site": "poi.-25_-31.knot.-6179.-7862",
+            "explicitLevel": 23,
+            "effectiveLevel": 23,
+            "points": 2,
+            "bodies": 5
+          },
+          {
+            "Pattern": "remnant_shade",
+            "site": "poi.-25_-31.knot.-6179.-7862",
+            "explicitLevel": 23,
+            "effectiveLevel": 23,
+            "points": 1,
+            "bodies": 4
+          },
+          {
+            "Pattern": "tangle",
+            "site": "poi.-25_-31.knot.-6179.-7862",
+            "explicitLevel": 23,
+            "effectiveLevel": 23,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "ruin_chest",
+            "site": "poi.-25_-31.troll_toll.-6337.-7772",
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "troll_bridgewarden",
+            "site": "poi.-25_-31.troll_toll.-6337.-7772",
+            "explicitLevel": null,
+            "effectiveLevel": 12,
+            "points": 1,
+            "bodies": 2
+          },
+          {
+            "Pattern": "troll_mauler",
+            "site": "poi.-25_-31.troll_toll.-6337.-7772",
+            "explicitLevel": null,
+            "effectiveLevel": 9,
+            "points": 1,
+            "bodies": 2
+          }
+        ],
+        "after": [
+          {
+            "Pattern": "blade_wraith",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 6,
+            "points": 3,
+            "bodies": 6
+          },
+          {
+            "Pattern": "carrion_crow",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "decay_wraith",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 5,
+            "points": 6,
+            "bodies": 7
+          },
+          {
+            "Pattern": "gutter_rat",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 2,
+            "bodies": 3
+          },
+          {
+            "Pattern": "hob",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 80,
+            "bodies": 234
+          },
+          {
+            "Pattern": "loosed_kindler",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 4,
+            "points": 11,
+            "bodies": 15
+          },
+          {
+            "Pattern": "remnant_shade",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 2,
+            "points": 38,
+            "bodies": 127
+          },
+          {
+            "Pattern": "tangle",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 6,
+            "points": 4,
+            "bodies": 4
+          },
+          {
+            "Pattern": "wolf",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 2,
+            "points": 20,
+            "bodies": 50
+          },
+          {
+            "Pattern": "cairn_stone",
+            "site": "poi.-25_-31.knot.-6179.-7862",
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 7,
+            "bodies": 7
+          },
+          {
+            "Pattern": "cinder_imp",
+            "site": "poi.-25_-31.knot.-6179.-7862",
+            "explicitLevel": 23,
+            "effectiveLevel": 23,
+            "points": 2,
+            "bodies": 5
+          },
+          {
+            "Pattern": "remnant_shade",
+            "site": "poi.-25_-31.knot.-6179.-7862",
+            "explicitLevel": 23,
+            "effectiveLevel": 23,
+            "points": 1,
+            "bodies": 4
+          },
+          {
+            "Pattern": "tangle",
+            "site": "poi.-25_-31.knot.-6179.-7862",
+            "explicitLevel": 23,
+            "effectiveLevel": 23,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "kobold_cinderweaver",
+            "site": "poi.-25_-31.kobold_cinder_camp.-6178.-7721",
+            "explicitLevel": null,
+            "effectiveLevel": 7,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "kobold_stormweaver",
+            "site": "poi.-25_-31.kobold_cinder_camp.-6178.-7721",
+            "explicitLevel": null,
+            "effectiveLevel": 8,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "kobold_tunnelguard",
+            "site": "poi.-25_-31.kobold_cinder_camp.-6178.-7721",
+            "explicitLevel": null,
+            "effectiveLevel": 6,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "shrine_stone",
+            "site": "poi.-25_-31.shrine.-6337.-7772",
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 1,
+            "bodies": 1
+          }
+        ]
+      }
+    },
+    {
+      "zone": "-7_-23",
+      "overlay": true,
+      "changes": [
+        "geometryHash",
+        "populationWithoutLevels",
+        "sites",
+        "nearby",
+        "populations"
+      ],
+      "geometryHash": {
+        "before": "D807C77F2E10244FF416FFC5A3ECE83CA80E94873ABF081F1FA10F4BD2234A54",
+        "after": "FB2018E34EA9205E844340713D393610B7B1E509FC1E0F6F40860C17E83BA649"
+      },
+      "populationWithoutLevels": {
+        "before": "07BB2E96B2488F6E78DA9C76998AA8E3A12F9F880F58D8FB1D32B4232A49631F",
+        "after": "9CCFA3DF1A0F28CA78511FF8358BAEF77198DF46D15291C0BDE2923CA4C504B5"
+      },
+      "sites": {
+        "before": [
+          {
+            "Id": "poi.-7_-23.knot.-1751.-5754",
+            "kind": "knot",
+            "Name": "the Drowning",
+            "X": -1751.5,
+            "Y": -5754.5,
+            "siteLevel": 15,
+            "Landmark": "knot_stones"
+          },
+          {
+            "Id": "poi.-7_-23.shrine.-1588.-5658",
+            "kind": "shrine",
+            "Name": "the Quiet Stone",
+            "X": -1588.5,
+            "Y": -5658.5,
+            "siteLevel": 13,
+            "Landmark": "shrine_ring"
+          },
+          {
+            "Id": "poi.-7_-23.shrine.-1598.-5756",
+            "kind": "shrine",
+            "Name": "the Quiet Stone",
+            "X": -1598.5,
+            "Y": -5756.5,
+            "siteLevel": 13,
+            "Landmark": "shrine_ring"
+          }
+        ],
+        "after": [
+          {
+            "Id": "poi.-7_-23.kobold_reed_camp.-1751.-5754",
+            "kind": "kobold_reed_camp",
+            "Name": "Reedspine Camp",
+            "X": -1751.5,
+            "Y": -5754.5,
+            "siteLevel": 16,
+            "Landmark": "camp_ring"
+          },
+          {
+            "Id": "poi.-7_-23.shrine.-1588.-5658",
+            "kind": "shrine",
+            "Name": "the Quiet Stone",
+            "X": -1588.5,
+            "Y": -5658.5,
+            "siteLevel": 13,
+            "Landmark": "shrine_ring"
+          },
+          {
+            "Id": "poi.-7_-23.shrine.-1598.-5756",
+            "kind": "shrine",
+            "Name": "the Quiet Stone",
+            "X": -1598.5,
+            "Y": -5756.5,
+            "siteLevel": 13,
+            "Landmark": "shrine_ring"
+          }
+        ]
+      },
+      "nearby": {
+        "before": [
+          "poi.-8_-24.scrap_fort.-1838.-5930",
+          "poi.-8_-24.orc_chaincamp.-1827.-6085",
+          "poi.-8_-24.knot.-1973.-5949",
+          "poi.-7_-24.orc_hold.-1725.-6076",
+          "poi.-7_-24.ruin.-1711.-5933",
+          "poi.-7_-24.ruin.-1609.-5993",
+          "poi.-6_-24.scrap_fort.-1514.-6074",
+          "poi.-6_-24.ossuary.-1324.-5915",
+          "poi.-6_-24.ruin.-1323.-6041",
+          "poi.-8_-23.knot.-1911.-5815",
+          "poi.-8_-23.ossuary.-1888.-5701",
+          "poi.-8_-23.knot.-1993.-5738",
+          "poi.-7_-23.knot.-1751.-5754",
+          "poi.-7_-23.shrine.-1588.-5658",
+          "poi.-7_-23.shrine.-1598.-5756",
+          "poi.-6_-23.ruin.-1330.-5849",
+          "poi.-6_-23.knot.-1370.-5687",
+          "poi.-6_-23.grave_court.-1478.-5781",
+          "poi.-8_-22.orc_chaincamp.-2022.-5473",
+          "poi.-8_-22.knot.-1857.-5469",
+          "poi.-8_-22.ossuary.-1871.-5581",
+          "poi.-7_-22.shrine.-1748.-5503",
+          "poi.-7_-22.shrine.-1674.-5459",
+          "poi.-7_-22.shrine.-1570.-5480",
+          "poi.-6_-22.scrap_fort.-1364.-5595"
+        ],
+        "after": [
+          "poi.-8_-24.scrap_fort.-1838.-5930",
+          "poi.-8_-24.kobold_scrap_camp.-1827.-6085",
+          "poi.-8_-24.knot.-1973.-5949",
+          "poi.-7_-24.orc_chaincamp.-1725.-6076",
+          "poi.-7_-24.ruin.-1711.-5933",
+          "poi.-7_-24.ruin.-1609.-5993",
+          "poi.-6_-24.scrap_fort.-1514.-6074",
+          "poi.-6_-24.ossuary.-1324.-5915",
+          "poi.-6_-24.ruin.-1323.-6041",
+          "poi.-8_-23.knot.-1911.-5815",
+          "poi.-8_-23.ossuary.-1888.-5701",
+          "poi.-8_-23.knot.-1993.-5738",
+          "poi.-7_-23.kobold_reed_camp.-1751.-5754",
+          "poi.-7_-23.shrine.-1588.-5658",
+          "poi.-7_-23.shrine.-1598.-5756",
+          "poi.-6_-23.ruin.-1330.-5849",
+          "poi.-6_-23.knot.-1370.-5687",
+          "poi.-6_-23.grave_court.-1478.-5781",
+          "poi.-8_-22.kobold_reed_camp.-2022.-5473",
+          "poi.-8_-22.knot.-1857.-5469",
+          "poi.-8_-22.ossuary.-1989.-5606",
+          "poi.-7_-22.shrine.-1748.-5503",
+          "poi.-7_-22.shrine.-1674.-5459",
+          "poi.-7_-22.shrine.-1570.-5480",
+          "poi.-6_-22.scrap_fort.-1364.-5595"
+        ]
+      },
+      "populations": {
+        "before": [
+          {
+            "Pattern": "cinder_imp",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 4,
+            "points": 21,
+            "bodies": 56
+          },
+          {
+            "Pattern": "goblin_scavenger",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 2,
+            "bodies": 6
+          },
+          {
+            "Pattern": "goblin_skirmisher",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 2,
+            "points": 5,
+            "bodies": 11
+          },
+          {
+            "Pattern": "goblin_slinger",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 2,
+            "points": 2,
+            "bodies": 2
+          },
+          {
+            "Pattern": "grove_stag",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 20,
+            "bodies": 46
+          },
+          {
+            "Pattern": "hedgehog",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "hob",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 82,
+            "bodies": 243
+          },
+          {
+            "Pattern": "red_fox",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 2,
+            "points": 2,
+            "bodies": 2
+          },
+          {
+            "Pattern": "roe_deer",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 2,
+            "points": 2,
+            "bodies": 2
+          },
+          {
+            "Pattern": "tide_crawler",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 4,
+            "points": 1,
+            "bodies": 2
+          },
+          {
+            "Pattern": "warg",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 6,
+            "points": 2,
+            "bodies": 4
+          },
+          {
+            "Pattern": "wolf",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 2,
+            "points": 40,
+            "bodies": 124
+          },
+          {
+            "Pattern": "woodgrouse",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 2,
+            "points": 2,
+            "bodies": 2
+          },
+          {
+            "Pattern": "cairn_stone",
+            "site": "poi.-7_-23.knot.-1751.-5754",
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 7,
+            "bodies": 7
+          },
+          {
+            "Pattern": "cinder_imp",
+            "site": "poi.-7_-23.knot.-1751.-5754",
+            "explicitLevel": 15,
+            "effectiveLevel": 15,
+            "points": 2,
+            "bodies": 5
+          },
+          {
+            "Pattern": "remnant_shade",
+            "site": "poi.-7_-23.knot.-1751.-5754",
+            "explicitLevel": 15,
+            "effectiveLevel": 15,
+            "points": 1,
+            "bodies": 3
+          },
+          {
+            "Pattern": "tangle",
+            "site": "poi.-7_-23.knot.-1751.-5754",
+            "explicitLevel": 15,
+            "effectiveLevel": 15,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "shrine_stone",
+            "site": "poi.-7_-23.shrine.-1588.-5658",
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "shrine_stone",
+            "site": "poi.-7_-23.shrine.-1598.-5756",
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 1,
+            "bodies": 1
+          }
+        ],
+        "after": [
+          {
+            "Pattern": "cinder_imp",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 4,
+            "points": 21,
+            "bodies": 56
+          },
+          {
+            "Pattern": "goblin_scavenger",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 2,
+            "bodies": 6
+          },
+          {
+            "Pattern": "goblin_skirmisher",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 2,
+            "points": 5,
+            "bodies": 11
+          },
+          {
+            "Pattern": "goblin_slinger",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 2,
+            "points": 2,
+            "bodies": 2
+          },
+          {
+            "Pattern": "grove_stag",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 20,
+            "bodies": 46
+          },
+          {
+            "Pattern": "hedgehog",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "hob",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 82,
+            "bodies": 243
+          },
+          {
+            "Pattern": "red_fox",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 2,
+            "points": 2,
+            "bodies": 2
+          },
+          {
+            "Pattern": "roe_deer",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 2,
+            "points": 2,
+            "bodies": 2
+          },
+          {
+            "Pattern": "tide_crawler",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 4,
+            "points": 1,
+            "bodies": 2
+          },
+          {
+            "Pattern": "warg",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 6,
+            "points": 2,
+            "bodies": 4
+          },
+          {
+            "Pattern": "wolf",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 2,
+            "points": 40,
+            "bodies": 124
+          },
+          {
+            "Pattern": "woodgrouse",
+            "site": null,
+            "explicitLevel": null,
+            "effectiveLevel": 2,
+            "points": 2,
+            "bodies": 2
+          },
+          {
+            "Pattern": "kobold_rimeweaver",
+            "site": "poi.-7_-23.kobold_reed_camp.-1751.-5754",
+            "explicitLevel": null,
+            "effectiveLevel": 7,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "kobold_spearguard",
+            "site": "poi.-7_-23.kobold_reed_camp.-1751.-5754",
+            "explicitLevel": null,
+            "effectiveLevel": 4,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "kobold_venomweaver",
+            "site": "poi.-7_-23.kobold_reed_camp.-1751.-5754",
+            "explicitLevel": null,
+            "effectiveLevel": 6,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "shrine_stone",
+            "site": "poi.-7_-23.shrine.-1588.-5658",
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 1,
+            "bodies": 1
+          },
+          {
+            "Pattern": "shrine_stone",
+            "site": "poi.-7_-23.shrine.-1598.-5756",
+            "explicitLevel": null,
+            "effectiveLevel": 1,
+            "points": 1,
+            "bodies": 1
+          }
+        ]
+      }
+    }
+  ]
+}

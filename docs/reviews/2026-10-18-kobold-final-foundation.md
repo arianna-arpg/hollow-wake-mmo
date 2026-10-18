@@ -15,3 +15,11 @@ Audit all sixteen cases and exact final-base content, including actual sites/pop
 No timing run, budget relaxation, entity-size change or AI replacement is authorized here. Kobolds retain cylinder fallback, existing skills and the documented reach/AI limitations. Inherited proving-band failures remain open. Separate #20/#50 combined acceptance stays with the coordinator.
 
 Acknowledged by: prior own-content approval linked above; final integration rereview pending.
+
+## Audited world changes
+
+Merge source fd4a088 preserves the complete incoming renderer/smoke source exactly and differs from the incoming Core only in the two existing appearance registrations. Both merge conflicts are resolved: the entity contract preserves default pattern levels plus the explicit Knot exception; Kobold goldens were retained for a first 32-pass/4-fail focused run before inspection.
+
+Across all sixteen audited cases, geometry, positions/counts, sites and nearby choices stay identical to approved 6c0eaa1. Only Knot residents acquire explicit site levels: origin 3, north 7, (3,2) 3, Scrap fixture 27, Cinder fixture 23, with and without overlays. Kobold birth levels are unchanged. The origin gains Clear Knot targeting the local Hob's Hollow and cinder_imp; its seeded scout changes from Sunken Lantern to Fallen Hall, poi.1_1.ruin.305.334. All sixteen quest lists exactly equal final-base content on the same runtime. Standard four-zone geometry/populations also equal final base; nearby weighted species choices retain the existing branch differences. Full sites, target regions and population rows are in before/after/base reports and changes.json.
+
+Only the five observed golden constants were refreshed: origin information/chunks, north chunks, (3,2) chunks and overlaid world. Climate and east-zone goldens stay unchanged. Own origin and overlay hashes differ from foundation constants because the branch retains Kobold neighboring choices.
