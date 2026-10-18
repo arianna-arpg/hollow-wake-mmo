@@ -120,7 +120,7 @@ A flight strikes each hostile body once; its ledger remembers whom. A flight wit
 | `on_expire` | range, duration or the ground ending the flight | no target |
 | `on_end` | the flight ending for any reason but forking | no target |
 
-Each runs where the flight is, facing its heading, with deliveries it starts beginning there, at the flight's depth (one deeper than the cast). A flight that runs `on_tick` or `on_travel` lists keeps its own copy of the cast's variables, so a rotating `cast` turns per flight. Emitters are `on_tick` lists with a `cast` or a nested `projectile`; a carried aura is an `on_tick` area; sequels are `on_end` casts; catching a returning blade for a charge is an `on_return` list.
+Each runs where the flight is, facing its heading, with deliveries it starts beginning there, at the flight's depth (one deeper than the cast). A flight that runs `on_tick` or `on_travel` lists keeps its own copy of the cast's variables, so a rotating `cast` turns per flight. Emitters are `on_tick` lists with a `cast` or a nested `projectile`; a carried aura is an `on_tick` area; sequels are `on_end` casts; a flight that strikes again from the body it struck is an `on_hit` cast of the host (`cast { weave: host, at: target }`); catching a returning blade for a charge is an `on_return` list.
 
 ### State the systems keep
 

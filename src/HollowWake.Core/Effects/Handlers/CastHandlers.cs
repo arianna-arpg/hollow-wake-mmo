@@ -12,13 +12,19 @@ using HollowWake.Core.Weaves;
 namespace HollowWake.Core.Effects.Handlers;
 
 /// <summary>
-/// Effects about casting: casting another weave from inside an effect graph (<c>cast</c>), running a list
-/// later (<c>delay</c>), banking a list behind a fuse that resolves at live stats (<c>fuse</c>), shaving
-/// running cooldowns (<c>cooldown</c>), putting use charges back into banks (<c>restore_uses</c>) and
-/// surging a raised guard's pool (<c>guard</c>).
+/// Effects about casting: casting another weave, or the hosting weave again, from inside an effect graph
+/// (<c>cast</c>), running a list later (<c>delay</c>), banking a list behind a fuse that resolves at live
+/// stats (<c>fuse</c>), shaving running cooldowns (<c>cooldown</c>), putting use charges back into banks
+/// (<c>restore_uses</c>) and surging a raised guard's pool (<c>guard</c>).
 /// </summary>
 public static class CastHandlers
 {
+    /// <summary>
+    /// The word a <c>cast</c> effect reads as the hosting weave, the one whose graph is running, rather than
+    /// as a preset; validation refuses a preset of that name.
+    /// </summary>
+    public const string HostWeave = "host";
+
     public static void Register(EffectRegistry r)
     {
         r.Register(new CastHandler());
@@ -262,9 +268,17 @@ internal sealed class RestoreUsesHandler : IEffectHandler
 /// points it onward along the host's direction (default), out from the host's center, at a random bearing,
 /// or at a bearing that turns by <c>turn</c> degrees (default 45) each time this effect runs for the host.
 /// The named weave compiles once per level. Sequels, emitters, follow-ups and contagion releases are this.
+/// <c>weave: host</c> names no preset: it runs again the graph of the weave the effect runs in, read when it
+/// runs, so a glyph's hook re-runs whatever weave it was compiled into, as that cast of it stands and at its
+/// own level (<c>level</c> does not apply). Where no weave runs it does nothing, and it is refused inside
+/// rule <c>effects.host_depth</c> host casts of the same weave, a count the context's variables carry down
+/// every delivery.
 /// </summary>
 internal sealed class CastHandler : IEffectHandler
 {
+    // The variable counting the host casts of one weave up a chain, by the weave's key.
+    private const string HostDepthPrefix = "cast.host_depth.";
+
     public string Type => "cast";
 
     public EffectSignature Signature { get; } = EffectSignature.Of("weave", "at", "aim", "turn", "level", "damage_scale");
@@ -272,7 +286,15 @@ internal sealed class CastHandler : IEffectHandler
     public CompiledEffect Compile(JsonObject p, EffectCompileContext ctx)
     {
         var weave = ctx.StringOf(p["weave"]) ?? throw new InvalidOperationException($"cast needs 'weave' in {ctx.Owner}.");
-        if (!ctx.Content.Has<WeaveDef>(weave))
+        var ofHost = weave == CastHandlers.HostWeave;
+        if (ofHost)
+        {
+            if (p["level"] is not null)
+            {
+                throw new InvalidOperationException($"cast of the host runs at the host's own level and takes no 'level' in {ctx.Owner}.");
+            }
+        }
+        else if (!ctx.Content.Has<WeaveDef>(weave))
         {
             throw new InvalidOperationException($"cast names unknown preset weave '{weave}' in {ctx.Owner}.");
         }
@@ -280,6 +302,7 @@ internal sealed class CastHandler : IEffectHandler
         {
             Type = Type,
             Weave = weave,
+            OfHost = ofHost,
             At = ctx.ChoiceOf(p["at"], "at", "point", "point", "target", "caster"),
             Aim = ctx.ChoiceOf(p["aim"], "aim", "onward", "onward", "out", "random", "rotating"),
             TurnRadians = ctx.NumberOf(p["turn"], 45) * Math.PI / 180.0,
@@ -290,8 +313,9 @@ internal sealed class CastHandler : IEffectHandler
             WeaveHash = Rng.Hash64(weave),
         };
         // Compile the named weave now unless it is already being compiled up this chain (weaves that cast
-        // each other), so a broken target fails its host at compile time rather than mid-fight.
-        if (ctx.Compiler is { } compiler && !compiler.IsBuilding(weave))
+        // each other), so a broken target fails its host at compile time rather than mid-fight. The host is
+        // known only when the effect runs, and it is the weave this graph compiles into.
+        if (!ofHost && ctx.Compiler is { } compiler && !compiler.IsBuilding(weave))
         {
             if (!compiler.TryCompile(new WeaveSpec { Preset = weave }, out var compiled, out var error, GlyphFit.Dormant))
             {
@@ -305,6 +329,8 @@ internal sealed class CastHandler : IEffectHandler
     private sealed class Effect : CompiledEffect
     {
         public required string Weave;
+        /// <summary>Casts the hosting weave rather than the named preset.</summary>
+        public bool OfHost;
         public required string At;
         public required string Aim;
         public double TurnRadians;
@@ -320,16 +346,42 @@ internal sealed class CastHandler : IEffectHandler
         private TagSet? _hostTags;
         private CompiledWeave? _taggedWeave;
         private TagSet _tags = TagSet.Empty;
+        // The last weave a host cast counted and the name of its count, since an effect runs for one weave.
+        private CompiledWeave? _countedWeave;
+        private string _hostCount = "";
 
         public void Remember(int level, CompiledWeave weave) => _byLevel[level] = weave;
 
         public override void Execute(EffectContext ctx)
         {
-            var level = Level is null ? ctx.Weave?.Level ?? 1 : Math.Max(1, (int)Math.Round(ctx.Eval(Level, 1)));
-            var weave = Resolve(ctx, level);
-            if (weave is null)
+            CompiledWeave? weave;
+            string? hostCount = null;
+            var hostDepth = 0;
+            if (OfHost)
             {
-                return;
+                // The host is the weave whose graph is running, as this cast of it stands: its level, its tags
+                // and any cast-local modifiers. A host cast inside as many host casts of the same weave as rule
+                // effects.host_depth allows is refused, so a weave whose hit casts itself stops there.
+                weave = ctx.Weave;
+                if (weave is null)
+                {
+                    return;
+                }
+                hostCount = HostCountOf(weave);
+                hostDepth = ctx.Vars.Count > 0 && ctx.Vars.TryGetValue(hostCount, out var held) ? (int)held : 0;
+                if (hostDepth >= (int)ctx.Sim.Content.Rules.Number("effects.host_depth", 1))
+                {
+                    return;
+                }
+            }
+            else
+            {
+                var level = Level is null ? ctx.Weave?.Level ?? 1 : Math.Max(1, (int)Math.Round(ctx.Eval(Level, 1)));
+                weave = Resolve(ctx, level);
+                if (weave is null)
+                {
+                    return;
+                }
             }
             var hostCenter = ctx.From ?? ctx.SourceTransform?.Position ?? ctx.Point;
             var target = Entity.None;
@@ -357,6 +409,11 @@ internal sealed class CastHandler : IEffectHandler
             var rng = new Rng(Rng.Combine(ctx.Rng.NextUInt64(), WeaveHash));
             var direction = AimFor(ctx, point, hostCenter, rng);
             var scale = DamageScale is null ? 1 : ctx.Eval(DamageScale, 1);
+            var vars = new Dictionary<string, double>(ctx.Vars, StringComparer.Ordinal);
+            if (hostCount is not null)
+            {
+                vars[hostCount] = hostDepth + 1;
+            }
             var cast = new EffectContext
             {
                 CastId = ctx.CastId,
@@ -373,11 +430,23 @@ internal sealed class CastHandler : IEffectHandler
                 Potency = ctx.Potency,
                 DamageScale = ctx.DamageScale * scale,
                 From = from,
-                Vars = new Dictionary<string, double>(ctx.Vars, StringComparer.Ordinal),
+                Vars = vars,
                 Slot = ctx.Slot,
                 Host = ctx.Host ?? ctx.Weave,
             };
             ExecuteAll(weave.Effects, cast);
+        }
+
+        /// <summary>The variable counting a weave's host casts: by the weave's key, which its views and levels share.</summary>
+        private string HostCountOf(CompiledWeave weave)
+        {
+            var root = weave.Root;
+            if (!ReferenceEquals(_countedWeave, root))
+            {
+                _countedWeave = root;
+                _hostCount = HostDepthPrefix + root.Key;
+            }
+            return _hostCount;
         }
 
         private CompiledWeave? Resolve(EffectContext ctx, int level)

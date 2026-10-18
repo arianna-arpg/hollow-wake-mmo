@@ -212,6 +212,9 @@ entries:
   - id: effects
     values:
       max_depth: 12
+      # A cast of the host (cast { weave: host }) is refused inside this many host casts of the same weave: at
+      # one, a weave whose hit casts itself lands that hit once more and its rerun casts nothing further.
+      host_depth: 1
 
   - id: weaves
     values:
