@@ -80,4 +80,16 @@ The Windows baseline now records the combined body-contact, fauna, aiming and ap
 
 Proving bands still fail three inherited ceilings: bulwark wins 9/10, plaguer 10/10 and pitfighter 10/10. These are balance failures, not a passed proving gate, and no thresholds were relaxed. The complete report remains visible. World-generation baseline reconciliation still waits for final #34. Native pixels and default performance acceptance remain open; no new timing or trace measurement ran.
 
+## Final separation of placement, sampled target and bearing
+
+Peer review of the successive wrappers exposed two distinct composition boundaries: nested zero-turn wrappers realigned the point, and retained targets differing from explicit Point relocated point-centered areas and point-origin projectiles. The retained-placement controls initially passed only the direct contact, with both supported contacts missing or selecting the wrong body. These failures remain published. The final runtime correction is `85ee039`, following `70f3ace` and `783fe37`; each is a separately adoptable scoped commit for #36.
+
+EffectContext.SampledTargetPoint now captures a target center separately from placement Point and committed Direction. Existing AimOffset remains body-relative. Wrappers rotate those independently and release the entity lock. Initial flights use actual launch origin for sampled-body bearing/elevation; gravity/converge/guide keep target-center semantics. Detached copies retain the sample; explicit re-aiming, retargeting and new placements clear it. This avoids child-handler dispatch in the wrapper and leaves direction-committed casts independent of body bearing.
+
+Salvos share the first shot's origin resolver and retain a once-sampled origin limit. A separate regression initially hit the frozen location only once rather than three times; all beats now originate at the configured point. Tests move the old target away and require actual hits on a bystander at the frozen location, then independently verify that explicit live re-aiming moves subsequent shots and releases the old sample. The final 39-case aim suite and 1,616 affected tests pass. The complete Release build on `85ee039` has 0 warnings/errors. Full tests pass 2,581 core, 66 server and 184 native client cases; only the four superseded world-generation goldens remain red. All seven combined replay hashes still match.
+
+The composition lint at `783fe37` reports 584 smells and 197 notes against 580/197 on the flight-foundation comparison. Its complete key delta is retained: relocated damage-expression keys and existing tag/form-read diagnostics account for several changes, while #50's previously documented snare form adds two known findings. Area contact is now reused and loses its single-use finding. No aim-wrapper-specific switch was added. This is an audit with remaining design debt, not a clean architecture certification.
+
+The attempted paired planning measurement window was released before any benchmark began because another session's functional checks were still active. No new performance result exists. Complete #34, final client checks, exact-source independent review and performance acceptance remain outstanding.
+
 Acknowledged by: pending Claude review of the combined correction.
