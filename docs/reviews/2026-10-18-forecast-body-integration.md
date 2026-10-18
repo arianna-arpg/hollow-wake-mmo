@@ -52,4 +52,12 @@ The support regression verifies forecast eligibility and actual damage on a body
 
 An attempted expansion of this matrix to Beam failed four dormant-support checks. Inspection confirmed the existing mechanism contract deliberately excludes range-based lines from the area mechanism. That exploratory content change was removed; Beam retains its authored range and existing support compatibility. The failed log is retained as `support-line-policy-first-tests.txt`. No mechanism gate was weakened to force a support onto an ineligible delivery.
 
+## Construct and paired renderer integration
+
+Complete #50 `738bad67f3c1490b1f2b241dc970d55606d6d24d`, including payload-origin correction `d796f04`, is merged at `c0e275c`. The single conflict retains physical `CastSource`, shared `PayloadOrigin` and the pure sampled `AimOffset`. Original `Aim` remains independent. The combined construct, cast-forecast, positional-release and support selection passes 114 cases. A fresh full Release build is clean; full tests retain 2,474 core passes and the same three outstanding flight/replay failures, with all 66 server and 147 client cases passing. No failure was hidden or removed. The pre-flight standard tournament report is retained locally for the later behavior comparison.
+
+The paired renderer contribution #55 `d15b3b72e69d1ff728adc2c9a3c9d49be9511429` is merged at `2c18e07`. Inspection confirms the live adapters call the tested segment builders and mesh-reuse predicates. Both retain the authoritative frame, lower/upper loops, holes and direction cue; translation and heading reuse local geometry. On this combined source, all 184 native client and 459 browser cases pass, including 37 paired geometry/reuse cases per client. The browser production build passes with its existing bundle advisory. These are engine-free geometry checks, not native pixel certification.
+
+The prototype-port suite passes 10 cases. The visual-convergence inventory reports no unclassified vocabulary across 948 recorded legacy skills and 457 supports, while still explicitly reporting partial and pending presentation families. Classification is not completion of those families. No new trace or performance sample ran during these integrations. The final complete #36 foundation handoff, combined replay reconciliation, fresh client/probe checks and performance acceptance remain open.
+
 Acknowledged by: pending Claude review of the combined correction.
