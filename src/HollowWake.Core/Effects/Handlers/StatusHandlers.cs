@@ -87,6 +87,7 @@ internal sealed class ApplyStatusHandler : IEffectHandler
     public string Type => "apply_status";
 
     public EffectSignature Signature { get; } = EffectSignature.Of("status", "duration", "fixed_duration", "chance", "stacks", "magnitude", "threads", "self", "to", "radius", "max_targets")
+        .Refers("statuses", "status")
         .Hook(StatusHandlers.OnStatusTick, StatusHandlers.OnStatusTick)
         .Hook(StatusHandlers.OnStatusExpire, StatusHandlers.OnStatusExpire);
 
@@ -195,7 +196,7 @@ internal sealed class RemoveStatusHandler : IEffectHandler
 {
     public string Type => "remove_status";
 
-    public EffectSignature Signature { get; } = EffectSignature.Of("status", "tags", "count", "self", "order", "kind");
+    public EffectSignature Signature { get; } = EffectSignature.Of("status", "tags", "count", "self", "order", "kind").Refers("statuses", "status");
 
     public CompiledEffect Compile(JsonObject p, EffectCompileContext ctx) => new Effect
     {
