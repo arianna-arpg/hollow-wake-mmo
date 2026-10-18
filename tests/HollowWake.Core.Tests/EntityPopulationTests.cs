@@ -21,6 +21,8 @@ public class EntityPopulationTests
     [InlineData("goblinkin_body")]
     [InlineData("orc_body")]
     [InlineData("fauna_body")]
+    [InlineData("gnoll_body")]
+    [InlineData("beastkin_body")]
     public void EveryEntityHabitatHasAMatchingPopulationReference(string template)
     {
         var content = CoreContent.Registry;

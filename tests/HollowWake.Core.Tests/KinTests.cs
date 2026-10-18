@@ -55,6 +55,12 @@ public class KinTests
         {
             Assert.True(Relations.IsHostile(a.Sim,a.Caster,e));
             Assert.True(Relations.IsHostile(a.Sim,e,a.Caster));
+            foreach(var faction in new[]{"wilds","the_loosed"})
+            {
+                var other=a.Body(22,10,faction:faction);
+                Assert.True(Relations.IsHostile(a.Sim,e,other));
+                Assert.True(Relations.IsHostile(a.Sim,other,e));
+            }
         }
     }
 
@@ -73,7 +79,7 @@ public class KinTests
         var small=Push("gnoll_bonepicker");var hunter=Push("gnoll_prowler");var bull=Push("beastkin_bullwarden");
         Assert.True(small.mass<hunter.mass && hunter.mass<bull.mass);
         Assert.True(small.travel>hunter.travel && hunter.travel>bull.travel*3);
-        Assert.InRange(CoreContent.Registry.Require<PatternDef>("gnoll_prowler").Height/1.8,.9,1.1);
+        Assert.InRange(CoreContent.Registry.Require<PatternDef>("gnoll_prowler").Height/CoreContent.Registry.Rules.Number("physicality.reference_height",0),.9,1.1);
         Assert.True(CoreContent.Registry.Require<PatternDef>("beastkin_bullwarden").Height>2.5);
     }
 

@@ -91,7 +91,7 @@
           ]
         },
         "behavior": {
-          "id": "kin_press"
+          "id": "close_melee"
         },
         "drops": {
           "table": "goblinkin_drops",
@@ -104,22 +104,6 @@
           "repository": "arianna-arpg/arpg-game-world",
           "revision": "118b510f8b5bfb781163c5bc13ea4908f698e75b",
           "id": "gnoll_prowler"
-        },
-        "ai_handoff": {
-          "current": "kin_press",
-          "status": "provisional; replaceable content assignment",
-          "desired": [
-            "bounded perception",
-            "mechanic-aware skill choices",
-            "readable commitments",
-            "pack flanking and morale"
-          ],
-          "deferred": [
-            "commander orders and reinforcements",
-            "tactical trap placement",
-            "ally triage",
-            "terrain-aware movement"
-          ]
         }
       }
     },
@@ -201,22 +185,6 @@
           "repository": "arianna-arpg/arpg-game-world",
           "revision": "118b510f8b5bfb781163c5bc13ea4908f698e75b",
           "id": "gnoll_bonepicker"
-        },
-        "ai_handoff": {
-          "current": "aggressive_ranged",
-          "status": "provisional; replaceable content assignment",
-          "desired": [
-            "bounded perception",
-            "mechanic-aware skill choices",
-            "readable commitments",
-            "pack flanking and morale"
-          ],
-          "deferred": [
-            "commander orders and reinforcements",
-            "tactical trap placement",
-            "ally triage",
-            "terrain-aware movement"
-          ]
         }
       }
     },
@@ -298,22 +266,6 @@
           "repository": "arianna-arpg/arpg-game-world",
           "revision": "118b510f8b5bfb781163c5bc13ea4908f698e75b",
           "id": "gnoll_longshot"
-        },
-        "ai_handoff": {
-          "current": "aggressive_ranged",
-          "status": "provisional; replaceable content assignment",
-          "desired": [
-            "bounded perception",
-            "mechanic-aware skill choices",
-            "readable commitments",
-            "pack flanking and morale"
-          ],
-          "deferred": [
-            "commander orders and reinforcements",
-            "tactical trap placement",
-            "ally triage",
-            "terrain-aware movement"
-          ]
         }
       }
     },
@@ -383,7 +335,7 @@
           ]
         },
         "behavior": {
-          "id": "kin_press"
+          "id": "close_melee"
         },
         "drops": {
           "table": "goblinkin_drops",
@@ -396,22 +348,6 @@
           "repository": "arianna-arpg/arpg-game-world",
           "revision": "118b510f8b5bfb781163c5bc13ea4908f698e75b",
           "id": "gnoll_impaler"
-        },
-        "ai_handoff": {
-          "current": "kin_press",
-          "status": "provisional; replaceable content assignment",
-          "desired": [
-            "bounded perception",
-            "mechanic-aware skill choices",
-            "readable commitments",
-            "pack flanking and morale"
-          ],
-          "deferred": [
-            "commander orders and reinforcements",
-            "tactical trap placement",
-            "ally triage",
-            "terrain-aware movement"
-          ]
         }
       }
     },
@@ -481,7 +417,7 @@
           ]
         },
         "behavior": {
-          "id": "kin_press"
+          "id": "close_melee"
         },
         "drops": {
           "table": "goblinkin_drops",
@@ -494,22 +430,6 @@
           "repository": "arianna-arpg/arpg-game-world",
           "revision": "118b510f8b5bfb781163c5bc13ea4908f698e75b",
           "id": "gnoll_howler"
-        },
-        "ai_handoff": {
-          "current": "kin_press",
-          "status": "provisional; replaceable content assignment",
-          "desired": [
-            "bounded perception",
-            "mechanic-aware skill choices",
-            "readable commitments",
-            "pack flanking and morale"
-          ],
-          "deferred": [
-            "commander orders and reinforcements",
-            "tactical trap placement",
-            "ally triage",
-            "terrain-aware movement"
-          ]
         }
       }
     },
@@ -591,22 +511,6 @@
           "repository": "arianna-arpg/arpg-game-world",
           "revision": "118b510f8b5bfb781163c5bc13ea4908f698e75b",
           "id": "gnoll_trapper"
-        },
-        "ai_handoff": {
-          "current": "aggressive_ranged",
-          "status": "provisional; replaceable content assignment",
-          "desired": [
-            "bounded perception",
-            "mechanic-aware skill choices",
-            "readable commitments",
-            "pack flanking and morale"
-          ],
-          "deferred": [
-            "commander orders and reinforcements",
-            "tactical trap placement",
-            "ally triage",
-            "terrain-aware movement"
-          ]
         }
       }
     },
@@ -676,7 +580,7 @@
           ]
         },
         "behavior": {
-          "id": "kin_press"
+          "id": "close_melee"
         },
         "drops": {
           "table": "goblinkin_drops",
@@ -689,22 +593,6 @@
           "repository": "arianna-arpg/arpg-game-world",
           "revision": "118b510f8b5bfb781163c5bc13ea4908f698e75b",
           "id": "gnoll_butcher"
-        },
-        "ai_handoff": {
-          "current": "kin_press",
-          "status": "provisional; replaceable content assignment",
-          "desired": [
-            "bounded perception",
-            "mechanic-aware skill choices",
-            "readable commitments",
-            "pack flanking and morale"
-          ],
-          "deferred": [
-            "commander orders and reinforcements",
-            "tactical trap placement",
-            "ally triage",
-            "terrain-aware movement"
-          ]
         }
       }
     },
@@ -774,7 +662,7 @@
           ]
         },
         "behavior": {
-          "id": "kin_press"
+          "id": "close_melee"
         },
         "drops": {
           "table": "goblinkin_drops",
@@ -787,22 +675,6 @@
           "repository": "arianna-arpg/arpg-game-world",
           "revision": "118b510f8b5bfb781163c5bc13ea4908f698e75b",
           "id": "gnoll_skinner"
-        },
-        "ai_handoff": {
-          "current": "kin_press",
-          "status": "provisional; replaceable content assignment",
-          "desired": [
-            "bounded perception",
-            "mechanic-aware skill choices",
-            "readable commitments",
-            "pack flanking and morale"
-          ],
-          "deferred": [
-            "commander orders and reinforcements",
-            "tactical trap placement",
-            "ally triage",
-            "terrain-aware movement"
-          ]
         }
       }
     },
@@ -885,22 +757,6 @@
           "repository": "arianna-arpg/arpg-game-world",
           "revision": "118b510f8b5bfb781163c5bc13ea4908f698e75b",
           "id": "gnoll_pyrekeeper"
-        },
-        "ai_handoff": {
-          "current": "aggressive_ranged",
-          "status": "provisional; replaceable content assignment",
-          "desired": [
-            "bounded perception",
-            "mechanic-aware skill choices",
-            "readable commitments",
-            "pack flanking and morale"
-          ],
-          "deferred": [
-            "commander orders and reinforcements",
-            "tactical trap placement",
-            "ally triage",
-            "terrain-aware movement"
-          ]
         }
       }
     },
@@ -971,7 +827,7 @@
           ]
         },
         "behavior": {
-          "id": "kin_press"
+          "id": "close_melee"
         },
         "drops": {
           "table": "goblinkin_drops",
@@ -984,22 +840,6 @@
           "repository": "arianna-arpg/arpg-game-world",
           "revision": "118b510f8b5bfb781163c5bc13ea4908f698e75b",
           "id": "gnoll_matron"
-        },
-        "ai_handoff": {
-          "current": "kin_press",
-          "status": "provisional; replaceable content assignment",
-          "desired": [
-            "bounded perception",
-            "mechanic-aware skill choices",
-            "readable commitments",
-            "pack flanking and morale"
-          ],
-          "deferred": [
-            "commander orders and reinforcements",
-            "tactical trap placement",
-            "ally triage",
-            "terrain-aware movement"
-          ]
         }
       }
     },
@@ -1070,7 +910,7 @@
           ]
         },
         "behavior": {
-          "id": "kin_press"
+          "id": "close_melee"
         },
         "drops": {
           "table": "goblinkin_drops",
@@ -1083,22 +923,6 @@
           "repository": "arianna-arpg/arpg-game-world",
           "revision": "118b510f8b5bfb781163c5bc13ea4908f698e75b",
           "id": "gnoll_ravener"
-        },
-        "ai_handoff": {
-          "current": "kin_press",
-          "status": "provisional; replaceable content assignment",
-          "desired": [
-            "bounded perception",
-            "mechanic-aware skill choices",
-            "readable commitments",
-            "pack flanking and morale"
-          ],
-          "deferred": [
-            "commander orders and reinforcements",
-            "tactical trap placement",
-            "ally triage",
-            "terrain-aware movement"
-          ]
         }
       }
     },
@@ -1173,7 +997,7 @@
           ]
         },
         "behavior": {
-          "id": "kin_press"
+          "id": "close_melee"
         },
         "drops": {
           "table": "goblinkin_drops",
@@ -1186,22 +1010,6 @@
           "repository": "arianna-arpg/arpg-game-world",
           "revision": "118b510f8b5bfb781163c5bc13ea4908f698e75b",
           "id": "gnoll_colossus"
-        },
-        "ai_handoff": {
-          "current": "kin_press",
-          "status": "provisional; replaceable content assignment",
-          "desired": [
-            "bounded perception",
-            "mechanic-aware skill choices",
-            "readable commitments",
-            "pack flanking and morale"
-          ],
-          "deferred": [
-            "commander orders and reinforcements",
-            "tactical trap placement",
-            "ally triage",
-            "terrain-aware movement"
-          ]
         }
       }
     }

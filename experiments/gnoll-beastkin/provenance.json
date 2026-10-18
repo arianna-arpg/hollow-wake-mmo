@@ -17,7 +17,7 @@
         "claw",
         "rend"
       ],
-      "behavior": "kin_press",
+      "behavior": "close_melee",
       "site": "gnoll_scavenge"
     },
     {
@@ -48,7 +48,7 @@
         "skewer",
         "pinning_spear"
       ],
-      "behavior": "kin_press",
+      "behavior": "close_melee",
       "site": "gnoll_moot"
     },
     {
@@ -59,7 +59,7 @@
         "rallying_shout",
         "claw"
       ],
-      "behavior": "kin_press",
+      "behavior": "close_melee",
       "site": "gnoll_moot"
     },
     {
@@ -80,7 +80,7 @@
         "cleave",
         "claw"
       ],
-      "behavior": "kin_press",
+      "behavior": "close_melee",
       "site": "gnoll_moot"
     },
     {
@@ -91,7 +91,7 @@
         "carve",
         "deep_carve"
       ],
-      "behavior": "kin_press",
+      "behavior": "close_melee",
       "site": "gnoll_moot"
     },
     {
@@ -114,7 +114,7 @@
         "claw",
         "rend"
       ],
-      "behavior": "kin_press",
+      "behavior": "close_melee",
       "site": "gnoll_moot"
     },
     {
@@ -126,7 +126,7 @@
         "deep_carve",
         "rend"
       ],
-      "behavior": "kin_press",
+      "behavior": "close_melee",
       "site": "gnoll_pyre"
     },
     {
@@ -138,7 +138,7 @@
         "ground_slam",
         "rallying_shout"
       ],
-      "behavior": "kin_press",
+      "behavior": "close_melee",
       "site": "gnoll_pyre"
     },
     {
@@ -149,7 +149,7 @@
         "skewer",
         "pinning_spear"
       ],
-      "behavior": "kin_press",
+      "behavior": "close_melee",
       "site": "beastkin_hunt"
     },
     {
@@ -160,7 +160,7 @@
         "gore_rend",
         "heavy_strike"
       ],
-      "behavior": "kin_press",
+      "behavior": "close_melee",
       "site": "beastkin_hunt"
     },
     {
@@ -192,7 +192,7 @@
         "gore_rend",
         "claw"
       ],
-      "behavior": "kin_press",
+      "behavior": "close_melee",
       "site": "beastkin_hunt"
     },
     {
@@ -203,7 +203,7 @@
         "rallying_shout",
         "heavy_strike"
       ],
-      "behavior": "kin_press",
+      "behavior": "close_melee",
       "site": "beastkin_circle"
     },
     {
@@ -214,7 +214,7 @@
         "shockfront",
         "ground_slam"
       ],
-      "behavior": "kin_press",
+      "behavior": "close_melee",
       "site": "beastkin_circle"
     },
     {
@@ -226,7 +226,7 @@
         "heavy_strike",
         "rallying_shout"
       ],
-      "behavior": "kin_press",
+      "behavior": "close_melee",
       "site": "beastkin_hold"
     },
     {
@@ -238,7 +238,7 @@
         "rallying_shout",
         "ground_slam"
       ],
-      "behavior": "kin_press",
+      "behavior": "close_melee",
       "site": "beastkin_hold"
     },
     {
@@ -249,7 +249,7 @@
         "heavy_strike",
         "ground_slam"
       ],
-      "behavior": "kin_press",
+      "behavior": "close_melee",
       "site": "beastkin_hold"
     }
   ],

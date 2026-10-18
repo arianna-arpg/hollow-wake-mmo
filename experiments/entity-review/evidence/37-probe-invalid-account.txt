@@ -1,0 +1,2 @@
+asked for features: entity_delta, interface; granted: entity_delta, interface
+no character list; got WelcomeMsg, LoginResultMsg

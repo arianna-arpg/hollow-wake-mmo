@@ -30,3 +30,7 @@ The paired-batch snapshot medians are 1.039 ms baseline and 1.089 ms candidate. 
 ## Existing card-view capture issue
 
 The browser smoke counts geometry/cards and verifies interactions but does not validate rendered world pixels. Its 16_cards capture shows sky and labels with the world absent, in both the preceding fauna run (run-QwdBg5) and this run (run-Q7cgqw). Paired images are retained here. The initial 01_isometric capture in the current harness shows the world and bodies correctly, and the separate production-mesh entity gallery renders correctly. This pass does not change the card renderer. Claude review should separately investigate that existing mode/capture failure and add a pixel-level assertion before treating smoke counts as visual proof.
+
+## Review correction follow-up
+
+The historical measurements and failed card captures above remain retained. The corrected shared foundation, full #36 integration and renderer fix are documented in `docs/reviews/2026-10-18-entity-review-corrections.md` and `docs/reviews/2026-10-18-card-renderer-state.md`, with current evidence under `experiments/entity-review/evidence/37-*`. The card defect now has a passing rendered-world regression; the corrected kin performance comparison is recorded separately when complete.

@@ -16,7 +16,9 @@
         "tangled": "hostile",
         "laughing_packs": "allied",
         "horned_tribes": "allied",
-        "goblinkin": "allied"
+        "goblinkin": "allied",
+        "wilds": "hostile",
+        "the_loosed": "hostile"
       }
     },
     {
@@ -33,7 +35,9 @@
         "remnant": "hostile",
         "tangled": "hostile",
         "laughing_packs": "allied",
-        "horned_tribes": "allied"
+        "horned_tribes": "allied",
+        "wilds": "hostile",
+        "the_loosed": "hostile"
       }
     }
   ]

@@ -66,6 +66,24 @@ This checkpoint is reusable by #38/#39/#40 but stays draft pending private smoke
 
 On 26c50de, the private browser and native-headless playthroughs pass with no cleanup errors; full runner result is `34-smoke.json`. Native pixel checks remain skipped. Inspection of `16_cards.png` still shows the inherited blank-world/card-mode defect, also recorded in the original #37 baseline. Therefore behavioral success is not claimed as a visual pass. #37 will correct CardBaker renderer-state restoration and add a regression plus fresh rendered evidence; this shared presentation ownership is recorded before that edit. The exact #34 Release performance check is also being independently repeated by the #36 owner.
 
+## #37 correction scope and AI handoff
+
+Gnolls and Beastkin consume the full corrected fauna/hitbox base. Their melee kits reuse `close_melee`; wilds/the_loosed hostility is reciprocal, and Goblinkin explicitly names its existing Gnoll alliance. Habitat and stature tests use the shared content contracts. All bodies retain their original shapes, palettes and material dimensions; the added real-flight matrix asserts cylinder fallback across flat and +/-0.5 m terrain.
+
+Repeated AI metadata is removed from concrete patterns. The shared intent remains bounded perception, mechanic-aware skill choice and readable commitments; Gnolls additionally call for pack flanking/morale and Beastkin for herd formations/coordinated charges. Commander orders, reinforcements, tactical trap placement, ally triage and terrain-aware movement remain deferred to the existing Claude AI design handoff. Current assignments live only in behavior components.
+
+The inherited card-mode blank-world defect is caused by CardBaker changing the renderer's viewport, scissor and clear color without restoring them. #37 owns the narrowly scoped restoration fix, failure-path cleanup and renderer-state regression, as predeclared in the #34 smoke follow-up. Fresh production smoke screenshots must verify the visible world before the visual gate can close. The shared browser smoke driver will add a conservative nonblank-world pixel check at its existing card screenshot; this extends the preserved driver rather than replacing its input flow.
+
+## #37 functional correction checkpoint
+
+Build and Release tool build: zero warnings/errors. Full tests pass: core2628/server48/client121; browser290 and production build pass with the existing chunk-size advisory; porter10; content validation zero errors/warnings; load, duel, protocol parity and private TCP delta/interface probe pass. The initial probe used an overlong generated account and was correctly rejected; its output is retained beside the passing short-account rerun. This was a probe setup error, not a server regression.
+
+All 462 kin real-flight cases pass, alongside the 462 fauna and 882 authored-profile cases. Kin/fauna still explicitly use cylinder fallback. The warm small-expression regression measures zero bytes on its executing thread for four formulas, separately from the CLI's process-wide allocation counter; the published benchmark is not altered. The independent exact-26c50de timing/size comparison is recorded on [#34](https://github.com/arianna-arpg/hollow-wake-mmo/pull/34#issuecomment-6253489076); the kin population still requires its own measurement.
+
+Private smoke run-TjzxaP passes browser31/native26 with no cleanup errors; native pixels remain skipped. Card state restoration is the separable commit 30f6c91. Its repaired world screenshot was inspected and passes the added pixel assertion (18.52% dominant color versus the failing frame's 97.50%). The production geometry gallery was refreshed in both cameras, grayscale walking and common scale without changing its reviewed geometry fixture. The four-zone population audit retains every pattern's count; the eastern site changes from Fallen Hall to Ossuary, and origin cull/scout offers now meet local/level constraints. Climate remains unchanged. All evidence is under `experiments/entity-review/evidence/37-*`.
+
+This functional checkpoint remains draft pending the coordinated kin performance comparison and Claude review. #20's separate performance findings are not represented as resolved by these entity gates.
+
 ## Verification and handoff
 
 Regression results and exact commit references will be appended after execution. No gate is claimed yet. #37 remains draft until its performance and visual evidence gates are resolved. Claude rereview will be requested with the focused correction commits and retained evidence.
