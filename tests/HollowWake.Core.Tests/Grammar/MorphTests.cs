@@ -1,0 +1,280 @@
+using System.Globalization;
+using System.Text;
+using Xunit;
+using Xunit.Abstractions;
+
+namespace HollowWake.Core.Tests.Grammar;
+
+/// <summary>
+/// The morph test: the combat grammar says a cast is a point in a product of dimensions and that the engine's invariants
+/// hold at every point. For each delivery and agency family it samples points from the family's parameter table
+/// (MorphFamilies.cs: axes, each one quantity with a unit inside a dimension, and choices) on a constant seed and
+/// compiles each as content in a scratch layer beside core (MorphLayer.cs). Every point must validate, compile strictly
+/// and state what it is as mechanisms; every sampled point, pressed once in the crowd scenario (MorphArena.cs), must run
+/// the same twice on one seed, lose no life outside the one damage pipeline, stay within the fan-out its parameters
+/// allow, leave nothing behind once its expected life is over, and pay its cost and cooldown. Then, parameter by
+/// parameter, each must move something the crowd shows, and an axis with a weave attribute behind it must show the same
+/// through the attribute as through the node. Known defects are listed in <see cref="Known"/> with their reasons; one
+/// that stops reproducing fails the test so the list stays honest.
+/// </summary>
+public class MorphTests
+{
+    private readonly ITestOutputHelper _output;
+
+    public MorphTests(ITestOutputHelper output)
+    {
+        _output = output;
+    }
+
+    public static TheoryData<string> FamilyNames()
+    {
+        var data = new TheoryData<string>();
+        foreach (var family in Families.All)
+        {
+            data.Add(family.Name);
+        }
+        return data;
+    }
+
+    private static bool OnNode(View v, string parameter) => v.Sets(parameter) && !v.Point.ViaAttribute.Contains(parameter);
+
+    /// <summary>A summon or deploy that raises more bodies in one press than its group may hold.</summary>
+    private static bool CountPastCap(View v) =>
+        Math.Clamp(Math.Round(v.Num("count")), 1, v.Rule("minions.max_per_cast", 32)) > Math.Max(1, Math.Round(v.Num("max_active")));
+
+    private const string OnePressUncapped =
+        "SummonRecipe.Wave asks MinionService.MakeRoom to fit a cast's bodies, and MakeRoom dismisses only bodies already standing: it never caps the cast's own count, so one summon or deploy whose count passes max_active stands every body it raises, though minions.md says past the capacity the oldest bodies are dismissed";
+
+    /// <summary>
+    /// Defects the morph test found and keeps finding, and what it lists as exempt: each matches violations of one
+    /// invariant in one family by a piece of their message (and, where given, by the point). The defects are findings to
+    /// fix, not behaviour to keep.
+    /// </summary>
+    internal static readonly Finding[] Known =
+    {
+        new("projectile", "states", "'chain' does not hold though chains",
+            "the chain probe (Weaves/Probes/DeliveryProbes.cs) reads only the weave attribute projectile.chain, never a projectile node's chains parameter, though the trajectory probes read both")
+        {
+            When = v => OnNode(v, "chains"),
+        },
+        new("projectile", "states", "'flight:children' does not hold though forks",
+            "flight:children (Weaves/Mechanisms.cs) reads only the weave attribute projectile.forks, never a projectile node's forks parameter")
+        {
+            When = v => OnNode(v, "forks"),
+        },
+        new("projectile", "states", "'flight:spends' holds though rehit",
+            "flight:spends (Weaves/Mechanisms.cs) is the absence of the weave attribute projectile.rehit and never sees a projectile node's rehit parameter, so a flight that never ends on a hit still says its hits spend it")
+        {
+            When = v => OnNode(v, "rehit"),
+        },
+        new("projectile", "states", "'trajectory' does not hold though",
+            "WeaveProbe.Raises counts only positive bases and modifiers, so a kinematic axis set negative on the weave (a slowing accel, a recurve or spiral the other way) is not stated; shipped lava_glob sheds speed through projectile.accel -5.8")
+        {
+            When = v => Families.Trajectory.All(a => v.Num(a, 0) == 0 || (v.Num(a, 0) < 0 && !OnNode(v, a))),
+        },
+        new("move", "sensitive", "choice 'anchor' moves nothing",
+            "inside a hit list the context's point is the struck body (EffectContext.WithTarget moves it there), so anchor point measures from the body itself and the shove runs along the facing; areas and fields set no from, so anchor from measures from the caster. For bodies on the aim line beyond the caster all three anchors push the same way; deliveries.md says point is the aim point and from a field's center"),
+        new("summon", "bounded", "stood at once, past the cap", OnePressUncapped) { When = CountPastCap },
+        new("deploy", "bounded", "stood at once, past the cap", OnePressUncapped) { When = CountPastCap },
+        new("summon", "sensitive", "axis 'max_active' moves nothing",
+            "within one press max_active caps nothing (MakeRoom dismisses only bodies already standing), so the crowd scenario's single press cannot show it; it bites only on a later press"),
+        new("deploy", "sensitive", "axis 'max_active' moves nothing",
+            "within one press max_active caps nothing (MakeRoom dismisses only bodies already standing), so the crowd scenario's single press cannot show it; it bites only on a later press"),
+        new("summon", "left behind", "with no lifetime and no contract",
+            "duration 0 raises a body for good (SummonRecipe.Birth gives it no end), held only by max_active, which one press does not enforce; shipped wraith and risen summons are raised this way, outside the rule that a summon left standing has a lifetime or a contract")
+        {
+            When = v => v.Num("duration") <= 0,
+        },
+        new("deploy", "left behind", "with no lifetime and no contract",
+            "lifetime 0 places a construct for good (SummonRecipe.Birth gives it no end), held only by max_active, which one press does not enforce; outside the rule that a body left standing has a lifetime or a contract")
+        {
+            When = v => v.Num("lifetime") <= 0,
+        },
+        new("deploy", "states", "'construct:massed' does not hold though count",
+            "construct:massed (Weaves/Mechanisms.cs Construct) reads only a deploy or spawn node's count, never the weave attribute summon.count that a deploy's count falls back to")
+        {
+            When = v => !OnNode(v, "count") && Math.Round(v.Num("count")) > 1,
+        },
+        new("spawn", "left behind", "bare spawn",
+            "exempt: a spawn without a lifetime places a body with no owner's terms, so it outlives every scenario by design; a finding, not a failure")
+        {
+            When = v => !v.Sets("lifetime"),
+        },
+    };
+
+    /// <summary>Validation, strict compilation and the mechanisms each point's values must state, over every point of the family.</summary>
+    [Theory]
+    [MemberData(nameof(FamilyNames))]
+    public void EveryPointValidatesCompilesAndStatesItsMechanisms(string name)
+    {
+        var layer = MorphLayer.Shared;
+        var violations = new List<Violation>();
+        var examined = layer.All(name).Select(p => new View(p, layer.Content)).ToList();
+        foreach (var view in examined)
+        {
+            violations.AddRange(MorphChecks.Static(layer, view.Point).Select(b => new Violation(view.Point, view, b.Invariant, b.Message)));
+        }
+        var family = Families.Named(name);
+        _output.WriteLine($"{name} on {family.Shell}, stated by '{family.Probe}': {examined.Count} points checked");
+        foreach (var p in family.Parameters)
+        {
+            var range = p.Kind == ParameterKind.Axis ? $"{p.Low:0.###}..{p.High:0.###} {p.Unit}" : string.Join("|", p.Words);
+            var exempt = family.Exempt.TryGetValue(p.Name, out var why) ? $"; exempt: {why}" : "";
+            _output.WriteLine($"  {p.Dimension.ToString().ToLowerInvariant()} {p.Describe} {range}{(p.Attribute is null ? "" : $" (or {p.Attribute})")}: {p.Source}{exempt}");
+        }
+        foreach (var (parameter, why) in family.Unsampled)
+        {
+            _output.WriteLine($"  unsampled '{parameter}': {why}");
+        }
+        Settle(name, examined, violations, "validates", "compiles", "states");
+    }
+
+    /// <summary>Each sampled point, pressed once: deterministic, one damage pipeline, bounded, terminating, nothing left behind, paying, and nothing logged.</summary>
+    [Theory]
+    [MemberData(nameof(FamilyNames))]
+    public void EverySampledPointHoldsTheInvariants(string name)
+    {
+        var layer = MorphLayer.Shared;
+        var violations = new List<Violation>();
+        var examined = layer.Morph[name].Where(p => Compiles(layer, p)).Select(p => new View(p, layer.Content)).ToList();
+        foreach (var view in examined)
+        {
+            var point = view.Point;
+            var first = MorphArena.Run(layer.Content, point);
+            var second = MorphArena.Run(layer.Content, point);
+            _output.WriteLine($"{point}\n    {first.Hits} hits (cap {first.Budget?.Damage:0.#}), {first.MaxLive} standing at most (cap {first.Budget?.Live:0.#}), {first.Created} made, life {first.Budget?.Seconds:0.##} s: {first.Observable}");
+            var broken = first.Broken.ToList();
+            if (Diverges(first.Events, second.Events) is { } where)
+            {
+                broken.Add(("deterministic", where));
+            }
+            violations.AddRange(broken.Select(b => new Violation(point, view, b.Invariant, b.Message)));
+        }
+        Settle(name, examined, violations, "deterministic", "pipeline", "bounded", "terminates", "left behind", "pays", "runs");
+    }
+
+    /// <summary>Each axis and choice, between its values with everything else at the family's default sample, moves something the crowd shows, unless it is exempt for a stated reason.</summary>
+    [Theory]
+    [MemberData(nameof(FamilyNames))]
+    public void EveryAxisAndChoiceMovesTheCrowd(string name)
+    {
+        var layer = MorphLayer.Shared;
+        var family = Families.Named(name);
+        var violations = new List<Violation>();
+        var examined = new List<View>();
+        foreach (var sense in layer.Sensitivity[name])
+        {
+            if (!sense.Points.All(p => Compiles(layer, p)))
+            {
+                continue;
+            }
+            examined.AddRange(sense.Points.Select(p => new View(p, layer.Content)));
+            var shown = sense.Points.Select(p => (p.Label, Observable: MorphArena.Run(layer.Content, p).Observable)).ToList();
+            foreach (var (label, observable) in shown)
+            {
+                _output.WriteLine($"{label}: {observable}");
+            }
+            var moves = shown.Select(s => s.Observable).Distinct(StringComparer.Ordinal).Count() > 1;
+            var exempt = family.Exempt.TryGetValue(sense.Parameter.Name, out var why);
+            var sample = sense.Points[0];
+            if (!moves && !exempt)
+            {
+                violations.Add(new Violation(sample, new View(sample, layer.Content), "sensitive",
+                    $"{sense.Parameter.Describe} moves nothing the crowd shows between {string.Join(" and ", shown.Select(s => s.Label))}: {shown[0].Observable}"));
+            }
+            else if (moves && exempt)
+            {
+                violations.Add(new Violation(sample, new View(sample, layer.Content), "sensitive",
+                    $"{sense.Parameter.Describe} is exempt ({why}) but moves the crowd: {string.Join(" / ", shown.Select(s => $"{s.Label}: {s.Observable}"))}"));
+            }
+        }
+        Settle(name, examined, violations, "sensitive");
+    }
+
+    /// <summary>
+    /// An axis with a weave attribute behind it shows the same whether a value is set on the node or on the attribute,
+    /// unless the attribute catalog's bounds move the value (reported, not failed) or the axis rolls on the cast's stream.
+    /// </summary>
+    [Theory]
+    [MemberData(nameof(FamilyNames))]
+    public void EveryAttributeAxisReadsAsItsParameter(string name)
+    {
+        var layer = MorphLayer.Shared;
+        var violations = new List<Violation>();
+        var examined = new List<View>();
+        foreach (var sense in layer.Sensitivity[name].Where(s => s.Doors.Count > 0 && !s.Parameter.Rolls))
+        {
+            for (var i = 0; i < sense.Points.Count; i++)
+            {
+                var node = sense.Points[i];
+                var door = sense.Doors[i];
+                if (!Compiles(layer, node) || !Compiles(layer, door))
+                {
+                    continue;
+                }
+                var view = new View(door, layer.Content);
+                examined.Add(view);
+                var value = Convert.ToDouble(door.Values[sense.Parameter.Name], CultureInfo.InvariantCulture);
+                if (view.Num(sense.Parameter.Name) != value)
+                {
+                    _output.WriteLine($"{door.Label}: {sense.Parameter.Attribute} holds {view.Num(sense.Parameter.Name):0.###} within its catalog bounds, so the door differs by design");
+                    continue;
+                }
+                var throughNode = MorphArena.Run(layer.Content, node).Observable;
+                var throughAttribute = MorphArena.Run(layer.Content, door).Observable;
+                if (throughNode != throughAttribute)
+                {
+                    violations.Add(new Violation(door, view, "doors",
+                        $"{sense.Parameter.Describe} = {Point.Format(door.Values[sense.Parameter.Name])} shows '{throughAttribute}' through {sense.Parameter.Attribute} but '{throughNode}' on the node"));
+                }
+            }
+        }
+        Settle(name, examined, violations, "doors");
+    }
+
+    /// <summary>Whether a point's layer entries validate and its weave compiles: points that do not are reported by the static theory and skipped by the rest.</summary>
+    private static bool Compiles(MorphLayer layer, Point p) => !MorphChecks.Static(layer, p).Any(b => b.Invariant is "validates" or "compiles");
+
+    /// <summary>Null when two runs logged the same events, else where they first part.</summary>
+    private static string? Diverges(List<string> a, List<string> b)
+    {
+        for (var i = 0; i < Math.Max(a.Count, b.Count); i++)
+        {
+            var x = i < a.Count ? a[i] : "(end)";
+            var y = i < b.Count ? b[i] : "(end)";
+            if (x != y)
+            {
+                return $"two runs on one seed part at event {i}: '{x}' then '{y}'";
+            }
+        }
+        return null;
+    }
+
+    /// <summary>
+    /// Fails on every violation no known finding explains, and on every known finding of these invariants that no longer
+    /// reproduces: one without a point condition must match some violation, and one with a condition must match whenever
+    /// some examined point meets the condition (a finding no examined point reaches is left untested, as deeper sweeps
+    /// reach it).
+    /// </summary>
+    private static void Settle(string family, IEnumerable<View> examined, List<Violation> violations, params string[] invariants)
+    {
+        var known = Known.Where(f => f.Family == family && invariants.Contains(f.Invariant)).ToList();
+        var unexplained = violations.Where(v => !known.Any(f => f.Matches(v))).ToList();
+        var views = examined.ToList();
+        var stale = known.Where(f => !violations.Any(f.Matches) && (f.When is null || views.Any(f.When))).ToList();
+        if (unexplained.Count == 0 && stale.Count == 0)
+        {
+            return;
+        }
+        var text = new StringBuilder();
+        foreach (var v in unexplained)
+        {
+            text.AppendLine(v.ToString());
+        }
+        foreach (var f in stale)
+        {
+            text.AppendLine($"[{f.Invariant}] the known finding '{f.Contains}' ({f.Reason}) no longer reproduces: remove it from MorphTests.Known");
+        }
+        Assert.Fail($"{family}: {unexplained.Count} violations, {stale.Count} stale findings\n{text}");
+    }
+}
