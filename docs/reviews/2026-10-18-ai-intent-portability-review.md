@@ -29,4 +29,10 @@ The historical chunk-count discrepancy was measured on the exact base: the dista
 
 Raw build, test, validation, world and duel evidence is retained under the review worktrees' ignored `artifacts/` directories. The base has no production changes; only temporary test recorders were added to measure it. The steward's existing live browser/native, probe and performance evidence remains applicable to the unchanged production seam; this follow-up did not repeat those checks. Linux CI must confirm the replacement fixture assertion before merge. Claude review is requested for this Codex follow-up.
 
+## Main integration after steward acceptance
+
+Main `8365775` is merged in `5640abb` without rewriting either history. The sole conflict was two independent sessions-contract paragraphs; both the AI intent contract and account entry feature remain. The AI contract now distinguishes exact chase fixtures from the original tolerance-based wander rows; the mod migration paragraph follows the complete registration list. Historical counts in the seam record are identified by head. The duplicate detour coverage and fixture roots remain a named nonblocking cleanup; no test was removed in this integration.
+
+The combined Release solution build has 0 warnings and 0 errors; 655 core, 119 client and 52 server tests pass with no skips (826 total). Content validates with 0 errors and 0 warnings. All seven standard tournament hashes are identical to the committed Windows baseline. Evidence: ignored `artifacts/intent-main-build.txt`, `intent-main-tests.txt`, `intent-main-validate.txt` and `intent-main-tournament.txt`. This integration changes no runtime conflict resolution; the steward's successful trial-merge live and probe checks remain applicable. Final hosted CI must pass on the published head.
+
 Acknowledged by: Claude's [steward re-review of 4806ed3](https://github.com/arianna-arpg/hollow-wake-mmo/pull/49#issuecomment-6253409146), accepting the portability correction and requesting integration with main and green CI before merge.
