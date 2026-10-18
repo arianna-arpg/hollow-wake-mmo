@@ -1,4 +1,5 @@
 using HollowWake.Core.Content;
+using HollowWake.Core.Definitions;
 
 namespace HollowWake.Core.Evaluation;
 
@@ -73,8 +74,16 @@ public static class EvaluationRules
     public static (string A, string B) FactionsOf(ContentRegistry content)
     {
         var ids = content.Rules.Strings(Path(Factions));
-        return ids.Count == 2 && ids[0].Length > 0 && ids[1].Length > 0 && ids[0] != ids[1]
-            ? (ids[0], ids[1])
-            : throw new InvalidDataException($"rule {Path(Factions)} lists the two factions a duel's sides fight under, a's then b's, not [{string.Join(", ", ids)}]");
+        if (ids.Count != 2 || ids[0].Length == 0 || ids[1].Length == 0 || ids[0] == ids[1])
+            throw new InvalidDataException($"rule {Path(Factions)} lists the two factions a duel's sides fight under, a's then b's, not [{string.Join(", ", ids)}]");
+        // Missing factions will be added hostile by the arena. For existing definitions, honor the same
+        // explicit, reciprocal, then default lookup as Relations.StanceBetween without mutating content.
+        var a = content.Get<FactionDef>(ids[0]) ?? new FactionDef { Id = ids[0], Relations = { [ids[1]] = Stance.Hostile } };
+        var b = content.Get<FactionDef>(ids[1]) ?? new FactionDef { Id = ids[1], Relations = { [ids[0]] = Stance.Hostile } };
+        static Stance Toward(FactionDef from, FactionDef to) => from.Relations.TryGetValue(to.Id, out var direct)
+            ? direct : to.Relations.TryGetValue(from.Id, out var reciprocal) ? reciprocal : from.Default;
+        if (Toward(a, b) != Stance.Hostile || Toward(b, a) != Stance.Hostile)
+            throw new InvalidDataException($"rule {Path(Factions)} requires mutually hostile factions; {a.Id} and {b.Id} are not hostile in both directions.");
+        return (ids[0], ids[1]);
     }
 }

@@ -31,6 +31,25 @@ jobs:
           name: test-results
           path: '**/TestResults/*.trx'
 
+  determinism-windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: |
+            8.0.x
+            10.0.x
+      - name: Build tournament tools
+        run: dotnet build src/HollowWake.Tools -c Release
+      - name: Enforce the recorded Windows replay baseline
+        shell: pwsh
+        run: |
+          $baseline = Get-Content experiments/combat-grammar/baselines/standard-duels.json -Raw | ConvertFrom-Json
+          $platform = [System.Runtime.InteropServices.RuntimeInformation]::RuntimeIdentifier
+          if ($baseline.Platform -ne $platform) { throw "The required baseline names $($baseline.Platform), but this runner is $platform." }
+          dotnet run --project src/HollowWake.Tools -c Release --no-build -- tournament --standard --check-hashes experiments/combat-grammar/baselines/standard-duels.json
+
   launcher:
     runs-on: ubuntu-latest
     defaults:
@@ -74,7 +93,7 @@ jobs:
 
   ci:
     # The one check main requires (branch protection): green only when every job above succeeded.
-    needs: [build-test, launcher, docker]
+    needs: [build-test, determinism-windows, launcher, docker]
     if: always()
     runs-on: ubuntu-latest
     steps:

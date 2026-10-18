@@ -51,7 +51,7 @@ public static class TournamentCommand
                 return Refuse(output, $"--check-hashes: {checkPath} is not a readable trace baseline ({ex.Message.ReplaceLineEndings(" ")})");
             }
         }
-        if (!TryPairings(content, options, flags, out var pairings, out var problem))
+        if (!TryPairings(content, options, flags, baseline, out var pairings, out var problem))
         {
             return Refuse(output, problem);
         }
@@ -192,10 +192,10 @@ public static class TournamentCommand
     }
 
     /// <summary>
-    /// The pairings to fight: <c>--pairs</c> when given, else the rule <c>--standard</c> or the default names. An empty
+    /// The pairings to fight: <c>--pairs</c>, else <c>--standard</c>, else a checked baseline's keys, else the default rule. An empty
     /// entry, one not written a:b, an empty list or a pattern no definition carries is a problem naming it.
     /// </summary>
-    private static bool TryPairings(ContentRegistry content, Dictionary<string, string> options, HashSet<string> flags, out IReadOnlyList<Pairing> pairings, out string problem)
+    private static bool TryPairings(ContentRegistry content, Dictionary<string, string> options, HashSet<string> flags, TraceBaseline? baseline, out IReadOnlyList<Pairing> pairings, out string problem)
     {
         var parsed = new List<Pairing>();
         pairings = parsed;
@@ -225,6 +225,24 @@ public static class TournamentCommand
                     problem = $"--pairs: {ex.Message}";
                     return false;
                 }
+            }
+        }
+        else if (baseline is not null && !flags.Contains("standard"))
+        {
+            origin = "--check-hashes";
+            try
+            {
+                parsed.AddRange(baseline.Hashes.Keys.Select(Pairing.Parse));
+            }
+            catch (ArgumentException ex)
+            {
+                problem = $"{origin}: {ex.Message}";
+                return false;
+            }
+            if (parsed.Count == 0)
+            {
+                problem = $"{origin}: the baseline lists no pairings";
+                return false;
             }
         }
         else
