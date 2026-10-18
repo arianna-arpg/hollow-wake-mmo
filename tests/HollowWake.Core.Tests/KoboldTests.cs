@@ -167,8 +167,9 @@ public class KoboldTests(ITestOutputHelper output)
             Assert.All(spawns, s => Assert.Null(s.Level));
             return spawns.Select(s => $"{s.Pattern}:{s.X}:{s.Y}:{s.PackSize}:{s.Level}").ToArray();
         }
-        var high = Generate(25);
         var def = CoreContent.Registry.Require<PoiDef>(site);
+        Assert.True(def.MinSpacing >= new PoiDef { Id = "spacing_reference" }.MinSpacing, $"{site} must retain at least the engine default separation");
+        var high = Generate(25);
         Assert.All(def.Inhabitants.Where(s => s.Level?.Contains(25 + def.Level) != false),
             s => Assert.Contains(high, row => row.StartsWith(s.Pattern + ":", StringComparison.Ordinal)));
         Assert.Equal(high, Generate(25));
@@ -225,22 +226,18 @@ public class KoboldTests(ITestOutputHelper output)
     public void DedicatedSitesActuallyOccurInUnmodifiedGeneratedHabitats(string site, int x, int y)
     {
         var g = new WorldGenerator(CoreContent.Registry, Rng.Hash64("aureth"));
-        var sites = g.Zone(new ZoneCoord(x, y)).Pois.Where(p => p.Def.Id == site).ToArray();
-        Assert.NotEmpty(sites);
+        var poi = Assert.Single(g.Zone(new ZoneCoord(x, y)).Pois, p => p.Def.Id == site);
         var sim = ZoneBuilder.CreateZone(CoreContent.Registry, g, new WorldState(new GenerationOverlays()), new ZoneCoord(x, y));
         ZoneBuilder.LoadZone(sim);
         sim.Tick();
-        foreach (var poi in sites)
-        {
-            var spawns = g.Layout.ChunksOf(poi.Zone).SelectMany(c => g.GenerateChunk(c).Spawns)
-                .Where(s => s.Pattern.StartsWith("kobold_", StringComparison.Ordinal) && s.Group == poi.Id).ToArray();
-            Assert.NotEmpty(spawns);
-            Assert.All(spawns, s => Assert.Null(s.Level));
-            var residents = sim.World.Query<Spawner>().Where(p => p.C1.Group == poi.Id && p.C1.Pattern.StartsWith("kobold_", StringComparison.Ordinal))
-                .SelectMany(p => p.C1.Alive).ToArray();
-            Assert.NotEmpty(residents);
-            Assert.All(residents, e => Assert.Equal(CoreContent.Registry.Require<PatternDef>(Assert.IsType<string>(sim.World.Get<Identity>(e)!.Pattern)).Level, sim.World.Get<Stats>(e)!.Level));
-            output.WriteLine($"{site}: zone({x},{y}), site level {poi.Level}, {spawns.Length} occupied spawn points, live pattern levels {string.Join(",", residents.Select(e => sim.World.Get<Stats>(e)!.Level).Order())}");
-        }
+        var spawns = g.Layout.ChunksOf(poi.Zone).SelectMany(c => g.GenerateChunk(c).Spawns)
+            .Where(s => s.Pattern.StartsWith("kobold_", StringComparison.Ordinal) && s.Group == poi.Id).ToArray();
+        Assert.NotEmpty(spawns);
+        Assert.All(spawns, s => Assert.Null(s.Level));
+        var residents = sim.World.Query<Spawner>().Where(p => p.C1.Group == poi.Id && p.C1.Pattern.StartsWith("kobold_", StringComparison.Ordinal))
+            .SelectMany(p => p.C1.Alive).ToArray();
+        Assert.NotEmpty(residents);
+        Assert.All(residents, e => Assert.Equal(CoreContent.Registry.Require<PatternDef>(Assert.IsType<string>(sim.World.Get<Identity>(e)!.Pattern)).Level, sim.World.Get<Stats>(e)!.Level));
+        output.WriteLine($"{site}: one site at ({poi.X},{poi.Y}) in zone({x},{y}), site level {poi.Level}, {spawns.Length} occupied spawn points, live pattern levels {string.Join(",", residents.Select(e => sim.World.Get<Stats>(e)!.Level).Order())}");
     }
 }

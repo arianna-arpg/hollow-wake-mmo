@@ -1,0 +1,29 @@
+{
+  "runtimeSource": "3afa3598539035706b5dacf0563f31222b630083",
+  "baseContentRef": "3d339d2ac71af6ac8bcff8e4f767e1f7c44ce2d8",
+  "afterSiteContentBlob": "621782094a98f8588ccdc62ba7d11dff5caaeb56",
+  "beforeAuditMatchesPreviouslyVerifiedHead": true,
+  "oldContentTests": {
+    "passed": 3,
+    "failed": 5
+  },
+  "correctedFocusedTests": {
+    "passed": 36,
+    "failed": 0
+  },
+  "goldenFilesChanged": 0,
+  "sourceNote": "Simulation runtime unchanged; four authored spacing values and uniqueness regressions corrected. Optional audit details preserve the original report format.",
+  "buildWarnings": 0,
+  "buildErrors": 0,
+  "fullTests": {
+    "core": 2402,
+    "server": 59,
+    "nativeClientLogic": 137
+  },
+  "validation": {
+    "errors": 0,
+    "warnings": 0
+  },
+  "standardWindowsReplay": "all seven identical",
+  "benchmarkRun": false
+}

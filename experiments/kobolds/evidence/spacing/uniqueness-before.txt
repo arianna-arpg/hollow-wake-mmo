@@ -1,0 +1,115 @@
+  Determining projects to restore...
+  All projects are up-to-date for restore.
+  HollowWake.Core -> C:\Users\John\.codex\worktrees\kobold-scaleclans\MMOARPG\src\HollowWake.Core\bin\Debug\net8.0\HollowWake.Core.dll
+  HollowWake.Protocol -> C:\Users\John\.codex\worktrees\kobold-scaleclans\MMOARPG\src\HollowWake.Protocol\bin\Debug\net8.0\HollowWake.Protocol.dll
+  HollowWake.Server -> C:\Users\John\.codex\worktrees\kobold-scaleclans\MMOARPG\src\HollowWake.Server\bin\Debug\net10.0\HollowWake.Server.dll
+  HollowWake.Tools -> C:\Users\John\.codex\worktrees\kobold-scaleclans\MMOARPG\src\HollowWake.Tools\bin\Debug\net10.0\hollowwake.dll
+  HollowWake.Core.Tests -> C:\Users\John\.codex\worktrees\kobold-scaleclans\MMOARPG\tests\HollowWake.Core.Tests\bin\Debug\net10.0\HollowWake.Core.Tests.dll
+Test run for C:\Users\John\.codex\worktrees\kobold-scaleclans\MMOARPG\tests\HollowWake.Core.Tests\bin\Debug\net10.0\HollowWake.Core.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+C:\Users\John\.codex\worktrees\kobold-scaleclans\MMOARPG\tests\HollowWake.Core.Tests\bin\Debug\net10.0\HollowWake.Core.Tests.dll
+[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v3.1.5+1b188a7b0a (64-bit .NET 10.0.13)
+[xUnit.net 00:00:00.17]   Discovering: HollowWake.Core.Tests
+[xUnit.net 00:00:02.03]   Discovered:  HollowWake.Core.Tests
+[xUnit.net 00:00:02.06]   Starting:    HollowWake.Core.Tests
+[xUnit.net 00:00:02.14]     HollowWake.Core.Tests.KoboldTests.DedicatedSitesActuallyOccurInUnmodifiedGeneratedHabitats(site: "kobold_reed_camp", x: -7, y: -23) [FAIL]
+[xUnit.net 00:00:02.14]       Assert.Single() Failure: The collection contained 2 matching items
+[xUnit.net 00:00:02.14]       Expected:      (predicate expression)
+[xUnit.net 00:00:02.14]       Collection:    [PoiInstance { Id = poi.-7_-23.kobold_reed_camp.-1751.-5754, Def = PoiDef { Id = kobold_reed_camp, Name = Reedspine Camp, Description = , Tags = [kobold_scaleclans landmark ruin], Meta = {
+[xUnit.net 00:00:02.14]         "population": "Sparse single-member ground encounters. Ruin-tagged definitions increase the weighted ruin share where eligible; no additional global budget is declared."
+[xUnit.net 00:00:02.14]       }, DisplayName = Reedspine Camp, Weight = 0.35, Radius = 10, MinSpacing = 32, Elevation = , Slope = Window { Min = -∞, Max = 0.55 }, WaterDistance = , Biomes = [forest marsh shore], Regions = [], Landmarks = System.Collections.Generic.List`1[System.String], Flatten = True, Inhabitants = System.Collections.Generic.List`1[HollowWake.Core.Definitions.SpawnSpec], Quests = System.Collections.Generic.List`1[System.String], Hub = False, Safe = False, Fount = , Factions = [], Names = System.Collections.Generic.List`1[System.String], Level = 3 }, Name = Reedspine Camp, Zone = zone(-7,-23), X = -1751.5, Y = -5754.5, BaseHeight = 8.8267565, Landmark = camp_ring, Faction = weftmarch_compact, Level = 16, Tags = [kobold_reed_camp kobold_scaleclans landmark poi ruin] }, PoiInstance { Id = poi.-7_-23.shrine.-1588.-5658, Def = PoiDef { Id = shrine, Name = Shrine, Description = , Tags = [landmark lumen shrine], Meta = , DisplayName = Shrine, Weight = 3, Radius = 5, MinSpacing = 70, Elevation = , Slope = Window { Min = -∞, Max = 0.7 }, WaterDistance = , Biomes = [], Regions = [], Landmarks = System.Collections.Generic.List`1[System.String], Flatten = True, Inhabitants = System.Collections.Generic.List`1[HollowWake.Core.Definitions.SpawnSpec], Quests = System.Collections.Generic.List`1[System.String], Hub = False, Safe = False, Fount = shrine, Factions = [], Names = System.Collections.Generic.List`1[System.String], Level = 0 }, Name = the Quiet Stone, Zone = zone(-7,-23), X = -1588.5, Y = -5658.5, BaseHeight = 0.4928976, Landmark = shrine_ring, Faction = weftmarch_compact, Level = 13, Tags = [landmark lumen poi shrine] }, PoiInstance { Id = poi.-7_-23.kobold_reed_camp.-1728.-5729, Def = PoiDef { Id = kobold_reed_camp, Name = Reedspine Camp, Description = , Tags = [kobold_scaleclans landmark ruin], Meta = {
+[xUnit.net 00:00:02.14]         "population": "Sparse single-member ground encounters. Ruin-tagged definitions increase the weighted ruin share where eligible; no additional global budget is declared."
+[xUnit.net 00:00:02.14]       }, DisplayName = Reedspine Camp, Weight = 0.35, Radius = 10, MinSpacing = 32, Elevation = , Slope = Window { Min = -∞, Max = 0.55 }, WaterDistance = , Biomes = [forest marsh shore], Regions = [], Landmarks = System.Collections.Generic.List`1[System.String], Flatten = True, Inhabitants = System.Collections.Generic.List`1[HollowWake.Core.Definitions.SpawnSpec], Quests = System.Collections.Generic.List`1[System.String], Hub = False, Safe = False, Fount = , Factions = [], Names = System.Collections.Generic.List`1[System.String], Level = 3 }, Name = Reedspine Camp, Zone = zone(-7,-23), X = -1728.5, Y = -5729.5, BaseHeight = 6.74349, Landmark = camp_ring, Faction = weftmarch_compact, Level = 16, Tags = [kobold_reed_camp kobold_scaleclans landmark poi ruin] }]
+[xUnit.net 00:00:02.14]       Match indices: 0, 2
+[xUnit.net 00:00:02.14]       Stack Trace:
+[xUnit.net 00:00:02.14]         C:\Users\John\.codex\worktrees\kobold-scaleclans\MMOARPG\tests\HollowWake.Core.Tests\KoboldTests.cs(229,0): at HollowWake.Core.Tests.KoboldTests.DedicatedSitesActuallyOccurInUnmodifiedGeneratedHabitats(String site, Int32 x, Int32 y)
+[xUnit.net 00:00:02.14]            at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+[xUnit.net 00:00:02.14]            at System.Reflection.MethodBaseInvoker.InvokeDirectByRefWithFewArgs(Object obj, Span`1 copyOfArgs, BindingFlags invokeAttr)
+  Failed HollowWake.Core.Tests.KoboldTests.DedicatedSitesActuallyOccurInUnmodifiedGeneratedHabitats(site: "kobold_reed_camp", x: -7, y: -23) [38 ms]
+  Error Message:
+   Assert.Single() Failure: The collection contained 2 matching items
+Expected:      (predicate expression)
+Collection:    [PoiInstance { Id = poi.-7_-23.kobold_reed_camp.-1751.-5754, Def = PoiDef { Id = kobold_reed_camp, Name = Reedspine Camp, Description = , Tags = [kobold_scaleclans landmark ruin], Meta = {
+  "population": "Sparse single-member ground encounters. Ruin-tagged definitions increase the weighted ruin share where eligible; no additional global budget is declared."
+}, DisplayName = Reedspine Camp, Weight = 0.35, Radius = 10, MinSpacing = 32, Elevation = , Slope = Window { Min = -∞, Max = 0.55 }, WaterDistance = , Biomes = [forest marsh shore], Regions = [], Landmarks = System.Collections.Generic.List`1[System.String], Flatten = True, Inhabitants = System.Collections.Generic.List`1[HollowWake.Core.Definitions.SpawnSpec], Quests = System.Collections.Generic.List`1[System.String], Hub = False, Safe = False, Fount = , Factions = [], Names = System.Collections.Generic.List`1[System.String], Level = 3 }, Name = Reedspine Camp, Zone = zone(-7,-23), X = -1751.5, Y = -5754.5, BaseHeight = 8.8267565, Landmark = camp_ring, Faction = weftmarch_compact, Level = 16, Tags = [kobold_reed_camp kobold_scaleclans landmark poi ruin] }, PoiInstance { Id = poi.-7_-23.shrine.-1588.-5658, Def = PoiDef { Id = shrine, Name = Shrine, Description = , Tags = [landmark lumen shrine], Meta = , DisplayName = Shrine, Weight = 3, Radius = 5, MinSpacing = 70, Elevation = , Slope = Window { Min = -∞, Max = 0.7 }, WaterDistance = , Biomes = [], Regions = [], Landmarks = System.Collections.Generic.List`1[System.String], Flatten = True, Inhabitants = System.Collections.Generic.List`1[HollowWake.Core.Definitions.SpawnSpec], Quests = System.Collections.Generic.List`1[System.String], Hub = False, Safe = False, Fount = shrine, Factions = [], Names = System.Collections.Generic.List`1[System.String], Level = 0 }, Name = the Quiet Stone, Zone = zone(-7,-23), X = -1588.5, Y = -5658.5, BaseHeight = 0.4928976, Landmark = shrine_ring, Faction = weftmarch_compact, Level = 13, Tags = [landmark lumen poi shrine] }, PoiInstance { Id = poi.-7_-23.kobold_reed_camp.-1728.-5729, Def = PoiDef { Id = kobold_reed_camp, Name = Reedspine Camp, Description = , Tags = [kobold_scaleclans landmark ruin], Meta = {
+  "population": "Sparse single-member ground encounters. Ruin-tagged definitions increase the weighted ruin share where eligible; no additional global budget is declared."
+}, DisplayName = Reedspine Camp, Weight = 0.35, Radius = 10, MinSpacing = 32, Elevation = , Slope = Window { Min = -∞, Max = 0.55 }, WaterDistance = , Biomes = [forest marsh shore], Regions = [], Landmarks = System.Collections.Generic.List`1[System.String], Flatten = True, Inhabitants = System.Collections.Generic.List`1[HollowWake.Core.Definitions.SpawnSpec], Quests = System.Collections.Generic.List`1[System.String], Hub = False, Safe = False, Fount = , Factions = [], Names = System.Collections.Generic.List`1[System.String], Level = 3 }, Name = Reedspine Camp, Zone = zone(-7,-23), X = -1728.5, Y = -5729.5, BaseHeight = 6.74349, Landmark = camp_ring, Faction = weftmarch_compact, Level = 16, Tags = [kobold_reed_camp kobold_scaleclans landmark poi ruin] }]
+Match indices: 0, 2
+  Stack Trace:
+     at HollowWake.Core.Tests.KoboldTests.DedicatedSitesActuallyOccurInUnmodifiedGeneratedHabitats(String site, Int32 x, Int32 y) in C:\Users\John\.codex\worktrees\kobold-scaleclans\MMOARPG\tests\HollowWake.Core.Tests\KoboldTests.cs:line 229
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeDirectByRefWithFewArgs(Object obj, Span`1 copyOfArgs, BindingFlags invokeAttr)
+  Passed HollowWake.Core.Tests.KoboldTests.DedicatedSitesActuallyOccurInUnmodifiedGeneratedHabitats(site: "kobold_scrap_camp", x: -8, y: -40) [791 ms]
+  Standard Output Messages:
+ kobold_scrap_camp: one site at (-2012.5,-10019.5) in zone(-8,-40), site level 27, 4 occupied spawn points, live pattern levels 2,3,4,5
+
+
+  Passed HollowWake.Core.Tests.KoboldTests.DedicatedSitesActuallyOccurInUnmodifiedGeneratedHabitats(site: "kobold_scale_hold", x: -15, y: -40) [623 ms]
+  Standard Output Messages:
+ kobold_scale_hold: one site at (-3654.5,-10123.5) in zone(-15,-40), site level 35, 4 occupied spawn points, live pattern levels 10,10,11,15
+
+
+[xUnit.net 00:00:04.17]       kobold_scrap_camp must retain at least the engine default separation
+[xUnit.net 00:00:04.17]     HollowWake.Core.Tests.KoboldTests.AuthoredSitesSpawnEveryEligibleRoleAndReplayWithLevelGates(site: "kobold_scrap_camp") [FAIL]
+[xUnit.net 00:00:04.17]       Stack Trace:
+[xUnit.net 00:00:04.17]         C:\Users\John\.codex\worktrees\kobold-scaleclans\MMOARPG\tests\HollowWake.Core.Tests\KoboldTests.cs(171,0): at HollowWake.Core.Tests.KoboldTests.AuthoredSitesSpawnEveryEligibleRoleAndReplayWithLevelGates(String site)
+[xUnit.net 00:00:04.17]            at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+[xUnit.net 00:00:04.17]            at System.Reflection.MethodBaseInvoker.InvokeDirectByRefWithFewArgs(Object obj, Span`1 copyOfArgs, BindingFlags invokeAttr)
+[xUnit.net 00:00:04.17]     HollowWake.Core.Tests.KoboldTests.AuthoredSitesSpawnEveryEligibleRoleAndReplayWithLevelGates(site: "kobold_cinder_camp") [FAIL]
+[xUnit.net 00:00:04.17]       kobold_cinder_camp must retain at least the engine default separation
+[xUnit.net 00:00:04.17]       Stack Trace:
+[xUnit.net 00:00:04.17]         C:\Users\John\.codex\worktrees\kobold-scaleclans\MMOARPG\tests\HollowWake.Core.Tests\KoboldTests.cs(171,0): at HollowWake.Core.Tests.KoboldTests.AuthoredSitesSpawnEveryEligibleRoleAndReplayWithLevelGates(String site)
+[xUnit.net 00:00:04.17]            at InvokeStub_KoboldTests.AuthoredSitesSpawnEveryEligibleRoleAndReplayWithLevelGates(Object, Span`1)
+[xUnit.net 00:00:04.17]            at System.Reflection.MethodBaseInvoker.InvokeWithOneArg(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:04.17]     HollowWake.Core.Tests.KoboldTests.AuthoredSitesSpawnEveryEligibleRoleAndReplayWithLevelGates(site: "kobold_reed_camp") [FAIL]
+[xUnit.net 00:00:04.17]       kobold_reed_camp must retain at least the engine default separation
+[xUnit.net 00:00:04.17]       Stack Trace:
+[xUnit.net 00:00:04.17]         C:\Users\John\.codex\worktrees\kobold-scaleclans\MMOARPG\tests\HollowWake.Core.Tests\KoboldTests.cs(171,0): at HollowWake.Core.Tests.KoboldTests.AuthoredSitesSpawnEveryEligibleRoleAndReplayWithLevelGates(String site)
+[xUnit.net 00:00:04.17]            at InvokeStub_KoboldTests.AuthoredSitesSpawnEveryEligibleRoleAndReplayWithLevelGates(Object, Span`1)
+[xUnit.net 00:00:04.17]            at System.Reflection.MethodBaseInvoker.InvokeWithOneArg(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:04.17]     HollowWake.Core.Tests.KoboldTests.AuthoredSitesSpawnEveryEligibleRoleAndReplayWithLevelGates(site: "kobold_scale_hold") [FAIL]
+[xUnit.net 00:00:04.17]       kobold_scale_hold must retain at least the engine default separation
+[xUnit.net 00:00:04.17]       Stack Trace:
+[xUnit.net 00:00:04.17]         C:\Users\John\.codex\worktrees\kobold-scaleclans\MMOARPG\tests\HollowWake.Core.Tests\KoboldTests.cs(171,0): at HollowWake.Core.Tests.KoboldTests.AuthoredSitesSpawnEveryEligibleRoleAndReplayWithLevelGates(String site)
+[xUnit.net 00:00:04.17]            at InvokeStub_KoboldTests.AuthoredSitesSpawnEveryEligibleRoleAndReplayWithLevelGates(Object, Span`1)
+[xUnit.net 00:00:04.17]            at System.Reflection.MethodBaseInvoker.InvokeWithOneArg(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:04.18]   Finished:    HollowWake.Core.Tests
+  Passed HollowWake.Core.Tests.KoboldTests.DedicatedSitesActuallyOccurInUnmodifiedGeneratedHabitats(site: "kobold_cinder_camp", x: -25, y: -31) [616 ms]
+  Standard Output Messages:
+ kobold_cinder_camp: one site at (-6178.5,-7721.5) in zone(-25,-31), site level 26, 3 occupied spawn points, live pattern levels 6,7,8
+
+
+  Failed HollowWake.Core.Tests.KoboldTests.AuthoredSitesSpawnEveryEligibleRoleAndReplayWithLevelGates(site: "kobold_scrap_camp") [< 1 ms]
+  Error Message:
+   kobold_scrap_camp must retain at least the engine default separation
+  Stack Trace:
+     at HollowWake.Core.Tests.KoboldTests.AuthoredSitesSpawnEveryEligibleRoleAndReplayWithLevelGates(String site) in C:\Users\John\.codex\worktrees\kobold-scaleclans\MMOARPG\tests\HollowWake.Core.Tests\KoboldTests.cs:line 171
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeDirectByRefWithFewArgs(Object obj, Span`1 copyOfArgs, BindingFlags invokeAttr)
+  Failed HollowWake.Core.Tests.KoboldTests.AuthoredSitesSpawnEveryEligibleRoleAndReplayWithLevelGates(site: "kobold_cinder_camp") [< 1 ms]
+  Error Message:
+   kobold_cinder_camp must retain at least the engine default separation
+  Stack Trace:
+     at HollowWake.Core.Tests.KoboldTests.AuthoredSitesSpawnEveryEligibleRoleAndReplayWithLevelGates(String site) in C:\Users\John\.codex\worktrees\kobold-scaleclans\MMOARPG\tests\HollowWake.Core.Tests\KoboldTests.cs:line 171
+   at InvokeStub_KoboldTests.AuthoredSitesSpawnEveryEligibleRoleAndReplayWithLevelGates(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithOneArg(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Failed HollowWake.Core.Tests.KoboldTests.AuthoredSitesSpawnEveryEligibleRoleAndReplayWithLevelGates(site: "kobold_reed_camp") [< 1 ms]
+  Error Message:
+   kobold_reed_camp must retain at least the engine default separation
+  Stack Trace:
+     at HollowWake.Core.Tests.KoboldTests.AuthoredSitesSpawnEveryEligibleRoleAndReplayWithLevelGates(String site) in C:\Users\John\.codex\worktrees\kobold-scaleclans\MMOARPG\tests\HollowWake.Core.Tests\KoboldTests.cs:line 171
+   at InvokeStub_KoboldTests.AuthoredSitesSpawnEveryEligibleRoleAndReplayWithLevelGates(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithOneArg(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Failed HollowWake.Core.Tests.KoboldTests.AuthoredSitesSpawnEveryEligibleRoleAndReplayWithLevelGates(site: "kobold_scale_hold") [< 1 ms]
+  Error Message:
+   kobold_scale_hold must retain at least the engine default separation
+  Stack Trace:
+     at HollowWake.Core.Tests.KoboldTests.AuthoredSitesSpawnEveryEligibleRoleAndReplayWithLevelGates(String site) in C:\Users\John\.codex\worktrees\kobold-scaleclans\MMOARPG\tests\HollowWake.Core.Tests\KoboldTests.cs:line 171
+   at InvokeStub_KoboldTests.AuthoredSitesSpawnEveryEligibleRoleAndReplayWithLevelGates(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithOneArg(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+
+Test Run Failed.
+Total tests: 8
+     Passed: 3
+     Failed: 5
+ Total time: 5.1306 Seconds

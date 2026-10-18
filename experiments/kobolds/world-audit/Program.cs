@@ -8,9 +8,11 @@ using HollowWake.Core.World;
 using HollowWake.Core.WorldGen;
 var zones = new[] { new ZoneCoord(0,0), new ZoneCoord(1,0), new ZoneCoord(0,-1), new ZoneCoord(3,2), new ZoneCoord(-15,-40), new ZoneCoord(-8,-40), new ZoneCoord(-25,-31), new ZoneCoord(-7,-23) };
 var results = new List<object>();
+var details = new List<object>();
+var contentRoot = args.Length > 1 ? args[1] : "content/core";
 foreach (var overlay in new[] { false, true })
 {
- var content=ContentRegistry.Load(new[]{"content/core"},out var report);
+ var content=ContentRegistry.Load(new[]{contentRoot},out var report);
  if(report.HasErrors)throw new InvalidOperationException(report.ToString());
  var o=new GenerationOverlays();
  if(overlay){
@@ -22,6 +24,11 @@ foreach (var overlay in new[] { false, true })
  var g=new WorldGenerator(content,Rng.Hash64("aureth"),o);
  foreach(var zc in zones){
   var z=g.Zone(zc);
+  if(args.Length > 2)
+  {
+   var nearby=g.PoisAround(zc).ToArray();
+   details.Add(new { overlay, zone=zc.Key, sites=nearby.Select(p=>new {p.Id,kind=p.Def.Id,p.Name,p.X,p.Y,zone=p.Zone.Key,region=g.Layout.RegionOf(p.Zone).Key,regionName=g.Region(g.Layout.RegionOf(p.Zone)).Name,archetype=g.Region(g.Layout.RegionOf(p.Zone)).Archetype.Id,siteLevel=p.Level,p.Def.MinSpacing,p.Landmark}), questTargets=z.Quests.SelectMany(q=>q.Objectives.Where(o=>o.Poi!=null).Select(o=>new {quest=q.Id,questName=q.Name,target=o.Poi,site=nearby.Where(p=>p.Id==o.Poi).Select(p=>new{p.Id,p.Name,p.X,p.Y,zone=p.Zone.Key,region=g.Layout.RegionOf(p.Zone).Key,regionName=g.Region(g.Layout.RegionOf(p.Zone)).Name,siteLevel=p.Level}).Single()}))});
+  }
   using var geometry=IncrementalHash.CreateHash(HashAlgorithmName.SHA256);
   var spawns=new List<SpawnPoint>();
   foreach(var cc in g.Layout.ChunksOf(zc)){
@@ -33,3 +40,4 @@ foreach (var overlay in new[] { false, true })
  }
 }
 File.WriteAllText(args[0],JsonSerializer.Serialize(results,new JsonSerializerOptions{WriteIndented=true})+"\n");
+if(args.Length > 2) File.WriteAllText(args[2], JsonSerializer.Serialize(details, new JsonSerializerOptions { WriteIndented=true })+"\n");

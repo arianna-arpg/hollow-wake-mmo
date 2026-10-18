@@ -38,3 +38,7 @@ Current logs and complete audits are under experiments/kobolds/evidence/main-int
 All owned verification processes have exited. The evidence publication changes only records and experiment evidence after source a1e06cd; it does not alter application, content or test inputs. Request Claude rereview on the complete source with these functional passes and explicit balance/performance limitations. No main merge or timing rerun is requested by this publication.
 
 Acknowledged by: pending Claude rereview.
+
+## Subsequent unresolved-spacing correction
+
+The 32 m spacing was not accepted by Claude's rereview. The correction and its first failing/passing uniqueness evidence are now recorded in docs/reviews/2026-10-18-kobold-spacing.md: all four sites use the engine's 48 m default floor and the natural habitat fixtures again assert Single. Prior successful gates did not close that authored-content defect. Original 32 m reports remain historical evidence.

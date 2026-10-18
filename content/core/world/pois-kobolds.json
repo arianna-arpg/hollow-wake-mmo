@@ -11,7 +11,7 @@
       ],
       "weight": 0.35,
       "radius": 10,
-      "min_spacing": 32,
+      "min_spacing": 48,
       "slope": {
         "max": 0.55
       },
@@ -91,7 +91,7 @@
       ],
       "weight": 0.35,
       "radius": 10,
-      "min_spacing": 32,
+      "min_spacing": 48,
       "slope": {
         "max": 0.55
       },
@@ -159,7 +159,7 @@
       ],
       "weight": 0.35,
       "radius": 10,
-      "min_spacing": 32,
+      "min_spacing": 48,
       "slope": {
         "max": 0.55
       },
@@ -227,7 +227,7 @@
       ],
       "weight": 0.35,
       "radius": 10,
-      "min_spacing": 32,
+      "min_spacing": 48,
       "slope": {
         "max": 0.55
       },
