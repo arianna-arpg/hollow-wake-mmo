@@ -1,0 +1,63 @@
+== proving_fletcher (A) vs proving_evoker (B), seed projectiles, 30 s
+      1  A cast gyre_hurl
+      3  A cast gyreblade
+      2  A cast splinter_volley
+      1  A cast web_shot
+      8  A dealt damage events
+      1  A interrupted web_shot
+      3  A started gyreblade
+      2  A started splinter_volley
+      2  A started web_shot
+      9  B cast chain_lightning
+      1  B cast frozen_orb
+     14  B dealt damage events
+      9  B started chain_lightning
+      1  B started frozen_orb
+-- ticks by state (20 per second)
+      8  A state , free
+     82  A state engage, casting Cast
+     56  A state engage, free
+      5  A state idle, free
+      2  B state , free
+    135  B state engage, casting Cast
+     11  B state engage, free
+      4  B state idle, casting Cast
+    443  B state idle, free
+      5  B state return, casting Cast
+-- A walked 0.0 units
+-- B walked 22.2 units
+-- life A gone  B 34/148
+-- timeline
+  t=0.05 A (10.00,10.00)  | B (14.00,10.00)  | dist 4.00
+  t=1.00 A (10.00,10.00) engage casting=splinter_volley(Cast) | B (15.04,10.69) engage casting=chain_lightning(Cast) | dist 5.09
+  t=2.00 A (10.00,10.00) engage casting=web_shot(Cast) | B (15.04,10.69) engage casting=frozen_orb(Cast) | dist 5.09
+  t=3.00 A (10.00,10.00) engage casting=gyreblade(Cast) | B (15.04,10.69) engage casting=chain_lightning(Cast) | dist 5.09
+  t=4.00 A (10.00,10.00) engage casting=splinter_volley(Cast) | B (15.04,10.69) engage casting=chain_lightning(Cast) | dist 5.09
+  t=5.00 A (10.00,10.00) engage casting=gyreblade(Cast) | B (15.04,10.69) engage casting=chain_lightning(Cast) | dist 5.09
+  t=5.45 A spent 2 gyre (left 0)
+  t=6.00 A (10.00,10.00) engage | B (15.04,10.69) engage casting=chain_lightning(Cast) | dist 5.09
+  t=7.00 A (10.00,10.00) engage | B (15.04,10.69) engage casting=chain_lightning(Cast) | dist 5.09
+  t=7.60 A died
+  t=8.00 A dead | B (15.04,10.69) idle casting=chain_lightning(Cast) | dist 5.09
+  t=9.00 A dead | B (14.42,10.28) idle | dist 4.43
+  t=10.00 A dead | B (14.42,10.28) idle | dist 4.43
+  t=11.00 A dead | B (11.88,9.22) idle | dist 2.04
+  t=12.00 A dead | B (11.88,9.22) idle | dist 2.04
+  t=13.00 A dead | B (11.88,9.22) idle | dist 2.04
+  t=14.00 A dead | B (12.37,9.12) idle | dist 2.53
+  t=15.00 A dead | B (13.10,8.92) idle | dist 3.28
+  t=16.00 A dead | B (12.11,9.09) idle | dist 2.30
+  t=17.00 A dead | B (14.85,9.33) idle | dist 4.90
+  t=18.00 A dead | B (14.85,9.33) idle | dist 4.90
+  t=19.00 A dead | B (15.58,8.32) idle | dist 5.83
+  t=20.00 A dead | B (15.58,8.32) idle | dist -1.00
+  t=21.00 A dead | B (15.58,8.32) idle | dist -1.00
+  t=22.00 A dead | B (15.58,8.32) idle | dist -1.00
+  t=23.00 A dead | B (15.58,8.32) idle | dist -1.00
+  t=24.00 A dead | B (15.07,9.73) idle | dist -1.00
+  t=25.00 A dead | B (14.74,10.67) idle | dist -1.00
+  t=26.00 A dead | B (14.74,10.67) idle | dist -1.00
+  t=27.00 A dead | B (13.02,11.02) idle | dist -1.00
+  t=28.00 A dead | B (13.02,11.02) idle | dist -1.00
+  t=29.00 A dead | B (13.92,8.42) idle | dist -1.00
+  t=30.00 A dead | B (14.17,7.71) idle | dist -1.00

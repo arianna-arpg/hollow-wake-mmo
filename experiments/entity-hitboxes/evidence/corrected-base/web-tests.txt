@@ -1,0 +1,16 @@
+
+> hollow-wake-web@0.1.0 test
+> vitest run
+
+
+ RUN  v5.0.3 C:/Users/John/.codex/worktrees/precise-entity-hitboxes/MMOARPG/web
+
+
+ Test Files  35 passed (35)
+      Tests  269 passed (269)
+   Start at  15:01:01
+   Duration  2.16s (setup 43%, transform 41%, tests 8%, import 6%, worker 1%)
+
+  Transform  transforming modules took 10.95s · 41% of tracked time, re-done on every run
+             persist transforms across runs with fsModuleCache: true
+             learn more: https://vitest.dev/guide/improving-performance#caching-between-reruns

@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import type { ItemInfo, WeaveSeatInfo } from '../../net/protocol';
 import type { Seat } from '../logic/heroState';
-import { dropHint, dropIntent, firstFreeSocket, fitHint, glyphLetter, hintTint, seatActions, seatCosts, seatMeta, seatTip } from './rack';
+import { dropHint, dropIntent, firstFreeSocket, fitHint, hintTint, seatActions, seatCosts, seatMeta, seatTip } from './rack';
 
 const info = (over: Partial<WeaveSeatInfo> = {}): WeaveSeatInfo => ({
   slot: 2,
@@ -94,9 +94,7 @@ describe('the rack', () => {
     expect(seatActions(empty(), 2, -1, true)).toEqual([]);
   });
 
-  it('draws the costs above zero as the server sent them, and a glyph by its first letter', () => {
+  it('draws the costs above zero as the server sent them', () => {
     expect(seatCosts(seat())).toEqual([{ resource: 'mana', amount: 12 }]);
-    expect(glyphLetter({ socket: 0, id: 'x', name: 'Swift', level: 1 })).toBe('S');
-    expect(glyphLetter({ socket: 0, id: 'x', name: '', level: 1 })).toBe('?');
   });
 });

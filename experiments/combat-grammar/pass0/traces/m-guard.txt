@@ -1,0 +1,70 @@
+== proving_mower (A) vs proving_pitfighter (B), seed mech, 30 s kitA=stone_bulwark,scythe_sweep
+      6  A cast scythe_sweep
+      4  A cast stone_bulwark
+     20  A dealt damage events
+      2  A released stone_bulwark (guard, max_hold)
+      7  A started scythe_sweep
+      2  A started stone_bulwark
+      1  B cast cross_jab
+      9  B cast frenzy
+      5  B cast haymaker
+      4  B cast one_two
+     11  B dealt damage events
+      2  B interrupted frenzy
+      1  B started cross_jab
+     11  B started frenzy
+      5  B started haymaker
+      4  B started one_two
+-- ticks by state (20 per second)
+      4  A state , free
+     68  A state chase, casting Cast
+    100  A state chase, casting Guard
+    194  A state chase, free
+      5  A state idle, free
+      3  B state , free
+    194  B state chase, casting Cast
+    172  B state chase, free
+    151  B state idle, free
+     80  B state return, free
+-- A walked 24.4 units
+-- B walked 52.8 units
+-- life A 0/172  B 62/172
+-- timeline
+  t=0.05 A (10.00,10.00)  | B (14.00,10.00)  | dist 4.00
+  t=1.00 A (10.00,10.00) chase casting=scythe_sweep(Cast) | B (11.40,10.00) chase casting=haymaker(Cast) | dist 1.40
+  t=2.00 A (5.11,10.00) chase | B (10.88,10.00) chase | dist 5.77
+  t=3.00 A (6.59,10.00) chase casting=scythe_sweep(Cast) | B (8.80,10.00) chase casting=frenzy(Cast) | dist 2.21
+  t=4.00 A (6.59,10.00) chase | B (8.02,10.00) chase casting=one_two(Cast) | dist 1.43
+  t=5.00 A (6.59,10.00) chase casting=scythe_sweep(Cast) | B (8.02,10.00) chase casting=frenzy(Cast) | dist 1.43
+  t=5.90 B spent 3 fury (left 0)
+  t=6.00 A (2.44,10.00) chase casting=stone_bulwark(Guard) | B (7.50,10.00) chase | dist 5.06
+  t=7.00 A (1.44,10.00) chase casting=stone_bulwark(Guard) | B (2.82,10.00) chase casting=frenzy(Cast) | dist 1.38
+  t=8.00 A (1.44,10.00) chase casting=stone_bulwark(Guard) | B (2.82,10.00) chase casting=frenzy(Cast) | dist 1.38
+  t=8.50 A released stone_bulwark mode=guard reason=max_hold held=2.50 fill=0.00 stage=0 fired=true
+  t=9.00 A (1.44,10.00) chase casting=scythe_sweep(Cast) | B (2.82,10.00) chase | dist 1.38
+  t=10.00 A (1.44,10.00) chase | B (2.82,10.00) chase casting=haymaker(Cast) | dist 1.38
+  t=10.10 B spent 2 fury (left 0)
+  t=11.00 A (-4.47,10.00) chase | B (-1.60,10.00) chase | dist 2.87
+  t=12.00 A (-4.47,10.00) chase casting=scythe_sweep(Cast) | B (-3.16,10.00) chase | dist 1.31
+  t=13.00 A (-4.47,10.00) chase | B (-3.16,10.00) chase casting=frenzy(Cast) | dist 1.31
+  t=14.00 A (-4.47,10.00) chase casting=stone_bulwark(Guard) | B (-3.16,10.00) chase casting=haymaker(Cast) | dist 1.31
+  t=14.55 B spent 3 fury (left 0)
+  t=15.00 A (-9.85,10.00) chase casting=stone_bulwark(Guard) | B (-4.98,10.00) chase | dist 4.87
+  t=16.00 A released stone_bulwark mode=guard reason=max_hold held=2.50 fill=0.00 stage=0 fired=true
+  t=16.00 A (-9.25,10.00) chase | B (-7.32,10.00) chase | dist 1.93
+  t=17.00 A (-9.25,10.00) chase | B (-7.32,10.00) chase casting=frenzy(Cast) | dist 1.93
+  t=18.00 A (-9.25,10.00) chase | B (-7.84,10.00) chase casting=haymaker(Cast) | dist 1.41
+  t=18.60 B spent 2 fury (left 0)
+  t=18.60 A died
+  t=19.00 A dead | B (-6.28,10.00) return | dist 2.97
+  t=20.00 A dead | B (-1.08,10.00) return | dist 8.17
+  t=21.00 A dead | B (4.12,10.00) return | dist 13.37
+  t=22.00 A dead | B (9.32,10.00) return | dist 18.57
+  t=23.00 A dead | B (13.74,10.00) idle | dist 22.99
+  t=24.00 A dead | B (13.96,9.86) idle | dist 23.21
+  t=25.00 A dead | B (15.04,9.14) idle | dist 24.31
+  t=26.00 A dead | B (15.04,9.14) idle | dist 24.31
+  t=27.00 A dead | B (12.29,9.93) idle | dist 21.55
+  t=28.00 A dead | B (12.87,8.21) idle | dist 22.20
+  t=29.00 A dead | B (14.25,8.94) idle | dist 23.53
+  t=30.00 A dead | B (14.48,9.06) idle | dist 23.76

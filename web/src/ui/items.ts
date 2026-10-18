@@ -1,4 +1,5 @@
 import type { ItemInfo } from '../net/protocol';
+import { abilityArt } from './abilityArt';
 import { clear, el } from './dom';
 import type { Carry, MenuAction } from './leaf';
 import { humanize } from './logic/content';
@@ -54,7 +55,10 @@ export function itemTile(skin: Skin, item: ItemInfo, glyphSize: number): HTMLEle
   tile.style.setProperty('--tile-edge', css(rarity, 0.85));
   tile.style.setProperty('--tile-ink', css(ink));
   const glyph = itemGlyph(skin, item);
-  if (glyph !== null) {
+  const ability = item.icon && skin.icons.icons[item.icon] !== undefined ? null : skin.names.abilityIcons.item(item);
+  if (ability !== null) {
+    tile.append(abilityArt(skin, ability, Math.max(10, Math.round(glyphSize)), 'tile-glyph'));
+  } else if (glyph !== null) {
     tile.append(skin.icon(glyph, Math.max(10, Math.round(glyphSize)), 'tile-glyph'));
   } else {
     const letter = el('span', { class: 'tile-letter', text: item.name.length > 0 ? item.name[0].toUpperCase() : '?' });

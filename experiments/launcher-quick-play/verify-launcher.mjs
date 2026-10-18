@@ -4,11 +4,13 @@ import { createRequire } from 'node:module';
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { observeEntry } from './observe-entry.mjs';
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
 const require = createRequire(path.join(root, 'web/package.json'));
 const { _electron: electron } = require('playwright-core');
 const { serve, json } = require(path.join(root, 'launcher/dist/test/helpers.js'));
 const arg = name => { const at = process.argv.indexOf(name); return at < 0 ? null : process.argv[at + 1]; };
+assert.ok(process.argv.includes('--isolated-graphical'), 'Run this graphical launcher acceptance only in an isolated graphical session, with --isolated-graphical.');
 const feed = path.resolve(root, arg('--feed') ?? 'artifacts/quick-play/feed');
 const manifest = JSON.parse(readFileSync(path.join(feed, 'manifest.json'), 'utf8'));
 const build = manifest.platforms['windows-x64'];
@@ -58,17 +60,10 @@ const waitState = async (page, predicate, timeout = 30000) => {
 const verifyEntry = async name => {
   if (!process.argv.includes('--entry')) return;
   const logFile = path.join(data, 'launcher/logs/client.log');
-  const deadline = Date.now() + 60000;
-  let log = '';
-  while (Date.now() < deadline) {
-    if (existsSync(logFile)) log = readFileSync(logFile, 'utf8');
-    if (log.includes('QUICKPLAY READY: entered the world; Crossing complete')) break;
-    await new Promise(resolve => setTimeout(resolve, 150));
-  }
-  writeFileSync(path.join(output, 'launcher-' + name + '-client.log'), log);
-  assert.match(log, /QUICKPLAY READY: entered the world; Crossing complete/);
-  assert.equal(log.match(/QUICKPLAY CROSSING/g)?.length, 1, 'one real character entry per Play');
-  result[name] = 'Installed combined client resumed its character through the Crossing and reached real world readiness';
+  const readLog = () => existsSync(logFile) ? readFileSync(logFile, 'utf8') : '';
+  try { await observeEntry(readLog); }
+  finally { writeFileSync(path.join(output, 'launcher-' + name + '-client.log'), readLog()); }
+  result[name] = 'Installed client reached the account entry stage and waited without Crossing or world entry throughout the following three seconds';
 };
 const launch = async extra => {
   app = await electron.launch({ executablePath: exe, args: [...(packaged ? [] : [path.join(root, 'launcher')]), '--disable-gpu', ...extra], env });

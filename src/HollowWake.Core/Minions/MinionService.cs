@@ -316,10 +316,7 @@ public sealed class MinionService
         {
             m.Stop();
             m.Velocity = Vector3.Zero;
-        }
-        if (_sim.World.TryGet<Behavior>(e, out var b))
-        {
-            b.Planned = false;
+            m.Planned = false;
         }
         _sim.Spatial.Update(e, t.Position);
         _sim.Events.Publish(new EntityMoved(e, from, t.Position) { Tick = _sim.Clock.Tick });
