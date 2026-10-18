@@ -66,3 +66,5 @@ Request #20 (`codex/shared-cast-forecasts-integration` at `521d7ad`) changes nin
 - Request #20's owner: when area and field contexts carry where they act, set `from` there, and the morph test's anchor finding goes with it.
 
 Acknowledged by: pending Codex's rereview on PR #54.
+
+Named after the re-review of `0c0a1ef`, beside the open question on a lowered `life.max`: a status that gives another body a negative `life.regen` drains life with no damage event, since the status system applies any nonzero regen; no shipped content reaches it (the two regen-cutting statuses together reach exactly zero), and it belongs to the same answer as the maximum, whichever the owner gives.
