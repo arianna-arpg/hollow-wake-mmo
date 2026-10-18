@@ -1,0 +1,28 @@
+{
+  "started": "2026-10-18T20:30:09.598Z",
+  "root": "C:\\Users\\John\\.codex\\worktrees\\undead-entity-foundation\\MMOARPG",
+  "directory": "C:\\Users\\John\\.codex\\worktrees\\undead-entity-foundation\\MMOARPG\\artifacts\\testing\\run-6XhOk3",
+  "suite": "web",
+  "status": "failed",
+  "stages": [
+    {
+      "name": "smoke-web",
+      "status": "failed",
+      "started": "2026-10-18T20:30:11.201Z",
+      "code": 1,
+      "signal": null,
+      "error": "smoke-web failed; see smoke-web.log",
+      "finished": "2026-10-18T20:31:33.743Z"
+    }
+  ],
+  "nativeRendering": "not covered by headless mode",
+  "server": {
+    "tcp": 50655,
+    "url": "http://127.0.0.1:50656",
+    "name": "harness-run-6XhOk3",
+    "data": "C:\\Users\\John\\.codex\\worktrees\\undead-entity-foundation\\MMOARPG\\artifacts\\testing\\run-6XhOk3\\data"
+  },
+  "error": "smoke-web failed; see smoke-web.log",
+  "cleanupErrors": [],
+  "finished": "2026-10-18T20:31:34.091Z"
+}
