@@ -55,8 +55,15 @@ internal sealed class MorphLayer
     /// <summary>A sense's points: its node points, its doors and the twins of the doors the catalog moves.</summary>
     private static IEnumerable<Point> PointsOf(Sense s) => s.Points.Concat(s.Doors).Concat(s.Twins.OfType<Point>());
 
-    /// <summary>The issues validation raised about a point's weave or its caster.</summary>
-    public IEnumerable<ValidationIssue> IssuesOf(Point p) => Report.Issues.Where(i => i.Id == p.Id || i.Id == p.Caster);
+    /// <summary>
+    /// The issues validation raised that fail a point: those about its weave or its caster, and every issue about no
+    /// point's entry (the crowd's dummy, the factions, the riders' entries, or a core entry the layer's content makes
+    /// fail). Core validates clean on its own, so every issue in the report is the scratch layer's.
+    /// </summary>
+    public IEnumerable<ValidationIssue> IssuesOf(Point p) => Report.Issues.Where(i => i.Id == p.Id || i.Id == p.Caster || !Owned.Contains(i.Id));
+
+    /// <summary>The ids of every point's weave and caster.</summary>
+    public required IReadOnlySet<string> Owned { get; init; }
 
     // ------------------------------------------------------------ sampling
 
@@ -211,7 +218,8 @@ internal sealed class MorphLayer
             Write(Path.Combine(dir, "statuses.yaml"), "statuses", new[] { MarkStatus() });
             Write(Path.Combine(dir, "procs.yaml"), "procs", new[] { Proc() });
             var content = ContentRegistry.Load(new[] { CoreContent.FindContentDir(), dir }, out var report);
-            return new MorphLayer { Content = content, Report = report, Morph = morph, Sensitivity = sensitivity };
+            var owned = points.SelectMany(p => new[] { p.Id, p.Caster }).ToHashSet(StringComparer.Ordinal);
+            return new MorphLayer { Content = content, Report = report, Morph = morph, Sensitivity = sensitivity, Owned = owned };
         }
         finally
         {

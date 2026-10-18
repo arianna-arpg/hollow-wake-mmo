@@ -15,11 +15,16 @@ namespace HollowWake.Core.Tests.Grammar;
 /// </summary>
 internal static class Families
 {
-    /// <summary>The relation words <c>EffectHelpers.Passes</c> knows (any other word passes everyone, unvalidated).</summary>
+    /// <summary>
+    /// The relation words <c>EffectHelpers.Passes</c> knows (any other word passes everyone). A list for now:
+    /// <c>Filters.Names</c>, the registry of filter words, replaces it once pull request #41 merges.
+    /// </summary>
     public static readonly string[] Filters = { "enemy", "ally", "ally_or_self", "self", "not_self", "all" };
 
-    /// <summary>The words of <c>Picks.Names</c>.</summary>
-    public static readonly string[] PickWords = { "random", "nearest", "farthest", "lowest_life", "highest_life" };
+    /// <summary>The words of the pick registry, <c>Picks.Names</c>, read from it: the registry is internal to the core, so by name.</summary>
+    public static readonly string[] PickWords = (string[])typeof(EffectRegistry).Assembly
+        .GetType("HollowWake.Core.Effects.Handlers.Picks", throwOnError: true)!
+        .GetField("Names")!.GetValue(null)!;
 
     public static readonly string[] Occlusions = { "blocked", "free" };
 
