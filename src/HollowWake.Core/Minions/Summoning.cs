@@ -164,6 +164,7 @@ internal sealed class SummonRecipe
     public Expr? Replenish;
     public WavesSpec? Waves;
     public string? FromCorpse;
+    public string? RaiseAs;
     public Expr? SearchRadius;
     public InterceptSpec? Intercept;
     public CompiledEffect[] OnBirth = Array.Empty<CompiledEffect>();
@@ -196,6 +197,7 @@ internal sealed class SummonRecipe
             Construct = construct,
             InheritCaster = construct && ctx.BoolOf(p["inherit_caster"], false),
             FromCorpse = CorpseMode(p["from_corpse"], ctx),
+            RaiseAs = ctx.StringOf(p["raise_as"]),
             SearchRadius = ctx.ExprOf(p["search_radius"]),
             Replenish = p["replenish"] is JsonObject replenish ? ctx.ExprOf(replenish["interval"], Expr.Constant(4)) : null,
             OnBirth = ctx.CompileList(p["on_birth"], "on_birth"),
@@ -213,6 +215,13 @@ internal sealed class SummonRecipe
         if (recipe.Pattern is not null && !ctx.Content.Has<PatternDef>(recipe.Pattern))
         {
             throw new InvalidOperationException($"{(construct ? "deploy" : "summon")} names unknown pattern '{recipe.Pattern}' in {ctx.Owner}.");
+        }
+        if (recipe.RaiseAs is not null)
+        {
+            if (recipe.FromCorpse is null || recipe.Pattern is not null || recipe.Pool.Length > 0)
+                throw new InvalidOperationException($"raise_as requires from_corpse and cannot have a fallback pattern or pool in {ctx.Owner}.");
+            if (!ctx.Content.Has<PatternDef>(recipe.RaiseAs))
+                throw new InvalidOperationException($"summon names unknown raise_as pattern '{recipe.RaiseAs}' in {ctx.Owner}.");
         }
         if (recipe.Behavior is not null && !ctx.Content.Has<BehaviorDef>(recipe.Behavior))
         {
@@ -484,7 +493,7 @@ internal sealed class SummonRecipe
                 var corpse = corpses[i];
                 if (Corpses.PatternOf(sim.World, corpse) is { } kind && sim.World.TryGet<Transform>(corpse, out var at))
                 {
-                    Birth(ctx, service, owner, ownerStats, kind, null, group, at.Position, contract, corpse);
+                    Birth(ctx, service, owner, ownerStats, RaiseAs ?? kind, null, group, at.Position, contract, corpse);
                 }
                 continue;
             }
@@ -622,6 +631,12 @@ internal sealed class SummonRecipe
             service.PresencesSeen = true;
         }
         var stats = sim.World.Get<Stats>(e);
+        // Anatomy stays; encounter-only classifiers do not describe an owned body.
+        if (sim.World.TryGet<Identity>(e, out var ownedIdentity))
+        {
+            ownedIdentity.Tags = service.OwnedTags(ownedIdentity.Tags);
+            if (stats is not null) stats.Tags = service.OwnedTags(stats.Tags);
+        }
         var tags = service.BodyTags(Construct);
         if (entry is { Tags.IsEmpty: false })
         {

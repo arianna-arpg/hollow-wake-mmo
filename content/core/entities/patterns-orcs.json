@@ -79,7 +79,7 @@
           ]
         },
         "behavior": {
-          "id": "orc_press"
+          "id": "close_melee"
         },
         "drops": {
           "table": "goblinkin_drops",
@@ -105,7 +105,8 @@
         "humanoid",
         "melee",
         "size.medium",
-        "habitat.orc_muster"
+        "habitat.orc_muster",
+        "habitat.scrap_fort"
       ],
       "level": 7,
       "radius": 0.575,
@@ -147,7 +148,7 @@
           ]
         },
         "behavior": {
-          "id": "orc_press"
+          "id": "close_melee"
         },
         "drops": {
           "table": "goblinkin_drops",
@@ -161,7 +162,8 @@
           "revision": "118b510f8b5bfb781163c5bc13ea4908f698e75b",
           "id": "orc_ravager"
         },
-        "adaptation": false
+        "adaptation": true,
+        "adaptation_note": "Retains prototype identity and Scrap Fort placement. Stature, physical mass, faction, level-scaled life, damage, armor, poise, speed, rewards and combat kit are authored for the MMO foundation; this is not unchanged combat parity."
       }
     },
     {
@@ -219,7 +221,7 @@
           ]
         },
         "behavior": {
-          "id": "orc_press"
+          "id": "close_melee"
         },
         "drops": {
           "table": "goblinkin_drops",
@@ -354,7 +356,7 @@
           ]
         },
         "behavior": {
-          "id": "orc_press"
+          "id": "close_melee"
         },
         "drops": {
           "table": "goblinkin_drops",
@@ -626,7 +628,7 @@
           ]
         },
         "behavior": {
-          "id": "orc_press"
+          "id": "close_melee"
         },
         "drops": {
           "table": "goblinkin_drops",
@@ -694,7 +696,7 @@
           ]
         },
         "behavior": {
-          "id": "orc_press"
+          "id": "close_melee"
         },
         "drops": {
           "table": "goblinkin_drops",
@@ -762,7 +764,7 @@
           ]
         },
         "behavior": {
-          "id": "orc_press"
+          "id": "close_melee"
         },
         "drops": {
           "table": "goblinkin_drops",
@@ -831,7 +833,7 @@
           ]
         },
         "behavior": {
-          "id": "orc_press"
+          "id": "close_melee"
         },
         "drops": {
           "table": "goblinkin_drops",

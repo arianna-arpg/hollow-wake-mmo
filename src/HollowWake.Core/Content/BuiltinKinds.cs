@@ -385,6 +385,15 @@ internal static class BuiltinKinds
         });
         ContentKinds.Register<QuestTemplateDef>("quest_templates", (d, c) =>
         {
+            foreach (var (name, slot) in d.Slots)
+            {
+                if (!double.IsFinite(slot.Within) || slot.Within < 0)
+                    c.Error($"slot '{name}' within must be finite and nonnegative.");
+                if (slot.LevelDelta is { } level && (double.IsNaN(level.Min) || double.IsNaN(level.Max) || level.Min > level.Max))
+                    c.Error($"slot '{name}' level_delta must be an ordered window.");
+                if (slot.LocalPopulation && slot.PatternTags.IsEmpty)
+                    c.Error($"slot '{name}' local_population requires pattern_tags.");
+            }
             if (d.Objectives.Count == 0)
             {
                 c.Error("template has no objectives.");
