@@ -14,7 +14,7 @@
 // contract.
 //
 // Environment overrides, for testing and mirrors (all optional):
-//   HOLLOWWAKE_GITHUB_TOKEN        token for a private repository (also settable in the page)
+//   HOLLOWWAKE_GITHUB_TOKEN        optional GitHub token, for a private fork (also settable in the page)
 //   HOLLOWWAKE_FEED                a manifest.json (path or URL) to install from instead of GitHub
 //   HOLLOWWAKE_GITHUB_API          REST root instead of https://api.github.com
 //   HOLLOWWAKE_REPO                owner/name instead of package.json's repository
@@ -59,7 +59,7 @@ const REPOSITORY = repository();
 const USER_AGENT = `HollowWakeMMO-Launcher/${app.getVersion()} (${PLATFORM})`;
 const PAGE = path.join(__dirname, '..', 'renderer', 'index.html');
 const BUNDLED_NEWS = path.join(__dirname, '..', 'news.json');
-const ICON = path.join(__dirname, '..', 'icon.png');
+const ICON = path.join(__dirname, '..', process.platform === 'win32' ? 'icon.ico' : 'icon.png');
 
 let settings: Settings;
 let token: string | null = null;

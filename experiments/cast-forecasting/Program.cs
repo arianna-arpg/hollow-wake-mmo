@@ -17,7 +17,7 @@ using HollowWake.Core.World;
 using ForecastExperiment;
 
 // An integration probe, not a forecast implementation. All attacks, movement and damage run the real core.
-// The bounded geometry reader below only accepts one direct deterministic area and fails on wider graphs.
+// The diagnostic adapter consumes the production primary-region capability; wider graphs stay unknown.
 var root = Path.GetFullPath(args.Length > 0 ? args[0] : ".");
 var owned = Path.Combine(root, "experiments", "cast-forecasting");
 var config = JsonNode.Parse(File.ReadAllText(Path.Combine(owned, "scenarios.json")))!.AsObject();
@@ -28,7 +28,6 @@ content.With(new FactionDef { Id = "forecast_blue", Relations = { ["forecast_red
 var results = new List<object>();
 var damageByRun = new Dictionary<string, double>();
 var checks = new List<string>();
-var providers = ForecastProviders.CreateDefault();
 #if CAST_CUES
 const bool confirmedLifecycleAvailable = true;
 #else
@@ -68,7 +67,7 @@ foreach (var rateNode in config["tickRates"]!.AsArray())
             Point = state is null ? aimPoint : state.Target.IsNone ? state.Point : sim.World.Get<Transform>(state.Target)?.Position ?? state.Point,
             Direction = state?.Direction ?? direction, Weave = weave, Tags = weave!.Tags, Rng = new HollowWake.Core.Maths.Rng(0)
         };
-        var geometry = providers.Describe(Context());
+        var geometry = ForecastProviders.Describe(Context());
         if (scenario["expectProvider"]?.GetValue<string>() == "unavailable")
         {
             Check(geometry is null, "Unsupported graphs must not invent an exact region");
@@ -138,7 +137,7 @@ foreach (var rateNode in config["tickRates"]!.AsArray())
         void Frame()
         {
             var active = book.Casting;
-            var footprint = providers.Describe(Context(cast))!;
+            var footprint = ForecastProviders.Describe(Context(cast))!;
             var position = targetTransform.Position;
             var inside = footprint.ContainsCenter(position);
             frames.Add(new { time = sim.Clock.Time, tick = sim.Clock.Tick, casting = active is not null,
