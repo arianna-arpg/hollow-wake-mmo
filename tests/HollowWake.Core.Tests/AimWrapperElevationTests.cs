@@ -118,4 +118,67 @@ public class AimWrapperElevationTests
         Assert.Equal(0f, flight.Velocity.Z);
         Assert.Equal(Entity.None, flight.CastTarget);
     }
+
+    [Theory]
+    [InlineData(false, false)]
+    [InlineData(false, true)]
+    [InlineData(true, false)]
+    [InlineData(true, true)]
+    public void IdentitySupportHitsRetainedOffsetAnatomyLikeThePlainChild(bool wrapped, bool stalePoint)
+    {
+        var a = DeliveryArena.Create();
+        var target = a.Body(18, 10);
+        a.Sim.World.Get<Transform>(target)!.Yaw = 0;
+        a.Sim.World.Add(target, new HitBody { Definition = new HitBodyDef
+        {
+            Id = "offset-only", Volumes = { new HitVolumeSpec { Left = 1, Up = .8f, Radius = .025f, HalfHeight = .1f } },
+        } });
+        var point = stalePoint ? new Vector3(16, 10, 0) : new Vector3(18, 10, 0);
+        const string child = """{"type":"projectile","speed":15,"range":12,"radius":0.02,"on_hit":[{"type":"event","name":"offset_hit"}]}""";
+        Projectile? flight = null;
+        a.Sim.Events.Subscribe<EntitySpawned>(e => flight = a.Sim.World.Get<Projectile>(e.Entity) ?? flight);
+        var context = a.Context(point, Vector2.UnitX, target);
+        a.Effect(wrapped ? "{\"type\":\"aim\",\"offset\":0,\"effects\":[" + child + "]}" : child).Execute(context);
+        Assert.NotNull(flight);
+        var aim = HitBodies.AimPoint(a.Sim, target);
+        var distance = Vector2.Distance(new(flight.Origin.X, flight.Origin.Y), new(aim.X, aim.Y));
+        a.Tick(30);
+        Assert.Contains(target, a.Struck("offset_hit"));
+        Assert.Equal(MathF.Atan2(aim.Y - flight.Origin.Y, aim.X - flight.Origin.X), flight.Heading, 5);
+        Assert.Equal((aim.Z - flight.Origin.Z) * 15 / distance, flight.Velocity.Z, 5);
+        Assert.Equal(wrapped ? Entity.None : target, flight.CastTarget);
+        Assert.Equal(point, context.Point);
+        Assert.Equal(point, context.Aim);
+    }
+
+    [Theory]
+    [InlineData(false, -30)]
+    [InlineData(false, 0)]
+    [InlineData(false, 30)]
+    [InlineData(true, -30)]
+    [InlineData(true, 0)]
+    [InlineData(true, 30)]
+    public void TurningRetainedAnatomyDoesNotRetargetAnAlreadyCommittedDirection(bool retainedTarget, int degrees)
+    {
+        var a = DeliveryArena.Create();
+        var target = a.Body(18, 10);
+        a.Sim.World.Get<Transform>(target)!.Yaw = 0;
+        a.Sim.World.Add(target, new HitBody { Definition = new HitBodyDef
+        {
+            Id = "off-center", Volumes = { new HitVolumeSpec { Left = 1, Up = .5f, Radius = .025f, HalfHeight = .1f } },
+        } });
+        var point = new Vector3(18, 10, 0);
+        var offset = HitBodies.AimPoint(a.Sim, target) - point;
+        Projectile? flight = null;
+        a.Sim.Events.Subscribe<EntitySpawned>(e => flight = a.Sim.World.Get<Projectile>(e.Entity) ?? flight);
+        a.Effect("{\"type\":\"aim\",\"offset\":" + degrees + ",\"effects\":[{\"type\":\"projectile\",\"speed\":15,\"range\":12}]}").Execute(new EffectContext
+        {
+            Sim = a.Sim, Source = a.Caster, Target = retainedTarget ? target : Entity.None,
+            Point = point, Direction = Vector2.UnitX, Rng = new Rng(481), AimOffset = retainedTarget ? Vector3.Zero : offset,
+        });
+        Assert.NotNull(flight);
+        var baseAngle = retainedTarget ? MathF.Atan2(offset.Y, 8 + offset.X) : 0;
+        Assert.Equal(baseAngle + degrees * Math.PI / 180, flight.Heading, 5);
+        Assert.Equal(Entity.None, flight.CastTarget);
+    }
 }
