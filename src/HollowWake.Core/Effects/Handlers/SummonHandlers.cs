@@ -45,8 +45,9 @@ internal sealed class SummonHandler : IEffectHandler
 
     public EffectSignature Signature { get; } = EffectSignature.Of(SummonRecipe.SharedParams.Concat(new[]
         {
-            "duration", "contract", "decay", "waves", "presence", "replenish", "from_corpse", "search_radius",
+            "duration", "contract", "decay", "waves", "presence", "replenish", "from_corpse", "raise_as", "search_radius",
         }).ToArray())
+        .Refers("patterns", "raise_as")
         .Hook(SummonHandlers.OnBirth, "on_birth")
         .Hook(SummonHandlers.OnDeath, "on_death");
 
@@ -91,7 +92,7 @@ internal sealed class SpawnHandler : IEffectHandler
 {
     public string Type => "spawn";
 
-    public EffectSignature Signature { get; } = EffectSignature.Of("pattern", "count", "lifetime", "as_corpse");
+    public EffectSignature Signature { get; } = EffectSignature.Of("pattern", "count", "lifetime", "as_corpse").Refers("patterns", "pattern");
 
     public CompiledEffect Compile(JsonObject p, EffectCompileContext ctx)
     {
@@ -130,7 +131,7 @@ internal sealed class SpawnHandler : IEffectHandler
                     var ang = ctx.Rng.NextDouble() * Math.PI * 2;
                     at += new Vector3((float)Math.Cos(ang) * 0.8f, (float)Math.Sin(ang) * 0.8f, 0);
                 }
-                var e = factory.Spawn(ctx.Sim, Pattern, at, new SpawnOptions { Owner = ctx.Origin });
+                var e = factory.Spawn(ctx.Sim, Pattern, at);
                 if (e.IsNone)
                 {
                     continue;

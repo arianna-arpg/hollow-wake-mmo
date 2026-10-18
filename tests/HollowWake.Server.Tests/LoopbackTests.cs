@@ -1,6 +1,7 @@
 using Microsoft.Extensions.Logging.Abstractions;
 using HollowWake.Core.Characters;
 using HollowWake.Core.Components;
+using HollowWake.Core.Territory;
 using HollowWake.Protocol;
 using HollowWake.Server;
 using HollowWake.Server.Config;
@@ -723,5 +724,149 @@ public class LoopbackTests
         Assert.NotNull(Await<StationStateMsg>(server, client, inbox, s => s != pane));
         Assert.Equal(level + 1, stone.Payload.Level);
         Assert.DoesNotContain(inbox, m => m is IntentRejectedMsg);
+    }
+
+    // ------------------------------------------------------------ what a player wears, and the world's day
+
+    /// <summary>What a viewer was last told an entity wears: a delta carries the list whole, a spawn or a full state carries it as it is.</summary>
+    private static List<string>? LastAppearanceSeen(IEnumerable<Message> inbox, long key, out int deltas)
+    {
+        List<string>? last = null;
+        deltas = 0;
+        foreach (var m in inbox)
+        {
+            switch (m)
+            {
+                case EntitySpawnMsg s when s.State.Key == key:
+                    last = s.State.Appearance;
+                    break;
+                case EntityUpdateMsg u:
+                    foreach (var s in u.States)
+                    {
+                        if (s.Key == key)
+                        {
+                            last = s.Appearance;
+                        }
+                    }
+                    break;
+                case EntityDeltaMsg d:
+                    foreach (var delta in d.Deltas)
+                    {
+                        if (delta.Key == key && delta.Appearance is not null)
+                        {
+                            last = delta.Appearance;
+                            deltas++;
+                        }
+                    }
+                    break;
+            }
+        }
+        return last;
+    }
+
+    [Fact]
+    public void WhatAPlayerWearsReachesOtherViewersOnSpawnAndOnChange()
+    {
+        var (server, transport) = Create();
+        var (wearer, wearerEnter, _, wearerReplies, _) = Enter(server, transport, "wearer", "Wren");
+        var (viewer, _, viewerSession, viewerReplies, _) = Enter(server, transport, "viewer", "Ash", new List<string> { ProtocolInfo.EntityDeltaFeature });
+        var (plain, _, plainSession, plainReplies, _) = Enter(server, transport, "plain", "Bay");
+        Assert.True(viewerSession.View.SendDeltas);
+        Assert.False(plainSession.View.SendDeltas);
+
+        // On spawn, a player's worn gear travels by slot, class and tags, in slot order: a kindler starts with a wand and a robe.
+        var equipment = wearerReplies.OfType<SelfStateMsg>().Last().Equipment;
+        var wornSlots = equipment.Keys.OrderBy(k => k, StringComparer.Ordinal).ToList();
+        Assert.Contains("main_hand", wornSlots);
+        var seen = Assert.Single(viewerReplies.OfType<EntitySpawnMsg>(), s => s.State.Key == wearerEnter.EntityKey).State;
+        Assert.True(seen.IsPlayer);
+        Assert.NotNull(seen.Appearance);
+        Assert.Equal(wornSlots, seen.Appearance!.Select(a => a[..a.IndexOf('=')]).ToList());
+        Assert.Contains(seen.Appearance, a => a.StartsWith("main_hand=weapon.wand ", StringComparison.Ordinal) && a.Contains(" caster", StringComparison.Ordinal));
+        Assert.Equal(seen.Appearance, Assert.Single(plainReplies.OfType<EntitySpawnMsg>(), s => s.State.Key == wearerEnter.EntityKey).State.Appearance);
+        // Monsters, villagers and props never carry one: their patterns say what they wear.
+        var others = viewerReplies.OfType<EntitySpawnMsg>().Where(s => !s.State.IsPlayer).ToList();
+        Assert.NotEmpty(others);
+        Assert.All(others, s => Assert.Null(s.State.Appearance));
+
+        // Taking the wand off reaches the delta viewer as the list whole and the plain viewer as a full state.
+        var viewerInbox = new List<Message>();
+        var plainInbox = new List<Message>();
+        var wearerInbox = new List<Message>();
+        wearer.Send(new UnequipMsg("main_hand"));
+        Step(server, 12, (viewer, viewerInbox), (plain, plainInbox), (wearer, wearerInbox));
+        Assert.DoesNotContain(wearerInbox, m => m is IntentRejectedMsg);
+        var bared = LastAppearanceSeen(viewerInbox, wearerEnter.EntityKey, out var deltasOff);
+        Assert.NotNull(bared);
+        Assert.Equal(wornSlots.Where(s => s != "main_hand").ToList(), bared!.Select(a => a[..a.IndexOf('=')]).ToList());
+        Assert.Equal(bared, LastAppearanceSeen(plainInbox, wearerEnter.EntityKey, out _));
+        Assert.Contains(plainInbox.OfType<EntityUpdateMsg>().SelectMany(u => u.States), s => s.Key == wearerEnter.EntityKey && s.Appearance is not null && s.Appearance.Count == bared.Count);
+        Assert.DoesNotContain(plainInbox, m => m is EntityDeltaMsg);
+
+        // Putting it back on brings it back, by the uid the owner's self state knows it by.
+        var wand = equipment["main_hand"];
+        viewerInbox.Clear();
+        plainInbox.Clear();
+        wearer.Send(new EquipMsg(wand.Uid, null));
+        Step(server, 12, (viewer, viewerInbox), (plain, plainInbox), (wearer, wearerInbox));
+        Assert.DoesNotContain(wearerInbox, m => m is IntentRejectedMsg);
+        Assert.Equal(seen.Appearance, LastAppearanceSeen(viewerInbox, wearerEnter.EntityKey, out var deltasOn));
+        Assert.Equal(seen.Appearance, LastAppearanceSeen(plainInbox, wearerEnter.EntityKey, out _));
+        // A change on an entity's refresh tick goes out as a full state instead; the two changes are nearer than the cadence, so at least one rode a delta.
+        Assert.True(deltasOff + deltasOn >= 1, "neither change of gear reached the delta viewer as a delta");
+        _output.WriteLine($"spawned wearing {string.Join(", ", seen.Appearance)}; {deltasOff} delta(s) taking the wand off, {deltasOn} putting it back");
+
+        // Taking every piece off remains authoritative for existing viewers and a newly joined viewer.
+        viewerInbox.Clear();
+        plainInbox.Clear();
+        wearerInbox.Clear();
+        foreach (var slot in wornSlots)
+        {
+            wearer.Send(new UnequipMsg(slot));
+            Step(server, 12, (viewer, viewerInbox), (plain, plainInbox), (wearer, wearerInbox));
+        }
+        Assert.DoesNotContain(wearerInbox, m => m is IntentRejectedMsg);
+        var naked = LastAppearanceSeen(viewerInbox, wearerEnter.EntityKey, out _);
+        Assert.NotNull(naked);
+        Assert.Empty(naked!);
+        var plainNaked = LastAppearanceSeen(plainInbox, wearerEnter.EntityKey, out _);
+        Assert.NotNull(plainNaked);
+        Assert.Empty(plainNaked!);
+        var (_, _, _, lateReplies, _) = Enter(server, transport, "late", "Reed");
+        var nakedSpawn = Assert.Single(lateReplies.OfType<EntitySpawnMsg>(), s => s.State.Key == wearerEnter.EntityKey).State;
+        Assert.NotNull(nakedSpawn.Appearance);
+        Assert.Empty(nakedSpawn.Appearance!);
+    }
+
+    [Fact]
+    public void TheWorldsDayIsOnTheWireAndAdvances()
+    {
+        var (server, transport) = Create();
+        var world = server.Zones.World;
+        var rules = server.Content.Rules;
+        Assert.True(world.DayLengthSeconds > 0);
+        Assert.Equal(rules.Number(WorldState.DayLengthRule, 0), world.DayLengthSeconds);
+        Assert.Equal(rules.Number(WorldState.DayStartRule, -1), world.DayStart);
+
+        var (client, enter, _, replies, _) = Enter(server, transport, "dawn", "Dawn");
+        Assert.Equal(world.DayLengthSeconds, enter.DayLength);
+        Assert.NotNull(enter.TimeOfDay);
+        // A new world wakes at the rule's start of day, not at midnight, a few ticks in.
+        Assert.InRange(enter.TimeOfDay!.Value, world.DayStart, world.DayStart + 10 * server.TickSeconds / world.DayLengthSeconds);
+        var first = replies.OfType<SelfStateMsg>().Last();
+        Assert.NotNull(first.TimeOfDay);
+        Assert.InRange(first.TimeOfDay!.Value, enter.TimeOfDay.Value, enter.TimeOfDay.Value + 10 * server.TickSeconds / world.DayLengthSeconds);
+
+        // Three seconds of ticks later, the self state's fraction has moved on with the world time, within its cadence.
+        var inbox = new List<Message>();
+        Step(server, (int)Math.Round(3 / server.TickSeconds), (client, inbox));
+        var later = inbox.OfType<SelfStateMsg>().Last();
+        Assert.NotNull(later.TimeOfDay);
+        Assert.True(later.TimeOfDay > first.TimeOfDay, $"the day did not advance: {first.TimeOfDay} then {later.TimeOfDay}");
+        var cadence = (server.Config.Snapshots.SelfMaxSeconds + server.TickSeconds) / world.DayLengthSeconds;
+        Assert.InRange(world.TimeOfDay - later.TimeOfDay!.Value, 0, cadence);
+        // The day is the world's, not the zone's: a zone clock at zero still finds the world past its start.
+        Assert.True(world.TimeOfDay > world.DayStart);
+        _output.WriteLine($"day of {enter.DayLength} s; entered at {enter.TimeOfDay:0.00000}, self states at {first.TimeOfDay:0.00000} then {later.TimeOfDay:0.00000}; the world at {world.TimeOfDay:0.00000}");
     }
 }

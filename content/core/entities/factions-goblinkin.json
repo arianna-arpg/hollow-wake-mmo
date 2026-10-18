@@ -15,7 +15,9 @@
         "mended_thread": "hostile",
         "remnant": "hostile",
         "tangled": "hostile",
-        "orc_warbands": "allied"
+        "orc_warbands": "allied",
+        "wilds": "hostile",
+        "the_loosed": "hostile"
       }
     }
   ]

@@ -6,11 +6,15 @@ namespace HollowWake.Client.World.Logic;
 /// <summary>The light and air at one moment: the sky, sun and ambient colours and energies, the fog, and the sun's place.</summary>
 public readonly record struct SkyState(Rgba Sky, Rgba Horizon, Rgba Sun, float SunEnergy, Rgba Ambient, float AmbientEnergy, Rgba Fog, float FogDensity, float SunPitch, float SunYaw, float Daylight);
 
+/// <summary>The world's day as the server reports it: how long it lasts, and the fraction it stood at when a server time was read.</summary>
+public readonly record struct ServerDay(double LengthSeconds, double Fraction, double AtServerTime);
+
 /// <summary>
-/// The day as the clients draw it (docs/design/appearance.md): the server clock folded by the content's day
-/// length into a fraction of the day, the sky keyframes blended at that fraction, and the sun's bearing and
-/// height around noon. Nothing here is a gameplay clock; the simulation's own day, should a rule read one,
-/// is the server's and is asked for in the review record.
+/// The day as the clients draw it (docs/design/appearance.md): the world's day as the server reports it in
+/// enter_world and on the self state's cadence, advanced between messages by the server clock, or for a
+/// server that never says, the zone clock folded by the content's day length; the sky keyframes blended at
+/// that fraction, and the sun's bearing and height around noon. Nothing here is a gameplay clock: the
+/// simulation's own day is the server's, and this only follows it.
 /// </summary>
 public sealed class DayCycle
 {
@@ -30,14 +34,56 @@ public sealed class DayCycle
         }
     }
 
+    /// <summary>The content's day length, the fallback for a server that never says how long its day is.</summary>
     public float LengthSeconds => (float)Math.Max(1, _def.Day.LengthSeconds);
 
-    /// <summary>The fraction of the day at a server time, from zero (midnight) through half (noon).</summary>
+    /// <summary>The server's day, once a message carried it; null before that, and for a server that predates the field.</summary>
+    public ServerDay? Server { get; private set; }
+
+    /// <summary>How long the day lasts: the server's length once known, else the content's.</summary>
+    public float DayLengthSeconds => (float)(Server?.LengthSeconds ?? LengthSeconds);
+
+    /// <summary>
+    /// The day as a message reported it: the fraction, and the length when the message carries one (enter_world
+    /// does, the self state does not, and a fraction alone keeps the length last reported, else the content's).
+    /// The server time is the client's estimate of the server clock as the message arrived; the fraction advances
+    /// from it. A message without a fraction changes nothing.
+    /// </summary>
+    public void ObserveServer(double? lengthSeconds, double? fraction, double atServerTime)
+    {
+        if (fraction is not { } f || double.IsNaN(f))
+        {
+            return;
+        }
+        var length = lengthSeconds ?? Server?.LengthSeconds ?? LengthSeconds;
+        Server = new ServerDay(Math.Max(0, length), Wrap(f), atServerTime);
+    }
+
+    /// <summary>Forgets the server's day, as on entering a world: the next message that carries one sets it again, and until then the clock folds.</summary>
+    public void ForgetServer() => Server = null;
+
+    /// <summary>
+    /// The fraction of the day at a server time, from zero (midnight) through half (noon): the server's fraction
+    /// advanced by the server clock when the server said, else the clock folded by the content's day from its
+    /// start, which agrees between two zones only while their clocks do.
+    /// </summary>
     public float TimeOfDay(double serverTime)
     {
-        var day = LengthSeconds;
-        var t = (serverTime / day + _def.Day.Start) % 1.0;
-        return (float)(t < 0 ? t + 1 : t);
+        if (Server is { } s)
+        {
+            if (s.LengthSeconds <= 0)
+            {
+                return (float)s.Fraction;
+            }
+            return (float)Wrap(s.Fraction + (serverTime - s.AtServerTime) / s.LengthSeconds);
+        }
+        return (float)Wrap(serverTime / LengthSeconds + _def.Day.Start);
+    }
+
+    private static double Wrap(double t)
+    {
+        t %= 1.0;
+        return t < 0 ? t + 1 : t;
     }
 
     /// <summary>The sky at a fraction of the day, blended between the keyframes around it, wrapping at midnight.</summary>

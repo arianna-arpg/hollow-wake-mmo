@@ -4,7 +4,7 @@
 
 ## What exists and what is provisional
 
-Wildlife has authored dimensions, material mixtures, poise, faction, habitats, role tags and current weave kits. Ambient critters use the content-only `fauna_flee` state machine, have no attack weave or drops component, and opt out of culling contracts. Predators use `aggressive_melee`; territorial animals use `guard`; defensive prey uses `skittish`. The migrated boar retains its existing aggressive behavior. These assignments are replaceable scaffolding. The `meta.ai_handoff` ledger records author intent only; the simulation must not read it.
+Wildlife has authored dimensions, material mixtures, poise, faction, habitats, role tags and current weave kits. Ambient critters use the content-only `fauna_flee` state machine, have no attack weave or drops component, and opt out of culling contracts. Predators use `aggressive_melee`; territorial animals use `guard`; defensive prey uses `skittish`. The migrated boar retains its existing aggressive behavior. These assignments are replaceable scaffolding. This handoff records author intent once; the pattern's `behavior.id` is the single source of its current assignment.
 
 `BehaviorSystem` currently acquires nearby faction enemies, prefers recent attackers and applies ignore tags. It does not implement a food web, sensory uncertainty, persistent social knowledge or coordinated tactics. `WeaveRuntime.ChooseForAi` already checks readiness, costs, ranges, gates and AI hints and casts through the normal runtime. Preserve that authority. Its preferred range is the longest hinted range; a long support skill can strand a mixed melee/support kit unless content constrains chase distance. Orc leaders already illustrate this limitation.
 
@@ -45,8 +45,8 @@ Require exact deterministic event digests for repeated runs of the same seed and
 
 Claude: review the above decomposition, propose the smallest observable scenario harness and compare planner options before implementation. Identify the shared capability/forecast interfaces that combat packages already supply, including pending PR #20. Agree on deterministic scheduling, reaction fairness and group ownership, then record the chosen contract/ADR and staged acceptance evidence. Keep experiments under `experiments/ai/` until the design is supported by measurements.
 
-Replace behavior bindings per content profile behind an explicit migration path; preserve old profiles until new scenarios pass. Do not promote `meta.ai_handoff` into runtime configuration by reading presentation metadata. Add a validated definition kind if the agreed design needs AI profiles. The separate precise-hitbox chat must migrate these wildlife bodies along with the existing rosters; model decoration must not silently change authoritative mass or collision.
+Replace behavior bindings per content profile behind an explicit migration path; preserve old profiles until new scenarios pass. Do not promote this handoff into runtime configuration by reading presentation metadata. Add a validated definition kind if the agreed design needs AI profiles. The separate precise-hitbox chat must migrate these wildlife bodies along with the existing rosters; model decoration must not silently change authoritative mass or collision.
 
-Adjacent issue observed: generated cull quests choose from the global matching-pattern catalog without a local-population/level filter. The expanded eligible set can offer a distant or higher-level beast. This pass only excludes ambient critters; habitat-aware quest selection belongs in a coordinated generation/quest change, with new seed evidence.
+The review correction integrates the shared quest-slot local-population and level filters. Generated culls now require eligible spawn facts nearby; the per-pattern audits are under `experiments/entity-review/evidence`. This fixes the observed global-catalog offer gap without adding ecological AI.
 
 Acknowledged by: pending Claude design review.

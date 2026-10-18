@@ -41,7 +41,7 @@ import { v3 as V, ZERO } from './bodyPlan';
         const hunch = b.s("hunch", 0) * 28;
         const boneColor = b.c("bone", "#d8d0b8");
         const skin = b.c("skin", "#aa8475");
-        const binding = b.c("binding", "#51453");
+        const binding = b.c("binding", "#51453f");
         const cloth = b.c("cloth", "#4a4458");
         const accent = b.c("accent", "#b89a67");
         const thick = b.s("thickness", 1);

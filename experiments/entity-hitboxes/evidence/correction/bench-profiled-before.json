@@ -1,0 +1,26 @@
+[
+  {
+    "Name": "deliveries.tick",
+    "Value": 5.38160525,
+    "Unit": "ms/tick",
+    "Note": "39 flights in the air on average among 120 foes; 42 profiled patterns, casts included"
+  },
+  {
+    "Name": "deliveries.tick.alloc",
+    "Value": 35.972421875,
+    "Unit": "KB/tick",
+    "Note": "casts, hits and effects included"
+  },
+  {
+    "Name": "deliveries.projectiles",
+    "Value": 4.121963499999997,
+    "Unit": "ms/tick",
+    "Note": "22.5 KB/tick allocated, hits and their effects included"
+  },
+  {
+    "Name": "deliveries.fields",
+    "Value": 0.12335774999999999,
+    "Unit": "ms/tick",
+    "Note": "3.4 KB/tick allocated"
+  }
+]

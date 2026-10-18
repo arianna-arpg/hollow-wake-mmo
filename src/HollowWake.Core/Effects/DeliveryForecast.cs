@@ -2,6 +2,7 @@ using System.Numerics;
 using HollowWake.Core.Ecs;
 using HollowWake.Core.Effects.Handlers;
 using HollowWake.Core.World;
+using HollowWake.Core.Combat;
 
 namespace HollowWake.Core.Effects;
 
@@ -13,7 +14,8 @@ namespace HollowWake.Core.Effects;
 public readonly record struct ResolvedAreaPlan(
     Shape Shape, ShapeSize Size, Vector3 Anchor, Vector2 Direction, string AnchorMode,
     string Filter, Entity ExcludedTarget, bool RequiresLineOfSight,
-    bool HasRequirement, bool HasTargetLimit)
+    bool HasRequirement, bool HasTargetLimit,
+    bool BodyContact = false, float Bottom = 0, float Top = 0)
 {
     public float Reach => Shape.Reach(Size);
     public float HeightTolerance => SpatialGrid.DefaultHeightTolerance;
@@ -27,14 +29,14 @@ public readonly record struct ResolvedAreaPlan(
     /// selection. Uses the same relation, untargetability and LOS checks as execution. No effects or rolls.
     /// </summary>
     public bool IsCandidate(EffectContext context, Entity entity, Vector3 position) =>
-        ContainsCenter(position) && (ExcludedTarget.IsNone || entity != ExcludedTarget) &&
+        (BodyContact ? HitBodies.Touches(context.Sim, entity, Shape, Size, Anchor, Direction, Bottom, Top) : ContainsCenter(position)) && (ExcludedTarget.IsNone || entity != ExcludedTarget) &&
         EffectHelpers.Passes(context, entity, Filter) && (!RequiresLineOfSight ||
             LineOfSight.Clear(context.Sim.Terrain, Anchor + EffectHelpers.Eye, position + EffectHelpers.Eye));
 
     public bool IsFinite => float.IsFinite(Size.Radius) && float.IsFinite(Size.Angle) &&
         float.IsFinite(Size.Width) && float.IsFinite(Size.Inner) && float.IsFinite(Reach) &&
         float.IsFinite(Anchor.X) && float.IsFinite(Anchor.Y) && float.IsFinite(Anchor.Z) &&
-        float.IsFinite(Direction.X) && float.IsFinite(Direction.Y);
+        float.IsFinite(Direction.X) && float.IsFinite(Direction.Y) && float.IsFinite(Bottom) && float.IsFinite(Top);
 }
 
 /// <summary>

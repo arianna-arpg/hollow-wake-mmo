@@ -79,7 +79,10 @@ public sealed class AppearanceService
     /// <summary>The look for an entity: its id's entry, else its pattern's tags, else nothing (the view keeps a block).</summary>
     public AppearanceDef? LookFor(EntityState s) => Catalog.Resolve(s.Look ?? s.Pattern, s.Pattern);
 
-    /// <summary>A built plan for an entity with the gear it wears: the self's own equipment, a monster's grants, a Calling's kit.</summary>
+    /// <summary>
+    /// A built plan for an entity with the gear it wears: the self's own equipment, another player's public
+    /// appearance from the wire, a monster's grants, a Calling's kit (<see cref="AppearanceCatalog.WornBy"/>).
+    /// </summary>
     public BodyPlan PlanFor(EntityState s, AppearanceDef look, bool isSelf, out string gearKey)
     {
         var plan = BodyFamilies.Build(look, s.Key, s.Height, s.Radius);
@@ -95,20 +98,7 @@ public sealed class AppearanceService
         }
         else if (plan.Sockets.Count > 0)
         {
-            var worn = new Dictionary<string, (string? Class, IEnumerable<string> Tags)>(StringComparer.Ordinal);
-            foreach (var (slot, item) in Catalog.DefaultGear(look, s.Pattern))
-            {
-                worn[slot] = item;
-            }
-            if (isSelf && SelfEquipment?.Invoke() is { } equipment)
-            {
-                worn.Clear();
-                foreach (var (slot, item) in equipment)
-                {
-                    var fromBase = Catalog.ItemLook(item.Base);
-                    worn[slot] = (item.Class ?? fromBase?.Class, fromBase?.Tags ?? Array.Empty<string>());
-                }
-            }
+            var worn = Catalog.WornBy(look, s.Pattern, s.IsPlayer ? s.Appearance : null, isSelf ? SelfEquipment?.Invoke() : null);
             foreach (var slot in worn.Keys.OrderBy(k => k, StringComparer.Ordinal))
             {
                 var (itemClass, tags) = worn[slot];

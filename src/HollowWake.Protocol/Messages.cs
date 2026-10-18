@@ -77,6 +77,7 @@ namespace HollowWake.Protocol;
 [JsonDerivedType(typeof(SelfStateMsg), "self_state")]
 [JsonDerivedType(typeof(CombatEventMsg), "combat_event")]
 [JsonDerivedType(typeof(CastCueMsg), "cast_cue")]
+[JsonDerivedType(typeof(HitBodiesMsg), "hit_bodies")]
 [JsonDerivedType(typeof(ChatBroadcastMsg), "chat_broadcast")]
 [JsonDerivedType(typeof(NoticeMsg), "notice")]
 [JsonDerivedType(typeof(QuestOffersMsg), "quest_offers")]
@@ -170,7 +171,18 @@ public sealed record LoginResultMsg(bool Ok, string? AccountId, string? Error) :
 public sealed record CharacterSummary(string Id, string Name, string Calling, int Level, string Zone);
 public sealed record CharacterListMsg(List<CharacterSummary> Characters, List<string> Callings) : Message;
 public sealed record ErrorMsg(string Code, string Text) : Message;
-public sealed record EnterWorldMsg(string CharacterId, long EntityKey, string Zone, float X, float Y, float Z, WorldInfo World, double ServerTime, int TickRate) : Message;
+public sealed record EnterWorldMsg(string CharacterId, long EntityKey, string Zone, float X, float Y, float Z, WorldInfo World, double ServerTime, int TickRate) : Message
+{
+    /// <summary>How long the world's day lasts, in seconds of world time (the rule landscape.day_length_seconds).</summary>
+    public double? DayLength { get; init; }
+
+    /// <summary>
+    /// The fraction of the world's day as of this message, from zero at midnight through a half at noon, the same in
+    /// every zone. Absent from a server that predates it, which leaves a client to fold the zone clock by its content's day.
+    /// </summary>
+    public double? TimeOfDay { get; init; }
+}
+
 public sealed record ZoneChangedMsg(string Zone, string ZoneName, int Level, bool Safe) : Message;
 
 public sealed record EntityState
@@ -185,6 +197,8 @@ public sealed record EntityState
     public float Yaw { get; init; }
     public float Radius { get; init; }
     public float Height { get; init; }
+    /// <summary>Server anatomy in the negotiated catalog; null is a legacy cylinder.</summary>
+    public string? HitBody { get; init; }
     public string? Faction { get; init; }
     public string? Rarity { get; init; }
     public bool IsPlayer { get; init; }
@@ -227,6 +241,14 @@ public sealed record EntityState
 
     /// <summary>For a body with a lifetime (a telegraph mark, a timed summon): the server time it lands or ends.</summary>
     public double? Until { get; init; }
+
+    /// <summary>
+    /// For a player, what it wears as others see it: one entry per worn slot, <c>slot=class tag tag ...</c> (the
+    /// item's class and the tags of its base, never the item itself), sorted by slot. The server derives it from
+    /// the worn items and sends it on spawn and whenever the equipment changes. Empty means nothing is worn;
+    /// absent means unavailable (an older server, or a nonplayer whose pattern says what it wears).
+    /// </summary>
+    public List<string>? Appearance { get; init; }
 }
 
 /// <summary>
@@ -247,6 +269,9 @@ public sealed record ShapeSizeInfo
 }
 
 public sealed record EntitySpawnMsg(EntityState State) : Message;
+public sealed record HitVolumeInfo(string Shape, float Forward, float Left, float Up, float Radius, float HalfHeight);
+public sealed record HitBodyInfo(string Id, int Aim, List<HitVolumeInfo> Volumes);
+public sealed record HitBodiesMsg(List<HitBodyInfo> Bodies) : Message;
 public sealed record EntityUpdateMsg(List<EntityState> States, double ServerTime) : Message;
 public sealed record EntityDespawnMsg(long Key) : Message;
 
@@ -274,6 +299,7 @@ public sealed record EntityDelta
     public float? Yaw { get; init; }
     public float? Radius { get; init; }
     public float? Height { get; init; }
+    public string? HitBody { get; init; }
     public string? Faction { get; init; }
     public string? Rarity { get; init; }
     public int? Level { get; init; }
@@ -295,6 +321,9 @@ public sealed record EntityDelta
     public ShapeSizeInfo? ShapeSize { get; init; }
     public float? Heading { get; init; }
     public float? Spin { get; init; }
+
+    /// <summary>What a player wears (<see cref="EntityState.Appearance"/>), whole, when it changed; empty when nothing is worn any more.</summary>
+    public List<string>? Appearance { get; init; }
 
     /// <summary>What a client does with a delta: the known state with every field the delta carries replaced.</summary>
     public EntityState ApplyTo(EntityState state)
@@ -324,6 +353,7 @@ public sealed record EntityDelta
             Yaw = Yaw ?? state.Yaw,
             Radius = Radius ?? state.Radius,
             Height = Height ?? state.Height,
+            HitBody = HitBody is null ? state.HitBody : Cleared(HitBody),
             Faction = Faction is null ? state.Faction : Cleared(Faction),
             Rarity = Rarity is null ? state.Rarity : Cleared(Rarity),
             Level = Level ?? state.Level,
@@ -343,6 +373,7 @@ public sealed record EntityDelta
             ShapeSize = Shape is "" ? null : ShapeSize ?? state.ShapeSize,
             Heading = Heading ?? state.Heading,
             Spin = Spin ?? state.Spin,
+            Appearance = Appearance ?? state.Appearance,
         };
     }
 }
@@ -405,6 +436,12 @@ public sealed record SelfStateMsg
     List<string> Holdings
 ) : Message
 {
+    /// <summary>
+    /// The fraction of the world's day as of this state (see <see cref="EnterWorldMsg.TimeOfDay"/>), on the self
+    /// state's cadence, so a client's sky keeps the server's day. Absent from a server that predates it.
+    /// </summary>
+    public double? TimeOfDay { get; init; }
+
     // The cluster's fields. Sent to clients that negotiated the interface feature, and omitted when empty.
 
     /// <summary>Per resource, the amount held back by toggles and contracts: drawn as a darkened cap on its orb.</summary>
@@ -451,6 +488,8 @@ public sealed record DisconnectMsg(string Reason) : Message;
 public static class ProtocolInfo
 {
     public const string CastCuesFeature = "cast_cues";
+    public const string HitBodiesFeature = "hit_bodies_v2";
+    public const string ProjectileSlabsFeature = "projectile_slabs_v1";
     public const int Version = 1;
 
     /// <summary>Hello feature: the client applies <see cref="EntityDeltaMsg"/>, so changes may be sent as deltas.</summary>
