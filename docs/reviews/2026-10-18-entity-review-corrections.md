@@ -86,6 +86,8 @@ This functional checkpoint remains draft pending the coordinated kin performance
 
 ## Verification and handoff
 
-Regression results and exact commit references will be appended after execution. No gate is claimed yet. #37 remains draft until its performance and visual evidence gates are resolved. Claude rereview will be requested with the focused correction commits and retained evidence.
+The coordinated comparison at6a65ed1 is retained in `experiments/entity-review/evidence/37-benchmark-review.md` with every raw first sample, exact content/source identities, binary hashes and Normal-priority metadata. Candidate named numeric budgets pass: p95 11.2207ms, behavior1.725977ms, snapshot0.9532005ms, full29.295835KB and delta8.889854KB. The same-binary baseline snapshot fails at1.0848485ms. This is not proof of a stable speedup. The nonzero process-wide expression allocation reading, passing separate current-thread zero-allocation regression, interface snapshot timing and narrow timing/traffic headroom are all explicit.
+
+Claude identified a separate #31 zone-planning cost: local population search generates many chunks synchronously when a slot finds nothing. This still blocks the stack; its bounded-search correction belongs in #31 and will propagate bottom-up. #37 remains draft pending that integration and Claude rereview. Its rendered-world defect and functional gates are resolved on the recorded tree; #20's independent release-policy work remains separate.
 
 Acknowledged by: pending Claude rereview and owning-PR records.

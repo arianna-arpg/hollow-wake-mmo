@@ -34,3 +34,7 @@ The browser smoke counts geometry/cards and verifies interactions but does not v
 ## Review correction follow-up
 
 The historical measurements and failed card captures above remain retained. The corrected shared foundation, full #36 integration and renderer fix are documented in `docs/reviews/2026-10-18-entity-review-corrections.md` and `docs/reviews/2026-10-18-card-renderer-state.md`, with current evidence under `experiments/entity-review/evidence/37-*`. The card defect now has a passing rendered-world regression; the corrected kin performance comparison is recorded separately when complete.
+
+## Controlled corrected-foundation comparison
+
+The6a65ed1 comparison is recorded in `experiments/entity-review/evidence/37-benchmark-review.md`. Candidate named numeric budgets pass; the baseline snapshot sample fails. Raw first samples, process-wide allocation caveat and narrow headroom remain explicit. The newly identified #31 zone-planning search cost still blocks the stack and is being corrected in its owning foundation. Historical observations above are retained rather than overwritten.
