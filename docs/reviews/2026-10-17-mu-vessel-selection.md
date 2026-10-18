@@ -6,8 +6,23 @@ Source: the prototype at `118b510f`, especially `src/data/mu.ts`, `src/engine/mu
 
 Ownership: this change touches `Main.cs` and client contracts also claimed by #22, and adds one content-kind registration beside #32. It uses the existing appearance services without changing their implementations. Networking documentation overlaps #20 and #31. These overlaps are declared before implementation; integration must preserve their additive changes.
 
-Verification: pending.
+Implementation: both clients now use the same authored spatial selection, prototype ring reference, shared spirit recipe and existing body/gear builders. Remembered lives and available Calling vessels have explicit Wake cards; quick play focuses a remembered vessel instead of bypassing Mu. Options, modal focus, delayed creation replies, cancelled entry, disconnect and returning from the world use the existing shell and loading lifecycle. No simulation entity or account progress exists until the corresponding authoritative action.
 
-Claude review requested for authority, the tutorial seam, parity and lifecycle behavior.
+The flow, stage capabilities, activity schemas and views have registration points. `entry_facts` and optional Calling requirements are server-owned tags; all shipped Callings have empty requirements. A synthetic preceding stage proves that create/select cannot bypass it, abort does not complete it, and server completion returns to the same Mu stage. The actual tutorial, transient staging instances and completion migration are not implemented. Their dependent systems and threshold contract are recorded in [entry.md](../design/entry.md).
+
+Integration: merged main at `a810b0a`, preserving #22's public outfits and shared day and #30's test cleanup. Mu previews the Calling's kit, not a saved equipment snapshot. Root main was not edited; its pre-existing untracked `.claude/` directory was left alone.
+
+Verification on `4b8143c` (the subsequent commit adds this record and evidence only):
+
+- `dotnet build HollowWake.sln`: zero errors and warnings, including the native client.
+- `dotnet test HollowWake.sln --no-build`: 749 passed (582 Core, 119 Client, 48 Server).
+- `npm --prefix web test`: 192 passed; `npm --prefix web run build` passed; `protocol-ts` regenerated and the contract test passed.
+- `hollowwake validate`: zero errors and warnings. `load --x 0 --y 0` ran 200 ticks; `fight hob wolf` finished at t=10.60 with Hob defeated and Wolf at 68/96. No simulation hot path changed.
+- `node scripts/test-background.mjs --suite all --no-build --out experiments/mu-selection/artifacts`: browser 30/30 and native 31/31, including actual Mu cards, native Tab/directional focus and return from the world. Owned test servers stopped cleanly.
+- `node experiments/mu-selection/check.mjs`: 28 passed, including touch drift/dwell, keyboard, controller, refusal, pending/cancelled creation, modal focus, portrait layout, reconnect, world return, live `probe` with `entry_flow,interface`, and the delayed startup/cancellation course. No browser exceptions.
+
+[Evidence](../../experiments/mu-selection/evidence/) contains the reports, real probe and combat traces, and inspected wide/card/portrait browser captures. Native ran with the headless driver: behavior and card layout passed, but rendered native pixels and geometry/card visual performance still require an isolated graphical session. The harness explicitly records those two skipped rendering checks. No native pixel parity is claimed. Launcher delivery, exports and release code did not change.
+
+Claude review requested for authority, the tutorial seam, parity and lifecycle behavior, and a native graphical inspection when an isolated session is available.
 
 Acknowledged by: pending Claude review.
