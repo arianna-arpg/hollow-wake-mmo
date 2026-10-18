@@ -83,3 +83,29 @@ Further independent testing at `cc0e1d4` found that `Run` built the owner effect
 The correction checks a context sourced from the physical caster first, so the registered policy sees that caster's stats, body, conditions and miss attribution. After acceptance, an inheriting device creates the owner effect context at the device's position. Both contexts retain the same cast identity, random stream, variables and owner origin; an ordinary caster still creates one context and dictionary. Free echo replay is unchanged and continues to check an owner use from the echo's location.
 
 Five permanent cases cover both range directions, inclusion of the device radius, both target-condition directions, owner payload stats/credit and device miss attribution. The targeted construct run passes 31 cases. Final combined gates and performance evidence are refreshed separately after integrating approved #54; earlier performance rows remain evidence for their named source, not measurements of this correction.
+
+## Final device and morph integration
+
+Correction `e8bc863` and approved #54 through main `17ca2f1` are combined at `a7a08f1`. The merge preserves the new `EffectContext.Aim` through its existing copy paths, the final-fold lethal-resource guard, the shared probe bindings and capacity-before-birth behavior. The device gate uses the device context; its accepted effects and queued echo replay retain owner credit.
+
+Independent final gates on this source: Release build 0 warnings/errors; **1,081 .NET tests** (883 core, 58 server, 140 client), no skips; **344 web tests**; **48 deep morph cases at 128 points**; validation 0/0; load and wolf/hob duel; current generated protocol; all seven Windows hashes identical to the inherited #20 baseline. The private background run with `--forecasts --cast-cues --calling kindler` passes **33 browser and 38 native checks**, with no cleanup errors. Browser world and forecast captures were inspected; native pixels remain untested. A private TCP probe successfully negotiated all five supported features and exercised entry, movement and interface state. The initial missing browser dependency was corrected with the pinned install before the web suite; its failed startup log is retained. Local logs are under `artifacts/construct-morph-*`.
+
+After all other owners confirmed quiet and every local test/server exited, one default Release sample ran at Normal priority on the verified `a7a08f1` executable. [All first rows](../../experiments/combat-grammar/review/construct-device-morph-bench.json) and [source/binary/run metadata](../../experiments/combat-grammar/review/construct-device-morph-bench-metadata.json) are retained. This is the first sample of changed source, not a repeated attempt on `268ab10`; that source's earlier misses remain recorded above.
+
+| Measure | First result on `a7a08f1` | Budget / assessment |
+|---|---:|---|
+| Tick p95 / allocation | 14.4723 ms / 70.752370 KB | 25 ms / 2 MB, passes |
+| Behavior | **3.202574 ms** / 22.4 KB | 3 ms **misses**; 1 MB passes |
+| Full snapshot build | 0.909541 ms | 1 ms, passes this sample |
+| Combined snapshot build | **1.105977 ms** | 1 ms, **misses** |
+| Full / delta traffic | 29.658721 / 9.326582 KB | 30 / 10 KB, limited headroom |
+| Combined traffic / allocation | 8.450063 / 52.368203 KB | 10 KB traffic passes |
+| Chunk | 0.674927 ms / 14.322998 KB | 4 ms / 400 KB, passes |
+| Damage fold | 346.6785 ns / 0.168 B | 500 ns / 200 B, passes |
+| Expression time | 120.0667 ns | 150 ns, passes |
+| Expression legacy process allocation | 0.02016 B | retained nonzero diagnostic |
+| Fixed calling-thread / companion process sample | 0 / 0 B | explicit warmed instrument; #20 measurement acceptance remains separate |
+| Zone planning | 18.2885 ms | reported, no entity-stack target imported |
+| System errors | 0 | passes |
+
+The 1,852 forecast observations, unchanged full/delta byte counts and every raw row remain visible. No contention, causality or improvement claim is inferred from comparison with a different source's one sample. This workload contains no constructs and cannot certify construct-heavy scaling or an indefinitely inactive echo queue. **Behavior and combined snapshot time remain open budget misses.** No further unchanged-source sample, relaxed budget or performance clearance is claimed. The request remains draft for these issues and Claude's review of the paid-device and queue corrections; retarget it to main before #20's base is merged or deleted.
