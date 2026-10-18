@@ -20,7 +20,7 @@ Other people can join with the same address while the port is public and the cod
 
 ## With the client on GitHub Pages
 
-When the repository publishes the web client to GitHub Pages (`.github/workflows/pages.yml`), open the Pages address and put the codespace's address in the **Server** field: `wss://<codespace-name>-7778.app.github.dev/ws`, or the `https://` address from step 2, which the field turns into the same thing. Port 7778 has to be public for this, since the Pages site is another origin. A link can carry it: `https://<owner>.github.io/<repository>/?server=wss://<codespace-name>-7778.app.github.dev/ws`.
+The web client is published to GitHub Pages at <https://arianna-arpg.github.io/hollow-wake-mmo/> from main (`.github/workflows/pages.yml`). Open it and put the codespace's address in the **Server** field: `wss://<codespace-name>-7778.app.github.dev/ws`, or the `https://` address from step 2, which the field turns into the same thing. Port 7778 has to be public for this, since the Pages site is another origin. A link can carry it: `https://arianna-arpg.github.io/hollow-wake-mmo/?server=wss://<codespace-name>-7778.app.github.dev/ws`.
 
 ## Notes
 

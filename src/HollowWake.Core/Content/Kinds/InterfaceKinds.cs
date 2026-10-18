@@ -48,6 +48,7 @@ internal static class InterfaceKinds
 
     public static void Register()
     {
+        LoadingKinds.Register();
         // Page gates and pip sources read the hero; the page scope adds the unspent points of each currency.
         ScopeNames.DeclarePrefix("points.");
         // Option gates and requirements read the client's facts and the other options.
@@ -189,6 +190,13 @@ internal static class InterfaceKinds
             if (!d.Icons.ContainsKey(id))
             {
                 c.Error($"filled names '{id}', which is not an icon of the set.");
+            }
+        }
+        foreach (var (id, path) in d.Accents)
+        {
+            if (!d.Icons.ContainsKey(id) || !path.TrimStart().StartsWith("M", StringComparison.OrdinalIgnoreCase))
+            {
+                c.Error($"accents.{id} must name an existing glyph and contain SVG path data.");
             }
         }
         void Mapped(Dictionary<string, string> map, string field)

@@ -83,6 +83,9 @@ public sealed record UiIconSetDef : Definition
     /// <summary>Glyphs drawn filled rather than stroked.</summary>
     public List<string> Filled { get; init; } = new();
 
+    /// <summary>Optional solid details over a stroked glyph (for example the reliquary's pupil).</summary>
+    public Dictionary<string, string> Accents { get; init; } = new();
+
     public Dictionary<string, string> Pools { get; init; } = new();
     public Dictionary<string, string> Statuses { get; init; } = new();
 

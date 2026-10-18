@@ -144,7 +144,7 @@ export class Input {
     this.down.delete(e.code);
   }
 
-  private releaseAll(): void {
+  releaseAll(): void {
     this.down.clear();
     this.heldPad.clear();
     this.orbiting = false;

@@ -34,7 +34,7 @@ export function rawKinds(files: Record<string, string>): Map<string, Obj[]> {
   for (const path of Object.keys(files).sort()) {
     let docs: YamlValue[];
     try {
-      docs = parseYamlDocuments(files[path]);
+      docs = path.endsWith('.json') ? [JSON.parse(files[path]) as YamlValue] : parseYamlDocuments(files[path]);
     } catch (error) {
       console.warn(`content ${path} could not be read`, error);
       continue;
@@ -119,6 +119,7 @@ export interface UiIconSet {
   stroke: number;
   icons: Record<string, string>;
   filled: Set<string>;
+  accents?: Record<string, string>;
   pools: Record<string, string>;
   statuses: Record<string, string>;
   looks: Record<string, string>;
@@ -248,6 +249,7 @@ function iconSetFrom(o: Obj): UiIconSet {
     stroke: num(o.stroke, 1.75),
     icons: strMap(o.icons),
     filled: new Set(strings(o.filled)),
+    accents: strMap(o.accents),
     pools: strMap(o.pools),
     statuses: strMap(o.statuses),
     looks: strMap(o.looks),
