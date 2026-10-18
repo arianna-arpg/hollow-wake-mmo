@@ -36,12 +36,12 @@ public class WorldGenGoldenTests
         Assert.Equal(new ZoneCoord(0, 0), g.StartZone());
     }
 
-    // Explicit spawn levels and bounded quest audit: experiments/golems/evidence/foundation-final/.
+    // Site-scaled Knots and anchored quest audit: experiments/golems/evidence/complete-foundation/.
     [Theory]
-    [InlineData(0, 0, "467923F597DB83C5", "38740F7C0C66C2F6")]
+    [InlineData(0, 0, "4BFB77C7FB773A38", "B04153F9629D9BAE")]
     [InlineData(1, 0, "A25A95C6F14431A1", "0E386FE1D6659BC0")]
-    [InlineData(0, -1, "8AD7370958FA7D7B", "2AFA9EE5AA75F409")]
-    [InlineData(3, 2, "BAFEA2C1CCA0DEC0", "B927209C7C70E524")]
+    [InlineData(0, -1, "8AD7370958FA7D7B", "D785D8F084A1F919")]
+    [InlineData(3, 2, "BAFEA2C1CCA0DEC0", "8711D19C4613D904")]
     public void ZoneMatchesGoldenHashes(int x, int y, string infoHash, string chunksHash)
     {
         var g = new WorldGenerator(Registry.Value, Rng.Hash64(Seed));
@@ -101,7 +101,7 @@ public class WorldGenGoldenTests
         {
             HashPoint(h, g, 40 + i * 0.83, 20 + i * 0.61, i % 20 == 0);
         }
-        Golden("overlaid world", "F2165541CF5F5CDF", h.Hex);
+        Golden("overlaid world", "805116FF4B6EE539", h.Hex);
 
         // Removing an overlay must regenerate exactly what a generator that never had it produces.
         overlays.Remove("fount");
