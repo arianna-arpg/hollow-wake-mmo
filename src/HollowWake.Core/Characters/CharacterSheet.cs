@@ -202,7 +202,7 @@ public sealed class CharacterFactory
         var calling = sim.Content.Get<CallingDef>(sheet.Calling);
         var e = sim.World.Create();
         var position = sim.Terrain.SnapToGround(sheet.Position, 3);
-        sim.World.Add(e, new Transform { Position = position, Radius = 0.4f, Height = 1.8f });
+        sim.World.Add(e, new Transform { Position = position, Radius = 0.4f, Height = (float)sim.Content.Rules.Number("physicality.reference_height", 1.8) });
         sim.World.Add(e, new Identity
         {
             Name = sheet.Name,

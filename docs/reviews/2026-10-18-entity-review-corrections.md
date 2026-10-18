@@ -34,6 +34,16 @@ On the merged correction tree, solution build passed with zero warnings/errors; 
 
 The recorded four-zone population audit includes every pattern's point/body counts. The eligibility change reshuffles zone 1_0's candidate choices even though its old selected sites were not Tolls: rejecting an ineligible candidate changes weighted selection. Other reference-zone population counts stay unchanged. The origin cull now names a present hob; downstream fauna classifiers replace that provisional cull vocabulary. Records and golden mismatch output are under `experiments/entity-review/evidence/32-*`.
 
+## #33 correction scope
+
+The player reads `physicality.reference_height`; skeleton and Goblin/Orc stature tests use that authored reference. The CharacterSheet height assignment overlaps #36 and will preserve its hit-body registration during the full foundation merge. Orc melee bindings reuse `close_melee`, and Orc faction relations explicitly reciprocate wilds/the_loosed hostility. Ravager provenance now declares its rebalance and restores its existing Scrap Fort habitat. Goblin mass reduction from the stature pass is intentional geometric scaling. The small Gnasher silhouettes remain unchanged; projectile coverage requires the complete #36 foundation.
+
+## #33 correction checkpoint
+
+Solution build and tests and content validation are recorded under `experiments/entity-review/evidence/33-*`. The four-zone per-pattern audit retains all count changes, not only ASCII maps. The origin scout now selects an eligible level-three ruin rather than a level-eight Chainkeeper Camp. Natural candidate eligibility reshuffles the eastern site's inhabitants, with unchanged counts in the other three zones. Climate remains unchanged. Full client smoke and performance gates remain for the combined downstream tree; the small-body projectile blocker still depends on full #36 and is not claimed closed by this content correction.
+
+The broad goblinkin classifier intentionally includes Orc ancestry. GoblinkinTests itself was not expanded in the original pass: its existing parameterized filter gained Gnashers and lost the migrated Ravager; OrcTests owns Orc coverage. Size classifiers are authoring categories rather than mass thresholds. This checkpoint remains draft pending the combined gates and Claude rereview.
+
 ## Verification and handoff
 
 Regression results and exact commit references will be appended after execution. No gate is claimed yet. #37 remains draft until its performance and visual evidence gates are resolved. Claude rereview will be requested with the focused correction commits and retained evidence.
