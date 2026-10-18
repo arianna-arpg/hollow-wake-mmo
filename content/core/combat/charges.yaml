@@ -1,6 +1,8 @@
 # Charges: named banks a body builds and spends. The count reads as the gauge charge.<id> and the most a body
 # holds is its attribute charge.<id>.max (three unless declared otherwise or modified). Charges last their
-# duration after the last gain, then decay (decay per second, or all at once at zero).
+# duration after the last gain, then decay (decay per second, or all at once at zero). A kind's modifiers are
+# granted per charge held, scaled by that gauge under the source charge:<id>; while a drain burns a kind down
+# its rate reads as the gauge charge.<id>.drain, so a modifier whose condition reads it holds only then.
 kind: charges
 entries:
   - id: fury
@@ -31,13 +33,50 @@ entries:
   - { id: verse, name: Verse, description: "Lines of a battle song, spent in a crescendo.", duration: 8, decay: 0.5, color: "#d8a8e0" }
   - { id: riposte, name: Riposte, description: "An answer banked by a parry.", duration: 6, decay: 1, color: "#d8e8f8" }
   - { id: magma, name: Magma, description: "Heat banked by Ember blows; a vent spends it.", duration: 10, decay: 0, color: "#e06a30" }
-  - { id: rage, name: Rage, description: "A short fury that fades fast.", duration: 3, decay: 1, color: "#e04030" }
-  - { id: bloodlust, name: Bloodlust, description: "A thirst banked by kills and burned down by a drain.", duration: 10, decay: 0, color: "#c02848" }
+  - id: rage
+    name: Rage
+    description: "A short fury that fades fast."
+    duration: 3
+    decay: 1
+    color: "#e04030"
+    modifiers:
+      - { attribute: attack.speed, form: increased, value: 0.025 }
+      - { attribute: damage, form: increased, value: 0.02, scope: [attack] }
+      - { attribute: added.stone, form: flat, value: 0.5, scope: [attack] }
+  # A banked thirst grants nothing; each charge feeds the high only while a drain burns the bank down.
+  - id: bloodlust
+    name: Bloodlust
+    description: "A thirst banked by kills and burned down by a drain."
+    duration: 10
+    decay: 0
+    color: "#c02848"
+    modifiers:
+      - { attribute: attack.speed, form: increased, value: 0.02, condition: "charge.bloodlust.drain > 0" }
+      - { attribute: cast.speed, form: increased, value: 0.02, condition: "charge.bloodlust.drain > 0" }
+      - { attribute: move.speed, form: increased, value: 0.012, condition: "charge.bloodlust.drain > 0" }
+      - { attribute: damage, form: increased, value: 0.02, condition: "charge.bloodlust.drain > 0" }
   - { id: soul, name: Souls, description: "The dead gathered to be spent.", duration: 6, decay: 0.5, color: "#9a86e8" }
   - { id: gyre, name: Gyre, description: "Blades caught on the return.", duration: 8, decay: 0.5, color: "#b8d0d8" }
   - { id: storm, name: Storm, description: "Storm gathered for a strike.", duration: 5, decay: 0.5, color: "#c8e84a" }
-  - { id: frenzy, name: Frenzy, description: "Quickening banked by blows.", duration: 8, decay: 0.5, color: "#8ae06a" }
+  - id: frenzy
+    name: Frenzy
+    description: "Quickening banked by blows."
+    duration: 8
+    decay: 0.5
+    color: "#8ae06a"
+    modifiers:
+      - { attribute: attack.speed, form: increased, value: 0.03 }
+      - { attribute: cast.speed, form: increased, value: 0.03 }
+      - { attribute: move.speed, form: increased, value: 0.02 }
   - { id: brew, name: Brew, description: "A draught steeped between uses.", duration: 10, decay: 0.25, color: "#c8a848" }
   - { id: verdict, name: Verdict, description: "Judgement banked to be passed.", duration: 10, decay: 0, color: "#e8d44a" }
-  - { id: communion, name: Communion, description: "Kinship with the summoned.", duration: 6, decay: 0.5, color: "#b06bd4" }
+  - id: communion
+    name: Communion
+    description: "Kinship with the summoned."
+    duration: 6
+    decay: 0.5
+    color: "#b06bd4"
+    modifiers:
+      - { attribute: damage, form: increased, value: 0.012 }
+      - { attribute: minion.damage, form: increased, value: 0.02 }
   - { id: wakeflame, name: Wakeflame, description: "Embers of the wake, gathered from the slain.", duration: 10, decay: 0, color: "#ffd98a" }

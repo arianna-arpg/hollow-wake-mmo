@@ -22,11 +22,11 @@ describe('config', () => {
   });
 
   it('merges a partial override over the defaults without losing the rest', () => {
-    const merged = merge(DEFAULTS, { world: { chunkRadius: 5 }, terrain: { fallback: '#000000' } });
+    const merged = merge(DEFAULTS, { world: { chunkRadius: 5 }, entities: { telegraph: '#000000' } });
     expect(merged.world.chunkRadius).toBe(5);
     expect(merged.world.maxChunkRequestsInFlight).toBe(DEFAULTS.world.maxChunkRequestsInFlight);
-    expect(merged.terrain.fallback).toBe('#000000');
-    expect(merged.terrain.base).toEqual(DEFAULTS.terrain.base);
+    expect(merged.entities.telegraph).toBe('#000000');
+    expect(merged.entities.labelColors).toEqual(DEFAULTS.entities.labelColors);
     expect(DEFAULTS.world.chunkRadius).toBe(3);
   });
 

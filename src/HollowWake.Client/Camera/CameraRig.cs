@@ -11,16 +11,21 @@ public enum CameraMode
 /// <summary>
 /// Two ways of looking at the same fully 3D world. Isometric: orthographic, fixed pitch, yaw in
 /// 45 degree steps, follows the player. Third person: perspective, orbit with the right mouse button,
-/// scroll to zoom. Presentation only; the simulation never knows which one is active.
+/// scroll to zoom. The zoom and the turn ease toward their targets and a shake (a hit taken, a kill) rides
+/// on top, both with timings from the motion content and both still under reduced motion. Presentation
+/// only; the simulation never knows which one is active.
 /// </summary>
 public partial class CameraRig : Node3D
 {
     private Camera3D _camera = null!;
     private Vector3 _target;
     private float _yaw = Mathf.DegToRad(45);
+    private float _yawNow = Mathf.DegToRad(45);
     private float _pitch = Mathf.DegToRad(35.264f);
     private float _orthoSize = 28f;
+    private float _orthoNow = 28f;
     private float _distance = 14f;
+    private float _distanceNow = 14f;
     private float _thirdPitch = Mathf.DegToRad(28f);
     private bool _orbiting;
     private float _isoStep = Mathf.DegToRad(45);
@@ -29,10 +34,30 @@ public partial class CameraRig : Node3D
     private bool _invert;
     private float _fov = 65f;
     private bool _hasTarget;
+    private float _shake;
+    private float _shakeTime;
+    private double _shakeStarted;
 
     public CameraMode Mode { get; private set; } = CameraMode.Isometric;
     public Camera3D Camera => _camera;
+
+    /// <summary>The yaw the camera is turning toward.</summary>
     public float Yaw => _yaw;
+
+    /// <summary>The yaw the camera has now, after easing.</summary>
+    public float YawNow => _yawNow;
+
+    /// <summary>The orthographic size now, for the representation choice.</summary>
+    public float OrthoSize => _orthoNow;
+
+    // the feel, from the motion content
+    public float FollowIso { get; set; } = 10f;
+    public float FollowThird { get; set; } = 14f;
+    public float ZoomEase { get; set; } = 9f;
+    public float ShakeSeconds { get; set; } = 0.28f;
+    public float ShakeRate { get; set; } = 28f;
+    public bool ShakeEnabled { get; set; } = true;
+    public bool ReducedMotion { get; set; }
 
     public override void _Ready()
     {
@@ -89,11 +114,29 @@ public partial class CameraRig : Node3D
     {
         if (Mode == CameraMode.Isometric)
         {
-            _orthoSize = Mathf.Clamp(_orthoSize - steps * 3f, 8f, _isoZoomMax);
+            // a zoom step is a fraction of the size, so the near end moves gently and the far end briskly
+            _orthoSize = Mathf.Clamp(_orthoSize * MathF.Pow(0.88f, steps), 8f, _isoZoomMax);
         }
         else
         {
-            _distance = Mathf.Clamp(_distance - steps * 1.5f, 3f, 60f);
+            _distance = Mathf.Clamp(_distance * MathF.Pow(0.88f, steps), 3f, 60f);
+        }
+    }
+
+    /// <summary>A shake of the given strength (world units at full), decaying over the shake time; the strongest wins.</summary>
+    public void Shake(float strength)
+    {
+        if (!ShakeEnabled || ReducedMotion || strength <= 0)
+        {
+            return;
+        }
+        var now = Time.GetTicksMsec() / 1000.0;
+        var remaining = _shakeTime <= 0 ? 0 : Mathf.Max(0, 1 - (float)(now - _shakeStarted) / _shakeTime) * _shake;
+        if (strength >= remaining)
+        {
+            _shake = strength;
+            _shakeTime = ShakeSeconds;
+            _shakeStarted = now;
         }
     }
 
@@ -146,13 +189,26 @@ public partial class CameraRig : Node3D
         {
             return;
         }
+        if (force || delta <= 0)
+        {
+            _orthoNow = _orthoSize;
+            _distanceNow = _distance;
+            _yawNow = _yaw;
+        }
+        else
+        {
+            var ease = 1f - Mathf.Exp(-delta * ZoomEase);
+            _orthoNow += (_orthoSize - _orthoNow) * ease;
+            _distanceNow += (_distance - _distanceNow) * ease;
+            _yawNow = Mathf.LerpAngle(_yawNow, _yaw, 1f - Mathf.Exp(-delta * ZoomEase * 1.4f));
+        }
         Vector3 desired;
         Vector3 lookAt;
         if (Mode == CameraMode.Isometric)
         {
             _camera.Projection = Camera3D.ProjectionType.Orthogonal;
-            _camera.Size = _orthoSize;
-            var dir = new Vector3(Mathf.Cos(_pitch) * Mathf.Sin(_yaw), Mathf.Sin(_pitch), Mathf.Cos(_pitch) * Mathf.Cos(_yaw));
+            _camera.Size = _orthoNow;
+            var dir = new Vector3(Mathf.Cos(_pitch) * Mathf.Sin(_yawNow), Mathf.Sin(_pitch), Mathf.Cos(_pitch) * Mathf.Cos(_yawNow));
             desired = _target + dir * 120f;
             lookAt = _target;
         }
@@ -161,8 +217,8 @@ public partial class CameraRig : Node3D
             _camera.Projection = Camera3D.ProjectionType.Perspective;
             _camera.Fov = _fov;
             var eye = _target + new Vector3(0, 1.6f, 0);
-            var dir = new Vector3(Mathf.Cos(_thirdPitch) * Mathf.Sin(_yaw), Mathf.Sin(_thirdPitch), Mathf.Cos(_thirdPitch) * Mathf.Cos(_yaw));
-            desired = eye + dir * _distance;
+            var dir = new Vector3(Mathf.Cos(_thirdPitch) * Mathf.Sin(_yawNow), Mathf.Sin(_thirdPitch), Mathf.Cos(_thirdPitch) * Mathf.Cos(_yawNow));
+            desired = eye + dir * _distanceNow;
             lookAt = eye;
         }
         if (force || delta <= 0)
@@ -171,9 +227,26 @@ public partial class CameraRig : Node3D
         }
         else
         {
-            var t = 1f - Mathf.Exp(-delta * (Mode == CameraMode.Isometric ? 10f : 14f));
+            var t = 1f - Mathf.Exp(-delta * (Mode == CameraMode.Isometric ? FollowIso : FollowThird));
             _camera.GlobalPosition = _camera.GlobalPosition.Lerp(desired, t);
         }
         _camera.LookAt(lookAt, Vector3.Up);
+        if (_shake > 0)
+        {
+            var now = Time.GetTicksMsec() / 1000.0;
+            var k = _shakeTime <= 0 ? 0 : 1 - (float)(now - _shakeStarted) / _shakeTime;
+            if (k <= 0)
+            {
+                _shake = 0;
+            }
+            else
+            {
+                var a = (float)now * ShakeRate;
+                var amount = _shake * k * k;
+                var offset = _camera.GlobalBasis.X * (MathF.Sin(a * 1.0f) * 0.6f + MathF.Sin(a * 2.3f) * 0.4f) * amount
+                    + _camera.GlobalBasis.Y * (MathF.Sin(a * 1.7f + 1.3f) * 0.7f) * amount;
+                _camera.GlobalPosition += offset;
+            }
+        }
     }
 }

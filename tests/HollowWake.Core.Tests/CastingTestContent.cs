@@ -14,8 +14,9 @@ using Xunit;
 namespace HollowWake.Core.Tests;
 
 /// <summary>
-/// The core content plus a layer of test forms, glyphs and presets for the cast modes (ids start with
-/// <c>t_</c>), loaded once. Numbers here are the tests' own, so tuning the shipped content cannot move them.
+/// The core content plus a layer of test forms, glyphs and presets for the cast modes, of charge kinds and of the
+/// rules they lean on (ids start with <c>t_</c>), loaded once. Numbers here are the tests' own, so tuning the shipped
+/// content cannot move them.
 /// </summary>
 internal static class CastingTestContent
 {
@@ -157,6 +158,36 @@ entries:
         - { id: near, links: [ wide ], excludes: [ far ], modifiers: [ { attribute: area.radius, form: flat, value: 1 } ] }
         - { id: grafted, links: [ far, near ], glyph: t_repeat }
     effects: [ { type: event, name: t_tree, data: { radius: weave.area.radius } } ]
+  - id: t_echo_bolt
+    targeting: enemy
+    cast_mode: instant
+    costs: { mana: 3 }
+    cooldown: 2
+    attributes: { range: 30 }
+    min_threads: 0
+    effects:
+      - type: projectile
+        speed: 6
+        range: 30
+        on_hit:
+          - { type: damage, amount: 10, threads: [mind], can_crit: false }
+          - { type: cast, weave: host, at: target, damage_scale: 0.5 }
+  - id: t_recast
+    targeting: enemy
+    cast_mode: instant
+    attributes: { range: 30 }
+    min_threads: 0
+    effects:
+      - { type: damage, amount: 10, threads: [mind], can_crit: false }
+      - { type: cast, weave: host, at: target }
+  - id: t_relayer
+    targeting: self
+    cast_mode: instant
+    min_threads: 0
+    effects:
+      - { type: event, name: t_relayer }
+      - { type: cast, weave: host }
+      - { type: cast, weave: t_relay }
 
 ---
 kind: glyphs
@@ -178,6 +209,7 @@ entries:
   - { id: t_spend, spend: { charge: t_fury, all: true, minimum: 1, scales: [ { attribute: area.radius, form: increased, per_charge: 0.5 } ] } }
   - { id: t_ranged_trigger, requires_mechanisms: [ projectile ], trigger: { on: hit, chance: 1 } }
   - { id: t_no_forward, forwards: false, requires_mechanisms: [ projectile ], modifiers: [ { attribute: cost, form: increased, value: 0.5 } ] }
+  - { id: t_echo, hooks: { on_hit: [ { type: cast, weave: host, at: target, damage_scale: 0.5 } ] } }
 
 ---
 kind: weaves
@@ -189,11 +221,30 @@ entries:
   - { id: t_step_b, form: t_marker }
   - { id: t_spark_a, form: t_shot, glyphs: [ t_on_hit ] }
   - { id: t_spark_b, form: t_shot, glyphs: [ t_on_hit ] }
+  - { id: t_relay, form: t_marker, effects: [ { type: event, name: t_relay }, { type: cast, weave: host } ] }
+
+---
+kind: rules
+entries:
+  - { id: effects, patch: true, values: { host_depth: 1 } }
 
 ---
 kind: patterns
 entries:
   - { id: t_blank, name: Blank, extends: monster, level: 1, components: { weaves: { list: [] } } }
+
+---
+kind: charges
+entries:
+  - id: t_quicken
+    duration: 4
+    decay: 1
+    modifiers:
+      - { attribute: attack.speed, form: increased, value: 0.1 }
+      - { attribute: damage, form: increased, value: 0.05, scope: [attack] }
+  - id: t_thirst
+    modifiers:
+      - { attribute: attack.speed, form: increased, value: 0.1, condition: "charge.t_thirst.drain > 0" }
 """;
 
     private static readonly Lazy<ContentRegistry> Loaded = new(() =>

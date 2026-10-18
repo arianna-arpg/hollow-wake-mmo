@@ -7,8 +7,7 @@
 // screenshot per stage and exits non-zero when any check fails.
 //
 //   npm run smoke -- [--url http://localhost:7778/] [--shots DIR] [--account NAME]
-//                    [--browser msedge|chrome|chromium] [--executable PATH] [--headed] [--full-states] [--isolated-input]
-//                    [--no-physical-gamepads]
+//                    [--browser msedge|chrome|chromium] [--executable PATH] [--headed] [--full-states] [--isolated-input] [--no-physical-gamepads]
 //
 // --full-states runs the client without entity deltas (full entity states only), for comparison. The page
 // runs under its own settings profile (smoke), started from the content's defaults each run.
@@ -50,15 +49,10 @@ const browser = await chromium.launch({
 });
 const page = await browser.newPage({ viewport: { width: 1280, height: 800 } });
 // Headless Chromium can still see real controllers. Background runs accept only scripted input.
-if (flag('isolated-input')) {
+if (flag('isolated-input') || flag('no-physical-gamepads')) {
   await page.addInitScript(isolatePhysicalInput);
   console.log('SMOKE input: page-local keyboard and pointer; physical controllers isolated');
-} else if (flag('no-physical-gamepads')) {
-  // This course drives keyboard/mouse; isolate it from controllers in use by other applications.
-  // The loading-specific course separately exercises controller behavior with explicit pad states.
-  await page.addInitScript(() => Object.defineProperty(navigator, 'getGamepads', { value: () => [] }));
 }
-
 const pageErrors = [];
 page.on('pageerror', (e) => pageErrors.push(e.message));
 page.on('console', (m) => {
@@ -404,6 +398,83 @@ async function optionsSteps() {
   await closeEverything();
 }
 
+/** Samples two seconds of frames: frame time percentiles, the renderer's draw calls and triangles, and the bodies drawn. */
+async function measure(mode) {
+  const frames = await page.evaluate(() => new Promise((done) => {
+    const times = [];
+    let last = performance.now();
+    const t0 = last;
+    const step = () => {
+      const now = performance.now();
+      times.push(now - last);
+      last = now;
+      if (now - t0 < 2000) {
+        requestAnimationFrame(step);
+      } else {
+        done(times);
+      }
+    };
+    requestAnimationFrame(step);
+  }));
+  frames.sort((a, b) => a - b);
+  const at = (q) => (frames.length === 0 ? 0 : frames[Math.min(frames.length - 1, Math.floor(q * frames.length))]);
+  const r = await hw(() => window.hollowWake.render);
+  const c = await counts();
+  const fps = Math.round(frames.length / 2);
+  const line = `${mode}: ${fps} fps, frame ms p50 ${at(0.5).toFixed(2)} p95 ${at(0.95).toFixed(2)} max ${frames[frames.length - 1].toFixed(2)}, ${c.frameMs} ms of work per frame; `
+    + `${r.drawCalls} draw calls, ${r.triangles} triangles; ${r.bodies} bodies (${r.cards} cards, ${r.bodyTriangles} body triangles), ${r.atlases} atlases ${(r.atlasBytes / 1024 / 1024).toFixed(2)} MiB, ${r.textures} textures; ${c.entities} entities, ${c.chunksBuilt} chunks`;
+  console.log(`SMOKE measure ${line}`);
+  return { line, p95: at(0.95), bodies: r.bodies, cards: r.cards };
+}
+
+/**
+ * The look's stages on the busiest scene, the hamlet on entry: the measurement line for painted geometry and for
+ * directional cards, then the readability checks of the visual language (grayscale, reduced motion) and the day
+ * at night and evening through the developer options.
+ */
+async function lookStages() {
+  const set = (id, value) => hw(([k, v]) => window.hollowWake.setSetting(k, v), [id, value]);
+  const geometry = await measure('geometry');
+  record('bodies as geometry', geometry.bodies > 0 && geometry.p95 < 50, geometry.line);
+  await set('shadows', false);
+  await sleep(300);
+  const unshadowed = await measure('geometry, no shadows');
+  await set('shadows', true);
+  record('bodies without shadows', unshadowed.bodies > 0, unshadowed.line);
+  await set('bodies', 'cards');
+  const baked = await until(async () => {
+    const r = await hw(() => window.hollowWake.render);
+    return r.bakesPending === 0 && r.cards > 0;
+  }, 20000);
+  await sleep(500);
+  const cards = await measure('cards');
+  await shot('16_cards.png');
+  record('bodies as cards', baked && cards.cards > 0 && cards.p95 < 50, cards.line);
+  await set('bodies', 'auto');
+  await sleep(300);
+  await set('grayscale', true);
+  await sleep(300);
+  await shot('17_grayscale.png');
+  await set('grayscale', false);
+  await set('reduce_motion', true);
+  await sleep(300);
+  await shot('18_reduced_motion.png');
+  await set('reduce_motion', false);
+  await set('day_lock', true);
+  await set('day_time', 1);
+  await sleep(400);
+  const night = (await hw(() => window.hollowWake.render)).timeOfDay;
+  await shot('19_night.png');
+  await set('day_time', 18.5);
+  await sleep(400);
+  const evening = (await hw(() => window.hollowWake.render)).timeOfDay;
+  await shot('20_evening.png');
+  await set('day_lock', false);
+  await sleep(300);
+  const server = (await hw(() => window.hollowWake.render)).timeOfDay;
+  record('day cycle', Math.abs(night - 1 / 24) < 0.01 && Math.abs(evening - 18.5 / 24) < 0.01, `night at ${night.toFixed(2)} of the day, evening at ${evening.toFixed(2)}, the server's day at ${server.toFixed(2)}`);
+}
+
 async function script() {
   await page.goto(`${url}${url.includes('?') ? '&' : '?'}account=${encodeURIComponent(account)}&profile=smoke&fresh-settings${flag('full-states') ? '&full-states' : ''}`);
   await page.waitForFunction(() => window.hollowWake !== undefined);
@@ -448,6 +519,7 @@ async function script() {
   record('terrain built', built, `${c.chunksBuilt} chunks (${c.chunksRequested} requested) in ${((Date.now() - t0) / 1000).toFixed(1)}s, ${c.entities} entities in view`);
   await sleep(800);
   await shot('01_isometric.png');
+  await lookStages();
 
   // Held movement: W for a moment, then see where the server put us.
   if (!(await ensureAlive())) {

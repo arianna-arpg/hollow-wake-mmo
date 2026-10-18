@@ -73,9 +73,9 @@ public sealed class EffectContext
     }
 
     /// <summary>
-    /// How deep in a chain this effect runs. Nested deliveries, repeats, delays and casts of other weaves
-    /// run one deeper; <c>effects.max_depth</c> caps it, and damage and status events carry it so triggers
-    /// can refuse to chain without limit.
+    /// How deep in a chain this effect runs. Nested deliveries, repeats, delays and casts (of other weaves or
+    /// of the host again) run one deeper; <c>effects.max_depth</c> caps it, and damage and status events carry
+    /// it so triggers can refuse to chain without limit.
     /// </summary>
     public int Depth { get; init; }
 

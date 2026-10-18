@@ -1,0 +1,61 @@
+{
+  "started": "2026-10-18T00:56:53.600Z",
+  "root": "D:\\Games\\MMOARPG\\artifacts\\pr-9-finalize",
+  "directory": "D:\\Games\\MMOARPG\\artifacts\\pr-9-finalize\\artifacts\\pr9-background-final\\run-Cy12AU",
+  "suite": "all",
+  "status": "failed",
+  "stages": [
+    {
+      "name": "build-server",
+      "status": "passed",
+      "started": "2026-10-18T00:56:53.603Z",
+      "code": 0,
+      "signal": null,
+      "finished": "2026-10-18T00:56:57.987Z"
+    },
+    {
+      "name": "typecheck-web",
+      "status": "passed",
+      "started": "2026-10-18T00:56:57.988Z",
+      "code": 0,
+      "signal": null,
+      "finished": "2026-10-18T00:57:01.364Z"
+    },
+    {
+      "name": "build-web",
+      "status": "passed",
+      "started": "2026-10-18T00:57:01.365Z",
+      "code": 0,
+      "signal": null,
+      "finished": "2026-10-18T00:57:02.163Z"
+    },
+    {
+      "name": "build-godot",
+      "status": "passed",
+      "started": "2026-10-18T00:57:02.164Z",
+      "code": 0,
+      "signal": null,
+      "finished": "2026-10-18T00:57:05.308Z"
+    },
+    {
+      "name": "smoke-web",
+      "status": "failed",
+      "started": "2026-10-18T00:57:08.909Z",
+      "code": 1,
+      "signal": null,
+      "error": "smoke-web failed; see smoke-web.log",
+      "finished": "2026-10-18T00:59:19.047Z"
+    }
+  ],
+  "nativeRendering": "not covered by headless mode",
+  "godot": "C:/Users/John/.codex/worktrees/launcher-quick-play/MMOARPG/artifacts/quick-play/tools/godot/Godot_v4.7.2-stable_mono_win64/Godot_v4.7.2-stable_mono_win64.exe",
+  "server": {
+    "tcp": 54299,
+    "url": "http://127.0.0.1:54300",
+    "name": "harness-run-Cy12AU",
+    "data": "D:\\Games\\MMOARPG\\artifacts\\pr-9-finalize\\artifacts\\pr9-background-final\\run-Cy12AU\\data"
+  },
+  "error": "smoke-web failed; see smoke-web.log",
+  "cleanupErrors": [],
+  "finished": "2026-10-18T00:59:19.432Z"
+}

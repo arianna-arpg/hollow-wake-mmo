@@ -240,6 +240,22 @@ public class ShoveTests
     }
 
     [Fact]
+    public void APullOnAFlightsHitReelsTowardTheCasterWhenAnchoredThere()
+    {
+        // A hook on a flight acts where the flight struck, so a plain pull measures from the hit point and moves
+        // nothing; anchored to the caster it reels the catch home, stopping a unit short.
+        var arena = DeliveryArena.Create();
+        var boar = arena.Body(16, 10);
+        arena.Run("{\"type\": \"projectile\", \"speed\": 20, \"range\": 10, \"on_hit\": [{\"type\": \"move\", \"kind\": \"pull\", \"distance\": 8}]}", At(arena, boar), target: boar);
+        arena.Tick(40);
+        Assert.Equal(16, At(arena, boar).X, 0);
+        arena.Run("{\"type\": \"projectile\", \"speed\": 20, \"range\": 10, \"on_hit\": [{\"type\": \"move\", \"kind\": \"pull\", \"distance\": 8, \"anchor\": \"caster\"}]}", At(arena, boar), target: boar);
+        arena.Tick(40);
+        Assert.Equal(11, At(arena, boar).X, 0);
+        Assert.Equal(10, At(arena, boar).Y, 3);
+    }
+
+    [Fact]
     public void ImmovableBodiesAreNotShoved()
     {
         var arena = DeliveryArena.Create();

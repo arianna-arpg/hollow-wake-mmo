@@ -1,0 +1,57 @@
+# The drawn ground (docs/design/appearance.md), read by both clients: a cell's colour from its surface tags
+# and cell flags. Ground rules match first by tags, first match wins; tints then apply in order; structure
+# cells take one structure rule (its side colours the skirt, its roof raises a pitched cap); layers are the
+# bridges and floors above the ground. Firstwork is matte limestone with measured joins; Marcher work is
+# wood, wattle and repaired stone. Values follow the visual language's swatches, quieter than the cue samples.
+kind: ui_surfaces
+entries:
+  - id: default
+    ground:
+      - { tags: [snow], color: "#d9dcd6" }
+      - { tags: [ash], color: "#5e4438" }
+      - { tags: [scorched], color: "#4a3a34" }
+      - { tags: [grey], color: "#4a4452" }
+      - { tags: [still], color: "#4a4452" }
+      - { tags: [bog], color: "#4f6b3a" }
+      - { tags: [sand], color: "#cfc097" }
+      - { tags: [rock], color: "#8c8a7a" }
+      - { tags: [forest_floor, deep], color: "#2a4a2a" }
+      - { tags: [forest_floor], color: "#3f6a36" }
+      - { tags: [scrub], color: "#a8964f" }
+      - { tags: [dry], color: "#a8964f" }
+      - { tags: [heath], color: "#8e9452" }
+      - { tags: [meadow], color: "#74a84a" }
+      - { tags: [grass], color: "#5e8a3c" }
+    fallback: "#6e8a56"
+    structure:
+      - { tags: [road], color: "#9e8f75" }
+      - { tags: [paved, shrine], color: "#d8d2ba", side: "#b8b2a0" }
+      - { tags: [paved, fount], color: "#d8d2ba", side: "#b8b2a0" }
+      - { tags: [paved], color: "#b8b2a0", side: "#9a9484" }
+      - { tags: [stair], color: "#c8c2aa", side: "#9a9484" }
+      - { tags: [hedge], color: "#4f7a3c", side: "#3f6a36" }
+      - { tags: [palisade], color: "#6b4a2e", side: "#5a4634" }
+      - { tags: [tent], color: "#8a7a5a", side: "#6e6248", roof: "#a89470" }
+      - { tags: [house], color: "#8a7a62", side: "#a89a80", roof: "#6b4a2e" }
+      - { tags: [tower], color: "#8c8a80", side: "#7a786e" }
+      - { tags: [kiln], color: "#5a4a44", side: "#4a3a34" }
+      - { tags: [wall, ruin], color: "#8c8a7a", side: "#6e6c60" }
+      - { tags: [wall], color: "#9a948a", side: "#7e7a70" }
+      - { tags: [pillar], color: "#d8d2ba", side: "#b8b2a0" }
+      - { tags: [well], color: "#9a9484", side: "#7e7a70" }
+      - { tags: [rubble], color: "#7e7a70", side: "#6e6c60" }
+      - { tags: [barrow], color: "#5a6a46", side: "#4e5a3c" }
+    structure_fallback: "#99948a"
+    tints:
+      - { flags: [road], color: "#9e8f75", mix: 0.7 }
+      - { tags: [cliff], darken: 0.35 }
+      - { tags: [shallow], flags: [water], color: "#5b8fa3", mix: 0.45 }
+      - { tags: [deep], flags: [water], color: "#2f5878", mix: 0.65 }
+      - { flags: [blocked], darken: 0.15 }
+    skirt_darken: 0.3
+    layers:
+      - { tags: [bridge], color: "#8c6b4d" }
+      - { tags: [floor], color: "#b8b2a0" }
+    layer_fallback: "#99948c"
+    variation: { value: 0.06, scale: 2.7 }
+    water: { color: "#2f6a8a", deep: "#1f3f5c", light: "#9ad6d8", opacity: 0.62, ripple: 0.5, speed: 0.35 }

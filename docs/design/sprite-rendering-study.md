@@ -118,6 +118,23 @@ GPU timer support was detected but **GPU elapsed time was not collected**. There
 
 The general repository build was attempted with outputs redirected into the experiment's ignored `.validation-dotnet/` directory. It failed to restore `Godot.NET.Sdk`, `YamlDotNet`, target packs and other NuGet dependencies, including unavailable repository-signature information. The solution tests and content-validation execution therefore remain unverified in this study; this is an environment failure, not a passing gate. No Godot executable was available on PATH. Production client builds/smokes are required at integration time.
 
+## Measured in the game
+
+The appearance adapter this study proposed is in both clients ([appearance.md](appearance.md)): bodies built from `ui_appearances` content as painted geometry, or as directional cards baked from the same body into eight-azimuth atlases, chosen per appearance (`card: never | allow | prefer`) and per camera through the **bodies** option (by camera, geometry, cards). Each client's scripted smoke measures both on the same scene, the hamlet of Ninewells on entry (about 230 to 290 entities, 49 chunks), on the development machine (Windows 10, RTX 3090), the desktop at 1600 by 900 with 2x MSAA and the browser at 1280 by 800 in headless Edge. Two seconds of frames per line; the desktop's frame timer has millisecond resolution. Lines come from one run each, so treat differences under about ten percent as noise.
+
+| Client, representation | fps | frame ms p50 / p95 | draw calls | primitives | bodies (cards) | atlases |
+|---|---:|---:|---:|---:|---:|---:|
+| Desktop, geometry | 130 | 8 / 10 | 504 | 126,742 | 235 (0) | 0 |
+| Desktop, geometry, no shadows | 142 | 7 / 9 | 485 | 65,266 | 235 (0) | 0 |
+| Desktop, cards | 111 | 9 / 11 | 418 | 91,692 | 236 (219) | 15, 9.56 MiB |
+| Browser, geometry | 210 | 4.7 / 5.8 | 256 | 105,914 | 231 (0) | 0 |
+| Browser, geometry, no shadows | 236 | 4.2 / 5.5 | 268 | 107,024 | 230 (0) | 0 |
+| Browser, cards | 239 | 4.2 / 5.0 | 185 | 90,982 | 229 (212) | 15, 9.56 MiB |
+
+Body triangles fall from about 45,000 to 2,500 with cards, and draw calls by about a fifth, but on this machine the desktop's cards cost frames rather than saving them (alpha-tested quads over a shadowed, MSAA scene) and the browser's gain is within noise. The browser's own work per frame (animation, interpolation, labels) is about 2.9 ms with geometry and 2.3 ms with cards. The rendering study's finding stands: nothing here shows cards as the cheaper representation on a strong GPU, and no integrated or low-end GPU has been measured. Geometry stays the default (`auto` draws cards only when the isometric camera is zoomed out past the card zoom), the option exists for the measurements to continue on the intended minimum machine, and the per-look atlas cost (about 0.6 MiB per look with mipmaps at up to 192 pixel cells) is the number to budget against when that machine is named. Atlas bytes are counted from their dimensions, not measured residency.
+
+Before this pipeline the same desktop smoke ran at 140 fps at its end and the browser at 239 fps with 1.35 ms of work per frame, drawing capsules and boxes; the before and after captures are in `experiments/appearance/evidence/`.
+
 ## Quality settings and repeatable decision gates
 
 The study's [JSON config](../../experiments/sprite-rendering/study-config.json) applies these reversible presets:

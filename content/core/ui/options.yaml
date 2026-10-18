@@ -101,6 +101,21 @@ entries:
           - { id: view_distance, name: Draw distance, kind: slider, min: 2, max: 6, step: 1, unit: chunks, default: 3, description: How many chunks around the hero are drawn. }
           - { id: shadows, name: Shadows, kind: toggle, default: true, description: The sun casts shadows. }
           - { id: fog, name: Distance haze, kind: toggle, default: true, description: A light haze toward the horizon. }
+          - { id: water_detail, name: Water detail, kind: toggle, default: true, description: "Ripples and a light beneath the water; off, a still tinted plane." }
+          - { id: foliage_density, name: Foliage density, kind: slider, min: 0, max: 2, step: 0.25, unit: x, default: 1, description: "How much grass and scrub the ground grows; zero is bare." }
+      - id: bodies
+        name: Bodies
+        entries:
+          - id: bodies
+            name: Bodies
+            kind: choice
+            default: auto
+            description: "How creatures and props are drawn: painted geometry, directional cards baked from it, or cards when the isometric camera is zoomed out."
+            choices:
+              - { id: auto, name: By camera }
+              - { id: geometry, name: Painted geometry }
+              - { id: cards, name: Directional cards }
+          - { id: screen_shake, name: Screen shake, kind: toggle, default: true, description: The camera jolts on a hit taken and a kill; reduce motion stills it too. }
           - id: antialiasing
             name: Anti-aliasing
             kind: choice
@@ -134,7 +149,11 @@ entries:
       - id: motion
         name: Motion
         entries:
-          - { id: reduce_motion, name: Reduce motion, kind: toggle, default: false, description: "Still pools in the orbs, no pulsing veils or glowing tabs." }
+          - { id: reduce_motion, name: Reduce motion, kind: toggle, default: false, description: "Still pools in the orbs, no pulsing veils or glowing tabs; bodies keep their functional poses and lose their sway, the camera never shakes." }
+      - id: sight
+        name: Sight
+        entries:
+          - { id: grayscale, name: Grayscale check, kind: toggle, default: false, description: "Draws everything without colour, to check that danger, relation and readiness still read." }
 
   - id: network
     name: Network
@@ -167,3 +186,8 @@ entries:
         name: Debug
         entries:
           - { id: dev_rects, name: Show layout rectangles, kind: toggle, default: false, description: Outline the cluster's published rectangle and the panes' seats. }
+      - id: look
+        name: Look
+        entries:
+          - { id: day_lock, name: Hold the time of day, kind: toggle, default: false, description: "Draw the sky at the hour below instead of the server's clock; a preview, nothing in the world changes." }
+          - { id: day_time, name: Hour of the day, kind: slider, min: 0, max: 24, step: 0.5, unit: h, default: 12, requires: option.day_lock, requires_reason: The time of day is the server's., description: The hour the held sky shows. }

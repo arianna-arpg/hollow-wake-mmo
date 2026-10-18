@@ -1,6 +1,7 @@
 using HollowWake.Core.Attributes;
 using HollowWake.Core.Definitions;
 using HollowWake.Core.Effects;
+using HollowWake.Core.Effects.Handlers;
 using HollowWake.Core.Expressions;
 using HollowWake.Core.Sim;
 using HollowWake.Core.Weaves;
@@ -28,6 +29,10 @@ internal static class CastingKinds
         ContentKinds.AddValidator<GlyphDef>(Glyph);
         ContentKinds.AddValidator<WeaveDef>((d, c) =>
         {
+            if (d.Id == CastHandlers.HostWeave)
+            {
+                c.Error($"a preset cannot be named '{CastHandlers.HostWeave}': a cast effect reads that word as the weave whose graph is running.");
+            }
             CooldownAt(d.CooldownAt, c);
             Hint(d.Ai, c);
             Trigger(d.Trigger, c, "trigger");

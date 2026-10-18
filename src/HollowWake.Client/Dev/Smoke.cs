@@ -9,7 +9,8 @@ namespace HollowWake.Client.Dev;
 /// keyboard: connect, enter the world, then exercise held movement, jumping, click-to-move, the
 /// quest giver, both cameras, the sheet and weaves on a hob. Input goes through the same input map
 /// and handlers a player uses, and screenshots are saved along the way. Start it with user arguments:
-/// <c>godot --path src/HollowWake.Client -- --smoke [--shots DIR] [--account NAME] [--host H] [--port P]</c>.
+/// <c>godot --path src/HollowWake.Client -- --smoke [--shots DIR] [--account NAME] [--host H] [--port P] [--isolated-input]</c>.
+/// With <c>--isolated-input</c> no controller is bound, so a controller in use elsewhere on the machine cannot act in the play-through.
 /// Prints one SMOKE PASS or FAIL line per check and exits non-zero when any check fails.
 /// </summary>
 public partial class Smoke : Node
@@ -49,6 +50,12 @@ public partial class Smoke : Node
                     _port = int.TryParse(_args[i + 1], out var p) ? p : _port;
                     break;
             }
+        }
+        if (_args.Contains("--isolated-input"))
+        {
+            InputSetup.IgnorePads = true;
+            InputSetup.Apply(_main.Settings);
+            GD.Print("SMOKE input: scripted keys and pointer; physical controllers unbound");
         }
         _started = Now;
         // A headless window never receives the operating system's mouse-enter notification.
@@ -133,12 +140,13 @@ public partial class Smoke : Node
 
         var t0 = Now;
         var built = await Until(() => _main.World.BuiltChunks > 0 && _main.World.PendingChunks == 0, 90);
-        Record("terrain built", built, $"{_main.World.BuiltChunks} chunks in {Now - t0:0.0}s, {_main.World.Entities.Count} entities in view, {Engine.GetFramesPerSecond()} fps");
+        Record("terrain built", built, $"{_main.World.BuiltChunks} chunks in {Now - t0:0.0}s, {_main.World.Entities.Count} entities in view, {Engine.GetFramesPerSecond()} fps{(built ? "" : $"; in world={_main.InWorld}, status: {login.Status}")}");
         var ready = await Until(() => !_main.Loading.BlocksWorldInput, 20);
         Record("world input ready", ready, $"loading={_main.Loading.Active}, blocked={_main.Loading.BlocksWorldInput}, chat={_main.Hud.ChatFocused}");
         if (!ready) return;
         await Wait(1.0);
         await Shot("01_isometric.png");
+        await LookStages();
 
         // Held movement: W for a moment, then see where the server put us.
         var p0 = Pos();
@@ -291,6 +299,93 @@ public partial class Smoke : Node
             }
         }
         await Wait(0.5);
+    }
+
+    // ------------------------------------------------------------ the look
+
+    /// <summary>
+    /// The look's stages on the busiest scene, the hamlet on entry: the measurement line for painted geometry and
+    /// for directional cards (frame times, draw calls, primitives, texture memory, atlas bytes), then the
+    /// readability checks of the visual language (grayscale, reduced motion) and the day at night and evening.
+    /// </summary>
+    private async Task LookStages()
+    {
+        var world = _main.World;
+        var settings = _main.Settings;
+        if (DisplayServer.GetName() == "headless")
+        {
+            GD.Print("SMOKE SKIP appearance rendering: headless display; geometry/card performance and readability require graphical evidence");
+        }
+        else
+        {
+            var geometry = await Measure("geometry");
+            Record("bodies as geometry", geometry.Bodies > 0 && geometry.P95 < 50, geometry.Line);
+            settings.Set("shadows", System.Text.Json.Nodes.JsonValue.Create(false));
+            await Wait(0.3);
+            var unshadowed = await Measure("geometry, no shadows");
+            settings.Set("shadows", System.Text.Json.Nodes.JsonValue.Create(true));
+            Record("bodies without shadows", unshadowed.Bodies > 0, unshadowed.Line);
+            settings.Set("bodies", System.Text.Json.Nodes.JsonValue.Create("cards"));
+            var baked = await Until(() => world.Appearance?.Baker.Pending == 0 && world.BodyCounts.Cards > 0, 20);
+            await Wait(0.5);
+            var cards = await Measure("cards");
+            await Shot("16_cards.png");
+            Record("bodies as cards", baked && cards.Cards > 0 && cards.P95 < 50, cards.Line);
+            settings.Set("bodies", System.Text.Json.Nodes.JsonValue.Create("auto"));
+            await Wait(0.3);
+            settings.Set("grayscale", System.Text.Json.Nodes.JsonValue.Create(true));
+            await Wait(0.3);
+            await Shot("17_grayscale.png");
+            settings.Set("grayscale", System.Text.Json.Nodes.JsonValue.Create(false));
+            settings.Set("reduce_motion", System.Text.Json.Nodes.JsonValue.Create(true));
+            await Wait(0.3);
+            await Shot("18_reduced_motion.png");
+            settings.Set("reduce_motion", System.Text.Json.Nodes.JsonValue.Create(false));
+        }
+        settings.Set("day_lock", System.Text.Json.Nodes.JsonValue.Create(true));
+        settings.Set("day_time", System.Text.Json.Nodes.JsonValue.Create(1.0));
+        await Wait(0.4);
+        var night = world.TimeOfDay;
+        await Shot("19_night.png");
+        settings.Set("day_time", System.Text.Json.Nodes.JsonValue.Create(18.5));
+        await Wait(0.4);
+        var evening = world.TimeOfDay;
+        await Shot("20_evening.png");
+        settings.Set("day_lock", System.Text.Json.Nodes.JsonValue.Create(false));
+        await Wait(0.3);
+        Record("day cycle", Math.Abs(night - 1.0 / 24) < 0.01 && Math.Abs(evening - 18.5 / 24) < 0.01, $"night at {night:0.00} of the day, evening at {evening:0.00}, the server's day at {world.TimeOfDay:0.00}");
+    }
+
+    private sealed record Measurement(string Line, double P95, int Bodies, int Cards);
+
+    /// <summary>Samples two seconds of frames: frame time percentiles, draw calls, primitives, objects, texture memory and the bodies drawn.</summary>
+    private async Task<Measurement> Measure(string mode)
+    {
+        var frames = new List<double>();
+        var t0 = Now;
+        var last = t0;
+        while (Now - t0 < 2.0)
+        {
+            await Frame();
+            var now = Now;
+            frames.Add((now - last) * 1000);
+            last = now;
+        }
+        frames.Sort();
+        double At(double q) => frames.Count == 0 ? 0 : frames[Math.Min(frames.Count - 1, (int)(q * frames.Count))];
+        var draws = Performance.GetMonitor(Performance.Monitor.RenderTotalDrawCallsInFrame);
+        var primitives = Performance.GetMonitor(Performance.Monitor.RenderTotalPrimitivesInFrame);
+        var objects = Performance.GetMonitor(Performance.Monitor.RenderTotalObjectsInFrame);
+        var textureBytes = Performance.GetMonitor(Performance.Monitor.RenderTextureMemUsed);
+        var videoBytes = Performance.GetMonitor(Performance.Monitor.RenderVideoMemUsed);
+        var world = _main.World;
+        var (triangles, cards, bodies) = world.BodyCounts;
+        var atlasBytes = world.Appearance?.AtlasBytes ?? 0;
+        var atlases = world.Appearance?.AtlasCount ?? 0;
+        var line = $"{mode}: {frames.Count / 2.0:0} fps, frame ms p50 {At(0.5):0.00} p95 {At(0.95):0.00} max {frames[^1]:0.00}; {draws:0} draw calls, {primitives:0} primitives, {objects:0} objects; "
+            + $"{bodies} bodies ({cards} cards, {triangles} body triangles), {atlases} atlases {atlasBytes / 1024.0 / 1024.0:0.00} MiB; texture memory {textureBytes / 1024.0 / 1024.0:0.0} MiB, video memory {videoBytes / 1024.0 / 1024.0:0.0} MiB; {world.Entities.Count} entities, {world.BuiltChunks} chunks";
+        GD.Print($"SMOKE measure {line}");
+        return new Measurement(line, At(0.95), bodies, cards);
     }
 
     // ------------------------------------------------------------ the interface
