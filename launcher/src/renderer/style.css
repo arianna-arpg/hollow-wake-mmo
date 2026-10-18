@@ -721,3 +721,7 @@ input.invalid {
   gap: 4px;
   align-items: flex-start;
 }
+
+#build-select { width: 100%; padding: 9px; color: var(--text); background: var(--bg); border: 1px solid var(--line-strong); border-radius: 4px; font: inherit; }
+#build-select:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+.play { overflow-y: auto; }

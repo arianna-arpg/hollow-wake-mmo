@@ -94,8 +94,16 @@ public partial class Main : Node3D
             var args = OS.GetCmdlineUserArgs();
             if (args.Contains("--boot-check")) { GD.Print("BOOT PASS"); GetTree().Quit(); return; }
             if (args.Contains("--loading-smoke")) { AddChild(new Dev.LoadingSmoke(this, args)); return; }
+            if (args.Contains("--quick-play-smoke"))
+            {
+                AddChild(new Dev.QuickPlaySmoke(this, args));
+                AddChild(new Dev.QuickPlay(this, args));
+                return;
+            }
             if (Arg(args, "--loading-preview") is { } direction && direction is "down" or "left" or "right")
                 _loading.Begin(spec.Text("boot"), cancel: () => _loading.Close(), direction: direction);
+            else if (args.Contains("--quick-play") && !args.Contains("--smoke") && !args.Contains("--mockup"))
+                AddChild(new Dev.QuickPlay(this, args) { Name = "QuickPlay" });
         }
         catch (Exception ex)
         {

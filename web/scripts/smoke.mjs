@@ -8,6 +8,7 @@
 //
 //   npm run smoke -- [--url http://localhost:7778/] [--shots DIR] [--account NAME]
 //                    [--browser msedge|chrome|chromium] [--executable PATH] [--headed] [--full-states]
+//                    [--no-physical-gamepads]
 //
 // --full-states runs the client without entity deltas (full entity states only), for comparison. The page
 // runs under its own settings profile (smoke), started from the content's defaults each run.
@@ -47,6 +48,12 @@ const browser = await chromium.launch({
   args: ['--ignore-gpu-blocklist', '--enable-unsafe-swiftshader'],
 });
 const page = await browser.newPage({ viewport: { width: 1280, height: 800 } });
+if (flag('no-physical-gamepads')) {
+  // This course drives keyboard/mouse; isolate it from controllers in use by other applications.
+  // The loading-specific course separately exercises controller behavior with explicit pad states.
+  await page.addInitScript(() => Object.defineProperty(navigator, 'getGamepads', { value: () => [] }));
+}
+
 const pageErrors = [];
 page.on('pageerror', (e) => pageErrors.push(e.message));
 page.on('console', (m) => {

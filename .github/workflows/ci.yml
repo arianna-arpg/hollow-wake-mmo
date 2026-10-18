@@ -52,6 +52,8 @@ jobs:
         run: npm run build
       - name: Unit tests (feed, verified download, extraction, install)
         run: npm test
+      - name: Local startup cache and configuration
+        run: node --test ../scripts/play-local.test.mjs
 
   docker:
     runs-on: ubuntu-latest

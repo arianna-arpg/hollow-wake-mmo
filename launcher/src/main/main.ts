@@ -22,7 +22,7 @@
 //   HOLLOWWAKE_DATA_DIR            data folder instead of the per-user default
 //   HOLLOWWAKE_LAUNCHER_UPDATE_URL generic electron-updater feed for the launcher's own update
 //   HOLLOWWAKE_LOG_STDOUT=1        copy the log to stdout
-// Flags: --play (start the game once the start-up check and any update are done), --offline (no
+// Flags: --play (start an installed game immediately; wait for installation if absent), --offline (no
 // network), --smoke-test, --screenshot FILE, --screenshot-delay MS.
 // ---------------------------------------------------------------------------------------------
 
@@ -33,7 +33,7 @@ import path from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { parseAddress } from './address';
 import { decideAction } from './decide';
-import { FeedError, newsRequest, resolveRelease, type FeedConfig, type FeedRelease } from './feed';
+import { FeedError, listBuilds, newsRequest, resolveRelease, type FeedConfig, type FeedRelease } from './feed';
 import { launchGame, tailFile } from './game';
 import { describeError, toUrl } from './http';
 import { buildDir, executablePath, installRelease, pruneBuilds, readInstalled, type InstalledRecord } from './installer';
@@ -72,8 +72,10 @@ const IDLE_TASK: TaskView = { kind: 'idle', version: null, received: 0, total: 0
 let task: TaskView = IDLE_TASK;
 let installAbort: AbortController | null = null;
 const autoAttempted = new Set<string>();
-let game: GameView = { running: false, pid: null, lastExit: null, error: null };
-let playOnReady = flags.play;
+let game: GameView = { starting: false, running: false, pid: null, lastExit: null, error: null };
+let builds: BuildChoice[] = [];
+let buildsError: string | null = null;
+let playOnReady = flags.play && !flags.smoke && !flags.screenshot;
 let stopTail: (() => void) | null = null;
 let news: NewsView = { status: 'loading', motd: null, items: [], note: null };
 let selfUpdater: SelfUpdater;
@@ -95,13 +97,14 @@ const cipher: Cipher = {
 if (!flags.smoke && !flags.screenshot && !app.requestSingleInstanceLock()) {
   app.quit();
 } else {
-  app.on('second-instance', () => {
+  app.on('second-instance', (_event, argv) => {
     if (win) {
       if (win.isMinimized()) {
         win.restore();
       }
       win.focus();
     }
+    if (argv.includes('--play') && settings && installed) void play();
   });
   app.whenReady().then(start).catch((error: unknown) => {
     log.error(`the launcher failed to start: ${describeError(error)}`);
@@ -146,6 +149,11 @@ async function start(): Promise<void> {
   log.subscribe((line) => win?.webContents.send('launcher:log', line));
   registerIpc();
   createWindow();
+  // Start an installed build immediately. Feed/news requests never gate this shortcut.
+  if (playOnReady && installed && !flags.smoke && !flags.screenshot) {
+    playOnReady = false;
+    void play();
+  }
   void refreshNews();
   void checkFeed();
   if (!flags.offline && !flags.smoke) {
@@ -242,6 +250,8 @@ function push(): void {
 function snapshot(): LauncherState {
   const remote = remoteView();
   return {
+    builds,
+    buildsError,
     launcherVersion: app.getVersion(),
     platform: PLATFORM,
     dataDir: paths.root,
@@ -250,12 +260,13 @@ function snapshot(): LauncherState {
       channel: settings.channel,
       developer: settings.developer,
       autoUpdate: settings.autoUpdate,
+      releaseTag: settings.releaseTag,
       token: { source: tokenSource, storage: settings.token ? (settings.token.encrypted ? 'encrypted' : 'plain') : null },
     },
     installed: installed ? { version: installed.version, channel: installed.channel, installedAt: installed.installedAt } : null,
     feed: { ...feed, remote },
     task,
-    action: decideAction(installed, remote, task.kind !== 'idle'),
+    action: decideAction(installed, remote, task.kind !== 'idle', !!settings.releaseTag),
     game,
     news,
     selfUpdate: selfUpdater.view,
@@ -292,6 +303,7 @@ function feedConfig(): FeedConfig {
     token,
     userAgent: USER_AGENT,
     timeoutMs: 15_000,
+    tag: settings.releaseTag,
   };
 }
 
@@ -304,6 +316,7 @@ async function checkFeed(): Promise<void> {
   const cfg = feedConfig();
   feed = { ...feed, status: 'checking', source: feedSource(cfg), overridden: !!cfg.override, message: null, hint: null };
   release = null;
+  buildsError = null;
   push();
   if (flags.offline) {
     feed = { ...feed, status: 'unreachable', message: 'Offline mode: the release feed was not checked.', hint: null, checkedAt: new Date().toISOString() };
@@ -312,6 +325,12 @@ async function checkFeed(): Promise<void> {
     return;
   }
   log.debug(`checking ${feed.source} on the ${settings.channel} channel`);
+  // Catalogue failure must not hold up the selected build or an already installed client.
+  void listBuilds(cfg, settings.channel, fetch).then(found => {
+    if (generation === feedGeneration) { builds = found; push(); }
+  }).catch(error => {
+    if (generation === feedGeneration) { buildsError = describeError(error); push(); }
+  });
   try {
     const found = await resolveRelease(cfg, settings.channel, fetch);
     if (generation !== feedGeneration) {
@@ -352,7 +371,7 @@ async function checkFeed(): Promise<void> {
   maybePlayOnStart();
 }
 
-/** --play: start the game once the start-up check, and any update it began, are done. */
+/** --play with no installed build: start after the initial check and automatic installation. */
 function maybePlayOnStart(): void {
   if (!playOnReady || feed.status === 'checking' || feed.status === 'idle' || task.kind !== 'idle') {
     return;
@@ -367,7 +386,7 @@ function maybePlayOnStart(): void {
 
 function maybeAutoInstall(): void {
   const remote = remoteView();
-  if (!settings.autoUpdate || flags.smoke || !remote || autoAttempted.has(remote.version)) {
+  if (!settings.autoUpdate || settings.releaseTag || game.running || game.starting || flags.smoke || !remote || autoAttempted.has(remote.version)) {
     return;
   }
   const action = decideAction(installed, remote, task.kind !== 'idle');
@@ -383,7 +402,7 @@ function maybeAutoInstall(): void {
 async function startInstall(): Promise<void> {
   const target = release;
   const remote = remoteView();
-  if (task.kind !== 'idle' || !target || !remote) {
+  if (task.kind !== 'idle' || game.running || game.starting || !target || !remote || remote.version === installed?.version) {
     return;
   }
   installAbort = new AbortController();
@@ -398,7 +417,9 @@ async function startInstall(): Promise<void> {
       paths,
       fetchImpl: fetch,
       signal,
-      prune: !game.running,
+      // Play remains available during downloads. Keep the previous build until the next startup;
+      // pruning based on game.running at download start races a later click on Play.
+      prune: false,
       log: (t) => log.info(t),
       onProgress: (p) => {
         task = {
@@ -459,7 +480,7 @@ async function startGame(): Promise<Outcome> {
   if (!installed) {
     return { ok: false, error: 'No game build is installed yet.' };
   }
-  if (game.running) {
+  if (game.running || game.starting) {
     return { ok: false, error: 'The game is already running.' };
   }
   const parsed = parseAddress(settings.address);
@@ -467,6 +488,8 @@ async function startGame(): Promise<Outcome> {
     return { ok: false, error: parsed.error };
   }
   const build = installed;
+  game = { ...game, starting: true, error: null };
+  push();
   try {
     const child = await launchGame({
       executable: executablePath(paths, build),
@@ -475,7 +498,7 @@ async function startGame(): Promise<Outcome> {
       port: parsed.address.port,
       logFile: paths.clientLogFile,
     });
-    game = { running: true, pid: child.pid ?? null, lastExit: game.lastExit, error: null };
+    game = { starting: false, running: true, pid: child.pid ?? null, lastExit: game.lastExit, error: null };
     log.info(`started the client ${build.version} (pid ${child.pid}) for ${parsed.address.text}`);
     if (settings.developer) {
       stopTail = tailFile(paths.clientLogFile, (line) => log.info(`[client] ${line}`));
@@ -484,21 +507,19 @@ async function startGame(): Promise<Outcome> {
       stopTail?.();
       stopTail = null;
       const how = signal ? `was stopped (${signal})` : `exited with code ${code}`;
-      game = { running: false, pid: null, lastExit: `The client ${how}.`, error: null };
+      game = { starting: false, running: false, pid: null, lastExit: `The client ${how}.`, error: null };
       const line = `the client ${how}; its output is in ${paths.clientLogFile}`;
       if (code === 0) {
         log.info(line);
       } else {
         log.warn(line);
       }
-      if (installed) {
-        void pruneBuilds(paths, installed.dir, (t) => log.debug(t));
-      }
       push();
     });
     push();
     return { ok: true };
   } catch (error) {
+    game = { ...game, starting: false };
     const message = `The client could not start: ${describeError(error)}.`;
     log.error(message);
     return { ok: false, error: message };
@@ -586,6 +607,20 @@ function registerIpc(): void {
   handle('getState', () => snapshot());
   handle('getLog', () => log.recent());
 
+  handle('selectBuild', async (tag: unknown) => {
+    if (task.kind !== 'idle') return { ok: false, error: 'Wait for the download or cancel it before choosing another build.' };
+    if (tag !== null && (typeof tag !== 'string' || !builds.some(b => b.tag === tag))) {
+      return { ok: false, error: 'Choose a published build from the list.' };
+    }
+    settings.releaseTag = tag as string | null;
+    // Invalidate synchronously: a click on Install while settings are saving must not install
+    // the release that belonged to the previous selection.
+    invalidateFeed();
+    await persist();
+    void checkFeed();
+    return { ok: true };
+  });
+
   handle('setAddress', async (input: unknown) => {
     const parsed = parseAddress(typeof input === 'string' ? input : '');
     if (!parsed.ok) {
@@ -601,10 +636,13 @@ function registerIpc(): void {
   });
 
   handle('setChannel', async (input: unknown) => {
-    if ((input !== 'stable' && input !== 'nightly') || input === settings.channel) {
+    if (task.kind !== 'idle' || (input !== 'stable' && input !== 'nightly') || input === settings.channel) {
       return;
     }
     settings.channel = input;
+    settings.releaseTag = null;
+    builds = [];
+    invalidateFeed();
     await persist();
     log.info(`channel set to ${input}`);
     void checkFeed();
@@ -677,6 +715,13 @@ function registerIpc(): void {
   });
   handle('applyLauncherUpdate', () => selfUpdater.apply());
   handle('quit', () => app.quit());
+}
+
+function invalidateFeed(): void {
+  feedGeneration++;
+  release = null;
+  feed = { ...feed, status: 'checking', message: null, hint: null };
+  push();
 }
 
 function fromOurPage(event: IpcMainInvokeEvent): boolean {
