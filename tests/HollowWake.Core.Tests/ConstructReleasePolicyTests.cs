@@ -21,7 +21,7 @@ public class ConstructReleasePolicyTests
             Id = "echo_release_probe", Cooldown = Expr.Constant(0),
             ReleaseCheck = new() { Policy = selector ? "delivery" : "body" },
             Effects = new() { CastForecastContent.Spec(selector ? """
-                {"type":"area","shape":"sector","radius":4,"angle":60,"center":"source","filter":"enemy",
+                {"type":"area","shape":"sector","radius":4,"angle":60,"center":"source","filter":"enemy","report_miss":true,
                  "effects":[{"type":"damage","amount":10,"threads":["stone"],"can_crit":false,
                   "after_damage":[{"type":"event","name":"echo_payload","data":{"amount":"last_damage"}}]}]}
                 """ : """{"type":"event","name":"echo_payload"}""") },
@@ -48,7 +48,12 @@ public class ConstructReleasePolicyTests
         CastForecastContent.Wall(arena);
         arena.RunSeconds(0.5);
         Assert.Empty(arena.Custom("echo_payload"));
-        Assert.Contains(arena.Of<WeaveMissed>(), e => e.Reason == "line_of_sight");
+        var miss = Assert.Single(arena.Of<WeaveMissed>(), e => e.Reason == "line_of_sight");
+        Assert.Equal(echo, miss.Caster);
+        Assert.True(miss.CastId > 0);
+        var cue = Assert.Single(arena.Of<CastPresentationEvent>(), e => e.Phase == "miss");
+        Assert.Equal(echo, cue.Caster);
+        Assert.Equal(miss.CastId, cue.CastId);
         Assert.DoesNotContain(arena.Of<WeaveCast>(), e => e.Caster == echo);
         Assert.Equal(mana, arena.Stats.Resource("mana"));
     }
@@ -66,6 +71,21 @@ public class ConstructReleasePolicyTests
         if (ownerMovesAway) Assert.Equal(arena.Caster, Assert.Single(arena.Custom("echo_payload")).Source);
         else Assert.Contains(arena.Of<WeaveMissed>(), e => e.Reason == "out_of_reach");
         Assert.Equal(mana, arena.Stats.Resource("mana"));
+    }
+
+    [Fact]
+    public void SelectorMissesNameTheEchoAndEachReplayHasItsOwnIdentity()
+    {
+        var (arena, echo, slot) = Setup(selector: true);
+        arena.Begin(slot);
+        arena.Events.Clear();
+        CastForecastContent.Move(arena, arena.Enemy, new Vector3(10, 30, 0));
+        arena.RunSeconds(0.5);
+        var misses = arena.Of<WeaveMissed>().ToArray();
+        Assert.Equal(2, misses.Length);
+        Assert.All(misses, e => { Assert.Equal(echo, e.Caster); Assert.True(e.CastId > 0); });
+        Assert.Equal(2, misses.Select(e => e.CastId).Distinct().Count());
+        Assert.Equal(misses.Select(e => e.CastId), arena.Of<CastPresentationEvent>().Where(e => e.Phase == "miss").Select(e => e.CastId));
     }
 
     [Fact]

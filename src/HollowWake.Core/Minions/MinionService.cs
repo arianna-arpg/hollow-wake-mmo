@@ -6,6 +6,7 @@ using HollowWake.Core.Attributes;
 using HollowWake.Core.Components;
 using HollowWake.Core.Content;
 using HollowWake.Core.Ecs;
+using HollowWake.Core.Effects;
 using HollowWake.Core.Maths;
 using HollowWake.Core.Sim;
 using HollowWake.Core.Tags;
@@ -13,7 +14,8 @@ using HollowWake.Core.Weaves;
 
 namespace HollowWake.Core.Minions;
 
-internal readonly record struct OwnerCast(long Sequence, CompiledWeave Weave, Vector3 Point, Entity Target);
+internal readonly record struct OwnerCast(long Sequence, CompiledWeave Weave, IReadOnlyList<CompiledEffect> Effects,
+    CastVariableSnapshot? Variables, Vector3 Point, Entity Target);
 
 /// <summary>
 /// The minions of one simulation: birth order, what each owner is fighting (so minions can assist), what
@@ -43,6 +45,8 @@ public sealed class MinionService
     private InheritRule[]? _inherit;
     private Dictionary<string, CommandDef>? _commands;
     private long _sequence;
+    private string[]? _echoExcludedTags;
+    private string[]? _echoExcludedMechanisms;
 
     private static readonly Comparison<(long Sequence, Entity Entity)> BySequence = static (a, b) => a.Sequence.CompareTo(b.Sequence);
 
@@ -55,6 +59,7 @@ public sealed class MinionService
         sim.Events.Subscribe<EntityDied>(OnDied);
         sim.Events.Subscribe<EntityDespawned>(OnDespawned);
         sim.Events.Subscribe<MinionCommandRequested>(OnCommandRequested);
+        sim.Events.Subscribe<StatusApplied>(s => CancelIncapacitatedEcho(s.Target));
     }
 
     /// <summary>The simulation's minion service, created on first use where the composition root did not register one.</summary>
@@ -492,14 +497,14 @@ public sealed class MinionService
             return;
         }
         state.Casts++;
-        if (state.Echoes is { Count: > 0 } echoes && w.Resolved is { } weave && Valid(w.Caster)
-            && !weave.Tags.Has("summon") && !weave.Tags.Has("movement")
-            && !weave.HasMechanism("summon") && !weave.HasMechanism("construct") && !weave.HasMechanism("displaces"))
+        if (state.Echoes is { Count: > 0 } echoes && w.Resolved is { } weave && w.ResolvedEffects is { } effects
+            && Valid(w.Caster) && EchoEligible(weave))
         {
-            var use = new OwnerCast(state.Casts, weave, w.Point, w.Target);
+            var use = new OwnerCast(state.Casts, weave, effects, w.ResolvedVariables, w.Point, w.Target);
             foreach (var echo in echoes)
             {
-                if (Valid(echo)) _sim.World.Get<Minion>(echo)?.PendingOwnerCasts?.Enqueue(use);
+                if (Valid(echo) && !CancelIncapacitatedEcho(echo))
+                    _sim.World.Get<Minion>(echo)?.PendingOwnerCasts?.Enqueue(use);
             }
         }
         if (!w.Target.IsNone && w.Target != w.Caster && Combat.Relations.IsHostile(_sim, w.Caster, w.Target))
@@ -507,6 +512,25 @@ public sealed class MinionService
             state.Target = w.Target;
             state.TargetAt = _sim.Clock.Time;
         }
+    }
+
+    private bool EchoEligible(CompiledWeave weave)
+    {
+        _echoExcludedTags ??= _sim.Content.Rules.Strings("minions.echo_excluded_tags").ToArray();
+        _echoExcludedMechanisms ??= _sim.Content.Rules.Strings("minions.echo_excluded_mechanisms").ToArray();
+        foreach (var tag in _echoExcludedTags) if (weave.Tags.Has(tag)) return false;
+        foreach (var mechanism in _echoExcludedMechanisms) if (weave.HasMechanism(mechanism)) return false;
+        return true;
+    }
+
+    /// <summary>Cancel immediately on a disabling status, including one that expires before the next think.</summary>
+    internal bool CancelIncapacitatedEcho(Entity echo)
+    {
+        if (_sim.World.Get<Minion>(echo)?.PendingOwnerCasts is not { } pending
+            || _sim.World.Get<Stats>(echo) is not { } stats
+            || !stats.HasFlag("stunned") && !stats.HasFlag("frozen")) return false;
+        pending.Clear();
+        return true;
     }
 
     private void OnDied(EntityDied d)

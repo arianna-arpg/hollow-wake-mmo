@@ -23,6 +23,8 @@ public sealed class EffectContext
 {
     /// <summary>The originating cast, retained through delayed and nested deliveries.</summary>
     public long CastId { get; init; }
+    /// <summary>The physical caster reporting this cast, distinct from inherited effect stats and credit.</summary>
+    public Entity CastSource { get; init; } = Entity.None;
     public required Simulation Sim { get => _sim; init => _sim = value; }
     public Entity Source { get => _source; init => _source = value; }
     public Entity Target { get => _target; init => _target = value; }
@@ -189,6 +191,7 @@ public sealed class EffectContext
         return new EffectContext
         {
             CastId = CastId,
+            CastSource = CastSource,
             Origin = _origin.IsNone ? Source : _origin,
             Sim = Sim,
             Source = source ?? Source,

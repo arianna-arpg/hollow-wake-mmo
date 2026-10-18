@@ -943,6 +943,7 @@ public sealed partial class WeaveRuntime
         EffectContext ContextFor(Entity source, Vector3? from = null) => new()
         {
             CastId = state.CastId,
+            CastSource = caster,
             Sim = sim,
             Origin = origin,
             Source = source,
@@ -984,7 +985,10 @@ public sealed partial class WeaveRuntime
         CompiledEffect.ExecuteAll(effects, ctx);
         if (publishCast)
         {
-            sim.Events.Publish(new WeaveCast(caster, weave.Key, target, ctx.Point, weave.Tags) { Tick = sim.Clock.Tick, Resolved = weave });
+            sim.Events.Publish(new WeaveCast(caster, weave.Key, target, ctx.Point, weave.Tags)
+            {
+                Tick = sim.Clock.Tick, Resolved = weave, ResolvedEffects = effects, ResolvedVariables = vars.Snapshot(),
+            });
             if (sim.World.TryGet<WeaveBook>(caster, out var book))
             {
                 book.RecordCast(weave.Key, RulesOf(sim).RecentCasts);
@@ -1875,6 +1879,12 @@ internal struct CastVarValues
     public double? GuardAbsorbed;
     public double? Persist;
 
+    // Ordinary casts carry no cast variables, so they need no extra allocation. Held/triggered uses retain
+    // their inputs by value, not the payload's mutable dictionary (which also contains damage rolls).
+    public readonly CastVariableSnapshot? Snapshot() => Held is null && Fill is null && Stage is null
+        && ChargesSpent is null && UsesSpent is null && TriggerPower is null && TriggerAmount is null
+        && RepeatIndex is null && GuardAbsorbed is null && Persist is null ? null : new(this);
+
     public readonly void WriteTo(Dictionary<string, double> vars)
     {
         Write(vars, CastVars.Held, Held);
@@ -1897,6 +1907,8 @@ internal struct CastVarValues
         }
     }
 }
+
+internal sealed record CastVariableSnapshot(CastVarValues Values);
 
 /// <summary>
 /// Random streams for casts, derived from the simulation seed, the entity, the tick and a salt, exactly as

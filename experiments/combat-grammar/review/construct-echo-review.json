@@ -1,0 +1,110 @@
+{
+  "previous_runtime": "a7a08f1150dcf4cff091ca868c45449acb083bd4",
+  "previous_documentation_head": "e713cf6bf5e65df1b5da4230e40be943e81bf08c",
+  "decision": "Stun and freeze cancel pending echo replays",
+  "before": {
+    "failed": 11,
+    "passed": 6,
+    "cases": [
+      {
+        "test": "HollowWake.Core.Tests.ConstructReleasePolicyTests.AQueuedEchoCannotDeliverThroughANewWallOrPayAgain",
+        "outcome": "Failed"
+      },
+      {
+        "test": "HollowWake.Core.Tests.ConstructReleasePolicyTests.AQueuedSelectorKeepsItsAimAndRidersFollowTheActualVictim",
+        "outcome": "Passed"
+      },
+      {
+        "test": "HollowWake.Core.Tests.ConstructEchoResolutionTests.AReplayKeepsTheResolvedPayloadAndHeldValues(form: \"t_charge\", held: 0.69999999999999996, marker: \"t_charge\", variable: \"fill\")",
+        "outcome": "Failed"
+      },
+      {
+        "test": "HollowWake.Core.Tests.ConstructEchoResolutionTests.AReplayTriggeredOwnerUseWaitsUntilTheNextThink",
+        "outcome": "Passed"
+      },
+      {
+        "test": "HollowWake.Core.Tests.ConstructEchoResolutionTests.AReplayKeepsTheResolvedPayloadAndHeldValues(form: \"t_channel\", held: 1.1000000000000001, marker: \"t_release\", variable: \"held\")",
+        "outcome": "Failed"
+      },
+      {
+        "test": "HollowWake.Core.Tests.ConstructEchoResolutionTests.BurstReplaysUseDistinctRepeatableDamageRolls",
+        "outcome": "Passed"
+      },
+      {
+        "test": "HollowWake.Core.Tests.ConstructEchoResolutionTests.IncapacitationCancelsPendingUsesAndRejectsNewOnesEvenBetweenThinks(status: \"frozen\", duration: 4)",
+        "outcome": "Failed"
+      },
+      {
+        "test": "HollowWake.Core.Tests.ConstructReleasePolicyTests.ReplayRangeIsMeasuredFromTheEcho(ownerMovesAway: True)",
+        "outcome": "Passed"
+      },
+      {
+        "test": "HollowWake.Core.Tests.ConstructEchoResolutionTests.AReplacementCannotReceiveTheOldEchoPendingQueue",
+        "outcome": "Passed"
+      },
+      {
+        "test": "HollowWake.Core.Tests.ConstructEchoResolutionTests.AReplayKeepsTheResolvedPayloadAndHeldValues(form: \"t_over\", held: 1.1000000000000001, marker: \"t_over\", variable: \"stage\")",
+        "outcome": "Failed"
+      },
+      {
+        "test": "HollowWake.Core.Tests.ConstructEchoResolutionTests.AReplayCannotSpendAnotherBody(preset: \"marrowhooks\")",
+        "outcome": "Failed"
+      },
+      {
+        "test": "HollowWake.Core.Tests.ConstructEchoResolutionTests.AReplayCannotSpendAnotherBody(preset: \"t_consume\")",
+        "outcome": "Failed"
+      },
+      {
+        "test": "HollowWake.Core.Tests.ConstructEchoResolutionTests.IncapacitationCancelsPendingUsesAndRejectsNewOnesEvenBetweenThinks(status: \"stunned\", duration: 0.10000000000000001)",
+        "outcome": "Failed"
+      },
+      {
+        "test": "HollowWake.Core.Tests.ConstructEchoResolutionTests.IncapacitationCancelsPendingUsesAndRejectsNewOnesEvenBetweenThinks(status: \"frozen\", duration: 0.10000000000000001)",
+        "outcome": "Failed"
+      },
+      {
+        "test": "HollowWake.Core.Tests.ConstructEchoResolutionTests.IncapacitationCancelsPendingUsesAndRejectsNewOnesEvenBetweenThinks(status: \"stunned\", duration: 4)",
+        "outcome": "Failed"
+      },
+      {
+        "test": "HollowWake.Core.Tests.ConstructEchoResolutionTests.AGuardReplayKeepsTheBashAndItsAbsorbedDamage",
+        "outcome": "Failed"
+      },
+      {
+        "test": "HollowWake.Core.Tests.ConstructReleasePolicyTests.ReplayRangeIsMeasuredFromTheEcho(ownerMovesAway: False)",
+        "outcome": "Passed"
+      }
+    ]
+  },
+  "mutations": [
+    {
+      "name": "drain-until-empty",
+      "failed": 1,
+      "passed": 0
+    },
+    {
+      "name": "drop-reseed",
+      "failed": 1,
+      "passed": 0
+    },
+    {
+      "name": "retain-removed-echo-queue",
+      "failed": 2,
+      "passed": 1
+    }
+  ],
+  "after": {
+    "focused_construct": 48,
+    "core": 900,
+    "server": 58,
+    "client": 140,
+    "build_warnings": 0,
+    "build_errors": 0,
+    "validation_errors": 0,
+    "validation_warnings": 0,
+    "standard_hashes": "all seven identical to inherited #20 baseline",
+    "lint_smells": 566,
+    "lint_notes": 197
+  },
+  "performance": "Not sampled for this correction; previous behavior and combined snapshot misses remain open"
+}

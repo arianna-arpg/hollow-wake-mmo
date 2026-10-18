@@ -58,6 +58,8 @@ public sealed record WeaveCast(Entity Caster, string Weave, Entity Target, Vecto
 {
     /// <summary>The resolved cast view, retained by local replay listeners even if its slot changes. Not a wire field.</summary>
     internal Weaves.CompiledWeave? Resolved { get; init; }
+    internal IReadOnlyList<Effects.CompiledEffect>? ResolvedEffects { get; init; }
+    internal Weaves.CastVariableSnapshot? ResolvedVariables { get; init; }
 }
 public sealed record WeaveFailed(Entity Caster, string Weave, string Reason) : GameEvent;
 public sealed record WeaveInterrupted(Entity Caster, string Weave) : GameEvent;

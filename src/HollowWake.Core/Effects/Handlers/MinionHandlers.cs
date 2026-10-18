@@ -262,6 +262,7 @@ internal sealed class MinionCastHandler : IEffectHandler
                 var order = new EffectContext
                 {
                     CastId = ctx.CastId,
+                    CastSource = ctx.CastSource,
                     Sim = sim,
                     Source = minion,
                     Target = target,
@@ -419,6 +420,7 @@ internal sealed class ConsumeMinionHandler : IEffectHandler
                 ExecuteAll(Effects, new EffectContext
                 {
                     CastId = ctx.CastId,
+                    CastSource = ctx.CastSource,
                     Sim = sim,
                     Origin = ctx.Origin,
                     Source = ctx.Source,

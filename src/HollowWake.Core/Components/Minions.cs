@@ -73,6 +73,8 @@ public sealed class Minion : IComponent
 
     /// <summary>Resolved owner uses awaiting this echo's next think; absent on minions without an echo action.</summary>
     internal Queue<Minions.OwnerCast>? PendingOwnerCasts;
+    /// <summary>Resolved uses retained for this echo, exposed for queue diagnostics without the payloads.</summary>
+    public int PendingReplayCount => PendingOwnerCasts?.Count ?? 0;
 }
 
 /// <summary>

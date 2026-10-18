@@ -390,15 +390,14 @@ internal static class MinionActions
     }
 
     /// <summary>
-    /// <c>echo_owner {damage_scale}</c>: an echo replays each weave its owner casts after it appeared, from where
-    /// the echo stands, with the owner's numbers and credit, its damage scaled. Summons, deployed constructs and movement are not
-    /// replayed. A replay is a resolution of the use the owner paid for, not a new use, so it is no intent: it
-    /// runs on the runtime's free path (<see cref="WeaveRuntime.Replay"/>), a world rule like the leash, and every
-    /// cast the owner makes is replayed.
+    /// <c>echo_owner {damage_scale}</c>: replay eligible owner resolutions captured since birth, with the owner's
+    /// numbers and credit, from the echo's position. Content's echo exclusions determine eligibility. Replays
+    /// run the captured payload and cast variables without paying again or beginning a new cast bar.
     /// </summary>
     private static void EchoOwner(AiContext c, JsonObject p)
     {
-        if (!OwnerOf(c, out var owner, out _) || !c.Sim.World.TryGet<Minion>(c.Entity, out var minion)
+        if (!OwnerOf(c, out var owner, out _) || MinionService.Of(c.Sim).CancelIncapacitatedEcho(c.Entity)
+            || !c.Sim.World.TryGet<Minion>(c.Entity, out var minion)
             || minion.PendingOwnerCasts is not { Count: > 0 } pending)
         {
             return;
@@ -411,7 +410,8 @@ internal static class MinionActions
             var rng = c.Sim.RngFor(c.Entity, "construct:" + use.Weave.Key);
             // Preserve the existing single-replay stream; additional uses in this think get distinct seeded streams.
             if (i > 0) rng = new Rng(Rng.Combine(rng.Seed, (ulong)use.Sequence));
-            runtime.Replay(c.Sim, c.Entity, owner, use.Weave, use.Target, use.Point, c.Num(p, "damage_scale", 0.5), rng);
+            runtime.Replay(c.Sim, c.Entity, owner, use.Weave, use.Effects, use.Variables,
+                use.Target, use.Point, c.Num(p, "damage_scale", 0.5), rng);
         }
     }
 

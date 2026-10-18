@@ -373,7 +373,8 @@ public sealed partial class WeaveRuntime
     /// <paramref name="damageScale"/> of their damage, on <paramref name="rng"/>. The caster turns to the aim, and
     /// the resolution is the caster's: it raises <see cref="WeaveCast"/>.
     /// </summary>
-    internal void Replay(Simulation sim, Entity caster, Entity origin, CompiledWeave weave, Entity target, Vector3 point, double damageScale, Rng rng)
+    internal void Replay(Simulation sim, Entity caster, Entity origin, CompiledWeave weave,
+        IReadOnlyList<CompiledEffect> effects, CastVariableSnapshot? variables, Entity target, Vector3 point, double damageScale, Rng rng)
     {
         if (!sim.World.IsAlive(caster) || sim.World.Has<Dead>(caster) || !sim.World.TryGet<Transform>(caster, out var ct)
             || !sim.World.IsAlive(origin) || !sim.World.Has<Stats>(origin))
@@ -385,8 +386,23 @@ public sealed partial class WeaveRuntime
         ct.Face(at);
         var direction = new Vector2(at.X - ct.Position.X, at.Y - ct.Position.Y);
         direction = direction.LengthSquared() > 0.0001f ? Vector2.Normalize(direction) : ct.Forward;
-        if (RunFree(sim, caster, origin, weave, weave.Tags, host: null, slot: null, target, at, direction, depth: 0, rng, damageScale))
-            sim.Events.Publish(new WeaveCast(caster, weave.Key, target, at, weave.Tags) { Tick = sim.Clock.Tick, Resolved = weave });
+        var context = new EffectContext
+        {
+            CastId = ++_nextCastId, CastSource = caster, Sim = sim, Source = origin, Origin = origin, Target = target,
+            Point = at, Direction = direction, Weave = weave, Tags = weave.Tags, Rng = rng,
+            DamageScale = damageScale, From = ct.Position,
+        };
+        variables?.Values.WriteTo(context.Vars);
+        if (!ReleaseTargets.Check(context, out var miss))
+        {
+            ReleaseTargets.Miss(context, miss);
+            return;
+        }
+        CompiledEffect.ExecuteAll(effects, context);
+        sim.Events.Publish(new WeaveCast(caster, weave.Key, target, at, weave.Tags)
+        {
+            Tick = sim.Clock.Tick, Resolved = weave, ResolvedEffects = effects, ResolvedVariables = variables,
+        });
     }
 
     /// <summary>
