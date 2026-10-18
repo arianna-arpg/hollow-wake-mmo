@@ -187,7 +187,7 @@ export class LoadingScreen {
     const dpad = pad ? Number(pad.buttons[down ? 15 : 13]?.pressed) - Number(pad.buttons[down ? 14 : 12]?.pressed) : 0;
     if (Math.abs(stick) > controls.deadzone || dpad) { axis = dpad || stick; this.pointer = undefined; }
     const confirm = !!pad?.buttons[0]?.pressed;
-    if (confirm && !this.padConfirm) this.actions?.querySelector('button')?.click();
+    if (document.hasFocus() && !document.hidden && confirm && !this.padConfirm) this.actions?.querySelector('button')?.click();
     this.padConfirm = confirm;
     if (!this.active) return;
     this.run.step(this.last && !document.hidden ? (now - this.last) / 1000 : 0, { axis, target: this.pointer }); this.last = now;

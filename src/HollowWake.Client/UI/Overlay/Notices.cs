@@ -19,7 +19,7 @@ public partial class Notices : Control
     private Vector2 _anchor;
     private bool _hasAnchor;
 
-    private sealed record Floater(string Text, Color Color, double At, float Drift, bool Big);
+    private sealed record Floater(string Text, Color Color, double At, float Drift, bool Big, float Weight);
 
     public Notices(Skin skin)
     {
@@ -41,10 +41,11 @@ public partial class Notices : Control
     }
 
     /// <summary>Text rising above the hero.</summary>
-    public void Float(string text, Color color, double now, bool big = false)
+    /// <summary>A number rising over the hero; weight (zero to one) is how heavy the blow was for its target, which sizes and pops it.</summary>
+    public void Float(string text, Color color, double now, bool big = false, float weight = 0)
     {
         var drift = (float)((_floaters.Count % 5) - 2) * 9f;
-        _floaters.Add(new Floater(text, color, now, drift, big));
+        _floaters.Add(new Floater(text, color, now, drift, big, Math.Clamp(weight, 0, 1)));
         if (_floaters.Count > 24)
         {
             _floaters.RemoveAt(0);
@@ -81,9 +82,12 @@ public partial class Notices : Control
         foreach (var f in _floaters)
         {
             var t = (float)((_now - f.At) / life);
-            var p = _anchor + new Vector2(f.Drift + t * f.Drift * 0.6f, -24 - t * 60);
-            var size = f.Big ? _skin.TitleSize + 6 : _skin.NumeralSize + 3;
-            Paint.Text(this, _skin.Numerals, p - new Vector2(80, 0), f.Text, size, f.Color with { A = 1 - t * t }, HorizontalAlignment.Center, 160, 5);
+            // a heavy blow rises slower and lands with a pop; a light one drifts off quickly
+            var rise = 60f - 20f * f.Weight;
+            var pop = Motion.Reduced ? 1f : 1f + 0.5f * Math.Max(0f, 1f - t / 0.12f) * (0.4f + f.Weight);
+            var p = _anchor + new Vector2(f.Drift + t * f.Drift * 0.6f, -24 - t * rise);
+            var size = (f.Big ? _skin.TitleSize + 6 : _skin.NumeralSize + 3) * (1f + 0.7f * f.Weight) * pop;
+            Paint.Text(this, _skin.Numerals, p - new Vector2(80, 0), f.Text, (int)MathF.Round(size), f.Color with { A = 1 - t * t }, HorizontalAlignment.Center, 160, 5);
         }
     }
 }

@@ -1,7 +1,4 @@
 import {
-  BoxGeometry,
-  CapsuleGeometry,
-  CylinderGeometry,
   ExtrudeGeometry,
   Group,
   Mesh,
@@ -10,46 +7,47 @@ import {
   Path,
   Shape,
   ShapeGeometry,
-  SphereGeometry,
   Vector2,
   Vector3,
   type BufferGeometry,
   type Camera,
+  type WebGLRenderer,
 } from 'three';
 import type { EntityPaletteSettings, MotionSettings } from '../config';
-import type { EntityState, Int64 } from '../net/protocol';
+import type { EntityState, Int64, ItemInfo } from '../net/protocol';
+import type { Obj } from '../ui/logic/content';
+import { animate, freshVisualState, Pose, type VisualState } from './appearance/animator';
+import { buildBody } from './appearance/bodyFamilies';
+import { BodyMesh, type BodyView } from './appearance/bodyMesh';
+import type { BodyPlan } from './appearance/bodyPlan';
+import { CardAtlas, CardBaker, CardView } from './appearance/cards';
+import { lay, wear } from './appearance/gearFamilies';
+import { AppearanceCatalog, type AppearanceDef, type ItemLook } from './appearance/looks';
+import { ContactMark, markStyle } from './appearance/marks';
 import { linearColor } from './colors';
 import { toThree, type CorePoint } from './coords';
 import { pushSample, sampleAt, lerpAngle, type Sample } from './interpolation';
 import { regionOf, specOf, type ShapeSpec } from './shapes';
 
 /**
- * Placeholder bodies for server entities, chosen by what they are like the desktop client's EntityView:
- * capsules for creatures, a trunk and canopy for trees, boxes for other props and structures, spheres for
- * projectiles, cylinders for drops, fields, markers and founts. A projectile, area or field the server names a
- * shape for is drawn as that shape (a slab for a projectile, a flat mark for the rest), facing its heading and
- * turned by its spin; a telegraph is a ground mark that fades in, pulses, and fades out when the strike lands.
- * Coloured by faction and rarity from config, with a name, level and life bar label kept over each body in
- * screen space.
+ * Server entities as drawn, the twin of the desktop EntityView: a built body from the appearance content
+ * (painted geometry or a directional card, chosen through the bodies option and the camera) posed by the
+ * shared animator from the state the server sends, a contact mark on the ground, a label kept over it in
+ * screen space, and snapshot interpolation. A projectile, area or field the server names a shape for is
+ * drawn as that shape (a slab for a projectile, a flat mark for the rest), facing its heading and turned by
+ * its spin; a telegraph is a ground mark that fades in, pulses, and fades out when the strike lands. Nothing
+ * here decides anything: every pose and flash follows a fact on the wire.
  */
 
-interface BodyShape {
+export type BodiesMode = 'auto' | 'geometry' | 'cards';
+
+interface ShapeBody {
   key: string;
   build: () => BufferGeometry;
   color: string;
   opacity: number;
-  /** Lift so the body stands on the entity's position rather than straddling it. */
   lift: number;
-  canopy?: { radius: number; y: number; color: string };
-  /**
-   * The size the mouse picks, matching what is drawn rather than the simulation radius (a marker's radius is
-   * its whole place). Null: never under the cursor (ground fields, projectiles in flight).
-   */
-  pick: { radius: number; height: number } | null;
-  /** Drawn by a delivery shape: faces its heading and spin rather than the body's yaw, and casts no shadow. */
-  shaped?: boolean;
-  /** A telegraph mark: fades in, pulses, and fades out when it goes. */
-  telegraph?: boolean;
+  telegraph: boolean;
 }
 
 /** A shape's region as a mesh on the ground, x along its facing and y to its left; a thickness extrudes it upward. */
@@ -79,104 +77,42 @@ function hasResources(s: EntityState): boolean {
   return Object.keys(s.resources).length > 0;
 }
 
-function floraRule(palette: EntityPaletteSettings, look: string) {
-  return palette.flora.find((rule) => rule.match.some((m) => look.includes(m)));
+/** Whether a body is drawn by a delivery shape rather than a built body. */
+export function isShaped(s: EntityState): boolean {
+  return s.shape != null || lookOf(s) === 'telegraph';
 }
 
-/** Which colour a body gets, mirroring EntityView.ColorFor on the desktop. */
-export function colorFor(s: EntityState, palette: EntityPaletteSettings): string {
+/** The colour of a drawn shape (a flight, an area, a field): its Thread's colour when the look names one, else by faction. */
+export function shapeColor(s: EntityState, palette: EntityPaletteSettings): string {
   const look = lookOf(s);
+  if (look === 'telegraph') {
+    return palette.telegraph;
+  }
   if (s.is_player) {
     return palette.player;
-  }
-  if (look.startsWith('drop:')) {
-    return palette.drops[s.rarity ?? 'normal'] ?? palette.drops.normal ?? palette.creatureFallback;
-  }
-  if (look === 'projectile') {
-    return palette.projectile;
   }
   if (look === 'field') {
     return palette.field;
   }
-  if (look.startsWith('poi:')) {
-    return palette.poi;
+  if (/^#[0-9a-fA-F]{6}$/.test(look)) {
+    return look;
   }
-  if (look === 'fount') {
-    return palette.fount;
-  }
-  if (!hasResources(s)) {
-    return floraRule(palette, look)?.color ?? palette.floraFallback;
-  }
-  return palette.factions[s.faction ?? ''] ?? palette.rarities[s.rarity ?? ''] ?? palette.creatureFallback;
+  return palette.factions[s.faction ?? ''] ?? palette.projectile;
 }
 
-export function shapeFor(s: EntityState, palette: EntityPaletteSettings): BodyShape {
+function shapeFor(s: EntityState, palette: EntityPaletteSettings): ShapeBody {
   const look = lookOf(s);
-  const color = colorFor(s, palette);
-  const radius = s.radius;
-  const height = s.height;
-  if (s.shape || look === 'telegraph') {
-    const spec = specOf(s.shape ?? 'circle', s.shape_size, Math.max(0.1, radius));
-    const kind = look === 'telegraph' ? 'telegraph' : look === 'projectile' || s.pattern === 'projectile' ? 'projectile' : 'area';
-    const thickness = kind === 'projectile' ? r2(Math.min(0.4, Math.max(0.12, height * 0.4))) : 0;
-    const key = `shape:${spec.name}:${r2(spec.radius)}:${r2(spec.angle)}:${r2(spec.width)}:${r2(spec.inner)}:${thickness}`;
-    return {
-      key,
-      build: () => shapeGeometry(spec, thickness),
-      color: kind === 'telegraph' ? palette.telegraph : color,
-      opacity: kind === 'telegraph' ? palette.telegraphOpacity : kind === 'projectile' ? 1 : palette.fieldOpacity,
-      lift: kind === 'projectile' ? Math.max(0.1, height * 0.5) - thickness / 2 : kind === 'telegraph' ? 0.07 : 0.05,
-      pick: null,
-      shaped: true,
-      telegraph: kind === 'telegraph',
-    };
-  }
-  if (look.startsWith('drop:')) {
-    return { key: 'drop', build: () => new CylinderGeometry(0.25, 0.25, 0.25, 12), color, opacity: 1, lift: 0.125, pick: { radius: 0.25, height: 0.25 } };
-  }
-  if (look === 'projectile' || s.pattern === 'projectile') {
-    const r = r2(Math.max(0.15, radius * 0.6));
-    return { key: `sphere:${r}`, build: () => new SphereGeometry(r, 12, 8), color, opacity: 1, lift: height * 0.5, pick: null };
-  }
-  if (look === 'field') {
-    const r = r2(Math.max(0.1, radius));
-    return { key: `field:${r}`, build: () => new CylinderGeometry(r, r, 0.1, 24), color, opacity: palette.fieldOpacity, lift: 0.05, pick: null };
-  }
-  if (look.startsWith('poi:')) {
-    return { key: 'poi', build: () => new CylinderGeometry(0.15, 0.6, 3.5, 10), color, opacity: 1, lift: 1.75, pick: { radius: 0.6, height: 3.5 } };
-  }
-  if (look === 'fount') {
-    const h = r2(Math.max(0.5, height));
-    return { key: `fount:${h}`, build: () => new CylinderGeometry(0.2, 1.0, h, 12), color, opacity: 1, lift: h / 2, pick: { radius: 1, height: h } };
-  }
-  if (s.interactable != null && !hasResources(s)) {
-    const w = r2(Math.max(0.2, radius * 2));
-    const h = r2(Math.max(0.2, height));
-    return { key: `box:${w}:${h}`, build: () => new BoxGeometry(w, h, w), color, opacity: 1, lift: h / 2, pick: { radius: w / 2, height: h } };
-  }
-  if (!hasResources(s) && floraRule(palette, look)?.tree) {
-    // A trunk with a round canopy on top, so tall flora reads as a tree and not a pillar.
-    const trunk = r2(Math.max(0.25, radius * 0.6));
-    const th = r2(Math.max(0.3, height * 0.6));
-    const canopy = r2(Math.min(4, Math.max(0.8, height * 0.28)));
-    return {
-      key: `trunk:${trunk}:${th}`,
-      build: () => new BoxGeometry(trunk, th, trunk),
-      color: palette.trunk,
-      opacity: 1,
-      lift: th / 2,
-      canopy: { radius: canopy, y: height - canopy, color },
-      pick: { radius: canopy, height },
-    };
-  }
-  if (!hasResources(s)) {
-    const w = r2(Math.max(0.3, radius * 1.4));
-    const h = r2(Math.max(0.2, height));
-    return { key: `box:${w}:${h}`, build: () => new BoxGeometry(w, h, w), color, opacity: 1, lift: h / 2, pick: { radius: w / 2, height: h } };
-  }
-  const r = r2(Math.max(0.2, radius));
-  const h = r2(Math.max(0.6, height));
-  return { key: `capsule:${r}:${h}`, build: () => new CapsuleGeometry(r, Math.max(0.01, h - 2 * r), 6, 12), color, opacity: 1, lift: h / 2, pick: { radius: r, height: h } };
+  const spec = specOf(s.shape ?? 'circle', s.shape_size, Math.max(0.1, s.radius));
+  const kind = look === 'telegraph' ? 'telegraph' : look === 'projectile' || s.pattern === 'projectile' ? 'projectile' : 'area';
+  const thickness = kind === 'projectile' ? r2(Math.min(0.4, Math.max(0.12, s.height * 0.4))) : 0;
+  return {
+    key: `shape:${spec.name}:${r2(spec.radius)}:${r2(spec.angle)}:${r2(spec.width)}:${r2(spec.inner)}:${thickness}`,
+    build: () => shapeGeometry(spec, thickness),
+    color: shapeColor(s, palette),
+    opacity: kind === 'telegraph' ? palette.telegraphOpacity : kind === 'projectile' ? 1 : palette.fieldOpacity,
+    lift: kind === 'projectile' ? Math.max(0.1, s.height * 0.5) - thickness / 2 : kind === 'telegraph' ? 0.07 : 0.05,
+    telegraph: kind === 'telegraph',
+  };
 }
 
 /** The label line over a body, as the desktop client writes it. */
@@ -194,6 +130,112 @@ export function titleFor(s: EntityState): string {
   return title;
 }
 
+/**
+ * The appearance pipeline the layer draws with: the catalog, the baker, and the settings every body reads.
+ * Plans are built per entity, since their seeded variation is the entity's own; atlases are shared per look and gear.
+ */
+export class AppearanceService {
+  readonly catalog: AppearanceCatalog;
+  readonly baker: CardBaker;
+  mode: BodiesMode = 'auto';
+  reducedMotion = false;
+  shadows = false;
+  cardZoom = 36;
+  isometric = true;
+  orthoSize = 28;
+  cameraYaw = 0;
+  /** The self's worn equipment, by slot, so its body shows what it wears. */
+  selfEquipment: (() => Record<string, ItemInfo>) | null = null;
+  private readonly atlases = new Map<string, CardAtlas>();
+
+  constructor(kinds: Map<string, Obj[]>, renderer: WebGLRenderer) {
+    this.catalog = new AppearanceCatalog(kinds);
+    this.baker = new CardBaker(renderer);
+  }
+
+  wantsCard(policy: string, isCardNow: boolean, height: number): boolean {
+    if (policy === 'never' || height > 4) {
+      return false;
+    }
+    switch (this.mode) {
+      case 'geometry':
+        return false;
+      case 'cards':
+        return true;
+      default: {
+        if (!this.isometric) {
+          return false;
+        }
+        if (policy === 'prefer') {
+          return true;
+        }
+        const threshold = isCardNow ? this.cardZoom - 4 : this.cardZoom + 4;
+        return this.orthoSize >= threshold;
+      }
+    }
+  }
+
+  lookFor(s: EntityState): AppearanceDef | null {
+    return this.catalog.resolve(s.look ?? s.pattern, s.pattern);
+  }
+
+  /** A built plan for an entity with the gear it wears: the self's own equipment, a monster's grants, a Calling's kit. */
+  planFor(s: EntityState, look: AppearanceDef, isSelf: boolean, key: number | string): { plan: BodyPlan; gearKey: string } {
+    const plan = buildBody(look, key, s.height, s.radius);
+    let gearKey = look.id;
+    const dropLook = s.look ?? '';
+    if (look.body === 'drop' && dropLook.startsWith('drop:')) {
+      const gear = this.catalog.gearForItem(dropLook.slice(5));
+      if (gear) {
+        lay(plan, gear, key);
+        gearKey += `+${gear.id}`;
+      }
+    } else if (plan.sockets.size > 0) {
+      const worn = new Map<string, ItemLook>(this.catalog.defaultGear(look, s.pattern));
+      const equipment = isSelf ? this.selfEquipment?.() : undefined;
+      if (equipment) {
+        worn.clear();
+        for (const [slot, item] of Object.entries(equipment)) {
+          const fromBase = this.catalog.itemLook(item.base);
+          worn.set(slot, { itemClass: item.class ?? fromBase?.itemClass ?? null, tags: fromBase?.tags ?? [] });
+        }
+      }
+      for (const slot of [...worn.keys()].sort()) {
+        const item = worn.get(slot)!;
+        const gear = this.catalog.gearFor(slot, item.itemClass, item.tags);
+        if (!gear) {
+          continue;
+        }
+        wear(plan, gear, slot, key);
+        gearKey += `+${slot}=${gear.id}`;
+      }
+    }
+    return { plan, gearKey };
+  }
+
+  atlasFor(key: string, unjitteredPlan: () => BodyPlan): CardAtlas {
+    let atlas = this.atlases.get(key);
+    if (!atlas) {
+      atlas = new CardAtlas(key);
+      this.atlases.set(key, atlas);
+      this.baker.enqueue(atlas, unjitteredPlan());
+    }
+    return atlas;
+  }
+
+  get atlasBytes(): number {
+    let bytes = 0;
+    for (const a of this.atlases.values()) {
+      bytes += a.bytes;
+    }
+    return bytes;
+  }
+
+  get atlasCount(): number {
+    return [...this.atlases.values()].filter((a) => a.ready).length;
+  }
+}
+
 export class EntityView {
   readonly root = new Group();
   readonly label: HTMLDivElement;
@@ -201,23 +243,17 @@ export class EntityView {
   private readonly statusEl: HTMLDivElement;
   private readonly lifeEl: HTMLDivElement;
   private readonly lifeFill: HTMLDivElement;
-  private body: Mesh | null = null;
-  private canopy: Mesh | null = null;
-  private shapeKey = '';
+  private shapeMesh: Mesh | null = null;
   /** Drawn by a delivery shape, facing its heading. */
   private shaped = false;
   /** A telegraph's own material, whose opacity fades; null for every other body. */
   private fade: MeshBasicMaterial | null = null;
-  /** A telegraph's fill, growing from its anchor to the whole mark as the strike nears. */
   private fill: Mesh | null = null;
   private fillMaterial: MeshBasicMaterial | null = null;
   private fadeOpacity = 0;
   private bornAt = 0;
-  /** The server time the client first saw the body, for a telegraph's progress toward its until. */
   private bornServer = 0;
-  /** When a telegraph's strike landed (it despawned): it fades out from then. */
   dyingAt: number | null = null;
-  /** What the mouse picks; see BodyShape.pick. */
   pickSize: { radius: number; height: number } | null = null;
   private readonly samples: Sample[] = [];
   private readonly target = new Vector3();
@@ -226,7 +262,30 @@ export class EntityView {
   private labelX = Number.NaN;
   private labelY = Number.NaN;
   private labelShown = false;
+  private labelAlpha = 1;
   state: EntityState;
+
+  // the built body
+  private body: BodyView | null = null;
+  private plan: BodyPlan | null = null;
+  private look: AppearanceDef | null = null;
+  private gearKey = '';
+  private atlas: CardAtlas | null = null;
+  private mark: ContactMark | null = null;
+  private readonly visual: VisualState = freshVisualState();
+  private readonly pose = new Pose();
+  private readonly lastDrawn = new Vector3();
+  private hasDrawn = false;
+  private speed = 0;
+  private releasedAt = Number.NEGATIVE_INFINITY;
+  private hitAt = Number.NEGATIVE_INFINITY;
+  private hitStrength = 0;
+  private hitFrom = Number.NaN;
+  private diedAt = Number.NEGATIVE_INFINITY;
+  private wasCasting = false;
+  private wasDead = false;
+  private settled = false;
+  private selfEquipmentKey = '';
 
   constructor(
     state: EntityState,
@@ -258,8 +317,34 @@ export class EntityView {
     return { x: this.root.position.x, y: -this.root.position.z, z: this.root.position.y };
   }
 
+  /** Triangles the body draws, for the measurement line. */
+  get triangles(): number {
+    return this.body?.triangles ?? 0;
+  }
+
+  get isCard(): boolean {
+    return this.body instanceof CardView;
+  }
+
+  /** The drawn body's height, for labels and picking. */
+  get drawnHeight(): number {
+    return this.plan?.height ?? this.state.height;
+  }
+
   apply(state: EntityState, serverTime: number, localSeconds: number, snap: boolean): void {
     const previous = this.state;
+    const now = this.layer.serverNow;
+    if (state.casting == null && previous.casting != null) {
+      this.releasedAt = now;
+    }
+    if (state.dead && !previous.dead) {
+      this.diedAt = now;
+    } else if (!state.dead && previous.dead) {
+      this.diedAt = Number.NEGATIVE_INFINITY;
+    }
+    if (snap && state.dead) {
+      this.diedAt = Math.min(this.diedAt, now - 5);
+    }
     this.state = state;
     pushSample(this.samples, { t: serverTime, x: state.x, y: state.y, z: state.z, yaw: state.yaw, vx: state.vx, vy: state.vy, vz: state.vz });
     toThree(state.x, state.y, state.z, this.target);
@@ -269,31 +354,107 @@ export class EntityView {
       this.bornAt = localSeconds;
       this.bornServer = this.layer.serverNow;
     }
-    const shape = shapeFor(state, this.layer.palette);
-    if (snap || shape.key !== this.shapeKey || state.dead !== previous.dead || colorFor(state, this.layer.palette) !== colorFor(previous, this.layer.palette)) {
-      this.rebuild(shape);
+    const rebuild = snap || state.look !== previous.look || Math.abs(state.height - previous.height) > 0.01 || (state.interactable == null) !== (previous.interactable == null)
+      || state.shape !== previous.shape || JSON.stringify(state.shape_size) !== JSON.stringify(previous.shape_size) || state.faction !== previous.faction;
+    if (rebuild) {
+      this.rebuild();
     }
     if (snap) {
       this.root.position.copy(this.target);
       this.root.rotation.y = this.facing(state.yaw);
+      this.lastDrawn.copy(this.target);
+      this.hasDrawn = true;
     }
     this.refreshLabel();
   }
 
-  /** The body's turn about the vertical: a shape faces its heading (else the yaw) plus its spin; a body its yaw. */
+  /** The body's turn about the vertical: a shape faces its heading (else the yaw) plus its spin; a body faces its yaw, forward along its x. */
   private facing(yaw: number): number {
-    return this.shaped ? (this.state.heading ?? yaw) + (this.state.spin ?? 0) : -yaw + Math.PI / 2;
+    return this.shaped ? (this.state.heading ?? yaw) + (this.state.spin ?? 0) : yaw;
   }
 
-  private rebuild(shape: BodyShape): void {
+  private dropBody(): void {
+    if (this.body !== null) {
+      this.root.remove(this.body.root);
+      this.body.dispose();
+      this.body = null;
+    }
+    this.plan = null;
+    this.atlas = null;
+    if (this.mark !== null) {
+      this.root.remove(this.mark.mesh);
+      this.mark = null;
+    }
+  }
+
+  private rebuild(): void {
     const s = this.state;
-    this.shapeKey = shape.key;
-    this.pickSize = shape.pick;
-    this.shaped = shape.shaped === true;
+    this.shaped = isShaped(s);
+    if (this.shaped) {
+      this.buildShape();
+      return;
+    }
+    this.fade?.dispose();
+    this.fade = null;
+    this.fillMaterial?.dispose();
+    this.fillMaterial = null;
+    if (this.fill !== null) {
+      this.fill.visible = false;
+    }
+    if (this.shapeMesh !== null) {
+      this.shapeMesh.visible = false;
+    }
+    this.dropBody();
+    const service = this.layer.appearance;
+    this.look = service.lookFor(s) ?? { id: 'block', match: [], priority: 0, body: 'block', slot: null, shape: {}, palette: {}, features: [], gear: {}, variation: { hue: 0, value: 0, scale: 0 }, card: 'never', scale: 1, glow: null };
+    const built = service.planFor(s, this.look, this.isSelf, s.key);
+    this.plan = built.plan;
+    this.gearKey = built.gearKey;
+    this.selfEquipmentKey = this.isSelf ? this.equipmentKey() : '';
+    this.visual.rig = this.plan.rig;
+    this.visual.swings = this.plan.swings;
+    this.visual.height = this.plan.height;
+    this.visual.hover = this.plan.hover;
+    this.visual.key = s.key;
+    const geometry = new BodyMesh(this.plan);
+    this.root.add(geometry.root);
+    this.body = geometry;
+    const drop = isDrop(s);
+    this.pickSize = this.look.body === 'orb' ? null : { radius: Math.max(0.3, this.plan.width * 0.5), height: Math.max(0.3, this.plan.height + this.plan.hover) };
+    const creature = hasResources(s);
+    if (creature || drop || s.interactable != null || this.plan.rig === 'tree') {
+      const relation = service.catalog.relationOf(s.faction);
+      const contact = service.catalog.motion.contact;
+      const style = !creature || this.isSelf ? 'plain' : relation === 'hostile' ? contact.hostile : relation === 'friendly' || relation === 'allied' ? contact.friendly : contact.neutral;
+      if (style !== 'none') {
+        const size = drop ? 0.9 : Math.min(4, Math.max(0.5, Math.max(this.plan.width, 0.5) * (this.plan.rig === 'tree' ? 0.5 : 1.25)));
+        this.mark = new ContactMark(size, markStyle(style), contact.opacity);
+        this.mark.setFade(creature ? 1 : 0.55);
+        this.root.add(this.mark.mesh);
+      }
+    }
+  }
+
+  private equipmentKey(): string {
+    const equipment = this.layer.appearance.selfEquipment?.();
+    return equipment ? Object.entries(equipment).sort(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0)).map(([slot, item]) => `${slot}:${item.base}`).join(',') : '';
+  }
+
+  /** The self's worn gear changed: its body is built again with it. */
+  refreshEquipment(): void {
+    if (this.isSelf && !this.shaped && this.equipmentKey() !== this.selfEquipmentKey) {
+      this.rebuild();
+    }
+  }
+
+  private buildShape(): void {
+    const s = this.state;
+    this.pickSize = null;
+    this.dropBody();
+    const shape = shapeFor(s, this.layer.palette);
     const opacity = s.dead ? Math.min(shape.opacity, this.layer.palette.deadOpacity) : shape.opacity;
     let material: MeshLambertMaterial | MeshBasicMaterial = this.layer.material(shape.color, opacity);
     if (shape.telegraph) {
-      // A telegraph's opacity is its own to fade, so it takes its own materials: the mark, and its growing fill.
       this.fade?.dispose();
       this.fillMaterial?.dispose();
       this.fade = new MeshBasicMaterial({ color: linearColor(shape.color), transparent: true, opacity: 0, depthWrite: false });
@@ -320,32 +481,43 @@ export class EntityView {
         this.fill.visible = false;
       }
     }
-    if (this.body === null) {
-      this.body = new Mesh(this.layer.geometry(shape.key, shape.build), material);
-      this.root.add(this.body);
+    if (this.shapeMesh === null) {
+      this.shapeMesh = new Mesh(this.layer.geometry(shape.key, shape.build), material);
+      this.root.add(this.shapeMesh);
     } else {
-      this.body.geometry = this.layer.geometry(shape.key, shape.build);
-      this.body.material = material;
+      this.shapeMesh.geometry = this.layer.geometry(shape.key, shape.build);
+      this.shapeMesh.material = material;
     }
-    this.body.castShadow = !this.shaped;
-    this.body.renderOrder = shape.telegraph ? 2 : 0;
-    this.body.position.y = shape.lift;
-    if (shape.canopy) {
-      const c = shape.canopy;
-      const geometry = this.layer.geometry(`canopy:${c.radius}`, () => new SphereGeometry(c.radius, 12, 6));
-      if (this.canopy === null) {
-        this.canopy = new Mesh(geometry, this.layer.material(c.color, opacity));
-        this.canopy.castShadow = true;
-        this.root.add(this.canopy);
-      } else {
-        this.canopy.geometry = geometry;
-        this.canopy.material = this.layer.material(c.color, opacity);
-      }
-      this.canopy.position.y = c.y;
-      this.canopy.visible = true;
-    } else if (this.canopy !== null) {
-      this.canopy.visible = false;
+    this.shapeMesh.visible = true;
+    this.shapeMesh.castShadow = false;
+    this.shapeMesh.renderOrder = shape.telegraph ? 2 : 0;
+    this.shapeMesh.position.y = shape.lift;
+  }
+
+  /** A blow landed on this body: the animator flinches it away from where it came and flashes it. */
+  hit(amount: number, from: Vector3 | null): void {
+    this.hitAt = this.layer.serverNow;
+    this.layer.cue?.('hit', this.plan?.rig ?? null, this.root.position);
+    const max = this.state.resource_max.life ?? 0;
+    this.hitStrength = Math.min(1, Math.max(0.25, (amount / (max > 0 ? max : 100)) * 4));
+    if (from !== null) {
+      const dx = from.x - this.root.position.x;
+      const dz = from.z - this.root.position.z;
+      const toSource = Math.atan2(-dz, dx);
+      let rel = toSource - this.root.rotation.y;
+      rel = ((rel + Math.PI) % (Math.PI * 2) + Math.PI * 2) % (Math.PI * 2) - Math.PI;
+      this.hitFrom = rel;
+    } else {
+      this.hitFrom = Number.NaN;
     }
+  }
+
+  /** This body landed a blow: its swing comes through now even if the snapshot missed the cast. */
+  struck(): void {
+    if (!this.wasCasting) {
+      this.releasedAt = this.layer.serverNow;
+    }
+    this.layer.cue?.('swing', this.plan?.swings ? 'weapon' : this.plan?.rig ?? null, this.root.position);
   }
 
   refreshLabel(): void {
@@ -403,15 +575,112 @@ export class EntityView {
       const predicted = this.velocity.clone().multiplyScalar(age).add(this.target);
       this.root.position.lerp(predicted, t);
       this.root.rotation.y = lerpAngle(this.root.rotation.y, this.facing(this.state.yaw), t);
+    } else if (this.dyingAt === null) {
+      const pose = sampleAt(this.samples, renderServerTime, motion.maxExtrapolationMs / 1000);
+      if (pose !== null) {
+        toThree(pose.x, pose.y, pose.z, this.root.position);
+        this.root.rotation.y = this.facing(pose.yaw);
+      }
+    }
+    if (this.body !== null && this.plan !== null) {
+      this.animateBody(dt);
+    }
+  }
+
+  /** Feeds the animator the body's state and applies the pose; swaps the representation when the camera asks. */
+  private animateBody(dt: number): void {
+    const service = this.layer.appearance;
+    const s = this.state;
+    const serverNow = this.layer.serverNow;
+    const v = this.visual;
+    const plan = this.plan!;
+    // a settled static prop (a rock, a chest, a marker) keeps its pose until something happens to it
+    const still = plan.rig === 'static' && !s.dead && serverNow - this.hitAt > 1 && this.settled;
+    if (still) {
+      this.chooseRepresentation();
       return;
     }
-    if (this.dyingAt !== null) {
+    this.settled = plan.rig === 'static';
+    if (this.hasDrawn) {
+      const dx = this.root.position.x - this.lastDrawn.x;
+      const dz = this.root.position.z - this.lastDrawn.z;
+      const distance = Math.hypot(dx, dz);
+      const speed = dt > 1e-4 ? distance / dt : 0;
+      this.speed += (speed - this.speed) * Math.min(1, dt * 10);
+      const stride = service.catalog.motion.walk('stride', 1.5) * Math.min(2.5, Math.max(0.4, plan.height / 1.8));
+      const before = v.walkPhase;
+      v.walkPhase = (v.walkPhase + (distance / Math.max(0.2, stride)) * Math.PI * 2) % (Math.PI * 2);
+      // a foot plants each half cycle: the footstep cue, with the surface underfoot as its variant
+      if (this.speed > 0.5 && s.grounded && !s.dead && (plan.rig === 'biped' || plan.rig === 'quadruped') && Math.floor(before / Math.PI) !== Math.floor(v.walkPhase / Math.PI)) {
+        this.layer.cue?.('footstep', this.layer.surfaceAt?.(this.root.position) ?? null, this.root.position);
+      }
+      const fx = Math.cos(this.root.rotation.y);
+      const fz = -Math.sin(this.root.rotation.y);
+      const along = dt > 1e-4 ? (dx * fx + dz * fz) / dt : 0;
+      const target = Math.min(8, Math.max(-8, (along - this.speed) * 2));
+      v.leanForward += (target - v.leanForward) * Math.min(1, dt * 6);
+    }
+    this.lastDrawn.copy(this.root.position);
+    this.hasDrawn = true;
+    v.speed = this.speed;
+    v.time = serverNow;
+    v.grounded = s.grounded;
+    v.leaping = s.flags.includes('leaping');
+    v.dashing = s.flags.includes('dashing');
+    v.dead = s.dead;
+    v.deadFor = s.dead ? Math.max(0, serverNow - this.diedAt) : 0;
+    if (s.dead && !this.wasDead) {
+      this.layer.cue?.('death', plan.rig, this.root.position);
+    }
+    this.wasDead = s.dead;
+    let casting = s.casting != null && s.casting.length > 0;
+    let mode = 'cast';
+    let progress = s.cast_progress;
+    const own = this.isSelf ? this.layer.selfCast?.() : null;
+    if (own) {
+      casting = true;
+      mode = own.mode;
+      progress = own.progress;
+    }
+    v.casting = casting;
+    v.castMode = mode;
+    v.castProgress = progress;
+    this.wasCasting = casting;
+    v.releaseAge = Math.max(0, serverNow - this.releasedAt);
+    v.hitAge = Math.max(0, serverNow - this.hitAt);
+    v.hitStrength = this.hitStrength;
+    v.hitFrom = this.hitFrom;
+    v.reducedMotion = this.layer.reducedMotion;
+    animate(v, service.catalog.motion, this.pose);
+    this.chooseRepresentation();
+    this.body!.apply(this.pose, service.cameraYaw);
+    this.mark?.setFade((hasResources(s) ? 1 : 0.55) * this.pose.opacity);
+  }
+
+  /** Geometry or a card, as the bodies option and the camera decide; a card waits for its atlas. */
+  private chooseRepresentation(): void {
+    const service = this.layer.appearance;
+    const plan = this.plan;
+    const look = this.look;
+    if (plan === null || look === null) {
       return;
     }
-    const pose = sampleAt(this.samples, renderServerTime, motion.maxExtrapolationMs / 1000);
-    if (pose !== null) {
-      toThree(pose.x, pose.y, pose.z, this.root.position);
-      this.root.rotation.y = this.facing(pose.yaw);
+    const isCard = this.body instanceof CardView;
+    const wantCard = service.wantsCard(look.card, isCard, plan.height);
+    if (wantCard && !isCard) {
+      const state = this.state;
+      this.atlas ??= service.atlasFor(this.gearKey, () => service.planFor(state, { ...look, variation: { hue: 0, value: 0, scale: 0 } }, this.isSelf, 0).plan);
+      if (this.atlas.ready) {
+        this.body!.root.removeFromParent();
+        this.body!.dispose();
+        this.body = new CardView(plan, this.atlas, plan.height / Math.max(0.1, this.atlas.height));
+        this.root.add(this.body.root);
+      }
+    } else if (!wantCard && isCard) {
+      this.body!.root.removeFromParent();
+      this.body!.dispose();
+      this.body = new BodyMesh(plan);
+      this.root.add(this.body.root);
     }
   }
 
@@ -420,12 +689,35 @@ export class EntityView {
     return this.fade !== null;
   }
 
-  placeLabel(camera: Camera, width: number, height: number, scratch: Vector3): void {
+  placeLabel(camera: Camera, width: number, height: number, scratch: Vector3, dt: number): void {
     if (!this.labelShown) {
       return;
     }
+    const s = this.state;
+    // a creature's name always shows; a prop's shows under the cursor or within reach of the hero, fading
+    if (!hasResources(s) && s.interactable != null) {
+      let near = this.layer.hoveredKey !== null && String(this.layer.hoveredKey) === String(this.key);
+      if (!near && this.layer.propLabelReach <= 0) {
+        near = true;
+      } else if (!near) {
+        const hero = this.layer.self;
+        if (hero !== undefined && hero !== this) {
+          const dx = hero.root.position.x - this.root.position.x;
+          const dz = hero.root.position.z - this.root.position.z;
+          near = Math.hypot(dx, dz) <= this.layer.propLabelReach;
+        }
+      }
+      this.labelAlpha += ((near ? 1 : 0) - this.labelAlpha) * Math.min(1, dt * 6);
+      if (this.labelAlpha < 0.02) {
+        this.label.style.display = 'none';
+        return;
+      }
+      this.label.style.opacity = this.labelAlpha.toFixed(2);
+    } else {
+      this.label.style.opacity = '';
+    }
     scratch.copy(this.root.position);
-    scratch.y += Math.max(this.state.height, this.pickSize?.height ?? 0) + 0.5;
+    scratch.y += Math.max(this.drawnHeight, this.pickSize?.height ?? 0) + 0.5;
     scratch.project(camera);
     const visible = scratch.z > -1 && scratch.z < 1 && Math.abs(scratch.x) < 1.1 && Math.abs(scratch.y) < 1.1;
     if (!visible) {
@@ -448,6 +740,7 @@ export class EntityView {
     this.label.remove();
     this.fade?.dispose();
     this.fillMaterial?.dispose();
+    this.body?.dispose();
   }
 }
 
@@ -455,21 +748,24 @@ export class EntityLayer {
   readonly group = new Group();
   readonly views = new Map<Int64, EntityView>();
   selfKey: Int64 | null = null;
-  /** Labels over resource nodes, chests and stations as well as creatures (the names-over-props option). */
   propLabels = true;
-  /** Still marks: telegraphs do not breathe (the reduce motion option). */
+  /** How near the hero a prop must be for its name to show; zero shows them all. */
+  propLabelReach = 7;
+  hoveredKey: Int64 | null = null;
   reducedMotion = false;
-  /** The server's clock now, as the client estimates it, for marks that end at a server time. */
   serverNow = 0;
-  /** How long a telegraph takes to fade once its strike lands. */
+  /** The self's cast as the interface knows it (mode and progress), richer than the entity state's. */
+  selfCast: (() => { mode: string; progress: number } | null) | null = null;
+  /** Where the animator's moments go as sound cues (a footstep on a surface, a swing, a hit, a death); null raises none. */
+  cue: ((cue: string, variant: string | null, position: Vector3) => void) | null = null;
+  /** The surface tag under a drawn point (grass, sand, stone ...), for the footstep variant; null when unknown. */
+  surfaceAt: ((position: Vector3) => string | null) | null = null;
   static readonly fadeSeconds = 0.35;
-  /** Telegraphs whose strike landed, fading out before they go. */
   private readonly fading: EntityView[] = [];
   private readonly geometries = new Map<string, BufferGeometry>();
   private readonly materials = new Map<string, MeshLambertMaterial>();
   private readonly scratch = new Vector3();
 
-  /** Shows or hides the props' labels. */
   setPropLabels(on: boolean): void {
     if (on === this.propLabels) {
       return;
@@ -484,8 +780,10 @@ export class EntityLayer {
     readonly palette: EntityPaletteSettings,
     private readonly motion: MotionSettings,
     private readonly labels: HTMLElement,
+    readonly appearance: AppearanceService,
   ) {
     this.group.name = 'entities';
+    this.propLabelReach = appearance.catalog.motion.labels('prop_reach', 7);
   }
 
   geometry(key: string, build: () => BufferGeometry): BufferGeometry {
@@ -509,6 +807,23 @@ export class EntityLayer {
 
   get self(): EntityView | undefined {
     return this.selfKey === null ? undefined : this.views.get(this.selfKey);
+  }
+
+  /** Triangles the drawn bodies hold, how many are cards, and how many bodies there are, for the measurement line. */
+  get bodyCounts(): { triangles: number; cards: number; bodies: number } {
+    let triangles = 0;
+    let cards = 0;
+    let bodies = 0;
+    for (const view of this.views.values()) {
+      triangles += view.triangles;
+      if (view.triangles > 0) {
+        bodies++;
+      }
+      if (view.isCard) {
+        cards++;
+      }
+    }
+    return { triangles, cards, bodies };
   }
 
   spawn(state: EntityState, serverTime: number, localSeconds: number): EntityView {
@@ -539,7 +854,6 @@ export class EntityLayer {
     if (view !== undefined) {
       this.views.delete(key);
       if (fade && view.isTelegraph) {
-        // The strike landed: the mark lingers to fade out.
         view.dyingAt = performance.now() / 1000;
         this.fading.push(view);
         view.label.style.display = 'none';
@@ -560,6 +874,23 @@ export class EntityLayer {
     }
   }
 
+  /** A blow landed: the struck body flinches and flashes, the striker's swing comes through. */
+  combatHit(kind: string, source: Int64, target: Int64, amount: number): void {
+    const struck = this.views.get(target);
+    const striker = this.views.get(source);
+    if (kind === 'damage' && struck !== undefined) {
+      struck.hit(amount, striker?.root.position ?? null);
+    }
+    if ((kind === 'damage' || kind === 'evade' || kind === 'block') && striker !== undefined) {
+      striker.struck();
+    }
+  }
+
+  /** The self's worn gear changed: its body shows it. */
+  refreshSelfEquipment(): void {
+    this.self?.refreshEquipment();
+  }
+
   /** Moves every body to where it should be drawn this frame, and lets faded telegraphs go. */
   animate(dt: number, localSeconds: number, renderServerTime: number): void {
     for (const view of this.views.values()) {
@@ -577,17 +908,15 @@ export class EntityLayer {
   }
 
   /** Puts labels over the bodies; call after the camera has moved for the frame. */
-  placeLabels(camera: Camera, width: number, height: number): void {
+  placeLabels(camera: Camera, width: number, height: number, dt: number): void {
     for (const view of this.views.values()) {
-      view.placeLabel(camera, width, height, this.scratch);
+      view.placeLabel(camera, width, height, this.scratch, dt);
     }
   }
 
   /**
    * The entity whose body a ray passes through, ignoring the player's own. Creatures and interactables win
-   * over plain props, so a canopy in front of a hob does not take the hover (and with it the weave target)
-   * from the hob behind it; among overlapping bodies the one the ray passes closest to the middle of wins,
-   * so a quest giver standing beside a marker is picked when the cursor is on the quest giver.
+   * over plain props; among overlapping bodies the one the ray passes closest to the middle of wins.
    */
   pick(origin: Vector3, direction: Vector3, maxDistance = 400): EntityView | null {
     let best: EntityView | null = null;
@@ -616,7 +945,6 @@ export class EntityLayer {
       if (off > reach) {
         continue;
       }
-      // How far from the body's middle the ray passes, as a share of the body's reach; nearer bodies win ties.
       const score = off / reach + along * 1e-4;
       if (hasResources(view.state) || view.state.interactable != null) {
         if (score < bestScore) {

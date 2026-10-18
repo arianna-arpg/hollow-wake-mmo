@@ -277,8 +277,11 @@ public partial class Hud : CanvasLayer, IItemHost
 
     public static string Escape(string s) => s.Replace("[", "[lb]");
 
-    /// <summary>Combat text above the hero: hits it lands, hits it takes, heals, as the options allow.</summary>
-    public void CombatText(string kind, double amount, bool crit, bool dealtBySelf, bool takenBySelf)
+    /// <summary>
+    /// Combat text above the hero: hits it lands, hits it takes, heals, as the options allow. The weight (zero to
+    /// one) is how large the blow was against its target's life, which sizes the number.
+    /// </summary>
+    public void CombatText(string kind, double amount, bool crit, bool dealtBySelf, bool takenBySelf, float weight = 0)
     {
         if (!_settings.Toggle("combat_text", true))
         {
@@ -301,7 +304,7 @@ public partial class Hud : CanvasLayer, IItemHost
             : takenBySelf ? Skin.Fill("life").Lightened(0.25f)
             : big ? Skin.S("accent").Lightened(0.2f)
             : Colors.White;
-        _notices.Float(big ? text + "!" : text, color, Clock, big);
+        _notices.Float(big ? text + "!" : text, color, Clock, big, weight);
     }
 
     public void ShowQuestOffers(QuestOffersMsg offers)

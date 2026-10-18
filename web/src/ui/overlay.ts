@@ -104,6 +104,8 @@ interface Floater {
   node: HTMLElement;
   at: number;
   drift: number;
+  /** How heavy the blow was for its target, zero to one: sizes the number, slows its rise and pops it. */
+  weight: number;
 }
 
 /**
@@ -136,12 +138,15 @@ export class Notices {
     this.noticeUntil = now + this.seconds;
   }
 
-  /** Text rising above the hero. */
-  float(text: string, color: string, now: number, big: boolean): void {
+  /** Still numbers (the reduce motion option): no pop. */
+  reducedMotion = false;
+
+  /** Text rising above the hero; the weight (zero to one) is how heavy the blow was for its target. */
+  float(text: string, color: string, now: number, big: boolean, weight = 0): void {
     const node = el('div', { class: `floater num${big ? ' big' : ''}`, text });
     node.style.color = color;
     this.root.append(node);
-    this.floaters.push({ node, at: now, drift: ((this.floaters.length % 5) - 2) * 9 });
+    this.floaters.push({ node, at: now, drift: ((this.floaters.length % 5) - 2) * 9, weight: Math.min(1, Math.max(0, weight)) });
     while (this.floaters.length > 24) {
       this.floaters.shift()?.node.remove();
     }
@@ -173,9 +178,12 @@ export class Notices {
         continue;
       }
       f.node.hidden = false;
+      // a heavy blow rises slower and lands with a pop; a light one drifts off quickly
+      const rise = 60 - 20 * f.weight;
+      const pop = this.reducedMotion ? 1 : 1 + 0.5 * Math.max(0, 1 - t / 0.12) * (0.4 + f.weight);
       const x = head.x + f.drift + t * f.drift * 0.6;
-      const y = head.y - 24 - t * 60;
-      f.node.style.transform = `translate(${x}px, ${y}px) translate(-50%, -100%)`;
+      const y = head.y - 24 - t * rise;
+      f.node.style.transform = `translate(${x}px, ${y}px) translate(-50%, -100%) scale(${((1 + 0.7 * f.weight) * pop).toFixed(3)})`;
       f.node.style.opacity = String(1 - t * t);
     }
   }

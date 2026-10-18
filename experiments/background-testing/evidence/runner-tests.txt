@@ -1,0 +1,17 @@
+✔ both suites enforce background input and reject headed or unbounded runs (2.4981ms)
+✔ background browser isolates physical controllers without changing keyboard or pointer events (1.9148ms)
+✔ private config preserves gameplay settings and quotes Windows paths literally (0.5223ms)
+✔ simultaneous reservations use distinct ports (26.0052ms)
+✔ server readiness refuses an unrelated server on the selected port (462.7431ms)
+✔ a clean exit with no completed smoke summary cannot pass (1.2039ms)
+✔ process failures preserve output and return a failing status (180.198ms)
+✔ timeout stops the owned process and its descendant without stopping a neighbour (1188.3956ms)
+✔ interruption stops an owned running process (355.0368ms)
+ℹ tests 9
+ℹ suites 0
+ℹ pass 9
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2396.3875

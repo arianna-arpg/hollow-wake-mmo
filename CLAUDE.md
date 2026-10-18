@@ -22,14 +22,14 @@ Hollow Wake MMO is an MMOARPG foundation: an engine-agnostic C# simulation core,
 - `src/HollowWake.Protocol` — `Messages.cs` (every wire message), `MessageSerializer.cs` (JSON + length framing) and `TypeScriptContract.cs` (generates the web client's message types).
 - `src/HollowWake.Server` — `GameServer` (composition root and loop), `Sessions/`, `World/` (`ZoneHost`, `ZoneInstance`, `Snapshots`), `Net/` (`ITransport`, TCP, WebSocket with the static web root, composite, loopback), `Persistence/` (JSON stores), `Config/`.
 - `src/HollowWake.Server.Host` — pure .NET entry point (TCP and WebSocket). `src/HollowWake.Server.Host.Brutal` — .NET 10 + BRUTAL RakNet entry point (compiles to a stub without the .NET 10 SDK).
-- `src/HollowWake.Client` — Godot 4.7 C#. `Main.cs` orchestrates; `World/` generates terrain locally and renders entities; `Camera/CameraRig.cs` has both camera modes; `UI/` is placeholder UI.
-- `web/` — browser client: Vite, TypeScript, three.js. `src/app.ts` orchestrates; `net/protocol.ts` is generated; `world/` builds terrain from server chunks and renders entities; `view/camera.ts` has both camera modes; `public/config.json` holds every client setting; `scripts/smoke.mjs` is the scripted browser play-through.
+- `src/HollowWake.Client` — Godot 4.7 C#. `Main.cs` orchestrates; `World/` generates terrain locally and renders entities, with the engine-free appearance logic (body plans, families, gear, the animator, surfaces, the day) under `World/Logic/` and its Godot side (painted bodies, card baking, contact marks) under `World/Appearance/`; `Camera/CameraRig.cs` has both camera modes; `UI/` is the interface.
+- `web/` — browser client: Vite, TypeScript, three.js. `src/app.ts` orchestrates; `net/protocol.ts` is generated; `world/` builds terrain from server chunks and renders entities, with `world/appearance/` the twin of the desktop's appearance logic; `view/camera.ts` has both camera modes; `public/config.json` holds every client setting; `scripts/smoke.mjs` is the scripted browser play-through.
 - `src/HollowWake.Tools` — the `hollowwake` CLI (`Program.cs`, `Probe.cs`, `Bench.cs`, `WeaveReport.cs`).
 - `launcher/`: the desktop launcher (Electron + TypeScript, pinned versions, electron-builder). `src/main/` holds the release feed, the verified download, safe extraction, installs, self-update and game start; `src/renderer/` is the page; `src/test/` the node:test suite; `news.json` is the news panel's source. It holds no game logic. Contract: `docs/design/launcher.md`.
 - `scripts/package-client.sh`: exports the client per platform with `src/HollowWake.Client/export_presets.cfg`, bundles `content/core`, zips, and writes the release `manifest.json`. `scripts/port/`: the porting script that mapped the earlier prototype's combat content onto ours (units, Threads, statuses, stats), run once to write drafts; its ledger is `docs/design/parity/port-ledger.md`.
 - `Play.cmd`, `Play Desktop.cmd`, `Stop Playtest.cmd`: local play entry points, backed by `scripts/play-local.mjs` and `config/playtest.json`. The helper builds changed inputs, publishes a private server runtime under `artifacts/playtest/server/`, starts/reuses that server, and opens quick play. The running server does not lock normal solution build outputs.
 - `.github/workflows/`: `ci.yml` (every push and pull request; its `ci` job is the one check main requires), `pages.yml` (the GitHub Pages build of the web client), `release.yml` (v* tags; dry runs on dispatch and on pipeline pull requests), `nightly.yml` (nightly pre-releases), `package.yml` (the jobs both release workflows share), `branches.yml` (the weekly branch report). `.github/pull_request_template.md` is the shape of a pull request.
-- `content/core` — the base content layer, one YAML file per area. `rules.yaml` holds every formula and tunable.
+- `content/core` — the base content layer, one YAML file per area. `rules.yaml` holds every formula and tunable. `appearance/` is what the clients draw with (looks, surfaces, the day, motion timings), content the simulation never reads.
 - `tests/` — xunit. `HollowWake.Core.Tests` (foundations and gameplay against the real content), `HollowWake.Server.Tests` (loopback and WebSocket end to end, the generated protocol module). Web client unit tests are vitest files beside the code in `web/src`.
 - `docs/` — `VISION.md`, `ARCHITECTURE.md`, `ROADMAP.md`, `modding.md`, `design/` (one contract per system; `design/world/` holds the living world's contract set and its plan; `design/parity/` holds gap analyses against the earlier prototype), `lore/`, `infrastructure/`, `adr/`.
 - `deploy/` — Dockerfile, Compose, VPS bootstrap. `config/server.yaml` — server settings.
@@ -54,6 +54,7 @@ node --test scripts/port/port-prototype.test.mjs              # the prototype po
 npm --prefix web ci && npm --prefix web run build              # build the web client into web/dist (Node 22)
 npm --prefix web test                                          # web client unit tests
 npm --prefix web run smoke -- --shots DIR                      # scripted browser play-through against a running server (installed Edge or Chrome)
+node scripts/test-background.mjs --suite all                  # private headless browser + native smoke; preserves desktop input and focus
 scripts/codespace-play.sh                                      # build the web client and run the server (Codespaces, Linux, macOS)
 ```
 
@@ -71,6 +72,8 @@ node scripts/serve-feed.mjs DIR                               # serve a feed fol
 bash scripts/package-client.sh --godot GODOT --version 0.1.0 --out DIR --check   # from the repository root: client archives + manifest.json
 git tag -a v0.2.0 -m "notes" && git push origin v0.2.0       # cut a stable release (release.yml); nightly.yml cuts pre-releases
 ```
+
+For routine client tests while the owner uses the machine, prefer the [background harness](docs/design/testing.md) from your own worktree. It hides child process windows, isolates browser controller input, and saves per-run logs and browser screenshots. Native rendering checks still require an isolated graphical session; the headless native run explicitly reports skipped pixel checks.
 
 ## Verification gates
 

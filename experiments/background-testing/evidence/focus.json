@@ -1,0 +1,10 @@
+{
+  "suite": "all",
+  "runnerExitCode": 0,
+  "durationSeconds": 129.5470644,
+  "samples": 1924,
+  "observedForegroundChanges": 4,
+  "ownedForegroundViolations": [],
+  "error": null,
+  "method": "GetForegroundWindow sampled every 50ms plus ancestor lookup on changes; no focus changes or global input sent by the probe. Brief transitions between samples may be missed."
+}

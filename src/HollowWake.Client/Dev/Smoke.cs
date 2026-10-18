@@ -9,7 +9,8 @@ namespace HollowWake.Client.Dev;
 /// keyboard: connect, enter the world, then exercise held movement, jumping, click-to-move, the
 /// quest giver, both cameras, the sheet and weaves on a hob. Input goes through the same input map
 /// and handlers a player uses, and screenshots are saved along the way. Start it with user arguments:
-/// <c>godot --path src/HollowWake.Client -- --smoke [--shots DIR] [--account NAME] [--host H] [--port P]</c>.
+/// <c>godot --path src/HollowWake.Client -- --smoke [--shots DIR] [--account NAME] [--host H] [--port P] [--isolated-input]</c>.
+/// With <c>--isolated-input</c> no controller is bound, so a controller in use elsewhere on the machine cannot act in the play-through.
 /// Prints one SMOKE PASS or FAIL line per check and exits non-zero when any check fails.
 /// </summary>
 public partial class Smoke : Node
@@ -50,7 +51,25 @@ public partial class Smoke : Node
                     break;
             }
         }
+        if (_args.Contains("--isolated-input"))
+        {
+            InputSetup.IgnorePads = true;
+            InputSetup.Apply(_main.Settings);
+            GD.Print("SMOKE input: scripted keys and pointer; physical controllers unbound");
+        }
         _started = Now;
+        // A headless window never receives the operating system's mouse-enter notification.
+        // Without it GUI clicks fall through to world input even when their coordinates hit a control.
+        if (DisplayServer.GetName() == "headless")
+        {
+            Record("headless input isolation", Input.GetConnectedJoypads().Count == 0,
+                $"{Input.GetConnectedJoypads().Count} physical controllers visible");
+            GetWindow().Size = new Vector2I(
+                (int)ProjectSettings.GetSetting("display/window/size/viewport_width"),
+                (int)ProjectSettings.GetSetting("display/window/size/viewport_height"));
+            GetViewport().NotifyMouseEntered();
+        }
+        GD.Print($"SMOKE viewport {GetViewport().GetVisibleRect()}, window {GetWindow().Size}");
         _ = Run();
     }
 
@@ -121,9 +140,13 @@ public partial class Smoke : Node
 
         var t0 = Now;
         var built = await Until(() => _main.World.BuiltChunks > 0 && _main.World.PendingChunks == 0, 90);
-        Record("terrain built", built, $"{_main.World.BuiltChunks} chunks in {Now - t0:0.0}s, {_main.World.Entities.Count} entities in view, {Engine.GetFramesPerSecond()} fps");
+        Record("terrain built", built, $"{_main.World.BuiltChunks} chunks in {Now - t0:0.0}s, {_main.World.Entities.Count} entities in view, {Engine.GetFramesPerSecond()} fps{(built ? "" : $"; in world={_main.InWorld}, status: {login.Status}")}");
+        var ready = await Until(() => !_main.Loading.BlocksWorldInput, 20);
+        Record("world input ready", ready, $"loading={_main.Loading.Active}, blocked={_main.Loading.BlocksWorldInput}, chat={_main.Hud.ChatFocused}");
+        if (!ready) return;
         await Wait(1.0);
         await Shot("01_isometric.png");
+        await LookStages();
 
         // Held movement: W for a moment, then see where the server put us.
         var p0 = Pos();
@@ -262,6 +285,93 @@ public partial class Smoke : Node
         await Wait(0.5);
     }
 
+    // ------------------------------------------------------------ the look
+
+    /// <summary>
+    /// The look's stages on the busiest scene, the hamlet on entry: the measurement line for painted geometry and
+    /// for directional cards (frame times, draw calls, primitives, texture memory, atlas bytes), then the
+    /// readability checks of the visual language (grayscale, reduced motion) and the day at night and evening.
+    /// </summary>
+    private async Task LookStages()
+    {
+        var world = _main.World;
+        var settings = _main.Settings;
+        if (DisplayServer.GetName() == "headless")
+        {
+            GD.Print("SMOKE SKIP appearance rendering: headless display; geometry/card performance and readability require graphical evidence");
+        }
+        else
+        {
+            var geometry = await Measure("geometry");
+            Record("bodies as geometry", geometry.Bodies > 0 && geometry.P95 < 50, geometry.Line);
+            settings.Set("shadows", System.Text.Json.Nodes.JsonValue.Create(false));
+            await Wait(0.3);
+            var unshadowed = await Measure("geometry, no shadows");
+            settings.Set("shadows", System.Text.Json.Nodes.JsonValue.Create(true));
+            Record("bodies without shadows", unshadowed.Bodies > 0, unshadowed.Line);
+            settings.Set("bodies", System.Text.Json.Nodes.JsonValue.Create("cards"));
+            var baked = await Until(() => world.Appearance?.Baker.Pending == 0 && world.BodyCounts.Cards > 0, 20);
+            await Wait(0.5);
+            var cards = await Measure("cards");
+            await Shot("16_cards.png");
+            Record("bodies as cards", baked && cards.Cards > 0 && cards.P95 < 50, cards.Line);
+            settings.Set("bodies", System.Text.Json.Nodes.JsonValue.Create("auto"));
+            await Wait(0.3);
+            settings.Set("grayscale", System.Text.Json.Nodes.JsonValue.Create(true));
+            await Wait(0.3);
+            await Shot("17_grayscale.png");
+            settings.Set("grayscale", System.Text.Json.Nodes.JsonValue.Create(false));
+            settings.Set("reduce_motion", System.Text.Json.Nodes.JsonValue.Create(true));
+            await Wait(0.3);
+            await Shot("18_reduced_motion.png");
+            settings.Set("reduce_motion", System.Text.Json.Nodes.JsonValue.Create(false));
+        }
+        settings.Set("day_lock", System.Text.Json.Nodes.JsonValue.Create(true));
+        settings.Set("day_time", System.Text.Json.Nodes.JsonValue.Create(1.0));
+        await Wait(0.4);
+        var night = world.TimeOfDay;
+        await Shot("19_night.png");
+        settings.Set("day_time", System.Text.Json.Nodes.JsonValue.Create(18.5));
+        await Wait(0.4);
+        var evening = world.TimeOfDay;
+        await Shot("20_evening.png");
+        settings.Set("day_lock", System.Text.Json.Nodes.JsonValue.Create(false));
+        await Wait(0.3);
+        Record("day cycle", Math.Abs(night - 1.0 / 24) < 0.01 && Math.Abs(evening - 18.5 / 24) < 0.01, $"night at {night:0.00} of the day, evening at {evening:0.00}, the server's day at {world.TimeOfDay:0.00}");
+    }
+
+    private sealed record Measurement(string Line, double P95, int Bodies, int Cards);
+
+    /// <summary>Samples two seconds of frames: frame time percentiles, draw calls, primitives, objects, texture memory and the bodies drawn.</summary>
+    private async Task<Measurement> Measure(string mode)
+    {
+        var frames = new List<double>();
+        var t0 = Now;
+        var last = t0;
+        while (Now - t0 < 2.0)
+        {
+            await Frame();
+            var now = Now;
+            frames.Add((now - last) * 1000);
+            last = now;
+        }
+        frames.Sort();
+        double At(double q) => frames.Count == 0 ? 0 : frames[Math.Min(frames.Count - 1, (int)(q * frames.Count))];
+        var draws = Performance.GetMonitor(Performance.Monitor.RenderTotalDrawCallsInFrame);
+        var primitives = Performance.GetMonitor(Performance.Monitor.RenderTotalPrimitivesInFrame);
+        var objects = Performance.GetMonitor(Performance.Monitor.RenderTotalObjectsInFrame);
+        var textureBytes = Performance.GetMonitor(Performance.Monitor.RenderTextureMemUsed);
+        var videoBytes = Performance.GetMonitor(Performance.Monitor.RenderVideoMemUsed);
+        var world = _main.World;
+        var (triangles, cards, bodies) = world.BodyCounts;
+        var atlasBytes = world.Appearance?.AtlasBytes ?? 0;
+        var atlases = world.Appearance?.AtlasCount ?? 0;
+        var line = $"{mode}: {frames.Count / 2.0:0} fps, frame ms p50 {At(0.5):0.00} p95 {At(0.95):0.00} max {frames[^1]:0.00}; {draws:0} draw calls, {primitives:0} primitives, {objects:0} objects; "
+            + $"{bodies} bodies ({cards} cards, {triangles} body triangles), {atlases} atlases {atlasBytes / 1024.0 / 1024.0:0.00} MiB; texture memory {textureBytes / 1024.0 / 1024.0:0.0} MiB, video memory {videoBytes / 1024.0 / 1024.0:0.0} MiB; {world.Entities.Count} entities, {world.BuiltChunks} chunks";
+        GD.Print($"SMOKE measure {line}");
+        return new Measurement(line, At(0.95), bodies, cards);
+    }
+
     // ------------------------------------------------------------ the interface
 
     private string? Arg(string key)
@@ -329,8 +439,7 @@ public partial class Smoke : Node
         // Escape closes the pages, then the core pane.
         for (var i = 0; i < pages.Count + 2 && hud.CoreOpen; i++)
         {
-            Tap(Key.Escape);
-            await Wait(0.15);
+            await EscapeAndWait();
         }
         Record("escape closes the core pane last", !hud.CoreOpen, $"core open={hud.CoreOpen}");
     }
@@ -404,12 +513,15 @@ public partial class Smoke : Node
             await Click(Screen(vendor.GlobalPosition + new Vector3(0, vendor.State.Height * 0.5f, 0)));
             await Until(() => (_main.VendorStates > states && hud.HasWorldPane("vendor")) || (_main.DialogueStates > talks && hud.HasWorldPane("dialogue")), 6);
             // A trader that talks first: bring its conversation to the front and ask to trade, as a player would.
-            if (!hud.HasWorldPane("vendor") && hud.FrontView<UI.WorldPanes.DialoguePane>() is { State: { } talk } dialogue)
+            if (!hud.HasWorldPane("vendor") && hud.FrontView<UI.WorldPanes.DialoguePane>() is { State: { } talk })
             {
                 hud.Workspace.SelectTab($"dialogue:{talk.Source}");
                 await Wait(0.3);
-                var index = talk.Choices.FindIndex(c => c.Id == "trade" && c.Enabled);
-                var button = index < 0 ? null : dialogue.FindChildren("*", "Button", true, false).OfType<Button>().FirstOrDefault(b => b.Text.StartsWith($"{index + 1}. ", StringComparison.Ordinal));
+                // Layout/restyling or a server close may replace the view during the await.
+                var dialogue = hud.FrontView<UI.WorldPanes.DialoguePane>();
+                var current = dialogue?.State;
+                var index = current?.Source == vendor.Key ? current.Choices.FindIndex(c => c.Id == "trade" && c.Enabled) : -1;
+                var button = index < 0 || !GodotObject.IsInstanceValid(dialogue) ? null : dialogue!.FindChildren("*", "Button", true, false).OfType<Button>().FirstOrDefault(b => b.Text.StartsWith($"{index + 1}. ", StringComparison.Ordinal));
                 if (button is not null)
                 {
                     await Click(ScreenCenter(button));
@@ -466,7 +578,8 @@ public partial class Smoke : Node
         }
 
         // The theme: pick the other direction in the theme row's list; the cluster redraws in it.
-        var before = SamplePixel(hud.ClusterRect);
+        var rendered = DisplayServer.GetName() != "headless";
+        var before = rendered ? SamplePixel(hud.ClusterRect) : "not rendered";
         var themeRow = Pane()?.RowOf("theme");
         var picker = themeRow?.FindChildren("*", "OptionButton", true, false).OfType<OptionButton>().FirstOrDefault();
         var other = 0;
@@ -484,10 +597,14 @@ public partial class Smoke : Node
         }
         await Wait(0.6);
         var themed = _main.Hud.Skin.T.Id;
-        var after = SamplePixel(_main.Hud.ClusterRect);
+        var after = rendered ? SamplePixel(_main.Hud.ClusterRect) : "not rendered";
         await Shot("12_theme.png");
-        Record("options switch the theme", picker is not null && themed != "etched_stone" && before != after,
+        Record("options switch the theme", picker is not null && themed != "etched_stone" && (!rendered || before != after),
             $"theme {themed}, cluster pixel {before} -> {after}");
+        if (!rendered)
+        {
+            GD.Print("SMOKE SKIP theme rendered pixels: headless display; theme state checked above");
+        }
 
         // A key: find the camera switch by searching, rebind it to B through its row, use it, and see the camera turn.
         await ShowOptionsPage("controls");
@@ -559,9 +676,23 @@ public partial class Smoke : Node
         var hud = _main.Hud;
         for (var i = 0; i < 8 && (hud.CoreOpen || hud.Workspace.Book.Leaves.Count > 0); i++)
         {
-            Tap(Key.Escape);
-            await Wait(0.15);
+            await EscapeAndWait();
         }
+    }
+
+    private string WorkspaceState()
+    {
+        var hud = _main.Hud;
+        return $"core={hud.CoreOpen}, tray={hud.Workspace.TrayOpen}, front={hud.Workspace.Book.Active()?.Id}, leaves={string.Join(',', hud.Workspace.Book.Leaves.Select(l => l.Id))}";
+    }
+
+    private async Task EscapeAndWait()
+    {
+        var before = WorkspaceState();
+        Tap(Key.Escape);
+        if (!await Until(() => WorkspaceState() != before, 2))
+            GD.Print($"SMOKE escape unchanged: {before}; loading={_main.Loading.BlocksWorldInput}, focus={GetViewport().GuiGetFocusOwner()?.GetType().Name}, chat={_main.Hud.ChatFocused}");
+        await Wait(0.15);
     }
 
     /// <summary>Types into the Options search field; the rows narrow to the matching entries of every page.</summary>
@@ -664,10 +795,23 @@ public partial class Smoke : Node
         Input.ParseInputEvent(new InputEventKey { Keycode = key, PhysicalKeycode = key, Pressed = false });
     }
 
-    /// <summary>Moves the cursor to a viewport point and clicks the left button there.</summary>
+    /// <summary>Moves the client's virtual pointer without touching the operating system cursor.</summary>
+    private void Point(Vector2 screen)
+    {
+        var previous = _main.SmokePointer ?? GetViewport().GetMousePosition();
+        _main.SmokePointer = screen;
+        Input.ParseInputEvent(new InputEventMouseMotion
+        {
+            Position = screen,
+            GlobalPosition = screen,
+            Relative = screen - previous,
+        });
+    }
+
+    /// <summary>Points and clicks inside the client, including with the headless display driver.</summary>
     private async Task Click(Vector2 screen)
     {
-        Input.WarpMouse(screen);
+        Point(screen);
         await Frame();
         await Frame();
         Input.ParseInputEvent(new InputEventMouseButton { ButtonIndex = MouseButton.Left, Pressed = true, Position = screen, GlobalPosition = screen });
@@ -676,7 +820,7 @@ public partial class Smoke : Node
 
     private async Task Hover(EntityView view)
     {
-        Input.WarpMouse(Screen(view.GlobalPosition + new Vector3(0, view.State.Height * 0.5f, 0)));
+        Point(Screen(view.GlobalPosition + new Vector3(0, view.State.Height * 0.5f, 0)));
         await Frame();
         await Frame();
     }
