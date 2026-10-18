@@ -1,0 +1,232 @@
+{
+  "kind": "ui_loading_screens",
+  "entries": [
+    {
+      "id": "mu_crossing",
+      "name": "The Crossing",
+      "default": true,
+      "meta": {
+        "activity": "spirit_run",
+        "seed": 160,
+        "seedStep": 2654435769,
+        "timeoutSeconds": 45,
+        "readyRadius": 1,
+        "labels": {
+          "brand": "HOLLOW WAKE",
+          "title": "ᚦᛖ ᚳᚱᛟᛋᛋᛁᛜ",
+          "accessibleTitle": "The Crossing — Loading",
+          "boot": "Gathering the Weft",
+          "entry": "Entering the Weftmarches",
+          "terrain": "Weaving the land",
+          "failed": "The crossing is interrupted",
+          "timeout": "The world is taking longer to arrive. Retry preparation or return to character selection.",
+          "retry": "Retry",
+          "cancel": "Cancel",
+          "hint": "FOLLOW THE WISPS · RIDE THE CURRENTS",
+          "controls": "MOUSE / TOUCH · WASD / ARROWS · LEFT STICK",
+          "canvas": "Steer the wisp through the spirit gates. Follow wandering souls and ride the chevron currents.",
+          "progress": "Loading progress"
+        },
+        "rules": {
+          "length": 1000,
+          "halfWidth": 280,
+          "playerU": 230,
+          "radius": 15,
+          "baseSpeed": 210,
+          "speedPerGate": 0.09,
+          "maxSpeed": 2.8,
+          "steerSpeed": 490,
+          "gateGapMin": 114,
+          "gateGapMax": 238,
+          "gateRim": 24,
+          "gateThickness": 22,
+          "gateSpacing": 480,
+          "choiceStagger": 70,
+          "pickupRadius": 12,
+          "pickupFade": 0.28,
+          "currentHalfLength": 30,
+          "currentHalfWidth": 12,
+          "currentExtra": 0.8,
+          "currentSeconds": 2.2,
+          "currentEase": 0.45,
+          "maxBoostSpeed": 3.6,
+          "burstSeconds": 0.75,
+          "maxBursts": 18,
+          "surgeSeconds": 1.2,
+          "hinderSeconds": 0.7,
+          "hinderSpeed": 0.36,
+          "entrySeconds": 0.7,
+          "spawnAhead": 60,
+          "despawnBehind": 80,
+          "openingCurrentChance": 0.32,
+          "betweenCurrentThreshold": 0.54,
+          "secondCurrentChance": 0.22,
+          "routeMargin": 18,
+          "choiceBendMin": 25,
+          "choiceBendRange": 20,
+          "hinderedSteer": 0.55,
+          "burstDrift": 0.28,
+          "maxFrame": 0.1,
+          "step": 0.008333333333333333
+        },
+        "gateProfiles": [
+          {
+            "until": 0.4,
+            "drift": 55,
+            "lanes": [
+              0
+            ],
+            "maximum": 238
+          },
+          {
+            "until": 0.78,
+            "drift": 30,
+            "lanes": [
+              -130,
+              130
+            ],
+            "maximum": 180
+          },
+          {
+            "until": 1,
+            "drift": 10,
+            "lanes": [
+              -175,
+              0,
+              175
+            ],
+            "maximum": 136
+          }
+        ],
+        "pickups": {
+          "mote": {
+            "name": "Memory Mote",
+            "boostGates": 0,
+            "size": 0.82,
+            "radiance": 29,
+            "flicker": 2.6
+          },
+          "gilded": {
+            "name": "Gilded Soul",
+            "boostGates": 0,
+            "size": 1,
+            "radiance": 37,
+            "flicker": 3.4
+          },
+          "wild": {
+            "name": "Wild Wisp",
+            "boostGates": 3,
+            "size": 1.2,
+            "radiance": 46,
+            "flicker": 4.2
+          }
+        },
+        "choices": [
+          [
+            "mote",
+            "gilded"
+          ],
+          [
+            "mote",
+            "wild"
+          ],
+          [
+            "gilded",
+            "wild"
+          ]
+        ],
+        "palette": {
+          "wisp": "#bcd4e8",
+          "current": "#b6fff0",
+          "floor": "#07070d",
+          "abyss": "#9ab8dc",
+          "impact": "#efa2a0",
+          "gate": "#8ac8bf",
+          "narrowGate": "#a6b1df",
+          "stone": "#456174",
+          "stoneDeep": "#1d2e3e"
+        },
+        "runes": "ᚦᛜᚨᛒᚳᛞᛖᚠᚷᚺᛁᛃᚲᛚᛗᚾᛟᛈᛩᚱᛋᛏᚢᚹᚥᛪᛇᛉ",
+        "layers": [
+          "abyss",
+          "ribbons",
+          "gates",
+          "currents",
+          "souls",
+          "bursts",
+          "wisp"
+        ],
+        "provenance": {
+          "repository": "arianna-arpg/arpg-game-world",
+          "commit": "64819bd4351001a34c92eed13b63e1f55f0c52ef",
+          "files": [
+            "src/loading/spiritRun.ts",
+            "src/loading/spiritView.ts",
+            "src/ui/loadingScreen.ts",
+            "src/render/vis/ambientFx.ts",
+            "src/data/runescript.ts",
+            "src/data/looks.ts",
+            "src/render/vis/parts.ts",
+            "src/engine/hash.ts"
+          ]
+        },
+        "wisp": {
+          "radius": 22,
+          "palette": {
+            "base": "#bcd4e8",
+            "glow": "#d8e6f2",
+            "light": "#cbdded",
+            "shadow": "#757d90",
+            "outline": "#33393f"
+          },
+          "parts": [
+            {
+              "kind": "disc",
+              "scale": 0.55
+            },
+            {
+              "kind": "halo",
+              "scale": 0.85
+            },
+            {
+              "kind": "eyes",
+              "params": {
+                "n": 2,
+                "spread": 0.5,
+                "dist": 0.34,
+                "size": 0.11
+              }
+            },
+            {
+              "kind": "wisps",
+              "x": -0.25,
+              "scale": 0.8,
+              "params": {
+                "n": 2
+              }
+            }
+          ]
+        },
+        "controls": {
+          "negativeX": [
+            "KeyA",
+            "ArrowLeft"
+          ],
+          "positiveX": [
+            "KeyD",
+            "ArrowRight"
+          ],
+          "negativeY": [
+            "KeyW",
+            "ArrowUp"
+          ],
+          "positiveY": [
+            "KeyS",
+            "ArrowDown"
+          ],
+          "deadzone": 0.2
+        }
+      }
+    }
+  ]
+}

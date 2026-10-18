@@ -13,12 +13,14 @@ public sealed class NetClient : IDisposable
     private TcpClient? _client;
     private NetworkStream? _stream;
     private CancellationTokenSource? _cts;
-    private readonly ConcurrentQueue<Message> _inbox = new();
+    private readonly ConcurrentQueue<(long Generation, Message Message)> _inbox = new();
+    private long _generation;
+    public long Generation => Interlocked.Read(ref _generation);
     private readonly object _sendLock = new();
 
     public bool IsConnected => _client?.Connected ?? false;
     public string? LastError { get; private set; }
-    public event Action<string>? Closed;
+    public event Action<long, string>? Closed;
     public long BytesIn { get; private set; }
     public long BytesOut { get; private set; }
 
@@ -31,7 +33,10 @@ public sealed class NetClient : IDisposable
             await _client.ConnectAsync(host, port);
             _stream = _client.GetStream();
             _cts = new CancellationTokenSource();
-            _ = Task.Run(() => ReadLoop(_cts.Token));
+            var stream = _stream;
+            var token = _cts.Token;
+            var generation = Generation;
+            _ = Task.Run(() => ReadLoop(stream, token, generation));
             LastError = null;
             return true;
         }
@@ -43,18 +48,18 @@ public sealed class NetClient : IDisposable
         }
     }
 
-    private async Task ReadLoop(CancellationToken ct)
+    private async Task ReadLoop(NetworkStream stream, CancellationToken ct, long generation)
     {
         var reader = new MessageSerializer.FrameReader();
         var buffer = new byte[32 * 1024];
         try
         {
-            while (!ct.IsCancellationRequested && _stream is not null)
+            while (!ct.IsCancellationRequested && _stream == stream)
             {
-                var n = await _stream.ReadAsync(buffer, ct);
+                var n = await stream.ReadAsync(buffer, ct);
                 if (n <= 0)
                 {
-                    Closed?.Invoke("closed by server");
+                    if (_stream == stream && !ct.IsCancellationRequested) Closed?.Invoke(generation, "closed by server");
                     return;
                 }
                 BytesIn += n;
@@ -62,9 +67,9 @@ public sealed class NetClient : IDisposable
                 while (reader.TryRead(out var payload))
                 {
                     var m = MessageSerializer.Decode(payload);
-                    if (m is not null)
+                    if (m is not null && _stream == stream && !ct.IsCancellationRequested)
                     {
-                        _inbox.Enqueue(m);
+                        _inbox.Enqueue((generation, m));
                     }
                 }
             }
@@ -74,13 +79,17 @@ public sealed class NetClient : IDisposable
         }
         catch (Exception ex)
         {
-            LastError = ex.Message;
-            Closed?.Invoke(ex.Message);
+            if (_stream == stream && !ct.IsCancellationRequested)
+            {
+                LastError = ex.Message;
+                Closed?.Invoke(generation, ex.Message);
+            }
         }
     }
 
     public void Send(Message message)
     {
+        var generation = Generation;
         if (_stream is null)
         {
             return;
@@ -97,14 +106,20 @@ public sealed class NetClient : IDisposable
         catch (Exception ex)
         {
             LastError = ex.Message;
-            Closed?.Invoke(ex.Message);
+            Closed?.Invoke(generation, ex.Message);
         }
     }
 
-    public bool TryDequeue(out Message message) => _inbox.TryDequeue(out message!);
+    public bool TryDequeue(out Message message)
+    {
+        while (_inbox.TryDequeue(out var row))
+            if (row.Generation == Generation) { message = row.Message; return true; }
+        message = null!; return false;
+    }
 
     public void Disconnect(string reason)
     {
+        Interlocked.Increment(ref _generation);
         _cts?.Cancel();
         try
         {

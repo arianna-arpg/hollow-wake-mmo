@@ -34,7 +34,7 @@ export function rawKinds(files: Record<string, string>): Map<string, Obj[]> {
   for (const path of Object.keys(files).sort()) {
     let docs: YamlValue[];
     try {
-      docs = parseYamlDocuments(files[path]);
+      docs = path.endsWith('.json') ? [JSON.parse(files[path]) as YamlValue] : parseYamlDocuments(files[path]);
     } catch (error) {
       console.warn(`content ${path} could not be read`, error);
       continue;
@@ -119,6 +119,7 @@ export interface UiIconSet {
   stroke: number;
   icons: Record<string, string>;
   filled: Set<string>;
+  accents?: Record<string, string>;
   pools: Record<string, string>;
   statuses: Record<string, string>;
   looks: Record<string, string>;
@@ -248,6 +249,7 @@ function iconSetFrom(o: Obj): UiIconSet {
     stroke: num(o.stroke, 1.75),
     icons: strMap(o.icons),
     filled: new Set(strings(o.filled)),
+    accents: strMap(o.accents),
     pools: strMap(o.pools),
     statuses: strMap(o.statuses),
     looks: strMap(o.looks),
@@ -442,7 +444,7 @@ const roundTo = (v: number): string => String(Math.round(v * 100) / 100);
 const signed = (v: number): string => (v >= 0 ? '+' : '') + roundTo(v);
 
 /** A content modifier as a line a player reads: "+10% increased Armor (Ember)". Formatting only. */
-export function modifierLine(m: Obj, attributes: Map<string, AttributeInfo>): string {
+export function modifierLine(m: Obj, attributes: Map<string, AttributeInfo>, threads: NamedEntry[] = []): string {
   const attribute = str(m.attribute);
   if (attribute.length === 0) {
     return '';
@@ -468,7 +470,7 @@ export function modifierLine(m: Obj, attributes: Map<string, AttributeInfo>): st
   }
   const scope = strings(m.scope);
   if (scope.length > 0) {
-    text += ` (${scope.map(humanize).join(', ')})`;
+    text += ` (${scope.map(id => threads.find(t => t.id === id)?.name ?? humanize(id)).join(', ')})`;
   }
   const condition = str(m.condition);
   if (condition.length > 0) {
@@ -496,6 +498,7 @@ export function loadNames(kinds: Map<string, Obj[]>): ContentNames {
     index,
   }));
   const attributeById = new Map(attributes.map((a) => [a.id, a]));
+  const threads = (kinds.get('threads') ?? []).map(named);
   const passives: PassiveNode[] = (kinds.get('passives') ?? []).map((p) => {
     const choice = isObj(p.choice) ? str(p.choice.group) : str(p.choice);
     return {
@@ -508,11 +511,10 @@ export function loadNames(kinds: Map<string, Obj[]>): ContentNames {
       realm: str(p.realm, 'star'),
       cost: num(p.cost, 1),
       calling: typeof p.calling === 'string' ? p.calling : null,
-      lines: objects(p.modifiers).map((m) => modifierLine(m, attributeById)).filter((l) => l.length > 0),
+      lines: objects(p.modifiers).map((m) => modifierLine(m, attributeById, threads)).filter((l) => l.length > 0),
       choice: choice.length > 0 ? choice : null,
     };
   });
-  const threads = (kinds.get('threads') ?? []).map(named);
   const threadOfStatus = new Map<string, string>();
   for (const t of kinds.get('threads') ?? []) {
     const status = str(t.status);
@@ -526,7 +528,7 @@ export function loadNames(kinds: Map<string, Obj[]>): ContentNames {
     const options: ChoiceOption[] = objects(g.options).map((o) => ({
       id: str(o.id),
       name: str(o.name, humanize(str(o.id))),
-      lines: objects(o.modifiers).map((m) => modifierLine(m, attributeById)).filter((l) => l.length > 0),
+      lines: objects(o.modifiers).map((m) => modifierLine(m, attributeById, threads)).filter((l) => l.length > 0),
     }));
     // A generated group deals one option per visible attribute of a category, as PassiveChoices.OptionsOf does.
     if (isObj(g.generate)) {

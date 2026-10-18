@@ -1,0 +1,148 @@
+# Cosmetic line recipes shared by both clients. All geometry is local X east, Y north, Z up.
+# Thread display names and persisted keys come from threads.yaml.
+kind: ui_cast_visuals
+entries:
+  - id: default
+    max_effects: 128
+    max_layers_per_event: 8
+    max_event_age: 1.5
+    max_preparation: 60
+    outcomes: [damage, heal, block, evade, status, status_expired, revive]
+    # Shared preparation/material language inherited by every current and future Thread.
+    # Thread colors come from threads.yaml; explicit profiles can override one layer.
+    thread_phases:
+      start: { primitive: corners, pieces: 4, size: 0.45, height: 0.65, opacity: 0.65 }
+      release: { primitive: rays, pieces: 5, arc: 90, seconds: 0.2, size: 0.55, height: 0.65, expand: 0.6 }
+      impact: { primitive: rays, pieces: 7, seconds: 0.25, size: 0.55, height: 0.55, expand: 0.7 }
+      recovery: { primitive: corners, pieces: 4, seconds: 0.3, size: 0.4, height: 0.6, opacity: 0.5, expand: -0.4 }
+    profiles:
+      - id: neutral
+        fallback: true
+        match: []
+        priority: 0
+        color: "#e8dcc0"
+        phases:
+          outcome:
+            primitive: corners
+            pieces: 4
+            seconds: 0.2
+            size: 0.35
+            height: 0.7
+            opacity: 0.5
+          start:
+            seconds: 1
+            size: 0.8
+            height: 0.65
+            opacity: 0.7
+            segments: [[-0.5,0,0, -0.25,0,0.35], [0.5,0,0, 0.25,0,0.35]]
+          release:
+            seconds: 0.18
+            size: 0.9
+            height: 0.65
+            expand: 0.6
+            segments: [[0,0,0, 0.8,0,0], [0,0,0, 0.4,0,0.3]]
+          impact:
+            seconds: 0.15
+            size: 0.6
+            height: 0.6
+            expand: 0.5
+            segments: [[-0.5,0,0, 0.5,0,0], [0,0,-0.5, 0,0,0.5]]
+          recovery:
+            seconds: 0.3
+            size: 0.6
+            height: 0.5
+            opacity: 0.5
+            expand: 0.3
+            segments: [[-0.5,0,0, -0.2,0,-0.2], [0.5,0,0, 0.2,0,-0.2]]
+          cancel:
+            seconds: 0.18
+            size: 0.6
+            height: 0.6
+            opacity: 0.5
+            expand: -0.6
+            segments: [[-0.5,0,-0.1, -0.25,0,0.1], [0.5,0,-0.1, 0.25,0,0.1]]
+      - id: rising_heat
+        layer: thread.ember
+        match: [ember]
+        priority: 10
+        color: "#ffb45c"
+        phases:
+          start:
+            seconds: 1
+            size: 0.9
+            height: 0.65
+            opacity: 0.9
+            spin: 0.35
+            stroke: 0.085
+            segments: [[-0.5,0,-0.2, -0.65,0,0.15], [-0.65,0,0.15, -0.3,0,0.5], [-0.3,0,0.5, -0.4,0,0.15], [0.5,0,-0.2, 0.65,0,0.15], [0.65,0,0.15, 0.3,0,0.5], [0.3,0,0.5, 0.4,0,0.15]]
+          release:
+            seconds: 0.2
+            size: 1.1
+            stroke: 0.07
+            height: 0.65
+            expand: 0.6
+            segments: [[0,0,0, 1,0,0.15], [0.2,-0.2,0, 0.7,-0.12,0.2], [0.2,0.2,0, 0.7,0.12,0.2]]
+          impact:
+            seconds: 0.22
+            stroke: 0.08
+            size: 1
+            height: 0.55
+            expand: 0.8
+            segments: [[0,0,0, 0.25,0,0.65], [0,0,0, -0.35,0,0.5], [0,0,0, 0.6,0,0.25], [0,0,0, -0.55,0,0.15], [0,0,0, 0,0.4,0.5], [0,0,0, 0,-0.4,0.5], [-0.12,0,0, 0.12,0,0]]
+          recovery:
+            seconds: 0.35
+            size: 0.7
+            height: 0.55
+            opacity: 0.55
+            expand: 0.45
+            segments: [[-0.4,0,0, -0.55,0,0.2], [0.4,0,0.15, 0.55,0,0.35], [0.1,0,0.3, 0.05,0,0.5]]
+      # Body accents describe delivery mechanisms, never their hit footprints.
+      - id: projectile_release
+        layer: delivery.projectile
+        match_mechanisms: [projectile]
+        color: "#e8dcc0"
+        phases:
+          release: { primitive: rays, pieces: 3, arc: 24, seconds: 0.18, size: 0.45, height: 0.8, opacity: 0.55, expand: 0.8 }
+      - id: area_release
+        layer: delivery.area
+        match_mechanisms: [area]
+        color: "#e8dcc0"
+        phases:
+          release: { primitive: ring, pieces: 16, seconds: 0.2, size: 0.35, height: 0.8, opacity: 0.4, expand: 0.6 }
+      - id: summon_release
+        layer: delivery.minion
+        match_mechanisms: [minion]
+        color: "#afd7aa"
+        phases:
+          release: { primitive: corners, pieces: 6, seconds: 0.35, size: 0.45, height: 0.7, expand: 0.6 }
+      # Adapted from Hollow Wake's semantic mend, barrier, ghost, barbs and collapse cue families.
+      - id: restoration
+        layer: outcome
+        color: "#9ae4b2"
+        phases:
+          heal: { primitive: rays, pieces: 4, seconds: 0.55, size: 0.5, height: 0.65, expand: -0.7, stroke: 0.06 }
+          revive: { primitive: corners, pieces: 6, seconds: 0.65, size: 0.65, height: 0.65, expand: 0.7, show_on_dead: true }
+      - id: beneficial_status
+        layer: outcome
+        priority: 10
+        match: [beneficial]
+        color: "#9ae4b2"
+        phases:
+          status: { primitive: corners, pieces: 4, seconds: 0.45, size: 0.4, height: 0.55, expand: -0.5 }
+      - id: defense
+        layer: outcome
+        color: "#dceaf4"
+        phases:
+          block: { primitive: ring, pieces: 8, arc: 120, seconds: 0.28, size: 0.55, height: 0.65, expand: 0.25, stroke: 0.07 }
+          evade: { primitive: corners, pieces: 3, seconds: 0.32, size: 0.55, height: 0.65, expand: 0.75, opacity: 0.55 }
+      - id: affliction
+        layer: outcome
+        color: "#dc9fe4"
+        phases:
+          status: { primitive: rays, pieces: 6, seconds: 0.45, size: 0.4, height: 0.55, expand: 0.65 }
+          status_expired: { primitive: corners, pieces: 5, seconds: 0.35, size: 0.4, height: 0.55, expand: -0.8, opacity: 0.5 }
+      - id: contact
+        layer: outcome
+        color: "#e8dcc0"
+        phases:
+          damage: { primitive: rays, pieces: 5, seconds: 0.18, size: 0.35, height: 0.55, expand: 0.6, show_on_dead: true }

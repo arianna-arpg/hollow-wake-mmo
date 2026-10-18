@@ -63,6 +63,16 @@ entries:
         min_hold: 0.5
         effects: [ { type: event, name: t_release, data: { held: cast.held, radius: weave.area.radius } } ]
     effects: [ { type: event, name: t_pulse, data: { held: cast.held, radius: weave.area.radius } } ]
+  - id: t_channel_bolt
+    targeting: direction
+    cast_mode: channel
+    min_threads: 0
+    channel: { interval: 1, windup: 0.1, max_hold: 3 }
+    effects:
+      - type: projectile
+        speed: 2
+        range: 30
+        on_hit: [ { type: damage, amount: 10, threads: [mind], can_crit: false } ]
   - id: t_charge
     targeting: self
     cast_mode: charge
@@ -221,6 +231,7 @@ internal sealed class CastingArena
     public static CastingArena Create(ulong seed = 11, string caster = "loosed_kindler", string enemy = "hob", float distance = 4, ContentRegistry? registry = null)
     {
         var sim = ZoneBuilder.CreateArena(registry ?? CastingTestContent.Registry, seed);
+        sim.EmitCastPresentation = true;
         var factory = sim.Service<PatternFactory>();
         var c = factory.Spawn(sim, caster, new Vector3(10, 10, 0), new SpawnOptions { Faction = "red" });
         var e = factory.Spawn(sim, enemy, new Vector3(10 + distance, 10, 0), new SpawnOptions { Faction = "blue" });

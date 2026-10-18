@@ -514,11 +514,13 @@ public sealed partial class WeaveRuntime
         if (resolvesNow)
         {
             ResolveUse(sim, caster, book, stats, state, face);
+            Present(sim, caster, state, face, "end", "complete");
             return true;
         }
         BeginHeld(sim, caster, book, stats, state, face, faceScope, rules);
         book.Casting = state;
         _live.Add(new LiveCast(caster, book, state));
+        if (state.CastId == 0) Present(sim, caster, state, face, "start");
         sim.Events.Publish(new WeaveStarted(caster, face.Key, target, point, state.Duration) { Tick = sim.Clock.Tick });
         return true;
     }
@@ -628,6 +630,7 @@ public sealed partial class WeaveRuntime
             {
                 // Raising the guard runs the form's own graph once (drawing foes, a brace); the bash is its payload.
                 RaiseGuard(sim, caster, stats, state, weave, scope, rules);
+                Present(sim, caster, state, weave, "start");
                 Run(sim, caster, stats, state, weave, weave.Effects, depth: 0, publishCast: true, default, rngPrefix: "guard:");
                 break;
             }
@@ -958,8 +961,11 @@ public sealed partial class WeaveRuntime
         {
             target = Entity.None;
         }
+        // Publish before executing: immediate contacts must follow their confirmed release on the wire.
+        if (publishCast && effects.Count > 0) Present(sim, caster, state, weave, "release");
         var ctx = new EffectContext
         {
+            CastId = state.CastId,
             Sim = sim,
             Source = caster,
             Target = target,
@@ -1014,6 +1020,8 @@ public sealed partial class WeaveRuntime
                 }
             }
             sim.Events.Publish(new WeaveInterrupted(caster, key) { Tick = sim.Clock.Tick });
+            if ((cast.Weave ?? cast.Slot.Compiled) is { } interrupted)
+                Present(sim, caster, cast, interrupted, "interrupt", "interrupted");
         }
     }
 
@@ -1079,6 +1087,7 @@ public sealed partial class WeaveRuntime
                 {
                     book.Casting = null;
                     ResolveUse(sim, caster, book, stats, cast, weave);
+                    Present(sim, caster, cast, weave, "end", "complete");
                 }
                 break;
         }
@@ -1096,6 +1105,9 @@ public sealed partial class WeaveRuntime
                 continue;
             }
             live.RemoveAt(i);
+            if (!entry.Cast.PresentationEnded && (entry.Cast.Weave ?? entry.Cast.Slot.Compiled) is { } ended)
+                Present(sim, entry.Caster, entry.Cast, ended, "interrupt",
+                    !sim.World.IsAlive(entry.Caster) || sim.World.Has<Dead>(entry.Caster) ? "death" : "cleared");
             if (sim.World.IsAlive(entry.Caster) && sim.World.TryGet<Stats>(entry.Caster, out var stats))
             {
                 EndHeldState(sim, entry.Caster, stats, entry.Cast);
@@ -1442,6 +1454,7 @@ public sealed partial class WeaveRuntime
             _ => "cast",
         };
         sim.Events.Publish(new WeaveReleased(caster, weave.Key, mode, cast.Held, cast.Fill, cast.Stage, fired, reason) { Tick = sim.Clock.Tick });
+        Present(sim, caster, cast, weave, "end", reason);
         if (cast.Mode == CastMode.Channel)
         {
             RaiseKind(sim, caster, CastingTriggers.ChannelEnd, FocusOf(cast), cast.Held, weave.Tags);

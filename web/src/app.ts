@@ -1,9 +1,13 @@
+import { presentation } from './loading/content';
+import type { LoadingScreen, LoadingLease } from './loading/loadingScreen';
 import { DirectionalLight, FogExp2, HemisphereLight, MathUtils, Scene, SRGBColorSpace, Vector3, WebGLRenderer } from 'three';
 import type { ClientConfig } from './config';
 import { Input } from './input/input';
 import { Connection } from './net/connection';
 import { applyDelta } from './net/delta';
-import { ENTITY_DELTA_FEATURE, INTERFACE_FEATURE, PROTOCOL_VERSION, type CombatEventMsg, type EntityState, type Int64, type Message } from './net/protocol';
+import { CAST_CUES_FEATURE, ENTITY_DELTA_FEATURE, INTERFACE_FEATURE, PROTOCOL_VERSION, type CombatEventMsg, type EntityState, type Int64, type Message } from './net/protocol';
+import { CastVisuals } from './world/castVisuals';
+import { cueSettings } from './world/castCueTimeline';
 import { parseServerInput, sameOrigin, socketUrl, type ServerAddress } from './ui/address';
 import { el, storageGet, storageSet } from './ui/dom';
 import { Hud } from './ui/hud';
@@ -41,6 +45,7 @@ export class App {
   readonly rig: CameraRig;
   readonly terrain: TerrainView;
   readonly entities: EntityLayer;
+  readonly castVisuals: CastVisuals;
   readonly hud: Hud;
   readonly login: LoginPanel;
   readonly settings: Settings;
@@ -54,6 +59,52 @@ export class App {
   private readonly appliers = new Map<string, () => void>();
   private width = 1;
   private height = 1;
+  private entryLease: LoadingLease | null = null;
+  private entryStarted = 0;
+  private entryPosition = { x: 0, y: 0 };
+  private entryFailed = false;
+  releaseLoadingInput(): void {
+    this.input?.releaseAll();
+    if (this.inWorld) this.send({ t: 'stop' });
+    this.lastMoveDir = [0, 0];
+  }
+  get reducedLoadingMotion(): boolean { return this.settings?.toggle('reduce_motion') ?? false; }
+
+  private beginEntry(id: string): void {
+    this.entryFailed = false;
+    this.entryStarted = performance.now() / 1000;
+    this.entryLease = this.loading.begin({ kind: 'entry', label: presentation.labels.entry, cancel: () => this.cancelEntry() });
+    this.send({ t: 'select_character', character_id: id });
+  }
+  private cancelEntry(): void {
+    this.entryLease?.finish(); this.entryLease = null;
+    this.connection.close('Loading cancelled');
+    this.closed('Loading cancelled');
+  }
+  private retryEntry(): void {
+    this.entryFailed = false;
+    this.entryStarted = performance.now() / 1000;
+    if (!this.connection.open) { this.cancelEntry(); return; }
+    this.terrain.retryPreparation();
+    // The reliable socket already owns delivery; a slow response must not select twice.
+    this.entryLease?.update({ label: presentation.labels.entry });
+  }
+  private checkEntry(now: number): void {
+    if (!this.entryLease?.current || this.entryFailed) return;
+    const progress = this.terrain.readiness(this.entryPosition.x, this.entryPosition.y, Math.min(presentation.readyRadius, this.config.world.chunkRadius));
+    const self = this.entities.self;
+    if (this.inWorld) {
+      this.entryLease.update({ label: presentation.labels.terrain, completed: progress.completed + Number(!!self), total: progress.total + 1 });
+      if (self && progress.completed === progress.total) {
+        this.entryLease.finish(); this.entryLease = null; return;
+      }
+    }
+    if (now - this.entryStarted > presentation.timeoutSeconds) {
+      this.entryFailed = true;
+      this.entryLease.fail(presentation.labels.timeout, () => this.retryEntry());
+    }
+  }
+
   inWorld = false;
   /** The zone the hero stands in, as the server names it. */
   zoneName = '';
@@ -78,7 +129,7 @@ export class App {
   /** Interface states received, by message type, for scripted checks. */
   readonly received = new Map<string, number>();
 
-  constructor(root: HTMLElement, readonly config: ClientConfig) {
+  constructor(root: HTMLElement, readonly config: ClientConfig, readonly loading: LoadingScreen) {
     const params = new URLSearchParams(window.location.search);
     this.developer = params.has('developer');
     // A profile keeps its own settings; ?fresh-settings starts it from the content's defaults (the smoke's way).
@@ -131,6 +182,7 @@ export class App {
     this.terrain = new TerrainView(config.world, palette, (x, y) => this.send({ t: 'request_chunk', x, y }));
     this.scene.add(this.terrain.group);
     this.entities = new EntityLayer(config.entities, config.motion, labels);
+    this.castVisuals = new CastVisuals(this.scene, this.entities, cueSettings(kinds.get('ui_cast_visuals')?.[0], kinds.get('threads') ?? []));
     this.scene.add(this.entities.group);
 
     const facts = (name: string): number | null => {
@@ -157,7 +209,7 @@ export class App {
     this.login = new LoginPanel({
       connect: (address, account, token) => void this.connect(address, account, token),
       create: (name, calling) => this.send({ t: 'create_character', name, calling }),
-      enter: (characterId) => this.send({ t: 'select_character', character_id: characterId }),
+      enter: (characterId) => this.beginEntry(characterId),
       options: () => this.hud.openOptions(),
     });
     root.append(this.login.root, this.hud.root);
@@ -312,6 +364,7 @@ export class App {
     const full = new URLSearchParams(window.location.search).has('full-states') || this.settings.text('snapshot_stream') === 'full';
     const wanted = new Set(this.config.server.features);
     wanted.add(INTERFACE_FEATURE);
+    wanted.add(CAST_CUES_FEATURE);
     if (full) {
       wanted.delete(ENTITY_DELTA_FEATURE);
     }
@@ -338,6 +391,10 @@ export class App {
   }
 
   private closed(reason: string): void {
+    if (this.entryLease?.current) {
+      this.entryFailed = true;
+      this.entryLease.fail(reason);
+    }
     this.inWorld = false;
     this.hud.inWorld = false;
     this.hud.hero.clear();
@@ -345,6 +402,7 @@ export class App {
     this.login.setBusy(false);
     this.login.setStatus(`Disconnected: ${reason}`);
     this.entities.clear();
+    this.castVisuals.clear();
     this.lastMoveDir = [0, 0];
   }
 
@@ -379,6 +437,10 @@ export class App {
           console.debug(m.text);
           break;
         }
+        if (this.entryLease?.current) {
+          this.entryFailed = true;
+          this.entryLease.fail(m.text, () => this.retryEntry());
+        }
         this.hud.notice(m.text, 'error');
         this.login.setStatus(m.text);
         break;
@@ -387,12 +449,20 @@ export class App {
         this.closed(m.reason);
         break;
       case 'enter_world': {
+        if (!this.entryLease?.current && !this.inWorld) break;
+        if (!this.entryLease?.current) {
+          this.entryStarted = performance.now() / 1000;
+          this.entryLease = this.loading.begin({ kind: 'travel', label: presentation.labels.entry, cancel: () => this.cancelEntry() });
+        }
+        this.entryPosition = { x: m.x, y: m.y };
+        this.entryFailed = false;
         const key = `${m.world.chunk_size}:${m.world.content_hash}:${m.world.seed}`;
         if (key !== this.worldKey) {
           this.worldKey = key;
           this.terrain.reset(m.world.chunk_size);
         }
         this.entities.clear();
+        this.castVisuals.clear();
         this.entities.selfKey = m.entity_key;
         this.clock.reset();
         this.clock.observe(m.server_time, local);
@@ -430,6 +500,7 @@ export class App {
         }
         break;
       case 'entity_despawn':
+        this.castVisuals.removeEntity(m.key);
         this.entities.despawn(m.key);
         break;
       case 'self_state':
@@ -465,6 +536,11 @@ export class App {
         break;
       case 'combat_event':
         this.showCombat(m);
+        break;
+      case 'cast_cue':
+        this.clock.observe(m.server_time, local);
+        this.castVisuals.receive(m, this.clock.now(local));
+        this.count(m.t);
         break;
       case 'chat_broadcast':
         this.hud.chat(m.from, m.channel, m.text);
@@ -530,6 +606,7 @@ export class App {
 
   /** A press of one or more actions: the interface first (Escape, the book walk, the tray, pages), then the world. */
   private press(actions: readonly string[]): void {
+    if (this.loading.active || this.loading.padQuarantined) return;
     if (this.hud.press(actions)) {
       return;
     }
@@ -612,6 +689,7 @@ export class App {
   }
 
   private click(x: number, y: number): void {
+    if (this.loading.active) return;
     if (!this.inWorld) {
       return;
     }
@@ -740,10 +818,11 @@ export class App {
   private work(local: number): void {
     const dt = Math.min(0.1, Math.max(0, local - this.lastFrame));
     this.lastFrame = local;
-    this.input.pollPad();
+    if (!this.loading.active && !this.loading.padQuarantined) this.input.pollPad();
     const renderTime = this.clock.now(local) - this.config.motion.interpolationDelayMs / 1000;
     this.entities.serverNow = this.clock.now(local);
     this.entities.animate(dt, local, renderTime);
+    this.castVisuals.update(this.clock.now(local), this.settings.toggle('reduce_motion'));
     if (this.inWorld) {
       const self = this.entities.self;
       if (self !== undefined) {
@@ -753,14 +832,14 @@ export class App {
         this.terrain.update(self.position, local);
       }
       this.hud.setSelfEntity(self?.state ?? null);
-      this.handleMovement();
-      this.updateHover();
+      if (!this.loading.active && !this.loading.padQuarantined) { this.handleMovement(); this.updateHover(); }
       if (local - this.lastPingAt > this.config.world.pingSeconds) {
         this.lastPingAt = local;
         this.send({ t: 'ping', nonce: Math.round(performance.now()) });
       }
       this.hud.netText = `${this.rtt === null ? '' : `${Math.round(this.rtt)} ms  `}${this.terrain.builtCount} chunks  ${this.entities.views.size} entities`;
     }
+    this.checkEntry(local);
     this.rig.update(dt);
     this.entities.placeLabels(this.rig.camera, this.width, this.height);
     this.hud.frame(performance.now() / 1000, this.width, this.height);
@@ -774,6 +853,7 @@ export class App {
     const app = this;
     const stateOf = (v: EntityView) => ({ ...v.state, drawn: v.position });
     return {
+      get loading() { return app.loading.snapshot; },
       get inWorld() {
         return app.inWorld;
       },
@@ -785,6 +865,7 @@ export class App {
           characterLists: app.characterLists,
           questOffers: app.questOffers,
           combatLines: app.combatLines,
+          castVisuals: app.castVisuals.timeline.active.length,
           hitsDealt: app.hitsDealt,
           chunksBuilt: app.terrain.builtCount,
           chunksPending: app.terrain.pendingCount,
@@ -828,6 +909,7 @@ export class App {
       get lastHit() {
         return app.lastHit;
       },
+      castCues: () => app.castVisuals.timeline.active.map(c => ({ phase: c.phase, source: c.event.source, target: c.event.target, name: c.event.name, color: c.color })),
       /** The player's effective bindings for an action, as Options shows them. */
       bindings: (action: string) => app.settings.bindings(action),
       setting: (id: string) => app.settings.value(id),

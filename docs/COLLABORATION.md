@@ -5,9 +5,20 @@ Two kinds of engineer work in this repository: Claude sessions (coordinator of t
 ## Where work happens
 
 - **The integration tree is clean.** The checkout at the repository root is where main is integrated and verified. Nothing is left uncommitted there between turns, by anyone. Work in progress lives on a branch in its own git worktree: `git worktree add <folder> -b <branch>` from main, with branches named `claude/<topic>` or `codex/<topic>`, and folders outside the root checkout or under an ignored path.
-- **Main moves through pull requests.** Every change reaches main as a pull request, reviewed by the other kind of engineer before it merges, except the coordinator's merges of package branches that were reviewed against their reports, and one-line fixes to docs. A pull request says which gates ran, names every behavior change with its evidence (trace, test, screenshot or bench line), and which vision tenet it serves.
+- **Main moves through pull requests.** Every change reaches main as a pull request, reviewed by the other kind of engineer before it merges, except the coordinator's merges of package branches that were reviewed against their reports, and one-line fixes to docs. Main is protected: it takes pull requests only, each with the `ci` check green and zero required approvals (one GitHub account serves both engineers and cannot approve its own requests, so the review is a comment on the request), and never a force push or a deletion; the exceptions waive the other side's review, not the pull request. A pull request says which gates ran, names every behavior change with its evidence (trace, test, screenshot or bench line), and which vision tenet it serves; the template under `.github/` lays that out.
 - **Never sweep the tree.** No `git add -A`, `git add .` or `git commit -a` in a shared tree; add paths by name. Never reset, check out or stash files you did not change. Never rewrite a branch someone else has fetched.
 - **Ownership is per pull request.** A file belongs to the open pull request that touches it until that request merges. Before starting on a file another open request touches, say so in a review record or on that request. The package ownership of the parity plan's section 3 has expired now that the packages landed; the registries and message shapes it froze remain additive-only, and a shape change is called out in the request.
+
+## Branch life
+
+A branch is a place to work, not a place to keep work. Uncommitted or unmerged work is lost work: the other engineer cannot see it, it drifts from main, and it goes with the worktree when a machine or a session does.
+
+- **Push at least daily.** Whatever state the branch is in, its commits are on the remote by the end of every working day.
+- **Open a draft pull request early**, as soon as the branch has a shape, so the claim is visible and the gates run on every push. Mark it ready when the gates and the evidence are in.
+- **A branch lives days, not weeks.** Slice the work so a branch merges within days; a long piece becomes a chain of small pull requests, not one branch kept open.
+- **Delete it when it merges.** GitHub deletes the remote branch on merge; the engineer removes the local branch and its worktree the same day (`git worktree remove <folder>`, `git branch -d <branch>`). `scripts/branches.sh` shows what is entirely on main and can go, and what is not.
+- **Stacked requests are retargeted before their base goes.** A request based on another branch is retargeted to main before that base merges, because deleting the base on merge closes the stacked request, and a closed request cannot be reopened or retargeted; or the stack is merged bottom-up and its base branches are deleted only after the top lands.
+- **The weekly report names what lingers.** The `branches` workflow lists every branch with commits not on main, with its age, in its job summary and in one issue it keeps current (Branch report: work not on main). Each engineer answers for its own branches there: merge, split or delete, not leave.
 
 ## How we talk
 

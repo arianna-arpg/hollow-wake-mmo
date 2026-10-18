@@ -75,7 +75,7 @@ describe('yaml', () => {
     const names = Object.keys(CONTENT_FILES);
     expect(names.length).toBeGreaterThan(0);
     for (const name of names) {
-      const doc = parseYaml(CONTENT_FILES[name]) as { kind?: unknown; entries?: unknown };
+      const doc = (name.endsWith('.json') ? JSON.parse(CONTENT_FILES[name]) : parseYaml(CONTENT_FILES[name])) as { kind?: unknown; entries?: unknown };
       expect(typeof doc.kind, name).toBe('string');
       expect(doc.entries === undefined || Array.isArray(doc.entries) || typeof doc.entries === 'object', name).toBe(true);
     }
