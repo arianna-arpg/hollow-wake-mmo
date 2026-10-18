@@ -2,7 +2,7 @@
 
 A minion is a body that belongs to someone: a summon, a raised corpse, a construct. It fights on its owner's side (relations follow the owner), its kills credit the owner, it inherits what the owner invests in minions, and its AI is ordinary behavior content that follows the owner, takes up what the owner fights and obeys orders. Players, monsters and constructs summon through the same effects, and minions cast through the same weave runtime as everyone else.
 
-Code: `Minions/` (the minion service, the summon recipe, contracts, corpses, crew forwarding), `Effects/Handlers/SummonHandlers.cs` (`summon`, `deploy`, `spawn`, `gather_corpses`), `Effects/Handlers/MinionHandlers.cs` (`recall_minions`, `command_minions`, `minion_cast`, `consume_minion`), `Ai/MinionActions.cs` (minion and construct AI actions, command kinds), `Systems/MinionSystem.cs`, `Components/Minions.cs`. Rules live in group `minions`.
+Code: `Minions/` (the minion service, the summon recipe, contracts, corpses, crew forwarding), `Effects/Handlers/SummonHandlers.cs` (`summon`, `deploy`, `spawn`, `gather_corpses`, `consume_corpse`), `Effects/Handlers/MinionHandlers.cs` (`recall_minions`, `command_minions`, `minion_cast`, `consume_minion`), `Ai/MinionActions.cs` (minion and construct AI actions, command kinds), `Systems/MinionSystem.cs`, `Components/Minions.cs`. Rules live in group `minions`.
 
 ## Units
 
@@ -46,7 +46,7 @@ Rule `minions.inherit` is a table of lines `{ from, attribute, form }`. At birth
 
 ## Corpses
 
-A dead body is a corpse while it lies there, unless it is a player, a minion or tagged `no_corpse`; it remembers what it was through its identity, so a death adds nothing, and the lifetime system clears it after `combat.corpse_seconds` (`Corpses.Is`, `Corpses.PatternOf`). `summon` with `from_corpse` raises them, `spawn` with `as_corpse` lays fresh ones down without a death, and `gather_corpses { radius }` drags those around the focus into a pile. A kill hook (`on_kill`) holding `summon { from_corpse: target }` raises the slain.
+A dead body is a corpse while it lies there, unless it is a player, a minion or tagged `no_corpse`; it remembers what it was through its identity, so a death adds nothing, and the lifetime system clears it after `combat.corpse_seconds` (`Corpses.Is`, `Corpses.PatternOf`). `summon` with `from_corpse` raises them, `spawn` with `as_corpse` lays fresh ones down without a death, and `gather_corpses { radius }` drags those around the focus into a pile; `consume_corpse { radius }` spends the corpse a cast chose (its target, else the one lying at the point) without raising it, for weaves that burn or hook the dead, and publishes `CorpseConsumed`. A kill hook (`on_kill`) holding `summon { from_corpse: target }` raises the slain.
 
 Two target kinds join the weave runtime's registry: `corpse` (a corpse that can still be raised or consumed) and `minion` (one of the caster's living minions or constructs). A form's `target: { kind: corpse, search_radius, consume }` refuses the weave before its cost is paid when no corpse lies in reach, and aims it at the one it found; since a cast drops a dead target and aims at where it lay, `from_corpse: target` takes the corpse lying within `minions.corpse_target_reach` of the aim. Raising consumes the corpse unless the summoning weave's form says `consume: false`, so one corpse can rise again. A summon with no such form whose search finds nothing publishes `SummonFizzled`.
 
