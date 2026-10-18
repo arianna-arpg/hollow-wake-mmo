@@ -1,0 +1,2 @@
+asked for features: entity_delta, interface, cast_forecast_v1; granted: cast_cues, cast_forecast_v1, entity_delta, interface
+no character list; got WelcomeMsg, LoginResultMsg

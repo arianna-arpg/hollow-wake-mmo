@@ -1,5 +1,7 @@
 # Forecast dependency observation candidate, 2026-10-18
 
+Final selection: the lazy cycle-tracking experiment was removed in fb23c4f after the matched default workload did not establish an AI benefit (2.2718955 ms control versus 2.7940962 ms candidate). The original dependency preflight is restored. The eleven live-safety regressions and the single PreferredRange slot-cache reuse remain. The integration record retains both first samples and subsequent gates; this historical candidate report does not claim the removed logic ships.
+
 This is a bounded core-side slice for coordinator-owned PR #20. Branch codex/forecast-ai-observation starts at published evidence head 2cc5d66297969c024fc3098cb6bde5e783f58fc8 (source 6edc124; approved main 8365775). It is a local integration candidate, not a performance certification or a separate pull request.
 
 ## Scope and finding
@@ -31,4 +33,4 @@ Content validation, zone load, fight and the standard tournament replay remain p
 
 Coordinator: integrate or compare this isolated candidate only within PR #20, then complete aggregate functional gates and the scheduled normal-priority pre-optimization/candidate benchmark. Retain the existing behavior and combined-snapshot performance blockers until measured evidence resolves them. Claude should review lazy recursion tracking, cleanup on declines, depth/cycle precedence and the eventual tournament/performance evidence before acceptance.
 
-Acknowledged by: integrated into PR #20 as 31c2546 after source review. Aggregate tournament/performance gates and Claude review remain pending; the integration record carries their results.
+Acknowledged by: integrated into PR #20 as 31c2546, then narrowed in fb23c4f to the slot-cache reuse and live-safety regressions. The integration record carries final verification; Claude review remains requested.

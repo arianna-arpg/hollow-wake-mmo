@@ -1,6 +1,6 @@
 # Shared cast forecasting: review corrections, 2026-10-18
 
-This supersedes the completion claims in the historical [forecast record](2026-10-17-shared-cast-forecasts.md). PR #20 remains the owned integration request. Approved main 26b9e46 was merged in 3ca56eb; approved tournament main 6e7e241 was merged in 1072b94. Release/approach changes are 415ccb6 and 7bd30a5. The forecasting chat's rider fix 47de147 was integrated as 8ba3f27. Approved entry/grammar main 8365775 was then integrated in 6edc124. Both client capability lists and both AI contract sections were preserved when resolving its three conflicts. No unmerged anatomy, AI-intent or construct branch is included.
+This supersedes the completion claims in the historical [forecast record](2026-10-17-shared-cast-forecasts.md). PR #20 remains the owned integration request. Approved main 26b9e46 was merged in 3ca56eb; approved tournament main 6e7e241 was merged in 1072b94. Release/approach changes are 415ccb6 and 7bd30a5. The forecasting chat's rider fix 47de147 was integrated as 8ba3f27. Approved entry/grammar main 8365775 was then integrated in 6edc124. Both client capability lists and both AI contract sections were preserved when resolving its three conflicts. Approved AI-intent/morph main 82e3a48 was integrated in 13671b5, preserving all three target-aware PreferredRange calls. No unmerged anatomy or construct branch is included.
 
 The owner chose committed, dodgeable swings with better pre-commit approach and positioning. Aim, collision reach and wall blocking do not gain forgiveness after commitment. The engine contains no spell-name dispatch.
 
@@ -28,7 +28,7 @@ The historical HitStage golden keeps its original expectation and explicitly set
 
 ## Verification and measurements
 
-Final executable source: 6edc124, with approved main 8365775. Evidence lives under [the rereview directory](../../experiments/forecast-rendering/evidence/rereview).
+The following completed client/entry checks describe executable source 6edc124, with approved main 8365775. Later cost and AI-main integration gates are recorded below. Evidence lives under [the rereview directory](../../experiments/forecast-rendering/evidence/rereview).
 
 - Release solution build: zero warnings/errors. All 919 .NET tests pass (733 core, 54 server, 132 client); 322 browser tests and the production browser build pass. The generated protocol is current.
 - Content validation: zero errors/warnings. Zone load runs 200 ticks; the final fight runs successfully. Standard tournament hashes replay identically. The fixture that replaces a selector with direct damage explicitly authors body validation; its double-knockout assertions are unchanged.
@@ -37,9 +37,9 @@ Final executable source: 6edc124, with approved main 8365775. Evidence lives und
 - Convergence audit: 948 captured skills and 457 supports across 12 families, with no unclassified vocabulary; partial/pending mechanisms remain explicitly incomplete.
 - Cloud CI at 6edc124 passes build/test, Docker, launcher, web build and the required aggregate check (run 39153347649). Final evidence-only commit checks are recorded on the pull request.
 
-Earlier source-handoff checks and failed measurements remain labeled in the evidence directory. The intermediate full snapshot exceeded both 1 ms and 30 KB; requiring the authored approach distance restored traffic below 30 KB without changing precision, cadence or protocol defaults. The final timing gate still fails as detailed below. The earlier 26b9e46 fight staging is kept separate from the mirrored 6e7e241 tournament staging.
+Earlier source-handoff checks and failed measurements remain labeled in the evidence directory. The intermediate full snapshot exceeded both 1 ms and 30 KB; requiring the authored approach distance restored traffic below 30 KB without changing precision, cadence or protocol defaults. The earlier 26b9e46 fight staging is kept separate from the mirrored 6e7e241 tournament staging.
 
-### Final coordinated performance window
+### Earlier coordinated performance window
 
 After the hitbox team completed its run, all participating engineering chats held heavy local work. Both owned benchmarks ran serially, at normal priority, with the same full Release command and no config or budget changes. Exact inputs are approved main 8365775 and source 6edc124. Both processes exited before the shared window was released. The full outputs are baseline-window-836.txt and bench-window-6ed.txt in the evidence directory.
 
@@ -52,7 +52,7 @@ After the hitbox team completed its run, all participating engineering chats hel
 | Combined snapshot | not instrumented on main | 1.085 ms / 8.449 KB | 1 ms / 10 KB |
 | Tick allocation | 68.225 KB | 71.096 KB | 2 MB |
 
-The branch still fails behavior and combined snapshot time. Zero simulation errors. Incremental forecasts cost 0.247 ms and 8.913 KB allocated per player over 1,852 observations. The branch passes the remaining named default budgets; main also exceeds its attribute-fold and expression-time limits in this window. Control failures neither waive the branch limits nor establish an exclusive cause. Earlier complete/intermediate samples remain recorded. No further repeated sampling was used to select a passing result. PR #20 remains draft for performance work and Claude rereview, despite its functional/CI passes.
+That source failed behavior and combined snapshot time. Zero simulation errors. Incremental forecasts cost 0.247 ms and 8.913 KB allocated per player over 1,852 observations. Main also exceeded its attribute-fold and expression-time limits in this window. Control failures neither waive the branch limits nor establish an exclusive cause. Earlier complete/intermediate samples remain recorded. The later comparison follows concrete source changes, not repeated sampling to select a passing result. PR #20 remains draft for final gates and Claude rereview.
 
 ### Same-base tournament comparison
 
@@ -76,9 +76,28 @@ In the older 26b9e46 staging, the intermediate Spark Duelist/Kindler trace had f
 
 Snapshot change 7ec0529 removes repeated delta comparisons for viewers with the exact same captured previous state. It retains only one history per entity in the existing tick/precision lifetime, recomputes divergent histories, and clears on explicit invalidation. The shared messages are read-only after capture. Wire fields, precision, repair cadences, interest, cast timing and combat results are unchanged. Four new history regressions and all 58 server tests pass. SnapshotBuilder.cs and the networking contract overlap were announced on #36, #49 and #50 before integration; their body-volume and intent semantics remain separate.
 
-Core change 31c2546 integrates the forecasting chat's 57b8a1f: constant leaf attributes no longer insert/remove recursion-path entries, while live purity, flags, dependency depth, modifiers, gauges, links and cycles remain checked per observation. The already obtained slot cache is reused inside one PreferredRange iteration. Its [handoff](2026-10-18-forecast-dependency-optimization.md) records 103 focused and 930 full tests on that isolated source. No safety result is retained between observations.
+Core experiment 31c2546 integrated the forecasting chat's 57b8a1f. Its [handoff](2026-10-18-forecast-dependency-optimization.md) records 103 focused and 930 full tests on that isolated source. Lazy recursion-path writes were removed in fb23c4f after the comparison below failed to establish an AI benefit. The original dependency walk is restored. The eleven live-safety regressions and the already obtained slot-cache reuse within one PreferredRange iteration remain. No safety result is retained between observations.
 
-The pre-optimization control is published 2cc5d66 (executable source 6edc124), built in an owned disposable worktree. The combined candidate is 31c2546. New timing claims await the coordinated comparison. Earlier failed measurements above remain acceptance blockers until a concrete revised source passes the existing budgets. A prospective merge with approved main 82e3a48 is clean and retains all three target-aware PreferredRange calls from this request; that inspection does not claim runtime verification of the combined tree.
+The pre-optimization control 2cc5d66 and candidate both received the same approved main 82e3a48 before measurement: control d562f1b versus candidate 13671b5. The only runtime differences were SnapshotBuilder, lazy dependency tracking and PreferredRange slot-cache reuse. Both builds were clean, then one full Release benchmark per head ran serially at Normal priority in the coordinator's window. Raw cost-control/cost-candidate bench JSON, build logs and environment records are retained. Both processes exited before other functional work was released.
+
+| Measure | Control d562f1b | Initial candidate 13671b5 | Limit |
+|---|---:|---:|---:|
+| Behavior | 2.271896 ms | 2.794096 ms | 3 ms |
+| Combined snapshot | 0.874679 ms | 0.774513 ms | 1 ms |
+| Combined allocation | 60.464609 KB | 52.303867 KB | diagnostic |
+| Full traffic | 29.658721 KB | 29.658721 KB | 30 KB |
+| Delta traffic | 9.326582 KB | 9.326582 KB | 10 KB |
+| Combined traffic | 8.448813 KB | 8.448813 KB | 10 KB |
+
+All snapshot traffic, active forecast observation counts and end-entity counts match. Behavior is slower in this sample, so no causal AI speedup is claimed; the speculative path-tracking change was removed. Both samples report expression allocation 0.0168 B/evaluation rather than literal zero. That inherited process-wide reading is retained, not rounded away or called a zero-allocation pass. Final source timing after the removal remains pending.
+
+### Approved main fixture compatibility
+
+Hosted run 39155313653 exposed six failures in the automatic merge with the new main, separately from performance. Four historical movement checks recorded direct-target Strike before positional melee/anticipation changed when actors stop to attack. 97ffd12 gives only those scenarios an isolated registry with their original Strike graph and hint, plus the same hostile fixture factions. The original trace files and tolerances are untouched; all twelve AI-intent/trajectory tests pass. Production content remains positional and its current approach/dodge tests remain enabled.
+
+Two morph sensitivity checks added on main incorrectly expected nearest and aimed_nearest to differ when the area press has no target, or the chain's original aimed target has already been struck and is excluded from later hops. Their existing Alike mechanism now declares these specific semantic equivalences and fails if they diverge. PositionalReleaseTests still verifies that an eligible aimed body wins over a closer body. A first incomplete historical-registry attempt omitted hostile factions and failed; its output is retained alongside the corrected twelve-test result.
+
+Source 97ffd12 builds without warnings/errors and passes all 994 .NET tests (804 core, 58 server, 132 client). Content validates 0/0, zone load runs 200 ticks, the proving fight runs, protocol generation is current, and the standard tournament hashes replay identically without regeneration. The private forecast/delta/interface probe finishes PROBE OK and its server exits0. Its earlier helper attempts failed on Windows log sharing, an initially empty log, and an overlong test account name; all owned servers stopped cleanly and no production change was made to pass the probe. The final performance comparison is still pending.
 
 ## Integration handoffs and review request
 
