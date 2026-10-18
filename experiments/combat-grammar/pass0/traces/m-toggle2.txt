@@ -1,0 +1,64 @@
+== proving_hexer (A) vs proving_reaver (B), seed mech, 40 s kitA=lumen_vigil,void_lash
+      9  A cast void_lash
+      9  A dealt damage events
+      9  A started void_lash
+      2  B cast strike[stone]+rending
+      5  B dealt damage events
+      3  B started strike[stone]+rending
+-- ticks by state (20 per second)
+     65  A state engage, casting Cast
+     30  A state engage, free
+    649  A state idle, free
+     25  A state kite, casting Cast
+     16  A state kite, free
+     15  A state return, free
+      5  B state , free
+    102  B state chase, casting Cast
+     24  B state chase, free
+      5  B state idle, free
+-- A walked 38.2 units
+-- B walked 5.5 units
+-- life A 143/148  B gone
+-- timeline
+  t=0.05 A (10.00,10.00) idle | B (14.00,10.00)  | dist 4.00
+  t=1.00 A (10.00,10.00) engage | B (12.75,10.00) chase casting=strike[stone]+rending(Cast) | dist 2.75
+  t=2.00 A (10.00,10.00) engage casting=void_lash(Cast) | B (12.75,10.00) chase casting=strike[stone]+rending(Cast) | dist 2.75
+  t=3.00 A (10.00,10.00) kite casting=void_lash(Cast) | B (11.75,10.00) chase casting=strike[stone]+rending(Cast) | dist 1.75
+  t=4.00 A (7.50,10.00) kite | B (11.75,10.00) chase casting=strike[stone]+rending(Cast) | dist 4.25
+  t=5.00 A (6.00,10.00) engage casting=void_lash(Cast) | B (9.50,10.00) chase | dist 3.50
+  t=6.00 A (6.00,10.00) engage casting=void_lash(Cast) | B (8.50,10.00) chase casting=strike[stone]+rending(Cast) | dist 2.50
+  t=6.85 B died
+  t=7.00 A (6.00,10.00) engage | B dead | dist 2.50
+  t=8.00 A (9.50,10.00) idle | B dead | dist 1.00
+  t=9.00 A (10.22,11.32) idle | B dead | dist 2.16
+  t=10.00 A (9.24,11.13) idle | B dead | dist 1.35
+  t=11.00 A (9.24,11.13) idle | B dead | dist 1.35
+  t=12.00 A (9.24,11.13) idle | B dead | dist 1.35
+  t=13.00 A (9.24,11.13) idle | B dead | dist 1.35
+  t=14.00 A (7.16,10.96) idle | B dead | dist 1.65
+  t=15.00 A (10.48,9.23) idle | B dead | dist 2.13
+  t=16.00 A (10.48,9.23) idle | B dead | dist 2.13
+  t=17.00 A (10.48,9.23) idle | B dead | dist 2.13
+  t=18.00 A (10.48,9.23) idle | B dead | dist 2.13
+  t=19.00 A (9.75,9.38) idle | B dead | dist -1.00
+  t=20.00 A (8.27,9.03) idle | B dead | dist -1.00
+  t=21.00 A (7.44,8.09) idle | B dead | dist -1.00
+  t=22.00 A (7.44,8.09) idle | B dead | dist -1.00
+  t=23.00 A (7.44,8.09) idle | B dead | dist -1.00
+  t=24.00 A (7.44,8.09) idle | B dead | dist -1.00
+  t=25.00 A (7.71,10.07) idle | B dead | dist -1.00
+  t=26.00 A (8.09,12.80) idle | B dead | dist -1.00
+  t=27.00 A (8.09,12.80) idle | B dead | dist -1.00
+  t=28.00 A (11.25,9.60) idle | B dead | dist -1.00
+  t=29.00 A (11.62,8.95) idle | B dead | dist -1.00
+  t=30.00 A (12.34,11.05) idle | B dead | dist -1.00
+  t=31.00 A (11.23,11.61) idle | B dead | dist -1.00
+  t=32.00 A (11.23,11.61) idle | B dead | dist -1.00
+  t=33.00 A (11.23,11.61) idle | B dead | dist -1.00
+  t=34.00 A (11.23,11.61) idle | B dead | dist -1.00
+  t=35.00 A (11.23,11.61) idle | B dead | dist -1.00
+  t=36.00 A (10.74,11.71) idle | B dead | dist -1.00
+  t=37.00 A (9.51,11.95) idle | B dead | dist -1.00
+  t=38.00 A (9.51,11.95) idle | B dead | dist -1.00
+  t=39.00 A (9.51,11.95) idle | B dead | dist -1.00
+  t=40.00 A (9.51,11.95) idle | B dead | dist -1.00

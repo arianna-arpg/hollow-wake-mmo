@@ -1,10 +1,10 @@
 using System.Numerics;
 using HollowWake.Core.Intents;
-using HollowWake.Core.World;
+using HollowWake.Core.Movement;
 
 namespace HollowWake.Core.Systems.Intents;
 
-/// <summary>Walking to a point, steering by direction, stopping and jumping.</summary>
+/// <summary>Walking to a point, steering by direction, stopping and jumping: any mover may send them.</summary>
 public static class MovementIntentHandlers
 {
     public static void Register(IntentHandlers handlers)
@@ -15,6 +15,10 @@ public static class MovementIntentHandlers
         handlers.Register<JumpIntent>(Jump);
     }
 
+    /// <summary>
+    /// Plans the walk under the shared policy of <see cref="MovePlanner"/>, for a click and a chase alike. The
+    /// search budget goes by the sender's kind, a player's or any other actor's, never by what the intent says.
+    /// </summary>
     private static void MoveTo(in IntentContext ctx, MoveToIntent m)
     {
         var motion = ctx.Motion;
@@ -24,19 +28,13 @@ public static class MovementIntentHandlers
             ctx.Reject("unknown_intent");
             return;
         }
-        var target = ctx.Sim.Terrain.SnapToGround(m.Point, 3);
-        var path = ctx.Sim.Service<Pathfinder>().FindPath(transform.Position, target);
-        motion.MoveDir = Vector2.Zero;
-        motion.Path.Clear();
-        if (path.Count > 0)
+        if (!float.IsFinite(m.Point.X) || !float.IsFinite(m.Point.Y) || !float.IsFinite(m.Point.Z))
         {
-            motion.Path.AddRange(path);
-            motion.StopDistance = 0.3f;
+            ctx.Reject("bad_point");
+            return;
         }
-        else
-        {
-            motion.MoveTarget = target;
-        }
+        var stop = m.Stop is { } s && float.IsFinite(s) ? Math.Max(0f, s) : MovePlanner.DefaultStop;
+        MovePlanner.Of(ctx.Sim).Plan(ctx.Sim, transform, motion, m.Point, stop, m.KeepPlan, player: ctx.Player is not null);
     }
 
     private static void MoveDir(in IntentContext ctx, MoveDirIntent d)
