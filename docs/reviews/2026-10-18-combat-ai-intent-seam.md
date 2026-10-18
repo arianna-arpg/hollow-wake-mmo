@@ -1,6 +1,6 @@
 # Combat AI: the intent seam
 
-Date: 2026-10-18. Author: the combat session (Claude). Base: main `a810b0a`. Branch `claude/combat-ai-intent-seam`. This is the first engine request of the combat AI rebuild that [the AI split record](2026-10-18-combat-ai-split.md) sequences: the seam both halves of the rebuild build on. The AI inventory behind it found that no AI body could send an intent and that the AI wrote the simulation directly at twenty-one call sites. An unanchored review (an Opus agent given the change, not the author's conclusions) returned "merge after fixes"; its findings and what became of them are below. The seam changes no gameplay: constructs keep their legacy path in this request and move in their own, stacked on this one (its record is `2026-10-18-combat-ai-constructs.md`).
+Date: 2026-10-18. Author: the combat session (Claude). Base: main `26b9e46` (written on `a810b0a` and rebased). Branch `claude/combat-ai-intent-seam`. This is the first engine request of the combat AI rebuild that [the AI split record](2026-10-18-combat-ai-split.md) sequences: the seam both halves of the rebuild build on. The AI inventory behind it found that no AI body could send an intent and that the AI wrote the simulation directly at twenty-one call sites. An unanchored review (an Opus agent given the change, not the author's conclusions) returned "merge after fixes"; its findings and what became of them are below. The seam changes no gameplay: constructs keep their legacy path in this request and move in their own, stacked on this one (its record is `2026-10-18-combat-ai-constructs.md`).
 
 ## What changed
 
@@ -65,7 +65,7 @@ A click with no path now always sets the stop distance to 0.3, where the old han
 
 ## Evidence
 
-- **Duel traces, byte-identical** (`fight`, md5 of the whole output, before and after, the after taken on the final tree):
+- **Duel traces, byte-identical** (`fight`, md5 of the whole output, before and after: main at `a810b0a` and at `26b9e46` draw the same, and so does this request on each, the after taken on the final tree):
 
   | Duel | md5 |
   |---|---|
@@ -77,16 +77,17 @@ A click with no path now always sets the stop distance to 0.3, where the old han
   | `proving_pitfighter proving_mower --seed strikes --seconds 60` | `f97e63c057dcc237494dd5ee71dfd0ee` |
   | `proving_fletcher proving_evoker --seed projectiles --seconds 60` | `d84e14f325a036a17b90c45220e3da0d` |
 
-- **Chases around obstacles, tick for tick:** the wall detour, the forest and the zigzag walk the base's recorded walks, `tests/fixtures/ai-chase-reference.json` (the review probe's traces of main at a810b0a on Windows, the numbers as it printed them): every tick within a ten-thousandth of a unit of position and of a radian of facing, and with the same number of waypoints left. On Windows they match to the bit: the traces' SHA-256, `2ec6e14a…`, `3334d55b…` and `2d722ec2…`, are the base's. The test first pinned those hashes, and the Linux runner drew other ones, since floating point differs in its last bits from one platform to another; so the pin is the recorded values within the tolerance, and no hash.
-- **Tests:** `dotnet test HollowWake.sln` passes: core 591 (nine new), server 43, client 114.
+- **Chases around obstacles, tick for tick:** the wall detour, the forest and the zigzag walk the base's recorded walks, `tests/fixtures/ai-chase-reference.json` (the review probe's traces of main at `a810b0a` on Windows, the numbers as it printed them; main at `26b9e46` draws the same walks to the bit): every tick within a ten-thousandth of a unit of position and of a radian of facing, and with the same number of waypoints left. On Windows they match to the bit: the traces' SHA-256, `2ec6e14a…`, `3334d55b…` and `2d722ec2…`, are the base's. The test first pinned those hashes, and the Linux runner drew other ones, since floating point differs in its last bits from one platform to another; so the pin is the recorded values within the tolerance, and no hash.
+- **Tests:** `dotnet test HollowWake.sln` passes on the final tree: core 615 (nine new), server 43, client 114.
 - **Content:** `hollowwake validate` reports 0 errors and 0 warnings. `hollowwake load --x 0 --y 0` ran 200 ticks to 2672 entities and 272 monsters, the same as the base.
+- The live gates and the bench below were taken on the head before the rebase onto `26b9e46`, which met no conflict; main's duel traces and chase walks there are those of `a810b0a`.
 - **Live:** a server started from this worktree on a scratch configuration, and `hollowwake probe` against it: `PROBE OK (walked south)`, 356 entities seen, a clean shutdown. The browser smoke through the background harness (`node scripts/test-background.mjs --suite web`, its browser suite): 30 of 30 checks, `click to move` among them.
 - **Bench** (`bench --only tick`, Release, three runs each of the base and this request back to back): `system.behavior` 2.06, 1.90 and 1.92 ms per tick on the base, 2.26, 1.82 and 1.78 here (means 1.96 and 1.95), inside the 3 ms budget; its allocation 22.9 KB a tick on the base and 23.4 here; `zone.tick.alloc` 68.2 and 68.8 KB.
 - **A finding the seam makes countable:** in the bench zone the AI sends about fifteen cast intents a tick and the runtime refuses about twelve of them as `busy`: the chooser presses again while its own cast is running. Nothing changes for it here; the chooser's vetoes are the place to stop it.
 
 ## Files other open requests touch
 
-No code: the construct edits that touched request #20's `Weaves/WeaveRuntime.cs`, `Weaves/SlotBehaviors.cs` and `Components/Weaves.cs` left with them. One contract is shared: this request adds a paragraph to the sessions section of `docs/design/networking-and-persistence.md`, which #20 also edits; a trial merge with #20's head merges it cleanly.
+No code: the construct edits that touched request #20's `Weaves/WeaveRuntime.cs`, `Weaves/SlotBehaviors.cs` and `Components/Weaves.cs` left with them. One contract is shared: this request adds a paragraph to the sessions section of `docs/design/networking-and-persistence.md`, which #20 also edits; a trial merge with #20's head (`da8e549`) merges it cleanly. That merge meets conflicts in six files (`WeaveRuntime.cs`, `Messages.cs`, `ZoneHost.cs`, `InterfaceProtocolTests.cs`, the web's `protocol.ts` and the desktop's `Main.cs`), the same six #20 meets merging with main alone: none is in this request's files.
 
 ## Asks of Codex
 
