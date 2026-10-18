@@ -23,6 +23,10 @@ const snapshot = {
       delivery: { type: 'projectile', speed: 360, radius: 8, range: 460, explode: { radius: 60, damageScale: 0.5 }, sequel: { skillId: 'ember_payload', damageScale: 0.7 } },
       effects: [{ type: 'damage' }, { type: 'status', status: 'burn', chance: 0.3, magnitude: 0.3 }, { type: 'knockback', strength: 64 }] }),
     bone_bolt: skill('bone_bolt', { tags: ['spell', 'projectile', 'chaos'], baseDamage: { chaos: [4, 6] }, delivery: { type: 'projectile', speed: 320, radius: 8, range: 400 } }),
+    spark: skill('spark', { tags: ['spell', 'projectile', 'lightning'], baseDamage: { lightning: [5, 9] }, delivery: { type: 'projectile', speed: 320, radius: 7, range: 400, trajectory: { homing: 3, erratic: 2, orbit: 1, orbitRadius: 80 } } }),
+    scattergun: skill('scattergun', { tags: ['attack', 'projectile', 'physical', 'munition'], manaCost: 0, useCharges: { max: 3 }, convert: { when: 'chargesEmpty', skillId: 'reload_shells' }, baseDamage: { physical: [4, 7] }, delivery: { type: 'projectile', speed: 520, radius: 5, range: 240 } }),
+    bolt_repeater: skill('bolt_repeater', { tags: ['attack', 'projectile', 'physical', 'munition'], manaCost: 0, cooldown: 3.5, useCharges: { max: 8, magazine: true }, baseDamage: { physical: [7, 11] }, delivery: { type: 'projectile', speed: 640, radius: 6, range: 470 } }),
+    reload_shells: skill('reload_shells', { noDrop: true, tags: ['reload', 'munition'], manaCost: 0, delivery: { type: 'self' }, effects: [{ type: 'restoreSkillCharges', amount: 1 }] }),
     ember_payload: skill('ember_payload', { noDrop: true, tags: ['spell', 'aoe', 'fire'], baseDamage: { fire: [3, 5] }, delivery: { type: 'nova', radius: 64 } }),
     hive_bite: skill('hive_bite', { noDrop: true, tags: ['attack', 'melee'], baseDamage: { physical: [1, 2] }, delivery: { type: 'melee', range: 40, arcDeg: 60 } }),
   },
@@ -74,6 +78,16 @@ test('a projectile keeps its riders, hooks and Thread', () => {
   assert.match(projectiles, /on_end:/);
   assert.match(projectiles, /radius: 1\.88/);
   assert.match(projectiles, /weave: ember_payload/);
+});
+
+test('trajectory axes come out in degrees a second and banks keep their kind', () => {
+  const projectiles = read('weaves-projectiles.yaml');
+  assert.match(projectiles, /projectile\.homing: 172/);
+  assert.match(projectiles, /projectile\.erratic: 573/);
+  assert.match(projectiles, /projectile\.orbit: 229/);
+  assert.match(projectiles, /uses: \{ max: 3, manual: true \}/);
+  assert.match(projectiles, /convert: \{ when: "?slot\.uses < 1"?, weave: reload_shells \}/);
+  assert.match(projectiles, /uses: \{ max: 8, magazine: \{ refill: 3\.5 \} \}/);
 });
 
 test('chaos goes to Umbra by theme and the port closure carries referenced kit skills', () => {
