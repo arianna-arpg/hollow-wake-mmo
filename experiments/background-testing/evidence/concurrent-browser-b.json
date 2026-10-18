@@ -1,0 +1,29 @@
+{
+  "started": "2026-10-18T00:51:06.550Z",
+  "root": "<worktree>",
+  "directory": "<worktree>\\artifacts\\testing\\concurrent-b\\run-sp7CQ2",
+  "suite": "web",
+  "status": "passed",
+  "stages": [
+    {
+      "name": "smoke-web",
+      "status": "passed",
+      "started": "2026-10-18T00:51:07.939Z",
+      "code": 0,
+      "signal": null,
+      "passed": 25,
+      "total": 25,
+      "skipped": [],
+      "finished": "2026-10-18T00:52:24.923Z"
+    }
+  ],
+  "nativeRendering": "not covered by headless mode",
+  "server": {
+    "tcp": 52944,
+    "url": "http://127.0.0.1:52945",
+    "name": "harness-run-sp7CQ2",
+    "data": "<worktree>\\artifacts\\testing\\concurrent-b\\run-sp7CQ2\\data"
+  },
+  "cleanupErrors": [],
+  "finished": "2026-10-18T00:52:25.678Z"
+}

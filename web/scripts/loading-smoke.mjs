@@ -81,6 +81,18 @@ try {
   check('controller confirm cancels and stays quarantined',await page.evaluate(()=>!window.cover.active&&window.cover.padQuarantined));
   await page.evaluate(()=>window.pad.buttons[0].pressed=false);
   check('neutral controller returns to world',await page.evaluate(()=>!window.cover.padQuarantined));
+  await page.evaluate(()=>{
+    window.lease=window.cover.begin({kind:'entry',label:'Background controller',cancel:()=>window.cover.close()});
+    Object.defineProperty(document,'hasFocus',{configurable:true,value:()=>false});
+    window.pad.buttons[0].pressed=true;
+  });await wait(100);
+  check('background controller cannot cancel loading',await page.evaluate(()=>window.cover.active));
+  await page.evaluate(()=>Object.defineProperty(document,'hasFocus',{configurable:true,value:()=>true}));await wait(100);
+  check('held background confirm cannot cancel on focus return',await page.evaluate(()=>window.cover.active));
+  await page.evaluate(()=>window.pad.buttons[0].pressed=false);await wait(100);
+  await page.evaluate(()=>window.pad.buttons[0].pressed=true);await wait(100);
+  check('fresh focused controller confirm cancels loading',await page.evaluate(()=>!window.cover.active));
+  await page.evaluate(()=>{delete document.hasFocus;window.pad.buttons[0].pressed=false;});
   await page.emulateMedia({reducedMotion:'reduce'});await page.setViewportSize({width:390,height:844});
   await page.evaluate(()=>window.lease=window.cover.begin({kind:'entry',label:'Gathering the Weft',cancel:()=>window.cover.close()}));
   await wait(200);await page.keyboard.down('ArrowRight');await wait(200);await page.keyboard.up('ArrowRight');

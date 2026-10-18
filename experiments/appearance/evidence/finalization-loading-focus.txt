@@ -1,0 +1,38 @@
+LOADING PASS down input isolation
+LOADING PASS down keyboard steering
+LOADING PASS down mouse steering
+LOADING PASS down touch steering
+LOADING PASS down controller steering
+LOADING PASS down cancel restores focus
+LOADING PASS right input isolation
+LOADING PASS right keyboard steering
+LOADING PASS right mouse steering
+LOADING PASS right touch steering
+LOADING PASS right controller steering
+LOADING PASS right cancel restores focus
+LOADING PASS left input isolation
+LOADING PASS left keyboard steering
+LOADING PASS left mouse steering
+LOADING PASS left touch steering
+LOADING PASS left controller steering
+LOADING PASS left cancel restores focus
+LOADING PASS stale work cannot change current cover
+LOADING PASS progress reports supplied work
+LOADING PASS unknown progress stays indeterminate
+LOADING PASS failure without retry is reported
+LOADING PASS reverse tab selects the last loading action
+LOADING PASS tab cycles only loading actions
+LOADING PASS retry clears failure
+LOADING PASS held key cannot leak after completion
+LOADING PASS released key returns to world
+LOADING PASS held confirm cannot dismiss new cover
+LOADING PASS controller confirm cancels and stays quarantined
+LOADING PASS neutral controller returns to world
+LOADING PASS background controller cannot cancel loading
+LOADING PASS held background confirm cannot cancel on focus return
+LOADING PASS fresh focused controller confirm cancels loading
+LOADING PASS reduced motion preserves steering
+LOADING PASS portrait controls remain visible
+LOADING PASS touch cancel
+LOADING PASS no browser errors
+LOADING SMOKE PASS

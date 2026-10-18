@@ -1,0 +1,2671 @@
+# Projectiles and bows: the prototype's flights ported as presets on the missile and shot shells
+# (forms-shells.yaml). Each preset carries its graph: a projectile with its hit shape, firing style and the
+# trajectory axes as weave attributes in our units (degrees a second), the riders the prototype gave it, and what
+# it does where it ends: a burst, a lingering field, a sequel cast, a spawn, a catch. A missile reads the preset's
+# base_damage with spell.power; a shot reads the weapon's dice times damage.effectiveness with attack.power. The
+# munitions carry their banks and reloads through the preset seam. The port ledger (docs/design/parity/port-ledger.md)
+# says what each one was and what changed. The payloads at the end are reached by casts from other weaves.
+kind: weaves
+entries:
+  - id: glass_lance
+    name: "Glass Lance"
+    description: "Fuse sand into a spear of glass mid-throw: a fast projectile dealing physical and fire damage, with a 35% chance to leave the victim sunscorched."
+    form: missile
+    threads: [ember, stone]
+    color: "#e8f0d8"
+    attributes: { cast.time: 0.6, cost.base.mana: 8, base_damage: 18, range: 15, projectile.speed: 21.25 }
+    ai: { role: damage, preferred_range: 13.13, weight: 2 }
+    effects:
+      - type: projectile
+        radius: 0.22
+        on_hit:
+          - type: damage
+            amounts:
+              ember: "weave.base_damage * 0.42 * lerp(0.78, 1.22, roll) * spell.power * (1 + 0.08 * (weave.level - 1))"
+              stone: "weave.base_damage * 0.58 * lerp(0.78, 1.22, roll) * spell.power * (1 + 0.08 * (weave.level - 1))"
+          - { type: apply_status, status: sunscorched, chance: 0.35 }
+  - id: firebolt
+    name: Firebolt
+    description: "Loose an orb of flame: a projectile dealing fire damage, with a 35% chance to set the victim burning."
+    form: missile
+    threads: [ember]
+    color: "#ff7a2a"
+    attributes: { cast.time: 0.75, cost.base.mana: 6, base_damage: 13, range: 16.25, projectile.speed: 11.88 }
+    ai: { role: damage, preferred_range: 15, weight: 2 }
+    effects:
+      - type: projectile
+        radius: 0.28
+        on_hit:
+          - type: damage
+            threads: $threads
+            amount: "weave.base_damage * lerp(0.77, 1.23, roll) * spell.power * (1 + 0.08 * (weave.level - 1))"
+          - { type: apply_status, status: burning, chance: 0.35, magnitude: "last_damage * 0.3" }
+  - id: cinderwisp
+    name: Cinderwisp
+    description: "Fling a slow ember dealing fire damage with a 15% chance to burn. A blow that lands leaves a cinder imp smouldering in the wound, a darting servant that fights beside you for 10 seconds. A flight that ends in the dirt breeds nothing."
+    form: missile
+    threads: [ember]
+    color: "#ffa050"
+    attributes: { cast.time: 0.8, cost.base.mana: 14, base_damage: 10.5, range: 14.38, projectile.speed: 9.38 }
+    ai: { role: damage, preferred_range: 13.13, weight: 2 }
+    effects:
+      - type: projectile
+        radius: 0.22
+        on_hit:
+          - type: damage
+            threads: $threads
+            amount: "weave.base_damage * lerp(0.76, 1.24, roll) * spell.power * (1 + 0.08 * (weave.level - 1))"
+          - { type: apply_status, status: burning, chance: 0.15, magnitude: "last_damage * 0.25" }
+          - { type: spawn, pattern: cinder_imp, count: 1, lifetime: 10 }
+  - id: unmaking_bolt
+    name: "Unmaking Bolt"
+    description: "Hurl a mote of undoing: a projectile of chaos damage with a 45% chance to set the victim unravelling."
+    form: missile
+    threads: [void]
+    color: "#7de84a"
+    attributes: { cast.time: 0.75, cost.base.mana: 7, base_damage: 11.5, range: 15.63, projectile.speed: 11.25 }
+    ai: { role: damage, preferred_range: 14.38, weight: 2 }
+    effects:
+      - type: projectile
+        radius: 0.28
+        on_hit:
+          - type: damage
+            threads: $threads
+            amount: "weave.base_damage * lerp(0.78, 1.22, roll) * spell.power * (1 + 0.08 * (weave.level - 1))"
+          - { type: apply_status, status: unraveling, chance: 0.45, magnitude: 0.6 }
+  - id: word_of_unmaking
+    name: "Word of Unmaking"
+    description: "Utters a ring of 20 chaos bolts that spread outward from you; every enemy struck is left UNRAVELLING. The syllable the world was never meant to keep."
+    form: missile
+    threads: [void]
+    color: "#b8ffd0"
+    attributes:
+      cast.time: 0.8
+      cooldown.base: 4
+      cost.base.mana: 24
+      base_damage: 4
+      range: 11.25
+      projectile.speed: 7.81
+      projectile.count: 20
+    ai: { role: damage, preferred_range: 9.38, weight: 3 }
+    effects:
+      - type: projectile
+        radius: 0.28
+        fire: ring
+        ring_jitter: 18
+        on_hit:
+          - type: damage
+            threads: $threads
+            amount: "weave.base_damage * lerp(0.75, 1.25, roll) * spell.power * (1 + 0.08 * (weave.level - 1))"
+          - { type: apply_status, status: unraveling, chance: 1, magnitude: 0.8 }
+  - id: frostbolt
+    name: Frostbolt
+    description: "Fires a shard of ice at the target: cold damage on the hit and a 70% chance to CHILL whatever it strikes."
+    form: missile
+    threads: [tide]
+    color: "#7ad4ff"
+    attributes: { cast.time: 0.7, cost.base.mana: 5, base_damage: 10, range: 15.63, projectile.speed: 10.63 }
+    ai: { role: damage, preferred_range: 14.38, weight: 2 }
+    effects:
+      - type: projectile
+        radius: 0.25
+        on_hit:
+          - type: damage
+            threads: $threads
+            amount: "weave.base_damage * lerp(0.8, 1.2, roll) * spell.power * (1 + 0.08 * (weave.level - 1))"
+          - { type: apply_status, status: chilled, chance: 0.7 }
+  - id: spark
+    name: Spark
+    description: "Releases a fan of 2 to 4 erratic sparks, each dealing lightning damage with a 25% chance to SHOCK."
+    form: missile
+    threads: [storm]
+    color: "#ffe14a"
+    attributes:
+      cast.time: 0.65
+      cost.base.mana: 6
+      base_damage: 7
+      range: 12.5
+      projectile.speed: 10
+      projectile.erratic: 1719
+    ai: { role: damage, preferred_range: 11.25, weight: 2 }
+    effects:
+      - type: projectile
+        radius: 0.22
+        count: "randi(2, 4)"
+        spread: 32
+        on_hit:
+          - type: damage
+            threads: $threads
+            amount: "weave.base_damage * lerp(0.43, 1.57, roll) * spell.power * (1 + 0.08 * (weave.level - 1))"
+          - { type: apply_status, status: shocked, chance: 0.25 }
+  - id: fulminate
+    name: Fulminate
+    description: "Hurls an unstable bolt whose damage rolls across an enormous range. Any hit has a 25% chance to SHOCK."
+    form: missile
+    threads: [storm]
+    color: "#9ae8ff"
+    attributes: { cast.time: 0.6, cost.base.mana: 9, base_damage: 29.5, range: 14.06, projectile.speed: 15.63 }
+    ai: { role: damage, preferred_range: 13.13, weight: 3 }
+    effects:
+      - type: projectile
+        radius: 0.25
+        on_hit:
+          - type: damage
+            threads: $threads
+            amount: "weave.base_damage * lerp(0.03, 1.97, roll) * spell.power * (1 + 0.08 * (weave.level - 1))"
+          - { type: apply_status, status: shocked, chance: 0.25 }
+  - id: pyroclast_bolt
+    name: "Pyroclast Bolt"
+    description: "Looses a heavy ember; wherever its flight ends, on a struck body or at the limit of its reach, a Pyre Nova blooms there at 90% strength. The hit itself has a 25% chance to burn."
+    form: missile
+    threads: [ember]
+    color: "#ff8a4a"
+    attributes: { cast.time: 0.75, cost.base.mana: 13, base_damage: 15, range: 13.13, projectile.speed: 9.38 }
+    ai: { role: damage, preferred_range: 12.5, weight: 3 }
+    effects:
+      - type: projectile
+        radius: 0.28
+        on_hit:
+          - type: damage
+            threads: $threads
+            amount: "weave.base_damage * lerp(0.73, 1.27, roll) * spell.power * (1 + 0.08 * (weave.level - 1))"
+          - { type: apply_status, status: burning, chance: 0.25, magnitude: "last_damage * 0.3" }
+        on_end: [{ type: cast, weave: pyre_nova, at: point, damage_scale: 0.9 }]
+  - id: venom_bolt
+    name: "Venom Bolt"
+    description: "Spits a bolt of virulent toxin at the target: an 80% chance to POISON with every hit, and poisons stack."
+    form: missile
+    threads: [umbra]
+    color: "#7ec850"
+    attributes: { cast.time: 0.7, cost.base.mana: 5, base_damage: 8, range: 14.38, projectile.speed: 10.31 }
+    ai: { role: damage, preferred_range: 13.13, weight: 2 }
+    effects:
+      - type: projectile
+        radius: 0.25
+        on_hit:
+          - type: damage
+            threads: $threads
+            amount: "weave.base_damage * lerp(0.75, 1.25, roll) * spell.power * (1 + 0.08 * (weave.level - 1))"
+          - { type: apply_status, status: poison, chance: 0.8, magnitude: "last_damage * 0.4" }
+  - id: blowdart
+    name: Blowdart
+    description: "A whisper-quiet dart that barely wounds: slight physical damage, but an 85% chance to apply a strong POISON."
+    form: shot
+    threads: [stone]
+    color: "#7ec850"
+    attributes:
+      cast.time: 0.42
+      cost.base.stamina: 9
+      damage.effectiveness: 0.5
+      range: 15
+      projectile.speed: 17.5
+    ai: { role: damage, preferred_range: 13.75, weight: 2 }
+    effects:
+      - type: projectile
+        radius: 0.16
+        on_hit:
+          - type: damage
+            threads: $threads
+            amount: "lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power"
+            tags: [hit]
+          - { type: apply_status, status: poison, chance: 0.85, magnitude: "last_damage * 0.5" }
+  - id: vine_lash
+    name: "Vine Lash"
+    description: "Casts a living creeper in a straight line and REELS the catch to your feet: a brief stun on the drag, then ROOTED where it lands. Close enough to answer for itself."
+    form: missile
+    threads: [void]
+    color: "#4f9a3c"
+    attributes:
+      cast.time: 0.5
+      cooldown.base: 4
+      cost.base.mana: 9
+      base_damage: 10.5
+      range: 12.5
+      projectile.speed: 19.38
+    ai: { role: damage, preferred_range: 11.88, weight: 2 }
+    effects:
+      - type: projectile
+        radius: 0.22
+        shape: line
+        on_hit:
+          - type: damage
+            threads: $threads
+            amount: "weave.base_damage * lerp(0.76, 1.24, roll) * spell.power * (1 + 0.08 * (weave.level - 1))"
+          - { type: move, kind: pull, distance: 8 }
+          - { type: apply_status, status: stunned, duration: 0.25 }
+          - { type: apply_status, status: rooted, chance: 1 }
+  - id: poison_nova
+    name: "Poison Nova"
+    description: "Exhales a ring of 24 slow venom bolts; every enemy struck is left with a strong POISON lasting 11 seconds. The ring settles a little differently with every breath."
+    form: missile
+    threads: [umbra]
+    color: "#66c83c"
+    attributes:
+      cast.time: 0.8
+      cooldown.base: 3.5
+      cost.base.mana: 26
+      base_damage: 3
+      range: 11.88
+      projectile.speed: 7.5
+      projectile.count: 24
+    ai: { role: damage, preferred_range: 6.25, weight: 3 }
+    effects:
+      - type: projectile
+        radius: 0.28
+        fire: ring
+        ring_jitter: 15
+        on_hit:
+          - type: damage
+            threads: $threads
+            amount: "weave.base_damage * lerp(0.67, 1.33, roll) * spell.power * (1 + 0.08 * (weave.level - 1))"
+          - { type: apply_status, status: poison, chance: 1, magnitude: "last_damage * 0.9", fixed_duration: 11 }
+  - id: versicle
+    name: Versicle
+    description: "A sung dart of lightning and fire loosed at range, quick to the lips."
+    form: missile
+    threads: [storm, ember]
+    tags: [song]
+    color: "#ffefc2"
+    attributes: { cast.time: 0.3, cost.base.mana: 7, base_damage: 11.5, range: 15, projectile.speed: 16.25 }
+    ai: { role: damage, preferred_range: 13.75, weight: 2 }
+    effects:
+      - type: projectile
+        radius: 0.31
+        on_hit:
+          - type: damage
+            amounts:
+              storm: "weave.base_damage * 0.61 * lerp(0.7, 1.3, roll) * spell.power * (1 + 0.08 * (weave.level - 1))"
+              ember: "weave.base_damage * 0.39 * lerp(0.7, 1.3, roll) * spell.power * (1 + 0.08 * (weave.level - 1))"
+  - id: seraph_lance
+    name: "Seraph Lance"
+    description: "Hurl a lance of dawnlight: a fire projectile that pierces one enemy."
+    form: missile
+    threads: [ember]
+    tags: [javelin]
+    color: "#ffeecc"
+    attributes:
+      cast.time: 0.6
+      cost.base.mana: 9
+      base_damage: 13.5
+      range: 16.25
+      projectile.speed: 13.13
+      projectile.pierce: 1
+    ai: { role: damage, preferred_range: 15, weight: 2 }
+    effects:
+      - type: projectile
+        radius: 0.28
+        on_hit:
+          - type: damage
+            threads: $threads
+            amount: "weave.base_damage * lerp(0.74, 1.26, roll) * spell.power * (1 + 0.08 * (weave.level - 1))"
+  - id: ruin
+    name: Ruin
+    description: "A bolt of consuming twilight: a chaos projectile, plain and fast."
+    form: missile
+    threads: [void]
+    color: "#9a78c8"
+    attributes: { cast.time: 0.65, cost.base.mana: 8, base_damage: 12, range: 15, projectile.speed: 11.25 }
+    ai: { role: damage, preferred_range: 13.75, weight: 2 }
+    effects:
+      - type: projectile
+        radius: 0.25
+        on_hit:
+          - type: damage
+            threads: $threads
+            amount: "weave.base_damage * lerp(0.75, 1.25, roll) * spell.power * (1 + 0.08 * (weave.level - 1))"
+  - id: phantasm_bolt
+    name: "Phantasmal Bolt"
+    description: "A dart of pale spirit-stuff: a cold projectile with a 15% chance to chill. Phantasms throw these; so could you, in theory."
+    form: missile
+    threads: [tide]
+    color: "#9ad8e8"
+    attributes:
+      cast.time: 0.45
+      cooldown.base: 0.4
+      cost.base.mana: 0
+      base_damage: 7
+      range: 13.75
+      projectile.speed: 11.88
+    ai: { role: damage, preferred_range: 12.5, weight: 2 }
+    effects:
+      - type: projectile
+        radius: 0.22
+        on_hit:
+          - type: damage
+            threads: $threads
+            amount: "weave.base_damage * lerp(0.71, 1.29, roll) * spell.power * (1 + 0.08 * (weave.level - 1))"
+          - { type: apply_status, status: chilled, chance: 0.15 }
+  - id: essence_drain
+    name: "Essence Drain"
+    description: "A sluggish bolt of withering chaos: a feeble hit, but it always applies decay at 1.6 times normal strength, rotting its victim long after the impact."
+    form: missile
+    threads: [umbra]
+    tags: [duration]
+    color: "#9a78c8"
+    attributes: { cast.time: 0.7, cost.base.mana: 7, base_damage: 5.5, range: 15, projectile.speed: 5 }
+    ai: { role: damage, preferred_range: 13.75, weight: 2 }
+    effects:
+      - type: projectile
+        radius: 0.31
+        on_hit:
+          - type: damage
+            threads: $threads
+            amount: "weave.base_damage * lerp(0.73, 1.27, roll) * spell.power * (1 + 0.08 * (weave.level - 1))"
+          - { type: apply_status, status: decay, chance: 1, magnitude: "last_damage * 1.6" }
+  - id: volatile_cinders
+    name: "Volatile Cinders"
+    description: "Consume a corpse near your mark and its heat rises as a CINDER: a homing bolt that hunts living flesh and bursts in a small area where it ends, with a 25% chance to burn."
+    form: missile_corpse
+    threads: [ember]
+    tags: [corpse]
+    color: "#e07848"
+    attributes:
+      cast.time: 0.55
+      cooldown.base: 1.2
+      cost.base.mana: 10
+      base_damage: 16
+      range: 13.13
+      projectile.speed: 6.56
+      projectile.homing: 172
+      projectile.erratic: 401
+    ai: { role: damage, preferred_range: 13.13, weight: 1 }
+    effects:
+      - { type: consume_corpse }
+      - type: projectile
+        radius: 0.31
+        duration: 3.5
+        origin: point
+        origin_range: weave.range
+        on_hit:
+          - type: damage
+            threads: $threads
+            amount: "weave.base_damage * lerp(0.81, 1.19, roll) * spell.power * (1 + 0.08 * (weave.level - 1))"
+          - { type: apply_status, status: burning, chance: 0.25, magnitude: "last_damage * 0.3" }
+        on_end:
+          - type: area
+            radius: 1.88
+            center: point
+            filter: enemy
+            effects:
+              - type: damage
+                threads: $threads
+                amount: "weave.base_damage * lerp(0.81, 1.19, roll) * spell.power * (1 + 0.08 * (weave.level - 1)) * 0.8"
+  - id: marrowhooks
+    name: Marrowhooks
+    description: "Consume a corpse near your mark and loose three hooked slivers of bone: the fan opens wide, then every sliver bends back to converge on the pile, each detonating where its flight ends, with a 35% chance to open a bleeding wound."
+    form: missile_corpse
+    threads: [stone]
+    tags: [corpse]
+    color: "#c2b28e"
+    attributes:
+      cast.time: 0.6
+      cooldown.base: 1.2
+      cost.base.mana: 10
+      base_damage: 12.5
+      range: 13.13
+      projectile.speed: 15
+      projectile.count: 3
+      projectile.converge: 126
+    ai: { role: damage, preferred_range: 13.13, weight: 2 }
+    effects:
+      - { type: consume_corpse }
+      - type: projectile
+        radius: 0.28
+        spread: 110
+        on_hit:
+          - type: damage
+            threads: $threads
+            amount: "weave.base_damage * lerp(0.8, 1.2, roll) * spell.power * (1 + 0.08 * (weave.level - 1))"
+          - { type: apply_status, status: bleeding, chance: 0.35, magnitude: "last_damage * 0.35" }
+        on_end:
+          - type: area
+            radius: 2.25
+            center: point
+            filter: enemy
+            effects:
+              - type: damage
+                threads: $threads
+                amount: "weave.base_damage * lerp(0.8, 1.2, roll) * spell.power * (1 + 0.08 * (weave.level - 1)) * 0.8"
+  - id: hammer_of_judgment
+    name: "Hammer of Judgment"
+    description: "Hurl a spectral hammer that orbits you, striking everything in its path again and again: each hit has a 20% chance to stun."
+    form: missile
+    threads: [stone]
+    tags: [duration]
+    color: "#e8c878"
+    attributes:
+      cast.time: 0.8
+      cooldown.base: 2
+      cost.base.mana: 8
+      base_damage: 18
+      range: 68.75
+      projectile.speed: 8.13
+      projectile.rehit: 1
+      projectile.orbit: 271
+    ai: { role: damage, preferred_range: 6.88, weight: 2 }
+    effects:
+      - type: projectile
+        radius: 0.5
+        shape: square
+        orbit_radius: 1.72
+        on_hit:
+          - type: damage
+            threads: $threads
+            amount: "weave.base_damage * lerp(0.78, 1.22, roll) * spell.power * (1 + 0.08 * (weave.level - 1))"
+          - { type: apply_status, status: stunned, chance: 0.2 }
+  - id: frozen_orb
+    name: "Frozen Orb"
+    description: "Loose a slow orb of ice that drifts forward, shedding a rotating cascade of Frostbolts as it flies; the orb itself chills whatever it touches."
+    form: missile
+    threads: [tide]
+    tags: [duration]
+    color: "#9ad8f8"
+    attributes:
+      cast.time: 0.9
+      cooldown.base: 4
+      cost.base.mana: 22
+      base_damage: 12.5
+      range: 13.13
+      projectile.speed: 3.44
+      projectile.rehit: 0.8
+    ai: { role: damage, preferred_range: 12.5, weight: 3 }
+    effects:
+      - type: projectile
+        radius: 0.47
+        on_hit:
+          - type: damage
+            threads: $threads
+            amount: "weave.base_damage * lerp(0.8, 1.2, roll) * spell.power * (1 + 0.08 * (weave.level - 1))"
+          - { type: apply_status, status: chilled, chance: 1 }
+        tick: 0.18
+        on_tick: [{ type: cast, weave: frostbolt, at: point, aim: rotating }]
+  - id: spectral_helix
+    name: "Spectral Helix"
+    description: "Fling a spinning blade that weaves a figure-eight along its flight path, dealing physical and cold damage to whatever drifts into the pattern; one blade can cut the same target more than once."
+    form: shot
+    threads: [stone, tide]
+    color: "#b8d0e8"
+    attributes:
+      cast.time: 0.7
+      cost.base.stamina: 21
+      damage.effectiveness: 1.5
+      range: 17.5
+      projectile.speed: 9.38
+      projectile.rehit: 0.7
+      projectile.wave: 1.6
+    ai: { role: damage, preferred_range: 15.63, weight: 2 }
+    effects:
+      - type: projectile
+        radius: 0.28
+        shape: line
+        amplitude: 1.5
+        on_hit:
+          - type: damage
+            threads: $threads
+            amount: "lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power"
+            tags: [hit]
+  - id: piercing_arrow
+    name: "Piercing Arrow"
+    description: "Loose an arrow that punches straight through the pack, piercing up to 3 enemies along its flight."
+    form: shot
+    threads: [stone]
+    color: "#b8d8a0"
+    attributes:
+      cast.time: 0.65
+      cost.base.stamina: 12
+      damage.effectiveness: 1.28
+      range: 19.38
+      projectile.speed: 16.25
+      projectile.pierce: 3
+    ai: { role: damage, preferred_range: 17.5, weight: 2 }
+    effects:
+      - type: projectile
+        radius: 0.19
+        on_hit:
+          - type: damage
+            threads: $threads
+            amount: "lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power"
+            tags: [hit]
+  - id: fan_of_blades
+    name: "Fan of Blades"
+    description: "Fling a fan of 5 knives in a wide arc in front of you; each blade strikes the first enemy in its path."
+    form: shot
+    threads: [stone]
+    color: "#c0c8d8"
+    attributes:
+      cast.time: 0.7
+      cooldown.base: 1.2
+      cost.base.stamina: 21
+      damage.effectiveness: 0.72
+      range: 9.38
+      projectile.speed: 13.75
+      projectile.count: 5
+    ai: { role: damage, preferred_range: 8.13, weight: 3 }
+    effects:
+      - type: projectile
+        radius: 0.19
+        spread: 70
+        on_hit:
+          - type: damage
+            threads: $threads
+            amount: "lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power"
+            tags: [hit]
+  - id: goad
+    name: Goad
+    description: "Hurl a stone that TAUNTS the one enemy it strikes into answering you, peeling it from its pack without waking the rest."
+    form: shot
+    threads: [stone]
+    color: "#e8c87a"
+    attributes:
+      cast.time: 0.45
+      cooldown.base: 5
+      cost.base.stamina: 24
+      damage.effectiveness: 1.06
+      range: 16.88
+      projectile.speed: 13.13
+    ai: { role: damage, preferred_range: 15, weight: 1.4 }
+    effects:
+      - type: projectile
+        radius: 0.25
+        on_hit:
+          - type: damage
+            threads: $threads
+            amount: "lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power"
+            tags: [hit]
+          - { type: apply_status, status: taunted, chance: 1 }
+  - id: null_lance
+    name: "Null Lance"
+    description: "Cast a humming void-dart of chaos damage: 60% of strikes leave the victim VOIDED, its shield unable to recharge while the status lasts."
+    form: missile
+    threads: [void]
+    color: "#9a8ae8"
+    attributes:
+      cast.time: 0.5
+      cooldown.base: 1.5
+      cost.base.mana: 9
+      base_damage: 14
+      range: 11.88
+      projectile.speed: 13.13
+    ai: { role: damage, preferred_range: 10.63, weight: 2 }
+    effects:
+      - type: projectile
+        radius: 0.22
+        on_hit:
+          - type: damage
+            threads: $threads
+            amount: "weave.base_damage * lerp(0.71, 1.29, roll) * spell.power * (1 + 0.08 * (weave.level - 1))"
+          - { type: apply_status, status: voided, chance: 0.6 }
+  - id: frost_pulse
+    name: "Frost Pulse"
+    description: "Push out a wide crescent of cold that washes through everything in its path, piercing up to 6 enemies; 60% of those it touches are chilled."
+    form: missile
+    threads: [tide]
+    color: "#9adcf0"
+    attributes:
+      cast.time: 0.7
+      cost.base.mana: 11
+      base_damage: 11.5
+      range: 11.25
+      projectile.speed: 9.38
+      projectile.pierce: 6
+    ai: { role: damage, preferred_range: 10.31, weight: 3 }
+    effects:
+      - type: projectile
+        radius: 0.81
+        shape: arc
+        on_hit:
+          - type: damage
+            threads: $threads
+            amount: "weave.base_damage * lerp(0.78, 1.22, roll) * spell.power * (1 + 0.08 * (weave.level - 1))"
+          - { type: apply_status, status: chilled, chance: 0.6 }
+  - id: fire_siege
+    name: "Fire Siege"
+    description: "Send a slow, wide wave of flame grinding forward through everything in its path; nothing it meets stops it, and 45% of enemies touched catch fire and burn."
+    form: missile
+    threads: [ember]
+    color: "#ff8438"
+    attributes:
+      cast.time: 0.85
+      cooldown.base: 3
+      cost.base.mana: 15
+      base_damage: 18
+      range: 13.44
+      projectile.speed: 6.25
+      projectile.pierce: 99
+    ai: { role: damage, preferred_range: 12.5, weight: 2 }
+    effects:
+      - type: projectile
+        radius: 0.94
+        shape: wave
+        on_hit:
+          - type: damage
+            threads: $threads
+            amount: "weave.base_damage * lerp(0.78, 1.22, roll) * spell.power * (1 + 0.08 * (weave.level - 1))"
+          - { type: apply_status, status: burning, chance: 0.45, magnitude: "last_damage * 0.3" }
+  - id: shockfront
+    name: Shockfront
+    description: "Launch a flat wall of force down a broad lane: the front punches through up to 3 enemies and knocks whatever it strikes backward."
+    form: shot
+    threads: [stone]
+    color: "#c8b8e8"
+    attributes:
+      cast.time: 0.75
+      cooldown.base: 2
+      cost.base.stamina: 36
+      damage.effectiveness: 1.72
+      range: 11.88
+      projectile.speed: 11.88
+      projectile.pierce: 3
+    ai: { role: damage, preferred_range: 10.94, weight: 2 }
+    effects:
+      - type: projectile
+        radius: 1
+        shape: bar
+        on_hit:
+          - type: damage
+            threads: $threads
+            amount: "lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power"
+            tags: [hit]
+          - { type: move, kind: knockback, distance: 1.44 }
+  - id: ball_lightning
+    name: "Ball Lightning"
+    description: "Loose a slow, crackling orb that drifts downrange, pulsing every 0.35 seconds to zap everything near its path for 55% of its lightning damage. Each zap carries a 30% chance to shock."
+    form: missile
+    threads: [storm]
+    tags: [duration]
+    color: "#ffe14a"
+    attributes:
+      cast.time: 0.8
+      cooldown.base: 4
+      cost.base.mana: 18
+      base_damage: 11
+      range: 11.88
+      projectile.speed: 3.44
+      projectile.rehit: 999
+    ai: { role: damage, preferred_range: 11.25, weight: 2 }
+    effects:
+      - type: projectile
+        radius: 0.38
+        on_hit:
+          - type: damage
+            threads: $threads
+            amount: "weave.base_damage * lerp(0.55, 1.45, roll) * spell.power * (1 + 0.08 * (weave.level - 1))"
+          - { type: apply_status, status: shocked, chance: 0.3 }
+        tick: 0.35
+        on_tick:
+          - type: area
+            radius: 2.97
+            center: point
+            filter: enemy
+            effects:
+              - type: damage
+                threads: $threads
+                amount: "weave.base_damage * lerp(0.55, 1.45, roll) * spell.power * (1 + 0.08 * (weave.level - 1)) * 0.55"
+  - id: chain_lightning
+    name: "Chain Lightning"
+    description: "A bolt that leaps to the nearest unstruck enemy on every hit, chaining 3 times innately with a 30% chance to shock each victim. Chain supports stack on top of the innate count."
+    form: missile
+    mechanisms: [chain]
+    threads: [storm]
+    color: "#f4e84a"
+    attributes:
+      cast.time: 0.7
+      cost.base.mana: 14
+      base_damage: 13.5
+      range: 13.13
+      projectile.speed: 20
+      chain.count: 3
+    ai: { role: damage, preferred_range: 12.5, weight: 3 }
+    effects:
+      - type: projectile
+        radius: 0.22
+        on_hit:
+          - type: damage
+            threads: $threads
+            amount: "weave.base_damage * lerp(0.52, 1.48, roll) * spell.power * (1 + 0.08 * (weave.level - 1))"
+          - { type: apply_status, status: shocked, chance: 0.3 }
+          - type: chain
+            count: weave.chain.count
+            range: 6
+            effects:
+              - type: damage
+                threads: $threads
+                amount: "weave.base_damage * lerp(0.52, 1.48, roll) * spell.power * (1 + 0.08 * (weave.level - 1))"
+              - { type: apply_status, status: shocked, chance: 0.3 }
+  - id: chain_pull
+    name: "Chain Pull"
+    description: "Fling a barbed chain that deals physical damage, stuns the enemy it hooks, and yanks them to your feet, holding them dazed for 1.4 seconds through the landing."
+    form: shot
+    threads: [stone]
+    color: "#d8b048"
+    attributes:
+      cast.time: 0.4
+      cooldown.base: 5
+      cost.base.stamina: 30
+      damage.effectiveness: 1.44
+      range: 13.13
+      projectile.speed: 28.13
+    ai: { role: damage, preferred_range: 11.88, weight: 2 }
+    effects:
+      - type: projectile
+        radius: 0.19
+        shape: line
+        on_hit:
+          - type: damage
+            threads: $threads
+            amount: "lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power"
+            tags: [hit]
+          - { type: move, kind: pull, distance: 8 }
+          - { type: apply_status, status: stunned, duration: 1.4 }
+  - id: lava_glob
+    name: "Lava Glob"
+    description: "A gout of molten stone arcs away, shedding speed, and bursts in fire where it falls, with a 40% chance to burn. Thrown by the mountain."
+    form: missile_quick
+    threads: [ember]
+    color: "#ff8a4a"
+    attributes: { cost.base.mana: 0, base_damage: 12, range: 7.19, projectile.speed: 10.63, projectile.accel: -5.8 }
+    ai: { role: damage, preferred_range: 7.19, weight: 0 }
+    effects:
+      - type: projectile
+        radius: 0.28
+        origin: point
+        origin_range: 60
+        on_hit:
+          - type: damage
+            threads: $threads
+            amount: "weave.base_damage * lerp(0.75, 1.25, roll) * spell.power * (1 + 0.08 * (weave.level - 1))"
+          - { type: apply_status, status: burning, chance: 0.4, magnitude: "last_damage * 0.35" }
+        on_end:
+          - type: area
+            radius: 2.13
+            center: point
+            filter: enemy
+            effects:
+              - type: damage
+                threads: $threads
+                amount: "weave.base_damage * lerp(0.75, 1.25, roll) * spell.power * (1 + 0.08 * (weave.level - 1))"
+  - id: powderkeg_arrow
+    name: "Powderkeg Arrow"
+    description: "Loose an arrow whose head is a keg: it lodges in the victim as a POWDER CHARGE, and the next Ember blow to land sets it off. The keg rides the target wherever they run."
+    form: shot
+    threads: [stone, ember]
+    color: "#e8a24a"
+    attributes:
+      cast.time: 0.6
+      cost.base.stamina: 21
+      damage.effectiveness: 1.17
+      range: 16.25
+      projectile.speed: 17.5
+    ai: { role: damage, preferred_range: 15, weight: 2 }
+    effects:
+      - type: projectile
+        radius: 0.19
+        on_hit:
+          - type: damage
+            threads: $threads
+            amount: "lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power"
+            tags: [hit]
+          - { type: apply_status, status: powder_charge, chance: 1 }
+  - id: orbital_blades
+    name: "Orbital Blades"
+    description: "Set a blade spinning in orbit around you: it cuts whatever drifts into its ring, striking the same victim again every 0.9 seconds until the blade wears out."
+    form: shot
+    threads: [stone]
+    tags: [duration]
+    color: "#c8d0e0"
+    attributes:
+      cast.time: 0.5
+      cooldown.base: 2
+      cost.base.stamina: 36
+      damage.effectiveness: 1.17
+      range: 81.25
+      projectile.speed: 7.81
+      projectile.rehit: 0.9
+      projectile.orbit: 169
+    ai: { role: damage, preferred_range: 3.75, weight: 2 }
+    effects:
+      - type: projectile
+        radius: 0.31
+        shape: line
+        orbit_radius: 2.66
+        on_hit:
+          - type: damage
+            threads: $threads
+            amount: "lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power"
+            tags: [hit]
+  - id: pinning_spear
+    name: "Pinning Spear"
+    description: "Hurl a spear that punches through one rank. Victims have a 30% chance to bleed."
+    form: shot
+    threads: [stone]
+    tags: [duration]
+    color: "#c8b890"
+    attributes:
+      cast.time: 0.6
+      cooldown.base: 1.2
+      cost.base.stamina: 24
+      damage.effectiveness: 1.39
+      range: 14.38
+      projectile.speed: 19.38
+      projectile.pierce: 1
+    ai: { role: damage, preferred_range: 13.13, weight: 2 }
+    effects:
+      - type: projectile
+        radius: 0.22
+        on_hit:
+          - type: damage
+            threads: $threads
+            amount: "lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power"
+            tags: [hit]
+          - { type: apply_status, status: bleeding, chance: 0.3, magnitude: "last_damage * 0.3" }
+  - id: planted_banderilla
+    name: "Planted Banderilla"
+    description: "A ribboned barb thrown to sting and insult: the struck beast is TAUNTED onto you, forgetting every other quarrel, with a 60% chance to be left VULNERABLE where the barb lodged. The third act is yours to schedule."
+    form: shot
+    threads: [stone]
+    tags: [duration]
+    color: "#e0763a"
+    attributes:
+      cast.time: 0.35
+      cooldown.base: 6
+      cost.base.stamina: 30
+      damage.effectiveness: 0.89
+      range: 16.25
+      projectile.speed: 20
+    ai: { role: damage, preferred_range: 15, weight: 1.6 }
+    effects:
+      - type: projectile
+        radius: 0.22
+        on_hit:
+          - type: damage
+            threads: $threads
+            amount: "lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power"
+            tags: [hit]
+          - { type: apply_status, status: taunted, chance: 1 }
+          - { type: apply_status, status: vulnerable, chance: 0.6 }
+  - id: thrown_ace
+    name: "Thrown Ace"
+    description: "Flick a card flat and spinning: a single projectile that deals physical, fire, cold and lightning damage all in one hit. Whatever turns up, the Sharper dealt it."
+    form: shot
+    threads: [storm, stone]
+    color: "#e8d8b0"
+    attributes:
+      cast.time: 0.3
+      cost.base.stamina: 18
+      damage.effectiveness: 1.83
+      range: 17.5
+      projectile.speed: 22.5
+    ai: { role: damage, preferred_range: 16.25, weight: 2 }
+    effects:
+      - type: projectile
+        radius: 0.19
+        on_hit:
+          - type: damage
+            threads: $threads
+            amount: "lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power"
+            tags: [hit]
+  - id: stasis_lock
+    name: "Stasis Lock"
+    description: "Loose a needle of unraveled time: every hit CHILLS the victim, and 80% of the time the needle holds them STUNNED for a second, a statue you may study or shatter."
+    form: missile
+    threads: [void]
+    tags: [chrono]
+    color: "#a8ecf0"
+    attributes:
+      cast.time: 0.6
+      cooldown.base: 5
+      cost.base.mana: 14
+      base_damage: 8
+      range: 15
+      projectile.speed: 12.5
+    ai: { role: damage, preferred_range: 13.75, weight: 2 }
+    effects:
+      - type: projectile
+        radius: 0.25
+        on_hit:
+          - type: damage
+            threads: $threads
+            amount: "weave.base_damage * lerp(0.75, 1.25, roll) * spell.power * (1 + 0.08 * (weave.level - 1))"
+          - { type: apply_status, status: stunned, chance: 0.8, duration: 1 }
+          - { type: apply_status, status: chilled, chance: 1 }
+
+  - id: soul_volley
+    name: "Soul Volley"
+    description: "Send out a fan of 3 hungry souls: chaos projectiles that return 35% of the damage they deal to you as healing. Damage that pays its keep."
+    form: missile
+    threads: [umbra]
+    tags: [heal]
+    color: "#c8a0e8"
+    attributes:
+      cast.time: 0.7
+      cost.base.mana: 9
+      base_damage: 6.5
+      range: 13.75
+      projectile.speed: 11.88
+      projectile.count: 3
+    ai: { role: damage, preferred_range: 12.5, weight: 2 }
+    effects:
+      - type: projectile
+        radius: 0.22
+        spread: 24
+        on_hit:
+          - type: damage
+            threads: $threads
+            amount: "weave.base_damage * lerp(0.77, 1.23, roll) * spell.power * (1 + 0.08 * (weave.level - 1))"
+            leech: 0.35
+  - id: splinter_volley
+    name: "Splinter Volley"
+    description: "Loose a fan of 4 jagged splinters in a spread; each hit has a 30% chance to leave a bleeding wound where it sticks."
+    form: shot
+    threads: [stone]
+    color: "#b09a6a"
+    attributes:
+      cast.time: 0.7
+      cooldown.base: 2
+      cost.base.stamina: 24
+      damage.effectiveness: 0.72
+      range: 10.63
+      projectile.speed: 12.5
+      projectile.count: 4
+    ai: { role: damage, preferred_range: 9.38, weight: 3 }
+    effects:
+      - type: projectile
+        radius: 0.19
+        spread: 55
+        on_hit:
+          - type: damage
+            threads: $threads
+            amount: "lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power"
+            tags: [hit]
+          - { type: apply_status, status: bleeding, chance: 0.3, magnitude: "last_damage * 0.3" }
+  - id: blinding_ichor
+    name: "Blinding Ichor"
+    description: "Fling a gout of ichor that BLINDS whatever it coats: chaos damage on the hit, and the blinded lose their aim and half their perception. The eye country hates nothing more than its own trick."
+    form: missile
+    threads: [void]
+    color: "#3a3444"
+    attributes:
+      cast.time: 0.6
+      cooldown.base: 5
+      cost.base.mana: 10
+      base_damage: 13
+      range: 13.75
+      projectile.speed: 9.38
+    ai: { role: damage, preferred_range: 12.5, weight: 2 }
+    effects:
+      - type: projectile
+        radius: 0.31
+        on_hit:
+          - type: damage
+            threads: $threads
+            amount: "weave.base_damage * lerp(0.77, 1.23, roll) * spell.power * (1 + 0.08 * (weave.level - 1))"
+          - { type: apply_status, status: blinded, chance: 1 }
+  - id: scatterhex
+    name: Scatterhex
+    description: "Hurl a hex that crosses the wires between wanting and doing: chaos damage, and the victim is ADDLED, so pressed casts may fire the kit's neighbor instead and cooldowns burn at the worst moment. Watch a warcaster spend its opener on a wall."
+    form: missile
+    threads: [umbra]
+    color: "#e0b464"
+    attributes:
+      cast.time: 0.6
+      cooldown.base: 5.5
+      cost.base.mana: 11
+      base_damage: 10.5
+      range: 13.75
+      projectile.speed: 9.38
+    ai: { role: damage, preferred_range: 12.5, weight: 2 }
+    effects:
+      - type: projectile
+        radius: 0.31
+        on_hit:
+          - type: damage
+            threads: $threads
+            amount: "weave.base_damage * lerp(0.76, 1.24, roll) * spell.power * (1 + 0.08 * (weave.level - 1))"
+          - { type: apply_status, status: addled, chance: 1 }
+  - id: gut_hurl
+    name: "Gut Hurl"
+    description: "Heave a wet knot of viscera: chaos and physical damage on the hit, with a 40% chance to leave the victim VULNERABLE, opened a little wider for everything after."
+    form: missile
+    threads: [void, stone]
+    color: "#b8604a"
+    attributes:
+      cast.time: 0.8
+      cooldown.base: 3
+      cost.base.mana: 9
+      base_damage: 20.5
+      range: 15
+      projectile.speed: 9.38
+    ai: { role: damage, preferred_range: 13.75, weight: 3 }
+    effects:
+      - type: projectile
+        radius: 0.31
+        on_hit:
+          - type: damage
+            amounts:
+              void: "weave.base_damage * 0.73 * lerp(0.78, 1.22, roll) * spell.power * (1 + 0.08 * (weave.level - 1))"
+              stone: "weave.base_damage * 0.27 * lerp(0.78, 1.22, roll) * spell.power * (1 + 0.08 * (weave.level - 1))"
+          - { type: apply_status, status: vulnerable, chance: 0.4 }
+  - id: web_shot
+    name: "Web Shot"
+    description: "Spit a hooked line of silk: a weak physical hit with a 60% chance to ROOT the target for 1.2 seconds. Long enough for what spun it to arrive."
+    form: shot
+    threads: [stone]
+    tags: [duration]
+    color: "#d8d8c8"
+    attributes:
+      cast.time: 0.65
+      cooldown.base: 3
+      cost.base.stamina: 18
+      damage.effectiveness: 0.44
+      range: 11.88
+      projectile.speed: 10.63
+    ai: { role: damage, preferred_range: 10.63, weight: 3 }
+    effects:
+      - type: projectile
+        radius: 0.25
+        on_hit:
+          - type: damage
+            threads: $threads
+            amount: "lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power"
+            tags: [hit]
+          - { type: apply_status, status: rooted, chance: 0.6, fixed_duration: 1.2 }
+  - id: hurl_debris
+    name: "Hurl Debris"
+    description: "Unseen hands rip something loose and throw it at the target: a physical projectile with a 15% chance to stun on impact. A stone, a chair, a headstone; whatever was nearest."
+    form: missile
+    threads: [stone]
+    color: "#b8b8d8"
+    attributes:
+      cast.time: 0.6
+      cooldown.base: 1.8
+      cost.base.mana: 7
+      base_damage: 13
+      range: 13.13
+      projectile.speed: 11.25
+    ai: { role: damage, preferred_range: 11.88, weight: 3 }
+    effects:
+      - type: projectile
+        radius: 0.28
+        on_hit:
+          - type: damage
+            threads: $threads
+            amount: "weave.base_damage * lerp(0.77, 1.23, roll) * spell.power * (1 + 0.08 * (weave.level - 1))"
+          - { type: apply_status, status: stunned, chance: 0.15 }
+  - id: barrage
+    name: Barrage
+    description: "Wind the repeater, then let it loose: 4 shots pour out in a rapid salvo, and the burst keeps tracking your aim as it fires. A canceled windup fires nothing."
+    form: shot
+    threads: [stone]
+    color: "#c8b878"
+    attributes:
+      cast.time: 0.55
+      cost.base.stamina: 24
+      damage.effectiveness: 1
+      range: 16.25
+      projectile.speed: 20
+      projectile.count: 4
+      cast.move: 0.3
+    ai: { role: damage, preferred_range: 15, weight: 2 }
+    effects:
+      - type: projectile
+        radius: 0.16
+        fire: salvo
+        salvo_interval: 0.08
+        on_hit:
+          - type: damage
+            threads: $threads
+            amount: "lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power"
+            tags: [hit]
+  - id: cold_spot
+    name: "Cold Spot"
+    description: "A shard of deep cold condenses at your mark, not in your hand, and bores onward from there, bursting in a wider blast where it ends. Each hit carries a 50% chance to CHILL."
+    form: missile
+    threads: [tide]
+    color: "#9adce8"
+    attributes: { cast.time: 0.6, cost.base.mana: 11, base_damage: 13, range: 8.13, projectile.speed: 9.38 }
+    ai: { role: damage, preferred_range: 12.5, weight: 2 }
+    effects:
+      - type: projectile
+        radius: 0.28
+        origin: point
+        origin_range: 13.13
+        on_hit:
+          - type: damage
+            threads: $threads
+            amount: "weave.base_damage * lerp(0.77, 1.23, roll) * spell.power * (1 + 0.08 * (weave.level - 1))"
+          - { type: apply_status, status: chilled, chance: 0.5 }
+        on_end:
+          - type: area
+            radius: 2.19
+            center: point
+            filter: enemy
+            effects:
+              - type: damage
+                threads: $threads
+                amount: "weave.base_damage * lerp(0.77, 1.23, roll) * spell.power * (1 + 0.08 * (weave.level - 1)) * 0.6"
+  - id: hellfire_missile
+    name: "Hellfire Missile"
+    description: "A wandering gobbet of riftfire that weaves after its master's mark, bursting where it lands with an 11% chance to BURN."
+    form: missile_quick
+    threads: [ember]
+    color: "#ff7a3a"
+    attributes:
+      cost.base.mana: 0
+      base_damage: 8
+      range: 25
+      projectile.speed: 10
+      projectile.guide: 126
+      projectile.erratic: 573
+    ai: { role: damage, preferred_range: 25, weight: 1 }
+    effects:
+      - type: projectile
+        radius: 0.22
+        on_hit:
+          - type: damage
+            threads: $threads
+            amount: "weave.base_damage * lerp(0.75, 1.25, roll) * spell.power * (1 + 0.08 * (weave.level - 1))"
+          - { type: apply_status, status: burning, chance: 0.3, magnitude: "last_damage * 0.3" }
+        on_end:
+          - type: area
+            radius: 1.72
+            center: point
+            filter: enemy
+            effects:
+              - type: damage
+                threads: $threads
+                amount: "weave.base_damage * lerp(0.75, 1.25, roll) * spell.power * (1 + 0.08 * (weave.level - 1)) * 0.5"
+  - id: mirage_shot
+    name: "Mirage Shot"
+    description: "The mirage's arrow: a straight-flying physical shot of shimmer and spite."
+    form: shot
+    threads: [stone]
+    color: "#8fd4c8"
+    attributes:
+      cast.time: 0.55
+      cost.base.stamina: 0
+      damage.effectiveness: 1.06
+      range: 17.5
+      projectile.speed: 16.25
+    ai: { role: damage, preferred_range: 17.5, weight: 1 }
+    effects:
+      - type: projectile
+        radius: 0.16
+        on_hit:
+          - type: damage
+            threads: $threads
+            amount: "lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power"
+            tags: [hit]
+  - id: archon_lance
+    name: "Archon Lance"
+    description: "Fires a lance of raw arcana as a lightning projectile. Its cost includes a tithe of 6% of your maximum mana; 30% chance to shock."
+    form: missile
+    threads: [storm]
+    color: "#6a9aff"
+    attributes:
+      cast.time: 0.8
+      cost.base.mana: 8
+      cost.pct_max.mana: 0.06
+      base_damage: 10.5
+      range: 16.88
+      projectile.speed: 13.44
+    ai: { role: damage, preferred_range: 15, weight: 2 }
+    effects:
+      - type: projectile
+        radius: 0.31
+        on_hit:
+          - type: damage
+            threads: $threads
+            amount: "weave.base_damage * lerp(0.76, 1.24, roll) * spell.power * (1 + 0.08 * (weave.level - 1))"
+          - { type: apply_status, status: shocked, chance: 0.3 }
+  - id: maelstrom_orb
+    name: "Maelstrom Orb"
+    description: "Looses a crackling orb that orbits you on a widening tether, striking whatever it passes through and zapping nearby enemies every 0.4 seconds for half its damage. Each hit has a 25% chance to shock."
+    form: missile
+    threads: [storm]
+    tags: [duration]
+    color: "#f8e44a"
+    attributes:
+      cast.time: 0.6
+      cooldown.base: 7
+      cost.base.mana: 22
+      base_damage: 9
+      range: 43.75
+      projectile.speed: 7.5
+      projectile.rehit: 999
+      projectile.orbit: 229
+    ai: { role: damage, preferred_range: 6.25, weight: 2 }
+    effects:
+      - type: projectile
+        radius: 0.34
+        orbit_radius: 1.88
+        on_hit:
+          - type: damage
+            threads: $threads
+            amount: "weave.base_damage * lerp(0.56, 1.44, roll) * spell.power * (1 + 0.08 * (weave.level - 1))"
+          - { type: apply_status, status: shocked, chance: 0.25 }
+        tick: 0.4
+        on_tick:
+          - type: area
+            radius: 2.5
+            center: point
+            filter: enemy
+            effects:
+              - type: damage
+                threads: $threads
+                amount: "weave.base_damage * lerp(0.56, 1.44, roll) * spell.power * (1 + 0.08 * (weave.level - 1)) * 0.5"
+  - id: fireball
+    name: Fireball
+    description: "Hurls a heavy orb of flame that explodes on impact, splashing 70% of its damage across everything near the strike. 35% chance to ignite."
+    form: missile
+    threads: [ember]
+    color: "#ff7a2a"
+    attributes: { cast.time: 0.8, cost.base.mana: 12, base_damage: 18, range: 13.75, projectile.speed: 11.88 }
+    ai: { role: damage, preferred_range: 12.81, weight: 3 }
+    effects:
+      - type: projectile
+        radius: 0.34
+        on_hit:
+          - type: damage
+            threads: $threads
+            amount: "weave.base_damage * lerp(0.78, 1.22, roll) * spell.power * (1 + 0.08 * (weave.level - 1))"
+          - { type: apply_status, status: burning, chance: 0.35, magnitude: "last_damage * 0.35" }
+        on_end:
+          - type: area
+            radius: 2.66
+            center: point
+            filter: enemy
+            effects:
+              - type: damage
+                threads: $threads
+                amount: "weave.base_damage * lerp(0.78, 1.22, roll) * spell.power * (1 + 0.08 * (weave.level - 1)) * 0.7"
+  - id: flame_arrow
+    name: "Flame Arrow"
+    description: "A quick dart of flame that pierces up to 2 enemies, with a 20% chance to ignite each one it passes through."
+    form: missile
+    threads: [ember]
+    color: "#ff9646"
+    attributes:
+      cast.time: 0.4
+      cost.base.mana: 4
+      base_damage: 8
+      range: 12.5
+      projectile.speed: 18.75
+      projectile.pierce: 2
+    ai: { role: damage, preferred_range: 11.88, weight: 3 }
+    effects:
+      - type: projectile
+        radius: 0.16
+        on_hit:
+          - type: damage
+            threads: $threads
+            amount: "weave.base_damage * lerp(0.75, 1.25, roll) * spell.power * (1 + 0.08 * (weave.level - 1))"
+          - { type: apply_status, status: burning, chance: 0.2, magnitude: "last_damage * 0.3" }
+  - id: magma_glob
+    name: "Magma Glob"
+    description: "A gob of molten rock that bursts where it lands, splashing fire with a 35% chance to ignite whatever it catches."
+    form: missile_quick
+    threads: [ember]
+    color: "#ff7a2a"
+    attributes: { cost.base.mana: 0, base_damage: 10.5, range: 7.5, projectile.speed: 9.38 }
+    ai: { role: damage, preferred_range: 7.5, weight: 1 }
+    effects:
+      - type: projectile
+        radius: 0.25
+        on_hit:
+          - type: damage
+            threads: $threads
+            amount: "weave.base_damage * lerp(0.76, 1.24, roll) * spell.power * (1 + 0.08 * (weave.level - 1))"
+          - { type: apply_status, status: burning, chance: 0.35, magnitude: "last_damage * 0.3" }
+        on_end:
+          - type: area
+            radius: 1.88
+            center: point
+            filter: enemy
+            effects:
+              - type: damage
+                threads: $threads
+                amount: "weave.base_damage * lerp(0.76, 1.24, roll) * spell.power * (1 + 0.08 * (weave.level - 1)) * 0.8"
+  - id: cinder_swarm
+    name: "Cinder Swarm"
+    description: "Looses a spray of 4 to 6 fire projectiles that weave erratically as they fly, each with a 30% chance to set what it hits burning."
+    form: missile
+    threads: [ember]
+    color: "#ffae52"
+    attributes:
+      cast.time: 0.6
+      cost.base.mana: 11
+      base_damage: 5.5
+      range: 11.88
+      projectile.speed: 10.63
+      projectile.erratic: 1719
+    ai: { role: damage, preferred_range: 10.94, weight: 2 }
+    effects:
+      - type: projectile
+        radius: 0.19
+        count: "randi(4, 6)"
+        spread: 30
+        on_hit:
+          - type: damage
+            threads: $threads
+            amount: "weave.base_damage * lerp(0.73, 1.27, roll) * spell.power * (1 + 0.08 * (weave.level - 1))"
+          - { type: apply_status, status: burning, chance: 0.3, magnitude: "last_damage * 0.35" }
+  - id: ice_spear
+    name: "Ice Spear"
+    description: "Hurl a spear of ice that SHATTERS on impact, spraying 5 shards in a cone behind whatever it strikes; the spear itself has a 35% chance to chill."
+    form: missile
+    threads: [tide]
+    color: "#a8dcf0"
+    attributes: { cast.time: 0.65, cost.base.mana: 9, base_damage: 14, range: 13.13, projectile.speed: 15 }
+    ai: { role: damage, preferred_range: 12.5, weight: 3 }
+    effects:
+      - type: projectile
+        radius: 0.28
+        shape: triangle
+        on_hit:
+          - type: damage
+            threads: $threads
+            amount: "weave.base_damage * lerp(0.79, 1.21, roll) * spell.power * (1 + 0.08 * (weave.level - 1))"
+          - { type: apply_status, status: chilled, chance: 0.35 }
+        on_first_hit:
+          - type: projectile
+            count: 5
+            spread: 70
+            speed: weave.projectile.speed
+            range: "weave.range * 0.6"
+            radius: 0.28
+            on_hit: [{ type: cast, weave: glacial_shard, at: target }]
+  - id: glacial_shard
+    name: "Glacial Shard"
+    description: "Cast off when an Ice Spear shatters, this sliver of flying ice carries cold damage a short way, with a 25% chance to chill."
+    form: missile_quick
+    threads: [tide]
+    color: "#c8ecf8"
+    attributes: { cost.base.mana: 0, base_damage: 5.5, range: 5.31, projectile.speed: 13.13 }
+    ai: { role: damage, preferred_range: 5.31, weight: 0 }
+    effects:
+      - type: projectile
+        radius: 0.16
+        on_hit:
+          - type: damage
+            threads: $threads
+            amount: "weave.base_damage * lerp(0.73, 1.27, roll) * spell.power * (1 + 0.08 * (weave.level - 1))"
+          - { type: apply_status, status: chilled, chance: 0.25 }
+  - id: bottled_swarm
+    name: "Bottled Swarm"
+    description: "Hurl a jarred nest that bursts where it lands: physical damage on impact, and 4 to 6 sprigs spill out to fight beside you for 10 seconds."
+    form: missile
+    threads: [stone]
+    color: "#9a8a62"
+    attributes:
+      cast.time: 0.8
+      cooldown.base: 7
+      cost.base.mana: 14
+      base_damage: 8
+      range: 12.5
+      projectile.speed: 13.13
+    ai: { role: damage, preferred_range: 12.5, weight: 2 }
+    effects:
+      - type: projectile
+        radius: 0.25
+        on_hit:
+          - type: damage
+            threads: $threads
+            amount: "weave.base_damage * lerp(0.75, 1.25, roll) * spell.power * (1 + 0.08 * (weave.level - 1))"
+        on_end: [{ type: spawn, pattern: sprig, count: "randi(4, 6)", lifetime: 10 }]
+
+  - id: bolt_repeater
+    name: "Bolt Repeater"
+    description: "Fires physical bolts from an 8-bolt drum as fast as you can press, with no trickle between shots. Spending the LAST bolt starts the reload clock; when it runs out the drum racks itself full in one motion. Mid-drum, the clock never moves."
+    form: shot
+    threads: [stone]
+    tags: [munition]
+    color: "#c8a878"
+    attributes:
+      cast.time: 0.3
+      cooldown.base: 0
+      cost.base.stamina: 0
+      damage.effectiveness: 1
+      range: 14.69
+      projectile.speed: 20
+    ai: { role: damage, preferred_range: 13.13, weight: 2 }
+    effects:
+      - type: projectile
+        radius: 0.19
+        on_hit:
+          - type: damage
+            threads: $threads
+            amount: "lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power"
+            tags: [hit]
+    uses: { max: 8, magazine: { refill: 3.5 } }
+  - id: scattergun
+    name: Scattergun
+    description: "Blasts 7 pellets of wide, brutal shot at short reach, paid from 3 shells. No clock saves you: the empty gun becomes its own reload, a shell-by-shell channel you may cut short to fight on whatever you racked. Reload early by hand if you choose; a topped drum lowers itself."
+    form: shot
+    threads: [stone]
+    tags: [munition]
+    color: "#d89050"
+    attributes:
+      cast.time: 0.5
+      cost.base.stamina: 0
+      damage.effectiveness: 0.61
+      range: 7.5
+      projectile.speed: 16.25
+      projectile.count: 7
+    ai: { role: damage, preferred_range: 6.25, weight: 2 }
+    effects:
+      - type: projectile
+        radius: 0.16
+        spread: 42
+        on_hit:
+          - type: damage
+            threads: $threads
+            amount: "lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power"
+            tags: [hit]
+    uses: { max: 3, manual: true }
+    convert: { when: "slot.uses < 1", weave: reload_shells }
+    meta_action: { weave: reload_shells, label: Reload }
+  - id: arquebus
+    name: "Long Arquebus"
+    description: "One round, one thunderclap: a physical shot that pierces up to 2 bodies deep. The emptied gun becomes its own reload, a long ram stood still before it speaks again. Charge investment deepens the bank, and one full rite fills all of it."
+    form: shot
+    threads: [stone]
+    tags: [munition]
+    color: "#b8a890"
+    attributes:
+      cast.time: 0.45
+      cost.base.stamina: 0
+      damage.effectiveness: 4.11
+      range: 17.5
+      projectile.speed: 28.13
+      projectile.pierce: 2
+    modifiers: [{ attribute: crit.chance, form: flat, value: 0.05 }]
+    ai: { role: damage, preferred_range: 15.63, weight: 2 }
+    effects:
+      - type: projectile
+        radius: 0.16
+        on_hit:
+          - type: damage
+            threads: $threads
+            amount: "lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power"
+            tags: [hit]
+    uses: { max: 1, manual: true }
+    convert: { when: "slot.uses < 1", weave: reload_powder }
+  - id: grenado
+    name: Grenado
+    description: "Lob a fizzing iron grenado that bursts where it lands, dealing fire damage in a wide blast. Three ride the satchel: throw them freely, and spending the last starts the refill clock, buckles and straps working while you run."
+    form: shot
+    threads: [ember]
+    tags: [munition]
+    color: "#e07840"
+    attributes:
+      cast.time: 0.6
+      cooldown.base: 0
+      cost.base.stamina: 0
+      damage.effectiveness: 2.22
+      range: 10.31
+      projectile.speed: 10.63
+    ai: { role: damage, preferred_range: 9.38, weight: 2 }
+    effects:
+      - type: projectile
+        radius: 0.25
+        on_hit:
+          - type: damage
+            threads: $threads
+            amount: "lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power"
+            tags: [hit]
+        on_end:
+          - type: area
+            radius: 2.25
+            center: point
+            filter: enemy
+            effects:
+              - type: damage
+                threads: $threads
+                amount: "lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power"
+                tags: [hit]
+    uses: { max: 3, magazine: { refill: 6 } }
+  - id: bonespray
+    name: Bonespray
+    description: "Fires a fan of 5 bone shards that each pierce up to 2 enemies, with a 20% chance to inflict bleed. Costs no mana."
+    form: missile
+    threads: [stone]
+    color: "#d8d0c0"
+    attributes:
+      cast.time: 0.45
+      cost.base.mana: 0
+      base_damage: 9
+      range: 13.13
+      projectile.speed: 16.25
+      projectile.count: 5
+      projectile.pierce: 2
+    ai: { role: damage, preferred_range: 11.88, weight: 2 }
+    effects:
+      - type: projectile
+        radius: 0.22
+        spread: 32
+        on_hit:
+          - type: damage
+            threads: $threads
+            amount: "weave.base_damage * lerp(0.78, 1.22, roll) * spell.power * (1 + 0.08 * (weave.level - 1))"
+          - { type: apply_status, status: bleeding, chance: 0.2, magnitude: "last_damage * 0.25" }
+  - id: sacrament_of_ruin
+    name: "Sacrament of Ruin"
+    description: "Lob three seeking globes of unmaking that burst where they strike, each with a 40% chance to lay Decay. As the rite closes, chaos lashes the ground around the officiant for a breath."
+    form: missile
+    threads: [void]
+    color: "#c058c8"
+    attributes:
+      cast.time: 0.8
+      cooldown.base: 2
+      cost.base.mana: 13
+      base_damage: 12.5
+      range: 14.38
+      projectile.speed: 11.88
+      projectile.count: 3
+      projectile.homing: 138
+    ai: { role: damage, preferred_range: 12.5, weight: 2 }
+    effects:
+      - type: projectile
+        radius: 0.38
+        spread: 70
+        on_hit:
+          - type: damage
+            threads: $threads
+            amount: "weave.base_damage * lerp(0.8, 1.2, roll) * spell.power * (1 + 0.08 * (weave.level - 1))"
+          - { type: apply_status, status: decay, chance: 0.4, magnitude: "last_damage * 0.5" }
+          - type: field
+            radius: 3.44
+            duration: 1.2
+            interval: 0.3
+            pulse:
+              - type: damage
+                threads: $threads
+                amount: "weave.base_damage * lerp(0.8, 1.2, roll) * spell.power * (1 + 0.08 * (weave.level - 1)) * 0.4"
+                can_crit: false
+        on_end:
+          - type: area
+            radius: 2.5
+            center: point
+            filter: enemy
+            effects:
+              - type: damage
+                threads: $threads
+                amount: "weave.base_damage * lerp(0.8, 1.2, roll) * spell.power * (1 + 0.08 * (weave.level - 1)) * 0.75"
+  - id: earthrender
+    name: Earthrender
+    description: "Fire the CRACK itself: a shot that pierces up to two enemies while the ground it crosses pulses with stone damage in its wake for a breath."
+    form: missile
+    threads: [stone]
+    tags: [duration, fissure]
+    color: "#c8a058"
+    attributes:
+      cast.time: 0.65
+      cooldown.base: 2.5
+      cost.base.mana: 12
+      base_damage: 15
+      range: 11.88
+      projectile.speed: 10.63
+      projectile.pierce: 2
+    ai: { role: damage, preferred_range: 10, weight: 2 }
+    effects:
+      - type: projectile
+        radius: 0.38
+        on_hit:
+          - type: damage
+            threads: $threads
+            amount: "weave.base_damage * lerp(0.8, 1.2, roll) * spell.power * (1 + 0.08 * (weave.level - 1))"
+          - { type: apply_status, status: stunned, chance: 0.1 }
+        travel: 1.5
+        on_travel:
+          - type: field
+            radius: 0.94
+            duration: 1.6
+            interval: 0.4
+            pulse:
+              - type: damage
+                threads: $threads
+                amount: "weave.base_damage * lerp(0.8, 1.2, roll) * spell.power * (1 + 0.08 * (weave.level - 1)) * 0.7"
+                can_crit: false
+
+  - id: nether_spirit
+    name: "Nether Spirit"
+    description: "A grave-light loosed from the fissure: it drifts on an erratic path, seeks the living, and lays Torment on whatever it touches."
+    form: missile_quick
+    threads: [umbra]
+    tags: [duration]
+    color: "#b07ae0"
+    attributes:
+      cost.base.mana: 0
+      base_damage: 6.5
+      range: 18.75
+      projectile.speed: 6.25
+      projectile.homing: 195
+      projectile.erratic: 573
+    ai: { role: damage, preferred_range: 18.75, weight: 0 }
+    effects:
+      - type: projectile
+        radius: 0.31
+        duration: 4
+        origin: point
+        origin_range: 60
+        on_hit:
+          - type: damage
+            threads: $threads
+            amount: "weave.base_damage * lerp(0.77, 1.23, roll) * spell.power * (1 + 0.08 * (weave.level - 1))"
+          - { type: apply_status, status: torment, chance: 1, magnitude: "last_damage * 0.5" }
+  - id: wandering_spirits
+    name: "Wandering Spirits"
+    description: "Four restless spirits rise in a ring around you and wander where they will for 5 seconds, drifting through everything, laying Torment on whatever they cross, and biting the same victim again as they linger. They answer to no aim: more projectiles means more ghosts, and more duration keeps the veil open longer."
+    form: missile
+    threads: [umbra]
+    tags: [duration]
+    color: "#9ab8d8"
+    attributes:
+      cast.time: 0.55
+      cooldown.base: 6
+      cost.base.mana: 16
+      base_damage: 5.5
+      range: 125
+      projectile.speed: 2.5
+      projectile.count: 4
+      projectile.pierce: 999
+      projectile.rehit: 0.6
+      projectile.homing: 17
+      projectile.erratic: 1146
+    ai: { role: damage, preferred_range: 5, weight: 2 }
+    effects:
+      - type: projectile
+        radius: 0.38
+        duration: 5
+        fire: ring
+        ring_jitter: 90
+        on_hit:
+          - type: damage
+            threads: $threads
+            amount: "weave.base_damage * lerp(0.73, 1.27, roll) * spell.power * (1 + 0.08 * (weave.level - 1))"
+          - { type: apply_status, status: torment, chance: 1, magnitude: "last_damage * 0.5" }
+  - id: creeping_frost
+    name: "Creeping Frost"
+    description: "Loose a straight bolt of packed ice, no seeking, that BURSTS where it lands and leaves a patch of winter for 4.5 seconds. The bolt flies dumb; the patch does the hunting, slinking after whatever lives nearby and gnawing everything it slides beneath, with a 60% chance to Chill."
+    form: missile
+    threads: [tide]
+    tags: [duration]
+    color: "#7ad4e8"
+    attributes:
+      cast.time: 0.6
+      cooldown.base: 3
+      cost.base.mana: 13
+      base_damage: 10.5
+      range: 13.13
+      projectile.speed: 14.38
+    ai: { role: damage, preferred_range: 11.88, weight: 2 }
+    effects:
+      - type: projectile
+        radius: 0.28
+        on_hit:
+          - type: damage
+            threads: $threads
+            amount: "weave.base_damage * lerp(0.76, 1.24, roll) * spell.power * (1 + 0.08 * (weave.level - 1))"
+          - { type: apply_status, status: chilled, chance: 0.6 }
+        on_end:
+          - type: area
+            radius: 2.19
+            center: point
+            filter: enemy
+            effects:
+              - type: damage
+                threads: $threads
+                amount: "weave.base_damage * lerp(0.76, 1.24, roll) * spell.power * (1 + 0.08 * (weave.level - 1)) * 0.8"
+          - type: field
+            radius: 2.5
+            duration: 4.5
+            interval: 0.5
+            seek: 1.72
+            pulse:
+              - type: damage
+                threads: $threads
+                amount: "weave.base_damage * lerp(0.76, 1.24, roll) * spell.power * (1 + 0.08 * (weave.level - 1)) * 0.35"
+                can_crit: false
+  - id: rift_shard
+    name: "Rift Shard"
+    description: "One barrage out of the rift: three shards in a tight fan, each able to pierce a single enemy, with a 35% chance to Chill."
+    form: missile_quick
+    threads: [tide]
+    color: "#b8d8f8"
+    attributes:
+      cost.base.mana: 0
+      base_damage: 8
+      range: 14.38
+      projectile.speed: 19.38
+      projectile.count: 3
+      projectile.pierce: 1
+    ai: { role: damage, preferred_range: 14.38, weight: 1 }
+    effects:
+      - type: projectile
+        radius: 0.22
+        spread: 24
+        on_hit:
+          - type: damage
+            threads: $threads
+            amount: "weave.base_damage * lerp(0.75, 1.25, roll) * spell.power * (1 + 0.08 * (weave.level - 1))"
+          - { type: apply_status, status: chilled, chance: 0.35 }
+  - id: impale_lance
+    name: "Impale Lance"
+    description: "Hurl a heavy spear that pierces up to two enemies."
+    form: shot
+    threads: [stone]
+    tags: [duration]
+    color: "#c8b090"
+    attributes:
+      cast.time: 0.6
+      cost.base.stamina: 15
+      damage.effectiveness: 1.56
+      range: 11.88
+      projectile.speed: 19.38
+      projectile.pierce: 2
+    ai: { role: damage, preferred_range: 10.63, weight: 2 }
+    effects:
+      - type: projectile
+        radius: 0.28
+        on_hit:
+          - type: damage
+            threads: $threads
+            amount: "lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power"
+            tags: [hit]
+  - id: arclight_rain
+    name: "Arclight Rain"
+    description: "Loose a fan of 4 charged arrows; where each lands the ground crackles with lightning for 6 seconds, zapping whoever stands near once a second. Hits have a 20% chance to shock."
+    form: shot
+    threads: [storm, stone]
+    tags: [duration]
+    color: "#d8e86a"
+    attributes:
+      cast.time: 0.7
+      cooldown.base: 1.5
+      cost.base.stamina: 27
+      damage.effectiveness: 1.5
+      range: 13.13
+      projectile.speed: 16.88
+      projectile.count: 4
+    ai: { role: damage, preferred_range: 11.88, weight: 2 }
+    effects:
+      - type: projectile
+        radius: 0.22
+        spread: 46
+        on_hit:
+          - type: damage
+            threads: $threads
+            amount: "lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power"
+            tags: [hit]
+          - { type: apply_status, status: shocked, chance: 0.2 }
+        on_end:
+          - type: field
+            radius: 1.5
+            duration: 6
+            interval: 1
+            pulse:
+              - type: damage
+                threads: [storm]
+                amount: "lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power * 0.6"
+                tags: [hit]
+                can_crit: false
+
+  - id: voltaic_orb
+    name: "Voltaic Orb"
+    description: "Conjure a searing sphere that orbits you for 6 seconds, dealing fire and lightning damage to whatever it touches again and again, while lightning arcs off it into nearby enemies throughout its flight. Every hit has a 25% chance to burn. A moon with opinions."
+    form: missile
+    threads: [ember, storm]
+    tags: [duration]
+    color: "#f0a848"
+    attributes:
+      cast.time: 0.5
+      cooldown.base: 4
+      cost.base.mana: 11
+      base_damage: 15
+      range: 312.47
+      projectile.speed: 10.63
+      projectile.rehit: 0.6
+      projectile.orbit: 226
+    ai: { role: damage, preferred_range: 3.75, weight: 2 }
+    effects:
+      - type: projectile
+        radius: 0.44
+        duration: 6
+        orbit_radius: 2.97
+        on_hit:
+          - type: damage
+            amounts:
+              ember: "weave.base_damage * 0.6 * lerp(0.73, 1.27, roll) * spell.power * (1 + 0.08 * (weave.level - 1))"
+              storm: "weave.base_damage * 0.4 * lerp(0.73, 1.27, roll) * spell.power * (1 + 0.08 * (weave.level - 1))"
+          - { type: apply_status, status: burning, chance: 0.25, magnitude: "last_damage * 0.3" }
+        tick: 0.55
+        on_tick:
+          - type: area
+            radius: 4.06
+            center: point
+            filter: enemy
+            effects:
+              - type: damage
+                amounts:
+                  ember: "weave.base_damage * 0.6 * lerp(0.73, 1.27, roll) * spell.power * (1 + 0.08 * (weave.level - 1)) * 0.45"
+                  storm: "weave.base_damage * 0.4 * lerp(0.73, 1.27, roll) * spell.power * (1 + 0.08 * (weave.level - 1)) * 0.45"
+  - id: beguile
+    name: Beguile
+    description: "Hurl a whispered suggestion as a chaos projectile: the struck mind turns maddened, swinging at whatever stands nearest, friend first, with a 40% chance to also be befuddled. You never drew a blade; that was the point."
+    form: missile
+    threads: [void]
+    tags: [duration]
+    color: "#c890d8"
+    attributes:
+      cast.time: 0.45
+      cooldown.base: 6
+      cost.base.mana: 14
+      base_damage: 5.5
+      range: 15
+      projectile.speed: 14.38
+    ai: { role: damage, preferred_range: 13.75, weight: 2 }
+    effects:
+      - type: projectile
+        radius: 0.25
+        on_hit:
+          - type: damage
+            threads: $threads
+            amount: "weave.base_damage * lerp(0.73, 1.27, roll) * spell.power * (1 + 0.08 * (weave.level - 1))"
+          - { type: apply_status, status: maddened, chance: 1 }
+          - { type: apply_status, status: befuddled, chance: 0.4 }
+  - id: gyreblade
+    name: Gyreblade
+    description: "Hurl a spinning blade that pierces up to 2 bodies and wheels back to your hand: each catch banks 1 Gyre charge, up to 6 held. Gyre Hurl spends the bank as extra blades."
+    form: shot
+    threads: [stone]
+    color: "#b8d0d8"
+    attributes:
+      cast.time: 0.5
+      cost.base.stamina: 12
+      damage.effectiveness: 1.28
+      range: 10.63
+      projectile.speed: 16.25
+      projectile.pierce: 2
+      projectile.spin: 401
+    ai: { role: damage, preferred_range: 9.38, weight: 2 }
+    effects:
+      - type: projectile
+        radius: 0.31
+        return: caster
+        on_return: [{ type: charge, id: gyre, gain: 1, max: 6, self: true }]
+        on_hit:
+          - type: damage
+            threads: $threads
+            amount: "lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power"
+            tags: [hit]
+  - id: gyre_hurl
+    name: "Gyre Hurl"
+    description: "Hurl the bank: one blade, plus one more per banked Gyre charge spent, fans out from your hand, and every spent charge adds 5% damage. With an empty bank it still throws the one desperate knife."
+    form: shot_quick
+    threads: [stone]
+    color: "#a8c8d8"
+    attributes:
+      cooldown.base: 2
+      cost.base.stamina: 15
+      damage.effectiveness: 1.11
+      range: 11.88
+      projectile.speed: 18.75
+      projectile.count: 1
+      projectile.pierce: 1
+    ai: { role: damage, preferred_range: 7.81, weight: 4, when: "charge.gyre >= 2" }
+    effects:
+      - type: projectile
+        radius: 0.25
+        spread: 70
+        on_hit:
+          - type: damage
+            threads: $threads
+            amount: "lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power"
+            tags: [hit]
+    spend:
+      charge: gyre
+      all: true
+      optional: true
+      scales: [{ attribute: damage, form: more, per_charge: 0.05 }, { attribute: projectile.count, form: flat, per_charge: 1 }]
+  - id: heartchaser
+    name: Heartchaser
+    description: "An arrow with one name on it: it homes on the nearest enemy and bends back to hit again after a pass, keeping to the air for up to 4 seconds; if its prey falls, it picks a new mark."
+    form: shot
+    threads: [stone]
+    color: "#e8a0b0"
+    attributes:
+      cast.time: 0.6
+      cost.base.stamina: 15
+      damage.effectiveness: 2
+      range: 21.88
+      projectile.speed: 17.5
+      projectile.recurve: 54
+      projectile.homing: 286
+    ai: { role: damage, preferred_range: 15, weight: 2 }
+    effects:
+      - type: projectile
+        radius: 0.25
+        duration: 4
+        on_hit:
+          - type: damage
+            threads: $threads
+            amount: "lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power"
+            tags: [hit]
+  - id: living_barrage
+    name: "Living Barrage"
+    description: "Loose a seeking projectile with a 4.5 second life: it pierces its victim, wheels around, and returns for more, able to strike the same body as often as every 0.55 seconds until its time runs out."
+    form: missile
+    threads: [stone]
+    tags: [duration]
+    color: "#b0c8a0"
+    attributes:
+      cast.time: 0.55
+      cooldown.base: 1.5
+      cost.base.mana: 8
+      base_damage: 7.5
+      range: 15.63
+      projectile.speed: 11.88
+      projectile.rehit: 0.55
+      projectile.homing: 258
+    ai: { role: damage, preferred_range: 12.5, weight: 2 }
+    effects:
+      - type: projectile
+        radius: 0.38
+        duration: 4.5
+        on_hit:
+          - type: damage
+            threads: $threads
+            amount: "weave.base_damage * lerp(0.8, 1.2, roll) * spell.power * (1 + 0.08 * (weave.level - 1))"
+  - id: skittering_bolt
+    name: "Skittering Bolt"
+    description: "A bolt that refuses the straight line: it kinks hard every few strides of its flight and pierces up to 3 bodies. Each hit has a 20% chance to shock."
+    form: missile
+    threads: [storm]
+    color: "#d8e858"
+    attributes:
+      cast.time: 0.5
+      cost.base.mana: 5
+      base_damage: 10.5
+      range: 19.38
+      projectile.speed: 15
+      projectile.pierce: 3
+    ai: { role: damage, preferred_range: 14.38, weight: 2 }
+    effects:
+      - type: projectile
+        radius: 0.28
+        zigzag: 55
+        zigzag_every: 3.3
+        on_hit:
+          - type: damage
+            threads: $threads
+            amount: "weave.base_damage * lerp(0.76, 1.24, roll) * spell.power * (1 + 0.08 * (weave.level - 1))"
+          - { type: apply_status, status: shocked, chance: 0.2 }
+  - id: frostcreep
+    name: Frostcreep
+    description: "A slow, patient seeker of cold: it creeps toward the nearest living thing for up to 6 seconds and bursts where it connects, with a 70% chance to chill. Easy to outwalk, costly to ignore; duration investment stretches the stalk."
+    form: missile
+    threads: [tide]
+    tags: [duration]
+    color: "#9ad8f8"
+    attributes:
+      cast.time: 0.6
+      cost.base.mana: 6
+      base_damage: 13
+      range: 25
+      projectile.speed: 3.59
+      projectile.homing: 80
+    ai: { role: damage, preferred_range: 13.13, weight: 2 }
+    effects:
+      - type: projectile
+        radius: 0.44
+        duration: 6
+        on_hit:
+          - type: damage
+            threads: $threads
+            amount: "weave.base_damage * lerp(0.77, 1.23, roll) * spell.power * (1 + 0.08 * (weave.level - 1))"
+          - { type: apply_status, status: chilled, chance: 0.7 }
+        on_end:
+          - type: area
+            radius: 2.19
+            center: point
+            filter: enemy
+            effects:
+              - type: damage
+                threads: $threads
+                amount: "weave.base_damage * lerp(0.77, 1.23, roll) * spell.power * (1 + 0.08 * (weave.level - 1)) * 0.7"
+  - id: rimeclaw
+    name: Rimeclaw
+    description: "Three talons of ice fan out wide and hook back to converge on your mark, each detonating in a frost burst where the claw closes. Every burst carries a 50% chance to chill."
+    form: missile
+    threads: [tide]
+    color: "#a8d8e8"
+    attributes:
+      cast.time: 0.6
+      cooldown.base: 1
+      cost.base.mana: 8
+      base_damage: 11.5
+      range: 28.13
+      projectile.speed: 15
+      projectile.count: 3
+      projectile.converge: 126
+    ai: { role: damage, preferred_range: 13.13, weight: 2 }
+    effects:
+      - type: projectile
+        radius: 0.28
+        spread: 110
+        on_hit:
+          - type: damage
+            threads: $threads
+            amount: "weave.base_damage * lerp(0.78, 1.22, roll) * spell.power * (1 + 0.08 * (weave.level - 1))"
+          - { type: apply_status, status: chilled, chance: 0.5 }
+        on_end:
+          - type: area
+            radius: 2.25
+            center: point
+            filter: enemy
+            effects:
+              - type: damage
+                threads: $threads
+                amount: "weave.base_damage * lerp(0.78, 1.22, roll) * spell.power * (1 + 0.08 * (weave.level - 1)) * 0.8"
+  - id: splayshot
+    name: Splayshot
+    description: "Where you hold the mark decides the volley's shape: 5 arrows leave at once, splayed wide as a wall at point-blank aim and choked to a tight lance at full reach."
+    form: shot
+    threads: [stone]
+    color: "#c8b890"
+    attributes:
+      cast.time: 0.55
+      cost.base.stamina: 15
+      damage.effectiveness: 1
+      range: 14.38
+      projectile.speed: 17.5
+      projectile.count: 5
+    ai: { role: damage, preferred_range: 11.25, weight: 2 }
+    effects:
+      - type: projectile
+        radius: 0.25
+        spread_by_aim: { near: 95, far: 10, range: 11.88 }
+        on_hit:
+          - type: damage
+            threads: $threads
+            amount: "lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power"
+            tags: [hit]
+  - id: galewisp
+    name: Galewisp
+    description: "Send out a slow, drifting twister that lives for 5 seconds: it wanders as it flies, passes through every body it hits, knocks each aside, and bounces off walls up to 5 times. Fired down a canyon, the walls aim it for you."
+    form: missile
+    threads: [stone]
+    tags: [duration]
+    color: "#b8d8c8"
+    attributes:
+      cast.time: 0.55
+      cost.base.mana: 7
+      base_damage: 9
+      range: 28.13
+      projectile.speed: 9.38
+      projectile.pierce: 30
+      projectile.erratic: 344
+      projectile.bounce: 5
+    ai: { role: damage, preferred_range: 11.88, weight: 2 }
+    effects:
+      - type: projectile
+        radius: 0.5
+        duration: 5
+        on_hit:
+          - type: damage
+            threads: $threads
+            amount: "weave.base_damage * lerp(0.78, 1.22, roll) * spell.power * (1 + 0.08 * (weave.level - 1))"
+          - { type: move, kind: knockback, distance: 2.19 }
+  - id: wildwisp
+    name: Wildwisp
+    description: "The unruly twin pierces nothing: every body it strikes deflects it onto a new line and is shoved hard away, and walls throw it back up to 6 times across its 5 second life. It hits, and hits, and does not settle."
+    form: missile
+    threads: [stone]
+    tags: [duration]
+    color: "#a0c8b0"
+    attributes:
+      cast.time: 0.55
+      cost.base.mana: 7
+      base_damage: 11.5
+      range: 28.13
+      projectile.speed: 10.63
+      projectile.bounce: 6
+    ai: { role: damage, preferred_range: 11.88, weight: 2 }
+    effects:
+      - type: projectile
+        radius: 0.47
+        duration: 5
+        on_hit:
+          - type: damage
+            threads: $threads
+            amount: "weave.base_damage * lerp(0.78, 1.22, roll) * spell.power * (1 + 0.08 * (weave.level - 1))"
+          - { type: move, kind: knockback, distance: 3.13 }
+  - id: soulflay
+    name: Soulflay
+    description: "A chaos bolt that hunts: it curves toward the living, pierces up to 4 enemies, and trails a rotting aura that deals chaos damage to everything near its flight. Hits carry a 35% chance to decay. Fire it through the pack, not at it."
+    form: missile
+    threads: [umbra]
+    tags: [duration]
+    color: "#9a68d8"
+    attributes:
+      cast.time: 0.6
+      cost.base.mana: 11
+      base_damage: 14
+      range: 17.5
+      projectile.speed: 5.94
+      projectile.pierce: 4
+      projectile.homing: 149
+      projectile.spin: 229
+      projectile.accel: 1.9
+    ai: { role: damage, preferred_range: 13.13, weight: 2 }
+    effects:
+      - type: projectile
+        radius: 0.31
+        on_hit:
+          - type: damage
+            threads: $threads
+            amount: "weave.base_damage * lerp(0.79, 1.21, roll) * spell.power * (1 + 0.08 * (weave.level - 1))"
+          - { type: apply_status, status: decay, chance: 0.35, magnitude: "last_damage * 0.35" }
+        tick: 0.5
+        on_tick:
+          - type: area
+            radius: 1.94
+            center: point
+            filter: enemy
+            effects: [{ type: damage, amount: "8 * spell.power", threads: [void], tags: [dot], can_crit: false }]
+  - id: gravewisp
+    name: Gravewisp
+    description: "Loose a slow bone-spirit that drifts after one quarry and DETONATES in a chaos burst on arrival, or wherever its 4.5 second unlife runs out. The blast carries a 40% chance to decay everything caught. Patience, weaponized."
+    form: missile
+    threads: [umbra]
+    tags: [duration]
+    color: "#c8c8e8"
+    attributes:
+      cast.time: 0.7
+      cooldown.base: 3
+      cost.base.mana: 13
+      base_damage: 28
+      range: 28.13
+      projectile.speed: 4.69
+      projectile.homing: 286
+    ai: { role: damage, preferred_range: 15.63, weight: 2 }
+    effects:
+      - type: projectile
+        radius: 0.41
+        duration: 4.5
+        on_hit:
+          - type: damage
+            threads: $threads
+            amount: "weave.base_damage * lerp(0.79, 1.21, roll) * spell.power * (1 + 0.08 * (weave.level - 1))"
+          - { type: apply_status, status: decay, chance: 0.4, magnitude: "last_damage * 0.4" }
+        on_end:
+          - type: area
+            radius: 3.13
+            center: point
+            filter: enemy
+            effects:
+              - type: damage
+                threads: $threads
+                amount: "weave.base_damage * lerp(0.79, 1.21, roll) * spell.power * (1 + 0.08 * (weave.level - 1))"
+  - id: voltspear
+    name: Voltspear
+    description: "A javelin thrown as a line of lightning: it pierces up to 3 enemies, and each one split carries a 30% chance to be shocked. The Impaler's answer to armor is voltage."
+    form: shot
+    threads: [storm]
+    tags: [javelin]
+    color: "#e8e05a"
+    attributes:
+      cast.time: 0.55
+      cost.base.stamina: 18
+      damage.effectiveness: 1.44
+      range: 16.25
+      projectile.speed: 20.63
+      projectile.pierce: 3
+    ai: { role: damage, preferred_range: 13.75, weight: 2 }
+    effects:
+      - type: projectile
+        radius: 0.22
+        shape: line
+        on_hit:
+          - type: damage
+            threads: $threads
+            amount: "lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power"
+            tags: [hit]
+          - { type: apply_status, status: shocked, chance: 0.3 }
+  - id: blightspear
+    name: Blightspear
+    description: "One javelin, two payloads: the throw deals physical and chaos damage, and wherever its flight ends, flesh or dirt, a plague-gas cloud bursts and lingers for 2.6 seconds with a 40% chance to decay whoever stands in it. Throw it into the doorway, not the man."
+    form: shot
+    threads: [umbra, stone]
+    tags: [javelin, duration]
+    color: "#9ac860"
+    attributes:
+      cast.time: 0.6
+      cost.base.stamina: 24
+      damage.effectiveness: 1.89
+      range: 13.75
+      projectile.speed: 15.63
+    ai: { role: damage, preferred_range: 11.88, weight: 2 }
+    effects:
+      - type: projectile
+        radius: 0.25
+        shape: line
+        on_hit:
+          - type: damage
+            threads: $threads
+            amount: "lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power"
+            tags: [hit]
+          - { type: apply_status, status: decay, chance: 0.4, magnitude: "last_damage * 0.4" }
+        on_end:
+          - type: field
+            radius: 2.97
+            duration: 2.6
+            interval: 0.4
+            pulse:
+              - type: damage
+                threads: $threads
+                amount: "lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power * 0.5"
+                tags: [hit]
+                can_crit: false
+  - id: mirespume
+    name: Mirespume
+    description: "Cough up a slow glob of living bog that dawdles after prey, shedding venom pools in its wake and a deeper pool where it dies. Every pool deals chaos damage with a 55% chance to poison. The slower the glob crawls, the longer its sheddings linger."
+    form: missile
+    threads: [umbra]
+    tags: [duration]
+    color: "#7aa042"
+    attributes:
+      cast.time: 0.75
+      cost.base.mana: 11
+      base_damage: 14
+      range: 13.44
+      projectile.speed: 2.81
+      projectile.homing: 46
+    ai: { role: damage, preferred_range: 13.13, weight: 3 }
+    effects:
+      - type: projectile
+        radius: 0.34
+        duration: 4.6
+        on_hit:
+          - type: damage
+            threads: $threads
+            amount: "weave.base_damage * lerp(0.79, 1.21, roll) * spell.power * (1 + 0.08 * (weave.level - 1))"
+          - { type: apply_status, status: poison, chance: 0.55, magnitude: "last_damage * 0.5" }
+        on_end:
+          - type: field
+            radius: 2.13
+            duration: 4
+            interval: 0.5
+            pulse:
+              - type: damage
+                threads: $threads
+                amount: "weave.base_damage * lerp(0.79, 1.21, roll) * spell.power * (1 + 0.08 * (weave.level - 1)) * 0.55"
+                can_crit: false
+        travel: 1.81
+        on_travel:
+          - type: field
+            radius: 1.25
+            duration: 3
+            interval: 0.5
+            pulse:
+              - type: damage
+                threads: $threads
+                amount: "weave.base_damage * lerp(0.79, 1.21, roll) * spell.power * (1 + 0.08 * (weave.level - 1)) * 0.3"
+                can_crit: false
+  - id: marshlight
+    name: Marshlight
+    description: "Send out a corpse-lantern on a leash of will: it bends after your cursor, passes through what it burns rather than dying on it, and sheds closing venom pools with a 45% chance to poison along whatever path you write. A slow, deliberate hand lays longer-lived pools. Drag it out to hound the fleeing, or wheel it around yourself and stand inside the moat it leaves."
+    form: missile
+    threads: [void]
+    tags: [duration]
+    color: "#9ad4a0"
+    attributes:
+      cast.time: 0.7
+      cost.base.mana: 12
+      base_damage: 11.5
+      range: 18.75
+      projectile.speed: 4.69
+      projectile.rehit: 0.6
+      projectile.guide: 172
+    ai: { role: damage, preferred_range: 11.25, weight: 2 }
+    effects:
+      - type: projectile
+        radius: 0.28
+        duration: 4.2
+        on_hit:
+          - type: damage
+            threads: $threads
+            amount: "weave.base_damage * lerp(0.78, 1.22, roll) * spell.power * (1 + 0.08 * (weave.level - 1))"
+          - { type: apply_status, status: poison, chance: 0.45, magnitude: "last_damage * 0.45" }
+        travel: 1.56
+        on_travel:
+          - type: field
+            radius: 1.13
+            duration: 2.6
+            interval: 0.5
+            pulse:
+              - type: damage
+                threads: $threads
+                amount: "weave.base_damage * lerp(0.78, 1.22, roll) * spell.power * (1 + 0.08 * (weave.level - 1)) * 0.26"
+                can_crit: false
+  - id: magma_lob
+    name: "Magma Lob"
+    description: "Heave a gout of living melt in a lazy arc: it bursts in fire damage where it lands and leaves a burning pool for 3.2 seconds. Every hit carries a 45% chance to burn."
+    form: missile
+    threads: [ember]
+    tags: [duration]
+    color: "#ff7a2a"
+    attributes:
+      cast.time: 0.7
+      cooldown.base: 0.8
+      cost.base.mana: 10
+      base_damage: 18
+      range: 14.38
+      projectile.speed: 5.94
+    ai: { role: damage, preferred_range: 13.44, weight: 3 }
+    effects:
+      - type: projectile
+        radius: 0.31
+        on_hit:
+          - type: damage
+            threads: $threads
+            amount: "weave.base_damage * lerp(0.78, 1.22, roll) * spell.power * (1 + 0.08 * (weave.level - 1))"
+          - { type: apply_status, status: burning, chance: 0.45, magnitude: "last_damage * 0.5" }
+        on_end:
+          - type: area
+            radius: 1.88
+            center: point
+            filter: enemy
+            effects:
+              - type: damage
+                threads: $threads
+                amount: "weave.base_damage * lerp(0.78, 1.22, roll) * spell.power * (1 + 0.08 * (weave.level - 1)) * 0.7"
+          - type: field
+            radius: 1.94
+            duration: 3.2
+            interval: 0.5
+            pulse:
+              - type: damage
+                threads: $threads
+                amount: "weave.base_damage * lerp(0.78, 1.22, roll) * spell.power * (1 + 0.08 * (weave.level - 1)) * 0.4"
+                can_crit: false
+  - id: void_hook
+    name: "Void Hook"
+    description: "Cast a barbed line of nothing and REEL: the hook deals chaos damage and drags the catch bodily to the caster's feet, stunned for 0.3 seconds on arrival. In an angler's grip, mind your footing; in yours, the reel-in brings the fight to you."
+    form: missile
+    threads: [void]
+    color: "#8a6ad4"
+    attributes:
+      cast.time: 0.6
+      cooldown.base: 3
+      cost.base.mana: 8
+      base_damage: 13
+      range: 13.13
+      projectile.speed: 16.25
+    ai: { role: damage, preferred_range: 12.5, weight: 3 }
+    effects:
+      - type: projectile
+        radius: 0.25
+        shape: line
+        on_hit:
+          - type: damage
+            threads: $threads
+            amount: "weave.base_damage * lerp(0.77, 1.23, roll) * spell.power * (1 + 0.08 * (weave.level - 1))"
+          - { type: move, kind: pull, distance: 8 }
+          - { type: apply_status, status: stunned, duration: 0.3 }
+  - id: tongue_reel
+    name: "Tongue Reel"
+    description: "A glistening tongue snaps out in a line, barbs, and REELS the catch bodily to the teeth, leaving it stunned for 0.35 seconds on arrival. Mind the ground between you and the maw, or spend the trip planning your arrival."
+    form: shot
+    threads: [stone]
+    color: "#b46a8a"
+    attributes:
+      cast.time: 0.7
+      cooldown.base: 4
+      cost.base.stamina: 18
+      damage.effectiveness: 1.22
+      range: 10.63
+      projectile.speed: 20
+    ai: { role: damage, preferred_range: 10, weight: 3 }
+    effects:
+      - type: projectile
+        radius: 0.28
+        shape: line
+        on_hit:
+          - type: damage
+            threads: $threads
+            amount: "lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power"
+            tags: [hit]
+          - { type: move, kind: pull, distance: 8 }
+          - { type: apply_status, status: stunned, duration: 0.35 }
+  - id: doomsayers_word
+    name: "Doomsayer's Word"
+    description: "Looses a chaos bolt that lands gently and waits: 3 seconds later the Word resolves all at once, rolled at whatever your power has become by then, with a 50% chance to inflict decay. Socket a Slow Match to stretch the wait and sharpen the verdict."
+    form: missile
+    threads: [umbra]
+    color: "#b06bd4"
+    attributes:
+      cast.time: 0.55
+      cooldown.base: 1.2
+      cost.base.mana: 9
+      base_damage: 23
+      range: 16.25
+      projectile.speed: 11.88
+    ai: { role: damage, preferred_range: 14.38, weight: 2 }
+    effects:
+      - type: projectile
+        radius: 0.25
+        on_hit:
+          - type: delay
+            seconds: 3
+            effects:
+              - type: damage
+                threads: $threads
+                amount: "weave.base_damage * lerp(0.78, 1.22, roll) * spell.power * (1 + 0.08 * (weave.level - 1))"
+              - { type: apply_status, status: decay, chance: 0.5, magnitude: "last_damage * 0.5" }
+  - id: whirlaxe
+    name: Whirlaxe
+    description: "Hurl the axe: it flies its course and drops where its flight ends, a marked catch spot that waits 5 seconds. Stand in it to take the steel back and bank a GYRE charge, up to 5; each hit has a 30% chance to inflict bleed."
+    form: shot
+    threads: [stone]
+    tags: [duration]
+    color: "#d8b878"
+    attributes:
+      cast.time: 0.45
+      cost.base.stamina: 15
+      damage.effectiveness: 1.83
+      range: 14.38
+      projectile.speed: 16.25
+    ai: { role: damage, preferred_range: 11.88, weight: 2 }
+    effects:
+      - type: projectile
+        radius: 0.31
+        on_hit:
+          - type: damage
+            threads: $threads
+            amount: "lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power"
+            tags: [hit]
+          - { type: apply_status, status: bleeding, chance: 0.3, magnitude: "last_damage * 0.3" }
+        on_end:
+          - type: field
+            radius: 0.75
+            duration: 5
+            filter: self
+            on_enter: [{ type: charge, id: gyre, gain: 1, max: 5, self: true }]
+
+  - id: feather_volley
+    name: "Feather Volley"
+    description: "Fans 5 razor feathers across a tight spread: physical projectiles with a 20% chance to inflict bleed."
+    form: shot
+    threads: [stone]
+    color: "#eef2fb"
+    attributes:
+      cast.time: 0.85
+      cost.base.stamina: 27
+      damage.effectiveness: 1.06
+      range: 15
+      projectile.speed: 16.25
+      projectile.count: 5
+    ai: { role: damage, preferred_range: 13.44, weight: 2 }
+    effects:
+      - type: projectile
+        radius: 0.19
+        spread: 32
+        on_hit:
+          - type: damage
+            threads: $threads
+            amount: "lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power"
+            tags: [hit]
+          - { type: apply_status, status: bleeding, chance: 0.2, magnitude: "last_damage * 0.4" }
+  - id: radiant_lance
+    name: "Radiant Lance"
+    description: "Hurl a spear of hardened dawn: a fast, flat projectile of physical and lightning damage that pierces up to 2 bodies, with a 15% chance to shock. The Powers carry ranks of these."
+    form: shot
+    threads: [stone, storm]
+    tags: [javelin]
+    color: "#ffe9c8"
+    attributes:
+      cast.time: 0.8
+      cost.base.stamina: 24
+      damage.effectiveness: 1.94
+      range: 17.5
+      projectile.speed: 20.63
+      projectile.pierce: 2
+    ai: { role: damage, preferred_range: 15.63, weight: 2 }
+    effects:
+      - type: projectile
+        radius: 0.22
+        on_hit:
+          - type: damage
+            threads: $threads
+            amount: "lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power"
+            tags: [hit]
+          - { type: apply_status, status: shocked, chance: 0.15 }
+  - id: gloriole
+    name: Gloriole
+    description: "Set a crown of dawn turning at the target point: for 5 seconds it spirals outward and homes onto the nearest head, dealing fire and lightning damage with every pass and striking each victim at most once every 0.8 seconds; 20% chance to shock. The one halo in the catalog that circles them, not you."
+    form: missile
+    threads: [ember, storm]
+    tags: [duration]
+    color: "#ffecb0"
+    attributes:
+      cast.time: 0.55
+      cooldown.base: 5
+      cost.base.mana: 17
+      base_damage: 15
+      range: 312.47
+      projectile.speed: 0.88
+      projectile.rehit: 0.8
+      projectile.homing: 126
+      projectile.spiral: 298
+    ai: { role: damage, preferred_range: 10, weight: 2 }
+    effects:
+      - type: projectile
+        radius: 0.38
+        duration: 5
+        origin: point
+        origin_range: 10.63
+        on_hit:
+          - type: damage
+            threads: $threads
+            amount: "weave.base_damage * lerp(0.73, 1.27, roll) * spell.power * (1 + 0.08 * (weave.level - 1))"
+          - { type: apply_status, status: shocked, chance: 0.2 }
+  - id: aureate_lash
+    name: "Aureate Lash"
+    description: "Fired by one column of the court: a needle of gilt fire, a fast projectile dealing lightning and fire damage with a 15% chance to shock."
+    form: missile_quick
+    threads: [storm, ember]
+    color: "#ffe6b8"
+    attributes: { cost.base.mana: 0, base_damage: 13.5, range: 9.38, projectile.speed: 20 }
+    ai: { role: damage, preferred_range: 9.38, weight: 1 }
+    effects:
+      - type: projectile
+        radius: 0.22
+        on_hit:
+          - type: damage
+            amounts:
+              storm: "weave.base_damage * 0.67 * lerp(0.74, 1.26, roll) * spell.power * (1 + 0.08 * (weave.level - 1))"
+              ember: "weave.base_damage * 0.33 * lerp(0.74, 1.26, roll) * spell.power * (1 + 0.08 * (weave.level - 1))"
+          - { type: apply_status, status: shocked, chance: 0.15 }
+  - id: skyhook
+    name: Skyhook
+    description: "Cast a crook of hardened wind: a fast projectile of physical and cold damage that reels the caught body to your feet and leaves it WINDED. The zephyrid matrons shepherd strays back onto the cloud with it, or off it."
+    form: missile
+    threads: [stone, tide]
+    color: "#b8d8ec"
+    attributes:
+      cast.time: 0.55
+      cooldown.base: 5
+      cost.base.mana: 12
+      base_damage: 12.5
+      range: 13.13
+      projectile.speed: 21.88
+    ai: { role: damage, preferred_range: 11.88, weight: 1.5 }
+    effects:
+      - type: projectile
+        radius: 0.22
+        on_hit:
+          - type: damage
+            amounts:
+              stone: "weave.base_damage * 0.56 * lerp(0.72, 1.28, roll) * spell.power * (1 + 0.08 * (weave.level - 1))"
+              tide: "weave.base_damage * 0.44 * lerp(0.72, 1.28, roll) * spell.power * (1 + 0.08 * (weave.level - 1))"
+          - { type: move, kind: pull, distance: 8 }
+          - { type: apply_status, status: stunned, duration: 0.3 }
+          - { type: apply_status, status: winded, chance: 1 }
+  - id: squall_dart
+    name: "Squall Dart"
+    description: "Spit a stitched needle of storm-charge that weaves on the wind rather than flying true, dealing lightning and physical damage to whatever it strikes, with a 12% chance to shock."
+    form: missile
+    threads: [storm, stone]
+    color: "#bfe0f8"
+    attributes: { cast.time: 0.55, cost.base.mana: 6, base_damage: 13.5, range: 16.25, projectile.speed: 16.88 }
+    ai: { role: damage, preferred_range: 14.38, weight: 2 }
+    effects:
+      - type: projectile
+        radius: 0.19
+        on_hit:
+          - type: damage
+            amounts:
+              storm: "weave.base_damage * 0.7 * lerp(0.74, 1.26, roll) * spell.power * (1 + 0.08 * (weave.level - 1))"
+              stone: "weave.base_damage * 0.3 * lerp(0.74, 1.26, roll) * spell.power * (1 + 0.08 * (weave.level - 1))"
+          - { type: apply_status, status: shocked, chance: 0.12 }
+
+  - id: pyre_nova
+    name: "Pyre Nova"
+    description: "Flame bursts in a nova around you with a 30% chance to set victims burning."
+    form: burst
+    threads: [ember]
+    color: "#ff7a3a"
+    attributes: { cast.time: 0.7, cooldown.base: 3, cost.base.mana: 11, base_damage: 12, area.radius: 3.44 }
+    ai: { role: damage, preferred_range: 4.06, weight: 3 }
+    effects:
+      - type: area
+        shape: circle
+        radius: weave.area.radius
+        center: source
+        filter: enemy
+        effects:
+          - type: damage
+            threads: $threads
+            amount: "weave.base_damage * lerp(0.75, 1.25, roll) * spell.power * (1 + 0.08 * (weave.level - 1))"
+          - { type: apply_status, status: burning, chance: 0.3, magnitude: "last_damage * 0.3" }
+  - id: reload_shells
+    name: "Ram Shells"
+    description: "CHANNELED: ram shells back into the drum, one per beat of the channel, while you move at 45% reduced speed. Cut it short and fight on what you racked; a topped drum lowers the hands itself."
+    form: reload_stream
+    threads: []
+    tags: [reload, munition]
+    color: "#d89050"
+    attributes: { cost.base.mana: 0, channel.interval: 0.55, channel.windup: 0.4, channel.move: 0.55, channel.max_hold: 2.2 }
+    ai: { role: damage, preferred_range: 6, weight: 0 }
+    effects: [{ type: restore_uses, amount: 1, scope: host }]
+  - id: reload_powder
+    name: "Powder & Ball"
+    description: "The full rite, stood still: powder, wad, ball, rod. When the bar completes, the bank fills to its cap."
+    form: reload
+    threads: []
+    tags: [reload, munition]
+    color: "#b8a890"
+    attributes: { cast.time: 1.5, cost.base.mana: 0 }
+    ai: { role: damage, preferred_range: 6, weight: 0 }
+    effects: [{ type: restore_uses, scope: host }]

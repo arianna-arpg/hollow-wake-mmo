@@ -16,6 +16,7 @@
     <PackageReference Include="xunit.runner.visualstudio" Version="3.1.5" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\src\HollowWake.Client\World\CastCueTimeline.cs" Link="World\CastCueTimeline.cs" />
     <Compile Include="..\..\src\HollowWake.Client\UI\Logic\**\*.cs" Link="Logic\%(RecursiveDir)%(Filename)%(Extension)" />
     <Compile Include="..\..\src\HollowWake.Client\World\Logic\**\*.cs" Link="WorldLogic\%(RecursiveDir)%(Filename)%(Extension)" />
   </ItemGroup>

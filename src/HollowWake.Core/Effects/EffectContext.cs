@@ -21,6 +21,8 @@ namespace HollowWake.Core.Effects;
 /// </summary>
 public sealed class EffectContext
 {
+    /// <summary>The originating cast, retained through delayed and nested deliveries.</summary>
+    public long CastId { get; init; }
     public required Simulation Sim { get; init; }
     public Entity Source { get; init; } = Entity.None;
     public Entity Target { get; init; } = Entity.None;
@@ -126,6 +128,7 @@ public sealed class EffectContext
     {
         return new EffectContext
         {
+            CastId = CastId,
             Origin = _origin.IsNone ? Source : _origin,
             Sim = Sim,
             Source = source ?? Source,

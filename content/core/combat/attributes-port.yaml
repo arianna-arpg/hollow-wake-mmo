@@ -1,0 +1,73 @@
+# Attributes the port of the prototype's content adds: the conversion family across every pair of Threads
+# (convert.stone.ember was the one declared so far) and the charge banks that hold more than the family's three.
+kind: attribute_families
+entries:
+  - id: convert
+    pattern: "convert.{from}.{to}"
+    over: { from: threads, to: threads }
+    name: "{from} converted to {to}"
+    description: "The fraction of {from} damage dealt as {to} instead."
+    category: offense
+    bounds: { min: 0, max: 1 }
+    percent: true
+    hidden: true
+---
+kind: attributes
+entries:
+  - { id: charge.wisp.max, name: Maximum Wisps, category: charge, base: 5, min: 0, decimals: 0, hidden: true }
+  - { id: charge.wakeflame.max, name: Maximum Wakeflame, category: charge, base: 5, min: 0, decimals: 0, hidden: true }
+---
+# The attributes the shells read (forms-shells.yaml), so one shell serves every preset of its kind. They are
+# weave attributes: a preset sets their bases and glyphs, passives and items may modify them like any other.
+kind: attributes
+entries:
+  - { id: cast.time, name: Cast Time, category: weave, base: 0.6, min: 0, decimals: 2, hidden: true, description: "Seconds a shell takes to cast, before speed." }
+  - { id: cooldown.base, name: Base Cooldown, category: weave, base: 0, min: 0, decimals: 2, hidden: true, description: "Seconds of cooldown a shell keeps, before cooldown.added and recovery." }
+  - { id: cast.move, name: Cast Mobility, category: weave, base: 0, min: 0, max: 1, percent: true, hidden: true, description: "The fraction of movement speed kept while a shell is cast." }
+  - { id: channel.interval, name: Channel Beat, category: weave, base: 0.5, min: 0.05, decimals: 2, hidden: true }
+  - { id: channel.windup, name: Channel Windup, category: weave, base: 0, min: 0, decimals: 2, hidden: true }
+  - { id: channel.move, name: Channel Mobility, category: weave, base: 0.5, min: 0, max: 1, percent: true, hidden: true }
+  - { id: channel.turn_rate, name: Channel Turn Rate, category: weave, base: 180, min: 0, decimals: 0, hidden: true }
+  - { id: channel.max_hold, name: Channel Hold, category: weave, base: 6, min: 0, decimals: 1, hidden: true }
+  - { id: guard.pool, name: Guard Pool, category: weave, base: 40, min: 0, decimals: 0, hidden: true }
+  - { id: guard.move, name: Guard Mobility, category: weave, base: 0.3, min: 0, max: 1, percent: true, hidden: true }
+  - { id: guard.turn_rate, name: Guard Turn Rate, category: weave, base: 180, min: 0, decimals: 0, hidden: true }
+  - { id: guard.parry, name: Parry Window, category: weave, base: 0.2, min: 0, decimals: 2, hidden: true }
+  - { id: guard.max_duration, name: Guard Hold, category: weave, base: 3, min: 0, decimals: 1, hidden: true }
+  - { id: charge.max_time, name: Draw Time, category: weave, base: 1.2, min: 0.1, decimals: 2, hidden: true }
+---
+kind: attribute_families
+entries:
+  - id: cost_base
+    pattern: "cost.base.{resource}"
+    over: resources
+    name: "Base {resource} cost"
+    description: "The {resource} a shell costs before the cost fold; a preset sets it."
+    category: weave
+    bounds: { min: 0 }
+    hidden: true
+  - id: cost_pct_max
+    pattern: "cost.pct_max.{resource}"
+    over: resources
+    name: "{resource} cost per maximum"
+    description: "A fraction of maximum {resource} a shell costs beside its base cost."
+    category: weave
+    bounds: { min: 0, max: 1 }
+    percent: true
+    hidden: true
+  - id: reserve
+    pattern: "reserve.{resource}"
+    over: resources
+    name: "{resource} reserved by a shell"
+    description: "The {resource} a toggle shell reserves while it is on."
+    category: weave
+    bounds: { min: 0 }
+    hidden: true
+  - id: upkeep
+    pattern: "upkeep.{resource}"
+    over: resources
+    name: "{resource} upkeep of a shell"
+    description: "The {resource} a toggle shell pays each second while it is on."
+    category: weave
+    bounds: { min: 0 }
+    hidden: true

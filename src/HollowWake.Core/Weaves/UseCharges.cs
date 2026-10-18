@@ -7,7 +7,8 @@ namespace HollowWake.Core.Weaves;
 
 // Banks of use charges kept in a slot's state. A bank starts full; a trickle bank recovers one use per
 // recharge, a magazine refills when emptied (all at once, or one at a time with drip), a still bank
-// recovers only while its caster stands still and bleeds while it moves. Reading a bank changes nothing:
+// recovers only while its caster stands still and bleeds while it moves, a manual bank never recovers on its
+// own (only restore_uses and converts refill it). Reading a bank changes nothing:
 // what it holds now is computed from what it held when it last changed, so checks, AI and the slot message
 // can read it freely. A bank is brought up to date only as it changes (a spend, a restore, a still bank's
 // beat), and only still banks need the upkeep system.
@@ -42,6 +43,10 @@ public sealed partial class WeaveRuntime
         if (double.IsNaN(uses))
         {
             return max;
+        }
+        if (spec.Manual)
+        {
+            return Math.Min(uses, max);
         }
         var elapsed = Math.Max(0, now - slot.StateOr(SlotState.UsesAt, now));
         if (spec.Magazine is { } magazine)
@@ -100,11 +105,11 @@ public sealed partial class WeaveRuntime
         var spent = spec.VentAll ? whole : 1;
         uses -= spent;
         slot.State[SlotState.Uses] = uses;
-        if (spec.Magazine is not null && uses < 1 - 1e-9 && slot.StateOr(SlotState.UsesReload, 0) <= 0)
+        if (!spec.Manual && spec.Magazine is not null && uses < 1 - 1e-9 && slot.StateOr(SlotState.UsesReload, 0) <= 0)
         {
             slot.State[SlotState.UsesReload] = now + RefillSeconds(weave, spec, stats);
         }
-        if (spec.Still is not null && sim.World.TryGet<WeaveBook>(caster, out var book))
+        if (!spec.Manual && spec.Still is not null && sim.World.TryGet<WeaveBook>(caster, out var book))
         {
             EnsureUpkeep(caster, book);
         }

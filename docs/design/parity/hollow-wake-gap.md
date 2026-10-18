@@ -91,6 +91,8 @@ Five moves carry most of the parity, each in our idiom rather than a port of the
 
 The foundations package and the six packages of section 3 have landed in the order the plan gave, each proving the standard duel traces unchanged and staying within the performance budgets. Everything the owner named as P0 exists: cast modes and triggers, projectiles with shapes and trajectories, summons with inheritance and orders, the status, charge and proc economy with the shield, poise and insight pools, the weave item model with codices and stones, passives with choice nodes, realms, vocations and refunds, dialogue and vendors, the grid bag, stashes and the reliquary, and the interface on both clients with its Options pane. Rows still open, each the owner of its files may take in a later round: A13, C11, C20, C23, C29, C33, C35 to C38, C47, C48 (the P2 cast and effect rows), D21 skill grants, E14 movement states, E15 weak spots, G11, G17, G18, H7 conduits, I9 memories, I13 salvage, and J6 per-weave tree pages on the clients. Account-scoped options wait on an account settings message, and there is no audio yet.
 
+The prototype's content is being ported onto these mechanisms family by family; the [port ledger](port-ledger.md) has one row per prototype skill, support, status, proc, passive notable and item family with what it became, the mapping the port used (units, Threads, statuses, stats) and the engine seams it found.
+
 ## 2. Parity matrix
 
 Rows are grouped by area: A cast modes and timing, B deliveries and trajectories, C effect types, D supports, E statuses, F modifiers, G damage pipeline, H passives, I items, J UI surfaces. Row ids are referenced from dependencies and from the work packages. YAML sketches for the main proposals follow the tables in 2.11.

@@ -1,0 +1,98 @@
+{
+  "version": 1,
+  "meaning": "Classification and convergence obligations, not a claim that the original catalog has been ported. Every future mechanism must enter a reviewed family; individual skill IDs are never renderer dispatch keys.",
+  "primitives": ["corners", "rays", "ring", "segments"],
+  "families": {
+    "identity": {
+      "status": "metadata",
+      "coverage": "Names, tags and material colors join shared profiles. Retain provenance; reconcile prior five damage colors with the current nine Thread definitions through content.",
+      "skill_fields": ["id", "name", "description", "tags", "color"],
+      "support_fields": ["id", "name", "description", "color", "requiresTags", "requiresMechanisms", "grantsTags", "dropTags", "excludeTags"]
+    },
+    "catalog_rules": {
+      "status": "no-decoration",
+      "coverage": "Acquisition, eligibility and numeric tuning use existing UI; a cosmetic cast cue must not pretend a stat or drop rule is a visible hit.",
+      "skill_fields": ["ai", "backstabMult", "baseDamage", "chargeCost", "chargeGain", "cooldown", "costScaling", "currentLifeDamage", "dropWeight", "equipMods", "gate", "innateMods", "leveling", "lifeCost", "manaCost", "minDropLevel", "noDrop", "requirements", "variance"],
+      "support_fields": ["chargeCost", "chargeGain", "gate", "levelBonus", "levelBonusPer", "maxLevel", "minDropLevel", "mods", "perLevel", "reserveLife", "rollBase", "variance", "weight"],
+      "current_effects": ["grant_item", "grant_xp", "log"]
+    },
+    "cast_lifecycle": {
+      "status": "partial",
+      "coverage": "All current runtime cast modes use shared start/release/end/interrupt identity. Thread templates and composed layers are implemented. Original readiness clocks, staged timing glyphs and mode-specific progress artwork still require shared state adapters; do not infer a repeating channel completion from its interval.",
+      "cast_modes": ["cast", "channel", "charge", "concentration", "guard", "multitude", "overcharge", "perfect", "timed"],
+      "skill_fields": ["castCycle", "castMode", "castMove", "channel", "chargeUp", "concentration", "gauge", "guard", "pool", "recoveryCues", "reflex", "requiresGuard", "timing", "usableWhileGuarding", "useCharges", "useTime"],
+      "support_fields": ["cadence", "guardBash", "guardCast", "overcharge", "strikeTiming", "useChargeGraft"],
+      "variant_paths": ["channel", "gate.guard", "guard", "overcharge", "tree.nodes.#.over.channel"],
+      "current_effects": ["interrupt"]
+    },
+    "resolved_contact": {
+      "status": "shared-cues",
+      "coverage": "Confirmed positive damage, block and evade select distinct shared outcomes. Correlated damage keeps the originating cast ID; uncorrelated contact uses a target outcome with no invented cast. Original attack silhouettes remain in delivery/voice obligations.",
+      "effects": ["damage", "rupture"],
+      "current_effects": ["damage", "rupture"]
+    },
+    "restoration": {
+      "status": "partial",
+      "coverage": "Positive Healed and revival transitions use inward mend and opening revival cues. Resource type remains tagged. Resource-transfer paths that do not publish Healed still need an adapter; original beam/link effects remain pending.",
+      "effects": ["heal", "restore", "restoreOverTime"],
+      "support_fields": ["healOverTime"],
+      "current_effects": ["heal", "resource"]
+    },
+    "status_transitions": {
+      "status": "partial",
+      "coverage": "Status application/expiry use shared transitions; beneficial application is distinct from harmful application. Persistent defense plates, state intensity, stacking and transfer links need durable state bindings and both renderers before parity can be claimed.",
+      "effects": ["buff", "cleanse", "status", "siphonStatus", "spreadStatus", "transfuseStatus"],
+      "skill_fields": ["contagion", "linkedHexes", "selfCleanse", "selfStack", "shatterStatus", "siphon"],
+      "support_fields": ["contagion", "curseOnHit", "exposure", "selfStack", "spawnBuff", "spreadOnHit"],
+      "current_effects": ["apply_status", "remove_status", "consume_status", "spread_status", "move_status", "modify"]
+    },
+    "delivery_and_forecast": {
+      "status": "partial",
+      "coverage": "Authoritative projectile/field entities already carry world state, and body accents can layer compiled mechanism capabilities. Exact swept shapes, committed/live aim, ground warnings and attack voice assets require the shared resolved-plan forecasting work. Cosmetic rings are never hit bounds.",
+      "deliveries": ["aura", "carom", "cone", "detonate", "detonateProjectile", "ground", "mark", "melee", "nova", "projectile", "self", "storm", "target"],
+      "effects": ["spawnZone", "terrain"],
+      "skill_fields": ["aim", "delivery", "targeting"],
+      "support_fields": ["aim", "auraDuration", "curseField", "fissureAftershock", "fissurePath", "fissureReclose", "fissureRoulette", "fissureTrail", "fissureVolatile", "healField", "meleeFissure", "pulse", "targeting", "trail", "zoneEmit", "zoneFollow", "zoneGrow", "zoneSizeOver"],
+      "variant_paths": ["delivery", "tree.nodes.#.attackSequence.castSweeps.#.delivery", "tree.nodes.#.guardArts.bashWave.delivery"],
+      "current_effects": ["area", "projectile", "chain", "field", "aura", "mark", "tether", "aim", "detonate"]
+    },
+    "spatial_movement": {
+      "status": "partial",
+      "coverage": "Transforms are authoritative and shared. Original trails, departure/arrival distinctions, grab/throw relationships and body-deformation visuals need reusable movement/state adapters, not skill-specific draw paths.",
+      "deliveries": ["blink", "dash", "leap"],
+      "effects": ["grabSeize", "grabThrow", "knockback", "pull", "relocateConstruct"],
+      "current_effects": ["move"]
+    },
+    "companions_and_constructs": {
+      "status": "partial",
+      "coverage": "Summoned/deployed actors use ordinary authoritative entities; compiled minion capability adds a shared release accent. Birth, command, possession, stance, formation and construct-specific artwork remain shared actor/state obligations.",
+      "deliveries": ["construct", "summon"],
+      "effects": ["birth", "commandMinions", "companionStance", "conjure", "detonateMinions", "dragCorpses", "lure", "minionCast", "possess", "possessEnd", "recallMinions", "shatterConstructs", "spawnCorpse", "tame", "throngDirect", "whistleCompanion"],
+      "skill_fields": ["bondFeed", "hivecall", "minionCombat", "throng"],
+      "support_fields": ["birth", "breakableGraft", "brood", "constructFx", "corpseSpawn", "devour", "dominate", "gather", "madden", "massGraft", "minionAura", "minionAuraPool", "sacrifice", "shellGraft", "summon", "tameMod", "throngSource", "turret"],
+      "current_effects": ["recall_minions", "command_minions", "minion_cast", "consume_minion", "summon", "deploy", "spawn", "gather_corpses", "consume_corpse", "taunt"]
+    },
+    "effect_composition": {
+      "status": "partial",
+      "coverage": "Existing context propagation preserves originating identity through executed nested/delayed/projectile work. Supports contribute compiled tags/mechanisms without an ID switch. Prototype-specific trigger/sequel/tree behavior must be ported before its semantics can be certified; child hits must come from executed outcomes.",
+      "skill_fields": ["amalgam", "chrono", "comboChain", "conduits", "convert", "effects", "empower", "followUp", "invokes", "meta", "mimic", "retaliate", "tree", "ultimate"],
+      "support_fields": ["cascade", "conduit", "echo", "followUp", "meta", "munition", "pendulum", "releaseOrder", "resonance", "sequel", "tether", "trigger", "triggerPermit"],
+      "variant_paths": ["effects", "delivery.sequel", "sequel", "tether", "tree.nodes.#.followUps"],
+      "current_effects": ["cast", "delay", "condition", "random", "repeat", "sequence", "scatter", "cascade", "event"]
+    },
+    "durable_defense_and_resources": {
+      "status": "pending",
+      "coverage": "Port the original shared defense/state vocabulary: plates, spiral, carapace, brace, guard, stored charge and discharge. Needs replicated durable state, source provenance and paired renderers; a cast sparkle is not coverage for this family.",
+      "effects": ["absorb", "drainCharge", "gainCharge", "guardSurge", "ironWard", "kindle", "litePour", "mimicSelect", "payLedger", "recallImpales", "reduceCooldowns", "restoreSkillCharges", "shapeshift", "shed", "siphonOrb", "townPortal", "vent", "ward"],
+      "skill_fields": ["discharge", "fuse", "poiseReap", "thresholds"],
+      "support_fields": ["fuse", "orbShedGraft"],
+      "current_effects": ["charge", "guard", "fuse", "cooldown", "restore_uses"]
+    },
+    "authored_effect_voices": {
+      "status": "pending",
+      "coverage": "These eight are only the registrations in the original base effectVoice module. Additional modules can register more. Preserve the original assets/profile parameters when a shared primitive or sprite adapter is added; current simple geometry is not their visual parity.",
+      "effect_voices": ["blast", "comet", "crossjab", "plunge", "refuge", "scramble", "shatter", "sporeburst"],
+      "variant_paths": ["delivery.fx", "tree.nodes.#.attackSequence.castSweeps.#.delivery.fx"]
+    }
+  }
+}

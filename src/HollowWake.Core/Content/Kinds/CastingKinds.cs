@@ -30,6 +30,17 @@ internal static class CastingKinds
         {
             CooldownAt(d.CooldownAt, c);
             Hint(d.Ai, c);
+            Trigger(d.Trigger, c, "trigger");
+            Gates(d.Gates, c);
+            Spend(d.Spend, c, "spend");
+            Uses(d.Uses, c, "uses");
+            Convert(d.Convert, c, "convert");
+            Meta(d.MetaAction, c, "meta_action");
+            FollowUp(d.FollowUp, c, "follow_up");
+            Cycle(d.Cycle, c, "cycle");
+            SelfStack(d.SelfStack, c, "self_stack");
+            Chain(d.Chain, c, "chain");
+            c.Modifiers(d.EquipModifiers, "equip_modifiers");
         });
     }
 
@@ -418,6 +429,10 @@ internal static class CastingKinds
         if (u.Magazine is not null && u.Still is not null)
         {
             c.Warn($"'{field}' has both a magazine and still recovery; the magazine decides.");
+        }
+        if (u.Manual && (u.Magazine is not null || u.Recharge is not null || u.Still is not null))
+        {
+            c.Warn($"'{field}' is manual; its recharge, magazine or still recovery never runs.");
         }
     }
 

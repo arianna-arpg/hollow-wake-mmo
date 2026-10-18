@@ -63,6 +63,16 @@ entries:
         min_hold: 0.5
         effects: [ { type: event, name: t_release, data: { held: cast.held, radius: weave.area.radius } } ]
     effects: [ { type: event, name: t_pulse, data: { held: cast.held, radius: weave.area.radius } } ]
+  - id: t_channel_bolt
+    targeting: direction
+    cast_mode: channel
+    min_threads: 0
+    channel: { interval: 1, windup: 0.1, max_hold: 3 }
+    effects:
+      - type: projectile
+        speed: 2
+        range: 30
+        on_hit: [ { type: damage, amount: 10, threads: [mind], can_crit: false } ]
   - id: t_charge
     targeting: self
     cast_mode: charge
@@ -92,6 +102,10 @@ entries:
   - { id: t_still, targeting: self, cast_mode: instant, min_threads: 0, uses: { max: 2, recharge: 1, still: { bleed: 1 } }, effects: [ { type: event, name: t_still } ] }
   - { id: t_vent, targeting: self, cast_mode: instant, min_threads: 0, uses: { max: 3, recharge: 100, vent_all: true, steps_from_bank: true }, effects: [ { type: event, name: t_vent, data: { spent: uses_spent } } ] }
   - { id: t_reloading, targeting: self, cast_mode: instant, min_threads: 0, uses: { max: 1, recharge: 100 }, convert: { when: "slot.uses < 1", weave: quiver_restring }, effects: [ { type: event, name: t_reloading } ] }
+  - { id: t_manual, targeting: self, cast_mode: instant, min_threads: 0, uses: { max: 2, manual: true }, convert: { when: "slot.uses < 1", weave: quiver_restring }, effects: [ { type: event, name: t_manual } ] }
+  - { id: t_manual_mag, targeting: self, cast_mode: instant, min_threads: 0, uses: { max: 2, manual: true, magazine: { refill: 1 } }, convert: { when: "slot.uses < 1", weave: quiver_restring }, effects: [ { type: event, name: t_manual } ] }
+  - { id: t_manual_drip, targeting: self, cast_mode: instant, min_threads: 0, uses: { max: 2, manual: true, magazine: { refill: 1, drip: true } }, convert: { when: "slot.uses < 1", weave: quiver_restring }, effects: [ { type: event, name: t_manual } ] }
+  - { id: t_manual_still, targeting: self, cast_mode: instant, min_threads: 0, uses: { max: 2, manual: true, recharge: 1, still: { bleed: 1 } }, convert: { when: "slot.uses < 1", weave: quiver_restring }, effects: [ { type: event, name: t_manual } ] }
   - { id: t_gated, targeting: self, cast_mode: instant, min_threads: 0, gates: [ 'life_pct > 0.5' ], effects: [ { type: event, name: t_gated } ] }
   - id: t_guard
     targeting: self
@@ -220,6 +234,7 @@ internal sealed class CastingArena
     public static CastingArena Create(ulong seed = 11, string caster = "loosed_kindler", string enemy = "hob", float distance = 4, ContentRegistry? registry = null)
     {
         var sim = ZoneBuilder.CreateArena(registry ?? CastingTestContent.Registry, seed);
+        sim.EmitCastPresentation = true;
         var factory = sim.Service<PatternFactory>();
         var c = factory.Spawn(sim, caster, new Vector3(10, 10, 0), new SpawnOptions { Faction = "red" });
         var e = factory.Spawn(sim, enemy, new Vector3(10 + distance, 10, 0), new SpawnOptions { Faction = "blue" });

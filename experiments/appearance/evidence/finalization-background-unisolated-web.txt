@@ -1,0 +1,25 @@
+SMOKE ok   connect and log in: Logged in. Pick a character. (features: cast_cues, entity_delta, interface)
+SMOKE ok   create character: Smoke the kindler
+SMOKE ok   enter world: Smoke at 129.5, 111.0, 14.7
+SMOKE FAIL terrain built: 8 chunks (30 requested) in 90.1s, 0 entities in view
+SMOKE measure geometry: 240 fps, frame ms p50 4.20 p95 4.40 max 8.40, 0.39 ms of work per frame; 16 draw calls, 34182 triangles; 0 bodies (0 cards, 0 body triangles), 0 atlases 0.00 MiB, 0 textures; 0 entities, 8 chunks
+SMOKE FAIL bodies as geometry: geometry: 240 fps, frame ms p50 4.20 p95 4.40 max 8.40, 0.39 ms of work per frame; 16 draw calls, 34182 triangles; 0 bodies (0 cards, 0 body triangles), 0 atlases 0.00 MiB, 0 textures; 0 entities, 8 chunks
+SMOKE measure geometry, no shadows: 239 fps, frame ms p50 4.20 p95 4.40 max 7.70, 0.38 ms of work per frame; 16 draw calls, 34182 triangles; 0 bodies (0 cards, 0 body triangles), 0 atlases 0.00 MiB, 0 textures; 0 entities, 8 chunks
+SMOKE FAIL bodies without shadows: geometry, no shadows: 239 fps, frame ms p50 4.20 p95 4.40 max 7.70, 0.38 ms of work per frame; 16 draw calls, 34182 triangles; 0 bodies (0 cards, 0 body triangles), 0 atlases 0.00 MiB, 0 textures; 0 entities, 8 chunks
+SMOKE measure cards: 240 fps, frame ms p50 4.20 p95 4.40 max 9.30, 0.44 ms of work per frame; 16 draw calls, 34182 triangles; 0 bodies (0 cards, 0 body triangles), 0 atlases 0.00 MiB, 0 textures; 0 entities, 8 chunks
+SMOKE FAIL bodies as cards: cards: 240 fps, frame ms p50 4.20 p95 4.40 max 9.30, 0.44 ms of work per frame; 16 draw calls, 34182 triangles; 0 bodies (0 cards, 0 body triangles), 0 atlases 0.00 MiB, 0 textures; 0 entities, 8 chunks
+SMOKE ok   day cycle: night at 0.04 of the day, evening at 0.77, the server's day at 0.37
+SMOKE FAIL script: Cannot read properties of null (reading 'x')
+SMOKE ok   no page errors: none
+SMOKE SUMMARY
+SMOKE PASS connect and log in: Logged in. Pick a character. (features: cast_cues, entity_delta, interface)
+SMOKE PASS create character: Smoke the kindler
+SMOKE PASS enter world: Smoke at 129.5, 111.0, 14.7
+SMOKE FAIL terrain built: 8 chunks (30 requested) in 90.1s, 0 entities in view
+SMOKE FAIL bodies as geometry: geometry: 240 fps, frame ms p50 4.20 p95 4.40 max 8.40, 0.39 ms of work per frame; 16 draw calls, 34182 triangles; 0 bodies (0 cards, 0 body triangles), 0 atlases 0.00 MiB, 0 textures; 0 entities, 8 chunks
+SMOKE FAIL bodies without shadows: geometry, no shadows: 239 fps, frame ms p50 4.20 p95 4.40 max 7.70, 0.38 ms of work per frame; 16 draw calls, 34182 triangles; 0 bodies (0 cards, 0 body triangles), 0 atlases 0.00 MiB, 0 textures; 0 entities, 8 chunks
+SMOKE FAIL bodies as cards: cards: 240 fps, frame ms p50 4.20 p95 4.40 max 9.30, 0.44 ms of work per frame; 16 draw calls, 34182 triangles; 0 bodies (0 cards, 0 body triangles), 0 atlases 0.00 MiB, 0 textures; 0 entities, 8 chunks
+SMOKE PASS day cycle: night at 0.04 of the day, evening at 0.77, the server's day at 0.37
+SMOKE FAIL script: Cannot read properties of null (reading 'x')
+SMOKE PASS no page errors: none
+SMOKE DONE 5/10 passed in 129.5s; 238 fps, 0.76 ms of work per frame, 8 chunks and 0 entities at the end; shots in D:\Games\MMOARPG\artifacts\pr-9-finalize\artifacts\pr9-background-final\run-Cy12AU\shots

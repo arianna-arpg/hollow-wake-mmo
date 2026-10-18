@@ -48,7 +48,7 @@ public static class Bench
         }
         if (only is "" or "tick")
         {
-            results.AddRange(Tick(content, opt("seed", "aureth"), int.Parse(opt("monsters", "300")), int.Parse(opt("players", "4")), int.Parse(opt("ticks", "600")), int.Parse(opt("minions", "0"))));
+            results.AddRange(Tick(content, opt("seed", "aureth"), int.Parse(opt("monsters", "300")), int.Parse(opt("players", "4")), int.Parse(opt("ticks", "600")), int.Parse(opt("minions", "0")), bool.Parse(opt("cast-cues", "false"))));
         }
         if (only is "" or "deliveries")
         {
@@ -213,13 +213,14 @@ public static class Bench
 
     // ------------------------------------------------------------ zone tick
 
-    private static IEnumerable<Result> Tick(ContentRegistry content, string seed, int monsters, int players, int ticks, int minions)
+    private static IEnumerable<Result> Tick(ContentRegistry content, string seed, int monsters, int players, int ticks, int minions, bool castCues)
     {
         var generator = new WorldGenerator(content, Rng.Hash64(seed));
         var world = new WorldState(generator.Overlays, content.Rules);
         var log = new ListSimLog();
         var sw = Stopwatch.StartNew();
         var sim = ZoneBuilder.CreateZone(content, generator, world, generator.StartZone(), log);
+        sim.EmitCastPresentation = castCues;
         var report = ZoneBuilder.LoadZone(sim);
         yield return new Result("zone.load", sw.Elapsed.TotalMilliseconds, "ms", report.ToString());
 

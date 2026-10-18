@@ -169,7 +169,7 @@ public sealed partial class WeaveRuntime
             {
                 continue;
             }
-            if (weave.Casting.Uses is { Still: not null } still)
+            if (weave.Casting.Uses is { Manual: false, Still: not null } still)
             {
                 busy |= UpkeepStill(sim, caster, slot, weave, still, stats, dt);
             }

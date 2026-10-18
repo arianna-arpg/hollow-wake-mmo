@@ -7,7 +7,7 @@
 // screenshot per stage and exits non-zero when any check fails.
 //
 //   npm run smoke -- [--url http://localhost:7778/] [--shots DIR] [--account NAME]
-//                    [--browser msedge|chrome|chromium] [--executable PATH] [--headed] [--full-states]
+//                    [--browser msedge|chrome|chromium] [--executable PATH] [--headed] [--full-states] [--isolated-input]
 //
 // --full-states runs the client without entity deltas (full entity states only), for comparison. The page
 // runs under its own settings profile (smoke), started from the content's defaults each run.
@@ -18,6 +18,7 @@
 import { mkdirSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { chromium } from 'playwright-core';
+import { isolatePhysicalInput } from './isolated-input.mjs';
 
 const args = process.argv.slice(2);
 const opt = (name, fallback) => {
@@ -47,6 +48,11 @@ const browser = await chromium.launch({
   args: ['--ignore-gpu-blocklist', '--enable-unsafe-swiftshader'],
 });
 const page = await browser.newPage({ viewport: { width: 1280, height: 800 } });
+// Headless Chromium can still see real controllers. Background runs accept only scripted input.
+if (flag('isolated-input')) {
+  await page.addInitScript(isolatePhysicalInput);
+  console.log('SMOKE input: page-local keyboard and pointer; physical controllers isolated');
+}
 const pageErrors = [];
 page.on('pageerror', (e) => pageErrors.push(e.message));
 page.on('console', (m) => {
@@ -213,11 +219,20 @@ async function corePaneAndPages() {
     shown.push(`${id}=${ok ? 'shown' : 'not shown'}`);
   }
   record('ribbon pages', ['weaves', 'passives', 'character'].every((id) => shown.includes(`${id}=shown`)), shown.join(', '));
+  const escapeState = (u) => JSON.stringify({ core: u.coreOpen, options: u.optionsOpen, tray: u.trayOpen, pages: u.shownPages, world: u.worldPanes });
+  const escapeSteps = [];
   for (let i = 0; i < 8 && (await ui()).coreOpen; i++) {
+    const before = escapeState(await ui());
     await page.keyboard.press('Escape');
+    // Wait for the observed transition before another press; a busy renderer/server can lag
+    // the old fixed delay. Keep the same bounded steps and require all panes to actually close.
+    const changed = await until(async () => escapeState(await ui()) !== before, 2000);
+    escapeSteps.push({ before, after: escapeState(await ui()), changed });
     await sleep(150);
   }
-  record('escape closes the core pane last', !(await ui()).coreOpen && !(await ui()).optionsOpen, `core open=${(await ui()).coreOpen}`);
+  const closed = !(await ui()).coreOpen && !(await ui()).optionsOpen;
+  const focus = closed ? '' : await hw(() => `${document.activeElement?.tagName}#${document.activeElement?.id}`);
+  record('escape closes the core pane last', closed, `core open=${(await ui()).coreOpen}${closed ? '' : `; focus=${focus}; transitions=${JSON.stringify(escapeSteps)}`}`);
 }
 
 /** A villager: walk up, click it, read its line and answer the first open choice. */
@@ -479,6 +494,7 @@ async function script() {
   if (!character) {
     const before = (await counts()).characterLists;
     await page.fill('#login-new-name', 'Smoke');
+    if (opt('calling', '')) await page.selectOption('#login-calling', opt('calling', ''));
     await page.click('#login-create');
     await until(async () => (await counts()).characterLists > before, 20000);
     character = (await hw(() => window.hollowWake.characters())).find((c) => c.name === 'Smoke');
@@ -619,6 +635,26 @@ async function script() {
   await optionsSteps();
 
   // Weaves: walk up to the nearest hob, hover it and press the attack slots until the player's own hit lands.
+  if (flag('cast-cues')) {
+    const phases = new Set();
+    for (let attempt = 0; attempt < 3 && !phases.has('impact'); attempt++) {
+      const target = await nearest(e => typeof e.pattern === 'string' && e.pattern.startsWith('hob') && !e.dead);
+      if (!target) break;
+      await travelTo(target.key, 3, 45000);
+      await hover(target.key);
+      await page.keyboard.press('Digit1');
+      const end = Date.now() + 4000;
+      while (Date.now() < end) {
+        const cues = await hw(() => window.hollowWake.castCues().filter(c => String(c.source) === String(window.hollowWake.self()?.key)));
+        for (const cue of cues) if (!phases.has(cue.phase)) {
+          phases.add(cue.phase);
+          await page.screenshot({ path: join(shots, `cast_cue_${cue.phase}.png`) });
+        }
+        await sleep(15);
+      }
+    }
+    record('Cast cue presentation', ['start', 'release', 'impact'].every(p => phases.has(p)), `phases: ${[...phases].join(', ')}`);
+  }
   // Hobs wander and fight back, so each try walks up again first.
   const isHob = (e) => typeof e.pattern === 'string' && e.pattern.startsWith('hob') && !e.dead;
   let hob = await nearest(isHob);

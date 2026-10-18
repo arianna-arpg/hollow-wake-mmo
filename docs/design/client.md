@@ -42,6 +42,8 @@ Core is X east, Y north, Z up; Godot is X east, Y up, Z south. `Coords` is the o
 
 ## Running and checking
 
+For testing while the operator uses other applications, use the [background testing harness](testing.md). Its native suite runs headlessly and injects pointer events inside Godot; native rendering checks still require a graphical session.
+
 The project needs Godot 4.7 .NET. `src/HollowWake.Client/HollowWake.Client.sln` is what the editor builds when play is pressed, and `content/core` is found beside the executable first and then by walking up from the project directory, so a checkout and an exported build both read the same content as the server.
 
 `--host H` and `--port P` (also `--host=H`, as engine arguments or after `--`) fill the login panel's server fields; the launcher starts exported builds that way. `export_presets.cfg` holds the Windows Desktop and Linux release presets the release pipeline exports with; `scripts/package-client.sh` exports both, puts `content/core` beside each executable and zips them (see [launcher.md](launcher.md)).

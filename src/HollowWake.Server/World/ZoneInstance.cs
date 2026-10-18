@@ -20,7 +20,7 @@ namespace HollowWake.Server.World;
 /// each player; entities enter and leave a session's known set as they come and go, and the
 /// <see cref="SnapshotBuilder"/> decides what each session needs to hear on each snapshot.
 /// </summary>
-public sealed class ZoneInstance
+public sealed partial class ZoneInstance
 {
     private readonly ILogger _log;
     private readonly List<GameEvent> _pending = new();
@@ -119,6 +119,7 @@ public sealed class ZoneInstance
         foreach (var message in _outbox)
         {
             session.Send(message);
+            if (message is EntitySpawnMsg spawn) SyncCastCue(session, spawn.State);
         }
         _outbox.Clear();
     }
@@ -133,8 +134,12 @@ public sealed class ZoneInstance
         _pending.Clear();
         foreach (var evt in batch)
         {
+            OutcomeCueAdapters.Present(this, evt);
             switch (evt)
             {
+                case CastPresentationEvent cast:
+                    SendCastCue(cast);
+                    break;
                 case DamageDealt d:
                     Broadcast(new CombatEventMsg(d.Evaded ? "evade" : d.Blocked ? "block" : "damage", d.Source.Key, d.Target.Key, Math.Round(d.Total, 1), d.Crit, d.Tags.Items.ToList(), null), d.Source, d.Target);
                     break;
@@ -325,6 +330,7 @@ public sealed class ZoneInstance
     public void Add(Session session)
     {
         Sessions.Add(session);
+        UpdateCastObservers();
         session.Zone = this;
         session.View.Reset();
         session.LastSnapshotAt = double.NegativeInfinity;
@@ -335,6 +341,7 @@ public sealed class ZoneInstance
     public void Remove(Session session)
     {
         Sessions.Remove(session);
+        UpdateCastObservers();
         if (session.Zone == this)
         {
             session.Zone = null;

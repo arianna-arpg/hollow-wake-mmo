@@ -51,6 +51,18 @@ public partial class Smoke : Node
             }
         }
         _started = Now;
+        // A headless window never receives the operating system's mouse-enter notification.
+        // Without it GUI clicks fall through to world input even when their coordinates hit a control.
+        if (DisplayServer.GetName() == "headless")
+        {
+            Record("headless input isolation", Input.GetConnectedJoypads().Count == 0,
+                $"{Input.GetConnectedJoypads().Count} physical controllers visible");
+            GetWindow().Size = new Vector2I(
+                (int)ProjectSettings.GetSetting("display/window/size/viewport_width"),
+                (int)ProjectSettings.GetSetting("display/window/size/viewport_height"));
+            GetViewport().NotifyMouseEntered();
+        }
+        GD.Print($"SMOKE viewport {GetViewport().GetVisibleRect()}, window {GetWindow().Size}");
         _ = Run();
     }
 
@@ -102,7 +114,7 @@ public partial class Smoke : Node
         if (character is null)
         {
             lists = _main.CharacterLists;
-            login.Create("Smoke", login.Callings.FirstOrDefault() ?? "holdfast");
+            login.Create("Smoke", Arg("--calling") ?? login.Callings.FirstOrDefault() ?? "holdfast");
             await Until(() => _main.CharacterLists > lists, 20);
             character = login.Characters.FirstOrDefault(c => c.Name == "Smoke");
             Record("create character", character is not null, character is null ? login.Status : $"{character.Name} the {character.Calling}");
@@ -121,7 +133,10 @@ public partial class Smoke : Node
 
         var t0 = Now;
         var built = await Until(() => _main.World.BuiltChunks > 0 && _main.World.PendingChunks == 0, 90);
-        Record("terrain built", built, $"{_main.World.BuiltChunks} chunks in {Now - t0:0.0}s, {_main.World.Entities.Count} entities in view, {Engine.GetFramesPerSecond()} fps");
+        Record("terrain built", built, $"{_main.World.BuiltChunks} chunks in {Now - t0:0.0}s, {_main.World.Entities.Count} entities in view, {Engine.GetFramesPerSecond()} fps{(built ? "" : $"; in world={_main.InWorld}, status: {login.Status}")}");
+        var ready = await Until(() => !_main.Loading.BlocksWorldInput, 20);
+        Record("world input ready", ready, $"loading={_main.Loading.Active}, blocked={_main.Loading.BlocksWorldInput}, chat={_main.Hud.ChatFocused}");
+        if (!ready) return;
         await Wait(1.0);
         await Shot("01_isometric.png");
         await LookStages();
@@ -226,6 +241,8 @@ public partial class Smoke : Node
         await TradeWithAVendor();
         await OptionsSteps();
 
+        if (_args.Contains("--cast-cues")) await CastCueSequence();
+
         // Weaves: walk to the nearest hob, hover it and press 1 to 4 until a combat line shows.
         var hob = Nearest(e => e.State.Pattern is not null && e.State.Pattern.StartsWith("hob", StringComparison.Ordinal) && !e.State.Dead);
         if (hob is null)
@@ -272,29 +289,36 @@ public partial class Smoke : Node
     {
         var world = _main.World;
         var settings = _main.Settings;
-        var geometry = await Measure("geometry");
-        Record("bodies as geometry", geometry.Bodies > 0 && geometry.P95 < 50, geometry.Line);
-        settings.Set("shadows", System.Text.Json.Nodes.JsonValue.Create(false));
-        await Wait(0.3);
-        var unshadowed = await Measure("geometry, no shadows");
-        settings.Set("shadows", System.Text.Json.Nodes.JsonValue.Create(true));
-        Record("bodies without shadows", unshadowed.Bodies > 0, unshadowed.Line);
-        settings.Set("bodies", System.Text.Json.Nodes.JsonValue.Create("cards"));
-        var baked = await Until(() => world.Appearance?.Baker.Pending == 0 && world.BodyCounts.Cards > 0, 20);
-        await Wait(0.5);
-        var cards = await Measure("cards");
-        await Shot("16_cards.png");
-        Record("bodies as cards", baked && cards.Cards > 0 && cards.P95 < 50, cards.Line);
-        settings.Set("bodies", System.Text.Json.Nodes.JsonValue.Create("auto"));
-        await Wait(0.3);
-        settings.Set("grayscale", System.Text.Json.Nodes.JsonValue.Create(true));
-        await Wait(0.3);
-        await Shot("17_grayscale.png");
-        settings.Set("grayscale", System.Text.Json.Nodes.JsonValue.Create(false));
-        settings.Set("reduce_motion", System.Text.Json.Nodes.JsonValue.Create(true));
-        await Wait(0.3);
-        await Shot("18_reduced_motion.png");
-        settings.Set("reduce_motion", System.Text.Json.Nodes.JsonValue.Create(false));
+        if (DisplayServer.GetName() == "headless")
+        {
+            GD.Print("SMOKE SKIP appearance rendering: headless display; geometry/card performance and readability require graphical evidence");
+        }
+        else
+        {
+            var geometry = await Measure("geometry");
+            Record("bodies as geometry", geometry.Bodies > 0 && geometry.P95 < 50, geometry.Line);
+            settings.Set("shadows", System.Text.Json.Nodes.JsonValue.Create(false));
+            await Wait(0.3);
+            var unshadowed = await Measure("geometry, no shadows");
+            settings.Set("shadows", System.Text.Json.Nodes.JsonValue.Create(true));
+            Record("bodies without shadows", unshadowed.Bodies > 0, unshadowed.Line);
+            settings.Set("bodies", System.Text.Json.Nodes.JsonValue.Create("cards"));
+            var baked = await Until(() => world.Appearance?.Baker.Pending == 0 && world.BodyCounts.Cards > 0, 20);
+            await Wait(0.5);
+            var cards = await Measure("cards");
+            await Shot("16_cards.png");
+            Record("bodies as cards", baked && cards.Cards > 0 && cards.P95 < 50, cards.Line);
+            settings.Set("bodies", System.Text.Json.Nodes.JsonValue.Create("auto"));
+            await Wait(0.3);
+            settings.Set("grayscale", System.Text.Json.Nodes.JsonValue.Create(true));
+            await Wait(0.3);
+            await Shot("17_grayscale.png");
+            settings.Set("grayscale", System.Text.Json.Nodes.JsonValue.Create(false));
+            settings.Set("reduce_motion", System.Text.Json.Nodes.JsonValue.Create(true));
+            await Wait(0.3);
+            await Shot("18_reduced_motion.png");
+            settings.Set("reduce_motion", System.Text.Json.Nodes.JsonValue.Create(false));
+        }
         settings.Set("day_lock", System.Text.Json.Nodes.JsonValue.Create(true));
         settings.Set("day_time", System.Text.Json.Nodes.JsonValue.Create(1.0));
         await Wait(0.4);
@@ -344,6 +368,37 @@ public partial class Smoke : Node
 
     // ------------------------------------------------------------ the interface
 
+    private string? Arg(string key)
+    {
+        var i = Array.IndexOf(_args, key);
+        return i >= 0 && i + 1 < _args.Length ? _args[i + 1] : null;
+    }
+
+    private async Task CastCueSequence()
+    {
+        var phases = new HashSet<string>();
+        // Real moving targets can evade a projectile. Retry ordinary input; never synthesize a contact.
+        for (var attempt = 0; attempt < 3 && !phases.Contains("impact"); attempt++)
+        {
+            var hob = Nearest(e => e.State.Pattern?.StartsWith("hob", StringComparison.Ordinal) == true && !e.State.Dead);
+            if (hob is null) break;
+            await TravelTo(() => (hob.State.X, hob.State.Y), 3f, 45);
+            await Hover(hob);
+            Tap(Key.Key1);
+            var until = Now + 3;
+            while (Now < until)
+            {
+                foreach (var cue in _main.CastVisuals.Timeline.Active.ToArray())
+                {
+                    if (cue.Event.Source == Self?.Key && phases.Add(cue.Phase)) await Shot($"cast_cue_{cue.Phase}.png");
+                }
+                await Frame();
+            }
+        }
+        Record("Cast cue presentation", phases.Contains("start") && phases.Contains("release") && phases.Contains("impact"),
+            $"phases={string.Join(',', phases)}; received={_main.CastCuesReceived}");
+    }
+
     /// <summary>The core pane opens with its key; every ribbon page the hero has opens from its ribbon on the rail.</summary>
     private async Task CorePaneAndPages()
     {
@@ -378,8 +433,7 @@ public partial class Smoke : Node
         // Escape closes the pages, then the core pane.
         for (var i = 0; i < pages.Count + 2 && hud.CoreOpen; i++)
         {
-            Tap(Key.Escape);
-            await Wait(0.15);
+            await EscapeAndWait();
         }
         Record("escape closes the core pane last", !hud.CoreOpen, $"core open={hud.CoreOpen}");
     }
@@ -453,12 +507,15 @@ public partial class Smoke : Node
             await Click(Screen(vendor.GlobalPosition + new Vector3(0, vendor.State.Height * 0.5f, 0)));
             await Until(() => (_main.VendorStates > states && hud.HasWorldPane("vendor")) || (_main.DialogueStates > talks && hud.HasWorldPane("dialogue")), 6);
             // A trader that talks first: bring its conversation to the front and ask to trade, as a player would.
-            if (!hud.HasWorldPane("vendor") && hud.FrontView<UI.WorldPanes.DialoguePane>() is { State: { } talk } dialogue)
+            if (!hud.HasWorldPane("vendor") && hud.FrontView<UI.WorldPanes.DialoguePane>() is { State: { } talk })
             {
                 hud.Workspace.SelectTab($"dialogue:{talk.Source}");
                 await Wait(0.3);
-                var index = talk.Choices.FindIndex(c => c.Id == "trade" && c.Enabled);
-                var button = index < 0 ? null : dialogue.FindChildren("*", "Button", true, false).OfType<Button>().FirstOrDefault(b => b.Text.StartsWith($"{index + 1}. ", StringComparison.Ordinal));
+                // Layout/restyling or a server close may replace the view during the await.
+                var dialogue = hud.FrontView<UI.WorldPanes.DialoguePane>();
+                var current = dialogue?.State;
+                var index = current?.Source == vendor.Key ? current.Choices.FindIndex(c => c.Id == "trade" && c.Enabled) : -1;
+                var button = index < 0 || !GodotObject.IsInstanceValid(dialogue) ? null : dialogue!.FindChildren("*", "Button", true, false).OfType<Button>().FirstOrDefault(b => b.Text.StartsWith($"{index + 1}. ", StringComparison.Ordinal));
                 if (button is not null)
                 {
                     await Click(ScreenCenter(button));
@@ -515,7 +572,8 @@ public partial class Smoke : Node
         }
 
         // The theme: pick the other direction in the theme row's list; the cluster redraws in it.
-        var before = SamplePixel(hud.ClusterRect);
+        var rendered = DisplayServer.GetName() != "headless";
+        var before = rendered ? SamplePixel(hud.ClusterRect) : "not rendered";
         var themeRow = Pane()?.RowOf("theme");
         var picker = themeRow?.FindChildren("*", "OptionButton", true, false).OfType<OptionButton>().FirstOrDefault();
         var other = 0;
@@ -533,10 +591,14 @@ public partial class Smoke : Node
         }
         await Wait(0.6);
         var themed = _main.Hud.Skin.T.Id;
-        var after = SamplePixel(_main.Hud.ClusterRect);
+        var after = rendered ? SamplePixel(_main.Hud.ClusterRect) : "not rendered";
         await Shot("12_theme.png");
-        Record("options switch the theme", picker is not null && themed != "etched_stone" && before != after,
+        Record("options switch the theme", picker is not null && themed != "etched_stone" && (!rendered || before != after),
             $"theme {themed}, cluster pixel {before} -> {after}");
+        if (!rendered)
+        {
+            GD.Print("SMOKE SKIP theme rendered pixels: headless display; theme state checked above");
+        }
 
         // A key: find the camera switch by searching, rebind it to B through its row, use it, and see the camera turn.
         await ShowOptionsPage("controls");
@@ -608,9 +670,23 @@ public partial class Smoke : Node
         var hud = _main.Hud;
         for (var i = 0; i < 8 && (hud.CoreOpen || hud.Workspace.Book.Leaves.Count > 0); i++)
         {
-            Tap(Key.Escape);
-            await Wait(0.15);
+            await EscapeAndWait();
         }
+    }
+
+    private string WorkspaceState()
+    {
+        var hud = _main.Hud;
+        return $"core={hud.CoreOpen}, tray={hud.Workspace.TrayOpen}, front={hud.Workspace.Book.Active()?.Id}, leaves={string.Join(',', hud.Workspace.Book.Leaves.Select(l => l.Id))}";
+    }
+
+    private async Task EscapeAndWait()
+    {
+        var before = WorkspaceState();
+        Tap(Key.Escape);
+        if (!await Until(() => WorkspaceState() != before, 2))
+            GD.Print($"SMOKE escape unchanged: {before}; loading={_main.Loading.BlocksWorldInput}, focus={GetViewport().GuiGetFocusOwner()?.GetType().Name}, chat={_main.Hud.ChatFocused}");
+        await Wait(0.15);
     }
 
     /// <summary>Types into the Options search field; the rows narrow to the matching entries of every page.</summary>
@@ -713,10 +789,23 @@ public partial class Smoke : Node
         Input.ParseInputEvent(new InputEventKey { Keycode = key, PhysicalKeycode = key, Pressed = false });
     }
 
-    /// <summary>Moves the cursor to a viewport point and clicks the left button there.</summary>
+    /// <summary>Moves the client's virtual pointer without touching the operating system cursor.</summary>
+    private void Point(Vector2 screen)
+    {
+        var previous = _main.SmokePointer ?? GetViewport().GetMousePosition();
+        _main.SmokePointer = screen;
+        Input.ParseInputEvent(new InputEventMouseMotion
+        {
+            Position = screen,
+            GlobalPosition = screen,
+            Relative = screen - previous,
+        });
+    }
+
+    /// <summary>Points and clicks inside the client, including with the headless display driver.</summary>
     private async Task Click(Vector2 screen)
     {
-        Input.WarpMouse(screen);
+        Point(screen);
         await Frame();
         await Frame();
         Input.ParseInputEvent(new InputEventMouseButton { ButtonIndex = MouseButton.Left, Pressed = true, Position = screen, GlobalPosition = screen });
@@ -725,7 +814,7 @@ public partial class Smoke : Node
 
     private async Task Hover(EntityView view)
     {
-        Input.WarpMouse(Screen(view.GlobalPosition + new Vector3(0, view.State.Height * 0.5f, 0)));
+        Point(Screen(view.GlobalPosition + new Vector3(0, view.State.Height * 0.5f, 0)));
         await Frame();
         await Frame();
     }

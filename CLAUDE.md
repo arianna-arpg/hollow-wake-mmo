@@ -26,7 +26,7 @@ Hollow Wake MMO is an MMOARPG foundation: an engine-agnostic C# simulation core,
 - `web/` — browser client: Vite, TypeScript, three.js. `src/app.ts` orchestrates; `net/protocol.ts` is generated; `world/` builds terrain from server chunks and renders entities, with `world/appearance/` the twin of the desktop's appearance logic; `view/camera.ts` has both camera modes; `public/config.json` holds every client setting; `scripts/smoke.mjs` is the scripted browser play-through.
 - `src/HollowWake.Tools` — the `hollowwake` CLI (`Program.cs`, `Probe.cs`, `Bench.cs`, `WeaveReport.cs`).
 - `launcher/`: the desktop launcher (Electron + TypeScript, pinned versions, electron-builder). `src/main/` holds the release feed, the verified download, safe extraction, installs, self-update and game start; `src/renderer/` is the page; `src/test/` the node:test suite; `news.json` is the news panel's source. It holds no game logic. Contract: `docs/design/launcher.md`.
-- `scripts/package-client.sh`: exports the client per platform with `src/HollowWake.Client/export_presets.cfg`, bundles `content/core`, zips, and writes the release `manifest.json`.
+- `scripts/package-client.sh`: exports the client per platform with `src/HollowWake.Client/export_presets.cfg`, bundles `content/core`, zips, and writes the release `manifest.json`. `scripts/port/`: the porting script that mapped the earlier prototype's combat content onto ours (units, Threads, statuses, stats), run once to write drafts; its ledger is `docs/design/parity/port-ledger.md`.
 - `.github/workflows/`: `ci.yml` (every push and pull request; its `ci` job is the one check main requires), `pages.yml` (the GitHub Pages build of the web client), `release.yml` (v* tags; dry runs on dispatch and on pipeline pull requests), `nightly.yml` (nightly pre-releases), `package.yml` (the jobs both release workflows share), `branches.yml` (the weekly branch report). `.github/pull_request_template.md` is the shape of a pull request.
 - `content/core` — the base content layer, one YAML file per area. `rules.yaml` holds every formula and tunable. `appearance/` is what the clients draw with (looks, surfaces, the day, motion timings), content the simulation never reads.
 - `tests/` — xunit. `HollowWake.Core.Tests` (foundations and gameplay against the real content), `HollowWake.Server.Tests` (loopback and WebSocket end to end, the generated protocol module). Web client unit tests are vitest files beside the code in `web/src`.
@@ -49,9 +49,11 @@ dotnet run --project src/HollowWake.Tools -- probe             # connect to a ru
 dotnet run --project src/HollowWake.Tools -c Release -- bench   # performance baseline against docs/design/performance.md budgets
 godot --path src/HollowWake.Client -- --smoke --shots DIR      # scripted client play-through against a running server (Godot 4.7 .NET)
 dotnet run --project src/HollowWake.Tools -- protocol-ts       # regenerate web/src/net/protocol.ts after changing a message
+node --test scripts/port/port-prototype.test.mjs              # the prototype porting script on a synthetic snapshot (see docs/design/parity/port-ledger.md to run it)
 npm --prefix web ci && npm --prefix web run build              # build the web client into web/dist (Node 22)
 npm --prefix web test                                          # web client unit tests
 npm --prefix web run smoke -- --shots DIR                      # scripted browser play-through against a running server (installed Edge or Chrome)
+node scripts/test-background.mjs --suite all                  # private headless browser + native smoke; preserves desktop input and focus
 scripts/codespace-play.sh                                      # build the web client and run the server (Codespaces, Linux, macOS)
 ```
 
@@ -70,6 +72,8 @@ bash scripts/package-client.sh --godot GODOT --version 0.1.0 --out DIR --check  
 git tag -a v0.2.0 -m "notes" && git push origin v0.2.0       # cut a stable release (release.yml); nightly.yml cuts pre-releases
 ```
 
+For routine client tests while the owner uses the machine, prefer the [background harness](docs/design/testing.md) from your own worktree. It hides child process windows, isolates browser controller input, and saves per-run logs and browser screenshots. Native rendering checks still require an isolated graphical session; the headless native run explicitly reports skipped pixel checks.
+
 ## Verification gates
 
 Before calling work done:
@@ -87,6 +91,7 @@ Before calling work done:
 - **One modifier engine.** Every numeric change to anything is a `Modifier` on an `AttributeSet` (flat, increased, more, override, link; scoped by tags; conditions; gauges). Do not invent parallel stat systems.
 - **Tags, not type checks.** Scope, gate and filter by tags. A new tag costs nothing.
 - **Registries for open sets.** Effect types, mechanism probes, hit stages, trigger kinds, intent handlers, AI actions, objective types, interactable kinds, component binders, content kinds and their validators, attribute families, curves, procedures, generator passes: register, never switch on strings inside systems.
+- **Presentation coverage.** A new effect handler family records its presentation decision in `tests/fixtures/cast-visuals/coverage.json`; the shared client fixture gate checks the effect registry and paired primitives.
 - **Events, not calls.** Systems publish `GameEvent`s; quests, loot, networking and tests subscribe.
 - **Determinism.** Every roll uses an `Rng` derived from a seed. Never `System.Random` or wall-clock time in gameplay code.
 - **Spatial queries are live views.** `Spatial.Within` iterates the grid in place: copy the results before spawning, destroying or moving entities inside the loop, because mutating the grid during iteration throws.
