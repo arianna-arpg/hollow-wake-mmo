@@ -8,7 +8,7 @@ Main merged automatically without conflicts. Its existing movement/AI, entry, ic
 
 The integration is prepared in a separate managed worktree. The final #37 source/content `ce3bcf569fb27426991ec69931c950e6951c74e1`, evidence head `c6e117a362b552f9865155789fdf020d979f97d2`, and its built outputs remain untouched for the serialized benchmark window. No builds, tests or benchmarks have run for this main integration yet. Full combined gates will run after the coordinator releases heavy work; no pass or merge acceptance is claimed.
 
-Acknowledged by: pending Claude review.
+Acknowledged by: [Claude rereview of #31 at 749e99b](https://github.com/arianna-arpg/hollow-wake-mmo/pull/31#issuecomment-6255391549); the newly named census table and paired timing are recorded separately for final review.
 
 ## Audit-only repair
 
@@ -96,3 +96,11 @@ Source `0ae9ec326a5c86ee58912013d31417fc05c4eeee`: browser unit tests 291 pass, 
 Fresh run-yVBA1c card and grayscale frames were inspected: both show interface/nameplates over a flat background, with no world terrain or bodies. This confirms the retained inherited blank-world defect on #34; behavioral smoke is not visual clearance. The separately committed #37 renderer correction 30f6c91 is the integration fix and will be rechecked after importing this foundation. No native pixel verification is claimed.
 
 These functional gates do not resolve the retained pre-main performance misses or establish a post-main timing pass. No benchmark was run during this integration.
+
+## #37 moving-villager smoke correction
+
+The first combined private browser run `run-Oqn7Cj` at runtime `4185c7f`/evidence `bee9c90` fails 1 of 31 checks: the villager conversation. The script reports arrival, waits 400 ms and aims before clicking, but the server rejects `Interact: too_far`. The world/card pixel assertion and all other browser checks pass. Native/probe stages do not run after this failure. Teardown is clean. The initial failure is retained as `37-main-interaction-first.*`.
+
+One read-only instrumented diagnostic run `run-6XhOk3` reproduces the same failure, retained as `37-main-interaction-diagnostic.*`. The requested, hovered and actual wire target all equal `4294969852` (Marcher). Immediately before the click the hero is at (129.10, 126.47) and villager at (132.64, 124.83), approximately 3.90 m apart; after sending it the villager is at (132.85, 124.68). The previous arrival predicate was <=1.6 m. Thus the moving villager had left the arrival range during the fixed delay/aiming; this is not a wrong-entity pick or a reason to relax server reach.
+
+The narrowly owned smoke correction removes the fixed wait and re-observes target position, hover identity and visibility after aiming, continuing the approach within the same original 45-second deadline until a nearby click is possible. It sends a single interaction, still requiring the real dialogue response. Read-only wire-target diagnostics remain for future failures. Three deterministic regressions cover movement during aiming, a different hovered body with bounded timeout, and a failed approach/disappearing target. They run with the normal browser test command (320 pass). Server rules, runtime, content, interaction reach and all existing success criteria are unchanged. The corrected full private run is recorded separately below; neither retained failure is overwritten or represented as a pass.

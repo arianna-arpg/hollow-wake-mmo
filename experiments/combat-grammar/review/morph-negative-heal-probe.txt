@@ -1,0 +1,36 @@
+  Determining projects to restore...
+  Restored <review-checkout>/src\HollowWake.Protocol\HollowWake.Protocol.csproj (in 264 ms).
+  Restored <review-checkout>/src\HollowWake.Server\HollowWake.Server.csproj (in 264 ms).
+  Restored <review-checkout>/src\HollowWake.Core\HollowWake.Core.csproj (in 263 ms).
+  Restored <review-checkout>/tests\HollowWake.Core.Tests\HollowWake.Core.Tests.csproj (in 264 ms).
+  Restored <review-checkout>/src\HollowWake.Tools\HollowWake.Tools.csproj (in 264 ms).
+  HollowWake.Core -> <review-checkout>/src\HollowWake.Core\bin\Release\net8.0\HollowWake.Core.dll
+  HollowWake.Protocol -> <review-checkout>/src\HollowWake.Protocol\bin\Release\net8.0\HollowWake.Protocol.dll
+  HollowWake.Server -> <review-checkout>/src\HollowWake.Server\bin\Release\net10.0\HollowWake.Server.dll
+  HollowWake.Tools -> <review-checkout>/src\HollowWake.Tools\bin\Release\net10.0\hollowwake.dll
+  HollowWake.Core.Tests -> <review-checkout>/tests\HollowWake.Core.Tests\bin\Release\net10.0\HollowWake.Core.Tests.dll
+Test run for <review-checkout>/tests\HollowWake.Core.Tests\bin\Release\net10.0\HollowWake.Core.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+[xUnit.net 00:00:02.28]     HollowWake.Core.Tests.MorphReviewProbeTests.HealingCannotLowerLifeOutsideTheDamagePipeline(negativeModifier: True) [FAIL]
+[xUnit.net 00:00:02.29]     HollowWake.Core.Tests.MorphReviewProbeTests.HealingCannotLowerLifeOutsideTheDamagePipeline(negativeModifier: False) [FAIL]
+  Failed HollowWake.Core.Tests.MorphReviewProbeTests.HealingCannotLowerLifeOutsideTheDamagePipeline(negativeModifier: True) [1 s]
+  Error Message:
+   Assert.Equal() Failure: Values differ
+Expected: 98
+Actual:   93
+  Stack Trace:
+     at HollowWake.Core.Tests.MorphReviewProbeTests.HealingCannotLowerLifeOutsideTheDamagePipeline(Boolean negativeModifier) in <review-checkout>/tests\HollowWake.Core.Tests\MorphReviewProbeTests.cs:line 33
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeDirectByRefWithFewArgs(Object obj, Span`1 copyOfArgs, BindingFlags invokeAttr)
+  Failed HollowWake.Core.Tests.MorphReviewProbeTests.HealingCannotLowerLifeOutsideTheDamagePipeline(negativeModifier: False) [1 ms]
+  Error Message:
+   Assert.Equal() Failure: Values differ
+Expected: 98
+Actual:   93
+  Stack Trace:
+     at HollowWake.Core.Tests.MorphReviewProbeTests.HealingCannotLowerLifeOutsideTheDamagePipeline(Boolean negativeModifier) in <review-checkout>/tests\HollowWake.Core.Tests\MorphReviewProbeTests.cs:line 33
+   at InvokeStub_MorphReviewProbeTests.HealingCannotLowerLifeOutsideTheDamagePipeline(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithOneArg(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+
+Failed!  - Failed:     2, Passed:     0, Skipped:     0, Total:     2, Duration: 1 s - HollowWake.Core.Tests.dll (net10.0)
+

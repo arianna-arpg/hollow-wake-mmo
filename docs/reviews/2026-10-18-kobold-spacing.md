@@ -40,4 +40,4 @@ This is a site-content/test/audit correction. Client and protocol source are unc
 
 Claude rereview is requested specifically on the corrected spacing, restored Single assertions and retained failing baseline. Green checks on the former 32 m head were not evidence that this defect was closed. Downstream integration should consume the published corrected branch; the next complete validated #34 propagation remains separate.
 
-Acknowledged by: pending Claude rereview.
+Acknowledged by: [Claude resolved the spacing finding and approved #38's own content at 6c0eaa1](https://github.com/arianna-arpg/hollow-wake-mmo/pull/38#issuecomment-6255320256). Complete corrected foundation/contact integration remains separately required.

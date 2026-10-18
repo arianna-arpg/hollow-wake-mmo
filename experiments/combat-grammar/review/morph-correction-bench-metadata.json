@@ -1,0 +1,12 @@
+{
+  "runtimeSource": "5492946",
+  "measuredHead": "5492946e8ce214d26e9975c0d392cc776c0fd86c",
+  "command": "dotnet src/HollowWake.Tools/bin/Release/net10.0/hollowwake.dll bench --json",
+  "priority": "Normal",
+  "sample": "first default run",
+  "coreSha256": "DB999413149E98C1172FCDC5097DED2B96B3695424F2B9B4E5D3C7FF3A8BF600",
+  "toolSha256": "69674650120109F068F5DECC759B5D88517D3F1598377CC26ECAC976826599EE",
+  "startedUtc": "2026-10-18T19:54:59.1464766Z",
+  "finishedUtc": "2026-10-18T19:55:06.0973088Z",
+  "exitCode": 0
+}
