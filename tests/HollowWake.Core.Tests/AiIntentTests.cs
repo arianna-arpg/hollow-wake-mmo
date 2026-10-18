@@ -1,10 +1,9 @@
-using System.Globalization;
 using System.Numerics;
-using System.Security.Cryptography;
-using System.Text;
+using System.Text.Json.Nodes;
 using HollowWake.Core.Ai;
 using HollowWake.Core.Characters;
 using HollowWake.Core.Components;
+using HollowWake.Core.Content;
 using HollowWake.Core.Definitions;
 using HollowWake.Core.Ecs;
 using HollowWake.Core.Intents;
@@ -327,10 +326,10 @@ public class AiIntentTests
     }
 
     /// <summary>
-    /// A hunter's walk tick by tick (position, facing and path length), the same trace the independent review
-    /// took on the base before the walks were intents.
+    /// A hunter's walk tick by tick: where it stands, which way it faces and how many waypoints its path has left,
+    /// the same walk the independent review traced on the base before the walks were intents.
     /// </summary>
-    private static string Trace(string hunter, Vector3 at, Vector3 preyAt, Action<Simulation> walls, double seconds, bool preyMoves)
+    private static List<(float X, float Y, float Yaw, int Path)> Walk(string hunter, Vector3 at, Vector3 preyAt, Action<Simulation> walls, double seconds, bool preyMoves)
     {
         var sim = ZoneBuilder.CreateArena(CoreContent.Registry, 3);
         var factory = sim.Service<PatternFactory>();
@@ -343,33 +342,52 @@ public class AiIntentTests
         walls(sim);
         var t = sim.World.Get<Transform>(h)!;
         var m = sim.World.Get<Motion>(h)!;
-        var sb = new StringBuilder();
+        var walk = new List<(float X, float Y, float Yaw, int Path)>();
         for (var i = 0; i < seconds * sim.Clock.TicksPerSecond; i++)
         {
             sim.Tick();
-            sb.Append(i).Append(' ')
-              .Append(t.Position.X.ToString("R", CultureInfo.InvariantCulture)).Append(' ')
-              .Append(t.Position.Y.ToString("R", CultureInfo.InvariantCulture)).Append(' ')
-              .Append(t.Yaw.ToString("R", CultureInfo.InvariantCulture)).Append(' ')
-              .Append(m.Path.Count).Append('\n');
+            walk.Add((t.Position.X, t.Position.Y, t.Yaw, m.Path.Count));
         }
-        return sb.ToString();
+        return walk;
     }
 
-    private static string Sha256(string text) => Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(text))).ToLowerInvariant();
+    /// <summary>
+    /// Holds a walk to the recorded one tick by tick: where it stands and which way it faces within
+    /// <paramref name="tolerance"/> (facing as an angle, so a turn across the circle's seam is no difference),
+    /// and how many waypoints its path has left exactly.
+    /// </summary>
+    private static void Follows(string name, JsonNode recorded, List<(float X, float Y, float Yaw, int Path)> walk, double tolerance)
+    {
+        var ticks = recorded.AsArray();
+        Assert.True(ticks.Count == walk.Count, $"{name}: {walk.Count} ticks walked against {ticks.Count} recorded");
+        for (var i = 0; i < ticks.Count; i++)
+        {
+            var tick = ticks[i]!.AsArray();
+            var (x, y, yaw, path) = walk[i];
+            double Recorded(int column) => JsonNum.TryDouble(tick[column], out var v) ? v : throw new InvalidDataException($"{name}: tick {i} has no number in column {column}");
+            var off = Math.Max(Math.Abs(x - Recorded(0)), Math.Abs(y - Recorded(1)));
+            Assert.True(off <= tolerance, $"{name}: at tick {i} the walker stands at ({x}, {y}), {off} from the recorded ({Recorded(0)}, {Recorded(1)})");
+            var turned = Math.Abs(Math.IEEERemainder(yaw - Recorded(2), 2 * Math.PI));
+            Assert.True(turned <= tolerance, $"{name}: at tick {i} the walker faces {yaw}, {turned} from the recorded {Recorded(2)}");
+            Assert.True(path == Recorded(3), $"{name}: at tick {i} the path has {path} waypoints left against {Recorded(3)} recorded");
+        }
+    }
 
     [Fact]
     public void ChasesAroundObstaclesWalkTheBaseTrajectoryTickForTick()
     {
-        // The hashes are of the traces the base drew (main at a810b0a, before the walks were intents).
-        var detour = Trace("wolf", new Vector3(10.5f, 10.5f, 0), new Vector3(17.5f, 10.5f, 0),
-            sim => { for (var y = 2; y <= 18; y++) Block(sim, 14, y); }, 8, false);
-        Assert.Equal("2ec6e14af3a1528319c700b0fd63e2f5396be1ce6083eaca52322fd911159e30", Sha256(detour));
-        var forest = Trace("wolf", new Vector3(5.5f, 5.5f, 0), new Vector3(30.5f, 24.5f, 0),
-            sim => { for (var x = 8; x <= 28; x += 3) for (var y = 6; y <= 24; y += 2) { Block(sim, x, y); Block(sim, x, y + 1); } }, 12, false);
-        Assert.Equal("3334d55b1e943f275be04d54d10fcf4c93fc016dc2e8937014716e96009ab787", Sha256(forest));
-        var zigzag = Trace("hob", new Vector3(5.5f, 10.5f, 0), new Vector3(30.5f, 10.5f, 0),
-            sim => { for (var y = 0; y <= 16; y++) Block(sim, 10, y); for (var y = 5; y <= 22; y++) Block(sim, 16, y); for (var y = 0; y <= 16; y++) Block(sim, 22, y); }, 15, true);
-        Assert.Equal("2d722ec264001e4047db8221086d92f93714cc495901806dbcdeeb5ee2af20b6", Sha256(zigzag));
+        // The reference holds the walks the base drew (main before the walks were intents) tick by tick, the numbers
+        // as the review's probe printed them. Floating point differs in its last bits from one platform to another
+        // (the reference names the one it was recorded on), so a walk is held to it within a ten-thousandth of a unit
+        // and of a radian, far below a tick's step, rather than by a hash of the trace; the waypoints left match exactly.
+        const double tolerance = 1e-4;
+        var file = Path.Combine(CoreContent.FindContentDir(), "..", "..", "tests", "fixtures", "ai-chase-reference.json");
+        var chases = JsonNode.Parse(File.ReadAllText(file))!["chases"]!;
+        Follows("wall_detour", chases["wall_detour"]!, Walk("wolf", new Vector3(10.5f, 10.5f, 0), new Vector3(17.5f, 10.5f, 0),
+            sim => { for (var y = 2; y <= 18; y++) Block(sim, 14, y); }, 8, false), tolerance);
+        Follows("forest", chases["forest"]!, Walk("wolf", new Vector3(5.5f, 5.5f, 0), new Vector3(30.5f, 24.5f, 0),
+            sim => { for (var x = 8; x <= 28; x += 3) for (var y = 6; y <= 24; y += 2) { Block(sim, x, y); Block(sim, x, y + 1); } }, 12, false), tolerance);
+        Follows("hob_zigzag", chases["hob_zigzag"]!, Walk("hob", new Vector3(5.5f, 10.5f, 0), new Vector3(30.5f, 10.5f, 0),
+            sim => { for (var y = 0; y <= 16; y++) Block(sim, 10, y); for (var y = 5; y <= 22; y++) Block(sim, 16, y); for (var y = 0; y <= 16; y++) Block(sim, 22, y); }, 15, true), tolerance);
     }
 }
