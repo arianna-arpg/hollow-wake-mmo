@@ -36,6 +36,7 @@ The living world's contract set and its work packages are in [design/world](desi
 - Status interactions (shatter, detonate), stat trades, keystone-scale passives, specialization realms.
 - Item sockets with glyph gems, crafting benches that add and remove affixes, bench costs as currency sinks.
 - Balance harness: seeded batch duels and drop statistics in the tools with baselines checked in.
+- The combat grammar ([design/combat-grammar.md](design/combat-grammar.md)) in passes: morphable deliveries (geometry and kinematics as attributes, flags folded into axes, a flight's state in its hooks); the AI as a player (an intent seam, affordances, doctrines as content, a decision event); the variety matrix with bands in content, a variety index and a nightly round robin; playtests against a rubric.
 - Verification: the balance harness runs in CI against baselines with tolerances.
 
 ## M4: Scale

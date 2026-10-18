@@ -1,0 +1,117 @@
+{
+  "priorSource": "3007003db865eceafac955ecf2a859431f010ae2",
+  "mainMergeSource": "44a8015795e16c8bc8b0333814496c9d89fe2fb7",
+  "contentPath": "content/core/combat/weaves-undead.json",
+  "priorGitBlob": "9017f323b91aebb86b040d21e2267e9a3e64468f",
+  "mainMergeGitBlob": "9017f323b91aebb86b040d21e2267e9a3e64468f",
+  "normalizedContentSha256": "02c0c7600f579ac83057bf594eb1196a29daeba4ccaddb1a60ad9a214ed5a845",
+  "unchangedContent": true,
+  "reviewedExistingLiterals": [
+    {
+      "key": "preset bone_arrow effects[0].radius",
+      "value": 0.16,
+      "reason": "Existing arrow collision radius in world units; no geometry change."
+    },
+    {
+      "key": "preset raise_dead effects[0].duration",
+      "value": 0,
+      "reason": "Existing no-timed-expiry sentinel; capacity, death and dismissal still apply."
+    },
+    {
+      "key": "preset raise_zombie effects[0].count",
+      "value": 1,
+      "reason": "Existing one-corpse, one-body request; corpse gating is unchanged."
+    },
+    {
+      "key": "preset raise_zombie effects[0].duration",
+      "value": 0,
+      "reason": "Existing no-timed-expiry sentinel; capacity, death and dismissal still apply."
+    },
+    {
+      "key": "preset summon_abomination effects[0].duration",
+      "value": 0,
+      "reason": "Existing no-timed-expiry sentinel; capacity, death and dismissal still apply."
+    },
+    {
+      "key": "preset summon_barrow_hound effects[0].duration",
+      "value": 0,
+      "reason": "Existing no-timed-expiry sentinel; capacity, death and dismissal still apply."
+    },
+    {
+      "key": "preset summon_blade_wraith effects[0].duration",
+      "value": 0,
+      "reason": "Existing no-timed-expiry sentinel; capacity, death and dismissal still apply."
+    },
+    {
+      "key": "preset summon_bone_golem effects[0].contract.reserve.mana",
+      "value": 30,
+      "reason": "Existing contract mana reservation, preserving its economy."
+    },
+    {
+      "key": "preset summon_bone_golem effects[0].contract.respawn",
+      "value": 8,
+      "reason": "Existing contract respawn seconds, preserving return timing."
+    },
+    {
+      "key": "preset summon_bone_golem effects[0].count",
+      "value": 1,
+      "reason": "Existing single-body contract request, preserving capacity behavior."
+    },
+    {
+      "key": "preset summon_bone_golem effects[0].max_active",
+      "value": 1,
+      "reason": "Existing one-active-golem cap, preserving exclusivity/capacity."
+    },
+    {
+      "key": "preset summon_ossuary_lich effects[0].duration",
+      "value": 0,
+      "reason": "Existing no-timed-expiry sentinel; capacity, death and dismissal still apply."
+    },
+    {
+      "key": "preset summon_skeletal_duelist effects[0].duration",
+      "value": 0,
+      "reason": "Existing no-timed-expiry sentinel; capacity, death and dismissal still apply."
+    },
+    {
+      "key": "preset summon_skeletal_mages effects[0].duration",
+      "value": 0,
+      "reason": "Existing no-timed-expiry sentinel; capacity, death and dismissal still apply."
+    },
+    {
+      "key": "preset summon_skeletal_sentinel effects[0].duration",
+      "value": 0,
+      "reason": "Existing no-timed-expiry sentinel; capacity, death and dismissal still apply."
+    },
+    {
+      "key": "preset summon_skeleton effects[0].duration",
+      "value": 0,
+      "reason": "Existing no-timed-expiry sentinel; capacity, death and dismissal still apply."
+    },
+    {
+      "key": "preset summon_skeleton_archer effects[0].duration",
+      "value": 0,
+      "reason": "Existing no-timed-expiry sentinel; capacity, death and dismissal still apply."
+    },
+    {
+      "key": "preset summon_wraith effects[0].decay.delay",
+      "value": 4,
+      "reason": "Existing delay before decay begins, in seconds."
+    },
+    {
+      "key": "preset summon_wraith effects[0].decay.fraction",
+      "value": 0.04,
+      "reason": "Existing initial fraction lost per decay step."
+    },
+    {
+      "key": "preset summon_wraith effects[0].decay.growth",
+      "value": 1.35,
+      "reason": "Existing decay growth factor, preserving escalation."
+    },
+    {
+      "key": "preset summon_wraith effects[0].duration",
+      "value": 0,
+      "reason": "Existing no-timed-expiry sentinel; decay still removes life."
+    }
+  ],
+  "verification": "Static comparison only; executable gates held for the coordinator measurement window."
+}

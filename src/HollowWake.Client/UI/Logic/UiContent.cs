@@ -100,7 +100,7 @@ public sealed class UiTheme
     }
 }
 
-/// <summary>Glyphs as SVG path data and the maps from pools, statuses, looks and slots to them.</summary>
+/// <summary>Glyphs as SVG path data and the maps from pools, statuses and slots to them.</summary>
 public sealed class UiIconSet
 {
     public string Id { get; init; } = "";
@@ -111,7 +111,6 @@ public sealed class UiIconSet
     public Dictionary<string, string> Accents { get; init; } = new(StringComparer.Ordinal);
     public Dictionary<string, string> Pools { get; init; } = new(StringComparer.Ordinal);
     public Dictionary<string, string> Statuses { get; init; } = new(StringComparer.Ordinal);
-    public Dictionary<string, string> Looks { get; init; } = new(StringComparer.Ordinal);
     public Dictionary<string, string> Slots { get; init; } = new(StringComparer.Ordinal);
     public string Fallback { get; init; } = "rune";
 
@@ -121,26 +120,6 @@ public sealed class UiIconSet
     public string ForPool(string pool) => Resolve(Pools.GetValueOrDefault(pool));
     public string ForStatus(string status) => Resolve(Statuses.GetValueOrDefault(status));
     public string ForSlot(string slot) => Resolve(Slots.GetValueOrDefault(slot));
-
-    /// <summary>A weave's glyph: its look, else any key word of its key that names a look or form, else the fallback.</summary>
-    public string ForWeave(string? look, string? key)
-    {
-        if (look is not null && Looks.TryGetValue(look, out var byLook))
-        {
-            return Resolve(byLook);
-        }
-        if (key is not null)
-        {
-            foreach (var part in key.Split(new[] { '_', '[', ']', '+', ',', '.', ' ' }, StringSplitOptions.RemoveEmptyEntries))
-            {
-                if (Looks.TryGetValue(part, out var byPart))
-                {
-                    return Resolve(byPart);
-                }
-            }
-        }
-        return Fallback;
-    }
 
     /// <summary>An SVG document for a glyph, white strokes on nothing, ready to rasterize and tint.</summary>
     public string Svg(string icon, double pixels, string color = "#ffffff")
@@ -167,7 +146,6 @@ public sealed class UiIconSet
         Accents = Json.StringMap(o["accents"]),
         Pools = Json.StringMap(o["pools"]),
         Statuses = Json.StringMap(o["statuses"]),
-        Looks = Json.StringMap(o["looks"]),
         Slots = Json.StringMap(o["slots"]),
         Fallback = Json.Str(o["fallback"], "rune"),
     };

@@ -7,7 +7,7 @@ The helper is verified locally. Automatic cloud provisioning, detached-process s
 ## Play
 
 1. Use **Play a branch** on the Pages login screen, or the repository's **Code**, **Codespaces** menu. The link offers an existing Codespace for that branch when available. First setup takes a few minutes.
-2. Wait for the forwarded browser port to open. The startup helper prepares the selected branch's server and client together. If the browser did not open, use **Open in Browser** on port 7778 in the Ports panel. The startup output also prints a link with `?play=1` for automatic login and character resume. To start it manually after stopping it, run:
+2. Wait for the forwarded browser port to open. The startup helper prepares the selected branch's server and client together. If the browser did not open, use **Open in Browser** on port 7778 in the Ports panel. The startup output also prints a link with `?play=1` for automatic login into Mu. To start it manually after stopping it, run:
 
    ```bash
    node scripts/play-local.mjs --browser --no-open
@@ -15,7 +15,7 @@ The helper is verified locally. Automatic cloud provisioning, detached-process s
 
    `node scripts/play-local.mjs --stop` requests a save and shutdown. Do not start the legacy foreground script while the managed server owns these ports.
 3. Keep the forwarded port private for your own playtest. To invite others or connect from the separate Pages origin, make port 7778 public in **Ports**, **Port Visibility**, **Public**, then return it to private when done.
-4. The page fills in its own server address. Press **Connect**, or use the `?play=1` link to connect automatically. Create a character on the first visit; quick play resumes the remembered character on later visits.
+4. The page fills in its own server address. Press **Connect**, or use the `?play=1` link to connect automatically. On the first visit, choose an unclaimed vessel in Mu, name it, and Wake. On later visits, quick play focuses the remembered vessel and waits for an explicit **Wake**; it does not enter the world automatically.
 
 Other people can join with the same address while the port is public and the codespace runs.
 
