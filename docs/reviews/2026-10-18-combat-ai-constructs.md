@@ -1,6 +1,6 @@
 # Combat AI: constructs act through the runtime
 
-Date: 2026-10-18. Author: the combat session (Claude). Base: `claude/combat-ai-intent-seam` at `0dd5b10`, stacked on it. Branch `claude/combat-ai-constructs`. The intent seam ([its record](2026-10-18-combat-ai-intent-seam.md)) left one direct effect run in the AI: the device actions fired their weaves through `ConstructCasting.Fire`, past costs, cast times, gates, target kinds and the runtime's events. This request replaces it. The independent review of the seam measured what an earlier draft of this work did to constructs (a totem's first bolt later, an echo replaying nine of fifteen owner casts); the decisions below answer it.
+Date: 2026-10-18. Author: the combat session (Claude). Base: `claude/combat-ai-intent-seam` at `87ad953` (on main `26b9e46`; written on `0dd5b10` and rebased), stacked on it. Branch `claude/combat-ai-constructs`. The intent seam ([its record](2026-10-18-combat-ai-intent-seam.md)) left one direct effect run in the AI: the device actions fired their weaves through `ConstructCasting.Fire`, past costs, cast times, gates, target kinds and the runtime's events. This request replaces it. The independent review of the seam measured what an earlier draft of this work did to constructs (a totem's first bolt later, an echo replaying nine of fifteen owner casts); the decisions below answer it.
 
 ## What changed
 
@@ -12,7 +12,7 @@ Date: 2026-10-18. Author: the combat session (Claude). Base: `claude/combat-ai-i
 
 ## Measured
 
-The review's totem and echo probes are now tests (`ConstructScenarioTests`): the owner casting its spit whenever ready for ten seconds with an echo beside it (at normal and double cast speed, the foe nine and fourteen units off), and the ember totem and a plain totem with a foe eight units off for ten seconds. Each scenario's casts and hits are traced event by event and hashed (SHA-256). Before is the seam's head, where constructs still took the legacy path; after is this request.
+The review's totem and echo probes are now tests (`ConstructScenarioTests`): the owner casting its spit whenever ready for ten seconds with an echo beside it (at normal and double cast speed, the foe nine and fourteen units off), and the ember totem and a plain totem with a foe eight units off for ten seconds. Each scenario's casts and hits are traced event by event and hashed (SHA-256). Before is the seam's head, where constructs still took the legacy path; after is this request. Both were measured again once the two were rebased onto main `26b9e46`: the same numbers and hashes.
 
 | | Before | After |
 |---|---|---|
@@ -30,20 +30,21 @@ The echo is unchanged event for event. The totem's bolt is now a use with its 0.
 
 ## Evidence
 
-- **Duel traces, byte-identical** to the seam's and the base's: `1632a833…`, `13103d53…`, `d86145f5…`, `35f7aba1…`, `498105ff…`, `f97e63c0…`, `d84e14f3…` (the seven standard duels; no duel holds a construct).
-- **Tests:** `dotnet test HollowWake.sln` passes: core 595 (four new: every owner cast replayed, the scenario numbers and hashes, a totem paying its cost and waiting its cast time with the waiver taken off, and no totem cast with an empty handler registry), server 43, client 114. The construct tests the seam left unchanged pass unchanged: the echo at half strength, the trap within half a second, the inheriting totem hitting with the owner's numbers and crediting the owner, caps, domes and the forwarded glyphs.
+- **Duel traces, byte-identical** to the seam's and to main's at `26b9e46`: `1632a833…`, `13103d53…`, `d86145f5…`, `35f7aba1…`, `498105ff…`, `f97e63c0…`, `d84e14f3…` (the seven standard duels; no duel holds a construct).
+- **Tests:** `dotnet test HollowWake.sln` passes on the final tree: core 619 (four new: every owner cast replayed, the scenario numbers and hashes, a totem paying its cost and waiting its cast time with the waiver taken off, and no totem cast with an empty handler registry), server 43, client 114. The construct tests the seam left unchanged pass unchanged: the echo at half strength, the trap within half a second, the inheriting totem hitting with the owner's numbers and crediting the owner, caps, domes and the forwarded glyphs.
 - **Content:** `hollowwake validate` reports 0 errors and 0 warnings; `hollowwake weave snare_burst` compiles it instant on `snare_blast`. `hollowwake load --x 0 --y 0` ran 200 ticks to 2672 entities and 272 monsters, unchanged.
-- **Bench** (`bench --only tick`, Release, three runs of the seam's head and three of this request back to back): `system.behavior` 1.97, 1.78 and 1.87 ms per tick on the seam's head and 2.34, 2.08 and 1.78 here, within the machine's noise (the bench zone holds no construct) and the 3 ms budget; behavior allocation 23.4 KB a tick on both; `zone.tick.alloc` 68.8 KB on both.
+- **Composition lint** (`hollowwake lint`, which main gained after this request was written): two findings more than on the seam, both the new form. `form.one_use` names `snare_blast` a shell (no drop weight) that one preset composes on, and `expression.copied` counts its damage, `weave.base_damage * spell.power`, as that formula's sixteenth copy. They are the price of an instant trap by content: a weave's cast mode and cast time are its form's, which no preset or glyph sets, and no shell that reads `cast.time` aims a spell's area at the ground; a shell for that delivery (`effects: []`, the graph on the preset) would be one preset's shell all the same. The rest of the report moves only by line numbers.
+- **Bench** (`bench --only tick`, Release, three runs of the seam's head and three of this request back to back, taken before the rebase onto main `26b9e46`): `system.behavior` 1.97, 1.78 and 1.87 ms per tick on the seam's head and 2.34, 2.08 and 1.78 here, within the machine's noise (the bench zone holds no construct) and the 3 ms budget; behavior allocation 23.4 KB a tick on both; `zone.tick.alloc` 68.8 KB on both.
 
 ## Files other open requests touch
 
 Request #20 (`codex/shared-cast-forecasts-integration`, open) edits files this request edits:
 
-- `Weaves/WeaveRuntime.cs`: `OriginOf`, and two lines in `Run`'s effect context (`Source` is the origin; `From` is the caster's position when the origin is another body). A trial merge with #20's head (`da8e549`) merges it cleanly; the merged `Run` keeps #20's release-time target check ahead of the origin, so a construct's reach at release is measured from the construct.
+- `Weaves/WeaveRuntime.cs`: `OriginOf`, and two lines in `Run`'s effect context (`Source` is the origin; `From` is the caster's position when the origin is another body). A trial merge with #20's head (`da8e549`) merges these lines cleanly; the merged `Run` keeps #20's release-time target check ahead of the origin, so a construct's reach at release is measured from the construct. The file's two conflicts in that merge are main's held-mode blocks against #20's own edits, the same two #20 meets merging with main alone.
 - `Weaves/SlotBehaviors.cs`: `CastPreset`'s resolution moves into `RunFree`, which `Replay` shares. This conflicts with #20's edit of `CastPreset` (it drops the dead-target check and runs the effects through its `ReleaseTargets.Execute`). The resolution is to take #20's two changes into `RunFree`, so presets and an echo's replay both get #20's release-time checks.
 - `docs/design/weaves-and-effects.md` and `docs/design/networking-and-persistence.md`: a sentence each, which merge cleanly.
 
-If #20 merges first, this request (with the seam beneath it) is rebased onto it and its gates run again.
+The trial merge's other conflicts (`Messages.cs`, `ZoneHost.cs`, `InterfaceProtocolTests.cs`, the web's `protocol.ts` and the desktop's `Main.cs`) are #20's with main alone. If #20 merges first, this request (with the seam beneath it) is rebased onto it and its gates run again.
 
 ## Open
 
