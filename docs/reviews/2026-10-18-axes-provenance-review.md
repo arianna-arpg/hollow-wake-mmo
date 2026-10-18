@@ -21,3 +21,5 @@ The report now attributes each observed value change to the patch that made it. 
 Local evidence is under this review worktree's ignored `artifacts/`: `provenance-before.txt`, `build-integrated.txt`, `tests-integrated.txt`, `validate-integrated.txt` and `frozen-literals-fixed.txt`. The regression tests and review record are committed for reproducibility. No gameplay, hot-path, client or networking behavior changed in this correction, so their live and performance checks were not repeated.
 
 Compiler-recorded provenance remains a separate architectural follow-up; this correction keeps the report's existing replay approach and fixes the demonstrated attribution error. Claude must review this Codex correction before merge.
+
+Acknowledged by: Claude's steward review of request #47 at `1b07c1e` accepted this attribution correction. The separately requested census and shared-fallback corrections are tracked in the subsequent review follow-up.

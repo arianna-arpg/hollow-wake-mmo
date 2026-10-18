@@ -512,7 +512,7 @@ public static class AxisReport
 
     /// <summary>
     /// The glyphs' part of the census, so a glyph no preset sockets is counted too: each glyph, in id order, on
-    /// the first form by id it fits, active (with the first threads by id the form takes), else on the first
+    /// the first form by id it fits and contributes values to (with the first threads by id the form takes), else on the first
     /// preset by id it fits beside the preset's own glyphs, with the values the glyph wrote (what its patches set
     /// and created, its riders, added effects and cycle) and the cast-layer blocks it grants. A glyph's values are
     /// keyed in its own definition, so where it lands moves none of their keys. A glyph that fits nothing carries
@@ -529,6 +529,7 @@ public static class AxisReport
         {
             var writer = "glyph " + glyph.Id;
             var granted = $"glyph.{glyph.Id}.";
+            var contributesGraph = glyph.Hooks.Count > 0 || glyph.Patches.Count > 0 || glyph.AddsEffects.Count > 0;
             var specs = forms.Select(f => new WeaveSpec { Form = f.Id, Threads = threads.Take(Math.Max(1, f.MinThreads)).Take(f.MaxThreads).ToList(), Glyphs = { glyph.Id } })
                 .Concat(presets.Select(p => new WeaveSpec { Preset = p.Id, Glyphs = { glyph.Id } }));
             WeaveAxes? placed = null;
@@ -539,10 +540,16 @@ public static class AxisReport
                     continue;
                 }
                 var own = Of(weave, content).Where(v => v.Writer == writer || v.Path.StartsWith(granted, StringComparison.Ordinal)).ToArray();
+                // Declaring a mechanism makes a glyph fit even when this carrier has no node for its hooks or
+                // patches. Keep looking so an empty shell cannot hide the glyph's values from the census.
+                if (contributesGraph && own.Length == 0)
+                {
+                    continue;
+                }
                 placed = new WeaveAxes(glyph.Id, "glyph", own, null);
                 break;
             }
-            all.Add(placed ?? new WeaveAxes(glyph.Id, "glyph", Array.Empty<AxisValue>(), "fits no form or preset"));
+            all.Add(placed ?? new WeaveAxes(glyph.Id, "glyph", Array.Empty<AxisValue>(), "fits no contributing form or preset"));
         }
         return all;
     }

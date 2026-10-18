@@ -227,6 +227,9 @@ entries:
         // The weave's damage effectiveness scales only the added damage, and only where the node writes no effectiveness.
         Assert.Null(At("effects[4].on_hit[1].added_effectiveness"));
         Assert.Equal(0.5, At("effects[4].on_hit[1].effectiveness"));
+        var writtenEffectiveness = Assert.Single(values, v => v.Path == "effects[4].on_hit[1].effectiveness");
+        Assert.Equal("damage.effectiveness", writtenEffectiveness.Attribute);
+        Assert.Contains("for added damage", writtenEffectiveness.Detail);
         Assert.Equal(1.5, At("effects[4].on_hit[2].added_effectiveness"));
         Assert.DoesNotContain(values, v => v.Name == "payload.effectiveness" && v.Source == AxisSource.Attribute);
 
@@ -420,6 +423,18 @@ entries:
             }
         }
         Assert.True(placed > 0);
+    }
+
+    [Fact]
+    public void EveryGraphGlyphContributesValuesToItsCensus()
+    {
+        var content = CoreContent.Registry;
+        var census = AxisReport.OfGlyphs(content).ToDictionary(item => item.Id);
+        foreach (var glyph in content.Each<GlyphDef>().Where(g => g.Hooks.Count > 0 || g.Patches.Count > 0 || g.AddsEffects.Count > 0))
+        {
+            Assert.True(census[glyph.Id].Values.Count > 0, $"{glyph.Id}: {census[glyph.Id].Error}");
+        }
+        Assert.Contains(census["martyrdom"].Values, v => v.Origin == "hooks.on_death[0].radius" && v.Number == 2.5);
     }
 
     [Fact]

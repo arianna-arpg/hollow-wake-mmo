@@ -63,6 +63,7 @@ glyph contagion hooks.on_kill[0].radius
 glyph contagion hooks.on_kill[0].strength
 glyph furious adds_effects[0].then[0].gain
 glyph hexing hooks.on_hit[0].chance
+glyph martyrdom hooks.on_death[0].radius
 glyph parting_gift hooks.on_end[0].damage_scale
 glyph reaping hooks.on_kill[0].count
 glyph reaping hooks.on_kill[0].duration

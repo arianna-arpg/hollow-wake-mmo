@@ -77,7 +77,7 @@ internal static class DeliveryAxes
         {
             if (json is null)
             {
-                if (key is null && (binding.FallbackWhen is not { } fallsBack || Holds(fallsBack, siblings)) && Unwritten(siblings, binding, dimension, path) is { } fallback)
+                if (!binding.WrittenOnly && key is null && (binding.FallbackWhen is not { } fallsBack || Holds(fallsBack, siblings)) && Unwritten(siblings, binding, dimension, path) is { } fallback)
                 {
                     yield return fallback;
                 }
@@ -186,7 +186,7 @@ internal static class DeliveryAxes
             Multiplied = multiplied,
             Effect = node.Type,
             Parameter = binding.Parameter,
-            Detail = detail,
+            Detail = Join(binding.WrittenDetail, detail),
             HidesNumber = binding.HidesNumber,
             Constant = constant,
             Writer = origin?.Writer,

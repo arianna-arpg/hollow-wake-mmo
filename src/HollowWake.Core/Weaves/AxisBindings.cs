@@ -183,6 +183,10 @@ public sealed record AxisBinding
     /// </summary>
     public string? FallbackWhen { get; init; }
     public bool Implicit { get; init; }
+    /// <summary>Only place a written value; a separate implicit axis describes the unwritten case.</summary>
+    public bool WrittenOnly { get; init; }
+    /// <summary>Explains the scope of a written value's attribute override.</summary>
+    public string? WrittenDetail { get; init; }
     /// <summary>The axis name within the dimension, when it is not the parameter's: one mechanism, one name.</summary>
     public string? Name { get; init; }
     public NodeShape Node { get; init; }
@@ -805,7 +809,12 @@ public static class AxisBindings
         FlagOf("damage", "can_crit", Payload, @default: true);
         // A written effectiveness scales the amount and the attacker's added damage. Unwritten, the amount is as written
         // and only the added damage takes the weave's damage.effectiveness (times added.effectiveness, DamagePipeline.AddedEffectiveness).
-        Axis("damage", "effectiveness", Payload, Fraction);
+        Register(new AxisBinding
+        {
+            Type = "damage", Parameter = "effectiveness", Kind = ParameterKind.Axis,
+            Dimension = Payload, Unit = Fraction, Attribute = "damage.effectiveness", Role = AttributeRole.Fallback,
+            WrittenOnly = true, WrittenDetail = "shadows damage.effectiveness for added damage; also scales the written amount",
+        });
         Implicit("damage", "added_effectiveness", Payload, Fraction, attribute: "damage.effectiveness", when: "!effectiveness");
         FlagOf("damage", "cannot_kill", Payload);
         Axis("damage", "leech", Payload, Fraction);
