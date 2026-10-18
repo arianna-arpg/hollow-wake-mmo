@@ -123,6 +123,20 @@ entries:
     shape: { shoulders: 1.05, arms: 1.1 }
     palette: { skin: "#b8a080", hair: "#34382a", cloth: "#52623c", cloth2: "#333d2b", leather: "#4a4434", metal: "#8c9488", accent: "#9ab86a", eyes: "#2a2622" }
     gear: { main_hand: weapon.axe, chest: armor.chest.light }
+  - id: proving_fletcher
+    match: [proving, fletcher]
+    priority: 5
+    body: biped
+    shape: { width: 0.95, arms: 1.05 }
+    palette: { skin: "#c8a07c", hair: "#5a4030", cloth: "#66724a", cloth2: "#39432d", leather: "#55463a", metal: "#8c8c90", accent: "#c6b88a", eyes: "#2a2622" }
+    gear: { main_hand: weapon.bow, chest: armor.chest.light }
+  - id: proving_evoker
+    match: [proving, evoker]
+    priority: 5
+    body: biped
+    shape: { width: 0.92 }
+    palette: { skin: "#b8a898", hair: "#343040", cloth: "#4c526e", cloth2: "#2d334a", leather: "#45404a", metal: "#9296a4", accent: "#aac7d8", eyes: "#aac7d8" }
+    gear: { main_hand: weapon.wand, chest: armor.chest.cloth, head: armor.head.cloth }
   - id: proving_bulwark
     match: [proving, bulwark]
     priority: 5
