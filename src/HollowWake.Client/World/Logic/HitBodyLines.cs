@@ -17,10 +17,11 @@ public static class HitBodyLines
     {
         var lines = new List<Vector3>();
         if (!Supported(body)) return lines;
+        var horizontal = body.Id.Length == 0 ? radius : height;
         foreach (var v in body.Volumes)
         {
-            var c = new Vector3(v.Forward * radius, v.Left * radius, v.Up * height);
-            var r = v.Radius * radius; var h = v.HalfHeight * height;
+            var c = new Vector3(v.Forward * horizontal, v.Left * horizontal, v.Up * height);
+            var r = v.Radius * horizontal; var h = v.HalfHeight * height;
             for (var plane = 0; plane < 3; plane++)
             for (var i = 0; i < segments; i++)
             {

@@ -217,7 +217,7 @@ internal sealed class AreaHandler : IEffectHandler
             {
                 if (FromEdge)
                 {
-                    radius += HitBodies.Reach(ctx.Sim, ctx.Source, Facing(ctx));
+                    radius += ctx.SourceTransform?.Radius ?? 0;
                 }
                 if (ctx.Tags.Has("melee"))
                 {
@@ -360,7 +360,7 @@ internal sealed class ProjectileHandler : IEffectHandler
 
     public EffectSignature Signature { get; } = EffectSignature.Of(
             "count", "speed", "range", "spread", "pierce", "radius", "on_expire", "look", "gravity",
-            "shape", "shape_size", "shape_angle", "shape_width",
+            "shape", "shape_size", "shape_angle", "shape_width", "aim",
             "fire", "salvo_interval", "volley_spacing", "ring_jitter", "spread_by_aim", "origin", "origin_range",
             "duration", "return", "forks", "chains", "rehit", "bounce",
             "homing", "guide", "erratic", "spiral", "orbit", "spin", "wave", "accel", "recurve", "converge",
@@ -405,6 +405,7 @@ internal sealed class ProjectileHandler : IEffectHandler
         {
             Type = Type,
             Spec = spec,
+            Aim = ProjectileAims.Get(ctx.StringOf(p["aim"]) ?? ctx.Content.Rules.Text("delivery.projectile_aim", "target")),
             Count = ctx.ExprOf(p["count"]),
             Speed = ctx.ExprOf(p["speed"]),
             Range = ctx.ExprOf(p["range"]),
@@ -480,6 +481,7 @@ internal sealed class ProjectileHandler : IEffectHandler
     private sealed class Effect : CompiledEffect
     {
         public required ProjectileSpec Spec;
+        public required Func<EffectContext, Vector3?> Aim;
         public Expr? Count;
         public Expr? Speed;
         public Expr? Range;
@@ -677,10 +679,10 @@ internal sealed class ProjectileHandler : IEffectHandler
             {
                 velocity.Z = LobSpeed(sim, start, aimPoint, speed, f.Range);
             }
-            else if (!ctx.Target.IsNone && sim.World.Has<Transform>(ctx.Target))
+            else if (Aim(ctx) is { } aim)
             {
-                var aim = HitBodies.AimPoint(sim, ctx.Target);
-                velocity.Z = (aim.Z - start.Z) * speed / MathF.Max(0.01f, Vector2.Distance(new(start.X, start.Y), new(aim.X, aim.Y)));
+                var distance = Vector2.Distance(new(start.X, start.Y), new(aim.X, aim.Y));
+                if (distance > 0.01f) velocity.Z = (aim.Z - start.Z) * speed / distance;
             }
             var p = new Projectile
             {
@@ -784,9 +786,11 @@ internal sealed class ProjectileHandler : IEffectHandler
                 var origin = st.Position;
                 Vector2 dir;
                 var aim = _point;
+                var shot = _ctx;
                 if (LiveAim.TryGet(sim, _ctx.Source, _since, out var live, out var liveDir))
                 {
                     aim = live;
+                    shot = _ctx.WithPoint(live);
                     dir = new Vector2(live.X - origin.X, live.Y - origin.Y);
                     if (dir.LengthSquared() < 0.0001f)
                     {
@@ -807,7 +811,7 @@ internal sealed class ProjectileHandler : IEffectHandler
                     dir = st.Forward;
                 }
                 dir = Vector2.Normalize(dir);
-                _effect.Launch(_ctx, _effect.Spec.Emits ? null : _ctx.Deeper(), _flight, origin, MathF.Atan2(dir.Y, dir.X), 1, aim);
+                _effect.Launch(shot, _effect.Spec.Emits ? null : shot.Deeper(), _flight, origin, MathF.Atan2(dir.Y, dir.X), 1, aim);
                 if (--_left > 0)
                 {
                     Later(sim, _interval, Beat);

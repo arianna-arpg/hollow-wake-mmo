@@ -1,6 +1,6 @@
 namespace HollowWake.Core.Definitions;
 
-/// <summary>Simulation anatomy. Horizontal numbers multiply live clearance radius, vertical numbers live height.</summary>
+/// <summary>Simulation anatomy. All dimensions multiply body height, independently of navigation clearance.</summary>
 public sealed record HitBodyDef : Definition
 {
     public List<HitVolumeSpec> Volumes { get; init; } = new();

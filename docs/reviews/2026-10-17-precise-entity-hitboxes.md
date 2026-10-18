@@ -1,5 +1,7 @@
 # Precise entity hitboxes
 
+This records the initial implementation at 2828586. Its release gate, clearance coupling and always-requested catalog were rejected in review; see the [correction record](2026-10-18-precise-entity-hitboxes-correction.md) for current behavior and gates.
+
 ## Claim and baseline
 
 Codex owns this additive entity-hitbox foundation on `codex/precise-entity-hitboxes`, in the new managed `precise-entity-hitboxes` worktree. Base: `8296c3ca34add6042691731a4e02bb1aa6aef0b1` (Orcs #33, stacked on Goblinkin #32 and undead #31). Remote recheck found all three open at the requested heads. The root checkout and the other entity chat's worktree are not used for edits.

@@ -26,5 +26,10 @@ internal static class HitBodyKinds
             if (resolved.Components.TryGetValue("hit_body", out var data))
                 c.Ref<HitBodyDef>(data["profile"]?.GetValue<string>() ?? "", "hit_body.profile");
         });
+        ContentKinds.AddValidator<RulesDef>((d, c) =>
+        {
+            if (d.Id == "body" && d.Values?["player_hit_profile"] is { } profile)
+                c.Ref<HitBodyDef>(profile.GetValue<string>(), "body.player_hit_profile");
+        });
     }
 }

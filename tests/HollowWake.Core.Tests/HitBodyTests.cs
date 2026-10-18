@@ -22,7 +22,8 @@ public class HitBodyTests
         var e = a.Body(15, 10);
         var t = a.Sim.World.Get<Transform>(e)!;
         t.Radius = 1; t.Height = 2; t.Yaw = 0;
-        a.Sim.World.Add(e, new HitBody { Definition = new HitBodyDef { Id = "test", Volumes = volumes.ToList() } });
+        a.Sim.World.Add(e, new HitBody { Definition = new HitBodyDef { Id = "test", Volumes = volumes.Select(v => v with
+            { Forward = v.Forward / 2, Left = v.Left / 2, Radius = v.Radius / 2 }).ToList() } });
         return e;
     }
 
@@ -51,9 +52,11 @@ public class HitBodyTests
         t.Yaw = MathF.PI / 2;
         Assert.True(At(a, e, new(15, 10.8f, 1)));
         Assert.False(At(a, e, new(15.8f, 10, 1)));
-        t.Radius *= 3; t.Height *= 2;
-        Assert.True(At(a, e, new(15, 12.4f, 2)));
-        Assert.Equal(new Vector3(15, 12.4f, 2), HitBodies.AimPoint(a.Sim, e));
+        t.Radius *= 3;
+        Assert.True(At(a, e, new(15, 10.8f, 1))); // Clearance tuning cannot widen anatomy.
+        t.Height *= 2;
+        Assert.True(At(a, e, new(15, 11.6f, 2)));
+        Assert.Equal(new Vector3(15, 11.6f, 2), HitBodies.AimPoint(a.Sim, e));
     }
 
     [Fact]
@@ -122,29 +125,6 @@ public class HitBodyTests
     }
 
     [Fact]
-    public void ElevatedTargetsCannotBeMeleedButCanBeAimedAtByRangedWeaves()
-    {
-        var a=DeliveryArena.Create(); var e=a.Body(11,10);
-        a.Sim.World.Get<Transform>(e)!.Position.Z=3;
-        Assert.False(HitBodies.InReach(a.Sim,a.Caster,e,2,true));
-        Assert.True(HitBodies.InReach(a.Sim,a.Caster,e,2,false));
-    }
-
-    [Theory]
-    [InlineData(false)]
-    [InlineData(true)]
-    public void AnActualMeleeReleaseMissesABodyThatLeftDuringWindup(bool moveAway)
-    {
-        var a=CastingArena.Create(distance:1.4f);a.Begin(a.Slot("strike"));
-        if(moveAway) {
-            var t=a.Sim.World.Get<Transform>(a.Enemy)!;t.Position=new(20,10,0);a.Sim.Spatial.Update(a.Enemy,t.Position);
-        }
-        a.RunSeconds(2);
-        Assert.Equal(!moveAway,a.Of<HollowWake.Core.Sim.DamageDealt>().Any(d=>d.Target==a.Enemy));
-        Assert.Single(a.Of<HollowWake.Core.Sim.WeaveCast>());
-    }
-
-    [Fact]
     public void ProfilesRejectBadShapesSizesAndMissingInheritedReferences()
     {
         var c=ContentRegistry.Load(new[]{CoreContent.FindContentDir()},out _);
@@ -157,6 +137,11 @@ public class HitBodyTests
         var child=new PatternDef{Id="bad_child",Extends="skeleton_warrior",Components={ ["hit_body"]=new JsonObject{["profile"]="absent"}}};
         c.With(child);var invalid=new ValidationReport();ContentKinds.TryGet("patterns",out var patternKind);
         patternKind!.Validate!(child,new ValidationContext(c,invalid,"patterns",child.Id,null));Assert.True(invalid.HasErrors);
+        ContentKinds.TryGet("rules", out var ruleKind);
+        var badRule = new RulesDef { Id = "body", Values = new JsonObject { ["player_hit_profile"] = "typo" } };
+        var badReference = new ValidationReport();
+        ruleKind!.Validate!(badRule, new ValidationContext(c, badReference, "rules", "body", null));
+        Assert.True(badReference.HasErrors);
     }
 
     [Theory]
@@ -165,7 +150,7 @@ public class HitBodyTests
     public void TargetedBoltsAimDownAtWhelpsWhileHorizontalBoltsPassAbove(bool targeted)
     {
         var a=DeliveryArena.Create();var e=a.Body(15,10,pattern:"gnasher_whelp");
-        a.Run("""{"type":"projectile","radius":0.05,"speed":30,"range":10,"on_hit":[{"type":"event","name":"t_hit"}]}""",
+        a.Run("""{"type":"projectile","aim":"target","radius":0.05,"speed":30,"range":10,"on_hit":[{"type":"event","name":"t_hit"}]}""",
             new(20,10,0),Vector2.UnitX,target:targeted?e:Entity.None);
         a.Tick(8);Assert.Equal(targeted,a.Struck().Contains(e));
     }
@@ -197,6 +182,29 @@ public class HitBodyTests
         var shape=Shapes.Get("sector");var size=new ShapeSize(1,90,0,1);
         Assert.True(shape.Contains(size,new(.7071068f,.72f),Vector2.UnitX,.02f));
         Assert.False(shape.Contains(size,new(.7071068f,.74f),Vector2.UnitX,.02f));
+    }
+
+    [Fact]
+    public void SectorApexUsesOnlyTheActualRoundBodyPadding()
+    {
+        var shape = Shapes.Get("sector"); var size = new ShapeSize(2, 90, 0, 0);
+        Assert.True(shape.Contains(size, new(-.05f, 0), Vector2.UnitX, .051f));
+        Assert.False(shape.Contains(size, new(-.05f, 0), Vector2.UnitX, .049f));
+        Assert.False(shape.Contains(size, new(-.005f, 0), Vector2.UnitX, 0));
+    }
+
+    [Fact]
+    public void CachedBoundsIncludeSameTickSpawnsAndExplicitResizeInvalidation()
+    {
+        var a = DeliveryArena.Create(); var old = HitBodies.Bounds(a.Sim);
+        var e = a.Body(20, 20, pattern: "orc_warlord");
+        Assert.True(HitBodies.Bounds(a.Sim).Height > old.Height);
+        a.Sim.World.Get<Transform>(e)!.Height *= 4;
+        HitBodies.InvalidateBounds(a.Sim);
+        Assert.True(HitBodies.Bounds(a.Sim).Height > old.Height * 4);
+        var before = GC.GetAllocatedBytesForCurrentThread();
+        for (var i = 0; i < 100; i++) _ = HitBodies.Bounds(a.Sim);
+        Assert.Equal(0, GC.GetAllocatedBytesForCurrentThread() - before);
     }
 
     [Fact]

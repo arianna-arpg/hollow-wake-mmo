@@ -459,7 +459,8 @@ public sealed record DisconnectMsg(string Reason) : Message;
 public static class ProtocolInfo
 {
     public const string CastCuesFeature = "cast_cues";
-    public const string HitBodiesFeature = "hit_bodies_v1";
+    public const string HitBodiesFeature = "hit_bodies_v2";
+    public const string ProjectileSlabsFeature = "projectile_slabs_v1";
     public const int Version = 1;
 
     /// <summary>Hello feature: the client applies <see cref="EntityDeltaMsg"/>, so changes may be sent as deltas.</summary>

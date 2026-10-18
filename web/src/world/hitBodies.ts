@@ -12,8 +12,9 @@ export function supportedHitBody(body: HitBodyInfo): boolean { return body.volum
 export function hitBodyLines(body: HitBodyInfo, radius: number, height: number, segments = 32): number[][] {
   const lines: number[][] = [];
   if (!supportedHitBody(body)) return lines;
+  const horizontal = body.id === '' ? radius : height;
   for (const v of body.volumes) {
-    const c = [v.forward * radius, v.left * radius, v.up * height], r = v.radius * radius, h = v.half_height * height;
+    const c = [v.forward * horizontal, v.left * horizontal, v.up * height], r = v.radius * horizontal, h = v.half_height * height;
     for (let plane = 0; plane < 3; plane++) for (let i = 0; i < segments; i++) for (let j = 0; j < 2; j++) {
       const a = (i + j) * Math.PI * 2 / segments, [x, y] = profiles[v.shape]!(a);
       const p = plane === 0 ? [Math.cos(a) * r, Math.sin(a) * r, 0] : plane === 1 ? [x * r, 0, y * h] : [0, x * r, y * h];

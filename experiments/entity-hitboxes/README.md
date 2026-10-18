@@ -1,5 +1,7 @@
 # Entity hit-body evidence
 
+The October 18 correction and its behavior ledger are in [the correction record](../../docs/reviews/2026-10-18-precise-entity-hitboxes-correction.md), with logs under `evidence/correction/`. Run `dotnet run --project src/HollowWake.Tools -c Release -- bench --only hit-bodies --json` for the profiled-body workload; the ordinary deliveries benchmark uses legacy bodies.
+
 The implementation is in Core and the production clients. This folder contains reproducible authoring and visual evidence, not a second gameplay implementation.
 
 - `author-profiles.mjs` writes the simulation profiles and additive pattern bindings from explicit rest-anatomy recipes. It reads dimensions/classification for authoring only; the simulation never reads appearance or runs this script.

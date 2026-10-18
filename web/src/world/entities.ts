@@ -453,7 +453,7 @@ export class EntityView {
     const s = this.state;
     this.pickSize = null;
     this.dropBody();
-    const shape = shapeFor(s, this.layer.palette, this.layer.hitBodyCatalog !== null);
+    const shape = shapeFor(s, this.layer.palette, this.layer.preciseProjectileSlabs);
     const opacity = s.dead ? Math.min(shape.opacity, this.layer.palette.deadOpacity) : shape.opacity;
     let material: MeshLambertMaterial | MeshBasicMaterial = this.layer.material(shape.color, opacity);
     if (shape.telegraph) {
@@ -755,6 +755,7 @@ export class EntityView {
 
 export class EntityLayer {
   hitBodyCatalog: Map<string, HitBodyInfo> | null = null;
+  preciseProjectileSlabs = false;
   showHitBodies = false;
   readonly group = new Group();
   readonly views = new Map<Int64, EntityView>();

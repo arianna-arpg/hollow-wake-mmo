@@ -134,7 +134,9 @@ public sealed class SessionManager
                 session.View.SendCastCues = hello.Features?.Contains(ProtocolInfo.CastCuesFeature) == true;
                 var granted = new List<string>();
                 var hitBodies = hello.Features?.Contains(ProtocolInfo.HitBodiesFeature) == true;
+                session.View.SendHitBodies = hitBodies;
                 if (hitBodies) granted.Add(ProtocolInfo.HitBodiesFeature);
+                if (hello.Features?.Contains(ProtocolInfo.ProjectileSlabsFeature) == true) granted.Add(ProtocolInfo.ProjectileSlabsFeature);
                 if (session.View.SendCastCues) granted.Add(ProtocolInfo.CastCuesFeature);
                 if (session.View.SendDeltas)
                 {

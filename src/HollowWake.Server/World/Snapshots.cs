@@ -208,7 +208,7 @@ public static class Snapshots
     /// The wire state of one entity, positions to the centimetre and resources to a tenth. Allocates the
     /// state and its collections only; flags and statuses are skipped when an entity has none.
     /// </summary>
-    public static EntityState Capture(Simulation sim, Entity e, bool isStatic)
+    public static EntityState Capture(Simulation sim, Entity e, bool isStatic, bool hitBodies = true)
     {
         var world = sim.World;
         var t = world.Get<Transform>(e);
@@ -231,7 +231,7 @@ public static class Snapshots
             Yaw = t is null ? 0 : Hundredths(t.Yaw),
             Radius = t is null ? 0.4f : Hundredths(t.Radius),
             Height = t is null ? 1.8f : Hundredths(t.Height),
-            HitBody = world.Get<HollowWake.Core.Combat.HitBody>(e)?.Definition.Id,
+            HitBody = hitBodies ? world.Get<HollowWake.Core.Combat.HitBody>(e)?.Definition.Id : null,
             Faction = HollowWake.Core.Combat.Relations.FactionOf(sim, e),
             Rarity = id?.Rarity,
             IsPlayer = id?.IsPlayer ?? false,

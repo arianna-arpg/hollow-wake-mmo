@@ -5,7 +5,7 @@ const profiles=[],patches=[],round=n=>Math.round(n*100000)/100000;
 function anatomy(id,H,R,W,D,family) {
   const volumes=[];
   function volume(x,z,y,r,h,shape='ellipsoid') {
-    volumes.push({shape,forward:round(x/R),left:round(-z/R),up:round(y/H),radius:round(r/R),half_height:round(h/H)});
+    volumes.push({shape,forward:round(x/H),left:round(-z/H),up:round(y/H),radius:round(r/H),half_height:round(h/H)});
   }
   function oval(x,z,y,d,w,h) {
     const along=d>=w,r=Math.min(d,w)/2,major=Math.max(d,w);

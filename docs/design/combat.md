@@ -6,7 +6,7 @@ Nine Threads are the damage types: Ember, Tide, Storm, Stone, Bloom, Umbra, Lume
 
 ## The damage pipeline
 
-Contact precedes damage. Target range admission and AI range checks use the source's directional damage-body extent and the target's anatomy. Melee also needs vertical overlap and rechecks reach at payload release, so a body that leaves during preparation is missed. Costs and cast/release lifecycle still occur; a geometric miss runs no targeted payload and does not masquerade as evasion. Directional areas use their authored candidate policy and projectiles test in flight. This reach gate is independent of the later defensive pipeline and does not imply an animated weapon sweep. See [physical bodies](physical-bodies.md#damage-anatomy) and [deliveries](deliveries.md).
+Contact precedes damage for geometric deliveries. Areas explicitly selecting body contact and projectiles test [damage anatomy](physical-bodies.md#damage-anatomy) before running their hit payloads. Cast admission, target fit, AI range and an area's `reach: edge` retain their clearance-radius semantics. Hit-body geometry adds no private cast-release gate: committed-release policy and miss reporting belong to the shared weave lifecycle. See [deliveries](deliveries.md).
 
 Every hit, including status ticks, ruptures and field pulses, takes one path:
 

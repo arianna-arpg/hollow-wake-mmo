@@ -31,16 +31,33 @@ public class HitBodyProtocolTests
         await using var server=new GameServer(new ServerConfig{ContentLayers=new(){ContentDir()},WorldEvents=false},NullLoggerFactory.Instance,transport,stores,stores,stores);
         await server.StartAsync(CancellationToken.None);
         var client=transport.Connect();
-        client.Send(new HelloMsg("hit-body-test",ProtocolInfo.Version){Features=optedIn?new(){ProtocolInfo.HitBodiesFeature}:null});
+        client.Send(new HelloMsg("hit-body-test",ProtocolInfo.Version){Features=optedIn?new(){ProtocolInfo.HitBodiesFeature, ProtocolInfo.ProjectileSlabsFeature}:new(){ProtocolInfo.ProjectileSlabsFeature}});
         server.Step();
         var messages=client.Drain();
         Assert.Equal(optedIn,Assert.Single(messages.OfType<WelcomeMsg>()).Features?.Contains(ProtocolInfo.HitBodiesFeature)==true);
+        Assert.Contains(ProtocolInfo.ProjectileSlabsFeature, Assert.Single(messages.OfType<WelcomeMsg>()).Features!);
         if(!optedIn) { Assert.Empty(messages.OfType<HitBodiesMsg>());return; }
         var catalog=Assert.Single(messages.OfType<HitBodiesMsg>());
         Assert.Contains(catalog.Bodies,b=>b.Id=="gnasher_whelp");
         Assert.Contains(catalog.Bodies,b=>b.Id=="saddle_gnasher");
         var decoded=Assert.IsType<HitBodiesMsg>(MessageSerializer.Decode(MessageSerializer.Encode(catalog)));
         Assert.Equal(MessageSerializer.ToJson(catalog),MessageSerializer.ToJson(decoded));
+    }
+    [Fact]
+    public void ProfileIdsAreSentOnlyToDiagnosticViewsIncludingSharedSnapshotCache()
+    {
+        var content = ContentRegistry.Load(new[] { ContentDir() }, out _);
+        var sim = ZoneBuilder.CreateArena(content, 7);
+        var e = sim.Service<PatternFactory>().Spawn(sim, "orc_grunt", new(10, 10, 0));
+        var builder = new SnapshotBuilder(sim, 48);
+        foreach (var diagnostic in new[] { false, true, false })
+        {
+            var view = new SnapshotView { SendHitBodies = diagnostic, SendDeltas = true };
+            var output = new List<Message>();
+            builder.Entities(view, e, output);
+            var state = Assert.Single(output.OfType<EntitySpawnMsg>(), m => m.State.Key == e.Key).State;
+            Assert.Equal(diagnostic ? "orc_grunt" : null, state.HitBody);
+        }
     }
     [Fact]
     public void SnapshotDeltaFingerprintAndClearAgreeAboutAnatomy()

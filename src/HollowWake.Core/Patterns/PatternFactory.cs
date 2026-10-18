@@ -158,6 +158,7 @@ public sealed class PatternFactory
             stats.FillResources();
         }
         sim.Spatial.Update(e, snapped);
+        Combat.HitBodies.InvalidateBounds(sim);
         sim.Events.Publish(new EntitySpawned(e, patternId, snapped) { Tick = sim.Clock.Tick });
         return e;
     }

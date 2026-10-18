@@ -37,7 +37,7 @@ Area execution resolves a `ResolvedAreaPlan` and uses its shared candidate predi
 | `radius` | default the weave's `area.radius` |
 | `angle`, `width`, `inner` | the shape's proportions; the angle of shapes that have one is scaled by the weave's `area.angle` |
 | `center` | `focus` (the target, else the point), `source` (the cast's start, else the source's body) or `point`; default `source` for anchored shapes and `focus` for the rest |
-| `reach` | `center` (default) or `edge`: anchored shapes reach further by the source's damage-body extent along the delivery facing |
+| `reach` | `center` (default) or `edge`: anchored shapes reach further by the source's navigation clearance radius |
 | `contact` | `center` (default, existing height tolerance) or `body` (intersection with authored anatomy) |
 | `height`, `elevation` | for body contact, vertical slab height (default source height) and offset above the anchor (default zero); sampled once when resolving |
 | `filter` | `enemy` (default), `ally`, `ally_or_self`, `self`, `not_self`, or `all` |
@@ -57,13 +57,16 @@ Deliveries stop at walls. A wall is a cell of a structure that cannot be walked;
 
 The flight's Transform height comes from `delivery.projectile_height` and is centered on its Z coordinate, matching the slab both current clients draw. Circular flights without an inner hole sweep continuously against convex damage primitives between tick positions, ordered by first contact then entity key. This catches a tiny body between endpoints without enlarging it. Other delivery shapes retain endpoint collision. Contacts keep the existing hostility, untargetability, hit-ledger, pierce, fork, chain and return policies; chain/return transitions discard the rest of the old path and resume from the contact point next tick. Existing wall/ground checks still own obstacle handling; this is not a replacement terrain collision solver.
 
-Direct caster launches use the body's authored aim elevation; targeted, homing and chaining flights steer toward the target's aim volume, including height. A horizontal untargeted flight can pass above a small body. Explicit point or inherited effect origins retain the legacy lift through `delivery.projectile_origin_height`; nested emission-origin semantics remain a separate contract. No rendered weapon socket supplies simulation coordinates.
+Direct caster launches use the body's authored aim elevation, or half its height for a legacy cylinder. The registered projectile `aim` choice selects launch elevation: `horizontal` keeps Z velocity zero, `target` aims at a retained target's body center and otherwise flies horizontally, and `point` also uses the cast's sampled point and body-relative aim offset when no payload target is retained. `delivery.projectile_aim` supplies the content default. A direction cast samples this offset on press without retaining a damage target or changing its planar bearing. A moving victim can leave that line and a bystander can be hit. Held casts update their offset when their existing tracking updates focus; explicit streamed points clear it. Ground-point input remains a ground aim, so empty gaps and deliberately high/low shots can miss.
+
+The launch slope remains constant after piercing and is inherited by forks, so descending shots can later meet the ground. Homing, chaining and returns steer toward live body aim elevation; an orbit follows its owner's aim elevation. Gravity retains its lob solver. Explicit point or inherited effect origins retain the legacy lift through `delivery.projectile_origin_height`; nested emission-origin semantics remain a separate contract. No rendered weapon socket supplies simulation coordinates.
 
 ### Launching
 
 | Parameter | Meaning |
 |---|---|
 | `count` | flights per launch; default the weave's `projectile.count`; an expression, so `randi(2, 4)` rolls on the cast's stream |
+| `aim` | registered launch elevation choice; default `delivery.projectile_aim` (`target` when absent); built-ins `horizontal`, `target`, `point` |
 | `speed` | ground speed; default `projectile.speed` |
 | `range` | how far a leg flies; default the weave's `range`, unbounded when `duration` is given alone |
 | `duration` | seconds a flight lasts, whatever its range |

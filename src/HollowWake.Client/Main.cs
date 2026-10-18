@@ -435,7 +435,9 @@ public partial class Main : Node3D
         // The client applies entity deltas; --full-states asks for full entity states only (for comparison and debugging).
         // It always draws the interface, so it asks for the interface's states.
         EntityView.HitBodyCatalog = null;
-        var features = new List<string> { ProtocolInfo.InterfaceFeature, ProtocolInfo.CastCuesFeature, ProtocolInfo.HitBodiesFeature };
+        EntityView.PreciseProjectileSlabs = false;
+        var features = new List<string> { ProtocolInfo.InterfaceFeature, ProtocolInfo.CastCuesFeature, ProtocolInfo.ProjectileSlabsFeature };
+        if (_settings.Toggle("dev_hit_bodies")) features.Add(ProtocolInfo.HitBodiesFeature);
         if (!OS.GetCmdlineUserArgs().Contains("--full-states") && _settings.Text("snapshot_stream") != "full")
         {
             features.Insert(0, ProtocolInfo.EntityDeltaFeature);
@@ -512,6 +514,7 @@ public partial class Main : Node3D
         switch (message)
         {
             case WelcomeMsg w:
+                EntityView.PreciseProjectileSlabs = w.Features?.Contains(ProtocolInfo.ProjectileSlabsFeature) == true;
                 _login.SetStatus($"Connected to {w.ServerName}: {w.Motd}");
                 _hud.Hero.Interface = w.Features?.Contains(ProtocolInfo.InterfaceFeature) == true;
                 GD.Print($"server granted features: {(w.Features is null ? "none" : string.Join(", ", w.Features))}");

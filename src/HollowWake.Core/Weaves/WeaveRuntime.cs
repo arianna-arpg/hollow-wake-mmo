@@ -497,6 +497,7 @@ public sealed partial class WeaveRuntime
             Target = target,
             Focus = focus,
             Point = point,
+            AimOffset = sim.World.Get<Transform>(focus) is { } aimBody ? HitBodies.AimPoint(sim, focus) - aimBody.Position : Vector3.Zero,
             Direction = direction,
             StartedAt = now,
             Duration = duration,
@@ -687,7 +688,7 @@ public sealed partial class WeaveRuntime
                     return false;
                 }
                 var tt = sim.World.Get<Transform>(target);
-                if (!HitBodies.InReach(sim, caster, target, (float)range, weave.Tags.Has("melee")))
+                if (ct is not null && tt is not null && range > 0 && ct.GroundDistanceTo(tt.Position) > range + tt.Radius + ct.Radius)
                 {
                     reason = "out_of_range";
                     return false;
@@ -788,7 +789,7 @@ public sealed partial class WeaveRuntime
         {
             return false;
         }
-        if (!HitBodies.InReach(sim, caster, candidate, (float)range, melee: false))
+        if (ct is not null && range > 0 && sim.World.TryGet<Transform>(candidate, out var tt) && ct.GroundDistanceTo(tt.Position) > range + tt.Radius + ct.Radius)
         {
             return false;
         }
@@ -970,6 +971,7 @@ public sealed partial class WeaveRuntime
             Source = caster,
             Target = target,
             Point = target.IsNone ? state.Point : (sim.World.Get<Transform>(target)?.Position ?? state.Point),
+            AimOffset = state.AimOffset,
             Direction = state.Direction,
             Weave = weave,
             Tags = weave.Tags,
@@ -986,11 +988,7 @@ public sealed partial class WeaveRuntime
         {
             stats.Stamp("moved", now);
         }
-        // A target lock is not permission to hit a body that left contact range during preparation.
-        // Directional areas retain their authored candidate policy and projectiles resolve in flight.
-        var contact = target.IsNone || !weave.Tags.Has("melee") ||
-            HitBodies.InReach(sim, caster, target, (float)weave.Range(stats), melee: true);
-        if (contact) CompiledEffect.ExecuteAll(effects, ctx);
+        CompiledEffect.ExecuteAll(effects, ctx);
         if (publishCast)
         {
             sim.Events.Publish(new WeaveCast(caster, weave.Key, target, ctx.Point, weave.Tags) { Tick = sim.Clock.Tick });
@@ -1277,6 +1275,7 @@ public sealed partial class WeaveRuntime
         {
             desired = new Vector2(ft.Position.X - t.Position.X, ft.Position.Y - t.Position.Y);
             cast.Point = ft.Position;
+            cast.AimOffset = HitBodies.AimPoint(sim, cast.Focus) - ft.Position;
         }
         else
         {
@@ -1310,6 +1309,7 @@ public sealed partial class WeaveRuntime
         if (cast.AimPoint is { } p)
         {
             cast.Point = p;
+            cast.AimOffset = Vector3.Zero;
         }
     }
 
@@ -1483,6 +1483,7 @@ public sealed partial class WeaveRuntime
         if (book.AimPoint is { } point && weave.Targeting is Targeting.Ground or Targeting.Direction)
         {
             cast.Point = point;
+            cast.AimOffset = Vector3.Zero;
             if (weave.Targeting == Targeting.Direction && (book.AimDirection is null) && sim.World.TryGet<Transform>(caster, out var t))
             {
                 var d = new Vector2(point.X - t.Position.X, point.Y - t.Position.Y);
@@ -1710,8 +1711,7 @@ public sealed partial class WeaveRuntime
             var hint = weave.Ai;
             var range = RangeOf(weave, stats, cache);
             var radii = (tt?.Radius ?? 0) + (ct?.Radius ?? 0);
-            if (weave.Targeting is Targeting.Enemy or Targeting.Ground or Targeting.Direction &&
-                !HitBodies.InReach(sim, caster, target, (float)range, weave.Tags.Has("melee")))
+            if (weave.Targeting is Targeting.Enemy or Targeting.Ground or Targeting.Direction && range > 0 && distance > range + radii)
             {
                 continue;
             }

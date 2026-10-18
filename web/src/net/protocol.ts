@@ -7,7 +7,9 @@ export const PROTOCOL_VERSION = 1;
 /** ProtocolInfo.CastCuesFeature */
 export const CAST_CUES_FEATURE = "cast_cues";
 /** ProtocolInfo.HitBodiesFeature */
-export const HIT_BODIES_FEATURE = "hit_bodies_v1";
+export const HIT_BODIES_FEATURE = "hit_bodies_v2";
+/** ProtocolInfo.ProjectileSlabsFeature */
+export const PROJECTILE_SLABS_FEATURE = "projectile_slabs_v1";
 /** ProtocolInfo.EntityDeltaFeature */
 export const ENTITY_DELTA_FEATURE = "entity_delta";
 /** ProtocolInfo.InterfaceFeature */

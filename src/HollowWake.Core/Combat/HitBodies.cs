@@ -1,5 +1,6 @@
 using System.Collections.Concurrent;
 using System.Numerics;
+using System.Runtime.CompilerServices;
 using HollowWake.Core.Components;
 using HollowWake.Core.Definitions;
 using HollowWake.Core.Ecs;
@@ -48,6 +49,17 @@ public static class HitVolumeShapes
 public static class HitBodies
 {
     private static readonly HitVolumeSpec Legacy = new() { Shape = "cylinder", Up = 0.5f, HalfHeight = 0.5f, Radius = 1 };
+    private sealed class BoundsCache
+    {
+        public long Tick = -1;
+        public (float Radius, float Height) Value;
+    }
+    private static readonly ConditionalWeakTable<Simulation, BoundsCache> CachedBounds = new();
+    /// <summary>Call after adding or resizing a body within a tick. Motion and facing do not change enclosing bounds.</summary>
+    public static void InvalidateBounds(Simulation sim)
+    {
+        if (CachedBounds.TryGetValue(sim, out var cache)) cache.Tick = -1;
+    }
 
     /// <summary>Continuous contact for disk-shaped flights against convex slices; other shapes keep their endpoint test.</summary>
     public static float? Sweep(Simulation sim, Entity e, Shape shape, in ShapeSize size, Vector3 from, Vector3 to,
@@ -70,13 +82,30 @@ public static class HitBodies
             }
             var c = Center(t, v);
             var h = v.HalfHeight * t.Height;
-            var radius = v.Radius * t.Radius;
+            var radius = v.Radius * (body is null ? t.Radius : t.Height);
             var start = from - c;
             var delta = to - from;
             float low = 0, high = first ?? 1;
+            var flatStart = new Vector2(start.X, start.Y);
+            var flatDelta = new Vector2(delta.X, delta.Y);
+            var lengthSquared = flatDelta.LengthSquared();
+            var nearest = lengthSquared > 0 ? Math.Clamp(-Vector2.Dot(flatStart, flatDelta) / lengthSquared, 0, high) : 0;
+            var enclosingRadius = radius + size.Radius;
+            if ((flatStart + flatDelta * nearest).LengthSquared() > enclosingRadius * enclosingRadius + 1e-6f) continue;
             if (MathF.Abs(delta.Z) < 1e-8f)
             {
                 if (MathF.Abs(start.Z) > h + halfHeight) continue;
+                // Constant-height disks have an analytic entry; no iterative minimization is needed.
+                var r = size.Radius + radius * primitive.Slice(MathF.Max(0, MathF.Abs(start.Z) - halfHeight) / h);
+                var c0 = flatStart.LengthSquared() - r * r;
+                if (c0 <= 1e-6f) { first = 0; continue; }
+                if (lengthSquared < 1e-12f) continue;
+                var projection = Vector2.Dot(flatStart, flatDelta);
+                var discriminant = projection * projection - lengthSquared * c0;
+                if (discriminant < 0) continue;
+                var entry = (-projection - MathF.Sqrt(discriminant)) / lengthSquared;
+                if (entry >= 0 && entry <= high) first = entry;
+                continue;
             }
             else
             {
@@ -114,25 +143,14 @@ public static class HitBodies
     }
 
     public static Vector3 Center(Transform t, HitVolumeSpec v) => t.Position + new Vector3(
-        (t.Forward.X * v.Forward - t.Forward.Y * v.Left) * t.Radius,
-        (t.Forward.Y * v.Forward + t.Forward.X * v.Left) * t.Radius, v.Up * t.Height);
+        (t.Forward.X * v.Forward - t.Forward.Y * v.Left) * t.Height,
+        (t.Forward.Y * v.Forward + t.Forward.X * v.Left) * t.Height, v.Up * t.Height);
 
     public static Vector3 AimPoint(Simulation sim, Entity e)
     {
         if (sim.World.Get<Transform>(e) is not { } t) return default;
         if (sim.World.Get<HitBody>(e) is { } body) return Center(t, body.Definition.Volumes[body.Definition.Aim]);
         return t.Position + new Vector3(0, 0, t.Height * 0.5f);
-    }
-
-    /// <summary>Admission/release reach uses real anatomy. Melee also requires overlapping body elevations.</summary>
-    public static bool InReach(Simulation sim, Entity source, Entity target, float range, bool melee)
-    {
-        if (range <= 0 || sim.World.Get<Transform>(source) is not { } s || sim.World.Get<Transform>(target) is not { } t) return true;
-        var delta = new Vector2(t.Position.X - s.Position.X, t.Position.Y - s.Position.Y);
-        var direction = delta.LengthSquared() > 1e-8f ? Vector2.Normalize(delta) : s.Forward;
-        var size = new ShapeSize(range + Reach(sim, source, direction), 0, 0, 0);
-        return Touches(sim, target, Shapes.Circle, size, s.Position, direction,
-            melee ? s.Position.Z : float.NegativeInfinity, melee ? s.Position.Z + s.Height : float.PositiveInfinity);
     }
 
     /// <summary>The damage solid intersected by a planar delivery extruded between low and high Z.</summary>
@@ -149,7 +167,7 @@ public static class HitBodies
             var h = t.Height * v.HalfHeight;
             var dz = MathF.Max(0, MathF.Max(low - center.Z, center.Z - high));
             if (dz > h) continue;
-            var radius = t.Radius * v.Radius * HitVolumeShapes.Get(v.Shape).Slice(dz / h);
+            var radius = t.Height * v.Radius * HitVolumeShapes.Get(v.Shape).Slice(dz / h);
             if (shape.Contains(size, new(center.X - anchor.X, center.Y - anchor.Y), facing, radius)) return true;
         }
         return false;
@@ -164,14 +182,16 @@ public static class HitBodies
         foreach (var v in body.Definition.Volumes)
         {
             var c = Center(t, v) - t.Position;
-            reach = MathF.Max(reach, Vector2.Dot(new(c.X, c.Y), direction) + v.Radius * t.Radius);
+            reach = MathF.Max(reach, Vector2.Dot(new(c.X, c.Y), direction) + v.Radius * t.Height);
         }
         return reach;
     }
 
-    /// <summary>Live broad-phase bounds; includes arbitrary scaled bodies and changes made by earlier payloads.</summary>
+    /// <summary>Enclosing bounds sampled once per tick, invalidated by body creation/resizing within a tick.</summary>
     public static (float Radius, float Height) Bounds(Simulation sim)
     {
+        var cache = CachedBounds.GetOrCreateValue(sim);
+        if (cache.Tick == sim.Clock.Tick) return cache.Value;
         float radius = 0, height = 0;
         foreach (var e in sim.Spatial.LiveEntities)
         {
@@ -180,12 +200,13 @@ public static class HitBodies
             {
                 foreach (var v in body.Definition.Volumes)
                 {
-                    radius = MathF.Max(radius, (MathF.Sqrt(v.Forward * v.Forward + v.Left * v.Left) + v.Radius) * t.Radius);
+                    radius = MathF.Max(radius, (MathF.Sqrt(v.Forward * v.Forward + v.Left * v.Left) + v.Radius) * t.Height);
                     height = MathF.Max(height, (MathF.Abs(v.Up) + v.HalfHeight) * t.Height);
                 }
             }
             else { radius = MathF.Max(radius, t.Radius); height = MathF.Max(height, t.Height); }
         }
-        return (radius, height);
+        cache.Tick = sim.Clock.Tick;
+        return cache.Value = (radius, height);
     }
 }

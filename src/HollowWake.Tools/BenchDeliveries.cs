@@ -21,10 +21,12 @@ namespace HollowWake.Tools;
 /// </summary>
 public static class BenchDeliveries
 {
-    public static IEnumerable<Bench.Result> Run(ContentRegistry content, int ticks = 400)
+    public static IEnumerable<Bench.Result> Run(ContentRegistry content, int ticks = 400, bool profiled = false)
     {
         var sim = ZoneBuilder.CreateArena(content, Rng.Hash64("deliveries"));
         var factory = sim.Service<PatternFactory>();
+        var patterns = profiled ? content.Each<PatternDef>().Where(d => factory.Resolve(d.Id).Components.ContainsKey("hit_body"))
+            .Select(d => d.Id).OrderBy(id => id, StringComparer.Ordinal).ToArray() : new[] { "boar" };
         var caster = factory.Spawn(sim, "loosed_kindler", new Vector3(32, 32, 0), new SpawnOptions { RollRarity = false });
         sim.World.Remove<Behavior>(caster);
         var foes = new List<Entity>();
@@ -32,7 +34,7 @@ public static class BenchDeliveries
         {
             for (var x = 0; x < 12; x++)
             {
-                var foe = factory.Spawn(sim, "boar", new Vector3(14 + x * 3.1f, 16 + y * 3.3f, 0), new SpawnOptions { RollRarity = false });
+                var foe = factory.Spawn(sim, patterns[(y * 12 + x) % patterns.Length], new Vector3(14 + x * 3.1f, 16 + y * 3.3f, 0), new SpawnOptions { RollRarity = false, Faction = "bench_foe" });
                 sim.World.Remove<Behavior>(foe);
                 var stats = sim.World.Get<Stats>(foe)!;
                 stats.Attributes.Add(new Modifier { Attribute = "life.max", Value = 1_000_000, Source = "bench" });
@@ -89,7 +91,7 @@ public static class BenchDeliveries
         var allocated = GC.GetTotalAllocatedBytes(true) - before;
         var projectiles = sim.Costs.TryGetValue("projectiles", out var p) ? p : null;
         var fields = sim.Costs.TryGetValue("fields", out var f) ? f : null;
-        var note = $"{flights / (double)ticks:0} flights in the air on average among {foes.Count} foes";
+        var note = $"{flights / (double)ticks:0} flights in the air on average among {foes.Count} foes; {patterns.Length} {(profiled ? "profiled" : "legacy")} patterns";
         yield return new Bench.Result("deliveries.tick", elapsed / ticks, "ms/tick", note + ", casts included");
         yield return new Bench.Result("deliveries.tick.alloc", allocated / 1024.0 / ticks, "KB/tick", "casts, hits and effects included");
         if (projectiles is not null)
