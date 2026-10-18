@@ -1,0 +1,24 @@
+{
+  "head": "e015329e68df072662b6a422edafca558caf9d92",
+  "simulationSource": "ad310a2b3047b366da9ad32798beea5cff5145e3",
+  "startedUtc": "2026-10-18T18:43:45.7338009Z",
+  "configuration": "Release",
+  "defaults": "300 monsters, 4 players, 600 ticks; no workload overrides",
+  "processes": [
+    {
+      "name": "bench",
+      "pid": 30400,
+      "priority": "Normal",
+      "command": "dotnet src/HollowWake.Tools/bin/Release/net10.0/hollowwake.dll bench --json",
+      "exitCode": 0
+    },
+    {
+      "name": "bench-hit-bodies",
+      "pid": 44692,
+      "priority": "Normal",
+      "command": "dotnet src/HollowWake.Tools/bin/Release/net10.0/hollowwake.dll bench --only hit-bodies --json",
+      "exitCode": 0
+    }
+  ],
+  "finishedUtc": "2026-10-18T18:43:54.8835085Z"
+}
