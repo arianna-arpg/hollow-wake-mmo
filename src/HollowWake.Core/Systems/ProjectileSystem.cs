@@ -90,7 +90,7 @@ public sealed class ProjectileSystem : SimSystem
     {
         var e = sim.World.Create();
         sim.World.Add(e, new Transform { Position = at, Yaw = p.Heading, Radius = p.Radius, Height = 0.5f });
-        sim.World.Add(e, new Identity { Name = "projectile", Pattern = null, Tags = ProjectileTags, Faction = sim.World.Get<Identity>(origin)?.Faction, Owner = origin, Look = look });
+        sim.World.Add(e, new Identity { Name = "projectile", Pattern = null, Tags = ProjectileTags, Faction = Relations.FactionOf(sim, origin), Owner = origin, Look = look });
         sim.World.Add(e, p);
         sim.Spatial.Update(e, at);
         sim.Events.Publish(new EntitySpawned(e, "projectile", at) { Tick = sim.Clock.Tick });

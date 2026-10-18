@@ -2,7 +2,13 @@
 
 ## Two sources, one shape
 
-Hand-authored quests live in `quests` with a giver (a pattern id or a point-of-interest id), level, prerequisites, objectives, rewards and text. Generated quests come from `quest_templates` instantiated by the zone planner for each point of interest that lists them: slots are filled with real nearby points of interest (by tags and distance), patterns (by tags) or items (by tags), and `$slot` placeholders resolve into a concrete `QuestDef` registered with the zone's quest service. Both kinds flow through the same service.
+Hand-authored quests live in `quests` with a giver (a pattern id or a point-of-interest id), level, prerequisites, objectives, rewards and text. Generated quests come from `quest_templates` instantiated by the zone planner for each point of interest that lists them: slots are filled with real nearby points of interest (by tags and distance), patterns (by tags and optional local populations) or items (by tags), and `$slot` placeholders resolve into a concrete `QuestDef` registered with the zone's quest service. Both kinds flow through the same service.
+
+## Generated target eligibility
+
+A slot's optional `level_delta: {min, max}` bounds target level minus quest level (giver level plus template offset). POI slots use the site's effective level. Pattern slots with `local_population: true` use actual generated spawn points within `within` of the giver, checking the site's spawn level or the roaming pattern's level. Chunks are searched nearest first with stable coordinate ties; matching species in the first qualifying chunk are sorted before the seeded selection. This favors nearby available targets, rather than sampling every species globally. If nothing qualifies, the template produces no offer.
+
+Population inspection uses the normal terrain/landmark/flora/spawn pipeline and independent chunk RNG, without recursively planning zone quests. The planner reuses spawn facts for adjacent slots during one planning run. Shipped combat and scouting templates opt into level windows; creature culls and knot foes also require a local population. These are content constraints, not hard-coded creature or faction exceptions.
 
 ## Objectives
 

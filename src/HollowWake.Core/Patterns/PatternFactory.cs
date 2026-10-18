@@ -3,6 +3,7 @@ using System.Text.Json;
 using System.Text.Json.Nodes;
 using HollowWake.Core.Attributes;
 using HollowWake.Core.Components;
+using HollowWake.Core.Combat;
 using HollowWake.Core.Content;
 using HollowWake.Core.Definitions;
 using HollowWake.Core.Ecs;
@@ -126,7 +127,7 @@ public sealed class PatternFactory
             Name = options.Name ?? def.DisplayName,
             Pattern = patternId,
             Tags = def.Tags.With("pattern." + patternId),
-            Faction = options.Faction ?? def.Faction,
+            Faction = options.Faction ?? (options.Owner.IsNone ? def.Faction : Relations.FactionOf(sim, options.Owner)),
             Owner = options.Owner,
             Look = def.Look ?? patternId,
         });

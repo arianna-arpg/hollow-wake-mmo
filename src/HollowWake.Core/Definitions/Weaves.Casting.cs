@@ -9,7 +9,10 @@ namespace HollowWake.Core.Definitions;
 // can carry, folded between the form and the glyphs. Where a weave holds only one of a kind (a bank of
 // uses, a spend, a convert, a cycle, a self stack, a combo chain) the first active glyph wins over the
 // preset and the preset over the form; triggers, gates, metas, follow-ups and worn modifiers add up, the
-// form's first, then the preset's. A preset's own tags join the weave's tags with preset.{id}.
+// form's first, then the preset's. A preset's own tags join the weave's tags with preset.{id}. A preset may
+// also carry the held-mode blocks of its form's cast mode (a channel, a charge-up, a guard, strike timing):
+// each replaces the form's block whole, never field by field, so what the preset says is what the weave
+// does. The cast mode stays the form's, and validation refuses a block the form's mode would not read.
 public sealed partial record WeaveDef
 {
     /// <summary>Mechanisms the preset declares beside its form's.</summary>
@@ -48,4 +51,16 @@ public sealed partial record WeaveDef
     public SelfStackSpec? SelfStack { get; init; }
 
     public ComboSpec? Chain { get; init; }
+
+    /// <summary>The preset's own channel, in place of its form's whole; the form must be a channel.</summary>
+    public ChannelSpec? Channel { get; init; }
+
+    /// <summary>The preset's own charge-up, in place of its form's whole; the form must be a charge.</summary>
+    public ChargeUpSpec? Charge { get; init; }
+
+    /// <summary>The preset's own guard, in place of its form's whole; the form must be a guard.</summary>
+    public GuardSpec? Guard { get; init; }
+
+    /// <summary>The preset's own strike timing, in place of its form's whole; the form must be a cast with a bar.</summary>
+    public TimingSpec? Timing { get; init; }
 }

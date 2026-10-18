@@ -49,4 +49,14 @@ describe('entity deltas', () => {
     expect(next.flags).toEqual(['monster', 'enraged']);
     expect(hob.resources.life).toBe(70);
   });
+
+  it('carries what a player wears whole and clears it with an empty list', () => {
+    const wren: EntityState = { ...hob, key: 8, is_player: true, appearance: ['chest=armor.chest light', 'main_hand=weapon.sword melee blade one_hand'] };
+    expect(applyDelta(wren, { key: 8, x: 2 }).appearance).toEqual(wren.appearance);
+    expect(applyDelta(wren, { key: 8, appearance: ['chest=armor.chest light'] }).appearance).toEqual(['chest=armor.chest light']);
+    const bare = applyDelta(wren, { key: 8, appearance: [] });
+    expect(bare.appearance).toEqual([]);
+    expect(applyDelta(bare, { key: 8, x: 3 }).appearance).toEqual([]);
+    expect(applyDelta(hob, { key: 7, appearance: ['main_hand=weapon.club'] }).appearance).toEqual(['main_hand=weapon.club']);
+  });
 });

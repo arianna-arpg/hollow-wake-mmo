@@ -172,7 +172,7 @@ internal sealed class ConsumeStatusHandler : IEffectHandler
 {
     public string Type => "consume_status";
 
-    public EffectSignature Signature { get; } = EffectSignature.Of("status", "statuses", "tags", "kind", "count", "as", "self");
+    public EffectSignature Signature { get; } = EffectSignature.Of("status", "statuses", "tags", "kind", "count", "as", "self").Refers("statuses", "status", "statuses");
 
     public CompiledEffect Compile(JsonObject p, EffectCompileContext ctx)
     {
@@ -427,7 +427,7 @@ internal sealed class RuptureHandler : IEffectHandler
 {
     public string Type => "rupture";
 
-    public EffectSignature Signature { get; } = EffectSignature.Of("status", "fraction", "scale", "self");
+    public EffectSignature Signature { get; } = EffectSignature.Of("status", "fraction", "scale", "self").Refers("statuses", "status");
 
     public CompiledEffect Compile(JsonObject p, EffectCompileContext ctx)
     {

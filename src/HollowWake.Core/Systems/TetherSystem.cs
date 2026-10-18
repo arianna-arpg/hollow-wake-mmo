@@ -1,5 +1,6 @@
 using System.Numerics;
 using HollowWake.Core.Components;
+using HollowWake.Core.Combat;
 using HollowWake.Core.Ecs;
 using HollowWake.Core.Effects;
 using HollowWake.Core.Effects.Handlers;
@@ -46,7 +47,7 @@ public sealed class TetherSystem : SimSystem
         var e = sim.World.Create();
         var transform = new Transform();
         sim.World.Add(e, transform);
-        sim.World.Add(e, new Identity { Name = "tether", Tags = TetherTags, Faction = sim.World.Get<Identity>(origin)?.Faction, Owner = origin, Look = look });
+        sim.World.Add(e, new Identity { Name = "tether", Tags = TetherTags, Faction = Relations.FactionOf(sim, origin), Owner = origin, Look = look });
         sim.World.Add(e, tether);
         if (Ends(sim, tether, out var a, out var b))
         {
