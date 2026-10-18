@@ -938,7 +938,7 @@ public sealed partial class WeaveRuntime
         // Instant and nested runtime applications need identity before constructing their payload context.
         if (state.CastId == 0) state.CastId = ++_nextCastId;
         var target = state.Target;
-        var origin = OriginOf(sim, caster);
+        var (origin, payloadFrom) = PayloadOrigin(sim, caster);
         var rng = RngStreams.For(sim, caster, rngPrefix, weave.Key, rngNumber < 0 ? state.Pulses : rngNumber);
         EffectContext ContextFor(Entity source, Vector3? from = null) => new()
         {
@@ -970,7 +970,7 @@ public sealed partial class WeaveRuntime
         }
         if (origin != caster)
         {
-            var inherited = ContextFor(origin, sim.World.Get<Transform>(caster)?.Position);
+            var inherited = ContextFor(origin, payloadFrom);
             foreach (var (key, value) in ctx.Vars) inherited.Vars[key] = value;
             ctx = inherited;
         }
@@ -1008,6 +1008,13 @@ public sealed partial class WeaveRuntime
             && sim.World.IsAlive(minion.Owner) && sim.World.Has<Stats>(minion.Owner)
             ? minion.Owner
             : caster;
+
+    /// <summary>Pure payload attribution and placement shared by paid execution and forecast observation.</summary>
+    internal static (Entity Source, Vector3? From) PayloadOrigin(Simulation sim, Entity caster)
+    {
+        var source = OriginOf(sim, caster);
+        return (source, source == caster ? null : sim.World.Get<Transform>(caster)?.Position);
+    }
 
     /// <summary>
     /// Stops the caster's running cast: nothing more fires. A hold that already took effect (a channel that
