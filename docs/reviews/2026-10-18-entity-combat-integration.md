@@ -61,7 +61,15 @@ Fresh run-8cdtTL card and grayscale frames were inspected: terrain, trees, villa
 
 These functional gates do not resolve the retained pre-main performance misses or establish a post-main timing pass. No benchmark was run during this integration.
 
-## #37 final dependency merge and world audit
+### #34 verified simulation after the aim correction
+
+Source `26431c48a67ddd3b77811cf94363a589cdd50e69` consumes complete parent `01b2884c3ddc61c0b617c9062a7e36b575d94551`. Solution and Release tools build with zero warnings/errors; core 2412, server 59, client 133 tests pass. Validation0/0, load/duel, exact 499-key census and all seven Release Windows replay hashes pass. No replay fixture or census allowance is changed. Relative to actual preceding branch source `3d339d2ac71af6ac8bcff8e4f767e1f7c44ce2d8`, content changes are precisely the inherited projectile default-elevation rule, Knot site-level opt-ins and anchored/windowed quest slot. Every other entity, kit, shape, material and spawn table is unchanged. The complete parent also carries the independently reviewed separation of explicit placement, sampled target and body aim through nested wrappers and salvos; see `2026-10-18-aim-placement-composition.md`. This clears that scoped contact correction, not the separate combined #20/#50 acceptance work.
+
+The full fresh proving JSON equals the exact archived preceding source, including all three inherited win-ceiling breaches, outcomes, mechanisms and hashes. The command exits1; this is not a balance pass. Seven hashes do not capture vertical spawn coordinates: the inherited launch correction's detailed trace and child-contact regressions establish the actual emission-height change. No timing run or budget relaxation accompanies this source. Full gate evidence: `34-aimfinal-*` and `34-pre54-*`. Client/transport coverage is stated separately rather than inferred from simulation checks.
+
+Claude rereview requested for the complete source after the aim correction. Historical performance misses remain open under coordinated ownership; no merge to main.
+
+## #37 checkpoint dependency merge and world audit
 
 Previous source `fef8087e11dcdeb2b08d4bd7047c140cc0441bec` now consumes complete parent `1e1d3b88f966dc39f52f216ecddaf2cabb18922c`, preserving main17ca, the owner-selected Knot site levels and the corrected projectile launch semantics. Paired audits/maps use the exact archived prior source and this merge's working tree; the merge commit captures those inputs. This is the same-branch integration comparison, not a claim about the content layer versus its PR base.
 

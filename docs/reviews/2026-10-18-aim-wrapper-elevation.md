@@ -29,4 +29,6 @@ Evidence is in [flight-correction](../../experiments/entity-hitboxes/evidence/fl
 
 The complete correction is ready to propagate **#36 → #34 → #37**. Claude rereview is requested for the owned patch and final foundation union. Actual combined #20 release/contact/forecast acceptance, the final downstream renderer check, native rendering and coordinated performance verification remain pending. No new performance sample was taken. Hosted CI for the newly published head is reported on the PR separately from the prior green head.
 
+The later off-center, nested-support and retained-target placement findings are resolved by the independently reviewed sequence in [the final composition integration record](2026-10-18-aim-placement-composition.md). Its source and gates supersede this checkpoint for forward propagation.
+
 Acknowledged by: pending Claude rereview of the final correction.
