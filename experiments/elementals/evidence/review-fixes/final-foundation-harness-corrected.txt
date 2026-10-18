@@ -1,0 +1,28 @@
+✔ a melee skill becomes a preset on the swing shell in world units (1.5061ms)
+✔ a projectile keeps its riders, hooks and Thread (0.7094ms)
+✔ bursts spare the body struck, pulls on flights anchor to the caster, and splits pair with their Threads (1.4042ms)
+✔ trajectory axes come out in degrees a second and banks keep their kind (0.7638ms)
+✔ chaos goes to Umbra by theme and the port closure carries referenced kit skills (1.4559ms)
+✔ supports become glyphs with triggers, mechanism probes and generated families (0.7131ms)
+✔ statuses map onto the roster, pops become on_reapply and time scales are not ported (1.7932ms)
+✔ procs and charges keep their payloads (1.5994ms)
+✔ structurally different shells have unique ids and presets reference them (2.2316ms)
+✔ mixed damage pairs shares with sorted Threads and preserves the folded total (1.3491ms)
+✔ Linux descendant check accepts absent or zombie processes and preserves other failures (2.3049ms)
+✔ both suites enforce background input and reject headed or unbounded runs (1.9075ms)
+✔ background browser isolates physical controllers without changing keyboard or pointer events (1.0113ms)
+✔ private config preserves gameplay settings and quotes Windows paths literally (0.5532ms)
+✔ simultaneous reservations use distinct ports (20.2932ms)
+✔ server readiness refuses an unrelated server on the selected port (458.4236ms)
+✔ a clean exit with no completed smoke summary cannot pass (0.515ms)
+✔ process failures preserve output and return a failing status (66.3693ms)
+✔ timeout stops the owned process and its descendant without stopping a neighbour (1130.1078ms)
+✔ interruption stops an owned running process (380.7536ms)
+ℹ tests 20
+ℹ suites 0
+ℹ pass 20
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2168.1959

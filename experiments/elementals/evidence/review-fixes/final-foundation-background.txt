@@ -1,0 +1,9 @@
+TEST evidence: <worktree>\experiments\elementals\artifacts\final-foundation-smoke\run-OmYdVD
+TEST build-server; evidence: <worktree>\experiments\elementals\artifacts\final-foundation-smoke\run-OmYdVD
+TEST typecheck-web; evidence: <worktree>\experiments\elementals\artifacts\final-foundation-smoke\run-OmYdVD
+TEST build-web; evidence: <worktree>\experiments\elementals\artifacts\final-foundation-smoke\run-OmYdVD
+TEST build-godot; evidence: <worktree>\experiments\elementals\artifacts\final-foundation-smoke\run-OmYdVD
+TEST smoke-web; evidence: <worktree>\experiments\elementals\artifacts\final-foundation-smoke\run-OmYdVD
+TEST import-godot; evidence: <worktree>\experiments\elementals\artifacts\final-foundation-smoke\run-OmYdVD
+TEST smoke-godot; evidence: <worktree>\experiments\elementals\artifacts\final-foundation-smoke\run-OmYdVD
+TEST PASSED; report: <worktree>\experiments\elementals\artifacts\final-foundation-smoke\run-OmYdVD\result.json

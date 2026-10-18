@@ -1,0 +1,6 @@
+Same runtime 3f414d7: exact c3099a8 foundation content versus unchanged elemental content.
+Entire before/after proving JSON is byte-identical, SHA256 ad9fca611d36b510c684173752559f37f3a34b376c10dea50f57ffd1a4b67282.
+Both commands exit 1; inherited bulwark, plaguer and pitfighter 10/10 wins against 80% ceilings remain open.
+Compared with ce4c992's main-proving-after.json after line-ending normalization: entire JSON unchanged.
+No band widening, balance clearance, fixture rewrite or benchmark.
+Windows Release standard replay matches all seven inherited hashes.

@@ -1,0 +1,70 @@
+Final foundation world audit
+Before: ce4c992 (tested runtime f5c8e92). After: 3f414d7, exact complete #34 c3099a8 plus unchanged elemental content.
+Seed aureth. Sites, per-pattern populations and mapped terrain are compared separately from resident levels and offers.
+
+0_0: sites and population unchanged; 115 spawners / 293 bodies.
+cinder_imp at poi.0_0.knot.200.60: explicit pattern / effective 4 -> explicit 3 / effective 3; 2 spawners / 4 bodies unchanged.
+remnant_shade at poi.0_0.knot.200.60: explicit pattern / effective 2 -> explicit 3 / effective 3; 1 spawners / 4 bodies unchanged.
+tangle at poi.0_0.knot.200.60: explicit pattern / effective 6 -> explicit 3 / effective 3; 1 spawners / 1 bodies unchanged.
+before: 3 offers.
+  gen.poi.0_0.hamlet.128.128.gather_floss.1 L1: collect:thread_floss
+  gen.poi.0_0.hamlet.128.128.cull_beasts.2 L1: kill:hob
+  gen.poi.0_0.hamlet.128.128.scout_ruin.3 L1: discover:poi.0_1.ruin.213.450
+after: 4 offers.
+  gen.poi.0_0.hamlet.128.128.clear_knot.0 L1: reach:poi.0_0.knot.200.60; kill:cinder_imp
+  gen.poi.0_0.hamlet.128.128.gather_floss.1 L1: collect:thread_floss
+  gen.poi.0_0.hamlet.128.128.cull_beasts.2 L1: kill:hob
+  gen.poi.0_0.hamlet.128.128.scout_ruin.3 L1: discover:poi.1_1.ruin.305.334
+
+1_0: sites and population unchanged; 122 spawners / 339 bodies.
+before: 0 offers.
+after: 0 offers.
+
+0_-1: sites and population unchanged; 171 spawners / 403 bodies.
+cinder_imp at poi.0_-1.knot.176.-74: explicit pattern / effective 4 -> explicit 7 / effective 7; 2 spawners / 5 bodies unchanged.
+cinder_imp at poi.0_-1.knot.185.-214: explicit pattern / effective 4 -> explicit 7 / effective 7; 2 spawners / 6 bodies unchanged.
+cinder_imp at poi.0_-1.knot.41.-37: explicit pattern / effective 4 -> explicit 7 / effective 7; 2 spawners / 4 bodies unchanged.
+remnant_shade at poi.0_-1.knot.176.-74: explicit pattern / effective 2 -> explicit 7 / effective 7; 1 spawners / 4 bodies unchanged.
+remnant_shade at poi.0_-1.knot.185.-214: explicit pattern / effective 2 -> explicit 7 / effective 7; 1 spawners / 2 bodies unchanged.
+remnant_shade at poi.0_-1.knot.41.-37: explicit pattern / effective 2 -> explicit 7 / effective 7; 1 spawners / 4 bodies unchanged.
+tangle at poi.0_-1.knot.176.-74: explicit pattern / effective 6 -> explicit 7 / effective 7; 1 spawners / 1 bodies unchanged.
+tangle at poi.0_-1.knot.185.-214: explicit pattern / effective 6 -> explicit 7 / effective 7; 1 spawners / 1 bodies unchanged.
+tangle at poi.0_-1.knot.41.-37: explicit pattern / effective 6 -> explicit 7 / effective 7; 1 spawners / 1 bodies unchanged.
+before: 0 offers.
+after: 0 offers.
+
+3_2: sites and population unchanged; 146 spawners / 392 bodies.
+cinder_imp at poi.3_2.knot.965.744: explicit pattern / effective 4 -> explicit 3 / effective 3; 2 spawners / 5 bodies unchanged.
+remnant_shade at poi.3_2.knot.965.744: explicit pattern / effective 2 -> explicit 3 / effective 3; 1 spawners / 3 bodies unchanged.
+tangle at poi.3_2.knot.965.744: explicit pattern / effective 6 -> explicit 3 / effective 3; 1 spawners / 1 bodies unchanged.
+before: 0 offers.
+after: 0 offers.
+
+-1_0: sites and population unchanged; 153 spawners / 399 bodies.
+before: 0 offers.
+after: 0 offers.
+
+-1_1: sites and population unchanged; 169 spawners / 421 bodies.
+cinder_imp at poi.-1_1.knot.-234.294: explicit pattern / effective 4 -> explicit 8 / effective 8; 2 spawners / 5 bodies unchanged.
+cinder_imp at poi.-1_1.knot.-34.419: explicit pattern / effective 4 -> explicit 8 / effective 8; 2 spawners / 4 bodies unchanged.
+remnant_shade at poi.-1_1.knot.-234.294: explicit pattern / effective 2 -> explicit 8 / effective 8; 1 spawners / 4 bodies unchanged.
+remnant_shade at poi.-1_1.knot.-34.419: explicit pattern / effective 2 -> explicit 8 / effective 8; 1 spawners / 4 bodies unchanged.
+tangle at poi.-1_1.knot.-234.294: explicit pattern / effective 6 -> explicit 8 / effective 8; 1 spawners / 1 bodies unchanged.
+tangle at poi.-1_1.knot.-34.419: explicit pattern / effective 6 -> explicit 8 / effective 8; 1 spawners / 1 bodies unchanged.
+before: 0 offers.
+after: 0 offers.
+
+2_1: sites and population unchanged; 139 spawners / 378 bodies.
+before: 0 offers.
+after: 0 offers.
+
+3_1: sites and population unchanged; 134 spawners / 346 bodies.
+cinder_imp at poi.3_1.knot.945.437: explicit pattern / effective 4 -> explicit 3 / effective 3; 2 spawners / 4 bodies unchanged.
+remnant_shade at poi.3_1.knot.945.437: explicit pattern / effective 2 -> explicit 3 / effective 3; 1 spawners / 2 bodies unchanged.
+tangle at poi.3_1.knot.945.437: explicit pattern / effective 6 -> explicit 3 / effective 3; 1 spawners / 1 bodies unchanged.
+before: 0 offers.
+after: 0 offers.
+Map 0,0: terrain and POI lines identical; quest lines changed as listed above.
+Map 1,0: terrain and POI lines identical; full output identical.
+Map 0,-1: terrain and POI lines identical; full output identical.
+Map 3,2: terrain and POI lines identical; full output identical.

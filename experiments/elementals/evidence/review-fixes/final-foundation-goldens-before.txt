@@ -1,0 +1,76 @@
+Test run for <worktree>\tests\HollowWake.Core.Tests\bin\Release\net10.0\HollowWake.Core.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v3.1.5+1b188a7b0a (64-bit .NET 10.0.13)
+[xUnit.net 00:00:00.45]   Discovering: HollowWake.Core.Tests
+[xUnit.net 00:00:04.99]   Discovered:  HollowWake.Core.Tests
+[xUnit.net 00:00:05.03]   Starting:    HollowWake.Core.Tests
+[xUnit.net 00:00:05.94]       zone(0,-1) info and chunks: expected BED451948F4FF6AD 2AFA9EE5AA75F409, generated BED451948F4FF6AD D785D8F084A1F919. Generation output changed; update the constant only if that was intended.
+[xUnit.net 00:00:05.94]       Stack Trace:
+[xUnit.net 00:00:05.94]         <worktree>\tests\HollowWake.Core.Tests\WorldGenGoldenTests.cs(165,0): at HollowWake.Core.Tests.WorldGenGoldenTests.Golden(String what, String expected, String actual)
+[xUnit.net 00:00:05.94]         <worktree>\tests\HollowWake.Core.Tests\WorldGenGoldenTests.cs(56,0): at HollowWake.Core.Tests.WorldGenGoldenTests.ZoneMatchesGoldenHashes(Int32 x, Int32 y, String infoHash, String chunksHash)
+[xUnit.net 00:00:05.94]            at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+[xUnit.net 00:00:05.94]            at System.Reflection.MethodBaseInvoker.InvokeDirectByRefWithFewArgs(Object obj, Span`1 copyOfArgs, BindingFlags invokeAttr)
+[xUnit.net 00:00:05.94]     HollowWake.Core.Tests.WorldGenGoldenTests.ZoneMatchesGoldenHashes(x: 0, y: -1, infoHash: "BED451948F4FF6AD", chunksHash: "2AFA9EE5AA75F409") [FAIL]
+[xUnit.net 00:00:06.07]     HollowWake.Core.Tests.WorldGenGoldenTests.ZoneMatchesGoldenHashes(x: 0, y: 0, infoHash: "6F31BE10B412E1B0", chunksHash: "38740F7C0C66C2F6") [FAIL]
+[xUnit.net 00:00:06.07]       zone(0,0) info and chunks: expected 6F31BE10B412E1B0 38740F7C0C66C2F6, generated 678462695CF5FCF1 B04153F9629D9BAE. Generation output changed; update the constant only if that was intended.
+[xUnit.net 00:00:06.07]       Stack Trace:
+[xUnit.net 00:00:06.07]         <worktree>\tests\HollowWake.Core.Tests\WorldGenGoldenTests.cs(165,0): at HollowWake.Core.Tests.WorldGenGoldenTests.Golden(String what, String expected, String actual)
+[xUnit.net 00:00:06.07]         <worktree>\tests\HollowWake.Core.Tests\WorldGenGoldenTests.cs(56,0): at HollowWake.Core.Tests.WorldGenGoldenTests.ZoneMatchesGoldenHashes(Int32 x, Int32 y, String infoHash, String chunksHash)
+[xUnit.net 00:00:06.07]            at InvokeStub_WorldGenGoldenTests.ZoneMatchesGoldenHashes(Object, Span`1)
+[xUnit.net 00:00:06.07]            at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:06.14]       zone(3,2) info and chunks: expected 2B931093C9DDE5E2 B927209C7C70E524, generated 2B931093C9DDE5E2 8711D19C4613D904. Generation output changed; update the constant only if that was intended.
+[xUnit.net 00:00:06.14]     HollowWake.Core.Tests.WorldGenGoldenTests.ZoneMatchesGoldenHashes(x: 3, y: 2, infoHash: "2B931093C9DDE5E2", chunksHash: "B927209C7C70E524") [FAIL]
+[xUnit.net 00:00:06.14]       Stack Trace:
+[xUnit.net 00:00:06.14]         <worktree>\tests\HollowWake.Core.Tests\WorldGenGoldenTests.cs(165,0): at HollowWake.Core.Tests.WorldGenGoldenTests.Golden(String what, String expected, String actual)
+[xUnit.net 00:00:06.14]         <worktree>\tests\HollowWake.Core.Tests\WorldGenGoldenTests.cs(56,0): at HollowWake.Core.Tests.WorldGenGoldenTests.ZoneMatchesGoldenHashes(Int32 x, Int32 y, String infoHash, String chunksHash)
+[xUnit.net 00:00:06.14]            at InvokeStub_WorldGenGoldenTests.ZoneMatchesGoldenHashes(Object, Span`1)
+[xUnit.net 00:00:06.14]            at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:06.32]     HollowWake.Core.Tests.WorldGenGoldenTests.OverlaidWorldMatchesGoldenHash [FAIL]
+[xUnit.net 00:00:06.33]       overlaid world: expected B532F6AA2C0EE744, generated C37D8803E53F4E7A. Generation output changed; update the constant only if that was intended.
+[xUnit.net 00:00:06.33]       Stack Trace:
+[xUnit.net 00:00:06.33]         <worktree>\tests\HollowWake.Core.Tests\WorldGenGoldenTests.cs(165,0): at HollowWake.Core.Tests.WorldGenGoldenTests.Golden(String what, String expected, String actual)
+[xUnit.net 00:00:06.33]         <worktree>\tests\HollowWake.Core.Tests\WorldGenGoldenTests.cs(104,0): at HollowWake.Core.Tests.WorldGenGoldenTests.OverlaidWorldMatchesGoldenHash()
+[xUnit.net 00:00:06.33]            at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+[xUnit.net 00:00:06.33]            at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:06.33]   Finished:    HollowWake.Core.Tests
+  Passed HollowWake.Core.Tests.WorldGenGoldenTests.ClimateSamplesMatchGoldenHash [736 ms]
+  Failed HollowWake.Core.Tests.WorldGenGoldenTests.ZoneMatchesGoldenHashes(x: 0, y: -1, infoHash: "BED451948F4FF6AD", chunksHash: "2AFA9EE5AA75F409") [117 ms]
+  Error Message:
+   zone(0,-1) info and chunks: expected BED451948F4FF6AD 2AFA9EE5AA75F409, generated BED451948F4FF6AD D785D8F084A1F919. Generation output changed; update the constant only if that was intended.
+  Stack Trace:
+     at HollowWake.Core.Tests.WorldGenGoldenTests.Golden(String what, String expected, String actual) in <worktree>\tests\HollowWake.Core.Tests\WorldGenGoldenTests.cs:line 165
+   at HollowWake.Core.Tests.WorldGenGoldenTests.ZoneMatchesGoldenHashes(Int32 x, Int32 y, String infoHash, String chunksHash) in <worktree>\tests\HollowWake.Core.Tests\WorldGenGoldenTests.cs:line 56
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeDirectByRefWithFewArgs(Object obj, Span`1 copyOfArgs, BindingFlags invokeAttr)
+  Passed HollowWake.Core.Tests.WorldGenGoldenTests.ZoneMatchesGoldenHashes(x: 1, y: 0, infoHash: "535B02D1C10CB22D", chunksHash: "0E386FE1D6659BC0") [72 ms]
+  Failed HollowWake.Core.Tests.WorldGenGoldenTests.ZoneMatchesGoldenHashes(x: 0, y: 0, infoHash: "6F31BE10B412E1B0", chunksHash: "38740F7C0C66C2F6") [67 ms]
+  Error Message:
+   zone(0,0) info and chunks: expected 6F31BE10B412E1B0 38740F7C0C66C2F6, generated 678462695CF5FCF1 B04153F9629D9BAE. Generation output changed; update the constant only if that was intended.
+  Stack Trace:
+     at HollowWake.Core.Tests.WorldGenGoldenTests.Golden(String what, String expected, String actual) in <worktree>\tests\HollowWake.Core.Tests\WorldGenGoldenTests.cs:line 165
+   at HollowWake.Core.Tests.WorldGenGoldenTests.ZoneMatchesGoldenHashes(Int32 x, Int32 y, String infoHash, String chunksHash) in <worktree>\tests\HollowWake.Core.Tests\WorldGenGoldenTests.cs:line 56
+   at InvokeStub_WorldGenGoldenTests.ZoneMatchesGoldenHashes(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Failed HollowWake.Core.Tests.WorldGenGoldenTests.ZoneMatchesGoldenHashes(x: 3, y: 2, infoHash: "2B931093C9DDE5E2", chunksHash: "B927209C7C70E524") [67 ms]
+  Error Message:
+   zone(3,2) info and chunks: expected 2B931093C9DDE5E2 B927209C7C70E524, generated 2B931093C9DDE5E2 8711D19C4613D904. Generation output changed; update the constant only if that was intended.
+  Stack Trace:
+     at HollowWake.Core.Tests.WorldGenGoldenTests.Golden(String what, String expected, String actual) in <worktree>\tests\HollowWake.Core.Tests\WorldGenGoldenTests.cs:line 165
+   at HollowWake.Core.Tests.WorldGenGoldenTests.ZoneMatchesGoldenHashes(Int32 x, Int32 y, String infoHash, String chunksHash) in <worktree>\tests\HollowWake.Core.Tests\WorldGenGoldenTests.cs:line 56
+   at InvokeStub_WorldGenGoldenTests.ZoneMatchesGoldenHashes(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Passed HollowWake.Core.Tests.WorldGenGoldenTests.StartZoneIsTheOrigin [5 ms]
+  Failed HollowWake.Core.Tests.WorldGenGoldenTests.OverlaidWorldMatchesGoldenHash [177 ms]
+  Error Message:
+   overlaid world: expected B532F6AA2C0EE744, generated C37D8803E53F4E7A. Generation output changed; update the constant only if that was intended.
+  Stack Trace:
+     at HollowWake.Core.Tests.WorldGenGoldenTests.Golden(String what, String expected, String actual) in <worktree>\tests\HollowWake.Core.Tests\WorldGenGoldenTests.cs:line 165
+   at HollowWake.Core.Tests.WorldGenGoldenTests.OverlaidWorldMatchesGoldenHash() in <worktree>\tests\HollowWake.Core.Tests\WorldGenGoldenTests.cs:line 104
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+
+Test Run Failed.
+Total tests: 7
+     Passed: 3
+     Failed: 4
+ Total time: 7.8330 Seconds

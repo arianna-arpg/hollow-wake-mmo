@@ -1,0 +1,458 @@
+[
+  {
+    "Zone": "0_0",
+    "Before": {
+      "Pattern": "cinder_imp",
+      "Group": "poi.0_0.knot.200.60",
+      "ExplicitLevel": null,
+      "EffectiveLevel": 4,
+      "Points": 2,
+      "Bodies": 4
+    },
+    "After": {
+      "Pattern": "cinder_imp",
+      "Group": "poi.0_0.knot.200.60",
+      "ExplicitLevel": 3,
+      "EffectiveLevel": 3,
+      "Points": 2,
+      "Bodies": 4
+    }
+  },
+  {
+    "Zone": "0_0",
+    "Before": {
+      "Pattern": "remnant_shade",
+      "Group": "poi.0_0.knot.200.60",
+      "ExplicitLevel": null,
+      "EffectiveLevel": 2,
+      "Points": 1,
+      "Bodies": 4
+    },
+    "After": {
+      "Pattern": "remnant_shade",
+      "Group": "poi.0_0.knot.200.60",
+      "ExplicitLevel": 3,
+      "EffectiveLevel": 3,
+      "Points": 1,
+      "Bodies": 4
+    }
+  },
+  {
+    "Zone": "0_0",
+    "Before": {
+      "Pattern": "tangle",
+      "Group": "poi.0_0.knot.200.60",
+      "ExplicitLevel": null,
+      "EffectiveLevel": 6,
+      "Points": 1,
+      "Bodies": 1
+    },
+    "After": {
+      "Pattern": "tangle",
+      "Group": "poi.0_0.knot.200.60",
+      "ExplicitLevel": 3,
+      "EffectiveLevel": 3,
+      "Points": 1,
+      "Bodies": 1
+    }
+  },
+  {
+    "Zone": "0_-1",
+    "Before": {
+      "Pattern": "cinder_imp",
+      "Group": "poi.0_-1.knot.176.-74",
+      "ExplicitLevel": null,
+      "EffectiveLevel": 4,
+      "Points": 2,
+      "Bodies": 5
+    },
+    "After": {
+      "Pattern": "cinder_imp",
+      "Group": "poi.0_-1.knot.176.-74",
+      "ExplicitLevel": 7,
+      "EffectiveLevel": 7,
+      "Points": 2,
+      "Bodies": 5
+    }
+  },
+  {
+    "Zone": "0_-1",
+    "Before": {
+      "Pattern": "cinder_imp",
+      "Group": "poi.0_-1.knot.185.-214",
+      "ExplicitLevel": null,
+      "EffectiveLevel": 4,
+      "Points": 2,
+      "Bodies": 6
+    },
+    "After": {
+      "Pattern": "cinder_imp",
+      "Group": "poi.0_-1.knot.185.-214",
+      "ExplicitLevel": 7,
+      "EffectiveLevel": 7,
+      "Points": 2,
+      "Bodies": 6
+    }
+  },
+  {
+    "Zone": "0_-1",
+    "Before": {
+      "Pattern": "cinder_imp",
+      "Group": "poi.0_-1.knot.41.-37",
+      "ExplicitLevel": null,
+      "EffectiveLevel": 4,
+      "Points": 2,
+      "Bodies": 4
+    },
+    "After": {
+      "Pattern": "cinder_imp",
+      "Group": "poi.0_-1.knot.41.-37",
+      "ExplicitLevel": 7,
+      "EffectiveLevel": 7,
+      "Points": 2,
+      "Bodies": 4
+    }
+  },
+  {
+    "Zone": "0_-1",
+    "Before": {
+      "Pattern": "remnant_shade",
+      "Group": "poi.0_-1.knot.176.-74",
+      "ExplicitLevel": null,
+      "EffectiveLevel": 2,
+      "Points": 1,
+      "Bodies": 4
+    },
+    "After": {
+      "Pattern": "remnant_shade",
+      "Group": "poi.0_-1.knot.176.-74",
+      "ExplicitLevel": 7,
+      "EffectiveLevel": 7,
+      "Points": 1,
+      "Bodies": 4
+    }
+  },
+  {
+    "Zone": "0_-1",
+    "Before": {
+      "Pattern": "remnant_shade",
+      "Group": "poi.0_-1.knot.185.-214",
+      "ExplicitLevel": null,
+      "EffectiveLevel": 2,
+      "Points": 1,
+      "Bodies": 2
+    },
+    "After": {
+      "Pattern": "remnant_shade",
+      "Group": "poi.0_-1.knot.185.-214",
+      "ExplicitLevel": 7,
+      "EffectiveLevel": 7,
+      "Points": 1,
+      "Bodies": 2
+    }
+  },
+  {
+    "Zone": "0_-1",
+    "Before": {
+      "Pattern": "remnant_shade",
+      "Group": "poi.0_-1.knot.41.-37",
+      "ExplicitLevel": null,
+      "EffectiveLevel": 2,
+      "Points": 1,
+      "Bodies": 4
+    },
+    "After": {
+      "Pattern": "remnant_shade",
+      "Group": "poi.0_-1.knot.41.-37",
+      "ExplicitLevel": 7,
+      "EffectiveLevel": 7,
+      "Points": 1,
+      "Bodies": 4
+    }
+  },
+  {
+    "Zone": "0_-1",
+    "Before": {
+      "Pattern": "tangle",
+      "Group": "poi.0_-1.knot.176.-74",
+      "ExplicitLevel": null,
+      "EffectiveLevel": 6,
+      "Points": 1,
+      "Bodies": 1
+    },
+    "After": {
+      "Pattern": "tangle",
+      "Group": "poi.0_-1.knot.176.-74",
+      "ExplicitLevel": 7,
+      "EffectiveLevel": 7,
+      "Points": 1,
+      "Bodies": 1
+    }
+  },
+  {
+    "Zone": "0_-1",
+    "Before": {
+      "Pattern": "tangle",
+      "Group": "poi.0_-1.knot.185.-214",
+      "ExplicitLevel": null,
+      "EffectiveLevel": 6,
+      "Points": 1,
+      "Bodies": 1
+    },
+    "After": {
+      "Pattern": "tangle",
+      "Group": "poi.0_-1.knot.185.-214",
+      "ExplicitLevel": 7,
+      "EffectiveLevel": 7,
+      "Points": 1,
+      "Bodies": 1
+    }
+  },
+  {
+    "Zone": "0_-1",
+    "Before": {
+      "Pattern": "tangle",
+      "Group": "poi.0_-1.knot.41.-37",
+      "ExplicitLevel": null,
+      "EffectiveLevel": 6,
+      "Points": 1,
+      "Bodies": 1
+    },
+    "After": {
+      "Pattern": "tangle",
+      "Group": "poi.0_-1.knot.41.-37",
+      "ExplicitLevel": 7,
+      "EffectiveLevel": 7,
+      "Points": 1,
+      "Bodies": 1
+    }
+  },
+  {
+    "Zone": "3_2",
+    "Before": {
+      "Pattern": "cinder_imp",
+      "Group": "poi.3_2.knot.965.744",
+      "ExplicitLevel": null,
+      "EffectiveLevel": 4,
+      "Points": 2,
+      "Bodies": 5
+    },
+    "After": {
+      "Pattern": "cinder_imp",
+      "Group": "poi.3_2.knot.965.744",
+      "ExplicitLevel": 3,
+      "EffectiveLevel": 3,
+      "Points": 2,
+      "Bodies": 5
+    }
+  },
+  {
+    "Zone": "3_2",
+    "Before": {
+      "Pattern": "remnant_shade",
+      "Group": "poi.3_2.knot.965.744",
+      "ExplicitLevel": null,
+      "EffectiveLevel": 2,
+      "Points": 1,
+      "Bodies": 3
+    },
+    "After": {
+      "Pattern": "remnant_shade",
+      "Group": "poi.3_2.knot.965.744",
+      "ExplicitLevel": 3,
+      "EffectiveLevel": 3,
+      "Points": 1,
+      "Bodies": 3
+    }
+  },
+  {
+    "Zone": "3_2",
+    "Before": {
+      "Pattern": "tangle",
+      "Group": "poi.3_2.knot.965.744",
+      "ExplicitLevel": null,
+      "EffectiveLevel": 6,
+      "Points": 1,
+      "Bodies": 1
+    },
+    "After": {
+      "Pattern": "tangle",
+      "Group": "poi.3_2.knot.965.744",
+      "ExplicitLevel": 3,
+      "EffectiveLevel": 3,
+      "Points": 1,
+      "Bodies": 1
+    }
+  },
+  {
+    "Zone": "-1_1",
+    "Before": {
+      "Pattern": "cinder_imp",
+      "Group": "poi.-1_1.knot.-234.294",
+      "ExplicitLevel": null,
+      "EffectiveLevel": 4,
+      "Points": 2,
+      "Bodies": 5
+    },
+    "After": {
+      "Pattern": "cinder_imp",
+      "Group": "poi.-1_1.knot.-234.294",
+      "ExplicitLevel": 8,
+      "EffectiveLevel": 8,
+      "Points": 2,
+      "Bodies": 5
+    }
+  },
+  {
+    "Zone": "-1_1",
+    "Before": {
+      "Pattern": "cinder_imp",
+      "Group": "poi.-1_1.knot.-34.419",
+      "ExplicitLevel": null,
+      "EffectiveLevel": 4,
+      "Points": 2,
+      "Bodies": 4
+    },
+    "After": {
+      "Pattern": "cinder_imp",
+      "Group": "poi.-1_1.knot.-34.419",
+      "ExplicitLevel": 8,
+      "EffectiveLevel": 8,
+      "Points": 2,
+      "Bodies": 4
+    }
+  },
+  {
+    "Zone": "-1_1",
+    "Before": {
+      "Pattern": "remnant_shade",
+      "Group": "poi.-1_1.knot.-234.294",
+      "ExplicitLevel": null,
+      "EffectiveLevel": 2,
+      "Points": 1,
+      "Bodies": 4
+    },
+    "After": {
+      "Pattern": "remnant_shade",
+      "Group": "poi.-1_1.knot.-234.294",
+      "ExplicitLevel": 8,
+      "EffectiveLevel": 8,
+      "Points": 1,
+      "Bodies": 4
+    }
+  },
+  {
+    "Zone": "-1_1",
+    "Before": {
+      "Pattern": "remnant_shade",
+      "Group": "poi.-1_1.knot.-34.419",
+      "ExplicitLevel": null,
+      "EffectiveLevel": 2,
+      "Points": 1,
+      "Bodies": 4
+    },
+    "After": {
+      "Pattern": "remnant_shade",
+      "Group": "poi.-1_1.knot.-34.419",
+      "ExplicitLevel": 8,
+      "EffectiveLevel": 8,
+      "Points": 1,
+      "Bodies": 4
+    }
+  },
+  {
+    "Zone": "-1_1",
+    "Before": {
+      "Pattern": "tangle",
+      "Group": "poi.-1_1.knot.-234.294",
+      "ExplicitLevel": null,
+      "EffectiveLevel": 6,
+      "Points": 1,
+      "Bodies": 1
+    },
+    "After": {
+      "Pattern": "tangle",
+      "Group": "poi.-1_1.knot.-234.294",
+      "ExplicitLevel": 8,
+      "EffectiveLevel": 8,
+      "Points": 1,
+      "Bodies": 1
+    }
+  },
+  {
+    "Zone": "-1_1",
+    "Before": {
+      "Pattern": "tangle",
+      "Group": "poi.-1_1.knot.-34.419",
+      "ExplicitLevel": null,
+      "EffectiveLevel": 6,
+      "Points": 1,
+      "Bodies": 1
+    },
+    "After": {
+      "Pattern": "tangle",
+      "Group": "poi.-1_1.knot.-34.419",
+      "ExplicitLevel": 8,
+      "EffectiveLevel": 8,
+      "Points": 1,
+      "Bodies": 1
+    }
+  },
+  {
+    "Zone": "3_1",
+    "Before": {
+      "Pattern": "cinder_imp",
+      "Group": "poi.3_1.knot.945.437",
+      "ExplicitLevel": null,
+      "EffectiveLevel": 4,
+      "Points": 2,
+      "Bodies": 4
+    },
+    "After": {
+      "Pattern": "cinder_imp",
+      "Group": "poi.3_1.knot.945.437",
+      "ExplicitLevel": 3,
+      "EffectiveLevel": 3,
+      "Points": 2,
+      "Bodies": 4
+    }
+  },
+  {
+    "Zone": "3_1",
+    "Before": {
+      "Pattern": "remnant_shade",
+      "Group": "poi.3_1.knot.945.437",
+      "ExplicitLevel": null,
+      "EffectiveLevel": 2,
+      "Points": 1,
+      "Bodies": 2
+    },
+    "After": {
+      "Pattern": "remnant_shade",
+      "Group": "poi.3_1.knot.945.437",
+      "ExplicitLevel": 3,
+      "EffectiveLevel": 3,
+      "Points": 1,
+      "Bodies": 2
+    }
+  },
+  {
+    "Zone": "3_1",
+    "Before": {
+      "Pattern": "tangle",
+      "Group": "poi.3_1.knot.945.437",
+      "ExplicitLevel": null,
+      "EffectiveLevel": 6,
+      "Points": 1,
+      "Bodies": 1
+    },
+    "After": {
+      "Pattern": "tangle",
+      "Group": "poi.3_1.knot.945.437",
+      "ExplicitLevel": 3,
+      "EffectiveLevel": 3,
+      "Points": 1,
+      "Bodies": 1
+    }
+  }
+]

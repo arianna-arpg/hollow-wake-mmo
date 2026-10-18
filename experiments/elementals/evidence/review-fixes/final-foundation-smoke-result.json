@@ -1,0 +1,84 @@
+{
+  "started": "2026-10-18T22:29:39.028Z",
+  "root": "<worktree>",
+  "directory": "<worktree>\\experiments\\elementals\\artifacts\\final-foundation-smoke\\run-OmYdVD",
+  "suite": "all",
+  "status": "passed",
+  "stages": [
+    {
+      "name": "build-server",
+      "status": "passed",
+      "started": "2026-10-18T22:29:39.032Z",
+      "code": 0,
+      "signal": null,
+      "finished": "2026-10-18T22:29:43.169Z"
+    },
+    {
+      "name": "typecheck-web",
+      "status": "passed",
+      "started": "2026-10-18T22:29:43.169Z",
+      "code": 0,
+      "signal": null,
+      "finished": "2026-10-18T22:29:47.595Z"
+    },
+    {
+      "name": "build-web",
+      "status": "passed",
+      "started": "2026-10-18T22:29:47.596Z",
+      "code": 0,
+      "signal": null,
+      "finished": "2026-10-18T22:29:48.702Z"
+    },
+    {
+      "name": "build-godot",
+      "status": "passed",
+      "started": "2026-10-18T22:29:48.703Z",
+      "code": 0,
+      "signal": null,
+      "finished": "2026-10-18T22:29:51.208Z"
+    },
+    {
+      "name": "smoke-web",
+      "status": "passed",
+      "started": "2026-10-18T22:29:52.738Z",
+      "code": 0,
+      "signal": null,
+      "passed": 31,
+      "total": 31,
+      "skipped": [],
+      "finished": "2026-10-18T22:31:14.349Z"
+    },
+    {
+      "name": "import-godot",
+      "status": "passed",
+      "started": "2026-10-18T22:31:14.351Z",
+      "code": 0,
+      "signal": null,
+      "finished": "2026-10-18T22:31:23.399Z"
+    },
+    {
+      "name": "smoke-godot",
+      "status": "passed",
+      "started": "2026-10-18T22:31:23.400Z",
+      "code": 0,
+      "signal": null,
+      "passed": 36,
+      "total": 36,
+      "skipped": [
+        "appearance rendering: headless display; geometry/card performance and readability require graphical evidence",
+        "theme rendered pixels: headless display; theme state checked above"
+      ],
+      "finished": "2026-10-18T22:31:58.171Z"
+    }
+  ],
+  "nativeRendering": "not covered by headless mode",
+  "godot": "<user-home>\\AppData\\Local\\Microsoft\\WinGet\\Packages\\GodotEngine.GodotEngine.Mono_Microsoft.Winget.Source_8wekyb3d8bbwe\\Godot_v4.7.2-stable_mono_win64\\Godot_v4.7.2-stable_mono_win64.exe",
+  "server": {
+    "tcp": 50635,
+    "url": "http://127.0.0.1:50636",
+    "name": "harness-run-OmYdVD",
+    "data": "<worktree>\\experiments\\elementals\\artifacts\\final-foundation-smoke\\run-OmYdVD\\data"
+  },
+  "cleanupErrors": [],
+  "finished": "2026-10-18T22:31:58.692Z"
+}
