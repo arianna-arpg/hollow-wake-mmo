@@ -15,6 +15,7 @@ try{
  await page.goto(`http://127.0.0.1:${port}/experiments/orc-warbands/gallery.html`);
  await page.waitForSelector('body[data-ready="true"]',{timeout:60000});
  await page.screenshot({path:path.join(out,'orc-warbands-isometric.jpg'),fullPage:true,type:'jpeg',quality:85});
+ await page.locator('section').screenshot({path:path.join(out,'shared-stature.jpg'),type:'jpeg',quality:90});
  await page.locator('#third').click();
  await page.screenshot({path:path.join(out,'orc-warbands-third-person.jpg'),fullPage:true,type:'jpeg',quality:85});
  await page.locator('#mono').click();await page.locator('#walk').click();
