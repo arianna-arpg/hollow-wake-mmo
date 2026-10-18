@@ -103,10 +103,13 @@ public sealed class AbilityIconTests
         var path = Path.Combine(ThemeContentTests.FindContentDir(), "..", "..", "tests", "fixtures", "ability-icons.json");
         var fixture = JsonNode.Parse(File.ReadAllText(path))!;
         var kinds = fixture["kinds"]!.AsObject();
-        var icons = AbilityIcons.Load(kind => kinds[kind]?.AsArray().Select(n => n!.AsObject()) ?? Enumerable.Empty<JsonObject>());
         foreach (var test in fixture["cases"]!.AsArray())
         {
-            var threads = test!["threads"]?.AsArray().Select(n => n!.GetValue<string>()).ToArray();
+            var caseKinds = kinds.DeepClone().AsObject();
+            if (test!["style"] is JsonObject style)
+                foreach (var (key, value) in style) caseKinds["ui_ability_styles"]![0]![key] = value?.DeepClone();
+            var icons = AbilityIcons.Load(kind => caseKinds[kind]?.AsArray().Select(n => n!.AsObject()) ?? Enumerable.Empty<JsonObject>());
+            var threads = test["threads"]?.AsArray().Select(n => n!.GetValue<string>()).ToArray();
             var face = test["seat"] is { } seat
                 ? icons.Seat(Json.StrOrNull(seat["key"]), Json.StrOrNull(seat["form"]), Json.StrOrNull(seat["preset"]),
                     seat["converted"] is { } converted ? System.Text.Json.JsonSerializer.Deserialize<FaceInfo>(converted.ToJsonString(), ContentJson.Options) : null, threads)

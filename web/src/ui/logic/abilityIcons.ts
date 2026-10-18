@@ -87,23 +87,27 @@ export class AbilityIcons {
   svg(face: AbilityFace): string {
     const e = (s: string) => s.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '&quot;').replaceAll("'", '&apos;');
     const n = (v: number) => String(Number(v.toFixed(15)));
+    // Match native SVG paint: eight-digit hex uses separate opacity, including alpha zero.
+    const paint = (attribute: string, value: string): string => /^#[\da-f]{8}$/i.test(value)
+      ? `${attribute}="${e(value.slice(0, 7))}" ${attribute}-opacity="${n(parseInt(value.slice(7), 16) / 255)}"`
+      : `${attribute}="${e(value)}"`;
     const s = this.style;
     const background = str(s.background, '#111820'), ink = str(s.ink, '#f4ebd7'), rim = str(s.rim, '#070c12');
     const layers = (id: string, tint: string, foreground: string, outline: string): string => {
       const seen = new Set<string>();
       while (!seen.has(id) && this.art.get(id)?.art) { seen.add(id); id = this.art.get(id)!.art!; }
       return (this.art.get(id)?.layers ?? []).map(layer => {
-      const paint = (token?: string) => e(token === 'tint' ? tint : token === 'ink' ? foreground : token === 'shade' ? outline : 'none');
+      const token = (name?: string) => name === 'tint' ? tint : name === 'ink' ? foreground : name === 'shade' ? outline : 'none';
       const transform = layer.transform?.length === 6 ? ` transform="matrix(${layer.transform.map(v => n(num(v))).join(' ')})"` : '';
       const path = e(layer.path), width = num(layer.width, num(s.line_width, 1.35));
-      return `<g${transform}><path d="${path}" fill="${paint(layer.fill)}"/>` + (layer.stroke
-        ? `<path d="${path}" fill="none" stroke="${e(outline)}" stroke-width="${n(width + num(s.rim_width, .8))}"/><path d="${path}" fill="none" stroke="${paint(layer.stroke)}" stroke-width="${n(width)}"/>` : '') + '</g>';
+      return `<g${transform}><path d="${path}" ${paint('fill', token(layer.fill))}/>` + (layer.stroke
+        ? `<path d="${path}" fill="none" ${paint('stroke', outline)} stroke-width="${n(width + num(s.rim_width, .8))}"/><path d="${path}" fill="none" ${paint('stroke', token(layer.stroke))} stroke-width="${n(width)}"/>` : '') + '</g>';
       }).join('');
     };
-    let svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><rect width="24" height="24" fill="${e(background)}"/><rect width="24" height="24" fill="${e(face.tone ?? face.color)}" opacity="${n(num(s.tint_alpha, .16))}"/>` + layers(face.art, face.tone ?? face.color, face.tone ?? ink, rim);
+    let svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><rect width="24" height="24" ${paint('fill', background)}/><rect width="24" height="24" ${paint('fill', face.tone ?? face.color)} opacity="${n(num(s.tint_alpha, .16))}"/>` + layers(face.art, face.tone ?? face.color, face.tone ?? ink, rim);
     if (face.badge && this.art.has(face.badge)) {
       const badgeBackground = str(s.badge_background, '#21182e'), badgeColor = str(s.badge_color, '#ffe3a0');
-      svg += `<g transform="scale(.34)"><rect width="24" height="24" rx="4" fill="${e(badgeBackground)}"/>` + layers(face.badge, face.tone ?? badgeColor, face.tone ?? badgeColor, badgeBackground) + '</g>';
+      svg += `<g transform="scale(.34)"><rect width="24" height="24" rx="4" ${paint('fill', badgeBackground)}/>` + layers(face.badge, face.tone ?? badgeColor, face.tone ?? badgeColor, badgeBackground) + '</g>';
     }
     return svg + '</svg>';
   }

@@ -111,29 +111,38 @@ public sealed class AbilityIcons
     {
         static string E(string s) => SecurityElement.Escape(s) ?? "";
         static string N(double n) => n.ToString("0.###############", CultureInfo.InvariantCulture);
+        // Godot's SVG loader cannot read #rrggbbaa. Keep alpha as paint opacity,
+        // including theme tones, authored palettes, rims and badge backgrounds.
+        static string Paint(string attribute, string value)
+        {
+            if (value.Length == 9 && value[0] == '#' &&
+                uint.TryParse(value.AsSpan(1), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out var rgba))
+                return $"{attribute}=\"{E(value[..7])}\" {attribute}-opacity=\"{N((rgba & 255) / 255d)}\"";
+            return $"{attribute}=\"{E(value)}\"";
+        }
         var s = Style;
         var b = new StringBuilder("<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\">");
-        b.Append($"<rect width=\"24\" height=\"24\" fill=\"{E(s.Background)}\"/><rect width=\"24\" height=\"24\" fill=\"{E(face.Tone ?? face.Color)}\" opacity=\"{N(s.TintAlpha)}\"/>");
+        b.Append($"<rect width=\"24\" height=\"24\" {Paint("fill", s.Background)}/><rect width=\"24\" height=\"24\" {Paint("fill", face.Tone ?? face.Color)} opacity=\"{N(s.TintAlpha)}\"/>");
         void Layers(string id, string tint, string ink, string rim)
         {
             var seen = new HashSet<string>();
             while (seen.Add(id) && Art.GetValueOrDefault(id)?.Art is { } target) id = target;
-            string Paint(string? token) => E(token switch { "tint" => tint, "ink" => ink, "shade" => rim, _ => "none" });
+            string Token(string? token) => token switch { "tint" => tint, "ink" => ink, "shade" => rim, _ => "none" };
             foreach (var layer in Art.GetValueOrDefault(id)?.Layers ?? new())
             {
                 var transform = layer.Transform is { Count: 6 } matrix ? " transform=\"matrix(" + string.Join(" ", matrix.Select(N)) + ")\"" : "";
                 var path = E(layer.Path);
                 var width = layer.Width ?? s.LineWidth;
-                b.Append($"<g{transform}><path d=\"{path}\" fill=\"{Paint(layer.Fill)}\"/>");
+                b.Append($"<g{transform}><path d=\"{path}\" {Paint("fill", Token(layer.Fill))}/>");
                 if (layer.Stroke is not null)
-                    b.Append($"<path d=\"{path}\" fill=\"none\" stroke=\"{E(rim)}\" stroke-width=\"{N(width + s.RimWidth)}\"/><path d=\"{path}\" fill=\"none\" stroke=\"{Paint(layer.Stroke)}\" stroke-width=\"{N(width)}\"/>");
+                    b.Append($"<path d=\"{path}\" fill=\"none\" {Paint("stroke", rim)} stroke-width=\"{N(width + s.RimWidth)}\"/><path d=\"{path}\" fill=\"none\" {Paint("stroke", Token(layer.Stroke))} stroke-width=\"{N(width)}\"/>");
                 b.Append("</g>");
             }
         }
         Layers(face.Art, face.Tone ?? face.Color, face.Tone ?? s.Ink, s.Rim);
         if (face.Badge is { } badge && Art.ContainsKey(badge))
         {
-            b.Append($"<g transform=\"scale(.34)\"><rect width=\"24\" height=\"24\" rx=\"4\" fill=\"{E(s.BadgeBackground)}\"/>");
+            b.Append($"<g transform=\"scale(.34)\"><rect width=\"24\" height=\"24\" rx=\"4\" {Paint("fill", s.BadgeBackground)}/>");
             Layers(badge, face.Tone ?? s.BadgeColor, face.Tone ?? s.BadgeColor, s.BadgeBackground);
             b.Append("</g>");
         }

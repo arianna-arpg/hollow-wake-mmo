@@ -136,6 +136,14 @@
       {
         "id": "coincidence",
         "form": "plain"
+      },
+      {
+        "id": "alpha_meta",
+        "form": "plain",
+        "meta": {
+          "ability_icon": "palette",
+          "icon_color": "#abcdef80"
+        }
       }
     ],
     "glyphs": [
@@ -310,6 +318,89 @@
         "badge": null
       },
       "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect width=\"24\" height=\"24\" fill=\"#111820\"/><rect width=\"24\" height=\"24\" fill=\"#b8b8b8\" opacity=\"0.16\"/><g><path d=\"M2 3L4 5\" fill=\"#f4ebd7\"/></g></svg>"
+    },
+    {
+      "name": "eight-digit opaque dormant paint",
+      "kind": "glyphs",
+      "id": "new_support",
+      "tone": "#77736cff",
+      "face": {
+        "art": "picture",
+        "color": "#998877",
+        "badge": "badge"
+      },
+      "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect width=\"24\" height=\"24\" fill=\"#111820\"/><rect width=\"24\" height=\"24\" fill=\"#77736c\" fill-opacity=\"1\" opacity=\"0.16\"/><g transform=\"matrix(1 0 0 1 2 3)\"><path d=\"M1 2L3 4\" fill=\"none\"/><path d=\"M1 2L3 4\" fill=\"none\" stroke=\"#070c12\" stroke-width=\"2.3\"/><path d=\"M1 2L3 4\" fill=\"none\" stroke=\"#77736c\" stroke-opacity=\"1\" stroke-width=\"1.5\"/></g><g transform=\"scale(.34)\"><rect width=\"24\" height=\"24\" rx=\"4\" fill=\"#21182e\"/><g><path d=\"M0 0L2 2\" fill=\"#77736c\" fill-opacity=\"1\"/></g></g></svg>"
+    },
+    {
+      "name": "eight-digit translucent dormant paint",
+      "kind": "glyphs",
+      "id": "new_support",
+      "tone": "#77736c80",
+      "face": {
+        "art": "picture",
+        "color": "#998877",
+        "badge": "badge"
+      },
+      "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect width=\"24\" height=\"24\" fill=\"#111820\"/><rect width=\"24\" height=\"24\" fill=\"#77736c\" fill-opacity=\"0.501960784313725\" opacity=\"0.16\"/><g transform=\"matrix(1 0 0 1 2 3)\"><path d=\"M1 2L3 4\" fill=\"none\"/><path d=\"M1 2L3 4\" fill=\"none\" stroke=\"#070c12\" stroke-width=\"2.3\"/><path d=\"M1 2L3 4\" fill=\"none\" stroke=\"#77736c\" stroke-opacity=\"0.501960784313725\" stroke-width=\"1.5\"/></g><g transform=\"scale(.34)\"><rect width=\"24\" height=\"24\" rx=\"4\" fill=\"#21182e\"/><g><path d=\"M0 0L2 2\" fill=\"#77736c\" fill-opacity=\"0.501960784313725\"/></g></g></svg>"
+    },
+    {
+      "name": "eight-digit transparent dormant paint",
+      "kind": "glyphs",
+      "id": "new_support",
+      "tone": "#77736c00",
+      "face": {
+        "art": "picture",
+        "color": "#998877",
+        "badge": "badge"
+      },
+      "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect width=\"24\" height=\"24\" fill=\"#111820\"/><rect width=\"24\" height=\"24\" fill=\"#77736c\" fill-opacity=\"0\" opacity=\"0.16\"/><g transform=\"matrix(1 0 0 1 2 3)\"><path d=\"M1 2L3 4\" fill=\"none\"/><path d=\"M1 2L3 4\" fill=\"none\" stroke=\"#070c12\" stroke-width=\"2.3\"/><path d=\"M1 2L3 4\" fill=\"none\" stroke=\"#77736c\" stroke-opacity=\"0\" stroke-width=\"1.5\"/></g><g transform=\"scale(.34)\"><rect width=\"24\" height=\"24\" rx=\"4\" fill=\"#21182e\"/><g><path d=\"M0 0L2 2\" fill=\"#77736c\" fill-opacity=\"0\"/></g></g></svg>"
+    },
+    {
+      "name": "authored meta palette retains alpha",
+      "kind": "weaves",
+      "id": "alpha_meta",
+      "face": {
+        "art": "picture",
+        "color": "#abcdef80",
+        "badge": null
+      },
+      "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect width=\"24\" height=\"24\" fill=\"#111820\"/><rect width=\"24\" height=\"24\" fill=\"#abcdef\" fill-opacity=\"0.501960784313725\" opacity=\"0.16\"/><g transform=\"matrix(1 0 0 1 2 3)\"><path d=\"M1 2L3 4\" fill=\"none\"/><path d=\"M1 2L3 4\" fill=\"none\" stroke=\"#070c12\" stroke-width=\"2.3\"/><path d=\"M1 2L3 4\" fill=\"none\" stroke=\"#abcdef\" stroke-opacity=\"0.501960784313725\" stroke-width=\"1.5\"/></g></svg>"
+    },
+    {
+      "name": "translucent style: new support retains badge",
+      "kind": "glyphs",
+      "id": "new_support",
+      "face": {
+        "art": "picture",
+        "color": "#998877",
+        "badge": "badge"
+      },
+      "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect width=\"24\" height=\"24\" fill=\"#111820\" fill-opacity=\"0.501960784313725\"/><rect width=\"24\" height=\"24\" fill=\"#998877\" opacity=\"0.16\"/><g transform=\"matrix(1 0 0 1 2 3)\"><path d=\"M1 2L3 4\" fill=\"none\"/><path d=\"M1 2L3 4\" fill=\"none\" stroke=\"#070c12\" stroke-opacity=\"0.501960784313725\" stroke-width=\"2.3\"/><path d=\"M1 2L3 4\" fill=\"none\" stroke=\"#998877\" stroke-width=\"1.5\"/></g><g transform=\"scale(.34)\"><rect width=\"24\" height=\"24\" rx=\"4\" fill=\"#21182e\" fill-opacity=\"0.501960784313725\"/><g><path d=\"M0 0L2 2\" fill=\"#ffe3a0\" fill-opacity=\"0.501960784313725\"/></g></g></svg>",
+      "style": {
+        "background": "#11182080",
+        "ink": "#f4ebd780",
+        "rim": "#070c1280",
+        "badge_color": "#ffe3a080",
+        "badge_background": "#21182e80"
+      }
+    },
+    {
+      "name": "translucent style: hierarchical parent tags choose art",
+      "kind": "weaves",
+      "id": "inherited",
+      "face": {
+        "art": "alternate",
+        "color": "#b8b8b8",
+        "badge": null
+      },
+      "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect width=\"24\" height=\"24\" fill=\"#111820\" fill-opacity=\"0.501960784313725\"/><rect width=\"24\" height=\"24\" fill=\"#b8b8b8\" opacity=\"0.16\"/><g><path d=\"M2 3L4 5\" fill=\"#f4ebd7\" fill-opacity=\"0.501960784313725\"/></g></svg>",
+      "style": {
+        "background": "#11182080",
+        "ink": "#f4ebd780",
+        "rim": "#070c1280",
+        "badge_color": "#ffe3a080",
+        "badge_background": "#21182e80"
+      }
     }
   ],
   "invalid_paths": [

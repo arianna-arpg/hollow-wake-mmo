@@ -58,9 +58,11 @@ describe('shared ability artwork', () => {
 });
 
 describe('shared native/browser fixtures', () => {
-  const icons = new AbilityIcons(new Map(Object.entries(fixtures.kinds)) as Map<string, Obj[]>);
-  for (const c of fixtures.cases as Array<{name: string; kind?: string; id?: string; threads?: string[]; seat?: {key: string|null; form?: string; preset?: string; converted?: FaceInfo}; face: AbilityFace; tone?: string; svg: string}>) {
+  for (const c of fixtures.cases as Array<{name: string; kind?: string; id?: string; threads?: string[]; seat?: {key: string|null; form?: string; preset?: string; converted?: FaceInfo}; face: AbilityFace; tone?: string; style?: Obj; svg: string}>) {
     it(c.name, () => {
+      const kinds = new Map(Object.entries(fixtures.kinds)) as Map<string, Obj[]>;
+      if (c.style) kinds.set('ui_ability_styles', [{...kinds.get('ui_ability_styles')![0], ...c.style}]);
+      const icons = new AbilityIcons(kinds);
       const face = c.seat ? icons.seat(c.seat.key, c.seat.form, c.seat.preset, c.seat.converted ?? null, c.threads) : icons.resolve(c.kind!, c.id, c.threads);
       expect(face).toEqual(c.face);
       expect(icons.svg({...face, tone:c.tone})).toBe(c.svg);

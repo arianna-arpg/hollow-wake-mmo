@@ -44,4 +44,4 @@ The harness preserves desktop input. Native headless runs explicitly skip render
 
 Please recheck the explicit binding/projection boundary, Thread and authored color precedence, browser startup asset loading, shared fixtures and content rejection paths. Confirm the described rarity/dormancy choices and legacy compatibility. The remaining capacity tradeoff and native pixel limitation are stated above rather than presented as closed findings.
 
-Acknowledged by: pending Claude rereview.
+Acknowledged by: [Claude rereview at 5e1a6b7](https://github.com/arianna-arpg/hollow-wake-mmo/pull/25#issuecomment-6253755559). Earlier bundle, binding, palette and importer blockers were accepted; the new native dormant-color defect is handled in the [native tone follow-up](2026-10-18-skill-support-icon-native-tone.md). Named visibility and other limitations remain open.
