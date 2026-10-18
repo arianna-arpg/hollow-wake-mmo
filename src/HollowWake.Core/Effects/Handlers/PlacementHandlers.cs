@@ -470,7 +470,7 @@ internal sealed class AimHandler : IEffectHandler
             var reach = new Vector2(ctx.Point.X - origin.X, ctx.Point.Y - origin.Y).Length();
             var point = new Vector3(origin.X + direction.X * reach, origin.Y + direction.Y * reach, ctx.Point.Z);
             var target = ctx.Target == ctx.Source ? ctx.Target : Entity.None;
-            ExecuteAll(Effects, At(ctx, target, point, direction, ctx.From, ctx.Depth));
+            ExecuteAll(Effects, At(ctx, target, point, direction, ctx.From, ctx.Depth, launchLift: ctx.LaunchLift));
         }
     }
 }

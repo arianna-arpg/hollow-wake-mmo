@@ -419,6 +419,7 @@ internal static class MorphArena
 
         // Who was struck, in the order of their first hits: a chain that leaps to the same bodies in another order shows it.
         private readonly List<string> _struck = new();
+        private readonly List<string> _hitTimes = new();
         private double _dealt;
         private long _first = -1;
         private long _last = -1;
@@ -692,6 +693,7 @@ internal static class MorphArena
                     if (d.Source == _caster || _made.Contains(d.Source))
                     {
                         Hits++;
+                        _hitTimes.Add($"{Who(d.Target)}@{t}");
                         _dealt += d.Total;
                         _first = _first < 0 ? t : _first;
                         _last = t;
@@ -780,7 +782,7 @@ internal static class MorphArena
         public string Observable()
         {
             var text = new StringBuilder();
-            text.Append($"struck [{string.Join(" ", _struck)}] hits {Hits} damage {_dealt.ToString("0.##", CultureInfo.InvariantCulture)} first {_first} last {_last}");
+            text.Append($"struck [{string.Join(" ", _struck)}] hit_times [{string.Join(" ", _hitTimes)}] hits {Hits} damage {_dealt.ToString("0.##", CultureInfo.InvariantCulture)} first {_first} last {_last}");
             text.Append($" | made {Made.Count} most {MaxLive} gone {_gone}");
             text.Append(" | at");
             foreach (var body in _crowd.Prepend(_caster))

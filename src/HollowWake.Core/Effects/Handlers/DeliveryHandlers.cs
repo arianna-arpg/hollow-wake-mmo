@@ -670,7 +670,8 @@ internal sealed class ProjectileHandler : IEffectHandler
         public void Launch(EffectContext ctx, EffectContext? basis, in Flight f, Vector3 at, float heading, float side, Vector3 aimPoint)
         {
             var sim = ctx.Sim;
-            var lift = ctx.From is not null || OriginAtPoint ? (float)sim.Content.Rules.Number("delivery.projectile_origin_height", 1) :
+            var lift = ctx.From is not null || OriginAtPoint ?
+                ctx.LaunchLift ?? (float)sim.Content.Rules.Number("delivery.projectile_origin_height", 1) :
                 HitBodies.AimPoint(sim, ctx.Source).Z - (ctx.SourceTransform?.Position.Z ?? 0);
             var start = at + new Vector3(0, 0, lift);
             var speed = f.Speed;
@@ -783,7 +784,7 @@ internal sealed class ProjectileHandler : IEffectHandler
                 {
                     return;
                 }
-                var origin = st.Position;
+                var origin = _ctx.From ?? st.Position;
                 Vector2 dir;
                 var aim = _point;
                 var shot = _ctx;

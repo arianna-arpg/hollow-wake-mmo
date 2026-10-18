@@ -80,7 +80,7 @@ internal static class EffectHelpers
     /// a body or at none, starting deliveries from <paramref name="from"/>, and with variables of its own
     /// when given. Everything else is the basis's.
     /// </summary>
-    internal static EffectContext At(EffectContext basis, Entity target, Vector3 point, Vector2 direction, Vector3? from, int depth, Dictionary<string, double>? vars = null, double? damageScale = null) => new()
+    internal static EffectContext At(EffectContext basis, Entity target, Vector3 point, Vector2 direction, Vector3? from, int depth, Dictionary<string, double>? vars = null, double? damageScale = null, float? launchLift = null) => new()
     {
         CastId = basis.CastId,
         Sim = basis.Sim,
@@ -96,6 +96,7 @@ internal static class EffectHelpers
         Potency = basis.Potency,
         DamageScale = damageScale ?? basis.DamageScale,
         From = from,
+        LaunchLift = launchLift,
         Vars = vars ?? basis.Vars,
         Slot = basis.Slot,
         Host = basis.Host,

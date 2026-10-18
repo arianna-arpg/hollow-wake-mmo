@@ -52,6 +52,12 @@ public sealed class EffectContext
     /// </summary>
     public Vector3? From { get; init; }
 
+    /// <summary>
+    /// Lift for a projectile launched from this delivery's anchor. Null uses the content-defined ground
+    /// placement lift; a flight supplies zero because its emission point is already at flight height.
+    /// </summary>
+    public float? LaunchLift { get; init; }
+
     public Dictionary<string, double> Vars { get; init; } = new(StringComparer.Ordinal);
 
     /// <summary>
@@ -146,6 +152,7 @@ public sealed class EffectContext
             Potency = Potency,
             DamageScale = damageScale ?? DamageScale,
             From = From,
+            LaunchLift = LaunchLift,
             Vars = vars ?? Vars,
             Slot = Slot,
             Host = Host,
