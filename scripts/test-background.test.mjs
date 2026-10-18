@@ -5,6 +5,8 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { createServer } from 'node:http';
 import { setTimeout as delay } from 'node:timers/promises';
+import { runInNewContext } from 'node:vm';
+import { isolatePhysicalInput } from '../web/scripts/isolated-input.mjs';
 import { options, serverConfig, reservePorts, startProcess, stopProcess, waitProcess,
   waitForServer, smokeCommand, smokeOutcome } from './test-background.mjs';
 
@@ -20,6 +22,7 @@ test('both suites enforce background input and reject headed or unbounded runs',
   assert.equal(opts.suite, 'web');
   const [, web] = smokeCommand('web', opts, context);
   assert.ok(!web.includes('--headed'));
+  assert.ok(web.includes('--isolated-input'));
   assert.ok(web.includes('private-test-web'));
   const [, native] = smokeCommand('godot', opts, context);
   assert.equal(native[0], '--headless');
@@ -31,6 +34,24 @@ test('both suites enforce background input and reject headed or unbounded runs',
   }
   for (const args of [['--headed'], ['--timeout', 'NaN'], ['--timeout', '0'], ['--suite', 'desktop']])
     assert.throws(() => options(args));
+});
+
+test('background browser isolates physical controllers without changing keyboard or pointer events', () => {
+  const listeners = new Map();
+  const navigator = { getGamepads: () => [{ connected: true, buttons: [{ pressed: true }] }] };
+  runInNewContext(`(${isolatePhysicalInput.toString()})()`, {
+    navigator, addEventListener: (type, listener, capture) => {
+      assert.equal(capture, true);
+      listeners.set(type, listener);
+    },
+  });
+  assert.equal(navigator.getGamepads().length, 0);
+  assert.deepEqual([...listeners.keys()], ['gamepadconnected', 'gamepaddisconnected']);
+  for (const listener of listeners.values()) {
+    let stopped = false;
+    listener({ stopImmediatePropagation: () => { stopped = true; } });
+    assert.equal(stopped, true);
+  }
 });
 
 test('private config preserves gameplay settings and quotes Windows paths literally', () => {

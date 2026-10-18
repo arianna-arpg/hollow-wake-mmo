@@ -1,0 +1,29 @@
+{
+  "started": "2026-10-18T00:51:07.283Z",
+  "root": "<worktree>",
+  "directory": "<worktree>\\artifacts\\testing\\concurrent-a\\run-iDAc0r",
+  "suite": "web",
+  "status": "passed",
+  "stages": [
+    {
+      "name": "smoke-web",
+      "status": "passed",
+      "started": "2026-10-18T00:51:08.667Z",
+      "code": 0,
+      "signal": null,
+      "passed": 25,
+      "total": 25,
+      "skipped": [],
+      "finished": "2026-10-18T00:52:23.123Z"
+    }
+  ],
+  "nativeRendering": "not covered by headless mode",
+  "server": {
+    "tcp": 52953,
+    "url": "http://127.0.0.1:52954",
+    "name": "harness-run-iDAc0r",
+    "data": "<worktree>\\artifacts\\testing\\concurrent-a\\run-iDAc0r\\data"
+  },
+  "cleanupErrors": [],
+  "finished": "2026-10-18T00:52:23.955Z"
+}
