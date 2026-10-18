@@ -446,13 +446,21 @@ internal sealed class SummonRecipe
         Wave(ctx, service, null);
     }
 
-    /// <summary>One wave: makes room under the capacity, dismisses an exclusive rival, then gives birth.</summary>
+    /// <summary>
+    /// One wave: raises no more bodies than the capacity holds, makes room for them under it (the oldest go),
+    /// dismisses an exclusive rival, then gives birth. A count past the capacity raises the capacity's worth, so the
+    /// group ends at the capacity with the newest bodies and none is born only to be dismissed: no birth is published,
+    /// no birth rider runs and no corpse is spent for a body the capacity would not keep.
+    /// </summary>
     public void Wave(EffectContext ctx, MinionService service, MinionContract? contract)
     {
         var sim = ctx.Sim;
         var owner = ctx.Origin;
         var ownerStats = sim.World.Get<Stats>(owner);
         var count = Math.Clamp((int)Math.Round(ctx.Eval(Count, 1)), 1, (int)sim.Content.Rules.Number("minions.max_per_cast", 32));
+        var group = GroupFor(ctx);
+        var capacity = Capacity(ctx, ownerStats);
+        count = Math.Min(count, capacity);
         List<Entity>? corpses = null;
         if (FromCorpse is not null)
         {
@@ -469,8 +477,7 @@ internal sealed class SummonRecipe
                 return;
             }
         }
-        var group = GroupFor(ctx);
-        service.MakeRoom(owner, group, PoolGroup, Capacity(ctx, ownerStats), count);
+        service.MakeRoom(owner, group, PoolGroup, capacity, count);
         if (ExclusiveGroup is not null)
         {
             service.DismissExclusive(owner, ExclusiveGroup, group);

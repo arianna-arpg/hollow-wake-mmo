@@ -128,6 +128,3 @@ export function seatCosts(seat: Seat): Array<{ resource: string; amount: number 
     .filter(([, amount]) => amount > 0)
     .map(([resource, amount]) => ({ resource, amount: Math.round(amount) }));
 }
-
-/** The letter a seated glyph shows on its pip. */
-export const glyphLetter = (glyph: SeatGlyphInfo): string => (glyph.name.length > 0 ? glyph.name.slice(0, 1) : '?');
