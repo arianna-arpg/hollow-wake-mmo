@@ -33,6 +33,7 @@ public readonly record struct ResolvedAreaPlan(
 
     public bool IsFinite => float.IsFinite(Size.Radius) && float.IsFinite(Size.Angle) &&
         float.IsFinite(Size.Width) && float.IsFinite(Size.Inner) && float.IsFinite(Reach) &&
+        float.IsFinite(Shape.Curvature) && float.IsFinite(Shape.CenterAllowanceSquared) && Shape.CenterAllowanceSquared >= 0 &&
         float.IsFinite(Anchor.X) && float.IsFinite(Anchor.Y) && float.IsFinite(Anchor.Z) &&
         float.IsFinite(Direction.X) && float.IsFinite(Direction.Y);
 }

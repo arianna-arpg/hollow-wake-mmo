@@ -77,7 +77,8 @@ public partial class CastForecasts : Node3D
             }
             var region = !stale && CastForecastTimeline.SegmentsFor(cast.Region, _style.Segments, _style.MaxSegments, _style.MaxChordError) > 0 ? cast.Region : null;
             if (region?.Shape != v.Region?.Shape || !Equals(region?.Size, v.Region?.Size) ||
-                region?.HeightTolerance != v.Region?.HeightTolerance || region?.ViewerEligibility != v.Region?.ViewerEligibility || v.Committed != cast.DirectionCommitted)
+                region?.HeightTolerance != v.Region?.HeightTolerance || region?.CenterAllowance != v.Region?.CenterAllowance ||
+                region?.ViewerEligibility != v.Region?.ViewerEligibility || v.Committed != cast.DirectionCommitted)
             {
                 foreach (var mesh in v.Meshes) mesh.QueueFree();
                 v.Meshes = region is null ? new() : Boundary(region, cast.DirectionCommitted); v.Region = region; v.Committed = cast.DirectionCommitted;

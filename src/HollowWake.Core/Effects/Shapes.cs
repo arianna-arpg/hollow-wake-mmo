@@ -43,6 +43,10 @@ public abstract class Shape
     /// <summary>For shapes that bow (arcs, waves): how far behind the anchor their circle centers, in radii; zero for the rest.</summary>
     public virtual float Curvature => 0f;
 
+    /// <summary>Squared radius at the anchor that bypasses an angular check, after radial bounds.
+    /// Exposed for exact presentation; zero means no central angular allowance.</summary>
+    public virtual float CenterAllowanceSquared => 0f;
+
     /// <summary>The width the shape takes when content names none: lines take the weave's area width.</summary>
     public virtual float DefaultWidth(float radius, float areaWidth) => areaWidth;
 
@@ -184,6 +188,8 @@ public static class Shapes
 
         public override bool HasAngle => true;
 
+        public override float CenterAllowanceSquared => 0.01f;
+
         public override float Reach(in ShapeSize size) => size.Radius;
 
         public override bool Contains(in ShapeSize size, Vector2 to, Vector2 facing, float pad)
@@ -199,7 +205,7 @@ public static class Shapes
             {
                 return false;
             }
-            if (d2 < 0.01f)
+            if (d2 < CenterAllowanceSquared)
             {
                 return true;
             }

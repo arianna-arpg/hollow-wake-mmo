@@ -74,11 +74,13 @@ public sealed class CastForecastTimeline
         return Usable(cast.Region) ? "primary" : "unavailable";
     }
     public static bool Usable(CastForecastRegion? r) => r is not null && ShapeOutline.Names.Contains(r.Shape) &&
-        r.TargetTest == "center" && r.Size.Radius is > 0 && r.HeightTolerance >= 0 &&
-        new[] { r.X, r.Y, r.Z, r.Heading, r.HeightTolerance, r.Size.Radius ?? 0, r.Size.Angle ?? 0,
+        (!ShapeOutline.WidthNames.Contains(r.Shape) || r.Size.Width is > 0) &&
+        (!ShapeOutline.AngleNames.Contains(r.Shape) || r.Size.Angle is > 0) &&
+        r.TargetTest == "center" && r.Size.Radius is > 0 && r.HeightTolerance >= 0 && r.CenterAllowance >= 0 &&
+        new[] { r.X, r.Y, r.Z, r.Heading, r.HeightTolerance, r.CenterAllowance, r.Size.Radius ?? 0, r.Size.Angle ?? 0,
             r.Size.Width ?? 0, r.Size.Inner ?? 0, r.Size.Curvature ?? 0 }.All(float.IsFinite);
     public static ShapeRegion Outline(CastForecastRegion r, int segments) => ShapeOutline.RegionOf(new ShapeSpec(
-        r.Shape, r.Size.Radius!.Value, r.Size.Angle ?? 0, r.Size.Width ?? 0, r.Size.Inner ?? 0, r.Size.Curvature ?? 0), segments);
+        r.Shape, r.Size.Radius!.Value, r.Size.Angle ?? 0, r.Size.Width ?? 0, r.Size.Inner ?? 0, r.Size.Curvature ?? 0, r.CenterAllowance), segments);
 
     /// <summary>Conservative chord bound for every built-in curve. Zero declines an over-budget outline
     /// instead of silently turning a huge modified region into an inaccurate low-polygon footprint.</summary>

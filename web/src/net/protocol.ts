@@ -1010,6 +1010,7 @@ export interface CastForecastRegion {
   heading: number;
   anchor: string;
   height_tolerance: number;
+  center_allowance: number;
   target_test: string;
   requires_line_of_sight: boolean;
   has_requirement: boolean;

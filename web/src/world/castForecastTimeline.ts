@@ -1,5 +1,5 @@
 import type { CastCueMsg, CastForecastInfo, CastForecastMsg, CastForecastRegion, Int64 } from '../net/protocol';
-import { SHAPES, regionOf } from './shapes';
+import { SHAPES, WIDTH_SHAPES, ANGLE_SHAPES, regionOf } from './shapes';
 
 export class CastForecastTimeline {
   private epoch: string | undefined;
@@ -57,12 +57,15 @@ export function forecastCaption(c: CastForecastInfo, now: number, stale: boolean
 }
 export function usableForecast(r: CastForecastRegion | undefined): r is CastForecastRegion {
   return r !== undefined && (SHAPES as readonly string[]).includes(r.shape) && r.target_test === 'center' &&
-    (r.size.radius ?? 0) > 0 && r.height_tolerance >= 0 &&
-    [r.x, r.y, r.z, r.heading, r.height_tolerance, r.size.radius ?? 0, r.size.angle ?? 0,
+    (!WIDTH_SHAPES.includes(r.shape) || (r.size.width ?? 0) > 0) &&
+    (!ANGLE_SHAPES.includes(r.shape) || (r.size.angle ?? 0) > 0) &&
+    (r.size.radius ?? 0) > 0 && r.height_tolerance >= 0 && (r.center_allowance ?? 0) >= 0 &&
+    [r.x, r.y, r.z, r.heading, r.height_tolerance, r.center_allowance ?? 0, r.size.radius ?? 0, r.size.angle ?? 0,
       r.size.width ?? 0, r.size.inner ?? 0, r.size.curvature ?? 0].every(Number.isFinite);
 }
 export const forecastOutline = (r: CastForecastRegion, segments: number) => regionOf({ name: r.shape,
-  radius: r.size.radius!, angle: r.size.angle ?? 0, width: r.size.width ?? 0, inner: r.size.inner ?? 0, curvature: r.size.curvature ?? 0 }, segments);
+  radius: r.size.radius!, angle: r.size.angle ?? 0, width: r.size.width ?? 0, inner: r.size.inner ?? 0,
+  curvature: r.size.curvature ?? 0, centerAllowance: r.center_allowance ?? 0 }, segments);
 export function forecastSegments(r: CastForecastRegion | undefined, minimum: number, maximum: number, error: number): number {
   if (!usableForecast(r)) return 0;
   const radius = r.size.radius! * Math.max(1, r.size.curvature ?? 0) + (r.size.width ?? 0) / 2;

@@ -58,6 +58,7 @@ public class CastForecastTests
             var plan = runtime.DescribeCast(sim, session.Entity)!.Delivery.PrimaryRegion!.Value;
             Assert.Equal(plan.Size.Radius, state.Region.Size.Radius);
             Assert.Equal(plan.Size.Inner * plan.Size.Radius, state.Region.Size.Inner);
+            Assert.Equal(MathF.Sqrt(plan.Shape.CenterAllowanceSquared), state.Region.CenterAllowance);
             Assert.Equal(plan.Anchor.X, state.Region.X); Assert.Equal(0, state.Region.Heading);
             // Exact unchanged data uses its original revision; a reset repairs a fresh observer.
             var builder = new CastForecastBuilder(sim);

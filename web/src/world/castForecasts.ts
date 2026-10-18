@@ -52,7 +52,7 @@ export class CastForecasts {
         v = { signature: '', meshes: [], label, text, bar }; this.drawn.set(id, v);
       }
       const region = !stale && forecastSegments(c.region, s.segments, s.max_segments, s.max_chord_error) > 0 ? c.region : undefined;
-      const signature = region ? JSON.stringify([region.shape, region.size, region.height_tolerance, region.viewer_eligibility, c.direction_committed]) : '';
+      const signature = region ? JSON.stringify([region.shape, region.size, region.height_tolerance, region.center_allowance, region.viewer_eligibility, c.direction_committed]) : '';
       if (signature !== v.signature) {
         for (const m of v.meshes) { this.scene.remove(m); m.geometry.dispose(); m.material.dispose(); }
         v.meshes = region ? this.boundary(c) : []; v.signature = signature;

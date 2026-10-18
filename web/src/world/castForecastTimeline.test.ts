@@ -49,10 +49,11 @@ describe('shared forecast state', () => {
     expect(50 * (1 - Math.cos(Math.PI / segments))).toBeLessThanOrEqual(.025);
     expect(forecastSegments({ ...r, size: { radius: 100000 } }, 64, 256, .025)).toBe(0);
   });
-  for (const f of shapes) it(`matches combat: ${f.shape}, inner=${f.size.inner}`, () => {
+  for (const f of shapes) it(`matches combat: ${f.shape}, radius=${f.size.radius}, angle=${f.size.angle}, width=${f.size.width}, inner=${f.size.inner}`, () => {
     const r = { ...f, node: 'root', x: 0, y: 0, z: 0, heading: 0, anchor: 'point', height_tolerance: 4, target_test: 'center',
       requires_line_of_sight: true, has_requirement: false, has_target_limit: false, viewer_eligibility: 'unknown' };
-    expect(usableForecast(r)).toBe(true); const outline = forecastOutline(r, 64);
+    expect(usableForecast(r)).toBe(f.drawable); if (!f.drawable) return;
+    const outline = forecastOutline(r, forecastSegments(r, 64, 256, .025));
     for (const p of f.points) expect(inside(outline, p.x, p.y), `${p.x}, ${p.y}`).toBe(p.inside);
   });
 });

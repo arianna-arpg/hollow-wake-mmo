@@ -356,6 +356,27 @@ public class DeliveryForecastTests
         Assert.Equal("custom_sample", DeliveryForecasts.Describe(effect, arena.Context(Vector3.Zero)).UnavailableReason);
     }
 
+    [Theory]
+    [InlineData(0.01f, 0f, true)]
+    [InlineData(-0.01f, 0f, false)]
+    [InlineData(float.NaN, 0f, false)]
+    [InlineData(0f, float.PositiveInfinity, false)]
+    public void Shape_observation_metadata_must_be_finite_and_nonnegative(float allowance, float curvature, bool valid)
+    {
+        var arena = DeliveryArena.Create();
+        var plan = DeliveryForecasts.Describe(Area(arena), arena.Context(Vector3.Zero)).PrimaryRegion!.Value;
+        Assert.Equal(valid, (plan with { Shape = new MetadataShape(allowance, curvature) }).IsFinite);
+    }
+
+    private sealed class MetadataShape(float allowance, float curvature) : Shape
+    {
+        public override string Name => "metadata_test";
+        public override float CenterAllowanceSquared => allowance;
+        public override float Curvature => curvature;
+        public override float Reach(in ShapeSize size) => size.Radius;
+        public override bool Contains(in ShapeSize size, Vector2 to, Vector2 facing, float pad) => false;
+    }
+
     private sealed class CountingScope : IExprScope
     {
         public int Reads;

@@ -47,6 +47,7 @@ public sealed record CastForecastRegion
     public float Heading { get; init; }
     public string Anchor { get; init; } = "unknown";
     public float HeightTolerance { get; init; }
+    public float CenterAllowance { get; init; }
     public string TargetTest { get; init; } = "center";
     public bool RequiresLineOfSight { get; init; }
     public bool HasRequirement { get; init; }

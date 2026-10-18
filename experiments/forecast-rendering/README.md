@@ -8,7 +8,7 @@ dotnet test tests/HollowWake.Client.Tests -c Release
 npm --prefix web test
 ```
 
-Pass restore options to a separate build/restore command, not after `dotnet run`'s `--`. Tests exclude samples within 0.03 world units of a mathematical boundary because finite polygons approximate curves. Thin hollow variants catch accidental cosmetic minimum sizes. Runtime tessellation uses a configurable chord-error bound and declines regions that exceed its segment budget.
+Pass restore options to a separate build/restore command, not after `dotnet run`'s `--`. Tests exclude a small boundary band because finite polygons approximate curves: at most 0.03 world units for the grid and 0.002 for the extra anchor samples. Thin hollows, small radii, saturated angles and wide arcs catch cosmetic clamps and missing collision semantics. Core supplies the central angular allowance; both clients clip it by the real outer and inner bounds. Nonpositive angular sweeps or required widths explicitly decline spatial presentation rather than inventing a positive region. Runtime tessellation uses a configurable chord-error bound and declines regions that exceed its segment budget.
 
 These fixtures prove sampled geometry agreement, not terrain clipping, complete graph coverage, prospective victim selection, damage, network-latency tolerance, or crowd readability. Primary regions remain conditional. Unknown delivery families have explicit unavailable spatial coverage.
 

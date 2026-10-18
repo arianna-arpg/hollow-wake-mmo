@@ -16,6 +16,8 @@ The primary perimeter stays broken because origin, size, LOS, target caps and re
 
 Server `cast_forecasts.max_casts` bounds each frame; `valid_seconds` bounds stale knowledge, with at least three snapshot intervals of repair allowance. `refresh_seconds` bounds full-record repair for unchanged members. Overload selects nearest known casters deterministically and displays an explicit additional-casts warning in both clients. This is an overload warning, not a certified combined danger envelope; crowded-world release still requires density/readability work. Geometry meshes are reused while only their authoritative transform changes.
 
+Angular sweeps at or above a full turn render as the saturated circle/ring that combat tests. The wire retains raw dimensions and supplies the shape's central angular allowance from core; clients union that allowance with the sector only after applying its outer and inner radial bounds. Degenerate nonpositive angles or required widths decline spatial presentation. Combat-derived fixtures include these modifier extremes, narrow holes and tiny regions around the anchor.
+
 ### Current coverage and extension gate
 
 - All current/future active casts inherit lifecycle, timing, expiry, interest handling and the common presentation settings.
@@ -28,7 +30,7 @@ The integrated review record lists the tested baseline, complete gates and remai
 
 ## Original study and follow-on design (historical)
 
-Status: shared-system design with a production core primary-area plan and executable experiment. Cast lifecycle, wire and production client integration remain proposed. See the [foundation handoff](../reviews/2026-10-17-delivery-plan-foundation.md) for current ownership and verification, and the [original proposal handoff](../reviews/2026-10-17-cast-forecasting.md) for its provenance.
+Historical status at the foundation handoff: shared-system design with a core primary-area plan and executable experiment; lifecycle, wire and client integration were proposed. The production section above and its integration record now supersede those implementation-status statements. The sections below retain the original design and follow-on requirements, not a claim that every proposal has shipped. See the [foundation handoff](../reviews/2026-10-17-delivery-plan-foundation.md) and [original proposal handoff](../reviews/2026-10-17-cast-forecasting.md) for provenance.
 
 ## Player contract
 
@@ -235,7 +237,7 @@ The experiment's thin adapter now calls the production `DeliveryForecasts` capab
 
 Current commands and results live in the [foundation handoff](../reviews/2026-10-17-delivery-plan-foundation.md). Original screenshots and historical checks remain in the [original verification record](../../experiments/cast-forecasting/evidence/verification.txt). Each record identifies its tested baseline; earlier results from a concurrently changing coordinator checkout are not evidence for this branch.
 
-Do not use the isolated contract checks as evidence that proposed tracking locks, network repair, bridge clipping, AI avoidance, prospective damage bounds, production performance or client visuals already work. Shared runtime integration and its fresh complete gates remain the coordinator's next responsibility.
+Do not use the isolated contract checks as evidence that proposed tracking locks, network repair, bridge clipping, AI avoidance, prospective damage bounds, production performance or client visuals work. The production integration record supplies separate current-runtime, transport and client evidence; its coverage limits still apply.
 
 ## Ownership and integration handoff
 

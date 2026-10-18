@@ -53,7 +53,7 @@ public partial class InterfaceProtocolTests
                 DirectionPolicy = "aim_on_release", DirectionCommitted = false, X = 1, Y = 2, Z = 3,
                 Coverage = "primary_candidate", UnavailableReason = "sample reason",
                 Region = new() { Node = "root", Shape = "cone", Size = new() { Radius = 3, Angle = 1.2f, Width = 1, Inner = .5f, Curvature = 1 },
-                    X = 1, Y = 2, Z = 3, Heading = .5f, Anchor = "source", HeightTolerance = 4,
+                    X = 1, Y = 2, Z = 3, Heading = .5f, Anchor = "source", HeightTolerance = 4, CenterAllowance = .1f,
                     TargetTest = "center", RequiresLineOfSight = true, HasRequirement = true, HasTargetLimit = true, ViewerEligibility = "candidate" } },
         }, 2) { Retained = new() { new(6, 9) } };
         var item = Card(9);

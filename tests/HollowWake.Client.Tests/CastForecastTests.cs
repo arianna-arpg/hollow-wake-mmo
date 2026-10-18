@@ -75,21 +75,26 @@ public class CastForecastTests
         var names = json.RootElement.EnumerateArray().Select(item => item.GetProperty("shape").GetString()!).Distinct().Order().ToArray();
         Assert.Equal(Shapes.Names.Order(), names);
         Assert.Equal(ShapeOutline.Names.Order(), names);
+        Assert.Equal(Shapes.Names.Where(n => Shapes.Get(n).HasAngle).Order(), ShapeOutline.AngleNames.Order());
+        Assert.Equal(Shapes.Names.Where(n => Shapes.Get(n).HasWidth).Order(), ShapeOutline.WidthNames.Order());
         foreach (var item in json.RootElement.EnumerateArray())
         {
             var size = item.GetProperty("size");
-            var r = new CastForecastRegion { Shape = item.GetProperty("shape").GetString()!, Size = new()
+            var r = new CastForecastRegion { Shape = item.GetProperty("shape").GetString()!,
+                CenterAllowance = item.GetProperty("center_allowance").GetSingle(), Size = new()
             { Radius = size.GetProperty("radius").GetSingle(), Angle = size.GetProperty("angle").GetSingle(),
               Width = size.GetProperty("width").GetSingle(), Inner = size.GetProperty("inner").GetSingle(), Curvature = size.GetProperty("curvature").GetSingle() } };
-            Assert.True(CastForecastTimeline.Usable(r));
-            var outline = CastForecastTimeline.Outline(r, 64);
+            var drawable = item.GetProperty("drawable").GetBoolean();
+            Assert.Equal(drawable, CastForecastTimeline.Usable(r));
+            Assert.Equal(MathF.Sqrt(Shapes.Get(r.Shape).CenterAllowanceSquared), r.CenterAllowance);
+            var outline = drawable ? CastForecastTimeline.Outline(r, CastForecastTimeline.SegmentsFor(r, 64, 256, .025)) : null;
             var combatSize = new ShapeSize(r.Size.Radius!.Value, r.Size.Angle!.Value * 180 / MathF.PI,
                 r.Size.Width!.Value, r.Size.Inner!.Value / r.Size.Radius.Value);
             foreach (var p in item.GetProperty("points").EnumerateArray())
             {
                 Assert.Equal(p.GetProperty("inside").GetBoolean(), Shapes.Get(r.Shape).Contains(combatSize,
                     new Vector2(p.GetProperty("x").GetSingle(), p.GetProperty("y").GetSingle()), Vector2.UnitX, 0));
-                Assert.True(p.GetProperty("inside").GetBoolean() == ShapeOutline.Inside(outline, p.GetProperty("x").GetSingle(), p.GetProperty("y").GetSingle()), $"{r.Shape}, inner {r.Size.Inner}: {p}");
+                if (outline is not null) Assert.True(p.GetProperty("inside").GetBoolean() == ShapeOutline.Inside(outline, p.GetProperty("x").GetSingle(), p.GetProperty("y").GetSingle()), $"{r.Shape}, angle {r.Size.Angle}, radius {r.Size.Radius}, inner {r.Size.Inner}: {p}");
             }
         }
     }
