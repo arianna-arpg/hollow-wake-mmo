@@ -1,0 +1,19 @@
+✔ source golem bindings resolve to dedicated current bodies, not the legacy fallback (2.0486ms)
+✔ a melee skill becomes a preset on the swing shell in world units (2.3036ms)
+✔ a projectile keeps its riders, hooks and Thread (1.0904ms)
+✔ bursts spare the body struck, pulls on flights anchor to the caster, and splits pair with their Threads (2.2918ms)
+✔ trajectory axes come out in degrees a second and banks keep their kind (1.3104ms)
+✔ chaos goes to Umbra by theme and the port closure carries referenced kit skills (2.0208ms)
+✔ supports become glyphs with triggers, mechanism probes and generated families (1.0675ms)
+✔ statuses map onto the roster, pops become on_reapply and time scales are not ported (2.5733ms)
+✔ procs and charges keep their payloads (2.4663ms)
+✔ structurally different shells have unique ids and presets reference them (3.9921ms)
+✔ mixed damage pairs shares with sorted Threads and preserves the folded total (2.6012ms)
+ℹ tests 11
+ℹ suites 0
+ℹ pass 11
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 241.651

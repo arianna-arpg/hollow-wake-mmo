@@ -14,6 +14,14 @@ At Ninewells, Clear Knot is omitted by the bounded local search; Gather Floss an
 
 The first focused run passes 458 cases and fails only the five expected golden cases. All five golem-site regressions verify actual birth and replacement at region levels 1 and 21; all 342 projectile cases, bounded-search, legacy-level and exact spawn-fact/overlay cases pass. The level-aware chunk hashes change in all four zones; only the origin zone-info hash changes. Climate remains `999D90D6110B1CDD`. After reviewing the audit, update origin info/chunks to `467923F597DB83C5`/`38740F7C0C66C2F6`, eastern chunks to `0E386FE1D6659BC0`, northern chunks to `2AFA9EE5AA75F409`, distant chunks to `B927209C7C70E524`, and the overlay hash to `F2165541CF5F5CDF`. Other zone-info hashes stay unchanged.
 
-Full functional results and new coordinated performance measurements pending. Keep #39 draft for Claude rereview and later complete reviewed-main integration.
+## Combined functional checkpoint
+
+Source `a21a58dbf11b974df7702405e6c933a53f3842be` contains the three corrections as `787e955`, `cf4310d` and `a73a404`, plus the explicit golem content, regression and audited-golden changes. The only cherry-pick conflict was the shared historical review record; its retained failed planning sample and subsequent optimization notes were preserved. No shared runtime behavior was changed locally.
+
+Debug solution and Release tools builds have zero warnings/errors. Full tests pass with core 2,581, client 122 and server 48, no exclusions/skips. Browser tests are 283/283 and its production build succeeds with the existing size advisory. Content validation is zero errors/warnings, generated protocol is current, and all 11 porter tests pass. The origin loads 200 ticks with three offers, the Amalgamation/Stone duel completes, and the private TCP probe negotiates hit-body/slab/delta/interface features, enters, walks and receives interface/chat state.
+
+The private background harness passes browser 31/31 and native 26/26 with no cleanup errors. Card and combat screenshots were visually inspected and retain terrain/bodies; the nonblank-world assertion records 18.57% dominant color and 171 bins. Guards/quartermasters visibly use their restored level 5. Native pixels and controller input remain untested, and the headless shutdown resource/object leak diagnostics remain in the log.
+
+New coordinated performance measurements pending. Earlier #39 tick/snapshot/plan figures are historical because restored legacy levels change the workload. Keep #39 draft for Claude rereview and later complete reviewed-main integration; the tournament/#20 checks still belong to that later combination.
 
 Acknowledged by: pending Claude rereview.

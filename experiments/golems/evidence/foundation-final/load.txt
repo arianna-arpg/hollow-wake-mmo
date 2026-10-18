@@ -1,0 +1,2 @@
+zone(0,0): 100 chunks, 4 pois, 2 founts, 115 spawners, 2269 flora, 3 quests in 595 ms
+ran 200 ticks in 889 ms; entities 2686; monsters 281
