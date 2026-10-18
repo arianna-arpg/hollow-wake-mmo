@@ -178,15 +178,27 @@ internal static class Families
         var orbit = v.Num("orbit");
         var returns = v.Word("return") is "origin" or "caster" && orbit == 0;
         var flights = count * Tree(k, forks);
-        var seconds = ProjectileSeconds(v, count, forks, chains, returns);
+        var (seconds, distance) = ProjectileSeconds(v, count, forks, chains, returns);
         var perFlight = rehit > 0
             ? b * (1 + Math.Ceiling(seconds / Math.Max(rehit, View.Dt)))
             : Math.Min(b, (pierce + 1.0) * (chains + 1)) + (returns ? b : 0);
-        var once = new Dictionary<string, double> { ["on_end"] = flights, ["on_expire"] = flights, ["on_return"] = flights, ["on_land"] = flights };
-        return new Budget(flights * perFlight + count, flights, flights, seconds,
-            $"{count} flights x {Tree(k, forks)} through {forks} forks of {k}; each strikes at most {perFlight} (pierce {pierce}, chains {chains}, rehit {rehit:0.##}, returns {returns}); lives {seconds:0.##} s")
+        // A flight runs on_tick once each tick interval it lives and on_travel once each travel interval it flies, each
+        // flight once more for where it starts; on_end, on_expire, on_return and on_land run once a flight at most.
+        var tick = Math.Max(0.05, v.Num("tick", 0.5));
+        var travel = Math.Max(0.25, v.Num("travel", 2));
+        var markers = new Dictionary<string, double>
         {
-            Markers = once,
+            ["on_end"] = flights,
+            ["on_expire"] = flights,
+            ["on_return"] = flights,
+            ["on_land"] = flights,
+            ["on_tick"] = flights * Math.Ceiling(seconds / tick) + flights,
+            ["on_travel"] = flights * Math.Ceiling(distance / travel) + flights,
+        };
+        return new Budget(flights * perFlight + count, flights, flights, seconds,
+            $"{count} flights x {Tree(k, forks)} through {forks} forks of {k}; each strikes at most {perFlight} (pierce {pierce}, chains {chains}, rehit {rehit:0.##}, returns {returns}); lives {seconds:0.##} s and flies {distance:0.##} at most")
+        {
+            Markers = markers,
         };
     }
 
@@ -196,9 +208,10 @@ internal static class Families
     /// launch and never resets), then the way back, and a tick for each leg and the way back to land on. Each salvo beat
     /// is scheduled from the one before and waits a whole number of ticks, its interval rounded up. The way back is no
     /// longer than the way out plus how far the flight's start stands from where it returns to, flown at the slowest
-    /// speed the flight can have by then, and never past the rule's longest return.
+    /// speed the flight can have by then, and never past the rule's longest return. Also how far one flight can fly in
+    /// all: its legs out and its way back.
     /// </summary>
-    private static double ProjectileSeconds(View v, int count, double forks, double chains, bool returns)
+    private static (double Seconds, double Distance) ProjectileSeconds(View v, int count, double forks, double chains, bool returns)
     {
         var speed = Math.Max(0.5, v.Num("speed"));
         var accel = v.Num("accel");
@@ -209,10 +222,12 @@ internal static class Families
         var orbit = v.Num("orbit");
         var legs = 1 + chains + forks;
         double outward;
+        double arc = 0;
         if (orbit != 0)
         {
             var radius = Math.Max(0.5, v.Num("orbit_radius", v.Rule("delivery.orbit_radius", 2.5)));
-            outward = legs * (range / (radius * Math.Abs(orbit) * Math.PI / 180) + View.Dt);
+            arc = radius * Math.Abs(orbit) * Math.PI / 180;
+            outward = legs * (range / arc + View.Dt);
         }
         else
         {
@@ -222,20 +237,28 @@ internal static class Families
         {
             outward = Math.Min(Math.Max(View.Dt, v.Num("duration")), outward);
         }
+        // An orbit's flight goes round its caster at its own pace; any other flies at its speed, as its acceleration takes
+        // it; and a leg ends on the first step past its range, so each leg may run a step long.
+        var step = (orbit != 0 ? arc : speed + Math.Max(0, accel) * outward) * View.Dt;
+        var flown = (orbit != 0 ? arc * outward : Distance(outward, speed, accel, floor)) + legs * step;
         var back = 0.0;
+        var home = 0.0;
         if (returns)
         {
             // A flight returning to its caster from a launch at the aim point has that far to come back besides.
             var offset = v.Word("return") == "caster" && v.Word("origin") == "point"
                 ? Math.Min(v.Point.Family.Aim.Length(), v.Sets("origin_range") ? Math.Max(0, v.Num("origin_range")) : double.PositiveInfinity)
                 : 0;
-            var distance = Distance(outward, speed, accel, floor) + offset;
+            home = flown + offset;
             var turning = accel >= 0 ? speed : Math.Max(floor, speed + accel * outward);
-            back = Math.Min(v.Rule("delivery.return_max_seconds", 6), TimeToTravel(distance, turning, accel, floor)) + View.Dt;
+            back = Math.Min(v.Rule("delivery.return_max_seconds", 6), TimeToTravel(home, turning, accel, floor)) + View.Dt;
         }
         var beat = Math.Max(1, Math.Ceiling(Math.Max(View.Dt, v.Num("salvo_interval", v.Rule("delivery.salvo_interval", 0.15))) * MorphArena.TicksPerSecond - 1e-6)) * View.Dt;
         var salvo = v.Word("fire") == "salvo" && count > 1 ? (count - 1) * beat : 0;
-        return salvo + outward + back + legs * View.Dt;
+        var seconds = salvo + outward + back + legs * View.Dt;
+        // The way back is flown straight home, a step past it at most, at a speed an acceleration may raise.
+        var fastest = speed + Math.Max(0, accel) * seconds;
+        return (seconds, flown + (returns ? home + fastest * View.Dt : 0));
     }
 
     /// <summary>How far a flight goes in a time from a speed under a steady acceleration that never takes the speed below a floor.</summary>

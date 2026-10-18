@@ -414,6 +414,9 @@ internal static class MorphArena
         public List<(long Tick, string Line)> Lines { get; } = new();
         public List<string> Casts { get; } = new();
 
+        // What the press made, for looking up whose hits are the press's.
+        private readonly HashSet<Entity> _made = new();
+
         /// <summary>Every entity the press made, in the order it made them.</summary>
         public List<Entity> Made { get; } = new();
 
@@ -642,7 +645,8 @@ internal static class MorphArena
                 case DamageDealt d:
                     Add(e.Tick, $"{t} hit {d.Source.Key} {d.Target.Key} {Num(d.Total)} {d.Crit} {d.Evaded} {d.Blocked} {string.Join("+", d.Tags.Items)}");
                     _damage[(e.Tick, d.Target)] = (_damage.TryGetValue((e.Tick, d.Target), out var sum) ? sum : 0) + d.Total;
-                    if (d.Source == _caster)
+                    // A hit counts as the press's when the caster or anything the press made struck it.
+                    if (d.Source == _caster || _made.Contains(d.Source))
                     {
                         Hits++;
                         _dealt += d.Total;
@@ -661,6 +665,7 @@ internal static class MorphArena
                     var kind = s.Pattern ?? _sim.World.Get<Identity>(s.Entity)?.Name ?? "entity";
                     _kinds[s.Entity] = kind;
                     Made.Add(s.Entity);
+                    _made.Add(s.Entity);
                     Watch(s.Entity);
                     Add(e.Tick, $"{t} spawn {s.Entity.Key} {kind} {Pos(s.Position)}");
                     if (kind == "projectile" && _sim.World.Get<Transform>(_caster) is { } at
