@@ -1,0 +1,5 @@
+TEST evidence: C:\Users\John\.codex\worktrees\undead-entity-foundation\MMOARPG\artifacts\testing\run-spkpUU
+TEST smoke-web; evidence: C:\Users\John\.codex\worktrees\undead-entity-foundation\MMOARPG\artifacts\testing\run-spkpUU
+TEST import-godot; evidence: C:\Users\John\.codex\worktrees\undead-entity-foundation\MMOARPG\artifacts\testing\run-spkpUU
+TEST smoke-godot; evidence: C:\Users\John\.codex\worktrees\undead-entity-foundation\MMOARPG\artifacts\testing\run-spkpUU
+TEST PASSED; report: C:\Users\John\.codex\worktrees\undead-entity-foundation\MMOARPG\artifacts\testing\run-spkpUU\result.json

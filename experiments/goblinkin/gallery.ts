@@ -27,13 +27,13 @@ const records = roster.entries.filter(e => e.id !== 'goblinkin_body').map((e, in
   const canvas = document.createElement('canvas'); canvas.width = 540; canvas.height = 330;
   article.append(canvas);
   const heading = document.createElement('h2'); heading.textContent = e.name; article.append(heading);
-  const tags = document.createElement('div'); tags.className = 'tags'; tags.textContent = e.tags.filter(t => t.startsWith('body.') || t.startsWith('role.')).map(t => t.split('.')[1]).join(' Ã‚· ').toUpperCase(); article.append(tags);
-  const kit = document.createElement('p'); kit.textContent = e.components.weaves!.list.join(' Ã‚· ').replaceAll('_',' '); article.append(kit);
+  const tags = document.createElement('div'); tags.className = 'tags'; tags.textContent = e.tags.filter(t => t.startsWith('body.') || t.startsWith('role.')).map(t => t.split('.')[1]).join(' / ').toUpperCase(); article.append(tags);
+  const kit = document.createElement('p'); kit.textContent = e.components.weaves!.list.join(' / ').replaceAll('_',' '); article.append(kit);
   const habitat = document.createElement('p'); habitat.textContent = e.tags.filter(t => t.startsWith('habitat.')).map(t => t.slice(8).replaceAll('_',' ')).join(' / '); article.append(habitat);
   const physical = e.components.physical!;
   const density = physical.materials.reduce((sum, m) => sum + m.fraction * materials.entries.find(d => d.id === m.material)!.density, 0);
   const mass = physical.width * physical.depth * physical.height * physical.fill * physical.heft * density;
-  const measure = document.createElement('p'); measure.textContent = `${physical.width}w Ã— ${physical.depth}d Ã— ${physical.height}h · ${mass.toFixed(1)} kg`; article.append(measure);
+  const measure = document.createElement('p'); measure.textContent = `${physical.width}w x ${physical.depth}d x ${physical.height}h / ${mass.toFixed(1)} kg`; article.append(measure);
   host.append(article);
   return { e, plan, body, scene, canvas, index };
 });

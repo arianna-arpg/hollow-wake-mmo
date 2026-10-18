@@ -26,6 +26,8 @@ import { v3 as V, ZERO } from './bodyPlan';
         p.add("torso", 'ellipsoid', V(D * 0.72, chest - legs, W * 0.65), V(-D * 0.08, (chest + legs) / 2, 0), skin, { segments: 7 });
         p.add("hips", 'wedge', V(D * 0.65, H * 0.16, W * 0.58), V(0, legs, 0), cloth);
         p.add("hips", 'box', V(D * 0.72, H * 0.035, W * 0.61), V(0, legs + H * 0.055, 0), dark);
+        const neck = H - head * 0.85 - chest;
+        p.add("torso", 'cylinder', V(head * 0.5, neck + H * 0.02, head * 0.55), V(D * 0.1, chest + neck / 2, 0), skin, {segments:6});
         p.add("head", 'ellipsoid', V(head * 0.9, head, head * 1.2), V(D * 0.1, H - head * 0.52, 0), skin, { segments: 6 });
         p.add("head", 'box', V(head * 0.9, head * 0.3 * b.s("jaw", 1), head * 0.95), V(D * 0.12 + head * 0.18, H - head * 0.9, 0), skin);
         p.add("head", 'wedge', V(head * 0.62, head * 0.38, head * 0.32), V(D * 0.12 + head * 0.5, H - head * 0.55, 0), skin, { turn: V(0, -12, 0) });

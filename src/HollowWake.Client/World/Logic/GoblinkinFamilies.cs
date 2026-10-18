@@ -31,6 +31,8 @@ public static class GoblinkinFamilies
         p.Add("torso", PartShape.Ellipsoid, V(D * 0.72f, chest - legs, W * 0.65f), V(-D * 0.08f, (chest + legs) / 2, 0), skin, segments: 7);
         p.Add("hips", PartShape.Wedge, V(D * 0.65f, H * 0.16f, W * 0.58f), V(0, legs, 0), cloth);
         p.Add("hips", PartShape.Box, V(D * 0.72f, H * 0.035f, W * 0.61f), V(0, legs + H * 0.055f, 0), dark);
+        var neck = H - head * 0.85f - chest;
+        p.Add("torso", PartShape.Cylinder, V(head * 0.5f, neck + H * 0.02f, head * 0.55f), V(D * 0.1f, chest + neck / 2, 0), skin, segments: 6);
         p.Add("head", PartShape.Ellipsoid, V(head * 0.9f, head, head * 1.2f), V(D * 0.1f, H - head * 0.52f, 0), skin, segments: 6);
         p.Add("head", PartShape.Box, V(head * 0.9f, head * 0.3f * b.S("jaw", 1), head * 0.95f), V(D * 0.12f + head * 0.18f, H - head * 0.9f, 0), skin);
         p.Add("head", PartShape.Wedge, V(head * 0.62f, head * 0.38f, head * 0.32f), V(D * 0.12f + head * 0.5f, H - head * 0.55f, 0), skin, V(0, -12, 0));

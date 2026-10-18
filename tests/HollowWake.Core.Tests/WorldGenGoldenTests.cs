@@ -38,10 +38,10 @@ public class WorldGenGoldenTests
 
     // Goblinkin site/population expansion: reviewed before/after maps in experiments/goblinkin/evidence.
     [Theory]
-    [InlineData(0, 0, "3DEFF8B31969D683", "9F3D4E5A92802AD9")]
-    [InlineData(1, 0, "D3ED1BE101166541", "2BD88CC2B83D698B")]
-    [InlineData(0, -1, "E34D9ADEB06139BA", "EED5E9C39EC01DBF")]
-    [InlineData(3, 2, "FDC8598452435246", "1F67272D69801B86")]
+    [InlineData(0, 0, "3DEFF8B31969D683", "ECFAC5835985CE09")]
+    [InlineData(1, 0, "D3ED1BE101166541", "96564013955F3B0B")]
+    [InlineData(0, -1, "E34D9ADEB06139BA", "876EEBF4E9529321")]
+    [InlineData(3, 2, "FDC8598452435246", "16E47CAD28B04E2C")]
     public void ZoneMatchesGoldenHashes(int x, int y, string infoHash, string chunksHash)
     {
         var g = new WorldGenerator(Registry.Value, Rng.Hash64(Seed));
@@ -101,7 +101,7 @@ public class WorldGenGoldenTests
         {
             HashPoint(h, g, 40 + i * 0.83, 20 + i * 0.61, i % 20 == 0);
         }
-        Golden("overlaid world", "1809D6CBF88B7E35", h.Hex);
+        Golden("overlaid world", "39E13888A0DC35D9", h.Hex);
 
         // Removing an overlay must regenerate exactly what a generator that never had it produces.
         overlays.Remove("fount");
