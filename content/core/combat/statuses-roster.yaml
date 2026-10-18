@@ -1,0 +1,675 @@
+# The rest of the prototype roster, ported into the Threads vocabulary: ailments that tick, debuffs that build into
+# worse ones, states the AI reads as flags, and the blessings skills grant. Each is a composition of the status
+# mechanics (statuses.md); the port ledger says what each one was. Physical is Stone, chaos is Umbra by theme or
+# Void, and a status with no element keeps its tags plain.
+kind: statuses
+entries:
+  - id: flamewreathed
+    name: Flame-Wreathed
+    tags: [ailment, ember, dot]
+    duration: 1.2
+    stack_policy: strongest
+    baseline: "4 + level * 1.4"
+    tick: { interval: 0.5, effects: [{ type: damage, amount: amount, threads: [ember], tags: [dot], can_crit: false }] }
+    keep_source: true
+    color: "#ffb547"
+  - id: starfire
+    name: Star-Seared
+    tags: [ailment, ember, dot]
+    duration: 1.1
+    stack_policy: strongest
+    baseline: "6 + level * 1.8"
+    tick: { interval: 0.5, effects: [{ type: damage, amount: amount, threads: [ember], tags: [dot], can_crit: false }] }
+    keep_source: true
+    color: "#ffd9a0"
+  - id: stonelashed
+    name: Stonelashed
+    tags: [ailment, stone, dot]
+    duration: 1.2
+    stack_policy: strongest
+    modifiers: [{ attribute: move.speed, form: more, value: -0.15 }]
+    baseline: "5 + level * 1.6"
+    tick: { interval: 0.5, effects: [{ type: damage, amount: amount, threads: [stone], tags: [dot], can_crit: false }] }
+    keep_source: true
+    color: "#b8ab90"
+  - id: sunscorched
+    name: Sunscorched
+    tags: [debuff, ember]
+    duration: 8
+    stack_policy: stack
+    max_stacks: 8
+    modifiers: [{ attribute: resist.ember, form: flat, value: -0.05 }]
+    modifiers_per_stack: true
+    buildup_into: heatstroke
+    color: "#ffb64a"
+  - id: heatstroke
+    name: Heatstroke
+    tags: [debuff, ember]
+    duration: 5
+    stack_policy: refresh
+    modifiers:
+      - { attribute: move.speed, form: more, value: -0.18 }
+      - { attribute: attack.speed, form: more, value: -0.12 }
+      - { attribute: cast.speed, form: more, value: -0.12 }
+    color: "#ff7a3a"
+  - id: faintness
+    name: Faintness
+    tags: [debuff]
+    duration: 6
+    stack_policy: stack
+    max_stacks: 6
+    modifiers: [{ attribute: accuracy, form: more, value: -0.02 }]
+    modifiers_per_stack: true
+    buildup_into: swoon
+    color: "#d8ccd8"
+  - id: swoon
+    name: Swooning
+    tags: [debuff]
+    duration: 2.2
+    stack_policy: refresh
+    modifiers:
+      - { attribute: move.speed, form: more, value: -0.26 }
+      - { attribute: attack.speed, form: more, value: -0.18 }
+      - { attribute: cast.speed, form: more, value: -0.18 }
+    color: "#e8e0ec"
+  - id: queasy
+    name: Queasy
+    tags: [debuff]
+    duration: 5
+    stack_policy: stack
+    max_stacks: 5
+    modifiers: [{ attribute: cast.speed, form: more, value: -0.03 }]
+    modifiers_per_stack: true
+    buildup_into: retching
+    color: "#a8b86a"
+  - id: retching
+    name: Retching
+    tags: [debuff]
+    duration: 1.6
+    stack_policy: refresh
+    modifiers:
+      - { attribute: cast.speed, form: more, value: -0.22 }
+      - { attribute: attack.speed, form: more, value: -0.14 }
+      - { attribute: cast.fizzle_chance, form: flat, value: 0.6 }
+    color: "#c2cc74"
+  - id: entranced
+    name: Entranced
+    tags: [control]
+    duration: 2
+    stack_policy: refresh
+    flags: [stunned]
+    color: "#b8a8e8"
+  - id: petrifying
+    name: Petrifying
+    tags: [debuff]
+    duration: 4
+    stack_policy: stack
+    max_stacks: 6
+    modifiers:
+      - { attribute: move.speed, form: more, value: -0.055 }
+      - { attribute: attack.speed, form: more, value: -0.045 }
+      - { attribute: cast.speed, form: more, value: -0.045 }
+    modifiers_per_stack: true
+    buildup_into: petrified
+    color: "#9a948a"
+  - id: petrified
+    name: Petrified
+    tags: [control]
+    duration: 1.4
+    stack_policy: refresh
+    modifiers: [{ attribute: damage.taken, form: more, value: 0.1 }]
+    flags: [stunned]
+    color: "#b8b2a4"
+  - id: harrowing
+    name: Harrowing
+    tags: [debuff]
+    duration: 4
+    stack_policy: stack
+    max_stacks: 5
+    modifiers:
+      - { attribute: attack.speed, form: more, value: -0.04 }
+      - { attribute: cast.speed, form: more, value: -0.04 }
+      - { attribute: accuracy, form: more, value: -0.03 }
+    modifiers_per_stack: true
+    buildup_into: horrified
+    color: "#b8a4d8"
+  - id: horrified
+    name: Horrified
+    tags: [debuff]
+    duration: 1.6
+    stack_policy: refresh
+    modifiers: [{ attribute: damage.taken, form: more, value: 0.08 }]
+    flags: [panicked]
+    color: "#d8c8f0"
+  - id: sundered
+    name: Sundered
+    tags: [debuff]
+    duration: 2.5
+    stack_policy: refresh
+    modifiers: [{ attribute: damage.taken, form: more, value: 0.15 }, { attribute: move.speed, form: more, value: -0.15 }]
+    color: "#d8b06a"
+  - id: melting
+    name: Melting
+    tags: [debuff, ember]
+    duration: 5
+    stack_policy: refresh
+    modifiers:
+      - { attribute: move.speed, form: increased, value: 0.22 }
+      - { attribute: attack.speed, form: increased, value: 0.15 }
+      - { attribute: damage.taken, form: more, value: 0.08 }
+    color: "#f0c26a"
+  - id: waxlight
+    name: Candlelit
+    description: Lit up for all to see; nothing slips a candlelit body past a blow.
+    tags: [debuff, lumen]
+    duration: 4
+    stack_policy: refresh
+    flags: [lit]
+    modifiers: [{ attribute: evasion, form: increased, value: -0.15 }]
+    color: "#ffe9a8"
+  - id: scorch
+    name: Scorched
+    tags: [ailment, ember, dot]
+    duration: 2.5
+    stack_policy: refresh
+    baseline: "3 + level * 1.1"
+    tick: { interval: 0.5, effects: [{ type: damage, amount: amount, threads: [ember], tags: [dot], can_crit: false }] }
+    keep_source: true
+    color: "#ffb056"
+  - id: wither_agony
+    name: "Withering Agony"
+    tags: [ailment, umbra, dot]
+    duration: 8
+    stack_policy: refresh
+    baseline: "3.5 + level * 1.3"
+    tick:
+      interval: 0.5
+      effects: [{ type: damage, amount: "amount * 2 * elapsed / total", threads: [umbra], tags: [dot], can_crit: false }]
+    keep_source: true
+    color: "#8a5ad8"
+  - id: unmade
+    name: Unmade
+    tags: [debuff]
+    duration: 2.2
+    stack_policy: refresh
+    modifiers:
+      - { attribute: move.speed, form: more, value: -0.24 }
+      - { attribute: attack.speed, form: more, value: -0.15 }
+      - { attribute: cast.speed, form: more, value: -0.15 }
+    color: "#b8ffd0"
+  - id: jinxed
+    name: Jinxed
+    description: Ill luck dulls the aim and the edge; until luck is a number of its own (row G17), this is the jinx.
+    tags: [debuff, curse]
+    duration: 5
+    stack_policy: refresh
+    modifiers:
+      - { attribute: accuracy, form: increased, value: -0.1 }
+      - { attribute: crit.chance, form: increased, value: -0.25 }
+    color: "#8a78a8"
+  - id: maddened
+    name: Maddened
+    tags: [debuff]
+    duration: 4
+    stack_policy: refresh
+    baseline: "2 + level * 0.5"
+    tick:
+      interval: 0.8
+      effects:
+        - type: area
+          radius: 3.75
+          center: focus
+          include_center: false
+          filter: all
+          max_targets: 1
+          pick: nearest
+          effects: [{ type: damage, amount: "(2 + level * 0.5) * 1.2", threads: [mind], tags: [dot], can_crit: false }]
+    color: "#d84a9a"
+  - id: reeling
+    name: Reeling
+    description: Knocked off the beat; insight comes back slower and the feet drag.
+    tags: [debuff]
+    duration: 4
+    stack_policy: refresh
+    modifiers:
+      - { attribute: insight.regen, form: increased, value: -0.5 }
+      - { attribute: move.speed, form: increased, value: -0.1 }
+    color: "#c8a8e8"
+  - id: voided
+    name: Voided
+    tags: [debuff]
+    duration: 3
+    stack_policy: refresh
+    modifiers:
+      - { attribute: shield.recharge_rate, form: more, value: -1 }
+      - { attribute: shield.recharge_delay, form: increased, value: 1 }
+    color: "#9a8ae8"
+  - id: prey_marked
+    name: Prey-Marked
+    tags: [debuff]
+    duration: 8
+    stack_policy: refresh
+    modifiers: [{ attribute: damage.taken, form: increased, value: 0.12 }]
+    flags: [prey]
+    color: "#c8a86a"
+  - id: bolted
+    name: Bolted
+    tags: [debuff]
+    duration: 2.4
+    stack_policy: refresh
+    modifiers: [{ attribute: evasion, form: more, value: -0.2 }]
+    flags: [panicked]
+    color: "#d8b84a"
+  - id: seared
+    name: Seared
+    description: Burned flesh that closes slowly.
+    tags: [debuff, ember]
+    duration: 3
+    stack_policy: refresh
+    modifiers: [{ attribute: life.regen, form: increased, value: -0.5 }]
+    color: "#ff9a5a"
+  - id: decay
+    name: Decaying
+    tags: [ailment, umbra, dot]
+    duration: 6
+    stack_policy: refresh
+    baseline: "3 + level * 1.2"
+    tick: { interval: 0.5, effects: [{ type: damage, amount: amount, threads: [umbra], tags: [dot], can_crit: false }] }
+    keep_source: true
+    color: "#9a78c8"
+  - id: torment
+    name: Tormented
+    tags: [ailment, void, dot]
+    duration: 5
+    stack_policy: refresh
+    modifiers: [{ attribute: move.speed, form: more, value: -0.25 }]
+    baseline: "2.5 + level * 1"
+    tick: { interval: 0.5, effects: [{ type: damage, amount: amount, threads: [void], tags: [dot], can_crit: false }] }
+    keep_source: true
+    color: "#8a5ac8"
+  - id: contagion
+    name: Contagion
+    tags: [ailment, void, dot]
+    duration: 7
+    stack_policy: refresh
+    propagate_on_death: true
+    baseline: "2.5 + level * 1"
+    tick: { interval: 0.5, effects: [{ type: damage, amount: amount, threads: [void], tags: [dot], can_crit: false }] }
+    keep_source: true
+    color: "#78c878"
+  - id: despair
+    name: Despair
+    tags: [debuff]
+    duration: 7
+    stack_policy: refresh
+    modifiers:
+      - { attribute: resist.ember, form: flat, value: -0.25 }
+      - { attribute: resist.tide, form: flat, value: -0.25 }
+      - { attribute: resist.storm, form: flat, value: -0.25 }
+      - { attribute: resist.void, form: flat, value: -0.25 }
+    color: "#8a68b8"
+  - id: agony
+    name: Agony
+    tags: [debuff]
+    duration: 7
+    stack_policy: refresh
+    modifiers: [{ attribute: armor, form: more, value: -0.6 }, { attribute: evasion, form: more, value: -0.3 }]
+    color: "#b85858"
+  - id: indecision
+    name: Indecision
+    tags: [debuff]
+    duration: 7
+    stack_policy: refresh
+    modifiers: [{ attribute: cast.speed, form: more, value: -0.3 }, { attribute: attack.speed, form: more, value: -0.25 }]
+    color: "#6888b8"
+  - id: befuddled
+    name: Befuddled
+    tags: [debuff]
+    duration: 7
+    stack_policy: refresh
+    modifiers: [{ attribute: cast.fizzle_chance, form: flat, value: 0.35 }]
+    color: "#c878b8"
+  - id: bewildered
+    name: Bewildered
+    description: Turned about; the aim wanders and a cast may slip. Disorientation builds into it.
+    tags: [debuff, mind]
+    duration: 7
+    stack_policy: refresh
+    modifiers:
+      - { attribute: accuracy, form: increased, value: -0.3 }
+      - { attribute: cast.fizzle_chance, form: flat, value: 0.15 }
+    color: "#c8a8e8"
+  - id: disoriented
+    name: Disoriented
+    tags: [debuff, mind]
+    duration: 6
+    stack_policy: stack
+    max_stacks: 5
+    buildup_into: bewildered
+    color: "#9ad8d0"
+  - id: hedonism
+    name: Hedonism
+    tags: [buff]
+    duration: 6
+    stack_policy: refresh
+    beneficial: true
+    modifiers: [{ attribute: attack.speed, form: more, value: 0.25 }, { attribute: cast.speed, form: more, value: 0.25 }]
+    color: "#e878a8"
+  - id: belligerence
+    name: Belligerence
+    description: "Spoiling for a fight: harder blows, and the flag that tells hunters where to look."
+    tags: [buff]
+    duration: 8
+    stack_policy: refresh
+    beneficial: true
+    flags: [belligerent]
+    modifiers: [{ attribute: damage, form: increased, value: 0.1 }]
+    color: "#d8a848"
+  - id: furor
+    name: Furor
+    tags: [buff]
+    duration: 8
+    stack_policy: refresh
+    beneficial: true
+    modifiers:
+      - { attribute: move.speed, form: increased, value: 0.2 }
+      - { attribute: attack.speed, form: increased, value: 0.2 }
+      - { attribute: cast.speed, form: increased, value: 0.2 }
+    color: "#e8c848"
+  - id: rallied
+    name: Rallied
+    tags: [buff]
+    duration: 6
+    stack_policy: refresh
+    beneficial: true
+    modifiers: [{ attribute: damage, form: increased, value: 0.25 }, { attribute: move.speed, form: increased, value: 0.15 }]
+    color: "#e8a040"
+  - id: verdant_communion
+    name: "Verdant Communion"
+    tags: [buff]
+    duration: 1.6
+    stack_policy: refresh
+    beneficial: true
+    modifiers:
+      - { attribute: life.regen, form: link, value: 0.05, from: life.max }
+      - { attribute: mana.regen, form: increased, value: 0.25 }
+    color: "#6ac860"
+  - id: stone_communion
+    name: "Stone Communion"
+    tags: [buff]
+    duration: 1.6
+    stack_policy: refresh
+    beneficial: true
+    modifiers:
+      - { attribute: armor, form: increased, value: 0.45 }
+      - { attribute: stagger.fraction, form: increased, value: 0.3 }
+      - { attribute: damage.taken, form: more, value: -0.06 }
+    color: "#a8a090"
+  - id: attuned_stone
+    name: "Attuned: Physical"
+    tags: [buff]
+    duration: 6
+    stack_policy: refresh
+    beneficial: true
+    modifiers:
+      - { attribute: damage, form: increased, value: 0.15, scope: [stone] }
+      - { attribute: armor, form: increased, value: 0.15 }
+    color: "#cdc6b6"
+  - id: attuned_ember
+    name: "Attuned: Fire"
+    tags: [buff]
+    duration: 6
+    stack_policy: refresh
+    beneficial: true
+    modifiers:
+      - { attribute: damage, form: increased, value: 0.15, scope: [ember] }
+      - { attribute: convert.stone.ember, form: flat, value: 0.12 }
+      - { attribute: resist.ember, form: flat, value: 0.1 }
+    color: "#ff8a3a"
+  - id: attuned_tide
+    name: "Attuned: Cold"
+    tags: [buff]
+    duration: 6
+    stack_policy: refresh
+    beneficial: true
+    modifiers:
+      - { attribute: damage, form: increased, value: 0.15, scope: [tide] }
+      - { attribute: convert.stone.tide, form: flat, value: 0.12 }
+      - { attribute: resist.tide, form: flat, value: 0.1 }
+    color: "#b8e8ff"
+  - id: attuned_storm
+    name: "Attuned: Lightning"
+    tags: [buff]
+    duration: 6
+    stack_policy: refresh
+    beneficial: true
+    modifiers:
+      - { attribute: damage, form: increased, value: 0.15, scope: [storm] }
+      - { attribute: convert.stone.storm, form: flat, value: 0.12 }
+      - { attribute: resist.storm, form: flat, value: 0.1 }
+    color: "#ffe27a"
+  - id: attuned_void
+    name: "Attuned: Chaos"
+    tags: [buff]
+    duration: 6
+    stack_policy: refresh
+    beneficial: true
+    modifiers:
+      - { attribute: damage, form: increased, value: 0.15, scope: [void] }
+      - { attribute: convert.stone.void, form: flat, value: 0.12 }
+      - { attribute: resist.void, form: flat, value: 0.1 }
+    color: "#c88aff"
+  - id: kindled
+    name: Kindled
+    description: A moment of light carried on the body.
+    tags: [buff, lumen]
+    duration: 1
+    stack_policy: refresh
+    beneficial: true
+    modifiers: [{ attribute: light.radius, form: flat, value: 4 }]
+    color: "#ffe9a8"
+  - id: consecrated
+    name: Consecrated
+    tags: [buff]
+    duration: 6
+    stack_policy: refresh
+    beneficial: true
+    modifiers: [{ attribute: life.regen, form: flat, value: 3 }, { attribute: damage, form: increased, value: 0.06 }]
+    color: "#ffe9b8"
+  - id: phasing
+    name: Phasing
+    tags: [buff]
+    duration: 4
+    stack_policy: refresh
+    beneficial: true
+    modifiers: [{ attribute: phasing, form: flat, value: 1 }]
+    color: "#9ad8e8"
+  - id: winded
+    name: Winded
+    tags: [debuff]
+    duration: 1.4
+    stack_policy: refresh
+    modifiers: [{ attribute: move.speed, form: increased, value: -0.15 }]
+    color: "#c8d4ea"
+  - id: smothered
+    name: Smothered
+    tags: [debuff]
+    duration: 1
+    stack_policy: refresh
+    modifiers: [{ attribute: accuracy, form: increased, value: -0.15 }]
+    color: "#9aa8c2"
+  - id: gloomveiled
+    name: Gloom-veiled
+    description: A veil of gloom that spoils the aim of whoever wears it.
+    tags: [debuff, umbra]
+    duration: 1.2
+    stack_policy: refresh
+    modifiers: [{ attribute: accuracy, form: increased, value: -0.2 }]
+    color: "#a89ad0"
+  - id: hearthglow
+    name: Hearthglow
+    description: The warmth of a hearth carried out into the cold.
+    tags: [buff, ember]
+    duration: 90
+    stack_policy: refresh
+    beneficial: true
+    scales_with_potency: false
+    modifiers:
+      - { attribute: resist.tide, form: flat, value: 0.2 }
+      - { attribute: life.regen, form: flat, value: 1 }
+    color: "#ffb45e"
+  - id: transfixed
+    name: Transfixed
+    tags: [debuff]
+    duration: 1.6
+    stack_policy: refresh
+    modifiers: [{ attribute: move.speed, form: more, value: -0.35 }]
+    color: "#d8f078"
+  - id: emboldened
+    name: Emboldened
+    tags: [buff]
+    duration: 4.5
+    stack_policy: refresh
+    beneficial: true
+    modifiers: [{ attribute: damage, form: increased, value: 0.18 }, { attribute: move.speed, form: increased, value: 0.1 }]
+    color: "#b8f0a0"
+  - id: quickborn
+    name: Quickborn
+    tags: [buff]
+    duration: 7
+    stack_policy: refresh
+    beneficial: true
+    modifiers:
+      - { attribute: damage, form: increased, value: 0.14 }
+      - { attribute: move.speed, form: increased, value: 0.08 }
+      - { attribute: cast.speed, form: increased, value: 0.08 }
+    color: "#e8c86a"
+  - id: blooming
+    name: Blooming
+    description: Green life quickening; mending takes better for a breath.
+    tags: [buff, bloom]
+    duration: 1
+    stack_policy: refresh
+    beneficial: true
+    modifiers: [{ attribute: healing, form: increased, value: 0.25 }]
+    color: "#9ad66a"
+  - id: living_bomb
+    name: Living Bomb
+    description: Ember packed under the skin; when the fuse runs out it bursts on everyone near the bearer.
+    tags: [debuff, ember, curse]
+    duration: 2.5
+    stack_policy: refresh
+    scales_with_potency: false
+    color: "#ff6a2a"
+    on_expire:
+      - type: area
+        shape: circle
+        radius: 2.5
+        center: focus
+        filter: enemy
+        effects:
+          - { type: damage, amount: "8 + level * 2.5", threads: [ember], tags: [dot, burst], can_crit: false }
+  - id: fulgur_brand
+    name: Fulgurweb
+    tags: [debuff, storm]
+    duration: 4
+    stack_policy: refresh
+    baseline: "4 + level * 1.4"
+    tick:
+      interval: 0.7
+      effects:
+        - type: area
+          radius: 4.69
+          center: focus
+          include_center: false
+          filter: enemy
+          effects: [{ type: damage, amount: "(4 + level * 1.4) * 1.1", threads: [storm], tags: [dot], can_crit: false }]
+    color: "#e8e05a"
+  - id: doombrand
+    name: Doombrand
+    description: A brand that opens the bearer to ruin.
+    tags: [debuff, curse, void]
+    duration: 4
+    stack_policy: refresh
+    scales_with_potency: false
+    modifiers: [{ attribute: damage.taken, form: increased, value: 0.1 }]
+    color: "#a848a8"
+  - id: powder_charge
+    name: Powder Charge
+    description: Black powder packed on the bearer; the next Ember blow that lands sets it off.
+    tags: [debuff, ember]
+    duration: 2.2
+    stack_policy: refresh
+    scales_with_potency: false
+    consume_on: { event: hurt, tags: [ember], count: 1 }
+    on_bearer_struck:
+      - type: area
+        shape: circle
+        radius: 2
+        center: focus
+        filter: enemy
+        effects:
+          - { type: damage, amount: "6 + level * 2", threads: [ember], tags: [dot, burst], can_crit: false }
+    color: "#e8a24a"
+  - id: mired
+    name: Mired
+    tags: [debuff]
+    duration: 0.6
+    stack_policy: refresh
+    modifiers: [{ attribute: move.speed, form: more, value: -0.4 }]
+    color: "#8a7440"
+  - id: soulchill
+    name: Soul-Chilled
+    tags: [debuff]
+    duration: 0.6
+    stack_policy: refresh
+    modifiers: [{ attribute: move.speed, form: more, value: -0.15 }]
+    color: "#9fd8ec"
+  - id: bog_rot
+    name: Bog-Rotted
+    tags: [ailment, umbra, dot]
+    duration: 1
+    stack_policy: strongest
+    tick: { interval: 0.5, effects: [{ type: damage, amount: amount, threads: [umbra], tags: [dot], can_crit: false }] }
+    keep_source: true
+    color: "#6a8a3a"
+  - id: brine_burn
+    name: Brine-Burned
+    tags: [ailment, void, dot]
+    duration: 1
+    stack_policy: strongest
+    tick: { interval: 0.5, effects: [{ type: damage, amount: amount, threads: [void], tags: [dot], can_crit: false }] }
+    keep_source: true
+    color: "#9fd8c8"
+  - id: sulphur_sting
+    name: Sulphur-Stung
+    tags: [ailment, ember, dot]
+    duration: 1
+    stack_policy: strongest
+    tick: { interval: 0.5, effects: [{ type: damage, amount: amount, threads: [ember], tags: [dot], can_crit: false }] }
+    keep_source: true
+    color: "#d8e04a"
+  - id: ensnared
+    name: Ensnared
+    tags: [debuff]
+    duration: 0.7
+    stack_policy: refresh
+    modifiers: [{ attribute: move.speed, form: more, value: -0.7 }, { attribute: attack.speed, form: more, value: -0.2 }]
+    color: "#7fce6a"
+---
+# How hard each ported ailment bites when a hit inflicts it through its chance family, as a fraction of the hit
+# per second (the prototype's hit magnitudes); burning and bleeding keep their core rules.
+kind: rules
+entries:
+  - id: combat
+    patch: true
+    values:
+      ailment_magnitude:
+        poison: "amount * 0.3"
+        hemorrhage: "amount * 0.45"
+        doom: "amount * 0.4"
+        scorch: "amount * 0.25"
+        wither_agony: "amount * 0.45"
+        decay: "amount * 0.35"
+        torment: "amount * 0.3"
+        contagion: "amount * 0.3"
