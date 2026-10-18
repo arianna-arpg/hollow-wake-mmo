@@ -1342,14 +1342,17 @@ public class DeliveryValidationTests
 }
 
 /// <summary>The package's acceptance: a seeded fight with forking, returning and homing weaves splits, returns and repeats.</summary>
-public class DeliveryAcceptanceTests
+public class DeliveryAcceptanceTests(Xunit.Abstractions.ITestOutputHelper output)
 {
     private static List<string> Fight(string seed)
     {
         var sim = ZoneBuilder.CreateArena(DeliveryArena.Registry, Rng.Hash64(seed));
         var factory = sim.Service<PatternFactory>();
         factory.Spawn(sim, "loosed_skirmisher", new Vector3(10, 10, 0), new SpawnOptions { Faction = "red" });
-        factory.Spawn(sim, "boar", new Vector3(14, 10, 0), new SpawnOptions { Faction = "blue" });
+        // Mechanism acceptance needs a stable upright body. A short production animal makes a
+        // piercing shot descend into the ground before its outward leg ends, correctly preventing
+        // a return. Species balance belongs in the authored-body matrix and seeded tournaments.
+        factory.Spawn(sim, "t_delivery_body", new Vector3(14, 10, 0), new SpawnOptions { Faction = "blue", RollRarity = false });
         var trace = new List<string>();
         sim.Events.SubscribeAll(e => trace.Add(e switch
         {
@@ -1364,9 +1367,10 @@ public class DeliveryAcceptanceTests
     public void ASeededFightSplitsReturnsAndRepeatsExactly()
     {
         var first = Fight("delivery");
+        output.WriteLine(string.Join(Environment.NewLine, first));
         Assert.Contains(first, l => l.StartsWith("ProjectileForked"));
         Assert.Contains(first, l => l.StartsWith("ProjectileTurned"));
-        Assert.Contains(first, l => l.StartsWith("ProjectileReturned"));
+        Assert.True(first.Any(l => l.StartsWith("ProjectileReturned")), string.Join(Environment.NewLine, first));
         // A hit lands after a glaive turns and before it is home: a return hit.
         var turned = first.FindIndex(l => l.StartsWith("ProjectileTurned"));
         var home = first.FindIndex(turned, l => l.StartsWith("ProjectileReturned"));

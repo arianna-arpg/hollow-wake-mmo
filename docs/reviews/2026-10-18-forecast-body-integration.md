@@ -60,4 +60,14 @@ The paired renderer contribution #55 `d15b3b72e69d1ff728adc2c9a3c9d49be9511429` 
 
 The prototype-port suite passes 10 cases. The visual-convergence inventory reports no unclassified vocabulary across 948 recorded legacy skills and 457 supports, while still explicitly reporting partial and pending presentation families. Classification is not completion of those families. No new trace or performance sample ran during these integrations. The final complete #36 foundation handoff, combined replay reconciliation, fresh client/probe checks and performance acceptance remain open.
 
+## Final flight merge and aim-support correction
+
+Complete #36 source46997d23fd4d73aba89ade15ca7669038f9420f9 is merged at4a95efe. The incoming original Aim, sampled AimOffset and LaunchLift coexist with #50 CastSource and PayloadOrigin. The point-anchored shove regression now passes. World-generation golden reconciliation waits for the complete fauna foundation; no existing combined fauna hash was replaced with an unrelated baseline.
+
+The combined review found a generic aim-wrapper defect: clearing its target also discarded body elevation. Six focused cases failed before correction; expanded actual-contact cases independently reproduce the same defect on standalone #36. Isolated correction8e3a5d1 samples the retained body's offset before releasing it, rotates XY with the bearing and keeps Z. EffectHelpers.At takes that offset explicitly, leaving new placements' reset behavior unchanged. Thirteen new cases cover retained/sampled targets, actual contact above a terrain step, noncentral body offsets, airborne launch anchors and empty-ground horizontal control. The combined aim, launch, forecast, construct, support and grammar selection passes226 cases. The fix is published for forward adoption through #36 and #34.
+
+The remaining seeded-delivery fixture exposed a changed assumption rather than a return-system regression: short authored boar anatomy makes the piercing glaive aim down, strike and then terminate on the ground before the outward leg ends. The full failing trace remains retained. This generic mechanism test now uses the existing stable, upright t_delivery_body fixture with rarity disabled. Its production skirmisher still casts the real seeking, splitting and returning weaves; fork, turn, return, intervening return hit and exact repeated seeded trace assertions all remain, and the test passes. Authored species remain covered by the body matrix and tournaments. Failure output now includes the complete trace for future diagnosis.
+
+Fresh complete combined gates and performance acceptance are still pending. No benchmark or trace ran during this correction.
+
 Acknowledged by: pending Claude review of the combined correction.
