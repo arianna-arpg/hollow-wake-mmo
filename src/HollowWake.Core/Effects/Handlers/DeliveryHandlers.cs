@@ -305,7 +305,10 @@ internal sealed class AreaHandler : IEffectHandler
                     var max = (int)Math.Round(ctx.Eval(MaxTargets, targets.Count));
                     Picks.Keep(ctx, targets, Math.Max(0, max), Pick, plan.Anchor);
                 }
-                if (ReportMiss && targets.Count == 0)
+                // Only the original selection reports a primary miss. Secondary placements still
+                // execute their payloads and retain their normal depth, without replaying that cue.
+                if (ReportMiss && targets.Count == 0 && !ctx.Vars.ContainsKey(DeliveryVars.Echo) &&
+                    ctx.Vars.GetValueOrDefault(DeliveryVars.Step) <= 0)
                     ReleaseTargets.Miss(ctx, MissReason(ctx, plan), emitted: true);
                 var deeper = PreservePayloadDepth ? ctx : ctx.Deeper();
                 foreach (var t in targets)
