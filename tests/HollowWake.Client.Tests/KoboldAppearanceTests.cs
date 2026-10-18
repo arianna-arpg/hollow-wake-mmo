@@ -42,6 +42,34 @@ public class KoboldAppearanceTests
         }
     }
 
+    [Theory]
+    [InlineData("biped")]
+    [InlineData("skeleton")]
+    [InlineData("scaled_biped")]
+    public void FieldEquipmentAttachesToOtherFamiliesAndFollowsTheCorrectBones(string family)
+    {
+        var content = ContentRegistry.Load(new[] { ThemeContentTests.FindContentDir() }, out _);
+        foreach (var gear in content.Each<AppearanceDef>().Where(a => a.Body == "field_kit"))
+        {
+            var body = new AppearanceDef { Id = "gear-host", Body = family, Variation = new AppearanceVariation { Scale = 0 } };
+            var plan = BodyFamilies.Build(body, 17, 1.8f, 0.4f);
+            var before = plan.Parts.Count;
+            GearFamilies.Wear(plan, gear, "chest", 17);
+            var added = plan.Parts.Skip(before).ToArray();
+            Assert.NotEmpty(added);
+            Assert.All(added, part => Assert.Contains(part.Bone, new[] { "torso", "hips", "head" }));
+            if (gear.Features.Any(f => f is "robe" or "vials" or "drum"))
+                Assert.Contains(added, part => part.Bone == "hips");
+            if (gear.Features.Contains("crown")) Assert.Contains(added, part => part.Bone == "head");
+            var enlarged = BodyFamilies.Build(body, 17, 3.6f, 0.8f);
+            var enlargedBefore = enlarged.Parts.Count;
+            GearFamilies.Wear(enlarged, gear, "chest", 17);
+            Assert.Equal(added.Length, enlarged.Parts.Count - enlargedBefore);
+            for (var n = 0; n < added.Length; n++)
+                Assert.True((enlarged.Parts[enlargedBefore + n].Size - added[n].Size * 2).Length < 0.0001f);
+        }
+    }
+
     private static float[] V(Vec3 p) => new[] { p.X, p.Y, p.Z };
 
     private static void Same(JsonElement actual, JsonElement expected, string path)

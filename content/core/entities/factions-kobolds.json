@@ -17,7 +17,8 @@
         "tangled": "hostile",
         "goblinkin": "neutral",
         "orc_warbands": "neutral",
-        "wilds": "neutral"
+        "wilds": "neutral",
+        "the_loosed": "hostile"
       }
     }
   ]

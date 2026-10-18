@@ -1,0 +1,424 @@
+{
+  "kind": "ui_appearances",
+  "entries": [
+    {
+      "id": "gear_field_kit_scavenger",
+      "slot": "chest",
+      "match": [
+        "field_kit.scavenger"
+      ],
+      "priority": 10,
+      "body": "field_kit",
+      "shape": {
+        "breadth": 0.41463414634146345,
+        "depth": 0.3902439024390244
+      },
+      "palette": {
+        "skin": "#a47b48",
+        "scute": "#40594e",
+        "belly": "#cfbb88",
+        "cloth": "#514d47",
+        "metal": "#929897",
+        "bone": "#e6d5ad",
+        "wood": "#765942",
+        "accent": "#c7a36a",
+        "eye": "#f0d98a"
+      },
+      "features": [
+        "satchel"
+      ],
+      "variation": {
+        "hue": 0,
+        "value": 0,
+        "scale": 0
+      }
+    },
+    {
+      "id": "gear_field_kit_dartbow",
+      "slot": "chest",
+      "match": [
+        "field_kit.dartbow"
+      ],
+      "priority": 10,
+      "body": "field_kit",
+      "shape": {
+        "breadth": 0.3804347826086956,
+        "depth": 0.3695652173913044
+      },
+      "palette": {
+        "skin": "#7d9363",
+        "scute": "#40594e",
+        "belly": "#cfbb88",
+        "cloth": "#514d47",
+        "metal": "#929897",
+        "bone": "#e6d5ad",
+        "wood": "#765942",
+        "accent": "#c7a36a",
+        "eye": "#f0d98a"
+      },
+      "features": [
+        "quiver"
+      ],
+      "variation": {
+        "hue": 0,
+        "value": 0,
+        "scale": 0
+      }
+    },
+    {
+      "id": "gear_field_kit_stonecaster",
+      "slot": "chest",
+      "match": [
+        "field_kit.stonecaster"
+      ],
+      "priority": 10,
+      "body": "field_kit",
+      "shape": {
+        "breadth": 0.4166666666666667,
+        "depth": 0.39583333333333337
+      },
+      "palette": {
+        "skin": "#9c8b70",
+        "scute": "#40594e",
+        "belly": "#cfbb88",
+        "cloth": "#514d47",
+        "metal": "#929897",
+        "bone": "#e6d5ad",
+        "wood": "#765942",
+        "accent": "#c7a36a",
+        "eye": "#f0d98a"
+      },
+      "features": [
+        "stonepack"
+      ],
+      "variation": {
+        "hue": 0,
+        "value": 0,
+        "scale": 0
+      }
+    },
+    {
+      "id": "gear_field_kit_spearguard",
+      "slot": "chest",
+      "match": [
+        "field_kit.spearguard"
+      ],
+      "priority": 10,
+      "body": "field_kit",
+      "shape": {
+        "breadth": 0.39215686274509803,
+        "depth": 0.37254901960784315
+      },
+      "palette": {
+        "skin": "#668b7d",
+        "scute": "#40594e",
+        "belly": "#cfbb88",
+        "cloth": "#514d47",
+        "metal": "#929897",
+        "bone": "#e6d5ad",
+        "wood": "#765942",
+        "accent": "#c7a36a",
+        "eye": "#f0d98a"
+      },
+      "features": [
+        "quiver"
+      ],
+      "variation": {
+        "hue": 0,
+        "value": 0,
+        "scale": 0
+      }
+    },
+    {
+      "id": "gear_field_kit_venomweaver",
+      "slot": "chest",
+      "match": [
+        "field_kit.venomweaver"
+      ],
+      "priority": 10,
+      "body": "field_kit",
+      "shape": {
+        "breadth": 0.3877551020408163,
+        "depth": 0.37755102040816324
+      },
+      "palette": {
+        "skin": "#718550",
+        "scute": "#40594e",
+        "belly": "#cfbb88",
+        "cloth": "#514d47",
+        "metal": "#929897",
+        "bone": "#e6d5ad",
+        "wood": "#765942",
+        "accent": "#b9c278",
+        "eye": "#f0d98a"
+      },
+      "features": [
+        "vials"
+      ],
+      "variation": {
+        "hue": 0,
+        "value": 0,
+        "scale": 0
+      }
+    },
+    {
+      "id": "gear_field_kit_rimeweaver",
+      "slot": "chest",
+      "match": [
+        "field_kit.rimeweaver"
+      ],
+      "priority": 10,
+      "body": "field_kit",
+      "shape": {
+        "breadth": 0.37142857142857144,
+        "depth": 0.3619047619047619
+      },
+      "palette": {
+        "skin": "#88a8b3",
+        "scute": "#40594e",
+        "belly": "#cfbb88",
+        "cloth": "#514d47",
+        "metal": "#929897",
+        "bone": "#e6d5ad",
+        "wood": "#765942",
+        "accent": "#c6e6df",
+        "eye": "#f0d98a"
+      },
+      "features": [
+        "robe"
+      ],
+      "variation": {
+        "hue": 0,
+        "value": 0,
+        "scale": 0
+      }
+    },
+    {
+      "id": "gear_field_kit_tunnelguard",
+      "slot": "chest",
+      "match": [
+        "field_kit.tunnelguard"
+      ],
+      "priority": 10,
+      "body": "field_kit",
+      "shape": {
+        "breadth": 0.4363636363636363,
+        "depth": 0.3818181818181818
+      },
+      "palette": {
+        "skin": "#8c6855",
+        "scute": "#40594e",
+        "belly": "#cfbb88",
+        "cloth": "#514d47",
+        "metal": "#929897",
+        "bone": "#e6d5ad",
+        "wood": "#765942",
+        "accent": "#c7a36a",
+        "eye": "#f0d98a"
+      },
+      "features": [
+        "armor"
+      ],
+      "variation": {
+        "hue": 0,
+        "value": 0,
+        "scale": 0
+      }
+    },
+    {
+      "id": "gear_field_kit_cinderweaver",
+      "slot": "chest",
+      "match": [
+        "field_kit.cinderweaver"
+      ],
+      "priority": 10,
+      "body": "field_kit",
+      "shape": {
+        "breadth": 0.39,
+        "depth": 0.37
+      },
+      "palette": {
+        "skin": "#ba704e",
+        "scute": "#40594e",
+        "belly": "#cfbb88",
+        "cloth": "#514d47",
+        "metal": "#929897",
+        "bone": "#e6d5ad",
+        "wood": "#765942",
+        "accent": "#efae57",
+        "eye": "#f0d98a"
+      },
+      "features": [
+        "censer"
+      ],
+      "variation": {
+        "hue": 0,
+        "value": 0,
+        "scale": 0
+      }
+    },
+    {
+      "id": "gear_field_kit_stormweaver",
+      "slot": "chest",
+      "match": [
+        "field_kit.stormweaver"
+      ],
+      "priority": 10,
+      "body": "field_kit",
+      "shape": {
+        "breadth": 0.37037037037037035,
+        "depth": 0.35185185185185186
+      },
+      "palette": {
+        "skin": "#687f9a",
+        "scute": "#40594e",
+        "belly": "#cfbb88",
+        "cloth": "#514d47",
+        "metal": "#929897",
+        "bone": "#e6d5ad",
+        "wood": "#765942",
+        "accent": "#c3b9e9",
+        "eye": "#f0d98a"
+      },
+      "features": [
+        "coil_yoke"
+      ],
+      "variation": {
+        "hue": 0,
+        "value": 0,
+        "scale": 0
+      }
+    },
+    {
+      "id": "gear_field_kit_cragbreaker",
+      "slot": "chest",
+      "match": [
+        "field_kit.cragbreaker"
+      ],
+      "priority": 10,
+      "body": "field_kit",
+      "shape": {
+        "breadth": 0.47407407407407404,
+        "depth": 0.37037037037037035
+      },
+      "palette": {
+        "skin": "#a38862",
+        "scute": "#40594e",
+        "belly": "#cfbb88",
+        "cloth": "#514d47",
+        "metal": "#929897",
+        "bone": "#e6d5ad",
+        "wood": "#765942",
+        "accent": "#c7a36a",
+        "eye": "#f0d98a"
+      },
+      "features": [
+        "backplates"
+      ],
+      "variation": {
+        "hue": 0,
+        "value": 0,
+        "scale": 0
+      }
+    },
+    {
+      "id": "gear_field_kit_ironback",
+      "slot": "chest",
+      "match": [
+        "field_kit.ironback"
+      ],
+      "priority": 10,
+      "body": "field_kit",
+      "shape": {
+        "breadth": 0.5142857142857143,
+        "depth": 0.3928571428571429
+      },
+      "palette": {
+        "skin": "#657c72",
+        "scute": "#40594e",
+        "belly": "#cfbb88",
+        "cloth": "#514d47",
+        "metal": "#929897",
+        "bone": "#e6d5ad",
+        "wood": "#765942",
+        "accent": "#c7a36a",
+        "eye": "#f0d98a"
+      },
+      "features": [
+        "armor",
+        "backplates"
+      ],
+      "variation": {
+        "hue": 0,
+        "value": 0,
+        "scale": 0
+      }
+    },
+    {
+      "id": "gear_field_kit_crestcaller",
+      "slot": "chest",
+      "match": [
+        "field_kit.crestcaller"
+      ],
+      "priority": 10,
+      "body": "field_kit",
+      "shape": {
+        "breadth": 0.391304347826087,
+        "depth": 0.3565217391304348
+      },
+      "palette": {
+        "skin": "#ac9860",
+        "scute": "#40594e",
+        "belly": "#cfbb88",
+        "cloth": "#514d47",
+        "metal": "#929897",
+        "bone": "#e6d5ad",
+        "wood": "#765942",
+        "accent": "#c7a36a",
+        "eye": "#f0d98a"
+      },
+      "features": [
+        "drum"
+      ],
+      "variation": {
+        "hue": 0,
+        "value": 0,
+        "scale": 0
+      }
+    },
+    {
+      "id": "gear_field_kit_scalechief",
+      "slot": "chest",
+      "match": [
+        "field_kit.scalechief"
+      ],
+      "priority": 10,
+      "body": "field_kit",
+      "shape": {
+        "breadth": 0.43243243243243246,
+        "depth": 0.3581081081081081
+      },
+      "palette": {
+        "skin": "#ae764a",
+        "scute": "#40594e",
+        "belly": "#cfbb88",
+        "cloth": "#514d47",
+        "metal": "#929897",
+        "bone": "#e6d5ad",
+        "wood": "#765942",
+        "accent": "#c7a36a",
+        "eye": "#f0d98a"
+      },
+      "features": [
+        "armor",
+        "banner",
+        "crown"
+      ],
+      "variation": {
+        "hue": 0,
+        "value": 0,
+        "scale": 0
+      }
+    }
+  ]
+}

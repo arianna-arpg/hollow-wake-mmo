@@ -54,6 +54,7 @@ internal static class AppearanceKinds
     /// <summary>Gear families, each attached to a body's bones by its slot, with the shape names it reads.</summary>
     public static readonly IReadOnlyDictionary<string, IReadOnlyList<string>> GearFamilies = new Dictionary<string, IReadOnlyList<string>>(StringComparer.Ordinal)
     {
+        ["field_kit"] = new[] { "breadth", "depth" },
         ["blade"] = new[] { "length", "width", "guard", "curve" },
         ["axe"] = new[] { "length", "head", "double" },
         ["spear"] = new[] { "length", "head" },

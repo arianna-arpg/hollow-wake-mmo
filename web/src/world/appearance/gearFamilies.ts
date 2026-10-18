@@ -1,3 +1,4 @@
+import { fieldKit } from './fieldGearFamilies';
 import type { Rgb } from '../palette';
 import { turnVec, v3, type BodyPlan, type BodySocket, type PartOptions, type PartShape, type Vec3 } from './bodyPlan';
 import { BodyBuild } from './bodyFamilies';
@@ -309,7 +310,7 @@ function gem(b: BodyBuild, f: GearFit): void {
   f.add('ellipsoid', V(size * 0.7, size * 0.7, size * 0.7), V(0, 0, 0), gemC, { glow: true, segments: 6 });
 }
 
-export const GEAR_FAMILIES: Record<string, Builder> = { blade, axe, spear, maul, bow, wand, staff, shield, tome, helm, hood, cuirass, jerkin, robe, gloves, boots, belt, sack, gem };
+export const GEAR_FAMILIES: Record<string, Builder> = { field_kit: fieldKit, blade, axe, spear, maul, bow, wand, staff, shield, tome, helm, hood, cuirass, jerkin, robe, gloves, boots, belt, sack, gem };
 
 /** Adds a worn piece to a body; a body without the socket wears nothing there. */
 export function wear(plan: BodyPlan, gear: AppearanceDef, slot: string, key: number | string): void {

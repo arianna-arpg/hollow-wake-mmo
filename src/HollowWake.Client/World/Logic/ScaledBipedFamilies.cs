@@ -22,9 +22,7 @@ public static class ScaledBipedFamilies
         var scute = b.C("scute", "#40594e");
         var belly = b.C("belly", "#cfbb88");
         var cloth = b.C("cloth", "#514d47");
-        var metal = b.C("metal", "#929897");
         var bone = b.C("bone", "#e6d5ad");
-        var wood = b.C("wood", "#765942");
         var accent = b.C("accent", "#c7a36a");
         var dark = b.C("dark", "#252c29");
         p.Bone("hips", "root", V(0, hip, 0));
@@ -67,39 +65,14 @@ public static class ScaledBipedFamilies
             p.Add("head", PartShape.Box, V(D * 0.07f, H * 0.018f, W * 0.04f), V(hx + D * 0.62f * snout, H * 0.87f, side * W * 0.16f), dark);
             if (b.Has("frill")) for (var i = 0; i < 3; i++)
                 p.Add("head", PartShape.Wedge, V(D * 0.12f, H * 0.19f * crest, W * 0.30f), V(hx - D * 0.22f, H * (0.81f + i * 0.065f), side * W * (0.27f + i * 0.04f)), accent, V(side * (30 - i * 25), 0, 0));
-            if (b.Has("armor")) p.Add("torso", PartShape.Wedge, V(D * 0.44f, H * 0.11f, W * 0.30f), V(-D * 0.03f, shoulder, z), metal);
             p.Sockets[side < 0 ? "hand_l" : "hand_r"] = new BodySocket(arm, V(D * 0.23f, H * 0.43f, z), Vec3.Zero, H * b.S("gear", 0.85f));
         }
-        if (b.Has("short_crest") || b.Has("crest") || b.Has("crown")) for (var i = 0; i < 3; i++)
-            p.Add("head", PartShape.Wedge, V(D * 0.18f, H * (b.Has("short_crest") ? 0.07f : 0.17f) * crest, W * 0.08f), V(hx - D * 0.26f + i * D * 0.19f, H * 1.00f, 0), b.Has("crown") ? metal : accent);
+        if (b.Has("short_crest") || b.Has("crest")) for (var i = 0; i < 3; i++)
+            p.Add("head", PartShape.Wedge, V(D * 0.18f, H * (b.Has("short_crest") ? 0.07f : 0.17f) * crest, W * 0.08f), V(hx - D * 0.26f + i * D * 0.19f, H * 1.00f, 0), accent);
         if (b.Has("sail")) p.Add("torso", PartShape.Wedge, V(D * 0.39f, H * 0.56f, W * 0.08f), V(-D * 0.41f, H * 0.76f, 0), accent);
-        if (b.Has("armor")) p.Add("torso", PartShape.Wedge, V(D * 0.17f, H * 0.28f, W * 0.58f), V(D * 0.31f, H * 0.60f, 0), metal);
-        if (b.Has("backplates")) for (var i = 0; i < 3; i++)
-            p.Add("torso", PartShape.Wedge, V(D * 0.35f, H * 0.16f, W * 0.77f), V(-D * 0.38f, H * (0.48f + i * 0.13f), 0), metal);
-        if (b.Has("robe")) p.Add("hips", PartShape.Cone, V(D * 0.80f, H * 0.32f, W * 0.84f), V(0, H * 0.30f, 0), cloth, segments: 7);
-        if (b.Has("satchel")) p.Add("torso", PartShape.Box, V(D * 0.35f, H * 0.27f, W * 0.61f), V(-D * 0.48f, H * 0.56f, 0), cloth);
-        if (b.Has("stonepack")) for (var i = -1; i <= 1; i++)
-            p.Add("torso", PartShape.Ellipsoid, V(D * 0.43f, H * 0.22f, W * 0.29f), V(-D * 0.48f, H * 0.59f + H * 0.08f * (i == 0 ? 1 : 0), i * W * 0.24f), metal, segments: 5);
-        if (b.Has("quiver")) for (var i = -1; i <= 1; i++)
-        {
-            p.Add("torso", PartShape.Cylinder, V(H * 0.018f, H * 0.53f, H * 0.018f), V(-D * 0.43f, H * 0.69f, i * W * 0.14f), wood, segments: 4);
-            p.Add("torso", PartShape.Wedge, V(H * 0.06f, H * 0.09f, H * 0.03f), V(-D * 0.43f, H * 0.96f, i * W * 0.14f), bone);
-        }
-        if (b.Has("vials")) for (var i = -1; i <= 1; i++)
-            p.Add("hips", PartShape.Cylinder, V(H * 0.065f, H * 0.15f, H * 0.065f), V(D * 0.39f, H * 0.39f, i * W * 0.26f), accent, segments: 6);
-        if (b.Has("censer")) p.Add("torso", PartShape.Ellipsoid, V(D * 0.37f, H * 0.22f, W * 0.36f), V(-D * 0.47f, H * 0.77f, 0), accent, glow: true, segments: 6);
-        if (b.Has("coil_yoke")) for (var i = -1; i <= 1; i += 2)
-        {
-            p.Add("torso", PartShape.Cylinder, V(H * 0.035f, H * 0.46f, H * 0.035f), V(-D * 0.38f, H * 0.83f, i * W * 0.40f), metal, segments: 5);
-            p.Add("torso", PartShape.Ellipsoid, V(H * 0.12f, H * 0.12f, H * 0.12f), V(-D * 0.38f, H * 1.07f, i * W * 0.40f), accent, segments: 6);
-        }
-        if (b.Has("drum")) p.Add("hips", PartShape.Cylinder, V(W * 0.52f, H * 0.21f, W * 0.52f), V(D * 0.47f, H * 0.43f, 0), wood, segments: 8);
-        if (b.Has("twin_blades")) p.Add("arm_l", PartShape.Wedge, V(H * 0.035f, H * 0.28f, H * 0.07f), V(D * 0.23f, H * 0.58f, -W * 0.37f), metal);
-        if (b.Has("banner"))
-        {
-            p.Add("torso", PartShape.Cylinder, V(H * 0.022f, H * 0.65f, H * 0.022f), V(-D * 0.48f, H * 0.91f, W * 0.25f), wood, segments: 4);
-            p.Add("torso", PartShape.Wedge, V(H * 0.018f, H * 0.23f, W * 0.62f), V(-D * 0.48f, H * 1.12f, W * 0.49f), accent);
-        }
+        p.Sockets["head"] = new BodySocket("head", V(hx, H, 0), Vec3.Zero, H * 0.24f);
+        p.Sockets["chest"] = new BodySocket("torso", V(0, H * 0.59f, 0), Vec3.Zero, H);
+        p.Sockets["belt"] = new BodySocket("hips", V(0, hip, 0), Vec3.Zero, H);
         p.Swings = true;
     }
 }

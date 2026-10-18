@@ -51,6 +51,7 @@ public static class GearFamilies
 {
     public static readonly IReadOnlyDictionary<string, Action<BodyBuild, GearFit>> Builders = new Dictionary<string, Action<BodyBuild, GearFit>>(StringComparer.Ordinal)
     {
+        ["field_kit"] = FieldGearFamilies.FieldKit,
         ["blade"] = Blade,
         ["axe"] = Axe,
         ["spear"] = Spear,

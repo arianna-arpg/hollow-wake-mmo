@@ -7,6 +7,7 @@ using HollowWake.Core.Maths;
 using HollowWake.Core.Movement;
 using HollowWake.Core.Patterns;
 using HollowWake.Core.Sim;
+using HollowWake.Core.Territory;
 using HollowWake.Core.World;
 using HollowWake.Core.WorldGen;
 using Xunit;
@@ -55,20 +56,41 @@ public class KoboldTests(ITestOutputHelper output)
     }
 
     [Fact]
-    public void NativeFactionIsHostileToPlayersAndNeutralToOtherWarbandsInBothDirections()
+    public void NativeFactionHasAnExplicitReciprocalStanceForEveryShippedFaction()
     {
-        var a = DeliveryArena.Create();
-        foreach (var faction in new[] { "players", "lantern_chancery", "weftmarch_compact", "remnant", "tangled" })
+        var content = ContentRegistry.Load(new[] { CoreContent.FindContentDir() }, out _);
+        var sim = ZoneBuilder.CreateArena(content);
+        var kobolds = content.Require<FactionDef>("kobold_scaleclans");
+        foreach (var faction in content.Each<FactionDef>())
         {
-            Assert.Equal(Stance.Hostile, Relations.StanceBetween(a.Sim, "kobold_scaleclans", faction));
-            Assert.Equal(Stance.Hostile, Relations.StanceBetween(a.Sim, faction, "kobold_scaleclans"));
+            Assert.True(kobolds.Relations.TryGetValue(faction.Id, out var expected), "Unreviewed faction: " + faction.Id);
+            Assert.Equal(expected, Relations.StanceBetween(sim, kobolds.Id, faction.Id));
+            Assert.Equal(expected, Relations.StanceBetween(sim, faction.Id, kobolds.Id));
         }
-        foreach (var faction in new[] { "goblinkin", "orc_warbands", "wilds" })
+        Assert.Equal(Stance.Hostile, kobolds.Relations["the_loosed"]);
+        Assert.Equal(Stance.Neutral, kobolds.Relations["wilds"]);
+        Assert.Equal(Stance.Allied, kobolds.Relations[kobolds.Id]);
+    }
+
+    [Fact]
+    public void LoosedAndKoboldsAcquireAndDamageEachOtherWithoutAPlayerOrInjectedTarget()
+    {
+        var sim = ZoneBuilder.CreateArena(CoreContent.Registry, 127);
+        var factory = sim.Service<PatternFactory>();
+        var kobold = factory.Spawn(sim, "kobold_tunnelguard", new Vector3(20, 20, 0), new SpawnOptions { RollRarity = false });
+        var loosed = factory.Spawn(sim, "loosed_brigand", new Vector3(23, 20, 0), new SpawnOptions { RollRarity = false });
+        Assert.Equal("the_loosed", Relations.FactionOf(sim, loosed));
+        foreach (var e in new[] { kobold, loosed })
         {
-            Assert.Equal(Stance.Neutral, Relations.StanceBetween(a.Sim, "kobold_scaleclans", faction));
-            Assert.Equal(Stance.Neutral, Relations.StanceBetween(a.Sim, faction, "kobold_scaleclans"));
+            var stats = sim.World.Get<Stats>(e)!;
+            stats.Attributes.SetBase("life.max", 100000);
+            stats.FillResources();
         }
-        Assert.Equal(Stance.Allied, Relations.StanceBetween(a.Sim, "kobold_scaleclans", "kobold_scaleclans"));
+        var hits = new List<DamageDealt>();
+        sim.Events.Subscribe<DamageDealt>(hits.Add);
+        sim.Run(300);
+        Assert.Contains(hits, h => h.Source == kobold && h.Target == loosed && h.Total > 0);
+        Assert.Contains(hits, h => h.Source == loosed && h.Target == kobold && h.Total > 0);
     }
 
     [Fact]
@@ -109,18 +131,44 @@ public class KoboldTests(ITestOutputHelper output)
             content.With(new RegionOverrideDef { Id = "hallows_home", X = 0, Y = 0, Archetype = "hallows", Level = level, Faction = "weftmarch_compact" });
             content.With(new ZoneOverrideDef { Id = "ninewells", X = 0, Y = 0, Pois = { new PoiPlacement { Poi = site, X = 50, Y = 50 } } });
             var g = new WorldGenerator(content, Rng.Hash64("copper-crest-sites"));
+            var placed = Assert.Single(g.Zone(new ZoneCoord(0, 0)).Pois, p => p.Def.Id == site && p.X == 50.5 && p.Y == 50.5);
             return g.Layout.ChunksOf(new ZoneCoord(0, 0)).SelectMany(c => g.GenerateChunk(c).Spawns)
-                .Where(s => s.Group?.Contains(site, StringComparison.Ordinal) == true && s.Pattern.StartsWith("kobold_", StringComparison.Ordinal))
+                .Where(s => s.Group == placed.Id && s.Pattern.StartsWith("kobold_", StringComparison.Ordinal))
                 .Select(s => $"{s.Pattern}:{s.X}:{s.Y}:{s.PackSize}").ToArray();
         }
         var high = Generate(25);
         var def = CoreContent.Registry.Require<PoiDef>(site);
-        Assert.All(def.Inhabitants, s => Assert.Contains(high, row => row.StartsWith(s.Pattern + ":", StringComparison.Ordinal)));
+        Assert.All(def.Inhabitants.Where(s => s.Level?.Contains(25 + def.Level) != false),
+            s => Assert.Contains(high, row => row.StartsWith(s.Pattern + ":", StringComparison.Ordinal)));
         Assert.Equal(high, Generate(25));
         var low = Generate(1);
-        foreach (var s in def.Inhabitants.Where(s => CoreContent.Registry.Require<PatternDef>(s.Pattern).Level > 1 + def.Level))
+        Assert.NotEmpty(low);
+        Assert.Equal(low, Generate(1));
+        foreach (var s in def.Inhabitants.Where(s => s.Level?.Contains(1 + def.Level) == false))
             Assert.DoesNotContain(low, row => row.StartsWith(s.Pattern + ":", StringComparison.Ordinal));
         Assert.InRange(high.Length, 1, 4);
+    }
+
+    [Fact]
+    public void HomeRegionHoldHasALiveGuardAndNoPrematureBosses()
+    {
+        var content = ContentRegistry.Load(new[] { CoreContent.FindContentDir() }, out _);
+        content.With(new RegionOverrideDef { Id = "hallows_home", X = 0, Y = 0, Archetype = "hallows", Level = 1, Faction = "weftmarch_compact" });
+        content.With(new ZoneOverrideDef { Id = "ninewells", X = 0, Y = 0, Pois = { new PoiPlacement { Poi = "kobold_scale_hold", X = 50, Y = 50 } } });
+        var generator = new WorldGenerator(content, Rng.Hash64("copper-crest-sites"));
+        var sim = ZoneBuilder.CreateZone(content, generator, new WorldState(new GenerationOverlays()), new ZoneCoord(0, 0));
+        var report = ZoneBuilder.LoadZone(sim);
+        var hold = Assert.Single(report.Info!.Pois, p => p.Def.Id == "kobold_scale_hold");
+        Assert.Equal(7, hold.Level);
+        sim.Tick();
+        var residents = sim.World.Query<Spawner>().Where(pair => pair.Item2.Group == hold.Id && pair.Item2.Pattern.StartsWith("kobold_", StringComparison.Ordinal))
+            .SelectMany(pair => pair.Item2.Alive).ToArray();
+        var guard = Assert.Single(residents);
+        Assert.True(sim.World.IsAlive(guard));
+        Assert.False(sim.World.Has<Dead>(guard));
+        Assert.Equal("kobold_tunnelguard", sim.World.Get<Identity>(guard)!.Pattern);
+        Assert.Equal("kobold_scaleclans", Relations.FactionOf(sim, guard));
+        output.WriteLine($"Home region hold at site level {hold.Level}: live {sim.World.Get<Identity>(guard)!.Pattern}");
     }
 
     [Theory]
@@ -131,9 +179,13 @@ public class KoboldTests(ITestOutputHelper output)
     public void DedicatedSitesActuallyOccurInUnmodifiedGeneratedHabitats(string site, int x, int y)
     {
         var g = new WorldGenerator(CoreContent.Registry, Rng.Hash64("aureth"));
-        var poi = Assert.Single(g.Zone(new ZoneCoord(x, y)).Pois, p => p.Def.Id == site);
+        var sites = g.Zone(new ZoneCoord(x, y)).Pois.Where(p => p.Def.Id == site).ToArray();
+        Assert.NotEmpty(sites);
+        foreach (var poi in sites)
+        {
         output.WriteLine($"{site}: zone({x},{y}), at({poi.X},{poi.Y}), level {poi.Level}");
         Assert.Contains(g.Layout.ChunksOf(poi.Zone).SelectMany(c => g.GenerateChunk(c).Spawns),
-            s => s.Pattern.StartsWith("kobold_", StringComparison.Ordinal) && s.Group?.Contains(site, StringComparison.Ordinal) == true);
+            s => s.Pattern.StartsWith("kobold_", StringComparison.Ordinal) && s.Group == poi.Id);
+        }
     }
 }

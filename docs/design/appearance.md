@@ -30,7 +30,7 @@ Prototype-derived looks preserve their source look ids in metadata. The shared `
 
 ### Scaled bipeds
 
-`ScaledBipedFamilies.cs` and `scaledBipedFamilies.ts` register the same `scaled_biped` family. Content supplies body breadth/depth, snout, tail and crest proportions, palette, gear and role features. The existing biped rig carries the claws, hocks, ventral plates, slit eyes and equipment; the tail inherits hip motion without a new gait system. Silhouette features remain presentation only. The Kobold shared fixture and gallery cover every concrete body, equipment, camera angles, grayscale and the player/skeleton stature reference. Model bounds include crests and banners, so they are not the authoritative body height.
+`ScaledBipedFamilies.cs` and `scaledBipedFamilies.ts` register the same `scaled_biped` family. Content supplies body breadth/depth, snout, tail and crest proportions, palette and anatomical features. Carried equipment belongs to gear entries, not species feature branches. The reusable `field_kit` gear family fits supplies, armor and banners to ordinary chest/belt sockets, with palette and proportions on the gear definition; a second blade uses the off-hand gear slot. Both clients include the worn kit in card framing. The existing biped rig carries the claws, hocks, ventral plates, slit eyes and equipment; the tail inherits hip motion without a new gait system. Silhouette features remain presentation only. The Kobold shared fixture and gallery cover every concrete body, equipment, camera angles, grayscale and the player/skeleton stature reference. Model bounds include crests and banners, so they are not the authoritative body height.
 
 ### Two representations
 

@@ -13,8 +13,8 @@
       "id": "kobold_knifehand",
       "body": "scaled_biped",
       "rig": "biped",
-      "parts": 52,
-      "triangles": 762,
+      "parts": 57,
+      "triangles": 838,
       "height": 0.9765
     },
     {
@@ -79,7 +79,7 @@
       "rig": "biped",
       "parts": 55,
       "triangles": 858,
-      "height": 1.2204000000000002
+      "height": 1.2204
     },
     {
       "id": "kobold_cragbreaker",
@@ -111,7 +111,7 @@
       "rig": "biped",
       "parts": 53,
       "triangles": 782,
-      "height": 1.8278000000000003
+      "height": 1.8277999999999999
     }
   ]
 }

@@ -1,0 +1,114 @@
+[
+  {
+    "id": "kobold_scavenger",
+    "oldParts": 52,
+    "newParts": 52,
+    "unchangedGeometry": 52,
+    "removed": 0,
+    "added": 0
+  },
+  {
+    "id": "kobold_knifehand",
+    "oldParts": 52,
+    "newParts": 57,
+    "unchangedGeometry": 51,
+    "removed": 1,
+    "added": 6
+  },
+  {
+    "id": "kobold_dartbow",
+    "oldParts": 55,
+    "newParts": 55,
+    "unchangedGeometry": 55,
+    "removed": 0,
+    "added": 0
+  },
+  {
+    "id": "kobold_stonecaster",
+    "oldParts": 48,
+    "newParts": 48,
+    "unchangedGeometry": 48,
+    "removed": 0,
+    "added": 0
+  },
+  {
+    "id": "kobold_spearguard",
+    "oldParts": 57,
+    "newParts": 57,
+    "unchangedGeometry": 57,
+    "removed": 0,
+    "added": 0
+  },
+  {
+    "id": "kobold_venomweaver",
+    "oldParts": 54,
+    "newParts": 54,
+    "unchangedGeometry": 54,
+    "removed": 0,
+    "added": 0
+  },
+  {
+    "id": "kobold_rimeweaver",
+    "oldParts": 47,
+    "newParts": 47,
+    "unchangedGeometry": 47,
+    "removed": 0,
+    "added": 0
+  },
+  {
+    "id": "kobold_tunnelguard",
+    "oldParts": 57,
+    "newParts": 57,
+    "unchangedGeometry": 57,
+    "removed": 0,
+    "added": 0
+  },
+  {
+    "id": "kobold_cinderweaver",
+    "oldParts": 49,
+    "newParts": 49,
+    "unchangedGeometry": 49,
+    "removed": 0,
+    "added": 0
+  },
+  {
+    "id": "kobold_stormweaver",
+    "oldParts": 55,
+    "newParts": 55,
+    "unchangedGeometry": 55,
+    "removed": 0,
+    "added": 0
+  },
+  {
+    "id": "kobold_cragbreaker",
+    "oldParts": 52,
+    "newParts": 52,
+    "unchangedGeometry": 52,
+    "removed": 0,
+    "added": 0
+  },
+  {
+    "id": "kobold_ironback",
+    "oldParts": 58,
+    "newParts": 58,
+    "unchangedGeometry": 58,
+    "removed": 0,
+    "added": 0
+  },
+  {
+    "id": "kobold_crestcaller",
+    "oldParts": 55,
+    "newParts": 55,
+    "unchangedGeometry": 55,
+    "removed": 0,
+    "added": 0
+  },
+  {
+    "id": "kobold_scalechief",
+    "oldParts": 53,
+    "newParts": 53,
+    "unchangedGeometry": 53,
+    "removed": 0,
+    "added": 0
+  }
+]

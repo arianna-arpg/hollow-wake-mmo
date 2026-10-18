@@ -30,3 +30,28 @@ describe('kobold scaleclans appearance parity', () => {
       bones:p.bones,parts:p.parts,sockets:Object.fromEntries(p.sockets)}, row.plan);
   });
 });
+
+it.each(['biped', 'skeleton', 'scaled_biped'])('field equipment fits %s sockets and scales with its body', family => {
+  const source = catalog.byIdOf('kobold_scavenger')!;
+  for (const row of fixture) {
+    const def = catalog.byIdOf(row.id)!;
+    const item = catalog.defaultGear(def, row.id).get('chest');
+    if (!item) continue;
+    const gear = catalog.gearFor('chest', item.itemClass, item.tags)!;
+    const body = { ...source, body: family, features: [], gear: {} };
+    const plan = buildBody(body, 17, 1.8, 0.4);
+    const before = plan.parts.length;
+    wear(plan, gear, 'chest', 17);
+    const added = plan.parts.slice(before);
+    expect(added.length).toBeGreaterThan(0);
+    expect(added.every(p => ['torso', 'hips', 'head'].includes(p.bone))).toBe(true);
+    if (gear.features.some(f => ['robe', 'vials', 'drum'].includes(f))) expect(added.some(p => p.bone === 'hips')).toBe(true);
+    if (gear.features.includes('crown')) expect(added.some(p => p.bone === 'head')).toBe(true);
+    const enlarged = buildBody(body, 17, 3.6, 0.8);
+    const enlargedBefore = enlarged.parts.length;
+    wear(enlarged, gear, 'chest', 17);
+    const larger = enlarged.parts.slice(enlargedBefore);
+    expect(larger.length).toBe(added.length);
+    added.forEach((p, i) => p.size.forEach((v, axis) => expect(larger[i].size[axis]).toBeCloseTo(v * 2, 5)));
+  }
+});

@@ -24,11 +24,11 @@
         "eye": "#f0d98a"
       },
       "features": [
-        "satchel",
         "short_crest"
       ],
       "gear": {
-        "main_hand": "weapon.dagger"
+        "main_hand": "weapon.dagger",
+        "chest": "field_kit.scavenger"
       },
       "variation": {
         "hue": 0.015,
@@ -64,11 +64,11 @@
         "eye": "#f0d98a"
       },
       "features": [
-        "twin_blades",
         "crest"
       ],
       "gear": {
-        "main_hand": "weapon.dagger"
+        "main_hand": "weapon.dagger",
+        "off_hand": "weapon.dagger"
       },
       "variation": {
         "hue": 0.015,
@@ -104,11 +104,11 @@
         "eye": "#f0d98a"
       },
       "features": [
-        "quiver",
         "short_crest"
       ],
       "gear": {
-        "main_hand": "weapon.bow"
+        "main_hand": "weapon.bow",
+        "chest": "field_kit.dartbow"
       },
       "variation": {
         "hue": 0.015,
@@ -144,10 +144,11 @@
         "eye": "#f0d98a"
       },
       "features": [
-        "stonepack",
         "crest"
       ],
-      "gear": {},
+      "gear": {
+        "chest": "field_kit.stonecaster"
+      },
       "variation": {
         "hue": 0.015,
         "value": 0.035,
@@ -182,11 +183,11 @@
         "eye": "#f0d98a"
       },
       "features": [
-        "frill",
-        "quiver"
+        "frill"
       ],
       "gear": {
-        "main_hand": "weapon.spear"
+        "main_hand": "weapon.spear",
+        "chest": "field_kit.spearguard"
       },
       "variation": {
         "hue": 0.015,
@@ -222,11 +223,11 @@
         "eye": "#f0d98a"
       },
       "features": [
-        "vials",
         "frill"
       ],
       "gear": {
-        "main_hand": "weapon.wand"
+        "main_hand": "weapon.wand",
+        "chest": "field_kit.venomweaver"
       },
       "variation": {
         "hue": 0.015,
@@ -262,11 +263,11 @@
         "eye": "#f0d98a"
       },
       "features": [
-        "robe",
         "sail"
       ],
       "gear": {
-        "main_hand": "weapon.staff"
+        "main_hand": "weapon.staff",
+        "chest": "field_kit.rimeweaver"
       },
       "variation": {
         "hue": 0.015,
@@ -302,12 +303,12 @@
         "eye": "#f0d98a"
       },
       "features": [
-        "armor",
         "short_crest"
       ],
       "gear": {
         "main_hand": "weapon.sword",
-        "off_hand": "shield"
+        "off_hand": "shield",
+        "chest": "field_kit.tunnelguard"
       },
       "variation": {
         "hue": 0.015,
@@ -343,11 +344,11 @@
         "eye": "#f0d98a"
       },
       "features": [
-        "censer",
         "crest"
       ],
       "gear": {
-        "main_hand": "weapon.wand"
+        "main_hand": "weapon.wand",
+        "chest": "field_kit.cinderweaver"
       },
       "variation": {
         "hue": 0.015,
@@ -383,11 +384,11 @@
         "eye": "#f0d98a"
       },
       "features": [
-        "coil_yoke",
         "frill"
       ],
       "gear": {
-        "main_hand": "weapon.staff"
+        "main_hand": "weapon.staff",
+        "chest": "field_kit.stormweaver"
       },
       "variation": {
         "hue": 0.015,
@@ -423,11 +424,11 @@
         "eye": "#f0d98a"
       },
       "features": [
-        "backplates",
         "crest"
       ],
       "gear": {
-        "main_hand": "weapon.maul"
+        "main_hand": "weapon.maul",
+        "chest": "field_kit.cragbreaker"
       },
       "variation": {
         "hue": 0.015,
@@ -463,13 +464,12 @@
         "eye": "#f0d98a"
       },
       "features": [
-        "armor",
-        "backplates",
         "short_crest"
       ],
       "gear": {
         "main_hand": "weapon.axe",
-        "off_hand": "shield"
+        "off_hand": "shield",
+        "chest": "field_kit.ironback"
       },
       "variation": {
         "hue": 0.015,
@@ -505,11 +505,11 @@
         "eye": "#f0d98a"
       },
       "features": [
-        "frill",
-        "drum"
+        "frill"
       ],
       "gear": {
-        "main_hand": "weapon.sword"
+        "main_hand": "weapon.sword",
+        "chest": "field_kit.crestcaller"
       },
       "variation": {
         "hue": 0.015,
@@ -544,13 +544,10 @@
         "accent": "#c7a36a",
         "eye": "#f0d98a"
       },
-      "features": [
-        "armor",
-        "crown",
-        "banner"
-      ],
+      "features": [],
       "gear": {
-        "main_hand": "weapon.spear"
+        "main_hand": "weapon.spear",
+        "chest": "field_kit.scalechief"
       },
       "variation": {
         "hue": 0.015,

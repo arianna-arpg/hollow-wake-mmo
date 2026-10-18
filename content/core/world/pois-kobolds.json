@@ -11,7 +11,7 @@
       ],
       "weight": 0.35,
       "radius": 10,
-      "min_spacing": 160,
+      "min_spacing": 32,
       "slope": {
         "max": 0.55
       },
@@ -78,7 +78,7 @@
         "Scrapscale Camp"
       ],
       "meta": {
-        "population": "Sparse ground encounters competing for the existing ruin budget. No underground traversal or ecological behavior."
+        "population": "Sparse single-member ground encounters. Ruin-tagged definitions increase the weighted ruin share where eligible; no additional global budget is declared."
       }
     },
     {
@@ -91,7 +91,7 @@
       ],
       "weight": 0.35,
       "radius": 10,
-      "min_spacing": 160,
+      "min_spacing": 32,
       "slope": {
         "max": 0.55
       },
@@ -146,7 +146,7 @@
         "Reedspine Camp"
       ],
       "meta": {
-        "population": "Sparse ground encounters competing for the existing ruin budget. No underground traversal or ecological behavior."
+        "population": "Sparse single-member ground encounters. Ruin-tagged definitions increase the weighted ruin share where eligible; no additional global budget is declared."
       }
     },
     {
@@ -159,7 +159,7 @@
       ],
       "weight": 0.35,
       "radius": 10,
-      "min_spacing": 160,
+      "min_spacing": 32,
       "slope": {
         "max": 0.55
       },
@@ -214,7 +214,7 @@
         "Cinderplate Camp"
       ],
       "meta": {
-        "population": "Sparse ground encounters competing for the existing ruin budget. No underground traversal or ecological behavior."
+        "population": "Sparse single-member ground encounters. Ruin-tagged definitions increase the weighted ruin share where eligible; no additional global budget is declared."
       }
     },
     {
@@ -227,7 +227,7 @@
       ],
       "weight": 0.35,
       "radius": 10,
-      "min_spacing": 160,
+      "min_spacing": 32,
       "slope": {
         "max": 0.55
       },
@@ -240,6 +240,19 @@
       ],
       "level": 6,
       "inhabitants": [
+        {
+          "pattern": "kobold_tunnelguard",
+          "density": 1,
+          "pack_size": [
+            1,
+            1
+          ],
+          "respawn": 360,
+          "level": {
+            "min": 6,
+            "max": 9
+          }
+        },
         {
           "pattern": "kobold_cragbreaker",
           "density": 1,
@@ -293,7 +306,7 @@
         "Copper-Crest Hold"
       ],
       "meta": {
-        "population": "Sparse ground encounters competing for the existing ruin budget. No underground traversal or ecological behavior."
+        "population": "Sparse single-member ground encounters. Ruin-tagged definitions increase the weighted ruin share where eligible; no additional global budget is declared."
       }
     }
   ]

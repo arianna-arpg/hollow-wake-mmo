@@ -1,5 +1,5 @@
 Base: 90cb7fcb5eec97a6ad438c10f7b564f1dfa88790, seed aureth.
-Four dedicated POIs at weight 0.35 enter existing ruin budgets. No climate, terrain generator, regional budget, biome roaming table or runtime edits.
+Four dedicated POIs at weight 0.35 add eligible weighted ruin choices. Existing regional budget entries are unchanged; this does increase the ruin share where those definitions fit. No climate, terrain generator, regional budget, biome roaming table or runtime edits.
 
 zone(0,0): authored starter sites and chunk hash unchanged. The nearby scout-ruin quest chooses Scrapscale Camp instead of Chainkeeper Camp.
 zone(1,0): the weighted choice at (432,199) changes from orc_hold/ruin_walls to orc_chaincamp/camp_ring. Other printed sites retain their coordinates. This intentionally changes the stamp and inhabitants, so its chunk hash changes.
@@ -14,3 +14,10 @@ kobold_reed_camp zone(-7,-23) at(-1751.5,-5754.5), L16
 These are evidence locations, not promised nearest spawns. Each site has at most four single-member Kobold inhabitants, with existing level gates. The ruin-walls landmark also carries its existing chest.
 
 Integrating concurrent faction POIs changes weighted picks again. Reinspect and regenerate goldens on the combined tree.
+
+2026-10-18 content corrections over d17ea28 (before shared-foundation integration):
+The 10 m-radius sites now use 32 m spacing. The new low-level Hold fallback is kobold_tunnelguard at site levels6 through9, replaced by existing specialists at higher levels.
+The starting zone chunks, authored POIs and quests remain identical to d17ea28. Its nearby-POI list changes poi.-1_1.scrap_fort.-234.294 to poi.-1_1.ruin.-234.294; this changes only its info hash F895E0D2D626AB3C -> F2D38CBA6DA8F4FE.
+The same neighbor change is present with the golden test overlays, moving the overlay hash1B3F4BBF3C1CE4BF ->8C8F35229AE37C99. The other three golden zones and climate remain unchanged.
+world-correction-summary.json records the named POI/population differences, including all natural-site coordinates above. Reduced spacing permits more than one Reedspine Camp in its fixture zone, so each placed site's own Group is tested separately.
+The initial port's earlier Ninewells scout change (Chainkeeper Camp -> Scrapscale Camp) and zone(1,0)'s Iron-Tusk Hold -> Chainkeeper Camp stamp change remain intentional and must be named in the final PR body.

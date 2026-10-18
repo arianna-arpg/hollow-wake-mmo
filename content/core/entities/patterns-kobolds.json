@@ -558,7 +558,8 @@
         "melee",
         "size.small",
         "habitat.kobold_cinder_camp",
-        "culture.scaleclan"
+        "culture.scaleclan",
+        "habitat.kobold_scale_hold"
       ],
       "level": 6,
       "radius": 0.24,

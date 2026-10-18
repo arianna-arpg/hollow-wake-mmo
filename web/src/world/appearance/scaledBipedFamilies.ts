@@ -18,9 +18,7 @@ export function scaledBiped(b: BodyBuild): void {
         const scute = b.c("scute", "#40594e");
         const belly = b.c("belly", "#cfbb88");
         const cloth = b.c("cloth", "#514d47");
-        const metal = b.c("metal", "#929897");
         const bone = b.c("bone", "#e6d5ad");
-        const wood = b.c("wood", "#765942");
         const accent = b.c("accent", "#c7a36a");
         const dark = b.c("dark", "#252c29");
         p.bone("hips", "root", V(0, hip, 0));
@@ -63,38 +61,13 @@ export function scaledBiped(b: BodyBuild): void {
             p.add("head", 'box', V(D * 0.07, H * 0.018, W * 0.04), V(hx + D * 0.62 * snout, H * 0.87, side * W * 0.16), dark);
             if (b.has("frill")) for (let i = 0; i < 3; i++)
                 p.add("head", 'wedge', V(D * 0.12, H * 0.19 * crest, W * 0.30), V(hx - D * 0.22, H * (0.81 + i * 0.065), side * W * (0.27 + i * 0.04)), accent, { turn: V(side * (30 - i * 25), 0, 0) });
-            if (b.has("armor")) p.add("torso", 'wedge', V(D * 0.44, H * 0.11, W * 0.30), V(-D * 0.03, shoulder, z), metal);
             p.sockets.set(side < 0 ? "hand_l" : "hand_r", {bone:arm, at:V(D * 0.23, H * 0.43, z), turn:ZERO, size:H * b.s("gear", 0.85)});
         }
-        if (b.has("short_crest") || b.has("crest") || b.has("crown")) for (let i = 0; i < 3; i++)
-            p.add("head", 'wedge', V(D * 0.18, H * (b.has("short_crest") ? 0.07 : 0.17) * crest, W * 0.08), V(hx - D * 0.26 + i * D * 0.19, H * 1.00, 0), b.has("crown") ? metal : accent);
+        if (b.has("short_crest") || b.has("crest")) for (let i = 0; i < 3; i++)
+            p.add("head", 'wedge', V(D * 0.18, H * (b.has("short_crest") ? 0.07 : 0.17) * crest, W * 0.08), V(hx - D * 0.26 + i * D * 0.19, H * 1.00, 0), accent);
         if (b.has("sail")) p.add("torso", 'wedge', V(D * 0.39, H * 0.56, W * 0.08), V(-D * 0.41, H * 0.76, 0), accent);
-        if (b.has("armor")) p.add("torso", 'wedge', V(D * 0.17, H * 0.28, W * 0.58), V(D * 0.31, H * 0.60, 0), metal);
-        if (b.has("backplates")) for (let i = 0; i < 3; i++)
-            p.add("torso", 'wedge', V(D * 0.35, H * 0.16, W * 0.77), V(-D * 0.38, H * (0.48 + i * 0.13), 0), metal);
-        if (b.has("robe")) p.add("hips", 'cone', V(D * 0.80, H * 0.32, W * 0.84), V(0, H * 0.30, 0), cloth, { segments: 7 });
-        if (b.has("satchel")) p.add("torso", 'box', V(D * 0.35, H * 0.27, W * 0.61), V(-D * 0.48, H * 0.56, 0), cloth);
-        if (b.has("stonepack")) for (let i = -1; i <= 1; i++)
-            p.add("torso", 'ellipsoid', V(D * 0.43, H * 0.22, W * 0.29), V(-D * 0.48, H * 0.59 + H * 0.08 * (i == 0 ? 1 : 0), i * W * 0.24), metal, { segments: 5 });
-        if (b.has("quiver")) for (let i = -1; i <= 1; i++)
-        {
-            p.add("torso", 'cylinder', V(H * 0.018, H * 0.53, H * 0.018), V(-D * 0.43, H * 0.69, i * W * 0.14), wood, { segments: 4 });
-            p.add("torso", 'wedge', V(H * 0.06, H * 0.09, H * 0.03), V(-D * 0.43, H * 0.96, i * W * 0.14), bone);
-        }
-        if (b.has("vials")) for (let i = -1; i <= 1; i++)
-            p.add("hips", 'cylinder', V(H * 0.065, H * 0.15, H * 0.065), V(D * 0.39, H * 0.39, i * W * 0.26), accent, { segments: 6 });
-        if (b.has("censer")) p.add("torso", 'ellipsoid', V(D * 0.37, H * 0.22, W * 0.36), V(-D * 0.47, H * 0.77, 0), accent, { glow: true, segments: 6 });
-        if (b.has("coil_yoke")) for (let i = -1; i <= 1; i += 2)
-        {
-            p.add("torso", 'cylinder', V(H * 0.035, H * 0.46, H * 0.035), V(-D * 0.38, H * 0.83, i * W * 0.40), metal, { segments: 5 });
-            p.add("torso", 'ellipsoid', V(H * 0.12, H * 0.12, H * 0.12), V(-D * 0.38, H * 1.07, i * W * 0.40), accent, { segments: 6 });
-        }
-        if (b.has("drum")) p.add("hips", 'cylinder', V(W * 0.52, H * 0.21, W * 0.52), V(D * 0.47, H * 0.43, 0), wood, { segments: 8 });
-        if (b.has("twin_blades")) p.add("arm_l", 'wedge', V(H * 0.035, H * 0.28, H * 0.07), V(D * 0.23, H * 0.58, -W * 0.37), metal);
-        if (b.has("banner"))
-        {
-            p.add("torso", 'cylinder', V(H * 0.022, H * 0.65, H * 0.022), V(-D * 0.48, H * 0.91, W * 0.25), wood, { segments: 4 });
-            p.add("torso", 'wedge', V(H * 0.018, H * 0.23, W * 0.62), V(-D * 0.48, H * 1.12, W * 0.49), accent);
-        }
+        p.sockets.set('head', { bone: 'head', at: V(hx, H, 0), turn: ZERO, size: H * 0.24 });
+        p.sockets.set('chest', { bone: 'torso', at: V(0, H * 0.59, 0), turn: ZERO, size: H });
+        p.sockets.set('belt', { bone: 'hips', at: V(0, hip, 0), turn: ZERO, size: H });
         p.swings = true;
 }
