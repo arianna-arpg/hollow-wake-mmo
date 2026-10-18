@@ -16,6 +16,7 @@ export function options(args) {
     out: { type: 'string', default: join(root, 'artifacts', 'testing') },
     godot: { type: 'string', ...(process.env.GODOT ? { default: process.env.GODOT } : {}) },
     browser: { type: 'string' }, executable: { type: 'string' }, calling: { type: 'string' },
+    forecasts: { type: 'boolean', default: false }, 'cast-cues': { type: 'boolean', default: false },
     'no-build': { type: 'boolean', default: false },
     timeout: { type: 'string', default: '600' }, help: { type: 'boolean' },
   } });
@@ -153,16 +154,17 @@ export async function waitForServer(url, name, server, signal, timeout = 60000) 
 
 export function smokeCommand(suite, opts, { url, tcp, directory, id }) {
   const calling = opts.calling ? ['--calling', opts.calling] : [];
+  const features = [...(opts.forecasts ? ['--forecasts'] : []), ...(opts['cast-cues'] ? ['--cast-cues'] : [])];
   const account = `${id}-${suite}`;
   if (suite === 'web') return [process.execPath, [join(root, 'web/scripts/smoke.mjs'),
     '--url', `${url}/?server=${encodeURIComponent(url)}`, '--shots', join(directory, 'shots'),
-    '--account', account, ...calling,
+    '--account', account, ...calling, ...features,
     ...(opts.browser ? ['--browser', opts.browser] : []),
     ...(opts.executable ? ['--executable', opts.executable] : []),
   ]];
   return [opts.godot, ['--headless', '--path', join(root, 'src/HollowWake.Client'),
     '--', '--smoke', '--host', '127.0.0.1', '--port', String(tcp), '--account', account,
-    '--profile', account, ...calling]];
+    '--profile', account, ...calling, ...features]];
 }
 
 export function smokeOutcome(log) {

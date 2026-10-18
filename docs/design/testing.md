@@ -26,6 +26,8 @@ node scripts/test-background.mjs --suite all --godot /path/to/godot
 
 ## Isolation and lifecycle
 
+Add `--forecasts` to exercise shared forecast reception, or `--cast-cues` for the confirmed visual sequence; both flags pass through to either client. For example, `node scripts/test-background.mjs --suite godot --calling holdfast --forecasts` checks melee forecasting, and `--calling kindler --forecasts --cast-cues` checks spell forecasting and cue lifecycle. Headless native runs still do not validate rendered pixels.
+
 - Each invocation receives a unique evidence folder, native profile, server name, free TCP and HTTP ports, and server data directory. Each suite gets its own account, so native tests never inherit the browser character's position. The runner copies the committed server configuration and overrides only its runtime identity, loopback bind, ports, data directory, web root and development authentication. It never reads `server.local.yaml` or attaches to an existing game server.
 - Readiness checks the service identity and this run's unique server name. Another process taking a port between reservation and launch causes failure, never a test against someone else's world.
 - The browser has a fresh Playwright context. On Windows and Linux, native user data is rooted inside the evidence directory through the child process environment, including interface placement. Native runs on macOS are rejected until equivalent isolation is implemented.
