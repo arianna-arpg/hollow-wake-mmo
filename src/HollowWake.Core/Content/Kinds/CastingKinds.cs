@@ -430,6 +430,10 @@ internal static class CastingKinds
         {
             c.Warn($"'{field}' has both a magazine and still recovery; the magazine decides.");
         }
+        if (u.Manual && (u.Magazine is not null || u.Recharge is not null || u.Still is not null))
+        {
+            c.Warn($"'{field}' is manual; its recharge, magazine or still recovery never runs.");
+        }
     }
 
     private static void Gates(IEnumerable<Expr> gates, ValidationContext c)
