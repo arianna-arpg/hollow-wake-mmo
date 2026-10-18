@@ -133,6 +133,8 @@ try {
   check('roster refresh preserves Options and its focus', focus && await page.evaluate(() => window.hollowWake.ui.optionsOpen && document.activeElement === window.muFocus));
   await page.locator('.options-done').click();
   await page.waitForFunction(() => !window.hollowWake.ui.optionsOpen);
+  // Let the resumed scene observe neutral input before sending a fresh held key.
+  await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
   const reboundStart = await entry(); await page.keyboard.down('KeyL'); await page.waitForTimeout(350); await page.keyboard.up('KeyL');
   check('Mu picks up changed bindings without recreating the scene', (await entry()).x > reboundStart.x + 20);
   for (let i = 0; i < 3; i++) {

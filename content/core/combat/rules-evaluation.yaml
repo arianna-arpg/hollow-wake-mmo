@@ -8,7 +8,7 @@ entries:
   - id: evaluation
     values:
       # The proving pairs, each written a:b with two pattern ids: matched pairings built to be even, which a
-      # tournament fights unless told otherwise.
+      # tournament fights unless explicit pairs, --standard, or a checked baseline select its pairings.
       proving_pairs:
         - "proving_reaver:proving_bulwark"
         - "proving_hexer:proving_plaguer"

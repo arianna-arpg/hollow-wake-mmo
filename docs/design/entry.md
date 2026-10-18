@@ -8,7 +8,7 @@ Remembered characters occupy the inner rank; unclaimed Calling vessels follow it
 
 Every shipped Calling is available. The prototype's dealt hand, slot unlocks, Vault purchases, unknown cowls, run contracts and death-to-new-run economy are not MMO mechanics and are not fabricated. Existing characters remain resumable if later availability rules change. The account's capacity limits creation; it never disables a remembered life. Capacity counts owned character ids even if a sheet cannot currently be loaded, matching the server creation limit. MMO death and respawn keep their existing behavior.
 
-Quick play authenticates and focuses a remembered vessel. It waits for an explicit Wake. Ordinary login, quick play, returning from the world and a future tutorial threshold all consume the same character-list entry state.
+Quick play authenticates and focuses a remembered vessel. The browser prepares DOM focus even if login finishes in a background window, so Enter works when the player returns without an extra click. Movement stays suspended until the window is active; Options and an open card still prevent remembered-vessel refocusing. It waits for an explicit Wake. Ordinary login, quick play, returning from the world and a future tutorial threshold all consume the same character-list entry state.
 
 ## Content and registries
 
@@ -39,6 +39,12 @@ Mouse and touch choose a ground destination. Keyboard and stick motion use the p
 The optional hello feature `entry_flow` adds `CharacterListMsg.entry`, containing the authoritative flow, stage, kind, presentation, creation capacity and Calling availability. It also enables a `create_character.request_id` to be echoed with `created_character_id` on the resulting list. All additions are optional. Legacy clients receive their original fields and still face the same server validation. A current client connected to an older server without entry state uses the default flow's terminal selection stage, so a locally authored tutorial prefix cannot strand it. This compatibility fallback does not bypass a modern server's authoritative entry stage. Creation while already in the world returns `in_world`; leave the world before creating another character.
 
 A view retains only its outstanding creation request. Only the matching successful list may trigger automatic selection after Create and Wake. Cancelling that card clears the request: the server may already have created the character, but a late result only refreshes the roster when no newer creation is pending. A stale correlated list cannot clear a newer request, replace its card, or focus a remembered vessel behind it. Rejection makes the card editable; refusals outside creation remain visible in the entry status. Roster replies while Options is open preserve the pane and its focus. Closing the connection disposes the view and clears pending input and creation state. Connection generation guards reject replies from old sockets. Account facts have no client-writable completion or unlock message. The browser view unsubscribes settings and explicitly releases its graphics context on disposal; bindings rebuild only when settings change. World movement and casts are inactive outside the world, and a key repeat that began while input was inactive cannot start a held action.
+
+### Known reply-order limitations
+
+Successful creation replies have request ids; `ErrorMsg` does not. If A is cancelled, B is submitted, and A's refusal arrives late, the client can clear B's pending request and show A's error on B's card. B may still be created on the server, but its later successful list then does not automatically Wake it. Correct correlation of refusals requires a protocol addition and is not implemented here.
+
+A stale correlated list is discarded whole by the entry view, including its roster and capacity state. If A takes the last account slot while B is pending, A's list is ignored and B receives `too_many`. Mu can still omit A and display creation as available until another character list arrives (for example after reconnecting). The server still enforces the actual capacity. Neither the successful-reply guard nor the focus changes reconcile that stale presentation automatically.
 
 ## Tutorial migration boundary
 

@@ -1,0 +1,39 @@
+{
+  "base": "6aa0117b19816bcfe6670472ef330f0d4a789f1b",
+  "date": "2026-10-18",
+  "solutionBuild": {
+    "errors": 0,
+    "warnings": 0
+  },
+  "dotnetTests": {
+    "core": 643,
+    "client": 119,
+    "server": 52,
+    "total": 814
+  },
+  "content": {
+    "errors": 0,
+    "warnings": 0
+  },
+  "webTests": 192,
+  "webBuild": "passed",
+  "protocol": "protocol-ts --check is current",
+  "loadTicks": 200,
+  "fight": "hob wolf: t=10.60, wolf 68/96",
+  "liveProbe": "passed through Mu course",
+  "launcher": {
+    "build": "passed",
+    "unitTests": 33,
+    "hiddenOfflineSmoke": "SMOKE launcher PASS 0.1.0",
+    "entryObservationTests": {
+      "command": "node --test experiments/launcher-quick-play/observe-entry.test.mjs",
+      "passed": 6
+    }
+  },
+  "limits": [
+    "Browser focus regression models document.hasFocus without moving OS focus.",
+    "Native smoke is headless; pixels and graphical installed-archive launcher acceptance remain unverified here.",
+    "Standalone native quick-play smoke not run because its isolated-input argument is not honored.",
+    "Late ErrorMsg correlation and discarded stale-list roster/capacity consequences are documented, not fixed."
+  ]
+}
