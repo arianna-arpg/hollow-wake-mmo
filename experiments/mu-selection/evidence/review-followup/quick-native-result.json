@@ -1,0 +1,6 @@
+{
+  "selections": 1,
+  "result": "Play waits in Mu; explicit Wake, delayed Crossing, terrain readiness and gameplay movement passed",
+  "client": "source",
+  "rendering": "not covered in headless mode"
+}

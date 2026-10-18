@@ -21,6 +21,7 @@ public sealed class Session
     public IConnection Connection { get; }
     public SessionState State { get; set; } = SessionState.Connected;
     public string? AccountId { get; set; }
+    public bool EntryFlow { get; set; }
     public CharacterSheet? Character { get; set; }
     public Entity Entity { get; set; } = Entity.None;
     public ZoneInstance? Zone { get; set; }

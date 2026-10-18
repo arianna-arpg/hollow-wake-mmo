@@ -1,0 +1,6 @@
+{
+  "boot": "Crossing appears while the client module loads; quick login then waits for first-time creation",
+  "entry": "Create and Wake shows a playable Crossing, waits for hero and terrain, quarantines held input, then accepts fresh gameplay input",
+  "resume": "Remembered resume, cancel, ignored late frames and explicit reconnect all use the same loading lifecycle",
+  "pageErrors": []
+}

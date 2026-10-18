@@ -1,6 +1,11 @@
 using Godot;
 using HollowWake.Client.UI.Widgets;
 using HollowWake.Protocol;
+using HollowWake.Core.Content;
+using HollowWake.Core.Definitions;
+using HollowWake.Client.UI.Entry;
+using HollowWake.Client.UI.Logic;
+using HollowWake.Client.World.Appearance;
 
 namespace HollowWake.Client.UI;
 
@@ -14,12 +19,15 @@ public partial class LoginPanel : CanvasLayer
     private LineEdit _account = null!;
     private Button _connect = null!;
     private Label _status = null!;
-    private ItemList _characters = null!;
-    private LineEdit _newName = null!;
-    private OptionButton _calling = null!;
-    private Button _create = null!;
-    private Button _enter = null!;
-    private VBoxContainer _characterBox = null!;
+    private Control _connection = null!;
+    private AccountEntryView? _entry;
+    private string? _entryId;
+    public EntryScene? Entry => _entry as EntryScene;
+    public ContentRegistry Content { get; init; } = null!;
+    public AppearanceService Appearance { get; init; } = null!;
+    public Func<bool> Suspended { get; init; } = () => false;
+    public string? CreationRequestId => _entry?.Pending;
+    public event Action? LeaveRequested;
     private List<CharacterSummary> _list = new();
 
     public event Action<string, int, string>? ConnectRequested;
@@ -68,6 +76,7 @@ public partial class LoginPanel : CanvasLayer
             AddChild(panel);
             host = panel;
         }
+        _connection = _pane is not null ? _pane : host;
         var box = new VBoxContainer();
         box.AddThemeConstantOverride("separation", 8);
         host.AddChild(box);
@@ -102,53 +111,13 @@ public partial class LoginPanel : CanvasLayer
         _status.AddThemeColorOverride("font_color", muted);
         box.AddChild(_status);
 
-        _characterBox = new VBoxContainer { Visible = false };
-        box.AddChild(_characterBox);
-        _characterBox.AddChild(new Label { Text = "Characters" });
-        _characters = new ItemList { CustomMinimumSize = new Vector2(480, 170) };
-        if (_skin is { } s)
-        {
-            _characters.AddThemeColorOverride("font_color", s.S("ink"));
-            _characters.AddThemeColorOverride("font_selected_color", s.S("accent"));
-            var list = new StyleBoxFlat { BgColor = s.S("inset"), BorderColor = s.S("edge_dark") };
-            list.SetBorderWidthAll(1);
-            list.SetContentMarginAll(6);
-            _characters.AddThemeStyleboxOverride("panel", list);
-        }
-        _characterBox.AddChild(_characters);
-        _enter = new Button { Text = "Enter the Weft", FocusMode = Control.FocusModeEnum.None };
-        _enter.Pressed += () =>
-        {
-            var selected = _characters.GetSelectedItems();
-            if (selected.Length > 0 && selected[0] < _list.Count)
-            {
-                EnterRequested?.Invoke(_list[selected[0]].Id);
-            }
-        };
-        _characterBox.AddChild(_enter);
-        _characterBox.AddChild(new HSeparator());
-        var createRow = new HBoxContainer();
-        _characterBox.AddChild(createRow);
-        _newName = new LineEdit { PlaceholderText = "New character name", CustomMinimumSize = new Vector2(220, 0) };
-        createRow.AddChild(_newName);
-        _calling = new OptionButton { FocusMode = Control.FocusModeEnum.None };
-        createRow.AddChild(_calling);
-        _create = new Button { Text = "Create", FocusMode = Control.FocusModeEnum.None };
-        _create.Pressed += () =>
-        {
-            if (_newName.Text.Trim().Length >= 2 && _calling.Selected >= 0)
-            {
-                CreateRequested?.Invoke(_newName.Text.Trim(), _calling.GetItemText(_calling.Selected));
-            }
-        };
-        createRow.AddChild(_create);
     }
 
     public string Status => _status.Text;
     public IReadOnlyList<CharacterSummary> Characters => _list;
     public IReadOnlyList<string> Callings { get; private set; } = Array.Empty<string>();
 
-    public void SetStatus(string text) => _status.Text = text;
+    public void SetStatus(string text) { _status.Text = text; _entry?.Error(text); }
 
     // Drive the panel from code (the scripted smoke run does); these raise the same events as the buttons.
     public void ConnectTo(string host, int port, string account)
@@ -167,24 +136,30 @@ public partial class LoginPanel : CanvasLayer
     {
         _list = msg.Characters;
         Callings = msg.Callings;
-        _characters.Clear();
-        foreach (var c in msg.Characters)
+        var stage = Content.Each<EntryFlowDef>().Single(f => f.Default).Stages[^1];
+        var kind = msg.Entry?.Kind ?? stage.Kind;
+        var definition = Content.Get<UiEntrySceneDef>(msg.Entry?.Presentation ?? stage.Presentation);
+        if (definition is null) { Reset(); SetStatus("This entry stage needs a compatible client."); return; }
+        var id = kind + ":" + definition.Id;
+        if (_entry is null || _entryId != id)
         {
-            _characters.AddItem($"{c.Name}  ({c.Calling}, level {c.Level}, zone {c.Zone})");
+            _entry?.QueueFree();
+            _entry = EntryViews.Create(kind, definition, Content, Appearance); _entryId = id;
+            if (_entry is null) { Reset(); SetStatus("This entry activity needs a compatible client."); return; }
+            _entry.Theme = _skin?.Theme;
+            _entry.Suspended = () => !Visible || Suspended();
+            _entry.CreateRequested += (name, calling) => CreateRequested?.Invoke(name, calling);
+            _entry.EnterRequested += id => EnterRequested?.Invoke(id);
+            _entry.LeaveRequested += () => LeaveRequested?.Invoke();
+            _entry.OptionsRequested += () => OptionsRequested?.Invoke();
+            AddChild(_entry);
         }
-        if (msg.Characters.Count > 0)
-        {
-            _characters.Select(0);
-        }
-        _calling.Clear();
-        foreach (var calling in msg.Callings)
-        {
-            _calling.AddItem(calling);
-        }
-        if (msg.Callings.Count > 0)
-        {
-            _calling.Select(0);
-        }
-        _characterBox.Visible = true;
+        _connection.Hide();
+        _entry.ShowCharacters(msg);
+    }
+    public void FocusCharacter(string id) => _entry?.FocusCharacter(id);
+    public void Reset()
+    {
+        _entry?.QueueFree(); _entry = null; _entryId = null; _connection.Show(); _list = new(); Callings = Array.Empty<string>();
     }
 }

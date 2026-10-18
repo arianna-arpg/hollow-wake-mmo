@@ -54,22 +54,7 @@ public partial class CrossingView : Control
         var motion = OwnerScreen.ReducedMotion() ? 0 : R.Distance * S * .18;
         var camX = R.Direction == "down" ? 0 : R.Direction == "left" ? -motion : motion;
         var camY = R.Direction == "down" ? motion : 0;
-        for (var i = 0; i < 4; i++)
-        {
-            var radius = 180 + Hash(i, 41) * 240;
-            var x = Wrap(Hash(i, 43) * (Size.X + radius * 2) + _time * (1.5 + Hash(i, 45) * 2) - camX * .12, Size.X + radius * 2) - radius;
-            var y = Wrap(Hash(i, 47) * (Size.Y + radius * 2) + Math.Sin(_time * .05 + i * 2.1) * 30 - camY * .12, Size.Y + radius * 2) - radius;
-            Glow(new((float)x, (float)y), (float)radius, Ink("abyss", .035f));
-        }
-        foreach (var (count, parallax, size, alpha, salt) in new[] { (26,.22,.9,.16,3), (18,.45,1.5,.24,101), (10,.78,2.2,.34,211) })
-        for (var i = 0; i < count; i++)
-        {
-            var x = Wrap(Hash(i, salt) * (Size.X + 40) + _time * (2 + Hash(i, salt + 2) * 5) - camX * parallax, Size.X + 40) - 20;
-            var y = Wrap(Hash(i, salt + 4) * (Size.Y + 40) + _time * (1 + Hash(i, salt + 6) * 3)
-                + Math.Sin(_time * (.3 + Hash(i, salt + 8) * .4) + i) * 9 - camY * parallax, Size.Y + 40) - 20;
-            DrawCircle(new((float)x, (float)y), (float)(size * (.8 + Hash(i, salt + 12) * .5)),
-                Ink("abyss", (float)(alpha * (.6 + .4 * Math.Sin(_time * (.4 + Hash(i, salt + 10) * .8) + i * 1.7)))));
-        }
+        SpiritCanvas.Abyss(this, Size, _time, camX, camY, Ink("abyss"), Glow);
     }
     private void Ribbons()
     {
@@ -198,39 +183,6 @@ public partial class CrossingView : Control
             foreach(var radius in new[]{30,38}) DrawArc(p,radius*S,(float)_time*3,(float)_time*3+Mathf.Pi*1.4f,35,color,1.2f*S,true);
         var look=OwnerScreen.Spec.Wisp;
         var angle=R.Direction=="down"?Mathf.Pi/2:R.Direction=="left"?Mathf.Pi:0;
-        var painters=new Dictionary<string,Action<WispPart,float>> {
-            ["disc"]=(part,r)=>{
-                DrawCircle(Vector2.Zero,r,new Color(look.Palette["base"]));
-                Glow(new(-r*.25f,-r*.25f),r*.7f,new Color(look.Palette["light"]) with { A=.5f });
-                DrawArc(Vector2.Zero,r,0,Mathf.Tau,48,new Color(look.Palette["outline"]) with { A=.75f },1.6f,true);
-            },
-            ["halo"]=(part,r)=>{
-                var glow=new Color(look.Palette["glow"]);
-                DrawArc(Vector2.Zero,r*.8f,0,Mathf.Tau,48,glow with { A=.28f },Math.Max(3,r*.2f),true);
-                DrawArc(Vector2.Zero,r*.8f,0,Mathf.Tau,48,glow with { A=.75f },Math.Max(1.2f,r*.06f),true);
-            },
-            ["eyes"]=(part,r)=>{
-                var n=(int)part.Param("n",2);var size=(float)part.Param("size",.1);var glow=new Color(look.Palette["glow"]);
-                for(var i=0;i<n;i++){
-                    var a=n==1?0:(i/(double)(n-1)-.5)*part.Param("spread",.5)*2;
-                    var at=new Vector2((float)Math.Cos(a),(float)Math.Sin(a))*r*(float)part.Param("dist",.72);
-                    Glow(at,r*size*2.6f,glow with { A=.65f });DrawCircle(at,r*size,glow);DrawCircle(at,r*size*.38f,Colors.White);
-                }
-            },
-            ["wisps"]=(part,r)=>{
-                var n=(int)part.Param("n",3);
-                for(var i=0;i<n;i++){
-                    var off=(i/(float)Math.Max(1,n-1)-.5f)*r*.9f;var sway=(float)Math.Sin(_time*2.2+i*2.1)*r*.28f;
-                    var len=r*(1+.25f*(float)Math.Sin(_time*1.7+i));
-                    DrawPolyline(Quadratic(new(-r*.3f,off),new(-r*.75f,off+sway*.5f),new(-r*.3f-len,off+sway)),
-                        new Color(look.Palette["glow"]) with { A=.4f-i*.06f },Math.Max(1.5f,r*(.16f-i*.03f)),true);
-                }
-            },
-        };
-        foreach(var part in look.Parts){
-            DrawSetTransform(p+new Vector2(part.X,part.Y).Rotated(angle)*look.Radius*S,angle,new Vector2(S,S));
-            if(painters.TryGetValue(part.Kind,out var paint))paint(part,look.Radius*part.Scale);
-        }
-        DrawSetTransform(Vector2.Zero);
+        SpiritCanvas.Draw(this, look, p, angle, S, _time, Glow);
     }
 }

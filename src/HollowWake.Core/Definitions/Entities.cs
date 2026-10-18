@@ -85,6 +85,8 @@ public sealed record PassiveGlyphGrant
 /// <summary>A starting path: attribute spread, starting weaves, items, passives. Never a cage.</summary>
 public sealed record CallingDef : Definition
 {
+    [JsonPropertyName("account_requirements")]
+    public TagSet AccountRequirements { get; init; } = TagSet.Empty;
     public TagSet Threads { get; init; } = TagSet.Empty;
     public Dictionary<string, double> Attributes { get; init; } = new();
     public List<WeaveSpec> Weaves { get; init; } = new();

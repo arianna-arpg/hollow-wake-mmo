@@ -15,4 +15,7 @@
     <!-- The tournament command's option parsing and exit codes are tested beside the harness it drives. -->
     <ProjectReference Include="..\..\src\HollowWake.Tools\HollowWake.Tools.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <None Update="Fixtures\AiTrajectories\*.txt" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
 </Project>

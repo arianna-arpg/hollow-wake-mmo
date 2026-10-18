@@ -1,0 +1,55 @@
+== proving_fletcher (A) vs proving_bulwark (B), seed mech, 30 s kitA=scattergun
+      3  A cast scattergun
+     11  A dealt damage events
+      3  A started scattergun
+     19  B cast bite
+     18  B dealt damage events
+     19  B started bite
+-- ticks by state (20 per second)
+      2  A state , free
+     30  A state engage, casting Cast
+    448  A state engage, free
+      5  A state idle, free
+    115  A state kite, free
+      3  B state , free
+    460  B state chase, casting Cast
+    132  B state chase, free
+      5  B state idle, free
+-- A walked 29.9 units
+-- B walked 29.3 units
+-- life A 131/220  B 220/220
+-- timeline
+  t=0.05 A (10.00,10.00)  | B (14.00,10.00)  | dist 4.00
+  t=0.40 A uses scattergun now 2.00 of 3
+  t=1.00 A (10.00,10.00) engage | B (12.87,10.00) chase casting=bite(Cast) | dist 2.87
+  t=1.15 A uses scattergun now 1.00 of 3
+  t=1.90 A uses scattergun now 0.00 of 3
+  t=2.00 A (10.00,10.00) engage casting=scattergun(Cast) | B (12.72,10.00) chase casting=bite(Cast) | dist 2.72
+  t=3.00 A (10.00,10.00) engage | B (12.72,10.00) chase casting=bite(Cast) | dist 2.72
+  t=4.00 A (10.00,10.00) engage | B (12.56,10.00) chase casting=bite(Cast) | dist 2.56
+  t=5.00 A (6.88,10.00) kite | B (12.33,10.00) chase casting=bite(Cast) | dist 5.45
+  t=6.00 A (6.10,10.00) engage | B (10.53,10.00) chase | dist 4.43
+  t=7.00 A (6.10,10.00) engage | B (8.73,10.00) chase casting=bite(Cast) | dist 2.63
+  t=8.00 A (4.28,10.00) kite | B (8.51,10.00) chase casting=bite(Cast) | dist 4.23
+  t=9.00 A (3.50,10.00) engage | B (7.83,10.00) chase | dist 4.33
+  t=10.00 A (3.50,10.00) engage | B (6.03,10.00) chase casting=bite(Cast) | dist 2.53
+  t=11.00 A (2.98,10.00) kite | B (4.91,10.00) chase casting=bite(Cast) | dist 1.93
+  t=12.00 A (-0.40,10.00) engage | B (4.91,10.00) chase casting=bite(Cast) | dist 5.31
+  t=13.00 A (-0.92,10.00) kite | B (1.53,10.00) chase casting=bite(Cast) | dist 2.45
+  t=14.00 A (-4.30,10.00) engage | B (1.53,10.00) chase casting=bite(Cast) | dist 5.83
+  t=15.00 A (-4.82,10.00) kite | B (-1.84,10.00) chase casting=bite(Cast) | dist 2.98
+  t=16.00 A (-6.90,10.00) engage | B (-1.84,10.00) chase casting=bite(Cast) | dist 5.06
+  t=17.00 A (-6.90,10.00) engage | B (-4.32,10.00) chase casting=bite(Cast) | dist 2.59
+  t=18.00 A (-6.90,10.00) engage | B (-4.54,10.00) chase | dist 2.36
+  t=19.00 A (-10.80,10.00) engage | B (-5.44,10.00) chase casting=bite(Cast) | dist 5.36
+  t=20.00 A (-10.80,10.00) engage | B (-7.92,10.00) chase casting=bite(Cast) | dist 2.89
+  t=21.00 A (-10.80,10.00) engage | B (-7.92,10.00) chase casting=bite(Cast) | dist 2.89
+  t=22.00 A (-10.80,10.00) engage | B (-8.14,10.00) chase casting=bite(Cast) | dist 2.66
+  t=23.00 A (-13.40,10.00) engage | B (-8.37,10.00) chase casting=bite(Cast) | dist 5.04
+  t=24.00 A (-13.40,10.00) engage | B (-9.94,10.00) chase | dist 3.46
+  t=25.00 A (-13.40,10.00) engage | B (-10.84,10.00) chase casting=bite(Cast) | dist 2.56
+  t=26.00 A (-16.26,10.00) kite | B (-11.07,10.00) chase casting=bite(Cast) | dist 5.20
+  t=27.00 A (-17.30,10.00) engage | B (-12.64,10.00) chase | dist 4.66
+  t=28.00 A (-17.30,10.00) engage | B (-14.67,10.00) chase casting=bite(Cast) | dist 2.63
+  t=29.00 A (-18.86,10.00) kite | B (-14.89,10.00) chase casting=bite(Cast) | dist 3.97
+  t=30.00 A (-19.90,10.00) engage | B (-15.34,10.00) chase | dist 4.56
