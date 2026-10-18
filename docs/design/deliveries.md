@@ -48,7 +48,7 @@ Execution and observation share the charge, overcharge, ramp and use-modifier co
 | `include_center` | false spares the context's target |
 | `max_targets`, `pick` | over the cap, `pick` chooses: `random` (default, shuffled on the context's stream), `nearest`, `farthest`, `lowest_life`, `highest_life` (by fraction of maximum life), or `aimed_nearest` (eligible context target first, then nearest) |
 | `require` | an expression each body must meet, read with the body as `target` (`target.life_pct < 0.5`) |
-| `report_miss` | false by default; publishes a miss when selection leaves no recipients, useful for a committed swing |
+| `report_miss` | false by default; publishes a primary miss when selection leaves no recipients; echoed placements and later cascade steps suppress duplicate miss cues |
 | `payload_depth` | `next` (default) runs payloads one level deeper; `same` makes this area a selector at its incoming depth, independent of target count or miss reporting |
 
 The shipped single-target melee selectors author `payload_depth: same`, preserving the proc budget of the direct payloads they replaced. Ordinary area deliveries retain `next`. Either policy leaves real echoes, delayed work, repeats and nested casts responsible for their own depth increments; existing effect/trigger/proc depth limits still apply. This is a reusable content policy, not a skill identity exception.

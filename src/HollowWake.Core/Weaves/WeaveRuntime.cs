@@ -1692,7 +1692,11 @@ public sealed partial class WeaveRuntime
                 ct is not null && tt is not null && weave.Effects.Count == 1 && weave.Effects[0] is IDeliveryPlanSource)
             {
                 var velocity = sim.World.Get<Motion>(target)?.Velocity ?? Vector3.Zero;
-                var ahead = velocity == Vector3.Zero ? 0 : AiAnticipation(weave, stats, cache);
+                var ahead = AiAnticipation(weave, stats, cache);
+                // A brief stop between enemy casts must not invite an edge-of-reach swing.
+                // With anticipation enabled, first attain the authored approach distance.
+                var approach = AiPreferredRange(weave, stats, cache);
+                if (ahead > 0 && approach > 0 && distance > approach) continue;
                 var predicted = tt.Position + new Vector3(velocity.X, velocity.Y, 0) * (float)ahead;
                 if (DeliveryForecasts.CandidateForAi(weave.Effects[0], sim, caster, target, tt.Position,
                     new Vector2(tt.Position.X - ct.Position.X, tt.Position.Y - ct.Position.Y), weave, predicted) == false) continue;
@@ -1748,6 +1752,8 @@ public sealed partial class WeaveRuntime
     /// <summary>
     /// The longest range among an entity's weaves, for AI positioning: each hint's <c>preferred_range</c>, or
     /// the weave's folded <c>range_attribute</c> when the hint names one, so the range scales with the caster.
+    /// With a target, subtract its observed outward travel during the authored anticipation fraction of
+    /// the actual windup. This changes pre-commit positioning, never reach or committed facing.
     /// </summary>
     public double PreferredRange(Simulation sim, Entity caster, Entity? target = null)
     {
@@ -1773,9 +1779,7 @@ public sealed partial class WeaveRuntime
             {
                 continue;
             }
-            var r = weave.Ai is { } hint
-                ? hint.RangeAttribute is { } attribute ? weave.Attr(stats, attribute) : hint.PreferredRange
-                : Math.Max(1.2, RangeOf(weave, stats, CacheFor(slot, weave, stats)) * 0.8);
+            var r = AiPreferredRange(weave, stats, CacheFor(slot, weave, stats));
             hasRange |= r > 0;
             // Spend the windup inside existing reach instead of stopping at the outer edge.
             // Zero is a valid approach distance: collision still prevents body overlap.
@@ -1784,6 +1788,11 @@ public sealed partial class WeaveRuntime
         }
         return hasRange ? best : 1.5;
     }
+
+    private static double AiPreferredRange(CompiledWeave weave, Stats stats, WeaveSlotCache cache) =>
+        weave.Ai is { } hint
+            ? hint.RangeAttribute is { } attribute ? weave.Attr(stats, attribute) : hint.PreferredRange
+            : Math.Max(1.2, RangeOf(weave, stats, cache) * 0.8);
 
     private static double AiAnticipation(CompiledWeave weave, Stats stats, WeaveSlotCache cache) =>
         weave.CastMode == CastMode.Cast ? CastDuration(weave, stats, cache.Scope) * Math.Clamp(weave.AttrOrZero(stats, "ai.anticipation"), 0, 1) : 0;

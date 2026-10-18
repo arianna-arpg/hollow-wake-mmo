@@ -983,7 +983,7 @@ public sealed class WeaveCompiler
         var nothing = form.Target is null && releaseCheck is null && triggers.Count == 0 && gates.Count == 0 && metas.Count == 0 && followUps.Count == 0 && equip.Count == 0
             && uses is null && spend is null && convert is null && cycleSpec is null && selfStack is null && chain is null
             && release.Count == 0 && bash.Count == 0 && deactivate.Count == 0 && cycle.Count == 0;
-        if (nothing)
+        if (nothing && ReferenceEquals(releasePolicy, WeaveCasting.None.ReleasePolicy))
         {
             return WeaveCasting.None;
         }

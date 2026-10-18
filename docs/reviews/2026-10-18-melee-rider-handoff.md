@@ -24,4 +24,4 @@ Integration asks:
 - Add after_damage and the per-hit semantics above to docs/design/weaves-and-effects.md in the coordinator-owned contract change.
 - Targeting, reach and approach decisions are unchanged by this slice.
 
-Acknowledged by: pending coordinator integration.
+Acknowledged by: forecast coordinator; cherry-picked 47de147 as 8ba3f27 on codex/shared-cast-forecasts-integration. Combined gates and the owner-selected approach policy are recorded in 2026-10-18-shared-cast-forecast-rereview.md.

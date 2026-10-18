@@ -323,6 +323,8 @@ public class PositionalReleaseTests
     public void AiDoesNotStopOutsideItsActualPrimaryRegionToSwingForever()
     {
         var a = CastForecastContent.Arena(2.8f);
+        // Isolate primary-region admission; approach anticipation has its own regressions.
+        a.Stats.Attributes.Add(new Modifier { Attribute = "ai.anticipation", Form = ModifierForm.Override, Value = 0 });
         a.Book.Slots.Clear();
         a.Slot("strike");
         Assert.Null(a.Runtime.ChooseForAi(a.Sim, a.Caster, a.Enemy));

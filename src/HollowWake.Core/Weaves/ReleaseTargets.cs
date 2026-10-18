@@ -86,7 +86,7 @@ public static class ReleaseTargets
         if (context.Sim.EmitCastPresentation && context.Weave is { } weave)
             context.Sim.Events.Publish(new CastPresentationEvent(context.CastId, "miss", context.Source, context.Target,
                 weave.Key, weave.Name, CastPresentationEvent.ModeName(weave.CastMode), context.Tags,
-                context.SourceTransform?.Position ?? context.Point, context.Point, context.Sim.Clock.Time, 0,
+                context.From ?? context.SourceTransform?.Position ?? context.Point, context.Point, context.Sim.Clock.Time, 0,
                 context.Sim.Clock.Time, emitted, reason) { Tick = context.Sim.Clock.Tick, Mechanisms = weave.Mechanisms, Outcome = true });
     }
 }

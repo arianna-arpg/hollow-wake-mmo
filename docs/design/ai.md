@@ -26,6 +26,14 @@ The plan is a cache on `Behavior` (`PlanGoal`, `PlannedAt`, `Planned`, `PlanFail
 
 ## Weave choice
 
-`WeaveRuntime.ChooseForAi` filters the entity's weaves by readiness, cost, range and the hint's `when` expression, skipping triggered weaves, toggles that are on, empty banks and failed gates, then weights by the hint. A zero-weight `min_range` rejection happens before geometry resolution or LOS work. Ordinary timed and instant positional attacks with a supported primary region also test the current target against that same region before committing; unsupported graphs retain range-based choice. This prevents stationary edge stalls, but does not predict a moving target's future position or retarget a committed swing. `PreferredRange` is the longest hinted range, used by `chase` and perception.
+`WeaveRuntime.ChooseForAi` filters the entity's weaves by readiness, cost, range and the hint's `when` expression, skipping triggered weaves, toggles that are on, empty banks and failed gates, then weights by the hint. A zero-weight `min_range` rejection happens before geometry resolution or LOS work. Ordinary timed and instant positional attacks with a supported primary region also test the current target against that same region before committing; unsupported graphs retain range-based choice. This prevents stationary edge stalls; the optional anticipation policy below adds pre-commit movement estimation without retargeting a committed swing. `PreferredRange` is the longest hinted range, used by `chase` and perception.
 
 Taunts set the target and a memory timestamp the behaviors read as `taunted`.
+
+### Commitment-aware approach
+
+The weave attribute `ai.anticipation` controls pre-commit movement estimation, from zero (current position only) to one (the actual windup, including speed modifiers). Shipped single-target melee selectors author one; other compositions can opt in through the same attribute and modifier fold. For a safe primary-area provider with anticipation enabled, the chooser first requires the authored preferred range (or folded range attribute). This also covers a moving target that briefly stops to cast. It then tests the observed target velocity projected over that interval against the shared region. Unknown providers keep their prior range-based fallback. This is a heuristic, not future knowledge: changes in direction, terrain or speed can defeat the estimate.
+
+`PreferredRange` accepts the current target and reduces the approach stop distance by its outward travel during that interval. It never increases collision reach or widens a sector, and a started swing keeps its original direction. Body collision still limits how close an actor can get. A target too fast to catch may continue avoiding melee; the policy does not promise a hit. Players can make the same positioning and timing choices manually.
+
+The chooser rejects ordinary busy casts before expensive geometry work, preserving the runtime's instant-reflex exception. Converted and combo faces retain their existing path. The AI intent seam owns dispatch and move planning; this policy only supplies choice eligibility and preferred approach distance.

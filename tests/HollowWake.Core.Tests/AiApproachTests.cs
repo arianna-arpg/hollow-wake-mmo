@@ -12,7 +12,7 @@ public class AiApproachTests
     [Fact]
     public void RetreatingTargetsRequireACloserApproachBeforeACommittedSwing()
     {
-        var a = CastForecastContent.Arena(1.9f);
+        var a = CastForecastContent.Arena(1.5f);
         a.Book.Slots.Clear();
         a.Slot("strike");
         var standing = a.Runtime.PreferredRange(a.Sim, a.Caster, a.Enemy);
@@ -56,6 +56,17 @@ public class AiApproachTests
         Assert.True(a.Runtime.PreferredRange(a.Sim, a.Caster, a.Enemy) > slow);
         a.Sim.World.Get<Motion>(a.Enemy)!.Velocity = -Vector3.UnitX;
         Assert.Equal(a.Runtime.PreferredRange(a.Sim, a.Caster), a.Runtime.PreferredRange(a.Sim, a.Caster, a.Enemy));
+    }
+
+    [Fact]
+    public void BrieflyStoppedTargetsStillRequireTheAuthoredApproachDistance()
+    {
+        var a = CastForecastContent.Arena(2);
+        a.Book.Slots.Clear();
+        a.Slot("strike");
+        Assert.Null(a.Runtime.ChooseForAi(a.Sim, a.Caster, a.Enemy));
+        CastForecastContent.Move(a, a.Enemy, new(11.5f, 10, 0));
+        Assert.NotNull(a.Runtime.ChooseForAi(a.Sim, a.Caster, a.Enemy));
     }
 
     [Fact]

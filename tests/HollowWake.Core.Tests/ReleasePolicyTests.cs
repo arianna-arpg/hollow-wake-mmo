@@ -99,6 +99,10 @@ public class ReleasePolicyTests
         Assert.True(ReleaseTargets.Check(Context(new(13, 10, 0)), out var valid), valid);
         Assert.False(ReleaseTargets.Check(Context(new(13, 10, 1)), out var height));
         Assert.Equal("out_of_reach", height);
+        Assert.False(ReleaseTargets.Execute(Context(new(13, 10, 1)), weave.Effects));
+        var miss = Assert.Single(a.Of<CastPresentationEvent>(), e => e.Phase == "miss");
+        Assert.True(miss.Outcome);
+        Assert.Equal(new Vector3(13, 10, 1), miss.Position);
         a.Sim.World.Add(a.Enemy, new Dead());
         Assert.False(ReleaseTargets.Check(Context(new(13, 10, 0)), out var dead));
         Assert.Equal("invalid_target", dead);
