@@ -1,0 +1,9 @@
+{
+  "Head": "d3982f6d6241bb1e742d996e55956d289b2e19e6",
+  "Utc": "2026-10-18T19:39:58.4762786Z",
+  "Priority": "Normal",
+  "Runtime": "10.0.402",
+  "Command": "dotnet src/HollowWake.Tools/bin/Release/net10.0/hollowwake.dll bench --only expressions --json",
+  "Build": "allocation-build.txt",
+  "Scope": "One expressions-only invocation; legacy process counter plus separately named fixed-warmup sample counters"
+}

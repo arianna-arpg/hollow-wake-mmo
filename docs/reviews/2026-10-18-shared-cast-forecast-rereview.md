@@ -139,7 +139,29 @@ The forecasting chat acknowledged the final integration: its rider fix and eleve
 
 The disposable matched-control checkout was removed only after verifying it was clean and all its measurements had exited and been committed. Its branch still retains exact source 271e82d. The integration worktree and shared-root files were not reset or swept.
 
+### Allocation measurement scope follow-up
+
+Minimal tools-only source d3982f6 preserves the historical expression.alloc loop and whole-process counter, labeling that scope in its note. It adds expression.alloc.calling_thread and expression.alloc.sample_process over one separate synchronous sample. The exact sample delegate runs forty fixed warmup loops, then one measured loop of 100,000 evaluations. There is no measured-loop retry, minimum selection or estimated-overhead subtraction. Both new counters are retained, including any residual runtime activity; neither counter retroactively changes the older 0.01392/0.0168 readings.
+
+The measurement helper's three controls prove that it invokes work exactly once, counts an escaping managed allocation on the calling thread, and includes a worker's allocation in the process counter without charging that array to the caller. This does not identify the precise source of every historical residual byte. Its contract explicitly excludes certification of custom/asynchronous functions that allocate elsewhere. Fixed warmup addresses the runtime's transition to steady state rather than changing the literal zero small-call budget.
+
+The complete Release build is clean and all 1,036 .NET tests pass (846 core, 58 server, 132 client). Hosted CI run 39159109358 also passes, including the required Windows replay. The earlier client and live-probe evidence still applies to unchanged gameplay/client code.
+
+After the coordinator's explicit START, one Normal-priority `bench --only expressions --json` invocation ran on the already-built d3982f6 source and exited 0. No retry occurred. The first results are:
+
+| Measure | Result |
+|---|---:|
+| expression.evaluate | 95.3153 ns/eval |
+| expression.alloc, retained legacy process scope | 0.01392 B/eval |
+| expression.alloc.calling_thread, fixed warmed sample | 0 B/eval |
+| expression.alloc.sample_process, companion to that sample | 0 B/eval |
+| expression.parse | 290.595 ns/parse |
+
+The literal zero warmed small-call measurement is verified, with the unchanged 150 ns evaluation ceiling also met. The original nonzero process value is preserved. The new sample differs from the old in warmup as well as scope; this result does not identify the historical residual bytes' exact source or establish that they all came from a different thread. No numeric budget was relaxed. Raw allocation-scopes JSON/environment records, the three instrument controls and complete local/hosted gates are retained. All owned processes stopped before the next owner's performance window. Claude review of this explicit measurement clarification and the full forecasting change remains pending.
+
 ## Integration handoffs and review request
+
+PR #50 is now a dependent draft at bb22d0f, based on codex/shared-cast-forecasts-integration (verified on GitHub). The coordinator reports its combined release cases and 1,054 tests pass; that branch's evidence owns those claims. **Retarget #50 to main before merging #20 and deleting its branch**, as required by the collaboration contract. No merge is performed or authorized by this record.
 
 - #36: consume its full corrected foundation, not correction 724c5ed alone. Preserve this request's compiled release/miss policy, author contact: body consistently on all three selectors introduced here (strike, measured_strike and bash), and preserve sampled CastState/EffectContext AimOffset for projectile elevation. The corrected full entity dependency is now #34 at 26c50de, including #36 through e383ffb; it remains a separately reviewed draft. Its removed private stored-target gate must not return. Repeat the species/relief matrix on the combined head and verify forecast viewer eligibility through the same resulting contact predicate.
 - #49: pass the current target into PreferredRange while preserving its intent-dispatch and movement-plan seam. File overlap was recorded on both requests before edits.
