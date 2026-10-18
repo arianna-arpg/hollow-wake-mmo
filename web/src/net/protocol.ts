@@ -377,6 +377,8 @@ export interface EnterWorldMsg {
   world: WorldInfo;
   server_time: number;
   tick_rate: number;
+  day_length?: number;
+  time_of_day?: number;
 }
 
 export interface ZoneChangedMsg {
@@ -428,6 +430,7 @@ export interface SelfStateMsg {
   quests: QuestInfo[];
   reputation: Record<string, number>;
   holdings: string[];
+  time_of_day?: number;
   reserved?: Record<string, number>;
   pools?: PoolInfo[];
   statuses?: StatusInfo[];
@@ -661,6 +664,7 @@ export interface EntityState {
   heading?: number;
   spin?: number;
   until?: number;
+  appearance?: string[];
 }
 
 export interface EntityDelta {
@@ -693,6 +697,7 @@ export interface EntityDelta {
   shape_size?: ShapeSizeInfo;
   heading?: number;
   spin?: number;
+  appearance?: string[];
 }
 
 export interface WeaveSlotInfo {

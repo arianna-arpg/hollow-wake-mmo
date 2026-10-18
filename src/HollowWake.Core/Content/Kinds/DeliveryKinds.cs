@@ -47,7 +47,14 @@ internal static class DeliveryKinds
                 Specs(release.Effects, c, "channel.release.effects");
             }
         });
-        ContentKinds.AddValidator<WeaveDef>((d, c) => Specs(d.Effects, c, "effects"));
+        ContentKinds.AddValidator<WeaveDef>((d, c) =>
+        {
+            Specs(d.Effects, c, "effects");
+            if (d.Channel?.Release is { } release)
+            {
+                Specs(release.Effects, c, "channel.release.effects");
+            }
+        });
         ContentKinds.AddValidator<GlyphDef>((d, c) =>
         {
             Specs(d.AddsEffects, c, "adds_effects");

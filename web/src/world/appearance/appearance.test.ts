@@ -5,7 +5,7 @@ import { buildBody } from './bodyFamilies';
 import { buildPart } from './bodyPlan';
 import { DayCycle } from './dayCycle';
 import { lay, wear } from './gearFamilies';
-import { AppearanceCatalog, jitter, scaleOf, variationUnit } from './looks';
+import { AppearanceCatalog, jitter, scaleOf, variationUnit, wornFromDescriptor } from './looks';
 import { SurfaceLook } from './surfaceLook';
 
 /**
@@ -67,6 +67,28 @@ describe('appearance catalog', () => {
     expect(catalog.relationOf('wilds')).toBe('hostile');
     expect(catalog.relationOf('weftmarch_compact')).toBe('friendly');
     expect(catalog.relationOf(undefined)).toBe('neutral');
+  });
+
+  it('dresses other players from the wire descriptor, the self from its equipment, the rest from the kit', () => {
+    const holdfast = catalog.resolve('holdfast', null)!;
+    // nothing from the server: the Calling's kit
+    expect(catalog.wornBy(holdfast, null, undefined, undefined).get('off_hand')?.itemClass).toBe('shield.buckler');
+    expect(catalog.wornBy(holdfast, null, [], undefined).size).toBe(0);
+    expect(catalog.wornBy(holdfast, null, ['main_hand=weapon.sword'], {}).size).toBe(0);
+    // the descriptor's slots, classes and tags read as the item's own would, and the class's trailing word is a tag
+    const worn = catalog.wornBy(holdfast, null, ['chest=armor.chest cloth caster', 'main_hand=weapon.wand caster one_hand focus_weapon', 'head=armor.head.heavy'], undefined);
+    expect([...worn.keys()].sort()).toEqual(['chest', 'head', 'main_hand']);
+    expect(catalog.gearFor('chest', worn.get('chest')!.itemClass, worn.get('chest')!.tags)?.body).toBe('robe');
+    expect(catalog.gearFor('main_hand', worn.get('main_hand')!.itemClass, worn.get('main_hand')!.tags)?.body).toBe('wand');
+    expect(catalog.gearFor('head', worn.get('head')!.itemClass, worn.get('head')!.tags)?.id).toBe('gear_helm');
+    expect(worn.has('off_hand')).toBe(false);
+    // the owner's own equipment wins over the descriptor
+    const own = { main_hand: { uid: 1, base: 'dagger', name: 'Dagger', rarity: 'common', count: 1, level: 1, slot: 'main_hand', lines: [], local: {} } };
+    const self = catalog.wornBy(holdfast, null, ['main_hand=weapon.sword melee blade one_hand'], own);
+    expect(self.get('main_hand')?.itemClass).toBe('weapon.dagger');
+    expect(self.get('main_hand')?.tags).toContain('finesse');
+    // entries without a slot or a class say nothing
+    expect(wornFromDescriptor(['nonsense', '=weapon.sword', 'belt=', 'belt=   ']).size).toBe(0);
   });
 });
 
@@ -193,5 +215,40 @@ describe('surfaces and the day', () => {
       last = s;
     }
     expect(day.at(0).sky).toEqual(day.at(1).sky);
+  });
+
+  it('holds a stopped server day and preserves a subsecond day rate', () => {
+    const day = new DayCycle(catalog.world);
+    for (const length of [0, -1]) {
+      day.observeServer(length, 0.5, 100);
+      expect(day.timeOfDay(100.25)).toBeCloseTo(0.5, 4);
+      day.observeServer(undefined, 0.5, 200);
+      expect(day.timeOfDay(200.25)).toBeCloseTo(0.5, 4);
+    }
+    day.observeServer(0.5, 0.25, 300);
+    expect(day.timeOfDay(300.25)).toBeCloseTo(0.75, 4);
+  });
+
+  it('follows the server day when it says and folds the clock otherwise', () => {
+    const day = new DayCycle(catalog.world);
+    expect(day.server).toBeNull();
+    const folded = day.timeOfDay(100);
+    expect(day.dayLengthSeconds).toBe(day.lengthSeconds);
+    // enter_world: the length and the fraction as of a server time; the fraction advances with the clock and wraps
+    day.observeServer(600, 0.25, 100);
+    expect(day.timeOfDay(100)).toBeCloseTo(0.25, 4);
+    expect(day.timeOfDay(250)).toBeCloseTo(0.5, 4);
+    expect(day.timeOfDay(580)).toBeCloseTo(0.05, 4);
+    expect(day.dayLengthSeconds).toBe(600);
+    // the self state: a fraction alone keeps the length; no fraction changes nothing
+    day.observeServer(undefined, 0.9, 1000);
+    expect(day.timeOfDay(1000)).toBeCloseTo(0.9, 4);
+    expect(day.dayLengthSeconds).toBe(600);
+    day.observeServer(undefined, undefined, 2000);
+    expect(day.timeOfDay(1000)).toBeCloseTo(0.9, 4);
+    // a server that never says: the clock folded by the content's day again
+    day.forgetServer();
+    expect(day.server).toBeNull();
+    expect(day.timeOfDay(100)).toBeCloseTo(folded, 4);
   });
 });

@@ -170,7 +170,7 @@ switch (command)
     {
         var registry = LoadContent(true);
         var generator = new WorldGenerator(registry, Rng.Hash64(Opt("seed", registry.Rules.Text("world.seed", "aureth"))));
-        var world = new WorldState(generator.Overlays);
+        var world = new WorldState(generator.Overlays, registry.Rules);
         var zc = new ZoneCoord(int.Parse(Opt("x", "0")), int.Parse(Opt("y", "0")));
         var log = new ListSimLog();
         var sw = System.Diagnostics.Stopwatch.StartNew();
@@ -229,6 +229,8 @@ switch (command)
         return WeaveReport.Run(LoadContent(false), rest.FirstOrDefault(a => !a.StartsWith("--")), Opt);
     case "passives":
         return PassiveLint.Run(LoadContent(false), Flag("verbose"));
+    case "lint":
+        return LintCommand.Run(contentDirs, Opt, Flag);
     case "bench":
         return Bench.Run(LoadContent(false), Opt, Flag("json"));
     case "probe":
@@ -294,6 +296,10 @@ switch (command)
               weave <preset|form> [--threads a,b] [--glyphs g,g@level] [--level n] [--calling c] [--caster-level n]
                                                   compile a weave: tags, mechanisms, dormant glyphs, graph, preview numbers
               passives [--verbose]                lint the constellations: broken links, orphans, unreachable nodes, route costs
+              lint [--json file] [--baseline file] [--code dir] [--no-code] [--copies n] [--check prefix]
+                                                  composition lint: one-use forms, single-use parameters, frozen axes,
+                                                  copied formulas, string switches and form reads in the runtime;
+                                                  --baseline writes the keys with --json, else fails on new ones
               protocol-ts [--out file] [--check]  write (or check) the web client's TypeScript message types
               probe [--host h] [--port n] [--account a] [--seconds s] [--deltas] [--interface] [--features a,b]
                                                   connect to a running server, enter, move and check what comes back

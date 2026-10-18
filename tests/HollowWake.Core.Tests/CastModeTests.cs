@@ -751,6 +751,125 @@ public class CastModeTests
         Assert.Equal(0.4, arena.Stats.Gauge(gauge), 6);
     }
 
+    // ------------------------------------------------------------ a preset's own held-mode blocks
+
+    [Fact]
+    public void APresetsChannelBeatsAtItsOwnIntervalAndReleasesItsOwnList()
+    {
+        var arena = CastingArena.Create();
+        var slot = arena.Slot("t_brisk_channel");
+        var baseSpeed = arena.Stats.Get("move.speed");
+        var start = arena.Now;
+        arena.Begin(slot);
+        // The preset's block replaces the form's whole: its own move factor where the form keeps 0.3 ...
+        Assert.Equal(0.8f, arena.Book.Casting!.MoveFactor, 4);
+        arena.RunSeconds(0.6);
+        // ... and none of the form's block leaks through: no caster ramp slows the channeler.
+        Assert.Equal(baseSpeed, arena.Stats.Get("move.speed"), 6);
+        arena.RunSeconds(0.6);
+
+        // A beat every quarter second from the first tick, where the form waits out a windup and beats every half.
+        var beats = arena.Of<ChannelPulsed>().Select(p => Math.Round(p.Held, 2)).ToList();
+        Assert.Equal(new[] { 0.05, 0.3, 0.55, 0.8 }, beats);
+        // Without the form's ramps every beat strikes at the form's base radius.
+        var pulses = arena.Custom("t_pulse");
+        Assert.Equal(4, pulses.Count);
+        Assert.All(pulses, p => Assert.Equal(2, p.Data["radius"], 6));
+
+        // At its own limit of one second it releases its own list, never the form's.
+        var ended = Assert.Single(arena.Of<WeaveReleased>());
+        Assert.Equal("max_hold", ended.Reason);
+        Assert.True(ended.Fired);
+        Assert.Equal(1, Assert.Single(arena.Custom("t_brisk_release")).Data["held"], 2);
+        Assert.Empty(arena.Custom("t_release"));
+        // Without the form's cooldown_on_end the clock started on the first beat, not when the channel ended.
+        Assert.InRange(arena.Book.ReadyAt[slot.Key] - start, 3 - 1e-6, 3.06);
+    }
+
+    [Fact]
+    public void APresetsChargeFillsAndScalesByItsOwnNumbers()
+    {
+        var arena = CastingArena.Create();
+        var slot = arena.Slot("t_deep_charge");
+        arena.Begin(slot);
+        // Two seconds to full, where the form takes one.
+        Assert.Equal(2, arena.Book.Casting!.Duration, 6);
+        arena.RunSeconds(1);
+        Assert.True(arena.Runtime.Release(arena.Sim, arena.Caster, arena.SlotIndex(slot)));
+        var half = Assert.Single(arena.Custom("t_charge"));
+        Assert.Equal(0.5, half.Data["fill"], 6);
+        // Half full, its own scale adds half of its three hundred percent: 2 * (1 + 1.5).
+        Assert.Equal(5, half.Data["radius"], 6);
+
+        // Held past full it lets go by itself after its own quarter-second hold, at its full scale: 2 * (1 + 3).
+        arena.Begin(slot);
+        arena.RunSeconds(2.4);
+        var full = arena.Custom("t_charge")[1];
+        Assert.Equal(1, full.Data["fill"], 6);
+        Assert.Equal(8, full.Data["radius"], 6);
+        var released = arena.Of<WeaveReleased>().Last();
+        Assert.Equal("full", released.Reason);
+        Assert.InRange(released.Held, 2.25 - 1e-6, 2.31);
+    }
+
+    [Fact]
+    public void APresetsGuardHoldsItsOwnArcPoolAndBash()
+    {
+        var arena = CastingArena.Create();
+        var slot = arena.Slot("t_wide_guard");
+        arena.Begin(slot);
+        Assert.Single(arena.Custom("t_raise"));
+        var guard = arena.Sim.World.Get<Guard>(arena.Caster)!;
+        // Its own pool, and a full circle where the form guards a third of one.
+        Assert.Equal(80, guard.MaxPool, 6);
+        Assert.Equal(-1, guard.ArcCos, 6);
+
+        // No parry window: a hit from the front a beat in is caught in the pool, where the form would parry it
+        // whole; a hit from behind is caught as well.
+        arena.RunSeconds(0.1);
+        var life = arena.Stats.Resource("life");
+        arena.Hit(arena.Enemy, arena.Caster, 50);
+        Assert.Empty(arena.Of<GuardParried>());
+        var behind = arena.Spawn("hob", new Vector3(6, 10, 0));
+        arena.Hit(behind, arena.Caster, 10);
+        Assert.Equal(60, guard.Absorbed, 6);
+        Assert.Equal(life, arena.Stats.Resource("life"), 6);
+
+        // Held to its own limit of a second and a half it bashes with its own list, armed at once.
+        arena.RunSeconds(1.5);
+        var ended = arena.Of<WeaveReleased>().Last();
+        Assert.Equal("max_hold", ended.Reason);
+        Assert.True(ended.Fired);
+        Assert.Equal(60, Assert.Single(arena.Custom("t_wide_bash")).Data["absorbed"], 6);
+        Assert.Empty(arena.Custom("t_bash"));
+    }
+
+    [Fact]
+    public void APresetsTimingReadsItsOwnWindowAndBonus()
+    {
+        (bool Flawless, double Dealt) Strike(string weave, double pressAt)
+        {
+            var arena = CastingArena.Create();
+            var slot = arena.Slot(weave);
+            arena.Begin(slot);
+            arena.RunSeconds(pressAt);
+            Assert.True(arena.Runtime.Press(arena.Sim, arena.Caster, arena.SlotIndex(slot)));
+            arena.RunSeconds(1.2);
+            return (Assert.Single(arena.Of<WeavePressed>()).Flawless, arena.Of<DamageDealt>().Single(d => d.Source == arena.Caster).Total);
+        }
+        var plain = Strike("t_timed", 0.3);
+        Assert.False(plain.Flawless);
+        // At 0.85 seconds into the one-second bar the form's quarter-second window holds; the preset's tenth does not.
+        Assert.True(Strike("t_timed", 0.85).Flawless);
+        var early = Strike("t_tight_timing", 0.85);
+        Assert.False(early.Flawless);
+        Assert.Equal(plain.Dealt, early.Dealt, 3);
+        // Inside its own window the press lands flawless and adds the preset's own bonus: four times the blow.
+        var late = Strike("t_tight_timing", 0.95);
+        Assert.True(late.Flawless);
+        Assert.Equal(plain.Dealt * 4, late.Dealt, 3);
+    }
+
     // ------------------------------------------------------------ effect validation
 
     [Fact]
