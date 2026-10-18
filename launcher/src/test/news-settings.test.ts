@@ -71,11 +71,12 @@ test('settings: defaults, repairs, round trip and the token', async () => {
     const sealed = sealToken('ghp_abcdefghijklmnopqrstuvwxyz', cipher);
     assert.equal(sealed.encrypted, true);
     assert.notEqual(sealed.value, 'ghp_abcdefghijklmnopqrstuvwxyz');
-    await saveSettings(file, { address: 'play.example.org:7000', channel: 'nightly', developer: true, autoUpdate: true, token: sealed });
+    await saveSettings(file, { address: 'play.example.org:7000', channel: 'nightly', developer: true, autoUpdate: true, releaseTag: 'v0.1.0', token: sealed });
     const loaded = await loadSettings(file);
     assert.equal(loaded.address, 'play.example.org:7000');
     assert.equal(loaded.channel, 'nightly');
     assert.equal(loaded.developer, true);
+    assert.equal(loaded.releaseTag, 'v0.1.0');
     assert.equal(openToken(loaded.token, cipher), 'ghp_abcdefghijklmnopqrstuvwxyz');
 
     const none: Cipher = { available: () => false, encrypt: () => '', decrypt: () => '' };

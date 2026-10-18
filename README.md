@@ -32,8 +32,8 @@ The commitment behind it: **the game is data, and the engine is a set of mechani
 
 Hollow Wake MMO is a client and a server. Pick a client, then point it at a server: one you run yourself, or one somebody shares with you.
 
-- **The desktop client, through the launcher.** Take the Windows installer or the Linux AppImage from the [latest release](https://github.com/arianna-arpg/hollow-wake-mmo/releases/latest). Windows installs for the current user, no admin needed; on Linux, `chmod +x` the AppImage and run it. The launcher installs the game and keeps it updated from GitHub Releases, checking every download against the release's manifest, and keeps itself updated from stable releases. Enter a server in its Server field (`127.0.0.1:7777` is a server on your own machine) and press Play. The channel toggle switches between stable releases and nightly pre-releases for testers. Builds are not code-signed yet, so Windows SmartScreen may ask before the first run. [docs/design/launcher.md](docs/design/launcher.md) describes the launcher, the releases and the channels.
-- **In the browser, from GitHub Pages.** [Play the web client](https://arianna-arpg.github.io/hollow-wake-mmo/), published from main whenever it changes. The page is only the client: type the address of a running server into its Server field, or open a link that carries one (`?server=wss://host/ws`). The page is served over HTTPS, so the server has to be reachable over `wss://`, which a Codespace or a reverse proxy provides; a server on your own machine is best played from the page it serves itself.
+- **The desktop client, through the launcher.** Take the Windows installer or the Linux AppImage from the [latest release](https://github.com/arianna-arpg/hollow-wake-mmo/releases/latest). Windows installs for the current user, no admin needed; on Linux, `chmod +x` the AppImage and run it. The launcher installs the game and keeps it updated from GitHub Releases, checking every download against the release's manifest, and keeps itself updated from stable releases. Enter a server in its Server field (`127.0.0.1:7777` is a server on your own machine) and press Play. The channel toggle switches between stable releases and nightly pre-releases for testers; the build picker can pin a published version. Play remains available while updates are checked or downloaded. Builds are not code-signed yet, so Windows SmartScreen may ask before the first run. [docs/design/launcher.md](docs/design/launcher.md) describes the launcher, the releases and the channels.
+- **In the browser, from GitHub Pages.** [Play the web client](https://arianna-arpg.github.io/hollow-wake-mmo/), published from main whenever it changes. The branch ribbon opens a Codespace running that branch's own client and server. The page is only the client: type the address of a running server into its Server field, or open a link that carries one (`?server=wss://host/ws`). The page is served over HTTPS, so the server has to be reachable over `wss://`, which a Codespace or a reverse proxy provides; a server on your own machine is best played from the page it serves itself.
 - **In the browser, from the server.** A running server serves the web client at its own address, `http://localhost:7778/` for one on your machine. The page finds the server at its own origin, so you only press Connect.
 - **With nothing installed.** Open a Codespace on the repository and follow [docs/infrastructure/codespaces.md](docs/infrastructure/codespaces.md). A few minutes later the server runs on GitHub's machines and serves the web client at an address other people can join.
 
@@ -46,6 +46,16 @@ Development servers accept any account name and create the account on first use.
 The scripted play-throughs take these: `godot --path src/HollowWake.Client -- --smoke --shots DIR` and `npm --prefix web run smoke -- --shots DIR`, each against a local server.
 
 ---
+
+## Local playtesting
+
+For a quick Windows playtest, double-click **Play.cmd**. It prepares the browser build, starts a local server and opens the game. Later runs reuse the build and server. **Play Desktop.cmd** opens the Godot client instead; configure its editor path once with `Play.cmd --desktop --godot "path to Godot .NET.exe"` or `HOLLOWWAKE_GODOT`. **Stop Playtest.cmd** saves and stops this checkout's server. The first session creates a character; later sessions resume the remembered character through the shared Wisp-Mu Crossing, which closes as soon as the hero and nearby terrain are ready. Ports and the playtest account are in `config/playtest.json`; errors and logs stay visible under `artifacts/playtest/`.
+
+On Linux/macOS use `node scripts/play-local.mjs` (`--desktop` for Godot, `--stop` to stop). The initial build needs the prerequisites below; unchanged repeat starts skip it.
+
+For cloud browser play, [open or resume a Codespace](https://codespaces.new/arianna-arpg/hollow-wake-mmo?quickstart=1). It is configured to start the server and open the browser port automatically; the cloud lifecycle still needs its first end-to-end verification. The [GitHub Pages client](https://arianna-arpg.github.io/hollow-wake-mmo/) includes a branch picker for branch-specific Codespaces and a desktop-launcher download link. First-time Codespace setup takes a few minutes. Pages itself hosts only the client; use a Codespace or local server for the simulation.
+
+The initial build uses the prerequisites in [local-dev.md](docs/infrastructure/local-dev.md).
 
 ## Host a server
 
@@ -94,7 +104,7 @@ Open `src/HollowWake.Client/project.godot` in Godot and press play for the deskt
 | `content/core` | The base content layer. Everything the engine runs comes from here; `rules.yaml` holds every formula and tunable. |
 | `docs/` | The vision, the architecture, one contract per system, the lore, hosting, decision records, review records. |
 | `deploy/`, `config/` | Dockerfile, Compose, VPS bootstrap; the server settings. |
-| `scripts/`, `.devcontainer/` | `codespace-play.sh` (build the web client, run the server), `package-client.sh` (the desktop client's release archives), `branches.sh` (where every branch stands against main); the Codespaces container. |
+| `scripts/`, `.devcontainer/` | `play-local.mjs` (the shared automatic startup behind Play.cmd and Play Desktop.cmd), `codespace-play.sh` (the cloud entry point), `package-client.sh` (the desktop client's release archives), `branches.sh` (where every branch stands against main); the Codespaces container. |
 | `.github/` | CI, the Pages build, the release and nightly pipelines, the weekly branch report, the pull request template. |
 
 [CLAUDE.md](CLAUDE.md) has the map in full, down to the files where each open set registers.

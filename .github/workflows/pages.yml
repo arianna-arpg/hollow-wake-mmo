@@ -9,9 +9,9 @@ name: pages
 on:
   push:
     branches: [main]
-    paths: ['web/**', '.github/workflows/pages.yml']
+    paths: ['web/**', 'content/**', '.devcontainer/**', 'scripts/play-local.mjs', '.github/workflows/pages.yml']
   pull_request:
-    paths: ['web/**', '.github/workflows/pages.yml']
+    paths: ['web/**', 'content/**', '.devcontainer/**', 'scripts/play-local.mjs', '.github/workflows/pages.yml']
   workflow_dispatch:
 
 permissions:
@@ -26,6 +26,8 @@ jobs:
       publish: ${{ steps.pages.outputs.publish }}
     steps:
       - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
       - uses: actions/setup-node@v7
         with:
           node-version: 22
@@ -46,6 +48,9 @@ jobs:
         run: >-
           node -e "const fs = require('fs'); const f = 'dist/config.json'; const c = JSON.parse(fs.readFileSync(f, 'utf8'));
           c.server.probeSameOrigin = false; fs.writeFileSync(f, JSON.stringify(c, null, 2) + '\n');"
+      - name: Add branch play links
+        working-directory: web
+        run: node scripts/play-catalog.mjs
       - name: Check Pages
         id: pages
         env:

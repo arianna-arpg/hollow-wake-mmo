@@ -7,7 +7,7 @@
 // screenshot per stage and exits non-zero when any check fails.
 //
 //   npm run smoke -- [--url http://localhost:7778/] [--shots DIR] [--account NAME]
-//                    [--browser msedge|chrome|chromium] [--executable PATH] [--headed] [--full-states] [--isolated-input]
+//                    [--browser msedge|chrome|chromium] [--executable PATH] [--headed] [--full-states] [--isolated-input] [--no-physical-gamepads]
 //
 // --full-states runs the client without entity deltas (full entity states only), for comparison. The page
 // runs under its own settings profile (smoke), started from the content's defaults each run.
@@ -49,7 +49,7 @@ const browser = await chromium.launch({
 });
 const page = await browser.newPage({ viewport: { width: 1280, height: 800 } });
 // Headless Chromium can still see real controllers. Background runs accept only scripted input.
-if (flag('isolated-input')) {
+if (flag('isolated-input') || flag('no-physical-gamepads')) {
   await page.addInitScript(isolatePhysicalInput);
   console.log('SMOKE input: page-local keyboard and pointer; physical controllers isolated');
 }

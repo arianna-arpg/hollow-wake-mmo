@@ -44,6 +44,8 @@ Core is X east, Y north, Z up; Godot is X east, Y up, Z south. `Coords` is the o
 
 For testing while the operator uses other applications, use the [background testing harness](testing.md). Its native suite runs headlessly and injects pointer events inside Godot; native rendering checks still require a graphical session.
 
+`--quick-play` connects with `--account NAME` (the normal default account otherwise), resumes the remembered character for that server/account, or enters the sole available character. Empty accounts still choose a name and Calling; accounts with multiple characters and no valid remembered choice still choose one. The remembered id lives in `user://quick-play.cfg`. There is no automatic character creation or retry loop after a disconnect. The launcher and checkout's `Play Desktop.cmd` opt into this convenience; ordinary editor runs keep manual login.
+
 The project needs Godot 4.7 .NET. `src/HollowWake.Client/HollowWake.Client.sln` is what the editor builds when play is pressed, and `content/core` is found beside the executable first and then by walking up from the project directory, so a checkout and an exported build both read the same content as the server.
 
 `--host H` and `--port P` (also `--host=H`, as engine arguments or after `--`) fill the login panel's server fields; the launcher starts exported builds that way. `export_presets.cfg` holds the Windows Desktop and Linux release presets the release pipeline exports with; `scripts/package-client.sh` exports both, puts `content/core` beside each executable and zips them (see [launcher.md](launcher.md)).
