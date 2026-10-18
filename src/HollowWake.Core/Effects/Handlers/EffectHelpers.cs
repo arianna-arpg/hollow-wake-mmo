@@ -40,15 +40,7 @@ internal static class EffectHelpers
         {
             return false;
         }
-        return filter switch
-        {
-            "enemy" => Relations.IsHostile(ctx.Sim, ctx.Origin, e),
-            "ally" => !Relations.IsHostile(ctx.Sim, ctx.Origin, e) && e != ctx.Origin,
-            "ally_or_self" => !Relations.IsHostile(ctx.Sim, ctx.Origin, e),
-            "self" => e == ctx.Source,
-            "not_self" => e != ctx.Source,
-            _ => true,
-        };
+        return Filters.Passes(ctx, e, filter);
     }
 
     internal static Vector3 Center(EffectContext ctx, string centerMode)

@@ -91,7 +91,7 @@ internal sealed class SpawnHandler : IEffectHandler
 {
     public string Type => "spawn";
 
-    public EffectSignature Signature { get; } = EffectSignature.Of("pattern", "count", "lifetime", "as_corpse");
+    public EffectSignature Signature { get; } = EffectSignature.Of("pattern", "count", "lifetime", "as_corpse").Refers("patterns", "pattern");
 
     public CompiledEffect Compile(JsonObject p, EffectCompileContext ctx)
     {

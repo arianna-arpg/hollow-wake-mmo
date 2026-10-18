@@ -703,6 +703,7 @@ internal static class MorphChecks
             Content = content,
             Form = weave.Form,
             Preset = content.Get<WeaveDef>(preset),
+            HeldBlocks = weave.HeldBlocks,
             Threads = weave.Threads,
             Tags = weave.Tags,
             Declared = weave.DeclaredMechanisms,
