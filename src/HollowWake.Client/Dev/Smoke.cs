@@ -118,6 +118,7 @@ public partial class Smoke : Node
         }
 
         Record("Mu vessel scene", login.Entry is not null && login.Entry.Model.Seats.Count > 0, "shared spatial selection is present");
+        await EntryReplySteps();
         var character = login.Characters.FirstOrDefault(c => c.Name == "Smoke");
         if (character is null)
         {

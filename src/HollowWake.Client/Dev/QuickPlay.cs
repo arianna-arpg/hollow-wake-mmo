@@ -37,6 +37,7 @@ public partial class QuickPlay(Main main, string[] args) : Node
         }
         if (_ready || main.CharacterLists == _lists) return;
         _lists = main.CharacterLists;
+        GD.Print("QUICKPLAY ENTRY: account stage ready; awaiting player choice");
         var list = main.Login.Characters;
         var remembered = _saved.GetValue("characters", _key, "").AsString();
         var id = UI.Logic.ResumeCharacter.Select(list.Select(c => c.Id).ToArray(), remembered);

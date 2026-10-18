@@ -37,7 +37,14 @@
           "floor": "#080a14",
           "ink": "#bcd4e8",
           "accent": "#d1b878",
-          "wisp": "#bcd4e8"
+          "glow": "#1a2835",
+          "edge": "#03040a",
+          "panel": "#0b1019",
+          "border": "#7f7865",
+          "muted": "#777688",
+          "control": "#0b111b",
+          "controlBorder": "#586271",
+          "footer": "#05070e"
         },
         "labels": {
           "title": "Mu",
@@ -54,7 +61,6 @@
           "unavailable": "This vessel is not available to this account.",
           "disconnect": "Leave Mu",
           "options": "Options",
-          "cancel": "Cancel",
           "brand": "HOLLOW WAKE"
         },
         "wispSource": "mu_crossing",
@@ -62,7 +68,16 @@
         "cameraHeight": 14,
         "cameraOffset": 8,
         "cameraLead": 2,
-        "apparitionOpacity": 0.65
+        "apparitionOpacity": 0.65,
+        "layout": {
+          "cardWidth": 400,
+          "cardPadding": 24,
+          "cardGap": 14,
+          "cardTitleSize": 28,
+          "rosterHeight": 96,
+          "progressWidth": 150,
+          "progressHeight": 5
+        }
       }
     }
   ]

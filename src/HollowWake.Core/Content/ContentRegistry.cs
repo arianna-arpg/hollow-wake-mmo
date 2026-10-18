@@ -300,6 +300,12 @@ public sealed class ContentRegistry
                 }
             }
         }
+        foreach (var kind in ContentKinds.All)
+        {
+            if (kind.ValidateCollection is not { } validate) continue;
+            try { validate(new ValidationContext(registry, report, kind.Name, "", null)); }
+            catch (Exception ex) { report.Error(kind.Name, "", $"Collection validator crashed: {ex.Message}"); }
+        }
         return registry;
     }
 

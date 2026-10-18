@@ -30,6 +30,7 @@ public sealed class EntrySceneSpec
     public double ApparitionOpacity { get; set; }
     public double MaxFrame { get; set; }
     public string WispSource { get; set; } = "";
+    public Dictionary<string, float> Layout { get; set; } = new();
     public Dictionary<string, string> Palette { get; set; } = new();
     public Dictionary<string, string> Labels { get; set; } = new();
     public static EntrySceneSpec Read(UiEntrySceneDef d) => JsonSerializer.Deserialize<EntrySceneSpec>(d.Meta!.ToJsonString(), new JsonSerializerOptions { PropertyNameCaseInsensitive = true })!;

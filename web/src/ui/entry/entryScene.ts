@@ -40,17 +40,18 @@ export class EntryScene {
   private frame = 0; private last = 0; private shown = -1; private request = 0; private pending: string | null = null;
   private wasActive = false; private movementArmed = false; private padArmed = false; private previousButtons: boolean[] = []; private focusBeforeCard: HTMLElement | null = null;
   private alive = true;
+  private notice: string | null = null;
+  private readonly unbindSettings: () => void;
   readonly spec: EntrySceneSpec;
 
   constructor(spec: EntrySceneSpec, private readonly kinds: Map<string, Obj[]>, private readonly appearance: AppearanceService,
-    private readonly settings: Settings, private readonly handlers: EntryHandlers, private readonly suspended: () => boolean) {
+    settings: Settings, private readonly handlers: EntryHandlers, private readonly suspended: () => boolean) {
     this.spec = spec; this.model = new SpatialSelection(spec);
     this.root.setAttribute('aria-label', spec.labels.title!);
     this.roster.setAttribute('aria-label', `${spec.labels.saved} / ${spec.labels.new}`);
     this.progress.setAttribute('aria-label', spec.labels.prompt!);
-    this.root.style.setProperty('--entry-ink', spec.palette.ink!);
-    this.root.style.setProperty('--entry-floor', spec.palette.floor!);
-    this.root.style.setProperty('--entry-accent', spec.palette.accent!);
+    for (const [key, value] of Object.entries(spec.palette)) this.root.style.setProperty(`--entry-${key}`, value);
+    for (const [key, value] of Object.entries(spec.layout)) this.root.style.setProperty(`--entry-${key}`, `${value}px`);
     const button = (label: string, action: () => void) => { const b = el('button', { type: 'button', text: label }); b.onclick = action; return b; };
     const header = el('header', {}, el('div', {}, el('span', { text: spec.labels.brand, class: 'entry-overline' }), el('h1', { text: spec.labels.title })),
       el('div', {}, button(spec.labels.options!, () => { this.input.releaseAll(); this.model.suspend(); handlers.options(); }), button(spec.labels.disconnect!, () => handlers.leave())));
@@ -62,6 +63,8 @@ export class EntryScene {
     this.input = new Input(this.renderer.domElement, {
       press: () => {}, click: (x, y) => this.ground(x, y), zoom: () => {}, orbit: () => {}, released: () => this.model.suspend(),
     }, 100);
+    const bind = () => this.input.bind(settings.catalog.actions.filter(a => a.held && a.id.startsWith('move_')), a => settings.bindings(a));
+    bind(); this.unbindSettings = settings.onChange(bind);
     this.input.enabled = () => this.active() && this.model.opened < 0;
     this.root.addEventListener('keydown', this.key);
     this.frame = requestAnimationFrame(this.tick);
@@ -69,6 +72,9 @@ export class EntryScene {
 
   private active(): boolean { return this.alive && this.root.isConnected && this.root.getClientRects().length > 0 && !document.hidden && document.hasFocus() && !this.root.closest('[inert]') && !this.suspended(); }
   show(list: CharacterListMsg): void {
+    // Preserve the newer card when a dismissed creation request replies late.
+    if (this.pending && list.request_id != null && list.request_id !== this.pending) return;
+    this.notice = null;
     const wake = this.pending && list.request_id === this.pending ? list.created_character_id : null;
     this.pending = null; this.clearBodies(); this.model.setChoices(entryChoices(list, this.kinds.get('callings') ?? [], this.spec));
     clear(this.names); clear(this.roster); this.setCardModal(false); this.shown = -1;
@@ -81,12 +87,17 @@ export class EntryScene {
       b.onclick = () => { this.model.open(i); this.updateCard(); }; this.roster.append(b);
     }
     this.status.textContent = this.model.seats.length ? '' : this.spec.labels.empty!;
-    this.root.focus();
+    if (this.active()) this.root.focus();
     if (wake && list.characters.some(c => c.id === wake)) this.handlers.enter(wake);
   }
 
-  focusCharacter(id: string): void { const i = this.model.seats.findIndex(s => s.choice.character === id); if (i >= 0) (this.roster.children[i] as HTMLElement).focus(); }
-  error(text: string): void { if (!this.pending) return; this.pending = null; this.status.textContent = text; this.shown = -1; this.updateCard(); }
+  focusCharacter(id: string): void { const i = this.model.seats.findIndex(s => s.choice.character === id); if (i >= 0 && this.model.opened < 0 && this.active()) (this.roster.children[i] as HTMLElement).focus(); }
+  error(text: string): void {
+    this.notice = text; this.status.textContent = text;
+    if (!this.pending) return;
+    this.pending = null; this.shown = -1; this.updateCard();
+  }
+  private closeCard(): void { this.notice = null; this.status.textContent = ''; this.pending = null; this.model.close(); this.updateCard(); }
   private body(look: string, key: number, height: number): BodyMesh | null {
     const def = this.appearance.catalog.resolve(look, look, ['humanoid']);
     if (!def) return null;
@@ -114,9 +125,10 @@ export class EntryScene {
     const wake = el('button', { type: 'button', text: choice.character ? this.spec.labels.wake : this.spec.labels.create });
     wake.disabled = !choice.available || !!this.pending;
     const close = el('button', { type: 'button', text: this.spec.labels.back });
-    close.onclick = () => { this.pending = null; this.model.close(); this.updateCard(); };
+    close.onclick = () => this.closeCard();
     wake.onclick = () => {
       if (this.pending || !choice.available) return;
+      this.notice = null; this.status.textContent = '';
       if (choice.character) { this.handlers.enter(choice.character); return; }
       if (name.value.trim().length < 2) { name.reportValidity(); name.focus(); return; }
       this.pending = `entry-${++this.request}`; wake.disabled = true; name.disabled = true;
@@ -135,7 +147,7 @@ export class EntryScene {
   }
   private key = (e: KeyboardEvent): void => {
     if (!this.active()) return;
-    if (e.key === 'Escape' && this.model.opened >= 0) { e.preventDefault(); this.pending = null; this.model.close(); this.updateCard(); }
+    if (e.key === 'Escape' && this.model.opened >= 0) { e.preventDefault(); this.closeCard(); }
     if (e.key === 'Tab' && this.model.opened >= 0) {
       const controls = [...this.card.querySelectorAll<HTMLElement>('button:not(:disabled),input:not(:disabled)')];
       const first = controls[0], last = controls.at(-1);
@@ -155,7 +167,7 @@ export class EntryScene {
     const step = pressed(15) || pressed(13) ? 1 : pressed(14) || pressed(12) ? -1 : 0;
     if (step && controls.length) { const i = controls.indexOf(document.activeElement as HTMLElement); controls[(i + step + controls.length) % controls.length]?.focus(); }
     if (pressed(0) && document.activeElement instanceof HTMLButtonElement && this.root.contains(document.activeElement)) document.activeElement.click();
-    if (pressed(1) && this.model.opened >= 0) { this.pending = null; this.model.close(); this.updateCard(); }
+    if (pressed(1) && this.model.opened >= 0) this.closeCard();
     this.previousButtons = buttons;
   }
   private tick = (now: number): void => {
@@ -164,7 +176,6 @@ export class EntryScene {
     const active = this.active();
     if (!active) { if (this.wasActive) this.input.releaseAll(); this.wasActive = false; this.padArmed = this.movementArmed = false; this.frame = requestAnimationFrame(this.tick); return; }
     if (!this.wasActive) this.input.releaseAll(); this.wasActive = true;
-    this.input.bind(this.settings.catalog.actions.filter(a => a.held && a.id.startsWith('move_')), a => this.settings.bindings(a));
     this.input.pollPad();
     const dx = Number(this.input.isHeld('move_right')) - Number(this.input.isHeld('move_left')), dy = Number(this.input.isHeld('move_back')) - Number(this.input.isHeld('move_forward'));
     if (dx === 0 && dy === 0 && this.model.opened < 0) this.movementArmed = true;
@@ -192,7 +203,7 @@ export class EntryScene {
     soul.save(); soul.translate((at.x + 1) * width / 2, (1 - at.y) * height / 2); soul.rotate(-Math.PI / 2);
     drawWisp(soul, time, { ...source.wisp, radius: this.spec.wispRadius * height / this.spec.cameraSpan }); soul.restore();
     this.progress.value = this.model.progress; this.progress.hidden = this.model.engaged < 0 || this.model.opened >= 0;
-    if (this.model.engaged >= 0 && this.model.opened < 0) this.status.textContent = this.model.seats[this.model.engaged]!.choice.name;
+    if (!this.notice && this.model.engaged >= 0 && this.model.opened < 0) this.status.textContent = this.model.seats[this.model.engaged]!.choice.name;
     this.renderer.render(this.scene, this.camera);
     this.frame = requestAnimationFrame(this.tick);
   };
@@ -202,5 +213,5 @@ export class EntryScene {
         ...s.choice, x: s.x, y: s.y, screen: { x: (p.x + 1) * this.root.clientWidth / 2, y: (1 - p.y) * this.root.clientHeight / 2 },
       }; }) };
   }
-  dispose(): void { this.alive = false; cancelAnimationFrame(this.frame); this.input.dispose(); this.clearBodies(); this.renderer.dispose(); this.root.removeEventListener('keydown', this.key); this.root.remove(); }
+  dispose(): void { this.alive = false; cancelAnimationFrame(this.frame); this.unbindSettings(); this.input.dispose(); this.clearBodies(); this.renderer.dispose(); this.renderer.forceContextLoss(); this.root.removeEventListener('keydown', this.key); this.root.remove(); }
 }

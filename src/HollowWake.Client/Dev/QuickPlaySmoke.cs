@@ -54,6 +54,7 @@ public partial class QuickPlaySmoke(Main main, string[] args) : Node
 
     private async Task Shot(string file)
     {
+        if (DisplayServer.GetName() == "headless") { GD.Print("QUICKPLAY SKIP rendered capture requires an isolated graphical session"); return; }
         await ToSignal(RenderingServer.Singleton, RenderingServer.SignalName.FramePostDraw);
         using var image = GetViewport().GetTexture().GetImage();
         Check("captured " + Path.GetFileName(file), image.SavePng(file) == Error.Ok);

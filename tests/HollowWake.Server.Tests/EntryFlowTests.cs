@@ -1,4 +1,5 @@
 using HollowWake.Core.Characters;
+using HollowWake.Core.Content;
 using HollowWake.Core.Definitions;
 using HollowWake.Core.Tags;
 using HollowWake.Protocol;
@@ -31,6 +32,8 @@ public class EntryFlowTests
     {
         c.Send(new HelloMsg("entry-test", ProtocolInfo.Version) { Features = feature ? ["entry_flow"] : null });
         c.Send(new LoginMsg("entrytest", "")); var replies = Pump(s, c);
+        var welcome = Assert.Single(replies.OfType<WelcomeMsg>());
+        Assert.Equal(feature, welcome.Features?.Contains(ProtocolInfo.EntryFlowFeature) == true);
         Assert.DoesNotContain(replies, m => m is EnterWorldMsg or EntitySpawnMsg);
         return Assert.Single(replies.OfType<CharacterListMsg>());
     }
@@ -42,6 +45,8 @@ public class EntryFlowTests
     {
         var (s, c, store) = Server(); var list = Login(s, c, feature);
         Assert.Empty(list.Characters); Assert.Empty(store.Load("entrytest")!.EntryFacts);
+        var content = ContentRegistry.Load([ContentDir()], out _, strict: true);
+        Assert.Equal(content.Each<CallingDef>().Select(d => d.Id), list.Callings);
         if (feature) { Assert.NotNull(list.Entry); Assert.All(list.Entry.Callings, v => Assert.True(v.Available)); }
         else Assert.Null(list.Entry);
         c.Send(new CreateCharacterMsg("Wren", "kindler") { RequestId = "request-one" });
@@ -98,12 +103,50 @@ public class EntryFlowTests
             c.Send(new CreateCharacterMsg("Wren", "kindler")); Assert.Contains(Pump(s, c), m => m is ErrorMsg { Code: "entry_required" });
             c.Send(new SelectCharacterMsg("anything")); Assert.Contains(Pump(s, c), m => m is ErrorMsg { Code: "entry_required" });
             Assert.Equal("prologue", Login(s, c).Entry!.Stage); // Abort never stamps completion.
+            store.Load("entrytest")!.EntryFacts.Add("journey.prologue.faction.ember");
+            Assert.Equal("prologue", Login(s, c).Entry!.Stage); // A constituent step is not the final completion fact.
             store.Load("entrytest")!.EntryFacts.Add("journey.prologue");
             Assert.Equal("mu", Login(s, c).Entry!.Stage);
             c.Send(new CreateCharacterMsg("Wren", "kindler")); Assert.Single(Assert.Single(Pump(s, c).OfType<CharacterListMsg>()).Characters);
             c.Disconnect(); s.Step();
         }
         finally { Directory.Delete(patch, true); }
+    }
+
+    [Theory]
+    [InlineData("remove")]
+    [InlineData("disable")]
+    [InlineData("duplicate")]
+    public void MissingOrAmbiguousDefaultFlowFailsContentValidationBeforeLogin(string change)
+    {
+        var patch = Path.Combine(Path.GetTempPath(), "hw-entry-" + Guid.NewGuid().ToString("N")); Directory.CreateDirectory(patch);
+        try
+        {
+            var entry = change switch {
+                "remove" => """{"id":"waking","remove":true}""",
+                "disable" => """{"id":"waking","patch":true,"default":false}""",
+                _ => """{"id":"another","default":true,"character_limit":4,"stages":[{"id":"mu","kind":"vessels","presentation":"mu"}]}""",
+            };
+            File.WriteAllText(Path.Combine(patch, "flow.json"), "{\"kind\":\"entry_flows\",\"entries\":[" + entry + "]}");
+            ContentRegistry.Load([ContentDir(), patch], out var report);
+            Assert.Contains("exactly one entry flow must be default", report.ToString());
+            Assert.Throws<ContentLoadException>(() => ContentRegistry.Load([ContentDir(), patch], out _, strict: true));
+        }
+        finally { Directory.Delete(patch, true); }
+    }
+
+    [Fact]
+    public void MissingCharacterSheetsStillConsumeTheAccountCapacity()
+    {
+        var (s, c, store) = Server(); Login(s, c);
+        var content = ContentRegistry.Load([ContentDir()], out _, strict: true);
+        var limit = content.Each<EntryFlowDef>().Single(f => f.Default).CharacterLimit;
+        store.Load("entrytest")!.Characters.AddRange(Enumerable.Range(0, limit).Select(i => "missing-" + i));
+        var list = Login(s, c);
+        Assert.Empty(list.Characters); Assert.False(list.Entry!.CanCreate);
+        c.Send(new CreateCharacterMsg("Wren", "kindler"));
+        Assert.Contains(Pump(s, c), m => m is ErrorMsg { Code: "too_many" });
+        c.Disconnect(); s.Step();
     }
 
     [Fact]

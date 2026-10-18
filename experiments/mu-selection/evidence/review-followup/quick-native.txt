@@ -1,0 +1,18 @@
+Godot Engine v4.7.2.stable.mono.official.ed1daf0bf - https://godotengine.org
+
+content loaded from C:\Users\John\.codex\worktrees\mu-vessel-selection\MMOARPG\content\core: 0 errors, 0 warnings
+server 127.0.0.1:53427 from the command line
+server granted features: entry_flow, cast_cues, entity_delta, interface
+QUICKPLAY ENTRY: account stage ready; awaiting player choice
+QUICKPLAY PASS startup stage completed before timeout
+QUICKPLAY PASS quick play waits in Mu for an explicit waking
+QUICKPLAY CROSSING: preparing character entry
+QUICKPLAY PASS startup stage completed before timeout
+QUICKPLAY PASS waking owns the Crossing
+QUICKPLAY SKIP rendered capture requires an isolated graphical session
+QUICKPLAY READY: entered the world; Crossing complete
+QUICKPLAY PASS startup stage completed before timeout
+QUICKPLAY PASS hero and terrain are ready before the cover closes
+QUICKPLAY PASS gameplay input moves the hero after loading
+QUICKPLAY SKIP rendered capture requires an isolated graphical session
+QUICKPLAY SMOKE PASS

@@ -332,12 +332,12 @@ public sealed class SessionManager
             }
         }
         var facts = Core.Tags.TagSet.From(account?.EntryFacts);
-        var choices = _zones.Content.Each<CallingDef>().OrderBy(c => c.Id, StringComparer.Ordinal)
+        var choices = _zones.Content.Each<CallingDef>()
             .Select(c => new CallingAvailability(c.Id, EntryPolicy.Available(c, facts))).ToList();
         var stage = EntryPolicy.Current(EntryFlow, facts)!;
         session.Send(new CharacterListMsg(list, choices.Where(c => c.Available).Select(c => c.Id).ToList()) {
             Entry = session.EntryFlow ? new EntryState(EntryFlow.Id, stage.Id, stage.Kind, stage.Presentation,
-                list.Count < EntryFlow.CharacterLimit && EntryStageKinds.AllowsSelection(stage.Kind), choices) : null,
+                (account?.Characters.Count ?? 0) < EntryFlow.CharacterLimit && EntryStageKinds.AllowsSelection(stage.Kind), choices) : null,
             CreatedCharacterId = session.EntryFlow ? created : null,
             RequestId = session.EntryFlow ? request : null,
         });

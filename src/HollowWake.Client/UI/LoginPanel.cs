@@ -136,7 +136,7 @@ public partial class LoginPanel : CanvasLayer
     {
         _list = msg.Characters;
         Callings = msg.Callings;
-        var stage = Content.Each<EntryFlowDef>().Single(f => f.Default).Stages[0];
+        var stage = Content.Each<EntryFlowDef>().Single(f => f.Default).Stages[^1];
         var kind = msg.Entry?.Kind ?? stage.Kind;
         var definition = Content.Get<UiEntrySceneDef>(msg.Entry?.Presentation ?? stage.Presentation);
         if (definition is null) { Reset(); SetStatus("This entry stage needs a compatible client."); return; }

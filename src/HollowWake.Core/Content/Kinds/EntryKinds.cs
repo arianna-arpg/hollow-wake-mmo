@@ -15,11 +15,13 @@ internal static class EntryKinds
         if (!(N("wrapReentry") < N("wrapRadius"))) c.Error("wrap reentry must be inside the rim.");
         if (!(N("arcTo") > N("arcFrom") && N("arcTo") - N("arcFrom") < 2 * Math.PI)) c.Error("arc must be a crescent.");
         if (m["labels"] is not JsonObject labels) c.Error("entry labels are required.");
-        else foreach (var key in "brand title prompt saved new wake create back name pending empty full unavailable disconnect options cancel".Split(' '))
+        else foreach (var key in "brand title prompt saved new wake create back name pending empty full unavailable disconnect options".Split(' '))
             if (string.IsNullOrWhiteSpace(labels[key]?.ToString())) c.Error($"entry label {key} is required.");
+        foreach (var key in "cardWidth cardPadding cardGap cardTitleSize rosterHeight progressWidth progressHeight".Split(' '))
+            if (!JsonNum.TryDouble(m["layout"]?[key], out var n) || !double.IsFinite(n) || n <= 0) c.Error($"meta.layout.{key} must be positive.");
         c.Ref<UiLoadingScreenDef>(m["wispSource"]?.ToString() ?? "", "meta.wispSource");
         if (!(N("apparitionOpacity") > 0 && N("apparitionOpacity") <= 1)) c.Error("apparitionOpacity must be within (0,1].");
-        foreach (var key in new[] { "floor", "ink", "accent", "wisp" })
+        foreach (var key in new[] { "floor", "ink", "accent", "glow", "edge", "panel", "border", "muted", "control", "controlBorder", "footer" })
             if (!System.Text.RegularExpressions.Regex.IsMatch(m["palette"]?[key]?.ToString() ?? "", "^#[0-9a-fA-F]{6}$")) c.Error($"entry palette {key} is invalid.");
     }
 
@@ -33,8 +35,12 @@ internal static class EntryKinds
                 if (string.IsNullOrWhiteSpace(s.Id) || !EntryStageKinds.Has(s.Kind)) c.Error("entry stage must have an id and registered kind.");
                 c.Ref<UiEntrySceneDef>(s.Presentation, "presentation");
             }
-            if (c.Registry.Each<EntryFlowDef>().Count(x => x.Default) != 1) c.Error("exactly one entry flow must be default.");
             if (d.Stages.LastOrDefault() is not { } last || !EntryStageKinds.AllowsSelection(last.Kind) || !last.CompletedBy.IsEmpty) c.Error("entry must end in a persistent selection stage.");
+        }, validateCollection: c => {
+            // Partial tooling packs need no account flow; a playable Calling catalog always does.
+            if ((c.Registry.Each<CallingDef>().Any() || c.Registry.Each<EntryFlowDef>().Any())
+                && c.Registry.Each<EntryFlowDef>().Count(x => x.Default) != 1)
+                c.Error("exactly one entry flow must be default when Callings or entry flows are present.");
         });
         ContentKinds.Register<UiEntrySceneDef>("ui_entry_scenes", (d, c) => {
             if (d.Meta is not { } m) { c.Error("entry presentation needs meta."); return; }

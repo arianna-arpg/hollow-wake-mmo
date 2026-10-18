@@ -32,11 +32,12 @@ try {
     WebSocket.prototype.send = function(data) { try { window.muSocket = this; window.muSent.push(JSON.parse(typeof data === 'string' ? data : new TextDecoder().decode(data))); } catch {} return send.call(this, data); };
   });
   const page = await context.newPage(); page.on('pageerror', e => errors.push(String(e)));
-  let hold = false; const held = []; let downstream;
+  let hold = false; const held = []; let downstream, latestList;
   await page.routeWebSocket('**/ws', ws => {
     const upstream = ws.connectToServer(); downstream = ws;
     upstream.onMessage(message => {
       const text = typeof message === 'string' ? message : message.toString();
+      if (JSON.parse(text).t === 'character_list') latestList = message;
       if (hold && JSON.parse(text).t === 'character_list') held.push(message); else ws.send(message);
     });
   });
@@ -99,11 +100,60 @@ try {
   check('server return routes back through the same Mu scene', await page.locator('.entry-scene').isVisible() && await page.evaluate(() => window.hollowWake.self() === null));
   await page.click(`[data-vessel="${character.id}"]`);
   check('returned roster remains interactive', (await entry()).opened >= 0);
+  await page.keyboard.press('Escape');
+  hold = true;
+  await page.click('[data-vessel="calling:kindler"]');
+  await page.fill('.entry-card input', 'Ash'); await page.locator('.entry-card button').first().click();
+  for (let i = 0; i < 100 && held.length < 1; i++) await delay(30);
+  assert.equal(held.length, 1);
+  await page.locator('.entry-card button').last().click();
+  await page.click('[data-vessel="calling:holdfast"]');
+  await page.fill('.entry-card input', 'Birch'); await page.locator('.entry-card button').first().click();
+  for (let i = 0; i < 100 && held.length < 2; i++) await delay(30);
+  assert.equal(held.length, 2);
+  const pending = (await entry()).pending;
+  downstream.send(held.shift()); await page.waitForTimeout(250);
+  check('stale creation A preserves pending card B', (await entry()).pending === pending && await page.locator('.entry-card input').inputValue() === 'Birch' && !(await page.evaluate(() => window.hollowWake.inWorld)));
+  downstream.send(held.shift()); hold = false;
+  await page.waitForFunction(() => window.hollowWake.inWorld && !window.hollowWake.loading.active);
+  check('matching creation B wakes only B', await page.evaluate(() => window.hollowWake.self().name === 'Birch'));
+  await page.evaluate(() => window.muSocket.send(new TextEncoder().encode(JSON.stringify({ t: 'leave_world' }))));
+  await page.waitForFunction(() => !window.hollowWake.inWorld && window.hollowWake.entry?.seats.length > 0);
+  downstream.send(Buffer.from(JSON.stringify({ t: 'error', code: 'selection_refused', text: 'Selection was refused.' })));
+  await page.waitForFunction(() => document.querySelector('.entry-status')?.textContent === 'Selection was refused.');
+  check('non-creation refusal is visible in Mu', true);
+  await page.getByRole('button', { name: 'Options', exact: true }).click();
+  await page.locator('.options-page[data-page="controls"]').click();
+  await page.locator('input.options-search').fill('Move right');
+  const binding = page.locator('.option-row[data-entry="key.move_right"] .key-slot[data-slot="0"]');
+  await binding.click(); await page.keyboard.press('KeyL');
+  check('Mu rebind is stored', await page.evaluate(() => window.hollowWake.bindings('move_right').primary === 'L'));
+  const focus = await page.evaluate(() => { window.muFocus = document.activeElement; return !!window.muFocus; });
+  downstream.send(latestList); await page.waitForTimeout(200);
+  check('roster refresh preserves Options and its focus', focus && await page.evaluate(() => window.hollowWake.ui.optionsOpen && document.activeElement === window.muFocus));
+  await page.locator('.options-done').click();
+  await page.waitForFunction(() => !window.hollowWake.ui.optionsOpen);
+  const reboundStart = await entry(); await page.keyboard.down('KeyL'); await page.waitForTimeout(350); await page.keyboard.up('KeyL');
+  check('Mu picks up changed bindings without recreating the scene', (await entry()).x > reboundStart.x + 20);
+  for (let i = 0; i < 3; i++) {
+    await page.evaluate(() => { window.muLost = false; document.querySelector('.entry-canvas').addEventListener('webglcontextlost', () => window.muLost = true); });
+    await page.getByRole('button', { name: 'Leave Mu', exact: true }).click();
+    await page.waitForFunction(() => window.muLost);
+    await page.click('#login-connect'); await page.waitForFunction(() => window.hollowWake.entry?.seats.some(s => s.character));
+  }
+  check('repeated reconnects explicitly release Mu graphics contexts', true);
   check('no browser exceptions', errors.length === 0);
   const probe = startProcess('dotnet', ['run', '--no-build', '--project', 'src/HollowWake.Tools', '--', 'probe', '--host', '127.0.0.1', '--port', String(tcp), '--account', 'mu-probe', '--seconds', '2', '--features', 'entry_flow,interface'], { cwd: root, log: join(dir, 'probe.log') });
   const probeResult = await waitProcess(probe, 60000, signal); check('live protocol probe', probeResult.code === 0);
   const startup = startProcess('node', ['experiments/launcher-quick-play/verify-crossing-startup.mjs', '--url', url, '--output', join(dir, 'startup')], { cwd: root, log: join(dir, 'startup.log') });
   const startupResult = await waitProcess(startup, 120000, signal); check('delayed startup, held input, cancellation and remembered Wake', startupResult.code === 0);
+  const quickBrowser = startProcess('node', ['experiments/launcher-quick-play/verify-browser.mjs', '--url', url, '--output', join(dir, 'quick-browser')], { cwd: root, log: join(dir, 'quick-browser.log') });
+  check('browser quick-play acceptance', (await waitProcess(quickBrowser, 120000, signal)).code === 0);
+  const godotAt = process.argv.indexOf('--godot');
+  if (godotAt >= 0) {
+    const native = startProcess('node', ['experiments/launcher-quick-play/verify-native-startup.mjs', '--godot', process.argv[godotAt + 1], '--port', String(tcp), '--output', join(dir, 'quick-native')], { cwd: root, log: join(dir, 'quick-native.log') });
+    check('headless native quick-play acceptance', (await waitProcess(native, 180000, signal)).code === 0);
+  }
   await writeFile(join(dir, 'result.json'), JSON.stringify({ passed: checks, errors }, null, 2) + '\n');
   console.log(`MU DONE ${checks.length} checks; evidence ${dir}`);
 } finally { await browser?.close(); await stopProcess(server); }

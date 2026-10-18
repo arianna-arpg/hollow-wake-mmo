@@ -3,6 +3,7 @@ export interface EntrySceneSpec {
   dwellRadius: number; bodyRadius: number; dwellSeconds: number; speed: number; turnRate: number;
   wrapRadius: number; wrapReentry: number; wrapClear: number; units: number; cameraSpan: number;
   bodyHeight: number; bodyWidth: number; wispRadius: number; maxFrame: number; wispSource: string; cameraHeight: number; cameraOffset: number; cameraLead: number; apparitionOpacity: number;
+  layout: Record<string, number>;
   palette: Record<string, string>; labels: Record<string, string>;
 }
 export interface VesselChoice { id: string; calling: string; name: string; description: string; look: string; character: string | null; available: boolean; rank: number }

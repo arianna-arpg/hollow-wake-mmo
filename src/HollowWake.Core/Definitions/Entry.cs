@@ -17,7 +17,7 @@ public sealed record EntryStageDef
     public string Id { get; init; } = "";
     public string Kind { get; init; } = "";
     public string Presentation { get; init; } = "";
-    /// <summary>All these account tags must be present to skip an already completed stage. Empty never skips.</summary>
+    /// <summary>All these exact account tags must be present to skip an already completed stage. Empty never skips.</summary>
     [JsonPropertyName("completed_by")]
     public TagSet CompletedBy { get; init; } = TagSet.Empty;
 }

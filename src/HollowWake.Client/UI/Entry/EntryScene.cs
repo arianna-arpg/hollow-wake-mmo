@@ -13,7 +13,7 @@ namespace HollowWake.Client.UI.Entry;
 public partial class EntryScene(EntrySceneSpec spec, ContentRegistry content, AppearanceService appearance) : AccountEntryView
 {
     public SpatialSelection Model { get; } = new(spec);
-    private string? _pending;
+    private string? _pending, _notice;
     public override string? Pending => _pending;
     private SubViewport _viewport = null!;
     private Node3D _scene = null!;
@@ -38,7 +38,7 @@ public partial class EntryScene(EntrySceneSpec spec, ContentRegistry content, Ap
     {
         SetAnchorsAndOffsetsPreset(LayoutPreset.FullRect); FocusMode = FocusModeEnum.All; MouseFilter = MouseFilterEnum.Stop;
         _background = new GradientTexture2D { Width = 512, Height = 512, Fill = GradientTexture2D.FillEnum.Radial,
-            FillFrom = new(.5f, .58f), FillTo = new(1, .58f), Gradient = new Gradient { Colors = [new Color("#1a2835"), new Color(spec.Palette["floor"])] } };
+            FillFrom = new(.5f, .58f), FillTo = new(1, .58f), Gradient = new Gradient { Colors = [new Color(spec.Palette["glow"]), new Color(spec.Palette["floor"])] } };
         var background = new TextureRect { Texture = _background, ExpandMode = TextureRect.ExpandModeEnum.IgnoreSize, MouseFilter = MouseFilterEnum.Ignore };
         AddChild(background); background.SetAnchorsAndOffsetsPreset(LayoutPreset.FullRect);
         var surface = new SubViewportContainer { Stretch = true, MouseFilter = MouseFilterEnum.Ignore };
@@ -63,15 +63,15 @@ public partial class EntryScene(EntrySceneSpec spec, ContentRegistry content, Ap
         actions.AddChild(Button(spec.Labels["disconnect"], () => RequestLeave()));
         _footer = new VBoxContainer(); _footer.AddThemeConstantOverride("separation", 8); AddChild(_footer);
         _status = new Label { HorizontalAlignment = HorizontalAlignment.Center }; _footer.AddChild(_status);
-        _progress = new ProgressBar { MaxValue = 1, ShowPercentage = false, CustomMinimumSize = new(150, 5), SizeFlagsHorizontal = SizeFlags.ShrinkCenter }; _footer.AddChild(_progress);
+        _progress = new ProgressBar { MaxValue = 1, ShowPercentage = false, CustomMinimumSize = new(spec.Layout["progressWidth"], spec.Layout["progressHeight"]), SizeFlagsHorizontal = SizeFlags.ShrinkCenter }; _footer.AddChild(_progress);
         _footer.AddChild(new Label { Text = spec.Labels["prompt"], HorizontalAlignment = HorizontalAlignment.Center, AutowrapMode = TextServer.AutowrapMode.WordSmart });
-        var scroll = new ScrollContainer { CustomMinimumSize = new(0, 64), HorizontalScrollMode = ScrollContainer.ScrollMode.Disabled };
+        var scroll = new ScrollContainer { CustomMinimumSize = new(0, spec.Layout["rosterHeight"]), HorizontalScrollMode = ScrollContainer.ScrollMode.Disabled };
         _footer.AddChild(scroll);
         _roster = new HFlowContainer { SizeFlagsHorizontal = SizeFlags.ExpandFill, Alignment = FlowContainer.AlignmentMode.Center }; scroll.AddChild(_roster);
         _veil = new ColorRect { Color = new Color(0, 0, 0, .45f), Visible = false, MouseFilter = MouseFilterEnum.Stop }; AddChild(_veil); _veil.SetAnchorsAndOffsetsPreset(LayoutPreset.FullRect);
         _card = new PanelContainer { Visible = false, MouseFilter = MouseFilterEnum.Stop }; AddChild(_card);
-        var style = new StyleBoxFlat { BgColor = new Color("#0b1019"), BorderColor = new Color("#7f7865") }; style.SetBorderWidthAll(1); style.SetContentMarginAll(24); _card.AddThemeStyleboxOverride("panel", style);
-        _cardBody = new VBoxContainer(); _cardBody.AddThemeConstantOverride("separation", 14); _card.AddChild(_cardBody);
+        var style = new StyleBoxFlat { BgColor = new Color(spec.Palette["panel"]), BorderColor = new Color(spec.Palette["border"]) }; style.SetBorderWidthAll(1); style.SetContentMarginAll(spec.Layout["cardPadding"]); _card.AddThemeStyleboxOverride("panel", style);
+        _cardBody = new VBoxContainer(); _cardBody.AddThemeConstantOverride("separation", (int)spec.Layout["cardGap"]); _card.AddChild(_cardBody);
         GuiInput += GroundInput;
     }
 
@@ -81,6 +81,9 @@ public partial class EntryScene(EntrySceneSpec spec, ContentRegistry content, Ap
     }
     public override void ShowCharacters(CharacterListMsg list)
     {
+        // A delayed reply for a dismissed card must not disturb a newer request or its card.
+        if (Pending is not null && list.RequestId is not null && list.RequestId != Pending) return;
+        _notice = null;
         var wake = Pending is not null && list.RequestId == Pending ? list.CreatedCharacterId : null;
         _pending = null;
         foreach (var b in _bodies) b?.QueueFree(); _bodies.Clear();
@@ -93,11 +96,12 @@ public partial class EntryScene(EntrySceneSpec spec, ContentRegistry content, Ap
             if (body is not null) body.Position = new((float)(seat.X / spec.Units), 0, (float)(seat.Y / spec.Units));
             _bodies.Add(body);
             var label = new Label { Text = seat.Choice.Name, MouseFilter = MouseFilterEnum.Ignore };
-            label.AddThemeColorOverride("font_color", new Color(seat.Choice.Available ? spec.Palette["accent"] : "#777688")); AddChild(label); MoveChild(label, _footer.GetIndex()); _names.Add(label);
+            label.AddThemeColorOverride("font_color", new Color(seat.Choice.Available ? spec.Palette["accent"] : spec.Palette["muted"])); AddChild(label); MoveChild(label, _footer.GetIndex()); _names.Add(label);
             var b = Button(seat.Choice.Name, () => { Model.Open(index); UpdateCard(); }); b.TooltipText = seat.Choice.Description;
             _roster.AddChild(b); _choices.Add(b);
         }
-        _shown = -1; _card.Hide(); _veil.Hide(); _status.Text = Model.Seats.Count == 0 ? spec.Labels["empty"] : ""; GrabFocus();
+        _shown = -1; _card.Hide(); _veil.Hide(); _status.Text = Model.Seats.Count == 0 ? spec.Labels["empty"] : "";
+        if (IsVisibleInTree() && !Suspended()) GrabFocus();
         if (wake is not null && list.Characters.Any(c => c.Id == wake)) RequestEnter(wake);
     }
     private BodyNode? Body(string look, long key, double height)
@@ -108,13 +112,15 @@ public partial class EntryScene(EntrySceneSpec spec, ContentRegistry content, Ap
     }
     public override void FocusCharacter(string id)
     {
-        var i = Model.Seats.FindIndex(s => s.Choice.Character == id); if (i >= 0) _choices[i].GrabFocus();
+        var i = Model.Seats.FindIndex(s => s.Choice.Character == id); if (i >= 0 && Model.Opened < 0 && IsVisibleInTree() && !Suspended()) _choices[i].GrabFocus();
     }
     public override void Error(string text)
     {
-        if (Pending is null) return; _pending = null; _status.Text = text; _shown = -1; UpdateCard();
+        _notice = text; _status.Text = text;
+        if (Pending is null) return;
+        _pending = null; _shown = -1; UpdateCard();
     }
-    private void CloseCard() { _pending = null; Model.Close(); UpdateCard(); }
+    private void CloseCard() { _notice = null; _status.Text = ""; _pending = null; Model.Close(); UpdateCard(); }
     private void UpdateCard()
     {
         if (_shown == Model.Opened) return;
@@ -124,7 +130,7 @@ public partial class EntryScene(EntrySceneSpec spec, ContentRegistry content, Ap
         _card.Visible = _veil.Visible = _shown >= 0;
         if (_shown < 0) { if (IsInstanceValid(_previousFocus)) _previousFocus?.GrabFocus(); else GrabFocus(); return; }
         var choice = Model.Seats[_shown].Choice;
-        var title = new Label { Text = choice.Name, HorizontalAlignment = HorizontalAlignment.Center }; title.AddThemeFontSizeOverride("font_size", 28); _cardBody.AddChild(title);
+        var title = new Label { Text = choice.Name, HorizontalAlignment = HorizontalAlignment.Center }; title.AddThemeFontSizeOverride("font_size", (int)spec.Layout["cardTitleSize"]); _cardBody.AddChild(title);
         _cardBody.AddChild(new Label { Text = choice.Description, AutowrapMode = TextServer.AutowrapMode.WordSmart, HorizontalAlignment = HorizontalAlignment.Center });
         var field = new LineEdit { Name = "MuName", PlaceholderText = spec.Labels["name"], MaxLength = 24 };
         if (choice.Character is null && choice.Available) _cardBody.AddChild(field);
@@ -134,6 +140,7 @@ public partial class EntryScene(EntrySceneSpec spec, ContentRegistry content, Ap
         void Wake()
         {
             if (!choice.Available || Pending is not null) return;
+            _notice = null; _status.Text = "";
             if (choice.Character is not null) { RequestEnter(choice.Character); return; }
             if (field.Text.Trim().Length < 2) { field.GrabFocus(); return; }
             _pending = "entry-" + ++_request; wake.Disabled = true; field.Editable = false; _status.Text = spec.Labels["pending"];
@@ -182,7 +189,7 @@ public partial class EntryScene(EntrySceneSpec spec, ContentRegistry content, Ap
         _header.Position = new(24, 20); _header.Size = new(Math.Max(0, Size.X - 48), 90);
         _title.AddThemeFontSizeOverride("font_size", Size.X < 600 ? 20 : 28);
         _footer.Size = new(Math.Max(0, Size.X - 32), 0); _footer.Position = new(16, Math.Max(110, Size.Y - _footer.Size.Y - 16));
-        _card.Size = new(Math.Min(400, Math.Max(250, Size.X - 32)), 0); _card.Position = (Size - _card.Size) / 2;
+        _card.Size = new(Math.Min(spec.Layout["cardWidth"], Math.Max(250, Size.X - 32)), 0); _card.Position = (Size - _card.Size) / 2;
         _camera.Size = (float)(spec.CameraSpan / spec.Units);
         var x = (float)(Model.X / spec.Units); var z = (float)(Model.Y / spec.Units);
         _camera.Position = new(x, (float)spec.CameraHeight, z + (float)spec.CameraOffset); _camera.LookAt(new Vector3(x, 0, z - (float)spec.CameraLead));
@@ -194,7 +201,7 @@ public partial class EntryScene(EntrySceneSpec spec, ContentRegistry content, Ap
         }
         _spirit.Time += Math.Min(dt, spec.MaxFrame); _spirit.QueueRedraw();
         _progress.Value = Model.Progress; _progress.Visible = Model.Engaged >= 0 && Model.Opened < 0;
-        if (Model.Engaged >= 0 && Model.Opened < 0) _status.Text = Model.Seats[Model.Engaged].Choice.Name;
+        if (_notice is null && Model.Engaged >= 0 && Model.Opened < 0) _status.Text = Model.Seats[Model.Engaged].Choice.Name;
     }
     public override void _ExitTree() { _background?.Gradient?.Dispose(); _background?.Dispose(); }
 }

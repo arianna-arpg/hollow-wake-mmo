@@ -527,7 +527,7 @@ public partial class Main : Node3D
                     _world.ClearEntities(); _castVisuals.Clear(); _entryLease?.Finish();
                     ReleaseLoadingInput();
                 }
-                _login.Visible = true;
+                _login.Visible = !_hud.OptionsOpen;
                 CharacterLists++;
                 _login.ShowCharacters(list);
                 break;

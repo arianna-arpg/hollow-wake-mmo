@@ -132,7 +132,7 @@ export class LoginPanel {
     this.callings = msg.callings;
     const flow = this.kinds.get('entry_flows')?.find(f => f.default === true);
     const stages = flow?.stages as unknown as {kind: string; presentation: string}[];
-    const stage = msg.entry ?? stages?.[0];
+    const stage = msg.entry ?? stages?.at(-1);
     const spec = this.kinds.get('ui_entry_scenes')?.find(s => s.id === stage?.presentation)?.meta as Obj;
     if (!stage || !spec) { this.reset(); this.setStatus('This entry stage needs a compatible client.'); return; }
     const id = stage.kind + ':' + stage.presentation;
