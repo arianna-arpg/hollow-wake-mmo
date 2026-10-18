@@ -1,0 +1,13 @@
+Test run for C:\Users\John\.codex\worktrees\golem-hitbox-validation\MMOARPG\tests\HollowWake.Core.Tests\bin\Debug\net10.0\HollowWake.Core.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v3.1.5+1b188a7b0a (64-bit .NET 10.0.13)
+[xUnit.net 00:00:00.12]   Discovering: HollowWake.Core.Tests
+[xUnit.net 00:00:02.21]   Discovered:  HollowWake.Core.Tests
+[xUnit.net 00:00:02.24]   Starting:    HollowWake.Core.Tests
+[xUnit.net 00:00:02.97]   Finished:    HollowWake.Core.Tests
+  Passed HollowWake.Core.Tests.UndeadContentTests.BoneGolemContractReservesRespawnsAndSharesTheWardenSlot [690 ms]
+
+Test Run Successful.
+Total tests: 1
+     Passed: 1
+ Total time: 3.5600 Seconds

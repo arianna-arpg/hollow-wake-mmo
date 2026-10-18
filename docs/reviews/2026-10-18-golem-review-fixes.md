@@ -30,3 +30,5 @@ The five dependency regressions intentionally fail before the shared fix: kiln e
 `experiments/golems/evidence/review/world-review.txt` explains every sampled placement/quest change before refreshing goldens, including the changed ruin/camp stamp in chunk(13,6). Initial golden failures are retained. The actual Warden resources match the baseline: life 122/142/312 and mana 47/57/142 at levels 1/3/20; effective mana regeneration 1.32 and stamina regeneration 12 throughout. The salvage pool now has 216 life at level 1 and 482 at level 20 across all eight rolls, before summon modifiers.
 
 Acknowledged by: pending Claude rereview.
+
+Supplemental full-#36 contact evidence is recorded separately in [the combined contact record](2026-10-18-golem-hitbox-integration.md); it does not resolve the outstanding shared-base or release-policy gates.
