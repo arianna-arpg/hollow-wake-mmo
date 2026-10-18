@@ -1,0 +1,520 @@
+{
+  "repository": "arianna-arpg/arpg-game-world",
+  "revision": "118b510f8b5bfb781163c5bc13ea4908f698e75b",
+  "sources": [
+    {
+      "file": "src/engine/skills.ts",
+      "sha256": "c909e526d4c48fb86e29ed59847fad92744d804db686b17242a85866ceb1d9e6"
+    },
+    {
+      "file": "src/data/skills.ts",
+      "sha256": "2385df4c6fc502506a92e5d469ce475b442836d4666ceab7b26f108feeaafcaa"
+    },
+    {
+      "file": "src/data/supports.ts",
+      "sha256": "a934f346103f63b871e823c61f58ec0e1a9755e9225bdda3e1648d9bf855d74a"
+    },
+    {
+      "file": "src/data/castingCues.ts",
+      "sha256": "a93fc775260440fdc1c9de5fd019f659bba0dc53d9bc581fa9fef2cdfd640093"
+    },
+    {
+      "file": "src/data/combatCues.ts",
+      "sha256": "191f37fc9328d5a2531f62321bb26cae5f13ebd1b06f90703260c10465cf0419"
+    },
+    {
+      "file": "src/data/defenseCues.ts",
+      "sha256": "121489c008b42215d84976bace2ef63e914f723dcaf9ee0c0bdaa0fe0a722cc8"
+    },
+    {
+      "file": "src/engine/castingCues.ts",
+      "sha256": "56a9b38a5eb66d69c64d7f4ad8a9e2f8cd2ed7800a792309b3b49aee2841ed6b"
+    },
+    {
+      "file": "src/render/vis/castingCueLayer.ts",
+      "sha256": "3434a74b0ee8a37aa5ba16667189bd7111586084e81c9923c01554f21c7d9b5c"
+    },
+    {
+      "file": "src/render/vis/combatCueLayer.ts",
+      "sha256": "22e1301e5b02bcdebfcf725504e7249661100a77a5931eaa31d1157da2fa326f"
+    },
+    {
+      "file": "src/render/vis/defenseCueLayer.ts",
+      "sha256": "4e1640a1952e362167751f9fe0e055a6a14b1f6e2ce28de474ee46ed365fd381"
+    },
+    {
+      "file": "src/render/vis/effectVoice.ts",
+      "sha256": "70ccd397a41a68d8c7251c6b28cdace7284e931332f824390e291c976526119b"
+    },
+    {
+      "file": "src/render/vis/aoeTrace.ts",
+      "sha256": "b9b451899e54d94dcedbf56c21934d3e6308823d93ebac075876e98ff7697ec8"
+    }
+  ],
+  "vocabulary": {
+    "deliveries": [
+      "aura",
+      "blink",
+      "carom",
+      "cone",
+      "construct",
+      "dash",
+      "detonate",
+      "detonateProjectile",
+      "ground",
+      "leap",
+      "mark",
+      "melee",
+      "nova",
+      "projectile",
+      "self",
+      "storm",
+      "summon",
+      "target"
+    ],
+    "effects": [
+      "absorb",
+      "birth",
+      "buff",
+      "cleanse",
+      "commandMinions",
+      "companionStance",
+      "conjure",
+      "damage",
+      "detonateMinions",
+      "dragCorpses",
+      "drainCharge",
+      "gainCharge",
+      "grabSeize",
+      "grabThrow",
+      "guardSurge",
+      "heal",
+      "ironWard",
+      "kindle",
+      "knockback",
+      "litePour",
+      "lure",
+      "mimicSelect",
+      "minionCast",
+      "payLedger",
+      "possess",
+      "possessEnd",
+      "pull",
+      "recallImpales",
+      "recallMinions",
+      "reduceCooldowns",
+      "relocateConstruct",
+      "restore",
+      "restoreOverTime",
+      "restoreSkillCharges",
+      "rupture",
+      "shapeshift",
+      "shatterConstructs",
+      "shed",
+      "siphonOrb",
+      "siphonStatus",
+      "spawnCorpse",
+      "spawnZone",
+      "spreadStatus",
+      "status",
+      "tame",
+      "terrain",
+      "throngDirect",
+      "townPortal",
+      "transfuseStatus",
+      "vent",
+      "ward",
+      "whistleCompanion"
+    ],
+    "cast_modes": [
+      "cast",
+      "channel",
+      "charge",
+      "concentration",
+      "guard",
+      "multitude",
+      "overcharge",
+      "perfect",
+      "timed"
+    ],
+    "effect_voices": [
+      "blast",
+      "comet",
+      "crossjab",
+      "plunge",
+      "refuge",
+      "scramble",
+      "shatter",
+      "sporeburst"
+    ]
+  },
+  "casting_profiles": {
+    "standard": {
+      "radius": 13,
+      "frontPad": 5,
+      "width": 1.8,
+      "corners": 4,
+      "interrupt": "cast_interrupt",
+      "fizzle": "cast_fizzle",
+      "ready": "cast_ready"
+    }
+  },
+  "combat_profiles": {
+    "companion_bind": {
+      "shape": "snap",
+      "life": 0.6,
+      "color": "#afd7aa",
+      "pieces": 3,
+      "travel": 0.7,
+      "width": 2.2
+    },
+    "companion_reject": {
+      "shape": "fracture",
+      "life": 0.5,
+      "color": "#d29679",
+      "pieces": 3,
+      "travel": 1.1,
+      "width": 2
+    },
+    "companion_sever": {
+      "shape": "fracture",
+      "life": 0.6,
+      "color": "#d5ab87",
+      "pieces": 3,
+      "travel": 1.2,
+      "width": 2
+    },
+    "companion_answer": {
+      "shape": "mend",
+      "life": 0.45,
+      "color": "#afd7aa",
+      "pieces": 3,
+      "travel": 0.6,
+      "width": 2
+    },
+    "companion_down": {
+      "shape": "collapse",
+      "life": 0.55,
+      "color": "#d9a17a",
+      "pieces": 4,
+      "travel": 0.7,
+      "width": 2
+    },
+    "companion_unravel": {
+      "shape": "collapse",
+      "life": 0.65,
+      "color": "#aa91c7",
+      "pieces": 7,
+      "travel": 1.2,
+      "width": 2
+    },
+    "companion_bloom": {
+      "shape": "irisBurst",
+      "life": 0.55,
+      "color": "#bd87cc",
+      "pieces": 7,
+      "travel": 0.9,
+      "width": 2.4
+    },
+    "field_form": {
+      "shape": "irisBurst",
+      "life": 0.6,
+      "color": "#a68cc9",
+      "pieces": 8,
+      "travel": 0.6,
+      "width": 2
+    },
+    "field_release": {
+      "shape": "ringCollapse",
+      "life": 0.5,
+      "color": "#a68cc9",
+      "pieces": 8,
+      "travel": 0.15,
+      "width": 2
+    },
+    "anatomy_weak_break": {
+      "shape": "fracture",
+      "life": 0.4,
+      "color": "#f29cce",
+      "pieces": 4,
+      "travel": 0.85,
+      "width": 2
+    },
+    "anatomy_part_break": {
+      "shape": "fracture",
+      "life": 0.6,
+      "color": "#d9b978",
+      "pieces": 6,
+      "travel": 1.2,
+      "width": 2.7
+    },
+    "anatomy_segment_tear": {
+      "shape": "sever",
+      "life": 0.5,
+      "color": "#ed8580",
+      "pieces": 3,
+      "travel": 0.9,
+      "width": 2.5
+    },
+    "proc_pop": {
+      "shape": "irisBurst",
+      "life": 0.5,
+      "color": "#ed6676",
+      "pieces": 6,
+      "travel": 0.8,
+      "width": 2
+    },
+    "payload_load": {
+      "shape": "snap",
+      "life": 0.32,
+      "color": "#dcc49b",
+      "pieces": 3,
+      "travel": 0.7,
+      "width": 2
+    },
+    "payload_prime": {
+      "shape": "snap",
+      "life": 0.4,
+      "color": "#dc9696",
+      "pieces": 4,
+      "travel": 0.7,
+      "width": 2
+    },
+    "payload_release": {
+      "shape": "mend",
+      "life": 0.45,
+      "color": "#dc9696",
+      "pieces": 4,
+      "travel": 0.8,
+      "width": 2
+    },
+    "reserve_spent": {
+      "shape": "collapse",
+      "life": 0.65,
+      "color": "#b6a27e",
+      "pieces": 6,
+      "travel": 0.9,
+      "width": 2
+    },
+    "culled": {
+      "shape": "sever",
+      "life": 0.42,
+      "color": "#c8a0e8",
+      "pieces": 2,
+      "travel": 1.3,
+      "width": 3
+    },
+    "hit_cap": {
+      "shape": "flatten",
+      "life": 0.35,
+      "color": "#9ab0c8",
+      "pieces": 4,
+      "travel": 0.8,
+      "width": 2.5
+    },
+    "volatile_release": {
+      "shape": "vent",
+      "life": 0.4,
+      "color": "#edb378",
+      "pieces": 5,
+      "travel": 1.4,
+      "width": 2.3
+    },
+    "last_gasp": {
+      "shape": "rekindle",
+      "life": 0.75,
+      "color": "#ffd890",
+      "pieces": 4,
+      "travel": 1.3,
+      "width": 2.8
+    },
+    "ward_form": {
+      "shape": "snap",
+      "life": 0.55,
+      "color": "#c68ee8",
+      "pieces": 6,
+      "travel": 0.65,
+      "width": 3
+    },
+    "ward_break": {
+      "shape": "fracture",
+      "life": 0.65,
+      "color": "#c68ee8",
+      "pieces": 6,
+      "travel": 1.2,
+      "width": 3
+    },
+    "doom_rupture": {
+      "shape": "irisBurst",
+      "life": 0.65,
+      "color": "#7a48c8",
+      "pieces": 8,
+      "travel": 1,
+      "width": 2.5
+    },
+    "cast_interrupt": {
+      "shape": "fracture",
+      "life": 0.42,
+      "color": "#d05050",
+      "pieces": 5,
+      "travel": 1.3,
+      "width": 2
+    },
+    "cast_fizzle": {
+      "shape": "collapse",
+      "life": 0.5,
+      "color": "#8a8678",
+      "pieces": 5,
+      "travel": 0.8,
+      "width": 1.7
+    },
+    "cast_ready": {
+      "shape": "snap",
+      "life": 0.3,
+      "color": "#fff0bb",
+      "pieces": 4,
+      "travel": 0.7,
+      "width": 2.2
+    },
+    "parry": {
+      "shape": "cross",
+      "life": 0.3,
+      "color": "#ffe9a6",
+      "pieces": 4,
+      "travel": 0.7,
+      "width": 2.5
+    },
+    "evade": {
+      "shape": "ghost",
+      "life": 0.32,
+      "color": "#bfdaea",
+      "pieces": 3,
+      "travel": 0.75,
+      "width": 1.6
+    },
+    "immune": {
+      "shape": "barrier",
+      "life": 0.28,
+      "color": "#dceaf4",
+      "pieces": 6,
+      "travel": 0.25,
+      "width": 2.2
+    },
+    "resist": {
+      "shape": "scatter",
+      "life": 0.32,
+      "color": "#b8cad6",
+      "pieces": 5,
+      "travel": 0.8,
+      "width": 1.7
+    },
+    "perfect": {
+      "shape": "snap",
+      "life": 0.32,
+      "color": "#ffe9a6",
+      "pieces": 4,
+      "travel": 0.55,
+      "width": 2
+    },
+    "flawless": {
+      "shape": "snap",
+      "life": 0.4,
+      "color": "#fff1bd",
+      "pieces": 8,
+      "travel": 0.75,
+      "width": 2.4
+    },
+    "spark": {
+      "shape": "snap",
+      "life": 0.22,
+      "color": "#fff8dc",
+      "pieces": 3,
+      "travel": 0.9,
+      "width": 2.8
+    },
+    "mend": {
+      "shape": "mend",
+      "life": 0.55,
+      "color": "#9ae4b2",
+      "pieces": 4,
+      "travel": 0.7,
+      "width": 2.3
+    },
+    "affliction": {
+      "shape": "barbs",
+      "life": 0.45,
+      "color": "#dc9fe4",
+      "pieces": 6,
+      "travel": 0.65,
+      "width": 2
+    },
+    "aftershock": {
+      "shape": "ground",
+      "life": 0.4,
+      "color": "#dfbb84",
+      "pieces": 7,
+      "travel": 0.85,
+      "width": 2.3
+    }
+  },
+  "defense_profiles": {
+    "shell": {
+      "shape": "plates",
+      "pieces": 8,
+      "travel": 0.85,
+      "thickness": 0.17,
+      "breakLife": 0.65,
+      "reformLife": 0.5,
+      "impactLife": 0.2
+    },
+    "spiral": {
+      "shape": "spiral",
+      "pieces": 7,
+      "travel": 0.7,
+      "thickness": 0.12,
+      "breakLife": 0.75,
+      "reformLife": 0.6,
+      "impactLife": 0.22
+    },
+    "carapace": {
+      "shape": "carapace",
+      "pieces": 5,
+      "travel": 0.9,
+      "thickness": 0.28,
+      "breakLife": 0.65,
+      "reformLife": 0.55,
+      "impactLife": 0.2
+    },
+    "poise": {
+      "shape": "brace",
+      "pieces": 4,
+      "travel": 0.45,
+      "thickness": 0.12,
+      "breakLife": 0.5,
+      "reformLife": 0.4,
+      "impactLife": 0.18
+    },
+    "guard": {
+      "shape": "guard",
+      "pieces": 3,
+      "travel": 0.6,
+      "thickness": 0.24,
+      "breakLife": 0.45,
+      "reformLife": 0.3,
+      "impactLife": 0.18
+    }
+  },
+  "source_tree_sha256": "6b9e8dab28f65957d0ff39231584fff813917d513b7cc52899db8a1446629275",
+  "skills_files": [
+    "prototype-skills-0.json",
+    "prototype-skills-1.json",
+    "prototype-skills-2.json",
+    "prototype-skills-3.json",
+    "prototype-skills-4.json"
+  ],
+  "supports_file": "prototype-supports.json",
+  "counts": {
+    "skills": 948,
+    "supports": 457
+  }
+}

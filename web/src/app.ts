@@ -5,7 +5,9 @@ import type { ClientConfig } from './config';
 import { Input } from './input/input';
 import { Connection } from './net/connection';
 import { applyDelta } from './net/delta';
-import { ENTITY_DELTA_FEATURE, INTERFACE_FEATURE, PROTOCOL_VERSION, type CombatEventMsg, type EntityState, type Int64, type Message } from './net/protocol';
+import { CAST_CUES_FEATURE, ENTITY_DELTA_FEATURE, INTERFACE_FEATURE, PROTOCOL_VERSION, type CombatEventMsg, type EntityState, type Int64, type Message } from './net/protocol';
+import { CastVisuals } from './world/castVisuals';
+import { cueSettings } from './world/castCueTimeline';
 import { parseServerInput, sameOrigin, socketUrl, type ServerAddress } from './ui/address';
 import { el, storageGet, storageSet } from './ui/dom';
 import { Hud } from './ui/hud';
@@ -55,6 +57,7 @@ export class App {
   readonly entities: EntityLayer;
   readonly appearance: AppearanceService;
   readonly audio = new AudioCues();
+  readonly castVisuals: CastVisuals;
   readonly hud: Hud;
   readonly login: LoginPanel;
   readonly settings: Settings;
@@ -199,6 +202,7 @@ export class App {
     this.terrain = new TerrainView(config.world, surfaces, this.day.foliage, (x, y) => this.send({ t: 'request_chunk', x, y }));
     this.scene.add(this.terrain.group);
     this.entities = new EntityLayer(config.entities, config.motion, labels, this.appearance);
+    this.castVisuals = new CastVisuals(this.scene, this.entities, cueSettings(kinds.get('ui_cast_visuals')?.[0], kinds.get('threads') ?? []));
     this.scene.add(this.entities.group);
     // the sound hooks: the bodies' moments raise cues at their places; nothing plays until an asset is registered
     this.entities.cue = (cue, variant, position) => {
@@ -415,6 +419,7 @@ export class App {
     const full = new URLSearchParams(window.location.search).has('full-states') || this.settings.text('snapshot_stream') === 'full';
     const wanted = new Set(this.config.server.features);
     wanted.add(INTERFACE_FEATURE);
+    wanted.add(CAST_CUES_FEATURE);
     if (full) {
       wanted.delete(ENTITY_DELTA_FEATURE);
     }
@@ -452,6 +457,7 @@ export class App {
     this.login.setBusy(false);
     this.login.setStatus(`Disconnected: ${reason}`);
     this.entities.clear();
+    this.castVisuals.clear();
     this.lastMoveDir = [0, 0];
   }
 
@@ -511,6 +517,7 @@ export class App {
           this.terrain.reset(m.world.chunk_size);
         }
         this.entities.clear();
+        this.castVisuals.clear();
         this.entities.selfKey = m.entity_key;
         this.clock.reset();
         this.clock.observe(m.server_time, local);
@@ -548,6 +555,7 @@ export class App {
         }
         break;
       case 'entity_despawn':
+        this.castVisuals.removeEntity(m.key);
         this.entities.despawn(m.key);
         break;
       case 'self_state':
@@ -584,6 +592,11 @@ export class App {
         break;
       case 'combat_event':
         this.showCombat(m);
+        break;
+      case 'cast_cue':
+        this.clock.observe(m.server_time, local);
+        this.castVisuals.receive(m, this.clock.now(local));
+        this.count(m.t);
         break;
       case 'chat_broadcast':
         this.hud.chat(m.from, m.channel, m.text);
@@ -881,6 +894,7 @@ export class App {
     this.appearance.cameraYaw = this.rig.yawCurrent;
     this.appearance.baker.step();
     this.entities.animate(dt, local, renderTime);
+    this.castVisuals.update(this.clock.now(local), this.settings.toggle('reduce_motion'));
     if (this.inWorld) {
       this.followDay(this.clock.now(local));
       const self = this.entities.self;
@@ -965,6 +979,7 @@ export class App {
           characterLists: app.characterLists,
           questOffers: app.questOffers,
           combatLines: app.combatLines,
+          castVisuals: app.castVisuals.timeline.active.length,
           hitsDealt: app.hitsDealt,
           chunksBuilt: app.terrain.builtCount,
           chunksPending: app.terrain.pendingCount,
@@ -1037,6 +1052,7 @@ export class App {
       get lastHit() {
         return app.lastHit;
       },
+      castCues: () => app.castVisuals.timeline.active.map(c => ({ phase: c.phase, source: c.event.source, target: c.event.target, name: c.event.name, color: c.color })),
       /** The player's effective bindings for an action, as Options shows them. */
       bindings: (action: string) => app.settings.bindings(action),
       setting: (id: string) => app.settings.value(id),

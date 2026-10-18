@@ -102,7 +102,7 @@ public partial class Smoke : Node
         if (character is null)
         {
             lists = _main.CharacterLists;
-            login.Create("Smoke", login.Callings.FirstOrDefault() ?? "holdfast");
+            login.Create("Smoke", Arg("--calling") ?? login.Callings.FirstOrDefault() ?? "holdfast");
             await Until(() => _main.CharacterLists > lists, 20);
             character = login.Characters.FirstOrDefault(c => c.Name == "Smoke");
             Record("create character", character is not null, character is null ? login.Status : $"{character.Name} the {character.Calling}");
@@ -226,6 +226,8 @@ public partial class Smoke : Node
         await TradeWithAVendor();
         await OptionsSteps();
 
+        if (_args.Contains("--cast-cues")) await CastCueSequence();
+
         // Weaves: walk to the nearest hob, hover it and press 1 to 4 until a combat line shows.
         var hob = Nearest(e => e.State.Pattern is not null && e.State.Pattern.StartsWith("hob", StringComparison.Ordinal) && !e.State.Dead);
         if (hob is null)
@@ -342,6 +344,37 @@ public partial class Smoke : Node
     }
 
     // ------------------------------------------------------------ the interface
+
+    private string? Arg(string key)
+    {
+        var i = Array.IndexOf(_args, key);
+        return i >= 0 && i + 1 < _args.Length ? _args[i + 1] : null;
+    }
+
+    private async Task CastCueSequence()
+    {
+        var phases = new HashSet<string>();
+        // Real moving targets can evade a projectile. Retry ordinary input; never synthesize a contact.
+        for (var attempt = 0; attempt < 3 && !phases.Contains("impact"); attempt++)
+        {
+            var hob = Nearest(e => e.State.Pattern?.StartsWith("hob", StringComparison.Ordinal) == true && !e.State.Dead);
+            if (hob is null) break;
+            await TravelTo(() => (hob.State.X, hob.State.Y), 3f, 45);
+            await Hover(hob);
+            Tap(Key.Key1);
+            var until = Now + 3;
+            while (Now < until)
+            {
+                foreach (var cue in _main.CastVisuals.Timeline.Active.ToArray())
+                {
+                    if (cue.Event.Source == Self?.Key && phases.Add(cue.Phase)) await Shot($"cast_cue_{cue.Phase}.png");
+                }
+                await Frame();
+            }
+        }
+        Record("Cast cue presentation", phases.Contains("start") && phases.Contains("release") && phases.Contains("impact"),
+            $"phases={string.Join(',', phases)}; received={_main.CastCuesReceived}");
+    }
 
     /// <summary>The core pane opens with its key; every ribbon page the hero has opens from its ribbon on the rail.</summary>
     private async Task CorePaneAndPages()

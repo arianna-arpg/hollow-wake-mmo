@@ -76,6 +76,7 @@ namespace HollowWake.Protocol;
 [JsonDerivedType(typeof(EntityDespawnMsg), "entity_despawn")]
 [JsonDerivedType(typeof(SelfStateMsg), "self_state")]
 [JsonDerivedType(typeof(CombatEventMsg), "combat_event")]
+[JsonDerivedType(typeof(CastCueMsg), "cast_cue")]
 [JsonDerivedType(typeof(ChatBroadcastMsg), "chat_broadcast")]
 [JsonDerivedType(typeof(NoticeMsg), "notice")]
 [JsonDerivedType(typeof(QuestOffersMsg), "quest_offers")]
@@ -449,6 +450,7 @@ public sealed record DisconnectMsg(string Reason) : Message;
 
 public static class ProtocolInfo
 {
+    public const string CastCuesFeature = "cast_cues";
     public const int Version = 1;
 
     /// <summary>Hello feature: the client applies <see cref="EntityDeltaMsg"/>, so changes may be sent as deltas.</summary>
