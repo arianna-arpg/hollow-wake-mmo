@@ -24,6 +24,7 @@ export default defineConfig({
   },
   test: {
     environment: 'node',
+    setupFiles: ['./src/testContent.ts'],
     include: ['src/**/*.test.ts'],
   },
 });

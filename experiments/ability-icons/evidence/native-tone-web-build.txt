@@ -1,0 +1,18 @@
+
+> hollow-wake-web@0.1.0 build
+> tsc --noEmit && vite build
+
+vite v8.3.4 building client environment for production...
+transforming...
+✓ 179 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                             0.85 kB │ gzip:   0.44 kB
+dist/assets/index--A3t2PVZ.css              4.55 kB │ gzip:   1.64 kB
+dist/assets/app-DZbJjJq6.css               35.48 kB │ gzip:   6.97 kB
+dist/assets/preload-helper-Comj8caF.js      5.03 kB │ gzip:   2.72 kB │ map:    11.69 kB
+dist/assets/index-vW-ueb_J.js              29.37 kB │ gzip:  11.96 kB │ map:    88.40 kB
+dist/assets/ability-icons-mVDshZSq.js     109.60 kB │ gzip:  15.03 kB │ map:     0.10 kB
+dist/assets/app-Bz-8Nyex.js             1,448.26 kB │ gzip: 360.40 kB │ map: 4,047.16 kB
+
+✓ built in 1.38s
