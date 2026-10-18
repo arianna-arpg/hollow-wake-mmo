@@ -5,7 +5,8 @@ import type { ClientConfig } from './config';
 import { Input } from './input/input';
 import { Connection } from './net/connection';
 import { applyDelta } from './net/delta';
-import { CAST_CUES_FEATURE, ENTITY_DELTA_FEATURE, INTERFACE_FEATURE, PROTOCOL_VERSION, type CombatEventMsg, type EntityState, type Int64, type Message } from './net/protocol';
+import { CAST_CUES_FEATURE, CAST_FORECAST_FEATURE, ENTITY_DELTA_FEATURE, INTERFACE_FEATURE, PROTOCOL_VERSION, type CombatEventMsg, type EntityState, type Int64, type Message } from './net/protocol';
+import { CastForecasts, forecastStyle } from './world/castForecasts';
 import { CastVisuals } from './world/castVisuals';
 import { cueSettings } from './world/castCueTimeline';
 import { parseServerInput, sameOrigin, socketUrl, type ServerAddress } from './ui/address';
@@ -46,6 +47,7 @@ export class App {
   readonly terrain: TerrainView;
   readonly entities: EntityLayer;
   readonly castVisuals: CastVisuals;
+  readonly forecasts: CastForecasts;
   readonly hud: Hud;
   readonly login: LoginPanel;
   readonly settings: Settings;
@@ -182,6 +184,7 @@ export class App {
     this.terrain = new TerrainView(config.world, palette, (x, y) => this.send({ t: 'request_chunk', x, y }));
     this.scene.add(this.terrain.group);
     this.entities = new EntityLayer(config.entities, config.motion, labels);
+    this.forecasts = new CastForecasts(this.scene, this.entities, forecastStyle(kinds.get('ui_cast_forecasts')?.[0]));
     this.castVisuals = new CastVisuals(this.scene, this.entities, cueSettings(kinds.get('ui_cast_visuals')?.[0], kinds.get('threads') ?? []));
     this.scene.add(this.entities.group);
 
@@ -365,6 +368,7 @@ export class App {
     const wanted = new Set(this.config.server.features);
     wanted.add(INTERFACE_FEATURE);
     wanted.add(CAST_CUES_FEATURE);
+    wanted.add(CAST_FORECAST_FEATURE);
     if (full) {
       wanted.delete(ENTITY_DELTA_FEATURE);
     }
@@ -403,6 +407,7 @@ export class App {
     this.login.setStatus(`Disconnected: ${reason}`);
     this.entities.clear();
     this.castVisuals.clear();
+    this.forecasts.clear();
     this.lastMoveDir = [0, 0];
   }
 
@@ -417,6 +422,7 @@ export class App {
     switch (m.t) {
       case 'welcome':
         this.features = m.features ?? [];
+        this.entities.showLegacyCast = !this.features.includes(CAST_FORECAST_FEATURE);
         this.hud.hero.interface = this.features.includes(INTERFACE_FEATURE);
         this.login.setStatus(`Connected to ${m.server_name}: ${m.motd}`);
         console.info(`server granted features: ${this.features.length > 0 ? this.features.join(', ') : 'none'}`);
@@ -463,6 +469,7 @@ export class App {
         }
         this.entities.clear();
         this.castVisuals.clear();
+        this.forecasts.clear(m.forecast_epoch);
         this.entities.selfKey = m.entity_key;
         this.clock.reset();
         this.clock.observe(m.server_time, local);
@@ -501,6 +508,7 @@ export class App {
         break;
       case 'entity_despawn':
         this.castVisuals.removeEntity(m.key);
+        this.forecasts.timeline.removeEntity(m.key);
         this.entities.despawn(m.key);
         break;
       case 'self_state':
@@ -537,7 +545,12 @@ export class App {
       case 'combat_event':
         this.showCombat(m);
         break;
+      case 'cast_forecast':
+        if (this.forecasts.timeline.receive(m)) this.clock.observe(m.server_time, local);
+        this.count(m.t);
+        break;
       case 'cast_cue':
+        this.forecasts.timeline.lifecycle(m);
         this.clock.observe(m.server_time, local);
         this.castVisuals.receive(m, this.clock.now(local));
         this.count(m.t);
@@ -590,6 +603,7 @@ export class App {
       : c.kind === 'evade' ? `${target} evades ${source}`
       : c.kind === 'block' ? `${target} blocks ${source}`
       : c.kind === 'heal' ? `${source} heals ${target} for ${Math.round(c.amount)}`
+      : c.kind === 'miss' ? `${source} misses ${target}: ${(c.status ?? '').replaceAll('_', ' ')}`
       : c.kind === 'status' ? `${target} is ${c.status ?? ''}`
       : c.kind === 'death' ? `${target} dies`
       : c.kind;
@@ -823,6 +837,7 @@ export class App {
     this.entities.serverNow = this.clock.now(local);
     this.entities.animate(dt, local, renderTime);
     this.castVisuals.update(this.clock.now(local), this.settings.toggle('reduce_motion'));
+    this.forecasts.update(this.clock.now(local), this.rig.camera);
     if (this.inWorld) {
       const self = this.entities.self;
       if (self !== undefined) {
@@ -909,6 +924,7 @@ export class App {
       get lastHit() {
         return app.lastHit;
       },
+      castForecasts: () => [...app.forecasts.timeline.active.values()],
       castCues: () => app.castVisuals.timeline.active.map(c => ({ phase: c.phase, source: c.event.source, target: c.event.target, name: c.event.name, color: c.color })),
       /** The player's effective bindings for an action, as Options shows them. */
       bindings: (action: string) => app.settings.bindings(action),

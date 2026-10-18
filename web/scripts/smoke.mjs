@@ -560,6 +560,23 @@ async function script() {
     }
     record('Cast cue presentation', ['start', 'release', 'impact'].every(p => phases.has(p)), `phases: ${[...phases].join(', ')}`);
   }
+  if (flag('forecasts')) {
+    const seen = new Set();
+    for (let attempt = 0; attempt < 3 && !seen.has('primary_candidate'); attempt++) {
+      const target = await nearest(e => typeof e.pattern === 'string' && e.pattern.startsWith('hob') && !e.dead);
+      if (!target) break;
+      await travelTo(target.key, 3, 45000); await hover(target.key); await page.keyboard.press('Digit2');
+      const end = Date.now() + 3000;
+      while (Date.now() < end) {
+        const casts = await hw(() => window.hollowWake.castForecasts().filter(c => String(c.source) === String(window.hollowWake.self()?.key)));
+        for (const c of casts) if (!seen.has(c.coverage)) {
+          seen.add(c.coverage); await page.screenshot({ path: join(shots, `forecast_${c.coverage}.png`) });
+        }
+        await sleep(15);
+      }
+    }
+    record('shared cast forecast', seen.has('primary_candidate'), `coverage: ${[...seen].join(', ')}`);
+  }
   // Hobs wander and fight back, so each try walks up again first.
   const isHob = (e) => typeof e.pattern === 'string' && e.pattern.startsWith('hob') && !e.dead;
   let hob = await nearest(isHob);

@@ -346,6 +346,27 @@ public static class Bench
         var (panelMs, panelBytes, _) = Snapshot(sim, builder, views, playerEntities, output, snapshots);
         yield return new Result("snapshot.interface.build", panelMs / (snapshots * players), "ms/player", "deltas plus the interface states on change, build and encode");
         yield return new Result("snapshot.interface.bytes", panelBytes / (double)(snapshots * players) / 1024, "KB/player", "an interface client: deltas, self state with pools and casts, weave slots, inventory, passives and pages on change");
+        // The exact production forecast builder, including per-tick shared sampling, viewer eligibility,
+        // baseline construction and JSON. Refresh interest outside this incremental measurement.
+        var forecasts = new CastForecastBuilder(sim);
+        double forecastMs = 0; long forecastBytes = 0, forecastAlloc = 0, forecastCasts = 0;
+        for (var round = 0; round < snapshots; round++)
+        {
+            sim.Tick(); sim.Tick();
+            for (var i = 0; i < playerEntities.Count; i++)
+            {
+                output.Clear(); builder.Entities(views[i], playerEntities[i], output);
+                var before = GC.GetAllocatedBytesForCurrentThread(); var t0 = Stopwatch.GetTimestamp();
+                var forecast = forecasts.Build(views[i], playerEntities[i], .1);
+                forecastBytes += MessageSerializer.Encode(forecast).Length;
+                forecastMs += Stopwatch.GetElapsedTime(t0).TotalMilliseconds;
+                forecastAlloc += GC.GetAllocatedBytesForCurrentThread() - before;
+                forecastCasts += forecast.Casts.Count + (forecast.Retained?.Count ?? 0);
+            }
+        }
+        yield return new Result("snapshot.forecast.build", forecastMs / (snapshots * players), "ms/player", $"incremental build + encode, {forecastCasts} active cast observations");
+        yield return new Result("snapshot.forecast.bytes", forecastBytes / (double)(snapshots * players) / 1024, "KB/player", "complete opt-in baseline, incremental to entity/interface stream");
+        yield return new Result("snapshot.forecast.alloc", forecastAlloc / (double)(snapshots * players) / 1024, "KB/player", "incremental forecast build and encode allocation");
     }
 
     /// <summary>Runs a stretch of snapshots the way the zone does: two ticks, then every viewer; the self state every fifth snapshot.</summary>

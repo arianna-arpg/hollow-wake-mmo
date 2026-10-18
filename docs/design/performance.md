@@ -11,6 +11,7 @@ The foundation must stay pristine as the game scales, so performance is measured
 - `worldgen.*`: zone planning, chunk generation time and allocation, climate sampling.
 - `zone.*`: a loaded start zone with several hundred monsters and a few walking, casting players, ticking for a stretch: average, median, 95th percentile and worst tick, allocation per tick, events per tick, per-system time and allocation (the simulation's profiler), and errors.
 - `snapshot.*`: what the server builds and serializes per player per snapshot on the server path: the one-time burst on entering a zone, then steady state with only changed entities as full states, then the same with deltas opted in.
+- `snapshot.forecast.*`: incremental production forecast observation, interest filtering, exact revision reuse and JSON encoding. The note reports active observations so an empty scene cannot masquerade as a forecast measurement. Entity interest refresh is measured by the preceding snapshot groups, not again here.
 
 `--only <group>` runs one group; `--monsters`, `--players`, `--ticks` and `--minions` (pooled summons per player, so minions think, follow and fight) size the zone run; `--json` emits results for machines.
 
@@ -26,11 +27,16 @@ Budgets are for the benchmark's default zone run in Release on a development mac
 | snapshot.build | at most 1 ms per player | Ten snapshots a second per player |
 | snapshot.bytes | at most 30 KB per player per snapshot | Full states are the fallback for a client that does not negotiate deltas; in a melee of hundreds of monsters their life, stamina and cast progress change every snapshot |
 | snapshot.delta.bytes | at most 10 KB per player per snapshot | Every shipped client negotiates deltas, so this is the number players feel |
+| snapshot.forecast.build | at most 0.5 ms per player | Additional authoritative geometry work at snapshot cadence, shared across viewers where possible |
+| snapshot.forecast.bytes | at most 3 KB per player per snapshot | Incremental to entity/interface traffic; unchanged exact revisions avoid repeating complete regions |
+| snapshot.forecast.alloc | at most 128 KB per player per snapshot | Includes pure observation, viewer eligibility, frame construction and serialization |
 | worldgen.chunk | at most 4 ms and 400 KB | Zones load in well under a second; clients stream without hitches |
 | attribute.apply.extra | at most 500 ns and 200 bytes | Every hit folds damage several times |
 | expression.evaluate | at most 150 ns, no allocation for small calls | Formulas run everywhere |
 
 When a change crosses a budget, the change is wrong until the budget is restored or the budget is argued down in this file.
+
+Snapshot groups run sequential stretches of the same workload, so adding their averages is only a traffic estimate, not a simultaneous end-to-end measurement. Run `--only tick --cast-cues true` to include confirmed cast-event production, and add `--minions` for a summon-heavy stress report. Default budgets remain default-workload gates; stress reports must explicitly retain any over-budget measurements and do not establish crowd or minimum-hardware certification.
 
 ## Profiling
 

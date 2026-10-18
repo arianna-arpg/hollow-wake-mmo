@@ -34,3 +34,9 @@ world_events: true
 world_event_interval_seconds: 900
 max_active_world_events: 3
 log_intents: false
+
+# Optional shared cast forecasts. Baselines use snapshot cadence; stale bounds lose spatial certainty.
+cast_forecasts:
+  max_casts: 256
+  valid_seconds: 0.5
+  refresh_seconds: 2

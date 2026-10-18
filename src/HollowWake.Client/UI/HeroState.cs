@@ -95,6 +95,13 @@ public sealed class HeroState
         Version++;
     }
 
+    /// <summary>A world-entry epoch has an independent clock; never ease from the previous zone.</summary>
+    public void ResetServerClock(double serverTime, double now)
+    {
+        ServerOffset = serverTime - now;
+        HasServerClock = true;
+    }
+
     /// <summary>Learns the server clock from a time the server stamped a message with, smoothing jitter.</summary>
     public void ObserveServerTime(double serverTime, double now)
     {

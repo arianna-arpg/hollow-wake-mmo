@@ -67,7 +67,7 @@ public sealed class ZoneHost
         }
         var log = new LoggerSimLog(_logs.CreateLogger("zone." + coord.Key));
         var sim = ZoneBuilder.CreateZone(Content, Generator, World, coord, log, _config.TickRate, _chunks);
-        zone = new ZoneInstance(coord, sim, _logs.CreateLogger<ZoneInstance>(), _config.SnapshotRate, _config.InterestRadius);
+        zone = new ZoneInstance(coord, sim, _logs.CreateLogger<ZoneInstance>(), _config.SnapshotRate, _config.InterestRadius, _config.CastForecasts);
         zone.TransferRequested += (session, at) => Transfer(session, at);
         _zones[coord] = zone;
         _log.LogInformation("zone {Zone} '{Name}' loaded: {Report}", coord, zone.Info.Name, zone.LoadReport);
@@ -129,7 +129,7 @@ public sealed class ZoneHost
         zone.Add(session);
         session.State = SessionState.InWorld;
         var t = zone.Sim.World.Get<Transform>(session.Entity)!;
-        session.Send(new EnterWorldMsg(sheet.Id, session.Entity.Key, zone.Key, t.Position.X, t.Position.Y, t.Position.Z, WorldInfo(), zone.Sim.Clock.Time, _config.TickRate));
+        session.Send(new EnterWorldMsg(sheet.Id, session.Entity.Key, zone.Key, t.Position.X, t.Position.Y, t.Position.Z, WorldInfo(), zone.Sim.Clock.Time, _config.TickRate) { ForecastEpoch = session.View.SendCastForecasts ? zone.ForecastEpoch : null });
         session.Send(new ZoneChangedMsg(zone.Key, zone.Info.Name, zone.Info.Level, zone.Info.Safe));
         foreach (var chunk in zone.ModifiedChunks())
         {
@@ -188,7 +188,7 @@ public sealed class ZoneHost
         }
         zone.Add(session);
         var pos = zone.Sim.World.Get<Transform>(session.Entity)!.Position;
-        session.Send(new EnterWorldMsg(session.Character.Id, session.Entity.Key, zone.Key, pos.X, pos.Y, pos.Z, WorldInfo(), zone.Sim.Clock.Time, _config.TickRate));
+        session.Send(new EnterWorldMsg(session.Character.Id, session.Entity.Key, zone.Key, pos.X, pos.Y, pos.Z, WorldInfo(), zone.Sim.Clock.Time, _config.TickRate) { ForecastEpoch = session.View.SendCastForecasts ? zone.ForecastEpoch : null });
         session.Send(new ZoneChangedMsg(zone.Key, zone.Info.Name, zone.Info.Level, zone.Info.Safe));
         foreach (var chunk in zone.ModifiedChunks())
         {

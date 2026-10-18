@@ -1,0 +1,16 @@
+
+> hollow-wake-web@0.1.0 test
+> vitest run
+
+
+ RUN  v5.0.3 <worktree>/web
+
+
+ Test Files  26 passed (26)
+      Tests  206 passed (206)
+   Start at  19:02:27
+   Duration  1.57s (transform 57%, import 33%, tests 8%, worker 2%)
+
+  Transform  transforming modules took 7.98s · 57% of tracked time, re-done on every run
+             persist transforms across runs with fsModuleCache: true
+             learn more: https://vitest.dev/guide/improving-performance#caching-between-reruns

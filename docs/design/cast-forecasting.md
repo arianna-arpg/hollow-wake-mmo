@@ -1,4 +1,32 @@
-# Cast forecasting
+# Cast and attack forecasting
+
+This section is the implemented contract for shared cast forecasting and positional hits. The proposal and diagnostic study below retain explicit follow-on scope. Implementation evidence and integration review live in the [shared forecasting handoff](../reviews/2026-10-17-shared-cast-forecasts.md).
+
+## Production shared forecasting
+
+Every active cast uses `WeaveRuntime.DescribeCast`. It observes the compiled delivery after forms, Threads, glyphs and cast-local modifiers compose. It does not dispatch by skill identity. The area capability and hit resolution share the same resolved geometry and candidate predicate; modifiers change the live sampled region through the existing attribute fold. Every active mechanism supplies timing, with explicit unavailable spatial coverage when its graph cannot be safely described. A primary region never claims the whole effect graph, secondary emissions, damage or future victim selection.
+
+`CastForecastBuilder` caches a pure observation once per entity per simulation tick across viewers. It converts dimensions without snapshot rounding and evaluates current viewer candidacy through the shared predicate. Known-source interest is required; a hidden stored target suppresses geometry conservatively. No hidden target coordinates or inferred future rolls are sent. Positional misses are logged without disclosing a hidden target identity.
+
+Clients negotiate `cast_forecast_v1`, which also grants `cast_cues`. `EnterWorldMsg.forecast_epoch` identifies the zone-instance lifetime. A reliable ordered `CastForecastMsg` contains complete active membership, increasing sequence, sample time, expiry, cast identities, independent emission/readiness/max-hold deadlines, committed-direction policy, optional primary candidate regions, and an explicit omitted count. Changed/new members carry full records; unchanged members reference the exact sequence of their last full record. Both clients refuse a missing revision and report the unknown member until periodic full-record repair. Geometry changes are never quantized away. Complete membership replaces old state at snapshot cadence, including empty frames. End/interruption suppress preparation immediately; a miss or channel release does not terminate an ongoing channel. World entry/reconnect clears old epochs and resets the clock. Despawn removes that source. A local timer never releases a cast. Expired samples lose their spatial outline and retain an explicit delayed/unknown indication until repaired.
+
+Both clients consume the same `ui_cast_forecasts` content for colors, stroke, uncertainty dashes, directional marker, dimensions, labels and segment quality. Timing panels use screen-space font/bar dimensions; boundaries retain world units. They use the existing shape adapters with exact sampled dimensions, bypassing cosmetic defaults and clamps. Tessellation increases with resolved dimensions to bound chord error; an over-budget outline becomes unknown rather than inaccurate. Unsupported shape names decline spatial presentation rather than falling back to a circle. Combat-derived fixtures exercise every built-in shape, including thin hollow variants, against both adapters and the live combat predicates. The registered vocabularies must match. To add a new shape, register its combat predicate and both drawing adapters and extend this parity gate; individual spells and supports need no renderer edits. A custom shape needs a distinct wire name: replacing the collision meaning of an existing name without matching adapters violates the contract.
+
+The primary perimeter stays broken because origin, size, LOS, target caps and requirements can still change. A closed direction marker means direction is committed; an open marker means aim can change. Short vertical markers show the actual upper and lower center-height limits. This is a candidate envelope in the authoritative world frame, not terrain/bridge clipping; wall and surface eligibility are still conditional. The boundary remains readable through scenery, while decorative cast cues keep their own depth policy. Reduced-motion mode retains the same steady boundaries and linear progress with no pulsing or sweep.
+
+Server `cast_forecasts.max_casts` bounds each frame; `valid_seconds` bounds stale knowledge, with at least three snapshot intervals of repair allowance. `refresh_seconds` bounds full-record repair for unchanged members. Overload selects nearest known casters deterministically and displays an explicit additional-casts warning in both clients. This is an overload warning, not a certified combined danger envelope; crowded-world release still requires density/readability work. Geometry meshes are reused while only their authoritative transform changes.
+
+### Current coverage and extension gate
+
+- All current/future active casts inherit lifecycle, timing, expiry, interest handling and the common presentation settings.
+- Supported direct area roots inherit actual shapes and modifiers, for melee, spells, players, monsters and summons through the same resolver.
+- Already emitted projectiles and fields continue using their authoritative entity shape stream. Preparing an unsupported delivery, dependent multi-root graph or unsafe/random geometry displays unknown coverage; its future travel, secondary scatter/pulses or acquisition targets are not fabricated.
+- A new delivery family implements `IDeliveryPlanSource` only if it can describe its semantics safely. Wrappers must preserve sequencing, placement, conditional state and scope. The migration coverage record remains partial until these capabilities exist and tests prove them. A neutral fallback does not satisfy full visual parity.
+- Forecasts do not yet include prospective damage, guaranteed survival, per-surface clipping, AI dodge decisions, latency compensation or a comprehensive hazard union under overload.
+
+The integrated review record lists the tested baseline, complete gates and remaining rollout limits. Benchmark `snapshot.forecast.*` measures the actual production builder and JSON serialization separately from entity snapshots, with the active observation count so empty work cannot masquerade as a loaded measurement.
+
+## Original study and follow-on design (historical)
 
 Status: shared-system design with a production core primary-area plan and executable experiment. Cast lifecycle, wire and production client integration remain proposed. See the [foundation handoff](../reviews/2026-10-17-delivery-plan-foundation.md) for current ownership and verification, and the [original proposal handoff](../reviews/2026-10-17-cast-forecasting.md) for its provenance.
 

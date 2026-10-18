@@ -60,6 +60,8 @@ public sealed class SnapshotView
     /// </summary>
     public bool SendInterface { get; set; }
     public bool SendCastCues { get; set; }
+    public bool SendCastForecasts { get; set; }
+    internal readonly Dictionary<long, (CastForecastInfo Info, long Revision, double RefreshAt)> Forecasts = new();
 
     /// <summary>Fingerprints of the interface states last sent, and when the weave previews last refreshed.</summary>
     internal ulong InventoryFingerprint;
@@ -92,6 +94,7 @@ public sealed class SnapshotView
         Changed.Clear();
         ChangedDeltas.Clear();
         Known.Clear();
+        Forecasts.Clear();
         SelfCache.Clear();
         SelfFingerprint = 0;
         SelfSentAt = double.NegativeInfinity;
