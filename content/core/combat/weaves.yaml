@@ -176,7 +176,7 @@ entries:
   # ---- minion and device kits
   - { id: shade_bolt, name: Shade Bolt, form: bolt, threads: [umbra], color: "#5a4a7a", attributes: { base_damage: 9 } }
   - { id: warden_slam, name: Warden Slam, form: cleave, threads: [stone], color: "#9c8b72", attributes: { damage.effectiveness: 1.1 } }
-  - { id: snare_burst, name: Snare Burst, form: snare_blast, threads: [stone], color: "#9c8b72", attributes: { base_damage: 12, area.radius: 2 } }
+  - { id: snare_burst, name: Snare Burst, form: blast, threads: [stone], color: "#9c8b72", attributes: { base_damage: 12, area.radius: 2 } }
   - id: grave_burst
     name: Grave Burst
     form: rite

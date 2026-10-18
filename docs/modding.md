@@ -94,9 +94,9 @@ A code mod is a .NET assembly that references `HollowWake.Core` and, before the 
 - `MechanismRegistry.Register("my_mechanism", probe)` for a mechanism probe glyphs can require.
 - `HitStages.Register(new MyStage())` for a hit stage, placed by rule `combat.stages`.
 - `TriggerKinds.Register("my_trigger")` for a trigger kind, raised through the simulation's `TriggerHub`.
-- `IntentHandlers.Register<MyIntent>(handler)` on a simulation's intent handlers for a new intent; any actor may send it, players by message and the AI through `AiIntents.Send`, unless it is registered with `playerOnly: true` because it works a player's state.
+- `IntentHandlers.Register<MyIntent>(handler)` on a simulation's intent handlers for a new intent; any actor may send it, players by message and the AI through `AiIntents.Send`, unless it is registered with `playerOnly: true` because it works a player's state. A handler reads `IntentContext.Player`, which is null when the sender is not a player.
 - `Curves.Register("my_curve", curve)` for a named curve.
-- `AiActions.Register("my_action", ...)` for a new AI action; it changes the simulation only by sending intents through `AiIntents.Send`, as a player would.
+- `AiActions.Register("my_action", ...)` for a new AI action; it changes the simulation by sending intents through `AiIntents.Send`, as a player would.
 - `QuestService.Register("my_objective", matcher)` for a new objective type.
 - `InteractionService.Register("my_kind", handler)` for a new interactable kind.
 - `PatternFactory.Register("my_component", binder)` for a new component.

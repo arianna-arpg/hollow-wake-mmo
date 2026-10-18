@@ -1,4 +1,7 @@
+using System.Globalization;
 using System.Numerics;
+using System.Security.Cryptography;
+using System.Text;
 using HollowWake.Core.Ai;
 using HollowWake.Core.Characters;
 using HollowWake.Core.Components;
@@ -9,7 +12,6 @@ using HollowWake.Core.Items;
 using HollowWake.Core.Patterns;
 using HollowWake.Core.Sim;
 using HollowWake.Core.Systems;
-using HollowWake.Core.Weaves;
 using HollowWake.Core.World;
 using Xunit;
 
@@ -17,8 +19,8 @@ namespace HollowWake.Core.Tests;
 
 /// <summary>
 /// The intent seam: AI bodies act through the intents a player sends, dispatched at once during the think
-/// through the same handlers, and hear refusals directly; constructs cast through the runtime like anyone;
-/// a player's click plans as a chase does.
+/// through the same handlers, and hear refusals directly; a player's click plans as a chase does, on bounded
+/// work; and the AI's walks follow the same ground, tick for tick, as before they were intents.
 /// </summary>
 public class AiIntentTests
 {
@@ -33,14 +35,13 @@ public class AiIntentTests
         return (sim, h, p);
     }
 
-    /// <summary>The default handlers behind a registry that counts what it passes on, by intent type and per tick.</summary>
+    /// <summary>The default handlers behind a registry that counts what it passes on, by intent type.</summary>
     private sealed class Counting
     {
         private readonly IntentHandlers _real = IntentHandlers.CreateDefault();
 
         public readonly IntentHandlers Handlers = new();
         public readonly Dictionary<Type, int> Handled = new();
-        public int ThisTick;
 
         public Counting()
         {
@@ -48,7 +49,6 @@ public class AiIntentTests
             Pass<MoveDirIntent>();
             Pass<StopIntent>();
             Pass<JumpIntent>();
-            Pass<FaceIntent>();
             Pass<UseWeaveIntent>();
         }
 
@@ -58,7 +58,6 @@ public class AiIntentTests
             Handlers.Register<T>((in IntentContext ctx, T _) =>
             {
                 Handled[typeof(T)] = Handled.GetValueOrDefault(typeof(T)) + 1;
-                ThisTick++;
                 _real.Dispatch(ctx);
             });
     }
@@ -79,41 +78,38 @@ public class AiIntentTests
         };
     }
 
+    private static void Block(Simulation sim, int x, int y)
+    {
+        var (chunk, i) = sim.Terrain.Locate(new CellCoord(x, y));
+        chunk.Flags[i] |= CellFlags.Blocked;
+    }
+
+    private static Entity Player(Simulation sim, string name, Vector3 at)
+    {
+        var characters = sim.Service<CharacterFactory>();
+        var sheet = characters.Create(sim, "c-" + name, "a-" + name, name, "holdfast", sim.Service<ItemGenerator>());
+        sheet.Position = at;
+        return characters.Materialize(sim, sheet);
+    }
+
     [Fact]
-    public void AnAiBodysStopsMovesFacingAndCastsLeaveAsIntentsAndTheHandlersRunThem()
+    public void AnAiBodysStopsWalksAndCastsLeaveAsIntentsAndTheHandlersRunThem()
     {
         var (sim, wolf, boar) = Duel(apart: 8);
         var counting = new Counting();
         sim.AddService(counting.Handlers);
-        var b = sim.World.Get<Behavior>(wolf)!;
         var bites = 0;
         sim.Events.Subscribe<DamageDealt>(d => bites += d.Source == wolf && d.Target == boar ? 1 : 0);
-        var chaseThinks = 0;
-        var silentThinks = 0;
-        for (var i = 0; i < 6 * sim.Clock.TicksPerSecond; i++)
-        {
-            var thinkAt = b.NextThinkAt;
-            counting.ThisTick = 0;
-            sim.Tick();
-            if (b.NextThinkAt != thinkAt && b.State == "chase")
-            {
-                chaseThinks++;
-                silentThinks += counting.ThisTick == 0 ? 1 : 0;
-            }
-        }
+        sim.RunSeconds(6);
         Assert.True(counting.Of<MoveToIntent>() > 0, "the wolf never walked by intent");
         Assert.True(counting.Of<StopIntent>() > 0, "the wolf never stopped by intent");
-        Assert.True(counting.Of<FaceIntent>() > 0, "the wolf never turned by intent");
         Assert.True(counting.Of<UseWeaveIntent>() > 0, "the wolf never cast by intent");
-        // Every think of the chase acts, and acts by intent: a move toward the boar or a stop beside it.
-        Assert.True(chaseThinks > 0);
-        Assert.Equal(0, silentThinks);
         Assert.True(bites > 0, "the handlers never carried a bite home");
         Assert.False(AiActions.TryGet("heal_self", out _), "a free heal is nothing an intent can ask for");
     }
 
     [Fact]
-    public void WithNoHandlersNeitherABeastNorATotemWalksTurnsOrCasts()
+    public void WithNoHandlersABeastNeitherWalksNorCasts()
     {
         var (sim, wolf, _) = Duel(apart: 8);
         sim.AddService(new IntentHandlers());
@@ -126,19 +122,58 @@ public class AiIntentTests
         Assert.Equal("chase", sim.World.Get<Behavior>(wolf)!.State);
         Assert.Equal(x, t.Position.X);
         Assert.Equal(y, t.Position.Y);
+        // Out of reach the chase only walks, so nothing turns it either.
         Assert.Equal(yaw, t.Yaw);
         Assert.Equal(0, casts);
         Assert.False(sim.World.Get<Motion>(wolf)!.WantsToMove);
+    }
 
-        // A construct's casts leave the same way.
-        var arena = MinionArena.Create(9);
-        arena.Foe("tangle", arena.OwnerAt.Position + new Vector3(6, 0, 0));
-        arena.Cast(arena.Learn("plant_ember_totem"), point: arena.OwnerAt.Position + new Vector3(2, 2, 0));
-        var totem = arena.Minions("ember_totems").Single();
+    [Fact]
+    public void WithNoHandlersNoMinionFollowsHeelsOrObeys()
+    {
+        var arena = MinionArena.Create();
+        arena.Cast(arena.Learn("t_shades"));
+        var minions = arena.Minions("t_shades");
+        Assert.Equal(2, minions.Count);
         arena.Sim.AddService(new IntentHandlers());
-        arena.Events.Clear();
-        arena.Sim.RunSeconds(3);
-        Assert.DoesNotContain(arena.Events.OfType<WeaveCast>(), w => w.Caster == totem);
+        var start = minions.ToDictionary(m => m, m => arena.At(m));
+        var seen = minions.ToDictionary(m => m, _ => new HashSet<string>());
+        void Run(double seconds)
+        {
+            for (var i = 0; i < seconds * arena.Sim.Clock.TicksPerSecond; i++)
+            {
+                arena.Sim.Tick();
+                foreach (var m in minions)
+                {
+                    seen[m].Add(arena.Sim.World.Get<Behavior>(m)!.State);
+                }
+            }
+        }
+        var home = arena.OwnerAt.Position;
+        // Follow: the owner steps beyond the follow distance.
+        arena.Move(arena.Owner, home + new Vector3(8, 0, 0));
+        Run(1);
+        // Heel: with a foe to fight, the owner goes past the leash but short of the recall distance, for less
+        // than the time a stuck minion waits before the leash recall (a world rule) teleports it.
+        var foe = arena.Foe("hob", home + new Vector3(0, 3, 0));
+        foreach (var m in minions)
+        {
+            arena.Sim.World.Get<Behavior>(m)!.Target = foe;
+        }
+        Run(0.5);
+        arena.Move(arena.Owner, home + new Vector3(20, 0, 0));
+        Run(1);
+        // Obey: an order to hold a mark.
+        arena.Sim.Events.Publish(new MinionCommandRequested(arena.Owner, "hold", Entity.None, home + new Vector3(0, -6, 0), "t_shades"));
+        Run(1);
+        foreach (var m in minions)
+        {
+            Assert.Contains("follow", seen[m]);
+            Assert.Contains("heel", seen[m]);
+            Assert.Contains("obey", seen[m]);
+            Assert.Equal(start[m].X, arena.At(m).X);
+            Assert.Equal(start[m].Y, arena.At(m).Y);
+        }
     }
 
     [Fact]
@@ -174,72 +209,42 @@ public class AiIntentTests
         Assert.Equal("held_fast", walk.Refusal);
         Assert.Equal("no_slot", AiIntents.Send(ctx, new UseWeaveIntent(99, boar, Vector3.Zero, Vector2.Zero)).Refusal);
         Assert.Equal(IntentHandlers.PlayersOnly, AiIntents.Send(ctx, new PickUpIntent(boar)).Refusal);
-        Assert.True(AiIntents.Send(ctx, new FaceIntent(new Vector3(10.5f, 20, 0))).Accepted);
+        Assert.True(AiIntents.Send(ctx, AiIntents.Stop).Accepted);
         Assert.Equal(new[] { "held_fast", "no_slot", IntentHandlers.PlayersOnly }, ctx.Refusals.Select(r => r.Reason));
         Assert.IsType<MoveToIntent>(ctx.Refusals[0].Intent);
         Assert.Equal(0, published);
     }
 
     [Fact]
-    public void AConstructsCastPaysItsCostAndWaitsItsCastTime()
+    public void TheHandlersThatTakePlayersOnlyAreTheseAndNoOthers()
     {
-        var arena = MinionArena.Create(9);
-        arena.Foe("tangle", arena.OwnerAt.Position + new Vector3(8, 0, 0));
-        arena.Cast(arena.Learn("plant_ember_totem"), point: arena.OwnerAt.Position + new Vector3(2, 0, 0));
-        var totem = arena.Minions("ember_totems").Single();
-        var stats = arena.Sim.World.Get<Stats>(totem)!;
-        var book = arena.Sim.World.Get<WeaveBook>(totem)!;
-        var runtime = arena.Sim.Service<WeaveRuntime>();
-        var weave = runtime.Resolve(arena.Sim, book.Slots[0], out _)!;
-        // The shipped devices cast free: their pattern folds every cost to nothing, through the same costs.
-        Assert.Equal(0, runtime.Costs(weave, stats)["mana"]);
-        // Without that waiver the totem pays as anyone would.
-        stats.Attributes.RemoveSource("pattern");
-        var cost = runtime.Costs(weave, stats)["mana"];
-        Assert.True(cost > 0);
-        double? manaAtStart = null, paid = null, startedAt = null, castAt = null, duration = null;
-        arena.Sim.Events.Subscribe<WeaveStarted>(w =>
+        var handlers = IntentHandlers.CreateDefault();
+        string[] Names(bool playerOnly) => handlers.IntentTypes.Where(t => handlers.IsPlayerOnly(t) == playerOnly)
+            .Select(t => t.Name).OrderBy(n => n, StringComparer.Ordinal).ToArray();
+        Assert.Equal(new[]
         {
-            if (w.Caster == totem && startedAt is null)
-            {
-                startedAt = arena.Sim.Clock.Time;
-                duration = w.CastTime;
-                paid = manaAtStart - stats.Resource("mana");
-            }
-        });
-        arena.Sim.Events.Subscribe<WeaveCast>(w =>
+            "AcceptQuestIntent", "AllocatePassiveIntent", "BindFountIntent", "BindGraftIntent", "BuildStructureIntent",
+            "BuyBackIntent", "BuyIntent", "BuyPageIntent", "BuyTreeNodeIntent", "ChooseDialogueIntent",
+            "CloseDialogueIntent", "ClosePaneIntent", "CraftStartIntent", "CraftSubmitIntent", "DropItemIntent",
+            "EnactDecreeIntent", "EquipIntent", "InteractIntent", "LearnFormIntent", "MoveItemIntent", "PickUpIntent",
+            "RefundPassiveIntent", "RespawnIntent", "SellIntent", "SetWeaveIntent", "SocketStoneIntent",
+            "StationServiceIntent", "TurnInQuestIntent", "UnequipIntent", "UnlearnFormIntent", "UnsocketStoneIntent",
+        }, Names(playerOnly: true));
+        Assert.Equal(new[]
         {
-            if (w.Caster == totem && castAt is null)
-            {
-                castAt = arena.Sim.Clock.Time;
-            }
-        });
-        for (var i = 0; i < 3 * arena.Sim.Clock.TicksPerSecond && castAt is null; i++)
-        {
-            manaAtStart = stats.Resource("mana");
-            arena.Sim.Tick();
-        }
-        Assert.NotNull(startedAt);
-        Assert.NotNull(castAt);
-        Assert.Equal(cost, paid!.Value, 6);
-        Assert.Equal(runtime.CastDuration(weave, stats), duration!.Value, 6);
-        Assert.True(duration > 0);
-        Assert.True(castAt - startedAt >= duration - 1e-9, $"the bolt flew {castAt - startedAt}s into a {duration}s cast");
+            "AimIntent", "CancelCastIntent", "CommandMinionsIntent", "JumpIntent", "MoveDirIntent", "MoveToIntent",
+            "PressWeaveIntent", "ReleaseWeaveIntent", "StopIntent", "SwapWeaveSlotsIntent", "UseMetaIntent", "UseWeaveIntent",
+        }, Names(playerOnly: false));
     }
 
     [Fact]
     public void APlayersClickPlansAsAChaseDoesButAfreshEachTime()
     {
         var sim = ZoneBuilder.CreateArena(CoreContent.Registry, 1);
-        var characters = sim.Service<CharacterFactory>();
-        var sheet = characters.Create(sim, "c-click", "a-click", "Clicker", "holdfast", sim.Service<ItemGenerator>());
-        sheet.Position = new Vector3(5, 5, 0);
-        var e = characters.Materialize(sim, sheet);
+        var e = Player(sim, "Clicker", new Vector3(5, 5, 0));
         var player = sim.World.Get<Player>(e)!;
         var m = sim.World.Get<Motion>(e)!;
         var t = sim.World.Get<Transform>(e)!;
-        Assert.False(sim.Service<IntentHandlers>().IsPlayerOnly<MoveToIntent>());
-        Assert.True(sim.Service<IntentHandlers>().IsPlayerOnly<PickUpIntent>());
 
         // Over clear ground a click walks straight at the point, as a chase does.
         player.Intents.Enqueue(new MoveToIntent(new Vector3(15, 5, 0)));
@@ -260,19 +265,13 @@ public class AiIntentTests
         // Around a wall the click searches, on the pathfinder's own budget, and gets there.
         for (var y = 2; y <= 12; y++)
         {
-            var (chunk, i) = sim.Terrain.Locate(new CellCoord(17, y));
-            chunk.Flags[i] |= CellFlags.Blocked;
+            Block(sim, 17, y);
         }
         player.Intents.Enqueue(new MoveToIntent(new Vector3(20.5f, 6.5f, 0)));
         sim.Tick();
         Assert.NotEmpty(m.Path);
         sim.RunSeconds(5);
         Assert.True(t.GroundDistanceTo(new Vector3(20.5f, 6.5f, 0)) < 0.5f, $"the click around the wall ended at {t.Position}");
-
-        // Facing is an intent any actor sends.
-        player.Intents.Enqueue(new FaceIntent(t.Position + new Vector3(0, -3, 0)));
-        sim.Tick();
-        Assert.Equal(-MathF.PI / 2, t.Yaw, 3);
     }
 
     [Fact]
@@ -282,16 +281,12 @@ public class AiIntentTests
         // A long wall between the walkers and their goal: the way round takes a search past the AI's budget.
         for (var y = 10; y <= 70; y++)
         {
-            var (chunk, i) = sim.Terrain.Locate(new CellCoord(17, y));
-            chunk.Flags[i] |= CellFlags.Blocked;
+            Block(sim, 17, y);
         }
         var goal = new Vector3(22.5f, 40.5f, 0);
         var pathfinder = sim.Service<Pathfinder>();
         var aiBudget = (long)sim.Content.Rules.Number("move.ai_path_max_nodes", 500);
-        var characters = sim.Service<CharacterFactory>();
-        var sheet = characters.Create(sim, "c-budget", "a-budget", "Budget", "holdfast", sim.Service<ItemGenerator>());
-        sheet.Position = new Vector3(12.5f, 40.5f, 0);
-        var player = sim.World.Get<Player>(characters.Materialize(sim, sheet))!;
+        var player = sim.World.Get<Player>(Player(sim, "Budget", new Vector3(12.5f, 40.5f, 0)))!;
         // A player's walk searches on the pathfinder's own budget, even sent as the AI sends its walks.
         var before = pathfinder.Expanded;
         player.Intents.Enqueue(new MoveToIntent(goal) { KeepPlan = true });
@@ -302,5 +297,79 @@ public class AiIntentTests
         before = pathfinder.Expanded;
         Assert.True(AiIntents.Send(ContextFor(sim, wolf), new MoveToIntent(goal)).Accepted);
         Assert.InRange(pathfinder.Expanded - before, 1, aiBudget);
+    }
+
+    [Fact]
+    public void AClickAnyDistanceAwayCostsBoundedWork()
+    {
+        (int Chunks, long Expanded) Click(float distance)
+        {
+            var sim = ZoneBuilder.CreateArena(CoreContent.Registry, 1);
+            var player = sim.World.Get<Player>(Player(sim, "Far", new Vector3(5, 5, 0)))!;
+            sim.Tick();
+            var pathfinder = sim.Service<Pathfinder>();
+            var (chunks, expanded) = (sim.Terrain.LoadedChunkCount, pathfinder.Expanded);
+            player.Intents.Enqueue(new MoveToIntent(new Vector3(5 + distance, 5.5f, 0)));
+            sim.Tick();
+            return (sim.Terrain.LoadedChunkCount - chunks, pathfinder.Expanded - expanded);
+        }
+        var budget = (long)CoreContent.Registry.Rules.Number("move.path_max_nodes", 4000);
+        var near = Click(1000);
+        var mid = Click(10000);
+        var far = Click(100000);
+        // Past the budget's reach a click searches on the budget and no further, however far the point lies:
+        // a click a hundred thousand units away loads no more ground than one at ten thousand.
+        Assert.InRange(far.Expanded, 1, budget);
+        Assert.Equal(mid.Chunks, far.Chunks);
+        Assert.True(far.Chunks < 4 * budget / 32, $"the far click loaded {far.Chunks} chunks");
+        // A click within the budget's reach finds its way and loads only the ground along it.
+        Assert.True(near.Chunks <= far.Chunks, $"the near click loaded {near.Chunks} chunks, the far {far.Chunks}");
+    }
+
+    /// <summary>
+    /// A hunter's walk tick by tick (position, facing and path length), the same trace the independent review
+    /// took on the base before the walks were intents.
+    /// </summary>
+    private static string Trace(string hunter, Vector3 at, Vector3 preyAt, Action<Simulation> walls, double seconds, bool preyMoves)
+    {
+        var sim = ZoneBuilder.CreateArena(CoreContent.Registry, 3);
+        var factory = sim.Service<PatternFactory>();
+        var h = factory.Spawn(sim, hunter, at, new SpawnOptions { Faction = "red" });
+        var p = factory.Spawn(sim, "boar", preyAt, new SpawnOptions { Faction = "blue" });
+        if (!preyMoves)
+        {
+            sim.World.Remove<Behavior>(p);
+        }
+        walls(sim);
+        var t = sim.World.Get<Transform>(h)!;
+        var m = sim.World.Get<Motion>(h)!;
+        var sb = new StringBuilder();
+        for (var i = 0; i < seconds * sim.Clock.TicksPerSecond; i++)
+        {
+            sim.Tick();
+            sb.Append(i).Append(' ')
+              .Append(t.Position.X.ToString("R", CultureInfo.InvariantCulture)).Append(' ')
+              .Append(t.Position.Y.ToString("R", CultureInfo.InvariantCulture)).Append(' ')
+              .Append(t.Yaw.ToString("R", CultureInfo.InvariantCulture)).Append(' ')
+              .Append(m.Path.Count).Append('\n');
+        }
+        return sb.ToString();
+    }
+
+    private static string Sha256(string text) => Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(text))).ToLowerInvariant();
+
+    [Fact]
+    public void ChasesAroundObstaclesWalkTheBaseTrajectoryTickForTick()
+    {
+        // The hashes are of the traces the base drew (main at a810b0a, before the walks were intents).
+        var detour = Trace("wolf", new Vector3(10.5f, 10.5f, 0), new Vector3(17.5f, 10.5f, 0),
+            sim => { for (var y = 2; y <= 18; y++) Block(sim, 14, y); }, 8, false);
+        Assert.Equal("2ec6e14af3a1528319c700b0fd63e2f5396be1ce6083eaca52322fd911159e30", Sha256(detour));
+        var forest = Trace("wolf", new Vector3(5.5f, 5.5f, 0), new Vector3(30.5f, 24.5f, 0),
+            sim => { for (var x = 8; x <= 28; x += 3) for (var y = 6; y <= 24; y += 2) { Block(sim, x, y); Block(sim, x, y + 1); } }, 12, false);
+        Assert.Equal("3334d55b1e943f275be04d54d10fcf4c93fc016dc2e8937014716e96009ab787", Sha256(forest));
+        var zigzag = Trace("hob", new Vector3(5.5f, 10.5f, 0), new Vector3(30.5f, 10.5f, 0),
+            sim => { for (var y = 0; y <= 16; y++) Block(sim, 10, y); for (var y = 5; y <= 22; y++) Block(sim, 16, y); for (var y = 0; y <= 16; y++) Block(sim, 22, y); }, 15, true);
+        Assert.Equal("2d722ec264001e4047db8221086d92f93714cc495901806dbcdeeb5ee2af20b6", Sha256(zigzag));
     }
 }

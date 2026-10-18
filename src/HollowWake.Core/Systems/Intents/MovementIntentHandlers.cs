@@ -4,7 +4,7 @@ using HollowWake.Core.Movement;
 
 namespace HollowWake.Core.Systems.Intents;
 
-/// <summary>Walking to a point, steering by direction, stopping, jumping and facing: any mover may send them.</summary>
+/// <summary>Walking to a point, steering by direction, stopping and jumping: any mover may send them.</summary>
 public static class MovementIntentHandlers
 {
     public static void Register(IntentHandlers handlers)
@@ -13,7 +13,6 @@ public static class MovementIntentHandlers
         handlers.Register<MoveDirIntent>(MoveDir);
         handlers.Register<StopIntent>(Stop);
         handlers.Register<JumpIntent>(Jump);
-        handlers.Register<FaceIntent>(Face);
     }
 
     /// <summary>
@@ -29,7 +28,7 @@ public static class MovementIntentHandlers
             ctx.Reject("unknown_intent");
             return;
         }
-        if (!Finite(m.Point))
+        if (!float.IsFinite(m.Point.X) || !float.IsFinite(m.Point.Y) || !float.IsFinite(m.Point.Z))
         {
             ctx.Reject("bad_point");
             return;
@@ -69,26 +68,4 @@ public static class MovementIntentHandlers
         }
         motion.JumpRequested = true;
     }
-
-    /// <summary>
-    /// Turns the sender toward a point at once. Nothing refuses it while a cast runs, as nothing refused the AI's
-    /// facing before it was an intent, so a raised guard's arc turns with the body; a turn rate for held casts
-    /// would be a rule checked here.
-    /// </summary>
-    private static void Face(in IntentContext ctx, FaceIntent f)
-    {
-        if (ctx.Transform is not { } transform)
-        {
-            ctx.Reject("unknown_intent");
-            return;
-        }
-        if (!Finite(f.Point))
-        {
-            ctx.Reject("bad_point");
-            return;
-        }
-        transform.Face(f.Point);
-    }
-
-    private static bool Finite(Vector3 p) => float.IsFinite(p.X) && float.IsFinite(p.Y) && float.IsFinite(p.Z);
 }

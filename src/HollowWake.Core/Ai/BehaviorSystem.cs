@@ -18,8 +18,9 @@ using HollowWake.Core.Weaves;
 namespace HollowWake.Core.Ai;
 
 /// <summary>
-/// What an AI action sees when it runs, and the sender it acts as: actions change the simulation only through
-/// the intents a player sends (<see cref="AiIntents.Send"/>), and each refusal is recorded here for the think.
+/// What an AI action sees when it runs, and the sender it acts as: actions change the simulation through the
+/// intents a player sends (<see cref="AiIntents.Send"/>), and each refusal is recorded here for the think. The
+/// world rules a body is under, which no intent asks for, are named in <see cref="AiActions"/>.
 /// </summary>
 public sealed class AiContext : IIntentSender
 {
@@ -58,7 +59,11 @@ public sealed class AiContext : IIntentSender
         init => _handlers = value;
     }
 
-    /// <summary>The intents this think sent that their handlers refused, with the reasons, in the order sent.</summary>
+    /// <summary>
+    /// The intents this think sent that their handlers refused, with the reasons, in the order sent. Valid only
+    /// during the think: the behavior system lends every think the same list and clears it before the next, so a
+    /// reader that needs the refusals later (the think's decision record) copies them before the think ends.
+    /// </summary>
     public IReadOnlyList<AiRefusal> Refusals => _refusals is null ? Array.Empty<AiRefusal>() : _refusals;
 
     /// <summary>
@@ -95,10 +100,10 @@ public sealed class AiContext : IIntentSender
 
 /// <summary>
 /// Registry of AI actions. Behaviors in content compose these by name. An action reads the AI's perception and
-/// writes its own mind (its target, its memory, its order), and acts on the simulation only by sending intents
-/// through <see cref="AiIntents"/>, as a player would; the few world rules a mind obeys but no player could
-/// ask for (a minion's leash recall, a spent trap's going, an echo carrying its owner's weaves) are service
-/// calls, named where they happen.
+/// writes its own mind (its target, its memory, its order), and acts on the simulation by sending intents
+/// through <see cref="AiIntents"/>, as a player would. The few world rules a body is under rather than asks for
+/// are named where they happen: facing its target (see <see cref="FaceTarget"/>), a minion's leash recall and a
+/// spent trap's going; and the device actions still fire their weaves through <c>ConstructCasting</c>.
 /// </summary>
 public static class AiActions
 {
@@ -197,7 +202,7 @@ public static class AiActions
         {
             if (c.TargetTransform is { } tt)
             {
-                AiIntents.Send(c, new FaceIntent(tt.Position));
+                FaceTarget(c, tt);
             }
         });
         Register("use_weave", (c, p) =>
@@ -235,10 +240,17 @@ public static class AiActions
 
     /// <summary>
     /// Walks toward a point as a destination sent again every think (<see cref="MoveToIntent.KeepPlan"/>), so the
-    /// move-to handler keeps a plan that still serves; see <see cref="Movement.MovePlanner"/>.
+    /// move-to handler keeps a plan that still serves; see <see cref="Movement.MovePlanner"/>. A plan already
+    /// leading to this very point that still stands is left as it is, since sending it again would change nothing.
     /// </summary>
-    internal static IntentOutcome MoveTo(AiContext c, Vector3 destination, float stop) =>
-        AiIntents.Send(c, new MoveToIntent(destination) { Stop = stop, KeepPlan = true });
+    internal static IntentOutcome MoveTo(AiContext c, Vector3 destination, float stop)
+    {
+        if (Movement.MovePlanner.Of(c.Sim).Stands(c.Sim, c.Motion, destination, stop))
+        {
+            return default;
+        }
+        return AiIntents.Send(c, new MoveToIntent(destination) { Stop = stop, KeepPlan = true });
+    }
 
     /// <summary>Closes on the target until within <paramref name="stop"/>, then stops and faces it.</summary>
     internal static void ChaseTo(AiContext c, Transform tt, float stop)
@@ -247,11 +259,19 @@ public static class AiActions
         if (dist <= stop)
         {
             AiIntents.Send(c, AiIntents.Stop);
-            AiIntents.Send(c, new FaceIntent(tt.Position));
+            FaceTarget(c, tt);
             return;
         }
         MoveTo(c, tt.Position, stop);
     }
+
+    /// <summary>
+    /// Turns the body toward its target at once: a rule of the simulation the behavior system applies, as the
+    /// leash recall and a spent trap's going are, not an intent; facing is not something a client asks for. A
+    /// turn rate, and the movement locks of a held cast holding the body's facing, are deferred: either would
+    /// move duels with roots and guards in them.
+    /// </summary>
+    private static void FaceTarget(AiContext c, Transform tt) => c.Transform.Face(tt.Position);
 
     /// <summary>Casts the weave the AI's hints choose at its target, as a player presses its key; true when a cast began.</summary>
     internal static bool AttackTarget(AiContext c)

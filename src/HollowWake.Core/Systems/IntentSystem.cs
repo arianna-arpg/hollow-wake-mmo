@@ -118,10 +118,17 @@ public sealed class IntentHandlers
     public void Register<T>(IntentHandler<T> handler, bool whileDead = false, bool playerOnly = false) where T : IIntent =>
         _handlers[typeof(T)] = new Entry<T> { Handler = handler, WhileDead = whileDead, PlayerOnly = playerOnly };
 
+    /// <summary>The registration as it was before senders other than players: open to any actor.</summary>
+    public void Register<T>(IntentHandler<T> handler, bool whileDead) where T : IIntent =>
+        Register(handler, whileDead, playerOnly: false);
+
     public bool Has<T>() where T : IIntent => _handlers.ContainsKey(typeof(T));
 
     /// <summary>Whether the handler for an intent type takes players only; false when none is registered.</summary>
-    public bool IsPlayerOnly<T>() where T : IIntent => _handlers.TryGetValue(typeof(T), out var entry) && entry.PlayerOnly;
+    public bool IsPlayerOnly<T>() where T : IIntent => IsPlayerOnly(typeof(T));
+
+    /// <summary>Whether the handler for an intent type takes players only; false when none is registered.</summary>
+    public bool IsPlayerOnly(Type intentType) => _handlers.TryGetValue(intentType, out var entry) && entry.PlayerOnly;
 
     public IEnumerable<Type> IntentTypes => _handlers.Keys;
 

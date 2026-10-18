@@ -117,8 +117,6 @@ public class ConstructTests
     public void AnEchoReplaysItsOwnersCastsAtHalfStrength()
     {
         var arena = Arena();
-        // The two hits compare like with like whatever each cast rolls: the replay rolls on the echo's own cast stream.
-        arena.OwnerStats.Attributes.Add(new Modifier { Attribute = "crit.chance", Form = ModifierForm.Override, Value = 0, Source = "test" });
         var foe = arena.Foe("tangle", arena.OwnerAt.Position + new Vector3(9, 0, 0));
         arena.Cast(arena.Learn("shade_echo"), point: arena.OwnerAt.Position);
         var echo = arena.Minions("echoes").Single();

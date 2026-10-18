@@ -1,6 +1,6 @@
-# Summoning forms: binding contracts, raising the dead, rites at a point, placing devices, laying snares and
-# the blast a sprung snare looses, raising domes and ordering minions. Their preset weaves carry the summon,
-# deploy and order effects; the summon form itself lives with the other forms.
+# Summoning forms: binding contracts, raising the dead, rites at a point, placing devices, laying snares,
+# raising domes and ordering minions. Their preset weaves carry the summon, deploy and order effects; the
+# summon form itself lives with the other forms.
 kind: forms
 entries:
   - id: bind
@@ -87,27 +87,6 @@ entries:
     min_threads: 0
     max_threads: 1
     max_glyphs: 2
-
-  # What a sprung snare looses: the blast, all at once, since a trap springs the moment a foe steps near.
-  - id: snare_blast
-    name: Snare Blast
-    description: A detonation at a point, all at once.
-    targeting: ground
-    cast_mode: instant
-    costs: { mana: 12 }
-    attributes: { range: 12, area.radius: 2.5, base_damage: 16 }
-    mechanisms: [area, spell, hit]
-    tags: [spell, area]
-    drop_weight: 0
-    effects:
-      - type: area
-        shape: circle
-        radius: "weave.area.radius"
-        center: point
-        filter: enemy
-        effects:
-          - { type: damage, amount: "weave.base_damage * spell.power", threads: $threads }
-          - { type: apply_status, status: $thread_status, chance: 0.3, threads: $threads }
 
   - id: dome
     name: Dome
