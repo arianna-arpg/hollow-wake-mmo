@@ -464,11 +464,12 @@ public sealed class ZonePlanner
     /// <summary>
     /// Search nearest chunks first, returning matching species from the first populated chunk in reach.
     /// Every candidate is backed by an actual spawn, with its actual site or pattern level. No candidate
-    /// means no quest. This consumes no placement RNG and never asks another zone to plan quests.
+    /// means no quest. The content-owned chunk limit includes cache hits, so slot order cannot extend
+    /// the search. This consumes no placement RNG and never asks another zone to plan quests.
     /// </summary>
     private List<PatternDef> LocalPatterns(List<PatternDef> candidates, QuestSlot req, PoiInstance giver, int questLevel)
     {
-        if (candidates.Count == 0) return candidates;
+        if (candidates.Count == 0 || _p.QuestPopulationChunks <= 0) return new List<PatternDef>();
         var first = _layout.ChunkOf(giver.X - req.Within, giver.Y - req.Within);
         var last = _layout.ChunkOf(giver.X + req.Within, giver.Y + req.Within);
         var chunks = new List<(ChunkCoord Coord, double Distance)>();
@@ -484,10 +485,17 @@ public sealed class ZonePlanner
         chunks.Sort((a, b) => a.Distance != b.Distance ? a.Distance.CompareTo(b.Distance)
             : a.Coord.Y != b.Coord.Y ? a.Coord.Y.CompareTo(b.Coord.Y) : a.Coord.X.CompareTo(b.Coord.X));
         var byId = candidates.ToDictionary(p => p.Id, StringComparer.Ordinal);
-        foreach (var (coord, _) in chunks)
+        var patternIds = new HashSet<string>(byId.Keys, StringComparer.Ordinal);
+        var limit = Math.Min(chunks.Count, _p.QuestPopulationChunks);
+        for (var i = 0; i < limit; i++)
         {
+            var coord = chunks[i].Coord;
             if (!_questPopulation.TryGetValue(coord, out var spawns))
-                _questPopulation[coord] = spawns = _gen.GenerateChunk(coord).Spawns.ToArray();
+            {
+                // A rejected chunk is not cached: another slot may ask for different species.
+                if (!_gen.CouldContainPopulation(coord, patternIds)) continue;
+                _questPopulation[coord] = spawns = _gen.GenerateSpawnFacts(coord);
+            }
             var matches = new Dictionary<string, PatternDef>(StringComparer.Ordinal);
             foreach (var spawn in spawns)
             {
