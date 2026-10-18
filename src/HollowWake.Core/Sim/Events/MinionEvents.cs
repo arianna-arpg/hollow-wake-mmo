@@ -36,6 +36,9 @@ public sealed record ContractRespawned(Entity Owner, Entity Minion, string Weave
 /// <summary>A corpse rose as a minion and is gone.</summary>
 public sealed record CorpseRaised(Entity Corpse, Entity Minion, string Pattern) : GameEvent;
 
+/// <summary>A corpse was spent by an effect without rising (<c>consume_corpse</c>) and is gone.</summary>
+public sealed record CorpseConsumed(Entity Corpse, Entity By, string Pattern) : GameEvent;
+
 /// <summary>A minion was spent by an effect of its owner's, its life feeding the effect.</summary>
 public sealed record MinionConsumed(Entity Minion, Entity Owner, double Life) : GameEvent;
 
