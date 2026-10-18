@@ -239,6 +239,26 @@ public static class LintSample
         1 => "one",
         _ => "other",
     };
+
+    public static int Mode(string mode)
+    {
+        if (mode == "deflect")
+        {
+            return 1;
+        }
+        return mode == "slow" ? 2 : 0;
+    }
+
+    public static bool Melee(string tag) => tag == "melee";
+
+    public static string Reach(EffectCompileContext ctx, JsonObject p) => ctx.ChoiceOf(p["reach"], "reach", "near", "near", "far");
+
+    public static int Rank(string reach) => reach switch
+    {
+        "near" => 1,
+        "far" => 2,
+        _ => 0,
+    };
 }
 """;
 
@@ -287,6 +307,24 @@ public sealed class LintForms
     public ModifierForm Kind(Modifier m) => m.Form is ModifierForm.Flat ? ModifierForm.More : m.Form;
 
     // weave.Form.Toggle in a comment is not a read
+
+    public bool Merged(CompiledWeave weave) => weave.Form.Uses is not null || weave.Preset?.Uses is not null;
+
+    public bool Instant(CompiledWeave face) => IsInstant(face.Form);
+
+    public FormDef Whole(CompiledWeave weave)
+    {
+        var form = weave.Form;
+        return form;
+    }
+
+    public string Named(WeaveSpec spec)
+    {
+        var formId = spec.Form;
+        return formId;
+    }
+
+    public Modifier Ramp(RampSpec ramp) => new() { Form = ramp.Form };
 }
 """;
 
@@ -317,6 +355,19 @@ public sealed class LintForms
             Assert.DoesNotContain(code, f => f.File == system && f.Line == LineOf(SystemSource, "Register("));
             Assert.DoesNotContain(code, f => f.File == system && f.Line == LineOf(SystemSource, "a comment"));
             Assert.DoesNotContain(code, f => f.File == system && f.Line == LineOf(SystemSource, "n switch"));
+            // One operand compared with two literals across the file is a switch written as ifs, on both lines.
+            foreach (var marker in new[] { "mode == \"deflect\"", "mode == \"slow\"" })
+            {
+                var chain = At(system, SystemSource, marker);
+                Assert.Contains("'mode'", chain.Message);
+                Assert.Contains("'deflect' and 'slow'", chain.Message);
+            }
+            // A tag is an open word content adds freely, so comparing with one alone is not a finding.
+            Assert.DoesNotContain(code, f => f.File == system && f.Line == LineOf(SystemSource, "tag == \"melee\""));
+            // A switch over words the same file declares with ChoiceOf is the handler reading its own vocabulary.
+            var rank = At(system, SystemSource, "reach switch");
+            Assert.Equal(CompositionLint.Note, rank.Severity);
+            Assert.Contains("declares", rank.Message);
 
             var parse = "Content/LintParse.cs";
             Assert.Equal(CompositionLint.Note, At(parse, ParseSource, "switch (text)").Severity);
@@ -331,7 +382,11 @@ public sealed class LintForms
             Assert.Contains("'Channel'", channels.Message);
             Assert.Contains("'Guard'", channels.Message);
             Assert.Contains("'Target'", Assert.Single(reads, f => f.File == weaves && f.Line == LineOf(WeaveSource, "Targets =>")).Message);
-            Assert.Equal(2, reads.Count(f => f.File == weaves));
+            // A whole form taken into a local or handed to a helper is a read; a line that merges the preset is not, nor
+            // is a weave spec's form id or a modifier's form.
+            Assert.Contains("whole form", Assert.Single(reads, f => f.File == weaves && f.Line == LineOf(WeaveSource, "IsInstant(")).Message);
+            Assert.Contains("whole form", Assert.Single(reads, f => f.File == weaves && f.Line == LineOf(WeaveSource, "var form = ")).Message);
+            Assert.Equal(4, reads.Count(f => f.File == weaves));
             Assert.DoesNotContain(reads, f => f.File == parse);
         }
         finally

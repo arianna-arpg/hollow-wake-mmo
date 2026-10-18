@@ -636,10 +636,11 @@ public sealed class CompositionLint
     /// <c>code.string_switch</c>, a scan of lines, not a compiler. Every switch over string words under the source root
     /// is reported: a smell inside the systems (<see cref="SystemDirectories"/>) or when its words re-list two or more
     /// effect types, a note elsewhere and where a handler parses its own choice words (<c>ChoiceOf</c>) at compile
-    /// time. Inside the systems, a line is also a smell when it tests a flag, tag or mechanism by a literal name,
-    /// compares with a literal that names content (a status, tag, flag, mechanism, resource, thread, charge, proc or
-    /// attribute), or compares one operand with two or more literals in the file: a switch written as ifs. Lines that
-    /// register words (<c>Register(</c>) are not findings. <c>code.form_read</c> comes from the same lines, in
+    /// time or switches on words the same file declares with <c>ChoiceOf(</c> or <c>OneOf(</c>. Inside the systems, a
+    /// line is also a smell when it tests a flag, tag or mechanism by a literal name, compares with a literal naming
+    /// what code must never name by id (a status, resource, thread, charge, proc or attribute), or compares one
+    /// operand with two or more literals in the file: a switch written as ifs. Lines that register words
+    /// (<c>Register(</c>) are not findings. <c>code.form_read</c> comes from the same lines, in
     /// <see cref="FormReadDirectories"/>.
     /// </summary>
     private void Code(string sourceRoot, List<CompositionFinding> findings)
@@ -675,35 +676,21 @@ public sealed class CompositionLint
     private static bool Within(string relative, IReadOnlyList<string> directories) =>
         directories.Any(d => ("/" + relative).Contains("/" + d, StringComparison.Ordinal));
 
-    /// <summary>The words that name content: ids of statuses, tags, resources, threads, charges, procs and attributes, and every tag, flag and mechanism a definition carries.</summary>
+    /// <summary>
+    /// The words code must never name by id: the ids of statuses, resources, threads, charges, procs and attributes.
+    /// Tags, flags and mechanisms are open words content adds freely, so they stay out, and adding one can never grow
+    /// the code findings; a flag or tag tested by name is caught by the call that tests it instead.
+    /// </summary>
     private HashSet<string> ContentNames()
     {
         var names = new HashSet<string>(StringComparer.Ordinal);
         foreach (var kind in new[]
         {
-            ContentKinds.NameOf<StatusDef>(), ContentKinds.NameOf<TagDef>(), ContentKinds.NameOf<ResourceDef>(), ContentKinds.NameOf<ThreadDef>(),
+            ContentKinds.NameOf<StatusDef>(), ContentKinds.NameOf<ResourceDef>(), ContentKinds.NameOf<ThreadDef>(),
             ContentKinds.NameOf<ChargeDef>(), ContentKinds.NameOf<ProcDef>(), ContentKinds.NameOf<AttributeDef>(),
         })
         {
             names.UnionWith(_content.IdsOfKind(kind));
-        }
-        foreach (var kind in _content.KindNames)
-        {
-            foreach (var raw in _content.RawOfKind(kind))
-            {
-                foreach (var field in new[] { "tags", "flags", "forbids_tags", "adds_tags", "mechanisms", "adds_mechanisms" })
-                {
-                    switch (raw.Object[field])
-                    {
-                        case JsonArray list:
-                            names.UnionWith(list.Select(JsonNum.StringOf).OfType<string>());
-                            break;
-                        case JsonValue v when v.TryGetValue<string>(out var text):
-                            names.UnionWith(text.Split(' ', StringSplitOptions.RemoveEmptyEntries));
-                            break;
-                    }
-                }
-            }
         }
         return names;
     }
@@ -723,6 +710,8 @@ public sealed class CompositionLint
     private static readonly Regex LiteralEquals = new(@"§(?<lit>\d+)§\s*(?:==|!=)\s*(?:" + Operand + ")?", RegexOptions.CultureInvariant);
     private static readonly Regex IsPattern = new("(?:" + Operand + @"\s+)?\bis\s+(?:not\s+)?\(?\s*(?<lits>" + AnyLiteral + @"(?:\s*\)?\s*or\s+\(?\s*" + AnyLiteral + ")*)", RegexOptions.CultureInvariant);
     private static readonly Regex FormMember = new(@"(?<!\w)Form\??\.(?<member>[A-Za-z_]\w*)", RegexOptions.CultureInvariant);
+    private static readonly Regex WholeForm = new(@"(?<=[=(,]\s*)(?<!\bForm\s*=\s*)(?<recv>[A-Za-z_]\w*(?:\??\.[A-Za-z_]\w*)*?)\??\.Form(?=\s*[;,)])", RegexOptions.CultureInvariant);
+    private static readonly Regex MergedRead = new(@"\bPreset\??\.[A-Za-z_]|\b(?:Active)?Glyphs\b", RegexOptions.CultureInvariant);
 
     /// <summary>Switches over string words, each attributed to the innermost switch whose braces directly hold its labels.</summary>
     private static void Switches(string file, IReadOnlyList<CodeLine> lines, bool inSystems, HashSet<string> effectTypes, List<CompositionFinding> findings)
@@ -791,6 +780,15 @@ public sealed class CompositionLint
                 }
             }
         }
+        // Words the file declares as the choices it accepts, so a switch over them reads its own vocabulary.
+        var declared = new HashSet<string>(StringComparer.Ordinal);
+        foreach (var line in lines)
+        {
+            if (line.Code.Contains("ChoiceOf(", StringComparison.Ordinal) || line.Code.Contains("OneOf(", StringComparison.Ordinal))
+            {
+                declared.UnionWith(line.Literals);
+            }
+        }
         foreach (var (index, list) in words)
         {
             var distinct = list.Distinct(StringComparer.Ordinal).ToList();
@@ -804,15 +802,20 @@ public sealed class CompositionLint
                 severity = Smell;
                 message = $"A switch re-lists the effect types {Names(relisted)}, where what it decides belongs with each handler and its signature.";
             }
-            else if (inSystems && !parses)
-            {
-                severity = Smell;
-                message = $"A switch on {strings} {Names(distinct)} inside a system, where a registry or an axis should carry {Plural(distinct.Count, "the word", "the words")}.";
-            }
             else if (parses)
             {
                 severity = Note;
                 message = $"A handler parses its own choice {Plural(distinct.Count, "word", "words")} {Names(distinct)} here at compile time; a second copy elsewhere would be the smell.";
+            }
+            else if (distinct.All(declared.Contains))
+            {
+                severity = Note;
+                message = $"A switch on {strings} {Names(distinct)}, which this file declares with ChoiceOf or OneOf; a second copy elsewhere would be the smell.";
+            }
+            else if (inSystems)
+            {
+                severity = Smell;
+                message = $"A switch on {strings} {Names(distinct)} inside a system, where a registry or an axis should carry {Plural(distinct.Count, "the word", "the words")}.";
             }
             else
             {
@@ -925,22 +928,47 @@ public sealed class CompositionLint
     }
 
     /// <summary>
-    /// <c>code.form_read</c>: a line that reads a member through a <c>Form</c>, <c>weave.Form.Channel</c> or a compiled
-    /// weave's own <c>Form.Targeting</c>, where the runtime should read the compiled weave that presets and glyphs merge
-    /// into. One finding per line, naming the members read.
+    /// <c>code.form_read</c>: a line that reads a member through a <c>Form</c> (<c>weave.Form.Channel</c>, a compiled
+    /// weave's own <c>Form.Targeting</c>) or takes a whole form into a local or a helper (<c>var form = weave.Form;</c>,
+    /// <c>IsInstant(face.Form)</c>), where the runtime should read the compiled weave that presets and glyphs merge into.
+    /// A line that also reads the preset's or the glyphs' block merges them and is left out, as are a weave spec's or
+    /// preset's form id (<c>spec.Form</c>, <c>preset.Form</c>) and a modifier's <c>Form = x.Form</c>. One finding per line.
     /// </summary>
     private static void FormReads(string file, IReadOnlyList<CodeLine> lines, List<CompositionFinding> findings)
     {
         for (var i = 0; i < lines.Count; i++)
         {
-            var members = FormMember.Matches(lines[i].Code).Select(m => m.Groups["member"].Value).Distinct(StringComparer.Ordinal).ToList();
-            if (members.Count == 0)
+            var code = lines[i].Code;
+            if (MergedRead.IsMatch(code))
             {
                 continue;
             }
+            var members = FormMember.Matches(code).Select(m => m.Groups["member"].Value).Distinct(StringComparer.Ordinal).ToList();
+            var whole = WholeForm.Matches(code).Any(m => !IsFormId(m.Groups["recv"].Value));
+            if (members.Count == 0 && !whole)
+            {
+                continue;
+            }
+            var parts = new List<string>();
+            if (members.Count > 0)
+            {
+                parts.Add($"reads the form's {Names(members)}");
+            }
+            if (whole)
+            {
+                parts.Add("takes the whole form");
+            }
+            var sentence = string.Join(" and ", parts);
             findings.Add(CodeFinding(CodeFormRead, file, i + 1, Smell,
-                $"Reads the form's {Names(members)} where the runtime should read the compiled weave, so a preset or glyph cannot grant or change {Plural(members.Count, "it", "them")}."));
+                $"{char.ToUpperInvariant(sentence[0])}{sentence[1..]} where the runtime should read the compiled weave, into which a preset or glyph can merge any block."));
         }
+    }
+
+    /// <summary>A receiver whose <c>Form</c> is a form id rather than a form: a weave spec or a preset.</summary>
+    private static bool IsFormId(string receiver)
+    {
+        var last = receiver[(receiver.LastIndexOf('.') + 1)..];
+        return last.Equals("spec", StringComparison.OrdinalIgnoreCase) || last.Equals("preset", StringComparison.OrdinalIgnoreCase);
     }
 
     private static CompositionFinding CodeFinding(string file, int line, string severity, string message) =>
