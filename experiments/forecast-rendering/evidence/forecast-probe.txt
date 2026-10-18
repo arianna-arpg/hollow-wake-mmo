@@ -1,14 +1,14 @@
 PASS: 63 real-core scenario/provider checks; configured damage comparisons passed. Confirmed lifecycle extension available: True.
-✔ late start uses server elapsed time, never a new full-duration countdown (0.995ms)
-✔ deadline and expiry never imply release, impact or a known cancellation (0.6607ms)
-✔ interruption wins against delayed start and no payload is inferred (0.167ms)
-✔ confirmed release is deduplicated and never represented as damage (0.2304ms)
-✔ revision rejects old geometry, while independent casts survive packet reordering (0.1854ms)
-✔ baseline reconstructs active states without replaying emissions, rejects old baseline (0.216ms)
-✔ lost terminal repairs from empty baseline; old epoch never leaks after transfer (0.1574ms)
-✔ indefinite holds do not invent completion or suppress later pulse emissions (0.1609ms)
-✔ proposed tracking has a rate cap; committed direction refuses later aim (0.1816ms)
-✔ Ember display keeps the persisted ember key; reduced motion retains information (0.2451ms)
+✔ late start uses server elapsed time, never a new full-duration countdown (0.9898ms)
+✔ deadline and expiry never imply release, impact or a known cancellation (0.5924ms)
+✔ interruption wins against delayed start and no payload is inferred (0.2404ms)
+✔ confirmed release is deduplicated and never represented as damage (0.316ms)
+✔ revision rejects old geometry, while independent casts survive packet reordering (0.1965ms)
+✔ baseline reconstructs active states without replaying emissions, rejects old baseline (0.2089ms)
+✔ lost terminal repairs from empty baseline; old epoch never leaks after transfer (0.1613ms)
+✔ indefinite holds do not invent completion or suppress later pulse emissions (0.1527ms)
+✔ proposed tracking has a rate cap; committed direction refuses later aim (0.1859ms)
+✔ Ember display keeps the persisted ember key; reduced motion retains information (0.253ms)
 ℹ tests 10
 ℹ suites 0
 ℹ pass 10
@@ -16,4 +16,4 @@ PASS: 63 real-core scenario/provider checks; configured damage comparisons passe
 ℹ cancelled 0
 ℹ skipped 0
 ℹ todo 0
-ℹ duration_ms 82.7937
+ℹ duration_ms 97.3779

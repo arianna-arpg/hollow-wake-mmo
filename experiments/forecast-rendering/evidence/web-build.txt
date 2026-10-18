@@ -11,7 +11,7 @@ dist/index.html                      0.84 kB │ gzip:   0.44 kB
 dist/assets/index-DadECjIA.css       3.78 kB │ gzip:   1.43 kB
 dist/assets/app-RvLAIen0.css        35.77 kB │ gzip:   7.01 kB
 dist/assets/content-ZUPcx3TZ.js      3.05 kB │ gzip:   1.75 kB │ map:     9.30 kB
-dist/assets/index-DDJxn85J.js       30.34 kB │ gzip:  12.27 kB │ map:    84.18 kB
-dist/assets/app-h2CwC2Xr.js      1,107.86 kB │ gzip: 291.71 kB │ map: 3,772.02 kB
+dist/assets/index-dhYRVw8_.js       30.34 kB │ gzip:  12.27 kB │ map:    84.18 kB
+dist/assets/app-WEvlighH.js      1,108.62 kB │ gzip: 291.90 kB │ map: 3,775.08 kB
 
-✓ built in 320ms
+✓ built in 375ms
