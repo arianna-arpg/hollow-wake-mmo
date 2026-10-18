@@ -1,7 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import { DEFAULTS } from '../config';
 import type { EntityState } from '../net/protocol';
-import { isShaped, shapeColor, titleFor, AppearanceService } from './entities';
+import { isShaped, shapeColor, titleFor, appearanceKey, AppearanceService } from './entities';
+import { applyDelta } from '../net/delta';
 import { bundledKinds } from '../ui/logic/content';
 import { buildBody } from './appearance/bodyFamilies';
 
@@ -15,6 +16,19 @@ function entity(over: Partial<EntityState>): EntityState {
 }
 
 describe('entity bodies', () => {
+  it('clears public gear after a delta and distinguishes a naked spawn from legacy absence', () => {
+    const service = new AppearanceService(bundledKinds(), null!);
+    const legacy = entity({ look: 'holdfast', is_player: true });
+    const clothed = { ...legacy, appearance: ['main_hand=weapon.sword'] };
+    const bare = applyDelta(clothed, { key: legacy.key, appearance: [] });
+    const look = service.lookFor(legacy)!;
+    expect(service.planFor(clothed, look, false, legacy.key).gearKey).toContain('+');
+    expect(service.planFor(bare, look, false, legacy.key).gearKey).toBe(look.id);
+    expect(service.planFor({ ...legacy, appearance: [] }, look, false, legacy.key).gearKey).toBe(look.id);
+    expect(service.planFor(legacy, look, false, legacy.key).gearKey).toContain('+');
+    expect(appearanceKey(legacy)).not.toBe(appearanceKey(bare));
+  });
+
   it('draws an explicitly empty self equipment list without default gear', () => {
     // Plan construction is pure; this test does not ask the baker to use a renderer.
     const service = new AppearanceService(bundledKinds(), null!);

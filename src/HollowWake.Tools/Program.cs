@@ -170,7 +170,7 @@ switch (command)
     {
         var registry = LoadContent(true);
         var generator = new WorldGenerator(registry, Rng.Hash64(Opt("seed", registry.Rules.Text("world.seed", "aureth"))));
-        var world = new WorldState(generator.Overlays);
+        var world = new WorldState(generator.Overlays, registry.Rules);
         var zc = new ZoneCoord(int.Parse(Opt("x", "0")), int.Parse(Opt("y", "0")));
         var log = new ListSimLog();
         var sw = System.Diagnostics.Stopwatch.StartNew();

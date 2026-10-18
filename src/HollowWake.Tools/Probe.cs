@@ -91,7 +91,8 @@ public static class Probe
             Console.WriteLine("did not enter the world; got " + string.Join(", ", counts.Select(kv => kv.Key + "=" + kv.Value)));
             return 1;
         }
-        Console.WriteLine($"entered zone {enter.Zone} at ({enter.X:0.0}, {enter.Y:0.0}, {enter.Z:0.0}); seed {enter.World.Seed}; tick {enter.TickRate}");
+        var day = enter.TimeOfDay is { } fraction ? $"; day of {enter.DayLength:0} s at {fraction:0.000}" : "; no day on the wire";
+        Console.WriteLine($"entered zone {enter.Zone} at ({enter.X:0.0}, {enter.Y:0.0}, {enter.Z:0.0}); seed {enter.World.Seed}; tick {enter.TickRate}{day}");
         Send(new ChatMsg("zone", "probe says hello"));
         // A saved character may stand where one way is blocked, so walk until something moves.
         var directions = new (float X, float Y, string Name)[] { (0, -1, "south"), (1, 0, "east"), (0, 1, "north"), (-1, 0, "west") };
