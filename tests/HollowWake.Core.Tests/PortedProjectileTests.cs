@@ -251,7 +251,7 @@ public class PortedProjectileTests
         var wisp = Slot(bench, "cinderwisp");
         Assert.True(Begin(bench, wisp, bench.Victim, at, out var reason), reason);
         bench.Run(2.5);
-        var imp = Assert.Single(bench.Events.OfType<EntitySpawned>().Where(e => e.Pattern == "cinder_imp")).Entity;
+        var imp = Assert.Single(bench.Events.OfType<EntitySpawned>(), e => e.Pattern == "cinder_imp").Entity;
         Assert.Equal(bench.Attacker, bench.Sim.World.Get<Minion>(imp)!.Owner);
     }
 
@@ -264,7 +264,7 @@ public class PortedProjectileTests
         var ball = Slot(bench, "fireball");
         Assert.True(Begin(bench, ball, bench.Victim, at, out var reason), reason);
         bench.Run(1.6);
-        Assert.Single(bench.HitsOn(bench.Victim).Where(h => !h.Tags.Has("dot")));
+        Assert.Single(bench.HitsOn(bench.Victim), h => !h.Tags.Has("dot"));
         Assert.NotEmpty(bench.HitsOn(neighbour));
     }
 
@@ -277,7 +277,7 @@ public class PortedProjectileTests
         var spear = Slot(bench, "ice_spear");
         Assert.True(Begin(bench, spear, bench.Victim, at, out var reason), reason);
         bench.Run(1.6);
-        Assert.Single(bench.HitsOn(bench.Victim).Where(h => !h.Tags.Has("dot")));
+        Assert.Single(bench.HitsOn(bench.Victim), h => !h.Tags.Has("dot"));
         Assert.NotEmpty(bench.HitsOn(behind));
     }
 
