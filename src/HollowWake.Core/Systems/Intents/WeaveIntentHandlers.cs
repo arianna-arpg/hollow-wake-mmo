@@ -9,6 +9,7 @@ namespace HollowWake.Core.Systems.Intents;
 /// Casting from a slot, cancelling, binding a weave to a slot, the held-input intents of the cast modes
 /// (release, a second press, the live aim), meta actions and swapping rack seats. Held input that finds
 /// nothing held is ignored rather than refused: a client may let go of a key just after its cast ended.
+/// Any caster sends them; binding a weave changes a character's loadout and is a player's only.
 /// </summary>
 public static class WeaveIntentHandlers
 {
@@ -16,7 +17,7 @@ public static class WeaveIntentHandlers
     {
         handlers.Register<UseWeaveIntent>(UseWeave);
         handlers.Register<CancelCastIntent>(CancelCast);
-        handlers.Register<SetWeaveIntent>(SetWeave);
+        handlers.Register<SetWeaveIntent>(SetWeave, playerOnly: true);
         handlers.Register<ReleaseWeaveIntent>(Release);
         handlers.Register<PressWeaveIntent>(Press);
         handlers.Register<AimIntent>(Aim);
