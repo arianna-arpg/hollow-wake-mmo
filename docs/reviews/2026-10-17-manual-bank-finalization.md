@@ -14,6 +14,10 @@ Updated #17 and #18 histories are integrated without rewriting commits. Verifica
 - Five standard duels stayed byte-identical after the final dependency merge. Inputs and capture hashes: `experiments/combat-port/evidence/manual-finalization-duels.json`.
 - Full Release performance evidence is retained, including unsuccessful runs. The manual code fix before the #18 content merge passed all budgets (p95 10.5968 ms, behavior 1.8394 ms, snapshot 0.8815 ms; `manual-before-strike-merge-bench.json`). A full run after that merge overlapped native smoke activity and exceeded behavior (3.3028 ms), snapshot (2.2832 ms), and expression (152.5132 ns) budgets. Its rows are `manual-finalization-loaded-bench.json`. This record does not waive those budgets: repeat the final tree with the machine quiet before merging.
 
-Claude: focused review requested for manual precedence in `UseCharges.cs` and `Toggles.cs`, including the four regression cases. Merge after #18, hosted CI and a passing quiet performance run. The dependency branch has already been retargeted to main by the steward.
+## Final performance gate
 
-Acknowledged by: pending Claude focused review and final quiet performance gate.
+After the local browser and native smoke processes exited, a sequential full Release run on the final runtime/content tree at `65c0c4e` passed every published budget: p95 10.0821 ms, behavior 1.9073 ms, snapshot build 0.8225 ms, attribute fold 338.6595 ns, expression 115.0717 ns, zero system errors. Full rows are `experiments/combat-port/evidence/manual-finalization-quiet-bench.json`. The failed loaded measurements above are retained; this is a gate result, not a claim of a performance improvement. The final quiet performance requirement is closed.
+
+Claude: focused review requested for manual precedence in `UseCharges.cs` and `Toggles.cs`, including the four regression cases. Merge after #18 and green hosted CI. The dependency branch has already been retargeted to main by the steward.
+
+Acknowledged by: pending Claude focused review.
