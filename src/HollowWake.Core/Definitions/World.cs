@@ -33,6 +33,9 @@ public sealed record SpawnSpec
     [JsonPropertyName("pack_size")]
     public double[] PackSize { get; init; } = { 1, 1 };
     public double Respawn { get; init; } = 120;
+    /// <summary>For POI inhabitants, opt into site-level births instead of the pattern level.</summary>
+    [JsonPropertyName("use_site_level")]
+    public bool UseSiteLevel { get; init; }
     public Window? Level { get; init; }
     public TagSet On { get; init; } = TagSet.Empty;
     public Expr? Condition { get; init; }
@@ -148,6 +151,9 @@ public sealed record LegendCell
     public bool Surface { get; init; } = true;
     public TagSet Tags { get; init; } = TagSet.Empty;
     public string? Spawn { get; init; }
+    /// <summary>Opt this stamped spawn into the owning site level; omitted retains pattern level.</summary>
+    [JsonPropertyName("use_site_level")]
+    public bool UseSiteLevel { get; init; }
     /// <summary>A raised surface placed above the terrain instead of replacing it (bridges, floors).</summary>
     public bool Layer { get; init; }
 }
