@@ -1,0 +1,84 @@
+{
+  "started": "2026-10-18T17:26:25.171Z",
+  "root": "C:\\Users\\John\\.codex\\worktrees\\mu-vessel-selection\\MMOARPG",
+  "directory": "C:\\Users\\John\\.codex\\worktrees\\mu-vessel-selection\\MMOARPG\\experiments\\mu-selection\\artifacts\\review-final\\run-k8mxRv",
+  "suite": "all",
+  "status": "passed",
+  "stages": [
+    {
+      "name": "build-server",
+      "status": "passed",
+      "started": "2026-10-18T17:26:25.176Z",
+      "code": 0,
+      "signal": null,
+      "finished": "2026-10-18T17:26:29.247Z"
+    },
+    {
+      "name": "typecheck-web",
+      "status": "passed",
+      "started": "2026-10-18T17:26:29.247Z",
+      "code": 0,
+      "signal": null,
+      "finished": "2026-10-18T17:26:32.512Z"
+    },
+    {
+      "name": "build-web",
+      "status": "passed",
+      "started": "2026-10-18T17:26:32.513Z",
+      "code": 0,
+      "signal": null,
+      "finished": "2026-10-18T17:26:33.820Z"
+    },
+    {
+      "name": "build-godot",
+      "status": "passed",
+      "started": "2026-10-18T17:26:33.821Z",
+      "code": 0,
+      "signal": null,
+      "finished": "2026-10-18T17:26:36.565Z"
+    },
+    {
+      "name": "smoke-web",
+      "status": "passed",
+      "started": "2026-10-18T17:26:37.941Z",
+      "code": 0,
+      "signal": null,
+      "passed": 30,
+      "total": 30,
+      "skipped": [],
+      "finished": "2026-10-18T17:28:08.904Z"
+    },
+    {
+      "name": "import-godot",
+      "status": "passed",
+      "started": "2026-10-18T17:28:08.906Z",
+      "code": 0,
+      "signal": null,
+      "finished": "2026-10-18T17:28:17.220Z"
+    },
+    {
+      "name": "smoke-godot",
+      "status": "passed",
+      "started": "2026-10-18T17:28:17.220Z",
+      "code": 0,
+      "signal": null,
+      "passed": 36,
+      "total": 36,
+      "skipped": [
+        "appearance rendering: headless display; geometry/card performance and readability require graphical evidence",
+        "theme rendered pixels: headless display; theme state checked above"
+      ],
+      "finished": "2026-10-18T17:28:59.063Z"
+    }
+  ],
+  "nativeRendering": "not covered by headless mode",
+  "godot": "C:\\Users\\John\\AppData\\Local\\Microsoft\\WinGet\\Packages\\GodotEngine.GodotEngine.Mono_Microsoft.Winget.Source_8wekyb3d8bbwe\\Godot_v4.7.2-stable_mono_win64\\Godot_v4.7.2-stable_mono_win64.exe",
+  "server": {
+    "tcp": 52600,
+    "url": "http://127.0.0.1:52601",
+    "name": "harness-run-k8mxRv",
+    "data": "C:\\Users\\John\\.codex\\worktrees\\mu-vessel-selection\\MMOARPG\\experiments\\mu-selection\\artifacts\\review-final\\run-k8mxRv\\data"
+  },
+  "cleanupErrors": [],
+  "finished": "2026-10-18T17:28:59.426Z"
+}

@@ -83,13 +83,13 @@ effects:
           - { type: damage, amount: "weave.base_damage * spell.power * 0.7", threads: $threads }
 ```
 
-`$threads` resolves to the weave's Threads, `$thread_status` to the first Thread's status. `hollowwake schema` does not list effect parameters; the handlers in `HollowWake.Core/Effects/Handlers/` (one file per family) are the reference, and each declares the parameters it reads in its `EffectSignature`. `hollowwake weave <id>` prints what the compiler makes of a weave.
+`$threads` resolves to the weave's Threads, `$thread_status` to the first Thread's status. `hollowwake schema` does not list effect parameters; the handlers in `HollowWake.Core/Effects/Handlers/` (one file per family) are the reference, and each declares the parameters it reads in its `EffectSignature`, while what each parameter is in the combat grammar (an axis with its unit and the attribute behind it, a node, a choice from a vocabulary, or a flag) is declared in `AxisBindings` beside the compiler, where a code mod declares its own handlers' parameters too. `hollowwake weave <id>` prints what the compiler makes of a weave, and `--axes` places it on the grammar's dimensions.
 
 ## Code mods
 
 A code mod is a .NET assembly that references `HollowWake.Core` and, before the server loads content, registers what it adds:
 
-- `ContentKinds.Register<MyDef>("my_kind", validator)` for a new definition kind; `ContentKinds.AddValidator<FormDef>(validator)` to validate fields of an existing kind.
+- `ContentKinds.Register<MyDef>("my_kind", validate: validator, validateCollection: collectionValidator)` for a new definition kind. Both callbacks are optional. `ContentKinds.AddValidator<FormDef>(validator)` appends a per-definition check to an existing kind.
 - `EffectRegistry.Register(new MyEffectHandler())` for a new effect type; give it an `EffectSignature` so glyph patches and hooks can reach it.
 - `MechanismRegistry.Register("my_mechanism", probe)` for a mechanism probe glyphs can require.
 - `HitStages.Register(new MyStage())` for a hit stage, placed by rule `combat.stages`.
@@ -97,12 +97,27 @@ A code mod is a .NET assembly that references `HollowWake.Core` and, before the 
 - `IntentHandlers.Register<MyIntent>(handler)` on a simulation's intent handlers for a new intent; any actor may send it, players by message and the AI through `AiIntents.Send`, unless it is registered with `playerOnly: true` because it works a player's state. A handler reads `IntentContext.Player`, which is null when the sender is not a player.
 - `Curves.Register("my_curve", curve)` for a named curve.
 - `AiActions.Register("my_action", ...)` for a new AI action; it changes the simulation by sending intents through `AiIntents.Send`, as a player would.
+
 - `QuestService.Register("my_objective", matcher)` for a new objective type.
 - `InteractionService.Register("my_kind", handler)` for a new interactable kind.
 - `PatternFactory.Register("my_component", binder)` for a new component.
 - `ProcedureRegistry.Register(new MyProcedure())` for a new crafting minigame.
 - `ExprFunctions.Register("fn", min, max, impl)` for a new expression function.
 - `ScopeNames.Declare("name")` so validation knows a new scope variable.
+
+A per-definition validator receives `(definition, context)`; a collection validator receives only `context` and reads `context.Registry` to check the catalog as a whole. For example, a mod that requires its catalog even when it is absent can register:
+
+```csharp
+ContentKinds.Register<MyDef>("my_kind", validateCollection: context =>
+{
+    if (context.Registry.Count<MyDef>() == 0)
+        context.Error("At least one my_kind entry is required.");
+});
+```
+
+Collection checks run once per registered kind after all per-definition checks, even when no files supplied that kind or an overlay removed its last entry. Their context has the kind name, an empty entry id and no single origin. Check for the relevant catalog or dependency if your mod supports partial tooling packs; absence does not suppress the callback. Re-registering an existing kind replaces its binding and validators, whereas `AddValidator` appends only a per-definition check. Both passes turn callback exceptions into reported errors and strict loading rejects errors. See the [content contract](design/content-and-expressions.md#definition-and-collection-validation) for the complete load order and construction-helper exceptions.
+
+The movement-plan cache moved from `Behavior` to `Motion`: `PlanGoal`, `PlannedAt`, `Planned` and `PlanFailed`. A compiled mod that referenced the old behavior fields must update those accesses and rebuild. Content-only behaviors do not need migration.
 
 Systems are added to a simulation through `Simulation.AddSystem` with a phase and order. A loader for mod assemblies is on the roadmap; today a host wires them in code.
 

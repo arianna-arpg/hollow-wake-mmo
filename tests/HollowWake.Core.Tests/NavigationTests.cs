@@ -155,14 +155,11 @@ public class NavigationEquivalenceTests
         from.Z = reference.HeightAt(from.X, from.Y);
         var to = new Vector3(origin.X + 124.2f, origin.Y + 87.9f, 0);
         var into = new List<Vector3>(256);
-        pathfinder.FindPath(from, to, into, 4000);
-        var before = GC.GetAllocatedBytesForCurrentThread();
-        for (var i = 0; i < 20; i++)
+        SteadyState.AssertAllocationFree(() =>
         {
             pathfinder.FindPath(from, to, into, 4000);
             terrain.TryFindGround(from.X, from.Y, from.Z, 0.6, out _, out _);
-        }
-        Assert.Equal(0, GC.GetAllocatedBytesForCurrentThread() - before);
+        }, callsPerRound: 20);
     }
 
     private static void CompareAt(Terrain terrain, ReferenceTerrain reference, double x, double y, double z, double stepUp)

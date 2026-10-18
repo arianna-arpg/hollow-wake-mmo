@@ -1,0 +1,52 @@
+{
+  "started": "2026-10-18T18:07:45.106Z",
+  "root": "C:\\Users\\John\\.codex\\worktrees\\mu-entry-followups\\MMOARPG",
+  "directory": "C:\\Users\\John\\.codex\\worktrees\\mu-entry-followups\\MMOARPG\\experiments\\mu-selection\\artifacts\\followup-background\\run-enkQPK",
+  "suite": "all",
+  "status": "passed",
+  "stages": [
+    {
+      "name": "smoke-web",
+      "status": "passed",
+      "started": "2026-10-18T18:07:46.951Z",
+      "code": 0,
+      "signal": null,
+      "passed": 30,
+      "total": 30,
+      "skipped": [],
+      "finished": "2026-10-18T18:09:05.543Z"
+    },
+    {
+      "name": "import-godot",
+      "status": "passed",
+      "started": "2026-10-18T18:09:05.545Z",
+      "code": 0,
+      "signal": null,
+      "finished": "2026-10-18T18:09:15.747Z"
+    },
+    {
+      "name": "smoke-godot",
+      "status": "passed",
+      "started": "2026-10-18T18:09:15.748Z",
+      "code": 0,
+      "signal": null,
+      "passed": 36,
+      "total": 36,
+      "skipped": [
+        "appearance rendering: headless display; geometry/card performance and readability require graphical evidence",
+        "theme rendered pixels: headless display; theme state checked above"
+      ],
+      "finished": "2026-10-18T18:09:57.023Z"
+    }
+  ],
+  "nativeRendering": "not covered by headless mode",
+  "godot": "C:\\Users\\John\\AppData\\Local\\Microsoft\\WinGet\\Packages\\GodotEngine.GodotEngine.Mono_Microsoft.Winget.Source_8wekyb3d8bbwe\\Godot_v4.7.2-stable_mono_win64\\Godot_v4.7.2-stable_mono_win64.exe",
+  "server": {
+    "tcp": 61021,
+    "url": "http://127.0.0.1:61022",
+    "name": "harness-run-enkQPK",
+    "data": "C:\\Users\\John\\.codex\\worktrees\\mu-entry-followups\\MMOARPG\\experiments\\mu-selection\\artifacts\\followup-background\\run-enkQPK\\data"
+  },
+  "cleanupErrors": [],
+  "finished": "2026-10-18T18:09:58.034Z"
+}
