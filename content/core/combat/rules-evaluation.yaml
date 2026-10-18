@@ -1,0 +1,15 @@
+# Evaluation rules: the bands a matched pairing must stay inside in a seeded tournament (docs/design/evaluation.md).
+# Times are seconds; rates and floors are fractions. Bands are for pairings built to be even, such as the proving
+# pairs; an uneven pairing is measured but not banded.
+kind: rules
+entries:
+  - id: evaluation
+    values:
+      # The median time to kill over the fights that ended.
+      ttk_min: 5
+      ttk_max: 45
+      # The share of fights either side may win, and the share that may end with nobody dead.
+      win_rate_ceiling: 0.8
+      draw_ceiling: 0.2
+      # The share of its kit each side must cast, averaged over its fights.
+      variety_floor: 0.25

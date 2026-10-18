@@ -49,6 +49,7 @@ dotnet run --project src/HollowWake.Tools -- passives          # lint the passiv
 dotnet run --project src/HollowWake.Server.Host                # run the server (TCP 7777; WebSocket and the web client on 7778)
 dotnet run --project src/HollowWake.Tools -- probe             # connect to a running server over TCP and exercise it
 dotnet run --project src/HollowWake.Tools -c Release -- bench   # performance baseline against docs/design/performance.md budgets
+dotnet run --project src/HollowWake.Tools -- tournament --pairs a:b --seeds 10 --seconds 60 --bands --out report.json   # seeded duels across pairings: time to kill, win rates, variety and the mechanisms used, against the evaluation bands (docs/design/evaluation.md)
 godot --path src/HollowWake.Client -- --smoke --shots DIR      # scripted client play-through against a running server (Godot 4.7 .NET)
 dotnet run --project src/HollowWake.Tools -- protocol-ts       # regenerate web/src/net/protocol.ts after changing a message
 node --test scripts/port/port-prototype.test.mjs              # the prototype porting script on a synthetic snapshot (see docs/design/parity/port-ledger.md to run it)
