@@ -232,7 +232,8 @@
         "habitat.warren",
         "humanoid",
         "ranged",
-        "size.small"
+        "size.small",
+        "caster"
       ],
       "faction": "goblinkin",
       "level": 4,
@@ -986,7 +987,7 @@
         "monster",
         "body.flesh",
         "family.gnasher",
-        "role.pouncer",
+        "role.biter",
         "habitat.warren",
         "beast",
         "melee",
