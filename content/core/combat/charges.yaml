@@ -23,3 +23,21 @@ entries:
     duration: 12
     decay: 1
     color: "#9c8b72"
+
+  # ---- the prototype's banks (the port ledger says what each was); wisps and wakeflame hold five
+  - { id: static, name: Static, description: "Storm banked by blows; a discharge spends it.", duration: 10, decay: 0, color: "#ffe94a" }
+  - { id: stealth, name: Stealth, description: "Unseen steps banked; a blow from hiding spends one.", duration: 10, decay: 0, color: "#4a5a78" }
+  - { id: wisp, name: Wisps, description: "Motes gathered to be loosed.", duration: 10, decay: 0, color: "#8fa8d8" }
+  - { id: verse, name: Verse, description: "Lines of a battle song, spent in a crescendo.", duration: 8, decay: 0.5, color: "#d8a8e0" }
+  - { id: riposte, name: Riposte, description: "An answer banked by a parry.", duration: 6, decay: 1, color: "#d8e8f8" }
+  - { id: magma, name: Magma, description: "Heat banked by Ember blows; a vent spends it.", duration: 10, decay: 0, color: "#e06a30" }
+  - { id: rage, name: Rage, description: "A short fury that fades fast.", duration: 3, decay: 1, color: "#e04030" }
+  - { id: bloodlust, name: Bloodlust, description: "A thirst banked by kills and burned down by a drain.", duration: 10, decay: 0, color: "#c02848" }
+  - { id: soul, name: Souls, description: "The dead gathered to be spent.", duration: 6, decay: 0.5, color: "#9a86e8" }
+  - { id: gyre, name: Gyre, description: "Blades caught on the return.", duration: 8, decay: 0.5, color: "#b8d0d8" }
+  - { id: storm, name: Storm, description: "Storm gathered for a strike.", duration: 5, decay: 0.5, color: "#c8e84a" }
+  - { id: frenzy, name: Frenzy, description: "Quickening banked by blows.", duration: 8, decay: 0.5, color: "#8ae06a" }
+  - { id: brew, name: Brew, description: "A draught steeped between uses.", duration: 10, decay: 0.25, color: "#c8a848" }
+  - { id: verdict, name: Verdict, description: "Judgement banked to be passed.", duration: 10, decay: 0, color: "#e8d44a" }
+  - { id: communion, name: Communion, description: "Kinship with the summoned.", duration: 6, decay: 0.5, color: "#b06bd4" }
+  - { id: wakeflame, name: Wakeflame, description: "Embers of the wake, gathered from the slain.", duration: 10, decay: 0, color: "#ffd98a" }

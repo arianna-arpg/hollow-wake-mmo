@@ -1,0 +1,74 @@
+# Weaves of the proving duels: presets the proving patterns cast so a seeded duel shows a ported family at work
+# (`hollowwake fight proving_hexer proving_plaguer`). Each is an ordinary preset on an ordinary form; nothing in
+# the world teaches them.
+kind: weaves
+entries:
+  # ---- the status roster: despair, agony and madness against contagion, decay, faintness and powder
+  - id: hex_of_despair
+    name: Hex of Despair
+    description: Despair and a withering agony laid on everything near the mark.
+    form: rite
+    threads: [umbra]
+    color: "#8a68b8"
+    ai: { role: damage, preferred_range: 7, weight: 1 }
+    effects:
+      - type: area
+        shape: circle
+        radius: 2.5
+        center: point
+        filter: enemy
+        effects:
+          - { type: apply_status, status: despair, duration: 7 }
+          - { type: apply_status, status: wither_agony, magnitude: "1 + level * 0.5", duration: 8 }
+
+  - id: maddening_rite
+    name: Maddening Rite
+    description: Madness near the mark; the afflicted lash out at whoever stands nearest and cannot make up their mind.
+    form: rite
+    threads: [mind]
+    color: "#d84a9a"
+    ai: { role: control, preferred_range: 7, weight: 0.8 }
+    effects:
+      - type: area
+        shape: circle
+        radius: 2.5
+        center: point
+        filter: enemy
+        effects:
+          - { type: apply_status, status: maddened, duration: 4 }
+          - { type: apply_status, status: indecision, duration: 5 }
+
+  - id: plague_rite
+    name: Plague Rite
+    description: Contagion, decay and a creeping faintness; the contagion passes to the fallen's allies and the faintness builds into a swoon.
+    form: rite
+    threads: [umbra]
+    color: "#78c878"
+    ai: { role: damage, preferred_range: 7, weight: 1 }
+    effects:
+      - type: area
+        shape: circle
+        radius: 2.5
+        center: point
+        filter: enemy
+        effects:
+          - { type: apply_status, status: contagion, magnitude: "1 + level * 0.4", duration: 7 }
+          - { type: apply_status, status: decay, magnitude: "1 + level * 0.4", duration: 6 }
+          - { type: apply_status, status: faintness, stacks: 3, duration: 6 }
+
+  - id: powder_rite
+    name: Powder Rite
+    description: Black powder packed on everything near the mark, then an ember to light it.
+    form: rite
+    threads: [ember]
+    color: "#e8a24a"
+    ai: { role: damage, preferred_range: 7, weight: 0.9 }
+    effects:
+      - type: area
+        shape: circle
+        radius: 2.5
+        center: point
+        filter: enemy
+        effects:
+          - { type: apply_status, status: powder_charge, duration: 2.2 }
+          - { type: damage, amount: "4 + level", threads: [ember], tags: [hit] }
