@@ -38,7 +38,7 @@ public class WorldGenGoldenTests
 
     // Undead site/population expansion: reviewed before/after maps in experiments/undead-entities/evidence.
     [Theory]
-    [InlineData(0, 0, "BAD05CC204F5A9DC", "20BCBB252116A13A")]
+    [InlineData(0, 0, "0CA8824E9BBCEB25", "20BCBB252116A13A")]
     [InlineData(1, 0, "C2FB146D336C5F08", "FF2F6E711BC363CE")]
     [InlineData(0, -1, "B59ACD622B675EA2", "7631657EC3C1D2E1")]
     [InlineData(3, 2, "8C5F6DA25EAF9E01", "60C8EBC63D00ECC7")]
@@ -101,7 +101,7 @@ public class WorldGenGoldenTests
         {
             HashPoint(h, g, 40 + i * 0.83, 20 + i * 0.61, i % 20 == 0);
         }
-        Golden("overlaid world", "1B7BB1180ED94764", h.Hex);
+        Golden("overlaid world", "0C972378F3EEFF45", h.Hex);
 
         // Removing an overlay must regenerate exactly what a generator that never had it produces.
         overlays.Remove("fount");

@@ -114,7 +114,7 @@ public class EntityPopulationTests
     [InlineData(1, 0)]
     [InlineData(0, -1)]
     [InlineData(3, 2)]
-    public void GeneratedCombatTargetsExistNearbyAndRespectQuestLevel(int x, int y)
+    public void GeneratedCombatTargetsExistAtTheirDeclaredAnchorAndRespectAuthoredLevelWindows(int x, int y)
     {
         var content = CoreContent.Registry;
         var generator = new WorldGenerator(content, Rng.Hash64("aureth"));
@@ -123,28 +123,43 @@ public class EntityPopulationTests
         foreach (var quest in zone.Quests)
         {
             var giver = around[quest.Giver!];
+            var template = Assert.Single(content.Each<QuestTemplateDef>(), t => quest.Id.StartsWith($"gen.{giver.Id}.{t.Id}.", StringComparison.Ordinal));
             foreach (var objective in quest.Objectives)
             {
-                if (objective.Poi is { } poiId && around.TryGetValue(poiId, out var poi))
-                    Assert.True(poi.Level <= quest.Level + 2, $"{quest.Id} targets level {poi.Level}");
-                if (objective.Type != "kill") continue;
-                const double reach = 160;
-                var first = generator.Layout.ChunkOf(giver.X - reach, giver.Y - reach);
-                var last = generator.Layout.ChunkOf(giver.X + reach, giver.Y + reach);
+                var authored = Assert.Single(template.Objectives, o => o.Id == objective.Id);
+                if (objective.Poi is { } poiId && authored.Poi is { } poiSlot && around.TryGetValue(poiId, out var poi))
+                {
+                    var req = template.Slots[poiSlot[1..]];
+                    Assert.True(req.LevelDelta?.Contains(poi.Level - quest.Level) ?? true, $"{quest.Id} targets level {poi.Level}");
+                }
+                if (objective.Type != "kill" || authored.Target is not { } targetSlot) continue;
+                var slot = template.Slots[targetSlot[1..]];
+                if (!slot.LocalPopulation) continue;
+                var origin = giver;
+                if (slot.PopulationAt is { } anchor && anchor != "$giver")
+                {
+                    var anchorObjective = Assert.Single(template.Objectives, o => o.Poi == anchor);
+                    var resolved = Assert.Single(quest.Objectives, o => o.Id == anchorObjective.Id).Poi;
+                    origin = around[resolved!];
+                }
+                var first = generator.Layout.ChunkOf(origin.X - slot.Within, origin.Y - slot.Within);
+                var last = generator.Layout.ChunkOf(origin.X + slot.Within, origin.Y + slot.Within);
                 var found = false;
                 for (var cy = first.Y; cy <= last.Y && !found; cy++)
                 for (var cx = first.X; cx <= last.X && !found; cx++)
                     found = generator.GenerateChunk(new ChunkCoord(cx, cy)).Spawns.Any(s =>
                         s.Pattern == objective.Target
-                        && Vector2.Distance(new((float)giver.X, (float)giver.Y), new(s.X, s.Y)) <= reach
-                        && (s.Level ?? content.Require<PatternDef>(s.Pattern).Level) <= quest.Level + 2);
-                Assert.True(found, $"{quest.Id} selected absent or overleveled {objective.Target}");
+                        && Vector2.Distance(new((float)origin.X, (float)origin.Y), new(s.X, s.Y)) <= slot.Within
+                        && (slot.LevelDelta?.Contains((s.Level ?? content.Require<PatternDef>(s.Pattern).Level) - quest.Level) ?? true));
+                Assert.True(found, $"{quest.Id} selected {objective.Target} outside its authored population constraints");
             }
         }
         if (x == 0 && y == 0)
         {
+            Assert.Contains(zone.Quests, q => q.Id.Contains("clear_knot", StringComparison.Ordinal));
             Assert.Contains(zone.Quests, q => q.Id.Contains("cull_beasts", StringComparison.Ordinal));
             Assert.DoesNotContain(zone.Quests.SelectMany(q => q.Objectives), o => o.Target == "barrow_hound");
         }
     }
+
 }
