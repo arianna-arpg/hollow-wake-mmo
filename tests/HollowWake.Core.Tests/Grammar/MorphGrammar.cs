@@ -66,9 +66,13 @@ internal sealed record Parameter(string Name, ParameterKind Kind, Dimension Dime
 
     /// <summary>
     /// The parameter draws on the cast's random stream, which is keyed by the weave, so two weaves holding the same value
-    /// roll differently: such a parameter is compared between its values but not between its node and its attribute.
+    /// roll differently: such a parameter is compared between its values over the point's seeds, and not between its
+    /// node and its attribute.
     /// </summary>
     public bool Rolls { get; init; }
+
+    /// <summary>The words of a choice that draw on the cast's random stream: compared with the other words over the point's seeds rather than on one draw.</summary>
+    public string[] Rolling { get; init; } = Array.Empty<string>();
 
     public string Source { get; init; } = "";
 
@@ -100,6 +104,32 @@ internal sealed record Parameter(string Name, ParameterKind Kind, Dimension Dime
     public IReadOnlyList<object> Probes() => Kind == ParameterKind.Choice
         ? Words
         : Pair is { } pair ? new[] { pair.Low, pair.High } : new object[] { Low, High };
+
+    /// <summary>Whether a value of the parameter draws on the cast's random stream: a rolling word, or a rolling axis away from zero.</summary>
+    public bool RollsAt(object value) => Kind == ParameterKind.Choice
+        ? value is string word && Rolling.Contains(word)
+        : Rolls && Convert.ToDouble(value, CultureInfo.InvariantCulture) != 0;
+}
+
+/// <summary>
+/// Two words of a choice the crowd scenario cannot tell apart, with why: the pairwise check accepts their collapse,
+/// and fails when they show apart after all, so the list stays honest.
+/// </summary>
+internal sealed record Alike(string Parameter, string A, string B, string Reason)
+{
+    public bool Covers(string parameter, string a, string b) => Parameter == parameter && ((A == a && B == b) || (A == b && B == a));
+
+    /// <summary>Every pair among the words, each with the same reason.</summary>
+    public static IEnumerable<Alike> Among(string parameter, string reason, params string[] words)
+    {
+        for (var i = 0; i < words.Length; i++)
+        {
+            for (var j = i + 1; j < words.Length; j++)
+            {
+                yield return new Alike(parameter, words[i], words[j], reason);
+            }
+        }
+    }
 }
 
 /// <summary>What a list the family fills carries: a plain damage hit, a counted marker (lists that run without a target), or a small burst of damage (plain lists run at a point).</summary>
@@ -170,6 +200,9 @@ internal sealed class Family
     /// <summary>Parameters the crowd scenario cannot show, each with why. The check still runs them and fails when one moves after all.</summary>
     public IReadOnlyDictionary<string, string> Exempt { get; init; } = new Dictionary<string, string>();
 
+    /// <summary>Pairs of a choice's words the crowd scenario cannot tell apart, each with why. The check fails when a listed pair shows apart after all.</summary>
+    public IReadOnlyList<Alike> Alike { get; init; } = Array.Empty<Alike>();
+
     /// <summary>Parameters the table leaves unsampled for now (flags, nodes, presentation), each with why: a later pass turns them into axes or choices.</summary>
     public IReadOnlyDictionary<string, string> Unsampled { get; init; } = new Dictionary<string, string>();
 
@@ -197,6 +230,16 @@ internal sealed class Point
 
     /// <summary>The value the point sets, or null when the parameter is left out.</summary>
     public object? Value(string parameter) => Values.TryGetValue(parameter, out var v) ? v : null;
+
+    /// <summary>The point's seeds: its own, then more derived from it, for comparing what a rolling value does over several draws.</summary>
+    public IEnumerable<ulong> Seeds(int count)
+    {
+        yield return Seed;
+        for (var i = 1; i < count; i++)
+        {
+            yield return Rng.Combine(Seed, (ulong)i);
+        }
+    }
 
     public override string ToString()
     {

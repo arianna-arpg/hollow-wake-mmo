@@ -72,7 +72,7 @@ public class MorphTests
         {
             When = v => Families.Trajectory.All(a => v.Num(a, 0) == 0 || (v.Num(a, 0) < 0 && !OnNode(v, a))),
         },
-        new("move", "sensitive", "choice 'anchor' moves nothing",
+        new("move", "sensitive", "choice 'anchor': ",
             "inside a hit list the context's point is the struck body (EffectContext.WithTarget moves it there), so anchor point measures from the body itself and the shove runs along the facing; areas and fields set no from, so anchor from measures from the caster. For bodies on the aim line beyond the caster all three anchors push the same way; deliveries.md says point is the aim point and from a field's center"),
         new("summon", "bounded", "stood at once, past the cap", OnePressUncapped) { When = CountPastCap },
         new("deploy", "bounded", "stood at once, past the cap", OnePressUncapped) { When = CountPastCap },
@@ -143,7 +143,15 @@ public class MorphTests
         Settle(name, examined, violations, "deterministic", "pipeline", "bounded", "terminates", "left behind", "pays", "runs");
     }
 
-    /// <summary>Each axis and choice, between its values with everything else at the family's default sample, moves something the crowd shows, unless it is exempt for a stated reason.</summary>
+    /// <summary>How many of a point's seeds a rolling value is compared over.</summary>
+    private const int Draws = 4;
+
+    /// <summary>
+    /// Each axis and choice, between its values with everything else at the family's default sample, moves something
+    /// the crowd shows, unless it is exempt for a stated reason. An axis compares its two values; a choice compares its
+    /// words two at a time, and a pair that shows the same fails unless the family lists it as alike with why. A value
+    /// that rolls on the cast's stream is compared over the point's seeds rather than on one draw.
+    /// </summary>
     [Theory]
     [MemberData(nameof(FamilyNames))]
     public void EveryAxisAndChoiceMovesTheCrowd(string name)
@@ -159,26 +167,58 @@ public class MorphTests
                 continue;
             }
             examined.AddRange(sense.Points.Select(p => new View(p, layer.Content)));
-            var shown = sense.Points.Select(p => (p.Label, Observable: MorphArena.Run(layer.Content, p).Observable)).ToList();
-            foreach (var (label, observable) in shown)
+            var parameter = sense.Parameter;
+            var draws = sense.Points.Any(p => parameter.RollsAt(p.Values[parameter.Name])) ? Draws : 1;
+            var shown = sense.Points.Select(p => new Shown(p, Point.Format(p.Values[parameter.Name]), p.Seeds(draws).Select(seed => MorphArena.Run(layer.Content, p, seed).Observable).ToList())).ToList();
+            foreach (var s in shown)
             {
-                _output.WriteLine($"{label}: {observable}");
+                _output.WriteLine($"{s.Point.Label}: {string.Join(" || ", s.Observables)}");
             }
-            var moves = shown.Select(s => s.Observable).Distinct(StringComparer.Ordinal).Count() > 1;
-            var exempt = family.Exempt.TryGetValue(sense.Parameter.Name, out var why);
+            var exempt = family.Exempt.TryGetValue(parameter.Name, out var why);
             var sample = sense.Points[0];
-            if (!moves && !exempt)
+            if (parameter.Kind == ParameterKind.Axis)
             {
-                violations.Add(new Violation(sample, new View(sample, layer.Content), "sensitive",
-                    $"{sense.Parameter.Describe} moves nothing the crowd shows between {string.Join(" and ", shown.Select(s => s.Label))}: {shown[0].Observable}"));
+                var moves = !shown[0].Observables.SequenceEqual(shown[1].Observables, StringComparer.Ordinal);
+                if (!moves && !exempt)
+                {
+                    violations.Add(new Violation(sample, new View(sample, layer.Content), "sensitive",
+                        $"{parameter.Describe} moves nothing the crowd shows between {string.Join(" and ", shown.Select(s => s.Point.Label))}: {shown[0].Text}"));
+                }
+                else if (moves && exempt)
+                {
+                    violations.Add(new Violation(sample, new View(sample, layer.Content), "sensitive",
+                        $"{parameter.Describe} is exempt ({why}) but moves the crowd: {string.Join(" / ", shown.Select(s => $"{s.Point.Label}: {s.Text}"))}"));
+                }
+                continue;
             }
-            else if (moves && exempt)
+            for (var i = 0; i < shown.Count; i++)
             {
-                violations.Add(new Violation(sample, new View(sample, layer.Content), "sensitive",
-                    $"{sense.Parameter.Describe} is exempt ({why}) but moves the crowd: {string.Join(" / ", shown.Select(s => $"{s.Label}: {s.Observable}"))}"));
+                for (var j = i + 1; j < shown.Count; j++)
+                {
+                    var a = shown[i];
+                    var b = shown[j];
+                    var same = a.Observables.SequenceEqual(b.Observables, StringComparer.Ordinal);
+                    var alike = family.Alike.FirstOrDefault(p => p.Covers(parameter.Name, a.Word, b.Word));
+                    if (same && !exempt && alike is null)
+                    {
+                        violations.Add(new Violation(a.Point, new View(a.Point, layer.Content), "sensitive",
+                            $"{parameter.Describe}: '{a.Word}' and '{b.Word}' show the crowd the same{(draws > 1 ? $" over {draws} seeds" : "")}: {a.Text}"));
+                    }
+                    else if (!same && (exempt || alike is not null))
+                    {
+                        violations.Add(new Violation(a.Point, new View(a.Point, layer.Content), "sensitive",
+                            $"{parameter.Describe}: '{a.Word}' and '{b.Word}' are listed as alike ({(exempt ? why : alike!.Reason)}) but show apart: {a.Point.Label}: {a.Text} / {b.Point.Label}: {b.Text}"));
+                    }
+                }
             }
         }
         Settle(name, examined, violations, "sensitive");
+    }
+
+    /// <summary>What one value of a parameter showed the crowd, on each seed it ran on.</summary>
+    private sealed record Shown(Point Point, string Word, List<string> Observables)
+    {
+        public string Text => string.Join(" || ", Observables);
     }
 
     /// <summary>

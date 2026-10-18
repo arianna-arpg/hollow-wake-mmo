@@ -13,12 +13,17 @@ using HollowWake.Core.Weaves;
 
 namespace HollowWake.Core.Tests.Grammar;
 
+/// <summary>One still body of the crowd: its name in what the crowd shows, where it stands from the caster, its side, and the share of its life it starts with.</summary>
+internal sealed record CrowdBody(string Name, Vector2 At, string Faction, double Life = 1);
+
 /// <summary>
 /// The crowd scenario every point runs in: a seeded arena, the point's caster at the origin pressing its weave once,
-/// aimed east, and seven still dummies: five in a line two units apart from two units out, and two flanking three units
-/// north and south at four units east. The run records every event the press causes, ticks through the point's
-/// expected lifetime and a quiet second, and checks what it may: that the press paid, that every life lost went through
-/// the one damage pipeline, that what it made ended or may stay, and that it stayed within the caps its parameters allow.
+/// aimed east, and a fixed crowd of still dummies: nine enemies (five in a line two units apart from two units out, one
+/// of them at half life, two flanking three units north and south at four units east, and two further out, south at
+/// six units east and north at ten) and one ally of the caster beside them. The run records every event the press
+/// causes, ticks through the point's expected lifetime and a quiet second, and checks what it may: that the press
+/// paid, that every life lost went through the one damage pipeline, that what it made ended or may stay, and that it
+/// stayed within the caps its parameters allow.
 /// </summary>
 internal static class MorphArena
 {
@@ -30,7 +35,25 @@ internal static class MorphArena
 
     public static readonly Vector3 Origin = new(20, 20, 0);
 
-    public static readonly Vector2[] Crowd = { new(2, 0), new(4, 0), new(6, 0), new(8, 0), new(10, 0), new(4, 3), new(4, -3) };
+    /// <summary>
+    /// The crowd, the same for every point. The hurt body lets the life picks choose apart from the nearest and the
+    /// farthest; the ally, a body of the caster's side standing by the line between the first enemies, lets the
+    /// filter words that reach allies show; the two outer enemies stand where the registry's hit shapes reach
+    /// differently, and outside the shove carrier's reach.
+    /// </summary>
+    public static readonly CrowdBody[] Crowd =
+    {
+        new("d0", new(2, 0), Blue),
+        new("d1", new(4, 0), Blue),
+        new("d2", new(6, 0), Blue),
+        new("d3", new(8, 0), Blue, Life: 0.5),
+        new("d4", new(10, 0), Blue),
+        new("d5", new(4, 3), Blue),
+        new("d6", new(4, -3), Blue),
+        new("d7", new(6, -3.5f), Blue),
+        new("d8", new(10, 2.5f), Blue),
+        new("a0", new(5, 1.1f), Red),
+    };
 
     /// <summary>Bodies one press can strike: the crowd and the caster itself (filters such as all reach it).</summary>
     public static int Bodies => Crowd.Length + 1;
@@ -44,11 +67,12 @@ internal static class MorphArena
     /// <summary>The longest a run may simulate; a point expected to live longer is a finding of its own.</summary>
     public const double MaxSeconds = 300;
 
-    public static Outcome Run(ContentRegistry content, Point point)
+    /// <summary>Runs a point in the crowd scenario, on its own seed or on another of its seeds.</summary>
+    public static Outcome Run(ContentRegistry content, Point point, ulong? seed = null)
     {
         var outcome = new Outcome();
         var log = new Log();
-        var sim = ZoneBuilder.CreateArena(content, point.Seed, log: log, ticksPerSecond: TicksPerSecond);
+        var sim = ZoneBuilder.CreateArena(content, seed ?? point.Seed, log: log, ticksPerSecond: TicksPerSecond);
         var factory = sim.Service<PatternFactory>();
         var caster = factory.Spawn(sim, point.Caster, Origin, new SpawnOptions { Faction = Red });
         if (caster.IsNone)
@@ -56,14 +80,14 @@ internal static class MorphArena
             outcome.Broke("runs", $"the caster pattern {point.Caster} did not spawn");
             return outcome;
         }
-        var crowd = Crowd.Select(c => factory.Spawn(sim, Dummy, Origin + new Vector3(c.X, c.Y, 0), new SpawnOptions { Faction = Blue })).ToArray();
-        foreach (var body in crowd.Prepend(caster))
+        var crowd = Crowd.Select(c => factory.Spawn(sim, Dummy, Origin + new Vector3(c.At.X, c.At.Y, 0), new SpawnOptions { Faction = c.Faction })).ToArray();
+        foreach (var (body, share) in crowd.Select((e, i) => (e, Crowd[i].Life)).Prepend((caster, 1.0)))
         {
             sim.World.Remove<Behavior>(body);
             var s = sim.World.Get<Stats>(body)!;
             foreach (var resource in new[] { "life", "mana", "stamina" })
             {
-                s.SetResource(resource, s.ResourceMax(resource));
+                s.SetResource(resource, s.ResourceMax(resource) * (resource == "life" ? share : 1));
             }
         }
         var runtime = sim.Service<WeaveRuntime>();
@@ -289,7 +313,9 @@ internal static class MorphArena
         private readonly Dictionary<Entity, string> _kinds = new();
         private readonly Dictionary<Entity, double> _lives = new();
         private readonly Dictionary<(long Tick, Entity Target), double> _damage = new();
-        private readonly SortedSet<string> _struck = new(StringComparer.Ordinal);
+
+        // Who was struck, in the order of their first hits: a chain that leaps to the same bodies in another order shows it.
+        private readonly List<string> _struck = new();
         private double _dealt;
         private long _first = -1;
         private long _last = -1;
@@ -447,7 +473,10 @@ internal static class MorphArena
                         _dealt += d.Total;
                         _first = _first < 0 ? t : _first;
                         _last = t;
-                        _struck.Add(Who(d.Target));
+                        if (!_struck.Contains(Who(d.Target)))
+                        {
+                            _struck.Add(Who(d.Target));
+                        }
                     }
                     break;
                 case EntityDied died:
@@ -499,7 +528,7 @@ internal static class MorphArena
                 return "caster";
             }
             var i = Array.IndexOf(_crowd, e);
-            return i >= 0 ? "d" + i : $"made {KindOf(e)} {e}";
+            return i >= 0 ? Crowd[i].Name : $"made {KindOf(e)} {e}";
         }
 
         /// <summary>What the crowd shows of the press, as one comparable line.</summary>

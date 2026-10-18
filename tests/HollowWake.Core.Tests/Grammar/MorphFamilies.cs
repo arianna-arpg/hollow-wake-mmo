@@ -29,6 +29,10 @@ internal static class Families
 
     private const string OpenArena = "the arena is flat and open: no walls or rising ground for anything to stop at or pass through";
 
+    private const string SameShape = "the Shapes registry registers the sector a second time under the name cone";
+
+    private const string NoBodyBetween = "the crowd stands no body inside one of these shapes and outside the other";
+
     private const Dimension Geometry = Dimension.Geometry;
     private const Dimension Kinematics = Dimension.Kinematics;
     private const Dimension Payload = Dimension.Payload;
@@ -92,18 +96,18 @@ internal static class Families
             Parameter.Axis("spread", Geometry, "degrees", 0, 180, "shipped 24..110, scaled by projectile.spread; no clamp") with { Default = 15.0, Absent = 0.3, Live = Map(("count", 3.0)) },
             Parameter.Count("pierce", Kinematics, "bodies", 0, 10, "shipped 0..999 as projectile.pierce (999 passes everything); the handler floors 0; ten passes the whole crowd") with { Attribute = "projectile.pierce", Absent = 0.2 },
             Parameter.Axis("radius", Geometry, "units", 0.1, 1.5, "shipped 0.16..1; a literal number, no clamp") with { Default = 0.5, Absent = 0.2 },
-            Parameter.Choice("shape", Geometry, ShapeNames, "the Shapes registry") with { Default = "circle", Absent = 0.4, Live = Map(("shape_size", 1.5), ("pierce", 10.0)) },
+            Parameter.Choice("shape", Geometry, ShapeNames, "the Shapes registry") with { Default = "circle", Absent = 0.4, Live = Map(("shape_size", 4.0), ("pierce", 10.0)) },
             Parameter.Axis("shape_size", Geometry, "units", 0.05, 3, "never shipped; the handler floors 0.05, default the radius") with { Absent = 0.6 },
             Parameter.Axis("shape_angle", Geometry, "degrees", 5, 360, "never shipped") with { Absent = 0.6, Live = Map(("shape", "sector"), ("shape_size", 3.0), ("pierce", 10.0)) },
             Parameter.Axis("shape_width", Geometry, "units", 0.1, 4, "never shipped") with { Absent = 0.6, Live = Map(("shape", "bar"), ("shape_size", 2.0), ("pierce", 10.0)) },
-            Parameter.Choice("fire", Geometry, new[] { "fan", "volley", "ring", "salvo" }, "the handler's firing styles") with { Default = "fan", Absent = 0.4, Live = Map(("count", 3.0)) },
+            Parameter.Choice("fire", Geometry, new[] { "fan", "volley", "ring", "salvo" }, "the handler's firing styles") with { Default = "fan", Absent = 0.4, Live = Map(("count", 3.0), ("spread", 90.0)) },
             Parameter.Axis("salvo_interval", Timing, "seconds", 0.05, 0.5, "shipped 0.08; floored at a tick, default rule delivery.salvo_interval") with { Absent = 0.5, Live = Map(("fire", "salvo"), ("count", 3.0)) },
             Parameter.Axis("volley_spacing", Geometry, "units", 0, 2, "shipped 0.8; a literal number") with { Default = 0.6, Absent = 0.5, Live = Map(("fire", "volley"), ("count", 3.0), ("pierce", 10.0)) },
             Parameter.Axis("ring_jitter", Geometry, "degrees", 0, 180, "shipped 15..90; a literal number") with { Default = 0.0, Absent = 0.5, Rolls = true, Live = Map(("fire", "ring"), ("count", 8.0), ("pierce", 10.0)) },
             Parameter.Choice("origin", Geometry, new[] { "caster", "point" }, "the handler's origins") with { Default = "caster", Absent = 0.5 },
             Parameter.Axis("origin_range", Geometry, "units", 0, 20, "shipped 10.63..60; floored 0") with { Absent = 0.5, Live = Map(("origin", "point")) },
             Parameter.Axis("duration", Timing, "seconds", 0.25, 6, "shipped 2.4..6; floored at a tick; absent, the range alone ends a flight") with { Absent = 0.5, Live = Map(("pierce", 10.0)) },
-            Parameter.Choice("return", Kinematics, new[] { "none", "origin", "caster" }, "the handler's returns") with { Default = "none", Absent = 0.4 },
+            Parameter.Choice("return", Kinematics, new[] { "none", "origin", "caster" }, "the handler's returns") with { Default = "none", Absent = 0.4, Live = Map(("origin", "point")) },
             Parameter.Count("forks", Kinematics, "forks", 0, 4, "shipped +1 as projectile.forks; no clamp, and each fork doubles the flights") with { Attribute = "projectile.forks", Absent = 0.3 },
             Parameter.Count("chains", Kinematics, "chains", 0, 5, "shipped +2 as projectile.chain; no clamp") with { Attribute = "projectile.chain", Absent = 0.3 },
             Parameter.Axis("rehit", Kinematics, "seconds", 0, 1.5, "shipped 0.5..0.6 (0.55..999 as projectile.rehit); floored 0") with { Attribute = "projectile.rehit", Absent = 0.5 },
@@ -113,7 +117,7 @@ internal static class Families
             Parameter.Axis("erratic", Kinematics, "degrees a second", 0, 1000, "shipped 199..997 as projectile.erratic") with { Attribute = "projectile.erratic", Absent = 0.6, Rolls = true, Live = Map(("pierce", 10.0)) },
             Parameter.Axis("spiral", Kinematics, "degrees a second", -360, 360, "shipped 298 as projectile.spiral; either way round") with { Attribute = "projectile.spiral", Absent = 0.7, Pair = (0.0, 360.0) },
             Parameter.Axis("orbit", Kinematics, "degrees a second", 90, 360, "shipped 169..271 as projectile.orbit; sampled from 90: an orbit lives range / (orbit_radius x rate), unbounded as the rate falls to zero") with { Attribute = "projectile.orbit", Absent = 0.75, Pair = (0.0, 360.0) },
-            Parameter.Axis("spin", Kinematics, "degrees a second", -1000, 1000, "shipped 900; turns the hit shape only") with { Attribute = "projectile.spin", Absent = 0.6, Pair = (0.0, 1000.0), Live = Map(("shape", "bar"), ("shape_size", 2.0), ("pierce", 10.0)) },
+            Parameter.Axis("spin", Kinematics, "degrees a second", -1000, 1000, "shipped 900; turns the hit shape only") with { Attribute = "projectile.spin", Absent = 0.6, Pair = (0.0, 1000.0), Live = Map(("shape", "line"), ("shape_size", 3.5), ("pierce", 10.0)) },
             Parameter.Axis("wave", Kinematics, "sways a second", 0, 4, "shipped 1.6 as projectile.wave") with { Attribute = "projectile.wave", Absent = 0.6, Live = Map(("amplitude", 2.0), ("pierce", 10.0)) },
             Parameter.Axis("amplitude", Kinematics, "units", 0, 3, "shipped 1.5; default rule delivery.wave_amplitude") with { Absent = 0.6, Live = Map(("wave", 2.0), ("pierce", 10.0)) },
             Parameter.Axis("accel", Kinematics, "units a second squared", -10, 10, "shipped -5.8..1.9 as projectile.accel; never below rule delivery.min_speed") with { Attribute = "projectile.accel", Absent = 0.6, Live = Map(("pierce", 10.0)) },
@@ -145,6 +149,11 @@ internal static class Families
         {
             ["bounce"] = "flights glance only off walls, rising ground or (lobbed) the ground, and gravity is a flag the table does not sample: " + OpenArena,
             ["occlusion"] = OpenArena,
+        },
+        Alike = new[]
+        {
+            new Alike("shape", "sector", "cone", SameShape),
+            new Alike("shape", "bar", "wave", "swept along the flight, the two blades laid across it pass over the crowd's bodies on the same ticks"),
         },
         Unsampled = new Dictionary<string, string>
         {
@@ -298,16 +307,16 @@ internal static class Families
         Attributes = Stamina(),
         Parameters = new[]
         {
-            Parameter.Choice("shape", Geometry, ShapeNames, "the Shapes registry") with { Default = "circle", Absent = 0.3 },
+            Parameter.Choice("shape", Geometry, ShapeNames, "the Shapes registry") with { Default = "circle", Absent = 0.3, Live = Map(("center", "focus"), ("radius", 7.0)) },
             Parameter.Axis("radius", Geometry, "units", 0.1, 9, "shipped 1.72..6 on the node, 1.1..9 as area.radius; the handler floors 0.1") with { Attribute = "area.radius", Absent = 0.2 },
             Parameter.Axis("angle", Geometry, "degrees", 5, 360, "shipped 60..120, scaled by area.angle") with { Absent = 0.5, Live = Map(("shape", "sector"), ("radius", 9.0)) },
             Parameter.Axis("width", Geometry, "units", 0.1, 8, "shipped 1 (area.width 2 by default)") with { Absent = 0.5, Live = Map(("shape", "line"), ("radius", 10.0)) },
             Parameter.Axis("inner", Geometry, "fraction of the radius", 0, 1, "shipped 0.72; the handler clamps 0..1") with { Absent = 0.6, Live = Map(("radius", 4.0)) },
             Parameter.Choice("center", Geometry, new[] { "focus", "source", "point" }, "the handler's centers") with { Absent = 0.4 },
             Parameter.Count("max_targets", Targeting, "bodies", 0, 8, "shipped 1..24; floored 0") with { Absent = 0.5, Live = Map(("radius", 4.0)) },
-            Parameter.Choice("pick", Targeting, PickWords, "Picks.Names") with { Default = "random", Absent = 0.5, Live = Map(("max_targets", 1.0), ("radius", 4.0)) },
+            Parameter.Choice("pick", Targeting, PickWords, "Picks.Names") with { Default = "random", Absent = 0.5, Rolling = new[] { "random" }, Live = Map(("max_targets", 1.0), ("radius", 3.8)) },
             Parameter.Choice("reach", Geometry, new[] { "center", "edge" }, "the handler's reaches") with { Default = "center", Absent = 0.5, Live = Map(("shape", "sector"), ("radius", 1.8)) },
-            Parameter.Choice("filter", Targeting, Filters, "the words EffectHelpers.Passes knows") with { Default = "enemy", Absent = 0.4, Live = Map(("center", "source"), ("radius", 3.0)) },
+            Parameter.Choice("filter", Targeting, Filters, "the words EffectHelpers.Passes knows") with { Default = "enemy", Absent = 0.4, Live = Map(("center", "source"), ("radius", 5.5)) },
             Parameter.Choice("occlusion", Geometry, Occlusions, "blocked or free") with { Default = "blocked", Absent = 0.5 },
             Parameter.Count("area.scatter", Causality, "aftershocks", 0, 4, "shipped +2 as a glyph modifier; no clamp") with { Attribute = "area.scatter", AttributeOnly = true, Absent = 0.5 },
             Parameter.Count("area.pulses", Causality, "repeats", 0, 4, "never moved by shipped content; no clamp") with { Attribute = "area.pulses", AttributeOnly = true, Absent = 0.5 },
@@ -334,6 +343,13 @@ internal static class Families
             return states;
         },
         Exempt = new Dictionary<string, string> { ["occlusion"] = OpenArena },
+        Alike = new[]
+        {
+            new Alike("shape", "sector", "cone", SameShape),
+            new Alike("shape", "circle", "square", NoBodyBetween),
+            new Alike("shape", "arc", "wave", NoBodyBetween),
+            new Alike("center", "focus", "point", "the press names no target, and an area's focus is its target, else its point"),
+        },
         Unsampled = new Dictionary<string, string>
         {
             ["include_center"] = "a flag; the capability map proposes a shared spare list",
@@ -357,7 +373,7 @@ internal static class Families
             Parameter.Count("count", Kinematics, "leaps", 0, 8, "shipped weave.chain.count (3, +2); no clamp") with { Attribute = "chain.count", Absent = 0.2 },
             Parameter.Axis("range", Geometry, "units", 0, 12, "shipped 6..8.75; no clamp") with { Default = 6.0, Absent = 0.3 },
             Parameter.Choice("filter", Targeting, Filters, "the words EffectHelpers.Passes knows") with { Default = "enemy", Absent = 0.4 },
-            Parameter.Choice("pick", Targeting, PickWords, "Picks.Names") with { Default = "nearest", Absent = 0.4 },
+            Parameter.Choice("pick", Targeting, PickWords, "Picks.Names") with { Default = "nearest", Absent = 0.4, Rolling = new[] { "random" } },
         },
         Defaults = Map(("count", 3.0), ("range", 6.0)),
         Lists = new[] { new ListFill("effects", Rider.Damage) },
@@ -386,7 +402,7 @@ internal static class Families
             Parameter.Axis("radius", Geometry, "units", 0.25, 6, "shipped 0.75..3.44 on the node, 1.1..9 as area.radius; no clamp in the handler") with { Attribute = "area.radius", Absent = 0.2 },
             Parameter.Axis("duration", Timing, "seconds", 0.1, 6, "shipped 1.2..6 on the node, 0.8..600 as duration; floored at a tick") with { Attribute = "duration", Absent = 0.2 },
             Parameter.Axis("interval", Timing, "seconds", 0.05, 2, "shipped 0.18..1; floored at a tick") with { Default = 0.5, Absent = 0.2 },
-            Parameter.Choice("shape", Geometry, ShapeNames, "the Shapes registry") with { Default = "circle", Absent = 0.5 },
+            Parameter.Choice("shape", Geometry, ShapeNames, "the Shapes registry") with { Default = "circle", Absent = 0.5, Live = Map(("radius", 4.0)) },
             Parameter.Axis("angle", Geometry, "degrees", 5, 360, "shipped 75, scaled by area.angle") with { Absent = 0.6, Live = Map(("shape", "sector"), ("radius", 4.0)) },
             Parameter.Axis("width", Geometry, "units", 0.1, 8, "never shipped on a field") with { Absent = 0.6, Live = Map(("shape", "bar"), ("radius", 4.0)) },
             Parameter.Axis("inner", Geometry, "fraction of the radius", 0, 1, "never shipped on a field; clamped 0..1") with { Absent = 0.6, Live = Map(("radius", 4.0)) },
@@ -397,7 +413,7 @@ internal static class Families
             Parameter.Axis("seek", Kinematics, "units a second", 0, 4, "shipped 1.72; floored 0") with { Absent = 0.7 },
             Parameter.Axis("rotate", Kinematics, "degrees a second", -360, 360, "never shipped") with { Absent = 0.7, Pair = (0.0, 360.0), Live = Map(("shape", "sector"), ("angle", 60.0), ("radius", 4.0)) },
             Parameter.Count("pulses", Timing, "pulses", 1, 10, "never shipped; floored 1, absent unlimited") with { Absent = 0.5 },
-            Parameter.Choice("filter", Targeting, Filters, "the words EffectHelpers.Passes knows") with { Default = "enemy", Absent = 0.4 },
+            Parameter.Choice("filter", Targeting, Filters, "the words EffectHelpers.Passes knows") with { Default = "enemy", Absent = 0.4, Live = Map(("radius", 8.0)) },
             Parameter.Choice("occlusion", Geometry, Occlusions, "blocked or free") with { Default = "blocked", Absent = 0.5 },
         },
         Defaults = Map(("radius", 2.5), ("duration", 2.0), ("interval", 0.5)),
@@ -449,6 +465,12 @@ internal static class Families
             return states;
         },
         Exempt = new Dictionary<string, string> { ["occlusion"] = OpenArena },
+        Alike = new[]
+        {
+            new Alike("shape", "sector", "cone", SameShape),
+            new Alike("shape", "line", "band", NoBodyBetween),
+            new Alike("shape", "bar", "arc", NoBodyBetween),
+        },
         Unsampled = new Dictionary<string, string>
         {
             ["follow"] = "a flag; the capability map proposes an anchor choice",
@@ -477,7 +499,7 @@ internal static class Families
         Attributes = Stamina(),
         Parameters = new[]
         {
-            Parameter.Choice("kind", Kinematics, new[] { "teleport", "dash", "leap", "blink", "knockback", "pull", "buffet" }, "the handler's kinds but recall, which needs a mark an earlier cast left") with { Default = "teleport" },
+            Parameter.Choice("kind", Kinematics, new[] { "teleport", "dash", "leap", "blink", "knockback", "pull", "buffet" }, "the handler's kinds but recall, which needs a mark an earlier cast left") with { Default = "teleport", Rolling = new[] { "buffet" } },
             Parameter.Axis("distance", Kinematics, "units", 0, 10, "shipped 0.94..8.13; scaled by knockback for knockbacks and buffets") with { Default = 4.0, Absent = 0.2 },
             Parameter.Axis("speed", Kinematics, "units a second", 0.5, 40, "shipped 24; floored 0.5; absent, a dash is instant") with { Absent = 0.4, Live = Map(("kind", "dash")) },
             Parameter.Axis("width", Geometry, "units", 0, 3, "never shipped; the dash's corridor, floored 0") with { Default = 1.5, Absent = 0.4, Live = Map(("kind", "dash")) },
@@ -543,6 +565,11 @@ internal static class Families
         {
             ["arc"] = "a leap's height shows only in the air: it lands where and when it would have, and its body is untargetable throughout",
         },
+        Alike = new[]
+        {
+            new Alike("filter", "ally", "ally_or_self", "a dash strikes the bodies in its way but never its own mover, the caster"),
+            new Alike("filter", "not_self", "all", "a dash strikes the bodies in its way but never its own mover, the caster"),
+        },
         Unsampled = new Dictionary<string, string>
         {
             ["who"] = "fixed by the carrier: the source for moves, the struck body for shoves",
@@ -570,11 +597,11 @@ internal static class Families
             Parameter.Count("count", Geometry, "strikes", 0, 16, "shipped 5 as area.strikes; no clamp") with { Attribute = "area.strikes", Absent = 0.2, Pair = (0.0, 6.0) },
             Parameter.Axis("radius", Geometry, "units", 0.1, 8, "shipped 4; floored 0.1, default twice area.radius") with { Absent = 0.3 },
             Parameter.Axis("interval", Timing, "seconds", 0, 0.5, "shipped 0.15; floored 0") with { Default = 0.0, Absent = 0.4 },
-            Parameter.Choice("at", Targeting, new[] { "random", "enemies" }, "the handler's placements") with { Default = "random", Absent = 0.4 },
+            Parameter.Choice("at", Targeting, new[] { "random", "enemies" }, "the handler's placements") with { Default = "random", Absent = 0.4, Rolling = new[] { "random" } },
             Parameter.Axis("jitter", Geometry, "units", 0, 2, "shipped 0.6; floored 0") with { Default = 0.0, Absent = 0.5, Live = Map(("at", "enemies")) },
             Parameter.Axis("telegraph", Timing, "seconds", 0, 1.5, "shipped 0.5; floored 0") with { Default = 0.0, Absent = 0.5 },
             Parameter.Axis("telegraph_radius", Geometry, "units", 0.1, 4, "never shipped; default area.radius") with { Absent = 0.6, Live = Map(("telegraph", 0.5)) },
-            Parameter.Choice("filter", Targeting, Filters, "the words EffectHelpers.Passes knows") with { Default = "enemy", Absent = 0.4, Live = Map(("at", "enemies")) },
+            Parameter.Choice("filter", Targeting, Filters, "the words EffectHelpers.Passes knows") with { Default = "enemy", Absent = 0.4, Live = Map(("at", "enemies"), ("count", 1.0), ("radius", 6.5)) },
         },
         // Strikes under the nearest bodies: random placement would roll differently for every weave, so the default places none at random.
         Defaults = Map(("count", 5.0), ("radius", 4.0), ("at", "enemies")),
@@ -601,6 +628,10 @@ internal static class Families
         {
             ["telegraph_radius"] = "the mark's radius is what clients draw; strikes land as they would have",
         },
+        // The filter row lays one strike, under the body nearest the focus the filter admits.
+        Alike = Alike.Among("filter", "one strike falls under the admitted body nearest the focus, and an enemy stands at the focus", "enemy", "not_self", "all")
+            .Append(new Alike("filter", "ally", "ally_or_self", "one strike falls under the admitted body nearest the focus, and the ally stands nearer it than the caster"))
+            .ToArray(),
     };
 
     // ------------------------------------------------------------ cascade
@@ -611,12 +642,13 @@ internal static class Families
         Effect = "cascade",
         Shell = "slam_quick",
         Probe = "cascade",
-        Aim = new Vector2(2, 0),
+        // Half a unit off the facing, so a cascade stepping out from the caster through the aim leaves the facing.
+        Aim = new Vector2(2, 0.5f),
         Attributes = Stamina(),
         Parameters = new[]
         {
             Parameter.Count("count", Geometry, "placements", 0, 10, "shipped 3 as area.cascade (+2 from a glyph); no clamp") with { Attribute = "area.cascade", Absent = 0.2 },
-            Parameter.Choice("dir", Geometry, new[] { "forward", "backward", "axis", "out", "random" }, "the handler's directions") with { Default = "forward", Absent = 0.4 },
+            Parameter.Choice("dir", Geometry, new[] { "forward", "backward", "axis", "out", "random" }, "the handler's directions") with { Default = "forward", Absent = 0.4, Rolling = new[] { "random" } },
             Parameter.Axis("step", Geometry, "units", 0, 4, "shipped 2; no clamp, default 1.5 x area.radius") with { Absent = 0.3 },
             Parameter.Axis("scale_step", Geometry, "fraction a step", -0.5, 1, "shipped 0.15; the scale floors 0.1") with { Default = 0.0, Absent = 0.5 },
             Parameter.Axis("damage_step", Payload, "fraction a step", -0.5, 1, "never shipped; the scale floors 0") with { Default = 0.0, Absent = 0.5 },
@@ -656,7 +688,7 @@ internal static class Families
             Parameter.Axis("radius", Geometry, "units", 0.25, 9, "shipped weave.area.radius (1.1..9 as area.radius); no clamp in the handler") with { Attribute = "area.radius", Absent = 0.2 },
             Parameter.Axis("duration", Timing, "seconds", 0.1, 6, "never shipped as a number (the shipped aura toggles); floored at a tick") with { Attribute = "duration", Absent = 0.2 },
             Parameter.Axis("interval", Timing, "seconds", 0.05, 2, "shipped 1; floored at a tick") with { Default = 1.0, Absent = 0.2 },
-            Parameter.Choice("filter", Targeting, Filters, "the words EffectHelpers.Passes knows") with { Default = "enemy", Absent = 0.4 },
+            Parameter.Choice("filter", Targeting, Filters, "the words EffectHelpers.Passes knows") with { Default = "enemy", Absent = 0.4, Live = Map(("radius", 5.5)) },
             Parameter.Choice("occlusion", Geometry, Occlusions, "blocked or free") with { Default = "blocked", Absent = 0.5 },
         },
         Defaults = Map(("radius", 3.0), ("duration", 2.0), ("interval", 0.5)),
@@ -709,7 +741,7 @@ internal static class Families
             Parameter.Axis("duration", Timing, "seconds", 0.1, 6, "shipped weave.duration; floored at a tick") with { Attribute = "duration", Absent = 0.2 },
             Parameter.Axis("interval", Timing, "seconds", 0.05, 2, "shipped 0.5; floored at a tick") with { Default = 0.5, Absent = 0.2 },
             Parameter.Axis("max_length", Geometry, "units", 0, 15, "shipped 12; no clamp, absent unlimited") with { Absent = 0.5 },
-            Parameter.Choice("filter", Targeting, Filters, "the words EffectHelpers.Passes knows") with { Default = "enemy", Absent = 0.4 },
+            Parameter.Choice("filter", Targeting, Filters, "the words EffectHelpers.Passes knows") with { Default = "enemy", Absent = 0.4, Live = Map(("width", 2.6)) },
         },
         Defaults = Map(("link", "point"), ("duration", 2.0), ("interval", 0.5)),
         Lists = new[]
@@ -730,6 +762,11 @@ internal static class Families
             };
         },
         States = _ => new[] { new Statement("tether", true, "a tether") },
+        Alike = new[]
+        {
+            new Alike("filter", "ally", "ally_or_self", "a tether strikes the bodies it crosses but never the one it runs from, the caster"),
+            new Alike("filter", "not_self", "all", "a tether strikes the bodies it crosses but never the one it runs from, the caster"),
+        },
         Unsampled = new Dictionary<string, string> { ["look"] = "presentation only" },
     };
 
@@ -888,8 +925,11 @@ internal static class Riders
 
     public static JsonObject Marker(string list) => new() { ["type"] = "event", ["name"] = Prefix + list };
 
-    /// <summary>A small burst of damage where a plain list runs (scattered strikes, cascade placements): its radius scales with the placement.</summary>
-    public static JsonObject Burst(string list) => new() { ["type"] = "area", ["radius"] = 1, ["effects"] = new JsonArray(Damage(list)) };
+    /// <summary>
+    /// A small burst of damage where a plain list runs (scattered strikes, cascade placements): its radius scales with
+    /// the placement, and it strikes every body it covers, so where a placement falls shows whoever stands there.
+    /// </summary>
+    public static JsonObject Burst(string list) => new() { ["type"] = "area", ["radius"] = 1, ["filter"] = "all", ["effects"] = new JsonArray(Damage(list)) };
 
     public static JsonArray Of(ListFill list) => list.Rider switch
     {
