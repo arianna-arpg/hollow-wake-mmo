@@ -1,6 +1,6 @@
 # Background testing
 
-Routine automation must leave the operator's desktop input available. `scripts/test-background.mjs` runs the existing smoke scenarios against a private local server without opening client windows or sending operating system mouse or keyboard input. It is tooling, with no gameplay or protocol changes.
+Routine automation must leave the operator's desktop input and active window focus available. `scripts/test-background.mjs` runs the existing smoke scenarios against a private local server without opening client windows or sending operating system mouse or keyboard input. It is tooling, with no gameplay or protocol changes.
 
 ## Run
 
@@ -11,7 +11,7 @@ npm --prefix web ci
 node scripts/test-background.mjs
 ```
 
-The default suite builds the server and browser client and runs the browser smoke headlessly. Playwright sends input to its own browser page; it can capture screenshots while the operator continues using other applications. The runner uses the installed Edge on Windows or Chrome elsewhere. `--browser` or `--executable` selects another installed compatible browser, using the smoke script's existing options.
+The default suite builds the server and browser client and runs the browser smoke headlessly. Playwright sends input to its own browser page; it can capture screenshots while the operator continues using other applications. The runner passes `--isolated-input` to suppress physical controller polling and connection events inside that page, because headless Chromium otherwise still receives real gamepad input. The operator's devices remain available to other applications. These runs do not test controller support. The runner uses the installed Edge on Windows or Chrome elsewhere. `--browser` or `--executable` selects another installed compatible browser, using the smoke script's existing options.
 
 For native behavior checks, supply the repository's required .NET Godot executable:
 
@@ -29,7 +29,7 @@ node scripts/test-background.mjs --suite all --godot /path/to/godot
 - Each invocation receives a unique evidence folder, native profile, server name, free TCP and HTTP ports, and server data directory. Each suite gets its own account, so native tests never inherit the browser character's position. The runner copies the committed server configuration and overrides only its runtime identity, loopback bind, ports, data directory, web root and development authentication. It never reads `server.local.yaml` or attaches to an existing game server.
 - Readiness checks the service identity and this run's unique server name. Another process taking a port between reservation and launch causes failure, never a test against someone else's world.
 - The browser has a fresh Playwright context. On Windows and Linux, native user data is rooted inside the evidence directory through the child process environment, including interface placement. Native runs on macOS are rejected until equivalent isolation is implemented.
-- Child processes start with hidden Windows console windows. Success, failure, timeout and handled interruption close only the runner's owned process trees. Saved test data remains for diagnosis. An externally force-killed runner cannot execute cleanup; use Ctrl+C or SIGTERM to stop it normally.
+- Child processes start with hidden Windows console windows. The detected Godot installation uses its engine executable directly, with output piped to logs. Both clients are headless, so tests never request foreground focus, minimize the operator's window, or activate another window. Success, failure, timeout and handled interruption close only the runner's owned process trees. Saved test data remains for diagnosis. An externally force-killed runner cannot execute cleanup; use Ctrl+C or SIGTERM to stop it normally.
 - Engineering sessions continue using their own worktrees. Build and Godot import outputs are local to the checkout, so do not build or import concurrently in the same checkout. Concurrent browser runs may use `--no-build` after the build finishes. This isolates input and data, not CPU, memory or GPU usage; demanding suites still share machine resources.
 
 ## Evidence and coverage
@@ -41,5 +41,7 @@ The runner reuses the scenarios maintained in [client.md](client.md) and [web-cl
 ```sh
 node --test scripts/test-background.test.mjs
 ```
+
+On Windows, `pwsh -NoProfile -File experiments/background-testing/check-focus.ps1` runs both suites and samples the foreground window, failing if a sampled window belongs to the runner's process tree. The probe only reads focus; it does not activate windows. This is supporting evidence, not a guarantee about transitions shorter than the sampling interval.
 
 The input distinction follows Godot's [Input.parse_input_event contract](https://docs.godotengine.org/en/stable/classes/class_input.html#class-input-method-parse-input-event): injected events do not move the operating system cursor. Graphical smoke runs still have windows and can receive real input; use the headless runner for concurrent desktop work.

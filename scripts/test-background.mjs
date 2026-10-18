@@ -36,7 +36,8 @@ async function godotExecutable(explicit) {
     for (const pkg of await readdir(packages).catch(() => [])) {
       if (!pkg.startsWith('GodotEngine.GodotEngine.Mono_')) continue;
       const stem = `Godot_v${version}-stable_mono_win64`;
-      const candidate = join(packages, pkg, stem, `${stem}_console.exe`);
+      // Pipe the engine's output directly; no console-wrapper process is needed.
+      const candidate = join(packages, pkg, stem, `${stem}.exe`);
       if (existsSync(candidate)) return candidate;
     }
   }
@@ -156,7 +157,7 @@ export function smokeCommand(suite, opts, { url, tcp, directory, id }) {
   const account = `${id}-${suite}`;
   if (suite === 'web') return [process.execPath, [join(root, 'web/scripts/smoke.mjs'),
     '--url', `${url}/?server=${encodeURIComponent(url)}`, '--shots', join(directory, 'shots'),
-    '--account', account, ...calling,
+    '--account', account, '--isolated-input', ...calling,
     ...(opts.browser ? ['--browser', opts.browser] : []),
     ...(opts.executable ? ['--executable', opts.executable] : []),
   ]];

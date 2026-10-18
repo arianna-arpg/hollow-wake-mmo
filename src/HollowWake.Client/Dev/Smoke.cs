@@ -55,6 +55,8 @@ public partial class Smoke : Node
         // Without it GUI clicks fall through to world input even when their coordinates hit a control.
         if (DisplayServer.GetName() == "headless")
         {
+            Record("headless input isolation", Input.GetConnectedJoypads().Count == 0,
+                $"{Input.GetConnectedJoypads().Count} physical controllers visible");
             GetWindow().Size = new Vector2I(
                 (int)ProjectSettings.GetSetting("display/window/size/viewport_width"),
                 (int)ProjectSettings.GetSetting("display/window/size/viewport_height"));

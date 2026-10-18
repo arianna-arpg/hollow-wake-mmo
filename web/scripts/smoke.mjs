@@ -7,7 +7,7 @@
 // screenshot per stage and exits non-zero when any check fails.
 //
 //   npm run smoke -- [--url http://localhost:7778/] [--shots DIR] [--account NAME]
-//                    [--browser msedge|chrome|chromium] [--executable PATH] [--headed] [--full-states]
+//                    [--browser msedge|chrome|chromium] [--executable PATH] [--headed] [--full-states] [--isolated-input]
 //
 // --full-states runs the client without entity deltas (full entity states only), for comparison. The page
 // runs under its own settings profile (smoke), started from the content's defaults each run.
@@ -18,6 +18,7 @@
 import { mkdirSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { chromium } from 'playwright-core';
+import { isolatePhysicalInput } from './isolated-input.mjs';
 
 const args = process.argv.slice(2);
 const opt = (name, fallback) => {
@@ -47,6 +48,11 @@ const browser = await chromium.launch({
   args: ['--ignore-gpu-blocklist', '--enable-unsafe-swiftshader'],
 });
 const page = await browser.newPage({ viewport: { width: 1280, height: 800 } });
+// Headless Chromium can still see real controllers. Background runs accept only scripted input.
+if (flag('isolated-input')) {
+  await page.addInitScript(isolatePhysicalInput);
+  console.log('SMOKE input: page-local keyboard and pointer; physical controllers isolated');
+}
 const pageErrors = [];
 page.on('pageerror', (e) => pageErrors.push(e.message));
 page.on('console', (m) => {
