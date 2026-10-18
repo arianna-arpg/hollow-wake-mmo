@@ -41,12 +41,13 @@ public class LocalPopulationSearchTests
     }
 
     [Theory]
-    [InlineData(0, 1, false)]
-    [InlineData(1, 1, true)]
-    [InlineData(1, 9, false)]
-    public void ResolvedPoiAnchorsTheSameBoundedSearchAndRetainsLevelEligibility(int chunks, int siteLevel, bool offered)
+    [InlineData(0, 1, 160, false)]
+    [InlineData(1, 1, 160, true)]
+    [InlineData(1, 1, 40, true)]
+    [InlineData(1, 9, 160, false)]
+    public void ResolvedPoiAnchorsTheSameBoundedSearchAndRetainsLevelEligibility(int chunks, int siteLevel, double reach, bool offered)
     {
-        var (generator, planner, giver) = Scenario(chunks, siteLevel, 160);
+        var (generator, planner, giver) = Scenario(chunks, siteLevel, reach);
         var content = generator.Content;
         content.With(content.Require<PoiDef>("budget_site") with { Tags = TagSet.Of("budget_site") });
         var quest = content.Require<QuestTemplateDef>("budget_quest");
@@ -58,6 +59,15 @@ public class LocalPopulationSearchTests
                 ["target"] = quest.Slots["target"] with { PopulationAt = "$site" },
             },
         });
+        if (reach == 40)
+        {
+            var resident = Assert.Single(generator.GenerateChunk(new ChunkCoord(3, 2)).Spawns,
+                s => s.Pattern == "budget_target");
+            var dx = resident.X - giver.X;
+            var dy = resident.Y - giver.Y;
+            // A giver-centered radius would reject this resident even if chunk ordering used the site.
+            Assert.True(dx * dx + dy * dy > reach * reach);
+        }
         var quests = planner.GenerateQuests(giver.Zone, new[] { giver });
         Assert.Equal(offered, quests.Count == 1);
         if (offered) Assert.Equal("budget_target", Assert.Single(Assert.Single(quests).Objectives).Target);
