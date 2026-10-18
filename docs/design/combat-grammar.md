@@ -79,11 +79,11 @@ These hold at every point of the space, for every actor, player or AI.
 1. **One pipeline.** No body loses life to another body's effect except through the stage ladder of [combat.md](combat.md); costs paid in life, falls and a minion's decay are the named exceptions and are not another's effect. *Target*: the morph test asserts every life drop on a struck body has a damage event; the `resource` effect, which may lower any resource directly, is the baseline exception.
 2. **Termination.** Every flight, hold, field and placement ends by its duration or with its source; a toggle ends with its bearer, its slot or its upkeep; a summon ends with its lifetime, its contract or its owner; every bank caps, and decays unless its kind says it holds (a manual bank, a brim floor). *Holds* for flights, fields, placements and capped summons (the morph test) and for holds (the held-mode tests); *target* for bare spawns (rule 7).
 3. **Bounded fan-out.** The resolutions one use causes are bounded by a named rule set: today the depth rule of each kind, the internal cooldowns, the chance caps and the repeat caps; the target is one causal budget per use. *Holds* for the delivery and agency families against today's caps (the morph test derives the bound from the sampled point and the rules); *target* for repeats, procs and chance caps, which no instrument samples yet, and for the single budget.
-4. **Determinism.** Every roll draws from a seeded stream. Reading a bank, a forecast, a hint or an explanation changes nothing: a tournament is identical with explanation on and off. *Holds* (the morph test runs each point twice; the standard duels hash against their baseline).
+4. **Determinism.** Every roll draws from a seeded stream. Reading a bank, a forecast, a hint or an explanation must change nothing. Seeded replay *holds* within the tested platform and runtime (the morph test runs each point twice; the standard duels hash against their platform's baseline). An identical tournament with explanation on and off remains a *target* until a differential check runs both modes; replay alone does not prove that claim.
 5. **A target is an aim, never a guarantee.** Each application re-tests position, arc and line of sight when it resolves; the weave's phasing is the only wall skip. *Holds* for deliveries (the release-time checks); *target* where a release check is a form field that may omit line of sight.
 6. **Quantities fold, choices patch.** A literal in a graph is a frozen axis. *Target*: the linter and `weave --axes` (the baseline of "What an axis is").
 7. **Execution and forecast share one plan.** A warning and a hit read the same resolved plan; a warning states its certainty and never promises a hit or safety. *Holds* for the deliveries with a forecast provider (the forecast tests); *target* for the deliveries without one.
-8. **A use has paid before anything resolves.** A press or a trigger pays its cost and cooldown before its first resolution; a sequel, follow-up or meta is a resolution of the use that paid, not a use; an interrupted hold fires nothing. *Holds* (the runtime tests).
+8. **A use has paid before anything resolves.** A press or a trigger pays its cost and cooldown before its first resolution; a sequel, follow-up or meta is a resolution of the use that paid, not a use. Interrupting a hold cancels its terminal discharge and future held resolutions; channel pulses that already resolved remain paid resolutions of that use. *Holds* (the runtime tests).
 9. **Steady state stays inside the budgets of [performance.md](performance.md)**, and the delivery systems allocate nothing per tick. *Holds* (the bench).
 
 ## The playstyle space
@@ -152,7 +152,7 @@ A new axis is added end to end, or not at all: an attribute with a base, a unit 
 
 ## Proving a change
 
-Every combat change shows, beyond the gates of `CLAUDE.md`, in its pull request and its review record:
+Every combat change shows, beyond the gates of `CLAUDE.md`, in its pull request and its review record the following evidence. An instrument becomes required when its implementation lands on the change's base; until then the record names it as pending and supplies the available gates and duel evidence.
 
 - `hollowwake validate` with no errors and no new warnings;
 - the standard duels (`hollowwake tournament --standard --check-hashes` against the committed baseline) identical to the recorded baseline, or the record naming each changed trace and the rule it serves;
