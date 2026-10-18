@@ -1,0 +1,49 @@
+{
+  "kind": "weaves",
+  "entries": [
+    {
+      "id": "goblin_cinder_keg",
+      "name": "Cinder Keg",
+      "form": "missile",
+      "threads": [
+        "ember"
+      ],
+      "color": "#cf793e",
+      "attributes": {
+        "cast.time": 0.9,
+        "cooldown.base": 4,
+        "cost.base.mana": 12,
+        "base_damage": 17,
+        "range": 12,
+        "projectile.speed": 9
+      },
+      "ai": {
+        "role": "damage",
+        "preferred_range": 8,
+        "weight": 4
+      },
+      "effects": [
+        {
+          "type": "projectile",
+          "radius": 0.3,
+          "gravity": 10,
+          "look": "ember_bolt",
+          "on_end": [
+            {
+              "type": "area",
+              "radius": 2.2,
+              "center": "point",
+              "effects": [
+                {
+                  "type": "damage",
+                  "threads": "$threads",
+                  "amount": "weave.base_damage * spell.power * (1 + 0.08 * (weave.level - 1))"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

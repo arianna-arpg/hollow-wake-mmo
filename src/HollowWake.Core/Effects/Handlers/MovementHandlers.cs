@@ -143,7 +143,9 @@ internal sealed class MoveHandler : IEffectHandler
             {
                 return;
             }
-            var distance = (float)ctx.Eval(Distance, 4);
+            var distance = (float)(ctx.Eval(Distance, 4)
+                * Physicality.ShoveScale(sim, ctx.Source, mover) * WeaveAttr(ctx, "shove.authority", ctx.SourceStats?.Get("shove.authority", ctx.Tags) ?? 1));
+            // Scale before the pull clamp: even a strong pusher cannot reel through its anchor.
             // What the shove measures from: where the effect acts (a flight's hit point, a field's center), the
             // caster's own position (a hook on a flight reeling its catch home), or the aim point.
             var source = Anchor switch

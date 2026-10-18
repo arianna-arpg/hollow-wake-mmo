@@ -1,0 +1,269 @@
+{
+  "kind": "pois",
+  "entries": [
+    {
+      "id": "warren_encampment",
+      "name": "Warren Encampment",
+      "tags": [
+        "ruin",
+        "landmark",
+        "goblinkin"
+      ],
+      "weight": 1,
+      "radius": 12,
+      "min_spacing": 130,
+      "slope": {
+        "max": 0.55
+      },
+      "landmarks": [
+        "camp_ring"
+      ],
+      "level": 2,
+      "inhabitants": [
+        {
+          "pattern": "goblin_scavenger",
+          "density": 1,
+          "pack_size": [
+            1,
+            2
+          ],
+          "respawn": 240,
+          "level": {
+            "min": 1
+          }
+        },
+        {
+          "pattern": "goblin_skirmisher",
+          "density": 1,
+          "pack_size": [
+            1,
+            2
+          ],
+          "respawn": 240,
+          "level": {
+            "min": 2
+          }
+        },
+        {
+          "pattern": "goblin_slinger",
+          "density": 1,
+          "pack_size": [
+            1,
+            2
+          ],
+          "respawn": 240,
+          "level": {
+            "min": 2
+          }
+        },
+        {
+          "pattern": "goblin_shaman",
+          "density": 1,
+          "pack_size": [
+            1,
+            2
+          ],
+          "respawn": 240,
+          "level": {
+            "min": 4
+          }
+        },
+        {
+          "pattern": "goblin_brute",
+          "density": 1,
+          "pack_size": [
+            1,
+            2
+          ],
+          "respawn": 240,
+          "level": {
+            "min": 5
+          }
+        },
+        {
+          "pattern": "goblin_chief",
+          "density": 1,
+          "pack_size": [
+            1,
+            1
+          ],
+          "respawn": 240,
+          "level": {
+            "min": 7
+          }
+        },
+        {
+          "pattern": "gnasher_whelp",
+          "density": 1,
+          "pack_size": [
+            1,
+            2
+          ],
+          "respawn": 240,
+          "level": {
+            "min": 1
+          }
+        },
+        {
+          "pattern": "cave_gnasher",
+          "density": 1,
+          "pack_size": [
+            1,
+            2
+          ],
+          "respawn": 240,
+          "level": {
+            "min": 4
+          }
+        }
+      ],
+      "names": [
+        "Warren Encampment"
+      ]
+    },
+    {
+      "id": "scrap_fort",
+      "name": "Scrap Fort",
+      "tags": [
+        "ruin",
+        "landmark",
+        "goblinkin"
+      ],
+      "weight": 1,
+      "radius": 12,
+      "min_spacing": 130,
+      "slope": {
+        "max": 0.55
+      },
+      "landmarks": [
+        "ruin_walls"
+      ],
+      "level": 5,
+      "inhabitants": [
+        {
+          "pattern": "goblin_sapper",
+          "density": 1,
+          "pack_size": [
+            1,
+            2
+          ],
+          "respawn": 240,
+          "level": {
+            "min": 5
+          }
+        },
+        {
+          "pattern": "hobgoblin_taskmaster",
+          "density": 1,
+          "pack_size": [
+            1,
+            2
+          ],
+          "respawn": 240,
+          "level": {
+            "min": 8
+          }
+        },
+        {
+          "pattern": "goblin_warboss",
+          "density": 1,
+          "pack_size": [
+            1,
+            2
+          ],
+          "respawn": 480,
+          "level": {
+            "min": 12
+          }
+        },
+        {
+          "pattern": "orc_ravager",
+          "density": 1,
+          "pack_size": [
+            1,
+            2
+          ],
+          "respawn": 240,
+          "level": {
+            "min": 7
+          }
+        },
+        {
+          "pattern": "goblin_colossus",
+          "density": 1,
+          "pack_size": [
+            1,
+            1
+          ],
+          "respawn": 480,
+          "level": {
+            "min": 20
+          }
+        },
+        {
+          "pattern": "warg",
+          "density": 1,
+          "pack_size": [
+            1,
+            2
+          ],
+          "respawn": 240,
+          "level": {
+            "min": 6
+          }
+        }
+      ],
+      "names": [
+        "Scrap Fort"
+      ]
+    },
+    {
+      "id": "troll_toll",
+      "name": "Troll Toll",
+      "tags": [
+        "ruin",
+        "landmark",
+        "goblinkin"
+      ],
+      "weight": 1,
+      "radius": 12,
+      "min_spacing": 130,
+      "slope": {
+        "max": 0.55
+      },
+      "landmarks": [
+        "barrow"
+      ],
+      "level": 4,
+      "inhabitants": [
+        {
+          "pattern": "troll_mauler",
+          "density": 1,
+          "pack_size": [
+            1,
+            2
+          ],
+          "respawn": 240,
+          "level": {
+            "min": 9
+          }
+        },
+        {
+          "pattern": "troll_bridgewarden",
+          "density": 1,
+          "pack_size": [
+            1,
+            2
+          ],
+          "respawn": 480,
+          "level": {
+            "min": 12
+          }
+        }
+      ],
+      "names": [
+        "Troll Toll"
+      ]
+    }
+  ]
+}

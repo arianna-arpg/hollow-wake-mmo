@@ -1,0 +1,22 @@
+{
+  "kind": "attributes",
+  "entries": [
+    {
+      "id": "mass",
+      "name": "Body Mass",
+      "category": "defense",
+      "base": 80,
+      "min": 0.1,
+      "description": "Mass in kilograms. Physical bodies supply a volume-and-material base to the common modifier fold.",
+      "hidden": true
+    },
+    {
+      "id": "shove.authority",
+      "name": "Shove Authority",
+      "category": "offense",
+      "base": 1,
+      "min": 0,
+      "description": "Multiplies the force of knockback, pull and buffet after the pusher mass term."
+    }
+  ]
+}

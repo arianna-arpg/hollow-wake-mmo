@@ -256,6 +256,15 @@ public sealed class PatternFactory
                 }
             }
         });
+        Register("physical", c =>
+        {
+            var profile = c.Bind<PhysicalBodySpec>();
+            var density = profile.Materials.Sum(s => s.Fraction * c.Sim.Content.Require<BodyMaterialDef>(s.Material).Density);
+            c.Sim.World.Add(c.Entity, new PhysicalBody { Profile = profile, Density = density });
+            var transform = c.Sim.World.Get<Transform>(c.Entity)!;
+            transform.Radius = (float)(Math.Max(profile.Width, profile.Depth) / 2);
+            transform.Height = (float)profile.Height;
+        });
         Register("motion", c =>
         {
             var m = c.Sim.World.GetOrAdd<Motion>(c.Entity);

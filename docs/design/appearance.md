@@ -64,3 +64,7 @@ The camera eases its zoom and its turn and shakes on a hit taken and a kill (`ca
 ## Still rough
 
 Bodies are generated low-poly proxies, not authored models: a sculpted character, a rigged animation set and painted textures remain art work, and cards carry no per-entity variation. Houses straddling a chunk border get two roofs. No audio exists yet; the animator's moments (a footstep, a swing, a hit, a death) are where footstep and surface sounds attach when assets arrive, on the client's audio buses. The isometric camera still passes through canopies. The reviewer's human readability check of the visual language has not been run.
+
+## Physical silhouettes
+
+The paired `goblinkin`, `gnasher` and `warbeast` builders use breadth and depth ratios to the authoritative body height. Content with a physical profile keeps those ratios aligned and disables random scale variation. Ears, noses, jaws, tusks, clothing and carried equipment remain presentation. Small pack creatures, upright raiders, long-armed brutes and low quadrupeds share existing animation rigs. A preview must include a common world-scale lineup as well as enlarged individual cards so silhouettes are not judged only after independent camera fitting.

@@ -211,3 +211,5 @@ In the move phase, walking runs first, then displacement, then projectiles, then
 ## Planning around placed blockers
 
 The pathfinder plans around the cells a simulation's placed things block (trees, veins, structures in its blocked-cell index), the cells walking refuses: it never stands in one. A diagonal step may pass such a cell's corner, as walking allows. A goal inside one (a wander point or a home that fell in a tree) is reached from a cell beside it, which counts as arriving, so a search never spends its budget on a cell it cannot enter.
+
+Shove distance is adjusted by the shared [physical body model](physical-bodies.md) before conversion to impulse. Knockback, pull and buffet read victim mass and remaining poise, source authority and the ordinary `shove.authority` fold. Pull clamping follows that adjustment. Direct velocity displacement and voluntary travel do not repeat it.
