@@ -1,0 +1,3690 @@
+{
+  "diagnosticOnly": true,
+  "rawSummaryAndFrameAccountingMatch": true,
+  "workload": {
+    "Seed": "aureth",
+    "Monsters": 300,
+    "Players": 4,
+    "Ticks": 600,
+    "Minions": 0,
+    "CastCues": false,
+    "SnapshotsPerPhase": 50
+  },
+  "environment": {
+    "Runtime": ".NET 10.0.13",
+    "Architecture": "X64",
+    "Processors": 20,
+    "ServerGc": false,
+    "Latency": "Interactive",
+    "Frequency": 10000000
+  },
+  "phases": [
+    {
+      "name": "full",
+      "context": {
+        "Name": "full",
+        "FirstTick": 640,
+        "LastTick": 740,
+        "FirstSample": 0,
+        "Samples": 200,
+        "WallMilliseconds": 466.5156,
+        "ProcessCpuMilliseconds": 531.25,
+        "Gc": {
+          "Gen0": 1,
+          "Gen1": 0,
+          "Gen2": 0
+        },
+        "Settings": [
+          {
+            "RefreshSeconds": 2,
+            "SweepSeconds": 10,
+            "SelfSeconds": 0.5,
+            "SelfMaxSeconds": 2,
+            "ResourceStep": 0.02,
+            "CastSteps": 5,
+            "InterestHeight": 64,
+            "PreviewSeconds": 2
+          },
+          {
+            "RefreshSeconds": 2,
+            "SweepSeconds": 10,
+            "SelfSeconds": 0.5,
+            "SelfMaxSeconds": 2,
+            "ResourceStep": 0.02,
+            "CastSteps": 5,
+            "InterestHeight": 64,
+            "PreviewSeconds": 2
+          },
+          {
+            "RefreshSeconds": 2,
+            "SweepSeconds": 10,
+            "SelfSeconds": 0.5,
+            "SelfMaxSeconds": 2,
+            "ResourceStep": 0.02,
+            "CastSteps": 5,
+            "InterestHeight": 64,
+            "PreviewSeconds": 2
+          },
+          {
+            "RefreshSeconds": 2,
+            "SweepSeconds": 10,
+            "SelfSeconds": 0.5,
+            "SelfMaxSeconds": 2,
+            "ResourceStep": 0.02,
+            "CastSteps": 5,
+            "InterestHeight": 64,
+            "PreviewSeconds": 2
+          }
+        ]
+      },
+      "count": 200,
+      "totalMs": {
+        "mean": 0.9462819999999996,
+        "p50": 0.8524,
+        "p95": 1.7669,
+        "max": 5.7294
+      },
+      "meanBytes": 30370.53,
+      "meanAllocation": 56719.52,
+      "meanKnown": 455.355,
+      "observations": 0,
+      "stages": {
+        "Entities": {
+          "ms": {
+            "mean": 0.3517155000000001,
+            "p50": 0.2323,
+            "p95": 0.8731,
+            "max": 5.0309
+          },
+          "meanAllocation": 21520.72,
+          "messages": 1170,
+          "bytes": 0
+        },
+        "Self": {
+          "ms": {
+            "mean": 0.017904999999999997,
+            "p50": 0,
+            "p95": 0.1101,
+            "max": 0.2416
+          },
+          "meanAllocation": 2294.64,
+          "messages": 36,
+          "bytes": 0
+        },
+        "Panels": {
+          "ms": {
+            "mean": 0,
+            "p50": 0,
+            "p95": 0,
+            "max": 0
+          },
+          "meanAllocation": 0,
+          "messages": 0,
+          "bytes": 0
+        },
+        "EntityEncoding": {
+          "ms": {
+            "mean": 0.5474740000000002,
+            "p50": 0.487,
+            "p95": 0.8895,
+            "max": 1.8089
+          },
+          "meanAllocation": 31449.48,
+          "messages": 1170,
+          "bytes": 5795414
+        },
+        "SelfEncoding": {
+          "ms": {
+            "mean": 0.027476000000000007,
+            "p50": 0,
+            "p95": 0.1982,
+            "max": 0.2151
+          },
+          "meanAllocation": 1454.68,
+          "messages": 36,
+          "bytes": 278692
+        },
+        "PanelEncoding": {
+          "ms": {
+            "mean": 0,
+            "p50": 0,
+            "p95": 0,
+            "max": 0
+          },
+          "meanAllocation": 0,
+          "messages": 0,
+          "bytes": 0
+        },
+        "ExtensionCapture": {
+          "ms": {
+            "mean": 0,
+            "p50": 0,
+            "p95": 0,
+            "max": 0
+          },
+          "meanAllocation": 0,
+          "messages": 0,
+          "bytes": 0
+        },
+        "ExtensionEncoding": {
+          "ms": {
+            "mean": 0,
+            "p50": 0,
+            "p95": 0,
+            "max": 0
+          },
+          "meanAllocation": 0,
+          "messages": 0,
+          "bytes": 0
+        }
+      },
+      "meanUnassignedProbeMs": 0.0017114999999999977,
+      "gcSamples": [
+        {
+          "round": 24,
+          "viewer": 0,
+          "tick": 690,
+          "gc": {
+            "Gen0": 1,
+            "Gen1": 0,
+            "Gen2": 0
+          },
+          "ms": 5.7294
+        }
+      ],
+      "emitted": {
+        "Spawns": 450,
+        "Updates": 13243,
+        "Deltas": 0,
+        "Refreshes": 339,
+        "Despawns": 520,
+        "SelfStates": 36,
+        "SelfSkipped": 4,
+        "Panels": 0
+      },
+      "viewers": [
+        {
+          "viewer": 0,
+          "count": 50,
+          "totalMs": {
+            "mean": 1.431694,
+            "p50": 1.2712,
+            "p95": 2.0651,
+            "max": 5.7294
+          },
+          "meanBytes": 31082.4,
+          "meanAllocation": 93404.48,
+          "meanKnown": 445.6,
+          "observations": 0,
+          "stages": {
+            "Entities": {
+              "ms": {
+                "mean": 0.77472,
+                "p50": 0.5934,
+                "p95": 1.1652,
+                "max": 5.0309
+              },
+              "meanAllocation": 56991.2,
+              "messages": 228,
+              "bytes": 0
+            },
+            "Self": {
+              "ms": {
+                "mean": 0.028366000000000002,
+                "p50": 0,
+                "p95": 0.1394,
+                "max": 0.2416
+              },
+              "meanAllocation": 3071.52,
+              "messages": 9,
+              "bytes": 0
+            },
+            "Panels": {
+              "ms": {
+                "mean": 0,
+                "p50": 0,
+                "p95": 0,
+                "max": 0
+              },
+              "meanAllocation": 0,
+              "messages": 0,
+              "bytes": 0
+            },
+            "EntityEncoding": {
+              "ms": {
+                "mean": 0.5920199999999999,
+                "p50": 0.5291,
+                "p95": 0.898,
+                "max": 0.9457
+              },
+              "meanAllocation": 31878.88,
+              "messages": 228,
+              "bytes": 1484017
+            },
+            "SelfEncoding": {
+              "ms": {
+                "mean": 0.032126,
+                "p50": 0,
+                "p95": 0.2053,
+                "max": 0.2151
+              },
+              "meanAllocation": 1462.88,
+              "messages": 9,
+              "bytes": 70103
+            },
+            "PanelEncoding": {
+              "ms": {
+                "mean": 0,
+                "p50": 0,
+                "p95": 0,
+                "max": 0
+              },
+              "meanAllocation": 0,
+              "messages": 0,
+              "bytes": 0
+            },
+            "ExtensionCapture": {
+              "ms": {
+                "mean": 0,
+                "p50": 0,
+                "p95": 0,
+                "max": 0
+              },
+              "meanAllocation": 0,
+              "messages": 0,
+              "bytes": 0
+            },
+            "ExtensionEncoding": {
+              "ms": {
+                "mean": 0,
+                "p50": 0,
+                "p95": 0,
+                "max": 0
+              },
+              "meanAllocation": 0,
+              "messages": 0,
+              "bytes": 0
+            }
+          },
+          "meanUnassignedProbeMs": 0.0044619999999999885,
+          "gcSamples": [
+            {
+              "round": 24,
+              "viewer": 0,
+              "tick": 690,
+              "gc": {
+                "Gen0": 1,
+                "Gen1": 0,
+                "Gen2": 0
+              },
+              "ms": 5.7294
+            }
+          ],
+          "emitted": {
+            "Spawns": 87,
+            "Updates": 3417,
+            "Deltas": 0,
+            "Refreshes": 92,
+            "Despawns": 91,
+            "SelfStates": 9,
+            "SelfSkipped": 1,
+            "Panels": 0
+          }
+        },
+        {
+          "viewer": 1,
+          "count": 50,
+          "totalMs": {
+            "mean": 0.8275460000000001,
+            "p50": 0.7916,
+            "p95": 1.303,
+            "max": 1.6673
+          },
+          "meanBytes": 28721.7,
+          "meanAllocation": 50177.6,
+          "meanKnown": 447.9,
+          "observations": 0,
+          "stages": {
+            "Entities": {
+              "ms": {
+                "mean": 0.28763999999999995,
+                "p50": 0.256,
+                "p95": 0.4216,
+                "max": 0.4865
+              },
+              "meanAllocation": 17499.52,
+              "messages": 304,
+              "bytes": 0
+            },
+            "Self": {
+              "ms": {
+                "mean": 0.015576000000000001,
+                "p50": 0,
+                "p95": 0.0884,
+                "max": 0.1204
+              },
+              "meanAllocation": 1836,
+              "messages": 9,
+              "bytes": 0
+            },
+            "Panels": {
+              "ms": {
+                "mean": 0,
+                "p50": 0,
+                "p95": 0,
+                "max": 0
+              },
+              "meanAllocation": 0,
+              "messages": 0,
+              "bytes": 0
+            },
+            "EntityEncoding": {
+              "ms": {
+                "mean": 0.4972580000000002,
+                "p50": 0.427,
+                "p95": 0.7469,
+                "max": 1.2937
+              },
+              "meanAllocation": 29405.12,
+              "messages": 304,
+              "bytes": 1367306
+            },
+            "SelfEncoding": {
+              "ms": {
+                "mean": 0.026166000000000005,
+                "p50": 0,
+                "p95": 0.1802,
+                "max": 0.2142
+              },
+              "meanAllocation": 1436.96,
+              "messages": 9,
+              "bytes": 68779
+            },
+            "PanelEncoding": {
+              "ms": {
+                "mean": 0,
+                "p50": 0,
+                "p95": 0,
+                "max": 0
+              },
+              "meanAllocation": 0,
+              "messages": 0,
+              "bytes": 0
+            },
+            "ExtensionCapture": {
+              "ms": {
+                "mean": 0,
+                "p50": 0,
+                "p95": 0,
+                "max": 0
+              },
+              "meanAllocation": 0,
+              "messages": 0,
+              "bytes": 0
+            },
+            "ExtensionEncoding": {
+              "ms": {
+                "mean": 0,
+                "p50": 0,
+                "p95": 0,
+                "max": 0
+              },
+              "meanAllocation": 0,
+              "messages": 0,
+              "bytes": 0
+            }
+          },
+          "meanUnassignedProbeMs": 0.000905999999999998,
+          "gcSamples": [],
+          "emitted": {
+            "Spawns": 116,
+            "Updates": 3102,
+            "Deltas": 0,
+            "Refreshes": 77,
+            "Despawns": 138,
+            "SelfStates": 9,
+            "SelfSkipped": 1,
+            "Panels": 0
+          }
+        },
+        {
+          "viewer": 2,
+          "count": 50,
+          "totalMs": {
+            "mean": 0.8210780000000001,
+            "p50": 0.7492,
+            "p95": 1.322,
+            "max": 3.4978
+          },
+          "meanBytes": 30343.5,
+          "meanAllocation": 45427.2,
+          "meanKnown": 463.44,
+          "observations": 0,
+          "stages": {
+            "Entities": {
+              "ms": {
+                "mean": 0.22600199999999993,
+                "p50": 0.1777,
+                "p95": 0.2923,
+                "max": 1.3972
+              },
+              "meanAllocation": 9383.36,
+              "messages": 360,
+              "bytes": 0
+            },
+            "Self": {
+              "ms": {
+                "mean": 0.013540000000000002,
+                "p50": 0,
+                "p95": 0.0898,
+                "max": 0.1072
+              },
+              "meanAllocation": 1890.72,
+              "messages": 9,
+              "bytes": 0
+            },
+            "Panels": {
+              "ms": {
+                "mean": 0,
+                "p50": 0,
+                "p95": 0,
+                "max": 0
+              },
+              "meanAllocation": 0,
+              "messages": 0,
+              "bytes": 0
+            },
+            "EntityEncoding": {
+              "ms": {
+                "mean": 0.5549000000000001,
+                "p50": 0.4692,
+                "p95": 0.8895,
+                "max": 1.8089
+              },
+              "meanAllocation": 32711.68,
+              "messages": 360,
+              "bytes": 1448172
+            },
+            "SelfEncoding": {
+              "ms": {
+                "mean": 0.025888,
+                "p50": 0,
+                "p95": 0.1897,
+                "max": 0.2056
+              },
+              "meanAllocation": 1441.44,
+              "messages": 9,
+              "bytes": 69003
+            },
+            "PanelEncoding": {
+              "ms": {
+                "mean": 0,
+                "p50": 0,
+                "p95": 0,
+                "max": 0
+              },
+              "meanAllocation": 0,
+              "messages": 0,
+              "bytes": 0
+            },
+            "ExtensionCapture": {
+              "ms": {
+                "mean": 0,
+                "p50": 0,
+                "p95": 0,
+                "max": 0
+              },
+              "meanAllocation": 0,
+              "messages": 0,
+              "bytes": 0
+            },
+            "ExtensionEncoding": {
+              "ms": {
+                "mean": 0,
+                "p50": 0,
+                "p95": 0,
+                "max": 0
+              },
+              "meanAllocation": 0,
+              "messages": 0,
+              "bytes": 0
+            }
+          },
+          "meanUnassignedProbeMs": 0.0007480000000000109,
+          "gcSamples": [],
+          "emitted": {
+            "Spawns": 135,
+            "Updates": 3298,
+            "Deltas": 0,
+            "Refreshes": 83,
+            "Despawns": 175,
+            "SelfStates": 9,
+            "SelfSkipped": 1,
+            "Panels": 0
+          }
+        },
+        {
+          "viewer": 3,
+          "count": 50,
+          "totalMs": {
+            "mean": 0.7048100000000003,
+            "p50": 0.6634,
+            "p95": 1.188,
+            "max": 1.3781
+          },
+          "meanBytes": 31334.52,
+          "meanAllocation": 37868.8,
+          "meanKnown": 464.48,
+          "observations": 0,
+          "stages": {
+            "Entities": {
+              "ms": {
+                "mean": 0.11849999999999997,
+                "p50": 0.104,
+                "p95": 0.1764,
+                "max": 0.3461
+              },
+              "meanAllocation": 2208.8,
+              "messages": 278,
+              "bytes": 0
+            },
+            "Self": {
+              "ms": {
+                "mean": 0.014138,
+                "p50": 0,
+                "p95": 0.0852,
+                "max": 0.1266
+              },
+              "meanAllocation": 2380.32,
+              "messages": 9,
+              "bytes": 0
+            },
+            "Panels": {
+              "ms": {
+                "mean": 0,
+                "p50": 0,
+                "p95": 0,
+                "max": 0
+              },
+              "meanAllocation": 0,
+              "messages": 0,
+              "bytes": 0
+            },
+            "EntityEncoding": {
+              "ms": {
+                "mean": 0.5457180000000001,
+                "p50": 0.5114,
+                "p95": 0.8895,
+                "max": 0.9792
+              },
+              "meanAllocation": 31802.24,
+              "messages": 278,
+              "bytes": 1495919
+            },
+            "SelfEncoding": {
+              "ms": {
+                "mean": 0.025723999999999997,
+                "p50": 0,
+                "p95": 0.186,
+                "max": 0.2092
+              },
+              "meanAllocation": 1477.44,
+              "messages": 9,
+              "bytes": 70807
+            },
+            "PanelEncoding": {
+              "ms": {
+                "mean": 0,
+                "p50": 0,
+                "p95": 0,
+                "max": 0
+              },
+              "meanAllocation": 0,
+              "messages": 0,
+              "bytes": 0
+            },
+            "ExtensionCapture": {
+              "ms": {
+                "mean": 0,
+                "p50": 0,
+                "p95": 0,
+                "max": 0
+              },
+              "meanAllocation": 0,
+              "messages": 0,
+              "bytes": 0
+            },
+            "ExtensionEncoding": {
+              "ms": {
+                "mean": 0,
+                "p50": 0,
+                "p95": 0,
+                "max": 0
+              },
+              "meanAllocation": 0,
+              "messages": 0,
+              "bytes": 0
+            }
+          },
+          "meanUnassignedProbeMs": 0.000729999999999994,
+          "gcSamples": [],
+          "emitted": {
+            "Spawns": 112,
+            "Updates": 3426,
+            "Deltas": 0,
+            "Refreshes": 87,
+            "Despawns": 116,
+            "SelfStates": 9,
+            "SelfSkipped": 1,
+            "Panels": 0
+          }
+        }
+      ],
+      "selfCadence": [
+        {
+          "due": false,
+          "count": 160,
+          "totalMs": {
+            "mean": 0.8779612500000005,
+            "p50": 0.7916,
+            "p95": 1.6673,
+            "max": 5.7294
+          },
+          "meanBytes": 28976.4375,
+          "meanAllocation": 52254.55,
+          "meanKnown": 455.225,
+          "observations": 0,
+          "stages": {
+            "Entities": {
+              "ms": {
+                "mean": 0.34213125000000005,
+                "p50": 0.2259,
+                "p95": 0.8731,
+                "max": 5.0309
+              },
+              "meanAllocation": 21453.8,
+              "messages": 862,
+              "bytes": 0
+            },
+            "Self": {
+              "ms": {
+                "mean": 0,
+                "p50": 0,
+                "p95": 0,
+                "max": 0
+              },
+              "meanAllocation": 0,
+              "messages": 0,
+              "bytes": 0
+            },
+            "Panels": {
+              "ms": {
+                "mean": 0,
+                "p50": 0,
+                "p95": 0,
+                "max": 0
+              },
+              "meanAllocation": 0,
+              "messages": 0,
+              "bytes": 0
+            },
+            "EntityEncoding": {
+              "ms": {
+                "mean": 0.534974375,
+                "p50": 0.4794,
+                "p95": 0.8567,
+                "max": 1.2937
+              },
+              "meanAllocation": 30800.75,
+              "messages": 862,
+              "bytes": 4636230
+            },
+            "SelfEncoding": {
+              "ms": {
+                "mean": 0,
+                "p50": 0,
+                "p95": 0,
+                "max": 0
+              },
+              "meanAllocation": 0,
+              "messages": 0,
+              "bytes": 0
+            },
+            "PanelEncoding": {
+              "ms": {
+                "mean": 0,
+                "p50": 0,
+                "p95": 0,
+                "max": 0
+              },
+              "meanAllocation": 0,
+              "messages": 0,
+              "bytes": 0
+            },
+            "ExtensionCapture": {
+              "ms": {
+                "mean": 0,
+                "p50": 0,
+                "p95": 0,
+                "max": 0
+              },
+              "meanAllocation": 0,
+              "messages": 0,
+              "bytes": 0
+            },
+            "ExtensionEncoding": {
+              "ms": {
+                "mean": 0,
+                "p50": 0,
+                "p95": 0,
+                "max": 0
+              },
+              "meanAllocation": 0,
+              "messages": 0,
+              "bytes": 0
+            }
+          },
+          "meanUnassignedProbeMs": 0.0008556249999999942,
+          "gcSamples": [
+            {
+              "round": 24,
+              "viewer": 0,
+              "tick": 690,
+              "gc": {
+                "Gen0": 1,
+                "Gen1": 0,
+                "Gen2": 0
+              },
+              "ms": 5.7294
+            }
+          ],
+          "emitted": {
+            "Spawns": 337,
+            "Updates": 10619,
+            "Deltas": 0,
+            "Refreshes": 254,
+            "Despawns": 365,
+            "SelfStates": 0,
+            "SelfSkipped": 0,
+            "Panels": 0
+          }
+        },
+        {
+          "due": true,
+          "count": 40,
+          "totalMs": {
+            "mean": 1.219565,
+            "p50": 1.0614,
+            "p95": 3.2944,
+            "max": 3.4978
+          },
+          "meanBytes": 35946.9,
+          "meanAllocation": 74579.4,
+          "meanKnown": 455.875,
+          "observations": 0,
+          "stages": {
+            "Entities": {
+              "ms": {
+                "mean": 0.3900525,
+                "p50": 0.2515,
+                "p95": 1.3972,
+                "max": 2.1114
+              },
+              "meanAllocation": 21788.4,
+              "messages": 308,
+              "bytes": 0
+            },
+            "Self": {
+              "ms": {
+                "mean": 0.089525,
+                "p50": 0.0852,
+                "p95": 0.2109,
+                "max": 0.2416
+              },
+              "meanAllocation": 11473.2,
+              "messages": 36,
+              "bytes": 0
+            },
+            "Panels": {
+              "ms": {
+                "mean": 0,
+                "p50": 0,
+                "p95": 0,
+                "max": 0
+              },
+              "meanAllocation": 0,
+              "messages": 0,
+              "bytes": 0
+            },
+            "EntityEncoding": {
+              "ms": {
+                "mean": 0.5974725,
+                "p50": 0.5291,
+                "p95": 0.9671,
+                "max": 1.8089
+              },
+              "meanAllocation": 34044.4,
+              "messages": 308,
+              "bytes": 1159184
+            },
+            "SelfEncoding": {
+              "ms": {
+                "mean": 0.13738000000000003,
+                "p50": 0.1306,
+                "p95": 0.2142,
+                "max": 0.2151
+              },
+              "meanAllocation": 7273.4,
+              "messages": 36,
+              "bytes": 278692
+            },
+            "PanelEncoding": {
+              "ms": {
+                "mean": 0,
+                "p50": 0,
+                "p95": 0,
+                "max": 0
+              },
+              "meanAllocation": 0,
+              "messages": 0,
+              "bytes": 0
+            },
+            "ExtensionCapture": {
+              "ms": {
+                "mean": 0,
+                "p50": 0,
+                "p95": 0,
+                "max": 0
+              },
+              "meanAllocation": 0,
+              "messages": 0,
+              "bytes": 0
+            },
+            "ExtensionEncoding": {
+              "ms": {
+                "mean": 0,
+                "p50": 0,
+                "p95": 0,
+                "max": 0
+              },
+              "meanAllocation": 0,
+              "messages": 0,
+              "bytes": 0
+            }
+          },
+          "meanUnassignedProbeMs": 0.005135000000000012,
+          "gcSamples": [],
+          "emitted": {
+            "Spawns": 113,
+            "Updates": 2624,
+            "Deltas": 0,
+            "Refreshes": 85,
+            "Despawns": 155,
+            "SelfStates": 36,
+            "SelfSkipped": 4,
+            "Panels": 0
+          }
+        }
+      ]
+    },
+    {
+      "name": "delta",
+      "context": {
+        "Name": "delta",
+        "FirstTick": 740,
+        "LastTick": 840,
+        "FirstSample": 200,
+        "Samples": 200,
+        "WallMilliseconds": 394.1172,
+        "ProcessCpuMilliseconds": 453.125,
+        "Gc": {
+          "Gen0": 1,
+          "Gen1": 1,
+          "Gen2": 0
+        },
+        "Settings": [
+          {
+            "RefreshSeconds": 2,
+            "SweepSeconds": 10,
+            "SelfSeconds": 0.5,
+            "SelfMaxSeconds": 2,
+            "ResourceStep": 0.02,
+            "CastSteps": 5,
+            "InterestHeight": 64,
+            "PreviewSeconds": 2
+          },
+          {
+            "RefreshSeconds": 2,
+            "SweepSeconds": 10,
+            "SelfSeconds": 0.5,
+            "SelfMaxSeconds": 2,
+            "ResourceStep": 0.02,
+            "CastSteps": 5,
+            "InterestHeight": 64,
+            "PreviewSeconds": 2
+          },
+          {
+            "RefreshSeconds": 2,
+            "SweepSeconds": 10,
+            "SelfSeconds": 0.5,
+            "SelfMaxSeconds": 2,
+            "ResourceStep": 0.02,
+            "CastSteps": 5,
+            "InterestHeight": 64,
+            "PreviewSeconds": 2
+          },
+          {
+            "RefreshSeconds": 2,
+            "SweepSeconds": 10,
+            "SelfSeconds": 0.5,
+            "SelfMaxSeconds": 2,
+            "ResourceStep": 0.02,
+            "CastSteps": 5,
+            "InterestHeight": 64,
+            "PreviewSeconds": 2
+          }
+        ]
+      },
+      "count": 200,
+      "totalMs": {
+        "mean": 0.7235860000000011,
+        "p50": 0.5281,
+        "p95": 1.4536,
+        "max": 11.7309
+      },
+      "meanBytes": 9550.42,
+      "meanAllocation": 45004.92,
+      "meanKnown": 448.095,
+      "observations": 0,
+      "stages": {
+        "Entities": {
+          "ms": {
+            "mean": 0.4000579999999999,
+            "p50": 0.2471,
+            "p95": 1.0725,
+            "max": 5.7706
+          },
+          "meanAllocation": 31093.2,
+          "messages": 1177,
+          "bytes": 0
+        },
+        "Self": {
+          "ms": {
+            "mean": 0.013151,
+            "p50": 0,
+            "p95": 0.0797,
+            "max": 0.1089
+          },
+          "meanAllocation": 2300.36,
+          "messages": 40,
+          "bytes": 0
+        },
+        "Panels": {
+          "ms": {
+            "mean": 0,
+            "p50": 0,
+            "p95": 0,
+            "max": 0
+          },
+          "meanAllocation": 0,
+          "messages": 0,
+          "bytes": 0
+        },
+        "EntityEncoding": {
+          "ms": {
+            "mean": 0.22795199999999993,
+            "p50": 0.1926,
+            "p95": 0.344,
+            "max": 3.2896
+          },
+          "meanAllocation": 9994.24,
+          "messages": 1177,
+          "bytes": 1600258
+        },
+        "SelfEncoding": {
+          "ms": {
+            "mean": 0.08171350000000002,
+            "p50": 0,
+            "p95": 0.1763,
+            "max": 11.276
+          },
+          "meanAllocation": 1617.12,
+          "messages": 40,
+          "bytes": 309826
+        },
+        "PanelEncoding": {
+          "ms": {
+            "mean": 0,
+            "p50": 0,
+            "p95": 0,
+            "max": 0
+          },
+          "meanAllocation": 0,
+          "messages": 0,
+          "bytes": 0
+        },
+        "ExtensionCapture": {
+          "ms": {
+            "mean": 0,
+            "p50": 0,
+            "p95": 0,
+            "max": 0
+          },
+          "meanAllocation": 0,
+          "messages": 0,
+          "bytes": 0
+        },
+        "ExtensionEncoding": {
+          "ms": {
+            "mean": 0,
+            "p50": 0,
+            "p95": 0,
+            "max": 0
+          },
+          "meanAllocation": 0,
+          "messages": 0,
+          "bytes": 0
+        }
+      },
+      "meanUnassignedProbeMs": 0.0007115000000000097,
+      "gcSamples": [
+        {
+          "round": 10,
+          "viewer": 2,
+          "tick": 762,
+          "gc": {
+            "Gen0": 1,
+            "Gen1": 1,
+            "Gen2": 0
+          },
+          "ms": 11.7309
+        }
+      ],
+      "emitted": {
+        "Spawns": 377,
+        "Updates": 1359,
+        "Deltas": 11585,
+        "Refreshes": 402,
+        "Despawns": 407,
+        "SelfStates": 40,
+        "SelfSkipped": 0,
+        "Panels": 0
+      },
+      "viewers": [
+        {
+          "viewer": 0,
+          "count": 50,
+          "totalMs": {
+            "mean": 1.2664579999999999,
+            "p50": 1.1254,
+            "p95": 1.6195,
+            "max": 9.0615
+          },
+          "meanBytes": 9708.2,
+          "meanAllocation": 96670.24,
+          "meanKnown": 445.64,
+          "observations": 0,
+          "stages": {
+            "Entities": {
+              "ms": {
+                "mean": 0.9233699999999999,
+                "p50": 0.866,
+                "p95": 1.1823,
+                "max": 5.7706
+              },
+              "meanAllocation": 82712.48,
+              "messages": 264,
+              "bytes": 0
+            },
+            "Self": {
+              "ms": {
+                "mean": 0.017004000000000002,
+                "p50": 0,
+                "p95": 0.1041,
+                "max": 0.1089
+              },
+              "meanAllocation": 2395.2,
+              "messages": 10,
+              "bytes": 0
+            },
+            "Panels": {
+              "ms": {
+                "mean": 0,
+                "p50": 0,
+                "p95": 0,
+                "max": 0
+              },
+              "meanAllocation": 0,
+              "messages": 0,
+              "bytes": 0
+            },
+            "EntityEncoding": {
+              "ms": {
+                "mean": 0.2949219999999999,
+                "p50": 0.2212,
+                "p95": 0.3546,
+                "max": 3.2896
+              },
+              "meanAllocation": 9935.36,
+              "messages": 264,
+              "bytes": 407438
+            },
+            "SelfEncoding": {
+              "ms": {
+                "mean": 0.03,
+                "p50": 0,
+                "p95": 0.1955,
+                "max": 0.209
+              },
+              "meanAllocation": 1627.2,
+              "messages": 10,
+              "bytes": 77972
+            },
+            "PanelEncoding": {
+              "ms": {
+                "mean": 0,
+                "p50": 0,
+                "p95": 0,
+                "max": 0
+              },
+              "meanAllocation": 0,
+              "messages": 0,
+              "bytes": 0
+            },
+            "ExtensionCapture": {
+              "ms": {
+                "mean": 0,
+                "p50": 0,
+                "p95": 0,
+                "max": 0
+              },
+              "meanAllocation": 0,
+              "messages": 0,
+              "bytes": 0
+            },
+            "ExtensionEncoding": {
+              "ms": {
+                "mean": 0,
+                "p50": 0,
+                "p95": 0,
+                "max": 0
+              },
+              "meanAllocation": 0,
+              "messages": 0,
+              "bytes": 0
+            }
+          },
+          "meanUnassignedProbeMs": 0.0011620000000000252,
+          "gcSamples": [],
+          "emitted": {
+            "Spawns": 79,
+            "Updates": 367,
+            "Deltas": 3012,
+            "Refreshes": 110,
+            "Despawns": 89,
+            "SelfStates": 10,
+            "SelfSkipped": 0,
+            "Panels": 0
+          }
+        },
+        {
+          "viewer": 1,
+          "count": 50,
+          "totalMs": {
+            "mean": 0.5231739999999998,
+            "p50": 0.5404,
+            "p95": 0.8605,
+            "max": 0.9819
+          },
+          "meanBytes": 8883.58,
+          "meanAllocation": 33328.96,
+          "meanKnown": 428.1,
+          "observations": 0,
+          "stages": {
+            "Entities": {
+              "ms": {
+                "mean": 0.292166,
+                "p50": 0.264,
+                "p95": 0.4281,
+                "max": 0.4544
+              },
+              "meanAllocation": 20352.16,
+              "messages": 293,
+              "bytes": 0
+            },
+            "Self": {
+              "ms": {
+                "mean": 0.012858000000000001,
+                "p50": 0,
+                "p95": 0.0812,
+                "max": 0.0835
+              },
+              "meanAllocation": 2040,
+              "messages": 10,
+              "bytes": 0
+            },
+            "Panels": {
+              "ms": {
+                "mean": 0,
+                "p50": 0,
+                "p95": 0,
+                "max": 0
+              },
+              "meanAllocation": 0,
+              "messages": 0,
+              "bytes": 0
+            },
+            "EntityEncoding": {
+              "ms": {
+                "mean": 0.18943,
+                "p50": 0.1817,
+                "p95": 0.3116,
+                "max": 0.3182
+              },
+              "meanAllocation": 9340.32,
+              "messages": 293,
+              "bytes": 367759
+            },
+            "SelfEncoding": {
+              "ms": {
+                "mean": 0.028114,
+                "p50": 0,
+                "p95": 0.1763,
+                "max": 0.2199
+              },
+              "meanAllocation": 1596.48,
+              "messages": 10,
+              "bytes": 76420
+            },
+            "PanelEncoding": {
+              "ms": {
+                "mean": 0,
+                "p50": 0,
+                "p95": 0,
+                "max": 0
+              },
+              "meanAllocation": 0,
+              "messages": 0,
+              "bytes": 0
+            },
+            "ExtensionCapture": {
+              "ms": {
+                "mean": 0,
+                "p50": 0,
+                "p95": 0,
+                "max": 0
+              },
+              "meanAllocation": 0,
+              "messages": 0,
+              "bytes": 0
+            },
+            "ExtensionEncoding": {
+              "ms": {
+                "mean": 0,
+                "p50": 0,
+                "p95": 0,
+                "max": 0
+              },
+              "meanAllocation": 0,
+              "messages": 0,
+              "bytes": 0
+            }
+          },
+          "meanUnassignedProbeMs": 0.000606000000000002,
+          "gcSamples": [],
+          "emitted": {
+            "Spawns": 93,
+            "Updates": 303,
+            "Deltas": 2615,
+            "Refreshes": 82,
+            "Despawns": 101,
+            "SelfStates": 10,
+            "SelfSkipped": 0,
+            "Panels": 0
+          }
+        },
+        {
+          "viewer": 2,
+          "count": 50,
+          "totalMs": {
+            "mean": 0.6971479999999999,
+            "p50": 0.4813,
+            "p95": 1.015,
+            "max": 11.7309
+          },
+          "meanBytes": 9058.12,
+          "meanAllocation": 27876,
+          "meanKnown": 447.96,
+          "observations": 0,
+          "stages": {
+            "Entities": {
+              "ms": {
+                "mean": 0.23518600000000003,
+                "p50": 0.221,
+                "p95": 0.3374,
+                "max": 1.0169
+              },
+              "meanAllocation": 14724.48,
+              "messages": 284,
+              "bytes": 0
+            },
+            "Self": {
+              "ms": {
+                "mean": 0.011141999999999999,
+                "p50": 0,
+                "p95": 0.0676,
+                "max": 0.0717
+              },
+              "meanAllocation": 2100.8,
+              "messages": 10,
+              "bytes": 0
+            },
+            "Panels": {
+              "ms": {
+                "mean": 0,
+                "p50": 0,
+                "p95": 0,
+                "max": 0
+              },
+              "meanAllocation": 0,
+              "messages": 0,
+              "bytes": 0
+            },
+            "EntityEncoding": {
+              "ms": {
+                "mean": 0.20533599999999996,
+                "p50": 0.1853,
+                "p95": 0.3211,
+                "max": 0.7825
+              },
+              "meanAllocation": 9447.52,
+              "messages": 284,
+              "bytes": 376143
+            },
+            "SelfEncoding": {
+              "ms": {
+                "mean": 0.24492200000000003,
+                "p50": 0,
+                "p95": 0.1154,
+                "max": 11.276
+              },
+              "meanAllocation": 1603.2,
+              "messages": 10,
+              "bytes": 76763
+            },
+            "PanelEncoding": {
+              "ms": {
+                "mean": 0,
+                "p50": 0,
+                "p95": 0,
+                "max": 0
+              },
+              "meanAllocation": 0,
+              "messages": 0,
+              "bytes": 0
+            },
+            "ExtensionCapture": {
+              "ms": {
+                "mean": 0,
+                "p50": 0,
+                "p95": 0,
+                "max": 0
+              },
+              "meanAllocation": 0,
+              "messages": 0,
+              "bytes": 0
+            },
+            "ExtensionEncoding": {
+              "ms": {
+                "mean": 0,
+                "p50": 0,
+                "p95": 0,
+                "max": 0
+              },
+              "meanAllocation": 0,
+              "messages": 0,
+              "bytes": 0
+            }
+          },
+          "meanUnassignedProbeMs": 0.0005620000000000147,
+          "gcSamples": [
+            {
+              "round": 10,
+              "viewer": 2,
+              "tick": 762,
+              "gc": {
+                "Gen0": 1,
+                "Gen1": 1,
+                "Gen2": 0
+              },
+              "ms": 11.7309
+            }
+          ],
+          "emitted": {
+            "Spawns": 93,
+            "Updates": 305,
+            "Deltas": 2743,
+            "Refreshes": 89,
+            "Despawns": 92,
+            "SelfStates": 10,
+            "SelfSkipped": 0,
+            "Panels": 0
+          }
+        },
+        {
+          "viewer": 3,
+          "count": 50,
+          "totalMs": {
+            "mean": 0.407564,
+            "p50": 0.4178,
+            "p95": 0.5931,
+            "max": 0.9235
+          },
+          "meanBytes": 10551.78,
+          "meanAllocation": 22144.48,
+          "meanKnown": 470.68,
+          "observations": 0,
+          "stages": {
+            "Entities": {
+              "ms": {
+                "mean": 0.14950999999999998,
+                "p50": 0.1457,
+                "p95": 0.2281,
+                "max": 0.249
+              },
+              "meanAllocation": 6583.68,
+              "messages": 336,
+              "bytes": 0
+            },
+            "Self": {
+              "ms": {
+                "mean": 0.0116,
+                "p50": 0,
+                "p95": 0.0549,
+                "max": 0.1029
+              },
+              "meanAllocation": 2665.44,
+              "messages": 10,
+              "bytes": 0
+            },
+            "Panels": {
+              "ms": {
+                "mean": 0,
+                "p50": 0,
+                "p95": 0,
+                "max": 0
+              },
+              "meanAllocation": 0,
+              "messages": 0,
+              "bytes": 0
+            },
+            "EntityEncoding": {
+              "ms": {
+                "mean": 0.22211999999999998,
+                "p50": 0.2002,
+                "p95": 0.3458,
+                "max": 0.5555
+              },
+              "meanAllocation": 11253.76,
+              "messages": 336,
+              "bytes": 448918
+            },
+            "SelfEncoding": {
+              "ms": {
+                "mean": 0.023817999999999995,
+                "p50": 0,
+                "p95": 0.1152,
+                "max": 0.2112
+              },
+              "meanAllocation": 1641.6,
+              "messages": 10,
+              "bytes": 78671
+            },
+            "PanelEncoding": {
+              "ms": {
+                "mean": 0,
+                "p50": 0,
+                "p95": 0,
+                "max": 0
+              },
+              "meanAllocation": 0,
+              "messages": 0,
+              "bytes": 0
+            },
+            "ExtensionCapture": {
+              "ms": {
+                "mean": 0,
+                "p50": 0,
+                "p95": 0,
+                "max": 0
+              },
+              "meanAllocation": 0,
+              "messages": 0,
+              "bytes": 0
+            },
+            "ExtensionEncoding": {
+              "ms": {
+                "mean": 0,
+                "p50": 0,
+                "p95": 0,
+                "max": 0
+              },
+              "meanAllocation": 0,
+              "messages": 0,
+              "bytes": 0
+            }
+          },
+          "meanUnassignedProbeMs": 0.0005159999999999965,
+          "gcSamples": [],
+          "emitted": {
+            "Spawns": 112,
+            "Updates": 384,
+            "Deltas": 3215,
+            "Refreshes": 121,
+            "Despawns": 125,
+            "SelfStates": 10,
+            "SelfSkipped": 0,
+            "Panels": 0
+          }
+        }
+      ],
+      "selfCadence": [
+        {
+          "due": false,
+          "count": 160,
+          "totalMs": {
+            "mean": 0.641071875,
+            "p50": 0.4978,
+            "p95": 1.3919,
+            "max": 9.0615
+          },
+          "meanBytes": 7645.78125,
+          "meanAllocation": 40783.5,
+          "meanKnown": 447.98125,
+          "observations": 0,
+          "stages": {
+            "Entities": {
+              "ms": {
+                "mean": 0.407525625,
+                "p50": 0.249,
+                "p95": 1.0734,
+                "max": 5.7706
+              },
+              "meanAllocation": 31222.2,
+              "messages": 905,
+              "bytes": 0
+            },
+            "Self": {
+              "ms": {
+                "mean": 0,
+                "p50": 0,
+                "p95": 0,
+                "max": 0
+              },
+              "meanAllocation": 0,
+              "messages": 0,
+              "bytes": 0
+            },
+            "Panels": {
+              "ms": {
+                "mean": 0,
+                "p50": 0,
+                "p95": 0,
+                "max": 0
+              },
+              "meanAllocation": 0,
+              "messages": 0,
+              "bytes": 0
+            },
+            "EntityEncoding": {
+              "ms": {
+                "mean": 0.23293312500000005,
+                "p50": 0.2007,
+                "p95": 0.3435,
+                "max": 3.2896
+              },
+              "meanAllocation": 9561.3,
+              "messages": 905,
+              "bytes": 1223325
+            },
+            "SelfEncoding": {
+              "ms": {
+                "mean": 0,
+                "p50": 0,
+                "p95": 0,
+                "max": 0
+              },
+              "meanAllocation": 0,
+              "messages": 0,
+              "bytes": 0
+            },
+            "PanelEncoding": {
+              "ms": {
+                "mean": 0,
+                "p50": 0,
+                "p95": 0,
+                "max": 0
+              },
+              "meanAllocation": 0,
+              "messages": 0,
+              "bytes": 0
+            },
+            "ExtensionCapture": {
+              "ms": {
+                "mean": 0,
+                "p50": 0,
+                "p95": 0,
+                "max": 0
+              },
+              "meanAllocation": 0,
+              "messages": 0,
+              "bytes": 0
+            },
+            "ExtensionEncoding": {
+              "ms": {
+                "mean": 0,
+                "p50": 0,
+                "p95": 0,
+                "max": 0
+              },
+              "meanAllocation": 0,
+              "messages": 0,
+              "bytes": 0
+            }
+          },
+          "meanUnassignedProbeMs": 0.0006131250000000078,
+          "gcSamples": [],
+          "emitted": {
+            "Spawns": 277,
+            "Updates": 916,
+            "Deltas": 9471,
+            "Refreshes": 291,
+            "Despawns": 311,
+            "SelfStates": 0,
+            "SelfSkipped": 0,
+            "Panels": 0
+          }
+        },
+        {
+          "due": true,
+          "count": 40,
+          "totalMs": {
+            "mean": 1.0536424999999998,
+            "p50": 0.7032,
+            "p95": 1.7613,
+            "max": 11.7309
+          },
+          "meanBytes": 17168.975,
+          "meanAllocation": 61890.6,
+          "meanKnown": 448.55,
+          "observations": 0,
+          "stages": {
+            "Entities": {
+              "ms": {
+                "mean": 0.37018749999999995,
+                "p50": 0.2217,
+                "p95": 1.0279,
+                "max": 1.1267
+              },
+              "meanAllocation": 30577.2,
+              "messages": 272,
+              "bytes": 0
+            },
+            "Self": {
+              "ms": {
+                "mean": 0.065755,
+                "p50": 0.0668,
+                "p95": 0.1075,
+                "max": 0.1089
+              },
+              "meanAllocation": 11501.8,
+              "messages": 40,
+              "bytes": 0
+            },
+            "Panels": {
+              "ms": {
+                "mean": 0,
+                "p50": 0,
+                "p95": 0,
+                "max": 0
+              },
+              "meanAllocation": 0,
+              "messages": 0,
+              "bytes": 0
+            },
+            "EntityEncoding": {
+              "ms": {
+                "mean": 0.20802749999999995,
+                "p50": 0.1831,
+                "p95": 0.384,
+                "max": 0.5555
+              },
+              "meanAllocation": 11726,
+              "messages": 272,
+              "bytes": 376933
+            },
+            "SelfEncoding": {
+              "ms": {
+                "mean": 0.4085675000000001,
+                "p50": 0.1151,
+                "p95": 0.2199,
+                "max": 11.276
+              },
+              "meanAllocation": 8085.6,
+              "messages": 40,
+              "bytes": 309826
+            },
+            "PanelEncoding": {
+              "ms": {
+                "mean": 0,
+                "p50": 0,
+                "p95": 0,
+                "max": 0
+              },
+              "meanAllocation": 0,
+              "messages": 0,
+              "bytes": 0
+            },
+            "ExtensionCapture": {
+              "ms": {
+                "mean": 0,
+                "p50": 0,
+                "p95": 0,
+                "max": 0
+              },
+              "meanAllocation": 0,
+              "messages": 0,
+              "bytes": 0
+            },
+            "ExtensionEncoding": {
+              "ms": {
+                "mean": 0,
+                "p50": 0,
+                "p95": 0,
+                "max": 0
+              },
+              "meanAllocation": 0,
+              "messages": 0,
+              "bytes": 0
+            }
+          },
+          "meanUnassignedProbeMs": 0.001105000000000017,
+          "gcSamples": [
+            {
+              "round": 10,
+              "viewer": 2,
+              "tick": 762,
+              "gc": {
+                "Gen0": 1,
+                "Gen1": 1,
+                "Gen2": 0
+              },
+              "ms": 11.7309
+            }
+          ],
+          "emitted": {
+            "Spawns": 100,
+            "Updates": 443,
+            "Deltas": 2114,
+            "Refreshes": 111,
+            "Despawns": 96,
+            "SelfStates": 40,
+            "SelfSkipped": 0,
+            "Panels": 0
+          }
+        }
+      ]
+    },
+    {
+      "name": "interface",
+      "context": {
+        "Name": "interface",
+        "FirstTick": 840,
+        "LastTick": 940,
+        "FirstSample": 400,
+        "Samples": 200,
+        "WallMilliseconds": 467.2948,
+        "ProcessCpuMilliseconds": 468.75,
+        "Gc": {
+          "Gen0": 2,
+          "Gen1": 0,
+          "Gen2": 0
+        },
+        "Settings": [
+          {
+            "RefreshSeconds": 2,
+            "SweepSeconds": 10,
+            "SelfSeconds": 0.5,
+            "SelfMaxSeconds": 2,
+            "ResourceStep": 0.02,
+            "CastSteps": 5,
+            "InterestHeight": 64,
+            "PreviewSeconds": 2
+          },
+          {
+            "RefreshSeconds": 2,
+            "SweepSeconds": 10,
+            "SelfSeconds": 0.5,
+            "SelfMaxSeconds": 2,
+            "ResourceStep": 0.02,
+            "CastSteps": 5,
+            "InterestHeight": 64,
+            "PreviewSeconds": 2
+          },
+          {
+            "RefreshSeconds": 2,
+            "SweepSeconds": 10,
+            "SelfSeconds": 0.5,
+            "SelfMaxSeconds": 2,
+            "ResourceStep": 0.02,
+            "CastSteps": 5,
+            "InterestHeight": 64,
+            "PreviewSeconds": 2
+          },
+          {
+            "RefreshSeconds": 2,
+            "SweepSeconds": 10,
+            "SelfSeconds": 0.5,
+            "SelfMaxSeconds": 2,
+            "ResourceStep": 0.02,
+            "CastSteps": 5,
+            "InterestHeight": 64,
+            "PreviewSeconds": 2
+          }
+        ]
+      },
+      "count": 200,
+      "totalMs": {
+        "mean": 1.018519,
+        "p50": 0.6859,
+        "p95": 1.5996,
+        "max": 46.1559
+      },
+      "meanBytes": 8201.515,
+      "meanAllocation": 47711.96,
+      "meanKnown": 424.125,
+      "observations": 0,
+      "stages": {
+        "Entities": {
+          "ms": {
+            "mean": 0.41886199999999973,
+            "p50": 0.2843,
+            "p95": 0.9858,
+            "max": 2.4277
+          },
+          "meanAllocation": 29057.32,
+          "messages": 1354,
+          "bytes": 0
+        },
+        "Self": {
+          "ms": {
+            "mean": 0.05401950000000002,
+            "p50": 0,
+            "p95": 0.1325,
+            "max": 3.9166
+          },
+          "meanAllocation": 3108.88,
+          "messages": 40,
+          "bytes": 0
+        },
+        "Panels": {
+          "ms": {
+            "mean": 0.23751250000000002,
+            "p50": 0.0716,
+            "p95": 0.1341,
+            "max": 29.2489
+          },
+          "meanAllocation": 4919.64,
+          "messages": 20,
+          "bytes": 0
+        },
+        "EntityEncoding": {
+          "ms": {
+            "mean": 0.20630950000000006,
+            "p50": 0.2,
+            "p95": 0.3262,
+            "max": 0.5068
+          },
+          "meanAllocation": 8772.04,
+          "messages": 1354,
+          "bytes": 1295867
+        },
+        "SelfEncoding": {
+          "ms": {
+            "mean": 0.041345,
+            "p50": 0,
+            "p95": 0.1966,
+            "max": 1.1608
+          },
+          "meanAllocation": 1636.56,
+          "messages": 40,
+          "bytes": 313741
+        },
+        "PanelEncoding": {
+          "ms": {
+            "mean": 0.059553499999999995,
+            "p50": 0,
+            "p95": 0,
+            "max": 11.0476
+          },
+          "meanAllocation": 217.52,
+          "messages": 20,
+          "bytes": 30695
+        },
+        "ExtensionCapture": {
+          "ms": {
+            "mean": 0,
+            "p50": 0,
+            "p95": 0,
+            "max": 0
+          },
+          "meanAllocation": 0,
+          "messages": 0,
+          "bytes": 0
+        },
+        "ExtensionEncoding": {
+          "ms": {
+            "mean": 0,
+            "p50": 0,
+            "p95": 0,
+            "max": 0
+          },
+          "meanAllocation": 0,
+          "messages": 0,
+          "bytes": 0
+        }
+      },
+      "meanUnassignedProbeMs": 0.0009170000000000392,
+      "gcSamples": [
+        {
+          "round": 0,
+          "viewer": 3,
+          "tick": 842,
+          "gc": {
+            "Gen0": 1,
+            "Gen1": 0,
+            "Gen2": 0
+          },
+          "ms": 4.0042
+        },
+        {
+          "round": 42,
+          "viewer": 0,
+          "tick": 926,
+          "gc": {
+            "Gen0": 1,
+            "Gen1": 0,
+            "Gen2": 0
+          },
+          "ms": 2.6493
+        }
+      ],
+      "emitted": {
+        "Spawns": 436,
+        "Updates": 915,
+        "Deltas": 9942,
+        "Refreshes": 362,
+        "Despawns": 520,
+        "SelfStates": 40,
+        "SelfSkipped": 0,
+        "Panels": 20
+      },
+      "viewers": [
+        {
+          "viewer": 0,
+          "count": 50,
+          "totalMs": {
+            "mean": 2.1965239999999997,
+            "p50": 1.2677,
+            "p95": 2.6493,
+            "max": 46.1559
+          },
+          "meanBytes": 8257.44,
+          "meanAllocation": 87703.68,
+          "meanKnown": 430.8,
+          "observations": 0,
+          "stages": {
+            "Entities": {
+              "ms": {
+                "mean": 0.8626860000000002,
+                "p50": 0.8543,
+                "p95": 1.2226,
+                "max": 2.4277
+              },
+              "meanAllocation": 68153.44,
+              "messages": 260,
+              "bytes": 0
+            },
+            "Self": {
+              "ms": {
+                "mean": 0.10484200000000002,
+                "p50": 0,
+                "p95": 0.1687,
+                "max": 3.9166
+              },
+              "meanAllocation": 3929.92,
+              "messages": 10,
+              "bytes": 0
+            },
+            "Panels": {
+              "ms": {
+                "mean": 0.7086979999999999,
+                "p50": 0.0982,
+                "p95": 0.274,
+                "max": 29.2489
+              },
+              "meanAllocation": 5431.2,
+              "messages": 8,
+              "bytes": 0
+            },
+            "EntityEncoding": {
+              "ms": {
+                "mean": 0.233186,
+                "p50": 0.2304,
+                "p95": 0.3368,
+                "max": 0.3894
+              },
+              "meanAllocation": 8190.88,
+              "messages": 260,
+              "bytes": 321473
+            },
+            "SelfEncoding": {
+              "ms": {
+                "mean": 0.061660000000000006,
+                "p50": 0,
+                "p95": 0.207,
+                "max": 1.1608
+              },
+              "meanAllocation": 1654.24,
+              "messages": 10,
+              "bytes": 79329
+            },
+            "PanelEncoding": {
+              "ms": {
+                "mean": 0.22428399999999996,
+                "p50": 0,
+                "p95": 0.0649,
+                "max": 11.0476
+              },
+              "meanAllocation": 344,
+              "messages": 8,
+              "bytes": 12070
+            },
+            "ExtensionCapture": {
+              "ms": {
+                "mean": 0,
+                "p50": 0,
+                "p95": 0,
+                "max": 0
+              },
+              "meanAllocation": 0,
+              "messages": 0,
+              "bytes": 0
+            },
+            "ExtensionEncoding": {
+              "ms": {
+                "mean": 0,
+                "p50": 0,
+                "p95": 0,
+                "max": 0
+              },
+              "meanAllocation": 0,
+              "messages": 0,
+              "bytes": 0
+            }
+          },
+          "meanUnassignedProbeMs": 0.0011680000000001557,
+          "gcSamples": [
+            {
+              "round": 42,
+              "viewer": 0,
+              "tick": 926,
+              "gc": {
+                "Gen0": 1,
+                "Gen1": 0,
+                "Gen2": 0
+              },
+              "ms": 2.6493
+            }
+          ],
+          "emitted": {
+            "Spawns": 75,
+            "Updates": 263,
+            "Deltas": 2609,
+            "Refreshes": 135,
+            "Despawns": 86,
+            "SelfStates": 10,
+            "SelfSkipped": 0,
+            "Panels": 8
+          }
+        },
+        {
+          "viewer": 1,
+          "count": 50,
+          "totalMs": {
+            "mean": 0.825322,
+            "p50": 0.7375,
+            "p95": 1.2286,
+            "max": 3.4019
+          },
+          "meanBytes": 7979.8,
+          "meanAllocation": 52022.56,
+          "meanKnown": 411.88,
+          "observations": 0,
+          "stages": {
+            "Entities": {
+              "ms": {
+                "mean": 0.443548,
+                "p50": 0.4569,
+                "p95": 0.5981,
+                "max": 0.7431
+              },
+              "meanAllocation": 34123.52,
+              "messages": 343,
+              "bytes": 0
+            },
+            "Self": {
+              "ms": {
+                "mean": 0.02387,
+                "p50": 0,
+                "p95": 0.1249,
+                "max": 0.2784
+              },
+              "meanAllocation": 2634.08,
+              "messages": 10,
+              "bytes": 0
+            },
+            "Panels": {
+              "ms": {
+                "mean": 0.104558,
+                "p50": 0.0747,
+                "p95": 0.2336,
+                "max": 1.2114
+              },
+              "meanAllocation": 4843.04,
+              "messages": 4,
+              "bytes": 0
+            },
+            "EntityEncoding": {
+              "ms": {
+                "mean": 0.20281799999999997,
+                "p50": 0.1922,
+                "p95": 0.32,
+                "max": 0.4357
+              },
+              "meanAllocation": 8628,
+              "messages": 343,
+              "bytes": 315260
+            },
+            "SelfEncoding": {
+              "ms": {
+                "mean": 0.041776,
+                "p50": 0,
+                "p95": 0.1956,
+                "max": 0.6825
+              },
+              "meanAllocation": 1620.32,
+              "messages": 10,
+              "bytes": 77608
+            },
+            "PanelEncoding": {
+              "ms": {
+                "mean": 0.007858,
+                "p50": 0,
+                "p95": 0,
+                "max": 0.3929
+              },
+              "meanAllocation": 173.6,
+              "messages": 4,
+              "bytes": 6122
+            },
+            "ExtensionCapture": {
+              "ms": {
+                "mean": 0,
+                "p50": 0,
+                "p95": 0,
+                "max": 0
+              },
+              "meanAllocation": 0,
+              "messages": 0,
+              "bytes": 0
+            },
+            "ExtensionEncoding": {
+              "ms": {
+                "mean": 0,
+                "p50": 0,
+                "p95": 0,
+                "max": 0
+              },
+              "meanAllocation": 0,
+              "messages": 0,
+              "bytes": 0
+            }
+          },
+          "meanUnassignedProbeMs": 0.0008939999999999936,
+          "gcSamples": [],
+          "emitted": {
+            "Spawns": 110,
+            "Updates": 217,
+            "Deltas": 2378,
+            "Refreshes": 71,
+            "Despawns": 133,
+            "SelfStates": 10,
+            "SelfSkipped": 0,
+            "Panels": 4
+          }
+        },
+        {
+          "viewer": 2,
+          "count": 50,
+          "totalMs": {
+            "mean": 0.5018220000000001,
+            "p50": 0.4779,
+            "p95": 0.8747,
+            "max": 1.4346
+          },
+          "meanBytes": 7770.84,
+          "meanAllocation": 26152.16,
+          "meanKnown": 410.08,
+          "observations": 0,
+          "stages": {
+            "Entities": {
+              "ms": {
+                "mean": 0.19675799999999996,
+                "p50": 0.2035,
+                "p95": 0.2843,
+                "max": 0.3037
+              },
+              "meanAllocation": 8181.92,
+              "messages": 403,
+              "bytes": 0
+            },
+            "Self": {
+              "ms": {
+                "mean": 0.018571999999999998,
+                "p50": 0,
+                "p95": 0.1109,
+                "max": 0.1313
+              },
+              "meanAllocation": 2652.8,
+              "messages": 10,
+              "bytes": 0
+            },
+            "Panels": {
+              "ms": {
+                "mean": 0.06877,
+                "p50": 0.0602,
+                "p95": 0.0987,
+                "max": 0.4767
+              },
+              "meanAllocation": 4698.72,
+              "messages": 4,
+              "bytes": 0
+            },
+            "EntityEncoding": {
+              "ms": {
+                "mean": 0.18070199999999997,
+                "p50": 0.1734,
+                "p95": 0.2816,
+                "max": 0.3593
+              },
+              "meanAllocation": 8822.72,
+              "messages": 403,
+              "bytes": 304681
+            },
+            "SelfEncoding": {
+              "ms": {
+                "mean": 0.033178,
+                "p50": 0,
+                "p95": 0.1976,
+                "max": 0.2049
+              },
+              "meanAllocation": 1620.8,
+              "messages": 10,
+              "bytes": 77660
+            },
+            "PanelEncoding": {
+              "ms": {
+                "mean": 0.0030859999999999998,
+                "p50": 0,
+                "p95": 0,
+                "max": 0.1543
+              },
+              "meanAllocation": 175.2,
+              "messages": 4,
+              "bytes": 6201
+            },
+            "ExtensionCapture": {
+              "ms": {
+                "mean": 0,
+                "p50": 0,
+                "p95": 0,
+                "max": 0
+              },
+              "meanAllocation": 0,
+              "messages": 0,
+              "bytes": 0
+            },
+            "ExtensionEncoding": {
+              "ms": {
+                "mean": 0,
+                "p50": 0,
+                "p95": 0,
+                "max": 0
+              },
+              "meanAllocation": 0,
+              "messages": 0,
+              "bytes": 0
+            }
+          },
+          "meanUnassignedProbeMs": 0.0007560000000000045,
+          "gcSamples": [],
+          "emitted": {
+            "Spawns": 130,
+            "Updates": 194,
+            "Deltas": 2235,
+            "Refreshes": 66,
+            "Despawns": 173,
+            "SelfStates": 10,
+            "SelfSkipped": 0,
+            "Panels": 4
+          }
+        },
+        {
+          "viewer": 3,
+          "count": 50,
+          "totalMs": {
+            "mean": 0.550408,
+            "p50": 0.4789,
+            "p95": 0.9065,
+            "max": 4.0042
+          },
+          "meanBytes": 8797.98,
+          "meanAllocation": 24969.44,
+          "meanKnown": 443.74,
+          "observations": 0,
+          "stages": {
+            "Entities": {
+              "ms": {
+                "mean": 0.172456,
+                "p50": 0.1817,
+                "p95": 0.2524,
+                "max": 0.3006
+              },
+              "meanAllocation": 5770.4,
+              "messages": 348,
+              "bytes": 0
+            },
+            "Self": {
+              "ms": {
+                "mean": 0.06879400000000001,
+                "p50": 0,
+                "p95": 0.112,
+                "max": 2.6052
+              },
+              "meanAllocation": 3218.72,
+              "messages": 10,
+              "bytes": 0
+            },
+            "Panels": {
+              "ms": {
+                "mean": 0.06802400000000003,
+                "p50": 0.0589,
+                "p95": 0.0955,
+                "max": 0.5749
+              },
+              "meanAllocation": 4705.6,
+              "messages": 4,
+              "bytes": 0
+            },
+            "EntityEncoding": {
+              "ms": {
+                "mean": 0.20853199999999997,
+                "p50": 0.2054,
+                "p95": 0.3262,
+                "max": 0.5068
+              },
+              "meanAllocation": 9446.56,
+              "messages": 348,
+              "bytes": 354453
+            },
+            "SelfEncoding": {
+              "ms": {
+                "mean": 0.028766000000000003,
+                "p50": 0,
+                "p95": 0.1875,
+                "max": 0.196
+              },
+              "meanAllocation": 1650.88,
+              "messages": 10,
+              "bytes": 79144
+            },
+            "PanelEncoding": {
+              "ms": {
+                "mean": 0.002986,
+                "p50": 0,
+                "p95": 0,
+                "max": 0.1493
+              },
+              "meanAllocation": 177.28,
+              "messages": 4,
+              "bytes": 6302
+            },
+            "ExtensionCapture": {
+              "ms": {
+                "mean": 0,
+                "p50": 0,
+                "p95": 0,
+                "max": 0
+              },
+              "meanAllocation": 0,
+              "messages": 0,
+              "bytes": 0
+            },
+            "ExtensionEncoding": {
+              "ms": {
+                "mean": 0,
+                "p50": 0,
+                "p95": 0,
+                "max": 0
+              },
+              "meanAllocation": 0,
+              "messages": 0,
+              "bytes": 0
+            }
+          },
+          "meanUnassignedProbeMs": 0.000850000000000003,
+          "gcSamples": [
+            {
+              "round": 0,
+              "viewer": 3,
+              "tick": 842,
+              "gc": {
+                "Gen0": 1,
+                "Gen1": 0,
+                "Gen2": 0
+              },
+              "ms": 4.0042
+            }
+          ],
+          "emitted": {
+            "Spawns": 121,
+            "Updates": 241,
+            "Deltas": 2720,
+            "Refreshes": 90,
+            "Despawns": 128,
+            "SelfStates": 10,
+            "SelfSkipped": 0,
+            "Panels": 4
+          }
+        }
+      ],
+      "selfCadence": [
+        {
+          "due": false,
+          "count": 160,
+          "totalMs": {
+            "mean": 0.7020756249999998,
+            "p50": 0.5648,
+            "p95": 1.4481,
+            "max": 2.6493
+          },
+          "meanBytes": 6420.15,
+          "meanAllocation": 41086.4,
+          "meanKnown": 423.91875,
+          "observations": 0,
+          "stages": {
+            "Entities": {
+              "ms": {
+                "mean": 0.4227656249999999,
+                "p50": 0.2773,
+                "p95": 1.0026,
+                "max": 2.4277
+              },
+              "meanAllocation": 28958.6,
+              "messages": 1038,
+              "bytes": 0
+            },
+            "Self": {
+              "ms": {
+                "mean": 0,
+                "p50": 0,
+                "p95": 0,
+                "max": 0
+              },
+              "meanAllocation": 0,
+              "messages": 0,
+              "bytes": 0
+            },
+            "Panels": {
+              "ms": {
+                "mean": 0.07481812499999999,
+                "p50": 0.071,
+                "p95": 0.1192,
+                "max": 0.3813
+              },
+              "meanAllocation": 3510.4,
+              "messages": 0,
+              "bytes": 0
+            },
+            "EntityEncoding": {
+              "ms": {
+                "mean": 0.20365062499999995,
+                "p50": 0.189,
+                "p95": 0.3368,
+                "max": 0.5068
+              },
+              "meanAllocation": 8617.4,
+              "messages": 1038,
+              "bytes": 1027224
+            },
+            "SelfEncoding": {
+              "ms": {
+                "mean": 0,
+                "p50": 0,
+                "p95": 0,
+                "max": 0
+              },
+              "meanAllocation": 0,
+              "messages": 0,
+              "bytes": 0
+            },
+            "PanelEncoding": {
+              "ms": {
+                "mean": 0,
+                "p50": 0,
+                "p95": 0,
+                "max": 0
+              },
+              "meanAllocation": 0,
+              "messages": 0,
+              "bytes": 0
+            },
+            "ExtensionCapture": {
+              "ms": {
+                "mean": 0,
+                "p50": 0,
+                "p95": 0,
+                "max": 0
+              },
+              "meanAllocation": 0,
+              "messages": 0,
+              "bytes": 0
+            },
+            "ExtensionEncoding": {
+              "ms": {
+                "mean": 0,
+                "p50": 0,
+                "p95": 0,
+                "max": 0
+              },
+              "meanAllocation": 0,
+              "messages": 0,
+              "bytes": 0
+            }
+          },
+          "meanUnassignedProbeMs": 0.0008412500000000052,
+          "gcSamples": [
+            {
+              "round": 42,
+              "viewer": 0,
+              "tick": 926,
+              "gc": {
+                "Gen0": 1,
+                "Gen1": 0,
+                "Gen2": 0
+              },
+              "ms": 2.6493
+            }
+          ],
+          "emitted": {
+            "Spawns": 322,
+            "Updates": 708,
+            "Deltas": 7962,
+            "Refreshes": 273,
+            "Despawns": 398,
+            "SelfStates": 0,
+            "SelfSkipped": 0,
+            "Panels": 0
+          }
+        },
+        {
+          "due": true,
+          "count": 40,
+          "totalMs": {
+            "mean": 2.2842925,
+            "p50": 0.9436,
+            "p95": 4.0042,
+            "max": 46.1559
+          },
+          "meanBytes": 15326.975,
+          "meanAllocation": 74214.2,
+          "meanKnown": 424.95,
+          "observations": 0,
+          "stages": {
+            "Entities": {
+              "ms": {
+                "mean": 0.4032475,
+                "p50": 0.2973,
+                "p95": 0.8707,
+                "max": 0.9858
+              },
+              "meanAllocation": 29452.2,
+              "messages": 316,
+              "bytes": 0
+            },
+            "Self": {
+              "ms": {
+                "mean": 0.2700975000000001,
+                "p50": 0.1079,
+                "p95": 2.6052,
+                "max": 3.9166
+              },
+              "meanAllocation": 15544.4,
+              "messages": 40,
+              "bytes": 0
+            },
+            "Panels": {
+              "ms": {
+                "mean": 0.8882899999999998,
+                "p50": 0.0731,
+                "p95": 1.4288,
+                "max": 29.2489
+              },
+              "meanAllocation": 10556.6,
+              "messages": 20,
+              "bytes": 0
+            },
+            "EntityEncoding": {
+              "ms": {
+                "mean": 0.21694500000000003,
+                "p50": 0.216,
+                "p95": 0.3182,
+                "max": 0.3294
+              },
+              "meanAllocation": 9390.6,
+              "messages": 316,
+              "bytes": 268643
+            },
+            "SelfEncoding": {
+              "ms": {
+                "mean": 0.206725,
+                "p50": 0.1832,
+                "p95": 0.6825,
+                "max": 1.1608
+              },
+              "meanAllocation": 8182.8,
+              "messages": 40,
+              "bytes": 313741
+            },
+            "PanelEncoding": {
+              "ms": {
+                "mean": 0.29776749999999996,
+                "p50": 0,
+                "p95": 0.3929,
+                "max": 11.0476
+              },
+              "meanAllocation": 1087.6,
+              "messages": 20,
+              "bytes": 30695
+            },
+            "ExtensionCapture": {
+              "ms": {
+                "mean": 0,
+                "p50": 0,
+                "p95": 0,
+                "max": 0
+              },
+              "meanAllocation": 0,
+              "messages": 0,
+              "bytes": 0
+            },
+            "ExtensionEncoding": {
+              "ms": {
+                "mean": 0,
+                "p50": 0,
+                "p95": 0,
+                "max": 0
+              },
+              "meanAllocation": 0,
+              "messages": 0,
+              "bytes": 0
+            }
+          },
+          "meanUnassignedProbeMs": 0.0012200000000001752,
+          "gcSamples": [
+            {
+              "round": 0,
+              "viewer": 3,
+              "tick": 842,
+              "gc": {
+                "Gen0": 1,
+                "Gen1": 0,
+                "Gen2": 0
+              },
+              "ms": 4.0042
+            }
+          ],
+          "emitted": {
+            "Spawns": 114,
+            "Updates": 207,
+            "Deltas": 1980,
+            "Refreshes": 89,
+            "Despawns": 122,
+            "SelfStates": 40,
+            "SelfSkipped": 0,
+            "Panels": 20
+          }
+        }
+      ]
+    },
+    {
+      "name": "combined",
+      "context": {
+        "Name": "combined",
+        "FirstTick": 940,
+        "LastTick": 1040,
+        "FirstSample": 600,
+        "Samples": 200,
+        "WallMilliseconds": 538.048,
+        "ProcessCpuMilliseconds": 531.25,
+        "Gc": {
+          "Gen0": 1,
+          "Gen1": 0,
+          "Gen2": 0
+        },
+        "Settings": [
+          {
+            "RefreshSeconds": 2,
+            "SweepSeconds": 10,
+            "SelfSeconds": 0.5,
+            "SelfMaxSeconds": 2,
+            "ResourceStep": 0.02,
+            "CastSteps": 5,
+            "InterestHeight": 64,
+            "PreviewSeconds": 2
+          },
+          {
+            "RefreshSeconds": 2,
+            "SweepSeconds": 10,
+            "SelfSeconds": 0.5,
+            "SelfMaxSeconds": 2,
+            "ResourceStep": 0.02,
+            "CastSteps": 5,
+            "InterestHeight": 64,
+            "PreviewSeconds": 2
+          },
+          {
+            "RefreshSeconds": 2,
+            "SweepSeconds": 10,
+            "SelfSeconds": 0.5,
+            "SelfMaxSeconds": 2,
+            "ResourceStep": 0.02,
+            "CastSteps": 5,
+            "InterestHeight": 64,
+            "PreviewSeconds": 2
+          },
+          {
+            "RefreshSeconds": 2,
+            "SweepSeconds": 10,
+            "SelfSeconds": 0.5,
+            "SelfMaxSeconds": 2,
+            "ResourceStep": 0.02,
+            "CastSteps": 5,
+            "InterestHeight": 64,
+            "PreviewSeconds": 2
+          }
+        ]
+      },
+      "count": 200,
+      "totalMs": {
+        "mean": 1.2173730000000007,
+        "p50": 0.8201,
+        "p95": 1.9774,
+        "max": 28.9546
+      },
+      "meanBytes": 8651.585,
+      "meanAllocation": 53559.28,
+      "meanKnown": 416.58,
+      "observations": 1852,
+      "stages": {
+        "Entities": {
+          "ms": {
+            "mean": 0.44868899999999995,
+            "p50": 0.3354,
+            "p95": 1.0326,
+            "max": 1.4478
+          },
+          "meanAllocation": 27474.32,
+          "messages": 1344,
+          "bytes": 0
+        },
+        "Self": {
+          "ms": {
+            "mean": 0.14853099999999997,
+            "p50": 0,
+            "p95": 0.1255,
+            "max": 22.8221
+          },
+          "meanAllocation": 3106.88,
+          "messages": 40,
+          "bytes": 0
+        },
+        "Panels": {
+          "ms": {
+            "mean": 0.09012699999999998,
+            "p50": 0.0785,
+            "p95": 0.14,
+            "max": 0.8479
+          },
+          "meanAllocation": 4138.8,
+          "messages": 9,
+          "bytes": 0
+        },
+        "EntityEncoding": {
+          "ms": {
+            "mean": 0.20482649999999988,
+            "p50": 0.1933,
+            "p95": 0.3306,
+            "max": 0.9837
+          },
+          "meanAllocation": 7971.44,
+          "messages": 1344,
+          "bytes": 1139175
+        },
+        "SelfEncoding": {
+          "ms": {
+            "mean": 0.032612999999999996,
+            "p50": 0,
+            "p95": 0.1949,
+            "max": 0.3304
+          },
+          "meanAllocation": 1636.96,
+          "messages": 40,
+          "bytes": 313772
+        },
+        "PanelEncoding": {
+          "ms": {
+            "mean": 0.0025440000000000003,
+            "p50": 0,
+            "p95": 0,
+            "max": 0.204
+          },
+          "meanAllocation": 101.8,
+          "messages": 9,
+          "bytes": 14300
+        },
+        "ExtensionCapture": {
+          "ms": {
+            "mean": 0.23588699999999999,
+            "p50": 0.0934,
+            "p95": 0.2361,
+            "max": 23.597
+          },
+          "meanAllocation": 7221.92,
+          "messages": 200,
+          "bytes": 0
+        },
+        "ExtensionEncoding": {
+          "ms": {
+            "mean": 0.05279349999999996,
+            "p50": 0.0223,
+            "p95": 0.1034,
+            "max": 3.3422
+          },
+          "meanAllocation": 1907.16,
+          "messages": 200,
+          "bytes": 263070
+        }
+      },
+      "meanUnassignedProbeMs": 0.001362000000000003,
+      "gcSamples": [
+        {
+          "round": 30,
+          "viewer": 1,
+          "tick": 1002,
+          "gc": {
+            "Gen0": 1,
+            "Gen1": 0,
+            "Gen2": 0
+          },
+          "ms": 3.7021
+        }
+      ],
+      "emitted": {
+        "Spawns": 448,
+        "Updates": 792,
+        "Deltas": 8675,
+        "Refreshes": 304,
+        "Despawns": 503,
+        "SelfStates": 40,
+        "SelfSkipped": 0,
+        "Panels": 9
+      },
+      "viewers": [
+        {
+          "viewer": 0,
+          "count": 50,
+          "totalMs": {
+            "mean": 2.031023999999999,
+            "p50": 1.4236,
+            "p95": 2.5615,
+            "max": 28.9546
+          },
+          "meanBytes": 8571.94,
+          "meanAllocation": 86488.48,
+          "meanKnown": 423.16,
+          "observations": 474,
+          "stages": {
+            "Entities": {
+              "ms": {
+                "mean": 0.8205760000000001,
+                "p50": 0.8506,
+                "p95": 1.1954,
+                "max": 1.2019
+              },
+              "meanAllocation": 55588.96,
+              "messages": 287,
+              "bytes": 0
+            },
+            "Self": {
+              "ms": {
+                "mean": 0.033954,
+                "p50": 0,
+                "p95": 0.1601,
+                "max": 0.425
+              },
+              "meanAllocation": 3424.48,
+              "messages": 10,
+              "bytes": 0
+            },
+            "Panels": {
+              "ms": {
+                "mean": 0.11685999999999998,
+                "p50": 0.0993,
+                "p95": 0.2995,
+                "max": 0.6209
+              },
+              "meanAllocation": 4570.88,
+              "messages": 5,
+              "bytes": 0
+            },
+            "EntityEncoding": {
+              "ms": {
+                "mean": 0.22894399999999993,
+                "p50": 0.2176,
+                "p95": 0.3306,
+                "max": 0.7106
+              },
+              "meanAllocation": 7405.6,
+              "messages": 287,
+              "bytes": 273126
+            },
+            "SelfEncoding": {
+              "ms": {
+                "mean": 0.038776,
+                "p50": 0,
+                "p95": 0.2081,
+                "max": 0.3304
+              },
+              "meanAllocation": 1646.88,
+              "messages": 10,
+              "bytes": 78941
+            },
+            "PanelEncoding": {
+              "ms": {
+                "mean": 0.006096000000000001,
+                "p50": 0,
+                "p95": 0.0454,
+                "max": 0.1474
+              },
+              "meanAllocation": 233.6,
+              "messages": 5,
+              "bytes": 8178
+            },
+            "ExtensionCapture": {
+              "ms": {
+                "mean": 0.6726680000000003,
+                "p50": 0.1596,
+                "p95": 0.3205,
+                "max": 23.597
+              },
+              "meanAllocation": 11599.36,
+              "messages": 50,
+              "bytes": 0
+            },
+            "ExtensionEncoding": {
+              "ms": {
+                "mean": 0.11142599999999997,
+                "p50": 0.0299,
+                "p95": 0.125,
+                "max": 3.3422
+              },
+              "meanAllocation": 2018.72,
+              "messages": 50,
+              "bytes": 68352
+            }
+          },
+          "meanUnassignedProbeMs": 0.0017240000000000122,
+          "gcSamples": [],
+          "emitted": {
+            "Spawns": 85,
+            "Updates": 225,
+            "Deltas": 2119,
+            "Refreshes": 103,
+            "Despawns": 105,
+            "SelfStates": 10,
+            "SelfSkipped": 0,
+            "Panels": 5
+          }
+        },
+        {
+          "viewer": 1,
+          "count": 50,
+          "totalMs": {
+            "mean": 1.528892,
+            "p50": 0.9715,
+            "p95": 2.7344,
+            "max": 24.3565
+          },
+          "meanBytes": 8230.26,
+          "meanAllocation": 64138.24,
+          "meanKnown": 399.12,
+          "observations": 414,
+          "stages": {
+            "Entities": {
+              "ms": {
+                "mean": 0.519796,
+                "p50": 0.4935,
+                "p95": 1.0309,
+                "max": 1.4478
+              },
+              "meanAllocation": 36877.28,
+              "messages": 316,
+              "bytes": 0
+            },
+            "Self": {
+              "ms": {
+                "mean": 0.5248539999999999,
+                "p50": 0,
+                "p95": 0.1238,
+                "max": 22.8221
+              },
+              "meanAllocation": 3106.72,
+              "messages": 10,
+              "bytes": 0
+            },
+            "Panels": {
+              "ms": {
+                "mean": 0.10059999999999998,
+                "p50": 0.0884,
+                "p95": 0.1234,
+                "max": 0.8479
+              },
+              "meanAllocation": 4816.32,
+              "messages": 4,
+              "bytes": 0
+            },
+            "EntityEncoding": {
+              "ms": {
+                "mean": 0.18904800000000005,
+                "p50": 0.1765,
+                "p95": 0.3314,
+                "max": 0.4192
+              },
+              "meanAllocation": 7470.56,
+              "messages": 316,
+              "bytes": 266514
+            },
+            "SelfEncoding": {
+              "ms": {
+                "mean": 0.03121,
+                "p50": 0,
+                "p95": 0.188,
+                "max": 0.2097
+              },
+              "meanAllocation": 1626.88,
+              "messages": 10,
+              "bytes": 77925
+            },
+            "PanelEncoding": {
+              "ms": {
+                "mean": 0.004079999999999999,
+                "p50": 0,
+                "p95": 0,
+                "max": 0.204
+              },
+              "meanAllocation": 173.6,
+              "messages": 4,
+              "bytes": 6122
+            },
+            "ExtensionCapture": {
+              "ms": {
+                "mean": 0.12389200000000003,
+                "p50": 0.1066,
+                "p95": 0.2419,
+                "max": 0.4518
+              },
+              "meanAllocation": 8303.68,
+              "messages": 50,
+              "bytes": 0
+            },
+            "ExtensionEncoding": {
+              "ms": {
+                "mean": 0.034013999999999996,
+                "p50": 0.0218,
+                "p95": 0.1034,
+                "max": 0.2048
+              },
+              "meanAllocation": 1763.2,
+              "messages": 50,
+              "bytes": 60952
+            }
+          },
+          "meanUnassignedProbeMs": 0.0013980000000000125,
+          "gcSamples": [
+            {
+              "round": 30,
+              "viewer": 1,
+              "tick": 1002,
+              "gc": {
+                "Gen0": 1,
+                "Gen1": 0,
+                "Gen2": 0
+              },
+              "ms": 3.7021
+            }
+          ],
+          "emitted": {
+            "Spawns": 103,
+            "Updates": 177,
+            "Deltas": 2058,
+            "Refreshes": 60,
+            "Despawns": 113,
+            "SelfStates": 10,
+            "SelfSkipped": 0,
+            "Panels": 4
+          }
+        },
+        {
+          "viewer": 2,
+          "count": 50,
+          "totalMs": {
+            "mean": 0.6358680000000001,
+            "p50": 0.6171,
+            "p95": 0.9776,
+            "max": 1.3215
+          },
+          "meanBytes": 8388.38,
+          "meanAllocation": 31111.36,
+          "meanKnown": 403.64,
+          "observations": 434,
+          "stages": {
+            "Entities": {
+              "ms": {
+                "mean": 0.23800399999999997,
+                "p50": 0.2231,
+                "p95": 0.3847,
+                "max": 0.7956
+              },
+              "meanAllocation": 9219.68,
+              "messages": 375,
+              "bytes": 0
+            },
+            "Self": {
+              "ms": {
+                "mean": 0.018216,
+                "p50": 0,
+                "p95": 0.1011,
+                "max": 0.1255
+              },
+              "meanAllocation": 2652.8,
+              "messages": 10,
+              "bytes": 0
+            },
+            "Panels": {
+              "ms": {
+                "mean": 0.072594,
+                "p50": 0.0721,
+                "p95": 0.1076,
+                "max": 0.1751
+              },
+              "meanAllocation": 3584,
+              "messages": 0,
+              "bytes": 0
+            },
+            "EntityEncoding": {
+              "ms": {
+                "mean": 0.18235199999999996,
+                "p50": 0.1785,
+                "p95": 0.2474,
+                "max": 0.3048
+              },
+              "meanAllocation": 8209.44,
+              "messages": 375,
+              "bytes": 283400
+            },
+            "SelfEncoding": {
+              "ms": {
+                "mean": 0.028836000000000004,
+                "p50": 0,
+                "p95": 0.1758,
+                "max": 0.2016
+              },
+              "meanAllocation": 1619.2,
+              "messages": 10,
+              "bytes": 77547
+            },
+            "PanelEncoding": {
+              "ms": {
+                "mean": 0,
+                "p50": 0,
+                "p95": 0,
+                "max": 0
+              },
+              "meanAllocation": 0,
+              "messages": 0,
+              "bytes": 0
+            },
+            "ExtensionCapture": {
+              "ms": {
+                "mean": 0.06561200000000002,
+                "p50": 0.0667,
+                "p95": 0.107,
+                "max": 0.1693
+              },
+              "meanAllocation": 4100.96,
+              "messages": 50,
+              "bytes": 0
+            },
+            "ExtensionEncoding": {
+              "ms": {
+                "mean": 0.029102000000000006,
+                "p50": 0.0187,
+                "p95": 0.0819,
+                "max": 0.1069
+              },
+              "meanAllocation": 1725.28,
+              "messages": 50,
+              "bytes": 58472
+            }
+          },
+          "meanUnassignedProbeMs": 0.0011519999999999896,
+          "gcSamples": [],
+          "emitted": {
+            "Spawns": 140,
+            "Updates": 175,
+            "Deltas": 2075,
+            "Refreshes": 59,
+            "Despawns": 138,
+            "SelfStates": 10,
+            "SelfSkipped": 0,
+            "Panels": 0
+          }
+        },
+        {
+          "viewer": 3,
+          "count": 50,
+          "totalMs": {
+            "mean": 0.673708,
+            "p50": 0.6493,
+            "p95": 1.1582,
+            "max": 1.5635
+          },
+          "meanBytes": 9415.76,
+          "meanAllocation": 32499.04,
+          "meanKnown": 440.4,
+          "observations": 530,
+          "stages": {
+            "Entities": {
+              "ms": {
+                "mean": 0.21638000000000004,
+                "p50": 0.217,
+                "p95": 0.3354,
+                "max": 0.4049
+              },
+              "meanAllocation": 8211.36,
+              "messages": 366,
+              "bytes": 0
+            },
+            "Self": {
+              "ms": {
+                "mean": 0.0171,
+                "p50": 0,
+                "p95": 0.1031,
+                "max": 0.1253
+              },
+              "meanAllocation": 3243.52,
+              "messages": 10,
+              "bytes": 0
+            },
+            "Panels": {
+              "ms": {
+                "mean": 0.070454,
+                "p50": 0.0684,
+                "p95": 0.1435,
+                "max": 0.1529
+              },
+              "meanAllocation": 3584,
+              "messages": 0,
+              "bytes": 0
+            },
+            "EntityEncoding": {
+              "ms": {
+                "mean": 0.218962,
+                "p50": 0.1922,
+                "p95": 0.3615,
+                "max": 0.9837
+              },
+              "meanAllocation": 8800.16,
+              "messages": 366,
+              "bytes": 316135
+            },
+            "SelfEncoding": {
+              "ms": {
+                "mean": 0.031630000000000005,
+                "p50": 0,
+                "p95": 0.1981,
+                "max": 0.2397
+              },
+              "meanAllocation": 1654.88,
+              "messages": 10,
+              "bytes": 79359
+            },
+            "PanelEncoding": {
+              "ms": {
+                "mean": 0,
+                "p50": 0,
+                "p95": 0,
+                "max": 0
+              },
+              "meanAllocation": 0,
+              "messages": 0,
+              "bytes": 0
+            },
+            "ExtensionCapture": {
+              "ms": {
+                "mean": 0.08137599999999999,
+                "p50": 0.0714,
+                "p95": 0.1173,
+                "max": 0.4889
+              },
+              "meanAllocation": 4883.68,
+              "messages": 50,
+              "bytes": 0
+            },
+            "ExtensionEncoding": {
+              "ms": {
+                "mean": 0.03663199999999999,
+                "p50": 0.0233,
+                "p95": 0.1155,
+                "max": 0.1556
+              },
+              "meanAllocation": 2121.44,
+              "messages": 50,
+              "bytes": 75294
+            }
+          },
+          "meanUnassignedProbeMs": 0.0011739999999999973,
+          "gcSamples": [],
+          "emitted": {
+            "Spawns": 120,
+            "Updates": 215,
+            "Deltas": 2423,
+            "Refreshes": 82,
+            "Despawns": 147,
+            "SelfStates": 10,
+            "SelfSkipped": 0,
+            "Panels": 0
+          }
+        }
+      ],
+      "selfCadence": [
+        {
+          "due": false,
+          "count": 160,
+          "totalMs": {
+            "mean": 0.9212462499999999,
+            "p50": 0.7907,
+            "p95": 1.7429,
+            "max": 3.755
+          },
+          "meanBytes": 6980.7625,
+          "meanAllocation": 48539.25,
+          "meanKnown": 416.525,
+          "observations": 1450,
+          "stages": {
+            "Entities": {
+              "ms": {
+                "mean": 0.4545693749999999,
+                "p50": 0.3451,
+                "p95": 1.0326,
+                "max": 1.4478
+              },
+              "meanAllocation": 27403,
+              "messages": 1024,
+              "bytes": 0
+            },
+            "Self": {
+              "ms": {
+                "mean": 0,
+                "p50": 0,
+                "p95": 0,
+                "max": 0
+              },
+              "meanAllocation": 0,
+              "messages": 0,
+              "bytes": 0
+            },
+            "Panels": {
+              "ms": {
+                "mean": 0.09521249999999999,
+                "p50": 0.0832,
+                "p95": 0.1479,
+                "max": 0.8479
+              },
+              "meanAllocation": 4314.3,
+              "messages": 9,
+              "bytes": 0
+            },
+            "EntityEncoding": {
+              "ms": {
+                "mean": 0.20706249999999993,
+                "p50": 0.1942,
+                "p95": 0.3314,
+                "max": 0.9837
+              },
+              "meanAllocation": 7739.7,
+              "messages": 1024,
+              "bytes": 891581
+            },
+            "SelfEncoding": {
+              "ms": {
+                "mean": 0,
+                "p50": 0,
+                "p95": 0,
+                "max": 0
+              },
+              "meanAllocation": 0,
+              "messages": 0,
+              "bytes": 0
+            },
+            "PanelEncoding": {
+              "ms": {
+                "mean": 0.00318,
+                "p50": 0,
+                "p95": 0,
+                "max": 0.204
+              },
+              "meanAllocation": 127.25,
+              "messages": 9,
+              "bytes": 14300
+            },
+            "ExtensionCapture": {
+              "ms": {
+                "mean": 0.12131249999999998,
+                "p50": 0.0922,
+                "p95": 0.2361,
+                "max": 2.1785
+              },
+              "meanAllocation": 7018.8,
+              "messages": 160,
+              "bytes": 0
+            },
+            "ExtensionEncoding": {
+              "ms": {
+                "mean": 0.038599375,
+                "p50": 0.0241,
+                "p95": 0.1034,
+                "max": 0.4101
+              },
+              "meanAllocation": 1936.2,
+              "messages": 160,
+              "bytes": 211041
+            }
+          },
+          "meanUnassignedProbeMs": 0.0013099999999999883,
+          "gcSamples": [],
+          "emitted": {
+            "Spawns": 347,
+            "Updates": 577,
+            "Deltas": 6958,
+            "Refreshes": 220,
+            "Despawns": 364,
+            "SelfStates": 0,
+            "SelfSkipped": 0,
+            "Panels": 9
+          }
+        },
+        {
+          "due": true,
+          "count": 40,
+          "totalMs": {
+            "mean": 2.40188,
+            "p50": 1.0277,
+            "p95": 24.3565,
+            "max": 28.9546
+          },
+          "meanBytes": 15334.875,
+          "meanAllocation": 73639.4,
+          "meanKnown": 416.8,
+          "observations": 402,
+          "stages": {
+            "Entities": {
+              "ms": {
+                "mean": 0.4251674999999998,
+                "p50": 0.3308,
+                "p95": 1.1105,
+                "max": 1.1636
+              },
+              "meanAllocation": 27759.6,
+              "messages": 320,
+              "bytes": 0
+            },
+            "Self": {
+              "ms": {
+                "mean": 0.7426549999999998,
+                "p50": 0.099,
+                "p95": 2.6659,
+                "max": 22.8221
+              },
+              "meanAllocation": 15534.4,
+              "messages": 40,
+              "bytes": 0
+            },
+            "Panels": {
+              "ms": {
+                "mean": 0.06978500000000001,
+                "p50": 0.066,
+                "p95": 0.116,
+                "max": 0.1166
+              },
+              "meanAllocation": 3436.8,
+              "messages": 0,
+              "bytes": 0
+            },
+            "EntityEncoding": {
+              "ms": {
+                "mean": 0.19588250000000001,
+                "p50": 0.1925,
+                "p95": 0.3306,
+                "max": 0.3615
+              },
+              "meanAllocation": 8898.4,
+              "messages": 320,
+              "bytes": 247594
+            },
+            "SelfEncoding": {
+              "ms": {
+                "mean": 0.163065,
+                "p50": 0.1668,
+                "p95": 0.2397,
+                "max": 0.3304
+              },
+              "meanAllocation": 8184.8,
+              "messages": 40,
+              "bytes": 313772
+            },
+            "PanelEncoding": {
+              "ms": {
+                "mean": 0,
+                "p50": 0,
+                "p95": 0,
+                "max": 0
+              },
+              "meanAllocation": 0,
+              "messages": 0,
+              "bytes": 0
+            },
+            "ExtensionCapture": {
+              "ms": {
+                "mean": 0.6941849999999998,
+                "p50": 0.0982,
+                "p95": 0.3203,
+                "max": 23.597
+              },
+              "meanAllocation": 8034.4,
+              "messages": 40,
+              "bytes": 0
+            },
+            "ExtensionEncoding": {
+              "ms": {
+                "mean": 0.10956999999999999,
+                "p50": 0.0182,
+                "p95": 0.1556,
+                "max": 3.3422
+              },
+              "meanAllocation": 1791,
+              "messages": 40,
+              "bytes": 52029
+            }
+          },
+          "meanUnassignedProbeMs": 0.0015700000000000616,
+          "gcSamples": [
+            {
+              "round": 30,
+              "viewer": 1,
+              "tick": 1002,
+              "gc": {
+                "Gen0": 1,
+                "Gen1": 0,
+                "Gen2": 0
+              },
+              "ms": 3.7021
+            }
+          ],
+          "emitted": {
+            "Spawns": 101,
+            "Updates": 215,
+            "Deltas": 1717,
+            "Refreshes": 84,
+            "Despawns": 139,
+            "SelfStates": 40,
+            "SelfSkipped": 0,
+            "Panels": 0
+          }
+        }
+      ]
+    }
+  ]
+}

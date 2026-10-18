@@ -183,3 +183,35 @@ The optional `--snapshot-profile` instrument records each viewer's capture and e
 The first parity fixture shared one simulation between ordinary and profiled views. Four cases failed at a later self-state cadence: the first ordinary Self read lazily compiled weave slots before the profiled view's initial fingerprint. The fixture now uses independent identically seeded worlds to preserve equal read histories. No production builder was changed to accommodate it. All eight instrument cases pass, covering exact ordered payloads and encoded bytes, view counters and membership, self cadence, interface ordering, one extra-stream invocation per frame, unchanged visible simulation state, output accounting, invalid options and preservation of existing evidence. The focused TRX is retained under artifacts/forecast-rereview/snapshot-profile-tests; complete final gate and diagnostic evidence follow when available.
 
 The final Release solution build has zero warnings/errors, all 1,044 .NET tests pass (854 core, 58 server, 132 client), and content validation reports zero errors/warnings. Complete console logs are published in experiments/forecast-rendering/evidence/rereview/snapshot-profile-{build,tests,validate}.txt. The shared TRX filename was overwritten between successful test projects; the complete console log preserves all three results, and the separate focused instrument TRX remains intact. Earlier client smoke, live probe and replay evidence applies to the unchanged runtime/client sources. A single fixed-source tick-only diagnostic is prepared for a coordinated quiet window; none has run at this checkpoint.
+
+### First diagnostic on 521d7ad
+
+After the coordinator's explicit START and peer quiet confirmations, exactly one Normal-priority `bench --only tick --snapshot-profile ... --json` ran on 521d7ad1742b7232d5c1e78954c68fd0702a7cec and exited 0. STOPPED was posted immediately on #34 before analysis, releasing the shared heavy-test window. No retry, normal benchmark or sample exclusion followed. Hosted CI run 39161793387 is green, including Windows deterministic replay, Linux build/tests, Docker and launcher.
+
+All 800 raw viewer samples (four sequential phases, 50 rounds, four viewers), original diagnostic summary rows, binary/source/environment identity and reproducible analysis are retained as snapshot-profile-{frames,bench,environment,analysis}.json and snapshot-profile-analysis.mjs in experiments/forecast-rendering/evidence/rereview. The analysis verifies every frame's message/byte sums and each phase's total against the original summary. No output appeared on stderr.
+
+These are diagnostic means in ms per player, including instrumentation overhead. They do not replace the prior ordinary budget records or certify a new pass; interface and combined diagnostic means exceed 1 ms and remain visible.
+
+| Phase | Total | Entities | Self | Panels | Entity encode | Self encode | Panel encode | Forecast capture | Forecast encode |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| Full | 0.946282 | 0.351716 | 0.017905 | 0 | 0.547474 | 0.027476 | 0 | 0 | 0 |
+| Delta | 0.723586 | 0.400058 | 0.013151 | 0 | 0.227952 | 0.081714 | 0 | 0 | 0 |
+| Interface | 1.018519 | 0.418862 | 0.054020 | 0.237513 | 0.206310 | 0.041345 | 0.059554 | 0 | 0 |
+| Combined | 1.217373 | 0.448689 | 0.148531 | 0.090127 | 0.204826 | 0.032613 | 0.002544 | 0.235887 | 0.052793 |
+
+The difference between total and summed stage intervals remains in the raw records (about 0.0007-0.0017 ms on average), not deducted. Mean traffic is exactly 29.658720703125 KB full, 9.32658203125 KB delta, 8.0092919921875 KB interface and 8.4488134765625 KB combined, matching the prior workload's bytes. Combined allocation is 52.303984375 KB/player; all 1,852 forecast observations remain. Zone errors are zero.
+
+| Phase | Entity messages | Self messages | Panel messages | Forecast messages | Spawns | Full entity states | Delta entity states | Despawns |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|
+| Full | 1,170 | 36 | 0 | 0 | 450 | 13,243 | 0 | 520 |
+| Delta | 1,177 | 40 | 0 | 0 | 377 | 1,359 | 11,585 | 407 |
+| Interface | 1,354 | 40 | 20 | 0 | 436 | 915 | 9,942 | 520 |
+| Combined | 1,344 | 40 | 9 | 200 | 448 | 792 | 8,675 | 503 |
+
+Full-state entity encoding is the largest full-phase stage in this sample. Viewer order also matters: mean entity capture for the first viewer is 0.774720 ms in full and 0.820576 ms in combined, versus 0.118500 and 0.216380 ms for the fourth viewer. The builder shares captures across viewers, but their interest membership also differs; this observation does not isolate a cache speedup or justify reordering viewers to improve a reported average.
+
+Several retained spikes materially affect the means. The first interface frame (round 0, viewer 0) takes 46.1559 ms, with 29.2489 ms in panels and 11.0476 ms in panel encoding. The first combined frame takes 28.9546 ms, including 23.597 ms forecast capture and 3.3422 ms forecast encoding. A later combined frame (round 40, viewer 1) takes 24.3565 ms, including 22.8221 ms in Self. These three frames report no GC collection; this does not establish JIT, preemption or another cause. A delta frame at round 10/viewer 2 takes 11.7309 ms, with 11.276 ms in self encoding and simultaneous gen0/gen1 increments. Full, interface and combined phases also retain gen0 events. None is trimmed or subtracted.
+
+The diagnostic distinguishes stage, viewer, first-use position and GC coincidence; it does not identify the cause of the older cross-branch regressions. Follow-up should attribute the large owner-state/first-use spikes and the entity capture/JSON paths with runtime stack and scheduling evidence before choosing an optimization. A future controlled experiment must retain this sample and the original budget failures, preserve payload parity and compare the actual combined source. No further measurement or production optimization was made in this diagnostic handoff.
+
+The precise-body owner subsequently published complete corrected-base #36 at c07b6df017ac9c7f9a854db836d5689e70debe16 (including #33 80dcac7 and prior cfeca690), with its own 2,237-test/replay/client evidence. It is moving forward through #34/#37 separately. That supersedes the earlier handoff head above; this request does not claim the combined body-contact, origin/aim, rider or forecast-eligibility gates until that full dependency is actually integrated. Claude rereview and combined-stack performance acceptance remain open.
