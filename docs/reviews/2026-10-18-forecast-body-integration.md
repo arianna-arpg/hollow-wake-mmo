@@ -92,4 +92,14 @@ The composition lint at `783fe37` reports 584 smells and 197 notes against 580/1
 
 The attempted paired planning measurement window was released before any benchmark began because another session's functional checks were still active. No new performance result exists. Complete #34, final client checks, exact-source independent review and performance acceptance remain outstanding.
 
+## Frozen geometry and physical input follow-up
+
+The forecasting peer cleared the aiming correction at `85ee039` with 30 independent behavioral cases in [the exact-source review](https://github.com/arianna-arpg/hollow-wake-mmo/pull/20#issuecomment-6255782966). Its scope is the inspected composition boundary, not final integration or performance acceptance.
+
+The construct reviewer separately reproduced an older replay defect: a target moving before an echo executes changes its launch geometry. Runtime follow-up `4057f79de28fc9698faebea581c20ee063883021` makes an explicit SampledTargetPoint/AimOffset pair authoritative for delivery geometry even when Target remains available for live release checks and direct payloads. Four captured-geometry cases fail before this correction while four live-target controls pass. Initial flights, identity wrappers and delayed salvo beats now use the frozen pair; actual contacts distinguish a replacement body at the captured location from the moved target. This does not disable authored homing.
+
+Salvos and authored guided flights now obtain live input from the physical CastSource, falling back to Source only when physical identity is absent. An owner contributing inherited stats can no longer steer another body's delivery with later cursor input. Four controls fail before this correction and pass after: each delivery ignores the unrelated owner's input and follows input from its physical caster. An initial test draft accidentally placed a hostile emitter at the muzzle, intercepting the guide before it could turn; its 3-fail/1-pass output remains alongside the corrected friendly-emitter 4-fail evidence. The final affected selection passes 1,818 tests, including all 12 new cases. All seven Windows standard duel hashes remain identical.
+
+The isolated correction is published for #50's event/queue/replay owner. That owner still must capture and forward the frozen center/offset and preserve Target=None for committed directions. Those event and queue files were not edited here. Exact-source follow-up review, complete #34 integration, fresh final client checks and performance acceptance remain outstanding. No benchmark or trace ran.
 Acknowledged by: pending Claude review of the combined correction.
+
