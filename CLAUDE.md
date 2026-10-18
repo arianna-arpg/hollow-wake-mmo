@@ -53,6 +53,7 @@ node --test scripts/port/port-prototype.test.mjs              # the prototype po
 npm --prefix web ci && npm --prefix web run build              # build the web client into web/dist (Node 22)
 npm --prefix web test                                          # web client unit tests
 npm --prefix web run smoke -- --shots DIR                      # scripted browser play-through against a running server (installed Edge or Chrome)
+node scripts/test-background.mjs --suite all                  # private headless browser + native smoke; preserves desktop input and focus
 scripts/codespace-play.sh                                      # build the web client and run the server (Codespaces, Linux, macOS)
 ```
 
@@ -70,6 +71,8 @@ node scripts/serve-feed.mjs DIR                               # serve a feed fol
 bash scripts/package-client.sh --godot GODOT --version 0.1.0 --out DIR --check   # from the repository root: client archives + manifest.json
 git tag -a v0.2.0 -m "notes" && git push origin v0.2.0       # cut a stable release (release.yml); nightly.yml cuts pre-releases
 ```
+
+For routine client tests while the owner uses the machine, prefer the [background harness](docs/design/testing.md) from your own worktree. It hides child process windows, isolates browser controller input, and saves per-run logs and browser screenshots. Native rendering checks still require an isolated graphical session; the headless native run explicitly reports skipped pixel checks.
 
 ## Verification gates
 
