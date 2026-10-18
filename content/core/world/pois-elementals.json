@@ -5,13 +5,12 @@
       "id": "ember_seam",
       "name": "Ashlight Seam",
       "tags": [
-        "ruin",
-        "landmark",
-        "elemental"
+        "site.manifestation",
+        "landmark"
       ],
       "weight": 0.22,
       "radius": 9,
-      "min_spacing": 180,
+      "min_spacing": 48,
       "slope": {
         "max": 0.75
       },
@@ -20,9 +19,9 @@
         "scrub"
       ],
       "landmarks": [
-        "camp_ring"
+        "manifestation_cleft"
       ],
-      "level": 3,
+      "level": 0,
       "inhabitants": [
         {
           "pattern": "cinderling",
@@ -62,23 +61,24 @@
         }
       ],
       "names": [
-        "Ashlight Seam"
+        "Ashlight Seam",
+        "Cinder Breath",
+        "The Last Coal"
       ],
       "meta": {
-        "population": "Sparse unbound manifestation inside the existing ruin budget. Level is the site offset; inhabitants keep their own minimum."
+        "population": "Dedicated manifestation budget. Region-level sites require an eligible inhabitant; no human structures, bonus loot or ruin quest tags."
       }
     },
     {
       "id": "tide_memory",
       "name": "Pool of Returning Rain",
       "tags": [
-        "ruin",
-        "landmark",
-        "elemental"
+        "site.manifestation",
+        "landmark"
       ],
       "weight": 0.22,
       "radius": 9,
-      "min_spacing": 180,
+      "min_spacing": 48,
       "slope": {
         "max": 0.75
       },
@@ -87,9 +87,9 @@
         "marsh"
       ],
       "landmarks": [
-        "shrine_ring"
+        "manifestation_ripple"
       ],
-      "level": 3,
+      "level": 0,
       "inhabitants": [
         {
           "pattern": "tide_surge",
@@ -105,23 +105,24 @@
         }
       ],
       "names": [
-        "Pool of Returning Rain"
+        "Pool of Returning Rain",
+        "Stillfold Pool",
+        "Rain Memory"
       ],
       "meta": {
-        "population": "Sparse unbound manifestation inside the existing ruin budget. Level is the site offset; inhabitants keep their own minimum."
+        "population": "Dedicated manifestation budget. Region-level sites require an eligible inhabitant; no human structures, bonus loot or ruin quest tags."
       }
     },
     {
       "id": "rime_bloom",
       "name": "Rime Bloom",
       "tags": [
-        "ruin",
-        "landmark",
-        "elemental"
+        "site.manifestation",
+        "landmark"
       ],
       "weight": 0.22,
       "radius": 9,
-      "min_spacing": 180,
+      "min_spacing": 48,
       "slope": {
         "max": 0.75
       },
@@ -130,9 +131,9 @@
         "highland"
       ],
       "landmarks": [
-        "shrine_ring"
+        "manifestation_ripple"
       ],
-      "level": 6,
+      "level": 0,
       "inhabitants": [
         {
           "pattern": "rime_star",
@@ -160,23 +161,24 @@
         }
       ],
       "names": [
-        "Rime Bloom"
+        "Rime Bloom",
+        "The White Breath",
+        "Fractured Dawn"
       ],
       "meta": {
-        "population": "Sparse unbound manifestation inside the existing ruin budget. Level is the site offset; inhabitants keep their own minimum."
+        "population": "Dedicated manifestation budget. Region-level sites require an eligible inhabitant; no human structures, bonus loot or ruin quest tags."
       }
     },
     {
       "id": "storm_eye",
       "name": "The Still Eye",
       "tags": [
-        "ruin",
-        "landmark",
-        "elemental"
+        "site.manifestation",
+        "landmark"
       ],
       "weight": 0.22,
       "radius": 9,
-      "min_spacing": 180,
+      "min_spacing": 48,
       "slope": {
         "max": 0.75
       },
@@ -185,9 +187,9 @@
         "heath"
       ],
       "landmarks": [
-        "shrine_ring"
+        "manifestation_cleft"
       ],
-      "level": 5,
+      "level": 0,
       "inhabitants": [
         {
           "pattern": "gale_elemental",
@@ -215,23 +217,24 @@
         }
       ],
       "names": [
-        "The Still Eye"
+        "Eye of the Unbound Wind",
+        "Thunder Hollow",
+        "Gale Spindle"
       ],
       "meta": {
-        "population": "Sparse unbound manifestation inside the existing ruin budget. Level is the site offset; inhabitants keep their own minimum."
+        "population": "Dedicated manifestation budget. Region-level sites require an eligible inhabitant; no human structures, bonus loot or ruin quest tags."
       }
     },
     {
       "id": "mineral_wake",
       "name": "Unhewn Wake",
       "tags": [
-        "ruin",
-        "landmark",
-        "elemental"
+        "site.manifestation",
+        "landmark"
       ],
       "weight": 0.22,
       "radius": 9,
-      "min_spacing": 180,
+      "min_spacing": 48,
       "slope": {
         "max": 0.75
       },
@@ -240,9 +243,9 @@
         "scrub"
       ],
       "landmarks": [
-        "ruin_walls"
+        "manifestation_cleft"
       ],
-      "level": 4,
+      "level": 0,
       "inhabitants": [
         {
           "pattern": "silt_crawler",
@@ -270,23 +273,24 @@
         }
       ],
       "names": [
-        "Unhewn Wake"
+        "Mineral Wake",
+        "The Walking Strata",
+        "Rootless Shelf"
       ],
       "meta": {
-        "population": "Sparse unbound manifestation inside the existing ruin budget. Level is the site offset; inhabitants keep their own minimum."
+        "population": "Dedicated manifestation budget. Region-level sites require an eligible inhabitant; no human structures, bonus loot or ruin quest tags."
       }
     },
     {
       "id": "bloom_exhalation",
       "name": "The Breathing Glade",
       "tags": [
-        "ruin",
-        "landmark",
-        "elemental"
+        "site.manifestation",
+        "landmark"
       ],
       "weight": 0.22,
       "radius": 9,
-      "min_spacing": 180,
+      "min_spacing": 48,
       "slope": {
         "max": 0.75
       },
@@ -296,9 +300,9 @@
         "marsh"
       ],
       "landmarks": [
-        "shrine_ring"
+        "manifestation_growth"
       ],
-      "level": 4,
+      "level": 0,
       "inhabitants": [
         {
           "pattern": "bloom_spore",
@@ -314,23 +318,24 @@
         }
       ],
       "names": [
-        "The Breathing Glade"
+        "The Breathing Glade",
+        "Green Exhalation",
+        "Sporewake"
       ],
       "meta": {
-        "population": "Sparse unbound manifestation inside the existing ruin budget. Level is the site offset; inhabitants keep their own minimum."
+        "population": "Dedicated manifestation budget. Region-level sites require an eligible inhabitant; no human structures, bonus loot or ruin quest tags."
       }
     },
     {
       "id": "unbound_refraction",
       "name": "Unbound Refraction",
       "tags": [
-        "ruin",
-        "landmark",
-        "elemental"
+        "site.manifestation",
+        "landmark"
       ],
       "weight": 0.22,
       "radius": 9,
-      "min_spacing": 180,
+      "min_spacing": 48,
       "slope": {
         "max": 0.75
       },
@@ -339,9 +344,9 @@
         "hollowed"
       ],
       "landmarks": [
-        "shrine_ring"
+        "manifestation_cleft"
       ],
-      "level": 5,
+      "level": 0,
       "inhabitants": [
         {
           "pattern": "lumen_wisp",
@@ -381,23 +386,24 @@
         }
       ],
       "names": [
-        "Unbound Refraction"
+        "Unbound Refraction",
+        "The Folded Light",
+        "Glass Quiet"
       ],
       "meta": {
-        "population": "Sparse unbound manifestation inside the existing ruin budget. Level is the site offset; inhabitants keep their own minimum."
+        "population": "Dedicated manifestation budget. Region-level sites require an eligible inhabitant; no human structures, bonus loot or ruin quest tags."
       }
     },
     {
       "id": "selvage_rent",
       "name": "Loose-End Hollow",
       "tags": [
-        "ruin",
-        "landmark",
-        "elemental"
+        "site.manifestation",
+        "landmark"
       ],
       "weight": 0.22,
       "radius": 9,
-      "min_spacing": 180,
+      "min_spacing": 48,
       "slope": {
         "max": 0.75
       },
@@ -406,9 +412,9 @@
         "deep_forest"
       ],
       "landmarks": [
-        "ruin_walls"
+        "manifestation_cleft"
       ],
-      "level": 7,
+      "level": 0,
       "inhabitants": [
         {
           "pattern": "umbra_drift",
@@ -436,10 +442,12 @@
         }
       ],
       "names": [
-        "Loose-End Hollow"
+        "Selvage Rent",
+        "Ragged Silence",
+        "The Frayed Dusk"
       ],
       "meta": {
-        "population": "Sparse unbound manifestation inside the existing ruin budget. Level is the site offset; inhabitants keep their own minimum."
+        "population": "Dedicated manifestation budget. Region-level sites require an eligible inhabitant; no human structures, bonus loot or ruin quest tags."
       }
     }
   ]

@@ -1,0 +1,93 @@
+Test run for <worktree>\tests\HollowWake.Core.Tests\bin\Debug\net10.0\HollowWake.Core.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+<worktree>\tests\HollowWake.Core.Tests\bin\Debug\net10.0\HollowWake.Core.Tests.dll
+[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v3.1.5+1b188a7b0a (64-bit .NET 10.0.13)
+[xUnit.net 00:00:00.37]   Discovering: HollowWake.Core.Tests
+[xUnit.net 00:00:02.27]   Discovered:  HollowWake.Core.Tests
+[xUnit.net 00:00:02.29]   Starting:    HollowWake.Core.Tests
+[xUnit.net 00:00:04.88]   Finished:    HollowWake.Core.Tests
+  Passed HollowWake.Core.Tests.ElementalTests.ReviewedWorldPopulationAuditSeparatesManifestationsFromTheBase [2 s]
+  Standard Output Messages:
+ zone(0,0) neighbor removed: zone(-1,0):kiln:-218.5:235.5:kiln_ring:Emberseat:L8
+ zone(0,0) neighbor removed: zone(-1,0):scrap_fort:-42.5:229.5:ruin_walls:Scrap Fort:L11
+ zone(0,0) neighbor removed: zone(-1,0):ruin:-46.5:48.5:ruin_walls:the Fallen Hall:L7
+ zone(0,0) neighbor removed: zone(-1,1):knot:-34.5:419.5:knot_stones:a Skyfall:L8
+ zone(0,0) neighbor removed: zone(-1,1):grave_court:-198.5:436.5:ruin_walls:the Silent Faculty:L10
+ zone(0,0) neighbor removed: zone(-1,1):scrap_fort:-234.5:294.5:ruin_walls:Scrap Fort:L11
+ zone(0,0) neighbor added: zone(-1,0):ruin:-218.5:235.5:ruin_walls:the Last Stitch:L7
+ zone(0,0) neighbor added: zone(-1,0):ruin:-42.5:229.5:barrow:the Sunken Lantern:L7
+ zone(0,0) neighbor added: zone(-1,0):kiln:-56.5:100.5:kiln_ring:the Cinderstair:L8
+ zone(0,0) neighbor added: zone(-1,1):knot:-34.5:419.5:knot_stones:a Tangle:L8
+ zone(0,0) neighbor added: zone(-1,1):ruin:-198.5:436.5:ruin_walls:the Last Stitch:L7
+ zone(0,0) neighbor added: zone(-1,1):knot:-234.5:294.5:knot_stones:a Snarl:L8
+ zone(0,0) population anvil: (1, 1) -> (1, 1) (spawners, initial bodies)
+ zone(0,0) population cairn_stone: (7, 7) -> (7, 7) (spawners, initial bodies)
+ zone(0,0) population cinder_imp: (2, 4) -> (2, 4) (spawners, initial bodies)
+ zone(0,0) population gnasher_whelp: (2, 8) -> (2, 8) (spawners, initial bodies)
+ zone(0,0) population goblin_scavenger: (2, 6) -> (2, 6) (spawners, initial bodies)
+ zone(0,0) population grove_stag: (6, 11) -> (6, 11) (spawners, initial bodies)
+ zone(0,0) population hedgehog: (2, 3) -> (2, 3) (spawners, initial bodies)
+ zone(0,0) population hob: (78, 235) -> (78, 235) (spawners, initial bodies)
+ zone(0,0) population loom: (1, 1) -> (1, 1) (spawners, initial bodies)
+ zone(0,0) population passive_font: (1, 1) -> (1, 1) (spawners, initial bodies)
+ zone(0,0) population quartermaster: (2, 2) -> (2, 2) (spawners, initial bodies)
+ zone(0,0) population remnant_shade: (1, 4) -> (1, 4) (spawners, initial bodies)
+ zone(0,0) population shrine_stone: (1, 1) -> (1, 1) (spawners, initial bodies)
+ zone(0,0) population spindlewatch_guard: (4, 4) -> (4, 4) (spawners, initial bodies)
+ zone(0,0) population stash_chest: (1, 1) -> (1, 1) (spawners, initial bodies)
+ zone(0,0) population tangle: (1, 1) -> (1, 1) (spawners, initial bodies)
+ zone(0,0) population villager: (3, 3) -> (3, 3) (spawners, initial bodies)
+ zone(0,0) quest gen.poi.0_0.hamlet.128.128.clear_knot.0 level=1: poi.0_0.knot.200.60;cinder_imp
+ zone(0,0) quest gen.poi.0_0.hamlet.128.128.gather_floss.1 level=1: thread_floss
+ zone(0,0) quest gen.poi.0_0.hamlet.128.128.cull_beasts.2 level=1: wolverine
+ zone(0,0) quest gen.poi.0_0.hamlet.128.128.scout_ruin.3 level=1: poi.0_1.orc_chaincamp.125.310
+ zone(1,0) neighbor added: zone(2,1):ruin:535.5:288.5:ruin_walls:the Sunken Lantern:L2
+ zone(1,0) population gnasher_whelp: (2, 8) -> (2, 8) (spawners, initial bodies)
+ zone(1,0) population goblin_sapper: (1, 1) -> (1, 1) (spawners, initial bodies)
+ zone(1,0) population goblin_scavenger: (4, 9) -> (4, 9) (spawners, initial bodies)
+ zone(1,0) population grove_stag: (25, 56) -> (25, 56) (spawners, initial bodies)
+ zone(1,0) population hedgehog: (1, 1) -> (1, 1) (spawners, initial bodies)
+ zone(1,0) population hob: (84, 259) -> (84, 259) (spawners, initial bodies)
+ zone(1,0) population oak: (10, 10) -> (10, 10) (spawners, initial bodies)
+ zone(1,0) population ruin_chest: (3, 3) -> (3, 3) (spawners, initial bodies)
+ zone(1,0) population shrine_stone: (1, 1) -> (1, 1) (spawners, initial bodies)
+ zone(1,0) population skeleton_archer: (2, 3) -> (2, 3) (spawners, initial bodies)
+ zone(1,0) population skeleton_warrior: (4, 10) -> (4, 10) (spawners, initial bodies)
+ zone(0,-1) neighbor removed: zone(-1,0):kiln:-218.5:235.5:kiln_ring:Emberseat:L8
+ zone(0,-1) neighbor removed: zone(-1,0):scrap_fort:-42.5:229.5:ruin_walls:Scrap Fort:L11
+ zone(0,-1) neighbor removed: zone(-1,0):ruin:-46.5:48.5:ruin_walls:the Fallen Hall:L7
+ zone(0,-1) neighbor added: zone(-1,0):ruin:-218.5:235.5:ruin_walls:the Last Stitch:L7
+ zone(0,-1) neighbor added: zone(-1,0):ruin:-42.5:229.5:barrow:the Sunken Lantern:L7
+ zone(0,-1) neighbor added: zone(-1,0):kiln:-56.5:100.5:kiln_ring:the Cinderstair:L8
+ zone(0,-1) population cairn_stone: (21, 21) -> (21, 21) (spawners, initial bodies)
+ zone(0,-1) population cinder_imp: (6, 15) -> (6, 15) (spawners, initial bodies)
+ zone(0,-1) population grove_stag: (1, 2) -> (1, 2) (spawners, initial bodies)
+ zone(0,-1) population hob: (76, 222) -> (76, 222) (spawners, initial bodies)
+ zone(0,-1) population loosed_kindler: (18, 25) -> (18, 25) (spawners, initial bodies)
+ zone(0,-1) population remnant_shade: (3, 10) -> (3, 10) (spawners, initial bodies)
+ zone(0,-1) population tangle: (3, 3) -> (3, 3) (spawners, initial bodies)
+ zone(0,-1) population wolf: (41, 103) -> (41, 103) (spawners, initial bodies)
+ zone(0,-1) population wolverine: (2, 2) -> (2, 2) (spawners, initial bodies)
+ zone(3,2) neighbor removed: zone(4,2):grove:1126.5:602.5:grove_ring:the Hush Grove:L1
+ zone(3,2) neighbor removed: zone(4,2):ruin:1233.5:580.5:barrow:the Last Stitch:L2
+ zone(3,2) neighbor added: zone(2,1):ruin:535.5:288.5:ruin_walls:the Sunken Lantern:L2
+ zone(3,2) neighbor added: zone(3,1):shrine:823.5:460.5:shrine_ring:the Stitch Shrine:L1
+ zone(3,2) neighbor added: zone(4,2):grave_court:1126.5:602.5:ruin_walls:the Last Lesson:L5
+ zone(3,2) population barrow_wight: (2, 3) -> (2, 3) (spawners, initial bodies)
+ zone(3,2) population cairn_stone: (7, 7) -> (7, 7) (spawners, initial bodies)
+ zone(3,2) population cinder_imp: (2, 5) -> (2, 5) (spawners, initial bodies)
+ zone(3,2) population gnasher_whelp: (9, 47) -> (9, 47) (spawners, initial bodies)
+ zone(3,2) population goblin_scavenger: (4, 10) -> (4, 10) (spawners, initial bodies)
+ zone(3,2) population grove_stag: (30, 60) -> (30, 60) (spawners, initial bodies)
+ zone(3,2) population hob: (86, 251) -> (86, 251) (spawners, initial bodies)
+ zone(3,2) population remnant_shade: (2, 5) -> (2, 5) (spawners, initial bodies)
+ zone(3,2) population ruin_chest: (1, 1) -> (1, 1) (spawners, initial bodies)
+ zone(3,2) population shrine_stone: (2, 2) -> (2, 2) (spawners, initial bodies)
+ zone(3,2) population tangle: (1, 1) -> (1, 1) (spawners, initial bodies)
+
+
+
+Test Run Successful.
+Total tests: 1
+     Passed: 1
+ Total time: 5.9964 Seconds

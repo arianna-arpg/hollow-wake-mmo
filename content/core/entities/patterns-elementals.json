@@ -7,7 +7,7 @@
       "extends": "creature",
       "faction": "unbound_elements",
       "tags": [
-        "elemental",
+        "kind.elemental",
         "monster",
         "no_corpse",
         "summonable"
@@ -30,11 +30,11 @@
       "extends": "elemental_body",
       "faction": "unbound_elements",
       "tags": [
-        "elemental",
+        "kind.elemental",
         "monster",
         "summonable",
         "no_corpse",
-        "thread.ember",
+        "ember",
         "body.ember_coal",
         "family.flame",
         "locomotion.ground",
@@ -98,22 +98,7 @@
           "id": "cinderling",
           "look": "cinderling"
         },
-        "adaptation": "Coal mound with stub feet and low flame tongues; no lava immunity or fire-spawn hooks.",
-        "ai_handoff": {
-          "current": "aggressive_melee",
-          "status": "provisional content scaffolding",
-          "deferred": [
-            "element-aware tactical decisions",
-            "bounded sensory memory",
-            "group action coordination"
-          ],
-          "constraints": [
-            "ground movement",
-            "ordinary collision",
-            "no material-granted immunity",
-            "no phasing"
-          ]
-        }
+        "adaptation": "Coal mound with stub feet and low flame tongues; no lava immunity or fire-spawn hooks."
       }
     },
     {
@@ -122,11 +107,11 @@
       "extends": "elemental_body",
       "faction": "unbound_elements",
       "tags": [
-        "elemental",
+        "kind.elemental",
         "monster",
         "summonable",
         "no_corpse",
-        "thread.ember",
+        "ember",
         "body.ethereal",
         "family.flame",
         "locomotion.ground",
@@ -190,22 +175,7 @@
           "id": "emberwisp",
           "look": "emberwisp"
         },
-        "adaptation": "Teardrop coal core and streaming tongues; all movement stays ground-bound.",
-        "ai_handoff": {
-          "current": "aggressive_ranged",
-          "status": "provisional content scaffolding",
-          "deferred": [
-            "element-aware tactical decisions",
-            "bounded sensory memory",
-            "group action coordination"
-          ],
-          "constraints": [
-            "ground movement",
-            "ordinary collision",
-            "no material-granted immunity",
-            "no phasing"
-          ]
-        }
+        "adaptation": "Teardrop coal core and streaming tongues; all movement stays ground-bound."
       }
     },
     {
@@ -214,11 +184,11 @@
       "extends": "elemental_body",
       "faction": "unbound_elements",
       "tags": [
-        "elemental",
+        "kind.elemental",
         "monster",
         "summonable",
         "no_corpse",
-        "thread.ember",
+        "ember",
         "body.ethereal",
         "family.flame",
         "locomotion.ground",
@@ -283,22 +253,7 @@
           "id": "ember_elemental",
           "look": "flame_elemental"
         },
-        "adaptation": "Forked rising fire crown replaces the flat flame disc; no cinder swarm.",
-        "ai_handoff": {
-          "current": "aggressive_ranged",
-          "status": "provisional content scaffolding",
-          "deferred": [
-            "element-aware tactical decisions",
-            "bounded sensory memory",
-            "group action coordination"
-          ],
-          "constraints": [
-            "ground movement",
-            "ordinary collision",
-            "no material-granted immunity",
-            "no phasing"
-          ]
-        }
+        "adaptation": "Forked rising fire crown replaces the flat flame disc; no cinder swarm."
       }
     },
     {
@@ -307,11 +262,11 @@
       "extends": "elemental_body",
       "faction": "unbound_elements",
       "tags": [
-        "elemental",
+        "kind.elemental",
         "monster",
         "summonable",
         "no_corpse",
-        "thread.tide",
+        "tide",
         "body.water",
         "family.surge",
         "locomotion.ground",
@@ -370,22 +325,7 @@
       },
       "meta": {
         "prototype": null,
-        "adaptation": "Curled wave with a hollow crest, splash fins and basal pool; new lore-derived adaptation, no swimming.",
-        "ai_handoff": {
-          "current": "aggressive_ranged",
-          "status": "provisional content scaffolding",
-          "deferred": [
-            "element-aware tactical decisions",
-            "bounded sensory memory",
-            "group action coordination"
-          ],
-          "constraints": [
-            "ground movement",
-            "ordinary collision",
-            "no material-granted immunity",
-            "no phasing"
-          ]
-        }
+        "adaptation": "Curled wave with a hollow crest, splash fins and basal pool; new lore-derived adaptation, no swimming."
       }
     },
     {
@@ -394,11 +334,11 @@
       "extends": "elemental_body",
       "faction": "unbound_elements",
       "tags": [
-        "elemental",
+        "kind.elemental",
         "monster",
         "summonable",
         "no_corpse",
-        "thread.tide",
+        "tide",
         "body.ice",
         "family.shard",
         "locomotion.ground",
@@ -457,22 +397,7 @@
       },
       "meta": {
         "prototype": null,
-        "adaptation": "Low radial ice bloom with a central spear; new Tide adaptation.",
-        "ai_handoff": {
-          "current": "aggressive_ranged",
-          "status": "provisional content scaffolding",
-          "deferred": [
-            "element-aware tactical decisions",
-            "bounded sensory memory",
-            "group action coordination"
-          ],
-          "constraints": [
-            "ground movement",
-            "ordinary collision",
-            "no material-granted immunity",
-            "no phasing"
-          ]
-        }
+        "adaptation": "Low radial ice bloom with a central spear; new Tide adaptation."
       }
     },
     {
@@ -481,11 +406,11 @@
       "extends": "elemental_body",
       "faction": "unbound_elements",
       "tags": [
-        "elemental",
+        "kind.elemental",
         "monster",
         "summonable",
         "no_corpse",
-        "thread.tide",
+        "tide",
         "body.ice",
         "family.shard",
         "locomotion.ground",
@@ -550,22 +475,7 @@
           "id": "frost_elemental",
           "look": "frost_elemental"
         },
-        "adaptation": "Tall splinter fan with downward icicles; Tide replaces prototype cold vocabulary.",
-        "ai_handoff": {
-          "current": "aggressive_ranged",
-          "status": "provisional content scaffolding",
-          "deferred": [
-            "element-aware tactical decisions",
-            "bounded sensory memory",
-            "group action coordination"
-          ],
-          "constraints": [
-            "ground movement",
-            "ordinary collision",
-            "no material-granted immunity",
-            "no phasing"
-          ]
-        }
+        "adaptation": "Tall splinter fan with downward icicles; Tide replaces prototype cold vocabulary."
       }
     },
     {
@@ -574,11 +484,11 @@
       "extends": "elemental_body",
       "faction": "unbound_elements",
       "tags": [
-        "elemental",
+        "kind.elemental",
         "monster",
         "summonable",
         "no_corpse",
-        "thread.storm",
+        "storm",
         "body.ethereal",
         "family.vortex",
         "locomotion.ground",
@@ -641,22 +551,7 @@
           "id": "gale_elemental",
           "look": "gale_elemental"
         },
-        "adaptation": "Open widening spiral and trailing air ribbons; no flanking, stun scheduling or flight.",
-        "ai_handoff": {
-          "current": "aggressive_melee",
-          "status": "provisional content scaffolding",
-          "deferred": [
-            "element-aware tactical decisions",
-            "bounded sensory memory",
-            "group action coordination"
-          ],
-          "constraints": [
-            "ground movement",
-            "ordinary collision",
-            "no material-granted immunity",
-            "no phasing"
-          ]
-        }
+        "adaptation": "Open widening spiral and trailing air ribbons; no flanking, stun scheduling or flight."
       }
     },
     {
@@ -665,11 +560,11 @@
       "extends": "elemental_body",
       "faction": "unbound_elements",
       "tags": [
-        "elemental",
+        "kind.elemental",
         "monster",
         "summonable",
         "no_corpse",
-        "thread.storm",
+        "storm",
         "body.ethereal",
         "family.vortex",
         "locomotion.ground",
@@ -728,22 +623,7 @@
       },
       "meta": {
         "prototype": null,
-        "adaptation": "Wide stacked storm loops and forked discharge spines; new Storm adaptation.",
-        "ai_handoff": {
-          "current": "aggressive_ranged",
-          "status": "provisional content scaffolding",
-          "deferred": [
-            "element-aware tactical decisions",
-            "bounded sensory memory",
-            "group action coordination"
-          ],
-          "constraints": [
-            "ground movement",
-            "ordinary collision",
-            "no material-granted immunity",
-            "no phasing"
-          ]
-        }
+        "adaptation": "Wide stacked storm loops and forked discharge spines; new Storm adaptation."
       }
     },
     {
@@ -752,11 +632,11 @@
       "extends": "elemental_body",
       "faction": "unbound_elements",
       "tags": [
-        "elemental",
+        "kind.elemental",
         "monster",
         "summonable",
         "no_corpse",
-        "thread.stone",
+        "stone",
         "body.silt",
         "family.mound",
         "locomotion.ground",
@@ -813,22 +693,7 @@
       },
       "meta": {
         "prototype": null,
-        "adaptation": "Loose earth slug with overlapping sediment lobes; unassembled mineral body, no split or trample.",
-        "ai_handoff": {
-          "current": "aggressive_melee",
-          "status": "provisional content scaffolding",
-          "deferred": [
-            "element-aware tactical decisions",
-            "bounded sensory memory",
-            "group action coordination"
-          ],
-          "constraints": [
-            "ground movement",
-            "ordinary collision",
-            "no material-granted immunity",
-            "no phasing"
-          ]
-        }
+        "adaptation": "Loose earth slug with overlapping sediment lobes; unassembled mineral body, no split or trample."
       }
     },
     {
@@ -837,11 +702,11 @@
       "extends": "elemental_body",
       "faction": "unbound_elements",
       "tags": [
-        "elemental",
+        "kind.elemental",
         "monster",
         "summonable",
         "no_corpse",
-        "thread.stone",
+        "stone",
         "body.crystal",
         "family.mound",
         "locomotion.ground",
@@ -903,22 +768,7 @@
           "id": "geode_shellback",
           "look": "geode_shellback"
         },
-        "adaptation": "Low hollow geode with faceted rim and live core; armor and poise, no prototype energy shield shell cycle.",
-        "ai_handoff": {
-          "current": "aggressive_melee",
-          "status": "provisional content scaffolding",
-          "deferred": [
-            "element-aware tactical decisions",
-            "bounded sensory memory",
-            "group action coordination"
-          ],
-          "constraints": [
-            "ground movement",
-            "ordinary collision",
-            "no material-granted immunity",
-            "no phasing"
-          ]
-        }
+        "adaptation": "Low hollow geode with faceted rim and live core; armor and poise, no prototype energy shield shell cycle."
       }
     },
     {
@@ -927,11 +777,11 @@
       "extends": "elemental_body",
       "faction": "unbound_elements",
       "tags": [
-        "elemental",
+        "kind.elemental",
         "monster",
         "summonable",
         "no_corpse",
-        "thread.bloom",
+        "bloom",
         "body.ethereal",
         "family.veil",
         "locomotion.ground",
@@ -990,22 +840,7 @@
       },
       "meta": {
         "prototype": null,
-        "adaptation": "Bell-shaped spore mantle and dangling roots; new Bloom adaptation, no healing aura or poison immunity.",
-        "ai_handoff": {
-          "current": "aggressive_ranged",
-          "status": "provisional content scaffolding",
-          "deferred": [
-            "element-aware tactical decisions",
-            "bounded sensory memory",
-            "group action coordination"
-          ],
-          "constraints": [
-            "ground movement",
-            "ordinary collision",
-            "no material-granted immunity",
-            "no phasing"
-          ]
-        }
+        "adaptation": "Bell-shaped spore mantle and dangling roots; new Bloom adaptation, no healing aura or poison immunity."
       }
     },
     {
@@ -1014,11 +849,11 @@
       "extends": "elemental_body",
       "faction": "unbound_elements",
       "tags": [
-        "elemental",
+        "kind.elemental",
         "monster",
         "summonable",
         "no_corpse",
-        "thread.umbra",
+        "umbra",
         "body.ethereal",
         "family.veil",
         "locomotion.ground",
@@ -1077,22 +912,7 @@
       },
       "meta": {
         "prototype": null,
-        "adaptation": "Open shroud of shadow ribbons, no flesh or undead classification; no phasing.",
-        "ai_handoff": {
-          "current": "aggressive_ranged",
-          "status": "provisional content scaffolding",
-          "deferred": [
-            "element-aware tactical decisions",
-            "bounded sensory memory",
-            "group action coordination"
-          ],
-          "constraints": [
-            "ground movement",
-            "ordinary collision",
-            "no material-granted immunity",
-            "no phasing"
-          ]
-        }
+        "adaptation": "Open shroud of shadow ribbons, no flesh or undead classification; no phasing."
       }
     },
     {
@@ -1101,11 +921,11 @@
       "extends": "elemental_body",
       "faction": "unbound_elements",
       "tags": [
-        "elemental",
+        "kind.elemental",
         "monster",
         "summonable",
         "no_corpse",
-        "thread.lumen",
+        "lumen",
         "body.ethereal",
         "family.prism",
         "locomotion.ground",
@@ -1168,22 +988,7 @@
           "id": "lumen_wisp",
           "look": "gale_elemental"
         },
-        "adaptation": "Axial light spindle and horizontal ray spokes. Existing Lumen Presence replaces the prototype lightning spark with a close-range aura; no shield shred.",
-        "ai_handoff": {
-          "current": "aggressive_melee",
-          "status": "provisional content scaffolding",
-          "deferred": [
-            "element-aware tactical decisions",
-            "bounded sensory memory",
-            "group action coordination"
-          ],
-          "constraints": [
-            "ground movement",
-            "ordinary collision",
-            "no material-granted immunity",
-            "no phasing"
-          ]
-        }
+        "adaptation": "Axial light spindle and horizontal ray spokes. Existing Lumen Presence replaces the prototype lightning spark with a close-range aura; no shield shred."
       }
     },
     {
@@ -1192,11 +997,11 @@
       "extends": "elemental_body",
       "faction": "unbound_elements",
       "tags": [
-        "elemental",
+        "kind.elemental",
         "monster",
         "summonable",
         "no_corpse",
-        "thread.mind",
+        "mind",
         "body.crystal",
         "family.prism",
         "locomotion.ground",
@@ -1254,22 +1059,7 @@
       },
       "meta": {
         "prototype": null,
-        "adaptation": "Folded diamond cage around a small thought kernel; new Mind adaptation, no mind-control or prediction.",
-        "ai_handoff": {
-          "current": "aggressive_ranged",
-          "status": "provisional content scaffolding",
-          "deferred": [
-            "element-aware tactical decisions",
-            "bounded sensory memory",
-            "group action coordination"
-          ],
-          "constraints": [
-            "ground movement",
-            "ordinary collision",
-            "no material-granted immunity",
-            "no phasing"
-          ]
-        }
+        "adaptation": "Folded diamond cage around a small thought kernel; new Mind adaptation, no mind-control or prediction."
       }
     },
     {
@@ -1278,11 +1068,11 @@
       "extends": "elemental_body",
       "faction": "unbound_elements",
       "tags": [
-        "elemental",
+        "kind.elemental",
         "monster",
         "summonable",
         "no_corpse",
-        "thread.void",
+        "void",
         "body.ethereal",
         "family.vortex",
         "locomotion.ground",
@@ -1341,22 +1131,7 @@
       },
       "meta": {
         "prototype": null,
-        "adaptation": "Broken loop fragments and an empty center, no portal, teleport or immunity.",
-        "ai_handoff": {
-          "current": "aggressive_ranged",
-          "status": "provisional content scaffolding",
-          "deferred": [
-            "element-aware tactical decisions",
-            "bounded sensory memory",
-            "group action coordination"
-          ],
-          "constraints": [
-            "ground movement",
-            "ordinary collision",
-            "no material-granted immunity",
-            "no phasing"
-          ]
-        }
+        "adaptation": "Broken loop fragments and an empty center, no portal, teleport or immunity."
       }
     },
     {
@@ -1365,11 +1140,11 @@
       "extends": "elemental_body",
       "faction": "unbound_elements",
       "tags": [
-        "elemental",
+        "kind.elemental",
         "monster",
         "summonable",
         "no_corpse",
-        "thread.mind",
+        "mind",
         "body.crystal",
         "family.prism",
         "locomotion.ground",
@@ -1378,9 +1153,9 @@
         "habitat.unbound_refraction",
         "habitat.heath",
         "habitat.hollowed",
-        "thread.ember",
-        "thread.tide",
-        "thread.storm",
+        "ember",
+        "tide",
+        "storm",
         "role.champion"
       ],
       "level": 16,
@@ -1438,22 +1213,7 @@
           "id": "triune_elemental",
           "look": "triune_elemental"
         },
-        "adaptation": "Three separately posed cores inside a prism. Existing bolts substitute for shatterchord; no reactive attunement or encounter phases.",
-        "ai_handoff": {
-          "current": "aggressive_ranged",
-          "status": "provisional content scaffolding",
-          "deferred": [
-            "element-aware tactical decisions",
-            "bounded sensory memory",
-            "group action coordination"
-          ],
-          "constraints": [
-            "ground movement",
-            "ordinary collision",
-            "no material-granted immunity",
-            "no phasing"
-          ]
-        }
+        "adaptation": "Three separately posed cores inside a prism. Existing bolts substitute for shatterchord; no reactive attunement or encounter phases."
       }
     }
   ]

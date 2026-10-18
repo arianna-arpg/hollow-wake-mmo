@@ -4,10 +4,23 @@
     {
       "id": "elemental_body",
       "body": "elemental_prism",
-      "shape": { "breadth": 0.6, "depth": 0.5 },
-      "features": ["lattice"],
-      "palette": { "body": "#675578", "edge": "#b18ebc", "core": "#eee0f3" },
-      "variation": { "hue": 0, "value": 0, "scale": 0 }
+      "shape": {
+        "breadth": 0.6,
+        "depth": 0.5
+      },
+      "features": [
+        "lattice"
+      ],
+      "palette": {
+        "body": "#675578",
+        "edge": "#b18ebc",
+        "core": "#eee0f3"
+      },
+      "variation": {
+        "hue": 0,
+        "value": 0,
+        "scale": 0
+      }
     },
     {
       "id": "cinderling",
@@ -305,9 +318,7 @@
         "edge": "#766785",
         "core": "#bdb4d0"
       },
-      "features": [
-        "torn"
-      ],
+      "features": [],
       "variation": {
         "hue": 0,
         "value": 0.02,
@@ -408,9 +419,9 @@
         "body": "#675578",
         "edge": "#b18ebc",
         "core": "#eee0f3",
-        "ember": "#efb06d",
-        "tide": "#b5e4e4",
-        "storm": "#b6a1d6"
+        "core_left": "#efb06d",
+        "core_center": "#b5e4e4",
+        "core_right": "#b6a1d6"
       },
       "features": [
         "triune"

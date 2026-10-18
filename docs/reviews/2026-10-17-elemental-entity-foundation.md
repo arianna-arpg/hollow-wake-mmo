@@ -1,5 +1,7 @@
 # Elemental entity foundation
 
+Historical evidence for `b29e67c`. Claude subsequently identified projectile contact, displacement, faction and site defects; see [the correction record](2026-10-18-elemental-review-fixes.md). The direct damage test below establishes mitigation only, and the old green gates did not establish projectile coverage or nonempty natural sites.
+
 2026-10-17. Codex claim and integration handoff. Branch `codex/elemental-entity-foundation`, based on fauna PR #34 at `90cb7fcb5eec97a6ad438c10f7b564f1dfa88790`.
 
 ## Scope and overlap declared before edits

@@ -4,7 +4,7 @@
 
 ## Implemented boundary
 
-The Unbound Elements are a native faction hostile to players, allied internally and otherwise neutral except for hostile relations to tangled and remnant bodies. This is attack permission, not sensory knowledge, temperament or a food web. The prototype describes some elementals as slow to anger; these current aggressive bindings do not implement that temperament. There is no change to AI, collision, networking, elemental interaction or displacement runtime.
+The Unbound Elements are a native faction hostile to players, the Loosed, tangled and remnant bodies, allied internally and otherwise neutral. Reciprocal stance tests cover every known faction. This is attack permission, not sensory knowledge, temperament or a food web. The prototype describes some elementals as slow to anger; these current aggressive bindings do not implement that temperament. This pass introduces no AI, collision, networking, elemental interaction or displacement runtime; shared runtime corrections belong to the foundation and hitbox PRs.
 
 All combat uses shipped presets through the normal weave compiler, AI feasibility checks and authoritative effects. Ember uses existing Ember strikes, bolts and blasts; Tide uses Brine Bolt, Tide Bolt and Ice Spear; Storm uses Storm Bolt and Storm Nova; Stone bodies use Claw or Warden Slam. Bloom uses Venom Spit, Umbra uses Shade Bolt and Umbra Field, Lumen uses Lumen Presence, Mind uses Mind Lash, and Void uses Void Lash and Unmaking Pulse. Triune casts separate Ember, Tide and Storm bolts. These are actual capabilities, not a promise of the source kits. Lumen Presence is an existing toggled aura with damage and its existing domain modifier, not a projectile or shield-shred attack.
 
@@ -29,7 +29,7 @@ No assembled golems or legacy `stone_warden` are changed. Geode Shellback is the
 | Void Ravel | Void Lash / Unmaking Pulse; broken loops and ordinary collision | teleportation, portals, unmaking world geometry, invulnerability |
 | Triune Elemental | independent existing bolts of three Threads | shatterchord, reactive attunement, damage conversion after being struck, sovereign phases |
 
-Affinity tags and palette are separate from attack Threads. Explicit non-Stone affinity resistance is 0.35; Ember and Tide bodies also carry -0.15 vulnerability to the opposing Thread. These are ordinary attributes in the existing modifier and damage pipeline, not density-derived defenses or immunities. Stone is armor-mitigated, not granted a new resistance channel. No material adds status or terrain immunity. Tests exercise positive damage through every Thread on every body.
+Bare Thread affinity tags and palette are separate from attack Threads. `kind.elemental` is the creature classifier; it does not overlap the `elemental` damage category. Explicit non-Stone affinity resistance is 0.35; Ember and Tide bodies also carry -0.15 vulnerability to the opposing Thread. These are ordinary attributes in the existing modifier and damage pipeline, not density-derived defenses or immunities. Stone is armor-mitigated, not granted a new resistance channel. No material adds status or terrain immunity. Direct damage-effect tests establish positive mitigated damage from every Thread on every body; separate real-flight tests are required to establish projectile contact on flat ground and relief.
 
 ## Physical and tactical questions for the next reviewed AI pass
 
@@ -38,7 +38,7 @@ Affinity tags and palette are separate from attack Threads. Explicit non-Stone a
 - The current ranged state machine uses its longest skill range and flees inside 2.5 m. It cannot deliberately close for a nova, hold a choke, predict a moving target or time ally support. Individual skills and whole kits must keep passing actual AI-hit and sustained-resource tests during migration.
 - Lumen Presence needs tactical aura positioning and domain value assessment without introducing a second modifier engine. Triune needs action-value comparison using each compiled Thread's real mitigation, costs and travel time, not a custom damage estimate.
 - Reactive attunement requires a validated content/state contract, event timing, duration and precedence before a body can acquire it. Resistances and visuals must agree through published state; a color change alone is never proof of a mechanic.
-- Flight, swimming and phasing each require a separate movement/targeting contract and truthful protocol representation. Do not promote author intent from `meta.ai_handoff` into simulation configuration.
+- Flight, swimming and phasing each require a separate movement/targeting contract and truthful protocol representation. Deferred author intent belongs in this ledger; it is not simulation configuration or repeated browser-bound metadata.
 
 ## Proposed acceptance scenarios
 

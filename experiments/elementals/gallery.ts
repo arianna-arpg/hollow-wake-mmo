@@ -1,4 +1,4 @@
-import { Scene, WebGLRenderer, OrthographicCamera, Color, Mesh, CircleGeometry, MeshBasicMaterial, SRGBColorSpace } from 'three';
+import { Scene, WebGLRenderer, OrthographicCamera, Color, Mesh, CircleGeometry, MeshBasicMaterial, SRGBColorSpace, Box3 } from 'three';
 import { bundledKinds } from '../../web/src/ui/logic/content';
 import { AppearanceCatalog } from '../../web/src/world/appearance/looks';
 import { buildBody } from '../../web/src/world/appearance/bodyFamilies';
@@ -58,8 +58,10 @@ const refBodies = referenceIds.map((id,i) => {
   const def=catalog.byIdOf(id)!;
   const p=buildBody(def,17,e?.height ?? 1.8,e?.radius ?? .4);
   for(const [slot,item] of catalog.defaultGear(def,id)) { const gear=catalog.gearFor(slot,item.itemClass,item.tags); if(gear)wear(p,gear,slot,17); }
-  const b=new BodyMesh(p);b.root.position.set(-9.9+(i%10)*2.2,0,0);b.root.rotation.y=-Math.PI/2;lineups[Math.floor(i/10)].add(b.root);
-  return {id,authoritativeHeight:e?.height ?? 1.8,modelHeight:p.height};
+  const b=new BodyMesh(p);const bounds=new Box3().setFromObject(b.root);
+  b.root.position.set(-9.9+(i%10)*2.2,0,0);b.root.rotation.y=-Math.PI/2;lineups[Math.floor(i/10)].add(b.root);
+  return {id,authoritativeHeight:e?.height ?? 1.8,modelHeight:p.height,
+    restGeometryMin:bounds.min.toArray(),restGeometryMax:bounds.max.toArray()};
 });
 (window as unknown as {elementalScale:unknown}).elementalScale=refBodies;
 const lineCamera = new OrthographicCamera(-11,11,2.6,-2.6,.01,100);
@@ -67,11 +69,12 @@ lineCamera.position.set(0,3.2,30);lineCamera.lookAt(0,1.35,0);
 renderer.setSize(1400,331);
 for(let i=0;i<2;i++){const canvas=document.querySelector<HTMLCanvasElement>(i===0?'#lineup':'#lineup2')!;renderer.render(lineups[i],lineCamera);canvas.width=2100;canvas.height=497;canvas.getContext('2d')!.drawImage(renderer.domElement,0,0,2100,497);}
 renderer.setSize(360,220);
-let third = false, walk = false;
+let third = false, walk = false, casting = false;
+const castButton=document.createElement('button');castButton.id='cast';castButton.textContent='Cast pose';castButton.setAttribute('aria-pressed','false');document.querySelector('nav')!.append(castButton);
 function draw() {
   const report = [];
   for (const { e, plan, body, scene, canvas, index } of records) {
-    const state = {...freshVisualState(), rig:plan.rig, height:plan.height, hover:plan.hover, swings:plan.swings, key:index+17, reducedMotion:true, time:1, speed:walk?3:0, walkPhase:.8};
+    const state = {...freshVisualState(), rig:plan.rig, height:plan.height, hover:plan.hover, swings:plan.swings, key:index+17, reducedMotion:true, time:1, speed:walk?3:0, walkPhase:.8, casting, castMode:'cast', castProgress:.85};
     const pose = new Pose(); animate(state,catalog.motion,pose); body.apply(pose,0);
     const viewHeight = Math.max(.48, plan.height * 1.65, e.components.physical!.depth * .90);
     const aspect = 360/220;
@@ -88,4 +91,5 @@ document.querySelector('#iso')!.addEventListener('click',()=>{third=false;docume
 document.querySelector('#third')!.addEventListener('click',()=>{third=true;document.querySelector('#iso')!.setAttribute('aria-pressed','false');document.querySelector('#third')!.setAttribute('aria-pressed','true');draw();});
 document.querySelector('#mono')!.addEventListener('click',()=>{const on=document.body.classList.toggle('mono');document.querySelector('#mono')!.setAttribute('aria-pressed',String(on));});
 document.querySelector('#walk')!.addEventListener('click',()=>{walk=!walk;document.querySelector('#walk')!.setAttribute('aria-pressed',String(walk));draw();});
+castButton.addEventListener('click',()=>{casting=!casting;castButton.setAttribute('aria-pressed',String(casting));draw();});
 draw();

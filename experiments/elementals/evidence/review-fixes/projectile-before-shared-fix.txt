@@ -1,0 +1,158 @@
+  Determining projects to restore...
+  All projects are up-to-date for restore.
+  HollowWake.Core -> <worktree>\src\HollowWake.Core\bin\Debug\net8.0\HollowWake.Core.dll
+<worktree>\tests\HollowWake.Core.Tests\PortedProjectileTests.cs(254,19): warning xUnit2031: Do not use a Where clause to filter before calling Assert.Single. Use the overload of Assert.Single that accepts a filtering function. (https://xunit.net/xunit.analyzers/rules/xUnit2031) [<worktree>\tests\HollowWake.Core.Tests\HollowWake.Core.Tests.csproj]
+<worktree>\tests\HollowWake.Core.Tests\PortedProjectileTests.cs(267,9): warning xUnit2031: Do not use a Where clause to filter before calling Assert.Single. Use the overload of Assert.Single that accepts a filtering function. (https://xunit.net/xunit.analyzers/rules/xUnit2031) [<worktree>\tests\HollowWake.Core.Tests\HollowWake.Core.Tests.csproj]
+<worktree>\tests\HollowWake.Core.Tests\PortedProjectileTests.cs(280,9): warning xUnit2031: Do not use a Where clause to filter before calling Assert.Single. Use the overload of Assert.Single that accepts a filtering function. (https://xunit.net/xunit.analyzers/rules/xUnit2031) [<worktree>\tests\HollowWake.Core.Tests\HollowWake.Core.Tests.csproj]
+  HollowWake.Core.Tests -> <worktree>\tests\HollowWake.Core.Tests\bin\Debug\net10.0\HollowWake.Core.Tests.dll
+Test run for <worktree>\tests\HollowWake.Core.Tests\bin\Debug\net10.0\HollowWake.Core.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v3.1.5+1b188a7b0a (64-bit .NET 10.0.13)
+[xUnit.net 00:00:00.39]   Discovering: HollowWake.Core.Tests
+[xUnit.net 00:00:02.52]   Discovered:  HollowWake.Core.Tests
+[xUnit.net 00:00:02.56]   Starting:    HollowWake.Core.Tests
+[xUnit.net 00:00:02.75]     HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(pattern: "rime_star", relief: -0.5) [FAIL]
+[xUnit.net 00:00:02.75]       rime_star was missed by the real bolt at relief -0.5.
+[xUnit.net 00:00:02.75]       Stack Trace:
+[xUnit.net 00:00:02.75]         <worktree>\tests\HollowWake.Core.Tests\ElementalProjectileTests.cs(46,0): at HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(String pattern, Single relief)
+[xUnit.net 00:00:02.75]            at InvokeStub_ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(Object, Span`1)
+[xUnit.net 00:00:02.75]            at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:02.75]       Output:
+[xUnit.net 00:00:02.75]         rime_star: relief=-0.5, authored height=0.72, flights=1, hits=0
+  Passed HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(pattern: "geode_shellback", relief: 0.5) [106 ms]
+  Passed HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(pattern: "mind_knot", relief: 0) [17 ms]
+  Passed HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(pattern: "bloom_spore", relief: 0.5) [10 ms]
+  Passed HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(pattern: "geode_shellback", relief: 0) [3 ms]
+  Passed HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(pattern: "triune_elemental", relief: -0.5) [3 ms]
+  Passed HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(pattern: "tide_surge", relief: 0) [3 ms]
+  Failed HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(pattern: "rime_star", relief: -0.5) [8 ms]
+  Error Message:
+   rime_star was missed by the real bolt at relief -0.5.
+  Stack Trace:
+     at HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(String pattern, Single relief) in <worktree>\tests\HollowWake.Core.Tests\ElementalProjectileTests.cs:line 46
+   at InvokeStub_ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Standard Output Messages:
+ rime_star: relief=-0.5, authored height=0.72, flights=1, hits=0
+
+
+  Passed HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(pattern: "cinderling", relief: 0.5) [4 ms]
+  Passed HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(pattern: "gale_elemental", relief: 0.5) [3 ms]
+[xUnit.net 00:00:02.77]     HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(pattern: "emberwisp", relief: -0.5) [FAIL]
+[xUnit.net 00:00:02.77]       emberwisp was missed by the real bolt at relief -0.5.
+[xUnit.net 00:00:02.77]       Stack Trace:
+[xUnit.net 00:00:02.77]         <worktree>\tests\HollowWake.Core.Tests\ElementalProjectileTests.cs(46,0): at HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(String pattern, Single relief)
+[xUnit.net 00:00:02.77]            at InvokeStub_ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(Object, Span`1)
+[xUnit.net 00:00:02.77]            at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:02.77]       Output:
+[xUnit.net 00:00:02.77]         emberwisp: relief=-0.5, authored height=0.85, flights=1, hits=0
+[xUnit.net 00:00:02.78]     HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(pattern: "cinderling", relief: 0) [FAIL]
+[xUnit.net 00:00:02.78]       cinderling was missed by the real bolt at relief 0.
+[xUnit.net 00:00:02.78]       Stack Trace:
+[xUnit.net 00:00:02.78]         <worktree>\tests\HollowWake.Core.Tests\ElementalProjectileTests.cs(46,0): at HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(String pattern, Single relief)
+[xUnit.net 00:00:02.78]            at InvokeStub_ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(Object, Span`1)
+[xUnit.net 00:00:02.78]            at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:02.78]       Output:
+[xUnit.net 00:00:02.78]         cinderling: relief=0, authored height=0.42, flights=1, hits=0
+  Passed HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(pattern: "bloom_spore", relief: -0.5) [6 ms]
+  Passed HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(pattern: "tide_surge", relief: 0.5) [5 ms]
+  Failed HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(pattern: "emberwisp", relief: -0.5) [3 ms]
+  Error Message:
+   emberwisp was missed by the real bolt at relief -0.5.
+  Stack Trace:
+     at HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(String pattern, Single relief) in <worktree>\tests\HollowWake.Core.Tests\ElementalProjectileTests.cs:line 46
+   at InvokeStub_ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Standard Output Messages:
+ emberwisp: relief=-0.5, authored height=0.85, flights=1, hits=0
+
+
+  Passed HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(pattern: "umbra_drift", relief: -0.5) [3 ms]
+  Failed HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(pattern: "cinderling", relief: 0) [5 ms]
+  Error Message:
+   cinderling was missed by the real bolt at relief 0.
+  Stack Trace:
+     at HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(String pattern, Single relief) in <worktree>\tests\HollowWake.Core.Tests\ElementalProjectileTests.cs:line 46
+   at InvokeStub_ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Standard Output Messages:
+ cinderling: relief=0, authored height=0.42, flights=1, hits=0
+
+
+  Passed HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(pattern: "frost_elemental", relief: 0) [4 ms]
+  Passed HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(pattern: "void_ravel", relief: 0) [3 ms]
+  Passed HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(pattern: "umbra_drift", relief: 0.5) [3 ms]
+  Passed HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(pattern: "frost_elemental", relief: -0.5) [3 ms]
+  Passed HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(pattern: "silt_crawler", relief: 0) [2 ms]
+  Passed HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(pattern: "rime_star", relief: 0) [4 ms]
+  Passed HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(pattern: "ember_elemental", relief: 0.5) [6 ms]
+  Passed HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(pattern: "mind_knot", relief: -0.5) [3 ms]
+  Passed HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(pattern: "lumen_wisp", relief: 0.5) [2 ms]
+  Passed HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(pattern: "rime_star", relief: 0.5) [3 ms]
+  Passed HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(pattern: "geode_shellback", relief: -0.5) [9 ms]
+  Passed HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(pattern: "mind_knot", relief: 0.5) [3 ms]
+  Passed HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(pattern: "tide_surge", relief: -0.5) [3 ms]
+  Passed HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(pattern: "storm_confluence", relief: -0.5) [2 ms]
+  Passed HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(pattern: "ember_elemental", relief: -0.5) [5 ms]
+  Passed HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(pattern: "bloom_spore", relief: 0) [4 ms]
+  Passed HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(pattern: "emberwisp", relief: 0) [2 ms]
+  Passed HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(pattern: "frost_elemental", relief: 0.5) [3 ms]
+  Passed HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(pattern: "gale_elemental", relief: -0.5) [3 ms]
+  Passed HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(pattern: "gale_elemental", relief: 0) [2 ms]
+  Passed HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(pattern: "silt_crawler", relief: 0.5) [2 ms]
+  Passed HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(pattern: "lumen_wisp", relief: -0.5) [2 ms]
+[xUnit.net 00:00:02.89]     HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(pattern: "cinderling", relief: -0.5) [FAIL]
+[xUnit.net 00:00:02.89]       cinderling was missed by the real bolt at relief -0.5.
+[xUnit.net 00:00:02.89]       Stack Trace:
+[xUnit.net 00:00:02.89]         <worktree>\tests\HollowWake.Core.Tests\ElementalProjectileTests.cs(46,0): at HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(String pattern, Single relief)
+[xUnit.net 00:00:02.89]            at InvokeStub_ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(Object, Span`1)
+[xUnit.net 00:00:02.89]            at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:02.89]       Output:
+[xUnit.net 00:00:02.89]         cinderling: relief=-0.5, authored height=0.42, flights=1, hits=0
+[xUnit.net 00:00:02.89]     HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(pattern: "silt_crawler", relief: -0.5) [FAIL]
+[xUnit.net 00:00:02.89]       silt_crawler was missed by the real bolt at relief -0.5.
+[xUnit.net 00:00:02.89]       Stack Trace:
+[xUnit.net 00:00:02.89]         <worktree>\tests\HollowWake.Core.Tests\ElementalProjectileTests.cs(46,0): at HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(String pattern, Single relief)
+[xUnit.net 00:00:02.89]            at InvokeStub_ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(Object, Span`1)
+[xUnit.net 00:00:02.89]            at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:02.89]       Output:
+[xUnit.net 00:00:02.89]         silt_crawler: relief=-0.5, authored height=0.75, flights=1, hits=0
+  Passed HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(pattern: "triune_elemental", relief: 0.5) [3 ms]
+  Passed HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(pattern: "void_ravel", relief: -0.5) [2 ms]
+  Passed HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(pattern: "lumen_wisp", relief: 0) [3 ms]
+  Passed HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(pattern: "storm_confluence", relief: 0) [3 ms]
+  Passed HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(pattern: "emberwisp", relief: 0.5) [2 ms]
+  Passed HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(pattern: "ember_elemental", relief: 0) [3 ms]
+  Failed HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(pattern: "cinderling", relief: -0.5) [2 ms]
+  Error Message:
+   cinderling was missed by the real bolt at relief -0.5.
+  Stack Trace:
+     at HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(String pattern, Single relief) in <worktree>\tests\HollowWake.Core.Tests\ElementalProjectileTests.cs:line 46
+   at InvokeStub_ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Standard Output Messages:
+ cinderling: relief=-0.5, authored height=0.42, flights=1, hits=0
+
+
+  Passed HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(pattern: "storm_confluence", relief: 0.5) [2 ms]
+  Failed HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(pattern: "silt_crawler", relief: -0.5) [2 ms]
+  Error Message:
+   silt_crawler was missed by the real bolt at relief -0.5.
+  Stack Trace:
+     at HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(String pattern, Single relief) in <worktree>\tests\HollowWake.Core.Tests\ElementalProjectileTests.cs:line 46
+   at InvokeStub_ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Standard Output Messages:
+ silt_crawler: relief=-0.5, authored height=0.75, flights=1, hits=0
+
+
+[xUnit.net 00:00:02.91]   Finished:    HollowWake.Core.Tests
+  Passed HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(pattern: "void_ravel", relief: 0.5) [2 ms]
+  Passed HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(pattern: "umbra_drift", relief: 0) [2 ms]
+  Passed HollowWake.Core.Tests.ElementalProjectileTests.TargetedBoltHitsAuthoredBodyOnFlatGroundAndRelief(pattern: "triune_elemental", relief: 0) [2 ms]
+
+Total tests: 48
+Test Run Failed.
+     Passed: 43
+     Failed: 5
+ Total time: 4.0739 Seconds

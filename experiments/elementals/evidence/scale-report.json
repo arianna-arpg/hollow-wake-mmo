@@ -2,96 +2,286 @@
   {
     "id": "holdfast",
     "authoritativeHeight": 1.8,
-    "modelHeight": 1.7334
+    "modelHeight": 1.7334,
+    "restGeometryMin": [
+      -0.23399999737739563,
+      -0.0008999862670898695,
+      -0.45080998474121103
+    ],
+    "restGeometryMax": [
+      0.3394800126552582,
+      1.7276400384902955,
+      0.3810600035762788
+    ]
   },
   {
     "id": "skeleton_warrior",
     "authoritativeHeight": 1.8,
-    "modelHeight": 1.7128800000000002
+    "modelHeight": 1.7128800000000002,
+    "restGeometryMin": [
+      -0.12600000202655792,
+      0.004500022411346505,
+      -0.28124999928474426
+    ],
+    "restGeometryMax": [
+      0.16200000047683716,
+      1.7128800277709961,
+      0.3330000035762787
+    ]
   },
   {
     "id": "goblin_skirmisher",
     "authoritativeHeight": 0.9,
-    "modelHeight": 0.9319047680409906
+    "modelHeight": 0.9319047680409906,
+    "restGeometryMin": [
+      -0.11761545389890671,
+      -4.6062469394314576e-9,
+      -0.22522759437561035
+    ],
+    "restGeometryMax": [
+      0.20596834202575684,
+      0.8960400153398514,
+      0.22522759437561035
+    ]
   },
   {
     "id": "cinderling",
     "authoritativeHeight": 0.42,
-    "modelHeight": 0.443678389083094
+    "modelHeight": 0.443678389083094,
+    "restGeometryMin": [
+      -0.23375000059604645,
+      0,
+      -0.2303999960422516
+    ],
+    "restGeometryMax": [
+      0.23375000059604645,
+      0.39321965420246124,
+      0.2303999960422516
+    ]
   },
   {
     "id": "emberwisp",
     "authoritativeHeight": 0.85,
-    "modelHeight": 0.85
+    "modelHeight": 0.85,
+    "restGeometryMin": [
+      -0.23776765167713165,
+      0.05524999618530274,
+      -0.21175000160932542
+    ],
+    "restGeometryMax": [
+      0.1915627419948578,
+      0.7958016467094422,
+      0.21175000160932542
+    ]
   },
   {
     "id": "ember_elemental",
     "authoritativeHeight": 1.95,
-    "modelHeight": 1.95
+    "modelHeight": 1.95,
+    "restGeometryMin": [
+      -0.3244737684726715,
+      0.1267499947547912,
+      -0.4494905173778534
+    ],
+    "restGeometryMax": [
+      0.289996862411499,
+      1.8256626152992248,
+      0.4494905173778534
+    ]
   },
   {
     "id": "tide_surge",
     "authoritativeHeight": 1.35,
-    "modelHeight": 1.35
+    "modelHeight": 1.35,
+    "restGeometryMin": [
+      -0.4749999940395355,
+      0,
+      -0.625
+    ],
+    "restGeometryMax": [
+      0.48230552673339844,
+      1.2892499995231628,
+      0.625
+    ]
   },
   {
     "id": "rime_star",
     "authoritativeHeight": 0.72,
-    "modelHeight": 0.72
+    "modelHeight": 0.72,
+    "restGeometryMin": [
+      -0.290800005197525,
+      0.07199999594688417,
+      -0.290800005197525
+    ],
+    "restGeometryMax": [
+      0.290800005197525,
+      0.7164000287294388,
+      0.290800005197525
+    ]
   },
   {
     "id": "frost_elemental",
     "authoritativeHeight": 1.85,
-    "modelHeight": 1.85
+    "modelHeight": 1.85,
+    "restGeometryMin": [
+      -0.5432500243186951,
+      0.17574997663497927,
+      -0.5220528244972229
+    ],
+    "restGeometryMax": [
+      0.46000000834465027,
+      1.8407499618530274,
+      0.5220528244972229
+    ]
   },
   {
     "id": "gale_elemental",
     "authoritativeHeight": 1.55,
-    "modelHeight": 1.55
+    "modelHeight": 1.55,
+    "restGeometryMin": [
+      -0.4069553017616272,
+      0.15112502336502076,
+      -0.4229754239320755
+    ],
+    "restGeometryMax": [
+      0.39262133836746216,
+      1.274875054359436,
+      0.4229754239320755
+    ]
   },
   {
     "id": "storm_confluence",
     "authoritativeHeight": 2.3,
-    "modelHeight": 2.3
+    "modelHeight": 2.3,
+    "restGeometryMin": [
+      -0.5186403393745422,
+      0.2242499923706054,
+      -0.6468848556280136
+    ],
+    "restGeometryMax": [
+      0.5186403393745422,
+      2.21147204875946,
+      0.6468848556280136
+    ]
   },
   {
     "id": "silt_crawler",
     "authoritativeHeight": 0.75,
-    "modelHeight": 0.75
+    "modelHeight": 0.75,
+    "restGeometryMin": [
+      -0.6758254766464233,
+      0.0187500059604645,
+      -0.5236058831214905
+    ],
+    "restGeometryMax": [
+      0.8320000112056732,
+      0.6487500011920929,
+      0.5236058831214905
+    ]
   },
   {
     "id": "geode_shellback",
     "authoritativeHeight": 1.3,
-    "modelHeight": 1.3
+    "modelHeight": 1.3,
+    "restGeometryMin": [
+      -0.823662281036377,
+      0.03249999046325691,
+      -0.7512606382369995
+    ],
+    "restGeometryMax": [
+      1.0140000462532044,
+      1.1960000014305114,
+      0.7512606382369995
+    ]
   },
   {
     "id": "bloom_spore",
     "authoritativeHeight": 1.25,
-    "modelHeight": 1.25
+    "modelHeight": 1.25,
+    "restGeometryMin": [
+      -0.288821816444397,
+      0.06874999403953552,
+      -0.492667555809021
+    ],
+    "restGeometryMax": [
+      0.338856965303421,
+      1.1499999701976775,
+      0.49097195267677307
+    ]
   },
   {
     "id": "umbra_drift",
     "authoritativeHeight": 1.8,
-    "modelHeight": 1.8
+    "modelHeight": 1.8,
+    "restGeometryMin": [
+      -0.26584985852241516,
+      0.2891982769966126,
+      -0.4152276813983917
+    ],
+    "restGeometryMax": [
+      0.29407402873039246,
+      1.6560000143051148,
+      0.4152276813983917
+    ]
   },
   {
     "id": "lumen_wisp",
     "authoritativeHeight": 1.1,
-    "modelHeight": 1.1
+    "modelHeight": 1.1,
+    "restGeometryMin": [
+      -0.30621612071990967,
+      0.27499998044967655,
+      -0.3887999951839447
+    ],
+    "restGeometryMax": [
+      0.30621612071990967,
+      0.8909999696612358,
+      0.3887999951839447
+    ]
   },
   {
     "id": "mind_knot",
     "authoritativeHeight": 1.55,
-    "modelHeight": 1.55
+    "modelHeight": 1.55,
+    "restGeometryMin": [
+      -0.12349999696016312,
+      0.16427201986312867,
+      -0.5863196849822998
+    ],
+    "restGeometryMax": [
+      0.12349999696016312,
+      1.3490717506408691,
+      0.5863196849822998
+    ]
   },
   {
     "id": "void_ravel",
     "authoritativeHeight": 1.9,
-    "modelHeight": 1.9
+    "modelHeight": 1.9,
+    "restGeometryMin": [
+      -0.34196072816848755,
+      0.1852500247955322,
+      -0.42385125398635864
+    ],
+    "restGeometryMax": [
+      0.34196072816848755,
+      1.6970517468452453,
+      0.42385125398635864
+    ]
   },
   {
     "id": "triune_elemental",
     "authoritativeHeight": 2.5,
-    "modelHeight": 2.5
+    "modelHeight": 2.5,
+    "restGeometryMin": [
+      -0.16899999976158142,
+      0.27451133728027344,
+      -0.8526730537414551
+    ],
+    "restGeometryMax": [
+      0.16899999976158142,
+      2.3499998927116392,
+      0.8526730537414551
+    ]
   }
 ]

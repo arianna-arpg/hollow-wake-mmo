@@ -15,6 +15,8 @@ Hierarchical tags provide independent joins:
 | `role.*` | The combat role its current kit can perform |
 | `habitat.*` | Intended environments, checked against authored population references |
 | `size.*` | Authored scale category for content filters; exact dimensions live in the physical profile |
+| `kind.*` | Creature-kind classifiers distinct from damage-category vocabulary; `kind.elemental` covers free-form manifestations |
+| Bare Thread ids | Authored body affinities using the same ids as content scopes; actual attack Threads come from the weave book |
 
 Existing broad tags such as `undead`, `monster`, `summonable`, `beast`, `melee`, `ranged` and `caster` remain available to existing filters. Tags describe what is currently implemented. They do not grant unimplemented immunities, attacks, collision behavior or spawning by themselves. A habitat requires an actual biome spawn-table or point-of-interest inhabitant reference. `no_corpse` uses the existing corpse rule; it does not change movement or grant invulnerability.
 
@@ -54,6 +56,8 @@ Ambient bodies extend a template without drops and carry an empty weave list. De
 
 ## Unbound manifestations
 
-Free-form elemental bodies compose existing combat weaves with an explicit native faction, physical profile and sparse, biome-filtered manifestation site. These populations share the existing ruin budget. Site level offsets and inhabitant minimum levels both apply; biome filters also admit sub-biomes under the existing place contract. An affinity tag does not imply every attack uses that Thread. The actual weave book determines damage, and any resistance or vulnerability is authored explicitly on attributes.
+Free-form elemental bodies compose existing combat weaves with an explicit native faction, physical profile and sparse, biome-filtered manifestation site. `kind.elemental` identifies the creature, while `site.manifestation` identifies its natural place and budget key. Neither reuses the `elemental` damage category. Body affinity tags use bare Thread ids, and do not imply every attack uses that Thread. The actual weave book determines damage, and any resistance or vulnerability is authored explicitly on attributes.
+
+Manifestation sites use the region's level with no upward offset and require eligible residents. They carry no ruin or shrine quest tags. Their small natural terrain stamps contain no extra spawns, chests, services or palisades; the ordinary discoverable, interactable POI marker remains. Their dedicated budget entry still follows the common planner: it multiplies each matching candidate's weight and contributes to the total desired site count, not a reserved or guaranteed manifestation pool. The common spacing rule compares all neighboring sites, not just the same kind. Population and quest consequences must therefore be audited alongside the new sites.
 
 Bound water, ice, sediment and crystal use positive material densities; ethereal bodies retain finite mass, ordinary collision and ground locomotion. Presentation glow, open loops, suspended cores and shrouds grant neither flight nor phasing. The corpseless tag uses the ordinary death rule, while wild reward drops remain available and summons lose them through the existing minion path. Assembled golems are a separate family. The elemental integration ledger records substitutions and deferred attunement, terrain interactions and tactical decisions instead of implying source-prototype parity.

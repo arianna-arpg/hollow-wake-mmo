@@ -20,6 +20,9 @@ try{
  await page.screenshot({path:path.join(out,'elemental-third-person.jpg'),fullPage:true,type:'jpeg',quality:78});
  await page.locator('#mono').click();await page.locator('#walk').click();
  await page.screenshot({path:path.join(out,'elemental-grayscale-walk.jpg'),fullPage:true,type:'jpeg',quality:78});
+ await page.locator('#walk').click();await page.locator('#mono').click();await page.locator('#cast').click();
+ await page.locator('article').filter({has:page.getByRole('heading',{name:'Lumen Wisp',exact:true})}).screenshot({path:path.join(out,'lumen-cast.jpg'),type:'jpeg',quality:85});
+ await page.locator('article').filter({has:page.getByRole('heading',{name:'Mind Knot',exact:true})}).screenshot({path:path.join(out,'mind-cast.jpg'),type:'jpeg',quality:85});
  if(process.argv.includes('--write-fixture')) {
   const plans=await page.evaluate(()=>window.elementalPlans);
   const fixture=path.join(root,'tests/fixtures/elemental-appearance.json');

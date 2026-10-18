@@ -1,13 +1,13 @@
   Determining projects to restore...
   All projects are up-to-date for restore.
-  HollowWake.Core -> C:\Users\John\.codex\worktrees\elemental-entity-foundation\MMOARPG\src\HollowWake.Core\bin\Debug\net8.0\HollowWake.Core.dll
-C:\Users\John\.codex\worktrees\elemental-entity-foundation\MMOARPG\tests\HollowWake.Core.Tests\PortedProjectileTests.cs(254,19): warning xUnit2031: Do not use a Where clause to filter before calling Assert.Single. Use the overload of Assert.Single that accepts a filtering function. (https://xunit.net/xunit.analyzers/rules/xUnit2031) [C:\Users\John\.codex\worktrees\elemental-entity-foundation\MMOARPG\tests\HollowWake.Core.Tests\HollowWake.Core.Tests.csproj]
-C:\Users\John\.codex\worktrees\elemental-entity-foundation\MMOARPG\tests\HollowWake.Core.Tests\PortedProjectileTests.cs(267,9): warning xUnit2031: Do not use a Where clause to filter before calling Assert.Single. Use the overload of Assert.Single that accepts a filtering function. (https://xunit.net/xunit.analyzers/rules/xUnit2031) [C:\Users\John\.codex\worktrees\elemental-entity-foundation\MMOARPG\tests\HollowWake.Core.Tests\HollowWake.Core.Tests.csproj]
-C:\Users\John\.codex\worktrees\elemental-entity-foundation\MMOARPG\tests\HollowWake.Core.Tests\PortedProjectileTests.cs(280,9): warning xUnit2031: Do not use a Where clause to filter before calling Assert.Single. Use the overload of Assert.Single that accepts a filtering function. (https://xunit.net/xunit.analyzers/rules/xUnit2031) [C:\Users\John\.codex\worktrees\elemental-entity-foundation\MMOARPG\tests\HollowWake.Core.Tests\HollowWake.Core.Tests.csproj]
-  HollowWake.Core.Tests -> C:\Users\John\.codex\worktrees\elemental-entity-foundation\MMOARPG\tests\HollowWake.Core.Tests\bin\Debug\net10.0\HollowWake.Core.Tests.dll
-Test run for C:\Users\John\.codex\worktrees\elemental-entity-foundation\MMOARPG\tests\HollowWake.Core.Tests\bin\Debug\net10.0\HollowWake.Core.Tests.dll (.NETCoreApp,Version=v10.0)
+  HollowWake.Core -> <worktree>\src\HollowWake.Core\bin\Debug\net8.0\HollowWake.Core.dll
+<worktree>\tests\HollowWake.Core.Tests\PortedProjectileTests.cs(254,19): warning xUnit2031: Do not use a Where clause to filter before calling Assert.Single. Use the overload of Assert.Single that accepts a filtering function. (https://xunit.net/xunit.analyzers/rules/xUnit2031) [<worktree>\tests\HollowWake.Core.Tests\HollowWake.Core.Tests.csproj]
+<worktree>\tests\HollowWake.Core.Tests\PortedProjectileTests.cs(267,9): warning xUnit2031: Do not use a Where clause to filter before calling Assert.Single. Use the overload of Assert.Single that accepts a filtering function. (https://xunit.net/xunit.analyzers/rules/xUnit2031) [<worktree>\tests\HollowWake.Core.Tests\HollowWake.Core.Tests.csproj]
+<worktree>\tests\HollowWake.Core.Tests\PortedProjectileTests.cs(280,9): warning xUnit2031: Do not use a Where clause to filter before calling Assert.Single. Use the overload of Assert.Single that accepts a filtering function. (https://xunit.net/xunit.analyzers/rules/xUnit2031) [<worktree>\tests\HollowWake.Core.Tests\HollowWake.Core.Tests.csproj]
+  HollowWake.Core.Tests -> <worktree>\tests\HollowWake.Core.Tests\bin\Debug\net10.0\HollowWake.Core.Tests.dll
+Test run for <worktree>\tests\HollowWake.Core.Tests\bin\Debug\net10.0\HollowWake.Core.Tests.dll (.NETCoreApp,Version=v10.0)
 A total of 1 test files matched the specified pattern.
-C:\Users\John\.codex\worktrees\elemental-entity-foundation\MMOARPG\tests\HollowWake.Core.Tests\bin\Debug\net10.0\HollowWake.Core.Tests.dll
+<worktree>\tests\HollowWake.Core.Tests\bin\Debug\net10.0\HollowWake.Core.Tests.dll
 [xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v3.1.5+1b188a7b0a (64-bit .NET 10.0.13)
 [xUnit.net 00:00:00.12]   Discovering: HollowWake.Core.Tests
 [xUnit.net 00:00:01.85]   Discovered:  HollowWake.Core.Tests

@@ -13,7 +13,8 @@
         "remnant": "hostile",
         "wilds": "neutral",
         "goblinkin": "neutral",
-        "orc_warbands": "neutral"
+        "orc_warbands": "neutral",
+        "the_loosed": "hostile"
       }
     }
   ]

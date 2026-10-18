@@ -155,9 +155,10 @@ export function elementalPrism(b: BodyBuild): void
     {
         const z = (i - (n - 1) * 0.5) * W * 0.28;
         const y = H * (n == 1 ? 0.53 : 0.48 + (i % 2) * 0.18);
-        const color = b.c(n == 1 ? "core" : i == 0 ? "ember" : i == 1 ? "tide" : "storm", "#eee0f3");
-        p.add(i == 0 ? "arm_l" : i == 2 ? "arm_r" : "head", 'cone', V(D * 0.26, H * 0.28, W * 0.24), V(0, y + H * 0.14, z), color, { glow: true, segments: 4 });
-        p.add(i == 0 ? "arm_l" : i == 2 ? "arm_r" : "head", 'cone', V(D * 0.26, H * 0.28, W * 0.24), V(0, y - H * 0.14, z), color, { turn: V(180, 0, 0), glow: true, segments: 4 });
+        const color = b.c(n == 1 ? "core" : i == 0 ? "core_left" : i == 1 ? "core_center" : "core_right", "#eee0f3");
+        const bone = n == 1 ? "head" : i == 0 ? "arm_l" : i == 2 ? "arm_r" : "head";
+        p.add(bone, 'cone', V(D * 0.26, H * 0.28, W * 0.24), V(0, y + H * 0.14, z), color, { glow: true, segments: 4 });
+        p.add(bone, 'cone', V(D * 0.26, H * 0.28, W * 0.24), V(0, y - H * 0.14, z), color, { turn: V(180, 0, 0), glow: true, segments: 4 });
     }
     if (b.has("halo"))
     {

@@ -61,4 +61,4 @@ SMOKE PASS options scale the interface: scale 1.25, cluster 908 -> 1135 px wide,
 SMOKE PASS options reset a group: theme etched_stone, scale 1
 SMOKE PASS weaves on a hob: reached=true hovered Hob [1]; slots 1; hits dealt=1, last on Hob
 SMOKE PASS no page errors: none
-SMOKE DONE 29/29 passed in 79.9s; 166 fps, 6.48 ms of work per frame, 63 chunks and 302 entities at the end; shots in C:\Users\John\.codex\worktrees\elemental-entity-foundation\MMOARPG\experiments\elementals\artifacts\background\run-v2yFdq\shots
+SMOKE DONE 29/29 passed in 79.9s; 166 fps, 6.48 ms of work per frame, 63 chunks and 302 entities at the end; shots in <worktree>\experiments\elementals\artifacts\background\run-v2yFdq\shots

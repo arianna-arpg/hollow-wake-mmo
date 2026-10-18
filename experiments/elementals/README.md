@@ -1,12 +1,12 @@
 # The Unbound Elements
 
-This experiment documents a free-form elemental content pass stacked on fauna PR #34. Sixteen bodies span the Nine Threads with explicit combat kits, wild rewards, dimensions, material mass, faction and sparse manifestation sites. No collision, AI or combat runtime is changed. Assembled golems and `stone_warden` are outside this pass.
+This experiment documents a free-form elemental content pass stacked on fauna PR #34. Sixteen bodies span the Nine Threads with explicit combat kits, wild rewards, dimensions, material mass, faction and sparse manifestation sites. Elemental-specific changes introduce no collision, AI or combat runtime. Shared foundation and hitbox corrections are tracked separately in the [review-fix record](../../docs/reviews/2026-10-18-elemental-review-fixes.md). Assembled golems and `stone_warden` are outside this pass.
 
 ## Review the bodies
 
-Open `gallery.html` through the local renderer below. The preview uses the production body builders, mesh adapter, content catalog and animator. Individual cards are enlarged to inspect anatomy; both common-scale lineup rows use the same orthographic projection. The 1.8 m player and skeleton plus the 0.9 m Goblin are references. `scale-report.json` distinguishes authored profile height from conservative renderer bounds. Turns and decoration can extend those bounds.
+Open `gallery.html` through the local renderer below. The preview uses the production body builders, mesh adapter, content catalog and animator. Individual cards are enlarged to inspect anatomy; both common-scale lineup rows use the same orthographic projection. The 1.8 m player and skeleton plus the 0.9 m Goblin are references. `scale-report.json` distinguishes authored profile height, conservative plan height (`modelHeight`), and actual rest-geometry min/max bounds in renderer coordinates. Suspended parts need not occupy the full nominal envelope. Turns and decoration can extend the geometry bounds.
 
-`evidence/elemental-isometric.jpg`, `elemental-third-person.jpg` and `elemental-grayscale-walk.jpg` were inspected. Flame tongues, the hollow water curl, ice fan, open wind loops, low mineral body, hanging veils and faceted prisms remain distinguishable without color. These are low-poly procedural proxies with existing animation rigs, not final sculpted models or custom movement animation.
+`evidence/elemental-isometric.jpg`, `elemental-third-person.jpg` and `elemental-grayscale-walk.jpg` were inspected. Flame tongues, the hollow water curl, ice fan, open wind loops, low mineral body, hanging veils and faceted prisms remain distinguishable without color. `lumen-cast.jpg` and `mind-cast.jpg` show the central cores on the central head bone during an actual gather pose. These are low-poly procedural proxies with existing animation rigs, not final sculpted models or custom movement animation.
 
 `reference.mjs` reads the prototype in place and calls its actual `bodySprite` and live-part painters on its monster definitions. It writes no source files. `HOLLOWWAKE_PROTOTYPE` overrides the source path. The reference is revision `118b510f8b5bfb781163c5bc13ea4908f698e75b`; the ledger distinguishes eight direct prototype bodies from eight new lore-derived adaptations. The capture is a fixed visual sample, not exact combat parity.
 
@@ -20,6 +20,8 @@ node experiments/elementals/render.mjs
 # Only when intentionally approving a new paired geometry baseline:
 node experiments/elementals/render.mjs --write-fixture
 dotnet test tests/HollowWake.Core.Tests --filter FullyQualifiedName~ElementalTests
+dotnet test tests/HollowWake.Core.Tests --filter FullyQualifiedName~ElementalReviewTests
+dotnet test tests/HollowWake.Core.Tests --filter FullyQualifiedName~ElementalProjectileTests
 dotnet test tests/HollowWake.Client.Tests --filter FullyQualifiedName~ElementalAppearanceTests
 npm --prefix web test
 node scripts/test-background.mjs --suite all
@@ -30,7 +32,7 @@ The renderer writes compact JPEGs, the full body-plan fixture, triangle counts a
 
 ## Implemented and deferred
 
-All bodies move on the ground and retain ordinary collision. Ethereal material is finite mass, not phasing. Open shapes do not imply precise hit volumes. Affinity resistances and opposing Ember/Tide vulnerability are explicit stats, not palette effects; tests deal positive damage from all nine Threads to every body. Generic summons inherit allegiance and lose wild loot/experience. Corpseless bodies still give their authored wild rewards.
+All bodies move on the ground and retain ordinary collision. Ethereal material is finite mass, not phasing. Open shapes do not imply precise hit volumes. Affinity resistances and opposing Ember/Tide vulnerability are explicit stats, not palette effects. Direct damage-effect tests establish mitigation for all nine Threads; they do not prove projectile contact. Separate tests launch the real Ember Bolt against every body on flat ground and +/-0.5 m relief. Generic summons inherit allegiance and lose wild loot/experience. Corpseless bodies still give their authored wild rewards.
 
 The [AI/combat handoff](../../docs/reviews/2026-10-17-elemental-ai-combat-handoff.md) lists every substitution and deferred interaction. Current state machines are replaceable scaffolding. Flight, swimming, material terrain immunity, reactive attunement, crystal shell phases, coordinated elemental tactics and complex social behavior are not implemented.
 
@@ -38,6 +40,8 @@ The tests exercise every skill independently through AI for 45 simulated seconds
 
 ## World evidence and constraints
 
-The four before/after `aureth` maps are identical within their own zones. The added low-weight candidate sites change neighboring weighted picks around zone (3,2), so only that info hash changes; all reviewed chunk hashes and the climate/overlay goldens are preserved. The detailed audit records the displaced neighboring sites, including cases where adding a candidate changes the weighted choice without selecting that candidate. Each new site shares the existing ruin budget, uses a 180 m kind spacing, and has one body per eligible inhabitant row with a 420 second respawn.
+The original `world-before-*`, `world-after-*`, `world-review.txt` and `gates/` evidence describes `b29e67c`, including the reviewed defects. It is historical, not a claim that the corrected head has unchanged maps. New evidence lives under `evidence/review-fixes/` and includes the per-pattern spawner/body counts, neighboring POIs, levels and generated quest targets against the base with elemental sites and their budget removed.
 
-The private browser smoke supplies rendered screenshots in ignored run artifacts. Native headless smoke verifies behavior and explicitly skips native pixels. No native graphical rendering, real controller or desktop focus test is claimed. The final [review record](../../docs/reviews/2026-10-17-elemental-entity-foundation.md) carries gate results and limitations.
+Corrected sites use `site.manifestation`, a dedicated 0.12 entry per region. It is a per-candidate weight multiplier and contributes to the total desired site count, not a reserved encounter pool. Other budget entries stay unchanged. Natural stamps add shallow walkable relief but no chest, shrine stone, camp palisade or extra creature. The ordinary discoverable/interactable POI marker remains. Sites have zero level offset, multiple names, 48 m minimum spacing against all sites, and one body per eligible inhabitant row with a 420 second respawn. They are excluded from ruin and shrine quest target tags.
+
+The private browser smoke supplies rendered screenshots in ignored run artifacts. Native headless smoke verifies behavior and explicitly skips native pixels. No native graphical rendering, real controller or desktop focus test is claimed. The [current review record](../../docs/reviews/2026-10-18-elemental-review-fixes.md) carries gate results and limitations; the [original record](../../docs/reviews/2026-10-17-elemental-entity-foundation.md) is historical. Committed logs normalize local machine prefixes and trailing whitespace without changing measured results.

@@ -1,0 +1,81 @@
+{
+  "kind": "landmarks",
+  "entries": [
+    {
+      "id": "manifestation_cleft",
+      "name": "Natural mineral cleft",
+      "rows": [
+        ".......",
+        "..s.s..",
+        ".......",
+        ".s...s.",
+        ".......",
+        "..s.s..",
+        "......."
+      ],
+      "legend": {
+        "s": {
+          "height": 0.15,
+          "walkable": true,
+          "tags": [
+            "stone"
+          ]
+        }
+      },
+      "anchor_x": 3,
+      "anchor_y": 3,
+      "flatten": false
+    },
+    {
+      "id": "manifestation_ripple",
+      "name": "Natural ripple shelf",
+      "rows": [
+        ".......",
+        "..sss..",
+        ".s...s.",
+        ".s...s.",
+        ".s...s.",
+        "..sss..",
+        "......."
+      ],
+      "legend": {
+        "s": {
+          "height": 0.1,
+          "walkable": true,
+          "tags": [
+            "stone"
+          ]
+        }
+      },
+      "anchor_x": 3,
+      "anchor_y": 3,
+      "flatten": false
+    },
+    {
+      "id": "manifestation_growth",
+      "name": "Natural growth hummocks",
+      "rows": [
+        ".......",
+        "..g....",
+        "....g..",
+        ".......",
+        ".g.....",
+        "....g..",
+        "......."
+      ],
+      "legend": {
+        "g": {
+          "height": 0.1,
+          "walkable": true,
+          "tags": [
+            "earth",
+            "grass"
+          ]
+        }
+      },
+      "anchor_x": 3,
+      "anchor_y": 3,
+      "flatten": false
+    }
+  ]
+}

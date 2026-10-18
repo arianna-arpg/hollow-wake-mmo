@@ -29,4 +29,4 @@ SMOKE PASS jump: rose 0.99 units
 SMOKE PASS click to move: tried (5,0) 4.8
 SMOKE FAIL script: page.evaluate: Target page, context or browser has been closed
 SMOKE PASS no page errors: none
-SMOKE DONE 12/13 passed in 26.8s; 0 fps, ? ms of work per frame, ? chunks and ? entities at the end; shots in C:\Users\John\.codex\worktrees\elemental-entity-foundation\MMOARPG\experiments\elementals\artifacts\background\run-6z5q08\shots
+SMOKE DONE 12/13 passed in 26.8s; 0 fps, ? ms of work per frame, ? chunks and ? entities at the end; shots in <worktree>\experiments\elementals\artifacts\background\run-6z5q08\shots

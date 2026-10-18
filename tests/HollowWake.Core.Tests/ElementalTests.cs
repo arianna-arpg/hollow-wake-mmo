@@ -23,7 +23,7 @@ public class ElementalTests(ITestOutputHelper output)
     public static IEnumerable<object[]> Bodies() => CoreContent.Registry.Each<PatternDef>()
         .Where(p => p.Extends == "elemental_body").Select(p => new object[] { p.Id });
     public static IEnumerable<object[]> Sites() => CoreContent.Registry.Each<PoiDef>()
-        .Where(p => p.Tags.Has("elemental")).Select(p => new object[] { p.Id });
+        .Where(p => p.Tags.Has("site.manifestation")).Select(p => new object[] { p.Id });
     public static IEnumerable<object[]> Kits() => Bodies().SelectMany(row => {
         var a = MinionArena.Create();
         var e = a.Foe((string)row[0], new Vector3(24,20,0));
@@ -35,8 +35,11 @@ public class ElementalTests(ITestOutputHelper output)
     {
         var a = DeliveryArena.Create(); var e = a.Body(20,20,pattern:pattern);
         var id = a.Sim.World.Get<Identity>(e)!;
-        foreach (var tag in new[]{"elemental","monster","body","family","role","size","thread","habitat","locomotion.ground","no_corpse"})
+        foreach (var tag in new[]{"kind.elemental","monster","body","family","role","size","habitat","locomotion.ground","no_corpse"})
             Assert.True(id.Tags.Has(tag),pattern+":"+tag);
+        Assert.False(id.Tags.Has("elemental"));
+        Assert.False(id.Tags.Has("thread"));
+        Assert.Contains(CoreContent.Registry.Each<ThreadDef>(), t => id.Tags.Has(t.Id));
         Assert.False(id.Tags.Has("golem")); Assert.False(id.Tags.Has("undead"));
         Assert.False(id.Tags.Has("flying")); Assert.False(id.Tags.Has("phasing"));
         Assert.Equal("unbound_elements",CoreContent.Registry.Require<PatternDef>(pattern).Faction);
@@ -78,7 +81,7 @@ public class ElementalTests(ITestOutputHelper output)
     }
 
     [Theory, MemberData(nameof(Bodies))]
-    public void CompleteKitsFightUsingNativeFactionAndRemainDamageable(string pattern)
+    public void CompleteKitsFightUsingNativeFactionAndDirectDamageTestsMitigation(string pattern)
     {
         var a=MinionArena.Create();a.OwnerStats.Attributes.SetBase("life.max",100000);a.OwnerStats.FillResources();
         a.Sim.World.Get<Identity>(a.Owner)!.Faction="players";
@@ -111,10 +114,12 @@ public class ElementalTests(ITestOutputHelper output)
         var high=Generate(siteId,25);
         Assert.Equal(high,Generate(siteId,25));
         foreach(var spawn in def.Inhabitants) Assert.Contains(high,s=>s.StartsWith(spawn.Pattern+":"));
+        Assert.All(high, s => Assert.Contains(def.Inhabitants, resident => s.StartsWith(resident.Pattern+":")));
         Assert.All(def.Inhabitants,s=>Assert.Equal(1,s.Density));
-        var low=Generate(siteId,1);
-        foreach(var spawn in def.Inhabitants.Where(s=>s.Level?.Min>1+def.Level))
-            Assert.DoesNotContain(low,s=>s.StartsWith(spawn.Pattern+":"));
+        var firstLevel=(int)def.Inhabitants.Min(s=>s.Level?.Min ?? 1);
+        Assert.NotEmpty(Generate(siteId,firstLevel));
+        // Explicit override pins can probe an ineligible level. Natural placement must reject it.
+        Assert.Empty(Generate(siteId,firstLevel-1));
         output.WriteLine(siteId+": "+string.Join(" | ",high));
     }
 
@@ -124,8 +129,10 @@ public class ElementalTests(ITestOutputHelper output)
         var g=new WorldGenerator(CoreContent.Registry,Rng.Hash64("aureth"));
         var found=new HashSet<string>();
         for(var y=-48;y<=48;y++)for(var x=-48;x<=48;x++)
-            foreach(var poi in g.Zone(new ZoneCoord(x,y)).Pois.Where(p=>p.Def.Tags.Has("elemental")))
+            foreach(var poi in g.Zone(new ZoneCoord(x,y)).Pois.Where(p=>p.Def.Tags.Has("site.manifestation")))
             {
+                Assert.True(poi.Def.Inhabitants.Any(s => s.Level is null || s.Level.Contains(poi.Level)),
+                    $"{poi.Id}: level {poi.Level} has no eligible resident.");
                 if(!found.Add(poi.Def.Id))continue;
                 var sample=g.Sample(poi.X,poi.Y);
                 var biome=g.Biome(sample,g.Region(g.Layout.RegionOf(poi.X,poi.Y)));
@@ -140,6 +147,10 @@ public class ElementalTests(ITestOutputHelper output)
                         habitat|=poi.Def.Biomes.Has(b.Id);
                 }
                 Assert.True(habitat,poi.Def.Id+" has no matching biome in its placement cell");
+                var residents=g.Layout.ChunksOf(poi.Zone).SelectMany(c=>g.GenerateChunk(c).Spawns)
+                    .Where(s=>s.Group==poi.Id).ToArray();
+                Assert.NotEmpty(residents);
+                Assert.All(residents, s => Assert.Contains(poi.Def.Inhabitants, r => r.Pattern==s.Pattern));
                 output.WriteLine($"{x},{y}: {poi.Def.Id} at {poi.X:R},{poi.Y:R}, biome={biome.Id}, site level={poi.Level}");
             }
         foreach(var site in Sites())Assert.Contains((string)site[0],found);
@@ -180,11 +191,13 @@ public class ElementalTests(ITestOutputHelper output)
     }
 
     [Fact]
-    public void ReviewedLocalZonesKeepTheirPlansWhileNeighborSitesJoinTheRuinBudget()
+    public void ReviewedWorldPopulationAuditSeparatesManifestationsFromTheBase()
     {
         var report=new ValidationReport();
         var raw=ContentLoader.LoadRaw(new[]{CoreContent.FindContentDir()},report);
         foreach(var row in Sites())raw["pois"].Remove((string)row[0]);
+        foreach(var region in raw["region_archetypes"].Values)
+            region.Object["poi_budget"]?.AsObject().Remove("site.manifestation");
         var baseline=ContentRegistry.FromRaw(raw,report);
         Assert.False(report.HasErrors,report.ToString());
         var before=new WorldGenerator(baseline,Rng.Hash64("aureth"));
@@ -192,11 +205,18 @@ public class ElementalTests(ITestOutputHelper output)
         static string Describe(PoiInstance p)=>$"{p.Zone}:{p.Def.Id}:{p.X:R}:{p.Y:R}:{p.Landmark}:{p.Name}:L{p.Level}";
         foreach(var zone in new[]{new ZoneCoord(0,0),new ZoneCoord(1,0),new ZoneCoord(0,-1),new ZoneCoord(3,2)})
         {
-            Assert.Equal(before.Zone(zone).Pois.Select(Describe),after.Zone(zone).Pois.Select(Describe));
             var old=before.PoisAround(zone).Select(Describe).ToArray();
             var next=after.PoisAround(zone).Select(Describe).ToArray();
             foreach(var p in old.Except(next))output.WriteLine(zone+" neighbor removed: "+p);
             foreach(var p in next.Except(old))output.WriteLine(zone+" neighbor added: "+p);
+            static Dictionary<string,(int spawners,int bodies)> Population(WorldGenerator g,ZoneCoord zone) =>
+                g.Layout.ChunksOf(zone).SelectMany(c=>g.GenerateChunk(c).Spawns).GroupBy(s=>s.Pattern)
+                    .ToDictionary(g=>g.Key,g=>(g.Count(),g.Sum(s=>s.PackSize)));
+            var original=Population(before,zone);var revised=Population(after,zone);
+            foreach(var pattern in original.Keys.Union(revised.Keys).OrderBy(id=>id,StringComparer.Ordinal))
+                output.WriteLine($"{zone} population {pattern}: {original.GetValueOrDefault(pattern)} -> {revised.GetValueOrDefault(pattern)} (spawners, initial bodies)");
+            foreach(var q in after.Zone(zone).Quests)
+                output.WriteLine($"{zone} quest {q.Id} level={q.Level}: {string.Join(";",q.Objectives.Select(o=>o.Poi??o.Target))}");
         }
     }
 }

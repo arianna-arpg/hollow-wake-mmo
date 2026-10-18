@@ -1,5 +1,5 @@
-TEST evidence: C:\Users\John\.codex\worktrees\elemental-entity-foundation\MMOARPG\experiments\elementals\artifacts\background\run-1x2PGz
-TEST smoke-web; evidence: C:\Users\John\.codex\worktrees\elemental-entity-foundation\MMOARPG\experiments\elementals\artifacts\background\run-1x2PGz
-TEST import-godot; evidence: C:\Users\John\.codex\worktrees\elemental-entity-foundation\MMOARPG\experiments\elementals\artifacts\background\run-1x2PGz
-TEST smoke-godot; evidence: C:\Users\John\.codex\worktrees\elemental-entity-foundation\MMOARPG\experiments\elementals\artifacts\background\run-1x2PGz
-TEST PASSED; report: C:\Users\John\.codex\worktrees\elemental-entity-foundation\MMOARPG\experiments\elementals\artifacts\background\run-1x2PGz\result.json
+TEST evidence: <worktree>\experiments\elementals\artifacts\background\run-1x2PGz
+TEST smoke-web; evidence: <worktree>\experiments\elementals\artifacts\background\run-1x2PGz
+TEST import-godot; evidence: <worktree>\experiments\elementals\artifacts\background\run-1x2PGz
+TEST smoke-godot; evidence: <worktree>\experiments\elementals\artifacts\background\run-1x2PGz
+TEST PASSED; report: <worktree>\experiments\elementals\artifacts\background\run-1x2PGz\result.json

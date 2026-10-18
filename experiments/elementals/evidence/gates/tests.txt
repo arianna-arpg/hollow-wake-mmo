@@ -1,7 +1,7 @@
-Test run for C:\Users\John\.codex\worktrees\elemental-entity-foundation\MMOARPG\tests\HollowWake.Client.Tests\bin\Debug\net10.0\HollowWake.Client.Tests.dll (.NETCoreApp,Version=v10.0)
-Test run for C:\Users\John\.codex\worktrees\elemental-entity-foundation\MMOARPG\tests\HollowWake.Core.Tests\bin\Debug\net10.0\HollowWake.Core.Tests.dll (.NETCoreApp,Version=v10.0)
+Test run for <worktree>\tests\HollowWake.Client.Tests\bin\Debug\net10.0\HollowWake.Client.Tests.dll (.NETCoreApp,Version=v10.0)
+Test run for <worktree>\tests\HollowWake.Core.Tests\bin\Debug\net10.0\HollowWake.Core.Tests.dll (.NETCoreApp,Version=v10.0)
 A total of 1 test files matched the specified pattern.
-Test run for C:\Users\John\.codex\worktrees\elemental-entity-foundation\MMOARPG\tests\HollowWake.Server.Tests\bin\Debug\net10.0\HollowWake.Server.Tests.dll (.NETCoreApp,Version=v10.0)
+Test run for <worktree>\tests\HollowWake.Server.Tests\bin\Debug\net10.0\HollowWake.Server.Tests.dll (.NETCoreApp,Version=v10.0)
 A total of 1 test files matched the specified pattern.
 A total of 1 test files matched the specified pattern.
 

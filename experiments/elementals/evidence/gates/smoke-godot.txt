@@ -1,6 +1,6 @@
 Godot Engine v4.7.2.stable.mono.official.ed1daf0bf - https://godotengine.org
 
-content loaded from C:\Users\John\.codex\worktrees\elemental-entity-foundation\MMOARPG\content\core: 0 errors, 0 warnings
+content loaded from <worktree>\content\core: 0 errors, 0 warnings
 server 127.0.0.1:64498 from the command line
 SMOKE ok   headless input isolation: 0 physical controllers visible
 SMOKE viewport (0, 0), (1600, 900), window (1600, 900)

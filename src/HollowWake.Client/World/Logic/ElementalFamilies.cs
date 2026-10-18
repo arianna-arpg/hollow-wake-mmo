@@ -172,9 +172,10 @@ public static class ElementalFamilies
         {
             var z = (i - (n - 1) * 0.5f) * W * 0.28f;
             var y = H * (n == 1 ? 0.53f : 0.48f + (i % 2) * 0.18f);
-            var color = b.C(n == 1 ? "core" : i == 0 ? "ember" : i == 1 ? "tide" : "storm", "#eee0f3");
-            p.Add(i == 0 ? "arm_l" : i == 2 ? "arm_r" : "head", PartShape.Cone, V(D * 0.26f, H * 0.28f, W * 0.24f), V(0, y + H * 0.14f, z), color, glow: true, segments: 4);
-            p.Add(i == 0 ? "arm_l" : i == 2 ? "arm_r" : "head", PartShape.Cone, V(D * 0.26f, H * 0.28f, W * 0.24f), V(0, y - H * 0.14f, z), color, V(180, 0, 0), glow: true, segments: 4);
+            var color = b.C(n == 1 ? "core" : i == 0 ? "core_left" : i == 1 ? "core_center" : "core_right", "#eee0f3");
+            var bone = n == 1 ? "head" : i == 0 ? "arm_l" : i == 2 ? "arm_r" : "head";
+            p.Add(bone, PartShape.Cone, V(D * 0.26f, H * 0.28f, W * 0.24f), V(0, y + H * 0.14f, z), color, glow: true, segments: 4);
+            p.Add(bone, PartShape.Cone, V(D * 0.26f, H * 0.28f, W * 0.24f), V(0, y - H * 0.14f, z), color, V(180, 0, 0), glow: true, segments: 4);
         }
         if (b.Has("halo"))
         {

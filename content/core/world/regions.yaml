@@ -9,7 +9,7 @@ entries:
     elevation_scale: 0.8
     moisture_bias: 0.05
     threads: { bloom: 0.15, stone: 0.1 }
-    poi_budget: { hamlet: 0.7, shrine: 0.8, ruin: 0.8, knot: 0.6, grove: 0.6, camp: 0.3 }
+    poi_budget: { hamlet: 0.7, shrine: 0.8, ruin: 0.8, knot: 0.6, grove: 0.6, camp: 0.3, site.manifestation: 0.12 }
     factions: [weftmarch_compact, lantern_chancery]
     max_distance: 2
     names: [the Hallows, the Low Hallows, the Hallow Reach]
@@ -22,7 +22,7 @@ entries:
     elevation_scale: 0.5
     moisture_bias: 0.3
     threads: { bloom: 0.1, umbra: 0.2 }
-    poi_budget: { ruin: 1.0, knot: 0.8, shrine: 0.4, camp: 0.4, hamlet: 0.3 }
+    poi_budget: { ruin: 1.0, knot: 0.8, shrine: 0.4, camp: 0.4, hamlet: 0.3, site.manifestation: 0.12 }
     factions: [weftmarch_compact]
     max_distance: 3
     names: [the Sallows, the Reedmire, the Drowned Walk]
@@ -37,7 +37,7 @@ entries:
     moisture_bias: -0.2
     threads: { ember: 0.3, stone: 0.15 }
     level_offset: 2
-    poi_budget: { kiln: 0.8, knot: 0.8, ruin: 0.6, camp: 0.5, hamlet: 0.3 }
+    poi_budget: { kiln: 0.8, knot: 0.8, ruin: 0.6, camp: 0.5, hamlet: 0.3, site.manifestation: 0.12 }
     factions: [longwake_company, the_loosed]
     min_distance: 1
     max_distance: 4
@@ -51,7 +51,7 @@ entries:
     elevation_scale: 0.7
     moisture_bias: 0.15
     threads: { tide: 0.3, storm: 0.15 }
-    poi_budget: { wreck: 0.8, hamlet: 0.5, shrine: 0.5, knot: 0.6, camp: 0.3 }
+    poi_budget: { wreck: 0.8, hamlet: 0.5, shrine: 0.5, knot: 0.6, camp: 0.3, site.manifestation: 0.12 }
     factions: [longwake_company]
     max_distance: 3
     names: [the Saltwrack, the Longwake Shore, Greyheron Reach]
@@ -65,7 +65,7 @@ entries:
     temperature_bias: -0.1
     threads: { void: 0.35, mind: 0.25 }
     level_offset: 4
-    poi_budget: { knot: 1.4, ruin: 0.8, shrine: 0.6, camp: 0.2 }
+    poi_budget: { knot: 1.4, ruin: 0.8, shrine: 0.6, camp: 0.2, site.manifestation: 0.12 }
     factions: [mended_thread]
     min_distance: 1
     names: [the Hush, the Stillwater Marches, the Echo Fields]
@@ -79,7 +79,7 @@ entries:
     temperature_bias: -0.2
     threads: { stone: 0.3, storm: 0.2 }
     level_offset: 8
-    poi_budget: { knot: 1.0, ruin: 0.6, shrine: 0.5 }
+    poi_budget: { knot: 1.0, ruin: 0.6, shrine: 0.5, site.manifestation: 0.12 }
     min_distance: 3
     names: [the Girdle, the High Girdle, the Stormwall]
 
@@ -91,7 +91,7 @@ entries:
     elevation_scale: 1.6
     threads: { void: 0.6, umbra: 0.2 }
     level_offset: 14
-    poi_budget: { knot: 2.0, ruin: 0.8 }
+    poi_budget: { knot: 2.0, ruin: 0.8, site.manifestation: 0.12 }
     min_distance: 5
     names: [the Fray, the Torn Weft, the Unmade Lands]
 ---
