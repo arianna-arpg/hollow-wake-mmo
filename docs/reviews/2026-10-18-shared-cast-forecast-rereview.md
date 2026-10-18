@@ -139,7 +139,29 @@ The forecasting chat acknowledged the final integration: its rider fix and eleve
 
 The disposable matched-control checkout was removed only after verifying it was clean and all its measurements had exited and been committed. Its branch still retains exact source 271e82d. The integration worktree and shared-root files were not reset or swept.
 
+### Allocation measurement scope follow-up
+
+Minimal tools-only source d3982f6 preserves the historical expression.alloc loop and whole-process counter, labeling that scope in its note. It adds expression.alloc.calling_thread and expression.alloc.sample_process over one separate synchronous sample. The exact sample delegate runs forty fixed warmup loops, then one measured loop of 100,000 evaluations. There is no measured-loop retry, minimum selection or estimated-overhead subtraction. Both new counters are retained, including any residual runtime activity; neither counter retroactively changes the older 0.01392/0.0168 readings.
+
+The measurement helper's three controls prove that it invokes work exactly once, counts an escaping managed allocation on the calling thread, and includes a worker's allocation in the process counter without charging that array to the caller. This does not identify the precise source of every historical residual byte. Its contract explicitly excludes certification of custom/asynchronous functions that allocate elsewhere. Fixed warmup addresses the runtime's transition to steady state rather than changing the literal zero small-call budget.
+
+The complete Release build is clean and all 1,036 .NET tests pass (846 core, 58 server, 132 client). Hosted CI run 39159109358 also passes, including the required Windows replay. The earlier client and live-probe evidence still applies to unchanged gameplay/client code.
+
+After the coordinator's explicit START, one Normal-priority `bench --only expressions --json` invocation ran on the already-built d3982f6 source and exited 0. No retry occurred. The first results are:
+
+| Measure | Result |
+|---|---:|
+| expression.evaluate | 95.3153 ns/eval |
+| expression.alloc, retained legacy process scope | 0.01392 B/eval |
+| expression.alloc.calling_thread, fixed warmed sample | 0 B/eval |
+| expression.alloc.sample_process, companion to that sample | 0 B/eval |
+| expression.parse | 290.595 ns/parse |
+
+The literal zero warmed small-call measurement is verified, with the unchanged 150 ns evaluation ceiling also met. The original nonzero process value is preserved. The new sample differs from the old in warmup as well as scope; this result does not identify the historical residual bytes' exact source or establish that they all came from a different thread. No numeric budget was relaxed. Raw allocation-scopes JSON/environment records, the three instrument controls and complete local/hosted gates are retained. All owned processes stopped before the next owner's performance window. Claude review of this explicit measurement clarification and the full forecasting change remains pending.
+
 ## Integration handoffs and review request
+
+PR #50 is now a dependent draft at bb22d0f, based on codex/shared-cast-forecasts-integration (verified on GitHub). The coordinator reports its combined release cases and 1,054 tests pass; that branch's evidence owns those claims. **Retarget #50 to main before merging #20 and deleting its branch**, as required by the collaboration contract. No merge is performed or authorized by this record.
 
 - #36: consume its full corrected foundation, not correction 724c5ed alone. Preserve this request's compiled release/miss policy, author contact: body consistently on all three selectors introduced here (strike, measured_strike and bash), and preserve sampled CastState/EffectContext AimOffset for projectile elevation. The corrected full entity dependency is now #34 at 26c50de, including #36 through e383ffb; it remains a separately reviewed draft. Its removed private stored-target gate must not return. Repeat the species/relief matrix on the combined head and verify forecast viewer eligibility through the same resulting contact predicate.
 - #49: pass the current target into PreferredRange while preserving its intent-dispatch and movement-plan seam. File overlap was recorded on both requests before edits.
@@ -149,3 +171,63 @@ The disposable matched-control checkout was removed only after verifying it was 
 Claude: rereview the compiled release contract, after_damage packet semantics, intentional melee/area composition expansion, approach comparisons and combined snapshot budget. No merge or final visual-production certification is claimed. Headless native evidence covers behavior, not rendered pixels or controllers.
 
 Acknowledged by: pending Claude rereview on PR #20.
+
+## Snapshot attribution diagnostic
+
+The coordinator preserved full snapshot misses on #37 (1.0225075 ms), #40 (1.222392 ms) and #50 (1.014923 ms; combined 1.1598315 ms). Those first results remain failures against the existing 1 ms ceiling. #50's record at cc0e1d4 also retains 29.658720703125 KB full, 9.32658203125 KB delta and 8.4488134765625 KB combined traffic. No budget is relaxed and no unchanged benchmark is repeated to find a passing sample.
+
+Source inspection found the published snapshot row combines entity capture, owner state, optional panels and JSON serialization. Viewers run in order and share per-tick capture caches. Full, delta, interface and combined phases advance different simulation stretches. Comparing their averages alone cannot assign a cause. Between this request's eef14c4 and #50's cc0e1d4, the snapshot builder, capture, serializer and benchmark sources are identical; seven runtime files differ. That narrows the comparison but does not establish either runtime regression or external contention.
+
+The optional `--snapshot-profile` instrument records each viewer's capture and encoding stages, bytes, message/entity-state counts, self cadence, known membership, GC counts and phase wall/process CPU context. The generic extra-stream adapter keeps the collector reusable on branches without forecasts. It invokes existing builders and serializers once in their normal order, preallocates its records, preserves raw samples, and refuses to overwrite existing evidence. The original non-profiled timed loops remain intact. Every summary row in a diagnostic invocation is explicitly labeled; overhead stays in totals and no measured estimate is subtracted. This serves the vision's observability requirement without changing gameplay, protocol or client behavior.
+
+The first parity fixture shared one simulation between ordinary and profiled views. Four cases failed at a later self-state cadence: the first ordinary Self read lazily compiled weave slots before the profiled view's initial fingerprint. The fixture now uses independent identically seeded worlds to preserve equal read histories. No production builder was changed to accommodate it. All eight instrument cases pass, covering exact ordered payloads and encoded bytes, view counters and membership, self cadence, interface ordering, one extra-stream invocation per frame, unchanged visible simulation state, output accounting, invalid options and preservation of existing evidence. The focused TRX is retained under artifacts/forecast-rereview/snapshot-profile-tests; complete final gate and diagnostic evidence follow when available.
+
+The final Release solution build has zero warnings/errors, all 1,044 .NET tests pass (854 core, 58 server, 132 client), and content validation reports zero errors/warnings. Complete console logs are published in experiments/forecast-rendering/evidence/rereview/snapshot-profile-{build,tests,validate}.txt. The shared TRX filename was overwritten between successful test projects; the complete console log preserves all three results, and the separate focused instrument TRX remains intact. Earlier client smoke, live probe and replay evidence applies to the unchanged runtime/client sources. A single fixed-source tick-only diagnostic is prepared for a coordinated quiet window; none has run at this checkpoint.
+
+### First diagnostic on 521d7ad
+
+After the coordinator's explicit START and peer quiet confirmations, exactly one Normal-priority `bench --only tick --snapshot-profile ... --json` ran on 521d7ad1742b7232d5c1e78954c68fd0702a7cec and exited 0. STOPPED was posted immediately on #34 before analysis, releasing the shared heavy-test window. No retry, normal benchmark or sample exclusion followed. Hosted CI run 39161793387 is green, including Windows deterministic replay, Linux build/tests, Docker and launcher.
+
+All 800 raw viewer samples (four sequential phases, 50 rounds, four viewers), original diagnostic summary rows, binary/source/environment identity and reproducible analysis are retained as snapshot-profile-{frames,bench,environment,analysis}.json and snapshot-profile-analysis.mjs in experiments/forecast-rendering/evidence/rereview. The analysis verifies every frame's message/byte sums and each phase's total against the original summary. No output appeared on stderr.
+
+These are diagnostic means in ms per player, including instrumentation overhead. They do not replace the prior ordinary budget records or certify a new pass; interface and combined diagnostic means exceed 1 ms and remain visible.
+
+| Phase | Total | Entities | Self | Panels | Entity encode | Self encode | Panel encode | Forecast capture | Forecast encode |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| Full | 0.946282 | 0.351716 | 0.017905 | 0 | 0.547474 | 0.027476 | 0 | 0 | 0 |
+| Delta | 0.723586 | 0.400058 | 0.013151 | 0 | 0.227952 | 0.081714 | 0 | 0 | 0 |
+| Interface | 1.018519 | 0.418862 | 0.054020 | 0.237513 | 0.206310 | 0.041345 | 0.059554 | 0 | 0 |
+| Combined | 1.217373 | 0.448689 | 0.148531 | 0.090127 | 0.204826 | 0.032613 | 0.002544 | 0.235887 | 0.052793 |
+
+The difference between total and summed stage intervals remains in the raw records (about 0.0007-0.0017 ms on average), not deducted. Mean traffic is exactly 29.658720703125 KB full, 9.32658203125 KB delta, 8.0092919921875 KB interface and 8.4488134765625 KB combined, matching the prior workload's bytes. Combined allocation is 52.303984375 KB/player; all 1,852 forecast observations remain. Zone errors are zero.
+
+| Phase | Entity messages | Self messages | Panel messages | Forecast messages | Spawns | Full entity states | Delta entity states | Despawns |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|
+| Full | 1,170 | 36 | 0 | 0 | 450 | 13,243 | 0 | 520 |
+| Delta | 1,177 | 40 | 0 | 0 | 377 | 1,359 | 11,585 | 407 |
+| Interface | 1,354 | 40 | 20 | 0 | 436 | 915 | 9,942 | 520 |
+| Combined | 1,344 | 40 | 9 | 200 | 448 | 792 | 8,675 | 503 |
+
+Full-state entity encoding is the largest full-phase stage in this sample. Viewer order also matters: mean entity capture for the first viewer is 0.774720 ms in full and 0.820576 ms in combined, versus 0.118500 and 0.216380 ms for the fourth viewer. The builder shares captures across viewers, but their interest membership also differs; this observation does not isolate a cache speedup or justify reordering viewers to improve a reported average.
+
+Several retained spikes materially affect the means. The first interface frame (round 0, viewer 0) takes 46.1559 ms, with 29.2489 ms in panels and 11.0476 ms in panel encoding. The first combined frame takes 28.9546 ms, including 23.597 ms forecast capture and 3.3422 ms forecast encoding. A later combined frame (round 40, viewer 1) takes 24.3565 ms, including 22.8221 ms in Self. These three frames report no GC collection; this does not establish JIT, preemption or another cause. A delta frame at round 10/viewer 2 takes 11.7309 ms, with 11.276 ms in self encoding and simultaneous gen0/gen1 increments. Full, interface and combined phases also retain gen0 events. None is trimmed or subtracted.
+
+The diagnostic distinguishes stage, viewer, first-use position and GC coincidence; it does not identify the cause of the older cross-branch regressions. Follow-up should attribute the large owner-state/first-use spikes and the entity capture/JSON paths with runtime stack and scheduling evidence before choosing an optimization. A future controlled experiment must retain this sample and the original budget failures, preserve payload parity and compare the actual combined source. No further measurement or production optimization was made in this diagnostic handoff.
+
+The precise-body owner subsequently published complete corrected-base #36 at c07b6df017ac9c7f9a854db836d5689e70debe16 (including #33 80dcac7 and prior cfeca690), with its own 2,237-test/replay/client evidence. It is moving forward through #34/#37 separately. That supersedes the earlier handoff head above; this request does not claim the combined body-contact, origin/aim, rider or forecast-eligibility gates until that full dependency is actually integrated. Claude rereview and combined-stack performance acceptance remain open.
+
+## Trace preparation, no additional game measurement
+
+The coordinator confirmed routine diagnostic preparation is within the owner's standing request. The concrete [capture plan](../../experiments/forecast-rendering/snapshot-trace-plan.md), guarded PowerShell runner, limited Windows scheduler profile and small trace inspector/control are now prepared. Official dotnet-trace 10.0.750501 was installed only in ignored artifacts/diagnostics, with Microsoft TraceEvent 3.1.23 for inspection; global tools and runtime settings were not changed.
+
+Tools-only profile schema 2 retains every stage's monotonic timestamps and optionally emits one completed-frame EventSource marker outside the measured interval. A before/after bracket records marker emission uncertainty for alignment with trace events. The marker has sample/phase/round/viewer/tick/timing fields only; machine identities come from local trace headers. The measured gameplay builders and original ordinary timed loops are unchanged. All 800 prior schema-1 samples remain unedited.
+
+The final solution build is clean, all 1,045 .NET tests pass (855 core, 58 server, 132 client), and validation reports zero errors/warnings. Nine profile cases include exact payload parity and a real EventListener check that one marker matches its completed frame and clock bracket. The experiment builds cleanly. Sanitized logs are published as trace-preparation-{build,tests,validate,inspector-build}.txt; original machine-specific logs remain ignored locally. The capture script parses, rejects a wrong source before creating output, and the WPR profile validates without starting a recording.
+
+Synthetic plumbing controls, not game benchmarks, exposed two missing pieces before capture. The initial zero-keyword/informational custom-provider configuration recorded no markers; the corrected all-keyword/verbose provider recorded both expected markers. Informational runtime collection did not expose detailed JIT starts, so the final configuration uses verbose runtime events and an explicit synthetic wait handle. The final retained control reports two markers, 35 JIT-start/load pairs and two wait-start/stop pairs, with zero lost events. The official managed stack report resolves the control. Earlier raw controls, including the missing-marker result, remain local; no game workload was repeated. Inspector subscription/API corrections were checked against those same retained traces.
+
+The runner requires an exact clean commit and an executable embedding that commit, refuses existing evidence, uses Normal priority, limits EventPipe to 30 seconds and its owned process tree to 45 seconds, preserves failures, and never retries. Its optional Windows recorder uses one uniquely named instance and 64 MB of memory for process/thread, context-switch and ready-thread events. WPR was not recording and this session is not elevated: live scheduler capture is unavailable here and has not been tested. Managed capture is usable, with scheduling attribution explicitly unresolved unless a suitable elevated diagnostic session supplies the bounded kernel companion. No permission question or artificial approval gate is introduced for routine managed diagnostics.
+
+Raw traces, local environment records, native identities and absolute paths stay under ignored artifacts/diagnostics with hashes. Only sanitized summaries and reproducible commands are published. All owned control/build/test processes have stopped; no combined-source measured run has begun. #34 is now published at 3d339d2ac71af6ac8bcff8e4f767e1f7c44ce2d8, but the actual acceptance composition must also include the reviewed #54 main merge and #50's in-progress device-versus-owner paid-release correction. Those owners' runtime files were not edited here. Keep source-specific tests and timing distinct until the combined build passes its own gates.
+
+Acknowledged by: pending Claude review of trace correlation and the combined acceptance source.

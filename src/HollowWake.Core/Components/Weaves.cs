@@ -110,6 +110,8 @@ public sealed class CastState
     public Entity Focus = Entity.None;
 
     public Vector3 Point;
+    /// <summary>Body-relative aim sampled on press; does not turn a direction cast into a target lock.</summary>
+    public Vector3 AimOffset;
     public Vector2 Direction;
     public double StartedAt;
 

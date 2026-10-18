@@ -1,0 +1,16 @@
+
+> hollow-wake-web@0.1.0 test
+> vitest run
+
+
+ RUN  v5.0.3 C:/Users/John/.codex/worktrees/undead-entity-foundation/MMOARPG/web
+
+
+ Test Files  30 passed (30)
+      Tests  198 passed (198)
+   Start at  21:07:01
+   Duration  1.45s (transform 55%, import 37%, tests 7%, worker 1%)
+
+  Transform  transforming modules took 8.70s · 55% of tracked time, re-done on every run
+             persist transforms across runs with fsModuleCache: true
+             learn more: https://vitest.dev/guide/improving-performance#caching-between-reruns

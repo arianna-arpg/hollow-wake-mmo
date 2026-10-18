@@ -50,11 +50,18 @@ Taunts set the target and a memory timestamp the behaviors read as `taunted`.
 
 ### Commitment-aware approach
 
-The weave attribute `ai.anticipation` controls pre-commit movement estimation, from zero (current position only) to one (the actual windup, including speed modifiers). Shipped single-target melee selectors author one; other compositions can opt in through the same attribute and modifier fold. For a safe primary-area provider with anticipation enabled, the chooser first requires the authored preferred range (or folded range attribute). This also covers a moving target that briefly stops to cast. It then tests the observed target velocity projected over that interval against the shared region. Unknown providers keep their prior range-based fallback. This is a heuristic, not future knowledge: changes in direction, terrain or speed can defeat the estimate.
+The weave attribute `ai.anticipation` controls pre-commit movement estimation, from zero (current position only) to one (the actual windup, including speed modifiers). Shipped single-target melee selectors author one; other compositions can opt in through the same attribute and modifier fold. For a safe primary-area provider with anticipation enabled, the chooser first requires the authored preferred range (or folded range attribute). This also covers a moving target that briefly stops to cast. It then tests the observed target velocity projected over that interval against the shared region, translating the actual damage anatomy for body-contact plans while leaving the live body untouched. Unknown providers keep their prior range-based fallback. This is a heuristic, not future knowledge: changes in direction, terrain or speed can defeat the estimate.
 
 `PreferredRange` accepts the current target and reduces the approach stop distance by its outward travel during that interval. It never increases collision reach or widens a sector, and a started swing keeps its original direction. Body collision still limits how close an actor can get. A target too fast to catch may continue avoiding melee; the policy does not promise a hit. Players can make the same positioning and timing choices manually.
 
 The chooser rejects ordinary busy casts before expensive geometry work, preserving the runtime's instant-reflex exception. Converted and combo faces retain their existing path. The AI intent seam owns dispatch and move planning; this policy only supplies choice eligibility and preferred approach distance.
+## Provisional wildlife assignments
+
+Wildlife content may use existing combat behaviors or a flee-only content state machine. A spawn pack is not coordinated AI, a predator tag is not predation, and a hostile faction does not imply every body attacks. Critters have empty weave lists and no drops; they flee perceived faction enemies without an attack state. Future sensory, tactical, social and need-based decisions require a separate reviewed contract and deterministic simulation evidence. Authoring intent under `meta` is never a simulation input. The [wildlife AI handoff](../reviews/2026-10-18-fauna-ai-handoff.md) records the proposed design questions and scenarios for Claude review.
+
+## Temporary close-combat content
+
+`close_melee` is a reusable behavior for kits that must close despite a longer-ranged secondary skill. It explicitly supplies the chase stop distance and keeps ordinary acquire/attack/return actions. Goblinkin leaders opt into it; downstream faction kits can reuse the same definition. Other behaviors retain their own policy and PreferredRange remains the longest hinted range. The stop distance currently follows the existing center-distance movement convention; future contact-aware AI must revisit that contract together with collision clearance. This is replaceable content scaffolding, not the planned tactical AI engine.
 
 ## The AI as a player
 

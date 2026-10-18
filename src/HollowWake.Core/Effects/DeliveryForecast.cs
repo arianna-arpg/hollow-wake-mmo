@@ -5,6 +5,7 @@ using HollowWake.Core.Maths;
 using HollowWake.Core.Sim;
 using HollowWake.Core.Weaves;
 using HollowWake.Core.World;
+using HollowWake.Core.Combat;
 
 namespace HollowWake.Core.Effects;
 
@@ -16,7 +17,8 @@ namespace HollowWake.Core.Effects;
 public readonly record struct ResolvedAreaPlan(
     Shape Shape, ShapeSize Size, Vector3 Anchor, Vector2 Direction, string AnchorMode,
     string Filter, Entity ExcludedTarget, bool RequiresLineOfSight,
-    bool HasRequirement, bool HasTargetLimit)
+    bool HasRequirement, bool HasTargetLimit,
+    bool BodyContact = false, float Bottom = 0, float Top = 0)
 {
     public float Reach => Shape.Reach(Size);
     public float HeightTolerance => SpatialGrid.DefaultHeightTolerance;
@@ -29,8 +31,12 @@ public readonly record struct ResolvedAreaPlan(
     /// Current candidate eligibility, before a delivery's per-target requirement and capped/random
     /// selection. Uses the same relation, untargetability and LOS checks as execution. No effects or rolls.
     /// </summary>
+    public bool ContainsBody(EffectContext context, Entity entity, Vector3 position) => BodyContact
+        ? HitBodies.Touches(context.Sim, entity, Shape, Size, Anchor, Direction, Bottom, Top, position)
+        : ContainsCenter(position);
+
     public bool IsCandidate(EffectContext context, Entity entity, Vector3 position) =>
-        ContainsCenter(position) && (ExcludedTarget.IsNone || entity != ExcludedTarget) &&
+        ContainsBody(context, entity, position) && (ExcludedTarget.IsNone || entity != ExcludedTarget) &&
         EffectHelpers.Passes(context, entity, Filter) && (!RequiresLineOfSight ||
             LineOfSight.Clear(context.Sim.Terrain, Anchor + EffectHelpers.Eye, position + EffectHelpers.Eye));
 
@@ -38,7 +44,7 @@ public readonly record struct ResolvedAreaPlan(
         float.IsFinite(Size.Width) && float.IsFinite(Size.Inner) && float.IsFinite(Reach) &&
         float.IsFinite(Shape.Curvature) && float.IsFinite(Shape.CenterAllowanceSquared) && Shape.CenterAllowanceSquared >= 0 &&
         float.IsFinite(Anchor.X) && float.IsFinite(Anchor.Y) && float.IsFinite(Anchor.Z) &&
-        float.IsFinite(Direction.X) && float.IsFinite(Direction.Y);
+        float.IsFinite(Direction.X) && float.IsFinite(Direction.Y) && float.IsFinite(Bottom) && float.IsFinite(Top);
 }
 
 /// <summary>

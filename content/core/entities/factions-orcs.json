@@ -1,0 +1,24 @@
+{
+  "kind": "factions",
+  "entries": [
+    {
+      "id": "orc_warbands",
+      "name": "The Iron-Tusk Warbands",
+      "color": "#906843",
+      "default": "neutral",
+      "relations": {
+        "goblinkin": "allied",
+        "players": "hostile",
+        "lantern_chancery": "hostile",
+        "weftmarch_compact": "hostile",
+        "longwake_company": "hostile",
+        "mended_thread": "hostile",
+        "remnant": "hostile",
+        "tangled": "hostile",
+        "orc_warbands": "allied",
+        "wilds": "hostile",
+        "the_loosed": "hostile"
+      }
+    }
+  ]
+}

@@ -1,0 +1,29 @@
+{
+  "branch": "32",
+  "preMergeSource": "1fa611f3ef52703febab46d62b16e08126c8e90a",
+  "added": [
+    {
+      "key": "preset goblin_cinder_keg effects[0].on_end[0].radius",
+      "value": 2.2,
+      "axis": "geometry.radius",
+      "unit": "units",
+      "attribute": "area.radius",
+      "contentPath": "content/core/combat/weaves-goblinkin.json"
+    },
+    {
+      "key": "preset goblin_cinder_keg effects[0].radius",
+      "value": 0.3,
+      "axis": "geometry.radius",
+      "unit": "units",
+      "attribute": null,
+      "contentPath": "content/core/combat/weaves-goblinkin.json"
+    }
+  ],
+  "removed": [],
+  "baselineCount": 497,
+  "actualCount": 499,
+  "status": "Each exact existing value reviewed against pre-main content; explicit census admission only; full gate follows.",
+  "verifiedUnchangedContentBlobs": {
+    "content/core/combat/weaves-goblinkin.json": "171c6f2f559725d52b2006a0cea4b717007283cb"
+  }
+}

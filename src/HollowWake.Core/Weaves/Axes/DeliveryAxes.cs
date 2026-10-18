@@ -220,6 +220,22 @@ internal static class DeliveryAxes
                 Detail = node.AddedBy,
             };
         }
+        // Choices can also fall back to content rules; do not report their words as numeric zero.
+        if (AxisUnits.IsWord(binding.Unit) && binding.Rule is { } wordRule)
+        {
+            return new AxisValue
+            {
+                Dimension = dimension,
+                Name = AxisValue.DimensionName(dimension) + "." + binding.Axis,
+                Word = reading.Content.Rules.Text(wordRule, binding.DefaultWord ?? ""),
+                Unit = binding.Unit,
+                Source = node.AddedAs ?? AxisSource.Rule,
+                Path = path,
+                Effect = node.Type,
+                Parameter = binding.Parameter,
+                Detail = Join(node.AddedBy, wordRule),
+            };
+        }
         // Only the weave's own fold is the weave's statement: a stack the handler reads elsewhere is the caster's, not the weave's.
         if (binding.Attribute is { } attribute && binding.Role != AttributeRole.None && binding.Fold == AttributeFold.Weave && reading.Mentions(attribute))
         {

@@ -22,6 +22,12 @@ A plan (`World/Logic/BodyPlan.cs`, `bodyPlan.ts`) is bones with pivots in a hier
 
 Each body stands on a **contact mark**: a soft disc that gives it its ground contact, with an edge grammar per relation to the players from the factions content (inward teeth for a hostile, spaced ticks for a friend, a plain rim otherwise) so danger reads without colour. The mark follows the body's root, not its pose.
 
+### Anatomical families
+
+`AnatomyFamilies.cs` and `anatomyFamilies.ts` add exposed skeletal bipeds, stitched flesh bipeds and skeletal quadrupeds to the family registry. They use the ordinary biped and quadruped rigs, with shared sockets for equipment. Rib spacing, limb thickness, shoulders, asymmetry and proportions are content shape choices; cowls, crystals, conductor yokes, vials, bindings, grafts and missing legs are presentation features. Mage schools must remain distinguishable by silhouette in grayscale, as well as by their accent colors. These features never grant gameplay behavior.
+
+Prototype-derived looks preserve their source look ids in metadata. The shared `tests/fixtures/undead-appearance.json` pins the reviewed plans, including parts, bones, sockets and worn gear, for both clients. `experiments/undead-entities` contains the translation ledger and the actual-geometry gallery used to inspect isometric, third-person and grayscale poses.
+
 ### Two representations
 
 The **bodies** option (Graphics) chooses painted geometry, directional cards, or by camera: cards in the isometric camera once it is zoomed out past the card zoom (with hysteresis), geometry in third person and up close. A card is the entry's body baked once per look and gear into an atlas of eight azimuths from the isometric pitch (`World/Appearance/CardBaker.cs`, `cards.ts`), drawn as one foot-anchored quad the body's size that turns to face the camera about the vertical and samples the cell nearest the camera's bearing from the body's yaw. Cards are depth-tested and depth-written, so they occlude and are occluded like geometry; they cast no shadow, carry no per-entity colour variation, and the animator moves only their root (bob, lean, squash, the fall of death). Bodies taller than four units and entries marked `card: never` stay geometry. A body draws as geometry until its atlas is ready; the baker bakes a cell per frame on the desktop and an atlas per frame in the browser, so a crowd arriving at once costs frames, never a stall. Switching the option back disposes the cards; the atlases are forgotten with the views that held them.
@@ -58,3 +64,17 @@ The camera eases its zoom and its turn and shakes on a hit taken and a kill (`ca
 ## Still rough
 
 Bodies are generated low-poly proxies, not authored models: a sculpted character, a rigged animation set and painted textures remain art work, and cards carry no per-entity variation. Houses straddling a chunk border get two roofs. No audio exists yet; the animator's moments (a footstep, a swing, a hit, a death) are where footstep and surface sounds attach when assets arrive, on the client's audio buses. The isometric camera still passes through canopies. The reviewer's human readability check of the visual language has not been run.
+
+## Physical silhouettes
+
+The paired `goblinkin`, `gnasher` and `warbeast` builders use breadth and depth ratios to the authoritative body height. Content with a physical profile keeps those ratios aligned and disables random scale variation. Ears, noses, jaws, tusks, clothing and carried equipment remain presentation. Small pack creatures, upright raiders, long-armed brutes and low quadrupeds share existing animation rigs. A preview must include a common world-scale lineup as well as enlarged individual cards so silhouettes are not judged only after independent camera fitting.
+
+### Adult stature and heavy bipeds
+
+The `orc` family composes a forward-set skull, high trapezius, broad chest and heavy segmented limbs on the ordinary biped rig. `hunch` moves the skull forward without silently shrinking the body's rest height. Breadth, depth, arm length, muscle and jaw proportions remain authored shape values. Equipment and features distinguish roles in grayscale. Both clients build the same full plans and gear under the shared fixture gate.
+
+Gnasher features include tusks, crest, spots, flank plates and an empty saddle. The saddle is presentation, sized for a small rider; it neither creates a rider nor transfers control. Reference lineups compare the player, skeleton, ordinary Goblin, Orcs and Gnashers at one world scale. Ordinary player and skeletal looks preserve authoritative scale without random size jitter; decorative horns, banners and headwear can extend beyond body stature. Precise collision fitting is a separate simulation contract, never inferred from these appearance parts.
+
+### Wildlife anatomy
+
+The fauna quadruped, ground-bird and crab families register in both clients. Breadth and depth follow each physical profile; leg, head, tail, ear, beak and claw proportions plus optional anatomical features distinguish silhouettes. Quadrupeds use the existing four-legged rig, birds the biped rig with folded wing parts, and crabs the crawler rig. This supplies shared procedural poses, not species-specific animation or new locomotion. Body height is nominal stature; ears, antlers and crests may exceed it as decoration. Rendered dimensions are not damage volumes. Paired plan fixtures, grayscale/camera previews and a single-scale lineup check translation and continuity.

@@ -73,6 +73,11 @@ public sealed class EffectContext
         _scope?.ClearObservation();
         _observationSpare = this;
     }
+    /// <summary>Body aim offset sampled separately from planar bearing and original cast aim.</summary>
+    public Vector3 AimOffset { get; init; }
+    /// <summary>A frozen target center after releasing its entity lock, independent of placement Point.
+    /// Together with AimOffset it preserves the body's aiming point; null keeps an explicit direction.</summary>
+    public Vector3? SampledTargetPoint { get; init; }
 
     /// <summary>
     /// How deep in a chain this effect runs. Nested deliveries, repeats, delays and casts (of other weaves or
@@ -92,6 +97,12 @@ public sealed class EffectContext
     /// fires its projectiles, bursts and cones from that point. Null means the source's position.
     /// </summary>
     public Vector3? From { get; init; }
+
+    /// <summary>
+    /// Lift for a projectile launched from this delivery's anchor. Null uses the content-defined ground
+    /// placement lift; a flight supplies zero because its emission point is already at flight height.
+    /// </summary>
+    public float? LaunchLift { get; init; }
 
     /// <summary>
     /// The point the cast was aimed at. It is the context's point until a delivery moves the point (onto a body
@@ -198,6 +209,9 @@ public sealed class EffectContext
             Target = target ?? Target,
             Point = point ?? Point,
             Aim = aim ?? Aim,
+            AimOffset = target is { } aimed && Sim.World.Get<Transform>(aimed) is { } at ?
+                Combat.HitBodies.AimPoint(Sim, aimed) - at.Position : point is not null ? Vector3.Zero : AimOffset,
+            SampledTargetPoint = target is not null || point is not null ? null : SampledTargetPoint,
             Direction = Direction,
             Weave = Weave,
             Tags = tags ?? Tags,
@@ -206,6 +220,7 @@ public sealed class EffectContext
             Potency = Potency,
             DamageScale = damageScale ?? DamageScale,
             From = From,
+            LaunchLift = LaunchLift,
             Vars = vars ?? Vars,
             ForecastRestrictions = ForecastRestrictions,
             Slot = Slot,

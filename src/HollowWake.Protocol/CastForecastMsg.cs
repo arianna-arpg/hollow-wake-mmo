@@ -49,6 +49,9 @@ public sealed record CastForecastRegion
     public float HeightTolerance { get; init; }
     public float CenterAllowance { get; init; }
     public string TargetTest { get; init; } = "center";
+    /// <summary>World-space vertical bounds for body contact. Absent for legacy center tests.</summary>
+    public float? Bottom { get; init; }
+    public float? Top { get; init; }
     public bool RequiresLineOfSight { get; init; }
     public bool HasRequirement { get; init; }
     public bool HasTargetLimit { get; init; }

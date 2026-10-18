@@ -1,0 +1,91 @@
+[
+  {
+    "zone": "0_0",
+    "before": [
+      {
+        "Id": "gen.poi.0_0.hamlet.128.128.gather_floss.1",
+        "Level": 1,
+        "Targets": [
+          {
+            "Type": "collect",
+            "Target": "thread_floss",
+            "Poi": null
+          }
+        ]
+      },
+      {
+        "Id": "gen.poi.0_0.hamlet.128.128.cull_beasts.2",
+        "Level": 1,
+        "Targets": [
+          {
+            "Type": "kill",
+            "Target": "hob",
+            "Poi": null
+          }
+        ]
+      },
+      {
+        "Id": "gen.poi.0_0.hamlet.128.128.scout_ruin.3",
+        "Level": 1,
+        "Targets": [
+          {
+            "Type": "discover",
+            "Target": null,
+            "Poi": "poi.1_0.ossuary.421.38"
+          }
+        ]
+      }
+    ],
+    "after": [
+      {
+        "Id": "gen.poi.0_0.hamlet.128.128.clear_knot.0",
+        "Level": 1,
+        "Targets": [
+          {
+            "Type": "reach",
+            "Target": null,
+            "Poi": "poi.0_0.knot.200.60"
+          },
+          {
+            "Type": "kill",
+            "Target": "cinder_imp",
+            "Poi": null
+          }
+        ]
+      },
+      {
+        "Id": "gen.poi.0_0.hamlet.128.128.gather_floss.1",
+        "Level": 1,
+        "Targets": [
+          {
+            "Type": "collect",
+            "Target": "thread_floss",
+            "Poi": null
+          }
+        ]
+      },
+      {
+        "Id": "gen.poi.0_0.hamlet.128.128.cull_beasts.2",
+        "Level": 1,
+        "Targets": [
+          {
+            "Type": "kill",
+            "Target": "hob",
+            "Poi": null
+          }
+        ]
+      },
+      {
+        "Id": "gen.poi.0_0.hamlet.128.128.scout_ruin.3",
+        "Level": 1,
+        "Targets": [
+          {
+            "Type": "discover",
+            "Target": null,
+            "Poi": "poi.1_0.ruin.291.217"
+          }
+        ]
+      }
+    ]
+  }
+]

@@ -48,7 +48,7 @@ public sealed class SpawnerSystem : SimSystem
                 var ang = rng.NextDouble() * Math.PI * 2;
                 var dist = rng.Range(0.0, s.Scatter);
                 var pos = t.Position + new Vector3((float)(Math.Cos(ang) * dist), (float)(Math.Sin(ang) * dist), 0);
-                var spawned = factory.Spawn(sim, s.Pattern, pos, new Patterns.SpawnOptions { RollRarity = s.RollRarity, Group = s.Group, Rng = rng.Fork((ulong)s.Alive.Count) });
+                var spawned = factory.Spawn(sim, s.Pattern, pos, new Patterns.SpawnOptions { RollRarity = s.RollRarity, Group = s.Group, Level = s.Level, Rng = rng.Fork((ulong)s.Alive.Count) });
                 if (spawned.IsNone)
                 {
                     s.Active = false;

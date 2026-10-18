@@ -3,3 +3,5 @@
 - Regenerate it from the repository root with `dotnet run --project src/HollowWake.Tools -- tournament --standard --hashes --out experiments/combat-grammar/baselines/standard-duels.json`, which fights them with the seeds and the cap rules group `evaluation` gives.
 - A change to it is named, with the pairings it moved, in the review record of the change that caused it (see docs/design/evaluation.md); a run on another platform that differs from it is a finding to record, not a reason to overwrite it.
 - The required `determinism-windows` CI job checks both the recorded platform and the hashes. `--check-hashes` alone selects the pairings recorded in the file; `--pairs` or `--standard` explicitly overrides that selection.
+
+- The fauna integration updates only the three wolf/boar pairing hashes, with same-runtime before/after and two-pattern restoration evidence in `docs/reviews/2026-10-18-entity-main-audits.md`. The other four hashes, seeds, cap and platform are unchanged.

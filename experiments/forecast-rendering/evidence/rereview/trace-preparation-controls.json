@@ -1,0 +1,36 @@
+{
+  "SyntheticOnly": true,
+  "GameMeasurements": 0,
+  "ToolVersion": "10.0.750501",
+  "RawTracePolicy": "Retained locally under ignored artifacts/diagnostics; not published",
+  "Controls": [
+    {
+      "Control": "fixture-first",
+      "TraceSha256": "0DC9B5E8377F17038E77354BDDE1460D54EBE7DCD9CAE1D6BD542921F301EF14",
+      "Bytes": 350570,
+      "Markers": 0,
+      "LostEvents": 0
+    },
+    {
+      "Control": "fixture-provider-check",
+      "TraceSha256": "08104A984523C0B4913CD83F4063660115DBEEC5B5AE1577FA9678A627EC6C99",
+      "Bytes": 357790,
+      "Markers": 2,
+      "LostEvents": 0
+    },
+    {
+      "Control": "fixture-jit-wait-control",
+      "TraceSha256": "B4C3CCCF6CAF9848EDFAD9B6C612C9D554C76AD959B6050DC80C22D17D70216C",
+      "Bytes": 384710,
+      "Markers": 2,
+      "LostEvents": 0
+    }
+  ],
+  "FinalJitStarts": 35,
+  "FinalMethodLoads": 35,
+  "FinalWaitStarts": 2,
+  "FinalWaitStops": 2,
+  "SchedulerProfileParsed": true,
+  "SchedulerCaptureStarted": false,
+  "ElevatedSession": false
+}

@@ -1,0 +1,164 @@
+[
+  {
+    "Name": "zone.load",
+    "Value": 142.984,
+    "Unit": "ms",
+    "Note": "DIAGNOSTIC RUN; snapshot probe overhead included, not ordinary budget evidence. zone(0,0): 100 chunks, 4 pois, 2 founts, 113 spawners, 2269 flora, 4 quests"
+  },
+  {
+    "Name": "zone.tick.avg",
+    "Value": 6.267329166666669,
+    "Unit": "ms/tick",
+    "Note": "DIAGNOSTIC RUN; snapshot probe overhead included, not ordinary budget evidence. 2692 entities at start, 2938 at end, 300 monsters, 4 players"
+  },
+  {
+    "Name": "zone.tick.p50",
+    "Value": 5.6215,
+    "Unit": "ms/tick",
+    "Note": "DIAGNOSTIC RUN; snapshot probe overhead included, not ordinary budget evidence. median"
+  },
+  {
+    "Name": "zone.tick.p95",
+    "Value": 13.1098,
+    "Unit": "ms/tick",
+    "Note": "DIAGNOSTIC RUN; snapshot probe overhead included, not ordinary budget evidence. 95th percentile"
+  },
+  {
+    "Name": "zone.tick.max",
+    "Value": 20.838,
+    "Unit": "ms/tick",
+    "Note": "DIAGNOSTIC RUN; snapshot probe overhead included, not ordinary budget evidence. worst tick"
+  },
+  {
+    "Name": "zone.tick.alloc",
+    "Value": 70.3330078125,
+    "Unit": "KB/tick",
+    "Note": "DIAGNOSTIC RUN; snapshot probe overhead included, not ordinary budget evidence. gen0 collections 4"
+  },
+  {
+    "Name": "zone.events",
+    "Value": 14,
+    "Unit": "events",
+    "Note": "DIAGNOSTIC RUN; snapshot probe overhead included, not ordinary budget evidence. raised during the last tick"
+  },
+  {
+    "Name": "system.casting",
+    "Value": 0.936505499999999,
+    "Unit": "ms/tick",
+    "Note": "DIAGNOSTIC RUN; snapshot probe overhead included, not ordinary budget evidence. 34.9 KB/tick allocated"
+  },
+  {
+    "Name": "system.behavior",
+    "Value": 2.930899,
+    "Unit": "ms/tick",
+    "Note": "DIAGNOSTIC RUN; snapshot probe overhead included, not ordinary budget evidence. 22.4 KB/tick allocated"
+  },
+  {
+    "Name": "system.territory",
+    "Value": 0.053927166666666616,
+    "Unit": "ms/tick",
+    "Note": "DIAGNOSTIC RUN; snapshot probe overhead included, not ordinary budget evidence. 6.1 KB/tick allocated"
+  },
+  {
+    "Name": "system.statuses",
+    "Value": 1.0286739999999992,
+    "Unit": "ms/tick",
+    "Note": "DIAGNOSTIC RUN; snapshot probe overhead included, not ordinary budget evidence. 3.5 KB/tick allocated"
+  },
+  {
+    "Name": "system.quests",
+    "Value": 0.015861999999999998,
+    "Unit": "ms/tick",
+    "Note": "DIAGNOSTIC RUN; snapshot probe overhead included, not ordinary budget evidence. 1.6 KB/tick allocated"
+  },
+  {
+    "Name": "system.projectiles",
+    "Value": 0.018071000000000014,
+    "Unit": "ms/tick",
+    "Note": "DIAGNOSTIC RUN; snapshot probe overhead included, not ordinary budget evidence. 0.4 KB/tick allocated"
+  },
+  {
+    "Name": "zone.errors",
+    "Value": 0,
+    "Unit": "count",
+    "Note": "DIAGNOSTIC RUN; snapshot probe overhead included, not ordinary budget evidence. no system errors"
+  },
+  {
+    "Name": "snapshot.enter",
+    "Value": 176.667236328125,
+    "Unit": "KB/player",
+    "Note": "DIAGNOSTIC RUN; snapshot probe overhead included, not ordinary budget evidence. spawns and self state on entering the zone, sent once"
+  },
+  {
+    "Name": "snapshot.build",
+    "Value": 0.9462819999999996,
+    "Unit": "ms/player",
+    "Note": "DIAGNOSTIC RUN; snapshot probe overhead included, not ordinary budget evidence. 455 known entities per player; build and encode"
+  },
+  {
+    "Name": "snapshot.bytes",
+    "Value": 29.658720703125,
+    "Unit": "KB/player",
+    "Note": "DIAGNOSTIC RUN; snapshot probe overhead included, not ordinary budget evidence. changed entities as full states plus self state, steady state, JSON"
+  },
+  {
+    "Name": "snapshot.delta.build",
+    "Value": 0.7235860000000011,
+    "Unit": "ms/player",
+    "Note": "DIAGNOSTIC RUN; snapshot probe overhead included, not ordinary budget evidence. the same with deltas opted in"
+  },
+  {
+    "Name": "snapshot.delta.bytes",
+    "Value": 9.32658203125,
+    "Unit": "KB/player",
+    "Note": "DIAGNOSTIC RUN; snapshot probe overhead included, not ordinary budget evidence. changed entities as deltas plus self state, steady state, JSON"
+  },
+  {
+    "Name": "snapshot.interface.build",
+    "Value": 1.018519,
+    "Unit": "ms/player",
+    "Note": "DIAGNOSTIC RUN; snapshot probe overhead included, not ordinary budget evidence. deltas plus the interface states on change, build and encode"
+  },
+  {
+    "Name": "snapshot.interface.bytes",
+    "Value": 8.0092919921875,
+    "Unit": "KB/player",
+    "Note": "DIAGNOSTIC RUN; snapshot probe overhead included, not ordinary budget evidence. an interface client: deltas, self state with pools and casts, weave slots, inventory, passives and pages on change"
+  },
+  {
+    "Name": "snapshot.combined.build",
+    "Value": 1.2173730000000007,
+    "Unit": "ms/player",
+    "Note": "DIAGNOSTIC RUN; snapshot probe overhead included, not ordinary budget evidence. deltas, interface, forecasts and encoding together; shares the existing 1 ms snapshot budget"
+  },
+  {
+    "Name": "snapshot.combined.bytes",
+    "Value": 8.4488134765625,
+    "Unit": "KB/player",
+    "Note": "DIAGNOSTIC RUN; snapshot probe overhead included, not ordinary budget evidence. all snapshot traffic together; shares the existing 10 KB delta budget"
+  },
+  {
+    "Name": "snapshot.combined.alloc",
+    "Value": 52.303984375,
+    "Unit": "KB/player",
+    "Note": "DIAGNOSTIC RUN; snapshot probe overhead included, not ordinary budget evidence. all snapshot allocation together"
+  },
+  {
+    "Name": "snapshot.forecast.build",
+    "Value": 0.2886805000000001,
+    "Unit": "ms/player",
+    "Note": "DIAGNOSTIC RUN; snapshot probe overhead included, not ordinary budget evidence. incremental build \u002B encode, 1852 active cast observations"
+  },
+  {
+    "Name": "snapshot.forecast.bytes",
+    "Value": 1.284521484375,
+    "Unit": "KB/player",
+    "Note": "DIAGNOSTIC RUN; snapshot probe overhead included, not ordinary budget evidence. complete opt-in baseline, incremental to entity/interface stream"
+  },
+  {
+    "Name": "snapshot.forecast.alloc",
+    "Value": 8.9151171875,
+    "Unit": "KB/player",
+    "Note": "DIAGNOSTIC RUN; snapshot probe overhead included, not ordinary budget evidence. incremental forecast build and encode allocation"
+  }
+]

@@ -21,6 +21,8 @@ public sealed class ZonePlanner
     private readonly WorldGenerator _gen;
     private readonly WorldLayout _layout;
     private readonly GenParams _p;
+    // One planning run only: adjacent quest slots reuse generated spawn facts, never another zone's quests.
+    private readonly Dictionary<ChunkCoord, SpawnPoint[]> _questPopulation = new();
 
     public ZonePlanner(WorldGenerator gen)
     {
@@ -218,6 +220,9 @@ public sealed class ZonePlanner
 
     private bool Fits(PoiDef def, in ClimateSample s, BiomeDef? biome, RegionInfo region, double waterDistance)
     {
+        var siteLevel = Math.Max(1, region.Level + def.Level);
+        if (def.Inhabitants.Count > 0 && !def.Inhabitants.Any(s => s.Level is null || s.Level.Contains(siteLevel)))
+            return false;
         if (def.Elevation is { } e && !e.Contains(s.Elevation - _p.SeaLevel))
         {
             return false;
@@ -284,7 +289,7 @@ public sealed class ZonePlanner
         name ??= def.Names.Count > 0 ? rng.Pick(def.Names) : def.DisplayName;
         var baseHeight = (float)Math.Max(_gen.WaterLevel(x, y) + 0.25, _gen.Elevation(x, y));
         var faction = !def.Factions.IsEmpty ? (region.Faction is not null && def.Factions.Has(region.Faction) ? region.Faction : rng.Pick(def.Factions.Items)) : region.Faction;
-        return new PoiInstance(id, def, name, zc, Math.Floor(x) + 0.5, Math.Floor(y) + 0.5, baseHeight, landmark, faction, region.Level + def.Level);
+        return new PoiInstance(id, def, name, zc, Math.Floor(x) + 0.5, Math.Floor(y) + 0.5, baseHeight, landmark, faction, Math.Max(1, region.Level + def.Level));
     }
 
     private static double Distance(double ax, double ay, double bx, double by) => Math.Sqrt((ax - bx) * (ax - bx) + (ay - by) * (ay - by));
@@ -322,7 +327,9 @@ public sealed class ZonePlanner
 
     private QuestDef? Instantiate(QuestTemplateDef template, PoiInstance giver, PoiInstance[] around, RegionInfo region, Rng rng, int index)
     {
+        var questLevel = Math.Max(1, giver.Level + template.LevelOffset);
         var fills = new Dictionary<string, (string Id, string Name)>(StringComparer.Ordinal);
+        var filledPois = new Dictionary<string, PoiInstance>(StringComparer.Ordinal);
         var usedPois = new HashSet<string> { giver.Id };
         foreach (var kv in template.Slots)
         {
@@ -330,13 +337,14 @@ public sealed class ZonePlanner
             var req = kv.Value;
             if (!req.PoiTags.IsEmpty)
             {
-                var pick = NearbyPoi(around, usedPois, req, giver, rng);
+                var pick = NearbyPoi(around, usedPois, req, giver, questLevel, rng);
                 if (pick is null)
                 {
                     return null;
                 }
                 usedPois.Add(pick.Id);
                 fills[slot] = (pick.Id, pick.Name);
+                filledPois[slot] = pick;
                 continue;
             }
             if (!req.PatternTags.IsEmpty)
@@ -344,10 +352,22 @@ public sealed class ZonePlanner
                 var options = new List<PatternDef>();
                 foreach (var p in _gen.Content.Each<PatternDef>())
                 {
-                    if (p.Tags.HasAll(req.PatternTags) && !p.Tags.Has("flora") && !p.Tags.Has("npc"))
+                    if (p.Tags.HasAll(req.PatternTags) && !p.Tags.Has("flora") && !p.Tags.Has("npc")
+                        && (req.LocalPopulation || req.LevelDelta is null || req.LevelDelta.Contains(p.Level - questLevel)))
                     {
                         options.Add(p);
                     }
+                }
+                if (req.LocalPopulation)
+                {
+                    var anchor = giver;
+                    if (req.PopulationAt is { } at && at != "$giver")
+                    {
+                        // Invalid/unresolved references fail closed even for programmatically supplied content.
+                        if (at.Length < 2 || at[0] != '$' || !filledPois.TryGetValue(at[1..], out var resolved)) return null;
+                        anchor = resolved;
+                    }
+                    options = LocalPatterns(options, req, anchor, questLevel);
                 }
                 if (options.Count == 0)
                 {
@@ -402,7 +422,7 @@ public sealed class ZonePlanner
             Name = Sub(string.IsNullOrEmpty(template.Name) ? template.DisplayName : template.Name, true, fills, giver),
             Description = Sub(template.Description, true, fills, giver),
             Tags = template.Tags.With("generated"),
-            Level = Math.Max(1, giver.Level + template.LevelOffset),
+            Level = questLevel,
             Giver = giver.Id,
             Zone = giver.Zone.Key,
             Objectives = objectives,
@@ -417,14 +437,15 @@ public sealed class ZonePlanner
     /// One of the three nearest unused points of interest within reach that carries a wanted tag. Nearest
     /// first, ties in their original order.
     /// </summary>
-    private static PoiInstance? NearbyPoi(PoiInstance[] around, HashSet<string> used, QuestSlot req, PoiInstance giver, Rng rng)
+    private static PoiInstance? NearbyPoi(PoiInstance[] around, HashSet<string> used, QuestSlot req, PoiInstance giver, int questLevel, Rng rng)
     {
         var options = new PoiInstance[around.Length];
         var keys = new double[around.Length];
         var count = 0;
         foreach (var p in around)
         {
-            if (used.Contains(p.Id) || !p.Tags.HasAny(req.PoiTags))
+            if (used.Contains(p.Id) || !p.Tags.HasAny(req.PoiTags)
+                || (req.LevelDelta is not null && !req.LevelDelta.Contains(p.Level - questLevel)))
             {
                 continue;
             }
@@ -450,6 +471,55 @@ public sealed class ZonePlanner
             return null;
         }
         return options[Math.Min(count - 1, rng.Next(Math.Min(3, count)))];
+    }
+
+    /// <summary>
+    /// Search nearest chunks first, returning matching species from the first populated chunk in reach.
+    /// Every candidate is backed by an actual spawn, with its actual site or pattern level. No candidate
+    /// means no quest. The content-owned chunk limit includes cache hits, so slot order cannot extend
+    /// the search. This consumes no placement RNG and never asks another zone to plan quests.
+    /// </summary>
+    private List<PatternDef> LocalPatterns(List<PatternDef> candidates, QuestSlot req, PoiInstance anchor, int questLevel)
+    {
+        if (candidates.Count == 0 || _p.QuestPopulationChunks <= 0) return new List<PatternDef>();
+        var first = _layout.ChunkOf(anchor.X - req.Within, anchor.Y - req.Within);
+        var last = _layout.ChunkOf(anchor.X + req.Within, anchor.Y + req.Within);
+        var chunks = new List<(ChunkCoord Coord, double Distance)>();
+        for (var y = first.Y; y <= last.Y; y++)
+            for (var x = first.X; x <= last.X; x++)
+            {
+                var coord = new ChunkCoord(x, y);
+                var origin = _layout.ChunkOrigin(coord);
+                var d = Distance(anchor.X, anchor.Y, Math.Clamp(anchor.X, origin.X, origin.X + _layout.ChunkSize),
+                    Math.Clamp(anchor.Y, origin.Y, origin.Y + _layout.ChunkSize));
+                if (d <= req.Within) chunks.Add((coord, d));
+            }
+        chunks.Sort((a, b) => a.Distance != b.Distance ? a.Distance.CompareTo(b.Distance)
+            : a.Coord.Y != b.Coord.Y ? a.Coord.Y.CompareTo(b.Coord.Y) : a.Coord.X.CompareTo(b.Coord.X));
+        var byId = candidates.ToDictionary(p => p.Id, StringComparer.Ordinal);
+        var patternIds = new HashSet<string>(byId.Keys, StringComparer.Ordinal);
+        var limit = Math.Min(chunks.Count, _p.QuestPopulationChunks);
+        for (var i = 0; i < limit; i++)
+        {
+            var coord = chunks[i].Coord;
+            if (!_questPopulation.TryGetValue(coord, out var spawns))
+            {
+                // A rejected chunk is not cached: another slot may ask for different species.
+                if (!_gen.CouldContainPopulation(coord, patternIds)) continue;
+                _questPopulation[coord] = spawns = _gen.GenerateSpawnFacts(coord);
+            }
+            var matches = new Dictionary<string, PatternDef>(StringComparer.Ordinal);
+            foreach (var spawn in spawns)
+            {
+                if (!byId.TryGetValue(spawn.Pattern, out var pattern)
+                    || Distance(anchor.X, anchor.Y, spawn.X, spawn.Y) > req.Within
+                    || (req.LevelDelta is not null && !req.LevelDelta.Contains((spawn.Level ?? pattern.Level) - questLevel)))
+                    continue;
+                matches.TryAdd(pattern.Id, pattern);
+            }
+            if (matches.Count > 0) return matches.Values.ToList();
+        }
+        return new List<PatternDef>();
     }
 
     private static string Sub(string? text, bool names, Dictionary<string, (string Id, string Name)> fills, PoiInstance giver)

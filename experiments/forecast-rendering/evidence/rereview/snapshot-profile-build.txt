@@ -1,0 +1,16 @@
+  HollowWake.Core -> C:\Users\John\.codex\worktrees\shared-cast-forecasts\MMOARPG\src\HollowWake.Core\bin\Release\net8.0\HollowWake.Core.dll
+  HollowWake.Protocol -> C:\Users\John\.codex\worktrees\shared-cast-forecasts\MMOARPG\src\HollowWake.Protocol\bin\Release\net8.0\HollowWake.Protocol.dll
+  HollowWake.Server -> C:\Users\John\.codex\worktrees\shared-cast-forecasts\MMOARPG\src\HollowWake.Server\bin\Release\net10.0\HollowWake.Server.dll
+  HollowWake.Server.Host -> C:\Users\John\.codex\worktrees\shared-cast-forecasts\MMOARPG\src\HollowWake.Server.Host\bin\Release\net10.0\hollowwake-server.dll
+  HollowWake.Server.Host.Brutal -> C:\Users\John\.codex\worktrees\shared-cast-forecasts\MMOARPG\src\HollowWake.Server.Host.Brutal\bin\Release\net10.0\hollowwake-server-brutal.dll
+  HollowWake.Tools -> C:\Users\John\.codex\worktrees\shared-cast-forecasts\MMOARPG\src\HollowWake.Tools\bin\Release\net10.0\hollowwake.dll
+  HollowWake.Client -> C:\Users\John\.codex\worktrees\shared-cast-forecasts\MMOARPG\src\HollowWake.Client\.godot\mono\temp\bin\Debug\HollowWake.Client.dll
+  HollowWake.Core.Tests -> C:\Users\John\.codex\worktrees\shared-cast-forecasts\MMOARPG\tests\HollowWake.Core.Tests\bin\Release\net10.0\HollowWake.Core.Tests.dll
+  HollowWake.Server.Tests -> C:\Users\John\.codex\worktrees\shared-cast-forecasts\MMOARPG\tests\HollowWake.Server.Tests\bin\Release\net10.0\HollowWake.Server.Tests.dll
+  HollowWake.Client.Tests -> C:\Users\John\.codex\worktrees\shared-cast-forecasts\MMOARPG\tests\HollowWake.Client.Tests\bin\Release\net10.0\HollowWake.Client.Tests.dll
+
+Build succeeded.
+    0 Warning(s)
+    0 Error(s)
+
+Time Elapsed 00:00:14.28

@@ -1,0 +1,133 @@
+{
+  "errors": [],
+  "bodies": [
+    {
+      "id": "goblin_scavenger",
+      "body": "goblinkin",
+      "rig": "biped",
+      "parts": 29,
+      "triangles": 464,
+      "height": 0.8131809587626303
+    },
+    {
+      "id": "goblin_skirmisher",
+      "body": "goblinkin",
+      "rig": "biped",
+      "parts": 28,
+      "triangles": 440,
+      "height": 0.9319047680409906
+    },
+    {
+      "id": "goblin_slinger",
+      "body": "goblinkin",
+      "rig": "biped",
+      "parts": 25,
+      "triangles": 408,
+      "height": 0.8904867783502799
+    },
+    {
+      "id": "goblin_shaman",
+      "body": "goblinkin",
+      "rig": "biped",
+      "parts": 28,
+      "triangles": 478,
+      "height": 1.2867209628342082
+    },
+    {
+      "id": "goblin_sapper",
+      "body": "goblinkin",
+      "rig": "biped",
+      "parts": 29,
+      "triangles": 542,
+      "height": 0.9526137628863459
+    },
+    {
+      "id": "goblin_brute",
+      "body": "goblinkin",
+      "rig": "biped",
+      "parts": 28,
+      "triangles": 448,
+      "height": 1.2839576804120314
+    },
+    {
+      "id": "goblin_chief",
+      "body": "goblinkin",
+      "rig": "biped",
+      "parts": 35,
+      "triangles": 532,
+      "height": 1.326
+    },
+    {
+      "id": "hobgoblin_taskmaster",
+      "body": "goblinkin",
+      "rig": "biped",
+      "parts": 30,
+      "triangles": 476,
+      "height": 1.8199999999999998
+    },
+    {
+      "id": "goblin_warboss",
+      "body": "goblinkin",
+      "rig": "biped",
+      "parts": 35,
+      "triangles": 528,
+      "height": 1.545462
+    },
+    {
+      "id": "troll_mauler",
+      "body": "goblinkin",
+      "rig": "biped",
+      "parts": 29,
+      "triangles": 464,
+      "height": 2.7251534536076667
+    },
+    {
+      "id": "troll_bridgewarden",
+      "body": "goblinkin",
+      "rig": "biped",
+      "parts": 32,
+      "triangles": 488,
+      "height": 2.9873836146900463
+    },
+    {
+      "id": "goblin_colossus",
+      "body": "goblinkin",
+      "rig": "biped",
+      "parts": 36,
+      "triangles": 540,
+      "height": 5.636436
+    },
+    {
+      "id": "gnasher_whelp",
+      "body": "gnasher",
+      "rig": "biped",
+      "parts": 19,
+      "triangles": 256,
+      "height": 0.34199999999999997
+    },
+    {
+      "id": "cave_gnasher",
+      "body": "gnasher",
+      "rig": "biped",
+      "parts": 23,
+      "triangles": 288,
+      "height": 0.8964332371720581
+    },
+    {
+      "id": "warg",
+      "body": "warbeast",
+      "rig": "quadruped",
+      "parts": 24,
+      "triangles": 330,
+      "height": 1.257482101073836
+    },
+    {
+      "id": "orc_ravager",
+      "body": "orc",
+      "rig": "biped",
+      "parts": 36,
+      "triangles": 576,
+      "height": 1.98
+    }
+  ]
+}

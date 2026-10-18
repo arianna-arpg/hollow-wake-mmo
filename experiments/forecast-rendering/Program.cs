@@ -15,7 +15,7 @@ foreach (var name in Shapes.Names)
         foreach (var hollow in new[] { 0f, .219f }) Add(shape, new(3.27f, angle, 1.135f, hollow));
     if (shape.HasWidth)
         foreach (var width in new[] { -0.25f, 0f, 16f }) Add(shape, new(3.27f, 450, width, 0));
-    if (shape.CenterAllowanceSquared > 0)
+    if (shape.Anchored && shape.HasAngle)
         foreach (var radius in new[] { .06f, 3.27f })
         foreach (var hollow in new[] { 0f, .01f, .219f }) Add(shape, new(radius, 90, 0, hollow));
 }
@@ -27,7 +27,7 @@ void Add(Shape shape, ShapeSize size)
     for (var x = -bound + .13f * step; x <= bound; x += step)
     for (var y = -bound + .21f * step; y <= bound; y += step)
         Sample(x, y, Math.Min(.03f, size.Radius / 200));
-    // The regular grid can miss the core's 0.1-unit central angular allowance.
+    // Keep anchor-neighborhood samples even when a shape has no central angular allowance.
     foreach (var x in new[] { -.12f, -.08f, -.04f, .005f, .04f, .08f, .12f, -1f, 1f })
     foreach (var y in new[] { .005f, .02f, -.02f, .08f, .2f }) Sample(x, y, .002f);
     void Sample(float x, float y, float band)

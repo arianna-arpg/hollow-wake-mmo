@@ -56,13 +56,16 @@ export function forecastCaption(c: CastForecastInfo, now: number, stale: boolean
   return usableForecast(c.region) ? 'primary' : 'unavailable';
 }
 export function usableForecast(r: CastForecastRegion | undefined): r is CastForecastRegion {
-  return r !== undefined && (SHAPES as readonly string[]).includes(r.shape) && r.target_test === 'center' &&
+  return r !== undefined && (SHAPES as readonly string[]).includes(r.shape) &&
+    (r.target_test === 'center' || r.target_test === 'body' && Number.isFinite(r.bottom) && Number.isFinite(r.top) && r.bottom! <= r.top!) &&
     (!WIDTH_SHAPES.includes(r.shape) || (r.size.width ?? 0) > 0) &&
     (!ANGLE_SHAPES.includes(r.shape) || (r.size.angle ?? 0) > 0) &&
     (r.size.radius ?? 0) > 0 && r.height_tolerance >= 0 && (r.center_allowance ?? 0) >= 0 &&
     [r.x, r.y, r.z, r.heading, r.height_tolerance, r.center_allowance ?? 0, r.size.radius ?? 0, r.size.angle ?? 0,
       r.size.width ?? 0, r.size.inner ?? 0, r.size.curvature ?? 0].every(Number.isFinite);
 }
+export const forecastVerticalBounds = (r: CastForecastRegion): [number, number] => r.target_test === 'body'
+  ? [r.bottom! - r.z, r.top! - r.z] : [-r.height_tolerance, r.height_tolerance];
 export const forecastOutline = (r: CastForecastRegion, segments: number) => regionOf({ name: r.shape,
   radius: r.size.radius!, angle: r.size.angle ?? 0, width: r.size.width ?? 0, inner: r.size.inner ?? 0,
   curvature: r.size.curvature ?? 0, centerAllowance: r.center_allowance ?? 0 }, segments);

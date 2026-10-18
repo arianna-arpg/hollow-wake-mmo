@@ -77,6 +77,8 @@ public class SignatureGrammarTests
     /// </summary>
     private static readonly string[] SplitNames =
     {
+        // Projectile launch elevation and nested cast orientation already use different aim vocabularies.
+        "aim",
         "amount",
         "at",
         "count",

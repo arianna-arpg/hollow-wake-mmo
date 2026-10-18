@@ -1,3 +1,7 @@
+import { faunaQuadruped, faunaBird, faunaCrab } from './faunaFamilies';
+import { orc } from './orcFamilies';
+import { goblinkin, gnasher, warbeast } from './goblinkinFamilies';
+import { skeleton, stitched, boneQuadruped } from './anatomyFamilies';
 import type { Rgb } from '../palette';
 import { BodyPlan, turnVec, v3 } from './bodyPlan';
 import { jitter, paletteColor, scaleOf, variationUnit, type AppearanceDef } from './looks';
@@ -746,7 +750,17 @@ function drop(b: BodyBuild): void {
 }
 
 export const BODY_FAMILIES: Record<string, Builder> = {
+  fauna_quadruped: faunaQuadruped,
+  fauna_bird: faunaBird,
+  fauna_crab: faunaCrab,
+  orc,
+  goblinkin,
+  gnasher,
+  warbeast,
   biped,
+  skeleton,
+  stitched,
+  bone_quadruped: boneQuadruped,
   quadruped,
   crawler,
   wisp,

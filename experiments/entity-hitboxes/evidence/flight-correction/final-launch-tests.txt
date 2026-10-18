@@ -1,0 +1,267 @@
+Test run for C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\bin\Debug\net10.0\HollowWake.Core.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\bin\Debug\net10.0\HollowWake.Core.Tests.dll
+[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v3.1.5+1b188a7b0a (64-bit .NET 10.0.13)
+[xUnit.net 00:00:00.09]   Discovering: HollowWake.Core.Tests
+[xUnit.net 00:00:01.74]   Discovered:  HollowWake.Core.Tests
+[xUnit.net 00:00:01.78]   Starting:    HollowWake.Core.Tests
+  Passed HollowWake.Core.Tests.ProjectileLaunchRegressionTests.EmptyGroundDirectionPressTravelsItsAuthoredRange(preset: "firebolt", cursorDistance: 3) [217 ms]
+  Standard Output Messages:
+ firebolt, cursor 3: origin <10, 10, 0.9>, traveled 16.632/16.250, final <26.631996, 10, 0.9>
+
+
+  Passed HollowWake.Core.Tests.ProjectileLaunchRegressionTests.EmptyGroundDirectionPressTravelsItsAuthoredRange(preset: "piercing_arrow", cursorDistance: 1) [8 ms]
+  Standard Output Messages:
+ piercing_arrow, cursor 1: origin <10, 10, 0.9>, traveled 19.500/19.380, final <29.5, 10, 0.9>
+
+
+  Passed HollowWake.Core.Tests.ProjectileLaunchRegressionTests.EmptyGroundDirectionPressTravelsItsAuthoredRange(preset: "piercing_arrow", cursorDistance: 3) [4 ms]
+  Standard Output Messages:
+ piercing_arrow, cursor 3: origin <10, 10, 0.9>, traveled 19.500/19.380, final <29.5, 10, 0.9>
+
+
+  Passed HollowWake.Core.Tests.ProjectileLaunchRegressionTests.EmptyGroundDirectionPressTravelsItsAuthoredRange(preset: "firebolt", cursorDistance: 1) [5 ms]
+  Standard Output Messages:
+ firebolt, cursor 1: origin <10, 10, 0.9>, traveled 16.632/16.250, final <26.631996, 10, 0.9>
+
+
+  Passed HollowWake.Core.Tests.ProjectileLaunchRegressionTests.EmptyGroundDirectionPressTravelsItsAuthoredRange(preset: "piercing_arrow", cursorDistance: 8) [6 ms]
+  Standard Output Messages:
+ piercing_arrow, cursor 8: origin <10, 10, 0.9>, traveled 19.500/19.380, final <29.5, 10, 0.9>
+
+
+  Passed HollowWake.Core.Tests.ProjectileLaunchRegressionTests.EmptyGroundDirectionPressTravelsItsAuthoredRange(preset: "firebolt", cursorDistance: 8) [6 ms]
+  Standard Output Messages:
+ firebolt, cursor 8: origin <10, 10, 0.9>, traveled 16.632/16.250, final <26.631996, 10, 0.9>
+
+
+  Passed HollowWake.Core.Tests.ProjectileLaunchRegressionTests.EmptyGroundDirectionCanStrikeABodyBeyondTheCursor [45 ms]
+  Passed HollowWake.Core.Tests.ProjectileLaunchRegressionTests.NestedFlightsKeepTheirEmissionHeightAndReachHumanoids(path: "on_travel", ground: 0.5, pattern: "skeleton_warrior") [38 ms]
+  Standard Output Messages:
+ on_travel/skeleton_warrior, ground 0.5: 4 children, heights 1.400,1.400,1.400,1.400
+
+
+  Passed HollowWake.Core.Tests.ProjectileLaunchRegressionTests.NestedFlightsKeepTheirEmissionHeightAndReachHumanoids(path: "aim", ground: 0.5, pattern: "hob") [8 ms]
+  Standard Output Messages:
+ aim/hob, ground 0.5: 4 children, heights 1.400,1.400,1.400,1.400
+
+
+  Passed HollowWake.Core.Tests.ProjectileLaunchRegressionTests.NestedFlightsKeepTheirEmissionHeightAndReachHumanoids(path: "on_travel", ground: -0.5, pattern: "hob") [9 ms]
+  Standard Output Messages:
+ on_travel/hob, ground -0.5: 4 children, heights 0.400,0.400,0.400,0.400
+
+
+  Passed HollowWake.Core.Tests.ProjectileLaunchRegressionTests.NestedFlightsKeepTheirEmissionHeightAndReachHumanoids(path: "cascade", ground: 0.5, pattern: "skeleton_warrior") [21 ms]
+  Standard Output Messages:
+ cascade/skeleton_warrior, ground 0.5: 12 children, heights 1.400,1.500,1.400,1.500,1.500,1.400,1.500,1.500,1.400,1.500,1.500,1.500
+
+
+  Passed HollowWake.Core.Tests.ProjectileLaunchRegressionTests.NestedFlightsKeepTheirEmissionHeightAndReachHumanoids(path: "cascade", ground: -0.5, pattern: "skeleton_warrior") [14 ms]
+  Standard Output Messages:
+ cascade/skeleton_warrior, ground -0.5: 12 children, heights 0.400,0.500,0.400,0.500,0.500,0.400,0.500,0.500,0.400,0.500,0.500,0.500
+
+
+  Passed HollowWake.Core.Tests.ProjectileLaunchRegressionTests.NestedFlightsKeepTheirEmissionHeightAndReachHumanoids(path: "cascade", ground: -0.5, pattern: "hob") [5 ms]
+  Standard Output Messages:
+ cascade/hob, ground -0.5: 12 children, heights 0.400,0.500,0.400,0.500,0.500,0.400,0.500,0.500,0.400,0.500,0.500,0.500
+
+
+  Passed HollowWake.Core.Tests.ProjectileLaunchRegressionTests.NestedFlightsKeepTheirEmissionHeightAndReachHumanoids(path: "delay", ground: 0.5, pattern: "hob") [4 ms]
+  Standard Output Messages:
+ delay/hob, ground 0.5: 4 children, heights 1.400,1.400,1.400,1.400
+
+
+  Passed HollowWake.Core.Tests.ProjectileLaunchRegressionTests.NestedFlightsKeepTheirEmissionHeightAndReachHumanoids(path: "on_tick", ground: 0.5, pattern: "skeleton_warrior") [7 ms]
+  Standard Output Messages:
+ on_tick/skeleton_warrior, ground 0.5: 4 children, heights 1.400,1.400,1.400,1.400
+
+
+  Passed HollowWake.Core.Tests.ProjectileLaunchRegressionTests.NestedFlightsKeepTheirEmissionHeightAndReachHumanoids(path: "salvo", ground: -0.5, pattern: "skeleton_warrior") [8 ms]
+  Standard Output Messages:
+ salvo/skeleton_warrior, ground -0.5: 8 children, heights 0.400,0.400,0.400,0.400,0.400,0.400,0.400,0.400
+
+
+  Passed HollowWake.Core.Tests.ProjectileLaunchRegressionTests.NestedFlightsKeepTheirEmissionHeightAndReachHumanoids(path: "aim", ground: 0, pattern: "skeleton_warrior") [7 ms]
+  Standard Output Messages:
+ aim/skeleton_warrior, ground 0: 4 children, heights 0.900,0.900,0.900,0.900
+
+
+  Passed HollowWake.Core.Tests.ProjectileLaunchRegressionTests.NestedFlightsKeepTheirEmissionHeightAndReachHumanoids(path: "delay", ground: -0.5, pattern: "hob") [4 ms]
+  Standard Output Messages:
+ delay/hob, ground -0.5: 4 children, heights 0.400,0.400,0.400,0.400
+
+
+  Passed HollowWake.Core.Tests.ProjectileLaunchRegressionTests.NestedFlightsKeepTheirEmissionHeightAndReachHumanoids(path: "delay", ground: 0, pattern: "skeleton_warrior") [4 ms]
+  Standard Output Messages:
+ delay/skeleton_warrior, ground 0: 4 children, heights 0.900,0.900,0.900,0.900
+
+
+  Passed HollowWake.Core.Tests.ProjectileLaunchRegressionTests.NestedFlightsKeepTheirEmissionHeightAndReachHumanoids(path: "cast", ground: 0.5, pattern: "hob") [28 ms]
+  Standard Output Messages:
+ cast/hob, ground 0.5: 4 children, heights 1.400,1.400,1.400,1.400
+
+
+  Passed HollowWake.Core.Tests.ProjectileLaunchRegressionTests.NestedFlightsKeepTheirEmissionHeightAndReachHumanoids(path: "on_tick", ground: 0, pattern: "skeleton_warrior") [6 ms]
+  Standard Output Messages:
+ on_tick/skeleton_warrior, ground 0: 4 children, heights 0.900,0.900,0.900,0.900
+
+
+  Passed HollowWake.Core.Tests.ProjectileLaunchRegressionTests.NestedFlightsKeepTheirEmissionHeightAndReachHumanoids(path: "delay", ground: -0.5, pattern: "skeleton_warrior") [5 ms]
+  Standard Output Messages:
+ delay/skeleton_warrior, ground -0.5: 4 children, heights 0.400,0.400,0.400,0.400
+
+
+  Passed HollowWake.Core.Tests.ProjectileLaunchRegressionTests.NestedFlightsKeepTheirEmissionHeightAndReachHumanoids(path: "on_tick", ground: -0.5, pattern: "hob") [3 ms]
+  Standard Output Messages:
+ on_tick/hob, ground -0.5: 4 children, heights 0.400,0.400,0.400,0.400
+
+
+  Passed HollowWake.Core.Tests.ProjectileLaunchRegressionTests.NestedFlightsKeepTheirEmissionHeightAndReachHumanoids(path: "on_travel", ground: 0, pattern: "hob") [4 ms]
+  Standard Output Messages:
+ on_travel/hob, ground 0: 4 children, heights 0.900,0.900,0.900,0.900
+
+
+  Passed HollowWake.Core.Tests.ProjectileLaunchRegressionTests.NestedFlightsKeepTheirEmissionHeightAndReachHumanoids(path: "on_travel", ground: -0.5, pattern: "skeleton_warrior") [3 ms]
+  Standard Output Messages:
+ on_travel/skeleton_warrior, ground -0.5: 4 children, heights 0.400,0.400,0.400,0.400
+
+
+  Passed HollowWake.Core.Tests.ProjectileLaunchRegressionTests.NestedFlightsKeepTheirEmissionHeightAndReachHumanoids(path: "salvo", ground: 0, pattern: "hob") [5 ms]
+  Standard Output Messages:
+ salvo/hob, ground 0: 8 children, heights 0.900,0.900,0.900,0.900,0.900,0.900,0.900,0.900
+
+
+  Passed HollowWake.Core.Tests.ProjectileLaunchRegressionTests.NestedFlightsKeepTheirEmissionHeightAndReachHumanoids(path: "aim", ground: -0.5, pattern: "skeleton_warrior") [4 ms]
+  Standard Output Messages:
+ aim/skeleton_warrior, ground -0.5: 4 children, heights 0.400,0.400,0.400,0.400
+
+
+  Passed HollowWake.Core.Tests.ProjectileLaunchRegressionTests.NestedFlightsKeepTheirEmissionHeightAndReachHumanoids(path: "aim", ground: 0, pattern: "hob") [5 ms]
+  Standard Output Messages:
+ aim/hob, ground 0: 4 children, heights 0.900,0.900,0.900,0.900
+
+
+  Passed HollowWake.Core.Tests.ProjectileLaunchRegressionTests.NestedFlightsKeepTheirEmissionHeightAndReachHumanoids(path: "on_tick", ground: -0.5, pattern: "skeleton_warrior") [20 ms]
+  Standard Output Messages:
+ on_tick/skeleton_warrior, ground -0.5: 4 children, heights 0.400,0.400,0.400,0.400
+
+
+  Passed HollowWake.Core.Tests.ProjectileLaunchRegressionTests.NestedFlightsKeepTheirEmissionHeightAndReachHumanoids(path: "on_tick", ground: 0.5, pattern: "hob") [6 ms]
+  Standard Output Messages:
+ on_tick/hob, ground 0.5: 4 children, heights 1.400,1.400,1.400,1.400
+
+
+  Passed HollowWake.Core.Tests.ProjectileLaunchRegressionTests.NestedFlightsKeepTheirEmissionHeightAndReachHumanoids(path: "on_travel", ground: 0.5, pattern: "hob") [3 ms]
+  Standard Output Messages:
+ on_travel/hob, ground 0.5: 4 children, heights 1.400,1.400,1.400,1.400
+
+
+  Passed HollowWake.Core.Tests.ProjectileLaunchRegressionTests.NestedFlightsKeepTheirEmissionHeightAndReachHumanoids(path: "on_tick", ground: 0, pattern: "hob") [5 ms]
+  Standard Output Messages:
+ on_tick/hob, ground 0: 4 children, heights 0.900,0.900,0.900,0.900
+
+
+  Passed HollowWake.Core.Tests.ProjectileLaunchRegressionTests.NestedFlightsKeepTheirEmissionHeightAndReachHumanoids(path: "salvo", ground: 0.5, pattern: "hob") [6 ms]
+  Standard Output Messages:
+ salvo/hob, ground 0.5: 8 children, heights 1.400,1.400,1.400,1.400,1.400,1.400,1.400,1.400
+
+
+  Passed HollowWake.Core.Tests.ProjectileLaunchRegressionTests.NestedFlightsKeepTheirEmissionHeightAndReachHumanoids(path: "cast", ground: 0, pattern: "skeleton_warrior") [13 ms]
+  Standard Output Messages:
+ cast/skeleton_warrior, ground 0: 4 children, heights 0.900,0.900,0.900,0.900
+
+
+  Passed HollowWake.Core.Tests.ProjectileLaunchRegressionTests.NestedFlightsKeepTheirEmissionHeightAndReachHumanoids(path: "cast", ground: 0.5, pattern: "skeleton_warrior") [10 ms]
+  Standard Output Messages:
+ cast/skeleton_warrior, ground 0.5: 4 children, heights 1.400,1.400,1.400,1.400
+
+
+  Passed HollowWake.Core.Tests.ProjectileLaunchRegressionTests.NestedFlightsKeepTheirEmissionHeightAndReachHumanoids(path: "cast", ground: -0.5, pattern: "hob") [15 ms]
+  Standard Output Messages:
+ cast/hob, ground -0.5: 4 children, heights 0.400,0.400,0.400,0.400
+
+
+  Passed HollowWake.Core.Tests.ProjectileLaunchRegressionTests.NestedFlightsKeepTheirEmissionHeightAndReachHumanoids(path: "delay", ground: 0, pattern: "hob") [4 ms]
+  Standard Output Messages:
+ delay/hob, ground 0: 4 children, heights 0.900,0.900,0.900,0.900
+
+
+  Passed HollowWake.Core.Tests.ProjectileLaunchRegressionTests.NestedFlightsKeepTheirEmissionHeightAndReachHumanoids(path: "salvo", ground: 0, pattern: "skeleton_warrior") [4 ms]
+  Standard Output Messages:
+ salvo/skeleton_warrior, ground 0: 8 children, heights 0.900,0.900,0.900,0.900,0.900,0.900,0.900,0.900
+
+
+  Passed HollowWake.Core.Tests.ProjectileLaunchRegressionTests.NestedFlightsKeepTheirEmissionHeightAndReachHumanoids(path: "salvo", ground: 0.5, pattern: "skeleton_warrior") [4 ms]
+  Standard Output Messages:
+ salvo/skeleton_warrior, ground 0.5: 8 children, heights 1.400,1.400,1.400,1.400,1.400,1.400,1.400,1.400
+
+
+  Passed HollowWake.Core.Tests.ProjectileLaunchRegressionTests.NestedFlightsKeepTheirEmissionHeightAndReachHumanoids(path: "delay", ground: 0.5, pattern: "skeleton_warrior") [5 ms]
+  Standard Output Messages:
+ delay/skeleton_warrior, ground 0.5: 4 children, heights 1.400,1.400,1.400,1.400
+
+
+  Passed HollowWake.Core.Tests.ProjectileLaunchRegressionTests.NestedFlightsKeepTheirEmissionHeightAndReachHumanoids(path: "cast", ground: 0, pattern: "hob") [8 ms]
+  Standard Output Messages:
+ cast/hob, ground 0: 4 children, heights 0.900,0.900,0.900,0.900
+
+
+  Passed HollowWake.Core.Tests.ProjectileLaunchRegressionTests.NestedFlightsKeepTheirEmissionHeightAndReachHumanoids(path: "cascade", ground: 0, pattern: "skeleton_warrior") [5 ms]
+  Standard Output Messages:
+ cascade/skeleton_warrior, ground 0: 12 children, heights 0.900,1.000,0.900,1.000,1.000,0.900,1.000,1.000,0.900,1.000,1.000,1.000
+
+
+  Passed HollowWake.Core.Tests.ProjectileLaunchRegressionTests.NestedFlightsKeepTheirEmissionHeightAndReachHumanoids(path: "cascade", ground: 0.5, pattern: "hob") [4 ms]
+  Standard Output Messages:
+ cascade/hob, ground 0.5: 12 children, heights 1.400,1.500,1.400,1.500,1.500,1.400,1.500,1.500,1.400,1.500,1.500,1.500
+
+
+  Passed HollowWake.Core.Tests.ProjectileLaunchRegressionTests.NestedFlightsKeepTheirEmissionHeightAndReachHumanoids(path: "aim", ground: -0.5, pattern: "hob") [6 ms]
+  Standard Output Messages:
+ aim/hob, ground -0.5: 4 children, heights 0.400,0.400,0.400,0.400
+
+
+  Passed HollowWake.Core.Tests.ProjectileLaunchRegressionTests.NestedFlightsKeepTheirEmissionHeightAndReachHumanoids(path: "aim", ground: 0.5, pattern: "skeleton_warrior") [4 ms]
+  Standard Output Messages:
+ aim/skeleton_warrior, ground 0.5: 4 children, heights 1.400,1.400,1.400,1.400
+
+
+[xUnit.net 00:00:02.59]   Finished:    HollowWake.Core.Tests
+  Passed HollowWake.Core.Tests.ProjectileLaunchRegressionTests.NestedFlightsKeepTheirEmissionHeightAndReachHumanoids(path: "cast", ground: -0.5, pattern: "skeleton_warrior") [9 ms]
+  Standard Output Messages:
+ cast/skeleton_warrior, ground -0.5: 4 children, heights 0.400,0.400,0.400,0.400
+
+
+  Passed HollowWake.Core.Tests.ProjectileLaunchRegressionTests.NestedFlightsKeepTheirEmissionHeightAndReachHumanoids(path: "on_travel", ground: 0, pattern: "skeleton_warrior") [4 ms]
+  Standard Output Messages:
+ on_travel/skeleton_warrior, ground 0: 4 children, heights 0.900,0.900,0.900,0.900
+
+
+  Passed HollowWake.Core.Tests.ProjectileLaunchRegressionTests.NestedFlightsKeepTheirEmissionHeightAndReachHumanoids(path: "cascade", ground: 0, pattern: "hob") [5 ms]
+  Standard Output Messages:
+ cascade/hob, ground 0: 12 children, heights 0.900,1.000,0.900,1.000,1.000,0.900,1.000,1.000,0.900,1.000,1.000,1.000
+
+
+  Passed HollowWake.Core.Tests.ProjectileLaunchRegressionTests.NestedFlightsKeepTheirEmissionHeightAndReachHumanoids(path: "salvo", ground: -0.5, pattern: "hob") [3 ms]
+  Standard Output Messages:
+ salvo/hob, ground -0.5: 8 children, heights 0.400,0.400,0.400,0.400,0.400,0.400,0.400,0.400
+
+
+  Passed HollowWake.Core.Tests.ProjectileLaunchRegressionTests.ExplicitElevationChoicesRemainAvailable(aim: "point", verticalSign: -1) [7 ms]
+  Passed HollowWake.Core.Tests.ProjectileLaunchRegressionTests.ExplicitElevationChoicesRemainAvailable(aim: "horizontal", verticalSign: 0) [< 1 ms]
+  Passed HollowWake.Core.Tests.ProjectileLaunchRegressionTests.AuthoredOrbsShedChildrenAtTheParentHeightAndHitBodies(preset: "tide_orb") [62 ms]
+  Standard Output Messages:
+ tide_orb: parent height 0.900, 15 children at 0.900,0.900,0.900,0.900,0.900,0.900,0.900,0.900,0.900,0.900,0.900,0.900,0.900,0.900,0.900
+
+
+  Passed HollowWake.Core.Tests.ProjectileLaunchRegressionTests.AuthoredOrbsShedChildrenAtTheParentHeightAndHitBodies(preset: "frozen_orb") [30 ms]
+  Standard Output Messages:
+ frozen_orb: parent height 0.900, 20 children at 0.900,0.900,0.900,0.900,0.900,0.900,0.900,0.900,0.900,0.900,0.900,0.900,0.900,0.900,0.900,0.900,0.900,0.900,0.900,0.900
+
+
+  Passed HollowWake.Core.Tests.ProjectileLaunchRegressionTests.ExplicitPointOriginAtANewAnchorUsesItsGroundLift [4 ms]
+
+Test Run Successful.
+Total tests: 54
+     Passed: 54
+ Total time: 3.0560 Seconds

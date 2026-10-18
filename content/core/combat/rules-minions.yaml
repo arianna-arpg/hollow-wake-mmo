@@ -11,6 +11,8 @@ entries:
       # Tags every summoned body wears, and every construct.
       tags: [minion]
       construct_tags: [construct]
+      # Species/material/role tags stay; these encounter roots (and descendants) do not.
+      encounter_tags: [monster, remnant, habitat, quest]
       # Bodies one summon raises at most, and the ring they appear on around their center.
       max_per_cast: 32
       ring: 1.2

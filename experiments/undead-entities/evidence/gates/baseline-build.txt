@@ -1,0 +1,34 @@
+  Determining projects to restore...
+  Restored C:\Users\John\.codex\worktrees\undead-entity-foundation\MMOARPG\src\HollowWake.Protocol\HollowWake.Protocol.csproj (in 314 ms).
+  Restored C:\Users\John\.codex\worktrees\undead-entity-foundation\MMOARPG\src\HollowWake.Server\HollowWake.Server.csproj (in 314 ms).
+  Restored C:\Users\John\.codex\worktrees\undead-entity-foundation\MMOARPG\tests\HollowWake.Client.Tests\HollowWake.Client.Tests.csproj (in 314 ms).
+  Restored C:\Users\John\.codex\worktrees\undead-entity-foundation\MMOARPG\src\HollowWake.Core\HollowWake.Core.csproj (in 314 ms).
+  Restored C:\Users\John\.codex\worktrees\undead-entity-foundation\MMOARPG\src\HollowWake.Server.Host\HollowWake.Server.Host.csproj (in 314 ms).
+  Restored C:\Users\John\.codex\worktrees\undead-entity-foundation\MMOARPG\src\HollowWake.Tools\HollowWake.Tools.csproj (in 314 ms).
+  Restored C:\Users\John\.codex\worktrees\undead-entity-foundation\MMOARPG\tests\HollowWake.Server.Tests\HollowWake.Server.Tests.csproj (in 314 ms).
+  Restored C:\Users\John\.codex\worktrees\undead-entity-foundation\MMOARPG\src\HollowWake.Server.Host.Brutal\HollowWake.Server.Host.Brutal.csproj (in 314 ms).
+  Restored C:\Users\John\.codex\worktrees\undead-entity-foundation\MMOARPG\src\HollowWake.Client\HollowWake.Client.csproj (in 314 ms).
+  Restored C:\Users\John\.codex\worktrees\undead-entity-foundation\MMOARPG\tests\HollowWake.Core.Tests\HollowWake.Core.Tests.csproj (in 314 ms).
+  HollowWake.Core -> C:\Users\John\.codex\worktrees\undead-entity-foundation\MMOARPG\src\HollowWake.Core\bin\Debug\net8.0\HollowWake.Core.dll
+  HollowWake.Protocol -> C:\Users\John\.codex\worktrees\undead-entity-foundation\MMOARPG\src\HollowWake.Protocol\bin\Debug\net8.0\HollowWake.Protocol.dll
+C:\Users\John\.codex\worktrees\undead-entity-foundation\MMOARPG\tests\HollowWake.Core.Tests\PortedProjectileTests.cs(267,9): warning xUnit2031: Do not use a Where clause to filter before calling Assert.Single. Use the overload of Assert.Single that accepts a filtering function. (https://xunit.net/xunit.analyzers/rules/xUnit2031) [C:\Users\John\.codex\worktrees\undead-entity-foundation\MMOARPG\tests\HollowWake.Core.Tests\HollowWake.Core.Tests.csproj]
+C:\Users\John\.codex\worktrees\undead-entity-foundation\MMOARPG\tests\HollowWake.Core.Tests\PortedProjectileTests.cs(254,19): warning xUnit2031: Do not use a Where clause to filter before calling Assert.Single. Use the overload of Assert.Single that accepts a filtering function. (https://xunit.net/xunit.analyzers/rules/xUnit2031) [C:\Users\John\.codex\worktrees\undead-entity-foundation\MMOARPG\tests\HollowWake.Core.Tests\HollowWake.Core.Tests.csproj]
+C:\Users\John\.codex\worktrees\undead-entity-foundation\MMOARPG\tests\HollowWake.Core.Tests\PortedProjectileTests.cs(280,9): warning xUnit2031: Do not use a Where clause to filter before calling Assert.Single. Use the overload of Assert.Single that accepts a filtering function. (https://xunit.net/xunit.analyzers/rules/xUnit2031) [C:\Users\John\.codex\worktrees\undead-entity-foundation\MMOARPG\tests\HollowWake.Core.Tests\HollowWake.Core.Tests.csproj]
+  HollowWake.Core.Tests -> C:\Users\John\.codex\worktrees\undead-entity-foundation\MMOARPG\tests\HollowWake.Core.Tests\bin\Debug\net10.0\HollowWake.Core.Tests.dll
+  HollowWake.Server -> C:\Users\John\.codex\worktrees\undead-entity-foundation\MMOARPG\src\HollowWake.Server\bin\Debug\net10.0\HollowWake.Server.dll
+  HollowWake.Client.Tests -> C:\Users\John\.codex\worktrees\undead-entity-foundation\MMOARPG\tests\HollowWake.Client.Tests\bin\Debug\net10.0\HollowWake.Client.Tests.dll
+  HollowWake.Server.Host -> C:\Users\John\.codex\worktrees\undead-entity-foundation\MMOARPG\src\HollowWake.Server.Host\bin\Debug\net10.0\hollowwake-server.dll
+  HollowWake.Client -> C:\Users\John\.codex\worktrees\undead-entity-foundation\MMOARPG\src\HollowWake.Client\.godot\mono\temp\bin\Debug\HollowWake.Client.dll
+  HollowWake.Server.Tests -> C:\Users\John\.codex\worktrees\undead-entity-foundation\MMOARPG\tests\HollowWake.Server.Tests\bin\Debug\net10.0\HollowWake.Server.Tests.dll
+  HollowWake.Server.Host.Brutal -> C:\Users\John\.codex\worktrees\undead-entity-foundation\MMOARPG\src\HollowWake.Server.Host.Brutal\bin\Debug\net10.0\hollowwake-server-brutal.dll
+  HollowWake.Tools -> C:\Users\John\.codex\worktrees\undead-entity-foundation\MMOARPG\src\HollowWake.Tools\bin\Debug\net10.0\hollowwake.dll
+
+Build succeeded.
+
+C:\Users\John\.codex\worktrees\undead-entity-foundation\MMOARPG\tests\HollowWake.Core.Tests\PortedProjectileTests.cs(267,9): warning xUnit2031: Do not use a Where clause to filter before calling Assert.Single. Use the overload of Assert.Single that accepts a filtering function. (https://xunit.net/xunit.analyzers/rules/xUnit2031) [C:\Users\John\.codex\worktrees\undead-entity-foundation\MMOARPG\tests\HollowWake.Core.Tests\HollowWake.Core.Tests.csproj]
+C:\Users\John\.codex\worktrees\undead-entity-foundation\MMOARPG\tests\HollowWake.Core.Tests\PortedProjectileTests.cs(254,19): warning xUnit2031: Do not use a Where clause to filter before calling Assert.Single. Use the overload of Assert.Single that accepts a filtering function. (https://xunit.net/xunit.analyzers/rules/xUnit2031) [C:\Users\John\.codex\worktrees\undead-entity-foundation\MMOARPG\tests\HollowWake.Core.Tests\HollowWake.Core.Tests.csproj]
+C:\Users\John\.codex\worktrees\undead-entity-foundation\MMOARPG\tests\HollowWake.Core.Tests\PortedProjectileTests.cs(280,9): warning xUnit2031: Do not use a Where clause to filter before calling Assert.Single. Use the overload of Assert.Single that accepts a filtering function. (https://xunit.net/xunit.analyzers/rules/xUnit2031) [C:\Users\John\.codex\worktrees\undead-entity-foundation\MMOARPG\tests\HollowWake.Core.Tests\HollowWake.Core.Tests.csproj]
+    3 Warning(s)
+    0 Error(s)
+
+Time Elapsed 00:00:07.33

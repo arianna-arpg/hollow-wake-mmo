@@ -1,0 +1,52 @@
+{
+  "started": "2026-10-18T02:08:17.565Z",
+  "root": "C:\\Users\\John\\.codex\\worktrees\\undead-entity-foundation\\MMOARPG",
+  "directory": "C:\\Users\\John\\.codex\\worktrees\\undead-entity-foundation\\MMOARPG\\experiments\\undead-entities\\artifacts\\smoke\\run-TrNIY5",
+  "suite": "all",
+  "status": "passed",
+  "stages": [
+    {
+      "name": "smoke-web",
+      "status": "passed",
+      "started": "2026-10-18T02:08:18.930Z",
+      "code": 0,
+      "signal": null,
+      "passed": 29,
+      "total": 29,
+      "skipped": [],
+      "finished": "2026-10-18T02:09:33.342Z"
+    },
+    {
+      "name": "import-godot",
+      "status": "passed",
+      "started": "2026-10-18T02:09:33.344Z",
+      "code": 0,
+      "signal": null,
+      "finished": "2026-10-18T02:09:37.640Z"
+    },
+    {
+      "name": "smoke-godot",
+      "status": "passed",
+      "started": "2026-10-18T02:09:37.641Z",
+      "code": 0,
+      "signal": null,
+      "passed": 25,
+      "total": 25,
+      "skipped": [
+        "appearance rendering: headless display; geometry/card performance and readability require graphical evidence",
+        "theme rendered pixels: headless display; theme state checked above"
+      ],
+      "finished": "2026-10-18T02:10:17.230Z"
+    }
+  ],
+  "nativeRendering": "not covered by headless mode",
+  "godot": "C:\\Users\\John\\AppData\\Local\\Microsoft\\WinGet\\Packages\\GodotEngine.GodotEngine.Mono_Microsoft.Winget.Source_8wekyb3d8bbwe\\Godot_v4.7.2-stable_mono_win64\\Godot_v4.7.2-stable_mono_win64.exe",
+  "server": {
+    "tcp": 64709,
+    "url": "http://127.0.0.1:64710",
+    "name": "harness-run-TrNIY5",
+    "data": "C:\\Users\\John\\.codex\\worktrees\\undead-entity-foundation\\MMOARPG\\experiments\\undead-entities\\artifacts\\smoke\\run-TrNIY5\\data"
+  },
+  "cleanupErrors": [],
+  "finished": "2026-10-18T02:10:17.527Z"
+}

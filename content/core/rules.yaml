@@ -24,6 +24,8 @@ entries:
         poi_cell: 64
         poi_margin: 20
         poi_target: 4
+        # Count inspected chunks per local quest slot, including cached chunks; no match means no offer.
+        quest_population_chunks: 16
         flatten_falloff: 6
         max_walkable_slope: 1.1
         shallow_depth: 0.6

@@ -18,7 +18,7 @@ The **summoning weave** is the context's host when a meta, trigger or `cast` run
 
 `summon` raises bodies for the context's origin. Its parameters:
 
-- what: a `pattern`; a weighted `pool` of `{pattern, weight, tags, behavior}` re-rolled per body (entry tags join the body's tags, an entry's behavior overrides the summon's); or `from_corpse` (`nearest` to the focus within `search_radius`, by default `minions.corpse_search`, or the context's `target`), raising each corpse as its own kind and consuming it; a pattern beside `from_corpse` is the fallback
+- what: a `pattern`; a weighted `pool` of `{pattern, weight, tags, behavior}` re-rolled per body (entry tags join the body's tags, an entry's behavior overrides the summon's); or `from_corpse` (`nearest` to the focus within `search_radius`, by default `minions.corpse_search`, or the context's `target`), raising each corpse as its own kind and consuming it; a pattern beside `from_corpse` is the fallback. `raise_as: pattern` instead transforms a found corpse into that pattern, with no fallback birth; it requires `from_corpse` and excludes `pattern`/`pool`. Every repeat or delayed wave must find an available corpse again
 - how many and how long: `count` (default `weave.summon.count`, at most `minions.max_per_cast`), `duration` (default `weave.duration`; zero or less lasts)
 - how many at once: `max_active` (default `weave.summon.max`) counted over the group; with a `pool_group` the count is over the pool and the capacity is the owner's `minion.max`, based on `max_active` and folded with the weave's tags plus `pool.{group}`, so investments can raise one pool. Past the capacity the oldest bodies are dismissed (despawned, not killed), and one press raises at most the capacity: a count past it raises only what the group can hold, publishing births, running `on_birth` and spending corpses for those bodies alone. An `exclusive_group` dismisses the owner's bodies of the other groups in it, and ends their contracts.
 - where: `place` with `at` (`focus`, the default: the target else the point; `caster`; `point`, clamped to `range` from the caster; `target`), and `shape`: `around` (the default: a ring of `radius`, by default `minions.ring`, at a random bearing per body), `scatter` (in a disc of `radius`; `scatter: r` is shorthand), `line` (across the facing, `spacing` apart) or `circle` (evenly around at `radius`)
@@ -28,6 +28,10 @@ The **summoning weave** is the context's host when a meta, trigger or `cast` run
 - terms: `contract`, `decay`, `waves`, `presence`, `replenish` (below)
 
 Every roll comes from the cast's random stream: a single-pattern summon draws one bearing per body, a pool one pick more. Births publish `MinionSummoned`.
+
+### Reusing encounter bodies
+
+A summon keeps its pattern's anatomy, classifiers, base attributes and weave kit. The summon recipe supplies the minion behavior and owner relation; it removes the pattern's wild `Drops` component at birth, including experience, so summons cannot be farmed for encounter rewards. This also applies to contract respawns. A wild spawn retains those rewards. At birth the identity and `faction.*` stat tag use the owner's effective faction. Rule `minions.encounter_tags` removes encounter tag roots and their descendants while keeping anatomy, species and role tags. The pattern definition retains the native wild faction. Public snapshots resolve the same effective owner faction as combat relations. See [entity content](entities.md).
 
 ### Inheritance
 

@@ -161,7 +161,6 @@ internal static class Families
         Alike = new[]
         {
             new Alike("shape", "sector", "cone", SameShape),
-            new Alike("shape", "bar", "wave", "swept along the flight, the two blades laid across it pass over the crowd's bodies on the same ticks"),
         },
         Unsampled = new Dictionary<string, string>
         {

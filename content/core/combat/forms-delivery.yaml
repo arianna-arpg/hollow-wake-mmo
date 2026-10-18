@@ -221,9 +221,10 @@ entries:
     ai: { role: control, preferred_range: 1.6, weight: 0.5 }
     effects:
       - type: area
+        contact: body
         shape: sector
         center: source
-        radius: "weave.range"
+        radius_base: "weave.range"
         angle: "weave.melee.arc"
         reach: edge
         max_targets: 1

@@ -428,6 +428,7 @@ internal sealed class CastHandler : IEffectHandler
                 Potency = ctx.Potency,
                 DamageScale = ctx.DamageScale * scale,
                 From = from,
+                LaunchLift = from is not null && from == ctx.From ? ctx.LaunchLift : null,
                 Vars = vars,
                 Slot = ctx.Slot,
                 Host = ctx.Host ?? ctx.Weave,

@@ -1,0 +1,26 @@
+[
+  {
+    "Name": "worldgen.zone.plan",
+    "Value": 36.6863,
+    "Unit": "ms",
+    "Note": "4 pois, 3 quests"
+  },
+  {
+    "Name": "worldgen.chunk",
+    "Value": 0.5795171875,
+    "Unit": "ms/chunk",
+    "Note": "64 chunks, 65536 cells"
+  },
+  {
+    "Name": "worldgen.chunk.alloc",
+    "Value": 14.111083984375,
+    "Unit": "KB/chunk",
+    "Note": "allocation per generated chunk"
+  },
+  {
+    "Name": "worldgen.sample",
+    "Value": 811.1700000000001,
+    "Unit": "ns/sample",
+    "Note": "climate sample"
+  }
+]

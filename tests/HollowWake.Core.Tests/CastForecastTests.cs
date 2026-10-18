@@ -21,6 +21,26 @@ public class CastForecastTests
     private static ResolvedAreaPlan Plan(CastingArena a) => Assert.IsType<ResolvedAreaPlan>(Observe(a).Delivery.PrimaryRegion);
 
     [Fact]
+    public void ReleaseAimObservationClearsOnlyTheSampledOffsetAndDoesNotMutateTheCast()
+    {
+        var a = CastForecastContent.Arena();
+        var slot = CastForecastContent.Slot(a, "forecast_charge");
+        a.Begin(slot);
+        var cast = a.Book.Casting!;
+        cast.AimOffset = new(0, 0, 1.25f);
+        a.Book.AimAt = a.Now;
+        a.Book.AimPoint = new(12, 11, 0);
+        var point = cast.Point;
+        var sample = Observe(a);
+        Assert.Equal(Vector3.Zero, sample.Context.AimOffset);
+        Assert.Equal(new Vector3(0, 0, 1.25f), cast.AimOffset);
+        Assert.Equal(point, cast.Point);
+        Assert.Equal(sample.Context.Point, sample.Context.Aim);
+        a.Runtime.Release(a.Sim, a.Caster, a.SlotIndex(slot));
+        Assert.Equal(Vector3.Zero, cast.AimOffset);
+    }
+
+    [Fact]
     public void TimedCastsExposeIdentityAndAConditionalEmissionDeadlineWithPresentationDisabled()
     {
         var a = CastForecastContent.Arena();

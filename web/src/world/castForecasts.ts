@@ -1,13 +1,15 @@
 import { BufferGeometry, Float32BufferAttribute, MeshBasicMaterial, Mesh, Scene, DoubleSide, Camera } from 'three';
-import type { CastForecastInfo, Int64 } from '../net/protocol';
+import type { CastForecastInfo, CastForecastRegion, Int64 } from '../net/protocol';
 import type { EntityLayer } from './entities';
 import { toThree } from './coords';
 import { linearColor } from './colors';
-import { CastForecastTimeline, forecastCaption, forecastOutline, forecastProgress, forecastSegments } from './castForecastTimeline';
+import { CastForecastTimeline, forecastCaption, forecastProgress, forecastSegments } from './castForecastTimeline';
+import { forecastGeometry, sameForecastMesh } from './castForecastGeometry';
+import type { ForecastGeometryStyle } from './castForecastGeometry';
 
-export interface ForecastStyle {
-  segments: number; max_segments: number; max_chord_error: number; stroke: number; dash_fraction: number; underlay_scale: number; direction_size: number; lift: number; bar_width: number; bar_height: number;
-  label_height: number; height_marker_size: number; font_size: number; color: string; candidate_color: string; unknown_color: string;
+export interface ForecastStyle extends ForecastGeometryStyle {
+  stroke: number; underlay_scale: number; lift: number; bar_width: number; bar_height: number;
+  label_height: number; font_size: number; color: string; candidate_color: string; unknown_color: string;
   underlay_color: string; labels: Record<string, string>;
 }
 export const forecastStyle = (raw: unknown): ForecastStyle => {
@@ -22,7 +24,7 @@ export const forecastStyle = (raw: unknown): ForecastStyle => {
  * vertical brackets show the actual center-height tolerance instead of pretending this is floor clipping. */
 export class CastForecasts {
   readonly timeline = new CastForecastTimeline();
-  private drawn = new Map<Int64, { signature: string; meshes: Mesh<BufferGeometry, MeshBasicMaterial>[]; label: HTMLDivElement; bar: HTMLDivElement; text: HTMLDivElement }>();
+  private drawn = new Map<Int64, { region?: CastForecastRegion; committed: boolean; meshes: Mesh<BufferGeometry, MeshBasicMaterial>[]; label: HTMLDivElement; bar: HTMLDivElement; text: HTMLDivElement }>();
   private readonly warning = document.createElement('div');
   constructor(private scene: Scene, private entities: EntityLayer, readonly style: ForecastStyle) {
     this.warning.style.cssText = 'position:fixed;left:50%;top:18%;transform:translateX(-50%);color:white;background:#182231dd;padding:6px;pointer-events:none;z-index:12;display:none';
@@ -49,13 +51,12 @@ export class CastForecasts {
         label.style.cssText = `position:fixed;pointer-events:none;transform:translate(-50%,-100%);text-align:center;color:${s.color};font:${s.font_size}px sans-serif;text-shadow:0 1px 3px black;z-index:11;background:${s.underlay_color}b0;padding:3px 5px;border-radius:3px`;
         const track = document.createElement('div'); track.style.cssText = `height:${s.bar_height}px;background:${s.underlay_color};width:${s.bar_width}px;margin:3px auto 0`;
         bar.style.cssText = `height:100%;background:${s.color};transform-origin:left`; track.append(bar); label.append(text, track); document.body.append(label);
-        v = { signature: '', meshes: [], label, text, bar }; this.drawn.set(id, v);
+        v = { committed: false, meshes: [], label, text, bar }; this.drawn.set(id, v);
       }
       const region = !stale && forecastSegments(c.region, s.segments, s.max_segments, s.max_chord_error) > 0 ? c.region : undefined;
-      const signature = region ? JSON.stringify([region.shape, region.size, region.height_tolerance, region.center_allowance, region.viewer_eligibility, c.direction_committed]) : '';
-      if (signature !== v.signature) {
+      if (!sameForecastMesh(v.region, v.committed, region, c.direction_committed)) {
         for (const m of v.meshes) { this.scene.remove(m); m.geometry.dispose(); m.material.dispose(); }
-        v.meshes = region ? this.boundary(c) : []; v.signature = signature;
+        v.meshes = region ? this.boundary(c) : []; v.region = region; v.committed = c.direction_committed;
       }
       let caption = forecastCaption(c, now, stale);
       if (caption === 'primary' && region === undefined) caption = 'unavailable';
@@ -74,20 +75,7 @@ export class CastForecasts {
     }
   }
   private boundary(c: CastForecastInfo): Mesh<BufferGeometry, MeshBasicMaterial>[] {
-    const r = c.region!, s = this.style, outline = forecastOutline(r, forecastSegments(r, s.segments, s.max_segments, s.max_chord_error));
-    const parts: number[][] = [];
-    const arrow = s.direction_size;
-    parts.push([0, -arrow / 2, 0, arrow, 0, 0], [arrow, 0, 0, 0, arrow / 2, 0]);
-    if (c.direction_committed) parts.push([0, arrow / 2, 0, 0, -arrow / 2, 0]);
-    for (const loop of [outline.outer, ...outline.holes]) for (let i = 0; i < loop.length; i++) {
-      const a = loop[i], b = loop[(i + 1) % loop.length];
-      // Broken perimeter means live candidate coverage, never certified safe space beyond it.
-      parts.push([a[0], a[1], 0, a[0] + (b[0] - a[0]) * s.dash_fraction, a[1] + (b[1] - a[1]) * s.dash_fraction, 0]);
-    }
-    for (let i = 0; i < outline.outer.length; i += Math.max(1, Math.floor(outline.outer.length / 4))) {
-      const p = outline.outer[i], extent = r.height_tolerance, marker = Math.min(extent, s.height_marker_size);
-      parts.push([p[0], p[1], -extent, p[0], p[1], -extent + marker], [p[0], p[1], extent - marker, p[0], p[1], extent]);
-    }
+    const r = c.region!, s = this.style, parts = forecastGeometry(r, c.direction_committed, s);
     const color = r.viewer_eligibility === 'candidate' ? s.candidate_color : s.color;
     return [this.lines(parts, r, s.stroke * s.underlay_scale, s.underlay_color, 10), this.lines(parts, r, s.stroke, color, 11)];
   }

@@ -1,0 +1,20 @@
+  Determining projects to restore...
+  All projects are up-to-date for restore.
+  HollowWake.Core -> <worktree>\src\HollowWake.Core\bin\Release\net8.0\HollowWake.Core.dll
+  HollowWake.Protocol -> <worktree>\src\HollowWake.Protocol\bin\Release\net8.0\HollowWake.Protocol.dll
+  HollowWake.Server -> <worktree>\src\HollowWake.Server\bin\Release\net10.0\HollowWake.Server.dll
+  HollowWake.Tools -> <worktree>\src\HollowWake.Tools\bin\Release\net10.0\hollowwake.dll
+  HollowWake.Core.Tests -> <worktree>\tests\HollowWake.Core.Tests\bin\Release\net10.0\HollowWake.Core.Tests.dll
+Test run for <worktree>\tests\HollowWake.Core.Tests\bin\Release\net10.0\HollowWake.Core.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+[xUnit.net 00:00:02.39]     HollowWake.Core.Tests.DeliveryAcceptanceTests.ASeededFightSplitsReturnsAndRepeatsExactly [FAIL]
+  Failed HollowWake.Core.Tests.DeliveryAcceptanceTests.ASeededFightSplitsReturnsAndRepeatsExactly [168 ms]
+  Error Message:
+   Assert.Contains() Failure: Filter not matched in collection
+Collection: ["WeaveStarted { Tick = 14, Caster = E0.1, Weave = s"···, "WeaveStarted { Tick = 17, Caster = E1.1, Weave = g"···, "EntitySpawned { Tick = 26, Entity = E2.1, Pattern "···, "WeaveCast { Tick = 26, Caster = E0.1, Weave = seek"···, "28 hit E0.1->E1.1 18.34 depth 1", ···]
+  Stack Trace:
+     at HollowWake.Core.Tests.DeliveryAcceptanceTests.ASeededFightSplitsReturnsAndRepeatsExactly() in <worktree>\tests\HollowWake.Core.Tests\DeliveryTests.cs:line 1368
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+
+Failed!  - Failed:     1, Passed:    67, Skipped:     0, Total:    68, Duration: 324 ms - HollowWake.Core.Tests.dll (net10.0)

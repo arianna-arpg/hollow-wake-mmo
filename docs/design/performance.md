@@ -17,6 +17,7 @@ The foundation must stay pristine as the game scales, so performance is measured
 `--only <group>` runs one group; `--monsters`, `--players`, `--ticks` and `--minions` (pooled summons per player, so minions think, follow and fight) size the zone run; `--json` emits results for machines.
 
 Expression allocation has explicitly different scopes. The historical `expression.alloc` row retains its original whole-process counter and loop; keep its nonzero readings when comparing old records. `expression.alloc.calling_thread` measures allocations on the synchronous evaluator's thread after a fixed forty warmup loops of the exact sample delegate, then one measured loop of one hundred thousand evaluations. `expression.alloc.sample_process` records whole-process allocation over that same new sample, including other runtime threads. No sample is retried or chosen for being zero, and no estimated overhead is subtracted. The zero-allocation small-call contract applies to the warmed calling-thread sample; runtime bookkeeping on that thread is still counted and a nonzero result must be reported and investigated. The process rows remain diagnostics and must not be relabeled as zero or omitted. These counters do not certify asynchronous/custom functions that allocate on other threads.
+`--only hit-bodies` repeats the deliveries workload with a deterministic roster of resolved patterns carrying authored hit profiles. This exercises compound-volume contact and broad-phase bounds; the ordinary unprofiled deliveries workload is not a substitute for it.
 
 ## Budgets
 
@@ -30,6 +31,7 @@ Budgets are for the benchmark's default zone run in Release on a development mac
 | snapshot.build | at most 1 ms per player | Ten snapshots a second per player |
 | snapshot.bytes | at most 30 KB per player per snapshot | Full states are the fallback for a client that does not negotiate deltas; in a melee of hundreds of monsters their life, stamina and cast progress change every snapshot |
 | snapshot.delta.bytes | at most 10 KB per player per snapshot | Every shipped client negotiates deltas, so this is the number players feel |
+| worldgen.zone.plan | at most 40 ms | Bounds synchronous zone planning, including local quest population inspection |
 | worldgen.chunk | at most 4 ms and 400 KB | Zones load in well under a second; clients stream without hitches |
 | attribute.apply.extra | at most 500 ns and 200 bytes | Every hit folds damage several times |
 | expression.evaluate | at most 150 ns, no allocation for small calls | Formulas run everywhere |
@@ -41,6 +43,14 @@ The full-state, delta and interface groups run sequential stretches of the same 
 ## Profiling
 
 `Simulation.Profile = true` records each system's time and allocation per tick in `Simulation.Costs`. The benchmark prints the top systems by allocation. Use it before optimizing anything: the first run of the benchmark showed one system responsible for almost all allocation, and a profile is what found it.
+
+For snapshot attribution, `hollowwake bench --only tick --snapshot-profile <new-file.json> --json` additionally records each viewer in each full, delta, interface and combined phase. The output directory must exist and an existing file is never overwritten. Ordinary runs retain their existing timed loops. The diagnostic invokes the same builders and serializer once in the same order, and retains the summary rows with an explicit diagnostic label. Capture costs are split into entities, self, interface panels and the optional forecast stream; encoding costs, message counts and bytes are recorded separately for each. Build and encoding counts describe the same messages, not two streams. Update/delta counters count entity states, not messages. Per-sample records include viewer order, simulation tick, known entities, self cadence, emitted counters and process-wide GC collections.
+
+All probe overhead remains included in diagnostic totals, with no estimated subtraction. The preallocated record buffer is sized before the run. Calling-thread allocation counters cover each stage; phase wall time, process CPU and GC also cover intervening simulation ticks and probe work. These contexts cannot establish contention or its cause. Preserve the first ordinary budget result alongside the diagnostic; the diagnostic does not replace it or certify a budget pass. Phases sample different simulation stretches, and viewers share caches in their existing order, so neither phase means nor viewer means alone establish a causal regression. Use a coordinated quiet window for a single fixed-source diagnostic and investigate its evidence before deciding whether another measurement is warranted.
+
+Profile schema 2 adds monotonic start/end timestamps to measured stages. When the `HollowWake-SnapshotProfile` EventSource is enabled, one completed-frame marker relates those timestamps to the trace's native thread and time. The marker runs after the measured frame, and its before/after timestamps bound correlation uncertainty; its process overhead can affect later frames and is not subtracted. The optional source is Tools-only and never participates in gameplay. Older raw profiles retain their original schema.
+
+The bounded [trace preparation](../../experiments/forecast-rendering/snapshot-trace-plan.md) combines process-scoped managed stacks, compilation/GC/wait events and, when an elevated Windows session is available, a limited scheduler recording. Managed thread-time sampling alone does not prove CPU use, preemption or external contention. Keep raw binary traces, process identities and absolute machine paths in ignored local evidence with hashes; publish only inspected, sanitized summaries. A capture is diagnostic evidence on its exact validated source, never a replacement for the first ordinary budget result.
 
 ## Rules of the road
 

@@ -1,0 +1,17 @@
+# The Living Wilds
+
+Fauna and critter foundation: 19 new bodies and renewed wolf, boar and grove_stag IDs. Source roster and sprite/anatomy precedents were inspected from `arianna-arpg/arpg-game-world` at `118b510f8b5bfb781163c5bc13ea4908f698e75b`; `provenance.json` records adaptations. Generated polygon anatomy is intentionally reinterpreted, not a pixel-exact conversion. Existing native/browser body builders and animation rigs render the same reviewed plans.
+
+Run `node experiments/fauna/render.mjs` from the repository root after web dependencies are installed. It creates a private Vite server and headless Edge page, renders both angles and a grayscale walking pose, then shuts them down. `--write-fixture` explicitly refreshes the shared reviewed plan fixture. Review images before accepting fixture changes. Build/cache output lives under ignored `artifacts/`.
+
+Cards enlarge each body independently; the top lineup uses one world scale with 1.8 m player and skeleton references. Card measurements are authoritative nominal W/D/H and authored physical mass. Ears/horns can extend beyond stature. The gallery renders actual production geometry with preview lighting, not gameplay or native pixels.
+
+The biome tables and direct legacy populations place all bodies; small critters have no attack or drops and cannot be selected by the beast-cull template. Current behavior assignments are scaffolding. See the [AI handoff](../../docs/reviews/2026-10-18-fauna-ai-handoff.md) for Claude review and proposed future simulations. Neither ecological AI, flight, swimming, climbing nor precise model-fitted hitboxes is implemented here.
+
+Generation evidence uses seed `aureth`. The original ASCII terrain/site maps match, but population tables consume the shared chunk stream before inline spawns, so existing populations are also reshuffled. The correction evidence records all pattern counts for the original addition and for the reviewed foundation separately; see `../entity-review/evidence/34-*`. Local population and level filters now govern cull offers.
+
+The legacy wolf radius changes from 0.5 to 0.625 m, boar from 0.55 to 0.65 m and stag from 0.6 to 0.74 m. Their new heights are authored body envelopes rather than the old 1.8 m fallback. Grove Stag retains ambient classification, avoiding an unintended monster rarity/affix/size-roll migration. Its defensive kit and cull eligibility remain independent. Ground birds use an estimated occupied fraction with a separate heft adjustment preserving their earlier mass; these are gameplay estimates, not measured biology. Bodies below the configured minimum weight share displacement resistance.
+
+The original reviewer measured roughly 6 KB more allocation per zone tick with changed populations. That measurement is retained, and performance must be assessed again on the combined corrected tree; no per-tick cost claim follows solely from content-only source changes. The skittish kit test still forces defence to exercise every kit; a separate injured stationary prey regression traverses the actual graze/flee/fight transitions without claiming obstacle-aware escape decisions.
+
+The corrected branch depends on the complete precise-hitbox foundation (#36). Small animals retain their authored dimensions; real cast/contact matrices on flat ground and half-unit relief verify the shared targeting correction. Headless native runs verify behavior, not rendered pixels.

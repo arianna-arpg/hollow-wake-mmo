@@ -1,0 +1,40 @@
+{
+  "kind": "body_materials",
+  "entries": [
+    {
+      "id": "flesh",
+      "name": "Flesh",
+      "density": 1000
+    },
+    {
+      "id": "fur",
+      "name": "Furred flesh",
+      "density": 980
+    },
+    {
+      "id": "bone",
+      "name": "Bone",
+      "density": 1850
+    },
+    {
+      "id": "wood",
+      "name": "Dry timber",
+      "density": 650
+    },
+    {
+      "id": "iron",
+      "name": "Iron",
+      "density": 7800
+    },
+    {
+      "id": "stone",
+      "name": "Stone",
+      "density": 2600
+    },
+    {
+      "id": "ethereal",
+      "name": "Ethereal substance",
+      "density": 120
+    }
+  ]
+}

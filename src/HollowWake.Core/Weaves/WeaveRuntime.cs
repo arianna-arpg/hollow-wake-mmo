@@ -500,6 +500,7 @@ public sealed partial class WeaveRuntime
             Target = target,
             Focus = focus,
             Point = point,
+            AimOffset = sim.World.Get<Transform>(focus) is { } aimBody ? HitBodies.AimPoint(sim, focus) - aimBody.Position : Vector3.Zero,
             Direction = direction,
             StartedAt = now,
             Duration = duration,
@@ -949,6 +950,7 @@ public sealed partial class WeaveRuntime
             Source = source,
             Target = target,
             Point = target.IsNone ? state.Point : (sim.World.Get<Transform>(target)?.Position ?? state.Point),
+            AimOffset = state.AimOffset,
             Direction = state.Direction,
             Weave = weave,
             Tags = weave.Tags,
@@ -1295,6 +1297,7 @@ public sealed partial class WeaveRuntime
         {
             desired = new Vector2(ft.Position.X - t.Position.X, ft.Position.Y - t.Position.Y);
             cast.Point = ft.Position;
+            cast.AimOffset = HitBodies.AimPoint(sim, cast.Focus) - ft.Position;
         }
         else
         {
@@ -1328,6 +1331,7 @@ public sealed partial class WeaveRuntime
         if (cast.AimPoint is { } p)
         {
             cast.Point = p;
+            cast.AimOffset = Vector3.Zero;
         }
     }
 
@@ -1461,12 +1465,12 @@ public sealed partial class WeaveRuntime
     /// <summary>A held cast that fires on release points where its caster aims at that moment, when it aims.</summary>
     private static void AimAtRelease(Simulation sim, Entity caster, WeaveBook book, CastState cast, CompiledWeave weave)
     {
-        (cast.Point, cast.Direction) = ReleaseAim(sim, caster, book, cast, weave);
+        (cast.Point, cast.Direction, cast.AimOffset) = ReleaseAim(sim, caster, book, cast, weave);
     }
 
-    private static (Vector3 Point, Vector2 Direction) ReleaseAim(Simulation sim, Entity caster, WeaveBook book, CastState cast, CompiledWeave weave)
+    private static (Vector3 Point, Vector2 Direction, Vector3 AimOffset) ReleaseAim(Simulation sim, Entity caster, WeaveBook book, CastState cast, CompiledWeave weave)
     {
-        var result = (Point: cast.Point, Direction: cast.Direction);
+        var result = (Point: cast.Point, Direction: cast.Direction, AimOffset: cast.AimOffset);
         if (book.AimAt < cast.StartedAt)
         {
             return result;
@@ -1478,6 +1482,7 @@ public sealed partial class WeaveRuntime
         if (book.AimPoint is { } point && weave.Targeting is Targeting.Ground or Targeting.Direction)
         {
             result.Point = point;
+            result.AimOffset = Vector3.Zero;
             if (weave.Targeting == Targeting.Direction && (book.AimDirection is null) && sim.World.TryGet<Transform>(caster, out var t))
             {
                 var d = new Vector2(point.X - t.Position.X, point.Y - t.Position.Y);
