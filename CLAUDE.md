@@ -41,7 +41,7 @@ Hollow Wake MMO is an MMOARPG foundation: an engine-agnostic C# simulation core,
 dotnet build HollowWake.sln                                   # everything, including the Godot client assembly
 dotnet test HollowWake.sln                                    # all tests
 dotnet run --project src/HollowWake.Tools -- validate          # content must report 0 errors (warnings are reviewed)
-dotnet run --project src/HollowWake.Tools -- lint              # composition lint: one-use forms, single-use parameters, frozen axes, copied formulas, string switches, form reads (--json FILE)
+dotnet run --project src/HollowWake.Tools -- lint              # composition lint: one-use forms, single-use parameters, frozen axes, copied formulas, string switches, form reads (--json FILE, --baseline FILE)
 dotnet run --project src/HollowWake.Tools -- load --x 0 --y 0  # headless zone smoke
 dotnet run --project src/HollowWake.Tools -- fight a b         # headless duel with event trace
 dotnet run --project src/HollowWake.Tools -- weave ember_bolt  # what the compiler makes of a weave: tags, mechanisms, dormant glyphs, graph
