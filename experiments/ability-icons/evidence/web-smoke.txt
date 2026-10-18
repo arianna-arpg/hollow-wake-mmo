@@ -1,0 +1,56 @@
+
+> hollow-wake-web@0.1.0 smoke
+> node scripts/smoke.mjs --url http://127.0.0.1:8898/ --shots artifacts/ability-icons/web --account icons-web
+
+SMOKE ok   connect and log in: Logged in. Pick a character. (features: cast_cues, entity_delta, interface)
+SMOKE ok   create character: Smoke the holdfast
+SMOKE ok   enter world: Smoke at 129.5, 111.0, 14.7
+SMOKE ok   terrain built: 49 chunks (81 requested) in 0.8s, 311 entities in view
+SMOKE FAIL wasd move: moved 0.0 units
+SMOKE FAIL jump: rose 0.00 units
+SMOKE ok   click to move: tried (5,0) 4.8
+SMOKE ok   quartermaster offers quests: reached=true, F interacted with Quartermaster (quest_giver) at 1.1, panel shown=true with 0 entries
+SMOKE FAIL escape closes the quest panel: quests visible=true
+SMOKE ok   camera toggle: isometric -> switched -> isometric
+SMOKE ok   camera rotate: Q turned yes, E turned back yes
+SMOKE ok   character sheet: opened=true closed=true
+SMOKE ok   chat: echoed by the zone
+SMOKE ok   core pane: open=true, 1 bag items, 9 doll slots, 3 wallet chips, ribbons weaves passives reliquary stash character
+SMOKE ok   ribbon pages: weaves=shown, passives=shown, character=shown, reliquary=shown, stash=shown
+SMOKE ok   escape closes the core pane last: core open=false
+SMOKE ok   talk to a villager: reached=true, Marcher: "Weft hold you, stranger.", chose "1. Any news?" (answered=true)
+SMOKE ok   trade with a vendor: reached=true, vendor open=true, 8 stock rows, nothing the hero can afford
+SMOKE ok   options open: open=true, 10 rows
+SMOKE ok   options switch the theme: theme runic_brass, frame stone -> brass
+SMOKE ok   options rebind a key: camera switch on B=true, B turned the camera=true
+SMOKE ok   options scale the interface: scale 1.25, cluster 908 -> 1135 px wide, panes above the cluster=true
+SMOKE ok   options reset a group: theme etched_stone, scale 1
+SMOKE ok   weaves on a hob: reached=true hovered Hob [1]; slots 12; hits dealt=1, last on Hob (rejected: Interact: too_far)
+SMOKE ok   no page errors: none
+SMOKE SUMMARY
+SMOKE PASS connect and log in: Logged in. Pick a character. (features: cast_cues, entity_delta, interface)
+SMOKE PASS create character: Smoke the holdfast
+SMOKE PASS enter world: Smoke at 129.5, 111.0, 14.7
+SMOKE PASS terrain built: 49 chunks (81 requested) in 0.8s, 311 entities in view
+SMOKE FAIL wasd move: moved 0.0 units
+SMOKE FAIL jump: rose 0.00 units
+SMOKE PASS click to move: tried (5,0) 4.8
+SMOKE PASS quartermaster offers quests: reached=true, F interacted with Quartermaster (quest_giver) at 1.1, panel shown=true with 0 entries
+SMOKE FAIL escape closes the quest panel: quests visible=true
+SMOKE PASS camera toggle: isometric -> switched -> isometric
+SMOKE PASS camera rotate: Q turned yes, E turned back yes
+SMOKE PASS character sheet: opened=true closed=true
+SMOKE PASS chat: echoed by the zone
+SMOKE PASS core pane: open=true, 1 bag items, 9 doll slots, 3 wallet chips, ribbons weaves passives reliquary stash character
+SMOKE PASS ribbon pages: weaves=shown, passives=shown, character=shown, reliquary=shown, stash=shown
+SMOKE PASS escape closes the core pane last: core open=false
+SMOKE PASS talk to a villager: reached=true, Marcher: "Weft hold you, stranger.", chose "1. Any news?" (answered=true)
+SMOKE PASS trade with a vendor: reached=true, vendor open=true, 8 stock rows, nothing the hero can afford
+SMOKE PASS options open: open=true, 10 rows
+SMOKE PASS options switch the theme: theme runic_brass, frame stone -> brass
+SMOKE PASS options rebind a key: camera switch on B=true, B turned the camera=true
+SMOKE PASS options scale the interface: scale 1.25, cluster 908 -> 1135 px wide, panes above the cluster=true
+SMOKE PASS options reset a group: theme etched_stone, scale 1
+SMOKE PASS weaves on a hob: reached=true hovered Hob [1]; slots 12; hits dealt=1, last on Hob (rejected: Interact: too_far)
+SMOKE PASS no page errors: none
+SMOKE DONE 22/25 passed in 73.2s; 231 fps, 2.32 ms of work per frame, 56 chunks and 299 entities at the end; shots in C:\Users\John\.codex\worktrees\skill-support-icons\MMOARPG\web\artifacts\ability-icons\web

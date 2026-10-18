@@ -71,6 +71,18 @@ The interface reads its own content from `content/core/ui/`, validated by `Conte
 
 A mod recolours a pool by patching one swatch, adds a page with one entry (and a server-side gate), or reorders the rings in the layout, without touching a client.
 
+### Skill and support artwork
+
+Inventory memories, carries, rack seats, support sockets and hotbars use one ability face in both clients. The authored vector catalog is imported from the prototype's illustrated branch by `scripts/import-ability-icons.mjs`; its exact source revision and regeneration command live in `assets/branding/ability-icons-provenance.json`. Importing artwork does not register playable skills or supports.
+
+`ui_ability_icons` entries contain either ordered vector layers or an `art` reference, with optional `color` and `badge`. Layers contain SVG path data, an optional six-number affine transform, stroke width, and paint tokens (`tint`, `ink`, `shade`). References are validated, including cycles. `ui_ability_styles` owns the palette, stroke widths, background tint, badge paint, raster cache bounds, namespace aliases, fallback artwork and ordered tag rules. A badge is another vector entry. Neither renderer depends on a skill roster or display-name spelling.
+
+Resolution uses a definition's `meta.ability_icon` override, then its `kind.id` catalog entry, then a content-authored namespace alias. An otherwise unmapped preset inherits its form's artwork with its own color. A form's explicit icon or content tag rules supply a semantic fallback; an unknown support keeps the support face and badge. `meta.icon_color` overrides the face palette. `ability-bindings.yaml` supplies presentation aliases for MMO names that differ from the prototype. New mechanics can select existing art or add vector content without editing either client. Missing future definitions still have a visible fallback.
+
+The server sends only stable identities: a seat's optional `preset`, a memory's optional `weave`, and a converted or secondary face's optional `weave` and `form`. These distinguish a plain form from a preset with the same id. Converted identities select their own art; older servers' alternate icon hints remain usable. Colors and geometry stay in client presentation content. Rarity borders, cooldowns, costs, input, dormancy and tooltips remain owned by their existing surfaces.
+
+Both clients use the same SVG paint order and transforms. The native client caches rasterized faces at their drawn pixel footprint in a bounded LRU and composites caller alpha once. The browser draws the vectors directly. Tests cover every imported face, item/seat identity, renamed labels, preset/form collisions, converted faces, future content, support badges and escaped markup.
+
 ### Status presentation
 
 How a status looks in the status row and on the target plate is read from the status's content by its id, never from the simulation. The keys live in the status's `meta` block, which the simulation never reads, and each has a fallback, so authors add meta only for the exceptions:

@@ -269,8 +269,7 @@ public partial class WeavesPage : LeafView
                 return;
             }
             var tint = dormant ? Skin.State("dormant", muted) : seat.Threads.Count > 0 ? Skin.Thread(seat.Threads[0]) : Skin.S("label");
-            var icon = Skin.IconSet.ForWeave(seat.Converted?.Icon ?? seat.Icon, seat.Key);
-            DrawTextureRect(Skin.Icon(icon, (int)(Glyph * 0.7f)), glyphRect.Grow(-Glyph * 0.15f), false, tint);
+            Skin.Abilities.Draw(this, glyphRect.Grow(-Glyph * 0.15f), Skin.Names.AbilityIcons.Seat(seat.Key, seat.Info?.Form, seat.Info?.Preset, seat.Converted), dormant: dormant);
             var left = seat.ReadyIn(_now);
             if (left > 0.05 && seat.Cooldown > 0)
             {
@@ -307,8 +306,7 @@ public partial class WeavesPage : LeafView
                 if (glyph is not null)
                 {
                     var color = glyph.Dormant is null ? Skin.S("accent") : Skin.State("dormant", muted);
-                    DrawCircle(c, 5.5f, color, true, -1, true);
-                    DrawString(Skin.Numerals, new Vector2(sr.Position.X, c.Y + 4), glyph.Name.Length > 0 ? glyph.Name[..1] : "?", HorizontalAlignment.Center, sr.Size.X, 10, Skin.S("well"));
+                    Skin.Abilities.Draw(this, new Rect2(c - new Vector2(8, 8), new Vector2(16, 16)), Skin.Names.AbilityIcons.Resolve("glyphs", glyph.Id), dormant: glyph.Dormant is not null);
                 }
                 if (i == _dropSocket)
                 {
@@ -345,7 +343,7 @@ public partial class WeavesPage : LeafView
             var r = new Rect2(-26, -26, 52, 52);
             Paint.Well(this, _skin, r, _skin.S("well") with { A = 0.9f }, true);
             var tint = _seat.Threads.Count > 0 ? _skin.Thread(_seat.Threads[0]) : _skin.S("label");
-            DrawTextureRect(_skin.Icon(_skin.IconSet.ForWeave(_seat.Icon, _seat.Key), 36), r.Grow(-8), false, tint);
+            _skin.Abilities.Draw(this, r.Grow(-8), _skin.Names.AbilityIcons.Seat(_seat.Key, _seat.Info?.Form, _seat.Info?.Preset, _seat.Converted));
         }
     }
 }

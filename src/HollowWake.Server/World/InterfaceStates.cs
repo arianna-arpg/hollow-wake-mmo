@@ -467,7 +467,7 @@ public static class InterfaceStates
         }
         else if (item.Payload is { } codex && WeaveItems.IsCodex(item))
         {
-            form = new ItemFormInfo(codex.Weave ?? codex.Form!, WeaveItems.TeachingName(sim.Content, codex), Math.Max(1, codex.Level), WeaveItems.SocketsOf(sim.Content, item));
+            form = new ItemFormInfo(codex.Weave ?? codex.Form!, WeaveItems.TeachingName(sim.Content, codex), Math.Max(1, codex.Level), WeaveItems.SocketsOf(sim.Content, item)) { Weave = codex.Weave };
         }
         List<SocketInfo>? sockets = null;
         if (item.Sockets is { } held)
@@ -675,6 +675,7 @@ public static class InterfaceStates
             sockets, glyphs, Math.Round(readyIn, 2), Math.Round(cooldown, 2), preview)
         {
             Icon = icon ?? compiled?.Look,
+            Preset = slot.Spec.Preset,
             Dormant = dormant,
             Item = seat?.Codex?.Uid,
             Threads = compiled is null ? null : compiled.Threads.Select(t => t.Id).ToList(),
@@ -732,7 +733,7 @@ public static class InterfaceStates
         {
             return null;
         }
-        return runtime.FaceOf(sim, e, slot) is { } face && !ReferenceEquals(face, compiled) ? new FaceInfo(face.Name) { Icon = face.Look } : null;
+        return runtime.FaceOf(sim, e, slot) is { } face && !ReferenceEquals(face, compiled) ? new FaceInfo(face.Name) { Icon = face.Look, Weave = face.Spec.Preset, Form = face.Form.Id } : null;
     }
 
     /// <summary>The slot's second ability: the first meta face, labelled by content or by the weave it casts.</summary>
@@ -745,7 +746,7 @@ public static class InterfaceStates
         }
         var meta = metas[0];
         var def = sim.Content.Get<WeaveDef>(meta.Weave);
-        return new FaceInfo(meta.Label.Length > 0 ? meta.Label : def?.DisplayName ?? Definition.Humanize(meta.Weave)) { Icon = def?.Icon };
+        return new FaceInfo(meta.Label.Length > 0 ? meta.Label : def?.DisplayName ?? Definition.Humanize(meta.Weave)) { Icon = def?.Icon, Weave = meta.Weave, Form = def?.Form };
     }
 
     /// <summary>A slot whose toggle or contract runs (a sustained summon, an aura).</summary>

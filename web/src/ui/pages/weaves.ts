@@ -2,11 +2,11 @@ import '../widgets';
 import './pages.css';
 import { el } from '../dom';
 import type { Carry, DropTarget, LeafContext, LeafView } from '../leaf';
-import { weaveIcon } from '../logic/content';
+import { abilityArt, seatArt } from '../abilityArt';
 import { seatReadyIn, type Seat } from '../logic/heroState';
 import { css, lighten } from '../skin';
 import { clamp01, drawnScale, inside, localPoint } from './geometry';
-import { dropHint, dropIntent, glyphAt, glyphLetter, hintTint, seatActions, seatCosts, seatMeta, seatTip } from './rack';
+import { dropHint, dropIntent, glyphAt, hintTint, seatActions, seatCosts, seatMeta, seatTip } from './rack';
 
 /** The glyph well's side, as the desktop draws it. */
 const GLYPH = 52;
@@ -177,7 +177,7 @@ export class WeavesPage implements LeafView {
     const skin = this.ctx.skin;
     const ghost = el('div', { class: 'seat-ghost' });
     ghost.style.color = seat.threads.length > 0 ? css(skin.thread(seat.threads[0])) : skin.s('label');
-    ghost.append(skin.icon(weaveIcon(skin.icons, seat.icon, seat.key), 36, 'glyph'));
+    ghost.append(seatArt(skin, seat, 36, 'glyph'));
     const host = this.root.closest<HTMLElement>('.ui-root');
     if (host === null) {
       ghost.style.position = 'fixed';
@@ -247,7 +247,7 @@ class SeatRow implements DropTarget {
       const thread = !dormant && seat.threads.length > 0 ? css(skin.thread(seat.threads[0])) : '';
       this.glyph.style.color = thread;
       this.sweep = el('span', { class: 'seat-sweep', hidden: '' });
-      this.glyph.append(el('span', { class: 'seat-halo' }), skin.icon(weaveIcon(skin.icons, seat.converted?.icon ?? seat.icon, seat.key), Math.round(GLYPH * 0.7), 'glyph seat-icon'), this.sweep);
+      this.glyph.append(el('span', { class: 'seat-halo' }), seatArt(skin, seat, Math.round(GLYPH * 0.7), 'glyph seat-icon'), this.sweep);
       const costs = seatCosts(seat);
       if (costs.length > 0) {
         const box = el('span', { class: 'seat-costs' });
@@ -270,7 +270,7 @@ class SeatRow implements DropTarget {
         const glyph = glyphAt(info, i);
         if (glyph !== null) {
           const dormantGlyph = glyph.dormant !== undefined && glyph.dormant !== null;
-          socket.append(el('span', { class: `socket-stone${dormantGlyph ? ' dormant' : ''}`, 'data-glyph': glyph.id, text: glyphLetter(glyph) }));
+          socket.append(abilityArt(skin, skin.names.abilityIcons.resolve('glyphs', glyph.id), 16, 'socket-art', dormantGlyph));
         }
         sockets.append(socket);
         this.sockets.push(socket);

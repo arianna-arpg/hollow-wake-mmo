@@ -1,0 +1,131 @@
+{
+  "kind": "ui_ability_styles",
+  "entries": [
+    {
+      "id": "default",
+      "background": "#111820",
+      "ink": "#f4ebd7",
+      "rim": "#070c12",
+      "tint_alpha": 0.16,
+      "line_width": 1.35,
+      "rim_width": 0.8,
+      "cache_limit": 128,
+      "max_bake_size": 192,
+      "badge_color": "#ffe3a0",
+      "badge_background": "#21182e",
+      "default_color": "#b8b8b8",
+      "badges": {
+        "glyphs": "badge.support"
+      },
+      "fallbacks": {
+        "weaves": "arcane",
+        "forms": "arcane",
+        "glyphs": "support"
+      },
+      "aliases": {
+        "forms": "weaves"
+      },
+      "rules": [
+        {
+          "tags": [
+            "guard"
+          ],
+          "art": "guard"
+        },
+        {
+          "tags": [
+            "warcry"
+          ],
+          "art": "rally"
+        },
+        {
+          "tags": [
+            "heal"
+          ],
+          "art": "heal"
+        },
+        {
+          "tags": [
+            "movement"
+          ],
+          "art": "step"
+        },
+        {
+          "tags": [
+            "summon",
+            "minion"
+          ],
+          "art": "summon"
+        },
+        {
+          "tags": [
+            "trap",
+            "mine"
+          ],
+          "art": "trap"
+        },
+        {
+          "tags": [
+            "construct",
+            "totem"
+          ],
+          "art": "construct"
+        },
+        {
+          "tags": [
+            "curse"
+          ],
+          "art": "curse"
+        },
+        {
+          "tags": [
+            "corpse"
+          ],
+          "art": "corpse"
+        },
+        {
+          "tags": [
+            "aura"
+          ],
+          "art": "aura"
+        },
+        {
+          "tags": [
+            "storm"
+          ],
+          "art": "storm"
+        },
+        {
+          "tags": [
+            "melee"
+          ],
+          "art": "sweep"
+        },
+        {
+          "tags": [
+            "ember"
+          ],
+          "art": "ember"
+        },
+        {
+          "tags": [
+            "tide"
+          ],
+          "art": "frost"
+        },
+        {
+          "tags": [
+            "storm"
+          ],
+          "art": "chain"
+        },
+        {
+          "tags": [
+            "projectile"
+          ],
+          "art": "projectile"
+        }
+      ]
+    }
+  ]
+}

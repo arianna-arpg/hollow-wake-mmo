@@ -830,6 +830,7 @@ export interface WeaveSeatInfo {
   ready_in: number;
   cooldown: number;
   preview: PreviewLineInfo[];
+  preset?: string;
   icon?: string;
   dormant?: string;
   item?: Int64;
@@ -952,6 +953,7 @@ export interface ItemFormInfo {
   name: string;
   level: number;
   sockets: number;
+  weave?: string;
 }
 
 export interface StoneFitInfo {
@@ -984,6 +986,8 @@ export interface PreviewLineInfo {
 
 export interface FaceInfo {
   label: string;
+  weave?: string;
+  form?: string;
   icon?: string;
 }
 

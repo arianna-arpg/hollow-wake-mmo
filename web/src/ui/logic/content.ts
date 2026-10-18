@@ -1,4 +1,5 @@
 import { CONTENT_FILES } from './contentFiles';
+import { AbilityIcons } from './abilityIcons';
 import { parseYamlDocuments, type YamlValue } from './yaml';
 
 /**
@@ -424,6 +425,7 @@ export function statusLookOf(status: Obj): StatusLook {
 export const lookOf = (names: ContentNames, status: string): StatusLook => names.statusLooks.get(status) ?? PLAIN_LOOK;
 
 export interface ContentNames {
+  abilityIcons: AbilityIcons;
   statuses: Map<string, NamedEntry>;
   statusLooks: Map<string, StatusLook>;
   threads: NamedEntry[];
@@ -548,6 +550,7 @@ export function loadNames(kinds: Map<string, Obj[]>): ContentNames {
     realms.set(str(r.id), str(r.name, humanize(str(r.id))));
   }
   return {
+    abilityIcons: new AbilityIcons(kinds),
     statuses: new Map((kinds.get('statuses') ?? []).map((s, i) => [str(s.id), named(s, i)])),
     statusLooks: new Map((kinds.get('statuses') ?? []).map((s) => [str(s.id), statusLookOf(s)])),
     threads,

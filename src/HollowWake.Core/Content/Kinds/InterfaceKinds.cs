@@ -49,6 +49,7 @@ internal static class InterfaceKinds
     public static void Register()
     {
         LoadingKinds.Register();
+        AbilityIconKinds.Register();
         // Page gates and pip sources read the hero; the page scope adds the unspent points of each currency.
         CastVisualKinds.Register();
         ScopeNames.DeclarePrefix("points.");
