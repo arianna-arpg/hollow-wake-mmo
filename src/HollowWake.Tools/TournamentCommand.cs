@@ -13,7 +13,8 @@ namespace HollowWake.Tools;
 /// <c>--out</c>, writes them as a baseline instead of the report; <c>--check-hashes FILE</c> fights against such a
 /// baseline (with its seeds and cap unless given), prints <c>identical</c> or names each pairing that changed, and
 /// fails the command on a change. Bad options, an unknown pattern, a missing baseline or output folder each stop the
-/// command with one line before any fight.
+/// command with one line before any fight. The table names every warning and error the simulation logged, and an
+/// error fails the command, naming the first.
 /// </summary>
 public static class TournamentCommand
 {
@@ -107,6 +108,12 @@ public static class TournamentCommand
         {
             Console.WriteLine(report.Passed == true ? "bands: pass" : "bands: FAIL");
             failed |= report.Passed != true;
+        }
+        // A fight on content the simulation could not run is no measurement: an error it logged fails the command.
+        if (report.FirstError() is { } error)
+        {
+            Console.WriteLine($"errors: the simulation logged an error, the first in {error}");
+            failed = true;
         }
         return failed ? 1 : 0;
     }

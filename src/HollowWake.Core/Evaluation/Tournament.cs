@@ -117,11 +117,31 @@ public sealed record Side(
 
 /// <summary>
 /// One seeded fight: who won (<c>a</c>, <c>b</c> or <c>draw</c>), when it ended, the hash of its ordered event log
-/// (sixteen hex digits, see <see cref="Tournament.Duel"/>), and each side's tally. A fight ends at the first tick after
-/// which a body is dead, or at the cap; it is a draw when both bodies stand at the cap, or when both are dead after
-/// that tick, a double knockout, which ends before the cap.
+/// (sixteen hex digits, see <see cref="Tournament.Duel"/>), each side's tally, and the warnings and errors the
+/// simulation logged while it ran, in order (a weave that failed to compile, a component that failed to bind, a
+/// system that threw), so a fight on broken content says so instead of reading as a quiet one. A fight ends at the
+/// first tick after which a body is dead, or at the cap; it is a draw when both bodies stand at the cap, or when both
+/// are dead after that tick, a double knockout, which ends before the cap.
 /// </summary>
-public sealed record Fight(string A, string B, int Index, ulong Seed, string Outcome, double Seconds, string Hash, Side SideA, Side SideB);
+public sealed record Fight(string A, string B, int Index, ulong Seed, string Outcome, double Seconds, string Hash, Side SideA, Side SideB, IReadOnlyList<string> Warnings, IReadOnlyList<string> Errors);
+
+/// <summary>
+/// The log a tournament's arena writes to: it keeps every warning and error the simulation reports, in the order they
+/// came, and drops what is only information.
+/// </summary>
+public sealed class CountingSimLog : ISimLog
+{
+    public List<string> Warnings { get; } = new();
+    public List<string> Errors { get; } = new();
+
+    public void Info(string message)
+    {
+    }
+
+    public void Warn(string message) => Warnings.Add(message);
+
+    public void Error(string message, Exception? exception = null) => Errors.Add(exception is null ? message : $"{message}: {exception.Message}");
+}
 
 /// <summary>
 /// A pairing over its fights: its trace hash (folded over its fights' hashes in seed order), rates, the time-to-kill
@@ -167,7 +187,14 @@ public sealed record TournamentReport(int Seeds, double Seconds, string Hash, bo
 
     public string ToJson() => JsonSerializer.Serialize(this, Json);
 
-    /// <summary>The report as the command prints it: a row per pairing, what each side used and the bands it broke, numbers in the invariant culture.</summary>
+    /// <summary>The first error any fight logged, in the order the fights ran, naming its pairing and fight; null when none did.</summary>
+    public string? FirstError() =>
+        Fights.FirstOrDefault(f => f.Errors.Count > 0) is { } f ? FormattableString.Invariant($"{new Pairing(f.A, f.B)} fight {f.Index}: {f.Errors[0]}") : null;
+
+    /// <summary>
+    /// The report as the command prints it: a row per pairing, what each side used, the bands it broke, and each
+    /// distinct warning and error its fights logged with how many fights logged it; numbers in the invariant culture.
+    /// </summary>
     public IEnumerable<string> Table()
     {
         yield return $"{"pairing",-44} {"fights",6} {"a wins",7} {"b wins",7} {"draws",6} {"ttk med",8} {"low",6} {"high",6} {"cov a",6} {"cov b",6} {"spr a",6} {"spr b",6}";
@@ -180,8 +207,18 @@ public sealed record TournamentReport(int Seeds, double Seconds, string Hash, bo
             {
                 yield return $"    BREACH {breach}";
             }
+            var own = Fights.Where(f => f.A == p.A && f.B == p.B).ToList();
+            foreach (var line in Logged(own, f => f.Errors, "ERROR").Concat(Logged(own, f => f.Warnings, "WARNING")))
+            {
+                yield return line;
+            }
         }
     }
+
+    /// <summary>Each distinct message the fights logged, in the order first logged, with how many of the fights logged it.</summary>
+    private static IEnumerable<string> Logged(List<Fight> fights, Func<Fight, IReadOnlyList<string>> messages, string label) =>
+        fights.SelectMany(f => messages(f).Distinct(StringComparer.Ordinal)).GroupBy(m => m, StringComparer.Ordinal)
+            .Select(g => FormattableString.Invariant($"    {label} in {g.Count()} of {fights.Count} fights: {g.Key}"));
 
     /// <summary>The trace hashes as the command prints them: one line per pairing keyed <c>a:b</c>, then the run's.</summary>
     public IEnumerable<string> HashLines()
@@ -409,7 +446,9 @@ public static class Tournament
     public static Fight Duel(ContentRegistry content, Pairing pairing, int index, double seconds)
     {
         var seed = Rng.Hash64(SeedText(pairing, index));
-        var sim = ZoneBuilder.CreateArena(content, seed);
+        // Every arena keeps what its simulation logs, so a broken kit or a failing system shows in the report.
+        var log = new CountingSimLog();
+        var sim = ZoneBuilder.CreateArena(content, seed, log: log);
         // The trace listens before the spawns, so the log opens with them.
         var trace = new Trace(sim);
         var (a, b) = Spawn(sim, pairing, BFirst(index));
@@ -495,7 +534,8 @@ public static class Tournament
         }
         var outcome = aDied == bDied ? "draw" : aDied ? "b" : "a";
         trace.End(outcome);
-        return new Fight(pairing.A, pairing.B, index, seed, outcome, ended ?? seconds, Hex(trace.Hash()), Measure(sim, a, pairing.A, tallies[a.Key]), Measure(sim, b, pairing.B, tallies[b.Key]));
+        return new Fight(pairing.A, pairing.B, index, seed, outcome, ended ?? seconds, Hex(trace.Hash()), Measure(sim, a, pairing.A, tallies[a.Key]), Measure(sim, b, pairing.B, tallies[b.Key]),
+            log.Warnings.ToList(), log.Errors.ToList());
     }
 
     /// <summary>

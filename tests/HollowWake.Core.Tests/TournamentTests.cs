@@ -478,6 +478,59 @@ entries:
     }
 
     [Fact]
+    public void AFightCarriesWhatTheSimulationLogged()
+    {
+        var dir = Scratch("evaluation-broken");
+        try
+        {
+            File.WriteAllText(Path.Combine(dir, "patterns.yaml"), """
+kind: patterns
+entries:
+  - id: t_broken
+    name: Broken
+    extends: monster
+    tags: [humanoid]
+    level: 5
+    components:
+      stats: { attributes: { might: 10, vigor: 10, move.speed: 4.8 } }
+      weaves: { list: [no_such_weave] }
+      behavior: { id: no_such_behavior }
+  - id: t_garbled
+    name: Garbled
+    extends: monster
+    tags: [humanoid]
+    level: 5
+    components:
+      stats: { attributes: { might: 10, vigor: 10, move.speed: 4.8 } }
+      weaves: { list: [5] }
+      behavior: { id: aggressive_melee }
+""".Replace("\r\n", "\n"));
+            var registry = ContentRegistry.Load(new[] { CoreContent.FindContentDir(), dir }, out _);
+
+            // An unknown weave: the seat is there and never used, and the fight says why instead of reading as an empty kit.
+            var broken = Tournament.Run(registry, new[] { new Pairing("t_broken", "hob") }, seeds: 1, seconds: 5, checkBands: false);
+            var fight = Assert.Single(broken.Fights);
+            Assert.Equal(1, fight.SideA.Kit);
+            Assert.Equal(0, fight.SideA.Coverage);
+            Assert.Contains(fight.Warnings, w => w.Contains("no_such_weave") && w.Contains("failed to compile"));
+            Assert.Contains(fight.Warnings, w => w.Contains("no_such_behavior"));
+            Assert.Empty(fight.Errors);
+            Assert.Null(broken.FirstError());
+            Assert.Contains(broken.Table(), line => line.StartsWith("    WARNING in 1 of 1 fights: ", StringComparison.Ordinal) && line.Contains("no_such_weave"));
+
+            // A weave list the binder cannot read is an error, and the report names the first.
+            var garbled = Tournament.Run(registry, new[] { new Pairing("t_garbled", "hob") }, seeds: 2, seconds: 5, checkBands: false);
+            Assert.All(garbled.Fights, f => Assert.Contains(f.Errors, e => e.Contains("'t_garbled'") && e.Contains("'weaves'")));
+            Assert.StartsWith("t_garbled:hob fight 0: pattern 't_garbled' component 'weaves' failed to bind", garbled.FirstError());
+            Assert.Contains(garbled.Table(), line => line.StartsWith("    ERROR in 2 of 2 fights: ", StringComparison.Ordinal));
+        }
+        finally
+        {
+            Directory.Delete(dir, recursive: true);
+        }
+    }
+
+    [Fact]
     public void AStatusWhoseApplierIsGoneIsItsBearersOwnNotDamageItDealt()
     {
         var dir = Scratch("evaluation-wisp");
