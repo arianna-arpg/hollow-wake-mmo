@@ -29,6 +29,10 @@ The **summoning weave** is the context's host when a meta, trigger or `cast` run
 
 Every roll comes from the cast's random stream: a single-pattern summon draws one bearing per body, a pool one pick more. Births publish `MinionSummoned`.
 
+### Reusing encounter bodies
+
+A summon keeps its pattern's anatomy, classifiers, base attributes and weave kit. The summon recipe supplies the minion behavior and owner relation; it removes the pattern's wild `Drops` component at birth, including experience, so summons cannot be farmed for encounter rewards. This also applies to contract respawns. A wild spawn retains those rewards. Public snapshots resolve the same effective owner faction as combat relations, while the body's native pattern faction stays intact. See [entity content](entities.md).
+
 ### Inheritance
 
 Rule `minions.inherit` is a table of lines `{ from, attribute, form }`. At birth, and again whenever the owner's attribute version has moved (checked every `minions.inherit_interval` seconds), each line folds the owner attribute `from` in the context of the summoning weave's tags and the body's own tags, with the weave's modifiers (its glyphs') joining the fold, subtracts the owner attribute's declared base, and lands what is left on the minion as one modifier of `form` on `attribute`, under source `owner:{owner key}`. So `minion.damage` (based at one) lands as `damage more` of its excess, `minion.regen` (based at zero) as flat `life.regen`. A line may carry placeholders (`minion.status.{status}.chance`), expanded over the attribute catalog at load. Nothing is copied: the minion's numbers stay its own fold, and a refold touches the minion only when a value moved. Bodies are filled to their inherited maximums at birth.

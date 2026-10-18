@@ -1,0 +1,247 @@
+{
+  "kind": "pois",
+  "entries": [
+    {
+      "id": "ossuary",
+      "name": "Ossuary",
+      "tags": [
+        "ruin",
+        "landmark",
+        "umbra",
+        "remnant"
+      ],
+      "weight": 2,
+      "radius": 8,
+      "min_spacing": 110,
+      "slope": {
+        "max": 0.6
+      },
+      "landmarks": [
+        "barrow"
+      ],
+      "level": 2,
+      "inhabitants": [
+        {
+          "pattern": "skeleton_warrior",
+          "density": 2,
+          "pack_size": [
+            2,
+            3
+          ],
+          "respawn": 240,
+          "level": {
+            "min": 3
+          }
+        },
+        {
+          "pattern": "skeleton_archer",
+          "density": 1,
+          "pack_size": [
+            1,
+            2
+          ],
+          "respawn": 240,
+          "level": {
+            "min": 3
+          }
+        },
+        {
+          "pattern": "skeletal_sentinel",
+          "density": 1,
+          "pack_size": [
+            1,
+            1
+          ],
+          "respawn": 240,
+          "level": {
+            "min": 5
+          }
+        },
+        {
+          "pattern": "skeletal_duelist",
+          "density": 1,
+          "pack_size": [
+            1,
+            1
+          ],
+          "respawn": 240,
+          "level": {
+            "min": 5
+          }
+        },
+        {
+          "pattern": "bone_golem",
+          "density": 1,
+          "pack_size": [
+            1,
+            1
+          ],
+          "respawn": 480,
+          "level": {
+            "min": 7
+          }
+        }
+      ],
+      "names": [
+        "the Hollow Reliquary",
+        "the Bone Vault",
+        "the Unquiet House"
+      ]
+    },
+    {
+      "id": "grave_court",
+      "name": "Grave Court",
+      "tags": [
+        "ruin",
+        "landmark",
+        "umbra",
+        "remnant"
+      ],
+      "weight": 1,
+      "radius": 9,
+      "min_spacing": 140,
+      "slope": {
+        "max": 0.6
+      },
+      "landmarks": [
+        "ruin_walls"
+      ],
+      "level": 4,
+      "inhabitants": [
+        {
+          "pattern": "skeletal_pyromancer",
+          "density": 1,
+          "pack_size": [
+            1,
+            1
+          ],
+          "respawn": 240,
+          "level": {
+            "min": 4
+          }
+        },
+        {
+          "pattern": "skeletal_cryomancer",
+          "density": 1,
+          "pack_size": [
+            1,
+            1
+          ],
+          "respawn": 240,
+          "level": {
+            "min": 4
+          }
+        },
+        {
+          "pattern": "skeletal_stormcaller",
+          "density": 1,
+          "pack_size": [
+            1,
+            1
+          ],
+          "respawn": 240,
+          "level": {
+            "min": 5
+          }
+        },
+        {
+          "pattern": "skeletal_venomancer",
+          "density": 1,
+          "pack_size": [
+            1,
+            1
+          ],
+          "respawn": 240,
+          "level": {
+            "min": 5
+          }
+        },
+        {
+          "pattern": "ossuary_lich",
+          "density": 1,
+          "pack_size": [
+            1,
+            1
+          ],
+          "respawn": 600,
+          "level": {
+            "min": 8
+          }
+        }
+      ],
+      "names": [
+        "the Cinder Lectern",
+        "the Silent Faculty",
+        "the Last Lesson"
+      ]
+    },
+    {
+      "id": "charnel_yard",
+      "name": "Charnel Yard",
+      "tags": [
+        "ruin",
+        "landmark",
+        "umbra",
+        "remnant"
+      ],
+      "weight": 1,
+      "radius": 8,
+      "min_spacing": 120,
+      "slope": {
+        "max": 0.6
+      },
+      "biomes": [
+        "marsh",
+        "hollowed",
+        "deep_forest"
+      ],
+      "landmarks": [
+        "barrow"
+      ],
+      "level": 3,
+      "inhabitants": [
+        {
+          "pattern": "zombie",
+          "density": 2,
+          "pack_size": [
+            2,
+            3
+          ],
+          "respawn": 240,
+          "level": {
+            "min": 2
+          }
+        },
+        {
+          "pattern": "zombie_crawler",
+          "density": 1,
+          "pack_size": [
+            1,
+            2
+          ],
+          "respawn": 240,
+          "level": {
+            "min": 3
+          }
+        },
+        {
+          "pattern": "court_abomination",
+          "density": 1,
+          "pack_size": [
+            1,
+            1
+          ],
+          "respawn": 480,
+          "level": {
+            "min": 8
+          }
+        }
+      ],
+      "names": [
+        "the Sutured Yard",
+        "the Dead Cart",
+        "the Unfinished Grave"
+      ]
+    }
+  ]
+}

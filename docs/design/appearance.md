@@ -22,6 +22,12 @@ A plan (`World/Logic/BodyPlan.cs`, `bodyPlan.ts`) is bones with pivots in a hier
 
 Each body stands on a **contact mark**: a soft disc that gives it its ground contact, with an edge grammar per relation to the players from the factions content (inward teeth for a hostile, spaced ticks for a friend, a plain rim otherwise) so danger reads without colour. The mark follows the body's root, not its pose.
 
+### Anatomical families
+
+`AnatomyFamilies.cs` and `anatomyFamilies.ts` add exposed skeletal bipeds, stitched flesh bipeds and skeletal quadrupeds to the family registry. They use the ordinary biped and quadruped rigs, with shared sockets for equipment. Rib spacing, limb thickness, shoulders, asymmetry and proportions are content shape choices; cowls, crystals, conductor yokes, vials, bindings, grafts and missing legs are presentation features. Mage schools must remain distinguishable by silhouette in grayscale, as well as by their accent colors. These features never grant gameplay behavior.
+
+Prototype-derived looks preserve their source look ids in metadata. The shared `tests/fixtures/undead-appearance.json` pins the reviewed plans, including parts, bones, sockets and worn gear, for both clients. `experiments/undead-entities` contains the translation ledger and the actual-geometry gallery used to inspect isometric, third-person and grayscale poses.
+
 ### Two representations
 
 The **bodies** option (Graphics) chooses painted geometry, directional cards, or by camera: cards in the isometric camera once it is zoomed out past the card zoom (with hysteresis), geometry in third person and up close. A card is the entry's body baked once per look and gear into an atlas of eight azimuths from the isometric pitch (`World/Appearance/CardBaker.cs`, `cards.ts`), drawn as one foot-anchored quad the body's size that turns to face the camera about the vertical and samples the cell nearest the camera's bearing from the body's yaw. Cards are depth-tested and depth-written, so they occlude and are occluded like geometry; they cast no shadow, carry no per-entity colour variation, and the animator moves only their root (bob, lean, squash, the fall of death). Bodies taller than four units and entries marked `card: never` stay geometry. A body draws as geometry until its atlas is ready; the baker bakes a cell per frame on the desktop and an atlas per frame in the browser, so a crowd arriving at once costs frames, never a stall. Switching the option back disposes the cards; the atlases are forgotten with the views that held them.

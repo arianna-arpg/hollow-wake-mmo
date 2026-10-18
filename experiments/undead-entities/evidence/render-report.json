@@ -1,0 +1,133 @@
+{
+  "errors": [],
+  "bodies": [
+    {
+      "id": "skeleton_warrior",
+      "body": "skeleton",
+      "rig": "biped",
+      "parts": 49,
+      "triangles": 772,
+      "height": 1.641656576956987
+    },
+    {
+      "id": "skeleton_archer",
+      "body": "skeleton",
+      "rig": "biped",
+      "parts": 47,
+      "triangles": 760,
+      "height": 1.623645728396058
+    },
+    {
+      "id": "skeletal_pyromancer",
+      "body": "skeleton",
+      "rig": "biped",
+      "parts": 49,
+      "triangles": 780,
+      "height": 1.681713687829301
+    },
+    {
+      "id": "skeletal_cryomancer",
+      "body": "skeleton",
+      "rig": "biped",
+      "parts": 50,
+      "triangles": 796,
+      "height": 1.6744578211122754
+    },
+    {
+      "id": "skeletal_stormcaller",
+      "body": "skeleton",
+      "rig": "biped",
+      "parts": 50,
+      "triangles": 808,
+      "height": 1.6660043611165878
+    },
+    {
+      "id": "skeletal_venomancer",
+      "body": "skeleton",
+      "rig": "biped",
+      "parts": 52,
+      "triangles": 848,
+      "height": 1.6716112699808552
+    },
+    {
+      "id": "skeletal_sentinel",
+      "body": "skeleton",
+      "rig": "biped",
+      "parts": 54,
+      "triangles": 924,
+      "height": 1.788167989842832
+    },
+    {
+      "id": "skeletal_duelist",
+      "body": "skeleton",
+      "rig": "biped",
+      "parts": 57,
+      "triangles": 908,
+      "height": 1.606784755680442
+    },
+    {
+      "id": "ossuary_lich",
+      "body": "skeleton",
+      "rig": "biped",
+      "parts": 56,
+      "triangles": 888,
+      "height": 2.3476087303569324
+    },
+    {
+      "id": "bone_golem",
+      "body": "skeleton",
+      "rig": "biped",
+      "parts": 50,
+      "triangles": 788,
+      "height": 2.110840598509789
+    },
+    {
+      "id": "court_abomination",
+      "body": "stitched",
+      "rig": "biped",
+      "parts": 65,
+      "triangles": 1008,
+      "height": 2.2889197009249926
+    },
+    {
+      "id": "zombie",
+      "body": "stitched",
+      "rig": "biped",
+      "parts": 45,
+      "triangles": 756,
+      "height": 1.6021696808761954
+    },
+    {
+      "id": "zombie_crawler",
+      "body": "stitched",
+      "rig": "biped",
+      "parts": 37,
+      "triangles": 588,
+      "height": 0.8013317822780908
+    },
+    {
+      "id": "decay_wraith",
+      "body": "wisp",
+      "rig": "wisp",
+      "parts": 13,
+      "triangles": 248,
+      "height": 1.4706781325340268
+    },
+    {
+      "id": "blade_wraith",
+      "body": "wisp",
+      "rig": "wisp",
+      "parts": 19,
+      "triangles": 336,
+      "height": 1.4284704704213143
+    },
+    {
+      "id": "barrow_hound",
+      "body": "bone_quadruped",
+      "rig": "quadruped",
+      "parts": 38,
+      "triangles": 498,
+      "height": 1.0060547178777834
+    }
+  ]
+}

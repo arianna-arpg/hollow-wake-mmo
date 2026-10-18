@@ -52,6 +52,9 @@ public static class BodyFamilies
     public static readonly IReadOnlyDictionary<string, Action<BodyBuild>> Builders = new Dictionary<string, Action<BodyBuild>>(StringComparer.Ordinal)
     {
         ["biped"] = Biped,
+        ["skeleton"] = AnatomyFamilies.Skeleton,
+        ["stitched"] = AnatomyFamilies.Stitched,
+        ["bone_quadruped"] = AnatomyFamilies.BoneQuadruped,
         ["quadruped"] = Quadruped,
         ["crawler"] = Crawler,
         ["wisp"] = Wisp,

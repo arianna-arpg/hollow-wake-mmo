@@ -595,6 +595,8 @@ internal sealed class SummonRecipe
         {
             return e;
         }
+        // A summoned copy carries the combat kit, never the wild encounter reward.
+        sim.World.Remove<Drops>(e);
         var now = sim.Clock.Time;
         var lifetime = contract is null && Lifetime is not null ? ctx.Eval(Lifetime, 20) : 0;
         var host = HostOf(ctx);

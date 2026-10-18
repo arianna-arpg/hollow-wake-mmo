@@ -431,6 +431,11 @@ public sealed class ChunkPasses
             var prng = _gen.RngFor($"inhabitants:{poi.Id}");
             foreach (var spec in poi.Def.Inhabitants)
             {
+                // The site level includes its authored offset from the region.
+                if (spec.Level is { } level && !level.Contains(poi.Level))
+                {
+                    continue;
+                }
                 var count = Math.Max(1, (int)Math.Round(spec.Density));
                 for (var k = 0; k < count; k++)
                 {

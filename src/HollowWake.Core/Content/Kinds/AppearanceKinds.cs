@@ -15,6 +15,9 @@ internal static class AppearanceKinds
     public static readonly IReadOnlyDictionary<string, IReadOnlyList<string>> BodyFamilies = new Dictionary<string, IReadOnlyList<string>>(StringComparer.Ordinal)
     {
         ["biped"] = new[] { "head", "neck", "torso", "hips", "legs", "arms", "width", "hunch", "stance", "blocky", "belly", "shoulders" },
+        ["skeleton"] = new[] { "head", "torso", "legs", "arms", "width", "hunch", "shoulders", "thickness", "ribs", "asymmetry" },
+        ["stitched"] = new[] { "head", "torso", "legs", "arms", "width", "hunch", "shoulders", "thickness", "ribs", "asymmetry", "stitches" },
+        ["bone_quadruped"] = new[] { "length", "width" },
         ["quadruped"] = new[] { "head", "snout", "neck", "torso", "legs", "width", "tail", "rump", "mane" },
         ["crawler"] = new[] { "shell", "legs", "width", "claws", "eyes" },
         ["wisp"] = new[] { "head", "torso", "hover", "trail", "width", "arms" },

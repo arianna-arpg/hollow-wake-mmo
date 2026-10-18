@@ -1,0 +1,92 @@
+{
+  "kind": "spawn_tables",
+  "entries": [
+    {
+      "id": "remnant_mire",
+      "spawns": [
+        {
+          "pattern": "zombie",
+          "density": 0.35,
+          "pack_size": [
+            2,
+            3
+          ],
+          "respawn": 240,
+          "level": {
+            "min": 2
+          }
+        },
+        {
+          "pattern": "zombie_crawler",
+          "density": 0.2,
+          "pack_size": [
+            2,
+            3
+          ],
+          "respawn": 240,
+          "level": {
+            "min": 3
+          }
+        },
+        {
+          "pattern": "skeletal_venomancer",
+          "density": 0.08,
+          "pack_size": [
+            1,
+            1
+          ],
+          "respawn": 240,
+          "level": {
+            "min": 5
+          }
+        }
+      ]
+    },
+    {
+      "id": "remnant_haunts",
+      "spawns": [
+        {
+          "pattern": "decay_wraith",
+          "density": 0.2,
+          "pack_size": [
+            1,
+            2
+          ],
+          "respawn": 240,
+          "level": {
+            "min": 5
+          }
+        },
+        {
+          "pattern": "blade_wraith",
+          "density": 0.12,
+          "pack_size": [
+            1,
+            2
+          ],
+          "respawn": 240,
+          "level": {
+            "min": 6
+          }
+        }
+      ]
+    },
+    {
+      "id": "remnant_hounds",
+      "spawns": [
+        {
+          "pattern": "barrow_hound",
+          "density": 0.2,
+          "pack_size": [
+            1,
+            2
+          ],
+          "respawn": 240,
+          "level": {
+            "min": 4
+          }
+        }
+      ]
+    }
+  ]
+}

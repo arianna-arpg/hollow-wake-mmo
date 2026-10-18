@@ -1,0 +1,941 @@
+{
+  "kind": "patterns",
+  "entries": [
+    {
+      "id": "undead_body",
+      "name": "Undead body template",
+      "extends": "creature",
+      "faction": "remnant",
+      "tags": [
+        "undead",
+        "remnant"
+      ],
+      "components": {
+        "stats": {
+          "attributes": {
+            "might": 8,
+            "grace": 8,
+            "will": 6,
+            "vigor": 0,
+            "stamina.max": 65,
+            "stamina.regen": 12,
+            "mana.max": 70,
+            "mana.regen": 9,
+            "resist.umbra": 0.3
+          }
+        },
+        "statuses": {}
+      }
+    },
+    {
+      "id": "skeleton_warrior",
+      "name": "Skeleton Warrior",
+      "extends": "undead_body",
+      "tags": [
+        "monster",
+        "summonable",
+        "skeleton",
+        "bone",
+        "body.bone",
+        "family.skeleton",
+        "role.warrior",
+        "habitat.ruin",
+        "melee",
+        "humanoid"
+      ],
+      "faction": "remnant",
+      "level": 3,
+      "radius": 0.41,
+      "height": 1.7,
+      "components": {
+        "stats": {
+          "attributes": {
+            "life.max": "70 + (level - 1) * 7",
+            "move.speed": 4.7,
+            "weapon.damage.min": "5 + (level - 1) * 0.7",
+            "weapon.damage.max": "9 + (level - 1) * 1.1",
+            "weapon.attack.time": 0.95
+          }
+        },
+        "weaves": {
+          "list": [
+            "cleave"
+          ]
+        },
+        "behavior": {
+          "id": "aggressive_melee"
+        },
+        "drops": {
+          "table": "undead_drops",
+          "xp": "12 + level * 6",
+          "chance": 0.55
+        }
+      },
+      "meta": {
+        "prototype": {
+          "repository": "arianna-arpg/arpg-game-world",
+          "revision": "118b510f8b5bfb781163c5bc13ea4908f698e75b",
+          "id": "skeleton_warrior",
+          "look": "skeleton_warrior"
+        }
+      }
+    },
+    {
+      "id": "skeleton_archer",
+      "name": "Skeleton Archer",
+      "extends": "undead_body",
+      "tags": [
+        "monster",
+        "summonable",
+        "skeleton",
+        "bone",
+        "body.bone",
+        "family.skeleton",
+        "role.archer",
+        "habitat.ruin",
+        "archer",
+        "ranged",
+        "humanoid"
+      ],
+      "faction": "remnant",
+      "level": 3,
+      "radius": 0.38,
+      "height": 1.7,
+      "components": {
+        "stats": {
+          "attributes": {
+            "life.max": "58 + (level - 1) * 7",
+            "move.speed": 4.1,
+            "weapon.damage.min": "4 + (level - 1) * 0.7",
+            "weapon.damage.max": "8 + (level - 1) * 1.1",
+            "weapon.attack.time": 0.95,
+            "grace": 12
+          }
+        },
+        "weaves": {
+          "list": [
+            "bone_arrow"
+          ]
+        },
+        "behavior": {
+          "id": "aggressive_ranged"
+        },
+        "drops": {
+          "table": "undead_drops",
+          "xp": "12 + level * 6",
+          "chance": 0.55
+        }
+      },
+      "meta": {
+        "prototype": {
+          "repository": "arianna-arpg/arpg-game-world",
+          "revision": "118b510f8b5bfb781163c5bc13ea4908f698e75b",
+          "id": "skeleton_archer",
+          "look": "skeleton_archer"
+        }
+      }
+    },
+    {
+      "id": "skeletal_pyromancer",
+      "name": "Skeletal Pyromancer",
+      "extends": "undead_body",
+      "tags": [
+        "monster",
+        "summonable",
+        "skeleton",
+        "bone",
+        "body.bone",
+        "family.skeleton",
+        "role.mage",
+        "habitat.ruin",
+        "caster",
+        "ranged",
+        "humanoid",
+        "ember"
+      ],
+      "faction": "remnant",
+      "level": 4,
+      "radius": 0.38,
+      "height": 1.75,
+      "components": {
+        "stats": {
+          "attributes": {
+            "life.max": "62 + (level - 1) * 7",
+            "move.speed": 4.2,
+            "weapon.damage.min": "3 + (level - 1) * 0.7",
+            "weapon.damage.max": "6 + (level - 1) * 1.1",
+            "weapon.attack.time": 0.95,
+            "will": 10,
+            "mana.max": 100,
+            "mana.regen": 14
+          }
+        },
+        "weaves": {
+          "list": [
+            "firebolt"
+          ]
+        },
+        "behavior": {
+          "id": "aggressive_ranged"
+        },
+        "drops": {
+          "table": "undead_drops",
+          "xp": "12 + level * 6",
+          "chance": 0.55
+        }
+      },
+      "meta": {
+        "prototype": {
+          "repository": "arianna-arpg/arpg-game-world",
+          "revision": "118b510f8b5bfb781163c5bc13ea4908f698e75b",
+          "id": "skeletal_pyromancer",
+          "look": "mage_cinder_scholar"
+        }
+      }
+    },
+    {
+      "id": "skeletal_cryomancer",
+      "name": "Skeletal Cryomancer",
+      "extends": "undead_body",
+      "tags": [
+        "monster",
+        "summonable",
+        "skeleton",
+        "bone",
+        "body.bone",
+        "family.skeleton",
+        "role.mage",
+        "habitat.ruin",
+        "caster",
+        "ranged",
+        "humanoid",
+        "tide"
+      ],
+      "faction": "remnant",
+      "level": 4,
+      "radius": 0.38,
+      "height": 1.75,
+      "components": {
+        "stats": {
+          "attributes": {
+            "life.max": "62 + (level - 1) * 7",
+            "move.speed": 4.2,
+            "weapon.damage.min": "3 + (level - 1) * 0.7",
+            "weapon.damage.max": "6 + (level - 1) * 1.1",
+            "weapon.attack.time": 0.95,
+            "will": 10,
+            "mana.max": 100,
+            "mana.regen": 14
+          }
+        },
+        "weaves": {
+          "list": [
+            "frostbolt"
+          ]
+        },
+        "behavior": {
+          "id": "aggressive_ranged"
+        },
+        "drops": {
+          "table": "undead_drops",
+          "xp": "12 + level * 6",
+          "chance": 0.55
+        }
+      },
+      "meta": {
+        "prototype": {
+          "repository": "arianna-arpg/arpg-game-world",
+          "revision": "118b510f8b5bfb781163c5bc13ea4908f698e75b",
+          "id": "skeletal_cryomancer",
+          "look": "mage_rime_scholar"
+        }
+      }
+    },
+    {
+      "id": "skeletal_stormcaller",
+      "name": "Skeletal Stormcaller",
+      "extends": "undead_body",
+      "tags": [
+        "monster",
+        "summonable",
+        "skeleton",
+        "bone",
+        "body.bone",
+        "family.skeleton",
+        "role.mage",
+        "habitat.ruin",
+        "caster",
+        "ranged",
+        "humanoid",
+        "storm"
+      ],
+      "faction": "remnant",
+      "level": 5,
+      "radius": 0.38,
+      "height": 1.75,
+      "components": {
+        "stats": {
+          "attributes": {
+            "life.max": "62 + (level - 1) * 7",
+            "move.speed": 4.2,
+            "weapon.damage.min": "3 + (level - 1) * 0.7",
+            "weapon.damage.max": "6 + (level - 1) * 1.1",
+            "weapon.attack.time": 0.95,
+            "will": 10,
+            "mana.max": 100,
+            "mana.regen": 14
+          }
+        },
+        "weaves": {
+          "list": [
+            "storm_bolt"
+          ]
+        },
+        "behavior": {
+          "id": "aggressive_ranged"
+        },
+        "drops": {
+          "table": "undead_drops",
+          "xp": "12 + level * 6",
+          "chance": 0.55
+        }
+      },
+      "meta": {
+        "prototype": {
+          "repository": "arianna-arpg/arpg-game-world",
+          "revision": "118b510f8b5bfb781163c5bc13ea4908f698e75b",
+          "id": "skeletal_stormcaller",
+          "look": "mage_storm_scholar"
+        }
+      }
+    },
+    {
+      "id": "skeletal_venomancer",
+      "name": "Skeletal Venomancer",
+      "extends": "undead_body",
+      "tags": [
+        "monster",
+        "summonable",
+        "skeleton",
+        "bone",
+        "body.bone",
+        "family.skeleton",
+        "role.mage",
+        "habitat.ruin",
+        "caster",
+        "ranged",
+        "humanoid",
+        "umbra",
+        "habitat.marsh"
+      ],
+      "faction": "remnant",
+      "level": 5,
+      "radius": 0.38,
+      "height": 1.75,
+      "components": {
+        "stats": {
+          "attributes": {
+            "life.max": "62 + (level - 1) * 7",
+            "move.speed": 4.2,
+            "weapon.damage.min": "3 + (level - 1) * 0.7",
+            "weapon.damage.max": "6 + (level - 1) * 1.1",
+            "weapon.attack.time": 0.95,
+            "will": 10,
+            "mana.max": 100,
+            "mana.regen": 14
+          }
+        },
+        "weaves": {
+          "list": [
+            "venom_bolt"
+          ]
+        },
+        "behavior": {
+          "id": "aggressive_ranged"
+        },
+        "drops": {
+          "table": "undead_drops",
+          "xp": "12 + level * 6",
+          "chance": 0.55
+        }
+      },
+      "meta": {
+        "prototype": {
+          "repository": "arianna-arpg/arpg-game-world",
+          "revision": "118b510f8b5bfb781163c5bc13ea4908f698e75b",
+          "id": "skeletal_venomancer",
+          "look": "mage_venom_scholar"
+        }
+      }
+    },
+    {
+      "id": "skeletal_sentinel",
+      "name": "Skeletal Sentinel",
+      "extends": "undead_body",
+      "tags": [
+        "monster",
+        "summonable",
+        "skeleton",
+        "bone",
+        "body.bone",
+        "family.skeleton",
+        "role.guardian",
+        "habitat.ruin",
+        "melee",
+        "humanoid"
+      ],
+      "faction": "remnant",
+      "level": 5,
+      "radius": 0.47,
+      "height": 1.85,
+      "components": {
+        "stats": {
+          "attributes": {
+            "life.max": "105 + (level - 1) * 7",
+            "move.speed": 4,
+            "weapon.damage.min": "6 + (level - 1) * 0.7",
+            "weapon.damage.max": "10 + (level - 1) * 1.1",
+            "weapon.attack.time": 0.95,
+            "armor": 30,
+            "block.chance": 0.2
+          }
+        },
+        "weaves": {
+          "list": [
+            "cleave",
+            "rallying_shout"
+          ]
+        },
+        "behavior": {
+          "id": "guard"
+        },
+        "drops": {
+          "table": "undead_drops",
+          "xp": "12 + level * 6",
+          "chance": 0.55
+        }
+      },
+      "meta": {
+        "prototype": {
+          "repository": "arianna-arpg/arpg-game-world",
+          "revision": "118b510f8b5bfb781163c5bc13ea4908f698e75b",
+          "id": "skeletal_sentinel",
+          "look": "sentinel_ossuary_guard"
+        }
+      }
+    },
+    {
+      "id": "skeletal_duelist",
+      "name": "Skeletal Duelist",
+      "extends": "undead_body",
+      "tags": [
+        "monster",
+        "summonable",
+        "skeleton",
+        "bone",
+        "body.bone",
+        "family.skeleton",
+        "role.skirmisher",
+        "habitat.ruin",
+        "melee",
+        "humanoid"
+      ],
+      "faction": "remnant",
+      "level": 5,
+      "radius": 0.38,
+      "height": 1.7,
+      "components": {
+        "stats": {
+          "attributes": {
+            "life.max": "70 + (level - 1) * 7",
+            "move.speed": 5.5,
+            "weapon.damage.min": "5 + (level - 1) * 0.7",
+            "weapon.damage.max": "9 + (level - 1) * 1.1",
+            "weapon.attack.time": 0.95,
+            "grace": 13
+          }
+        },
+        "weaves": {
+          "list": [
+            "frenzy",
+            "cleave"
+          ]
+        },
+        "behavior": {
+          "id": "aggressive_melee"
+        },
+        "drops": {
+          "table": "undead_drops",
+          "xp": "12 + level * 6",
+          "chance": 0.55
+        }
+      },
+      "meta": {
+        "prototype": {
+          "repository": "arianna-arpg/arpg-game-world",
+          "revision": "118b510f8b5bfb781163c5bc13ea4908f698e75b",
+          "id": "skeletal_duelist",
+          "look": "duelist_boneblades"
+        }
+      }
+    },
+    {
+      "id": "ossuary_lich",
+      "name": "Ossuary Lich",
+      "extends": "undead_body",
+      "tags": [
+        "monster",
+        "summonable",
+        "skeleton",
+        "bone",
+        "body.bone",
+        "family.skeleton",
+        "role.mage",
+        "habitat.ruin",
+        "caster",
+        "ranged",
+        "humanoid",
+        "ember",
+        "umbra"
+      ],
+      "faction": "remnant",
+      "level": 8,
+      "radius": 0.65,
+      "height": 2.2,
+      "components": {
+        "stats": {
+          "attributes": {
+            "life.max": "185 + (level - 1) * 7",
+            "move.speed": 3.9,
+            "weapon.damage.min": "5 + (level - 1) * 0.7",
+            "weapon.damage.max": "9 + (level - 1) * 1.1",
+            "weapon.attack.time": 0.95,
+            "will": 10,
+            "mana.max": 140,
+            "mana.regen": 18,
+            "armor": 20
+          }
+        },
+        "weaves": {
+          "list": [
+            "fireball",
+            "shade_bolt"
+          ]
+        },
+        "behavior": {
+          "id": "aggressive_ranged"
+        },
+        "drops": {
+          "table": "undead_drops",
+          "xp": "12 + level * 6",
+          "chance": 0.55
+        }
+      },
+      "meta": {
+        "prototype": {
+          "repository": "arianna-arpg/arpg-game-world",
+          "revision": "118b510f8b5bfb781163c5bc13ea4908f698e75b",
+          "id": "ossuary_lich",
+          "look": "lich_ossuary_regent"
+        }
+      }
+    },
+    {
+      "id": "bone_golem",
+      "name": "Bone Golem",
+      "extends": "undead_body",
+      "tags": [
+        "monster",
+        "summonable",
+        "golem",
+        "bone",
+        "body.bone",
+        "family.golem",
+        "role.brute",
+        "habitat.ruin",
+        "melee",
+        "assembled",
+        "no_corpse",
+        "stone"
+      ],
+      "faction": "remnant",
+      "level": 7,
+      "radius": 0.56,
+      "height": 2.45,
+      "components": {
+        "stats": {
+          "attributes": {
+            "life.max": "210 + (level - 1) * 16",
+            "move.speed": 3.3,
+            "weapon.damage.min": "8 + (level - 1) * 0.7",
+            "weapon.damage.max": "14 + (level - 1) * 1.1",
+            "weapon.attack.time": 1.35,
+            "armor": 40,
+            "poise.max": 60
+          }
+        },
+        "weaves": {
+          "list": [
+            "ground_slam",
+            "claw"
+          ]
+        },
+        "behavior": {
+          "id": "aggressive_melee"
+        },
+        "drops": {
+          "table": "undead_drops",
+          "xp": "28 + level * 6",
+          "chance": 0.8
+        }
+      },
+      "meta": {
+        "prototype": {
+          "repository": "arianna-arpg/arpg-game-world",
+          "revision": "118b510f8b5bfb781163c5bc13ea4908f698e75b",
+          "id": "bone_golem",
+          "look": "golem_bone_assembled"
+        }
+      }
+    },
+    {
+      "id": "court_abomination",
+      "name": "Stitched Abomination",
+      "extends": "undead_body",
+      "tags": [
+        "monster",
+        "summonable",
+        "abomination",
+        "flesh",
+        "body.flesh",
+        "family.abomination",
+        "role.brute",
+        "habitat.marsh",
+        "habitat.ruin",
+        "melee",
+        "assembled"
+      ],
+      "faction": "remnant",
+      "level": 8,
+      "radius": 0.81,
+      "height": 2.6,
+      "components": {
+        "stats": {
+          "attributes": {
+            "life.max": "290 + (level - 1) * 16",
+            "move.speed": 3,
+            "weapon.damage.min": "10 + (level - 1) * 0.7",
+            "weapon.damage.max": "16 + (level - 1) * 1.1",
+            "weapon.attack.time": 1.35,
+            "armor": 20,
+            "poise.max": 45
+          }
+        },
+        "weaves": {
+          "list": [
+            "claw",
+            "ground_slam"
+          ]
+        },
+        "behavior": {
+          "id": "aggressive_melee"
+        },
+        "drops": {
+          "table": "undead_drops",
+          "xp": "28 + level * 6",
+          "chance": 0.8
+        }
+      },
+      "meta": {
+        "prototype": {
+          "repository": "arianna-arpg/arpg-game-world",
+          "revision": "118b510f8b5bfb781163c5bc13ea4908f698e75b",
+          "id": "court_abomination",
+          "look": "abomination_stitched_brute"
+        }
+      }
+    },
+    {
+      "id": "zombie",
+      "name": "Shambling Zombie",
+      "extends": "undead_body",
+      "tags": [
+        "monster",
+        "summonable",
+        "zombie",
+        "flesh",
+        "body.flesh",
+        "family.zombie",
+        "role.shambler",
+        "habitat.marsh",
+        "habitat.ruin",
+        "melee",
+        "humanoid"
+      ],
+      "faction": "remnant",
+      "level": 2,
+      "radius": 0.44,
+      "height": 1.65,
+      "components": {
+        "stats": {
+          "attributes": {
+            "life.max": "82 + (level - 1) * 7",
+            "move.speed": 3,
+            "weapon.damage.min": "4 + (level - 1) * 0.7",
+            "weapon.damage.max": "7 + (level - 1) * 1.1",
+            "weapon.attack.time": 1.25
+          }
+        },
+        "weaves": {
+          "list": [
+            "claw"
+          ]
+        },
+        "behavior": {
+          "id": "undead_shambler"
+        },
+        "drops": {
+          "table": "undead_drops",
+          "xp": "12 + level * 6",
+          "chance": 0.55
+        }
+      },
+      "meta": {
+        "prototype": {
+          "repository": "arianna-arpg/arpg-game-world",
+          "revision": "118b510f8b5bfb781163c5bc13ea4908f698e75b",
+          "id": "zombie",
+          "look": "zombie"
+        }
+      }
+    },
+    {
+      "id": "zombie_crawler",
+      "name": "Crawling Zombie",
+      "extends": "undead_body",
+      "tags": [
+        "monster",
+        "summonable",
+        "zombie",
+        "flesh",
+        "body.flesh",
+        "family.zombie",
+        "role.shambler",
+        "habitat.marsh",
+        "habitat.ruin",
+        "melee",
+        "humanoid"
+      ],
+      "faction": "remnant",
+      "level": 2,
+      "radius": 0.38,
+      "height": 0.85,
+      "components": {
+        "stats": {
+          "attributes": {
+            "life.max": "58 + (level - 1) * 7",
+            "move.speed": 2.1,
+            "weapon.damage.min": "3 + (level - 1) * 0.7",
+            "weapon.damage.max": "6 + (level - 1) * 1.1",
+            "weapon.attack.time": 1.25
+          }
+        },
+        "weaves": {
+          "list": [
+            "claw"
+          ]
+        },
+        "behavior": {
+          "id": "undead_shambler"
+        },
+        "drops": {
+          "table": "undead_drops",
+          "xp": "12 + level * 6",
+          "chance": 0.55
+        }
+      },
+      "meta": {
+        "prototype": {
+          "repository": "arianna-arpg/arpg-game-world",
+          "revision": "118b510f8b5bfb781163c5bc13ea4908f698e75b",
+          "id": "zombie_crawler",
+          "look": "zombie_crawler"
+        }
+      }
+    },
+    {
+      "id": "decay_wraith",
+      "name": "Wraith",
+      "extends": "undead_body",
+      "tags": [
+        "monster",
+        "summonable",
+        "wraith",
+        "ethereal",
+        "body.ethereal",
+        "family.wraith",
+        "role.mage",
+        "habitat.hollowed",
+        "habitat.ruin",
+        "caster",
+        "ranged",
+        "spirit",
+        "no_corpse",
+        "umbra"
+      ],
+      "faction": "remnant",
+      "level": 5,
+      "radius": 0.38,
+      "height": 1.8,
+      "components": {
+        "stats": {
+          "attributes": {
+            "life.max": "95 + (level - 1) * 7",
+            "move.speed": 4.7,
+            "weapon.damage.min": "3 + (level - 1) * 0.7",
+            "weapon.damage.max": "6 + (level - 1) * 1.1",
+            "weapon.attack.time": 0.95,
+            "will": 10,
+            "mana.max": 100,
+            "mana.regen": 14,
+            "resist.umbra": 0.5
+          }
+        },
+        "weaves": {
+          "list": [
+            "venom_bolt"
+          ]
+        },
+        "behavior": {
+          "id": "aggressive_ranged"
+        },
+        "drops": {
+          "table": "undead_drops",
+          "xp": "12 + level * 6",
+          "chance": 0.55
+        }
+      },
+      "meta": {
+        "prototype": {
+          "repository": "arianna-arpg/arpg-game-world",
+          "revision": "118b510f8b5bfb781163c5bc13ea4908f698e75b",
+          "id": "decay_wraith",
+          "look": "wraith"
+        }
+      }
+    },
+    {
+      "id": "blade_wraith",
+      "name": "Blade Wraith",
+      "extends": "undead_body",
+      "tags": [
+        "monster",
+        "summonable",
+        "wraith",
+        "ethereal",
+        "body.ethereal",
+        "family.wraith",
+        "role.skirmisher",
+        "habitat.hollowed",
+        "habitat.ruin",
+        "melee",
+        "spirit",
+        "no_corpse",
+        "umbra"
+      ],
+      "faction": "remnant",
+      "level": 6,
+      "radius": 0.38,
+      "height": 1.85,
+      "components": {
+        "stats": {
+          "attributes": {
+            "life.max": "85 + (level - 1) * 7",
+            "move.speed": 5.5,
+            "weapon.damage.min": "6 + (level - 1) * 0.7",
+            "weapon.damage.max": "10 + (level - 1) * 1.1",
+            "weapon.attack.time": 0.95,
+            "resist.umbra": 0.5
+          }
+        },
+        "weaves": {
+          "list": [
+            "whirling_reap",
+            "claw"
+          ]
+        },
+        "behavior": {
+          "id": "aggressive_melee"
+        },
+        "drops": {
+          "table": "undead_drops",
+          "xp": "12 + level * 6",
+          "chance": 0.55
+        }
+      },
+      "meta": {
+        "prototype": {
+          "repository": "arianna-arpg/arpg-game-world",
+          "revision": "118b510f8b5bfb781163c5bc13ea4908f698e75b",
+          "id": "blade_wraith",
+          "look": "blade_wraith"
+        }
+      }
+    },
+    {
+      "id": "barrow_hound",
+      "name": "Barrow Hound",
+      "extends": "undead_body",
+      "tags": [
+        "monster",
+        "summonable",
+        "hound",
+        "bone",
+        "body.bone",
+        "family.hound",
+        "role.hunter",
+        "habitat.deep_forest",
+        "habitat.ruin",
+        "melee",
+        "beast",
+        "fauna"
+      ],
+      "faction": "remnant",
+      "level": 4,
+      "radius": 0.48,
+      "height": 0.95,
+      "components": {
+        "stats": {
+          "attributes": {
+            "life.max": "74 + (level - 1) * 7",
+            "move.speed": 6.1,
+            "weapon.damage.min": "5 + (level - 1) * 0.7",
+            "weapon.damage.max": "9 + (level - 1) * 1.1",
+            "weapon.attack.time": 0.95
+          }
+        },
+        "weaves": {
+          "list": [
+            "bite"
+          ]
+        },
+        "behavior": {
+          "id": "aggressive_melee"
+        },
+        "drops": {
+          "table": "undead_drops",
+          "xp": "12 + level * 6",
+          "chance": 0.55
+        }
+      },
+      "meta": {
+        "prototype": {
+          "repository": "arianna-arpg/arpg-game-world",
+          "revision": "118b510f8b5bfb781163c5bc13ea4908f698e75b",
+          "id": "barrow_hound",
+          "look": "barrow_hound"
+        }
+      }
+    }
+  ]
+}

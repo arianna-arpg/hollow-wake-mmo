@@ -64,6 +64,7 @@ entries:
     yields: { shards: 4, floss: 3 }
 
   - id: deep_forest
+    spawn_tables: [remnant_hounds]
     name: Deep Forest
     parent: forest
     priority: 2
@@ -77,6 +78,7 @@ entries:
       - { pattern: barrow_wight, density: 0.4, pack_size: [1, 2], respawn: 240, level: { min: 3 } }
 
   - id: marsh
+    spawn_tables: [remnant_mire]
     name: Marsh
     parent: wilds
     priority: 3
@@ -133,6 +135,7 @@ entries:
     yields: { shards: 6, residue: 2 }
 
   - id: hollowed
+    spawn_tables: [remnant_haunts]
     name: The Hollowed
     parent: wilds
     priority: 9
