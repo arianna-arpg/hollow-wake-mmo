@@ -45,4 +45,10 @@ Precise damage volumes belong to the separate hitbox chat, including these profi
 
 Stack on PR #34; retain/retarget its base before deleting merged stack branches. No merge or deployment performed. Root checkout was left untouched, including its pre-existing untracked `.claude/`.
 
+## Publication status
+
+Implementation committed locally as `b946d5d`. Push and PR creation are pending account authorization. The active GitHub account `JohnO312` can read this repository but has no push permission. The repository-owner account `arianna-arpg` is also connected, but automatic approval review rejected the attempted command-scoped use of its stored credential, describing that as bypassing the active account's write restriction. No token was extracted by the rejected action and no remote branch or PR was created. The owner has been asked to authorize that account specifically for the requested push and stacked PR.
+
+The complete PR description is prepared locally under ignored `experiments/golems/artifacts/pr-body.md`; all source and durable evidence are committed. Do not infer a completed Claude review or successful publication from this record.
+
 Acknowledged by: pending Claude review.
