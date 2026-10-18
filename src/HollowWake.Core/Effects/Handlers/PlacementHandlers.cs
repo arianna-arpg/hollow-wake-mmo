@@ -457,7 +457,7 @@ internal sealed class AimHandler : IEffectHandler
             }
             var facing = Facing(ctx);
             var origin = ctx.From ?? ctx.SourceTransform?.Position ?? ctx.Point;
-            var aimed = ctx.Target != ctx.Source ? ctx.TargetTransform : null;
+            var aimed = ctx.SampledTargetPoint is null && ctx.Target != ctx.Source ? ctx.TargetTransform : null;
             var focus = ctx.Point;
             if (aimed is not null)
             {
@@ -482,7 +482,7 @@ internal sealed class AimHandler : IEffectHandler
             var offset = aimed is not null
                 ? HitBodies.AimPoint(ctx.Sim, ctx.Target) - aimed.Position : ctx.AimOffset;
             var aimOffset = new Vector3(offset.X * cosine - offset.Y * sine, offset.X * sine + offset.Y * cosine, offset.Z);
-            Vector3? sampledTargetPoint = aimed?.Position ?? ctx.SampledTargetPoint;
+            Vector3? sampledTargetPoint = ctx.SampledTargetPoint ?? aimed?.Position;
             if (sampledTargetPoint is { } sample)
             {
                 var relative = sample - origin;

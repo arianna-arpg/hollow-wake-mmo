@@ -75,8 +75,8 @@ public sealed class EffectContext
     }
     /// <summary>Body aim offset sampled separately from planar bearing and original cast aim.</summary>
     public Vector3 AimOffset { get; init; }
-    /// <summary>A frozen target center after releasing its entity lock, independent of placement Point.
-    /// Together with AimOffset it preserves the body's aiming point; null keeps an explicit direction.</summary>
+    /// <summary>An optional frozen target center for delivery geometry, independent of placement Point
+    /// and the live Target used by body payloads. Together with AimOffset it overrides live body aiming.</summary>
     public Vector3? SampledTargetPoint { get; init; }
 
     /// <summary>
