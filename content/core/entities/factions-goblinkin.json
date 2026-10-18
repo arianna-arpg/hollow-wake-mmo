@@ -14,7 +14,8 @@
         "longwake_company": "hostile",
         "mended_thread": "hostile",
         "remnant": "hostile",
-        "tangled": "hostile"
+        "tangled": "hostile",
+        "orc_warbands": "allied"
       }
     }
   ]

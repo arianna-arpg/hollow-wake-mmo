@@ -1,3 +1,4 @@
+import { orc } from './orcFamilies';
 import { goblinkin, gnasher, warbeast } from './goblinkinFamilies';
 import { skeleton, stitched, boneQuadruped } from './anatomyFamilies';
 import type { Rgb } from '../palette';
@@ -748,6 +749,7 @@ function drop(b: BodyBuild): void {
 }
 
 export const BODY_FAMILIES: Record<string, Builder> = {
+  orc,
   goblinkin,
   gnasher,
   warbeast,

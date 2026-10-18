@@ -1,0 +1,174 @@
+{
+  "prototype_revision": "118b510f8b5bfb781163c5bc13ea4908f698e75b",
+  "reference_height": 1.8,
+  "standard_skeletons": [
+    "skeleton_warrior",
+    "skeleton_archer",
+    "skeletal_pyromancer",
+    "skeletal_cryomancer",
+    "skeletal_stormcaller",
+    "skeletal_venomancer",
+    "skeletal_sentinel",
+    "skeletal_duelist"
+  ],
+  "goblin_heights": {
+    "goblin_scavenger": 0.78,
+    "goblin_skirmisher": 0.9,
+    "goblin_slinger": 0.86,
+    "goblin_shaman": 0.94,
+    "goblin_sapper": 0.92,
+    "goblin_chief": 1.02,
+    "goblin_brute": 1.24,
+    "goblin_warboss": 1.38,
+    "hobgoblin_taskmaster": 1.4
+  },
+  "entities": [
+    {
+      "id": "orc_grunt",
+      "source": "original_variant",
+      "kit": [
+        "cleave"
+      ]
+    },
+    {
+      "id": "orc_ravager",
+      "source": "orc_ravager",
+      "kit": [
+        "cleave",
+        "whirling_reap"
+      ]
+    },
+    {
+      "id": "orc_cleaver",
+      "source": "original_variant",
+      "kit": [
+        "whirling_reap",
+        "heavy_strike"
+      ]
+    },
+    {
+      "id": "orc_bulwark",
+      "source": "original_variant",
+      "kit": [
+        "heavy_strike"
+      ]
+    },
+    {
+      "id": "orc_shieldbreaker",
+      "source": "original_variant",
+      "kit": [
+        "sunder_maul",
+        "heavy_strike"
+      ]
+    },
+    {
+      "id": "orc_headhunter",
+      "source": "original_variant",
+      "kit": [
+        "pinning_spear",
+        "cleave"
+      ]
+    },
+    {
+      "id": "orc_rockhurler",
+      "source": "original_variant",
+      "kit": [
+        "hurl_debris",
+        "heavy_strike"
+      ]
+    },
+    {
+      "id": "orc_ashcaller",
+      "source": "original_variant",
+      "kit": [
+        "firebolt"
+      ]
+    },
+    {
+      "id": "orc_bloodchanter",
+      "source": "original_variant",
+      "kit": [
+        "rallying_shout",
+        "cleave"
+      ]
+    },
+    {
+      "id": "orc_overseer",
+      "source": "original_variant",
+      "kit": [
+        "rallying_shout",
+        "heavy_strike"
+      ]
+    },
+    {
+      "id": "orc_slaver",
+      "source": "original_variant",
+      "kit": [
+        "heavy_strike",
+        "cleave"
+      ]
+    },
+    {
+      "id": "orc_warlord",
+      "source": "original_variant",
+      "kit": [
+        "rallying_shout",
+        "ground_slam",
+        "sunder_maul"
+      ]
+    },
+    {
+      "id": "reed_gnasher",
+      "source": "original_variant",
+      "kit": [
+        "bite",
+        "claw"
+      ]
+    },
+    {
+      "id": "thornback_gnasher",
+      "source": "original_variant",
+      "kit": [
+        "bite",
+        "heavy_strike"
+      ]
+    },
+    {
+      "id": "great_gnasher",
+      "source": "great_gnasher",
+      "kit": [
+        "stone_leap",
+        "heavy_strike"
+      ]
+    },
+    {
+      "id": "saddle_gnasher",
+      "source": "original_variant",
+      "kit": [
+        "bite",
+        "claw"
+      ]
+    },
+    {
+      "id": "ironjaw_gnasher",
+      "source": "original_variant",
+      "kit": [
+        "heavy_strike",
+        "ground_slam"
+      ]
+    },
+    {
+      "id": "brood_gnasher",
+      "source": "original_variant",
+      "kit": [
+        "bite",
+        "ground_slam"
+      ]
+    }
+  ],
+  "deferred": [
+    "Mounting and rider aggregation",
+    "Enslavement and dynamic warband hierarchy",
+    "Exact model-aligned collision"
+  ]
+}

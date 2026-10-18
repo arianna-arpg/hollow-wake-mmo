@@ -1,0 +1,468 @@
+{
+  "kind": "ui_appearances",
+  "entries": [
+    {
+      "id": "orc_grunt",
+      "body": "orc",
+      "shape": {
+        "breadth": 0.478021978021978,
+        "depth": 0.33516483516483514,
+        "hunch": 0.6
+      },
+      "palette": {
+        "skin": "#6b7951",
+        "cloth": "#593a32",
+        "metal": "#676d6a",
+        "wood": "#72573b",
+        "bone": "#d9cbaa",
+        "eye": "#d6b66c",
+        "dark": "#292b29",
+        "accent": "#b96d44"
+      },
+      "features": [
+        "tusks",
+        "bracers"
+      ],
+      "gear": {
+        "main_hand": "weapon.axe"
+      },
+      "card": "allow",
+      "variation": {
+        "hue": 0.012,
+        "value": 0.035,
+        "scale": 0
+      },
+      "meta": {
+        "prototype_look": "orc",
+        "adaptation": true
+      }
+    },
+    {
+      "id": "orc_ravager",
+      "body": "orc",
+      "shape": {
+        "breadth": 0.5808080808080808,
+        "depth": 0.3787878787878788,
+        "hunch": 0.8
+      },
+      "palette": {
+        "skin": "#6b7951",
+        "cloth": "#593a32",
+        "metal": "#676d6a",
+        "wood": "#72573b",
+        "bone": "#d9cbaa",
+        "eye": "#d6b66c",
+        "dark": "#292b29",
+        "accent": "#b96d44"
+      },
+      "features": [
+        "tusks",
+        "warpaint",
+        "pauldrons"
+      ],
+      "gear": {
+        "main_hand": "weapon.axe"
+      },
+      "card": "allow",
+      "variation": {
+        "hue": 0.012,
+        "value": 0.035,
+        "scale": 0
+      },
+      "meta": {
+        "prototype_look": "orc",
+        "adaptation": false
+      }
+    },
+    {
+      "id": "orc_cleaver",
+      "body": "orc",
+      "shape": {
+        "breadth": 0.5654450261780105,
+        "depth": 0.3769633507853403,
+        "arms": 1.1,
+        "muscle": 1.2,
+        "hunch": 0.9
+      },
+      "palette": {
+        "skin": "#8b7956",
+        "cloth": "#593a32",
+        "metal": "#676d6a",
+        "wood": "#72573b",
+        "bone": "#d9cbaa",
+        "eye": "#d6b66c",
+        "dark": "#292b29",
+        "accent": "#be5544"
+      },
+      "features": [
+        "tusks",
+        "warpaint",
+        "mohawk"
+      ],
+      "gear": {
+        "main_hand": "weapon.axe"
+      },
+      "card": "allow",
+      "variation": {
+        "hue": 0.012,
+        "value": 0.035,
+        "scale": 0
+      },
+      "meta": {
+        "prototype_look": "orc",
+        "adaptation": true
+      }
+    },
+    {
+      "id": "orc_bulwark",
+      "body": "orc",
+      "shape": {
+        "breadth": 0.6153846153846154,
+        "depth": 0.3990384615384615,
+        "hunch": 0.65,
+        "muscle": 1.15
+      },
+      "palette": {
+        "skin": "#6b7951",
+        "cloth": "#593a32",
+        "metal": "#676d6a",
+        "wood": "#72573b",
+        "bone": "#d9cbaa",
+        "eye": "#d6b66c",
+        "dark": "#292b29",
+        "accent": "#b96d44"
+      },
+      "features": [
+        "tusks",
+        "armor",
+        "pauldrons",
+        "visor"
+      ],
+      "gear": {
+        "main_hand": "weapon.club",
+        "off_hand": "shield"
+      },
+      "card": "allow",
+      "variation": {
+        "hue": 0.012,
+        "value": 0.035,
+        "scale": 0
+      },
+      "meta": {
+        "prototype_look": "orc",
+        "adaptation": true
+      }
+    },
+    {
+      "id": "orc_shieldbreaker",
+      "body": "orc",
+      "shape": {
+        "breadth": 0.5754716981132075,
+        "depth": 0.3915094339622641,
+        "hunch": 0.95,
+        "arms": 1.15
+      },
+      "palette": {
+        "skin": "#6b7951",
+        "cloth": "#593a32",
+        "metal": "#676d6a",
+        "wood": "#72573b",
+        "bone": "#d9cbaa",
+        "eye": "#d6b66c",
+        "dark": "#292b29",
+        "accent": "#b96d44"
+      },
+      "features": [
+        "tusks",
+        "bracers",
+        "pauldrons",
+        "backspikes"
+      ],
+      "gear": {
+        "main_hand": "weapon.maul"
+      },
+      "card": "allow",
+      "variation": {
+        "hue": 0.012,
+        "value": 0.035,
+        "scale": 0
+      },
+      "meta": {
+        "prototype_look": "orc",
+        "adaptation": true
+      }
+    },
+    {
+      "id": "orc_headhunter",
+      "body": "orc",
+      "shape": {
+        "breadth": 0.46842105263157896,
+        "depth": 0.3263157894736842,
+        "hunch": 0.6,
+        "muscle": 0.85
+      },
+      "palette": {
+        "skin": "#6b7951",
+        "cloth": "#593a32",
+        "metal": "#676d6a",
+        "wood": "#72573b",
+        "bone": "#d9cbaa",
+        "eye": "#d6b66c",
+        "dark": "#292b29",
+        "accent": "#b96d44"
+      },
+      "features": [
+        "tusks",
+        "quiver",
+        "trophies"
+      ],
+      "gear": {
+        "main_hand": "weapon.spear"
+      },
+      "card": "allow",
+      "variation": {
+        "hue": 0.012,
+        "value": 0.035,
+        "scale": 0
+      },
+      "meta": {
+        "prototype_look": "orc",
+        "adaptation": true
+      }
+    },
+    {
+      "id": "orc_rockhurler",
+      "body": "orc",
+      "shape": {
+        "breadth": 0.6272727272727272,
+        "depth": 0.4272727272727272,
+        "hunch": 1,
+        "arms": 1.15,
+        "muscle": 1.25
+      },
+      "palette": {
+        "skin": "#6b7951",
+        "cloth": "#593a32",
+        "metal": "#676d6a",
+        "wood": "#72573b",
+        "bone": "#d9cbaa",
+        "eye": "#d6b66c",
+        "dark": "#292b29",
+        "accent": "#b96d44"
+      },
+      "features": [
+        "tusks",
+        "rockpack",
+        "bracers"
+      ],
+      "gear": {
+        "main_hand": "weapon.club"
+      },
+      "card": "allow",
+      "variation": {
+        "hue": 0.012,
+        "value": 0.035,
+        "scale": 0
+      },
+      "meta": {
+        "prototype_look": "orc",
+        "adaptation": true
+      }
+    },
+    {
+      "id": "orc_ashcaller",
+      "body": "orc",
+      "shape": {
+        "breadth": 0.5053763440860215,
+        "depth": 0.3870967741935484,
+        "hunch": 1.05,
+        "muscle": 0.85
+      },
+      "palette": {
+        "skin": "#7c8068",
+        "cloth": "#393f47",
+        "metal": "#676d6a",
+        "wood": "#72573b",
+        "bone": "#d9cbaa",
+        "eye": "#d6b66c",
+        "dark": "#292b29",
+        "accent": "#dc9b5a"
+      },
+      "features": [
+        "tusks",
+        "robe",
+        "horns",
+        "censer"
+      ],
+      "gear": {
+        "main_hand": "weapon.staff"
+      },
+      "card": "allow",
+      "variation": {
+        "hue": 0.012,
+        "value": 0.035,
+        "scale": 0
+      },
+      "meta": {
+        "prototype_look": "orc",
+        "adaptation": true
+      }
+    },
+    {
+      "id": "orc_bloodchanter",
+      "body": "orc",
+      "shape": {
+        "breadth": 0.5297029702970297,
+        "depth": 0.3712871287128713,
+        "hunch": 0.8
+      },
+      "palette": {
+        "skin": "#6b7951",
+        "cloth": "#593a32",
+        "metal": "#676d6a",
+        "wood": "#72573b",
+        "bone": "#d9cbaa",
+        "eye": "#d6b66c",
+        "dark": "#292b29",
+        "accent": "#b96d44"
+      },
+      "features": [
+        "tusks",
+        "drums",
+        "trophies",
+        "warpaint"
+      ],
+      "gear": {
+        "main_hand": "weapon.club"
+      },
+      "card": "allow",
+      "variation": {
+        "hue": 0.012,
+        "value": 0.035,
+        "scale": 0
+      },
+      "meta": {
+        "prototype_look": "orc",
+        "adaptation": true
+      }
+    },
+    {
+      "id": "orc_overseer",
+      "body": "orc",
+      "shape": {
+        "breadth": 0.5333333333333333,
+        "depth": 0.36666666666666664,
+        "hunch": 0.7
+      },
+      "palette": {
+        "skin": "#6b7951",
+        "cloth": "#593a32",
+        "metal": "#676d6a",
+        "wood": "#72573b",
+        "bone": "#d9cbaa",
+        "eye": "#d6b66c",
+        "dark": "#292b29",
+        "accent": "#b96d44"
+      },
+      "features": [
+        "tusks",
+        "banner",
+        "armor",
+        "pauldrons"
+      ],
+      "gear": {
+        "main_hand": "weapon.spear"
+      },
+      "card": "allow",
+      "variation": {
+        "hue": 0.012,
+        "value": 0.035,
+        "scale": 0
+      },
+      "meta": {
+        "prototype_look": "orc",
+        "adaptation": true
+      }
+    },
+    {
+      "id": "orc_slaver",
+      "body": "orc",
+      "shape": {
+        "breadth": 0.5882352941176471,
+        "depth": 0.40196078431372545,
+        "hunch": 1.1
+      },
+      "palette": {
+        "skin": "#647269",
+        "cloth": "#593a32",
+        "metal": "#979285",
+        "wood": "#72573b",
+        "bone": "#d9cbaa",
+        "eye": "#d6b66c",
+        "dark": "#292b29",
+        "accent": "#b96d44"
+      },
+      "features": [
+        "tusks",
+        "chains",
+        "visor",
+        "bracers"
+      ],
+      "gear": {
+        "main_hand": "weapon.club"
+      },
+      "card": "allow",
+      "variation": {
+        "hue": 0.012,
+        "value": 0.035,
+        "scale": 0
+      },
+      "meta": {
+        "prototype_look": "orc",
+        "adaptation": true
+      }
+    },
+    {
+      "id": "orc_warlord",
+      "body": "orc",
+      "shape": {
+        "breadth": 0.6370967741935484,
+        "depth": 0.4112903225806452,
+        "hunch": 0.9,
+        "muscle": 1.25,
+        "jaw": 1.25
+      },
+      "palette": {
+        "skin": "#6b7951",
+        "cloth": "#593a32",
+        "metal": "#676d6a",
+        "wood": "#72573b",
+        "bone": "#d9cbaa",
+        "eye": "#d6b66c",
+        "dark": "#292b29",
+        "accent": "#b96d44"
+      },
+      "features": [
+        "tusks",
+        "armor",
+        "pauldrons",
+        "horns",
+        "banner",
+        "trophies"
+      ],
+      "gear": {
+        "main_hand": "weapon.axe"
+      },
+      "card": "allow",
+      "variation": {
+        "hue": 0.012,
+        "value": 0.035,
+        "scale": 0
+      },
+      "meta": {
+        "prototype_look": "orc",
+        "adaptation": true
+      }
+    }
+  ]
+}

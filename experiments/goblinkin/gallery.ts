@@ -5,7 +5,9 @@ import { buildBody } from '../../web/src/world/appearance/bodyFamilies';
 import { BodyMesh } from '../../web/src/world/appearance/bodyMesh';
 import { wear } from '../../web/src/world/appearance/gearFamilies';
 import { animate, Pose, freshVisualState } from '../../web/src/world/appearance/animator';
-import roster from '../../content/core/entities/patterns-goblinkin.json';
+import goblins from '../../content/core/entities/patterns-goblinkin.json';
+import orcs from '../../content/core/entities/patterns-orcs.json';
+const roster={entries:[...goblins.entries,...orcs.entries.filter(e=>e.id==='orc_ravager')]};
 
 import materials from '../../content/core/entities/body-materials.json';
 const catalog = new AppearanceCatalog(bundledKinds());

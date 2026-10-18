@@ -1,0 +1,431 @@
+{
+  "kind": "patterns",
+  "entries": [
+    {
+      "id": "reed_gnasher",
+      "name": "Reed Gnasher",
+      "extends": "goblinkin_body",
+      "faction": "goblinkin",
+      "tags": [
+        "monster",
+        "body.flesh",
+        "family.gnasher",
+        "role.biter",
+        "habitat.gnasher_pen",
+        "beast",
+        "melee",
+        "size.small"
+      ],
+      "level": 3,
+      "radius": 0.34,
+      "height": 0.64,
+      "components": {
+        "physical": {
+          "width": 0.58,
+          "depth": 0.68,
+          "height": 0.64,
+          "fill": 0.29,
+          "heft": 1,
+          "materials": [
+            {
+              "material": "flesh",
+              "fraction": 0.97
+            },
+            {
+              "material": "bone",
+              "fraction": 0.03
+            }
+          ]
+        },
+        "stats": {
+          "attributes": {
+            "life.max": "55 + (level - 1) * 7",
+            "move.speed": 6.2,
+            "weapon.damage.min": "6.5 + (level - 1) * 0.8",
+            "weapon.damage.max": "13 + (level - 1) * 1.2",
+            "weapon.attack.time": 1.15,
+            "poise.max": 10,
+            "armor": 20,
+            "spell.power": 1.2
+          }
+        },
+        "weaves": {
+          "list": [
+            "bite",
+            "claw"
+          ]
+        },
+        "behavior": {
+          "id": "aggressive_melee"
+        },
+        "drops": {
+          "table": "goblinkin_drops",
+          "xp": "15 + level * 9",
+          "chance": 0.65
+        }
+      },
+      "meta": {
+        "origin": "Original expansion of Hollow Wake prototype Orc and Gnasher anatomy",
+        "social_context": "Context authored by encounter; not an ownership or enslavement mechanic."
+      }
+    },
+    {
+      "id": "thornback_gnasher",
+      "name": "Thornback Gnasher",
+      "extends": "goblinkin_body",
+      "faction": "goblinkin",
+      "tags": [
+        "monster",
+        "body.flesh",
+        "family.gnasher",
+        "role.biter",
+        "habitat.gnasher_pen",
+        "beast",
+        "melee",
+        "size.small"
+      ],
+      "level": 6,
+      "radius": 0.52,
+      "height": 0.9,
+      "components": {
+        "physical": {
+          "width": 0.96,
+          "depth": 1.04,
+          "height": 0.9,
+          "fill": 0.32,
+          "heft": 1,
+          "materials": [
+            {
+              "material": "flesh",
+              "fraction": 0.97
+            },
+            {
+              "material": "bone",
+              "fraction": 0.03
+            }
+          ]
+        },
+        "stats": {
+          "attributes": {
+            "life.max": "125 + (level - 1) * 7",
+            "move.speed": 4.9,
+            "weapon.damage.min": "8.0 + (level - 1) * 0.8",
+            "weapon.damage.max": "16 + (level - 1) * 1.2",
+            "weapon.attack.time": 1.15,
+            "poise.max": 30,
+            "armor": 20,
+            "spell.power": 1.2
+          }
+        },
+        "weaves": {
+          "list": [
+            "bite",
+            "heavy_strike"
+          ]
+        },
+        "behavior": {
+          "id": "aggressive_melee"
+        },
+        "drops": {
+          "table": "goblinkin_drops",
+          "xp": "15 + level * 9",
+          "chance": 0.65
+        }
+      },
+      "meta": {
+        "origin": "Original expansion of Hollow Wake prototype Orc and Gnasher anatomy",
+        "social_context": "Context authored by encounter; not an ownership or enslavement mechanic."
+      }
+    },
+    {
+      "id": "great_gnasher",
+      "name": "Great Gnasher",
+      "extends": "goblinkin_body",
+      "faction": "goblinkin",
+      "tags": [
+        "monster",
+        "body.flesh",
+        "family.gnasher",
+        "role.leaper",
+        "habitat.gnasher_pen",
+        "beast",
+        "melee",
+        "size.medium"
+      ],
+      "level": 9,
+      "radius": 0.74,
+      "height": 1.32,
+      "components": {
+        "physical": {
+          "width": 1.35,
+          "depth": 1.48,
+          "height": 1.32,
+          "fill": 0.32,
+          "heft": 1,
+          "materials": [
+            {
+              "material": "flesh",
+              "fraction": 0.97
+            },
+            {
+              "material": "bone",
+              "fraction": 0.03
+            }
+          ]
+        },
+        "stats": {
+          "attributes": {
+            "life.max": "220 + (level - 1) * 7",
+            "move.speed": 4.7,
+            "weapon.damage.min": "9.5 + (level - 1) * 0.8",
+            "weapon.damage.max": "19 + (level - 1) * 1.2",
+            "weapon.attack.time": 1.15,
+            "poise.max": 45,
+            "armor": 20,
+            "spell.power": 1.2
+          }
+        },
+        "weaves": {
+          "list": [
+            "stone_leap",
+            "heavy_strike"
+          ]
+        },
+        "behavior": {
+          "id": "aggressive_melee"
+        },
+        "drops": {
+          "table": "goblinkin_drops",
+          "xp": "15 + level * 9",
+          "chance": 0.65
+        }
+      },
+      "meta": {
+        "origin": "Original expansion of Hollow Wake prototype Orc and Gnasher anatomy",
+        "social_context": "Context authored by encounter; not an ownership or enslavement mechanic.",
+        "prototype": {
+          "repository": "arianna-arpg/arpg-game-world",
+          "revision": "118b510f8b5bfb781163c5bc13ea4908f698e75b",
+          "id": "great_gnasher"
+        },
+        "translation": "stone_leap substitutes for prototype crushing_leap through the existing leap_slam form."
+      }
+    },
+    {
+      "id": "saddle_gnasher",
+      "name": "Saddleback Gnasher",
+      "extends": "goblinkin_body",
+      "faction": "goblinkin",
+      "tags": [
+        "monster",
+        "body.flesh",
+        "family.gnasher",
+        "role.biter",
+        "habitat.gnasher_pen",
+        "beast",
+        "melee",
+        "size.medium"
+      ],
+      "level": 7,
+      "radius": 0.72,
+      "height": 1.12,
+      "components": {
+        "physical": {
+          "width": 1.12,
+          "depth": 1.44,
+          "height": 1.12,
+          "fill": 0.3,
+          "heft": 1,
+          "materials": [
+            {
+              "material": "flesh",
+              "fraction": 0.97
+            },
+            {
+              "material": "bone",
+              "fraction": 0.03
+            }
+          ]
+        },
+        "stats": {
+          "attributes": {
+            "life.max": "180 + (level - 1) * 7",
+            "move.speed": 5.3,
+            "weapon.damage.min": "8.5 + (level - 1) * 0.8",
+            "weapon.damage.max": "17 + (level - 1) * 1.2",
+            "weapon.attack.time": 1.15,
+            "poise.max": 35,
+            "armor": 20,
+            "spell.power": 1.2
+          }
+        },
+        "weaves": {
+          "list": [
+            "bite",
+            "claw"
+          ]
+        },
+        "behavior": {
+          "id": "aggressive_melee"
+        },
+        "drops": {
+          "table": "goblinkin_drops",
+          "xp": "15 + level * 9",
+          "chance": 0.65
+        }
+      },
+      "meta": {
+        "origin": "Original expansion of Hollow Wake prototype Orc and Gnasher anatomy",
+        "social_context": "Context authored by encounter; not an ownership or enslavement mechanic.",
+        "mount_design": {
+          "status": "visual seat only; no mounting, control transfer or rider mass aggregation",
+          "intended_rider": "ordinary Goblin around 0.9m",
+          "seat_width": 0.538,
+          "seat_height": 1.075
+        }
+      }
+    },
+    {
+      "id": "ironjaw_gnasher",
+      "name": "Ironjaw Gnasher",
+      "extends": "goblinkin_body",
+      "faction": "goblinkin",
+      "tags": [
+        "monster",
+        "body.flesh",
+        "family.gnasher",
+        "role.bruiser",
+        "habitat.gnasher_pen",
+        "beast",
+        "melee",
+        "size.medium"
+      ],
+      "level": 12,
+      "radius": 0.84,
+      "height": 1.46,
+      "components": {
+        "physical": {
+          "width": 1.55,
+          "depth": 1.68,
+          "height": 1.46,
+          "fill": 0.34,
+          "heft": 1,
+          "materials": [
+            {
+              "material": "flesh",
+              "fraction": 0.97
+            },
+            {
+              "material": "bone",
+              "fraction": 0.03
+            }
+          ]
+        },
+        "stats": {
+          "attributes": {
+            "life.max": "300 + (level - 1) * 7",
+            "move.speed": 3.9,
+            "weapon.damage.min": "11.0 + (level - 1) * 0.8",
+            "weapon.damage.max": "22 + (level - 1) * 1.2",
+            "weapon.attack.time": 1.15,
+            "poise.max": 70,
+            "armor": 20,
+            "spell.power": 1.2
+          }
+        },
+        "weaves": {
+          "list": [
+            "heavy_strike",
+            "ground_slam"
+          ]
+        },
+        "behavior": {
+          "id": "aggressive_melee"
+        },
+        "drops": {
+          "table": "goblinkin_drops",
+          "xp": "15 + level * 9",
+          "chance": 0.65
+        }
+      },
+      "meta": {
+        "origin": "Original expansion of Hollow Wake prototype Orc and Gnasher anatomy",
+        "social_context": "Context authored by encounter; not an ownership or enslavement mechanic.",
+        "mount_design": {
+          "status": "visual seat only; no mounting, control transfer or rider mass aggregation",
+          "intended_rider": "ordinary Goblin around 0.9m",
+          "seat_width": 0.744,
+          "seat_height": 1.402
+        }
+      }
+    },
+    {
+      "id": "brood_gnasher",
+      "name": "Gnasher Broodmother",
+      "extends": "goblinkin_body",
+      "faction": "goblinkin",
+      "tags": [
+        "monster",
+        "body.flesh",
+        "family.gnasher",
+        "role.biter",
+        "habitat.gnasher_pen",
+        "beast",
+        "melee",
+        "size.medium"
+      ],
+      "level": 14,
+      "radius": 0.93,
+      "height": 1.52,
+      "components": {
+        "physical": {
+          "width": 1.86,
+          "depth": 1.72,
+          "height": 1.52,
+          "fill": 0.36,
+          "heft": 1,
+          "materials": [
+            {
+              "material": "flesh",
+              "fraction": 0.97
+            },
+            {
+              "material": "bone",
+              "fraction": 0.03
+            }
+          ]
+        },
+        "stats": {
+          "attributes": {
+            "life.max": "390 + (level - 1) * 7",
+            "move.speed": 3.6,
+            "weapon.damage.min": "12.0 + (level - 1) * 0.8",
+            "weapon.damage.max": "24 + (level - 1) * 1.2",
+            "weapon.attack.time": 1.15,
+            "poise.max": 60,
+            "armor": 20,
+            "spell.power": 1.2
+          }
+        },
+        "weaves": {
+          "list": [
+            "bite",
+            "ground_slam"
+          ]
+        },
+        "behavior": {
+          "id": "aggressive_melee"
+        },
+        "drops": {
+          "table": "goblinkin_drops",
+          "xp": "15 + level * 9",
+          "chance": 0.65
+        }
+      },
+      "meta": {
+        "origin": "Original expansion of Hollow Wake prototype Orc and Gnasher anatomy",
+        "social_context": "Context authored by encounter; not an ownership or enslavement mechanic."
+      }
+    }
+  ]
+}

@@ -68,3 +68,9 @@ Bodies are generated low-poly proxies, not authored models: a sculpted character
 ## Physical silhouettes
 
 The paired `goblinkin`, `gnasher` and `warbeast` builders use breadth and depth ratios to the authoritative body height. Content with a physical profile keeps those ratios aligned and disables random scale variation. Ears, noses, jaws, tusks, clothing and carried equipment remain presentation. Small pack creatures, upright raiders, long-armed brutes and low quadrupeds share existing animation rigs. A preview must include a common world-scale lineup as well as enlarged individual cards so silhouettes are not judged only after independent camera fitting.
+
+### Adult stature and heavy bipeds
+
+The `orc` family composes a forward-set skull, high trapezius, broad chest and heavy segmented limbs on the ordinary biped rig. `hunch` moves the skull forward without silently shrinking the body's rest height. Breadth, depth, arm length, muscle and jaw proportions remain authored shape values. Equipment and features distinguish roles in grayscale. Both clients build the same full plans and gear under the shared fixture gate.
+
+Gnasher features include tusks, crest, spots, flank plates and an empty saddle. The saddle is presentation, sized for a small rider; it neither creates a rider nor transfers control. Reference lineups compare the player, skeleton, ordinary Goblin, Orcs and Gnashers at one world scale. Ordinary player and skeletal looks preserve authoritative scale without random size jitter; decorative horns, banners and headwear can extend beyond body stature. Precise collision fitting is a separate simulation contract, never inferred from these appearance parts.

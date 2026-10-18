@@ -1,0 +1,205 @@
+{
+  "kind": "ui_appearances",
+  "entries": [
+    {
+      "id": "reed_gnasher",
+      "body": "gnasher",
+      "shape": {
+        "breadth": 0.9062499999999999,
+        "depth": 1.0625
+      },
+      "palette": {
+        "skin": "#8b9b65",
+        "cloth": "#593a32",
+        "metal": "#676d6a",
+        "wood": "#72573b",
+        "bone": "#d9cbaa",
+        "eye": "#d6b66c",
+        "dark": "#292b29",
+        "accent": "#b96d44"
+      },
+      "features": [
+        "spots"
+      ],
+      "gear": {},
+      "card": "allow",
+      "variation": {
+        "hue": 0.012,
+        "value": 0.035,
+        "scale": 0
+      },
+      "meta": {
+        "prototype_look": "cave_gnasher",
+        "adaptation": true
+      }
+    },
+    {
+      "id": "thornback_gnasher",
+      "body": "gnasher",
+      "shape": {
+        "breadth": 1.0666666666666667,
+        "depth": 1.1555555555555557
+      },
+      "palette": {
+        "skin": "#637c78",
+        "cloth": "#593a32",
+        "metal": "#676d6a",
+        "wood": "#72573b",
+        "bone": "#d9cbaa",
+        "eye": "#d6b66c",
+        "dark": "#292b29",
+        "accent": "#b96d44"
+      },
+      "features": [
+        "spines",
+        "plates"
+      ],
+      "gear": {},
+      "card": "allow",
+      "variation": {
+        "hue": 0.012,
+        "value": 0.035,
+        "scale": 0
+      },
+      "meta": {
+        "prototype_look": "cave_gnasher",
+        "adaptation": true
+      }
+    },
+    {
+      "id": "great_gnasher",
+      "body": "gnasher",
+      "shape": {
+        "breadth": 1.0227272727272727,
+        "depth": 1.121212121212121
+      },
+      "palette": {
+        "skin": "#aa5c43",
+        "cloth": "#593a32",
+        "metal": "#676d6a",
+        "wood": "#72573b",
+        "bone": "#d9cbaa",
+        "eye": "#d6b66c",
+        "dark": "#292b29",
+        "accent": "#b96d44"
+      },
+      "features": [
+        "tusks",
+        "crest",
+        "spots"
+      ],
+      "gear": {},
+      "card": "allow",
+      "variation": {
+        "hue": 0.012,
+        "value": 0.035,
+        "scale": 0
+      },
+      "meta": {
+        "prototype_look": "great_gnasher",
+        "adaptation": false
+      }
+    },
+    {
+      "id": "saddle_gnasher",
+      "body": "gnasher",
+      "shape": {
+        "breadth": 1.0,
+        "depth": 1.2857142857142856
+      },
+      "palette": {
+        "skin": "#a98a50",
+        "cloth": "#593a32",
+        "metal": "#676d6a",
+        "wood": "#72573b",
+        "bone": "#d9cbaa",
+        "eye": "#d6b66c",
+        "dark": "#292b29",
+        "accent": "#b96d44"
+      },
+      "features": [
+        "saddle",
+        "spots"
+      ],
+      "gear": {},
+      "card": "allow",
+      "variation": {
+        "hue": 0.012,
+        "value": 0.035,
+        "scale": 0
+      },
+      "meta": {
+        "prototype_look": "cave_gnasher",
+        "adaptation": true
+      }
+    },
+    {
+      "id": "ironjaw_gnasher",
+      "body": "gnasher",
+      "shape": {
+        "breadth": 1.0616438356164384,
+        "depth": 1.1506849315068493
+      },
+      "palette": {
+        "skin": "#626c61",
+        "cloth": "#593a32",
+        "metal": "#676d6a",
+        "wood": "#72573b",
+        "bone": "#d9cbaa",
+        "eye": "#d6b66c",
+        "dark": "#292b29",
+        "accent": "#b96d44"
+      },
+      "features": [
+        "plates",
+        "tusks",
+        "saddle"
+      ],
+      "gear": {},
+      "card": "allow",
+      "variation": {
+        "hue": 0.012,
+        "value": 0.035,
+        "scale": 0
+      },
+      "meta": {
+        "prototype_look": "great_gnasher",
+        "adaptation": true
+      }
+    },
+    {
+      "id": "brood_gnasher",
+      "body": "gnasher",
+      "shape": {
+        "breadth": 1.223684210526316,
+        "depth": 1.131578947368421
+      },
+      "palette": {
+        "skin": "#896b82",
+        "cloth": "#593a32",
+        "metal": "#676d6a",
+        "wood": "#72573b",
+        "bone": "#d9cbaa",
+        "eye": "#d6b66c",
+        "dark": "#292b29",
+        "accent": "#b96d44"
+      },
+      "features": [
+        "spots",
+        "crest",
+        "tusks"
+      ],
+      "gear": {},
+      "card": "allow",
+      "variation": {
+        "hue": 0.012,
+        "value": 0.035,
+        "scale": 0
+      },
+      "meta": {
+        "prototype_look": "great_gnasher",
+        "adaptation": true
+      }
+    }
+  ]
+}

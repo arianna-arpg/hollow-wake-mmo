@@ -147,26 +147,32 @@ entries:
 
   # ---------------------------------------------------------------- the Callings: players read their build through gear and stance
   - id: holdfast
+    variation: { hue: 0.025, value: 0.05, scale: 0 }
     body: biped
     shape: { shoulders: 1.1, width: 1.05, stance: 1.1 }
     palette: { skin: "#d2b08e", hair: "#4a3828", cloth: "#6b6a5a", cloth2: "#4a4a3e", leather: "#55463a", metal: "#9a9ca4", accent: "#b89a67", eyes: "#2a2622" }
     card: allow
   - id: kindler
+    variation: { hue: 0.025, value: 0.05, scale: 0 }
     body: biped
     shape: { width: 0.95 }
     palette: { skin: "#d2b08e", hair: "#6a3a28", cloth: "#5a3a3a", cloth2: "#3a2626", leather: "#55463a", metal: "#8c8c90", accent: "#edac69", eyes: "#2a2622" }
   - id: sower
+    variation: { hue: 0.025, value: 0.05, scale: 0 }
     body: biped
     palette: { skin: "#c8a888", hair: "#3a2c22", cloth: "#5a6a4a", cloth2: "#3a4a34", leather: "#55463a", metal: "#8c8c90", accent: "#a5c58b", eyes: "#2a2622" }
   - id: shade
+    variation: { hue: 0.025, value: 0.05, scale: 0 }
     body: biped
     shape: { width: 0.92, hunch: 0.08 }
     palette: { skin: "#c8a888", hair: "#1e1a1a", cloth: "#3a3442", cloth2: "#26222c", leather: "#3a3030", metal: "#6c6a70", accent: "#c1a1c8", eyes: "#2a2622" }
   - id: harrier
+    variation: { hue: 0.025, value: 0.05, scale: 0 }
     body: biped
     shape: { legs: 1.05, width: 0.95 }
     palette: { skin: "#c8a888", hair: "#8a6a3a", cloth: "#5a6a6a", cloth2: "#3a4a4a", leather: "#55463a", metal: "#8c8c90", accent: "#c5b7ef", eyes: "#2a2622" }
   - id: binder
+    variation: { hue: 0.025, value: 0.05, scale: 0 }
     body: biped
     palette: { skin: "#d2b08e", hair: "#d8d0c0", cloth: "#d8d2ba", cloth2: "#8a846a", leather: "#55463a", metal: "#b89a67", accent: "#eee0a3", eyes: "#2a2622" }
 

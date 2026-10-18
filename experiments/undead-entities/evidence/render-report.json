@@ -7,7 +7,7 @@
       "rig": "biped",
       "parts": 49,
       "triangles": 772,
-      "height": 1.641656576956987
+      "height": 1.7128800000000002
     },
     {
       "id": "skeleton_archer",
@@ -15,7 +15,7 @@
       "rig": "biped",
       "parts": 47,
       "triangles": 760,
-      "height": 1.623645728396058
+      "height": 1.7128800000000002
     },
     {
       "id": "skeletal_pyromancer",
@@ -23,7 +23,7 @@
       "rig": "biped",
       "parts": 49,
       "triangles": 780,
-      "height": 1.681713687829301
+      "height": 1.7275500000000001
     },
     {
       "id": "skeletal_cryomancer",
@@ -31,7 +31,7 @@
       "rig": "biped",
       "parts": 50,
       "triangles": 796,
-      "height": 1.6744578211122754
+      "height": 1.7128800000000002
     },
     {
       "id": "skeletal_stormcaller",
@@ -39,7 +39,7 @@
       "rig": "biped",
       "parts": 50,
       "triangles": 808,
-      "height": 1.6660043611165878
+      "height": 1.7128800000000002
     },
     {
       "id": "skeletal_venomancer",
@@ -47,7 +47,7 @@
       "rig": "biped",
       "parts": 52,
       "triangles": 848,
-      "height": 1.6716112699808552
+      "height": 1.7275500000000001
     },
     {
       "id": "skeletal_sentinel",
@@ -55,7 +55,7 @@
       "rig": "biped",
       "parts": 54,
       "triangles": 924,
-      "height": 1.788167989842832
+      "height": 1.7128800000000002
     },
     {
       "id": "skeletal_duelist",
@@ -63,7 +63,7 @@
       "rig": "biped",
       "parts": 57,
       "triangles": 908,
-      "height": 1.606784755680442
+      "height": 1.7128800000000002
     },
     {
       "id": "ossuary_lich",

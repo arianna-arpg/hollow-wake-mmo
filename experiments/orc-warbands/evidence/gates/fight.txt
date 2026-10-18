@@ -1,0 +1,6 @@
+t=0.30 Warren Overseer cast rallying_shout at Warren Overseer
+t=1.70 Warren Overseer hit Skeleton Warrior for 92
+t=1.70 Skeleton Warrior died
+t=1.70 Warren Overseer cast heavy_strike at
+t=13.70 despawned skeleton_warrior
+orc_overseer: life 295/295   skeleton_warrior: life /

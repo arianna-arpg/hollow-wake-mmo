@@ -1,0 +1,848 @@
+{
+  "kind": "patterns",
+  "entries": [
+    {
+      "id": "orc_body",
+      "name": "Iron-Tusk body template",
+      "extends": "creature",
+      "faction": "orc_warbands",
+      "tags": [
+        "goblinkin",
+        "orc"
+      ],
+      "components": {
+        "stats": {
+          "attributes": {
+            "might": 17,
+            "grace": 8,
+            "will": 10,
+            "stamina.max": 90,
+            "stamina.regen": 18,
+            "mana.max": 100,
+            "mana.regen": 12
+          }
+        },
+        "statuses": {}
+      }
+    },
+    {
+      "id": "orc_grunt",
+      "name": "Iron-Tusk Grunt",
+      "extends": "orc_body",
+      "faction": "orc_warbands",
+      "tags": [
+        "monster",
+        "body.flesh",
+        "family.orc",
+        "role.infantry",
+        "humanoid",
+        "melee",
+        "size.medium",
+        "habitat.orc_muster"
+      ],
+      "level": 4,
+      "radius": 0.435,
+      "height": 1.82,
+      "components": {
+        "physical": {
+          "width": 0.87,
+          "depth": 0.61,
+          "height": 1.82,
+          "fill": 0.15,
+          "heft": 1,
+          "materials": [
+            {
+              "material": "flesh",
+              "fraction": 0.988
+            },
+            {
+              "material": "iron",
+              "fraction": 0.012
+            }
+          ]
+        },
+        "stats": {
+          "attributes": {
+            "life.max": "90 + (level - 1) * 7",
+            "move.speed": 4.5,
+            "weapon.damage.min": "7.0 + (level - 1) * 0.8",
+            "weapon.damage.max": "14 + (level - 1) * 1.2",
+            "weapon.attack.time": 1.15,
+            "poise.max": 28,
+            "armor": 12,
+            "spell.power": 1.2
+          }
+        },
+        "weaves": {
+          "list": [
+            "cleave"
+          ]
+        },
+        "behavior": {
+          "id": "orc_press"
+        },
+        "drops": {
+          "table": "goblinkin_drops",
+          "xp": "15 + level * 9",
+          "chance": 0.65
+        }
+      },
+      "meta": {
+        "origin": "Original expansion of Hollow Wake prototype Orc and Gnasher anatomy",
+        "social_context": "Context authored by encounter; not an ownership or enslavement mechanic."
+      }
+    },
+    {
+      "id": "orc_ravager",
+      "name": "Orc Ravager",
+      "extends": "orc_body",
+      "faction": "orc_warbands",
+      "tags": [
+        "monster",
+        "body.flesh",
+        "family.orc",
+        "role.ravager",
+        "humanoid",
+        "melee",
+        "size.medium",
+        "habitat.orc_muster"
+      ],
+      "level": 7,
+      "radius": 0.575,
+      "height": 1.98,
+      "components": {
+        "physical": {
+          "width": 1.15,
+          "depth": 0.75,
+          "height": 1.98,
+          "fill": 0.15,
+          "heft": 1,
+          "materials": [
+            {
+              "material": "flesh",
+              "fraction": 0.988
+            },
+            {
+              "material": "iron",
+              "fraction": 0.012
+            }
+          ]
+        },
+        "stats": {
+          "attributes": {
+            "life.max": "150 + (level - 1) * 7",
+            "move.speed": 4.7,
+            "weapon.damage.min": "8.5 + (level - 1) * 0.8",
+            "weapon.damage.max": "17 + (level - 1) * 1.2",
+            "weapon.attack.time": 1.15,
+            "poise.max": 40,
+            "armor": 25,
+            "spell.power": 1.2
+          }
+        },
+        "weaves": {
+          "list": [
+            "cleave",
+            "whirling_reap"
+          ]
+        },
+        "behavior": {
+          "id": "orc_press"
+        },
+        "drops": {
+          "table": "goblinkin_drops",
+          "xp": "15 + level * 9",
+          "chance": 0.65
+        }
+      },
+      "meta": {
+        "prototype": {
+          "repository": "arianna-arpg/arpg-game-world",
+          "revision": "118b510f8b5bfb781163c5bc13ea4908f698e75b",
+          "id": "orc_ravager"
+        },
+        "adaptation": false
+      }
+    },
+    {
+      "id": "orc_cleaver",
+      "name": "Redhand Cleaver",
+      "extends": "orc_body",
+      "faction": "orc_warbands",
+      "tags": [
+        "monster",
+        "body.flesh",
+        "family.orc",
+        "role.berserker",
+        "humanoid",
+        "melee",
+        "size.medium",
+        "habitat.orc_muster"
+      ],
+      "level": 8,
+      "radius": 0.54,
+      "height": 1.91,
+      "components": {
+        "physical": {
+          "width": 1.08,
+          "depth": 0.72,
+          "height": 1.91,
+          "fill": 0.15,
+          "heft": 1,
+          "materials": [
+            {
+              "material": "flesh",
+              "fraction": 0.988
+            },
+            {
+              "material": "iron",
+              "fraction": 0.012
+            }
+          ]
+        },
+        "stats": {
+          "attributes": {
+            "life.max": "145 + (level - 1) * 7",
+            "move.speed": 5.1,
+            "weapon.damage.min": "9.0 + (level - 1) * 0.8",
+            "weapon.damage.max": "18 + (level - 1) * 1.2",
+            "weapon.attack.time": 1.15,
+            "poise.max": 32,
+            "armor": 8,
+            "spell.power": 1.2
+          }
+        },
+        "weaves": {
+          "list": [
+            "whirling_reap",
+            "heavy_strike"
+          ]
+        },
+        "behavior": {
+          "id": "orc_press"
+        },
+        "drops": {
+          "table": "goblinkin_drops",
+          "xp": "15 + level * 9",
+          "chance": 0.65
+        }
+      },
+      "meta": {
+        "origin": "Original expansion of Hollow Wake prototype Orc and Gnasher anatomy",
+        "social_context": "Context authored by encounter; not an ownership or enslavement mechanic."
+      }
+    },
+    {
+      "id": "orc_bulwark",
+      "name": "Ironhide Bulwark",
+      "extends": "orc_body",
+      "faction": "orc_warbands",
+      "tags": [
+        "monster",
+        "body.flesh",
+        "family.orc",
+        "role.guard",
+        "humanoid",
+        "melee",
+        "size.medium",
+        "habitat.orc_hold"
+      ],
+      "level": 9,
+      "radius": 0.64,
+      "height": 2.08,
+      "components": {
+        "physical": {
+          "width": 1.28,
+          "depth": 0.83,
+          "height": 2.08,
+          "fill": 0.15,
+          "heft": 1,
+          "materials": [
+            {
+              "material": "flesh",
+              "fraction": 0.965
+            },
+            {
+              "material": "iron",
+              "fraction": 0.035
+            }
+          ]
+        },
+        "stats": {
+          "attributes": {
+            "life.max": "240 + (level - 1) * 7",
+            "move.speed": 3.3,
+            "weapon.damage.min": "9.5 + (level - 1) * 0.8",
+            "weapon.damage.max": "19 + (level - 1) * 1.2",
+            "weapon.attack.time": 1.15,
+            "poise.max": 75,
+            "armor": 65,
+            "spell.power": 1.2
+          }
+        },
+        "weaves": {
+          "list": [
+            "heavy_strike"
+          ]
+        },
+        "behavior": {
+          "id": "guard"
+        },
+        "drops": {
+          "table": "goblinkin_drops",
+          "xp": "15 + level * 9",
+          "chance": 0.65
+        }
+      },
+      "meta": {
+        "origin": "Original expansion of Hollow Wake prototype Orc and Gnasher anatomy",
+        "social_context": "Context authored by encounter; not an ownership or enslavement mechanic."
+      }
+    },
+    {
+      "id": "orc_shieldbreaker",
+      "name": "Shieldbreaker",
+      "extends": "orc_body",
+      "faction": "orc_warbands",
+      "tags": [
+        "monster",
+        "body.flesh",
+        "family.orc",
+        "role.breaker",
+        "humanoid",
+        "melee",
+        "size.medium",
+        "habitat.orc_hold"
+      ],
+      "level": 10,
+      "radius": 0.61,
+      "height": 2.12,
+      "components": {
+        "physical": {
+          "width": 1.22,
+          "depth": 0.83,
+          "height": 2.12,
+          "fill": 0.15,
+          "heft": 1,
+          "materials": [
+            {
+              "material": "flesh",
+              "fraction": 0.965
+            },
+            {
+              "material": "iron",
+              "fraction": 0.035
+            }
+          ]
+        },
+        "stats": {
+          "attributes": {
+            "life.max": "210 + (level - 1) * 7",
+            "move.speed": 3.9,
+            "weapon.damage.min": "10.0 + (level - 1) * 0.8",
+            "weapon.damage.max": "20 + (level - 1) * 1.2",
+            "weapon.attack.time": 1.15,
+            "poise.max": 60,
+            "armor": 35,
+            "spell.power": 1.2
+          }
+        },
+        "weaves": {
+          "list": [
+            "sunder_maul",
+            "heavy_strike"
+          ]
+        },
+        "behavior": {
+          "id": "orc_press"
+        },
+        "drops": {
+          "table": "goblinkin_drops",
+          "xp": "15 + level * 9",
+          "chance": 0.65
+        }
+      },
+      "meta": {
+        "origin": "Original expansion of Hollow Wake prototype Orc and Gnasher anatomy",
+        "social_context": "Context authored by encounter; not an ownership or enslavement mechanic."
+      }
+    },
+    {
+      "id": "orc_headhunter",
+      "name": "Tuskbound Headhunter",
+      "extends": "orc_body",
+      "faction": "orc_warbands",
+      "tags": [
+        "monster",
+        "body.flesh",
+        "family.orc",
+        "role.hunter",
+        "humanoid",
+        "ranged",
+        "size.medium",
+        "habitat.orc_muster"
+      ],
+      "level": 6,
+      "radius": 0.445,
+      "height": 1.9,
+      "components": {
+        "physical": {
+          "width": 0.89,
+          "depth": 0.62,
+          "height": 1.9,
+          "fill": 0.15,
+          "heft": 1,
+          "materials": [
+            {
+              "material": "flesh",
+              "fraction": 0.988
+            },
+            {
+              "material": "iron",
+              "fraction": 0.012
+            }
+          ]
+        },
+        "stats": {
+          "attributes": {
+            "life.max": "105 + (level - 1) * 7",
+            "move.speed": 5.2,
+            "weapon.damage.min": "8.0 + (level - 1) * 0.8",
+            "weapon.damage.max": "16 + (level - 1) * 1.2",
+            "weapon.attack.time": 1.15,
+            "poise.max": 22,
+            "armor": 14,
+            "spell.power": 1.2
+          }
+        },
+        "weaves": {
+          "list": [
+            "pinning_spear",
+            "cleave"
+          ]
+        },
+        "behavior": {
+          "id": "aggressive_ranged"
+        },
+        "drops": {
+          "table": "goblinkin_drops",
+          "xp": "15 + level * 9",
+          "chance": 0.65
+        }
+      },
+      "meta": {
+        "origin": "Original expansion of Hollow Wake prototype Orc and Gnasher anatomy",
+        "social_context": "Context authored by encounter; not an ownership or enslavement mechanic."
+      }
+    },
+    {
+      "id": "orc_rockhurler",
+      "name": "Quarry Rockhurler",
+      "extends": "orc_body",
+      "faction": "orc_warbands",
+      "tags": [
+        "monster",
+        "body.flesh",
+        "family.orc",
+        "role.artillery",
+        "humanoid",
+        "ranged",
+        "size.large",
+        "habitat.orc_hold"
+      ],
+      "level": 9,
+      "radius": 0.69,
+      "height": 2.2,
+      "components": {
+        "physical": {
+          "width": 1.38,
+          "depth": 0.94,
+          "height": 2.2,
+          "fill": 0.15,
+          "heft": 1,
+          "materials": [
+            {
+              "material": "flesh",
+              "fraction": 0.988
+            },
+            {
+              "material": "iron",
+              "fraction": 0.012
+            }
+          ]
+        },
+        "stats": {
+          "attributes": {
+            "life.max": "225 + (level - 1) * 7",
+            "move.speed": 3.6,
+            "weapon.damage.min": "9.5 + (level - 1) * 0.8",
+            "weapon.damage.max": "19 + (level - 1) * 1.2",
+            "weapon.attack.time": 1.15,
+            "poise.max": 50,
+            "armor": 20,
+            "spell.power": 1.2
+          }
+        },
+        "weaves": {
+          "list": [
+            "hurl_debris",
+            "heavy_strike"
+          ]
+        },
+        "behavior": {
+          "id": "aggressive_ranged"
+        },
+        "drops": {
+          "table": "goblinkin_drops",
+          "xp": "15 + level * 9",
+          "chance": 0.65
+        }
+      },
+      "meta": {
+        "origin": "Original expansion of Hollow Wake prototype Orc and Gnasher anatomy",
+        "social_context": "Context authored by encounter; not an ownership or enslavement mechanic."
+      }
+    },
+    {
+      "id": "orc_ashcaller",
+      "name": "Ashcaller",
+      "extends": "orc_body",
+      "faction": "orc_warbands",
+      "tags": [
+        "monster",
+        "body.flesh",
+        "family.orc",
+        "role.caster",
+        "humanoid",
+        "ranged",
+        "size.medium",
+        "caster",
+        "habitat.orc_chaincamp"
+      ],
+      "level": 8,
+      "radius": 0.47,
+      "height": 1.86,
+      "components": {
+        "physical": {
+          "width": 0.94,
+          "depth": 0.72,
+          "height": 1.86,
+          "fill": 0.15,
+          "heft": 1,
+          "materials": [
+            {
+              "material": "flesh",
+              "fraction": 0.988
+            },
+            {
+              "material": "iron",
+              "fraction": 0.012
+            }
+          ]
+        },
+        "stats": {
+          "attributes": {
+            "life.max": "130 + (level - 1) * 7",
+            "move.speed": 4.1,
+            "weapon.damage.min": "9.0 + (level - 1) * 0.8",
+            "weapon.damage.max": "18 + (level - 1) * 1.2",
+            "weapon.attack.time": 1.15,
+            "poise.max": 24,
+            "armor": 10,
+            "spell.power": 1.2
+          }
+        },
+        "weaves": {
+          "list": [
+            "firebolt"
+          ]
+        },
+        "behavior": {
+          "id": "aggressive_ranged"
+        },
+        "drops": {
+          "table": "goblinkin_drops",
+          "xp": "15 + level * 9",
+          "chance": 0.65
+        }
+      },
+      "meta": {
+        "origin": "Original expansion of Hollow Wake prototype Orc and Gnasher anatomy",
+        "social_context": "Context authored by encounter; not an ownership or enslavement mechanic."
+      }
+    },
+    {
+      "id": "orc_bloodchanter",
+      "name": "War-Chanter",
+      "extends": "orc_body",
+      "faction": "orc_warbands",
+      "tags": [
+        "monster",
+        "body.flesh",
+        "family.orc",
+        "role.support",
+        "humanoid",
+        "melee",
+        "size.medium",
+        "habitat.orc_chaincamp"
+      ],
+      "level": 10,
+      "radius": 0.535,
+      "height": 2.02,
+      "components": {
+        "physical": {
+          "width": 1.07,
+          "depth": 0.75,
+          "height": 2.02,
+          "fill": 0.15,
+          "heft": 1,
+          "materials": [
+            {
+              "material": "flesh",
+              "fraction": 0.988
+            },
+            {
+              "material": "iron",
+              "fraction": 0.012
+            }
+          ]
+        },
+        "stats": {
+          "attributes": {
+            "life.max": "180 + (level - 1) * 7",
+            "move.speed": 4.2,
+            "weapon.damage.min": "10.0 + (level - 1) * 0.8",
+            "weapon.damage.max": "20 + (level - 1) * 1.2",
+            "weapon.attack.time": 1.15,
+            "poise.max": 40,
+            "armor": 20,
+            "spell.power": 1.2
+          }
+        },
+        "weaves": {
+          "list": [
+            "rallying_shout",
+            "cleave"
+          ]
+        },
+        "behavior": {
+          "id": "orc_press"
+        },
+        "drops": {
+          "table": "goblinkin_drops",
+          "xp": "15 + level * 9",
+          "chance": 0.65
+        }
+      },
+      "meta": {
+        "origin": "Original expansion of Hollow Wake prototype Orc and Gnasher anatomy",
+        "social_context": "Context authored by encounter; not an ownership or enslavement mechanic."
+      }
+    },
+    {
+      "id": "orc_overseer",
+      "name": "Warren Overseer",
+      "extends": "orc_body",
+      "faction": "orc_warbands",
+      "tags": [
+        "monster",
+        "body.flesh",
+        "family.orc",
+        "role.overseer",
+        "humanoid",
+        "melee",
+        "size.medium",
+        "habitat.orc_chaincamp"
+      ],
+      "level": 10,
+      "radius": 0.56,
+      "height": 2.1,
+      "components": {
+        "physical": {
+          "width": 1.12,
+          "depth": 0.77,
+          "height": 2.1,
+          "fill": 0.15,
+          "heft": 1,
+          "materials": [
+            {
+              "material": "flesh",
+              "fraction": 0.965
+            },
+            {
+              "material": "iron",
+              "fraction": 0.035
+            }
+          ]
+        },
+        "stats": {
+          "attributes": {
+            "life.max": "200 + (level - 1) * 7",
+            "move.speed": 4.3,
+            "weapon.damage.min": "10.0 + (level - 1) * 0.8",
+            "weapon.damage.max": "20 + (level - 1) * 1.2",
+            "weapon.attack.time": 1.15,
+            "poise.max": 55,
+            "armor": 35,
+            "spell.power": 1.2
+          }
+        },
+        "weaves": {
+          "list": [
+            "rallying_shout",
+            "heavy_strike"
+          ]
+        },
+        "behavior": {
+          "id": "orc_press"
+        },
+        "drops": {
+          "table": "goblinkin_drops",
+          "xp": "15 + level * 9",
+          "chance": 0.65
+        }
+      },
+      "meta": {
+        "origin": "Original expansion of Hollow Wake prototype Orc and Gnasher anatomy",
+        "social_context": "Context authored by encounter; not an ownership or enslavement mechanic."
+      }
+    },
+    {
+      "id": "orc_slaver",
+      "name": "Chainkeeper",
+      "extends": "orc_body",
+      "faction": "orc_warbands",
+      "tags": [
+        "monster",
+        "body.flesh",
+        "family.orc",
+        "role.slaver",
+        "humanoid",
+        "melee",
+        "size.medium",
+        "habitat.orc_chaincamp"
+      ],
+      "level": 11,
+      "radius": 0.6,
+      "height": 2.04,
+      "components": {
+        "physical": {
+          "width": 1.2,
+          "depth": 0.82,
+          "height": 2.04,
+          "fill": 0.15,
+          "heft": 1,
+          "materials": [
+            {
+              "material": "flesh",
+              "fraction": 0.965
+            },
+            {
+              "material": "iron",
+              "fraction": 0.035
+            }
+          ]
+        },
+        "stats": {
+          "attributes": {
+            "life.max": "205 + (level - 1) * 7",
+            "move.speed": 4.1,
+            "weapon.damage.min": "10.5 + (level - 1) * 0.8",
+            "weapon.damage.max": "21 + (level - 1) * 1.2",
+            "weapon.attack.time": 1.15,
+            "poise.max": 58,
+            "armor": 38,
+            "spell.power": 1.2
+          }
+        },
+        "weaves": {
+          "list": [
+            "heavy_strike",
+            "cleave"
+          ]
+        },
+        "behavior": {
+          "id": "orc_press"
+        },
+        "drops": {
+          "table": "goblinkin_drops",
+          "xp": "15 + level * 9",
+          "chance": 0.65
+        }
+      },
+      "meta": {
+        "origin": "Original expansion of Hollow Wake prototype Orc and Gnasher anatomy",
+        "social_context": "Context authored by encounter; not an ownership or enslavement mechanic."
+      }
+    },
+    {
+      "id": "orc_warlord",
+      "name": "Iron-Tusk Warlord",
+      "extends": "orc_body",
+      "faction": "orc_warbands",
+      "tags": [
+        "monster",
+        "body.flesh",
+        "family.orc",
+        "role.commander",
+        "humanoid",
+        "melee",
+        "size.large",
+        "habitat.orc_hold"
+      ],
+      "level": 16,
+      "radius": 0.79,
+      "height": 2.48,
+      "components": {
+        "physical": {
+          "width": 1.58,
+          "depth": 1.02,
+          "height": 2.48,
+          "fill": 0.15,
+          "heft": 1,
+          "materials": [
+            {
+              "material": "flesh",
+              "fraction": 0.965
+            },
+            {
+              "material": "iron",
+              "fraction": 0.035
+            }
+          ]
+        },
+        "stats": {
+          "attributes": {
+            "life.max": "520 + (level - 1) * 7",
+            "move.speed": 3.8,
+            "weapon.damage.min": "13.0 + (level - 1) * 0.8",
+            "weapon.damage.max": "26 + (level - 1) * 1.2",
+            "weapon.attack.time": 1.15,
+            "poise.max": 100,
+            "armor": 80,
+            "spell.power": 1.2
+          }
+        },
+        "weaves": {
+          "list": [
+            "rallying_shout",
+            "ground_slam",
+            "sunder_maul"
+          ]
+        },
+        "behavior": {
+          "id": "orc_press"
+        },
+        "drops": {
+          "table": "goblinkin_drops",
+          "xp": "15 + level * 9",
+          "chance": 0.65
+        }
+      },
+      "meta": {
+        "origin": "Original expansion of Hollow Wake prototype Orc and Gnasher anatomy",
+        "social_context": "Context authored by encounter; not an ownership or enslavement mechanic."
+      }
+    }
+  ]
+}
