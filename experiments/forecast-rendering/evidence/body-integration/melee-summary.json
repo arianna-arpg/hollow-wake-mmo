@@ -1,0 +1,12 @@
+{
+  "source": "0eac5dc42497f91df89dda4dd1eb10eb29971674",
+  "calling": "holdfast",
+  "forecasts": true,
+  "browserChecks": "32/32",
+  "nativeChecks": "37/37",
+  "nativeRendering": "not covered by headless mode",
+  "status": "passed",
+  "cleanupErrors": [],
+  "nativeShutdownWarnings": "6 dummy textures, 2 shaped-text data, 1 font, 1 CanvasItem, 29 ObjectDB instances; related warning classes already present in inherited 34-main-smoke-godot.txt",
+  "browserScreenshotSha256": "B6757266409AE8BB0B59CD27045CE058C1ED208273E0237DFBEF44E09D9CD481"
+}

@@ -34,4 +34,14 @@ New regressions cover translated anatomy and vertical misses without live moveme
 
 Raw outputs stay under ignored `artifacts/forecast-body-integration`; sanitized first build/test logs are under `experiments/forecast-rendering/evidence/body-integration`. No new timing or trace run occurred. Earlier default-budget misses, diagnostic samples and their uncertainty remain intact. Full functional/client/probe/replay gates and one separately coordinated diagnostic capture remain pending the corrected combined source. Native pixels still require an isolated graphical session.
 
+## Client and viewer follow-up
+
+On runtime source `0eac5dc`, the restored tiny-sector matrix passes all 422 browser cases. The content pack validates with zero errors/warnings. Seven targeted server/history cases pass, including a live loopback viewer whose center is outside the sector while its anatomy overlaps: wire eligibility is candidate, then becomes not-candidate after the viewer moves wholly above the same slab. The server sends unchanged bounds in both cases.
+
+`node scripts/test-background.mjs --suite all --calling holdfast --forecasts --out artifacts/forecast-body-integration/melee-client` passes 32 browser and 37 native behavior checks, returns to character selection and reports no harness cleanup errors. The browser screenshot `forecast_primary_candidate.png` was inspected: it shows the two slab perimeters and the actual Cleave progress bar. Crowded labels and foliage remain readability limits; it is not final production art. The screenshot remains local with its hash recorded in `melee-summary.json`.
+
+Native headless mode does not validate pixels. Its shutdown log includes six dummy textures, two shaped-text objects, one font, one CanvasItem and 29 ObjectDB instances reported as leaked. The inherited #34 log already contains the same warning classes with different counts; this comparison does not prove their cause or clear them. Both complete logs and the passing functional summary remain visible. No trace or new budget measurement was run.
+
+A separate code-level compatibility finding was posted on [#50](https://github.com/arianna-arpg/hollow-wake-mmo/pull/50#issuecomment-6255062880): an inheriting device's execution uses owner stats from the device origin, while its unchanged forecast still samples device stats. That owner must reconcile the shared pure effect-context sample and test differing geometry stats before claiming construct forecast parity. #20 does not independently edit its owned Run/miss/replay paths. The forecasting chat is also reviewing this checkpoint independently.
+
 Acknowledged by: pending Claude review of the combined correction.

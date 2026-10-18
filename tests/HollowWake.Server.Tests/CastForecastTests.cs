@@ -63,6 +63,26 @@ public class CastForecastTests
             Assert.Equal(plan.BodyContact ? "body" : "center", state.Region.TargetTest);
             Assert.Equal(plan.BodyContact ? plan.Bottom : (float?)null, state.Region.Bottom);
             Assert.Equal(plan.BodyContact ? plan.Top : (float?)null, state.Region.Top);
+            Assert.True(plan.BodyContact);
+            // The viewer's center lies outside the sector, but its anatomy touches the slab.
+            // A higher floor must reverse that eligibility without changing the planar outline.
+            var observerAt = plan.Anchor + new Vector3(plan.Size.Radius + .1f, 0, 0);
+            var observer = sim.Service<PatternFactory>().Spawn(sim, "hob", observerAt);
+            sim.World.Remove<Behavior>(observer);
+            sim.World.Get<Transform>(observer)!.Height = 1;
+            sim.World.Add(observer, new HollowWake.Core.Combat.HitBody { Definition = new HitBodyDef
+                { Id = "forecast_observer", Volumes = new() { new() { Shape = "cylinder", Up = .5f, Radius = .3f, HalfHeight = .5f } } } });
+            var observerView = new SnapshotView(); observerView.Known.Add(session.Entity.Key);
+            var observerBuilder = new CastForecastBuilder(sim);
+            var touching = observerBuilder.Build(observerView, observer, .05).Casts.Single(c => c.CastId == id).Region!;
+            Assert.False(plan.ContainsCenter(observerAt));
+            Assert.Equal("candidate", touching.ViewerEligibility);
+            observerAt.Z = plan.Top + .1f;
+            sim.World.Get<Transform>(observer)!.Position = observerAt;
+            sim.Spatial.Update(observer, observerAt);
+            var above = observerBuilder.Build(observerView, observer, .05).Casts.Single(c => c.CastId == id).Region!;
+            Assert.Equal("not_candidate_now", above.ViewerEligibility);
+            Assert.Equal(touching.Bottom, above.Bottom); Assert.Equal(touching.Top, above.Top);
             // Exact unchanged data uses its original revision; a reset repairs a fresh observer.
             var builder = new CastForecastBuilder(sim);
             var view = new SnapshotView(); view.Known.UnionWith(session.View.Known);
