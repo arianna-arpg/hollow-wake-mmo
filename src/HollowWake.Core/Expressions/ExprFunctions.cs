@@ -14,44 +14,50 @@ public static class ExprFunctions
     /// </summary>
     public delegate double Body(ReadOnlySpan<double> args);
 
-    public sealed record Function(string Name, int MinArgs, int MaxArgs, Body Impl);
+    public sealed record Function(string Name, int MinArgs, int MaxArgs, Body Impl, bool PreviewSafe = false);
 
     private static readonly ConcurrentDictionary<string, Function> Registry = new(StringComparer.Ordinal);
 
     static ExprFunctions()
     {
-        Register("min", 1, 64, Min);
-        Register("max", 1, 64, Max);
-        Register("clamp", 3, 3, static a => Math.Clamp(a[0], Math.Min(a[1], a[2]), Math.Max(a[1], a[2])));
-        Register("floor", 1, 1, static a => Math.Floor(a[0]));
-        Register("ceil", 1, 1, static a => Math.Ceiling(a[0]));
-        Register("round", 1, 2, static a => a.Length == 1 ? Math.Round(a[0], MidpointRounding.AwayFromZero) : Math.Round(a[0], (int)a[1], MidpointRounding.AwayFromZero));
-        Register("trunc", 1, 1, static a => Math.Truncate(a[0]));
-        Register("abs", 1, 1, static a => Math.Abs(a[0]));
-        Register("sign", 1, 1, static a => Math.Sign(a[0]));
-        Register("sqrt", 1, 1, static a => a[0] <= 0 ? 0 : Math.Sqrt(a[0]));
-        Register("pow", 2, 2, static a => Math.Pow(a[0], a[1]));
-        Register("log", 1, 2, static a => a[0] <= 0 ? 0 : (a.Length == 1 ? Math.Log(a[0]) : Math.Log(a[0], a[1])));
-        Register("exp", 1, 1, static a => Math.Exp(a[0]));
-        Register("lerp", 3, 3, static a => a[0] + (a[1] - a[0]) * a[2]);
-        Register("inverse_lerp", 3, 3, static a => Math.Abs(a[1] - a[0]) < 1e-12 ? 0 : (a[2] - a[0]) / (a[1] - a[0]));
-        Register("step", 2, 2, static a => a[1] >= a[0] ? 1 : 0);
-        Register("smoothstep", 3, 3, static a =>
+        RegisterPure("min", 1, 64, Min);
+        RegisterPure("max", 1, 64, Max);
+        RegisterPure("clamp", 3, 3, static a => Math.Clamp(a[0], Math.Min(a[1], a[2]), Math.Max(a[1], a[2])));
+        RegisterPure("floor", 1, 1, static a => Math.Floor(a[0]));
+        RegisterPure("ceil", 1, 1, static a => Math.Ceiling(a[0]));
+        RegisterPure("round", 1, 2, static a => a.Length == 1 ? Math.Round(a[0], MidpointRounding.AwayFromZero) : Math.Round(a[0], (int)a[1], MidpointRounding.AwayFromZero));
+        RegisterPure("trunc", 1, 1, static a => Math.Truncate(a[0]));
+        RegisterPure("abs", 1, 1, static a => Math.Abs(a[0]));
+        RegisterPure("sign", 1, 1, static a => Math.Sign(a[0]));
+        RegisterPure("sqrt", 1, 1, static a => a[0] <= 0 ? 0 : Math.Sqrt(a[0]));
+        RegisterPure("pow", 2, 2, static a => Math.Pow(a[0], a[1]));
+        RegisterPure("log", 1, 2, static a => a[0] <= 0 ? 0 : (a.Length == 1 ? Math.Log(a[0]) : Math.Log(a[0], a[1])));
+        RegisterPure("exp", 1, 1, static a => Math.Exp(a[0]));
+        RegisterPure("lerp", 3, 3, static a => a[0] + (a[1] - a[0]) * a[2]);
+        RegisterPure("inverse_lerp", 3, 3, static a => Math.Abs(a[1] - a[0]) < 1e-12 ? 0 : (a[2] - a[0]) / (a[1] - a[0]));
+        RegisterPure("step", 2, 2, static a => a[1] >= a[0] ? 1 : 0);
+        RegisterPure("smoothstep", 3, 3, static a =>
         {
             var t = Math.Clamp((a[2] - a[0]) / Math.Max(1e-12, a[1] - a[0]), 0, 1);
             return t * t * (3 - 2 * t);
         });
-        Register("pct", 1, 1, static a => a[0] / 100.0);
-        Register("avg", 1, 64, static a => Sum(a) / a.Length);
-        Register("sum", 1, 64, Sum);
+        RegisterPure("pct", 1, 1, static a => a[0] / 100.0);
+        RegisterPure("avg", 1, 64, static a => Sum(a) / a.Length);
+        RegisterPure("sum", 1, 64, Sum);
         // Diminishing returns curve common in ARPG mitigation: x / (x + k).
-        Register("diminish", 2, 2, static a => a[0] + a[1] <= 0 ? 0 : a[0] / (a[0] + a[1]));
+        RegisterPure("diminish", 2, 2, static a => a[0] + a[1] <= 0 ? 0 : a[0] / (a[0] + a[1]));
     }
 
-    public static void Register(string name, int minArgs, int maxArgs, Body impl)
+    /// <summary>
+    /// Preview safety is an explicit promise: a deterministic function of its arguments only, with no
+    /// external reads, writes or rolls. Existing registrations remain executable without that promise.
+    /// </summary>
+    public static void Register(string name, int minArgs, int maxArgs, Body impl, bool previewSafe = false)
     {
-        Registry[name] = new Function(name, minArgs, maxArgs, impl);
+        Registry[name] = new Function(name, minArgs, maxArgs, impl, previewSafe);
     }
+
+    private static void RegisterPure(string name, int minArgs, int maxArgs, Body impl) => Register(name, minArgs, maxArgs, impl, previewSafe: true);
 
     public static bool TryGet(string name, out Function? fn) => Registry.TryGetValue(name, out fn);
 

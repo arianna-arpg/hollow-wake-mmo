@@ -59,6 +59,13 @@ public sealed class Expr
 
     public bool IsConstant => _root is ConstNode;
 
+    /// <summary>
+    /// Whether the tree calls only pure deterministic functions. Scope dependencies must also be
+    /// checked by the caller: an identifier may itself read a random attribute formula.
+    /// Conservative across both branches of a conditional; this never evaluates the expression.
+    /// </summary>
+    public bool IsPreviewSafe => _root.IsPreviewSafe;
+
     public double ConstantValue => _root is ConstNode c ? c.Value : throw new InvalidOperationException("Expression is not constant.");
 
     private Expr(string source, Node root)
@@ -106,6 +113,7 @@ public sealed class Expr
 
     private abstract class Node
     {
+        public virtual bool IsPreviewSafe => true;
         public abstract double Eval(IExprScope scope);
         public abstract void Collect(List<string> identifiers, List<string> flags);
     }
@@ -140,6 +148,7 @@ public sealed class Expr
 
     private abstract class UnaryNode : Node
     {
+        public override bool IsPreviewSafe => A.IsPreviewSafe;
         protected readonly Node A;
         protected UnaryNode(Node a) => A = a;
         public sealed override void Collect(List<string> identifiers, List<string> flags) => A.Collect(identifiers, flags);
@@ -160,6 +169,7 @@ public sealed class Expr
     /// <summary>Operands evaluate left then right (rand() draws keep their order).</summary>
     private abstract class BinaryNode : Node
     {
+        public override bool IsPreviewSafe => A.IsPreviewSafe && B.IsPreviewSafe;
         protected readonly Node A;
         protected readonly Node B;
         protected BinaryNode(Node a, Node b) { A = a; B = b; }
@@ -289,6 +299,7 @@ public sealed class Expr
 
     private sealed class TernaryNode : Node
     {
+        public override bool IsPreviewSafe => _c.IsPreviewSafe && _a.IsPreviewSafe && _b.IsPreviewSafe;
         private readonly Node _c, _a, _b;
         public TernaryNode(Node c, Node a, Node b) { _c = c; _a = a; _b = b; }
         public override double Eval(IExprScope scope) => _c.Eval(scope) != 0 ? _a.Eval(scope) : _b.Eval(scope);
@@ -311,6 +322,7 @@ public sealed class Expr
 
     private sealed class RandNode : Node
     {
+        public override bool IsPreviewSafe => false;
         public override double Eval(IExprScope scope) => scope.NextRandom();
         public override void Collect(List<string> identifiers, List<string> flags) { }
     }
@@ -322,6 +334,7 @@ public sealed class Expr
     /// </summary>
     private sealed class RandIntNode : Node
     {
+        public override bool IsPreviewSafe => false;
         private readonly Node _lo, _hi;
         public RandIntNode(Node lo, Node hi) { _lo = lo; _hi = hi; }
 
@@ -349,6 +362,7 @@ public sealed class Expr
     /// <summary><c>curve("name", t)</c>: a named curve from <see cref="Curves"/> at t; a curve unregistered at evaluation is linear.</summary>
     private sealed class CurveNode : Node
     {
+        public override bool IsPreviewSafe => Curves.IsPreviewSafe(_curve) && _t.IsPreviewSafe;
         private readonly string _curve;
         private readonly Node _t;
         public CurveNode(string curve, Node t) { _curve = curve; _t = t; }
@@ -365,11 +379,14 @@ public sealed class Expr
 
         private readonly Node[] _args;
         private readonly ExprFunctions.Body _impl;
+        private readonly bool _previewSafe;
+        public override bool IsPreviewSafe => _previewSafe && _args.All(a => a.IsPreviewSafe);
 
-        private CallNode(Node[] args, ExprFunctions.Body impl)
+        private CallNode(Node[] args, ExprFunctions.Body impl, bool previewSafe)
         {
             _args = args;
             _impl = impl;
+            _previewSafe = previewSafe;
         }
 
         /// <summary>Validates a call while parsing: built-in forms first, then the function registry.</summary>
@@ -420,7 +437,7 @@ public sealed class Expr
                     {
                         throw new ExprParseException($"{name}() expects {fn.MinArgs}..{fn.MaxArgs} arguments, got {args.Length}", position);
                     }
-                    return new CallNode(args, fn.Impl);
+                    return new CallNode(args, fn.Impl, fn.PreviewSafe);
             }
         }
 

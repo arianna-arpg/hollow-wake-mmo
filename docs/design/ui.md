@@ -1,5 +1,7 @@
 # Interface
 
+The shared Hollow Wake insignia, inherited icon vocabulary and playable loading cover are specified in [loading.md](loading.md).
+
 The player's interface: the HUD cluster, the core pane and the panes the world opens beside it. The layout follows the earlier prototype, whose arrangement worked with the interface space; the texture does not, and is ours to set. This is the contract for the client packages; the data shapes it reads are owned by the protocol and listed at the end.
 
 Three rules hold everywhere:

@@ -40,6 +40,12 @@ const snapshot = {
   passiveNodes: {}, choiceGroups: {}, realms: {}, vocations: {}, classes: [], itemBases: {}, affixes: {}, uniques: {}, statDefs: {},
 };
 
+snapshot.skills.mobile_bolt = skill('mobile_bolt', { ...snapshot.skills.firebolt, id: 'mobile_bolt', castMove: 0.5 });
+snapshot.skills.mixed_bolt = skill('mixed_bolt', { ...snapshot.skills.bone_bolt, id: 'mixed_bolt', name: 'Mixed Bolt',
+  baseDamage: { fire: [1, 1], cold: [9, 9] }, tags: ['spell', 'projectile', 'fire', 'cold'] });
+snapshot.skills.three_types = skill('three_types', { ...snapshot.skills.bone_bolt, id: 'three_types', name: 'Three Types',
+  baseDamage: { fire: [1, 1], cold: [6, 6], lightning: [3, 3] }, tags: ['spell', 'projectile', 'fire', 'cold', 'lightning'] });
+
 const out = mkdtempSync(join(tmpdir(), 'hollow-wake-port-'));
 const snap = join(out, 'snapshot.json');
 writeFileSync(snap, JSON.stringify(snapshot));
@@ -101,4 +107,23 @@ test('procs and charges keep their payloads', () => {
   assert.match(read('procs-port.yaml'), /on: hit\n\s+effects: \[\{ type: damage, amount: "last_damage \* 0\.6", threads: \$threads, tags: \[proc\] \}\]/);
   assert.match(read('charges-port.yaml'), /id: fury\n\s+name: Fury\n\s+color: "#fff"\n\s+duration: 8\n\s+decay: 1\n/);
   assert.match(read('attributes-port.yaml'), /id: charge\.fury\.max[\s\S]{0,80}base: 5\n/);
+});
+
+test('structurally different shells have unique ids and presets reference them', () => {
+  const ids = [...read('forms-port.yaml').matchAll(/^  - id: (.+)$/gm)].map(m => m[1]);
+  assert.equal(ids.length, new Set(ids).size, JSON.stringify(ids));
+  assert.match(read('weaves-projectiles.yaml'), /id: mobile_bolt[\s\S]*?form: missile_2\n/);
+  assert.match(read('forms-port.yaml'), /id: missile_2[\s\S]*?cast_move: 0\.5/);
+});
+
+test('mixed damage pairs shares with sorted Threads and preserves the folded total', () => {
+  const mixed = read('weaves-projectiles.yaml').split('  - id: mixed_bolt')[1].split('  - id: three_types')[0];
+  assert.match(mixed, /tide: "weave.base_damage \* 0\.9/);
+  assert.match(mixed, /ember: "weave.base_damage \* 0\.1/);
+  const folded = read('weaves-projectiles.yaml').split('  - id: three_types')[1];
+  assert.match(folded, /threads: \[tide, storm\]/);
+  assert.match(folded, /base_damage: 10/);
+  assert.match(folded, /tide: "weave.base_damage \* 0\.67/);
+  assert.match(folded, /storm: "weave.base_damage \* 0\.33/);
+  assert.doesNotMatch(folded, /ember: "weave.base_damage/);
 });

@@ -1,0 +1,18 @@
+{
+  "extra_threads": [{ "id": "future_thread", "name": "Future Thread", "color": "#34ab9f" }],
+  "cases": [
+    { "name": "two Threads and two delivery mechanisms compose", "phase": "release", "tags": ["ember", "tide"], "mechanisms": ["area", "projectile"], "profiles": ["area_release", "projectile_release", "rising_heat", "thread.tide"] },
+    { "name": "new Thread inherits the shared material template", "phase": "start", "tags": ["future_thread"], "mechanisms": [], "profiles": ["thread.future_thread"] },
+    { "name": "a support-added projectile inherits the delivery layer", "phase": "release", "tags": ["mind"], "mechanisms": ["projectile"], "profiles": ["projectile_release", "thread.mind"] },
+    { "name": "inactive mechanism does not acquire decoration", "phase": "release", "tags": ["mind"], "mechanisms": [], "profiles": ["thread.mind"] },
+    { "name": "uncorrelated healing is an outcome without a fabricated cast", "phase": "heal", "outcome": true, "tags": ["life"], "mechanisms": [], "profiles": ["restoration"] },
+    { "name": "defense uses its own outcome", "phase": "block", "outcome": true, "tags": [], "mechanisms": [], "profiles": ["defense"] },
+    { "name": "beneficial status is not an affliction cue", "phase": "status", "outcome": true, "tags": ["status", "beneficial"], "mechanisms": [], "profiles": ["beneficial_status"] },
+    { "name": "new outcome vocabulary falls back without claiming damage", "phase": "future_state_change", "outcome": true, "tags": [], "mechanisms": [], "profiles": ["neutral"] }
+  ],
+  "primitives": [
+    { "primitive": "ring", "pieces": 4, "arc": 360, "expected": [[-1,0,0, 0,-1,0], [0,-1,0, 1,0,0], [1,0,0, 0,1,0], [0,1,0, -1,0,0]] },
+    { "primitive": "rays", "pieces": 4, "arc": 360, "expected": [[-0.35,0,0, -1,0,0], [0,-0.35,0, 0,-1,0], [0.35,0,0, 1,0,0], [0,0.35,0, 0,1,0]] },
+    { "primitive": "corners", "pieces": 4, "expected": [[1,-0.18,0, 1,0.18,0], [0.18,1,0, -0.18,1,0], [-1,0.18,0, -1,-0.18,0], [-0.18,-1,0, 0.18,-1,0]] }
+  ]
+}

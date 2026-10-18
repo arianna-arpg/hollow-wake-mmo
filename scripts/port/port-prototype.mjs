@@ -302,13 +302,16 @@ function damageNode(k, ctx) {
     node.tags = ['hit'];
   } else {
     node.amount = `weave.base_damage${roll} * spell.power${growth}${scale}`;
-    const types = Object.keys(dmg);
+    const { types, threads } = threadsOf(k);
     if (types.length >= 2) {
-      const shares = types.map(t => mean(dmg[t]) / m);
-      const { threads } = threadsOf(k);
+      // Keep each share paired with its Thread's descending damage order. Fold any
+      // omitted third type proportionally into the two retained Threads.
+      const retained = types.slice(0, 2);
+      const retainedMean = retained.reduce((sum, t) => sum + mean(dmg[t]), 0);
+      const shares = retained.map(t => mean(dmg[t]) / retainedMean);
       if (threads.length >= 2 && Math.max(...shares) / Math.min(...shares) > 1.25) {
         node.amounts = {};
-        types.slice(0, 2).forEach((t, i) => { node.amounts[threads[i]] = `weave.base_damage * ${+shares[i].toFixed(2)}${roll} * spell.power${growth}${scale}`; });
+        retained.forEach((t, i) => { node.amounts[threads[i]] = `weave.base_damage * ${+shares[i].toFixed(2)}${roll} * spell.power${growth}${scale}`; });
         delete node.amount;
         delete node.threads;
       }

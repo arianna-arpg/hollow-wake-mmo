@@ -1,0 +1,19 @@
+PASS: 63 real-core scenario/provider checks; configured damage comparisons passed. Confirmed lifecycle extension available: False.
+✔ late start uses server elapsed time, never a new full-duration countdown (1.0333ms)
+✔ deadline and expiry never imply release, impact or a known cancellation (0.7598ms)
+✔ interruption wins against delayed start and no payload is inferred (0.1751ms)
+✔ confirmed release is deduplicated and never represented as damage (0.2412ms)
+✔ revision rejects old geometry, while independent casts survive packet reordering (0.1883ms)
+✔ baseline reconstructs active states without replaying emissions, rejects old baseline (0.2074ms)
+✔ lost terminal repairs from empty baseline; old epoch never leaks after transfer (0.1902ms)
+✔ indefinite holds do not invent completion or suppress later pulse emissions (0.1564ms)
+✔ proposed tracking has a rate cap; committed direction refuses later aim (0.1827ms)
+✔ Ember display keeps the persisted ember key; reduced motion retains information (0.2457ms)
+ℹ tests 10
+ℹ suites 0
+ℹ pass 10
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 83.4203

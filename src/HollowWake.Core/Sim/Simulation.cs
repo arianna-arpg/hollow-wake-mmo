@@ -23,6 +23,8 @@ public sealed class Simulation
     public SimClock Clock { get; }
     public Scheduler Scheduler { get; }
     public EventBus Events { get; } = new();
+    /// <summary>Optional semantic presentation observers. Headless simulation pays no event allocation by default.</summary>
+    public bool EmitCastPresentation { get; set; }
     public Rng Rng { get; }
     public ISimLog Log { get; set; } = NullSimLog.Instance;
     public WorldLayout Layout { get; }
