@@ -116,14 +116,16 @@ public sealed record Side(
     double LifeLeft);
 
 /// <summary>
-/// One seeded fight: who won (<c>a</c>, <c>b</c> or <c>draw</c>), when it ended, the hash of its ordered event log
-/// (sixteen hex digits, see <see cref="Tournament.Duel"/>), each side's tally, and the warnings and errors the
-/// simulation logged while it ran, in order (a weave that failed to compile, a component that failed to bind, a
-/// system that threw), so a fight on broken content says so instead of reading as a quiet one. A fight ends at the
-/// first tick after which a body is dead, or at the cap; it is a draw when both bodies stand at the cap, or when both
-/// are dead after that tick, a double knockout, which ends before the cap.
+/// One seeded fight: its seed text (<c>tournament:a:b:i</c>, see <see cref="Tournament.SeedText"/>), who won
+/// (<c>a</c>, <c>b</c> or <c>draw</c>), the tick it ended on and that tick's time in seconds to the millisecond, the
+/// hash of its ordered event log (sixteen hex digits, see <see cref="Tournament.Duel"/>), each side's tally, and the
+/// warnings and errors the simulation logged while it ran, in order (a weave that failed to compile, a component that
+/// failed to bind, a system that threw), so a fight on broken content says so instead of reading as a quiet one. A
+/// fight ends at the first tick after which a body is dead, or at the cap; it is a draw when both bodies stand at the
+/// cap, or when both are dead after that tick, a double knockout, which ends before the cap. <c>hollowwake fight a b
+/// --seed</c> with the seed text stages the same fight.
 /// </summary>
-public sealed record Fight(string A, string B, int Index, ulong Seed, string Outcome, double Seconds, string Hash, Side SideA, Side SideB, IReadOnlyList<string> Warnings, IReadOnlyList<string> Errors);
+public sealed record Fight(string A, string B, int Index, string Seed, string Outcome, long EndTick, double Seconds, string Hash, Side SideA, Side SideB, IReadOnlyList<string> Warnings, IReadOnlyList<string> Errors);
 
 /// <summary>
 /// The log a tournament's arena writes to: it keeps every warning and error the simulation reports, in the order they
@@ -450,10 +452,10 @@ public static class Tournament
     /// </summary>
     public static Fight Duel(ContentRegistry content, Pairing pairing, int index, double seconds)
     {
-        var seed = Rng.Hash64(SeedText(pairing, index));
+        var seedText = SeedText(pairing, index);
         // Every arena keeps what its simulation logs, so a broken kit or a failing system shows in the report.
         var log = new CountingSimLog();
-        var sim = ZoneBuilder.CreateArena(content, seed, log: log);
+        var sim = ZoneBuilder.CreateArena(content, Rng.Hash64(seedText), log: log);
         // The trace listens before the spawns, so the log opens with them.
         var trace = new Trace(sim);
         var (a, b) = Spawn(sim, pairing, BFirst(index));
@@ -463,7 +465,7 @@ public static class Tournament
         // Whatever a side owns works for it: the side owning an entity is found up the owner chain from a minion,
         // construct, projectile or field the way kill credit is.
         Tally? Owning(Entity e) => tallies.TryGetValue(DeathService.CreditTarget(sim, e).Key, out var t) ? t : null;
-        double? ended = null;
+        long? decided = null;
         var aDied = false;
         var bDied = false;
         // Damage and statuses are a side's work only on a target another side owns, or none does. A source and a
@@ -528,19 +530,22 @@ public static class Tournament
         {
             if (d.Entity == a || d.Entity == b)
             {
-                ended ??= sim.Clock.Time;
+                decided ??= sim.Clock.Tick;
                 aDied |= d.Entity == a;
                 bDied |= d.Entity == b;
             }
         });
-        while (ended is null && sim.Clock.Time < seconds)
+        while (decided is null && sim.Clock.Time < seconds)
         {
             sim.Tick();
         }
         var outcome = aDied == bDied ? "draw" : aDied ? "b" : "a";
         trace.End(outcome);
-        return new Fight(pairing.A, pairing.B, index, seed, outcome, ended ?? seconds, Hex(trace.Hash()), Measure(sim, a, pairing.A, tallies[a.Key]), Measure(sim, b, pairing.B, tallies[b.Key]),
-            log.Warnings.ToList(), log.Errors.ToList());
+        // The fight ended on the deciding tick, or on the last tick the cap let run; its time is that tick's to the
+        // millisecond, without the noise a product of ticks and their length carries.
+        var endTick = decided ?? sim.Clock.Tick;
+        return new Fight(pairing.A, pairing.B, index, seedText, outcome, endTick, Math.Round(endTick * sim.Clock.Dt, 3), Hex(trace.Hash()),
+            Measure(sim, a, pairing.A, tallies[a.Key]), Measure(sim, b, pairing.B, tallies[b.Key]), log.Warnings.ToList(), log.Errors.ToList());
     }
 
     /// <summary>

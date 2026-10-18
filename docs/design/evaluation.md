@@ -22,6 +22,12 @@ Its kit is its body's: the seats in the body's book, a seat being one weave of t
 
 Per fight: its outcome, when it ended, its trace hash, and per side the damage dealt, hits and crits (a hit is any application of damage that was not evaded, blocked ones included), casts (every `WeaveCast` of the side, a channel's beats and releases each one), uses, the size of its kit, its coverage and spread, the seats it used, the weaves its uses cast (faces included) and their mechanisms, the statuses applied, its self-sourced damage and statuses, and the fraction of life left; and the warnings and errors the simulation logged while it ran, in order, since every arena writes to a log that keeps them (`CountingSimLog`). Per pairing: its trace hash, win rates for each side and the draw rate, the median and quartiles of time to kill over the fights that ended, each side's coverage and spread averaged over its fights, the union of seats and mechanisms each side used, each side's self-sourced damage summed over its fights and the self-sourced statuses it bore, and the bands it broke. Per run: a trace hash over its pairings. The whole report serializes to JSON (`--out`), so a pull request can keep it under the evidence folder. Every number the harness writes, in the table, the breaches, the trace and the seeds, is written in the invariant culture by the library itself.
 
+## Replaying a fight
+
+Every fight records its seed text (`Seed`, written `tournament:a:b:i`) and the tick it ended on (`EndTick`), with `Seconds` that tick's time to the millisecond. `hollowwake fight a b --seed tournament:a:b:i --seconds S` replays fight `i` of pairing `a:b` exactly up to its first death: the fight command seeds its arena with the same text, reads the text back to the fight's index so the same side spawns first, and stages the duel with `Tournament.Spawn`. Give it a cap of at least the fight's `Seconds`, since its own default is shorter than a tournament's; past the first death it keeps ticking where the tournament stopped. A test replays fights of both spawn orders this way and requires the same end tick.
+
+## What goes wrong
+
 A fight on content the simulation could not run is not a measurement, and it must not read as a quiet fight. A weave that failed to compile, an unknown behavior, a component that failed to bind and a system that threw all reach the simulation's log, so the table names each distinct warning and error under its pairing with how many of its fights logged it, a seat whose weave never compiled still counts in its kit (unused, never an empty kit), and an error fails the command, which names the first.
 
 ## Bands
@@ -49,6 +55,7 @@ dotnet run --project src/HollowWake.Tools -- tournament                         
 dotnet run --project src/HollowWake.Tools -- tournament --pairs wolf:hob,proving_reaver:proving_bulwark --seeds 20 --seconds 45 --bands --out report.json
 dotnet run --project src/HollowWake.Tools -- tournament --standard --seeds 3 --seconds 60 --hashes --out experiments/combat-grammar/baselines/standard-duels.json
 dotnet run --project src/HollowWake.Tools -- tournament --standard --check-hashes experiments/combat-grammar/baselines/standard-duels.json
+dotnet run --project src/HollowWake.Tools -- fight proving_reaver proving_bulwark --seed tournament:proving_reaver:proving_bulwark:1 --seconds 60   # replay fight 1 of a pairing
 ```
 
 A gate on a content or AI change runs the proving pairs with bands, keeps the JSON, and compares the mechanisms each side used before and after: a doctrine or a weave that never shows in a report is not proven to work. The report is not a playtest: a human rubric and recorded sessions say whether the fights are good, the harness only says whether they stay inside what the designers wrote down.

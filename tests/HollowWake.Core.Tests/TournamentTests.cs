@@ -237,6 +237,43 @@ entries:
     }
 
     [Fact]
+    public void AFightNamesTheSeedTextThatReplaysIt()
+    {
+        var pairing = new Pairing("proving_reaver", "proving_bulwark");
+        var run = Tournament.Run(CoreContent.Registry, new[] { pairing }, seeds: 4, seconds: 60, checkBands: false);
+        var dt = ZoneBuilder.CreateArena(CoreContent.Registry).Clock.Dt;
+        foreach (var fight in run.Fights)
+        {
+            Assert.Equal(Tournament.SeedText(pairing, fight.Index), fight.Seed);
+            // Seconds is the end tick's time to the millisecond, free of the noise a product of ticks carries.
+            Assert.Equal(Math.Round(fight.EndTick * dt, 3), fight.Seconds);
+            Assert.Equal(fight.Seconds, Math.Round(fight.Seconds, 3));
+
+            // What hollowwake fight does with the seed text: the arena it seeds and the staging it reads back give
+            // the same fight, up to the tick it ended on.
+            Assert.True(Tournament.TryReadSeed(fight.Seed, out var read, out var index));
+            var sim = ZoneBuilder.CreateArena(CoreContent.Registry, Maths.Rng.Hash64(fight.Seed));
+            var (a, b) = Tournament.Spawn(sim, read, Tournament.BFirst(index));
+            long? died = null;
+            sim.Events.Subscribe<EntityDied>(d =>
+            {
+                if (d.Entity == a || d.Entity == b)
+                {
+                    died ??= sim.Clock.Tick;
+                }
+            });
+            while (died is null && sim.Clock.Time < 60)
+            {
+                sim.Tick();
+            }
+            Assert.Equal(fight.EndTick, died ?? sim.Clock.Tick);
+        }
+        // Both orders of spawning were replayed.
+        Assert.Contains(run.Fights, f => Tournament.BFirst(f.Index));
+        Assert.Contains(run.Fights, f => !Tournament.BFirst(f.Index));
+    }
+
+    [Fact]
     public void TheProvingPairsComeFromTheRule()
     {
         Assert.Contains(new Pairing("proving_reaver", "proving_bulwark"), Pairing.Listed(CoreContent.Registry, Pairing.ProvingPairs));
