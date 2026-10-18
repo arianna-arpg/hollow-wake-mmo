@@ -44,6 +44,10 @@ public sealed partial class WeaveRuntime
         {
             return max;
         }
+        if (spec.Manual)
+        {
+            return Math.Min(uses, max);
+        }
         var elapsed = Math.Max(0, now - slot.StateOr(SlotState.UsesAt, now));
         if (spec.Magazine is { } magazine)
         {
@@ -61,7 +65,7 @@ public sealed partial class WeaveRuntime
                 }
             }
         }
-        else if (spec.Still is null && !spec.Manual && uses < max)
+        else if (spec.Still is null && uses < max)
         {
             var recharge = RechargeSeconds(weave, spec, stats);
             uses = recharge <= 0 ? max : Math.Min(max, uses + elapsed / recharge);
@@ -101,11 +105,11 @@ public sealed partial class WeaveRuntime
         var spent = spec.VentAll ? whole : 1;
         uses -= spent;
         slot.State[SlotState.Uses] = uses;
-        if (spec.Magazine is not null && uses < 1 - 1e-9 && slot.StateOr(SlotState.UsesReload, 0) <= 0)
+        if (!spec.Manual && spec.Magazine is not null && uses < 1 - 1e-9 && slot.StateOr(SlotState.UsesReload, 0) <= 0)
         {
             slot.State[SlotState.UsesReload] = now + RefillSeconds(weave, spec, stats);
         }
-        if (spec.Still is not null && sim.World.TryGet<WeaveBook>(caster, out var book))
+        if (!spec.Manual && spec.Still is not null && sim.World.TryGet<WeaveBook>(caster, out var book))
         {
             EnsureUpkeep(caster, book);
         }

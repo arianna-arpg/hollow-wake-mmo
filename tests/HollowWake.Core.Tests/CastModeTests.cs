@@ -416,12 +416,23 @@ public class CastModeTests
         Assert.Equal(slot.Key, arena.Runtime.FaceOf(arena.Sim, arena.Caster, slot)!.Key);
     }
 
-    [Fact]
-    public void AManualBankNeverRecoversOnItsOwn()
+    [Theory]
+    [InlineData("t_manual")]
+    [InlineData("t_manual_mag")]
+    [InlineData("t_manual_drip")]
+    [InlineData("t_manual_still")]
+    public void AManualBankNeverRecoversOnItsOwn(string form)
     {
         var arena = CastingArena.Create();
-        var slot = arena.Slot("t_manual");
+        var slot = arena.Slot(form);
         arena.Begin(slot);
+        arena.RunSeconds(2);
+        Assert.Equal(1, arena.Runtime.Uses(arena.Sim, arena.Caster, slot, out _));
+        // Moving cannot drain a manual bank even if content also carries a still-bank spec.
+        arena.Sim.World.Get<Motion>(arena.Caster)!.MoveDir = Vector2.UnitY;
+        arena.RunSeconds(2);
+        Assert.Equal(1, arena.Runtime.Uses(arena.Sim, arena.Caster, slot, out _));
+        arena.Sim.World.Get<Motion>(arena.Caster)!.MoveDir = Vector2.Zero;
         arena.Begin(slot);
         Assert.Equal(0, arena.Runtime.Uses(arena.Sim, arena.Caster, slot, out var max));
         Assert.Equal(2, max);
