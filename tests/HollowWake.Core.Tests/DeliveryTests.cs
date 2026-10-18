@@ -1205,6 +1205,52 @@ public class DeliveryValidationTests
         var cascading = compiler.Compile(new WeaveSpec { Form = "nova", Threads = { "storm" }, Glyphs = { GlyphRef.Parse("cascading") } });
         Assert.Equal("cascade", cascading.Specs[0].Type);
     }
+
+    [Fact]
+    public void ProbesReadANodesParameterAndTheWeaveAttributeBehindItAlike()
+    {
+        // A quantity has two doors, the node's parameter and the weave attribute it falls back to, and a probe sees it
+        // through the one the handler reads: a node's own value wins over the attribute, and a value that acts either
+        // way round (a flight that slows) is stated as surely as one that acts forward.
+        var dir = Path.Combine(Path.GetTempPath(), "hollowwake-doors-" + Guid.NewGuid().ToString("N"));
+        Directory.CreateDirectory(dir);
+        try
+        {
+            File.WriteAllText(Path.Combine(dir, "weaves.yaml"), string.Join("\n",
+                "kind: weaves",
+                "entries:",
+                "  - { id: t_node_chains, name: Node Chains, form: missile_quick, threads: [ember], effects: [ { type: projectile, chains: 2 } ] }",
+                "  - { id: t_node_forks, name: Node Forks, form: missile_quick, threads: [ember], effects: [ { type: projectile, forks: 1 } ] }",
+                "  - { id: t_node_rehit, name: Node Rehit, form: missile_quick, threads: [ember], effects: [ { type: projectile, rehit: 0.5 } ] }",
+                "  - { id: t_weave_rehit, name: Weave Rehit, form: missile_quick, threads: [ember], attributes: { projectile.rehit: 0.5 }, effects: [ { type: projectile } ] }",
+                "  - { id: t_plain_flight, name: Plain Flight, form: missile_quick, threads: [ember], effects: [ { type: projectile } ] }",
+                "  - { id: t_slowing, name: Slowing, form: missile_quick, threads: [ember], attributes: { projectile.accel: -4 }, effects: [ { type: projectile } ] }",
+                "  - { id: t_held_steady, name: Held Steady, form: missile_quick, threads: [ember], attributes: { projectile.accel: 3 }, effects: [ { type: projectile, accel: 0 } ] }",
+                "  - { id: t_massed, name: Massed, form: slam_quick, attributes: { summon.count: 3 }, effects: [ { type: deploy, pattern: ember_totem } ] }",
+                "  - { id: t_single, name: Single, form: slam_quick, attributes: { summon.count: 3 }, effects: [ { type: deploy, pattern: ember_totem, count: 1 } ] }",
+                ""));
+            var registry = ContentRegistry.Load(new[] { CoreContent.FindContentDir(), dir }, out var report);
+            Assert.False(report.HasErrors, report.ToString());
+            var compiler = new WeaveCompiler(registry, EffectRegistry.Shared);
+            CompiledWeave Weave(string id) => compiler.Compile(new WeaveSpec { Preset = id });
+            Assert.True(Weave("t_node_chains").Mechanisms.Has("chain"));
+            Assert.True(Weave("t_node_forks").HasMechanism("flight:children"));
+            Assert.False(Weave("t_node_rehit").HasMechanism("flight:spends"));
+            Assert.False(Weave("t_weave_rehit").HasMechanism("flight:spends"));
+            Assert.True(Weave("t_plain_flight").HasMechanism("flight:spends"));
+            Assert.False(Weave("t_plain_flight").Mechanisms.Has("trajectory"));
+            Assert.True(Weave("t_slowing").Mechanisms.Has("trajectory"));
+            Assert.False(Weave("t_held_steady").Mechanisms.Has("trajectory"));
+            Assert.True(Weave("t_massed").HasMechanism("construct:massed"));
+            Assert.False(Weave("t_single").HasMechanism("construct:massed"));
+            // Shipped: a lava glob sheds speed as it flies, through its weave's negative projectile.accel.
+            Assert.True(Weave("lava_glob").Mechanisms.Has("trajectory"));
+        }
+        finally
+        {
+            Directory.Delete(dir, recursive: true);
+        }
+    }
 }
 
 /// <summary>The package's acceptance: a seeded fight with forking, returning and homing weaves splits, returns and repeats.</summary>

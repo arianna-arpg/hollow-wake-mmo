@@ -37,8 +37,6 @@ public class MorphTests
         return data;
     }
 
-    private static bool OnNode(View v, string parameter) => v.Sets(parameter) && !v.Point.ViaAttribute.Contains(parameter);
-
     /// <summary>A summon or deploy that raises more bodies in one press than its group may hold.</summary>
     private static bool CountPastCap(View v) =>
         Math.Clamp(Math.Round(v.Num("count")), 1, v.Rule("minions.max_per_cast", 32)) > Math.Max(1, Math.Round(v.Num("max_active")));
@@ -59,26 +57,6 @@ public class MorphTests
     /// </summary>
     internal static readonly Finding[] Known =
     {
-        new("projectile", "states", "'chain' does not hold though chains",
-            "the chain probe (Weaves/Probes/DeliveryProbes.cs) reads only the weave attribute projectile.chain, never a projectile node's chains parameter, though the trajectory probes read both")
-        {
-            When = v => OnNode(v, "chains"),
-        },
-        new("projectile", "states", "'flight:children' does not hold though forks",
-            "flight:children (Weaves/Mechanisms.cs) reads only the weave attribute projectile.forks, never a projectile node's forks parameter")
-        {
-            When = v => OnNode(v, "forks"),
-        },
-        new("projectile", "states", "'flight:spends' holds though rehit",
-            "flight:spends (Weaves/Mechanisms.cs) is the absence of the weave attribute projectile.rehit and never sees a projectile node's rehit parameter, so a flight that never ends on a hit still says its hits spend it")
-        {
-            When = v => OnNode(v, "rehit"),
-        },
-        new("projectile", "states", "'trajectory' does not hold though",
-            "WeaveProbe.Raises counts only positive bases and modifiers, so a kinematic axis set negative on the weave (a slowing accel, a recurve or spiral the other way) is not stated; shipped lava_glob sheds speed through projectile.accel -5.8")
-        {
-            When = v => Families.Trajectory.All(a => v.Num(a, 0) == 0 || (v.Num(a, 0) < 0 && !OnNode(v, a))),
-        },
         new("projectile", "doors", "through projectile.count holds 20, where the node holds 64",
             "projectile.count's catalog stops at 20 (attributes.yaml) where the handler clamps a node's count at 64 (DeliveryHandlers.cs): one axis clamps differently through its two doors, against the grammar's rule 1 (one mechanism, one door)"),
         new("projectile", "doors", "through projectile.speed holds 1, where the node holds 0.5",
@@ -134,11 +112,6 @@ public class MorphTests
             "a cast raises the cast trigger kind at depth 0 (Sim/Triggers.cs OnCast: WeaveCast carries no depth), so a proc answering a triggered use's cast runs at depth 1 whatever depth the use ran at; the runtime lifts its own triggered seats by the depth it keeps while a triggered cast resolves, but procs and status hooks read the event's; rule 8's baseline")
         {
             When = v => v.Fills(MorphLayer.Relay),
-        },
-        new("deploy", "states", "'construct:massed' does not hold though count",
-            "construct:massed (Weaves/Mechanisms.cs Construct) reads only a deploy or spawn node's count, never the weave attribute summon.count that a deploy's count falls back to")
-        {
-            When = v => !OnNode(v, "count") && Math.Round(v.Num("count")) > 1,
         },
         new(Finding.AnyFamily, "states", "'landing' does not hold though",
             "the landing probe (Weaves/Mechanisms.cs) holds only for a projectile's gravity or a node carrying an on_land list, so a leap, a field placed after a delay or a telegraphed strike that carries none is never stated as landing, though the probe's own description names lobbed flights, leaps and delayed placements")
