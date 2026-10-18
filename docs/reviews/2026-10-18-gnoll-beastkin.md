@@ -24,7 +24,7 @@ The Release snapshot-time budget is not declared passed. Initial and repeated sa
 
 Acknowledged by: pending Claude review.
 
-## Final shared foundation and client verification
+## Pre-main shared foundation and client verification (historical)
 
 Source/content head `ce3bcf569fb27426991ec69931c950e6951c74e1` incorporates the full corrected fauna stack through `745015e`, including #36. The final solution build has zero warnings/errors; all 2,811 .NET tests pass (core 2,642, server 48, client 121), as do 290 browser and 10 porter tests. Content validation is zero errors/warnings; load, live duel, production web build and generated protocol parity pass. The web build retains its existing large-chunk advisory. No new networking change requires repeating the earlier private TCP probe.
 
@@ -37,3 +37,15 @@ Earlier timing/traffic evidence at `6a65ed1` is historical after the resident-le
 ## Retained pre-main Release measurement
 
 The final coordinated first samples at `c6e117a` are recorded in `experiments/entity-review/evidence/37-final-benchmark-review.md`. A fresh Release build preceded measurement after preflight rejected an older #31 binary. Snapshot building is 1.0225075 ms against the established 1 ms budget; zone planning is 40.8383 ms against the proposed 40 ms target. Both misses are retained, with all raw rows, hashes and the authored-profile workload. Other named numeric timing/size limits pass; process-wide expression allocation remains nonzero. No reruns or source changes occurred, and all benchmark jobs stopped before the next owner. The separate main integration is not certified by this pre-main measurement. Keep draft pending review and resolution of the misses.
+
+## Complete main and entity foundation integration
+
+Source `4185c7fdbc8e057d35b78fc9b9587642f4f7183d` merges validated fauna `3d339d2ac71af6ac8bcff8e4f767e1f7c44ce2d8`, which includes complete corrected #33 `80dcac7`, reconciled #36 `c07b6df` and main `45ce87d`. Gnoll/Beastkin patterns, appearance, the existing world-generation goldens and renderer correction `30f6c91` remain unchanged by the merge. The generated grammar census exactly matches all 499 reviewed keys without a new allowance.
+
+Both Debug solution and Release tool builds have zero warnings/errors. Core 2780, server 59, native logic 134, browser 320 and porter 10 tests pass. Validate is 0/0; load, duel, generated protocol, production browser build, all seven Release Windows replay hashes and a private TCP probe granting all six requested features pass. Private `run-MG1zf0` passes browser 31/31 and native 36/36, with clean teardown. Fresh card/grayscale frames show the terrain and bodies, and the world-pixel assertion passes. Native rendered pixels remain skipped; headless exit diagnostics and the existing browser chunk advisory remain disclosed. Exact evidence is in `experiments/entity-review/evidence/37-main-*` and `docs/reviews/2026-10-18-entity-main-audits.md`.
+
+Harness-only correction `316c97358005bf5faed195f68d1ac466b7a496fe` rechecks live villager reach after aiming. The initial private failure and one diagnostic reproduction both retain the correct target receiving `too_far` after moving beyond the stale arrival position. Three deterministic regressions cover movement, wrong hover/timeout and failed approach/despawn. The corrected private run above follows this diagnosed fix; runtime/content are unchanged. Both failures remain in `37-main-interaction-*`.
+
+The inherited fauna baseline updates only the three counterfactually proven wolf/boar pairings; the other four hashes, platform, seeds and cap remain unchanged. A fresh Release proving report equals the retained fauna report in its entirety, including outcomes, mechanisms, hashes and the three inherited 80% win-ceiling breaches. No balance clearance or relaxed band is claimed.
+
+No post-main timing sample was run. The retained snapshot 1.0225075 ms / 1 ms budget miss and planning 40.8383 ms / proposed 40 ms target miss remain open historical evidence. They do not certify this source, and no cause has been established. Claude rereview and the coordinator's combined acceptance/performance work remain outstanding. New kin still use fallback cylinders; complex pack/herd AI and authored anatomy migration remain future work. No merge to main was performed.
