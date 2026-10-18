@@ -1,0 +1,16 @@
+{
+  "verifiedBaseline": "d84dfde34e0c5e48a04937290dfc8d67f4ecd452",
+  "mergedFoundation": "745015e5a0849a201e6857e47c9e23435618fb0a",
+  "scope": "Every tracked path outside docs/ and experiments/, including src/content/tests/web/scripts/config/build definitions",
+  "differingApplicationOrTestPaths": [],
+  "releaseBinaryBuildSource": "d84dfde34e0c5e48a04937290dfc8d67f4ecd452",
+  "releaseBinarySha256": "8628373c10068f5e84a31dcdc76f384ef410c6e61cd0846be5e9d1dabbc69b12",
+  "buildReused": true,
+  "reason": "No application, content or test input changed. Preserve the tested binary; no rebuild or repeated tests.",
+  "historicalEvidencePreserved": [
+    "34-final-tests-first.txt",
+    "34-final-allocation-isolated.txt",
+    "34-final-tests-retry.txt"
+  ],
+  "recordedUtc": "2026-10-18T19:35:37.504Z"
+}

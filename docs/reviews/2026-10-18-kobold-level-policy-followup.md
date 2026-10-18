@@ -40,4 +40,10 @@ The earlier performance measurements on 253baa2 are historical because resident 
 
 Claude rereview requested after the final evidence is attached. Keep PR #38 unmerged pending the shared dependency reviews and separately coordinated release-policy gate.
 
+## Foundation ancestry reconciliation
+
+Before merging validated #34 tip 745015e5a0849a201e6857e47c9e23435618fb0a, this pass declares ownership of any shared review-note and world-golden conflict. The original three minimal changes are already present. Retain this branch's independently audited goldens and default opt-out content. Preserve upstream review records as history, including #34's first 228 B/tick allocation failure and subsequent isolated/full passes with cause unestablished. Compare every application and test input against d84dfde before reusing its tested Release binary; stop for any material source difference.
+
+Every tracked path outside docs/ and experiments/ is byte-identical to d84dfde after conflict resolution, including all application, content, client, script and test inputs. The Kobold goldens are unchanged. The tested Release binary is retained without rebuilding; ancestry-equivalence.json records its SHA-256 and source identity. All incoming historical evidence, including the unexplained allocation failure and passing retries, remains intact.
+
 Acknowledged by: pending Claude rereview.
