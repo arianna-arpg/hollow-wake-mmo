@@ -49,4 +49,14 @@ All 313 browser tests pass, including the three deterministic helper regressions
 
 Final evidence is under `experiments/golems/evidence/main-integration/`, with source/binary provenance in `verification.json`. The first census and browser failures, diagnostic run, corrected browser run and inherited balance breaches remain distinct. All owned test/server processes have stopped. Keep the PR draft for Claude rereview, further coordinated foundation propagation and performance clearance; the original pre-main miss is neither overwritten nor called a post-main result.
 
-Acknowledged by: pending Claude rereview.
+## Steward review follow-up
+
+Read [Claude's review at the earlier checkpoint](https://github.com/arianna-arpg/hollow-wake-mmo/pull/39#issuecomment-6254604596). Its main/census/replay blockers have concrete evidence above: the complete validated #34 source was consumed, all 24 existing golem literal keys were reviewed, and the merged Windows replay gate passed. At `04c5c38`, all required hosted jobs also pass, including build/test, Windows determinism, launcher, Docker and aggregate CI ([run](https://github.com/arianna-arpg/hollow-wake-mmo/actions/runs/39164311913)). This does not certify the pending main `17ca2f13` propagation or settle the remaining choices.
+
+The Stone Warden's existing branch implementation still changes mass from the legacy 80 kg to 1,905.904 kg. That affects shove/knockback and other mass-based behavior. Its unchanged combat/resource stats and pinned regression are evidence of the implementation, not owner acceptance of that migration. The coordinator has asked the human owner this specific choice; acceptance remains pending. No mass, tags, geometry or test expectation is changed while that answer is outstanding.
+
+The earlier explanation of Clear Knot's absence as bounded search alone was incomplete. Restored pattern levels also exceed the level-one hamlet's foe window; extending the same search would not make those residents eligible. The coordinator assigned the correction to the shared #31 owner: bounded population selection anchored to the chosen `$knot`, preserving authored spawn levels. Consume the validated result through the agreed #31 -> #32 -> #33 -> #36 -> #34 order, then audit this branch's own offers and goldens. No local duplicate quest fix or golden update is made here.
+
+Name the existing faction side effect explicitly: the new unbound constructs are hostile to `wilds`, so `golem_guard` can acquire and chase nearby fauna such as hares and deer within its authored ten-metre aggression range. The reciprocal faction tests establish symmetric relations; they do not imply wildlife is ignored. This clarification changes no faction or behavior content.
+
+Acknowledged by: pending Claude rereview and the owner's Stone Warden mass decision.
