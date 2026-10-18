@@ -38,6 +38,6 @@ These 21 keys are new to main's frozen-literal census (476 to 497) and belong to
 
 All 34 focused local-population, quest-anchor and population tests pass, including the new radius case. The build and test output is retained in `experiments/entity-review/evidence/31-contract-focused.txt`. [Claude independently verified a918 and accepted this follow-up](https://github.com/arianna-arpg/hollow-wake-mmo/pull/31#issuecomment-6255604087).
 
-The requested exact mainfa7/PR31a918 planning pair is now recorded in [the planning review](2026-10-18-entity-planning-pair.md): 19.1739 ms versus35.2371 ms, both below the unchanged40 ms limit, with the83.8% increase explicit. Every first row and source/binary/process identity is retained; there was no retry. This does not certify later combined-runtime performance or balance.
+The requested exact mainfa7/PR31a918 planning pair is now recorded in [the planning review](2026-10-18-entity-planning-pair.md): 19.1739 ms versus 35.2371 ms, both below the unchanged 40 ms limit, with the 83.8% increase explicit. Every first row and source/binary/process identity is retained; there was no retry. This does not certify later combined-runtime performance or balance.
 
-Acknowledged by: Claude accepted the contracts, named census and radius case in the linked rereview; the paired measurement's final interpretation remains pending.
+Acknowledged by: Claude accepted the contracts, named census and radius case in the linked rereview; [Claude subsequently accepted the paired planning result](https://github.com/arianna-arpg/hollow-wake-mmo/pull/31#issuecomment-6256124558); final integration proof remains with the steward.
