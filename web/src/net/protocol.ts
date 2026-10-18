@@ -6,6 +6,10 @@
 export const PROTOCOL_VERSION = 1;
 /** ProtocolInfo.CastCuesFeature */
 export const CAST_CUES_FEATURE = "cast_cues";
+/** ProtocolInfo.HitBodiesFeature */
+export const HIT_BODIES_FEATURE = "hit_bodies_v2";
+/** ProtocolInfo.ProjectileSlabsFeature */
+export const PROJECTILE_SLABS_FEATURE = "projectile_slabs_v1";
 /** ProtocolInfo.EntityDeltaFeature */
 export const ENTITY_DELTA_FEATURE = "entity_delta";
 /** ProtocolInfo.InterfaceFeature */
@@ -377,6 +381,8 @@ export interface EnterWorldMsg {
   world: WorldInfo;
   server_time: number;
   tick_rate: number;
+  day_length?: number;
+  time_of_day?: number;
 }
 
 export interface ZoneChangedMsg {
@@ -428,6 +434,7 @@ export interface SelfStateMsg {
   quests: QuestInfo[];
   reputation: Record<string, number>;
   holdings: string[];
+  time_of_day?: number;
   reserved?: Record<string, number>;
   pools?: PoolInfo[];
   statuses?: StatusInfo[];
@@ -471,6 +478,11 @@ export interface CastCueMsg {
   reason: string;
   mechanisms?: string[];
   outcome: boolean;
+}
+
+export interface HitBodiesMsg {
+  t: "hit_bodies";
+  bodies: HitBodyInfo[];
 }
 
 export interface ChatBroadcastMsg {
@@ -639,6 +651,7 @@ export interface EntityState {
   yaw: number;
   radius: number;
   height: number;
+  hit_body?: string;
   faction?: string;
   rarity?: string;
   is_player: boolean;
@@ -661,6 +674,7 @@ export interface EntityState {
   heading?: number;
   spin?: number;
   until?: number;
+  appearance?: string[];
 }
 
 export interface EntityDelta {
@@ -674,6 +688,7 @@ export interface EntityDelta {
   yaw?: number;
   radius?: number;
   height?: number;
+  hit_body?: string;
   faction?: string;
   rarity?: string;
   level?: number;
@@ -693,6 +708,7 @@ export interface EntityDelta {
   shape_size?: ShapeSizeInfo;
   heading?: number;
   spin?: number;
+  appearance?: string[];
 }
 
 export interface WeaveSlotInfo {
@@ -774,6 +790,12 @@ export interface ChargeInfo {
   id: string;
   count: number;
   max: number;
+}
+
+export interface HitBodyInfo {
+  id: string;
+  aim: number;
+  volumes: HitVolumeInfo[];
 }
 
 export interface LayerInfo {
@@ -960,6 +982,15 @@ export interface StoneFitInfo {
   reason?: string;
 }
 
+export interface HitVolumeInfo {
+  shape: string;
+  forward: number;
+  left: number;
+  up: number;
+  radius: number;
+  half_height: number;
+}
+
 export interface RungInfo {
   index: number;
   unlocked: boolean;
@@ -1064,6 +1095,7 @@ export type Message =
   | SelfStateMsg
   | CombatEventMsg
   | CastCueMsg
+  | HitBodiesMsg
   | ChatBroadcastMsg
   | NoticeMsg
   | QuestOffersMsg
@@ -1152,6 +1184,7 @@ export const MESSAGE_TYPES: readonly MessageType[] = [
   "self_state",
   "combat_event",
   "cast_cue",
+  "hit_bodies",
   "chat_broadcast",
   "notice",
   "quest_offers",

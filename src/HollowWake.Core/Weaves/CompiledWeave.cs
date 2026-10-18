@@ -102,6 +102,59 @@ public sealed class WeaveCasting
 }
 
 /// <summary>
+/// The held-mode blocks a weave casts by, resolved once from its form and preset: a channel, a charge-up, a
+/// guard and strike timing, each the preset's where the preset gives one and else the form's, whole block for
+/// whole block. The cast mode stays the form's (validation refuses a preset block its mode would not read), so
+/// the runtime, the mechanism probes and the compiled sections read these and never where a block came from.
+/// </summary>
+public sealed class HeldBlocks
+{
+    private readonly FormDef _form;
+    private readonly WeaveDef? _preset;
+
+    public HeldBlocks(FormDef form, WeaveDef? preset)
+    {
+        _form = form;
+        _preset = preset;
+        Channel = preset?.Channel ?? form.Channel;
+        Charge = preset?.Charge ?? form.Charge;
+        Guard = preset?.Guard ?? form.Guard;
+        Timing = preset?.Timing ?? form.Timing;
+    }
+
+    public ChannelSpec? Channel { get; }
+    public ChargeUpSpec? Charge { get; }
+    public GuardSpec? Guard { get; }
+    public TimingSpec? Timing { get; }
+
+    /// <summary>
+    /// The blocks the weave carries, each by its name in content (<c>channel</c>, <c>charge</c>, <c>guard</c>,
+    /// <c>timing</c>) with where it came from (<c>preset {id}</c> or <c>form {id}</c>), for reports.
+    /// </summary>
+    public IEnumerable<(string Block, string Source)> Sources()
+    {
+        if (Channel is not null)
+        {
+            yield return ("channel", SourceOf(_preset?.Channel));
+        }
+        if (Charge is not null)
+        {
+            yield return ("charge", SourceOf(_preset?.Charge));
+        }
+        if (Guard is not null)
+        {
+            yield return ("guard", SourceOf(_preset?.Guard));
+        }
+        if (Timing is not null)
+        {
+            yield return ("timing", SourceOf(_preset?.Timing));
+        }
+    }
+
+    private string SourceOf(object? presetBlock) => presetBlock is null ? "form " + _form.Id : "preset " + _preset!.Id;
+}
+
+/// <summary>
 /// A weave resolved from its spec: form, threads, glyphs, the union of their tags and mechanisms,
 /// the weave-local attribute bases and modifiers, and the compiled effect graph. Every number a weave
 /// has is computed on the caster's modifier stack with the weave's modifiers joining the same fold.
@@ -170,6 +223,12 @@ public sealed class CompiledWeave
     /// <summary>Triggers, gates, banks, slot behaviors and compiled sections.</summary>
     public WeaveCasting Casting { get; init; } = WeaveCasting.None;
 
+    /// <summary>
+    /// The held-mode blocks the weave casts by, each the preset's or the form's, with where each came from;
+    /// the runtime reads them through <see cref="Channel"/>, <see cref="Charge"/>, <see cref="Guard"/> and <see cref="Timing"/>.
+    /// </summary>
+    public required HeldBlocks HeldBlocks { get; init; }
+
     internal WeaveProbe? Probe { get; init; }
 
     /// <summary>What the weave runtime keeps for this weave: its cost entries and their tag contexts, built on first use.</summary>
@@ -203,6 +262,18 @@ public sealed class CompiledWeave
 
     public Targeting Targeting => Form.Targeting;
     public CastMode CastMode => Form.CastMode;
+
+    /// <summary>The channel the weave holds: the preset's where it gives one, else the form's.</summary>
+    public ChannelSpec? Channel => HeldBlocks.Channel;
+
+    /// <summary>The charge-up the weave holds: the preset's where it gives one, else the form's.</summary>
+    public ChargeUpSpec? Charge => HeldBlocks.Charge;
+
+    /// <summary>The guard the weave holds: the preset's where it gives one, else the form's.</summary>
+    public GuardSpec? Guard => HeldBlocks.Guard;
+
+    /// <summary>The strike timing of the weave's cast bar: the preset's where it gives one, else the form's.</summary>
+    public TimingSpec? Timing => HeldBlocks.Timing;
 
     /// <summary>True when every socketed glyph is active.</summary>
     public bool Fits => Dormant.Count == 0;
@@ -318,6 +389,7 @@ public sealed class CompiledWeave
         Specs = Specs,
         CooldownAt = CooldownAt,
         Casting = Casting,
+        HeldBlocks = HeldBlocks,
         Probe = Probe,
         Origin = Root,
     };
@@ -326,8 +398,9 @@ public sealed class CompiledWeave
 }
 
 /// <summary>
-/// Turns specs into compiled weaves. In order: the preset, form and Threads resolve; glyphs resolve at
-/// their levels with their rolled rows, slot grafts joining after the sockets; the form's tree folds the
+/// Turns specs into compiled weaves. In order: the preset, form and Threads resolve, and the held-mode
+/// blocks with them (<see cref="HeldBlocks"/>: the preset's where it gives one, else the form's); glyphs
+/// resolve at their levels with their rolled rows, slot grafts joining after the sockets; the form's tree folds the
 /// spec's spent nodes in the order bought (their glyphs join as grafts do, their modifiers and patches
 /// after the glyphs'); then, to a fixpoint, the
 /// active glyphs' tags, mechanisms, modifiers, patches and hooks build the weave, the mechanism probes run
@@ -588,6 +661,8 @@ public sealed class WeaveCompiler
             throw new WeaveCompileException("A weave needs a form or a preset.");
         }
         var form = _content.Get<FormDef>(formId) ?? throw new WeaveCompileException($"Unknown form '{formId}'.");
+        // The held-mode blocks: a preset's block replaces its form's whole; the cast mode stays the form's.
+        var held = new HeldBlocks(form, preset);
         var threads = new List<ThreadDef>();
         foreach (var t in threadIds)
         {
@@ -678,7 +753,7 @@ public sealed class WeaveCompiler
         Evaluation state;
         while (true)
         {
-            state = Evaluate(preset, form, threads, baseTags, bases, glyphs, active, tree.Ranks, riding);
+            state = Evaluate(preset, form, held, threads, baseTags, bases, glyphs, active, tree.Ranks, riding);
             var failing = -1;
             string? reason = null;
             var rides = false;
@@ -810,6 +885,7 @@ public sealed class WeaveCompiler
             Specs = specs,
             CooldownAt = preset?.CooldownAt ?? form.CooldownAt,
             Casting = CastingOf(form, preset, activeGlyphs, release, bash, deactivate, cycle),
+            HeldBlocks = held,
             Probe = state.Probe,
         };
     }
@@ -922,7 +998,7 @@ public sealed class WeaveCompiler
         TriggerKinds.TryGet(trigger.On, out var kind) ? kind : throw new WeaveCompileException($"'{owner}' triggers on unknown kind '{trigger.On}'.");
 
     /// <summary>The weave with the active glyphs: tags, declared and probed mechanisms, modifiers, and the patched, hooked graph.</summary>
-    private Evaluation Evaluate(WeaveDef? preset, FormDef form, List<ThreadDef> threads, TagSet baseTags, Dictionary<string, double> bases, List<Socketed> glyphs, bool[] active, List<TreeRank> tree, bool[] riding)
+    private Evaluation Evaluate(WeaveDef? preset, FormDef form, HeldBlocks held, List<ThreadDef> threads, TagSet baseTags, Dictionary<string, double> bases, List<Socketed> glyphs, bool[] active, List<TreeRank> tree, bool[] riding)
     {
         var tags = baseTags;
         var declared = preset is null ? form.Mechanisms : form.Mechanisms.Union(preset.Mechanisms);
@@ -990,9 +1066,10 @@ public sealed class WeaveCompiler
             modifiers.AddRange(node.Modifiers.Select(m => m.Scaled(ranks).WithSource(source)));
         }
 
-        // The graph: the form's and preset's effects take patches in glyph order, and so do the form's
-        // sections (a channel's release, a guard's bash, a toggle's deactivation, a cycle's payload); glyphs'
-        // added effects join the root; hooks append into every node exposing them; on_cast lists close the root.
+        // The graph: the form's and preset's effects take patches in glyph order, and so do the sections (the
+        // release of the channel and the bash of the guard the weave holds, its form's or its preset's; the
+        // form's toggle deactivation; a cycle's payload); glyphs' added effects join the root; hooks append into
+        // every node exposing them; on_cast lists close the root.
         var graph = new WeaveGraph(_effects);
         foreach (var s in form.Effects)
         {
@@ -1005,14 +1082,14 @@ public sealed class WeaveCompiler
                 graph.Add(s, patchable: true);
             }
         }
-        if (form.Channel?.Release is { } release)
+        if (held.Channel?.Release is { } release)
         {
             foreach (var s in release.Effects)
             {
                 graph.Add(s, patchable: true, WeaveSections.Release);
             }
         }
-        if (form.Guard?.Bash is { } bash)
+        if (held.Guard?.Bash is { } bash)
         {
             foreach (var s in bash.Effects)
             {
@@ -1118,6 +1195,7 @@ public sealed class WeaveCompiler
             Content = _content,
             Form = form,
             Preset = preset,
+            HeldBlocks = held,
             Threads = threads,
             Tags = tags,
             Declared = declared,

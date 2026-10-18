@@ -60,6 +60,7 @@ public sealed class SnapshotView
     /// </summary>
     public bool SendInterface { get; set; }
     public bool SendCastCues { get; set; }
+    public bool SendHitBodies { get; set; }
 
     /// <summary>Fingerprints of the interface states last sent, and when the weave previews last refreshed.</summary>
     internal ulong InventoryFingerprint;
@@ -137,7 +138,7 @@ public sealed class SnapshotBuilder
     /// so sharing them between messages is safe. Fingerprints depend on precision, so the cache also
     /// starts over when a viewer with different precision asks.
     /// </summary>
-    private readonly Dictionary<long, (ulong Fingerprint, EntityState? State)> _tick = new();
+    private readonly Dictionary<long, (ulong Fingerprint, EntityState? State, EntityState? Diagnostic)> _tick = new();
     private long _tickNumber = -1;
     private double _tickResourceStep = double.NaN;
     private int _tickCastSteps = -1;
@@ -176,21 +177,19 @@ public sealed class SnapshotBuilder
             return known.Fingerprint;
         }
         var fingerprint = Snapshots.Fingerprint(_sim, e, settings.ResourceStep, settings.CastSteps);
-        _tick[e.Key] = (fingerprint, null);
+        _tick[e.Key] = (fingerprint, null, null);
         return fingerprint;
     }
 
-    private EntityState DynamicStateOf(Entity e, SnapshotSettings settings)
+    private EntityState DynamicStateOf(Entity e, SnapshotSettings settings, bool diagnostic)
     {
         var fingerprint = FingerprintOf(e, settings);
         var known = _tick[e.Key];
-        if (known.State is { } state)
-        {
-            return state;
-        }
-        state = Snapshots.Capture(_sim, e, isStatic: false);
-        _tick[e.Key] = (fingerprint, state);
-        return state;
+        var state = known.State ?? Snapshots.Capture(_sim, e, isStatic: false, hitBodies: false);
+        var debug = known.Diagnostic;
+        if (diagnostic && debug is null) debug = state with { HitBody = _sim.World.Get<HollowWake.Core.Combat.HitBody>(e)?.Definition.Id };
+        _tick[e.Key] = (fingerprint, state, debug);
+        return diagnostic ? debug! : state;
     }
 
     /// <summary>
@@ -301,7 +300,7 @@ public sealed class SnapshotBuilder
     /// <summary>Queues a known dynamic entity's state: as a delta when the viewer takes them and one can express the change, else in full.</summary>
     private void Emit(SnapshotView view, SnapshotView.Entry entry, bool full)
     {
-        var state = DynamicStateOf(entry.Entity, view.Settings);
+        var state = DynamicStateOf(entry.Entity, view.Settings, view.SendHitBodies);
         if (!full && view.SendDeltas && entry.Last is { } last)
         {
             var delta = Snapshots.Delta(last, state, out var empty);
@@ -441,7 +440,7 @@ public sealed class SnapshotBuilder
     private void Spawn(SnapshotView view, SnapshotView.Entry entry, bool isStatic, double now, List<Message> output)
     {
         var e = entry.Entity;
-        var state = isStatic ? Snapshots.Capture(_sim, e, isStatic: true) : DynamicStateOf(e, view.Settings);
+        var state = isStatic ? Snapshots.Capture(_sim, e, isStatic: true, hitBodies: view.SendHitBodies) : DynamicStateOf(e, view.Settings, view.SendHitBodies);
         entry.Fingerprint = FingerprintOf(e, view.Settings);
         entry.Static = isStatic;
         entry.Sent = true;

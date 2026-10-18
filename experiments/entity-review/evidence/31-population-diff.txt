@@ -1,0 +1,16 @@
+Base: 21514c0 (original #31 plus main 26b9e46). Seed: aureth.
+Candidate: corpse/allegiance and world-eligibility corrections, exact commit recorded in review handoff.
+
+Zone 0_0
+  Site placements/populations unchanged: True
+  Per-pattern spawn point/body counts unchanged: True
+  Quest gen.poi.0_0.hamlet.128.128.cull_beasts.2: [{"Type": "kill", "Target": "wolf", "Poi": null}] -> [{"Type": "kill", "Target": "hob", "Poi": null}]
+Zone 1_0
+  Site placements/populations unchanged: True
+  Per-pattern spawn point/body counts unchanged: True
+Zone 0_-1
+  Site placements/populations unchanged: True
+  Per-pattern spawn point/body counts unchanged: True
+Zone 3_2
+  Site placements/populations unchanged: True
+  Per-pattern spawn point/body counts unchanged: True

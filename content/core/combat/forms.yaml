@@ -38,6 +38,7 @@ entries:
     effects:
       - type: area
         shape: cone
+        contact: body
         angle: 110
         radius: "weave.area.radius"
         center: source

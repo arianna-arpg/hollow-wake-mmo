@@ -17,7 +17,7 @@ export function faunaQuadruped(b: BodyBuild): void {
         const y = legs + torso * 0.44;
         const skin = b.c("hide", "#9b7955");
         const belly = b.c("belly", "#c7bba0");
-        const dark = b.c("dark", "#36352");
+        const dark = b.c("dark", "#36352f");
         const horn = b.c("horn", "#d0c7ab");
         p.bone("hips", "root", V(mid - length * 0.3, legs, 0));
         p.bone("torso", "hips", V(mid, y, 0));
@@ -106,7 +106,7 @@ export function faunaBird(b: BodyBuild): void {
         const D = H * b.s("depth", 1);
         const legs = H * b.s("legs", 0.25);
         const skin = b.c("hide", "#a68d61");
-        const dark = b.c("dark", "#36352");
+        const dark = b.c("dark", "#36352f");
         p.bone("hips", "root", V(-D * 0.08, legs, 0));
         p.bone("torso", "hips", V(0, H * 0.52, 0));
         p.bone("head", "torso", V(D * 0.22, H * 0.76, 0));
@@ -138,7 +138,7 @@ export function faunaCrab(b: BodyBuild): void {
         const W = H * b.s("breadth", 1.7);
         const D = H * b.s("depth", 1.3);
         const skin = b.c("hide", "#bc8c65");
-        const dark = b.c("dark", "#36352");
+        const dark = b.c("dark", "#36352f");
         p.bone("shell", "root", V(0, H * 0.52, 0));
         p.add("shell", 'ellipsoid', V(D * 0.68, H * 0.50, W * 0.63), V(-D * 0.06, H * 0.53, 0), skin, { segments: 8 });
         for (const side of [-1, 1])

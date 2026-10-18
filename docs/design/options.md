@@ -38,7 +38,7 @@ The pages ship with these groups; each grows as its system lands, and the schema
 - **Gameplay**: auto pickup rules, item filter level, confirmations (sell, destroy, refund, trade), loot and currency notices, the duel and trade request policies, the profanity filter.
 - **Accessibility**: colour-vision palettes (themes that remap the pool and rarity colours), text size, high contrast, the grayscale check, reduce motion, hold or toggle for held actions, cooldown and status readouts as numbers, screen reader hints.
 - **Network**: the server address book and the last server, the snapshot stream choice (deltas or full states, for diagnostics), the latency and traffic overlay, connection timeouts.
-- **Developer**: gated by a developer flag; the smoke, the mockup renderer, verbose logs, the profiler overlay, the held time of day for look previews.
+- **Developer**: gated by a developer flag; the smoke, the mockup renderer, verbose logs, the profiler overlay, the held time of day for look previews, and server hit-body outlines with a separate movement-clearance ring. The latter is a read-only diagnostic, not a gameplay preference.
 
 ## Checking
 

@@ -77,6 +77,7 @@ public sealed class MinionService
     /// <summary>Whether a body carrying a presence was ever born here; until one is, there are no presences to keep.</summary>
     internal bool PresencesSeen { get; set; }
 
+    private string[]? _encounterTags;
     private TagSet? _minionTags;
     private TagSet? _constructTags;
     private string? _defaultBehavior;
@@ -86,6 +87,14 @@ public sealed class MinionService
     internal TagSet BodyTags(bool construct) => construct
         ? _constructTags ??= TagSet.From(_sim.Content.Rules.Strings("minions.construct_tags"))
         : _minionTags ??= TagSet.From(_sim.Content.Rules.Strings("minions.tags"));
+
+    /// <summary>Remove authored encounter tag roots, including their descendants, from owned bodies.</summary>
+    internal TagSet OwnedTags(TagSet tags)
+    {
+        _encounterTags ??= _sim.Content.Rules.Strings("minions.encounter_tags").ToArray();
+        return TagSet.From(tags.Where(tag => !_encounterTags.Any(root =>
+            tag == root || tag.StartsWith(root + ".", StringComparison.Ordinal))));
+    }
 
     /// <summary>The behavior summoned bodies run unless their summon names one (<c>minions.behavior</c>); null keeps the pattern's.</summary>
     internal string? DefaultBehavior

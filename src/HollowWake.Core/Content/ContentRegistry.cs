@@ -441,6 +441,9 @@ public sealed class ContentRegistry
 
     public int CountOfKind(string kindName) => _byKind.TryGetValue(kindName, out var d) ? d.Count : 0;
 
+    /// <summary>Whether a definition of the kind named as content names it (<c>statuses</c>, <c>patterns</c>) exists under the id.</summary>
+    public bool HasOfKind(string kindName, string id) => _byKind.TryGetValue(kindName, out var d) && d.ContainsKey(id);
+
     public JsonObject? Raw(string kind, string id) => _raw.TryGetValue(kind, out var k) && k.TryGetValue(id, out var r) ? r.Object : null;
 
     public IEnumerable<RawDefinition> RawOfKind(string kind) => _raw.TryGetValue(kind, out var k) ? k.Values : Enumerable.Empty<RawDefinition>();

@@ -43,10 +43,10 @@ public partial class ProtocolContractTests
     {
         var interfaces = InterfacePattern().Matches(TypeScriptContract.Generate())
             .ToDictionary(m => m.Groups[1].Value, m => FieldPattern().Matches(m.Groups[2].Value).Select(f => f.Groups[1].Value).ToHashSet());
-        var state = new EntityState { Key = 5L << 32 | 3, Name = "Hob", Pattern = "hob", Look = "hob", Faction = "the_loosed", Rarity = "magic", Interactable = "talk", Casting = "Ember", VX = 1, Resources = { ["life"] = 3 }, ResourceMax = { ["life"] = 9 }, Flags = { "monster" }, Statuses = { "burning" } };
+        var state = new EntityState { Key = 5L << 32 | 3, Name = "Hob", Pattern = "hob", Look = "hob", Faction = "the_loosed", Rarity = "magic", Interactable = "talk", Casting = "Ember", VX = 1, Resources = { ["life"] = 3 }, ResourceMax = { ["life"] = 9 }, Flags = { "monster" }, Statuses = { "burning" }, Appearance = new List<string> { "main_hand=weapon.sword melee blade one_hand" } };
         var item = new ItemInfo(9, "short_blade", "Short Blade", "rare", 1, 4, "main_hand", new List<string> { "+3 damage" }, new Dictionary<string, double> { ["damage.min"] = 2 });
         var quest = new QuestInfo("q", "Quest", "active", new List<string> { "Slay" }, new List<int> { 1 }, new List<int> { 3 }, "quartermaster", 2);
-        var delta = new EntityDelta { Key = 9, X = 1, Look = "", Dead = true, Resources = new Dictionary<string, float> { ["life"] = 2 }, Statuses = new List<string> { "burning" }, VX = 0 };
+        var delta = new EntityDelta { Key = 9, X = 1, Look = "", Dead = true, Resources = new Dictionary<string, float> { ["life"] = 2 }, Statuses = new List<string> { "burning" }, VX = 0, Appearance = new List<string>() };
         var samples = new (Message Message, string Interface)[]
         {
             (new EntitySpawnMsg(state), nameof(EntitySpawnMsg)),
@@ -57,9 +57,9 @@ public partial class ProtocolContractTests
             (new ChunkDataMsg(0, 0, 1, new float[] { 1 }, new byte[] { 1 }, new List<string> { "ground grass" }, new ushort[] { 0 }, new List<LayerInfo> { new(0, 2, true, "bridge") }, 1, 0.5f), nameof(ChunkDataMsg)),
             (new SelfStateMsg(1, 2, 3, 4, 5, new List<string>(), new Dictionary<string, double>(), new Dictionary<string, double>(), new Dictionary<string, double>(),
                 new List<WeaveSlotInfo> { new(0, "ember", "Ember", null, 0.5, new Dictionary<string, double> { ["mana"] = 4 }, "enemy", 12) }, new List<ItemInfo> { item }, 20,
-                new Dictionary<string, ItemInfo> { ["main_hand"] = item }, new Dictionary<string, double>(), new List<QuestInfo> { quest }, new Dictionary<string, double>(), new List<string>()), nameof(SelfStateMsg)),
+                new Dictionary<string, ItemInfo> { ["main_hand"] = item }, new Dictionary<string, double>(), new List<QuestInfo> { quest }, new Dictionary<string, double>(), new List<string>()) { TimeOfDay = 0.5 }, nameof(SelfStateMsg)),
             (new QuestOffersMsg(4, new List<QuestInfo> { quest }, new List<QuestInfo>()), nameof(QuestOffersMsg)),
-            (new EnterWorldMsg("c1", 3, "0_0", 1, 2, 3, new WorldInfo(ulong.MaxValue, 32, 8, 8, new List<OverlayInfo> { new("o", true, new List<int[]> { new[] { 0, 0 } }, new List<int[]>(), new double[] { 1, 2, 3 }, new Dictionary<string, double>(), 1) }, "abc"), 0, 20), nameof(EnterWorldMsg)),
+            (new EnterWorldMsg("c1", 3, "0_0", 1, 2, 3, new WorldInfo(ulong.MaxValue, 32, 8, 8, new List<OverlayInfo> { new("o", true, new List<int[]> { new[] { 0, 0 } }, new List<int[]>(), new double[] { 1, 2, 3 }, new Dictionary<string, double>(), 1) }, "abc"), 0, 20) { DayLength = 1800, TimeOfDay = 0.3 }, nameof(EnterWorldMsg)),
             (new CombatEventMsg("damage", 1, 2, 3, true, new List<string> { "fire" }, "burning"), nameof(CombatEventMsg)),
         };
         foreach (var (message, name) in samples)

@@ -1,6 +1,7 @@
 using System.Numerics;
 using HollowWake.Core.Attributes;
 using HollowWake.Core.Components;
+using HollowWake.Core.Content;
 using HollowWake.Core.Definitions;
 using HollowWake.Core.Ecs;
 using HollowWake.Core.Expressions;
@@ -60,7 +61,19 @@ public sealed class WorldState
     public Dictionary<string, Holding> Holdings { get; } = new(StringComparer.Ordinal);
     public List<ActiveWorldEvent> Events { get; } = new();
     public GenerationOverlays Overlays { get; }
+
+    /// <summary>The rule that sets the day's length, in seconds of world time (the calendar's, docs/design/world/landscape.md).</summary>
+    public const string DayLengthRule = "landscape.day_length_seconds";
+
+    /// <summary>The rule that sets the fraction of the day a new world wakes at, so it need not begin at midnight.</summary>
+    public const string DayStartRule = "landscape.day_start";
+
+    /// <summary>How long a day lasts, in seconds of world time; <see cref="DayLengthRule"/> sets it.</summary>
     public double DayLengthSeconds { get; set; } = 1800;
+
+    /// <summary>The fraction of the day at world time zero; <see cref="DayStartRule"/> sets it.</summary>
+    public double DayStart { get; set; }
+
     public double WorldTime { get; set; }
 
     public WorldState(GenerationOverlays overlays)
@@ -68,9 +81,31 @@ public sealed class WorldState
         Overlays = overlays;
     }
 
+    /// <summary>A world whose day the rules set; a rule that is absent keeps the default.</summary>
+    public WorldState(GenerationOverlays overlays, Rules rules) : this(overlays)
+    {
+        DayLengthSeconds = rules.Number(DayLengthRule, DayLengthSeconds);
+        DayStart = rules.Number(DayStartRule, DayStart);
+    }
+
     public Holding? HoldingOfFount(string fountId) => Holdings.Values.FirstOrDefault(h => h.Founts.Contains(fountId));
 
-    public double TimeOfDay => DayLengthSeconds <= 0 ? 0.5 : (WorldTime % DayLengthSeconds) / DayLengthSeconds;
+    /// <summary>
+    /// The fraction of the day now, from zero at midnight through a half at noon, the same in every zone of the
+    /// world since it follows the world time and not a zone's clock. A world without a day stands at noon.
+    /// </summary>
+    public double TimeOfDay
+    {
+        get
+        {
+            if (DayLengthSeconds <= 0)
+            {
+                return 0.5;
+            }
+            var t = (WorldTime / DayLengthSeconds + DayStart) % 1.0;
+            return t < 0 ? t + 1 : t;
+        }
+    }
 }
 
 /// <summary>
