@@ -11,7 +11,7 @@
       ],
       "weight": 0.35,
       "radius": 10,
-      "min_spacing": 180,
+      "min_spacing": 64,
       "slope": {
         "max": 0.55
       },
@@ -34,7 +34,7 @@
           ],
           "respawn": 600,
           "level": {
-            "min": 4
+            "min": 3
           }
         },
         {
@@ -55,7 +55,12 @@
       ],
       "meta": {
         "population": "Sparse single-body packs at material-appropriate works. No broader biome churn."
-      }
+      },
+      "regions": [
+        "hallows",
+        "sallows",
+        "emberfells"
+      ]
     },
     {
       "id": "golem_quarry",
@@ -67,7 +72,7 @@
       ],
       "weight": 0.35,
       "radius": 10,
-      "min_spacing": 180,
+      "min_spacing": 64,
       "slope": {
         "max": 0.55
       },
@@ -90,7 +95,7 @@
           ],
           "respawn": 600,
           "level": {
-            "min": 6
+            "min": 5
           }
         },
         {
@@ -111,7 +116,11 @@
       ],
       "meta": {
         "population": "Sparse single-body packs at material-appropriate works. No broader biome churn."
-      }
+      },
+      "regions": [
+        "emberfells",
+        "girdle"
+      ]
     },
     {
       "id": "golem_foundry",
@@ -123,7 +132,7 @@
       ],
       "weight": 0.35,
       "radius": 10,
-      "min_spacing": 180,
+      "min_spacing": 64,
       "slope": {
         "max": 0.55
       },
@@ -146,7 +155,7 @@
           ],
           "respawn": 600,
           "level": {
-            "min": 9
+            "min": 7
           }
         },
         {
@@ -167,7 +176,12 @@
       ],
       "meta": {
         "population": "Sparse single-body packs at material-appropriate works. No broader biome churn."
-      }
+      },
+      "regions": [
+        "emberfells",
+        "girdle",
+        "hush"
+      ]
     },
     {
       "id": "golem_sawmill",
@@ -179,7 +193,7 @@
       ],
       "weight": 0.35,
       "radius": 10,
-      "min_spacing": 180,
+      "min_spacing": 64,
       "slope": {
         "max": 0.55
       },
@@ -201,7 +215,7 @@
           ],
           "respawn": 600,
           "level": {
-            "min": 5
+            "min": 4
           }
         },
         {
@@ -222,7 +236,11 @@
       ],
       "meta": {
         "population": "Sparse single-body packs at material-appropriate works. No broader biome churn."
-      }
+      },
+      "regions": [
+        "hallows",
+        "sallows"
+      ]
     }
   ]
 }

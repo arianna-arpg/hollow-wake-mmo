@@ -85,8 +85,9 @@ public class GolemPrototypeTests(ITestOutputHelper output)
     {
         var def = CoreContent.Registry.Require<PatternDef>(id);
         Assert.Equal("players", def.Faction);
-        Assert.True(def.Tags.Has("habitat.bound_service"));
+        Assert.True(DeliveryArena.Create().Sim.Service<PatternFactory>().Resolve(id).Def.Tags.Has("habitat.bound_service"));
         Assert.DoesNotContain(CoreContent.Registry.Each<PoiDef>(), p => p.Inhabitants.Any(s => s.Pattern == id));
+        Assert.DoesNotContain(CoreContent.Registry.Each<BiomeDef>(), b => b.Spawns.Any(s => s.Pattern == id));
         var a = MinionArena.Create();
         a.Cast(a.Learn("bind_stone_warden"));
         a.Cast(a.Learn("summon_" + id));
@@ -121,8 +122,8 @@ public class GolemPrototypeTests(ITestOutputHelper output)
     [InlineData("fire_golem", "ember", .75)]
     [InlineData("ice_golem", "tide", .75)]
     [InlineData("lightning_golem", "storm", .6)]
-    [InlineData("blood_golem", "void", .4)]
-    [InlineData("amalgam_horror", "void", .4)]
+    [InlineData("blood_golem", "umbra", .4)]
+    [InlineData("amalgam_horror", "umbra", .4)]
     public void ExplicitResistanceReducesRealHitsWithoutMakingBodiesImmune(string id, string thread, double resist)
     {
         var a = DeliveryArena.Create();
@@ -173,7 +174,7 @@ public class GolemPrototypeTests(ITestOutputHelper output)
         var found = false;
         for (var y = -64; y <= 64 && !found; y++)
             for (var x = -64; x <= 64 && !found; x++)
-                foreach (var p in natural.PoisOf(new ZoneCoord(x, y)).Where(p => p.Def.Id == site && p.Level >= 14))
+                foreach (var p in natural.PoisOf(new ZoneCoord(x, y)).Where(p => p.Def.Id == site))
                 {
                     var inhabitants = natural.Layout.ChunksOf(new ZoneCoord(x, y))
                         .SelectMany(c => natural.GenerateChunk(c).Spawns)
@@ -186,15 +187,13 @@ public class GolemPrototypeTests(ITestOutputHelper output)
         string[] Populate(int level)
         {
             var content = ContentRegistry.Load(new[] { CoreContent.FindContentDir() }, out _);
-            content.With(content.Require<PoiDef>(site) with { Level = 0 });
             content.With(new RegionOverrideDef { Id = "hallows_home", X = 0, Y = 0, Archetype = "hallows", Level = level, Faction = "weftmarch_compact" });
             content.With(new ZoneOverrideDef { Id = "ninewells", X = 0, Y = 0, Pois = { new PoiPlacement { Poi = site, X = 50, Y = 50 } } });
             var g = new WorldGenerator(content, Rng.Hash64("golem-amalgamation"));
             return g.Layout.ChunksOf(new ZoneCoord(0, 0)).SelectMany(c => g.GenerateChunk(c).Spawns)
                 .Where(s => s.Pattern == "amalgam_horror").Select(s => $"{s.Pattern}:{s.X}:{s.Y}:{s.PackSize}").ToArray();
         }
-        Assert.Empty(Populate(13));
-        Assert.NotEmpty(Populate(14));
-        Assert.Equal(Populate(14), Populate(14));
+        Assert.NotEmpty(Populate(1));
+        Assert.Equal(Populate(1), Populate(1));
     }
 }

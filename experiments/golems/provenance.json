@@ -175,7 +175,7 @@
         "id": "stone_golem",
         "look": "golem_stone_assembled"
       },
-      "translation": "Existing ID, faction, dimensions, combat stats, reduction and bind contract preserved. Gains explicit physical mass and shared resource pools; remains reward-free and summon-only.",
+      "translation": "ID, faction, dimensions, original stats including inherited resource formulas/regeneration, Warden Slam, reduction and binding retained. Explicit 1905.904 kg mass replaces the old 80 kg reference, intentionally changing shove response. Adds construct classifiers and assembled geometry with scale jitter disabled. Reward-free, summon-only; not an additions-only behavioral change.",
       "ai": {
         "current": "minion_melee",
         "status": "provisional existing owner/order behavior",

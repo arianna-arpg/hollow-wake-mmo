@@ -1,0 +1,43 @@
+
+> hollow-wake-web@0.1.0 test
+> vitest run --run
+
+
+ RUN  v5.0.3 C:/Users/John/.codex/worktrees/golem-construct-foundation/MMOARPG/web
+
+ ❯ src/world/appearance/appearance.test.ts (10 tests | 1 failed) 500ms
+   ❯ appearance catalog (4)
+     × finds a look for every pattern the world spawns, not a fallback 29ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/world/appearance/appearance.test.ts > appearance catalog > finds a look for every pattern the world spawns, not a fallback
+AssertionError: expected [ Array(1) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "bound_golem_body -> creature_fallback",
++ ]
+
+ ❯ src/world/appearance/appearance.test.ts:35:21
+     33|       }
+     34|     }
+     35|     expect(missing).toEqual([]);
+       |                     ^
+     36|   });
+     37|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 33 passed (34)
+      Tests  1 failed | 268 passed (269)
+   Start at  12:24:46
+   Duration  5.57s (transform 60%, import 34%, tests 5%, worker 1%)
+
+  Transform  transforming modules took 37.63s · 60% of tracked time, re-done on every run
+             persist transforms across runs with fsModuleCache: true
+             learn more: https://vitest.dev/guide/improving-performance#caching-between-reruns

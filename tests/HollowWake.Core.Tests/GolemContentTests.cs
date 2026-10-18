@@ -19,10 +19,10 @@ namespace HollowWake.Core.Tests;
 public class GolemContentTests(ITestOutputHelper output)
 {
     public static IEnumerable<object[]> Bodies() => CoreContent.Registry.Each<PatternDef>()
-        .Where(p => p.Extends == "golem_body").Select(p => new object[] { p.Id });
+        .Where(p => p.Extends == "golem_body" && p.Id != "bound_golem_body" || p.Id == "stone_warden").Select(p => new object[] { p.Id });
 
     public static IEnumerable<object[]> WildKits() => CoreContent.Registry.Each<PatternDef>()
-        .Where(p => p.Extends == "golem_body" && p.Id != "stone_warden")
+        .Where(p => p.Extends == "golem_body" && p.Id != "bound_golem_body")
         .SelectMany(p => p.Components["weaves"]!["list"]!.AsArray().Select(s => new object[] { p.Id, s!.GetValue<string>() }));
 
     [Theory, MemberData(nameof(Bodies))]
@@ -115,14 +115,14 @@ public class GolemContentTests(ITestOutputHelper output)
     [InlineData("golem_quarry")]
     [InlineData("golem_foundry")]
     [InlineData("golem_sawmill")]
+    [InlineData("amalgam_suture_works")]
     public void AuthoredSitesPopulateAtTheirLevelAndReplay(string site)
     {
         string[] Generate(int level)
         {
             var content=ContentRegistry.Load(new[]{CoreContent.FindContentDir()},out _);
             var original=content.Require<PoiDef>(site);
-            // Pin this existing site and remove only its offset to test absolute population windows.
-            content.With(original with { Level=0 });
+            // Preserve the authored offset: even the lowest region must have real occupants.
             content.With(new RegionOverrideDef{Id="hallows_home",X=0,Y=0,Archetype="hallows",Level=level,Faction="weftmarch_compact"});
             content.With(new ZoneOverrideDef{Id="ninewells",X=0,Y=0,Pois={new PoiPlacement{Poi=site,X=50,Y=50}}});
             var g=new WorldGenerator(content,Rng.Hash64("golem-sites"));
@@ -130,7 +130,8 @@ public class GolemContentTests(ITestOutputHelper output)
                 .Where(s=>s.Group?.Contains(site,StringComparison.Ordinal)==true && original.Inhabitants.Any(i=>i.Pattern==s.Pattern))
                 .Select(s=>$"{s.Pattern}:{s.X}:{s.Y}:{s.PackSize}").ToArray();
         }
-        Assert.Empty(Generate(1));
+        Assert.NotEmpty(Generate(1));
+        Assert.Equal(Generate(1),Generate(1));
         var old=Generate(15);
         foreach(var inhabitant in CoreContent.Registry.Require<PoiDef>(site).Inhabitants)
             Assert.Contains(old,s=>s.StartsWith(inhabitant.Pattern+":"));
@@ -143,11 +144,15 @@ public class GolemContentTests(ITestOutputHelper output)
     {
         var g=new WorldGenerator(CoreContent.Registry,Rng.Hash64("aureth"));
         var wanted=CoreContent.Registry.Each<PoiDef>().Where(p=>p.Tags.Has("golem_site")).Select(p=>p.Id).ToHashSet();
-        for(var y=-12;y<=12 && wanted.Count>0;y++)
-            for(var x=-12;x<=12 && wanted.Count>0;x++)
+        for(var y=-64;y<=64 && wanted.Count>0;y++)
+            for(var x=-64;x<=64 && wanted.Count>0;x++)
                 foreach(var p in g.PoisOf(new ZoneCoord(x,y)))
                     if(wanted.Remove(p.Def.Id))
+                    {
+                        Assert.Contains(g.Layout.ChunksOf(new ZoneCoord(x,y)).SelectMany(c=>g.GenerateChunk(c).Spawns),
+                            s=>s.Group==p.Id && p.Def.Inhabitants.Any(i=>i.Pattern==s.Pattern));
                         output.WriteLine($"{p.Def.Id}: zone({x},{y}), at ({p.X},{p.Y}), level {p.Level}");
+                    }
         Assert.Empty(wanted);
     }
 

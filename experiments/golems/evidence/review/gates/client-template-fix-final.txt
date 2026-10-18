@@ -1,0 +1,4 @@
+Test run for C:\Users\John\.codex\worktrees\golem-construct-foundation\MMOARPG\tests\HollowWake.Client.Tests\bin\Debug\net10.0\HollowWake.Client.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+
+Passed!  - Failed:     0, Passed:   117, Skipped:     0, Total:   117, Duration: 5 s - HollowWake.Client.Tests.dll (net10.0)

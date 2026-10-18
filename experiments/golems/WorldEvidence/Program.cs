@@ -18,8 +18,19 @@ foreach (var (x,y) in new[] { (0,0),(1,0),(0,-1),(3,2) })
         .Select(p => $"{p.Id}: {p.Def.Id}, {p.Name}, {p.X},{p.Y}, height={p.BaseHeight:R}, level={p.Level}")
         .ToArray();
     var old = Describe(a); var current = Describe(b);
+    var chunks = a.Layout.ChunksOf(zone).Select(coord =>
+    {
+        var left=a.GenerateChunk(coord); var right=b.GenerateChunk(coord);
+        return new { chunk=coord.ToString(),
+            heightsChanged=!left.Height.SequenceEqual(right.Height),
+            flagsChanged=!left.Flags.SequenceEqual(right.Flags),
+            biomeIndicesChanged=!left.BiomeIndex.SequenceEqual(right.BiomeIndex),
+            removedStamps=left.Stamps.Except(right.Stamps).ToArray(),addedStamps=right.Stamps.Except(left.Stamps).ToArray(),
+            removedSpawns=left.Spawns.Except(right.Spawns).ToArray(),addedSpawns=right.Spawns.Except(left.Spawns).ToArray() };
+    }).Where(c=>c.heightsChanged||c.flagsChanged||c.biomeIndicesChanged||c.removedStamps.Length>0||c.addedStamps.Length>0||c.removedSpawns.Length>0||c.addedSpawns.Length>0).ToArray();
     report.Add(new { zone = zone.ToString(), removedNearby = old.Except(current).ToArray(),
         addedNearby = current.Except(old).ToArray(),
+        changedChunks=chunks,
         questsBefore = a.Zone(zone).Quests.Select(q => new {q.Id,q.Name,q.Description,q.Objectives}),
         questsAfter = b.Zone(zone).Quests.Select(q => new {q.Id,q.Name,q.Description,q.Objectives}) });
 }

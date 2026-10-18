@@ -49,14 +49,14 @@
         },
         "stats": {
           "attributes": {
-            "life.max": 650,
+            "life.max": "260 + (level - 1) * 30",
             "might": 24,
             "grace": 6,
             "will": 18,
             "vigor": 24,
             "move.speed": 3.2,
-            "weapon.damage.min": 20,
-            "weapon.damage.max": 30,
+            "weapon.damage.min": "10 + (level - 1) * 0.8",
+            "weapon.damage.max": "16 + (level - 1) * 1.2",
             "weapon.attack.time": 1.4,
             "armor": 35,
             "poise.max": 65,
@@ -67,7 +67,7 @@
           },
           "modifiers": [
             {
-              "attribute": "resist.void",
+              "attribute": "resist.umbra",
               "form": "flat",
               "value": 0.4
             }
@@ -85,7 +85,7 @@
         },
         "drops": {
           "table": "amalgam_relics",
-          "xp": "160 + level * 20",
+          "xp": "28 + level * 8",
           "chance": 1
         }
       },
@@ -96,7 +96,7 @@
           "id": "amalgam_horror",
           "look": "amalgam_stitched"
         },
-        "combat_translation": "Heavy Strike replaces claw; existing Poison Nova replaces pestilent_nova. Explicit Void resistance translates source chaos resistance.",
+        "combat_translation": "Heavy Strike replaces claw; existing Umbra Poison Nova replaces pestilent_nova. Explicit Umbra resistance translates the source grave/poison chaos theme consistently with the port ledger.",
         "encounter_translation": "A fixed assembled guardian at sparse Suture Works. The source Bonewright hunt, selectable graft parts, Crown promotion and part-selected rewards are deferred.",
         "ai_handoff": {
           "current": "golem_guard",

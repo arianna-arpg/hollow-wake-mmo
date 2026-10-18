@@ -1,0 +1,29 @@
+Content correction compared with 0f29605, using the same generator and seed aureth.
+This is the pre-foundation-integration comparison; later shared corrections need separate evidence.
+
+All four sampled zone-info hashes change because PoisAround includes neighbors.
+Ninewells scout target changes from the Unquiet House back to Chainkeeper Camp.
+The other sampled quests are unchanged at this stage (shared quest corrections are pending).
+
+Near (0,0)/(1,0)/(0,-1): Iron-Tusk Hold at (431.5,198.5) becomes Chainkeeper Camp;
+Scrap Fort at (-234.5,294.5) becomes the Old Seam ruin; the Skyfall at
+(125.5,310.5) becomes Chainkeeper Camp. The local chunk change is isolated to
+chunk(13,6): ruin_walls becomes camp_ring, changing stamped heights/flags,
+chest/inhabitants and the nearest Hob spawn coordinate. Biome indices are unchanged.
+The other three sampled zones have no changed local chunks.
+
+Near (3,2): the two Gnasher Pens become level-4 sawmills, now each eligible for
+Timber Golem. Two shrines remain nearby at new candidates (745.5,745.5) and
+(731.5,636.5), instead of being excluded by the old 180 m sawmill radius.
+
+Current golden values:
+(0,0) B4668A5E618C47CC / B4967CED570DD0B6
+(1,0) FB8641E6E0F2A968 / 6615F2EDE81806A7
+(0,-1) F75575B10A717024 / 44FDA182BF6A81C9
+(3,2) 1AF0288C5B48224A / 15C99D20020E2BF4
+Overlay 6FA306B417408A1D; climate/region remains 999D90D6110B1CDD.
+
+Natural spacing witnesses in initial-regressions.txt:
+foundry + ruin 121.3 m; quarry + knot 137.7 m; Suture Works + shrine 93.8 m;
+sawmill + knot 112.5 m; kiln + ruin 92.1 m. All would have been rejected by
+the golem site's old spacing in at least one placement order.

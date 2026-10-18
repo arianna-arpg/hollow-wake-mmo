@@ -1,0 +1,124 @@
+  Determining projects to restore...
+  All projects are up-to-date for restore.
+  HollowWake.Core -> C:\Users\John\.codex\worktrees\golem-construct-foundation\MMOARPG\src\HollowWake.Core\bin\Debug\net8.0\HollowWake.Core.dll
+C:\Users\John\.codex\worktrees\golem-construct-foundation\MMOARPG\tests\HollowWake.Core.Tests\PortedProjectileTests.cs(254,19): warning xUnit2031: Do not use a Where clause to filter before calling Assert.Single. Use the overload of Assert.Single that accepts a filtering function. (https://xunit.net/xunit.analyzers/rules/xUnit2031) [C:\Users\John\.codex\worktrees\golem-construct-foundation\MMOARPG\tests\HollowWake.Core.Tests\HollowWake.Core.Tests.csproj]
+C:\Users\John\.codex\worktrees\golem-construct-foundation\MMOARPG\tests\HollowWake.Core.Tests\PortedProjectileTests.cs(267,9): warning xUnit2031: Do not use a Where clause to filter before calling Assert.Single. Use the overload of Assert.Single that accepts a filtering function. (https://xunit.net/xunit.analyzers/rules/xUnit2031) [C:\Users\John\.codex\worktrees\golem-construct-foundation\MMOARPG\tests\HollowWake.Core.Tests\HollowWake.Core.Tests.csproj]
+C:\Users\John\.codex\worktrees\golem-construct-foundation\MMOARPG\tests\HollowWake.Core.Tests\PortedProjectileTests.cs(280,9): warning xUnit2031: Do not use a Where clause to filter before calling Assert.Single. Use the overload of Assert.Single that accepts a filtering function. (https://xunit.net/xunit.analyzers/rules/xUnit2031) [C:\Users\John\.codex\worktrees\golem-construct-foundation\MMOARPG\tests\HollowWake.Core.Tests\HollowWake.Core.Tests.csproj]
+  HollowWake.Core.Tests -> C:\Users\John\.codex\worktrees\golem-construct-foundation\MMOARPG\tests\HollowWake.Core.Tests\bin\Debug\net10.0\HollowWake.Core.Tests.dll
+Test run for C:\Users\John\.codex\worktrees\golem-construct-foundation\MMOARPG\tests\HollowWake.Core.Tests\bin\Debug\net10.0\HollowWake.Core.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v3.1.5+1b188a7b0a (64-bit .NET 10.0.13)
+[xUnit.net 00:00:00.12]   Discovering: HollowWake.Core.Tests
+[xUnit.net 00:00:01.69]   Discovered:  HollowWake.Core.Tests
+[xUnit.net 00:00:01.73]   Starting:    HollowWake.Core.Tests
+[xUnit.net 00:00:03.00]     HollowWake.Core.Tests.GolemReviewTests.LoadedWorksHaveLivingResidentsAtTheSiteLevel(site: "amalgam_suture_works") [FAIL]
+[xUnit.net 00:00:03.00]       Assert.All() Failure: 1 out of 1 items in the collection did not pass.
+[xUnit.net 00:00:03.00]       [0]: Item:  E2933.1
+[xUnit.net 00:00:03.00]            Error: Assert.Equal() Failure: Values differ
+[xUnit.net 00:00:03.00]                   Expected: 9
+[xUnit.net 00:00:03.00]                   Actual:   14
+[xUnit.net 00:00:03.00]       Stack Trace:
+[xUnit.net 00:00:03.00]         C:\Users\John\.codex\worktrees\golem-construct-foundation\MMOARPG\tests\HollowWake.Core.Tests\GolemReviewTests.cs(41,0): at HollowWake.Core.Tests.GolemReviewTests.LoadedWorksHaveLivingResidentsAtTheSiteLevel(String site)
+[xUnit.net 00:00:03.00]            at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+[xUnit.net 00:00:03.00]            at System.Reflection.MethodBaseInvoker.InvokeDirectByRefWithFewArgs(Object obj, Span`1 copyOfArgs, BindingFlags invokeAttr)
+  Failed HollowWake.Core.Tests.GolemReviewTests.LoadedWorksHaveLivingResidentsAtTheSiteLevel(site: "amalgam_suture_works") [1 s]
+  Error Message:
+   Assert.All() Failure: 1 out of 1 items in the collection did not pass.
+[0]: Item:  E2933.1
+     Error: Assert.Equal() Failure: Values differ
+            Expected: 9
+            Actual:   14
+  Stack Trace:
+     at HollowWake.Core.Tests.GolemReviewTests.LoadedWorksHaveLivingResidentsAtTheSiteLevel(String site) in C:\Users\John\.codex\worktrees\golem-construct-foundation\MMOARPG\tests\HollowWake.Core.Tests\GolemReviewTests.cs:line 41
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeDirectByRefWithFewArgs(Object obj, Span`1 copyOfArgs, BindingFlags invokeAttr)
+[xUnit.net 00:00:04.03]     HollowWake.Core.Tests.GolemReviewTests.LoadedWorksHaveLivingResidentsAtTheSiteLevel(site: "golem_kiln") [FAIL]
+[xUnit.net 00:00:04.03]       Assert.All() Failure: 1 out of 1 items in the collection did not pass.
+[xUnit.net 00:00:04.03]       [0]: Item:  E2933.1
+[xUnit.net 00:00:04.03]            Error: Assert.Equal() Failure: Values differ
+[xUnit.net 00:00:04.03]                   Expected: 3
+[xUnit.net 00:00:04.03]                   Actual:   4
+[xUnit.net 00:00:04.03]       Stack Trace:
+[xUnit.net 00:00:04.03]         C:\Users\John\.codex\worktrees\golem-construct-foundation\MMOARPG\tests\HollowWake.Core.Tests\GolemReviewTests.cs(41,0): at HollowWake.Core.Tests.GolemReviewTests.LoadedWorksHaveLivingResidentsAtTheSiteLevel(String site)
+[xUnit.net 00:00:04.03]            at InvokeStub_GolemReviewTests.LoadedWorksHaveLivingResidentsAtTheSiteLevel(Object, Span`1)
+[xUnit.net 00:00:04.03]            at System.Reflection.MethodBaseInvoker.InvokeWithOneArg(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Failed HollowWake.Core.Tests.GolemReviewTests.LoadedWorksHaveLivingResidentsAtTheSiteLevel(site: "golem_kiln") [1 s]
+  Error Message:
+   Assert.All() Failure: 1 out of 1 items in the collection did not pass.
+[0]: Item:  E2933.1
+     Error: Assert.Equal() Failure: Values differ
+            Expected: 3
+            Actual:   4
+  Stack Trace:
+     at HollowWake.Core.Tests.GolemReviewTests.LoadedWorksHaveLivingResidentsAtTheSiteLevel(String site) in C:\Users\John\.codex\worktrees\golem-construct-foundation\MMOARPG\tests\HollowWake.Core.Tests\GolemReviewTests.cs:line 41
+   at InvokeStub_GolemReviewTests.LoadedWorksHaveLivingResidentsAtTheSiteLevel(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithOneArg(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:05.63]     HollowWake.Core.Tests.GolemReviewTests.LoadedWorksHaveLivingResidentsAtTheSiteLevel(site: "golem_sawmill") [FAIL]
+[xUnit.net 00:00:05.63]       Assert.All() Failure: 1 out of 1 items in the collection did not pass.
+[xUnit.net 00:00:05.63]       [0]: Item:  E2934.1
+[xUnit.net 00:00:05.63]            Error: Assert.Equal() Failure: Values differ
+[xUnit.net 00:00:05.63]                   Expected: 4
+[xUnit.net 00:00:05.63]                   Actual:   5
+[xUnit.net 00:00:05.63]       Stack Trace:
+[xUnit.net 00:00:05.63]         C:\Users\John\.codex\worktrees\golem-construct-foundation\MMOARPG\tests\HollowWake.Core.Tests\GolemReviewTests.cs(41,0): at HollowWake.Core.Tests.GolemReviewTests.LoadedWorksHaveLivingResidentsAtTheSiteLevel(String site)
+[xUnit.net 00:00:05.63]            at InvokeStub_GolemReviewTests.LoadedWorksHaveLivingResidentsAtTheSiteLevel(Object, Span`1)
+[xUnit.net 00:00:05.63]            at System.Reflection.MethodBaseInvoker.InvokeWithOneArg(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Failed HollowWake.Core.Tests.GolemReviewTests.LoadedWorksHaveLivingResidentsAtTheSiteLevel(site: "golem_sawmill") [1 s]
+  Error Message:
+   Assert.All() Failure: 1 out of 1 items in the collection did not pass.
+[0]: Item:  E2934.1
+     Error: Assert.Equal() Failure: Values differ
+            Expected: 4
+            Actual:   5
+  Stack Trace:
+     at HollowWake.Core.Tests.GolemReviewTests.LoadedWorksHaveLivingResidentsAtTheSiteLevel(String site) in C:\Users\John\.codex\worktrees\golem-construct-foundation\MMOARPG\tests\HollowWake.Core.Tests\GolemReviewTests.cs:line 41
+   at InvokeStub_GolemReviewTests.LoadedWorksHaveLivingResidentsAtTheSiteLevel(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithOneArg(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:07.36]     HollowWake.Core.Tests.GolemReviewTests.LoadedWorksHaveLivingResidentsAtTheSiteLevel(site: "golem_foundry") [FAIL]
+[xUnit.net 00:00:07.36]       Assert.All() Failure: 1 out of 1 items in the collection did not pass.
+[xUnit.net 00:00:07.36]       [0]: Item:  E2933.1
+[xUnit.net 00:00:07.36]            Error: Assert.Equal() Failure: Values differ
+[xUnit.net 00:00:07.36]                   Expected: 7
+[xUnit.net 00:00:07.36]                   Actual:   9
+[xUnit.net 00:00:07.36]       Stack Trace:
+[xUnit.net 00:00:07.36]         C:\Users\John\.codex\worktrees\golem-construct-foundation\MMOARPG\tests\HollowWake.Core.Tests\GolemReviewTests.cs(41,0): at HollowWake.Core.Tests.GolemReviewTests.LoadedWorksHaveLivingResidentsAtTheSiteLevel(String site)
+[xUnit.net 00:00:07.36]            at InvokeStub_GolemReviewTests.LoadedWorksHaveLivingResidentsAtTheSiteLevel(Object, Span`1)
+[xUnit.net 00:00:07.36]            at System.Reflection.MethodBaseInvoker.InvokeWithOneArg(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Failed HollowWake.Core.Tests.GolemReviewTests.LoadedWorksHaveLivingResidentsAtTheSiteLevel(site: "golem_foundry") [1 s]
+  Error Message:
+   Assert.All() Failure: 1 out of 1 items in the collection did not pass.
+[0]: Item:  E2933.1
+     Error: Assert.Equal() Failure: Values differ
+            Expected: 7
+            Actual:   9
+  Stack Trace:
+     at HollowWake.Core.Tests.GolemReviewTests.LoadedWorksHaveLivingResidentsAtTheSiteLevel(String site) in C:\Users\John\.codex\worktrees\golem-construct-foundation\MMOARPG\tests\HollowWake.Core.Tests\GolemReviewTests.cs:line 41
+   at InvokeStub_GolemReviewTests.LoadedWorksHaveLivingResidentsAtTheSiteLevel(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithOneArg(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:08.41]       Assert.All() Failure: 1 out of 1 items in the collection did not pass.
+[xUnit.net 00:00:08.41]       [0]: Item:  E2933.1
+[xUnit.net 00:00:08.42]            Error: Assert.Equal() Failure: Values differ
+[xUnit.net 00:00:08.41]     HollowWake.Core.Tests.GolemReviewTests.LoadedWorksHaveLivingResidentsAtTheSiteLevel(site: "golem_quarry") [FAIL]
+[xUnit.net 00:00:08.42]                   Expected: 5
+[xUnit.net 00:00:08.42]                   Actual:   6
+[xUnit.net 00:00:08.42]       Stack Trace:
+[xUnit.net 00:00:08.42]         C:\Users\John\.codex\worktrees\golem-construct-foundation\MMOARPG\tests\HollowWake.Core.Tests\GolemReviewTests.cs(41,0): at HollowWake.Core.Tests.GolemReviewTests.LoadedWorksHaveLivingResidentsAtTheSiteLevel(String site)
+[xUnit.net 00:00:08.42]            at InvokeStub_GolemReviewTests.LoadedWorksHaveLivingResidentsAtTheSiteLevel(Object, Span`1)
+[xUnit.net 00:00:08.42]            at System.Reflection.MethodBaseInvoker.InvokeWithOneArg(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:08.42]   Finished:    HollowWake.Core.Tests
+  Failed HollowWake.Core.Tests.GolemReviewTests.LoadedWorksHaveLivingResidentsAtTheSiteLevel(site: "golem_quarry") [1 s]
+  Error Message:
+   Assert.All() Failure: 1 out of 1 items in the collection did not pass.
+[0]: Item:  E2933.1
+     Error: Assert.Equal() Failure: Values differ
+            Expected: 5
+            Actual:   6
+  Stack Trace:
+     at HollowWake.Core.Tests.GolemReviewTests.LoadedWorksHaveLivingResidentsAtTheSiteLevel(String site) in C:\Users\John\.codex\worktrees\golem-construct-foundation\MMOARPG\tests\HollowWake.Core.Tests\GolemReviewTests.cs:line 41
+   at InvokeStub_GolemReviewTests.LoadedWorksHaveLivingResidentsAtTheSiteLevel(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithOneArg(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+
+Test Run Failed.
+Total tests: 5
+     Failed: 5
+ Total time: 9.7714 Seconds

@@ -660,7 +660,7 @@ Every slice lands with a seeded duel the fight tool runs twice to the same trace
 | summon_flame_sprite | summon_flame_sprite | preset on call: summon (ember) | ported (difference) | sum:cinder_imp<flame_sprite; req; grow | fight port duel: summons |
 | raise_dead | raise_dead | preset on call: summon | seam | sum:remnant_shade<skeleton_warrior; sum:remnant_shade<zombie; req; tree; grow; seam: preset behaviors (meta_action) | fight port duel: summons |
 | summon_sporeling | summon_sporeling | preset on call: summon | ported (difference) | sum:sprig<fungal_sporeling; req; grow | fight port duel: summons |
-| summon_stone_golem | summon_stone_golem | preset on pact: summon | ported (difference) | sum:stone_warden<stone_golem; req; grow | fight port duel: summons |
+| summon_stone_golem | summon_stone_golem | preset on pact: summon | ported (difference) | sum:stone_golem<stone_golem; dedicated binding in PR #39; req; grow | fight port duel: summons |
 | summon_bone_golem | summon_bone_golem | preset on pact: summon | ported (difference) | sum:stone_warden<bone_golem; req; tree; grow | fight port duel: summons |
 | bind_familiar | bind_familiar | preset on pact: summon (void) | ported (difference) | sum:remnant_archer<arcane_familiar; req; tree; grow | fight port duel: summons |
 | conjure_wisp | conjure_wisp | preset on call: summon (tide) | seam | sum:remnant_shade<spirit_wisp; req; grow; seam: preset tags (duration) | fight port duel: summons |
@@ -668,9 +668,9 @@ Every slice lands with a seeded duel the fight tool runs twice to the same trace
 | gate_shift | gate_shift | preset on plant: deploy | seam | req; grow; seam: preset tags (duration) | fight port duel: summons |
 | raise_spectre |  | preset on call: summon | not ported | sum:remnant_shade<undefined; plural targeting (several corpses) is one target here; req; grow; seam: preset tags (corpse); later: summon.grimoire (row B22, later) | fight port duel: summons |
 | revive | revive | preset on call: summon | seam | sum:remnant_shade<undefined; plural targeting (several corpses) is one target here; req; grow; seam: preset tags (corpse, duration) | fight port duel: summons |
-| summon_fire_golem | summon_fire_golem | preset on pact: summon (ember) | ported (difference) | sum:stone_warden<fire_golem; req; grow | fight port duel: summons |
-| summon_ice_golem | summon_ice_golem | preset on pact: summon (tide) | ported (difference) | sum:stone_warden<ice_golem; req; grow | fight port duel: summons |
-| summon_blood_golem | summon_blood_golem | preset on pact: summon (stone) | ported (difference) | sum:stone_warden<blood_golem; req; grow | fight port duel: summons |
+| summon_fire_golem | summon_fire_golem | preset on pact: summon (ember) | ported (difference) | sum:fire_golem<fire_golem; dedicated binding in PR #39; req; grow | fight port duel: summons |
+| summon_ice_golem | summon_ice_golem | preset on pact: summon (tide) | ported (difference) | sum:ice_golem<ice_golem; dedicated binding in PR #39; req; grow | fight port duel: summons |
+| summon_blood_golem | summon_blood_golem | preset on pact: summon (stone) | ported (difference) | sum:blood_golem<blood_golem; dedicated binding in PR #39; req; grow | fight port duel: summons |
 | orb_of_storms | orb_of_storms | preset on plant: deploy (storm) | seam | req; grow; seam: preset tags (duration) | fight port duel: summons |
 | flame_totem | flame_totem | preset on plant: deploy (ember) | seam | req; grow; seam: preset tags (duration) | fight port duel: summons |
 | ballista_sentry | ballista_sentry | preset on plant: deploy (stone) | seam | req; tree; grow; seam: preset tags (duration) | fight port duel: summons |
@@ -3407,3 +3407,5 @@ Every slice lands with a seeded duel the fight tool runs twice to the same trace
 | needle_eye | needle_eye | unique on relic_talisman: pierceCount, projectileSpeed, accuracy | ported |  | unique roll test |
 | hollow_choir | hollow_choir | unique on relic_effigy: durationAuraCap, effectDuration, manaRegen | ported |  | unique roll test |
 
+
+PR #39 follow-up: `summon_lightning_golem` is a new Storm assembly adaptation, not a source-port row. Stone, Fire, Ice and Blood now map to their dedicated bodies; their earlier fallback to Stone Warden is superseded. Blood and Amalgamation grave/poison chaos defenses use Umbra. Full Bonewright event behavior remains deferred.

@@ -2,25 +2,43 @@
   "kind": "patterns",
   "entries": [
     {
+      "id": "bound_golem_body",
+      "name": "Bound golem template",
+      "extends": "golem_body",
+      "faction": "players",
+      "tags": [
+        "family.golem",
+        "locomotion.ground",
+        "size.large",
+        "habitat.bound_service"
+      ],
+      "components": {
+        "stats": {
+          "attributes": {
+            "might": 16,
+            "grace": 6,
+            "will": 18,
+            "vigor": 16,
+            "weapon.attack.time": 1.3,
+            "mana.max": 200,
+            "mana.regen": 14
+          }
+        }
+      }
+    },
+    {
       "id": "stone_golem",
       "name": "Stone Golem",
-      "extends": "creature",
+      "extends": "bound_golem_body",
       "faction": "players",
       "level": 5,
       "height": 2.3,
       "radius": 0.675,
       "tags": [
-        "construct",
-        "golem",
         "summonable",
-        "no_corpse",
-        "family.golem",
         "body.stone",
         "thread.stone",
         "assembly.blocks",
-        "locomotion.ground",
-        "size.large",
-        "habitat.bound_service",
         "role.guardian",
         "melee"
       ],
@@ -40,21 +58,10 @@
         },
         "stats": {
           "attributes": {
-            "life.max": 220,
-            "might": 16,
-            "grace": 6,
-            "will": 18,
-            "vigor": 16,
+            "life.max": "180 + (level - 1) * 14",
             "move.speed": 2.9,
-            "weapon.damage.min": 13,
-            "weapon.damage.max": 20,
-            "weapon.attack.time": 1.3,
             "armor": 50,
-            "poise.max": 45,
-            "mana.max": 200,
-            "mana.regen": 14,
-            "stamina.max": 100,
-            "stamina.regen": 16
+            "poise.max": 45
           },
           "modifiers": [
             {
@@ -64,7 +71,6 @@
             }
           ]
         },
-        "statuses": {},
         "weaves": {
           "list": [
             "ground_slam",
@@ -82,7 +88,7 @@
           "id": "stone_golem",
           "look": "golem_stone_assembled"
         },
-        "combat_translation": "Ground Slam retained; Strike replaces claw. The older Stone Warden remains a separate unchanged contract.",
+        "combat_translation": "Ground Slam retained; Strike replaces claw. The older Stone Warden remains separate; its intentional mass/appearance migration is recorded in patterns-golems.json.",
         "physical_translation": "Authored effective mass of a jointed magical body; no automatic immunity, flight or phasing.",
         "ai_handoff": {
           "current": "golem_bound_guard",
@@ -98,23 +104,16 @@
     {
       "id": "fire_golem",
       "name": "Fire Golem",
-      "extends": "creature",
+      "extends": "bound_golem_body",
       "faction": "players",
       "level": 5,
       "height": 2.2,
       "radius": 0.55,
       "tags": [
-        "construct",
-        "golem",
         "summonable",
-        "no_corpse",
-        "family.golem",
         "body.fire",
         "thread.ember",
         "assembly.kindled",
-        "locomotion.ground",
-        "size.large",
-        "habitat.bound_service",
         "role.artillery",
         "ranged"
       ],
@@ -138,21 +137,10 @@
         },
         "stats": {
           "attributes": {
-            "life.max": 170,
-            "might": 16,
-            "grace": 6,
-            "will": 18,
-            "vigor": 16,
+            "life.max": "140 + (level - 1) * 14",
             "move.speed": 3.7,
-            "weapon.damage.min": 13,
-            "weapon.damage.max": 20,
-            "weapon.attack.time": 1.3,
             "armor": 20,
-            "poise.max": 18,
-            "mana.max": 200,
-            "mana.regen": 14,
-            "stamina.max": 100,
-            "stamina.regen": 16
+            "poise.max": 18
           },
           "modifiers": [
             {
@@ -162,7 +150,6 @@
             }
           ]
         },
-        "statuses": {},
         "weaves": {
           "list": [
             "firebolt",
@@ -196,23 +183,16 @@
     {
       "id": "ice_golem",
       "name": "Ice Golem",
-      "extends": "creature",
+      "extends": "bound_golem_body",
       "faction": "players",
       "level": 5,
       "height": 2.4,
       "radius": 0.6,
       "tags": [
-        "construct",
-        "golem",
         "summonable",
-        "no_corpse",
-        "family.golem",
         "body.ice",
         "thread.tide",
         "assembly.prisms",
-        "locomotion.ground",
-        "size.large",
-        "habitat.bound_service",
         "role.guardian",
         "melee"
       ],
@@ -232,21 +212,10 @@
         },
         "stats": {
           "attributes": {
-            "life.max": 195,
-            "might": 16,
-            "grace": 6,
-            "will": 18,
-            "vigor": 16,
+            "life.max": "160 + (level - 1) * 14",
             "move.speed": 3.4,
-            "weapon.damage.min": 13,
-            "weapon.damage.max": 20,
-            "weapon.attack.time": 1.3,
             "armor": 30,
-            "poise.max": 28,
-            "mana.max": 200,
-            "mana.regen": 14,
-            "stamina.max": 100,
-            "stamina.regen": 16
+            "poise.max": 28
           },
           "modifiers": [
             {
@@ -256,7 +225,6 @@
             }
           ]
         },
-        "statuses": {},
         "weaves": {
           "list": [
             "frostbolt",
@@ -290,23 +258,16 @@
     {
       "id": "lightning_golem",
       "name": "Lightning Golem",
-      "extends": "creature",
+      "extends": "bound_golem_body",
       "faction": "players",
       "level": 5,
       "height": 2.5,
       "radius": 0.575,
       "tags": [
-        "construct",
-        "golem",
         "summonable",
-        "no_corpse",
-        "family.golem",
         "body.lightning",
         "thread.storm",
         "assembly.conductors",
-        "locomotion.ground",
-        "size.large",
-        "habitat.bound_service",
         "role.guardian",
         "melee"
       ],
@@ -334,21 +295,10 @@
         },
         "stats": {
           "attributes": {
-            "life.max": 180,
-            "might": 16,
-            "grace": 6,
-            "will": 18,
-            "vigor": 16,
+            "life.max": "150 + (level - 1) * 14",
             "move.speed": 3.9,
-            "weapon.damage.min": 13,
-            "weapon.damage.max": 20,
-            "weapon.attack.time": 1.3,
             "armor": 25,
-            "poise.max": 25,
-            "mana.max": 200,
-            "mana.regen": 14,
-            "stamina.max": 100,
-            "stamina.regen": 16
+            "poise.max": 25
           },
           "modifiers": [
             {
@@ -358,7 +308,6 @@
             }
           ]
         },
-        "statuses": {},
         "weaves": {
           "list": [
             "storm_bolt",
@@ -391,23 +340,16 @@
     {
       "id": "blood_golem",
       "name": "Blood Golem",
-      "extends": "creature",
+      "extends": "bound_golem_body",
       "faction": "players",
       "level": 5,
       "height": 2.15,
       "radius": 0.65,
       "tags": [
-        "construct",
-        "golem",
         "summonable",
-        "no_corpse",
-        "family.golem",
         "body.blood",
-        "thread.void",
+        "thread.umbra",
         "assembly.clotted",
-        "locomotion.ground",
-        "size.large",
-        "habitat.bound_service",
         "role.guardian",
         "melee"
       ],
@@ -431,21 +373,10 @@
         },
         "stats": {
           "attributes": {
-            "life.max": 260,
-            "might": 16,
-            "grace": 6,
-            "will": 18,
-            "vigor": 16,
+            "life.max": "170 + (level - 1) * 14",
             "move.speed": 3.5,
-            "weapon.damage.min": 13,
-            "weapon.damage.max": 20,
-            "weapon.attack.time": 1.3,
             "armor": 10,
-            "poise.max": 20,
-            "mana.max": 200,
-            "mana.regen": 14,
-            "stamina.max": 100,
-            "stamina.regen": 16
+            "poise.max": 20
           },
           "modifiers": [
             {
@@ -454,13 +385,12 @@
               "value": 0.05
             },
             {
-              "attribute": "resist.void",
+              "attribute": "resist.umbra",
               "form": "flat",
               "value": 0.4
             }
           ]
         },
-        "statuses": {},
         "weaves": {
           "list": [
             "strike",
@@ -478,7 +408,7 @@
           "id": "blood_golem",
           "look": "golem_blood_assembled"
         },
-        "combat_translation": "Heavy Strike and life leech retained; Strike replaces claw and Void resistance translates chaos resistance.",
+        "combat_translation": "Heavy Strike and life leech retained; Strike replaces claw. Umbra resistance translates the source grave/blood chaos theme consistently with the port ledger.",
         "physical_translation": "Authored effective mass of a jointed magical body; no automatic immunity, flight or phasing.",
         "ai_handoff": {
           "current": "golem_bound_guard",

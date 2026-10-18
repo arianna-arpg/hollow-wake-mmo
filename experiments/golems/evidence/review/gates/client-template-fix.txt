@@ -1,0 +1,12 @@
+Test run for C:\Users\John\.codex\worktrees\golem-construct-foundation\MMOARPG\tests\HollowWake.Client.Tests\bin\Debug\net10.0\HollowWake.Client.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+[xUnit.net 00:00:04.47]     HollowWake.Client.Tests.AppearanceTests.EverySpawnedPatternHasItsOwnLook [FAIL]
+  Failed HollowWake.Client.Tests.AppearanceTests.EverySpawnedPatternHasItsOwnLook [11 ms]
+  Error Message:
+   patterns drawn by a fallback: bound_golem_body -> creature_fallback
+  Stack Trace:
+     at HollowWake.Client.Tests.AppearanceTests.EverySpawnedPatternHasItsOwnLook() in C:\Users\John\.codex\worktrees\golem-construct-foundation\MMOARPG\tests\HollowWake.Client.Tests\AppearanceTests.cs:line 89
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+
+Failed!  - Failed:     1, Passed:   116, Skipped:     0, Total:   117, Duration: 5 s - HollowWake.Client.Tests.dll (net10.0)

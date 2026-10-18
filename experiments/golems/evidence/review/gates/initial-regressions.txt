@@ -1,0 +1,159 @@
+  Determining projects to restore...
+  All projects are up-to-date for restore.
+  HollowWake.Core -> C:\Users\John\.codex\worktrees\golem-construct-foundation\MMOARPG\src\HollowWake.Core\bin\Debug\net8.0\HollowWake.Core.dll
+C:\Users\John\.codex\worktrees\golem-construct-foundation\MMOARPG\tests\HollowWake.Core.Tests\GolemContentTests.cs(152,25): warning xUnit2030: Do not use Assert.NotEmpty to check if a value exists in a collection. Use Assert.Contains instead. (https://xunit.net/xunit.analyzers/rules/xUnit2030) [C:\Users\John\.codex\worktrees\golem-construct-foundation\MMOARPG\tests\HollowWake.Core.Tests\HollowWake.Core.Tests.csproj]
+C:\Users\John\.codex\worktrees\golem-construct-foundation\MMOARPG\tests\HollowWake.Core.Tests\PortedProjectileTests.cs(254,19): warning xUnit2031: Do not use a Where clause to filter before calling Assert.Single. Use the overload of Assert.Single that accepts a filtering function. (https://xunit.net/xunit.analyzers/rules/xUnit2031) [C:\Users\John\.codex\worktrees\golem-construct-foundation\MMOARPG\tests\HollowWake.Core.Tests\HollowWake.Core.Tests.csproj]
+C:\Users\John\.codex\worktrees\golem-construct-foundation\MMOARPG\tests\HollowWake.Core.Tests\PortedProjectileTests.cs(267,9): warning xUnit2031: Do not use a Where clause to filter before calling Assert.Single. Use the overload of Assert.Single that accepts a filtering function. (https://xunit.net/xunit.analyzers/rules/xUnit2031) [C:\Users\John\.codex\worktrees\golem-construct-foundation\MMOARPG\tests\HollowWake.Core.Tests\HollowWake.Core.Tests.csproj]
+C:\Users\John\.codex\worktrees\golem-construct-foundation\MMOARPG\tests\HollowWake.Core.Tests\PortedProjectileTests.cs(280,9): warning xUnit2031: Do not use a Where clause to filter before calling Assert.Single. Use the overload of Assert.Single that accepts a filtering function. (https://xunit.net/xunit.analyzers/rules/xUnit2031) [C:\Users\John\.codex\worktrees\golem-construct-foundation\MMOARPG\tests\HollowWake.Core.Tests\HollowWake.Core.Tests.csproj]
+  HollowWake.Core.Tests -> C:\Users\John\.codex\worktrees\golem-construct-foundation\MMOARPG\tests\HollowWake.Core.Tests\bin\Debug\net10.0\HollowWake.Core.Tests.dll
+Test run for C:\Users\John\.codex\worktrees\golem-construct-foundation\MMOARPG\tests\HollowWake.Core.Tests\bin\Debug\net10.0\HollowWake.Core.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+C:\Users\John\.codex\worktrees\golem-construct-foundation\MMOARPG\tests\HollowWake.Core.Tests\bin\Debug\net10.0\HollowWake.Core.Tests.dll
+[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v3.1.5+1b188a7b0a (64-bit .NET 10.0.13)
+[xUnit.net 00:00:00.12]   Discovering: HollowWake.Core.Tests
+[xUnit.net 00:00:02.18]   Discovered:  HollowWake.Core.Tests
+[xUnit.net 00:00:02.22]   Starting:    HollowWake.Core.Tests
+  Passed HollowWake.Core.Tests.GolemReviewTests.SalvageRollsShareProgressionInsteadOfASeveralFoldLifeLottery(level: 1) [96 ms]
+  Standard Output Messages:
+ Salvage L1: life 216.0-216.0; eight kits share weapon progression
+
+
+  Passed HollowWake.Core.Tests.GolemReviewTests.SalvageRollsShareProgressionInsteadOfASeveralFoldLifeLottery(level: 20) [1 ms]
+  Standard Output Messages:
+ Salvage L20: life 482.0-482.0; eight kits share weapon progression
+
+
+  Passed HollowWake.Core.Tests.GolemReviewTests.NamedBindingsUseOwnerLevelAndScaledCombatStats(level: 1) [1 s]
+  Standard Output Messages:
+ stone_golem owner L1: life 244.00, weapon 7.00-12.00
+ fire_golem owner L1: life 204.00, weapon 7.00-12.00
+ ice_golem owner L1: life 224.00, weapon 7.00-12.00
+ lightning_golem owner L1: life 214.00, weapon 7.00-12.00
+ blood_golem owner L1: life 234.00, weapon 7.00-12.00
+
+
+  Passed HollowWake.Core.Tests.GolemReviewTests.NamedBindingsUseOwnerLevelAndScaledCombatStats(level: 20) [18 ms]
+  Standard Output Messages:
+ stone_golem owner L20: life 510.00, weapon 20.30-32.90
+ fire_golem owner L20: life 470.00, weapon 20.30-32.90
+ ice_golem owner L20: life 490.00, weapon 20.30-32.90
+ lightning_golem owner L20: life 480.00, weapon 20.30-32.90
+ blood_golem owner L20: life 500.00, weapon 20.30-32.90
+
+
+  Passed HollowWake.Core.Tests.GolemPrototypeTests.NamedContractsFightRespawnAndReplaceExistingWardensWithoutRewards(id: "stone_golem") [1 s]
+  Passed HollowWake.Core.Tests.GolemReviewTests.WorksAndCourtHaveReciprocalStancesAndActuallyReturnFire(faction: "unbound_constructs", pattern: "clay_golem") [78 ms]
+  Passed HollowWake.Core.Tests.GolemPrototypeTests.NamedContractsFightRespawnAndReplaceExistingWardensWithoutRewards(id: "blood_golem") [47 ms]
+  Passed HollowWake.Core.Tests.GolemPrototypeTests.NamedContractsFightRespawnAndReplaceExistingWardensWithoutRewards(id: "fire_golem") [49 ms]
+[xUnit.net 00:00:03.71]     HollowWake.Core.Tests.WorldGenGoldenTests.ZoneMatchesGoldenHashes(x: 0, y: -1, infoHash: "330979854289527A", chunksHash: "44FDA182BF6A81C9") [FAIL]
+[xUnit.net 00:00:03.71]       zone(0,-1) info and chunks: expected 330979854289527A 44FDA182BF6A81C9, generated F75575B10A717024 44FDA182BF6A81C9. Generation output changed; update the constant only if that was intended.
+[xUnit.net 00:00:03.71]       Stack Trace:
+[xUnit.net 00:00:03.71]         C:\Users\John\.codex\worktrees\golem-construct-foundation\MMOARPG\tests\HollowWake.Core.Tests\WorldGenGoldenTests.cs(165,0): at HollowWake.Core.Tests.WorldGenGoldenTests.Golden(String what, String expected, String actual)
+[xUnit.net 00:00:03.72]         C:\Users\John\.codex\worktrees\golem-construct-foundation\MMOARPG\tests\HollowWake.Core.Tests\WorldGenGoldenTests.cs(56,0): at HollowWake.Core.Tests.WorldGenGoldenTests.ZoneMatchesGoldenHashes(Int32 x, Int32 y, String infoHash, String chunksHash)
+[xUnit.net 00:00:03.72]            at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+[xUnit.net 00:00:03.72]            at System.Reflection.MethodBaseInvoker.InvokeDirectByRefWithFewArgs(Object obj, Span`1 copyOfArgs, BindingFlags invokeAttr)
+[xUnit.net 00:00:04.08]     HollowWake.Core.Tests.WorldGenGoldenTests.ZoneMatchesGoldenHashes(x: 1, y: 0, infoHash: "B1165AE2155D27CE", chunksHash: "719165F3D645E5F0") [FAIL]
+[xUnit.net 00:00:04.08]       zone(1,0) info and chunks: expected B1165AE2155D27CE 719165F3D645E5F0, generated FB8641E6E0F2A968 6615F2EDE81806A7. Generation output changed; update the constant only if that was intended.
+[xUnit.net 00:00:04.08]       Stack Trace:
+[xUnit.net 00:00:04.08]         C:\Users\John\.codex\worktrees\golem-construct-foundation\MMOARPG\tests\HollowWake.Core.Tests\WorldGenGoldenTests.cs(165,0): at HollowWake.Core.Tests.WorldGenGoldenTests.Golden(String what, String expected, String actual)
+[xUnit.net 00:00:04.08]         C:\Users\John\.codex\worktrees\golem-construct-foundation\MMOARPG\tests\HollowWake.Core.Tests\WorldGenGoldenTests.cs(56,0): at HollowWake.Core.Tests.WorldGenGoldenTests.ZoneMatchesGoldenHashes(Int32 x, Int32 y, String infoHash, String chunksHash)
+[xUnit.net 00:00:04.08]            at InvokeStub_WorldGenGoldenTests.ZoneMatchesGoldenHashes(Object, Span`1)
+[xUnit.net 00:00:04.08]            at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:04.41]     HollowWake.Core.Tests.WorldGenGoldenTests.ZoneMatchesGoldenHashes(x: 0, y: 0, infoHash: "A975CEC42D2B310F", chunksHash: "B4967CED570DD0B6") [FAIL]
+[xUnit.net 00:00:04.41]       zone(0,0) info and chunks: expected A975CEC42D2B310F B4967CED570DD0B6, generated B4668A5E618C47CC B4967CED570DD0B6. Generation output changed; update the constant only if that was intended.
+[xUnit.net 00:00:04.41]       Stack Trace:
+[xUnit.net 00:00:04.41]         C:\Users\John\.codex\worktrees\golem-construct-foundation\MMOARPG\tests\HollowWake.Core.Tests\WorldGenGoldenTests.cs(165,0): at HollowWake.Core.Tests.WorldGenGoldenTests.Golden(String what, String expected, String actual)
+[xUnit.net 00:00:04.41]         C:\Users\John\.codex\worktrees\golem-construct-foundation\MMOARPG\tests\HollowWake.Core.Tests\WorldGenGoldenTests.cs(56,0): at HollowWake.Core.Tests.WorldGenGoldenTests.ZoneMatchesGoldenHashes(Int32 x, Int32 y, String infoHash, String chunksHash)
+[xUnit.net 00:00:04.41]            at InvokeStub_WorldGenGoldenTests.ZoneMatchesGoldenHashes(Object, Span`1)
+[xUnit.net 00:00:04.41]            at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Passed HollowWake.Core.Tests.GolemReviewTests.WorksAndCourtHaveReciprocalStancesAndActuallyReturnFire(faction: "grafted_court", pattern: "amalgam_horror") [81 ms]
+  Passed HollowWake.Core.Tests.GolemReviewTests.LegacyWardenFightsThroughItsActualOwnerBoundPath [28 ms]
+  Failed HollowWake.Core.Tests.WorldGenGoldenTests.ZoneMatchesGoldenHashes(x: 0, y: -1, infoHash: "330979854289527A", chunksHash: "44FDA182BF6A81C9") [1 s]
+  Error Message:
+   zone(0,-1) info and chunks: expected 330979854289527A 44FDA182BF6A81C9, generated F75575B10A717024 44FDA182BF6A81C9. Generation output changed; update the constant only if that was intended.
+  Stack Trace:
+     at HollowWake.Core.Tests.WorldGenGoldenTests.Golden(String what, String expected, String actual) in C:\Users\John\.codex\worktrees\golem-construct-foundation\MMOARPG\tests\HollowWake.Core.Tests\WorldGenGoldenTests.cs:line 165
+   at HollowWake.Core.Tests.WorldGenGoldenTests.ZoneMatchesGoldenHashes(Int32 x, Int32 y, String infoHash, String chunksHash) in C:\Users\John\.codex\worktrees\golem-construct-foundation\MMOARPG\tests\HollowWake.Core.Tests\WorldGenGoldenTests.cs:line 56
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeDirectByRefWithFewArgs(Object obj, Span`1 copyOfArgs, BindingFlags invokeAttr)
+  Passed HollowWake.Core.Tests.GolemPrototypeTests.NamedContractsFightRespawnAndReplaceExistingWardensWithoutRewards(id: "lightning_golem") [56 ms]
+  Passed HollowWake.Core.Tests.GolemPrototypeTests.NamedContractsFightRespawnAndReplaceExistingWardensWithoutRewards(id: "ice_golem") [67 ms]
+  Failed HollowWake.Core.Tests.WorldGenGoldenTests.ZoneMatchesGoldenHashes(x: 1, y: 0, infoHash: "B1165AE2155D27CE", chunksHash: "719165F3D645E5F0") [372 ms]
+  Error Message:
+   zone(1,0) info and chunks: expected B1165AE2155D27CE 719165F3D645E5F0, generated FB8641E6E0F2A968 6615F2EDE81806A7. Generation output changed; update the constant only if that was intended.
+  Stack Trace:
+     at HollowWake.Core.Tests.WorldGenGoldenTests.Golden(String what, String expected, String actual) in C:\Users\John\.codex\worktrees\golem-construct-foundation\MMOARPG\tests\HollowWake.Core.Tests\WorldGenGoldenTests.cs:line 165
+   at HollowWake.Core.Tests.WorldGenGoldenTests.ZoneMatchesGoldenHashes(Int32 x, Int32 y, String infoHash, String chunksHash) in C:\Users\John\.codex\worktrees\golem-construct-foundation\MMOARPG\tests\HollowWake.Core.Tests\WorldGenGoldenTests.cs:line 56
+   at InvokeStub_WorldGenGoldenTests.ZoneMatchesGoldenHashes(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Passed HollowWake.Core.Tests.GolemReviewTests.WardenRetainsLegacyStatsWhileItsExplicitMassAndAppearanceAreDeliberate(level: 1) [491 ms]
+  Standard Output Messages:
+ Warden L1: life 122, mana 47, regen 1.32/12; mass 1905.9039763946525 kg
+
+
+  Failed HollowWake.Core.Tests.WorldGenGoldenTests.ZoneMatchesGoldenHashes(x: 0, y: 0, infoHash: "A975CEC42D2B310F", chunksHash: "B4967CED570DD0B6") [326 ms]
+  Error Message:
+   zone(0,0) info and chunks: expected A975CEC42D2B310F B4967CED570DD0B6, generated B4668A5E618C47CC B4967CED570DD0B6. Generation output changed; update the constant only if that was intended.
+  Stack Trace:
+     at HollowWake.Core.Tests.WorldGenGoldenTests.Golden(String what, String expected, String actual) in C:\Users\John\.codex\worktrees\golem-construct-foundation\MMOARPG\tests\HollowWake.Core.Tests\WorldGenGoldenTests.cs:line 165
+   at HollowWake.Core.Tests.WorldGenGoldenTests.ZoneMatchesGoldenHashes(Int32 x, Int32 y, String infoHash, String chunksHash) in C:\Users\John\.codex\worktrees\golem-construct-foundation\MMOARPG\tests\HollowWake.Core.Tests\WorldGenGoldenTests.cs:line 56
+   at InvokeStub_WorldGenGoldenTests.ZoneMatchesGoldenHashes(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:04.73]     HollowWake.Core.Tests.WorldGenGoldenTests.ZoneMatchesGoldenHashes(x: 3, y: 2, infoHash: "0CC30AA46F8AF08C", chunksHash: "15C99D20020E2BF4") [FAIL]
+[xUnit.net 00:00:04.73]       zone(3,2) info and chunks: expected 0CC30AA46F8AF08C 15C99D20020E2BF4, generated 1AF0288C5B48224A 15C99D20020E2BF4. Generation output changed; update the constant only if that was intended.
+[xUnit.net 00:00:04.73]       Stack Trace:
+[xUnit.net 00:00:04.73]         C:\Users\John\.codex\worktrees\golem-construct-foundation\MMOARPG\tests\HollowWake.Core.Tests\WorldGenGoldenTests.cs(165,0): at HollowWake.Core.Tests.WorldGenGoldenTests.Golden(String what, String expected, String actual)
+[xUnit.net 00:00:04.73]         C:\Users\John\.codex\worktrees\golem-construct-foundation\MMOARPG\tests\HollowWake.Core.Tests\WorldGenGoldenTests.cs(56,0): at HollowWake.Core.Tests.WorldGenGoldenTests.ZoneMatchesGoldenHashes(Int32 x, Int32 y, String infoHash, String chunksHash)
+[xUnit.net 00:00:04.73]            at InvokeStub_WorldGenGoldenTests.ZoneMatchesGoldenHashes(Object, Span`1)
+[xUnit.net 00:00:04.73]            at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:05.38]     HollowWake.Core.Tests.WorldGenGoldenTests.OverlaidWorldMatchesGoldenHash [FAIL]
+[xUnit.net 00:00:05.38]       overlaid world: expected FBF3EE3DF4583601, generated 6FA306B417408A1D. Generation output changed; update the constant only if that was intended.
+[xUnit.net 00:00:05.38]       Stack Trace:
+[xUnit.net 00:00:05.38]         C:\Users\John\.codex\worktrees\golem-construct-foundation\MMOARPG\tests\HollowWake.Core.Tests\WorldGenGoldenTests.cs(165,0): at HollowWake.Core.Tests.WorldGenGoldenTests.Golden(String what, String expected, String actual)
+[xUnit.net 00:00:05.38]         C:\Users\John\.codex\worktrees\golem-construct-foundation\MMOARPG\tests\HollowWake.Core.Tests\WorldGenGoldenTests.cs(104,0): at HollowWake.Core.Tests.WorldGenGoldenTests.OverlaidWorldMatchesGoldenHash()
+[xUnit.net 00:00:05.38]            at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+[xUnit.net 00:00:05.38]            at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+[xUnit.net 00:00:05.69]   Finished:    HollowWake.Core.Tests
+  Passed HollowWake.Core.Tests.GolemReviewTests.WardenRetainsLegacyStatsWhileItsExplicitMassAndAppearanceAreDeliberate(level: 3) [411 ms]
+  Standard Output Messages:
+ Warden L3: life 142, mana 57, regen 1.32/12; mass 1905.9039763946525 kg
+
+
+  Failed HollowWake.Core.Tests.WorldGenGoldenTests.ZoneMatchesGoldenHashes(x: 3, y: 2, infoHash: "0CC30AA46F8AF08C", chunksHash: "15C99D20020E2BF4") [322 ms]
+  Error Message:
+   zone(3,2) info and chunks: expected 0CC30AA46F8AF08C 15C99D20020E2BF4, generated 1AF0288C5B48224A 15C99D20020E2BF4. Generation output changed; update the constant only if that was intended.
+  Stack Trace:
+     at HollowWake.Core.Tests.WorldGenGoldenTests.Golden(String what, String expected, String actual) in C:\Users\John\.codex\worktrees\golem-construct-foundation\MMOARPG\tests\HollowWake.Core.Tests\WorldGenGoldenTests.cs:line 165
+   at HollowWake.Core.Tests.WorldGenGoldenTests.ZoneMatchesGoldenHashes(Int32 x, Int32 y, String infoHash, String chunksHash) in C:\Users\John\.codex\worktrees\golem-construct-foundation\MMOARPG\tests\HollowWake.Core.Tests\WorldGenGoldenTests.cs:line 56
+   at InvokeStub_WorldGenGoldenTests.ZoneMatchesGoldenHashes(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Passed HollowWake.Core.Tests.WorldGenGoldenTests.ClimateSamplesMatchGoldenHash [46 ms]
+  Passed HollowWake.Core.Tests.WorldGenGoldenTests.StartZoneIsTheOrigin [3 ms]
+  Passed HollowWake.Core.Tests.GolemReviewTests.WardenRetainsLegacyStatsWhileItsExplicitMassAndAppearanceAreDeliberate(level: 20) [419 ms]
+  Standard Output Messages:
+ Warden L20: life 312, mana 142, regen 1.32/12; mass 1905.9039763946525 kg
+
+
+  Failed HollowWake.Core.Tests.WorldGenGoldenTests.OverlaidWorldMatchesGoldenHash [598 ms]
+  Error Message:
+   overlaid world: expected FBF3EE3DF4583601, generated 6FA306B417408A1D. Generation output changed; update the constant only if that was intended.
+  Stack Trace:
+     at HollowWake.Core.Tests.WorldGenGoldenTests.Golden(String what, String expected, String actual) in C:\Users\John\.codex\worktrees\golem-construct-foundation\MMOARPG\tests\HollowWake.Core.Tests\WorldGenGoldenTests.cs:line 165
+   at HollowWake.Core.Tests.WorldGenGoldenTests.OverlaidWorldMatchesGoldenHash() in C:\Users\John\.codex\worktrees\golem-construct-foundation\MMOARPG\tests\HollowWake.Core.Tests\WorldGenGoldenTests.cs:line 104
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  Passed HollowWake.Core.Tests.GolemReviewTests.SparseSitesUseRegionsAndWeightsWithoutExcludingShrinesAcrossTheZone [669 ms]
+  Standard Output Messages:
+ golem_foundry coexists with ruin at 121.3 m in zone(-19,-32)
+ golem_quarry coexists with knot at 137.7 m in zone(1,-32)
+ amalgam_suture_works coexists with shrine at 93.8 m in zone(-26,-30)
+ golem_sawmill coexists with knot at 112.5 m in zone(-8,-23)
+ golem_kiln coexists with ruin at 92.1 m in zone(3,-12)
+
+
+
+Test Run Failed.
+Total tests: 23
+     Passed: 18
+     Failed: 5
+ Total time: 6.9105 Seconds

@@ -1,0 +1,16 @@
+
+> hollow-wake-web@0.1.0 test
+> vitest run --run
+
+
+ RUN  v5.0.3 C:/Users/John/.codex/worktrees/golem-construct-foundation/MMOARPG/web
+
+
+ Test Files  34 passed (34)
+      Tests  269 passed (269)
+   Start at  12:26:52
+   Duration  3.17s (transform 51%, import 40%, tests 8%, worker 1%)
+
+  Transform  transforming modules took 18.46s · 51% of tracked time, re-done on every run
+             persist transforms across runs with fsModuleCache: true
+             learn more: https://vitest.dev/guide/improving-performance#caching-between-reruns

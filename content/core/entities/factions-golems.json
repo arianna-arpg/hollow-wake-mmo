@@ -12,7 +12,11 @@
         "lantern_chancery": "hostile",
         "weftmarch_compact": "hostile",
         "longwake_company": "hostile",
-        "mended_thread": "hostile"
+        "mended_thread": "hostile",
+        "wilds": "hostile",
+        "the_loosed": "hostile",
+        "tangled": "hostile",
+        "remnant": "hostile"
       }
     }
   ]

@@ -17,7 +17,10 @@
             "stamina.max": 100,
             "stamina.regen": 16,
             "mana.max": 80,
-            "mana.regen": 12
+            "mana.regen": 12,
+            "life.max": "160 + (level - 1) * 14",
+            "weapon.damage.min": "7 + (level - 1) * 0.7",
+            "weapon.damage.max": "12 + (level - 1) * 1.1"
           }
         },
         "statuses": {}
@@ -62,14 +65,11 @@
         },
         "stats": {
           "attributes": {
-            "life.max": 145,
             "might": 16,
             "grace": 5,
             "will": 6,
             "vigor": 14,
             "move.speed": 3.4,
-            "weapon.damage.min": 12,
-            "weapon.damage.max": 18,
             "weapon.attack.time": 1.35,
             "armor": 20,
             "poise.max": 15
@@ -108,7 +108,8 @@
             "repair and reassembly",
             "forecast-aware choice of shove and target mass"
           ]
-        }
+        },
+        "balance": "Wild and salvaged bodies share level-scaled base life and weapon damage. Speed, defenses, kit and mass remain material-specific tradeoffs; salvage is rerollable, not a 2.3x life lottery."
       }
     },
     {
@@ -154,14 +155,11 @@
         },
         "stats": {
           "attributes": {
-            "life.max": 240,
             "might": 18,
             "grace": 5,
             "will": 6,
             "vigor": 14,
             "move.speed": 2.8,
-            "weapon.damage.min": 17,
-            "weapon.damage.max": 25,
             "weapon.attack.time": 1.35,
             "armor": 55,
             "poise.max": 40
@@ -201,7 +199,8 @@
             "repair and reassembly",
             "forecast-aware choice of shove and target mass"
           ]
-        }
+        },
+        "balance": "Wild and salvaged bodies share level-scaled base life and weapon damage. Speed, defenses, kit and mass remain material-specific tradeoffs; salvage is rerollable, not a 2.3x life lottery."
       }
     },
     {
@@ -247,14 +246,11 @@
         },
         "stats": {
           "attributes": {
-            "life.max": 340,
             "might": 21,
             "grace": 5,
             "will": 6,
             "vigor": 14,
             "move.speed": 2.6,
-            "weapon.damage.min": 20,
-            "weapon.damage.max": 30,
             "weapon.attack.time": 1.35,
             "armor": 90,
             "poise.max": 65
@@ -293,7 +289,8 @@
             "repair and reassembly",
             "forecast-aware choice of shove and target mass"
           ]
-        }
+        },
+        "balance": "Wild and salvaged bodies share level-scaled base life and weapon damage. Speed, defenses, kit and mass remain material-specific tradeoffs; salvage is rerollable, not a 2.3x life lottery."
       }
     },
     {
@@ -339,14 +336,11 @@
         },
         "stats": {
           "attributes": {
-            "life.max": 175,
             "might": 20,
             "grace": 5,
             "will": 18,
             "vigor": 14,
             "move.speed": 3.6,
-            "weapon.damage.min": 10,
-            "weapon.damage.max": 16,
             "weapon.attack.time": 1.35,
             "armor": 35,
             "poise.max": 24
@@ -384,7 +378,8 @@
             "repair and reassembly",
             "forecast-aware choice of shove and target mass"
           ]
-        }
+        },
+        "balance": "Wild and salvaged bodies share level-scaled base life and weapon damage. Speed, defenses, kit and mass remain material-specific tradeoffs; salvage is rerollable, not a 2.3x life lottery."
       }
     },
     {
@@ -430,14 +425,11 @@
         },
         "stats": {
           "attributes": {
-            "life.max": 190,
             "might": 17,
             "grace": 5,
             "will": 6,
             "vigor": 14,
             "move.speed": 3.7,
-            "weapon.damage.min": 13,
-            "weapon.damage.max": 20,
             "weapon.attack.time": 1.35,
             "armor": 25,
             "poise.max": 25
@@ -476,7 +468,8 @@
             "repair and reassembly",
             "forecast-aware choice of shove and target mass"
           ]
-        }
+        },
+        "balance": "Wild and salvaged bodies share level-scaled base life and weapon damage. Speed, defenses, kit and mass remain material-specific tradeoffs; salvage is rerollable, not a 2.3x life lottery."
       }
     },
     {
@@ -522,14 +515,11 @@
         },
         "stats": {
           "attributes": {
-            "life.max": 160,
             "might": 17,
             "grace": 5,
             "will": 6,
             "vigor": 14,
             "move.speed": 3,
-            "weapon.damage.min": 11,
-            "weapon.damage.max": 18,
             "weapon.attack.time": 1.35,
             "armor": 40,
             "poise.max": 22
@@ -567,7 +557,8 @@
             "repair and reassembly",
             "forecast-aware choice of shove and target mass"
           ]
-        }
+        },
+        "balance": "Wild and salvaged bodies share level-scaled base life and weapon damage. Speed, defenses, kit and mass remain material-specific tradeoffs; salvage is rerollable, not a 2.3x life lottery."
       }
     },
     {
@@ -613,14 +604,11 @@
         },
         "stats": {
           "attributes": {
-            "life.max": 320,
             "might": 22,
             "grace": 5,
             "will": 6,
             "vigor": 14,
             "move.speed": 2.4,
-            "weapon.damage.min": 18,
-            "weapon.damage.max": 28,
             "weapon.attack.time": 1.35,
             "armor": 70,
             "poise.max": 55
@@ -659,7 +647,8 @@
             "repair and reassembly",
             "forecast-aware choice of shove and target mass"
           ]
-        }
+        },
+        "balance": "Wild and salvaged bodies share level-scaled base life and weapon damage. Speed, defenses, kit and mass remain material-specific tradeoffs; salvage is rerollable, not a 2.3x life lottery."
       }
     },
     {
@@ -709,14 +698,11 @@
         },
         "stats": {
           "attributes": {
-            "life.max": 220,
             "might": 19,
             "grace": 5,
             "will": 6,
             "vigor": 14,
             "move.speed": 3.1,
-            "weapon.damage.min": 14,
-            "weapon.damage.max": 22,
             "weapon.attack.time": 1.35,
             "armor": 40,
             "poise.max": 30
@@ -756,13 +742,14 @@
             "repair and reassembly",
             "forecast-aware choice of shove and target mass"
           ]
-        }
+        },
+        "balance": "Wild and salvaged bodies share level-scaled base life and weapon damage. Speed, defenses, kit and mass remain material-specific tradeoffs; salvage is rerollable, not a 2.3x life lottery."
       }
     },
     {
       "id": "stone_warden",
       "name": "Stone Warden",
-      "extends": "golem_body",
+      "extends": "creature",
       "tags": [
         "stone",
         "warden",
@@ -832,7 +819,7 @@
           "id": "stone_golem",
           "look": "golem_stone_assembled"
         },
-        "compatibility": "Existing ID, faction, dimensions, combat stats, reduction and bind contract preserved. Gains explicit physical mass and shared resource pools; remains reward-free and summon-only.",
+        "compatibility": "ID, faction, dimensions, original stats including inherited resource formulas/regeneration, Warden Slam, reduction and binding retained. Explicit 1905.904 kg mass replaces the old 80 kg reference, intentionally changing shove response. Adds construct classifiers and assembled geometry with scale jitter disabled. Reward-free, summon-only; not an additions-only behavioral change.",
         "materials": "Existing global 10% damage reduction is an authored modifier, not an automatic stone immunity.",
         "ai_handoff": {
           "current": "minion_melee",

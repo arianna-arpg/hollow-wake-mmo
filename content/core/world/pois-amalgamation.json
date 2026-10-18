@@ -11,7 +11,7 @@
       ],
       "weight": 0.2,
       "radius": 12,
-      "min_spacing": 220,
+      "min_spacing": 64,
       "slope": {
         "max": 0.5
       },
@@ -34,7 +34,7 @@
           ],
           "respawn": 900,
           "level": {
-            "min": 14
+            "min": 9
           }
         }
       ],
@@ -43,7 +43,12 @@
       ],
       "meta": {
         "encounter": "Single assembled guardian; fixed content adaptation, not the prototype hunt-and-graft event."
-      }
+      },
+      "regions": [
+        "sallows",
+        "hush",
+        "fray"
+      ]
     }
   ]
 }

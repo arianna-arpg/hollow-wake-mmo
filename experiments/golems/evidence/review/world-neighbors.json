@@ -1,0 +1,307 @@
+[
+  {
+    "zone": "zone(0,0)",
+    "removedNearby": [
+      "poi.1_0.orc_hold.431.198: orc_hold, Iron-Tusk Hold, 431.5,198.5, height=7.736144, level=8",
+      "poi.-1_1.scrap_fort.-234.294: scrap_fort, Scrap Fort, -234.5,294.5, height=20.447456, level=11",
+      "poi.0_1.knot.125.310: knot, a Skyfall, 125.5,310.5, height=21.279917, level=3"
+    ],
+    "addedNearby": [
+      "poi.1_0.orc_chaincamp.431.198: orc_chaincamp, Chainkeeper Camp, 431.5,198.5, height=7.736144, level=8",
+      "poi.-1_1.ruin.-234.294: ruin, the Old Seam, -234.5,294.5, height=20.447456, level=7",
+      "poi.0_1.orc_chaincamp.125.310: orc_chaincamp, Chainkeeper Camp, 125.5,310.5, height=21.279917, level=8"
+    ],
+    "changedChunks": [],
+    "questsBefore": [
+      {
+        "Id": "gen.poi.0_0.hamlet.128.128.clear_knot.0",
+        "Name": "The Hob\u0027s Hollow",
+        "Description": "A Knot has tangled near Ninewells. Walk into it and unmake what crawled out.",
+        "Objectives": [
+          {
+            "Id": "reach",
+            "Type": "reach",
+            "Target": null,
+            "Tags": [],
+            "Count": 1,
+            "Zone": null,
+            "Poi": "poi.0_0.knot.200.60",
+            "Text": "Find Hob\u0027s Hollow",
+            "Optional": false
+          },
+          {
+            "Id": "cull",
+            "Type": "kill",
+            "Target": "cinder_imp",
+            "Tags": [],
+            "Count": 6,
+            "Zone": null,
+            "Poi": null,
+            "Text": "Unmake six Cinder Imp",
+            "Optional": false
+          }
+        ]
+      },
+      {
+        "Id": "gen.poi.0_0.hamlet.128.128.gather_floss.1",
+        "Name": "Loose Threads",
+        "Description": "The weavers of Ninewells want floss and the hedgerows are full of it.",
+        "Objectives": [
+          {
+            "Id": "gather",
+            "Type": "collect",
+            "Target": "thread_floss",
+            "Tags": [],
+            "Count": 5,
+            "Zone": null,
+            "Poi": null,
+            "Text": "Gather five Thread Floss",
+            "Optional": false
+          }
+        ]
+      },
+      {
+        "Id": "gen.poi.0_0.hamlet.128.128.cull_beasts.2",
+        "Name": "Teeth in the Hedge",
+        "Description": "Beasts press on Ninewells.",
+        "Objectives": [
+          {
+            "Id": "cull",
+            "Type": "kill",
+            "Target": "wolverine",
+            "Tags": [],
+            "Count": 8,
+            "Zone": null,
+            "Poi": null,
+            "Text": "Cull eight Wolverine",
+            "Optional": false
+          }
+        ]
+      },
+      {
+        "Id": "gen.poi.0_0.hamlet.128.128.scout_ruin.3",
+        "Name": "What Stands at the Unquiet House",
+        "Description": "No one from Ninewells has walked to the Unquiet House in years.",
+        "Objectives": [
+          {
+            "Id": "find",
+            "Type": "discover",
+            "Target": null,
+            "Tags": [],
+            "Count": 1,
+            "Zone": null,
+            "Poi": "poi.1_0.ossuary.291.217",
+            "Text": "Find the Unquiet House",
+            "Optional": false
+          }
+        ]
+      }
+    ],
+    "questsAfter": [
+      {
+        "Id": "gen.poi.0_0.hamlet.128.128.clear_knot.0",
+        "Name": "The Hob\u0027s Hollow",
+        "Description": "A Knot has tangled near Ninewells. Walk into it and unmake what crawled out.",
+        "Objectives": [
+          {
+            "Id": "reach",
+            "Type": "reach",
+            "Target": null,
+            "Tags": [],
+            "Count": 1,
+            "Zone": null,
+            "Poi": "poi.0_0.knot.200.60",
+            "Text": "Find Hob\u0027s Hollow",
+            "Optional": false
+          },
+          {
+            "Id": "cull",
+            "Type": "kill",
+            "Target": "cinder_imp",
+            "Tags": [],
+            "Count": 6,
+            "Zone": null,
+            "Poi": null,
+            "Text": "Unmake six Cinder Imp",
+            "Optional": false
+          }
+        ]
+      },
+      {
+        "Id": "gen.poi.0_0.hamlet.128.128.gather_floss.1",
+        "Name": "Loose Threads",
+        "Description": "The weavers of Ninewells want floss and the hedgerows are full of it.",
+        "Objectives": [
+          {
+            "Id": "gather",
+            "Type": "collect",
+            "Target": "thread_floss",
+            "Tags": [],
+            "Count": 5,
+            "Zone": null,
+            "Poi": null,
+            "Text": "Gather five Thread Floss",
+            "Optional": false
+          }
+        ]
+      },
+      {
+        "Id": "gen.poi.0_0.hamlet.128.128.cull_beasts.2",
+        "Name": "Teeth in the Hedge",
+        "Description": "Beasts press on Ninewells.",
+        "Objectives": [
+          {
+            "Id": "cull",
+            "Type": "kill",
+            "Target": "wolverine",
+            "Tags": [],
+            "Count": 8,
+            "Zone": null,
+            "Poi": null,
+            "Text": "Cull eight Wolverine",
+            "Optional": false
+          }
+        ]
+      },
+      {
+        "Id": "gen.poi.0_0.hamlet.128.128.scout_ruin.3",
+        "Name": "What Stands at Chainkeeper Camp",
+        "Description": "No one from Ninewells has walked to Chainkeeper Camp in years.",
+        "Objectives": [
+          {
+            "Id": "find",
+            "Type": "discover",
+            "Target": null,
+            "Tags": [],
+            "Count": 1,
+            "Zone": null,
+            "Poi": "poi.0_1.orc_chaincamp.125.310",
+            "Text": "Find Chainkeeper Camp",
+            "Optional": false
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "zone": "zone(1,0)",
+    "removedNearby": [
+      "poi.1_0.orc_hold.431.198: orc_hold, Iron-Tusk Hold, 431.5,198.5, height=7.736144, level=8",
+      "poi.0_1.knot.125.310: knot, a Skyfall, 125.5,310.5, height=21.279917, level=3"
+    ],
+    "addedNearby": [
+      "poi.1_0.orc_chaincamp.431.198: orc_chaincamp, Chainkeeper Camp, 431.5,198.5, height=7.736144, level=8",
+      "poi.0_1.orc_chaincamp.125.310: orc_chaincamp, Chainkeeper Camp, 125.5,310.5, height=21.279917, level=8"
+    ],
+    "changedChunks": [
+      {
+        "chunk": "chunk(13,6)",
+        "heightsChanged": true,
+        "flagsChanged": true,
+        "biomeIndicesChanged": false,
+        "removedStamps": [
+          {
+            "PoiId": "poi.1_0.orc_hold.431.198",
+            "Landmark": "ruin_walls",
+            "CenterX": 431,
+            "CenterY": 198,
+            "BaseHeight": 7.736144
+          }
+        ],
+        "addedStamps": [
+          {
+            "PoiId": "poi.1_0.orc_chaincamp.431.198",
+            "Landmark": "camp_ring",
+            "CenterX": 431,
+            "CenterY": 198,
+            "BaseHeight": 7.736144
+          }
+        ],
+        "removedSpawns": [
+          {
+            "Pattern": "ruin_chest",
+            "X": 428.5,
+            "Y": 200.5,
+            "PackSize": 1,
+            "RespawnSeconds": 300,
+            "Group": "poi.1_0.orc_hold.431.198"
+          },
+          {
+            "Pattern": "hob",
+            "X": 446.5,
+            "Y": 216.5,
+            "PackSize": 3,
+            "RespawnSeconds": 120,
+            "Group": null
+          },
+          {
+            "Pattern": "goblin_sapper",
+            "X": 434.97833,
+            "Y": 197.21384,
+            "PackSize": 1,
+            "RespawnSeconds": 300,
+            "Group": "poi.1_0.orc_hold.431.198"
+          }
+        ],
+        "addedSpawns": [
+          {
+            "Pattern": "hob",
+            "X": 443.5,
+            "Y": 216.5,
+            "PackSize": 3,
+            "RespawnSeconds": 120,
+            "Group": null
+          },
+          {
+            "Pattern": "orc_ashcaller",
+            "X": 434.81485,
+            "Y": 204.54828,
+            "PackSize": 1,
+            "RespawnSeconds": 300,
+            "Group": "poi.1_0.orc_chaincamp.431.198"
+          },
+          {
+            "Pattern": "goblin_scavenger",
+            "X": 432.82635,
+            "Y": 199.68132,
+            "PackSize": 1,
+            "RespawnSeconds": 300,
+            "Group": "poi.1_0.orc_chaincamp.431.198"
+          }
+        ]
+      }
+    ],
+    "questsBefore": [],
+    "questsAfter": []
+  },
+  {
+    "zone": "zone(0,-1)",
+    "removedNearby": [
+      "poi.1_0.orc_hold.431.198: orc_hold, Iron-Tusk Hold, 431.5,198.5, height=7.736144, level=8"
+    ],
+    "addedNearby": [
+      "poi.1_0.orc_chaincamp.431.198: orc_chaincamp, Chainkeeper Camp, 431.5,198.5, height=7.736144, level=8"
+    ],
+    "changedChunks": [],
+    "questsBefore": [],
+    "questsAfter": []
+  },
+  {
+    "zone": "zone(3,2)",
+    "removedNearby": [
+      "poi.3_1.gnasher_pen.789.283: gnasher_pen, Gnasher Pens, 789.5,283.5, height=5.164064, level=5",
+      "poi.2_2.gnasher_pen.658.694: gnasher_pen, Gnasher Pens, 658.5,694.5, height=11.465487, level=5",
+      "poi.2_2.shrine.661.548: shrine, the Hedge Shrine, 661.5,548.5, height=6.0695996, level=1",
+      "poi.2_2.shrine.551.584: shrine, Nine Candles, 551.5,584.5, height=13.125869, level=1"
+    ],
+    "addedNearby": [
+      "poi.3_1.golem_sawmill.789.283: golem_sawmill, Forgotten Sawmill, 789.5,283.5, height=5.164064, level=4",
+      "poi.2_2.golem_sawmill.658.694: golem_sawmill, Forgotten Sawmill, 658.5,694.5, height=11.465487, level=4",
+      "poi.2_2.shrine.745.745: shrine, the Hedge Shrine, 745.5,745.5, height=9.667401, level=1",
+      "poi.2_2.shrine.731.636: shrine, Nine Candles, 731.5,636.5, height=6.328836, level=1"
+    ],
+    "changedChunks": [],
+    "questsBefore": [],
+    "questsAfter": []
+  }
+]
