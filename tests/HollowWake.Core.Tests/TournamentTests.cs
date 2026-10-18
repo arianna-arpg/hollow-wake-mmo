@@ -385,4 +385,47 @@ entries:
             Directory.Delete(dir, recursive: true);
         }
     }
+
+    [Fact]
+    public void AStatusWhoseApplierIsGoneIsItsBearersOwnNotDamageItDealt()
+    {
+        var dir = Scratch("evaluation-wisp");
+        try
+        {
+            // A summoner of imps that burn what they strike; past its cap an old imp gives way to a new one, and the
+            // burns it laid tick on, sourced from the body that bears them.
+            File.WriteAllText(Path.Combine(dir, "patterns.yaml"), """
+kind: patterns
+entries:
+  - id: t_wisp_caller
+    name: Wisp Caller
+    extends: monster
+    tags: [humanoid, caster]
+    level: 5
+    components:
+      stats: { attributes: { might: 6, grace: 9, will: 15, vigor: 8, move.speed: 4.8 } }
+      weaves: { list: [cinderwisp] }
+      behavior: { id: aggressive_ranged }
+""".Replace("\r\n", "\n"));
+            var registry = ContentRegistry.Load(new[] { CoreContent.FindContentDir(), dir }, out var report);
+            Assert.Empty(report.Errors);
+            var fight = Tournament.Duel(registry, new Pairing("t_wisp_caller", "proving_bulwark"), index: 0, seconds: 60);
+            var bulwark = fight.SideB;
+            // The burns that ticked on after their imp was gone are the bulwark's own, booked apart.
+            Assert.True(bulwark.SelfDamage > 0, "no self-sourced damage was booked");
+            // Its bite lands at most one hit per cast and it deals damage no other way, so its hits cannot outnumber its
+            // casts; booking those ticks as its work did exactly that.
+            Assert.InRange(bulwark.Hits, 1, bulwark.Casts);
+            // What it lays on itself, its shield's delay, is its own too, never a status it applied.
+            Assert.Contains("shield_delay", bulwark.SelfStatuses);
+            Assert.DoesNotContain("shield_delay", bulwark.StatusesApplied);
+            // The summoner is credited with its imps' work on the bulwark, and booked nothing as its own.
+            Assert.True(fight.SideA.DamageDealt > 0 && fight.SideA.Hits > 0);
+            Assert.Equal(0, fight.SideA.SelfDamage);
+        }
+        finally
+        {
+            Directory.Delete(dir, recursive: true);
+        }
+    }
 }

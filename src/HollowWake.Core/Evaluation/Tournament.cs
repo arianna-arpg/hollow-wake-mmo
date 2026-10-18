@@ -63,11 +63,14 @@ public sealed record Bands(double TtkMin, double TtkMax, double WinRateCeiling, 
 /// One side of one fight: what it dealt, cast and used. A side is its body and whatever it owns, its minions,
 /// constructs, projectiles and fields, found up the owner chain the way kill credit is
 /// (<see cref="DeathService.CreditTarget"/>), so damage, hits, crits, casts and statuses count whichever of them did
-/// them and a summoner's kit is measured as its kit. A hit is any application of damage that was not evaded, blocked
-/// ones included. <c>Kit</c> is how many weaves its body's book holds; <c>Weaves</c> are the weaves its body cast and
-/// those of its book that anything it owns cast, so distinct weaves over kit is the share of its kit it used, and a
-/// minion's own weaves count as casts but not as its owner's kit. <c>Spread</c> is how evenly those casts fell over
-/// the weaves cast, one being even.
+/// them and a summoner's kit is measured as its kit. Damage, hits, crits and statuses are a side's only when the side
+/// that owns their target is another (the foe, or a body neither side owns): what a side's own sources do to itself,
+/// a status ticking on once its applier is gone (the simulation then sources the tick from its bearer), a pool
+/// breaking, a buff it lays on itself, is its <c>SelfDamage</c> and <c>SelfStatuses</c> instead. A hit is any
+/// application of damage that was not evaded, blocked ones included. <c>Kit</c> is how many weaves its body's book
+/// holds; <c>Weaves</c> are the weaves its body cast and those of its book that anything it owns cast, so distinct
+/// weaves over kit is the share of its kit it used, and a minion's own weaves count as casts but not as its owner's
+/// kit. <c>Spread</c> is how evenly those casts fell over the weaves cast, one being even.
 /// </summary>
 public sealed record Side(
     string Pattern,
@@ -81,6 +84,8 @@ public sealed record Side(
     IReadOnlyList<string> Weaves,
     IReadOnlyList<string> Mechanisms,
     IReadOnlyList<string> StatusesApplied,
+    double SelfDamage,
+    IReadOnlyList<string> SelfStatuses,
     double LifeLeft);
 
 /// <summary>
@@ -93,7 +98,8 @@ public sealed record Fight(string A, string B, int Index, ulong Seed, string Out
 
 /// <summary>
 /// A pairing over its fights: its trace hash (folded over its fights' hashes in seed order), rates, the time-to-kill
-/// spread, variety, what each side used, and the bands it broke.
+/// spread, variety, what each side used, the self-sourced damage each side took over its fights and the self-sourced
+/// statuses it bore, and the bands it broke.
 /// </summary>
 public sealed record PairReport(
     string A,
@@ -114,6 +120,10 @@ public sealed record PairReport(
     IReadOnlyList<string> WeavesB,
     IReadOnlyList<string> MechanismsA,
     IReadOnlyList<string> MechanismsB,
+    double SelfDamageA,
+    double SelfDamageB,
+    IReadOnlyList<string> SelfStatusesA,
+    IReadOnlyList<string> SelfStatusesB,
     IReadOnlyList<string> Breaches);
 
 /// <summary>
@@ -135,8 +145,8 @@ public sealed record TournamentReport(int Seeds, double Seconds, string Hash, Ba
         foreach (var p in Pairs)
         {
             yield return FormattableString.Invariant($"{p.A + " v " + p.B,-44} {p.Fights,6} {p.WinRateA,7:0.00} {p.WinRateB,7:0.00} {p.DrawRate,6:0.00} {p.TtkMedian,8:0.#} {p.TtkLow,6:0.#} {p.TtkHigh,6:0.#} {p.VarietyA,6:0.00} {p.VarietyB,6:0.00} {p.SpreadA,6:0.00} {p.SpreadB,6:0.00}");
-            yield return $"    {p.A}: {string.Join(" ", p.WeavesA)} | {string.Join(" ", p.MechanismsA)}";
-            yield return $"    {p.B}: {string.Join(" ", p.WeavesB)} | {string.Join(" ", p.MechanismsB)}";
+            yield return FormattableString.Invariant($"    {p.A}: {string.Join(" ", p.WeavesA)} | {string.Join(" ", p.MechanismsA)} | self {p.SelfDamageA:0.#} {string.Join(" ", p.SelfStatusesA)}");
+            yield return FormattableString.Invariant($"    {p.B}: {string.Join(" ", p.WeavesB)} | {string.Join(" ", p.MechanismsB)} | self {p.SelfDamageB:0.#} {string.Join(" ", p.SelfStatusesB)}");
             foreach (var breach in p.Breaches)
             {
                 yield return $"    BREACH {breach}";
@@ -373,27 +383,36 @@ public static class Tournament
         trace.A = a;
         trace.B = b;
         var tallies = new Dictionary<long, Tally> { [a.Key] = new(a), [b.Key] = new(b) };
-        // Whatever a side owns works for it: credit climbs the owner chain from a minion, construct, projectile or
-        // field the way kill credit does.
-        Tally? Credit(Entity e) => tallies.TryGetValue(DeathService.CreditTarget(sim, e).Key, out var t) ? t : null;
+        // Whatever a side owns works for it: the side owning an entity is found up the owner chain from a minion,
+        // construct, projectile or field the way kill credit is.
+        Tally? Owning(Entity e) => tallies.TryGetValue(DeathService.CreditTarget(sim, e).Key, out var t) ? t : null;
         double? ended = null;
         var aDied = false;
         var bDied = false;
+        // Damage and statuses are a side's work only on a target another side owns, or none does. A source and a
+        // target of one side is that side's own doing to itself: a status ticking on once its applier is gone (the
+        // simulation sources the tick from its bearer then), a pool breaking, a self-buff. That is booked apart.
         sim.Events.Subscribe<DamageDealt>(d =>
         {
-            if (!d.Evaded && Credit(d.Source) is { } t)
+            if (d.Evaded || Owning(d.Source) is not { } by)
             {
-                t.Damage += d.Total;
-                t.Hits++;
-                if (d.Crit)
-                {
-                    t.Crits++;
-                }
+                return;
+            }
+            if (ReferenceEquals(by, Owning(d.Target)))
+            {
+                by.SelfDamage += d.Total;
+                return;
+            }
+            by.Damage += d.Total;
+            by.Hits++;
+            if (d.Crit)
+            {
+                by.Crits++;
             }
         });
         sim.Events.Subscribe<WeaveCast>(w =>
         {
-            if (Credit(w.Caster) is { } t)
+            if (Owning(w.Caster) is { } t)
             {
                 t.Casts++;
                 // Its weaves are its kit's: what its body cast, and what anything it owns cast from its body's book.
@@ -405,9 +424,9 @@ public static class Tournament
         });
         sim.Events.Subscribe<StatusApplied>(s =>
         {
-            if (Credit(s.Source) is { } t)
+            if (Owning(s.Source) is { } by)
             {
-                t.Statuses.Add(s.Status);
+                (ReferenceEquals(by, Owning(s.Target)) ? by.SelfStatuses : by.Statuses).Add(s.Status);
             }
         });
         // The fight ends with the tick a body died in; a body that dies later in that same tick is down too, so both
@@ -455,8 +474,11 @@ public static class Tournament
         var max = stats?.ResourceMax("life") ?? 0;
         var life = sim.World.Has<Dead>(body) || max <= 0 ? 0 : Math.Clamp(stats!.Resource("life") / max, 0, 1);
         return new Side(pattern, Math.Round(t.Damage, 2), t.Hits, t.Crits, t.Casts, weaves.Count, kit, Math.Round(spread, 3), weaves, mechanisms.ToList(),
-            t.Statuses.Distinct(StringComparer.Ordinal).Order(StringComparer.Ordinal).ToList(), Math.Round(life, 3));
+            Sorted(t.Statuses), Math.Round(t.SelfDamage, 2), Sorted(t.SelfStatuses), Math.Round(life, 3));
     }
+
+    /// <summary>The distinct names in ordinal order.</summary>
+    private static List<string> Sorted(IEnumerable<string> names) => names.Distinct(StringComparer.Ordinal).Order(StringComparer.Ordinal).ToList();
 
     private static PairReport Summarize(Pairing pairing, List<Fight> fights, Bands bands, bool checkBands)
     {
@@ -505,7 +527,9 @@ public static class Tournament
         }
         return new PairReport(pairing.A, pairing.B, n, Fold(fights.OrderBy(f => f.Index).Select(f => f.Hash)), Round((double)winsA / n), Round((double)winsB / n), Round((double)draws / n),
             Round(median), Round(Quantile(ttk, 0.25)), Round(Quantile(ttk, 0.75)), Round(varietyA), Round(varietyB), Round(fights.Average(f => f.SideA.Spread)), Round(fights.Average(f => f.SideB.Spread)),
-            weavesA, weavesB, mechanismsA, mechanismsB, breaches);
+            weavesA, weavesB, mechanismsA, mechanismsB,
+            Math.Round(fights.Sum(f => f.SideA.SelfDamage), 2), Math.Round(fights.Sum(f => f.SideB.SelfDamage), 2),
+            Sorted(fights.SelectMany(f => f.SideA.SelfStatuses)), Sorted(fights.SelectMany(f => f.SideB.SelfStatuses)), breaches);
     }
 
     /// <summary>How evenly casts spread over the weaves cast: the entropy of their shares over the most it could be; one for a single weave.</summary>
@@ -547,6 +571,10 @@ public static class Tournament
         public int Casts;
         public readonly List<string> Weaves = new();
         public readonly List<string> Statuses = new();
+
+        /// <summary>Damage and statuses whose source and target both belong to this side.</summary>
+        public double SelfDamage;
+        public readonly List<string> SelfStatuses = new();
     }
 
     /// <summary>
