@@ -8,10 +8,10 @@ namespace HollowWake.Core.Tests.Grammar;
 
 /// <summary>
 /// The engine's handler signatures held at their baseline against the combat grammar (docs/design/combat-grammar.md):
-/// the flags not yet resolved, the effect lists no signature declares as a hook, and the parameter names that mean
-/// different things on different handlers. Each baseline shrinks with the engine: an item resolved is removed from
-/// its list, and a new one fails its test. The declarations read are <see cref="AxisBindings"/>, the interim form of
-/// what each <see cref="EffectSignature"/> will declare.
+/// the flags not yet resolved, the effect lists no signature declares as a hook, the parameter names that mean
+/// different things on different handlers, and the axes reached through doors that differ. Each baseline shrinks with
+/// the engine: an item resolved is removed from its list, and a new one fails its test. The declarations read are
+/// <see cref="AxisBindings"/>, the interim form of what each <see cref="EffectSignature"/> will declare.
 /// </summary>
 public class SignatureGrammarTests
 {
@@ -106,6 +106,41 @@ public class SignatureGrammarTests
         "width",
     };
 
+    /// <summary>
+    /// Axes of a dimension, by name, that the bindings reach through more than one door (a parameter of a handler,
+    /// or a number a handler reads with no parameter) where the doors differ in kind, unit, the attribute behind
+    /// them and how it folds, rule, vocabulary or default: rule 1 of the grammar seen from the axis, so a chain
+    /// count behind a flight's chains and a chain's count, or a chain range a rule and a default give, are one
+    /// axis behind two doors. An axis made one door is removed from this list; a new one fails the test.
+    /// </summary>
+    private static readonly string[] SplitAxes =
+    {
+        "agency.bodies",
+        "agency.inherit",
+        "agency.lifetime",
+        "geometry.chain_range",
+        "geometry.radius",
+        "geometry.spread",
+        "geometry.width",
+        "kinematics.chains",
+        "kinematics.speed",
+        "payload.amount",
+        "payload.duration",
+        "payload.resource",
+        "targeting.at",
+        "targeting.domain_filter",
+        "targeting.filter",
+        "targeting.pick",
+        "targeting.radius",
+        "targeting.self",
+        "targeting.to",
+        "timing.delay",
+        "timing.duration",
+        "timing.interval",
+        "timing.pulses",
+        "timing.telegraph",
+    };
+
     [Fact]
     public void TheParametersBoundAsFlagsAreTheBaseline()
     {
@@ -154,6 +189,21 @@ public class SignatureGrammarTests
         Baseline("parameter names split across handlers", SplitNames, split);
     }
 
+    [Fact]
+    public void AnAxisHasOneDoorBarTheBaseline()
+    {
+        // Every door onto one axis of a dimension (each parameter, or number read with no parameter, that the bindings
+        // place under the axis's name), implicit doors included: two doors that differ in what they are is one
+        // mechanism behind two doors, or two mechanisms under one name. A door with conditions on its kind
+        // (a shove's distance against a dash's) is one door.
+        var split = AxisBindings.All
+            .Where(b => b.Dimension is not null)
+            .GroupBy(b => $"{AxisValue.DimensionName(b.Dimension!.Value)}.{b.Axis}")
+            .Where(g => g.GroupBy(b => $"{b.Type}.{b.Parameter}").Select(door => string.Join(" / ", door.Select(Meaning))).Distinct().Count() > 1)
+            .Select(g => g.Key);
+        Baseline("axes split across doors", SplitAxes, split);
+    }
+
     /// <summary>Asserts a set equals its baseline, naming what is new and what was resolved.</summary>
     private static void Baseline(string what, string[] baseline, IEnumerable<string> actual)
     {
@@ -165,11 +215,14 @@ public class SignatureGrammarTests
         Assert.Equal(baseline.OrderBy(s => s, StringComparer.Ordinal), baseline);
     }
 
-    /// <summary>What a binding says a parameter is: its kind, unit, the attribute behind it and how, its vocabulary and its default.</summary>
+    /// <summary>
+    /// What a binding says a parameter is: its kind, unit, the attribute behind it, how it meets the parameter and
+    /// on whose stack, its factors, the rule read in its place, its vocabulary and its default.
+    /// </summary>
     private static string Meaning(AxisBinding b)
     {
         var words = AxisBindings.WordsOf(b) is { } list ? string.Join(",", list.OrderBy(w => w, StringComparer.Ordinal)) : "";
-        return $"{b.Kind}|{b.Unit}|{b.Attribute}|{b.Role}|{b.Factor}|{words}|{b.Default}|{b.DefaultWord}";
+        return $"{b.Kind}|{b.Unit}|{b.Attribute}|{b.Role}|{b.Fold}|{b.Factor}|{b.FactorOf}|{b.Rule}|{words}|{b.Default}|{b.DefaultWord}";
     }
 
     /// <summary>Asserts that each parameter of a node holding effects is declared an effect list, at every depth.</summary>
