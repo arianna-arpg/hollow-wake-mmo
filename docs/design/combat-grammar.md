@@ -130,14 +130,14 @@ The AI must never:
 
 ## Measurement
 
-Combat is measured, not asserted. The harness ([evaluation.md](evaluation.md)) runs seeded fights over pairings from content and reports what the simulation's own events say happened. What it reports today, per pairing: the win and draw rates, the median and quartiles of time to kill, each side's kit coverage (the share of its kit it cast) and spread (how evenly its casts fell), the mechanisms used, and the bands broken; and for the standard duels, the trace hash against the baseline. Bands are content, in the rules group the harness reads, written before the run they judge.
+Combat is measured, not asserted. The harness ([evaluation.md](evaluation.md)) runs seeded fights over pairings from content and reports what the simulation's own events say happened. What it reports today, per pairing: the win and draw rates, the median and quartiles of time to kill, each side's kit coverage (the share of its seats it used, a use being a press or a trigger) and spread (the effective number of seats it used, over its uses), the mechanisms used, and the bands broken; and for the standard duels, the trace hash against the baseline. Bands are content, in the rules group the harness reads, written before the run they judge.
 
 What the passes add, each with its own definition when it lands:
 
 - **Scenarios and archetypes**: fights in arenas with walls, crowds and allies, and against the world's packs, elites and a boss, aggregated by archetype with intervals; in those, a proficiency score that averages the win, the time left, the life left and the foe's life taken.
 - **Damage taken per kill**, as medians, spreads and high quantiles.
 - **Engagement**: the share of fights in which the archetype's declared payoff happened, read from the events the content names. Its control is **restricted play**: the same pattern with the mechanic's weaves removed from its kit, or its doctrine forbidden the verb; how often it beats the full build. Near one half, the mechanic does not matter.
-- **Decision entropy**: the entropy of the AI's choices over a fight, reported as an effective number of choices (distinct from spread, which is over casts).
+- **Decision entropy**: the entropy of the AI's choices over a fight, reported as an effective number of choices (distinct from spread, which is over a side's uses of its seats).
 - **Win-rate band and counter cap**: each archetype's share of wins against the field inside its band, no matchup past a cap, and mirrors at one half as the harness's own check.
 - **Effective archetypes**: the effective number of viable archetypes, from the equilibrium mass over the win-rate matrix summed by archetype, so a duplicated build does not count twice (distinct from kit coverage, which is per side).
 - **Causal fan-out**: the most resolutions one use caused.
