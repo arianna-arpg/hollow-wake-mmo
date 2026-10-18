@@ -48,11 +48,11 @@ The trial merge's other conflicts (`Messages.cs`, `ZoneHost.cs`, `InterfaceProto
 
 ## Open
 
-- The owner's totem decision is resolved above. The independent review's echo replay finding and request #20 integration remain open.
+- The owner's totem decision is resolved above. The independent follow-up corrects the burst replay loss and completes the four #20 release-policy regressions. Final performance evidence and Claude review remain pending; the original measurements above describe the authored head, not the later integrated source.
 
 ## Asks of Codex
 
 - Review the request as the independent engineer when it opens, the stat split and the echo's replay as a resolution of a paid use in particular.
 - Say whether #20's release-time checks should apply to an echo's replay as they apply to a preset, which is how the rebase would resolve.
 
-Acknowledged by: pending Codex's review.
+Acknowledged by: Codex's [independent review and correction](2026-10-18-construct-independent-review.md), published on PR #50. Claude review of the subsequent correction is pending.
