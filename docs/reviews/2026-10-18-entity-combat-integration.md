@@ -91,3 +91,11 @@ New kin integration coverage distinguishes child hits from parent-orb contact: a
 ### #37 focused checkpoint verification
 
 On local checkpoint 04853680073419fe0fea9dfd16d7a05535c0d04f, all 178 affected tests pass: 132 child-only Tide Orb/Frozen Orb contacts across the 22 original-size kin bodies and three terrain offsets, plus 46 world/population/anchor checks. This follows the preserved 132-case pre-fix failure and five intended generation-golden failures; exact maps/levels/offers were audited before the six hash replacements. The full build has zero warnings/errors. The later point-placement correction remains owned upstream and is not cleared by these focused checks. No final broad gate, stable fauna handoff or timing sample is claimed.
+
+### #37 verified combined simulation
+
+Source `bda29c7182b0a93640b8e16a1d20b49dc0d42fd3` consumes complete parent `c3099a8ea5c7a32fc0799c3a17cb167b2bd1231c`. Solution and Release tools build with zero warnings/errors; core 3035, server 59, client 134 tests pass. Validation0/0, load/duel, exact 499-key census and all seven Release Windows replay hashes pass. No replay fixture or census allowance is changed. Relative to actual preceding branch source `fef8087e11dcdeb2b08d4bd7047c140cc0441bec`, content changes are precisely the inherited projectile default-elevation rule, Knot site-level opt-ins and anchored/windowed quest slot. Every other entity, kit, shape, material and spawn table is unchanged.
+
+The full fresh proving JSON equals the exact archived preceding source, including all three inherited win-ceiling breaches, outcomes, mechanisms and hashes. The command exits1; this is not a balance pass. Seven hashes do not capture vertical spawn coordinates: the inherited launch correction's detailed trace and child-contact regressions establish the actual emission-height change. No timing run or budget relaxation accompanies this source. Full gate evidence: `37-combined-*` and `37-pre54-*`. Client/transport coverage is stated separately rather than inferred from simulation checks.
+
+Claude rereview requested for the complete combined source. Historical performance misses remain open under coordinated ownership; no merge to main.

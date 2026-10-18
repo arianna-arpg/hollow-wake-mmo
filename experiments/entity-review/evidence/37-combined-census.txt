@@ -1,0 +1,64 @@
+322 weaves: 62 forms and 260 presets placed, 0 did not compile; 68 of 68 glyphs placed on the first form or preset each fits
+  dimension     weaves    axes  literals  distinct   rules
+  geometry         248    1022       214       199       1
+  kinematics       156     867        31        26      70
+  payload          258    1747       152       134       0
+  economy          322    1270        19        20       0
+  timing           322    1313        76        65       4
+  targeting        322    1069        22         7     165
+  agency            41     208        39        42       0
+  causality         24      46         6         6       0
+  coupling         163     229         0         0       0
+literals    559 in 231 weaves; 499 distinct by who wrote them (55 by forms, 19 by glyphs, 425 by presets); most often
+  apply_status.chance                 137  payload.chance (no attribute)
+  projectile.radius                   114  geometry.radius (no attribute)
+  area.radius                          42  geometry.radius (weave.area.radius)
+  field.interval                       17  timing.interval (no attribute)
+  summon.duration                      17  agency.lifetime (weave.duration)
+  chain.range                          15  targeting.chain_range (no attribute)
+  projectile.duration                  15  timing.duration (no attribute)
+  field.duration                       10  timing.duration (weave.duration)
+  field.radius                         10  geometry.radius (weave.area.radius)
+  charge.gain                           8  economy.charge.gain (no attribute)
+  charge.max                            8  economy.charge.max (the bearer's charge.{id}.max)
+  projectile.tick                       7  timing.tick (no attribute)
+  field.radius_curve.from               6  geometry.radius_curve.from (no attribute)
+  field.radius_curve.to                 6  geometry.radius_curve.to (no attribute)
+  projectile.orbit_radius               6  kinematics.orbit_radius (no attribute)
+  move.distance                         5  kinematics.distance (no attribute)
+  projectile.ring_jitter                5  geometry.ring_jitter (no attribute)
+  summon.count                          5  agency.bodies (weave.summon.count)
+  timing.strike.window                  5  timing.strike.window (no attribute)
+  deploy.count                          4  agency.bodies (weave.summon.count)
+rules       19 read where a graph or block gives nothing
+  delivery.projectile_aim             134  targeting.aim
+  delivery.collision_speed             20  kinematics.collision_speed
+  delivery.impulse_decay               20  kinematics.impulse_decay
+  delivery.impulse_min                 20  kinematics.impulse_min
+  delivery.homing_radius               12  targeting.homing_radius
+  delivery.homing_reacquire            12  targeting.homing_reacquire
+  delivery.return_arrive                3  kinematics.return_arrive
+  delivery.return_max_seconds           3  timing.return_max_seconds
+  delivery.bounce_restitution           2  kinematics.bounce_restitution
+  delivery.min_speed                    2  kinematics.min_speed
+  minions.cast_range                    2  targeting.range
+  minions.corpse_search                 2  targeting.search_radius
+  minions.corpse_target_reach           2  targeting.radius
+  casting.max_hold                      1  timing.channel.max_hold
+  delivery.fork_angle                   1  kinematics.fork_angle
+  delivery.fork_children                1  kinematics.fork_children
+  delivery.seek_radius                  1  targeting.seek_radius
+  minions.recall_radius                 1  geometry.radius
+  move.gravity                          1  kinematics.gravity_pull
+words       96 that stand for a number
+  area.reach                           46  edge
+  move.kind                            26  blink, dash, knockback, leap, pull
+  projectile.fire                      10  ring, salvo, volley
+  projectile.origin                     5  point
+  projectile.return                     3  caster
+  cascade.dir                           2  out
+  scatter.at                            2  enemies
+  cast.aim                              1  rotating
+  deploy.intercept.mode                 1  dissolve
+wrote D:\Games\MMOARPG\artifacts\entity37-combined-axes.json
+wrote D:\Games\MMOARPG\artifacts\entity37-combined-literals.txt
