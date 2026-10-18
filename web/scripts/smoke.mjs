@@ -19,6 +19,7 @@ import { mkdirSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { chromium } from 'playwright-core';
 import { isolatePhysicalInput } from './isolated-input.mjs';
+import { approachAndClick } from './interaction-click.mjs';
 
 const args = process.argv.slice(2);
 const opt = (name, fallback) => {
@@ -53,6 +54,15 @@ if (flag('isolated-input') || flag('no-physical-gamepads')) {
   await page.addInitScript(isolatePhysicalInput);
   console.log('SMOKE input: page-local keyboard and pointer; physical controllers isolated');
 }
+// Read-only interaction diagnostics: retain the actual wire target rather than infer it from a projected point.
+let clickedTarget = null;
+page.on('websocket', (socket) => socket.on('framesent', ({ payload }) => {
+  try {
+    const message = JSON.parse(typeof payload === 'string' ? payload : payload.toString('utf8'));
+    if (message.t === 'interact') clickedTarget = message.target;
+  } catch { /* Non-JSON frames are outside this diagnostic. */ }
+}));
+
 const pageErrors = [];
 page.on('pageerror', (e) => pageErrors.push(e.message));
 page.on('console', (m) => {
@@ -72,7 +82,7 @@ const rejected = async () => {
 const flat = (a, b) => Math.hypot(a.x - b.x, a.y - b.y);
 const shot = async (name) => {
   await sleep(150);
-  await page.screenshot({ path: join(shots, name) });
+  return await page.screenshot({ path: join(shots, name) });
 };
 
 async function until(condition, timeoutMs) {
@@ -172,9 +182,21 @@ async function hover(key) {
 async function clickEntity(key) {
   await hover(key);
   const s = await hw((k) => window.hollowWake.screenOf(k), key);
-  if (s && s.visible) {
-    await page.mouse.click(s.x, s.y);
-  }
+  if (s && s.visible) await clickAtEntityScreen(key, s);
+}
+
+async function clickAtEntityScreen(key, s) {
+  clickedTarget = null;
+  const before = await hw((key) => ({
+    self: window.hollowWake.self(),
+    target: window.hollowWake.entities().find(e => String(e.key) === String(key)),
+    hovered: window.hollowWake.hoveredKey,
+  }), key);
+  await page.mouse.click(s.x, s.y);
+  await sleep(100);
+  const actual = await hw((key) => window.hollowWake.entities().find(e => String(e.key) === String(key)) ?? null, clickedTarget);
+  const body = (e) => e ? { key: e.key, name: e.name, x: e.x, y: e.y, z: e.z, drawn: e.drawn } : null;
+  console.log(`SMOKE click diagnostic ${JSON.stringify({ requested: key, wireTarget: clickedTarget, hovered: before.hovered, screen: s, self: body(before.self), target: body(before.target), actual: body(actual) })}`);
 }
 
 const statesOf = async (type) => (await counts()).states[type] ?? 0;
@@ -242,10 +264,20 @@ async function talkToAVillager() {
     record('talk to a villager', false, 'no villager in view');
     return;
   }
-  const reached = await travelTo(villager.key, 1.6, 45000);
-  await sleep(400);
   const before = await statesOf('dialogue_state');
-  await clickEntity(villager.key);
+  const reached = await approachAndClick({
+    within: 1.6, timeoutMs: 45000,
+    approach: (remaining) => travelTo(villager.key, 1.6, remaining),
+    aim: () => hover(villager.key),
+    observe: () => hw((key) => ({
+      self: window.hollowWake.self(),
+      target: window.hollowWake.entities().find(e => String(e.key) === String(key)),
+      hovered: window.hollowWake.hoveredKey,
+      screen: window.hollowWake.screenOf(key),
+    }), villager.key),
+    click: (screen) => clickAtEntityScreen(villager.key, screen),
+    wait: sleep,
+  });
   const shown = await until(async () => (await statesOf('dialogue_state')) > before && (await ui()).worldPanes.includes('dialogue'), 6000);
   await sleep(300);
   await shot('08_dialogue.png');
@@ -448,10 +480,27 @@ async function lookStages() {
   }, 20000);
   await sleep(500);
   const cards = await measure('cards');
-  await shot('16_cards.png');
+  const cardShot = await shot('16_cards.png');
   record('bodies as cards', baked && cards.cards > 0 && cards.p95 < 50, cards.line);
   const canvasViewport = (await hw(() => window.hollowWake.render)).canvasViewport;
   record('card baking restores the world viewport', canvasViewport, `full canvas viewport=${canvasViewport}`);
+  // Sample the central world above the HUD. Sky plus floating labels must not pass as rendered terrain.
+  const worldPixels = await page.evaluate(async (png) => {
+    const image = new Image(); image.src = `data:image/png;base64,${png}`; await image.decode();
+    const canvas = document.createElement('canvas'); canvas.width = image.width; canvas.height = image.height;
+    const context = canvas.getContext('2d'); context.drawImage(image, 0, 0);
+    const data = context.getImageData(0, 0, image.width, image.height).data;
+    const buckets = new Uint32Array(4096); let samples = 0;
+    for (let y = Math.floor(image.height * .12); y < image.height * .48; y += 2) {
+      for (let x = Math.floor(image.width * .2); x < image.width * .8; x += 2) {
+        const i = (y * image.width + x) * 4;
+        buckets[((data[i] >> 4) << 8) | ((data[i + 1] >> 4) << 4) | (data[i + 2] >> 4)]++; samples++;
+      }
+    }
+    return { dominant: Math.max(...buckets) / samples, colors: buckets.filter(n => n > 0).length, samples };
+  }, cardShot.toString('base64'));
+  record('card mode draws the world', worldPixels.dominant < .92 && worldPixels.colors >= 16,
+    `largest color region ${(worldPixels.dominant * 100).toFixed(2)}%, ${worldPixels.colors} color bins, ${worldPixels.samples} samples`);
   await set('bodies', 'auto');
   await sleep(300);
   await set('grayscale', true);

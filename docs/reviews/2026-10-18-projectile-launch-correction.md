@@ -65,4 +65,6 @@ Fresh final-source evidence uses the `final33-` prefix in the evidence directory
 - Final background run `run-i2p30g`: browser 30/30 and native 36/36 pass; cleanup errors are empty. Native rendering is not covered and the same shutdown diagnostics remain. Isometric screenshot inspection shows the expected world. The card screenshot still shows the separately owned #37 blank-world/tiny-viewport defect and is retained as failure evidence.
 
 The final source is ready for the complete **#36 → #34 → #37** propagation. Do not cherry-pick an isolated flight fix or merge #34 backward. The foundation owner can now run its prepared child-only kin matrix against the complete correction. Claude rereview, actual combined #20 acceptance, #37 renderer acceptance and coordinated performance verification remain outstanding; no new performance sample or final combined approval is claimed.
+The later aim-wrapper propagation defect, independent reproduction, owner-written correction and final docs/test foundation union are recorded in [the aim elevation follow-up](2026-10-18-aim-wrapper-elevation.md). That record supplies the newer source and handoff gates.
+
 Acknowledged by: pending Claude rereview after final combined source.

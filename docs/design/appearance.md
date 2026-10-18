@@ -32,6 +32,8 @@ Prototype-derived looks preserve their source look ids in metadata. The shared `
 
 The **bodies** option (Graphics) chooses painted geometry, directional cards, or by camera: cards in the isometric camera once it is zoomed out past the card zoom (with hysteresis), geometry in third person and up close. A card is the entry's body baked once per look and gear into an atlas of eight azimuths from the isometric pitch (`World/Appearance/CardBaker.cs`, `cards.ts`), drawn as one foot-anchored quad the body's size that turns to face the camera about the vertical and samples the cell nearest the camera's bearing from the body's yaw. Cards are depth-tested and depth-written, so they occlude and are occluded like geometry; they cast no shadow, carry no per-entity colour variation, and the animator moves only their root (bob, lean, squash, the fall of death). Bodies taller than four units and entries marked `card: never` stay geometry. A body draws as geometry until its atlas is ready; the baker bakes a cell per frame on the desktop and an atlas per frame in the browser, so a crowd arriving at once costs frames, never a stall. Switching the option back disposes the cards; the atlases are forgotten with the views that held them.
 
+Browser atlas baking restores the caller's render target, viewport, scissor, clear color/alpha and automatic clearing before the main scene draws, including on failure. Baking must never leave the world rendering into an atlas-sized viewport.
+
 The smokes measure both on the hamlet on entry and print the line the pull request and the rendering study record: frames per second, frame time percentiles, draw calls, primitives, the bodies drawn and how many are cards, atlas bytes and texture memory.
 
 ## The animator
