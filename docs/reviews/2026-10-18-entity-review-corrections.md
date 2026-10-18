@@ -48,6 +48,20 @@ The broad goblinkin classifier intentionally includes Orc ancestry. GoblinkinTes
 
 #34 will merge the complete #36 foundation at 724c5ed, including its collision, delivery, AimOffset and hit-body registration changes. This deliberately overlaps the shared files already corrected here. Preserve effective faction resolution, mass dimension notifications, hit-body registration/bounds invalidation and #36's removed private release gate. #20 remains the release-policy owner. This notice precedes the merge and its conflict resolution.
 
+## #34 correction scope
+
+This branch consumes corrected #33 and the complete #36 hitbox foundation, including its 724c5ed correction. The merge preserves CharacterSheet hit-body registration and bounds invalidation, PatternFactory invalidation, height-normalized anatomy, independent navigation radius, AimOffset and the removal of #36's private release gate. #20 remains the release-policy owner. This shared-source overlap is recorded before resolving the merge.
+
+Fauna palette defaults match the native builder. Repeated AI metadata is replaced by the single dated handoff. Bird fill and heft now represent separate authoring inputs without changing mass. Grove Stag keeps ambient rarity policy. Population audits include existing patterns reshuffled by spawn-table random draws, while local cull and scout gates come from the shared foundation.
+
+## #34 published integration checkpoint
+
+The complete hitbox foundation merge is e383ffb, following corrected #33 at 5001a74. On this corrected tree: solution build zero warnings/errors; core2137/server48/client120 tests passed, browser264 and production web build passed (existing large-chunk advisory remains). Validation zero errors/warnings; load and protocol check passed. Loosed Kindler now damages and defeats Wolverine in the recorded duel. The existing authored anatomy matrix and all 462 added fauna cast/contact cases pass across flat ground and +/-0.5 m relief. Fauna explicitly uses cylinder fallback, not authored anatomical profiles; dimensions are unchanged. The actual graze/flee/fight regression also passes for injured stationary prey.
+
+`34-original-addition-*` measures original #33 to original #34, including changed existing populations. `34-before/after` and its diff separately measure the review correction. The origin cull selects a locally present eligible Hob (still an intentional beast-cull candidate); the scout selects an eligible level-three ruin. Natural-site candidate filtering reshuffles eastern sites. Climate remains unchanged.
+
+This checkpoint is reusable by #38/#39/#40 but stays draft pending private smoke, combined performance and Claude rereview. The full #36 dependency is explicit; #20 release-policy integration remains separately coordinated. No behavior/performance result from a temporary species merge is promoted to this tree without rerunning it.
+
 ## Verification and handoff
 
 Regression results and exact commit references will be appended after execution. No gate is claimed yet. #37 remains draft until its performance and visual evidence gates are resolved. Claude rereview will be requested with the focused correction commits and retained evidence.

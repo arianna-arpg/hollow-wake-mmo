@@ -40,7 +40,10 @@ public class HitBodyProjectileTests
     }
 
     [Theory, MemberData(nameof(Cases))]
-    public void RealCastsReachAuthoredBodiesAcrossRelief(string pattern, float relief, string form)
+    public void RealCastsReachAuthoredBodiesAcrossRelief(string pattern, float relief, string form) =>
+        AssertRealCastContact(pattern, relief, form);
+
+    internal static void AssertRealCastContact(string pattern, float relief, string form)
     {
         var a = DeliveryArena.Create(seed: 481);
         var chunk = a.Sim.Terrain.GetChunk(new ChunkCoord(0, 0));

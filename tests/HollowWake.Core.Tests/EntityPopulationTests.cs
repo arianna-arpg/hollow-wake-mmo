@@ -20,6 +20,7 @@ public class EntityPopulationTests
     [InlineData("undead_body")]
     [InlineData("goblinkin_body")]
     [InlineData("orc_body")]
+    [InlineData("fauna_body")]
     public void EveryEntityHabitatHasAMatchingPopulationReference(string template)
     {
         var content = CoreContent.Registry;
