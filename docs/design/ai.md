@@ -1,6 +1,6 @@
 # AI
 
-Behaviors are state machines in content. A behavior names an initial state, a think interval, aggro and leash range expressions, and states with enter, tick and exit actions and prioritized transitions. Monsters, minions and constructs all think this way, in one behavior system; what differs is the content they run and the actions it names. Every action acts on the simulation through `AiIntents.Send`, with the same intents and the same handlers a client's intent runs through; the few world rules a body is under rather than does, and the device actions' own casting, are named below (see Acting through intents).
+Behaviors are state machines in content. A behavior names an initial state, a think interval, aggro and leash range expressions, and states with enter, tick and exit actions and prioritized transitions. Monsters, minions and constructs all think this way, in one behavior system; what differs is the content they run and the actions it names. Every action acts on the simulation through `AiIntents.Send`, with the same intents and the same handlers a client's intent runs through; the few world rules a body is under rather than does are named below (see Acting through intents).
 
 ## Perception
 
@@ -18,9 +18,10 @@ The world rules a body is under rather than does, which no intent asks for, are 
 
 - **Facing.** `chase` within reach and `face_target` turn the body toward its target at once. Facing is a rule of the simulation, not something a client asks for. A turn rate, and the movement locks of a held cast holding the body's facing, are deferred: either would move duels with roots and guards in them.
 - **The leash.** A minion's leash recall teleports it (`MinionService.Teleport`).
-- **A spent trap.** A trap that sprang goes (`MinionService.Dismiss`).
+- **A spent trap.** A trap that sprang goes (`MinionService.Dismiss`), once its cast is over.
+- **An echo's replay.** An echo resolves each use its owner paid for, from where it stands (`WeaveRuntime.Replay`): not a new use, so not an intent.
 
-The device actions (`construct_cast`, `spring`, `echo_owner`) still fire their weaves through `ConstructCasting.Fire`, which runs a weave's effects directly, past the runtime's costs, cast times and checks: the one direct effect run left in the AI.
+The device actions `construct_cast` and `spring` cast like anyone, by `UseWeaveIntent` (see [minions.md](minions.md)).
 
 ## Orders
 

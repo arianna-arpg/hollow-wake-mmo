@@ -152,7 +152,11 @@ entries:
     name: Device
     tags: [device, no_corpse]
     components:
-      stats: { attributes: { might: 4, grace: 4, will: 4, vigor: 8, move.speed: 0.5 } }
+      stats:
+        attributes: { might: 4, grace: 4, will: 4, vigor: 8, move.speed: 0.5 }
+        # Devices cast free of cost, though not of uses, charges or gates: their casts pay through the runtime's
+        # costs like anyone's, and this folds every cost to nothing.
+        modifiers: [ { attribute: cost, form: more, value: -1 } ]
       motion: {}
       statuses: {}
 

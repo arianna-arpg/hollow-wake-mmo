@@ -952,7 +952,8 @@ public sealed partial class WeaveRuntime
     /// <summary>
     /// Runs a list of a weave's effects for a cast: the context aims at the cast's live target or point, its
     /// random stream comes from the caster, the weave, the tick and the cast's beat, and the cast variables
-    /// are set on it. Returns the context, or null when the caster is gone.
+    /// are set on it. The effects run as the cast's origin (see <see cref="OriginOf"/>), from where the caster
+    /// stands. Returns the context, or null when the caster is gone.
     /// </summary>
     internal EffectContext? Run(Simulation sim, Entity caster, Stats stats, CastState state, CompiledWeave weave, IReadOnlyList<CompiledEffect> effects, int depth, bool publishCast, in CastVarValues vars, double damageScale = 1, string rngPrefix = "weave:", long rngNumber = -1)
     {
@@ -961,13 +962,14 @@ public sealed partial class WeaveRuntime
         {
             target = Entity.None;
         }
+        var origin = OriginOf(sim, caster);
         // Publish before executing: immediate contacts must follow their confirmed release on the wire.
         if (publishCast && effects.Count > 0) Present(sim, caster, state, weave, "release");
         var ctx = new EffectContext
         {
             CastId = state.CastId,
             Sim = sim,
-            Source = caster,
+            Source = origin,
             Target = target,
             Point = target.IsNone ? state.Point : (sim.World.Get<Transform>(target)?.Position ?? state.Point),
             Direction = state.Direction,
@@ -978,6 +980,7 @@ public sealed partial class WeaveRuntime
             DamageScale = damageScale,
             Depth = depth,
             Slot = state.Slot,
+            From = origin == caster ? null : sim.World.Get<Transform>(caster)?.Position,
         };
         vars.WriteTo(ctx.Vars);
         var now = sim.Clock.Time;
@@ -997,6 +1000,18 @@ public sealed partial class WeaveRuntime
         }
         return ctx;
     }
+
+    /// <summary>
+    /// Who a cast's effects run as: the caster's owner when the caster is a construct that inherits its caster
+    /// and the owner lives with stats, else the caster. The cast stays the caster's either way: it is paid,
+    /// validated, reached and timed by the caster's own numbers, and it raises the events; only its effects
+    /// carry the owner's numbers and credit.
+    /// </summary>
+    internal static Entity OriginOf(Simulation sim, Entity caster) =>
+        sim.World.TryGet<Minion>(caster, out var minion) && minion.InheritCaster && !minion.Owner.IsNone
+            && sim.World.IsAlive(minion.Owner) && sim.World.Has<Stats>(minion.Owner)
+            ? minion.Owner
+            : caster;
 
     /// <summary>
     /// Stops the caster's running cast: nothing more fires. A hold that already took effect (a channel that

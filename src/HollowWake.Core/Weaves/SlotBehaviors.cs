@@ -5,6 +5,7 @@ using HollowWake.Core.Components;
 using HollowWake.Core.Definitions;
 using HollowWake.Core.Ecs;
 using HollowWake.Core.Effects;
+using HollowWake.Core.Maths;
 using HollowWake.Core.Sim;
 using HollowWake.Core.Tags;
 
@@ -351,7 +352,8 @@ public sealed partial class WeaveRuntime
     /// <summary>
     /// Casts a preset as the <c>cast</c> effect does: free of cost and cooldown, at the host's level with the
     /// host's tags joined, one deeper, at the host's target when it lives or else its point, with the host
-    /// slot as the context's slot and the host weave as its host.
+    /// slot as the context's slot and the host weave as its host, and as the caster's origin (see
+    /// <see cref="OriginOf"/>).
     /// </summary>
     internal void CastPreset(Simulation sim, Entity caster, string preset, CompiledWeave host, WeaveSlot? slot, Entity target, Vector3 point, Vector2 direction, int depth, string rngPrefix, long number)
     {
@@ -359,7 +361,38 @@ public sealed partial class WeaveRuntime
         {
             return;
         }
-        var hostTags = host.Tags;
+        RunFree(sim, caster, OriginOf(sim, caster), weave, weave.Tags.Union(host.Tags), host.Root, slot, target, point, direction, depth,
+            RngStreams.For(sim, caster, rngPrefix, weave.Key, number), damageScale: 1);
+    }
+
+    /// <summary>
+    /// Resolves a use another body already paid for, from where <paramref name="caster"/> stands: an echo's
+    /// replay of its owner's cast. Not a new use, so like a preset it is free of cost and cooldown and passes no
+    /// cast time; the weave's effects run as <paramref name="origin"/> (its numbers and credit) at
+    /// <paramref name="damageScale"/> of their damage, on <paramref name="rng"/>. The caster turns to the aim, and
+    /// the resolution is the caster's: it raises <see cref="WeaveCast"/>.
+    /// </summary>
+    internal void Replay(Simulation sim, Entity caster, Entity origin, CompiledWeave weave, Entity target, Vector3 point, double damageScale, Rng rng)
+    {
+        if (!sim.World.IsAlive(caster) || sim.World.Has<Dead>(caster) || !sim.World.TryGet<Transform>(caster, out var ct)
+            || !sim.World.IsAlive(origin) || !sim.World.Has<Stats>(origin))
+        {
+            return;
+        }
+        var at = !target.IsNone && sim.World.TryGet<Transform>(target, out var tt) ? tt.Position : point;
+        ct.Face(at);
+        var direction = new Vector2(at.X - ct.Position.X, at.Y - ct.Position.Y);
+        direction = direction.LengthSquared() > 0.0001f ? Vector2.Normalize(direction) : ct.Forward;
+        RunFree(sim, caster, origin, weave, weave.Tags, host: null, slot: null, target, at, direction, depth: 0, rng, damageScale);
+        sim.Events.Publish(new WeaveCast(caster, weave.Key, target, at, weave.Tags) { Tick = sim.Clock.Tick });
+    }
+
+    /// <summary>
+    /// Runs a resolution that pays nothing and waits for nothing: the effects of a preset or a replay, as
+    /// <paramref name="origin"/> from where <paramref name="caster"/> stands, at the live target or the point.
+    /// </summary>
+    private static void RunFree(Simulation sim, Entity caster, Entity origin, CompiledWeave weave, TagSet tags, CompiledWeave? host, WeaveSlot? slot, Entity target, Vector3 point, Vector2 direction, int depth, Rng rng, double damageScale)
+    {
         if (!target.IsNone && (!sim.World.IsAlive(target) || sim.World.Has<Dead>(target)))
         {
             target = Entity.None;
@@ -371,16 +404,18 @@ public sealed partial class WeaveRuntime
         var ctx = new EffectContext
         {
             Sim = sim,
-            Source = caster,
+            Source = origin,
             Target = target,
             Point = point,
             Direction = direction,
             Weave = weave,
-            Tags = weave.Tags.Union(hostTags),
+            Tags = tags,
             Depth = depth,
-            Rng = RngStreams.For(sim, caster, rngPrefix, weave.Key, number),
+            Rng = rng,
+            DamageScale = damageScale,
             Slot = slot,
-            Host = host.Root,
+            Host = host,
+            From = origin == caster ? null : sim.World.Get<Transform>(caster)?.Position,
         };
         CompiledEffect.ExecuteAll(weave.Effects, ctx);
     }

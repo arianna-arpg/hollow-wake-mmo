@@ -46,7 +46,7 @@ A weave's mechanisms are the ones its form and active glyphs declare plus every 
 
 ## Runtime
 
-Players, monsters and summons cast through one `WeaveRuntime`. Slots compile through `Resolve` with misfit glyphs dormant (their reasons stay on `WeaveSlot.Dormant`), so a seat holding a misfit still casts; presets in content must fit. `SetWeaveIntent` compiles the same way; while rule `casting.require_ownership` holds it asks the registered `IWeaveOwnership` (a missing service is permission), and changing the loadout follows rule `casting.swap_requires`, an expression over the caster waived where the ground carries the tag rule `casting.swap_waived_by` names. Swapping rack seats is always free.
+Players, monsters, summons and constructs cast through one `WeaveRuntime`. A cast's effects run as its origin (`OriginOf`): the caster, or its owner when the caster is a construct that inherits its caster, from where the caster stands; the cast stays the caster's, which pays, is validated, reached and timed by its own numbers, and raises the events. Slots compile through `Resolve` with misfit glyphs dormant (their reasons stay on `WeaveSlot.Dormant`), so a seat holding a misfit still casts; presets in content must fit. `SetWeaveIntent` compiles the same way; while rule `casting.require_ownership` holds it asks the registered `IWeaveOwnership` (a missing service is permission), and changing the loadout follows rule `casting.swap_requires`, an expression over the caster waived where the ground carries the tag rule `casting.swap_waived_by` names. Swapping rack seats is always free.
 
 ### Beginning a cast
 
