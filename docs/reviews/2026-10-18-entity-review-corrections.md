@@ -62,6 +62,10 @@ The complete hitbox foundation merge is e383ffb, following corrected #33 at 5001
 
 This checkpoint is reusable by #38/#39/#40 but stays draft pending private smoke, combined performance and Claude rereview. The full #36 dependency is explicit; #20 release-policy integration remains separately coordinated. No behavior/performance result from a temporary species merge is promoted to this tree without rerunning it.
 
+## #34 private smoke follow-up
+
+On 26c50de, the private browser and native-headless playthroughs pass with no cleanup errors; full runner result is `34-smoke.json`. Native pixel checks remain skipped. Inspection of `16_cards.png` still shows the inherited blank-world/card-mode defect, also recorded in the original #37 baseline. Therefore behavioral success is not claimed as a visual pass. #37 will correct CardBaker renderer-state restoration and add a regression plus fresh rendered evidence; this shared presentation ownership is recorded before that edit. The exact #34 Release performance check is also being independently repeated by the #36 owner.
+
 ## Verification and handoff
 
 Regression results and exact commit references will be appended after execution. No gate is claimed yet. #37 remains draft until its performance and visual evidence gates are resolved. Claude rereview will be requested with the focused correction commits and retained evidence.
