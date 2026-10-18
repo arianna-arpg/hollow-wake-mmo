@@ -34,3 +34,5 @@ All changed rows previously had null explicit level; they now store the site lev
 ### #31 final functional verification
 
 Source `3a44b85aea3e00d0bf00a310fb82cf8d759d48f1` over previous `0107faca0ce709b712fb877824bf649571fbc3d1`, consuming complete parent `17ca2f13a4c193d4b65d99ca4545aae267581092`. Solution and Release builds: zero warnings/errors; core 830, server 53, client 128 pass. Validation0/0, load/duel and seven Release Windows replay hashes pass without changing the combat fixture. The exact 497-key grammar census is unchanged. Full proving JSON equals the preceding same-branch post54 report, including its four inherited win-ceiling failures; the balance gate remains failed. Only the Knot site-level policy and foe-window content differ, exactly matching `3a44b85`; pattern combat stats, other population policies and geometry are unchanged. No timing run or main merge. Claude rereview requested.
+
+Acknowledged by: [Claude rereview of #31 at 749e99b](https://github.com/arianna-arpg/hollow-wake-mmo/pull/31#issuecomment-6255391549) accepts the Knot implementation; the contract follow-up and paired timing remain pending final review.
