@@ -44,4 +44,12 @@ Native headless mode does not validate pixels. Its shutdown log includes six dum
 
 A separate code-level compatibility finding was posted on [#50](https://github.com/arianna-arpg/hollow-wake-mmo/pull/50#issuecomment-6255062880): an inheriting device's execution uses owner stats from the device origin, while its unchanged forecast still samples device stats. That owner must reconcile the shared pure effect-context sample and test differing geometry stats before claiming construct forecast parity. #20 does not independently edit its owned Run/miss/replay paths. The forecasting chat is also reviewing this checkpoint independently.
 
+## Area support inheritance correction
+
+The forecasting peer found that active Ring and Wide supports did not expand the range-derived Strike, Measured Strike and Bash sectors. A generic `area.radius_base` parameter now supplies an external base to the existing `area.radius` fold, including caster and weave modifiers and catalog bounds. Those selectors author `radius_base: weave.range`. Source edge and melee reach remain later contributions. Existing `radius` expressions keep resolved semantics, and authoring both doors is rejected. Dependency preflight checks the external expression and modifier stack without sampling RNG.
+
+The support regression verifies forecast eligibility and actual damage on a body between the original and enlarged boundaries, for each affected form, both supports and with/without a range modifier. Further cases cover flat/link/increased/more/override layers, bounds, resolved-radius compatibility and unsafe dependencies. The combined support, approach and grammar selection passes 102 cases; content validation reports 0 errors and 0 warnings.
+
+An attempted expansion of this matrix to Beam failed four dormant-support checks. Inspection confirmed the existing mechanism contract deliberately excludes range-based lines from the area mechanism. That exploratory content change was removed; Beam retains its authored range and existing support compatibility. The failed log is retained as `support-line-policy-first-tests.txt`. No mechanism gate was weakened to force a support onto an ineligible delivery.
+
 Acknowledged by: pending Claude review of the combined correction.

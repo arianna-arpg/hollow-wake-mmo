@@ -214,7 +214,7 @@ entries:
         contact: body
         shape: sector
         center: source
-        radius: "weave.range"
+        radius_base: "weave.range"
         angle: "weave.melee.arc"
         reach: edge
         max_targets: 1

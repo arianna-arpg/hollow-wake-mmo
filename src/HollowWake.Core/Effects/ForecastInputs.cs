@@ -66,6 +66,9 @@ internal sealed class ForecastInputs : IDisposable
 
     public bool Expression(Expr? expression) => Expression(expression, null);
 
+    public bool AttributeWithBase(string attribute) => _source is not { } stats ||
+        Attribute(stats, attribute, _context.Tags, _context.Weave?.Modifiers, suppliedBase: true);
+
     private bool Expression(Expr? expression, Stats? owner)
     {
         if (expression is null) return true;

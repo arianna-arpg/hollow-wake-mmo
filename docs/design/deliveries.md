@@ -40,7 +40,8 @@ Execution and observation share the charge, overcharge, ramp and use-modifier co
 | Parameter | Meaning |
 |---|---|
 | `shape` | a registered shape; default `circle` |
-| `radius` | default the weave's `area.radius` |
+| `radius` | resolved radius expression; absent, reads the weave's `area.radius` |
+| `radius_base` | alternative external base expression, then folded through `area.radius` modifiers and catalog bounds; mutually exclusive with `radius` |
 | `angle`, `width`, `inner` | the shape's proportions; the angle of shapes that have one is scaled by the weave's `area.angle` |
 | `center` | `focus` (the target, else the point), `source` (the cast's start, else the source's body) or `point`; default `source` for anchored shapes and `focus` for the rest |
 | `reach` | `center` (default) or `edge`: anchored shapes reach further by the source's navigation clearance radius |
@@ -52,6 +53,8 @@ Execution and observation share the charge, overcharge, ramp and use-modifier co
 | `require` | an expression each body must meet, read with the body as `target` (`target.life_pct < 0.5`) |
 | `report_miss` | false by default; publishes a primary miss when selection leaves no recipients; echoed placements and later cascade steps suppress duplicate miss cues |
 | `payload_depth` | `next` (default) runs payloads one level deeper; `same` makes this area a selector at its incoming depth, independent of target count or miss reporting |
+
+Use `radius_base` when another attribute supplies an area's starting extent, such as `weave.range`. That range is resolved first, then the existing attribute engine applies `area.radius` flat, linked, increased, more and override modifiers and its bounds. Range and area supports therefore compose without losing either contribution. `radius` retains its already-resolved semantics, so expressions such as `weave.area.radius` are not folded twice. Observation checks both the external expression and the same modifier dependencies before resolving the plan.
 
 The shipped single-target melee selectors author `payload_depth: same`, preserving the proc budget of the direct payloads they replaced. Ordinary area deliveries retain `next`. Either policy leaves real echoes, delayed work, repeats and nested casts responsible for their own depth increments; existing effect/trigger/proc depth limits still apply. This is a reusable content policy, not a skill identity exception.
 

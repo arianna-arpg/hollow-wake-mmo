@@ -162,38 +162,48 @@ internal sealed class AreaHandler : IEffectHandler
 {
     public string Type => "area";
 
-    public EffectSignature Signature { get; } = EffectSignature.Of("shape", "radius", "angle", "width", "inner", "filter", "center", "max_targets", "include_center", "pick", "require", "reach", "occlusion", "report_miss", "payload_depth", "contact", "height", "elevation")
-        .Hook(EffectHooks.OnHit, "effects");
+    public EffectSignature Signature { get; } = EffectSignature.Of("shape", "radius", "radius_base", "angle", "width", "inner", "filter", "center", "max_targets", "include_center", "pick", "require", "reach", "occlusion", "report_miss", "payload_depth", "contact", "height", "elevation")
+        .Hook(EffectHooks.OnHit, "effects")
+        .Checking((p, _) => RadiusConflict(p));
 
-    public CompiledEffect Compile(JsonObject p, EffectCompileContext ctx) => new Effect
+    private static string? RadiusConflict(JsonObject p) => p["radius"] is not null && p["radius_base"] is not null
+        ? "area accepts either radius (resolved) or radius_base (through area.radius modifiers), not both." : null;
+
+    public CompiledEffect Compile(JsonObject p, EffectCompileContext ctx)
     {
-        Type = Type,
-        Shape = ShapeOf(ctx, p["shape"], "shape"),
-        Radius = ctx.ExprOf(p["radius"]),
-        Angle = ctx.ExprOf(p["angle"]),
-        Width = ctx.ExprOf(p["width"]),
-        Inner = ctx.ExprOf(p["inner"]),
-        Filter = ctx.StringOf(p["filter"]) ?? "enemy",
-        CenterMode = p["center"] is null ? null : ctx.ChoiceOf(p["center"], "center", "focus", "focus", "source", "point"),
-        MaxTargets = ctx.ExprOf(p["max_targets"]),
-        Effects = ctx.CompileList(p["effects"], "effects"),
-        IncludeCenter = ctx.BoolOf(p["include_center"], true),
-        Pick = Picks.Of(ctx, p["pick"], "random"),
-        Require = ctx.ExprOf(p["require"]),
-        FromEdge = ctx.ChoiceOf(p["reach"], "reach", "center", "center", "edge") == "edge",
-        Free = OcclusionFree(ctx, p["occlusion"]),
-        ReportMiss = ctx.BoolOf(p["report_miss"], false),
-        PreservePayloadDepth = ctx.ChoiceOf(p["payload_depth"], "payload_depth", "next", "next", "same") == "same",
-        BodyContact = ctx.ChoiceOf(p["contact"], "contact", "center", "center", "body") == "body",
-        Height = ctx.ExprOf(p["height"]),
-        Elevation = ctx.ExprOf(p["elevation"]),
-    };
+        if (RadiusConflict(p) is { } error) throw new InvalidOperationException(error);
+        return new Effect
+        {
+            Type = Type,
+            Shape = ShapeOf(ctx, p["shape"], "shape"),
+            Radius = ctx.ExprOf(p["radius"]),
+            RadiusBase = ctx.ExprOf(p["radius_base"]),
+            Angle = ctx.ExprOf(p["angle"]),
+            Width = ctx.ExprOf(p["width"]),
+            Inner = ctx.ExprOf(p["inner"]),
+            Filter = ctx.StringOf(p["filter"]) ?? "enemy",
+            CenterMode = p["center"] is null ? null : ctx.ChoiceOf(p["center"], "center", "focus", "focus", "source", "point"),
+            MaxTargets = ctx.ExprOf(p["max_targets"]),
+            Effects = ctx.CompileList(p["effects"], "effects"),
+            IncludeCenter = ctx.BoolOf(p["include_center"], true),
+            Pick = Picks.Of(ctx, p["pick"], "random"),
+            Require = ctx.ExprOf(p["require"]),
+            FromEdge = ctx.ChoiceOf(p["reach"], "reach", "center", "center", "edge") == "edge",
+            Free = OcclusionFree(ctx, p["occlusion"]),
+            ReportMiss = ctx.BoolOf(p["report_miss"], false),
+            PreservePayloadDepth = ctx.ChoiceOf(p["payload_depth"], "payload_depth", "next", "next", "same") == "same",
+            BodyContact = ctx.ChoiceOf(p["contact"], "contact", "center", "center", "body") == "body",
+            Height = ctx.ExprOf(p["height"]),
+            Elevation = ctx.ExprOf(p["elevation"]),
+        };
+    }
 
     private sealed class Effect : CompiledEffect, IImmediateDeliveryCandidateSource, IReleaseTargetSelector
     {
         public bool ChecksLineOfSight => !Free;
         public required Shape Shape;
         public Expr? Radius;
+        public Expr? RadiusBase;
         public Expr? Angle;
         public Expr? Width;
         public Expr? Inner;
@@ -217,7 +227,10 @@ internal sealed class AreaHandler : IEffectHandler
         private ResolvedAreaPlan ResolvePlan(EffectContext ctx)
         {
             var center = Center(ctx, CenterMode ?? (Shape.Anchored ? "source" : "focus"));
-            var radius = (float)Math.Max(0.1, ParamOrAttr(ctx, Radius, "area.radius", 2));
+            var rawRadius = RadiusBase is null ? ParamOrAttr(ctx, Radius, "area.radius", 2) : ctx.Eval(RadiusBase);
+            if (RadiusBase is not null && ctx.SourceStats is { } source)
+                rawRadius = source.Attributes.Get("area.radius", source, ctx.Tags, ctx.Weave?.Modifiers, rawRadius);
+            var radius = (float)Math.Max(0.1, rawRadius);
             var scale = PlacementScale(ctx);
             if (scale != 1)
             {
@@ -264,7 +277,8 @@ internal sealed class AreaHandler : IEffectHandler
             plan = default;
             reason = null;
             using var inputs = ForecastInputs.Rent(ctx);
-            if (!inputs.ParameterOrAttribute(Radius, "area.radius") || !inputs.Expression(Angle) ||
+            if (!(RadiusBase is null ? inputs.ParameterOrAttribute(Radius, "area.radius") :
+                    inputs.Expression(RadiusBase) && inputs.AttributeWithBase("area.radius")) || !inputs.Expression(Angle) ||
                 Shape.HasAngle && !inputs.WeaveAttribute("area.angle") ||
                 Shape.HasWidth && !inputs.ParameterOrAttribute(Width, "area.width") ||
                 !inputs.Expression(Inner) || Shape.Anchored && ctx.Tags.Has("melee") && !inputs.WeaveAttribute("melee.reach") ||

@@ -586,7 +586,11 @@ public static class AxisBindings
         // area: an angle shapes only the shapes it shapes, and a width only those with one, an unwritten width
         // taking the shape's share of the weave's area.width (EffectHelpers.SizeOf).
         Choice("area", "shape", Geometry, "circle", registry: "shapes");
-        Axis("area", "radius", Geometry, Units, "area.radius", 2);
+        Axis("area", "radius", Geometry, Units, "area.radius", 2, fallbackWhen: "!radius_base");
+        Register(new AxisBinding { Type = "area", Parameter = "radius_base", Kind = ParameterKind.Axis,
+            Dimension = Geometry, Unit = Units, Attribute = "area.radius", Role = AttributeRole.Channel,
+            Fold = AttributeFold.Weave, WrittenOnly = true,
+            WrittenDetail = "external base through area.radius modifiers and bounds; mutually exclusive with radius" });
         Scaled("area", "angle", Geometry, Degrees, "area.angle", when: "shape:angle");
         Axis("area", "width", Geometry, Units, "area.width", when: "shape:width", fallbackWhen: "shape:width_share", factorOf: "shape:width_share");
         Axis("area", "inner", Geometry, Fraction);
