@@ -1,0 +1,34 @@
+{
+  "integratedMain": "91f234f",
+  "integrationCommit": "a316048",
+  "approvedPredecessor": "ae933a9",
+  "automatedTests": {
+    "core": 531,
+    "server": 38,
+    "client": 99,
+    "web": 176,
+    "launcher": 33,
+    "localHelper": 2
+  },
+  "nativeFullSmoke": "SMOKE DONE 22/22 passed in 42.2s; 110 fps at the end with 63 chunks and 293 entities",
+  "browserFullSmoke": "SMOKE DONE 25/25 passed in 69.5s; 231 fps, 2.39 ms of work per frame, 63 chunks and 299 entities at the end",
+  "browserInputEnvironment": "--no-physical-gamepads; all existing keyboard/mouse assertions retained; physical controller input excluded only from the test page",
+  "nativeQuickPlay": {
+    "selections": 1,
+    "result": "Automatic character resume, visible Crossing during delayed entry, terrain readiness and subsequent gameplay movement passed",
+    "client": "source"
+  },
+  "browserQuickPlay": {
+    "boot": "Crossing appears while the client module loads; quick login then waits for first-time creation",
+    "entry": "Automatic selection shows a playable Crossing, waits for hero and terrain, quarantines held input, then accepts fresh gameplay input",
+    "resume": "Remembered resume, cancel, ignored late frames and explicit reconnect all use the same loading lifecycle",
+    "pageErrors": []
+  },
+  "knownLimits": [
+    "Unisolated browser courses failed with unexpected panels and one cancelled loading session; cause correlated with controller input but no physical-device trace proves it.",
+    "Background loading confirmation focus guard is tracked separately in #9, commit b57ee405454b396ab9a8ab0bf569aad6015c69fa; not included here.",
+    "Optional native --cast-cues run passed 22 standard checks but missed impact sampling (22/23); retained for the presentation owner.",
+    "Existing combined.2 preview artifacts and managed server were preserved; packaging/install evidence remains the approved ae933a9 run.",
+    "Codespaces provisioning and physical controller/touch hardware are not verified."
+  ]
+}

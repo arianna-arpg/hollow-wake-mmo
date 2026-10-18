@@ -1,4 +1,4 @@
-// Run against the managed local server. A TCP proxy delays the real entry response, not the UI.
+// Run against a local server (the managed playtest ports by default). A TCP proxy delays the real entry response, not the UI.
 import assert from 'node:assert/strict';
 import { spawn } from 'node:child_process';
 import { createServer, connect } from 'node:net';
@@ -11,7 +11,9 @@ const executable = arg('--executable');
 const godot = arg('--godot') ?? process.env.HOLLOWWAKE_GODOT;
 assert.ok(executable || godot, 'pass --godot PATH or --executable PATH');
 const config = JSON.parse(readFileSync(path.join(root, 'config/playtest.json'), 'utf8'));
-const out = path.join(root, 'experiments/launcher-quick-play/output', executable ? 'combined-export' : 'combined-native');
+const port = Number(arg('--port') ?? config.port);
+assert.ok(Number.isInteger(port) && port > 0 && port <= 65535, 'pass a valid --port');
+const out = path.resolve(root, arg('--output') ?? `experiments/launcher-quick-play/output/${executable ? 'combined-export' : 'combined-native'}`);
 mkdirSync(out, { recursive: true });
 const run = (command, args) => new Promise((resolve, reject) => {
   const child = spawn(command, args, { cwd: root, windowsHide: true });
@@ -20,13 +22,13 @@ const run = (command, args) => new Promise((resolve, reject) => {
   child.once('error', reject); child.once('exit', code => resolve({ code, text }));
 });
 const account = `native-${Date.now()}`;
-const seed = await run('dotnet', ['run', '--project', 'src/HollowWake.Tools', '--no-build', '--', 'probe', '--host', '127.0.0.1', '--port', String(config.port), '--account', account, '--seconds', '3']);
+const seed = await run('dotnet', ['run', '--project', 'src/HollowWake.Tools', '--no-build', '--', 'probe', '--host', '127.0.0.1', '--port', String(port), '--account', account, '--seconds', '3']);
 assert.equal(seed.code, 0, seed.text);
 assert.match(seed.text, /PROBE OK/);
 let selections = 0;
 const sockets = new Set();
 const proxy = createServer(client => {
-  const server = connect(config.port, '127.0.0.1');
+  const server = connect(port, '127.0.0.1');
   sockets.add(client); sockets.add(server);
   let clientBytes = Buffer.alloc(0), held = false, queued = [], timer;
   client.on('data', bytes => {
