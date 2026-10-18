@@ -181,4 +181,80 @@ public class AimWrapperElevationTests
         Assert.Equal(baseAngle + degrees * Math.PI / 180, flight.Heading, 5);
         Assert.Equal(Entity.None, flight.CastTarget);
     }
+
+    [Theory]
+    [InlineData(false, 0, 0)]
+    [InlineData(false, 30, -30)]
+    [InlineData(false, 15, 20)]
+    [InlineData(true, 0, 0)]
+    [InlineData(true, 30, -30)]
+    [InlineData(true, 15, 20)]
+    public void NestedBearingSupportsComposeWithoutRealigningTheSampledPoint(bool retainedTarget, int first, int second)
+    {
+        var a = DeliveryArena.Create();
+        var target = a.Body(18, 10);
+        a.Sim.World.Get<Transform>(target)!.Yaw = 0;
+        a.Sim.World.Add(target, new HitBody { Definition = new HitBodyDef
+        {
+            Id = "nested-offset", Volumes = { new HitVolumeSpec { Left = 1, Up = .8f, Radius = .025f, HalfHeight = .1f } },
+        } });
+        var offset = HitBodies.AimPoint(a.Sim, target) - new Vector3(18, 10, 0);
+        const string child = """{"type":"projectile","speed":15,"range":12,"radius":0.02,"on_hit":[{"type":"event","name":"nested_hit"}]}""";
+        static string Wrap(int turn, string effects) => "{\"type\":\"aim\",\"offset\":" + turn + ",\"effects\":[" + effects + "]}";
+        EffectContext Context() => new()
+        {
+            Sim = a.Sim, Source = a.Caster, Target = retainedTarget ? target : Entity.None,
+            Point = new Vector3(16, 10, 0), Direction = Vector2.Normalize(new Vector2(1, .2f)),
+            From = new Vector3(10, 10, .9f), LaunchLift = 0,
+            Rng = new Rng(481), AimOffset = retainedTarget ? Vector3.Zero : offset,
+        };
+        var flights = new List<Projectile>();
+        a.Sim.Events.Subscribe<EntitySpawned>(e => { if (a.Sim.World.Get<Projectile>(e.Entity) is { } p) flights.Add(p); });
+        a.Effect(Wrap(first + second, child)).Execute(Context());
+        a.Effect(Wrap(first, Wrap(second, child))).Execute(Context());
+        var single = flights[0]; var nested = flights[1];
+        Assert.True(Vector3.Distance(single.Context.Point, nested.Context.Point) < 0.00001f);
+        Assert.True(Vector3.Distance(single.Context.AimOffset, nested.Context.AimOffset) < 0.00001f);
+        Assert.True(Vector3.Distance(single.Velocity, nested.Velocity) < 0.00001f);
+        if (first + second == 0)
+        {
+            a.Effect(child).Execute(Context());
+            Assert.True(Vector3.Distance(flights[2].Velocity, nested.Velocity) < 0.00001f);
+            Assert.True(Vector3.Distance(retainedTarget ? new Vector3(18, 10, 0) : Context().Point, nested.Context.Point) < 0.00001f);
+            a.Tick(30);
+            if (retainedTarget)
+            {
+                Assert.Equal(3, a.Struck("nested_hit").Count(e => e == target));
+                Assert.All(flights, p => Assert.True(p.Hits.Holds(target, a.Sim.Clock.Time, 0)));
+            }
+        }
+        Assert.Equal(Entity.None, nested.CastTarget);
+    }
+
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public void IdentitySupportsPreservePointPlacedAreaAndProjectileContacts(bool projectile)
+    {
+        var a = DeliveryArena.Create();
+        var point = new Vector3(16, 10, 0);
+        var direction = Vector2.Normalize(new Vector2(1, .2f));
+        var targetPoint = projectile ? point + new Vector3(direction * 4, 0) : point;
+        var target = a.Body(targetPoint.X, targetPoint.Y);
+        var child = projectile
+            ? """{"type":"projectile","origin":"point","aim":"horizontal","speed":15,"range":6,"radius":0.1,"on_hit":[{"type":"event","name":"point_hit"}]}"""
+            : """{"type":"area","center":"point","radius":0.1,"effects":[{"type":"event","name":"point_hit"}]}""";
+        static string Wrap(string effects) => "{\"type\":\"aim\",\"offset\":0,\"effects\":[" + effects + "]}";
+        var flights = new List<Projectile>();
+        a.Sim.Events.Subscribe<EntitySpawned>(e => { if (a.Sim.World.Get<Projectile>(e.Entity) is { } p) flights.Add(p); });
+        foreach (var graph in new[] { child, Wrap(child), Wrap(Wrap(child)) })
+            a.Effect(graph).Execute(a.Context(point, direction));
+        a.Tick(30);
+        Assert.Equal(3, a.Struck("point_hit").Count(e => e == target));
+        if (projectile)
+        {
+            Assert.Equal(3, flights.Count);
+            Assert.All(flights, p => Assert.Equal(new Vector3(16, 10, 1), p.Origin));
+        }
+    }
 }

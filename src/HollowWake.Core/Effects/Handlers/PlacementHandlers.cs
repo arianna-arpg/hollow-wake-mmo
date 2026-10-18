@@ -470,14 +470,17 @@ internal sealed class AimHandler : IEffectHandler
             var turn = (float)(degrees * Math.PI / 180.0);
             var angle = MathF.Atan2(facing.Y, facing.X) + turn;
             var direction = new Vector2(MathF.Cos(angle), MathF.Sin(angle));
-            var reach = new Vector2(focus.X - origin.X, focus.Y - origin.Y).Length();
-            var point = new Vector3(origin.X + direction.X * reach, origin.Y + direction.Y * reach, focus.Z);
+            var cosine = MathF.Cos(turn); var sine = MathF.Sin(turn);
+            var delta = focus - origin;
+            // Point and bearing are independent inputs. Rebuilding the point along the bearing
+            // would realign it on every nested wrapper, even when the authored turn is zero.
+            var point = new Vector3(origin.X + delta.X * cosine - delta.Y * sine,
+                origin.Y + delta.X * sine + delta.Y * cosine, focus.Z);
             var target = ctx.Target == ctx.Source ? ctx.Target : Entity.None;
             // A bearing change releases the body lock but keeps its sampled three-dimensional aim.
             // Rotate the body-relative offset with the point; it is not a new ground placement.
             var offset = aimed is not null
                 ? HitBodies.AimPoint(ctx.Sim, ctx.Target) - aimed.Position : ctx.AimOffset;
-            var cosine = MathF.Cos(turn); var sine = MathF.Sin(turn);
             var aimOffset = new Vector3(offset.X * cosine - offset.Y * sine, offset.X * sine + offset.Y * cosine, offset.Z);
             // Releasing a retained body preserves its authored aiming point. An already committed
             // direction is independent of the offset and must never reacquire that body bearing.
