@@ -4,6 +4,7 @@ using HollowWake.Core.Content;
 using HollowWake.Core.Definitions;
 using HollowWake.Core.Tags;
 using HollowWake.Core.World;
+using HollowWake.Protocol;
 using Xunit;
 
 namespace HollowWake.Client.Tests;
@@ -340,5 +341,61 @@ public class AppearanceTests
             last = s;
         }
         Assert.Equal(day.At(0f).Sky, day.At(1f).Sky);
+    }
+
+    [Fact]
+    public void TheDayFollowsTheServerWhenItSaysAndFoldsTheClockOtherwise()
+    {
+        var day = new DayCycle(Catalog().World);
+        Assert.Null(day.Server);
+        var folded = day.TimeOfDay(100);
+        Assert.Equal(day.LengthSeconds, day.DayLengthSeconds);
+
+        // enter_world: the length and the fraction as of a server time; the fraction advances with the clock and wraps
+        day.ObserveServer(600, 0.25, atServerTime: 100);
+        Assert.Equal(0.25f, day.TimeOfDay(100), 4);
+        Assert.Equal(0.5f, day.TimeOfDay(250), 4);
+        Assert.Equal(0.05f, day.TimeOfDay(580), 4);
+        Assert.Equal(600f, day.DayLengthSeconds);
+
+        // the self state: a fraction alone keeps the length; no fraction changes nothing
+        day.ObserveServer(null, 0.9, atServerTime: 1000);
+        Assert.Equal(0.9f, day.TimeOfDay(1000), 4);
+        Assert.Equal(600f, day.DayLengthSeconds);
+        day.ObserveServer(null, null, atServerTime: 2000);
+        Assert.Equal(0.9f, day.TimeOfDay(1000), 4);
+
+        // a server that never says: the clock folded by the content's day again
+        day.ForgetServer();
+        Assert.Null(day.Server);
+        Assert.Equal(folded, day.TimeOfDay(100), 4);
+    }
+
+    [Fact]
+    public void OtherPlayersWearWhatTheWireSays()
+    {
+        var catalog = Catalog();
+        var holdfast = catalog.Resolve("holdfast", null)!;
+
+        // nothing from the server: the Calling's kit
+        Assert.Equal("shield.buckler", catalog.WornBy(holdfast, null, null, null)["off_hand"].Class);
+        Assert.Equal("shield.buckler", catalog.WornBy(holdfast, null, new List<string>(), null)["off_hand"].Class);
+
+        // the descriptor's slots, classes and tags read as the item's own would, and the class's trailing word is a tag
+        var worn = catalog.WornBy(holdfast, null, new List<string> { "chest=armor.chest cloth caster", "main_hand=weapon.wand caster one_hand focus_weapon", "head=armor.head.heavy" }, null);
+        Assert.Equal(new[] { "chest", "head", "main_hand" }, worn.Keys.OrderBy(k => k, StringComparer.Ordinal).ToArray());
+        Assert.Equal("robe", catalog.GearFor("chest", worn["chest"].Class, worn["chest"].Tags)!.Body);
+        Assert.Equal("wand", catalog.GearFor("main_hand", worn["main_hand"].Class, worn["main_hand"].Tags)!.Body);
+        Assert.Equal("gear_helm", catalog.GearFor("head", worn["head"].Class, worn["head"].Tags)!.Id);
+        Assert.DoesNotContain("off_hand", worn.Keys);
+
+        // the owner's own equipment wins over the descriptor
+        var own = new Dictionary<string, ItemInfo> { ["main_hand"] = new(1, "dagger", "Dagger", "common", 1, 1, "main_hand", new List<string>(), new Dictionary<string, double>()) };
+        var self = catalog.WornBy(holdfast, null, new List<string> { "main_hand=weapon.sword melee blade one_hand" }, own);
+        Assert.Equal("weapon.dagger", self["main_hand"].Class);
+        Assert.Contains("finesse", self["main_hand"].Tags);
+
+        // entries without a slot or a class say nothing
+        Assert.Empty(AppearanceCatalog.WornFromDescriptor(new[] { "nonsense", "=weapon.sword", "belt=", "belt=   " }));
     }
 }

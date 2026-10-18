@@ -1,3 +1,4 @@
+import type { ItemInfo } from '../../net/protocol';
 import type { Obj } from '../../ui/logic/content';
 import { str, num } from '../../ui/logic/content';
 import { parseHex, type Rgb } from '../palette';
@@ -369,6 +370,51 @@ export class AppearanceCatalog {
     }
     return gear;
   }
+
+  /**
+   * What a body wears, in order of preference: the owner's own equipment (the self's body, from its self state), the
+   * public descriptor the server sends for a player (EntityState.appearance), else the defaults of defaultGear. A
+   * descriptor that names nothing falls to the defaults, as does a state without one: the server omits it when nothing
+   * is worn, and a server that predates it never sends one.
+   */
+  wornBy(body: AppearanceDef, patternId: string | null | undefined, appearance: readonly string[] | undefined, selfEquipment: Record<string, ItemInfo> | undefined): Map<string, ItemLook> {
+    if (selfEquipment && Object.keys(selfEquipment).length > 0) {
+      const own = new Map<string, ItemLook>();
+      for (const [slot, item] of Object.entries(selfEquipment)) {
+        const fromBase = this.itemLook(item.base);
+        own.set(slot, { itemClass: item.class ?? fromBase?.itemClass ?? null, tags: fromBase?.tags ?? [] });
+      }
+      return own;
+    }
+    if (appearance && appearance.length > 0) {
+      const worn = wornFromDescriptor(appearance);
+      if (worn.size > 0) {
+        return worn;
+      }
+    }
+    return this.defaultGear(body, patternId);
+  }
+}
+
+/**
+ * The gear a public appearance descriptor says a player wears (docs/design/networking-and-persistence.md): one entry per
+ * slot, `slot=class tag tag ...`, the class split as an entry's own gear is so its trailing word reads as a tag. Entries
+ * without a slot or a class are skipped.
+ */
+export function wornFromDescriptor(appearance: readonly string[]): Map<string, ItemLook> {
+  const worn = new Map<string, ItemLook>();
+  for (const entry of appearance) {
+    const eq = entry.indexOf('=');
+    if (eq <= 0) {
+      continue;
+    }
+    const words = entry.slice(eq + 1).split(' ').filter((w) => w.length > 0);
+    if (words.length === 0) {
+      continue;
+    }
+    worn.set(entry.slice(0, eq), { itemClass: words[0], tags: [...splitClass(words[0]), ...words.slice(1)] });
+  }
+  return worn;
 }
 
 /** An item class as tags: armor.chest.heavy carries armor, armor.chest and the trailing word as its own tag. */

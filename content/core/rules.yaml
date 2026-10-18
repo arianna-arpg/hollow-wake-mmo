@@ -29,6 +29,14 @@ entries:
         shallow_depth: 0.6
         flora_jitter: 0.4
 
+  # The calendar (docs/design/world/landscape.md): how long a day lasts in seconds of world time, and the fraction of
+  # the day a new world wakes at. Every zone shares the one day; the clients draw the sky from the fraction the
+  # server sends, so a rule that reads the time of day and the sky a player sees always agree.
+  - id: landscape
+    values:
+      day_length_seconds: 1800
+      day_start: 0.3
+
   - id: server
     values:
       tick_rate: 20

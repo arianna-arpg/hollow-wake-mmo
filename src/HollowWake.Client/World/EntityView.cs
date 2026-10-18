@@ -362,10 +362,14 @@ public partial class EntityView : Node3D
         };
     }
 
+    /// <summary>Whether two states say the same about what a player wears; both absent is the same too.</summary>
+    private static bool SameAppearance(List<string>? a, List<string>? b) =>
+        ReferenceEquals(a, b) || (a is not null && b is not null && a.SequenceEqual(b, StringComparer.Ordinal));
+
     public void Apply(EntityState state, bool snap)
     {
         var rebuild = state.Look != State.Look || Math.Abs(state.Height - State.Height) > 0.01f || state.Interactable is null != State.Interactable is null
-            || state.Shape != State.Shape || state.ShapeSize != State.ShapeSize || state.Faction != State.Faction;
+            || state.Shape != State.Shape || state.ShapeSize != State.ShapeSize || state.Faction != State.Faction || !SameAppearance(state.Appearance, State.Appearance);
         var now = ServerNow?.Invoke() ?? Time.GetTicksMsec() / 1000.0;
         if (state.Casting is null && State.Casting is not null)
         {

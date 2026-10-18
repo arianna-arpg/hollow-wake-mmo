@@ -307,6 +307,7 @@ public partial class Smoke : Node
         settings.Set("day_lock", System.Text.Json.Nodes.JsonValue.Create(false));
         await Wait(0.3);
         Record("day cycle", Math.Abs(night - 1.0 / 24) < 0.01 && Math.Abs(evening - 18.5 / 24) < 0.01, $"night at {night:0.00} of the day, evening at {evening:0.00}, the server's day at {world.TimeOfDay:0.00}");
+        Record("server day", world.HasServerDay, world.HasServerDay ? $"the sky follows the day the server reported, at {world.TimeOfDay:0.00}" : "the sky folds the zone clock: the server sent no day");
     }
 
     private sealed record Measurement(string Line, double P95, int Bodies, int Cards);

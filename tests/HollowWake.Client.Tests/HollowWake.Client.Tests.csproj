@@ -21,5 +21,6 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\HollowWake.Core\HollowWake.Core.csproj" />
+    <ProjectReference Include="..\..\src\HollowWake.Protocol\HollowWake.Protocol.csproj" />
   </ItemGroup>
 </Project>

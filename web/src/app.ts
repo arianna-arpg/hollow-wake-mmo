@@ -515,6 +515,9 @@ export class App {
         this.clock.reset();
         this.clock.observe(m.server_time, local);
         this.hud.hero.observeServerTime(m.server_time, local);
+        // the world's day, when the server says: how long it lasts and the fraction as of the zone's clock now
+        this.day.forgetServer();
+        this.day.observeServer(m.day_length, m.time_of_day, m.server_time);
         this.inWorld = true;
         this.hud.inWorld = true;
         this.login.show(false);
@@ -552,6 +555,7 @@ export class App {
         break;
       case 'self_state':
         this.hud.applySelf(m);
+        this.day.observeServer(undefined, m.time_of_day, this.clock.now(local));
         break;
       case 'weave_slots':
         this.count(m.t);
@@ -911,7 +915,12 @@ export class App {
     return this.dayOverride ?? this.day.timeOfDay(this.clock.now(performance.now() / 1000));
   }
 
-  /** The sky, sun, ambient light and haze follow the server's clock through the content's day. */
+  /** Whether the sky follows the day the server reported rather than the folded zone clock, for the smoke's evidence. */
+  get hasServerDay(): boolean {
+    return this.day.server !== null;
+  }
+
+  /** The sky, sun, ambient light and haze follow the server's day (else its clock through the content's day). */
   private followDay(serverNow: number): void {
     const fraction = this.dayOverride ?? this.day.timeOfDay(serverNow);
     if (Math.abs(fraction - this.lastDayFraction) < 0.0005) {
@@ -990,6 +999,7 @@ export class App {
           atlasBytes: app.appearance.atlasBytes,
           bakesPending: app.appearance.baker.pending,
           timeOfDay: app.timeOfDay,
+          dayFromServer: app.hasServerDay,
           cues: Object.fromEntries(app.audio.raised),
           light: {
             sun: app.sun.intensity,

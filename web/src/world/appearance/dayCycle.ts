@@ -3,10 +3,24 @@ import { num, str } from '../../ui/logic/content';
 import { lerp, parseHex, type Rgb } from '../palette';
 
 /**
- * The day as the browser draws it, the twin of the desktop's World/Logic/DayCycle.cs: the server clock
- * folded by the content's day length into a fraction of the day, the sky keyframes blended at that fraction,
- * and the sun's bearing and height around noon. Nothing here is a gameplay clock.
+ * The day as the browser draws it, the twin of the desktop's World/Logic/DayCycle.cs: the world's day as the
+ * server reports it in enter_world and on the self state's cadence, advanced between messages by the server
+ * clock, or for a server that never says, the zone clock folded by the content's day length; the sky keyframes
+ * blended at that fraction, and the sun's bearing and height around noon. Nothing here is a gameplay clock: the
+ * simulation's own day is the server's, and this only follows it.
  */
+
+/** The world's day as the server reports it: how long it lasts, and the fraction it stood at when a server time was read. */
+export interface ServerDay {
+  lengthSeconds: number;
+  fraction: number;
+  atServerTime: number;
+}
+
+const wrap = (t: number): number => {
+  const r = t % 1;
+  return r < 0 ? r + 1 : r;
+};
 
 export interface SkyState {
   sky: Rgb;
@@ -96,10 +110,44 @@ export class DayCycle {
     }
   }
 
-  /** The fraction of the day at a server time, from zero (midnight) through half (noon). */
+  /** The server's day, once a message carried it; null before that, and for a server that predates the field. */
+  server: ServerDay | null = null;
+
+  /** How long the day lasts: the server's length once known, else the content's. */
+  get dayLengthSeconds(): number {
+    return this.server?.lengthSeconds ?? this.lengthSeconds;
+  }
+
+  /**
+   * The day as a message reported it: the fraction, and the length when the message carries one (enter_world does,
+   * the self state does not, and a fraction alone keeps the length last reported, else the content's). The server
+   * time is the client's estimate of the server clock as the message arrived; the fraction advances from it. A
+   * message without a fraction changes nothing.
+   */
+  observeServer(lengthSeconds: number | undefined, fraction: number | undefined, atServerTime: number): void {
+    if (fraction === undefined || !Number.isFinite(fraction)) {
+      return;
+    }
+    const length = lengthSeconds ?? this.server?.lengthSeconds ?? this.lengthSeconds;
+    this.server = { lengthSeconds: Math.max(1, length), fraction: wrap(fraction), atServerTime };
+  }
+
+  /** Forgets the server's day, as on entering a world: the next message that carries one sets it again, and until then the clock folds. */
+  forgetServer(): void {
+    this.server = null;
+  }
+
+  /**
+   * The fraction of the day at a server time, from zero (midnight) through half (noon): the server's fraction advanced
+   * by the server clock when the server said, else the clock folded by the content's day from its start, which agrees
+   * between two zones only while their clocks do.
+   */
   timeOfDay(serverTime: number): number {
-    const t = (serverTime / this.lengthSeconds + this.start) % 1;
-    return t < 0 ? t + 1 : t;
+    const s = this.server;
+    if (s !== null) {
+      return wrap(s.fraction + (serverTime - s.atServerTime) / s.lengthSeconds);
+    }
+    return wrap(serverTime / this.lengthSeconds + this.start);
   }
 
   /** The sky at a fraction of the day, blended between the keyframes around it, wrapping at midnight. */
