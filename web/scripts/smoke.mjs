@@ -72,7 +72,7 @@ const rejected = async () => {
 const flat = (a, b) => Math.hypot(a.x - b.x, a.y - b.y);
 const shot = async (name) => {
   await sleep(150);
-  await page.screenshot({ path: join(shots, name) });
+  return await page.screenshot({ path: join(shots, name) });
 };
 
 async function until(condition, timeoutMs) {
@@ -448,8 +448,25 @@ async function lookStages() {
   }, 20000);
   await sleep(500);
   const cards = await measure('cards');
-  await shot('16_cards.png');
+  const cardShot = await shot('16_cards.png');
   record('bodies as cards', baked && cards.cards > 0 && cards.p95 < 50, cards.line);
+  // Sample the central world above the HUD. Sky plus floating labels must not pass as rendered terrain.
+  const worldPixels = await page.evaluate(async (png) => {
+    const image = new Image(); image.src = `data:image/png;base64,${png}`; await image.decode();
+    const canvas = document.createElement('canvas'); canvas.width = image.width; canvas.height = image.height;
+    const context = canvas.getContext('2d'); context.drawImage(image, 0, 0);
+    const data = context.getImageData(0, 0, image.width, image.height).data;
+    const buckets = new Uint32Array(4096); let samples = 0;
+    for (let y = Math.floor(image.height * .12); y < image.height * .48; y += 2) {
+      for (let x = Math.floor(image.width * .2); x < image.width * .8; x += 2) {
+        const i = (y * image.width + x) * 4;
+        buckets[((data[i] >> 4) << 8) | ((data[i + 1] >> 4) << 4) | (data[i + 2] >> 4)]++; samples++;
+      }
+    }
+    return { dominant: Math.max(...buckets) / samples, colors: buckets.filter(n => n > 0).length, samples };
+  }, cardShot.toString('base64'));
+  record('card mode draws the world', worldPixels.dominant < .92 && worldPixels.colors >= 16,
+    `largest color region ${(worldPixels.dominant * 100).toFixed(2)}%, ${worldPixels.colors} color bins, ${worldPixels.samples} samples`);
   await set('bodies', 'auto');
   await sleep(300);
   await set('grayscale', true);
