@@ -272,6 +272,75 @@ public class HitStageTests
         }
     }
 
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public void AHealTakesNoLifeAroundTheLadder(bool penalty)
+    {
+        // A heal only restores: one a formula turns below zero is refused and said once per weave, and one the healer's
+        // healing folds below zero (a flat penalty past the amount) heals nothing; neither takes life without a hit.
+        var arena = DeliveryArena.Create();
+        var log = new ListSimLog();
+        arena.Sim.Log = log;
+        var victim = arena.Body(12, 10);
+        var stats = arena.Sim.World.Get<Stats>(victim)!;
+        var at = arena.Sim.World.Get<Transform>(victim)!.Position;
+        stats.SetResource("life", stats.ResourceMax("life") - 20);
+        var before = stats.Resource("life");
+        if (penalty)
+        {
+            arena.Sim.World.Get<Stats>(arena.Caster)!.Attributes.Add(new Modifier { Attribute = "healing", Form = ModifierForm.Flat, Value = -10, Source = "test" });
+        }
+        var heal = arena.Effect(penalty ? "{\"type\": \"heal\", \"amount\": 5}" : "{\"type\": \"heal\", \"amount\": \"-min(5, target.life)\"}");
+        var blast = arena.Weave("blast");
+        heal.Execute(arena.Context(at, target: victim, weave: blast));
+        heal.Execute(arena.Context(at, target: victim, weave: blast));
+        Assert.Equal(before, stats.Resource("life"));
+        Assert.Empty(arena.Of<DamageDealt>());
+        Assert.Empty(arena.Of<Healed>());
+        if (penalty)
+        {
+            Assert.Empty(log.Lines);
+        }
+        else
+        {
+            var refusal = Assert.Single(log.Lines);
+            Assert.Contains($"the heal effect of weave '{blast.Key}'", refusal);
+            Assert.Contains("damage", refusal);
+        }
+        // A heal still restores.
+        arena.Effect("{\"type\": \"heal\", \"amount\": 30}").Execute(arena.Context(at, target: victim, weave: blast));
+        Assert.True(stats.Resource("life") > before);
+    }
+
+    [Fact]
+    public void ValidationRefusesALiteralNegativeHeal()
+    {
+        var dir = Path.Combine(Path.GetTempPath(), "hollowwake-heal-" + Guid.NewGuid().ToString("N"));
+        Directory.CreateDirectory(dir);
+        try
+        {
+            File.WriteAllText(Path.Combine(dir, "weaves.yaml"), string.Join("\n",
+                "kind: weaves",
+                "entries:",
+                "  - { id: t_harm_life, name: Harm, form: slam_quick, effects: [ { type: heal, amount: -5 } ] }",
+                "  - { id: t_harm_mana, name: Harm, form: slam_quick, effects: [ { type: area, radius: 2, effects: [ { type: heal, resource: mana, amount: \"-5\" } ] } ] }",
+                "  - { id: t_harm_formula, name: Harm, form: slam_quick, effects: [ { type: heal, amount: \"-min(5, target.life)\" } ] }",
+                "  - { id: t_mend, name: Mend, form: slam_quick, effects: [ { type: heal, amount: 5 } ] }",
+                ""));
+            ContentRegistry.Load(new[] { CoreContent.FindContentDir(), dir }, out var report);
+            var errors = report.Errors.Select(e => $"{e.Id}: {e.Message}").ToList();
+            Assert.Contains(errors, e => e.StartsWith("t_harm_life") && e.Contains("'damage'"));
+            Assert.Contains(errors, e => e.StartsWith("t_harm_mana") && e.Contains("'resource'"));
+            // A formula is refused when it runs, not at load; a heal that restores loads.
+            Assert.DoesNotContain(errors, e => e.StartsWith("t_harm_formula") || e.StartsWith("t_mend"));
+        }
+        finally
+        {
+            Directory.Delete(dir, recursive: true);
+        }
+    }
+
     /// <summary>A test stage after damage taken: doubles what was received.</summary>
     private sealed class DoublingStage : IHitStage
     {

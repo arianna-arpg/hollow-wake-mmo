@@ -20,6 +20,29 @@ public static class DamageHandlers
         r.Register(new HealHandler());
         r.Register(new ResourceHandler());
     }
+
+    /// <summary>Whether losing all of a resource kills (life): such a resource falls only through the damage ladder.</summary>
+    internal static bool Lethal(ContentRegistry content, string resource) => content.Get<ResourceDef>(resource)?.Lethal == true;
+
+    /// <summary>An amount content writes as a number, or as a formula that is one: what validation can judge before a cast.</summary>
+    internal static bool Literal(JsonNode? amount, out double value)
+    {
+        value = 0;
+        if (amount is null)
+        {
+            return false;
+        }
+        if (JsonNum.StringOf(amount) is { } text)
+        {
+            if (!Expr.TryParse(text, out var expr, out _) || !expr!.IsConstant)
+            {
+                return false;
+            }
+            value = expr.ConstantValue;
+            return true;
+        }
+        return JsonNum.TryDouble(amount, out value);
+    }
 }
 
 /// <summary>
@@ -181,13 +204,15 @@ internal sealed class DamageHandler : IEffectHandler
 /// <summary>
 /// <c>heal</c>: an amount folded through the healer's <c>healing</c>, on the target (the healer when there is none);
 /// <c>self</c> heals the healer instead, as a status tick that heals whoever applied it; <c>exclude_self</c> skips
-/// the healer.
+/// the healer. A heal only restores. An amount below zero is refused (logged once per weave, since lowering life is
+/// a <c>damage</c> effect and lowering another resource a <c>resource</c> effect), and validation refuses a literal
+/// one; a <c>healing</c> fold that takes an amount below zero heals nothing.
 /// </summary>
 internal sealed class HealHandler : IEffectHandler
 {
     public string Type => "heal";
 
-    public EffectSignature Signature { get; } = EffectSignature.Of("amount", "resource", "tags", "self", "exclude_self");
+    public EffectSignature Signature { get; } = EffectSignature.Of("amount", "resource", "tags", "self", "exclude_self").Checking(Lowers);
 
     public CompiledEffect Compile(JsonObject p, EffectCompileContext ctx) => new Effect
     {
@@ -199,6 +224,18 @@ internal sealed class HealHandler : IEffectHandler
         ExcludeSelf = ctx.BoolOf(p["exclude_self"], false),
     };
 
+    /// <summary>Refuses an amount written as a negative number, or a formula that is one: a heal only restores.</summary>
+    private static string? Lowers(JsonObject p, ContentRegistry content)
+    {
+        if (!DamageHandlers.Literal(p["amount"], out var value) || value >= 0)
+        {
+            return null;
+        }
+        var resource = JsonNum.StringOf(p["resource"]) ?? "life";
+        var instead = DamageHandlers.Lethal(content, resource) ? "damage" : "resource";
+        return $"lowers {resource} by {(-value).ToString("0.###", CultureInfo.InvariantCulture)}, but a heal only restores: write a '{instead}' effect instead";
+    }
+
     private sealed class Effect : CompiledEffect
     {
         public required Expr Amount;
@@ -206,6 +243,9 @@ internal sealed class HealHandler : IEffectHandler
         public TagSet Tags = TagSet.Empty;
         public bool Self;
         public bool ExcludeSelf;
+
+        // The weaves whose negative heal this effect already logged; it logs each once.
+        private readonly ConcurrentDictionary<string, bool> _refused = new(StringComparer.Ordinal);
 
         public override void Execute(EffectContext ctx)
         {
@@ -219,9 +259,23 @@ internal sealed class HealHandler : IEffectHandler
                 return;
             }
             var amount = ctx.Eval(Amount) * ctx.Potency;
+            if (amount < 0)
+            {
+                var weave = ctx.Weave?.Key ?? "none";
+                if (_refused.TryAdd(weave, true))
+                {
+                    ctx.Sim.Log.Warn($"the heal effect of weave '{weave}' would lower {Resource} by {(-amount).ToString("0.###", CultureInfo.InvariantCulture)}; refused, since a heal only restores: a decrease of {Resource} is a {(DamageHandlers.Lethal(ctx.Sim.Content, Resource) ? "damage" : "resource")} effect");
+                }
+                return;
+            }
             if (ctx.SourceStats is { } src)
             {
                 amount = src.Attributes.Apply("healing", amount, src, ctx.Tags.Union(Tags), ctx.Weave?.Modifiers);
+            }
+            if (amount < 0)
+            {
+                // A healing fold below nothing (a flat penalty past the amount) heals nothing; it never takes.
+                return;
             }
             var healed = stats.AddResource(Resource, amount);
             if (healed > 0)
@@ -255,33 +309,15 @@ internal sealed class ResourceHandler : IEffectHandler
         Self = ctx.BoolOf(p["self"], false),
     };
 
-    /// <summary>Whether losing all of a resource kills (life): such a resource falls only through the damage ladder.</summary>
-    private static bool Lethal(ContentRegistry content, string resource) => content.Get<ResourceDef>(resource)?.Lethal == true;
-
     /// <summary>Refuses an amount written as a negative number, or a formula that is one, of a lethal resource.</summary>
     private static string? LowersLethal(JsonObject p, ContentRegistry content)
     {
         var resource = JsonNum.StringOf(p["resource"]) ?? DefaultResource;
-        if (!Lethal(content, resource) || p["amount"] is not { } amount)
+        if (!DamageHandlers.Lethal(content, resource) || !DamageHandlers.Literal(p["amount"], out var value) || value >= 0)
         {
             return null;
         }
-        double value;
-        if (JsonNum.StringOf(amount) is { } text)
-        {
-            if (!Expr.TryParse(text, out var expr, out _) || !expr!.IsConstant)
-            {
-                return null;
-            }
-            value = expr.ConstantValue;
-        }
-        else if (!JsonNum.TryDouble(amount, out value))
-        {
-            return null;
-        }
-        return value < 0
-            ? $"lowers {resource} by {(-value).ToString("0.###", CultureInfo.InvariantCulture)}, but {resource} falls only through the damage ladder: write a 'damage' effect instead"
-            : null;
+        return $"lowers {resource} by {(-value).ToString("0.###", CultureInfo.InvariantCulture)}, but {resource} falls only through the damage ladder: write a 'damage' effect instead";
     }
 
     private sealed class Effect : CompiledEffect
@@ -301,7 +337,7 @@ internal sealed class ResourceHandler : IEffectHandler
                 return;
             }
             var amount = ctx.Eval(Amount) * ctx.Potency;
-            if (amount < 0 && Lethal(ctx.Sim.Content, Resource))
+            if (amount < 0 && DamageHandlers.Lethal(ctx.Sim.Content, Resource))
             {
                 var weave = ctx.Weave?.Key ?? "none";
                 if (_refused.TryAdd(weave, true))

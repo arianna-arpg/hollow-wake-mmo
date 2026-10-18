@@ -1111,6 +1111,9 @@ internal static class Riders
     /// </summary>
     public static JsonObject Drain() => new() { ["type"] = "resource", ["resource"] = "life", ["amount"] = $"-min({Drained}, target.life)" };
 
+    /// <summary>A heal told to lower the reached body's life, the other effect that could step around the ladder: refused and logged as the drain is.</summary>
+    public static JsonObject HealDrain() => new() { ["type"] = "heal", ["amount"] = $"-min({Drained}, target.life)" };
+
     /// <summary>A status rider: a marker of the depth it is applied at, then the marking status, whose every tick runs a marker of the depth the tick runs at.</summary>
     public static JsonObject[] Status() => new[]
     {
@@ -1141,7 +1144,7 @@ internal static class Riders
     {
         Rider.Damage => new JsonArray(Damage(list.Name)),
         Rider.Marker => new JsonArray(Marker(list.Name)),
-        Rider.Drain => new JsonArray(Drain()),
+        Rider.Drain => new JsonArray(Drain(), HealDrain()),
         Rider.Status => new JsonArray(Status()),
         Rider.Cast => new JsonArray(Cast()),
         _ => new JsonArray(Burst(list.Name)),

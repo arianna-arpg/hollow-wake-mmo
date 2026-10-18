@@ -260,14 +260,14 @@ internal static class MorphArena
             }
         }
 
-        // A drain asks the resource effect to take life around the ladder; the handler refusing it, and saying so, is the
-        // invariant holding. Every other line logged breaks the run.
+        // A drain asks the resource and heal effects to take life around the ladder; a handler refusing it, and saying
+        // so, is the invariant holding. Every other line logged breaks the run.
         var drains = point.Family.Lists.Any(l => l.Rider == Rider.Drain && point.Lists.Contains(l.Key));
         foreach (var line in log.Lines)
         {
-            if (drains && line.Contains("the resource effect of weave", StringComparison.Ordinal) && line.Contains("refused", StringComparison.Ordinal))
+            if (drains && Refusal(line) is { } effect)
             {
-                outcome.Refused++;
+                outcome.Refused.Add(effect);
                 continue;
             }
             outcome.Broke("runs", line);
@@ -279,6 +279,16 @@ internal static class MorphArena
         outcome.Events = recorder.Lines.Select(l => l.Line).ToList();
         outcome.Observable = recorder.Observable();
         return outcome;
+    }
+
+    /// <summary>The effect a logged line says refused to lower a resource (<c>the heal effect of weave 'x' would lower life by 5; refused, ...</c>), or null.</summary>
+    private static string? Refusal(string line)
+    {
+        const string lead = "warning: the ";
+        var of = line.IndexOf(" effect of weave ", StringComparison.Ordinal);
+        return line.StartsWith(lead, StringComparison.Ordinal) && of > lead.Length && line.Contains("; refused", StringComparison.Ordinal)
+            ? line[lead.Length..of]
+            : null;
     }
 
     /// <summary>
@@ -389,8 +399,8 @@ internal static class MorphArena
         /// <summary>The ticks, from the press, at which flights were launched from where the caster stands.</summary>
         public List<long> Launches { get; set; } = new();
 
-        /// <summary>How many times the resource effect refused a drain the point carries, as the simulation logged it.</summary>
-        public int Refused { get; set; }
+        /// <summary>The effects that refused a drain the point carries, as the simulation logged their refusals.</summary>
+        public SortedSet<string> Refused { get; } = new(StringComparer.Ordinal);
 
         public void Broke(string invariant, string message) => Broken.Add((invariant, message));
     }

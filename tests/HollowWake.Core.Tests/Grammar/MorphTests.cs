@@ -137,11 +137,14 @@ public class MorphTests
         Settle(name, examined, violations, "validates", "compiles", "states");
     }
 
+    /// <summary>The effects a drain asks to lower life around the ladder: each must refuse it somewhere the family samples drains.</summary>
+    private static readonly string[] Drainers = { "resource", "heal" };
+
     /// <summary>
     /// Each sampled point, pressed: deterministic, one damage pipeline, bounded, terminating, nothing left behind, paying
-    /// before it resolves, keeping the depth, on time, and nothing logged but the refusal of a drain it carries. Where the
-    /// family samples drains, some drain must have reached a body and been refused, so the pipeline check saw the effect
-    /// that could step around the ladder.
+    /// before it resolves, keeping the depth, on time, and nothing logged but the refusals of a drain it carries. Where
+    /// the family samples drains, each effect a drain asks must have refused one that reached a body, so the pipeline
+    /// check saw both effects that could step around the ladder.
     /// </summary>
     [Theory]
     [MemberData(nameof(FamilyNames))]
@@ -151,7 +154,7 @@ public class MorphTests
         var violations = new List<Violation>();
         var examined = layer.Morph[name].Where(p => Compiles(layer, p)).Select(p => new View(p, layer.Content)).ToList();
         var drains = new List<View>();
-        var refused = 0;
+        var refused = new SortedSet<string>(StringComparer.Ordinal);
         foreach (var view in examined)
         {
             var point = view.Point;
@@ -167,13 +170,16 @@ public class MorphTests
             if (point.Family.Lists.Any(l => l.Rider == Rider.Drain && point.Lists.Contains(l.Key)))
             {
                 drains.Add(view);
-                refused += first.Refused;
+                refused.UnionWith(first.Refused);
             }
         }
-        if (drains.Count > 0 && refused == 0)
+        foreach (var effect in Drainers.Where(e => !refused.Contains(e)))
         {
-            violations.Add(new Violation(drains[0].Point, drains[0], "pipeline",
-                $"{drains.Count} sampled points carry a drain, but no drain was refused: none reached a body, or the refusal went unsaid, so the pipeline check saw no drain"));
+            if (drains.Count > 0)
+            {
+                violations.Add(new Violation(drains[0].Point, drains[0], "pipeline",
+                    $"{drains.Count} sampled points carry a drain, but the {effect} effect refused none: no drain reached a body, or the refusal went unsaid, so the pipeline check saw no {effect} drain"));
+            }
         }
         Settle(name, examined, violations, "deterministic", "pipeline", "bounded", "terminates", "left behind", "pays", "depth", "timing", "runs");
     }
