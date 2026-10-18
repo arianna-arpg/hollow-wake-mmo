@@ -413,8 +413,8 @@ public sealed record WeaveAxes(string Id, string Kind, IReadOnlyList<AxisValue> 
 /// cast-layer blocks through the compiled weave's accessors, its triggers, follow-ups and repeats. The
 /// parameter readings come from <see cref="AxisBindings"/>. One reader per family of mechanics places its
 /// part; a new family registers a reader with <see cref="Register"/> rather than editing one.
-/// <c>hollowwake weave &lt;id&gt; --axes</c> prints it; the composition linter, the morph test and the AI's
-/// affordances read it.
+/// <c>hollowwake weave &lt;id&gt; --axes</c> prints it, and the axis report tests hold the content's frozen
+/// literals to their baseline through it.
 /// </summary>
 public static class AxisReport
 {

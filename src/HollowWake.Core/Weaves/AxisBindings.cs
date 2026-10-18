@@ -220,11 +220,11 @@ public sealed record WeaveAttributeBinding(string Attribute, Dimension Dimension
 
 /// <summary>
 /// The open registry of what every effect parameter is in the combat grammar, read by <see cref="AxisReport"/>
-/// (<c>hollowwake weave --axes</c>), the composition linter, the morph test and the AI's affordances. Each
-/// parameter of every handler signature is declared here as an axis (with its dimension, unit, the weave
-/// attribute it falls back to or is multiplied by, and the rule or default the handler reads otherwise), a
-/// node, a choice (with its vocabulary) or a flag. Beside them it declares the weave attributes the runtime
-/// reads off a weave as a whole and the dimension each mechanism probe speaks to.
+/// (<c>hollowwake weave --axes</c>) and held to its baselines by the signature tests. Each parameter of every
+/// handler signature is declared here as an axis (with its dimension, unit, the attribute it falls back to, is
+/// multiplied by or passes through, and the rule or default the handler reads otherwise), a node, a choice
+/// (with its vocabulary) or a flag. Beside them it declares the weave attributes the runtime reads off a weave
+/// as a whole and the dimension each mechanism probe speaks to.
 /// </summary>
 /// <remarks>
 /// These declarations belong on each handler's <see cref="EffectSignature"/>, beside the parameter names it
