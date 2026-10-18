@@ -183,7 +183,12 @@ public sealed class AxisReading
         });
     }
 
-    /// <summary>A quantity the cast layer writes as an expression: its number where the weave alone states one, else its formula.</summary>
+    /// <summary>
+    /// A quantity the cast layer writes as an expression: its number where the weave alone states one, else its
+    /// formula. A field that names a weave attribute and nothing else states the attribute, folded with its bases
+    /// and modifiers: the field's owner wrote the name, the base's owner the number (a swing's cast time is the
+    /// form's field and the preset's base), so it is placed as the attribute, naming the base and who wrote it.
+    /// </summary>
     public void Quantity(Dimension dimension, string axis, Expr? expr, string unit, AxisSource source, string path, string? attribute = null)
     {
         if (expr is null)
@@ -191,9 +196,29 @@ public sealed class AxisReading
             return;
         }
         var number = Evaluate(expr);
+        if (WeaveReference(expr) is { } reference)
+        {
+            Add(dimension, axis, number, number is null ? expr.Source : null, unit, AxisSource.Attribute, path, reference, Based(expr.Source, reference));
+            return;
+        }
         Add(dimension, axis, number, number is null ? expr.Source : null, unit, source, path, attribute,
             number is not null && !expr.IsConstant ? expr.Source : null);
     }
+
+    /// <summary>
+    /// Who wrote the base a weave attribute folds from: the preset, whose bases the compiler merges first, else
+    /// the form; null where neither writes one and the attribute's own base stands.
+    /// </summary>
+    public string? BaseOwner(string attribute) =>
+        Preset is { } preset && preset.Attributes.ContainsKey(attribute) ? "preset " + preset.Id
+        : Weave.Form.Attributes.ContainsKey(attribute) ? "form " + Weave.Form.Id
+        : null;
+
+    /// <summary>The detail of a value that names a weave attribute: what was written, then the base the attribute folds from and who wrote it.</summary>
+    public string Based(string written, string attribute) =>
+        BaseOwner(attribute) is { } owner && Weave.Bases.TryGetValue(attribute, out var b)
+            ? $"{written}; base {AxisReport.Format(b)} from {owner}"
+            : $"{written}; the attribute's own base";
 
     /// <summary>Whether the weave's bases or its own modifiers name an attribute.</summary>
     public bool Mentions(string attribute) => Weave.Mentions(attribute);

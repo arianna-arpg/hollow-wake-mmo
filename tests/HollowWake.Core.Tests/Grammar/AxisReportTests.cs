@@ -169,6 +169,28 @@ entries:
     }
 
     [Fact]
+    public void ACastLayerFieldThatNamesAnAttributeIsTheAttributesAndNamesWhoWroteItsBase()
+    {
+        // A swing's cast time and cooldown are the form's fields naming the weave's cast.time and cooldown.base,
+        // whose bases Heavy Strike writes: the attribute states them, and the preset wrote the number.
+        var values = Report(CoreContent.Registry, new WeaveSpec { Preset = "heavy_strike" });
+        var bar = Assert.Single(values, v => v.Name == "timing.cast_time");
+        Assert.Equal((0.9, AxisSource.Attribute, "cast.time", "form.cast_time"), (bar.Number, bar.Source, bar.Attribute, bar.Path));
+        Assert.Contains("from preset heavy_strike", bar.Detail);
+        var cooldown = Assert.Single(values, v => v.Name == "economy.cooldown");
+        Assert.Equal((2.5, AxisSource.Attribute, "cooldown.base"), (cooldown.Number, cooldown.Source, cooldown.Attribute));
+        Assert.Contains("from preset heavy_strike", cooldown.Detail);
+
+        // The swing compiled bare states its own bases: the form wrote them.
+        var bare = Assert.Single(Report(CoreContent.Registry, new WeaveSpec { Form = "swing" }), v => v.Name == "timing.cast_time");
+        Assert.Contains("from form swing", bare.Detail);
+
+        // A number the cast layer writes stays its owner's: the bolt writes its own cast time.
+        var bolt = Assert.Single(Report(CoreContent.Registry, new WeaveSpec { Preset = "ember_bolt" }), v => v.Name == "timing.cast_time");
+        Assert.Equal((0.6, AxisSource.Form), (bolt.Number, bolt.Source));
+    }
+
+    [Fact]
     public void AValueIsPlacedOnlyWhereTheHandlerReadsIt()
     {
         var values = Report(Layered.Value, new WeaveSpec { Form = "t_axes_reads" });

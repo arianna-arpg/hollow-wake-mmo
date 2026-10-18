@@ -308,13 +308,16 @@ internal static class CastingAxes
                     total = null;
                 }
             }
-            var detail = written && !expr!.IsConstant ? expr.Source : null;
+            // A cost that names a weave attribute and nothing else states the attribute, as a cast-layer quantity does.
+            var reference = written ? AxisReading.WeaveReference(expr!) : null;
+            var detail = written && !expr!.IsConstant ? reference is null ? expr.Source : r.Based(expr.Source, reference) : null;
             if (total is { } t && amount is { } b && Math.Abs(t - b) > 1e-9)
             {
                 detail = (detail is null ? "" : detail + "; ") + $"{AxisReport.Format(b)} before the cost fold";
             }
             r.Add(Economy, "cost." + resource, total, total is null ? expr?.Source : null, Resource,
-                written ? AxisSource.Form : AxisSource.Attribute, written ? "form.costs." + resource : "weave." + adds, written ? null : adds, detail);
+                written && reference is null ? AxisSource.Form : AxisSource.Attribute, written ? "form.costs." + resource : "weave." + adds,
+                written ? reference : adds, detail);
         }
     }
 
@@ -331,8 +334,19 @@ internal static class CastingAxes
             {
                 seconds = Math.Max(0, s + more);
             }
-            r.Add(Economy, "cooldown", seconds, seconds is null ? cooldown.Source : null, Seconds, AxisSource.Form, "form.cooldown",
-                levied ? "cooldown.added" : null, levied ? $"{cooldown.Source} + cooldown.added" : cooldown.IsConstant ? null : cooldown.Source);
+            // A cooldown that names a weave attribute (a swing's weave.cooldown.base) states the attribute, whose
+            // base the preset or the form wrote, as a cast-layer quantity does.
+            var written = levied ? $"{cooldown.Source} + cooldown.added" : cooldown.IsConstant ? null : cooldown.Source;
+            if (AxisReading.WeaveReference(cooldown) is { } reference)
+            {
+                r.Add(Economy, "cooldown", seconds, seconds is null ? cooldown.Source : null, Seconds, AxisSource.Attribute, "form.cooldown",
+                    reference, r.Based(written ?? cooldown.Source, reference));
+            }
+            else
+            {
+                r.Add(Economy, "cooldown", seconds, seconds is null ? cooldown.Source : null, Seconds, AxisSource.Form, "form.cooldown",
+                    levied ? "cooldown.added" : null, written);
+            }
         }
         else if (levied)
         {
