@@ -58,3 +58,7 @@ Main's new audit finds the following existing constants in #32's pre-merge sourc
 ## #32 main integration gates
 
 Source `f1e2927105c95b4326c38503f7054bd3f8da6181`: solution build zero warnings/errors; all core 849, server 53 and client 129 tests pass. Validation is zero errors/warnings; load and the skeleton/zombie duel pass. The generated frozen-literal keys exactly equal the reviewed fixture; full census and keys are retained with these gates under `experiments/entity-review/evidence/32-main-*`. This verifies functional integration, not performance after main. Earlier benchmark misses remain open; no timing run or budget change accompanied these gates.
+
+## #33 main integration gates
+
+Source `921ba9e93beacf608985cf21dcdca47fed6c63e8`: solution build zero warnings/errors; all core 871, server 53 and client 130 tests pass. Validation is zero errors/warnings; load and the skeleton/zombie duel pass. The generated frozen-literal keys exactly equal the reviewed fixture; full census and keys are retained with these gates under `experiments/entity-review/evidence/33-main-*`. This verifies functional integration, not performance after main. Earlier benchmark misses remain open; no timing run or budget change accompanied these gates.
