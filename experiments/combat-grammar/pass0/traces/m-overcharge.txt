@@ -1,0 +1,63 @@
+== proving_evoker (A) vs proving_bulwark (B), seed mech, 30 s kitA=storm_surge
+      6  A cast storm_surge
+      5  A dealt damage events
+      6  A overcharge storm_surge stage 1 of 3
+      6  A overcharge storm_surge stage 2 of 3
+      6  A overcharge storm_surge stage 3 of 3
+      6  A released storm_surge (overcharge, full)
+      6  A started storm_surge
+     17  B cast bite
+     17  B dealt damage events
+     18  B started bite
+-- ticks by state (20 per second)
+      8  A state , free
+    127  A state engage, casting Overcharge
+    240  A state engage, free
+      5  A state idle, free
+     95  A state kite, casting Overcharge
+    125  A state kite, free
+      3  B state , free
+    433  B state chase, casting Cast
+    159  B state chase, free
+      5  B state idle, free
+-- A walked 31.2 units
+-- B walked 32.4 units
+-- life A 23/148  B 220/220
+-- timeline
+  t=0.05 A (10.00,10.00)  | B (14.00,10.00)  | dist 4.00
+  t=1.00 A (10.00,10.00) engage casting=storm_surge(Overcharge) | B (12.87,10.00) chase casting=bite(Cast) | dist 2.87
+  t=2.00 A (10.00,10.00) engage casting=storm_surge(Overcharge) | B (12.65,10.00) chase casting=bite(Cast) | dist 2.65
+  t=2.55 A released storm_surge mode=overcharge reason=full held=1.85 fill=1.00 stage=3 fired=true
+  t=3.00 A (10.00,10.00) engage | B (12.65,10.00) chase casting=bite(Cast) | dist 2.65
+  t=4.00 A (6.25,10.00) engage | B (12.49,10.00) chase casting=bite(Cast) | dist 6.24
+  t=5.00 A (6.25,10.00) engage | B (9.77,10.00) chase | dist 3.52
+  t=6.00 A (6.25,10.00) engage casting=storm_surge(Overcharge) | B (9.09,10.00) chase casting=bite(Cast) | dist 2.84
+  t=7.00 A (6.25,10.00) engage casting=storm_surge(Overcharge) | B (8.87,10.00) chase casting=bite(Cast) | dist 2.62
+  t=7.55 A released storm_surge mode=overcharge reason=full held=1.85 fill=1.00 stage=3 fired=true
+  t=8.00 A (4.50,10.00) kite | B (8.64,10.00) chase casting=bite(Cast) | dist 4.14
+  t=9.00 A (2.50,10.00) engage | B (7.97,10.00) chase | dist 5.47
+  t=10.00 A (2.50,10.00) engage | B (5.04,10.00) chase casting=bite(Cast) | dist 2.54
+  t=11.00 A (2.50,10.00) engage casting=storm_surge(Overcharge) | B (4.59,10.00) chase | dist 2.09
+  t=12.00 A (2.50,10.00) kite casting=storm_surge(Overcharge) | B (3.92,10.00) chase casting=bite(Cast) | dist 1.42
+  t=12.55 A released storm_surge mode=overcharge reason=full held=1.85 fill=1.00 stage=3 fired=true
+  t=13.00 A (0.00,10.00) kite | B (3.92,10.00) chase casting=bite(Cast) | dist 3.92
+  t=14.00 A (-2.00,10.00) engage | B (3.60,10.00) chase | dist 5.60
+  t=15.00 A (-2.50,10.00) kite | B (0.23,10.00) chase casting=bite(Cast) | dist 2.73
+  t=16.00 A (-5.75,10.00) engage casting=storm_surge(Overcharge) | B (0.23,10.00) chase casting=bite(Cast) | dist 5.98
+  t=17.00 A (-5.75,10.00) kite casting=storm_surge(Overcharge) | B (-3.60,10.00) chase casting=bite(Cast) | dist 2.15
+  t=17.55 A released storm_surge mode=overcharge reason=full held=1.85 fill=1.00 stage=3 fired=true
+  t=18.00 A (-8.25,10.00) kite | B (-3.60,10.00) chase casting=bite(Cast) | dist 4.65
+  t=19.00 A (-9.25,10.00) engage | B (-6.75,10.00) chase casting=bite(Cast) | dist 2.50
+  t=20.00 A (-9.25,10.00) engage | B (-6.75,10.00) chase casting=bite(Cast) | dist 2.50
+  t=21.00 A (-11.75,10.00) kite casting=storm_surge(Overcharge) | B (-6.97,10.00) chase casting=bite(Cast) | dist 4.78
+  t=22.00 A (-11.75,10.00) kite casting=storm_surge(Overcharge) | B (-9.22,10.00) chase casting=bite(Cast) | dist 2.53
+  t=22.60 A released storm_surge mode=overcharge reason=full held=1.85 fill=1.00 stage=3 fired=true
+  t=23.00 A (-11.75,10.00) engage | B (-9.22,10.00) chase casting=bite(Cast) | dist 2.53
+  t=24.00 A (-15.50,10.00) engage | B (-9.38,10.00) chase casting=bite(Cast) | dist 6.12
+  t=25.00 A (-15.50,10.00) engage | B (-11.88,10.00) chase | dist 3.62
+  t=26.00 A (-15.50,10.00) engage casting=storm_surge(Overcharge) | B (-12.78,10.00) chase casting=bite(Cast) | dist 2.72
+  t=27.00 A (-15.50,10.00) kite casting=storm_surge(Overcharge) | B (-13.00,10.00) chase casting=bite(Cast) | dist 2.50
+  t=27.60 A released storm_surge mode=overcharge reason=full held=1.85 fill=1.00 stage=3 fired=true
+  t=28.00 A (-17.75,10.00) kite | B (-14.35,10.00) chase | dist 3.40
+  t=29.00 A (-21.25,10.00) engage | B (-18.40,10.00) chase casting=bite(Cast) | dist 2.85
+  t=30.00 A (-21.25,10.00) engage | B (-18.40,10.00) chase casting=bite(Cast) | dist 2.85

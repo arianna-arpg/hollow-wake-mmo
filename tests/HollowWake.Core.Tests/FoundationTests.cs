@@ -137,13 +137,8 @@ public class ExpressionTests
     {
         var scope = new DictScope(new Rng(1)).Set("a", 1).Set("b", 2).Flag("stationary");
         var expr = Expr.Parse("max(a, b, 3, 4, 5, 6, 7, 8) + min(a, b) + lerp(a, b, rand()) + (has(\"stationary\") ? 1 : 0) + clamp(a / max(1, b), 0, 1) + sum(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)");
-        var total = expr.Evaluate(scope);
-        var before = GC.GetAllocatedBytesForCurrentThread();
-        for (var i = 0; i < 1000; i++)
-        {
-            total += expr.Evaluate(scope);
-        }
-        Assert.Equal(0, GC.GetAllocatedBytesForCurrentThread() - before);
+        var total = 0.0;
+        SteadyState.AssertAllocationFree(() => total += expr.Evaluate(scope), callsPerRound: 1000);
         Assert.True(total > 0);
     }
 
@@ -641,17 +636,13 @@ public class AttributeTests
             new() { Attribute = "damage", Form = ModifierForm.Increased, Value = 0.2, Scope = TagSet.Of("spell") },
         };
         var total = 0.0;
-        foreach (var t in tags)
+        var call = 0;
+        SteadyState.AssertAllocationFree(() =>
         {
+            var t = tags[call++ % 2];
             total += set.Apply("damage", 100, dict, t, extra);
-        }
-        var before = GC.GetAllocatedBytesForCurrentThread();
-        for (var i = 0; i < 1000; i++)
-        {
-            total += set.Apply("damage", 100, dict, tags[i % 2], extra);
-            total += set.Get("damage", dict, tags[i % 2], extra);
-        }
-        Assert.Equal(0, GC.GetAllocatedBytesForCurrentThread() - before);
+            total += set.Get("damage", dict, t, extra);
+        }, callsPerRound: 1000);
         Assert.True(total > 0);
     }
 

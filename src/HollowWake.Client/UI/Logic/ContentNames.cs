@@ -56,6 +56,7 @@ public sealed record StatusLook(bool Hidden, string? Icon, Rgba? Color, string K
 /// </summary>
 public sealed class ContentNames
 {
+    public AbilityIcons AbilityIcons { get; init; } = new();
     public Dictionary<string, NamedEntry> Statuses { get; init; } = new(StringComparer.Ordinal);
     public List<NamedEntry> Threads { get; init; } = new();
     public Dictionary<string, NamedEntry> Currencies { get; init; } = new(StringComparer.Ordinal);
@@ -128,6 +129,7 @@ public sealed class ContentNames
         }
         var names = new ContentNames
         {
+            AbilityIcons = AbilityIcons.Load(rawOfKind),
             Statuses = rawOfKind("statuses").Select(Named).ToDictionary(e => e.Id, StringComparer.Ordinal),
             StatusLooks = rawOfKind("statuses").ToDictionary(s => Json.Str(s["id"]), StatusLook.From, StringComparer.Ordinal),
             Threads = rawOfKind("threads").Select(Named).ToList(),
