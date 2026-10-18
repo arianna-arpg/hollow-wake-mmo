@@ -39,10 +39,14 @@ The plan is a cache on `Motion` (`PlanGoal`, `PlannedAt`, `Planned`, `PlanFailed
 
 The straight-walk test's sample spacing is 0.25 units, so its maximum reach is that spacing times the mover's budget (125 units with the shipped AI budget). An order beyond that reach uses bounded searches even across clear ground. This also bounds the work of a distant minion order, which previously tested the whole straight segment.
 
-Seeded replay is exact within the tested platform/runtime. The simulation does not promise identical floating-point state across platforms where native math functions contribute values. The chase regression fixtures compare full-precision positions and path counts from non-wandering scenarios; facing angles are excluded because platform `Atan2` results can differ in their last bits. That test does not claim portable combat or world-generation state.
+Seeded replay is exact within the tested platform/runtime. The simulation does not promise identical floating-point state across platforms where native math functions contribute values. `AiTrajectoryTests` compares full-precision positions and path counts from non-wandering chases; facing angles are excluded because platform `Atan2` results can differ in their last bits. `AiIntentTests` retains the original mixed scenarios, including two idle-wander rows, under a 0.0001 coordinate and facing tolerance with exact path counts. Its `wall_detour` also overlaps the exact detour fixture. Neither suite claims portable combat or world-generation state.
 
 ## Weave choice
 
 `WeaveRuntime.ChooseForAi` filters the entity's weaves by readiness, cost, range and the hint's `when` expression, skipping triggered weaves, toggles that are on, empty banks and failed gates, then weights by the hint. `PreferredRange` is the longest hinted range, used by `chase` and perception.
 
 Taunts set the target and a memory timestamp the behaviors read as `taunted`.
+
+## The AI as a player
+
+What any AI in this engine must and must not be, whatever runs it, is stated in [combat-grammar.md](combat-grammar.md): its inputs are what a client could show and what the compiled weave states, its outputs are the intents a client sends, its decisions are registered affordances, perception names and considerations bound by doctrines authored as content, and every decision publishes an event that explains it. The behavior machine above stays the outer mode machine; each piece of that section replaces what it supersedes here as it lands.

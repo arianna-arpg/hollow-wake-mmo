@@ -17,6 +17,9 @@ public sealed class ContentKind
     public required Func<JsonObject, IDefinition> Bind { get; init; }
     public bool Ordered { get; init; }
 
+    /// <summary>Validates the collection, including an absent kind, after every definition is bound.</summary>
+    public Action<ValidationContext>? ValidateCollection { get; init; }
+
     /// <summary>Every validator of the kind, in the order they were added.</summary>
     public IReadOnlyList<Action<IDefinition, ValidationContext>> Validators => _validators;
 
@@ -68,13 +71,14 @@ public static class ContentKinds
     }
 
     /// <summary>Registers a kind, replacing any earlier kind of the same name (and its validators).</summary>
-    public static void Register<T>(string name, Action<T, ValidationContext>? validate = null) where T : class, IDefinition
+    public static void Register<T>(string name, Action<T, ValidationContext>? validate = null, Action<ValidationContext>? validateCollection = null) where T : class, IDefinition
     {
         var kind = new ContentKind
         {
             Name = name,
             DefinitionType = typeof(T),
             Bind = obj => ContentJson.Bind<T>(obj),
+            ValidateCollection = validateCollection,
         };
         if (validate is not null)
         {

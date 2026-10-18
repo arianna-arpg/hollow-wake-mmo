@@ -98,13 +98,14 @@ A code mod is a .NET assembly that references `HollowWake.Core` and, before the 
 - `Curves.Register("my_curve", curve)` for a named curve.
 - `AiActions.Register("my_action", ...)` for a new AI action; it changes the simulation by sending intents through `AiIntents.Send`, as a player would.
 
-The movement-plan cache moved from `Behavior` to `Motion`: `PlanGoal`, `PlannedAt`, `Planned` and `PlanFailed`. A compiled mod that referenced the old behavior fields must update those accesses and rebuild. Content-only behaviors do not need migration.
 - `QuestService.Register("my_objective", matcher)` for a new objective type.
 - `InteractionService.Register("my_kind", handler)` for a new interactable kind.
 - `PatternFactory.Register("my_component", binder)` for a new component.
 - `ProcedureRegistry.Register(new MyProcedure())` for a new crafting minigame.
 - `ExprFunctions.Register("fn", min, max, impl)` for a new expression function.
 - `ScopeNames.Declare("name")` so validation knows a new scope variable.
+
+The movement-plan cache moved from `Behavior` to `Motion`: `PlanGoal`, `PlannedAt`, `Planned` and `PlanFailed`. A compiled mod that referenced the old behavior fields must update those accesses and rebuild. Content-only behaviors do not need migration.
 
 Systems are added to a simulation through `Simulation.AddSystem` with a phase and order. A loader for mod assemblies is on the roadmap; today a host wires them in code.
 

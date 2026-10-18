@@ -5,7 +5,7 @@ import type { ClientConfig } from './config';
 import { Input } from './input/input';
 import { Connection } from './net/connection';
 import { applyDelta } from './net/delta';
-import { CAST_CUES_FEATURE, ENTITY_DELTA_FEATURE, INTERFACE_FEATURE, PROTOCOL_VERSION, type CombatEventMsg, type EntityState, type Int64, type Message } from './net/protocol';
+import { ENTRY_FLOW_FEATURE, CAST_CUES_FEATURE, ENTITY_DELTA_FEATURE, INTERFACE_FEATURE, PROTOCOL_VERSION, type CombatEventMsg, type EntityState, type Int64, type Message } from './net/protocol';
 import { CastVisuals } from './world/castVisuals';
 import { cueSettings } from './world/castCueTimeline';
 import { parseServerInput, sameOrigin, socketUrl, type ServerAddress } from './ui/address';
@@ -242,13 +242,14 @@ export class App {
     this.hud.optionsClosed = () => this.optionsClosed();
     this.login = new LoginPanel({
       connect: (address, account, token) => void this.connect(address, account, token),
-      create: (name, calling) => this.send({ t: 'create_character', name, calling }),
+      create: (name, calling, request) => this.send({ t: 'create_character', name, calling, request_id: request }),
+      leave: () => { this.connection.close('Left Mu'); this.closed('Left Mu'); },
       enter: (characterId) => {
         if (this.characterKey) storageSet(this.characterKey, characterId);
         this.beginEntry(characterId);
       },
       options: () => this.hud.openOptions(),
-    });
+    }, kinds, this.appearance, this.settings, () => this.loading.snapshot.active || this.hud.optionsOpen);
     root.append(this.login.root, this.hud.root);
     // The login panel wears the interface's look and follows it when the theme changes.
     this.hud.skin.apply(this.login.root);
@@ -285,6 +286,7 @@ export class App {
       invert: s.toggle('third_invert'),
       fov: s.number('third_fov', 65),
     });
+    this.input.enabled = () => this.inWorld || this.hud.optionsOpen;
     for (const id of ['iso_rotate_step', 'iso_zoom_max', 'third_sensitivity', 'third_invert', 'third_fov']) {
       this.appliers.set(id, camera);
     }
@@ -426,6 +428,7 @@ export class App {
     const full = new URLSearchParams(window.location.search).has('full-states') || this.settings.text('snapshot_stream') === 'full';
     const wanted = new Set(this.config.server.features);
     wanted.add(INTERFACE_FEATURE);
+    wanted.add(ENTRY_FLOW_FEATURE);
     wanted.add(CAST_CUES_FEATURE);
     if (full) {
       wanted.delete(ENTITY_DELTA_FEATURE);
@@ -461,6 +464,7 @@ export class App {
     this.inWorld = false;
     this.hud.inWorld = false;
     this.hud.hero.clear();
+    this.login.reset();
     this.login.show(true);
     this.login.setBusy(false);
     this.login.setStatus(`Disconnected: ${reason}`);
@@ -491,12 +495,17 @@ export class App {
         }
         break;
       case 'character_list':
+        if (this.inWorld) {
+          this.inWorld = false; this.hud.inWorld = false; this.hud.hero.clear(); this.hud.workspace.closeCore();
+          this.entities.clear(); this.castVisuals.clear(); this.entryLease?.finish(); this.releaseLoadingInput();
+        }
+        this.login.show(true);
         this.characterLists++;
         this.login.setBusy(false);
         this.login.showCharacters(m);
-        if (this.quickPlay) {
+        if (this.quickPlay && !this.loading.snapshot.active && !this.inWorld) {
           const id = resumeCharacter(m.characters.map(c => c.id), storageGet(this.characterKey));
-          if (id !== null) this.login.enter(id);
+          if (id !== null) this.login.focusCharacter(id);
         }
         break;
       case 'error':
@@ -990,6 +999,7 @@ export class App {
     const stateOf = (v: EntityView) => ({ ...v.state, drawn: v.position });
     return {
       get loading() { return app.loading.snapshot; },
+      get entry() { return app.login.entry?.snapshot?.() ?? null; },
       get inWorld() {
         return app.inWorld;
       },

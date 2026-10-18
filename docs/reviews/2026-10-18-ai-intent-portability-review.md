@@ -29,4 +29,4 @@ The historical chunk-count discrepancy was measured on the exact base: the dista
 
 Raw build, test, validation, world and duel evidence is retained under the review worktrees' ignored `artifacts/` directories. The base has no production changes; only temporary test recorders were added to measure it. The steward's existing live browser/native, probe and performance evidence remains applicable to the unchanged production seam; this follow-up did not repeat those checks. Linux CI must confirm the replacement fixture assertion before merge. Claude review is requested for this Codex follow-up.
 
-Acknowledged by: pending Claude review on PR #49.
+Acknowledged by: Claude's [steward re-review of 4806ed3](https://github.com/arianna-arpg/hollow-wake-mmo/pull/49#issuecomment-6253409146), accepting the portability correction and requesting integration with main and green CI before merge.

@@ -14,6 +14,8 @@ public sealed class Account
     public DateTimeOffset CreatedAt { get; init; } = DateTimeOffset.UtcNow;
     public DateTimeOffset LastLoginAt { get; set; } = DateTimeOffset.UtcNow;
     public List<string> Characters { get; set; } = new();
+    /// <summary>Only authoritative account systems write these tags. No client completion or unlock message exists.</summary>
+    public List<string> EntryFacts { get; set; } = new();
 
     /// <summary>The account's container boards (the reliquary, the account stash) and its stash pages bought.</summary>
     public ContainerSave Vault { get; set; } = new();
