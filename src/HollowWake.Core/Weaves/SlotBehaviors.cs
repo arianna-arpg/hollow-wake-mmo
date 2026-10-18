@@ -361,6 +361,7 @@ public sealed partial class WeaveRuntime
         {
             return;
         }
+        if (!target.IsNone && sim.World.TryGet<Transform>(target, out var targetTransform)) point = targetTransform.Position;
         RunFree(sim, caster, OriginOf(sim, caster), weave, weave.Tags.Union(host.Tags), host.Root, slot, target, point, direction, depth,
             RngStreams.For(sim, caster, rngPrefix, weave.Key, number), damageScale: 1);
     }
@@ -379,24 +380,21 @@ public sealed partial class WeaveRuntime
         {
             return;
         }
-        var at = !target.IsNone && sim.World.TryGet<Transform>(target, out var tt) ? tt.Position : point;
+        // The owner already resolved this use. A queued replay keeps that aim; it does not track a body again.
+        var at = point;
         ct.Face(at);
         var direction = new Vector2(at.X - ct.Position.X, at.Y - ct.Position.Y);
         direction = direction.LengthSquared() > 0.0001f ? Vector2.Normalize(direction) : ct.Forward;
-        RunFree(sim, caster, origin, weave, weave.Tags, host: null, slot: null, target, at, direction, depth: 0, rng, damageScale);
-        sim.Events.Publish(new WeaveCast(caster, weave.Key, target, at, weave.Tags) { Tick = sim.Clock.Tick, Resolved = weave });
+        if (RunFree(sim, caster, origin, weave, weave.Tags, host: null, slot: null, target, at, direction, depth: 0, rng, damageScale))
+            sim.Events.Publish(new WeaveCast(caster, weave.Key, target, at, weave.Tags) { Tick = sim.Clock.Tick, Resolved = weave });
     }
 
     /// <summary>
     /// Runs a resolution that pays nothing and waits for nothing: the effects of a preset or a replay, as
     /// <paramref name="origin"/> from where <paramref name="caster"/> stands, at the live target or the point.
     /// </summary>
-    private static void RunFree(Simulation sim, Entity caster, Entity origin, CompiledWeave weave, TagSet tags, CompiledWeave? host, WeaveSlot? slot, Entity target, Vector3 point, Vector2 direction, int depth, Rng rng, double damageScale)
+    private static bool RunFree(Simulation sim, Entity caster, Entity origin, CompiledWeave weave, TagSet tags, CompiledWeave? host, WeaveSlot? slot, Entity target, Vector3 point, Vector2 direction, int depth, Rng rng, double damageScale)
     {
-        if (!target.IsNone && sim.World.TryGet<Transform>(target, out var tt))
-        {
-            point = tt.Position;
-        }
         var ctx = new EffectContext
         {
             Sim = sim,
@@ -413,7 +411,7 @@ public sealed partial class WeaveRuntime
             Host = host,
             From = origin == caster ? null : sim.World.Get<Transform>(caster)?.Position,
         };
-        ReleaseTargets.Execute(ctx, weave.Effects);
+        return ReleaseTargets.Execute(ctx, weave.Effects);
     }
 
     private sealed class PresetJob

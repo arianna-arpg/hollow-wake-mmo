@@ -408,11 +408,10 @@ internal static class MinionActions
         var count = pending.Count;
         for (var i = 0; i < count && pending.TryDequeue(out var use); i++)
         {
-            var aim = !use.Target.IsNone && c.Sim.World.IsAlive(use.Target) && !c.Sim.World.Has<Dead>(use.Target) ? use.Target : Entity.None;
             var rng = c.Sim.RngFor(c.Entity, "construct:" + use.Weave.Key);
             // Preserve the existing single-replay stream; additional uses in this think get distinct seeded streams.
             if (i > 0) rng = new Rng(Rng.Combine(rng.Seed, (ulong)use.Sequence));
-            runtime.Replay(c.Sim, c.Entity, owner, use.Weave, aim, use.Point, c.Num(p, "damage_scale", 0.5), rng);
+            runtime.Replay(c.Sim, c.Entity, owner, use.Weave, use.Target, use.Point, c.Num(p, "damage_scale", 0.5), rng);
         }
     }
 
