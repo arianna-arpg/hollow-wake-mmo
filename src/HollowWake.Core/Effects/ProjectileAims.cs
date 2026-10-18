@@ -9,7 +9,8 @@ public static class ProjectileAims
     private static readonly Dictionary<string, Func<EffectContext, Vector3?>> Registry = new(StringComparer.Ordinal)
     {
         ["horizontal"] = _ => null,
-        ["target"] = c => c.TargetTransform is null ? null : HitBodies.AimPoint(c.Sim, c.Target),
+        ["target"] = c => c.TargetTransform is not null ? HitBodies.AimPoint(c.Sim, c.Target) :
+            c.AimOffset != Vector3.Zero ? c.Point + c.AimOffset : null,
         ["point"] = c => c.TargetTransform is null ? c.Point + c.AimOffset : HitBodies.AimPoint(c.Sim, c.Target),
     };
     public static IEnumerable<string> Names => Registry.Keys;

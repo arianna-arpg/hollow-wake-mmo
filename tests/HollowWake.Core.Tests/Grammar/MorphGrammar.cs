@@ -141,7 +141,7 @@ internal sealed record Alike(string Parameter, string A, string B, string Reason
 /// <summary>
 /// What a list the family fills carries: a plain damage hit, a counted marker (lists that run without a target), a
 /// small burst of damage (plain lists run at a point), or one of the riders that reach what the grammar names beyond a
-/// hit: a drain that lowers life through the resource effect, a status that ticks, or a cast of another weave.
+/// hit: a drain that asks the resource and heal effects to lower life, a status that ticks, or a cast of another weave.
 /// </summary>
 internal enum Rider
 {

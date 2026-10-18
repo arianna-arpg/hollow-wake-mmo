@@ -52,6 +52,25 @@ public sealed class EffectContext
     /// </summary>
     public Vector3? From { get; init; }
 
+    /// <summary>
+    /// Lift for a projectile launched from this delivery's anchor. Null uses the content-defined ground
+    /// placement lift; a flight supplies zero because its emission point is already at flight height.
+    /// </summary>
+    public float? LaunchLift { get; init; }
+
+    /// <summary>
+    /// The point the cast was aimed at. It is the context's point until a delivery moves the point (onto a body
+    /// it struck, or to where a flight or a placement is), which keeps the aim here, so the effects of a hit can
+    /// still reach where the cast was aimed.
+    /// </summary>
+    public Vector3 Aim
+    {
+        get => _aim ?? Point;
+        init => _aim = value;
+    }
+
+    private readonly Vector3? _aim;
+
     public Dictionary<string, double> Vars { get; init; } = new(StringComparer.Ordinal);
 
     /// <summary>
@@ -97,9 +116,11 @@ public sealed class EffectContext
 
     public double Eval(Expr? expr, double fallback = 0) => expr is null ? fallback : expr.Evaluate(Scope);
 
+    /// <summary>The context of a hit on a body: the body is the target and the point moves onto it, while the aim stays where the cast was aimed.</summary>
     public EffectContext WithTarget(Entity target) => Copy(target: target, point: Sim.World.TryGet<Transform>(target, out var t) ? t.Position : Point);
 
-    public EffectContext WithPoint(Vector3 point) => Copy(point: point);
+    /// <summary>A context aimed at another point: the point and the aim move together.</summary>
+    public EffectContext WithPoint(Vector3 point) => Copy(point: point, aim: point);
 
     public EffectContext Targetless() => Copy(target: Entity.None);
 
@@ -126,7 +147,7 @@ public sealed class EffectContext
     /// <summary><see cref="Fork"/> with damage effects scaled by a further factor: a fuse's power.</summary>
     public EffectContext Fork(int deeper, double damageScale) => Copy(depth: Depth + deeper, vars: new Dictionary<string, double>(Vars, StringComparer.Ordinal), damageScale: DamageScale * damageScale);
 
-    private EffectContext Copy(Entity? source = null, Entity? target = null, Vector3? point = null, int? depth = null, Dictionary<string, double>? vars = null, TagSet? tags = null, double? damageScale = null)
+    private EffectContext Copy(Entity? source = null, Entity? target = null, Vector3? point = null, int? depth = null, Dictionary<string, double>? vars = null, TagSet? tags = null, double? damageScale = null, Vector3? aim = null)
     {
         return new EffectContext
         {
@@ -136,6 +157,7 @@ public sealed class EffectContext
             Source = source ?? Source,
             Target = target ?? Target,
             Point = point ?? Point,
+            Aim = aim ?? Aim,
             AimOffset = target is { } aimed && Sim.World.Get<Transform>(aimed) is { } at ?
                 Combat.HitBodies.AimPoint(Sim, aimed) - at.Position : point is not null ? Vector3.Zero : AimOffset,
             Direction = Direction,
@@ -146,6 +168,7 @@ public sealed class EffectContext
             Potency = Potency,
             DamageScale = damageScale ?? DamageScale,
             From = From,
+            LaunchLift = LaunchLift,
             Vars = vars ?? Vars,
             Slot = Slot,
             Host = Host,
@@ -468,15 +491,17 @@ public abstract class CompiledEffect
 
 /// <summary>
 /// What an effect type reads: every parameter it accepts, which of them hold effect lists that glyph hooks
-/// may extend (keyed by hook name: <c>on_hit</c>, <c>on_kill</c> ...), and which list a wrapper puts the
-/// effects it wraps in. The weave compiler reads it to append hooks and apply patches; validators read it
-/// to reject patches that name parameters the type does not have.
+/// may extend (keyed by hook name: <c>on_hit</c>, <c>on_kill</c> ...), which list a wrapper puts the
+/// effects it wraps in, which parameters name content, and the checks of its own a node must pass. The weave
+/// compiler reads it to append hooks and apply patches; validators read it to reject patches that name
+/// parameters the type does not have, names of content that does not exist, and nodes its checks refuse.
 /// </summary>
 public sealed class EffectSignature
 {
     private readonly HashSet<string> _params;
     private readonly Dictionary<string, string> _hooks;
     private readonly List<(string Kind, string Parameter)> _refers = new();
+    private readonly List<Func<JsonObject, ContentRegistry, string?>> _checks = new();
 
     /// <summary>A handler that declares nothing: any parameter is accepted and nothing hooks into it.</summary>
     public static readonly EffectSignature Open = new(Array.Empty<string>(), open: true);
@@ -535,6 +560,20 @@ public sealed class EffectSignature
             _params.Add(parameter);
             _refers.Add((kind, parameter));
         }
+        return this;
+    }
+
+    /// <summary>The checks validation runs on every node of the type, each saying why it refuses the node, or null.</summary>
+    public IReadOnlyList<Func<JsonObject, ContentRegistry, string?>> Checks => _checks;
+
+    /// <summary>
+    /// Declares a check validation runs on every node of the type: given the node's parameters and the content, it
+    /// says why the node is refused, or returns null. What the handler would refuse at run time is refused at load
+    /// where content writes it as a literal.
+    /// </summary>
+    public EffectSignature Checking(Func<JsonObject, ContentRegistry, string?> check)
+    {
+        _checks.Add(check);
         return this;
     }
 }
