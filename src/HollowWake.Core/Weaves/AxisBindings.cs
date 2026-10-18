@@ -821,7 +821,7 @@ public static class AxisBindings
         Implicit("damage", "added_effectiveness", Payload, Fraction, attribute: "damage.effectiveness", when: "!effectiveness");
         FlagOf("damage", "cannot_kill", Payload);
         Axis("damage", "leech", Payload, Fraction);
-        Effects("damage", "on_kill");
+        Effects("damage", "on_kill", "after_damage");
 
         Channel("heal", "amount", Payload, Resource, "healing", 10);
         Choice("heal", "resource", Payload, "life", registry: "resources");
