@@ -91,3 +91,33 @@ The coordinated comparison at6a65ed1 is retained in `experiments/entity-review/e
 Claude identified a separate #31 zone-planning cost: local population search generates many chunks synchronously when a slot finds nothing. This still blocks the stack; its bounded-search correction belongs in #31 and will propagate bottom-up. #37 remains draft pending that integration and Claude rereview. Its rendered-world defect and functional gates are resolved on the recorded tree; #20's independent release-policy work remains separate.
 
 Acknowledged by: pending Claude rereview and owning-PR records.
+
+## Shared planning and level-policy correction
+
+The historical unconditional site-level checkpoint above is superseded by `docs/reviews/2026-10-18-local-population-budget.md`: bounded population inspection, pattern-level defaults on both site birth paths, explicit `use_site_level` opt-in, initial/respawn regressions and full per-site/effective-level audits. The existing counts-only evidence was insufficient to establish unchanged difficulty; the new audit names every changed level. Existing published history and first failures remain retained.
+
+## #32 final foundation propagation
+
+This merge consumes the complete bounded-search, explicit resident-level and exact spawn-query corrections from 3007003db865eceafac955ecf2a859431f010ae2, over the previous #32 head a96307e691b038db2924bcc5ebab6884bca774a7. Solution build has zero warnings/errors; core712/server44/client116 pass, validation zero errors/warnings, load and duel pass. Four-zone audits retain every pattern/site/effective-level count and changed offer under `experiments/entity-review/evidence/32-final-*`. All placements and population counts are unchanged. Default resident levels return to pattern levels on both birth paths; opt-in scaling remains available. The cap omits distant offers and may shift later seeded selections; exact changes are retained. Climate remains unchanged. The first expected golden failures are retained before the reviewed refresh.
+
+The controlled36.6863ms result belongs to exact #31 runtime ec144c3 and the proposed40ms target; it is not a performance measurement of this #32 tree. Earlier level-dependent tick/snapshot measurements remain historical. Claude rereview and final stack integration remain pending.
+
+## #33 final foundation propagation
+
+This merge consumes the complete bounded-search, explicit resident-level and exact spawn-query corrections from 1fa611f3ef52703febab46d62b16e08126c8e90a, over the previous #33 head 5001a749021a6cc148c73fbc6d38f5e3272d38f9. Solution build has zero warnings/errors; core734/server44/client117 pass, validation zero errors/warnings, load and duel pass. Four-zone audits retain every pattern/site/effective-level count and changed offer under `experiments/entity-review/evidence/33-final-*`. All placements and population counts are unchanged. Default resident levels return to pattern levels on both birth paths; opt-in scaling remains available. The cap omits distant offers and may shift later seeded selections; exact changes are retained. Climate remains unchanged. The first expected golden failures are retained before the reviewed refresh.
+
+The controlled36.6863ms result belongs to exact #31 runtime ec144c3 and the proposed40ms target; it is not a performance measurement of this #33 tree. Earlier level-dependent tick/snapshot measurements remain historical. Claude rereview and final stack integration remain pending.
+
+## #34 final foundation propagation
+
+This merge consumes the complete bounded-search, explicit resident-level and exact spawn-query corrections from 9d459f680f5f77734e7ecc4260673aeba8fd3785, over the previous #34 head 4fd7063cf4e3c5d8ae4bf4a8bf1020c43d02d58b. Solution build has zero warnings/errors; core2151/server48/client120 pass, validation zero errors/warnings, load and duel pass. Four-zone audits retain every pattern/site/effective-level count and changed offer under `experiments/entity-review/evidence/34-final-*`. All placements and population counts are unchanged. Default resident levels return to pattern levels on both birth paths; opt-in scaling remains available. The cap omits distant offers and may shift later seeded selections; exact changes are retained. Climate remains unchanged. The first expected golden failures are retained before the reviewed refresh.
+
+The controlled36.6863ms result belongs to exact #31 runtime ec144c3 and the proposed40ms target; it is not a performance measurement of this #34 tree. Earlier level-dependent tick/snapshot measurements remain historical. Claude rereview and final stack integration remain pending.
+
+The first full run failed one unchanged projectile allocation assertion (228 bytes/tick versus less than200). The isolated test and one complete unchanged-suite retry pass. All three results are retained as `34-final-tests-first`, `34-final-allocation-isolated` and `34-final-tests-retry`. No assertion, threshold or delivery source was changed. The cause was not established; this is not attributed to unrelated host load.
+
+## #37 final foundation propagation
+
+This merge consumes the complete bounded-search, explicit resident-level and exact spawn-query corrections from 745015e5a0849a201e6857e47c9e23435618fb0a, over the previous #37 head 7c07a530f7daa72369face715da17fe90dda74a6. Solution build has zero warnings/errors; core2642/server48/client121 pass, validation zero errors/warnings, load and duel pass. Four-zone audits retain every pattern/site/effective-level count and changed offer under `experiments/entity-review/evidence/37-final-*`. All placements and population counts are unchanged. Default resident levels return to pattern levels on both birth paths; opt-in scaling remains available. The cap omits distant offers and may shift later seeded selections; exact changes are retained. Climate remains unchanged. The first expected golden failures are retained before the reviewed refresh.
+
+The controlled36.6863ms result belongs to exact #31 runtime ec144c3 and the proposed40ms target; it is not a performance measurement of this #37 tree. Earlier level-dependent tick/snapshot measurements remain historical. Claude rereview and final stack integration remain pending.

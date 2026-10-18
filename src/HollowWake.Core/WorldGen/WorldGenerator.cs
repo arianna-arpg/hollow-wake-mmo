@@ -654,17 +654,70 @@ public sealed class WorldGenerator
 
     // ------------------------------------------------------------ chunks
 
+    // Conservative union: all biome/table references admitted at a region level. It may over-admit
+    // a biome absent from this chunk, but can never reject a spawn that the normal passes produce.
+    private readonly Dictionary<int, HashSet<string>> _possibleRoaming = new();
+
+    /// <summary>
+    /// Reject only chunks with no possible matching spawn reference. Does not roll or infer actual
+    /// population; a positive result must still go through GenerateSpawnFacts and exact eligibility.
+    /// </summary>
+    public bool CouldContainPopulation(ChunkCoord cc, IReadOnlySet<string> patterns)
+    {
+        RefreshIfOverlaysChanged();
+        var zone = Layout.ZoneOf(cc);
+        var level = PopulationLevel(zone);
+        if (!_possibleRoaming.TryGetValue(level, out var roaming))
+        {
+            roaming = new HashSet<string>(StringComparer.Ordinal);
+            foreach (var biome in Content.Each<BiomeDef>())
+                foreach (var spec in biome.Spawns)
+                    if (spec.Level is null || spec.Level.Contains(level)) roaming.Add(spec.Pattern);
+            foreach (var table in Content.Each<SpawnTableDef>())
+                foreach (var spec in table.Spawns)
+                    if (spec.Level is null || spec.Level.Contains(level)) roaming.Add(spec.Pattern);
+            _possibleRoaming.Add(level, roaming);
+        }
+        foreach (var pattern in patterns) if (roaming.Contains(pattern)) return true;
+
+        var origin = Layout.ChunkOrigin(cc);
+        foreach (var poi in PoisAroundCached(zone))
+        {
+            if (Layout.ChunkOf(poi.X, poi.Y) == cc)
+                foreach (var spec in poi.Def.Inhabitants)
+                    if (patterns.Contains(spec.Pattern) && (spec.Level is null || spec.Level.Contains(poi.Level))) return true;
+            if (poi.Landmark is null || Content.Get<LandmarkDef>(poi.Landmark) is not { } landmark) continue;
+            var width = ChunkPasses.Width(landmark);
+            var height = landmark.Rows.Count;
+            var left = (int)Math.Floor(poi.X) - (landmark.AnchorX > 0 ? landmark.AnchorX : width / 2);
+            var bottom = (int)Math.Floor(poi.Y) - (landmark.AnchorY > 0 ? landmark.AnchorY : height / 2);
+            if (left >= origin.X + Layout.ChunkSize || left + width <= origin.X
+                || bottom >= origin.Y + Layout.ChunkSize || bottom + height <= origin.Y) continue;
+            foreach (var cell in landmark.Legend.Values)
+                if (cell.Spawn is { } pattern && patterns.Contains(pattern)) return true;
+        }
+        return false;
+    }
+
     /// <summary>Population difficulty independent of quest planning, avoiding recursive chunk/zone generation.</summary>
     internal int PopulationLevel(ZoneCoord zone) => Math.Max(1, Region(Layout.RegionOf(zone)).Level);
 
-    public ChunkData GenerateChunk(ChunkCoord cc)
+    public ChunkData GenerateChunk(ChunkCoord cc) => GenerateChunk(cc, includeFlora: true);
+
+    /// <summary>
+    /// Exact population facts without placing flora. Spawns consume terrain and landmark state,
+    /// never flora, and each pass has an independent seeded stream. Normal chunks keep every pass.
+    /// </summary>
+    public SpawnPoint[] GenerateSpawnFacts(ChunkCoord cc) => GenerateChunk(cc, includeFlora: false).Spawns.ToArray();
+
+    private ChunkData GenerateChunk(ChunkCoord cc, bool includeFlora)
     {
         RefreshIfOverlaysChanged();
         var chunk = new ChunkData(cc, Layout.ChunkSize) { GenVersion = GenVersion };
         var passes = new ChunkPasses(this);
         passes.Terrain(chunk);
         passes.Landmarks(chunk);
-        passes.Flora(chunk);
+        if (includeFlora) passes.Flora(chunk);
         passes.Spawns(chunk);
         return chunk;
     }
@@ -735,6 +788,8 @@ public sealed record GenParams
     public double PoiCell { get; init; } = 64;
     public double PoiMargin { get; init; } = 20;
     public double PoiTarget { get; init; } = 4;
+    /// <summary>Nearest chunks inspected per local-population quest slot, including cached chunks.</summary>
+    public int QuestPopulationChunks { get; init; } = 16;
     public double FlattenFalloff { get; init; } = 6;
     public double MaxWalkableSlope { get; init; } = 1.1;
     public double ShallowDepth { get; init; } = 0.6;
@@ -756,6 +811,7 @@ public sealed record GenParams
         PoiCell = r.Number("world.gen.poi_cell", 64),
         PoiMargin = r.Number("world.gen.poi_margin", 20),
         PoiTarget = r.Number("world.gen.poi_target", 4),
+        QuestPopulationChunks = (int)Math.Clamp(r.Number("world.gen.quest_population_chunks", 16), 0, int.MaxValue),
         FlattenFalloff = r.Number("world.gen.flatten_falloff", 6),
         MaxWalkableSlope = r.Number("world.gen.max_walkable_slope", 1.1),
         ShallowDepth = r.Number("world.gen.shallow_depth", 0.6),
