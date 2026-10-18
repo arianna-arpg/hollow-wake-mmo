@@ -1,6 +1,6 @@
 # Combat AI: the intent seam
 
-Date: 2026-10-18. Author: the combat session (Claude). Base: main `a810b0a`. Branch `claude/combat-ai-intent-seam`. This is the first engine request of the combat AI rebuild that [the AI split record](2026-10-18-combat-ai-split.md) sequences: the seam both halves of the rebuild build on. The AI inventory behind it found that no AI body could send an intent and that the AI wrote the simulation directly at twenty-one call sites. An unanchored review (an Opus agent given the change, not the author's conclusions) returned "merge after fixes"; its findings and what became of them are below. The seam changes no gameplay: constructs keep their legacy path in this request and move in their own, stacked on this one (its record is `2026-10-18-combat-ai-constructs.md`).
+Date: 2026-10-18. Author: the combat session (Claude). Base: main `26b9e46` (written on `a810b0a` and rebased). Branch `claude/combat-ai-intent-seam`. This is the first engine request of the combat AI rebuild that [the AI split record](2026-10-18-combat-ai-split.md) sequences: the seam both halves of the rebuild build on. The AI inventory behind it found that no AI body could send an intent and that the AI wrote the simulation directly at twenty-one call sites. An unanchored review (an Opus agent given the change, not the author's conclusions) returned "merge after fixes"; its findings and what became of them are below. The seam changes no gameplay: constructs keep their legacy path in this request and move in their own, stacked on this one (its record is `2026-10-18-combat-ai-constructs.md`).
 
 ## What changed
 
@@ -48,7 +48,7 @@ A world rule a body is under is not something it does, and no intent asks for it
 
 1. **The seam changed gameplay through constructs** (the reviewer's probe: a totem's first bolt 0.35 to 1.00 seconds, ten bolts to nine in ten seconds, an echo replaying nine of fifteen owner casts). The construct work left this request for its own, and constructs keep `ConstructCasting.Fire` here.
 2. **A click had unbounded cost**: the straight-walk check sampled the whole segment, so a click 100,000 units away loaded 3,126 chunks in a 155 ms tick (the base, searching on its budget, had 127 chunks in total: one already loaded plus 126 added). The check now takes no more samples than the mover's budget and leaves a longer segment to the bounded search. Measured on the arena: a click 1,000 units away loads 31 chunks (its search expands 1,001 cells and finds the point), one at 10,000 loads 126 and one at 100,000 loads 126 (each search stops at the budget's 4,000 cells), exactly the base's numbers. A test pins it. The review asked that the far click load no more than the one at a thousand; that cannot hold under a bounded search, since a thousand-unit click finds its goal and loads only the ground along it while any click past the budget's reach loads the budget's worth (the base does the same), so the test pins the far click to the ten-thousand one and to the budget.
-3. **Zeroing `MoveDir` on a kept plan moved a chase**: the movement system keeps steering by its last direction on the tick a waypoint is reached, and the handler cleared it; the review's wall-detour trace diverged from the base at tick nineteen. The handler clears it only for a click. The original Windows traces of three chases matched the base, including full-precision facing. That assertion was platform-dependent. The follow-up records full-precision position and path-count fixtures from the same base, holds aggro to avoid wandering, and scripts the moving prey on an axis; see `2026-10-18-ai-intent-portability-review.md`.
+3. **Zeroing `MoveDir` on a kept plan moved a chase**: the movement system keeps steering by its last direction on the tick a waypoint is reached, and the handler cleared it; the review's wall-detour trace diverged from the base at tick nineteen. The handler clears it only for a click. Three chases around obstacles (the review's wall detour, forest and moving-prey zigzag) are held tick by tick in a test to the walks the base recorded.
 4. Smaller findings, all taken: the player-only set is pinned by a test; with an empty handler registry no minion follows, heels or obeys (and no beast walks or casts); `Refusals` is documented as valid only during the think; the docs say no `IntentRejected` is published for an AI's refusal while `WeaveFailed` stays on the bus, and name `Stop` and `KeepPlan` as fields no client sends yet; `Register<T>(handler, whileDead)` keeps its two-parameter form; `modding.md` notes that `IntentContext.Player` can be null; and a walk whose plan already stands is not sent again.
 
 ## A click, before and after
@@ -65,7 +65,7 @@ A click with no path now always sets the stop distance to 0.3, where the old han
 
 ## Evidence
 
-- **Duel traces, byte-identical** (`fight`, md5 of the whole output, before and after, the after taken on the final tree):
+- **Duel traces, byte-identical** (`fight`, md5 of the whole output, before and after: main at `a810b0a` and at `26b9e46` draw the same, and so does this request on each, the after taken on the final tree):
 
   | Duel | md5 |
   |---|---|
@@ -77,16 +77,17 @@ A click with no path now always sets the stop distance to 0.3, where the old han
   | `proving_pitfighter proving_mower --seed strikes --seconds 60` | `f97e63c057dcc237494dd5ee71dfd0ee` |
   | `proving_fletcher proving_evoker --seed projectiles --seconds 60` | `d84e14f325a036a17b90c45220e3da0d` |
 
-- **Original Windows chase evidence (superseded as the cross-platform gate):** the wall detour `2ec6e14a…`, the forest `3334d55b…` and the zigzag `2d722ec2…` (SHA-256 of position, facing and path length every tick) are the base's.
-- **Tests:** `dotnet test HollowWake.sln` passes: core 591 (nine new), server 43, client 114.
+- **Chases around obstacles, tick for tick:** the wall detour, the forest and the zigzag walk the base's recorded walks, `tests/fixtures/ai-chase-reference.json` (the review probe's traces of main at `a810b0a` on Windows, the numbers as it printed them; main at `26b9e46` draws the same walks to the bit): every tick within a ten-thousandth of a unit of position and of a radian of facing, and with the same number of waypoints left. On Windows they match to the bit: the traces' SHA-256, `2ec6e14a…`, `3334d55b…` and `2d722ec2…`, are the base's. The test first pinned those hashes, and the Linux runner drew other ones, since floating point differs in its last bits from one platform to another; so the pin is the recorded values within the tolerance, and no hash.
+- **Tests:** `dotnet test HollowWake.sln` passes on the final tree: core 615 (nine new), server 43, client 114.
 - **Content:** `hollowwake validate` reports 0 errors and 0 warnings. `hollowwake load --x 0 --y 0` ran 200 ticks to 2672 entities and 272 monsters, the same as the base.
+- The live gates and the bench below were taken on the head before the rebase onto `26b9e46`, which met no conflict; main's duel traces and chase walks there are those of `a810b0a`.
 - **Live:** a server started from this worktree on a scratch configuration, and `hollowwake probe` against it: `PROBE OK (walked south)`, 356 entities seen, a clean shutdown. The browser smoke through the background harness (`node scripts/test-background.mjs --suite web`, its browser suite): 30 of 30 checks, `click to move` among them.
 - **Bench** (`bench --only tick`, Release, three runs each of the base and this request back to back): `system.behavior` 2.06, 1.90 and 1.92 ms per tick on the base, 2.26, 1.82 and 1.78 here (means 1.96 and 1.95), inside the 3 ms budget; its allocation 22.9 KB a tick on the base and 23.4 here; `zone.tick.alloc` 68.2 and 68.8 KB.
 - **A finding the seam makes countable:** in the bench zone the AI sends about fifteen cast intents a tick and the runtime refuses about twelve of them as `busy`: the chooser presses again while its own cast is running. Nothing changes for it here; the chooser's vetoes are the place to stop it.
 
 ## Files other open requests touch
 
-No code: the construct edits that touched request #20's `Weaves/WeaveRuntime.cs`, `Weaves/SlotBehaviors.cs` and `Components/Weaves.cs` left with them. One contract is shared: this request adds a paragraph to the sessions section of `docs/design/networking-and-persistence.md`, which #20 also edits; a trial merge with #20's head merges it cleanly.
+No code: the construct edits that touched request #20's `Weaves/WeaveRuntime.cs`, `Weaves/SlotBehaviors.cs` and `Components/Weaves.cs` left with them. One contract is shared: this request adds a paragraph to the sessions section of `docs/design/networking-and-persistence.md`, which #20 also edits; a trial merge with #20's head (`da8e549`) merges it cleanly. That merge meets conflicts in six files (`WeaveRuntime.cs`, `Messages.cs`, `ZoneHost.cs`, `InterfaceProtocolTests.cs`, the web's `protocol.ts` and the desktop's `Main.cs`), the same six #20 meets merging with main alone: none is in this request's files.
 
 ## Asks of Codex
 
