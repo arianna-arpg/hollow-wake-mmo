@@ -1,0 +1,40 @@
+{
+  "kind": "factions",
+  "entries": [
+    {
+      "id": "laughing_packs",
+      "name": "The Laughing Packs",
+      "color": "#ae8951",
+      "default": "neutral",
+      "relations": {
+        "players": "hostile",
+        "lantern_chancery": "hostile",
+        "weftmarch_compact": "hostile",
+        "longwake_company": "hostile",
+        "mended_thread": "hostile",
+        "remnant": "hostile",
+        "tangled": "hostile",
+        "laughing_packs": "allied",
+        "horned_tribes": "allied",
+        "goblinkin": "allied"
+      }
+    },
+    {
+      "id": "horned_tribes",
+      "name": "The Horned Tribes",
+      "color": "#9c9171",
+      "default": "neutral",
+      "relations": {
+        "players": "hostile",
+        "lantern_chancery": "hostile",
+        "weftmarch_compact": "hostile",
+        "longwake_company": "hostile",
+        "mended_thread": "hostile",
+        "remnant": "hostile",
+        "tangled": "hostile",
+        "laughing_packs": "allied",
+        "horned_tribes": "allied"
+      }
+    }
+  ]
+}

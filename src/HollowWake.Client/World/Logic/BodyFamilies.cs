@@ -54,6 +54,8 @@ public static class BodyFamilies
         ["fauna_quadruped"] = FaunaFamilies.Quadruped,
         ["fauna_bird"] = FaunaFamilies.Bird,
         ["fauna_crab"] = FaunaFamilies.Crab,
+        ["gnoll"] = KinFamilies.Gnoll,
+        ["beastkin"] = KinFamilies.Beastkin,
         ["orc"] = OrcFamilies.Orc,
         ["goblinkin"] = GoblinkinFamilies.Goblinkin,
         ["gnasher"] = GoblinkinFamilies.Gnasher,

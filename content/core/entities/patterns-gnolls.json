@@ -1,0 +1,1209 @@
+{
+  "kind": "patterns",
+  "entries": [
+    {
+      "id": "gnoll_body",
+      "name": "Gnoll body template",
+      "extends": "creature",
+      "faction": "laughing_packs",
+      "tags": [
+        "gnoll",
+        "humanoid"
+      ],
+      "components": {
+        "stats": {
+          "attributes": {
+            "might": 14,
+            "grace": 12,
+            "will": 12,
+            "stamina.max": 100,
+            "stamina.regen": 20,
+            "mana.max": 120,
+            "mana.regen": 15
+          }
+        },
+        "statuses": {}
+      }
+    },
+    {
+      "id": "gnoll_prowler",
+      "name": "Gnoll Prowler",
+      "extends": "gnoll_body",
+      "faction": "laughing_packs",
+      "tags": [
+        "gnoll",
+        "humanoid",
+        "monster",
+        "body.flesh",
+        "body.fur",
+        "family.gnoll",
+        "role.hunter",
+        "locomotion.ground",
+        "habitat.gnoll_scavenge",
+        "melee",
+        "size.medium"
+      ],
+      "level": 4,
+      "height": 1.72,
+      "radius": 0.38,
+      "components": {
+        "physical": {
+          "width": 0.7,
+          "depth": 0.76,
+          "height": 1.72,
+          "fill": 0.12,
+          "heft": 1,
+          "materials": [
+            {
+              "material": "flesh",
+              "fraction": 0.76
+            },
+            {
+              "material": "fur",
+              "fraction": 0.16
+            },
+            {
+              "material": "bone",
+              "fraction": 0.06
+            },
+            {
+              "material": "keratin",
+              "fraction": 0.02
+            }
+          ]
+        },
+        "stats": {
+          "attributes": {
+            "life.max": "65 + (level - 1) * 6",
+            "move.speed": 5.7,
+            "weapon.damage.min": "7.0 + (level - 1) * 0.6",
+            "weapon.damage.max": "14 + (level - 1) * 0.9",
+            "weapon.attack.time": 1.15,
+            "poise.max": 20,
+            "armor": 12,
+            "spell.power": 1.2
+          }
+        },
+        "weaves": {
+          "list": [
+            "claw",
+            "rend"
+          ]
+        },
+        "behavior": {
+          "id": "kin_press"
+        },
+        "drops": {
+          "table": "goblinkin_drops",
+          "xp": "12 + level * 8",
+          "chance": 0.65
+        }
+      },
+      "meta": {
+        "prototype": {
+          "repository": "arianna-arpg/arpg-game-world",
+          "revision": "118b510f8b5bfb781163c5bc13ea4908f698e75b",
+          "id": "gnoll_prowler"
+        },
+        "ai_handoff": {
+          "current": "kin_press",
+          "status": "provisional; replaceable content assignment",
+          "desired": [
+            "bounded perception",
+            "mechanic-aware skill choices",
+            "readable commitments",
+            "pack flanking and morale"
+          ],
+          "deferred": [
+            "commander orders and reinforcements",
+            "tactical trap placement",
+            "ally triage",
+            "terrain-aware movement"
+          ]
+        }
+      }
+    },
+    {
+      "id": "gnoll_bonepicker",
+      "name": "Gnoll Bonepicker",
+      "extends": "gnoll_body",
+      "faction": "laughing_packs",
+      "tags": [
+        "gnoll",
+        "humanoid",
+        "monster",
+        "body.flesh",
+        "body.fur",
+        "family.gnoll",
+        "role.scavenger",
+        "locomotion.ground",
+        "habitat.gnoll_scavenge",
+        "ranged",
+        "size.medium"
+      ],
+      "level": 3,
+      "height": 1.38,
+      "radius": 0.325,
+      "components": {
+        "physical": {
+          "width": 0.57,
+          "depth": 0.65,
+          "height": 1.38,
+          "fill": 0.12,
+          "heft": 1,
+          "materials": [
+            {
+              "material": "flesh",
+              "fraction": 0.76
+            },
+            {
+              "material": "fur",
+              "fraction": 0.16
+            },
+            {
+              "material": "bone",
+              "fraction": 0.06
+            },
+            {
+              "material": "keratin",
+              "fraction": 0.02
+            }
+          ]
+        },
+        "stats": {
+          "attributes": {
+            "life.max": "48 + (level - 1) * 6",
+            "move.speed": 5.2,
+            "weapon.damage.min": "6.5 + (level - 1) * 0.6",
+            "weapon.damage.max": "13 + (level - 1) * 0.9",
+            "weapon.attack.time": 1.15,
+            "poise.max": 12,
+            "armor": 12,
+            "spell.power": 1.2
+          }
+        },
+        "weaves": {
+          "list": [
+            "hurl_debris"
+          ]
+        },
+        "behavior": {
+          "id": "aggressive_ranged"
+        },
+        "drops": {
+          "table": "goblinkin_drops",
+          "xp": "12 + level * 8",
+          "chance": 0.65
+        }
+      },
+      "meta": {
+        "prototype": {
+          "repository": "arianna-arpg/arpg-game-world",
+          "revision": "118b510f8b5bfb781163c5bc13ea4908f698e75b",
+          "id": "gnoll_bonepicker"
+        },
+        "ai_handoff": {
+          "current": "aggressive_ranged",
+          "status": "provisional; replaceable content assignment",
+          "desired": [
+            "bounded perception",
+            "mechanic-aware skill choices",
+            "readable commitments",
+            "pack flanking and morale"
+          ],
+          "deferred": [
+            "commander orders and reinforcements",
+            "tactical trap placement",
+            "ally triage",
+            "terrain-aware movement"
+          ]
+        }
+      }
+    },
+    {
+      "id": "gnoll_longshot",
+      "name": "Gnoll Longshot",
+      "extends": "gnoll_body",
+      "faction": "laughing_packs",
+      "tags": [
+        "gnoll",
+        "humanoid",
+        "monster",
+        "body.flesh",
+        "body.fur",
+        "family.gnoll",
+        "role.marksman",
+        "locomotion.ground",
+        "habitat.gnoll_scavenge",
+        "ranged",
+        "size.medium"
+      ],
+      "level": 6,
+      "height": 1.78,
+      "radius": 0.36,
+      "components": {
+        "physical": {
+          "width": 0.63,
+          "depth": 0.72,
+          "height": 1.78,
+          "fill": 0.12,
+          "heft": 1,
+          "materials": [
+            {
+              "material": "flesh",
+              "fraction": 0.76
+            },
+            {
+              "material": "fur",
+              "fraction": 0.16
+            },
+            {
+              "material": "bone",
+              "fraction": 0.06
+            },
+            {
+              "material": "keratin",
+              "fraction": 0.02
+            }
+          ]
+        },
+        "stats": {
+          "attributes": {
+            "life.max": "66 + (level - 1) * 6",
+            "move.speed": 4.7,
+            "weapon.damage.min": "8.0 + (level - 1) * 0.6",
+            "weapon.damage.max": "16 + (level - 1) * 0.9",
+            "weapon.attack.time": 1.15,
+            "poise.max": 16,
+            "armor": 12,
+            "spell.power": 1.2
+          }
+        },
+        "weaves": {
+          "list": [
+            "piercing_arrow"
+          ]
+        },
+        "behavior": {
+          "id": "aggressive_ranged"
+        },
+        "drops": {
+          "table": "goblinkin_drops",
+          "xp": "12 + level * 8",
+          "chance": 0.65
+        }
+      },
+      "meta": {
+        "prototype": {
+          "repository": "arianna-arpg/arpg-game-world",
+          "revision": "118b510f8b5bfb781163c5bc13ea4908f698e75b",
+          "id": "gnoll_longshot"
+        },
+        "ai_handoff": {
+          "current": "aggressive_ranged",
+          "status": "provisional; replaceable content assignment",
+          "desired": [
+            "bounded perception",
+            "mechanic-aware skill choices",
+            "readable commitments",
+            "pack flanking and morale"
+          ],
+          "deferred": [
+            "commander orders and reinforcements",
+            "tactical trap placement",
+            "ally triage",
+            "terrain-aware movement"
+          ]
+        }
+      }
+    },
+    {
+      "id": "gnoll_impaler",
+      "name": "Gnoll Impaler",
+      "extends": "gnoll_body",
+      "faction": "laughing_packs",
+      "tags": [
+        "gnoll",
+        "humanoid",
+        "monster",
+        "body.flesh",
+        "body.fur",
+        "family.gnoll",
+        "role.lancer",
+        "locomotion.ground",
+        "habitat.gnoll_moot",
+        "melee",
+        "size.medium"
+      ],
+      "level": 6,
+      "height": 1.86,
+      "radius": 0.39,
+      "components": {
+        "physical": {
+          "width": 0.77,
+          "depth": 0.78,
+          "height": 1.86,
+          "fill": 0.12,
+          "heft": 1,
+          "materials": [
+            {
+              "material": "flesh",
+              "fraction": 0.76
+            },
+            {
+              "material": "fur",
+              "fraction": 0.16
+            },
+            {
+              "material": "bone",
+              "fraction": 0.06
+            },
+            {
+              "material": "keratin",
+              "fraction": 0.02
+            }
+          ]
+        },
+        "stats": {
+          "attributes": {
+            "life.max": "95 + (level - 1) * 6",
+            "move.speed": 5.1,
+            "weapon.damage.min": "8.0 + (level - 1) * 0.6",
+            "weapon.damage.max": "16 + (level - 1) * 0.9",
+            "weapon.attack.time": 1.15,
+            "poise.max": 28,
+            "armor": 12,
+            "spell.power": 1.2
+          }
+        },
+        "weaves": {
+          "list": [
+            "skewer",
+            "pinning_spear"
+          ]
+        },
+        "behavior": {
+          "id": "kin_press"
+        },
+        "drops": {
+          "table": "goblinkin_drops",
+          "xp": "12 + level * 8",
+          "chance": 0.65
+        }
+      },
+      "meta": {
+        "prototype": {
+          "repository": "arianna-arpg/arpg-game-world",
+          "revision": "118b510f8b5bfb781163c5bc13ea4908f698e75b",
+          "id": "gnoll_impaler"
+        },
+        "ai_handoff": {
+          "current": "kin_press",
+          "status": "provisional; replaceable content assignment",
+          "desired": [
+            "bounded perception",
+            "mechanic-aware skill choices",
+            "readable commitments",
+            "pack flanking and morale"
+          ],
+          "deferred": [
+            "commander orders and reinforcements",
+            "tactical trap placement",
+            "ally triage",
+            "terrain-aware movement"
+          ]
+        }
+      }
+    },
+    {
+      "id": "gnoll_howler",
+      "name": "Gnoll Howler",
+      "extends": "gnoll_body",
+      "faction": "laughing_packs",
+      "tags": [
+        "gnoll",
+        "humanoid",
+        "monster",
+        "body.flesh",
+        "body.fur",
+        "family.gnoll",
+        "role.caller",
+        "locomotion.ground",
+        "habitat.gnoll_moot",
+        "melee",
+        "size.medium"
+      ],
+      "level": 8,
+      "height": 1.92,
+      "radius": 0.44,
+      "components": {
+        "physical": {
+          "width": 0.88,
+          "depth": 0.84,
+          "height": 1.92,
+          "fill": 0.12,
+          "heft": 1,
+          "materials": [
+            {
+              "material": "flesh",
+              "fraction": 0.76
+            },
+            {
+              "material": "fur",
+              "fraction": 0.16
+            },
+            {
+              "material": "bone",
+              "fraction": 0.06
+            },
+            {
+              "material": "keratin",
+              "fraction": 0.02
+            }
+          ]
+        },
+        "stats": {
+          "attributes": {
+            "life.max": "135 + (level - 1) * 6",
+            "move.speed": 4.5,
+            "weapon.damage.min": "9.0 + (level - 1) * 0.6",
+            "weapon.damage.max": "18 + (level - 1) * 0.9",
+            "weapon.attack.time": 1.15,
+            "poise.max": 35,
+            "armor": 12,
+            "spell.power": 1.2
+          }
+        },
+        "weaves": {
+          "list": [
+            "rallying_shout",
+            "claw"
+          ]
+        },
+        "behavior": {
+          "id": "kin_press"
+        },
+        "drops": {
+          "table": "goblinkin_drops",
+          "xp": "12 + level * 8",
+          "chance": 0.65
+        }
+      },
+      "meta": {
+        "prototype": {
+          "repository": "arianna-arpg/arpg-game-world",
+          "revision": "118b510f8b5bfb781163c5bc13ea4908f698e75b",
+          "id": "gnoll_howler"
+        },
+        "ai_handoff": {
+          "current": "kin_press",
+          "status": "provisional; replaceable content assignment",
+          "desired": [
+            "bounded perception",
+            "mechanic-aware skill choices",
+            "readable commitments",
+            "pack flanking and morale"
+          ],
+          "deferred": [
+            "commander orders and reinforcements",
+            "tactical trap placement",
+            "ally triage",
+            "terrain-aware movement"
+          ]
+        }
+      }
+    },
+    {
+      "id": "gnoll_trapper",
+      "name": "Gnoll Trapper",
+      "extends": "gnoll_body",
+      "faction": "laughing_packs",
+      "tags": [
+        "gnoll",
+        "humanoid",
+        "monster",
+        "body.flesh",
+        "body.fur",
+        "family.gnoll",
+        "role.hunter",
+        "locomotion.ground",
+        "habitat.gnoll_scavenge",
+        "ranged",
+        "size.medium"
+      ],
+      "level": 7,
+      "height": 1.61,
+      "radius": 0.355,
+      "components": {
+        "physical": {
+          "width": 0.62,
+          "depth": 0.71,
+          "height": 1.61,
+          "fill": 0.12,
+          "heft": 1,
+          "materials": [
+            {
+              "material": "flesh",
+              "fraction": 0.76
+            },
+            {
+              "material": "fur",
+              "fraction": 0.16
+            },
+            {
+              "material": "bone",
+              "fraction": 0.06
+            },
+            {
+              "material": "keratin",
+              "fraction": 0.02
+            }
+          ]
+        },
+        "stats": {
+          "attributes": {
+            "life.max": "72 + (level - 1) * 6",
+            "move.speed": 4.9,
+            "weapon.damage.min": "8.5 + (level - 1) * 0.6",
+            "weapon.damage.max": "17 + (level - 1) * 0.9",
+            "weapon.attack.time": 1.15,
+            "poise.max": 18,
+            "armor": 12,
+            "spell.power": 1.2
+          }
+        },
+        "weaves": {
+          "list": [
+            "piercing_arrow"
+          ]
+        },
+        "behavior": {
+          "id": "aggressive_ranged"
+        },
+        "drops": {
+          "table": "goblinkin_drops",
+          "xp": "12 + level * 8",
+          "chance": 0.65
+        }
+      },
+      "meta": {
+        "prototype": {
+          "repository": "arianna-arpg/arpg-game-world",
+          "revision": "118b510f8b5bfb781163c5bc13ea4908f698e75b",
+          "id": "gnoll_trapper"
+        },
+        "ai_handoff": {
+          "current": "aggressive_ranged",
+          "status": "provisional; replaceable content assignment",
+          "desired": [
+            "bounded perception",
+            "mechanic-aware skill choices",
+            "readable commitments",
+            "pack flanking and morale"
+          ],
+          "deferred": [
+            "commander orders and reinforcements",
+            "tactical trap placement",
+            "ally triage",
+            "terrain-aware movement"
+          ]
+        }
+      }
+    },
+    {
+      "id": "gnoll_butcher",
+      "name": "Gnoll Butcher",
+      "extends": "gnoll_body",
+      "faction": "laughing_packs",
+      "tags": [
+        "gnoll",
+        "humanoid",
+        "monster",
+        "body.flesh",
+        "body.fur",
+        "family.gnoll",
+        "role.bruiser",
+        "locomotion.ground",
+        "habitat.gnoll_moot",
+        "melee",
+        "size.medium"
+      ],
+      "level": 8,
+      "height": 1.95,
+      "radius": 0.52,
+      "components": {
+        "physical": {
+          "width": 1.04,
+          "depth": 0.93,
+          "height": 1.95,
+          "fill": 0.12,
+          "heft": 1,
+          "materials": [
+            {
+              "material": "flesh",
+              "fraction": 0.76
+            },
+            {
+              "material": "fur",
+              "fraction": 0.16
+            },
+            {
+              "material": "bone",
+              "fraction": 0.06
+            },
+            {
+              "material": "keratin",
+              "fraction": 0.02
+            }
+          ]
+        },
+        "stats": {
+          "attributes": {
+            "life.max": "160 + (level - 1) * 6",
+            "move.speed": 4.2,
+            "weapon.damage.min": "9.0 + (level - 1) * 0.6",
+            "weapon.damage.max": "18 + (level - 1) * 0.9",
+            "weapon.attack.time": 1.15,
+            "poise.max": 48,
+            "armor": 12,
+            "spell.power": 1.2
+          }
+        },
+        "weaves": {
+          "list": [
+            "cleave",
+            "claw"
+          ]
+        },
+        "behavior": {
+          "id": "kin_press"
+        },
+        "drops": {
+          "table": "goblinkin_drops",
+          "xp": "12 + level * 8",
+          "chance": 0.65
+        }
+      },
+      "meta": {
+        "prototype": {
+          "repository": "arianna-arpg/arpg-game-world",
+          "revision": "118b510f8b5bfb781163c5bc13ea4908f698e75b",
+          "id": "gnoll_butcher"
+        },
+        "ai_handoff": {
+          "current": "kin_press",
+          "status": "provisional; replaceable content assignment",
+          "desired": [
+            "bounded perception",
+            "mechanic-aware skill choices",
+            "readable commitments",
+            "pack flanking and morale"
+          ],
+          "deferred": [
+            "commander orders and reinforcements",
+            "tactical trap placement",
+            "ally triage",
+            "terrain-aware movement"
+          ]
+        }
+      }
+    },
+    {
+      "id": "gnoll_skinner",
+      "name": "Gnoll Skinner",
+      "extends": "gnoll_body",
+      "faction": "laughing_packs",
+      "tags": [
+        "gnoll",
+        "humanoid",
+        "monster",
+        "body.flesh",
+        "body.fur",
+        "family.gnoll",
+        "role.skirmisher",
+        "locomotion.ground",
+        "habitat.gnoll_moot",
+        "melee",
+        "size.medium"
+      ],
+      "level": 9,
+      "height": 1.66,
+      "radius": 0.36,
+      "components": {
+        "physical": {
+          "width": 0.62,
+          "depth": 0.72,
+          "height": 1.66,
+          "fill": 0.12,
+          "heft": 1,
+          "materials": [
+            {
+              "material": "flesh",
+              "fraction": 0.76
+            },
+            {
+              "material": "fur",
+              "fraction": 0.16
+            },
+            {
+              "material": "bone",
+              "fraction": 0.06
+            },
+            {
+              "material": "keratin",
+              "fraction": 0.02
+            }
+          ]
+        },
+        "stats": {
+          "attributes": {
+            "life.max": "90 + (level - 1) * 6",
+            "move.speed": 5.9,
+            "weapon.damage.min": "9.5 + (level - 1) * 0.6",
+            "weapon.damage.max": "19 + (level - 1) * 0.9",
+            "weapon.attack.time": 1.15,
+            "poise.max": 22,
+            "armor": 12,
+            "spell.power": 1.2
+          }
+        },
+        "weaves": {
+          "list": [
+            "carve",
+            "deep_carve"
+          ]
+        },
+        "behavior": {
+          "id": "kin_press"
+        },
+        "drops": {
+          "table": "goblinkin_drops",
+          "xp": "12 + level * 8",
+          "chance": 0.65
+        }
+      },
+      "meta": {
+        "prototype": {
+          "repository": "arianna-arpg/arpg-game-world",
+          "revision": "118b510f8b5bfb781163c5bc13ea4908f698e75b",
+          "id": "gnoll_skinner"
+        },
+        "ai_handoff": {
+          "current": "kin_press",
+          "status": "provisional; replaceable content assignment",
+          "desired": [
+            "bounded perception",
+            "mechanic-aware skill choices",
+            "readable commitments",
+            "pack flanking and morale"
+          ],
+          "deferred": [
+            "commander orders and reinforcements",
+            "tactical trap placement",
+            "ally triage",
+            "terrain-aware movement"
+          ]
+        }
+      }
+    },
+    {
+      "id": "gnoll_pyrekeeper",
+      "name": "Gnoll Pyrekeeper",
+      "extends": "gnoll_body",
+      "faction": "laughing_packs",
+      "tags": [
+        "gnoll",
+        "humanoid",
+        "monster",
+        "body.flesh",
+        "body.fur",
+        "family.gnoll",
+        "role.caster",
+        "locomotion.ground",
+        "habitat.gnoll_pyre",
+        "ranged",
+        "size.medium"
+      ],
+      "level": 12,
+      "height": 1.75,
+      "radius": 0.41,
+      "components": {
+        "physical": {
+          "width": 0.75,
+          "depth": 0.82,
+          "height": 1.75,
+          "fill": 0.12,
+          "heft": 1,
+          "materials": [
+            {
+              "material": "flesh",
+              "fraction": 0.76
+            },
+            {
+              "material": "fur",
+              "fraction": 0.16
+            },
+            {
+              "material": "bone",
+              "fraction": 0.06
+            },
+            {
+              "material": "keratin",
+              "fraction": 0.02
+            }
+          ]
+        },
+        "stats": {
+          "attributes": {
+            "life.max": "120 + (level - 1) * 6",
+            "move.speed": 4.1,
+            "weapon.damage.min": "11.0 + (level - 1) * 0.6",
+            "weapon.damage.max": "22 + (level - 1) * 0.9",
+            "weapon.attack.time": 1.15,
+            "poise.max": 24,
+            "armor": 12,
+            "spell.power": 1.2
+          }
+        },
+        "weaves": {
+          "list": [
+            "firebolt",
+            "fire_siege"
+          ]
+        },
+        "behavior": {
+          "id": "aggressive_ranged"
+        },
+        "drops": {
+          "table": "goblinkin_drops",
+          "xp": "12 + level * 8",
+          "chance": 0.65
+        }
+      },
+      "meta": {
+        "prototype": {
+          "repository": "arianna-arpg/arpg-game-world",
+          "revision": "118b510f8b5bfb781163c5bc13ea4908f698e75b",
+          "id": "gnoll_pyrekeeper"
+        },
+        "ai_handoff": {
+          "current": "aggressive_ranged",
+          "status": "provisional; replaceable content assignment",
+          "desired": [
+            "bounded perception",
+            "mechanic-aware skill choices",
+            "readable commitments",
+            "pack flanking and morale"
+          ],
+          "deferred": [
+            "commander orders and reinforcements",
+            "tactical trap placement",
+            "ally triage",
+            "terrain-aware movement"
+          ]
+        }
+      }
+    },
+    {
+      "id": "gnoll_matron",
+      "name": "Gnoll Matron",
+      "extends": "gnoll_body",
+      "faction": "laughing_packs",
+      "tags": [
+        "gnoll",
+        "humanoid",
+        "monster",
+        "body.flesh",
+        "body.fur",
+        "family.gnoll",
+        "role.matriarch",
+        "locomotion.ground",
+        "habitat.gnoll_moot",
+        "melee",
+        "size.medium"
+      ],
+      "level": 15,
+      "height": 2.1,
+      "radius": 0.55,
+      "components": {
+        "physical": {
+          "width": 1.1,
+          "depth": 1.01,
+          "height": 2.1,
+          "fill": 0.12,
+          "heft": 1,
+          "materials": [
+            {
+              "material": "flesh",
+              "fraction": 0.76
+            },
+            {
+              "material": "fur",
+              "fraction": 0.16
+            },
+            {
+              "material": "bone",
+              "fraction": 0.06
+            },
+            {
+              "material": "keratin",
+              "fraction": 0.02
+            }
+          ]
+        },
+        "stats": {
+          "attributes": {
+            "life.max": "290 + (level - 1) * 6",
+            "move.speed": 4.0,
+            "weapon.damage.min": "12.5 + (level - 1) * 0.6",
+            "weapon.damage.max": "25 + (level - 1) * 0.9",
+            "weapon.attack.time": 1.15,
+            "poise.max": 65,
+            "armor": 12,
+            "spell.power": 1.2
+          }
+        },
+        "weaves": {
+          "list": [
+            "rallying_shout",
+            "claw",
+            "rend"
+          ]
+        },
+        "behavior": {
+          "id": "kin_press"
+        },
+        "drops": {
+          "table": "goblinkin_drops",
+          "xp": "12 + level * 8",
+          "chance": 0.65
+        }
+      },
+      "meta": {
+        "prototype": {
+          "repository": "arianna-arpg/arpg-game-world",
+          "revision": "118b510f8b5bfb781163c5bc13ea4908f698e75b",
+          "id": "gnoll_matron"
+        },
+        "ai_handoff": {
+          "current": "kin_press",
+          "status": "provisional; replaceable content assignment",
+          "desired": [
+            "bounded perception",
+            "mechanic-aware skill choices",
+            "readable commitments",
+            "pack flanking and morale"
+          ],
+          "deferred": [
+            "commander orders and reinforcements",
+            "tactical trap placement",
+            "ally triage",
+            "terrain-aware movement"
+          ]
+        }
+      }
+    },
+    {
+      "id": "gnoll_ravener",
+      "name": "Gnoll Ravener",
+      "extends": "gnoll_body",
+      "faction": "laughing_packs",
+      "tags": [
+        "gnoll",
+        "humanoid",
+        "monster",
+        "body.flesh",
+        "body.fur",
+        "family.gnoll",
+        "role.ravager",
+        "locomotion.ground",
+        "habitat.gnoll_pyre",
+        "melee",
+        "size.medium"
+      ],
+      "level": 14,
+      "height": 2.02,
+      "radius": 0.495,
+      "components": {
+        "physical": {
+          "width": 0.93,
+          "depth": 0.99,
+          "height": 2.02,
+          "fill": 0.12,
+          "heft": 1,
+          "materials": [
+            {
+              "material": "flesh",
+              "fraction": 0.76
+            },
+            {
+              "material": "fur",
+              "fraction": 0.16
+            },
+            {
+              "material": "bone",
+              "fraction": 0.06
+            },
+            {
+              "material": "keratin",
+              "fraction": 0.02
+            }
+          ]
+        },
+        "stats": {
+          "attributes": {
+            "life.max": "210 + (level - 1) * 6",
+            "move.speed": 5.3,
+            "weapon.damage.min": "12.0 + (level - 1) * 0.6",
+            "weapon.damage.max": "24 + (level - 1) * 0.9",
+            "weapon.attack.time": 1.15,
+            "poise.max": 50,
+            "armor": 12,
+            "spell.power": 1.2
+          }
+        },
+        "weaves": {
+          "list": [
+            "carve",
+            "deep_carve",
+            "rend"
+          ]
+        },
+        "behavior": {
+          "id": "kin_press"
+        },
+        "drops": {
+          "table": "goblinkin_drops",
+          "xp": "12 + level * 8",
+          "chance": 0.65
+        }
+      },
+      "meta": {
+        "prototype": {
+          "repository": "arianna-arpg/arpg-game-world",
+          "revision": "118b510f8b5bfb781163c5bc13ea4908f698e75b",
+          "id": "gnoll_ravener"
+        },
+        "ai_handoff": {
+          "current": "kin_press",
+          "status": "provisional; replaceable content assignment",
+          "desired": [
+            "bounded perception",
+            "mechanic-aware skill choices",
+            "readable commitments",
+            "pack flanking and morale"
+          ],
+          "deferred": [
+            "commander orders and reinforcements",
+            "tactical trap placement",
+            "ally triage",
+            "terrain-aware movement"
+          ]
+        }
+      }
+    },
+    {
+      "id": "gnoll_packfather",
+      "name": "Rrakhan, Packfather",
+      "extends": "gnoll_body",
+      "faction": "laughing_packs",
+      "tags": [
+        "gnoll",
+        "humanoid",
+        "monster",
+        "body.flesh",
+        "body.fur",
+        "family.gnoll",
+        "role.champion",
+        "locomotion.ground",
+        "habitat.gnoll_pyre",
+        "melee",
+        "size.large"
+      ],
+      "level": 22,
+      "height": 2.48,
+      "radius": 0.68,
+      "components": {
+        "physical": {
+          "width": 1.36,
+          "depth": 1.25,
+          "height": 2.48,
+          "fill": 0.12,
+          "heft": 1,
+          "materials": [
+            {
+              "material": "flesh",
+              "fraction": 0.72
+            },
+            {
+              "material": "fur",
+              "fraction": 0.16
+            },
+            {
+              "material": "bone",
+              "fraction": 0.06
+            },
+            {
+              "material": "keratin",
+              "fraction": 0.02
+            },
+            {
+              "material": "iron",
+              "fraction": 0.04
+            }
+          ]
+        },
+        "stats": {
+          "attributes": {
+            "life.max": "580 + (level - 1) * 6",
+            "move.speed": 3.9,
+            "weapon.damage.min": "16.0 + (level - 1) * 0.6",
+            "weapon.damage.max": "32 + (level - 1) * 0.9",
+            "weapon.attack.time": 1.15,
+            "poise.max": 95,
+            "armor": 45,
+            "spell.power": 1.2
+          }
+        },
+        "weaves": {
+          "list": [
+            "heavy_strike",
+            "ground_slam",
+            "rallying_shout"
+          ]
+        },
+        "behavior": {
+          "id": "kin_press"
+        },
+        "drops": {
+          "table": "goblinkin_drops",
+          "xp": "12 + level * 8",
+          "chance": 0.65
+        }
+      },
+      "meta": {
+        "prototype": {
+          "repository": "arianna-arpg/arpg-game-world",
+          "revision": "118b510f8b5bfb781163c5bc13ea4908f698e75b",
+          "id": "gnoll_colossus"
+        },
+        "ai_handoff": {
+          "current": "kin_press",
+          "status": "provisional; replaceable content assignment",
+          "desired": [
+            "bounded perception",
+            "mechanic-aware skill choices",
+            "readable commitments",
+            "pack flanking and morale"
+          ],
+          "deferred": [
+            "commander orders and reinforcements",
+            "tactical trap placement",
+            "ally triage",
+            "terrain-aware movement"
+          ]
+        }
+      }
+    }
+  ]
+}

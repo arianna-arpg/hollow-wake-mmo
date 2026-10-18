@@ -17,6 +17,8 @@ internal static class AppearanceKinds
         ["fauna_quadruped"] = new[] { "breadth", "depth", "legs", "head", "ears", "tail", "rump", "snout" },
         ["fauna_bird"] = new[] { "breadth", "depth", "legs", "tail", "beak" },
         ["fauna_crab"] = new[] { "breadth", "depth", "claw" },
+        ["gnoll"] = new[] { "breadth", "depth", "snout", "hunch", "muscle", "grip" },
+        ["beastkin"] = new[] { "breadth", "depth", "legs", "muscle", "horns", "grip" },
         ["orc"] = new[] { "breadth", "depth", "arms", "hunch", "muscle", "jaw" },
         ["goblinkin"] = new[] { "breadth", "depth", "legs", "arms", "head", "jaw" },
         ["gnasher"] = new[] { "breadth", "depth" },

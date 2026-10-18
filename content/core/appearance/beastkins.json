@@ -1,0 +1,405 @@
+{
+  "kind": "ui_appearances",
+  "entries": [
+    {
+      "id": "beastkin_chaser",
+      "body": "beastkin",
+      "shape": {
+        "breadth": 0.4047619047619048,
+        "depth": 0.3630952380952381,
+        "grip": 0.95,
+        "legs": 0.53,
+        "horns": 0.8
+      },
+      "palette": {
+        "hide": "#b18a61",
+        "belly": "#c9b894",
+        "dark": "#332e28",
+        "eye": "#edba64",
+        "bone": "#ddd0aa",
+        "cloth": "#554239",
+        "metal": "#777b78",
+        "wood": "#72583d",
+        "accent": "#7d9e95"
+      },
+      "features": [
+        "swept_horns",
+        "quiver"
+      ],
+      "gear": {
+        "main_hand": "weapon.spear"
+      },
+      "card": "allow",
+      "variation": {
+        "hue": 0.01,
+        "value": 0.03,
+        "scale": 0
+      },
+      "meta": {
+        "prototype_look": "beastkin_chaser",
+        "translation": "Caprine/bovine face, horns, bent hocks and split hooves"
+      }
+    },
+    {
+      "id": "beastkin_gorer",
+      "body": "beastkin",
+      "shape": {
+        "breadth": 0.5471698113207547,
+        "depth": 0.42452830188679247,
+        "grip": 0.95,
+        "muscle": 1.2,
+        "legs": 0.46
+      },
+      "palette": {
+        "hide": "#95714b",
+        "belly": "#c9b894",
+        "dark": "#332e28",
+        "eye": "#edba64",
+        "bone": "#ddd0aa",
+        "cloth": "#554239",
+        "metal": "#777b78",
+        "wood": "#72583d",
+        "accent": "#7d9e95"
+      },
+      "features": [
+        "bull",
+        "bull_horns",
+        "warpaint"
+      ],
+      "gear": {},
+      "card": "allow",
+      "variation": {
+        "hue": 0.01,
+        "value": 0.03,
+        "scale": 0
+      },
+      "meta": {
+        "prototype_look": "beastkin_gorer",
+        "translation": "Caprine/bovine face, horns, bent hocks and split hooves"
+      }
+    },
+    {
+      "id": "beastkin_impaler",
+      "body": "beastkin",
+      "shape": {
+        "breadth": 0.40437158469945356,
+        "depth": 0.366120218579235,
+        "grip": 0.95,
+        "horns": 0.8
+      },
+      "palette": {
+        "hide": "#c09c67",
+        "belly": "#c9b894",
+        "dark": "#332e28",
+        "eye": "#edba64",
+        "bone": "#ddd0aa",
+        "cloth": "#554239",
+        "metal": "#777b78",
+        "wood": "#72583d",
+        "accent": "#7d9e95"
+      },
+      "features": [
+        "ram_horns",
+        "quiver"
+      ],
+      "gear": {
+        "main_hand": "weapon.bow"
+      },
+      "card": "allow",
+      "variation": {
+        "hue": 0.01,
+        "value": 0.03,
+        "scale": 0
+      },
+      "meta": {
+        "prototype_look": "beastkin_impaler",
+        "translation": "Caprine/bovine face, horns, bent hocks and split hooves"
+      }
+    },
+    {
+      "id": "beastkin_ritualist",
+      "body": "beastkin",
+      "shape": {
+        "breadth": 0.4240837696335079,
+        "depth": 0.3769633507853403,
+        "grip": 0.95,
+        "horns": 1.15
+      },
+      "palette": {
+        "hide": "#c6ae8b",
+        "belly": "#c9b894",
+        "dark": "#332e28",
+        "eye": "#edba64",
+        "bone": "#ddd0aa",
+        "cloth": "#554239",
+        "metal": "#777b78",
+        "wood": "#72583d",
+        "accent": "#7d9e95"
+      },
+      "features": [
+        "swept_horns",
+        "mantle",
+        "censer",
+        "beard"
+      ],
+      "gear": {
+        "main_hand": "weapon.staff"
+      },
+      "card": "allow",
+      "variation": {
+        "hue": 0.01,
+        "value": 0.03,
+        "scale": 0
+      },
+      "meta": {
+        "prototype_look": "beastkin_ritualist",
+        "translation": "Caprine/bovine face, horns, bent hocks and split hooves"
+      }
+    },
+    {
+      "id": "beastkin_flayer",
+      "body": "beastkin",
+      "shape": {
+        "breadth": 0.4057142857142857,
+        "depth": 0.37142857142857144,
+        "grip": 0.95,
+        "legs": 0.53,
+        "muscle": 0.85
+      },
+      "palette": {
+        "hide": "#a16c49",
+        "belly": "#c9b894",
+        "dark": "#332e28",
+        "eye": "#edba64",
+        "bone": "#ddd0aa",
+        "cloth": "#554239",
+        "metal": "#777b78",
+        "wood": "#72583d",
+        "accent": "#7d9e95"
+      },
+      "features": [
+        "ram_horns",
+        "beard",
+        "trophies"
+      ],
+      "gear": {
+        "main_hand": "weapon.dagger"
+      },
+      "card": "allow",
+      "variation": {
+        "hue": 0.01,
+        "value": 0.03,
+        "scale": 0
+      },
+      "meta": {
+        "prototype_look": "beastkin_flayer",
+        "translation": "Caprine/bovine face, horns, bent hocks and split hooves"
+      }
+    },
+    {
+      "id": "beastkin_horncaller",
+      "body": "beastkin",
+      "shape": {
+        "breadth": 0.425,
+        "depth": 0.375,
+        "grip": 0.95,
+        "horns": 1.2
+      },
+      "palette": {
+        "hide": "#c2b17d",
+        "belly": "#c9b894",
+        "dark": "#332e28",
+        "eye": "#edba64",
+        "bone": "#ddd0aa",
+        "cloth": "#554239",
+        "metal": "#777b78",
+        "wood": "#72583d",
+        "accent": "#7d9e95"
+      },
+      "features": [
+        "ram_horns",
+        "warhorn",
+        "mantle"
+      ],
+      "gear": {
+        "main_hand": "weapon.club"
+      },
+      "card": "allow",
+      "variation": {
+        "hue": 0.01,
+        "value": 0.03,
+        "scale": 0
+      },
+      "meta": {
+        "prototype_look": "beastkin_horncaller",
+        "translation": "Caprine/bovine face, horns, bent hocks and split hooves"
+      }
+    },
+    {
+      "id": "beastkin_earthshaker",
+      "body": "beastkin",
+      "shape": {
+        "breadth": 0.5743801652892562,
+        "depth": 0.4338842975206612,
+        "grip": 0.62,
+        "muscle": 1.3,
+        "legs": 0.45
+      },
+      "palette": {
+        "hide": "#987350",
+        "belly": "#c9b894",
+        "dark": "#332e28",
+        "eye": "#edba64",
+        "bone": "#ddd0aa",
+        "cloth": "#554239",
+        "metal": "#777b78",
+        "wood": "#72583d",
+        "accent": "#7d9e95"
+      },
+      "features": [
+        "bull",
+        "bull_horns",
+        "bracers",
+        "warpaint"
+      ],
+      "gear": {
+        "main_hand": "weapon.maul"
+      },
+      "card": "allow",
+      "variation": {
+        "hue": 0.01,
+        "value": 0.03,
+        "scale": 0
+      },
+      "meta": {
+        "prototype_look": "beastkin_earthshaker",
+        "translation": "Caprine/bovine face, horns, bent hocks and split hooves"
+      }
+    },
+    {
+      "id": "beastkin_warbringer",
+      "body": "beastkin",
+      "shape": {
+        "breadth": 0.5347826086956522,
+        "depth": 0.4173913043478261,
+        "grip": 0.62,
+        "muscle": 1.2,
+        "horns": 1.2
+      },
+      "palette": {
+        "hide": "#a18150",
+        "belly": "#c9b894",
+        "dark": "#332e28",
+        "eye": "#edba64",
+        "bone": "#ddd0aa",
+        "cloth": "#554239",
+        "metal": "#777b78",
+        "wood": "#72583d",
+        "accent": "#7d9e95"
+      },
+      "features": [
+        "ram_horns",
+        "armor",
+        "warhorn"
+      ],
+      "gear": {
+        "main_hand": "weapon.maul"
+      },
+      "card": "allow",
+      "variation": {
+        "hue": 0.01,
+        "value": 0.03,
+        "scale": 0
+      },
+      "meta": {
+        "prototype_look": "beastkin_warbringer",
+        "translation": "Caprine/bovine face, horns, bent hocks and split hooves"
+      }
+    },
+    {
+      "id": "beastlord_khan",
+      "body": "beastkin",
+      "shape": {
+        "breadth": 0.5735849056603773,
+        "depth": 0.43773584905660373,
+        "grip": 0.95,
+        "muscle": 1.3,
+        "horns": 1.3,
+        "legs": 0.46
+      },
+      "palette": {
+        "hide": "#ac8050",
+        "belly": "#c9b894",
+        "dark": "#332e28",
+        "eye": "#edba64",
+        "bone": "#ddd0aa",
+        "cloth": "#554239",
+        "metal": "#777b78",
+        "wood": "#72583d",
+        "accent": "#7d9e95"
+      },
+      "features": [
+        "ram_horns",
+        "armor",
+        "warhorn",
+        "beard",
+        "trophies"
+      ],
+      "gear": {
+        "main_hand": "weapon.axe"
+      },
+      "card": "allow",
+      "variation": {
+        "hue": 0.01,
+        "value": 0.03,
+        "scale": 0
+      },
+      "meta": {
+        "prototype_look": "beastlord_khan",
+        "translation": "Caprine/bovine face, horns, bent hocks and split hooves"
+      }
+    },
+    {
+      "id": "beastkin_bullwarden",
+      "body": "beastkin",
+      "shape": {
+        "breadth": 0.6223021582733813,
+        "depth": 0.460431654676259,
+        "grip": 0.62,
+        "muscle": 1.4,
+        "legs": 0.44
+      },
+      "palette": {
+        "hide": "#6c594a",
+        "belly": "#c9b894",
+        "dark": "#332e28",
+        "eye": "#edba64",
+        "bone": "#ddd0aa",
+        "cloth": "#554239",
+        "metal": "#777b78",
+        "wood": "#72583d",
+        "accent": "#7d9e95"
+      },
+      "features": [
+        "bull",
+        "bull_horns",
+        "armor",
+        "bracers"
+      ],
+      "gear": {
+        "main_hand": "weapon.maul",
+        "off_hand": "shield"
+      },
+      "card": "allow",
+      "variation": {
+        "hue": 0.01,
+        "value": 0.03,
+        "scale": 0
+      },
+      "meta": {
+        "prototype_look": null,
+        "translation": "Caprine/bovine face, horns, bent hocks and split hooves"
+      }
+    }
+  ]
+}

@@ -1,0 +1,270 @@
+{
+  "prototype_revision": "118b510f8b5bfb781163c5bc13ea4908f698e75b",
+  "sources": [
+    "src/data/monsters.ts",
+    "src/data/looks.ts",
+    "src/data/kinshipLooks.ts",
+    "src/data/commanders.ts",
+    "src/world/traits.ts"
+  ],
+  "reference_height": 1.8,
+  "entities": [
+    {
+      "id": "gnoll_prowler",
+      "source": "gnoll_prowler",
+      "family": "gnoll",
+      "skills": [
+        "claw",
+        "rend"
+      ],
+      "behavior": "kin_press",
+      "site": "gnoll_scavenge"
+    },
+    {
+      "id": "gnoll_bonepicker",
+      "source": "gnoll_bonepicker",
+      "family": "gnoll",
+      "skills": [
+        "hurl_debris"
+      ],
+      "behavior": "aggressive_ranged",
+      "site": "gnoll_scavenge"
+    },
+    {
+      "id": "gnoll_longshot",
+      "source": "gnoll_longshot",
+      "family": "gnoll",
+      "skills": [
+        "piercing_arrow"
+      ],
+      "behavior": "aggressive_ranged",
+      "site": "gnoll_scavenge"
+    },
+    {
+      "id": "gnoll_impaler",
+      "source": "gnoll_impaler",
+      "family": "gnoll",
+      "skills": [
+        "skewer",
+        "pinning_spear"
+      ],
+      "behavior": "kin_press",
+      "site": "gnoll_moot"
+    },
+    {
+      "id": "gnoll_howler",
+      "source": "gnoll_howler",
+      "family": "gnoll",
+      "skills": [
+        "rallying_shout",
+        "claw"
+      ],
+      "behavior": "kin_press",
+      "site": "gnoll_moot"
+    },
+    {
+      "id": "gnoll_trapper",
+      "source": "gnoll_trapper",
+      "family": "gnoll",
+      "skills": [
+        "piercing_arrow"
+      ],
+      "behavior": "aggressive_ranged",
+      "site": "gnoll_scavenge"
+    },
+    {
+      "id": "gnoll_butcher",
+      "source": "gnoll_butcher",
+      "family": "gnoll",
+      "skills": [
+        "cleave",
+        "claw"
+      ],
+      "behavior": "kin_press",
+      "site": "gnoll_moot"
+    },
+    {
+      "id": "gnoll_skinner",
+      "source": "gnoll_skinner",
+      "family": "gnoll",
+      "skills": [
+        "carve",
+        "deep_carve"
+      ],
+      "behavior": "kin_press",
+      "site": "gnoll_moot"
+    },
+    {
+      "id": "gnoll_pyrekeeper",
+      "source": "gnoll_pyrekeeper",
+      "family": "gnoll",
+      "skills": [
+        "firebolt",
+        "fire_siege"
+      ],
+      "behavior": "aggressive_ranged",
+      "site": "gnoll_pyre"
+    },
+    {
+      "id": "gnoll_matron",
+      "source": "gnoll_matron",
+      "family": "gnoll",
+      "skills": [
+        "rallying_shout",
+        "claw",
+        "rend"
+      ],
+      "behavior": "kin_press",
+      "site": "gnoll_moot"
+    },
+    {
+      "id": "gnoll_ravener",
+      "source": "gnoll_ravener",
+      "family": "gnoll",
+      "skills": [
+        "carve",
+        "deep_carve",
+        "rend"
+      ],
+      "behavior": "kin_press",
+      "site": "gnoll_pyre"
+    },
+    {
+      "id": "gnoll_packfather",
+      "source": "gnoll_colossus",
+      "family": "gnoll",
+      "skills": [
+        "heavy_strike",
+        "ground_slam",
+        "rallying_shout"
+      ],
+      "behavior": "kin_press",
+      "site": "gnoll_pyre"
+    },
+    {
+      "id": "beastkin_chaser",
+      "source": "beastkin_chaser",
+      "family": "beastkin",
+      "skills": [
+        "skewer",
+        "pinning_spear"
+      ],
+      "behavior": "kin_press",
+      "site": "beastkin_hunt"
+    },
+    {
+      "id": "beastkin_gorer",
+      "source": "beastkin_gorer",
+      "family": "beastkin",
+      "skills": [
+        "gore_rend",
+        "heavy_strike"
+      ],
+      "behavior": "kin_press",
+      "site": "beastkin_hunt"
+    },
+    {
+      "id": "beastkin_impaler",
+      "source": "beastkin_impaler",
+      "family": "beastkin",
+      "skills": [
+        "piercing_arrow"
+      ],
+      "behavior": "aggressive_ranged",
+      "site": "beastkin_hunt"
+    },
+    {
+      "id": "beastkin_ritualist",
+      "source": "beastkin_ritualist",
+      "family": "beastkin",
+      "skills": [
+        "firebolt",
+        "ember_blast"
+      ],
+      "behavior": "aggressive_ranged",
+      "site": "beastkin_circle"
+    },
+    {
+      "id": "beastkin_flayer",
+      "source": "beastkin_flayer",
+      "family": "beastkin",
+      "skills": [
+        "gore_rend",
+        "claw"
+      ],
+      "behavior": "kin_press",
+      "site": "beastkin_hunt"
+    },
+    {
+      "id": "beastkin_horncaller",
+      "source": "beastkin_horncaller",
+      "family": "beastkin",
+      "skills": [
+        "rallying_shout",
+        "heavy_strike"
+      ],
+      "behavior": "kin_press",
+      "site": "beastkin_circle"
+    },
+    {
+      "id": "beastkin_earthshaker",
+      "source": "beastkin_earthshaker",
+      "family": "beastkin",
+      "skills": [
+        "shockfront",
+        "ground_slam"
+      ],
+      "behavior": "kin_press",
+      "site": "beastkin_circle"
+    },
+    {
+      "id": "beastkin_warbringer",
+      "source": "beastkin_warbringer",
+      "family": "beastkin",
+      "skills": [
+        "shockfront",
+        "heavy_strike",
+        "rallying_shout"
+      ],
+      "behavior": "kin_press",
+      "site": "beastkin_hold"
+    },
+    {
+      "id": "beastlord_khan",
+      "source": "beastlord_khan",
+      "family": "beastkin",
+      "skills": [
+        "gore_rend",
+        "rallying_shout",
+        "ground_slam"
+      ],
+      "behavior": "kin_press",
+      "site": "beastkin_hold"
+    },
+    {
+      "id": "beastkin_bullwarden",
+      "source": "original_variant",
+      "family": "beastkin",
+      "skills": [
+        "heavy_strike",
+        "ground_slam"
+      ],
+      "behavior": "kin_press",
+      "site": "beastkin_hold"
+    }
+  ],
+  "adaptations": [
+    "Unavailable bone_arrow/snipe use the existing piercing_arrow kit.",
+    "Rallying Shout substitutes for war_cry/rallying_howl. No obedience, command or morale system is claimed.",
+    "Pyrekeeper uses firebolt/fire_siege; Ritualist firebolt/ember_blast. Unported area-control spells are deferred.",
+    "Matron uses a melee/rally kit; ally triage and greater_mending deferred.",
+    "Chaser uses skewer/pinning_spear; hanging_volley and dash coordination deferred.",
+    "Ravener uses carve/deep_carve/rend; no tactical dash decision.",
+    "Bullwarden is an original minotaur expansion; Rrakhan adapts the commander silhouette."
+  ],
+  "deferred": [
+    "AI overhaul and pack/herd simulation",
+    "Precise model-aligned damage volumes",
+    "Mounts, crusades, faction dread, garrison claiming, capture and reinforcements"
+  ]
+}

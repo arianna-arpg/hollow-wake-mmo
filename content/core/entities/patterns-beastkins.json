@@ -1,0 +1,1022 @@
+{
+  "kind": "patterns",
+  "entries": [
+    {
+      "id": "beastkin_body",
+      "name": "Beastkin body template",
+      "extends": "creature",
+      "faction": "horned_tribes",
+      "tags": [
+        "beastkin",
+        "humanoid"
+      ],
+      "components": {
+        "stats": {
+          "attributes": {
+            "might": 14,
+            "grace": 12,
+            "will": 12,
+            "stamina.max": 100,
+            "stamina.regen": 20,
+            "mana.max": 120,
+            "mana.regen": 15
+          }
+        },
+        "statuses": {}
+      }
+    },
+    {
+      "id": "beastkin_chaser",
+      "name": "Beastkin Chaser",
+      "extends": "beastkin_body",
+      "faction": "horned_tribes",
+      "tags": [
+        "beastkin",
+        "humanoid",
+        "monster",
+        "body.flesh",
+        "body.fur",
+        "family.beastkin",
+        "role.hunter",
+        "locomotion.ground",
+        "habitat.beastkin_hunt",
+        "melee",
+        "size.medium"
+      ],
+      "level": 6,
+      "height": 1.68,
+      "radius": 0.34,
+      "components": {
+        "physical": {
+          "width": 0.68,
+          "depth": 0.61,
+          "height": 1.68,
+          "fill": 0.15,
+          "heft": 1,
+          "materials": [
+            {
+              "material": "flesh",
+              "fraction": 0.76
+            },
+            {
+              "material": "fur",
+              "fraction": 0.16
+            },
+            {
+              "material": "bone",
+              "fraction": 0.06
+            },
+            {
+              "material": "keratin",
+              "fraction": 0.02
+            }
+          ]
+        },
+        "stats": {
+          "attributes": {
+            "life.max": "90 + (level - 1) * 6",
+            "move.speed": 6.0,
+            "weapon.damage.min": "8.0 + (level - 1) * 0.6",
+            "weapon.damage.max": "16 + (level - 1) * 0.9",
+            "weapon.attack.time": 1.15,
+            "poise.max": 22,
+            "armor": 12,
+            "spell.power": 1.2
+          }
+        },
+        "weaves": {
+          "list": [
+            "skewer",
+            "pinning_spear"
+          ]
+        },
+        "behavior": {
+          "id": "kin_press"
+        },
+        "drops": {
+          "table": "goblinkin_drops",
+          "xp": "12 + level * 8",
+          "chance": 0.65
+        }
+      },
+      "meta": {
+        "prototype": {
+          "repository": "arianna-arpg/arpg-game-world",
+          "revision": "118b510f8b5bfb781163c5bc13ea4908f698e75b",
+          "id": "beastkin_chaser"
+        },
+        "ai_handoff": {
+          "current": "kin_press",
+          "status": "provisional; replaceable content assignment",
+          "desired": [
+            "bounded perception",
+            "mechanic-aware skill choices",
+            "readable commitments",
+            "herd formations and coordinated charges"
+          ],
+          "deferred": [
+            "commander orders and reinforcements",
+            "tactical trap placement",
+            "ally triage",
+            "terrain-aware movement"
+          ]
+        }
+      }
+    },
+    {
+      "id": "beastkin_gorer",
+      "name": "Beastkin Gorer",
+      "extends": "beastkin_body",
+      "faction": "horned_tribes",
+      "tags": [
+        "beastkin",
+        "humanoid",
+        "monster",
+        "body.flesh",
+        "body.fur",
+        "family.beastkin",
+        "role.charger",
+        "locomotion.ground",
+        "habitat.beastkin_hunt",
+        "melee",
+        "size.medium"
+      ],
+      "level": 9,
+      "height": 2.12,
+      "radius": 0.58,
+      "components": {
+        "physical": {
+          "width": 1.16,
+          "depth": 0.9,
+          "height": 2.12,
+          "fill": 0.15,
+          "heft": 1,
+          "materials": [
+            {
+              "material": "flesh",
+              "fraction": 0.76
+            },
+            {
+              "material": "fur",
+              "fraction": 0.16
+            },
+            {
+              "material": "bone",
+              "fraction": 0.06
+            },
+            {
+              "material": "keratin",
+              "fraction": 0.02
+            }
+          ]
+        },
+        "stats": {
+          "attributes": {
+            "life.max": "185 + (level - 1) * 6",
+            "move.speed": 4.9,
+            "weapon.damage.min": "9.5 + (level - 1) * 0.6",
+            "weapon.damage.max": "19 + (level - 1) * 0.9",
+            "weapon.attack.time": 1.15,
+            "poise.max": 55,
+            "armor": 12,
+            "spell.power": 1.2
+          }
+        },
+        "weaves": {
+          "list": [
+            "gore_rend",
+            "heavy_strike"
+          ]
+        },
+        "behavior": {
+          "id": "kin_press"
+        },
+        "drops": {
+          "table": "goblinkin_drops",
+          "xp": "12 + level * 8",
+          "chance": 0.65
+        }
+      },
+      "meta": {
+        "prototype": {
+          "repository": "arianna-arpg/arpg-game-world",
+          "revision": "118b510f8b5bfb781163c5bc13ea4908f698e75b",
+          "id": "beastkin_gorer"
+        },
+        "ai_handoff": {
+          "current": "kin_press",
+          "status": "provisional; replaceable content assignment",
+          "desired": [
+            "bounded perception",
+            "mechanic-aware skill choices",
+            "readable commitments",
+            "herd formations and coordinated charges"
+          ],
+          "deferred": [
+            "commander orders and reinforcements",
+            "tactical trap placement",
+            "ally triage",
+            "terrain-aware movement"
+          ]
+        }
+      }
+    },
+    {
+      "id": "beastkin_impaler",
+      "name": "Beastkin Impaler",
+      "extends": "beastkin_body",
+      "faction": "horned_tribes",
+      "tags": [
+        "beastkin",
+        "humanoid",
+        "monster",
+        "body.flesh",
+        "body.fur",
+        "family.beastkin",
+        "role.marksman",
+        "locomotion.ground",
+        "habitat.beastkin_hunt",
+        "ranged",
+        "size.medium"
+      ],
+      "level": 7,
+      "height": 1.83,
+      "radius": 0.37,
+      "components": {
+        "physical": {
+          "width": 0.74,
+          "depth": 0.67,
+          "height": 1.83,
+          "fill": 0.15,
+          "heft": 1,
+          "materials": [
+            {
+              "material": "flesh",
+              "fraction": 0.76
+            },
+            {
+              "material": "fur",
+              "fraction": 0.16
+            },
+            {
+              "material": "bone",
+              "fraction": 0.06
+            },
+            {
+              "material": "keratin",
+              "fraction": 0.02
+            }
+          ]
+        },
+        "stats": {
+          "attributes": {
+            "life.max": "90 + (level - 1) * 6",
+            "move.speed": 4.8,
+            "weapon.damage.min": "8.5 + (level - 1) * 0.6",
+            "weapon.damage.max": "17 + (level - 1) * 0.9",
+            "weapon.attack.time": 1.15,
+            "poise.max": 25,
+            "armor": 12,
+            "spell.power": 1.2
+          }
+        },
+        "weaves": {
+          "list": [
+            "piercing_arrow"
+          ]
+        },
+        "behavior": {
+          "id": "aggressive_ranged"
+        },
+        "drops": {
+          "table": "goblinkin_drops",
+          "xp": "12 + level * 8",
+          "chance": 0.65
+        }
+      },
+      "meta": {
+        "prototype": {
+          "repository": "arianna-arpg/arpg-game-world",
+          "revision": "118b510f8b5bfb781163c5bc13ea4908f698e75b",
+          "id": "beastkin_impaler"
+        },
+        "ai_handoff": {
+          "current": "aggressive_ranged",
+          "status": "provisional; replaceable content assignment",
+          "desired": [
+            "bounded perception",
+            "mechanic-aware skill choices",
+            "readable commitments",
+            "herd formations and coordinated charges"
+          ],
+          "deferred": [
+            "commander orders and reinforcements",
+            "tactical trap placement",
+            "ally triage",
+            "terrain-aware movement"
+          ]
+        }
+      }
+    },
+    {
+      "id": "beastkin_ritualist",
+      "name": "Beastkin Ritualist",
+      "extends": "beastkin_body",
+      "faction": "horned_tribes",
+      "tags": [
+        "beastkin",
+        "humanoid",
+        "monster",
+        "body.flesh",
+        "body.fur",
+        "family.beastkin",
+        "role.caster",
+        "locomotion.ground",
+        "habitat.beastkin_circle",
+        "ranged",
+        "size.medium"
+      ],
+      "level": 10,
+      "height": 1.91,
+      "radius": 0.405,
+      "components": {
+        "physical": {
+          "width": 0.81,
+          "depth": 0.72,
+          "height": 1.91,
+          "fill": 0.15,
+          "heft": 1,
+          "materials": [
+            {
+              "material": "flesh",
+              "fraction": 0.76
+            },
+            {
+              "material": "fur",
+              "fraction": 0.16
+            },
+            {
+              "material": "bone",
+              "fraction": 0.06
+            },
+            {
+              "material": "keratin",
+              "fraction": 0.02
+            }
+          ]
+        },
+        "stats": {
+          "attributes": {
+            "life.max": "135 + (level - 1) * 6",
+            "move.speed": 4.0,
+            "weapon.damage.min": "10.0 + (level - 1) * 0.6",
+            "weapon.damage.max": "20 + (level - 1) * 0.9",
+            "weapon.attack.time": 1.15,
+            "poise.max": 28,
+            "armor": 12,
+            "spell.power": 1.2
+          }
+        },
+        "weaves": {
+          "list": [
+            "firebolt",
+            "ember_blast"
+          ]
+        },
+        "behavior": {
+          "id": "aggressive_ranged"
+        },
+        "drops": {
+          "table": "goblinkin_drops",
+          "xp": "12 + level * 8",
+          "chance": 0.65
+        }
+      },
+      "meta": {
+        "prototype": {
+          "repository": "arianna-arpg/arpg-game-world",
+          "revision": "118b510f8b5bfb781163c5bc13ea4908f698e75b",
+          "id": "beastkin_ritualist"
+        },
+        "ai_handoff": {
+          "current": "aggressive_ranged",
+          "status": "provisional; replaceable content assignment",
+          "desired": [
+            "bounded perception",
+            "mechanic-aware skill choices",
+            "readable commitments",
+            "herd formations and coordinated charges"
+          ],
+          "deferred": [
+            "commander orders and reinforcements",
+            "tactical trap placement",
+            "ally triage",
+            "terrain-aware movement"
+          ]
+        }
+      }
+    },
+    {
+      "id": "beastkin_flayer",
+      "name": "Beastkin Flayer",
+      "extends": "beastkin_body",
+      "faction": "horned_tribes",
+      "tags": [
+        "beastkin",
+        "humanoid",
+        "monster",
+        "body.flesh",
+        "body.fur",
+        "family.beastkin",
+        "role.skirmisher",
+        "locomotion.ground",
+        "habitat.beastkin_hunt",
+        "melee",
+        "size.medium"
+      ],
+      "level": 9,
+      "height": 1.75,
+      "radius": 0.355,
+      "components": {
+        "physical": {
+          "width": 0.71,
+          "depth": 0.65,
+          "height": 1.75,
+          "fill": 0.15,
+          "heft": 1,
+          "materials": [
+            {
+              "material": "flesh",
+              "fraction": 0.76
+            },
+            {
+              "material": "fur",
+              "fraction": 0.16
+            },
+            {
+              "material": "bone",
+              "fraction": 0.06
+            },
+            {
+              "material": "keratin",
+              "fraction": 0.02
+            }
+          ]
+        },
+        "stats": {
+          "attributes": {
+            "life.max": "115 + (level - 1) * 6",
+            "move.speed": 5.5,
+            "weapon.damage.min": "9.5 + (level - 1) * 0.6",
+            "weapon.damage.max": "19 + (level - 1) * 0.9",
+            "weapon.attack.time": 1.15,
+            "poise.max": 25,
+            "armor": 12,
+            "spell.power": 1.2
+          }
+        },
+        "weaves": {
+          "list": [
+            "gore_rend",
+            "claw"
+          ]
+        },
+        "behavior": {
+          "id": "kin_press"
+        },
+        "drops": {
+          "table": "goblinkin_drops",
+          "xp": "12 + level * 8",
+          "chance": 0.65
+        }
+      },
+      "meta": {
+        "prototype": {
+          "repository": "arianna-arpg/arpg-game-world",
+          "revision": "118b510f8b5bfb781163c5bc13ea4908f698e75b",
+          "id": "beastkin_flayer"
+        },
+        "ai_handoff": {
+          "current": "kin_press",
+          "status": "provisional; replaceable content assignment",
+          "desired": [
+            "bounded perception",
+            "mechanic-aware skill choices",
+            "readable commitments",
+            "herd formations and coordinated charges"
+          ],
+          "deferred": [
+            "commander orders and reinforcements",
+            "tactical trap placement",
+            "ally triage",
+            "terrain-aware movement"
+          ]
+        }
+      }
+    },
+    {
+      "id": "beastkin_horncaller",
+      "name": "Beastkin Horncaller",
+      "extends": "beastkin_body",
+      "faction": "horned_tribes",
+      "tags": [
+        "beastkin",
+        "humanoid",
+        "monster",
+        "body.flesh",
+        "body.fur",
+        "family.beastkin",
+        "role.caller",
+        "locomotion.ground",
+        "habitat.beastkin_circle",
+        "melee",
+        "size.medium"
+      ],
+      "level": 11,
+      "height": 2.0,
+      "radius": 0.425,
+      "components": {
+        "physical": {
+          "width": 0.85,
+          "depth": 0.75,
+          "height": 2.0,
+          "fill": 0.15,
+          "heft": 1,
+          "materials": [
+            {
+              "material": "flesh",
+              "fraction": 0.76
+            },
+            {
+              "material": "fur",
+              "fraction": 0.16
+            },
+            {
+              "material": "bone",
+              "fraction": 0.06
+            },
+            {
+              "material": "keratin",
+              "fraction": 0.02
+            }
+          ]
+        },
+        "stats": {
+          "attributes": {
+            "life.max": "165 + (level - 1) * 6",
+            "move.speed": 4.3,
+            "weapon.damage.min": "10.5 + (level - 1) * 0.6",
+            "weapon.damage.max": "21 + (level - 1) * 0.9",
+            "weapon.attack.time": 1.15,
+            "poise.max": 38,
+            "armor": 12,
+            "spell.power": 1.2
+          }
+        },
+        "weaves": {
+          "list": [
+            "rallying_shout",
+            "heavy_strike"
+          ]
+        },
+        "behavior": {
+          "id": "kin_press"
+        },
+        "drops": {
+          "table": "goblinkin_drops",
+          "xp": "12 + level * 8",
+          "chance": 0.65
+        }
+      },
+      "meta": {
+        "prototype": {
+          "repository": "arianna-arpg/arpg-game-world",
+          "revision": "118b510f8b5bfb781163c5bc13ea4908f698e75b",
+          "id": "beastkin_horncaller"
+        },
+        "ai_handoff": {
+          "current": "kin_press",
+          "status": "provisional; replaceable content assignment",
+          "desired": [
+            "bounded perception",
+            "mechanic-aware skill choices",
+            "readable commitments",
+            "herd formations and coordinated charges"
+          ],
+          "deferred": [
+            "commander orders and reinforcements",
+            "tactical trap placement",
+            "ally triage",
+            "terrain-aware movement"
+          ]
+        }
+      }
+    },
+    {
+      "id": "beastkin_earthshaker",
+      "name": "Beastkin Earthshaker",
+      "extends": "beastkin_body",
+      "faction": "horned_tribes",
+      "tags": [
+        "beastkin",
+        "humanoid",
+        "monster",
+        "body.flesh",
+        "body.fur",
+        "family.beastkin",
+        "role.breaker",
+        "locomotion.ground",
+        "habitat.beastkin_circle",
+        "melee",
+        "size.large"
+      ],
+      "level": 16,
+      "height": 2.42,
+      "radius": 0.695,
+      "components": {
+        "physical": {
+          "width": 1.39,
+          "depth": 1.05,
+          "height": 2.42,
+          "fill": 0.15,
+          "heft": 1,
+          "materials": [
+            {
+              "material": "flesh",
+              "fraction": 0.76
+            },
+            {
+              "material": "fur",
+              "fraction": 0.16
+            },
+            {
+              "material": "bone",
+              "fraction": 0.06
+            },
+            {
+              "material": "keratin",
+              "fraction": 0.02
+            }
+          ]
+        },
+        "stats": {
+          "attributes": {
+            "life.max": "330 + (level - 1) * 6",
+            "move.speed": 3.6,
+            "weapon.damage.min": "13.0 + (level - 1) * 0.6",
+            "weapon.damage.max": "26 + (level - 1) * 0.9",
+            "weapon.attack.time": 1.15,
+            "poise.max": 85,
+            "armor": 12,
+            "spell.power": 1.2
+          }
+        },
+        "weaves": {
+          "list": [
+            "shockfront",
+            "ground_slam"
+          ]
+        },
+        "behavior": {
+          "id": "kin_press"
+        },
+        "drops": {
+          "table": "goblinkin_drops",
+          "xp": "12 + level * 8",
+          "chance": 0.65
+        }
+      },
+      "meta": {
+        "prototype": {
+          "repository": "arianna-arpg/arpg-game-world",
+          "revision": "118b510f8b5bfb781163c5bc13ea4908f698e75b",
+          "id": "beastkin_earthshaker"
+        },
+        "ai_handoff": {
+          "current": "kin_press",
+          "status": "provisional; replaceable content assignment",
+          "desired": [
+            "bounded perception",
+            "mechanic-aware skill choices",
+            "readable commitments",
+            "herd formations and coordinated charges"
+          ],
+          "deferred": [
+            "commander orders and reinforcements",
+            "tactical trap placement",
+            "ally triage",
+            "terrain-aware movement"
+          ]
+        }
+      }
+    },
+    {
+      "id": "beastkin_warbringer",
+      "name": "Beastkin Warbringer",
+      "extends": "beastkin_body",
+      "faction": "horned_tribes",
+      "tags": [
+        "beastkin",
+        "humanoid",
+        "monster",
+        "body.flesh",
+        "body.fur",
+        "family.beastkin",
+        "role.bruiser",
+        "locomotion.ground",
+        "habitat.beastkin_hold",
+        "melee",
+        "size.large"
+      ],
+      "level": 15,
+      "height": 2.3,
+      "radius": 0.615,
+      "components": {
+        "physical": {
+          "width": 1.23,
+          "depth": 0.96,
+          "height": 2.3,
+          "fill": 0.15,
+          "heft": 1,
+          "materials": [
+            {
+              "material": "flesh",
+              "fraction": 0.72
+            },
+            {
+              "material": "fur",
+              "fraction": 0.16
+            },
+            {
+              "material": "bone",
+              "fraction": 0.06
+            },
+            {
+              "material": "keratin",
+              "fraction": 0.02
+            },
+            {
+              "material": "iron",
+              "fraction": 0.04
+            }
+          ]
+        },
+        "stats": {
+          "attributes": {
+            "life.max": "300 + (level - 1) * 6",
+            "move.speed": 4.0,
+            "weapon.damage.min": "12.5 + (level - 1) * 0.6",
+            "weapon.damage.max": "25 + (level - 1) * 0.9",
+            "weapon.attack.time": 1.15,
+            "poise.max": 75,
+            "armor": 45,
+            "spell.power": 1.2
+          }
+        },
+        "weaves": {
+          "list": [
+            "shockfront",
+            "heavy_strike",
+            "rallying_shout"
+          ]
+        },
+        "behavior": {
+          "id": "kin_press"
+        },
+        "drops": {
+          "table": "goblinkin_drops",
+          "xp": "12 + level * 8",
+          "chance": 0.65
+        }
+      },
+      "meta": {
+        "prototype": {
+          "repository": "arianna-arpg/arpg-game-world",
+          "revision": "118b510f8b5bfb781163c5bc13ea4908f698e75b",
+          "id": "beastkin_warbringer"
+        },
+        "ai_handoff": {
+          "current": "kin_press",
+          "status": "provisional; replaceable content assignment",
+          "desired": [
+            "bounded perception",
+            "mechanic-aware skill choices",
+            "readable commitments",
+            "herd formations and coordinated charges"
+          ],
+          "deferred": [
+            "commander orders and reinforcements",
+            "tactical trap placement",
+            "ally triage",
+            "terrain-aware movement"
+          ]
+        }
+      }
+    },
+    {
+      "id": "beastlord_khan",
+      "name": "The Beastlord Khan",
+      "extends": "beastkin_body",
+      "faction": "horned_tribes",
+      "tags": [
+        "beastkin",
+        "humanoid",
+        "monster",
+        "body.flesh",
+        "body.fur",
+        "family.beastkin",
+        "role.chieftain",
+        "locomotion.ground",
+        "habitat.beastkin_hold",
+        "melee",
+        "size.large"
+      ],
+      "level": 24,
+      "height": 2.65,
+      "radius": 0.76,
+      "components": {
+        "physical": {
+          "width": 1.52,
+          "depth": 1.16,
+          "height": 2.65,
+          "fill": 0.15,
+          "heft": 1,
+          "materials": [
+            {
+              "material": "flesh",
+              "fraction": 0.72
+            },
+            {
+              "material": "fur",
+              "fraction": 0.16
+            },
+            {
+              "material": "bone",
+              "fraction": 0.06
+            },
+            {
+              "material": "keratin",
+              "fraction": 0.02
+            },
+            {
+              "material": "iron",
+              "fraction": 0.04
+            }
+          ]
+        },
+        "stats": {
+          "attributes": {
+            "life.max": "650 + (level - 1) * 6",
+            "move.speed": 4.1,
+            "weapon.damage.min": "17.0 + (level - 1) * 0.6",
+            "weapon.damage.max": "34 + (level - 1) * 0.9",
+            "weapon.attack.time": 1.15,
+            "poise.max": 110,
+            "armor": 45,
+            "spell.power": 1.2
+          }
+        },
+        "weaves": {
+          "list": [
+            "gore_rend",
+            "rallying_shout",
+            "ground_slam"
+          ]
+        },
+        "behavior": {
+          "id": "kin_press"
+        },
+        "drops": {
+          "table": "goblinkin_drops",
+          "xp": "12 + level * 8",
+          "chance": 0.65
+        }
+      },
+      "meta": {
+        "prototype": {
+          "repository": "arianna-arpg/arpg-game-world",
+          "revision": "118b510f8b5bfb781163c5bc13ea4908f698e75b",
+          "id": "beastlord_khan"
+        },
+        "ai_handoff": {
+          "current": "kin_press",
+          "status": "provisional; replaceable content assignment",
+          "desired": [
+            "bounded perception",
+            "mechanic-aware skill choices",
+            "readable commitments",
+            "herd formations and coordinated charges"
+          ],
+          "deferred": [
+            "commander orders and reinforcements",
+            "tactical trap placement",
+            "ally triage",
+            "terrain-aware movement"
+          ]
+        }
+      }
+    },
+    {
+      "id": "beastkin_bullwarden",
+      "name": "Minotaur Bullwarden",
+      "extends": "beastkin_body",
+      "faction": "horned_tribes",
+      "tags": [
+        "beastkin",
+        "humanoid",
+        "monster",
+        "body.flesh",
+        "body.fur",
+        "family.beastkin",
+        "role.bulwark",
+        "locomotion.ground",
+        "habitat.beastkin_hold",
+        "melee",
+        "size.large"
+      ],
+      "level": 25,
+      "height": 2.78,
+      "radius": 0.865,
+      "components": {
+        "physical": {
+          "width": 1.73,
+          "depth": 1.28,
+          "height": 2.78,
+          "fill": 0.15,
+          "heft": 1,
+          "materials": [
+            {
+              "material": "flesh",
+              "fraction": 0.72
+            },
+            {
+              "material": "fur",
+              "fraction": 0.16
+            },
+            {
+              "material": "bone",
+              "fraction": 0.06
+            },
+            {
+              "material": "keratin",
+              "fraction": 0.02
+            },
+            {
+              "material": "iron",
+              "fraction": 0.04
+            }
+          ]
+        },
+        "stats": {
+          "attributes": {
+            "life.max": "720 + (level - 1) * 6",
+            "move.speed": 3.2,
+            "weapon.damage.min": "17.5 + (level - 1) * 0.6",
+            "weapon.damage.max": "35 + (level - 1) * 0.9",
+            "weapon.attack.time": 1.15,
+            "poise.max": 130,
+            "armor": 45,
+            "spell.power": 1.2
+          }
+        },
+        "weaves": {
+          "list": [
+            "heavy_strike",
+            "ground_slam"
+          ]
+        },
+        "behavior": {
+          "id": "kin_press"
+        },
+        "drops": {
+          "table": "goblinkin_drops",
+          "xp": "12 + level * 8",
+          "chance": 0.65
+        }
+      },
+      "meta": {
+        "prototype": {
+          "repository": "arianna-arpg/arpg-game-world",
+          "revision": "118b510f8b5bfb781163c5bc13ea4908f698e75b",
+          "id": null
+        },
+        "ai_handoff": {
+          "current": "kin_press",
+          "status": "provisional; replaceable content assignment",
+          "desired": [
+            "bounded perception",
+            "mechanic-aware skill choices",
+            "readable commitments",
+            "herd formations and coordinated charges"
+          ],
+          "deferred": [
+            "commander orders and reinforcements",
+            "tactical trap placement",
+            "ally triage",
+            "terrain-aware movement"
+          ]
+        }
+      }
+    }
+  ]
+}

@@ -78,3 +78,7 @@ Gnasher features include tusks, crest, spots, flank plates and an empty saddle. 
 ### Wildlife anatomy
 
 The fauna quadruped, ground-bird and crab families register in both clients. Breadth and depth follow each physical profile; leg, head, tail, ear, beak and claw proportions plus optional anatomical features distinguish silhouettes. Quadrupeds use the existing four-legged rig, birds the biped rig with folded wing parts, and crabs the crawler rig. This supplies shared procedural poses, not species-specific animation or new locomotion. Body height is nominal stature; ears, antlers and crests may exceed it as decoration. Rendered dimensions are not damage volumes. Paired plan fixtures, grayscale/camera previews and a single-scale lineup check translation and continuity.
+
+## Canine and ungulate bipeds
+
+The `gnoll` family draws a hunched torso, low forward canine skull, grinning tooth row, ear variants, tail and paw toes. The separate `beastkin` family draws caprine or bovine faces, curved/swept/spread horns, bent hocks and cloven hooves. Both use the existing biped animation rig; the segmented legs are authored rest anatomy, not inverse kinematics or new foot contact behavior. Family shape vocabularies are registered additively. `grip` sizes worn equipment to the hand height, keeping heavy weapon tips above the ground at rest. Horn tips, tails, carried props and gear are visual extremities outside the conservative body envelope. Geometry fixtures and the common-scale gallery check native/browser parity; they do not establish precise collision volumes.

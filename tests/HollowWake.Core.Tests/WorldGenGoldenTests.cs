@@ -36,12 +36,12 @@ public class WorldGenGoldenTests
         Assert.Equal(new ZoneCoord(0, 0), g.StartZone());
     }
 
-    // Wildlife spawn tables and cull candidates: reviewed maps in experiments/fauna/evidence.
+    // Clan camp candidates: reviewed before/after maps in experiments/gnoll-beastkin/evidence.
     [Theory]
-    [InlineData(0, 0, "7EA79EBAD31156E2", "B4967CED570DD0B6")]
-    [InlineData(1, 0, "5DD57952BE997040", "719165F3D645E5F0")]
-    [InlineData(0, -1, "330979854289527A", "44FDA182BF6A81C9")]
-    [InlineData(3, 2, "7395A7B7D40E67D9", "15C99D20020E2BF4")]
+    [InlineData(0, 0, "174BCF597AE3D8C8", "B4967CED570DD0B6")]
+    [InlineData(1, 0, "29EE69F7DE0C53B5", "2A7B0AB1B613B478")]
+    [InlineData(0, -1, "62BF9E78CF8E06FD", "44FDA182BF6A81C9")]
+    [InlineData(3, 2, "453D9206FD3D6794", "15C99D20020E2BF4")]
     public void ZoneMatchesGoldenHashes(int x, int y, string infoHash, string chunksHash)
     {
         var g = new WorldGenerator(Registry.Value, Rng.Hash64(Seed));
@@ -101,7 +101,7 @@ public class WorldGenGoldenTests
         {
             HashPoint(h, g, 40 + i * 0.83, 20 + i * 0.61, i % 20 == 0);
         }
-        Golden("overlaid world", "43DEFDD2C3C767CE", h.Hex);
+        Golden("overlaid world", "F7C4319D6C753421", h.Hex);
 
         // Removing an overlay must regenerate exactly what a generator that never had it produces.
         overlays.Remove("fount");

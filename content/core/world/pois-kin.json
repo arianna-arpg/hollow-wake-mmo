@@ -1,0 +1,431 @@
+{
+  "kind": "pois",
+  "entries": [
+    {
+      "id": "gnoll_scavenge",
+      "name": "Laughing-Pack Scrapyard",
+      "tags": [
+        "ruin",
+        "landmark",
+        "laughing_packs"
+      ],
+      "weight": 0.4,
+      "radius": 12,
+      "min_spacing": 150,
+      "slope": {
+        "max": 0.55
+      },
+      "landmarks": [
+        "camp_ring"
+      ],
+      "level": 2,
+      "inhabitants": [
+        {
+          "pattern": "gnoll_prowler",
+          "density": 1,
+          "pack_size": [
+            1,
+            1
+          ],
+          "respawn": 300,
+          "level": {
+            "min": 4
+          }
+        },
+        {
+          "pattern": "gnoll_bonepicker",
+          "density": 1,
+          "pack_size": [
+            1,
+            1
+          ],
+          "respawn": 300,
+          "level": {
+            "min": 3
+          }
+        },
+        {
+          "pattern": "gnoll_longshot",
+          "density": 1,
+          "pack_size": [
+            1,
+            1
+          ],
+          "respawn": 300,
+          "level": {
+            "min": 6
+          }
+        },
+        {
+          "pattern": "gnoll_trapper",
+          "density": 1,
+          "pack_size": [
+            1,
+            1
+          ],
+          "respawn": 300,
+          "level": {
+            "min": 7
+          }
+        }
+      ],
+      "names": [
+        "Laughing-Pack Scrapyard"
+      ],
+      "meta": {
+        "context": "Hostile encampment; faction ownership comes from each pattern. Level-gated champion seats do not create reinforcements."
+      }
+    },
+    {
+      "id": "gnoll_moot",
+      "name": "Matron\u2019s Bone Moot",
+      "tags": [
+        "ruin",
+        "landmark",
+        "laughing_packs"
+      ],
+      "weight": 0.4,
+      "radius": 12,
+      "min_spacing": 150,
+      "slope": {
+        "max": 0.55
+      },
+      "landmarks": [
+        "camp_ring"
+      ],
+      "level": 5,
+      "inhabitants": [
+        {
+          "pattern": "gnoll_impaler",
+          "density": 1,
+          "pack_size": [
+            1,
+            1
+          ],
+          "respawn": 300,
+          "level": {
+            "min": 6
+          }
+        },
+        {
+          "pattern": "gnoll_howler",
+          "density": 1,
+          "pack_size": [
+            1,
+            1
+          ],
+          "respawn": 300,
+          "level": {
+            "min": 8
+          }
+        },
+        {
+          "pattern": "gnoll_butcher",
+          "density": 1,
+          "pack_size": [
+            1,
+            1
+          ],
+          "respawn": 300,
+          "level": {
+            "min": 8
+          }
+        },
+        {
+          "pattern": "gnoll_skinner",
+          "density": 1,
+          "pack_size": [
+            1,
+            1
+          ],
+          "respawn": 300,
+          "level": {
+            "min": 9
+          }
+        },
+        {
+          "pattern": "gnoll_matron",
+          "density": 1,
+          "pack_size": [
+            1,
+            1
+          ],
+          "respawn": 300,
+          "level": {
+            "min": 15
+          }
+        }
+      ],
+      "names": [
+        "Matron\u2019s Bone Moot"
+      ],
+      "meta": {
+        "context": "Hostile encampment; faction ownership comes from each pattern. Level-gated champion seats do not create reinforcements."
+      }
+    },
+    {
+      "id": "gnoll_pyre",
+      "name": "Ashfang Pyre",
+      "tags": [
+        "ruin",
+        "landmark",
+        "laughing_packs"
+      ],
+      "weight": 0.4,
+      "radius": 12,
+      "min_spacing": 150,
+      "slope": {
+        "max": 0.55
+      },
+      "landmarks": [
+        "ruin_walls"
+      ],
+      "level": 7,
+      "inhabitants": [
+        {
+          "pattern": "gnoll_pyrekeeper",
+          "density": 1,
+          "pack_size": [
+            1,
+            1
+          ],
+          "respawn": 300,
+          "level": {
+            "min": 12
+          }
+        },
+        {
+          "pattern": "gnoll_ravener",
+          "density": 1,
+          "pack_size": [
+            1,
+            1
+          ],
+          "respawn": 300,
+          "level": {
+            "min": 14
+          }
+        },
+        {
+          "pattern": "gnoll_packfather",
+          "density": 1,
+          "pack_size": [
+            1,
+            1
+          ],
+          "respawn": 300,
+          "level": {
+            "min": 22
+          }
+        }
+      ],
+      "names": [
+        "Ashfang Pyre"
+      ],
+      "meta": {
+        "context": "Hostile encampment; faction ownership comes from each pattern. Level-gated champion seats do not create reinforcements."
+      }
+    },
+    {
+      "id": "beastkin_hunt",
+      "name": "Horned Hunting Camp",
+      "tags": [
+        "ruin",
+        "landmark",
+        "horned_tribes"
+      ],
+      "weight": 0.4,
+      "radius": 12,
+      "min_spacing": 150,
+      "slope": {
+        "max": 0.55
+      },
+      "landmarks": [
+        "camp_ring"
+      ],
+      "level": 4,
+      "inhabitants": [
+        {
+          "pattern": "beastkin_chaser",
+          "density": 1,
+          "pack_size": [
+            1,
+            1
+          ],
+          "respawn": 300,
+          "level": {
+            "min": 6
+          }
+        },
+        {
+          "pattern": "beastkin_impaler",
+          "density": 1,
+          "pack_size": [
+            1,
+            1
+          ],
+          "respawn": 300,
+          "level": {
+            "min": 7
+          }
+        },
+        {
+          "pattern": "beastkin_flayer",
+          "density": 1,
+          "pack_size": [
+            1,
+            1
+          ],
+          "respawn": 300,
+          "level": {
+            "min": 9
+          }
+        },
+        {
+          "pattern": "beastkin_gorer",
+          "density": 1,
+          "pack_size": [
+            1,
+            1
+          ],
+          "respawn": 300,
+          "level": {
+            "min": 9
+          }
+        }
+      ],
+      "names": [
+        "Horned Hunting Camp"
+      ],
+      "meta": {
+        "context": "Hostile encampment; faction ownership comes from each pattern. Level-gated champion seats do not create reinforcements."
+      }
+    },
+    {
+      "id": "beastkin_circle",
+      "name": "Scree-Horn Circle",
+      "tags": [
+        "ruin",
+        "landmark",
+        "horned_tribes"
+      ],
+      "weight": 0.4,
+      "radius": 12,
+      "min_spacing": 150,
+      "slope": {
+        "max": 0.55
+      },
+      "landmarks": [
+        "knot_stones"
+      ],
+      "level": 6,
+      "inhabitants": [
+        {
+          "pattern": "beastkin_ritualist",
+          "density": 1,
+          "pack_size": [
+            1,
+            1
+          ],
+          "respawn": 300,
+          "level": {
+            "min": 10
+          }
+        },
+        {
+          "pattern": "beastkin_horncaller",
+          "density": 1,
+          "pack_size": [
+            1,
+            1
+          ],
+          "respawn": 300,
+          "level": {
+            "min": 11
+          }
+        },
+        {
+          "pattern": "beastkin_earthshaker",
+          "density": 1,
+          "pack_size": [
+            1,
+            1
+          ],
+          "respawn": 300,
+          "level": {
+            "min": 16
+          }
+        }
+      ],
+      "names": [
+        "Scree-Horn Circle"
+      ],
+      "meta": {
+        "context": "Hostile encampment; faction ownership comes from each pattern. Level-gated champion seats do not create reinforcements."
+      }
+    },
+    {
+      "id": "beastkin_hold",
+      "name": "Khan\u2019s Highland Hold",
+      "tags": [
+        "ruin",
+        "landmark",
+        "horned_tribes"
+      ],
+      "weight": 0.4,
+      "radius": 12,
+      "min_spacing": 150,
+      "slope": {
+        "max": 0.55
+      },
+      "landmarks": [
+        "ruin_walls"
+      ],
+      "level": 8,
+      "inhabitants": [
+        {
+          "pattern": "beastkin_warbringer",
+          "density": 1,
+          "pack_size": [
+            1,
+            1
+          ],
+          "respawn": 300,
+          "level": {
+            "min": 15
+          }
+        },
+        {
+          "pattern": "beastlord_khan",
+          "density": 1,
+          "pack_size": [
+            1,
+            1
+          ],
+          "respawn": 300,
+          "level": {
+            "min": 24
+          }
+        },
+        {
+          "pattern": "beastkin_bullwarden",
+          "density": 1,
+          "pack_size": [
+            1,
+            1
+          ],
+          "respawn": 300,
+          "level": {
+            "min": 25
+          }
+        }
+      ],
+      "names": [
+        "Khan\u2019s Highland Hold"
+      ],
+      "meta": {
+        "context": "Hostile encampment; faction ownership comes from each pattern. Level-gated champion seats do not create reinforcements."
+      }
+    }
+  ]
+}

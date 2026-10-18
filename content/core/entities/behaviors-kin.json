@@ -1,0 +1,71 @@
+{
+  "kind": "behaviors",
+  "entries": [
+    {
+      "id": "kin_press",
+      "initial": "idle",
+      "tick_interval": 0.25,
+      "aggro_range": 12,
+      "leash_range": 36,
+      "states": {
+        "idle": {
+          "tick": [
+            {
+              "type": "wander",
+              "radius": 4,
+              "chance": 0.12
+            },
+            {
+              "type": "acquire_target",
+              "filter": "enemy"
+            }
+          ],
+          "transitions": [
+            {
+              "to": "press",
+              "when": "has_target",
+              "priority": 10
+            }
+          ]
+        },
+        "press": {
+          "tick": [
+            {
+              "type": "chase",
+              "stop": 1.15
+            },
+            {
+              "type": "attack"
+            }
+          ],
+          "transitions": [
+            {
+              "to": "return",
+              "when": "!has_target || home_distance > leash_range",
+              "priority": 10
+            }
+          ]
+        },
+        "return": {
+          "enter": [
+            {
+              "type": "drop_target"
+            }
+          ],
+          "tick": [
+            {
+              "type": "return_home"
+            }
+          ],
+          "transitions": [
+            {
+              "to": "idle",
+              "when": "home_distance < 1.5",
+              "priority": 10
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

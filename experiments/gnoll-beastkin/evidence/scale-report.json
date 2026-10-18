@@ -1,0 +1,57 @@
+[
+  {
+    "id": "holdfast",
+    "authoritativeHeight": 1.8,
+    "modelHeight": 1.7334
+  },
+  {
+    "id": "skeleton_warrior",
+    "authoritativeHeight": 1.8,
+    "modelHeight": 1.7128800000000002
+  },
+  {
+    "id": "goblin_skirmisher",
+    "authoritativeHeight": 0.9,
+    "modelHeight": 0.9319047680409906
+  },
+  {
+    "id": "orc_grunt",
+    "authoritativeHeight": 1.82,
+    "modelHeight": 1.82
+  },
+  {
+    "id": "gnoll_bonepicker",
+    "authoritativeHeight": 1.38,
+    "modelHeight": 1.4392814166263699
+  },
+  {
+    "id": "gnoll_prowler",
+    "authoritativeHeight": 1.72,
+    "modelHeight": 1.7000842148284956
+  },
+  {
+    "id": "gnoll_packfather",
+    "authoritativeHeight": 2.48,
+    "modelHeight": 2.4673139454006074
+  },
+  {
+    "id": "beastkin_chaser",
+    "authoritativeHeight": 1.68,
+    "modelHeight": 1.9013031528770894
+  },
+  {
+    "id": "beastkin_gorer",
+    "authoritativeHeight": 2.12,
+    "modelHeight": 2.3216124718526965
+  },
+  {
+    "id": "beastlord_khan",
+    "authoritativeHeight": 2.65,
+    "modelHeight": 2.7824999999999998
+  },
+  {
+    "id": "beastkin_bullwarden",
+    "authoritativeHeight": 2.78,
+    "modelHeight": 3.048381153147955
+  }
+]

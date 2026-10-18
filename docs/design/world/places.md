@@ -74,3 +74,7 @@ Every place, part and prop carries appearance ids under `meta` (a kind, a cultur
 ## Rules used
 
 The `places` group: grammar depth and part limits, cluster reach, settlement field weights, interior layer limits, instance keys and turn policy, reward budgets by rung and depth, rumor range.
+
+## Clan encampments
+
+Clan camp content uses existing ruin budgets and registered landmarks with sparse weighted candidates and spacing. Each inhabitant carries its minimum level; a champion only appears when the effective site level reaches it. A camp can occur within another faction’s region: its residents retain their own pattern faction. Gnoll and Beastkin camp references are explicit on each resident’s habitat tags, and their placement/population replay is pinned by generation tests.

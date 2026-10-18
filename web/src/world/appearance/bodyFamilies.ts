@@ -1,3 +1,4 @@
+import { gnoll, beastkin } from './kinFamilies';
 import { faunaQuadruped, faunaBird, faunaCrab } from './faunaFamilies';
 import { orc } from './orcFamilies';
 import { goblinkin, gnasher, warbeast } from './goblinkinFamilies';
@@ -753,6 +754,7 @@ export const BODY_FAMILIES: Record<string, Builder> = {
   fauna_quadruped: faunaQuadruped,
   fauna_bird: faunaBird,
   fauna_crab: faunaCrab,
+  gnoll, beastkin,
   orc,
   goblinkin,
   gnasher,

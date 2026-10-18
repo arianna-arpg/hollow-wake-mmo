@@ -1,0 +1,181 @@
+{
+  "errors": [],
+  "bodies": [
+    {
+      "id": "gnoll_prowler",
+      "body": "gnoll",
+      "rig": "biped",
+      "parts": 58,
+      "triangles": 934,
+      "height": 1.7000842148284956
+    },
+    {
+      "id": "gnoll_bonepicker",
+      "body": "gnoll",
+      "rig": "biped",
+      "parts": 50,
+      "triangles": 758,
+      "height": 1.4392814166263699
+    },
+    {
+      "id": "gnoll_longshot",
+      "body": "gnoll",
+      "rig": "biped",
+      "parts": 53,
+      "triangles": 822,
+      "height": 1.8506483297483507
+    },
+    {
+      "id": "gnoll_impaler",
+      "body": "gnoll",
+      "rig": "biped",
+      "parts": 55,
+      "triangles": 878,
+      "height": 1.8373264280513109
+    },
+    {
+      "id": "gnoll_howler",
+      "body": "gnoll",
+      "rig": "biped",
+      "parts": 57,
+      "triangles": 882,
+      "height": 1.900164707184719
+    },
+    {
+      "id": "gnoll_trapper",
+      "body": "gnoll",
+      "rig": "biped",
+      "parts": 57,
+      "triangles": 906,
+      "height": 1.6766477086828662
+    },
+    {
+      "id": "gnoll_butcher",
+      "body": "gnoll",
+      "rig": "biped",
+      "parts": 60,
+      "triangles": 1026,
+      "height": 1.906125
+    },
+    {
+      "id": "gnoll_skinner",
+      "body": "gnoll",
+      "rig": "biped",
+      "parts": 55,
+      "triangles": 834,
+      "height": 1.727880914777458
+    },
+    {
+      "id": "gnoll_pyrekeeper",
+      "body": "gnoll",
+      "rig": "biped",
+      "parts": 55,
+      "triangles": 882,
+      "height": 1.7324560335458759
+    },
+    {
+      "id": "gnoll_matron",
+      "body": "gnoll",
+      "rig": "biped",
+      "parts": 64,
+      "triangles": 1086,
+      "height": 2.05275
+    },
+    {
+      "id": "gnoll_ravener",
+      "body": "gnoll",
+      "rig": "biped",
+      "parts": 61,
+      "triangles": 946,
+      "height": 2.0031770919957435
+    },
+    {
+      "id": "gnoll_packfather",
+      "body": "gnoll",
+      "rig": "biped",
+      "parts": 70,
+      "triangles": 1114,
+      "height": 2.4673139454006074
+    },
+    {
+      "id": "beastkin_chaser",
+      "body": "beastkin",
+      "rig": "biped",
+      "parts": 42,
+      "triangles": 760,
+      "height": 1.9013031528770894
+    },
+    {
+      "id": "beastkin_gorer",
+      "body": "beastkin",
+      "rig": "biped",
+      "parts": 39,
+      "triangles": 710,
+      "height": 2.3216124718526965
+    },
+    {
+      "id": "beastkin_impaler",
+      "body": "beastkin",
+      "rig": "biped",
+      "parts": 49,
+      "triangles": 920,
+      "height": 1.87575
+    },
+    {
+      "id": "beastkin_ritualist",
+      "body": "beastkin",
+      "rig": "biped",
+      "parts": 39,
+      "triangles": 738,
+      "height": 2.250208374480328
+    },
+    {
+      "id": "beastkin_flayer",
+      "body": "beastkin",
+      "rig": "biped",
+      "parts": 52,
+      "triangles": 942,
+      "height": 1.8112499999999998
+    },
+    {
+      "id": "beastkin_horncaller",
+      "body": "beastkin",
+      "rig": "biped",
+      "parts": 45,
+      "triangles": 886,
+      "height": 2.09
+    },
+    {
+      "id": "beastkin_earthshaker",
+      "body": "beastkin",
+      "rig": "biped",
+      "parts": 45,
+      "triangles": 830,
+      "height": 2.651359337829604
+    },
+    {
+      "id": "beastkin_warbringer",
+      "body": "beastkin",
+      "rig": "biped",
+      "parts": 48,
+      "triangles": 910,
+      "height": 2.4034999999999997
+    },
+    {
+      "id": "beastlord_khan",
+      "body": "beastkin",
+      "rig": "biped",
+      "parts": 55,
+      "triangles": 1004,
+      "height": 2.7824999999999998
+    },
+    {
+      "id": "beastkin_bullwarden",
+      "body": "beastkin",
+      "rig": "biped",
+      "parts": 48,
+      "triangles": 934,
+      "height": 3.048381153147955
+    }
+  ]
+}
