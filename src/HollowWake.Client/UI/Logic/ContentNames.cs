@@ -222,7 +222,7 @@ public static class ModifierText
         var scope = Json.Strings(m["scope"]);
         if (scope.Count > 0)
         {
-            text += $" ({string.Join(", ", scope.Select(ContentNames.Humanize))})";
+            text += $" ({string.Join(", ", scope.Select(names.ThreadName))})";
         }
         var condition = Json.StrOrNull(m["condition"]);
         if (!string.IsNullOrEmpty(condition))
