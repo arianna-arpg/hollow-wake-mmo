@@ -1,0 +1,35 @@
+Source: 4b7d0aaf035b5ef35de05a4dc44ddd82e5c1b7bb.
+Release build, normal process priority, coordinator-reserved quiet window.
+Other species tests/builds and benchmarks were held. Both first samples are
+retained; no repeat or priority adjustment was needed. Both processes exited 0.
+Raw results and per-process/source metadata are in bench-*-final.json and
+bench-*-metadata.json. Stderr files are empty.
+
+Default full benchmark:
+  zone.tick.p95           9.8238 ms       (25 ms cap)
+  zone.tick.alloc        75.78699 KB      (2 MB cap)
+  system.behavior        1.617983 ms      (3 ms cap)
+  snapshot.build         0.918138 ms      (1 ms cap)
+  snapshot.bytes        29.295835 KB      (30 KB cap)
+  snapshot.delta.bytes   8.889854 KB      (10 KB cap)
+  worldgen.chunk         0.549073 ms      (4 ms cap)
+  worldgen.chunk.alloc  14.330811 KB      (400 KB cap)
+  attribute.apply.extra 353.918 ns        (500 ns cap)
+  attribute.apply.alloc  0.1344 bytes     (200 byte cap)
+  expression.evaluate  105.721 ns         (150 ns cap)
+  zone.errors            0
+
+The expression allocation counter is 0.0168 bytes/eval, exactly the shared
+foundation/reference counter. It is explicitly not described as literal zero
+allocation. Full snapshots have only 0.704165 KB of headroom; the payload equals
+the independent exact-26c50de foundation measurement. This sample clears the
+named time/size budgets, not all possible loads or future combined content.
+
+The separate --only hit-bodies profile uses 42 authored profiles and 120 foes:
+  total delivery tick    2.006589 ms
+  projectile system     0.990746 ms
+  fields                0.126752 ms
+  allocation           37.592715 KB/tick
+This is the shared authored-volume workload, not a claim that elemental bodies
+have bespoke hit profiles. Their 48-case actual-flight matrix tests the shipped
+fallback bodies and unchanged dimensions.

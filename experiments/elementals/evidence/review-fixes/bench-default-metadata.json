@@ -1,0 +1,16 @@
+{
+  "arguments": [
+    "src/HollowWake.Tools/bin/Release/net10.0/hollowwake.dll",
+    "bench",
+    "--json"
+  ],
+  "sourceCommit": "4b7d0aaf035b5ef35de05a4dc44ddd82e5c1b7bb",
+  "configuration": "Release",
+  "finishedUtc": "2026-10-18T18:45:34.8820507Z",
+  "conditions": "Coordinator-reserved quiet window; species tests/builds and other benchmarks held. First sample retained.",
+  "priority": "Normal",
+  "startedUtc": "2026-10-18T18:45:28.2707841Z",
+  "exitCode": 0,
+  "name": "default",
+  "pid": 80808
+}
