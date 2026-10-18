@@ -12,7 +12,7 @@ Claude review is requested on PR #37 with evidence. The fauna AI design handoff 
 
 Claude: inspect the paired canine/ungulate anatomy and the silhouette gallery, the occupied-volume/material estimates, supported kit substitutions, low/high-level champion gates and existing-budget world changes. The roster contains twelve Gnolls and ten Beastkin; exact records and source revision are in the experiment provenance. All combat kit checks require positive damage, not merely a cast event. They do not prove every skill is tactically chosen.
 
-Use the fauna AI handoff as the design boundary. Add diagnostic scenarios for a Gnoll pack circling a blocker while a longshot holds a sightline; a Matron choosing between self-preservation, ally triage and rally; an isolated Trapper choosing reachable trap placement; and a mixed satyr/minotaur group coordinating openings without smaller bodies becoming trapped behind the Bullwarden. Observe commitment windows, poise, shove resistance, resources, friendly spacing, failed reachability and decision budget. These are proposed scenarios for Claude’s design pass, not implemented behaviors or completed simulations. Current skeleton state machines remain replaceable content bindings.
+Use the fauna AI handoff as the design boundary. Add diagnostic scenarios for a Gnoll pack circling a blocker while a longshot holds a sightline; a Matron choosing between self-preservation, ally triage and rally; an isolated Trapper choosing reachable trap placement; and a mixed satyr/minotaur group coordinating openings without smaller bodies becoming trapped behind the Bullwarden. Observe commitment windows, poise, shove resistance, resources, friendly spacing, failed reachability and decision budget. These are proposed scenarios for Claudeâ€™s design pass, not implemented behaviors or completed simulations. Current skeleton state machines remain replaceable content bindings.
 
 The shared-scale report distinguishes authoritative body height from conservative rendered bounds, which include horns and other extremities. Body profiles do not automatically claim every horn tip as a damage volume. The separate hitbox chat must migrate these families after integration.
 
@@ -22,7 +22,7 @@ Implementation is on draft PR #37. All 893 .NET, 276 web and 10 porter tests pas
 
 The Release snapshot-time budget is not declared passed. Initial and repeated same-runtime comparisons vary around 1 ms, with both the fauna baseline and this branch exceeding it in some runs. The three-pair medians are 1.039 and 1.089 ms respectively. Every run is retained in the evidence; all report zero system errors. Keep the PR in draft until controlled performance review resolves the gate. The existing card-view screenshot issue is also documented with baseline/current images; smoke interaction counts alone do not prove rendered card output. See experiments/gnoll-beastkin/evidence/verification.md for exact limitations.
 
-Acknowledged by: pending Claude review.
+Acknowledged by: [Claude review of #37](https://github.com/arianna-arpg/hollow-wake-mmo/pull/37#issuecomment-6254572663) requested the corrected actual-base audit and retained performance follow-up; final forward integration awaits rereview.
 
 ## Pre-main shared foundation and client verification (historical)
 
@@ -49,3 +49,15 @@ Harness-only correction `316c97358005bf5faed195f68d1ac466b7a496fe` rechecks live
 The inherited fauna baseline updates only the three counterfactually proven wolf/boar pairings; the other four hashes, platform, seeds and cap remain unchanged. A fresh Release proving report equals the retained fauna report in its entirety, including outcomes, mechanisms, hashes and the three inherited 80% win-ceiling breaches. No balance clearance or relaxed band is claimed.
 
 No post-main timing sample was run. The retained snapshot 1.0225075 ms / 1 ms budget miss and planning 40.8383 ms / proposed 40 ms target miss remain open historical evidence. They do not certify this source, and no cause has been established. Claude rereview and the coordinator's combined acceptance/performance work remain outstanding. New kin still use fallback cylinders; complex pack/herd AI and authored anatomy migration remain future work. No merge to main was performed.
+
+## Final reviewed foundation and actual-base audit
+
+Runtime/content source `bda29c7182b0a93640b8e16a1d20b49dc0d42fd3` consumes complete fauna `c3099a8ea5c7a32fc0799c3a17cb167b2bd1231c`, including the reviewed #36 placement/aim sequence and the test-only mainfa7 lifecycle fix. The full Debug/Release builds have zero warnings/errors; core 3035, server 59 and native logic 134 pass. Browser 320 and porter 10 tests, validation 0/0, load/duel, generated protocol, the exact 499-key census and seven Windows replay hashes pass. Full proving JSON equals the actual previous kin and fauna reports, preserving three inherited balance failures.
+
+All 132 child-only Tide Orb/Frozen Orb cases pass in the full suite, alongside the 462 kin actual-flight cases. The child assertions cover all 22 original-size bodies at three terrain offsets, preserving emission height, source and cast identity. The earlier 132 failures and five generation-golden failures remain retained. No body was enlarged and no balance band was relaxed.
+
+Client source `021f79a131a97d72fe173afabb9407680ca647e5` passes private `run-L3gBxb`: browser 31/31 and native 36/36, with clean teardown. The private TCP probe grants all six features. Fresh card/grayscale frames were viewed and show the full world and bodies. Native pixels remain skipped; shutdown diagnostics and the browser chunk-size advisory remain disclosed.
+
+The corrected [actual fauna-base audit](../../experiments/entity-review/evidence/37-base-world-review.md) compares exact fauna `c3099a8ea5c7a32fc0799c3a17cb167b2bd1231c` against kin `2d5b3306a5ab3f7915fb92542c7695ebd4b4879b`. It names all three eastern site replacements, the Knot's seven stones and ten level-3 combat residents, and the changed origin Scout destination. Removing only the six clan-camp definitions reproduces the entire four-zone fauna report. Earlier same-branch comparisons and original maps are historical. The new four-zone sample contains no natural clan camp; separate eligibility tests cover the authored camps.
+
+Physical profiles and paired silhouettes remain unchanged by this integration. The explicit faction/skill/loot and movement/AI/anatomy boundaries are named in that audit. Historical snapshot/planning misses remain open; the prepared main17ca/#31 pair has not run. Combined #20/#50 acceptance is separate. Claude rereview is requested; no merge to main.
