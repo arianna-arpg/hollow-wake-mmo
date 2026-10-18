@@ -133,7 +133,7 @@ public partial class Smoke : Node
 
         var t0 = Now;
         var built = await Until(() => _main.World.BuiltChunks > 0 && _main.World.PendingChunks == 0, 90);
-        Record("terrain built", built, $"{_main.World.BuiltChunks} chunks in {Now - t0:0.0}s, {_main.World.Entities.Count} entities in view, {Engine.GetFramesPerSecond()} fps");
+        Record("terrain built", built, $"{_main.World.BuiltChunks} chunks in {Now - t0:0.0}s, {_main.World.Entities.Count} entities in view, {Engine.GetFramesPerSecond()} fps{(built ? "" : $"; in world={_main.InWorld}, status: {login.Status}")}");
         var ready = await Until(() => !_main.Loading.BlocksWorldInput, 20);
         Record("world input ready", ready, $"loading={_main.Loading.Active}, blocked={_main.Loading.BlocksWorldInput}, chat={_main.Hud.ChatFocused}");
         if (!ready) return;
