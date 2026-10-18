@@ -177,6 +177,7 @@ public sealed class LootDrop : IComponent
 /// <summary>A spawn point that keeps its pack alive and respawns it.</summary>
 public sealed class Spawner : IComponent
 {
+    public int? Level;
     public required string Pattern;
     public int PackSize = 1;
     public double RespawnSeconds = 120;

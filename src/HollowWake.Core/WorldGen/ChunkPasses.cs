@@ -368,7 +368,7 @@ public sealed class ChunkPasses
     {
         var origin = _layout.ChunkOrigin(chunk.Coord);
         var zc = _layout.ZoneOf(chunk.Coord);
-        var zone = _gen.Zone(zc);
+        var zoneLevel = _gen.PopulationLevel(zc);
         var rng = _gen.RngFor($"spawns:{chunk.Coord.X}:{chunk.Coord.Y}");
         // Walkable open cells grouped by biome entry in one buffer: group b is cells[start[b] .. start[b] + count[b]),
         // in cell order, and the groups are visited in the order their first cell appears.
@@ -391,7 +391,7 @@ public sealed class ChunkPasses
             }
             foreach (var spec in AllSpawns(biome))
             {
-                if (spec.Level is { } lvl && !lvl.Contains(zone.Level))
+                if (spec.Level is { } lvl && !lvl.Contains(zoneLevel))
                 {
                     continue;
                 }
@@ -442,7 +442,7 @@ public sealed class ChunkPasses
                     var ang = prng.NextDouble() * Math.PI * 2;
                     var dist = prng.Range(1.0, Math.Max(1.5, poi.Def.Radius - 1));
                     var pack = prng.Range((int)spec.PackSize[0], (int)spec.PackSize[Math.Min(1, spec.PackSize.Length - 1)]);
-                    chunk.Spawns.Add(new SpawnPoint(spec.Pattern, (float)(poi.X + Math.Cos(ang) * dist), (float)(poi.Y + Math.Sin(ang) * dist), Math.Max(1, pack), spec.Respawn, poi.Id));
+                    chunk.Spawns.Add(new SpawnPoint(spec.Pattern, (float)(poi.X + Math.Cos(ang) * dist), (float)(poi.Y + Math.Sin(ang) * dist), Math.Max(1, pack), spec.Respawn, poi.Id) { Level = poi.Level });
                 }
             }
         }

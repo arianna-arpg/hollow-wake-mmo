@@ -38,10 +38,10 @@ public class WorldGenGoldenTests
 
     // Undead site/population expansion: reviewed before/after maps in experiments/undead-entities/evidence.
     [Theory]
-    [InlineData(0, 0, "1C78174C94305CE1", "9277347F7101CD5A")]
-    [InlineData(1, 0, "C2FB146D336C5F08", "FC33BA56BCEB707E")]
-    [InlineData(0, -1, "B59ACD622B675EA2", "067903F6A091CF31")]
-    [InlineData(3, 2, "8C5F6DA25EAF9E01", "2F33A841D313EBF7")]
+    [InlineData(0, 0, "0CA8824E9BBCEB25", "EE1EED4EE1C34006")]
+    [InlineData(1, 0, "C2FB146D336C5F08", "3296943FDE1EAB8B")]
+    [InlineData(0, -1, "B59ACD622B675EA2", "6D9AEE576A168431")]
+    [InlineData(3, 2, "8C5F6DA25EAF9E01", "BDC191356EE362C1")]
     public void ZoneMatchesGoldenHashes(int x, int y, string infoHash, string chunksHash)
     {
         var g = new WorldGenerator(Registry.Value, Rng.Hash64(Seed));
@@ -101,7 +101,7 @@ public class WorldGenGoldenTests
         {
             HashPoint(h, g, 40 + i * 0.83, 20 + i * 0.61, i % 20 == 0);
         }
-        Golden("overlaid world", "F8BD42800D55CFC9", h.Hex);
+        Golden("overlaid world", "F0E079607FB3EB08", h.Hex);
 
         // Removing an overlay must regenerate exactly what a generator that never had it produces.
         overlays.Remove("fount");
@@ -334,6 +334,7 @@ public class WorldGenGoldenTests
             h.I32(s.PackSize);
             h.F64(s.RespawnSeconds);
             h.Str(s.Group);
+            h.I32(s.Level ?? 0);
         }
         h.I32(c.Flora.Count);
         foreach (var f in c.Flora)

@@ -1,6 +1,7 @@
 using System.Numerics;
 using HollowWake.Core.Attributes;
 using HollowWake.Core.Components;
+using HollowWake.Core.Combat;
 using HollowWake.Core.Content;
 using HollowWake.Core.Ecs;
 using HollowWake.Core.Effects;
@@ -64,7 +65,7 @@ public sealed class FieldSystem : SimSystem
             transform.Yaw = f.Facing;
         }
         sim.World.Add(e, transform);
-        sim.World.Add(e, new Identity { Name = "field", Tags = FieldTags, Faction = sim.World.Get<Identity>(origin)?.Faction, Owner = origin, Look = look });
+        sim.World.Add(e, new Identity { Name = "field", Tags = FieldTags, Faction = Relations.FactionOf(sim, origin), Owner = origin, Look = look });
         if (f.Spec.Domain.Length > 0)
         {
             f.DomainSource = "field:" + e.Key;
