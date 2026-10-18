@@ -1,0 +1,47 @@
+{
+  "Source": "fa7f5f0d468737f3bd8fafdb9a9e19b198cca359",
+  "ContentTree": "0257df1e898b57e8ea60274061d9f02f4a76e616",
+  "ArchiveSha256": "3f5e7834c734ca24a993bda3b38a13b1c14e85ca1a4cf9eb41b4570b9d9b29a0",
+  "SourceFilesVerified": 380,
+  "ProcessId": 114832,
+  "Priority": "Normal",
+  "Command": "dotnet src/HollowWake.Tools/bin/Release/net10.0/hollowwake.dll bench --only worldgen --json",
+  "OutputMode": "JSON redirected from standard output",
+  "StartedUtc": "2026-10-18T22:45:36.6703437Z",
+  "Binaries": [
+    {
+      "File": "HollowWake.Core.dll",
+      "Hash": "6FB4A1B190655F7850B706A7A49D3CC199D3FDF2189198A9B322C185257E144A"
+    },
+    {
+      "File": "hollowwake.dll",
+      "Hash": "C404C542D7EFC91AFBDE1752F5A512FBE406E2E66F9DABB16E537E8FC841A74B"
+    },
+    {
+      "File": "HollowWake.Protocol.dll",
+      "Hash": "6242E82405C14CB8893EE835D70BDED66224AD151B75E4B8B1639DC81F46AB3F"
+    },
+    {
+      "File": "HollowWake.Server.dll",
+      "Hash": "CA9E62AD89D0EFD0C793709DD5A115038B794529C066F470BEF2CE3C65B9A07B"
+    },
+    {
+      "File": "Microsoft.Extensions.DependencyInjection.Abstractions.dll",
+      "Hash": "7C97C4463FE0FC11D1F22F4D160B2BD2288981ADF1DE2717A6FF3FB993DDF294"
+    },
+    {
+      "File": "Microsoft.Extensions.Logging.Abstractions.dll",
+      "Hash": "A76A735B63E6EF3B0BF41FF92423CBD16103B8952E8306140A9BD650346034DC"
+    },
+    {
+      "File": "YamlDotNet.dll",
+      "Hash": "D618138109A40E4A7250E49E2ABAD8C450E3636BEE18D7499AB231E37FA9150A"
+    }
+  ],
+  "NoRetry": true,
+  "Seed": "aureth",
+  "Order": "mainfa7",
+  "DotnetVersion": null,
+  "CompletedUtc": "2026-10-18T22:45:38.0284112Z",
+  "ExitCode": 0
+}

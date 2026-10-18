@@ -271,7 +271,7 @@ public static class Snapshots
             Yaw = t is null ? 0 : Hundredths(t.Yaw),
             Radius = t is null ? 0.4f : Hundredths(t.Radius),
             Height = t is null ? 1.8f : Hundredths(t.Height),
-            Faction = id?.Faction,
+            Faction = HollowWake.Core.Combat.Relations.FactionOf(sim, e),
             Rarity = id?.Rarity,
             IsPlayer = id?.IsPlayer ?? false,
             Level = stats?.Level ?? 0,
@@ -348,7 +348,7 @@ public static class Snapshots
             h.Add(id.Name);
             h.Add(id.Pattern);
             h.Add(id.Look);
-            h.Add(id.Faction);
+            h.Add(HollowWake.Core.Combat.Relations.FactionOf(sim, e));
             h.Add(id.Rarity);
             h.Add(id.IsPlayer);
             if (id.IsPlayer && world.TryGet<Equipment>(e, out var equipment) && equipment.BySlot.Count > 0)

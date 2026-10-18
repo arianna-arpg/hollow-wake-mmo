@@ -1,0 +1,558 @@
+{
+  "kind": "ui_appearances",
+  "entries": [
+    {
+      "id": "skeleton_warrior",
+      "body": "skeleton",
+      "shape": {},
+      "palette": {
+        "bone": "#d8d0b8",
+        "hollow": "#28252e",
+        "skin": "#aa8475",
+        "binding": "#51453f",
+        "cloth": "#4a4458",
+        "accent": "#b89a67",
+        "glow": "#c1a1c8"
+      },
+      "features": [],
+      "gear": {
+        "main_hand": "weapon.sword"
+      },
+      "card": "allow",
+      "variation": {
+        "hue": 0.015,
+        "value": 0.055,
+        "scale": 0.025
+      },
+      "meta": {
+        "prototype_look": "skeleton_warrior",
+        "translation": "Anatomy, silhouette and equipment translated from the prototype part grammar into the shared standing 3D rig."
+      }
+    },
+    {
+      "id": "skeleton_archer",
+      "body": "skeleton",
+      "shape": {
+        "width": 0.9
+      },
+      "palette": {
+        "bone": "#d8d0b8",
+        "hollow": "#28252e",
+        "skin": "#aa8475",
+        "binding": "#51453f",
+        "cloth": "#4a4458",
+        "accent": "#b89a67",
+        "glow": "#c1a1c8"
+      },
+      "features": [],
+      "gear": {
+        "main_hand": "weapon.bow"
+      },
+      "card": "allow",
+      "variation": {
+        "hue": 0.015,
+        "value": 0.055,
+        "scale": 0.025
+      },
+      "meta": {
+        "prototype_look": "skeleton_archer",
+        "translation": "Anatomy, silhouette and equipment translated from the prototype part grammar into the shared standing 3D rig."
+      }
+    },
+    {
+      "id": "skeletal_pyromancer",
+      "body": "skeleton",
+      "shape": {},
+      "palette": {
+        "bone": "#d8d0b8",
+        "hollow": "#28252e",
+        "skin": "#aa8475",
+        "binding": "#51453f",
+        "cloth": "#6a3e30",
+        "accent": "#ed985a",
+        "glow": "#ed985a"
+      },
+      "features": [
+        "mantle",
+        "cowl"
+      ],
+      "gear": {
+        "main_hand": "weapon.wand"
+      },
+      "card": "allow",
+      "variation": {
+        "hue": 0.015,
+        "value": 0.055,
+        "scale": 0.025
+      },
+      "meta": {
+        "prototype_look": "mage_cinder_scholar",
+        "translation": "Anatomy, silhouette and equipment translated from the prototype part grammar into the shared standing 3D rig."
+      }
+    },
+    {
+      "id": "skeletal_cryomancer",
+      "body": "skeleton",
+      "shape": {},
+      "palette": {
+        "bone": "#d8d0b8",
+        "hollow": "#28252e",
+        "skin": "#aa8475",
+        "binding": "#51453f",
+        "cloth": "#455e70",
+        "accent": "#8bd6ed",
+        "glow": "#8bd6ed"
+      },
+      "features": [
+        "mantle",
+        "crystals"
+      ],
+      "gear": {
+        "main_hand": "weapon.staff"
+      },
+      "card": "allow",
+      "variation": {
+        "hue": 0.015,
+        "value": 0.055,
+        "scale": 0.025
+      },
+      "meta": {
+        "prototype_look": "mage_rime_scholar",
+        "translation": "Anatomy, silhouette and equipment translated from the prototype part grammar into the shared standing 3D rig."
+      }
+    },
+    {
+      "id": "skeletal_stormcaller",
+      "body": "skeleton",
+      "shape": {},
+      "palette": {
+        "bone": "#d8d0b8",
+        "hollow": "#28252e",
+        "skin": "#aa8475",
+        "binding": "#51453f",
+        "cloth": "#52476e",
+        "accent": "#c5b6fa",
+        "glow": "#c5b6fa"
+      },
+      "features": [
+        "mantle",
+        "yoke"
+      ],
+      "gear": {
+        "main_hand": "weapon.wand"
+      },
+      "card": "allow",
+      "variation": {
+        "hue": 0.015,
+        "value": 0.055,
+        "scale": 0.025
+      },
+      "meta": {
+        "prototype_look": "mage_storm_scholar",
+        "translation": "Anatomy, silhouette and equipment translated from the prototype part grammar into the shared standing 3D rig."
+      }
+    },
+    {
+      "id": "skeletal_venomancer",
+      "body": "skeleton",
+      "shape": {},
+      "palette": {
+        "bone": "#d8d0b8",
+        "hollow": "#28252e",
+        "skin": "#aa8475",
+        "binding": "#51453f",
+        "cloth": "#4f5842",
+        "accent": "#a8ce72",
+        "glow": "#a8ce72"
+      },
+      "features": [
+        "mantle",
+        "cowl",
+        "beak",
+        "vials"
+      ],
+      "gear": {
+        "main_hand": "weapon.staff"
+      },
+      "card": "allow",
+      "variation": {
+        "hue": 0.015,
+        "value": 0.055,
+        "scale": 0.025
+      },
+      "meta": {
+        "prototype_look": "mage_venom_scholar",
+        "translation": "Anatomy, silhouette and equipment translated from the prototype part grammar into the shared standing 3D rig."
+      }
+    },
+    {
+      "id": "skeletal_sentinel",
+      "body": "skeleton",
+      "shape": {
+        "shoulders": 1.2,
+        "thickness": 1.3
+      },
+      "palette": {
+        "bone": "#d8d0b8",
+        "hollow": "#28252e",
+        "skin": "#aa8475",
+        "binding": "#51453f",
+        "cloth": "#4a4458",
+        "accent": "#b89a67",
+        "glow": "#c1a1c8"
+      },
+      "features": [
+        "bound"
+      ],
+      "gear": {
+        "main_hand": "weapon.sword",
+        "off_hand": "shield"
+      },
+      "card": "allow",
+      "variation": {
+        "hue": 0.015,
+        "value": 0.055,
+        "scale": 0.025
+      },
+      "meta": {
+        "prototype_look": "sentinel_ossuary_guard",
+        "translation": "Anatomy, silhouette and equipment translated from the prototype part grammar into the shared standing 3D rig."
+      }
+    },
+    {
+      "id": "skeletal_duelist",
+      "body": "skeleton",
+      "shape": {
+        "width": 0.85,
+        "arms": 1.1
+      },
+      "palette": {
+        "bone": "#d8d0b8",
+        "hollow": "#28252e",
+        "skin": "#aa8475",
+        "binding": "#51453f",
+        "cloth": "#4a4458",
+        "accent": "#b89a67",
+        "glow": "#c1a1c8"
+      },
+      "features": [
+        "bound"
+      ],
+      "gear": {
+        "main_hand": "weapon.sword",
+        "off_hand": "weapon.dagger"
+      },
+      "card": "allow",
+      "variation": {
+        "hue": 0.015,
+        "value": 0.055,
+        "scale": 0.025
+      },
+      "meta": {
+        "prototype_look": "duelist_boneblades",
+        "translation": "Anatomy, silhouette and equipment translated from the prototype part grammar into the shared standing 3D rig."
+      }
+    },
+    {
+      "id": "ossuary_lich",
+      "body": "skeleton",
+      "shape": {
+        "head": 1.1,
+        "torso": 1.1
+      },
+      "palette": {
+        "bone": "#d8d0b8",
+        "hollow": "#28252e",
+        "skin": "#aa8475",
+        "binding": "#51453f",
+        "cloth": "#4b3659",
+        "accent": "#bc9be8",
+        "glow": "#bc9be8"
+      },
+      "features": [
+        "mantle",
+        "crown",
+        "bound"
+      ],
+      "gear": {
+        "main_hand": "weapon.staff",
+        "off_hand": "focus"
+      },
+      "card": "allow",
+      "variation": {
+        "hue": 0.015,
+        "value": 0.055,
+        "scale": 0.025
+      },
+      "meta": {
+        "prototype_look": "lich_ossuary_regent",
+        "translation": "Anatomy, silhouette and equipment translated from the prototype part grammar into the shared standing 3D rig."
+      }
+    },
+    {
+      "id": "bone_golem",
+      "body": "skeleton",
+      "shape": {
+        "width": 1.6,
+        "shoulders": 1.35,
+        "thickness": 2.1,
+        "legs": 0.8,
+        "arms": 1.2,
+        "ribs": 5
+      },
+      "palette": {
+        "bone": "#d8d0b8",
+        "hollow": "#28252e",
+        "skin": "#aa8475",
+        "binding": "#51453f",
+        "cloth": "#4a4458",
+        "accent": "#b89a67",
+        "glow": "#c1a1c8"
+      },
+      "features": [
+        "bound",
+        "spikes"
+      ],
+      "gear": {},
+      "card": "never",
+      "variation": {
+        "hue": 0.015,
+        "value": 0.055,
+        "scale": 0.025
+      },
+      "meta": {
+        "prototype_look": "golem_bone_assembled",
+        "translation": "Anatomy, silhouette and equipment translated from the prototype part grammar into the shared standing 3D rig."
+      }
+    },
+    {
+      "id": "court_abomination",
+      "body": "stitched",
+      "shape": {
+        "width": 1.65,
+        "shoulders": 1.2,
+        "legs": 0.75,
+        "torso": 1.2,
+        "arms": 1.2,
+        "asymmetry": 0.5,
+        "hunch": 0.25,
+        "stitches": 7
+      },
+      "palette": {
+        "bone": "#d8d0b8",
+        "hollow": "#28252e",
+        "skin": "#aa8475",
+        "binding": "#51453f",
+        "cloth": "#4a4458",
+        "accent": "#b89a67",
+        "glow": "#c1a1c8"
+      },
+      "features": [
+        "harness",
+        "graft_head"
+      ],
+      "gear": {},
+      "card": "never",
+      "variation": {
+        "hue": 0.015,
+        "value": 0.055,
+        "scale": 0.025
+      },
+      "meta": {
+        "prototype_look": "abomination_stitched_brute",
+        "translation": "Anatomy, silhouette and equipment translated from the prototype part grammar into the shared standing 3D rig."
+      }
+    },
+    {
+      "id": "zombie",
+      "body": "stitched",
+      "shape": {
+        "width": 1.1,
+        "hunch": 0.55,
+        "arms": 1.1,
+        "stitches": 0
+      },
+      "palette": {
+        "bone": "#b4b399",
+        "hollow": "#28252e",
+        "skin": "#6a8858",
+        "binding": "#51453f",
+        "cloth": "#4a4458",
+        "accent": "#b89a67",
+        "glow": "#c1a1c8"
+      },
+      "features": [],
+      "gear": {},
+      "card": "allow",
+      "variation": {
+        "hue": 0.015,
+        "value": 0.055,
+        "scale": 0.025
+      },
+      "meta": {
+        "prototype_look": "zombie",
+        "translation": "Anatomy, silhouette and equipment translated from the prototype part grammar into the shared standing 3D rig."
+      }
+    },
+    {
+      "id": "zombie_crawler",
+      "body": "stitched",
+      "shape": {
+        "legs": 0.25,
+        "torso": 1.5,
+        "arms": 1.5,
+        "width": 1.9,
+        "hunch": 1.4,
+        "stitches": 0,
+        "head": 1.25
+      },
+      "palette": {
+        "bone": "#b4b399",
+        "hollow": "#28252e",
+        "skin": "#71824e",
+        "binding": "#51453f",
+        "cloth": "#4a4458",
+        "accent": "#b89a67",
+        "glow": "#c1a1c8"
+      },
+      "features": [
+        "legless"
+      ],
+      "gear": {},
+      "card": "allow",
+      "variation": {
+        "hue": 0.015,
+        "value": 0.055,
+        "scale": 0.025
+      },
+      "meta": {
+        "prototype_look": "zombie_crawler",
+        "translation": "Anatomy, silhouette and equipment translated from the prototype part grammar into the shared standing 3D rig."
+      },
+      "scale": 1.2
+    },
+    {
+      "id": "decay_wraith",
+      "body": "wisp",
+      "shape": {
+        "hover": 0.18,
+        "trail": 1.4,
+        "width": 0.85
+      },
+      "palette": {
+        "bone": "#d8d0b8",
+        "hollow": "#28252e",
+        "skin": "#aa8475",
+        "binding": "#51453f",
+        "cloth": "#41364f",
+        "accent": "#b89a67",
+        "glow": "#8a6ad8",
+        "cloth2": "#292334",
+        "face": "#cec4dd"
+      },
+      "features": [
+        "hood",
+        "arms"
+      ],
+      "gear": {},
+      "card": "allow",
+      "variation": {
+        "hue": 0.015,
+        "value": 0.055,
+        "scale": 0.025
+      },
+      "glow": "#8a6ad8",
+      "meta": {
+        "prototype_look": "wraith",
+        "translation": "Anatomy, silhouette and equipment translated from the prototype part grammar into the shared standing 3D rig."
+      }
+    },
+    {
+      "id": "blade_wraith",
+      "body": "wisp",
+      "shape": {
+        "hover": 0.12,
+        "trail": 1.2,
+        "width": 1.1,
+        "arms": 1.1
+      },
+      "palette": {
+        "bone": "#d8d0b8",
+        "hollow": "#28252e",
+        "skin": "#aa8475",
+        "binding": "#51453f",
+        "cloth": "#493c56",
+        "accent": "#b89a67",
+        "glow": "#9a7ac8",
+        "cloth2": "#2d2635",
+        "face": "#ddd0da"
+      },
+      "features": [
+        "hood",
+        "arms"
+      ],
+      "gear": {
+        "main_hand": "weapon.sword"
+      },
+      "card": "allow",
+      "variation": {
+        "hue": 0.015,
+        "value": 0.055,
+        "scale": 0.025
+      },
+      "glow": "#9a7ac8",
+      "meta": {
+        "prototype_look": "blade_wraith",
+        "translation": "Anatomy, silhouette and equipment translated from the prototype part grammar into the shared standing 3D rig."
+      }
+    },
+    {
+      "id": "barrow_hound",
+      "body": "bone_quadruped",
+      "shape": {
+        "length": 1.15,
+        "width": 0.9
+      },
+      "palette": {
+        "bone": "#cfc8b8",
+        "hollow": "#28252e",
+        "skin": "#aa8475",
+        "binding": "#51453f",
+        "cloth": "#4a4458",
+        "accent": "#b89a67",
+        "glow": "#a8ce72"
+      },
+      "features": [],
+      "gear": {},
+      "card": "allow",
+      "variation": {
+        "hue": 0.015,
+        "value": 0.055,
+        "scale": 0.025
+      },
+      "meta": {
+        "prototype_look": "barrow_hound",
+        "translation": "Anatomy, silhouette and equipment translated from the prototype part grammar into the shared standing 3D rig."
+      }
+    },
+    {
+      "id": "undead_offhand_blade",
+      "slot": "off_hand",
+      "match": [
+        "weapon.dagger"
+      ],
+      "body": "blade",
+      "shape": {
+        "length": 0.52,
+        "width": 0.055,
+        "guard": 0.6
+      },
+      "palette": {
+        "metal": "#b9bcc4",
+        "edge": "#eee9da",
+        "grip": "#51453f",
+        "band": "#b89a67"
+      }
+    }
+  ]
+}

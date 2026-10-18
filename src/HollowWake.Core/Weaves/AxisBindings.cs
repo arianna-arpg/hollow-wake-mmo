@@ -951,6 +951,7 @@ public static class AxisBindings
         NodeOf("summon", "replenish", NodeShape.Block);
         Axis("summon", "replenish.interval", Agency, Seconds, @default: 4);
         Choice("summon", "from_corpse", Agency, null, new[] { "nearest", "target" });
+        Reference("summon", "raise_as", dimension: Agency, readBy: "summons", name: "summon");
         Axis("summon", "search_radius", Targeting, Units, rule: "minions.corpse_search", @default: 6, when: "from_corpse");
         Spends("summon", "corpse", when: "from_corpse");
 

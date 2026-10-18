@@ -163,7 +163,7 @@ public static class ZoneBuilder
                     var pos = sim.Terrain.SnapToGround(new Vector3(sp.X, sp.Y, 0), 4);
                     sim.World.Add(e, new Transform { Position = pos, Radius = 0.1f });
                     sim.World.Add(e, new Identity { Name = "spawner", Tags = TagSet.Of("spawner"), Look = null });
-                    sim.World.Add(e, new Spawner { Pattern = sp.Pattern, PackSize = sp.PackSize, RespawnSeconds = sp.RespawnSeconds, Group = sp.Group, RollRarity = sp.Group is null, RespawnAt = sim.Clock.Time });
+                    sim.World.Add(e, new Spawner { Pattern = sp.Pattern, Level = sp.Level, PackSize = sp.PackSize, RespawnSeconds = sp.RespawnSeconds, Group = sp.Group, RollRarity = sp.Group is null, RespawnAt = sim.Clock.Time });
                     report.Spawners++;
                 }
             }

@@ -1,0 +1,192 @@
+{
+  "repository": "arianna-arpg/arpg-game-world",
+  "revision": "118b510f8b5bfb781163c5bc13ea4908f698e75b",
+  "sources": [
+    "src/data/monsters.ts",
+    "src/data/necromancerMinions.ts",
+    "src/data/necromancerCourts.ts",
+    "src/data/looks.ts",
+    "src/data/skeletalMageLooks.ts",
+    "src/data/golemLooks.ts",
+    "src/data/undeadCourtLooks.ts",
+    "src/data/skills.ts",
+    "src/data/summonLooks.ts"
+  ],
+  "entities": [
+    {
+      "id": "skeleton_warrior",
+      "name": "Skeleton Warrior",
+      "material": "bone",
+      "role": "warrior",
+      "skills": [
+        "cleave"
+      ],
+      "prototype_look": "skeleton_warrior"
+    },
+    {
+      "id": "skeleton_archer",
+      "name": "Skeleton Archer",
+      "material": "bone",
+      "role": "archer",
+      "skills": [
+        "bone_arrow"
+      ],
+      "prototype_look": "skeleton_archer"
+    },
+    {
+      "id": "skeletal_pyromancer",
+      "name": "Skeletal Pyromancer",
+      "material": "bone",
+      "role": "mage",
+      "skills": [
+        "firebolt"
+      ],
+      "prototype_look": "mage_cinder_scholar"
+    },
+    {
+      "id": "skeletal_cryomancer",
+      "name": "Skeletal Cryomancer",
+      "material": "bone",
+      "role": "mage",
+      "skills": [
+        "frostbolt"
+      ],
+      "prototype_look": "mage_rime_scholar"
+    },
+    {
+      "id": "skeletal_stormcaller",
+      "name": "Skeletal Stormcaller",
+      "material": "bone",
+      "role": "mage",
+      "skills": [
+        "storm_bolt"
+      ],
+      "prototype_look": "mage_storm_scholar"
+    },
+    {
+      "id": "skeletal_venomancer",
+      "name": "Skeletal Venomancer",
+      "material": "bone",
+      "role": "mage",
+      "skills": [
+        "venom_bolt"
+      ],
+      "prototype_look": "mage_venom_scholar"
+    },
+    {
+      "id": "skeletal_sentinel",
+      "name": "Skeletal Sentinel",
+      "material": "bone",
+      "role": "guardian",
+      "skills": [
+        "cleave",
+        "rallying_shout"
+      ],
+      "prototype_look": "sentinel_ossuary_guard"
+    },
+    {
+      "id": "skeletal_duelist",
+      "name": "Skeletal Duelist",
+      "material": "bone",
+      "role": "skirmisher",
+      "skills": [
+        "frenzy",
+        "cleave"
+      ],
+      "prototype_look": "duelist_boneblades"
+    },
+    {
+      "id": "ossuary_lich",
+      "name": "Ossuary Lich",
+      "material": "bone",
+      "role": "mage",
+      "skills": [
+        "fireball",
+        "shade_bolt"
+      ],
+      "prototype_look": "lich_ossuary_regent"
+    },
+    {
+      "id": "bone_golem",
+      "name": "Bone Golem",
+      "material": "bone",
+      "role": "brute",
+      "skills": [
+        "ground_slam",
+        "claw"
+      ],
+      "prototype_look": "golem_bone_assembled"
+    },
+    {
+      "id": "court_abomination",
+      "name": "Stitched Abomination",
+      "material": "flesh",
+      "role": "brute",
+      "skills": [
+        "claw",
+        "ground_slam"
+      ],
+      "prototype_look": "abomination_stitched_brute"
+    },
+    {
+      "id": "zombie",
+      "name": "Shambling Zombie",
+      "material": "flesh",
+      "role": "shambler",
+      "skills": [
+        "claw"
+      ],
+      "prototype_look": "zombie"
+    },
+    {
+      "id": "zombie_crawler",
+      "name": "Crawling Zombie",
+      "material": "flesh",
+      "role": "shambler",
+      "skills": [
+        "claw"
+      ],
+      "prototype_look": "zombie_crawler"
+    },
+    {
+      "id": "decay_wraith",
+      "name": "Wraith",
+      "material": "ethereal",
+      "role": "mage",
+      "skills": [
+        "venom_bolt"
+      ],
+      "prototype_look": "wraith"
+    },
+    {
+      "id": "blade_wraith",
+      "name": "Blade Wraith",
+      "material": "ethereal",
+      "role": "skirmisher",
+      "skills": [
+        "whirling_reap",
+        "claw"
+      ],
+      "prototype_look": "blade_wraith"
+    },
+    {
+      "id": "barrow_hound",
+      "name": "Barrow Hound",
+      "material": "bone",
+      "role": "hunter",
+      "skills": [
+        "bite"
+      ],
+      "prototype_look": "barrow_hound"
+    }
+  ],
+  "units": "Prototype radii and speeds divided by 32 and rounded; height authored for the standing 3D anatomy. Life, damage, resources and rewards tuned to the MMO content, not numeric parity.",
+  "deferred": [
+    "Prototype per-skill trees, court upgrades, grafted parts and ally-healer AI.",
+    "Prototype perception cones, scent tracking, memory and flanking policy.",
+    "Mage specialty kit substitutions use landed Firebolt, Frostbolt, Storm Bolt and Venom Bolt; lich uses Fireball and Shade Bolt; sentinel rally replaces Court Challenge; duelist Frenzy/Cleave replaces Twin Cut; abomination uses Ground Slam.",
+    "Wraith hovering is presentation only; no flight or physical immunity is inferred.",
+    "Broader living fauna and the rest of the prototype bestiary remain later entity passes."
+  ],
+  "preset_policy": "Original skill ids are retained where verified. Direct sentinel, duelist, abomination, lich and hound summons, corpse-targeted Raise Zombie and the four-school mage pool are new MMO presets exposing prototype bodies; they do not claim to be source skill definitions."
+}

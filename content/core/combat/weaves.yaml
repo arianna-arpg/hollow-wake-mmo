@@ -89,7 +89,7 @@ entries:
     color: "#2b2033"
     attributes: { summon.count: 3, summon.max: 6 }
     effects:
-      - { type: summon, pattern: remnant_shade, count: "weave.summon.count", max_active: "weave.summon.max", duration: 0, group: wraiths, decay: { delay: 3, fraction: 0.04, growth: 1.3 } }
+      - { type: summon, pattern: decay_wraith, behavior: minion_ranged, count: "weave.summon.count", max_active: "weave.summon.max", duration: 0, group: wraiths, decay: { delay: 3, fraction: 0.04, growth: 1.3 } }
   - id: raise_fallen
     name: Raise the Fallen
     form: raise
