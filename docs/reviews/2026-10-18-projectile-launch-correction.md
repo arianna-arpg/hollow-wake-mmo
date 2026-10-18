@@ -8,7 +8,7 @@ Claude's [rereview](https://github.com/arianna-arpg/hollow-wake-mmo/pull/36#issu
 
 This merge includes complete #33 e92de2270a9c39497a842d9ba063efeb56b04d2b and main17ca2f13a4c193d4b65d99ca4545aae267581092, including reviewed #54. Original Aim, delivery Point, sampled body AimOffset and LaunchLift remain separate. EffectContext.Copy and EffectHelpers.At retain the aim; the aim wrapper both turns that aim and preserves its emission lift. The test contract retains #54's closed lethal-resource exception. No #34 history or isolated foundation correction is copied backward.
 
-The foundation owner has subsequently marked e92de22 provisional while reconciling the owner's Knot-resident level decision. This published checkpoint supports review of the flight fixes; it is not the final stable #36 handoff for #34. The definitive complete #33 still needs to be merged and its affected gates rerun. #50's separate CastSource addition must be retained when that branch later joins this source.
+The original checkpoint used provisional #33 e92de22 while the foundation owner reconciled the owner's Knot-resident level decision. The final propagation is recorded below. #50's separate CastSource addition must be retained when that branch later joins this source.
 
 ## Reproduction and fix
 
@@ -48,6 +48,21 @@ Across ten seeds, the first three pairings still have A win rate1.0 and the same
 - Card screenshot inspection still reproduces the separately owned #37 renderer defect. Its capture is retained as failure evidence; this is not card-mode visual acceptance.
 - All owned heavy processes have stopped. No new performance sample was taken. Actual combined #20 forecast/release/contact acceptance and a coordinated timing run remain pending. Performance budgets are unchanged.
 
-Claude rereview is requested on the published correction and its incoming-source union. The foundation owner receives the definitive stable full #36 only after its final #33 content decision arrives and affected gates pass.
+Claude rereview is requested on the published correction and its final incoming-source union.
 
+## Definitive foundation and stable handoff
+
+The final runtime/content source is **64dd292a5f4298508b995b67e8335094f03d2ad6**: complete #33 **6ac37940996e5d067fbdfd0ffb32e092221b87df** merged into the correction **415421c58b37640fee1741ed8c15da3c1e813220**. The correction checkpoint's [hosted CI](https://github.com/arianna-arpg/hollow-wake-mmo/actions/runs/39167285563) passed all jobs, including Windows determinism and aggregate ci. Hosted checks for the final publication are reported separately on the PR.
+
+The incoming content sets all three Knot resident definitions to `use_site_level: true` and restores the clear-Knot foe window of at most two levels above the quest. Its regression tests verify the actual initial and respawned residents, and its golden changes and paired maps are retained from the foundation owner's complete branch. No runtime code or client source changed in this last merge, and there is no remaining foundation product decision. The existing launch, body geometry and #54 context changes remain intact.
+
+Fresh final-source evidence uses the `final33-` prefix in the evidence directory:
+
+- Debug solution and Tools Release builds: zero warnings/errors. Full tests: core 1860, server 59, native 132 and browser 269; **2320 passed**, with no .NET failures or skips. This includes the launch and authored anatomy regressions.
+- Validation: zero errors/warnings. Starter zone load completes 200 ticks. All seven Release Windows replay hashes remain identical; the baseline was not changed. The literal census still matches exactly 499 keys.
+- The complete proving report is structurally identical to the previous correction report, including all per-fight outcomes and hashes. It still exits 1 for the same three inherited win-rate ceiling breaches; this is not a passing balance gate. The full final JSON and explicit comparison are retained.
+- Production web build passes with its existing large-chunk advisory. The app is 1665.62 kB and the separately loaded icon artwork is 109.60 kB.
+- Final background run `run-i2p30g`: browser 30/30 and native 36/36 pass; cleanup errors are empty. Native rendering is not covered and the same shutdown diagnostics remain. Isometric screenshot inspection shows the expected world. The card screenshot still shows the separately owned #37 blank-world/tiny-viewport defect and is retained as failure evidence.
+
+The final source is ready for the complete **#36 → #34 → #37** propagation. Do not cherry-pick an isolated flight fix or merge #34 backward. The foundation owner can now run its prepared child-only kin matrix against the complete correction. Claude rereview, actual combined #20 acceptance, #37 renderer acceptance and coordinated performance verification remain outstanding; no new performance sample or final combined approval is claimed.
 Acknowledged by: pending Claude rereview after final combined source.

@@ -1,0 +1,20 @@
+Final runtime/content source: 64dd292a5f4298508b995b67e8335094f03d2ad6
+Parent correction: 415421c58b37640fee1741ed8c15da3c1e813220
+Definitive complete #33: 6ac37940996e5d067fbdfd0ffb32e092221b87df
+The prior correction's hosted CI passed all jobs at https://github.com/arianna-arpg/hollow-wake-mmo/actions/runs/39167285563.
+Final-source local commands:
+  dotnet build HollowWake.sln --no-restore
+  dotnet test HollowWake.sln --no-build --no-restore
+  dotnet build src/HollowWake.Tools -c Release --no-restore
+  npm --prefix web run build
+  npm --prefix web test
+  dotnet src/HollowWake.Tools/bin/Release/net10.0/hollowwake.dll validate
+  dotnet src/HollowWake.Tools/bin/Release/net10.0/hollowwake.dll load --x 0 --y 0
+  dotnet src/HollowWake.Tools/bin/Release/net10.0/hollowwake.dll tournament --standard --check-hashes experiments/combat-grammar/baselines/standard-duels.json
+  dotnet src/HollowWake.Tools/bin/Release/net10.0/hollowwake.dll weave --axes --all --literals experiments/entity-hitboxes/artifacts/flight-correction/final33-literals.txt
+  dotnet src/HollowWake.Tools/bin/Release/net10.0/hollowwake.dll tournament --pairs proving_reaver:proving_bulwark,proving_hexer:proving_plaguer,proving_pitfighter:proving_mower,proving_fletcher:proving_evoker --seeds 10 --seconds 60 --bands --out experiments/entity-hitboxes/artifacts/flight-correction/final33-proving.json
+  node scripts/test-background.mjs --suite all --no-build --out experiments/entity-hitboxes/artifacts/flight-correction/final33-smoke
+The proving command exits 1 for the same three inherited win-rate ceiling failures. The full report is structurally identical to combined-proving.json, not just its hashes. Initial hash-only output and the failed comparison against that wrong schema remain in ignored raw artifacts; final33-proving.json is the complete report.
+Final literal comparison ignores blank lines and comment lines only; all 499 keys match and committed owner comments remain untouched.
+No runtime code or client source changed in the final #33 merge; only the owner's Knot content policy, its regression/golden tests, contract and evidence changed. Existing correction lint/protocol/probe/duel traces remain scoped to 415421c; final replay, full tests, load and client smoke exercise the resulting combined source. No performance timing was sampled.
+Committed logs normalize line endings and trailing whitespace only; raw originals remain under ignored artifacts.
