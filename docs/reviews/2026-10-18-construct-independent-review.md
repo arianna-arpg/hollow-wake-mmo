@@ -149,4 +149,4 @@ Final source build is clean (Release, 0 warnings/errors). The full solution run 
 
 The compact [aim review evidence](../../experiments/combat-grammar/review/construct-echo-aim-review.json) names retained runs. Raw logs are under `artifacts/echo-aim-*`. This is an isolated source handoff for combined integration and Claude review, not approval to merge the intermediate branch or clear the historical budget misses.
 
-Acknowledged by: pending independent capture-path review and Claude review on PR #50.
+Acknowledged by: [independent Codex capture-path review of 81b9197](https://github.com/arianna-arpg/hollow-wake-mmo/pull/50#issuecomment-6256013579), with 63 construct cases and 14 additional paid-runtime anatomy, live-target validity and offset-echo direction/sector cases passing. Claude reciprocal review remains pending.
