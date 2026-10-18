@@ -51,12 +51,29 @@ public sealed record Pairing(string A, string B)
 /// </summary>
 public sealed record Bands(double TtkMin, double TtkMax, double WinRateCeiling, double DrawCeiling, double CoverageFloor)
 {
+    /// <summary>The rules group the harness reads.</summary>
+    public const string Group = "evaluation";
+
+    /// <summary>The bands' names in rules group <c>evaluation</c>, in the order the record holds them.</summary>
+    public static readonly IReadOnlyList<string> Names = new[] { "ttk_min", "ttk_max", "win_rate_ceiling", "draw_ceiling", "coverage_floor" };
+
+    /// <summary>
+    /// The bands as content writes them. The harness has no number of its own for one: a band that is missing or not a
+    /// number throws, naming it, and validation refuses such content before any run.
+    /// </summary>
     public static Bands Of(ContentRegistry content) => new(
-        content.Rules.Number("evaluation.ttk_min", 5),
-        content.Rules.Number("evaluation.ttk_max", 45),
-        content.Rules.Number("evaluation.win_rate_ceiling", 0.8),
-        content.Rules.Number("evaluation.draw_ceiling", 0.2),
-        content.Rules.Number("evaluation.coverage_floor", 0.25));
+        Rule(content, "ttk_min"),
+        Rule(content, "ttk_max"),
+        Rule(content, "win_rate_ceiling"),
+        Rule(content, "draw_ceiling"),
+        Rule(content, "coverage_floor"));
+
+    /// <summary>A number in rules group <c>evaluation</c>; throws naming it when it is missing or not a number.</summary>
+    public static double Rule(ContentRegistry content, string name)
+    {
+        var value = content.Rules.Number($"{Group}.{name}", double.NaN);
+        return double.IsNaN(value) ? throw new InvalidDataException($"rule {Group}.{name} is missing or not a number") : value;
+    }
 }
 
 /// <summary>
@@ -138,13 +155,15 @@ public sealed record PairReport(
 
 /// <summary>
 /// The whole run, serializable, so a gate can keep it as evidence beside the bench rows. <c>Hash</c> is folded over
-/// its pairings' hashes in the order they ran.
+/// its pairings' hashes in the order they ran. <c>BandsChecked</c> says whether the run judged its pairings against the
+/// bands; <c>Bands</c> are the bands it judged by, null when it judged nothing.
 /// </summary>
-public sealed record TournamentReport(int Seeds, double Seconds, string Hash, Bands Bands, IReadOnlyList<PairReport> Pairs, IReadOnlyList<Fight> Fights)
+public sealed record TournamentReport(int Seeds, double Seconds, string Hash, bool BandsChecked, Bands? Bands, IReadOnlyList<PairReport> Pairs, IReadOnlyList<Fight> Fights)
 {
     private static readonly JsonSerializerOptions Json = new() { WriteIndented = true, DefaultIgnoreCondition = JsonIgnoreCondition.Never };
 
-    public bool Passed => Pairs.All(p => p.Breaches.Count == 0);
+    /// <summary>Whether every pairing stayed inside the bands; null when the run did not check them, so it passed nothing.</summary>
+    public bool? Passed => BandsChecked ? Pairs.All(p => p.Breaches.Count == 0) : null;
 
     public string ToJson() => JsonSerializer.Serialize(this, Json);
 
@@ -328,7 +347,11 @@ public static class Tournament
         return (a, b);
     }
 
-    /// <summary>Fights every pairing <paramref name="seeds"/> times, after checking every pattern they name exists, so a bad pairing fails before any fight.</summary>
+    /// <summary>
+    /// Fights every pairing <paramref name="seeds"/> times, after checking every pattern they name exists and, when
+    /// <paramref name="checkBands"/> asks for them, that content writes every band, so a bad pairing or a missing band
+    /// fails before any fight.
+    /// </summary>
     public static TournamentReport Run(ContentRegistry content, IReadOnlyList<Pairing> pairings, int seeds, double seconds, bool checkBands)
     {
         if (seeds < 1)
@@ -342,7 +365,7 @@ public static class Tournament
                 throw new ArgumentException(why);
             }
         }
-        var bands = Bands.Of(content);
+        var bands = checkBands ? Bands.Of(content) : null;
         var fights = new List<Fight>();
         var pairs = new List<PairReport>();
         foreach (var pairing in pairings)
@@ -353,9 +376,9 @@ public static class Tournament
                 own.Add(Duel(content, pairing, i, seconds));
             }
             fights.AddRange(own);
-            pairs.Add(Summarize(pairing, own, bands, checkBands));
+            pairs.Add(Summarize(pairing, own, bands));
         }
-        return new TournamentReport(seeds, seconds, Fold(pairs.Select(p => p.Hash)), bands, pairs, fights);
+        return new TournamentReport(seeds, seconds, Fold(pairs.Select(p => p.Hash)), checkBands, bands, pairs, fights);
     }
 
     /// <summary>Why a pairing cannot be fought, naming it and the pattern no definition carries; null when it can.</summary>
@@ -517,7 +540,8 @@ public static class Tournament
     /// <summary>The distinct names in ordinal order.</summary>
     private static List<string> Sorted(IEnumerable<string> names) => names.Distinct(StringComparer.Ordinal).Order(StringComparer.Ordinal).ToList();
 
-    private static PairReport Summarize(Pairing pairing, List<Fight> fights, Bands bands, bool checkBands)
+    /// <summary>A pairing's fights summed up, judged against <paramref name="bands"/> when the run checks them.</summary>
+    private static PairReport Summarize(Pairing pairing, List<Fight> fights, Bands? bands)
     {
         var n = fights.Count;
         var winsA = fights.Count(f => f.Outcome == "a");
@@ -529,7 +553,7 @@ public static class Tournament
         var coverageB = fights.Average(f => f.SideB.Coverage);
         var median = Quantile(ttk, 0.5);
         var breaches = new List<string>();
-        if (checkBands)
+        if (bands is not null)
         {
             // Breaches are written in the invariant culture, whatever culture the host runs in.
             if ((double)winsA / n > bands.WinRateCeiling)

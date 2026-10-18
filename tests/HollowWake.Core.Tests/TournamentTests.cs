@@ -279,7 +279,71 @@ entries:
         var report = Tournament.Run(CoreContent.Registry, new[] { new Pairing("hob", "proving_bulwark") }, seeds: 1, seconds: 8, checkBands: true);
         var pair = Assert.Single(report.Pairs);
         Assert.NotEmpty(pair.Breaches);
+        Assert.True(report.BandsChecked);
+        Assert.Equal(bands, report.Bands);
         Assert.False(report.Passed);
+
+        // A run that does not check the bands judged nothing: it neither passed nor failed, and says so.
+        var unjudged = Tournament.Run(CoreContent.Registry, new[] { new Pairing("hob", "proving_bulwark") }, seeds: 1, seconds: 8, checkBands: false);
+        Assert.False(unjudged.BandsChecked);
+        Assert.Null(unjudged.Bands);
+        Assert.Null(unjudged.Passed);
+        Assert.Empty(Assert.Single(unjudged.Pairs).Breaches);
+        var json = System.Text.Json.Nodes.JsonNode.Parse(unjudged.ToJson())!;
+        Assert.False(json["BandsChecked"]!.GetValue<bool>());
+        Assert.Null(json["Passed"]);
+        Assert.Null(json["Bands"]);
+    }
+
+    [Fact]
+    public void AMisspelledOrMissingBandIsRefused()
+    {
+        var dir = Scratch("evaluation-bands");
+        try
+        {
+            // A patch that misspells a band adds a rule the harness never reads.
+            File.WriteAllText(Path.Combine(dir, "rules.yaml"), """
+kind: rules
+entries:
+  - id: evaluation
+    patch: true
+    values:
+      win_rate_cieling: 0.5
+      draw_ceiling: 1.5
+""".Replace("\r\n", "\n"));
+            ContentRegistry.Load(new[] { CoreContent.FindContentDir(), dir }, out var patched);
+            var errors = patched.Errors.Where(e => e.Id == "evaluation").Select(e => e.Message).ToList();
+            Assert.Contains(errors, m => m.Contains("'win_rate_cieling'") && m.Contains("not an evaluation rule"));
+            Assert.Contains(errors, m => m.Contains("draw_ceiling") && m.Contains("from 0 to 1"));
+            Assert.Equal(2, errors.Count);
+
+            // A layer that replaces the group with the misspelling leaves the real band unwritten, and the harness
+            // has no number of its own to judge by.
+            File.WriteAllText(Path.Combine(dir, "rules.yaml"), """
+kind: rules
+entries:
+  - id: evaluation
+    values:
+      proving_pairs: ["wolf:hob"]
+      standard_duels: ["wolf:hob"]
+      ttk_min: 5
+      ttk_max: 45
+      win_rate_cieling: 0.5
+      draw_ceiling: 0.2
+      coverage_floor: 0.25
+""".Replace("\r\n", "\n"));
+            var replaced = ContentRegistry.Load(new[] { CoreContent.FindContentDir(), dir }, out var report);
+            errors = report.Errors.Where(e => e.Id == "evaluation").Select(e => e.Message).ToList();
+            Assert.Contains(errors, m => m.Contains("'win_rate_cieling'"));
+            Assert.Contains(errors, m => m.StartsWith("win_rate_ceiling is missing", StringComparison.Ordinal));
+            var thrown = Assert.Throws<InvalidDataException>(() => Bands.Of(replaced));
+            Assert.Contains("evaluation.win_rate_ceiling", thrown.Message);
+            Assert.Throws<InvalidDataException>(() => Tournament.Run(replaced, new[] { new Pairing("wolf", "hob") }, seeds: 1, seconds: 2, checkBands: true));
+        }
+        finally
+        {
+            Directory.Delete(dir, recursive: true);
+        }
     }
 
     [Fact]

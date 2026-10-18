@@ -57,6 +57,17 @@ public static class TournamentCommand
         }
         var bands = flag("bands");
         var hashes = flag("hashes");
+        if (bands)
+        {
+            try
+            {
+                Bands.Of(content);
+            }
+            catch (InvalidDataException ex)
+            {
+                return Refuse($"--bands: {ex.Message}");
+            }
+        }
         var report = Tournament.Run(content, pairings, seeds, seconds, bands);
         foreach (var line in report.Table())
         {
@@ -94,8 +105,8 @@ public static class TournamentCommand
         }
         if (bands)
         {
-            Console.WriteLine(report.Passed ? "bands: pass" : "bands: FAIL");
-            failed |= !report.Passed;
+            Console.WriteLine(report.Passed == true ? "bands: pass" : "bands: FAIL");
+            failed |= report.Passed != true;
         }
         return failed ? 1 : 0;
     }
