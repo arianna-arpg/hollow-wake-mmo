@@ -10,6 +10,8 @@ namespace HollowWake.Client;
 /// </summary>
 public static class InputSetup
 {
+    /// <summary>When set, no controller input is bound: a scripted play-through drives keys and the pointer only, so a controller in use elsewhere on the machine cannot act in it.</summary>
+    public static bool IgnorePads { get; set; }
     private static readonly Dictionary<string, JoyButton> Buttons = new(StringComparer.Ordinal)
     {
         ["A"] = JoyButton.A,
@@ -63,7 +65,7 @@ public static class InputSetup
                     InputMap.ActionAddEvent(action.Id, ev);
                 }
             }
-            if (PadEvent(binding.Pad) is { } pad)
+            if (!IgnorePads && PadEvent(binding.Pad) is { } pad)
             {
                 InputMap.ActionAddEvent(action.Id, pad);
             }
