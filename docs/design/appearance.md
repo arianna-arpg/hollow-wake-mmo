@@ -1,6 +1,6 @@
 # Appearance
 
-How the world and the things in it look on both clients: bodies and props, the ground, the water, the light and the day, and the motion of bodies and feedback. Everything here is content the clients read and nothing the simulation or the protocol carries; a mod recolours a hob, adds a creature's look or retimes a swing's anticipation by editing data. The art direction this serves is [visual-language.md](visual-language.md); the representation choice and its measurements come from [sprite-rendering-study.md](sprite-rendering-study.md). Cast telegraphs, releases and impacts are the cast cues of [cast-presentation.md](cast-presentation.md), consumed here and never duplicated.
+How the world and the things in it look on both clients: bodies and props, the ground, the water, the light and the day, and the motion of bodies and feedback. Authored presentation is content the clients read; the protocol supplies the worn item classes and world day, while the simulation never reads the presentation content; a mod recolours a hob, adds a creature's look or retimes a swing's anticipation by editing data. The art direction this serves is [visual-language.md](visual-language.md); the representation choice and its measurements come from [sprite-rendering-study.md](sprite-rendering-study.md). Cast telegraphs, releases and impacts are the cast cues of [cast-presentation.md](cast-presentation.md), consumed here and never duplicated.
 
 Three rules hold everywhere:
 

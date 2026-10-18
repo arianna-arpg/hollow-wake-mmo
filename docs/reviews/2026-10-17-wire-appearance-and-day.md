@@ -1,5 +1,8 @@
 # What a player wears, and the world's day, on the wire
 
+Initial author record for 784d9b1. The later absent-versus-empty correction, stopped-day correction and final integration gates are recorded in [the Codex finalization review](2026-10-17-wire-finalization.md). The PR now targets main and includes the current #9 integration.
+
+
 Date: 2026-10-17. Author: the Claude coordinator's wire session, branch `claude/dreamy-cerf-31c49f`, stacked on `claude/visuals-feel-6141d3` (pull request 9) because the client seams it feeds exist only there. This record answers the two protocol asks of [2026-10-17-presentation-and-feel.md](2026-10-17-presentation-and-feel.md), which that branch was not allowed to make itself, and claims the files below under [COLLABORATION.md](../COLLABORATION.md) until its pull request merges.
 
 ## What was done
