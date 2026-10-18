@@ -48,6 +48,8 @@ The trial merge's other conflicts (`Messages.cs`, `ZoneHost.cs`, `InterfaceProto
 
 ## Open
 
+- The owner decided the echo's pending replays, answering finding 2 of the combat session's re-review of `cc0e1d4` on the request: "Pending echo replays expire while the echo cannot act, so a stun counters the echo." So an inactive echo retains no pending uses: a use the owner resolves while the echo is stunned, frozen or otherwise unable to act expires rather than banking, which keeps invariant 2 (every bank caps and decays) and keeps a stun a counter to an echo. The correction belongs with the fixes the re-review named, with a regression that an owner casting during the echo's stun yields no replay afterward.
+
 - The owner's totem decision is resolved above. The independent follow-up corrects the burst replay loss and completes the four #20 release-policy regressions. Final performance evidence and Claude review remain pending; the original measurements above describe the authored head, not the later integrated source.
 
 ## Asks of Codex
