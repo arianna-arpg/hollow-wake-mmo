@@ -37,18 +37,8 @@ public class MorphTests
         return data;
     }
 
-    /// <summary>A summon or deploy that raises more bodies in one press than its group may hold.</summary>
-    private static bool CountPastCap(View v) =>
-        Math.Clamp(Math.Round(v.Num("count")), 1, v.Rule("minions.max_per_cast", 32)) > Math.Max(1, Math.Round(v.Num("max_active")));
-
-    /// <summary>A summon or deploy that raises its bodies for good (a lifetime of zero; the attribute floors a duration above zero).</summary>
-    private static bool ForGood(View v) => v.Num(v.Point.Family.Name == "summon" ? "duration" : "lifetime") <= 0;
-
     /// <summary>The run moved bodies of the crowd: a shove that moves nothing is not the anchor finding.</summary>
     private static bool Displaced(Violation v) => v.Outcome is { Moved: > 0 };
-
-    private const string OnePressUncapped =
-        "SummonRecipe.Wave asks MinionService.MakeRoom to fit a cast's bodies, and MakeRoom dismisses only bodies already standing: it never caps the cast's own count, so one summon or deploy whose count passes max_active stands every body it raises, though minions.md says past the capacity the oldest bodies are dismissed";
 
     /// <summary>
     /// Defects the morph test found and keeps finding, and what it lists as exempt: each matches violations of one
@@ -82,16 +72,6 @@ public class MorphTests
             "an area sets no from on its hit list (nor does a field on its pulse), so anchor from measures from the caster, where deliveries.md says from is where the effect acts")
         {
             Shows = Displaced,
-        },
-        new("summon", "bounded", "stood at once, past the cap", OnePressUncapped) { When = CountPastCap },
-        new("deploy", "bounded", "stood at once, past the cap", OnePressUncapped) { When = CountPastCap },
-        new("summon", "left behind", "past its owner's cap", OnePressUncapped + "; raised for good, those bodies stand past the cap to the end")
-        {
-            When = v => CountPastCap(v) && ForGood(v),
-        },
-        new("deploy", "left behind", "past its owner's cap", OnePressUncapped + "; raised for good, those bodies stand past the cap to the end")
-        {
-            When = v => CountPastCap(v) && ForGood(v),
         },
         new("area", "pipeline", "with no DamageDealt on it",
             "the resource effect takes life with no hit: it adds to the resource directly (DamageHandlers.cs ResourceHandler), so a drain on a struck body lowers its life outside the stage ladder; the grammar's invariant 1 names it as the baseline exception")

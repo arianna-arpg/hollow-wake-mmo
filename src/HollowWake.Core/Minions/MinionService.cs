@@ -232,7 +232,9 @@ public sealed class MinionService
 
     /// <summary>
     /// Makes room for <paramref name="incoming"/> bodies under a capacity: counts the owner's living minions
-    /// of the pool group (or of the group without one) and dismisses the oldest until the newcomers fit.
+    /// of the pool group (or of the group without one) and dismisses the oldest until the newcomers fit. Only
+    /// standing bodies can go, so a summon raising more than its capacity in one press asks again for each body
+    /// past it, and its own first bodies go as the oldest.
     /// </summary>
     internal void MakeRoom(Entity owner, string group, string? poolGroup, int capacity, int incoming)
     {

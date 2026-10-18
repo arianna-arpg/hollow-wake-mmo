@@ -27,6 +27,7 @@ internal sealed class MinionArena
             .With(new FactionDef { Id = "blue", Relations = { ["red"] = Stance.Hostile } })
             .With(Summon("t_pool", "{\"type\": \"summon\", \"pool\": [ {\"pattern\": \"remnant_shade\", \"weight\": 1}, {\"pattern\": \"sprig\", \"weight\": 1, \"tags\": [\"t_sprout\"]} ], \"count\": 8, \"max_active\": 8, \"duration\": 0, \"group\": \"t_pool\"}"))
             .With(Summon("t_cap", "{\"type\": \"summon\", \"pattern\": \"sprig\", \"count\": 1, \"max_active\": 2, \"duration\": 0, \"group\": \"t_cap\"}"))
+            .With(Summon("t_overflow", "{\"type\": \"summon\", \"pattern\": \"sprig\", \"count\": 5, \"max_active\": 2, \"duration\": 0, \"group\": \"t_overflow\"}"))
             .With(Summon("t_shared_a", "{\"type\": \"summon\", \"pattern\": \"sprig\", \"count\": 2, \"max_active\": 3, \"duration\": 0, \"group\": \"t_a\", \"pool_group\": \"t_shared\"}"))
             .With(Summon("t_shared_b", "{\"type\": \"summon\", \"pattern\": \"remnant_shade\", \"count\": 2, \"max_active\": 3, \"duration\": 0, \"group\": \"t_b\", \"pool_group\": \"t_shared\"}"))
             .With(Summon("t_rival_a", "{\"type\": \"summon\", \"pattern\": \"sprig\", \"count\": 2, \"max_active\": 4, \"duration\": 0, \"group\": \"t_ra\", \"exclusive_group\": \"t_rivals\"}"))
@@ -67,6 +68,13 @@ internal sealed class MinionArena
                 Effects = { Spec("{\"type\": \"consume_minion\", \"count\": 1, \"pick\": \"oldest\", \"effects\": [ {\"type\": \"event\", \"name\": \"t_consumed\", \"data\": {\"life\": \"consumed_life_max\"}} ]}") },
             })
             // Constructs.
+            .With(new WeaveDef
+            {
+                Id = "t_totem_overflow",
+                Form = "totem",
+                Threads = { "ember" },
+                Effects = { Spec("{\"type\": \"deploy\", \"pattern\": \"ember_totem\", \"count\": 4, \"max_active\": 2, \"group\": \"t_overflow_totems\", \"lifetime\": 30}") },
+            })
             .With(new WeaveDef
             {
                 Id = "t_totem_plain",
@@ -244,6 +252,32 @@ public class MinionTests
         // The replaced body was dismissed, not killed.
         Assert.DoesNotContain(arena.Events.OfType<EntityDied>(), d => d.Entity == firstTwo[0]);
         Assert.Contains(arena.Events.OfType<EntityDespawned>(), d => d.Entity == firstTwo[0]);
+    }
+
+    [Theory]
+    [InlineData("t_overflow", "t_overflow", 5)]
+    [InlineData("t_totem_overflow", "t_overflow_totems", 4)]
+    public void APressPastTheCapEndsAtTheCapWithItsNewestBodies(string weave, string group, int count)
+    {
+        // A summon or a deploy raising more bodies in one press than its group holds (two): each body past the cap
+        // makes room as it is raised, so the press's own first bodies go as the oldest, despawned and not killed.
+        var arena = MinionArena.Create();
+        var slot = arena.Learn(weave);
+        List<Entity> Raised() => arena.Events.OfType<MinionSummoned>().Where(m => m.Group == group).Select(m => m.Minion).ToList();
+        arena.Cast(slot);
+        var first = Raised();
+        Assert.Equal(count, first.Count);
+        Assert.Equal(first.Skip(count - 2), arena.Minions(group));
+        foreach (var gone in first.Take(count - 2))
+        {
+            Assert.Contains(arena.Events.OfType<EntityDespawned>(), d => d.Entity == gone);
+            Assert.DoesNotContain(arena.Events.OfType<EntityDied>(), d => d.Entity == gone);
+        }
+        // A second press replaces the group whole with its own newest two.
+        arena.Cast(slot);
+        var second = Raised().Skip(count).ToList();
+        Assert.Equal(count, second.Count);
+        Assert.Equal(second.Skip(count - 2), arena.Minions(group));
     }
 
     [Fact]
