@@ -145,6 +145,11 @@ public sealed record AxisBinding
     public AttributeFold Fold { get; init; }
     /// <summary>What a fallback attribute is multiplied by: a storm's disc is twice the weave's area radius.</summary>
     public double Factor { get; init; } = 1;
+    /// <summary>
+    /// A property of a sibling's word that multiplies the fallback as well, <c>shape:width_share</c>: a bar
+    /// takes a quarter of the weave's area width, a line all of it.
+    /// </summary>
+    public string? FactorOf { get; init; }
     /// <summary>The number the handler uses when neither the graph nor the attribute or rule gives one.</summary>
     public double? Default { get; init; }
     /// <summary>The word or flag the handler uses when the graph writes none.</summary>
@@ -152,10 +157,19 @@ public sealed record AxisBinding
     /// <summary>A rule the handler or its system reads in place of a parameter.</summary>
     public string? Rule { get; init; }
     /// <summary>
-    /// When the binding applies, over a sibling parameter: <c>wave</c> (stated and not zero), <c>fire=salvo</c>
-    /// or <c>kind!=knockback|buffet</c>. A sibling the graph does not write takes its own binding's default.
+    /// When the handler reads the parameter at all, written or not: terms joined by <c>&amp;</c>, each over a
+    /// sibling parameter or the weave: <c>wave</c> (stated and not zero), <c>!amounts</c> (the graph writes no
+    /// <c>amounts</c>), <c>fire=salvo</c>, <c>kind!=knockback|buffet</c>, <c>shape:anchored</c> (the sibling's
+    /// word has a property its vocabulary declares, see <see cref="AxisBindings.Property"/>) or <c>#melee</c> (the
+    /// weave carries the tag). A sibling the graph does not write takes its own binding's default.
     /// </summary>
     public string? When { get; init; }
+    /// <summary>
+    /// When the handler falls back to the attribute, rule or default, in the same terms as <see cref="When"/>: a
+    /// written value is read whatever this says. A flight's range falls back to the weave's <c>range</c> only
+    /// where no duration is written; with one, an unwritten range leaves the flight unbounded.
+    /// </summary>
+    public string? FallbackWhen { get; init; }
     public bool Implicit { get; init; }
     /// <summary>The axis name within the dimension, when it is not the parameter's: one mechanism, one name.</summary>
     public string? Name { get; init; }
@@ -210,6 +224,7 @@ public static class AxisBindings
     private static readonly ConcurrentDictionary<string, WeaveAttributeBinding> Attributes = new(StringComparer.Ordinal);
     private static readonly ConcurrentDictionary<string, Dimension> Mechanisms = new(StringComparer.Ordinal);
     private static readonly ConcurrentDictionary<string, Func<IEnumerable<string>>> Vocabularies = new(StringComparer.Ordinal);
+    private static readonly ConcurrentDictionary<string, Func<string, double?>> Properties = new(StringComparer.Ordinal);
     private static WeaveAttributeBinding[] _attributeOrder = Array.Empty<WeaveAttributeBinding>();
 
     /// <summary>The relation words a delivery's <c>filter</c> takes (EffectHelpers.Passes).</summary>
@@ -227,6 +242,7 @@ public static class AxisBindings
         Vocabulary("target kinds", () => TargetKinds.All.Select(k => k.Name));
         Vocabulary("trigger kinds", () => TriggerKinds.All.Select(k => k.Name));
         Vocabulary("filters", () => Relations);
+        ShapeProperties();
 
         Deliveries();
         Placements();
@@ -339,9 +355,20 @@ public static class AxisBindings
         return binding.Words;
     }
 
+    /// <summary>
+    /// Declares a property of a vocabulary's words, read live from what the vocabulary's registry says of each
+    /// word: a number, one or zero for a yes or no. A condition reads it as <c>shape:anchored</c> (it holds
+    /// where the property is not zero), a fallback factor as <c>shape:width_share</c>.
+    /// </summary>
+    public static void Property(string registry, string property, Func<string, double?> value) => Properties[registry + ":" + property] = value;
+
+    /// <summary>A property of a word of a vocabulary; null where the vocabulary declares no such property or does not know the word.</summary>
+    public static double? PropertyOf(string registry, string property, string word) =>
+        Properties.TryGetValue(registry + ":" + property, out var value) ? value(word) : null;
+
     // ------------------------------------------------------------ declaration helpers
 
-    private static void Axis(string type, string parameter, Dimension dimension, string unit, string? attribute = null, double? @default = null, double factor = 1, string? rule = null, string? when = null, string? name = null) =>
+    private static void Axis(string type, string parameter, Dimension dimension, string unit, string? attribute = null, double? @default = null, double factor = 1, string? rule = null, string? when = null, string? name = null, string? fallbackWhen = null, string? factorOf = null) =>
         Register(new AxisBinding
         {
             Type = type,
@@ -352,9 +379,11 @@ public static class AxisBindings
             Attribute = attribute,
             Role = attribute is null ? AttributeRole.None : AttributeRole.Fallback,
             Factor = factor,
+            FactorOf = factorOf,
             Default = @default,
             Rule = rule,
             When = when,
+            FallbackWhen = fallbackWhen,
             Name = name,
         });
 
@@ -375,7 +404,7 @@ public static class AxisBindings
         });
 
     /// <summary>An axis that passes through an attribute's modifier stack (<see cref="AttributeRole.Channel"/>): an amount of damage or healing.</summary>
-    private static void Channel(string type, string parameter, Dimension dimension, string unit, string attribute, double? @default = null, string? name = null) =>
+    private static void Channel(string type, string parameter, Dimension dimension, string unit, string attribute, double? @default = null, string? name = null, string? fallbackWhen = null) =>
         Register(new AxisBinding
         {
             Type = type,
@@ -386,6 +415,7 @@ public static class AxisBindings
             Attribute = attribute,
             Role = AttributeRole.Channel,
             Default = @default,
+            FallbackWhen = fallbackWhen,
             Name = name,
         });
 
@@ -481,15 +511,34 @@ public static class AxisBindings
             Implicit = true,
         });
 
+    // ------------------------------------------------------------ the shape registry's words
+
+    /// <summary>
+    /// What a delivery's sizes read of its shape, from the shape itself: whether it is anchored (it extends from
+    /// the caster, so a melee weave's reach lengthens it), whether an angle or a width shapes it, and the share
+    /// of the weave's <c>area.width</c> it takes where content writes no width (its default width at a unit area
+    /// width less its default width at none: all of it for a line, a quarter for a bar, an arc or a wave, none
+    /// for a band, whose width is its radius).
+    /// </summary>
+    private static void ShapeProperties()
+    {
+        static double? Of(string word, Func<Shape, double> property) => Shapes.TryGet(word, out var shape) ? property(shape) : null;
+        Property("shapes", "anchored", w => Of(w, s => s.Anchored ? 1 : 0));
+        Property("shapes", "angle", w => Of(w, s => s.HasAngle ? 1 : 0));
+        Property("shapes", "width", w => Of(w, s => s.HasWidth ? 1 : 0));
+        Property("shapes", "width_share", w => Of(w, s => s.HasWidth ? s.DefaultWidth(1, 1) - s.DefaultWidth(1, 0) : 0));
+    }
+
     // ------------------------------------------------------------ DeliveryHandlers.cs
 
     private static void Deliveries()
     {
-        // area
+        // area: an angle shapes only the shapes it shapes, and a width only those with one, an unwritten width
+        // taking the shape's share of the weave's area.width (EffectHelpers.SizeOf).
         Choice("area", "shape", Geometry, "circle", registry: "shapes");
         Axis("area", "radius", Geometry, Units, "area.radius", 2);
-        Scaled("area", "angle", Geometry, Degrees, "area.angle");
-        Axis("area", "width", Geometry, Units, "area.width");
+        Scaled("area", "angle", Geometry, Degrees, "area.angle", when: "shape:angle");
+        Axis("area", "width", Geometry, Units, "area.width", when: "shape:width", fallbackWhen: "shape:width_share", factorOf: "shape:width_share");
         Axis("area", "inner", Geometry, Fraction);
         Choice("area", "filter", Targeting, "enemy", Relations, "filters");
         Choice("area", "center", Geometry, "focus", new[] { "focus", "source", "point" });
@@ -505,14 +554,16 @@ public static class AxisBindings
         Implicit("area", "aftershock_delay", Timing, Seconds, rule: "delivery.aftershock_delay", @default: 0.15, when: "aftershocks");
         Implicit("area", "pulses", Timing, Count, attribute: "area.pulses");
         Implicit("area", "pulse_interval", Timing, Seconds, rule: "delivery.pulse_interval", @default: 0.4, when: "pulses");
-        Implicit("area", "melee_reach", Geometry, Units, attribute: "melee.reach");
+        // A melee weave's reach lengthens only the shapes that extend from the caster.
+        Implicit("area", "melee_reach", Geometry, Units, attribute: "melee.reach", when: "shape:anchored & #melee");
         Phasing("area");
 
-        // projectile
+        // projectile: a written duration bounds a flight, and an unwritten range then leaves it unbounded; an aimed
+        // fan's spreads replace the spread.
         Axis("projectile", "count", Geometry, Count, "projectile.count", 1, name: "flights");
         Axis("projectile", "speed", Kinematics, UnitsPerSecond, "projectile.speed", 12);
-        Axis("projectile", "range", Kinematics, Units, "range", 12);
-        Scaled("projectile", "spread", Geometry, Degrees, "projectile.spread", 15);
+        Axis("projectile", "range", Kinematics, Units, "range", 12, fallbackWhen: "!duration");
+        Scaled("projectile", "spread", Geometry, Degrees, "projectile.spread", 15, when: "!spread_by_aim");
         Axis("projectile", "pierce", Kinematics, Count, "projectile.pierce", 0);
         Axis("projectile", "radius", Geometry, Units, @default: 0.5);
         Effects("projectile", "on_expire");
@@ -520,8 +571,8 @@ public static class AxisBindings
         FlagOf("projectile", "gravity", Kinematics);
         Choice("projectile", "shape", Geometry, "circle", registry: "shapes");
         Axis("projectile", "shape_size", Geometry, Units);
-        Axis("projectile", "shape_angle", Geometry, Degrees);
-        Axis("projectile", "shape_width", Geometry, Units, "area.width");
+        Axis("projectile", "shape_angle", Geometry, Degrees, when: "shape:angle");
+        Axis("projectile", "shape_width", Geometry, Units, "area.width", when: "shape:width", fallbackWhen: "shape:width_share", factorOf: "shape:width_share");
         Choice("projectile", "fire", Geometry, "fan", new[] { "fan", "volley", "ring", "salvo" }, hidesNumber: true);
         Axis("projectile", "salvo_interval", Timing, Seconds, rule: "delivery.salvo_interval", @default: 0.15, when: "fire=salvo");
         Axis("projectile", "volley_spacing", Geometry, Units, @default: 0.6, when: "fire=volley");
@@ -581,8 +632,8 @@ public static class AxisBindings
         Keys("field", null, "look", "exclusive");
         FlagOf("field", "follow", Kinematics);
         Choice("field", "shape", Geometry, "circle", registry: "shapes");
-        Scaled("field", "angle", Geometry, Degrees, "area.angle");
-        Axis("field", "width", Geometry, Units, "area.width");
+        Scaled("field", "angle", Geometry, Degrees, "area.angle", when: "shape:angle");
+        Axis("field", "width", Geometry, Units, "area.width", when: "shape:width", fallbackWhen: "shape:width_share", factorOf: "shape:width_share");
         Axis("field", "inner", Geometry, Fraction);
         Axis("field", "delay", Timing, Seconds);
         Axis("field", "exposure", Timing, Seconds);
@@ -610,7 +661,8 @@ public static class AxisBindings
 
         // aura
         Axis("aura", "radius", Geometry, Units, "area.radius", 2);
-        Axis("aura", "duration", Timing, Seconds, "duration", 4);
+        // A toggled aura with no written duration lasts until it is turned off; a written one is read either way.
+        Axis("aura", "duration", Timing, Seconds, "duration", 4, fallbackWhen: "toggle=false");
         Axis("aura", "interval", Timing, Seconds, @default: 1);
         Choice("aura", "filter", Targeting, "enemy", Relations, "filters");
         NodeOf("aura", "domain", NodeShape.Modifiers);
@@ -705,13 +757,17 @@ public static class AxisBindings
 
     private static void Payloads()
     {
-        // Every amount passes through the attacker's damage stack, the weave's modifiers joining, in the damage pipeline.
-        Channel("damage", "amount", Payload, Resource, "damage", 10);
+        // Every amount passes through the attacker's damage stack, the weave's modifiers joining, in the damage pipeline;
+        // per-Thread amounts alone mean no split amount, so the default ten stands only where no amounts are written.
+        Channel("damage", "amount", Payload, Resource, "damage", 10, fallbackWhen: "!amounts");
         Channel("damage", "amounts.*", Payload, Resource, "damage", name: "amount.*");
         Choice("damage", "threads", Payload, registry: "threads");
         Choice("damage", "tags", Payload);
         FlagOf("damage", "can_crit", Payload, @default: true);
-        Axis("damage", "effectiveness", Payload, Fraction, "damage.effectiveness");
+        // A written effectiveness scales the amount and the attacker's added damage. Unwritten, the amount is as written
+        // and only the added damage takes the weave's damage.effectiveness (times added.effectiveness, DamagePipeline.AddedEffectiveness).
+        Axis("damage", "effectiveness", Payload, Fraction);
+        Implicit("damage", "added_effectiveness", Payload, Fraction, attribute: "damage.effectiveness", when: "!effectiveness");
         FlagOf("damage", "cannot_kill", Payload);
         Axis("damage", "leech", Payload, Fraction);
         Effects("damage", "on_kill");

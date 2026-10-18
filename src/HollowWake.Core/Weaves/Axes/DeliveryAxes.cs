@@ -10,10 +10,21 @@ namespace HollowWake.Core.Weaves.Axes;
 /// literal, an attribute reference, a formula; a word), by whoever wrote it (the form's or preset's graph, a
 /// glyph's patch, a rider); one it leaves out is placed when the weave states the attribute it falls back to,
 /// or when the handler reads a rule in its place. Implicit bindings place what the handler or its system reads
-/// with no parameter of its own (an area's aftershocks, a fork's angle), under the same conditions.
+/// with no parameter of its own (an area's aftershocks, a fork's angle), under the same conditions. A binding's
+/// condition says when the handler reads the parameter at all, its fallback condition when an unwritten one
+/// falls back.
 /// </summary>
 internal static class DeliveryAxes
 {
+    /// <summary>One node as it is read: the weave, the node, its bindings and what the report placed of it so far.</summary>
+    private sealed class Siblings
+    {
+        public required AxisReading Reading { get; init; }
+        public required AxisNode Node { get; init; }
+        public required IReadOnlyList<AxisBinding> Bindings { get; init; }
+        public Dictionary<string, AxisValue> Stated { get; } = new(StringComparer.Ordinal);
+    }
+
     public static void Read(AxisReading reading)
     {
         foreach (var node in reading.Nodes)
@@ -23,13 +34,13 @@ internal static class DeliveryAxes
             {
                 continue;
             }
-            var stated = new Dictionary<string, AxisValue>(StringComparer.Ordinal);
+            var siblings = new Siblings { Reading = reading, Node = node, Bindings = bindings };
             // Bindings without a condition first, so a condition reads its sibling as the report placed it.
             for (var pass = 0; pass < 2; pass++)
             {
                 foreach (var binding in bindings)
                 {
-                    if ((binding.When is null) != (pass == 0) || binding.Dimension is not { } dimension || binding.ReadBy is not null)
+                    if ((binding.When is null && binding.FallbackWhen is null) != (pass == 0) || binding.Dimension is not { } dimension || binding.ReadBy is not null)
                     {
                         continue;
                     }
@@ -37,25 +48,26 @@ internal static class DeliveryAxes
                     {
                         continue;
                     }
-                    if (stated.ContainsKey(binding.Parameter) || (binding.When is { } when && !Holds(when, node, stated, bindings)))
+                    if (siblings.Stated.ContainsKey(binding.Parameter) || (binding.When is { } when && !Holds(when, siblings)))
                     {
                         continue;
                     }
-                    foreach (var value in Values(reading, node, binding, dimension))
+                    foreach (var value in Values(siblings, binding, dimension))
                     {
                         reading.Add(value);
-                        stated.TryAdd(binding.Parameter, value);
+                        siblings.Stated.TryAdd(binding.Parameter, value);
                     }
                 }
             }
         }
     }
 
-    private static IEnumerable<AxisValue> Values(AxisReading reading, AxisNode node, AxisBinding binding, Dimension dimension)
+    private static IEnumerable<AxisValue> Values(Siblings siblings, AxisBinding binding, Dimension dimension)
     {
+        var node = siblings.Node;
         if (binding.Implicit)
         {
-            if (Unwritten(reading, node, binding, dimension, $"{node.Path}.{binding.Parameter}") is { } value)
+            if (Unwritten(siblings, binding, dimension, $"{node.Path}.{binding.Parameter}") is { } value)
             {
                 yield return value;
             }
@@ -65,13 +77,13 @@ internal static class DeliveryAxes
         {
             if (json is null)
             {
-                if (key is null && Unwritten(reading, node, binding, dimension, path) is { } fallback)
+                if (key is null && (binding.FallbackWhen is not { } fallsBack || Holds(fallsBack, siblings)) && Unwritten(siblings, binding, dimension, path) is { } fallback)
                 {
                     yield return fallback;
                 }
                 continue;
             }
-            if (Written(reading, node, binding, dimension, json, path, key) is { } written)
+            if (Written(siblings.Reading, node, binding, dimension, json, path, key) is { } written)
             {
                 yield return written;
             }
@@ -180,8 +192,9 @@ internal static class DeliveryAxes
     /// A value the graph leaves out: the attribute the handler falls back to when the weave states it, else the
     /// rule it reads; for an implicit word, what the effect states by being in the graph.
     /// </summary>
-    private static AxisValue? Unwritten(AxisReading reading, AxisNode node, AxisBinding binding, Dimension dimension, string path)
+    private static AxisValue? Unwritten(Siblings siblings, AxisBinding binding, Dimension dimension, string path)
     {
+        var (reading, node) = (siblings.Reading, siblings.Node);
         double? number;
         AxisSource source;
         string? detail;
@@ -206,8 +219,18 @@ internal static class DeliveryAxes
         {
             if (binding.Role == AttributeRole.Fallback)
             {
-                number = reading.Fold(attribute) * binding.Factor;
-                detail = binding.Factor == 1 ? "falls back to " + attribute : $"{AxisReport.Format(binding.Factor)} x {attribute}";
+                // A sibling's word may scale the fallback too: a bar takes a quarter of the weave's area width.
+                var factor = binding.Factor;
+                if (binding.FactorOf is { } of)
+                {
+                    if (Property(of, siblings) is not { } share)
+                    {
+                        return null;
+                    }
+                    factor *= share;
+                }
+                number = reading.Fold(attribute) * factor;
+                detail = factor == 1 ? "falls back to " + attribute : $"{AxisReport.Format(factor)} x {attribute}";
             }
             else if (binding.Default is { } @default && Reach(reading, binding, attribute, @default) is { } reached)
             {
@@ -322,25 +345,65 @@ internal static class DeliveryAxes
         return frontier;
     }
 
-    /// <summary>Whether a binding's condition over a sibling parameter holds.</summary>
-    private static bool Holds(string when, AxisNode node, Dictionary<string, AxisValue> stated, IReadOnlyList<AxisBinding> bindings)
+    /// <summary>
+    /// Whether a binding's condition holds: every term joined by <c>&amp;</c> holds, each over a sibling parameter
+    /// or the weave (see <see cref="AxisBinding.When"/>).
+    /// </summary>
+    private static bool Holds(string condition, Siblings siblings)
     {
-        var negate = when.Contains("!=", StringComparison.Ordinal);
-        var cut = when.IndexOf(negate ? "!=" : "=", StringComparison.Ordinal);
-        var parameter = cut < 0 ? when : when[..cut];
-        var effective = Effective(parameter, node, stated, bindings);
+        foreach (var raw in condition.Split('&'))
+        {
+            if (!HoldsTerm(raw.Trim(), siblings))
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private static bool HoldsTerm(string term, Siblings siblings)
+    {
+        if (term.StartsWith('#'))
+        {
+            return siblings.Reading.Weave.Tags.Has(term[1..]);
+        }
+        if (term.StartsWith('!'))
+        {
+            return siblings.Node.Node[term[1..]] is null;
+        }
+        if (term.Contains(':', StringComparison.Ordinal))
+        {
+            return Property(term, siblings) is { } value && value != 0;
+        }
+        var negate = term.Contains("!=", StringComparison.Ordinal);
+        var cut = term.IndexOf(negate ? "!=" : "=", StringComparison.Ordinal);
+        var parameter = cut < 0 ? term : term[..cut];
+        var effective = Effective(parameter, siblings);
         if (cut < 0)
         {
             return effective is not null && effective.Length > 0 && effective is not ("0" or "false" or "none");
         }
-        var words = when[(cut + (negate ? 2 : 1))..].Split('|');
+        var words = term[(cut + (negate ? 2 : 1))..].Split('|');
         var hit = effective is not null && Array.IndexOf(words, effective) >= 0;
         return negate ? !hit : hit;
     }
 
-    /// <summary>A sibling's value as a word: as the graph writes it, else as the report placed it, else its binding's default.</summary>
-    private static string? Effective(string parameter, AxisNode node, Dictionary<string, AxisValue> stated, IReadOnlyList<AxisBinding> bindings)
+    /// <summary>
+    /// A property of a sibling's word, <c>shape:width_share</c>: the word the sibling states, looked up in the
+    /// vocabulary its binding names; null where the vocabulary declares no such property or does not know the word.
+    /// </summary>
+    private static double? Property(string term, Siblings siblings)
     {
+        var colon = term.IndexOf(':');
+        var parameter = term[..colon];
+        var registry = siblings.Bindings.FirstOrDefault(b => b.Parameter == parameter && b.Registry is not null)?.Registry;
+        return registry is not null && Effective(parameter, siblings) is { } word ? AxisBindings.PropertyOf(registry, term[(colon + 1)..], word) : null;
+    }
+
+    /// <summary>A sibling's value as a word: as the graph writes it, else as the report placed it, else its binding's default.</summary>
+    private static string? Effective(string parameter, Siblings siblings)
+    {
+        var (node, stated, bindings) = (siblings.Node, siblings.Stated, siblings.Bindings);
         switch (node.Node[parameter])
         {
             case JsonValue value when value.TryGetValue<bool>(out var flag):

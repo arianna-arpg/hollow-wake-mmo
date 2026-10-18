@@ -40,6 +40,24 @@ entries:
             radius: "weave.area.radius"
             effects: [ { type: damage, amount: 2, threads: [ember] } ]
           - { type: apply_status, status: burning, duration: 3 }
+  - id: t_axes_reads
+    targeting: direction
+    cast_mode: instant
+    min_threads: 0
+    tags: [melee]
+    attributes: { range: 10, duration: 3, area.width: 2, melee.reach: 1, damage: 0, damage.effectiveness: 1.5 }
+    effects:
+      - { type: area, shape: bar, radius: 3 }
+      - { type: area, shape: band, radius: 3 }
+      - { type: area, shape: line, radius: 3 }
+      - { type: area, shape: circle, radius: 3, width: 1, angle: 45 }
+      - type: projectile
+        duration: 2
+        on_hit:
+          - { type: damage, amounts: { ember: 4 } }
+          - { type: damage, amount: 3, effectiveness: 0.5, threads: [ember] }
+          - { type: damage, threads: [ember] }
+      - { type: aura, toggle: true }
 ---
 kind: weaves
 entries:
@@ -148,6 +166,45 @@ entries:
         var area = Assert.Single(values, v => v.Name == "geometry.radius" && v.Effect == "area");
         Assert.Equal((AxisSource.Attribute, 2.0, "area.radius"), (area.Source, area.Number, area.Attribute));
         Assert.DoesNotContain(literals, v => v.Effect == "area" && v.Name == "geometry.radius");
+    }
+
+    [Fact]
+    public void AValueIsPlacedOnlyWhereTheHandlerReadsIt()
+    {
+        var values = Report(Layered.Value, new WeaveSpec { Form = "t_axes_reads" });
+        double? At(string path) => values.SingleOrDefault(v => v.Path == path)?.Number;
+
+        // A width shapes only the shapes with one; unwritten, it is the shape's share of the weave's area width:
+        // a quarter for a bar, all of it for a line, none for a band, whose width is its radius.
+        Assert.Equal(0.5, At("effects[0].width"));
+        Assert.Null(At("effects[1].width"));
+        Assert.Equal(2.0, At("effects[2].width"));
+        // A circle's written width and angle shape nothing, so neither is placed.
+        Assert.Null(At("effects[3].width"));
+        Assert.Null(At("effects[3].angle"));
+
+        // A melee weave's reach lengthens the shapes that extend from the caster (a band, a line), not a bar or a circle.
+        Assert.Equal(new[] { "effects[1].melee_reach", "effects[2].melee_reach" },
+            values.Where(v => v.Name == "geometry.melee_reach").Select(v => v.Path).OrderBy(p => p, StringComparer.Ordinal));
+
+        // A flight with a duration and no range is bounded by its duration: the weave's range is not its range.
+        Assert.Null(At("effects[4].range"));
+        Assert.Contains(values, v => v.Path == "effects[4].duration" && v.Number == 2);
+
+        // Per-Thread amounts alone mean no split amount; a node that writes neither takes ten through the damage channel.
+        Assert.Null(At("effects[4].on_hit[0].amount"));
+        Assert.Equal(4.0, At("effects[4].on_hit[0].amounts.ember"));
+        var unwritten = Assert.Single(values, v => v.Path == "effects[4].on_hit[2].amount");
+        Assert.Equal((10.0, AxisSource.Attribute, "damage"), (unwritten.Number, unwritten.Source, unwritten.Attribute));
+
+        // The weave's damage effectiveness scales only the added damage, and only where the node writes no effectiveness.
+        Assert.Null(At("effects[4].on_hit[1].added_effectiveness"));
+        Assert.Equal(0.5, At("effects[4].on_hit[1].effectiveness"));
+        Assert.Equal(1.5, At("effects[4].on_hit[2].added_effectiveness"));
+        Assert.DoesNotContain(values, v => v.Name == "payload.effectiveness" && v.Source == AxisSource.Attribute);
+
+        // A toggled aura with no written duration lasts until it is turned off: the weave's duration is not its duration.
+        Assert.Null(At("effects[5].duration"));
     }
 
     [Fact]
