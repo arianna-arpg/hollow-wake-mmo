@@ -88,6 +88,7 @@ Before calling work done:
 - **One modifier engine.** Every numeric change to anything is a `Modifier` on an `AttributeSet` (flat, increased, more, override, link; scoped by tags; conditions; gauges). Do not invent parallel stat systems.
 - **Tags, not type checks.** Scope, gate and filter by tags. A new tag costs nothing.
 - **Registries for open sets.** Effect types, mechanism probes, hit stages, trigger kinds, intent handlers, AI actions, objective types, interactable kinds, component binders, content kinds and their validators, attribute families, curves, procedures, generator passes: register, never switch on strings inside systems.
+- **Presentation coverage.** A new effect handler family records its presentation decision in `tests/fixtures/cast-visuals/coverage.json`; the shared client fixture gate checks the effect registry and paired primitives.
 - **Events, not calls.** Systems publish `GameEvent`s; quests, loot, networking and tests subscribe.
 - **Determinism.** Every roll uses an `Rng` derived from a seed. Never `System.Random` or wall-clock time in gameplay code.
 - **Spatial queries are live views.** `Spatial.Within` iterates the grid in place: copy the results before spawning, destroying or moving entities inside the loop, because mutating the grid during iteration throws.
