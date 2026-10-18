@@ -261,6 +261,7 @@ internal sealed class MinionCastHandler : IEffectHandler
                 var direction = new Vector2(point.X - mt.Position.X, point.Y - mt.Position.Y);
                 var order = new EffectContext
                 {
+                    CastId = ctx.CastId,
                     Sim = sim,
                     Source = minion,
                     Target = target,
@@ -417,6 +418,7 @@ internal sealed class ConsumeMinionHandler : IEffectHandler
                 };
                 ExecuteAll(Effects, new EffectContext
                 {
+                    CastId = ctx.CastId,
                     Sim = sim,
                     Origin = ctx.Origin,
                     Source = ctx.Source,

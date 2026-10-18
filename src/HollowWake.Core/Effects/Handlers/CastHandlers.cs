@@ -359,6 +359,7 @@ internal sealed class CastHandler : IEffectHandler
             var scale = DamageScale is null ? 1 : ctx.Eval(DamageScale, 1);
             var cast = new EffectContext
             {
+                CastId = ctx.CastId,
                 Sim = ctx.Sim,
                 Origin = ctx.Origin,
                 Source = ctx.Source,
