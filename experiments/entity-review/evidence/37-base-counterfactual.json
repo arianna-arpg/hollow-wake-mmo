@@ -1,0 +1,14 @@
+{
+  "source": "2d5b3306a5ab3f7915fb92542c7695ebd4b4879b",
+  "removedOnlyPoiIds": [
+    "gnoll_scavenge",
+    "gnoll_moot",
+    "gnoll_pyre",
+    "beastkin_hunt",
+    "beastkin_circle",
+    "beastkin_hold"
+  ],
+  "unchangedFiles": "All other content, including kin patterns/factions/looks, retained",
+  "exactFourZoneJsonEqualsFaunaBase": true,
+  "contentCopy": "C:\\Users\\John\\.codex\\worktrees\\undead-entity-foundation\\MMOARPG\\artifacts\\kin-world-without-candidates-2d5b330"
+}

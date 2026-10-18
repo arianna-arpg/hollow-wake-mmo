@@ -1,0 +1,35 @@
+--- c3099a8/0_0
++++ 2d5b330/0_0
+@@ -6,7 +6,7 @@
+   quest gen.poi.0_0.hamlet.128.128.clear_knot.0: The Hob's Hollow [L1] Find Hob's Hollow; Unmake six Cinder Imp
+   quest gen.poi.0_0.hamlet.128.128.gather_floss.1: Loose Threads [L1] Gather five Thread Floss
+   quest gen.poi.0_0.hamlet.128.128.cull_beasts.2: Teeth in the Hedge [L1] Cull eight Hob
+-  quest gen.poi.0_0.hamlet.128.128.scout_ruin.3: What Stands at the Fallen Hall [L1] Find the Fallen Hall
++  quest gen.poi.0_0.hamlet.128.128.scout_ruin.3: What Stands at the Unquiet House [L1] Find the Unquiet House
+ ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^FFFFFFFFFFFFFFF
+ ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^FFFFFFFFFFFFFFF
+ ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^FFFFFFFFFFFFFF
+--- c3099a8/1_0
++++ 2d5b330/1_0
+@@ -1,7 +1,7 @@
+ zone(1,0) the Hallows: region the Hallows (hallows), level 1, safe False, start False
+-  poi ossuary    the Hollow Reliquary     at (422,39) h=14.4 landmark=barrow faction=weftmarch_compact
+-  poi orc_chaincamp Chainkeeper Camp         at (432,199) h=7.7 landmark=camp_ring faction=weftmarch_compact
+-  poi orc_muster Iron-Tusk Muster         at (292,218) h=11.5 landmark=camp_ring faction=weftmarch_compact
++  poi orc_muster Iron-Tusk Muster         at (422,39) h=14.4 landmark=camp_ring faction=weftmarch_compact
++  poi knot       a Kiln Knot              at (432,199) h=7.7 landmark=knot_stones faction=weftmarch_compact
++  poi ossuary    the Unquiet House        at (292,218) h=11.5 landmark=barrow faction=weftmarch_compact
+ FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+ FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+ FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+@@ -15,8 +15,8 @@
+ FFFFFFFFOOFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+ FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+ FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+-FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFOOFFFFFFFFFFFFFFFFFFF
+-FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFOOFFFFFFFFFFFFFFFFFFF
++FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFKKFFFFFFFFFFFFFFFFFFF
++FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFKKFFFFFFFFFFFFFFFFFFF
+ FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+ FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+ FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
