@@ -3,6 +3,7 @@ using System.Text.Json.Nodes;
 using HollowWake.Core.Attributes;
 using HollowWake.Core.Content;
 using HollowWake.Core.Definitions;
+using HollowWake.Core.Expressions;
 using HollowWake.Core.Weaves.Probes;
 using HollowWake.Core.Tags;
 
@@ -179,8 +180,8 @@ public static class MechanismRegistry
         }
         return parameter switch
         {
-            "children" => w.Raises("projectile.forks") || w.Nodes("projectile").Any(p => NestedProjectile(w, p)),
-            "spends" => !w.Raises("projectile.rehit"),
+            "children" => w.Nodes("projectile").Any(p => w.Holds(p, "forks", WeaveProbe.Counted) || NestedProjectile(w, p)),
+            "spends" => w.Nodes("projectile").Any(p => !w.Holds(p, "rehit", WeaveProbe.Positive)),
             _ => true,
         };
     }
@@ -221,11 +222,15 @@ public static class MechanismRegistry
 
     private static IEnumerable<JsonObject> Constructs(WeaveProbe w) => w.Nodes("deploy").Concat(w.Nodes("spawn"));
 
+    /// <summary>A deploy's count falls back to the weave's <c>summon.count</c>; a spawn's has no attribute behind it.</summary>
     private static bool Construct(WeaveProbe w, string? parameter) => parameter switch
     {
-        "massed" => Constructs(w).Any(n => n["count"] is { } count && !(JsonNum.TryDouble(count, out var c) && c <= 1)),
+        "massed" => w.Holds("deploy", "count", Massed) || w.Holds("spawn", "count", Massed),
         _ => Constructs(w).Any(),
     };
+
+    /// <summary>More than one body, as the handlers round a count.</summary>
+    private static readonly Func<double, bool> Massed = static v => Math.Round(v) > 1;
 
     private static bool Affliction(WeaveProbe w, string? status)
     {
@@ -305,7 +310,9 @@ public sealed class WeaveProbe
 
     /// <summary>
     /// True when the weave itself gives an attribute a positive value: a positive base, or a modifier among
-    /// the weave's own (preset and glyph modifiers) that adds to it, flat positive or by formula.
+    /// the weave's own (preset and glyph modifiers) that adds to it, flat positive or by formula. The probes of
+    /// quantities no node writes read it (a weave's repeats, leech, use bank and levied cooldown); a quantity a node
+    /// may write as well reads both doors through <see cref="Holds(JsonObject, string, Func{double, bool})"/>.
     /// </summary>
     public bool Raises(string attribute)
     {
@@ -325,6 +332,73 @@ public sealed class WeaveProbe
             }
         }
         return false;
+    }
+
+    /// <summary>A quantity that acts at any value but zero, either way round: a turn, a sway, an acceleration.</summary>
+    public static readonly Func<double, bool> Nonzero = static v => v != 0;
+
+    /// <summary>A count as the handlers round it: at least one.</summary>
+    public static readonly Func<double, bool> Counted = static v => Math.Round(v) >= 1;
+
+    /// <summary>A quantity that acts only above zero: a lockout, a delay.</summary>
+    public static readonly Func<double, bool> Positive = static v => v > 0;
+
+    /// <summary>
+    /// Whether a mechanism's quantity holds a value on a node through either of its two doors, the one its handler
+    /// reads: the node's parameter when the node sets it, else the weave attribute the parameter falls back to, as
+    /// <see cref="ProbeBindings"/> names it (none for a parameter with no attribute behind it). A number holds when
+    /// <paramref name="holds"/> says so; an expression on the node, or a weave modifier that reads the caster, may hold
+    /// any value, so it counts.
+    /// </summary>
+    public bool Holds(JsonObject node, string parameter, Func<double, bool> holds)
+    {
+        if (node[parameter] is { } value)
+        {
+            return !JsonNum.TryDouble(value, out var v) || holds(v);
+        }
+        return ProbeBindings.AttributeOf(WeaveGraph.TypeOf(node) ?? "", parameter) is { } attribute && (Gives(attribute) is not { } given || holds(given));
+    }
+
+    /// <summary>Whether some node of the type holds the quantity, as <see cref="Holds(JsonObject, string, Func{double, bool})"/> reads a node.</summary>
+    public bool Holds(string type, string parameter, Func<double, bool> holds)
+    {
+        foreach (var node in Nodes(type))
+        {
+            if (Holds(node, parameter, holds))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /// <summary>
+    /// The value the weave itself gives an attribute, as a handler's fallback reads it before the caster's own
+    /// modifiers join: the weave's base (else the catalog's) folded through the modifier engine with the weave's own
+    /// modifiers under its tags. Null when one of those modifiers reads the caster (a formula, a link, a condition or
+    /// a gauge) or the catalog derives the attribute, since then only a cast can tell.
+    /// </summary>
+    public double? Gives(string attribute)
+    {
+        List<Modifier>? own = null;
+        foreach (var m in Modifiers)
+        {
+            if (m.Attribute != attribute)
+            {
+                continue;
+            }
+            if (m.ValueExpr is not null || m.Form is ModifierForm.Link || m.Condition is not null || m.Gauge is not null)
+            {
+                return null;
+            }
+            (own ??= new List<Modifier>()).Add(m);
+        }
+        double? local = Bases.TryGetValue(attribute, out var b) ? b : null;
+        if (local is null && Content.Get<AttributeDef>(attribute)?.Formula is not null)
+        {
+            return null;
+        }
+        return new AttributeSet(Content.Attributes).Get(attribute, new DictScope(), Tags, own, local);
     }
 
     /// <summary>A cooldown from the form's expression (not a constant zero) or levied through <c>cooldown.added</c>.</summary>

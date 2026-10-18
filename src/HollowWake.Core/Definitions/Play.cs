@@ -75,7 +75,7 @@ public sealed record QuestSlot
     public TagSet PatternTags { get; init; } = TagSet.Empty;
     [JsonPropertyName("item_tags")]
     public TagSet ItemTags { get; init; } = TagSet.Empty;
-    /// <summary>Maximum distance in cells from the giver's point of interest.</summary>
+    /// <summary>Maximum distance in cells from the giver, or the local population's declared anchor.</summary>
     public double Within { get; init; } = 256;
     public bool Hub { get; init; }
     /// <summary>Eligible target level minus this quest's level; omitted means unrestricted.</summary>
@@ -84,6 +84,9 @@ public sealed record QuestSlot
     /// <summary>Pattern slots must resolve to an actual nearby generated spawn point.</summary>
     [JsonPropertyName("local_population")]
     public bool LocalPopulation { get; init; }
+    /// <summary>Local population search origin: $giver (default), or a previously filled POI slot.</summary>
+    [JsonPropertyName("population_at")]
+    public string? PopulationAt { get; init; }
 }
 
 public sealed record ItemRequirement
