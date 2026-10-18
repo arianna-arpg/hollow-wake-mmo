@@ -13,6 +13,7 @@ const out = path.resolve(root, arg('--output') ?? 'experiments/launcher-quick-pl
 mkdirSync(out, { recursive: true });
 const browser = await chromium.launch({ channel: process.platform === 'win32' ? 'msedge' : 'chrome', args: ['--enable-unsafe-swiftshader'] });
 const page = await browser.newPage({ viewport: { width: 1280, height: 800 } });
+await page.addInitScript(() => Object.defineProperty(navigator, 'getGamepads', { value: () => [] }));
 const errors = [], results = {};
 page.on('pageerror', error => errors.push(error.message));
 let holdNext = false, hold = false, pending = [], selections = 0, movement = 0;
@@ -32,6 +33,12 @@ const release = () => {
 };
 const ready = () => page.waitForFunction(() => window.hollowWake?.inWorld && window.hollowWake.self() && !window.hollowWake.loading.active);
 const waiting = () => page.waitForFunction(() => window.hollowWake?.counts.characterLists > 0 && window.hollowWake.loading.active && !window.hollowWake.inWorld);
+const wakeRemembered = async () => {
+  await page.waitForFunction(() => window.hollowWake?.entry?.seats.some(s => s.character));
+  assert.equal(await page.evaluate(() => window.hollowWake.inWorld), false, 'quick play waits for explicit Wake in Mu');
+  await page.locator('.entry-roster button').first().click();
+  await page.locator('.entry-card button').first().click();
+};
 try {
   let releaseBoot;
   const bootWork = new Promise(resolve => { releaseBoot = resolve; });
@@ -49,8 +56,9 @@ try {
   results.boot = 'Crossing appears while the client module loads; quick login then waits for first-time creation';
 
   holdNext = true;
-  await page.locator('#login-new-name').fill('Crossing');
-  await page.locator('#login-create').click();
+  await page.locator('.entry-roster button').first().click();
+  await page.locator('.entry-card input').fill('Crossing');
+  await page.locator('.entry-card button').first().click();
   await waiting();
   assert.equal(selections, 1, 'one automatic character selection');
   const beforeMovement = movement;
@@ -73,11 +81,12 @@ try {
   const moved = await page.evaluate(([x, y]) => { const s = window.hollowWake.self(); return Math.hypot(s.x - x, s.y - y); }, position);
   assert.ok(moved > .5, `fresh input moves the hero (${moved})`);
   await page.screenshot({ path: path.join(out, '03-playing.png') });
-  results.entry = 'Automatic selection shows a playable Crossing, waits for hero and terrain, quarantines held input, then accepts fresh gameplay input';
+  results.entry = 'Create and Wake shows a playable Crossing, waits for hero and terrain, quarantines held input, then accepts fresh gameplay input';
 
   holdNext = true;
   const beforeResume = selections;
   await page.reload();
+  await wakeRemembered();
   await waiting();
   assert.equal(selections, beforeResume + 1, 'remembered character resumes exactly once');
   await page.getByRole('button', { name: 'Cancel', exact: true }).click();
@@ -90,6 +99,7 @@ try {
   holdNext = true;
   await page.locator('#login-connect').click();
   await page.waitForFunction(n => window.hollowWake.counts.characterLists > n, lists);
+  await wakeRemembered();
   await waiting();
   assert.equal(selections, beforeResume + 2);
   release();

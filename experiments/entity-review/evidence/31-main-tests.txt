@@ -1,0 +1,12 @@
+Test run for C:\Users\John\.codex\worktrees\entity-main-audit\MMOARPG\tests\HollowWake.Core.Tests\bin\Debug\net10.0\HollowWake.Core.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+
+Passed!  - Failed:     0, Passed:   801, Skipped:     0, Total:   801, Duration: 29 s - HollowWake.Core.Tests.dll (net10.0)
+Test run for C:\Users\John\.codex\worktrees\entity-main-audit\MMOARPG\tests\HollowWake.Server.Tests\bin\Debug\net10.0\HollowWake.Server.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+
+Passed!  - Failed:     0, Passed:    53, Skipped:     0, Total:    53, Duration: 20 s - HollowWake.Server.Tests.dll (net10.0)
+Test run for C:\Users\John\.codex\worktrees\entity-main-audit\MMOARPG\tests\HollowWake.Client.Tests\bin\Debug\net10.0\HollowWake.Client.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+
+Passed!  - Failed:     0, Passed:   128, Skipped:     0, Total:   128, Duration: 5 s - HollowWake.Client.Tests.dll (net10.0)

@@ -1,0 +1,57 @@
+{
+  "baseline_commit": "26b9e46",
+  "baseline": [
+    {
+      "file": "app-DkbBm04v.js",
+      "bytes": 1425644,
+      "gzip_bytes": 353636
+    },
+    {
+      "file": "content-OEIng8U1.js",
+      "bytes": 3500,
+      "gzip_bytes": 2008
+    },
+    {
+      "file": "index-DkLbQuB8.js",
+      "bytes": 30840,
+      "gzip_bytes": 12466
+    }
+  ],
+  "candidate": [
+    {
+      "file": "ability-icons-mVDshZSq.js",
+      "bytes": 109600,
+      "gzip_bytes": 15107
+    },
+    {
+      "file": "app-Dud4nwHC.js",
+      "bytes": 1448137,
+      "gzip_bytes": 358372
+    },
+    {
+      "file": "index-D6aJn786.js",
+      "bytes": 29374,
+      "gzip_bytes": 11895
+    },
+    {
+      "file": "preload-helper-Comj8caF.js",
+      "bytes": 5037,
+      "gzip_bytes": 2720
+    }
+  ],
+  "baseline_total": {
+    "bytes": 1459984,
+    "gzip_bytes": 368110
+  },
+  "candidate_total": {
+    "bytes": 1592148,
+    "gzip_bytes": 388094
+  },
+  "catalog": {
+    "before_bytes": 575456,
+    "after_bytes": 109519,
+    "entries": 388,
+    "bindings": 234
+  },
+  "note": "Raw and gzip file sizes, not a claim of gzip transfer by the game server. Candidate boot awaits the separate artwork chunk."
+}

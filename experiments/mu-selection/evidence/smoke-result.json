@@ -1,0 +1,44 @@
+{
+  "started": "2026-10-18T03:56:41.532Z",
+  "finished": "2026-10-18T03:58:46.818Z",
+  "status": "passed",
+  "stages": [
+    {
+      "name": "smoke-web",
+      "status": "passed",
+      "started": "2026-10-18T03:56:43.358Z",
+      "code": 0,
+      "signal": null,
+      "passed": 30,
+      "total": 30,
+      "skipped": [],
+      "finished": "2026-10-18T03:58:00.453Z"
+    },
+    {
+      "name": "import-godot",
+      "status": "passed",
+      "started": "2026-10-18T03:58:00.455Z",
+      "code": 0,
+      "signal": null,
+      "finished": "2026-10-18T03:58:05.905Z"
+    },
+    {
+      "name": "smoke-godot",
+      "status": "passed",
+      "started": "2026-10-18T03:58:05.905Z",
+      "code": 0,
+      "signal": null,
+      "passed": 31,
+      "total": 31,
+      "skipped": [
+        "appearance rendering: headless display; geometry/card performance and readability require graphical evidence",
+        "theme rendered pixels: headless display; theme state checked above"
+      ],
+      "finished": "2026-10-18T03:58:46.377Z"
+    }
+  ],
+  "nativeRendering": "not covered by headless mode",
+  "cleanupErrors": [],
+  "commit": "4b8143ce8059592d438bab0ea1e8097f39b35454",
+  "command": "node scripts/test-background.mjs --suite all --no-build --out experiments/mu-selection/artifacts"
+}

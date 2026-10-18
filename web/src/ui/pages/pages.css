@@ -213,24 +213,6 @@
   box-shadow: 0 0 0 2px var(--state-fit);
 }
 
-.rack-seat .socket-stone {
-  display: grid;
-  place-items: center;
-  width: 11px;
-  height: 11px;
-  border-radius: 50%;
-  background: var(--accent);
-  color: var(--well);
-  font-family: var(--font-num);
-  font-size: 9px;
-  font-weight: 700;
-  line-height: 1;
-}
-
-.rack-seat .socket-stone.dormant {
-  background: var(--state-dormant, var(--ink-muted));
-}
-
 .rack-seat .seat-preview {
   flex: 0 0 40%;
   min-width: 0;

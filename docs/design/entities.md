@@ -46,7 +46,7 @@ Physical creatures use the registered [physical body contract](physical-bodies.m
 
 ## Stature and warband identity
 
-Patterns may bind simulation damage anatomy through `hit_body`, independently of physical mass and conservative movement clearance. Owned bodies retain the same profile as wild bodies. Live height scales its parts; neither allegiance nor appearance selects collision. See [damage anatomy](physical-bodies.md#damage-anatomy).
+Patterns may bind simulation damage anatomy through `hit_body`, independently of physical mass and conservative movement clearance. Owned bodies retain the same profile as wild bodies. Live height scales its parts independently of navigation radius; neither allegiance nor appearance selects collision. See [damage anatomy](physical-bodies.md#damage-anatomy).
 
 The player reads the reference adult stature from `physicality.reference_height`. Ordinary skeletal humanoids share that authoritative height; ordinary Goblins are roughly half as tall. Hobgoblins and exceptional brutes remain intermediate, while Orcs are adult-height or taller with substantially broader bodies. Rare and summoned scaling still uses the existing authoritative transform. Appearance-only scale jitter is disabled on the standard player and skeleton looks and profiled warband bodies; palette variation remains.
 

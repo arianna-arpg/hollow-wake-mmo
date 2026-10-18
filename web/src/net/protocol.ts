@@ -4,6 +4,8 @@
 
 /** The protocol version the server speaks (ProtocolInfo.Version), sent in hello. */
 export const PROTOCOL_VERSION = 1;
+/** ProtocolInfo.EntryFlowFeature */
+export const ENTRY_FLOW_FEATURE = "entry_flow";
 /** ProtocolInfo.CastCuesFeature */
 export const CAST_CUES_FEATURE = "cast_cues";
 /** ProtocolInfo.HitBodiesFeature */
@@ -40,6 +42,7 @@ export interface CreateCharacterMsg {
   t: "create_character";
   name: string;
   calling: string;
+  request_id?: string;
 }
 
 export interface SelectCharacterMsg {
@@ -362,6 +365,9 @@ export interface CharacterListMsg {
   t: "character_list";
   characters: CharacterSummary[];
   callings: string[];
+  entry?: EntryState;
+  created_character_id?: string;
+  request_id?: string;
 }
 
 export interface ErrorMsg {
@@ -631,6 +637,15 @@ export interface CharacterSummary {
   zone: string;
 }
 
+export interface EntryState {
+  flow: string;
+  stage: string;
+  kind: string;
+  presentation: string;
+  can_create: boolean;
+  callings: CallingAvailability[];
+}
+
 export interface WorldInfo {
   seed: Int64;
   chunk_size: number;
@@ -852,6 +867,7 @@ export interface WeaveSeatInfo {
   ready_in: number;
   cooldown: number;
   preview: PreviewLineInfo[];
+  preset?: string;
   icon?: string;
   dormant?: string;
   item?: Int64;
@@ -934,6 +950,11 @@ export interface StationServiceInfo {
   reason?: string;
 }
 
+export interface CallingAvailability {
+  id: string;
+  available: boolean;
+}
+
 export interface OverlayInfo {
   id: string;
   global: boolean;
@@ -974,6 +995,7 @@ export interface ItemFormInfo {
   name: string;
   level: number;
   sockets: number;
+  weave?: string;
 }
 
 export interface StoneFitInfo {
@@ -1015,6 +1037,8 @@ export interface PreviewLineInfo {
 
 export interface FaceInfo {
   label: string;
+  weave?: string;
+  form?: string;
   icon?: string;
 }
 
