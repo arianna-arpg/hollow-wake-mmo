@@ -1,0 +1,84 @@
+{
+  "started": "2026-10-18T01:27:57.616Z",
+  "root": "D:\\Games\\MMOARPG\\artifacts\\pr-22-finalize",
+  "directory": "D:\\Games\\MMOARPG\\artifacts\\pr-22-finalize\\artifacts\\pr22-background\\run-1BonfS",
+  "suite": "all",
+  "status": "passed",
+  "stages": [
+    {
+      "name": "build-server",
+      "status": "passed",
+      "started": "2026-10-18T01:27:57.619Z",
+      "code": 0,
+      "signal": null,
+      "finished": "2026-10-18T01:28:04.278Z"
+    },
+    {
+      "name": "typecheck-web",
+      "status": "passed",
+      "started": "2026-10-18T01:28:04.279Z",
+      "code": 0,
+      "signal": null,
+      "finished": "2026-10-18T01:28:10.053Z"
+    },
+    {
+      "name": "build-web",
+      "status": "passed",
+      "started": "2026-10-18T01:28:10.055Z",
+      "code": 0,
+      "signal": null,
+      "finished": "2026-10-18T01:28:11.444Z"
+    },
+    {
+      "name": "build-godot",
+      "status": "passed",
+      "started": "2026-10-18T01:28:11.446Z",
+      "code": 0,
+      "signal": null,
+      "finished": "2026-10-18T01:28:16.676Z"
+    },
+    {
+      "name": "smoke-web",
+      "status": "passed",
+      "started": "2026-10-18T01:28:21.633Z",
+      "code": 0,
+      "signal": null,
+      "passed": 30,
+      "total": 30,
+      "skipped": [],
+      "finished": "2026-10-18T01:29:37.679Z"
+    },
+    {
+      "name": "import-godot",
+      "status": "passed",
+      "started": "2026-10-18T01:29:37.681Z",
+      "code": 0,
+      "signal": null,
+      "finished": "2026-10-18T01:29:45.348Z"
+    },
+    {
+      "name": "smoke-godot",
+      "status": "passed",
+      "started": "2026-10-18T01:29:45.349Z",
+      "code": 0,
+      "signal": null,
+      "passed": 26,
+      "total": 26,
+      "skipped": [
+        "appearance rendering: headless display; geometry/card performance and readability require graphical evidence",
+        "theme rendered pixels: headless display; theme state checked above"
+      ],
+      "finished": "2026-10-18T01:30:25.277Z"
+    }
+  ],
+  "nativeRendering": "not covered by headless mode",
+  "godot": "C:/Users/John/.codex/worktrees/launcher-quick-play/MMOARPG/artifacts/quick-play/tools/godot/Godot_v4.7.2-stable_mono_win64/Godot_v4.7.2-stable_mono_win64.exe",
+  "server": {
+    "tcp": 59545,
+    "url": "http://127.0.0.1:59546",
+    "name": "harness-run-1BonfS",
+    "data": "D:\\Games\\MMOARPG\\artifacts\\pr-22-finalize\\artifacts\\pr22-background\\run-1BonfS\\data"
+  },
+  "cleanupErrors": [],
+  "finished": "2026-10-18T01:30:25.752Z"
+}

@@ -108,6 +108,28 @@ public partial class ClientWorld : Node3D
         _hasServerNow = true;
     }
 
+    /// <summary>
+    /// The world's day as a message reported it (docs/design/networking-and-persistence.md): enter_world carries the
+    /// day's length and the fraction, the self state the fraction alone; the server time is the client's estimate
+    /// of the server clock as the message arrived. Entering a world forgets the day a previous server said, so a
+    /// server that predates the fields leaves the clock folding. Needs the appearance content, given at startup.
+    /// </summary>
+    public void ObserveDay(double? dayLengthSeconds, double? timeOfDay, double atServerTime, bool entering = false)
+    {
+        if (_day is null)
+        {
+            return;
+        }
+        if (entering)
+        {
+            _day.ForgetServer();
+        }
+        _day.ObserveServer(dayLengthSeconds, timeOfDay, atServerTime);
+    }
+
+    /// <summary>Whether the sky follows the day the server reported rather than the folded zone clock, for the smoke's evidence.</summary>
+    public bool HasServerDay => _day?.Server is not null;
+
     private float? _dayOverride;
 
     /// <summary>A held fraction of the day for previews (the developer options), or null for the server's clock.</summary>

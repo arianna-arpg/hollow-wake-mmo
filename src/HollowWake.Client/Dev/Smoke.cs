@@ -117,11 +117,46 @@ public partial class Smoke : Node
             return;
         }
 
+        Record("Mu vessel scene", login.Entry is not null && login.Entry.Model.Seats.Count > 0, "shared spatial selection is present");
+        await EntryReplySteps();
         var character = login.Characters.FirstOrDefault(c => c.Name == "Smoke");
         if (character is null)
         {
             lists = _main.CharacterLists;
-            login.Create("Smoke", Arg("--calling") ?? login.Callings.FirstOrDefault() ?? "holdfast");
+            var scene = login.Entry!;
+            var calling = Arg("--calling") ?? login.Callings.First();
+            scene.Model.Open(scene.Model.Seats.FindIndex(s => s.Choice.Character is null && s.Choice.Calling == calling));
+            await Frame();
+            var field = scene.FindChild("MuName", true, false) as LineEdit;
+            var wake = scene.FindChild("MuWake", true, false) as Button;
+            if (field is null || wake is null) throw new InvalidOperationException("Mu create card missing");
+            var focused = new HashSet<Control>();
+            var contained = true;
+            for (var i = 0; i < 9; i++)
+            {
+                Input.ParseInputEvent(new InputEventKey { Keycode = Key.Tab, PhysicalKeycode = Key.Tab, Pressed = true });
+                Input.ParseInputEvent(new InputEventKey { Keycode = Key.Tab, PhysicalKeycode = Key.Tab, Pressed = false });
+                await Frame();
+                var focus = GetViewport().GuiGetFocusOwner();
+                contained &= focus?.GetParent() == field.GetParent();
+                if (focus is not null) focused.Add(focus);
+            }
+            Record("Mu card focus", contained && focused.Count == 3, $"Tab visits {focused.Count} controls and stays inside the card={contained}");
+            focused.Clear();
+            for (var i = 0; i < 9; i++)
+            {
+                Input.ParseInputEvent(new InputEventAction { Action = "ui_down", Pressed = true });
+                Input.ParseInputEvent(new InputEventAction { Action = "ui_down", Pressed = false });
+                await Frame();
+                var focus = GetViewport().GuiGetFocusOwner();
+                contained &= focus?.GetParent() == field.GetParent();
+                if (focus is not null) focused.Add(focus);
+            }
+            Record("Mu directional focus", contained && focused.Count == 3, $"directional navigation visits {focused.Count} controls inside the card={contained}");
+            var card = (Control)field.GetParent().GetParent();
+            var rect = card.GetGlobalRect(); var viewport = GetViewport().GetVisibleRect();
+            Record("Mu card layout", rect.Size.X > 0 && rect.Size.Y > 0 && viewport.Encloses(rect), $"card {rect} within {viewport}");
+            field.Text = "Smoke"; wake.EmitSignal(Button.SignalName.Pressed);
             await Until(() => _main.CharacterLists > lists, 20);
             character = login.Characters.FirstOrDefault(c => c.Name == "Smoke");
             Record("create character", character is not null, character is null ? login.Status : $"{character.Name} the {character.Calling}");
@@ -130,7 +165,13 @@ public partial class Smoke : Node
                 return;
             }
         }
-        login.Enter(character.Id);
+        if (!_main.Loading.Active && !_main.InWorld)
+        {
+            var scene = login.Entry!;
+            scene.Model.Open(scene.Model.Seats.FindIndex(s => s.Choice.Character == character.Id));
+            await Frame();
+            (scene.FindChild("MuWake", true, false) as Button)!.EmitSignal(Button.SignalName.Pressed);
+        }
         var entered = await Until(() => _main.InWorld && Self is not null, 20);
         Record("enter world", entered, entered ? $"{Self!.State.Name} at {Fmt(Pos())}" : login.Status);
         if (!entered)
@@ -283,6 +324,11 @@ public partial class Smoke : Node
             }
         }
         await Wait(0.5);
+        lists = _main.CharacterLists;
+        _main.Net.Send(new LeaveWorldMsg());
+        var returned = await Until(() => _main.CharacterLists > lists && !_main.InWorld && login.Visible && login.Entry is not null, 10);
+        Record("return to Mu", returned && Self is null && !_main.Hud.Visible, "server list replaces world presentation with remembered vessels");
+
     }
 
     // ------------------------------------------------------------ the look
@@ -338,6 +384,7 @@ public partial class Smoke : Node
         settings.Set("day_lock", System.Text.Json.Nodes.JsonValue.Create(false));
         await Wait(0.3);
         Record("day cycle", Math.Abs(night - 1.0 / 24) < 0.01 && Math.Abs(evening - 18.5 / 24) < 0.01, $"night at {night:0.00} of the day, evening at {evening:0.00}, the server's day at {world.TimeOfDay:0.00}");
+        Record("server day", world.HasServerDay, world.HasServerDay ? $"the sky follows the day the server reported, at {world.TimeOfDay:0.00}" : "the sky folds the zone clock: the server sent no day");
     }
 
     private sealed record Measurement(string Line, double P95, int Bodies, int Cards);

@@ -300,6 +300,12 @@ public sealed class ContentRegistry
                 }
             }
         }
+        foreach (var kind in ContentKinds.All)
+        {
+            if (kind.ValidateCollection is not { } validate) continue;
+            try { validate(new ValidationContext(registry, report, kind.Name, "", null)); }
+            catch (Exception ex) { report.Error(kind.Name, "", $"Collection validator crashed: {ex.Message}"); }
+        }
         return registry;
     }
 
@@ -440,6 +446,9 @@ public sealed class ContentRegistry
     public IEnumerable<string> KindNames => _byKind.Keys;
 
     public int CountOfKind(string kindName) => _byKind.TryGetValue(kindName, out var d) ? d.Count : 0;
+
+    /// <summary>Whether a definition of the kind named as content names it (<c>statuses</c>, <c>patterns</c>) exists under the id.</summary>
+    public bool HasOfKind(string kindName, string id) => _byKind.TryGetValue(kindName, out var d) && d.ContainsKey(id);
 
     public JsonObject? Raw(string kind, string id) => _raw.TryGetValue(kind, out var k) && k.TryGetValue(id, out var r) ? r.Object : null;
 

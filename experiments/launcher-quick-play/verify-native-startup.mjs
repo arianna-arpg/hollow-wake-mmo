@@ -1,6 +1,6 @@
 // Run against a local server (the managed playtest ports by default). A TCP proxy delays the real entry response, not the UI.
 import assert from 'node:assert/strict';
-import { spawn } from 'node:child_process';
+import { startProcess, waitProcess } from '../../scripts/test-background.mjs';
 import { createServer, connect } from 'node:net';
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
@@ -15,12 +15,15 @@ const port = Number(arg('--port') ?? config.port);
 assert.ok(Number.isInteger(port) && port > 0 && port <= 65535, 'pass a valid --port');
 const out = path.resolve(root, arg('--output') ?? `experiments/launcher-quick-play/output/${executable ? 'combined-export' : 'combined-native'}`);
 mkdirSync(out, { recursive: true });
-const run = (command, args) => new Promise((resolve, reject) => {
-  const child = spawn(command, args, { cwd: root, windowsHide: true });
-  let text = '';
-  child.stdout.on('data', b => text += b); child.stderr.on('data', b => text += b);
-  child.once('error', reject); child.once('exit', code => resolve({ code, text }));
-});
+const graphical = process.argv.includes('--isolated-graphical');
+const userData = path.join(out, 'native-user'); mkdirSync(userData, { recursive: true });
+let runId = 0;
+const run = async (command, args) => {
+  const log = path.join(out, `process-${++runId}.log`);
+  const process = startProcess(command, args, { cwd: root, log, env: { ...globalThis.process.env, APPDATA: userData, XDG_DATA_HOME: userData } });
+  const result = await waitProcess(process, 120000);
+  return { code: result.code, text: readFileSync(log, 'utf8') };
+};
 const account = `native-${Date.now()}`;
 const seed = await run('dotnet', ['run', '--project', 'src/HollowWake.Tools', '--no-build', '--', 'probe', '--host', '127.0.0.1', '--port', String(port), '--account', account, '--seconds', '3']);
 assert.equal(seed.code, 0, seed.text);
@@ -53,17 +56,17 @@ const proxy = createServer(client => {
 });
 await new Promise(resolve => proxy.listen(0, '127.0.0.1', resolve));
 try {
-  const args = [...(executable ? [] : ['--path', path.join(root, 'src/HollowWake.Client')]), '--',
+  const args = [...(graphical ? [] : ['--headless']), ...(executable ? [] : ['--path', path.join(root, 'src/HollowWake.Client')]), '--',
     '--host', '127.0.0.1', '--port', String(proxy.address().port), '--account', account,
-    '--profile', 'combined-native', '--quick-play-smoke', '--shots', out];
+    '--profile', 'combined-native', '--isolated-input', '--quick-play-smoke', '--shots', out];
   const result = await run(executable ?? godot, args);
   writeFileSync(path.join(out, 'client.log'), result.text);
   assert.equal(result.code, 0, result.text);
   assert.match(result.text, /QUICKPLAY CROSSING/);
   assert.match(result.text, /QUICKPLAY READY: entered the world; Crossing complete/);
   assert.match(result.text, /QUICKPLAY SMOKE PASS/);
-  assert.equal(selections, 1, 'one automatic selection passes through the real server');
-  const results = { selections, result: 'Automatic character resume, visible Crossing during delayed entry, terrain readiness and subsequent gameplay movement passed', client: executable ? 'exported' : 'source' };
+  assert.equal(selections, 1, 'one explicit Wake passes through the real server');
+  const results = { selections, result: 'Play waits in Mu; explicit Wake, delayed Crossing, terrain readiness and gameplay movement passed', client: executable ? 'exported' : 'source', rendering: graphical ? 'captured' : 'not covered in headless mode' };
   writeFileSync(path.join(out, 'results.json'), JSON.stringify(results, null, 2));
   console.log(JSON.stringify(results, null, 2));
 } finally {

@@ -1,0 +1,8 @@
+{
+  "branchLinks": "Selected branch and resumable Codespace link agree; narrow layout fits",
+  "firstRun": "Play opens Mu; Name and Wake creates and enters the selected character",
+  "backgroundLogin": "Remembered vessel gets DOM focus during background login; movement stays paused; Enter works after activation without a click",
+  "remembered": "Reload focuses the remembered vessel and waits for explicit Wake",
+  "resumeMilliseconds": 1650,
+  "pageErrors": []
+}

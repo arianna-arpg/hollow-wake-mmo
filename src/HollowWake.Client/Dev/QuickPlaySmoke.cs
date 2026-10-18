@@ -12,8 +12,14 @@ public partial class QuickPlaySmoke(Main main, string[] args) : Node
             var at = Array.IndexOf(args, "--shots");
             var shots = Path.GetFullPath(at >= 0 ? args[at + 1] : "artifacts/quick-play-smoke");
             Directory.CreateDirectory(shots);
-            await Until(() => main.CharacterLists > 0 && main.Loading.Active && !main.InWorld);
-            Check("automatic selection owns the Crossing", main.Loading.Session.Cancel is not null);
+            await Until(() => main.CharacterLists > 0 && main.Login.Entry is not null);
+            Check("quick play waits in Mu for an explicit waking", !main.InWorld && !main.Loading.Active);
+            var scene = main.Login.Entry!;
+            scene.Model.Open(scene.Model.Seats.FindIndex(s => s.Choice.Character is not null));
+            await ToSignal(GetTree(), SceneTree.SignalName.ProcessFrame);
+            (scene.FindChild("MuWake", true, false) as Button)!.EmitSignal(Button.SignalName.Pressed);
+            await Until(() => main.Loading.Active);
+            Check("waking owns the Crossing", main.Loading.Session.Cancel is not null);
             await Shot(Path.Combine(shots, "entry.png"));
             await Until(() => main.InWorld && main.World.Self is not null && !main.Loading.Active);
             Check("hero and terrain are ready before the cover closes", main.World.BuiltChunks > 0);
@@ -48,6 +54,7 @@ public partial class QuickPlaySmoke(Main main, string[] args) : Node
 
     private async Task Shot(string file)
     {
+        if (DisplayServer.GetName() == "headless") { GD.Print("QUICKPLAY SKIP rendered capture requires an isolated graphical session"); return; }
         await ToSignal(RenderingServer.Singleton, RenderingServer.SignalName.FramePostDraw);
         using var image = GetViewport().GetTexture().GetImage();
         Check("captured " + Path.GetFileName(file), image.SavePng(file) == Error.Ok);

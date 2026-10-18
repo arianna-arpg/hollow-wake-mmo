@@ -1,5 +1,7 @@
 using System.Numerics;
 using HollowWake.Core.Components;
+using HollowWake.Core.Content;
+using HollowWake.Core.Definitions;
 using HollowWake.Core.Ecs;
 using HollowWake.Core.Effects;
 using HollowWake.Core.Items;
@@ -200,6 +202,44 @@ public static class Snapshots
         }
     }
 
+    // ------------------------------------------------------------ appearance
+
+    /// <summary>
+    /// What a player wears as others see it: one entry per worn slot, <c>slot=class tag tag ...</c> from the item
+    /// base's class and tags, sorted by slot so two captures of the same gear read the same. Empty when nothing is
+    /// worn. Only players carry it; a monster's pattern says what it wears.
+    /// </summary>
+    public static List<string> AppearanceOf(ContentRegistry content, Equipment? equipment)
+    {
+        if (equipment is null || equipment.BySlot.Count == 0)
+        {
+            return new List<string>();
+        }
+        var list = new List<string>(equipment.BySlot.Count);
+        foreach (var (slot, item) in equipment.BySlot)
+        {
+            if (!content.TryGet<ItemBaseDef>(item.Base, out var b) || b is null)
+            {
+                continue;
+            }
+            list.Add(b.Tags.IsEmpty ? slot + "=" + b.Class : slot + "=" + b.Class + " " + string.Join(' ', b.Tags.Items));
+        }
+        list.Sort(StringComparer.Ordinal);
+        return list;
+    }
+
+    /// <summary>Folds what <see cref="AppearanceOf"/> reads into a fingerprint without allocating: the worn slots and their bases.</summary>
+    private static void AddAppearance(ref FingerprintHash h, Equipment equipment)
+    {
+        ulong worn = 0;
+        foreach (var (slot, item) in equipment.BySlot)
+        {
+            worn += FingerprintHash.Mix((ulong)(uint)slot.GetHashCode() * 31 + (ulong)(uint)item.Base.GetHashCode());
+        }
+        h.Add(worn);
+        h.Add(equipment.BySlot.Count);
+    }
+
     // ------------------------------------------------------------ entity state
 
     public static EntityState Capture(Simulation sim, Entity e) => Capture(sim, e, IsStatic(sim, e));
@@ -250,6 +290,7 @@ public static class Snapshots
             Heading = drawn.Shape is not null ? Hundredths(drawn.Facing) : null,
             Spin = drawn.Spin is { } spin ? Hundredths(spin) : null,
             Until = double.IsNaN(drawn.Until) ? null : Math.Round(drawn.Until, 2),
+            Appearance = id is { IsPlayer: true } ? AppearanceOf(sim.Content, world.Get<Equipment>(e)) : null,
         };
         if (stats is not null)
         {
@@ -311,6 +352,10 @@ public static class Snapshots
             h.Add(HollowWake.Core.Combat.Relations.FactionOf(sim, e));
             h.Add(id.Rarity);
             h.Add(id.IsPlayer);
+            if (id.IsPlayer && world.TryGet<Equipment>(e, out var equipment) && equipment.BySlot.Count > 0)
+            {
+                AddAppearance(ref h, equipment);
+            }
         }
         h.Add(world.TryGet<Interactable>(e, out var interactable) ? interactable.Kind : null);
         h.Add(world.Has<Dead>(e));
@@ -377,6 +422,7 @@ public static class Snapshots
     {
         empty = false;
         if (last.Key != next.Key || last.IsPlayer != next.IsPlayer || last.Static != next.Static
+            || (last.Appearance is not null && next.Appearance is null)
             || !SameKeys(last.Resources, next.Resources) || !SameKeys(last.ResourceMax, next.ResourceMax))
         {
             return null;
@@ -435,7 +481,11 @@ public static class Snapshots
         var maxes = ChangedEntries(last.ResourceMax, next.ResourceMax);
         var flags = SameSet(last.Flags, next.Flags) ? null : next.Flags;
         var statuses = SameSequence(last.Statuses, next.Statuses) ? null : next.Statuses;
-        changes += (resources is null ? 0 : 1) + (maxes is null ? 0 : 1) + (flags is null ? 0 : 1) + (statuses is null ? 0 : 1);
+        // What a player wears travels whole, and an empty list when the last piece comes off.
+        var appearance = ReferenceEquals(last.Appearance, next.Appearance)
+            || (last.Appearance is not null && next.Appearance is not null && SameSequence(last.Appearance, next.Appearance))
+            ? null : next.Appearance;
+        changes += (resources is null ? 0 : 1) + (maxes is null ? 0 : 1) + (flags is null ? 0 : 1) + (statuses is null ? 0 : 1) + (appearance is null ? 0 : 1);
         int? level = null;
         if (last.Level != next.Level)
         {
@@ -474,6 +524,7 @@ public static class Snapshots
             ShapeSize = size,
             Heading = NF(last.Heading, next.Heading),
             Spin = NF(last.Spin, next.Spin),
+            Appearance = appearance,
         };
         empty = changes == 0;
         return delta;
@@ -729,8 +780,14 @@ public static class Snapshots
             inv is null ? new Dictionary<string, double>() : new Dictionary<string, double>(inv.Currency, StringComparer.Ordinal),
             quests,
             log is null ? new Dictionary<string, double>() : new Dictionary<string, double>(log.Reputation, StringComparer.Ordinal),
-            holdings);
+            holdings)
+        {
+            TimeOfDay = TimeOfDay(world),
+        };
     }
+
+    /// <summary>The world's time of day as the wire carries it: a fraction of the day to a hundred-thousandth (under a fiftieth of a second of a half-hour day).</summary>
+    public static double TimeOfDay(WorldState world) => Math.Round(world.TimeOfDay, 5);
 
     /// <summary>
     /// A hash of what <see cref="Self(Simulation, Entity, SelfCache?)"/> reads: level, xp, passives, the

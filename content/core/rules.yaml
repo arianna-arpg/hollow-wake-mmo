@@ -29,6 +29,14 @@ entries:
         shallow_depth: 0.6
         flora_jitter: 0.4
 
+  # The calendar (docs/design/world/landscape.md): how long a day lasts in seconds of world time, and the fraction of
+  # the day a new world wakes at. Every zone shares the one day; the clients draw the sky from the fraction the
+  # server sends, so a rule that reads the time of day and the sky a player sees always agree.
+  - id: landscape
+    values:
+      day_length_seconds: 1800
+      day_start: 0.3
+
   - id: server
     values:
       tick_rate: 20
@@ -144,8 +152,9 @@ entries:
       max_drop: 3
       default_speed: 4.5
       path_max_nodes: 4000
-      # AI movers: a smaller search budget, and plans kept until they run out, the goal moves this
-      # many cells away from the planned goal, or they reach this age.
+      # Movers that are not players search on a smaller budget (a player's walk uses path_max_nodes).
+      # A destination sent again every think, as the AI's chases and follows send it, keeps its plan until
+      # the plan runs out, the goal moves this many cells away from the planned goal, or it reaches this age.
       ai_path_max_nodes: 500
       ai_repath_distance: 2
       ai_repath_seconds: 1.5

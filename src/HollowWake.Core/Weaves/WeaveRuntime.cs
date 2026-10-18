@@ -346,8 +346,8 @@ public sealed partial class WeaveRuntime
             var form = weave.Form;
             var expr = form.CastMode switch
             {
-                CastMode.Channel => form.Channel?.Move ?? form.CastMove,
-                CastMode.Guard => form.Guard?.Move ?? form.CastMove,
+                CastMode.Channel => weave.Channel?.Move ?? form.CastMove,
+                CastMode.Guard => weave.Guard?.Move ?? form.CastMove,
                 _ => form.CastMove,
             };
             factor = expr is null ? rules.CastMove : expr.Evaluate(scope);
@@ -476,7 +476,7 @@ public sealed partial class WeaveRuntime
         }
         AdvanceChain(slot, weave, now);
 
-        var cooldownAt = (face.CooldownAt is { } at ? at == "press" : rules.CooldownAtPress) && !(face.CastMode == CastMode.Channel && face.Form.Channel?.CooldownOnEnd == true);
+        var cooldownAt = (face.CooldownAt is { } at ? at == "press" : rules.CooldownAtPress) && !(face.CastMode == CastMode.Channel && face.Channel?.CooldownOnEnd == true);
         if (sim.World.TryGet<Transform>(caster, out var t))
         {
             var faceAt = target.IsNone ? point : (sim.World.Get<Transform>(target)?.Position ?? point);
@@ -586,7 +586,7 @@ public sealed partial class WeaveRuntime
         {
             case CastMode.Channel:
             {
-                var channel = form.Channel;
+                var channel = weave.Channel;
                 var windup = channel?.Windup is { } w ? Math.Max(0, w.Evaluate(scope)) / speed : 0;
                 state.NextChannelAt = now + windup;
                 state.MaxHold = channel?.MaxHold is { } max ? Math.Max(0, max.Evaluate(scope)) : state.Duration > 0 ? state.Duration : rules.MaxHold;
@@ -603,7 +603,7 @@ public sealed partial class WeaveRuntime
             }
             case CastMode.Charge:
             {
-                var charge = form.Charge;
+                var charge = weave.Charge;
                 var maxTime = (charge?.MaxTime is { } m ? Math.Max(0, m.Evaluate(scope)) : rules.ChargeTime) / speed;
                 var fullHold = charge?.FullHold is { } fh ? Math.Max(0, fh.Evaluate(scope)) : rules.FullHold;
                 state.Duration = maxTime;
@@ -637,7 +637,7 @@ public sealed partial class WeaveRuntime
             }
             default:
             {
-                if (form.Timing is { Kind: TimingKind.Timed })
+                if (weave.Timing is { Kind: TimingKind.Timed })
                 {
                     state.Rng = RngStreams.For(sim, caster, "cast:", weave.Key, 0);
                     state.Marker = state.Duration * state.Rng.Range(0.3, 0.8);
@@ -926,7 +926,7 @@ public sealed partial class WeaveRuntime
                 }
             }
         }
-        if (state.Flawless && weave.Form.Timing is { } timing && timing.Bonus != 0)
+        if (state.Flawless && weave.Timing is { } timing && timing.Bonus != 0)
         {
             (modifiers ??= state.Modifiers).Add(new Modifier { Attribute = "damage", Form = ModifierForm.More, Value = timing.Bonus, Source = "timing" });
         }
@@ -1119,7 +1119,7 @@ public sealed partial class WeaveRuntime
 
     private void AdvanceChannel(Simulation sim, Entity caster, WeaveBook book, Stats stats, CastState cast, CompiledWeave weave, double now)
     {
-        var channel = weave.Form.Channel;
+        var channel = weave.Channel;
         cast.Held = now - cast.StartedAt;
         if (channel?.Brim is { } brim)
         {
@@ -1188,13 +1188,16 @@ public sealed partial class WeaveRuntime
     /// <summary>Who a cast is aimed at for the trigger kinds it raises: its target, else the body it tracks.</summary>
     private static Entity FocusOf(CastState cast) => cast.Target.IsNone ? cast.Focus : cast.Target;
 
-    /// <summary>A channel's beat: <c>channel.interval</c>, else the form's <c>channel_interval</c>, else rule <c>casting.channel_interval</c>; divided by the speed attribute.</summary>
+    /// <summary>
+    /// A channel's beat: the <c>interval</c> of the channel the weave holds (its preset's or its form's), else the
+    /// form's <c>channel_interval</c>, else rule <c>casting.channel_interval</c>; the first divided by the speed attribute.
+    /// </summary>
     private double ChannelInterval(CompiledWeave weave, Stats stats, IExprScope scope)
     {
-        var form = weave.Form;
-        var expr = form.Channel?.Interval ?? form.ChannelInterval;
+        var interval = weave.Channel?.Interval;
+        var expr = interval ?? weave.Form.ChannelInterval;
         var seconds = expr is null ? (_rules?.ChannelInterval ?? 0.5) : expr.Evaluate(scope);
-        var speed = form.Channel?.Interval is null ? 1 : Speed(weave, stats);
+        var speed = interval is null ? 1 : Speed(weave, stats);
         return Math.Max(1.0 / 64, seconds / speed);
     }
 
@@ -1319,7 +1322,7 @@ public sealed partial class WeaveRuntime
     /// </summary>
     private static void BuildRamps(Stats stats, CastState cast, CompiledWeave weave, double held)
     {
-        var ramps = weave.Form.Channel?.Ramps;
+        var ramps = weave.Channel?.Ramps;
         if (ramps is null || ramps.Count == 0)
         {
             return;
@@ -1404,7 +1407,7 @@ public sealed partial class WeaveRuntime
                 {
                     cast.Fill = cast.Duration <= 0 ? 1 : Math.Min(1, cast.Held / cast.Duration);
                     cast.Modifiers.Clear();
-                    if (weave.Form.Charge is { } charge)
+                    if (weave.Charge is { } charge)
                     {
                         foreach (var scale in charge.Scales)
                         {
@@ -1498,7 +1501,7 @@ public sealed partial class WeaveRuntime
     /// <summary>A channel's release: its payload (or its own graph) when the hold was long and full enough; then its persisting pulses.</summary>
     private bool ReleaseChannel(Simulation sim, Entity caster, WeaveBook book, Stats stats, CastState cast, CompiledWeave weave, ref string reason)
     {
-        var channel = weave.Form.Channel;
+        var channel = weave.Channel;
         var fired = false;
         var scope = ScopeOf(cast, weave, stats);
         var brimOk = true;
@@ -1604,7 +1607,7 @@ public sealed partial class WeaveRuntime
         }
         var now = sim.Clock.Time;
         var elapsed = now - cast.StartedAt;
-        if (weave.Form.Timing is { } timing && cast.Mode == CastMode.Cast)
+        if (weave.Timing is { } timing && cast.Mode == CastMode.Cast)
         {
             switch (timing.Kind)
             {
@@ -2245,7 +2248,7 @@ internal sealed class SlotScope : IExprScope
         {
             return WeaveRuntime.StacksNow(_slot, stack, Now);
         }
-        if (key == SlotState.Brim && _weave.Form.Channel?.Brim is { } brim)
+        if (key == SlotState.Brim && _weave.Channel?.Brim is { } brim)
         {
             return WeaveRuntime.BrimNow(_slot, brim, Now);
         }

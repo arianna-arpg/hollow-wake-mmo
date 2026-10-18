@@ -81,7 +81,10 @@ public static class MinionCommands
                 Arrive = (float)command.Arrive,
             };
             b.Target = Entity.None;
-            b.Planned = false;
+            if (sim.World.TryGet<Motion>(r, out var motion))
+            {
+                motion.Planned = false;
+            }
             heeded++;
         }
         sim.Events.Publish(new MinionsCommanded(issuer, command.Name, point, quarry, heeded, defied) { Tick = sim.Clock.Tick });
@@ -171,7 +174,10 @@ public static class MinionCommands
 /// <summary>
 /// The AI actions minions and constructs compose in content: following and assisting their owner, heeling
 /// home on a leash, obeying orders, and the device actions constructs use to cast with their owner's
-/// numbers, spring on what comes near and echo their owner's casts.
+/// numbers, spring on what comes near and echo their owner's casts. Walking leaves through the intents any
+/// actor sends; the leash recall's teleport and a spent trap's going are world rules no intent asks for, so
+/// they stay service calls. The device actions still fire their weaves through <see cref="ConstructCasting"/>,
+/// the one place the AI runs effects itself.
 /// </summary>
 internal static class MinionActions
 {
@@ -291,6 +297,8 @@ internal static class MinionActions
         var radius = rules.Number("minions.recall_radius", 1.5);
         var ang = c.Rng.NextDouble() * Math.PI * 2;
         var to = ot.Position + new Vector3((float)(Math.Cos(ang) * radius), (float)(Math.Sin(ang) * radius), 0);
+        // The leash is a world rule a minion is under, not something it does: no intent teleports, so the
+        // recall stays a service call.
         MinionService.Of(c.Sim).Teleport(c.Entity, ot.Position, to);
         minion.RecallReadyAt = now + rules.Number("minions.recall_cooldown", 5);
         minion.ProgressFrom = c.Transform.Position;
@@ -342,6 +350,7 @@ internal static class MinionActions
         c.Behavior.Target = foe;
         if (ConstructCasting.CastAt(c.Sim, c.Entity, c.Str(p, "weave"), foe) && Flag(p, "consume", true))
         {
+            // A spent trap's going is a world rule, not something it asks for, so it stays a service call.
             MinionService.Of(c.Sim).Dismiss(c.Entity);
         }
     }
@@ -392,7 +401,8 @@ internal static class MinionActions
 /// its caster casts with its owner as the source, so its numbers are the owner's and its kills credit the
 /// owner; any other construct casts as itself. Either way the cast is the construct's (it raises the
 /// <see cref="WeaveCast"/>), and the weave's cooldown, its cast time or <c>minions.construct_interval</c>,
-/// whichever is longest, passes before the same weave fires again.
+/// whichever is longest, passes before the same weave fires again. This is the one place the AI still runs a
+/// weave's effects itself, past the runtime's costs, cast times and checks, rather than sending a cast intent.
 /// </summary>
 internal static class ConstructCasting
 {

@@ -220,13 +220,14 @@ public partial class Main : Node3D
         {
             GD.Print($"server {launch.Host}:{launch.Port} from the command line");
         }
-        _login = new LoginPanel { Name = "Login", DefaultHost = launch.Host, DefaultPort = launch.Port, Skin = _hud.Skin };
+        _login = new LoginPanel { Name = "Login", DefaultHost = launch.Host, DefaultPort = launch.Port, Skin = _hud.Skin, Content = _content, Appearance = _appearance, Suspended = () => _loading.Active };
         AddChild(_login);
 
         _login.ConnectRequested += OnConnect;
-        _login.CreateRequested += (name, calling) => _net.Send(new CreateCharacterMsg(name, calling));
+        _login.CreateRequested += (name, calling) => _net.Send(new CreateCharacterMsg(name, calling) { RequestId = _login.CreationRequestId });
         _login.EnterRequested += SelectCharacter;
         _login.OptionsRequested += OpenOptionsFromLogin;
+        _login.LeaveRequested += () => { _net.Disconnect("Left Mu"); OnClosed("Left Mu"); };
         _net.Closed += (generation, reason) => CallDeferred(nameof(OnConnectionClosed), generation, reason);
 
         RegisterAppliers();
@@ -436,7 +437,7 @@ public partial class Main : Node3D
         // It always draws the interface, so it asks for the interface's states.
         EntityView.HitBodyCatalog = null;
         EntityView.PreciseProjectileSlabs = false;
-        var features = new List<string> { ProtocolInfo.InterfaceFeature, ProtocolInfo.CastCuesFeature, ProtocolInfo.ProjectileSlabsFeature };
+        var features = new List<string> { ProtocolInfo.InterfaceFeature, ProtocolInfo.CastCuesFeature, ProtocolInfo.EntryFlowFeature, ProtocolInfo.ProjectileSlabsFeature };
         if (_settings.Toggle("dev_hit_bodies")) features.Add(ProtocolInfo.HitBodiesFeature);
         if (!OS.GetCmdlineUserArgs().Contains("--full-states") && _settings.Text("snapshot_stream") != "full")
         {
@@ -465,6 +466,7 @@ public partial class Main : Node3D
         _hud.Workspace.CloseCore();
         _hud.Hero.Clear();
         _login.Visible = true;
+        _login.Reset();
         _login.SetStatus("Disconnected: " + reason);
         _world.ClearEntities();
         _castVisuals.Clear();
@@ -523,6 +525,14 @@ public partial class Main : Node3D
                 _login.SetStatus(r.Ok ? "Logged in. Pick a character." : "Login failed: " + r.Error);
                 break;
             case CharacterListMsg list:
+                if (_inWorld)
+                {
+                    _inWorld = false; _hud.InWorld = false; _hud.Visible = false;
+                    _hud.Workspace.CloseCore(); _hud.Hero.Clear();
+                    _world.ClearEntities(); _castVisuals.Clear(); _entryLease?.Finish();
+                    ReleaseLoadingInput();
+                }
+                _login.Visible = !_hud.OptionsOpen;
                 CharacterLists++;
                 _login.ShowCharacters(list);
                 break;
@@ -558,6 +568,7 @@ public partial class Main : Node3D
                 _hud.InWorld = true;
                 _hud.Visible = true;
                 _hud.Hero.ObserveServerTime(enter.ServerTime, LocalNow);
+                _world.ObserveDay(enter.DayLength, enter.TimeOfDay, enter.ServerTime, entering: true);
                 _camera.Follow(Coords.ToGodot(enter.X, enter.Y, enter.Z));
                 _hud.Log($"[color=#{_hud.Skin.Notice("quest").ToHtml(false)}]Entered the world at {enter.X:0}, {enter.Y:0} (zone {Hud.Escape(enter.Zone)}).[/color]");
                 break;
@@ -587,6 +598,10 @@ public partial class Main : Node3D
                 break;
             case SelfStateMsg self:
                 _hud.ApplySelf(self);
+                if (_hud.Hero.HasServerClock)
+                {
+                    _world.ObserveDay(null, self.TimeOfDay, _hud.Hero.ServerNow(LocalNow));
+                }
                 break;
             case WeaveSlotsMsg slots:
                 _hud.ApplySlots(slots);

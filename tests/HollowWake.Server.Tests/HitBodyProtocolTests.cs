@@ -23,19 +23,25 @@ public class HitBodyProtocolTests
         throw new DirectoryNotFoundException();
     }
     [Theory]
-    [InlineData(true)]
-    [InlineData(false)]
-    public async Task AnatomyIsNegotiatedAndComesFromTheServer(bool optedIn)
+    [InlineData(true, true)]
+    [InlineData(true, false)]
+    [InlineData(false, true)]
+    [InlineData(false, false)]
+    public async Task AnatomyIsNegotiatedAndComesFromTheServer(bool optedIn, bool entryFlow)
     {
         var transport=new LoopbackTransport();var stores=new MemoryStores();
         await using var server=new GameServer(new ServerConfig{ContentLayers=new(){ContentDir()},WorldEvents=false},NullLoggerFactory.Instance,transport,stores,stores,stores);
         await server.StartAsync(CancellationToken.None);
         var client=transport.Connect();
-        client.Send(new HelloMsg("hit-body-test",ProtocolInfo.Version){Features=optedIn?new(){ProtocolInfo.HitBodiesFeature, ProtocolInfo.ProjectileSlabsFeature}:new(){ProtocolInfo.ProjectileSlabsFeature}});
+        var features = new List<string> { ProtocolInfo.ProjectileSlabsFeature };
+        if (optedIn) features.Add(ProtocolInfo.HitBodiesFeature);
+        if (entryFlow) features.Add(ProtocolInfo.EntryFlowFeature);
+        client.Send(new HelloMsg("hit-body-test",ProtocolInfo.Version){Features=features});
         server.Step();
         var messages=client.Drain();
         Assert.Equal(optedIn,Assert.Single(messages.OfType<WelcomeMsg>()).Features?.Contains(ProtocolInfo.HitBodiesFeature)==true);
         Assert.Contains(ProtocolInfo.ProjectileSlabsFeature, Assert.Single(messages.OfType<WelcomeMsg>()).Features!);
+        Assert.Equal(entryFlow, Assert.Single(messages.OfType<WelcomeMsg>()).Features?.Contains(ProtocolInfo.EntryFlowFeature) == true);
         if(!optedIn) { Assert.Empty(messages.OfType<HitBodiesMsg>());return; }
         var catalog=Assert.Single(messages.OfType<HitBodiesMsg>());
         Assert.Contains(catalog.Bodies,b=>b.Id=="gnasher_whelp");
