@@ -1,6 +1,7 @@
 using System.Numerics;
 using System.Text.Json.Nodes;
 using HollowWake.Core.Effects;
+using HollowWake.Core.Systems;
 
 namespace HollowWake.Core.Tests.Grammar;
 
@@ -192,8 +193,10 @@ internal static class Families
     /// <summary>
     /// How long a launch lives: the salvo's beats, then every leg (the first, each chain and each fork generation flies
     /// a fresh range, at the speed the last one left it: an acceleration carries across legs; a duration counts from the
-    /// launch and never resets), then the way back. Each salvo beat is scheduled from the one before and waits a whole
-    /// number of ticks, its interval rounded up.
+    /// launch and never resets), then the way back, and a tick for each leg and the way back to land on. Each salvo beat
+    /// is scheduled from the one before and waits a whole number of ticks, its interval rounded up. The way back is no
+    /// longer than the way out plus how far the flight's start stands from where it returns to, flown at the slowest
+    /// speed the flight can have by then, and never past the rule's longest return.
     /// </summary>
     private static double ProjectileSeconds(View v, int count, double forks, double chains, bool returns)
     {
@@ -219,10 +222,33 @@ internal static class Families
         {
             outward = Math.Min(Math.Max(View.Dt, v.Num("duration")), outward);
         }
-        var back = returns ? v.Rule("delivery.return_max_seconds", 6) : 0;
+        var back = 0.0;
+        if (returns)
+        {
+            // A flight returning to its caster from a launch at the aim point has that far to come back besides.
+            var offset = v.Word("return") == "caster" && v.Word("origin") == "point"
+                ? Math.Min(v.Point.Family.Aim.Length(), v.Sets("origin_range") ? Math.Max(0, v.Num("origin_range")) : double.PositiveInfinity)
+                : 0;
+            var distance = Distance(outward, speed, accel, floor) + offset;
+            var turning = accel >= 0 ? speed : Math.Max(floor, speed + accel * outward);
+            back = Math.Min(v.Rule("delivery.return_max_seconds", 6), TimeToTravel(distance, turning, accel, floor)) + View.Dt;
+        }
         var beat = Math.Max(1, Math.Ceiling(Math.Max(View.Dt, v.Num("salvo_interval", v.Rule("delivery.salvo_interval", 0.15))) * MorphArena.TicksPerSecond - 1e-6)) * View.Dt;
         var salvo = v.Word("fire") == "salvo" && count > 1 ? (count - 1) * beat : 0;
-        return salvo + outward + back;
+        return salvo + outward + back + legs * View.Dt;
+    }
+
+    /// <summary>How far a flight goes in a time from a speed under a steady acceleration that never takes the speed below a floor.</summary>
+    internal static double Distance(double seconds, double speed, double accel, double floor)
+    {
+        if (accel >= 0 || speed <= floor)
+        {
+            return accel >= 0 ? speed * seconds + accel * seconds * seconds / 2 : floor * seconds;
+        }
+        var toFloor = (speed - floor) / -accel;
+        return seconds <= toFloor
+            ? speed * seconds + accel * seconds * seconds / 2
+            : (speed + floor) / 2 * toFloor + floor * (seconds - toFloor);
     }
 
     /// <summary>
@@ -409,7 +435,7 @@ internal static class Families
                 markers["follow_up"] = 1;
                 markers["proc"] = 2;
             }
-            return new Budget(reached, 0, 0, seconds, $"1 strike and {echoes} echoes, each on at most {per} bodies") { Markers = markers };
+            return new Budget(reached, 0, 0, seconds + View.Dt, $"1 strike and {echoes} echoes, each on at most {per} bodies") { Markers = markers };
         },
         States = v =>
         {
@@ -470,7 +496,7 @@ internal static class Families
         Budget = v =>
         {
             var leaps = Math.Min(MorphArena.Bodies, Count0(v.Num("count")));
-            return new Budget(1 + leaps, 1, 1, CarrierSeconds, $"the carrier's hit and at most {leaps} leaps");
+            return new Budget(1 + leaps, 1, 1, CarrierSeconds + View.Dt, $"the carrier's hit and at most {leaps} leaps");
         },
         States = v => new[] { new Statement("chain", true, "the graph chains"), Landing(v) },
     };
@@ -527,7 +553,11 @@ internal static class Families
             // Bodies enter once each while nothing moves; with a pull, a drift, a seek or a turn, at most once a tick each.
             var transitions = moves ? b * ((delay + duration) * MorphArena.TicksPerSecond + 2) : b;
             var damage = pulses * b + (v.Fills("on_enter") ? transitions : 0) + (v.Fills("on_exit") ? transitions : 0);
-            return new Budget(damage, 1, 1, delay + duration, $"{pulses} pulses on at most {b} bodies and {transitions} entries or exits")
+            // A field lands after its delay and pulses on the first tick past each interval; it ends at its last pulse or
+            // when its duration is out, whichever comes first, on the tick after.
+            var spacing = Math.Ceiling(interval * MorphArena.TicksPerSecond - 1e-9) * View.Dt;
+            var lasts = v.Sets("pulses") ? Math.Min(duration, (Math.Max(1, Math.Round(v.Num("pulses"))) - 1) * spacing) : duration;
+            return new Budget(damage, 1, 1, delay + lasts + View.Dt, $"{pulses} pulses on at most {b} bodies and {transitions} entries or exits")
             {
                 Markers = new Dictionary<string, double> { ["on_end"] = 1, ["on_land"] = 1, ["on_tick"] = pulses },
             };
@@ -613,8 +643,12 @@ internal static class Families
             var distance = Math.Max(0, v.Num("distance"));
             if (Shoves.Contains(kind))
             {
-                // A shove settles within a second or two; collisions run once per shoved body.
-                return new Budget(2 * b, 0, 0, 3, "the carrier's hit and one collision per shoved body");
+                // A shove starts its body at the speed that carries it the distance (a knockback's and a buffet's scaled
+                // by the weave's knockback; a pull's never longer) and moves it from the next tick until the impulse
+                // falls under the rule's floor, as the displacement system works it out; collisions run once per body.
+                var shoved = kind == "pull" ? distance : distance * v.Attribute("knockback", 1);
+                var settle = shoved <= 0.01 ? 0 : DisplacementSystem.SettleSeconds(v.Sim!, DisplacementSystem.SpeedFor(v.Sim!, (float)shoved));
+                return new Budget(2 * b, 0, 0, settle + 2 * View.Dt, $"the carrier's hit and one collision per shoved body; a shove of {shoved:0.##} settles in {settle:0.##} s");
             }
             var reach = Math.Min(distance, 6);
             var seconds = kind switch
@@ -625,7 +659,7 @@ internal static class Families
                 _ => 0,
             };
             var travel = Math.Max(0.25, v.Num("travel"));
-            return new Budget(b, 0, 0, seconds, $"a {kind} strikes each body in its way once")
+            return new Budget(b, 0, 0, seconds + View.Dt, $"a {kind} strikes each body in its way once")
             {
                 Markers = new Dictionary<string, double> { ["on_end"] = 1, ["on_land"] = 1, ["on_travel"] = Math.Ceiling(reach / travel) + 1 },
             };
@@ -702,7 +736,7 @@ internal static class Families
             var interval = Math.Max(0, v.Num("interval", 0));
             var telegraph = Math.Max(0, v.Num("telegraph", 0));
             var marks = telegraph > 0 ? strikes : 0;
-            return new Budget(strikes * MorphArena.Bodies, marks, marks, interval * Math.Max(0, strikes - 1) + telegraph, $"{strikes} strikes on at most {MorphArena.Bodies} bodies each, {marks} marks");
+            return new Budget(strikes * MorphArena.Bodies, marks, marks, interval * Math.Max(0, strikes - 1) + telegraph + View.Dt, $"{strikes} strikes on at most {MorphArena.Bodies} bodies each, {marks} marks");
         },
         States = v => new[]
         {
@@ -756,7 +790,7 @@ internal static class Families
             {
                 seconds += Math.Max(0, interval + step * (i - 1));
             }
-            return new Budget((1 + extra) * MorphArena.Bodies, 0, 0, seconds, $"{1 + extra} placements on at most {MorphArena.Bodies} bodies each");
+            return new Budget((1 + extra) * MorphArena.Bodies, 0, 0, seconds + View.Dt, $"{1 + extra} placements on at most {MorphArena.Bodies} bodies each");
         },
         States = v => new[] { new Statement("cascade", true, "a cascade"), Landing(v) },
     };
@@ -795,7 +829,7 @@ internal static class Families
             var duration = Math.Max(View.Dt, v.Num("duration"));
             var pulses = Math.Floor(duration / Math.Max(View.Dt, v.Num("interval"))) + 1;
             var damage = pulses * b + (v.Fills("on_enter") ? b : 0) + (v.Fills("on_exit") ? b : 0);
-            return new Budget(damage, 1, 1, duration, $"{pulses} pulses on at most {b} bodies, each body entering once")
+            return new Budget(damage, 1, 1, duration + View.Dt, $"{pulses} pulses on at most {b} bodies, each body entering once")
             {
                 Markers = new Dictionary<string, double> { ["on_end"] = 1, ["on_tick"] = pulses },
             };
@@ -844,7 +878,7 @@ internal static class Families
             var duration = Math.Max(View.Dt, v.Num("duration"));
             var pulses = Math.Floor(duration / Math.Max(View.Dt, v.Num("interval"))) + 1;
             var carried = v.Word("link") == "target";
-            return new Budget(pulses * MorphArena.Bodies, carried ? 2 : 1, carried ? 2 : 1, duration + (carried ? CarrierSeconds : 0), $"{pulses} pulses on at most {MorphArena.Bodies} bodies")
+            return new Budget(pulses * MorphArena.Bodies, carried ? 2 : 1, carried ? 2 : 1, duration + (carried ? CarrierSeconds : 0) + View.Dt, $"{pulses} pulses on at most {MorphArena.Bodies} bodies")
             {
                 Markers = new Dictionary<string, double> { ["on_end"] = 1 },
             };
@@ -910,7 +944,7 @@ internal static class Families
             var count = Math.Clamp((int)Math.Round(v.Num("count")), 1, (int)v.Rule("minions.max_per_cast", 32));
             var cap = Math.Max(1, (int)Math.Round(v.Num("max_active")));
             var life = v.Num(lifetime);
-            return new Budget(0, cap, count, Math.Max(0, life), $"{count} bodies, at most {cap} at once, for {(life > 0 ? $"{life:0.##} s" : "good")}")
+            return new Budget(0, cap, count, life > 0 ? life + View.Dt : 0, $"{count} bodies, at most {cap} at once, for {(life > 0 ? $"{life:0.##} s" : "good")}")
             {
                 Markers = new Dictionary<string, double> { ["on_birth"] = count, ["on_death"] = count },
             };
@@ -989,7 +1023,7 @@ internal static class Families
         {
             var count = Math.Clamp((int)Math.Round(v.Num("count")), 1, 32);
             var life = v.Num("lifetime", 0);
-            return new Budget(0, count, count, Math.Max(0, life), $"{count} bodies {(v.Sets("lifetime") ? $"for {life:0.##} s" : "with no end")}");
+            return new Budget(0, count, count, life > 0 ? life + View.Dt : 0, $"{count} bodies {(v.Sets("lifetime") ? $"for {life:0.##} s" : "with no end")}");
         },
         States = v =>
         {

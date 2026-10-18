@@ -313,6 +313,9 @@ internal sealed class View
     public Point Point { get; }
     public ContentRegistry Content { get; }
 
+    /// <summary>The arena the point runs in, when the view is taken for a run: what the engine's own timing helpers read.</summary>
+    public HollowWake.Core.Sim.Simulation? Sim { get; init; }
+
     /// <summary>Seconds per tick of the arena.</summary>
     public const double Dt = 1.0 / MorphArena.TicksPerSecond;
 
@@ -331,19 +334,26 @@ internal sealed class View
         }
         if (parameter.Attribute is { } attr)
         {
-            // The weave's base: the preset's own, else the shell form's, else the attribute catalog's.
-            if (Point.Family.Attributes.TryGetValue(attr, out var preset))
-            {
-                return Bounded(attr, preset);
-            }
-            if (Content.Get<FormDef>(Point.Family.Shell)?.Attributes.TryGetValue(attr, out var shell) == true)
-            {
-                return Bounded(attr, shell);
-            }
-            var def = Content.Get<AttributeDef>(attr);
-            return Bounded(attr, def?.Base ?? 0);
+            return Attribute(attr, 0);
         }
         return parameter.Default is null ? double.NaN : Convert.ToDouble(parameter.Default, CultureInfo.InvariantCulture);
+    }
+
+    /// <summary>
+    /// A weave attribute as the point's weave holds it before any modifier: the preset's own base, else the shell form's,
+    /// else the attribute catalog's, folded through the catalog's bounds; the fallback for an attribute the catalog lacks.
+    /// </summary>
+    public double Attribute(string attribute, double fallback)
+    {
+        if (Point.Family.Attributes.TryGetValue(attribute, out var preset))
+        {
+            return Bounded(attribute, preset);
+        }
+        if (Content.Get<FormDef>(Point.Family.Shell)?.Attributes.TryGetValue(attribute, out var shell) == true)
+        {
+            return Bounded(attribute, shell);
+        }
+        return Content.Get<AttributeDef>(attribute) is { } def ? Bounded(attribute, def.Base) : fallback;
     }
 
     public double Num(string name, double fallback)

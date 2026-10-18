@@ -58,8 +58,8 @@ internal static class MorphArena
     /// <summary>Bodies one press can strike: the crowd and the caster itself (filters such as all reach it).</summary>
     public static int Bodies => Crowd.Length + 1;
 
-    /// <summary>Seconds past the expected lifetime before what was due to end must be gone.</summary>
-    public const double Margin = 1.0;
+    /// <summary>Seconds past the expected lifetime before what was due to end must be gone: a few ticks, since each family works its expected life out to the tick.</summary>
+    public const double Margin = 3.0 / TicksPerSecond;
 
     /// <summary>Seconds of quiet the arena must keep after that.</summary>
     public const double Quiet = 1.0;
@@ -141,7 +141,7 @@ internal static class MorphArena
 
         // Terminates: through the expected lifetime and a margin, everything the press made that was due to end is gone,
         // nothing is still scheduled or carried, and a quiet second follows.
-        var budget = point.Family.Budget(new View(point, content));
+        var budget = point.Family.Budget(new View(point, content) { Sim = sim });
         outcome.Budget = budget;
         if (!budget.Finite)
         {
