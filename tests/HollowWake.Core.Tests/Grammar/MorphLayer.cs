@@ -6,8 +6,12 @@ using HollowWake.Core.Maths;
 
 namespace HollowWake.Core.Tests.Grammar;
 
-/// <summary>One parameter's sensitivity points (one per value compared, set on the node) and, for an axis with an attribute behind it, its door points (the same values set on the weave's attribute).</summary>
-internal sealed record Sense(Parameter Parameter, IReadOnlyList<Point> Points, IReadOnlyList<Point> Doors);
+/// <summary>
+/// One parameter's sensitivity points in one row (one per value compared, set on the node) and, for an axis with an
+/// attribute behind it, its door points (the same values set on the weave's attribute). <see cref="Row"/> names a
+/// further row; null is the parameter's own.
+/// </summary>
+internal sealed record Sense(Parameter Parameter, IReadOnlyList<Point> Points, IReadOnlyList<Point> Doors, string? Row = null);
 
 /// <summary>
 /// The morph test's points and the scratch content layer they compile from. Every family's sampled points and its
@@ -98,24 +102,28 @@ internal sealed class MorphLayer
     /// <summary>
     /// A family's sensitivity points: for each parameter, one point per value it compares (an axis's range ends, or
     /// every word of a choice), each the family's default sample with the parameter's live overrides, every list filled,
-    /// all on one seed, so the points of one parameter differ on it alone. An axis with an attribute behind it also gets
-    /// its door points: the same values set on the weave's attribute instead of the node.
+    /// all on one seed, so the points of one parameter differ on it alone; then the same for each of the family's further
+    /// rows under that row's overrides. An axis with an attribute behind it also gets its door points: the same values set
+    /// on the weave's attribute instead of the node.
     /// </summary>
     public static List<Sense> Senses(Family family)
     {
         var seed = Rng.Hash64($"morph:{family.Name}:sensitivity");
         var k = 0;
         var result = new List<Sense>();
-        foreach (var parameter in family.Parameters)
+        var rows = family.Parameters.Select(p => (Parameter: p, p.Live, Row: (string?)null))
+            .Concat(family.Rows.Select(r => (Parameter: family.Parameter(r.Parameter), r.Live, Row: (string?)r.Label)));
+        foreach (var (parameter, live, row) in rows)
         {
             Point Make(object value, bool viaAttribute)
             {
-                var p = new Point { Family = family, Id = $"morph_{family.Name}_s{k++:000}", Label = $"{parameter.Name}{(viaAttribute ? "@attr" : "")}={Point.Format(value)}", Seed = seed };
+                var label = $"{parameter.Name}{(viaAttribute ? "@attr" : "")}={Point.Format(value)}{(row is null ? "" : $" ({row})")}";
+                var p = new Point { Family = family, Id = $"morph_{family.Name}_s{k++:000}", Label = label, Seed = seed };
                 foreach (var (name, v) in family.Defaults)
                 {
                     p.Values[name] = v;
                 }
-                foreach (var (name, v) in parameter.Live)
+                foreach (var (name, v) in live)
                 {
                     p.Values[name] = v;
                 }
@@ -135,7 +143,7 @@ internal sealed class MorphLayer
             var doors = parameter.Attribute is not null && !parameter.AttributeOnly && parameter.Kind == ParameterKind.Axis
                 ? values.Select(v => Make(v, true)).ToList()
                 : new List<Point>();
-            result.Add(new Sense(parameter, points, doors));
+            result.Add(new Sense(parameter, points, doors, row));
         }
         return result;
     }

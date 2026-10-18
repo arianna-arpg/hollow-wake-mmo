@@ -214,6 +214,7 @@ internal static class MorphArena
         outcome.Hits = recorder.Hits;
         outcome.MaxLive = recorder.MaxLive;
         outcome.Created = recorder.Made.Count;
+        outcome.Moved = recorder.Moved();
         outcome.Events = recorder.Lines.Select(l => l.Line).ToList();
         outcome.Observable = recorder.Observable();
         return outcome;
@@ -277,6 +278,9 @@ internal static class MorphArena
         public int Hits { get; set; }
         public int MaxLive { get; set; }
         public int Created { get; set; }
+
+        /// <summary>How many of the crowd's bodies stand away from where they stood when the run ended.</summary>
+        public int Moved { get; set; }
 
         public void Broke(string invariant, string message) => Broken.Add((invariant, message));
     }
@@ -529,6 +533,21 @@ internal static class MorphArena
             }
             var i = Array.IndexOf(_crowd, e);
             return i >= 0 ? Crowd[i].Name : $"made {KindOf(e)} {e}";
+        }
+
+        /// <summary>How many of the crowd's bodies stand away from their places (by more than a hair).</summary>
+        public int Moved()
+        {
+            var moved = 0;
+            for (var i = 0; i < _crowd.Length; i++)
+            {
+                var p = _sim.World.Get<Transform>(_crowd[i])?.Position ?? default;
+                if (Vector2.Distance(new Vector2(p.X - Origin.X, p.Y - Origin.Y), Crowd[i].At) > 0.01f)
+                {
+                    moved++;
+                }
+            }
+            return moved;
         }
 
         /// <summary>What the crowd shows of the press, as one comparable line.</summary>

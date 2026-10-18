@@ -42,6 +42,9 @@ public class MorphTests
     private static bool CountPastCap(View v) =>
         Math.Clamp(Math.Round(v.Num("count")), 1, v.Rule("minions.max_per_cast", 32)) > Math.Max(1, Math.Round(v.Num("max_active")));
 
+    /// <summary>The run moved bodies of the crowd: a shove that moves nothing is not the anchor finding.</summary>
+    private static bool Displaced(Violation v) => v.Outcome is { Moved: > 0 };
+
     private const string OnePressUncapped =
         "SummonRecipe.Wave asks MinionService.MakeRoom to fit a cast's bodies, and MakeRoom dismisses only bodies already standing: it never caps the cast's own count, so one summon or deploy whose count passes max_active stands every body it raises, though minions.md says past the capacity the oldest bodies are dismissed";
 
@@ -72,8 +75,21 @@ public class MorphTests
         {
             When = v => Families.Trajectory.All(a => v.Num(a, 0) == 0 || (v.Num(a, 0) < 0 && !OnNode(v, a))),
         },
-        new("move", "sensitive", "choice 'anchor': ",
-            "inside a hit list the context's point is the struck body (EffectContext.WithTarget moves it there), so anchor point measures from the body itself and the shove runs along the facing; areas and fields set no from, so anchor from measures from the caster. For bodies on the aim line beyond the caster all three anchors push the same way; deliveries.md says point is the aim point and from a field's center"),
+        new("move", "sensitive", "choice 'anchor': 'from' and 'point' show the crowd the same",
+            "inside a hit list the context's point is the struck body (EffectContext.WithTarget moves it there), so anchor point measures from the body itself and the shove runs along the facing; areas and fields set no from, so anchor from measures from the caster. For bodies on the aim line beyond the caster all three anchors push the same way; deliveries.md says point is the aim point and from a field's center")
+        {
+            Shows = Displaced,
+        },
+        new("move", "sensitive", "choice 'anchor': 'caster' and 'point' show the crowd the same",
+            "the anchor finding above, seen from the caster: point measures from the struck body, and for bodies on the aim line beyond the caster that pushes them the way the caster's position does")
+        {
+            Shows = Displaced,
+        },
+        new("move", "sensitive", "choice 'anchor': 'from' and 'caster' show the crowd the same",
+            "an area sets no from on its hit list (nor does a field on its pulse), so anchor from measures from the caster, where deliveries.md says from is where the effect acts")
+        {
+            Shows = Displaced,
+        },
         new("summon", "bounded", "stood at once, past the cap", OnePressUncapped) { When = CountPastCap },
         new("deploy", "bounded", "stood at once, past the cap", OnePressUncapped) { When = CountPastCap },
         new("summon", "sensitive", "axis 'max_active' moves nothing",
@@ -169,25 +185,26 @@ public class MorphTests
             examined.AddRange(sense.Points.Select(p => new View(p, layer.Content)));
             var parameter = sense.Parameter;
             var draws = sense.Points.Any(p => parameter.RollsAt(p.Values[parameter.Name])) ? Draws : 1;
-            var shown = sense.Points.Select(p => new Shown(p, Point.Format(p.Values[parameter.Name]), p.Seeds(draws).Select(seed => MorphArena.Run(layer.Content, p, seed).Observable).ToList())).ToList();
+            var shown = sense.Points.Select(p => new Shown(p, Point.Format(p.Values[parameter.Name]), p.Seeds(draws).Select(seed => MorphArena.Run(layer.Content, p, seed)).ToList())).ToList();
             foreach (var s in shown)
             {
-                _output.WriteLine($"{s.Point.Label}: {string.Join(" || ", s.Observables)}");
+                _output.WriteLine($"{s.Point.Label}: {s.Text}");
             }
             var exempt = family.Exempt.TryGetValue(parameter.Name, out var why);
             var sample = sense.Points[0];
+            var row = sense.Row is null ? "" : $" in the {sense.Row} row";
             if (parameter.Kind == ParameterKind.Axis)
             {
                 var moves = !shown[0].Observables.SequenceEqual(shown[1].Observables, StringComparer.Ordinal);
                 if (!moves && !exempt)
                 {
                     violations.Add(new Violation(sample, new View(sample, layer.Content), "sensitive",
-                        $"{parameter.Describe} moves nothing the crowd shows between {string.Join(" and ", shown.Select(s => s.Point.Label))}: {shown[0].Text}"));
+                        $"{parameter.Describe}{row} moves nothing the crowd shows between {string.Join(" and ", shown.Select(s => s.Point.Label))}: {shown[0].Text}") { Outcome = shown[0].Runs[0] });
                 }
                 else if (moves && exempt)
                 {
                     violations.Add(new Violation(sample, new View(sample, layer.Content), "sensitive",
-                        $"{parameter.Describe} is exempt ({why}) but moves the crowd: {string.Join(" / ", shown.Select(s => $"{s.Point.Label}: {s.Text}"))}"));
+                        $"{parameter.Describe}{row} is exempt ({why}) but moves the crowd: {string.Join(" / ", shown.Select(s => $"{s.Point.Label}: {s.Text}"))}") { Outcome = shown[0].Runs[0] });
                 }
                 continue;
             }
@@ -202,12 +219,12 @@ public class MorphTests
                     if (same && !exempt && alike is null)
                     {
                         violations.Add(new Violation(a.Point, new View(a.Point, layer.Content), "sensitive",
-                            $"{parameter.Describe}: '{a.Word}' and '{b.Word}' show the crowd the same{(draws > 1 ? $" over {draws} seeds" : "")}: {a.Text}"));
+                            $"{parameter.Describe}{row}: '{a.Word}' and '{b.Word}' show the crowd the same{(draws > 1 ? $" over {draws} seeds" : "")}: {a.Text}") { Outcome = a.Runs[0] });
                     }
                     else if (!same && (exempt || alike is not null))
                     {
                         violations.Add(new Violation(a.Point, new View(a.Point, layer.Content), "sensitive",
-                            $"{parameter.Describe}: '{a.Word}' and '{b.Word}' are listed as alike ({(exempt ? why : alike!.Reason)}) but show apart: {a.Point.Label}: {a.Text} / {b.Point.Label}: {b.Text}"));
+                            $"{parameter.Describe}{row}: '{a.Word}' and '{b.Word}' are listed as alike ({(exempt ? why : alike!.Reason)}) but show apart: {a.Point.Label}: {a.Text} / {b.Point.Label}: {b.Text}") { Outcome = a.Runs[0] });
                     }
                 }
             }
@@ -216,8 +233,10 @@ public class MorphTests
     }
 
     /// <summary>What one value of a parameter showed the crowd, on each seed it ran on.</summary>
-    private sealed record Shown(Point Point, string Word, List<string> Observables)
+    private sealed record Shown(Point Point, string Word, List<MorphArena.Outcome> Runs)
     {
+        public IEnumerable<string> Observables => Runs.Select(r => r.Observable);
+
         public string Text => string.Join(" || ", Observables);
     }
 

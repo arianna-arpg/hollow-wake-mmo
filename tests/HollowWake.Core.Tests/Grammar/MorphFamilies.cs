@@ -570,6 +570,8 @@ internal static class Families
             new Alike("filter", "ally", "ally_or_self", "a dash strikes the bodies in its way but never its own mover, the caster"),
             new Alike("filter", "not_self", "all", "a dash strikes the bodies in its way but never its own mover, the caster"),
         },
+        // The distance row runs a dash; a shove reads distance through its own path (an impulse, scaled by knockback).
+        Rows = new[] { new Row("distance", "shove", Map(("kind", "knockback"))) },
         Unsampled = new Dictionary<string, string>
         {
             ["who"] = "fixed by the carrier: the source for moves, the struck body for shoves",

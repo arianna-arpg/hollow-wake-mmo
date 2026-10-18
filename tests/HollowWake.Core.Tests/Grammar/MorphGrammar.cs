@@ -112,6 +112,12 @@ internal sealed record Parameter(string Name, ParameterKind Kind, Dimension Dime
 }
 
 /// <summary>
+/// A further sensitivity row for a parameter: the same values compared from the default sample under other live
+/// overrides, so the parameter must also move the crowd there (a shove's distance, beside a dash's).
+/// </summary>
+internal sealed record Row(string Parameter, string Label, IReadOnlyDictionary<string, object> Live);
+
+/// <summary>
 /// Two words of a choice the crowd scenario cannot tell apart, with why: the pairwise check accepts their collapse,
 /// and fails when they show apart after all, so the list stays honest.
 /// </summary>
@@ -202,6 +208,9 @@ internal sealed class Family
 
     /// <summary>Pairs of a choice's words the crowd scenario cannot tell apart, each with why. The check fails when a listed pair shows apart after all.</summary>
     public IReadOnlyList<Alike> Alike { get; init; } = Array.Empty<Alike>();
+
+    /// <summary>Further sensitivity rows, each comparing a parameter's values under its own live overrides.</summary>
+    public IReadOnlyList<Row> Rows { get; init; } = Array.Empty<Row>();
 
     /// <summary>Parameters the table leaves unsampled for now (flags, nodes, presentation), each with why: a later pass turns them into axes or choices.</summary>
     public IReadOnlyDictionary<string, string> Unsampled { get; init; } = new Dictionary<string, string>();
@@ -343,13 +352,20 @@ internal sealed class View
 /// </summary>
 internal sealed record Finding(string Family, string Invariant, string Contains, string Reason)
 {
+    /// <summary>A condition on the point, so the finding is expected only where the point meets it.</summary>
     public Func<View, bool>? When { get; init; }
 
-    public bool Matches(Violation v) => v.Point.Family.Name == Family && v.Invariant == Invariant && v.Message.Contains(Contains, StringComparison.Ordinal) && (When is null || When(v.View));
+    /// <summary>A condition on what the run showed (the violation's outcome), so the finding matches only a violation that shows it.</summary>
+    public Func<Violation, bool>? Shows { get; init; }
+
+    public bool Matches(Violation v) => v.Point.Family.Name == Family && v.Invariant == Invariant && v.Message.Contains(Contains, StringComparison.Ordinal)
+        && (When is null || When(v.View)) && (Shows is null || Shows(v));
 }
 
-/// <summary>One invariant a point broke, with what happened.</summary>
+/// <summary>One invariant a point broke, with what happened, and the run that showed it when there was one.</summary>
 internal sealed record Violation(Point Point, View View, string Invariant, string Message)
 {
+    public MorphArena.Outcome? Outcome { get; init; }
+
     public override string ToString() => $"[{Invariant}] {Message}\n    point: {Point}";
 }
