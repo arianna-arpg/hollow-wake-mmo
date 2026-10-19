@@ -1,0 +1,11 @@
+{
+  "validate": 0,
+  "load": 0,
+  "fight": 0,
+  "protocol": 0,
+  "census": 0,
+  "proving": 1,
+  "worldAudit": 0,
+  "releaseBuild": 0,
+  "replay": 0
+}

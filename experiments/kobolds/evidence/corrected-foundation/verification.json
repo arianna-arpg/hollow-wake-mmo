@@ -1,0 +1,71 @@
+{
+  "source": "082609be05c13da65f2be66d013897e933677e10",
+  "build": {
+    "errors": 0,
+    "warnings": 0
+  },
+  "releaseBuild": {
+    "errors": 0,
+    "warnings": 0
+  },
+  "firstFullDotNet": {
+    "core": 2954,
+    "server": 89,
+    "native": 141,
+    "failed": 0,
+    "skipped": 0
+  },
+  "web": {
+    "tests": 321,
+    "files": 40,
+    "productionBuild": "passed; existing large-bundle advisory"
+  },
+  "porter": 10,
+  "lifecycle": 10,
+  "validate": {
+    "errors": 0,
+    "warnings": 0
+  },
+  "literalKeys": 499,
+  "protocolCurrent": true,
+  "load": {
+    "chunks": 100,
+    "ticks": 200,
+    "entities": 2686,
+    "monsters": 281,
+    "quests": 4
+  },
+  "duel": "Kobold Tunnelguard and Loosed Brigand deal mutual damage",
+  "worldCasesExactlyUnchanged": 16,
+  "replay": {
+    "pairs": 7,
+    "exit": 0,
+    "fullReportEqualsFoundation": true,
+    "ownReferenceEdits": 0
+  },
+  "proving": {
+    "exit": 1,
+    "fullReportEqualsPriorKoboldAndFoundation": true,
+    "inheritedCeilingFailures": 3
+  },
+  "probe": {
+    "features": 6,
+    "status": "passed",
+    "cleanupErrors": []
+  },
+  "smoke": {
+    "browser": 31,
+    "native": 36,
+    "cleanupErrors": [],
+    "inspected": [
+      "01_isometric.png",
+      "16_cards.png",
+      "17_grayscale.png"
+    ],
+    "finding": "Full viewport, terrain, bodies and interface visible; no isolated36 blank/tiny viewport defect.",
+    "nativePixels": "not covered by headless mode",
+    "exitDiagnostics": "5 dummy textures, 2 shaped texts, 1 font, 1 CanvasItem, 26 ObjectDB instances"
+  },
+  "performanceRun": false,
+  "performanceTrace": false
+}

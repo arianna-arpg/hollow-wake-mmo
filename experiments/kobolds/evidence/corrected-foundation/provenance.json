@@ -1,0 +1,40 @@
+{
+  "testedSource": "082609be05c13da65f2be66d013897e933677e10",
+  "parents": [
+    "82860ed057c24e4921e902ce6d51e9f872eefdf1",
+    "1bbaa120730376e1297c4f4a7011291c1f69b542"
+  ],
+  "completeFoundation": "1bbaa120730376e1297c4f4a7011291c1f69b542",
+  "reviewed36": "0c610e4715c5d32002d051eec55d4fa7f7f4f526",
+  "mainIncluded": "f7ef072cc322b93b628229916c5220024e74a89c",
+  "platform": "win-x64",
+  "gitObjects": {
+    "src": "07c8edcd62260fede2272633ef35a9a9a9b6f313",
+    "content": "5cf86137ea89149f1d273d5cb197ebb0614fb1a1",
+    "web": "fb2c05ed4fc0f1a4f3781f607eccea4bdd066507",
+    "scripts": "c32b108f34a01db365c71bbf04ceb7fbc435581d",
+    "tests": "5895a2e484ea7324fcd48f030d3527d67b6ac276",
+    "launcher": "033590aa99e02047868ebcfbf32af0101b120990",
+    "global.json": "1e056533b3e2c3445e506ba547c0579e23439274",
+    "Directory.Build.props": "50af01107374bd2815efe593734d421c5910af53",
+    "HollowWake.sln": "4d6c45d9a667ca56ae4f1df37f4cae03a3bfd20a"
+  },
+  "binaries": {
+    "src/HollowWake.Tools/bin/Debug/net10.0/hollowwake.dll": "3ddcac3e80504653e0198b4039ddd8c83c589b1fa7737cd3af3fd63f52a614df",
+    "src/HollowWake.Tools/bin/Debug/net10.0/HollowWake.Core.dll": "be14f13cbee7382fc1376242ba4a61a963105e823c6614d031cb3c09da59375a",
+    "src/HollowWake.Server.Host/bin/Debug/net10.0/hollowwake-server.dll": "0cbf7c5acd29d3415c56b21c3f2a60477e2844ea1ba857c2fd90c15e5edb9f19",
+    "src/HollowWake.Client/.godot/mono/temp/bin/Debug/HollowWake.Client.dll": "edf71188293dd3c902662ad6bd53efda52628e2d858988c03c9586b905332691",
+    "tests/HollowWake.Core.Tests/bin/Debug/net10.0/HollowWake.Core.Tests.dll": "6d664df59a51822ddd5d2a7d92388278fbf63d90f6b89b7fe76269c036358625",
+    "tests/HollowWake.Server.Tests/bin/Debug/net10.0/HollowWake.Server.Tests.dll": "d16956322a7ca44e15c52bfe86cd4818577839e665255e6137f921f8877d8298",
+    "tests/HollowWake.Client.Tests/bin/Debug/net10.0/HollowWake.Client.Tests.dll": "c29a2dfb06a25763f7dbff26efa64544b4aeded43f7331ad9fe8764bd9e5483c",
+    "src/HollowWake.Tools/bin/Release/net10.0/hollowwake.dll": "cec8fb6aff5519e5366bbbae71e5f47c1b45aad1c1499f167a596fee8dabeeb9",
+    "src/HollowWake.Tools/bin/Release/net10.0/HollowWake.Core.dll": "057a82dd9cb84b560ef1d7de39cef0d40aac1a1a7603da0f7f5d16574dadafa6"
+  },
+  "windowsRuntime": ".NET SDK:\n Version:           10.0.402\n Commit:            a8dd0577c5\n Workload version:  10.0.400-manifests.da132f47\n MSBuild version:   18.9.15+a8dd0577c\n\nRuntime Environment:\n OS Name:     Windows\n OS Version:  10.0.19045\n OS Platform: Windows\n RID:         win-x64\n Base Path:   C:\\Program Files\\dotnet\\sdk\\10.0.402\\\n\n.NET workloads installed:\nThere are no installed workloads to display.\nConfigured to use workload sets when installing new manifests.\nNo workload sets are installed. Run \"dotnet workload restore\" to install a workload set.\n\nHost:\n  Version:      10.0.13\n  Architecture: x64\n  Commit:       4099f83977\n\n.NET SDKs installed:\n  6.0.415 [C:\\Program Files\\dotnet\\sdk]\n  7.0.402 [C:\\Program Files\\dotnet\\sdk]\n  8.0.421 [C:\\Program Files\\dotnet\\sdk]\n  10.0.402 [C:\\Program Files\\dotnet\\sdk]\n\n.NET runtimes installed:\n  Microsoft.AspNetCore.App 6.0.23 [C:\\Program Files\\dotnet\\shared\\Microsoft.AspNetCore.App]\n  Microsoft.AspNetCore.App 7.0.12 [C:\\Program Files\\dotnet\\shared\\Microsoft.AspNetCore.App]\n  Microsoft.AspNetCore.App 8.0.27 [C:\\Program Files\\dotnet\\shared\\Microsoft.AspNetCore.App]\n  Microsoft.AspNetCore.App 10.0.13 [C:\\Program Files\\dotnet\\shared\\Microsoft.AspNetCore.App]\n  Microsoft.NETCore.App 5.0.5 [C:\\Program Files\\dotnet\\shared\\Microsoft.NETCore.App]\n  Microsoft.NETCore.App 5.0.17 [C:\\Program Files\\dotnet\\shared\\Microsoft.NETCore.App]\n  Microsoft.NETCore.App 6.0.23 [C:\\Program Files\\dotnet\\shared\\Microsoft.NETCore.App]\n  Microsoft.NETCore.App 6.0.36 [C:\\Program Files\\dotnet\\shared\\Microsoft.NETCore.App]\n  Microsoft.NETCore.App 7.0.12 [C:\\Program Files\\dotnet\\shared\\Microsoft.NETCore.App]\n  Microsoft.NETCore.App 8.0.18 [C:\\Program Files\\dotnet\\shared\\Microsoft.NETCore.App]\n  Microsoft.NETCore.App 8.0.27 [C:\\Program Files\\dotnet\\shared\\Microsoft.NETCore.App]\n  Microsoft.NETCore.App 10.0.13 [C:\\Program Files\\dotnet\\shared\\Microsoft.NETCore.App]\n  Microsoft.WindowsDesktop.App 5.0.5 [C:\\Program Files\\dotnet\\shared\\Microsoft.WindowsDesktop.App]\n  Microsoft.WindowsDesktop.App 6.0.23 [C:\\Program Files\\dotnet\\shared\\Microsoft.WindowsDesktop.App]\n  Microsoft.WindowsDesktop.App 6.0.36 [C:\\Program Files\\dotnet\\shared\\Microsoft.WindowsDesktop.App]\n  Microsoft.WindowsDesktop.App 7.0.12 [C:\\Program Files\\dotnet\\shared\\Microsoft.WindowsDesktop.App]\n  Microsoft.WindowsDesktop.App 8.0.18 [C:\\Program Files\\dotnet\\shared\\Microsoft.WindowsDesktop.App]\n  Microsoft.WindowsDesktop.App 8.0.27 [C:\\Program Files\\dotnet\\shared\\Microsoft.WindowsDesktop.App]\n  Microsoft.WindowsDesktop.App 10.0.13 [C:\\Program Files\\dotnet\\shared\\Microsoft.WindowsDesktop.App]\n\nOther architectures found:\n  None\n\nEnvironment variables:\n  Not set\n\nglobal.json file:\n  C:\\Users\\John\\.codex\\worktrees\\kobold-scaleclans\\MMOARPG\\global.json\n\nLearn more:\n  https://aka.ms/dotnet/info\n\nDownload .NET:\n  https://aka.ms/dotnet/download\n",
+  "performanceRun": false,
+  "performanceTrace": false,
+  "logNormalization": "Line endings and trailing whitespace only; original outputs retained in ignored artifacts.",
+  "packagingNotes": [
+    "Cleanup guard initially expected the prior 21 import sidecars and stopped before removing any. Inspection identified the new GroundRay.cs.uid, for 22 total, all generated after a verified empty pre-smoke set. Only these scoped untracked sidecars were removed; source files were untouched."
+  ]
+}

@@ -1,0 +1,41 @@
+{
+  "testedSource": "082609be05c13da65f2be66d013897e933677e10",
+  "priorKobold": "82860ed057c24e4921e902ce6d51e9f872eefdf1",
+  "completeFoundation": "1bbaa120730376e1297c4f4a7011291c1f69b542",
+  "worldCases": 16,
+  "worldReportsAndSiteDetailsExactlyEqualPriorKobold": true,
+  "worldGoldenEdits": false,
+  "koboldContentEdits": false,
+  "standardReportExactlyEqualsIncomingActualUnion": true,
+  "standardHash": "9b66bcccb4f086a9",
+  "standardChangedPairs": [
+    {
+      "pair": "loosed_skirmisher:hob",
+      "before": "0d9d4a3110181c7a",
+      "after": "465a4807b0fe94f2"
+    },
+    {
+      "pair": "loosed_skirmisher:boar",
+      "before": "1f6c4b594340b306",
+      "after": "fbf0ac20a5a74103"
+    }
+  ],
+  "otherFivePairsUnchanged": true,
+  "ownReplayReferenceEdits": false,
+  "provingExactlyEqualsPriorKoboldAndIncomingFoundation": true,
+  "provingHash": "4730bef23767a558",
+  "inheritedProvingCeilings": [
+    "proving_bulwark",
+    "proving_plaguer",
+    "proving_pitfighter"
+  ],
+  "literalsExact": 499,
+  "attribution": {
+    "source": "Complete reviewed return-policy correction with pre-existing Fauna boar contribution; no additional Kobold replay effect.",
+    "incomingCounterfactual": "docs/reviews/2026-10-18-layered-ground-return.md: exactly two returning-floor adoption/descent hunks reverted, restoring all seven earlier isolated hashes while retaining layered support and admission.",
+    "actualFoundationControls": "experiments/entity-review/evidence/34-final-union/replay-comparison.json",
+    "controlsScope": "Inherited reviewed evidence, not rerun or relabeled as fresh Kobold controls. New Kobold whole-report equality verifies the actual union.",
+    "floorControls": "Complete foundation standard reports equal at 0.16 and 0.342; exact legacy boar restores incoming36 7dd259e21c8ac0e8 at both floors.",
+    "foundationRuntimeMatchesKoboldExceptAppearanceRegistrations": true
+  }
+}

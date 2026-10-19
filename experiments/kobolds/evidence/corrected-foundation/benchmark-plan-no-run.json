@@ -1,0 +1,114 @@
+{
+  "status": "NO-RUN",
+  "performanceRun": false,
+  "performanceTrace": false,
+  "authorization": "Functional integration and Release provenance only. Separate coordinator START required before any benchmark process.",
+  "functionalSource": "082609be05c13da65f2be66d013897e933677e10",
+  "foundation": "1bbaa120730376e1297c4f4a7011291c1f69b542",
+  "incoming36": "0c610e4715c5d32002d051eec55d4fa7f7f4f526",
+  "platform": "win-x64",
+  "configuration": "Release",
+  "finalHeadBinding": "After the evidence commit, build Release at the exact final published head and record its head, relevant Git trees, binary SHA256 and environment in the PR review comment and ignored local final-head-release-no-run.json. This avoids a self-referential commit hash.",
+  "plannedProcesses": [
+    {
+      "name": "ordinary-default",
+      "executable": "dotnet",
+      "arguments": [
+        "src/HollowWake.Tools/bin/Release/net10.0/hollowwake.dll",
+        "bench",
+        "--json"
+      ],
+      "run": false
+    },
+    {
+      "name": "authored-hit-bodies",
+      "executable": "dotnet",
+      "arguments": [
+        "src/HollowWake.Tools/bin/Release/net10.0/hollowwake.dll",
+        "bench",
+        "--only",
+        "hit-bodies",
+        "--json"
+      ],
+      "run": false
+    }
+  ],
+  "ordinaryDefaults": {
+    "seed": "aureth",
+    "monsters": 300,
+    "players": 4,
+    "ticks": 600,
+    "minions": 0,
+    "castCues": false
+  },
+  "policy": {
+    "priority": "Normal",
+    "retries": "No retry or tuning run without a new explicit grant; retain first outputs, failures and provenance.",
+    "coordinatorOwnedQuietWindow": true
+  },
+  "budgets": {
+    "zone.tick.p95": {
+      "max": 25,
+      "unit": "ms"
+    },
+    "zone.tick.alloc": {
+      "max": 2,
+      "unit": "MB"
+    },
+    "system.behavior": {
+      "max": 3,
+      "unit": "ms"
+    },
+    "system.behavior.alloc": {
+      "max": 1,
+      "unit": "MB"
+    },
+    "snapshot.build": {
+      "max": 1,
+      "unit": "ms/player"
+    },
+    "snapshot.bytes": {
+      "max": 30,
+      "unit": "KB/player"
+    },
+    "snapshot.delta.bytes": {
+      "max": 10,
+      "unit": "KB/player"
+    },
+    "worldgen.zone.plan": {
+      "max": 40,
+      "unit": "ms"
+    },
+    "worldgen.chunk": {
+      "max": 4,
+      "unit": "ms"
+    },
+    "worldgen.chunk.alloc": {
+      "max": 400,
+      "unit": "KB"
+    },
+    "attribute.apply.extra": {
+      "max": 500,
+      "unit": "ns"
+    },
+    "attribute.apply.alloc": {
+      "max": 200,
+      "unit": "bytes"
+    },
+    "expression.evaluate": {
+      "max": 150,
+      "unit": "ns"
+    },
+    "expression.alloc": {
+      "max": 0,
+      "unit": "bytes for small calls"
+    }
+  },
+  "measurements": null,
+  "limitations": [
+    "No old timing establishes performance at this source.",
+    "Historical snapshot-path misses and 0.0168 B/evaluation process counter stay open; no threshold or measurement relabeling.",
+    "Authored-profile delivery workload is distinct from Kobold fallback cylinders and their 84 functional contact cases.",
+    "The separate #20/#50 combined workload is not measured or accepted here."
+  ]
+}
