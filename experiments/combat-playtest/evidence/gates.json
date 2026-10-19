@@ -1,0 +1,129 @@
+{
+  "platform": "win-x64",
+  "productionSource": "1ce0ce388cf3b57e0511bcd39f3a891529564f4c",
+  "build": {
+    "warnings": 0,
+    "errors": 0
+  },
+  "tests": {
+    "core": 3064,
+    "server": 98,
+    "nativeLogic": 188,
+    "browser": 472,
+    "lifecycle": 12
+  },
+  "validation": {
+    "errors": 0,
+    "warnings": 0
+  },
+  "loadTicks": 200,
+  "standardReplayHashes": "seven identical",
+  "probe": "seven requested features granted; entered, moved; PROBE OK",
+  "runs": [
+    {
+      "run": "melee/run-HXWMOW",
+      "status": "failed",
+      "stages": [
+        {
+          "name": "build-server",
+          "status": "passed",
+          "code": 0
+        },
+        {
+          "name": "typecheck-web",
+          "status": "passed",
+          "code": 0
+        },
+        {
+          "name": "build-web",
+          "status": "passed",
+          "code": 0
+        },
+        {
+          "name": "build-godot",
+          "status": "passed",
+          "code": 0
+        },
+        {
+          "name": "smoke-web",
+          "status": "passed",
+          "passed": 34,
+          "total": 34,
+          "skipped": [],
+          "code": 0
+        },
+        {
+          "name": "import-godot",
+          "status": "passed",
+          "code": 0
+        },
+        {
+          "name": "smoke-godot",
+          "status": "failed",
+          "code": 1,
+          "error": "smoke-godot failed; see smoke-godot.log"
+        }
+      ],
+      "cleanupErrors": []
+    },
+    {
+      "run": "spells/run-Vnoimj",
+      "status": "passed",
+      "stages": [
+        {
+          "name": "smoke-web",
+          "status": "passed",
+          "passed": 34,
+          "total": 34,
+          "skipped": [],
+          "code": 0
+        },
+        {
+          "name": "import-godot",
+          "status": "passed",
+          "code": 0
+        },
+        {
+          "name": "smoke-godot",
+          "status": "passed",
+          "passed": 38,
+          "total": 38,
+          "skipped": [
+            "appearance rendering: headless display; geometry/card performance and readability require graphical evidence",
+            "theme rendered pixels: headless display; theme state checked above"
+          ],
+          "code": 0
+        }
+      ],
+      "cleanupErrors": []
+    },
+    {
+      "run": "melee-native-final/run-BlaKcB",
+      "status": "passed",
+      "stages": [
+        {
+          "name": "import-godot",
+          "status": "passed",
+          "code": 0
+        },
+        {
+          "name": "smoke-godot",
+          "status": "passed",
+          "passed": 38,
+          "total": 38,
+          "skipped": [
+            "appearance rendering: headless display; geometry/card performance and readability require graphical evidence",
+            "theme rendered pixels: headless display; theme state checked above"
+          ],
+          "code": 0
+        }
+      ],
+      "cleanupErrors": []
+    }
+  ],
+  "limits": [
+    "Native rendering and physical controller coverage are not established by headless tests.",
+    "Native shutdown retains previously documented resource leak diagnostics.",
+    "Existing evaluation balance failures are retained."
+  ]
+}

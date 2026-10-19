@@ -305,7 +305,6 @@ public partial class Smoke : Node
             var lines0 = _main.HitsDealt;
             var hovered = false;
             var used = "";
-            bool CastIdle() => _main.Hud.Hero.Cast is null && string.IsNullOrEmpty(Self?.State.Casting);
             for (var attempt = 0; attempt < 10 && _main.HitsDealt == lines0; attempt++)
             {
                 if (Self?.State.Dead == true) { Tap(Key.R); await Wait(1.0); }
@@ -448,10 +447,11 @@ public partial class Smoke : Node
         var seen = new HashSet<string>();
         for (var attempt = 0; attempt < 3 && !seen.Contains("primary_candidate"); attempt++)
         {
+            if (!await Until(CastIdle, 6)) break;
             var target = Nearest(e => e.State.Pattern?.StartsWith("hob", StringComparison.Ordinal) == true && !e.State.Dead);
             if (target is null) break;
-            await TravelTo(() => (target.State.X, target.State.Y), 3f, 45);
-            await Hover(target); Tap(Key.Key2);
+            await TravelTo(() => (target.State.X, target.State.Y), 2f, 45);
+            await Hover(target, heightFraction: 0.1f); Tap(Key.Key2);
             var until = Now + 3;
             while (Now < until)
             {
@@ -469,10 +469,13 @@ public partial class Smoke : Node
         // Real moving targets can evade a projectile. Retry ordinary input; never synthesize a contact.
         for (var attempt = 0; attempt < 3 && !phases.Contains("impact"); attempt++)
         {
+            if (!await Until(CastIdle, 6)) break;
             var hob = Nearest(e => e.State.Pattern?.StartsWith("hob", StringComparison.Ordinal) == true && !e.State.Dead);
             if (hob is null) break;
-            await TravelTo(() => (hob.State.X, hob.State.Y), 3f, 45);
-            await Hover(hob);
+            // Use the same melee-safe approach as the landed-hit check. Three units can
+            // leave Strike outside admission range, so no lifecycle exists to observe.
+            await TravelTo(() => (hob.State.X, hob.State.Y), 2f, 45);
+            await Hover(hob, heightFraction: 0.1f);
             Tap(Key.Key1);
             var until = Now + 3;
             while (Now < until)
@@ -485,8 +488,10 @@ public partial class Smoke : Node
             }
         }
         Record("Cast cue presentation", phases.Contains("start") && phases.Contains("release") && phases.Contains("impact"),
-            $"phases={string.Join(',', phases)}; received={_main.CastCuesReceived}");
+            $"phases={string.Join(',', phases)}; received={_main.CastCuesReceived}{Rejected()}");
     }
+
+    private bool CastIdle() => _main.Hud.Hero.Cast is null && string.IsNullOrEmpty(Self?.State.Casting);
 
     /// <summary>The core pane opens with its key; every ribbon page the hero has opens from its ribbon on the rail.</summary>
     private async Task CorePaneAndPages()

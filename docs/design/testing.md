@@ -24,6 +24,8 @@ node scripts/test-background.mjs --suite all --godot /path/to/godot
 
 `--calling ID` selects the smoke character's Calling. `--timeout SECONDS` bounds each build or smoke stage. `--no-build` reuses this checkout's existing Debug server and client outputs. `--out DIR` selects the evidence parent; each invocation creates a fresh subdirectory, so previous evidence is retained. Arguments not recognized by the runner fail, including `--headed`.
 
+The native cast-cue and forecast checks wait for the previous cast to finish and use the landed-hit scenario's melee-safe approach and foot-level aim. An out-of-range input has no cast lifecycle to observe; it must not be confused with missing presentation. Misses never count as landed hits, and native failure output retains the last input rejection.
+
 ## Isolation and lifecycle
 
 Add `--forecasts` to exercise shared forecast reception, or `--cast-cues` for the confirmed visual sequence; both flags pass through to either client. For example, `node scripts/test-background.mjs --suite godot --calling holdfast --forecasts` checks melee forecasting, and `--calling kindler --forecasts --cast-cues` checks spell forecasting and cue lifecycle. Headless native runs still do not validate rendered pixels.
