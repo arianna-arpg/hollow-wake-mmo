@@ -1,0 +1,143 @@
+{
+  "status": "NO-RUN",
+  "testedSource": "b7b9e6ca00d7c412942c2be252c49b00619167ee",
+  "foundation": "1bbaa120730376e1297c4f4a7011291c1f69b542",
+  "configuration": "Release",
+  "platform": "win-x64",
+  "buildCommand": [
+    "dotnet",
+    "build",
+    "HollowWake.sln",
+    "-c",
+    "Release",
+    "-m:1",
+    "-nr:false",
+    "-p:UseSharedCompilation=false"
+  ],
+  "buildEvidence": "experiments/elementals/evidence/review-fixes/union-build.txt",
+  "inputTrees": {
+    "src": "2371bcf9f6eed4bd248e50804247684492be5f29",
+    "content": "630dbcb6b13b7689f80723e80a305a31656a2ce1",
+    "tests": "7e2ed3e0518f65bd6954cb00188ef0608ec37359",
+    "web": "70e4667e8f76f1e2a56047e13e524f9aab7b1b1d",
+    "scripts": "c32b108f34a01db365c71bbf04ceb7fbc435581d",
+    "config": "3d860634367f6b5c5218655707e91b321e321f53",
+    "HollowWake.sln": "4d6c45d9a667ca56ae4f1df37f4cae03a3bfd20a",
+    "Directory.Build.props": "50af01107374bd2815efe593734d421c5910af53"
+  },
+  "releaseFiles": [
+    {
+      "path": "src/HollowWake.Tools/bin/Release/net10.0/HollowWake.Core.dll",
+      "bytes": 2297344,
+      "sha256": "6c5f81ef688d18a5134e3e74cf0d4c530ca1dd55ea17297d6bda2e93f4f1dba4"
+    },
+    {
+      "path": "src/HollowWake.Tools/bin/Release/net10.0/HollowWake.Core.pdb",
+      "bytes": 588260,
+      "sha256": "8b689aa544867665e692115cb9f6a6168b4be8c716025c2243af6b749bb258ae"
+    },
+    {
+      "path": "src/HollowWake.Tools/bin/Release/net10.0/HollowWake.Protocol.dll",
+      "bytes": 269824,
+      "sha256": "bf9479d3ff4d9a013c3a32269e41d13b2793d0fb542b91d0db4abbd42f61e3f8"
+    },
+    {
+      "path": "src/HollowWake.Tools/bin/Release/net10.0/HollowWake.Protocol.pdb",
+      "bytes": 56776,
+      "sha256": "25e2ada9c3a0b53852e06179f08c2b016732596a627eaaf4cd0520db10566ae5"
+    },
+    {
+      "path": "src/HollowWake.Tools/bin/Release/net10.0/HollowWake.Server.dll",
+      "bytes": 199168,
+      "sha256": "3546b20cf46cb83b3efc270a6dfd1b4530c94f94d3ea0b7724d5649662555551"
+    },
+    {
+      "path": "src/HollowWake.Tools/bin/Release/net10.0/HollowWake.Server.pdb",
+      "bytes": 61120,
+      "sha256": "b2123da861dd04dc51ec0ef73f8d09ba929136005e5ea599efda68f39636dfa8"
+    },
+    {
+      "path": "src/HollowWake.Tools/bin/Release/net10.0/Microsoft.Extensions.DependencyInjection.Abstractions.dll",
+      "bytes": 66312,
+      "sha256": "7c97c4463fe0fc11d1f22f4d160b2bd2288981adf1de2717a6ff3fb993ddf294"
+    },
+    {
+      "path": "src/HollowWake.Tools/bin/Release/net10.0/Microsoft.Extensions.Logging.Abstractions.dll",
+      "bytes": 67344,
+      "sha256": "a76a735b63e6ef3b0bf41ff92423cbd16103b8952e8306140a9bd650346034dc"
+    },
+    {
+      "path": "src/HollowWake.Tools/bin/Release/net10.0/YamlDotNet.dll",
+      "bytes": 300032,
+      "sha256": "d618138109a40e4a7250e49e2abad8c450e3636bee18d7499ab231e37fa9150a"
+    },
+    {
+      "path": "src/HollowWake.Tools/bin/Release/net10.0/hollowwake.deps.json",
+      "bytes": 3919,
+      "sha256": "4230a35eee07bc8e07bf30d27c11333f2d2941b1a62f5aa811fe334110767493"
+    },
+    {
+      "path": "src/HollowWake.Tools/bin/Release/net10.0/hollowwake.dll",
+      "bytes": 115712,
+      "sha256": "ef41c40d895c4b3f5a67c3019a267ea746fddb6ce1e34c0255214df2efaaae2c"
+    },
+    {
+      "path": "src/HollowWake.Tools/bin/Release/net10.0/hollowwake.exe",
+      "bytes": 162304,
+      "sha256": "ff172e1cc5df773fc864d526ce45421698aef21e5c9da3d93e279c6be7be7784"
+    },
+    {
+      "path": "src/HollowWake.Tools/bin/Release/net10.0/hollowwake.pdb",
+      "bytes": 32688,
+      "sha256": "b0b540c37c0a5e3d7f11d954660e13a19baf71b8eea59314fcf98ae9bc9bd40d"
+    },
+    {
+      "path": "src/HollowWake.Tools/bin/Release/net10.0/hollowwake.runtimeconfig.json",
+      "bytes": 449,
+      "sha256": "2ca90a18bac3b48286c20acd3c1ae4f83fa38de5acf4b2f8cdd277bf90dc9bd7"
+    }
+  ],
+  "plannedOnly": [
+    {
+      "name": "default",
+      "command": [
+        "dotnet",
+        "src/HollowWake.Tools/bin/Release/net10.0/hollowwake.dll",
+        "bench",
+        "--json"
+      ]
+    },
+    {
+      "name": "authored-hit-bodies",
+      "command": [
+        "dotnet",
+        "src/HollowWake.Tools/bin/Release/net10.0/hollowwake.dll",
+        "bench",
+        "--only",
+        "hit-bodies",
+        "--json"
+      ]
+    }
+  ],
+  "benchmarkExecuted": false,
+  "performanceTraceExecuted": false,
+  "processId": null,
+  "startedUtc": null,
+  "finishedUtc": null,
+  "exitCode": null,
+  "samples": [],
+  "authorization": "No timing grant. Require coordinator START for the exact published head; verify clean source, input trees and binary hashes first. Preserve first samples and stop/report owned processes. No retries to obtain a pass.",
+  "historicalOpenRows": {
+    "source": "50f7dd639d95ade50b04987aa6f835cfef3f8304",
+    "snapshotBuildMs": 1.222392,
+    "snapshotLimitMs": 1,
+    "expressionProcessWideBytesPerEval": 0.0168,
+    "planningMs": 35.962,
+    "planningLimitMs": 40
+  },
+  "acceptance": {
+    "currentSourcePerformance": "unmeasured",
+    "balance": "three inherited 10/10 wins against 80% ceilings remain open",
+    "nativePixels": "not covered by headless mode"
+  }
+}

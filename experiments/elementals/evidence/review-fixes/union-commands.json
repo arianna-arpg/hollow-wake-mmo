@@ -1,0 +1,212 @@
+[
+  {
+    "name": "validate",
+    "exe": "dotnet",
+    "args": [
+      "src/HollowWake.Tools/bin/Release/net10.0/hollowwake.dll",
+      "validate"
+    ],
+    "startedUtc": "2026-10-19T00:46:44.262Z",
+    "finishedUtc": "2026-10-19T00:46:45.444Z",
+    "exitCode": 0
+  },
+  {
+    "name": "load",
+    "exe": "dotnet",
+    "args": [
+      "src/HollowWake.Tools/bin/Release/net10.0/hollowwake.dll",
+      "load",
+      "--x",
+      "0",
+      "--y",
+      "0"
+    ],
+    "startedUtc": "2026-10-19T00:46:45.445Z",
+    "finishedUtc": "2026-10-19T00:46:47.447Z",
+    "exitCode": 0
+  },
+  {
+    "name": "fight",
+    "exe": "dotnet",
+    "args": [
+      "src/HollowWake.Tools/bin/Release/net10.0/hollowwake.dll",
+      "fight",
+      "ember_elemental",
+      "frost_elemental"
+    ],
+    "startedUtc": "2026-10-19T00:46:47.447Z",
+    "finishedUtc": "2026-10-19T00:46:48.834Z",
+    "exitCode": 0
+  },
+  {
+    "name": "protocol",
+    "exe": "dotnet",
+    "args": [
+      "src/HollowWake.Tools/bin/Release/net10.0/hollowwake.dll",
+      "protocol-ts",
+      "--check"
+    ],
+    "startedUtc": "2026-10-19T00:46:48.834Z",
+    "finishedUtc": "2026-10-19T00:46:48.968Z",
+    "exitCode": 0
+  },
+  {
+    "name": "census",
+    "exe": "dotnet",
+    "args": [
+      "src/HollowWake.Tools/bin/Release/net10.0/hollowwake.dll",
+      "weave",
+      "--axes",
+      "--all",
+      "--json",
+      "experiments/elementals/artifacts/union-axes.json",
+      "--literals",
+      "experiments/elementals/artifacts/union-literals.txt"
+    ],
+    "startedUtc": "2026-10-19T00:46:48.968Z",
+    "finishedUtc": "2026-10-19T00:46:50.737Z",
+    "exitCode": 0
+  },
+  {
+    "name": "replay",
+    "exe": "dotnet",
+    "args": [
+      "src/HollowWake.Tools/bin/Release/net10.0/hollowwake.dll",
+      "tournament",
+      "--standard",
+      "--check-hashes",
+      "experiments/combat-grammar/baselines/standard-duels.json",
+      "--out",
+      "experiments/elementals/evidence/review-fixes/union-standard.json"
+    ],
+    "startedUtc": "2026-10-19T00:46:50.740Z",
+    "finishedUtc": "2026-10-19T00:46:53.192Z",
+    "exitCode": 0
+  },
+  {
+    "name": "floor-control",
+    "exe": "dotnet",
+    "args": [
+      "src/HollowWake.Tools/bin/Release/net10.0/hollowwake.dll",
+      "tournament",
+      "--standard",
+      "--content",
+      "content/core;experiments/elementals/artifacts/union-floor342",
+      "--seeds",
+      "10",
+      "--seconds",
+      "60",
+      "--out",
+      "experiments/elementals/evidence/review-fixes/union-standard-floor342.json"
+    ],
+    "startedUtc": "2026-10-19T00:46:53.194Z",
+    "finishedUtc": "2026-10-19T00:46:55.611Z",
+    "exitCode": 0
+  },
+  {
+    "name": "proving",
+    "exe": "dotnet",
+    "args": [
+      "src/HollowWake.Tools/bin/Release/net10.0/hollowwake.dll",
+      "tournament",
+      "--bands",
+      "--out",
+      "experiments/elementals/evidence/review-fixes/union-proving.json"
+    ],
+    "startedUtc": "2026-10-19T00:46:55.617Z",
+    "finishedUtc": "2026-10-19T00:46:57.731Z",
+    "exitCode": 1
+  },
+  {
+    "name": "world-audit-build",
+    "exe": "dotnet",
+    "args": [
+      "build",
+      "experiments/elementals/artifacts/LevelAudit/LevelAudit.csproj",
+      "-c",
+      "Release",
+      "-p:RuntimePath=<worktree>\\src\\HollowWake.Tools\\bin\\Release\\net10.0",
+      "-m:1",
+      "-nr:false"
+    ],
+    "startedUtc": "2026-10-19T00:46:57.736Z",
+    "finishedUtc": "2026-10-19T00:46:59.351Z",
+    "exitCode": 0
+  },
+  {
+    "name": "world-audit",
+    "exe": "dotnet",
+    "args": [
+      "experiments/elementals/artifacts/LevelAudit/bin/Release/net10.0/LevelAudit.dll",
+      "experiments/elementals/evidence/review-fixes/union-levels-after.json",
+      "content/core"
+    ],
+    "startedUtc": "2026-10-19T00:46:59.352Z",
+    "finishedUtc": "2026-10-19T00:47:00.802Z",
+    "exitCode": 0
+  },
+  {
+    "name": "world-0_0",
+    "exe": "dotnet",
+    "args": [
+      "src/HollowWake.Tools/bin/Release/net10.0/hollowwake.dll",
+      "zone",
+      "--x",
+      "0",
+      "--y",
+      "0",
+      "--map"
+    ],
+    "startedUtc": "2026-10-19T00:47:00.804Z",
+    "finishedUtc": "2026-10-19T00:47:01.915Z",
+    "exitCode": 0
+  },
+  {
+    "name": "world-1_0",
+    "exe": "dotnet",
+    "args": [
+      "src/HollowWake.Tools/bin/Release/net10.0/hollowwake.dll",
+      "zone",
+      "--x",
+      "1",
+      "--y",
+      "0",
+      "--map"
+    ],
+    "startedUtc": "2026-10-19T00:47:01.917Z",
+    "finishedUtc": "2026-10-19T00:47:03.004Z",
+    "exitCode": 0
+  },
+  {
+    "name": "world-0_-1",
+    "exe": "dotnet",
+    "args": [
+      "src/HollowWake.Tools/bin/Release/net10.0/hollowwake.dll",
+      "zone",
+      "--x",
+      "0",
+      "--y",
+      "-1",
+      "--map"
+    ],
+    "startedUtc": "2026-10-19T00:47:03.006Z",
+    "finishedUtc": "2026-10-19T00:47:04.261Z",
+    "exitCode": 0
+  },
+  {
+    "name": "world-3_2",
+    "exe": "dotnet",
+    "args": [
+      "src/HollowWake.Tools/bin/Release/net10.0/hollowwake.dll",
+      "zone",
+      "--x",
+      "3",
+      "--y",
+      "2",
+      "--map"
+    ],
+    "startedUtc": "2026-10-19T00:47:04.263Z",
+    "finishedUtc": "2026-10-19T00:47:05.415Z",
+    "exitCode": 0
+  }
+]

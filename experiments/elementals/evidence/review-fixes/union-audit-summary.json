@@ -1,0 +1,42 @@
+{
+  "source": "b7b9e6ca00d7c412942c2be252c49b00619167ee",
+  "world": {
+    "eightZoneRecordsIdentical": true,
+    "fourMapsIdentical": true,
+    "goldensChanged": false
+  },
+  "census": {
+    "keys": 499,
+    "fixtureChanged": false
+  },
+  "replay": {
+    "platform": "win-x64",
+    "seeds": 10,
+    "seconds": 60,
+    "changesFrom064ff049": {
+      "loosed_skirmisher:boar": {
+        "before": "1f6c4b594340b306",
+        "after": "fbf0ac20a5a74103"
+      },
+      "loosed_skirmisher:hob": {
+        "before": "0d9d4a3110181c7a",
+        "after": "465a4807b0fe94f2"
+      }
+    },
+    "actualEqualsFoundationCompleteReport": true,
+    "actualEqualsFloor342CompleteReport": true,
+    "ownBaselineEdits": false
+  },
+  "proving": {
+    "entireReportEqualsFoundation": true,
+    "entireReportEqualsPriorElemental": true,
+    "hash": "4730bef23767a558",
+    "exitCode": 1,
+    "balanceCleared": false
+  },
+  "performance": {
+    "status": "NO-RUN",
+    "benchmarkExecuted": false,
+    "traceExecuted": false
+  }
+}

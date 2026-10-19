@@ -1,0 +1,39 @@
+{
+  "source": "b7b9e6ca00d7c412942c2be252c49b00619167ee",
+  "captures": [
+    {
+      "path": "experiments/elementals/artifacts/union-smoke/run-f9IhpA/shots/01_isometric.png",
+      "bytes": 516248,
+      "sha256": "1ede303225e9da5c65918d110ea3dcd96e773536e97023f428b8286855fcfb9b",
+      "inspected": true,
+      "width": 1280,
+      "height": 800
+    },
+    {
+      "path": "experiments/elementals/artifacts/union-smoke/run-f9IhpA/shots/16_cards.png",
+      "bytes": 493803,
+      "sha256": "08013b50954b8a5b90498a5fd22b7d20cee9105a356ba9055ecf7bbd560ddcf6",
+      "inspected": true,
+      "width": 1280,
+      "height": 800
+    },
+    {
+      "path": "experiments/elementals/artifacts/union-smoke/run-f9IhpA/shots/17_grayscale.png",
+      "bytes": 332728,
+      "sha256": "29d74bd477b2afaa8996b9b84ad83af49358029c02c156c9415375ac28147e94",
+      "inspected": true,
+      "width": 1280,
+      "height": 800
+    }
+  ],
+  "findings": [
+    "Full viewport, terrain, bodies and interface render in isometric and card modes.",
+    "Grayscale frame renders terrain/bodies and applies grayscale.",
+    "Starting guards and quartermasters display level 5."
+  ],
+  "limitations": [
+    "Native rendered pixels are not covered.",
+    "These world frames do not establish anatomical rendering of every elemental."
+  ],
+  "storage": "Original PNGs retained outside git in ignored artifacts; no resizing or modification."
+}

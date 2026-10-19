@@ -1,0 +1,9 @@
+TEST evidence: <worktree>\experiments\elementals\artifacts\union-smoke\run-f9IhpA
+TEST build-server; evidence: <worktree>\experiments\elementals\artifacts\union-smoke\run-f9IhpA
+TEST typecheck-web; evidence: <worktree>\experiments\elementals\artifacts\union-smoke\run-f9IhpA
+TEST build-web; evidence: <worktree>\experiments\elementals\artifacts\union-smoke\run-f9IhpA
+TEST build-godot; evidence: <worktree>\experiments\elementals\artifacts\union-smoke\run-f9IhpA
+TEST smoke-web; evidence: <worktree>\experiments\elementals\artifacts\union-smoke\run-f9IhpA
+TEST import-godot; evidence: <worktree>\experiments\elementals\artifacts\union-smoke\run-f9IhpA
+TEST smoke-godot; evidence: <worktree>\experiments\elementals\artifacts\union-smoke\run-f9IhpA
+TEST PASSED; report: <worktree>\experiments\elementals\artifacts\union-smoke\run-f9IhpA\result.json
