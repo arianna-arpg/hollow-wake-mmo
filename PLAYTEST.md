@@ -2,7 +2,7 @@
 
 **Double-click `Play.cmd` in the main checkout.** It prepares the game, starts its local server and opens the browser. First preparation takes longer; later starts reuse the build. Keep the preparation window open until it says ready. If preparation fails, the window stays open with the error.
 
-Choose a Calling vessel in Mu, give the character a name and press **Create and Wake**. For an existing character, choose its vessel and press **Wake**. The Crossing closes when the character and nearby terrain are ready. Characters are saved locally. Double-click `Stop Playtest.cmd` when finished to save and stop the server.
+Choose a Calling vessel in Mu, give the character a name and press **Name this vessel and wake**. For an existing character, choose its vessel and press **Wake**. The Crossing closes when the character and nearby terrain are ready. Characters are saved locally. Double-click `Stop Playtest.cmd` when finished to save and stop the server.
 
 Use `Play Desktop.cmd` only if you want the Godot client; it needs the Godot .NET executable configured as described in [local playtesting](README.md#local-playtesting). The browser route is the default and needs no Godot editor. A first build requires the installed development prerequisites in [local-dev.md](docs/infrastructure/local-dev.md).
 

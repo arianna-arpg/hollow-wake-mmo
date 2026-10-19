@@ -43,4 +43,6 @@ Cleanup completed: 19 annotated preservation tags were published and their remot
 
 Review: the extracted `cards.ts` matches #20's implementation exactly. Inspection confirms target-local cell rectangles, prior-target face/mip restoration, clear-state restoration and failure disposal. The six regressions exercise both normal and interrupted bakes and on/offscreen callers. The smoke additions observe rendering only. No unreviewed combat or population code is included. The owner-facing guide distinguishes engine capabilities from equipped starter kits and unmerged work. Required hosted CI must still pass before merging this cleanup.
 
+The actual `Play.cmd` helper was also exercised from the isolated checkout: the first `node scripts/play-local.mjs --no-open` prepared the private server and browser build and reached the local play URL; the second reused the server and build; `--stop` saved and stopped that owned server successfully. This covers the entry path beyond the private smoke harness. The final main launch follows merge so the owner receives the repaired build.
+
 Acknowledged by: owner-directed temporary Codex coordination; normal Claude review is unavailable for this reset. Claude retrospective review is requested when service resumes, without blocking the gated playtest repair.
