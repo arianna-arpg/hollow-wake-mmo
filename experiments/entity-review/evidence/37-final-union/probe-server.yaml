@@ -1,0 +1,36 @@
+# Hollow Wake MMO server settings. Copy to server.local.yaml for machine-specific overrides (ignored by git).
+name: entity37-final-union-probe-3a9c7152b3ea4f03868b48fb9981904f
+motd: A quiet corner of the Weftmarches.
+port: 51869
+bind: 127.0.0.1
+transport: tcp
+websocket_enabled: true # browser clients over WebSocket at /ws, and the web client over HTTP, on websocket_port
+websocket_port: 7778
+web_root: web/dist      # the built web client (npm --prefix web run build); empty serves only the socket
+chunk_request_radius: 8 # chunks around the player a client may request terrain for
+tick_rate: 20
+snapshot_rate: 10
+interest_radius: 48
+snapshots:                # what each client is sent and how precisely (defaults shown; docs/design/networking-and-persistence.md)
+  refresh_seconds: 2      # a changed entity is resent in full once it goes quiet; static entities are re-verified
+  sweep_seconds: 10       # every known dynamic entity is resent in full regardless
+  self_seconds: 0.5       # how often the self state is checked for change; cooldowns count down in these steps
+  self_max_seconds: 2     # the longest a client goes without a self state
+  resource_step: 0.02     # a resource counts as changed in steps of this fraction of its maximum
+  cast_steps: 5           # cast progress counts as changed in this many steps per cast
+  interest_height: 64     # how far above and below a player interest reaches
+  preview_seconds: 2      # interface clients: the shortest time between weave preview refreshes when only the hero's numbers changed
+content_layers:
+  - content/core
+strict_content: true
+data_dir: artifacts/entity37-final-union-probe-3a9c7152b3ea4f03868b48fb9981904f/data
+# seed: aureth          # overrides world.seed from the rules
+auth: dev               # dev: any account name; token: require the shared token below
+# token: change-me
+max_players: 64
+autosave_seconds: 60
+zone_unload_seconds: 300
+world_events: true
+world_event_interval_seconds: 900
+max_active_world_events: 3
+log_intents: false

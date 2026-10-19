@@ -1,0 +1,8 @@
+{
+  "LintKeys": 777,
+  "Smells": 580,
+  "Notes": 197,
+  "LintKeysEqualIncoming34": true,
+  "LiteralKeys": 499,
+  "LiteralKeysEqualCommittedFixture": true
+}

@@ -1,5 +1,7 @@
 # Gnoll and Beastkin clans: scope and ownership
 
+**Current handoff:** complete34 adopted at tested runtime `8e13e23d43bb95f36b6ef4e87c7f0524104a7936`; fresh full functional evidence is recorded in the final section below. The PR stays draft for Claude review and performance disposition. Earlier sections retain their historical source identities.
+
 2026-10-18. Codex owns codex/gnoll-beastkin-clans, based on fauna PR #34 at 90cb7fc. The owner requests distinct hunched hyena/coyote Gnolls and horned satyr/minotaur/goat/ram Beastkin with hocked legs, continuing the fully classified and physically authored entity foundation.
 
 Scope: prototype-inspired content, separate factions, existing skills and provisional behaviors, habitats/POIs, material mass, paired client anatomy, scale/grayscale galleries, integration/parity tests and evidence. No AI or collision runtime replacement. Declare overlap before edits with own #31-34 body family registries, entity/appearance contracts and world generation goldens. Use dedicated new content files; existing wildlife and undead bodies remain owned by their preceding passes.
@@ -61,3 +63,29 @@ Client source `021f79a131a97d72fe173afabb9407680ca647e5` passes private `run-L3g
 The corrected [actual fauna-base audit](../../experiments/entity-review/evidence/37-base-world-review.md) compares exact fauna `c3099a8ea5c7a32fc0799c3a17cb167b2bd1231c` against kin `2d5b3306a5ab3f7915fb92542c7695ebd4b4879b`. It names all three eastern site replacements, the Knot's seven stones and ten level-3 combat residents, and the changed origin Scout destination. Removing only the six clan-camp definitions reproduces the entire four-zone fauna report. Earlier same-branch comparisons and original maps are historical. The new four-zone sample contains no natural clan camp; separate eligibility tests cover the authored camps.
 
 Physical profiles and paired silhouettes remain unchanged by this integration. The explicit faction/skill/loot and movement/AI/anatomy boundaries are named in that audit. Historical snapshot/planning misses remain open; the prepared main17ca/#31 pair has not run. Combined #20/#50 acceptance is separate. Claude rereview is requested; no merge to main.
+
+## Complete foundation adoption and final functional handoff
+
+The conflict-free merge **`8e13e23d43bb95f36b6ef4e87c7f0524104a7936`** combines previous #37 `60e6e8acc63e28f9f2111f85bc8f1f03929731f4` with complete #34 **`1bbaa120730376e1297c4f4a7011291c1f69b542`**, including all of #36 `0c610e4715c5d32002d051eec55d4fa7f7f4f526` and main `f7ef072cc322b93b628229916c5220024e74a89c`. This is the tested runtime; its publication adds only this review record and evidence. The coordinator retargeted #37 to main to protect the stack from base deletion. It remains draft.
+
+The twelve Gnolls and ten Beastkin retain their separate canine/ungulate anatomy, dimensions, materials, roles, faction/skill/loot bindings and current replaceable AI. The faction definitions, paired appearance fixture, kin flight tests, generation goldens and population/quest audits are unchanged from60e6e8a. The corrected actual Fauna-base world comparison and its original failures remain preserved. No new world golden or content allowance is introduced.
+
+The full incoming foundation is retained: the 0.16 m floor with its all-statted-pattern safety guard, all 15 intentional airborne misses, internal helper, returning descent, supporting-layer aim, bounded input admission and loaded-only observation. Card-renderer and interaction/background-harness corrections remain. Existing roster-scale, body-selected and all 132 child-only orb checks pass in the full suite; new kin still use fallback cylinders, not newly authored anatomical profiles. No complex pack/herd AI is implied.
+
+### Actual-union verification
+
+All checks below were run on8e13e23d; none are inferred from the incoming branch's green gates:
+
+- Debug solution and Release Tools builds: zero warnings/errors. Full .NET: **3,691 pass** (3,464 core, 89 server, 138 native), zero failures. Browser **326 pass**, porter **10**, background-harness **10**.
+- Validate: zero errors/warnings. Starter load runs200 ticks; fight and generated protocol checks pass. Production web build passes with its existing chunk-size advisory. All777 lint keys remain (580 smells,197 notes); all499 literal keys match the unchanged fixture.
+- All seven Windows replay hashes pass against the complete34 fixture with **no baseline edit**. The fresh full proving report equals both previous37 and incoming34 structurally, including hash`4730bef23767a558`. Its exit1 retains the same three inherited ceilings: Bulwark, Plaguer and Pitfighter each win10/10 above0.8. Fletcher/Evoker remains0.5/0.5 with median7s. This is not balance acceptance.
+- Private smoke`run-uefAu4`: browser31/31 and native36/36, cleanup errors empty. A separate private TCP probe grants all six requested features and passes. Owned-process and lease inventory is empty after shutdown.
+- Fresh card and grayscale captures were viewed: terrain, bodies, settlement and interface fill the normal viewport, and grayscale is visible. These origin captures verify the rendering path; the preserved shared-scale gallery and paired fixture cover clan anatomy.
+
+Exact parents, source manifest, tested binary hashes, commands, complete outputs, comparison records, screenshots and checksums are in [37-final-union](../../experiments/entity-review/evidence/37-final-union/), including [provenance](../../experiments/entity-review/evidence/37-final-union/provenance.json) and [verification](../../experiments/entity-review/evidence/37-final-union/verification.json). The initial records and all prior failures retain their own source identities. Only task-generated, previously untracked Godot import sidecars were removed after the native run.
+
+Native pixels are skipped in headless mode. The known shutdown diagnostics remain:5 dummy textures,2 shaped texts,1 font,1 CanvasItem and26 ObjectDB instances. No new timing measurement or performance clearance accompanies this source. Historical snapshot/planning misses remain open; a comparison against complete34 requires the coordinator's exact-head quiet window. Prepared benchmark metadata and commands are not results.
+
+Claude reciprocal rereview of the complete published #37 head is requested. Keep draft pending review, exact-head CI and coordinated performance disposition. No main merge, branch deletion or performance run was performed by this chat.
+
+Acknowledged by: coordinator authorized complete34 adoption and retargeted #37 to main; final Claude rereview and performance clearance remain pending.

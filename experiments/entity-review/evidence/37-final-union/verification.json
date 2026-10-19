@@ -1,0 +1,46 @@
+{
+  "RuntimeSource": "8e13e23d43bb95f36b6ef4e87c7f0524104a7936",
+  "DebugBuild": {
+    "Warnings": 0,
+    "Errors": 0
+  },
+  "ReleaseBuild": {
+    "Warnings": 0,
+    "Errors": 0
+  },
+  "FullDotNet": {
+    "Core": 3464,
+    "Server": 89,
+    "Native": 138,
+    "Total": 3691,
+    "Failures": 0
+  },
+  "WebTests": 326,
+  "PorterTests": 10,
+  "BackgroundRunnerTests": 10,
+  "Validate": {
+    "Errors": 0,
+    "Warnings": 0
+  },
+  "LoadTicks": 200,
+  "FightPassed": true,
+  "ProtocolCurrent": true,
+  "WindowsReplayPairs": 7,
+  "ReplayFixtureUnchangedFromComplete34": true,
+  "BrowserSmoke": 31,
+  "NativeSmoke": 36,
+  "ProbeFeatures": 6,
+  "CleanupErrors": [],
+  "ScreenshotsInspected": [
+    "16_cards.png",
+    "17_grayscale.png"
+  ],
+  "RenderFinding": "Full-world terrain and bodies render in card mode; grayscale applies to world and interface. These origin captures verify rendering, not every clan silhouette.",
+  "NativePixels": "Skipped in headless mode",
+  "NativeShutdownDiagnostics": "5 dummy textures, 2 shaped texts, 1 font, 1 CanvasItem, 26 ObjectDB instances",
+  "WebBuildWarning": "Existing chunk-size advisory",
+  "ProvingExit": 1,
+  "InheritedProvingBreaches": 3,
+  "PerformanceAcceptance": false,
+  "MainMerged": false
+}

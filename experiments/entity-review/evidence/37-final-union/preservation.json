@@ -1,0 +1,84 @@
+{
+  "Before": "60e6e8acc63e28f9f2111f85bc8f1f03929731f4",
+  "After": "8e13e23d43bb95f36b6ef4e87c7f0524104a7936",
+  "NamedFactionFiles": [
+    {
+      "Path": "content/core/appearance/beastkins.json",
+      "Before": "f9ae88a05051c382291cd164a45459ee4ffb8ceb",
+      "After": "f9ae88a05051c382291cd164a45459ee4ffb8ceb",
+      "Equal": true
+    },
+    {
+      "Path": "content/core/appearance/gnolls.json",
+      "Before": "2322af322bc634851d25e5872459b1da55bee3ef",
+      "After": "2322af322bc634851d25e5872459b1da55bee3ef",
+      "Equal": true
+    },
+    {
+      "Path": "content/core/entities/patterns-beastkins.json",
+      "Before": "1dc9692866754532a1da05b2605e54cd23743ec3",
+      "After": "1dc9692866754532a1da05b2605e54cd23743ec3",
+      "Equal": true
+    },
+    {
+      "Path": "content/core/entities/patterns-gnolls.json",
+      "Before": "1b3af31fcf6fb61c2b49ec27d9eb7629faa23ab3",
+      "After": "1b3af31fcf6fb61c2b49ec27d9eb7629faa23ab3",
+      "Equal": true
+    },
+    {
+      "Path": "tests/fixtures/gnoll-beastkin-appearance.json",
+      "Before": "deafd1dd2dc0c2c581e33daaeaee07b1212fcd7e",
+      "After": "deafd1dd2dc0c2c581e33daaeaee07b1212fcd7e",
+      "Equal": true
+    }
+  ],
+  "GenerationGoldensDiff": "",
+  "WorldAuditAndKinRegressionFiles": [
+    {
+      "Path": "tests/HollowWake.Core.Tests/WorldGenGoldenTests.cs",
+      "Before": "4c3056493e046ce5561cbe7af7edd7c6f966bd52",
+      "After": "4c3056493e046ce5561cbe7af7edd7c6f966bd52",
+      "Equal": true
+    },
+    {
+      "Path": "tests/HollowWake.Core.Tests/QuestPopulationAnchorTests.cs",
+      "Before": "8cb06a33435bb534700715fab2e186ab84060875",
+      "After": "8cb06a33435bb534700715fab2e186ab84060875",
+      "Equal": true
+    },
+    {
+      "Path": "tests/HollowWake.Core.Tests/LocalPopulationSearchTests.cs",
+      "Before": "50dc7dc8fe039310ad722da8b76c7b0043c97c43",
+      "After": "50dc7dc8fe039310ad722da8b76c7b0043c97c43",
+      "Equal": true
+    },
+    {
+      "Path": "tests/HollowWake.Core.Tests/KinTests.cs",
+      "Before": "83d47927ed97014e913cef7796992c9125bdaf12",
+      "After": "83d47927ed97014e913cef7796992c9125bdaf12",
+      "Equal": true
+    },
+    {
+      "Path": "tests/HollowWake.Core.Tests/KinProjectileTests.cs",
+      "Before": "6ab14744d6626a5e9477d1e8e2c65f385e3bab1a",
+      "After": "6ab14744d6626a5e9477d1e8e2c65f385e3bab1a",
+      "Equal": true
+    },
+    {
+      "Path": "src/HollowWake.Client/World/Logic/BodyFamilies.cs",
+      "Before": "5340478de97b98ca3f26d4cf45bd52918dd4af0c",
+      "After": "5340478de97b98ca3f26d4cf45bd52918dd4af0c",
+      "Equal": true
+    },
+    {
+      "Path": "web/src/world/appearance/bodyFamilies.ts",
+      "Before": "ead4523a6cdc4131175cd64da95e62e625309f00",
+      "After": "ead4523a6cdc4131175cd64da95e62e625309f00",
+      "Equal": true
+    }
+  ],
+  "ContentDeltaFromPrevious37": [
+    "content/core/combat/rules-hit-bodies.json"
+  ]
+}

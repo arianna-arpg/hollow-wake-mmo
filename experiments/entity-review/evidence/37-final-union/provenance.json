@@ -1,0 +1,24 @@
+{
+  "RuntimeSource": "8e13e23d43bb95f36b6ef4e87c7f0524104a7936",
+  "Previous37": "60e6e8acc63e28f9f2111f85bc8f1f03929731f4",
+  "Complete34": "1bbaa120730376e1297c4f4a7011291c1f69b542",
+  "Complete36": "0c610e4715c5d32002d051eec55d4fa7f7f4f526",
+  "Main": "f7ef072cc322b93b628229916c5220024e74a89c",
+  "RuntimeSourceManifestSha256": "b293fb6fa52a566065218637d87d481e52b29255d21f31f862864a9facbcf8cc",
+  "Binaries": {
+    "src/HollowWake.Tools/bin/Debug/net10.0/HollowWake.Core.dll": "0f4957eacfa1f2833fc26a0ad7e99b1cd8edbf75d928bb8b3a7ed97fc52e0bdc",
+    "src/HollowWake.Tools/bin/Debug/net10.0/hollowwake.dll": "0a1a580da50cfa8de9d349a5c9d0d6709519ffb2e2130e6686813264d9fd4637",
+    "src/HollowWake.Server.Host/bin/Debug/net10.0/hollowwake-server.dll": "c57545b807d09d9ad9b5786d7f44431d33d6d8384324ee54569ef92b99e28211",
+    "src/HollowWake.Client/.godot/mono/temp/bin/Debug/HollowWake.Client.dll": "8aaf17e564feed2769daa39a2ce91012a211c256e93bdf4915d49dfedf54026d",
+    "tests/HollowWake.Core.Tests/bin/Debug/net10.0/HollowWake.Core.Tests.dll": "2f448cdb3eb56893ddb42c94b72dcd3433251d607eedf79b0dc3ad5710818693",
+    "tests/HollowWake.Server.Tests/bin/Debug/net10.0/HollowWake.Server.Tests.dll": "d2c2e4fe03bf958a99e6cf5a55c0e42d2dce97dbec21141960ce7c7a4333e5ea",
+    "tests/HollowWake.Client.Tests/bin/Debug/net10.0/HollowWake.Client.Tests.dll": "c006ddb50b25a481194f3b215ee6a5a1f5452352aecff0247a84530e129fb6d0",
+    "src/HollowWake.Tools/bin/Release/net10.0/HollowWake.Core.dll": "dc9676537c6f450838d433d424d3fe339eb3033a5b0e48168700094453877b3e",
+    "src/HollowWake.Tools/bin/Release/net10.0/hollowwake.dll": "4983d8965eaa57e73b554a34d51bfed108e8b00d232fcced3efb77471adf083e"
+  },
+  "PublicationChanges": "Review and evidence only",
+  "SmokeRun": "run-uefAu4",
+  "ProbeDirectory": "entity37-final-union-probe-3a9c7152b3ea4f03868b48fb9981904f",
+  "Platform": "win-x64; same host/runtime installation as incoming34 provenance; no new environment process started during coordinator quiet window",
+  "PerformanceRun": false
+}
