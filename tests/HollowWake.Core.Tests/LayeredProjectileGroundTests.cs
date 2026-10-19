@@ -19,17 +19,23 @@ namespace HollowWake.Core.Tests;
 public class LayeredProjectileGroundTests(ITestOutputHelper output)
 {
     [Theory]
-    [InlineData("watch_tower", "firebolt")]
-    [InlineData("watch_tower", "piercing_arrow")]
-    [InlineData("wreck_hull", "firebolt")]
-    [InlineData("wreck_hull", "piercing_arrow")]
-    public void RealShippedFloorsSupportFreeShotsBeyondANearCursor(string landmark, string preset)
+    [InlineData("watch_tower", "firebolt", false)]
+    [InlineData("watch_tower", "firebolt", true)]
+    [InlineData("watch_tower", "piercing_arrow", false)]
+    [InlineData("watch_tower", "piercing_arrow", true)]
+    [InlineData("wreck_hull", "firebolt", false)]
+    [InlineData("wreck_hull", "firebolt", true)]
+    [InlineData("wreck_hull", "piercing_arrow", false)]
+    [InlineData("wreck_hull", "piercing_arrow", true)]
+    public void RealShippedFloorsSupportFreeShotsBeyondANearCursor(string landmark, string preset, bool aimBelow)
     {
         var (a, start, floor) = Arena(landmark);
         var target = a.Body(start.X, start.Y + 2.25f, pattern: "goblin_skirmisher");
         Move(a, target, new(start.X, start.Y + 2.25f, floor));
         var flights = Capture(a);
-        Press(a, preset, start + new Vector3(0, .35f, 0));
+        var cursor = start + new Vector3(0, .35f, 0);
+        if (aimBelow) cursor.Z = a.Sim.Terrain.HeightAt(cursor.X, cursor.Y);
+        Press(a, preset, cursor);
         var minimum = float.PositiveInfinity;
         for (var i = 0; i < 45; i++)
         {
@@ -43,6 +49,24 @@ public class LayeredProjectileGroundTests(ITestOutputHelper output)
         Assert.Contains(a.Events.OfType<DamageDealt>(), hit => hit.Target == target && hit.Total > 0);
     }
 
+    [Theory]
+    [InlineData("watch_tower")]
+    [InlineData("wreck_hull")]
+    public void FreeShotsFromLowerGroundCanAimAtARealDeck(string landmark)
+    {
+        var (a, start, floor) = Arena(landmark);
+        Move(a, a.Caster, start with { Z = a.Sim.Terrain.HeightAt(start.X, start.Y) });
+        var target = a.Body(start.X, start.Y + 2.25f, pattern: "goblin_skirmisher");
+        Move(a, target, new(start.X, start.Y + 2.25f, floor));
+        var flights = Capture(a);
+        Press(a, "firebolt", start + new Vector3(0, 1.4f, 0));
+        for (var i = 0; i < 40 && flights.Count == 0; i++) a.Tick();
+        var p = Assert.Single(flights);
+        Assert.True(p.Velocity.Z > 0);
+        Assert.Equal(floor, p.Context.Point.Z, 4);
+        a.Tick(40);
+        Assert.Contains(a.Events.OfType<DamageDealt>(), hit => hit.Target == target && hit.Total > 0);
+    }
     [Theory]
     [InlineData("watch_tower")]
     [InlineData("wreck_hull")]
