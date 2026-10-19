@@ -1,0 +1,11 @@
+{
+  "PriorFaunaRuntime": "26431c48a67ddd3b77811cf94363a589cdd50e69",
+  "PriorReport": "experiments/entity-review/evidence/34-aimfinal-proving.json",
+  "CompleteReportsEqual": true,
+  "Hash": "4730bef23767a558",
+  "Breaches": [
+    "proving_bulwark wins 10 of 10, above the ceiling 0.8",
+    "proving_plaguer wins 10 of 10, above the ceiling 0.8",
+    "proving_pitfighter wins 10 of 10, above the ceiling 0.8"
+  ]
+}

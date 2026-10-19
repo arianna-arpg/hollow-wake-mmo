@@ -8,6 +8,7 @@ using HollowWake.Core.Items;
 using HollowWake.Core.Progression;
 using HollowWake.Core.Quests;
 using HollowWake.Core.Sim;
+using HollowWake.Core.Systems;
 using HollowWake.Core.Territory;
 using HollowWake.Core.Weaves;
 using HollowWake.Protocol;
@@ -107,7 +108,7 @@ public static class Snapshots
     /// </summary>
     private readonly record struct Drawn(Shape? Shape, ShapeSize Size, float Facing, float? Spin, bool Flies, Vector3 Velocity, double Until);
 
-    private static Drawn DrawnOf(EcsWorld world, Entity e, Transform? t)
+    private static Drawn DrawnOf(Simulation sim, EcsWorld world, Entity e, Transform? t)
     {
         Shape? shape = null;
         var size = default(ShapeSize);
@@ -118,7 +119,7 @@ public static class Snapshots
         if (world.TryGet<Projectile>(e, out var p))
         {
             flies = true;
-            velocity = p.Velocity;
+            velocity = ProjectileSystem.ObservedVelocity(sim, p, t?.Position ?? p.Carrier);
             facing = p.Heading;
             shape = p.Spec.Shape;
             // A circle's size is its collision radius; every other shape keeps its own.
@@ -258,7 +259,7 @@ public static class Snapshots
         var statuses = world.Get<Statuses>(e);
         var casting = world.Get<WeaveBook>(e)?.Casting;
         var interactable = world.Get<Interactable>(e);
-        var drawn = DrawnOf(world, e, t);
+        var drawn = DrawnOf(sim, world, e, t);
         var state = new EntityState
         {
             Key = e.Key,
@@ -409,7 +410,7 @@ public static class Snapshots
             h.Add(QHundredths(motion.Velocity.Z));
         }
         var body = world.Get<Transform>(e);
-        AddDrawn(ref h, DrawnOf(world, e, body));
+        AddDrawn(ref h, DrawnOf(sim, world, e, body));
         return h.Value;
     }
 

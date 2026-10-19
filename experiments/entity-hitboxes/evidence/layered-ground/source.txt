@@ -1,0 +1,38 @@
+Layered-ground and returning-descent correction, Windows x64, 2026-10-18 local.
+Tested source: 560adf01fe8c47667ad16ccc2b5c8aae668211b9.
+Production source: d9ac853bed4368ee9ac732bc420f0d6ff8a50957.
+Integrated main: f7ef072cc322b93b628229916c5220024e74a89c.
+The tested follow-up changes tests only. This evidence publication changes only two justified replay baseline entries and review/evidence files.
+
+Run from the precise-entity-hitboxes worktree. gate-summary.json preserves original gate invocations and exit codes. gate-resolutions.json records subsequent resolutions without rewriting failures. No benchmark or performance trace ran.
+
+Final gates:
+  dotnet build HollowWake.sln --no-restore
+  dotnet build src/HollowWake.Tools -c Release --no-restore
+  dotnet test HollowWake.sln --no-build --no-restore
+  npm --prefix web test
+  npm --prefix web run build
+  node --test scripts/test-background.test.mjs
+  dotnet src/HollowWake.Tools/bin/Release/net10.0/hollowwake.dll validate
+  dotnet src/HollowWake.Tools/bin/Release/net10.0/hollowwake.dll load --x 0 --y 0
+  dotnet src/HollowWake.Tools/bin/Release/net10.0/hollowwake.dll protocol-ts --check
+  dotnet src/HollowWake.Tools/bin/Release/net10.0/hollowwake.dll fight wolf hob --seed layered-ground-review --seconds 15
+  dotnet src/HollowWake.Tools/bin/Release/net10.0/hollowwake.dll tournament --standard --check-hashes experiments/combat-grammar/baselines/standard-duels.json
+  dotnet src/HollowWake.Tools/bin/Release/net10.0/hollowwake.dll tournament --pairs proving_reaver:proving_bulwark,proving_hexer:proving_plaguer,proving_pitfighter:proving_mower,proving_fletcher:proving_evoker --seeds 10 --seconds 60 --bands --out experiments/entity-hitboxes/artifacts/layered-ground/proving.json
+  dotnet src/HollowWake.Tools/bin/Release/net10.0/hollowwake.dll lint --json experiments/entity-hitboxes/artifacts/layered-ground/lint.json
+  dotnet src/HollowWake.Tools/bin/Release/net10.0/hollowwake.dll weave --axes --all --literals experiments/entity-hitboxes/artifacts/layered-ground/literals.txt
+
+The initial literal run redirected its log to the same literals.txt destination and failed with an IOException. The corrected run redirected to literals-run.txt, exited 0, and produced the unchanged 499-key census. The original diagnostic remains present.
+
+The initial full .NET run passed 2049 core, 89 server and 136 native cases; its sole failure was the two-entry Windows replay baseline. After counterfactual attribution and only two baseline replacements, the seven-pair replay and this single failed test were rerun successfully:
+  dotnet test tests/HollowWake.Core.Tests --no-build --no-restore --filter FullyQualifiedName~TheCommittedBaselineHoldsOnItsPlatform
+No runtime source changed. Browser tests pass 275; 2550 distinct .NET/browser cases are accounted for, with the initial failure retained. The separate background-runner suite passes 10.
+
+Counterfactual reproduction:
+Archive source 560adf01 for Directory.Build.props, global.json, Core, Protocol, Server, Tools and content; revert only returning launch-floor assignment in DeliveryHandlers.cs and the existing-GroundFloor guard at returning pierce in ProjectileSystem.cs to pre-7103405 behavior. Build Tools Release into counterfactual-return/bin-counterfactual. Run standard replay and the same proving command with its own content working directory and the absolute prior baseline path. An initial relative-path lookup failed and is retained. The corrected replay restores all seven prior hashes, and complete proving JSON equals the preceding b116 report. Blob verification checks 402 archived production/content files and finds exactly those two changed files. See counterfactual-provenance.json and binary-provenance.json.
+
+Private background smoke reproduction uses scripts/test-background.mjs --suite all --no-build --out experiments/entity-hitboxes/artifacts/layered-ground/smoke. The recorded run is run-5HVo2p, server harness-run-5HVo2p, TCP65095 / HTTP65096. The six-feature Tools probe used that private TCP endpoint, account layered-ground-probe, and entity_delta,interface,entry_flow,cast_cues,hit_bodies_v2,projectile_slabs_v1 after verifying GET/ws server identity. See result, probe and identity records. All owned processes are stopped; cleanupErrors is empty.
+
+Screenshots inspected locally: shots/01_isometric.png renders the world. shots/16_cards.png still has the known blank-world/tiny-viewport defect owned downstream by #34. Neither screenshot is committed. Native rendering remains unverified in headless mode. Native shutdown reports 5 dummy textures, 2 shaped texts, 1 font, 1 CanvasItem and 26 ObjectDB instances, as in prior evidence.
+
+Provenance includes source blob IDs, exact Debug/Release DLL hashes and served browser build files. All eight previously recorded binary hashes were rechecked unchanged after smoke before extending the manifest to host/native dependency copies and web dist files. No binaries are committed. Raw reports, screenshots and fixtures remain under ignored artifacts/layered-ground; compact logs and comparisons are committed here. Timing printed by ordinary test/smoke tooling is not a benchmark or performance claim.

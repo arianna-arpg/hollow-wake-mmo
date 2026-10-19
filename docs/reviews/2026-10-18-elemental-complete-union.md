@@ -1,0 +1,11 @@
+# Elemental complete foundation union
+
+PR #40 merges exact complete #34 `1bbaa120730376e1297c4f4a7011291c1f69b542` once into `064ff049a0bc3f2331f2ec33679b2178e89d34cb`. The incoming runtime is `900928f9`, including full corrected #36 `0c610e47` and complete main `f7ef072c`. This is the coordinator's definitive functional handoff, not a separate main merge. The merge is conflict-free; own elemental content, world goldens, renderer correction and audited site/quest decisions are retained.
+
+The incoming shared changes cover occupied-start displacement escape, the content-authored full-roster flight floor at 0.16 m, returning descent after low pierces, layered terrain support, bounded admitted cursor sampling and pure loaded-only snapshot observation. Existing authored dimensions and anatomy stay unchanged. The original [#40 finding disposition](https://github.com/arianna-arpg/hollow-wake-mmo/pull/40#issuecomment-6256219341) remains evidence for its scoped elemental cases; the newly integrated shared corrections require actual-union checks.
+
+The inherited replay change is limited to Skirmisher/Hob `465a4807b0fe94f2` and Fauna Skirmisher/Boar `fbf0ac20a5a74103`; the other five references are retained. The [foundation causal comparison](../../experiments/entity-review/evidence/34-final-union/replay-comparison.json) records equal full reports at floor 0.16 and 0.342 on the incoming runtime, exact legacy-boar controls and the prior failed comparison. The [#36 returning/layered record](2026-10-18-layered-ground-return.md) preserves its two-hunk runtime counterfactual. No elemental replay reference is refreshed without checking this union.
+
+Required functional gates, world audit and Release provenance are pending. Evidence uses `union-` under `experiments/elementals/evidence/review-fixes/`. Every first failure will be retained. Proving ceilings and prior performance findings remain open. No benchmark or performance trace is authorized or run; benchmark metadata must remain NO-RUN. Native pixels remain outside headless coverage. The PR stays draft pending Claude reciprocal review and separately coordinated performance acceptance.
+
+Acknowledged by: pending Claude reciprocal review.

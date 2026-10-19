@@ -1,0 +1,30 @@
+{
+  "WorkingDirectory": "C:\\Users\\John\\.codex\\worktrees\\fauna-foundation-integration\\MMOARPG",
+  "RuntimeSource": "900928f9e3706a650f1255b098e05550bc137976",
+  "Commands": [
+    "dotnet build HollowWake.sln --no-restore -m:1 -nr:false -p:UseSharedCompilation=false",
+    "dotnet test HollowWake.sln --no-build -m:1 -nr:false",
+    "dotnet build src/HollowWake.Tools/HollowWake.Tools.csproj -c Release --no-restore -m:1 -nr:false -p:UseSharedCompilation=false",
+    "dotnet src/HollowWake.Tools/bin/Debug/net10.0/hollowwake.dll validate",
+    "dotnet src/HollowWake.Tools/bin/Debug/net10.0/hollowwake.dll load",
+    "dotnet src/HollowWake.Tools/bin/Debug/net10.0/hollowwake.dll fight skeleton_warrior zombie",
+    "dotnet src/HollowWake.Tools/bin/Debug/net10.0/hollowwake.dll weave --axes --all --json <evidence>/axes.json --literals <evidence>/literals.txt",
+    "dotnet src/HollowWake.Tools/bin/Debug/net10.0/hollowwake.dll lint --json <evidence>/lint.json",
+    "npm --prefix web ci",
+    "npm --prefix web test",
+    "npm --prefix web run build",
+    "node --test scripts/port/port-prototype.test.mjs",
+    "node --test scripts/test-background.test.mjs",
+    "dotnet src/HollowWake.Tools/bin/Debug/net10.0/hollowwake.dll protocol-ts --check",
+    "node scripts/test-background.mjs --suite all --no-build",
+    "dotnet src/HollowWake.Tools/bin/Release/net10.0/hollowwake.dll tournament --standard --out <evidence>/standard-actual.json",
+    "dotnet src/HollowWake.Tools/bin/Release/net10.0/hollowwake.dll tournament --standard --content \"content/core;artifacts/foundation-counter/floor342\" --seeds 10 --seconds 60 --out <evidence>/standard-floor342.json",
+    "dotnet src/HollowWake.Tools/bin/Release/net10.0/hollowwake.dll tournament --pairs loosed_skirmisher:boar --content \"content/core;artifacts/foundation-counter/legacy-boar\" --seeds 10 --seconds 60 --out <evidence>/boar-legacy-floor016.json",
+    "dotnet src/HollowWake.Tools/bin/Release/net10.0/hollowwake.dll tournament --pairs loosed_skirmisher:boar --content \"content/core;artifacts/foundation-counter/floor342;artifacts/foundation-counter/legacy-boar\" --seeds 10 --seconds 60 --out <evidence>/boar-legacy-floor342.json",
+    "dotnet src/HollowWake.Tools/bin/Release/net10.0/hollowwake.dll tournament --seeds 10 --seconds 60 --bands --out <evidence>/proving.json",
+    "dotnet test tests/HollowWake.Core.Tests/HollowWake.Core.Tests.csproj --no-build -m:1 -nr:false --filter FullyQualifiedName~TheCommittedBaselineHoldsOnItsPlatform",
+    "dotnet src/HollowWake.Tools/bin/Release/net10.0/hollowwake.dll tournament --standard --check-hashes experiments/combat-grammar/baselines/standard-duels.json"
+  ],
+  "Probe": "probe-commands.ps1 uses private identity/ports, six features and bounded lease cleanup",
+  "OutputNote": "Original output prefix is D:/Games/MMOARPG/artifacts/entity34-final-union-; packaged files omit that prefix. Exact private endpoints are retained in smoke-result.json and probe-server.yaml."
+}

@@ -1,0 +1,127 @@
+  HollowWake.Core -> C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\src\HollowWake.Core\bin\Debug\net8.0\HollowWake.Core.dll
+  HollowWake.Protocol -> C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\src\HollowWake.Protocol\bin\Debug\net8.0\HollowWake.Protocol.dll
+  HollowWake.Server -> C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\src\HollowWake.Server\bin\Debug\net10.0\HollowWake.Server.dll
+  HollowWake.Tools -> C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\src\HollowWake.Tools\bin\Debug\net10.0\hollowwake.dll
+  HollowWake.Core.Tests -> C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\bin\Debug\net10.0\HollowWake.Core.Tests.dll
+Test run for C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\bin\Debug\net10.0\HollowWake.Core.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v3.1.5+1b188a7b0a (64-bit .NET 10.0.13)
+[xUnit.net 00:00:00.10]   Discovering: HollowWake.Core.Tests
+[xUnit.net 00:00:01.88]   Discovered:  HollowWake.Core.Tests
+[xUnit.net 00:00:01.91]   Starting:    HollowWake.Core.Tests
+[xUnit.net 00:00:02.50]     HollowWake.Core.Tests.LayeredProjectileGroundTests.RealShippedFloorsSupportFreeShotsBeyondANearCursor(landmark: "watch_tower", preset: "firebolt") [FAIL]
+[xUnit.net 00:00:02.50]       Flight fell below the real watch_tower floor: 21.262096 < 23.920097
+[xUnit.net 00:00:02.50]       Stack Trace:
+[xUnit.net 00:00:02.50]         C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\LayeredProjectileGroundTests.cs(42,0): at HollowWake.Core.Tests.LayeredProjectileGroundTests.RealShippedFloorsSupportFreeShotsBeyondANearCursor(String landmark, String preset)
+[xUnit.net 00:00:02.50]            at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+[xUnit.net 00:00:02.50]            at System.Reflection.MethodBaseInvoker.InvokeDirectByRefWithFewArgs(Object obj, Span`1 copyOfArgs, BindingFlags invokeAttr)
+[xUnit.net 00:00:02.50]       Output:
+[xUnit.net 00:00:02.50]         watch_tower/firebolt: deck=23.920097, start=<15.5, 17.2, 25.018097>, minimum=21.262096
+[xUnit.net 00:00:02.89]     HollowWake.Core.Tests.LayeredProjectileGroundTests.RealShippedFloorsSupportFreeShotsBeyondANearCursor(landmark: "watch_tower", preset: "piercing_arrow") [FAIL]
+[xUnit.net 00:00:02.89]       Flight fell below the real watch_tower floor: 21.262096 < 23.920097
+[xUnit.net 00:00:02.89]       Stack Trace:
+[xUnit.net 00:00:02.89]         C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\LayeredProjectileGroundTests.cs(42,0): at HollowWake.Core.Tests.LayeredProjectileGroundTests.RealShippedFloorsSupportFreeShotsBeyondANearCursor(String landmark, String preset)
+[xUnit.net 00:00:02.89]            at InvokeStub_LayeredProjectileGroundTests.RealShippedFloorsSupportFreeShotsBeyondANearCursor(Object, Span`1)
+[xUnit.net 00:00:02.89]            at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:02.89]       Output:
+[xUnit.net 00:00:02.89]         watch_tower/piercing_arrow: deck=23.920097, start=<15.5, 17.2, 25.018097>, minimum=21.262096
+[xUnit.net 00:00:03.29]     HollowWake.Core.Tests.LayeredProjectileGroundTests.RealShippedFloorsSupportFreeShotsBeyondANearCursor(landmark: "wreck_hull", preset: "piercing_arrow") [FAIL]
+[xUnit.net 00:00:03.29]       Flight fell below the real wreck_hull floor: 21.262096 < 22.120098
+[xUnit.net 00:00:03.29]       Stack Trace:
+[xUnit.net 00:00:03.29]         C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\LayeredProjectileGroundTests.cs(42,0): at HollowWake.Core.Tests.LayeredProjectileGroundTests.RealShippedFloorsSupportFreeShotsBeyondANearCursor(String landmark, String preset)
+[xUnit.net 00:00:03.29]            at InvokeStub_LayeredProjectileGroundTests.RealShippedFloorsSupportFreeShotsBeyondANearCursor(Object, Span`1)
+[xUnit.net 00:00:03.29]            at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:03.29]       Output:
+[xUnit.net 00:00:03.29]         wreck_hull/piercing_arrow: deck=22.120098, start=<15.5, 15.2, 23.218098>, minimum=21.262096
+  Failed HollowWake.Core.Tests.LayeredProjectileGroundTests.RealShippedFloorsSupportFreeShotsBeyondANearCursor(landmark: "watch_tower", preset: "firebolt") [553 ms]
+  Error Message:
+   Flight fell below the real watch_tower floor: 21.262096 < 23.920097
+  Stack Trace:
+     at HollowWake.Core.Tests.LayeredProjectileGroundTests.RealShippedFloorsSupportFreeShotsBeyondANearCursor(String landmark, String preset) in C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\LayeredProjectileGroundTests.cs:line 42
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeDirectByRefWithFewArgs(Object obj, Span`1 copyOfArgs, BindingFlags invokeAttr)
+  Standard Output Messages:
+ watch_tower/firebolt: deck=23.920097, start=<15.5, 17.2, 25.018097>, minimum=21.262096
+
+
+  Failed HollowWake.Core.Tests.LayeredProjectileGroundTests.RealShippedFloorsSupportFreeShotsBeyondANearCursor(landmark: "watch_tower", preset: "piercing_arrow") [395 ms]
+  Error Message:
+   Flight fell below the real watch_tower floor: 21.262096 < 23.920097
+  Stack Trace:
+     at HollowWake.Core.Tests.LayeredProjectileGroundTests.RealShippedFloorsSupportFreeShotsBeyondANearCursor(String landmark, String preset) in C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\LayeredProjectileGroundTests.cs:line 42
+   at InvokeStub_LayeredProjectileGroundTests.RealShippedFloorsSupportFreeShotsBeyondANearCursor(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Standard Output Messages:
+ watch_tower/piercing_arrow: deck=23.920097, start=<15.5, 17.2, 25.018097>, minimum=21.262096
+
+
+  Failed HollowWake.Core.Tests.LayeredProjectileGroundTests.RealShippedFloorsSupportFreeShotsBeyondANearCursor(landmark: "wreck_hull", preset: "piercing_arrow") [399 ms]
+  Error Message:
+   Flight fell below the real wreck_hull floor: 21.262096 < 22.120098
+  Stack Trace:
+     at HollowWake.Core.Tests.LayeredProjectileGroundTests.RealShippedFloorsSupportFreeShotsBeyondANearCursor(String landmark, String preset) in C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\LayeredProjectileGroundTests.cs:line 42
+   at InvokeStub_LayeredProjectileGroundTests.RealShippedFloorsSupportFreeShotsBeyondANearCursor(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Standard Output Messages:
+ wreck_hull/piercing_arrow: deck=22.120098, start=<15.5, 15.2, 23.218098>, minimum=21.262096
+
+
+[xUnit.net 00:00:03.80]     HollowWake.Core.Tests.LayeredProjectileGroundTests.RealShippedFloorsSupportFreeShotsBeyondANearCursor(landmark: "wreck_hull", preset: "firebolt") [FAIL]
+[xUnit.net 00:00:03.80]       Flight fell below the real wreck_hull floor: 21.262096 < 22.120098
+[xUnit.net 00:00:03.80]       Stack Trace:
+[xUnit.net 00:00:03.80]         C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\LayeredProjectileGroundTests.cs(42,0): at HollowWake.Core.Tests.LayeredProjectileGroundTests.RealShippedFloorsSupportFreeShotsBeyondANearCursor(String landmark, String preset)
+[xUnit.net 00:00:03.80]            at InvokeStub_LayeredProjectileGroundTests.RealShippedFloorsSupportFreeShotsBeyondANearCursor(Object, Span`1)
+[xUnit.net 00:00:03.80]            at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:03.80]       Output:
+[xUnit.net 00:00:03.80]         wreck_hull/firebolt: deck=22.120098, start=<15.5, 15.2, 23.218098>, minimum=21.262096
+[xUnit.net 00:00:04.23]     HollowWake.Core.Tests.LayeredProjectileGroundTests.DirectionInputHeightIsResolvedToAnActualSurface(landmark: "wreck_hull") [FAIL]
+[xUnit.net 00:00:04.23]       Assert.Equal() Failure: Values are not within 4 decimal places
+[xUnit.net 00:00:04.23]       Expected: 22.1201 (rounded from 22.1200981)
+[xUnit.net 00:00:04.23]       Actual:   1022.1201 (rounded from 1022.12012)
+[xUnit.net 00:00:04.23]       Stack Trace:
+[xUnit.net 00:00:04.23]         C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\LayeredProjectileGroundTests.cs(56,0): at HollowWake.Core.Tests.LayeredProjectileGroundTests.DirectionInputHeightIsResolvedToAnActualSurface(String landmark)
+[xUnit.net 00:00:04.23]            at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+[xUnit.net 00:00:04.23]            at System.Reflection.MethodBaseInvoker.InvokeDirectByRefWithFewArgs(Object obj, Span`1 copyOfArgs, BindingFlags invokeAttr)
+[xUnit.net 00:00:04.70]     HollowWake.Core.Tests.LayeredProjectileGroundTests.DirectionInputHeightIsResolvedToAnActualSurface(landmark: "watch_tower") [FAIL]
+[xUnit.net 00:00:04.70]       Assert.Equal() Failure: Values are not within 4 decimal places
+[xUnit.net 00:00:04.70]       Expected: 23.9201 (rounded from 23.9200974)
+[xUnit.net 00:00:04.70]       Actual:   1023.9201 (rounded from 1023.9201)
+[xUnit.net 00:00:04.70]       Stack Trace:
+[xUnit.net 00:00:04.70]         C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\LayeredProjectileGroundTests.cs(56,0): at HollowWake.Core.Tests.LayeredProjectileGroundTests.DirectionInputHeightIsResolvedToAnActualSurface(String landmark)
+[xUnit.net 00:00:04.70]            at InvokeStub_LayeredProjectileGroundTests.DirectionInputHeightIsResolvedToAnActualSurface(Object, Span`1)
+[xUnit.net 00:00:04.70]            at System.Reflection.MethodBaseInvoker.InvokeWithOneArg(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:04.70]   Finished:    HollowWake.Core.Tests
+  Failed HollowWake.Core.Tests.LayeredProjectileGroundTests.RealShippedFloorsSupportFreeShotsBeyondANearCursor(landmark: "wreck_hull", preset: "firebolt") [512 ms]
+  Error Message:
+   Flight fell below the real wreck_hull floor: 21.262096 < 22.120098
+  Stack Trace:
+     at HollowWake.Core.Tests.LayeredProjectileGroundTests.RealShippedFloorsSupportFreeShotsBeyondANearCursor(String landmark, String preset) in C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\LayeredProjectileGroundTests.cs:line 42
+   at InvokeStub_LayeredProjectileGroundTests.RealShippedFloorsSupportFreeShotsBeyondANearCursor(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Standard Output Messages:
+ wreck_hull/firebolt: deck=22.120098, start=<15.5, 15.2, 23.218098>, minimum=21.262096
+
+
+  Failed HollowWake.Core.Tests.LayeredProjectileGroundTests.DirectionInputHeightIsResolvedToAnActualSurface(landmark: "wreck_hull") [426 ms]
+  Error Message:
+   Assert.Equal() Failure: Values are not within 4 decimal places
+Expected: 22.1201 (rounded from 22.1200981)
+Actual:   1022.1201 (rounded from 1022.12012)
+  Stack Trace:
+     at HollowWake.Core.Tests.LayeredProjectileGroundTests.DirectionInputHeightIsResolvedToAnActualSurface(String landmark) in C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\LayeredProjectileGroundTests.cs:line 56
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeDirectByRefWithFewArgs(Object obj, Span`1 copyOfArgs, BindingFlags invokeAttr)
+  Failed HollowWake.Core.Tests.LayeredProjectileGroundTests.DirectionInputHeightIsResolvedToAnActualSurface(landmark: "watch_tower") [465 ms]
+  Error Message:
+   Assert.Equal() Failure: Values are not within 4 decimal places
+Expected: 23.9201 (rounded from 23.9200974)
+Actual:   1023.9201 (rounded from 1023.9201)
+  Stack Trace:
+     at HollowWake.Core.Tests.LayeredProjectileGroundTests.DirectionInputHeightIsResolvedToAnActualSurface(String landmark) in C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\LayeredProjectileGroundTests.cs:line 56
+   at InvokeStub_LayeredProjectileGroundTests.DirectionInputHeightIsResolvedToAnActualSurface(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithOneArg(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+
+Test Run Failed.
+Total tests: 6
+     Failed: 6
+ Total time: 5.5640 Seconds

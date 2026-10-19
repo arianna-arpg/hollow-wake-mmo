@@ -1,0 +1,890 @@
+{
+  "Seeds": 10,
+  "Seconds": 60,
+  "Hash": "38574041830492e0",
+  "BandsChecked": false,
+  "Bands": null,
+  "Pairs": [
+    {
+      "A": "loosed_skirmisher",
+      "B": "boar",
+      "Fights": 10,
+      "Hash": "7dd259e21c8ac0e8",
+      "WinRateA": 1,
+      "WinRateB": 0,
+      "DrawRate": 0,
+      "TtkMedian": 7.6,
+      "TtkLow": 5.75,
+      "TtkHigh": 9.2,
+      "CoverageA": 0.9,
+      "CoverageB": 1,
+      "SpreadA": 2.532,
+      "SpreadB": 1,
+      "SeatsA": [
+        "seeking_bolt",
+        "splitting_bolt",
+        "stone_glaive"
+      ],
+      "SeatsB": [
+        "gore"
+      ],
+      "MechanismsA": [
+        "affliction",
+        "attack",
+        "bankless",
+        "chain",
+        "flight",
+        "hit",
+        "homing",
+        "projectile",
+        "returning",
+        "spell",
+        "status",
+        "strikes",
+        "trajectory"
+      ],
+      "MechanismsB": [
+        "area",
+        "attack",
+        "bankless",
+        "hit",
+        "melee",
+        "shape",
+        "strikes"
+      ],
+      "SelfDamageA": 0,
+      "SelfDamageB": 0,
+      "SelfStatusesA": [],
+      "SelfStatusesB": [],
+      "Breaches": []
+    }
+  ],
+  "Fights": [
+    {
+      "A": "loosed_skirmisher",
+      "B": "boar",
+      "Index": 0,
+      "Seed": "tournament:loosed_skirmisher:boar:0",
+      "Outcome": "a",
+      "EndTick": 104,
+      "Seconds": 5.2,
+      "Hash": "55733cc1acc61c30",
+      "SideA": {
+        "Pattern": "loosed_skirmisher",
+        "DamageDealt": 127.69,
+        "Hits": 13,
+        "Crits": 1,
+        "Casts": 6,
+        "Uses": 7,
+        "Kit": 3,
+        "Coverage": 0.667,
+        "Spread": 1.507,
+        "Seats": [
+          "splitting_bolt",
+          "seeking_bolt"
+        ],
+        "Faces": [
+          "seeking_bolt",
+          "splitting_bolt"
+        ],
+        "Mechanisms": [
+          "affliction",
+          "bankless",
+          "chain",
+          "flight",
+          "hit",
+          "homing",
+          "projectile",
+          "spell",
+          "status",
+          "trajectory"
+        ],
+        "StatusesApplied": [
+          "burning"
+        ],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0.95
+      },
+      "SideB": {
+        "Pattern": "boar",
+        "DamageDealt": 8.42,
+        "Hits": 1,
+        "Crits": 0,
+        "Casts": 2,
+        "Uses": 3,
+        "Kit": 1,
+        "Coverage": 1,
+        "Spread": 1,
+        "Seats": [
+          "gore"
+        ],
+        "Faces": [
+          "gore"
+        ],
+        "Mechanisms": [
+          "area",
+          "attack",
+          "bankless",
+          "hit",
+          "melee",
+          "shape",
+          "strikes"
+        ],
+        "StatusesApplied": [],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0
+      },
+      "Warnings": [],
+      "Errors": []
+    },
+    {
+      "A": "loosed_skirmisher",
+      "B": "boar",
+      "Index": 1,
+      "Seed": "tournament:loosed_skirmisher:boar:1",
+      "Outcome": "a",
+      "EndTick": 184,
+      "Seconds": 9.2,
+      "Hash": "e7282dff04b67fed",
+      "SideA": {
+        "Pattern": "loosed_skirmisher",
+        "DamageDealt": 127.77,
+        "Hits": 17,
+        "Crits": 0,
+        "Casts": 9,
+        "Uses": 10,
+        "Kit": 3,
+        "Coverage": 1,
+        "Spread": 2.8,
+        "Seats": [
+          "stone_glaive",
+          "splitting_bolt",
+          "seeking_bolt"
+        ],
+        "Faces": [
+          "seeking_bolt",
+          "splitting_bolt",
+          "stone_glaive"
+        ],
+        "Mechanisms": [
+          "affliction",
+          "attack",
+          "bankless",
+          "chain",
+          "flight",
+          "hit",
+          "homing",
+          "projectile",
+          "returning",
+          "spell",
+          "status",
+          "strikes",
+          "trajectory"
+        ],
+        "StatusesApplied": [
+          "burning"
+        ],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0.952
+      },
+      "SideB": {
+        "Pattern": "boar",
+        "DamageDealt": 10.82,
+        "Hits": 1,
+        "Crits": 0,
+        "Casts": 5,
+        "Uses": 6,
+        "Kit": 1,
+        "Coverage": 1,
+        "Spread": 1,
+        "Seats": [
+          "gore"
+        ],
+        "Faces": [
+          "gore"
+        ],
+        "Mechanisms": [
+          "area",
+          "attack",
+          "bankless",
+          "hit",
+          "melee",
+          "shape",
+          "strikes"
+        ],
+        "StatusesApplied": [],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0
+      },
+      "Warnings": [],
+      "Errors": []
+    },
+    {
+      "A": "loosed_skirmisher",
+      "B": "boar",
+      "Index": 2,
+      "Seed": "tournament:loosed_skirmisher:boar:2",
+      "Outcome": "a",
+      "EndTick": 239,
+      "Seconds": 11.95,
+      "Hash": "b5f685d88d258ab4",
+      "SideA": {
+        "Pattern": "loosed_skirmisher",
+        "DamageDealt": 136.83,
+        "Hits": 17,
+        "Crits": 1,
+        "Casts": 11,
+        "Uses": 11,
+        "Kit": 3,
+        "Coverage": 1,
+        "Spread": 2.705,
+        "Seats": [
+          "stone_glaive",
+          "splitting_bolt",
+          "seeking_bolt"
+        ],
+        "Faces": [
+          "seeking_bolt",
+          "splitting_bolt",
+          "stone_glaive"
+        ],
+        "Mechanisms": [
+          "affliction",
+          "attack",
+          "bankless",
+          "chain",
+          "flight",
+          "hit",
+          "homing",
+          "projectile",
+          "returning",
+          "spell",
+          "status",
+          "strikes",
+          "trajectory"
+        ],
+        "StatusesApplied": [],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0.851
+      },
+      "SideB": {
+        "Pattern": "boar",
+        "DamageDealt": 26.52,
+        "Hits": 3,
+        "Crits": 0,
+        "Casts": 7,
+        "Uses": 8,
+        "Kit": 1,
+        "Coverage": 1,
+        "Spread": 1,
+        "Seats": [
+          "gore"
+        ],
+        "Faces": [
+          "gore"
+        ],
+        "Mechanisms": [
+          "area",
+          "attack",
+          "bankless",
+          "hit",
+          "melee",
+          "shape",
+          "strikes"
+        ],
+        "StatusesApplied": [],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0
+      },
+      "Warnings": [],
+      "Errors": []
+    },
+    {
+      "A": "loosed_skirmisher",
+      "B": "boar",
+      "Index": 3,
+      "Seed": "tournament:loosed_skirmisher:boar:3",
+      "Outcome": "a",
+      "EndTick": 115,
+      "Seconds": 5.75,
+      "Hash": "4b9910d078ef9cec",
+      "SideA": {
+        "Pattern": "loosed_skirmisher",
+        "DamageDealt": 135.9,
+        "Hits": 13,
+        "Crits": 0,
+        "Casts": 7,
+        "Uses": 8,
+        "Kit": 3,
+        "Coverage": 0.667,
+        "Spread": 1.938,
+        "Seats": [
+          "splitting_bolt",
+          "seeking_bolt"
+        ],
+        "Faces": [
+          "seeking_bolt",
+          "splitting_bolt"
+        ],
+        "Mechanisms": [
+          "affliction",
+          "bankless",
+          "chain",
+          "flight",
+          "hit",
+          "homing",
+          "projectile",
+          "spell",
+          "status",
+          "trajectory"
+        ],
+        "StatusesApplied": [
+          "burning"
+        ],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0.881
+      },
+      "SideB": {
+        "Pattern": "boar",
+        "DamageDealt": 17.45,
+        "Hits": 2,
+        "Crits": 0,
+        "Casts": 3,
+        "Uses": 4,
+        "Kit": 1,
+        "Coverage": 1,
+        "Spread": 1,
+        "Seats": [
+          "gore"
+        ],
+        "Faces": [
+          "gore"
+        ],
+        "Mechanisms": [
+          "area",
+          "attack",
+          "bankless",
+          "hit",
+          "melee",
+          "shape",
+          "strikes"
+        ],
+        "StatusesApplied": [],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0
+      },
+      "Warnings": [],
+      "Errors": []
+    },
+    {
+      "A": "loosed_skirmisher",
+      "B": "boar",
+      "Index": 4,
+      "Seed": "tournament:loosed_skirmisher:boar:4",
+      "Outcome": "a",
+      "EndTick": 138,
+      "Seconds": 6.9,
+      "Hash": "98acb8d8778feb7b",
+      "SideA": {
+        "Pattern": "loosed_skirmisher",
+        "DamageDealt": 137.91,
+        "Hits": 9,
+        "Crits": 0,
+        "Casts": 8,
+        "Uses": 9,
+        "Kit": 3,
+        "Coverage": 1,
+        "Spread": 2.889,
+        "Seats": [
+          "stone_glaive",
+          "splitting_bolt",
+          "seeking_bolt"
+        ],
+        "Faces": [
+          "seeking_bolt",
+          "splitting_bolt",
+          "stone_glaive"
+        ],
+        "Mechanisms": [
+          "affliction",
+          "attack",
+          "bankless",
+          "chain",
+          "flight",
+          "hit",
+          "homing",
+          "projectile",
+          "returning",
+          "spell",
+          "status",
+          "strikes",
+          "trajectory"
+        ],
+        "StatusesApplied": [
+          "shocked"
+        ],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0.958
+      },
+      "SideB": {
+        "Pattern": "boar",
+        "DamageDealt": 7.81,
+        "Hits": 1,
+        "Crits": 0,
+        "Casts": 3,
+        "Uses": 4,
+        "Kit": 1,
+        "Coverage": 1,
+        "Spread": 1,
+        "Seats": [
+          "gore"
+        ],
+        "Faces": [
+          "gore"
+        ],
+        "Mechanisms": [
+          "area",
+          "attack",
+          "bankless",
+          "hit",
+          "melee",
+          "shape",
+          "strikes"
+        ],
+        "StatusesApplied": [],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0
+      },
+      "Warnings": [],
+      "Errors": []
+    },
+    {
+      "A": "loosed_skirmisher",
+      "B": "boar",
+      "Index": 5,
+      "Seed": "tournament:loosed_skirmisher:boar:5",
+      "Outcome": "a",
+      "EndTick": 162,
+      "Seconds": 8.1,
+      "Hash": "2c2f9587c21d19a4",
+      "SideA": {
+        "Pattern": "loosed_skirmisher",
+        "DamageDealt": 128.21,
+        "Hits": 16,
+        "Crits": 0,
+        "Casts": 8,
+        "Uses": 8,
+        "Kit": 3,
+        "Coverage": 1,
+        "Spread": 2.951,
+        "Seats": [
+          "stone_glaive",
+          "splitting_bolt",
+          "seeking_bolt"
+        ],
+        "Faces": [
+          "seeking_bolt",
+          "splitting_bolt",
+          "stone_glaive"
+        ],
+        "Mechanisms": [
+          "affliction",
+          "attack",
+          "bankless",
+          "chain",
+          "flight",
+          "hit",
+          "homing",
+          "projectile",
+          "returning",
+          "spell",
+          "status",
+          "strikes",
+          "trajectory"
+        ],
+        "StatusesApplied": [
+          "burning",
+          "shocked"
+        ],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0.951
+      },
+      "SideB": {
+        "Pattern": "boar",
+        "DamageDealt": 11.25,
+        "Hits": 1,
+        "Crits": 0,
+        "Casts": 4,
+        "Uses": 5,
+        "Kit": 1,
+        "Coverage": 1,
+        "Spread": 1,
+        "Seats": [
+          "gore"
+        ],
+        "Faces": [
+          "gore"
+        ],
+        "Mechanisms": [
+          "area",
+          "attack",
+          "bankless",
+          "hit",
+          "melee",
+          "shape",
+          "strikes"
+        ],
+        "StatusesApplied": [],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0
+      },
+      "Warnings": [],
+      "Errors": []
+    },
+    {
+      "A": "loosed_skirmisher",
+      "B": "boar",
+      "Index": 6,
+      "Seed": "tournament:loosed_skirmisher:boar:6",
+      "Outcome": "a",
+      "EndTick": 179,
+      "Seconds": 8.95,
+      "Hash": "8134f6eb1f7c0a22",
+      "SideA": {
+        "Pattern": "loosed_skirmisher",
+        "DamageDealt": 136.89,
+        "Hits": 12,
+        "Crits": 0,
+        "Casts": 9,
+        "Uses": 9,
+        "Kit": 3,
+        "Coverage": 1,
+        "Spread": 2.889,
+        "Seats": [
+          "stone_glaive",
+          "splitting_bolt",
+          "seeking_bolt"
+        ],
+        "Faces": [
+          "seeking_bolt",
+          "splitting_bolt",
+          "stone_glaive"
+        ],
+        "Mechanisms": [
+          "affliction",
+          "attack",
+          "bankless",
+          "chain",
+          "flight",
+          "hit",
+          "homing",
+          "projectile",
+          "returning",
+          "spell",
+          "status",
+          "strikes",
+          "trajectory"
+        ],
+        "StatusesApplied": [
+          "shocked"
+        ],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 1
+      },
+      "SideB": {
+        "Pattern": "boar",
+        "DamageDealt": 0,
+        "Hits": 0,
+        "Crits": 0,
+        "Casts": 5,
+        "Uses": 6,
+        "Kit": 1,
+        "Coverage": 1,
+        "Spread": 1,
+        "Seats": [
+          "gore"
+        ],
+        "Faces": [
+          "gore"
+        ],
+        "Mechanisms": [
+          "area",
+          "attack",
+          "bankless",
+          "hit",
+          "melee",
+          "shape",
+          "strikes"
+        ],
+        "StatusesApplied": [],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0
+      },
+      "Warnings": [],
+      "Errors": []
+    },
+    {
+      "A": "loosed_skirmisher",
+      "B": "boar",
+      "Index": 7,
+      "Seed": "tournament:loosed_skirmisher:boar:7",
+      "Outcome": "a",
+      "EndTick": 97,
+      "Seconds": 4.85,
+      "Hash": "6ec5f7c5a6d0dff2",
+      "SideA": {
+        "Pattern": "loosed_skirmisher",
+        "DamageDealt": 128.17,
+        "Hits": 7,
+        "Crits": 1,
+        "Casts": 6,
+        "Uses": 7,
+        "Kit": 3,
+        "Coverage": 0.667,
+        "Spread": 1.819,
+        "Seats": [
+          "splitting_bolt",
+          "seeking_bolt"
+        ],
+        "Faces": [
+          "seeking_bolt",
+          "splitting_bolt"
+        ],
+        "Mechanisms": [
+          "affliction",
+          "bankless",
+          "chain",
+          "flight",
+          "hit",
+          "homing",
+          "projectile",
+          "spell",
+          "status",
+          "trajectory"
+        ],
+        "StatusesApplied": [
+          "burning",
+          "shocked"
+        ],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0.88
+      },
+      "SideB": {
+        "Pattern": "boar",
+        "DamageDealt": 16.58,
+        "Hits": 2,
+        "Crits": 0,
+        "Casts": 2,
+        "Uses": 3,
+        "Kit": 1,
+        "Coverage": 1,
+        "Spread": 1,
+        "Seats": [
+          "gore"
+        ],
+        "Faces": [
+          "gore"
+        ],
+        "Mechanisms": [
+          "area",
+          "attack",
+          "bankless",
+          "hit",
+          "melee",
+          "shape",
+          "strikes"
+        ],
+        "StatusesApplied": [],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0
+      },
+      "Warnings": [],
+      "Errors": []
+    },
+    {
+      "A": "loosed_skirmisher",
+      "B": "boar",
+      "Index": 8,
+      "Seed": "tournament:loosed_skirmisher:boar:8",
+      "Outcome": "a",
+      "EndTick": 152,
+      "Seconds": 7.6,
+      "Hash": "a5a1d7cdf3eae2f5",
+      "SideA": {
+        "Pattern": "loosed_skirmisher",
+        "DamageDealt": 128.39,
+        "Hits": 10,
+        "Crits": 0,
+        "Casts": 8,
+        "Uses": 9,
+        "Kit": 3,
+        "Coverage": 1,
+        "Spread": 2.889,
+        "Seats": [
+          "stone_glaive",
+          "splitting_bolt",
+          "seeking_bolt"
+        ],
+        "Faces": [
+          "seeking_bolt",
+          "splitting_bolt",
+          "stone_glaive"
+        ],
+        "Mechanisms": [
+          "affliction",
+          "attack",
+          "bankless",
+          "chain",
+          "flight",
+          "hit",
+          "homing",
+          "projectile",
+          "returning",
+          "spell",
+          "status",
+          "strikes",
+          "trajectory"
+        ],
+        "StatusesApplied": [
+          "shocked"
+        ],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0.958
+      },
+      "SideB": {
+        "Pattern": "boar",
+        "DamageDealt": 9.9,
+        "Hits": 1,
+        "Crits": 0,
+        "Casts": 4,
+        "Uses": 5,
+        "Kit": 1,
+        "Coverage": 1,
+        "Spread": 1,
+        "Seats": [
+          "gore"
+        ],
+        "Faces": [
+          "gore"
+        ],
+        "Mechanisms": [
+          "area",
+          "attack",
+          "bankless",
+          "hit",
+          "melee",
+          "shape",
+          "strikes"
+        ],
+        "StatusesApplied": [],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0
+      },
+      "Warnings": [],
+      "Errors": []
+    },
+    {
+      "A": "loosed_skirmisher",
+      "B": "boar",
+      "Index": 9,
+      "Seed": "tournament:loosed_skirmisher:boar:9",
+      "Outcome": "a",
+      "EndTick": 224,
+      "Seconds": 11.2,
+      "Hash": "931a7643e194bca6",
+      "SideA": {
+        "Pattern": "loosed_skirmisher",
+        "DamageDealt": 139.74,
+        "Hits": 14,
+        "Crits": 0,
+        "Casts": 11,
+        "Uses": 12,
+        "Kit": 3,
+        "Coverage": 1,
+        "Spread": 2.937,
+        "Seats": [
+          "stone_glaive",
+          "splitting_bolt",
+          "seeking_bolt"
+        ],
+        "Faces": [
+          "seeking_bolt",
+          "splitting_bolt",
+          "stone_glaive"
+        ],
+        "Mechanisms": [
+          "affliction",
+          "attack",
+          "bankless",
+          "chain",
+          "flight",
+          "hit",
+          "homing",
+          "projectile",
+          "returning",
+          "spell",
+          "status",
+          "strikes",
+          "trajectory"
+        ],
+        "StatusesApplied": [
+          "shocked"
+        ],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0.769
+      },
+      "SideB": {
+        "Pattern": "boar",
+        "DamageDealt": 34.02,
+        "Hits": 3,
+        "Crits": 1,
+        "Casts": 7,
+        "Uses": 7,
+        "Kit": 1,
+        "Coverage": 1,
+        "Spread": 1,
+        "Seats": [
+          "gore"
+        ],
+        "Faces": [
+          "gore"
+        ],
+        "Mechanisms": [
+          "area",
+          "attack",
+          "bankless",
+          "hit",
+          "melee",
+          "shape",
+          "strikes"
+        ],
+        "StatusesApplied": [],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0
+      },
+      "Warnings": [],
+      "Errors": []
+    }
+  ],
+  "Passed": null
+}

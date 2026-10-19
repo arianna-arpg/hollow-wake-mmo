@@ -1,0 +1,11 @@
+  Determining projects to restore...
+  Restored C:\Users\John\.codex\worktrees\fauna-foundation-integration\MMOARPG\tests\HollowWake.Server.Tests\HollowWake.Server.Tests.csproj (in 222 ms).
+  Restored C:\Users\John\.codex\worktrees\fauna-foundation-integration\MMOARPG\tests\HollowWake.Client.Tests\HollowWake.Client.Tests.csproj (in 12 ms).
+  Restored C:\Users\John\.codex\worktrees\fauna-foundation-integration\MMOARPG\src\HollowWake.Server.Host.Brutal\HollowWake.Server.Host.Brutal.csproj (in 31 ms).
+  Restored C:\Users\John\.codex\worktrees\fauna-foundation-integration\MMOARPG\src\HollowWake.Server.Host\HollowWake.Server.Host.csproj (in 2 ms).
+  Restored C:\Users\John\.codex\worktrees\fauna-foundation-integration\MMOARPG\src\HollowWake.Core\HollowWake.Core.csproj (in 5 ms).
+  Restored C:\Users\John\.codex\worktrees\fauna-foundation-integration\MMOARPG\src\HollowWake.Client\HollowWake.Client.csproj (in 6 ms).
+  Restored C:\Users\John\.codex\worktrees\fauna-foundation-integration\MMOARPG\tests\HollowWake.Core.Tests\HollowWake.Core.Tests.csproj (in 3 ms).
+  Restored C:\Users\John\.codex\worktrees\fauna-foundation-integration\MMOARPG\src\HollowWake.Tools\HollowWake.Tools.csproj (in 2 ms).
+  Restored C:\Users\John\.codex\worktrees\fauna-foundation-integration\MMOARPG\src\HollowWake.Server\HollowWake.Server.csproj (in 2 ms).
+  Restored C:\Users\John\.codex\worktrees\fauna-foundation-integration\MMOARPG\src\HollowWake.Protocol\HollowWake.Protocol.csproj (in 1 ms).

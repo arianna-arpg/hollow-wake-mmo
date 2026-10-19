@@ -1,0 +1,5 @@
+TEST evidence: C:\Users\John\.codex\worktrees\fauna-foundation-integration\MMOARPG\artifacts\testing\run-n4vt04
+TEST smoke-web; evidence: C:\Users\John\.codex\worktrees\fauna-foundation-integration\MMOARPG\artifacts\testing\run-n4vt04
+TEST import-godot; evidence: C:\Users\John\.codex\worktrees\fauna-foundation-integration\MMOARPG\artifacts\testing\run-n4vt04
+TEST smoke-godot; evidence: C:\Users\John\.codex\worktrees\fauna-foundation-integration\MMOARPG\artifacts\testing\run-n4vt04
+TEST PASSED; report: C:\Users\John\.codex\worktrees\fauna-foundation-integration\MMOARPG\artifacts\testing\run-n4vt04\result.json
