@@ -30,6 +30,10 @@ The commitment behind it: **the game is data, and the engine is a set of mechani
 
 ## Play
 
+**For this Windows checkout: double-click [Play.cmd](Play.cmd).** It builds what is needed, starts the local server and opens the browser game. No release download, branch selection or server address is needed. [PLAYTEST.md](PLAYTEST.md) gives the first-session steps, controls, implemented combat and the work that is still waiting. [Stop Playtest.cmd](Stop%20Playtest.cmd) saves and stops the local server.
+
+The choices below are distribution and hosting alternatives. The local checkout is the primary development playtest.
+
 Hollow Wake MMO is a client and a server. Pick a client, then point it at a server: one you run yourself, or one somebody shares with you.
 
 - **The desktop client, through the launcher.** Take the Windows installer or the Linux AppImage from the [latest release](https://github.com/arianna-arpg/hollow-wake-mmo/releases/latest). Windows installs for the current user, no admin needed; on Linux, `chmod +x` the AppImage and run it. The launcher installs the game and keeps it updated from GitHub Releases, checking every download against the release's manifest, and keeps itself updated from stable releases. Enter a server in its Server field (`127.0.0.1:7777` is a server on your own machine) and press Play. The channel toggle switches between stable releases and nightly pre-releases for testers; the build picker can pin a published version. Play remains available while updates are checked or downloaded. Builds are not code-signed yet, so Windows SmartScreen may ask before the first run. [docs/design/launcher.md](docs/design/launcher.md) describes the launcher, the releases and the channels.
