@@ -109,14 +109,15 @@ public class AimWrapperElevationTests
     }
 
     [Fact]
-    public void EmptyGroundBearingSupportRemainsHorizontal()
+    public void EmptyGroundBearingSupportKeepsGroundAimAndFloor()
     {
         var a = DeliveryArena.Create();
         Projectile? flight = null;
         a.Sim.Events.Subscribe<EntitySpawned>(e => flight = a.Sim.World.Get<Projectile>(e.Entity) ?? flight);
         a.Run("""{"type":"aim","offset":30,"effects":[{"type":"projectile","speed":15,"range":10}]}""", new Vector3(13, 10, 0), Vector2.UnitX);
         Assert.NotNull(flight);
-        Assert.Equal(0f, flight.Velocity.Z);
+        Assert.Equal(-4.5f, flight.Velocity.Z, 4);
+        Assert.Equal((float)a.Sim.Content.Rules.Number("delivery.projectile_ground_floor", 0), flight.GroundFloor);
         Assert.Equal(Entity.None, flight.CastTarget);
     }
 
@@ -327,7 +328,7 @@ public class AimWrapperElevationTests
         var point = new Vector3(12, 8, 0);
         var reaimed = fork.WithPoint(point);
         Assert.Null(reaimed.SampledTargetPoint);
-        Assert.Null(ProjectileAims.Get("target")(reaimed));
+        Assert.Equal(point, ProjectileAims.Get("target")(reaimed));
         Assert.Equal(point, ProjectileAims.Get("point")(reaimed));
         var retargeted = fork.WithTarget(target);
         Assert.Null(retargeted.SampledTargetPoint);

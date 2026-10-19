@@ -1,0 +1,12 @@
+{
+  "kind": "rules",
+  "entries": [
+    {
+      "id": "delivery",
+      "patch": true,
+      "values": {
+        "projectile_ground_floor": 0.342
+      }
+    }
+  ]
+}

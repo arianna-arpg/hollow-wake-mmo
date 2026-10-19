@@ -1,0 +1,47 @@
+{
+  "TestedHead": "560adf01fe8c47667ad16ccc2b5c8aae668211b9",
+  "ProductionHead": "d9ac853bed4368ee9ac732bc420f0d6ff8a50957",
+  "Baseline": {
+    "ChangedPairs": [
+      "loosed_skirmisher:hob",
+      "loosed_skirmisher:boar"
+    ],
+    "RuntimeChanged": false,
+    "FinalReplayExitCode": 0,
+    "FailingTestRerun": {
+      "Passed": 1,
+      "Command": "dotnet test tests/HollowWake.Core.Tests --no-build --no-restore --filter FullyQualifiedName~TheCommittedBaselineHoldsOnItsPlatform",
+      "ExitCode": 0
+    },
+    "Initial": "tests.txt and replay-before-baseline.txt retain both failures",
+    "Cause": "Two-hunk returning-floor counterfactual restores all seven old hashes"
+  },
+  "Literals": {
+    "CorrectedCommand": "dotnet src/HollowWake.Tools/bin/Release/net10.0/hollowwake.dll weave --axes --all --literals experiments/entity-hitboxes/artifacts/layered-ground/literals.txt",
+    "ExitCode": 0,
+    "KeyDifferences": 0,
+    "SeparateLog": "literals-run.txt",
+    "Initial": "Output log and --literals target collided; IOException retained in literal-command-path-diagnostic.txt",
+    "Keys": 499
+  },
+  "Counterfactual": {
+    "CorrectedBaseline": "C:/Users/John/.codex/worktrees/precise-entity-hitboxes/MMOARPG/experiments/combat-grammar/baselines/standard-duels.json (prior values at time of run)",
+    "Initial": "Relative baseline path resolved from counterfactual folder; diagnostic retained",
+    "ReplayExitCode": 0,
+    "ProvingExitCode": 1
+  },
+  "Final": {
+    "BackgroundRunnerCases": 10,
+    "BrowserSmoke": 30,
+    "BrowserCases": 275,
+    "Proving": "Same three inherited ceiling failures; every non-hash value unchanged",
+    "NativeSmoke": 36,
+    "Probe": "Passed all six requested features",
+    "ServerCases": 89,
+    "CoreCases": 2050,
+    "NativePixels": "Skipped in headless mode",
+    "TotalDistinctCases": 2550,
+    "Performance": "Not run; coordinator owns timing",
+    "NativeCases": 136
+  }
+}

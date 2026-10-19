@@ -1,0 +1,72 @@
+[
+  {
+    "Name": "build",
+    "ExitCode": 0,
+    "Command": "dotnet build HollowWake.sln --no-restore"
+  },
+  {
+    "Name": "release-build",
+    "ExitCode": 0,
+    "Command": "dotnet build src/HollowWake.Tools -c Release --no-restore"
+  },
+  {
+    "Name": "tests",
+    "ExitCode": 1,
+    "Command": "dotnet test HollowWake.sln --no-build --no-restore"
+  },
+  {
+    "Name": "web-tests",
+    "ExitCode": 0,
+    "Command": "npm --prefix web test"
+  },
+  {
+    "Name": "web-build-final",
+    "ExitCode": 0,
+    "Command": "npm --prefix web run build"
+  },
+  {
+    "Name": "background-runner-tests",
+    "ExitCode": 0,
+    "Command": "node --test scripts/test-background.test.mjs"
+  },
+  {
+    "Name": "validate",
+    "ExitCode": 0,
+    "Command": "dotnet src/HollowWake.Tools/bin/Release/net10.0/hollowwake.dll validate"
+  },
+  {
+    "Name": "load",
+    "ExitCode": 0,
+    "Command": "dotnet src/HollowWake.Tools/bin/Release/net10.0/hollowwake.dll load --x 0 --y 0"
+  },
+  {
+    "Name": "protocol",
+    "ExitCode": 0,
+    "Command": "dotnet src/HollowWake.Tools/bin/Release/net10.0/hollowwake.dll protocol-ts --check"
+  },
+  {
+    "Name": "fight",
+    "ExitCode": 0,
+    "Command": "dotnet src/HollowWake.Tools/bin/Release/net10.0/hollowwake.dll fight wolf hob --seed layered-ground-review --seconds 15"
+  },
+  {
+    "Name": "replay-before-baseline",
+    "ExitCode": 1,
+    "Command": "dotnet src/HollowWake.Tools/bin/Release/net10.0/hollowwake.dll tournament --standard --check-hashes experiments/combat-grammar/baselines/standard-duels.json --out experiments\\entity-hitboxes\\artifacts\\layered-ground\\standard-final.json"
+  },
+  {
+    "Name": "proving",
+    "ExitCode": 1,
+    "Command": "dotnet src/HollowWake.Tools/bin/Release/net10.0/hollowwake.dll tournament --pairs proving_reaver:proving_bulwark,proving_hexer:proving_plaguer,proving_pitfighter:proving_mower,proving_fletcher:proving_evoker --seeds 10 --seconds 60 --bands --out experiments\\entity-hitboxes\\artifacts\\layered-ground\\proving.json"
+  },
+  {
+    "Name": "lint",
+    "ExitCode": 0,
+    "Command": "dotnet src/HollowWake.Tools/bin/Release/net10.0/hollowwake.dll lint --json experiments\\entity-hitboxes\\artifacts\\layered-ground\\lint.json"
+  },
+  {
+    "Name": "literals",
+    "ExitCode": -532462766,
+    "Command": "dotnet src/HollowWake.Tools/bin/Release/net10.0/hollowwake.dll weave --axes --all --literals experiments\\entity-hitboxes\\artifacts\\layered-ground\\literals.txt"
+  }
+]

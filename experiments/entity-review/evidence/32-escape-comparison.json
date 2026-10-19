@@ -1,0 +1,11 @@
+{
+  "runtime": "17d640b760a6bbb89617048d2230889f67286c43",
+  "prior_head": "08831970d0241656ba6b91a86d1e71b34baf72f5",
+  "prior_proving_source": "eb506a717169600dd635488f7381535a34d80aa1",
+  "prior_runtime_content_equal": true,
+  "proving_full_json_equal": true,
+  "proving_exit": 1,
+  "inherited_band_breaches": 4,
+  "literal_census_equal": true,
+  "literal_keys": 499
+}

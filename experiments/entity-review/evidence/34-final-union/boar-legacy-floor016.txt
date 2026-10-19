@@ -1,0 +1,5 @@
+pairing                                      fights  a wins  b wins  draws  ttk med    low   high  cov a  cov b  spr a  spr b
+loosed_skirmisher v boar                         10    1.00    0.00   0.00      7.6    5.8    9.2   0.90   1.00   2.53   1.00
+    loosed_skirmisher: seeking_bolt splitting_bolt stone_glaive | affliction attack bankless chain flight hit homing projectile returning spell status strikes trajectory | self 0 
+    boar: gore | area attack bankless hit melee shape strikes | self 0 
+wrote D:/Games/MMOARPG/artifacts/entity34-final-union-boar-legacy-floor016.json

@@ -387,6 +387,7 @@ public sealed class DisplacementSystem : SimSystem
     /// Grid traversal checks every cell crossed by the segment, including a short diagonal intersection.
     /// Each interval samples its interior and near its exit; the endpoint is checked exactly. This is
     /// terrain/placed-cell clearance for the current center-based movement model, not anatomical collision.
+    /// An invalid starting cell may be left; every newly entered cell still requires clearance.
     /// </summary>
     private static bool TraceGround(Simulation sim, BlockedCells? blocked, Vector3 from, Vector3 to,
         double stepUp, out Vector3 last)
@@ -397,6 +398,18 @@ public sealed class DisplacementSystem : SimSystem
         if (dx == 0 && dy == 0) return true;
         var x = (int)Math.Floor(from.X);
         var y = (int)Math.Floor(from.Y);
+        // Keep normal ground sampling, including slopes, when it succeeds. A resident may already
+        // occupy an invalid home cell; only that cell may be traversed at its existing height.
+        bool SampleGround(float px, float py, float feet, out float height)
+        {
+            if (MovementSystem.CanOccupy(sim, blocked, px, py, feet, stepUp, out var ground))
+            {
+                height = ground.Height;
+                return true;
+            }
+            height = feet;
+            return Math.Floor(px) == x && Math.Floor(py) == y;
+        }
         var stepX = Math.Sign(dx);
         var stepY = Math.Sign(dy);
         var deltaX = dx == 0 ? double.PositiveInfinity : Math.Abs(1 / dx);
@@ -413,12 +426,12 @@ public sealed class DisplacementSystem : SimSystem
                 var mid = (begin + end) * 0.5;
                 var mx = (float)(from.X + dx * mid);
                 var my = (float)(from.Y + dy * mid);
-                if (!MovementSystem.CanOccupy(sim, blocked, mx, my, last.Z, stepUp, out var ground)) return false;
+                if (!SampleGround(mx, my, last.Z, out var height)) return false;
                 var at = end == 1 ? 1 : Math.Max(mid, end - backoff);
                 var px = (float)(from.X + dx * at);
                 var py = (float)(from.Y + dy * at);
-                if (!MovementSystem.CanOccupy(sim, blocked, px, py, ground.Height, stepUp, out ground)) return false;
-                last = new Vector3(px, py, ground.Height);
+                if (!SampleGround(px, py, height, out height)) return false;
+                last = new Vector3(px, py, height);
             }
             if (end == 1) return true;
             if (nextX <= end) nextX += deltaX;

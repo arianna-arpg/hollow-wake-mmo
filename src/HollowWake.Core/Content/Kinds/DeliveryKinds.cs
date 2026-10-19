@@ -39,6 +39,12 @@ internal static class DeliveryKinds
             ScopeNames.Declare(name);
         }
         _ = DisplacementSystem.Collision;
+        ContentKinds.AddValidator<RulesDef>((d, c) =>
+        {
+            if (d.Id == "delivery" && d.Values?["projectile_ground_floor"] is { } floor &&
+                (!JsonNum.TryDouble(floor, out var value) || !double.IsFinite(value) || value < 0 || value > float.MaxValue))
+                c.Error("delivery.projectile_ground_floor must be a finite nonnegative height.");
+        });
         ContentKinds.AddValidator<FormDef>((d, c) =>
         {
             Specs(d.Effects, c, "effects");

@@ -159,6 +159,36 @@ public sealed class Terrain
         return a + (b - a) * ty;
     }
 
+    /// <summary>Bilinear height from loaded chunks only; observation never loads or generates terrain.</summary>
+    public bool TryHeightAt(double x, double y, out float height)
+    {
+        var fx = x - 0.5;
+        var fy = y - 0.5;
+        var x0 = (int)Math.Floor(fx);
+        var y0 = (int)Math.Floor(fy);
+        height = 0;
+        if (!TryGroundHeight(x0, y0, out var h00) || !TryGroundHeight(x0 + 1, y0, out var h10) ||
+            !TryGroundHeight(x0, y0 + 1, out var h01) || !TryGroundHeight(x0 + 1, y0 + 1, out var h11))
+            return false;
+        var tx = (float)(fx - x0);
+        var ty = (float)(fy - y0);
+        var a = h00 + (h10 - h00) * tx;
+        var b = h01 + (h11 - h01) * tx;
+        height = a + (b - a) * ty;
+        return true;
+    }
+
+    private bool TryGroundHeight(int x, int y, out float height)
+    {
+        var cell = new CellCoord(x, y);
+        if (TryGetLoaded(Layout.ChunkOf(cell), out var chunk))
+        {
+            height = chunk.Height[Layout.LocalIndex(cell)];
+            return true;
+        }
+        height = 0;
+        return false;
+    }
     public bool IsWalkable(CellCoord cell)
     {
         var chunk = ChunkAt(cell.X, cell.Y, out int i);
@@ -205,7 +235,12 @@ public sealed class Terrain
     {
         var chunk = ChunkAt((int)Math.Floor(x), (int)Math.Floor(y), out int index);
         flags = chunk.Flags[index];
-        var smoothGround = HeightAt(x, y);
+        return FindGround(chunk, index, HeightAt(x, y), z, stepUp, out ground, out airborne);
+    }
+
+    private static bool FindGround(ChunkData chunk, int index, float smoothGround, double z, double stepUp,
+        out Surface ground, out bool airborne)
+    {
         var limit = z + stepUp;
         var found = false;
         var best = default(Surface);
@@ -252,6 +287,52 @@ public sealed class Terrain
         return true;
     }
 
+    /// <summary>
+    /// Solid base terrain or the highest walkable layer below the reference height. An overhead deck
+    /// is not support. Base rises retain their terrain collision semantics even when not walkable.
+    /// </summary>
+    public float SupportHeightAt(double x, double y, double referenceHeight)
+    {
+        var chunk = ChunkAt((int)Math.Floor(x), (int)Math.Floor(y), out int index);
+        return SupportHeight(chunk, index, HeightAt(x, y), referenceHeight);
+    }
+
+    /// <summary>The same support query using loaded data only, without touching the chunk memo.</summary>
+    public bool TrySupportHeightAt(double x, double y, double referenceHeight, out float height)
+    {
+        var cell = new CellCoord((int)Math.Floor(x), (int)Math.Floor(y));
+        height = 0;
+        if (!TryGetLoaded(Layout.ChunkOf(cell), out var chunk) || !TryHeightAt(x, y, out var baseHeight)) return false;
+        height = SupportHeight(chunk, Layout.LocalIndex(cell), baseHeight, referenceHeight);
+        return true;
+    }
+
+    private static float SupportHeight(ChunkData chunk, int index, float baseHeight, double referenceHeight) =>
+        FindGround(chunk, index, baseHeight, referenceHeight, 0, out var ground, out _) ?
+            MathF.Max(baseHeight, ground.Height) : baseHeight;
+
+    /// <summary>
+    /// Resolves a cursor height hint to a real base or walkable layer at its coordinates. The hint
+    /// selects among stacked surfaces; it cannot supply arbitrary airborne elevation to a ground cast.
+    /// </summary>
+    public Vector3 AimGroundAt(Vector3 point)
+    {
+        var chunk = ChunkAt((int)Math.Floor(point.X), (int)Math.Floor(point.Y), out int index);
+        var baseHeight = HeightAt(point.X, point.Y);
+        var height = baseHeight;
+        var distance = MathF.Abs(point.Z - height);
+        if (chunk.Layers.TryGetValue(index, out var layers))
+        {
+            foreach (var layer in layers)
+            {
+                if (!layer.Walkable) continue;
+                var h = layer.Tags.Has("ground") ? baseHeight : layer.Height;
+                var d = MathF.Abs(point.Z - h);
+                if (d < distance) { height = h; distance = d; }
+            }
+        }
+        return point with { Z = height };
+    }
     private static void Consider(Surface s, float height, double limit, ref Surface best, ref bool found)
     {
         if (!s.Walkable || !(height <= limit))
