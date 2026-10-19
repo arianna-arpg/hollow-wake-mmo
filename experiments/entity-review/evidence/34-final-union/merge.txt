@@ -1,0 +1,6 @@
+Auto-merging docs/design/deliveries.md
+CONFLICT (content): Merge conflict in docs/design/deliveries.md
+Auto-merging experiments/combat-grammar/baselines/standard-duels.json
+CONFLICT (content): Merge conflict in experiments/combat-grammar/baselines/standard-duels.json
+Auto-merging tests/HollowWake.Core.Tests/FreeShotGroundFloorTests.cs
+Automatic merge failed; fix conflicts and then commit the result.

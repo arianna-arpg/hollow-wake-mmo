@@ -1,0 +1,797 @@
+code scan: src/HollowWake.Core
+
+form.one_use: 8 smell(s), 31 note(s)
+  smell  forms/burst: A shell (drop_weight 0) that only preset 'pyre_nova' composes on, where a shell is meant to serve every preset of its kind.
+  smell  forms/reload: A shell (drop_weight 0) that only preset 'reload_powder' composes on, where a shell is meant to serve every preset of its kind.
+  smell  forms/reload_stream: A shell (drop_weight 0) that only preset 'reload_shells' composes on, where a shell is meant to serve every preset of its kind.
+  smell  forms/shot_quick: A shell (drop_weight 0) that only preset 'gyre_hurl' composes on, where a shell is meant to serve every preset of its kind.
+  smell  forms/slam_quick: A shell (drop_weight 0) that only preset 'follow_sweep' composes on, where a shell is meant to serve every preset of its kind.
+  smell  forms/sweep_quick: A shell (drop_weight 0) that only preset 'bastion_thrust' composes on, where a shell is meant to serve every preset of its kind.
+  smell  forms/swing_sentence: A shell (drop_weight 0) that only preset 'verdict' composes on, where a shell is meant to serve every preset of its kind.
+  smell  forms/thrust_wounded: A shell (drop_weight 0) that only preset 'eviscerate' composes on, where a shell is meant to serve every preset of its kind.
+  note   forms/bash: Only preset 'shield_bash' composes on this form.
+  note   forms/binding: Only preset 'void_binding' composes on this form.
+  note   forms/brace: Only preset 'stone_brace' composes on this form.
+  note   forms/bulwark: Only preset 'stone_bulwark' composes on this form.
+  note   forms/dash: Only preset 'quick_dash' composes on this form.
+  note   forms/dome: Only preset 'lumen_dome' composes on this form.
+  note   forms/drawn_shot: Only preset 'ember_draw' composes on this form.
+  note   forms/field: Only preset 'umbra_field' composes on this form.
+  note   forms/gathering: Only preset 'umbra_gathering' composes on this form.
+  note   forms/glaive: Only preset 'stone_glaive' composes on this form.
+  note   forms/leap_slam: Only preset 'stone_leap' composes on this form.
+  note   forms/maelstrom: Only preset 'tide_maelstrom' composes on this form.
+  note   forms/measured_strike: Only preset 'measured_cut' composes on this form.
+  note   forms/mend: Only preset 'bloom_mend' composes on this form.
+  note   forms/offering: Only preset 'grave_offering' composes on this form.
+  note   forms/orb: Only preset 'tide_orb' composes on this form.
+  note   forms/presence: Only preset 'lumen_presence' composes on this form.
+  note   forms/quiver: Only preset 'bramble_quiver' composes on this form.
+  note   forms/restring: Only preset 'quiver_restring' composes on this form.
+  note   forms/ripple: Only preset 'stone_ripple' composes on this form.
+  note   forms/shadowstep: Only preset 'umbra_step' composes on this form.
+  note   forms/shout: Only preset 'rallying_shout' composes on this form.
+  note   forms/snare: Only preset 'lay_snare' composes on this form.
+  note   forms/storm: Only preset 'storm_call' composes on this form.
+  note   forms/surge: Only preset 'storm_surge' composes on this form.
+  note   forms/torrent: Only preset 'tide_torrent' composes on this form.
+  note   forms/vigil: Only preset 'lumen_vigil' composes on this form.
+  note   forms/volley: Only preset 'ember_volley' composes on this form.
+  note   forms/wall: Only preset 'ember_wall' composes on this form.
+  note   forms/ward: Only preset 'lumen_ward' composes on this form.
+  note   forms/wheel: Only preset 'whirling_blades' composes on this form.
+
+form.unused: 4 smell(s), 0 note(s)
+  smell  forms/swing_multitude: A shell (drop_weight 0) that no preset composes on, so nothing can cast it.
+  smell  forms/swing_perfect: A shell (drop_weight 0) that no preset composes on, so nothing can cast it.
+  smell  forms/swing_timed: A shell (drop_weight 0) that no preset composes on, so nothing can cast it.
+  smell  forms/whirl_stream: A shell (drop_weight 0) that no preset composes on, so nothing can cast it.
+
+parameter.single_use: 76 smell(s), 0 note(s)
+  smell  effect/aim.spread: Only glyphs/scattershot writes 'spread' of 'aim', so no second definition reuses it.
+  smell  effect/apply_status.on_status_tick: Only glyphs/searing writes 'on_status_tick' of 'apply_status', so no second definition reuses it.
+  smell  effect/apply_status.stacks: Only weaves/plague_rite writes 'stacks' of 'apply_status', so no second definition reuses it.
+  smell  effect/area.contact: Only forms/cleave writes 'contact' of 'area', so no second definition reuses it.
+  smell  effect/area.inner: Only weaves/surgical_strike writes 'inner' of 'area', so no second definition reuses it.
+  smell  effect/area.width: Only weaves/cross_jab writes 'width' of 'area', so no second definition reuses it.
+  smell  effect/aura.domain: Only forms/presence writes 'domain' of 'aura', so no second definition reuses it.
+  smell  effect/aura.interval: Only forms/presence writes 'interval' of 'aura', so no second definition reuses it.
+  smell  effect/aura.on_end: Only glyphs/parting_gift writes 'on_end' of 'aura', so no second definition reuses it.
+  smell  effect/aura.on_tick: Only glyphs/shedding writes 'on_tick' of 'aura', so no second definition reuses it.
+  smell  effect/aura.radius: Only forms/presence writes 'radius' of 'aura', so no second definition reuses it.
+  smell  effect/aura.toggle: Only forms/presence writes 'toggle' of 'aura', so no second definition reuses it.
+  smell  effect/cascade.effects: Only forms/ripple writes 'effects' of 'cascade', so no second definition reuses it.
+  smell  effect/cascade.scale_step: Only forms/ripple writes 'scale_step' of 'cascade', so no second definition reuses it.
+  smell  effect/cascade.step: Only forms/ripple writes 'step' of 'cascade', so no second definition reuses it.
+  smell  effect/cast.aim: Only weaves/frozen_orb writes 'aim' of 'cast', so no second definition reuses it.
+  smell  effect/cast.turn: Only weaves/frozen_orb writes 'turn' of 'cast', so no second definition reuses it.
+  smell  effect/charge.all: Only glyphs/furywoven writes 'all' of 'charge', so no second definition reuses it.
+  smell  effect/consume_minion.pick: Only weaves/grave_offering writes 'pick' of 'consume_minion', so no second definition reuses it.
+  smell  effect/consume_minion.self: Only weaves/grave_burst writes 'self' of 'consume_minion', so no second definition reuses it.
+  smell  effect/consume_status: Only weaves/execution uses 'consume_status', so no second definition reuses its parameters (as, status).
+  smell  effect/damage.leech: Only weaves/soul_volley writes 'leech' of 'damage', so no second definition reuses it.
+  smell  effect/delay: Only weaves/doomsayers_word uses 'delay', so no second definition reuses its parameters (effects, seconds).
+  smell  effect/deploy.intercept: Only weaves/lumen_dome writes 'intercept' of 'deploy', so no second definition reuses it.
+  smell  effect/deploy.on_birth: Only glyphs/fervent_birth writes 'on_birth' of 'deploy', so no second definition reuses it.
+  smell  effect/deploy.on_death: Only glyphs/martyrdom writes 'on_death' of 'deploy', so no second definition reuses it.
+  smell  effect/deploy.place: Only weaves/shade_echo writes 'place' of 'deploy', so no second definition reuses it.
+  smell  effect/field.angle: Only weaves/follow_sweep writes 'angle' of 'field', so no second definition reuses it.
+  smell  effect/field.on_end: Only glyphs/parting_gift writes 'on_end' of 'field', so no second definition reuses it.
+  smell  effect/field.on_tick: Only glyphs/shedding writes 'on_tick' of 'field', so no second definition reuses it.
+  smell  effect/field.pull: Only forms/maelstrom writes 'pull' of 'field', so no second definition reuses it.
+  smell  effect/field.seek: Only weaves/creeping_frost writes 'seek' of 'field', so no second definition reuses it.
+  smell  effect/field.segments: Only forms/wall writes 'segments' of 'field', so no second definition reuses it.
+  smell  effect/field.shape: Only weaves/follow_sweep writes 'shape' of 'field', so no second definition reuses it.
+  smell  effect/fuse: Only glyphs/time_fuse uses 'fuse', so no second definition reuses its parameters (delay, power).
+  smell  effect/guard: Only forms/brace uses 'guard', so no second definition reuses its parameters (amount, self).
+  smell  effect/heal.exclude_self: Only weaves/sanctified_strike writes 'exclude_self' of 'heal', so no second definition reuses it.
+  smell  effect/heal.self: Only statuses/sapped writes 'self' of 'heal', so no second definition reuses it.
+  smell  effect/move.air_time: Only forms/leap_slam writes 'air_time' of 'move', so no second definition reuses it.
+  smell  effect/move.arc: Only forms/leap_slam writes 'arc' of 'move', so no second definition reuses it.
+  smell  effect/move.behind: Only forms/shadowstep writes 'behind' of 'move', so no second definition reuses it.
+  smell  effect/move.on_collide: Only forms/bash writes 'on_collide' of 'move', so no second definition reuses it.
+  smell  effect/move.on_contact: Only glyphs/hexing writes 'on_contact' of 'move', so no second definition reuses it.
+  smell  effect/move.on_end: Only glyphs/parting_gift writes 'on_end' of 'move', so no second definition reuses it.
+  smell  effect/move.on_land: Only forms/leap_slam writes 'on_land' of 'move', so no second definition reuses it.
+  smell  effect/move.speed: Only forms/dash writes 'speed' of 'move', so no second definition reuses it.
+  smell  effect/move.telegraph: Only forms/leap_slam writes 'telegraph' of 'move', so no second definition reuses it.
+  smell  effect/projectile.amplitude: Only weaves/spectral_helix writes 'amplitude' of 'projectile', so no second definition reuses it.
+  smell  effect/projectile.gravity: Only weaves/goblin_cinder_keg writes 'gravity' of 'projectile', so no second definition reuses it.
+  smell  effect/projectile.on_first_hit: Only weaves/ice_spear writes 'on_first_hit' of 'projectile', so no second definition reuses it.
+  smell  effect/projectile.on_return: Only weaves/gyreblade writes 'on_return' of 'projectile', so no second definition reuses it.
+  smell  effect/projectile.salvo_interval: Only weaves/barrage writes 'salvo_interval' of 'projectile', so no second definition reuses it.
+  smell  effect/projectile.spin: Only forms/glaive writes 'spin' of 'projectile', so no second definition reuses it.
+  smell  effect/projectile.spread_by_aim: Only weaves/splayshot writes 'spread_by_aim' of 'projectile', so no second definition reuses it.
+  smell  effect/projectile.volley_spacing: Only forms/volley writes 'volley_spacing' of 'projectile', so no second definition reuses it.
+  smell  effect/projectile.zigzag: Only weaves/skittering_bolt writes 'zigzag' of 'projectile', so no second definition reuses it.
+  smell  effect/projectile.zigzag_every: Only weaves/skittering_bolt writes 'zigzag_every' of 'projectile', so no second definition reuses it.
+  smell  effect/random: Only weaves/tuning_strike uses 'random', so no second definition reuses its parameters (choices).
+  smell  effect/recall_minions: Only weaves/command_recall uses 'recall_minions', so no second definition reuses its parameters.
+  smell  effect/remove_status.self: Only forms/vigil writes 'self' of 'remove_status', so no second definition reuses it.
+  smell  effect/resource.self: Only forms/ward writes 'self' of 'resource', so no second definition reuses it.
+  smell  effect/restore_uses.amount: Only weaves/reload_shells writes 'amount' of 'restore_uses', so no second definition reuses it.
+  smell  effect/scatter: Only forms/storm uses 'scatter', so no second definition reuses its parameters (at, effects, interval, jitter, radius, telegraph).
+  smell  effect/spawn: Only weaves/exhume uses 'spawn', so no second definition reuses its parameters (as_corpse, count, pattern).
+  smell  effect/spread_status: Only glyphs/contagion uses 'spread_status', so no second definition reuses its parameters (kind, max_targets, radius, strength).
+  smell  effect/summon.inherit: Only weaves/bind_remnant_court writes 'inherit' of 'summon', so no second definition reuses it.
+  smell  effect/summon.on_birth: Only glyphs/fervent_birth writes 'on_birth' of 'summon', so no second definition reuses it.
+  smell  effect/summon.on_death: Only glyphs/martyrdom writes 'on_death' of 'summon', so no second definition reuses it.
+  smell  effect/summon.place: Only weaves/bind_remnant_court writes 'place' of 'summon', so no second definition reuses it.
+  smell  effect/summon.raise_as: Only weaves/raise_zombie writes 'raise_as' of 'summon', so no second definition reuses it.
+  smell  effect/tether.duration: Only forms/binding writes 'duration' of 'tether', so no second definition reuses it.
+  smell  effect/tether.interval: Only forms/binding writes 'interval' of 'tether', so no second definition reuses it.
+  smell  effect/tether.link: Only forms/binding writes 'link' of 'tether', so no second definition reuses it.
+  smell  effect/tether.max_length: Only forms/binding writes 'max_length' of 'tether', so no second definition reuses it.
+  smell  effect/tether.on_end: Only glyphs/parting_gift writes 'on_end' of 'tether', so no second definition reuses it.
+  smell  effect/tether.width: Only forms/binding writes 'width' of 'tether', so no second definition reuses it.
+
+parameter.unused: 0 smell(s), 132 note(s)
+  note   effect/aim.offset: 'aim' declares 'offset' but no loaded content writes it.
+  note   effect/apply_status.max_targets: 'apply_status' declares 'max_targets' but no loaded content writes it.
+  note   effect/apply_status.on_status_expire: 'apply_status' declares 'on_status_expire' but no loaded content writes it.
+  note   effect/apply_status.radius: 'apply_status' declares 'radius' but no loaded content writes it.
+  note   effect/area.elevation: 'area' declares 'elevation' but no loaded content writes it.
+  note   effect/area.height: 'area' declares 'height' but no loaded content writes it.
+  note   effect/area.occlusion: 'area' declares 'occlusion' but no loaded content writes it.
+  note   effect/area.require: 'area' declares 'require' but no loaded content writes it.
+  note   effect/aura.domain_filter: 'aura' declares 'domain_filter' but no loaded content writes it.
+  note   effect/aura.duration: 'aura' declares 'duration', which no loaded content writes, as intended: attribute 'duration' carries it.
+  note   effect/aura.filter: 'aura' declares 'filter' but no loaded content writes it.
+  note   effect/aura.key: 'aura' declares 'key' but no loaded content writes it.
+  note   effect/aura.look: 'aura' declares 'look' but no loaded content writes it.
+  note   effect/aura.occlusion: 'aura' declares 'occlusion' but no loaded content writes it.
+  note   effect/aura.on_enter: 'aura' declares 'on_enter' but no loaded content writes it.
+  note   effect/aura.on_exit: 'aura' declares 'on_exit' but no loaded content writes it.
+  note   effect/cascade.count: 'cascade' declares 'count', which no loaded content writes, as intended: attribute 'area.cascade' carries it.
+  note   effect/cascade.damage_step: 'cascade' declares 'damage_step' but no loaded content writes it.
+  note   effect/cascade.interval_step: 'cascade' declares 'interval_step' but no loaded content writes it.
+  note   effect/cast.level: 'cast' declares 'level' but no loaded content writes it.
+  note   effect/chain.filter: 'chain' declares 'filter' but no loaded content writes it.
+  note   effect/chain.pick: 'chain' declares 'pick' but no loaded content writes it.
+  note   effect/charge.drain: 'charge' declares 'drain' but no loaded content writes it.
+  note   effect/command_minions.affects: 'command_minions' declares 'affects' but no loaded content writes it.
+  note   effect/command_minions.discipline: 'command_minions' declares 'discipline' but no loaded content writes it.
+  note   effect/command_minions.duration: 'command_minions' declares 'duration' but no loaded content writes it.
+  note   effect/command_minions.group: 'command_minions' declares 'group' but no loaded content writes it.
+  note   effect/command_minions.radius: 'command_minions' declares 'radius' but no loaded content writes it.
+  note   effect/condition.else: 'condition' declares 'else' but no loaded content writes it.
+  note   effect/consume_corpse.radius: 'consume_corpse' declares 'radius' but no loaded content writes it.
+  note   effect/consume_minion.count: 'consume_minion' declares 'count' but no loaded content writes it.
+  note   effect/consume_minion.group: 'consume_minion' declares 'group' but no loaded content writes it.
+  note   effect/consume_minion.of: 'consume_minion' declares 'of' but no loaded content writes it.
+  note   effect/consume_minion.radius: 'consume_minion' declares 'radius' but no loaded content writes it.
+  note   effect/consume_status.count: 'consume_status' declares 'count' but no loaded content writes it.
+  note   effect/consume_status.kind: 'consume_status' declares 'kind' but no loaded content writes it.
+  note   effect/consume_status.self: 'consume_status' declares 'self' but no loaded content writes it.
+  note   effect/consume_status.statuses: 'consume_status' declares 'statuses' but no loaded content writes it.
+  note   effect/consume_status.tags: 'consume_status' declares 'tags' but no loaded content writes it.
+  note   effect/cooldown: No loaded content has a 'cooldown' node, so none of its parameters (fraction, scope, seconds) is exercised.
+  note   effect/damage.cannot_kill: 'damage' declares 'cannot_kill' but no loaded content writes it.
+  note   effect/damage.effectiveness: 'damage' declares 'effectiveness', which no loaded content writes, as intended: attribute 'damage.effectiveness' carries it.
+  note   effect/deploy.behavior: 'deploy' declares 'behavior' but no loaded content writes it.
+  note   effect/deploy.decay: 'deploy' declares 'decay' but no loaded content writes it.
+  note   effect/deploy.exclusive_group: 'deploy' declares 'exclusive_group' but no loaded content writes it.
+  note   effect/deploy.inherit: 'deploy' declares 'inherit' but no loaded content writes it.
+  note   effect/deploy.pool: 'deploy' declares 'pool' but no loaded content writes it.
+  note   effect/deploy.pool_group: 'deploy' declares 'pool_group' but no loaded content writes it.
+  note   effect/deploy.presence: 'deploy' declares 'presence' but no loaded content writes it.
+  note   effect/detonate: No loaded content has a 'detonate' node, so none of its parameters (effects, pick, radius, tags) is exercised.
+  note   effect/event: No loaded content has a 'event' node, so none of its parameters (data, name) is exercised.
+  note   effect/field.delay: 'field' declares 'delay' but no loaded content writes it.
+  note   effect/field.domain: 'field' declares 'domain' but no loaded content writes it.
+  note   effect/field.domain_filter: 'field' declares 'domain_filter' but no loaded content writes it.
+  note   effect/field.drift: 'field' declares 'drift' but no loaded content writes it.
+  note   effect/field.exclusive: 'field' declares 'exclusive' but no loaded content writes it.
+  note   effect/field.exposure: 'field' declares 'exposure' but no loaded content writes it.
+  note   effect/field.follow: 'field' declares 'follow' but no loaded content writes it.
+  note   effect/field.inner: 'field' declares 'inner' but no loaded content writes it.
+  note   effect/field.look: 'field' declares 'look' but no loaded content writes it.
+  note   effect/field.occlusion: 'field' declares 'occlusion' but no loaded content writes it.
+  note   effect/field.on_enter: 'field' declares 'on_enter' but no loaded content writes it.
+  note   effect/field.on_exit: 'field' declares 'on_exit' but no loaded content writes it.
+  note   effect/field.on_land: 'field' declares 'on_land' but no loaded content writes it.
+  note   effect/field.pulses: 'field' declares 'pulses' but no loaded content writes it.
+  note   effect/field.rearm_on_exit: 'field' declares 'rearm_on_exit' but no loaded content writes it.
+  note   effect/field.rotate: 'field' declares 'rotate' but no loaded content writes it.
+  note   effect/field.width: 'field' declares 'width', which no loaded content writes, as intended: attribute 'area.width' carries it.
+  note   effect/fuse.effects: 'fuse' declares 'effects' but no loaded content writes it.
+  note   effect/gather_corpses: No loaded content has a 'gather_corpses' node, so none of its parameters (radius) is exercised.
+  note   effect/grant_item: No loaded content has a 'grant_item' node, so none of its parameters (count, item, rarity, table) is exercised.
+  note   effect/grant_xp: No loaded content has a 'grant_xp' node, so none of its parameters (amount) is exercised.
+  note   effect/heal.tags: 'heal' declares 'tags' but no loaded content writes it.
+  note   effect/interrupt: No loaded content has a 'interrupt' node.
+  note   effect/log: No loaded content has a 'log' node, so none of its parameters (text) is exercised.
+  note   effect/mark: No loaded content has a 'mark' node, so none of its parameters (at, key) is exercised.
+  note   effect/minion_cast.group: 'minion_cast' declares 'group' but no loaded content writes it.
+  note   effect/minion_cast.range: 'minion_cast' declares 'range' but no loaded content writes it.
+  note   effect/modify: No loaded content has a 'modify' node, so none of its parameters (attribute, duration, form, key, scope, self, value) is exercised.
+  note   effect/move.delay: 'move' declares 'delay' but no loaded content writes it.
+  note   effect/move.filter: 'move' declares 'filter' but no loaded content writes it.
+  note   effect/move.mark: 'move' declares 'mark' but no loaded content writes it.
+  note   effect/move.on_travel: 'move' declares 'on_travel' but no loaded content writes it.
+  note   effect/move.phase: 'move' declares 'phase' but no loaded content writes it.
+  note   effect/move.status: 'move' declares 'status' but no loaded content writes it.
+  note   effect/move.travel: 'move' declares 'travel' but no loaded content writes it.
+  note   effect/move.who: 'move' declares 'who' but no loaded content writes it.
+  note   effect/move.width: 'move' declares 'width' but no loaded content writes it.
+  note   effect/move_status: No loaded content has a 'move_status' node, so none of its parameters (count, filter, from, kind, radius, splash, status, statuses, tags, to) is exercised.
+  note   effect/projectile.accel: 'projectile' declares 'accel', which no loaded content writes, as intended: attribute 'projectile.accel' carries it.
+  note   effect/projectile.aim: 'projectile' declares 'aim' but no loaded content writes it.
+  note   effect/projectile.bounce: 'projectile' declares 'bounce', which no loaded content writes, as intended: attribute 'projectile.bounce' carries it.
+  note   effect/projectile.chains: 'projectile' declares 'chains', which no loaded content writes, as intended: attribute 'projectile.chain' carries it.
+  note   effect/projectile.converge: 'projectile' declares 'converge', which no loaded content writes, as intended: attribute 'projectile.converge' carries it.
+  note   effect/projectile.erratic: 'projectile' declares 'erratic', which no loaded content writes, as intended: attribute 'projectile.erratic' carries it.
+  note   effect/projectile.forks: 'projectile' declares 'forks', which no loaded content writes, as intended: attribute 'projectile.forks' carries it.
+  note   effect/projectile.guide: 'projectile' declares 'guide', which no loaded content writes, as intended: attribute 'projectile.guide' carries it.
+  note   effect/projectile.homing: 'projectile' declares 'homing', which no loaded content writes, as intended: attribute 'projectile.homing' carries it.
+  note   effect/projectile.occlusion: 'projectile' declares 'occlusion' but no loaded content writes it.
+  note   effect/projectile.on_land: 'projectile' declares 'on_land' but no loaded content writes it.
+  note   effect/projectile.orbit: 'projectile' declares 'orbit', which no loaded content writes, as intended: attribute 'projectile.orbit' carries it.
+  note   effect/projectile.pierce: 'projectile' declares 'pierce', which no loaded content writes, as intended: attribute 'projectile.pierce' carries it.
+  note   effect/projectile.recurve: 'projectile' declares 'recurve', which no loaded content writes, as intended: attribute 'projectile.recurve' carries it.
+  note   effect/projectile.shape_angle: 'projectile' declares 'shape_angle' but no loaded content writes it.
+  note   effect/projectile.shape_size: 'projectile' declares 'shape_size' but no loaded content writes it.
+  note   effect/projectile.shape_width: 'projectile' declares 'shape_width', which no loaded content writes, as intended: attribute 'area.width' carries it.
+  note   effect/projectile.spiral: 'projectile' declares 'spiral', which no loaded content writes, as intended: attribute 'projectile.spiral' carries it.
+  note   effect/projectile.wave: 'projectile' declares 'wave', which no loaded content writes, as intended: attribute 'projectile.wave' carries it.
+  note   effect/recall_minions.group: 'recall_minions' declares 'group' but no loaded content writes it.
+  note   effect/recall_minions.radius: 'recall_minions' declares 'radius' but no loaded content writes it.
+  note   effect/remove_status.count: 'remove_status' declares 'count' but no loaded content writes it.
+  note   effect/remove_status.kind: 'remove_status' declares 'kind' but no loaded content writes it.
+  note   effect/remove_status.order: 'remove_status' declares 'order' but no loaded content writes it.
+  note   effect/remove_status.tags: 'remove_status' declares 'tags' but no loaded content writes it.
+  note   effect/rupture.scale: 'rupture' declares 'scale' but no loaded content writes it.
+  note   effect/rupture.self: 'rupture' declares 'self' but no loaded content writes it.
+  note   effect/scatter.count: 'scatter' declares 'count', which no loaded content writes, as intended: attribute 'area.strikes' carries it.
+  note   effect/scatter.filter: 'scatter' declares 'filter' but no loaded content writes it.
+  note   effect/scatter.telegraph_radius: 'scatter' declares 'telegraph_radius', which no loaded content writes, as intended: attribute 'area.radius' carries it.
+  note   effect/sequence: No loaded content has a 'sequence' node, so none of its parameters (effects) is exercised.
+  note   effect/spawn.lifetime: 'spawn' declares 'lifetime' but no loaded content writes it.
+  note   effect/spread_status.duration: 'spread_status' declares 'duration' but no loaded content writes it.
+  note   effect/spread_status.filter: 'spread_status' declares 'filter' but no loaded content writes it.
+  note   effect/spread_status.status: 'spread_status' declares 'status' but no loaded content writes it.
+  note   effect/spread_status.statuses: 'spread_status' declares 'statuses' but no loaded content writes it.
+  note   effect/spread_status.tags: 'spread_status' declares 'tags' but no loaded content writes it.
+  note   effect/summon.presence: 'summon' declares 'presence' but no loaded content writes it.
+  note   effect/summon.replenish: 'summon' declares 'replenish' but no loaded content writes it.
+  note   effect/summon.search_radius: 'summon' declares 'search_radius' but no loaded content writes it.
+  note   effect/summon.waves: 'summon' declares 'waves' but no loaded content writes it.
+  note   effect/tether.filter: 'tether' declares 'filter' but no loaded content writes it.
+  note   effect/tether.look: 'tether' declares 'look' but no loaded content writes it.
+
+axis.frozen: 123 smell(s), 0 note(s)
+  smell  forms/bulwark: 'radius' on the 'area' effect at effects[0] is the literal 3, so nothing that moves weave attribute 'area.radius' reaches it.
+  smell  forms/glaive: 'spin' on the 'projectile' effect at effects[0] is the literal 900, so nothing that moves weave attribute 'projectile.spin' reaches it.
+  smell  forms/orb: 'count' on the 'projectile' effect at effects[0].on_tick[0] is the literal 3, so nothing that moves weave attribute 'projectile.count' reaches it.
+  smell  forms/orb: 'range' on the 'projectile' effect at effects[0].on_tick[0] is the literal 5, so nothing that moves weave attribute 'range' reaches it.
+  smell  forms/orb: 'speed' on the 'projectile' effect at effects[0].on_tick[0] is the literal 15, so nothing that moves weave attribute 'projectile.speed' reaches it.
+  smell  forms/orb: 'rehit' on the 'projectile' effect at effects[0] is the literal 0.6, so nothing that moves weave attribute 'projectile.rehit' reaches it.
+  smell  forms/ripple: 'step' on the 'cascade' effect at effects[0] is the literal 2, so nothing that moves weave attribute 'area.radius' reaches it.
+  smell  forms/storm: 'radius' on the 'scatter' effect at effects[0] is the literal 4, so nothing that moves weave attribute 'area.radius' reaches it.
+  smell  forms/wheel: 'rehit' on the 'projectile' effect at effects[0] is the literal 0.5, so nothing that moves weave attribute 'projectile.rehit' reaches it.
+  smell  glyphs/martyrdom: 'radius' on the 'area' effect at hooks.on_death[0] is the literal 2.5, so nothing that moves weave attribute 'area.radius' reaches it.
+  smell  glyphs/reaping: 'count' on the 'summon' effect at hooks.on_kill[0] is the literal 1, so nothing that moves weave attribute 'summon.count' reaches it.
+  smell  glyphs/reaping: 'duration' on the 'summon' effect at hooks.on_kill[0] is the literal 20, so nothing that moves weave attribute 'duration' reaches it.
+  smell  glyphs/reaping: 'max_active' on the 'summon' effect at hooks.on_kill[0] is the literal 3, so nothing that moves weave attribute 'summon.max' reaches it.
+  smell  glyphs/shedding: 'count' on the 'projectile' effect at hooks.on_tick[0] is the literal 2, so nothing that moves weave attribute 'projectile.count' reaches it.
+  smell  glyphs/shedding: 'range' on the 'projectile' effect at hooks.on_tick[0] is the literal 4, so nothing that moves weave attribute 'range' reaches it.
+  smell  glyphs/shedding: 'speed' on the 'projectile' effect at hooks.on_tick[0] is the literal 14, so nothing that moves weave attribute 'projectile.speed' reaches it.
+  smell  glyphs/time_fuse: 'delay' on the 'fuse' effect at patches[0].wrap is the literal 0.8, so nothing that moves weave attribute 'fuse.delay' reaches it.
+  smell  glyphs/time_fuse: 'power' on the 'fuse' effect at patches[0].wrap is the literal 0.25, so nothing that moves weave attribute 'fuse.power' reaches it.
+  smell  weaves/arclight_rain: 'duration' on the 'field' effect at effects[0].on_end[0] is the literal 6, so nothing that moves weave attribute 'duration' reaches it.
+  smell  weaves/arclight_rain: 'radius' on the 'field' effect at effects[0].on_end[0] is the literal 1.5, so nothing that moves weave attribute 'area.radius' reaches it.
+  smell  weaves/ball_lightning: 'radius' on the 'area' effect at effects[0].on_tick[0] is the literal 2.97, so nothing that moves weave attribute 'area.radius' reaches it.
+  smell  weaves/bind_stone_warden: 'count' on the 'summon' effect at effects[0] is the literal 1, so nothing that moves weave attribute 'summon.count' reaches it.
+  smell  weaves/bind_stone_warden: 'max_active' on the 'summon' effect at effects[0] is the literal 1, so nothing that moves weave attribute 'summon.max' reaches it.
+  smell  weaves/blightspear: 'duration' on the 'field' effect at effects[0].on_end[0] is the literal 2.6, so nothing that moves weave attribute 'duration' reaches it.
+  smell  weaves/blightspear: 'radius' on the 'field' effect at effects[0].on_end[0] is the literal 2.97, so nothing that moves weave attribute 'area.radius' reaches it.
+  smell  weaves/bottled_swarm: 'count' on the 'summon' effect at effects[0].on_end[0] is the literal "randi(4, 6)", so nothing that moves weave attribute 'summon.count' reaches it.
+  smell  weaves/bottled_swarm: 'duration' on the 'summon' effect at effects[0].on_end[0] is the literal 10, so nothing that moves weave attribute 'duration' reaches it.
+  smell  weaves/bottled_swarm: 'max_active' on the 'summon' effect at effects[0].on_end[0] is the literal 12, so nothing that moves weave attribute 'summon.max' reaches it.
+  smell  weaves/call_wraiths: 'duration' on the 'summon' effect at effects[0] is the literal 0, so nothing that moves weave attribute 'duration' reaches it.
+  smell  weaves/cinder_swarm: 'count' on the 'projectile' effect at effects[0] is the literal "randi(4, 6)", so nothing that moves weave attribute 'projectile.count' reaches it.
+  smell  weaves/cinderwisp: 'count' on the 'summon' effect at effects[0].on_hit[2] is the literal 1, so nothing that moves weave attribute 'summon.count' reaches it.
+  smell  weaves/cinderwisp: 'duration' on the 'summon' effect at effects[0].on_hit[2] is the literal 10, so nothing that moves weave attribute 'duration' reaches it.
+  smell  weaves/cinderwisp: 'max_active' on the 'summon' effect at effects[0].on_hit[2] is the literal 2, so nothing that moves weave attribute 'summon.max' reaches it.
+  smell  weaves/cold_spot: 'radius' on the 'area' effect at effects[0].on_expire[0] is the literal 2.19, so nothing that moves weave attribute 'area.radius' reaches it.
+  smell  weaves/cold_spot: 'radius' on the 'area' effect at effects[0].on_hit[2] is the literal 2.19, so nothing that moves weave attribute 'area.radius' reaches it.
+  smell  weaves/creeping_frost: 'duration' on the 'field' effect at effects[0].on_end[0] is the literal 4.5, so nothing that moves weave attribute 'duration' reaches it.
+  smell  weaves/creeping_frost: 'radius' on the 'field' effect at effects[0].on_end[0] is the literal 2.5, so nothing that moves weave attribute 'area.radius' reaches it.
+  smell  weaves/creeping_frost: 'radius' on the 'area' effect at effects[0].on_expire[0] is the literal 2.19, so nothing that moves weave attribute 'area.radius' reaches it.
+  smell  weaves/creeping_frost: 'radius' on the 'area' effect at effects[0].on_hit[2] is the literal 2.19, so nothing that moves weave attribute 'area.radius' reaches it.
+  smell  weaves/cross_jab: 'max' on the 'charge' effect at effects[0].effects[1] is the literal 5, which shadows the holder's attribute 'charge.fury.max'.
+  smell  weaves/cross_jab: 'width' on the 'area' effect at effects[0] is the literal 1, so nothing that moves weave attribute 'area.width' reaches it.
+  smell  weaves/earthrender: 'duration' on the 'field' effect at effects[0].on_travel[0] is the literal 1.6, so nothing that moves weave attribute 'duration' reaches it.
+  smell  weaves/earthrender: 'radius' on the 'field' effect at effects[0].on_travel[0] is the literal 0.94, so nothing that moves weave attribute 'area.radius' reaches it.
+  smell  weaves/fireball: 'radius' on the 'area' effect at effects[0].on_expire[0] is the literal 2.66, so nothing that moves weave attribute 'area.radius' reaches it.
+  smell  weaves/fireball: 'radius' on the 'area' effect at effects[0].on_hit[2] is the literal 2.66, so nothing that moves weave attribute 'area.radius' reaches it.
+  smell  weaves/frenzy: 'max' on the 'charge' effect at effects[0].effects[2] is the literal 5, which shadows the holder's attribute 'charge.fury.max'.
+  smell  weaves/frostcreep: 'radius' on the 'area' effect at effects[0].on_expire[0] is the literal 2.19, so nothing that moves weave attribute 'area.radius' reaches it.
+  smell  weaves/frostcreep: 'radius' on the 'area' effect at effects[0].on_hit[2] is the literal 2.19, so nothing that moves weave attribute 'area.radius' reaches it.
+  smell  weaves/goblin_cinder_keg: 'radius' on the 'area' effect at effects[0].on_end[0] is the literal 2.2, so nothing that moves weave attribute 'area.radius' reaches it.
+  smell  weaves/grave_burst: 'radius' on the 'area' effect at effects[0].effects[0] is the literal 2.5, so nothing that moves weave attribute 'area.radius' reaches it.
+  smell  weaves/grave_offering: 'radius' on the 'area' effect at effects[0].effects[0] is the literal 3, so nothing that moves weave attribute 'area.radius' reaches it.
+  smell  weaves/gravewisp: 'radius' on the 'area' effect at effects[0].on_expire[0] is the literal 3.13, so nothing that moves weave attribute 'area.radius' reaches it.
+  smell  weaves/gravewisp: 'radius' on the 'area' effect at effects[0].on_hit[2] is the literal 3.13, so nothing that moves weave attribute 'area.radius' reaches it.
+  smell  weaves/grenado: 'radius' on the 'area' effect at effects[0].on_expire[0] is the literal 2.25, so nothing that moves weave attribute 'area.radius' reaches it.
+  smell  weaves/grenado: 'radius' on the 'area' effect at effects[0].on_hit[1] is the literal 2.25, so nothing that moves weave attribute 'area.radius' reaches it.
+  smell  weaves/gyreblade: 'max' on the 'charge' effect at effects[0].on_return[0] is the literal 6, which shadows the holder's attribute 'charge.gyre.max'.
+  smell  weaves/hellfire_missile: 'radius' on the 'area' effect at effects[0].on_expire[0] is the literal 1.72, so nothing that moves weave attribute 'area.radius' reaches it.
+  smell  weaves/hellfire_missile: 'radius' on the 'area' effect at effects[0].on_hit[2] is the literal 1.72, so nothing that moves weave attribute 'area.radius' reaches it.
+  smell  weaves/hex_of_despair: 'radius' on the 'area' effect at effects[0] is the literal 2.5, so nothing that moves weave attribute 'area.radius' reaches it.
+  smell  weaves/ice_spear: 'radius' on the 'area' effect at effects[0].on_first_hit[0] is the literal 5.31, so nothing that moves weave attribute 'area.radius' reaches it.
+  smell  weaves/lava_glob: 'radius' on the 'area' effect at effects[0].on_expire[0] is the literal 2.13, so nothing that moves weave attribute 'area.radius' reaches it.
+  smell  weaves/lava_glob: 'radius' on the 'area' effect at effects[0].on_hit[2] is the literal 2.13, so nothing that moves weave attribute 'area.radius' reaches it.
+  smell  weaves/lay_snare: 'count' on the 'deploy' effect at effects[0] is the literal 1, so nothing that moves weave attribute 'summon.count' reaches it.
+  smell  weaves/lumen_dome: 'count' on the 'deploy' effect at effects[0] is the literal 1, so nothing that moves weave attribute 'summon.count' reaches it.
+  smell  weaves/lumen_dome: 'max_active' on the 'deploy' effect at effects[0] is the literal 1, so nothing that moves weave attribute 'summon.max' reaches it.
+  smell  weaves/maddening_rite: 'radius' on the 'area' effect at effects[0] is the literal 2.5, so nothing that moves weave attribute 'area.radius' reaches it.
+  smell  weaves/maelstrom_orb: 'radius' on the 'area' effect at effects[0].on_tick[0] is the literal 2.5, so nothing that moves weave attribute 'area.radius' reaches it.
+  smell  weaves/magma_glob: 'radius' on the 'area' effect at effects[0].on_expire[0] is the literal 1.88, so nothing that moves weave attribute 'area.radius' reaches it.
+  smell  weaves/magma_glob: 'radius' on the 'area' effect at effects[0].on_hit[2] is the literal 1.88, so nothing that moves weave attribute 'area.radius' reaches it.
+  smell  weaves/magma_lob: 'duration' on the 'field' effect at effects[0].on_end[0] is the literal 3.2, so nothing that moves weave attribute 'duration' reaches it.
+  smell  weaves/magma_lob: 'radius' on the 'field' effect at effects[0].on_end[0] is the literal 1.94, so nothing that moves weave attribute 'area.radius' reaches it.
+  smell  weaves/magma_lob: 'radius' on the 'area' effect at effects[0].on_expire[0] is the literal 1.88, so nothing that moves weave attribute 'area.radius' reaches it.
+  smell  weaves/magma_lob: 'radius' on the 'area' effect at effects[0].on_hit[2] is the literal 1.88, so nothing that moves weave attribute 'area.radius' reaches it.
+  smell  weaves/marrowhooks: 'radius' on the 'area' effect at effects[1].on_expire[0] is the literal 2.25, so nothing that moves weave attribute 'area.radius' reaches it.
+  smell  weaves/marrowhooks: 'radius' on the 'area' effect at effects[1].on_hit[2] is the literal 2.25, so nothing that moves weave attribute 'area.radius' reaches it.
+  smell  weaves/marrowhooks: 'range' on the 'projectile' effect at effects[1] is the literal 28.13, so nothing that moves weave attribute 'range' reaches it.
+  smell  weaves/marshlight: 'duration' on the 'field' effect at effects[0].on_travel[0] is the literal 2.6, so nothing that moves weave attribute 'duration' reaches it.
+  smell  weaves/marshlight: 'radius' on the 'field' effect at effects[0].on_travel[0] is the literal 1.13, so nothing that moves weave attribute 'area.radius' reaches it.
+  smell  weaves/mirespume: 'duration' on the 'field' effect at effects[0].on_end[0] is the literal 4, so nothing that moves weave attribute 'duration' reaches it.
+  smell  weaves/mirespume: 'radius' on the 'field' effect at effects[0].on_end[0] is the literal 2.13, so nothing that moves weave attribute 'area.radius' reaches it.
+  smell  weaves/mirespume: 'duration' on the 'field' effect at effects[0].on_travel[0] is the literal 3, so nothing that moves weave attribute 'duration' reaches it.
+  smell  weaves/mirespume: 'radius' on the 'field' effect at effects[0].on_travel[0] is the literal 1.25, so nothing that moves weave attribute 'area.radius' reaches it.
+  smell  weaves/one_two: 'max' on the 'charge' effect at effects[0].effects[1] is the literal 5, which shadows the holder's attribute 'charge.fury.max'.
+  smell  weaves/piledriver: 'max' on the 'charge' effect at effects[0].effects[1] is the literal 5, which shadows the holder's attribute 'charge.fury.max'.
+  smell  weaves/plague_rite: 'radius' on the 'area' effect at effects[0] is the literal 2.5, so nothing that moves weave attribute 'area.radius' reaches it.
+  smell  weaves/plant_ember_totem: 'count' on the 'deploy' effect at effects[0] is the literal 1, so nothing that moves weave attribute 'summon.count' reaches it.
+  smell  weaves/powder_rite: 'radius' on the 'area' effect at effects[0] is the literal 2.5, so nothing that moves weave attribute 'area.radius' reaches it.
+  smell  weaves/raise_barrow: 'duration' on the 'summon' effect at effects[0] is the literal 0, so nothing that moves weave attribute 'duration' reaches it.
+  smell  weaves/raise_dead: 'duration' on the 'summon' effect at effects[0] is the literal 0, so nothing that moves weave attribute 'duration' reaches it.
+  smell  weaves/raise_fallen: 'count' on the 'summon' effect at effects[0] is the literal 1, so nothing that moves weave attribute 'summon.count' reaches it.
+  smell  weaves/raise_fallen: 'duration' on the 'summon' effect at effects[0] is the literal 0, so nothing that moves weave attribute 'duration' reaches it.
+  smell  weaves/raise_zombie: 'count' on the 'summon' effect at effects[0] is the literal 1, so nothing that moves weave attribute 'summon.count' reaches it.
+  smell  weaves/raise_zombie: 'duration' on the 'summon' effect at effects[0] is the literal 0, so nothing that moves weave attribute 'duration' reaches it.
+  smell  weaves/rimeclaw: 'radius' on the 'area' effect at effects[0].on_expire[0] is the literal 2.25, so nothing that moves weave attribute 'area.radius' reaches it.
+  smell  weaves/rimeclaw: 'radius' on the 'area' effect at effects[0].on_hit[2] is the literal 2.25, so nothing that moves weave attribute 'area.radius' reaches it.
+  smell  weaves/sacrament_of_ruin: 'duration' on the 'field' effect at effects[0].on_end[0] is the literal 1.2, so nothing that moves weave attribute 'duration' reaches it.
+  smell  weaves/sacrament_of_ruin: 'radius' on the 'field' effect at effects[0].on_end[0] is the literal 3.44, so nothing that moves weave attribute 'area.radius' reaches it.
+  smell  weaves/sacrament_of_ruin: 'radius' on the 'area' effect at effects[0].on_expire[0] is the literal 2.5, so nothing that moves weave attribute 'area.radius' reaches it.
+  smell  weaves/sacrament_of_ruin: 'radius' on the 'area' effect at effects[0].on_hit[2] is the literal 2.5, so nothing that moves weave attribute 'area.radius' reaches it.
+  smell  weaves/shade_echo: 'count' on the 'deploy' effect at effects[0] is the literal 1, so nothing that moves weave attribute 'summon.count' reaches it.
+  smell  weaves/shade_echo: 'max_active' on the 'deploy' effect at effects[0] is the literal 1, so nothing that moves weave attribute 'summon.max' reaches it.
+  smell  weaves/soulflay: 'radius' on the 'area' effect at effects[0].on_tick[0] is the literal 1.94, so nothing that moves weave attribute 'area.radius' reaches it.
+  smell  weaves/spark: 'count' on the 'projectile' effect at effects[0] is the literal "randi(2, 4)", so nothing that moves weave attribute 'projectile.count' reaches it.
+  smell  weaves/static_strike: 'max' on the 'charge' effect at effects[0].effects[1] is the literal 6, which shadows the holder's attribute 'charge.static.max'.
+  smell  weaves/summon_abomination: 'duration' on the 'summon' effect at effects[0] is the literal 0, so nothing that moves weave attribute 'duration' reaches it.
+  smell  weaves/summon_barrow_hound: 'duration' on the 'summon' effect at effects[0] is the literal 0, so nothing that moves weave attribute 'duration' reaches it.
+  smell  weaves/summon_blade_wraith: 'duration' on the 'summon' effect at effects[0] is the literal 0, so nothing that moves weave attribute 'duration' reaches it.
+  smell  weaves/summon_bone_golem: 'count' on the 'summon' effect at effects[0] is the literal 1, so nothing that moves weave attribute 'summon.count' reaches it.
+  smell  weaves/summon_bone_golem: 'max_active' on the 'summon' effect at effects[0] is the literal 1, so nothing that moves weave attribute 'summon.max' reaches it.
+  smell  weaves/summon_ossuary_lich: 'duration' on the 'summon' effect at effects[0] is the literal 0, so nothing that moves weave attribute 'duration' reaches it.
+  smell  weaves/summon_skeletal_duelist: 'duration' on the 'summon' effect at effects[0] is the literal 0, so nothing that moves weave attribute 'duration' reaches it.
+  smell  weaves/summon_skeletal_mages: 'duration' on the 'summon' effect at effects[0] is the literal 0, so nothing that moves weave attribute 'duration' reaches it.
+  smell  weaves/summon_skeletal_sentinel: 'duration' on the 'summon' effect at effects[0] is the literal 0, so nothing that moves weave attribute 'duration' reaches it.
+  smell  weaves/summon_skeleton_archer: 'duration' on the 'summon' effect at effects[0] is the literal 0, so nothing that moves weave attribute 'duration' reaches it.
+  smell  weaves/summon_skeleton: 'duration' on the 'summon' effect at effects[0] is the literal 0, so nothing that moves weave attribute 'duration' reaches it.
+  smell  weaves/summon_wraith: 'duration' on the 'summon' effect at effects[0] is the literal 0, so nothing that moves weave attribute 'duration' reaches it.
+  smell  weaves/tempest_gathering: 'max' on the 'charge' effect at effects[0].effects[1] is the literal 8, which shadows the holder's attribute 'charge.storm.max'.
+  smell  weaves/volatile_cinders: 'radius' on the 'area' effect at effects[1].on_expire[0] is the literal 1.88, so nothing that moves weave attribute 'area.radius' reaches it.
+  smell  weaves/volatile_cinders: 'radius' on the 'area' effect at effects[1].on_hit[2] is the literal 1.88, so nothing that moves weave attribute 'area.radius' reaches it.
+  smell  weaves/voltaic_orb: 'radius' on the 'area' effect at effects[0].on_tick[0] is the literal 4.06, so nothing that moves weave attribute 'area.radius' reaches it.
+  smell  weaves/whirlaxe: 'duration' on the 'field' effect at effects[0].on_end[0] is the literal 5, so nothing that moves weave attribute 'duration' reaches it.
+  smell  weaves/whirlaxe: 'max' on the 'charge' effect at effects[0].on_end[0].pulse[0] is the literal 5, which shadows the holder's attribute 'charge.gyre.max'.
+  smell  weaves/whirlaxe: 'radius' on the 'field' effect at effects[0].on_end[0] is the literal 0.75, so nothing that moves weave attribute 'area.radius' reaches it.
+
+expression.copied: 204 smell(s), 0 note(s)
+  smell  forms/bash: Writes 'lerp(weapon.damage.min, weapon.damage.max, rand()) * weave.damage.effectiveness * attack.power' at effects[0].amount, a formula 5 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  forms/beam: Writes 'weave.base_damage * spell.power' at effects[0].effects[0].amount, a formula 15 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  forms/binding: Writes 'weave.base_damage * spell.power' at effects[0].pulse[0].amount, a formula 15 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  forms/blast: Writes 'weave.base_damage * spell.power' at effects[0].effects[0].amount, a formula 15 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  forms/cleave: Writes 'lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power' at effects[0].effects[0].amount, a formula 90 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  forms/field: Writes 'weave.base_damage * spell.power' at effects[0].pulse[0].amount, a formula 15 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  forms/gathering: Writes 'weave.base_damage * spell.power' at effects[0].on_hit[0].amount, a formula 15 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  forms/glaive: Writes 'lerp(weapon.damage.min, weapon.damage.max, rand()) * weave.damage.effectiveness * attack.power' at effects[0].on_hit[0].amount, a formula 5 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  forms/leap_slam: Writes 'lerp(weapon.damage.min, weapon.damage.max, rand()) * weave.damage.effectiveness * attack.power' at effects[0].on_land[0].effects[0].amount, a formula 5 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  forms/maelstrom: Writes 'weave.base_damage * spell.power' at effects[0].pulse[0].amount, a formula 15 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  forms/measured_strike: Writes 'lerp(weapon.damage.min, weapon.damage.max, rand()) * weave.damage.effectiveness * attack.power' at effects[0].amount, a formula 5 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  forms/nova: Writes 'weave.base_damage * spell.power' at effects[0].effects[0].amount, a formula 15 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  forms/orb: Writes 'weave.base_damage * spell.power' at effects[0].on_end[0].effects[0].amount, a formula 15 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  forms/presence: Writes 'weave.base_damage * spell.power' at effects[0].pulse[0].amount, a formula 15 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  forms/ripple: Writes 'weave.base_damage * spell.power' at effects[0].effects[0].effects[0].amount, a formula 15 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  forms/storm: Writes 'weave.base_damage * spell.power' at effects[0].effects[0].effects[0].amount, a formula 15 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  forms/strike: Writes 'lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power' at effects[0].amount, a formula 90 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  forms/surge: Writes 'weave.base_damage * spell.power' at effects[0].effects[0].amount, a formula 15 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  forms/torrent: Writes 'weave.base_damage * spell.power' at effects[0].effects[0].amount, a formula 15 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  forms/volley: Writes 'weave.base_damage * spell.power' at effects[0].on_hit[0].amount, a formula 15 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  forms/wall: Writes 'weave.base_damage * spell.power' at effects[0].pulse[0].amount, a formula 15 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  forms/wheel: Writes 'lerp(weapon.damage.min, weapon.damage.max, rand()) * weave.damage.effectiveness * attack.power' at effects[0].on_hit[0].amount, a formula 5 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  procs/brutal_strike: Writes 'last_damage * 0.5' at effects[0].amount, a formula 10 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  procs/echoing_blow: Writes 'last_damage * 0.3' at effects[0].amount, a formula 17 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/acid_spray: Writes 'lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power' at effects[0].effects[0].amount, a formula 90 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/acid_spray: Writes 'last_damage * 0.35' at effects[0].effects[1].magnitude, a formula 9 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/archon_lance: Writes 'weave.base_damage * lerp(0.76, 1.24, roll) * spell.power * (1 + 0.08 * (weave.level - 1))' at effects[0].on_hit[0].amount, a formula 7 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/arclight_rain: Writes 'lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power' at effects[0].on_hit[0].amount, a formula 90 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/arquebus: Writes 'lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power' at effects[0].on_hit[0].amount, a formula 90 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/backstab: Writes 'lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power' at effects[0].effects[0].amount, a formula 90 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/backstab: Writes 'last_damage * 0.4' at effects[0].effects[1].magnitude, a formula 8 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/barrage: Writes 'lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power' at effects[0].on_hit[0].amount, a formula 90 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/bastion_thrust: Writes 'lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power' at effects[0].effects[0].amount, a formula 90 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/bastion_thrust: Writes 'last_damage * 0.4' at effects[0].effects[1].magnitude, a formula 8 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/beguile: Writes 'weave.base_damage * lerp(0.73, 1.27, roll) * spell.power * (1 + 0.08 * (weave.level - 1))' at effects[0].on_hit[0].amount, a formula 7 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/bisect_cut: Writes 'lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power' at effects[0].effects[0].amount, a formula 90 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/blightspear: Writes 'lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power' at effects[0].on_hit[0].amount, a formula 90 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/blightspear: Writes 'last_damage * 0.4' at effects[0].on_hit[1].magnitude, a formula 8 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/blinding_ichor: Writes 'weave.base_damage * lerp(0.77, 1.23, roll) * spell.power * (1 + 0.08 * (weave.level - 1))' at effects[0].on_hit[0].amount, a formula 8 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/bloodlet: Writes 'lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power' at effects[0].effects[0].amount, a formula 90 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/blowdart: Writes 'lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power' at effects[0].on_hit[0].amount, a formula 90 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/blowdart: Writes 'last_damage * 0.5' at effects[0].on_hit[1].magnitude, a formula 10 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/bolt_repeater: Writes 'lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power' at effects[0].on_hit[0].amount, a formula 90 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/bone_arrow: Writes 'lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power' at effects[0].on_hit[0].amount, a formula 90 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/bonespray: Writes 'weave.base_damage * lerp(0.78, 1.22, roll) * spell.power * (1 + 0.08 * (weave.level - 1))' at effects[0].on_hit[0].amount, a formula 12 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/bottled_swarm: Writes 'weave.base_damage * lerp(0.75, 1.25, roll) * spell.power * (1 + 0.08 * (weave.level - 1))' at effects[0].on_hit[0].amount, a formula 10 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/buckler_strike: Writes 'lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power' at effects[0].effects[0].effects[0].effects[0].amount, a formula 90 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/carve: Writes 'lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power' at effects[0].effects[0].amount, a formula 90 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/caul_lash: Writes 'lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power' at effects[0].effects[0].amount, a formula 90 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/chain_pull: Writes 'lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power' at effects[0].on_hit[0].amount, a formula 90 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/cinder_swarm: Writes 'weave.base_damage * lerp(0.73, 1.27, roll) * spell.power * (1 + 0.08 * (weave.level - 1))' at effects[0].on_hit[0].amount, a formula 7 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/cinder_swarm: Writes 'last_damage * 0.35' at effects[0].on_hit[1].magnitude, a formula 9 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/cinderwisp: Writes 'weave.base_damage * lerp(0.76, 1.24, roll) * spell.power * (1 + 0.08 * (weave.level - 1))' at effects[0].on_hit[0].amount, a formula 7 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/cold_spot: Writes 'weave.base_damage * lerp(0.77, 1.23, roll) * spell.power * (1 + 0.08 * (weave.level - 1))' at effects[0].on_hit[0].amount, a formula 8 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/creeping_frost: Writes 'weave.base_damage * lerp(0.76, 1.24, roll) * spell.power * (1 + 0.08 * (weave.level - 1))' at effects[0].on_hit[0].amount, a formula 7 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/cross_jab: Writes 'lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power' at effects[0].effects[0].amount, a formula 90 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/deep_carve: Writes 'lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power' at effects[0].effects[0].amount, a formula 90 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/devouring_maw: Writes 'lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power' at effects[0].effects[0].amount, a formula 90 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/doomsayers_word: Writes 'weave.base_damage * lerp(0.78, 1.22, roll) * spell.power * (1 + 0.08 * (weave.level - 1))' at effects[0].on_hit[0].effects[0].amount, a formula 12 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/doomsayers_word: Writes 'last_damage * 0.5' at effects[0].on_hit[0].effects[1].magnitude, a formula 10 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/earthrender: Writes 'weave.base_damage * lerp(0.8, 1.2, roll) * spell.power * (1 + 0.08 * (weave.level - 1))' at effects[0].on_hit[0].amount, a formula 6 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/essence_drain: Writes 'weave.base_damage * lerp(0.73, 1.27, roll) * spell.power * (1 + 0.08 * (weave.level - 1))' at effects[0].on_hit[0].amount, a formula 7 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/eviscerate: Writes 'lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power' at effects[1].amount, a formula 90 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/fan_of_blades: Writes 'lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power' at effects[0].on_hit[0].amount, a formula 90 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/feather_volley: Writes 'lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power' at effects[0].on_hit[0].amount, a formula 90 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/feather_volley: Writes 'last_damage * 0.4' at effects[0].on_hit[1].magnitude, a formula 8 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/fire_siege: Writes 'weave.base_damage * lerp(0.78, 1.22, roll) * spell.power * (1 + 0.08 * (weave.level - 1))' at effects[0].on_hit[0].amount, a formula 12 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/fire_siege: Writes 'last_damage * 0.3' at effects[0].on_hit[1].magnitude, a formula 17 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/fireball: Writes 'weave.base_damage * lerp(0.78, 1.22, roll) * spell.power * (1 + 0.08 * (weave.level - 1))' at effects[0].on_hit[0].amount, a formula 12 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/fireball: Writes 'last_damage * 0.35' at effects[0].on_hit[1].magnitude, a formula 9 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/firebolt: Writes 'weave.base_damage * lerp(0.77, 1.23, roll) * spell.power * (1 + 0.08 * (weave.level - 1))' at effects[0].on_hit[0].amount, a formula 8 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/firebolt: Writes 'last_damage * 0.3' at effects[0].on_hit[1].magnitude, a formula 17 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/flame_arrow: Writes 'weave.base_damage * lerp(0.75, 1.25, roll) * spell.power * (1 + 0.08 * (weave.level - 1))' at effects[0].on_hit[0].amount, a formula 10 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/flame_arrow: Writes 'last_damage * 0.3' at effects[0].on_hit[1].magnitude, a formula 17 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/follow_sweep: Writes 'lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power' at effects[0].pulse[0].amount, a formula 90 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/forgebound: Writes 'lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power' at effects[0].effects[0].amount, a formula 90 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/frenzy: Writes 'lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power' at effects[0].effects[0].amount, a formula 90 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/frost_pulse: Writes 'weave.base_damage * lerp(0.78, 1.22, roll) * spell.power * (1 + 0.08 * (weave.level - 1))' at effects[0].on_hit[0].amount, a formula 12 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/frostbolt: Writes 'weave.base_damage * lerp(0.8, 1.2, roll) * spell.power * (1 + 0.08 * (weave.level - 1))' at effects[0].on_hit[0].amount, a formula 6 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/frostcreep: Writes 'weave.base_damage * lerp(0.77, 1.23, roll) * spell.power * (1 + 0.08 * (weave.level - 1))' at effects[0].on_hit[0].amount, a formula 8 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/frozen_orb: Writes 'weave.base_damage * lerp(0.8, 1.2, roll) * spell.power * (1 + 0.08 * (weave.level - 1))' at effects[0].on_hit[0].amount, a formula 6 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/gale_lash: Writes 'lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power' at effects[0].effects[0].amount, a formula 90 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/galewisp: Writes 'weave.base_damage * lerp(0.78, 1.22, roll) * spell.power * (1 + 0.08 * (weave.level - 1))' at effects[0].on_hit[0].amount, a formula 12 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/glacial_shard: Writes 'weave.base_damage * lerp(0.73, 1.27, roll) * spell.power * (1 + 0.08 * (weave.level - 1))' at effects[0].on_hit[0].amount, a formula 7 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/gloriole: Writes 'weave.base_damage * lerp(0.73, 1.27, roll) * spell.power * (1 + 0.08 * (weave.level - 1))' at effects[0].on_hit[0].amount, a formula 7 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/goad: Writes 'lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power' at effects[0].on_hit[0].amount, a formula 90 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/gore_rend: Writes 'lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power' at effects[0].effects[0].amount, a formula 90 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/gore_rend: Writes 'last_damage * 0.5' at effects[0].effects[1].magnitude, a formula 10 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/gravewisp: Writes 'last_damage * 0.4' at effects[0].on_hit[1].magnitude, a formula 8 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/grenado: Writes 'lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power' at effects[0].on_hit[0].amount, a formula 90 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/ground_slam: Writes 'lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power' at effects[0].effects[0].amount, a formula 90 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/gyre_hurl: Writes 'lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power' at effects[0].on_hit[0].amount, a formula 90 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/gyreblade: Writes 'lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power' at effects[0].on_hit[0].amount, a formula 90 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/hammer_of_judgment: Writes 'weave.base_damage * lerp(0.78, 1.22, roll) * spell.power * (1 + 0.08 * (weave.level - 1))' at effects[0].on_hit[0].amount, a formula 12 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/harvest_stroke: Writes 'lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power' at effects[0].effects[0].amount, a formula 90 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/harvest_stroke: Writes 'last_damage * 0.3' at effects[0].effects[1].magnitude, a formula 17 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/haymaker: Writes 'lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power' at effects[0].effects[0].amount, a formula 90 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/heartchaser: Writes 'lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power' at effects[0].on_hit[0].amount, a formula 90 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/heavy_strike: Writes 'lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power' at effects[0].effects[0].amount, a formula 90 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/hellfire_lash: Writes 'lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power' at effects[0].effects[0].amount, a formula 90 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/hellfire_lash: Writes 'last_damage * 0.3' at effects[0].effects[2].magnitude, a formula 17 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/hellfire_missile: Writes 'weave.base_damage * lerp(0.75, 1.25, roll) * spell.power * (1 + 0.08 * (weave.level - 1))' at effects[0].on_hit[0].amount, a formula 10 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/hellfire_missile: Writes 'last_damage * 0.3' at effects[0].on_hit[1].magnitude, a formula 17 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/hurl_debris: Writes 'weave.base_damage * lerp(0.77, 1.23, roll) * spell.power * (1 + 0.08 * (weave.level - 1))' at effects[0].on_hit[0].amount, a formula 8 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/impale_lance: Writes 'lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power' at effects[0].on_hit[0].amount, a formula 90 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/lancing_flurry: Writes 'lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power' at effects[0].effects[0].amount, a formula 90 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/lancing_flurry: Writes 'last_damage * 0.35' at effects[0].effects[1].magnitude, a formula 9 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/lash_roots: Writes 'lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power' at effects[0].effects[0].amount, a formula 90 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/lash_roots: Writes 'last_damage * 0.3' at effects[0].effects[2].magnitude, a formula 17 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/lava_glob: Writes 'weave.base_damage * lerp(0.75, 1.25, roll) * spell.power * (1 + 0.08 * (weave.level - 1))' at effects[0].on_hit[0].amount, a formula 10 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/lava_glob: Writes 'last_damage * 0.35' at effects[0].on_hit[1].magnitude, a formula 9 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/living_barrage: Writes 'weave.base_damage * lerp(0.8, 1.2, roll) * spell.power * (1 + 0.08 * (weave.level - 1))' at effects[0].on_hit[0].amount, a formula 6 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/machete_arc: Writes 'lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power' at effects[0].effects[0].amount, a formula 90 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/machete_arc: Writes 'last_damage * 0.35' at effects[0].effects[1].magnitude, a formula 9 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/magma_glob: Writes 'weave.base_damage * lerp(0.76, 1.24, roll) * spell.power * (1 + 0.08 * (weave.level - 1))' at effects[0].on_hit[0].amount, a formula 7 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/magma_glob: Writes 'last_damage * 0.3' at effects[0].on_hit[1].magnitude, a formula 17 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/magma_lob: Writes 'weave.base_damage * lerp(0.78, 1.22, roll) * spell.power * (1 + 0.08 * (weave.level - 1))' at effects[0].on_hit[0].amount, a formula 12 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/magma_lob: Writes 'last_damage * 0.5' at effects[0].on_hit[1].magnitude, a formula 10 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/mantra_strike: Writes 'lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power' at effects[0].effects[0].amount, a formula 90 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/marrowhooks: Writes 'weave.base_damage * lerp(0.8, 1.2, roll) * spell.power * (1 + 0.08 * (weave.level - 1))' at effects[1].on_hit[0].amount, a formula 6 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/marrowhooks: Writes 'last_damage * 0.35' at effects[1].on_hit[1].magnitude, a formula 9 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/marshlight: Writes 'weave.base_damage * lerp(0.78, 1.22, roll) * spell.power * (1 + 0.08 * (weave.level - 1))' at effects[0].on_hit[0].amount, a formula 12 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/mirage_knife: Writes 'lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power' at effects[0].effects[0].amount, a formula 90 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/mirage_shot: Writes 'lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power' at effects[0].on_hit[0].amount, a formula 90 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/mirespume: Writes 'last_damage * 0.5' at effects[0].on_hit[1].magnitude, a formula 10 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/nether_spirit: Writes 'weave.base_damage * lerp(0.77, 1.23, roll) * spell.power * (1 + 0.08 * (weave.level - 1))' at effects[0].on_hit[0].amount, a formula 8 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/nether_spirit: Writes 'last_damage * 0.5' at effects[0].on_hit[1].magnitude, a formula 10 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/one_two: Writes 'lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power' at effects[0].effects[0].amount, a formula 90 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/orbital_blades: Writes 'lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power' at effects[0].on_hit[0].amount, a formula 90 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/piercing_arrow: Writes 'lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power' at effects[0].on_hit[0].amount, a formula 90 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/piledriver: Writes 'lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power' at effects[0].effects[0].amount, a formula 90 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/pinning_spear: Writes 'lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power' at effects[0].on_hit[0].amount, a formula 90 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/pinning_spear: Writes 'last_damage * 0.3' at effects[0].on_hit[1].magnitude, a formula 17 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/planted_banderilla: Writes 'lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power' at effects[0].on_hit[0].amount, a formula 90 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/powderkeg_arrow: Writes 'lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power' at effects[0].on_hit[0].amount, a formula 90 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/pyre_nova: Writes 'weave.base_damage * lerp(0.75, 1.25, roll) * spell.power * (1 + 0.08 * (weave.level - 1))' at effects[0].effects[0].amount, a formula 10 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/pyre_nova: Writes 'last_damage * 0.3' at effects[0].effects[1].magnitude, a formula 17 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/pyroclast_bolt: Writes 'weave.base_damage * lerp(0.73, 1.27, roll) * spell.power * (1 + 0.08 * (weave.level - 1))' at effects[0].on_hit[0].amount, a formula 7 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/pyroclast_bolt: Writes 'last_damage * 0.3' at effects[0].on_hit[1].magnitude, a formula 17 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/radiant_lance: Writes 'lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power' at effects[0].on_hit[0].amount, a formula 90 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/reckoning: Writes 'lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power' at effects[0].effects[0].amount, a formula 90 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/rend: Writes 'lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power' at effects[0].effects[0].amount, a formula 90 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/rend: Writes 'last_damage * 0.4' at effects[0].effects[1].magnitude, a formula 8 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/reprisal: Writes 'lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power' at effects[0].effects[0].amount, a formula 90 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/rift_shard: Writes 'weave.base_damage * lerp(0.75, 1.25, roll) * spell.power * (1 + 0.08 * (weave.level - 1))' at effects[0].on_hit[0].amount, a formula 10 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/rimeclaw: Writes 'weave.base_damage * lerp(0.78, 1.22, roll) * spell.power * (1 + 0.08 * (weave.level - 1))' at effects[0].on_hit[0].amount, a formula 12 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/ruin: Writes 'weave.base_damage * lerp(0.75, 1.25, roll) * spell.power * (1 + 0.08 * (weave.level - 1))' at effects[0].on_hit[0].amount, a formula 10 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/sacrament_of_ruin: Writes 'weave.base_damage * lerp(0.8, 1.2, roll) * spell.power * (1 + 0.08 * (weave.level - 1))' at effects[0].on_hit[0].amount, a formula 6 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/sacrament_of_ruin: Writes 'last_damage * 0.5' at effects[0].on_hit[1].magnitude, a formula 10 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/sanctified_strike: Writes 'lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power' at effects[0].effects[0].amount, a formula 90 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/scalding_lash: Writes 'lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power' at effects[0].effects[0].amount, a formula 90 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/scalding_lash: Writes 'last_damage * 0.5' at effects[0].effects[1].magnitude, a formula 10 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/scattergun: Writes 'lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power' at effects[0].on_hit[0].amount, a formula 90 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/scatterhex: Writes 'weave.base_damage * lerp(0.76, 1.24, roll) * spell.power * (1 + 0.08 * (weave.level - 1))' at effects[0].on_hit[0].amount, a formula 7 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/scythe_sweep: Writes 'lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power' at effects[0].effects[0].effects[0].effects[0].amount, a formula 90 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/scythe_sweep: Writes 'last_damage * 0.3' at effects[0].effects[0].effects[0].effects[1].magnitude, a formula 17 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/severing_lash: Writes 'lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power' at effects[0].effects[0].amount, a formula 90 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/shockfront: Writes 'lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power' at effects[0].on_hit[0].amount, a formula 90 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/siphon_strike: Writes 'lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power' at effects[0].effects[0].amount, a formula 90 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/skewer: Writes 'lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power' at effects[0].effects[0].amount, a formula 90 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/skewer: Writes 'last_damage * 0.35' at effects[0].effects[1].magnitude, a formula 9 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/skittering_bolt: Writes 'weave.base_damage * lerp(0.76, 1.24, roll) * spell.power * (1 + 0.08 * (weave.level - 1))' at effects[0].on_hit[0].amount, a formula 7 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/soul_volley: Writes 'weave.base_damage * lerp(0.77, 1.23, roll) * spell.power * (1 + 0.08 * (weave.level - 1))' at effects[0].on_hit[0].amount, a formula 8 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/soulflay: Writes 'last_damage * 0.35' at effects[0].on_hit[1].magnitude, a formula 9 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/spectral_helix: Writes 'lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power' at effects[0].on_hit[0].amount, a formula 90 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/splayshot: Writes 'lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power' at effects[0].on_hit[0].amount, a formula 90 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/splinter_volley: Writes 'lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power' at effects[0].on_hit[0].amount, a formula 90 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/splinter_volley: Writes 'last_damage * 0.3' at effects[0].on_hit[1].magnitude, a formula 17 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/stasis_lock: Writes 'weave.base_damage * lerp(0.75, 1.25, roll) * spell.power * (1 + 0.08 * (weave.level - 1))' at effects[0].on_hit[0].amount, a formula 10 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/static_strike: Writes 'lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power' at effects[0].effects[0].amount, a formula 90 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/sunder_maul: Writes 'lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power' at effects[0].effects[0].amount, a formula 90 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/surgical_strike: Writes 'lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power' at effects[0].effects[0].amount, a formula 90 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/talon_rake: Writes 'lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power' at effects[0].effects[0].amount, a formula 90 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/talon_rake: Writes 'last_damage * 0.4' at effects[0].effects[1].magnitude, a formula 8 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/tempest_gathering: Writes 'lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power' at effects[0].effects[0].amount, a formula 90 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/tendril_lash: Writes 'lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power' at effects[0].effects[0].amount, a formula 90 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/thousand_cuts: Writes 'lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power' at effects[0].effects[0].amount, a formula 90 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/thrown_ace: Writes 'lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power' at effects[0].on_hit[0].amount, a formula 90 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/tide_lash: Writes 'lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power' at effects[0].effects[0].amount, a formula 90 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/tongue_reel: Writes 'lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power' at effects[0].on_hit[0].amount, a formula 90 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/toppling_stroke: Writes 'lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power' at effects[0].effects[0].amount, a formula 90 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/trisect_finisher: Writes 'lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power' at effects[0].effects[0].amount, a formula 90 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/trisect: Writes 'lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power' at effects[0].effects[0].amount, a formula 90 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/tuning_strike: Writes 'lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power' at effects[0].effects[0].amount, a formula 90 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/unmaking_bolt: Writes 'weave.base_damage * lerp(0.78, 1.22, roll) * spell.power * (1 + 0.08 * (weave.level - 1))' at effects[0].on_hit[0].amount, a formula 12 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/venom_bolt: Writes 'weave.base_damage * lerp(0.75, 1.25, roll) * spell.power * (1 + 0.08 * (weave.level - 1))' at effects[0].on_hit[0].amount, a formula 10 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/venom_bolt: Writes 'last_damage * 0.4' at effects[0].on_hit[1].magnitude, a formula 8 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/vine_lash: Writes 'weave.base_damage * lerp(0.76, 1.24, roll) * spell.power * (1 + 0.08 * (weave.level - 1))' at effects[0].on_hit[0].amount, a formula 7 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/void_hook: Writes 'weave.base_damage * lerp(0.77, 1.23, roll) * spell.power * (1 + 0.08 * (weave.level - 1))' at effects[0].on_hit[0].amount, a formula 8 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/volatile_cinders: Writes 'last_damage * 0.3' at effects[1].on_hit[1].magnitude, a formula 17 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/voltaic_orb: Writes 'last_damage * 0.3' at effects[0].on_hit[1].magnitude, a formula 17 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/voltspear: Writes 'lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power' at effects[0].on_hit[0].amount, a formula 90 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/wandering_spirits: Writes 'weave.base_damage * lerp(0.73, 1.27, roll) * spell.power * (1 + 0.08 * (weave.level - 1))' at effects[0].on_hit[0].amount, a formula 7 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/wandering_spirits: Writes 'last_damage * 0.5' at effects[0].on_hit[1].magnitude, a formula 10 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/web_shot: Writes 'lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power' at effects[0].on_hit[0].amount, a formula 90 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/whirlaxe: Writes 'lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power' at effects[0].on_hit[0].amount, a formula 90 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/whirlaxe: Writes 'last_damage * 0.3' at effects[0].on_hit[1].magnitude, a formula 17 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/whirling_reap: Writes 'lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power' at effects[0].effects[0].effects[0].effects[0].amount, a formula 90 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/wildwisp: Writes 'weave.base_damage * lerp(0.78, 1.22, roll) * spell.power * (1 + 0.08 * (weave.level - 1))' at effects[0].on_hit[0].amount, a formula 12 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/winters_sweep: Writes 'lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power' at effects[0].effects[0].amount, a formula 90 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/word_of_unmaking: Writes 'weave.base_damage * lerp(0.75, 1.25, roll) * spell.power * (1 + 0.08 * (weave.level - 1))' at effects[0].on_hit[0].amount, a formula 10 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/zanshin_cut: Writes 'lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power' at effects[0].effects[0].amount, a formula 90 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/zealots_cadence: Writes 'lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power' at effects[0].effects[0].amount, a formula 90 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+  smell  weaves/zeal: Writes 'lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power' at effects[0].effects[0].amount, a formula 90 definitions copy, which a named basis in rules.yaml or an attribute should carry.
+
+code.string_switch: 79 smell(s), 34 note(s)
+  smell  src/HollowWake.Core/Ai/BehaviorSystem.cs:620: Tests the flag or tag 'hidden' by name; content or a registry should carry this word.
+  smell  src/HollowWake.Core/Ai/BehaviorSystem.cs:143: Compares 'filter' with 'ally' and 'enemy' in this file, a switch on strings written as ifs; content or a registry should carry these words.
+  smell  src/HollowWake.Core/Ai/BehaviorSystem.cs:147: Compares 'filter' with 'ally' and 'enemy' in this file, a switch on strings written as ifs; content or a registry should carry these words.
+  smell  src/HollowWake.Core/Ai/BehaviorSystem.cs:138: Tests the flag or tag 'hidden' by name; content or a registry should carry this word.
+  smell  src/HollowWake.Core/Ai/BehaviorSystem.cs:522: Tests the flags or tags 'stunned' and 'frozen' by name; content or a registry should carry these words.
+  smell  src/HollowWake.Core/Ai/BehaviorSystem.cs:387: A switch on the strings 'has_target', 'target_distance', 'target_life_pct', 'home_distance', 'state_time', 'aggro_range', 'leash_range', 'taunted' and 8 more inside a system, where a registry or an axis should carry the words.
+  smell  src/HollowWake.Core/Ai/MinionActions.cs:388: Tests the flags or tags 'summon', 'movement' and 'displaces' by name; content or a registry should carry these words.
+  smell  src/HollowWake.Core/Ai/MinionActions.cs:154: Tests the flag or tag 'hidden' by name; content or a registry should carry this word.
+  smell  src/HollowWake.Core/Combat/DamagePipeline.cs:1058: Compares 'kind' with 'absorb' and 'break' in this file, a switch on strings written as ifs; content or a registry should carry these words.
+  smell  src/HollowWake.Core/Combat/DamagePipeline.cs:1063: Compares 'kind' with 'absorb' and 'break' in this file, a switch on strings written as ifs; content or a registry should carry these words.
+  smell  src/HollowWake.Core/Combat/HitScope.cs:314: Compares 'name' with 'angle' and 'distance' in this file, a switch on strings written as ifs; content or a registry should carry these words.
+  smell  src/HollowWake.Core/Combat/HitScope.cs:318: Compares 'name' with 'angle' and 'distance' in this file, a switch on strings written as ifs; content or a registry should carry these words.
+  smell  src/HollowWake.Core/Combat/Stages/ImmunityStage.cs:11: Tests the flags or tags 'immune' and 'invulnerable' by name; content or a registry should carry these words.
+  smell  src/HollowWake.Core/Combat/Stages/MitigateStage.cs:53: Compares 'mitigation' with 'armor' and 'resist' in this file, a switch on strings written as ifs; content or a registry should carry these words.
+  smell  src/HollowWake.Core/Combat/Stages/MitigateStage.cs:39: Compares with the content name 'armor' and compares 'mitigation' with 'armor' and 'resist' in this file, a switch on strings written as ifs; content or a registry should carry these words.
+  smell  src/HollowWake.Core/Combat/Stages/PoolsStage.cs:44: Compares with the content name 'life'; content or a registry should carry this word.
+  smell  src/HollowWake.Core/Content/Kinds/DeliveryKinds.cs:149: A switch re-lists the effect types 'area', 'projectile', 'chain', 'field', 'move', 'scatter', 'cascade', 'aura' and 4 more, where what it decides belongs with each handler and its signature.
+  smell  src/HollowWake.Core/Effects/Handlers/CastHandlers.cs:245: Compares 'Scope' with 'all' and 'host' in this file, a switch on strings written as ifs; content or a registry should carry these words.
+  smell  src/HollowWake.Core/Effects/Handlers/CastHandlers.cs:255: Compares 'Scope' with 'all' and 'host' in this file, a switch on strings written as ifs; content or a registry should carry these words.
+  smell  src/HollowWake.Core/Effects/Handlers/DeliveryHandlers.cs:246: Tests the flag or tag 'melee' by name; content or a registry should carry this word.
+  smell  src/HollowWake.Core/Effects/Handlers/DeliveryHandlers.cs:222: Tests the flag or tag 'melee' by name; content or a registry should carry this word.
+  smell  src/HollowWake.Core/Effects/Handlers/EffectHelpers.cs:48: A switch on the strings 'source' and 'point' inside a system, where a registry or an axis should carry the words.
+  smell  src/HollowWake.Core/Effects/Handlers/MinionHandlers.cs:347: Compares 'Pick' with 'nearest', 'newest' and 'target' in this file, a switch on strings written as ifs; content or a registry should carry these words.
+  smell  src/HollowWake.Core/Effects/Handlers/MinionHandlers.cs:387: Compares 'Pick' with 'nearest', 'newest' and 'target' in this file, a switch on strings written as ifs; content or a registry should carry these words.
+  smell  src/HollowWake.Core/Effects/Handlers/MinionHandlers.cs:237: Tests the flags or tags 'stunned' and 'frozen' by name; content or a registry should carry these words.
+  smell  src/HollowWake.Core/Effects/Handlers/MinionHandlers.cs:131: Compares 'Affects' with 'minions' and 'squad' in this file, a switch on strings written as ifs; content or a registry should carry these words.
+  smell  src/HollowWake.Core/Effects/Handlers/MinionHandlers.cs:139: Compares 'Affects' with 'minions' and 'squad' in this file, a switch on strings written as ifs; content or a registry should carry these words.
+  smell  src/HollowWake.Core/Effects/Handlers/MinionHandlers.cs:383: Compares 'Pick' with 'nearest', 'newest' and 'target' in this file, a switch on strings written as ifs; content or a registry should carry these words.
+  smell  src/HollowWake.Core/Effects/Handlers/MovementHandlers.cs:142: Tests the flag or tag 'immovable' by name; content or a registry should carry this word.
+  smell  src/HollowWake.Core/Effects/Handlers/MovementHandlers.cs:114: A switch on the strings 'knockback', 'pull', 'buffet', 'leap', 'blink', 'recall' and 'dash' inside a system, where a registry or an axis should carry the words.
+  smell  src/HollowWake.Core/Effects/Handlers/MovementHandlers.cs:160: A switch on the strings 'pull' and 'buffet' inside a system, where a registry or an axis should carry the words.
+  smell  src/HollowWake.Core/Effects/Handlers/MovementHandlers.cs:55: Compares with the content name 'knockback' and compares 'kind' with 'buffet', 'knockback' and 'pull' in this file, a switch on strings written as ifs; content or a registry should carry these words.
+  smell  src/HollowWake.Core/Effects/Handlers/PlacementHandlers.cs:530: Compares 't' with 'field' and 'projectile' in this file, a switch on strings written as ifs; content or a registry should carry these words.
+  smell  src/HollowWake.Core/Effects/Handlers/PlacementHandlers.cs:261: Compares 'Dir' with 'out' and 'random' in this file, a switch on strings written as ifs; content or a registry should carry these words.
+  smell  src/HollowWake.Core/Effects/Handlers/PlacementHandlers.cs:549: Tests the flag or tag 'projectile' by name; content or a registry should carry this word.
+  smell  src/HollowWake.Core/Effects/Handlers/PlacementHandlers.cs:559: Tests the flag or tag 'field' by name; content or a registry should carry this word.
+  smell  src/HollowWake.Core/Effects/Handlers/PlacementHandlers.cs:269: Compares 'Dir' with 'out' and 'random' in this file, a switch on strings written as ifs; content or a registry should carry these words.
+  smell  src/HollowWake.Core/StatusEffects/StatusService.cs:894: Tests the flag or tag 'dot' by name; content or a registry should carry this word.
+  smell  src/HollowWake.Core/Systems/DisplacementSystem.cs:242: Tests the flag or tag 'untargetable' by name; content or a registry should carry this word.
+  smell  src/HollowWake.Core/Systems/DisplacementSystem.cs:270: Compares 'd.Kind' with 'blink' and 'leap' in this file, a switch on strings written as ifs; content or a registry should carry these words.
+  smell  src/HollowWake.Core/Systems/DisplacementSystem.cs:111: Compares 'd.Kind' with 'blink' and 'leap' in this file, a switch on strings written as ifs; content or a registry should carry these words.
+  smell  src/HollowWake.Core/Systems/DisplacementSystem.cs:151: Compares 'd.Kind' with 'blink' and 'leap' in this file, a switch on strings written as ifs; content or a registry should carry these words.
+  smell  src/HollowWake.Core/Systems/DisplacementSystem.cs:170: Compares 'd.Kind' with 'blink' and 'leap' in this file, a switch on strings written as ifs; content or a registry should carry these words.
+  smell  src/HollowWake.Core/Systems/DisplacementSystem.cs:209: Compares 'd.Kind' with 'blink' and 'leap' in this file, a switch on strings written as ifs; content or a registry should carry these words.
+  smell  src/HollowWake.Core/Systems/DisplacementSystem.cs:193: Compares 'd.Kind' with 'blink' and 'leap' in this file, a switch on strings written as ifs; content or a registry should carry these words.
+  smell  src/HollowWake.Core/Systems/DisplacementSystem.cs:281: Compares 'd.Kind' with 'blink' and 'leap' in this file, a switch on strings written as ifs; content or a registry should carry these words.
+  smell  src/HollowWake.Core/Systems/FieldSystem.cs:365: Tests the flag or tag 'immovable' by name; content or a registry should carry this word.
+  smell  src/HollowWake.Core/Systems/Intents/DialogueIntentHandlers.cs:39: A switch on the strings 'dialogue', 'vendor' and 'station' inside a system, where a registry or an axis should carry the words.
+  smell  src/HollowWake.Core/Systems/MinionSystem.cs:246: A switch on the strings 'deflect' and 'slow' inside a system, where a registry or an axis should carry the words.
+  smell  src/HollowWake.Core/Weaves/Axes/DeliveryAxes.cs:424: Compares 'effective' with '0', 'false' and 'none' in this file, a switch on strings written as ifs; content or a registry should carry these words.
+  smell  src/HollowWake.Core/Weaves/Axes/StatusAxes.cs:84: Compares 'kind' with 'buffet', 'knockback', 'pull' and 'recall' in this file, a switch on strings written as ifs; content or a registry should carry these words.
+  smell  src/HollowWake.Core/Weaves/Axes/StatusAxes.cs:313: Compares 't' with '$thread' and '$threads' in this file, a switch on strings written as ifs; content or a registry should carry these words.
+  smell  src/HollowWake.Core/Weaves/Axes/StatusAxes.cs:315: Compares 'word' with '$thread' and '$threads' in this file, a switch on strings written as ifs; content or a registry should carry these words.
+  smell  src/HollowWake.Core/Weaves/Axes/StatusAxes.cs:83: Compares with the content name 'knockback' and compares 'kind' with 'buffet', 'knockback', 'pull' and 'recall' in this file, a switch on strings written as ifs; content or a registry should carry these words.
+  smell  src/HollowWake.Core/Weaves/Axes/TriggerAxes.cs:101: A switch on the strings 'form' and 'preset' inside a system, where a registry or an axis should carry the words.
+  smell  src/HollowWake.Core/Weaves/AxisReport.cs:394: A switch on the strings '$threads', '$thread' and '$thread_status' inside a system, where a registry or an axis should carry the words.
+  smell  src/HollowWake.Core/Weaves/CastPresentation.cs:22: Compares 'phase' with 'end', 'interrupt' and 'release' in this file, a switch on strings written as ifs; content or a registry should carry these words.
+  smell  src/HollowWake.Core/Weaves/CastPresentation.cs:17: Compares 'phase' with 'end', 'interrupt' and 'release' in this file, a switch on strings written as ifs; content or a registry should carry these words.
+  smell  src/HollowWake.Core/Weaves/CompiledWeave.cs:1233: Compares with the content name 'cost'; content or a registry should carry this word.
+  smell  src/HollowWake.Core/Weaves/Mechanisms.cs:239: Tests the flag or tag 'ailment' by name; content or a registry should carry this word.
+  smell  src/HollowWake.Core/Weaves/Mechanisms.cs:156: Tests the flag or tag 'guard' by name; content or a registry should carry this word.
+  smell  src/HollowWake.Core/Weaves/Mechanisms.cs:454: A switch on the strings '$threads' and '$thread' inside a system, where a registry or an axis should carry the words.
+  smell  src/HollowWake.Core/Weaves/Probes/DeliveryProbes.cs:140: Compares with the content name 'knockback' and matches a value against 'knockback', 'pull' and 'buffet', a switch on strings in one pattern; content or a registry should carry these words.
+  smell  src/HollowWake.Core/Weaves/Probes/DeliveryProbes.cs:96: Compares 'name' with 'circle', 'cone' and 'sector' in this file, a switch on strings written as ifs and compares 'shape' with 'cone' and 'sector' in this file, a switch on strings written as ifs; content or a registry should carry these words.
+  smell  src/HollowWake.Core/Weaves/Probes/DeliveryProbes.cs:91: Compares 'type' with 'area', 'field' and 'projectile' in this file, a switch on strings written as ifs; content or a registry should carry these words.
+  smell  src/HollowWake.Core/Weaves/SlotBehaviors.cs:466: Tests the flags or tags 'stunned' and 'frozen' by name; content or a registry should carry these words.
+  smell  src/HollowWake.Core/Weaves/Triggers.cs:267: Tests the flag or tag 'trigger_permit' by name; content or a registry should carry this word.
+  smell  src/HollowWake.Core/Weaves/Triggers.cs:256: Tests the flags or tags 'stunned' and 'frozen' by name; content or a registry should carry these words.
+  smell  src/HollowWake.Core/Weaves/Triggers.cs:252: Tests the flag or tag 'untriggerable' by name; content or a registry should carry this word.
+  smell  src/HollowWake.Core/Weaves/UseCharges.cs:155: Tests the flag or tag 'moving' by name; content or a registry should carry this word.
+  smell  src/HollowWake.Core/Weaves/UseCharges.cs:169: Tests the flag or tag 'moving' by name; content or a registry should carry this word.
+  smell  src/HollowWake.Core/Weaves/WeaveRuntime.cs:307: Tests the flag or tag 'attack' by name; content or a registry should carry this word.
+  smell  src/HollowWake.Core/Weaves/WeaveRuntime.cs:2056: Compares with the content names 'repeat.count' and 'repeat.seals' and compares 'm.Attribute' with 'repeat.count' and 'repeat.seals' in this file, a switch on strings written as ifs; content or a registry should carry these words.
+  smell  src/HollowWake.Core/Weaves/WeaveRuntime.cs:397: Tests the flags or tags 'stunned' and 'frozen' by name; content or a registry should carry these words.
+  smell  src/HollowWake.Core/Weaves/WeaveRuntime.cs:1077: Tests the flags or tags 'stunned' and 'frozen' by name; content or a registry should carry these words.
+  smell  src/HollowWake.Core/Weaves/WeaveRuntime.cs:340: Tests the flag or tag 'mobile' by name; content or a registry should carry this word.
+  smell  src/HollowWake.Core/Weaves/WeaveRuntime.cs:1006: Tests the flag or tag 'movement' by name; content or a registry should carry this word.
+  smell  src/HollowWake.Core/Weaves/WeaveRuntime.cs:330: Tests the flag or tag 'mobile' by name; content or a registry should carry this word.
+  smell  src/HollowWake.Core/Weaves/WeaveRuntime.cs:779: A switch on the strings 'self' and 'aim' inside a system, where a registry or an axis should carry the words.
+  note   src/HollowWake.Core/Components/Stats.cs:389: A switch on the strings 'low_life', 'full_life', 'low_mana', 'full_mana', 'combo_varied' and 'combo_repeated' outside the systems, where parsing and validation may need one; a copy of a handler's words would be the smell.
+  note   src/HollowWake.Core/Components/Stats.cs:329: A switch on the strings 'level' and 'xp' outside the systems, where parsing and validation may need one; a copy of a handler's words would be the smell.
+  note   src/HollowWake.Core/Content/BuiltinKinds.cs:160: A switch on the strings 'item', 'unique', 'table', 'currency' and 'nothing' outside the systems, where parsing and validation may need one; a copy of a handler's words would be the smell.
+  note   src/HollowWake.Core/Content/Kinds/InterfaceKinds.cs:557: A switch on the strings 'toggle', 'slider', 'choice', 'key', 'color' and 'text' outside the systems, where parsing and validation may need one; a copy of a handler's words would be the smell.
+  note   src/HollowWake.Core/Content/YamlToJson.cs:69: A switch on the strings '', '~', 'null', 'Null', 'NULL', 'true', 'True', 'TRUE' and 3 more outside the systems, where parsing and validation may need one; a copy of a handler's words would be the smell.
+  note   src/HollowWake.Core/Crafting/StationService.cs:82: A switch on the strings 'level', 'missing', 'currency', 'too_far' and 'wrong_station' outside the systems, where parsing and validation may need one; a copy of a handler's words would be the smell.
+  note   src/HollowWake.Core/Effects/EffectContext.cs:284: A switch on the strings 'depth', 'time' and 'distance' outside the systems, where parsing and validation may need one; a copy of a handler's words would be the smell.
+  note   src/HollowWake.Core/Effects/Handlers/CastHandlers.cs:486: A switch on the strings 'random', 'out' and 'rotating', which this file declares with ChoiceOf or OneOf; a second copy elsewhere would be the smell.
+  note   src/HollowWake.Core/Effects/Handlers/CastHandlers.cs:390: A switch on the strings 'target' and 'caster', which this file declares with ChoiceOf or OneOf; a second copy elsewhere would be the smell.
+  note   src/HollowWake.Core/Effects/Handlers/DeliveryHandlers.cs:390: A handler parses its own choice words 'origin' and 'caster' here at compile time; a second copy elsewhere would be the smell.
+  note   src/HollowWake.Core/Effects/Handlers/DeliveryHandlers.cs:74: A handler parses its own choice words 'nearest', 'farthest', 'lowest_life' and 'highest_life' here at compile time; a second copy elsewhere would be the smell.
+  note   src/HollowWake.Core/Effects/Handlers/DeliveryHandlers.cs:545: A switch on the strings 'volley', 'ring' and 'salvo', which this file declares with ChoiceOf or OneOf; a second copy elsewhere would be the smell.
+  note   src/HollowWake.Core/Effects/Handlers/MinionHandlers.cs:357: A switch on the strings 'constructs' and 'any', which this file declares with ChoiceOf or OneOf; a second copy elsewhere would be the smell.
+  note   src/HollowWake.Core/Effects/Handlers/MovementHandlers.cs:153: A switch on the strings 'caster' and 'point', which this file declares with ChoiceOf or OneOf; a second copy elsewhere would be the smell.
+  note   src/HollowWake.Core/Effects/Handlers/PlacementHandlers.cs:275: A switch on the strings 'backward', 'axis', 'random' and 'out', which this file declares with ChoiceOf or OneOf; a second copy elsewhere would be the smell.
+  note   src/HollowWake.Core/Effects/Handlers/PlacementHandlers.cs:354: A switch on the strings 'target' and 'owner', which this file declares with ChoiceOf or OneOf; a second copy elsewhere would be the smell.
+  note   src/HollowWake.Core/Effects/Handlers/StatusHandlers.cs:209: A handler parses its own choice words 'beneficial' and 'any' here at compile time; a second copy elsewhere would be the smell.
+  note   src/HollowWake.Core/Effects/Handlers/StatusHandlers.cs:32: A switch on the strings 'self', 'minions' and 'allies', which this file declares with ChoiceOf or OneOf; a second copy elsewhere would be the smell.
+  note   src/HollowWake.Core/Effects/Handlers/StatusTransferHandlers.cs:55: A handler parses its own choice words 'beneficial' and 'any' here at compile time; a second copy elsewhere would be the smell.
+  note   src/HollowWake.Core/Effects/Handlers/StatusTransferHandlers.cs:354: A switch on the strings 'self' and 'area', which this file declares with ChoiceOf or OneOf; a second copy elsewhere would be the smell.
+  note   src/HollowWake.Core/Effects/Handlers/StatusTransferHandlers.cs:122: A switch on the strings 'enemies' and 'allies', which this file declares with ChoiceOf or OneOf; a second copy elsewhere would be the smell.
+  note   src/HollowWake.Core/Expressions/Expr.cs:183: A switch on the strings '+', '-', '*', '/', '%', '^', '<', '<=' and 6 more outside the systems, where parsing and validation may need one; a copy of a handler's words would be the smell.
+  note   src/HollowWake.Core/Expressions/Expr.cs:395: A switch on the strings 'has', 'rand', 'randi', 'curve' and 'if' outside the systems, where parsing and validation may need one; a copy of a handler's words would be the smell.
+  note   src/HollowWake.Core/Items/ItemGenerator.cs:503: A switch on the strings 'nothing', 'item', 'unique', 'table' and 'currency' outside the systems, where parsing and validation may need one; a copy of a handler's words would be the smell.
+  note   src/HollowWake.Core/Items/ItemGenerator.cs:440: A switch on the strings 'magic' and 'rare' outside the systems, where parsing and validation may need one; a copy of a handler's words would be the smell.
+  note   src/HollowWake.Core/Minions/MinionService.cs:637: A switch on the strings 'increased', 'more' and 'override' outside the systems, where parsing and validation may need one; a copy of a handler's words would be the smell.
+  note   src/HollowWake.Core/Minions/Summoning.cs:57: A switch on the strings 'caster' and 'point', which this file declares with ChoiceOf or OneOf; a second copy elsewhere would be the smell.
+  note   src/HollowWake.Core/Minions/Summoning.cs:86: A switch on the strings 'scatter', 'line' and 'circle', which this file declares with ChoiceOf or OneOf; a second copy elsewhere would be the smell.
+  note   src/HollowWake.Core/Progression/HeroScope.cs:95: A switch on the strings 'active', 'complete', 'completed' and 'taken' outside the systems, where parsing and validation may need one; a copy of a handler's words would be the smell.
+  note   src/HollowWake.Core/Sim/Events/CombatEvents.cs:31: A switch on the strings 'leech' and 'kill' outside the systems, where parsing and validation may need one; a copy of a handler's words would be the smell.
+  note   src/HollowWake.Core/Sim/ProcService.cs:277: A switch on the strings 'amount', 'crit' and 'roll' outside the systems, where parsing and validation may need one; a copy of a handler's words would be the smell.
+  note   src/HollowWake.Core/Weaves/Mechanisms.cs:226: A switch on the string 'massed', which this file declares with ChoiceOf or OneOf; a second copy elsewhere would be the smell.
+  note   src/HollowWake.Core/Weaves/Mechanisms.cs:217: A switch on the string 'standing', which this file declares with ChoiceOf or OneOf; a second copy elsewhere would be the smell.
+  note   src/HollowWake.Core/Weaves/Mechanisms.cs:181: A switch on the strings 'children' and 'spends', which this file declares with ChoiceOf or OneOf; a second copy elsewhere would be the smell.
+
+code.form_read: 86 smell(s), 0 note(s)
+  smell  src/HollowWake.Core/Weaves/Axes/CastingAxes.cs:203: Takes the whole form where the runtime should read the compiled weave, into which a preset or glyph can merge any block.
+  smell  src/HollowWake.Core/Weaves/Axes/CastingAxes.cs:202: Takes the whole form where the runtime should read the compiled weave, into which a preset or glyph can merge any block.
+  smell  src/HollowWake.Core/Weaves/Axes/CastingAxes.cs:437: Reads the form's 'Id' where the runtime should read the compiled weave, into which a preset or glyph can merge any block.
+  smell  src/HollowWake.Core/Weaves/Axes/CastingAxes.cs:87: Reads the form's 'ChannelInterval' where the runtime should read the compiled weave, into which a preset or glyph can merge any block.
+  smell  src/HollowWake.Core/Weaves/Axes/CastingAxes.cs:175: Reads the form's 'Overcharge' where the runtime should read the compiled weave, into which a preset or glyph can merge any block.
+  smell  src/HollowWake.Core/Weaves/Axes/CastingAxes.cs:271: Reads the form's 'Toggle' where the runtime should read the compiled weave, into which a preset or glyph can merge any block.
+  smell  src/HollowWake.Core/Weaves/Axes/CastingAxes.cs:74: Takes the whole form where the runtime should read the compiled weave, into which a preset or glyph can merge any block.
+  smell  src/HollowWake.Core/Weaves/Axes/CastingAxes.cs:387: Reads the form's 'ToString' and takes the whole form where the runtime should read the compiled weave, into which a preset or glyph can merge any block.
+  smell  src/HollowWake.Core/Weaves/Axes/CastingAxes.cs:347: Takes the whole form where the runtime should read the compiled weave, into which a preset or glyph can merge any block.
+  smell  src/HollowWake.Core/Weaves/Axes/CastingAxes.cs:59: Takes the whole form where the runtime should read the compiled weave, into which a preset or glyph can merge any block.
+  smell  src/HollowWake.Core/Weaves/Axes/CastingAxes.cs:403: Takes the whole form where the runtime should read the compiled weave, into which a preset or glyph can merge any block.
+  smell  src/HollowWake.Core/Weaves/Axes/CastingAxes.cs:198: Reads the form's 'ToString' and takes the whole form where the runtime should read the compiled weave, into which a preset or glyph can merge any block.
+  smell  src/HollowWake.Core/Weaves/Axes/CastingAxes.cs:114: Takes the whole form where the runtime should read the compiled weave, into which a preset or glyph can merge any block.
+  smell  src/HollowWake.Core/Weaves/Axes/CastingAxes.cs:167: Takes the whole form where the runtime should read the compiled weave, into which a preset or glyph can merge any block.
+  smell  src/HollowWake.Core/Weaves/Axes/CastingAxes.cs:24: Takes the whole form where the runtime should read the compiled weave, into which a preset or glyph can merge any block.
+  smell  src/HollowWake.Core/Weaves/Axes/CastingAxes.cs:25: Takes the whole form where the runtime should read the compiled weave, into which a preset or glyph can merge any block.
+  smell  src/HollowWake.Core/Weaves/Axes/CastingAxes.cs:31: Takes the whole form where the runtime should read the compiled weave, into which a preset or glyph can merge any block.
+  smell  src/HollowWake.Core/Weaves/Axes/CastingAxes.cs:275: Takes the whole form where the runtime should read the compiled weave, into which a preset or glyph can merge any block.
+  smell  src/HollowWake.Core/Weaves/Axes/CastingAxes.cs:180: Takes the whole form where the runtime should read the compiled weave, into which a preset or glyph can merge any block.
+  smell  src/HollowWake.Core/Weaves/Axes/CastingAxes.cs:192: Takes the whole form where the runtime should read the compiled weave, into which a preset or glyph can merge any block.
+  smell  src/HollowWake.Core/Weaves/Axes/CastingAxes.cs:49: Takes the whole form where the runtime should read the compiled weave, into which a preset or glyph can merge any block.
+  smell  src/HollowWake.Core/Weaves/Axes/CastingAxes.cs:55: Takes the whole form where the runtime should read the compiled weave, into which a preset or glyph can merge any block.
+  smell  src/HollowWake.Core/Weaves/Axes/CastingAxes.cs:27: Takes the whole form where the runtime should read the compiled weave, into which a preset or glyph can merge any block.
+  smell  src/HollowWake.Core/Weaves/Axes/CastingAxes.cs:26: Takes the whole form where the runtime should read the compiled weave, into which a preset or glyph can merge any block.
+  smell  src/HollowWake.Core/Weaves/Axes/CastingAxes.cs:28: Takes the whole form where the runtime should read the compiled weave, into which a preset or glyph can merge any block.
+  smell  src/HollowWake.Core/Weaves/Axes/CastingAxes.cs:89: Takes the whole form where the runtime should read the compiled weave, into which a preset or glyph can merge any block.
+  smell  src/HollowWake.Core/Weaves/Axes/CastingAxes.cs:189: Takes the whole form where the runtime should read the compiled weave, into which a preset or glyph can merge any block.
+  smell  src/HollowWake.Core/Weaves/Axes/CastingAxes.cs:183: Takes the whole form where the runtime should read the compiled weave, into which a preset or glyph can merge any block.
+  smell  src/HollowWake.Core/Weaves/Axes/CastingAxes.cs:276: Takes the whole form where the runtime should read the compiled weave, into which a preset or glyph can merge any block.
+  smell  src/HollowWake.Core/Weaves/Axes/CastingAxes.cs:404: Reads the form's 'ToString' where the runtime should read the compiled weave, into which a preset or glyph can merge any block.
+  smell  src/HollowWake.Core/Weaves/Axes/CastingAxes.cs:21: Takes the whole form where the runtime should read the compiled weave, into which a preset or glyph can merge any block.
+  smell  src/HollowWake.Core/Weaves/Axes/CastingAxes.cs:328: Takes the whole form where the runtime should read the compiled weave, into which a preset or glyph can merge any block.
+  smell  src/HollowWake.Core/Weaves/Axes/MechanismAxes.cs:28: Reads the form's 'Mechanisms' where the runtime should read the compiled weave, into which a preset or glyph can merge any block.
+  smell  src/HollowWake.Core/Weaves/Axes/StatusAxes.cs:155: Takes the whole form where the runtime should read the compiled weave, into which a preset or glyph can merge any block.
+  smell  src/HollowWake.Core/Weaves/Axes/StatusAxes.cs:153: Reads the form's 'Target' where the runtime should read the compiled weave, into which a preset or glyph can merge any block.
+  smell  src/HollowWake.Core/Weaves/Axes/TargetingAxes.cs:19: Takes the whole form where the runtime should read the compiled weave, into which a preset or glyph can merge any block.
+  smell  src/HollowWake.Core/Weaves/Axes/TargetingAxes.cs:34: Takes the whole form where the runtime should read the compiled weave, into which a preset or glyph can merge any block.
+  smell  src/HollowWake.Core/Weaves/Axes/TargetingAxes.cs:37: Takes the whole form where the runtime should read the compiled weave, into which a preset or glyph can merge any block.
+  smell  src/HollowWake.Core/Weaves/Axes/TargetingAxes.cs:31: Takes the whole form where the runtime should read the compiled weave, into which a preset or glyph can merge any block.
+  smell  src/HollowWake.Core/Weaves/Axes/TargetingAxes.cs:40: Takes the whole form where the runtime should read the compiled weave, into which a preset or glyph can merge any block.
+  smell  src/HollowWake.Core/Weaves/Axes/TargetingAxes.cs:22: Takes the whole form where the runtime should read the compiled weave, into which a preset or glyph can merge any block.
+  smell  src/HollowWake.Core/Weaves/Axes/TargetingAxes.cs:36: Takes the whole form where the runtime should read the compiled weave, into which a preset or glyph can merge any block.
+  smell  src/HollowWake.Core/Weaves/Axes/TargetingAxes.cs:54: Takes the whole form where the runtime should read the compiled weave, into which a preset or glyph can merge any block.
+  smell  src/HollowWake.Core/Weaves/Axes/TargetingAxes.cs:18: Takes the whole form where the runtime should read the compiled weave, into which a preset or glyph can merge any block.
+  smell  src/HollowWake.Core/Weaves/Axes/TargetingAxes.cs:57: Takes the whole form where the runtime should read the compiled weave, into which a preset or glyph can merge any block.
+  smell  src/HollowWake.Core/Weaves/Axes/TriggerAxes.cs:103: Takes the whole form where the runtime should read the compiled weave, into which a preset or glyph can merge any block.
+  smell  src/HollowWake.Core/Weaves/AxisReport.cs:268: Reads the form's 'Attributes' and 'Id' where the runtime should read the compiled weave, into which a preset or glyph can merge any block.
+  smell  src/HollowWake.Core/Weaves/AxisReport.cs:371: Takes the whole form where the runtime should read the compiled weave, into which a preset or glyph can merge any block.
+  smell  src/HollowWake.Core/Weaves/AxisReport.cs:807: Takes the whole form where the runtime should read the compiled weave, into which a preset or glyph can merge any block.
+  smell  src/HollowWake.Core/Weaves/AxisReport.cs:597: Reads the form's 'Effects' where the runtime should read the compiled weave, into which a preset or glyph can merge any block.
+  smell  src/HollowWake.Core/Weaves/CompiledWeave.cs:264: Reads the form's 'CastMode' where the runtime should read the compiled weave, into which a preset or glyph can merge any block.
+  smell  src/HollowWake.Core/Weaves/CompiledWeave.cs:263: Reads the form's 'Targeting' where the runtime should read the compiled weave, into which a preset or glyph can merge any block.
+  smell  src/HollowWake.Core/Weaves/CompiledWeave.cs:288: Reads the form's 'CastMode' where the runtime should read the compiled weave, into which a preset or glyph can merge any block.
+  smell  src/HollowWake.Core/Weaves/CompiledWeave.cs:285: Reads the form's 'Toggle' where the runtime should read the compiled weave, into which a preset or glyph can merge any block.
+  smell  src/HollowWake.Core/Weaves/CompiledWeave.cs:343: Reads the form's 'CastTime' where the runtime should read the compiled weave, into which a preset or glyph can merge any block.
+  smell  src/HollowWake.Core/Weaves/CompiledWeave.cs:346: Reads the form's 'Cooldown' where the runtime should read the compiled weave, into which a preset or glyph can merge any block.
+  smell  src/HollowWake.Core/Weaves/CompiledWeave.cs:342: Reads the form's 'Range' where the runtime should read the compiled weave, into which a preset or glyph can merge any block.
+  smell  src/HollowWake.Core/Weaves/Mechanisms.cs:146: Reads the form's 'CastMode' where the runtime should read the compiled weave, into which a preset or glyph can merge any block.
+  smell  src/HollowWake.Core/Weaves/Mechanisms.cs:147: Reads the form's 'CastMode' where the runtime should read the compiled weave, into which a preset or glyph can merge any block.
+  smell  src/HollowWake.Core/Weaves/Mechanisms.cs:144: Reads the form's 'Toggle' where the runtime should read the compiled weave, into which a preset or glyph can merge any block.
+  smell  src/HollowWake.Core/Weaves/Mechanisms.cs:156: Reads the form's 'CastMode' where the runtime should read the compiled weave, into which a preset or glyph can merge any block.
+  smell  src/HollowWake.Core/Weaves/Mechanisms.cs:405: Reads the form's 'Cooldown' where the runtime should read the compiled weave, into which a preset or glyph can merge any block.
+  smell  src/HollowWake.Core/Weaves/Probes/CastingProbes.cs:19: Reads the form's 'CastMode' where the runtime should read the compiled weave, into which a preset or glyph can merge any block.
+  smell  src/HollowWake.Core/Weaves/Probes/CastingProbes.cs:21: Reads the form's 'CastMode' where the runtime should read the compiled weave, into which a preset or glyph can merge any block.
+  smell  src/HollowWake.Core/Weaves/Probes/CastingProbes.cs:18: Reads the form's 'Toggle' where the runtime should read the compiled weave, into which a preset or glyph can merge any block.
+  smell  src/HollowWake.Core/Weaves/SlotBehaviors.cs:166: Reads the form's 'Recovery' where the runtime should read the compiled weave, into which a preset or glyph can merge any block.
+  smell  src/HollowWake.Core/Weaves/SlotBehaviors.cs:538: Reads the form's 'Tree' where the runtime should read the compiled weave, into which a preset or glyph can merge any block.
+  smell  src/HollowWake.Core/Weaves/Toggles.cs:146: Reads the form's 'Toggle' where the runtime should read the compiled weave, into which a preset or glyph can merge any block.
+  smell  src/HollowWake.Core/Weaves/Toggles.cs:65: Reads the form's 'Id' where the runtime should read the compiled weave, into which a preset or glyph can merge any block.
+  smell  src/HollowWake.Core/Weaves/Toggles.cs:32: Takes the whole form where the runtime should read the compiled weave, into which a preset or glyph can merge any block.
+  smell  src/HollowWake.Core/Weaves/Toggles.cs:154: Reads the form's 'Upkeep' where the runtime should read the compiled weave, into which a preset or glyph can merge any block.
+  smell  src/HollowWake.Core/Weaves/Triggers.cs:266: Reads the form's 'CastTime' where the runtime should read the compiled weave, into which a preset or glyph can merge any block.
+  smell  src/HollowWake.Core/Weaves/WeaveRuntime.cs:2048: Reads the form's 'Overcharge' where the runtime should read the compiled weave, into which a preset or glyph can merge any block.
+  smell  src/HollowWake.Core/Weaves/WeaveRuntime.cs:2049: Reads the form's 'Upkeep' where the runtime should read the compiled weave, into which a preset or glyph can merge any block.
+  smell  src/HollowWake.Core/Weaves/WeaveRuntime.cs:410: Reads the form's 'Reflex' and takes the whole form where the runtime should read the compiled weave, into which a preset or glyph can merge any block.
+  smell  src/HollowWake.Core/Weaves/WeaveRuntime.cs:1445: Reads the form's 'Overcharge' where the runtime should read the compiled weave, into which a preset or glyph can merge any block.
+  smell  src/HollowWake.Core/Weaves/WeaveRuntime.cs:2025: Reads the form's 'Overcharge' where the runtime should read the compiled weave, into which a preset or glyph can merge any block.
+  smell  src/HollowWake.Core/Weaves/WeaveRuntime.cs:666: Reads the form's 'Target' where the runtime should read the compiled weave, into which a preset or glyph can merge any block.
+  smell  src/HollowWake.Core/Weaves/WeaveRuntime.cs:2035: Reads the form's 'Upkeep' where the runtime should read the compiled weave, into which a preset or glyph can merge any block.
+  smell  src/HollowWake.Core/Weaves/WeaveRuntime.cs:1217: Reads the form's 'ChannelInterval' where the runtime should read the compiled weave, into which a preset or glyph can merge any block.
+  smell  src/HollowWake.Core/Weaves/WeaveRuntime.cs:876: Reads the form's 'Cooldown' where the runtime should read the compiled weave, into which a preset or glyph can merge any block.
+  smell  src/HollowWake.Core/Weaves/WeaveRuntime.cs:346: Takes the whole form where the runtime should read the compiled weave, into which a preset or glyph can merge any block.
+  smell  src/HollowWake.Core/Weaves/WeaveRuntime.cs:583: Takes the whole form where the runtime should read the compiled weave, into which a preset or glyph can merge any block.
+  smell  src/HollowWake.Core/Weaves/WeaveRuntime.cs:1265: Reads the form's 'Overcharge' where the runtime should read the compiled weave, into which a preset or glyph can merge any block.
+  smell  src/HollowWake.Core/Weaves/WeaveRuntime.cs:321: Reads the form's 'CastTime' where the runtime should read the compiled weave, into which a preset or glyph can merge any block.
+  smell  src/HollowWake.Core/Weaves/WeaveRuntime.cs:303: Reads the form's 'Range' where the runtime should read the compiled weave, into which a preset or glyph can merge any block.
+
+580 smell(s), 197 note(s)
+wrote D:/Games/MMOARPG/artifacts/entity34-final-union-lint.json

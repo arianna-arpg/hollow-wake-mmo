@@ -21,6 +21,7 @@ import { CellFlag, ChunkStore, chunkKey, chunksAround, ring, type Chunk, type Ch
 import { toCore, toThree, type CorePoint } from './coords';
 import { lerp, toLinear } from './palette';
 import { buildGround, hasWater } from './terrainMesh';
+import { rayToGround } from './terrainRay';
 
 /**
  * The land around the player, streamed from the server: chunks are requested nearest first within the view
@@ -86,7 +87,6 @@ export class TerrainView {
   private readonly water: ShaderMaterial;
   private readonly tuft: BufferGeometry;
   private readonly tuftMaterial: MeshLambertMaterial;
-  private readonly scratch = new Vector3();
   private foliageDensity = 1;
   requested = 0;
 
@@ -465,40 +465,8 @@ export class TerrainView {
   }
 
   rayToGround(origin: Vector3, direction: Vector3, maxDistance = 400): CorePoint | null {
-    const below = (p: Vector3): boolean => {
-      const core = toCore(p);
-      const c = this.store.chunkOf(core.x, core.y);
-      if (!this.isBuilt(c.x, c.y)) {
-        return false;
-      }
-      const h = this.store.heightAt(core.x, core.y);
-      return h !== undefined && core.z <= h;
-    };
-    const step = 0.5;
-    const last = origin.clone();
-    const p = this.scratch;
-    for (let d = 0; d < maxDistance; d += step) {
-      p.copy(direction).multiplyScalar(d).add(origin);
-      if (below(p)) {
-        const lo = last.clone();
-        const hi = p.clone();
-        const mid = new Vector3();
-        for (let i = 0; i < 6; i++) {
-          mid.addVectors(lo, hi).multiplyScalar(0.5);
-          if (below(mid)) {
-            hi.copy(mid);
-          } else {
-            lo.copy(mid);
-          }
-        }
-        const core = toCore(hi);
-        return { x: core.x, y: core.y, z: this.store.heightAt(core.x, core.y) ?? core.z };
-      }
-      last.copy(p);
-    }
-    return null;
+    return rayToGround(this.store, toCore(origin), toCore(direction), c => this.isBuilt(c.x, c.y), maxDistance);
   }
-
   dispose(): void {
     this.reset(this.store.chunkSize);
     this.ground.dispose();

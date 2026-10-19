@@ -759,7 +759,9 @@ internal sealed class ProjectileHandler : IEffectHandler
                 Context = basis ?? ctx.Fork(deeper: 1),
                 Spec = Spec,
                 Velocity = velocity,
-                GroundFloor = Spec.Gravity ? null : Aim.GroundFloor?.Invoke(ctx),
+                GroundFloor = Spec.Gravity ? null : Aim.GroundFloor?.Invoke(ctx) ??
+                    (Aim.ReturnGroundFloor && Spec.Return != ReturnMode.None && f.Orbit == 0 && ctx.LaunchLift is null ?
+                        (float)sim.Content.Rules.Number("delivery.projectile_ground_floor", 0) : null),
                 Speed = speed,
                 Heading = heading,
                 Carrier = start,

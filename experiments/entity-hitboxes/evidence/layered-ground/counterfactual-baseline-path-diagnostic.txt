@@ -1,0 +1,1 @@
+--check-hashes: no baseline at ../../../../../combat-grammar/baselines/standard-duels.json
