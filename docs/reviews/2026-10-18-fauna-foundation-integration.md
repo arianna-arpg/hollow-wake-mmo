@@ -2,7 +2,9 @@
 
 Date: 2026-10-18. PR #34. Previous Fauna head `c3099a8ea5c7a32fc0799c3a17cb167b2bd1231c`.
 
-**Status: scoped review checkpoint only.** Runtime/content source `6ca91cc026998edcb5df0645fdbbff5c253f8d9d` is ready for independent review of the Fauna correction, not final foundation handoff. Claude subsequently reopened #36 in [6256607271](https://github.com/arianna-arpg/hollow-wake-mmo/pull/36#issuecomment-6256607271): returning free shots lose their downward path after a pierce, and bridge/tower shots use base terrain instead of layered walkable ground. The coordinator has paused final full-suite, client/probe gates and sibling propagation until complete corrected #36 arrives. The already committed combined replay entry is provisional and must be checked again then; no further replacement is made under this hold.
+**Current status: complete functional foundation prepared for coordinator adoption.** Tested runtime `900928f9e3706a650f1255b098e05550bc137976` includes complete #36 `0c610e4715c5d32002d051eec55d4fa7f7f4f526`. Final evidence and fresh replay attribution are below. Claude review, exact publication-head CI and coordinated performance clearance remain open; the PR stays draft. Earlier sections retain their historical source identities.
+
+**Historical scoped checkpoint, superseded by the complete functional handoff below.** Runtime/content source `6ca91cc026998edcb5df0645fdbbff5c253f8d9d` is ready for independent review of the Fauna correction, not final foundation handoff. Claude subsequently reopened #36 in [6256607271](https://github.com/arianna-arpg/hollow-wake-mmo/pull/36#issuecomment-6256607271): returning free shots lose their downward path after a pierce, and bridge/tower shots use base terrain instead of layered walkable ground. The coordinator has paused final full-suite, client/probe gates and sibling propagation until complete corrected #36 arrives. The already committed combined replay entry is provisional and must be checked again then; no further replacement is made under this hold.
 
 ## Complete inputs and scope
 
@@ -48,3 +50,42 @@ The review identified xUnit1013 on the public non-test helper `AssertHumanoidFre
 
 `dotnet build tests/HollowWake.Core.Tests/HollowWake.Core.Tests.csproj --no-restore -m:1 -nr:false -p:UseSharedCompilation=false` succeeds with zero warnings and zero errors. The log and exact one-line declaration diff are retained as `34-helper-visibility-build.txt` and `34-helper-visibility.patch` under the entity review evidence directory. Neither the 848-case runtime selection nor the independent 1,112-check review was rerun. Final integration gates and sibling propagation remain held pending complete corrected #36.
 Acknowledged by: independent scoped floor review completed at6ca91cc with the visibility cleanup above; final Claude reciprocal review remains pending under the upstream integration hold.
+
+## Complete functional foundation handoff
+
+The complete #36 publication `0c610e4715c5d32002d051eec55d4fa7f7f4f526` was merged once into Fauna `20ddf5a37fea115cdcb521bc06e24608934e2f4b`, producing tested runtime **`900928f9e3706a650f1255b098e05550bc137976`**. Complete main `f7ef072cc322b93b628229916c5220024e74a89c` remains included. The incoming [layered-ground/return review](2026-10-18-layered-ground-return.md), isolated causal comparison and original failures remain in the branch. This publication changes only the replay fixture, this review record and evidence after that tested merge.
+
+The deliveries conflict combines support at the previous flight height, exclusion of overhead decks, bounded admitted cursor input, fresh-launch rules and pure loaded-only snapshot observation with Fauna's minimum across all statted patterns, including fallback cylinders. The content floor stays 0.16 m. The internal test helper, all 15 intentional airborne misses, body-selected checks, card renderer, interaction smoke and background harness corrections remain intact. Fauna definitions, physical dimensions, habitats, faction assignments and existing AI are unchanged. No #37-40 or separate #20 source is imported backward.
+
+### Actual-union replay attribution
+
+The baseline conflict initially retains the whole prior Fauna fixture. Both input fixtures and the conflict text are preserved under [34-final-union](../../experiments/entity-review/evidence/34-final-union/). The full solution run then reports exactly one failed test, the provisional baseline, naming Skirmisher/Hob and Skirmisher/Boar. No incoming hashes were installed without measuring the union.
+
+Fresh Release controls on runtime900928f establish the following; the older 6ca91cc comparison above remains historical evidence only:
+
+- Complete standard reports at 0.16 m and with a read-only 0.342 m overlay are structurally identical, including individual fights. This equality was checked again under the new returning policy that adopts its floor at launch.
+- Actual Fauna Skirmisher/Boar is `fbf0ac20a5a74103`, with 10/10 Skirmisher wins and median 7.6 s. Restoring the exact original #36 boar definition produces incoming `7dd259e21c8ac0e8` at both floor choices; those two complete single-pair reports are identical. This distinguishes the existing Fauna boar contribution from the floor choice on the actual union.
+- Skirmisher/Hob becomes `465a4807b0fe94f2`, matching the reviewed incoming return-policy correction. Incoming #36 preserves its independent two-hunk runtime counterfactual, which restored all seven previous isolated hashes while keeping layered support and admission corrections.
+- Only the two prior Fauna references change: Boar `e661cfbccc766113 -> fbf0ac20a5a74103`, Hob `1cf76df19ceeb296 -> 465a4807b0fe94f2`. The other five stay unchanged. No runtime source was edited for these new content-overlay controls.
+
+The corrected baseline test passes on its single-test rerun, and the required Release seven-pair Windows comparison prints `hashes: identical`. [Comparison](../../experiments/entity-review/evidence/34-final-union/replay-comparison.json), complete actual/floor reports, legacy-boar controls, exact overlay files and the original failed test log are retained.
+
+### Final functional evidence
+
+[Provenance](../../experiments/entity-review/evidence/34-final-union/provenance.json) records both parents, main, the runtime tree manifest, tested binary SHA256 values, smoke/probe identities and platform. [Verification](../../experiments/entity-review/evidence/34-final-union/verification.json) and the adjacent raw logs account for:
+
+- Debug solution and Release Tools builds: zero warnings and errors. Initial full .NET run: 2,840 core pass plus the sole replay-fixture failure, 89 server pass, 137 native pass. The sole failed test then passes after the attributed fixture update. This accounts for 3,067 distinct cases; a second full-suite run is neither claimed nor needed for a fixture-only correction.
+- Browser tests: 304 pass; prototype porter: 10; background-runner lifecycle tests: 10. Production web build succeeds with its existing chunk-size warning. Generated protocol is current.
+- Content validation: zero errors/warnings. Starter load runs 200 ticks. Skeleton/Zombie fight passes. The audit retains all 777 lint keys (580 smells, 197 notes), and all 499 literal keys equal the committed fixture.
+- Private smoke `run-n4vt04`: browser 31/31, native 36/36; cleanup errors empty. The separate private probe grants all six requested features and passes. Owned-process/lease checks find no remaining test processes or leases.
+- The saved isometric and card screenshots were inspected: both show the full world viewport, terrain, bodies and interface. The isolated #36 blank-world/tiny-viewport defect is absent with the retained renderer fix. These captures do not replace anatomical rendering review of every creature.
+
+The full proving report is structurally identical to Fauna runtime `26431c48a67ddd3b77811cf94363a589cdd50e69`, including hash `4730bef23767a558`. It still exits 1 for the same three inherited ceilings: Bulwark, Plaguer and Pitfighter each win 10/10 above 0.8. Fletcher/Evoker remains 0.5/0.5 with median 7 s. This is not balance acceptance.
+
+Native pixels remain untested in headless mode. The run retains the known shutdown diagnostics: 5 dummy textures, 2 shaped texts, 1 font, 1 CanvasItem and 26 ObjectDB instances. Ordinary smoke timings are not performance acceptance. No benchmark or performance trace ran. No main merge or sibling propagation occurred. #37 remains at its prior source until the coordinator adopts this complete handoff.
+
+One evidence-packaging command initially used the wrong Core framework directory; its diagnostic is retained. The manifest was corrected to hash the actual Core DLL beside the tested Tools executable. No completed build/test was rerun for this packaging correction. Generated, previously untracked Godot import sidecars were removed by explicit owned paths; source files were untouched.
+
+Claude reciprocal review of the complete published foundation and exact-head hosted CI are requested. Keep #34 draft until review and separately coordinated performance acceptance. Guarded ordinary-default and authored-hit-body benchmark commands will be prepared without execution; the coordinator owns the quiet window and final landing source.
+
+Acknowledged by: coordinator authorized the complete36 union and requested this final functional publication; Claude review and performance clearance of the published head remain pending.

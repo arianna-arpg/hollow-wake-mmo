@@ -1,0 +1,17 @@
+
+> hollow-wake-web@0.1.0 test
+> vitest run
+
+
+ RUN  v5.0.3 C:/Users/John/.codex/worktrees/fauna-foundation-integration/MMOARPG/web
+
+
+ Test Files  39 passed (39)
+      Tests  304 passed (304)
+   Start at  19:30:38
+   Duration  3.04s (setup 48%, transform 38%, tests 7%, import 6%, worker 1%)
+
+  Transform  transforming modules took 14.40s · 38% of tracked time, re-done on every run
+             persist transforms across runs with fsModuleCache: true
+             learn more: https://vitest.dev/guide/improving-performance#caching-between-reruns
+
