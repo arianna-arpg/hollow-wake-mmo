@@ -661,16 +661,19 @@ public sealed partial class WeaveRuntime
             reason = "invalid_aim";
             return false;
         }
-        if (weave.Targeting == Targeting.Ground) point = sim.Terrain.AimGroundAt(point);
-        else if (weave.Targeting == Targeting.Direction)
-            point = sim.World.TryGet<Transform>(target, out var focus) ? point with { Z = focus.Position.Z } : sim.Terrain.AimGroundAt(point);
-        if (weave.Form.Target is { } spec)
-        {
-            return ValidateKind(sim, caster, stats, weave, spec, ref target, ref point, ref direction, out reason);
-        }
-        reason = "";
         var ct = sim.World.Get<Transform>(caster);
         var range = weave.Range(stats);
+        if (weave.Form.Target is { } spec)
+        {
+            if (!ValidateKind(sim, caster, stats, weave, spec, ref target, ref point, ref direction, out reason)) return false;
+            // Admission may refuse or supply an authoritative body point. Only an accepted bare aim
+            // needs a surface query, after its existing authored/streamed aim bound has been applied.
+            if (target.IsNone && weave.Targeting is Targeting.Ground or Targeting.Direction)
+                point = ResolveGroundInput(sim, ct, point,
+                    weave.Targeting == Targeting.Ground && range > 0 ? range : RulesOf(sim).MaxAimRange);
+            return true;
+        }
+        reason = "";
         switch (weave.Targeting)
         {
             case Targeting.Self:
@@ -708,21 +711,12 @@ public sealed partial class WeaveRuntime
             case Targeting.Ground:
             {
                 target = Entity.None;
-                if (ct is not null && range > 0)
-                {
-                    var d = ct.GroundDistanceTo(point);
-                    if (d > range)
-                    {
-                        // Clamp to range instead of refusing: feels better for click casting.
-                        var dir = new Vector2(point.X - ct.Position.X, point.Y - ct.Position.Y) / d;
-                        point = new Vector3(ct.Position.X + dir.X * (float)range, ct.Position.Y + dir.Y * (float)range, point.Z);
-                        point = sim.Terrain.AimGroundAt(point);
-                    }
-                }
+                point = ResolveGroundInput(sim, ct, point, range > 0 ? range : RulesOf(sim).MaxAimRange);
                 return true;
             }
             case Targeting.Direction:
             {
+                var focus = sim.World.Get<Transform>(target);
                 target = Entity.None;
                 if (direction.LengthSquared() < 0.0001f && ct is not null)
                 {
@@ -733,12 +727,28 @@ public sealed partial class WeaveRuntime
                     }
                 }
                 direction = Vector2.Normalize(direction);
+                point = focus is not null ? point with { Z = focus.Position.Z } :
+                    ResolveGroundInput(sim, ct, point, RulesOf(sim).MaxAimRange);
                 return true;
             }
         }
         return true;
     }
 
+    /// <summary>Bounds the planar input before any terrain generation, retaining its bearing and layer hint.</summary>
+    private static Vector3 ResolveGroundInput(Simulation sim, Transform? caster, Vector3 point, double range)
+    {
+        if (caster is not null && range > 0)
+        {
+            var dx = (double)point.X - caster.Position.X;
+            var dy = (double)point.Y - caster.Position.Y;
+            var distance = Math.Sqrt(dx * dx + dy * dy);
+            if (distance > range)
+                point = new Vector3((float)(caster.Position.X + dx * range / distance),
+                    (float)(caster.Position.Y + dy * range / distance), point.Z);
+        }
+        return sim.Terrain.AimGroundAt(point);
+    }
     /// <summary>
     /// A form's <c>target</c> block: the given body must be one its kind accepts, meet its condition and be in
     /// range; otherwise the kind searches near the aim within the search radius; otherwise the fallback

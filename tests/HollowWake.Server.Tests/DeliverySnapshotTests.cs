@@ -157,7 +157,7 @@ public class DeliverySnapshotTests
         Assert.Null(Snapshots.Delta(state, state with { Until = state.Until + 1 }, out _));
     }
     public static IEnumerable<object[]> FloorSnapshots() =>
-        new[] { "firebolt", "piercing_arrow" }.SelectMany(preset =>
+        new[] { "firebolt", "piercing_arrow", "stone_glaive" }.SelectMany(preset =>
             new[] { -.125f, 0, .125f }.SelectMany(slope =>
                 new[] { 0, 1 }.Select(afterContact => new object[] { preset, slope, afterContact })));
 
