@@ -34,7 +34,7 @@ public class OrcTests
         Assert.Equal(profile.Width/profile.Height, look.Shape["breadth"], 6);
         Assert.Equal(profile.Depth/profile.Height, look.Shape["depth"], 6);
         Assert.Equal(0, look.Variation.Scale);
-        Assert.Contains(CoreContent.Registry.Each<PoiDef>(), p => p.Inhabitants.Any(s=>s.Pattern==pattern) && id.Tags.Has("habitat."+p.Id));
+        Assert.Contains(ParkedPopulationContent.Registry.Each<PoiDef>(), p => p.Inhabitants.Any(s=>s.Pattern==pattern) && id.Tags.Has("habitat."+p.Id));
         for (var i=0; i<450; i++) a.Sim.Tick();
         Assert.True(a.Hit(body,a.Owner), pattern+" did not land damage through AI");
     }
@@ -102,7 +102,7 @@ public class OrcTests
     {
         static string[] Generate(int level)
         {
-            var content=ContentRegistry.Load(new[]{CoreContent.FindContentDir()},out _);
+            var content=ParkedPopulationContent.Create();
             content.With(new RegionOverrideDef{Id="hallows_home",X=0,Y=0,Archetype="hallows",Level=level,Faction="weftmarch_compact"});
             content.With(new ZoneOverrideDef{Id="ninewells",X=0,Y=0,Pois={new PoiPlacement{Poi="orc_hold",X=50,Y=50}}});
             var g=new WorldGenerator(content,Rng.Hash64("iron-tusk-hold"));

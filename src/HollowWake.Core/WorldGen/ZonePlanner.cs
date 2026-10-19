@@ -130,11 +130,11 @@ public sealed class ZonePlanner
                     continue;
                 }
                 var biome = _gen.Biome(sample, region);
-                var waterDistance = _gen.WaterDistance(x, y);
+                var waterDistance = double.NaN;
                 var count = 0;
                 foreach (var def in defs)
                 {
-                    if (!Fits(def, sample, biome, region, waterDistance) || TooClose(placed, def, x, y))
+                    if (TooClose(placed, def, x, y) || !Fits(def, sample, biome, region, x, y, ref waterDistance))
                     {
                         continue;
                     }
@@ -218,7 +218,7 @@ public sealed class ZonePlanner
         return already;
     }
 
-    private bool Fits(PoiDef def, in ClimateSample s, BiomeDef? biome, RegionInfo region, double waterDistance)
+    private bool Fits(PoiDef def, in ClimateSample s, BiomeDef? biome, RegionInfo region, double x, double y, ref double waterDistance)
     {
         var siteLevel = Math.Max(1, region.Level + def.Level);
         if (def.Inhabitants.Count > 0 && !def.Inhabitants.Any(s => s.Level is null || s.Level.Contains(siteLevel)))
@@ -228,10 +228,6 @@ public sealed class ZonePlanner
             return false;
         }
         if (def.Slope is { } sl && !sl.Contains(s.Slope))
-        {
-            return false;
-        }
-        if (def.WaterDistance is { } wd && !wd.Contains(waterDistance))
         {
             return false;
         }
@@ -253,6 +249,13 @@ public sealed class ZonePlanner
         if (!def.Factions.IsEmpty && region.Faction is not null && !def.Factions.Has(region.Faction))
         {
             return false;
+        }
+        // Ring sampling is expensive. Most candidates need no water constraint, or already
+        // failed a cheaper condition. Sample once only for a candidate that actually needs it.
+        if (def.WaterDistance is { } wd)
+        {
+            if (double.IsNaN(waterDistance)) waterDistance = _gen.WaterDistance(x, y);
+            if (!wd.Contains(waterDistance)) return false;
         }
         return true;
     }
@@ -496,8 +499,16 @@ public sealed class ZonePlanner
             }
         chunks.Sort((a, b) => a.Distance != b.Distance ? a.Distance.CompareTo(b.Distance)
             : a.Coord.Y != b.Coord.Y ? a.Coord.Y.CompareTo(b.Coord.Y) : a.Coord.X.CompareTo(b.Coord.X));
-        var byId = candidates.ToDictionary(p => p.Id, StringComparer.Ordinal);
-        var patternIds = new HashSet<string>(byId.Keys, StringComparer.Ordinal);
+        var byId = new Dictionary<string, PatternDef>(candidates.Count, StringComparer.Ordinal);
+        var patternIds = new HashSet<string>(StringComparer.Ordinal);
+        foreach (var pattern in candidates)
+        {
+            byId.Add(pattern.Id, pattern);
+            patternIds.Add(pattern.Id);
+        }
+        // Reuse the result across rejected chunks. Candidate definitions are unique and shared,
+        // so reference membership preserves the former dictionary's first-spawn ordering.
+        var matches = new List<PatternDef>();
         var limit = Math.Min(chunks.Count, _p.QuestPopulationChunks);
         for (var i = 0; i < limit; i++)
         {
@@ -508,18 +519,17 @@ public sealed class ZonePlanner
                 if (!_gen.CouldContainPopulation(coord, patternIds)) continue;
                 _questPopulation[coord] = spawns = _gen.GenerateSpawnFacts(coord);
             }
-            var matches = new Dictionary<string, PatternDef>(StringComparer.Ordinal);
             foreach (var spawn in spawns)
             {
                 if (!byId.TryGetValue(spawn.Pattern, out var pattern)
                     || Distance(anchor.X, anchor.Y, spawn.X, spawn.Y) > req.Within
                     || (req.LevelDelta is not null && !req.LevelDelta.Contains((spawn.Level ?? pattern.Level) - questLevel)))
                     continue;
-                matches.TryAdd(pattern.Id, pattern);
+                if (!matches.Contains(pattern)) matches.Add(pattern);
             }
-            if (matches.Count > 0) return matches.Values.ToList();
+            if (matches.Count > 0) return matches;
         }
-        return new List<PatternDef>();
+        return matches;
     }
 
     private static string Sub(string? text, bool names, Dictionary<string, (string Id, string Name)> fills, PoiInstance giver)

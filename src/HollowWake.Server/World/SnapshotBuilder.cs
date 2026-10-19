@@ -191,8 +191,13 @@ public sealed class SnapshotBuilder
 
     private EntityState DynamicStateOf(Entity e, SnapshotSettings settings, bool diagnostic)
     {
-        var fingerprint = FingerprintOf(e, settings);
-        var known = _tick[e.Key];
+        SyncTick(settings);
+        var found = _tick.TryGetValue(e.Key, out var known);
+        // Neighbouring viewers share the exact state. Avoid looking up and rewriting its
+        // fingerprint again when the requested variant is already captured for this tick.
+        if (diagnostic ? known.Diagnostic is not null : known.State is not null)
+            return diagnostic ? known.Diagnostic! : known.State!;
+        var fingerprint = found ? known.Fingerprint : Snapshots.Fingerprint(_sim, e, settings.ResourceStep, settings.CastSteps);
         var state = known.State ?? Snapshots.Capture(_sim, e, isStatic: false, hitBodies: false);
         var debug = known.Diagnostic;
         if (diagnostic && debug is null) debug = state with { HitBody = _sim.World.Get<HollowWake.Core.Combat.HitBody>(e)?.Definition.Id };

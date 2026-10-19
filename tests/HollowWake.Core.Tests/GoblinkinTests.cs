@@ -41,9 +41,10 @@ public class GoblinkinTests
         Assert.Equal(profile.Width / profile.Height, look.Shape["breadth"], 6);
         Assert.Equal(profile.Depth / profile.Height, look.Shape["depth"], 6);
         Assert.Equal(0, look.Variation.Scale);
-        var active = content.Each<PoiDef>().SelectMany(p => p.Inhabitants)
-            .Concat(content.Each<BiomeDef>().SelectMany(b => b.SpawnTables).Distinct().SelectMany(t => content.Require<SpawnTableDef>(t).Spawns));
-        Assert.Contains(active, s => s.Pattern == pattern);
+        var populations = ParkedPopulationContent.Registry;
+        var authored = populations.Each<PoiDef>().SelectMany(p => p.Inhabitants)
+            .Concat(populations.Each<BiomeDef>().SelectMany(b => b.SpawnTables).Distinct().SelectMany(t => populations.Require<SpawnTableDef>(t).Spawns));
+        Assert.Contains(authored, s => s.Pattern == pattern);
         for (var i = 0; i < 450; i++) a.Sim.Tick();
         Assert.True(a.Hit(body, a.Owner), pattern + " did not land damage through its own AI kit");
     }

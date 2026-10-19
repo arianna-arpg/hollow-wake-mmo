@@ -2,6 +2,7 @@ using System.Reflection;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using HollowWake.Core.Content;
 
 namespace HollowWake.Protocol;
 
@@ -73,9 +74,10 @@ public static class TypeScriptContract
                     return $"Record<string, {Map(args[1])}>";
                 }
             }
-            if (options.Converters.Any(c => c.CanConvert(t)))
+            if (ContentJson.Options.Converters.Any(c => c.CanConvert(t)))
             {
                 // Shapes owned by a content converter (weave specs, tag sets) stay opaque to the web client.
+                // Wire writers that preserve a record's shape must not hide its TypeScript contract.
                 return "unknown";
             }
             if (t.IsClass && t.Namespace == typeof(Message).Namespace)

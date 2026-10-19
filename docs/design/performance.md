@@ -57,5 +57,6 @@ The bounded [trace preparation](../../experiments/forecast-rendering/snapshot-tr
 - Measure first; keep the benchmark honest; add a benchmark group when a new hot path appears.
 - Determinism is not negotiable: an optimization that changes generated terrain or simulation outcomes is a bug, so golden tests pin outputs.
 - Prefer removing work to making work faster: do not re-path when the path is still good, do not send what did not change, do not evaluate what no one reads.
+- Zone placement samples distance to water only after cheaper candidate constraints pass and only when an authored water-distance constraint needs it; candidates at the same point share that sample. This preserves placement, RNG and quest output. Entity snapshots reuse the requested captured variant across nearby viewers and use a generated writer for the repeated entity payload, with byte-equivalence tests against the reference serializer.
 - Allocation in steady state is the enemy of a smooth tick. Pool, reuse, iterate without copying, avoid closures and LINQ in per-tick code.
 - The server thread owns the simulation. Parallelism comes from zones on worker threads behind the job scheduler seam, not from threads inside a zone.

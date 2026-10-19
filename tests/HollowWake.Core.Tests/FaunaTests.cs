@@ -17,7 +17,7 @@ public class FaunaTests
         .Where(p => p.Extends == "fauna_body").Select(p => new object[] { p.Id });
 
     [Theory, MemberData(nameof(Bodies))]
-    public void WildlifeHasPhysicalScaleClassifiersAndReachableHabitats(string pattern)
+    public void WildlifeHasPhysicalScaleClassifiersAndAuthoredParkedHabitats(string pattern)
     {
         var a = DeliveryArena.Create();
         var body = a.Body(20, 20, pattern: pattern, faction: "wilds");
@@ -32,9 +32,9 @@ public class FaunaTests
         Assert.Equal(0, look.Variation.Scale);
         Assert.Equal(physical.Height, a.Sim.World.Get<Transform>(body)!.Height, 5);
         Assert.True(Physicality.Mass(a.Sim, body) > 0);
-        Assert.Contains(CoreContent.Registry.Each<BiomeDef>(), biome => id.Tags.Has("habitat." + biome.Id) &&
+        Assert.Contains(ParkedPopulationContent.Registry.Each<BiomeDef>(), biome => id.Tags.Has("habitat." + biome.Id) &&
             (biome.Spawns.Any(s => s.Pattern == pattern) || biome.SpawnTables
-            .Any(t => CoreContent.Registry.Require<SpawnTableDef>(t).Spawns.Any(s => s.Pattern == pattern))));
+            .Any(t => ParkedPopulationContent.Registry.Require<SpawnTableDef>(t).Spawns.Any(s => s.Pattern == pattern))));
     }
 
     [Theory, MemberData(nameof(Bodies))]

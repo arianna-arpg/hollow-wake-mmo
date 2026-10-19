@@ -2,6 +2,8 @@
 
 The checkout's play helper publishes the server into its private `artifacts/playtest/server/` runtime and uses an owned lease for graceful shutdown. This keeps normal solution builds available while playtesting. Shutdown unhooks process events and joins the lease monitor before disposing cancellation state.
 
+Entity snapshot payloads use a generated JSON writer inside the existing message serializer. It preserves the exact field names, omission rules, escaping and bytes of the reference writer; decoding retains the content JSON conventions. Message registration remains additive. The TypeScript generator treats only content converters as opaque, so a faster writer cannot hide a wire record's fields. Serialization equivalence and protocol contract tests guard this boundary.
+
 ## Sessions
 
 The pure .NET host's local-play orchestration flags are `--bind`, `--websocket` and `--lifetime-file`. The last watches a checkout-owned lease file, updating its heartbeat while present and requesting the existing save/shutdown path when removed. These are host lifecycle controls, not game messages; ordinary server runs need no lease. The local helper never terminates unrelated processes to free a port.
