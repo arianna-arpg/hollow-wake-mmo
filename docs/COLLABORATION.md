@@ -11,6 +11,14 @@ Two kinds of engineer work in this repository: Claude sessions (coordinator of t
 
 ## Branch life
 
+### Playable integration first
+
+The owner's 2026-10-19 reset makes Codex the temporary integration coordinator while Claude is unavailable. Codex records its own review and verification during this interval; Claude's absence does not block a reviewed, gated cleanup. Required CI and performance gates still apply. This exception ends when the owner restores the normal review arrangement.
+
+Keep one visible integration candidate while the combat backlog is consolidated. A new work branch must address a concrete blocker in that candidate or the current playtest, and closes with that fix. The main checkout's `Play.cmd` is the canonical local play entry point. Update `PLAYTEST.md` when the playable capabilities or limitations change, distinguishing engine support, starting-character access and deferred work.
+
+An asset or combat kit does not require a world placement. Preserve prepared content until its rollout is wanted. Staging bodies, approving their combat and adding their population rules are separate decisions. Deferred work belongs in recoverable archive tags with an index and a reason, rather than indefinitely active branches. Before retiring an unmerged branch, verify its exact tip is preserved remotely; never call archived work merged. Retain local evidence and uncommitted files.
+
 A branch is a place to work, not a place to keep work. Uncommitted or unmerged work is lost work: the other engineer cannot see it, it drifts from main, and it goes with the worktree when a machine or a session does.
 
 - **Push at least daily.** Whatever state the branch is in, its commits are on the remote by the end of every working day.

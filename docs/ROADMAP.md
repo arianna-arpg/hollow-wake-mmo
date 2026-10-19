@@ -2,6 +2,10 @@
 
 Milestones, in order. Each is done when its verification holds, not when its code exists.
 
+## Current focus
+
+Make the integrated combat loop easy to launch, play and assess. [PLAYTEST.md](../PLAYTEST.md) is the player-facing status and route into that build; the [2026-10-19 reset](reviews/2026-10-19-project-reset.md) records the branch dispositions. Complete and assess the existing combat integration candidate before starting another feature stream. Further creature population rollout and living-world implementation wait behind that work. Prepared bodies, appearances and kits may remain staged without new world spawns. The milestones below are the long-term plan, not a completion ledger.
+
 ## M0: Foundation (this repository's first state)
 
 Core simulation with every system present end to end, the server and protocol, a Godot client that connects and plays, a content pack that exercises everything, tools, tests, docs, deployment files. Verification: build, tests, validate, headless zone, headless duel, loopback session, live TCP probe.
