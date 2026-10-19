@@ -26,6 +26,8 @@ Summoning presets live in weave content: caps and replacement groups, melee or r
 
 ## Population
 
+Body and appearance authoring can finish before population design. A reusable pattern or summon need not be referenced by a biome or point of interest. Keep unapproved population proposals staged; adding a creature to the catalog does not authorize adding it to the live world. The living-world integration decides where new populations belong after their combat behavior is ready for playtesting.
+
 Biome spawn tables express roaming density, pack size, level windows and respawn time. Point-of-interest inhabitants express local populations under the existing per-candidate place weight multipliers, with their level windows evaluated against the site's level including its authored offset. Site occupants use pattern levels by default at birth and respawn. An inhabitant specification or landmark legend cell may explicitly opt into the site's level with `use_site_level: true`; the shipped Knot does so for its three inhabitants. Naturally selected sites must have an eligible inhabitant. Pinned authoring overrides can intentionally bypass placement eligibility. A place's `factions` filter restricts eligible regions; it does not assign the inhabitants' combat faction. Hostile ruins can appear within a settled region while their bodies retain their hostile pattern faction.
 
 Region budgets currently multiply every matching candidate's weight. Adding ruin definitions therefore changes the total weight of ruins relative to other kinds; it does not partition a fixed ruin allocation.

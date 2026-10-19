@@ -1,0 +1,406 @@
+{
+  "date": "2026-10-19",
+  "main": "f7ef072cc322b93b628229916c5220024e74a89c",
+  "candidate": "d73a64dbf9083e70ccbb13c9a5354de752e0b402",
+  "remote": [
+    {
+      "branch": "claude/combat-ai-constructs",
+      "commit": "738bad67f3c1490b1f2b241dc970d55606d6d24d",
+      "tag": "archive/2026-10-19/claude/combat-ai-constructs"
+    },
+    {
+      "branch": "claude/living-world-4b4aca",
+      "commit": "82dd45a420e03c8e47d1ef5432601ebaafe69347",
+      "tag": "archive/2026-10-19/claude/living-world-4b4aca"
+    },
+    {
+      "branch": "codex/elemental-entity-foundation",
+      "commit": "423ce83243e66d0891e37e8cf831409f05663ea9",
+      "tag": "archive/2026-10-19/codex/elemental-entity-foundation"
+    },
+    {
+      "branch": "codex/elemental-shared-review-checks",
+      "commit": "b878de221d5d06e0d3e80545a4cd7fc137fdcef8",
+      "tag": "archive/2026-10-19/codex/elemental-shared-review-checks"
+    },
+    {
+      "branch": "codex/fauna-critter-foundation",
+      "commit": "1bbaa120730376e1297c4f4a7011291c1f69b542",
+      "tag": "archive/2026-10-19/codex/fauna-critter-foundation"
+    },
+    {
+      "branch": "codex/gnoll-beastkin-clans",
+      "commit": "50f9e85a6c00cd118e3711c466aeb1222e7af970",
+      "tag": "archive/2026-10-19/codex/gnoll-beastkin-clans"
+    },
+    {
+      "branch": "codex/golem-construct-foundation",
+      "commit": "69203620aa4f129f9032606a1dbdf7b6c7ae6e1f",
+      "tag": "archive/2026-10-19/codex/golem-construct-foundation"
+    },
+    {
+      "branch": "codex/kobold-scaleclans",
+      "commit": "89f700307def75826b93a12c711fdf9721f302a0",
+      "tag": "archive/2026-10-19/codex/kobold-scaleclans"
+    },
+    {
+      "branch": "codex/orc-warbands-scale",
+      "commit": "a3eafab043d38a3acf43d24f4c8f31c255668bd0",
+      "tag": "archive/2026-10-19/codex/orc-warbands-scale"
+    },
+    {
+      "branch": "codex/pr-50-review",
+      "commit": "5d4be81a755987eb23393c70924f0c35400938d6",
+      "tag": "archive/2026-10-19/codex/pr-50-review"
+    },
+    {
+      "branch": "codex/precise-entity-hitboxes",
+      "commit": "0c610e4715c5d32002d051eec55d4fa7f7f4f526",
+      "tag": "archive/2026-10-19/codex/precise-entity-hitboxes"
+    }
+  ],
+  "local": [
+    {
+      "branch": "claude/combat-ai-constructs",
+      "commit": "4505c1d3f82145a3033a66c28bfbb5dd6e9380e9",
+      "contained_in": "origin/codex/shared-cast-forecasts-integration",
+      "tag": null
+    },
+    {
+      "branch": "claude/combat-ai-intent-seam",
+      "commit": "87ad95385ea7cd3979ddcaa328e01decf114166b",
+      "contained_in": "origin/main",
+      "tag": null
+    },
+    {
+      "branch": "claude/combat-composition-lint",
+      "commit": "a2aca2dd3e7da81a86e32afebaedd669f01277fb",
+      "contained_in": "origin/main",
+      "tag": null
+    },
+    {
+      "branch": "claude/combat-effect-references",
+      "commit": "16a4a7edf16ca1033299735d1ca01fd42d2a8aa7",
+      "contained_in": "origin/main",
+      "tag": null
+    },
+    {
+      "branch": "claude/combat-evaluation-harness",
+      "commit": "e60090b720fc55ba1fa504c6004a120a3e2b1e7a",
+      "contained_in": "origin/main",
+      "tag": null
+    },
+    {
+      "branch": "claude/combat-evaluation-harness-content",
+      "commit": "380ecee41d48ef9924978c34a197dc2b0857336d",
+      "contained_in": null,
+      "tag": "archive/local/2026-10-19/claude/combat-evaluation-harness-content"
+    },
+    {
+      "branch": "claude/combat-grammar-contract",
+      "commit": "081fbfe26d49783c3808c459db62bdf54af215d8",
+      "contained_in": "origin/main",
+      "tag": null
+    },
+    {
+      "branch": "claude/combat-morph-fixes",
+      "commit": "0dda215bc98323e429f9e372944b7ef029bbb4e7",
+      "contained_in": "origin/main",
+      "tag": null
+    },
+    {
+      "branch": "claude/combat-morph-test",
+      "commit": "48741bd3f574d4e639dcb990e59c3c05a9462dd1",
+      "contained_in": "origin/main",
+      "tag": null
+    },
+    {
+      "branch": "claude/combat-port-10-projectile-corrections",
+      "commit": "14f7f3b97442d956a4cf7ef48e7b357b4b6a08d9",
+      "contained_in": "origin/main",
+      "tag": null
+    },
+    {
+      "branch": "claude/combat-port-11-spells",
+      "commit": "dd8ca0215c1fa28573abbd9f1ede3446f19fa90b",
+      "contained_in": "origin/main",
+      "tag": null
+    },
+    {
+      "branch": "claude/combat-port-12-held-presets",
+      "commit": "81754916119ebe4e219a0a128c6a56e4ee87731b",
+      "contained_in": "origin/main",
+      "tag": null
+    },
+    {
+      "branch": "claude/combat-port-13-auras",
+      "commit": "dd8ca0215c1fa28573abbd9f1ede3446f19fa90b",
+      "contained_in": "origin/main",
+      "tag": null
+    },
+    {
+      "branch": "claude/combat-port-6-corpse-spend",
+      "commit": "4ef90853a22daba2148903b396ec1d5ee5e1479a",
+      "contained_in": "origin/main",
+      "tag": null
+    },
+    {
+      "branch": "claude/combat-port-7-charge-modifiers",
+      "commit": "71cca685bb205c3e08b3384f20eae5433c9ecf0a",
+      "contained_in": "origin/main",
+      "tag": null
+    },
+    {
+      "branch": "claude/combat-port-8-cast-host",
+      "commit": "8a0307a2021953e89f7168230dfa1526ff78bbf3",
+      "contained_in": "origin/main",
+      "tag": null
+    },
+    {
+      "branch": "claude/combat-weave-axes",
+      "commit": "4153802c0c16bda18f77189acecc9ede06f26228",
+      "contained_in": "origin/main",
+      "tag": null
+    },
+    {
+      "branch": "claude/combat-weave-axes-review",
+      "commit": "320d115b26b9d5c6686eca9c96529bccd6b49dbb",
+      "contained_in": "origin/main",
+      "tag": null
+    },
+    {
+      "branch": "claude/dreamy-cerf-31c49f",
+      "commit": "784d9b1286be9988128f3c89bed9698d86af4183",
+      "contained_in": "origin/main",
+      "tag": null
+    },
+    {
+      "branch": "claude/github-setup-63b667",
+      "commit": "a7e3aeadd6ea2f7d43f30acd79c9b872ed59a59f",
+      "contained_in": "origin/main",
+      "tag": null
+    },
+    {
+      "branch": "claude/living-world-4b4aca",
+      "commit": "82dd45a420e03c8e47d1ef5432601ebaafe69347",
+      "contained_in": "origin/claude/living-world-4b4aca",
+      "tag": null
+    },
+    {
+      "branch": "claude/visuals-feel-6141d3",
+      "commit": "106d9806d7d3cc1373b3be0ea953c125eea2818b",
+      "contained_in": "origin/main",
+      "tag": null
+    },
+    {
+      "branch": "claude/zen-hodgkin-0526f9",
+      "commit": "ceb2784228dd451dbbfd22526a597efd860bc2f4",
+      "contained_in": "origin/main",
+      "tag": null
+    },
+    {
+      "branch": "codex/cast-forecast-core",
+      "commit": "3e4fa9130fdda3ad8a3de6ed5a053be4f3d0a0db",
+      "contained_in": null,
+      "tag": "archive/local/2026-10-19/codex/cast-forecast-core"
+    },
+    {
+      "branch": "codex/elemental-entity-foundation",
+      "commit": "423ce83243e66d0891e37e8cf831409f05663ea9",
+      "contained_in": "origin/codex/elemental-entity-foundation",
+      "tag": null
+    },
+    {
+      "branch": "codex/elemental-shared-review-checks",
+      "commit": "b878de221d5d06e0d3e80545a4cd7fc137fdcef8",
+      "contained_in": "origin/codex/elemental-shared-review-checks",
+      "tag": null
+    },
+    {
+      "branch": "codex/fauna-critter-foundation",
+      "commit": "1bbaa120730376e1297c4f4a7011291c1f69b542",
+      "contained_in": "origin/codex/shared-cast-forecasts-integration",
+      "tag": null
+    },
+    {
+      "branch": "codex/forecast-ai-observation",
+      "commit": "57b8a1f21d39f8e48dbed96f2c35abfdc03f1981",
+      "contained_in": null,
+      "tag": "archive/local/2026-10-19/codex/forecast-ai-observation"
+    },
+    {
+      "branch": "codex/forecast-cost-control",
+      "commit": "271e82d26ab1bed394b4d6b2f3c54de5ff846c2b",
+      "contained_in": null,
+      "tag": "archive/local/2026-10-19/codex/forecast-cost-control"
+    },
+    {
+      "branch": "codex/forecast-slab-parity",
+      "commit": "d15b3b72e69d1ff728adc2c9a3c9d49be9511429",
+      "contained_in": "origin/codex/shared-cast-forecasts-integration",
+      "tag": null
+    },
+    {
+      "branch": "codex/gnoll-beastkin-clans",
+      "commit": "50f9e85a6c00cd118e3711c466aeb1222e7af970",
+      "contained_in": "origin/codex/gnoll-beastkin-clans",
+      "tag": null
+    },
+    {
+      "branch": "codex/golem-construct-foundation",
+      "commit": "69203620aa4f129f9032606a1dbdf7b6c7ae6e1f",
+      "contained_in": "origin/codex/golem-construct-foundation",
+      "tag": null
+    },
+    {
+      "branch": "codex/golem-hitbox-validation",
+      "commit": "3b286a8a22acf1d3cc84a3a87be78a6884ce1243",
+      "contained_in": null,
+      "tag": "archive/local/2026-10-19/codex/golem-hitbox-validation"
+    },
+    {
+      "branch": "codex/hitbody-fauna-validation",
+      "commit": "26c50de03c62f434c517564906a54c0287b281ce",
+      "contained_in": "origin/codex/shared-cast-forecasts-integration",
+      "tag": null
+    },
+    {
+      "branch": "codex/kobold-scaleclans",
+      "commit": "89f700307def75826b93a12c711fdf9721f302a0",
+      "contained_in": "origin/codex/kobold-scaleclans",
+      "tag": null
+    },
+    {
+      "branch": "codex/launcher-quick-play",
+      "commit": "c89e5f3498dd7ef29e5f3a2e89839a25f3c8345a",
+      "contained_in": "origin/main",
+      "tag": null
+    },
+    {
+      "branch": "codex/melee-rider-review",
+      "commit": "47de147ee5fca8b1e2f9e3f0afcc0a69b310ab8c",
+      "contained_in": null,
+      "tag": "archive/local/2026-10-19/codex/melee-rider-review"
+    },
+    {
+      "branch": "codex/orc-warbands-scale",
+      "commit": "a3eafab043d38a3acf43d24f4c8f31c255668bd0",
+      "contained_in": "origin/codex/shared-cast-forecasts-integration",
+      "tag": null
+    },
+    {
+      "branch": "codex/pr-50-review",
+      "commit": "5d4be81a755987eb23393c70924f0c35400938d6",
+      "contained_in": "origin/codex/pr-50-review",
+      "tag": null
+    },
+    {
+      "branch": "codex/precise-entity-hitboxes",
+      "commit": "0c610e4715c5d32002d051eec55d4fa7f7f4f526",
+      "contained_in": "origin/codex/shared-cast-forecasts-integration",
+      "tag": null
+    },
+    {
+      "branch": "codex/shared-cast-forecasts",
+      "commit": "8aa963bc651202aad39041314baa2cbfea389237",
+      "contained_in": null,
+      "tag": "archive/local/2026-10-19/codex/shared-cast-forecasts"
+    },
+    {
+      "branch": "morph-fixes-backup-90ebfd7",
+      "commit": "90ebfd7a5026818cdb937b1cc288d5504ab08560",
+      "contained_in": null,
+      "tag": "archive/local/2026-10-19/morph-fixes-backup-90ebfd7"
+    },
+    {
+      "branch": "review-52",
+      "commit": "904b652b128ac70ca1de7c12578bac98b43871eb",
+      "contained_in": "origin/main",
+      "tag": null
+    },
+    {
+      "branch": "worktree-agent-a1247794f6ecfcee2",
+      "commit": "a810b0a2a9a588db8a3959f14f4ddb1d38147e3d",
+      "contained_in": "origin/main",
+      "tag": null
+    },
+    {
+      "branch": "worktree-agent-a14324b50830e8bd6",
+      "commit": "dd8ca0215c1fa28573abbd9f1ede3446f19fa90b",
+      "contained_in": "origin/main",
+      "tag": null
+    },
+    {
+      "branch": "worktree-agent-a310a07617d8379ac",
+      "commit": "91f234faa5c2557bd33402a55dcf8d3d37f4e818",
+      "contained_in": "origin/main",
+      "tag": null
+    },
+    {
+      "branch": "worktree-agent-a38a7dbf5028ade33",
+      "commit": "dd8ca0215c1fa28573abbd9f1ede3446f19fa90b",
+      "contained_in": "origin/main",
+      "tag": null
+    },
+    {
+      "branch": "worktree-agent-a68beeb19af958f57",
+      "commit": "82e3a48bb6052801ced7faa64a43fbda718cea06",
+      "contained_in": "origin/main",
+      "tag": null
+    },
+    {
+      "branch": "worktree-agent-a720682101d5d65f8",
+      "commit": "83657750ff1918c309a7acf073f89fb01559c1f3",
+      "contained_in": "origin/main",
+      "tag": null
+    },
+    {
+      "branch": "worktree-agent-a77e6f7cab7eee100",
+      "commit": "a810b0a2a9a588db8a3959f14f4ddb1d38147e3d",
+      "contained_in": "origin/main",
+      "tag": null
+    },
+    {
+      "branch": "worktree-agent-a8a3ca7c994d6242c",
+      "commit": "a810b0a2a9a588db8a3959f14f4ddb1d38147e3d",
+      "contained_in": "origin/main",
+      "tag": null
+    },
+    {
+      "branch": "worktree-agent-ad07e262dc26b74a8",
+      "commit": "a810b0a2a9a588db8a3959f14f4ddb1d38147e3d",
+      "contained_in": "origin/main",
+      "tag": null
+    },
+    {
+      "branch": "worktree-agent-ad559ff8918f43c35",
+      "commit": "91f234faa5c2557bd33402a55dcf8d3d37f4e818",
+      "contained_in": "origin/main",
+      "tag": null
+    },
+    {
+      "branch": "worktree-agent-ad70229b909b67380",
+      "commit": "a810b0a2a9a588db8a3959f14f4ddb1d38147e3d",
+      "contained_in": "origin/main",
+      "tag": null
+    },
+    {
+      "branch": "worktree-agent-ada76b9806f7e2fce",
+      "commit": "45ce87dae2102245a91c09e1d12086d4481880f0",
+      "contained_in": "origin/main",
+      "tag": null
+    },
+    {
+      "branch": "worktree-agent-ade03552c711dfde9",
+      "commit": "a810b0a2a9a588db8a3959f14f4ddb1d38147e3d",
+      "contained_in": "origin/main",
+      "tag": null
+    },
+    {
+      "branch": "worktree-agent-af9f4229577bc001c",
+      "commit": "26b9e4652114c280944ebd229f402dbafd07e53d",
+      "contained_in": "origin/main",
+      "tag": null
+    }
+  ]
+}

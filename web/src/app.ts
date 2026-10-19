@@ -1,7 +1,7 @@
 export { preloadAbilityArtwork as prepareContent } from './ui/logic/contentFiles';
 import { presentation } from './loading/content';
 import type { LoadingScreen, LoadingLease } from './loading/loadingScreen';
-import { Color, DirectionalLight, FogExp2, HemisphereLight, MathUtils, Scene, SRGBColorSpace, Vector3, WebGLRenderer } from 'three';
+import { Color, DirectionalLight, FogExp2, HemisphereLight, MathUtils, Scene, SRGBColorSpace, Vector3, Vector4, WebGLRenderer } from 'three';
 import type { ClientConfig } from './config';
 import { Input } from './input/input';
 import { Connection } from './net/connection';
@@ -1026,7 +1026,11 @@ export class App {
       get render() {
         const info = app.renderer.info;
         const bodies = app.entities.bodyCounts;
+        const viewport = app.renderer.getCurrentViewport(new Vector4());
         return {
+          canvasViewport: app.renderer.getRenderTarget() === null && !app.renderer.getScissorTest()
+            && viewport.x === 0 && viewport.y === 0
+            && viewport.z === app.renderer.domElement.width && viewport.w === app.renderer.domElement.height,
           drawCalls: info.render.calls,
           triangles: info.render.triangles,
           textures: info.memory.textures,
