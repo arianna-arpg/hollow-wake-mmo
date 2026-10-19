@@ -1,0 +1,6220 @@
+{
+  "Seeds": 10,
+  "Seconds": 60,
+  "Hash": "c7bc954ed94f2efc",
+  "BandsChecked": false,
+  "Bands": null,
+  "Pairs": [
+    {
+      "A": "wolf",
+      "B": "hob",
+      "Fights": 10,
+      "Hash": "dd79ac96e2dad61a",
+      "WinRateA": 1,
+      "WinRateB": 0,
+      "DrawRate": 0,
+      "TtkMedian": 15.05,
+      "TtkLow": 13.85,
+      "TtkHigh": 16.1,
+      "CoverageA": 1,
+      "CoverageB": 1,
+      "SpreadA": 1,
+      "SpreadB": 1,
+      "SeatsA": [
+        "bite"
+      ],
+      "SeatsB": [
+        "bite"
+      ],
+      "MechanismsA": [
+        "area",
+        "attack",
+        "bankless",
+        "hit",
+        "melee",
+        "shape",
+        "strikes"
+      ],
+      "MechanismsB": [
+        "area",
+        "attack",
+        "bankless",
+        "hit",
+        "melee",
+        "shape",
+        "strikes"
+      ],
+      "SelfDamageA": 0,
+      "SelfDamageB": 0,
+      "SelfStatusesA": [
+        "poise_broken",
+        "poise_rearming"
+      ],
+      "SelfStatusesB": [],
+      "Breaches": []
+    },
+    {
+      "A": "loosed_skirmisher",
+      "B": "hob",
+      "Fights": 10,
+      "Hash": "af3540685cfc7be4",
+      "WinRateA": 1,
+      "WinRateB": 0,
+      "DrawRate": 0,
+      "TtkMedian": 5.8,
+      "TtkLow": 5.1,
+      "TtkHigh": 7.05,
+      "CoverageA": 0.933,
+      "CoverageB": 1,
+      "SpreadA": 2.666,
+      "SpreadB": 1,
+      "SeatsA": [
+        "seeking_bolt",
+        "splitting_bolt",
+        "stone_glaive"
+      ],
+      "SeatsB": [
+        "bite"
+      ],
+      "MechanismsA": [
+        "affliction",
+        "attack",
+        "bankless",
+        "chain",
+        "flight",
+        "hit",
+        "homing",
+        "projectile",
+        "returning",
+        "spell",
+        "status",
+        "strikes",
+        "trajectory"
+      ],
+      "MechanismsB": [
+        "area",
+        "attack",
+        "bankless",
+        "hit",
+        "melee",
+        "shape",
+        "strikes"
+      ],
+      "SelfDamageA": 0,
+      "SelfDamageB": 0,
+      "SelfStatusesA": [],
+      "SelfStatusesB": [],
+      "Breaches": []
+    },
+    {
+      "A": "loosed_skirmisher",
+      "B": "boar",
+      "Fights": 10,
+      "Hash": "bd11bbb1c6e05665",
+      "WinRateA": 1,
+      "WinRateB": 0,
+      "DrawRate": 0,
+      "TtkMedian": 7.6,
+      "TtkLow": 5.2,
+      "TtkHigh": 9.25,
+      "CoverageA": 0.9,
+      "CoverageB": 1,
+      "SpreadA": 2.501,
+      "SpreadB": 1,
+      "SeatsA": [
+        "seeking_bolt",
+        "splitting_bolt",
+        "stone_glaive"
+      ],
+      "SeatsB": [
+        "gore"
+      ],
+      "MechanismsA": [
+        "affliction",
+        "attack",
+        "bankless",
+        "chain",
+        "flight",
+        "hit",
+        "homing",
+        "projectile",
+        "returning",
+        "spell",
+        "status",
+        "strikes",
+        "trajectory"
+      ],
+      "MechanismsB": [
+        "area",
+        "attack",
+        "bankless",
+        "hit",
+        "melee",
+        "shape",
+        "strikes"
+      ],
+      "SelfDamageA": 0,
+      "SelfDamageB": 0,
+      "SelfStatusesA": [],
+      "SelfStatusesB": [
+        "poise_broken",
+        "poise_rearming"
+      ],
+      "Breaches": []
+    },
+    {
+      "A": "loosed_kindler",
+      "B": "boar",
+      "Fights": 10,
+      "Hash": "55f3c653d896dd06",
+      "WinRateA": 1,
+      "WinRateB": 0,
+      "DrawRate": 0,
+      "TtkMedian": 6.55,
+      "TtkLow": 6.35,
+      "TtkHigh": 6.7,
+      "CoverageA": 0.5,
+      "CoverageB": 1,
+      "SpreadA": 1,
+      "SpreadB": 1,
+      "SeatsA": [
+        "cinder_spit"
+      ],
+      "SeatsB": [
+        "gore"
+      ],
+      "MechanismsA": [
+        "affliction",
+        "bankless",
+        "chain",
+        "flight",
+        "hit",
+        "projectile",
+        "spell",
+        "status"
+      ],
+      "MechanismsB": [
+        "area",
+        "attack",
+        "bankless",
+        "hit",
+        "melee",
+        "shape",
+        "strikes"
+      ],
+      "SelfDamageA": 0,
+      "SelfDamageB": 0,
+      "SelfStatusesA": [],
+      "SelfStatusesB": [
+        "poise_broken",
+        "poise_rearming"
+      ],
+      "Breaches": []
+    },
+    {
+      "A": "tide_channeler",
+      "B": "spark_duelist",
+      "Fights": 10,
+      "Hash": "fa5af5e32501a451",
+      "WinRateA": 1,
+      "WinRateB": 0,
+      "DrawRate": 0,
+      "TtkMedian": 8,
+      "TtkLow": 7.9,
+      "TtkHigh": 8,
+      "CoverageA": 1,
+      "CoverageB": 0.6,
+      "SpreadA": 1,
+      "SpreadB": 1.682,
+      "SeatsA": [
+        "tide_torrent"
+      ],
+      "SeatsB": [
+        "kindling_spark",
+        "strike"
+      ],
+      "MechanismsA": [
+        "affliction",
+        "area",
+        "bankless",
+        "channel",
+        "cooldown",
+        "held",
+        "hit",
+        "ramps",
+        "release",
+        "shape",
+        "spell",
+        "status"
+      ],
+      "MechanismsB": [
+        "affliction",
+        "area",
+        "attack",
+        "bankless",
+        "chain",
+        "flight",
+        "hit",
+        "melee",
+        "projectile",
+        "shape",
+        "spell",
+        "status",
+        "strikes",
+        "triggered"
+      ],
+      "SelfDamageA": 0,
+      "SelfDamageB": 0,
+      "SelfStatusesA": [],
+      "SelfStatusesB": [],
+      "Breaches": []
+    },
+    {
+      "A": "proving_reaver",
+      "B": "proving_bulwark",
+      "Fights": 10,
+      "Hash": "afb3fac2523af03a",
+      "WinRateA": 0.1,
+      "WinRateB": 0.9,
+      "DrawRate": 0,
+      "TtkMedian": 33.2,
+      "TtkLow": 32.4,
+      "TtkHigh": 36.7,
+      "CoverageA": 1,
+      "CoverageB": 1,
+      "SpreadA": 1,
+      "SpreadB": 1,
+      "SeatsA": [
+        "strike[stone]\u002Brending"
+      ],
+      "SeatsB": [
+        "bite"
+      ],
+      "MechanismsA": [
+        "affliction",
+        "affliction:bleeding",
+        "area",
+        "attack",
+        "bankless",
+        "hit",
+        "melee",
+        "rupture",
+        "shape",
+        "strikes"
+      ],
+      "MechanismsB": [
+        "area",
+        "attack",
+        "bankless",
+        "hit",
+        "melee",
+        "shape",
+        "strikes"
+      ],
+      "SelfDamageA": 0,
+      "SelfDamageB": 0,
+      "SelfStatusesA": [],
+      "SelfStatusesB": [
+        "poise_broken",
+        "poise_rearming",
+        "shield_delay"
+      ],
+      "Breaches": []
+    },
+    {
+      "A": "loosed_skirmisher",
+      "B": "tide_caller",
+      "Fights": 10,
+      "Hash": "c78c43f0835e549e",
+      "WinRateA": 0.6,
+      "WinRateB": 0.3,
+      "DrawRate": 0.1,
+      "TtkMedian": 7.5,
+      "TtkLow": 5.7,
+      "TtkHigh": 8.65,
+      "CoverageA": 0.9,
+      "CoverageB": 1,
+      "SpreadA": 2.493,
+      "SpreadB": 2.923,
+      "SeatsA": [
+        "seeking_bolt",
+        "splitting_bolt",
+        "stone_glaive"
+      ],
+      "SeatsB": [
+        "storm_call",
+        "tide_maelstrom",
+        "tide_orb"
+      ],
+      "MechanismsA": [
+        "affliction",
+        "attack",
+        "bankless",
+        "chain",
+        "flight",
+        "hit",
+        "homing",
+        "projectile",
+        "returning",
+        "spell",
+        "status",
+        "strikes",
+        "trajectory"
+      ],
+      "MechanismsB": [
+        "affliction",
+        "area",
+        "bankless",
+        "cooldown",
+        "duration",
+        "field",
+        "fire",
+        "flight",
+        "hit",
+        "projectile",
+        "spell",
+        "storm",
+        "surface",
+        "telegraph"
+      ],
+      "SelfDamageA": 0,
+      "SelfDamageB": 0,
+      "SelfStatusesA": [],
+      "SelfStatusesB": [],
+      "Breaches": []
+    }
+  ],
+  "Fights": [
+    {
+      "A": "wolf",
+      "B": "hob",
+      "Index": 0,
+      "Seed": "tournament:wolf:hob:0",
+      "Outcome": "a",
+      "EndTick": 277,
+      "Seconds": 13.85,
+      "Hash": "a25c3a4fe216c056",
+      "SideA": {
+        "Pattern": "wolf",
+        "DamageDealt": 92.75,
+        "Hits": 13,
+        "Crits": 2,
+        "Casts": 13,
+        "Uses": 13,
+        "Kit": 1,
+        "Coverage": 1,
+        "Spread": 1,
+        "Seats": [
+          "bite"
+        ],
+        "Faces": [
+          "bite"
+        ],
+        "Mechanisms": [
+          "area",
+          "attack",
+          "bankless",
+          "hit",
+          "melee",
+          "shape",
+          "strikes"
+        ],
+        "StatusesApplied": [
+          "bleeding"
+        ],
+        "SelfDamage": 0,
+        "SelfStatuses": [
+          "poise_broken",
+          "poise_rearming"
+        ],
+        "LifeLeft": 0.509
+      },
+      "SideB": {
+        "Pattern": "hob",
+        "DamageDealt": 58.64,
+        "Hits": 12,
+        "Crits": 1,
+        "Casts": 12,
+        "Uses": 13,
+        "Kit": 1,
+        "Coverage": 1,
+        "Spread": 1,
+        "Seats": [
+          "bite"
+        ],
+        "Faces": [
+          "bite"
+        ],
+        "Mechanisms": [
+          "area",
+          "attack",
+          "bankless",
+          "hit",
+          "melee",
+          "shape",
+          "strikes"
+        ],
+        "StatusesApplied": [],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0
+      },
+      "Warnings": [],
+      "Errors": []
+    },
+    {
+      "A": "wolf",
+      "B": "hob",
+      "Index": 1,
+      "Seed": "tournament:wolf:hob:1",
+      "Outcome": "a",
+      "EndTick": 241,
+      "Seconds": 12.05,
+      "Hash": "dc5d29ea061211cd",
+      "SideA": {
+        "Pattern": "wolf",
+        "DamageDealt": 88.9,
+        "Hits": 21,
+        "Crits": 1,
+        "Casts": 11,
+        "Uses": 11,
+        "Kit": 1,
+        "Coverage": 1,
+        "Spread": 1,
+        "Seats": [
+          "bite"
+        ],
+        "Faces": [
+          "bite"
+        ],
+        "Mechanisms": [
+          "area",
+          "attack",
+          "bankless",
+          "hit",
+          "melee",
+          "shape",
+          "strikes"
+        ],
+        "StatusesApplied": [
+          "bleeding"
+        ],
+        "SelfDamage": 0,
+        "SelfStatuses": [
+          "poise_broken",
+          "poise_rearming"
+        ],
+        "LifeLeft": 0.573
+      },
+      "SideB": {
+        "Pattern": "hob",
+        "DamageDealt": 50.77,
+        "Hits": 11,
+        "Crits": 0,
+        "Casts": 11,
+        "Uses": 12,
+        "Kit": 1,
+        "Coverage": 1,
+        "Spread": 1,
+        "Seats": [
+          "bite"
+        ],
+        "Faces": [
+          "bite"
+        ],
+        "Mechanisms": [
+          "area",
+          "attack",
+          "bankless",
+          "hit",
+          "melee",
+          "shape",
+          "strikes"
+        ],
+        "StatusesApplied": [],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0
+      },
+      "Warnings": [],
+      "Errors": []
+    },
+    {
+      "A": "wolf",
+      "B": "hob",
+      "Index": 2,
+      "Seed": "tournament:wolf:hob:2",
+      "Outcome": "a",
+      "EndTick": 296,
+      "Seconds": 14.8,
+      "Hash": "fb329b0bc35e4a01",
+      "SideA": {
+        "Pattern": "wolf",
+        "DamageDealt": 93.45,
+        "Hits": 14,
+        "Crits": 0,
+        "Casts": 14,
+        "Uses": 14,
+        "Kit": 1,
+        "Coverage": 1,
+        "Spread": 1,
+        "Seats": [
+          "bite"
+        ],
+        "Faces": [
+          "bite"
+        ],
+        "Mechanisms": [
+          "area",
+          "attack",
+          "bankless",
+          "hit",
+          "melee",
+          "shape",
+          "strikes"
+        ],
+        "StatusesApplied": [],
+        "SelfDamage": 0,
+        "SelfStatuses": [
+          "poise_broken",
+          "poise_rearming"
+        ],
+        "LifeLeft": 0.542
+      },
+      "SideB": {
+        "Pattern": "hob",
+        "DamageDealt": 56.26,
+        "Hits": 12,
+        "Crits": 0,
+        "Casts": 13,
+        "Uses": 14,
+        "Kit": 1,
+        "Coverage": 1,
+        "Spread": 1,
+        "Seats": [
+          "bite"
+        ],
+        "Faces": [
+          "bite"
+        ],
+        "Mechanisms": [
+          "area",
+          "attack",
+          "bankless",
+          "hit",
+          "melee",
+          "shape",
+          "strikes"
+        ],
+        "StatusesApplied": [],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0
+      },
+      "Warnings": [],
+      "Errors": []
+    },
+    {
+      "A": "wolf",
+      "B": "hob",
+      "Index": 3,
+      "Seed": "tournament:wolf:hob:3",
+      "Outcome": "a",
+      "EndTick": 317,
+      "Seconds": 15.85,
+      "Hash": "f907b4ee9af7f274",
+      "SideA": {
+        "Pattern": "wolf",
+        "DamageDealt": 92.55,
+        "Hits": 16,
+        "Crits": 1,
+        "Casts": 15,
+        "Uses": 15,
+        "Kit": 1,
+        "Coverage": 1,
+        "Spread": 1,
+        "Seats": [
+          "bite"
+        ],
+        "Faces": [
+          "bite"
+        ],
+        "Mechanisms": [
+          "area",
+          "attack",
+          "bankless",
+          "hit",
+          "melee",
+          "shape",
+          "strikes"
+        ],
+        "StatusesApplied": [
+          "bleeding"
+        ],
+        "SelfDamage": 0,
+        "SelfStatuses": [
+          "poise_broken",
+          "poise_rearming"
+        ],
+        "LifeLeft": 0.421
+      },
+      "SideB": {
+        "Pattern": "hob",
+        "DamageDealt": 68.75,
+        "Hits": 14,
+        "Crits": 2,
+        "Casts": 14,
+        "Uses": 15,
+        "Kit": 1,
+        "Coverage": 1,
+        "Spread": 1,
+        "Seats": [
+          "bite"
+        ],
+        "Faces": [
+          "bite"
+        ],
+        "Mechanisms": [
+          "area",
+          "attack",
+          "bankless",
+          "hit",
+          "melee",
+          "shape",
+          "strikes"
+        ],
+        "StatusesApplied": [],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0
+      },
+      "Warnings": [],
+      "Errors": []
+    },
+    {
+      "A": "wolf",
+      "B": "hob",
+      "Index": 4,
+      "Seed": "tournament:wolf:hob:4",
+      "Outcome": "a",
+      "EndTick": 301,
+      "Seconds": 15.05,
+      "Hash": "223730a945248388",
+      "SideA": {
+        "Pattern": "wolf",
+        "DamageDealt": 91.62,
+        "Hits": 17,
+        "Crits": 1,
+        "Casts": 14,
+        "Uses": 14,
+        "Kit": 1,
+        "Coverage": 1,
+        "Spread": 1,
+        "Seats": [
+          "bite"
+        ],
+        "Faces": [
+          "bite"
+        ],
+        "Mechanisms": [
+          "area",
+          "attack",
+          "bankless",
+          "hit",
+          "melee",
+          "shape",
+          "strikes"
+        ],
+        "StatusesApplied": [
+          "bleeding"
+        ],
+        "SelfDamage": 0,
+        "SelfStatuses": [
+          "poise_broken",
+          "poise_rearming"
+        ],
+        "LifeLeft": 0.548
+      },
+      "SideB": {
+        "Pattern": "hob",
+        "DamageDealt": 55.65,
+        "Hits": 11,
+        "Crits": 0,
+        "Casts": 13,
+        "Uses": 14,
+        "Kit": 1,
+        "Coverage": 1,
+        "Spread": 1,
+        "Seats": [
+          "bite"
+        ],
+        "Faces": [
+          "bite"
+        ],
+        "Mechanisms": [
+          "area",
+          "attack",
+          "bankless",
+          "hit",
+          "melee",
+          "shape",
+          "strikes"
+        ],
+        "StatusesApplied": [],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0
+      },
+      "Warnings": [],
+      "Errors": []
+    },
+    {
+      "A": "wolf",
+      "B": "hob",
+      "Index": 5,
+      "Seed": "tournament:wolf:hob:5",
+      "Outcome": "a",
+      "EndTick": 357,
+      "Seconds": 17.85,
+      "Hash": "51ebc39a01d7b938",
+      "SideA": {
+        "Pattern": "wolf",
+        "DamageDealt": 95.69,
+        "Hits": 15,
+        "Crits": 0,
+        "Casts": 17,
+        "Uses": 17,
+        "Kit": 1,
+        "Coverage": 1,
+        "Spread": 1,
+        "Seats": [
+          "bite"
+        ],
+        "Faces": [
+          "bite"
+        ],
+        "Mechanisms": [
+          "area",
+          "attack",
+          "bankless",
+          "hit",
+          "melee",
+          "shape",
+          "strikes"
+        ],
+        "StatusesApplied": [],
+        "SelfDamage": 0,
+        "SelfStatuses": [
+          "poise_broken",
+          "poise_rearming"
+        ],
+        "LifeLeft": 0.333
+      },
+      "SideB": {
+        "Pattern": "hob",
+        "DamageDealt": 79.06,
+        "Hits": 23,
+        "Crits": 2,
+        "Casts": 16,
+        "Uses": 17,
+        "Kit": 1,
+        "Coverage": 1,
+        "Spread": 1,
+        "Seats": [
+          "bite"
+        ],
+        "Faces": [
+          "bite"
+        ],
+        "Mechanisms": [
+          "area",
+          "attack",
+          "bankless",
+          "hit",
+          "melee",
+          "shape",
+          "strikes"
+        ],
+        "StatusesApplied": [
+          "bleeding"
+        ],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0
+      },
+      "Warnings": [],
+      "Errors": []
+    },
+    {
+      "A": "wolf",
+      "B": "hob",
+      "Index": 6,
+      "Seed": "tournament:wolf:hob:6",
+      "Outcome": "a",
+      "EndTick": 236,
+      "Seconds": 11.8,
+      "Hash": "79ba9697e9ffa1cd",
+      "SideA": {
+        "Pattern": "wolf",
+        "DamageDealt": 88.12,
+        "Hits": 19,
+        "Crits": 1,
+        "Casts": 11,
+        "Uses": 11,
+        "Kit": 1,
+        "Coverage": 1,
+        "Spread": 1,
+        "Seats": [
+          "bite"
+        ],
+        "Faces": [
+          "bite"
+        ],
+        "Mechanisms": [
+          "area",
+          "attack",
+          "bankless",
+          "hit",
+          "melee",
+          "shape",
+          "strikes"
+        ],
+        "StatusesApplied": [
+          "bleeding"
+        ],
+        "SelfDamage": 0,
+        "SelfStatuses": [
+          "poise_broken",
+          "poise_rearming"
+        ],
+        "LifeLeft": 0.684
+      },
+      "SideB": {
+        "Pattern": "hob",
+        "DamageDealt": 39.81,
+        "Hits": 8,
+        "Crits": 0,
+        "Casts": 10,
+        "Uses": 11,
+        "Kit": 1,
+        "Coverage": 1,
+        "Spread": 1,
+        "Seats": [
+          "bite"
+        ],
+        "Faces": [
+          "bite"
+        ],
+        "Mechanisms": [
+          "area",
+          "attack",
+          "bankless",
+          "hit",
+          "melee",
+          "shape",
+          "strikes"
+        ],
+        "StatusesApplied": [],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0
+      },
+      "Warnings": [],
+      "Errors": []
+    },
+    {
+      "A": "wolf",
+      "B": "hob",
+      "Index": 7,
+      "Seed": "tournament:wolf:hob:7",
+      "Outcome": "a",
+      "EndTick": 341,
+      "Seconds": 17.05,
+      "Hash": "8dff255653b85388",
+      "SideA": {
+        "Pattern": "wolf",
+        "DamageDealt": 91.48,
+        "Hits": 14,
+        "Crits": 0,
+        "Casts": 16,
+        "Uses": 16,
+        "Kit": 1,
+        "Coverage": 1,
+        "Spread": 1,
+        "Seats": [
+          "bite"
+        ],
+        "Faces": [
+          "bite"
+        ],
+        "Mechanisms": [
+          "area",
+          "attack",
+          "bankless",
+          "hit",
+          "melee",
+          "shape",
+          "strikes"
+        ],
+        "StatusesApplied": [],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0.783
+      },
+      "SideB": {
+        "Pattern": "hob",
+        "DamageDealt": 35.1,
+        "Hits": 7,
+        "Crits": 0,
+        "Casts": 15,
+        "Uses": 16,
+        "Kit": 1,
+        "Coverage": 1,
+        "Spread": 1,
+        "Seats": [
+          "bite"
+        ],
+        "Faces": [
+          "bite"
+        ],
+        "Mechanisms": [
+          "area",
+          "attack",
+          "bankless",
+          "hit",
+          "melee",
+          "shape",
+          "strikes"
+        ],
+        "StatusesApplied": [],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0
+      },
+      "Warnings": [],
+      "Errors": []
+    },
+    {
+      "A": "wolf",
+      "B": "hob",
+      "Index": 8,
+      "Seed": "tournament:wolf:hob:8",
+      "Outcome": "a",
+      "EndTick": 322,
+      "Seconds": 16.1,
+      "Hash": "f160f1cce82e0efb",
+      "SideA": {
+        "Pattern": "wolf",
+        "DamageDealt": 93.55,
+        "Hits": 14,
+        "Crits": 0,
+        "Casts": 15,
+        "Uses": 15,
+        "Kit": 1,
+        "Coverage": 1,
+        "Spread": 1,
+        "Seats": [
+          "bite"
+        ],
+        "Faces": [
+          "bite"
+        ],
+        "Mechanisms": [
+          "area",
+          "attack",
+          "bankless",
+          "hit",
+          "melee",
+          "shape",
+          "strikes"
+        ],
+        "StatusesApplied": [],
+        "SelfDamage": 0,
+        "SelfStatuses": [
+          "poise_broken",
+          "poise_rearming"
+        ],
+        "LifeLeft": 0.416
+      },
+      "SideB": {
+        "Pattern": "hob",
+        "DamageDealt": 69.35,
+        "Hits": 14,
+        "Crits": 0,
+        "Casts": 14,
+        "Uses": 15,
+        "Kit": 1,
+        "Coverage": 1,
+        "Spread": 1,
+        "Seats": [
+          "bite"
+        ],
+        "Faces": [
+          "bite"
+        ],
+        "Mechanisms": [
+          "area",
+          "attack",
+          "bankless",
+          "hit",
+          "melee",
+          "shape",
+          "strikes"
+        ],
+        "StatusesApplied": [],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0
+      },
+      "Warnings": [],
+      "Errors": []
+    },
+    {
+      "A": "wolf",
+      "B": "hob",
+      "Index": 9,
+      "Seed": "tournament:wolf:hob:9",
+      "Outcome": "a",
+      "EndTick": 301,
+      "Seconds": 15.05,
+      "Hash": "449d81197489bbeb",
+      "SideA": {
+        "Pattern": "wolf",
+        "DamageDealt": 96.35,
+        "Hits": 12,
+        "Crits": 2,
+        "Casts": 14,
+        "Uses": 14,
+        "Kit": 1,
+        "Coverage": 1,
+        "Spread": 1,
+        "Seats": [
+          "bite"
+        ],
+        "Faces": [
+          "bite"
+        ],
+        "Mechanisms": [
+          "area",
+          "attack",
+          "bankless",
+          "hit",
+          "melee",
+          "shape",
+          "strikes"
+        ],
+        "StatusesApplied": [],
+        "SelfDamage": 0,
+        "SelfStatuses": [
+          "poise_broken",
+          "poise_rearming"
+        ],
+        "LifeLeft": 0.408
+      },
+      "SideB": {
+        "Pattern": "hob",
+        "DamageDealt": 69.4,
+        "Hits": 14,
+        "Crits": 1,
+        "Casts": 14,
+        "Uses": 15,
+        "Kit": 1,
+        "Coverage": 1,
+        "Spread": 1,
+        "Seats": [
+          "bite"
+        ],
+        "Faces": [
+          "bite"
+        ],
+        "Mechanisms": [
+          "area",
+          "attack",
+          "bankless",
+          "hit",
+          "melee",
+          "shape",
+          "strikes"
+        ],
+        "StatusesApplied": [],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0
+      },
+      "Warnings": [],
+      "Errors": []
+    },
+    {
+      "A": "loosed_skirmisher",
+      "B": "hob",
+      "Index": 0,
+      "Seed": "tournament:loosed_skirmisher:hob:0",
+      "Outcome": "a",
+      "EndTick": 112,
+      "Seconds": 5.6,
+      "Hash": "1cb5710ee61b3756",
+      "SideA": {
+        "Pattern": "loosed_skirmisher",
+        "DamageDealt": 82.51,
+        "Hits": 12,
+        "Crits": 0,
+        "Casts": 5,
+        "Uses": 6,
+        "Kit": 3,
+        "Coverage": 1,
+        "Spread": 3,
+        "Seats": [
+          "stone_glaive",
+          "splitting_bolt",
+          "seeking_bolt"
+        ],
+        "Faces": [
+          "seeking_bolt",
+          "splitting_bolt",
+          "stone_glaive"
+        ],
+        "Mechanisms": [
+          "affliction",
+          "attack",
+          "bankless",
+          "chain",
+          "flight",
+          "hit",
+          "homing",
+          "projectile",
+          "returning",
+          "spell",
+          "status",
+          "strikes",
+          "trajectory"
+        ],
+        "StatusesApplied": [
+          "burning"
+        ],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0.941
+      },
+      "SideB": {
+        "Pattern": "hob",
+        "DamageDealt": 10.42,
+        "Hits": 2,
+        "Crits": 0,
+        "Casts": 4,
+        "Uses": 4,
+        "Kit": 1,
+        "Coverage": 1,
+        "Spread": 1,
+        "Seats": [
+          "bite"
+        ],
+        "Faces": [
+          "bite"
+        ],
+        "Mechanisms": [
+          "area",
+          "attack",
+          "bankless",
+          "hit",
+          "melee",
+          "shape",
+          "strikes"
+        ],
+        "StatusesApplied": [],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0
+      },
+      "Warnings": [],
+      "Errors": []
+    },
+    {
+      "A": "loosed_skirmisher",
+      "B": "hob",
+      "Index": 1,
+      "Seed": "tournament:loosed_skirmisher:hob:1",
+      "Outcome": "a",
+      "EndTick": 152,
+      "Seconds": 7.6,
+      "Hash": "25463b4bbafdfd56",
+      "SideA": {
+        "Pattern": "loosed_skirmisher",
+        "DamageDealt": 85.33,
+        "Hits": 10,
+        "Crits": 0,
+        "Casts": 7,
+        "Uses": 7,
+        "Kit": 3,
+        "Coverage": 1,
+        "Spread": 2.6,
+        "Seats": [
+          "stone_glaive",
+          "splitting_bolt",
+          "seeking_bolt"
+        ],
+        "Faces": [
+          "seeking_bolt",
+          "splitting_bolt",
+          "stone_glaive"
+        ],
+        "Mechanisms": [
+          "affliction",
+          "attack",
+          "bankless",
+          "chain",
+          "flight",
+          "hit",
+          "homing",
+          "projectile",
+          "returning",
+          "spell",
+          "status",
+          "strikes",
+          "trajectory"
+        ],
+        "StatusesApplied": [],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0.787
+      },
+      "SideB": {
+        "Pattern": "hob",
+        "DamageDealt": 30.03,
+        "Hits": 13,
+        "Crits": 1,
+        "Casts": 5,
+        "Uses": 6,
+        "Kit": 1,
+        "Coverage": 1,
+        "Spread": 1,
+        "Seats": [
+          "bite"
+        ],
+        "Faces": [
+          "bite"
+        ],
+        "Mechanisms": [
+          "area",
+          "attack",
+          "bankless",
+          "hit",
+          "melee",
+          "shape",
+          "strikes"
+        ],
+        "StatusesApplied": [
+          "bleeding"
+        ],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0
+      },
+      "Warnings": [],
+      "Errors": []
+    },
+    {
+      "A": "loosed_skirmisher",
+      "B": "hob",
+      "Index": 2,
+      "Seed": "tournament:loosed_skirmisher:hob:2",
+      "Outcome": "a",
+      "EndTick": 88,
+      "Seconds": 4.4,
+      "Hash": "751dc76e0e4cbf2f",
+      "SideA": {
+        "Pattern": "loosed_skirmisher",
+        "DamageDealt": 89.51,
+        "Hits": 11,
+        "Crits": 1,
+        "Casts": 5,
+        "Uses": 5,
+        "Kit": 3,
+        "Coverage": 0.667,
+        "Spread": 1.649,
+        "Seats": [
+          "stone_glaive",
+          "splitting_bolt"
+        ],
+        "Faces": [
+          "splitting_bolt",
+          "stone_glaive"
+        ],
+        "Mechanisms": [
+          "affliction",
+          "attack",
+          "bankless",
+          "chain",
+          "flight",
+          "hit",
+          "projectile",
+          "returning",
+          "spell",
+          "status",
+          "strikes"
+        ],
+        "StatusesApplied": [
+          "bleeding",
+          "burning"
+        ],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0.901
+      },
+      "SideB": {
+        "Pattern": "hob",
+        "DamageDealt": 14.05,
+        "Hits": 3,
+        "Crits": 0,
+        "Casts": 3,
+        "Uses": 4,
+        "Kit": 1,
+        "Coverage": 1,
+        "Spread": 1,
+        "Seats": [
+          "bite"
+        ],
+        "Faces": [
+          "bite"
+        ],
+        "Mechanisms": [
+          "area",
+          "attack",
+          "bankless",
+          "hit",
+          "melee",
+          "shape",
+          "strikes"
+        ],
+        "StatusesApplied": [],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0
+      },
+      "Warnings": [],
+      "Errors": []
+    },
+    {
+      "A": "loosed_skirmisher",
+      "B": "hob",
+      "Index": 3,
+      "Seed": "tournament:loosed_skirmisher:hob:3",
+      "Outcome": "a",
+      "EndTick": 116,
+      "Seconds": 5.8,
+      "Hash": "3c5106b75b54cee7",
+      "SideA": {
+        "Pattern": "loosed_skirmisher",
+        "DamageDealt": 94.29,
+        "Hits": 9,
+        "Crits": 0,
+        "Casts": 6,
+        "Uses": 6,
+        "Kit": 3,
+        "Coverage": 1,
+        "Spread": 2.749,
+        "Seats": [
+          "stone_glaive",
+          "splitting_bolt",
+          "seeking_bolt"
+        ],
+        "Faces": [
+          "seeking_bolt",
+          "splitting_bolt",
+          "stone_glaive"
+        ],
+        "Mechanisms": [
+          "affliction",
+          "attack",
+          "bankless",
+          "chain",
+          "flight",
+          "hit",
+          "homing",
+          "projectile",
+          "returning",
+          "spell",
+          "status",
+          "strikes",
+          "trajectory"
+        ],
+        "StatusesApplied": [
+          "burning"
+        ],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0.81
+      },
+      "SideB": {
+        "Pattern": "hob",
+        "DamageDealt": 25.93,
+        "Hits": 11,
+        "Crits": 1,
+        "Casts": 4,
+        "Uses": 5,
+        "Kit": 1,
+        "Coverage": 1,
+        "Spread": 1,
+        "Seats": [
+          "bite"
+        ],
+        "Faces": [
+          "bite"
+        ],
+        "Mechanisms": [
+          "area",
+          "attack",
+          "bankless",
+          "hit",
+          "melee",
+          "shape",
+          "strikes"
+        ],
+        "StatusesApplied": [
+          "bleeding"
+        ],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0
+      },
+      "Warnings": [],
+      "Errors": []
+    },
+    {
+      "A": "loosed_skirmisher",
+      "B": "hob",
+      "Index": 4,
+      "Seed": "tournament:loosed_skirmisher:hob:4",
+      "Outcome": "a",
+      "EndTick": 140,
+      "Seconds": 7,
+      "Hash": "5606b2727e36bd1d",
+      "SideA": {
+        "Pattern": "loosed_skirmisher",
+        "DamageDealt": 94.64,
+        "Hits": 9,
+        "Crits": 0,
+        "Casts": 7,
+        "Uses": 7,
+        "Kit": 3,
+        "Coverage": 1,
+        "Spread": 2.942,
+        "Seats": [
+          "stone_glaive",
+          "splitting_bolt",
+          "seeking_bolt"
+        ],
+        "Faces": [
+          "seeking_bolt",
+          "splitting_bolt",
+          "stone_glaive"
+        ],
+        "Mechanisms": [
+          "affliction",
+          "attack",
+          "bankless",
+          "chain",
+          "flight",
+          "hit",
+          "homing",
+          "projectile",
+          "returning",
+          "spell",
+          "status",
+          "strikes",
+          "trajectory"
+        ],
+        "StatusesApplied": [],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0.946
+      },
+      "SideB": {
+        "Pattern": "hob",
+        "DamageDealt": 10.8,
+        "Hits": 3,
+        "Crits": 0,
+        "Casts": 4,
+        "Uses": 5,
+        "Kit": 1,
+        "Coverage": 1,
+        "Spread": 1,
+        "Seats": [
+          "bite"
+        ],
+        "Faces": [
+          "bite"
+        ],
+        "Mechanisms": [
+          "area",
+          "attack",
+          "bankless",
+          "hit",
+          "melee",
+          "shape",
+          "strikes"
+        ],
+        "StatusesApplied": [],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0
+      },
+      "Warnings": [],
+      "Errors": []
+    },
+    {
+      "A": "loosed_skirmisher",
+      "B": "hob",
+      "Index": 5,
+      "Seed": "tournament:loosed_skirmisher:hob:5",
+      "Outcome": "a",
+      "EndTick": 116,
+      "Seconds": 5.8,
+      "Hash": "40cfde8d7a7fe652",
+      "SideA": {
+        "Pattern": "loosed_skirmisher",
+        "DamageDealt": 91.1,
+        "Hits": 8,
+        "Crits": 1,
+        "Casts": 6,
+        "Uses": 6,
+        "Kit": 3,
+        "Coverage": 1,
+        "Spread": 3,
+        "Seats": [
+          "stone_glaive",
+          "splitting_bolt",
+          "seeking_bolt"
+        ],
+        "Faces": [
+          "seeking_bolt",
+          "splitting_bolt",
+          "stone_glaive"
+        ],
+        "Mechanisms": [
+          "affliction",
+          "attack",
+          "bankless",
+          "chain",
+          "flight",
+          "hit",
+          "homing",
+          "projectile",
+          "returning",
+          "spell",
+          "status",
+          "strikes",
+          "trajectory"
+        ],
+        "StatusesApplied": [],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0.937
+      },
+      "SideB": {
+        "Pattern": "hob",
+        "DamageDealt": 9.26,
+        "Hits": 2,
+        "Crits": 0,
+        "Casts": 3,
+        "Uses": 3,
+        "Kit": 1,
+        "Coverage": 1,
+        "Spread": 1,
+        "Seats": [
+          "bite"
+        ],
+        "Faces": [
+          "bite"
+        ],
+        "Mechanisms": [
+          "area",
+          "attack",
+          "bankless",
+          "hit",
+          "melee",
+          "shape",
+          "strikes"
+        ],
+        "StatusesApplied": [],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0
+      },
+      "Warnings": [],
+      "Errors": []
+    },
+    {
+      "A": "loosed_skirmisher",
+      "B": "hob",
+      "Index": 6,
+      "Seed": "tournament:loosed_skirmisher:hob:6",
+      "Outcome": "a",
+      "EndTick": 146,
+      "Seconds": 7.3,
+      "Hash": "f5c07a5a653fed7f",
+      "SideA": {
+        "Pattern": "loosed_skirmisher",
+        "DamageDealt": 96.64,
+        "Hits": 9,
+        "Crits": 0,
+        "Casts": 7,
+        "Uses": 7,
+        "Kit": 3,
+        "Coverage": 1,
+        "Spread": 2.942,
+        "Seats": [
+          "stone_glaive",
+          "splitting_bolt",
+          "seeking_bolt"
+        ],
+        "Faces": [
+          "seeking_bolt",
+          "splitting_bolt",
+          "stone_glaive"
+        ],
+        "Mechanisms": [
+          "affliction",
+          "attack",
+          "bankless",
+          "chain",
+          "flight",
+          "hit",
+          "homing",
+          "projectile",
+          "returning",
+          "spell",
+          "status",
+          "strikes",
+          "trajectory"
+        ],
+        "StatusesApplied": [
+          "shocked"
+        ],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0.85
+      },
+      "SideB": {
+        "Pattern": "hob",
+        "DamageDealt": 22.67,
+        "Hits": 4,
+        "Crits": 1,
+        "Casts": 5,
+        "Uses": 6,
+        "Kit": 1,
+        "Coverage": 1,
+        "Spread": 1,
+        "Seats": [
+          "bite"
+        ],
+        "Faces": [
+          "bite"
+        ],
+        "Mechanisms": [
+          "area",
+          "attack",
+          "bankless",
+          "hit",
+          "melee",
+          "shape",
+          "strikes"
+        ],
+        "StatusesApplied": [],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0
+      },
+      "Warnings": [],
+      "Errors": []
+    },
+    {
+      "A": "loosed_skirmisher",
+      "B": "hob",
+      "Index": 7,
+      "Seed": "tournament:loosed_skirmisher:hob:7",
+      "Outcome": "a",
+      "EndTick": 102,
+      "Seconds": 5.1,
+      "Hash": "d1666d22fd58da5a",
+      "SideA": {
+        "Pattern": "loosed_skirmisher",
+        "DamageDealt": 83.82,
+        "Hits": 7,
+        "Crits": 1,
+        "Casts": 4,
+        "Uses": 5,
+        "Kit": 3,
+        "Coverage": 1,
+        "Spread": 2.872,
+        "Seats": [
+          "stone_glaive",
+          "splitting_bolt",
+          "seeking_bolt"
+        ],
+        "Faces": [
+          "seeking_bolt",
+          "splitting_bolt",
+          "stone_glaive"
+        ],
+        "Mechanisms": [
+          "affliction",
+          "attack",
+          "bankless",
+          "chain",
+          "flight",
+          "hit",
+          "homing",
+          "projectile",
+          "returning",
+          "spell",
+          "status",
+          "strikes",
+          "trajectory"
+        ],
+        "StatusesApplied": [
+          "burning",
+          "shocked"
+        ],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0.903
+      },
+      "SideB": {
+        "Pattern": "hob",
+        "DamageDealt": 14.09,
+        "Hits": 3,
+        "Crits": 0,
+        "Casts": 3,
+        "Uses": 4,
+        "Kit": 1,
+        "Coverage": 1,
+        "Spread": 1,
+        "Seats": [
+          "bite"
+        ],
+        "Faces": [
+          "bite"
+        ],
+        "Mechanisms": [
+          "area",
+          "attack",
+          "bankless",
+          "hit",
+          "melee",
+          "shape",
+          "strikes"
+        ],
+        "StatusesApplied": [],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0
+      },
+      "Warnings": [],
+      "Errors": []
+    },
+    {
+      "A": "loosed_skirmisher",
+      "B": "hob",
+      "Index": 8,
+      "Seed": "tournament:loosed_skirmisher:hob:8",
+      "Outcome": "a",
+      "EndTick": 141,
+      "Seconds": 7.05,
+      "Hash": "c72acd4847d3508b",
+      "SideA": {
+        "Pattern": "loosed_skirmisher",
+        "DamageDealt": 98.68,
+        "Hits": 9,
+        "Crits": 0,
+        "Casts": 7,
+        "Uses": 7,
+        "Kit": 3,
+        "Coverage": 1,
+        "Spread": 2.942,
+        "Seats": [
+          "stone_glaive",
+          "splitting_bolt",
+          "seeking_bolt"
+        ],
+        "Faces": [
+          "seeking_bolt",
+          "splitting_bolt",
+          "stone_glaive"
+        ],
+        "Mechanisms": [
+          "affliction",
+          "attack",
+          "bankless",
+          "chain",
+          "flight",
+          "hit",
+          "homing",
+          "projectile",
+          "returning",
+          "spell",
+          "status",
+          "strikes",
+          "trajectory"
+        ],
+        "StatusesApplied": [
+          "shocked"
+        ],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0.929
+      },
+      "SideB": {
+        "Pattern": "hob",
+        "DamageDealt": 13.12,
+        "Hits": 3,
+        "Crits": 0,
+        "Casts": 4,
+        "Uses": 4,
+        "Kit": 1,
+        "Coverage": 1,
+        "Spread": 1,
+        "Seats": [
+          "bite"
+        ],
+        "Faces": [
+          "bite"
+        ],
+        "Mechanisms": [
+          "area",
+          "attack",
+          "bankless",
+          "hit",
+          "melee",
+          "shape",
+          "strikes"
+        ],
+        "StatusesApplied": [],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0
+      },
+      "Warnings": [],
+      "Errors": []
+    },
+    {
+      "A": "loosed_skirmisher",
+      "B": "hob",
+      "Index": 9,
+      "Seed": "tournament:loosed_skirmisher:hob:9",
+      "Outcome": "a",
+      "EndTick": 78,
+      "Seconds": 3.9,
+      "Hash": "bc3bf5c264bfe9c9",
+      "SideA": {
+        "Pattern": "loosed_skirmisher",
+        "DamageDealt": 97.2,
+        "Hits": 5,
+        "Crits": 1,
+        "Casts": 5,
+        "Uses": 5,
+        "Kit": 3,
+        "Coverage": 0.667,
+        "Spread": 1.96,
+        "Seats": [
+          "splitting_bolt",
+          "seeking_bolt"
+        ],
+        "Faces": [
+          "seeking_bolt",
+          "splitting_bolt"
+        ],
+        "Mechanisms": [
+          "affliction",
+          "bankless",
+          "chain",
+          "flight",
+          "hit",
+          "homing",
+          "projectile",
+          "spell",
+          "status",
+          "trajectory"
+        ],
+        "StatusesApplied": [],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0.919
+      },
+      "SideB": {
+        "Pattern": "hob",
+        "DamageDealt": 11.3,
+        "Hits": 2,
+        "Crits": 0,
+        "Casts": 2,
+        "Uses": 3,
+        "Kit": 1,
+        "Coverage": 1,
+        "Spread": 1,
+        "Seats": [
+          "bite"
+        ],
+        "Faces": [
+          "bite"
+        ],
+        "Mechanisms": [
+          "area",
+          "attack",
+          "bankless",
+          "hit",
+          "melee",
+          "shape",
+          "strikes"
+        ],
+        "StatusesApplied": [],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0
+      },
+      "Warnings": [],
+      "Errors": []
+    },
+    {
+      "A": "loosed_skirmisher",
+      "B": "boar",
+      "Index": 0,
+      "Seed": "tournament:loosed_skirmisher:boar:0",
+      "Outcome": "a",
+      "EndTick": 104,
+      "Seconds": 5.2,
+      "Hash": "e223fe7557a5d16e",
+      "SideA": {
+        "Pattern": "loosed_skirmisher",
+        "DamageDealt": 135.83,
+        "Hits": 13,
+        "Crits": 1,
+        "Casts": 6,
+        "Uses": 7,
+        "Kit": 3,
+        "Coverage": 0.667,
+        "Spread": 1.507,
+        "Seats": [
+          "splitting_bolt",
+          "seeking_bolt"
+        ],
+        "Faces": [
+          "seeking_bolt",
+          "splitting_bolt"
+        ],
+        "Mechanisms": [
+          "affliction",
+          "bankless",
+          "chain",
+          "flight",
+          "hit",
+          "homing",
+          "projectile",
+          "spell",
+          "status",
+          "trajectory"
+        ],
+        "StatusesApplied": [
+          "burning"
+        ],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0.95
+      },
+      "SideB": {
+        "Pattern": "boar",
+        "DamageDealt": 8.42,
+        "Hits": 1,
+        "Crits": 0,
+        "Casts": 2,
+        "Uses": 3,
+        "Kit": 1,
+        "Coverage": 1,
+        "Spread": 1,
+        "Seats": [
+          "gore"
+        ],
+        "Faces": [
+          "gore"
+        ],
+        "Mechanisms": [
+          "area",
+          "attack",
+          "bankless",
+          "hit",
+          "melee",
+          "shape",
+          "strikes"
+        ],
+        "StatusesApplied": [],
+        "SelfDamage": 0,
+        "SelfStatuses": [
+          "poise_broken",
+          "poise_rearming"
+        ],
+        "LifeLeft": 0
+      },
+      "Warnings": [],
+      "Errors": []
+    },
+    {
+      "A": "loosed_skirmisher",
+      "B": "boar",
+      "Index": 1,
+      "Seed": "tournament:loosed_skirmisher:boar:1",
+      "Outcome": "a",
+      "EndTick": 185,
+      "Seconds": 9.25,
+      "Hash": "aa710a430bfef32a",
+      "SideA": {
+        "Pattern": "loosed_skirmisher",
+        "DamageDealt": 128.25,
+        "Hits": 17,
+        "Crits": 0,
+        "Casts": 9,
+        "Uses": 10,
+        "Kit": 3,
+        "Coverage": 1,
+        "Spread": 2.8,
+        "Seats": [
+          "stone_glaive",
+          "splitting_bolt",
+          "seeking_bolt"
+        ],
+        "Faces": [
+          "seeking_bolt",
+          "splitting_bolt",
+          "stone_glaive"
+        ],
+        "Mechanisms": [
+          "affliction",
+          "attack",
+          "bankless",
+          "chain",
+          "flight",
+          "hit",
+          "homing",
+          "projectile",
+          "returning",
+          "spell",
+          "status",
+          "strikes",
+          "trajectory"
+        ],
+        "StatusesApplied": [
+          "burning"
+        ],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0.863
+      },
+      "SideB": {
+        "Pattern": "boar",
+        "DamageDealt": 21.23,
+        "Hits": 2,
+        "Crits": 0,
+        "Casts": 5,
+        "Uses": 6,
+        "Kit": 1,
+        "Coverage": 1,
+        "Spread": 1,
+        "Seats": [
+          "gore"
+        ],
+        "Faces": [
+          "gore"
+        ],
+        "Mechanisms": [
+          "area",
+          "attack",
+          "bankless",
+          "hit",
+          "melee",
+          "shape",
+          "strikes"
+        ],
+        "StatusesApplied": [],
+        "SelfDamage": 0,
+        "SelfStatuses": [
+          "poise_broken",
+          "poise_rearming"
+        ],
+        "LifeLeft": 0
+      },
+      "Warnings": [],
+      "Errors": []
+    },
+    {
+      "A": "loosed_skirmisher",
+      "B": "boar",
+      "Index": 2,
+      "Seed": "tournament:loosed_skirmisher:boar:2",
+      "Outcome": "a",
+      "EndTick": 239,
+      "Seconds": 11.95,
+      "Hash": "bd2df14c6a2b741d",
+      "SideA": {
+        "Pattern": "loosed_skirmisher",
+        "DamageDealt": 137.1,
+        "Hits": 16,
+        "Crits": 1,
+        "Casts": 11,
+        "Uses": 11,
+        "Kit": 3,
+        "Coverage": 1,
+        "Spread": 2.705,
+        "Seats": [
+          "stone_glaive",
+          "splitting_bolt",
+          "seeking_bolt"
+        ],
+        "Faces": [
+          "seeking_bolt",
+          "splitting_bolt",
+          "stone_glaive"
+        ],
+        "Mechanisms": [
+          "affliction",
+          "attack",
+          "bankless",
+          "chain",
+          "flight",
+          "hit",
+          "homing",
+          "projectile",
+          "returning",
+          "spell",
+          "status",
+          "strikes",
+          "trajectory"
+        ],
+        "StatusesApplied": [],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0.759
+      },
+      "SideB": {
+        "Pattern": "boar",
+        "DamageDealt": 37.23,
+        "Hits": 4,
+        "Crits": 0,
+        "Casts": 7,
+        "Uses": 7,
+        "Kit": 1,
+        "Coverage": 1,
+        "Spread": 1,
+        "Seats": [
+          "gore"
+        ],
+        "Faces": [
+          "gore"
+        ],
+        "Mechanisms": [
+          "area",
+          "attack",
+          "bankless",
+          "hit",
+          "melee",
+          "shape",
+          "strikes"
+        ],
+        "StatusesApplied": [],
+        "SelfDamage": 0,
+        "SelfStatuses": [
+          "poise_broken",
+          "poise_rearming"
+        ],
+        "LifeLeft": 0
+      },
+      "Warnings": [],
+      "Errors": []
+    },
+    {
+      "A": "loosed_skirmisher",
+      "B": "boar",
+      "Index": 3,
+      "Seed": "tournament:loosed_skirmisher:boar:3",
+      "Outcome": "a",
+      "EndTick": 103,
+      "Seconds": 5.15,
+      "Hash": "730a815945d1ca8b",
+      "SideA": {
+        "Pattern": "loosed_skirmisher",
+        "DamageDealt": 122.59,
+        "Hits": 11,
+        "Crits": 0,
+        "Casts": 6,
+        "Uses": 7,
+        "Kit": 3,
+        "Coverage": 0.667,
+        "Spread": 1.98,
+        "Seats": [
+          "splitting_bolt",
+          "seeking_bolt"
+        ],
+        "Faces": [
+          "seeking_bolt",
+          "splitting_bolt"
+        ],
+        "Mechanisms": [
+          "affliction",
+          "bankless",
+          "chain",
+          "flight",
+          "hit",
+          "homing",
+          "projectile",
+          "spell",
+          "status",
+          "trajectory"
+        ],
+        "StatusesApplied": [
+          "burning"
+        ],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0.876
+      },
+      "SideB": {
+        "Pattern": "boar",
+        "DamageDealt": 17.45,
+        "Hits": 2,
+        "Crits": 0,
+        "Casts": 3,
+        "Uses": 3,
+        "Kit": 1,
+        "Coverage": 1,
+        "Spread": 1,
+        "Seats": [
+          "gore"
+        ],
+        "Faces": [
+          "gore"
+        ],
+        "Mechanisms": [
+          "area",
+          "attack",
+          "bankless",
+          "hit",
+          "melee",
+          "shape",
+          "strikes"
+        ],
+        "StatusesApplied": [],
+        "SelfDamage": 0,
+        "SelfStatuses": [
+          "poise_broken",
+          "poise_rearming"
+        ],
+        "LifeLeft": 0
+      },
+      "Warnings": [],
+      "Errors": []
+    },
+    {
+      "A": "loosed_skirmisher",
+      "B": "boar",
+      "Index": 4,
+      "Seed": "tournament:loosed_skirmisher:boar:4",
+      "Outcome": "a",
+      "EndTick": 121,
+      "Seconds": 6.05,
+      "Hash": "ae6ae4b43e694ead",
+      "SideA": {
+        "Pattern": "loosed_skirmisher",
+        "DamageDealt": 124.41,
+        "Hits": 8,
+        "Crits": 0,
+        "Casts": 7,
+        "Uses": 7,
+        "Kit": 3,
+        "Coverage": 1,
+        "Spread": 2.6,
+        "Seats": [
+          "stone_glaive",
+          "splitting_bolt",
+          "seeking_bolt"
+        ],
+        "Faces": [
+          "seeking_bolt",
+          "splitting_bolt",
+          "stone_glaive"
+        ],
+        "Mechanisms": [
+          "affliction",
+          "attack",
+          "bankless",
+          "chain",
+          "flight",
+          "hit",
+          "homing",
+          "projectile",
+          "returning",
+          "spell",
+          "status",
+          "strikes",
+          "trajectory"
+        ],
+        "StatusesApplied": [
+          "shocked"
+        ],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0.952
+      },
+      "SideB": {
+        "Pattern": "boar",
+        "DamageDealt": 7.81,
+        "Hits": 1,
+        "Crits": 0,
+        "Casts": 3,
+        "Uses": 4,
+        "Kit": 1,
+        "Coverage": 1,
+        "Spread": 1,
+        "Seats": [
+          "gore"
+        ],
+        "Faces": [
+          "gore"
+        ],
+        "Mechanisms": [
+          "area",
+          "attack",
+          "bankless",
+          "hit",
+          "melee",
+          "shape",
+          "strikes"
+        ],
+        "StatusesApplied": [],
+        "SelfDamage": 0,
+        "SelfStatuses": [
+          "poise_broken",
+          "poise_rearming"
+        ],
+        "LifeLeft": 0
+      },
+      "Warnings": [],
+      "Errors": []
+    },
+    {
+      "A": "loosed_skirmisher",
+      "B": "boar",
+      "Index": 5,
+      "Seed": "tournament:loosed_skirmisher:boar:5",
+      "Outcome": "a",
+      "EndTick": 165,
+      "Seconds": 8.25,
+      "Hash": "4ec4c9125a0174c4",
+      "SideA": {
+        "Pattern": "loosed_skirmisher",
+        "DamageDealt": 128.73,
+        "Hits": 16,
+        "Crits": 0,
+        "Casts": 8,
+        "Uses": 9,
+        "Kit": 3,
+        "Coverage": 1,
+        "Spread": 2.889,
+        "Seats": [
+          "stone_glaive",
+          "splitting_bolt",
+          "seeking_bolt"
+        ],
+        "Faces": [
+          "seeking_bolt",
+          "splitting_bolt",
+          "stone_glaive"
+        ],
+        "Mechanisms": [
+          "affliction",
+          "attack",
+          "bankless",
+          "chain",
+          "flight",
+          "hit",
+          "homing",
+          "projectile",
+          "returning",
+          "spell",
+          "status",
+          "strikes",
+          "trajectory"
+        ],
+        "StatusesApplied": [
+          "burning",
+          "shocked"
+        ],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0.952
+      },
+      "SideB": {
+        "Pattern": "boar",
+        "DamageDealt": 11.25,
+        "Hits": 1,
+        "Crits": 0,
+        "Casts": 4,
+        "Uses": 5,
+        "Kit": 1,
+        "Coverage": 1,
+        "Spread": 1,
+        "Seats": [
+          "gore"
+        ],
+        "Faces": [
+          "gore"
+        ],
+        "Mechanisms": [
+          "area",
+          "attack",
+          "bankless",
+          "hit",
+          "melee",
+          "shape",
+          "strikes"
+        ],
+        "StatusesApplied": [],
+        "SelfDamage": 0,
+        "SelfStatuses": [
+          "poise_broken",
+          "poise_rearming"
+        ],
+        "LifeLeft": 0
+      },
+      "Warnings": [],
+      "Errors": []
+    },
+    {
+      "A": "loosed_skirmisher",
+      "B": "boar",
+      "Index": 6,
+      "Seed": "tournament:loosed_skirmisher:boar:6",
+      "Outcome": "a",
+      "EndTick": 179,
+      "Seconds": 8.95,
+      "Hash": "c7becdee625b6fbb",
+      "SideA": {
+        "Pattern": "loosed_skirmisher",
+        "DamageDealt": 135.44,
+        "Hits": 12,
+        "Crits": 0,
+        "Casts": 9,
+        "Uses": 9,
+        "Kit": 3,
+        "Coverage": 1,
+        "Spread": 2.889,
+        "Seats": [
+          "stone_glaive",
+          "splitting_bolt",
+          "seeking_bolt"
+        ],
+        "Faces": [
+          "seeking_bolt",
+          "splitting_bolt",
+          "stone_glaive"
+        ],
+        "Mechanisms": [
+          "affliction",
+          "attack",
+          "bankless",
+          "chain",
+          "flight",
+          "hit",
+          "homing",
+          "projectile",
+          "returning",
+          "spell",
+          "status",
+          "strikes",
+          "trajectory"
+        ],
+        "StatusesApplied": [
+          "shocked"
+        ],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0.943
+      },
+      "SideB": {
+        "Pattern": "boar",
+        "DamageDealt": 7.02,
+        "Hits": 1,
+        "Crits": 0,
+        "Casts": 5,
+        "Uses": 6,
+        "Kit": 1,
+        "Coverage": 1,
+        "Spread": 1,
+        "Seats": [
+          "gore"
+        ],
+        "Faces": [
+          "gore"
+        ],
+        "Mechanisms": [
+          "area",
+          "attack",
+          "bankless",
+          "hit",
+          "melee",
+          "shape",
+          "strikes"
+        ],
+        "StatusesApplied": [],
+        "SelfDamage": 0,
+        "SelfStatuses": [
+          "poise_broken",
+          "poise_rearming"
+        ],
+        "LifeLeft": 0
+      },
+      "Warnings": [],
+      "Errors": []
+    },
+    {
+      "A": "loosed_skirmisher",
+      "B": "boar",
+      "Index": 7,
+      "Seed": "tournament:loosed_skirmisher:boar:7",
+      "Outcome": "a",
+      "EndTick": 97,
+      "Seconds": 4.85,
+      "Hash": "c5b89ed555fb3316",
+      "SideA": {
+        "Pattern": "loosed_skirmisher",
+        "DamageDealt": 135.2,
+        "Hits": 7,
+        "Crits": 1,
+        "Casts": 6,
+        "Uses": 7,
+        "Kit": 3,
+        "Coverage": 0.667,
+        "Spread": 1.819,
+        "Seats": [
+          "splitting_bolt",
+          "seeking_bolt"
+        ],
+        "Faces": [
+          "seeking_bolt",
+          "splitting_bolt"
+        ],
+        "Mechanisms": [
+          "affliction",
+          "bankless",
+          "chain",
+          "flight",
+          "hit",
+          "homing",
+          "projectile",
+          "spell",
+          "status",
+          "trajectory"
+        ],
+        "StatusesApplied": [
+          "burning",
+          "shocked"
+        ],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0.88
+      },
+      "SideB": {
+        "Pattern": "boar",
+        "DamageDealt": 16.58,
+        "Hits": 2,
+        "Crits": 0,
+        "Casts": 2,
+        "Uses": 3,
+        "Kit": 1,
+        "Coverage": 1,
+        "Spread": 1,
+        "Seats": [
+          "gore"
+        ],
+        "Faces": [
+          "gore"
+        ],
+        "Mechanisms": [
+          "area",
+          "attack",
+          "bankless",
+          "hit",
+          "melee",
+          "shape",
+          "strikes"
+        ],
+        "StatusesApplied": [],
+        "SelfDamage": 0,
+        "SelfStatuses": [
+          "poise_broken",
+          "poise_rearming"
+        ],
+        "LifeLeft": 0
+      },
+      "Warnings": [],
+      "Errors": []
+    },
+    {
+      "A": "loosed_skirmisher",
+      "B": "boar",
+      "Index": 8,
+      "Seed": "tournament:loosed_skirmisher:boar:8",
+      "Outcome": "a",
+      "EndTick": 152,
+      "Seconds": 7.6,
+      "Hash": "5afb22a8c2aa4e74",
+      "SideA": {
+        "Pattern": "loosed_skirmisher",
+        "DamageDealt": 129.1,
+        "Hits": 10,
+        "Crits": 0,
+        "Casts": 8,
+        "Uses": 9,
+        "Kit": 3,
+        "Coverage": 1,
+        "Spread": 2.889,
+        "Seats": [
+          "stone_glaive",
+          "splitting_bolt",
+          "seeking_bolt"
+        ],
+        "Faces": [
+          "seeking_bolt",
+          "splitting_bolt",
+          "stone_glaive"
+        ],
+        "Mechanisms": [
+          "affliction",
+          "attack",
+          "bankless",
+          "chain",
+          "flight",
+          "hit",
+          "homing",
+          "projectile",
+          "returning",
+          "spell",
+          "status",
+          "strikes",
+          "trajectory"
+        ],
+        "StatusesApplied": [
+          "shocked"
+        ],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0.958
+      },
+      "SideB": {
+        "Pattern": "boar",
+        "DamageDealt": 9.9,
+        "Hits": 1,
+        "Crits": 0,
+        "Casts": 4,
+        "Uses": 5,
+        "Kit": 1,
+        "Coverage": 1,
+        "Spread": 1,
+        "Seats": [
+          "gore"
+        ],
+        "Faces": [
+          "gore"
+        ],
+        "Mechanisms": [
+          "area",
+          "attack",
+          "bankless",
+          "hit",
+          "melee",
+          "shape",
+          "strikes"
+        ],
+        "StatusesApplied": [],
+        "SelfDamage": 0,
+        "SelfStatuses": [
+          "poise_broken",
+          "poise_rearming"
+        ],
+        "LifeLeft": 0
+      },
+      "Warnings": [],
+      "Errors": []
+    },
+    {
+      "A": "loosed_skirmisher",
+      "B": "boar",
+      "Index": 9,
+      "Seed": "tournament:loosed_skirmisher:boar:9",
+      "Outcome": "a",
+      "EndTick": 223,
+      "Seconds": 11.15,
+      "Hash": "62c5bccc045c39f2",
+      "SideA": {
+        "Pattern": "loosed_skirmisher",
+        "DamageDealt": 138.8,
+        "Hits": 13,
+        "Crits": 0,
+        "Casts": 11,
+        "Uses": 12,
+        "Kit": 3,
+        "Coverage": 1,
+        "Spread": 2.937,
+        "Seats": [
+          "stone_glaive",
+          "splitting_bolt",
+          "seeking_bolt"
+        ],
+        "Faces": [
+          "seeking_bolt",
+          "splitting_bolt",
+          "stone_glaive"
+        ],
+        "Mechanisms": [
+          "affliction",
+          "attack",
+          "bankless",
+          "chain",
+          "flight",
+          "hit",
+          "homing",
+          "projectile",
+          "returning",
+          "spell",
+          "status",
+          "strikes",
+          "trajectory"
+        ],
+        "StatusesApplied": [
+          "shocked"
+        ],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0.888
+      },
+      "SideB": {
+        "Pattern": "boar",
+        "DamageDealt": 18.26,
+        "Hits": 2,
+        "Crits": 0,
+        "Casts": 6,
+        "Uses": 7,
+        "Kit": 1,
+        "Coverage": 1,
+        "Spread": 1,
+        "Seats": [
+          "gore"
+        ],
+        "Faces": [
+          "gore"
+        ],
+        "Mechanisms": [
+          "area",
+          "attack",
+          "bankless",
+          "hit",
+          "melee",
+          "shape",
+          "strikes"
+        ],
+        "StatusesApplied": [],
+        "SelfDamage": 0,
+        "SelfStatuses": [
+          "poise_broken",
+          "poise_rearming"
+        ],
+        "LifeLeft": 0
+      },
+      "Warnings": [],
+      "Errors": []
+    },
+    {
+      "A": "loosed_kindler",
+      "B": "boar",
+      "Index": 0,
+      "Seed": "tournament:loosed_kindler:boar:0",
+      "Outcome": "a",
+      "EndTick": 134,
+      "Seconds": 6.7,
+      "Hash": "a81d940cc9201059",
+      "SideA": {
+        "Pattern": "loosed_kindler",
+        "DamageDealt": 133.1,
+        "Hits": 15,
+        "Crits": 0,
+        "Casts": 8,
+        "Uses": 9,
+        "Kit": 2,
+        "Coverage": 0.5,
+        "Spread": 1,
+        "Seats": [
+          "cinder_spit"
+        ],
+        "Faces": [
+          "cinder_spit"
+        ],
+        "Mechanisms": [
+          "affliction",
+          "bankless",
+          "chain",
+          "flight",
+          "hit",
+          "projectile",
+          "spell",
+          "status"
+        ],
+        "StatusesApplied": [
+          "burning"
+        ],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0.906
+      },
+      "SideB": {
+        "Pattern": "boar",
+        "DamageDealt": 14.47,
+        "Hits": 2,
+        "Crits": 0,
+        "Casts": 3,
+        "Uses": 4,
+        "Kit": 1,
+        "Coverage": 1,
+        "Spread": 1,
+        "Seats": [
+          "gore"
+        ],
+        "Faces": [
+          "gore"
+        ],
+        "Mechanisms": [
+          "area",
+          "attack",
+          "bankless",
+          "hit",
+          "melee",
+          "shape",
+          "strikes"
+        ],
+        "StatusesApplied": [],
+        "SelfDamage": 0,
+        "SelfStatuses": [
+          "poise_broken",
+          "poise_rearming"
+        ],
+        "LifeLeft": 0
+      },
+      "Warnings": [],
+      "Errors": []
+    },
+    {
+      "A": "loosed_kindler",
+      "B": "boar",
+      "Index": 1,
+      "Seed": "tournament:loosed_kindler:boar:1",
+      "Outcome": "a",
+      "EndTick": 127,
+      "Seconds": 6.35,
+      "Hash": "6be9b13eb75e5d85",
+      "SideA": {
+        "Pattern": "loosed_kindler",
+        "DamageDealt": 132.43,
+        "Hits": 10,
+        "Crits": 1,
+        "Casts": 8,
+        "Uses": 9,
+        "Kit": 2,
+        "Coverage": 0.5,
+        "Spread": 1,
+        "Seats": [
+          "cinder_spit"
+        ],
+        "Faces": [
+          "cinder_spit"
+        ],
+        "Mechanisms": [
+          "affliction",
+          "bankless",
+          "chain",
+          "flight",
+          "hit",
+          "projectile",
+          "spell",
+          "status"
+        ],
+        "StatusesApplied": [
+          "burning"
+        ],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0.915
+      },
+      "SideB": {
+        "Pattern": "boar",
+        "DamageDealt": 13.44,
+        "Hits": 2,
+        "Crits": 0,
+        "Casts": 3,
+        "Uses": 4,
+        "Kit": 1,
+        "Coverage": 1,
+        "Spread": 1,
+        "Seats": [
+          "gore"
+        ],
+        "Faces": [
+          "gore"
+        ],
+        "Mechanisms": [
+          "area",
+          "attack",
+          "bankless",
+          "hit",
+          "melee",
+          "shape",
+          "strikes"
+        ],
+        "StatusesApplied": [],
+        "SelfDamage": 0,
+        "SelfStatuses": [
+          "poise_broken",
+          "poise_rearming"
+        ],
+        "LifeLeft": 0
+      },
+      "Warnings": [],
+      "Errors": []
+    },
+    {
+      "A": "loosed_kindler",
+      "B": "boar",
+      "Index": 2,
+      "Seed": "tournament:loosed_kindler:boar:2",
+      "Outcome": "a",
+      "EndTick": 133,
+      "Seconds": 6.65,
+      "Hash": "2953ac416e213735",
+      "SideA": {
+        "Pattern": "loosed_kindler",
+        "DamageDealt": 126.2,
+        "Hits": 9,
+        "Crits": 1,
+        "Casts": 8,
+        "Uses": 8,
+        "Kit": 2,
+        "Coverage": 0.5,
+        "Spread": 1,
+        "Seats": [
+          "cinder_spit"
+        ],
+        "Faces": [
+          "cinder_spit"
+        ],
+        "Mechanisms": [
+          "affliction",
+          "bankless",
+          "chain",
+          "flight",
+          "hit",
+          "projectile",
+          "spell",
+          "status"
+        ],
+        "StatusesApplied": [
+          "burning"
+        ],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0.803
+      },
+      "SideB": {
+        "Pattern": "boar",
+        "DamageDealt": 26.23,
+        "Hits": 3,
+        "Crits": 0,
+        "Casts": 4,
+        "Uses": 4,
+        "Kit": 1,
+        "Coverage": 1,
+        "Spread": 1,
+        "Seats": [
+          "gore"
+        ],
+        "Faces": [
+          "gore"
+        ],
+        "Mechanisms": [
+          "area",
+          "attack",
+          "bankless",
+          "hit",
+          "melee",
+          "shape",
+          "strikes"
+        ],
+        "StatusesApplied": [],
+        "SelfDamage": 0,
+        "SelfStatuses": [
+          "poise_broken",
+          "poise_rearming"
+        ],
+        "LifeLeft": 0
+      },
+      "Warnings": [],
+      "Errors": []
+    },
+    {
+      "A": "loosed_kindler",
+      "B": "boar",
+      "Index": 3,
+      "Seed": "tournament:loosed_kindler:boar:3",
+      "Outcome": "a",
+      "EndTick": 127,
+      "Seconds": 6.35,
+      "Hash": "1405a9e3464ce865",
+      "SideA": {
+        "Pattern": "loosed_kindler",
+        "DamageDealt": 134.1,
+        "Hits": 15,
+        "Crits": 0,
+        "Casts": 8,
+        "Uses": 9,
+        "Kit": 2,
+        "Coverage": 0.5,
+        "Spread": 1,
+        "Seats": [
+          "cinder_spit"
+        ],
+        "Faces": [
+          "cinder_spit"
+        ],
+        "Mechanisms": [
+          "affliction",
+          "bankless",
+          "chain",
+          "flight",
+          "hit",
+          "projectile",
+          "spell",
+          "status"
+        ],
+        "StatusesApplied": [
+          "burning"
+        ],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0.808
+      },
+      "SideB": {
+        "Pattern": "boar",
+        "DamageDealt": 25.16,
+        "Hits": 2,
+        "Crits": 1,
+        "Casts": 3,
+        "Uses": 4,
+        "Kit": 1,
+        "Coverage": 1,
+        "Spread": 1,
+        "Seats": [
+          "gore"
+        ],
+        "Faces": [
+          "gore"
+        ],
+        "Mechanisms": [
+          "area",
+          "attack",
+          "bankless",
+          "hit",
+          "melee",
+          "shape",
+          "strikes"
+        ],
+        "StatusesApplied": [],
+        "SelfDamage": 0,
+        "SelfStatuses": [
+          "poise_broken",
+          "poise_rearming"
+        ],
+        "LifeLeft": 0
+      },
+      "Warnings": [],
+      "Errors": []
+    },
+    {
+      "A": "loosed_kindler",
+      "B": "boar",
+      "Index": 4,
+      "Seed": "tournament:loosed_kindler:boar:4",
+      "Outcome": "a",
+      "EndTick": 127,
+      "Seconds": 6.35,
+      "Hash": "195a0c7ee5a8935d",
+      "SideA": {
+        "Pattern": "loosed_kindler",
+        "DamageDealt": 124.92,
+        "Hits": 16,
+        "Crits": 0,
+        "Casts": 8,
+        "Uses": 9,
+        "Kit": 2,
+        "Coverage": 0.5,
+        "Spread": 1,
+        "Seats": [
+          "cinder_spit"
+        ],
+        "Faces": [
+          "cinder_spit"
+        ],
+        "Mechanisms": [
+          "affliction",
+          "bankless",
+          "chain",
+          "flight",
+          "hit",
+          "projectile",
+          "spell",
+          "status"
+        ],
+        "StatusesApplied": [
+          "burning"
+        ],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0.904
+      },
+      "SideB": {
+        "Pattern": "boar",
+        "DamageDealt": 14.72,
+        "Hits": 2,
+        "Crits": 0,
+        "Casts": 3,
+        "Uses": 4,
+        "Kit": 1,
+        "Coverage": 1,
+        "Spread": 1,
+        "Seats": [
+          "gore"
+        ],
+        "Faces": [
+          "gore"
+        ],
+        "Mechanisms": [
+          "area",
+          "attack",
+          "bankless",
+          "hit",
+          "melee",
+          "shape",
+          "strikes"
+        ],
+        "StatusesApplied": [],
+        "SelfDamage": 0,
+        "SelfStatuses": [
+          "poise_broken",
+          "poise_rearming"
+        ],
+        "LifeLeft": 0
+      },
+      "Warnings": [],
+      "Errors": []
+    },
+    {
+      "A": "loosed_kindler",
+      "B": "boar",
+      "Index": 5,
+      "Seed": "tournament:loosed_kindler:boar:5",
+      "Outcome": "a",
+      "EndTick": 132,
+      "Seconds": 6.6,
+      "Hash": "e193b9600b045fb2",
+      "SideA": {
+        "Pattern": "loosed_kindler",
+        "DamageDealt": 124.08,
+        "Hits": 8,
+        "Crits": 1,
+        "Casts": 8,
+        "Uses": 8,
+        "Kit": 2,
+        "Coverage": 0.5,
+        "Spread": 1,
+        "Seats": [
+          "cinder_spit"
+        ],
+        "Faces": [
+          "cinder_spit"
+        ],
+        "Mechanisms": [
+          "affliction",
+          "bankless",
+          "chain",
+          "flight",
+          "hit",
+          "projectile",
+          "spell",
+          "status"
+        ],
+        "StatusesApplied": [],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0.936
+      },
+      "SideB": {
+        "Pattern": "boar",
+        "DamageDealt": 7.79,
+        "Hits": 1,
+        "Crits": 0,
+        "Casts": 3,
+        "Uses": 4,
+        "Kit": 1,
+        "Coverage": 1,
+        "Spread": 1,
+        "Seats": [
+          "gore"
+        ],
+        "Faces": [
+          "gore"
+        ],
+        "Mechanisms": [
+          "area",
+          "attack",
+          "bankless",
+          "hit",
+          "melee",
+          "shape",
+          "strikes"
+        ],
+        "StatusesApplied": [],
+        "SelfDamage": 0,
+        "SelfStatuses": [
+          "poise_broken",
+          "poise_rearming"
+        ],
+        "LifeLeft": 0
+      },
+      "Warnings": [],
+      "Errors": []
+    },
+    {
+      "A": "loosed_kindler",
+      "B": "boar",
+      "Index": 6,
+      "Seed": "tournament:loosed_kindler:boar:6",
+      "Outcome": "a",
+      "EndTick": 113,
+      "Seconds": 5.65,
+      "Hash": "f9e237f183659881",
+      "SideA": {
+        "Pattern": "loosed_kindler",
+        "DamageDealt": 130.41,
+        "Hits": 14,
+        "Crits": 1,
+        "Casts": 7,
+        "Uses": 7,
+        "Kit": 2,
+        "Coverage": 0.5,
+        "Spread": 1,
+        "Seats": [
+          "cinder_spit"
+        ],
+        "Faces": [
+          "cinder_spit"
+        ],
+        "Mechanisms": [
+          "affliction",
+          "bankless",
+          "chain",
+          "flight",
+          "hit",
+          "projectile",
+          "spell",
+          "status"
+        ],
+        "StatusesApplied": [
+          "burning"
+        ],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0.874
+      },
+      "SideB": {
+        "Pattern": "boar",
+        "DamageDealt": 17.31,
+        "Hits": 2,
+        "Crits": 0,
+        "Casts": 3,
+        "Uses": 3,
+        "Kit": 1,
+        "Coverage": 1,
+        "Spread": 1,
+        "Seats": [
+          "gore"
+        ],
+        "Faces": [
+          "gore"
+        ],
+        "Mechanisms": [
+          "area",
+          "attack",
+          "bankless",
+          "hit",
+          "melee",
+          "shape",
+          "strikes"
+        ],
+        "StatusesApplied": [],
+        "SelfDamage": 0,
+        "SelfStatuses": [
+          "poise_broken",
+          "poise_rearming"
+        ],
+        "LifeLeft": 0
+      },
+      "Warnings": [],
+      "Errors": []
+    },
+    {
+      "A": "loosed_kindler",
+      "B": "boar",
+      "Index": 7,
+      "Seed": "tournament:loosed_kindler:boar:7",
+      "Outcome": "a",
+      "EndTick": 131,
+      "Seconds": 6.55,
+      "Hash": "57ca33030dd8e47d",
+      "SideA": {
+        "Pattern": "loosed_kindler",
+        "DamageDealt": 125.14,
+        "Hits": 8,
+        "Crits": 1,
+        "Casts": 8,
+        "Uses": 8,
+        "Kit": 2,
+        "Coverage": 0.5,
+        "Spread": 1,
+        "Seats": [
+          "cinder_spit"
+        ],
+        "Faces": [
+          "cinder_spit"
+        ],
+        "Mechanisms": [
+          "affliction",
+          "bankless",
+          "chain",
+          "flight",
+          "hit",
+          "projectile",
+          "spell",
+          "status"
+        ],
+        "StatusesApplied": [],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0.946
+      },
+      "SideB": {
+        "Pattern": "boar",
+        "DamageDealt": 10.1,
+        "Hits": 1,
+        "Crits": 0,
+        "Casts": 3,
+        "Uses": 4,
+        "Kit": 1,
+        "Coverage": 1,
+        "Spread": 1,
+        "Seats": [
+          "gore"
+        ],
+        "Faces": [
+          "gore"
+        ],
+        "Mechanisms": [
+          "area",
+          "attack",
+          "bankless",
+          "hit",
+          "melee",
+          "shape",
+          "strikes"
+        ],
+        "StatusesApplied": [],
+        "SelfDamage": 0,
+        "SelfStatuses": [
+          "poise_broken",
+          "poise_rearming"
+        ],
+        "LifeLeft": 0
+      },
+      "Warnings": [],
+      "Errors": []
+    },
+    {
+      "A": "loosed_kindler",
+      "B": "boar",
+      "Index": 8,
+      "Seed": "tournament:loosed_kindler:boar:8",
+      "Outcome": "a",
+      "EndTick": 146,
+      "Seconds": 7.3,
+      "Hash": "af31f79ced3b4c0f",
+      "SideA": {
+        "Pattern": "loosed_kindler",
+        "DamageDealt": 138.18,
+        "Hits": 9,
+        "Crits": 1,
+        "Casts": 9,
+        "Uses": 9,
+        "Kit": 2,
+        "Coverage": 0.5,
+        "Spread": 1,
+        "Seats": [
+          "cinder_spit"
+        ],
+        "Faces": [
+          "cinder_spit"
+        ],
+        "Mechanisms": [
+          "affliction",
+          "bankless",
+          "chain",
+          "flight",
+          "hit",
+          "projectile",
+          "spell",
+          "status"
+        ],
+        "StatusesApplied": [
+          "burning"
+        ],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0.745
+      },
+      "SideB": {
+        "Pattern": "boar",
+        "DamageDealt": 31.38,
+        "Hits": 3,
+        "Crits": 1,
+        "Casts": 4,
+        "Uses": 4,
+        "Kit": 1,
+        "Coverage": 1,
+        "Spread": 1,
+        "Seats": [
+          "gore"
+        ],
+        "Faces": [
+          "gore"
+        ],
+        "Mechanisms": [
+          "area",
+          "attack",
+          "bankless",
+          "hit",
+          "melee",
+          "shape",
+          "strikes"
+        ],
+        "StatusesApplied": [],
+        "SelfDamage": 0,
+        "SelfStatuses": [
+          "poise_broken",
+          "poise_rearming"
+        ],
+        "LifeLeft": 0
+      },
+      "Warnings": [],
+      "Errors": []
+    },
+    {
+      "A": "loosed_kindler",
+      "B": "boar",
+      "Index": 9,
+      "Seed": "tournament:loosed_kindler:boar:9",
+      "Outcome": "a",
+      "EndTick": 146,
+      "Seconds": 7.3,
+      "Hash": "b6adcb454edd7fa1",
+      "SideA": {
+        "Pattern": "loosed_kindler",
+        "DamageDealt": 131.13,
+        "Hits": 9,
+        "Crits": 0,
+        "Casts": 9,
+        "Uses": 9,
+        "Kit": 2,
+        "Coverage": 0.5,
+        "Spread": 1,
+        "Seats": [
+          "cinder_spit"
+        ],
+        "Faces": [
+          "cinder_spit"
+        ],
+        "Mechanisms": [
+          "affliction",
+          "bankless",
+          "chain",
+          "flight",
+          "hit",
+          "projectile",
+          "spell",
+          "status"
+        ],
+        "StatusesApplied": [],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0.874
+      },
+      "SideB": {
+        "Pattern": "boar",
+        "DamageDealt": 15.69,
+        "Hits": 2,
+        "Crits": 0,
+        "Casts": 4,
+        "Uses": 5,
+        "Kit": 1,
+        "Coverage": 1,
+        "Spread": 1,
+        "Seats": [
+          "gore"
+        ],
+        "Faces": [
+          "gore"
+        ],
+        "Mechanisms": [
+          "area",
+          "attack",
+          "bankless",
+          "hit",
+          "melee",
+          "shape",
+          "strikes"
+        ],
+        "StatusesApplied": [],
+        "SelfDamage": 0,
+        "SelfStatuses": [
+          "poise_broken",
+          "poise_rearming"
+        ],
+        "LifeLeft": 0
+      },
+      "Warnings": [],
+      "Errors": []
+    },
+    {
+      "A": "tide_channeler",
+      "B": "spark_duelist",
+      "Index": 0,
+      "Seed": "tournament:tide_channeler:spark_duelist:0",
+      "Outcome": "a",
+      "EndTick": 161,
+      "Seconds": 8.05,
+      "Hash": "92f7b2eb35cb19b6",
+      "SideA": {
+        "Pattern": "tide_channeler",
+        "DamageDealt": 127.52,
+        "Hits": 8,
+        "Crits": 0,
+        "Casts": 8,
+        "Uses": 2,
+        "Kit": 1,
+        "Coverage": 1,
+        "Spread": 1,
+        "Seats": [
+          "tide_torrent"
+        ],
+        "Faces": [
+          "tide_torrent"
+        ],
+        "Mechanisms": [
+          "affliction",
+          "area",
+          "bankless",
+          "channel",
+          "cooldown",
+          "held",
+          "hit",
+          "ramps",
+          "release",
+          "shape",
+          "spell",
+          "status"
+        ],
+        "StatusesApplied": [],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0.878
+      },
+      "SideB": {
+        "Pattern": "spark_duelist",
+        "DamageDealt": 19.42,
+        "Hits": 2,
+        "Crits": 0,
+        "Casts": 3,
+        "Uses": 3,
+        "Kit": 3,
+        "Coverage": 0.667,
+        "Spread": 1.89,
+        "Seats": [
+          "strike",
+          "kindling_spark"
+        ],
+        "Faces": [
+          "kindling_spark",
+          "strike"
+        ],
+        "Mechanisms": [
+          "affliction",
+          "area",
+          "attack",
+          "bankless",
+          "chain",
+          "flight",
+          "hit",
+          "melee",
+          "projectile",
+          "shape",
+          "spell",
+          "status",
+          "strikes",
+          "triggered"
+        ],
+        "StatusesApplied": [],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0
+      },
+      "Warnings": [],
+      "Errors": []
+    },
+    {
+      "A": "tide_channeler",
+      "B": "spark_duelist",
+      "Index": 1,
+      "Seed": "tournament:tide_channeler:spark_duelist:1",
+      "Outcome": "a",
+      "EndTick": 161,
+      "Seconds": 8.05,
+      "Hash": "71db4fb6fbcb5ad6",
+      "SideA": {
+        "Pattern": "tide_channeler",
+        "DamageDealt": 127.52,
+        "Hits": 8,
+        "Crits": 0,
+        "Casts": 8,
+        "Uses": 2,
+        "Kit": 1,
+        "Coverage": 1,
+        "Spread": 1,
+        "Seats": [
+          "tide_torrent"
+        ],
+        "Faces": [
+          "tide_torrent"
+        ],
+        "Mechanisms": [
+          "affliction",
+          "area",
+          "bankless",
+          "channel",
+          "cooldown",
+          "held",
+          "hit",
+          "ramps",
+          "release",
+          "shape",
+          "spell",
+          "status"
+        ],
+        "StatusesApplied": [],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0.816
+      },
+      "SideB": {
+        "Pattern": "spark_duelist",
+        "DamageDealt": 25.63,
+        "Hits": 2,
+        "Crits": 1,
+        "Casts": 4,
+        "Uses": 4,
+        "Kit": 3,
+        "Coverage": 0.667,
+        "Spread": 1.755,
+        "Seats": [
+          "strike",
+          "kindling_spark"
+        ],
+        "Faces": [
+          "kindling_spark",
+          "strike"
+        ],
+        "Mechanisms": [
+          "affliction",
+          "area",
+          "attack",
+          "bankless",
+          "chain",
+          "flight",
+          "hit",
+          "melee",
+          "projectile",
+          "shape",
+          "spell",
+          "status",
+          "strikes",
+          "triggered"
+        ],
+        "StatusesApplied": [],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0
+      },
+      "Warnings": [],
+      "Errors": []
+    },
+    {
+      "A": "tide_channeler",
+      "B": "spark_duelist",
+      "Index": 2,
+      "Seed": "tournament:tide_channeler:spark_duelist:2",
+      "Outcome": "a",
+      "EndTick": 158,
+      "Seconds": 7.9,
+      "Hash": "c61c39c6a3131317",
+      "SideA": {
+        "Pattern": "tide_channeler",
+        "DamageDealt": 127.52,
+        "Hits": 8,
+        "Crits": 0,
+        "Casts": 8,
+        "Uses": 2,
+        "Kit": 1,
+        "Coverage": 1,
+        "Spread": 1,
+        "Seats": [
+          "tide_torrent"
+        ],
+        "Faces": [
+          "tide_torrent"
+        ],
+        "Mechanisms": [
+          "affliction",
+          "area",
+          "bankless",
+          "channel",
+          "cooldown",
+          "held",
+          "hit",
+          "ramps",
+          "release",
+          "shape",
+          "spell",
+          "status"
+        ],
+        "StatusesApplied": [],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0.887
+      },
+      "SideB": {
+        "Pattern": "spark_duelist",
+        "DamageDealt": 18.05,
+        "Hits": 2,
+        "Crits": 0,
+        "Casts": 3,
+        "Uses": 4,
+        "Kit": 3,
+        "Coverage": 0.667,
+        "Spread": 1.755,
+        "Seats": [
+          "strike",
+          "kindling_spark"
+        ],
+        "Faces": [
+          "kindling_spark",
+          "strike"
+        ],
+        "Mechanisms": [
+          "affliction",
+          "area",
+          "attack",
+          "bankless",
+          "chain",
+          "flight",
+          "hit",
+          "melee",
+          "projectile",
+          "shape",
+          "spell",
+          "status",
+          "strikes",
+          "triggered"
+        ],
+        "StatusesApplied": [],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0
+      },
+      "Warnings": [],
+      "Errors": []
+    },
+    {
+      "A": "tide_channeler",
+      "B": "spark_duelist",
+      "Index": 3,
+      "Seed": "tournament:tide_channeler:spark_duelist:3",
+      "Outcome": "a",
+      "EndTick": 153,
+      "Seconds": 7.65,
+      "Hash": "102194f5f125e711",
+      "SideA": {
+        "Pattern": "tide_channeler",
+        "DamageDealt": 127.52,
+        "Hits": 8,
+        "Crits": 0,
+        "Casts": 8,
+        "Uses": 2,
+        "Kit": 1,
+        "Coverage": 1,
+        "Spread": 1,
+        "Seats": [
+          "tide_torrent"
+        ],
+        "Faces": [
+          "tide_torrent"
+        ],
+        "Mechanisms": [
+          "affliction",
+          "area",
+          "bankless",
+          "channel",
+          "cooldown",
+          "held",
+          "hit",
+          "ramps",
+          "release",
+          "shape",
+          "spell",
+          "status"
+        ],
+        "StatusesApplied": [],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0.896
+      },
+      "SideB": {
+        "Pattern": "spark_duelist",
+        "DamageDealt": 16.64,
+        "Hits": 2,
+        "Crits": 0,
+        "Casts": 3,
+        "Uses": 3,
+        "Kit": 3,
+        "Coverage": 0.667,
+        "Spread": 1.89,
+        "Seats": [
+          "strike",
+          "kindling_spark"
+        ],
+        "Faces": [
+          "kindling_spark",
+          "strike"
+        ],
+        "Mechanisms": [
+          "affliction",
+          "area",
+          "attack",
+          "bankless",
+          "chain",
+          "flight",
+          "hit",
+          "melee",
+          "projectile",
+          "shape",
+          "spell",
+          "status",
+          "strikes",
+          "triggered"
+        ],
+        "StatusesApplied": [],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0
+      },
+      "Warnings": [],
+      "Errors": []
+    },
+    {
+      "A": "tide_channeler",
+      "B": "spark_duelist",
+      "Index": 4,
+      "Seed": "tournament:tide_channeler:spark_duelist:4",
+      "Outcome": "a",
+      "EndTick": 160,
+      "Seconds": 8,
+      "Hash": "44c04c9fa7136978",
+      "SideA": {
+        "Pattern": "tide_channeler",
+        "DamageDealt": 127.52,
+        "Hits": 8,
+        "Crits": 0,
+        "Casts": 8,
+        "Uses": 2,
+        "Kit": 1,
+        "Coverage": 1,
+        "Spread": 1,
+        "Seats": [
+          "tide_torrent"
+        ],
+        "Faces": [
+          "tide_torrent"
+        ],
+        "Mechanisms": [
+          "affliction",
+          "area",
+          "bankless",
+          "channel",
+          "cooldown",
+          "held",
+          "hit",
+          "ramps",
+          "release",
+          "shape",
+          "spell",
+          "status"
+        ],
+        "StatusesApplied": [
+          "chilled"
+        ],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0.899
+      },
+      "SideB": {
+        "Pattern": "spark_duelist",
+        "DamageDealt": 16.85,
+        "Hits": 2,
+        "Crits": 0,
+        "Casts": 3,
+        "Uses": 3,
+        "Kit": 3,
+        "Coverage": 0.667,
+        "Spread": 1.89,
+        "Seats": [
+          "strike",
+          "kindling_spark"
+        ],
+        "Faces": [
+          "kindling_spark",
+          "strike"
+        ],
+        "Mechanisms": [
+          "affliction",
+          "area",
+          "attack",
+          "bankless",
+          "chain",
+          "flight",
+          "hit",
+          "melee",
+          "projectile",
+          "shape",
+          "spell",
+          "status",
+          "strikes",
+          "triggered"
+        ],
+        "StatusesApplied": [],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0
+      },
+      "Warnings": [],
+      "Errors": []
+    },
+    {
+      "A": "tide_channeler",
+      "B": "spark_duelist",
+      "Index": 5,
+      "Seed": "tournament:tide_channeler:spark_duelist:5",
+      "Outcome": "a",
+      "EndTick": 160,
+      "Seconds": 8,
+      "Hash": "34fe008cc82dfa6b",
+      "SideA": {
+        "Pattern": "tide_channeler",
+        "DamageDealt": 127.52,
+        "Hits": 8,
+        "Crits": 0,
+        "Casts": 8,
+        "Uses": 2,
+        "Kit": 1,
+        "Coverage": 1,
+        "Spread": 1,
+        "Seats": [
+          "tide_torrent"
+        ],
+        "Faces": [
+          "tide_torrent"
+        ],
+        "Mechanisms": [
+          "affliction",
+          "area",
+          "bankless",
+          "channel",
+          "cooldown",
+          "held",
+          "hit",
+          "ramps",
+          "release",
+          "shape",
+          "spell",
+          "status"
+        ],
+        "StatusesApplied": [
+          "chilled"
+        ],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0.667
+      },
+      "SideB": {
+        "Pattern": "spark_duelist",
+        "DamageDealt": 43.65,
+        "Hits": 10,
+        "Crits": 1,
+        "Casts": 2,
+        "Uses": 2,
+        "Kit": 3,
+        "Coverage": 0.667,
+        "Spread": 2,
+        "Seats": [
+          "strike",
+          "kindling_spark"
+        ],
+        "Faces": [
+          "kindling_spark",
+          "strike"
+        ],
+        "Mechanisms": [
+          "affliction",
+          "area",
+          "attack",
+          "bankless",
+          "chain",
+          "flight",
+          "hit",
+          "melee",
+          "projectile",
+          "shape",
+          "spell",
+          "status",
+          "strikes",
+          "triggered"
+        ],
+        "StatusesApplied": [
+          "burning"
+        ],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0
+      },
+      "Warnings": [],
+      "Errors": []
+    },
+    {
+      "A": "tide_channeler",
+      "B": "spark_duelist",
+      "Index": 6,
+      "Seed": "tournament:tide_channeler:spark_duelist:6",
+      "Outcome": "a",
+      "EndTick": 160,
+      "Seconds": 8,
+      "Hash": "28bb5ef2ff6c996f",
+      "SideA": {
+        "Pattern": "tide_channeler",
+        "DamageDealt": 127.52,
+        "Hits": 8,
+        "Crits": 0,
+        "Casts": 8,
+        "Uses": 2,
+        "Kit": 1,
+        "Coverage": 1,
+        "Spread": 1,
+        "Seats": [
+          "tide_torrent"
+        ],
+        "Faces": [
+          "tide_torrent"
+        ],
+        "Mechanisms": [
+          "affliction",
+          "area",
+          "bankless",
+          "channel",
+          "cooldown",
+          "held",
+          "hit",
+          "ramps",
+          "release",
+          "shape",
+          "spell",
+          "status"
+        ],
+        "StatusesApplied": [],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 1
+      },
+      "SideB": {
+        "Pattern": "spark_duelist",
+        "DamageDealt": 0,
+        "Hits": 0,
+        "Crits": 0,
+        "Casts": 3,
+        "Uses": 4,
+        "Kit": 3,
+        "Coverage": 0.333,
+        "Spread": 1,
+        "Seats": [
+          "strike"
+        ],
+        "Faces": [
+          "strike"
+        ],
+        "Mechanisms": [
+          "area",
+          "attack",
+          "bankless",
+          "hit",
+          "melee",
+          "shape",
+          "strikes"
+        ],
+        "StatusesApplied": [],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0
+      },
+      "Warnings": [],
+      "Errors": []
+    },
+    {
+      "A": "tide_channeler",
+      "B": "spark_duelist",
+      "Index": 7,
+      "Seed": "tournament:tide_channeler:spark_duelist:7",
+      "Outcome": "a",
+      "EndTick": 160,
+      "Seconds": 8,
+      "Hash": "4a80cf2f46d21fb2",
+      "SideA": {
+        "Pattern": "tide_channeler",
+        "DamageDealt": 127.52,
+        "Hits": 8,
+        "Crits": 0,
+        "Casts": 8,
+        "Uses": 2,
+        "Kit": 1,
+        "Coverage": 1,
+        "Spread": 1,
+        "Seats": [
+          "tide_torrent"
+        ],
+        "Faces": [
+          "tide_torrent"
+        ],
+        "Mechanisms": [
+          "affliction",
+          "area",
+          "bankless",
+          "channel",
+          "cooldown",
+          "held",
+          "hit",
+          "ramps",
+          "release",
+          "shape",
+          "spell",
+          "status"
+        ],
+        "StatusesApplied": [
+          "chilled"
+        ],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0.873
+      },
+      "SideB": {
+        "Pattern": "spark_duelist",
+        "DamageDealt": 19.78,
+        "Hits": 2,
+        "Crits": 0,
+        "Casts": 3,
+        "Uses": 3,
+        "Kit": 3,
+        "Coverage": 0.667,
+        "Spread": 1.89,
+        "Seats": [
+          "strike",
+          "kindling_spark"
+        ],
+        "Faces": [
+          "kindling_spark",
+          "strike"
+        ],
+        "Mechanisms": [
+          "affliction",
+          "area",
+          "attack",
+          "bankless",
+          "chain",
+          "flight",
+          "hit",
+          "melee",
+          "projectile",
+          "shape",
+          "spell",
+          "status",
+          "strikes",
+          "triggered"
+        ],
+        "StatusesApplied": [],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0
+      },
+      "Warnings": [],
+      "Errors": []
+    },
+    {
+      "A": "tide_channeler",
+      "B": "spark_duelist",
+      "Index": 8,
+      "Seed": "tournament:tide_channeler:spark_duelist:8",
+      "Outcome": "a",
+      "EndTick": 155,
+      "Seconds": 7.75,
+      "Hash": "ab7c645c92e21d63",
+      "SideA": {
+        "Pattern": "tide_channeler",
+        "DamageDealt": 127.52,
+        "Hits": 8,
+        "Crits": 0,
+        "Casts": 8,
+        "Uses": 2,
+        "Kit": 1,
+        "Coverage": 1,
+        "Spread": 1,
+        "Seats": [
+          "tide_torrent"
+        ],
+        "Faces": [
+          "tide_torrent"
+        ],
+        "Mechanisms": [
+          "affliction",
+          "area",
+          "bankless",
+          "channel",
+          "cooldown",
+          "held",
+          "hit",
+          "ramps",
+          "release",
+          "shape",
+          "spell",
+          "status"
+        ],
+        "StatusesApplied": [],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0.876
+      },
+      "SideB": {
+        "Pattern": "spark_duelist",
+        "DamageDealt": 19.4,
+        "Hits": 2,
+        "Crits": 0,
+        "Casts": 4,
+        "Uses": 4,
+        "Kit": 3,
+        "Coverage": 0.667,
+        "Spread": 1.755,
+        "Seats": [
+          "strike",
+          "kindling_spark"
+        ],
+        "Faces": [
+          "kindling_spark",
+          "strike"
+        ],
+        "Mechanisms": [
+          "affliction",
+          "area",
+          "attack",
+          "bankless",
+          "chain",
+          "flight",
+          "hit",
+          "melee",
+          "projectile",
+          "shape",
+          "spell",
+          "status",
+          "strikes",
+          "triggered"
+        ],
+        "StatusesApplied": [],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0
+      },
+      "Warnings": [],
+      "Errors": []
+    },
+    {
+      "A": "tide_channeler",
+      "B": "spark_duelist",
+      "Index": 9,
+      "Seed": "tournament:tide_channeler:spark_duelist:9",
+      "Outcome": "a",
+      "EndTick": 160,
+      "Seconds": 8,
+      "Hash": "b99586302cada4f5",
+      "SideA": {
+        "Pattern": "tide_channeler",
+        "DamageDealt": 127.52,
+        "Hits": 8,
+        "Crits": 0,
+        "Casts": 8,
+        "Uses": 2,
+        "Kit": 1,
+        "Coverage": 1,
+        "Spread": 1,
+        "Seats": [
+          "tide_torrent"
+        ],
+        "Faces": [
+          "tide_torrent"
+        ],
+        "Mechanisms": [
+          "affliction",
+          "area",
+          "bankless",
+          "channel",
+          "cooldown",
+          "held",
+          "hit",
+          "ramps",
+          "release",
+          "shape",
+          "spell",
+          "status"
+        ],
+        "StatusesApplied": [
+          "chilled"
+        ],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 1
+      },
+      "SideB": {
+        "Pattern": "spark_duelist",
+        "DamageDealt": 0,
+        "Hits": 0,
+        "Crits": 0,
+        "Casts": 2,
+        "Uses": 3,
+        "Kit": 3,
+        "Coverage": 0.333,
+        "Spread": 1,
+        "Seats": [
+          "strike"
+        ],
+        "Faces": [
+          "strike"
+        ],
+        "Mechanisms": [
+          "area",
+          "attack",
+          "bankless",
+          "hit",
+          "melee",
+          "shape",
+          "strikes"
+        ],
+        "StatusesApplied": [],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0
+      },
+      "Warnings": [],
+      "Errors": []
+    },
+    {
+      "A": "proving_reaver",
+      "B": "proving_bulwark",
+      "Index": 0,
+      "Seed": "tournament:proving_reaver:proving_bulwark:0",
+      "Outcome": "b",
+      "EndTick": 664,
+      "Seconds": 33.2,
+      "Hash": "9d0816229d3ad6eb",
+      "SideA": {
+        "Pattern": "proving_reaver",
+        "DamageDealt": 393.92,
+        "Hits": 75,
+        "Crits": 0,
+        "Casts": 15,
+        "Uses": 16,
+        "Kit": 1,
+        "Coverage": 1,
+        "Spread": 1,
+        "Seats": [
+          "strike[stone]\u002Brending"
+        ],
+        "Faces": [
+          "strike[stone]\u002Brending"
+        ],
+        "Mechanisms": [
+          "affliction",
+          "affliction:bleeding",
+          "area",
+          "attack",
+          "bankless",
+          "hit",
+          "melee",
+          "rupture",
+          "shape",
+          "strikes"
+        ],
+        "StatusesApplied": [
+          "bleeding"
+        ],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0
+      },
+      "SideB": {
+        "Pattern": "proving_bulwark",
+        "DamageDealt": 230,
+        "Hits": 32,
+        "Crits": 2,
+        "Casts": 25,
+        "Uses": 25,
+        "Kit": 1,
+        "Coverage": 1,
+        "Spread": 1,
+        "Seats": [
+          "bite"
+        ],
+        "Faces": [
+          "bite"
+        ],
+        "Mechanisms": [
+          "area",
+          "attack",
+          "bankless",
+          "hit",
+          "melee",
+          "shape",
+          "strikes"
+        ],
+        "StatusesApplied": [
+          "bleeding"
+        ],
+        "SelfDamage": 0,
+        "SelfStatuses": [
+          "poise_broken",
+          "poise_rearming",
+          "shield_delay"
+        ],
+        "LifeLeft": 0.778
+      },
+      "Warnings": [],
+      "Errors": []
+    },
+    {
+      "A": "proving_reaver",
+      "B": "proving_bulwark",
+      "Index": 1,
+      "Seed": "tournament:proving_reaver:proving_bulwark:1",
+      "Outcome": "b",
+      "EndTick": 634,
+      "Seconds": 31.7,
+      "Hash": "c461bcccfa9c7f36",
+      "SideA": {
+        "Pattern": "proving_reaver",
+        "DamageDealt": 314.75,
+        "Hits": 59,
+        "Crits": 1,
+        "Casts": 15,
+        "Uses": 16,
+        "Kit": 1,
+        "Coverage": 1,
+        "Spread": 1,
+        "Seats": [
+          "strike[stone]\u002Brending"
+        ],
+        "Faces": [
+          "strike[stone]\u002Brending"
+        ],
+        "Mechanisms": [
+          "affliction",
+          "affliction:bleeding",
+          "area",
+          "attack",
+          "bankless",
+          "hit",
+          "melee",
+          "rupture",
+          "shape",
+          "strikes"
+        ],
+        "StatusesApplied": [
+          "bleeding"
+        ],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0
+      },
+      "SideB": {
+        "Pattern": "proving_bulwark",
+        "DamageDealt": 221.35,
+        "Hits": 24,
+        "Crits": 0,
+        "Casts": 24,
+        "Uses": 24,
+        "Kit": 1,
+        "Coverage": 1,
+        "Spread": 1,
+        "Seats": [
+          "bite"
+        ],
+        "Faces": [
+          "bite"
+        ],
+        "Mechanisms": [
+          "area",
+          "attack",
+          "bankless",
+          "hit",
+          "melee",
+          "shape",
+          "strikes"
+        ],
+        "StatusesApplied": [],
+        "SelfDamage": 0,
+        "SelfStatuses": [
+          "poise_broken",
+          "poise_rearming",
+          "shield_delay"
+        ],
+        "LifeLeft": 0.775
+      },
+      "Warnings": [],
+      "Errors": []
+    },
+    {
+      "A": "proving_reaver",
+      "B": "proving_bulwark",
+      "Index": 2,
+      "Seed": "tournament:proving_reaver:proving_bulwark:2",
+      "Outcome": "b",
+      "EndTick": 729,
+      "Seconds": 36.45,
+      "Hash": "54fc6a8c44f11f2d",
+      "SideA": {
+        "Pattern": "proving_reaver",
+        "DamageDealt": 576.45,
+        "Hits": 75,
+        "Crits": 1,
+        "Casts": 17,
+        "Uses": 18,
+        "Kit": 1,
+        "Coverage": 1,
+        "Spread": 1,
+        "Seats": [
+          "strike[stone]\u002Brending"
+        ],
+        "Faces": [
+          "strike[stone]\u002Brending"
+        ],
+        "Mechanisms": [
+          "affliction",
+          "affliction:bleeding",
+          "area",
+          "attack",
+          "bankless",
+          "hit",
+          "melee",
+          "rupture",
+          "shape",
+          "strikes"
+        ],
+        "StatusesApplied": [
+          "bleeding"
+        ],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0
+      },
+      "SideB": {
+        "Pattern": "proving_bulwark",
+        "DamageDealt": 259.1,
+        "Hits": 27,
+        "Crits": 0,
+        "Casts": 28,
+        "Uses": 28,
+        "Kit": 1,
+        "Coverage": 1,
+        "Spread": 1,
+        "Seats": [
+          "bite"
+        ],
+        "Faces": [
+          "bite"
+        ],
+        "Mechanisms": [
+          "area",
+          "attack",
+          "bankless",
+          "hit",
+          "melee",
+          "shape",
+          "strikes"
+        ],
+        "StatusesApplied": [],
+        "SelfDamage": 0,
+        "SelfStatuses": [
+          "poise_broken",
+          "poise_rearming",
+          "shield_delay"
+        ],
+        "LifeLeft": 0.219
+      },
+      "Warnings": [],
+      "Errors": []
+    },
+    {
+      "A": "proving_reaver",
+      "B": "proving_bulwark",
+      "Index": 3,
+      "Seed": "tournament:proving_reaver:proving_bulwark:3",
+      "Outcome": "b",
+      "EndTick": 648,
+      "Seconds": 32.4,
+      "Hash": "ef29c05556fe48ee",
+      "SideA": {
+        "Pattern": "proving_reaver",
+        "DamageDealt": 454.37,
+        "Hits": 75,
+        "Crits": 2,
+        "Casts": 15,
+        "Uses": 16,
+        "Kit": 1,
+        "Coverage": 1,
+        "Spread": 1,
+        "Seats": [
+          "strike[stone]\u002Brending"
+        ],
+        "Faces": [
+          "strike[stone]\u002Brending"
+        ],
+        "Mechanisms": [
+          "affliction",
+          "affliction:bleeding",
+          "area",
+          "attack",
+          "bankless",
+          "hit",
+          "melee",
+          "rupture",
+          "shape",
+          "strikes"
+        ],
+        "StatusesApplied": [
+          "bleeding"
+        ],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0
+      },
+      "SideB": {
+        "Pattern": "proving_bulwark",
+        "DamageDealt": 240.02,
+        "Hits": 39,
+        "Crits": 2,
+        "Casts": 23,
+        "Uses": 23,
+        "Kit": 1,
+        "Coverage": 1,
+        "Spread": 1,
+        "Seats": [
+          "bite"
+        ],
+        "Faces": [
+          "bite"
+        ],
+        "Mechanisms": [
+          "area",
+          "attack",
+          "bankless",
+          "hit",
+          "melee",
+          "shape",
+          "strikes"
+        ],
+        "StatusesApplied": [
+          "bleeding"
+        ],
+        "SelfDamage": 0,
+        "SelfStatuses": [
+          "poise_broken",
+          "poise_rearming",
+          "shield_delay"
+        ],
+        "LifeLeft": 0.65
+      },
+      "Warnings": [],
+      "Errors": []
+    },
+    {
+      "A": "proving_reaver",
+      "B": "proving_bulwark",
+      "Index": 4,
+      "Seed": "tournament:proving_reaver:proving_bulwark:4",
+      "Outcome": "b",
+      "EndTick": 559,
+      "Seconds": 27.95,
+      "Hash": "4019456b4c341b4a",
+      "SideA": {
+        "Pattern": "proving_reaver",
+        "DamageDealt": 334.86,
+        "Hits": 60,
+        "Crits": 1,
+        "Casts": 13,
+        "Uses": 14,
+        "Kit": 1,
+        "Coverage": 1,
+        "Spread": 1,
+        "Seats": [
+          "strike[stone]\u002Brending"
+        ],
+        "Faces": [
+          "strike[stone]\u002Brending"
+        ],
+        "Mechanisms": [
+          "affliction",
+          "affliction:bleeding",
+          "area",
+          "attack",
+          "bankless",
+          "hit",
+          "melee",
+          "rupture",
+          "shape",
+          "strikes"
+        ],
+        "StatusesApplied": [
+          "bleeding"
+        ],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0
+      },
+      "SideB": {
+        "Pattern": "proving_bulwark",
+        "DamageDealt": 216.47,
+        "Hits": 31,
+        "Crits": 1,
+        "Casts": 21,
+        "Uses": 21,
+        "Kit": 1,
+        "Coverage": 1,
+        "Spread": 1,
+        "Seats": [
+          "bite"
+        ],
+        "Faces": [
+          "bite"
+        ],
+        "Mechanisms": [
+          "area",
+          "attack",
+          "bankless",
+          "hit",
+          "melee",
+          "shape",
+          "strikes"
+        ],
+        "StatusesApplied": [
+          "bleeding"
+        ],
+        "SelfDamage": 0,
+        "SelfStatuses": [
+          "poise_broken",
+          "poise_rearming",
+          "shield_delay"
+        ],
+        "LifeLeft": 0.83
+      },
+      "Warnings": [],
+      "Errors": []
+    },
+    {
+      "A": "proving_reaver",
+      "B": "proving_bulwark",
+      "Index": 5,
+      "Seed": "tournament:proving_reaver:proving_bulwark:5",
+      "Outcome": "b",
+      "EndTick": 734,
+      "Seconds": 36.7,
+      "Hash": "726d8ae4e990eff9",
+      "SideA": {
+        "Pattern": "proving_reaver",
+        "DamageDealt": 461.13,
+        "Hits": 80,
+        "Crits": 2,
+        "Casts": 17,
+        "Uses": 18,
+        "Kit": 1,
+        "Coverage": 1,
+        "Spread": 1,
+        "Seats": [
+          "strike[stone]\u002Brending"
+        ],
+        "Faces": [
+          "strike[stone]\u002Brending"
+        ],
+        "Mechanisms": [
+          "affliction",
+          "affliction:bleeding",
+          "area",
+          "attack",
+          "bankless",
+          "hit",
+          "melee",
+          "rupture",
+          "shape",
+          "strikes"
+        ],
+        "StatusesApplied": [
+          "bleeding"
+        ],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0
+      },
+      "SideB": {
+        "Pattern": "proving_bulwark",
+        "DamageDealt": 247.71,
+        "Hits": 25,
+        "Crits": 1,
+        "Casts": 26,
+        "Uses": 26,
+        "Kit": 1,
+        "Coverage": 1,
+        "Spread": 1,
+        "Seats": [
+          "bite"
+        ],
+        "Faces": [
+          "bite"
+        ],
+        "Mechanisms": [
+          "area",
+          "attack",
+          "bankless",
+          "hit",
+          "melee",
+          "shape",
+          "strikes"
+        ],
+        "StatusesApplied": [],
+        "SelfDamage": 0,
+        "SelfStatuses": [
+          "poise_broken",
+          "poise_rearming",
+          "shield_delay"
+        ],
+        "LifeLeft": 0.858
+      },
+      "Warnings": [],
+      "Errors": []
+    },
+    {
+      "A": "proving_reaver",
+      "B": "proving_bulwark",
+      "Index": 6,
+      "Seed": "tournament:proving_reaver:proving_bulwark:6",
+      "Outcome": "b",
+      "EndTick": 809,
+      "Seconds": 40.45,
+      "Hash": "dbbad335d264313b",
+      "SideA": {
+        "Pattern": "proving_reaver",
+        "DamageDealt": 649.86,
+        "Hits": 94,
+        "Crits": 2,
+        "Casts": 19,
+        "Uses": 20,
+        "Kit": 1,
+        "Coverage": 1,
+        "Spread": 1,
+        "Seats": [
+          "strike[stone]\u002Brending"
+        ],
+        "Faces": [
+          "strike[stone]\u002Brending"
+        ],
+        "Mechanisms": [
+          "affliction",
+          "affliction:bleeding",
+          "area",
+          "attack",
+          "bankless",
+          "hit",
+          "melee",
+          "rupture",
+          "shape",
+          "strikes"
+        ],
+        "StatusesApplied": [
+          "bleeding"
+        ],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0
+      },
+      "SideB": {
+        "Pattern": "proving_bulwark",
+        "DamageDealt": 272.87,
+        "Hits": 28,
+        "Crits": 1,
+        "Casts": 30,
+        "Uses": 30,
+        "Kit": 1,
+        "Coverage": 1,
+        "Spread": 1,
+        "Seats": [
+          "bite"
+        ],
+        "Faces": [
+          "bite"
+        ],
+        "Mechanisms": [
+          "area",
+          "attack",
+          "bankless",
+          "hit",
+          "melee",
+          "shape",
+          "strikes"
+        ],
+        "StatusesApplied": [],
+        "SelfDamage": 0,
+        "SelfStatuses": [
+          "poise_broken",
+          "poise_rearming",
+          "shield_delay"
+        ],
+        "LifeLeft": 0.128
+      },
+      "Warnings": [],
+      "Errors": []
+    },
+    {
+      "A": "proving_reaver",
+      "B": "proving_bulwark",
+      "Index": 7,
+      "Seed": "tournament:proving_reaver:proving_bulwark:7",
+      "Outcome": "b",
+      "EndTick": 659,
+      "Seconds": 32.95,
+      "Hash": "0feccbc6c7e79704",
+      "SideA": {
+        "Pattern": "proving_reaver",
+        "DamageDealt": 499.3,
+        "Hits": 74,
+        "Crits": 0,
+        "Casts": 15,
+        "Uses": 16,
+        "Kit": 1,
+        "Coverage": 1,
+        "Spread": 1,
+        "Seats": [
+          "strike[stone]\u002Brending"
+        ],
+        "Faces": [
+          "strike[stone]\u002Brending"
+        ],
+        "Mechanisms": [
+          "affliction",
+          "affliction:bleeding",
+          "area",
+          "attack",
+          "bankless",
+          "hit",
+          "melee",
+          "rupture",
+          "shape",
+          "strikes"
+        ],
+        "StatusesApplied": [
+          "bleeding"
+        ],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0
+      },
+      "SideB": {
+        "Pattern": "proving_bulwark",
+        "DamageDealt": 250.36,
+        "Hits": 33,
+        "Crits": 3,
+        "Casts": 24,
+        "Uses": 24,
+        "Kit": 1,
+        "Coverage": 1,
+        "Spread": 1,
+        "Seats": [
+          "bite"
+        ],
+        "Faces": [
+          "bite"
+        ],
+        "Mechanisms": [
+          "area",
+          "attack",
+          "bankless",
+          "hit",
+          "melee",
+          "shape",
+          "strikes"
+        ],
+        "StatusesApplied": [
+          "bleeding"
+        ],
+        "SelfDamage": 0,
+        "SelfStatuses": [
+          "poise_broken",
+          "poise_rearming",
+          "shield_delay"
+        ],
+        "LifeLeft": 0.511
+      },
+      "Warnings": [],
+      "Errors": []
+    },
+    {
+      "A": "proving_reaver",
+      "B": "proving_bulwark",
+      "Index": 8,
+      "Seed": "tournament:proving_reaver:proving_bulwark:8",
+      "Outcome": "b",
+      "EndTick": 734,
+      "Seconds": 36.7,
+      "Hash": "64b0d01730a25d1a",
+      "SideA": {
+        "Pattern": "proving_reaver",
+        "DamageDealt": 398.85,
+        "Hits": 70,
+        "Crits": 2,
+        "Casts": 17,
+        "Uses": 18,
+        "Kit": 1,
+        "Coverage": 1,
+        "Spread": 1,
+        "Seats": [
+          "strike[stone]\u002Brending"
+        ],
+        "Faces": [
+          "strike[stone]\u002Brending"
+        ],
+        "Mechanisms": [
+          "affliction",
+          "affliction:bleeding",
+          "area",
+          "attack",
+          "bankless",
+          "hit",
+          "melee",
+          "rupture",
+          "shape",
+          "strikes"
+        ],
+        "StatusesApplied": [
+          "bleeding"
+        ],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0
+      },
+      "SideB": {
+        "Pattern": "proving_bulwark",
+        "DamageDealt": 240.62,
+        "Hits": 25,
+        "Crits": 0,
+        "Casts": 26,
+        "Uses": 26,
+        "Kit": 1,
+        "Coverage": 1,
+        "Spread": 1,
+        "Seats": [
+          "bite"
+        ],
+        "Faces": [
+          "bite"
+        ],
+        "Mechanisms": [
+          "area",
+          "attack",
+          "bankless",
+          "hit",
+          "melee",
+          "shape",
+          "strikes"
+        ],
+        "StatusesApplied": [],
+        "SelfDamage": 0,
+        "SelfStatuses": [
+          "poise_broken",
+          "poise_rearming",
+          "shield_delay"
+        ],
+        "LifeLeft": 0.855
+      },
+      "Warnings": [],
+      "Errors": []
+    },
+    {
+      "A": "proving_reaver",
+      "B": "proving_bulwark",
+      "Index": 9,
+      "Seed": "tournament:proving_reaver:proving_bulwark:9",
+      "Outcome": "a",
+      "EndTick": 856,
+      "Seconds": 42.8,
+      "Hash": "b8ed3cd7684391fd",
+      "SideA": {
+        "Pattern": "proving_reaver",
+        "DamageDealt": 767.41,
+        "Hits": 105,
+        "Crits": 2,
+        "Casts": 21,
+        "Uses": 21,
+        "Kit": 1,
+        "Coverage": 1,
+        "Spread": 1,
+        "Seats": [
+          "strike[stone]\u002Brending"
+        ],
+        "Faces": [
+          "strike[stone]\u002Brending"
+        ],
+        "Mechanisms": [
+          "affliction",
+          "affliction:bleeding",
+          "area",
+          "attack",
+          "bankless",
+          "hit",
+          "melee",
+          "rupture",
+          "shape",
+          "strikes"
+        ],
+        "StatusesApplied": [
+          "bleeding"
+        ],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0.284
+      },
+      "SideB": {
+        "Pattern": "proving_bulwark",
+        "DamageDealt": 240.83,
+        "Hits": 26,
+        "Crits": 0,
+        "Casts": 30,
+        "Uses": 31,
+        "Kit": 1,
+        "Coverage": 1,
+        "Spread": 1,
+        "Seats": [
+          "bite"
+        ],
+        "Faces": [
+          "bite"
+        ],
+        "Mechanisms": [
+          "area",
+          "attack",
+          "bankless",
+          "hit",
+          "melee",
+          "shape",
+          "strikes"
+        ],
+        "StatusesApplied": [],
+        "SelfDamage": 0,
+        "SelfStatuses": [
+          "poise_broken",
+          "poise_rearming",
+          "shield_delay"
+        ],
+        "LifeLeft": 0
+      },
+      "Warnings": [],
+      "Errors": []
+    },
+    {
+      "A": "loosed_skirmisher",
+      "B": "tide_caller",
+      "Index": 0,
+      "Seed": "tournament:loosed_skirmisher:tide_caller:0",
+      "Outcome": "a",
+      "EndTick": 174,
+      "Seconds": 8.7,
+      "Hash": "9b4bbf01d93d3419",
+      "SideA": {
+        "Pattern": "loosed_skirmisher",
+        "DamageDealt": 128.69,
+        "Hits": 17,
+        "Crits": 0,
+        "Casts": 8,
+        "Uses": 9,
+        "Kit": 3,
+        "Coverage": 1,
+        "Spread": 2.889,
+        "Seats": [
+          "stone_glaive",
+          "splitting_bolt",
+          "seeking_bolt"
+        ],
+        "Faces": [
+          "seeking_bolt",
+          "splitting_bolt",
+          "stone_glaive"
+        ],
+        "Mechanisms": [
+          "affliction",
+          "attack",
+          "bankless",
+          "chain",
+          "flight",
+          "hit",
+          "homing",
+          "projectile",
+          "returning",
+          "spell",
+          "status",
+          "strikes",
+          "trajectory"
+        ],
+        "StatusesApplied": [
+          "burning",
+          "shocked"
+        ],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0.026
+      },
+      "SideB": {
+        "Pattern": "tide_caller",
+        "DamageDealt": 119.62,
+        "Hits": 20,
+        "Crits": 0,
+        "Casts": 4,
+        "Uses": 5,
+        "Kit": 3,
+        "Coverage": 1,
+        "Spread": 2.872,
+        "Seats": [
+          "tide_orb",
+          "tide_maelstrom",
+          "storm_call"
+        ],
+        "Faces": [
+          "storm_call",
+          "tide_maelstrom",
+          "tide_orb"
+        ],
+        "Mechanisms": [
+          "affliction",
+          "area",
+          "bankless",
+          "cooldown",
+          "duration",
+          "field",
+          "fire",
+          "flight",
+          "hit",
+          "projectile",
+          "spell",
+          "storm",
+          "surface",
+          "telegraph"
+        ],
+        "StatusesApplied": [],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0
+      },
+      "Warnings": [],
+      "Errors": []
+    },
+    {
+      "A": "loosed_skirmisher",
+      "B": "tide_caller",
+      "Index": 1,
+      "Seed": "tournament:loosed_skirmisher:tide_caller:1",
+      "Outcome": "a",
+      "EndTick": 100,
+      "Seconds": 5,
+      "Hash": "187342817ec8af23",
+      "SideA": {
+        "Pattern": "loosed_skirmisher",
+        "DamageDealt": 128.02,
+        "Hits": 8,
+        "Crits": 2,
+        "Casts": 5,
+        "Uses": 6,
+        "Kit": 3,
+        "Coverage": 1,
+        "Spread": 2.749,
+        "Seats": [
+          "stone_glaive",
+          "splitting_bolt",
+          "seeking_bolt"
+        ],
+        "Faces": [
+          "seeking_bolt",
+          "splitting_bolt",
+          "stone_glaive"
+        ],
+        "Mechanisms": [
+          "affliction",
+          "attack",
+          "bankless",
+          "chain",
+          "flight",
+          "hit",
+          "homing",
+          "projectile",
+          "returning",
+          "spell",
+          "status",
+          "strikes",
+          "trajectory"
+        ],
+        "StatusesApplied": [
+          "burning",
+          "shocked"
+        ],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0.407
+      },
+      "SideB": {
+        "Pattern": "tide_caller",
+        "DamageDealt": 71.77,
+        "Hits": 9,
+        "Crits": 0,
+        "Casts": 3,
+        "Uses": 3,
+        "Kit": 3,
+        "Coverage": 1,
+        "Spread": 3,
+        "Seats": [
+          "tide_orb",
+          "tide_maelstrom",
+          "storm_call"
+        ],
+        "Faces": [
+          "storm_call",
+          "tide_maelstrom",
+          "tide_orb"
+        ],
+        "Mechanisms": [
+          "affliction",
+          "area",
+          "bankless",
+          "cooldown",
+          "duration",
+          "field",
+          "fire",
+          "flight",
+          "hit",
+          "projectile",
+          "spell",
+          "storm",
+          "surface",
+          "telegraph"
+        ],
+        "StatusesApplied": [],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0
+      },
+      "Warnings": [],
+      "Errors": []
+    },
+    {
+      "A": "loosed_skirmisher",
+      "B": "tide_caller",
+      "Index": 2,
+      "Seed": "tournament:loosed_skirmisher:tide_caller:2",
+      "Outcome": "a",
+      "EndTick": 114,
+      "Seconds": 5.7,
+      "Hash": "62327f0fd6a8806e",
+      "SideA": {
+        "Pattern": "loosed_skirmisher",
+        "DamageDealt": 129.11,
+        "Hits": 7,
+        "Crits": 0,
+        "Casts": 7,
+        "Uses": 8,
+        "Kit": 3,
+        "Coverage": 0.667,
+        "Spread": 1.938,
+        "Seats": [
+          "splitting_bolt",
+          "seeking_bolt"
+        ],
+        "Faces": [
+          "seeking_bolt",
+          "splitting_bolt"
+        ],
+        "Mechanisms": [
+          "affliction",
+          "bankless",
+          "chain",
+          "flight",
+          "hit",
+          "homing",
+          "projectile",
+          "spell",
+          "status",
+          "trajectory"
+        ],
+        "StatusesApplied": [
+          "shocked"
+        ],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0.273
+      },
+      "SideB": {
+        "Pattern": "tide_caller",
+        "DamageDealt": 87.72,
+        "Hits": 12,
+        "Crits": 0,
+        "Casts": 3,
+        "Uses": 3,
+        "Kit": 3,
+        "Coverage": 1,
+        "Spread": 3,
+        "Seats": [
+          "tide_orb",
+          "tide_maelstrom",
+          "storm_call"
+        ],
+        "Faces": [
+          "storm_call",
+          "tide_maelstrom",
+          "tide_orb"
+        ],
+        "Mechanisms": [
+          "affliction",
+          "area",
+          "bankless",
+          "cooldown",
+          "duration",
+          "field",
+          "fire",
+          "flight",
+          "hit",
+          "projectile",
+          "spell",
+          "storm",
+          "surface",
+          "telegraph"
+        ],
+        "StatusesApplied": [],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0
+      },
+      "Warnings": [],
+      "Errors": []
+    },
+    {
+      "A": "loosed_skirmisher",
+      "B": "tide_caller",
+      "Index": 3,
+      "Seed": "tournament:loosed_skirmisher:tide_caller:3",
+      "Outcome": "a",
+      "EndTick": 120,
+      "Seconds": 6,
+      "Hash": "85ce3575032b768c",
+      "SideA": {
+        "Pattern": "loosed_skirmisher",
+        "DamageDealt": 126.95,
+        "Hits": 16,
+        "Crits": 1,
+        "Casts": 6,
+        "Uses": 7,
+        "Kit": 3,
+        "Coverage": 1,
+        "Spread": 2.73,
+        "Seats": [
+          "stone_glaive",
+          "splitting_bolt",
+          "seeking_bolt"
+        ],
+        "Faces": [
+          "seeking_bolt",
+          "splitting_bolt",
+          "stone_glaive"
+        ],
+        "Mechanisms": [
+          "affliction",
+          "attack",
+          "bankless",
+          "chain",
+          "flight",
+          "hit",
+          "homing",
+          "projectile",
+          "returning",
+          "spell",
+          "status",
+          "strikes",
+          "trajectory"
+        ],
+        "StatusesApplied": [
+          "burning"
+        ],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0.463
+      },
+      "SideB": {
+        "Pattern": "tide_caller",
+        "DamageDealt": 65.97,
+        "Hits": 10,
+        "Crits": 0,
+        "Casts": 3,
+        "Uses": 3,
+        "Kit": 3,
+        "Coverage": 1,
+        "Spread": 3,
+        "Seats": [
+          "tide_orb",
+          "tide_maelstrom",
+          "storm_call"
+        ],
+        "Faces": [
+          "storm_call",
+          "tide_maelstrom",
+          "tide_orb"
+        ],
+        "Mechanisms": [
+          "affliction",
+          "area",
+          "bankless",
+          "cooldown",
+          "duration",
+          "field",
+          "fire",
+          "flight",
+          "hit",
+          "projectile",
+          "spell",
+          "storm",
+          "surface",
+          "telegraph"
+        ],
+        "StatusesApplied": [],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0
+      },
+      "Warnings": [],
+      "Errors": []
+    },
+    {
+      "A": "loosed_skirmisher",
+      "B": "tide_caller",
+      "Index": 4,
+      "Seed": "tournament:loosed_skirmisher:tide_caller:4",
+      "Outcome": "b",
+      "EndTick": 173,
+      "Seconds": 8.65,
+      "Hash": "45edc2aafe3349b0",
+      "SideA": {
+        "Pattern": "loosed_skirmisher",
+        "DamageDealt": 128.04,
+        "Hits": 11,
+        "Crits": 1,
+        "Casts": 8,
+        "Uses": 9,
+        "Kit": 3,
+        "Coverage": 0.667,
+        "Spread": 1.988,
+        "Seats": [
+          "stone_glaive",
+          "seeking_bolt"
+        ],
+        "Faces": [
+          "seeking_bolt",
+          "stone_glaive"
+        ],
+        "Mechanisms": [
+          "affliction",
+          "attack",
+          "bankless",
+          "chain",
+          "flight",
+          "hit",
+          "homing",
+          "projectile",
+          "returning",
+          "spell",
+          "status",
+          "strikes",
+          "trajectory"
+        ],
+        "StatusesApplied": [
+          "shocked"
+        ],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0
+      },
+      "SideB": {
+        "Pattern": "tide_caller",
+        "DamageDealt": 124.7,
+        "Hits": 21,
+        "Crits": 0,
+        "Casts": 4,
+        "Uses": 4,
+        "Kit": 3,
+        "Coverage": 1,
+        "Spread": 2.828,
+        "Seats": [
+          "tide_orb",
+          "tide_maelstrom",
+          "storm_call"
+        ],
+        "Faces": [
+          "storm_call",
+          "tide_maelstrom",
+          "tide_orb"
+        ],
+        "Mechanisms": [
+          "affliction",
+          "area",
+          "bankless",
+          "cooldown",
+          "duration",
+          "field",
+          "fire",
+          "flight",
+          "hit",
+          "projectile",
+          "spell",
+          "storm",
+          "surface",
+          "telegraph"
+        ],
+        "StatusesApplied": [],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0.006
+      },
+      "Warnings": [],
+      "Errors": []
+    },
+    {
+      "A": "loosed_skirmisher",
+      "B": "tide_caller",
+      "Index": 5,
+      "Seed": "tournament:loosed_skirmisher:tide_caller:5",
+      "Outcome": "a",
+      "EndTick": 110,
+      "Seconds": 5.5,
+      "Hash": "f1d2af5153338c62",
+      "SideA": {
+        "Pattern": "loosed_skirmisher",
+        "DamageDealt": 141.13,
+        "Hits": 15,
+        "Crits": 1,
+        "Casts": 6,
+        "Uses": 7,
+        "Kit": 3,
+        "Coverage": 1,
+        "Spread": 2.73,
+        "Seats": [
+          "stone_glaive",
+          "splitting_bolt",
+          "seeking_bolt"
+        ],
+        "Faces": [
+          "seeking_bolt",
+          "splitting_bolt",
+          "stone_glaive"
+        ],
+        "Mechanisms": [
+          "affliction",
+          "attack",
+          "bankless",
+          "chain",
+          "flight",
+          "hit",
+          "homing",
+          "projectile",
+          "returning",
+          "spell",
+          "status",
+          "strikes",
+          "trajectory"
+        ],
+        "StatusesApplied": [
+          "burning",
+          "shocked"
+        ],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0.374
+      },
+      "SideB": {
+        "Pattern": "tide_caller",
+        "DamageDealt": 76.12,
+        "Hits": 12,
+        "Crits": 0,
+        "Casts": 3,
+        "Uses": 3,
+        "Kit": 3,
+        "Coverage": 1,
+        "Spread": 3,
+        "Seats": [
+          "tide_orb",
+          "tide_maelstrom",
+          "storm_call"
+        ],
+        "Faces": [
+          "storm_call",
+          "tide_maelstrom",
+          "tide_orb"
+        ],
+        "Mechanisms": [
+          "affliction",
+          "area",
+          "bankless",
+          "cooldown",
+          "duration",
+          "field",
+          "fire",
+          "flight",
+          "hit",
+          "projectile",
+          "spell",
+          "storm",
+          "surface",
+          "telegraph"
+        ],
+        "StatusesApplied": [],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0
+      },
+      "Warnings": [],
+      "Errors": []
+    },
+    {
+      "A": "loosed_skirmisher",
+      "B": "tide_caller",
+      "Index": 6,
+      "Seed": "tournament:loosed_skirmisher:tide_caller:6",
+      "Outcome": "a",
+      "EndTick": 150,
+      "Seconds": 7.5,
+      "Hash": "96dededaf23b4b85",
+      "SideA": {
+        "Pattern": "loosed_skirmisher",
+        "DamageDealt": 145.82,
+        "Hits": 10,
+        "Crits": 1,
+        "Casts": 8,
+        "Uses": 9,
+        "Kit": 3,
+        "Coverage": 1,
+        "Spread": 2.337,
+        "Seats": [
+          "stone_glaive",
+          "splitting_bolt",
+          "seeking_bolt"
+        ],
+        "Faces": [
+          "seeking_bolt",
+          "splitting_bolt",
+          "stone_glaive"
+        ],
+        "Mechanisms": [
+          "affliction",
+          "attack",
+          "bankless",
+          "chain",
+          "flight",
+          "hit",
+          "homing",
+          "projectile",
+          "returning",
+          "spell",
+          "status",
+          "strikes",
+          "trajectory"
+        ],
+        "StatusesApplied": [
+          "shocked"
+        ],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0.038
+      },
+      "SideB": {
+        "Pattern": "tide_caller",
+        "DamageDealt": 116.72,
+        "Hits": 17,
+        "Crits": 0,
+        "Casts": 3,
+        "Uses": 3,
+        "Kit": 3,
+        "Coverage": 1,
+        "Spread": 3,
+        "Seats": [
+          "tide_orb",
+          "tide_maelstrom",
+          "storm_call"
+        ],
+        "Faces": [
+          "storm_call",
+          "tide_maelstrom",
+          "tide_orb"
+        ],
+        "Mechanisms": [
+          "affliction",
+          "area",
+          "bankless",
+          "cooldown",
+          "duration",
+          "field",
+          "fire",
+          "flight",
+          "hit",
+          "projectile",
+          "spell",
+          "storm",
+          "surface",
+          "telegraph"
+        ],
+        "StatusesApplied": [],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0
+      },
+      "Warnings": [],
+      "Errors": []
+    },
+    {
+      "A": "loosed_skirmisher",
+      "B": "tide_caller",
+      "Index": 7,
+      "Seed": "tournament:loosed_skirmisher:tide_caller:7",
+      "Outcome": "draw",
+      "EndTick": 164,
+      "Seconds": 8.2,
+      "Hash": "5ae69d2d4ece9506",
+      "SideA": {
+        "Pattern": "loosed_skirmisher",
+        "DamageDealt": 132.87,
+        "Hits": 18,
+        "Crits": 0,
+        "Casts": 8,
+        "Uses": 8,
+        "Kit": 3,
+        "Coverage": 1,
+        "Spread": 2.951,
+        "Seats": [
+          "stone_glaive",
+          "splitting_bolt",
+          "seeking_bolt"
+        ],
+        "Faces": [
+          "seeking_bolt",
+          "splitting_bolt",
+          "stone_glaive"
+        ],
+        "Mechanisms": [
+          "affliction",
+          "attack",
+          "bankless",
+          "chain",
+          "flight",
+          "hit",
+          "homing",
+          "projectile",
+          "returning",
+          "spell",
+          "status",
+          "strikes",
+          "trajectory"
+        ],
+        "StatusesApplied": [
+          "burning",
+          "shocked"
+        ],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0
+      },
+      "SideB": {
+        "Pattern": "tide_caller",
+        "DamageDealt": 124.7,
+        "Hits": 21,
+        "Crits": 0,
+        "Casts": 4,
+        "Uses": 4,
+        "Kit": 3,
+        "Coverage": 1,
+        "Spread": 2.828,
+        "Seats": [
+          "tide_orb",
+          "tide_maelstrom",
+          "storm_call"
+        ],
+        "Faces": [
+          "storm_call",
+          "tide_maelstrom",
+          "tide_orb"
+        ],
+        "Mechanisms": [
+          "affliction",
+          "area",
+          "bankless",
+          "cooldown",
+          "duration",
+          "field",
+          "fire",
+          "flight",
+          "hit",
+          "projectile",
+          "spell",
+          "storm",
+          "surface",
+          "telegraph"
+        ],
+        "StatusesApplied": [],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0
+      },
+      "Warnings": [],
+      "Errors": []
+    },
+    {
+      "A": "loosed_skirmisher",
+      "B": "tide_caller",
+      "Index": 8,
+      "Seed": "tournament:loosed_skirmisher:tide_caller:8",
+      "Outcome": "b",
+      "EndTick": 157,
+      "Seconds": 7.85,
+      "Hash": "dd4d55e7cb0a113d",
+      "SideA": {
+        "Pattern": "loosed_skirmisher",
+        "DamageDealt": 78.56,
+        "Hits": 10,
+        "Crits": 0,
+        "Casts": 7,
+        "Uses": 7,
+        "Kit": 3,
+        "Coverage": 0.667,
+        "Spread": 1.819,
+        "Seats": [
+          "stone_glaive",
+          "seeking_bolt"
+        ],
+        "Faces": [
+          "seeking_bolt",
+          "stone_glaive"
+        ],
+        "Mechanisms": [
+          "affliction",
+          "attack",
+          "bankless",
+          "chain",
+          "flight",
+          "hit",
+          "homing",
+          "projectile",
+          "returning",
+          "spell",
+          "status",
+          "strikes",
+          "trajectory"
+        ],
+        "StatusesApplied": [
+          "shocked"
+        ],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0
+      },
+      "SideB": {
+        "Pattern": "tide_caller",
+        "DamageDealt": 122.52,
+        "Hits": 18,
+        "Crits": 0,
+        "Casts": 4,
+        "Uses": 4,
+        "Kit": 3,
+        "Coverage": 1,
+        "Spread": 2.828,
+        "Seats": [
+          "tide_orb",
+          "tide_maelstrom",
+          "storm_call"
+        ],
+        "Faces": [
+          "storm_call",
+          "tide_maelstrom",
+          "tide_orb"
+        ],
+        "Mechanisms": [
+          "affliction",
+          "area",
+          "bankless",
+          "cooldown",
+          "duration",
+          "field",
+          "fire",
+          "flight",
+          "hit",
+          "projectile",
+          "spell",
+          "storm",
+          "surface",
+          "telegraph"
+        ],
+        "StatusesApplied": [],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0.403
+      },
+      "Warnings": [],
+      "Errors": []
+    },
+    {
+      "A": "loosed_skirmisher",
+      "B": "tide_caller",
+      "Index": 9,
+      "Seed": "tournament:loosed_skirmisher:tide_caller:9",
+      "Outcome": "b",
+      "EndTick": 207,
+      "Seconds": 10.35,
+      "Hash": "d8b91785d7e33b50",
+      "SideA": {
+        "Pattern": "loosed_skirmisher",
+        "DamageDealt": 110.9,
+        "Hits": 13,
+        "Crits": 0,
+        "Casts": 10,
+        "Uses": 10,
+        "Kit": 3,
+        "Coverage": 1,
+        "Spread": 2.8,
+        "Seats": [
+          "stone_glaive",
+          "splitting_bolt",
+          "seeking_bolt"
+        ],
+        "Faces": [
+          "seeking_bolt",
+          "splitting_bolt",
+          "stone_glaive"
+        ],
+        "Mechanisms": [
+          "affliction",
+          "attack",
+          "bankless",
+          "chain",
+          "flight",
+          "hit",
+          "homing",
+          "projectile",
+          "returning",
+          "spell",
+          "status",
+          "strikes",
+          "trajectory"
+        ],
+        "StatusesApplied": [],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0
+      },
+      "SideB": {
+        "Pattern": "tide_caller",
+        "DamageDealt": 126.87,
+        "Hits": 19,
+        "Crits": 0,
+        "Casts": 5,
+        "Uses": 5,
+        "Kit": 3,
+        "Coverage": 1,
+        "Spread": 2.872,
+        "Seats": [
+          "tide_orb",
+          "tide_maelstrom",
+          "storm_call"
+        ],
+        "Faces": [
+          "storm_call",
+          "tide_maelstrom",
+          "tide_orb"
+        ],
+        "Mechanisms": [
+          "affliction",
+          "area",
+          "bankless",
+          "cooldown",
+          "duration",
+          "field",
+          "fire",
+          "flight",
+          "hit",
+          "projectile",
+          "spell",
+          "storm",
+          "surface",
+          "telegraph"
+        ],
+        "StatusesApplied": [],
+        "SelfDamage": 0,
+        "SelfStatuses": [],
+        "LifeLeft": 0.159
+      },
+      "Warnings": [],
+      "Errors": []
+    }
+  ],
+  "Passed": null
+}

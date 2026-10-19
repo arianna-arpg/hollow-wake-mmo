@@ -1,0 +1,15 @@
+  Determining projects to restore...
+  Restored <worktree>\artifacts\forecast-body-integration\return-control-c6d853bd\src\HollowWake.Server\HollowWake.Server.csproj (in 246 ms).
+  Restored <worktree>\artifacts\forecast-body-integration\return-control-c6d853bd\src\HollowWake.Core\HollowWake.Core.csproj (in 246 ms).
+  Restored <worktree>\artifacts\forecast-body-integration\return-control-c6d853bd\src\HollowWake.Protocol\HollowWake.Protocol.csproj (in 246 ms).
+  Restored <worktree>\artifacts\forecast-body-integration\return-control-c6d853bd\src\HollowWake.Tools\HollowWake.Tools.csproj (in 246 ms).
+  HollowWake.Core -> <worktree>\artifacts\forecast-body-integration\return-control-c6d853bd\src\HollowWake.Core\bin\Release\net8.0\HollowWake.Core.dll
+  HollowWake.Protocol -> <worktree>\artifacts\forecast-body-integration\return-control-c6d853bd\src\HollowWake.Protocol\bin\Release\net8.0\HollowWake.Protocol.dll
+  HollowWake.Server -> <worktree>\artifacts\forecast-body-integration\return-control-c6d853bd\src\HollowWake.Server\bin\Release\net10.0\HollowWake.Server.dll
+  HollowWake.Tools -> <worktree>\artifacts\forecast-body-integration\return-control-c6d853bd\src\HollowWake.Tools\bin\Release\net10.0\hollowwake.dll
+
+Build succeeded.
+    0 Warning(s)
+    0 Error(s)
+
+Time Elapsed 00:00:12.90

@@ -20,4 +20,4 @@ The new cases cover Ground/Direction, charge/overcharge, changed/removed layers 
 
 Independent forecasting review is requested on the exact published correction before the final combined build/test/client/probe/replay cycle. These focused results are not final functional or performance acceptance. No benchmark, trace or main merge has run; prior 225 and partial 295 records remain untouched.
 
-Acknowledged by: pending independent forecasting/Claude review.
+Acknowledged by: [forecasting peer, 202 passing focused checks](https://github.com/arianna-arpg/hollow-wake-mmo/pull/20#issuecomment-6257391327) and [coordinator's scoped review](https://github.com/arianna-arpg/hollow-wake-mmo/pull/20#issuecomment-6257393230). Full combined acceptance is recorded separately; Claude reciprocal review and performance remain open.

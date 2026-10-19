@@ -1,0 +1,2556 @@
+{
+  "head": "c6d853bdcfc06b9d983380de0ba265d287472d55",
+  "purpose": "Restore only previous return launch-floor and pierce behavior; retains current layered aim, pure observation, sample-first and physical caster changes. No benchmark.",
+  "compared": [
+    {
+      "file": "Directory.Build.props",
+      "expected": "50af01107374bd2815efe593734d421c5910af53",
+      "actual": "50af01107374bd2815efe593734d421c5910af53",
+      "equal": true
+    },
+    {
+      "file": "content/core/appearance/appearances.yaml",
+      "expected": "db0ef115d8d0756a45d489209a4b43c7836e0130",
+      "actual": "db0ef115d8d0756a45d489209a4b43c7836e0130",
+      "equal": true
+    },
+    {
+      "file": "content/core/appearance/fauna.json",
+      "expected": "2f62fab2b2063422d5773007e68131de962fa7c5",
+      "actual": "2f62fab2b2063422d5773007e68131de962fa7c5",
+      "equal": true
+    },
+    {
+      "file": "content/core/appearance/gnashers.json",
+      "expected": "a9ae04ecac78e18a6e750b6fe882cbc80e10ef44",
+      "actual": "a9ae04ecac78e18a6e750b6fe882cbc80e10ef44",
+      "equal": true
+    },
+    {
+      "file": "content/core/appearance/goblinkin.json",
+      "expected": "84120b3d0c6da408225c5137f8ee6277fd6c2080",
+      "actual": "84120b3d0c6da408225c5137f8ee6277fd6c2080",
+      "equal": true
+    },
+    {
+      "file": "content/core/appearance/motion.yaml",
+      "expected": "7124a792daaa6b6cc86863c4a6b705edcd2f6912",
+      "actual": "7124a792daaa6b6cc86863c4a6b705edcd2f6912",
+      "equal": true
+    },
+    {
+      "file": "content/core/appearance/orc-places.json",
+      "expected": "69c558dda776232da2825a23a8238e12146042a5",
+      "actual": "69c558dda776232da2825a23a8238e12146042a5",
+      "equal": true
+    },
+    {
+      "file": "content/core/appearance/orcs.json",
+      "expected": "26b57a58eadb0c9d2192253184953bf57d7c8300",
+      "actual": "26b57a58eadb0c9d2192253184953bf57d7c8300",
+      "equal": true
+    },
+    {
+      "file": "content/core/appearance/surfaces.yaml",
+      "expected": "eea232187cd7c81d6e7efbb08349453325ca7a17",
+      "actual": "eea232187cd7c81d6e7efbb08349453325ca7a17",
+      "equal": true
+    },
+    {
+      "file": "content/core/appearance/undead.json",
+      "expected": "08a92339b714c08f1e5c1cfd8f0941128c8c1fa5",
+      "actual": "08a92339b714c08f1e5c1cfd8f0941128c8c1fa5",
+      "equal": true
+    },
+    {
+      "file": "content/core/appearance/world.yaml",
+      "expected": "51705ade75e73082eb62a8fe27bbd260b66b4e91",
+      "actual": "51705ade75e73082eb62a8fe27bbd260b66b4e91",
+      "equal": true
+    },
+    {
+      "file": "content/core/attribute-families.yaml",
+      "expected": "0c95f1c19e009e688e54be3d6722dae33e52dd7c",
+      "actual": "0c95f1c19e009e688e54be3d6722dae33e52dd7c",
+      "equal": true
+    },
+    {
+      "file": "content/core/attributes.yaml",
+      "expected": "5997eb81a9e3f50ec50691fbd33f8b689672ead6",
+      "actual": "5997eb81a9e3f50ec50691fbd33f8b689672ead6",
+      "equal": true
+    },
+    {
+      "file": "content/core/combat/attributes-casting.yaml",
+      "expected": "edcc38a50ac70b6c88be750d6ce85b689bc35155",
+      "actual": "edcc38a50ac70b6c88be750d6ce85b689bc35155",
+      "equal": true
+    },
+    {
+      "file": "content/core/combat/attributes-delivery.yaml",
+      "expected": "36d41633f21582d805fb9124a226df80c21921ec",
+      "actual": "36d41633f21582d805fb9124a226df80c21921ec",
+      "equal": true
+    },
+    {
+      "file": "content/core/combat/attributes-minion.yaml",
+      "expected": "d5e3d067445dbb039d15cfa669507b5b430f76e1",
+      "actual": "d5e3d067445dbb039d15cfa669507b5b430f76e1",
+      "equal": true
+    },
+    {
+      "file": "content/core/combat/attributes-physicality.json",
+      "expected": "3654c5fb14cd92265fd819433f808286e5f5fd41",
+      "actual": "3654c5fb14cd92265fd819433f808286e5f5fd41",
+      "equal": true
+    },
+    {
+      "file": "content/core/combat/attributes-port.yaml",
+      "expected": "739bf8ad16f43f576673437f3712f8d653f7b6f9",
+      "actual": "739bf8ad16f43f576673437f3712f8d653f7b6f9",
+      "equal": true
+    },
+    {
+      "file": "content/core/combat/charges.yaml",
+      "expected": "e54e8540da83dc23b4754de7a4ec67679fe94fdd",
+      "actual": "e54e8540da83dc23b4754de7a4ec67679fe94fdd",
+      "equal": true
+    },
+    {
+      "file": "content/core/combat/forms-casting.yaml",
+      "expected": "9b402d9a6ecce7b4df56d651fb87eb3054b54bb3",
+      "actual": "9b402d9a6ecce7b4df56d651fb87eb3054b54bb3",
+      "equal": true
+    },
+    {
+      "file": "content/core/combat/forms-delivery.yaml",
+      "expected": "a6797ada8a520702ca36f233ad63d5c28794e880",
+      "actual": "a6797ada8a520702ca36f233ad63d5c28794e880",
+      "equal": true
+    },
+    {
+      "file": "content/core/combat/forms-shells.yaml",
+      "expected": "5db191503c4fa35383c81d4bffc7f9ddb4867455",
+      "actual": "5db191503c4fa35383c81d4bffc7f9ddb4867455",
+      "equal": true
+    },
+    {
+      "file": "content/core/combat/forms-summon.yaml",
+      "expected": "17e628bed5c0a152b98a53e28d1f3bb3c9ae93e1",
+      "actual": "17e628bed5c0a152b98a53e28d1f3bb3c9ae93e1",
+      "equal": true
+    },
+    {
+      "file": "content/core/combat/forms.yaml",
+      "expected": "b4fcb58cf46dc2a22207eba8185b5c23a4c025a0",
+      "actual": "b4fcb58cf46dc2a22207eba8185b5c23a4c025a0",
+      "equal": true
+    },
+    {
+      "file": "content/core/combat/glyphs-affliction.yaml",
+      "expected": "5f158b3e0e7488d7dca2731f24ab81ee47bd59c9",
+      "actual": "5f158b3e0e7488d7dca2731f24ab81ee47bd59c9",
+      "equal": true
+    },
+    {
+      "file": "content/core/combat/glyphs-casting.yaml",
+      "expected": "ef5aabf8b6ce2884329bcf0d4baffe5115bd5dd2",
+      "actual": "ef5aabf8b6ce2884329bcf0d4baffe5115bd5dd2",
+      "equal": true
+    },
+    {
+      "file": "content/core/combat/glyphs-chassis.yaml",
+      "expected": "ac6e09bf853e82ddcd5e565028dc89f2f59cf35a",
+      "actual": "ac6e09bf853e82ddcd5e565028dc89f2f59cf35a",
+      "equal": true
+    },
+    {
+      "file": "content/core/combat/glyphs-delivery.yaml",
+      "expected": "a14bb48750230e26893b9c2eceeac4a7f0c4cd45",
+      "actual": "a14bb48750230e26893b9c2eceeac4a7f0c4cd45",
+      "equal": true
+    },
+    {
+      "file": "content/core/combat/glyphs-minion.yaml",
+      "expected": "b1d5e698676948e3845c95dc15484134a82ff87b",
+      "actual": "b1d5e698676948e3845c95dc15484134a82ff87b",
+      "equal": true
+    },
+    {
+      "file": "content/core/combat/glyphs.yaml",
+      "expected": "c346a3c7ce8671670fe82b92b8756a6e1111e992",
+      "actual": "c346a3c7ce8671670fe82b92b8756a6e1111e992",
+      "equal": true
+    },
+    {
+      "file": "content/core/combat/procs-relays.yaml",
+      "expected": "24e5b44f65e14082c4854d3dea042ae2a6a77524",
+      "actual": "24e5b44f65e14082c4854d3dea042ae2a6a77524",
+      "equal": true
+    },
+    {
+      "file": "content/core/combat/procs.yaml",
+      "expected": "10c82c201b198a26cc07a6b5e7a34854c18cc976",
+      "actual": "10c82c201b198a26cc07a6b5e7a34854c18cc976",
+      "equal": true
+    },
+    {
+      "file": "content/core/combat/rarities.yaml",
+      "expected": "144f6eec12dfa8f2ac59542b1904d535e8a32077",
+      "actual": "144f6eec12dfa8f2ac59542b1904d535e8a32077",
+      "equal": true
+    },
+    {
+      "file": "content/core/combat/rules-casting.yaml",
+      "expected": "fba882bbcee581e3c38a8af69d0028c40bd2fb0f",
+      "actual": "fba882bbcee581e3c38a8af69d0028c40bd2fb0f",
+      "equal": true
+    },
+    {
+      "file": "content/core/combat/rules-delivery.yaml",
+      "expected": "51b880912c8b92f4d7d943b06a2f6289c82cf7d2",
+      "actual": "51b880912c8b92f4d7d943b06a2f6289c82cf7d2",
+      "equal": true
+    },
+    {
+      "file": "content/core/combat/rules-evaluation.yaml",
+      "expected": "6b62137e13d6bfaebbb154b44d20b355671200ab",
+      "actual": "6b62137e13d6bfaebbb154b44d20b355671200ab",
+      "equal": true
+    },
+    {
+      "file": "content/core/combat/rules-hit-bodies.json",
+      "expected": "47fba5618d8e47b490b59aa5ba8675929ac01c10",
+      "actual": "47fba5618d8e47b490b59aa5ba8675929ac01c10",
+      "equal": true
+    },
+    {
+      "file": "content/core/combat/rules-minions.yaml",
+      "expected": "26364d8fb322a7b00b0adefed91e03cee1685c5d",
+      "actual": "26364d8fb322a7b00b0adefed91e03cee1685c5d",
+      "equal": true
+    },
+    {
+      "file": "content/core/combat/rules-physicality.json",
+      "expected": "60521548236b694b01a4d97b43f91f0ec20f287b",
+      "actual": "60521548236b694b01a4d97b43f91f0ec20f287b",
+      "equal": true
+    },
+    {
+      "file": "content/core/combat/statuses-extra.yaml",
+      "expected": "778608045d34bdce2c99043385dbb701cb52e261",
+      "actual": "778608045d34bdce2c99043385dbb701cb52e261",
+      "equal": true
+    },
+    {
+      "file": "content/core/combat/statuses-roster.yaml",
+      "expected": "4fb9d75ccf39ed3f0f9f7818f3bdb8e3962fbb76",
+      "actual": "4fb9d75ccf39ed3f0f9f7818f3bdb8e3962fbb76",
+      "equal": true
+    },
+    {
+      "file": "content/core/combat/statuses-weaves.yaml",
+      "expected": "5d7e1fc01dad153bb42ff20ce2966cd972b36c4e",
+      "actual": "5d7e1fc01dad153bb42ff20ce2966cd972b36c4e",
+      "equal": true
+    },
+    {
+      "file": "content/core/combat/statuses.yaml",
+      "expected": "676faeaf661993b9162e0cc68fabee83b8e22ccf",
+      "actual": "676faeaf661993b9162e0cc68fabee83b8e22ccf",
+      "equal": true
+    },
+    {
+      "file": "content/core/combat/weaves-casting.yaml",
+      "expected": "a8031a7473ca6be01bf21eacece4b75b8975118d",
+      "actual": "a8031a7473ca6be01bf21eacece4b75b8975118d",
+      "equal": true
+    },
+    {
+      "file": "content/core/combat/weaves-delivery.yaml",
+      "expected": "918f3612b5f5f53f4238ad6a9715c555da7d4b6d",
+      "actual": "918f3612b5f5f53f4238ad6a9715c555da7d4b6d",
+      "equal": true
+    },
+    {
+      "file": "content/core/combat/weaves-goblinkin.json",
+      "expected": "171c6f2f559725d52b2006a0cea4b717007283cb",
+      "actual": "171c6f2f559725d52b2006a0cea4b717007283cb",
+      "equal": true
+    },
+    {
+      "file": "content/core/combat/weaves-projectiles.yaml",
+      "expected": "e86fc0bfb5fde1b24cd579b10f6aad575649447f",
+      "actual": "e86fc0bfb5fde1b24cd579b10f6aad575649447f",
+      "equal": true
+    },
+    {
+      "file": "content/core/combat/weaves-proving.yaml",
+      "expected": "cc3c57bdb4b39893f7b75fea78fb2ee91d9a21d1",
+      "actual": "cc3c57bdb4b39893f7b75fea78fb2ee91d9a21d1",
+      "equal": true
+    },
+    {
+      "file": "content/core/combat/weaves-strikes.yaml",
+      "expected": "b92ec56f50b834904de2cd3a487b1e345a59695a",
+      "actual": "b92ec56f50b834904de2cd3a487b1e345a59695a",
+      "equal": true
+    },
+    {
+      "file": "content/core/combat/weaves-undead.json",
+      "expected": "9017f323b91aebb86b040d21e2267e9a3e64468f",
+      "actual": "9017f323b91aebb86b040d21e2267e9a3e64468f",
+      "equal": true
+    },
+    {
+      "file": "content/core/combat/weaves.yaml",
+      "expected": "376fac6de4ac2c78f0dc511e2645e217bea68361",
+      "actual": "376fac6de4ac2c78f0dc511e2645e217bea68361",
+      "equal": true
+    },
+    {
+      "file": "content/core/dialogue/quartermaster.yaml",
+      "expected": "425d33bfee2a26543c7167be74495451bd6669d4",
+      "actual": "425d33bfee2a26543c7167be74495451bd6669d4",
+      "equal": true
+    },
+    {
+      "file": "content/core/dialogue/villagers.yaml",
+      "expected": "c781a36aad8c664d85dc63a3b41b2ede7c1e61b0",
+      "actual": "c781a36aad8c664d85dc63a3b41b2ede7c1e61b0",
+      "equal": true
+    },
+    {
+      "file": "content/core/entities/behaviors-close-melee.json",
+      "expected": "5306ff61d6c40387911811a39deed53d7f4828a2",
+      "actual": "5306ff61d6c40387911811a39deed53d7f4828a2",
+      "equal": true
+    },
+    {
+      "file": "content/core/entities/behaviors-fauna.json",
+      "expected": "ce4ee6c7a093f0254f5ec5b245e1dc10d1bd392a",
+      "actual": "ce4ee6c7a093f0254f5ec5b245e1dc10d1bd392a",
+      "equal": true
+    },
+    {
+      "file": "content/core/entities/behaviors-goblinkin.json",
+      "expected": "8d790f9be27cd965fe5010d7fe1b2365a1e8b052",
+      "actual": "8d790f9be27cd965fe5010d7fe1b2365a1e8b052",
+      "equal": true
+    },
+    {
+      "file": "content/core/entities/behaviors-undead.json",
+      "expected": "aacc1243d1aa75d7015d8b594a35e5c45c9a24fb",
+      "actual": "aacc1243d1aa75d7015d8b594a35e5c45c9a24fb",
+      "equal": true
+    },
+    {
+      "file": "content/core/entities/behaviors.yaml",
+      "expected": "2d6739af3a07bbfb1c8306b8477fa9f4f53d35de",
+      "actual": "2d6739af3a07bbfb1c8306b8477fa9f4f53d35de",
+      "equal": true
+    },
+    {
+      "file": "content/core/entities/body-materials-fauna.json",
+      "expected": "c21f3b735c9f8a598d52118ab570a6f5f56f524a",
+      "actual": "c21f3b735c9f8a598d52118ab570a6f5f56f524a",
+      "equal": true
+    },
+    {
+      "file": "content/core/entities/body-materials.json",
+      "expected": "3b598d46bbc9b45efb299b12761796f9fbde6d89",
+      "actual": "3b598d46bbc9b45efb299b12761796f9fbde6d89",
+      "equal": true
+    },
+    {
+      "file": "content/core/entities/callings.yaml",
+      "expected": "876b34ecc963f47c5e26dfc5b30a20a9200f2e11",
+      "actual": "876b34ecc963f47c5e26dfc5b30a20a9200f2e11",
+      "equal": true
+    },
+    {
+      "file": "content/core/entities/factions-goblinkin.json",
+      "expected": "c850eaf70485ea2d7db25dad2eff7b7c9f29c251",
+      "actual": "c850eaf70485ea2d7db25dad2eff7b7c9f29c251",
+      "equal": true
+    },
+    {
+      "file": "content/core/entities/factions-orcs.json",
+      "expected": "4d58cd03e716bef8b84ee0394467c360dca7b4cc",
+      "actual": "4d58cd03e716bef8b84ee0394467c360dca7b4cc",
+      "equal": true
+    },
+    {
+      "file": "content/core/entities/hit-bodies.json",
+      "expected": "4cd711fafd7cd469433bdfbc42d39a7a866859f1",
+      "actual": "4cd711fafd7cd469433bdfbc42d39a7a866859f1",
+      "equal": true
+    },
+    {
+      "file": "content/core/entities/loot-goblinkin.json",
+      "expected": "19d8b4871c8aa6f8c61ca88cc5eb30ad6327829a",
+      "actual": "19d8b4871c8aa6f8c61ca88cc5eb30ad6327829a",
+      "equal": true
+    },
+    {
+      "file": "content/core/entities/passive-choices.yaml",
+      "expected": "77e63efe3d839638ac439bd101c371b3b820dd44",
+      "actual": "77e63efe3d839638ac439bd101c371b3b820dd44",
+      "equal": true
+    },
+    {
+      "file": "content/core/entities/passive-realms.yaml",
+      "expected": "1b54a14fb9a4919133818a05ce94ff26fdbbcb7c",
+      "actual": "1b54a14fb9a4919133818a05ce94ff26fdbbcb7c",
+      "equal": true
+    },
+    {
+      "file": "content/core/entities/passives.yaml",
+      "expected": "eb11db7c715f2e9b5c7b4fc9dd230bed77736392",
+      "actual": "eb11db7c715f2e9b5c7b4fc9dd230bed77736392",
+      "equal": true
+    },
+    {
+      "file": "content/core/entities/patterns-delivery.yaml",
+      "expected": "8e5580f532279afa011e8b05aa2aa9d51ee0347f",
+      "actual": "8e5580f532279afa011e8b05aa2aa9d51ee0347f",
+      "equal": true
+    },
+    {
+      "file": "content/core/entities/patterns-fauna.json",
+      "expected": "2df492e172c13b9a71e6db4e70e83ab7d3226995",
+      "actual": "2df492e172c13b9a71e6db4e70e83ab7d3226995",
+      "equal": true
+    },
+    {
+      "file": "content/core/entities/patterns-gnashers.json",
+      "expected": "4142db3c0640ae2f6d0bf899a517270dd15b95bd",
+      "actual": "4142db3c0640ae2f6d0bf899a517270dd15b95bd",
+      "equal": true
+    },
+    {
+      "file": "content/core/entities/patterns-goblinkin.json",
+      "expected": "32df206600a197533b2549200c125a7ac2b083a6",
+      "actual": "32df206600a197533b2549200c125a7ac2b083a6",
+      "equal": true
+    },
+    {
+      "file": "content/core/entities/patterns-hit-bodies.json",
+      "expected": "893204d2e266324631f7b9916513710e12bd9f9d",
+      "actual": "893204d2e266324631f7b9916513710e12bd9f9d",
+      "equal": true
+    },
+    {
+      "file": "content/core/entities/patterns-orcs.json",
+      "expected": "d919eb48f4de9000e1fdcc1357db34820591b6e3",
+      "actual": "d919eb48f4de9000e1fdcc1357db34820591b6e3",
+      "equal": true
+    },
+    {
+      "file": "content/core/entities/patterns-proving.yaml",
+      "expected": "1212569ed4318336b301092b976e5f8d2c88a4d5",
+      "actual": "1212569ed4318336b301092b976e5f8d2c88a4d5",
+      "equal": true
+    },
+    {
+      "file": "content/core/entities/patterns-undead.json",
+      "expected": "861f036c4ca113518366f8fb3ee546b86da5bf9a",
+      "actual": "861f036c4ca113518366f8fb3ee546b86da5bf9a",
+      "equal": true
+    },
+    {
+      "file": "content/core/entities/patterns.yaml",
+      "expected": "f8b37a4bdfddbf6904f9e4319b55ba1b4f892a81",
+      "actual": "f8b37a4bdfddbf6904f9e4319b55ba1b4f892a81",
+      "equal": true
+    },
+    {
+      "file": "content/core/entry/flow.json",
+      "expected": "803b1bc40730c307eb4a4d61203cf48f6063e97f",
+      "actual": "803b1bc40730c307eb4a4d61203cf48f6063e97f",
+      "equal": true
+    },
+    {
+      "file": "content/core/factions.yaml",
+      "expected": "0f48b19f5ab514f59c967ab85cd895c4b2fbea37",
+      "actual": "0f48b19f5ab514f59c967ab85cd895c4b2fbea37",
+      "equal": true
+    },
+    {
+      "file": "content/core/items/affixes.yaml",
+      "expected": "ba78dbfe46c30541f39ac921ff50c50c55e75552",
+      "actual": "ba78dbfe46c30541f39ac921ff50c50c55e75552",
+      "equal": true
+    },
+    {
+      "file": "content/core/items/containers.yaml",
+      "expected": "ec1aeae2becbd9e11a81990f98ec962922066ad5",
+      "actual": "ec1aeae2becbd9e11a81990f98ec962922066ad5",
+      "equal": true
+    },
+    {
+      "file": "content/core/items/contracts.yaml",
+      "expected": "0fcb75afe558caa90dc282f301c151e834e8ecde",
+      "actual": "0fcb75afe558caa90dc282f301c151e834e8ecde",
+      "equal": true
+    },
+    {
+      "file": "content/core/items/items.yaml",
+      "expected": "c066fbe218130a691ec4bad912fce502b64c0612",
+      "actual": "c066fbe218130a691ec4bad912fce502b64c0612",
+      "equal": true
+    },
+    {
+      "file": "content/core/items/loot.yaml",
+      "expected": "843f42ba7f537d51661a21d73a4a1caa0b36000b",
+      "actual": "843f42ba7f537d51661a21d73a4a1caa0b36000b",
+      "equal": true
+    },
+    {
+      "file": "content/core/items/relics.yaml",
+      "expected": "96c7568f3a1596ed33ce1e48d6163874f8588b6f",
+      "actual": "96c7568f3a1596ed33ce1e48d6163874f8588b6f",
+      "equal": true
+    },
+    {
+      "file": "content/core/items/weave-items.yaml",
+      "expected": "d5e455538fe0c1edb3031feac24a34247d0b4f3a",
+      "actual": "d5e455538fe0c1edb3031feac24a34247d0b4f3a",
+      "equal": true
+    },
+    {
+      "file": "content/core/play/crafting.yaml",
+      "expected": "e7ba2a2d8f9cf127cbb431048f1f574a9eac0097",
+      "actual": "e7ba2a2d8f9cf127cbb431048f1f574a9eac0097",
+      "equal": true
+    },
+    {
+      "file": "content/core/play/quests.yaml",
+      "expected": "01f4887eb005e21c1ef4d9c6c2ba91db107b95d5",
+      "actual": "01f4887eb005e21c1ef4d9c6c2ba91db107b95d5",
+      "equal": true
+    },
+    {
+      "file": "content/core/play/station-services.yaml",
+      "expected": "13bcdf88faf631067233ca316b3697cc402e38e4",
+      "actual": "13bcdf88faf631067233ca316b3697cc402e38e4",
+      "equal": true
+    },
+    {
+      "file": "content/core/play/stations.yaml",
+      "expected": "6c3639b8b06fc4477126fcddae3a55545afc5aa4",
+      "actual": "6c3639b8b06fc4477126fcddae3a55545afc5aa4",
+      "equal": true
+    },
+    {
+      "file": "content/core/play/territory.yaml",
+      "expected": "8a4e707568619da34b5c7922ae7a36bddeb3c77c",
+      "actual": "8a4e707568619da34b5c7922ae7a36bddeb3c77c",
+      "equal": true
+    },
+    {
+      "file": "content/core/resources.yaml",
+      "expected": "c0afa224d5e328544343833caff276ef077fd3d5",
+      "actual": "c0afa224d5e328544343833caff276ef077fd3d5",
+      "equal": true
+    },
+    {
+      "file": "content/core/rules-inventory.yaml",
+      "expected": "72c87ee59a30b492fc645bf5548069fe71d36bc4",
+      "actual": "72c87ee59a30b492fc645bf5548069fe71d36bc4",
+      "equal": true
+    },
+    {
+      "file": "content/core/rules.yaml",
+      "expected": "c762ba7ef7ce0b088cfb12857571427f83680e4c",
+      "actual": "c762ba7ef7ce0b088cfb12857571427f83680e4c",
+      "equal": true
+    },
+    {
+      "file": "content/core/slots.yaml",
+      "expected": "a8a137f4b6578504d27ff9c116d5f792a3fe82fd",
+      "actual": "a8a137f4b6578504d27ff9c116d5f792a3fe82fd",
+      "equal": true
+    },
+    {
+      "file": "content/core/threads.yaml",
+      "expected": "38a86485183ee06c606bfa66b15ae9a7c75f941f",
+      "actual": "38a86485183ee06c606bfa66b15ae9a7c75f941f",
+      "equal": true
+    },
+    {
+      "file": "content/core/ui/ability-bindings.json",
+      "expected": "17b19433375eb8f748c0ecbec54073a54a5901e6",
+      "actual": "17b19433375eb8f748c0ecbec54073a54a5901e6",
+      "equal": true
+    },
+    {
+      "file": "content/core/ui/ability-icons.json",
+      "expected": "570f03f312ad405107a532e219da6006ffe46562",
+      "actual": "570f03f312ad405107a532e219da6006ffe46562",
+      "equal": true
+    },
+    {
+      "file": "content/core/ui/ability-style.json",
+      "expected": "57d279a26a0aaa8a3d0926883a4c3a935d6a54c6",
+      "actual": "57d279a26a0aaa8a3d0926883a4c3a935d6a54c6",
+      "equal": true
+    },
+    {
+      "file": "content/core/ui/cast-forecasts.yaml",
+      "expected": "618db9375cf6179a8aaaca364da8ba806c5f98ee",
+      "actual": "618db9375cf6179a8aaaca364da8ba806c5f98ee",
+      "equal": true
+    },
+    {
+      "file": "content/core/ui/cast-visuals.yaml",
+      "expected": "29db71d1be58d70554251380e0865c146b6190db",
+      "actual": "29db71d1be58d70554251380e0865c146b6190db",
+      "equal": true
+    },
+    {
+      "file": "content/core/ui/entry.json",
+      "expected": "aa1ce5ce15b62d6c2f279be9ee20f2d2b3eb7d55",
+      "actual": "aa1ce5ce15b62d6c2f279be9ee20f2d2b3eb7d55",
+      "equal": true
+    },
+    {
+      "file": "content/core/ui/icons.yaml",
+      "expected": "c43bd10b3490d62269ba49f913f51358b660bc7e",
+      "actual": "c43bd10b3490d62269ba49f913f51358b660bc7e",
+      "equal": true
+    },
+    {
+      "file": "content/core/ui/input.yaml",
+      "expected": "793efd087a7a1167491b9d2ed8d72c52893bf489",
+      "actual": "793efd087a7a1167491b9d2ed8d72c52893bf489",
+      "equal": true
+    },
+    {
+      "file": "content/core/ui/layout.yaml",
+      "expected": "e14c3ffd75804a8607661b16ae10c618553b7c07",
+      "actual": "e14c3ffd75804a8607661b16ae10c618553b7c07",
+      "equal": true
+    },
+    {
+      "file": "content/core/ui/legacy-icons.yaml",
+      "expected": "dade3cdf6ce4ee88c783453f4bbef4b81e2f35c8",
+      "actual": "dade3cdf6ce4ee88c783453f4bbef4b81e2f35c8",
+      "equal": true
+    },
+    {
+      "file": "content/core/ui/loading.json",
+      "expected": "ede91321475b240b2e55cbecdd76b2bfa7c69bc4",
+      "actual": "ede91321475b240b2e55cbecdd76b2bfa7c69bc4",
+      "equal": true
+    },
+    {
+      "file": "content/core/ui/options.yaml",
+      "expected": "ce858b62680ee302d2e708eddffe313dcf33ebfc",
+      "actual": "ce858b62680ee302d2e708eddffe313dcf33ebfc",
+      "equal": true
+    },
+    {
+      "file": "content/core/ui/pages.yaml",
+      "expected": "c05b92ea4e6f4fc2ba3d7523c32dcdfa4598a34e",
+      "actual": "c05b92ea4e6f4fc2ba3d7523c32dcdfa4598a34e",
+      "equal": true
+    },
+    {
+      "file": "content/core/ui/sheet.yaml",
+      "expected": "6a42d7bfc24af0766d5e222215fe98f83579661b",
+      "actual": "6a42d7bfc24af0766d5e222215fe98f83579661b",
+      "equal": true
+    },
+    {
+      "file": "content/core/ui/themes.yaml",
+      "expected": "2097e39574910d3d4940a1855c418e9dc1e0e5e1",
+      "actual": "2097e39574910d3d4940a1855c418e9dc1e0e5e1",
+      "equal": true
+    },
+    {
+      "file": "content/core/vendors.yaml",
+      "expected": "463308c26e68f272dbca31bd9052d63cf73cc61b",
+      "actual": "463308c26e68f272dbca31bd9052d63cf73cc61b",
+      "equal": true
+    },
+    {
+      "file": "content/core/world/biomes.yaml",
+      "expected": "134c63c043224fd9ecaafe37cc4d7803b8de4de6",
+      "actual": "134c63c043224fd9ecaafe37cc4d7803b8de4de6",
+      "equal": true
+    },
+    {
+      "file": "content/core/world/events.yaml",
+      "expected": "ea13a5023d95642aac727f91ed4514bf88be0698",
+      "actual": "ea13a5023d95642aac727f91ed4514bf88be0698",
+      "equal": true
+    },
+    {
+      "file": "content/core/world/landmarks.yaml",
+      "expected": "cbd7ac61c9c5847a604583a83f43c6ee27e532e2",
+      "actual": "cbd7ac61c9c5847a604583a83f43c6ee27e532e2",
+      "equal": true
+    },
+    {
+      "file": "content/core/world/pois-goblinkin.json",
+      "expected": "67f66185c00d018f89c514258ae1a8d11134e98f",
+      "actual": "67f66185c00d018f89c514258ae1a8d11134e98f",
+      "equal": true
+    },
+    {
+      "file": "content/core/world/pois-orcs.json",
+      "expected": "1ddd1553463901361d00a60f54f4b2cb7c7bafb6",
+      "actual": "1ddd1553463901361d00a60f54f4b2cb7c7bafb6",
+      "equal": true
+    },
+    {
+      "file": "content/core/world/pois-undead.json",
+      "expected": "ef74c6198f34d7fa5451afe4990ff70607403c1b",
+      "actual": "ef74c6198f34d7fa5451afe4990ff70607403c1b",
+      "equal": true
+    },
+    {
+      "file": "content/core/world/pois.yaml",
+      "expected": "24c41fc5954563c26a24f5dfc9b7864325195892",
+      "actual": "24c41fc5954563c26a24f5dfc9b7864325195892",
+      "equal": true
+    },
+    {
+      "file": "content/core/world/regions.yaml",
+      "expected": "428d23472814818ecc50928b6dbcb1bc2de9d6a9",
+      "actual": "428d23472814818ecc50928b6dbcb1bc2de9d6a9",
+      "equal": true
+    },
+    {
+      "file": "content/core/world/spawns-fauna.json",
+      "expected": "03a05ed2447ff8444dc20c49c5ffc2427255d98f",
+      "actual": "03a05ed2447ff8444dc20c49c5ffc2427255d98f",
+      "equal": true
+    },
+    {
+      "file": "content/core/world/spawns-goblinkin.json",
+      "expected": "90ebb3138589e3fd0e0e928e0404d0fe900b1af2",
+      "actual": "90ebb3138589e3fd0e0e928e0404d0fe900b1af2",
+      "equal": true
+    },
+    {
+      "file": "content/core/world/spawns-undead.json",
+      "expected": "c9b535ea5e7bb80b73c058f240dd7788b75cc878",
+      "actual": "c9b535ea5e7bb80b73c058f240dd7788b75cc878",
+      "equal": true
+    },
+    {
+      "file": "global.json",
+      "expected": "1e056533b3e2c3445e506ba547c0579e23439274",
+      "actual": "1e056533b3e2c3445e506ba547c0579e23439274",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Ai/AiIntents.cs",
+      "expected": "90ea9452d29bc5a4dfdb6d578ca7ed9db90b4b3b",
+      "actual": "90ea9452d29bc5a4dfdb6d578ca7ed9db90b4b3b",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Ai/BehaviorSystem.cs",
+      "expected": "6d192ac3539d079f63dddf67572110ecfd994e86",
+      "actual": "6d192ac3539d079f63dddf67572110ecfd994e86",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Ai/MinionActions.cs",
+      "expected": "67ff32e26453e75ec4769ec3f549813d20fea33a",
+      "actual": "67ff32e26453e75ec4769ec3f549813d20fea33a",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Attributes/AttributeCatalog.cs",
+      "expected": "2b1f40d59a15654abdcb9fa8478c9e8ec7d295dd",
+      "actual": "2b1f40d59a15654abdcb9fa8478c9e8ec7d295dd",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Attributes/AttributeSet.cs",
+      "expected": "14c38e52b8e32ebe39b835e6ff5b853018b66f00",
+      "actual": "14c38e52b8e32ebe39b835e6ff5b853018b66f00",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Attributes/Modifier.cs",
+      "expected": "4e51c77bf2daab249dd9294e6f923592e0f41386",
+      "actual": "4e51c77bf2daab249dd9294e6f923592e0f41386",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Characters/CharacterSheet.cs",
+      "expected": "71f1d012cf0df523fd72906139724307fefb65a9",
+      "actual": "71f1d012cf0df523fd72906139724307fefb65a9",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Characters/EntryPolicy.cs",
+      "expected": "af4666e90d874013e9cfed30f8d65119b8df2c30",
+      "actual": "af4666e90d874013e9cfed30f8d65119b8df2c30",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Combat/ChargeService.cs",
+      "expected": "26ea1306db024c6bd72e505aa39d944ed87032f1",
+      "actual": "26ea1306db024c6bd72e505aa39d944ed87032f1",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Combat/DamagePipeline.cs",
+      "expected": "ac65f38ca815d52daff8b578a3261dad709493fb",
+      "actual": "ac65f38ca815d52daff8b578a3261dad709493fb",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Combat/DeathService.cs",
+      "expected": "726b745cdcae308f11fc11c557df19a2df142b5f",
+      "actual": "726b745cdcae308f11fc11c557df19a2df142b5f",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Combat/HitBodies.cs",
+      "expected": "65f949eae3c011db8c6e3ae1d35ecd4e4f833bf8",
+      "actual": "65f949eae3c011db8c6e3ae1d35ecd4e4f833bf8",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Combat/HitScope.cs",
+      "expected": "48a1394030562530527146409b492322b8ecaddb",
+      "actual": "48a1394030562530527146409b492322b8ecaddb",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Combat/Relations.cs",
+      "expected": "abfcb0e3708ab703e673eadb77ecb86f227ab639",
+      "actual": "abfcb0e3708ab703e673eadb77ecb86f227ab639",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Combat/Stages/BlockStage.cs",
+      "expected": "f5b57b11a12a3f286a5a1331f85ca7a0d0bf653b",
+      "actual": "f5b57b11a12a3f286a5a1331f85ca7a0d0bf653b",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Combat/Stages/CapStage.cs",
+      "expected": "8e4209f4a8a3d89c1760241e477ca899ab3bf8c3",
+      "actual": "8e4209f4a8a3d89c1760241e477ca899ab3bf8c3",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Combat/Stages/CheatDeathStage.cs",
+      "expected": "dc712f249352705ef8b8e87513ce37a3ca0376f2",
+      "actual": "dc712f249352705ef8b8e87513ce37a3ca0376f2",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Combat/Stages/CullStage.cs",
+      "expected": "85444a6800cc5789c649879401a11320d820acf5",
+      "actual": "85444a6800cc5789c649879401a11320d820acf5",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Combat/Stages/EvadeStage.cs",
+      "expected": "5a219aa991a936eebd8d448bdeda932c02a47e8a",
+      "actual": "5a219aa991a936eebd8d448bdeda932c02a47e8a",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Combat/Stages/GuardStage.cs",
+      "expected": "cde7dc6be1e466d7672cd0d1489634039b9ea0ea",
+      "actual": "cde7dc6be1e466d7672cd0d1489634039b9ea0ea",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Combat/Stages/HitStages.cs",
+      "expected": "292160cdce282ebbcfd84d0b61374284aee4acaa",
+      "actual": "292160cdce282ebbcfd84d0b61374284aee4acaa",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Combat/Stages/ImmunityStage.cs",
+      "expected": "7b39d4299cf8af8055a545d51bd53cbb09a201de",
+      "actual": "7b39d4299cf8af8055a545d51bd53cbb09a201de",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Combat/Stages/LeechStage.cs",
+      "expected": "c88546150d9b36cfacfc371d54c1f998cb6cdf17",
+      "actual": "c88546150d9b36cfacfc371d54c1f998cb6cdf17",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Combat/Stages/MitigateStage.cs",
+      "expected": "ac18b96a6c764419a9f84537b82ce31aa9e5857f",
+      "actual": "ac18b96a6c764419a9f84537b82ce31aa9e5857f",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Combat/Stages/PoolsStage.cs",
+      "expected": "6a84936df6e2c53156271aaea95afe87b838223e",
+      "actual": "6a84936df6e2c53156271aaea95afe87b838223e",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Combat/Stages/StaggerStage.cs",
+      "expected": "606ead3aaee1b10297b14deb2477c16d30cead74",
+      "actual": "606ead3aaee1b10297b14deb2477c16d30cead74",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Combat/Stages/TakenAsStage.cs",
+      "expected": "d45ec3270f9161c65defe6a52de6fc481e9e8c03",
+      "actual": "d45ec3270f9161c65defe6a52de6fc481e9e8c03",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Combat/Stages/TakenStage.cs",
+      "expected": "8e550a2af37f5dd94bec727996f38b4688eba560",
+      "actual": "8e550a2af37f5dd94bec727996f38b4688eba560",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Components/Ai.cs",
+      "expected": "0051d723e04422d7739ff8a95a8908fd2da0628f",
+      "actual": "0051d723e04422d7739ff8a95a8908fd2da0628f",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Components/Body.cs",
+      "expected": "9eb69b460c4b566a438494f4c08bbeba4f2b9d55",
+      "actual": "9eb69b460c4b566a438494f4c08bbeba4f2b9d55",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Components/Charges.cs",
+      "expected": "57ab74071a12c77455cd841418e60b1cc3f4dad9",
+      "actual": "57ab74071a12c77455cd841418e60b1cc3f4dad9",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Components/Guard.cs",
+      "expected": "b4dcd0303829cfe94faee749c01e95e89d8eb1b0",
+      "actual": "b4dcd0303829cfe94faee749c01e95e89d8eb1b0",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Components/Inventory.cs",
+      "expected": "158053a222a3a1f42ecdd42f32a1d62e27120e63",
+      "actual": "158053a222a3a1f42ecdd42f32a1d62e27120e63",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Components/Minions.cs",
+      "expected": "f6e2f5353662249e3d5f1b79e8f84052702e3808",
+      "actual": "f6e2f5353662249e3d5f1b79e8f84052702e3808",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Components/PassiveState.cs",
+      "expected": "40983025485d4c5690a0066c1a40e9205605310f",
+      "actual": "40983025485d4c5690a0066c1a40e9205605310f",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Components/PhysicalBody.cs",
+      "expected": "5a13eba4f68c0bc72e58fe0699936625657aa7ec",
+      "actual": "5a13eba4f68c0bc72e58fe0699936625657aa7ec",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Components/Play.cs",
+      "expected": "b8967d452e005535584136d8c2d5f61cbf05ddee",
+      "actual": "b8967d452e005535584136d8c2d5f61cbf05ddee",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Components/Stats.cs",
+      "expected": "d9d4dcf6eef44ba95877aa62169ba126ac6023c5",
+      "actual": "d9d4dcf6eef44ba95877aa62169ba126ac6023c5",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Components/Weaves.cs",
+      "expected": "6ddfba3732ed70b0b87eb1da9bde8ddaaa0938b2",
+      "actual": "6ddfba3732ed70b0b87eb1da9bde8ddaaa0938b2",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Content/AttributeFamilies.cs",
+      "expected": "ba7fa4c2604ff823644a4d06b827727566ae5b33",
+      "actual": "ba7fa4c2604ff823644a4d06b827727566ae5b33",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Content/BuiltinKinds.cs",
+      "expected": "9adf6d6ed35deb073282b48bb2daacf98a23a7be",
+      "actual": "9adf6d6ed35deb073282b48bb2daacf98a23a7be",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Content/CompositionLint.cs",
+      "expected": "c2f932f8c37f9d34f17f087a6eef28972cfb24e2",
+      "actual": "c2f932f8c37f9d34f17f087a6eef28972cfb24e2",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Content/ContentJson.cs",
+      "expected": "699e3c8844a41fba1ab1ddcf1a9e527d5cf75824",
+      "actual": "699e3c8844a41fba1ab1ddcf1a9e527d5cf75824",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Content/ContentKinds.cs",
+      "expected": "7e8c78f9bd5cccbf7f35517901102f2188d6407d",
+      "actual": "7e8c78f9bd5cccbf7f35517901102f2188d6407d",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Content/ContentLoader.cs",
+      "expected": "1c42383ddba638a7de55a0019b73ce9b6ebf52f2",
+      "actual": "1c42383ddba638a7de55a0019b73ce9b6ebf52f2",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Content/ContentRegistry.cs",
+      "expected": "a90a7266292181facf5c3306e72ccf45af01109f",
+      "actual": "a90a7266292181facf5c3306e72ccf45af01109f",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Content/JsonNum.cs",
+      "expected": "fee4ba58bc40568cdabfc5062d012e84612d8304",
+      "actual": "fee4ba58bc40568cdabfc5062d012e84612d8304",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Content/Kinds/AbilityIconKinds.cs",
+      "expected": "7ddce5c2091fbed8f4db141e7d8dd8b56378752e",
+      "actual": "7ddce5c2091fbed8f4db141e7d8dd8b56378752e",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Content/Kinds/AppearanceKinds.cs",
+      "expected": "e1ec8059606db6d580b35def9013f642fc2ad00e",
+      "actual": "e1ec8059606db6d580b35def9013f642fc2ad00e",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Content/Kinds/CastForecastKinds.cs",
+      "expected": "73cef887ea7495f378012f25571460345a3aace1",
+      "actual": "73cef887ea7495f378012f25571460345a3aace1",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Content/Kinds/CastVisualKinds.cs",
+      "expected": "b575450f52ca41665e99b6703218f8c0aae1d0fa",
+      "actual": "b575450f52ca41665e99b6703218f8c0aae1d0fa",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Content/Kinds/CastingKinds.cs",
+      "expected": "fd0db1ba5b3a2bf117e8f9fad88e1219f2cc84c5",
+      "actual": "fd0db1ba5b3a2bf117e8f9fad88e1219f2cc84c5",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Content/Kinds/CombatKinds.cs",
+      "expected": "fd9a6c5875f35821ef6111f31c9dad26316d8bd9",
+      "actual": "fd9a6c5875f35821ef6111f31c9dad26316d8bd9",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Content/Kinds/DeliveryKinds.cs",
+      "expected": "ea35b11440b6f8348ad1ed94bb14066335239a80",
+      "actual": "ea35b11440b6f8348ad1ed94bb14066335239a80",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Content/Kinds/EntryKinds.cs",
+      "expected": "4a04a1ccc6d4769f8588a1a0e779041fe5317fbe",
+      "actual": "4a04a1ccc6d4769f8588a1a0e779041fe5317fbe",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Content/Kinds/EvaluationKinds.cs",
+      "expected": "d3be2e2cac5b861829424303d80e528694cf99a9",
+      "actual": "d3be2e2cac5b861829424303d80e528694cf99a9",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Content/Kinds/HitBodyKinds.cs",
+      "expected": "1740db2e72b2110c7992e40712cce8a1be8e2402",
+      "actual": "1740db2e72b2110c7992e40712cce8a1be8e2402",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Content/Kinds/InterfaceKinds.cs",
+      "expected": "bb9d755b97940be71a90581545ea3a9b990ca50d",
+      "actual": "bb9d755b97940be71a90581545ea3a9b990ca50d",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Content/Kinds/LoadingKinds.cs",
+      "expected": "3c8899de2abd47b3eb5ea5e190eaf864a77b55b1",
+      "actual": "3c8899de2abd47b3eb5ea5e190eaf864a77b55b1",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Content/Kinds/MinionKinds.cs",
+      "expected": "2a406a610304c0212cfee784dfaa6b1bc6de2efc",
+      "actual": "2a406a610304c0212cfee784dfaa6b1bc6de2efc",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Content/Kinds/PhysicalKinds.cs",
+      "expected": "c9f5d615d5e2dcd0ec327fa400d42a9e77c3fb4a",
+      "actual": "c9f5d615d5e2dcd0ec327fa400d42a9e77c3fb4a",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Content/Kinds/ProgressionKinds.cs",
+      "expected": "fb79c10c645069f1a34e28f40332cc8fc885b36e",
+      "actual": "fb79c10c645069f1a34e28f40332cc8fc885b36e",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Content/ValidationReport.cs",
+      "expected": "b11b5a445423c9f034a9b3d3a129cdc9c2a98cfc",
+      "actual": "b11b5a445423c9f034a9b3d3a129cdc9c2a98cfc",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Content/WeaveValidation.cs",
+      "expected": "278ddb836e3fc2ab4b285db19ac2d0059caedac2",
+      "actual": "278ddb836e3fc2ab4b285db19ac2d0059caedac2",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Content/YamlToJson.cs",
+      "expected": "df7f971ba1f9bbe8a09598bb1bb773598b71afed",
+      "actual": "df7f971ba1f9bbe8a09598bb1bb773598b71afed",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/CoreInfo.cs",
+      "expected": "ac42b01dae411bcce80c01a1bd9e44ecb6bb9061",
+      "actual": "ac42b01dae411bcce80c01a1bd9e44ecb6bb9061",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Crafting/CraftingService.cs",
+      "expected": "e7afb4253cf3f158df39197aef46a4639e55bbaf",
+      "actual": "e7afb4253cf3f158df39197aef46a4639e55bbaf",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Crafting/Procedures.cs",
+      "expected": "936cf3591c88a655926884bf1ea80a2ab2e5f682",
+      "actual": "936cf3591c88a655926884bf1ea80a2ab2e5f682",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Crafting/StationService.cs",
+      "expected": "4447b814e7af39d4289834e3574a0680e7f6648b",
+      "actual": "4447b814e7af39d4289834e3574a0680e7f6648b",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Crafting/StationServices.cs",
+      "expected": "3b24e1b662d8bf558fc41edbe81c6cbc22a4909e",
+      "actual": "3b24e1b662d8bf558fc41edbe81c6cbc22a4909e",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Definitions/AbilityIcons.cs",
+      "expected": "1edf8315f5cf45197b735429b27c5db467229e0d",
+      "actual": "1edf8315f5cf45197b735429b27c5db467229e0d",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Definitions/Appearance.cs",
+      "expected": "1dc0acedc700f8d9835d819be6288642dcf9fab4",
+      "actual": "1dc0acedc700f8d9835d819be6288642dcf9fab4",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Definitions/CastForecastStyle.cs",
+      "expected": "a36f1e6372df0156f59ff463328ccbaed7e5d2d6",
+      "actual": "a36f1e6372df0156f59ff463328ccbaed7e5d2d6",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Definitions/CastVisualPrimitives.cs",
+      "expected": "5195c18977347976666651899ef0d97ee3407d25",
+      "actual": "5195c18977347976666651899ef0d97ee3407d25",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Definitions/CastVisuals.cs",
+      "expected": "ac66cb1d1367b457c4f622349f3dc0839001b2db",
+      "actual": "ac66cb1d1367b457c4f622349f3dc0839001b2db",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Definitions/Charges.cs",
+      "expected": "59379c19e27ca3a082810e556e71f700669c4bb5",
+      "actual": "59379c19e27ca3a082810e556e71f700669c4bb5",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Definitions/Combat.cs",
+      "expected": "abc530603c73e07db009e06e4ef0055cf2265c44",
+      "actual": "abc530603c73e07db009e06e4ef0055cf2265c44",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Definitions/Containers.cs",
+      "expected": "6078e81b9180f52370855be916e3d6f96b399e39",
+      "actual": "6078e81b9180f52370855be916e3d6f96b399e39",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Definitions/Core.cs",
+      "expected": "f6c9193f09b4dbf65edb2091437fcc6161b476ee",
+      "actual": "f6c9193f09b4dbf65edb2091437fcc6161b476ee",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Definitions/Dialogue.cs",
+      "expected": "e633bbbdb80b12a29df4ff7ddf02b7ff69bf2b76",
+      "actual": "e633bbbdb80b12a29df4ff7ddf02b7ff69bf2b76",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Definitions/Entities.cs",
+      "expected": "ea371b313196ed7784fd589152c784a94506246f",
+      "actual": "ea371b313196ed7784fd589152c784a94506246f",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Definitions/Entry.cs",
+      "expected": "689872314fd3881e7d44cacee306fe6b4982257d",
+      "actual": "689872314fd3881e7d44cacee306fe6b4982257d",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Definitions/Forms.Casting.cs",
+      "expected": "6d68ffa08fcd38d9d1279728d373ea69c5bb0975",
+      "actual": "6d68ffa08fcd38d9d1279728d373ea69c5bb0975",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Definitions/Forms.Delivery.cs",
+      "expected": "cfd18d0f3552a53c6f9254d83b82cf48830ddded",
+      "actual": "cfd18d0f3552a53c6f9254d83b82cf48830ddded",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Definitions/Forms.Items.cs",
+      "expected": "bf2523713882f685f0d179bd7ec7747092bc46fe",
+      "actual": "bf2523713882f685f0d179bd7ec7747092bc46fe",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Definitions/Forms.Summon.cs",
+      "expected": "b7d5a073fa08b583798aed07dd4795f5c8b2fa71",
+      "actual": "b7d5a073fa08b583798aed07dd4795f5c8b2fa71",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Definitions/Glyphs.Casting.cs",
+      "expected": "6bc7bb425ba3d35fbd191e3b04d477f3911433f6",
+      "actual": "6bc7bb425ba3d35fbd191e3b04d477f3911433f6",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Definitions/Glyphs.Items.cs",
+      "expected": "9672374b5776ed127f9e88d411a411af66da69f5",
+      "actual": "9672374b5776ed127f9e88d411a411af66da69f5",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Definitions/Glyphs.Minion.cs",
+      "expected": "5b8e11b2baa5e83eabc0360d024c5ff0cb7fd110",
+      "actual": "5b8e11b2baa5e83eabc0360d024c5ff0cb7fd110",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Definitions/HitBodies.cs",
+      "expected": "54a5838429c2caf70cf610776a181448826b0196",
+      "actual": "54a5838429c2caf70cf610776a181448826b0196",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Definitions/Items.cs",
+      "expected": "373af59171df350c3c8e61de0bb7e4b2a20250b1",
+      "actual": "373af59171df350c3c8e61de0bb7e4b2a20250b1",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Definitions/Loading.cs",
+      "expected": "c959e3b75f202dbffe3a8e9f206b143a860b834c",
+      "actual": "c959e3b75f202dbffe3a8e9f206b143a860b834c",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Definitions/PhysicalBodies.cs",
+      "expected": "43f718a71d1b7b97a6ea98b28fdaedac3d7d4d61",
+      "actual": "43f718a71d1b7b97a6ea98b28fdaedac3d7d4d61",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Definitions/Play.cs",
+      "expected": "29465345c20d492b3a12fba04db38caa81a4198d",
+      "actual": "29465345c20d492b3a12fba04db38caa81a4198d",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Definitions/Procs.cs",
+      "expected": "03db297ad88d0e5c3b855a11ce24e45de226364b",
+      "actual": "03db297ad88d0e5c3b855a11ce24e45de226364b",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Definitions/Progression.cs",
+      "expected": "a53cef66fe46b4a907e450c7b63abd4089bc5603",
+      "actual": "a53cef66fe46b4a907e450c7b63abd4089bc5603",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Definitions/ReleaseCheckSpec.cs",
+      "expected": "6a1b4fcb991c507541a8884885c49bad315f5e68",
+      "actual": "6a1b4fcb991c507541a8884885c49bad315f5e68",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Definitions/StationServices.cs",
+      "expected": "9a019ed7ae08a519f0f655fe02c3fd96b2f3be59",
+      "actual": "9a019ed7ae08a519f0f655fe02c3fd96b2f3be59",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Definitions/Statuses.cs",
+      "expected": "ce1a6da99d5b5e913cc424f5ffee7937ad24fa43",
+      "actual": "ce1a6da99d5b5e913cc424f5ffee7937ad24fa43",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Definitions/Ui.cs",
+      "expected": "0f97ddc898505f82307a7e7762d865a92f6fd1b7",
+      "actual": "0f97ddc898505f82307a7e7762d865a92f6fd1b7",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Definitions/Weaves.Casting.cs",
+      "expected": "947d3a780a798c8c4caf6a81434192a4315610c5",
+      "actual": "947d3a780a798c8c4caf6a81434192a4315610c5",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Definitions/World.cs",
+      "expected": "ac4e6062bec3a64bb09dd63265a2006234668637",
+      "actual": "ac4e6062bec3a64bb09dd63265a2006234668637",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Dialogue/DialogueActions.cs",
+      "expected": "3c30f0db2401a012d2e17fcfb92077a975636be8",
+      "actual": "3c30f0db2401a012d2e17fcfb92077a975636be8",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Dialogue/DialogueService.cs",
+      "expected": "f09152c7d4634f16add9d1a80c066bba481111a8",
+      "actual": "f09152c7d4634f16add9d1a80c066bba481111a8",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Dialogue/PaneSystem.cs",
+      "expected": "98abc0226e216e463bdd02d49f9288acd1df752d",
+      "actual": "98abc0226e216e463bdd02d49f9288acd1df752d",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Ecs/Entity.cs",
+      "expected": "e02c1554d7353dae271f1e6e5435bfac2bfc0619",
+      "actual": "e02c1554d7353dae271f1e6e5435bfac2bfc0619",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Ecs/World.cs",
+      "expected": "05d7a9587a1976e32ac192c708c5fb91d7e3ab3b",
+      "actual": "05d7a9587a1976e32ac192c708c5fb91d7e3ab3b",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Effects/BuiltinEffects.cs",
+      "expected": "8bfdcefabf2abd33c5e23c30d9f77d21afc9511d",
+      "actual": "8bfdcefabf2abd33c5e23c30d9f77d21afc9511d",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Effects/DeliveryForecast.cs",
+      "expected": "3016a4c9ff8323ac9128e3779cd4a16d0a038732",
+      "actual": "3016a4c9ff8323ac9128e3779cd4a16d0a038732",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Effects/EffectContext.cs",
+      "expected": "d2e715331c146e90e7fd634a133a70ab05f34d11",
+      "actual": "d2e715331c146e90e7fd634a133a70ab05f34d11",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Effects/Filters.cs",
+      "expected": "254130b0d34aea1502438da2c8f4a4960b957acf",
+      "actual": "254130b0d34aea1502438da2c8f4a4960b957acf",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Effects/ForecastInputs.cs",
+      "expected": "0046e27aadbeb1a7f79c72bbd5028fed103b8a19",
+      "actual": "0046e27aadbeb1a7f79c72bbd5028fed103b8a19",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Effects/Handlers/AiHandlers.cs",
+      "expected": "f6e24eae8379e7431f4c4b5b39b0aed8bec591d8",
+      "actual": "f6e24eae8379e7431f4c4b5b39b0aed8bec591d8",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Effects/Handlers/CastHandlers.cs",
+      "expected": "02be5c075c4fb237599b463fedc61b79ee7bf743",
+      "actual": "02be5c075c4fb237599b463fedc61b79ee7bf743",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Effects/Handlers/ChargeHandlers.cs",
+      "expected": "740a32f2871e43b00378ffd03f9ffc42515fbaf0",
+      "actual": "740a32f2871e43b00378ffd03f9ffc42515fbaf0",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Effects/Handlers/DamageHandlers.cs",
+      "expected": "d2cffd9a61ce64297f98244bf084dbb2187253c8",
+      "actual": "d2cffd9a61ce64297f98244bf084dbb2187253c8",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Effects/Handlers/DeliveryHandlers.cs",
+      "expected": "36f3853e175e887ca06ec62efe870ff431dab6b6",
+      "actual": "dd40021b5ba6b92afc72dd14937cc961c3cf0341",
+      "equal": false
+    },
+    {
+      "file": "src/HollowWake.Core/Effects/Handlers/EffectHelpers.cs",
+      "expected": "160855c67f35c8fe9fe600ceaf70d24f039eac4d",
+      "actual": "160855c67f35c8fe9fe600ceaf70d24f039eac4d",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Effects/Handlers/FlowHandlers.cs",
+      "expected": "c640a4cb69bf646c3724dce0024adc319c0ffdce",
+      "actual": "c640a4cb69bf646c3724dce0024adc319c0ffdce",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Effects/Handlers/MinionHandlers.cs",
+      "expected": "15506462e1addc58c2e7a0b5df875d6186cc6b5f",
+      "actual": "15506462e1addc58c2e7a0b5df875d6186cc6b5f",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Effects/Handlers/MovementHandlers.cs",
+      "expected": "1c12ac7931c0044d11f69826db6dcb24b836c55a",
+      "actual": "1c12ac7931c0044d11f69826db6dcb24b836c55a",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Effects/Handlers/PlacementHandlers.cs",
+      "expected": "adbbdcc6009fb1d4871cae23b7f4f80c410cdc45",
+      "actual": "adbbdcc6009fb1d4871cae23b7f4f80c410cdc45",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Effects/Handlers/StatusHandlers.cs",
+      "expected": "ef682e11cdc8c2b782d3cccdb2e075c639312f91",
+      "actual": "ef682e11cdc8c2b782d3cccdb2e075c639312f91",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Effects/Handlers/StatusTransferHandlers.cs",
+      "expected": "7d3dd709d55b6bd8460ab99c9a50ebfa4c7420e7",
+      "actual": "7d3dd709d55b6bd8460ab99c9a50ebfa4c7420e7",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Effects/Handlers/SummonHandlers.cs",
+      "expected": "c23f9f822713ebabcd6613c5d4788de2ab602b89",
+      "actual": "c23f9f822713ebabcd6613c5d4788de2ab602b89",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Effects/Handlers/UtilityHandlers.cs",
+      "expected": "3edbc0c75b94329769444b8da8888ec05251ce30",
+      "actual": "3edbc0c75b94329769444b8da8888ec05251ce30",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Effects/ProjectileAims.cs",
+      "expected": "7f7628efd22002a83e0aed9f94b5379309ab649d",
+      "actual": "7f7628efd22002a83e0aed9f94b5379309ab649d",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Effects/ProjectileComponents.cs",
+      "expected": "2772862acd7d72cc36e27ca6e77d79713b47e883",
+      "actual": "2772862acd7d72cc36e27ca6e77d79713b47e883",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Effects/Shapes.cs",
+      "expected": "ef58ad66f96216769159475431a7a8c5044abcae",
+      "actual": "ef58ad66f96216769159475431a7a8c5044abcae",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Evaluation/EvaluationRules.cs",
+      "expected": "871736252872b964322cc7be9ca690403aa140f2",
+      "actual": "871736252872b964322cc7be9ca690403aa140f2",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Evaluation/Tournament.cs",
+      "expected": "43e6bbef5e17197ea16a7ea1f8639b7b115a105a",
+      "actual": "43e6bbef5e17197ea16a7ea1f8639b7b115a105a",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Expressions/Curves.cs",
+      "expected": "6e8ed798cb7dbdccb047c8ea551cdbe2b968871c",
+      "actual": "6e8ed798cb7dbdccb047c8ea551cdbe2b968871c",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Expressions/Expr.cs",
+      "expected": "e56f9e5d883f8e6318abdab2e5e2ef8cb56dff1c",
+      "actual": "e56f9e5d883f8e6318abdab2e5e2ef8cb56dff1c",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Expressions/ExprFunctions.cs",
+      "expected": "cf5553f931bc59e30f6e0d1ab8fbaa72179006e7",
+      "actual": "cf5553f931bc59e30f6e0d1ab8fbaa72179006e7",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Expressions/Scopes.cs",
+      "expected": "d84af0281ad5e44ca7f4f7dad0a9737b81e0f37f",
+      "actual": "d84af0281ad5e44ca7f4f7dad0a9737b81e0f37f",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/HollowWake.Core.csproj",
+      "expected": "70c5b7a9390f959f2c8afc5a3477ec330ae22548",
+      "actual": "70c5b7a9390f959f2c8afc5a3477ec330ae22548",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Intents/DialogueIntents.cs",
+      "expected": "7e73c438f29721d11040538738d83f8d3e1f96e3",
+      "actual": "7e73c438f29721d11040538738d83f8d3e1f96e3",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Intents/Intents.cs",
+      "expected": "df60ebdb4c8ff4e8775e3dad9f36fd4a06bb3afc",
+      "actual": "df60ebdb4c8ff4e8775e3dad9f36fd4a06bb3afc",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Intents/ItemIntents.cs",
+      "expected": "666fcd974cf5bcb9f2659764782ac91419148464",
+      "actual": "666fcd974cf5bcb9f2659764782ac91419148464",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Intents/MovementIntents.cs",
+      "expected": "0488cdc8cd07be11d44f11383db4dd77c0d51a36",
+      "actual": "0488cdc8cd07be11d44f11383db4dd77c0d51a36",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Intents/ProgressionIntents.cs",
+      "expected": "913d1d4e151ac644786d37f21a43b3a6abc5c4d3",
+      "actual": "913d1d4e151ac644786d37f21a43b3a6abc5c4d3",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Intents/WeaveIntents.cs",
+      "expected": "b5fb3094f72f40f3b6d4ebd7b512908273d84c68",
+      "actual": "b5fb3094f72f40f3b6d4ebd7b512908273d84c68",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Intents/WorldIntents.cs",
+      "expected": "2e637d61d42b43a7e42b9952f4e4d9919746fc2a",
+      "actual": "2e637d61d42b43a7e42b9952f4e4d9919746fc2a",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Interaction/Fonts.cs",
+      "expected": "52556d903b5f977503dcc5ec22b2669a5768d789",
+      "actual": "52556d903b5f977503dcc5ec22b2669a5768d789",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Interaction/InteractionService.cs",
+      "expected": "c9aa462a507268d07808cb2016fb1aac9efbff8a",
+      "actual": "c9aa462a507268d07808cb2016fb1aac9efbff8a",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Items/ContainerService.cs",
+      "expected": "ce7d358d9e9a300432e995771d2c45696a33d1c4",
+      "actual": "ce7d358d9e9a300432e995771d2c45696a33d1c4",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Items/EquipmentService.cs",
+      "expected": "40e6c58db498b637027e58ca34aa22a18ef9f62a",
+      "actual": "40e6c58db498b637027e58ca34aa22a18ef9f62a",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Items/GearSockets.cs",
+      "expected": "b7a967e754969eb1cae5cb9caa1300518748934d",
+      "actual": "b7a967e754969eb1cae5cb9caa1300518748934d",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Items/InventoryService.cs",
+      "expected": "890bbb77eba539862770c82d59fc8690390883cd",
+      "actual": "890bbb77eba539862770c82d59fc8690390883cd",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Items/ItemGenerator.cs",
+      "expected": "c382978ee7dcd0cda2f1821a15cd39813eccf665",
+      "actual": "c382978ee7dcd0cda2f1821a15cd39813eccf665",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Items/ItemInstance.cs",
+      "expected": "0d439a36e3904ca0c56a48655101348110b7115f",
+      "actual": "0d439a36e3904ca0c56a48655101348110b7115f",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Items/ItemResolver.cs",
+      "expected": "f3ba79cd44f142874e9dabd4a211921b8422fea4",
+      "actual": "f3ba79cd44f142874e9dabd4a211921b8422fea4",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Items/RackService.cs",
+      "expected": "b4568ad48ad3478d38ba32951da0cb8b8f9782d2",
+      "actual": "b4568ad48ad3478d38ba32951da0cb8b8f9782d2",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Items/VendorService.cs",
+      "expected": "ae9ff6468662c3904f3dd0a7b0c27c6ec82e469c",
+      "actual": "ae9ff6468662c3904f3dd0a7b0c27c6ec82e469c",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Items/WeaveItems.cs",
+      "expected": "e1cf90fc80fab369ddc508a67a973a64557b9c81",
+      "actual": "e1cf90fc80fab369ddc508a67a973a64557b9c81",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Items/WeaveOwnership.cs",
+      "expected": "b5cbfe002377bad777c6d4f0136016a3cdc23211",
+      "actual": "b5cbfe002377bad777c6d4f0136016a3cdc23211",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Items/WeavePreviews.cs",
+      "expected": "b91c434b0d5e1e258cea3de53416d0c464b19a19",
+      "actual": "b91c434b0d5e1e258cea3de53416d0c464b19a19",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Items/WeaveTrees.cs",
+      "expected": "13065bb9da07c13b7feb9a4e3b977676dfb0ff83",
+      "actual": "13065bb9da07c13b7feb9a4e3b977676dfb0ff83",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Loot/LootService.cs",
+      "expected": "46e294aba188d672fe4f5605911f87c3459c6925",
+      "actual": "46e294aba188d672fe4f5605911f87c3459c6925",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Maths/Noise2D.cs",
+      "expected": "d8be24320cd3e7ab01327b6cc99ceb472df41454",
+      "actual": "d8be24320cd3e7ab01327b6cc99ceb472df41454",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Maths/Rng.cs",
+      "expected": "b8911f44075d4b158a7883c14ed31c321499da13",
+      "actual": "b8911f44075d4b158a7883c14ed31c321499da13",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Minions/Corpses.cs",
+      "expected": "016d6f6b10408a6c2cc4e4d026a2472f2494ef09",
+      "actual": "016d6f6b10408a6c2cc4e4d026a2472f2494ef09",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Minions/CrewForwarding.cs",
+      "expected": "ae1278171ccf9cd3f5d1f31bd9de41e3c0f6710b",
+      "actual": "ae1278171ccf9cd3f5d1f31bd9de41e3c0f6710b",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Minions/MinionContract.cs",
+      "expected": "aa82ce635ae16ff790f2b0271e0fda6564e3b369",
+      "actual": "aa82ce635ae16ff790f2b0271e0fda6564e3b369",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Minions/MinionService.cs",
+      "expected": "f2b1584b54aed6cdb7c7e8c9b7d3775549e5b15a",
+      "actual": "f2b1584b54aed6cdb7c7e8c9b7d3775549e5b15a",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Minions/MinionTargets.cs",
+      "expected": "eebdf68e1bfc534871dfc2252f587ee5ef9144ea",
+      "actual": "eebdf68e1bfc534871dfc2252f587ee5ef9144ea",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Minions/Summoning.cs",
+      "expected": "ef5a295e3738bfe89f31b8bb823246235ab9b1a4",
+      "actual": "ef5a295e3738bfe89f31b8bb823246235ab9b1a4",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Movement/MovePlanner.cs",
+      "expected": "11956e9f803c9032d0c3355cb226b26d381b8abc",
+      "actual": "11956e9f803c9032d0c3355cb226b26d381b8abc",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Movement/MovementSystem.cs",
+      "expected": "c1907ae75a17623fe6fcd1bb18f48e3b4071396c",
+      "actual": "c1907ae75a17623fe6fcd1bb18f48e3b4071396c",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Movement/Physicality.cs",
+      "expected": "8affbcb8192ecc881b7332f15ad61e6bd5e550b7",
+      "actual": "8affbcb8192ecc881b7332f15ad61e6bd5e550b7",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Patterns/PatternFactory.cs",
+      "expected": "d83a3dadd1e7f8a9d92b354b04d5044245837f67",
+      "actual": "d83a3dadd1e7f8a9d92b354b04d5044245837f67",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Progression/HeroScope.cs",
+      "expected": "9779779b934f3d31304d754794980f379be4202d",
+      "actual": "9779779b934f3d31304d754794980f379be4202d",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Progression/PageGates.cs",
+      "expected": "fddb9cc1682a06a8c532c1f6d29088ebc12a42fd",
+      "actual": "fddb9cc1682a06a8c532c1f6d29088ebc12a42fd",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Progression/PassiveChoices.cs",
+      "expected": "1abdd7a0b9fe8e9904d48d1032ee35bc17598618",
+      "actual": "1abdd7a0b9fe8e9904d48d1032ee35bc17598618",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Progression/PassiveGrafts.cs",
+      "expected": "683fd6d389084863beade7d1318a7535365ed797",
+      "actual": "683fd6d389084863beade7d1318a7535365ed797",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Progression/PassiveSystem.cs",
+      "expected": "95643f9600cea5044869fc349a9e73c938835304",
+      "actual": "95643f9600cea5044869fc349a9e73c938835304",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Progression/ProgressionService.cs",
+      "expected": "01ab981bbe09152049bc453dd8dc9ded651f0a8b",
+      "actual": "01ab981bbe09152049bc453dd8dc9ded651f0a8b",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Progression/ProgressionWiring.cs",
+      "expected": "90fccc27fac867d39ca71ab36586bbef4f5210c0",
+      "actual": "90fccc27fac867d39ca71ab36586bbef4f5210c0",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Quests/QuestOffers.cs",
+      "expected": "ddef252ac2cbd678c87e650fd3bd7e86ff3b1dcb",
+      "actual": "ddef252ac2cbd678c87e650fd3bd7e86ff3b1dcb",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Quests/QuestService.cs",
+      "expected": "b15aebeb2ff1a8647111d8871d0913fb3e4aab04",
+      "actual": "b15aebeb2ff1a8647111d8871d0913fb3e4aab04",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Sim/EventBus.cs",
+      "expected": "7cea4333cb03decce7932136dcac2c43580b0d77",
+      "actual": "7cea4333cb03decce7932136dcac2c43580b0d77",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Sim/Events.cs",
+      "expected": "6778eb51dbd298c373a77fba5059b23d636335f2",
+      "actual": "6778eb51dbd298c373a77fba5059b23d636335f2",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Sim/Events/CastPresentationEvents.cs",
+      "expected": "acfb2c22ed68daecf8d51e272a6e88e7094812a9",
+      "actual": "acfb2c22ed68daecf8d51e272a6e88e7094812a9",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Sim/Events/CastingEvents.cs",
+      "expected": "c1eb2448d19def9d72de5e0beb5833b797d23e5a",
+      "actual": "c1eb2448d19def9d72de5e0beb5833b797d23e5a",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Sim/Events/CombatEvents.cs",
+      "expected": "a1dd51c830d2cc73842ec3fe1027df98f6ef8960",
+      "actual": "a1dd51c830d2cc73842ec3fe1027df98f6ef8960",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Sim/Events/DeliveryEvents.cs",
+      "expected": "11c7b529ebd6327a33efbfceb63eea4bc6574389",
+      "actual": "11c7b529ebd6327a33efbfceb63eea4bc6574389",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Sim/Events/MinionEvents.cs",
+      "expected": "d0c4bacaab71c9a4490281ccb4d3c2782a90719b",
+      "actual": "d0c4bacaab71c9a4490281ccb4d3c2782a90719b",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Sim/Events/ProgressionEvents.cs",
+      "expected": "68751fd5253722984b444f5ceeb910bfc7cbe9ed",
+      "actual": "68751fd5253722984b444f5ceeb910bfc7cbe9ed",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Sim/ProcService.cs",
+      "expected": "c70524535f48510590f23616c5a888ec4e67d459",
+      "actual": "c70524535f48510590f23616c5a888ec4e67d459",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Sim/SimClock.cs",
+      "expected": "931c8094953e9de00430a0546375949bc713ad8d",
+      "actual": "931c8094953e9de00430a0546375949bc713ad8d",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Sim/SimSystem.cs",
+      "expected": "e11aaac38e6c7dff46a8f76abb895af76bb68ebf",
+      "actual": "e11aaac38e6c7dff46a8f76abb895af76bb68ebf",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Sim/Simulation.cs",
+      "expected": "a51038f3e48f5a00589b77d3255d7f3d4770bf5b",
+      "actual": "a51038f3e48f5a00589b77d3255d7f3d4770bf5b",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Sim/Triggers.cs",
+      "expected": "1f5efc66de99fda622abf3c8b078c02e9a66047a",
+      "actual": "1f5efc66de99fda622abf3c8b078c02e9a66047a",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Sim/ZoneBuilder.cs",
+      "expected": "87ad748c915bb136671d7f1246b28aa7835d202a",
+      "actual": "87ad748c915bb136671d7f1246b28aa7835d202a",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/StatusEffects/StatusService.cs",
+      "expected": "6f8763c8e3f47c71b96871ac7aeb7cae03f6fa31",
+      "actual": "6f8763c8e3f47c71b96871ac7aeb7cae03f6fa31",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Systems/CastingSystem.cs",
+      "expected": "b82a95b8eff4aceeb60d8ea9b02ed232fdba4c27",
+      "actual": "b82a95b8eff4aceeb60d8ea9b02ed232fdba4c27",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Systems/DisplacementSystem.cs",
+      "expected": "9f8934d369515f521cf230577a255b2e813c8e2f",
+      "actual": "9f8934d369515f521cf230577a255b2e813c8e2f",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Systems/FieldSystem.cs",
+      "expected": "b411327df312bc5b66aa0302fecfc2a426e2e97e",
+      "actual": "b411327df312bc5b66aa0302fecfc2a426e2e97e",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Systems/IntentSystem.cs",
+      "expected": "c7505eabdb5e7cf6e671e1e33fd5f2eb569e286d",
+      "actual": "c7505eabdb5e7cf6e671e1e33fd5f2eb569e286d",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Systems/Intents/DialogueIntentHandlers.cs",
+      "expected": "901960062069b3e8f06b1f4ffb81bcdf9ab9cdc8",
+      "actual": "901960062069b3e8f06b1f4ffb81bcdf9ab9cdc8",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Systems/Intents/ItemIntentHandlers.cs",
+      "expected": "9e2a7dddcfead9129a710cce210d1d33972b5b95",
+      "actual": "9e2a7dddcfead9129a710cce210d1d33972b5b95",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Systems/Intents/MovementIntentHandlers.cs",
+      "expected": "aba3a3237b691da7029ead99d0c3c3cdedf4fe8c",
+      "actual": "aba3a3237b691da7029ead99d0c3c3cdedf4fe8c",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Systems/Intents/ProgressionIntentHandlers.cs",
+      "expected": "13100ec96f898076a9595fe99d80435d4c87ab58",
+      "actual": "13100ec96f898076a9595fe99d80435d4c87ab58",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Systems/Intents/WeaveIntentHandlers.cs",
+      "expected": "38548dc333d41976e9222e0fd4407dfc61bff37a",
+      "actual": "38548dc333d41976e9222e0fd4407dfc61bff37a",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Systems/Intents/WorldIntentHandlers.cs",
+      "expected": "529409ed3dca1ec591e6b56ff71adc290e02c063",
+      "actual": "529409ed3dca1ec591e6b56ff71adc290e02c063",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Systems/LifetimeSystem.cs",
+      "expected": "d0b7b279e14bbcdc964ee8220fd37ff7a19c0a90",
+      "actual": "d0b7b279e14bbcdc964ee8220fd37ff7a19c0a90",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Systems/MinionSystem.cs",
+      "expected": "5ace7f75c68c95b483d872f6967ee3d1f82977bb",
+      "actual": "5ace7f75c68c95b483d872f6967ee3d1f82977bb",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Systems/ProjectileSystem.cs",
+      "expected": "c58a4441d511c2193b618963891593ff375c05f7",
+      "actual": "78deefb1886e5f45c608e8faf6aefb81ba21d483",
+      "equal": false
+    },
+    {
+      "file": "src/HollowWake.Core/Systems/SpawnerSystem.cs",
+      "expected": "ae67b6bda05e7d40d043dc21dc7552b64aaa1d26",
+      "actual": "ae67b6bda05e7d40d043dc21dc7552b64aaa1d26",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Systems/StatusSystem.cs",
+      "expected": "a1a87dd5ef2c9a826506dc811dd56bac280e7951",
+      "actual": "a1a87dd5ef2c9a826506dc811dd56bac280e7951",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Systems/TetherSystem.cs",
+      "expected": "3bd44f27141231dfd031f21aeb1304cd02c22fb3",
+      "actual": "3bd44f27141231dfd031f21aeb1304cd02c22fb3",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Systems/UpkeepSystem.cs",
+      "expected": "69608247ac2bab63ac2fcf67f282ff8dd38b294f",
+      "actual": "69608247ac2bab63ac2fcf67f282ff8dd38b294f",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Tags/TagSet.cs",
+      "expected": "9b03de8e77de1682792514c72d173715c2a87d2d",
+      "actual": "9b03de8e77de1682792514c72d173715c2a87d2d",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Territory/Territory.cs",
+      "expected": "aab28dfdc5d38a1047edebc46440a350845608a9",
+      "actual": "aab28dfdc5d38a1047edebc46440a350845608a9",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Weaves/Axes/CastingAxes.cs",
+      "expected": "0b84ea705af69ff20142b1a077049da776b1812c",
+      "actual": "0b84ea705af69ff20142b1a077049da776b1812c",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Weaves/Axes/DeliveryAxes.cs",
+      "expected": "8eb287b799016826ef4cc3c4a2c7e01578004125",
+      "actual": "8eb287b799016826ef4cc3c4a2c7e01578004125",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Weaves/Axes/MechanismAxes.cs",
+      "expected": "6f61bcccd8a58d57d1a17637ceb36e4a92d8b1c7",
+      "actual": "6f61bcccd8a58d57d1a17637ceb36e4a92d8b1c7",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Weaves/Axes/StatusAxes.cs",
+      "expected": "5e44dd0e33653be7cd7c158f57692ac05a5d56db",
+      "actual": "5e44dd0e33653be7cd7c158f57692ac05a5d56db",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Weaves/Axes/SummonAxes.cs",
+      "expected": "d18a33b934c8caf5d1910fe18ec6c59b482af0bb",
+      "actual": "d18a33b934c8caf5d1910fe18ec6c59b482af0bb",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Weaves/Axes/TargetingAxes.cs",
+      "expected": "3fbd606237ecf86c2c90ee31e4a03cfbb5dd775a",
+      "actual": "3fbd606237ecf86c2c90ee31e4a03cfbb5dd775a",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Weaves/Axes/TriggerAxes.cs",
+      "expected": "f7305c84ef9de566beba50413788c64da3d7d913",
+      "actual": "f7305c84ef9de566beba50413788c64da3d7d913",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Weaves/AxisBindings.cs",
+      "expected": "9e488aad5740b1413ddc0b4db5ebdbe160190f68",
+      "actual": "9e488aad5740b1413ddc0b4db5ebdbe160190f68",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Weaves/AxisReport.cs",
+      "expected": "86c6d92248ead287a354db5665d6203de5fd5f18",
+      "actual": "86c6d92248ead287a354db5665d6203de5fd5f18",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Weaves/CastForecast.cs",
+      "expected": "bc21df4cf186a2778bc3acbae70f54003509f362",
+      "actual": "bc21df4cf186a2778bc3acbae70f54003509f362",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Weaves/CastModifiers.cs",
+      "expected": "9ce9755ffd11d85f6809e35845fff1cd750eae26",
+      "actual": "9ce9755ffd11d85f6809e35845fff1cd750eae26",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Weaves/CastPresentation.cs",
+      "expected": "8ae23675a24e907caa7be5b5cef8bb9092ca8dbd",
+      "actual": "8ae23675a24e907caa7be5b5cef8bb9092ca8dbd",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Weaves/CompiledWeave.cs",
+      "expected": "c685de1c8cacc91e1404e0a4ac52a65f28a6c809",
+      "actual": "c685de1c8cacc91e1404e0a4ac52a65f28a6c809",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Weaves/EffectPatches.cs",
+      "expected": "b1bdbee9ce8d25738a531f3bb3f3facf2a28a843",
+      "actual": "b1bdbee9ce8d25738a531f3bb3f3facf2a28a843",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Weaves/HeldModes.cs",
+      "expected": "17cfcfeb9ef27e0f6b498e9870c1b206ea33532b",
+      "actual": "17cfcfeb9ef27e0f6b498e9870c1b206ea33532b",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Weaves/IWeaveOwnership.cs",
+      "expected": "11a9104bae4b22e097ee5b8aef58167ff4042464",
+      "actual": "11a9104bae4b22e097ee5b8aef58167ff4042464",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Weaves/Mechanisms.cs",
+      "expected": "ea80f07c057471c5866a3a27d0f88b68cd01802e",
+      "actual": "ea80f07c057471c5866a3a27d0f88b68cd01802e",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Weaves/Probes/CastingProbes.cs",
+      "expected": "71598ec347960a1a388239421c285bce0f03ee53",
+      "actual": "71598ec347960a1a388239421c285bce0f03ee53",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Weaves/Probes/CombatProbes.cs",
+      "expected": "4f0f25eef302338040f5f145624da2d6826dd6b8",
+      "actual": "4f0f25eef302338040f5f145624da2d6826dd6b8",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Weaves/Probes/DeliveryProbes.cs",
+      "expected": "17f5f67ab560f93d2e31b7278214ebfef8867714",
+      "actual": "17f5f67ab560f93d2e31b7278214ebfef8867714",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Weaves/Probes/MinionProbes.cs",
+      "expected": "249b22f2d520490c7c2c06188d960079423cd5bc",
+      "actual": "249b22f2d520490c7c2c06188d960079423cd5bc",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Weaves/Probes/ProbeBindings.cs",
+      "expected": "df8f04c4a9bcfa6bfd6e8bf54fd3a033a3c9db5f",
+      "actual": "df8f04c4a9bcfa6bfd6e8bf54fd3a033a3c9db5f",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Weaves/ReleasePolicies.cs",
+      "expected": "73f2c0d3b0e48cfadb450fc6905086660ec026fa",
+      "actual": "73f2c0d3b0e48cfadb450fc6905086660ec026fa",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Weaves/ReleaseTargets.cs",
+      "expected": "abc1d4a02d269e1ca96794aa2fc900a11b9d42e9",
+      "actual": "abc1d4a02d269e1ca96794aa2fc900a11b9d42e9",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Weaves/SlotBehaviors.cs",
+      "expected": "fad895db8b5ff0973880c27d4c908c9832b118b7",
+      "actual": "fad895db8b5ff0973880c27d4c908c9832b118b7",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Weaves/TargetKinds.cs",
+      "expected": "0ed6cb88ba66f4ee9581f7a5639a7b66b8e73119",
+      "actual": "0ed6cb88ba66f4ee9581f7a5639a7b66b8e73119",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Weaves/Toggles.cs",
+      "expected": "48a96de00eee5457686399e5fbed939d8734d650",
+      "actual": "48a96de00eee5457686399e5fbed939d8734d650",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Weaves/Triggers.cs",
+      "expected": "e90c4d0dfdeb5ba3654c9d1444def7ceb7c2e020",
+      "actual": "e90c4d0dfdeb5ba3654c9d1444def7ceb7c2e020",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Weaves/UseCharges.cs",
+      "expected": "532ccfd9096e1e55332dc64d8226454d398e75b1",
+      "actual": "532ccfd9096e1e55332dc64d8226454d398e75b1",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/Weaves/WeaveRuntime.cs",
+      "expected": "d9dbcb8a2e59840183d62d41dd4d677b2a3b0c3d",
+      "actual": "d9dbcb8a2e59840183d62d41dd4d677b2a3b0c3d",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/World/ChunkData.cs",
+      "expected": "2fd0c806530dd8924cbaf97bd6b589f93321fb83",
+      "actual": "2fd0c806530dd8924cbaf97bd6b589f93321fb83",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/World/LineOfSight.cs",
+      "expected": "d3a2566359cbebf6a85aefb000a9b92aa2521849",
+      "actual": "d3a2566359cbebf6a85aefb000a9b92aa2521849",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/World/Pathfinder.cs",
+      "expected": "dcb2f9ddfc31647572db8ac32a55542cbc3ce145",
+      "actual": "dcb2f9ddfc31647572db8ac32a55542cbc3ce145",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/World/SpatialGrid.cs",
+      "expected": "3adc32ed565efeb1568c60f32e6f2224ee7dfdca",
+      "actual": "3adc32ed565efeb1568c60f32e6f2224ee7dfdca",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/World/Terrain.cs",
+      "expected": "191b7847122a2e90e48dc03a8faa5973f75c12b5",
+      "actual": "191b7847122a2e90e48dc03a8faa5973f75c12b5",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/World/WorldLayout.cs",
+      "expected": "af758156a28217d29d3e84f90e732c7614f52825",
+      "actual": "af758156a28217d29d3e84f90e732c7614f52825",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/WorldGen/BiomeTable.cs",
+      "expected": "7b686cff7e8ce845c177c21c26be7ce48ed84b45",
+      "actual": "7b686cff7e8ce845c177c21c26be7ce48ed84b45",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/WorldGen/ChunkPasses.cs",
+      "expected": "f09b7c1743515148753c8187c05785bf84fe9855",
+      "actual": "f09b7c1743515148753c8187c05785bf84fe9855",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/WorldGen/ClimateGrid.cs",
+      "expected": "ade26741a0e9fcc83460eae7100fb0f0af81266a",
+      "actual": "ade26741a0e9fcc83460eae7100fb0f0af81266a",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/WorldGen/CoordCache.cs",
+      "expected": "61dc3257c00b8982747c38aad070b6ef054f5d5b",
+      "actual": "61dc3257c00b8982747c38aad070b6ef054f5d5b",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/WorldGen/GenerationOverlays.cs",
+      "expected": "051fc005bbf54a4d0864f71430350a8f60923740",
+      "actual": "051fc005bbf54a4d0864f71430350a8f60923740",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/WorldGen/WorldGenerator.cs",
+      "expected": "7ebae2dd3915824d5ad96752b3dda21e81cd70e8",
+      "actual": "7ebae2dd3915824d5ad96752b3dda21e81cd70e8",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Core/WorldGen/ZonePlanner.cs",
+      "expected": "7b32c64f9b3a58145029c1f82474ddfcf2f89204",
+      "actual": "7b32c64f9b3a58145029c1f82474ddfcf2f89204",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Protocol/CastCueMsg.cs",
+      "expected": "c9276597aa3eff2a62eed3acec1f98b74d29453f",
+      "actual": "c9276597aa3eff2a62eed3acec1f98b74d29453f",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Protocol/CastForecastMsg.cs",
+      "expected": "0d87db8d803cdf37a59e7975756abaa49f282191",
+      "actual": "0d87db8d803cdf37a59e7975756abaa49f282191",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Protocol/HollowWake.Protocol.csproj",
+      "expected": "f1cb3c03da9c88b4c2b300263abb9b1e20e43b6c",
+      "actual": "f1cb3c03da9c88b4c2b300263abb9b1e20e43b6c",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Protocol/InterfaceMessages.cs",
+      "expected": "d190b15102b71acab920c06f62c85a9796c8403a",
+      "actual": "d190b15102b71acab920c06f62c85a9796c8403a",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Protocol/MessageSerializer.cs",
+      "expected": "87c8625c716df5e70695bce58de68c102a3686b8",
+      "actual": "87c8625c716df5e70695bce58de68c102a3686b8",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Protocol/Messages.cs",
+      "expected": "946fd568ff169e7fe68d3b207e47761b2db4f64d",
+      "actual": "946fd568ff169e7fe68d3b207e47761b2db4f64d",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Protocol/TypeScriptContract.cs",
+      "expected": "c000711099c7829881c0abac635cf9450d62867d",
+      "actual": "c000711099c7829881c0abac635cf9450d62867d",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Server/Config/CastForecastSettings.cs",
+      "expected": "64b3fb4ce0a40e9bb5850706f58f9a2bef8469a9",
+      "actual": "64b3fb4ce0a40e9bb5850706f58f9a2bef8469a9",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Server/Config/ServerConfig.cs",
+      "expected": "3709c341d3be8b2939deafe309a9a3eb302bacf3",
+      "actual": "3709c341d3be8b2939deafe309a9a3eb302bacf3",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Server/Config/SnapshotSettings.cs",
+      "expected": "fe1219c1ad0e243fb16dad4079f0429bb2bfb6cf",
+      "actual": "fe1219c1ad0e243fb16dad4079f0429bb2bfb6cf",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Server/GameServer.cs",
+      "expected": "f2a4fe82ab3b11872043305f402d4b071acc4cd5",
+      "actual": "f2a4fe82ab3b11872043305f402d4b071acc4cd5",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Server/HollowWake.Server.csproj",
+      "expected": "e3f53630c736a592807e5cefc091255639b1cd8d",
+      "actual": "e3f53630c736a592807e5cefc091255639b1cd8d",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Server/Net/CompositeTransport.cs",
+      "expected": "6d33d2a3dad3d11d58cf7ffe852e445e76441b7e",
+      "actual": "6d33d2a3dad3d11d58cf7ffe852e445e76441b7e",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Server/Net/LoopbackTransport.cs",
+      "expected": "156f63b5d609a9fce3be052e13857498751799a5",
+      "actual": "156f63b5d609a9fce3be052e13857498751799a5",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Server/Net/TcpTransport.cs",
+      "expected": "0f19b95e937f5bd9fbdc075accc7aea9f860ada1",
+      "actual": "0f19b95e937f5bd9fbdc075accc7aea9f860ada1",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Server/Net/Transport.cs",
+      "expected": "b1ba2e230c864320d1dd3813ccd3440126d88c51",
+      "actual": "b1ba2e230c864320d1dd3813ccd3440126d88c51",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Server/Net/WebRoot.cs",
+      "expected": "1337b54eab1774a2ee4204aa21f8656c245fc06c",
+      "actual": "1337b54eab1774a2ee4204aa21f8656c245fc06c",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Server/Net/WebSocketTransport.cs",
+      "expected": "8af9e53b8d9f3ec1c680147de24837c530c59350",
+      "actual": "8af9e53b8d9f3ec1c680147de24837c530c59350",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Server/Persistence/JsonStores.cs",
+      "expected": "f4f24bf30d74f0862fa3b2d3d63b76fbc8f85d16",
+      "actual": "f4f24bf30d74f0862fa3b2d3d63b76fbc8f85d16",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Server/ServerInfo.cs",
+      "expected": "04f58e24297f908407afca365c3f237309c44366",
+      "actual": "04f58e24297f908407afca365c3f237309c44366",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Server/Sessions/Session.cs",
+      "expected": "1458c641163f0c3bd9dccbdbdc48f0e133e39104",
+      "actual": "1458c641163f0c3bd9dccbdbdc48f0e133e39104",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Server/Sessions/SessionManager.cs",
+      "expected": "9ba78ce57ddc05d8abde243806983ef76ec3861c",
+      "actual": "9ba78ce57ddc05d8abde243806983ef76ec3861c",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Server/World/CastCues.cs",
+      "expected": "5ec7f23f4b85aa8e81b6249abd1a26cdb29225ee",
+      "actual": "5ec7f23f4b85aa8e81b6249abd1a26cdb29225ee",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Server/World/CastForecasts.cs",
+      "expected": "750e15eba7b62e4159244c587e5f8ede9ab21d22",
+      "actual": "750e15eba7b62e4159244c587e5f8ede9ab21d22",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Server/World/InterfaceStates.cs",
+      "expected": "4d4fd0d84270f685543ece7dddb9eb1fe664c433",
+      "actual": "4d4fd0d84270f685543ece7dddb9eb1fe664c433",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Server/World/OutcomeCueAdapters.cs",
+      "expected": "40a131e09794a817ea4b5941362be4e186a70cd5",
+      "actual": "40a131e09794a817ea4b5941362be4e186a70cd5",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Server/World/SnapshotBuilder.cs",
+      "expected": "03c1633052b9e7e29309bbed64e9d0243bb4591a",
+      "actual": "03c1633052b9e7e29309bbed64e9d0243bb4591a",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Server/World/Snapshots.cs",
+      "expected": "330a0c4a7b868f6897b66fedebe4ad295d254ae1",
+      "actual": "330a0c4a7b868f6897b66fedebe4ad295d254ae1",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Server/World/ZoneHost.cs",
+      "expected": "e3733605224568f6a439e95b3c233a3ef115b4cb",
+      "actual": "e3733605224568f6a439e95b3c233a3ef115b4cb",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Server/World/ZoneInstance.cs",
+      "expected": "1dad33df1298d1fecaf19fd366e338c494f40cca",
+      "actual": "1dad33df1298d1fecaf19fd366e338c494f40cca",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Tools/AllocationSample.cs",
+      "expected": "649a695a1485824d80a978883fc7eb97aa762c4d",
+      "actual": "649a695a1485824d80a978883fc7eb97aa762c4d",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Tools/Bench.cs",
+      "expected": "3b5a9e5f78e2fe407af2a6611465feab0b373b53",
+      "actual": "3b5a9e5f78e2fe407af2a6611465feab0b373b53",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Tools/BenchDeliveries.cs",
+      "expected": "011fd5b286f26e3800c6634b3fa15b5e01a7bc46",
+      "actual": "011fd5b286f26e3800c6634b3fa15b5e01a7bc46",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Tools/HollowWake.Tools.csproj",
+      "expected": "89a1f7dd00499c055111066e1cd356995b9f184b",
+      "actual": "89a1f7dd00499c055111066e1cd356995b9f184b",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Tools/LintCommand.cs",
+      "expected": "2a1d33eb67d5a0ee05514167684cd8d53567a5b7",
+      "actual": "2a1d33eb67d5a0ee05514167684cd8d53567a5b7",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Tools/PassiveLint.cs",
+      "expected": "6746d6fdd15c64a9ce8b0e1fa9d4e64fa9fc971b",
+      "actual": "6746d6fdd15c64a9ce8b0e1fa9d4e64fa9fc971b",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Tools/Probe.cs",
+      "expected": "062c3f5f87f4ecea3c11eb89d3a1aaacfd7b9074",
+      "actual": "062c3f5f87f4ecea3c11eb89d3a1aaacfd7b9074",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Tools/Program.cs",
+      "expected": "ce7c9acf55b8ed7569898ee8f60371581460668b",
+      "actual": "ce7c9acf55b8ed7569898ee8f60371581460668b",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Tools/SnapshotProfile.cs",
+      "expected": "9080d5c1e5fe2109b49589171cd95d562daddf6f",
+      "actual": "9080d5c1e5fe2109b49589171cd95d562daddf6f",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Tools/SnapshotProfileTrace.cs",
+      "expected": "b9a6d8a23bfff7f9bfea9e2f3748b2e345a17bf6",
+      "actual": "b9a6d8a23bfff7f9bfea9e2f3748b2e345a17bf6",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Tools/TournamentCommand.cs",
+      "expected": "b7e28b4c251d98ad0036de13e89583b5c3906d05",
+      "actual": "b7e28b4c251d98ad0036de13e89583b5c3906d05",
+      "equal": true
+    },
+    {
+      "file": "src/HollowWake.Tools/WeaveReport.cs",
+      "expected": "c8cc93c647bc3179513df74dc360c33ede8eb8d3",
+      "actual": "c8cc93c647bc3179513df74dc360c33ede8eb8d3",
+      "equal": true
+    }
+  ],
+  "changes": [
+    [
+      "src/HollowWake.Core/Effects/Handlers/DeliveryHandlers.cs",
+      "GroundFloor = Spec.Gravity ? null : Aim.GroundFloor?.Invoke(ctx) ??\n                    (Aim.ReturnGroundFloor && Spec.Return != ReturnMode.None && f.Orbit == 0 && ctx.LaunchLift is null ?\n                        (float)sim.Content.Rules.Number(\"delivery.projectile_ground_floor\", 0) : null),",
+      "GroundFloor = Spec.Gravity ? null : Aim.GroundFloor?.Invoke(ctx),"
+    ],
+    [
+      "src/HollowWake.Core/Systems/ProjectileSystem.cs",
+      "if (Returns(p) && p.GroundFloor is null)",
+      "if (Returns(p))"
+    ]
+  ]
+}

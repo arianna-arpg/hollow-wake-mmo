@@ -1,0 +1,9 @@
+TEST evidence: <worktree>\artifacts\forecast-body-integration\final-foundation-c6d853bd\melee\run-mWQX2j
+TEST build-server; evidence: <worktree>\artifacts\forecast-body-integration\final-foundation-c6d853bd\melee\run-mWQX2j
+TEST typecheck-web; evidence: <worktree>\artifacts\forecast-body-integration\final-foundation-c6d853bd\melee\run-mWQX2j
+TEST build-web; evidence: <worktree>\artifacts\forecast-body-integration\final-foundation-c6d853bd\melee\run-mWQX2j
+TEST build-godot; evidence: <worktree>\artifacts\forecast-body-integration\final-foundation-c6d853bd\melee\run-mWQX2j
+TEST smoke-web; evidence: <worktree>\artifacts\forecast-body-integration\final-foundation-c6d853bd\melee\run-mWQX2j
+TEST import-godot; evidence: <worktree>\artifacts\forecast-body-integration\final-foundation-c6d853bd\melee\run-mWQX2j
+TEST smoke-godot; evidence: <worktree>\artifacts\forecast-body-integration\final-foundation-c6d853bd\melee\run-mWQX2j
+TEST PASSED; report: <worktree>\artifacts\forecast-body-integration\final-foundation-c6d853bd\melee\run-mWQX2j\result.json

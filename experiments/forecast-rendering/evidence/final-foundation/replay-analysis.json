@@ -1,0 +1,286 @@
+{
+  "source": "c6d853bdcfc06b9d983380de0ba265d287472d55",
+  "referenceChanges": [
+    {
+      "pair": "loosed_skirmisher:hob",
+      "before": "1cf76df19ceeb296",
+      "actual": "af3540685cfc7be4"
+    },
+    {
+      "pair": "loosed_skirmisher:boar",
+      "before": "cf41fad065ff7e16",
+      "actual": "bd11bbb1c6e05665"
+    }
+  ],
+  "pairChangesFrom295": [
+    {
+      "pair": "loosed_skirmisher:hob",
+      "before": "b9217d0eaacd2b63",
+      "actual": "af3540685cfc7be4",
+      "nonHashDifferences": []
+    },
+    {
+      "pair": "loosed_skirmisher:boar",
+      "before": "edfaa2f2fe5c81a8",
+      "actual": "bd11bbb1c6e05665",
+      "nonHashDifferences": [
+        {
+          "path": "/TtkHigh",
+          "before": 9.2,
+          "after": 9.25
+        }
+      ]
+    }
+  ],
+  "provingDifferences": [],
+  "floor342": {
+    "differencesFromActual": [],
+    "differencesFrom295": [
+      {
+        "path": "/Hash",
+        "before": "8eb07e06cae31ac7",
+        "after": "c7bc954ed94f2efc"
+      },
+      {
+        "path": "/Pairs/1/Hash",
+        "before": "b9217d0eaacd2b63",
+        "after": "af3540685cfc7be4"
+      },
+      {
+        "path": "/Pairs/2/Hash",
+        "before": "edfaa2f2fe5c81a8",
+        "after": "bd11bbb1c6e05665"
+      },
+      {
+        "path": "/Pairs/2/TtkHigh",
+        "before": 9.2,
+        "after": 9.25
+      },
+      {
+        "path": "/Fights/10/Hash",
+        "before": "ceea625f7e57756d",
+        "after": "1cb5710ee61b3756"
+      },
+      {
+        "path": "/Fights/11/Hash",
+        "before": "19b4b09755577226",
+        "after": "25463b4bbafdfd56"
+      },
+      {
+        "path": "/Fights/12/Hash",
+        "before": "bebdda109197e38a",
+        "after": "751dc76e0e4cbf2f"
+      },
+      {
+        "path": "/Fights/13/Hash",
+        "before": "68971e78a9b49a1f",
+        "after": "3c5106b75b54cee7"
+      },
+      {
+        "path": "/Fights/14/Hash",
+        "before": "87d02fab7f8d7062",
+        "after": "5606b2727e36bd1d"
+      },
+      {
+        "path": "/Fights/15/Hash",
+        "before": "7552490a4bddf600",
+        "after": "40cfde8d7a7fe652"
+      },
+      {
+        "path": "/Fights/16/Hash",
+        "before": "d53a348a090f85c0",
+        "after": "f5c07a5a653fed7f"
+      },
+      {
+        "path": "/Fights/17/Hash",
+        "before": "a14e56dd97848411",
+        "after": "d1666d22fd58da5a"
+      },
+      {
+        "path": "/Fights/18/Hash",
+        "before": "fe9a4473fc7c7ec4",
+        "after": "c72acd4847d3508b"
+      },
+      {
+        "path": "/Fights/21/EndTick",
+        "before": 184,
+        "after": 185
+      },
+      {
+        "path": "/Fights/21/Seconds",
+        "before": 9.2,
+        "after": 9.25
+      },
+      {
+        "path": "/Fights/21/Hash",
+        "before": "4bb1d9264b14cd75",
+        "after": "aa710a430bfef32a"
+      },
+      {
+        "path": "/Fights/21/SideA/LifeLeft",
+        "before": 0.862,
+        "after": 0.863
+      },
+      {
+        "path": "/Fights/22/Hash",
+        "before": "9450738822b7468e",
+        "after": "bd2df14c6a2b741d"
+      },
+      {
+        "path": "/Fights/25/EndTick",
+        "before": 164,
+        "after": 165
+      },
+      {
+        "path": "/Fights/25/Seconds",
+        "before": 8.2,
+        "after": 8.25
+      },
+      {
+        "path": "/Fights/25/Hash",
+        "before": "43937996b65a8eba",
+        "after": "4ec4c9125a0174c4"
+      },
+      {
+        "path": "/Fights/26/Hash",
+        "before": "76293bb5ab780bab",
+        "after": "c7becdee625b6fbb"
+      },
+      {
+        "path": "/Fights/28/Hash",
+        "before": "f7e26969f2b5824b",
+        "after": "5afb22a8c2aa4e74"
+      },
+      {
+        "path": "/Fights/29/Hash",
+        "before": "773906ec2022a6fd",
+        "after": "62c5bccc045c39f2"
+      }
+    ]
+  },
+  "returnControl": {
+    "differencesFromActual": [
+      {
+        "path": "/Hash",
+        "before": "c7bc954ed94f2efc",
+        "after": "8eb07e06cae31ac7"
+      },
+      {
+        "path": "/Pairs/1/Hash",
+        "before": "af3540685cfc7be4",
+        "after": "b9217d0eaacd2b63"
+      },
+      {
+        "path": "/Pairs/2/Hash",
+        "before": "bd11bbb1c6e05665",
+        "after": "edfaa2f2fe5c81a8"
+      },
+      {
+        "path": "/Pairs/2/TtkHigh",
+        "before": 9.25,
+        "after": 9.2
+      },
+      {
+        "path": "/Fights/10/Hash",
+        "before": "1cb5710ee61b3756",
+        "after": "ceea625f7e57756d"
+      },
+      {
+        "path": "/Fights/11/Hash",
+        "before": "25463b4bbafdfd56",
+        "after": "19b4b09755577226"
+      },
+      {
+        "path": "/Fights/12/Hash",
+        "before": "751dc76e0e4cbf2f",
+        "after": "bebdda109197e38a"
+      },
+      {
+        "path": "/Fights/13/Hash",
+        "before": "3c5106b75b54cee7",
+        "after": "68971e78a9b49a1f"
+      },
+      {
+        "path": "/Fights/14/Hash",
+        "before": "5606b2727e36bd1d",
+        "after": "87d02fab7f8d7062"
+      },
+      {
+        "path": "/Fights/15/Hash",
+        "before": "40cfde8d7a7fe652",
+        "after": "7552490a4bddf600"
+      },
+      {
+        "path": "/Fights/16/Hash",
+        "before": "f5c07a5a653fed7f",
+        "after": "d53a348a090f85c0"
+      },
+      {
+        "path": "/Fights/17/Hash",
+        "before": "d1666d22fd58da5a",
+        "after": "a14e56dd97848411"
+      },
+      {
+        "path": "/Fights/18/Hash",
+        "before": "c72acd4847d3508b",
+        "after": "fe9a4473fc7c7ec4"
+      },
+      {
+        "path": "/Fights/21/EndTick",
+        "before": 185,
+        "after": 184
+      },
+      {
+        "path": "/Fights/21/Seconds",
+        "before": 9.25,
+        "after": 9.2
+      },
+      {
+        "path": "/Fights/21/Hash",
+        "before": "aa710a430bfef32a",
+        "after": "4bb1d9264b14cd75"
+      },
+      {
+        "path": "/Fights/21/SideA/LifeLeft",
+        "before": 0.863,
+        "after": 0.862
+      },
+      {
+        "path": "/Fights/22/Hash",
+        "before": "bd2df14c6a2b741d",
+        "after": "9450738822b7468e"
+      },
+      {
+        "path": "/Fights/25/EndTick",
+        "before": 165,
+        "after": 164
+      },
+      {
+        "path": "/Fights/25/Seconds",
+        "before": 8.25,
+        "after": 8.2
+      },
+      {
+        "path": "/Fights/25/Hash",
+        "before": "4ec4c9125a0174c4",
+        "after": "43937996b65a8eba"
+      },
+      {
+        "path": "/Fights/26/Hash",
+        "before": "c7becdee625b6fbb",
+        "after": "76293bb5ab780bab"
+      },
+      {
+        "path": "/Fights/28/Hash",
+        "before": "5afb22a8c2aa4e74",
+        "after": "f7e26969f2b5824b"
+      },
+      {
+        "path": "/Fights/29/Hash",
+        "before": "62c5bccc045c39f2",
+        "after": "773906ec2022a6fd"
+      }
+    ],
+    "differencesFrom295": []
+  }
+}

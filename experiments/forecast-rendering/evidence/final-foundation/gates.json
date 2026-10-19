@@ -1,0 +1,237 @@
+[
+  {
+    "name": "release-build",
+    "command": "dotnet",
+    "arguments": [
+      "build",
+      "HollowWake.sln",
+      "-c",
+      "Release",
+      "--no-restore",
+      "-m:1",
+      "-nr:false",
+      "-p:UseSharedCompilation=false"
+    ],
+    "source": "c6d853bdcfc06b9d983380de0ba265d287472d55",
+    "startedUtc": "2026-10-19T00:57:22.7891493Z",
+    "endedUtc": "2026-10-19T00:57:48.6311067Z",
+    "exitCode": 0,
+    "log": "release-build.txt"
+  },
+  {
+    "name": "full-tests",
+    "command": "dotnet",
+    "arguments": [
+      "test",
+      "HollowWake.sln",
+      "-c",
+      "Release",
+      "--no-build",
+      "--no-restore",
+      "-m:1",
+      "-nr:false"
+    ],
+    "source": "c6d853bdcfc06b9d983380de0ba265d287472d55",
+    "startedUtc": "2026-10-19T00:57:48.8942086Z",
+    "endedUtc": "2026-10-19T00:58:47.7912554Z",
+    "exitCode": 1,
+    "log": "full-tests.txt"
+  },
+  {
+    "name": "validate",
+    "command": "dotnet",
+    "arguments": [
+      "exec",
+      "src/HollowWake.Tools/bin/Release/net10.0/hollowwake.dll",
+      "validate"
+    ],
+    "source": "c6d853bdcfc06b9d983380de0ba265d287472d55",
+    "startedUtc": "2026-10-19T00:58:47.8353006Z",
+    "endedUtc": "2026-10-19T00:58:48.8610446Z",
+    "exitCode": 0,
+    "log": "validate.txt"
+  },
+  {
+    "name": "load",
+    "command": "dotnet",
+    "arguments": [
+      "exec",
+      "src/HollowWake.Tools/bin/Release/net10.0/hollowwake.dll",
+      "load",
+      "--x",
+      "0",
+      "--y",
+      "0"
+    ],
+    "source": "c6d853bdcfc06b9d983380de0ba265d287472d55",
+    "startedUtc": "2026-10-19T00:58:48.9050514Z",
+    "endedUtc": "2026-10-19T00:58:50.6074249Z",
+    "exitCode": 0,
+    "log": "load.txt"
+  },
+  {
+    "name": "fight",
+    "command": "dotnet",
+    "arguments": [
+      "exec",
+      "src/HollowWake.Tools/bin/Release/net10.0/hollowwake.dll",
+      "fight",
+      "proving_reaver",
+      "proving_bulwark"
+    ],
+    "source": "c6d853bdcfc06b9d983380de0ba265d287472d55",
+    "startedUtc": "2026-10-19T00:58:50.6528993Z",
+    "endedUtc": "2026-10-19T00:58:51.8808411Z",
+    "exitCode": 0,
+    "log": "fight.txt"
+  },
+  {
+    "name": "replay-first",
+    "command": "dotnet",
+    "arguments": [
+      "exec",
+      "src/HollowWake.Tools/bin/Release/net10.0/hollowwake.dll",
+      "tournament",
+      "--standard",
+      "--check-hashes",
+      "experiments/combat-grammar/baselines/standard-duels.json",
+      "--out",
+      "<worktree>\\artifacts\\forecast-body-integration\\final-foundation-c6d853bd\\standard-first.json"
+    ],
+    "source": "c6d853bdcfc06b9d983380de0ba265d287472d55",
+    "startedUtc": "2026-10-19T00:58:51.9271807Z",
+    "endedUtc": "2026-10-19T00:58:54.1225063Z",
+    "exitCode": 1,
+    "log": "replay-first.txt"
+  },
+  {
+    "name": "proving",
+    "command": "dotnet",
+    "arguments": [
+      "exec",
+      "src/HollowWake.Tools/bin/Release/net10.0/hollowwake.dll",
+      "tournament",
+      "--bands",
+      "--out",
+      "<worktree>\\artifacts\\forecast-body-integration\\final-foundation-c6d853bd\\proving.json"
+    ],
+    "source": "c6d853bdcfc06b9d983380de0ba265d287472d55",
+    "startedUtc": "2026-10-19T00:58:54.1700303Z",
+    "endedUtc": "2026-10-19T00:58:56.0853076Z",
+    "exitCode": 1,
+    "log": "proving.txt"
+  },
+  {
+    "name": "protocol",
+    "command": "dotnet",
+    "arguments": [
+      "exec",
+      "src/HollowWake.Tools/bin/Release/net10.0/hollowwake.dll",
+      "protocol-ts",
+      "--check"
+    ],
+    "source": "c6d853bdcfc06b9d983380de0ba265d287472d55",
+    "startedUtc": "2026-10-19T00:58:56.1270980Z",
+    "endedUtc": "2026-10-19T00:58:56.2199463Z",
+    "exitCode": 0,
+    "log": "protocol.txt"
+  },
+  {
+    "name": "web-tests",
+    "command": "npm.cmd",
+    "arguments": [
+      "--prefix",
+      "web",
+      "test"
+    ],
+    "source": "c6d853bdcfc06b9d983380de0ba265d287472d55",
+    "startedUtc": "2026-10-19T00:58:56.2582360Z",
+    "endedUtc": "2026-10-19T00:59:00.0456242Z",
+    "exitCode": 0,
+    "log": "web-tests.txt"
+  },
+  {
+    "name": "web-build",
+    "command": "npm.cmd",
+    "arguments": [
+      "--prefix",
+      "web",
+      "run",
+      "build"
+    ],
+    "source": "c6d853bdcfc06b9d983380de0ba265d287472d55",
+    "startedUtc": "2026-10-19T00:59:00.0940987Z",
+    "endedUtc": "2026-10-19T00:59:06.9944396Z",
+    "exitCode": 0,
+    "log": "web-build.txt"
+  },
+  {
+    "name": "harness-tests",
+    "command": "node",
+    "arguments": [
+      "--test",
+      "scripts/test-background.test.mjs"
+    ],
+    "source": "c6d853bdcfc06b9d983380de0ba265d287472d55",
+    "startedUtc": "2026-10-19T00:59:07.0394685Z",
+    "endedUtc": "2026-10-19T00:59:09.0866046Z",
+    "exitCode": 0,
+    "log": "harness-tests.txt"
+  },
+  {
+    "name": "probe",
+    "command": "node",
+    "arguments": [
+      "artifacts/forecast-body-integration/final-probe.mjs"
+    ],
+    "source": "c6d853bdcfc06b9d983380de0ba265d287472d55",
+    "startedUtc": "2026-10-19T00:59:09.1299604Z",
+    "endedUtc": "2026-10-19T00:59:20.9075635Z",
+    "exitCode": 0,
+    "log": "probe.txt"
+  },
+  {
+    "name": "melee-smoke",
+    "command": "node",
+    "arguments": [
+      "scripts/test-background.mjs",
+      "--suite",
+      "all",
+      "--calling",
+      "holdfast",
+      "--forecasts",
+      "--timeout",
+      "180",
+      "--out",
+      "<worktree>\\artifacts\\forecast-body-integration\\final-foundation-c6d853bd\\melee"
+    ],
+    "source": "c6d853bdcfc06b9d983380de0ba265d287472d55",
+    "startedUtc": "2026-10-19T00:59:20.9526174Z",
+    "endedUtc": "2026-10-19T01:01:42.1028059Z",
+    "exitCode": 0,
+    "log": "melee-smoke.txt"
+  },
+  {
+    "name": "spell-smoke",
+    "command": "node",
+    "arguments": [
+      "scripts/test-background.mjs",
+      "--suite",
+      "all",
+      "--calling",
+      "kindler",
+      "--forecasts",
+      "--cast-cues",
+      "--no-build",
+      "--timeout",
+      "180",
+      "--out",
+      "<worktree>\\artifacts\\forecast-body-integration\\final-foundation-c6d853bd\\spell"
+    ],
+    "source": "c6d853bdcfc06b9d983380de0ba265d287472d55",
+    "startedUtc": "2026-10-19T01:01:42.1482083Z",
+    "endedUtc": "2026-10-19T01:03:49.7445320Z",
+    "exitCode": 0,
+    "log": "spell-smoke.txt"
+  }
+]

@@ -1,0 +1,214 @@
+{
+  "source": "c6d853bdcfc06b9d983380de0ba265d287472d55",
+  "foundation": "1bbaa120730376e1297c4f4a7011291c1f69b542",
+  "merge": "b1a954d05cfc8730e628062fd0a56914e1e91e23",
+  "logs": [
+    {
+      "name": "release-build.txt",
+      "rawSha256": "c101eb57a4ef84e6030223b798efdc52abf5f8bc123b2f445cefef73cbfba9bb"
+    },
+    {
+      "name": "full-tests.txt",
+      "rawSha256": "c30409754792cc7e3650d0b0e6d8fc05aa6225eb4d5db683146a0cbda7280a85"
+    },
+    {
+      "name": "validate.txt",
+      "rawSha256": "256d99d04d3b74192104b776ec0da3719635286f81e4f4898f534698c624000f"
+    },
+    {
+      "name": "load.txt",
+      "rawSha256": "6890cde1e603c4fafe771d43f5b748350c078955a0fde9921ce51e81cb132755"
+    },
+    {
+      "name": "fight.txt",
+      "rawSha256": "f3a13891aa11dee6770e200424cea1ac6beadcc92fcc86f050ff75f3fba888db"
+    },
+    {
+      "name": "replay-first.txt",
+      "rawSha256": "f7f5838eadc45f90025d64e2dd8cb8f3e05c68609811d9ac8643ac9c6c0d3bb2"
+    },
+    {
+      "name": "proving.txt",
+      "rawSha256": "ff04f90a36f1a39f001683cd186882a5dd48cdc09d1ea0b53c46a07e6b93e8df"
+    },
+    {
+      "name": "protocol.txt",
+      "rawSha256": "a546093acfd0a7a87a77f0ab9831ed74d98bd6c3457e7bfdebda21628e9e768f"
+    },
+    {
+      "name": "web-tests.txt",
+      "rawSha256": "026af877b90c1c2ca87d9565213379afcede650cffa718cee33c910f36f9bd65"
+    },
+    {
+      "name": "web-build.txt",
+      "rawSha256": "4aaa479fe8bdccc87d2aadfd4fe6086ab9c6374fdf2707bd876875e8e502e8fc"
+    },
+    {
+      "name": "harness-tests.txt",
+      "rawSha256": "d8764af1c17bff630383784254f7e0463e9ff848692b71d08c8666d700e7cf03"
+    },
+    {
+      "name": "probe.txt",
+      "rawSha256": "013e30f5cdda2c1a852fbd0b2db4391a1f7a803fd5dcb81bb03089aa615fa40e"
+    },
+    {
+      "name": "melee-smoke.txt",
+      "rawSha256": "7c55548660512a937cc16cba60815ff2daedb4c8f8a8a8843297e38d9f69b861"
+    },
+    {
+      "name": "spell-smoke.txt",
+      "rawSha256": "21c86b0d20956addb2f75367969990de404f693a2dc8909af5c75a9419c625c6"
+    },
+    {
+      "name": "standard-floor342.txt",
+      "rawSha256": "c89ea46a2af686fbc6d89165876d7a385a4edec7a0e2e08a553c119f73b25f13"
+    },
+    {
+      "name": "return-control-build.txt",
+      "rawSha256": "48881a2c339561ecbf6931b11cfa3c93c60f392bf4f1d15ffbd08b9372ce7a64"
+    },
+    {
+      "name": "return-control-standard.txt",
+      "rawSha256": "ccec3c521e5d38d9d83c393a4e5405382fa5d2544ebcf05ad4fb1a1d1619d3dc"
+    },
+    {
+      "name": "replay-test-final.txt",
+      "rawSha256": "6727fbfdbdbd96449b4703fb2eb16bb17c6cc30c86aac89206a9167f33922d99"
+    },
+    {
+      "name": "replay-final.txt",
+      "rawSha256": "3e1cab29a333a83724c673b61a7da73f159e23a8554591e30837c472f9e311f9"
+    }
+  ],
+  "smokes": [
+    {
+      "mode": "melee",
+      "run": "run-mWQX2j",
+      "status": "passed",
+      "cleanupErrors": [],
+      "nativeRendering": "not covered by headless mode",
+      "stages": [
+        {
+          "name": "smoke-web",
+          "passed": 33,
+          "total": 33,
+          "skipped": []
+        },
+        {
+          "name": "smoke-godot",
+          "passed": 37,
+          "total": 37,
+          "skipped": [
+            "appearance rendering: headless display; geometry/card performance and readability require graphical evidence",
+            "theme rendered pixels: headless display; theme state checked above"
+          ]
+        }
+      ],
+      "screenshots": [
+        {
+          "name": "01_isometric.png",
+          "sha256": "05edf91432f07d996dda7bbeb5ab44b75558ac03833a1126abfad323548cfb2b",
+          "inspected": true
+        },
+        {
+          "name": "16_cards.png",
+          "sha256": "d7a3699ba552c5d49e83fcd8576687a04b3446e9d8dcc4df8096d15e6a7dfff6",
+          "inspected": true
+        },
+        {
+          "name": "forecast_primary_candidate.png",
+          "sha256": "aced6c334b74a39d8c677a8808d7132600da4c85d80e1502c1a7648d5ecfa27a",
+          "inspected": true
+        }
+      ]
+    },
+    {
+      "mode": "spell",
+      "run": "run-KkiKZx",
+      "status": "passed",
+      "cleanupErrors": [],
+      "nativeRendering": "not covered by headless mode",
+      "stages": [
+        {
+          "name": "smoke-web",
+          "passed": 34,
+          "total": 34,
+          "skipped": []
+        },
+        {
+          "name": "smoke-godot",
+          "passed": 38,
+          "total": 38,
+          "skipped": [
+            "appearance rendering: headless display; geometry/card performance and readability require graphical evidence",
+            "theme rendered pixels: headless display; theme state checked above"
+          ]
+        }
+      ],
+      "screenshots": [
+        {
+          "name": "cast_cue_start.png",
+          "sha256": "03354cc5a10471b0778331b002ab583ec3ba24f479541bbc654123b52fa53a82",
+          "inspected": true
+        },
+        {
+          "name": "cast_cue_release.png",
+          "sha256": "129017515d8a2ab04fdee4acb1bccf4ede78857f7541a253d415c86e03cc1d46",
+          "inspected": true
+        },
+        {
+          "name": "cast_cue_impact.png",
+          "sha256": "e264e3a01b6c41c2de09b222bd34d3fa3282fa3984a56eba10799a11cff8ed7f",
+          "inspected": true
+        }
+      ]
+    }
+  ],
+  "performanceRun": false,
+  "mainMerged": false,
+  "verification": {
+    "buildWarnings": 0,
+    "buildErrors": 0,
+    "initialCore": {
+      "passed": 3056,
+      "failed": 1
+    },
+    "serverPassed": 96,
+    "nativeUnitPassed": 188,
+    "soleFailure": "Two provisional standard replay expectations",
+    "replayTestRerunPassed": 1,
+    "distinctDotNetCases": 3341,
+    "fullSuiteRerun": false,
+    "webPassed": 472,
+    "harnessPassed": 10,
+    "validateErrors": 0,
+    "validateWarnings": 0,
+    "loadTicks": 200,
+    "fight": true,
+    "protocolCurrent": true,
+    "probeFeatures": 7,
+    "windowsReplayPairs": 7,
+    "provingInheritedBreaches": 3,
+    "provingStructurallyUnchanged": true
+  },
+  "replay": {
+    "floorReportsIdentical": true,
+    "returnControlRestores295Report": true,
+    "finalRepeatsOriginalActual": true,
+    "sourceControlFiles": 423,
+    "changedControlFiles": [
+      "src/HollowWake.Core/Effects/Handlers/DeliveryHandlers.cs",
+      "src/HollowWake.Core/Systems/ProjectileSystem.cs"
+    ]
+  },
+  "limitations": {
+    "nativePixels": false,
+    "physicalControllers": false,
+    "nativeShutdown": "6 dummy textures, 2 shaped texts, 1 font, 1 CanvasItem, 29 ObjectDB instances in each run",
+    "webBuild": "Existing chunk-size advisory",
+    "balance": "Unchanged inherited Bulwark/Plaguer/Pitfighter ceilings",
+    "coverage": "Supported primary regions and shared lifecycle, not complete arbitrary graphs or future projectile paths",
+    "claudeReciprocalReview": "Pending",
+    "performance": "Pending exact final-head preparation and separately authorized quiet window"
+  }
+}
