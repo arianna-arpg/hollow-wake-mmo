@@ -290,8 +290,10 @@ public partial class Smoke : Node
         await OptionsSteps();
 
         if (_args.Contains("--cast-cues")) await CastCueSequence();
+        if (_args.Contains("--forecasts")) await ForecastSequence();
 
-        // Weaves: walk to the nearest hob, hover it and press 1 to 4 until a combat line shows.
+        // Use the smoke calling's attack slots, approaching again between attempts. Cycling utility
+        // slots can enter an indefinite guard; a miss must never count as the required landed hit.
         var hob = Nearest(e => e.State.Pattern is not null && e.State.Pattern.StartsWith("hob", StringComparison.Ordinal) && !e.State.Dead);
         if (hob is null)
         {
@@ -299,23 +301,36 @@ public partial class Smoke : Node
         }
         else
         {
-            var reached = await TravelTo(() => (hob.State.X, hob.State.Y), 2.2f, 60);
-            var lines0 = _main.CombatLines;
+            var reached = false;
+            var lines0 = _main.HitsDealt;
             var hovered = false;
             var used = "";
-            for (var round = 0; round < 3 && _main.CombatLines == lines0; round++)
+            for (var attempt = 0; attempt < 10 && _main.HitsDealt == lines0; attempt++)
             {
-                for (var slot = 1; slot <= 4 && _main.CombatLines == lines0; slot++)
+                if (Self?.State.Dead == true) { Tap(Key.R); await Wait(1.0); }
+                // Finish the preceding cast before moving or pressing another slot. Cast durations
+                // come from the equipped build; a fixed one-second retry can repeatedly report busy.
+                if (!await Until(CastIdle, 6)) break;
+                if (hob.State.Dead || !_main.World.Entities.ContainsKey(hob.Key))
                 {
-                    await Hover(hob);
-                    hovered |= _main.HoveredKey != 0;
-                    Tap(Key.Key0 + slot);
-                    used += slot;
-                    await Wait(1.0);
+                    hob = Nearest(e => e.State.Pattern?.StartsWith("hob", StringComparison.Ordinal) == true && !e.State.Dead);
+                    if (hob is null) break;
                 }
+                reached |= await TravelTo(() => (hob.State.X, hob.State.Y), 2f, 15);
+                // Directional casts aim at the ground under the pointer. Point near the feet to
+                // reduce the torso-to-ground parallax behind the foe; hover remains diagnostic.
+                await Hover(hob, heightFraction: 0.1f);
+                hovered |= _main.HoveredKey == hob.Key;
+                var slot = attempt % 2 + 1;
+                Tap(Key.Key0 + slot);
+                used += slot;
+                var observed = await Until(() => !CastIdle() || _main.HitsDealt > lines0, 2);
+                GD.Print($"SMOKE combat attempt {attempt + 1}: slot={slot}, observed={observed}, cast={_main.Hud.Hero.Cast?.Name ?? Self?.State.Casting ?? "none"}, distance={Flat(Pos(), new(hob.State.X, hob.State.Y, hob.State.Z)):0.00}");
+                await Until(CastIdle, 6);
+                await Wait(0.2);
             }
-            var fought = await Until(() => _main.CombatLines > lines0, 6);
-            Record("weaves on a hob", fought, $"reached={reached} hovered={hovered} slots {used} combat lines={_main.CombatLines - lines0}{Rejected()}");
+            var fought = await Until(() => _main.HitsDealt > lines0, 6);
+            Record("weaves on a hob", fought, $"reached={reached} hovered={hovered} slots {used} hits dealt={_main.HitsDealt - lines0}{Rejected()}");
             await Shot("05_combat.png");
             if (Self?.State.Dead == true)
             {
@@ -427,16 +442,40 @@ public partial class Smoke : Node
         return i >= 0 && i + 1 < _args.Length ? _args[i + 1] : null;
     }
 
+    private async Task ForecastSequence()
+    {
+        var seen = new HashSet<string>();
+        for (var attempt = 0; attempt < 3 && !seen.Contains("primary_candidate"); attempt++)
+        {
+            if (!await Until(CastIdle, 6)) break;
+            var target = Nearest(e => e.State.Pattern?.StartsWith("hob", StringComparison.Ordinal) == true && !e.State.Dead);
+            if (target is null) break;
+            await TravelTo(() => (target.State.X, target.State.Y), 2f, 45);
+            await Hover(target, heightFraction: 0.1f); Tap(Key.Key2);
+            var until = Now + 3;
+            while (Now < until)
+            {
+                foreach (var c in _main.Forecasts.Timeline.Active.ToArray())
+                    if (c.Source == Self?.Key && seen.Add(c.Coverage)) await Shot($"forecast_{c.Coverage}.png");
+                await Frame();
+            }
+        }
+        Record("shared cast forecast", seen.Contains("primary_candidate"), $"coverage={string.Join(',', seen)}; baselines={_main.ForecastsReceived}");
+    }
+
     private async Task CastCueSequence()
     {
         var phases = new HashSet<string>();
         // Real moving targets can evade a projectile. Retry ordinary input; never synthesize a contact.
         for (var attempt = 0; attempt < 3 && !phases.Contains("impact"); attempt++)
         {
+            if (!await Until(CastIdle, 6)) break;
             var hob = Nearest(e => e.State.Pattern?.StartsWith("hob", StringComparison.Ordinal) == true && !e.State.Dead);
             if (hob is null) break;
-            await TravelTo(() => (hob.State.X, hob.State.Y), 3f, 45);
-            await Hover(hob);
+            // Use the same melee-safe approach as the landed-hit check. Three units can
+            // leave Strike outside admission range, so no lifecycle exists to observe.
+            await TravelTo(() => (hob.State.X, hob.State.Y), 2f, 45);
+            await Hover(hob, heightFraction: 0.1f);
             Tap(Key.Key1);
             var until = Now + 3;
             while (Now < until)
@@ -449,8 +488,10 @@ public partial class Smoke : Node
             }
         }
         Record("Cast cue presentation", phases.Contains("start") && phases.Contains("release") && phases.Contains("impact"),
-            $"phases={string.Join(',', phases)}; received={_main.CastCuesReceived}");
+            $"phases={string.Join(',', phases)}; received={_main.CastCuesReceived}{Rejected()}");
     }
+
+    private bool CastIdle() => _main.Hud.Hero.Cast is null && string.IsNullOrEmpty(Self?.State.Casting);
 
     /// <summary>The core pane opens with its key; every ribbon page the hero has opens from its ribbon on the rail.</summary>
     private async Task CorePaneAndPages()
@@ -555,10 +596,19 @@ public partial class Smoke : Node
             }
             await TravelTo(() => (vendor.State.X, vendor.State.Y), 1.4f, 45);
             await Wait(0.4);
+            await CloseEverything();
             var states = _main.VendorStates;
             var talks = _main.DialogueStates;
-            await Click(Screen(vendor.GlobalPosition + new Vector3(0, vendor.State.Height * 0.5f, 0)));
-            await Until(() => (_main.VendorStates > states && hud.HasWorldPane("vendor")) || (_main.DialogueStates > talks && hud.HasWorldPane("dialogue")), 6);
+            bool Opened() => (_main.VendorStates > states && hud.FrontView<UI.WorldPanes.VendorPane>()?.State?.Source == vendor.Key) ||
+                (_main.DialogueStates > talks && hud.FrontView<UI.WorldPanes.DialoguePane>()?.State?.Source == vendor.Key);
+            Tap(Key.F);
+            if (!await Until(Opened, 4))
+            {
+                await CloseEverything();
+                await Hover(vendor);
+                await Click(Screen(vendor.GlobalPosition + new Vector3(0, vendor.State.Height * 0.5f, 0)));
+                await Until(Opened, 6);
+            }
             // A trader that talks first: bring its conversation to the front and ask to trade, as a player would.
             if (!hud.HasWorldPane("vendor") && hud.FrontView<UI.WorldPanes.DialoguePane>() is { State: { } talk })
             {
@@ -865,9 +915,9 @@ public partial class Smoke : Node
         Input.ParseInputEvent(new InputEventMouseButton { ButtonIndex = MouseButton.Left, Pressed = false, Position = screen, GlobalPosition = screen });
     }
 
-    private async Task Hover(EntityView view)
+    private async Task Hover(EntityView view, float heightFraction = 0.5f)
     {
-        Point(Screen(view.GlobalPosition + new Vector3(0, view.State.Height * 0.5f, 0)));
+        Point(Screen(view.GlobalPosition + new Vector3(0, view.State.Height * heightFraction, 0)));
         await Frame();
         await Frame();
     }

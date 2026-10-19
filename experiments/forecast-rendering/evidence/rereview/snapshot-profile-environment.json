@@ -1,0 +1,27 @@
+{
+  "Head": "521d7ad1742b7232d5c1e78954c68fd0702a7cec",
+  "Utc": "2026-10-18T20:09:08.4206567Z",
+  "Priority": "Normal",
+  "Runtime": "10.0.402",
+  "Command": "dotnet src/HollowWake.Tools/bin/Release/net10.0/hollowwake.dll bench --only tick --snapshot-profile artifacts/forecast-rereview/snapshot-profile-frames.json --json",
+  "Binaries": [
+    {
+      "Path": "src/HollowWake.Tools/bin/Release/net10.0/hollowwake.dll",
+      "Sha256": "03D3895B3F4D09C0618E366E5ACE2E9435D64ACD5B3E9EDE473BE95FF7FA2E93"
+    },
+    {
+      "Path": "src/HollowWake.Tools/bin/Release/net10.0/HollowWake.Core.dll",
+      "Sha256": "F2DF5822EE7248F887B04BAE2EF242FF9768105644B370409B1B128A83CAA1D0"
+    },
+    {
+      "Path": "src/HollowWake.Tools/bin/Release/net10.0/HollowWake.Server.dll",
+      "Sha256": "300EFF30AD749C445C816AD4C2F7A46DAD5AC812601B20726C381E077FC668D6"
+    },
+    {
+      "Path": "src/HollowWake.Tools/bin/Release/net10.0/HollowWake.Protocol.dll",
+      "Sha256": "1E2C2A2DE4AAD98491A0F4B8BDD887DA9167EE59029C6229CB550F27E75537DF"
+    }
+  ],
+  "BuildEvidence": "experiments/forecast-rendering/evidence/rereview/snapshot-profile-build.txt",
+  "Scope": "One diagnostic tick-only invocation; default workload, original per-view order and cadence. Probe overhead is retained. Not ordinary budget evidence."
+}

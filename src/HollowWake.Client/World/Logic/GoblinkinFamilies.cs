@@ -140,6 +140,16 @@ public static class GoblinkinFamilies
             for (var i = 0; i < 4; i++) p.Add("torso", PartShape.Cone, V(D * 0.15f, H * 0.22f, W * 0.24f), V(-D * 0.35f + i * D * 0.17f, H * 0.94f, 0), dark, V(0, 25, 0), segments: 4);
         }
         if (longBody) p.Add("hips", PartShape.Cone, V(W * 0.22f, D * 0.34f, W * 0.22f), V(-D * 0.51f, H * 0.55f, 0), dark, V(0, 65, 0), segments: 5);
+        if (b.Has("tusks")) foreach (var side in new[] { -1f, 1f }) p.Add("head", PartShape.Cone, V(W * 0.13f, H * 0.38f, W * 0.13f), V(D * 0.48f, H * 0.60f, side * W * 0.36f), bone, V(side * 18, -15, 0), segments: 5);
+        if (b.Has("spots")) foreach (var side in new[] { -1f, 1f }) for (var i = 0; i < 3; i++) p.Add("torso", PartShape.Ellipsoid, V(D * 0.14f, H * 0.12f, W * 0.025f), V(-D * 0.22f + i * D * 0.14f, H * 0.68f, side * W * 0.46f), dark, segments: 5);
+        if (b.Has("crest")) for (var i = 0; i < 3; i++) p.Add("torso", PartShape.Cone, V(D * 0.16f, H * (0.22f + i * 0.06f), W * 0.11f), V(-D * 0.32f + i * D * 0.18f, H * 0.98f, 0), bone, segments: 4);
+        if (b.Has("plates")) foreach (var side in new[] { -1f, 1f }) p.Add("torso", PartShape.Wedge, V(D * 0.65f, H * 0.26f, W * 0.15f), V(-D * 0.02f, H * 0.70f, side * W * 0.42f), bone);
+        if (b.Has("saddle"))
+        {
+            p.Add("torso", PartShape.Box, V(D * 0.39f, H * 0.07f, W * 0.48f), V(-D * 0.08f, H * 0.96f, 0), b.C("cloth", "#593a32"));
+            foreach (var end in new[] { -1f, 1f }) p.Add("torso", PartShape.Box, V(D * 0.035f, H * 0.12f, W * 0.45f), V(-D * 0.08f + end * D * 0.19f, H * 1.01f, 0), b.C("wood", "#72573b"));
+            foreach (var side in new[] { -1f, 1f }) p.Add("torso", PartShape.Box, V(D * 0.08f, H * 0.48f, W * 0.035f), V(-D * 0.08f, H * 0.71f, side * W * 0.47f), dark);
+        }
         p.Swings = false;
     }
 }

@@ -1,0 +1,16 @@
+
+> hollow-wake-web@0.1.0 test
+> vitest run --run
+
+
+ RUN  v5.0.3 C:/Users/John/.codex/worktrees/shared-cast-forecasts/MMOARPG/web
+
+
+ Test Files  29 passed (29)
+      Tests  297 passed (297)
+   Start at  20:24:41
+   Duration  4.20s (transform 60%, import 32%, tests 7%, worker 1%)
+
+  Transform  transforming modules took 25.14s · 60% of tracked time, re-done on every run
+             persist transforms across runs with fsModuleCache: true
+             learn more: https://vitest.dev/guide/improving-performance#caching-between-reruns

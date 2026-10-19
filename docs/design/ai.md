@@ -1,6 +1,6 @@
 # AI
 
-Behaviors are state machines in content. A behavior names an initial state, a think interval, aggro and leash range expressions, and states with enter, tick and exit actions and prioritized transitions. Monsters, minions and constructs all think this way, in one behavior system; what differs is the content they run and the actions it names. Every action acts on the simulation through `AiIntents.Send`, with the same intents and the same handlers a client's intent runs through; the few world rules a body is under rather than does, and the device actions' own casting, are named below (see Acting through intents).
+Behaviors are state machines in content. A behavior names an initial state, a think interval, aggro and leash range expressions, and states with enter, tick and exit actions and prioritized transitions. Monsters, minions and constructs all think this way, in one behavior system; what differs is the content they run and the actions it names. Every action acts on the simulation through `AiIntents.Send`, with the same intents and the same handlers a client's intent runs through; the few world rules a body is under rather than does are named below (see Acting through intents).
 
 ## Perception
 
@@ -18,9 +18,10 @@ The world rules a body is under rather than does, which no intent asks for, are 
 
 - **Facing.** `chase` within reach and `face_target` turn the body toward its target at once. Facing is a rule of the simulation, not something a client asks for. A turn rate, and the movement locks of a held cast holding the body's facing, are deferred: either would move duels with roots and guards in them.
 - **The leash.** A minion's leash recall teleports it (`MinionService.Teleport`).
-- **A spent trap.** A trap that sprang goes (`MinionService.Dismiss`).
+- **A spent trap.** A trap that sprang goes (`MinionService.Dismiss`), once its cast is over.
+- **An echo's replay.** An echo resolves each use its owner paid for, from where it stands (`WeaveRuntime.Replay`): not a new use, so not an intent.
 
-The device actions (`construct_cast`, `spring`, `echo_owner`) still fire their weaves through `ConstructCasting.Fire`, which runs a weave's effects directly, past the runtime's costs, cast times and checks: the one direct effect run left in the AI.
+The device actions `construct_cast` and `spring` cast like anyone, by `UseWeaveIntent` (see [minions.md](minions.md)).
 
 ## Orders
 
@@ -43,9 +44,20 @@ Seeded replay is exact within the tested platform/runtime. The simulation does n
 
 ## Weave choice
 
-`WeaveRuntime.ChooseForAi` filters the entity's weaves by readiness, cost, range and the hint's `when` expression, skipping triggered weaves, toggles that are on, empty banks and failed gates, then weights by the hint. `PreferredRange` is the longest hinted range, used by `chase` and perception.
+`WeaveRuntime.ChooseForAi` filters the entity's weaves by readiness, cost, range and the hint's `when` expression, skipping triggered weaves, toggles that are on, empty banks and failed gates, then weights by the hint. A zero-weight `min_range` rejection happens before geometry resolution or LOS work. Ordinary timed and instant positional attacks with a supported primary region also test the current target against that same region before committing; unsupported graphs retain range-based choice. This prevents stationary edge stalls; the optional anticipation policy below adds pre-commit movement estimation without retargeting a committed swing. `PreferredRange` is the longest hinted range, used by `chase` and perception.
 
 Taunts set the target and a memory timestamp the behaviors read as `taunted`.
+
+### Commitment-aware approach
+
+The weave attribute `ai.anticipation` controls pre-commit movement estimation, from zero (current position only) to one (the actual windup, including speed modifiers). Shipped single-target melee selectors author one; other compositions can opt in through the same attribute and modifier fold. For a safe primary-area provider with anticipation enabled, the chooser first requires the authored preferred range (or folded range attribute). This also covers a moving target that briefly stops to cast. It then tests the observed target velocity projected over that interval against the shared region, translating the actual damage anatomy for body-contact plans while leaving the live body untouched. Unknown providers keep their prior range-based fallback. This is a heuristic, not future knowledge: changes in direction, terrain or speed can defeat the estimate.
+
+`PreferredRange` accepts the current target and reduces the approach stop distance by its outward travel during that interval. It never increases collision reach or widens a sector, and a started swing keeps its original direction. Body collision still limits how close an actor can get. A target too fast to catch may continue avoiding melee; the policy does not promise a hit. Players can make the same positioning and timing choices manually.
+
+The chooser rejects ordinary busy casts before expensive geometry work, preserving the runtime's instant-reflex exception. Converted and combo faces retain their existing path. The AI intent seam owns dispatch and move planning; this policy only supplies choice eligibility and preferred approach distance.
+## Provisional wildlife assignments
+
+Wildlife content may use existing combat behaviors or a flee-only content state machine. A spawn pack is not coordinated AI, a predator tag is not predation, and a hostile faction does not imply every body attacks. Critters have empty weave lists and no drops; they flee perceived faction enemies without an attack state. Future sensory, tactical, social and need-based decisions require a separate reviewed contract and deterministic simulation evidence. Authoring intent under `meta` is never a simulation input. The [wildlife AI handoff](../reviews/2026-10-18-fauna-ai-handoff.md) records the proposed design questions and scenarios for Claude review.
 
 ## Temporary close-combat content
 

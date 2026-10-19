@@ -135,5 +135,15 @@ import { v3 as V, ZERO } from './bodyPlan';
             for (let i = 0; i < 4; i++) p.add("torso", 'cone', V(D * 0.15, H * 0.22, W * 0.24), V(-D * 0.35 + i * D * 0.17, H * 0.94, 0), dark, { turn: V(0, 25, 0), segments: 4 });
         }
         if (longBody) p.add("hips", 'cone', V(W * 0.22, D * 0.34, W * 0.22), V(-D * 0.51, H * 0.55, 0), dark, {turn: V(0, 65, 0), segments: 5});
+        if (b.has("tusks")) for (const side of [-1, 1]) p.add("head", 'cone', V(W * 0.13, H * 0.38, W * 0.13), V(D * 0.48, H * 0.60, side * W * 0.36), bone, { turn: V(side * 18, -15, 0), segments: 5 });
+        if (b.has("spots")) for (const side of [-1, 1]) for (let i = 0; i < 3; i++) p.add("torso", 'ellipsoid', V(D * 0.14, H * 0.12, W * 0.025), V(-D * 0.22 + i * D * 0.14, H * 0.68, side * W * 0.46), dark, { segments: 5 });
+        if (b.has("crest")) for (let i = 0; i < 3; i++) p.add("torso", 'cone', V(D * 0.16, H * (0.22 + i * 0.06), W * 0.11), V(-D * 0.32 + i * D * 0.18, H * 0.98, 0), bone, { segments: 4 });
+        if (b.has("plates")) for (const side of [-1, 1]) p.add("torso", 'wedge', V(D * 0.65, H * 0.26, W * 0.15), V(-D * 0.02, H * 0.70, side * W * 0.42), bone);
+        if (b.has("saddle"))
+        {
+            p.add("torso", 'box', V(D * 0.39, H * 0.07, W * 0.48), V(-D * 0.08, H * 0.96, 0), b.c("cloth", "#593a32"));
+            for (const end of [-1, 1]) p.add("torso", 'box', V(D * 0.035, H * 0.12, W * 0.45), V(-D * 0.08 + end * D * 0.19, H * 1.01, 0), b.c("wood", "#72573b"));
+            for (const side of [-1, 1]) p.add("torso", 'box', V(D * 0.08, H * 0.48, W * 0.035), V(-D * 0.08, H * 0.71, side * W * 0.47), dark);
+        }
         p.swings = false;
     }

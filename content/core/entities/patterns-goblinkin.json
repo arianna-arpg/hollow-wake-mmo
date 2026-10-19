@@ -36,7 +36,7 @@
         "habitat.forest",
         "humanoid",
         "melee",
-        "size.tiny"
+        "size.small"
       ],
       "faction": "goblinkin",
       "level": 1,
@@ -105,13 +105,13 @@
       ],
       "faction": "goblinkin",
       "level": 2,
-      "radius": 0.28,
-      "height": 1.16,
+      "radius": 0.21725,
+      "height": 0.9,
       "components": {
         "physical": {
-          "width": 0.56,
-          "depth": 0.42,
-          "height": 1.16,
+          "width": 0.4345,
+          "depth": 0.3259,
+          "height": 0.9,
           "fill": 0.12,
           "heft": 1,
           "materials": [
@@ -171,13 +171,13 @@
       ],
       "faction": "goblinkin",
       "level": 2,
-      "radius": 0.265,
-      "height": 1.08,
+      "radius": 0.211,
+      "height": 0.86,
       "components": {
         "physical": {
-          "width": 0.53,
-          "depth": 0.39,
-          "height": 1.08,
+          "width": 0.422,
+          "depth": 0.3106,
+          "height": 0.86,
           "fill": 0.12,
           "heft": 1,
           "materials": [
@@ -232,18 +232,18 @@
         "habitat.warren_encampment",
         "humanoid",
         "ranged",
-        "size.small",
-        "caster"
+        "caster",
+        "size.small"
       ],
       "faction": "goblinkin",
       "level": 4,
-      "radius": 0.31,
-      "height": 1.3,
+      "radius": 0.22415,
+      "height": 0.94,
       "components": {
         "physical": {
-          "width": 0.62,
-          "depth": 0.46,
-          "height": 1.3,
+          "width": 0.4483,
+          "depth": 0.3326,
+          "height": 0.94,
           "fill": 0.12,
           "heft": 1,
           "materials": [
@@ -303,13 +303,13 @@
       ],
       "faction": "goblinkin",
       "level": 5,
-      "radius": 0.34,
-      "height": 1.18,
+      "radius": 0.2651,
+      "height": 0.92,
       "components": {
         "physical": {
-          "width": 0.68,
-          "depth": 0.68,
-          "height": 1.18,
+          "width": 0.5302,
+          "depth": 0.5302,
+          "height": 0.92,
           "fill": 0.12,
           "heft": 1,
           "materials": [
@@ -373,17 +373,18 @@
         "habitat.warren_encampment",
         "humanoid",
         "melee",
+        "stature.exceptional",
         "size.medium"
       ],
       "faction": "goblinkin",
       "level": 5,
-      "radius": 0.565,
-      "height": 1.58,
+      "radius": 0.4434,
+      "height": 1.24,
       "components": {
         "physical": {
-          "width": 1.13,
-          "depth": 0.72,
-          "height": 1.58,
+          "width": 0.8868,
+          "depth": 0.5651,
+          "height": 1.24,
           "fill": 0.15,
           "heft": 1,
           "materials": [
@@ -439,17 +440,17 @@
         "habitat.warren_encampment",
         "humanoid",
         "melee",
-        "size.medium"
+        "size.small"
       ],
       "faction": "goblinkin",
       "level": 7,
-      "radius": 0.44,
-      "height": 1.55,
+      "radius": 0.28955,
+      "height": 1.02,
       "components": {
         "physical": {
-          "width": 0.88,
-          "depth": 0.58,
-          "height": 1.55,
+          "width": 0.5791,
+          "depth": 0.3817,
+          "height": 1.02,
           "fill": 0.15,
           "heft": 1,
           "materials": [
@@ -514,13 +515,13 @@
       ],
       "faction": "goblinkin",
       "level": 8,
-      "radius": 0.45,
-      "height": 1.95,
+      "radius": 0.3231,
+      "height": 1.4,
       "components": {
         "physical": {
-          "width": 0.9,
-          "depth": 0.6,
-          "height": 1.95,
+          "width": 0.6462,
+          "depth": 0.4308,
+          "height": 1.4,
           "fill": 0.15,
           "heft": 1,
           "materials": [
@@ -576,17 +577,18 @@
         "habitat.scrap_fort",
         "humanoid",
         "melee",
-        "size.large"
+        "stature.exceptional",
+        "size.medium"
       ],
       "faction": "goblinkin",
       "level": 12,
-      "radius": 0.775,
-      "height": 2.2,
+      "radius": 0.48615,
+      "height": 1.38,
       "components": {
         "physical": {
-          "width": 1.55,
-          "depth": 0.95,
-          "height": 2.2,
+          "width": 0.9723,
+          "depth": 0.5959,
+          "height": 1.38,
           "fill": 0.18,
           "heft": 1,
           "materials": [
@@ -632,72 +634,6 @@
           "repository": "arianna-arpg/arpg-game-world",
           "revision": "118b510f8b5bfb781163c5bc13ea4908f698e75b",
           "id": "goblin_warboss"
-        },
-        "adaptation": false
-      }
-    },
-    {
-      "id": "orc_ravager",
-      "name": "Orc Ravager",
-      "extends": "goblinkin_body",
-      "tags": [
-        "monster",
-        "body.flesh",
-        "family.orc",
-        "role.ravager",
-        "habitat.scrap_fort",
-        "humanoid",
-        "melee",
-        "size.medium"
-      ],
-      "faction": "goblinkin",
-      "level": 7,
-      "radius": 0.575,
-      "height": 1.95,
-      "components": {
-        "physical": {
-          "width": 1.15,
-          "depth": 0.68,
-          "height": 1.95,
-          "fill": 0.15,
-          "heft": 1,
-          "materials": [
-            {
-              "material": "flesh",
-              "fraction": 1.0
-            }
-          ]
-        },
-        "stats": {
-          "attributes": {
-            "life.max": "190 + (level - 1) * 15",
-            "move.speed": 4.8,
-            "weapon.damage.min": "7 + (level - 1) * 0.65",
-            "weapon.damage.max": "10 + (level - 1) * 1.05",
-            "weapon.attack.time": 0.8,
-            "poise.max": 40
-          }
-        },
-        "weaves": {
-          "list": [
-            "cleave",
-            "whirling_reap"
-          ]
-        },
-        "behavior": {
-          "id": "aggressive_melee"
-        },
-        "drops": {
-          "table": "goblinkin_drops",
-          "xp": "10 + level * 6",
-          "chance": 0.5
-        }
-      },
-      "meta": {
-        "prototype": {
-          "repository": "arianna-arpg/arpg-game-world",
-          "revision": "118b510f8b5bfb781163c5bc13ea4908f698e75b",
-          "id": "orc_ravager"
         },
         "adaptation": false
       }
@@ -926,7 +862,8 @@
         "beast",
         "melee",
         "size.tiny",
-        "fauna"
+        "fauna",
+        "quest.cull"
       ],
       "faction": "goblinkin",
       "level": 1,
@@ -992,7 +929,8 @@
         "beast",
         "melee",
         "size.small",
-        "fauna"
+        "fauna",
+        "quest.cull"
       ],
       "faction": "goblinkin",
       "level": 4,
@@ -1059,7 +997,8 @@
         "beast",
         "melee",
         "size.small",
-        "fauna"
+        "fauna",
+        "quest.cull"
       ],
       "faction": "goblinkin",
       "level": 6,

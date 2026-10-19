@@ -17,6 +17,30 @@ public class CastCueTimelineTests
         new() { "spell", "ember" }, 10, 9, 2, 1, 2, 3, 4, 5, 3, false, "");
 
     [Fact]
+    public void Body_lifecycle_is_validated_once_even_without_cosmetic_profiles()
+    {
+        var t = new CastCueTimeline(Config with { Profiles = new() });
+        var accepted = new List<CastCueMsg>();
+        t.Lifecycle += accepted.Add;
+        var release = Cue("release", 1) with { Fired = true };
+        Assert.False(t.Receive(release, 10)); // No art selected, but emission remains a fact.
+        Assert.Equal(release, Assert.Single(accepted));
+        t.Receive(release, 10);
+        t.Receive(Cue("release", 2) with { Fired = true }, 20); // Stale.
+        t.Receive(Cue("release", 3) with { Fired = true, CastId = 0 }, 10);
+        t.Receive(Cue("release", 4) with { Fired = true, Outcome = true }, 10);
+        t.Receive(Cue("unknown", 5), 10);
+        Assert.Single(accepted);
+        foreach (var phase in new[] { "start", "sync", "end", "interrupt", "impact", "release" })
+            t.Receive(Cue(phase, 6 + accepted.Count), 10);
+        Assert.Equal(new[] { "release", "start", "sync", "end", "interrupt", "impact", "release" }, accepted.Select(e => e.Phase));
+        Assert.Single(accepted, e => e.Phase == "release" && e.Fired);
+        t.Clear();
+        t.Receive(release, 10);
+        Assert.Equal(2, accepted.Count(e => e.Phase == "release" && e.Fired));
+    }
+
+    [Fact]
     public void Every_current_preset_has_shared_cast_presentation_and_new_effect_families_need_a_coverage_decision()
     {
         var core = ThemeContentTests.FindContentDir();

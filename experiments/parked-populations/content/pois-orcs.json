@@ -1,0 +1,377 @@
+{
+  "kind": "pois",
+  "entries": [
+    {
+      "id": "orc_muster",
+      "name": "Iron-Tusk Muster",
+      "tags": [
+        "ruin",
+        "landmark",
+        "orc_warbands"
+      ],
+      "weight": 0.65,
+      "radius": 12,
+      "min_spacing": 140,
+      "slope": {
+        "max": 0.55
+      },
+      "landmarks": [
+        "camp_ring"
+      ],
+      "level": 4,
+      "inhabitants": [
+        {
+          "pattern": "orc_grunt",
+          "density": 1,
+          "pack_size": [
+            1,
+            1
+          ],
+          "respawn": 300,
+          "level": {
+            "min": 4
+          }
+        },
+        {
+          "pattern": "orc_ravager",
+          "density": 1,
+          "pack_size": [
+            1,
+            1
+          ],
+          "respawn": 300,
+          "level": {
+            "min": 7
+          }
+        },
+        {
+          "pattern": "orc_cleaver",
+          "density": 1,
+          "pack_size": [
+            1,
+            1
+          ],
+          "respawn": 300,
+          "level": {
+            "min": 8
+          }
+        },
+        {
+          "pattern": "orc_headhunter",
+          "density": 1,
+          "pack_size": [
+            1,
+            1
+          ],
+          "respawn": 300,
+          "level": {
+            "min": 6
+          }
+        },
+        {
+          "pattern": "goblin_skirmisher",
+          "density": 1,
+          "pack_size": [
+            1,
+            1
+          ],
+          "respawn": 300,
+          "level": {
+            "min": 2
+          }
+        }
+      ],
+      "names": [
+        "Iron-Tusk Muster"
+      ],
+      "meta": {
+        "context": "Mixed allied warband encounter; social roles do not implement capture or ownership."
+      }
+    },
+    {
+      "id": "orc_hold",
+      "name": "Iron-Tusk Hold",
+      "tags": [
+        "ruin",
+        "landmark",
+        "orc_warbands"
+      ],
+      "weight": 0.65,
+      "radius": 12,
+      "min_spacing": 140,
+      "slope": {
+        "max": 0.55
+      },
+      "landmarks": [
+        "ruin_walls"
+      ],
+      "level": 7,
+      "inhabitants": [
+        {
+          "pattern": "orc_bulwark",
+          "density": 1,
+          "pack_size": [
+            1,
+            1
+          ],
+          "respawn": 300,
+          "level": {
+            "min": 9
+          }
+        },
+        {
+          "pattern": "orc_shieldbreaker",
+          "density": 1,
+          "pack_size": [
+            1,
+            1
+          ],
+          "respawn": 300,
+          "level": {
+            "min": 10
+          }
+        },
+        {
+          "pattern": "orc_rockhurler",
+          "density": 1,
+          "pack_size": [
+            1,
+            1
+          ],
+          "respawn": 300,
+          "level": {
+            "min": 9
+          }
+        },
+        {
+          "pattern": "orc_warlord",
+          "density": 1,
+          "pack_size": [
+            1,
+            1
+          ],
+          "respawn": 300,
+          "level": {
+            "min": 16
+          }
+        },
+        {
+          "pattern": "goblin_sapper",
+          "density": 1,
+          "pack_size": [
+            1,
+            1
+          ],
+          "respawn": 300,
+          "level": {
+            "min": 5
+          }
+        }
+      ],
+      "names": [
+        "Iron-Tusk Hold"
+      ],
+      "meta": {
+        "context": "Mixed allied warband encounter; social roles do not implement capture or ownership."
+      }
+    },
+    {
+      "id": "orc_chaincamp",
+      "name": "Chainkeeper Camp",
+      "tags": [
+        "ruin",
+        "landmark",
+        "orc_warbands"
+      ],
+      "weight": 0.65,
+      "radius": 12,
+      "min_spacing": 140,
+      "slope": {
+        "max": 0.55
+      },
+      "landmarks": [
+        "camp_ring"
+      ],
+      "level": 7,
+      "inhabitants": [
+        {
+          "pattern": "orc_overseer",
+          "density": 1,
+          "pack_size": [
+            1,
+            1
+          ],
+          "respawn": 300,
+          "level": {
+            "min": 10
+          }
+        },
+        {
+          "pattern": "orc_slaver",
+          "density": 1,
+          "pack_size": [
+            1,
+            1
+          ],
+          "respawn": 300,
+          "level": {
+            "min": 11
+          }
+        },
+        {
+          "pattern": "orc_bloodchanter",
+          "density": 1,
+          "pack_size": [
+            1,
+            1
+          ],
+          "respawn": 300,
+          "level": {
+            "min": 10
+          }
+        },
+        {
+          "pattern": "orc_ashcaller",
+          "density": 1,
+          "pack_size": [
+            1,
+            1
+          ],
+          "respawn": 300,
+          "level": {
+            "min": 8
+          }
+        },
+        {
+          "pattern": "goblin_scavenger",
+          "density": 1,
+          "pack_size": [
+            1,
+            1
+          ],
+          "respawn": 300,
+          "level": {
+            "min": 1
+          }
+        }
+      ],
+      "names": [
+        "Chainkeeper Camp"
+      ],
+      "meta": {
+        "context": "Mixed allied warband encounter; social roles do not implement capture or ownership."
+      }
+    },
+    {
+      "id": "gnasher_pen",
+      "name": "Gnasher Pens",
+      "tags": [
+        "ruin",
+        "landmark",
+        "goblinkin"
+      ],
+      "weight": 0.65,
+      "radius": 12,
+      "min_spacing": 140,
+      "slope": {
+        "max": 0.55
+      },
+      "landmarks": [
+        "camp_ring"
+      ],
+      "level": 4,
+      "inhabitants": [
+        {
+          "pattern": "reed_gnasher",
+          "density": 1,
+          "pack_size": [
+            1,
+            1
+          ],
+          "respawn": 300,
+          "level": {
+            "min": 3
+          }
+        },
+        {
+          "pattern": "thornback_gnasher",
+          "density": 1,
+          "pack_size": [
+            1,
+            1
+          ],
+          "respawn": 300,
+          "level": {
+            "min": 6
+          }
+        },
+        {
+          "pattern": "great_gnasher",
+          "density": 1,
+          "pack_size": [
+            1,
+            1
+          ],
+          "respawn": 300,
+          "level": {
+            "min": 9
+          }
+        },
+        {
+          "pattern": "saddle_gnasher",
+          "density": 1,
+          "pack_size": [
+            1,
+            1
+          ],
+          "respawn": 300,
+          "level": {
+            "min": 7
+          }
+        },
+        {
+          "pattern": "ironjaw_gnasher",
+          "density": 1,
+          "pack_size": [
+            1,
+            1
+          ],
+          "respawn": 300,
+          "level": {
+            "min": 12
+          }
+        },
+        {
+          "pattern": "brood_gnasher",
+          "density": 1,
+          "pack_size": [
+            1,
+            1
+          ],
+          "respawn": 300,
+          "level": {
+            "min": 14
+          }
+        },
+        {
+          "pattern": "gnasher_whelp",
+          "density": 1,
+          "pack_size": [
+            1,
+            1
+          ],
+          "respawn": 300,
+          "level": {
+            "min": 1
+          }
+        }
+      ],
+      "names": [
+        "Gnasher Pens"
+      ],
+      "meta": {
+        "context": "Mixed allied warband encounter; social roles do not implement capture or ownership."
+      }
+    }
+  ]
+}

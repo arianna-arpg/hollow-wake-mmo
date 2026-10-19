@@ -1,0 +1,54 @@
+[
+  {
+    "name": "standard-floor342",
+    "cwd": "<worktree>",
+    "arguments": [
+      "exec",
+      "src/HollowWake.Tools/bin/Release/net10.0/hollowwake.dll",
+      "tournament",
+      "--standard",
+      "--content",
+      "content/core;<worktree>\\artifacts\\forecast-body-integration\\return-control-c6d853bd\\floor342",
+      "--out",
+      "<worktree>\\artifacts\\forecast-body-integration\\final-foundation-c6d853bd\\standard-floor342.json"
+    ],
+    "startedUtc": "2026-10-19T01:01:29.2505525Z",
+    "endedUtc": "2026-10-19T01:01:32.1730627Z",
+    "exitCode": 0
+  },
+  {
+    "name": "return-control-build",
+    "cwd": "<worktree>\\artifacts\\forecast-body-integration\\return-control-c6d853bd",
+    "arguments": [
+      "build",
+      "src/HollowWake.Tools/HollowWake.Tools.csproj",
+      "-c",
+      "Release",
+      "-m:1",
+      "-nr:false",
+      "-p:UseSharedCompilation=false",
+      "-p:EnableSourceControlManagerQueries=false",
+      "-p:SourceRevisionId=return-control-c6d853bd"
+    ],
+    "startedUtc": "2026-10-19T01:01:32.2031086Z",
+    "endedUtc": "2026-10-19T01:01:45.4093906Z",
+    "exitCode": 0
+  },
+  {
+    "name": "return-control-standard",
+    "cwd": "<worktree>\\artifacts\\forecast-body-integration\\return-control-c6d853bd",
+    "arguments": [
+      "exec",
+      "src/HollowWake.Tools/bin/Release/net10.0/hollowwake.dll",
+      "tournament",
+      "--standard",
+      "--content",
+      "content/core;floor342",
+      "--out",
+      "<worktree>\\artifacts\\forecast-body-integration\\final-foundation-c6d853bd\\return-control-standard.json"
+    ],
+    "startedUtc": "2026-10-19T01:01:45.4260815Z",
+    "endedUtc": "2026-10-19T01:01:47.9097028Z",
+    "exitCode": 0
+  }
+]

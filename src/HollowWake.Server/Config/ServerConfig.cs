@@ -24,6 +24,7 @@ public sealed record ServerConfig
     public double InterestRadius { get; init; } = 48;
     /// <summary>Snapshot precision and redundancy, given to every session's view; see <see cref="SnapshotSettings"/>.</summary>
     public SnapshotSettings Snapshots { get; init; } = SnapshotSettings.Default;
+    public CastForecastSettings CastForecasts { get; init; } = new();
     public List<string> ContentLayers { get; init; } = new() { "content/core" };
     public bool StrictContent { get; init; } = true;
     public string DataDir { get; init; } = "data";

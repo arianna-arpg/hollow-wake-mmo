@@ -1,0 +1,20 @@
+✔ build cache observes edits and deletions, but ignores generated output (18.8154ms)
+✔ local launch rejects ambiguous ports and invalid account values (0.4553ms)
+✔ Linux descendant check accepts absent or zombie processes and preserves other failures (3.2448ms)
+✔ both suites enforce background input and reject headed or unbounded runs (2.118ms)
+✔ background browser isolates physical controllers without changing keyboard or pointer events (1.6314ms)
+✔ private config preserves gameplay settings and quotes Windows paths literally (0.7792ms)
+✔ simultaneous reservations use distinct ports (22.6329ms)
+✔ server readiness refuses an unrelated server on the selected port (448.1582ms)
+✔ a clean exit with no completed smoke summary cannot pass (0.6373ms)
+✔ process failures preserve output and return a failing status (75.0578ms)
+✔ timeout stops the owned process and its descendant without stopping a neighbour (1030.5679ms)
+✔ interruption stops an owned running process (397.037ms)
+ℹ tests 12
+ℹ suites 0
+ℹ pass 12
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2098.4166

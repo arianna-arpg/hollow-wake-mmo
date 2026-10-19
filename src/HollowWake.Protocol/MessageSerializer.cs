@@ -23,6 +23,7 @@ public static class MessageSerializer
             WriteIndented = false,
             DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
         };
+        o.Converters.Add(new SnapshotStateConverter(new JsonSerializerOptions(o)));
         return o;
     }
 

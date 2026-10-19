@@ -8,6 +8,7 @@ using HollowWake.Core.Items;
 using HollowWake.Core.Progression;
 using HollowWake.Core.Quests;
 using HollowWake.Core.Sim;
+using HollowWake.Core.Systems;
 using HollowWake.Core.Territory;
 using HollowWake.Core.Weaves;
 using HollowWake.Protocol;
@@ -107,7 +108,7 @@ public static class Snapshots
     /// </summary>
     private readonly record struct Drawn(Shape? Shape, ShapeSize Size, float Facing, float? Spin, bool Flies, Vector3 Velocity, double Until);
 
-    private static Drawn DrawnOf(EcsWorld world, Entity e, Transform? t)
+    private static Drawn DrawnOf(Simulation sim, EcsWorld world, Entity e, Transform? t)
     {
         Shape? shape = null;
         var size = default(ShapeSize);
@@ -118,7 +119,7 @@ public static class Snapshots
         if (world.TryGet<Projectile>(e, out var p))
         {
             flies = true;
-            velocity = p.Velocity;
+            velocity = ProjectileSystem.ObservedVelocity(sim, p, t?.Position ?? p.Carrier);
             facing = p.Heading;
             shape = p.Spec.Shape;
             // A circle's size is its collision radius; every other shape keeps its own.
@@ -248,7 +249,7 @@ public static class Snapshots
     /// The wire state of one entity, positions to the centimetre and resources to a tenth. Allocates the
     /// state and its collections only; flags and statuses are skipped when an entity has none.
     /// </summary>
-    public static EntityState Capture(Simulation sim, Entity e, bool isStatic)
+    public static EntityState Capture(Simulation sim, Entity e, bool isStatic, bool hitBodies = true)
     {
         var world = sim.World;
         var t = world.Get<Transform>(e);
@@ -258,7 +259,7 @@ public static class Snapshots
         var statuses = world.Get<Statuses>(e);
         var casting = world.Get<WeaveBook>(e)?.Casting;
         var interactable = world.Get<Interactable>(e);
-        var drawn = DrawnOf(world, e, t);
+        var drawn = DrawnOf(sim, world, e, t);
         var state = new EntityState
         {
             Key = e.Key,
@@ -271,6 +272,7 @@ public static class Snapshots
             Yaw = t is null ? 0 : Hundredths(t.Yaw),
             Radius = t is null ? 0.4f : Hundredths(t.Radius),
             Height = t is null ? 1.8f : Hundredths(t.Height),
+            HitBody = hitBodies ? world.Get<HollowWake.Core.Combat.HitBody>(e)?.Definition.Id : null,
             Faction = HollowWake.Core.Combat.Relations.FactionOf(sim, e),
             Rarity = id?.Rarity,
             IsPlayer = id?.IsPlayer ?? false,
@@ -358,6 +360,7 @@ public static class Snapshots
         }
         h.Add(world.TryGet<Interactable>(e, out var interactable) ? interactable.Kind : null);
         h.Add(world.Has<Dead>(e));
+        h.Add(world.Get<HollowWake.Core.Combat.HitBody>(e)?.Definition.Id);
         if (world.TryGet<Stats>(e, out var stats))
         {
             h.Add(stats.Level);
@@ -407,7 +410,7 @@ public static class Snapshots
             h.Add(QHundredths(motion.Velocity.Z));
         }
         var body = world.Get<Transform>(e);
-        AddDrawn(ref h, DrawnOf(world, e, body));
+        AddDrawn(ref h, DrawnOf(sim, world, e, body));
         return h.Value;
     }
 
@@ -502,6 +505,7 @@ public static class Snapshots
             Yaw = F(last.Yaw, next.Yaw),
             Radius = F(last.Radius, next.Radius),
             Height = F(last.Height, next.Height),
+            HitBody = S(last.HitBody, next.HitBody),
             Faction = S(last.Faction, next.Faction),
             Rarity = S(last.Rarity, next.Rarity),
             Level = level,

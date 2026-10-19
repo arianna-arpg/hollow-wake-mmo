@@ -9,8 +9,9 @@ entries:
     excludes: [area]
     requires_mechanisms: ["affliction:bleeding"]
     color: "#a0282b"
-    adds_effects:
-      - { type: rupture, status: bleeding, fraction: 1 }
+    hooks:
+      after_damage:
+        - { type: rupture, status: bleeding, fraction: 1 }
 
   - id: hemorrhaging
     name: Hemorrhaging
@@ -64,8 +65,9 @@ entries:
     requires: [melee]
     excludes: [area]
     color: "#d9b25a"
-    adds_effects:
-      - { type: condition, if: 'has("target.pool.poise.broken")', then: [ { type: damage, amount: "target.poise.max * 0.5", threads: $threads, can_crit: false } ] }
+    hooks:
+      after_damage:
+        - { type: condition, if: 'has("target.pool.poise.broken")', then: [ { type: damage, amount: "target.poise.max * 0.5", threads: $threads, can_crit: false } ] }
 
   - id: furious
     name: Furious
@@ -74,8 +76,9 @@ entries:
     excludes: [area]
     requires_mechanisms: [strikes]
     color: "#e8622a"
-    adds_effects:
-      - { type: condition, if: "last_damage > 0", then: [ { type: charge, id: fury, gain: 1 } ] }
+    hooks:
+      after_damage:
+        - { type: charge, id: fury, gain: 1 }
 
   - id: furywoven
     name: Furywoven

@@ -1,0 +1,15 @@
+kind: patterns
+entries:
+  - id: boar
+    name: Bristle Boar
+    extends: monster
+    tags: [beast, boar]
+    faction: wilds
+    level: 3
+    radius: 0.55
+    components:
+      stats: { attributes: { might: 13, grace: 7, vigor: 12, move.speed: 5, armor: 20, weapon.damage.min: 6, weapon.damage.max: 11, weapon.attack.time: 1.2 } }
+      weaves: { list: [gore] }
+      drops: { table: beast_drops, xp: "18 + level * 6", chance: 0.7 }
+
+  # ---- remnants and barrows

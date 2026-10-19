@@ -24,6 +24,7 @@ public class SignatureGrammarTests
     {
         "apply_status.self",
         "area.include_center",
+        "area.report_miss", // Outcome-event reporting, deliberately no gameplay dimension in AxisBindings.
         "aura.toggle",
         "charge.all",
         "charge.self",
@@ -76,6 +77,8 @@ public class SignatureGrammarTests
     /// </summary>
     private static readonly string[] SplitNames =
     {
+        // Projectile launch elevation and nested cast orientation already use different aim vocabularies.
+        "aim",
         "amount",
         "at",
         "count",

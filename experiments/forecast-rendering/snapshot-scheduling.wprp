@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<WindowsPerformanceRecorder Version="1.0" Author="Hollow Wake">
+  <Profiles>
+    <SystemCollector Id="SnapshotSchedulerCollector" Name="HollowWakeSnapshotScheduler">
+      <BufferSize Value="1024" />
+      <Buffers Value="64" />
+    </SystemCollector>
+    <SystemProvider Id="SnapshotSchedulerProvider">
+      <Keywords>
+        <Keyword Value="ProcessThread" />
+        <Keyword Value="CSwitch" />
+        <Keyword Value="ReadyThread" />
+      </Keywords>
+    </SystemProvider>
+    <Profile Id="SnapshotScheduling.Light.Memory" Name="SnapshotScheduling" Description="Bounded scheduler companion to process-scoped EventPipe; raw output remains local" LoggingMode="Memory" DetailLevel="Light">
+      <Collectors>
+        <SystemCollectorId Value="SnapshotSchedulerCollector">
+          <SystemProviderId Value="SnapshotSchedulerProvider" />
+        </SystemCollectorId>
+      </Collectors>
+    </Profile>
+  </Profiles>
+</WindowsPerformanceRecorder>

@@ -14,6 +14,7 @@ using HollowWake.Core.Sim;
 using HollowWake.Core.StatusEffects;
 using HollowWake.Core.Systems;
 using HollowWake.Core.Tags;
+using HollowWake.Core.Weaves;
 using HollowWake.Core.World;
 using static HollowWake.Core.Effects.Handlers.EffectHelpers;
 
@@ -65,11 +66,12 @@ internal enum Pick
     Farthest,
     LowestLife,
     HighestLife,
+    AimedNearest,
 }
 
 internal static class Picks
 {
-    public static readonly string[] Names = { "random", "nearest", "farthest", "lowest_life", "highest_life" };
+    public static readonly string[] Names = { "random", "nearest", "farthest", "lowest_life", "highest_life", "aimed_nearest" };
 
     public static Pick Of(EffectCompileContext ctx, JsonNode? node, string fallback) => ctx.ChoiceOf(node, "pick", fallback, Names) switch
     {
@@ -77,6 +79,7 @@ internal static class Picks
         "farthest" => Pick.Farthest,
         "lowest_life" => Pick.LowestLife,
         "highest_life" => Pick.HighestLife,
+        "aimed_nearest" => Pick.AimedNearest,
         _ => Pick.Random,
     };
 
@@ -120,10 +123,10 @@ internal static class Picks
             for (var i = 0; i < max; i++)
             {
                 var best = i;
-                var bestKey = Key(ctx.Sim, pick, bodies[i], from);
+                var bestKey = SelectionKey(bodies[i]);
                 for (var j = i + 1; j < bodies.Count; j++)
                 {
-                    var key = Key(ctx.Sim, pick, bodies[j], from);
+                    var key = SelectionKey(bodies[j]);
                     if (key < bestKey)
                     {
                         best = j;
@@ -139,6 +142,9 @@ internal static class Picks
             }
         }
         bodies.RemoveRange(max, bodies.Count - max);
+
+        double SelectionKey(Entity e) => pick == Pick.AimedNearest && e == ctx.Target
+            ? double.NegativeInfinity : Key(ctx.Sim, pick, e, from);
     }
 }
 
@@ -156,32 +162,48 @@ internal sealed class AreaHandler : IEffectHandler
 {
     public string Type => "area";
 
-    public EffectSignature Signature { get; } = EffectSignature.Of("shape", "radius", "angle", "width", "inner", "filter", "center", "max_targets", "include_center", "pick", "require", "reach", "occlusion")
-        .Hook(EffectHooks.OnHit, "effects");
+    public EffectSignature Signature { get; } = EffectSignature.Of("shape", "radius", "radius_base", "angle", "width", "inner", "filter", "center", "max_targets", "include_center", "pick", "require", "reach", "occlusion", "report_miss", "payload_depth", "contact", "height", "elevation")
+        .Hook(EffectHooks.OnHit, "effects")
+        .Checking((p, _) => RadiusConflict(p));
 
-    public CompiledEffect Compile(JsonObject p, EffectCompileContext ctx) => new Effect
-    {
-        Type = Type,
-        Shape = ShapeOf(ctx, p["shape"], "shape"),
-        Radius = ctx.ExprOf(p["radius"]),
-        Angle = ctx.ExprOf(p["angle"]),
-        Width = ctx.ExprOf(p["width"]),
-        Inner = ctx.ExprOf(p["inner"]),
-        Filter = ctx.StringOf(p["filter"]) ?? "enemy",
-        CenterMode = p["center"] is null ? null : ctx.ChoiceOf(p["center"], "center", "focus", "focus", "source", "point"),
-        MaxTargets = ctx.ExprOf(p["max_targets"]),
-        Effects = ctx.CompileList(p["effects"], "effects"),
-        IncludeCenter = ctx.BoolOf(p["include_center"], true),
-        Pick = Picks.Of(ctx, p["pick"], "random"),
-        Require = ctx.ExprOf(p["require"]),
-        FromEdge = ctx.ChoiceOf(p["reach"], "reach", "center", "center", "edge") == "edge",
-        Free = OcclusionFree(ctx, p["occlusion"]),
-    };
+    private static string? RadiusConflict(JsonObject p) => p["radius"] is not null && p["radius_base"] is not null
+        ? "area accepts either radius (resolved) or radius_base (through area.radius modifiers), not both." : null;
 
-    private sealed class Effect : CompiledEffect, IDeliveryPlanSource
+    public CompiledEffect Compile(JsonObject p, EffectCompileContext ctx)
     {
+        if (RadiusConflict(p) is { } error) throw new InvalidOperationException(error);
+        return new Effect
+        {
+            Type = Type,
+            Shape = ShapeOf(ctx, p["shape"], "shape"),
+            Radius = ctx.ExprOf(p["radius"]),
+            RadiusBase = ctx.ExprOf(p["radius_base"]),
+            Angle = ctx.ExprOf(p["angle"]),
+            Width = ctx.ExprOf(p["width"]),
+            Inner = ctx.ExprOf(p["inner"]),
+            Filter = ctx.StringOf(p["filter"]) ?? "enemy",
+            CenterMode = p["center"] is null ? null : ctx.ChoiceOf(p["center"], "center", "focus", "focus", "source", "point"),
+            MaxTargets = ctx.ExprOf(p["max_targets"]),
+            Effects = ctx.CompileList(p["effects"], "effects"),
+            IncludeCenter = ctx.BoolOf(p["include_center"], true),
+            Pick = Picks.Of(ctx, p["pick"], "random"),
+            Require = ctx.ExprOf(p["require"]),
+            FromEdge = ctx.ChoiceOf(p["reach"], "reach", "center", "center", "edge") == "edge",
+            Free = OcclusionFree(ctx, p["occlusion"]),
+            ReportMiss = ctx.BoolOf(p["report_miss"], false),
+            PreservePayloadDepth = ctx.ChoiceOf(p["payload_depth"], "payload_depth", "next", "next", "same") == "same",
+            BodyContact = ctx.ChoiceOf(p["contact"], "contact", "center", "center", "body") == "body",
+            Height = ctx.ExprOf(p["height"]),
+            Elevation = ctx.ExprOf(p["elevation"]),
+        };
+    }
+
+    private sealed class Effect : CompiledEffect, IImmediateDeliveryCandidateSource, IReleaseTargetSelector
+    {
+        public bool ChecksLineOfSight => !Free;
         public required Shape Shape;
         public Expr? Radius;
+        public Expr? RadiusBase;
         public Expr? Angle;
         public Expr? Width;
         public Expr? Inner;
@@ -196,11 +218,19 @@ internal sealed class AreaHandler : IEffectHandler
         public bool FromEdge;
         /// <summary>Strikes through walls and rising ground (<c>occlusion: free</c>).</summary>
         public bool Free;
+        public bool ReportMiss;
+        public bool PreservePayloadDepth;
+        public bool BodyContact;
+        public Expr? Height;
+        public Expr? Elevation;
 
         private ResolvedAreaPlan ResolvePlan(EffectContext ctx)
         {
             var center = Center(ctx, CenterMode ?? (Shape.Anchored ? "source" : "focus"));
-            var radius = (float)Math.Max(0.1, ParamOrAttr(ctx, Radius, "area.radius", 2));
+            var rawRadius = RadiusBase is null ? ParamOrAttr(ctx, Radius, "area.radius", 2) : ctx.Eval(RadiusBase);
+            if (RadiusBase is not null && ctx.SourceStats is { } source)
+                rawRadius = source.Attributes.Get("area.radius", source, ctx.Tags, ctx.Weave?.Modifiers, rawRadius);
+            var radius = (float)Math.Max(0.1, rawRadius);
             var scale = PlacementScale(ctx);
             if (scale != 1)
             {
@@ -221,31 +251,53 @@ internal sealed class AreaHandler : IEffectHandler
             var size = SizeOf(ctx, Shape, radius, Angle, Width, Inner, scaleAngle: true);
             var facing = Facing(ctx);
             var occluded = Occluded(ctx, Free);
+            var bottom = anchor.Z + (float)ctx.Eval(Elevation, 0);
+            var top = bottom + (float)Math.Max(0, ctx.Eval(Height, ctx.SourceTransform?.Height ?? 0));
             return new ResolvedAreaPlan(Shape, size, anchor, facing, CenterMode ?? (Shape.Anchored ? "source" : "focus"),
-                Filter, IncludeCenter ? Entity.None : ctx.Target, occluded, Require is not null, MaxTargets is not null);
+                Filter, IncludeCenter ? Entity.None : ctx.Target, occluded, Require is not null, MaxTargets is not null,
+                BodyContact, bottom, top);
         }
 
         public DeliveryForecast DescribeDelivery(EffectContext ctx)
         {
             // Observation must not initialize the caller's lazy scope and freeze its time/distance.
             // Sample live inputs in a detached context; never advance either shared random stream.
-            ctx = ctx.Fork();
-            var inputs = new ForecastInputs(ctx);
-            if (!inputs.ParameterOrAttribute(Radius, "area.radius") || !inputs.Expression(Angle) ||
+            return DescribeDetachedDelivery(ctx.Fork());
+        }
+
+        public DeliveryForecast DescribeDetachedDelivery(EffectContext ctx)
+            => TryDescribePlan(ctx, out var plan, out var reason)
+                ? new DeliveryForecast(plan, null) : DeliveryForecast.Unavailable(reason!);
+
+        public bool? IsCandidate(EffectContext ctx, Entity target, Vector3 position)
+            => TryDescribePlan(ctx, out var plan, out _) ? plan.IsCandidate(ctx, target, position) : null;
+
+        private bool TryDescribePlan(EffectContext ctx, out ResolvedAreaPlan plan, out string? reason)
+        {
+            plan = default;
+            reason = null;
+            using var inputs = ForecastInputs.Rent(ctx);
+            if (!(RadiusBase is null ? inputs.ParameterOrAttribute(Radius, "area.radius") :
+                    inputs.Expression(RadiusBase) && inputs.AttributeWithBase("area.radius")) || !inputs.Expression(Angle) ||
                 Shape.HasAngle && !inputs.WeaveAttribute("area.angle") ||
                 Shape.HasWidth && !inputs.ParameterOrAttribute(Width, "area.width") ||
                 !inputs.Expression(Inner) || Shape.Anchored && ctx.Tags.Has("melee") && !inputs.WeaveAttribute("melee.reach") ||
-                !Free && !inputs.WeaveAttribute("phasing"))
-                return DeliveryForecast.Unavailable(inputs.Failure ?? "unavailable_inputs");
+                !Free && !inputs.WeaveAttribute("phasing") || !inputs.Expression(Height) || !inputs.Expression(Elevation))
+            {
+                reason = inputs.Failure ?? "unavailable_inputs";
+                return false;
+            }
             try
             {
-                var plan = ResolvePlan(ctx);
-                return plan.IsFinite ? new DeliveryForecast(plan, null) : DeliveryForecast.Unavailable("non_finite_geometry");
+                plan = ResolvePlan(ctx);
+                if (plan.IsFinite) return true;
+                reason = "non_finite_geometry";
             }
-            catch (ExprEvalException) { return DeliveryForecast.Unavailable("unresolved_expression"); }
-            catch (AttributeCycleException) { return DeliveryForecast.Unavailable("cyclic_attribute_dependency"); }
-            catch (ArithmeticException) { return DeliveryForecast.Unavailable("invalid_expression"); }
-            catch (ArgumentException) { return DeliveryForecast.Unavailable("invalid_expression"); }
+            catch (ExprEvalException) { reason = "unresolved_expression"; }
+            catch (AttributeCycleException) { reason = "cyclic_attribute_dependency"; }
+            catch (ArithmeticException) { reason = "invalid_expression"; }
+            catch (ArgumentException) { reason = "invalid_expression"; }
+            return false;
         }
 
         public override void Execute(EffectContext ctx)
@@ -254,7 +306,9 @@ internal sealed class AreaHandler : IEffectHandler
             var targets = Rent();
             try
             {
-                foreach (var (e, pos, _) in ctx.Sim.Spatial.Within(plan.Anchor, plan.Reach, plan.HeightTolerance))
+                var bounds = plan.BodyContact ? HitBodies.Bounds(ctx.Sim) : default;
+                var height = plan.BodyContact ? MathF.Max(MathF.Abs(plan.Bottom - plan.Anchor.Z), MathF.Abs(plan.Top - plan.Anchor.Z)) + bounds.Height : plan.HeightTolerance;
+                foreach (var (e, pos, _) in ctx.Sim.Spatial.Within(plan.Anchor, plan.Reach + bounds.Radius, height))
                 {
                     if (!plan.IsCandidate(ctx, e, pos))
                     {
@@ -277,7 +331,12 @@ internal sealed class AreaHandler : IEffectHandler
                     var max = (int)Math.Round(ctx.Eval(MaxTargets, targets.Count));
                     Picks.Keep(ctx, targets, Math.Max(0, max), Pick, plan.Anchor);
                 }
-                var deeper = ctx.Deeper();
+                // Only the original selection reports a primary miss. Secondary placements still
+                // execute their payloads and retain their normal depth, without replaying that cue.
+                if (ReportMiss && targets.Count == 0 && !ctx.Vars.ContainsKey(DeliveryVars.Echo) &&
+                    ctx.Vars.GetValueOrDefault(DeliveryVars.Step) <= 0)
+                    ReleaseTargets.Miss(ctx, MissReason(ctx, plan), emitted: true);
+                var deeper = PreservePayloadDepth ? ctx : ctx.Deeper();
                 foreach (var t in targets)
                 {
                     ExecuteAll(Effects, deeper.WithTarget(t));
@@ -288,6 +347,20 @@ internal sealed class AreaHandler : IEffectHandler
                 Return(targets);
             }
             Echoes(ctx, plan.Anchor, plan.Size.Radius);
+        }
+
+        private static string MissReason(EffectContext ctx, ResolvedAreaPlan plan)
+        {
+            if (ctx.Target.IsNone) return "no_candidate";
+            if (!ctx.Sim.World.IsAlive(ctx.Target) || ctx.Sim.World.Has<Dead>(ctx.Target)) return "dead";
+            if (ctx.TargetTransform is not { } target) return "missing_position";
+            var delta = target.Position - plan.Anchor;
+            var padding = plan.BodyContact ? HitBodies.Bounds(ctx.Sim).Radius : 0;
+            if (new Vector2(delta.X, delta.Y).Length() > plan.Reach + padding ||
+                !plan.BodyContact && MathF.Abs(delta.Z) > plan.HeightTolerance) return "out_of_reach";
+            if (!plan.ContainsBody(ctx, ctx.Target, target.Position)) return "outside_area";
+            if (plan.RequiresLineOfSight && !LineOfSight.Clear(ctx.Sim.Terrain, plan.Anchor + Eye, target.Position + Eye)) return "line_of_sight";
+            return "no_candidate";
         }
 
         /// <summary>Aftershocks around the area and pulse repeats where it stood, from the weave's area.scatter and area.pulses.</summary>
@@ -349,7 +422,7 @@ internal sealed class ProjectileHandler : IEffectHandler
 
     public EffectSignature Signature { get; } = EffectSignature.Of(
             "count", "speed", "range", "spread", "pierce", "radius", "on_expire", "look", "gravity",
-            "shape", "shape_size", "shape_angle", "shape_width",
+            "shape", "shape_size", "shape_angle", "shape_width", "aim",
             "fire", "salvo_interval", "volley_spacing", "ring_jitter", "spread_by_aim", "origin", "origin_range",
             "duration", "return", "forks", "chains", "rehit", "bounce",
             "homing", "guide", "erratic", "spiral", "orbit", "spin", "wave", "accel", "recurve", "converge",
@@ -394,6 +467,7 @@ internal sealed class ProjectileHandler : IEffectHandler
         {
             Type = Type,
             Spec = spec,
+            Aim = ProjectileAims.Policy(ctx.StringOf(p["aim"]) ?? ctx.Content.Rules.Text("delivery.projectile_aim", "target")),
             Count = ctx.ExprOf(p["count"]),
             Speed = ctx.ExprOf(p["speed"]),
             Range = ctx.ExprOf(p["range"]),
@@ -469,6 +543,7 @@ internal sealed class ProjectileHandler : IEffectHandler
     private sealed class Effect : CompiledEffect
     {
         public required ProjectileSpec Spec;
+        public required ProjectileAim Aim;
         public Expr? Count;
         public Expr? Speed;
         public Expr? Range;
@@ -513,25 +588,12 @@ internal sealed class ProjectileHandler : IEffectHandler
         public override void Execute(EffectContext ctx)
         {
             var sim = ctx.Sim;
-            var caster = ctx.From ?? ctx.SourceTransform?.Position ?? ctx.Point;
-            var origin = caster;
-            if (OriginAtPoint)
-            {
-                origin = ctx.Point;
-                if (OriginRange is not null)
-                {
-                    var limit = (float)Math.Max(0, ctx.Eval(OriginRange, 0));
-                    var away = new Vector2(origin.X - caster.X, origin.Y - caster.Y);
-                    if (away.Length() > limit && away.LengthSquared() > 1e-6f)
-                    {
-                        away = Vector2.Normalize(away) * limit;
-                        origin = sim.Terrain.SnapToGround(new Vector3(caster.X + away.X, caster.Y + away.Y, caster.Z), 3);
-                    }
-                }
-            }
+            // Sample the authored limit once, like the other flight numbers, including for salvos.
+            float? originLimit = OriginAtPoint && OriginRange is not null ? (float)Math.Max(0, ctx.Eval(OriginRange, 0)) : null;
+            var origin = OriginOf(ctx, originLimit);
             var count = Math.Clamp((int)Math.Round(ParamOrAttr(ctx, Count, "projectile.count", 1)), 1, 64);
             var flight = Numbers(ctx);
-            var aimPoint = !ctx.Target.IsNone && ctx.TargetTransform is { } aimed ? aimed.Position : ctx.Point;
+            var aimPoint = ctx.SampledTargetPoint ?? (!ctx.Target.IsNone && ctx.TargetTransform is { } aimed ? aimed.Position : ctx.Point);
             var dir = AimFrom(ctx, origin);
             var spreadDegrees = ctx.Eval(Spread, 15);
             if (!double.IsNaN(AimNear))
@@ -570,7 +632,7 @@ internal sealed class ProjectileHandler : IEffectHandler
                     if (count > 1)
                     {
                         var interval = Math.Max(sim.Clock.Dt, SalvoInterval is null ? sim.Content.Rules.Number("delivery.salvo_interval", 0.15) : ctx.Eval(SalvoInterval, 0.15));
-                        var salvo = new Salvo(this, ctx.Fork(), flight, count - 1, interval, dir, aimPoint, sim.Clock.Time);
+                        var salvo = new Salvo(this, ctx.Fork(), flight, count - 1, interval, dir, aimPoint, sim.Clock.Time, originLimit);
                         Later(sim, interval, salvo.Beat);
                     }
                     break;
@@ -587,13 +649,33 @@ internal sealed class ProjectileHandler : IEffectHandler
             }
         }
 
-        /// <summary>Toward the target, else along the cast's direction, else toward the point, else the source's facing.</summary>
+        private Vector3 OriginOf(EffectContext ctx, float? limit)
+        {
+            var caster = ctx.From ?? ctx.SourceTransform?.Position ?? ctx.Point;
+            if (!OriginAtPoint) return caster;
+            var origin = ctx.Point;
+            var away = new Vector2(origin.X - caster.X, origin.Y - caster.Y);
+            if (limit is { } reach && away.Length() > reach && away.LengthSquared() > 1e-6f)
+            {
+                away = Vector2.Normalize(away) * reach;
+                origin = ctx.Sim.Terrain.SnapToGround(new Vector3(caster.X + away.X, caster.Y + away.Y, caster.Z), 3);
+            }
+            return origin;
+        }
+
+        /// <summary>Toward an explicit frozen sample, else a live target, else along the cast's direction or point.</summary>
         private static Vector2 AimFrom(EffectContext ctx, Vector3 origin)
         {
             Vector2 dir;
-            if (!ctx.Target.IsNone && ctx.TargetTransform is { } tt)
+            if (ctx.SampledTargetPoint is { } point)
             {
-                dir = new Vector2(tt.Position.X - origin.X, tt.Position.Y - origin.Y);
+                var aim = point + ctx.AimOffset;
+                dir = new Vector2(aim.X - origin.X, aim.Y - origin.Y);
+            }
+            else if (!ctx.Target.IsNone && ctx.TargetTransform is { } tt)
+            {
+                var aim = HitBodies.AimPoint(ctx.Sim, ctx.Target);
+                dir = new Vector2(aim.X - origin.X, aim.Y - origin.Y);
             }
             else if (ctx.Direction.LengthSquared() > 0.001f)
             {
@@ -656,18 +738,30 @@ internal sealed class ProjectileHandler : IEffectHandler
         public void Launch(EffectContext ctx, EffectContext? basis, in Flight f, Vector3 at, float heading, float side, Vector3 aimPoint)
         {
             var sim = ctx.Sim;
-            var start = at + new Vector3(0, 0, 1.0f);
+            var inheritedLift = ctx.From is not null && (!OriginAtPoint || ctx.Point == ctx.From) ? ctx.LaunchLift : null;
+            var lift = ctx.From is not null || OriginAtPoint ?
+                inheritedLift ?? (float)sim.Content.Rules.Number("delivery.projectile_origin_height", 1) :
+                HitBodies.AimPoint(sim, ctx.Source).Z - (ctx.SourceTransform?.Position.Z ?? 0);
+            var start = at + new Vector3(0, 0, lift);
             var speed = f.Speed;
             var velocity = new Vector3(MathF.Cos(heading) * speed, MathF.Sin(heading) * speed, 0);
             if (Spec.Gravity)
             {
                 velocity.Z = LobSpeed(sim, start, aimPoint, speed, f.Range);
             }
+            else if (Aim.Point(ctx) is { } aim)
+            {
+                var distance = Vector2.Distance(new(start.X, start.Y), new(aim.X, aim.Y));
+                if (distance > 0.01f) velocity.Z = (aim.Z - start.Z) * speed / distance;
+            }
             var p = new Projectile
             {
                 Context = basis ?? ctx.Fork(deeper: 1),
                 Spec = Spec,
                 Velocity = velocity,
+                GroundFloor = Spec.Gravity ? null : Aim.GroundFloor?.Invoke(ctx) ??
+                    (Aim.ReturnGroundFloor && Spec.Return != ReturnMode.None && f.Orbit == 0 && ctx.LaunchLift is null ?
+                        (float)sim.Content.Rules.Number("delivery.projectile_ground_floor", 0) : null),
                 Speed = speed,
                 Heading = heading,
                 Carrier = start,
@@ -730,7 +824,7 @@ internal sealed class ProjectileHandler : IEffectHandler
 
         /// <summary>
         /// The later shots of a salvo: one per beat, each aimed at the live aim when the caster streams one,
-        /// else at the cast's target where it now stands, else along the cast's own aim.
+        /// else at its frozen sample or live target, else along the cast's own aim.
         /// </summary>
         private sealed class Salvo
         {
@@ -741,9 +835,10 @@ internal sealed class ProjectileHandler : IEffectHandler
             private readonly Vector2 _direction;
             private readonly Vector3 _point;
             private readonly double _since;
+            private readonly float? _originLimit;
             private int _left;
 
-            public Salvo(Effect effect, EffectContext ctx, Flight flight, int left, double interval, Vector2 direction, Vector3 point, double since)
+            public Salvo(Effect effect, EffectContext ctx, Flight flight, int left, double interval, Vector2 direction, Vector3 point, double since, float? originLimit)
             {
                 _effect = effect;
                 _ctx = ctx;
@@ -753,6 +848,7 @@ internal sealed class ProjectileHandler : IEffectHandler
                 _direction = direction;
                 _point = point;
                 _since = since;
+                _originLimit = originLimit;
             }
 
             public void Beat()
@@ -762,22 +858,30 @@ internal sealed class ProjectileHandler : IEffectHandler
                 {
                     return;
                 }
-                var origin = st.Position;
+                var origin = _effect.OriginOf(_ctx, _originLimit);
                 Vector2 dir;
                 var aim = _point;
-                if (LiveAim.TryGet(sim, _ctx.Source, _since, out var live, out var liveDir))
+                var shot = _ctx;
+                if (LiveAim.TryGet(_ctx, _since, out var live, out var liveDir))
                 {
                     aim = live;
+                    shot = _ctx.WithPoint(live).WithTarget(Entity.None);
+                    origin = _effect.OriginOf(shot, _originLimit);
                     dir = new Vector2(live.X - origin.X, live.Y - origin.Y);
                     if (dir.LengthSquared() < 0.0001f)
                     {
                         dir = liveDir;
                     }
                 }
+                else if (_ctx.SampledTargetPoint is { } sampled)
+                {
+                    aim = sampled;
+                    dir = AimFrom(shot, origin);
+                }
                 else if (!_ctx.Target.IsNone && sim.World.IsAlive(_ctx.Target) && !sim.World.Has<Dead>(_ctx.Target) && sim.World.TryGet<Transform>(_ctx.Target, out var tt))
                 {
                     aim = tt.Position;
-                    dir = new Vector2(aim.X - origin.X, aim.Y - origin.Y);
+                    dir = AimFrom(shot, origin);
                 }
                 else
                 {
@@ -788,7 +892,7 @@ internal sealed class ProjectileHandler : IEffectHandler
                     dir = st.Forward;
                 }
                 dir = Vector2.Normalize(dir);
-                _effect.Launch(_ctx, _effect.Spec.Emits ? null : _ctx.Deeper(), _flight, origin, MathF.Atan2(dir.Y, dir.X), 1, aim);
+                _effect.Launch(shot, _effect.Spec.Emits ? null : shot.Deeper(), _flight, origin, MathF.Atan2(dir.Y, dir.X), 1, aim);
                 if (--_left > 0)
                 {
                     Later(sim, _interval, Beat);
@@ -897,6 +1001,7 @@ internal sealed class ChainHandler : IEffectHandler
                 {
                     Pick.Nearest => distance,
                     Pick.Farthest => -distance,
+                    Pick.AimedNearest when e == ctx.Target => double.NegativeInfinity,
                     _ => Picks.Key(ctx.Sim, Pick, e, from),
                 };
                 // Ties keep the nearer body, then the one met first.

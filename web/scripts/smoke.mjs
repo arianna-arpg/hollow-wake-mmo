@@ -19,6 +19,7 @@ import { mkdirSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { chromium } from 'playwright-core';
 import { isolatePhysicalInput } from './isolated-input.mjs';
+import { approachAndClick } from './interaction-click.mjs';
 
 const args = process.argv.slice(2);
 const opt = (name, fallback) => {
@@ -53,6 +54,15 @@ if (flag('isolated-input') || flag('no-physical-gamepads')) {
   await page.addInitScript(isolatePhysicalInput);
   console.log('SMOKE input: page-local keyboard and pointer; physical controllers isolated');
 }
+// Read-only interaction diagnostics: retain the actual wire target rather than infer it from a projected point.
+let clickedTarget = null;
+page.on('websocket', (socket) => socket.on('framesent', ({ payload }) => {
+  try {
+    const message = JSON.parse(typeof payload === 'string' ? payload : payload.toString('utf8'));
+    if (message.t === 'interact') clickedTarget = message.target;
+  } catch { /* Non-JSON frames are outside this diagnostic. */ }
+}));
+
 const pageErrors = [];
 page.on('pageerror', (e) => pageErrors.push(e.message));
 page.on('console', (m) => {
@@ -172,9 +182,21 @@ async function hover(key) {
 async function clickEntity(key) {
   await hover(key);
   const s = await hw((k) => window.hollowWake.screenOf(k), key);
-  if (s && s.visible) {
-    await page.mouse.click(s.x, s.y);
-  }
+  if (s && s.visible) await clickAtEntityScreen(key, s);
+}
+
+async function clickAtEntityScreen(key, s) {
+  clickedTarget = null;
+  const before = await hw((key) => ({
+    self: window.hollowWake.self(),
+    target: window.hollowWake.entities().find(e => String(e.key) === String(key)),
+    hovered: window.hollowWake.hoveredKey,
+  }), key);
+  await page.mouse.click(s.x, s.y);
+  await sleep(100);
+  const actual = await hw((key) => window.hollowWake.entities().find(e => String(e.key) === String(key)) ?? null, clickedTarget);
+  const body = (e) => e ? { key: e.key, name: e.name, x: e.x, y: e.y, z: e.z, drawn: e.drawn } : null;
+  console.log(`SMOKE click diagnostic ${JSON.stringify({ requested: key, wireTarget: clickedTarget, hovered: before.hovered, screen: s, self: body(before.self), target: body(before.target), actual: body(actual) })}`);
 }
 
 const statesOf = async (type) => (await counts()).states[type] ?? 0;
@@ -242,10 +264,20 @@ async function talkToAVillager() {
     record('talk to a villager', false, 'no villager in view');
     return;
   }
-  const reached = await travelTo(villager.key, 1.6, 45000);
-  await sleep(400);
   const before = await statesOf('dialogue_state');
-  await clickEntity(villager.key);
+  const reached = await approachAndClick({
+    within: 1.6, timeoutMs: 45000,
+    approach: (remaining) => travelTo(villager.key, 1.6, remaining),
+    aim: () => hover(villager.key),
+    observe: () => hw((key) => ({
+      self: window.hollowWake.self(),
+      target: window.hollowWake.entities().find(e => String(e.key) === String(key)),
+      hovered: window.hollowWake.hoveredKey,
+      screen: window.hollowWake.screenOf(key),
+    }), villager.key),
+    click: (screen) => clickAtEntityScreen(villager.key, screen),
+    wait: sleep,
+  });
   const shown = await until(async () => (await statesOf('dialogue_state')) > before && (await ui()).worldPanes.includes('dialogue'), 6000);
   await sleep(300);
   await shot('08_dialogue.png');
@@ -676,6 +708,23 @@ async function script() {
       }
     }
     record('Cast cue presentation', ['start', 'release', 'impact'].every(p => phases.has(p)), `phases: ${[...phases].join(', ')}`);
+  }
+  if (flag('forecasts')) {
+    const seen = new Set();
+    for (let attempt = 0; attempt < 3 && !seen.has('primary_candidate'); attempt++) {
+      const target = await nearest(e => typeof e.pattern === 'string' && e.pattern.startsWith('hob') && !e.dead);
+      if (!target) break;
+      await travelTo(target.key, 3, 45000); await hover(target.key); await page.keyboard.press('Digit2');
+      const end = Date.now() + 3000;
+      while (Date.now() < end) {
+        const casts = await hw(() => window.hollowWake.castForecasts().filter(c => String(c.source) === String(window.hollowWake.self()?.key)));
+        for (const c of casts) if (!seen.has(c.coverage)) {
+          seen.add(c.coverage); await page.screenshot({ path: join(shots, `forecast_${c.coverage}.png`) });
+        }
+        await sleep(15);
+      }
+    }
+    record('shared cast forecast', seen.has('primary_candidate'), `coverage: ${[...seen].join(', ')}`);
   }
   // Hobs wander and fight back, so each try walks up again first.
   const isHob = (e) => typeof e.pattern === 'string' && e.pattern.startsWith('hob') && !e.dead;

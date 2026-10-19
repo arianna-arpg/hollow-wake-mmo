@@ -34,6 +34,10 @@ An `entity_spawn` for a known key replaces its state; static entities (flora, pr
 
 Other entities are drawn a little in the past at the server's time, blended between the two snapshots around it, and run on with their velocity for a short while past the newest one. The server clock is estimated from snapshot times and smoothed against jitter. The player's own body leads instead: its last known position plus velocity, smoothed, as on the desktop.
 
+## Hit-body diagnostics
+
+Developer Options exposes `dev_hit_bodies`: cyan outlines the negotiated server damage anatomy, yellow shows movement clearance. `world/hitBodies.ts` uses the last authoritative snapshot pose rather than the interpolated artwork and shares line fixtures with the native client. The option explains missing catalogs and unknown primitives; it never infers collision from cosmetic meshes. The entity-hitbox gallery compares these outlines against actual body meshes at common scale and rotated views.
+
 ## Camera
 
 The same two modes as the desktop `CameraRig`. Isometric: orthographic, fixed pitch, yaw in steps with `Q` and `E`, follows the player, scroll to zoom. Third person: perspective behind the character, orbit with the right mouse button, scroll for distance, `Q` and `E` in smaller steps. `V` toggles. The zoom and the turn ease and a shake rides on a hit taken or a kill, timed by the motion content. The starting mode, the isometric step and zoom range, and the third-person sensitivity, inversion and field of view are Options.
@@ -86,3 +90,7 @@ The [background testing harness](testing.md) builds this client, starts a privat
 ## Still rough
 
 Worth knowing before judging a screenshot: bodies are generated proxies from content, not authored models, and the browser's custom materials carry no shadows; trees and walls hide the player from the isometric camera; `F` takes the nearest interactable, so a villager standing between you and the quartermaster answers first (click the quartermaster instead); the browser downloads every chunk it shows, tens of kilobytes each; the server speaks plain HTTP and WebSocket, so TLS comes from whatever is in front of it (the Codespaces forwarder, a reverse proxy); on Windows the server listens on this machine only unless a URL ACL allows the wildcard prefix.
+
+## Shared cast forecasts
+
+Both shipped clients negotiate `cast_forecasts`. Confirmed lifecycle events drive release, contact and cancellation; preparation bars and candidate regions consume the server's resolved forecasts. When this feature is active, the legacy name-label cast percentage is hidden to avoid conflicting progress displays. Unsupported spatial providers keep timing with explicit unknown coverage. Shape adapters draw the supplied world-space dimensions without skill-name dispatch; cosmetic profiles do not change hit membership. See [cast-forecasting.md](cast-forecasting.md) for parity, relation cues, expiry, visibility repair and current coverage limits.

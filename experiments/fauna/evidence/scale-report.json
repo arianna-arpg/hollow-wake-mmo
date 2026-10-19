@@ -1,0 +1,47 @@
+[
+  {
+    "id": "holdfast",
+    "authoritativeHeight": 1.8,
+    "modelHeight": 1.7334
+  },
+  {
+    "id": "skeleton_warrior",
+    "authoritativeHeight": 1.8,
+    "modelHeight": 1.7128800000000002
+  },
+  {
+    "id": "plains_aurochs",
+    "authoritativeHeight": 1.92,
+    "modelHeight": 2.450559102556232
+  },
+  {
+    "id": "brown_bear",
+    "authoritativeHeight": 1.35,
+    "modelHeight": 1.5353660899393897
+  },
+  {
+    "id": "grove_stag",
+    "authoritativeHeight": 1.6,
+    "modelHeight": 2.1392882800593798
+  },
+  {
+    "id": "wolf",
+    "authoritativeHeight": 0.86,
+    "modelHeight": 1.0118865958889525
+  },
+  {
+    "id": "red_fox",
+    "authoritativeHeight": 0.48,
+    "modelHeight": 0.5874294703021711
+  },
+  {
+    "id": "meadow_hare",
+    "authoritativeHeight": 0.38,
+    "modelHeight": 0.5557917466292795
+  },
+  {
+    "id": "snapping_terrapin",
+    "authoritativeHeight": 0.34,
+    "modelHeight": 0.34
+  }
+]

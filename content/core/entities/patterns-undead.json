@@ -46,7 +46,7 @@
       "faction": "remnant",
       "level": 3,
       "radius": 0.41,
-      "height": 1.7,
+      "height": 1.8,
       "components": {
         "stats": {
           "attributes": {
@@ -100,7 +100,7 @@
       "faction": "remnant",
       "level": 3,
       "radius": 0.38,
-      "height": 1.7,
+      "height": 1.8,
       "components": {
         "stats": {
           "attributes": {
@@ -156,7 +156,7 @@
       "faction": "remnant",
       "level": 4,
       "radius": 0.38,
-      "height": 1.75,
+      "height": 1.8,
       "components": {
         "stats": {
           "attributes": {
@@ -214,7 +214,7 @@
       "faction": "remnant",
       "level": 4,
       "radius": 0.38,
-      "height": 1.75,
+      "height": 1.8,
       "components": {
         "stats": {
           "attributes": {
@@ -272,7 +272,7 @@
       "faction": "remnant",
       "level": 5,
       "radius": 0.38,
-      "height": 1.75,
+      "height": 1.8,
       "components": {
         "stats": {
           "attributes": {
@@ -331,7 +331,7 @@
       "faction": "remnant",
       "level": 5,
       "radius": 0.38,
-      "height": 1.75,
+      "height": 1.8,
       "components": {
         "stats": {
           "attributes": {
@@ -387,7 +387,7 @@
       "faction": "remnant",
       "level": 5,
       "radius": 0.47,
-      "height": 1.85,
+      "height": 1.8,
       "components": {
         "stats": {
           "attributes": {
@@ -443,7 +443,7 @@
       "faction": "remnant",
       "level": 5,
       "radius": 0.38,
-      "height": 1.7,
+      "height": 1.8,
       "components": {
         "stats": {
           "attributes": {
@@ -895,7 +895,8 @@
         "habitat.deep_forest",
         "melee",
         "beast",
-        "fauna"
+        "fauna",
+        "quest.cull"
       ],
       "faction": "remnant",
       "level": 4,

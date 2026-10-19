@@ -8,6 +8,8 @@ public sealed class CastCueTimeline
 {
     public sealed record Cue(CastCueMsg Event, string Phase, CastVisualPhase Style, string Color, double Until, string Layer, string Profile);
     public List<Cue> Active { get; } = new();
+    /// <summary>Accepted lifecycle facts, independent of cosmetic profiles and layer budgets.</summary>
+    public event Action<CastCueMsg>? Lifecycle;
     private long _sequence = -1;
     private readonly CastVisualsDef _config;
     private readonly CastVisualProfile[] _profiles;
@@ -29,6 +31,7 @@ public sealed class CastCueTimeline
         var phase = e.Outcome ? (_config.Outcomes.Contains(e.Phase) && _profiles.Any(p => p.Phases.ContainsKey(e.Phase)) ? e.Phase : "outcome")
             : e.Phase switch { "sync" => "start", "end" => e.Fired ? "recovery" : "cancel", "interrupt" => "cancel", _ => e.Phase };
         if (!e.Outcome && phase is not ("start" or "release" or "impact" or "recovery" or "cancel")) return false;
+        if (!e.Outcome) Lifecycle?.Invoke(e);
         if (!e.Outcome && phase is "start" or "recovery" or "cancel")
             Active.RemoveAll(c => c.Phase == "start" && c.Event.Source == e.Source && c.Event.CastId == e.CastId);
         var layers = new HashSet<string>(StringComparer.Ordinal);

@@ -161,7 +161,6 @@ internal static class Families
         Alike = new[]
         {
             new Alike("shape", "sector", "cone", SameShape),
-            new Alike("shape", "bar", "wave", "swept along the flight, the two blades laid across it pass over the crowd's bodies on the same ticks"),
         },
         Unsampled = new Dictionary<string, string>
         {
@@ -491,6 +490,7 @@ internal static class Families
             new Alike("shape", "circle", "square", NoBodyBetween),
             new Alike("shape", "arc", "wave", NoBodyBetween),
             new Alike("center", "focus", "point", "the press names no target, and an area's focus is its target, else its point"),
+            new Alike("pick", "nearest", "aimed_nearest", "the press names no target, so aimed_nearest falls back to nearest; PositionalReleaseTests separately pins preference for an eligible aimed body"),
         },
         Unsampled = new Dictionary<string, string>
         {
@@ -527,6 +527,10 @@ internal static class Families
             return new Budget(1 + leaps, 1, 1, CarrierSeconds + View.Dt, $"the carrier's hit and at most {leaps} leaps");
         },
         States = v => new[] { new Statement("chain", true, "the graph chains"), Landing(v) },
+        Alike = new[]
+        {
+            new Alike("pick", "nearest", "aimed_nearest", "the chain's aimed body has already been struck and is excluded from every subsequent hop, leaving nearest as the fallback"),
+        },
     };
 
     // ------------------------------------------------------------ field

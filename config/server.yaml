@@ -34,3 +34,10 @@ world_events: true
 world_event_interval_seconds: 900
 max_active_world_events: 3
 log_intents: false
+
+# Only clients negotiating cast_forecast_v1 receive these forecasts; ordinary clients do not.
+# Membership baselines use snapshot cadence; stale bounds lose spatial certainty.
+cast_forecasts:
+  max_casts: 256         # maximum active casts sent to one viewer, nearest first
+  valid_seconds: 0.5    # seconds before unrefreshed geometry becomes uncertain
+  refresh_seconds: 2    # seconds between full records that repair missing geometry revisions

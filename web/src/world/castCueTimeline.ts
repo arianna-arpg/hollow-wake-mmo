@@ -28,6 +28,8 @@ export const sameKey = (a: Int64, b: Int64): boolean => String(a) === String(b);
 /** Pure event consumer: no gameplay prediction, wall-clock RNG, name-based skill cases, or inferred hits. */
 export class CastCueTimeline {
   readonly active: CueInstance[] = [];
+  /** Accepted lifecycle facts, independent of cosmetic profiles and layer budgets. */
+  onLifecycle?: (event: CastCueMsg) => void;
   private sequence = -1n;
   private readonly profiles: CueProfile[];
   constructor(readonly config: CueSettings) {
@@ -48,6 +50,7 @@ export class CastCueTimeline {
     const phase = e.outcome ? (this.config.outcomes.includes(e.phase) && this.profiles.some(p => p.phases[e.phase]) ? e.phase : 'outcome')
       : e.phase === 'sync' ? 'start' : e.phase === 'end' ? (e.fired ? 'recovery' : 'cancel') : e.phase === 'interrupt' ? 'cancel' : e.phase;
     if (!e.outcome && !['start', 'release', 'impact', 'recovery', 'cancel'].includes(phase)) return false;
+    if (!e.outcome) this.onLifecycle?.(e);
     if (!e.outcome && (phase === 'recovery' || phase === 'cancel' || phase === 'start')) {
       for (let i = this.active.length - 1; i >= 0; i--) {
         const old = this.active[i];

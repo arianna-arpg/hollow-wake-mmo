@@ -1,0 +1,19 @@
+{
+  "errors": [],
+  "skills": 948,
+  "supports": 457,
+  "families": 12,
+  "pending": [
+    "durable_defense_and_resources",
+    "authored_effect_voices"
+  ],
+  "partial": [
+    "cast_lifecycle",
+    "restoration",
+    "status_transitions",
+    "delivery_and_forecast",
+    "spatial_movement",
+    "companions_and_constructs",
+    "effect_composition"
+  ]
+}

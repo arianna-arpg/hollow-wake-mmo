@@ -1,0 +1,137 @@
+  HollowWake.Core -> C:\Users\John\.codex\worktrees\shared-cast-forecasts\MMOARPG\src\HollowWake.Core\bin\Release\net8.0\HollowWake.Core.dll
+  HollowWake.Protocol -> C:\Users\John\.codex\worktrees\shared-cast-forecasts\MMOARPG\src\HollowWake.Protocol\bin\Release\net8.0\HollowWake.Protocol.dll
+  HollowWake.Server -> C:\Users\John\.codex\worktrees\shared-cast-forecasts\MMOARPG\src\HollowWake.Server\bin\Release\net10.0\HollowWake.Server.dll
+  HollowWake.Tools -> C:\Users\John\.codex\worktrees\shared-cast-forecasts\MMOARPG\src\HollowWake.Tools\bin\Release\net10.0\hollowwake.dll
+  HollowWake.Core.Tests -> C:\Users\John\.codex\worktrees\shared-cast-forecasts\MMOARPG\tests\HollowWake.Core.Tests\bin\Release\net10.0\HollowWake.Core.Tests.dll
+Test run for C:\Users\John\.codex\worktrees\shared-cast-forecasts\MMOARPG\tests\HollowWake.Core.Tests\bin\Release\net10.0\HollowWake.Core.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+[xUnit.net 00:00:07.84]     HollowWake.Core.Tests.HeldGroundForecastTests.ChangedLayerIsResolvedAgainWithoutObservationChangingState(targeting: Direction, mode: "over", remove: False) [FAIL]
+  Failed HollowWake.Core.Tests.HeldGroundForecastTests.ChangedLayerIsResolvedAgainWithoutObservationChangingState(targeting: Direction, mode: "over", remove: False) [2 s]
+  Error Message:
+   Assert.Equal() Failure: Values differ
+Expected: <13, 10, 4>
+Actual:   <13, 10, 3>
+  Stack Trace:
+     at HollowWake.Core.Tests.HeldGroundForecastTests.ChangedLayerIsResolvedAgainWithoutObservationChangingState(Targeting targeting, String mode, Boolean remove) in C:\Users\John\.codex\worktrees\shared-cast-forecasts\MMOARPG\tests\HollowWake.Core.Tests\HeldGroundForecastTests.cs:line 72
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeDirectByRefWithFewArgs(Object obj, Span`1 copyOfArgs, BindingFlags invokeAttr)
+[xUnit.net 00:00:07.87]     HollowWake.Core.Tests.HeldGroundForecastTests.ChangedLayerIsResolvedAgainWithoutObservationChangingState(targeting: Ground, mode: "over", remove: False) [FAIL]
+[xUnit.net 00:00:07.87]     HollowWake.Core.Tests.HeldGroundForecastTests.ChangedLayerIsResolvedAgainWithoutObservationChangingState(targeting: Ground, mode: "over", remove: True) [FAIL]
+[xUnit.net 00:00:07.87]     HollowWake.Core.Tests.HeldGroundForecastTests.ChangedLayerIsResolvedAgainWithoutObservationChangingState(targeting: Ground, mode: "charge", remove: True) [FAIL]
+[xUnit.net 00:00:07.87]     HollowWake.Core.Tests.HeldGroundForecastTests.ChangedLayerIsResolvedAgainWithoutObservationChangingState(targeting: Ground, mode: "charge", remove: False) [FAIL]
+[xUnit.net 00:00:07.87]     HollowWake.Core.Tests.HeldGroundForecastTests.ChangedLayerIsResolvedAgainWithoutObservationChangingState(targeting: Direction, mode: "charge", remove: True) [FAIL]
+[xUnit.net 00:00:07.87]     HollowWake.Core.Tests.HeldGroundForecastTests.ChangedLayerIsResolvedAgainWithoutObservationChangingState(targeting: Direction, mode: "charge", remove: False) [FAIL]
+[xUnit.net 00:00:07.87]     HollowWake.Core.Tests.HeldGroundForecastTests.ChangedLayerIsResolvedAgainWithoutObservationChangingState(targeting: Direction, mode: "over", remove: True) [FAIL]
+  Failed HollowWake.Core.Tests.HeldGroundForecastTests.ChangedLayerIsResolvedAgainWithoutObservationChangingState(targeting: Ground, mode: "over", remove: False) [2 ms]
+  Error Message:
+   Assert.Equal() Failure: Values differ
+Expected: <13, 10, 4>
+Actual:   <13, 10, 3>
+  Stack Trace:
+     at HollowWake.Core.Tests.HeldGroundForecastTests.ChangedLayerIsResolvedAgainWithoutObservationChangingState(Targeting targeting, String mode, Boolean remove) in C:\Users\John\.codex\worktrees\shared-cast-forecasts\MMOARPG\tests\HollowWake.Core.Tests\HeldGroundForecastTests.cs:line 72
+   at InvokeStub_HeldGroundForecastTests.ChangedLayerIsResolvedAgainWithoutObservationChangingState(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Failed HollowWake.Core.Tests.HeldGroundForecastTests.ChangedLayerIsResolvedAgainWithoutObservationChangingState(targeting: Ground, mode: "over", remove: True) [2 ms]
+  Error Message:
+   Assert.Equal() Failure: Values differ
+Expected: <13, 10, 0>
+Actual:   <13, 10, 3>
+  Stack Trace:
+     at HollowWake.Core.Tests.HeldGroundForecastTests.ChangedLayerIsResolvedAgainWithoutObservationChangingState(Targeting targeting, String mode, Boolean remove) in C:\Users\John\.codex\worktrees\shared-cast-forecasts\MMOARPG\tests\HollowWake.Core.Tests\HeldGroundForecastTests.cs:line 72
+   at InvokeStub_HeldGroundForecastTests.ChangedLayerIsResolvedAgainWithoutObservationChangingState(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Failed HollowWake.Core.Tests.HeldGroundForecastTests.ChangedLayerIsResolvedAgainWithoutObservationChangingState(targeting: Ground, mode: "charge", remove: True) [6 ms]
+  Error Message:
+   Assert.Equal() Failure: Values differ
+Expected: <13, 10, 0>
+Actual:   <13, 10, 3>
+  Stack Trace:
+     at HollowWake.Core.Tests.HeldGroundForecastTests.ChangedLayerIsResolvedAgainWithoutObservationChangingState(Targeting targeting, String mode, Boolean remove) in C:\Users\John\.codex\worktrees\shared-cast-forecasts\MMOARPG\tests\HollowWake.Core.Tests\HeldGroundForecastTests.cs:line 72
+   at InvokeStub_HeldGroundForecastTests.ChangedLayerIsResolvedAgainWithoutObservationChangingState(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Failed HollowWake.Core.Tests.HeldGroundForecastTests.ChangedLayerIsResolvedAgainWithoutObservationChangingState(targeting: Ground, mode: "charge", remove: False) [3 ms]
+  Error Message:
+   Assert.Equal() Failure: Values differ
+Expected: <13, 10, 4>
+Actual:   <13, 10, 3>
+  Stack Trace:
+     at HollowWake.Core.Tests.HeldGroundForecastTests.ChangedLayerIsResolvedAgainWithoutObservationChangingState(Targeting targeting, String mode, Boolean remove) in C:\Users\John\.codex\worktrees\shared-cast-forecasts\MMOARPG\tests\HollowWake.Core.Tests\HeldGroundForecastTests.cs:line 72
+   at InvokeStub_HeldGroundForecastTests.ChangedLayerIsResolvedAgainWithoutObservationChangingState(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Failed HollowWake.Core.Tests.HeldGroundForecastTests.ChangedLayerIsResolvedAgainWithoutObservationChangingState(targeting: Direction, mode: "charge", remove: True) [2 ms]
+  Error Message:
+   Assert.Equal() Failure: Values differ
+Expected: <13, 10, 0>
+Actual:   <13, 10, 3>
+  Stack Trace:
+     at HollowWake.Core.Tests.HeldGroundForecastTests.ChangedLayerIsResolvedAgainWithoutObservationChangingState(Targeting targeting, String mode, Boolean remove) in C:\Users\John\.codex\worktrees\shared-cast-forecasts\MMOARPG\tests\HollowWake.Core.Tests\HeldGroundForecastTests.cs:line 72
+   at InvokeStub_HeldGroundForecastTests.ChangedLayerIsResolvedAgainWithoutObservationChangingState(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Failed HollowWake.Core.Tests.HeldGroundForecastTests.ChangedLayerIsResolvedAgainWithoutObservationChangingState(targeting: Direction, mode: "charge", remove: False) [2 ms]
+  Error Message:
+   Assert.Equal() Failure: Values differ
+Expected: <13, 10, 4>
+Actual:   <13, 10, 3>
+  Stack Trace:
+     at HollowWake.Core.Tests.HeldGroundForecastTests.ChangedLayerIsResolvedAgainWithoutObservationChangingState(Targeting targeting, String mode, Boolean remove) in C:\Users\John\.codex\worktrees\shared-cast-forecasts\MMOARPG\tests\HollowWake.Core.Tests\HeldGroundForecastTests.cs:line 72
+   at InvokeStub_HeldGroundForecastTests.ChangedLayerIsResolvedAgainWithoutObservationChangingState(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Failed HollowWake.Core.Tests.HeldGroundForecastTests.ChangedLayerIsResolvedAgainWithoutObservationChangingState(targeting: Direction, mode: "over", remove: True) [2 ms]
+  Error Message:
+   Assert.Equal() Failure: Values differ
+Expected: <13, 10, 0>
+Actual:   <13, 10, 3>
+  Stack Trace:
+     at HollowWake.Core.Tests.HeldGroundForecastTests.ChangedLayerIsResolvedAgainWithoutObservationChangingState(Targeting targeting, String mode, Boolean remove) in C:\Users\John\.codex\worktrees\shared-cast-forecasts\MMOARPG\tests\HollowWake.Core.Tests\HeldGroundForecastTests.cs:line 72
+   at InvokeStub_HeldGroundForecastTests.ChangedLayerIsResolvedAgainWithoutObservationChangingState(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:07.91]     HollowWake.Core.Tests.HeldGroundForecastTests.MissingTerrainDeclinesGeometryUntilRuntimeReleaseLoadsIt(targeting: Ground, neighbourOnly: False) [FAIL]
+[xUnit.net 00:00:07.91]     HollowWake.Core.Tests.HeldGroundForecastTests.MissingTerrainDeclinesGeometryUntilRuntimeReleaseLoadsIt(targeting: Ground, neighbourOnly: True) [FAIL]
+[xUnit.net 00:00:07.92]     HollowWake.Core.Tests.HeldGroundForecastTests.MissingTerrainDeclinesGeometryUntilRuntimeReleaseLoadsIt(targeting: Direction, neighbourOnly: False) [FAIL]
+[xUnit.net 00:00:07.93]     HollowWake.Core.Tests.HeldGroundForecastTests.MissingTerrainDeclinesGeometryUntilRuntimeReleaseLoadsIt(targeting: Direction, neighbourOnly: True) [FAIL]
+  Failed HollowWake.Core.Tests.HeldGroundForecastTests.MissingTerrainDeclinesGeometryUntilRuntimeReleaseLoadsIt(targeting: Ground, neighbourOnly: False) [6 ms]
+  Error Message:
+   Assert.Equal() Failure: Strings differ
+           ↓ (pos 0)
+Expected: "unavailable"
+Actual:   "primary"
+           ↑ (pos 0)
+  Stack Trace:
+     at HollowWake.Core.Tests.HeldGroundForecastTests.MissingTerrainDeclinesGeometryUntilRuntimeReleaseLoadsIt(Targeting targeting, Boolean neighbourOnly) in C:\Users\John\.codex\worktrees\shared-cast-forecasts\MMOARPG\tests\HollowWake.Core.Tests\HeldGroundForecastTests.cs:line 100
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeDirectByRefWithFewArgs(Object obj, Span`1 copyOfArgs, BindingFlags invokeAttr)
+  Failed HollowWake.Core.Tests.HeldGroundForecastTests.MissingTerrainDeclinesGeometryUntilRuntimeReleaseLoadsIt(targeting: Ground, neighbourOnly: True) [2 ms]
+  Error Message:
+   Assert.Equal() Failure: Strings differ
+           ↓ (pos 0)
+Expected: "unavailable"
+Actual:   "primary"
+           ↑ (pos 0)
+  Stack Trace:
+     at HollowWake.Core.Tests.HeldGroundForecastTests.MissingTerrainDeclinesGeometryUntilRuntimeReleaseLoadsIt(Targeting targeting, Boolean neighbourOnly) in C:\Users\John\.codex\worktrees\shared-cast-forecasts\MMOARPG\tests\HollowWake.Core.Tests\HeldGroundForecastTests.cs:line 100
+   at InvokeStub_HeldGroundForecastTests.MissingTerrainDeclinesGeometryUntilRuntimeReleaseLoadsIt(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Failed HollowWake.Core.Tests.HeldGroundForecastTests.MissingTerrainDeclinesGeometryUntilRuntimeReleaseLoadsIt(targeting: Direction, neighbourOnly: False) [6 ms]
+  Error Message:
+   Assert.Equal() Failure: Strings differ
+           ↓ (pos 0)
+Expected: "unavailable"
+Actual:   "primary"
+           ↑ (pos 0)
+  Stack Trace:
+     at HollowWake.Core.Tests.HeldGroundForecastTests.MissingTerrainDeclinesGeometryUntilRuntimeReleaseLoadsIt(Targeting targeting, Boolean neighbourOnly) in C:\Users\John\.codex\worktrees\shared-cast-forecasts\MMOARPG\tests\HollowWake.Core.Tests\HeldGroundForecastTests.cs:line 100
+   at InvokeStub_HeldGroundForecastTests.MissingTerrainDeclinesGeometryUntilRuntimeReleaseLoadsIt(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Failed HollowWake.Core.Tests.HeldGroundForecastTests.MissingTerrainDeclinesGeometryUntilRuntimeReleaseLoadsIt(targeting: Direction, neighbourOnly: True) [12 ms]
+  Error Message:
+   Assert.Equal() Failure: Strings differ
+           ↓ (pos 0)
+Expected: "unavailable"
+Actual:   "primary"
+           ↑ (pos 0)
+  Stack Trace:
+     at HollowWake.Core.Tests.HeldGroundForecastTests.MissingTerrainDeclinesGeometryUntilRuntimeReleaseLoadsIt(Targeting targeting, Boolean neighbourOnly) in C:\Users\John\.codex\worktrees\shared-cast-forecasts\MMOARPG\tests\HollowWake.Core.Tests\HeldGroundForecastTests.cs:line 100
+   at InvokeStub_HeldGroundForecastTests.MissingTerrainDeclinesGeometryUntilRuntimeReleaseLoadsIt(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+
+Failed!  - Failed:    12, Passed:     6, Skipped:     0, Total:    18, Duration: 3 s - HollowWake.Core.Tests.dll (net10.0)

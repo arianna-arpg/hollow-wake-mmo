@@ -81,15 +81,18 @@ internal static class EffectHelpers
     /// when given. The aim stays the basis's unless <paramref name="aim"/> turns it; everything else is the
     /// basis's.
     /// </summary>
-    internal static EffectContext At(EffectContext basis, Entity target, Vector3 point, Vector2 direction, Vector3? from, int depth, Dictionary<string, double>? vars = null, double? damageScale = null, Vector3? aim = null) => new()
+    internal static EffectContext At(EffectContext basis, Entity target, Vector3 point, Vector2 direction, Vector3? from, int depth, Dictionary<string, double>? vars = null, double? damageScale = null, Vector3? aim = null, float? launchLift = null, Vector3? aimOffset = null, Vector3? sampledTargetPoint = null) => new()
     {
         CastId = basis.CastId,
+        CastSource = basis.CastSource,
         Sim = basis.Sim,
         Origin = basis.Origin,
         Source = basis.Source,
         Target = target,
         Point = point,
         Aim = aim ?? basis.Aim,
+        AimOffset = aimOffset ?? Vector3.Zero,
+        SampledTargetPoint = sampledTargetPoint,
         Direction = direction,
         Weave = basis.Weave,
         Tags = basis.Tags,
@@ -98,6 +101,7 @@ internal static class EffectHelpers
         Potency = basis.Potency,
         DamageScale = damageScale ?? basis.DamageScale,
         From = from,
+        LaunchLift = launchLift,
         Vars = vars ?? basis.Vars,
         Slot = basis.Slot,
         Host = basis.Host,
@@ -213,6 +217,10 @@ public static class DeliveryVars
 /// </summary>
 internal static class LiveAim
 {
+    /// <summary>Input belongs to the physical caster, independently of inherited stats and credit.</summary>
+    public static bool TryGet(EffectContext context, double since, out Vector3 point, out Vector2 direction) =>
+        TryGet(context.Sim, context.CastSource.IsNone ? context.Source : context.CastSource, since, out point, out direction);
+
     /// <summary>
     /// The caster's latest aim sent at or after <paramref name="since"/>. False when it sent none, in which
     /// case the caller keeps the aim the cast was made with.

@@ -22,6 +22,12 @@ namespace HollowWake.Server.World;
 /// </summary>
 public sealed partial class ZoneInstance
 {
+    private readonly CastForecastBuilder _forecastBuilder;
+    public string ForecastEpoch => _forecastBuilder.Epoch;
+    private void SendCastForecast(Session session)
+    {
+        if (session.View.SendCastForecasts) session.Send(_forecastBuilder.Build(session.View, session.Entity, _snapshotInterval));
+    }
     private readonly ILogger _log;
     private readonly List<GameEvent> _pending = new();
     private readonly double _snapshotInterval;
@@ -41,8 +47,9 @@ public sealed partial class ZoneInstance
     /// <summary>Raised when a player walks out of the zone or asks to travel; the host moves them.</summary>
     public event Action<Session, Vector3>? TransferRequested;
 
-    public ZoneInstance(ZoneCoord coord, Simulation sim, ILogger log, int snapshotRate, double interestRadius)
+    public ZoneInstance(ZoneCoord coord, Simulation sim, ILogger log, int snapshotRate, double interestRadius, Config.CastForecastSettings? forecasts = null)
     {
+        _forecastBuilder = new(sim, forecasts);
         Coord = coord;
         Sim = sim;
         _log = log;
@@ -122,6 +129,7 @@ public sealed partial class ZoneInstance
             if (message is EntitySpawnMsg spawn) SyncCastCue(session, spawn.State);
         }
         _outbox.Clear();
+        SendCastForecast(session);
     }
 
     private void DispatchEvents()
@@ -139,6 +147,10 @@ public sealed partial class ZoneInstance
             {
                 case CastPresentationEvent cast:
                     SendCastCue(cast);
+                    break;
+                case WeaveMissed missed:
+                    // A miss may end one application of an ongoing channel. It is not a cast termination.
+                    SendCastMiss(missed);
                     break;
                 case DamageDealt d:
                     Broadcast(new CombatEventMsg(d.Evaded ? "evade" : d.Blocked ? "block" : "damage", d.Source.Key, d.Target.Key, Math.Round(d.Total, 1), d.Crit, d.Tags.Items.ToList(), null), d.Source, d.Target);

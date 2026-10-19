@@ -30,10 +30,11 @@ public static class Bench
 {
     public sealed record Result(string Name, double Value, string Unit, string Note);
 
-    public static int Run(ContentRegistry content, Func<string, string, string> opt, bool json)
+    public static int Run(ContentRegistry content, Func<string, string, string> opt, bool json, bool snapshotProfile = false)
     {
         var results = new List<Result>();
         var only = opt("only", "");
+        using var profile = snapshotProfile ? new SnapshotProfile(opt("snapshot-profile", ""), only) : null;
         if (only is "" or "attributes")
         {
             results.AddRange(Attributes(content));
@@ -48,11 +49,16 @@ public static class Bench
         }
         if (only is "" or "tick")
         {
-            results.AddRange(Tick(content, opt("seed", "aureth"), int.Parse(opt("monsters", "300")), int.Parse(opt("players", "4")), int.Parse(opt("ticks", "600")), int.Parse(opt("minions", "0")), bool.Parse(opt("cast-cues", "false"))));
+            results.AddRange(Tick(content, opt("seed", "aureth"), int.Parse(opt("monsters", "300")), int.Parse(opt("players", "4")), int.Parse(opt("ticks", "600")), int.Parse(opt("minions", "0")), bool.Parse(opt("cast-cues", "false")), profile));
         }
-        if (only is "" or "deliveries")
+        if (only is "" or "deliveries" or "hit-bodies")
         {
-            results.AddRange(BenchDeliveries.Run(content));
+            results.AddRange(BenchDeliveries.Run(content, profiled: only == "hit-bodies"));
+        }
+        if (profile is not null)
+        {
+            for (var i = 0; i < results.Count; i++)
+                results[i] = results[i] with { Note = "DIAGNOSTIC RUN; snapshot probe overhead included, not ordinary budget evidence. " + results[i].Note };
         }
         if (json)
         {
@@ -66,6 +72,7 @@ public static class Bench
                 Console.WriteLine($"{r.Name,-34} {r.Value,12:0.###} {r.Unit,-12} {r.Note}");
             }
         }
+        profile?.Save();
         return 0;
     }
 
@@ -171,7 +178,26 @@ public static class Bench
         {
             formulas[1].Evaluate(scope);
         }
-        yield return new Result("expression.alloc", (GC.GetTotalAllocatedBytes(true) - before) / 100_000.0, "bytes/eval", "lerp with rand()");
+        yield return new Result("expression.alloc", (GC.GetTotalAllocatedBytes(true) - before) / 100_000.0, "bytes/eval", "legacy whole-process counter; lerp with rand()");
+        // Retain the historical process-wide row above. This distinct sample warms its exact delegate/loop
+        // a fixed number of times, then records both counters once, including any remaining runtime noise.
+        const int allocationCalls = 100_000;
+        Action allocationWork = () =>
+        {
+            for (var i = 0; i < allocationCalls; i++)
+            {
+                formulas[1].Evaluate(scope);
+            }
+        };
+        for (var round = 0; round < 40; round++)
+        {
+            allocationWork();
+        }
+        Settle();
+        var allocation = AllocationSample.Capture(allocationWork);
+        const string allocationNote = "lerp with rand(); 40 fixed warmup loops, one 100000-evaluation sample; no retries or overhead subtraction";
+        yield return new Result("expression.alloc.calling_thread", allocation.CallingThreadBytes / (double)allocationCalls, "bytes/eval", allocationNote);
+        yield return new Result("expression.alloc.sample_process", allocation.ProcessBytes / (double)allocationCalls, "bytes/eval", "whole-process companion to calling_thread; " + allocationNote);
         for (var i = 0; i < 2_000; i++)
         {
             Expr.Parse("40 + level * 10 + vigor * 4");
@@ -213,8 +239,10 @@ public static class Bench
 
     // ------------------------------------------------------------ zone tick
 
-    private static IEnumerable<Result> Tick(ContentRegistry content, string seed, int monsters, int players, int ticks, int minions, bool castCues)
+    private static IEnumerable<Result> Tick(ContentRegistry content, string seed, int monsters, int players, int ticks, int minions, bool castCues, SnapshotProfile? profile)
     {
+        const int snapshots = 50;
+        profile?.Prepare(new SnapshotProfile.Workload(seed, monsters, players, ticks, minions, castCues, snapshots));
         var generator = new WorldGenerator(content, Rng.Hash64(seed));
         var world = new WorldState(generator.Overlays, content.Rules);
         var log = new ListSimLog();
@@ -328,38 +356,93 @@ public static class Bench
             enterBytes += Encoded(output);
         }
         yield return new Result("snapshot.enter", enterBytes / (double)players / 1024, "KB/player", "spawns and self state on entering the zone, sent once");
-        const int snapshots = 50;
-        var (fullMs, fullBytes, known) = Snapshot(sim, builder, views, playerEntities, output, snapshots);
+        var (fullMs, fullBytes, known) = Snapshot(sim, builder, views, playerEntities, output, snapshots, profile, "full");
         yield return new Result("snapshot.build", fullMs / (snapshots * players), "ms/player", $"{known / (double)(snapshots * players):0} known entities per player; build and encode");
         yield return new Result("snapshot.bytes", fullBytes / (double)(snapshots * players) / 1024, "KB/player", "changed entities as full states plus self state, steady state, JSON");
         foreach (var view in views)
         {
             view.SendDeltas = true;
         }
-        var (deltaMs, deltaBytes, _) = Snapshot(sim, builder, views, playerEntities, output, snapshots);
+        var (deltaMs, deltaBytes, _) = Snapshot(sim, builder, views, playerEntities, output, snapshots, profile, "delta");
         yield return new Result("snapshot.delta.build", deltaMs / (snapshots * players), "ms/player", "the same with deltas opted in");
         yield return new Result("snapshot.delta.bytes", deltaBytes / (double)(snapshots * players) / 1024, "KB/player", "changed entities as deltas plus self state, steady state, JSON");
         foreach (var view in views)
         {
             view.SendInterface = true;
         }
-        var (panelMs, panelBytes, _) = Snapshot(sim, builder, views, playerEntities, output, snapshots);
+        var (panelMs, panelBytes, _) = Snapshot(sim, builder, views, playerEntities, output, snapshots, profile, "interface");
         yield return new Result("snapshot.interface.build", panelMs / (snapshots * players), "ms/player", "deltas plus the interface states on change, build and encode");
         yield return new Result("snapshot.interface.bytes", panelBytes / (double)(snapshots * players) / 1024, "KB/player", "an interface client: deltas, self state with pools and casts, weave slots, inventory, passives and pages on change");
+        // The exact production forecast builder, including per-tick shared sampling, viewer eligibility,
+        // baseline construction and JSON. Refresh interest outside this incremental measurement.
+        var forecasts = new CastForecastBuilder(sim);
+        ISnapshotProfileExtension? forecastProfile = profile is null ? null : new ForecastProfileSource(forecasts);
+        double forecastMs = 0, combinedMs = 0; long forecastBytes = 0, forecastAlloc = 0, forecastCasts = 0, combinedBytes = 0, combinedAlloc = 0;
+        profile?.BeginPhase("combined", sim.Clock.Tick, views);
+        for (var round = 0; round < snapshots; round++)
+        {
+            sim.Tick(); sim.Tick();
+            for (var i = 0; i < playerEntities.Count; i++)
+            {
+                if (profile is not null)
+                {
+                    var frame = profile.Measure(sim, builder, views[i], playerEntities[i], output, round, i, forecastProfile, out _);
+                    forecastBytes += frame.ExtensionEncoding.EncodedBytes;
+                    forecastMs += frame.ExtensionCapture.Milliseconds + frame.ExtensionEncoding.Milliseconds;
+                    forecastAlloc += frame.ExtensionCapture.AllocatedBytes + frame.ExtensionEncoding.AllocatedBytes;
+                    forecastCasts += frame.Observations;
+                    combinedMs += frame.Total.Milliseconds;
+                    combinedBytes += frame.Total.EncodedBytes;
+                    combinedAlloc += frame.Total.AllocatedBytes;
+                    continue;
+                }
+                var combinedBefore = GC.GetAllocatedBytesForCurrentThread(); var combinedStart = Stopwatch.GetTimestamp();
+                output.Clear(); builder.Entities(views[i], playerEntities[i], output);
+                if (round % 5 == 0 && builder.Self(views[i], playerEntities[i]) is { } own) output.Add(own);
+                if (views[i].SendInterface) builder.Panels(views[i], playerEntities[i], output);
+                var entityBytes = Encoded(output);
+                var before = GC.GetAllocatedBytesForCurrentThread(); var t0 = Stopwatch.GetTimestamp();
+                var forecast = forecasts.Build(views[i], playerEntities[i], .1);
+                var encoded = MessageSerializer.Encode(forecast).Length;
+                forecastBytes += encoded;
+                forecastMs += Stopwatch.GetElapsedTime(t0).TotalMilliseconds;
+                forecastAlloc += GC.GetAllocatedBytesForCurrentThread() - before;
+                forecastCasts += forecast.Casts.Count + (forecast.Retained?.Count ?? 0);
+                combinedMs += Stopwatch.GetElapsedTime(combinedStart).TotalMilliseconds;
+                combinedBytes += entityBytes + encoded;
+                combinedAlloc += GC.GetAllocatedBytesForCurrentThread() - combinedBefore;
+            }
+        }
+        profile?.EndPhase(sim.Clock.Tick);
+        yield return new Result("snapshot.combined.build", combinedMs / (snapshots * players), "ms/player", "deltas, interface, forecasts and encoding together; shares the existing 1 ms snapshot budget");
+        yield return new Result("snapshot.combined.bytes", combinedBytes / (double)(snapshots * players) / 1024, "KB/player", "all snapshot traffic together; shares the existing 10 KB delta budget");
+        yield return new Result("snapshot.combined.alloc", combinedAlloc / (double)(snapshots * players) / 1024, "KB/player", "all snapshot allocation together");
+        yield return new Result("snapshot.forecast.build", forecastMs / (snapshots * players), "ms/player", $"incremental build + encode, {forecastCasts} active cast observations");
+        yield return new Result("snapshot.forecast.bytes", forecastBytes / (double)(snapshots * players) / 1024, "KB/player", "complete opt-in baseline, incremental to entity/interface stream");
+        yield return new Result("snapshot.forecast.alloc", forecastAlloc / (double)(snapshots * players) / 1024, "KB/player", "incremental forecast build and encode allocation");
     }
 
     /// <summary>Runs a stretch of snapshots the way the zone does: two ticks, then every viewer; the self state every fifth snapshot.</summary>
-    private static (double Milliseconds, long Bytes, long Known) Snapshot(Simulation sim, SnapshotBuilder builder, List<SnapshotView> views, List<Entity> viewers, List<Message> output, int snapshots)
+    private static (double Milliseconds, long Bytes, long Known) Snapshot(Simulation sim, SnapshotBuilder builder, List<SnapshotView> views, List<Entity> viewers, List<Message> output, int snapshots, SnapshotProfile? profile, string phase)
     {
         double ms = 0;
         long bytes = 0;
         long known = 0;
+        profile?.BeginPhase(phase, sim.Clock.Tick, views);
         for (var round = 0; round < snapshots; round++)
         {
             sim.Tick();
             sim.Tick();
             for (var i = 0; i < viewers.Count; i++)
             {
+                if (profile is not null)
+                {
+                    var frame = profile.Measure(sim, builder, views[i], viewers[i], output, round, i, null, out _);
+                    ms += frame.Total.Milliseconds;
+                    bytes += frame.Total.EncodedBytes;
+                    known += frame.KnownAfter;
+                    continue;
+                }
                 output.Clear();
                 var t0 = Stopwatch.GetTimestamp();
                 builder.Entities(views[i], viewers[i], output);
@@ -376,7 +459,18 @@ public static class Bench
                 known += views[i].Known.Count;
             }
         }
+        profile?.EndPhase(sim.Clock.Tick);
         return (ms, bytes, known);
+    }
+
+    private sealed class ForecastProfileSource(CastForecastBuilder builder) : ISnapshotProfileExtension
+    {
+        public string Name => "forecast";
+        public SnapshotProfileExtra Build(SnapshotView view, Entity viewer)
+        {
+            var message = builder.Build(view, viewer, .1);
+            return new SnapshotProfileExtra(message, message.Casts.Count + (message.Retained?.Count ?? 0));
+        }
     }
 
     private static long Encoded(List<Message> messages)

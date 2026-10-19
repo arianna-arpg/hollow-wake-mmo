@@ -1,0 +1,53 @@
+{
+  "kind": "ui_appearances",
+  "entries": [
+    {
+      "id": "poi:orc_muster",
+      "body": "marker",
+      "shape": {
+        "height": 1.3,
+        "cap": 0.7
+      },
+      "palette": {
+        "stone": "#776d5d",
+        "accent": "#ad7450"
+      }
+    },
+    {
+      "id": "poi:orc_hold",
+      "body": "marker",
+      "shape": {
+        "height": 1.3,
+        "cap": 0.7
+      },
+      "palette": {
+        "stone": "#776d5d",
+        "accent": "#ad7450"
+      }
+    },
+    {
+      "id": "poi:orc_chaincamp",
+      "body": "marker",
+      "shape": {
+        "height": 1.3,
+        "cap": 0.7
+      },
+      "palette": {
+        "stone": "#776d5d",
+        "accent": "#ad7450"
+      }
+    },
+    {
+      "id": "poi:gnasher_pen",
+      "body": "marker",
+      "shape": {
+        "height": 1.3,
+        "cap": 0.7
+      },
+      "palette": {
+        "stone": "#776d5d",
+        "accent": "#ad7450"
+      }
+    }
+  ]
+}

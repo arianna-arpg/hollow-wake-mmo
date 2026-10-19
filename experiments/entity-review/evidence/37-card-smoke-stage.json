@@ -1,0 +1,11 @@
+{
+  "name": "smoke-web",
+  "status": "passed",
+  "started": "2026-10-18T18:30:52.029Z",
+  "code": 0,
+  "signal": null,
+  "passed": 31,
+  "total": 31,
+  "skipped": [],
+  "finished": "2026-10-18T18:32:22.429Z"
+}

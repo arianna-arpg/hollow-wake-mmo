@@ -262,6 +262,7 @@ internal sealed class MinionCastHandler : IEffectHandler
                 var order = new EffectContext
                 {
                     CastId = ctx.CastId,
+                    CastSource = ctx.CastSource,
                     Sim = sim,
                     Source = minion,
                     Target = target,
@@ -272,7 +273,7 @@ internal sealed class MinionCastHandler : IEffectHandler
                     Depth = ctx.Depth + 1,
                     Rng = new Rng(Rng.Combine(ctx.Rng.NextUInt64(), (ulong)minion.Key)),
                 };
-                ExecuteAll(weave.Effects, order);
+                ReleaseTargets.Execute(order, weave.Effects);
                 sim.Events.Publish(new MinionOrdered(minion, ctx.Origin, weave.Key, point) { Tick = sim.Clock.Tick });
             }
             service.ReturnList(list);
@@ -419,6 +420,7 @@ internal sealed class ConsumeMinionHandler : IEffectHandler
                 ExecuteAll(Effects, new EffectContext
                 {
                     CastId = ctx.CastId,
+                    CastSource = ctx.CastSource,
                     Sim = sim,
                     Origin = ctx.Origin,
                     Source = ctx.Source,

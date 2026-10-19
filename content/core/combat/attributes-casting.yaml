@@ -2,6 +2,7 @@
 # Weave-category attributes are read in a weave's scope: the caster's stack with the weave's own modifiers.
 kind: attributes
 entries:
+  - { id: ai.anticipation, name: Attack Anticipation, category: weave, base: 0, min: 0, max: 1, percent: true, hidden: true, description: "Fraction of the actual windup used to estimate target movement before committing and to close inside existing reach; never tracks a committed swing." }
   - { id: cast.mobility, name: Casting Mobility, category: weave, base: 0, min: -1, max: 1, percent: true, description: "Movement speed kept while casting, added to the weave's own factor." }
   - { id: cooldown.added, name: Added Cooldown, category: weave, base: 0, min: 0, decimals: 2, description: "Seconds of cooldown levied on a weave, before recovery." }
   - { id: cast.fizzle_chance, name: Fizzle Chance, category: tempo, base: 0, min: 0, max: 1, percent: true, hidden: true, description: "Chance a cast fails after paying and leaves its caster reeling." }

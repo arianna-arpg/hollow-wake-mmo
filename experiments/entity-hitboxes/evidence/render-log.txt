@@ -1,0 +1,1 @@
+Hit body gallery: both views rendered without errors.

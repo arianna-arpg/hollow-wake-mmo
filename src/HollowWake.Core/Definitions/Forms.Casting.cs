@@ -29,6 +29,10 @@ public enum CastMode
 // combo chains, modifiers worn while slotted). The weave runtime reads them through the compiled weave.
 public sealed partial record FormDef
 {
+    /// <summary>Release validation inherited by the compiled weave.</summary>
+    [JsonPropertyName("release_check")]
+    public ReleaseCheckSpec? ReleaseCheck { get; init; }
+
     /// <summary>The fraction of movement speed kept while casting; joins attribute <c>cast.mobility</c>. Null takes rule <c>casting.cast_move</c>.</summary>
     [JsonPropertyName("cast_move")]
     public Expr? CastMove { get; init; }

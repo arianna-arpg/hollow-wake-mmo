@@ -13,6 +13,8 @@ Use `Play Desktop.cmd` only if you want the Godot client; it needs the Godot .NE
 3. Hover an enemy or aim at the ground, then use the numbered weave slots. Try movement, taking damage, healing or guarding, killing and collecting a drop. If defeated, press **R** to respawn.
 4. Open the weave, inventory and passive pages through the menu to inspect your build. A starter's equipped weaves show only a small part of the engine's supported mechanics.
 
+To assess the integrated combat, try moving out of a melee swing after it starts, firing past the edge of an enemy, and aiming on a raised surface. Cast forecasts show the server's supported primary attack region; they do not promise every later bounce or effect. For anatomy inspection, enable **Show body hit volumes** in the developer options before connecting, then reconnect: cyan is damage anatomy and yellow is movement clearance. The rendered rest-pose anatomy can differ from animated limbs.
+
 | Action | Default control |
 | --- | --- |
 | Move | WASD, arrows or left-click ground |
@@ -23,25 +25,25 @@ Use `Play Desktop.cmd` only if you want the Godot client; it needs the Godot .NE
 
 ## What is actually integrated
 
-This describes the main playtest after the 2026-10-19 cleanup, based on gameplay source `f7ef072c`. It is a development build with placeholder presentation. Engine support is not a claim that every mechanic is equipped, balanced or visually complete.
+This checkout contains the combat integration from [PR #20](https://github.com/arianna-arpg/hollow-wake-mmo/pull/20) and the browser rendering repair from [PR #57](https://github.com/arianna-arpg/hollow-wake-mmo/pull/57). It is a development build with placeholder presentation. Engine support is not a claim that every mechanic is equipped, balanced or visually complete.
 
 | Area | On main now | Remaining boundary |
 | --- | --- | --- |
 | Casting | Costs, cooldowns, charges, triggers, channels, charge-up/overcharge, guards, timed casts, toggles and bank/reload mechanisms | Starting kits expose a subset; the complete combat grammar is still being refined. |
-| Hits and effects | Shared authoritative damage pipeline; modifiers, crit/defense, healing, statuses, status interactions and charge/proc economy | Precision anatomy, committed targeting and full shared cast forecasts remain in the integration candidate. |
-| Deliveries | Areas, projectiles, chains, fields, auras, movement and nested effect graphs | Some presentation families remain partial; later contact/return-flight corrections are not yet on main. |
-| Summons | Summoning, inheritance, capacity, contracts, orders and corpse use | Revised paid construct casting and queued echoes remain in the integration candidate. Prepared undead summons are not all granted by progression. |
+| Hits and effects | Shared authoritative damage pipeline; modifiers, crit/defense, healing, statuses and charge/proc economy; precise damage anatomy, dodgeable committed melee and shared cast forecasts | Forecasts cover supported primary geometry; anatomy is a rest-pose approximation. Later effects and unsupported geometry do not receive invented forecasts. |
+| Deliveries | Areas, projectiles, chains, fields, auras, movement and nested effect graphs; body contact, frozen launch samples, layered aiming and return-flight support | Some presentation families remain partial. |
+| Summons | Summoning, inheritance, capacity, contracts, orders and corpse use; paid device casts and queued echoes through the shared combat rules | Prepared summons and constructs are not all granted by starter kits or progression. |
 | Character builds | Forms, Threads, glyphs, weave items, equipment, passives, realms, vendors and crafting interfaces | Per-weave tree pages, some parity mechanics and progression/balance work remain. |
-| Enemies and world | Existing generated terrain, sites, quests and populations, including the already merged undead and goblinkin work | Expanded Orcs/fauna are inside the candidate; Gnolls/Beastkin, Kobolds, golems and elementals are archived. The proposed living-world simulation is still a plan. |
+| Enemies and world | Existing generated terrain, sites, quests and populations, including the already merged undead and goblinkin work | New Orc, Gnasher and wildlife populations are parked outside the live content layer. Gnolls/Beastkin, Kobolds, golems and elementals remain archived. Living-world implementation waits for collaboration with Claude. |
 | AI | Existing behaviors and shared actor-intent foundation | The proposed affordance/doctrine chooser and richer positioning are not finished. Enemies do not yet use every mechanic intelligently. |
 
 Source contracts: [weaves](docs/design/weaves-and-effects.md), [combat](docs/design/combat.md), [deliveries](docs/design/deliveries.md), [minions](docs/design/minions.md), [AI](docs/design/ai.md), [parity follow-ups](docs/design/parity/hollow-wake-gap.md#15-where-this-stands). Some older parity matrix cells describe the original gap; they are not the current completion ledger.
 
 ## What happens next
 
-The single pending integration candidate is [PR #20](https://github.com/arianna-arpg/hollow-wake-mmo/pull/20). It already contains the separate construct, precision-hitbox, Orc and fauna histories. It is **not on main**. Functional checks exist, but final performance acceptance remains open, and its retained balance failures must stay visible. Review its included population changes separately before landing it; the presence of prepared assets does not require those spawns.
+Use this build to assess combat feel and turn concrete failures into fixes. The [integration record](docs/reviews/2026-10-19-combat-playtest-integration.md) holds acceptance evidence and the [parked population proposal](experiments/parked-populations/README.md) states what is waiting. Creature definitions can remain ready in the catalog without being placed in the world.
 
-Playtest main first and turn concrete failures into fixes. Finish the combat candidate and its gates, then decide which prepared content belongs in the living-world work. No new creature rollout or parallel feature expansion is needed to unblock today's playtest.
+Population placement and living-world work resume with Claude after this combat playtest. Existing balance failures for Bulwark, Plaguer and Pitfighter remain recorded in the prior evaluation evidence; integration does not certify balance.
 
 Known limits: placeholder bodies/terrain, no shipped audio, incomplete visual convergence, rough camera collision, unfinished AI and balance, and native renderer/controller coverage beyond the headless tests. Passing automation does not certify that the combat feels good. Report the Calling, action, expected result and observed result; that is the next useful input.
 

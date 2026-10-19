@@ -1,0 +1,1318 @@
+  HollowWake.Core -> C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\src\HollowWake.Core\bin\Debug\net8.0\HollowWake.Core.dll
+  HollowWake.Protocol -> C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\src\HollowWake.Protocol\bin\Debug\net8.0\HollowWake.Protocol.dll
+  HollowWake.Server -> C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\src\HollowWake.Server\bin\Debug\net10.0\HollowWake.Server.dll
+  HollowWake.Tools -> C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\src\HollowWake.Tools\bin\Debug\net10.0\hollowwake.dll
+  HollowWake.Core.Tests -> C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\bin\Debug\net10.0\HollowWake.Core.Tests.dll
+Test run for C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\bin\Debug\net10.0\HollowWake.Core.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v3.1.5+1b188a7b0a (64-bit .NET 10.0.13)
+[xUnit.net 00:00:00.17]   Discovering: HollowWake.Core.Tests
+[xUnit.net 00:00:01.92]   Discovered:  HollowWake.Core.Tests
+[xUnit.net 00:00:01.98]   Starting:    HollowWake.Core.Tests
+[xUnit.net 00:00:02.20]     HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(pattern: "reed_gnasher", slope: -0.125, preset: "piercing_arrow", beyond: False) [FAIL]
+[xUnit.net 00:00:02.20]       Assert.Contains() Failure: Filter not matched in collection
+[xUnit.net 00:00:02.20]       Collection: []
+[xUnit.net 00:00:02.20]       Stack Trace:
+[xUnit.net 00:00:02.20]         C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\FreeShotGroundFloorTests.cs(40,0): at HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(String pattern, Single slope, String preset, Boolean beyond)
+[xUnit.net 00:00:02.20]            at InvokeStub_FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(Object, Span`1)
+[xUnit.net 00:00:02.20]            at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:02.20]       Output:
+[xUnit.net 00:00:02.20]         piercing_arrow/reed_gnasher, slope -0.125, beyond=False, launch=<10, 10, 1.098>, distance=19.500
+[xUnit.net 00:00:02.20]     HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(pattern: "goblin_skirmisher", slope: 0, preset: "firebolt", beyond: True) [FAIL]
+[xUnit.net 00:00:02.20]       Assert.Contains() Failure: Filter not matched in collection
+[xUnit.net 00:00:02.20]       Collection: []
+[xUnit.net 00:00:02.20]       Stack Trace:
+[xUnit.net 00:00:02.20]         C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\FreeShotGroundFloorTests.cs(40,0): at HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(String pattern, Single slope, String preset, Boolean beyond)
+[xUnit.net 00:00:02.20]            at InvokeStub_FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(Object, Span`1)
+[xUnit.net 00:00:02.20]            at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:02.20]       Output:
+[xUnit.net 00:00:02.20]         firebolt/goblin_skirmisher, slope 0, beyond=True, launch=<10, 10, 1.098>, distance=16.632
+[xUnit.net 00:00:02.21]     HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(pattern: "goblin_scavenger", slope: 0, preset: "piercing_arrow", beyond: True) [FAIL]
+[xUnit.net 00:00:02.21]       Assert.Contains() Failure: Filter not matched in collection
+[xUnit.net 00:00:02.21]       Collection: []
+[xUnit.net 00:00:02.21]       Stack Trace:
+[xUnit.net 00:00:02.21]         C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\FreeShotGroundFloorTests.cs(40,0): at HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(String pattern, Single slope, String preset, Boolean beyond)
+[xUnit.net 00:00:02.21]            at InvokeStub_FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(Object, Span`1)
+[xUnit.net 00:00:02.21]            at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:02.21]       Output:
+[xUnit.net 00:00:02.21]         piercing_arrow/goblin_scavenger, slope 0, beyond=True, launch=<10, 10, 1.098>, distance=19.500
+[xUnit.net 00:00:02.21]     HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(pattern: "goblin_skirmisher", slope: 0, preset: "piercing_arrow", beyond: True) [FAIL]
+[xUnit.net 00:00:02.22]       Assert.Contains() Failure: Filter not matched in collection
+[xUnit.net 00:00:02.22]       Collection: []
+[xUnit.net 00:00:02.22]       Stack Trace:
+[xUnit.net 00:00:02.22]         C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\FreeShotGroundFloorTests.cs(40,0): at HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(String pattern, Single slope, String preset, Boolean beyond)
+[xUnit.net 00:00:02.22]            at InvokeStub_FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(Object, Span`1)
+[xUnit.net 00:00:02.22]            at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:02.22]       Output:
+[xUnit.net 00:00:02.22]         piercing_arrow/goblin_skirmisher, slope 0, beyond=True, launch=<10, 10, 1.098>, distance=19.500
+[xUnit.net 00:00:02.22]     HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(pattern: "goblin_slinger", slope: 0, preset: "piercing_arrow", beyond: True) [FAIL]
+[xUnit.net 00:00:02.22]       Assert.Contains() Failure: Filter not matched in collection
+[xUnit.net 00:00:02.22]       Collection: []
+[xUnit.net 00:00:02.22]       Stack Trace:
+[xUnit.net 00:00:02.22]         C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\FreeShotGroundFloorTests.cs(40,0): at HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(String pattern, Single slope, String preset, Boolean beyond)
+[xUnit.net 00:00:02.22]            at InvokeStub_FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(Object, Span`1)
+[xUnit.net 00:00:02.22]            at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:02.22]       Output:
+[xUnit.net 00:00:02.22]         piercing_arrow/goblin_slinger, slope 0, beyond=True, launch=<10, 10, 1.098>, distance=19.500
+  Passed HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(pattern: "cave_gnasher", slope: 0.125, preset: "piercing_arrow", beyond: True) [157 ms]
+  Passed HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(pattern: "reed_gnasher", slope: 0.125, preset: "firebolt", beyond: False) [18 ms]
+  Failed HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(pattern: "reed_gnasher", slope: -0.125, preset: "piercing_arrow", beyond: False) [7 ms]
+  Error Message:
+   Assert.Contains() Failure: Filter not matched in collection
+Collection: []
+  Stack Trace:
+     at HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(String pattern, Single slope, String preset, Boolean beyond) in C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\FreeShotGroundFloorTests.cs:line 40
+   at InvokeStub_FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Standard Output Messages:
+ piercing_arrow/reed_gnasher, slope -0.125, beyond=False, launch=<10, 10, 1.098>, distance=19.500
+
+
+  Passed HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(pattern: "reed_gnasher", slope: 0.125, preset: "piercing_arrow", beyond: False) [4 ms]
+  Failed HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(pattern: "goblin_skirmisher", slope: 0, preset: "firebolt", beyond: True) [4 ms]
+  Error Message:
+   Assert.Contains() Failure: Filter not matched in collection
+Collection: []
+  Stack Trace:
+     at HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(String pattern, Single slope, String preset, Boolean beyond) in C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\FreeShotGroundFloorTests.cs:line 40
+   at InvokeStub_FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Standard Output Messages:
+ firebolt/goblin_skirmisher, slope 0, beyond=True, launch=<10, 10, 1.098>, distance=16.632
+
+
+  Failed HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(pattern: "goblin_scavenger", slope: 0, preset: "piercing_arrow", beyond: True) [3 ms]
+  Error Message:
+   Assert.Contains() Failure: Filter not matched in collection
+Collection: []
+  Stack Trace:
+     at HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(String pattern, Single slope, String preset, Boolean beyond) in C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\FreeShotGroundFloorTests.cs:line 40
+   at InvokeStub_FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Standard Output Messages:
+ piercing_arrow/goblin_scavenger, slope 0, beyond=True, launch=<10, 10, 1.098>, distance=19.500
+
+
+  Failed HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(pattern: "goblin_skirmisher", slope: 0, preset: "piercing_arrow", beyond: True) [4 ms]
+  Error Message:
+   Assert.Contains() Failure: Filter not matched in collection
+Collection: []
+  Stack Trace:
+     at HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(String pattern, Single slope, String preset, Boolean beyond) in C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\FreeShotGroundFloorTests.cs:line 40
+   at InvokeStub_FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Standard Output Messages:
+ piercing_arrow/goblin_skirmisher, slope 0, beyond=True, launch=<10, 10, 1.098>, distance=19.500
+
+
+  Failed HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(pattern: "goblin_slinger", slope: 0, preset: "piercing_arrow", beyond: True) [10 ms]
+  Error Message:
+   Assert.Contains() Failure: Filter not matched in collection
+Collection: []
+  Stack Trace:
+     at HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(String pattern, Single slope, String preset, Boolean beyond) in C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\FreeShotGroundFloorTests.cs:line 40
+   at InvokeStub_FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Standard Output Messages:
+ piercing_arrow/goblin_slinger, slope 0, beyond=True, launch=<10, 10, 1.098>, distance=19.500
+
+
+  Passed HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(pattern: "cave_gnasher", slope: 0.125, preset: "firebolt", beyond: True) [5 ms]
+[xUnit.net 00:00:02.24]     HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(pattern: "gnasher_whelp", slope: 0, preset: "firebolt", beyond: True) [FAIL]
+[xUnit.net 00:00:02.24]       Assert.Contains() Failure: Filter not matched in collection
+[xUnit.net 00:00:02.24]       Collection: []
+[xUnit.net 00:00:02.24]       Stack Trace:
+[xUnit.net 00:00:02.24]         C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\FreeShotGroundFloorTests.cs(40,0): at HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(String pattern, Single slope, String preset, Boolean beyond)
+[xUnit.net 00:00:02.24]            at InvokeStub_FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(Object, Span`1)
+[xUnit.net 00:00:02.24]            at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:02.24]       Output:
+[xUnit.net 00:00:02.24]         firebolt/gnasher_whelp, slope 0, beyond=True, launch=<10, 10, 1.098>, distance=16.632
+[xUnit.net 00:00:02.24]     HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(pattern: "goblin_slinger", slope: -0.125, preset: "firebolt", beyond: True) [FAIL]
+[xUnit.net 00:00:02.24]       Assert.Contains() Failure: Filter not matched in collection
+[xUnit.net 00:00:02.24]       Collection: []
+[xUnit.net 00:00:02.24]       Stack Trace:
+[xUnit.net 00:00:02.24]         C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\FreeShotGroundFloorTests.cs(40,0): at HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(String pattern, Single slope, String preset, Boolean beyond)
+[xUnit.net 00:00:02.24]            at InvokeStub_FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(Object, Span`1)
+[xUnit.net 00:00:02.24]            at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:02.24]       Output:
+[xUnit.net 00:00:02.24]         firebolt/goblin_slinger, slope -0.125, beyond=True, launch=<10, 10, 1.098>, distance=16.632
+[xUnit.net 00:00:02.25]     HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(pattern: "cave_gnasher", slope: -0.125, preset: "firebolt", beyond: True) [FAIL]
+[xUnit.net 00:00:02.25]       Assert.Contains() Failure: Filter not matched in collection
+[xUnit.net 00:00:02.25]       Collection: []
+[xUnit.net 00:00:02.25]       Stack Trace:
+[xUnit.net 00:00:02.25]         C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\FreeShotGroundFloorTests.cs(40,0): at HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(String pattern, Single slope, String preset, Boolean beyond)
+[xUnit.net 00:00:02.25]            at InvokeStub_FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(Object, Span`1)
+[xUnit.net 00:00:02.25]            at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:02.25]       Output:
+[xUnit.net 00:00:02.25]         firebolt/cave_gnasher, slope -0.125, beyond=True, launch=<10, 10, 1.098>, distance=16.632
+[xUnit.net 00:00:02.26]       Assert.Contains() Failure: Filter not matched in collection
+[xUnit.net 00:00:02.26]     HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(pattern: "cave_gnasher", slope: 0, preset: "firebolt", beyond: False) [FAIL]
+[xUnit.net 00:00:02.26]       Collection: []
+[xUnit.net 00:00:02.26]       Stack Trace:
+[xUnit.net 00:00:02.26]         C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\FreeShotGroundFloorTests.cs(40,0): at HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(String pattern, Single slope, String preset, Boolean beyond)
+[xUnit.net 00:00:02.26]            at InvokeStub_FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(Object, Span`1)
+[xUnit.net 00:00:02.26]            at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:02.26]       Output:
+[xUnit.net 00:00:02.26]         firebolt/cave_gnasher, slope 0, beyond=False, launch=<10, 10, 1.098>, distance=16.632
+[xUnit.net 00:00:02.27]     HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(pattern: "cave_gnasher", slope: -0.125, preset: "piercing_arrow", beyond: False) [FAIL]
+[xUnit.net 00:00:02.27]       Assert.Contains() Failure: Filter not matched in collection
+[xUnit.net 00:00:02.27]       Collection: []
+[xUnit.net 00:00:02.27]       Stack Trace:
+[xUnit.net 00:00:02.27]         C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\FreeShotGroundFloorTests.cs(40,0): at HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(String pattern, Single slope, String preset, Boolean beyond)
+[xUnit.net 00:00:02.27]            at InvokeStub_FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(Object, Span`1)
+[xUnit.net 00:00:02.27]            at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:02.27]       Output:
+[xUnit.net 00:00:02.27]         piercing_arrow/cave_gnasher, slope -0.125, beyond=False, launch=<10, 10, 1.098>, distance=19.500
+[xUnit.net 00:00:02.27]     HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(pattern: "reed_gnasher", slope: 0, preset: "piercing_arrow", beyond: True) [FAIL]
+[xUnit.net 00:00:02.27]       Assert.Contains() Failure: Filter not matched in collection
+[xUnit.net 00:00:02.27]       Collection: []
+[xUnit.net 00:00:02.27]       Stack Trace:
+[xUnit.net 00:00:02.27]         C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\FreeShotGroundFloorTests.cs(40,0): at HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(String pattern, Single slope, String preset, Boolean beyond)
+[xUnit.net 00:00:02.27]            at InvokeStub_FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(Object, Span`1)
+[xUnit.net 00:00:02.27]            at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:02.27]       Output:
+[xUnit.net 00:00:02.27]         piercing_arrow/reed_gnasher, slope 0, beyond=True, launch=<10, 10, 1.098>, distance=19.500
+  Passed HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(pattern: "goblin_skirmisher", slope: 0.125, preset: "firebolt", beyond: True) [5 ms]
+  Failed HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(pattern: "gnasher_whelp", slope: 0, preset: "firebolt", beyond: True) [3 ms]
+  Error Message:
+   Assert.Contains() Failure: Filter not matched in collection
+Collection: []
+  Stack Trace:
+     at HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(String pattern, Single slope, String preset, Boolean beyond) in C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\FreeShotGroundFloorTests.cs:line 40
+   at InvokeStub_FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Standard Output Messages:
+ firebolt/gnasher_whelp, slope 0, beyond=True, launch=<10, 10, 1.098>, distance=16.632
+
+
+  Failed HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(pattern: "goblin_slinger", slope: -0.125, preset: "firebolt", beyond: True) [4 ms]
+  Error Message:
+   Assert.Contains() Failure: Filter not matched in collection
+Collection: []
+  Stack Trace:
+     at HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(String pattern, Single slope, String preset, Boolean beyond) in C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\FreeShotGroundFloorTests.cs:line 40
+   at InvokeStub_FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Standard Output Messages:
+ firebolt/goblin_slinger, slope -0.125, beyond=True, launch=<10, 10, 1.098>, distance=16.632
+
+
+  Passed HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(pattern: "goblin_skirmisher", slope: 0.125, preset: "piercing_arrow", beyond: True) [3 ms]
+  Failed HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(pattern: "cave_gnasher", slope: -0.125, preset: "firebolt", beyond: True) [3 ms]
+  Error Message:
+   Assert.Contains() Failure: Filter not matched in collection
+Collection: []
+  Stack Trace:
+     at HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(String pattern, Single slope, String preset, Boolean beyond) in C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\FreeShotGroundFloorTests.cs:line 40
+   at InvokeStub_FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Standard Output Messages:
+ firebolt/cave_gnasher, slope -0.125, beyond=True, launch=<10, 10, 1.098>, distance=16.632
+
+
+  Passed HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(pattern: "goblin_slinger", slope: 0.125, preset: "piercing_arrow", beyond: True) [3 ms]
+  Failed HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(pattern: "cave_gnasher", slope: 0, preset: "firebolt", beyond: False) [6 ms]
+  Error Message:
+   Assert.Contains() Failure: Filter not matched in collection
+Collection: []
+  Stack Trace:
+     at HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(String pattern, Single slope, String preset, Boolean beyond) in C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\FreeShotGroundFloorTests.cs:line 40
+   at InvokeStub_FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Standard Output Messages:
+ firebolt/cave_gnasher, slope 0, beyond=False, launch=<10, 10, 1.098>, distance=16.632
+
+
+  Failed HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(pattern: "cave_gnasher", slope: -0.125, preset: "piercing_arrow", beyond: False) [5 ms]
+  Error Message:
+   Assert.Contains() Failure: Filter not matched in collection
+Collection: []
+  Stack Trace:
+     at HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(String pattern, Single slope, String preset, Boolean beyond) in C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\FreeShotGroundFloorTests.cs:line 40
+   at InvokeStub_FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Standard Output Messages:
+ piercing_arrow/cave_gnasher, slope -0.125, beyond=False, launch=<10, 10, 1.098>, distance=19.500
+
+
+  Failed HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(pattern: "reed_gnasher", slope: 0, preset: "piercing_arrow", beyond: True) [3 ms]
+  Error Message:
+   Assert.Contains() Failure: Filter not matched in collection
+Collection: []
+  Stack Trace:
+     at HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(String pattern, Single slope, String preset, Boolean beyond) in C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\FreeShotGroundFloorTests.cs:line 40
+   at InvokeStub_FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Standard Output Messages:
+ piercing_arrow/reed_gnasher, slope 0, beyond=True, launch=<10, 10, 1.098>, distance=19.500
+
+
+[xUnit.net 00:00:02.27]     HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(pattern: "goblin_scavenger", slope: -0.125, preset: "piercing_arrow", beyond: True) [FAIL]
+[xUnit.net 00:00:02.27]       Assert.Contains() Failure: Filter not matched in collection
+[xUnit.net 00:00:02.27]       Collection: []
+[xUnit.net 00:00:02.27]       Stack Trace:
+[xUnit.net 00:00:02.27]         C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\FreeShotGroundFloorTests.cs(40,0): at HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(String pattern, Single slope, String preset, Boolean beyond)
+[xUnit.net 00:00:02.27]            at InvokeStub_FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(Object, Span`1)
+[xUnit.net 00:00:02.27]            at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:02.27]       Output:
+[xUnit.net 00:00:02.27]         piercing_arrow/goblin_scavenger, slope -0.125, beyond=True, launch=<10, 10, 1.098>, distance=19.500
+[xUnit.net 00:00:02.28]     HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(pattern: "goblin_skirmisher", slope: -0.125, preset: "piercing_arrow", beyond: True) [FAIL]
+[xUnit.net 00:00:02.28]       Assert.Contains() Failure: Filter not matched in collection
+[xUnit.net 00:00:02.28]       Collection: []
+[xUnit.net 00:00:02.28]       Stack Trace:
+[xUnit.net 00:00:02.28]         C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\FreeShotGroundFloorTests.cs(40,0): at HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(String pattern, Single slope, String preset, Boolean beyond)
+[xUnit.net 00:00:02.28]            at InvokeStub_FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(Object, Span`1)
+[xUnit.net 00:00:02.28]            at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:02.28]       Output:
+[xUnit.net 00:00:02.28]         piercing_arrow/goblin_skirmisher, slope -0.125, beyond=True, launch=<10, 10, 1.098>, distance=19.500
+[xUnit.net 00:00:02.28]     HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(pattern: "gnasher_whelp", slope: -0.125, preset: "firebolt", beyond: False) [FAIL]
+[xUnit.net 00:00:02.28]       Assert.Contains() Failure: Filter not matched in collection
+[xUnit.net 00:00:02.28]       Collection: []
+[xUnit.net 00:00:02.28]       Stack Trace:
+[xUnit.net 00:00:02.28]         C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\FreeShotGroundFloorTests.cs(40,0): at HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(String pattern, Single slope, String preset, Boolean beyond)
+[xUnit.net 00:00:02.28]            at InvokeStub_FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(Object, Span`1)
+[xUnit.net 00:00:02.28]            at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:02.28]       Output:
+[xUnit.net 00:00:02.28]         firebolt/gnasher_whelp, slope -0.125, beyond=False, launch=<10, 10, 1.098>, distance=16.632
+[xUnit.net 00:00:02.29]     HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(pattern: "goblin_slinger", slope: -0.125, preset: "firebolt", beyond: False) [FAIL]
+[xUnit.net 00:00:02.29]       Assert.Contains() Failure: Filter not matched in collection
+[xUnit.net 00:00:02.29]       Collection: []
+[xUnit.net 00:00:02.29]       Stack Trace:
+[xUnit.net 00:00:02.29]         C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\FreeShotGroundFloorTests.cs(40,0): at HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(String pattern, Single slope, String preset, Boolean beyond)
+[xUnit.net 00:00:02.29]            at InvokeStub_FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(Object, Span`1)
+[xUnit.net 00:00:02.29]            at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:02.29]       Output:
+[xUnit.net 00:00:02.29]         firebolt/goblin_slinger, slope -0.125, beyond=False, launch=<10, 10, 1.098>, distance=16.632
+[xUnit.net 00:00:02.30]     HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(pattern: "goblin_skirmisher", slope: 0, preset: "firebolt", beyond: False) [FAIL]
+[xUnit.net 00:00:02.30]       Assert.Contains() Failure: Filter not matched in collection
+[xUnit.net 00:00:02.30]       Collection: []
+[xUnit.net 00:00:02.30]       Stack Trace:
+[xUnit.net 00:00:02.30]         C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\FreeShotGroundFloorTests.cs(40,0): at HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(String pattern, Single slope, String preset, Boolean beyond)
+[xUnit.net 00:00:02.30]            at InvokeStub_FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(Object, Span`1)
+[xUnit.net 00:00:02.30]            at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:02.30]       Output:
+[xUnit.net 00:00:02.30]         firebolt/goblin_skirmisher, slope 0, beyond=False, launch=<10, 10, 1.098>, distance=16.632
+[xUnit.net 00:00:02.30]     HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(pattern: "gnasher_whelp", slope: 0.125, preset: "piercing_arrow", beyond: False) [FAIL]
+[xUnit.net 00:00:02.30]       Assert.Contains() Failure: Filter not matched in collection
+[xUnit.net 00:00:02.30]       Collection: []
+[xUnit.net 00:00:02.30]       Stack Trace:
+[xUnit.net 00:00:02.30]         C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\FreeShotGroundFloorTests.cs(40,0): at HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(String pattern, Single slope, String preset, Boolean beyond)
+[xUnit.net 00:00:02.30]            at InvokeStub_FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(Object, Span`1)
+[xUnit.net 00:00:02.30]            at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:02.30]       Output:
+[xUnit.net 00:00:02.30]         piercing_arrow/gnasher_whelp, slope 0.125, beyond=False, launch=<10, 10, 1.098>, distance=9.750
+[xUnit.net 00:00:02.30]     HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(pattern: "goblin_slinger", slope: 0, preset: "piercing_arrow", beyond: False) [FAIL]
+[xUnit.net 00:00:02.30]       Assert.Contains() Failure: Filter not matched in collection
+[xUnit.net 00:00:02.30]       Collection: []
+[xUnit.net 00:00:02.30]       Stack Trace:
+[xUnit.net 00:00:02.30]         C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\FreeShotGroundFloorTests.cs(40,0): at HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(String pattern, Single slope, String preset, Boolean beyond)
+[xUnit.net 00:00:02.30]            at InvokeStub_FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(Object, Span`1)
+[xUnit.net 00:00:02.30]            at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:02.30]       Output:
+[xUnit.net 00:00:02.30]         piercing_arrow/goblin_slinger, slope 0, beyond=False, launch=<10, 10, 1.098>, distance=19.500
+  Failed HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(pattern: "goblin_scavenger", slope: -0.125, preset: "piercing_arrow", beyond: True) [4 ms]
+  Error Message:
+   Assert.Contains() Failure: Filter not matched in collection
+Collection: []
+  Stack Trace:
+     at HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(String pattern, Single slope, String preset, Boolean beyond) in C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\FreeShotGroundFloorTests.cs:line 40
+   at InvokeStub_FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Standard Output Messages:
+ piercing_arrow/goblin_scavenger, slope -0.125, beyond=True, launch=<10, 10, 1.098>, distance=19.500
+
+
+  Failed HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(pattern: "goblin_skirmisher", slope: -0.125, preset: "piercing_arrow", beyond: True) [3 ms]
+  Error Message:
+   Assert.Contains() Failure: Filter not matched in collection
+Collection: []
+  Stack Trace:
+     at HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(String pattern, Single slope, String preset, Boolean beyond) in C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\FreeShotGroundFloorTests.cs:line 40
+   at InvokeStub_FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Standard Output Messages:
+ piercing_arrow/goblin_skirmisher, slope -0.125, beyond=True, launch=<10, 10, 1.098>, distance=19.500
+
+
+  Failed HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(pattern: "gnasher_whelp", slope: -0.125, preset: "firebolt", beyond: False) [3 ms]
+  Error Message:
+   Assert.Contains() Failure: Filter not matched in collection
+Collection: []
+  Stack Trace:
+     at HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(String pattern, Single slope, String preset, Boolean beyond) in C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\FreeShotGroundFloorTests.cs:line 40
+   at InvokeStub_FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Standard Output Messages:
+ firebolt/gnasher_whelp, slope -0.125, beyond=False, launch=<10, 10, 1.098>, distance=16.632
+
+
+  Passed HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(pattern: "goblin_skirmisher", slope: 0.125, preset: "firebolt", beyond: False) [5 ms]
+  Failed HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(pattern: "goblin_slinger", slope: -0.125, preset: "firebolt", beyond: False) [3 ms]
+  Error Message:
+   Assert.Contains() Failure: Filter not matched in collection
+Collection: []
+  Stack Trace:
+     at HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(String pattern, Single slope, String preset, Boolean beyond) in C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\FreeShotGroundFloorTests.cs:line 40
+   at InvokeStub_FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Standard Output Messages:
+ firebolt/goblin_slinger, slope -0.125, beyond=False, launch=<10, 10, 1.098>, distance=16.632
+
+
+  Failed HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(pattern: "goblin_skirmisher", slope: 0, preset: "firebolt", beyond: False) [3 ms]
+  Error Message:
+   Assert.Contains() Failure: Filter not matched in collection
+Collection: []
+  Stack Trace:
+     at HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(String pattern, Single slope, String preset, Boolean beyond) in C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\FreeShotGroundFloorTests.cs:line 40
+   at InvokeStub_FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Standard Output Messages:
+ firebolt/goblin_skirmisher, slope 0, beyond=False, launch=<10, 10, 1.098>, distance=16.632
+
+
+  Failed HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(pattern: "gnasher_whelp", slope: 0.125, preset: "piercing_arrow", beyond: False) [3 ms]
+  Error Message:
+   Assert.Contains() Failure: Filter not matched in collection
+Collection: []
+  Stack Trace:
+     at HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(String pattern, Single slope, String preset, Boolean beyond) in C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\FreeShotGroundFloorTests.cs:line 40
+   at InvokeStub_FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Standard Output Messages:
+ piercing_arrow/gnasher_whelp, slope 0.125, beyond=False, launch=<10, 10, 1.098>, distance=9.750
+
+
+  Failed HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(pattern: "goblin_slinger", slope: 0, preset: "piercing_arrow", beyond: False) [4 ms]
+  Error Message:
+   Assert.Contains() Failure: Filter not matched in collection
+Collection: []
+  Stack Trace:
+     at HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(String pattern, Single slope, String preset, Boolean beyond) in C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\FreeShotGroundFloorTests.cs:line 40
+   at InvokeStub_FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Standard Output Messages:
+ piercing_arrow/goblin_slinger, slope 0, beyond=False, launch=<10, 10, 1.098>, distance=19.500
+
+
+  Passed HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(pattern: "goblin_slinger", slope: 0.125, preset: "firebolt", beyond: True) [8 ms]
+[xUnit.net 00:00:02.32]     HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(pattern: "gnasher_whelp", slope: 0.125, preset: "firebolt", beyond: False) [FAIL]
+[xUnit.net 00:00:02.32]       Assert.Contains() Failure: Filter not matched in collection
+[xUnit.net 00:00:02.32]       Collection: []
+[xUnit.net 00:00:02.32]       Stack Trace:
+[xUnit.net 00:00:02.32]         C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\FreeShotGroundFloorTests.cs(40,0): at HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(String pattern, Single slope, String preset, Boolean beyond)
+[xUnit.net 00:00:02.32]            at InvokeStub_FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(Object, Span`1)
+[xUnit.net 00:00:02.32]            at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:02.32]       Output:
+[xUnit.net 00:00:02.32]         firebolt/gnasher_whelp, slope 0.125, beyond=False, launch=<10, 10, 1.098>, distance=9.504
+[xUnit.net 00:00:02.32]       Assert.Contains() Failure: Filter not matched in collection
+[xUnit.net 00:00:02.32]     HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(pattern: "gnasher_whelp", slope: 0, preset: "piercing_arrow", beyond: True) [FAIL]
+[xUnit.net 00:00:02.32]       Collection: []
+[xUnit.net 00:00:02.32]       Stack Trace:
+[xUnit.net 00:00:02.32]         C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\FreeShotGroundFloorTests.cs(40,0): at HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(String pattern, Single slope, String preset, Boolean beyond)
+[xUnit.net 00:00:02.32]            at InvokeStub_FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(Object, Span`1)
+[xUnit.net 00:00:02.32]            at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:02.32]       Output:
+[xUnit.net 00:00:02.32]         piercing_arrow/gnasher_whelp, slope 0, beyond=True, launch=<10, 10, 1.098>, distance=19.500
+[xUnit.net 00:00:02.33]       Assert.Contains() Failure: Filter not matched in collection
+[xUnit.net 00:00:02.33]     HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(pattern: "reed_gnasher", slope: -0.125, preset: "piercing_arrow", beyond: True) [FAIL]
+[xUnit.net 00:00:02.33]       Collection: []
+[xUnit.net 00:00:02.33]       Stack Trace:
+[xUnit.net 00:00:02.33]         C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\FreeShotGroundFloorTests.cs(40,0): at HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(String pattern, Single slope, String preset, Boolean beyond)
+[xUnit.net 00:00:02.33]            at InvokeStub_FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(Object, Span`1)
+[xUnit.net 00:00:02.33]            at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:02.33]       Output:
+[xUnit.net 00:00:02.33]         piercing_arrow/reed_gnasher, slope -0.125, beyond=True, launch=<10, 10, 1.098>, distance=19.500
+[xUnit.net 00:00:02.33]     HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(pattern: "gnasher_whelp", slope: -0.125, preset: "firebolt", beyond: True) [FAIL]
+[xUnit.net 00:00:02.33]       Assert.Contains() Failure: Filter not matched in collection
+[xUnit.net 00:00:02.33]       Collection: []
+[xUnit.net 00:00:02.33]       Stack Trace:
+[xUnit.net 00:00:02.33]         C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\FreeShotGroundFloorTests.cs(40,0): at HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(String pattern, Single slope, String preset, Boolean beyond)
+[xUnit.net 00:00:02.33]            at InvokeStub_FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(Object, Span`1)
+[xUnit.net 00:00:02.33]            at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:02.33]       Output:
+[xUnit.net 00:00:02.33]         firebolt/gnasher_whelp, slope -0.125, beyond=True, launch=<10, 10, 1.098>, distance=16.632
+[xUnit.net 00:00:02.34]     HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(pattern: "reed_gnasher", slope: 0, preset: "firebolt", beyond: False) [FAIL]
+[xUnit.net 00:00:02.34]       Assert.Contains() Failure: Filter not matched in collection
+[xUnit.net 00:00:02.34]       Collection: []
+[xUnit.net 00:00:02.34]       Stack Trace:
+[xUnit.net 00:00:02.34]         C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\FreeShotGroundFloorTests.cs(40,0): at HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(String pattern, Single slope, String preset, Boolean beyond)
+[xUnit.net 00:00:02.34]            at InvokeStub_FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(Object, Span`1)
+[xUnit.net 00:00:02.34]            at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:02.34]       Output:
+[xUnit.net 00:00:02.34]         firebolt/reed_gnasher, slope 0, beyond=False, launch=<10, 10, 1.098>, distance=16.632
+[xUnit.net 00:00:02.34]     HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(pattern: "goblin_skirmisher", slope: -0.125, preset: "piercing_arrow", beyond: False) [FAIL]
+[xUnit.net 00:00:02.34]       Assert.Contains() Failure: Filter not matched in collection
+[xUnit.net 00:00:02.34]       Collection: []
+[xUnit.net 00:00:02.34]       Stack Trace:
+[xUnit.net 00:00:02.34]         C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\FreeShotGroundFloorTests.cs(40,0): at HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(String pattern, Single slope, String preset, Boolean beyond)
+[xUnit.net 00:00:02.34]            at InvokeStub_FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(Object, Span`1)
+[xUnit.net 00:00:02.34]            at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:02.34]       Output:
+[xUnit.net 00:00:02.34]         piercing_arrow/goblin_skirmisher, slope -0.125, beyond=False, launch=<10, 10, 1.098>, distance=19.500
+[xUnit.net 00:00:02.34]     HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(pattern: "gnasher_whelp", slope: -0.125, preset: "piercing_arrow", beyond: True) [FAIL]
+[xUnit.net 00:00:02.34]       Assert.Contains() Failure: Filter not matched in collection
+[xUnit.net 00:00:02.34]       Collection: []
+[xUnit.net 00:00:02.34]       Stack Trace:
+[xUnit.net 00:00:02.34]         C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\FreeShotGroundFloorTests.cs(40,0): at HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(String pattern, Single slope, String preset, Boolean beyond)
+[xUnit.net 00:00:02.34]            at InvokeStub_FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(Object, Span`1)
+[xUnit.net 00:00:02.34]            at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:02.34]       Output:
+[xUnit.net 00:00:02.34]         piercing_arrow/gnasher_whelp, slope -0.125, beyond=True, launch=<10, 10, 1.098>, distance=19.500
+[xUnit.net 00:00:02.35]     HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(pattern: "cave_gnasher", slope: 0, preset: "piercing_arrow", beyond: True) [FAIL]
+[xUnit.net 00:00:02.35]       Assert.Contains() Failure: Filter not matched in collection
+[xUnit.net 00:00:02.35]       Collection: []
+[xUnit.net 00:00:02.35]       Stack Trace:
+[xUnit.net 00:00:02.35]         C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\FreeShotGroundFloorTests.cs(40,0): at HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(String pattern, Single slope, String preset, Boolean beyond)
+[xUnit.net 00:00:02.35]            at InvokeStub_FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(Object, Span`1)
+[xUnit.net 00:00:02.35]            at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:02.35]       Output:
+[xUnit.net 00:00:02.35]         piercing_arrow/cave_gnasher, slope 0, beyond=True, launch=<10, 10, 1.098>, distance=19.500
+  Failed HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(pattern: "gnasher_whelp", slope: 0.125, preset: "firebolt", beyond: False) [3 ms]
+  Error Message:
+   Assert.Contains() Failure: Filter not matched in collection
+Collection: []
+  Stack Trace:
+     at HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(String pattern, Single slope, String preset, Boolean beyond) in C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\FreeShotGroundFloorTests.cs:line 40
+   at InvokeStub_FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Standard Output Messages:
+ firebolt/gnasher_whelp, slope 0.125, beyond=False, launch=<10, 10, 1.098>, distance=9.504
+
+
+  Failed HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(pattern: "gnasher_whelp", slope: 0, preset: "piercing_arrow", beyond: True) [3 ms]
+  Error Message:
+   Assert.Contains() Failure: Filter not matched in collection
+Collection: []
+  Stack Trace:
+     at HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(String pattern, Single slope, String preset, Boolean beyond) in C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\FreeShotGroundFloorTests.cs:line 40
+   at InvokeStub_FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Standard Output Messages:
+ piercing_arrow/gnasher_whelp, slope 0, beyond=True, launch=<10, 10, 1.098>, distance=19.500
+
+
+  Passed HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(pattern: "goblin_scavenger", slope: 0.125, preset: "firebolt", beyond: True) [4 ms]
+  Failed HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(pattern: "reed_gnasher", slope: -0.125, preset: "piercing_arrow", beyond: True) [3 ms]
+  Error Message:
+   Assert.Contains() Failure: Filter not matched in collection
+Collection: []
+  Stack Trace:
+     at HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(String pattern, Single slope, String preset, Boolean beyond) in C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\FreeShotGroundFloorTests.cs:line 40
+   at InvokeStub_FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Standard Output Messages:
+ piercing_arrow/reed_gnasher, slope -0.125, beyond=True, launch=<10, 10, 1.098>, distance=19.500
+
+
+  Failed HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(pattern: "gnasher_whelp", slope: -0.125, preset: "firebolt", beyond: True) [3 ms]
+  Error Message:
+   Assert.Contains() Failure: Filter not matched in collection
+Collection: []
+  Stack Trace:
+     at HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(String pattern, Single slope, String preset, Boolean beyond) in C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\FreeShotGroundFloorTests.cs:line 40
+   at InvokeStub_FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Standard Output Messages:
+ firebolt/gnasher_whelp, slope -0.125, beyond=True, launch=<10, 10, 1.098>, distance=16.632
+
+
+  Failed HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(pattern: "reed_gnasher", slope: 0, preset: "firebolt", beyond: False) [3 ms]
+  Error Message:
+   Assert.Contains() Failure: Filter not matched in collection
+Collection: []
+  Stack Trace:
+     at HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(String pattern, Single slope, String preset, Boolean beyond) in C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\FreeShotGroundFloorTests.cs:line 40
+   at InvokeStub_FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Standard Output Messages:
+ firebolt/reed_gnasher, slope 0, beyond=False, launch=<10, 10, 1.098>, distance=16.632
+
+
+  Failed HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(pattern: "goblin_skirmisher", slope: -0.125, preset: "piercing_arrow", beyond: False) [3 ms]
+  Error Message:
+   Assert.Contains() Failure: Filter not matched in collection
+Collection: []
+  Stack Trace:
+     at HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(String pattern, Single slope, String preset, Boolean beyond) in C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\FreeShotGroundFloorTests.cs:line 40
+   at InvokeStub_FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Standard Output Messages:
+ piercing_arrow/goblin_skirmisher, slope -0.125, beyond=False, launch=<10, 10, 1.098>, distance=19.500
+
+
+  Failed HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(pattern: "gnasher_whelp", slope: -0.125, preset: "piercing_arrow", beyond: True) [3 ms]
+  Error Message:
+   Assert.Contains() Failure: Filter not matched in collection
+Collection: []
+  Stack Trace:
+     at HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(String pattern, Single slope, String preset, Boolean beyond) in C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\FreeShotGroundFloorTests.cs:line 40
+   at InvokeStub_FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Standard Output Messages:
+ piercing_arrow/gnasher_whelp, slope -0.125, beyond=True, launch=<10, 10, 1.098>, distance=19.500
+
+
+  Failed HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(pattern: "cave_gnasher", slope: 0, preset: "piercing_arrow", beyond: True) [3 ms]
+  Error Message:
+   Assert.Contains() Failure: Filter not matched in collection
+Collection: []
+  Stack Trace:
+     at HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(String pattern, Single slope, String preset, Boolean beyond) in C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\FreeShotGroundFloorTests.cs:line 40
+   at InvokeStub_FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Standard Output Messages:
+ piercing_arrow/cave_gnasher, slope 0, beyond=True, launch=<10, 10, 1.098>, distance=19.500
+
+
+[xUnit.net 00:00:02.36]       Assert.Contains() Failure: Filter not matched in collection
+[xUnit.net 00:00:02.36]     HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(pattern: "cave_gnasher", slope: -0.125, preset: "piercing_arrow", beyond: True) [FAIL]
+[xUnit.net 00:00:02.36]       Collection: []
+[xUnit.net 00:00:02.36]       Stack Trace:
+[xUnit.net 00:00:02.36]         C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\FreeShotGroundFloorTests.cs(40,0): at HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(String pattern, Single slope, String preset, Boolean beyond)
+[xUnit.net 00:00:02.36]            at InvokeStub_FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(Object, Span`1)
+[xUnit.net 00:00:02.36]            at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:02.36]       Output:
+[xUnit.net 00:00:02.36]         piercing_arrow/cave_gnasher, slope -0.125, beyond=True, launch=<10, 10, 1.098>, distance=19.500
+[xUnit.net 00:00:02.37]       Assert.Contains() Failure: Filter not matched in collection
+[xUnit.net 00:00:02.37]     HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(pattern: "reed_gnasher", slope: -0.125, preset: "firebolt", beyond: True) [FAIL]
+[xUnit.net 00:00:02.37]       Collection: []
+[xUnit.net 00:00:02.37]       Stack Trace:
+[xUnit.net 00:00:02.37]         C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\FreeShotGroundFloorTests.cs(40,0): at HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(String pattern, Single slope, String preset, Boolean beyond)
+[xUnit.net 00:00:02.37]            at InvokeStub_FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(Object, Span`1)
+[xUnit.net 00:00:02.37]            at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:02.37]       Output:
+[xUnit.net 00:00:02.37]         firebolt/reed_gnasher, slope -0.125, beyond=True, launch=<10, 10, 1.098>, distance=16.632
+[xUnit.net 00:00:02.37]     HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(pattern: "goblin_slinger", slope: -0.125, preset: "piercing_arrow", beyond: True) [FAIL]
+[xUnit.net 00:00:02.37]       Assert.Contains() Failure: Filter not matched in collection
+[xUnit.net 00:00:02.37]       Collection: []
+[xUnit.net 00:00:02.37]       Stack Trace:
+[xUnit.net 00:00:02.37]         C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\FreeShotGroundFloorTests.cs(40,0): at HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(String pattern, Single slope, String preset, Boolean beyond)
+[xUnit.net 00:00:02.37]            at InvokeStub_FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(Object, Span`1)
+[xUnit.net 00:00:02.37]            at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:02.37]       Output:
+[xUnit.net 00:00:02.37]         piercing_arrow/goblin_slinger, slope -0.125, beyond=True, launch=<10, 10, 1.098>, distance=19.500
+[xUnit.net 00:00:02.37]     HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(pattern: "cave_gnasher", slope: 0, preset: "firebolt", beyond: True) [FAIL]
+[xUnit.net 00:00:02.37]       Assert.Contains() Failure: Filter not matched in collection
+[xUnit.net 00:00:02.37]       Collection: []
+[xUnit.net 00:00:02.37]       Stack Trace:
+[xUnit.net 00:00:02.37]         C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\FreeShotGroundFloorTests.cs(40,0): at HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(String pattern, Single slope, String preset, Boolean beyond)
+[xUnit.net 00:00:02.37]            at InvokeStub_FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(Object, Span`1)
+[xUnit.net 00:00:02.37]            at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:02.38]       Output:
+[xUnit.net 00:00:02.38]         firebolt/cave_gnasher, slope 0, beyond=True, launch=<10, 10, 1.098>, distance=16.632
+[xUnit.net 00:00:02.38]     HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(pattern: "goblin_scavenger", slope: -0.125, preset: "firebolt", beyond: False) [FAIL]
+[xUnit.net 00:00:02.38]       Assert.Contains() Failure: Filter not matched in collection
+[xUnit.net 00:00:02.38]       Collection: []
+[xUnit.net 00:00:02.38]       Stack Trace:
+[xUnit.net 00:00:02.38]         C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\FreeShotGroundFloorTests.cs(40,0): at HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(String pattern, Single slope, String preset, Boolean beyond)
+[xUnit.net 00:00:02.38]            at InvokeStub_FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(Object, Span`1)
+[xUnit.net 00:00:02.38]            at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:02.38]       Output:
+[xUnit.net 00:00:02.38]         firebolt/goblin_scavenger, slope -0.125, beyond=False, launch=<10, 10, 1.098>, distance=16.632
+  Passed HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(pattern: "gnasher_whelp", slope: 0.125, preset: "piercing_arrow", beyond: True) [3 ms]
+  Passed HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(pattern: "gnasher_whelp", slope: 0.125, preset: "firebolt", beyond: True) [3 ms]
+  Failed HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(pattern: "cave_gnasher", slope: -0.125, preset: "piercing_arrow", beyond: True) [3 ms]
+  Error Message:
+   Assert.Contains() Failure: Filter not matched in collection
+Collection: []
+  Stack Trace:
+     at HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(String pattern, Single slope, String preset, Boolean beyond) in C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\FreeShotGroundFloorTests.cs:line 40
+   at InvokeStub_FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Standard Output Messages:
+ piercing_arrow/cave_gnasher, slope -0.125, beyond=True, launch=<10, 10, 1.098>, distance=19.500
+
+
+  Passed HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(pattern: "reed_gnasher", slope: 0.125, preset: "firebolt", beyond: True) [5 ms]
+  Failed HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(pattern: "reed_gnasher", slope: -0.125, preset: "firebolt", beyond: True) [3 ms]
+  Error Message:
+   Assert.Contains() Failure: Filter not matched in collection
+Collection: []
+  Stack Trace:
+     at HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(String pattern, Single slope, String preset, Boolean beyond) in C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\FreeShotGroundFloorTests.cs:line 40
+   at InvokeStub_FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Standard Output Messages:
+ firebolt/reed_gnasher, slope -0.125, beyond=True, launch=<10, 10, 1.098>, distance=16.632
+
+
+  Failed HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(pattern: "goblin_slinger", slope: -0.125, preset: "piercing_arrow", beyond: True) [3 ms]
+  Error Message:
+   Assert.Contains() Failure: Filter not matched in collection
+Collection: []
+  Stack Trace:
+     at HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(String pattern, Single slope, String preset, Boolean beyond) in C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\FreeShotGroundFloorTests.cs:line 40
+   at InvokeStub_FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Standard Output Messages:
+ piercing_arrow/goblin_slinger, slope -0.125, beyond=True, launch=<10, 10, 1.098>, distance=19.500
+
+
+  Failed HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(pattern: "cave_gnasher", slope: 0, preset: "firebolt", beyond: True) [4 ms]
+  Error Message:
+   Assert.Contains() Failure: Filter not matched in collection
+Collection: []
+  Stack Trace:
+     at HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(String pattern, Single slope, String preset, Boolean beyond) in C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\FreeShotGroundFloorTests.cs:line 40
+   at InvokeStub_FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Standard Output Messages:
+ firebolt/cave_gnasher, slope 0, beyond=True, launch=<10, 10, 1.098>, distance=16.632
+
+
+  Passed HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(pattern: "goblin_slinger", slope: 0.125, preset: "piercing_arrow", beyond: False) [3 ms]
+  Failed HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(pattern: "goblin_scavenger", slope: -0.125, preset: "firebolt", beyond: False) [3 ms]
+  Error Message:
+   Assert.Contains() Failure: Filter not matched in collection
+Collection: []
+  Stack Trace:
+     at HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(String pattern, Single slope, String preset, Boolean beyond) in C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\FreeShotGroundFloorTests.cs:line 40
+   at InvokeStub_FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Standard Output Messages:
+ firebolt/goblin_scavenger, slope -0.125, beyond=False, launch=<10, 10, 1.098>, distance=16.632
+
+
+[xUnit.net 00:00:02.39]     HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(pattern: "goblin_slinger", slope: 0, preset: "firebolt", beyond: True) [FAIL]
+[xUnit.net 00:00:02.39]       Assert.Contains() Failure: Filter not matched in collection
+[xUnit.net 00:00:02.39]       Collection: []
+[xUnit.net 00:00:02.39]       Stack Trace:
+[xUnit.net 00:00:02.39]         C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\FreeShotGroundFloorTests.cs(40,0): at HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(String pattern, Single slope, String preset, Boolean beyond)
+[xUnit.net 00:00:02.39]            at InvokeStub_FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(Object, Span`1)
+[xUnit.net 00:00:02.39]            at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:02.39]       Output:
+[xUnit.net 00:00:02.39]         firebolt/goblin_slinger, slope 0, beyond=True, launch=<10, 10, 1.098>, distance=16.632
+[xUnit.net 00:00:02.39]       Assert.Contains() Failure: Filter not matched in collection
+[xUnit.net 00:00:02.39]     HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(pattern: "reed_gnasher", slope: 0, preset: "piercing_arrow", beyond: False) [FAIL]
+[xUnit.net 00:00:02.39]       Collection: []
+[xUnit.net 00:00:02.39]       Stack Trace:
+[xUnit.net 00:00:02.39]         C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\FreeShotGroundFloorTests.cs(40,0): at HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(String pattern, Single slope, String preset, Boolean beyond)
+[xUnit.net 00:00:02.39]            at InvokeStub_FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(Object, Span`1)
+[xUnit.net 00:00:02.39]            at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:02.39]       Output:
+[xUnit.net 00:00:02.39]         piercing_arrow/reed_gnasher, slope 0, beyond=False, launch=<10, 10, 1.098>, distance=19.500
+[xUnit.net 00:00:02.40]     HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(pattern: "gnasher_whelp", slope: 0, preset: "piercing_arrow", beyond: False) [FAIL]
+[xUnit.net 00:00:02.40]       Assert.Contains() Failure: Filter not matched in collection
+[xUnit.net 00:00:02.40]       Collection: []
+[xUnit.net 00:00:02.40]       Stack Trace:
+[xUnit.net 00:00:02.40]         C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\FreeShotGroundFloorTests.cs(40,0): at HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(String pattern, Single slope, String preset, Boolean beyond)
+[xUnit.net 00:00:02.40]            at InvokeStub_FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(Object, Span`1)
+[xUnit.net 00:00:02.40]            at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:02.40]       Output:
+[xUnit.net 00:00:02.40]         piercing_arrow/gnasher_whelp, slope 0, beyond=False, launch=<10, 10, 1.098>, distance=19.500
+[xUnit.net 00:00:02.40]     HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(pattern: "goblin_skirmisher", slope: -0.125, preset: "firebolt", beyond: False) [FAIL]
+[xUnit.net 00:00:02.40]       Assert.Contains() Failure: Filter not matched in collection
+[xUnit.net 00:00:02.40]       Collection: []
+[xUnit.net 00:00:02.40]       Stack Trace:
+[xUnit.net 00:00:02.40]         C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\FreeShotGroundFloorTests.cs(40,0): at HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(String pattern, Single slope, String preset, Boolean beyond)
+[xUnit.net 00:00:02.40]            at InvokeStub_FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(Object, Span`1)
+[xUnit.net 00:00:02.40]            at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:02.40]       Output:
+[xUnit.net 00:00:02.40]         firebolt/goblin_skirmisher, slope -0.125, beyond=False, launch=<10, 10, 1.098>, distance=16.632
+[xUnit.net 00:00:02.41]     HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(pattern: "goblin_scavenger", slope: -0.125, preset: "piercing_arrow", beyond: False) [FAIL]
+[xUnit.net 00:00:02.41]       Assert.Contains() Failure: Filter not matched in collection
+[xUnit.net 00:00:02.41]       Collection: []
+[xUnit.net 00:00:02.41]       Stack Trace:
+[xUnit.net 00:00:02.41]         C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\FreeShotGroundFloorTests.cs(40,0): at HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(String pattern, Single slope, String preset, Boolean beyond)
+[xUnit.net 00:00:02.41]            at InvokeStub_FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(Object, Span`1)
+[xUnit.net 00:00:02.41]            at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:02.41]       Output:
+[xUnit.net 00:00:02.41]         piercing_arrow/goblin_scavenger, slope -0.125, beyond=False, launch=<10, 10, 1.098>, distance=19.500
+[xUnit.net 00:00:02.41]     HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(pattern: "goblin_scavenger", slope: -0.125, preset: "firebolt", beyond: True) [FAIL]
+[xUnit.net 00:00:02.41]       Assert.Contains() Failure: Filter not matched in collection
+[xUnit.net 00:00:02.41]       Collection: []
+[xUnit.net 00:00:02.41]       Stack Trace:
+[xUnit.net 00:00:02.41]         C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\FreeShotGroundFloorTests.cs(40,0): at HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(String pattern, Single slope, String preset, Boolean beyond)
+[xUnit.net 00:00:02.41]            at InvokeStub_FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(Object, Span`1)
+[xUnit.net 00:00:02.41]            at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:02.41]       Output:
+[xUnit.net 00:00:02.41]         firebolt/goblin_scavenger, slope -0.125, beyond=True, launch=<10, 10, 1.098>, distance=16.632
+[xUnit.net 00:00:02.41]     HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(pattern: "goblin_slinger", slope: -0.125, preset: "piercing_arrow", beyond: False) [FAIL]
+[xUnit.net 00:00:02.41]       Assert.Contains() Failure: Filter not matched in collection
+[xUnit.net 00:00:02.41]       Collection: []
+[xUnit.net 00:00:02.41]       Stack Trace:
+[xUnit.net 00:00:02.41]         C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\FreeShotGroundFloorTests.cs(40,0): at HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(String pattern, Single slope, String preset, Boolean beyond)
+[xUnit.net 00:00:02.41]            at InvokeStub_FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(Object, Span`1)
+[xUnit.net 00:00:02.41]            at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:02.41]       Output:
+[xUnit.net 00:00:02.41]         piercing_arrow/goblin_slinger, slope -0.125, beyond=False, launch=<10, 10, 1.098>, distance=19.500
+[xUnit.net 00:00:02.42]     HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(pattern: "gnasher_whelp", slope: -0.125, preset: "piercing_arrow", beyond: False) [FAIL]
+[xUnit.net 00:00:02.42]       Assert.Contains() Failure: Filter not matched in collection
+[xUnit.net 00:00:02.42]       Collection: []
+[xUnit.net 00:00:02.42]       Stack Trace:
+[xUnit.net 00:00:02.42]         C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\FreeShotGroundFloorTests.cs(40,0): at HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(String pattern, Single slope, String preset, Boolean beyond)
+[xUnit.net 00:00:02.42]            at InvokeStub_FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(Object, Span`1)
+[xUnit.net 00:00:02.42]            at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:02.42]       Output:
+[xUnit.net 00:00:02.42]         piercing_arrow/gnasher_whelp, slope -0.125, beyond=False, launch=<10, 10, 1.098>, distance=19.500
+  Passed HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(pattern: "goblin_scavenger", slope: 0.125, preset: "piercing_arrow", beyond: False) [3 ms]
+  Failed HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(pattern: "goblin_slinger", slope: 0, preset: "firebolt", beyond: True) [3 ms]
+  Error Message:
+   Assert.Contains() Failure: Filter not matched in collection
+Collection: []
+  Stack Trace:
+     at HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(String pattern, Single slope, String preset, Boolean beyond) in C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\FreeShotGroundFloorTests.cs:line 40
+   at InvokeStub_FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Standard Output Messages:
+ firebolt/goblin_slinger, slope 0, beyond=True, launch=<10, 10, 1.098>, distance=16.632
+
+
+  Failed HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(pattern: "reed_gnasher", slope: 0, preset: "piercing_arrow", beyond: False) [3 ms]
+  Error Message:
+   Assert.Contains() Failure: Filter not matched in collection
+Collection: []
+  Stack Trace:
+     at HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(String pattern, Single slope, String preset, Boolean beyond) in C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\FreeShotGroundFloorTests.cs:line 40
+   at InvokeStub_FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Standard Output Messages:
+ piercing_arrow/reed_gnasher, slope 0, beyond=False, launch=<10, 10, 1.098>, distance=19.500
+
+
+  Failed HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(pattern: "gnasher_whelp", slope: 0, preset: "piercing_arrow", beyond: False) [4 ms]
+  Error Message:
+   Assert.Contains() Failure: Filter not matched in collection
+Collection: []
+  Stack Trace:
+     at HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(String pattern, Single slope, String preset, Boolean beyond) in C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\FreeShotGroundFloorTests.cs:line 40
+   at InvokeStub_FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Standard Output Messages:
+ piercing_arrow/gnasher_whelp, slope 0, beyond=False, launch=<10, 10, 1.098>, distance=19.500
+
+
+  Failed HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(pattern: "goblin_skirmisher", slope: -0.125, preset: "firebolt", beyond: False) [3 ms]
+  Error Message:
+   Assert.Contains() Failure: Filter not matched in collection
+Collection: []
+  Stack Trace:
+     at HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(String pattern, Single slope, String preset, Boolean beyond) in C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\FreeShotGroundFloorTests.cs:line 40
+   at InvokeStub_FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Standard Output Messages:
+ firebolt/goblin_skirmisher, slope -0.125, beyond=False, launch=<10, 10, 1.098>, distance=16.632
+
+
+  Failed HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(pattern: "goblin_scavenger", slope: -0.125, preset: "piercing_arrow", beyond: False) [3 ms]
+  Error Message:
+   Assert.Contains() Failure: Filter not matched in collection
+Collection: []
+  Stack Trace:
+     at HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(String pattern, Single slope, String preset, Boolean beyond) in C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\FreeShotGroundFloorTests.cs:line 40
+   at InvokeStub_FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Standard Output Messages:
+ piercing_arrow/goblin_scavenger, slope -0.125, beyond=False, launch=<10, 10, 1.098>, distance=19.500
+
+
+  Failed HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(pattern: "goblin_scavenger", slope: -0.125, preset: "firebolt", beyond: True) [3 ms]
+  Error Message:
+   Assert.Contains() Failure: Filter not matched in collection
+Collection: []
+  Stack Trace:
+     at HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(String pattern, Single slope, String preset, Boolean beyond) in C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\FreeShotGroundFloorTests.cs:line 40
+   at InvokeStub_FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Standard Output Messages:
+ firebolt/goblin_scavenger, slope -0.125, beyond=True, launch=<10, 10, 1.098>, distance=16.632
+
+
+  Failed HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(pattern: "goblin_slinger", slope: -0.125, preset: "piercing_arrow", beyond: False) [5 ms]
+  Error Message:
+   Assert.Contains() Failure: Filter not matched in collection
+Collection: []
+  Stack Trace:
+     at HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(String pattern, Single slope, String preset, Boolean beyond) in C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\FreeShotGroundFloorTests.cs:line 40
+   at InvokeStub_FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Standard Output Messages:
+ piercing_arrow/goblin_slinger, slope -0.125, beyond=False, launch=<10, 10, 1.098>, distance=19.500
+
+
+  Failed HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(pattern: "gnasher_whelp", slope: -0.125, preset: "piercing_arrow", beyond: False) [3 ms]
+  Error Message:
+   Assert.Contains() Failure: Filter not matched in collection
+Collection: []
+  Stack Trace:
+     at HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(String pattern, Single slope, String preset, Boolean beyond) in C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\FreeShotGroundFloorTests.cs:line 40
+   at InvokeStub_FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Standard Output Messages:
+ piercing_arrow/gnasher_whelp, slope -0.125, beyond=False, launch=<10, 10, 1.098>, distance=19.500
+
+
+[xUnit.net 00:00:02.43]     HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(pattern: "goblin_skirmisher", slope: -0.125, preset: "firebolt", beyond: True) [FAIL]
+[xUnit.net 00:00:02.43]       Assert.Contains() Failure: Filter not matched in collection
+[xUnit.net 00:00:02.43]       Collection: []
+[xUnit.net 00:00:02.43]       Stack Trace:
+[xUnit.net 00:00:02.43]         C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\FreeShotGroundFloorTests.cs(40,0): at HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(String pattern, Single slope, String preset, Boolean beyond)
+[xUnit.net 00:00:02.43]            at InvokeStub_FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(Object, Span`1)
+[xUnit.net 00:00:02.43]            at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:02.43]       Output:
+[xUnit.net 00:00:02.43]         firebolt/goblin_skirmisher, slope -0.125, beyond=True, launch=<10, 10, 1.098>, distance=16.632
+[xUnit.net 00:00:02.44]     HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(pattern: "goblin_skirmisher", slope: 0, preset: "piercing_arrow", beyond: False) [FAIL]
+[xUnit.net 00:00:02.44]       Assert.Contains() Failure: Filter not matched in collection
+[xUnit.net 00:00:02.44]       Collection: []
+[xUnit.net 00:00:02.44]       Stack Trace:
+[xUnit.net 00:00:02.44]         C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\FreeShotGroundFloorTests.cs(40,0): at HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(String pattern, Single slope, String preset, Boolean beyond)
+[xUnit.net 00:00:02.44]            at InvokeStub_FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(Object, Span`1)
+[xUnit.net 00:00:02.44]            at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:02.44]       Output:
+[xUnit.net 00:00:02.44]         piercing_arrow/goblin_skirmisher, slope 0, beyond=False, launch=<10, 10, 1.098>, distance=19.500
+[xUnit.net 00:00:02.45]     HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(pattern: "cave_gnasher", slope: 0, preset: "piercing_arrow", beyond: False) [FAIL]
+[xUnit.net 00:00:02.45]       Assert.Contains() Failure: Filter not matched in collection
+[xUnit.net 00:00:02.45]       Collection: []
+[xUnit.net 00:00:02.45]       Stack Trace:
+[xUnit.net 00:00:02.45]         C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\FreeShotGroundFloorTests.cs(40,0): at HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(String pattern, Single slope, String preset, Boolean beyond)
+[xUnit.net 00:00:02.45]            at InvokeStub_FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(Object, Span`1)
+[xUnit.net 00:00:02.45]            at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:02.45]       Output:
+[xUnit.net 00:00:02.45]         piercing_arrow/cave_gnasher, slope 0, beyond=False, launch=<10, 10, 1.098>, distance=19.500
+[xUnit.net 00:00:02.46]     HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(pattern: "goblin_scavenger", slope: 0, preset: "firebolt", beyond: False) [FAIL]
+[xUnit.net 00:00:02.46]       Assert.Contains() Failure: Filter not matched in collection
+[xUnit.net 00:00:02.46]       Collection: []
+[xUnit.net 00:00:02.46]       Stack Trace:
+[xUnit.net 00:00:02.46]         C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\FreeShotGroundFloorTests.cs(40,0): at HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(String pattern, Single slope, String preset, Boolean beyond)
+[xUnit.net 00:00:02.46]            at InvokeStub_FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(Object, Span`1)
+[xUnit.net 00:00:02.46]            at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:02.46]       Output:
+[xUnit.net 00:00:02.46]         firebolt/goblin_scavenger, slope 0, beyond=False, launch=<10, 10, 1.098>, distance=16.632
+[xUnit.net 00:00:02.46]     HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(pattern: "gnasher_whelp", slope: 0, preset: "firebolt", beyond: False) [FAIL]
+[xUnit.net 00:00:02.46]       Assert.Contains() Failure: Filter not matched in collection
+[xUnit.net 00:00:02.46]       Collection: []
+[xUnit.net 00:00:02.46]       Stack Trace:
+[xUnit.net 00:00:02.47]         C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\FreeShotGroundFloorTests.cs(40,0): at HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(String pattern, Single slope, String preset, Boolean beyond)
+[xUnit.net 00:00:02.47]            at InvokeStub_FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(Object, Span`1)
+[xUnit.net 00:00:02.47]            at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:02.47]       Output:
+[xUnit.net 00:00:02.47]         firebolt/gnasher_whelp, slope 0, beyond=False, launch=<10, 10, 1.098>, distance=16.632
+  Passed HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(pattern: "cave_gnasher", slope: 0.125, preset: "firebolt", beyond: False) [6 ms]
+  Failed HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(pattern: "goblin_skirmisher", slope: -0.125, preset: "firebolt", beyond: True) [3 ms]
+  Error Message:
+   Assert.Contains() Failure: Filter not matched in collection
+Collection: []
+  Stack Trace:
+     at HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(String pattern, Single slope, String preset, Boolean beyond) in C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\FreeShotGroundFloorTests.cs:line 40
+   at InvokeStub_FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Standard Output Messages:
+ firebolt/goblin_skirmisher, slope -0.125, beyond=True, launch=<10, 10, 1.098>, distance=16.632
+
+
+  Passed HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(pattern: "goblin_scavenger", slope: 0.125, preset: "piercing_arrow", beyond: True) [3 ms]
+  Failed HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(pattern: "goblin_skirmisher", slope: 0, preset: "piercing_arrow", beyond: False) [5 ms]
+  Error Message:
+   Assert.Contains() Failure: Filter not matched in collection
+Collection: []
+  Stack Trace:
+     at HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(String pattern, Single slope, String preset, Boolean beyond) in C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\FreeShotGroundFloorTests.cs:line 40
+   at InvokeStub_FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Standard Output Messages:
+ piercing_arrow/goblin_skirmisher, slope 0, beyond=False, launch=<10, 10, 1.098>, distance=19.500
+
+
+  Passed HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(pattern: "goblin_slinger", slope: 0.125, preset: "firebolt", beyond: False) [7 ms]
+  Failed HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(pattern: "cave_gnasher", slope: 0, preset: "piercing_arrow", beyond: False) [5 ms]
+  Error Message:
+   Assert.Contains() Failure: Filter not matched in collection
+Collection: []
+  Stack Trace:
+     at HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(String pattern, Single slope, String preset, Boolean beyond) in C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\FreeShotGroundFloorTests.cs:line 40
+   at InvokeStub_FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Standard Output Messages:
+ piercing_arrow/cave_gnasher, slope 0, beyond=False, launch=<10, 10, 1.098>, distance=19.500
+
+
+  Passed HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(pattern: "cave_gnasher", slope: 0.125, preset: "piercing_arrow", beyond: False) [5 ms]
+  Failed HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(pattern: "goblin_scavenger", slope: 0, preset: "firebolt", beyond: False) [4 ms]
+  Error Message:
+   Assert.Contains() Failure: Filter not matched in collection
+Collection: []
+  Stack Trace:
+     at HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(String pattern, Single slope, String preset, Boolean beyond) in C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\FreeShotGroundFloorTests.cs:line 40
+   at InvokeStub_FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Standard Output Messages:
+ firebolt/goblin_scavenger, slope 0, beyond=False, launch=<10, 10, 1.098>, distance=16.632
+
+
+  Failed HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(pattern: "gnasher_whelp", slope: 0, preset: "firebolt", beyond: False) [4 ms]
+  Error Message:
+   Assert.Contains() Failure: Filter not matched in collection
+Collection: []
+  Stack Trace:
+     at HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(String pattern, Single slope, String preset, Boolean beyond) in C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\FreeShotGroundFloorTests.cs:line 40
+   at InvokeStub_FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Standard Output Messages:
+ firebolt/gnasher_whelp, slope 0, beyond=False, launch=<10, 10, 1.098>, distance=16.632
+
+
+[xUnit.net 00:00:02.47]     HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(pattern: "goblin_slinger", slope: 0, preset: "firebolt", beyond: False) [FAIL]
+[xUnit.net 00:00:02.47]       Assert.Contains() Failure: Filter not matched in collection
+[xUnit.net 00:00:02.47]       Collection: []
+[xUnit.net 00:00:02.47]       Stack Trace:
+[xUnit.net 00:00:02.47]         C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\FreeShotGroundFloorTests.cs(40,0): at HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(String pattern, Single slope, String preset, Boolean beyond)
+[xUnit.net 00:00:02.47]            at InvokeStub_FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(Object, Span`1)
+[xUnit.net 00:00:02.47]            at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:02.47]       Output:
+[xUnit.net 00:00:02.47]         firebolt/goblin_slinger, slope 0, beyond=False, launch=<10, 10, 1.098>, distance=16.632
+[xUnit.net 00:00:02.48]     HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(pattern: "goblin_scavenger", slope: 0, preset: "piercing_arrow", beyond: False) [FAIL]
+[xUnit.net 00:00:02.48]       Assert.Contains() Failure: Filter not matched in collection
+[xUnit.net 00:00:02.48]       Collection: []
+[xUnit.net 00:00:02.48]       Stack Trace:
+[xUnit.net 00:00:02.48]         C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\FreeShotGroundFloorTests.cs(40,0): at HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(String pattern, Single slope, String preset, Boolean beyond)
+[xUnit.net 00:00:02.48]            at InvokeStub_FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(Object, Span`1)
+[xUnit.net 00:00:02.48]            at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:02.48]       Output:
+[xUnit.net 00:00:02.48]         piercing_arrow/goblin_scavenger, slope 0, beyond=False, launch=<10, 10, 1.098>, distance=19.500
+[xUnit.net 00:00:02.49]     HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(pattern: "reed_gnasher", slope: 0, preset: "firebolt", beyond: True) [FAIL]
+[xUnit.net 00:00:02.49]       Assert.Contains() Failure: Filter not matched in collection
+[xUnit.net 00:00:02.49]       Collection: []
+[xUnit.net 00:00:02.49]       Stack Trace:
+[xUnit.net 00:00:02.49]         C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\FreeShotGroundFloorTests.cs(40,0): at HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(String pattern, Single slope, String preset, Boolean beyond)
+[xUnit.net 00:00:02.49]            at InvokeStub_FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(Object, Span`1)
+[xUnit.net 00:00:02.49]            at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:02.49]       Output:
+[xUnit.net 00:00:02.49]         firebolt/reed_gnasher, slope 0, beyond=True, launch=<10, 10, 1.098>, distance=16.632
+[xUnit.net 00:00:02.49]     HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(pattern: "reed_gnasher", slope: -0.125, preset: "firebolt", beyond: False) [FAIL]
+[xUnit.net 00:00:02.49]       Assert.Contains() Failure: Filter not matched in collection
+[xUnit.net 00:00:02.49]       Collection: []
+[xUnit.net 00:00:02.49]       Stack Trace:
+[xUnit.net 00:00:02.49]         C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\FreeShotGroundFloorTests.cs(40,0): at HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(String pattern, Single slope, String preset, Boolean beyond)
+[xUnit.net 00:00:02.49]            at InvokeStub_FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(Object, Span`1)
+[xUnit.net 00:00:02.49]            at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:02.49]       Output:
+[xUnit.net 00:00:02.49]         firebolt/reed_gnasher, slope -0.125, beyond=False, launch=<10, 10, 1.098>, distance=16.632
+[xUnit.net 00:00:02.50]     HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(pattern: "cave_gnasher", slope: -0.125, preset: "firebolt", beyond: False) [FAIL]
+[xUnit.net 00:00:02.50]       Assert.Contains() Failure: Filter not matched in collection
+[xUnit.net 00:00:02.50]       Collection: []
+[xUnit.net 00:00:02.50]       Stack Trace:
+[xUnit.net 00:00:02.50]         C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\FreeShotGroundFloorTests.cs(40,0): at HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(String pattern, Single slope, String preset, Boolean beyond)
+[xUnit.net 00:00:02.50]            at InvokeStub_FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(Object, Span`1)
+[xUnit.net 00:00:02.50]            at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:02.50]       Output:
+[xUnit.net 00:00:02.50]         firebolt/cave_gnasher, slope -0.125, beyond=False, launch=<10, 10, 1.098>, distance=16.632
+[xUnit.net 00:00:02.50]       Assert.Contains() Failure: Filter not matched in collection
+[xUnit.net 00:00:02.50]     HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(pattern: "goblin_scavenger", slope: 0, preset: "firebolt", beyond: True) [FAIL]
+[xUnit.net 00:00:02.50]       Collection: []
+[xUnit.net 00:00:02.50]       Stack Trace:
+[xUnit.net 00:00:02.50]         C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\FreeShotGroundFloorTests.cs(40,0): at HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(String pattern, Single slope, String preset, Boolean beyond)
+[xUnit.net 00:00:02.50]            at InvokeStub_FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(Object, Span`1)
+[xUnit.net 00:00:02.50]            at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:02.50]       Output:
+[xUnit.net 00:00:02.50]         firebolt/goblin_scavenger, slope 0, beyond=True, launch=<10, 10, 1.098>, distance=16.632
+  Failed HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(pattern: "goblin_slinger", slope: 0, preset: "firebolt", beyond: False) [3 ms]
+  Error Message:
+   Assert.Contains() Failure: Filter not matched in collection
+Collection: []
+  Stack Trace:
+     at HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(String pattern, Single slope, String preset, Boolean beyond) in C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\FreeShotGroundFloorTests.cs:line 40
+   at InvokeStub_FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Standard Output Messages:
+ firebolt/goblin_slinger, slope 0, beyond=False, launch=<10, 10, 1.098>, distance=16.632
+
+
+  Passed HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(pattern: "reed_gnasher", slope: 0.125, preset: "piercing_arrow", beyond: True) [4 ms]
+  Failed HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(pattern: "goblin_scavenger", slope: 0, preset: "piercing_arrow", beyond: False) [5 ms]
+  Error Message:
+   Assert.Contains() Failure: Filter not matched in collection
+Collection: []
+  Stack Trace:
+     at HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(String pattern, Single slope, String preset, Boolean beyond) in C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\FreeShotGroundFloorTests.cs:line 40
+   at InvokeStub_FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Standard Output Messages:
+ piercing_arrow/goblin_scavenger, slope 0, beyond=False, launch=<10, 10, 1.098>, distance=19.500
+
+
+  Passed HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(pattern: "goblin_scavenger", slope: 0.125, preset: "firebolt", beyond: False) [4 ms]
+  Failed HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(pattern: "reed_gnasher", slope: 0, preset: "firebolt", beyond: True) [4 ms]
+  Error Message:
+   Assert.Contains() Failure: Filter not matched in collection
+Collection: []
+  Stack Trace:
+     at HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(String pattern, Single slope, String preset, Boolean beyond) in C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\FreeShotGroundFloorTests.cs:line 40
+   at InvokeStub_FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Standard Output Messages:
+ firebolt/reed_gnasher, slope 0, beyond=True, launch=<10, 10, 1.098>, distance=16.632
+
+
+  Failed HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(pattern: "reed_gnasher", slope: -0.125, preset: "firebolt", beyond: False) [3 ms]
+  Error Message:
+   Assert.Contains() Failure: Filter not matched in collection
+Collection: []
+  Stack Trace:
+     at HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(String pattern, Single slope, String preset, Boolean beyond) in C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\FreeShotGroundFloorTests.cs:line 40
+   at InvokeStub_FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Standard Output Messages:
+ firebolt/reed_gnasher, slope -0.125, beyond=False, launch=<10, 10, 1.098>, distance=16.632
+
+
+  Failed HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(pattern: "cave_gnasher", slope: -0.125, preset: "firebolt", beyond: False) [3 ms]
+  Error Message:
+   Assert.Contains() Failure: Filter not matched in collection
+Collection: []
+  Stack Trace:
+     at HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(String pattern, Single slope, String preset, Boolean beyond) in C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\FreeShotGroundFloorTests.cs:line 40
+   at InvokeStub_FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Standard Output Messages:
+ firebolt/cave_gnasher, slope -0.125, beyond=False, launch=<10, 10, 1.098>, distance=16.632
+
+
+  Passed HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(pattern: "goblin_skirmisher", slope: 0.125, preset: "piercing_arrow", beyond: False) [3 ms]
+  Failed HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(pattern: "goblin_scavenger", slope: 0, preset: "firebolt", beyond: True) [3 ms]
+  Error Message:
+   Assert.Contains() Failure: Filter not matched in collection
+Collection: []
+  Stack Trace:
+     at HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(String pattern, Single slope, String preset, Boolean beyond) in C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\FreeShotGroundFloorTests.cs:line 40
+   at InvokeStub_FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Standard Output Messages:
+ firebolt/goblin_scavenger, slope 0, beyond=True, launch=<10, 10, 1.098>, distance=16.632
+
+
+[xUnit.net 00:00:02.51]     HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidNearAndFarFreeShotsTravelFullRange(slope: 0.125, preset: "piercing_arrow", cursor: 3) [FAIL]
+[xUnit.net 00:00:02.51]       Assert.True() Failure
+[xUnit.net 00:00:02.51]       Expected: True
+[xUnit.net 00:00:02.51]       Actual:   False
+[xUnit.net 00:00:02.51]       Stack Trace:
+[xUnit.net 00:00:02.51]         C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\FreeShotGroundFloorTests.cs(58,0): at HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidNearAndFarFreeShotsTravelFullRange(Single slope, String preset, Single cursor)
+[xUnit.net 00:00:02.51]            at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+[xUnit.net 00:00:02.51]            at System.Reflection.MethodBaseInvoker.InvokeDirectByRefWithFewArgs(Object obj, Span`1 copyOfArgs, BindingFlags invokeAttr)
+[xUnit.net 00:00:02.51]       Output:
+[xUnit.net 00:00:02.51]         piercing_arrow, slope 0.125, cursor 3, distance=9.750/19.380, end=<19.75, 10, 1.098>
+[xUnit.net 00:00:02.53]       Assert.True() Failure
+[xUnit.net 00:00:02.53]     HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidNearAndFarFreeShotsTravelFullRange(slope: 0.125, preset: "firebolt", cursor: 3) [FAIL]
+[xUnit.net 00:00:02.53]       Expected: True
+[xUnit.net 00:00:02.53]       Actual:   False
+[xUnit.net 00:00:02.53]       Stack Trace:
+[xUnit.net 00:00:02.53]         C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\FreeShotGroundFloorTests.cs(58,0): at HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidNearAndFarFreeShotsTravelFullRange(Single slope, String preset, Single cursor)
+[xUnit.net 00:00:02.53]            at InvokeStub_FreeShotGroundFloorTests.HumanoidNearAndFarFreeShotsTravelFullRange(Object, Span`1)
+[xUnit.net 00:00:02.53]            at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:02.53]       Output:
+[xUnit.net 00:00:02.53]         firebolt, slope 0.125, cursor 3, distance=9.504/16.250, end=<19.503998, 10, 1.098>
+  Failed HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidNearAndFarFreeShotsTravelFullRange(slope: 0.125, preset: "piercing_arrow", cursor: 3) [3 ms]
+  Error Message:
+   Assert.True() Failure
+Expected: True
+Actual:   False
+  Stack Trace:
+     at HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidNearAndFarFreeShotsTravelFullRange(Single slope, String preset, Single cursor) in C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\FreeShotGroundFloorTests.cs:line 58
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeDirectByRefWithFewArgs(Object obj, Span`1 copyOfArgs, BindingFlags invokeAttr)
+  Standard Output Messages:
+ piercing_arrow, slope 0.125, cursor 3, distance=9.750/19.380, end=<19.75, 10, 1.098>
+
+
+  Passed HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidNearAndFarFreeShotsTravelFullRange(slope: -0.125, preset: "firebolt", cursor: 8) [3 ms]
+  Passed HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidNearAndFarFreeShotsTravelFullRange(slope: 0, preset: "piercing_arrow", cursor: 3) [2 ms]
+  Passed HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidNearAndFarFreeShotsTravelFullRange(slope: 0, preset: "firebolt", cursor: 1) [3 ms]
+  Passed HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidNearAndFarFreeShotsTravelFullRange(slope: -0.125, preset: "piercing_arrow", cursor: 1) [3 ms]
+  Passed HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidNearAndFarFreeShotsTravelFullRange(slope: -0.125, preset: "piercing_arrow", cursor: 3) [2 ms]
+  Passed HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidNearAndFarFreeShotsTravelFullRange(slope: 0, preset: "firebolt", cursor: 3) [2 ms]
+  Passed HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidNearAndFarFreeShotsTravelFullRange(slope: 0, preset: "piercing_arrow", cursor: 1) [2 ms]
+  Failed HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidNearAndFarFreeShotsTravelFullRange(slope: 0.125, preset: "firebolt", cursor: 3) [4 ms]
+  Error Message:
+   Assert.True() Failure
+Expected: True
+Actual:   False
+  Stack Trace:
+     at HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidNearAndFarFreeShotsTravelFullRange(Single slope, String preset, Single cursor) in C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\FreeShotGroundFloorTests.cs:line 58
+   at InvokeStub_FreeShotGroundFloorTests.HumanoidNearAndFarFreeShotsTravelFullRange(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Standard Output Messages:
+ firebolt, slope 0.125, cursor 3, distance=9.504/16.250, end=<19.503998, 10, 1.098>
+
+
+[xUnit.net 00:00:02.54]     HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidNearAndFarFreeShotsTravelFullRange(slope: 0.125, preset: "piercing_arrow", cursor: 8) [FAIL]
+[xUnit.net 00:00:02.54]       Assert.True() Failure
+[xUnit.net 00:00:02.54]       Expected: True
+[xUnit.net 00:00:02.54]       Actual:   False
+[xUnit.net 00:00:02.54]       Stack Trace:
+[xUnit.net 00:00:02.54]         C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\FreeShotGroundFloorTests.cs(58,0): at HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidNearAndFarFreeShotsTravelFullRange(Single slope, String preset, Single cursor)
+[xUnit.net 00:00:02.54]            at InvokeStub_FreeShotGroundFloorTests.HumanoidNearAndFarFreeShotsTravelFullRange(Object, Span`1)
+[xUnit.net 00:00:02.54]            at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:02.54]       Output:
+[xUnit.net 00:00:02.54]         piercing_arrow, slope 0.125, cursor 8, distance=9.750/19.380, end=<19.75, 10, 1.098>
+[xUnit.net 00:00:02.55]     HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidNearAndFarFreeShotsTravelFullRange(slope: 0.125, preset: "piercing_arrow", cursor: 1) [FAIL]
+[xUnit.net 00:00:02.55]       Assert.True() Failure
+[xUnit.net 00:00:02.55]       Expected: True
+[xUnit.net 00:00:02.55]       Actual:   False
+[xUnit.net 00:00:02.55]       Stack Trace:
+[xUnit.net 00:00:02.55]         C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\FreeShotGroundFloorTests.cs(58,0): at HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidNearAndFarFreeShotsTravelFullRange(Single slope, String preset, Single cursor)
+[xUnit.net 00:00:02.55]            at InvokeStub_FreeShotGroundFloorTests.HumanoidNearAndFarFreeShotsTravelFullRange(Object, Span`1)
+[xUnit.net 00:00:02.55]            at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:02.55]       Output:
+[xUnit.net 00:00:02.55]         piercing_arrow, slope 0.125, cursor 1, distance=9.750/19.380, end=<19.75, 10, 1.098>
+[xUnit.net 00:00:02.55]     HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidNearAndFarFreeShotsTravelFullRange(slope: 0.125, preset: "firebolt", cursor: 1) [FAIL]
+[xUnit.net 00:00:02.55]       Assert.True() Failure
+[xUnit.net 00:00:02.55]       Expected: True
+[xUnit.net 00:00:02.55]       Actual:   False
+[xUnit.net 00:00:02.55]       Stack Trace:
+[xUnit.net 00:00:02.55]         C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\FreeShotGroundFloorTests.cs(58,0): at HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidNearAndFarFreeShotsTravelFullRange(Single slope, String preset, Single cursor)
+[xUnit.net 00:00:02.55]            at InvokeStub_FreeShotGroundFloorTests.HumanoidNearAndFarFreeShotsTravelFullRange(Object, Span`1)
+[xUnit.net 00:00:02.55]            at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:02.55]       Output:
+[xUnit.net 00:00:02.55]         firebolt, slope 0.125, cursor 1, distance=9.504/16.250, end=<19.503998, 10, 1.098>
+[xUnit.net 00:00:02.56]     HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidNearAndFarFreeShotsTravelFullRange(slope: 0.125, preset: "firebolt", cursor: 8) [FAIL]
+[xUnit.net 00:00:02.56]       Assert.True() Failure
+[xUnit.net 00:00:02.56]       Expected: True
+[xUnit.net 00:00:02.56]       Actual:   False
+[xUnit.net 00:00:02.56]       Stack Trace:
+[xUnit.net 00:00:02.56]         C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\FreeShotGroundFloorTests.cs(58,0): at HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidNearAndFarFreeShotsTravelFullRange(Single slope, String preset, Single cursor)
+[xUnit.net 00:00:02.56]            at InvokeStub_FreeShotGroundFloorTests.HumanoidNearAndFarFreeShotsTravelFullRange(Object, Span`1)
+[xUnit.net 00:00:02.56]            at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:02.56]       Output:
+[xUnit.net 00:00:02.56]         firebolt, slope 0.125, cursor 8, distance=9.504/16.250, end=<19.503998, 10, 1.098>
+  Failed HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidNearAndFarFreeShotsTravelFullRange(slope: 0.125, preset: "piercing_arrow", cursor: 8) [2 ms]
+  Error Message:
+   Assert.True() Failure
+Expected: True
+Actual:   False
+  Stack Trace:
+     at HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidNearAndFarFreeShotsTravelFullRange(Single slope, String preset, Single cursor) in C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\FreeShotGroundFloorTests.cs:line 58
+   at InvokeStub_FreeShotGroundFloorTests.HumanoidNearAndFarFreeShotsTravelFullRange(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Standard Output Messages:
+ piercing_arrow, slope 0.125, cursor 8, distance=9.750/19.380, end=<19.75, 10, 1.098>
+
+
+  Passed HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidNearAndFarFreeShotsTravelFullRange(slope: 0, preset: "firebolt", cursor: 8) [2 ms]
+  Passed HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidNearAndFarFreeShotsTravelFullRange(slope: -0.125, preset: "firebolt", cursor: 1) [2 ms]
+  Failed HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidNearAndFarFreeShotsTravelFullRange(slope: 0.125, preset: "piercing_arrow", cursor: 1) [2 ms]
+  Error Message:
+   Assert.True() Failure
+Expected: True
+Actual:   False
+  Stack Trace:
+     at HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidNearAndFarFreeShotsTravelFullRange(Single slope, String preset, Single cursor) in C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\FreeShotGroundFloorTests.cs:line 58
+   at InvokeStub_FreeShotGroundFloorTests.HumanoidNearAndFarFreeShotsTravelFullRange(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Standard Output Messages:
+ piercing_arrow, slope 0.125, cursor 1, distance=9.750/19.380, end=<19.75, 10, 1.098>
+
+
+  Failed HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidNearAndFarFreeShotsTravelFullRange(slope: 0.125, preset: "firebolt", cursor: 1) [2 ms]
+  Error Message:
+   Assert.True() Failure
+Expected: True
+Actual:   False
+  Stack Trace:
+     at HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidNearAndFarFreeShotsTravelFullRange(Single slope, String preset, Single cursor) in C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\FreeShotGroundFloorTests.cs:line 58
+   at InvokeStub_FreeShotGroundFloorTests.HumanoidNearAndFarFreeShotsTravelFullRange(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Standard Output Messages:
+ firebolt, slope 0.125, cursor 1, distance=9.504/16.250, end=<19.503998, 10, 1.098>
+
+
+  Passed HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidNearAndFarFreeShotsTravelFullRange(slope: 0, preset: "piercing_arrow", cursor: 8) [2 ms]
+  Passed HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidNearAndFarFreeShotsTravelFullRange(slope: -0.125, preset: "piercing_arrow", cursor: 8) [2 ms]
+  Passed HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidNearAndFarFreeShotsTravelFullRange(slope: -0.125, preset: "firebolt", cursor: 3) [2 ms]
+  Failed HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidNearAndFarFreeShotsTravelFullRange(slope: 0.125, preset: "firebolt", cursor: 8) [2 ms]
+  Error Message:
+   Assert.True() Failure
+Expected: True
+Actual:   False
+  Stack Trace:
+     at HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidNearAndFarFreeShotsTravelFullRange(Single slope, String preset, Single cursor) in C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\FreeShotGroundFloorTests.cs:line 58
+   at InvokeStub_FreeShotGroundFloorTests.HumanoidNearAndFarFreeShotsTravelFullRange(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Standard Output Messages:
+ firebolt, slope 0.125, cursor 8, distance=9.504/16.250, end=<19.503998, 10, 1.098>
+
+
+[xUnit.net 00:00:02.56]     HollowWake.Core.Tests.FreeShotGroundFloorTests.HoveredGlaivePiercesAndReachesItsReturn(pattern: "gnasher_whelp", slope: -0.125) [FAIL]
+[xUnit.net 00:00:02.56]       Assert.Single() Failure: The collection was empty
+[xUnit.net 00:00:02.56]       Stack Trace:
+[xUnit.net 00:00:02.56]         C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\FreeShotGroundFloorTests.cs(82,0): at HollowWake.Core.Tests.FreeShotGroundFloorTests.HoveredGlaivePiercesAndReachesItsReturn(String pattern, Single slope)
+[xUnit.net 00:00:02.56]            at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+[xUnit.net 00:00:02.56]            at System.Reflection.MethodBaseInvoker.InvokeDirectByRefWithFewArgs(Object obj, Span`1 copyOfArgs, BindingFlags invokeAttr)
+[xUnit.net 00:00:02.57]     HollowWake.Core.Tests.FreeShotGroundFloorTests.HoveredGlaivePiercesAndReachesItsReturn(pattern: "goblin_skirmisher", slope: 0.125) [FAIL]
+[xUnit.net 00:00:02.57]       Assert.Single() Failure: The collection was empty
+[xUnit.net 00:00:02.57]       Stack Trace:
+[xUnit.net 00:00:02.57]         C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\FreeShotGroundFloorTests.cs(82,0): at HollowWake.Core.Tests.FreeShotGroundFloorTests.HoveredGlaivePiercesAndReachesItsReturn(String pattern, Single slope)
+[xUnit.net 00:00:02.57]            at InvokeStub_FreeShotGroundFloorTests.HoveredGlaivePiercesAndReachesItsReturn(Object, Span`1)
+[xUnit.net 00:00:02.57]            at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:02.57]     HollowWake.Core.Tests.FreeShotGroundFloorTests.HoveredGlaivePiercesAndReachesItsReturn(pattern: "gnasher_whelp", slope: 0.125) [FAIL]
+[xUnit.net 00:00:02.57]       Assert.Single() Failure: The collection was empty
+[xUnit.net 00:00:02.57]       Stack Trace:
+[xUnit.net 00:00:02.57]         C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\FreeShotGroundFloorTests.cs(82,0): at HollowWake.Core.Tests.FreeShotGroundFloorTests.HoveredGlaivePiercesAndReachesItsReturn(String pattern, Single slope)
+[xUnit.net 00:00:02.57]            at InvokeStub_FreeShotGroundFloorTests.HoveredGlaivePiercesAndReachesItsReturn(Object, Span`1)
+[xUnit.net 00:00:02.57]            at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:02.58]     HollowWake.Core.Tests.FreeShotGroundFloorTests.HoveredGlaivePiercesAndReachesItsReturn(pattern: "goblin_skirmisher", slope: 0) [FAIL]
+[xUnit.net 00:00:02.58]       Assert.Single() Failure: The collection was empty
+[xUnit.net 00:00:02.58]       Stack Trace:
+[xUnit.net 00:00:02.58]         C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\FreeShotGroundFloorTests.cs(82,0): at HollowWake.Core.Tests.FreeShotGroundFloorTests.HoveredGlaivePiercesAndReachesItsReturn(String pattern, Single slope)
+[xUnit.net 00:00:02.58]            at InvokeStub_FreeShotGroundFloorTests.HoveredGlaivePiercesAndReachesItsReturn(Object, Span`1)
+[xUnit.net 00:00:02.58]            at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:02.58]     HollowWake.Core.Tests.FreeShotGroundFloorTests.HoveredGlaivePiercesAndReachesItsReturn(pattern: "goblin_skirmisher", slope: -0.125) [FAIL]
+[xUnit.net 00:00:02.58]       Assert.Single() Failure: The collection was empty
+[xUnit.net 00:00:02.58]       Stack Trace:
+[xUnit.net 00:00:02.58]         C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\FreeShotGroundFloorTests.cs(82,0): at HollowWake.Core.Tests.FreeShotGroundFloorTests.HoveredGlaivePiercesAndReachesItsReturn(String pattern, Single slope)
+[xUnit.net 00:00:02.58]            at InvokeStub_FreeShotGroundFloorTests.HoveredGlaivePiercesAndReachesItsReturn(Object, Span`1)
+[xUnit.net 00:00:02.58]            at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:02.59]     HollowWake.Core.Tests.FreeShotGroundFloorTests.HoveredGlaivePiercesAndReachesItsReturn(pattern: "gnasher_whelp", slope: 0) [FAIL]
+[xUnit.net 00:00:02.59]       Assert.Single() Failure: The collection was empty
+[xUnit.net 00:00:02.59]       Stack Trace:
+[xUnit.net 00:00:02.59]         C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\FreeShotGroundFloorTests.cs(82,0): at HollowWake.Core.Tests.FreeShotGroundFloorTests.HoveredGlaivePiercesAndReachesItsReturn(String pattern, Single slope)
+[xUnit.net 00:00:02.59]            at InvokeStub_FreeShotGroundFloorTests.HoveredGlaivePiercesAndReachesItsReturn(Object, Span`1)
+[xUnit.net 00:00:02.59]            at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:02.59]   Finished:    HollowWake.Core.Tests
+  Failed HollowWake.Core.Tests.FreeShotGroundFloorTests.HoveredGlaivePiercesAndReachesItsReturn(pattern: "gnasher_whelp", slope: -0.125) [4 ms]
+  Error Message:
+   Assert.Single() Failure: The collection was empty
+  Stack Trace:
+     at HollowWake.Core.Tests.FreeShotGroundFloorTests.HoveredGlaivePiercesAndReachesItsReturn(String pattern, Single slope) in C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\FreeShotGroundFloorTests.cs:line 82
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeDirectByRefWithFewArgs(Object obj, Span`1 copyOfArgs, BindingFlags invokeAttr)
+  Failed HollowWake.Core.Tests.FreeShotGroundFloorTests.HoveredGlaivePiercesAndReachesItsReturn(pattern: "goblin_skirmisher", slope: 0.125) [4 ms]
+  Error Message:
+   Assert.Single() Failure: The collection was empty
+  Stack Trace:
+     at HollowWake.Core.Tests.FreeShotGroundFloorTests.HoveredGlaivePiercesAndReachesItsReturn(String pattern, Single slope) in C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\FreeShotGroundFloorTests.cs:line 82
+   at InvokeStub_FreeShotGroundFloorTests.HoveredGlaivePiercesAndReachesItsReturn(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Failed HollowWake.Core.Tests.FreeShotGroundFloorTests.HoveredGlaivePiercesAndReachesItsReturn(pattern: "gnasher_whelp", slope: 0.125) [3 ms]
+  Error Message:
+   Assert.Single() Failure: The collection was empty
+  Stack Trace:
+     at HollowWake.Core.Tests.FreeShotGroundFloorTests.HoveredGlaivePiercesAndReachesItsReturn(String pattern, Single slope) in C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\FreeShotGroundFloorTests.cs:line 82
+   at InvokeStub_FreeShotGroundFloorTests.HoveredGlaivePiercesAndReachesItsReturn(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Failed HollowWake.Core.Tests.FreeShotGroundFloorTests.HoveredGlaivePiercesAndReachesItsReturn(pattern: "goblin_skirmisher", slope: 0) [3 ms]
+  Error Message:
+   Assert.Single() Failure: The collection was empty
+  Stack Trace:
+     at HollowWake.Core.Tests.FreeShotGroundFloorTests.HoveredGlaivePiercesAndReachesItsReturn(String pattern, Single slope) in C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\FreeShotGroundFloorTests.cs:line 82
+   at InvokeStub_FreeShotGroundFloorTests.HoveredGlaivePiercesAndReachesItsReturn(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Failed HollowWake.Core.Tests.FreeShotGroundFloorTests.HoveredGlaivePiercesAndReachesItsReturn(pattern: "goblin_skirmisher", slope: -0.125) [5 ms]
+  Error Message:
+   Assert.Single() Failure: The collection was empty
+  Stack Trace:
+     at HollowWake.Core.Tests.FreeShotGroundFloorTests.HoveredGlaivePiercesAndReachesItsReturn(String pattern, Single slope) in C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\FreeShotGroundFloorTests.cs:line 82
+   at InvokeStub_FreeShotGroundFloorTests.HoveredGlaivePiercesAndReachesItsReturn(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Failed HollowWake.Core.Tests.FreeShotGroundFloorTests.HoveredGlaivePiercesAndReachesItsReturn(pattern: "gnasher_whelp", slope: 0) [3 ms]
+  Error Message:
+   Assert.Single() Failure: The collection was empty
+  Stack Trace:
+     at HollowWake.Core.Tests.FreeShotGroundFloorTests.HoveredGlaivePiercesAndReachesItsReturn(String pattern, Single slope) in C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\FreeShotGroundFloorTests.cs:line 82
+   at InvokeStub_FreeShotGroundFloorTests.HoveredGlaivePiercesAndReachesItsReturn(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+
+Test Run Failed.
+Total tests: 96
+     Passed: 34
+     Failed: 62
+ Total time: 3.4615 Seconds

@@ -12,6 +12,7 @@ export class CastVisuals {
   private readonly drawn = new Map<CueInstance, Mesh<BufferGeometry, MeshBasicMaterial>>();
   constructor(private readonly scene: Scene, private readonly entities: EntityLayer, config: CueSettings) {
     this.timeline = new CastCueTimeline(config);
+    this.timeline.onLifecycle = event => this.entities.views.get(event.source)?.observeCastCue(event);
   }
   receive(event: CastCueMsg, now: number): void { this.timeline.receive(event, now); }
   removeEntity(key: Int64): void { this.timeline.removeEntity(key); }

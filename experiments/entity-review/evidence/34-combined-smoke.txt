@@ -1,0 +1,5 @@
+TEST evidence: C:\Users\John\.codex\worktrees\entity-main-audit\MMOARPG\artifacts\testing\run-8cdtTL
+TEST smoke-web; evidence: C:\Users\John\.codex\worktrees\entity-main-audit\MMOARPG\artifacts\testing\run-8cdtTL
+TEST import-godot; evidence: C:\Users\John\.codex\worktrees\entity-main-audit\MMOARPG\artifacts\testing\run-8cdtTL
+TEST smoke-godot; evidence: C:\Users\John\.codex\worktrees\entity-main-audit\MMOARPG\artifacts\testing\run-8cdtTL
+TEST PASSED; report: C:\Users\John\.codex\worktrees\entity-main-audit\MMOARPG\artifacts\testing\run-8cdtTL\result.json

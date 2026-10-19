@@ -1,0 +1,32 @@
+[
+  {
+    "Name": "expression.evaluate",
+    "Value": 95.3153,
+    "Unit": "ns/eval",
+    "Note": "four formulas, checksum 57948161"
+  },
+  {
+    "Name": "expression.alloc",
+    "Value": 0.01392,
+    "Unit": "bytes/eval",
+    "Note": "legacy whole-process counter; lerp with rand()"
+  },
+  {
+    "Name": "expression.alloc.calling_thread",
+    "Value": 0,
+    "Unit": "bytes/eval",
+    "Note": "lerp with rand(); 40 fixed warmup loops, one 100000-evaluation sample; no retries or overhead subtraction"
+  },
+  {
+    "Name": "expression.alloc.sample_process",
+    "Value": 0,
+    "Unit": "bytes/eval",
+    "Note": "whole-process companion to calling_thread; lerp with rand(); 40 fixed warmup loops, one 100000-evaluation sample; no retries or overhead subtraction"
+  },
+  {
+    "Name": "expression.parse",
+    "Value": 290.59499999999997,
+    "Unit": "ns/parse",
+    "Note": "uncached parse of a short formula"
+  }
+]

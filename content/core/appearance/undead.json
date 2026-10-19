@@ -22,7 +22,7 @@
       "variation": {
         "hue": 0.015,
         "value": 0.055,
-        "scale": 0.025
+        "scale": 0
       },
       "meta": {
         "prototype_look": "skeleton_warrior",
@@ -52,7 +52,7 @@
       "variation": {
         "hue": 0.015,
         "value": 0.055,
-        "scale": 0.025
+        "scale": 0
       },
       "meta": {
         "prototype_look": "skeleton_archer",
@@ -83,7 +83,7 @@
       "variation": {
         "hue": 0.015,
         "value": 0.055,
-        "scale": 0.025
+        "scale": 0
       },
       "meta": {
         "prototype_look": "mage_cinder_scholar",
@@ -114,7 +114,7 @@
       "variation": {
         "hue": 0.015,
         "value": 0.055,
-        "scale": 0.025
+        "scale": 0
       },
       "meta": {
         "prototype_look": "mage_rime_scholar",
@@ -145,7 +145,7 @@
       "variation": {
         "hue": 0.015,
         "value": 0.055,
-        "scale": 0.025
+        "scale": 0
       },
       "meta": {
         "prototype_look": "mage_storm_scholar",
@@ -178,7 +178,7 @@
       "variation": {
         "hue": 0.015,
         "value": 0.055,
-        "scale": 0.025
+        "scale": 0
       },
       "meta": {
         "prototype_look": "mage_venom_scholar",
@@ -212,7 +212,7 @@
       "variation": {
         "hue": 0.015,
         "value": 0.055,
-        "scale": 0.025
+        "scale": 0
       },
       "meta": {
         "prototype_look": "sentinel_ossuary_guard",
@@ -246,7 +246,7 @@
       "variation": {
         "hue": 0.015,
         "value": 0.055,
-        "scale": 0.025
+        "scale": 0
       },
       "meta": {
         "prototype_look": "duelist_boneblades",

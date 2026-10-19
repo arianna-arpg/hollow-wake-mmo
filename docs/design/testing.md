@@ -24,7 +24,11 @@ node scripts/test-background.mjs --suite all --godot /path/to/godot
 
 `--calling ID` selects the smoke character's Calling. `--timeout SECONDS` bounds each build or smoke stage. `--no-build` reuses this checkout's existing Debug server and client outputs. `--out DIR` selects the evidence parent; each invocation creates a fresh subdirectory, so previous evidence is retained. Arguments not recognized by the runner fail, including `--headed`.
 
+The native cast-cue and forecast checks wait for the previous cast to finish and use the landed-hit scenario's melee-safe approach and foot-level aim. An out-of-range input has no cast lifecycle to observe; it must not be confused with missing presentation. Misses never count as landed hits, and native failure output retains the last input rejection.
+
 ## Isolation and lifecycle
+
+Add `--forecasts` to exercise shared forecast reception, or `--cast-cues` for the confirmed visual sequence; both flags pass through to either client. For example, `node scripts/test-background.mjs --suite godot --calling holdfast --forecasts` checks melee forecasting, and `--calling kindler --forecasts --cast-cues` checks spell forecasting and cue lifecycle. Headless native runs still do not validate rendered pixels.
 
 - Each invocation receives a unique evidence folder, native profile, server name, free TCP and HTTP ports, and server data directory. Each suite gets its own account, so native tests never inherit the browser character's position. The runner copies the committed server configuration and overrides only its runtime identity, loopback bind, ports, data directory, web root and development authentication. It never reads `server.local.yaml` or attaches to an existing game server.
 - Readiness checks the service identity and this run's unique server name. Another process taking a port between reservation and launch causes failure, never a test against someone else's world.
@@ -55,3 +59,5 @@ Every point must validate (any issue the scratch layer raises fails it), compile
 Then each axis, moved alone from a default sample (and from a further row where another kind reads it its own way, as a shove reads a distance), must change something the crowd shows; the words of each choice, compared two at a time from the default sample, must show the crowd apart, a word that rolls on the cast's stream compared over several of the point's seeds rather than one draw; and an axis with a weave attribute behind it must read the same through the attribute as through the node, a door the attribute catalog clamps compared with the node at the value it holds, the clamp itself listed against the grammar's rule 1.
 
 Defects it finds stay listed in the test with their reasons until they are fixed, and so do the baseline exceptions the grammar names (the bare spawn for rule 7, the depth restarts for rule 8); a parameter, or a pair of words, the crowd cannot show apart is exempt only with a stated reason. Setting `HOLLOWWAKE_MORPH_POINTS` runs a deeper sweep of the same streams.
+
+Projectile shape sensitivity compares the target and tick of every hit, as well as first/last timing and totals. Equal totals can otherwise hide a curved shape contacting an intermediate body earlier than a straight shape. The launch regressions press direction shots at empty ground and exercise flight children through tick/travel hooks, casts, delays, salvos and aim wrappers alongside grounded cascades.

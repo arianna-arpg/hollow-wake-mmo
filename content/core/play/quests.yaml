@@ -80,7 +80,7 @@ entries:
     weight: 3
     tags: [combat]
     slots:
-      beast: { pattern_tags: [beast], within: 160, local_population: true, level_delta: { max: 2 } }
+      beast: { pattern_tags: [beast, quest.cull], within: 160, local_population: true, level_delta: { max: 2 } }
     objectives:
       - { id: cull, type: kill, target: $beast, count: 8, text: "Cull eight $beast" }
     rewards:

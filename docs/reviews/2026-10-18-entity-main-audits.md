@@ -58,3 +58,49 @@ Main's new audit finds the following existing constants in #32's pre-merge sourc
 ## #32 main integration gates
 
 Source `f1e2927105c95b4326c38503f7054bd3f8da6181`: solution build zero warnings/errors; all core 849, server 53 and client 129 tests pass. Validation is zero errors/warnings; load and the skeleton/zombie duel pass. The generated frozen-literal keys exactly equal the reviewed fixture; full census and keys are retained with these gates under `experiments/entity-review/evidence/32-main-*`. This verifies functional integration, not performance after main. Earlier benchmark misses remain open; no timing run or budget change accompanied these gates.
+
+## #33 main integration gates
+
+Source `921ba9e93beacf608985cf21dcdca47fed6c63e8`: solution build zero warnings/errors; all core 871, server 53 and client 130 tests pass. Validation is zero errors/warnings; load and the skeleton/zombie duel pass. The generated frozen-literal keys exactly equal the reviewed fixture; full census and keys are retained with these gates under `experiments/entity-review/evidence/33-main-*`. This verifies functional integration, not performance after main. Earlier benchmark misses remain open; no timing run or budget change accompanied these gates.
+
+## #34 complete hit-body and main reconciliation
+
+Fauna consumes complete #36 `c07b6df017ac9c7f9a854db836d5689e70debe16`, which includes the validated #33 `80dcac71e6de2d561cd79d58755b34433ffd0e81` and the complete prior hit-body lineage. This follows the agreed forward order #33 -> #36 -> #34, with no backward fauna merge or partial runtime picks. The sole conflict is the entity contract's anatomy sentence; the incoming explicit navigation-radius independence is retained alongside the fauna sections. AI documentation merges both main's intent contract and provisional wildlife assignments. No fauna dimensions, visuals, kits, population content, anatomy implementation or generation-golden constant is changed by the reconciliation itself. Main's existing shared runtime changes are included. Functional gates begin only after the coordinator releases the short diagnostic window.
+
+## #34 intentional wildlife replay baseline
+
+The first combined suite at `2bf403c` failed only the newly introduced main replay gate: three standard pairings involving the wolf/boar bodies intentionally reauthored in the existing fauna pass. All other 2,288 core tests, 59 server and 133 client tests pass; the original failure is retained as `34-main-tests-before-replay-update.txt`. No numeric content or runtime was changed to resolve it.
+
+Causal check, same Debug runtime/source and Windows platform, ten seeds and a sixty-second cap throughout: exact archived #36 `c07b6df` content reproduces all seven inherited hashes. Current fauna content changes only the three rows below. A temporary final-content overlay replacing only wolf and boar with their exact old definitions restores all seven inherited hashes. This isolates the changes to those two already-authored patterns, rather than an unexamined main/runtime regression. The updated patterns include explicit height/radius/materials, fauna resource bases and poise (wolf 18, boar 40); both now emit poise-breaking/rearming statuses. The counterfactual isolates the whole patterns, not each property's individual contribution. Other four pairing hashes, seed count, cap and platform remain unchanged, including the prior #36 projectile baselines where unaffected.
+
+| Pairing | Before hash | Fauna hash | Median time before -> after |
+| --- | --- | --- | --- |
+| `loosed_kindler:boar` | `ae3a86f086814949` | `e59288fd8b0152b9` | 6.7 -> 6.65 s |
+| `loosed_skirmisher:boar` | `7dd259e21c8ac0e8` | `1f6c4b594340b306` | 7.6 -> 8.7 s |
+| `wolf:hob` | `043fb9358749be95` | `ef8f11679dddfa70` | 14.8 -> 14.8 s |
+
+Winner/draw rates for these three pairings are unchanged. All seven standard runs and the counterfactual contain zero simulation warnings/errors. Full reports and text output are retained in `34-main-replay-*`. The evaluation contract permits a reviewed baseline change for intentional content changes; only these three proven hashes are updated.
+
+The required proving-pair comparison is also retained, in `34-main-proving-*`. Its entire before/after JSON is identical, including mechanisms, trace hashes, outcomes and breaches. Both runs fail the pre-existing 0.8 win ceiling for the bulwark, plaguer and pitfighter, each winning ten of ten. These inherited balance breaches are not claimed passed or attributed to fauna; no bands or runtime were relaxed. Release replay and the full suite will now verify the narrowly updated baseline. The shared snapshot/planning timing misses remain separate and open.
+
+## #34 main integration gates
+
+Source `0ffa92049b817c3279593005f6ac9aff23404277`: solution build zero warnings/errors; all core 2289, server 59 and client 133 tests pass. Validation is zero errors/warnings; load and the skeleton/zombie duel pass. The generated frozen-literal keys exactly equal the reviewed fixture; full census and keys are retained with these gates under `experiments/entity-review/evidence/34-main-*`. This verifies functional integration, not performance after main. Earlier benchmark misses remain open; no timing run or budget change accompanied these gates.
+
+Release tools build with zero warnings/errors and enforce all seven recorded Windows replay hashes unchanged from the reviewed baseline. The three inherited proving-band breaches remain open as documented above; this replay pass does not establish balance clearance.
+
+## #34 combined client and transport verification
+
+Source `0ae9ec326a5c86ee58912013d31417fc05c4eeee`: browser unit tests 291 pass, production browser build and porter tests pass, generated protocol is current. Private `run-yVBA1c` passes browser 30/30 and native 36/36; teardown is clean. Native rendered pixels remain explicitly skipped; complete headless output, including exit diagnostics, is retained. The isolated TCP probe passes with all six requested features granted. The production build retains its existing large-chunk advisory.
+
+Fresh run-yVBA1c card and grayscale frames were inspected: both show interface/nameplates over a flat background, with no world terrain or bodies. This confirms the retained inherited blank-world defect on #34; behavioral smoke is not visual clearance. The separately committed #37 renderer correction 30f6c91 is the integration fix and will be rechecked after importing this foundation. No native pixel verification is claimed.
+
+These functional gates do not resolve the retained pre-main performance misses or establish a post-main timing pass. No benchmark was run during this integration.
+
+## #37 moving-villager smoke correction
+
+The first combined private browser run `run-Oqn7Cj` at runtime `4185c7f`/evidence `bee9c90` fails 1 of 31 checks: the villager conversation. The script reports arrival, waits 400 ms and aims before clicking, but the server rejects `Interact: too_far`. The world/card pixel assertion and all other browser checks pass. Native/probe stages do not run after this failure. Teardown is clean. The initial failure is retained as `37-main-interaction-first.*`.
+
+One read-only instrumented diagnostic run `run-6XhOk3` reproduces the same failure, retained as `37-main-interaction-diagnostic.*`. The requested, hovered and actual wire target all equal `4294969852` (Marcher). Immediately before the click the hero is at (129.10, 126.47) and villager at (132.64, 124.83), approximately 3.90 m apart; after sending it the villager is at (132.85, 124.68). The previous arrival predicate was <=1.6 m. Thus the moving villager had left the arrival range during the fixed delay/aiming; this is not a wrong-entity pick or a reason to relax server reach.
+
+The narrowly owned smoke correction removes the fixed wait and re-observes target position, hover identity and visibility after aiming, continuing the approach within the same original 45-second deadline until a nearby click is possible. It sends a single interaction, still requiring the real dialogue response. Read-only wire-target diagnostics remain for future failures. Three deterministic regressions cover movement during aiming, a different hovered body with bounded timeout, and a failed approach/disappearing target. They run with the normal browser test command (320 pass). Server rules, runtime, content, interaction reach and all existing success criteria are unchanged. The corrected full private run is recorded separately below; neither retained failure is overwritten or represented as a pass.

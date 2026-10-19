@@ -1,0 +1,84 @@
+{
+  "started": "2026-10-18T18:05:38.944Z",
+  "root": "C:\\Users\\John\\.codex\\worktrees\\shared-cast-forecasts\\MMOARPG",
+  "directory": "C:\\Users\\John\\.codex\\worktrees\\shared-cast-forecasts\\MMOARPG\\artifacts\\forecast-rereview\\smoke-melee-final\\run-2EpgFR",
+  "suite": "all",
+  "status": "passed",
+  "stages": [
+    {
+      "name": "build-server",
+      "status": "passed",
+      "started": "2026-10-18T18:05:38.949Z",
+      "code": 0,
+      "signal": null,
+      "finished": "2026-10-18T18:05:48.111Z"
+    },
+    {
+      "name": "typecheck-web",
+      "status": "passed",
+      "started": "2026-10-18T18:05:48.112Z",
+      "code": 0,
+      "signal": null,
+      "finished": "2026-10-18T18:05:59.856Z"
+    },
+    {
+      "name": "build-web",
+      "status": "passed",
+      "started": "2026-10-18T18:05:59.857Z",
+      "code": 0,
+      "signal": null,
+      "finished": "2026-10-18T18:06:01.187Z"
+    },
+    {
+      "name": "build-godot",
+      "status": "passed",
+      "started": "2026-10-18T18:06:01.188Z",
+      "code": 0,
+      "signal": null,
+      "finished": "2026-10-18T18:06:04.614Z"
+    },
+    {
+      "name": "smoke-web",
+      "status": "passed",
+      "started": "2026-10-18T18:06:06.445Z",
+      "code": 0,
+      "signal": null,
+      "passed": 32,
+      "total": 32,
+      "skipped": [],
+      "finished": "2026-10-18T18:07:30.939Z"
+    },
+    {
+      "name": "import-godot",
+      "status": "passed",
+      "started": "2026-10-18T18:07:30.943Z",
+      "code": 0,
+      "signal": null,
+      "finished": "2026-10-18T18:07:38.551Z"
+    },
+    {
+      "name": "smoke-godot",
+      "status": "passed",
+      "started": "2026-10-18T18:07:38.552Z",
+      "code": 0,
+      "signal": null,
+      "passed": 27,
+      "total": 27,
+      "skipped": [
+        "appearance rendering: headless display; geometry/card performance and readability require graphical evidence",
+        "theme rendered pixels: headless display; theme state checked above"
+      ],
+      "finished": "2026-10-18T18:08:23.566Z"
+    }
+  ],
+  "nativeRendering": "not covered by headless mode",
+  "godot": "C:\\Users\\John\\AppData\\Local\\Microsoft\\WinGet\\Packages\\GodotEngine.GodotEngine.Mono_Microsoft.Winget.Source_8wekyb3d8bbwe\\Godot_v4.7.2-stable_mono_win64\\Godot_v4.7.2-stable_mono_win64.exe",
+  "server": {
+    "tcp": 60699,
+    "url": "http://127.0.0.1:60700",
+    "name": "harness-run-2EpgFR",
+    "data": "C:\\Users\\John\\.codex\\worktrees\\shared-cast-forecasts\\MMOARPG\\artifacts\\forecast-rereview\\smoke-melee-final\\run-2EpgFR\\data"
+  },
+  "cleanupErrors": [],
+  "finished": "2026-10-18T18:08:24.231Z"
+}

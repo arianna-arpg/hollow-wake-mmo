@@ -207,11 +207,12 @@ entries:
     name: Bash
     description: A shoulder blow that throws a foe back; a foe thrown into a wall is stunned.
     targeting: enemy
+    release_check: { policy: delivery }
     cast_mode: cast
     cast_time: "weapon.attack.time"
     costs: { stamina: 12 }
     cooldown: 4
-    attributes: { range: 1.9, damage.effectiveness: 0.8 }
+    attributes: { ai.anticipation: 1, range: 1.9, damage.effectiveness: 0.8 }
     mechanisms: [hit, melee, attack, cooldown]
     tags: [attack, melee]
     min_threads: 0
@@ -219,15 +220,27 @@ entries:
     max_glyphs: 3
     ai: { role: control, preferred_range: 1.6, weight: 0.5 }
     effects:
-      - type: damage
-        amount: "lerp(weapon.damage.min, weapon.damage.max, rand()) * weave.damage.effectiveness * attack.power"
-        threads: $threads
-        tags: [hit]
-      - type: move
-        kind: knockback
-        distance: 3
-        on_collide:
-          - { type: apply_status, status: stunned, duration: 1 }
+      - type: area
+        contact: body
+        shape: sector
+        center: source
+        radius_base: "weave.range"
+        angle: "weave.melee.arc"
+        reach: edge
+        max_targets: 1
+        pick: aimed_nearest
+        report_miss: true
+        payload_depth: same
+        effects:
+          - type: damage
+            amount: "lerp(weapon.damage.min, weapon.damage.max, rand()) * weave.damage.effectiveness * attack.power"
+            threads: $threads
+            tags: [hit]
+          - type: move
+            kind: knockback
+            distance: 3
+            on_collide:
+              - { type: apply_status, status: stunned, duration: 1 }
 
   - id: leap_slam
     name: Leap Slam

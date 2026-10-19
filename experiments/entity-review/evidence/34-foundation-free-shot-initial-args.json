@@ -1,0 +1,2121 @@
+{
+  "Source": "-m:1",
+  "Total": 264,
+  "Passed": 219,
+  "Failed": 45,
+  "Cases": [
+    {
+      "Pattern": "boar",
+      "Slope": -0.125,
+      "Preset": "firebolt",
+      "BeyondCursor": false,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "boar",
+      "Slope": -0.125,
+      "Preset": "firebolt",
+      "BeyondCursor": true,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "boar",
+      "Slope": -0.125,
+      "Preset": "piercing_arrow",
+      "BeyondCursor": false,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "boar",
+      "Slope": -0.125,
+      "Preset": "piercing_arrow",
+      "BeyondCursor": true,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "boar",
+      "Slope": 0,
+      "Preset": "firebolt",
+      "BeyondCursor": false,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "boar",
+      "Slope": 0,
+      "Preset": "firebolt",
+      "BeyondCursor": true,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "boar",
+      "Slope": 0,
+      "Preset": "piercing_arrow",
+      "BeyondCursor": false,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "boar",
+      "Slope": 0,
+      "Preset": "piercing_arrow",
+      "BeyondCursor": true,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "boar",
+      "Slope": 0.125,
+      "Preset": "firebolt",
+      "BeyondCursor": false,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "boar",
+      "Slope": 0.125,
+      "Preset": "firebolt",
+      "BeyondCursor": true,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "boar",
+      "Slope": 0.125,
+      "Preset": "piercing_arrow",
+      "BeyondCursor": false,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "boar",
+      "Slope": 0.125,
+      "Preset": "piercing_arrow",
+      "BeyondCursor": true,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "brown_bear",
+      "Slope": -0.125,
+      "Preset": "firebolt",
+      "BeyondCursor": false,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "brown_bear",
+      "Slope": -0.125,
+      "Preset": "firebolt",
+      "BeyondCursor": true,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "brown_bear",
+      "Slope": -0.125,
+      "Preset": "piercing_arrow",
+      "BeyondCursor": false,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "brown_bear",
+      "Slope": -0.125,
+      "Preset": "piercing_arrow",
+      "BeyondCursor": true,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "brown_bear",
+      "Slope": 0,
+      "Preset": "firebolt",
+      "BeyondCursor": false,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "brown_bear",
+      "Slope": 0,
+      "Preset": "firebolt",
+      "BeyondCursor": true,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "brown_bear",
+      "Slope": 0,
+      "Preset": "piercing_arrow",
+      "BeyondCursor": false,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "brown_bear",
+      "Slope": 0,
+      "Preset": "piercing_arrow",
+      "BeyondCursor": true,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "brown_bear",
+      "Slope": 0.125,
+      "Preset": "firebolt",
+      "BeyondCursor": false,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "brown_bear",
+      "Slope": 0.125,
+      "Preset": "firebolt",
+      "BeyondCursor": true,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "brown_bear",
+      "Slope": 0.125,
+      "Preset": "piercing_arrow",
+      "BeyondCursor": false,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "brown_bear",
+      "Slope": 0.125,
+      "Preset": "piercing_arrow",
+      "BeyondCursor": true,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "carrion_crow",
+      "Slope": -0.125,
+      "Preset": "firebolt",
+      "BeyondCursor": false,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "carrion_crow",
+      "Slope": -0.125,
+      "Preset": "firebolt",
+      "BeyondCursor": true,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "carrion_crow",
+      "Slope": -0.125,
+      "Preset": "piercing_arrow",
+      "BeyondCursor": false,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "carrion_crow",
+      "Slope": -0.125,
+      "Preset": "piercing_arrow",
+      "BeyondCursor": true,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "carrion_crow",
+      "Slope": 0,
+      "Preset": "firebolt",
+      "BeyondCursor": false,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "carrion_crow",
+      "Slope": 0,
+      "Preset": "firebolt",
+      "BeyondCursor": true,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "carrion_crow",
+      "Slope": 0,
+      "Preset": "piercing_arrow",
+      "BeyondCursor": false,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "carrion_crow",
+      "Slope": 0,
+      "Preset": "piercing_arrow",
+      "BeyondCursor": true,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "carrion_crow",
+      "Slope": 0.125,
+      "Preset": "firebolt",
+      "BeyondCursor": false,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "carrion_crow",
+      "Slope": 0.125,
+      "Preset": "firebolt",
+      "BeyondCursor": true,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "carrion_crow",
+      "Slope": 0.125,
+      "Preset": "piercing_arrow",
+      "BeyondCursor": false,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "carrion_crow",
+      "Slope": 0.125,
+      "Preset": "piercing_arrow",
+      "BeyondCursor": true,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "dust_quail",
+      "Slope": -0.125,
+      "Preset": "firebolt",
+      "BeyondCursor": false,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "dust_quail",
+      "Slope": -0.125,
+      "Preset": "firebolt",
+      "BeyondCursor": true,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "dust_quail",
+      "Slope": -0.125,
+      "Preset": "piercing_arrow",
+      "BeyondCursor": false,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "dust_quail",
+      "Slope": -0.125,
+      "Preset": "piercing_arrow",
+      "BeyondCursor": true,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "dust_quail",
+      "Slope": 0,
+      "Preset": "firebolt",
+      "BeyondCursor": false,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "dust_quail",
+      "Slope": 0,
+      "Preset": "firebolt",
+      "BeyondCursor": true,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "dust_quail",
+      "Slope": 0,
+      "Preset": "piercing_arrow",
+      "BeyondCursor": false,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "dust_quail",
+      "Slope": 0,
+      "Preset": "piercing_arrow",
+      "BeyondCursor": true,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "dust_quail",
+      "Slope": 0.125,
+      "Preset": "firebolt",
+      "BeyondCursor": false,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "dust_quail",
+      "Slope": 0.125,
+      "Preset": "firebolt",
+      "BeyondCursor": true,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "dust_quail",
+      "Slope": 0.125,
+      "Preset": "piercing_arrow",
+      "BeyondCursor": false,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "dust_quail",
+      "Slope": 0.125,
+      "Preset": "piercing_arrow",
+      "BeyondCursor": true,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "grove_stag",
+      "Slope": -0.125,
+      "Preset": "firebolt",
+      "BeyondCursor": false,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "grove_stag",
+      "Slope": -0.125,
+      "Preset": "firebolt",
+      "BeyondCursor": true,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "grove_stag",
+      "Slope": -0.125,
+      "Preset": "piercing_arrow",
+      "BeyondCursor": false,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "grove_stag",
+      "Slope": -0.125,
+      "Preset": "piercing_arrow",
+      "BeyondCursor": true,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "grove_stag",
+      "Slope": 0,
+      "Preset": "firebolt",
+      "BeyondCursor": false,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "grove_stag",
+      "Slope": 0,
+      "Preset": "firebolt",
+      "BeyondCursor": true,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "grove_stag",
+      "Slope": 0,
+      "Preset": "piercing_arrow",
+      "BeyondCursor": false,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "grove_stag",
+      "Slope": 0,
+      "Preset": "piercing_arrow",
+      "BeyondCursor": true,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "grove_stag",
+      "Slope": 0.125,
+      "Preset": "firebolt",
+      "BeyondCursor": false,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "grove_stag",
+      "Slope": 0.125,
+      "Preset": "firebolt",
+      "BeyondCursor": true,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "grove_stag",
+      "Slope": 0.125,
+      "Preset": "piercing_arrow",
+      "BeyondCursor": false,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "grove_stag",
+      "Slope": 0.125,
+      "Preset": "piercing_arrow",
+      "BeyondCursor": true,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "gutter_rat",
+      "Slope": -0.125,
+      "Preset": "firebolt",
+      "BeyondCursor": false,
+      "Passed": false,
+      "Failure": "Xunit.Sdk.ContainsException: Assert.Contains() Failure: Filter not matched in collection\r\nCollection: []\r\n   at Xunit.Assert.Contains[T](IEnumerable\u00601 collection, Predicate\u00601 filter) in /_/src/xunit.assert/Asserts/CollectionAsserts.cs:line 304\r\n   at HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(String pattern, Single slope, String preset, Boolean beyond) in C:\\Users\\John\\.codex\\worktrees\\fauna-foundation-integration\\MMOARPG\\tests\\HollowWake.Core.Tests\\FreeShotGroundFloorTests.cs:line 44\r\n   at Program.\u003CMain\u003E$(String[] args) in C:\\Users\\John\\.codex\\worktrees\\fauna-foundation-integration\\MMOARPG\\experiments\\entity-review\\free-shot-probe\\Program.cs:line 15"
+    },
+    {
+      "Pattern": "gutter_rat",
+      "Slope": -0.125,
+      "Preset": "firebolt",
+      "BeyondCursor": true,
+      "Passed": false,
+      "Failure": "Xunit.Sdk.ContainsException: Assert.Contains() Failure: Filter not matched in collection\r\nCollection: []\r\n   at Xunit.Assert.Contains[T](IEnumerable\u00601 collection, Predicate\u00601 filter) in /_/src/xunit.assert/Asserts/CollectionAsserts.cs:line 304\r\n   at HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(String pattern, Single slope, String preset, Boolean beyond) in C:\\Users\\John\\.codex\\worktrees\\fauna-foundation-integration\\MMOARPG\\tests\\HollowWake.Core.Tests\\FreeShotGroundFloorTests.cs:line 44\r\n   at Program.\u003CMain\u003E$(String[] args) in C:\\Users\\John\\.codex\\worktrees\\fauna-foundation-integration\\MMOARPG\\experiments\\entity-review\\free-shot-probe\\Program.cs:line 15"
+    },
+    {
+      "Pattern": "gutter_rat",
+      "Slope": -0.125,
+      "Preset": "piercing_arrow",
+      "BeyondCursor": false,
+      "Passed": false,
+      "Failure": "Xunit.Sdk.ContainsException: Assert.Contains() Failure: Filter not matched in collection\r\nCollection: []\r\n   at Xunit.Assert.Contains[T](IEnumerable\u00601 collection, Predicate\u00601 filter) in /_/src/xunit.assert/Asserts/CollectionAsserts.cs:line 304\r\n   at HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(String pattern, Single slope, String preset, Boolean beyond) in C:\\Users\\John\\.codex\\worktrees\\fauna-foundation-integration\\MMOARPG\\tests\\HollowWake.Core.Tests\\FreeShotGroundFloorTests.cs:line 44\r\n   at Program.\u003CMain\u003E$(String[] args) in C:\\Users\\John\\.codex\\worktrees\\fauna-foundation-integration\\MMOARPG\\experiments\\entity-review\\free-shot-probe\\Program.cs:line 15"
+    },
+    {
+      "Pattern": "gutter_rat",
+      "Slope": -0.125,
+      "Preset": "piercing_arrow",
+      "BeyondCursor": true,
+      "Passed": false,
+      "Failure": "Xunit.Sdk.ContainsException: Assert.Contains() Failure: Filter not matched in collection\r\nCollection: []\r\n   at Xunit.Assert.Contains[T](IEnumerable\u00601 collection, Predicate\u00601 filter) in /_/src/xunit.assert/Asserts/CollectionAsserts.cs:line 304\r\n   at HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(String pattern, Single slope, String preset, Boolean beyond) in C:\\Users\\John\\.codex\\worktrees\\fauna-foundation-integration\\MMOARPG\\tests\\HollowWake.Core.Tests\\FreeShotGroundFloorTests.cs:line 44\r\n   at Program.\u003CMain\u003E$(String[] args) in C:\\Users\\John\\.codex\\worktrees\\fauna-foundation-integration\\MMOARPG\\experiments\\entity-review\\free-shot-probe\\Program.cs:line 15"
+    },
+    {
+      "Pattern": "gutter_rat",
+      "Slope": 0,
+      "Preset": "firebolt",
+      "BeyondCursor": false,
+      "Passed": false,
+      "Failure": "Xunit.Sdk.ContainsException: Assert.Contains() Failure: Filter not matched in collection\r\nCollection: []\r\n   at Xunit.Assert.Contains[T](IEnumerable\u00601 collection, Predicate\u00601 filter) in /_/src/xunit.assert/Asserts/CollectionAsserts.cs:line 304\r\n   at HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(String pattern, Single slope, String preset, Boolean beyond) in C:\\Users\\John\\.codex\\worktrees\\fauna-foundation-integration\\MMOARPG\\tests\\HollowWake.Core.Tests\\FreeShotGroundFloorTests.cs:line 44\r\n   at Program.\u003CMain\u003E$(String[] args) in C:\\Users\\John\\.codex\\worktrees\\fauna-foundation-integration\\MMOARPG\\experiments\\entity-review\\free-shot-probe\\Program.cs:line 15"
+    },
+    {
+      "Pattern": "gutter_rat",
+      "Slope": 0,
+      "Preset": "firebolt",
+      "BeyondCursor": true,
+      "Passed": false,
+      "Failure": "Xunit.Sdk.ContainsException: Assert.Contains() Failure: Filter not matched in collection\r\nCollection: []\r\n   at Xunit.Assert.Contains[T](IEnumerable\u00601 collection, Predicate\u00601 filter) in /_/src/xunit.assert/Asserts/CollectionAsserts.cs:line 304\r\n   at HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(String pattern, Single slope, String preset, Boolean beyond) in C:\\Users\\John\\.codex\\worktrees\\fauna-foundation-integration\\MMOARPG\\tests\\HollowWake.Core.Tests\\FreeShotGroundFloorTests.cs:line 44\r\n   at Program.\u003CMain\u003E$(String[] args) in C:\\Users\\John\\.codex\\worktrees\\fauna-foundation-integration\\MMOARPG\\experiments\\entity-review\\free-shot-probe\\Program.cs:line 15"
+    },
+    {
+      "Pattern": "gutter_rat",
+      "Slope": 0,
+      "Preset": "piercing_arrow",
+      "BeyondCursor": false,
+      "Passed": false,
+      "Failure": "Xunit.Sdk.ContainsException: Assert.Contains() Failure: Filter not matched in collection\r\nCollection: []\r\n   at Xunit.Assert.Contains[T](IEnumerable\u00601 collection, Predicate\u00601 filter) in /_/src/xunit.assert/Asserts/CollectionAsserts.cs:line 304\r\n   at HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(String pattern, Single slope, String preset, Boolean beyond) in C:\\Users\\John\\.codex\\worktrees\\fauna-foundation-integration\\MMOARPG\\tests\\HollowWake.Core.Tests\\FreeShotGroundFloorTests.cs:line 44\r\n   at Program.\u003CMain\u003E$(String[] args) in C:\\Users\\John\\.codex\\worktrees\\fauna-foundation-integration\\MMOARPG\\experiments\\entity-review\\free-shot-probe\\Program.cs:line 15"
+    },
+    {
+      "Pattern": "gutter_rat",
+      "Slope": 0,
+      "Preset": "piercing_arrow",
+      "BeyondCursor": true,
+      "Passed": false,
+      "Failure": "Xunit.Sdk.ContainsException: Assert.Contains() Failure: Filter not matched in collection\r\nCollection: []\r\n   at Xunit.Assert.Contains[T](IEnumerable\u00601 collection, Predicate\u00601 filter) in /_/src/xunit.assert/Asserts/CollectionAsserts.cs:line 304\r\n   at HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(String pattern, Single slope, String preset, Boolean beyond) in C:\\Users\\John\\.codex\\worktrees\\fauna-foundation-integration\\MMOARPG\\tests\\HollowWake.Core.Tests\\FreeShotGroundFloorTests.cs:line 44\r\n   at Program.\u003CMain\u003E$(String[] args) in C:\\Users\\John\\.codex\\worktrees\\fauna-foundation-integration\\MMOARPG\\experiments\\entity-review\\free-shot-probe\\Program.cs:line 15"
+    },
+    {
+      "Pattern": "gutter_rat",
+      "Slope": 0.125,
+      "Preset": "firebolt",
+      "BeyondCursor": false,
+      "Passed": false,
+      "Failure": "Xunit.Sdk.ContainsException: Assert.Contains() Failure: Filter not matched in collection\r\nCollection: []\r\n   at Xunit.Assert.Contains[T](IEnumerable\u00601 collection, Predicate\u00601 filter) in /_/src/xunit.assert/Asserts/CollectionAsserts.cs:line 304\r\n   at HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(String pattern, Single slope, String preset, Boolean beyond) in C:\\Users\\John\\.codex\\worktrees\\fauna-foundation-integration\\MMOARPG\\tests\\HollowWake.Core.Tests\\FreeShotGroundFloorTests.cs:line 44\r\n   at Program.\u003CMain\u003E$(String[] args) in C:\\Users\\John\\.codex\\worktrees\\fauna-foundation-integration\\MMOARPG\\experiments\\entity-review\\free-shot-probe\\Program.cs:line 15"
+    },
+    {
+      "Pattern": "gutter_rat",
+      "Slope": 0.125,
+      "Preset": "firebolt",
+      "BeyondCursor": true,
+      "Passed": false,
+      "Failure": "Xunit.Sdk.ContainsException: Assert.Contains() Failure: Filter not matched in collection\r\nCollection: []\r\n   at Xunit.Assert.Contains[T](IEnumerable\u00601 collection, Predicate\u00601 filter) in /_/src/xunit.assert/Asserts/CollectionAsserts.cs:line 304\r\n   at HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(String pattern, Single slope, String preset, Boolean beyond) in C:\\Users\\John\\.codex\\worktrees\\fauna-foundation-integration\\MMOARPG\\tests\\HollowWake.Core.Tests\\FreeShotGroundFloorTests.cs:line 44\r\n   at Program.\u003CMain\u003E$(String[] args) in C:\\Users\\John\\.codex\\worktrees\\fauna-foundation-integration\\MMOARPG\\experiments\\entity-review\\free-shot-probe\\Program.cs:line 15"
+    },
+    {
+      "Pattern": "gutter_rat",
+      "Slope": 0.125,
+      "Preset": "piercing_arrow",
+      "BeyondCursor": false,
+      "Passed": false,
+      "Failure": "Xunit.Sdk.ContainsException: Assert.Contains() Failure: Filter not matched in collection\r\nCollection: []\r\n   at Xunit.Assert.Contains[T](IEnumerable\u00601 collection, Predicate\u00601 filter) in /_/src/xunit.assert/Asserts/CollectionAsserts.cs:line 304\r\n   at HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(String pattern, Single slope, String preset, Boolean beyond) in C:\\Users\\John\\.codex\\worktrees\\fauna-foundation-integration\\MMOARPG\\tests\\HollowWake.Core.Tests\\FreeShotGroundFloorTests.cs:line 44\r\n   at Program.\u003CMain\u003E$(String[] args) in C:\\Users\\John\\.codex\\worktrees\\fauna-foundation-integration\\MMOARPG\\experiments\\entity-review\\free-shot-probe\\Program.cs:line 15"
+    },
+    {
+      "Pattern": "gutter_rat",
+      "Slope": 0.125,
+      "Preset": "piercing_arrow",
+      "BeyondCursor": true,
+      "Passed": false,
+      "Failure": "Xunit.Sdk.ContainsException: Assert.Contains() Failure: Filter not matched in collection\r\nCollection: []\r\n   at Xunit.Assert.Contains[T](IEnumerable\u00601 collection, Predicate\u00601 filter) in /_/src/xunit.assert/Asserts/CollectionAsserts.cs:line 304\r\n   at HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(String pattern, Single slope, String preset, Boolean beyond) in C:\\Users\\John\\.codex\\worktrees\\fauna-foundation-integration\\MMOARPG\\tests\\HollowWake.Core.Tests\\FreeShotGroundFloorTests.cs:line 44\r\n   at Program.\u003CMain\u003E$(String[] args) in C:\\Users\\John\\.codex\\worktrees\\fauna-foundation-integration\\MMOARPG\\experiments\\entity-review\\free-shot-probe\\Program.cs:line 15"
+    },
+    {
+      "Pattern": "hedgehog",
+      "Slope": -0.125,
+      "Preset": "firebolt",
+      "BeyondCursor": false,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "hedgehog",
+      "Slope": -0.125,
+      "Preset": "firebolt",
+      "BeyondCursor": true,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "hedgehog",
+      "Slope": -0.125,
+      "Preset": "piercing_arrow",
+      "BeyondCursor": false,
+      "Passed": false,
+      "Failure": "Xunit.Sdk.ContainsException: Assert.Contains() Failure: Filter not matched in collection\r\nCollection: []\r\n   at Xunit.Assert.Contains[T](IEnumerable\u00601 collection, Predicate\u00601 filter) in /_/src/xunit.assert/Asserts/CollectionAsserts.cs:line 304\r\n   at HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(String pattern, Single slope, String preset, Boolean beyond) in C:\\Users\\John\\.codex\\worktrees\\fauna-foundation-integration\\MMOARPG\\tests\\HollowWake.Core.Tests\\FreeShotGroundFloorTests.cs:line 44\r\n   at Program.\u003CMain\u003E$(String[] args) in C:\\Users\\John\\.codex\\worktrees\\fauna-foundation-integration\\MMOARPG\\experiments\\entity-review\\free-shot-probe\\Program.cs:line 15"
+    },
+    {
+      "Pattern": "hedgehog",
+      "Slope": -0.125,
+      "Preset": "piercing_arrow",
+      "BeyondCursor": true,
+      "Passed": false,
+      "Failure": "Xunit.Sdk.ContainsException: Assert.Contains() Failure: Filter not matched in collection\r\nCollection: []\r\n   at Xunit.Assert.Contains[T](IEnumerable\u00601 collection, Predicate\u00601 filter) in /_/src/xunit.assert/Asserts/CollectionAsserts.cs:line 304\r\n   at HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(String pattern, Single slope, String preset, Boolean beyond) in C:\\Users\\John\\.codex\\worktrees\\fauna-foundation-integration\\MMOARPG\\tests\\HollowWake.Core.Tests\\FreeShotGroundFloorTests.cs:line 44\r\n   at Program.\u003CMain\u003E$(String[] args) in C:\\Users\\John\\.codex\\worktrees\\fauna-foundation-integration\\MMOARPG\\experiments\\entity-review\\free-shot-probe\\Program.cs:line 15"
+    },
+    {
+      "Pattern": "hedgehog",
+      "Slope": 0,
+      "Preset": "firebolt",
+      "BeyondCursor": false,
+      "Passed": false,
+      "Failure": "Xunit.Sdk.ContainsException: Assert.Contains() Failure: Filter not matched in collection\r\nCollection: []\r\n   at Xunit.Assert.Contains[T](IEnumerable\u00601 collection, Predicate\u00601 filter) in /_/src/xunit.assert/Asserts/CollectionAsserts.cs:line 304\r\n   at HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(String pattern, Single slope, String preset, Boolean beyond) in C:\\Users\\John\\.codex\\worktrees\\fauna-foundation-integration\\MMOARPG\\tests\\HollowWake.Core.Tests\\FreeShotGroundFloorTests.cs:line 44\r\n   at Program.\u003CMain\u003E$(String[] args) in C:\\Users\\John\\.codex\\worktrees\\fauna-foundation-integration\\MMOARPG\\experiments\\entity-review\\free-shot-probe\\Program.cs:line 15"
+    },
+    {
+      "Pattern": "hedgehog",
+      "Slope": 0,
+      "Preset": "firebolt",
+      "BeyondCursor": true,
+      "Passed": false,
+      "Failure": "Xunit.Sdk.ContainsException: Assert.Contains() Failure: Filter not matched in collection\r\nCollection: []\r\n   at Xunit.Assert.Contains[T](IEnumerable\u00601 collection, Predicate\u00601 filter) in /_/src/xunit.assert/Asserts/CollectionAsserts.cs:line 304\r\n   at HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(String pattern, Single slope, String preset, Boolean beyond) in C:\\Users\\John\\.codex\\worktrees\\fauna-foundation-integration\\MMOARPG\\tests\\HollowWake.Core.Tests\\FreeShotGroundFloorTests.cs:line 44\r\n   at Program.\u003CMain\u003E$(String[] args) in C:\\Users\\John\\.codex\\worktrees\\fauna-foundation-integration\\MMOARPG\\experiments\\entity-review\\free-shot-probe\\Program.cs:line 15"
+    },
+    {
+      "Pattern": "hedgehog",
+      "Slope": 0,
+      "Preset": "piercing_arrow",
+      "BeyondCursor": false,
+      "Passed": false,
+      "Failure": "Xunit.Sdk.ContainsException: Assert.Contains() Failure: Filter not matched in collection\r\nCollection: []\r\n   at Xunit.Assert.Contains[T](IEnumerable\u00601 collection, Predicate\u00601 filter) in /_/src/xunit.assert/Asserts/CollectionAsserts.cs:line 304\r\n   at HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(String pattern, Single slope, String preset, Boolean beyond) in C:\\Users\\John\\.codex\\worktrees\\fauna-foundation-integration\\MMOARPG\\tests\\HollowWake.Core.Tests\\FreeShotGroundFloorTests.cs:line 44\r\n   at Program.\u003CMain\u003E$(String[] args) in C:\\Users\\John\\.codex\\worktrees\\fauna-foundation-integration\\MMOARPG\\experiments\\entity-review\\free-shot-probe\\Program.cs:line 15"
+    },
+    {
+      "Pattern": "hedgehog",
+      "Slope": 0,
+      "Preset": "piercing_arrow",
+      "BeyondCursor": true,
+      "Passed": false,
+      "Failure": "Xunit.Sdk.ContainsException: Assert.Contains() Failure: Filter not matched in collection\r\nCollection: []\r\n   at Xunit.Assert.Contains[T](IEnumerable\u00601 collection, Predicate\u00601 filter) in /_/src/xunit.assert/Asserts/CollectionAsserts.cs:line 304\r\n   at HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(String pattern, Single slope, String preset, Boolean beyond) in C:\\Users\\John\\.codex\\worktrees\\fauna-foundation-integration\\MMOARPG\\tests\\HollowWake.Core.Tests\\FreeShotGroundFloorTests.cs:line 44\r\n   at Program.\u003CMain\u003E$(String[] args) in C:\\Users\\John\\.codex\\worktrees\\fauna-foundation-integration\\MMOARPG\\experiments\\entity-review\\free-shot-probe\\Program.cs:line 15"
+    },
+    {
+      "Pattern": "hedgehog",
+      "Slope": 0.125,
+      "Preset": "firebolt",
+      "BeyondCursor": false,
+      "Passed": false,
+      "Failure": "Xunit.Sdk.ContainsException: Assert.Contains() Failure: Filter not matched in collection\r\nCollection: []\r\n   at Xunit.Assert.Contains[T](IEnumerable\u00601 collection, Predicate\u00601 filter) in /_/src/xunit.assert/Asserts/CollectionAsserts.cs:line 304\r\n   at HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(String pattern, Single slope, String preset, Boolean beyond) in C:\\Users\\John\\.codex\\worktrees\\fauna-foundation-integration\\MMOARPG\\tests\\HollowWake.Core.Tests\\FreeShotGroundFloorTests.cs:line 44\r\n   at Program.\u003CMain\u003E$(String[] args) in C:\\Users\\John\\.codex\\worktrees\\fauna-foundation-integration\\MMOARPG\\experiments\\entity-review\\free-shot-probe\\Program.cs:line 15"
+    },
+    {
+      "Pattern": "hedgehog",
+      "Slope": 0.125,
+      "Preset": "firebolt",
+      "BeyondCursor": true,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "hedgehog",
+      "Slope": 0.125,
+      "Preset": "piercing_arrow",
+      "BeyondCursor": false,
+      "Passed": false,
+      "Failure": "Xunit.Sdk.ContainsException: Assert.Contains() Failure: Filter not matched in collection\r\nCollection: []\r\n   at Xunit.Assert.Contains[T](IEnumerable\u00601 collection, Predicate\u00601 filter) in /_/src/xunit.assert/Asserts/CollectionAsserts.cs:line 304\r\n   at HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(String pattern, Single slope, String preset, Boolean beyond) in C:\\Users\\John\\.codex\\worktrees\\fauna-foundation-integration\\MMOARPG\\tests\\HollowWake.Core.Tests\\FreeShotGroundFloorTests.cs:line 44\r\n   at Program.\u003CMain\u003E$(String[] args) in C:\\Users\\John\\.codex\\worktrees\\fauna-foundation-integration\\MMOARPG\\experiments\\entity-review\\free-shot-probe\\Program.cs:line 15"
+    },
+    {
+      "Pattern": "hedgehog",
+      "Slope": 0.125,
+      "Preset": "piercing_arrow",
+      "BeyondCursor": true,
+      "Passed": false,
+      "Failure": "Xunit.Sdk.ContainsException: Assert.Contains() Failure: Filter not matched in collection\r\nCollection: []\r\n   at Xunit.Assert.Contains[T](IEnumerable\u00601 collection, Predicate\u00601 filter) in /_/src/xunit.assert/Asserts/CollectionAsserts.cs:line 304\r\n   at HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(String pattern, Single slope, String preset, Boolean beyond) in C:\\Users\\John\\.codex\\worktrees\\fauna-foundation-integration\\MMOARPG\\tests\\HollowWake.Core.Tests\\FreeShotGroundFloorTests.cs:line 44\r\n   at Program.\u003CMain\u003E$(String[] args) in C:\\Users\\John\\.codex\\worktrees\\fauna-foundation-integration\\MMOARPG\\experiments\\entity-review\\free-shot-probe\\Program.cs:line 15"
+    },
+    {
+      "Pattern": "land_crab",
+      "Slope": -0.125,
+      "Preset": "firebolt",
+      "BeyondCursor": false,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "land_crab",
+      "Slope": -0.125,
+      "Preset": "firebolt",
+      "BeyondCursor": true,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "land_crab",
+      "Slope": -0.125,
+      "Preset": "piercing_arrow",
+      "BeyondCursor": false,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "land_crab",
+      "Slope": -0.125,
+      "Preset": "piercing_arrow",
+      "BeyondCursor": true,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "land_crab",
+      "Slope": 0,
+      "Preset": "firebolt",
+      "BeyondCursor": false,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "land_crab",
+      "Slope": 0,
+      "Preset": "firebolt",
+      "BeyondCursor": true,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "land_crab",
+      "Slope": 0,
+      "Preset": "piercing_arrow",
+      "BeyondCursor": false,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "land_crab",
+      "Slope": 0,
+      "Preset": "piercing_arrow",
+      "BeyondCursor": true,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "land_crab",
+      "Slope": 0.125,
+      "Preset": "firebolt",
+      "BeyondCursor": false,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "land_crab",
+      "Slope": 0.125,
+      "Preset": "firebolt",
+      "BeyondCursor": true,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "land_crab",
+      "Slope": 0.125,
+      "Preset": "piercing_arrow",
+      "BeyondCursor": false,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "land_crab",
+      "Slope": 0.125,
+      "Preset": "piercing_arrow",
+      "BeyondCursor": true,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "lynx",
+      "Slope": -0.125,
+      "Preset": "firebolt",
+      "BeyondCursor": false,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "lynx",
+      "Slope": -0.125,
+      "Preset": "firebolt",
+      "BeyondCursor": true,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "lynx",
+      "Slope": -0.125,
+      "Preset": "piercing_arrow",
+      "BeyondCursor": false,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "lynx",
+      "Slope": -0.125,
+      "Preset": "piercing_arrow",
+      "BeyondCursor": true,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "lynx",
+      "Slope": 0,
+      "Preset": "firebolt",
+      "BeyondCursor": false,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "lynx",
+      "Slope": 0,
+      "Preset": "firebolt",
+      "BeyondCursor": true,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "lynx",
+      "Slope": 0,
+      "Preset": "piercing_arrow",
+      "BeyondCursor": false,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "lynx",
+      "Slope": 0,
+      "Preset": "piercing_arrow",
+      "BeyondCursor": true,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "lynx",
+      "Slope": 0.125,
+      "Preset": "firebolt",
+      "BeyondCursor": false,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "lynx",
+      "Slope": 0.125,
+      "Preset": "firebolt",
+      "BeyondCursor": true,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "lynx",
+      "Slope": 0.125,
+      "Preset": "piercing_arrow",
+      "BeyondCursor": false,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "lynx",
+      "Slope": 0.125,
+      "Preset": "piercing_arrow",
+      "BeyondCursor": true,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "meadow_hare",
+      "Slope": -0.125,
+      "Preset": "firebolt",
+      "BeyondCursor": false,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "meadow_hare",
+      "Slope": -0.125,
+      "Preset": "firebolt",
+      "BeyondCursor": true,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "meadow_hare",
+      "Slope": -0.125,
+      "Preset": "piercing_arrow",
+      "BeyondCursor": false,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "meadow_hare",
+      "Slope": -0.125,
+      "Preset": "piercing_arrow",
+      "BeyondCursor": true,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "meadow_hare",
+      "Slope": 0,
+      "Preset": "firebolt",
+      "BeyondCursor": false,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "meadow_hare",
+      "Slope": 0,
+      "Preset": "firebolt",
+      "BeyondCursor": true,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "meadow_hare",
+      "Slope": 0,
+      "Preset": "piercing_arrow",
+      "BeyondCursor": false,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "meadow_hare",
+      "Slope": 0,
+      "Preset": "piercing_arrow",
+      "BeyondCursor": true,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "meadow_hare",
+      "Slope": 0.125,
+      "Preset": "firebolt",
+      "BeyondCursor": false,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "meadow_hare",
+      "Slope": 0.125,
+      "Preset": "firebolt",
+      "BeyondCursor": true,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "meadow_hare",
+      "Slope": 0.125,
+      "Preset": "piercing_arrow",
+      "BeyondCursor": false,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "meadow_hare",
+      "Slope": 0.125,
+      "Preset": "piercing_arrow",
+      "BeyondCursor": true,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "plains_aurochs",
+      "Slope": -0.125,
+      "Preset": "firebolt",
+      "BeyondCursor": false,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "plains_aurochs",
+      "Slope": -0.125,
+      "Preset": "firebolt",
+      "BeyondCursor": true,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "plains_aurochs",
+      "Slope": -0.125,
+      "Preset": "piercing_arrow",
+      "BeyondCursor": false,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "plains_aurochs",
+      "Slope": -0.125,
+      "Preset": "piercing_arrow",
+      "BeyondCursor": true,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "plains_aurochs",
+      "Slope": 0,
+      "Preset": "firebolt",
+      "BeyondCursor": false,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "plains_aurochs",
+      "Slope": 0,
+      "Preset": "firebolt",
+      "BeyondCursor": true,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "plains_aurochs",
+      "Slope": 0,
+      "Preset": "piercing_arrow",
+      "BeyondCursor": false,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "plains_aurochs",
+      "Slope": 0,
+      "Preset": "piercing_arrow",
+      "BeyondCursor": true,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "plains_aurochs",
+      "Slope": 0.125,
+      "Preset": "firebolt",
+      "BeyondCursor": false,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "plains_aurochs",
+      "Slope": 0.125,
+      "Preset": "firebolt",
+      "BeyondCursor": true,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "plains_aurochs",
+      "Slope": 0.125,
+      "Preset": "piercing_arrow",
+      "BeyondCursor": false,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "plains_aurochs",
+      "Slope": 0.125,
+      "Preset": "piercing_arrow",
+      "BeyondCursor": true,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "red_fox",
+      "Slope": -0.125,
+      "Preset": "firebolt",
+      "BeyondCursor": false,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "red_fox",
+      "Slope": -0.125,
+      "Preset": "firebolt",
+      "BeyondCursor": true,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "red_fox",
+      "Slope": -0.125,
+      "Preset": "piercing_arrow",
+      "BeyondCursor": false,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "red_fox",
+      "Slope": -0.125,
+      "Preset": "piercing_arrow",
+      "BeyondCursor": true,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "red_fox",
+      "Slope": 0,
+      "Preset": "firebolt",
+      "BeyondCursor": false,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "red_fox",
+      "Slope": 0,
+      "Preset": "firebolt",
+      "BeyondCursor": true,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "red_fox",
+      "Slope": 0,
+      "Preset": "piercing_arrow",
+      "BeyondCursor": false,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "red_fox",
+      "Slope": 0,
+      "Preset": "piercing_arrow",
+      "BeyondCursor": true,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "red_fox",
+      "Slope": 0.125,
+      "Preset": "firebolt",
+      "BeyondCursor": false,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "red_fox",
+      "Slope": 0.125,
+      "Preset": "firebolt",
+      "BeyondCursor": true,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "red_fox",
+      "Slope": 0.125,
+      "Preset": "piercing_arrow",
+      "BeyondCursor": false,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "red_fox",
+      "Slope": 0.125,
+      "Preset": "piercing_arrow",
+      "BeyondCursor": true,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "reed_frog",
+      "Slope": -0.125,
+      "Preset": "firebolt",
+      "BeyondCursor": false,
+      "Passed": false,
+      "Failure": "Xunit.Sdk.ContainsException: Assert.Contains() Failure: Filter not matched in collection\r\nCollection: []\r\n   at Xunit.Assert.Contains[T](IEnumerable\u00601 collection, Predicate\u00601 filter) in /_/src/xunit.assert/Asserts/CollectionAsserts.cs:line 304\r\n   at HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(String pattern, Single slope, String preset, Boolean beyond) in C:\\Users\\John\\.codex\\worktrees\\fauna-foundation-integration\\MMOARPG\\tests\\HollowWake.Core.Tests\\FreeShotGroundFloorTests.cs:line 44\r\n   at Program.\u003CMain\u003E$(String[] args) in C:\\Users\\John\\.codex\\worktrees\\fauna-foundation-integration\\MMOARPG\\experiments\\entity-review\\free-shot-probe\\Program.cs:line 15"
+    },
+    {
+      "Pattern": "reed_frog",
+      "Slope": -0.125,
+      "Preset": "firebolt",
+      "BeyondCursor": true,
+      "Passed": false,
+      "Failure": "Xunit.Sdk.ContainsException: Assert.Contains() Failure: Filter not matched in collection\r\nCollection: []\r\n   at Xunit.Assert.Contains[T](IEnumerable\u00601 collection, Predicate\u00601 filter) in /_/src/xunit.assert/Asserts/CollectionAsserts.cs:line 304\r\n   at HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(String pattern, Single slope, String preset, Boolean beyond) in C:\\Users\\John\\.codex\\worktrees\\fauna-foundation-integration\\MMOARPG\\tests\\HollowWake.Core.Tests\\FreeShotGroundFloorTests.cs:line 44\r\n   at Program.\u003CMain\u003E$(String[] args) in C:\\Users\\John\\.codex\\worktrees\\fauna-foundation-integration\\MMOARPG\\experiments\\entity-review\\free-shot-probe\\Program.cs:line 15"
+    },
+    {
+      "Pattern": "reed_frog",
+      "Slope": -0.125,
+      "Preset": "piercing_arrow",
+      "BeyondCursor": false,
+      "Passed": false,
+      "Failure": "Xunit.Sdk.ContainsException: Assert.Contains() Failure: Filter not matched in collection\r\nCollection: []\r\n   at Xunit.Assert.Contains[T](IEnumerable\u00601 collection, Predicate\u00601 filter) in /_/src/xunit.assert/Asserts/CollectionAsserts.cs:line 304\r\n   at HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(String pattern, Single slope, String preset, Boolean beyond) in C:\\Users\\John\\.codex\\worktrees\\fauna-foundation-integration\\MMOARPG\\tests\\HollowWake.Core.Tests\\FreeShotGroundFloorTests.cs:line 44\r\n   at Program.\u003CMain\u003E$(String[] args) in C:\\Users\\John\\.codex\\worktrees\\fauna-foundation-integration\\MMOARPG\\experiments\\entity-review\\free-shot-probe\\Program.cs:line 15"
+    },
+    {
+      "Pattern": "reed_frog",
+      "Slope": -0.125,
+      "Preset": "piercing_arrow",
+      "BeyondCursor": true,
+      "Passed": false,
+      "Failure": "Xunit.Sdk.ContainsException: Assert.Contains() Failure: Filter not matched in collection\r\nCollection: []\r\n   at Xunit.Assert.Contains[T](IEnumerable\u00601 collection, Predicate\u00601 filter) in /_/src/xunit.assert/Asserts/CollectionAsserts.cs:line 304\r\n   at HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(String pattern, Single slope, String preset, Boolean beyond) in C:\\Users\\John\\.codex\\worktrees\\fauna-foundation-integration\\MMOARPG\\tests\\HollowWake.Core.Tests\\FreeShotGroundFloorTests.cs:line 44\r\n   at Program.\u003CMain\u003E$(String[] args) in C:\\Users\\John\\.codex\\worktrees\\fauna-foundation-integration\\MMOARPG\\experiments\\entity-review\\free-shot-probe\\Program.cs:line 15"
+    },
+    {
+      "Pattern": "reed_frog",
+      "Slope": 0,
+      "Preset": "firebolt",
+      "BeyondCursor": false,
+      "Passed": false,
+      "Failure": "Xunit.Sdk.ContainsException: Assert.Contains() Failure: Filter not matched in collection\r\nCollection: []\r\n   at Xunit.Assert.Contains[T](IEnumerable\u00601 collection, Predicate\u00601 filter) in /_/src/xunit.assert/Asserts/CollectionAsserts.cs:line 304\r\n   at HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(String pattern, Single slope, String preset, Boolean beyond) in C:\\Users\\John\\.codex\\worktrees\\fauna-foundation-integration\\MMOARPG\\tests\\HollowWake.Core.Tests\\FreeShotGroundFloorTests.cs:line 44\r\n   at Program.\u003CMain\u003E$(String[] args) in C:\\Users\\John\\.codex\\worktrees\\fauna-foundation-integration\\MMOARPG\\experiments\\entity-review\\free-shot-probe\\Program.cs:line 15"
+    },
+    {
+      "Pattern": "reed_frog",
+      "Slope": 0,
+      "Preset": "firebolt",
+      "BeyondCursor": true,
+      "Passed": false,
+      "Failure": "Xunit.Sdk.ContainsException: Assert.Contains() Failure: Filter not matched in collection\r\nCollection: []\r\n   at Xunit.Assert.Contains[T](IEnumerable\u00601 collection, Predicate\u00601 filter) in /_/src/xunit.assert/Asserts/CollectionAsserts.cs:line 304\r\n   at HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(String pattern, Single slope, String preset, Boolean beyond) in C:\\Users\\John\\.codex\\worktrees\\fauna-foundation-integration\\MMOARPG\\tests\\HollowWake.Core.Tests\\FreeShotGroundFloorTests.cs:line 44\r\n   at Program.\u003CMain\u003E$(String[] args) in C:\\Users\\John\\.codex\\worktrees\\fauna-foundation-integration\\MMOARPG\\experiments\\entity-review\\free-shot-probe\\Program.cs:line 15"
+    },
+    {
+      "Pattern": "reed_frog",
+      "Slope": 0,
+      "Preset": "piercing_arrow",
+      "BeyondCursor": false,
+      "Passed": false,
+      "Failure": "Xunit.Sdk.ContainsException: Assert.Contains() Failure: Filter not matched in collection\r\nCollection: []\r\n   at Xunit.Assert.Contains[T](IEnumerable\u00601 collection, Predicate\u00601 filter) in /_/src/xunit.assert/Asserts/CollectionAsserts.cs:line 304\r\n   at HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(String pattern, Single slope, String preset, Boolean beyond) in C:\\Users\\John\\.codex\\worktrees\\fauna-foundation-integration\\MMOARPG\\tests\\HollowWake.Core.Tests\\FreeShotGroundFloorTests.cs:line 44\r\n   at Program.\u003CMain\u003E$(String[] args) in C:\\Users\\John\\.codex\\worktrees\\fauna-foundation-integration\\MMOARPG\\experiments\\entity-review\\free-shot-probe\\Program.cs:line 15"
+    },
+    {
+      "Pattern": "reed_frog",
+      "Slope": 0,
+      "Preset": "piercing_arrow",
+      "BeyondCursor": true,
+      "Passed": false,
+      "Failure": "Xunit.Sdk.ContainsException: Assert.Contains() Failure: Filter not matched in collection\r\nCollection: []\r\n   at Xunit.Assert.Contains[T](IEnumerable\u00601 collection, Predicate\u00601 filter) in /_/src/xunit.assert/Asserts/CollectionAsserts.cs:line 304\r\n   at HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(String pattern, Single slope, String preset, Boolean beyond) in C:\\Users\\John\\.codex\\worktrees\\fauna-foundation-integration\\MMOARPG\\tests\\HollowWake.Core.Tests\\FreeShotGroundFloorTests.cs:line 44\r\n   at Program.\u003CMain\u003E$(String[] args) in C:\\Users\\John\\.codex\\worktrees\\fauna-foundation-integration\\MMOARPG\\experiments\\entity-review\\free-shot-probe\\Program.cs:line 15"
+    },
+    {
+      "Pattern": "reed_frog",
+      "Slope": 0.125,
+      "Preset": "firebolt",
+      "BeyondCursor": false,
+      "Passed": false,
+      "Failure": "Xunit.Sdk.ContainsException: Assert.Contains() Failure: Filter not matched in collection\r\nCollection: []\r\n   at Xunit.Assert.Contains[T](IEnumerable\u00601 collection, Predicate\u00601 filter) in /_/src/xunit.assert/Asserts/CollectionAsserts.cs:line 304\r\n   at HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(String pattern, Single slope, String preset, Boolean beyond) in C:\\Users\\John\\.codex\\worktrees\\fauna-foundation-integration\\MMOARPG\\tests\\HollowWake.Core.Tests\\FreeShotGroundFloorTests.cs:line 44\r\n   at Program.\u003CMain\u003E$(String[] args) in C:\\Users\\John\\.codex\\worktrees\\fauna-foundation-integration\\MMOARPG\\experiments\\entity-review\\free-shot-probe\\Program.cs:line 15"
+    },
+    {
+      "Pattern": "reed_frog",
+      "Slope": 0.125,
+      "Preset": "firebolt",
+      "BeyondCursor": true,
+      "Passed": false,
+      "Failure": "Xunit.Sdk.ContainsException: Assert.Contains() Failure: Filter not matched in collection\r\nCollection: []\r\n   at Xunit.Assert.Contains[T](IEnumerable\u00601 collection, Predicate\u00601 filter) in /_/src/xunit.assert/Asserts/CollectionAsserts.cs:line 304\r\n   at HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(String pattern, Single slope, String preset, Boolean beyond) in C:\\Users\\John\\.codex\\worktrees\\fauna-foundation-integration\\MMOARPG\\tests\\HollowWake.Core.Tests\\FreeShotGroundFloorTests.cs:line 44\r\n   at Program.\u003CMain\u003E$(String[] args) in C:\\Users\\John\\.codex\\worktrees\\fauna-foundation-integration\\MMOARPG\\experiments\\entity-review\\free-shot-probe\\Program.cs:line 15"
+    },
+    {
+      "Pattern": "reed_frog",
+      "Slope": 0.125,
+      "Preset": "piercing_arrow",
+      "BeyondCursor": false,
+      "Passed": false,
+      "Failure": "Xunit.Sdk.ContainsException: Assert.Contains() Failure: Filter not matched in collection\r\nCollection: []\r\n   at Xunit.Assert.Contains[T](IEnumerable\u00601 collection, Predicate\u00601 filter) in /_/src/xunit.assert/Asserts/CollectionAsserts.cs:line 304\r\n   at HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(String pattern, Single slope, String preset, Boolean beyond) in C:\\Users\\John\\.codex\\worktrees\\fauna-foundation-integration\\MMOARPG\\tests\\HollowWake.Core.Tests\\FreeShotGroundFloorTests.cs:line 44\r\n   at Program.\u003CMain\u003E$(String[] args) in C:\\Users\\John\\.codex\\worktrees\\fauna-foundation-integration\\MMOARPG\\experiments\\entity-review\\free-shot-probe\\Program.cs:line 15"
+    },
+    {
+      "Pattern": "reed_frog",
+      "Slope": 0.125,
+      "Preset": "piercing_arrow",
+      "BeyondCursor": true,
+      "Passed": false,
+      "Failure": "Xunit.Sdk.ContainsException: Assert.Contains() Failure: Filter not matched in collection\r\nCollection: []\r\n   at Xunit.Assert.Contains[T](IEnumerable\u00601 collection, Predicate\u00601 filter) in /_/src/xunit.assert/Asserts/CollectionAsserts.cs:line 304\r\n   at HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(String pattern, Single slope, String preset, Boolean beyond) in C:\\Users\\John\\.codex\\worktrees\\fauna-foundation-integration\\MMOARPG\\tests\\HollowWake.Core.Tests\\FreeShotGroundFloorTests.cs:line 44\r\n   at Program.\u003CMain\u003E$(String[] args) in C:\\Users\\John\\.codex\\worktrees\\fauna-foundation-integration\\MMOARPG\\experiments\\entity-review\\free-shot-probe\\Program.cs:line 15"
+    },
+    {
+      "Pattern": "river_otter",
+      "Slope": -0.125,
+      "Preset": "firebolt",
+      "BeyondCursor": false,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "river_otter",
+      "Slope": -0.125,
+      "Preset": "firebolt",
+      "BeyondCursor": true,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "river_otter",
+      "Slope": -0.125,
+      "Preset": "piercing_arrow",
+      "BeyondCursor": false,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "river_otter",
+      "Slope": -0.125,
+      "Preset": "piercing_arrow",
+      "BeyondCursor": true,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "river_otter",
+      "Slope": 0,
+      "Preset": "firebolt",
+      "BeyondCursor": false,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "river_otter",
+      "Slope": 0,
+      "Preset": "firebolt",
+      "BeyondCursor": true,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "river_otter",
+      "Slope": 0,
+      "Preset": "piercing_arrow",
+      "BeyondCursor": false,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "river_otter",
+      "Slope": 0,
+      "Preset": "piercing_arrow",
+      "BeyondCursor": true,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "river_otter",
+      "Slope": 0.125,
+      "Preset": "firebolt",
+      "BeyondCursor": false,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "river_otter",
+      "Slope": 0.125,
+      "Preset": "firebolt",
+      "BeyondCursor": true,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "river_otter",
+      "Slope": 0.125,
+      "Preset": "piercing_arrow",
+      "BeyondCursor": false,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "river_otter",
+      "Slope": 0.125,
+      "Preset": "piercing_arrow",
+      "BeyondCursor": true,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "roe_deer",
+      "Slope": -0.125,
+      "Preset": "firebolt",
+      "BeyondCursor": false,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "roe_deer",
+      "Slope": -0.125,
+      "Preset": "firebolt",
+      "BeyondCursor": true,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "roe_deer",
+      "Slope": -0.125,
+      "Preset": "piercing_arrow",
+      "BeyondCursor": false,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "roe_deer",
+      "Slope": -0.125,
+      "Preset": "piercing_arrow",
+      "BeyondCursor": true,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "roe_deer",
+      "Slope": 0,
+      "Preset": "firebolt",
+      "BeyondCursor": false,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "roe_deer",
+      "Slope": 0,
+      "Preset": "firebolt",
+      "BeyondCursor": true,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "roe_deer",
+      "Slope": 0,
+      "Preset": "piercing_arrow",
+      "BeyondCursor": false,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "roe_deer",
+      "Slope": 0,
+      "Preset": "piercing_arrow",
+      "BeyondCursor": true,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "roe_deer",
+      "Slope": 0.125,
+      "Preset": "firebolt",
+      "BeyondCursor": false,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "roe_deer",
+      "Slope": 0.125,
+      "Preset": "firebolt",
+      "BeyondCursor": true,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "roe_deer",
+      "Slope": 0.125,
+      "Preset": "piercing_arrow",
+      "BeyondCursor": false,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "roe_deer",
+      "Slope": 0.125,
+      "Preset": "piercing_arrow",
+      "BeyondCursor": true,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "salt_ibex",
+      "Slope": -0.125,
+      "Preset": "firebolt",
+      "BeyondCursor": false,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "salt_ibex",
+      "Slope": -0.125,
+      "Preset": "firebolt",
+      "BeyondCursor": true,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "salt_ibex",
+      "Slope": -0.125,
+      "Preset": "piercing_arrow",
+      "BeyondCursor": false,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "salt_ibex",
+      "Slope": -0.125,
+      "Preset": "piercing_arrow",
+      "BeyondCursor": true,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "salt_ibex",
+      "Slope": 0,
+      "Preset": "firebolt",
+      "BeyondCursor": false,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "salt_ibex",
+      "Slope": 0,
+      "Preset": "firebolt",
+      "BeyondCursor": true,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "salt_ibex",
+      "Slope": 0,
+      "Preset": "piercing_arrow",
+      "BeyondCursor": false,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "salt_ibex",
+      "Slope": 0,
+      "Preset": "piercing_arrow",
+      "BeyondCursor": true,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "salt_ibex",
+      "Slope": 0.125,
+      "Preset": "firebolt",
+      "BeyondCursor": false,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "salt_ibex",
+      "Slope": 0.125,
+      "Preset": "firebolt",
+      "BeyondCursor": true,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "salt_ibex",
+      "Slope": 0.125,
+      "Preset": "piercing_arrow",
+      "BeyondCursor": false,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "salt_ibex",
+      "Slope": 0.125,
+      "Preset": "piercing_arrow",
+      "BeyondCursor": true,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "shore_crab",
+      "Slope": -0.125,
+      "Preset": "firebolt",
+      "BeyondCursor": false,
+      "Passed": false,
+      "Failure": "Xunit.Sdk.ContainsException: Assert.Contains() Failure: Filter not matched in collection\r\nCollection: []\r\n   at Xunit.Assert.Contains[T](IEnumerable\u00601 collection, Predicate\u00601 filter) in /_/src/xunit.assert/Asserts/CollectionAsserts.cs:line 304\r\n   at HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(String pattern, Single slope, String preset, Boolean beyond) in C:\\Users\\John\\.codex\\worktrees\\fauna-foundation-integration\\MMOARPG\\tests\\HollowWake.Core.Tests\\FreeShotGroundFloorTests.cs:line 44\r\n   at Program.\u003CMain\u003E$(String[] args) in C:\\Users\\John\\.codex\\worktrees\\fauna-foundation-integration\\MMOARPG\\experiments\\entity-review\\free-shot-probe\\Program.cs:line 15"
+    },
+    {
+      "Pattern": "shore_crab",
+      "Slope": -0.125,
+      "Preset": "firebolt",
+      "BeyondCursor": true,
+      "Passed": false,
+      "Failure": "Xunit.Sdk.ContainsException: Assert.Contains() Failure: Filter not matched in collection\r\nCollection: []\r\n   at Xunit.Assert.Contains[T](IEnumerable\u00601 collection, Predicate\u00601 filter) in /_/src/xunit.assert/Asserts/CollectionAsserts.cs:line 304\r\n   at HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(String pattern, Single slope, String preset, Boolean beyond) in C:\\Users\\John\\.codex\\worktrees\\fauna-foundation-integration\\MMOARPG\\tests\\HollowWake.Core.Tests\\FreeShotGroundFloorTests.cs:line 44\r\n   at Program.\u003CMain\u003E$(String[] args) in C:\\Users\\John\\.codex\\worktrees\\fauna-foundation-integration\\MMOARPG\\experiments\\entity-review\\free-shot-probe\\Program.cs:line 15"
+    },
+    {
+      "Pattern": "shore_crab",
+      "Slope": -0.125,
+      "Preset": "piercing_arrow",
+      "BeyondCursor": false,
+      "Passed": false,
+      "Failure": "Xunit.Sdk.ContainsException: Assert.Contains() Failure: Filter not matched in collection\r\nCollection: []\r\n   at Xunit.Assert.Contains[T](IEnumerable\u00601 collection, Predicate\u00601 filter) in /_/src/xunit.assert/Asserts/CollectionAsserts.cs:line 304\r\n   at HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(String pattern, Single slope, String preset, Boolean beyond) in C:\\Users\\John\\.codex\\worktrees\\fauna-foundation-integration\\MMOARPG\\tests\\HollowWake.Core.Tests\\FreeShotGroundFloorTests.cs:line 44\r\n   at Program.\u003CMain\u003E$(String[] args) in C:\\Users\\John\\.codex\\worktrees\\fauna-foundation-integration\\MMOARPG\\experiments\\entity-review\\free-shot-probe\\Program.cs:line 15"
+    },
+    {
+      "Pattern": "shore_crab",
+      "Slope": -0.125,
+      "Preset": "piercing_arrow",
+      "BeyondCursor": true,
+      "Passed": false,
+      "Failure": "Xunit.Sdk.ContainsException: Assert.Contains() Failure: Filter not matched in collection\r\nCollection: []\r\n   at Xunit.Assert.Contains[T](IEnumerable\u00601 collection, Predicate\u00601 filter) in /_/src/xunit.assert/Asserts/CollectionAsserts.cs:line 304\r\n   at HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(String pattern, Single slope, String preset, Boolean beyond) in C:\\Users\\John\\.codex\\worktrees\\fauna-foundation-integration\\MMOARPG\\tests\\HollowWake.Core.Tests\\FreeShotGroundFloorTests.cs:line 44\r\n   at Program.\u003CMain\u003E$(String[] args) in C:\\Users\\John\\.codex\\worktrees\\fauna-foundation-integration\\MMOARPG\\experiments\\entity-review\\free-shot-probe\\Program.cs:line 15"
+    },
+    {
+      "Pattern": "shore_crab",
+      "Slope": 0,
+      "Preset": "firebolt",
+      "BeyondCursor": false,
+      "Passed": false,
+      "Failure": "Xunit.Sdk.ContainsException: Assert.Contains() Failure: Filter not matched in collection\r\nCollection: []\r\n   at Xunit.Assert.Contains[T](IEnumerable\u00601 collection, Predicate\u00601 filter) in /_/src/xunit.assert/Asserts/CollectionAsserts.cs:line 304\r\n   at HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(String pattern, Single slope, String preset, Boolean beyond) in C:\\Users\\John\\.codex\\worktrees\\fauna-foundation-integration\\MMOARPG\\tests\\HollowWake.Core.Tests\\FreeShotGroundFloorTests.cs:line 44\r\n   at Program.\u003CMain\u003E$(String[] args) in C:\\Users\\John\\.codex\\worktrees\\fauna-foundation-integration\\MMOARPG\\experiments\\entity-review\\free-shot-probe\\Program.cs:line 15"
+    },
+    {
+      "Pattern": "shore_crab",
+      "Slope": 0,
+      "Preset": "firebolt",
+      "BeyondCursor": true,
+      "Passed": false,
+      "Failure": "Xunit.Sdk.ContainsException: Assert.Contains() Failure: Filter not matched in collection\r\nCollection: []\r\n   at Xunit.Assert.Contains[T](IEnumerable\u00601 collection, Predicate\u00601 filter) in /_/src/xunit.assert/Asserts/CollectionAsserts.cs:line 304\r\n   at HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(String pattern, Single slope, String preset, Boolean beyond) in C:\\Users\\John\\.codex\\worktrees\\fauna-foundation-integration\\MMOARPG\\tests\\HollowWake.Core.Tests\\FreeShotGroundFloorTests.cs:line 44\r\n   at Program.\u003CMain\u003E$(String[] args) in C:\\Users\\John\\.codex\\worktrees\\fauna-foundation-integration\\MMOARPG\\experiments\\entity-review\\free-shot-probe\\Program.cs:line 15"
+    },
+    {
+      "Pattern": "shore_crab",
+      "Slope": 0,
+      "Preset": "piercing_arrow",
+      "BeyondCursor": false,
+      "Passed": false,
+      "Failure": "Xunit.Sdk.ContainsException: Assert.Contains() Failure: Filter not matched in collection\r\nCollection: []\r\n   at Xunit.Assert.Contains[T](IEnumerable\u00601 collection, Predicate\u00601 filter) in /_/src/xunit.assert/Asserts/CollectionAsserts.cs:line 304\r\n   at HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(String pattern, Single slope, String preset, Boolean beyond) in C:\\Users\\John\\.codex\\worktrees\\fauna-foundation-integration\\MMOARPG\\tests\\HollowWake.Core.Tests\\FreeShotGroundFloorTests.cs:line 44\r\n   at Program.\u003CMain\u003E$(String[] args) in C:\\Users\\John\\.codex\\worktrees\\fauna-foundation-integration\\MMOARPG\\experiments\\entity-review\\free-shot-probe\\Program.cs:line 15"
+    },
+    {
+      "Pattern": "shore_crab",
+      "Slope": 0,
+      "Preset": "piercing_arrow",
+      "BeyondCursor": true,
+      "Passed": false,
+      "Failure": "Xunit.Sdk.ContainsException: Assert.Contains() Failure: Filter not matched in collection\r\nCollection: []\r\n   at Xunit.Assert.Contains[T](IEnumerable\u00601 collection, Predicate\u00601 filter) in /_/src/xunit.assert/Asserts/CollectionAsserts.cs:line 304\r\n   at HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(String pattern, Single slope, String preset, Boolean beyond) in C:\\Users\\John\\.codex\\worktrees\\fauna-foundation-integration\\MMOARPG\\tests\\HollowWake.Core.Tests\\FreeShotGroundFloorTests.cs:line 44\r\n   at Program.\u003CMain\u003E$(String[] args) in C:\\Users\\John\\.codex\\worktrees\\fauna-foundation-integration\\MMOARPG\\experiments\\entity-review\\free-shot-probe\\Program.cs:line 15"
+    },
+    {
+      "Pattern": "shore_crab",
+      "Slope": 0.125,
+      "Preset": "firebolt",
+      "BeyondCursor": false,
+      "Passed": false,
+      "Failure": "Xunit.Sdk.ContainsException: Assert.Contains() Failure: Filter not matched in collection\r\nCollection: []\r\n   at Xunit.Assert.Contains[T](IEnumerable\u00601 collection, Predicate\u00601 filter) in /_/src/xunit.assert/Asserts/CollectionAsserts.cs:line 304\r\n   at HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(String pattern, Single slope, String preset, Boolean beyond) in C:\\Users\\John\\.codex\\worktrees\\fauna-foundation-integration\\MMOARPG\\tests\\HollowWake.Core.Tests\\FreeShotGroundFloorTests.cs:line 44\r\n   at Program.\u003CMain\u003E$(String[] args) in C:\\Users\\John\\.codex\\worktrees\\fauna-foundation-integration\\MMOARPG\\experiments\\entity-review\\free-shot-probe\\Program.cs:line 15"
+    },
+    {
+      "Pattern": "shore_crab",
+      "Slope": 0.125,
+      "Preset": "firebolt",
+      "BeyondCursor": true,
+      "Passed": false,
+      "Failure": "Xunit.Sdk.ContainsException: Assert.Contains() Failure: Filter not matched in collection\r\nCollection: []\r\n   at Xunit.Assert.Contains[T](IEnumerable\u00601 collection, Predicate\u00601 filter) in /_/src/xunit.assert/Asserts/CollectionAsserts.cs:line 304\r\n   at HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(String pattern, Single slope, String preset, Boolean beyond) in C:\\Users\\John\\.codex\\worktrees\\fauna-foundation-integration\\MMOARPG\\tests\\HollowWake.Core.Tests\\FreeShotGroundFloorTests.cs:line 44\r\n   at Program.\u003CMain\u003E$(String[] args) in C:\\Users\\John\\.codex\\worktrees\\fauna-foundation-integration\\MMOARPG\\experiments\\entity-review\\free-shot-probe\\Program.cs:line 15"
+    },
+    {
+      "Pattern": "shore_crab",
+      "Slope": 0.125,
+      "Preset": "piercing_arrow",
+      "BeyondCursor": false,
+      "Passed": false,
+      "Failure": "Xunit.Sdk.ContainsException: Assert.Contains() Failure: Filter not matched in collection\r\nCollection: []\r\n   at Xunit.Assert.Contains[T](IEnumerable\u00601 collection, Predicate\u00601 filter) in /_/src/xunit.assert/Asserts/CollectionAsserts.cs:line 304\r\n   at HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(String pattern, Single slope, String preset, Boolean beyond) in C:\\Users\\John\\.codex\\worktrees\\fauna-foundation-integration\\MMOARPG\\tests\\HollowWake.Core.Tests\\FreeShotGroundFloorTests.cs:line 44\r\n   at Program.\u003CMain\u003E$(String[] args) in C:\\Users\\John\\.codex\\worktrees\\fauna-foundation-integration\\MMOARPG\\experiments\\entity-review\\free-shot-probe\\Program.cs:line 15"
+    },
+    {
+      "Pattern": "shore_crab",
+      "Slope": 0.125,
+      "Preset": "piercing_arrow",
+      "BeyondCursor": true,
+      "Passed": false,
+      "Failure": "Xunit.Sdk.ContainsException: Assert.Contains() Failure: Filter not matched in collection\r\nCollection: []\r\n   at Xunit.Assert.Contains[T](IEnumerable\u00601 collection, Predicate\u00601 filter) in /_/src/xunit.assert/Asserts/CollectionAsserts.cs:line 304\r\n   at HollowWake.Core.Tests.FreeShotGroundFloorTests.HumanoidFreeShotsStrikeShortBodiesBeforeAndBeyondCursor(String pattern, Single slope, String preset, Boolean beyond) in C:\\Users\\John\\.codex\\worktrees\\fauna-foundation-integration\\MMOARPG\\tests\\HollowWake.Core.Tests\\FreeShotGroundFloorTests.cs:line 44\r\n   at Program.\u003CMain\u003E$(String[] args) in C:\\Users\\John\\.codex\\worktrees\\fauna-foundation-integration\\MMOARPG\\experiments\\entity-review\\free-shot-probe\\Program.cs:line 15"
+    },
+    {
+      "Pattern": "snapping_terrapin",
+      "Slope": -0.125,
+      "Preset": "firebolt",
+      "BeyondCursor": false,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "snapping_terrapin",
+      "Slope": -0.125,
+      "Preset": "firebolt",
+      "BeyondCursor": true,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "snapping_terrapin",
+      "Slope": -0.125,
+      "Preset": "piercing_arrow",
+      "BeyondCursor": false,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "snapping_terrapin",
+      "Slope": -0.125,
+      "Preset": "piercing_arrow",
+      "BeyondCursor": true,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "snapping_terrapin",
+      "Slope": 0,
+      "Preset": "firebolt",
+      "BeyondCursor": false,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "snapping_terrapin",
+      "Slope": 0,
+      "Preset": "firebolt",
+      "BeyondCursor": true,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "snapping_terrapin",
+      "Slope": 0,
+      "Preset": "piercing_arrow",
+      "BeyondCursor": false,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "snapping_terrapin",
+      "Slope": 0,
+      "Preset": "piercing_arrow",
+      "BeyondCursor": true,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "snapping_terrapin",
+      "Slope": 0.125,
+      "Preset": "firebolt",
+      "BeyondCursor": false,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "snapping_terrapin",
+      "Slope": 0.125,
+      "Preset": "firebolt",
+      "BeyondCursor": true,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "snapping_terrapin",
+      "Slope": 0.125,
+      "Preset": "piercing_arrow",
+      "BeyondCursor": false,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "snapping_terrapin",
+      "Slope": 0.125,
+      "Preset": "piercing_arrow",
+      "BeyondCursor": true,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "snow_hare",
+      "Slope": -0.125,
+      "Preset": "firebolt",
+      "BeyondCursor": false,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "snow_hare",
+      "Slope": -0.125,
+      "Preset": "firebolt",
+      "BeyondCursor": true,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "snow_hare",
+      "Slope": -0.125,
+      "Preset": "piercing_arrow",
+      "BeyondCursor": false,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "snow_hare",
+      "Slope": -0.125,
+      "Preset": "piercing_arrow",
+      "BeyondCursor": true,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "snow_hare",
+      "Slope": 0,
+      "Preset": "firebolt",
+      "BeyondCursor": false,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "snow_hare",
+      "Slope": 0,
+      "Preset": "firebolt",
+      "BeyondCursor": true,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "snow_hare",
+      "Slope": 0,
+      "Preset": "piercing_arrow",
+      "BeyondCursor": false,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "snow_hare",
+      "Slope": 0,
+      "Preset": "piercing_arrow",
+      "BeyondCursor": true,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "snow_hare",
+      "Slope": 0.125,
+      "Preset": "firebolt",
+      "BeyondCursor": false,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "snow_hare",
+      "Slope": 0.125,
+      "Preset": "firebolt",
+      "BeyondCursor": true,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "snow_hare",
+      "Slope": 0.125,
+      "Preset": "piercing_arrow",
+      "BeyondCursor": false,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "snow_hare",
+      "Slope": 0.125,
+      "Preset": "piercing_arrow",
+      "BeyondCursor": true,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "wolf",
+      "Slope": -0.125,
+      "Preset": "firebolt",
+      "BeyondCursor": false,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "wolf",
+      "Slope": -0.125,
+      "Preset": "firebolt",
+      "BeyondCursor": true,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "wolf",
+      "Slope": -0.125,
+      "Preset": "piercing_arrow",
+      "BeyondCursor": false,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "wolf",
+      "Slope": -0.125,
+      "Preset": "piercing_arrow",
+      "BeyondCursor": true,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "wolf",
+      "Slope": 0,
+      "Preset": "firebolt",
+      "BeyondCursor": false,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "wolf",
+      "Slope": 0,
+      "Preset": "firebolt",
+      "BeyondCursor": true,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "wolf",
+      "Slope": 0,
+      "Preset": "piercing_arrow",
+      "BeyondCursor": false,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "wolf",
+      "Slope": 0,
+      "Preset": "piercing_arrow",
+      "BeyondCursor": true,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "wolf",
+      "Slope": 0.125,
+      "Preset": "firebolt",
+      "BeyondCursor": false,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "wolf",
+      "Slope": 0.125,
+      "Preset": "firebolt",
+      "BeyondCursor": true,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "wolf",
+      "Slope": 0.125,
+      "Preset": "piercing_arrow",
+      "BeyondCursor": false,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "wolf",
+      "Slope": 0.125,
+      "Preset": "piercing_arrow",
+      "BeyondCursor": true,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "wolverine",
+      "Slope": -0.125,
+      "Preset": "firebolt",
+      "BeyondCursor": false,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "wolverine",
+      "Slope": -0.125,
+      "Preset": "firebolt",
+      "BeyondCursor": true,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "wolverine",
+      "Slope": -0.125,
+      "Preset": "piercing_arrow",
+      "BeyondCursor": false,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "wolverine",
+      "Slope": -0.125,
+      "Preset": "piercing_arrow",
+      "BeyondCursor": true,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "wolverine",
+      "Slope": 0,
+      "Preset": "firebolt",
+      "BeyondCursor": false,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "wolverine",
+      "Slope": 0,
+      "Preset": "firebolt",
+      "BeyondCursor": true,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "wolverine",
+      "Slope": 0,
+      "Preset": "piercing_arrow",
+      "BeyondCursor": false,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "wolverine",
+      "Slope": 0,
+      "Preset": "piercing_arrow",
+      "BeyondCursor": true,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "wolverine",
+      "Slope": 0.125,
+      "Preset": "firebolt",
+      "BeyondCursor": false,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "wolverine",
+      "Slope": 0.125,
+      "Preset": "firebolt",
+      "BeyondCursor": true,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "wolverine",
+      "Slope": 0.125,
+      "Preset": "piercing_arrow",
+      "BeyondCursor": false,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "wolverine",
+      "Slope": 0.125,
+      "Preset": "piercing_arrow",
+      "BeyondCursor": true,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "woodgrouse",
+      "Slope": -0.125,
+      "Preset": "firebolt",
+      "BeyondCursor": false,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "woodgrouse",
+      "Slope": -0.125,
+      "Preset": "firebolt",
+      "BeyondCursor": true,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "woodgrouse",
+      "Slope": -0.125,
+      "Preset": "piercing_arrow",
+      "BeyondCursor": false,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "woodgrouse",
+      "Slope": -0.125,
+      "Preset": "piercing_arrow",
+      "BeyondCursor": true,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "woodgrouse",
+      "Slope": 0,
+      "Preset": "firebolt",
+      "BeyondCursor": false,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "woodgrouse",
+      "Slope": 0,
+      "Preset": "firebolt",
+      "BeyondCursor": true,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "woodgrouse",
+      "Slope": 0,
+      "Preset": "piercing_arrow",
+      "BeyondCursor": false,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "woodgrouse",
+      "Slope": 0,
+      "Preset": "piercing_arrow",
+      "BeyondCursor": true,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "woodgrouse",
+      "Slope": 0.125,
+      "Preset": "firebolt",
+      "BeyondCursor": false,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "woodgrouse",
+      "Slope": 0.125,
+      "Preset": "firebolt",
+      "BeyondCursor": true,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "woodgrouse",
+      "Slope": 0.125,
+      "Preset": "piercing_arrow",
+      "BeyondCursor": false,
+      "Passed": true,
+      "Failure": null
+    },
+    {
+      "Pattern": "woodgrouse",
+      "Slope": 0.125,
+      "Preset": "piercing_arrow",
+      "BeyondCursor": true,
+      "Passed": true,
+      "Failure": null
+    }
+  ]
+}
+

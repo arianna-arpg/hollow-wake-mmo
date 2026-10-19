@@ -110,6 +110,8 @@ public sealed class CastState
     public Entity Focus = Entity.None;
 
     public Vector3 Point;
+    /// <summary>Body-relative aim sampled on press; does not turn a direction cast into a target lock.</summary>
+    public Vector3 AimOffset;
     public Vector2 Direction;
     public double StartedAt;
 
@@ -117,6 +119,9 @@ public sealed class CastState
     public double Duration;
 
     public double NextChannelAt;
+
+    /// <summary>Start of the already-scheduled channel beat window; observation never reschedules it.</summary>
+    public double? NextChannelStartedAt;
     public bool Channeling;
     public int Pulses;
 
@@ -181,6 +186,7 @@ public sealed class CastState
     internal Expressions.IExprScope? Scope;
 
     private List<Modifier>? _modifiers;
+    internal List<Modifier>? LocalModifiers { get => _modifiers; set => _modifiers = value; }
 
     /// <summary>
     /// Modifiers local to this cast, such as ramps and charge-up scales, joining the weave's fold while

@@ -19,9 +19,11 @@ public class EntityPopulationTests
     [Theory]
     [InlineData("undead_body")]
     [InlineData("goblinkin_body")]
-    public void EveryEntityHabitatHasAMatchingPopulationReference(string template)
+    [InlineData("orc_body")]
+    [InlineData("fauna_body")]
+    public void EveryEntityHabitatHasALiveOrExplicitlyParkedPopulationReference(string template)
     {
-        var content = CoreContent.Registry;
+        var content = ParkedPopulationContent.Registry;
         foreach (var body in content.Each<PatternDef>().Where(p => p.Extends == template))
         foreach (var tag in body.Tags.Where(t => t.StartsWith("habitat.", StringComparison.Ordinal)))
         {

@@ -1,0 +1,29 @@
+{
+  "started": "2026-10-18T02:04:34.866Z",
+  "root": "C:\\Users\\John\\.codex\\worktrees\\shared-cast-forecasts\\MMOARPG",
+  "directory": "C:\\Users\\John\\.codex\\worktrees\\shared-cast-forecasts\\MMOARPG\\artifacts\\forecast-review\\appearance-spell-corrected\\run-wT5WLL",
+  "suite": "web",
+  "status": "passed",
+  "stages": [
+    {
+      "name": "smoke-web",
+      "status": "passed",
+      "started": "2026-10-18T02:04:36.225Z",
+      "code": 0,
+      "signal": null,
+      "passed": 32,
+      "total": 32,
+      "skipped": [],
+      "finished": "2026-10-18T02:06:12.889Z"
+    }
+  ],
+  "nativeRendering": "not covered by headless mode",
+  "server": {
+    "tcp": 64255,
+    "url": "http://127.0.0.1:64256",
+    "name": "harness-run-wT5WLL",
+    "data": "C:\\Users\\John\\.codex\\worktrees\\shared-cast-forecasts\\MMOARPG\\artifacts\\forecast-review\\appearance-spell-corrected\\run-wT5WLL\\data"
+  },
+  "cleanupErrors": [],
+  "finished": "2026-10-18T02:06:13.180Z"
+}

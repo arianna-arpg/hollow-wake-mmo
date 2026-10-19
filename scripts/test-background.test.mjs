@@ -58,6 +58,10 @@ test('both suites enforce background input and reject headed or unbounded runs',
   assert.equal(native[0], '--headless');
   assert.ok(native.includes('--profile'));
   assert.ok(native.includes('private-test-godot'), 'the native suite must not inherit the web character position');
+  for (const suite of ['web', 'godot']) {
+    const [, args] = smokeCommand(suite, options(['--forecasts', '--cast-cues', '--calling', 'kindler']), context);
+    assert.ok(args.includes('--forecasts') && args.includes('--cast-cues') && args.includes('kindler'));
+  }
   for (const args of [['--headed'], ['--timeout', 'NaN'], ['--timeout', '0'], ['--suite', 'desktop']])
     assert.throws(() => options(args));
 });

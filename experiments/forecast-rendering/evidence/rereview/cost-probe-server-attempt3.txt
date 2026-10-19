@@ -1,0 +1,9 @@
+13:55:15 info: HollowWake.Server.GameServer[0] content loaded: 62 kinds from C:\Users\John\.codex\worktrees\shared-cast-forecasts\MMOARPG\content\core
+13:55:15 info: HollowWake.Server.World.ZoneHost[0] world seed 'aureth' (10175781948776629366); start zone zone(0,0)
+13:55:15 info: HollowWake.Server.Net.TcpTransport[0] tcp transport listening on 127.0.0.1:53650
+13:55:16 info: HollowWake.Server.World.ZoneHost[0] zone zone(0,0) 'Ninewells' loaded: zone(0,0): 100 chunks, 4 pois, 2 founts, 113 spawners, 2269 flora, 4 quests
+13:55:16 info: HollowWake.Server.GameServer[0] forecast-cost-probe-631da7ca63d84213ad6f3bac6d1f2ec1 is up: transport tcp, tick 20 Hz, data in C:/Users/John/.codex/worktrees/shared-cast-forecasts/MMOARPG/artifacts/forecast-rereview/cost-probe-data
+13:55:16 warn: HollowWake.Server.GameServer[0] tick took 88.3 ms (budget 50.0 ms)
+13:55:16 info: HollowWake.Server.Sessions.SessionManager[0] session 2 (127.0.0.1:53653) Connected  connected
+13:55:17 info: HollowWake.Server.Sessions.SessionManager[0] session 2 (127.0.0.1:53653) Closed  disconnected: closed by peer
+13:55:17 info: HollowWake.Server.GameServer[0] shutting down

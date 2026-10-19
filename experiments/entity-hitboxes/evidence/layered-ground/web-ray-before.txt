@@ -1,0 +1,43 @@
+
+> hollow-wake-web@0.1.0 test
+> vitest run --run src/world/terrainRay.test.ts
+
+
+ RUN  v5.0.3 C:/Users/John/.codex/worktrees/precise-entity-hitboxes/MMOARPG/web
+
+ ❯ src/world/terrainRay.test.ts (4 tests | 2 failed) 8ms
+   ❯ cursor surface ray (4)
+     × picks the visible 1.2m deck instead of base terrain 5ms
+     × picks the visible 3m deck instead of base terrain 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/world/terrainRay.test.ts > cursor surface ray > picks the visible 1.2m deck instead of base terrain
+AssertionError: expected +0 to be close to 1.2, received difference is 1.2, but expected 0.005
+ ❯ src/world/terrainRay.test.ts:24:22
+     22|       const hit = terrain(height).rayToGround(toThree(1.5, 1.5, 10), t…
+     23|       expect(hit).not.toBeNull();
+     24|       expect(hit!.z).toBeCloseTo(height);
+       |                      ^
+     25|     });
+     26|     it(`can still pick underneath the ${height}m deck`, () => {
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/world/terrainRay.test.ts > cursor surface ray > picks the visible 3m deck instead of base terrain
+AssertionError: expected +0 to be close to 3, received difference is 3, but expected 0.005
+ ❯ src/world/terrainRay.test.ts:24:22
+     22|       const hit = terrain(height).rayToGround(toThree(1.5, 1.5, 10), t…
+     23|       expect(hit).not.toBeNull();
+     24|       expect(hit!.z).toBeCloseTo(height);
+       |                      ^
+     25|     });
+     26|     it(`can still pick underneath the ${height}m deck`, () => {
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 2 passed (4)
+   Start at  18:52:09
+   Duration  843ms (transform 75%, setup 16%, import 8%, tests 1%, worker 1%)

@@ -1,7 +1,11 @@
 using System.Numerics;
 using HollowWake.Core.Ecs;
 using HollowWake.Core.Effects.Handlers;
+using HollowWake.Core.Maths;
+using HollowWake.Core.Sim;
+using HollowWake.Core.Weaves;
 using HollowWake.Core.World;
+using HollowWake.Core.Combat;
 
 namespace HollowWake.Core.Effects;
 
@@ -13,7 +17,8 @@ namespace HollowWake.Core.Effects;
 public readonly record struct ResolvedAreaPlan(
     Shape Shape, ShapeSize Size, Vector3 Anchor, Vector2 Direction, string AnchorMode,
     string Filter, Entity ExcludedTarget, bool RequiresLineOfSight,
-    bool HasRequirement, bool HasTargetLimit)
+    bool HasRequirement, bool HasTargetLimit,
+    bool BodyContact = false, float Bottom = 0, float Top = 0)
 {
     public float Reach => Shape.Reach(Size);
     public float HeightTolerance => SpatialGrid.DefaultHeightTolerance;
@@ -26,15 +31,20 @@ public readonly record struct ResolvedAreaPlan(
     /// Current candidate eligibility, before a delivery's per-target requirement and capped/random
     /// selection. Uses the same relation, untargetability and LOS checks as execution. No effects or rolls.
     /// </summary>
+    public bool ContainsBody(EffectContext context, Entity entity, Vector3 position) => BodyContact
+        ? HitBodies.Touches(context.Sim, entity, Shape, Size, Anchor, Direction, Bottom, Top, position)
+        : ContainsCenter(position);
+
     public bool IsCandidate(EffectContext context, Entity entity, Vector3 position) =>
-        ContainsCenter(position) && (ExcludedTarget.IsNone || entity != ExcludedTarget) &&
+        ContainsBody(context, entity, position) && (ExcludedTarget.IsNone || entity != ExcludedTarget) &&
         EffectHelpers.Passes(context, entity, Filter) && (!RequiresLineOfSight ||
             LineOfSight.Clear(context.Sim.Terrain, Anchor + EffectHelpers.Eye, position + EffectHelpers.Eye));
 
     public bool IsFinite => float.IsFinite(Size.Radius) && float.IsFinite(Size.Angle) &&
         float.IsFinite(Size.Width) && float.IsFinite(Size.Inner) && float.IsFinite(Reach) &&
+        float.IsFinite(Shape.Curvature) && float.IsFinite(Shape.CenterAllowanceSquared) && Shape.CenterAllowanceSquared >= 0 &&
         float.IsFinite(Anchor.X) && float.IsFinite(Anchor.Y) && float.IsFinite(Anchor.Z) &&
-        float.IsFinite(Direction.X) && float.IsFinite(Direction.Y);
+        float.IsFinite(Direction.X) && float.IsFinite(Direction.Y) && float.IsFinite(Bottom) && float.IsFinite(Top);
 }
 
 /// <summary>
@@ -45,6 +55,24 @@ public readonly record struct ResolvedAreaPlan(
 public interface IDeliveryPlanSource
 {
     DeliveryForecast DescribeDelivery(EffectContext context);
+}
+
+/// <summary>
+/// Internal fast path for a fresh observation-only context. It may initialize that context's scope;
+/// callers must not pass an execution context or reuse it for a later sample. Providers still perform
+/// the same live dependency checks and resolution. Third-party providers retain the public path.
+/// </summary>
+internal interface IDetachedDeliveryPlanSource : IDeliveryPlanSource
+{
+    DeliveryForecast DescribeDetachedDelivery(EffectContext context);
+}
+
+// Synchronous built-in capability: never retain the context or expose it to external providers.
+// Unlike persistent DescribeDetachedDelivery, this borrows a freshly rebound context/scope per call.
+// null means unknown, retaining the caller's existing behavior rather than claiming ineligibility.
+internal interface IImmediateDeliveryCandidateSource : IDetachedDeliveryPlanSource
+{
+    bool? IsCandidate(EffectContext context, Entity target, Vector3 position);
 }
 
 /// <summary>
@@ -59,6 +87,25 @@ public sealed record DeliveryForecast(ResolvedAreaPlan? PrimaryRegion, string? U
 
 public static class DeliveryForecasts
 {
+    internal static bool? CandidateForAi(CompiledEffect effect, Simulation sim, Entity caster,
+        Entity target, Vector3 point, Vector2 direction, CompiledWeave weave, Vector3? candidatePosition = null)
+    {
+        if (effect is IImmediateDeliveryCandidateSource immediate)
+        {
+            var scratch = EffectContext.RentObservation(sim, caster, target, point, direction, weave);
+            try { return immediate.IsCandidate(scratch, target, candidatePosition ?? point); }
+            finally { scratch.ReturnObservation(); }
+        }
+        // Preserve the public provider's detached lifetime and safety contract.
+        var context = new EffectContext { Sim = sim, Source = caster, Target = target, Point = point,
+            Direction = direction, Weave = weave, Tags = weave.Tags, Rng = new Rng(0) };
+        return Describe(effect, context).PrimaryRegion is { } plan ? plan.IsCandidate(context, target, candidatePosition ?? point) : null;
+    }
+
+    internal static DeliveryForecast DescribeDetached(IReadOnlyList<CompiledEffect> graph, EffectContext context) =>
+        graph.Count == 1 && graph[0] is IDetachedDeliveryPlanSource provider
+            ? provider.DescribeDetachedDelivery(context) : Describe(graph, context);
+
     public static DeliveryForecast Describe(CompiledEffect effect, EffectContext context) =>
         effect is IDeliveryPlanSource provider ? provider.DescribeDelivery(context) :
             DeliveryForecast.Unavailable("unsupported_delivery");

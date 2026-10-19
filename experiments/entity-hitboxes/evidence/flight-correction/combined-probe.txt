@@ -1,0 +1,8 @@
+asked for features: entity_delta, interface, cast_cues, entry_flow, hit_bodies_v2, projectile_slabs_v1; granted: hit_bodies_v2, projectile_slabs_v1, entry_flow, cast_cues, entity_delta, interface
+entered zone 0_0 at (129.5, 111.0, 14.7); seed 10175781948776629366; tick 20; day of 1800 s at 0.320
+messages: EntitySpawnMsg=338, EntityDeltaMsg=54, EntityDespawnMsg=39, EntityUpdateMsg=30, SelfStateMsg=3, CharacterListMsg=2, WelcomeMsg=1, HitBodiesMsg=1, LoginResultMsg=1, EnterWorldMsg=1, ZoneChangedMsg=1, InventoryStateMsg=1, WeaveSlotsMsg=1, PassiveStateMsg=1, PageStateMsg=1, ChatBroadcastMsg=1
+self updates: 27; last position (129.5, 101.0, 15.2)
+entities seen: 338 (Pine, Oak, Boulder, Fallen Ash, Shrub, Fern, Hob, Floss Knot, Iron Vein, Hungering Hob, Grove Stag, Probe)
+chat: Probe: probe says hello
+interface: bag 12x5 with 1 items, 3 worn; 4 of 8 weave seats filled; 1 passives, points passive 0, devotion 0, vocation 0; pages inventory, weaves, passives, reliquary, stash (sealed), stash (sealed), character, options
+PROBE OK (walked south)

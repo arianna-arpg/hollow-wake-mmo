@@ -23,6 +23,10 @@ internal sealed class DeliveryArena
         var registry = ContentRegistry.Load(new[] { CoreContent.FindContentDir() }, out var report);
         Assert.False(report.HasErrors, report.ToString());
         registry
+            // Deliberately unprofiled, legacy-sized target: changing fauna balance must not change
+            // the neutral mass, poise and collision assumptions of generic delivery tests.
+            .With(new PatternDef { Id = "t_delivery_body", Extends = "monster", Radius = .55f, Height = 1.8f,
+                Components = { ["stats"] = System.Text.Json.Nodes.JsonNode.Parse("""{"attributes":{"might":13,"grace":7,"vigor":12,"move.speed":5,"armor":20,"weapon.damage.min":6,"weapon.damage.max":11,"weapon.attack.time":1.2}}""")!.AsObject() } })
             .With(new WeaveDef { Id = "t_spark", Form = "blast", Threads = { "ember" }, Effects = { Spec("{\"type\": \"event\", \"name\": \"t_spark\", \"data\": {\"depth\": \"depth\"}}") } })
             .With(new GlyphDef { Id = "t_wide", Modifiers = { new Attributes.Modifier { Attribute = "area.angle", Form = Attributes.ModifierForm.Increased, Value = 0.5 }, new Attributes.Modifier { Attribute = "melee.reach", Value = 1 } } })
             .With(new GlyphDef { Id = "t_echo", Modifiers = { new Attributes.Modifier { Attribute = "area.scatter", Value = 2 }, new Attributes.Modifier { Attribute = "area.pulses", Value = 1 } } })
@@ -53,8 +57,8 @@ internal sealed class DeliveryArena
         return arena;
     }
 
-    /// <summary>A still body: a boar of the other side, or of the caster's side.</summary>
-    public Entity Body(float x, float y, string faction = "blue", string pattern = "boar")
+    /// <summary>A still neutral test body, or an explicitly requested production pattern.</summary>
+    public Entity Body(float x, float y, string faction = "blue", string pattern = "t_delivery_body")
     {
         var e = Sim.Service<PatternFactory>().Spawn(Sim, pattern, new Vector3(x, y, 0), new SpawnOptions { Faction = faction, RollRarity = false });
         Sim.World.Remove<Behavior>(e);
@@ -191,6 +195,49 @@ public class ShapeTests
 /// <summary>Areas strike where their shapes are drawn, pick and require, and echo.</summary>
 public class AreaDeliveryTests
 {
+    [Theory]
+    [InlineData(null, 1)]
+    [InlineData("next", 1)]
+    [InlineData("same", 0)]
+    public void AreaPayloadDepthIsAnExplicitPolicyIndependentOfSelection(string? policy, int increment)
+    {
+        var arena = DeliveryArena.Create();
+        var target = arena.Body(11, 10);
+        var payload = """{"type":"event","name":"t_hit","data":{"depth":"depth"}}""";
+        var ctx = arena.Context(new(11, 10, 0), target: target).Fork(3);
+        arena.Effect(payload).Execute(ctx);
+        var directDepth = Assert.Single(arena.Of<CustomEvent>()).Data["depth"];
+        foreach (var selection in new[] { "", ",\"max_targets\":1,\"report_miss\":true,\"pick\":\"aimed_nearest\"" })
+        {
+            arena.Events.Clear();
+            var authored = policy is null ? "" : ",\"payload_depth\":\"" + policy + "\"";
+            var area = arena.Effect("{\"type\":\"area\",\"radius\":2,\"center\":\"source\",\"effects\":[" + payload + "]" + authored + selection + "}");
+            area.Execute(ctx);
+            Assert.Equal(directDepth + increment, Assert.Single(arena.Of<CustomEvent>()).Data["depth"]);
+        }
+        Assert.Throws<InvalidOperationException>(() => arena.Effect("""{"type":"area","payload_depth":"invalid"}"""));
+    }
+
+    [Theory]
+    [InlineData("same", 0)]
+    [InlineData("next", 1)]
+    public void AreaPayloadPolicyNeverRemovesTheDepthCostOfRealDelayedWork(string policy, int increment)
+    {
+        var arena = DeliveryArena.Create();
+        arena.Body(11, 10);
+        var payload = """{"type":"event","name":"t_hit","data":{"depth":"depth"}}""";
+        var area = "{\"type\":\"area\",\"radius\":2,\"center\":\"source\",\"payload_depth\":\"" + policy + "\",\"effects\":[" + payload + "]}";
+        var delayed = arena.Effect("{\"type\":\"delay\",\"seconds\":0.1,\"effects\":[" + area + "]}");
+        delayed.Execute(arena.Context(new(11, 10, 0)).Fork(3));
+        arena.Tick(3);
+        Assert.Equal(4 + increment, Assert.Single(arena.Of<CustomEvent>()).Data["depth"]);
+        arena.Events.Clear();
+        var limit = (int)arena.Sim.Content.Rules.Number("effects.max_depth", 12);
+        delayed.Execute(arena.Context(new(11, 10, 0)).Fork(limit));
+        arena.Tick(3);
+        Assert.Empty(arena.Of<CustomEvent>());
+    }
+
     [Fact]
     public void AnchoredShapesExtendFromTheSourceAlongTheFacing()
     {
@@ -249,7 +296,9 @@ public class AreaDeliveryTests
     public void AreaAngleAndMeleeReachScaleSweeps()
     {
         var arena = DeliveryArena.Create();
-        var side = arena.Body(11.5f, 12.4f);
+        // The unmodified sweep now touches body edges. Put this body beyond that graze,
+        // but inside the wider glyph's cone, so the test still proves angle scaling.
+        var side = arena.Body(11.2f, 12.9f);
         var reach = arena.Body(13.6f, 10);
         var plain = arena.Weave("cleave", "");
         var wide = arena.Sim.Service<WeaveCompiler>().Compile(new WeaveSpec { Form = "cleave", Glyphs = { GlyphRef.Parse("t_wide") } });
@@ -267,13 +316,15 @@ public class AreaDeliveryTests
         Assert.Contains(arena.Of<DamageDealt>(), d => d.Target == reach);
     }
 
-    [Fact]
-    public void AftershocksAndPulsesEchoTheArea()
+    [Theory]
+    [InlineData("next", 1)]
+    [InlineData("same", 0)]
+    public void AftershocksAndPulsesEchoTheArea(string policy, int initialDepth)
     {
         var arena = DeliveryArena.Create();
         arena.Body(15, 10);
         var weave = arena.Sim.Service<WeaveCompiler>().Compile(new WeaveSpec { Form = "blast", Threads = { "ember" }, Glyphs = { GlyphRef.Parse("t_echo") } });
-        var area = arena.Effect("{\"type\": \"area\", \"radius\": 2, \"center\": \"point\", \"effects\": [{\"type\": \"event\", \"name\": \"t_hit\", \"data\": {\"depth\": \"depth\"}}]}");
+        var area = arena.Effect("{\"type\": \"area\", \"radius\": 2, \"center\": \"point\", \"payload_depth\":\"" + policy + "\", \"effects\": [{\"type\": \"event\", \"name\": \"t_hit\", \"data\": {\"depth\": \"depth\"}}]}");
         var pending = arena.Sim.Scheduler.Pending;
         area.Execute(arena.Context(new Vector3(15, 10, 0), weave: weave));
         // Struck now; two aftershocks and one pulse wait their turn.
@@ -281,9 +332,9 @@ public class AreaDeliveryTests
         Assert.Equal(3, arena.Sim.Scheduler.Pending - pending);
         arena.Tick(20);
         var hits = arena.Events.OfType<CustomEvent>().Where(e => e.Name == "t_hit").ToList();
-        Assert.Equal(1, hits[0].Data["depth"]);
+        Assert.Equal(initialDepth, hits[0].Data["depth"]);
         // The pulse strikes where the area stood, one level deeper; echoes never echo again.
-        Assert.Contains(hits.Skip(1), h => h.Data["depth"] == 2);
+        Assert.Contains(hits.Skip(1), h => h.Data["depth"] == initialDepth + 1);
         Assert.Equal(pending, arena.Sim.Scheduler.Pending);
     }
 }
@@ -1291,14 +1342,17 @@ public class DeliveryValidationTests
 }
 
 /// <summary>The package's acceptance: a seeded fight with forking, returning and homing weaves splits, returns and repeats.</summary>
-public class DeliveryAcceptanceTests
+public class DeliveryAcceptanceTests(Xunit.Abstractions.ITestOutputHelper output)
 {
     private static List<string> Fight(string seed)
     {
         var sim = ZoneBuilder.CreateArena(DeliveryArena.Registry, Rng.Hash64(seed));
         var factory = sim.Service<PatternFactory>();
         factory.Spawn(sim, "loosed_skirmisher", new Vector3(10, 10, 0), new SpawnOptions { Faction = "red" });
-        factory.Spawn(sim, "boar", new Vector3(14, 10, 0), new SpawnOptions { Faction = "blue" });
+        // Mechanism acceptance needs a stable upright body. A short production animal makes a
+        // piercing shot descend into the ground before its outward leg ends, correctly preventing
+        // a return. Species balance belongs in the authored-body matrix and seeded tournaments.
+        factory.Spawn(sim, "t_delivery_body", new Vector3(14, 10, 0), new SpawnOptions { Faction = "blue", RollRarity = false });
         var trace = new List<string>();
         sim.Events.SubscribeAll(e => trace.Add(e switch
         {
@@ -1313,9 +1367,10 @@ public class DeliveryAcceptanceTests
     public void ASeededFightSplitsReturnsAndRepeatsExactly()
     {
         var first = Fight("delivery");
+        output.WriteLine(string.Join(Environment.NewLine, first));
         Assert.Contains(first, l => l.StartsWith("ProjectileForked"));
         Assert.Contains(first, l => l.StartsWith("ProjectileTurned"));
-        Assert.Contains(first, l => l.StartsWith("ProjectileReturned"));
+        Assert.True(first.Any(l => l.StartsWith("ProjectileReturned")), string.Join(Environment.NewLine, first));
         // A hit lands after a glaive turns and before it is home: a return hit.
         var turned = first.FindIndex(l => l.StartsWith("ProjectileTurned"));
         var home = first.FindIndex(turned, l => l.StartsWith("ProjectileReturned"));

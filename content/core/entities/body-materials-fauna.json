@@ -1,0 +1,15 @@
+{
+  "kind": "body_materials",
+  "entries": [
+    {
+      "id": "keratin",
+      "name": "Horn and spine tissue",
+      "density": 1300
+    },
+    {
+      "id": "chitin",
+      "name": "Chitinous shell",
+      "density": 1400
+    }
+  ]
+}

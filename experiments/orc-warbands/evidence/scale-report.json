@@ -1,0 +1,47 @@
+[
+  {
+    "id": "holdfast",
+    "authoritativeHeight": 1.8,
+    "modelHeight": 1.7334
+  },
+  {
+    "id": "skeleton_warrior",
+    "authoritativeHeight": 1.8,
+    "modelHeight": 1.7128800000000002
+  },
+  {
+    "id": "goblin_skirmisher",
+    "authoritativeHeight": 0.9,
+    "modelHeight": 0.9319047680409906
+  },
+  {
+    "id": "orc_grunt",
+    "authoritativeHeight": 1.82,
+    "modelHeight": 1.82
+  },
+  {
+    "id": "orc_warlord",
+    "authoritativeHeight": 2.48,
+    "modelHeight": 3.3604
+  },
+  {
+    "id": "gnasher_whelp",
+    "authoritativeHeight": 0.36,
+    "modelHeight": 0.34199999999999997
+  },
+  {
+    "id": "great_gnasher",
+    "authoritativeHeight": 1.32,
+    "modelHeight": 1.518
+  },
+  {
+    "id": "saddle_gnasher",
+    "authoritativeHeight": 1.12,
+    "modelHeight": 1.1984000000000001
+  },
+  {
+    "id": "ironjaw_gnasher",
+    "authoritativeHeight": 1.46,
+    "modelHeight": 1.5621999999999998
+  }
+]

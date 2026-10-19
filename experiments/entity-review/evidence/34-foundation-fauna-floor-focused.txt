@@ -1,0 +1,25 @@
+  HollowWake.Core -> C:\Users\John\.codex\worktrees\fauna-foundation-integration\MMOARPG\src\HollowWake.Core\bin\Debug\net8.0\HollowWake.Core.dll
+  HollowWake.Protocol -> C:\Users\John\.codex\worktrees\fauna-foundation-integration\MMOARPG\src\HollowWake.Protocol\bin\Debug\net8.0\HollowWake.Protocol.dll
+  HollowWake.Server -> C:\Users\John\.codex\worktrees\fauna-foundation-integration\MMOARPG\src\HollowWake.Server\bin\Debug\net10.0\HollowWake.Server.dll
+  HollowWake.Tools -> C:\Users\John\.codex\worktrees\fauna-foundation-integration\MMOARPG\src\HollowWake.Tools\bin\Debug\net10.0\hollowwake.dll
+C:\Users\John\.codex\worktrees\fauna-foundation-integration\MMOARPG\tests\HollowWake.Core.Tests\FreeShotGroundFloorTests.cs(30,17): warning xUnit1013: Public method 'AssertHumanoidFreeShotContact' on test class 'FreeShotGroundFloorTests' should be marked as a Theory. Reduce the visibility of the method, or add a Theory attribute to the method. (https://xunit.net/xunit.analyzers/rules/xUnit1013) [C:\Users\John\.codex\worktrees\fauna-foundation-integration\MMOARPG\tests\HollowWake.Core.Tests\HollowWake.Core.Tests.csproj]
+  HollowWake.Core.Tests -> C:\Users\John\.codex\worktrees\fauna-foundation-integration\MMOARPG\tests\HollowWake.Core.Tests\bin\Debug\net10.0\HollowWake.Core.Tests.dll
+Test run for C:\Users\John\.codex\worktrees\fauna-foundation-integration\MMOARPG\tests\HollowWake.Core.Tests\bin\Debug\net10.0\HollowWake.Core.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+[xUnit.net 00:00:03.65]     HollowWake.Core.Tests.FaunaFreeShotTests.StillAirborneFreeShotsCanPassAboveCrittersBeforeReachingTheCursor(pattern: "hedgehog", preset: "firebolt") [FAIL]
+  Failed HollowWake.Core.Tests.FaunaFreeShotTests.StillAirborneFreeShotsCanPassAboveCrittersBeforeReachingTheCursor(pattern: "hedgehog", preset: "firebolt") [8 ms]
+  Error Message:
+   Assert.DoesNotContain() Failure: Filter matched in collection
+             ↓ (pos 0)
+Collection: [DamageDealt { Tick = 22, Source = E0.1, Target = E1.1, Total = 21.91643602809492, Crit = True, Tags = [cast.timed damage elemental ember form.missile heat hit preset.firebolt projectile spell thread.ember vs.ambient vs.beast vs.body.flesh vs.creature vs.critter vs.faction.blue vs.family.erinaceid vs.fauna vs.full_life vs.habitat.forest vs.locomotion.ground vs.pattern.hedgehog vs.prey vs.role.critter vs.size.tiny vs.stationary weave], ByThread = System.Collections.Generic.Dictionary`2[System.String,System.Double], Evaded = False, Blocked = False, CastId = 1, Depth = 1, Culled = False, Clamped = False, Roll = 0.05892660547727402 }]
+  Stack Trace:
+     at HollowWake.Core.Tests.FreeShotGroundFloorTests.AssertHumanoidFreeShotContact(String pattern, Single slope, String preset, Single distance, Single cursorDistance, Boolean expectedHit) in C:\Users\John\.codex\worktrees\fauna-foundation-integration\MMOARPG\tests\HollowWake.Core.Tests\FreeShotGroundFloorTests.cs:line 51
+   at HollowWake.Core.Tests.FaunaFreeShotTests.StillAirborneFreeShotsCanPassAboveCrittersBeforeReachingTheCursor(String pattern, String preset) in C:\Users\John\.codex\worktrees\fauna-foundation-integration\MMOARPG\tests\HollowWake.Core.Tests\FaunaFreeShotTests.cs:line 36
+   at InvokeStub_FaunaFreeShotTests.StillAirborneFreeShotsCanPassAboveCrittersBeforeReachingTheCursor(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Standard Output Messages:
+ firebolt/hedgehog, slope 0, body=4, cursor=6, launch=<10, 10, 1.098>, distance=4.752
+
+
+
+Failed!  - Failed:     1, Passed:   840, Skipped:     0, Total:   841, Duration: 2 s - HollowWake.Core.Tests.dll (net10.0)

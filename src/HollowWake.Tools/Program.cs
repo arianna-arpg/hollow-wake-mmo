@@ -251,7 +251,7 @@ switch (command)
     case "lint":
         return LintCommand.Run(contentDirs, Opt, Flag);
     case "bench":
-        return Bench.Run(LoadContent(false), Opt, Flag("json"));
+        return Bench.Run(LoadContent(false), Opt, Flag("json"), Flag("snapshot-profile"));
     case "probe":
     {
         var host = Opt("host", "127.0.0.1");

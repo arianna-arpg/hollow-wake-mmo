@@ -11,6 +11,16 @@ public sealed partial class ZoneInstance
 {
     private long _castSequence;
 
+    private void SendCastMiss(WeaveMissed missed)
+    {
+        foreach (var session in Sessions)
+        {
+            if (session.Entity != missed.Caster && !session.Known.Contains(missed.Caster.Key)) continue;
+            var target = session.Entity == missed.Target || session.Known.Contains(missed.Target.Key) ? missed.Target.Key : 0;
+            session.Send(new CombatEventMsg("miss", missed.Caster.Key, target, 0, false, new(), missed.Reason));
+        }
+    }
+
     private CastCueMsg Cue(CastPresentationEvent e) => new(++_castSequence, e.CastId, e.Phase,
         e.Caster.Key, e.Target.Key, e.Weave, e.Name, e.Mode, e.Tags.Items.ToList(), e.Time,
         e.StartedAt, e.Duration, e.Position.X, e.Position.Y, e.Position.Z,

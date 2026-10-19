@@ -255,6 +255,7 @@ public static class AxisBindings
     static AxisBindings()
     {
         Vocabulary("shapes", () => Shapes.Names);
+        Vocabulary("projectile aims", () => ProjectileAims.Names);
         Vocabulary("picks", () => Picks.Names);
         Vocabulary("curves", () => Curves.Names);
         Vocabulary("target kinds", () => TargetKinds.All.Select(k => k.Name));
@@ -446,7 +447,7 @@ public static class AxisBindings
             Name = name,
         });
 
-    private static void Choice(string type, string parameter, Dimension? dimension, string? @default = null, string[]? words = null, string? registry = null, bool hidesNumber = false, string? readBy = null, string? name = null) =>
+    private static void Choice(string type, string parameter, Dimension? dimension, string? @default = null, string[]? words = null, string? registry = null, bool hidesNumber = false, string? readBy = null, string? name = null, string? rule = null) =>
         Register(new AxisBinding
         {
             Type = type,
@@ -455,6 +456,7 @@ public static class AxisBindings
             Dimension = dimension,
             Unit = Word,
             DefaultWord = @default,
+            Rule = rule,
             Words = words,
             Registry = registry,
             HidesNumber = hidesNumber,
@@ -471,7 +473,7 @@ public static class AxisBindings
         }
     }
 
-    private static void FlagOf(string type, string parameter, Dimension dimension, bool @default = false, string unit = Flag, string? name = null) =>
+    private static void FlagOf(string type, string parameter, Dimension? dimension, bool @default = false, string unit = Flag, string? name = null) =>
         Register(new AxisBinding
         {
             Type = type,
@@ -584,7 +586,11 @@ public static class AxisBindings
         // area: an angle shapes only the shapes it shapes, and a width only those with one, an unwritten width
         // taking the shape's share of the weave's area.width (EffectHelpers.SizeOf).
         Choice("area", "shape", Geometry, "circle", registry: "shapes");
-        Axis("area", "radius", Geometry, Units, "area.radius", 2);
+        Axis("area", "radius", Geometry, Units, "area.radius", 2, fallbackWhen: "!radius_base");
+        Register(new AxisBinding { Type = "area", Parameter = "radius_base", Kind = ParameterKind.Axis,
+            Dimension = Geometry, Unit = Units, Attribute = "area.radius", Role = AttributeRole.Channel,
+            Fold = AttributeFold.Weave, WrittenOnly = true,
+            WrittenDetail = "external base through area.radius modifiers and bounds; mutually exclusive with radius" });
         Scaled("area", "angle", Geometry, Degrees, "area.angle", when: "shape:angle");
         Axis("area", "width", Geometry, Units, "area.width", when: "shape:width", fallbackWhen: "shape:width_share", factorOf: "shape:width_share");
         Axis("area", "inner", Geometry, Fraction);
@@ -596,6 +602,13 @@ public static class AxisBindings
         NodeOf("area", "require", NodeShape.Predicate, Targeting);
         Choice("area", "reach", Geometry, "center", new[] { "center", "edge" }, hidesNumber: true);
         Choice("area", "occlusion", Geometry, "blocked", Occlusions, hidesNumber: true);
+        // Outcome reporting does not change the region or payload; depth policy does affect proc causality.
+        FlagOf("area", "report_miss", null);
+        Choice("area", "payload_depth", Causality, "next", new[] { "next", "same" });
+        Choice("area", "contact", Geometry, "center", new[] { "center", "body" });
+        // Unwritten height is the live source body, not a fixed weave number.
+        Axis("area", "height", Geometry, Units, when: "contact=body");
+        Axis("area", "elevation", Geometry, Units, @default: 0, when: "contact=body");
         Effects("area", "effects");
         Implicit("area", "aftershocks", Geometry, Count, attribute: "area.scatter");
         Implicit("area", "aftershock_scale", Geometry, Fraction, rule: "delivery.aftershock_scale", @default: 0.5, when: "aftershocks");
@@ -608,6 +621,7 @@ public static class AxisBindings
 
         // projectile: a written duration bounds a flight, and an unwritten range then leaves it unbounded; an aimed
         // fan's spreads replace the spread.
+        Choice("projectile", "aim", Targeting, "target", registry: "projectile aims", rule: "delivery.projectile_aim");
         Axis("projectile", "count", Geometry, Count, "projectile.count", 1, name: "flights");
         Axis("projectile", "speed", Kinematics, UnitsPerSecond, "projectile.speed", 12);
         Axis("projectile", "range", Kinematics, Units, "range", 12, fallbackWhen: "!duration");
@@ -825,7 +839,7 @@ public static class AxisBindings
         Implicit("damage", "added_effectiveness", Payload, Fraction, attribute: "damage.effectiveness", when: "!effectiveness");
         FlagOf("damage", "cannot_kill", Payload);
         Axis("damage", "leech", Payload, Fraction);
-        Effects("damage", "on_kill");
+        Effects("damage", "on_kill", "after_damage");
 
         Channel("heal", "amount", Payload, Resource, "healing", 10);
         Choice("heal", "resource", Payload, "life", registry: "resources");

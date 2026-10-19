@@ -103,7 +103,7 @@ public sealed class AiContext : IIntentSender
 /// writes its own mind (its target, its memory, its order), and acts on the simulation by sending intents
 /// through <see cref="AiIntents"/>, as a player would. The few world rules a body is under rather than asks for
 /// are named where they happen: facing its target (see <see cref="FaceTarget"/>), a minion's leash recall and a
-/// spent trap's going; and the device actions still fire their weaves through <c>ConstructCasting</c>.
+/// spent trap's going; device actions begin ordinary paid uses through <c>UseWeaveIntent</c>.
 /// </summary>
 public static class AiActions
 {
@@ -167,7 +167,7 @@ public static class AiActions
             {
                 return;
             }
-            var stop = (float)c.Num(p, "stop", c.Sim.Service<WeaveRuntime>().PreferredRange(c.Sim, c.Entity) * 0.9);
+            var stop = (float)c.Num(p, "stop", c.Sim.Service<WeaveRuntime>().PreferredRange(c.Sim, c.Entity, c.Behavior.Target) * 0.9);
             ChaseTo(c, tt, stop);
         });
         Register("attack", (c, p) => AttackTarget(c));
@@ -305,7 +305,7 @@ public static class AiActions
         {
             return;
         }
-        ChaseTo(c, tt, (float)(c.Sim.Service<WeaveRuntime>().PreferredRange(c.Sim, c.Entity) * 0.9));
+        ChaseTo(c, tt, (float)(c.Sim.Service<WeaveRuntime>().PreferredRange(c.Sim, c.Entity, c.Behavior.Target) * 0.9));
         AttackTarget(c);
     }
 
@@ -521,6 +521,7 @@ public sealed class BehaviorSystem : SimSystem
         var ctx = new AiContext { Sim = sim, Entity = e, Behavior = b, Def = def, Transform = t, Motion = m, Stats = stats, Handlers = handlers, RefusalLog = _refusals };
         if (stats.HasFlag("stunned") || stats.HasFlag("frozen"))
         {
+            sim.World.Get<Minion>(e)?.PendingOwnerCasts?.Clear();
             AiIntents.Send(ctx, AiIntents.Stop);
             return;
         }
@@ -623,7 +624,7 @@ public sealed class BehaviorSystem : SimSystem
             }
         }
         scope.NearestEnemyDistance = nearest;
-        scope.PreferredRange = sim.Service<WeaveRuntime>().PreferredRange(sim, e);
+        scope.PreferredRange = sim.Service<WeaveRuntime>().PreferredRange(sim, e, b.Target);
         if (hasTarget && sim.World.Get<Stats>(b.Target) is { } ts)
         {
             scope.MountTarget(ts);

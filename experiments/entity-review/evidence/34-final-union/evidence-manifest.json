@@ -1,0 +1,345 @@
+{
+  "TextStorage": "UTF-8/LF normalized for git; original run evidence retained at the paths in provenance and commands.",
+  "Files": [
+    {
+      "Path": "01_isometric.png",
+      "Bytes": 518803,
+      "Sha256": "420943c01bc1b86fd87bf211a444b80e1ca542f4da1ddf91517cae9a928f691a"
+    },
+    {
+      "Path": "16_cards.png",
+      "Bytes": 495657,
+      "Sha256": "74f8957449e336a8210a1813a76a159f1971179d7acfda4242ed5e437de393a5"
+    },
+    {
+      "Path": "audit-comparison.json",
+      "Bytes": 150,
+      "Sha256": "16383399959e618ca93dbf0301297f055bbdf061d0fcbb8fc4cffc9fde920896"
+    },
+    {
+      "Path": "axes.json",
+      "Bytes": 4086388,
+      "Sha256": "b537ec5f5a0e4e0f4c04a8be5922a9d82673af1ccdf1f1fc04ec8c6229604d4a"
+    },
+    {
+      "Path": "background-runner-tests.txt",
+      "Bytes": 956,
+      "Sha256": "48d61bdb78a9306eb69d5a02c97edc071b45d38b91cbbf6631d683884b7db6d8"
+    },
+    {
+      "Path": "baseline-base.txt",
+      "Bytes": 431,
+      "Sha256": "4a6ff124e053222ccf2fb08745f66415f028ae084663579d0cfbab275a309b01"
+    },
+    {
+      "Path": "baseline-conflict.txt",
+      "Bytes": 647,
+      "Sha256": "e84bded5b0005668b9d24d9b6b5979998d5c351b0abef4a335cf3fbedc09a219"
+    },
+    {
+      "Path": "baseline-fauna.txt",
+      "Bytes": 431,
+      "Sha256": "563f3c970cb136394d3d12f5443563cbb423c0bbb319df8bf7d484371c2f2c1c"
+    },
+    {
+      "Path": "baseline-incoming36.txt",
+      "Bytes": 431,
+      "Sha256": "e0d08c87dace113c51fdcd14ef884aa427368596f89294c800a24501b28e352a"
+    },
+    {
+      "Path": "baseline-test.txt",
+      "Bytes": 360,
+      "Sha256": "a95c6b12ea03e3ede879bd8dd6c6ecb93c30cea776f06cd3fc68f51864cdec3b"
+    },
+    {
+      "Path": "boar-legacy-floor016.json",
+      "Bytes": 18612,
+      "Sha256": "17a430be5bb77255c15b2936dedb15f19023a641e52cd657653d29c38fa73b39"
+    },
+    {
+      "Path": "boar-legacy-floor016.txt",
+      "Bytes": 584,
+      "Sha256": "ea94e82eaad9c981c189c92593f679e8ad4dff8a1c665c2150f32e81d2e8cfc7"
+    },
+    {
+      "Path": "boar-legacy-floor342.json",
+      "Bytes": 18612,
+      "Sha256": "17a430be5bb77255c15b2936dedb15f19023a641e52cd657653d29c38fa73b39"
+    },
+    {
+      "Path": "boar-legacy-floor342.txt",
+      "Bytes": 584,
+      "Sha256": "87e37c7aa24ad04e591451c88af131430885de77a7c497246f9fa7973f87a196"
+    },
+    {
+      "Path": "build.txt",
+      "Bytes": 1699,
+      "Sha256": "1f3d0c1c8f679e729f73f0db69ba5f43a19298669fe24adc3af3385e5e531bc3"
+    },
+    {
+      "Path": "census.txt",
+      "Bytes": 4367,
+      "Sha256": "db93291383e354c3c543e1db08c9e94179f8282ab1f31b180ffbb3689885a29e"
+    },
+    {
+      "Path": "client-commands.ps1",
+      "Bytes": 1332,
+      "Sha256": "76330bfb793b7e0cd26b5d513f098f35befb29df40e3bbf3348ec65c863e741d"
+    },
+    {
+      "Path": "client-source.txt",
+      "Bytes": 41,
+      "Sha256": "429ba089c0c1377d2e5f7fa63b374ccd16b17a1f39f624c371f8715283b3deb8"
+    },
+    {
+      "Path": "commands.json",
+      "Bytes": 2989,
+      "Sha256": "03675d83bba82c1c85780bad88c9f4e8afca7f970ab88df58995a3d703e0d57d"
+    },
+    {
+      "Path": "counterfactual-floor342.json",
+      "Bytes": 166,
+      "Sha256": "e52275f668a16cad9345ed8fc2d75ef83d9530cddc56a9cfc57fd6d9aab173c0"
+    },
+    {
+      "Path": "counterfactual-legacy-boar.yaml",
+      "Bytes": 463,
+      "Sha256": "23cfdf58c7e363de41a9bf727b72ba6b22ccc4c1ba659d11f94137e022172b11"
+    },
+    {
+      "Path": "deliveries-base.txt",
+      "Bytes": 34375,
+      "Sha256": "b7018194a37c01566834834a3b15dab4c4faf09ef42ecc28ef8367ea2e9f677c"
+    },
+    {
+      "Path": "deliveries-conflict.txt",
+      "Bytes": 36856,
+      "Sha256": "a7b67217fa677e684e5d1b77849d32bf43036484300e51da540b646f747baf3d"
+    },
+    {
+      "Path": "deliveries-fauna.txt",
+      "Bytes": 34599,
+      "Sha256": "4e50abedbab8d0f260847718ba0c5f743e8bc27e991c5d03c9b6afbb89c79939"
+    },
+    {
+      "Path": "deliveries-incoming36.txt",
+      "Bytes": 35223,
+      "Sha256": "f066a60daa0dfcad27fad02c62708d2495c364f8e3d11447c09d6890cc96e191"
+    },
+    {
+      "Path": "fight.txt",
+      "Bytes": 2049,
+      "Sha256": "249b15e47cfe88fc80f0fa5045bdd7e3d657f9a3a95d6b8e0eeb1a93f2c878d4"
+    },
+    {
+      "Path": "import-cleanup.txt",
+      "Bytes": 2101,
+      "Sha256": "7a73e81b5183f2dcd7a7915484f2e1898a10ddf0c624c19c423bf8cdb540d3d1"
+    },
+    {
+      "Path": "lint.json",
+      "Bytes": 315112,
+      "Sha256": "99001c85a1b134fcee10d44d9dd1e6391fab6f82caee7d676cd703a1ed9231e7"
+    },
+    {
+      "Path": "lint.txt",
+      "Bytes": 134800,
+      "Sha256": "258cca0cff5c2d4dcc81161279083b42555a5872a1f1201549ff7a8474a24995"
+    },
+    {
+      "Path": "literals.txt",
+      "Bytes": 21940,
+      "Sha256": "e531614f185510a1c36d71a2bf7664f7d4dc18998a2412c9a50b4cd788f9de6e"
+    },
+    {
+      "Path": "load.txt",
+      "Bytes": 139,
+      "Sha256": "cf98410c448f70a80847fd7814128e164b477f8a0b5ba3a00943525560531282"
+    },
+    {
+      "Path": "merge.txt",
+      "Bytes": 403,
+      "Sha256": "869932c75c85afe2fc1d1b07caaa18761da99796d97d67cf2995f4994e9e9856"
+    },
+    {
+      "Path": "owned-process-cleanup.json",
+      "Bytes": 189,
+      "Sha256": "6da54b1ec6df4209c9d07cb8e7480b9ab261c04ae011f73e5607b65b670fa6af"
+    },
+    {
+      "Path": "packaging-diagnostic.txt",
+      "Bytes": 469,
+      "Sha256": "fa2686c231e290f44838fcb8b7084066405bcea68cd1819454867de065cf9116"
+    },
+    {
+      "Path": "porter.txt",
+      "Bytes": 982,
+      "Sha256": "52842128c5fd1c2378b6510771d0c1eeb1060b0eedb813ec0662bee60932b6cf"
+    },
+    {
+      "Path": "probe-commands.ps1",
+      "Bytes": 2506,
+      "Sha256": "a45b3e14585a4d65bcb2595c0002b74cd79a3c72772849d0d213549d081dc49f"
+    },
+    {
+      "Path": "probe-server-errors.txt",
+      "Bytes": 0,
+      "Sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "Path": "probe-server.txt",
+      "Bytes": 2002,
+      "Sha256": "38ae76a8d61913618284a5394179f9c18ff1991926eb73cd18c77427693ec4b6"
+    },
+    {
+      "Path": "probe-server.yaml",
+      "Bytes": 2019,
+      "Sha256": "7b0f70b6e9bf79ee876b8cb2ef728019700e1cdf22a4a96fcd21c75bef1167ee"
+    },
+    {
+      "Path": "probe.txt",
+      "Bytes": 1050,
+      "Sha256": "21f35074a5e61f995cd68cb43872546131ca8eb19449763f47d7743e18fe1d95"
+    },
+    {
+      "Path": "protocol.txt",
+      "Bytes": 35,
+      "Sha256": "413527813d9773e5d804d6838e339de87d949cc06b9a5220f5def7cd21865f10"
+    },
+    {
+      "Path": "provenance.json",
+      "Bytes": 4957,
+      "Sha256": "3058c9f66c47847362d2fedf4d622b0bf1a171815f8735e30bcfac2eaf785df1"
+    },
+    {
+      "Path": "proving-comparison.json",
+      "Bytes": 415,
+      "Sha256": "aaae5bf339706b3efc4ae1bcb62f8e321b90564b66e70b009fe49fdd242e2cc5"
+    },
+    {
+      "Path": "proving-differences.json",
+      "Bytes": 3,
+      "Sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+    },
+    {
+      "Path": "proving-exit.txt",
+      "Bytes": 2,
+      "Sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865"
+    },
+    {
+      "Path": "proving.json",
+      "Bytes": 82051,
+      "Sha256": "8c8cd9be4372791a72fc4242cbb8daec9789445c80bf4235ed725330df88063c"
+    },
+    {
+      "Path": "proving.txt",
+      "Bytes": 2047,
+      "Sha256": "7e464446ce72c57f6873732a8da2c4e54be3e5cf2d7ebdeeb12ca1ad095eb35b"
+    },
+    {
+      "Path": "release-build.txt",
+      "Bytes": 685,
+      "Sha256": "bed948ecc77e007db8f2b02796c686880cc204e1c02d12af7f9503452ad85035"
+    },
+    {
+      "Path": "release-replay.txt",
+      "Bytes": 2833,
+      "Sha256": "b95e4a01992cee37da7293655a38f109088c2089cc1828a0e0bb60940eba4f0c"
+    },
+    {
+      "Path": "replay-comparison.json",
+      "Bytes": 1046,
+      "Sha256": "613c81f39720355f1dc0ca5d0ebbf333626529c645e1e6a0b49d32d273a8bc8b"
+    },
+    {
+      "Path": "runtime-source-manifest.txt",
+      "Bytes": 86044,
+      "Sha256": "ee47e80e8759bf294ea3fd8e820c40fc4098b6324cb5556febf702be5adb7962"
+    },
+    {
+      "Path": "smoke-import-godot.txt",
+      "Bytes": 8223,
+      "Sha256": "dcb720e7a12f8fbad7725b380efd72b3e94421e3c8a5daa5d28c582ad377cdc8"
+    },
+    {
+      "Path": "smoke-result.json",
+      "Bytes": 1790,
+      "Sha256": "357a8fd5e376effc5f3db06df6d2f38a0ea16359d04a2becf2b2a869671bdb3c"
+    },
+    {
+      "Path": "smoke-server.txt",
+      "Bytes": 2742,
+      "Sha256": "b303c324ed84ac42c3984d1ba6f6478cbbaa8f3bbed04a6730a668b91bfbbe93"
+    },
+    {
+      "Path": "smoke-smoke-godot.txt",
+      "Bytes": 6886,
+      "Sha256": "1247cf7300b19959a343e96ec605a7d4a43f500cf7d8f77d3dbfcbb53d8f586e"
+    },
+    {
+      "Path": "smoke-smoke-web.txt",
+      "Bytes": 7995,
+      "Sha256": "2ea86deb33619f5c38fca14ee56f47d90f7795734ab7198f2174c5ab0524acc6"
+    },
+    {
+      "Path": "smoke.txt",
+      "Bytes": 616,
+      "Sha256": "3c6285b10aa68da4ed8c81fecb4871cdc5b67842507a4d38e90ce25ece747cf9"
+    },
+    {
+      "Path": "source.txt",
+      "Bytes": 41,
+      "Sha256": "429ba089c0c1377d2e5f7fa63b374ccd16b17a1f39f624c371f8715283b3deb8"
+    },
+    {
+      "Path": "standard-actual.json",
+      "Bytes": 129021,
+      "Sha256": "b3450177072d37e86ac4f0b40322d32a44e78658b3124425b6f9d01c21c6045d"
+    },
+    {
+      "Path": "standard-actual.txt",
+      "Bytes": 2830,
+      "Sha256": "66710bde3993229677288fd02e2dc40c32e62539f74575470d6afdc4a02ebd9b"
+    },
+    {
+      "Path": "standard-floor342.json",
+      "Bytes": 129021,
+      "Sha256": "b3450177072d37e86ac4f0b40322d32a44e78658b3124425b6f9d01c21c6045d"
+    },
+    {
+      "Path": "standard-floor342.txt",
+      "Bytes": 2832,
+      "Sha256": "b70e342fbc2d9c843e02d8212a7c54c8f3c00e795a37594695ec5b9557423c6b"
+    },
+    {
+      "Path": "tests.txt",
+      "Bytes": 1964,
+      "Sha256": "ccbbada17c71f5e42b71fdfb25b88c0d5c35f2f8ff7b08693bda754ad925abfe"
+    },
+    {
+      "Path": "validate.txt",
+      "Bytes": 1809,
+      "Sha256": "01d64f7e000cf4afa1cbad8f0b6ef53d059cd58668e82376e152cfc54b8529e5"
+    },
+    {
+      "Path": "verification.json",
+      "Bytes": 1480,
+      "Sha256": "c81b38fb880bfb98563a4ca92af352fcfb7ef29e42e5e8692436487318d5c525"
+    },
+    {
+      "Path": "web-build.txt",
+      "Bytes": 1176,
+      "Sha256": "9e207e8ec8b039d0176092a9933cff78dfa1f55af821a5e8282753807be6a66b"
+    },
+    {
+      "Path": "web-install.txt",
+      "Bytes": 75,
+      "Sha256": "ecae91800f22c06ecfc68cb220e507fb2ad5e9f25a3ad3c62025dc963b206666"
+    },
+    {
+      "Path": "web-tests.txt",
+      "Bytes": 547,
+      "Sha256": "89f7daae9f06015d7d04455fb5b32f8964c96fb3d948b744eb71c7eb416ab069"
+    }
+  ]
+}

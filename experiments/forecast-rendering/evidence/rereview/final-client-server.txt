@@ -1,0 +1,17 @@
+14:17:22 info: HollowWake.Server.GameServer[0] content loaded: 62 kinds from C:\Users\John\.codex\worktrees\shared-cast-forecasts\MMOARPG\content\core
+14:17:22 info: HollowWake.Server.World.ZoneHost[0] world seed 'aureth' (10175781948776629366); start zone zone(0,0)
+14:17:22 info: HollowWake.Server.Net.TcpTransport[0] tcp transport listening on 127.0.0.1:56298
+14:17:22 info: HollowWake.Server.Net.WebSocketTransport[0] websocket transport listening on http://127.0.0.1:56299/ (socket at /ws, web client from C:\Users\John\.codex\worktrees\shared-cast-forecasts\MMOARPG\web\dist)
+14:17:22 info: HollowWake.Server.World.ZoneHost[0] zone zone(0,0) 'Ninewells' loaded: zone(0,0): 100 chunks, 4 pois, 2 founts, 113 spawners, 2269 flora, 4 quests
+14:17:22 info: HollowWake.Server.GameServer[0] harness-run-Yb6fyj is up: transport tcp+websocket, tick 20 Hz, data in C:\Users\John\.codex\worktrees\shared-cast-forecasts\MMOARPG\artifacts\forecast-rereview\final-client\run-Yb6fyj\data
+14:17:22 warn: HollowWake.Server.GameServer[0] tick took 116.3 ms (budget 50.0 ms)
+14:17:24 info: HollowWake.Server.Sessions.SessionManager[0] session 1 (websocket 127.0.0.1:56328) Connected  connected
+14:17:25 info: HollowWake.Server.Sessions.SessionManager[0] session 1 (websocket 127.0.0.1:56328) Authenticated  created character Smoke (kindler)
+14:17:25 info: HollowWake.Server.World.ZoneHost[0] session 1 (websocket 127.0.0.1:56328) InWorld Smoke entered zone(0,0) at <129.5, 111, 14.692402>
+14:18:50 info: HollowWake.Server.World.ZoneInstance[0] session 1 (websocket 127.0.0.1:56328) InWorld Smoke left zone(0,0): 2133 snapshot bytes per snapshot over 849 snapshots since connecting: 1117 changes, 409 spawns and despawns, 606 self (921 spawns, 992 full states, 8696 deltas, 64 self states)
+14:18:50 info: HollowWake.Server.Sessions.SessionManager[0] session 1 (websocket 127.0.0.1:56328) Closed Smoke disconnected: closed by peer
+14:18:57 info: HollowWake.Server.Sessions.SessionManager[0] session 2 (tcp 127.0.0.1:56550) Connected  connected
+14:18:58 info: HollowWake.Server.Sessions.SessionManager[0] session 2 (tcp 127.0.0.1:56550) Authenticated  created character Smoke (kindler)
+14:18:58 info: HollowWake.Server.World.ZoneHost[0] session 2 (tcp 127.0.0.1:56550) InWorld Smoke entered zone(0,0) at <129.5, 111, 14.692402>
+14:19:37 info: HollowWake.Server.World.ZoneInstance[0] session 2 (tcp 127.0.0.1:56550) InWorld Smoke left zone(0,0): 2171 snapshot bytes per snapshot over 388 snapshots since connecting: 1071 changes, 462 spawns and despawns, 637 self (498 spawns, 424 full states, 3862 deltas, 30 self states)
+14:19:37 info: HollowWake.Server.Sessions.SessionManager[0] session 2 (tcp 127.0.0.1:56550) Closed Smoke disconnected: closed by peer

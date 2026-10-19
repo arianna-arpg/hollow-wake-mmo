@@ -5,6 +5,8 @@ using HollowWake.Core.Effects.Handlers;
 using HollowWake.Core.Expressions;
 using HollowWake.Core.Sim;
 using HollowWake.Core.Weaves;
+using System.Text.Json;
+using System.Text.Json.Nodes;
 
 namespace HollowWake.Core.Content.Kinds;
 
@@ -27,12 +29,22 @@ internal static class CastingKinds
         CastingTriggers.Register();
         ContentKinds.AddValidator<FormDef>(Form);
         ContentKinds.AddValidator<GlyphDef>(Glyph);
+        ContentKinds.AddValidator<PatternDef>((d, c) =>
+        {
+            // Patterns carry inline compositions too. Validate them before a creature is spawned,
+            // so an invalid rider cannot silently leave its only attack unusable at runtime.
+            if (d.Components.TryGetValue("weaves", out var component) && component["list"] is JsonArray list)
+                for (var i = 0; i < list.Count; i++)
+                    if (list[i]?.Deserialize<WeaveSpec>(ContentJson.Options) is { } spec)
+                        WeaveValidation.Fits(spec, c, $"components.weaves.list[{i}]");
+        });
         ContentKinds.AddValidator<WeaveDef>((d, c) =>
         {
             if (d.Id == CastHandlers.HostWeave)
             {
                 c.Error($"a preset cannot be named '{CastHandlers.HostWeave}': a cast effect reads that word as the weave whose graph is running.");
             }
+            ReleaseCheck(d.ReleaseCheck, c);
             CooldownAt(d.CooldownAt, c);
             Hint(d.Ai, c);
             Trigger(d.Trigger, c, "trigger");
@@ -75,8 +87,16 @@ internal static class CastingKinds
         }
     }
 
+    private static void ReleaseCheck(ReleaseCheckSpec? spec, ValidationContext c)
+    {
+        if (spec is null) return;
+        if (!ReleasePolicies.TryGet(spec.Policy, out _)) c.Error($"Unknown release_check.policy '{spec.Policy}'.");
+        c.Expression(spec.HeightTolerance, "release_check.height_tolerance");
+    }
+
     private static void Form(FormDef d, ValidationContext c)
     {
+        ReleaseCheck(d.ReleaseCheck, c);
         c.Expression(d.CastMove, "cast_move");
         Hint(d.Ai, c);
         CooldownAt(d.CooldownAt, c);
@@ -436,6 +456,7 @@ internal static class CastingKinds
 
     private static void Glyph(GlyphDef d, ValidationContext c)
     {
+        ReleaseCheck(d.ReleaseCheck, c);
         Trigger(d.Trigger, c, "trigger");
         Gates(d.Gates, c);
         Spend(d.Spend, c, "spend");

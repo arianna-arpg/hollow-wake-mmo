@@ -84,6 +84,10 @@ public sealed class WeaveCasting
 {
     public static readonly WeaveCasting None = new();
 
+    public ReleaseCheckSpec ReleaseCheck { get; init; } = new();
+    public TargetSpec? ReleaseTarget { get; init; }
+    public ReleasePolicy ReleasePolicy { get; init; } = ReleasePolicies.Body;
+
     public IReadOnlyList<WeaveTrigger> Triggers { get; init; } = Array.Empty<WeaveTrigger>();
     public IReadOnlyList<Expr> Gates { get; init; } = Array.Empty<Expr>();
     public UsesSpec? Uses { get; init; }
@@ -855,6 +859,10 @@ public sealed class WeaveCompiler
             }
         }
         var mechanisms = state.Satisfied.Count == 0 ? state.Mechanisms : state.Mechanisms.Union(TagSet.From(state.Satisfied));
+        var casting = CastingOf(form, preset, activeGlyphs, release, bash, deactivate, cycle);
+        foreach (var graph in new[] { effects, release, bash, deactivate, cycle })
+            if (!casting.ReleasePolicy.AcceptsGraph(graph))
+                throw new WeaveCompileException($"Release policy '{casting.ReleasePolicy.Name}' requires every root to select and validate its own targets, including LOS. Put target-bound riders inside delivery hooks.");
         return new CompiledWeave
         {
             Spec = spec,
@@ -884,7 +892,7 @@ public sealed class WeaveCompiler
             LevelBonus = state.LevelBonus,
             Specs = specs,
             CooldownAt = preset?.CooldownAt ?? form.CooldownAt,
-            Casting = CastingOf(form, preset, activeGlyphs, release, bash, deactivate, cycle),
+            Casting = casting,
             HeldBlocks = held,
             Probe = state.Probe,
         };
@@ -932,6 +940,7 @@ public sealed class WeaveCompiler
             }
             equip.AddRange(preset.EquipModifiers);
         }
+        ReleaseCheckSpec? releaseCheck = null;
         UsesSpec? uses = null;
         SpendSpec? spend = null;
         ConvertSpec? convert = null;
@@ -954,6 +963,7 @@ public sealed class WeaveCompiler
                 followUps.Add(follow);
             }
             equip.AddRange(g.EquipModifiers);
+            releaseCheck ??= g.ReleaseCheck;
             uses ??= g.Uses;
             spend ??= g.Spend;
             convert ??= g.Convert;
@@ -961,21 +971,27 @@ public sealed class WeaveCompiler
             selfStack ??= g.SelfStack;
             chain ??= g.Chain;
         }
+        releaseCheck ??= preset?.ReleaseCheck ?? form.ReleaseCheck;
+        if (!ReleasePolicies.TryGet(releaseCheck?.Policy ?? "body", out var releasePolicy))
+            throw new WeaveCompileException($"Unknown release policy '{releaseCheck?.Policy}'.");
         uses ??= preset?.Uses ?? form.Uses;
         spend ??= preset?.Spend ?? form.Spend;
         convert ??= preset?.Convert ?? form.Convert;
         cycleSpec ??= preset?.Cycle ?? form.Cycle;
         selfStack ??= preset?.SelfStack ?? form.SelfStack;
         chain ??= preset?.Chain ?? form.Chain;
-        var nothing = triggers.Count == 0 && gates.Count == 0 && metas.Count == 0 && followUps.Count == 0 && equip.Count == 0
+        var nothing = form.Target is null && releaseCheck is null && triggers.Count == 0 && gates.Count == 0 && metas.Count == 0 && followUps.Count == 0 && equip.Count == 0
             && uses is null && spend is null && convert is null && cycleSpec is null && selfStack is null && chain is null
             && release.Count == 0 && bash.Count == 0 && deactivate.Count == 0 && cycle.Count == 0;
-        if (nothing)
+        if (nothing && ReferenceEquals(releasePolicy, WeaveCasting.None.ReleasePolicy))
         {
             return WeaveCasting.None;
         }
         return new WeaveCasting
         {
+            ReleaseCheck = releaseCheck ?? new(),
+            ReleaseTarget = form.Target,
+            ReleasePolicy = releasePolicy,
             Triggers = triggers,
             Gates = gates,
             Uses = uses,

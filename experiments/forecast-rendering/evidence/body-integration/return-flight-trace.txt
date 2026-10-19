@@ -1,0 +1,115 @@
+Test run for <worktree>\tests\HollowWake.Core.Tests\bin\Release\net10.0\HollowWake.Core.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+[xUnit.net 00:00:02.67]     HollowWake.Core.Tests.DeliveryAcceptanceTests.ASeededFightSplitsReturnsAndRepeatsExactly [FAIL]
+  Failed HollowWake.Core.Tests.DeliveryAcceptanceTests.ASeededFightSplitsReturnsAndRepeatsExactly [206 ms]
+  Error Message:
+   Assert.Contains() Failure: Filter not matched in collection
+Collection: ["WeaveStarted { Tick = 14, Caster = E0.1, Weave = s"···, "WeaveStarted { Tick = 17, Caster = E1.1, Weave = g"···, "EntitySpawned { Tick = 26, Entity = E2.1, Pattern "···, "WeaveCast { Tick = 26, Caster = E0.1, Weave = seek"···, "28 hit E0.1->E1.1 18.34 depth 1", ···]
+  Stack Trace:
+     at HollowWake.Core.Tests.DeliveryAcceptanceTests.ASeededFightSplitsReturnsAndRepeatsExactly() in <worktree>\tests\HollowWake.Core.Tests\DeliveryTests.cs:line 1369
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  Standard Output Messages:
+ WeaveStarted { Tick = 14, Caster = E0.1, Weave = seeking_bolt, Target = E1.1, Point = <13.5, 10, 0>, CastTime = 0.6 }
+ WeaveStarted { Tick = 17, Caster = E1.1, Weave = gore, Target = E(none), Point = <10, 10, 0>, CastTime = 1.44 }
+ EntitySpawned { Tick = 26, Entity = E2.1, Pattern = projectile, Position = <10, 10, 0.9> }
+ WeaveCast { Tick = 26, Caster = E0.1, Weave = seeking_bolt, Target = E1.1, Point = <12.75, 10, 0>, Tags = [cast.timed elemental form.bolt glyph.seeking lightning preset.seeking_bolt projectile spell storm thread.storm weave wind] }
+ 28 hit E0.1->E1.1 18.34 depth 1
+ StatusApplied { Tick = 28, Target = E1.1, Source = E0.1, Status = shocked, Stacks = 1, Duration = 4, Depth = 1 }
+ EntityDespawned { Tick = 28, Entity = E2.1, Pattern = projectile }
+ PoolRecharging { Tick = 28, Depth = 0, Entity = E1.1, Resource = poise, From = 21.86 }
+ WeaveStarted { Tick = 29, Caster = E0.1, Weave = splitting_bolt, Target = E1.1, Point = <12.75, 10, 0>, CastTime = 0.6 }
+ EntitySpawned { Tick = 41, Entity = E2.2, Pattern = projectile, Position = <10, 10, 0.9> }
+ WeaveCast { Tick = 41, Caster = E0.1, Weave = splitting_bolt, Target = E1.1, Point = <12.75, 10, 0>, Tags = [cast.timed elemental ember form.bolt glyph.forking heat preset.splitting_bolt projectile spell thread.ember weave] }
+ 42 hit E0.1->E1.1 18.982 depth 1
+ EntitySpawned { Tick = 42, Entity = E3.1, Pattern = projectile, Position = <11.599999, 10, 0.6440002> }
+ EntitySpawned { Tick = 42, Entity = E4.1, Pattern = projectile, Position = <11.599999, 10, 0.6440002> }
+ ProjectileForked { Tick = 42, Projectile = E2.2, Owner = E0.1, Children = 2, Position = <11.599999, 10, 0.6440002> }
+ EntityDespawned { Tick = 42, Entity = E2.2, Pattern = projectile }
+ WeaveStarted { Tick = 44, Caster = E0.1, Weave = seeking_bolt, Target = E1.1, Point = <12.75, 10, 0>, CastTime = 0.6 }
+ 46 hit E1.1->E0.1 0 depth 1
+ WeaveCast { Tick = 46, Caster = E1.1, Weave = gore, Target = E(none), Point = <10, 10, 0>, Tags = [area attack cast.timed form.cleave melee preset.gore weave] }
+ WeaveStarted { Tick = 47, Caster = E1.1, Weave = gore, Target = E(none), Point = <10, 10, 0>, CastTime = 1.44 }
+ EntityDespawned { Tick = 48, Entity = E4.1, Pattern = projectile }
+ EntityDespawned { Tick = 48, Entity = E3.1, Pattern = projectile }
+ EntitySpawned { Tick = 56, Entity = E3.2, Pattern = projectile, Position = <10, 10, 0.9> }
+ WeaveCast { Tick = 56, Caster = E0.1, Weave = seeking_bolt, Target = E1.1, Point = <12.5, 10, 0>, Tags = [cast.timed elemental form.bolt glyph.seeking lightning preset.seeking_bolt projectile spell storm thread.storm weave wind] }
+ StatusApplied { Tick = 57, Target = E1.1, Source = E1.1, Status = poise_broken, Stacks = 1, Duration = 2, Depth = 1 }
+ PoolBroken { Tick = 57, Depth = 1, Entity = E1.1, By = E0.1, Resource = poise }
+ 57 hit E0.1->E1.1 21.091 depth 1
+ EntityDespawned { Tick = 57, Entity = E3.2, Pattern = projectile }
+ WeaveStarted { Tick = 59, Caster = E0.1, Weave = stone_glaive, Target = E(none), Point = <12.5, 10, 0>, CastTime = 1 }
+ 76 hit E1.1->E0.1 7.653 depth 1
+ WeaveCast { Tick = 76, Caster = E1.1, Weave = gore, Target = E(none), Point = <10, 10, 0>, Tags = [area attack cast.timed form.cleave melee preset.gore weave] }
+ WeaveStarted { Tick = 77, Caster = E1.1, Weave = gore, Target = E(none), Point = <10, 10, 0>, CastTime = 1.44 }
+ EntitySpawned { Tick = 79, Entity = E3.3, Pattern = projectile, Position = <10, 10, 0.9> }
+ WeaveCast { Tick = 79, Caster = E0.1, Weave = stone_glaive, Target = E(none), Point = <12.5, 10, 0>, Tags = [attack cast.timed form.glaive preset.stone_glaive projectile weave] }
+ 80 hit E0.1->E1.1 5.523 depth 1
+ WeaveStarted { Tick = 84, Caster = E0.1, Weave = stone_glaive, Target = E(none), Point = <12.325, 10, 0>, CastTime = 1 }
+ EntityDespawned { Tick = 87, Entity = E3.3, Pattern = projectile }
+ StatusApplied { Tick = 96, Target = E1.1, Source = E1.1, Status = poise_rearming, Stacks = 1, Duration = 4, Depth = 0 }
+ StatusExpired { Tick = 96, Target = E1.1, Status = poise_broken, Depth = 0 }
+ EntitySpawned { Tick = 104, Entity = E3.4, Pattern = projectile, Position = <8.699999, 10, 0.9> }
+ WeaveCast { Tick = 104, Caster = E0.1, Weave = stone_glaive, Target = E(none), Point = <12.325, 10, 0>, Tags = [attack cast.timed form.glaive preset.stone_glaive projectile weave] }
+ WeaveCast { Tick = 106, Caster = E1.1, Weave = gore, Target = E(none), Point = <10, 10, 0>, Tags = [area attack cast.timed form.cleave melee preset.gore weave] }
+ 107 hit E0.1->E1.1 5.234 depth 1
+ StatusExpired { Tick = 108, Target = E1.1, Status = shocked, Depth = 0 }
+ WeaveStarted { Tick = 109, Caster = E0.1, Weave = seeking_bolt, Target = E1.1, Point = <11.575, 10, 0>, CastTime = 0.6 }
+ EntityDespawned { Tick = 116, Entity = E3.4, Pattern = projectile }
+ WeaveStarted { Tick = 117, Caster = E1.1, Weave = gore, Target = E(none), Point = <7.3999977, 10, 0>, CastTime = 1.44 }
+ EntitySpawned { Tick = 121, Entity = E3.5, Pattern = projectile, Position = <7.3999977, 10, 0.9> }
+ WeaveCast { Tick = 121, Caster = E0.1, Weave = seeking_bolt, Target = E1.1, Point = <9.825, 10, 0>, Tags = [cast.timed elemental form.bolt glyph.seeking lightning preset.seeking_bolt projectile spell storm thread.storm weave wind] }
+ 122 hit E0.1->E1.1 18.34 depth 1
+ EntityDespawned { Tick = 122, Entity = E3.5, Pattern = projectile }
+ WeaveStarted { Tick = 124, Caster = E0.1, Weave = stone_glaive, Target = E(none), Point = <9.825, 10, 0>, CastTime = 1 }
+ EntitySpawned { Tick = 144, Entity = E3.6, Pattern = projectile, Position = <6.619997, 10, 0.9> }
+ WeaveCast { Tick = 144, Caster = E0.1, Weave = stone_glaive, Target = E(none), Point = <9.825, 10, 0>, Tags = [attack cast.timed form.glaive preset.stone_glaive projectile weave] }
+ WeaveCast { Tick = 146, Caster = E1.1, Weave = gore, Target = E(none), Point = <7.3999977, 10, 0>, Tags = [area attack cast.timed form.cleave melee preset.gore weave] }
+ 146 hit E0.1->E1.1 2.742 depth 1
+ WeaveStarted { Tick = 147, Caster = E1.1, Weave = gore, Target = E(none), Point = <6.619997, 10, 0>, CastTime = 1.44 }
+ WeaveStarted { Tick = 149, Caster = E0.1, Weave = stone_glaive, Target = E(none), Point = <9.575, 10, 0>, CastTime = 1 }
+ EntityDespawned { Tick = 154, Entity = E3.6, Pattern = projectile }
+ StatusExpired { Tick = 166, Target = E1.1, Status = poise_rearming, Depth = 0 }
+ PoolRestored { Tick = 166, Depth = 0, Entity = E1.1, Resource = poise, Amount = 40 }
+ EntitySpawned { Tick = 169, Entity = E3.7, Pattern = projectile, Position = <6.619997, 10, 0.9> }
+ WeaveCast { Tick = 169, Caster = E0.1, Weave = stone_glaive, Target = E(none), Point = <9.575, 10, 0>, Tags = [attack cast.timed form.glaive preset.stone_glaive projectile weave] }
+ 171 hit E0.1->E1.1 2.472 depth 1
+ PoolRecharging { Tick = 171, Depth = 0, Entity = E1.1, Resource = poise, From = 37.727556520621945 }
+ WeaveStarted { Tick = 174, Caster = E0.1, Weave = stone_glaive, Target = E(none), Point = <9.575, 10, 0>, CastTime = 1 }
+ 176 hit E1.1->E0.1 8.872 depth 1
+ WeaveCast { Tick = 176, Caster = E1.1, Weave = gore, Target = E(none), Point = <6.619997, 10, 0>, Tags = [area attack cast.timed form.cleave melee preset.gore weave] }
+ WeaveStarted { Tick = 178, Caster = E1.1, Weave = gore, Target = E(none), Point = <6.619997, 10, 0>, CastTime = 1.44 }
+ EntityDespawned { Tick = 178, Entity = E3.7, Pattern = projectile }
+ PoolRestored { Tick = 183, Depth = 0, Entity = E1.1, Resource = poise, Amount = 40 }
+ EntitySpawned { Tick = 194, Entity = E3.8, Pattern = projectile, Position = <6.619997, 10, 0.9> }
+ WeaveCast { Tick = 194, Caster = E0.1, Weave = stone_glaive, Target = E(none), Point = <9.575, 10, 0>, Tags = [attack cast.timed form.glaive preset.stone_glaive projectile weave] }
+ 195 hit E0.1->E1.1 4.125 depth 1
+ PoolRecharging { Tick = 195, Depth = 0, Entity = E1.1, Resource = poise, From = 36.07515019251994 }
+ WeaveStarted { Tick = 199, Caster = E0.1, Weave = splitting_bolt, Target = E1.1, Point = <9.075, 10, 0>, CastTime = 0.6 }
+ EntityDespawned { Tick = 203, Entity = E3.8, Pattern = projectile }
+ WeaveCast { Tick = 207, Caster = E1.1, Weave = gore, Target = E(none), Point = <6.619997, 10, 0>, Tags = [area attack cast.timed form.cleave melee preset.gore weave] }
+ EntitySpawned { Tick = 212, Entity = E3.9, Pattern = projectile, Position = <5.319996, 10, 0.9> }
+ WeaveCast { Tick = 212, Caster = E0.1, Weave = splitting_bolt, Target = E1.1, Point = <8.575, 10, 0>, Tags = [cast.timed elemental ember form.bolt glyph.forking heat preset.splitting_bolt projectile spell thread.ember weave] }
+ WeaveStarted { Tick = 214, Caster = E0.1, Weave = seeking_bolt, Target = E1.1, Point = <8.325, 10, 0>, CastTime = 0.6 }
+ 214 hit E0.1->E1.1 24.759 depth 1
+ StatusApplied { Tick = 214, Target = E1.1, Source = E0.1, Status = burning, Stacks = 1, Duration = 4, Depth = 1 }
+ EntitySpawned { Tick = 214, Entity = E4.2, Pattern = projectile, Position = <6.9249988, 10, 0.6830414> }
+ EntitySpawned { Tick = 214, Entity = E2.3, Pattern = projectile, Position = <6.9249988, 10, 0.6830414> }
+ ProjectileForked { Tick = 214, Projectile = E3.9, Owner = E0.1, Children = 2, Position = <6.9249988, 10, 0.6830414> }
+ EntityDespawned { Tick = 214, Entity = E3.9, Pattern = projectile }
+ WeaveStarted { Tick = 218, Caster = E1.1, Weave = gore, Target = E(none), Point = <4.7999954, 10, 0>, CastTime = 1.44 }
+ EntityDespawned { Tick = 221, Entity = E2.3, Pattern = projectile }
+ EntityDespawned { Tick = 221, Entity = E4.2, Pattern = projectile }
+ 224 hit E0.1->E1.1 3.714 depth 0
+ EntitySpawned { Tick = 227, Entity = E4.3, Pattern = projectile, Position = <4.7999954, 10, 0.9> }
+ WeaveCast { Tick = 227, Caster = E0.1, Weave = seeking_bolt, Target = E1.1, Point = <7.325, 10, 0>, Tags = [cast.timed elemental form.bolt glyph.seeking lightning preset.seeking_bolt projectile spell storm thread.storm weave wind] }
+ StatusApplied { Tick = 228, Target = E1.1, Source = E1.1, Status = poise_broken, Stacks = 1, Duration = 2, Depth = 1 }
+ PoolBroken { Tick = 228, Depth = 1, Entity = E1.1, By = E0.1, Resource = poise }
+ 228 hit E0.1->E1.1 18.34 depth 1
+ EntityDied { Tick = 228, Entity = E1.1, Killer = E0.1, Pattern = boar, Tags = [beast boar body.flesh creature faction.blue family.suid fauna habitat.meadow locomotion.ground melee monster pattern.boar quest.cull role.territorial size.small], Position = <7.325, 10, 0>, Depth = 1 }
+ ItemDropped { Tick = 228, Drop = E2.4, From = E1.1, Base = hob_hide, Rarity = common, Position = <7.4512835, 10.78997, 0> }
+ EntityDespawned { Tick = 228, Entity = E4.3, Pattern = projectile }
+
+
+
+Failed!  - Failed:     1, Passed:     0, Skipped:     0, Total:     1, Duration: 206 ms - HollowWake.Core.Tests.dll (net10.0)

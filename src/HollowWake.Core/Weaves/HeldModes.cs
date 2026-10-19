@@ -120,8 +120,7 @@ public sealed partial class WeaveRuntime
         {
             return false;
         }
-        Run(sim, caster, stats, cast, weave, weave.Casting.Bash, depth: 0, publishCast: true, new CastVarValues { Held = cast.Held, GuardAbsorbed = guard.Absorbed }, rngPrefix: "bash:");
-        return true;
+        return Run(sim, caster, stats, cast, weave, weave.Casting.Bash, depth: 0, publishCast: true, new CastVarValues { Held = cast.Held, GuardAbsorbed = guard.Absorbed }, rngPrefix: "bash:") is not null;
     }
 
     // ------------------------------------------------------------ brims

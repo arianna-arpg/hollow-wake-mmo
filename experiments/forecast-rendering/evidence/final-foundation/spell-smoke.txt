@@ -1,0 +1,5 @@
+TEST evidence: <worktree>\artifacts\forecast-body-integration\final-foundation-c6d853bd\spell\run-KkiKZx
+TEST smoke-web; evidence: <worktree>\artifacts\forecast-body-integration\final-foundation-c6d853bd\spell\run-KkiKZx
+TEST import-godot; evidence: <worktree>\artifacts\forecast-body-integration\final-foundation-c6d853bd\spell\run-KkiKZx
+TEST smoke-godot; evidence: <worktree>\artifacts\forecast-body-integration\final-foundation-c6d853bd\spell\run-KkiKZx
+TEST PASSED; report: <worktree>\artifacts\forecast-body-integration\final-foundation-c6d853bd\spell\run-KkiKZx\result.json

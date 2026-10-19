@@ -1,0 +1,14 @@
+{
+  "Seeds": 10,
+  "Seconds": 60,
+  "Platform": "win-x64",
+  "Hashes": {
+    "loosed_kindler:boar": "55f3c653d896dd06",
+    "loosed_skirmisher:boar": "cf41fad065ff7e16",
+    "loosed_skirmisher:hob": "1cf76df19ceeb296",
+    "loosed_skirmisher:tide_caller": "c78c43f0835e549e",
+    "proving_reaver:proving_bulwark": "afb3fac2523af03a",
+    "tide_channeler:spark_duelist": "fa5af5e32501a451",
+    "wolf:hob": "dd79ac96e2dad61a"
+  }
+}

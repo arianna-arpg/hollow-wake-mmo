@@ -1,0 +1,47 @@
+  Determining projects to restore...
+  All projects are up-to-date for restore.
+  HollowWake.Core -> <worktree>\src\HollowWake.Core\bin\Release\net8.0\HollowWake.Core.dll
+  HollowWake.Protocol -> <worktree>\src\HollowWake.Protocol\bin\Release\net8.0\HollowWake.Protocol.dll
+  HollowWake.Server -> <worktree>\src\HollowWake.Server\bin\Release\net10.0\HollowWake.Server.dll
+  HollowWake.Tools -> <worktree>\src\HollowWake.Tools\bin\Release\net10.0\hollowwake.dll
+  HollowWake.Core.Tests -> <worktree>\tests\HollowWake.Core.Tests\bin\Release\net10.0\HollowWake.Core.Tests.dll
+Test run for <worktree>\tests\HollowWake.Core.Tests\bin\Release\net10.0\HollowWake.Core.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+[xUnit.net 00:00:02.56]     HollowWake.Core.Tests.SampledAimPrecedenceTests.LiveInputBelongsToPhysicalCaster(guided: False, physicalInput: False) [FAIL]
+[xUnit.net 00:00:02.57]     HollowWake.Core.Tests.SampledAimPrecedenceTests.LiveInputBelongsToPhysicalCaster(guided: False, physicalInput: True) [FAIL]
+[xUnit.net 00:00:02.57]     HollowWake.Core.Tests.SampledAimPrecedenceTests.LiveInputBelongsToPhysicalCaster(guided: True, physicalInput: False) [FAIL]
+[xUnit.net 00:00:02.57]     HollowWake.Core.Tests.SampledAimPrecedenceTests.LiveInputBelongsToPhysicalCaster(guided: True, physicalInput: True) [FAIL]
+  Failed HollowWake.Core.Tests.SampledAimPrecedenceTests.LiveInputBelongsToPhysicalCaster(guided: False, physicalInput: False) [96 ms]
+  Error Message:
+   Assert.Equal() Failure: Values are not within 5 decimal places
+Expected: 0 (rounded from 0)
+Actual:   1.5708 (rounded from 1.57079637)
+  Stack Trace:
+     at HollowWake.Core.Tests.SampledAimPrecedenceTests.LiveInputBelongsToPhysicalCaster(Boolean guided, Boolean physicalInput) in <worktree>\tests\HollowWake.Core.Tests\SampledAimPrecedenceTests.cs:line 47
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeDirectByRefWithFewArgs(Object obj, Span`1 copyOfArgs, BindingFlags invokeAttr)
+  Failed HollowWake.Core.Tests.SampledAimPrecedenceTests.LiveInputBelongsToPhysicalCaster(guided: False, physicalInput: True) [1 ms]
+  Error Message:
+   physical caster input must turn the flight: 0
+  Stack Trace:
+     at HollowWake.Core.Tests.SampledAimPrecedenceTests.LiveInputBelongsToPhysicalCaster(Boolean guided, Boolean physicalInput) in <worktree>\tests\HollowWake.Core.Tests\SampledAimPrecedenceTests.cs:line 46
+   at InvokeStub_SampledAimPrecedenceTests.LiveInputBelongsToPhysicalCaster(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Failed HollowWake.Core.Tests.SampledAimPrecedenceTests.LiveInputBelongsToPhysicalCaster(guided: True, physicalInput: False) [1 ms]
+  Error Message:
+   Assert.Equal() Failure: Values are not within 5 decimal places
+Expected: 0 (rounded from 0)
+Actual:   1.62581 (rounded from 1.62581003)
+  Stack Trace:
+     at HollowWake.Core.Tests.SampledAimPrecedenceTests.LiveInputBelongsToPhysicalCaster(Boolean guided, Boolean physicalInput) in <worktree>\tests\HollowWake.Core.Tests\SampledAimPrecedenceTests.cs:line 47
+   at InvokeStub_SampledAimPrecedenceTests.LiveInputBelongsToPhysicalCaster(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Failed HollowWake.Core.Tests.SampledAimPrecedenceTests.LiveInputBelongsToPhysicalCaster(guided: True, physicalInput: True) [1 ms]
+  Error Message:
+   physical caster input must turn the flight: 0
+  Stack Trace:
+     at HollowWake.Core.Tests.SampledAimPrecedenceTests.LiveInputBelongsToPhysicalCaster(Boolean guided, Boolean physicalInput) in <worktree>\tests\HollowWake.Core.Tests\SampledAimPrecedenceTests.cs:line 46
+   at InvokeStub_SampledAimPrecedenceTests.LiveInputBelongsToPhysicalCaster(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+
+Failed!  - Failed:     4, Passed:     0, Skipped:     0, Total:     4, Duration: 110 ms - HollowWake.Core.Tests.dll (net10.0)

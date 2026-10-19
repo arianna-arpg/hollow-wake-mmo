@@ -15,7 +15,7 @@
       "rig": "biped",
       "parts": 28,
       "triangles": 440,
-      "height": 1.20112170103061
+      "height": 0.9319047680409906
     },
     {
       "id": "goblin_slinger",
@@ -23,7 +23,7 @@
       "rig": "biped",
       "parts": 25,
       "triangles": 408,
-      "height": 1.1182857216491888
+      "height": 0.8904867783502799
     },
     {
       "id": "goblin_shaman",
@@ -31,7 +31,7 @@
       "rig": "biped",
       "parts": 28,
       "triangles": 478,
-      "height": 1.7795077145579477
+      "height": 1.2867209628342082
     },
     {
       "id": "goblin_sapper",
@@ -39,7 +39,7 @@
       "rig": "biped",
       "parts": 29,
       "triangles": 542,
-      "height": 1.2218306958759653
+      "height": 0.9526137628863459
     },
     {
       "id": "goblin_brute",
@@ -47,7 +47,7 @@
       "rig": "biped",
       "parts": 28,
       "triangles": 448,
-      "height": 1.6360105927830724
+      "height": 1.2839576804120314
     },
     {
       "id": "goblin_chief",
@@ -55,7 +55,7 @@
       "rig": "biped",
       "parts": 35,
       "triangles": 532,
-      "height": 2.015
+      "height": 1.326
     },
     {
       "id": "hobgoblin_taskmaster",
@@ -63,7 +63,7 @@
       "rig": "biped",
       "parts": 30,
       "triangles": 476,
-      "height": 2.535
+      "height": 1.8199999999999998
     },
     {
       "id": "goblin_warboss",
@@ -71,15 +71,7 @@
       "rig": "biped",
       "parts": 35,
       "triangles": 528,
-      "height": 2.4637800000000003
-    },
-    {
-      "id": "orc_ravager",
-      "body": "goblinkin",
-      "rig": "biped",
-      "parts": 31,
-      "triangles": 480,
-      "height": 2.0122142976799315
+      "height": 1.545462
     },
     {
       "id": "troll_mauler",
@@ -128,6 +120,14 @@
       "parts": 24,
       "triangles": 330,
       "height": 1.257482101073836
+    },
+    {
+      "id": "orc_ravager",
+      "body": "orc",
+      "rig": "biped",
+      "parts": 36,
+      "triangles": 576,
+      "height": 1.98
     }
   ]
 }

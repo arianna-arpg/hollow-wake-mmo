@@ -22,7 +22,7 @@ entries:
   - id: hob
     name: Hob
     extends: monster
-    tags: [beast, hob]
+    tags: [beast, hob, quest.cull]
     faction: wilds
     level: 1
     radius: 0.45
@@ -41,44 +41,6 @@ entries:
       stats: { attributes: { will: 8 } }
       weaves: { list: [bite, howl] }
       behavior: { id: aggressive_ranged }
-
-  - id: wolf
-    name: Grey Wolf
-    extends: monster
-    tags: [beast, wolf]
-    faction: wilds
-    level: 2
-    radius: 0.5
-    components:
-      stats: { attributes: { might: 10, grace: 12, vigor: 9, move.speed: 6.5, weapon.damage.min: 4, weapon.damage.max: 8, weapon.attack.time: 0.85 } }
-      weaves: { list: [bite] }
-      drops: { table: beast_drops, xp: "14 + level * 6", chance: 0.7 }
-
-  - id: grove_stag
-    name: Grove Stag
-    extends: creature
-    tags: [beast, stag, prey]
-    faction: wilds
-    level: 1
-    radius: 0.6
-    height: 1.6
-    components:
-      stats: { attributes: { might: 9, grace: 11, vigor: 10, move.speed: 7, weapon.damage.min: 3, weapon.damage.max: 7 } }
-      weaves: { list: [gore] }
-      behavior: { id: skittish }
-      drops: { table: beast_drops, xp: "6 + level * 4", chance: 0.8 }
-
-  - id: boar
-    name: Bristle Boar
-    extends: monster
-    tags: [beast, boar]
-    faction: wilds
-    level: 3
-    radius: 0.55
-    components:
-      stats: { attributes: { might: 13, grace: 7, vigor: 12, move.speed: 5, armor: 20, weapon.damage.min: 6, weapon.damage.max: 11, weapon.attack.time: 1.2 } }
-      weaves: { list: [gore] }
-      drops: { table: beast_drops, xp: "18 + level * 6", chance: 0.7 }
 
   # ---- remnants and barrows
   - id: barrow_wight
@@ -152,7 +114,11 @@ entries:
     name: Device
     tags: [device, no_corpse]
     components:
-      stats: { attributes: { might: 4, grace: 4, will: 4, vigor: 8, move.speed: 0.5 } }
+      stats:
+        attributes: { might: 4, grace: 4, will: 4, vigor: 8, move.speed: 0.5 }
+        # Devices cast free of cost, though not of uses, charges or gates: their casts pay through the runtime's
+        # costs like anyone's, and this folds every cost to nothing.
+        modifiers: [ { attribute: cost, form: more, value: -1 } ]
       motion: {}
       statuses: {}
 

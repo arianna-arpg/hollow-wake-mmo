@@ -50,8 +50,13 @@ public class HitStageTests
         sim.Events.Subscribe<DamageDealt>(d => log.Add($"{sim.Clock.Tick} hit {d.Total.ToString("R", CultureInfo.InvariantCulture)} {d.Crit} {d.Evaded}"));
         sim.Events.Subscribe<StatusApplied>(s => log.Add($"{sim.Clock.Tick} status {s.Status}"));
         var factory = sim.Service<PatternFactory>();
-        factory.Spawn(sim, "remnant_shade", new Vector3(10, 10, 0), new SpawnOptions { Faction = "red" });
-        factory.Spawn(sim, "barrow_wight", new Vector3(14, 10, 0), new SpawnOptions { Faction = "blue" });
+        var a = factory.Spawn(sim, "remnant_shade", new Vector3(10, 10, 0), new SpawnOptions { Faction = "red" });
+        var b = factory.Spawn(sim, "barrow_wight", new Vector3(14, 10, 0), new SpawnOptions { Faction = "blue" });
+        // This historical fixture isolates hit-stage ordering. Keep its original approach policy;
+        // the enabled anticipation policy has separate moving-target regressions and duel evidence.
+        foreach (var actor in new[] { a, b })
+            sim.World.Get<Stats>(actor)!.Attributes.Add(new Modifier
+                { Attribute = "ai.anticipation", Form = ModifierForm.Override, Value = 0 });
         sim.RunSeconds(25);
         return log;
     }

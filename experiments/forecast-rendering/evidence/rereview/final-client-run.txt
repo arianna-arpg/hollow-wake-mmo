@@ -1,0 +1,9 @@
+TEST evidence: C:\Users\John\.codex\worktrees\shared-cast-forecasts\MMOARPG\artifacts\forecast-rereview\final-client\run-Yb6fyj
+TEST build-server; evidence: C:\Users\John\.codex\worktrees\shared-cast-forecasts\MMOARPG\artifacts\forecast-rereview\final-client\run-Yb6fyj
+TEST typecheck-web; evidence: C:\Users\John\.codex\worktrees\shared-cast-forecasts\MMOARPG\artifacts\forecast-rereview\final-client\run-Yb6fyj
+TEST build-web; evidence: C:\Users\John\.codex\worktrees\shared-cast-forecasts\MMOARPG\artifacts\forecast-rereview\final-client\run-Yb6fyj
+TEST build-godot; evidence: C:\Users\John\.codex\worktrees\shared-cast-forecasts\MMOARPG\artifacts\forecast-rereview\final-client\run-Yb6fyj
+TEST smoke-web; evidence: C:\Users\John\.codex\worktrees\shared-cast-forecasts\MMOARPG\artifacts\forecast-rereview\final-client\run-Yb6fyj
+TEST import-godot; evidence: C:\Users\John\.codex\worktrees\shared-cast-forecasts\MMOARPG\artifacts\forecast-rereview\final-client\run-Yb6fyj
+TEST smoke-godot; evidence: C:\Users\John\.codex\worktrees\shared-cast-forecasts\MMOARPG\artifacts\forecast-rereview\final-client\run-Yb6fyj
+TEST PASSED; report: C:\Users\John\.codex\worktrees\shared-cast-forecasts\MMOARPG\artifacts\forecast-rereview\final-client\run-Yb6fyj\result.json

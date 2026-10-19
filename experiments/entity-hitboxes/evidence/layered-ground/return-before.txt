@@ -1,0 +1,127 @@
+  HollowWake.Core -> C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\src\HollowWake.Core\bin\Debug\net8.0\HollowWake.Core.dll
+  HollowWake.Protocol -> C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\src\HollowWake.Protocol\bin\Debug\net8.0\HollowWake.Protocol.dll
+  HollowWake.Server -> C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\src\HollowWake.Server\bin\Debug\net10.0\HollowWake.Server.dll
+  HollowWake.Tools -> C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\src\HollowWake.Tools\bin\Debug\net10.0\hollowwake.dll
+  HollowWake.Core.Tests -> C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\bin\Debug\net10.0\HollowWake.Core.Tests.dll
+Test run for C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\bin\Debug\net10.0\HollowWake.Core.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v3.1.5+1b188a7b0a (64-bit .NET 10.0.13)
+[xUnit.net 00:00:00.17]   Discovering: HollowWake.Core.Tests
+[xUnit.net 00:00:02.01]   Discovered:  HollowWake.Core.Tests
+[xUnit.net 00:00:02.03]   Starting:    HollowWake.Core.Tests
+[xUnit.net 00:00:02.23]     HollowWake.Core.Tests.FreeShotGroundFloorTests.FreeGlaiveKeepsDescendingAfterPiercingAnEarlierBody(pattern: "reed_gnasher", slope: 0) [FAIL]
+[xUnit.net 00:00:02.23]       Assert.Contains() Failure: Item not found in set
+[xUnit.net 00:00:02.23]       Set:       [E1.1]
+[xUnit.net 00:00:02.23]       Not found: E2.1
+[xUnit.net 00:00:02.23]       Stack Trace:
+[xUnit.net 00:00:02.23]         C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\FreeShotGroundFloorTests.cs(205,0): at HollowWake.Core.Tests.FreeShotGroundFloorTests.FreeGlaiveKeepsDescendingAfterPiercingAnEarlierBody(String pattern, Single slope)
+[xUnit.net 00:00:02.23]            at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+[xUnit.net 00:00:02.23]            at System.Reflection.MethodBaseInvoker.InvokeDirectByRefWithFewArgs(Object obj, Span`1 copyOfArgs, BindingFlags invokeAttr)
+[xUnit.net 00:00:02.23]       Output:
+[xUnit.net 00:00:02.23]         free glaive/reed_gnasher/0: outward=E1.1, raw=<-13, -1.136496E-06, 0.38557813>
+[xUnit.net 00:00:02.24]     HollowWake.Core.Tests.FreeShotGroundFloorTests.FreeGlaiveKeepsDescendingAfterPiercingAnEarlierBody(pattern: "gnasher_whelp", slope: -0.125) [FAIL]
+[xUnit.net 00:00:02.24]       Assert.Contains() Failure: Item not found in set
+[xUnit.net 00:00:02.24]       Set:       [E1.1]
+[xUnit.net 00:00:02.24]       Not found: E2.1
+[xUnit.net 00:00:02.24]       Stack Trace:
+[xUnit.net 00:00:02.24]         C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\FreeShotGroundFloorTests.cs(205,0): at HollowWake.Core.Tests.FreeShotGroundFloorTests.FreeGlaiveKeepsDescendingAfterPiercingAnEarlierBody(String pattern, Single slope)
+[xUnit.net 00:00:02.24]            at InvokeStub_FreeShotGroundFloorTests.FreeGlaiveKeepsDescendingAfterPiercingAnEarlierBody(Object, Span`1)
+[xUnit.net 00:00:02.24]            at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:02.24]       Output:
+[xUnit.net 00:00:02.24]         free glaive/gnasher_whelp/-0.125: outward=E1.1, raw=<-13, -1.136496E-06, 0.6500122>
+[xUnit.net 00:00:02.24]       Assert.Contains() Failure: Item not found in set
+[xUnit.net 00:00:02.24]     HollowWake.Core.Tests.FreeShotGroundFloorTests.FreeGlaiveKeepsDescendingAfterPiercingAnEarlierBody(pattern: "gnasher_whelp", slope: 0) [FAIL]
+[xUnit.net 00:00:02.24]       Set:       [E1.1]
+[xUnit.net 00:00:02.24]       Not found: E2.1
+[xUnit.net 00:00:02.24]       Stack Trace:
+[xUnit.net 00:00:02.24]         C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\FreeShotGroundFloorTests.cs(205,0): at HollowWake.Core.Tests.FreeShotGroundFloorTests.FreeGlaiveKeepsDescendingAfterPiercingAnEarlierBody(String pattern, Single slope)
+[xUnit.net 00:00:02.24]            at InvokeStub_FreeShotGroundFloorTests.FreeGlaiveKeepsDescendingAfterPiercingAnEarlierBody(Object, Span`1)
+[xUnit.net 00:00:02.24]            at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:02.24]       Output:
+[xUnit.net 00:00:02.24]         free glaive/gnasher_whelp/0: outward=E1.1, raw=<-13, -1.136496E-06, 0.38557813>
+[xUnit.net 00:00:02.25]     HollowWake.Core.Tests.FreeShotGroundFloorTests.HoveredGlaiveStillReturnsWhenItsTargetMovesAside(slope: -0.125) [FAIL]
+[xUnit.net 00:00:02.25]       Missed flight stopped at 4.55 of 8
+[xUnit.net 00:00:02.25]       Stack Trace:
+[xUnit.net 00:00:02.25]         C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\FreeShotGroundFloorTests.cs(226,0): at HollowWake.Core.Tests.FreeShotGroundFloorTests.HoveredGlaiveStillReturnsWhenItsTargetMovesAside(Single slope)
+[xUnit.net 00:00:02.25]            at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+[xUnit.net 00:00:02.25]            at System.Reflection.MethodBaseInvoker.InvokeDirectByRefWithFewArgs(Object obj, Span`1 copyOfArgs, BindingFlags invokeAttr)
+[xUnit.net 00:00:02.26]     HollowWake.Core.Tests.FreeShotGroundFloorTests.HoveredGlaiveStillReturnsWhenItsTargetMovesAside(slope: 0.125) [FAIL]
+[xUnit.net 00:00:02.26]       Missed flight stopped at 4.55 of 8
+[xUnit.net 00:00:02.26]       Stack Trace:
+[xUnit.net 00:00:02.26]         C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\FreeShotGroundFloorTests.cs(226,0): at HollowWake.Core.Tests.FreeShotGroundFloorTests.HoveredGlaiveStillReturnsWhenItsTargetMovesAside(Single slope)
+[xUnit.net 00:00:02.26]            at InvokeStub_FreeShotGroundFloorTests.HoveredGlaiveStillReturnsWhenItsTargetMovesAside(Object, Span`1)
+[xUnit.net 00:00:02.26]            at System.Reflection.MethodBaseInvoker.InvokeWithOneArg(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:02.26]     HollowWake.Core.Tests.FreeShotGroundFloorTests.HoveredGlaiveStillReturnsWhenItsTargetMovesAside(slope: 0) [FAIL]
+[xUnit.net 00:00:02.26]       Missed flight stopped at 4.55 of 8
+[xUnit.net 00:00:02.26]       Stack Trace:
+[xUnit.net 00:00:02.26]         C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\FreeShotGroundFloorTests.cs(226,0): at HollowWake.Core.Tests.FreeShotGroundFloorTests.HoveredGlaiveStillReturnsWhenItsTargetMovesAside(Single slope)
+[xUnit.net 00:00:02.26]            at InvokeStub_FreeShotGroundFloorTests.HoveredGlaiveStillReturnsWhenItsTargetMovesAside(Object, Span`1)
+[xUnit.net 00:00:02.26]            at System.Reflection.MethodBaseInvoker.InvokeWithOneArg(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:02.26]   Finished:    HollowWake.Core.Tests
+  Failed HollowWake.Core.Tests.FreeShotGroundFloorTests.FreeGlaiveKeepsDescendingAfterPiercingAnEarlierBody(pattern: "reed_gnasher", slope: 0) [152 ms]
+  Error Message:
+   Assert.Contains() Failure: Item not found in set
+Set:       [E1.1]
+Not found: E2.1
+  Stack Trace:
+     at HollowWake.Core.Tests.FreeShotGroundFloorTests.FreeGlaiveKeepsDescendingAfterPiercingAnEarlierBody(String pattern, Single slope) in C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\FreeShotGroundFloorTests.cs:line 205
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeDirectByRefWithFewArgs(Object obj, Span`1 copyOfArgs, BindingFlags invokeAttr)
+  Standard Output Messages:
+ free glaive/reed_gnasher/0: outward=E1.1, raw=<-13, -1.136496E-06, 0.38557813>
+
+
+  Passed HollowWake.Core.Tests.FreeShotGroundFloorTests.FreeGlaiveKeepsDescendingAfterPiercingAnEarlierBody(pattern: "gnasher_whelp", slope: 0.125) [6 ms]
+  Failed HollowWake.Core.Tests.FreeShotGroundFloorTests.FreeGlaiveKeepsDescendingAfterPiercingAnEarlierBody(pattern: "gnasher_whelp", slope: -0.125) [5 ms]
+  Error Message:
+   Assert.Contains() Failure: Item not found in set
+Set:       [E1.1]
+Not found: E2.1
+  Stack Trace:
+     at HollowWake.Core.Tests.FreeShotGroundFloorTests.FreeGlaiveKeepsDescendingAfterPiercingAnEarlierBody(String pattern, Single slope) in C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\FreeShotGroundFloorTests.cs:line 205
+   at InvokeStub_FreeShotGroundFloorTests.FreeGlaiveKeepsDescendingAfterPiercingAnEarlierBody(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Standard Output Messages:
+ free glaive/gnasher_whelp/-0.125: outward=E1.1, raw=<-13, -1.136496E-06, 0.6500122>
+
+
+  Failed HollowWake.Core.Tests.FreeShotGroundFloorTests.FreeGlaiveKeepsDescendingAfterPiercingAnEarlierBody(pattern: "gnasher_whelp", slope: 0) [4 ms]
+  Error Message:
+   Assert.Contains() Failure: Item not found in set
+Set:       [E1.1]
+Not found: E2.1
+  Stack Trace:
+     at HollowWake.Core.Tests.FreeShotGroundFloorTests.FreeGlaiveKeepsDescendingAfterPiercingAnEarlierBody(String pattern, Single slope) in C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\FreeShotGroundFloorTests.cs:line 205
+   at InvokeStub_FreeShotGroundFloorTests.FreeGlaiveKeepsDescendingAfterPiercingAnEarlierBody(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Standard Output Messages:
+ free glaive/gnasher_whelp/0: outward=E1.1, raw=<-13, -1.136496E-06, 0.38557813>
+
+
+  Failed HollowWake.Core.Tests.FreeShotGroundFloorTests.HoveredGlaiveStillReturnsWhenItsTargetMovesAside(slope: -0.125) [4 ms]
+  Error Message:
+   Missed flight stopped at 4.55 of 8
+  Stack Trace:
+     at HollowWake.Core.Tests.FreeShotGroundFloorTests.HoveredGlaiveStillReturnsWhenItsTargetMovesAside(Single slope) in C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\FreeShotGroundFloorTests.cs:line 226
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeDirectByRefWithFewArgs(Object obj, Span`1 copyOfArgs, BindingFlags invokeAttr)
+  Failed HollowWake.Core.Tests.FreeShotGroundFloorTests.HoveredGlaiveStillReturnsWhenItsTargetMovesAside(slope: 0.125) [8 ms]
+  Error Message:
+   Missed flight stopped at 4.55 of 8
+  Stack Trace:
+     at HollowWake.Core.Tests.FreeShotGroundFloorTests.HoveredGlaiveStillReturnsWhenItsTargetMovesAside(Single slope) in C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\FreeShotGroundFloorTests.cs:line 226
+   at InvokeStub_FreeShotGroundFloorTests.HoveredGlaiveStillReturnsWhenItsTargetMovesAside(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithOneArg(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Failed HollowWake.Core.Tests.FreeShotGroundFloorTests.HoveredGlaiveStillReturnsWhenItsTargetMovesAside(slope: 0) [3 ms]
+  Error Message:
+   Missed flight stopped at 4.55 of 8
+  Stack Trace:
+     at HollowWake.Core.Tests.FreeShotGroundFloorTests.HoveredGlaiveStillReturnsWhenItsTargetMovesAside(Single slope) in C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\tests\HollowWake.Core.Tests\FreeShotGroundFloorTests.cs:line 226
+   at InvokeStub_FreeShotGroundFloorTests.HoveredGlaiveStillReturnsWhenItsTargetMovesAside(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithOneArg(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+
+Test Run Failed.
+Total tests: 7
+     Passed: 1
+     Failed: 6
+ Total time: 3.2176 Seconds

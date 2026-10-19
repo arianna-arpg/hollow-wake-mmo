@@ -1,0 +1,126 @@
+{
+  "source": "6ef2a6fbad69c2eb7c3efa2787ae4b54a4584502",
+  "webSource": "9419fff7123ab70e97c5ab15dae16e4c3ab6e6a4",
+  "webUnchanged": true,
+  "smokes": [
+    {
+      "mode": "melee",
+      "status": "passed",
+      "cleanupErrors": [],
+      "nativeRendering": "not covered by headless mode",
+      "stages": [
+        {
+          "name": "smoke-web",
+          "passed": 33,
+          "total": 33,
+          "skipped": []
+        },
+        {
+          "name": "smoke-godot",
+          "passed": 37,
+          "total": 37,
+          "skipped": [
+            "appearance rendering: headless display; geometry/card performance and readability require graphical evidence",
+            "theme rendered pixels: headless display; theme state checked above"
+          ]
+        }
+      ],
+      "screenshots": [
+        {
+          "name": "16_cards.png",
+          "sha256": "6baf35c8ac613cb820a04bda9aa3ad33c71dae98f7908fad50bd691a9d69864b",
+          "inspected": true
+        },
+        {
+          "name": "forecast_primary_candidate.png",
+          "sha256": "7776a0b9890d6207c0b8d370f4ca35ba1f4631c5fe77d822a49eb9a252a55d23",
+          "inspected": true
+        }
+      ]
+    },
+    {
+      "mode": "spell",
+      "status": "passed",
+      "cleanupErrors": [],
+      "nativeRendering": "not covered by headless mode",
+      "stages": [
+        {
+          "name": "smoke-web",
+          "passed": 34,
+          "total": 34,
+          "skipped": []
+        },
+        {
+          "name": "smoke-godot",
+          "passed": 38,
+          "total": 38,
+          "skipped": [
+            "appearance rendering: headless display; geometry/card performance and readability require graphical evidence",
+            "theme rendered pixels: headless display; theme state checked above"
+          ]
+        }
+      ],
+      "screenshots": [
+        {
+          "name": "16_cards.png",
+          "sha256": "37a655d46fdcf069c846a2a5f301da370b7216330d077fe3c4943f27c2c51148",
+          "inspected": false
+        },
+        {
+          "name": "forecast_primary_candidate.png",
+          "sha256": "9a779095e4a476b39ac530475cd37ab350e98be045bdb71a671471bcb4c063eb",
+          "inspected": true
+        },
+        {
+          "name": "cast_cue_release.png",
+          "sha256": "6217fb849293207c781855dced563bcb071a69104dc038d01d4bd675bec7e930",
+          "inspected": true
+        },
+        {
+          "name": "cast_cue_impact.png",
+          "sha256": "943047a77257edc9429226683a4dc5135ac04b23b9d5c18396e5e9082fb599d5",
+          "inspected": true
+        }
+      ]
+    }
+  ],
+  "logs": [
+    {
+      "name": "final-release-build.txt",
+      "rawSha256": "9d3371a15843c7fb5772c0574761301664bc8f7e61bbfede85e05ba68b22c6ef"
+    },
+    {
+      "name": "final-full-tests.txt",
+      "rawSha256": "b28ba5be2b99890548c797b8209152ddac5862b1f22e9d08fff8923ae15fd58f"
+    },
+    {
+      "name": "final-validate.txt",
+      "rawSha256": "256d99d04d3b74192104b776ec0da3719635286f81e4f4898f534698c624000f"
+    },
+    {
+      "name": "final-load.txt",
+      "rawSha256": "7c5632091e54468ab4d1e9f76969321f1a2a53947889f6c5148673c749b89868"
+    },
+    {
+      "name": "final-fight.txt",
+      "rawSha256": "febbeb9b049b26ec8956e9037e172783e1a57803dbf2888bbe13ebe7d3b9d063"
+    },
+    {
+      "name": "final-replay.txt",
+      "rawSha256": "175bba32d204b7835171170023e26a733615ed423460c0fe3d009dad04763055"
+    },
+    {
+      "name": "final-proving.txt",
+      "rawSha256": "49a4118c18d340f53242d5b6cef4b647fc24a9d6409081c92abd1bb9c91a894e"
+    },
+    {
+      "name": "final-probe.txt",
+      "rawSha256": "2e2a9f450fe60cab72087f2bb4be0f460c7cf163bc469d33a4fdd32890741a74"
+    }
+  ],
+  "proving": {
+    "sha256": "c1265f7625cf844b9c35203030b3424ea8a6588fa596475e44693e45f2151638",
+    "unchanged": true,
+    "inheritedBreaches": 3
+  }
+}

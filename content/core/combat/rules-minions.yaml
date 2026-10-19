@@ -63,5 +63,8 @@ entries:
       construct_forward_scale: 0.7
       # The least time between two casts of one construct weave.
       construct_interval: 1
+      # Free echo resolutions cannot create bodies, move their owner, or spend another body.
+      echo_excluded_tags: [summon, movement]
+      echo_excluded_mechanisms: [summon, construct, displaces, spends_bodies]
       # Seconds between looks for slotted summons that replenish themselves.
       replenish_scan: 1

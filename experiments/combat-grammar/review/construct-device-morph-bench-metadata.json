@@ -1,0 +1,12 @@
+{
+  "runtimeSource": "a7a08f1150dcf4cff091ca868c45449acb083bd4",
+  "command": "dotnet src/HollowWake.Tools/bin/Release/net10.0/hollowwake.dll bench --json",
+  "sample": "first default run after paid-device correction and merged PR54",
+  "priority": "Normal",
+  "productVersion": "1.0.0+a7a08f1150dcf4cff091ca868c45449acb083bd4",
+  "coreSha256": "51FA0F15749E8B1C9BA6693F2177B9CB35ABE380C2C4F9CC6DBBD7E118D11B67",
+  "toolSha256": "8C33561FCEFA55716E3CB6CA0389E9DC6DD4E07DB5CF7D9E00B491A0F0EC45CA",
+  "startedUtc": "2026-10-18T20:40:15.7506868Z",
+  "finishedUtc": "2026-10-18T20:40:24.4997269Z",
+  "exitCode": 0
+}

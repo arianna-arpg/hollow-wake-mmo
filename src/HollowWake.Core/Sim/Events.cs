@@ -54,7 +54,17 @@ public sealed record StatusExpired(Entity Target, string Status) : GameEvent
 }
 
 public sealed record WeaveStarted(Entity Caster, string Weave, Entity Target, Vector3 Point, double CastTime) : GameEvent;
-public sealed record WeaveCast(Entity Caster, string Weave, Entity Target, Vector3 Point, TagSet Tags) : GameEvent;
+public sealed record WeaveCast(Entity Caster, string Weave, Entity Target, Vector3 Point, TagSet Tags) : GameEvent
+{
+    /// <summary>The resolved cast view, retained by local replay listeners even if its slot changes. Not a wire field.</summary>
+    internal Weaves.CompiledWeave? Resolved { get; init; }
+    internal IReadOnlyList<Effects.CompiledEffect>? ResolvedEffects { get; init; }
+    internal Weaves.CastVariableSnapshot? ResolvedVariables { get; init; }
+    /// <summary>Launch geometry sampled before payload execution. Replay eligibility still uses Target.</summary>
+    internal Vector3? ResolvedTargetPoint { get; init; }
+    internal Vector3 ResolvedAimOffset { get; init; }
+    internal Vector2 ResolvedDirection { get; init; }
+}
 public sealed record WeaveFailed(Entity Caster, string Weave, string Reason) : GameEvent;
 public sealed record WeaveInterrupted(Entity Caster, string Weave) : GameEvent;
 

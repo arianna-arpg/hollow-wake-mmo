@@ -35,7 +35,8 @@ internal sealed class DamageHandler : IEffectHandler
     public string Type => "damage";
 
     public EffectSignature Signature { get; } = EffectSignature.Of("amount", "amounts", "threads", "tags", "can_crit", "effectiveness", "cannot_kill", "leech")
-        .Hook(EffectHooks.OnKill, "on_kill");
+        .Hook(EffectHooks.OnKill, "on_kill")
+        .Hook("after_damage", "after_damage");
 
     public CompiledEffect Compile(JsonObject p, EffectCompileContext ctx)
     {
@@ -75,6 +76,7 @@ internal sealed class DamageHandler : IEffectHandler
             Leech = leech,
             Rolls = rolls,
             OnKill = ctx.CompileList(p["on_kill"], "on_kill"),
+            AfterDamage = ctx.CompileList(p["after_damage"], "after_damage"),
         };
     }
 
@@ -112,6 +114,7 @@ internal sealed class DamageHandler : IEffectHandler
         public Expr? Leech;
         public bool Rolls;
         public CompiledEffect[] OnKill = Array.Empty<CompiledEffect>();
+        public CompiledEffect[] AfterDamage = Array.Empty<CompiledEffect>();
 
         // The rule's default thread as a one-element list, kept while the rule text stays the same.
         private string? _defaultThread;
@@ -163,6 +166,14 @@ internal sealed class DamageHandler : IEffectHandler
             {
                 ExecuteAll(OnKill, ctx.Deeper());
             }
+            // Payload riders run for each positive packet on its actual recipient, at payload depth.
+            // Keep the parent result stable even if kill hooks or these riders deal more damage.
+            if (AfterDamage.Length > 0 && result.Total > 0)
+                ExecuteAll(AfterDamage, ctx.WithVars(v =>
+                {
+                    v["last_damage"] = result.Total;
+                    v["amount"] = result.Total;
+                }));
         }
 
         private List<string> DefaultThreads(EffectContext ctx)

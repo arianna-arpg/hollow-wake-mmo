@@ -1,0 +1,25 @@
+benchmark                                 value unit         note
+zone.load                               129.618 ms           zone(0,0): 100 chunks, 4 pois, 2 founts, 113 spawners, 2269 flora, 4 quests
+zone.tick.avg                             6.165 ms/tick      3028 entities at start, 3015 at end, 300 monsters, 4 players
+zone.tick.p50                             5.041 ms/tick      median
+zone.tick.p95                            14.034 ms/tick      95th percentile
+zone.tick.max                            19.836 ms/tick      worst tick
+zone.tick.alloc                         110.951 KB/tick      gen0 collections 6
+zone.events                                  19 events       raised during the last tick
+system.behavior                           3.058 ms/tick      47.7 KB/tick allocated
+system.casting                            0.915 ms/tick      45.1 KB/tick allocated
+system.territory                          0.053 ms/tick      6.9 KB/tick allocated
+system.statuses                           1.025 ms/tick      5.1 KB/tick allocated
+system.projectiles                        0.063 ms/tick      2.3 KB/tick allocated
+system.quests                             0.019 ms/tick      2.1 KB/tick allocated
+zone.errors                                   0 count        no system errors
+snapshot.enter                          212.344 KB/player    spawns and self state on entering the zone, sent once
+snapshot.build                            1.385 ms/player    550 known entities per player; build and encode
+snapshot.bytes                           55.636 KB/player    changed entities as full states plus self state, steady state, JSON
+snapshot.delta.build                      1.123 ms/player    the same with deltas opted in
+snapshot.delta.bytes                     16.148 KB/player    changed entities as deltas plus self state, steady state, JSON
+snapshot.interface.build                  1.108 ms/player    deltas plus the interface states on change, build and encode
+snapshot.interface.bytes                 13.339 KB/player    an interface client: deltas, self state with pools and casts, weave slots, inventory, passives and pages on change
+snapshot.forecast.build                   0.282 ms/player    incremental build + encode, 1355 active cast observations
+snapshot.forecast.bytes                   0.991 KB/player    complete opt-in baseline, incremental to entity/interface stream
+snapshot.forecast.alloc                  42.872 KB/player    incremental forecast build and encode allocation

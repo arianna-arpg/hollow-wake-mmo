@@ -1,0 +1,151 @@
+{
+  "source": "783fe37c",
+  "comparisonSource": "complete flight-foundation combined-lint.json",
+  "previous": {
+    "smells": 580,
+    "notes": 197
+  },
+  "current": {
+    "smells": 584,
+    "notes": 197
+  },
+  "added": [
+    {
+      "key": "form.one_use|forms|snare_blast",
+      "severity": "smell",
+      "kind": "forms",
+      "id": "snare_blast",
+      "file": "content/core/combat/forms-summon.yaml",
+      "message": "A shell (drop_weight 0) that only preset 'snare_burst' composes on, where a shell is meant to serve every preset of its kind."
+    },
+    {
+      "key": "expression.copied|forms|bash|effects[0].effects[0].amount",
+      "severity": "smell",
+      "kind": "forms",
+      "id": "bash",
+      "file": "content/core/combat/forms-delivery.yaml",
+      "message": "Writes 'lerp(weapon.damage.min, weapon.damage.max, rand()) * weave.damage.effectiveness * attack.power' at effects[0].effects[0].amount, a formula 5 definitions copy, which a named basis in rules.yaml or an attribute should carry."
+    },
+    {
+      "key": "expression.copied|forms|measured_strike|effects[0].effects[0].amount",
+      "severity": "smell",
+      "kind": "forms",
+      "id": "measured_strike",
+      "file": "content/core/combat/forms-casting.yaml",
+      "message": "Writes 'lerp(weapon.damage.min, weapon.damage.max, rand()) * weave.damage.effectiveness * attack.power' at effects[0].effects[0].amount, a formula 5 definitions copy, which a named basis in rules.yaml or an attribute should carry."
+    },
+    {
+      "key": "expression.copied|forms|snare_blast|effects[0].effects[0].amount",
+      "severity": "smell",
+      "kind": "forms",
+      "id": "snare_blast",
+      "file": "content/core/combat/forms-summon.yaml",
+      "message": "Writes 'weave.base_damage * spell.power' at effects[0].effects[0].amount, a formula 16 definitions copy, which a named basis in rules.yaml or an attribute should carry."
+    },
+    {
+      "key": "expression.copied|forms|strike|effects[0].effects[0].amount",
+      "severity": "smell",
+      "kind": "forms",
+      "id": "strike",
+      "file": "content/core/combat/forms.yaml",
+      "message": "Writes 'lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power' at effects[0].effects[0].amount, a formula 90 definitions copy, which a named basis in rules.yaml or an attribute should carry."
+    },
+    {
+      "key": "code.string_switch|src/HollowWake.Core/Weaves/CastForecast.cs|if (weave.Tags.Has(§0§)) (changingFlags ??= new(CastChangingFlags, StringComparer.Ordinal)).Add(§1§);",
+      "severity": "smell",
+      "file": "src/HollowWake.Core/Weaves/CastForecast.cs",
+      "line": 65,
+      "message": "Tests the flag or tag 'movement' by name; content or a registry should carry this word."
+    },
+    {
+      "key": "code.string_switch|src/HollowWake.Core/Weaves/CastPresentation.cs|cast.PresentationReleases > 0, reason) { Tick = sim.Clock.Tick, Mechanisms = weave.Mechanisms, Outcome = phase == §0§ });",
+      "severity": "smell",
+      "file": "src/HollowWake.Core/Weaves/CastPresentation.cs",
+      "line": 31,
+      "message": "Compares 'phase' with 'end', 'interrupt', 'miss' and 'release' in this file, a switch on strings written as ifs; content or a registry should carry these words."
+    },
+    {
+      "key": "code.string_switch|src/HollowWake.Core/Weaves/ReleaseTargets.cs|if (sim.World.Get<Stats>(target)?.Flags.Contains(§0§) == true)",
+      "severity": "smell",
+      "file": "src/HollowWake.Core/Weaves/ReleaseTargets.cs",
+      "line": 50,
+      "message": "Tests the flag or tag 'untargetable' by name; content or a registry should carry this word."
+    },
+    {
+      "key": "code.form_read|src/HollowWake.Core/Weaves/CastForecast.cs|AddOverchargeModifiers(local, weave.Form.Overcharge, cast.Stage, now - cast.StageAt);",
+      "severity": "smell",
+      "file": "src/HollowWake.Core/Weaves/CastForecast.cs",
+      "line": 112,
+      "message": "Reads the form's 'Overcharge' where the runtime should read the compiled weave, into which a preset or glyph can merge any block."
+    },
+    {
+      "key": "code.form_read|src/HollowWake.Core/Weaves/WeaveRuntime.cs|AddOverchargeModifiers(cast.Modifiers, weave.Form.Overcharge, cast.Stage, now - cast.StageAt);",
+      "severity": "smell",
+      "file": "src/HollowWake.Core/Weaves/WeaveRuntime.cs",
+      "line": 1430,
+      "message": "Reads the form's 'Overcharge' where the runtime should read the compiled weave, into which a preset or glyph can merge any block."
+    },
+    {
+      "key": "code.form_read|src/HollowWake.Core/Weaves/WeaveRuntime.cs|IsInstant(weave.Form) && (weave.Form.Reflex || weave.AttrOrZero(stats, §0§) > 0);",
+      "severity": "smell",
+      "file": "src/HollowWake.Core/Weaves/WeaveRuntime.cs",
+      "line": 580,
+      "message": "Reads the form's 'Reflex' and takes the whole form where the runtime should read the compiled weave, into which a preset or glyph can merge any block."
+    }
+  ],
+  "removed": [
+    {
+      "key": "parameter.single_use|effect|area.contact",
+      "severity": "smell",
+      "kind": "effect",
+      "id": "area.contact",
+      "file": "content/core/combat/forms.yaml",
+      "message": "Only forms/cleave writes 'contact' of 'area', so no second definition reuses it."
+    },
+    {
+      "key": "expression.copied|forms|bash|effects[0].amount",
+      "severity": "smell",
+      "kind": "forms",
+      "id": "bash",
+      "file": "content/core/combat/forms-delivery.yaml",
+      "message": "Writes 'lerp(weapon.damage.min, weapon.damage.max, rand()) * weave.damage.effectiveness * attack.power' at effects[0].amount, a formula 5 definitions copy, which a named basis in rules.yaml or an attribute should carry."
+    },
+    {
+      "key": "expression.copied|forms|measured_strike|effects[0].amount",
+      "severity": "smell",
+      "kind": "forms",
+      "id": "measured_strike",
+      "file": "content/core/combat/forms-casting.yaml",
+      "message": "Writes 'lerp(weapon.damage.min, weapon.damage.max, rand()) * weave.damage.effectiveness * attack.power' at effects[0].amount, a formula 5 definitions copy, which a named basis in rules.yaml or an attribute should carry."
+    },
+    {
+      "key": "expression.copied|forms|strike|effects[0].amount",
+      "severity": "smell",
+      "kind": "forms",
+      "id": "strike",
+      "file": "content/core/combat/forms.yaml",
+      "message": "Writes 'lerp(weapon.damage.min, weapon.damage.max, roll) * weave.damage.effectiveness * attack.power' at effects[0].amount, a formula 90 definitions copy, which a named basis in rules.yaml or an attribute should carry."
+    },
+    {
+      "key": "code.string_switch|src/HollowWake.Core/Ai/MinionActions.cs|if (weave is null || weave.Tags.Has(§0§) || weave.Tags.Has(§1§) || weave.HasMechanism(§2§) || weave.HasMechanism(§3§))",
+      "severity": "smell",
+      "file": "src/HollowWake.Core/Ai/MinionActions.cs",
+      "line": 388,
+      "message": "Tests the flags or tags 'summon', 'movement' and 'displaces' by name; content or a registry should carry these words."
+    },
+    {
+      "key": "code.form_read|src/HollowWake.Core/Weaves/WeaveRuntime.cs|if (book.Casting is not null && !(IsInstant(face.Form) && (face.Form.Reflex || face.AttrOrZero(stats, §0§) > 0)))",
+      "severity": "smell",
+      "file": "src/HollowWake.Core/Weaves/WeaveRuntime.cs",
+      "line": 410,
+      "message": "Reads the form's 'Reflex' and takes the whole form where the runtime should read the compiled weave, into which a preset or glyph can merge any block."
+    },
+    {
+      "key": "code.form_read|src/HollowWake.Core/Weaves/WeaveRuntime.cs|if (weave.Form.Overcharge is { } over)#2",
+      "severity": "smell",
+      "file": "src/HollowWake.Core/Weaves/WeaveRuntime.cs",
+      "line": 2006,
+      "message": "Reads the form's 'Overcharge' where the runtime should read the compiled weave, into which a preset or glyph can merge any block."
+    }
+  ]
+}

@@ -68,10 +68,14 @@ public static class ShapeMesh
             // Match the hole's start to the outer loop's by the nearest angle.
             var start = 0;
             var best = float.MaxValue;
-            var a0 = MathF.Atan2(outer[0].Y, outer[0].X);
+            // Bowed full-turn regions center behind the anchor. Match ring vertices about the
+            // actual loop center, otherwise an offset hole stitches to unrelated outer angles.
+            var centerX = outer.Average(p => p.X);
+            var centerY = outer.Average(p => p.Y);
+            var a0 = MathF.Atan2(outer[0].Y - centerY, outer[0].X - centerX);
             for (var i = 0; i < hole.Count; i++)
             {
-                var d = MathF.Abs(Mathf.AngleDifference(a0, MathF.Atan2(hole[i].Y, hole[i].X)));
+                var d = MathF.Abs(Mathf.AngleDifference(a0, MathF.Atan2(hole[i].Y - centerY, hole[i].X - centerX)));
                 if (d < best)
                 {
                     best = d;

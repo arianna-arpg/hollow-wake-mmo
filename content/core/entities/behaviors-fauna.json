@@ -1,0 +1,55 @@
+{
+  "kind": "behaviors",
+  "entries": [
+    {
+      "id": "fauna_flee",
+      "initial": "graze",
+      "tick_interval": 0.5,
+      "aggro_range": 6,
+      "leash_range": 30,
+      "states": {
+        "graze": {
+          "tick": [
+            {
+              "type": "wander",
+              "radius": 4,
+              "chance": 0.1
+            },
+            {
+              "type": "acquire_target",
+              "filter": "enemy",
+              "range": 6
+            }
+          ],
+          "transitions": [
+            {
+              "to": "flee",
+              "when": "has_target && target_distance < 6",
+              "priority": 10
+            }
+          ]
+        },
+        "flee": {
+          "tick": [
+            {
+              "type": "flee",
+              "distance": 7
+            }
+          ],
+          "transitions": [
+            {
+              "to": "graze",
+              "when": "!has_target || target_distance > 12 || state_time > 5",
+              "priority": 10
+            }
+          ],
+          "exit": [
+            {
+              "type": "drop_target"
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

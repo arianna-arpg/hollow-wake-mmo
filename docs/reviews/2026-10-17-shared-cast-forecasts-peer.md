@@ -1,0 +1,41 @@
+# Shared forecasting integration peer review
+
+Reviewed [PR #20](https://github.com/arianna-arpg/hollow-wake-mmo/pull/20), head `85d848549049e563d962c46edb078c876a617f62` against main `dcecf647`. The integration worktree and coordinator checkout were read only. Scope: forecast observation to wire conversion, opt-in/interest redaction, revision reuse and repair, both client timelines/renderers, shape conformance gates, and channel progress propagation. This supplements Claude review; it is not a merge approval.
+
+## Actionable findings
+
+1. **P2: normalize saturated angular coverage before outlining.** `src/HollowWake.Client/UI/Logic/CastForecastTimeline.cs:80` and `web/src/world/castForecastTimeline.ts:64` construct the shape adapter input directly from resolved dimensions. The core leaves modifier-scaled `area.angle` unbounded; sector/cone/crescent predicates cover the full radial region at angles of at least 360 degrees. The adapters instead trace more than one turn, producing overlapping loops and an incorrect region. A radius-3 sector at 450 degrees hits `(-1, 0.2)` in combat but the actual C# forecast outline excludes it; at 720 degrees the same mismatch occurs at `(1, 0.2)`. Both are accepted as usable at 64 segments with the default 0.025 error. The browser adapter has the same loop. Normalize the effective rendered sweep to combat's saturated semantics or explicitly decline unsupported geometry, and add greater-than-full-turn fixtures for the angular families. Keep this independent of skill identity.
+
+2. **P2: account for the sector predicate's anchor allowance.** The same adapter seam treats a sector as a mathematical wedge, while `SectorShape.Contains` accepts every point with squared distance below 0.01 after its radial checks. For a radius-3, 90-degree sector, `(-0.08, 0)` is therefore hit by combat but outside the displayed wedge. This 0.08-unit discrepancy exceeds the advertised default 0.025 rendering tolerance and applies to ordinary sectors without unusual modifiers. Represent the actual small anchor region (including its interaction with the inner radius), or explicitly bound/report this discrepancy rather than claiming only chord error. Add near-anchor points to the shared conformance fixtures; the current coarse grid misses them. Preserve gameplay semantics during a rendering correction.
+
+The reproduction compiled the PR's actual engine-free C# forecast adapter and `ShapeOutline` against its already-built Core/Protocol assemblies in a private ignored experiment directory. It called `Shapes.Get("sector").Contains(new ShapeSize(3, angle, 0, 0), point, Vector2.UnitX, 0)` and compared that with `ShapeOutline.Inside(CastForecastTimeline.Outline(region, CastForecastTimeline.SegmentsFor(region, 64, 256, .025)), point.X, point.Y)`. All three cases returned combat true / forecast false. No integration binaries were rebuilt by this probe.
+
+## Other reviewed behavior
+
+No additional actionable defect found in the inspected opt-in, hidden-target geometry redaction, bounded membership, exact-revision reuse, missing-revision removal, periodic repair, epoch reset, expiry handling, or emission/readiness separation. The new channel window is propagated to both clients and used as the progress origin. Geometry uses the core coordinate and unit conversion seam, remains a live primary candidate sample and does not promise requirements, capped selection, secondary emissions or damage. Unsupported graph coverage stays explicit. The documented echo depth/proving-duel winner change remains a separate required Claude gameplay review; this review does not waive it.
+
+Read the existing client/server regressions and retained integration evidence. Current GitHub build-test, build, launcher, Docker and CI checks passed; deploy was skipped. Did not repeat full tests, live clients or heavy benchmarks while integration was finishing its native playthrough.
+
+## Recheck of the geometry corrections
+
+Rechecked code `73ecf64` at integrated head `b1b6a4be6778cc68629899d7aa7af2bce5d331cc`. Both findings above are resolved. The three original points now return combat true / forecast true. Angular coverage saturates to real circle/ring loops; the core exposes its existing squared center allowance as shape metadata, and both adapters receive its radius and clip the central region by the existing inner and outer bounds. The core comparison retains its original `0.01f` squared threshold. Arc inner radii can reach zero, full-turn offset rings use the correct center, and nonpositive angular/required-width dimensions explicitly decline forecasting.
+
+Independent isolated replays of the actual current adapters passed all 116 shared fixtures in both languages: 30 explicitly declined cases and 57,138 drawable point comparisons per client. The C# replay additionally compared each drawable point with the current combat predicate. Browser replay used Node's built-in TypeScript stripping and in-memory module loading, without modifying the integration checkout. Inspected wire propagation, finite metadata validation and mesh-rebuild invalidation for center allowance. No further actionable defect found in these corrections. Final integrated live/performance gates and Claude's gameplay review remain with the integration owner.
+
+Acknowledged by: integration chat implemented both findings; forecasting peer recheck passes at `b1b6a4b`. Claude review remains separate.
+
+## Observation storage and proc-depth recheck
+
+The forecasting chat inspected the review correction later committed as `a2dee0a` read-only and found no actionable defect. Renting removes the spare before use; nested sampling gets separate storage. Return clears simulation, actor, weave, tags, variables and scope references through `finally`. Rebinding refreshes time, distance and actors; dependency preflight runs on every sample. Public providers retain ordinary unpooled context lifetimes. `payload_depth: same` preserves selector payload depth, while delays, repeats, casts and echoes still deepen and payload execution still enforces the cap.
+
+The peer suggested direct regressions for nested sampling and a public provider retaining its context. Integration added both in `03d5110`; they pass with the full merged suite. The peer did not run builds/tests or independently reproduce allocation timings. A subsequent read-only performance inspection noted that minimum-range rejection could precede candidate observation, and confirmed that `snapshot.build` excludes the separately measured forecast constructor. Neither observation established the cause of the timing overruns or waived the performance gate.
+
+## Appearance lifecycle integration
+
+After approved appearance #9 landed, the forecasting chat independently confirmed that both body adapters inferred release when casting snapshots cleared, including interruptions. Readiness alone did not trigger that transition. The integration owner corrected the shared seam in `db752e0`: validated lifecycle callbacks precede cosmetic selection, only confirmed emission starts release motion/audio, and snapshot/damage inference remains only for servers without `cast_cues`. All animated rigs show a channel emission before returning to ongoing preparation.
+
+The peer read the paired timeline/body/animator diff and regressions and found no actionable lifecycle defect. This was a read-only review; no build, test or timing reproduction was performed by the peer. Integration's mirrored regression and complete test results are recorded in the main handoff. Claude's review remains separate.
+
+## Card-baking renderer isolation
+
+Integration's screenshot inspection caught the merged appearance baker leaving the browser viewport at the last atlas cell. The forecasting chat reviewed fix `eb842ad` against the installed Three.js implementation and found no actionable renderer-state defect. Target-local viewport/scissor coordinates stay in physical pixels; restoring the previous render target restores its viewport/scissor state. The `finally` block restores clear color, alpha and auto-clear and disposes failed work before an atlas can be published. The new full-canvas smoke assertion catches the original defect. This was read-only inspection, with no independent builds or live tests.
