@@ -1,0 +1,15 @@
+{
+  "source": "a918663ce5845474fb4347a11fcb663d337a9eb9",
+  "contentTree": "63645cec1a7c63cfc8f8007b156f1530751abeda",
+  "verifiedFiles": 386,
+  "binaries": {
+    "HollowWake.Core.dll": "fcada9bdfd0f4c607986bb2e8ca1b12dfa8fea3b2a2088350a8198de26bf2ba0",
+    "hollowwake.dll": "e99a4a6051a020ac8316660c9df8cd78e876ddedcedc8b368f58c6e754a5adbc",
+    "HollowWake.Protocol.dll": "1b022a55f9f9e8418966d6ff725295f17f6d78dc5921e35b8d4ae8b0f0497a7a",
+    "HollowWake.Server.dll": "1a6f35c664b05068db3c6acd7b5dd5b7186acdaf4cf09ea249ca0ef8dc282908",
+    "Microsoft.Extensions.DependencyInjection.Abstractions.dll": "7c97c4463fe0fc11d1f22f4d160b2bd2288981adf1de2717a6ff3fb993ddf294",
+    "Microsoft.Extensions.Logging.Abstractions.dll": "a76a735b63e6ef3b0bf41ff92423cbd16103b8952e8306140a9bd650346034dc",
+    "YamlDotNet.dll": "d618138109a40e4a7250e49e2abad8c450e3636bee18d7499ab231e37fa9150a"
+  },
+  "samplesAbsent": true
+}
