@@ -1,0 +1,27 @@
+{
+  "testedSource": "b17ebccae418e5e63ca54e2b53f9365863816b7a",
+  "foundation": "1bbaa120730376e1297c4f4a7011291c1f69b542",
+  "configuration": "Release",
+  "builtBy": "dotnet build src/HollowWake.Tools/HollowWake.Tools.csproj -c Release --no-restore -m:1 -nr:false -p:UseSharedCompilation=false",
+  "platform": "win-x64",
+  "binaries": [
+    {
+      "path": "src/HollowWake.Tools/bin/Release/net10.0/hollowwake.dll",
+      "sha256": "688B0DF221615D8B1E6B3A6E6EE67DFE02EF4793DCB083F3B522D0F369FA6ACB"
+    },
+    {
+      "path": "src/HollowWake.Tools/bin/Release/net10.0/HollowWake.Core.dll",
+      "sha256": "496545F0F413510402BE226B40AB49E2088A45FE5436A5605CFAFC193A056F54"
+    },
+    {
+      "path": "src/HollowWake.Tools/bin/Release/net10.0/HollowWake.Server.dll",
+      "sha256": "1566B095BC83E6A3780F2E70E292074821FB6F5703787E0AABC645CB37E3A774"
+    },
+    {
+      "path": "src/HollowWake.Tools/bin/Release/net10.0/HollowWake.Protocol.dll",
+      "sha256": "84B3B92C692967C8A11977D87BFB91E8E42975200C311705BAF21BF06BF12AAD"
+    }
+  ],
+  "performanceMeasured": false,
+  "traceCaptured": false
+}

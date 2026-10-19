@@ -1,0 +1,208 @@
+[
+  {
+    "name": "release-build",
+    "executable": "dotnet",
+    "arguments": [
+      "build",
+      "src/HollowWake.Tools/HollowWake.Tools.csproj",
+      "-c",
+      "Release",
+      "--no-restore",
+      "-m:1",
+      "-nr:false",
+      "-p:UseSharedCompilation=false"
+    ],
+    "startedUtc": "2026-10-19T00:47:23.1420051Z",
+    "finishedUtc": "2026-10-19T00:47:36.3258698Z",
+    "exitCode": 0,
+    "expectedExit": 0
+  },
+  {
+    "name": "web-tests",
+    "executable": "npm.cmd",
+    "arguments": [
+      "--prefix",
+      "web",
+      "test"
+    ],
+    "startedUtc": "2026-10-19T00:47:36.3749594Z",
+    "finishedUtc": "2026-10-19T00:47:41.6771610Z",
+    "exitCode": 0,
+    "expectedExit": 0
+  },
+  {
+    "name": "web-build",
+    "executable": "npm.cmd",
+    "arguments": [
+      "--prefix",
+      "web",
+      "run",
+      "build"
+    ],
+    "startedUtc": "2026-10-19T00:47:41.6796319Z",
+    "finishedUtc": "2026-10-19T00:47:48.2838499Z",
+    "exitCode": 0,
+    "expectedExit": 0
+  },
+  {
+    "name": "porter",
+    "executable": "node",
+    "arguments": [
+      "--test",
+      "scripts/port/port-prototype.test.mjs"
+    ],
+    "startedUtc": "2026-10-19T00:47:48.2851128Z",
+    "finishedUtc": "2026-10-19T00:47:48.5314074Z",
+    "exitCode": 0,
+    "expectedExit": 0
+  },
+  {
+    "name": "lifecycle-tests",
+    "executable": "node",
+    "arguments": [
+      "--test",
+      "scripts/test-background.test.mjs"
+    ],
+    "startedUtc": "2026-10-19T00:47:48.5325159Z",
+    "finishedUtc": "2026-10-19T00:47:50.8178159Z",
+    "exitCode": 0,
+    "expectedExit": 0
+  },
+  {
+    "name": "validate",
+    "executable": "dotnet",
+    "arguments": [
+      "src/HollowWake.Tools/bin/Debug/net10.0/hollowwake.dll",
+      "validate"
+    ],
+    "startedUtc": "2026-10-19T00:47:50.8191053Z",
+    "finishedUtc": "2026-10-19T00:47:52.2653933Z",
+    "exitCode": 0,
+    "expectedExit": 0
+  },
+  {
+    "name": "protocol",
+    "executable": "dotnet",
+    "arguments": [
+      "src/HollowWake.Tools/bin/Debug/net10.0/hollowwake.dll",
+      "protocol-ts",
+      "--check"
+    ],
+    "startedUtc": "2026-10-19T00:47:52.2669857Z",
+    "finishedUtc": "2026-10-19T00:47:52.3994825Z",
+    "exitCode": 0,
+    "expectedExit": 0
+  },
+  {
+    "name": "axes",
+    "executable": "dotnet",
+    "arguments": [
+      "src/HollowWake.Tools/bin/Debug/net10.0/hollowwake.dll",
+      "weave",
+      "--axes",
+      "--all",
+      "--json",
+      "experiments/golems/artifacts/corrected-axes.json",
+      "--literals",
+      "experiments/golems/evidence/corrected-foundation/frozen-literals.txt"
+    ],
+    "startedUtc": "2026-10-19T00:47:52.4006990Z",
+    "finishedUtc": "2026-10-19T00:47:54.3819826Z",
+    "exitCode": 0,
+    "expectedExit": 0
+  },
+  {
+    "name": "load",
+    "executable": "dotnet",
+    "arguments": [
+      "src/HollowWake.Tools/bin/Debug/net10.0/hollowwake.dll",
+      "load",
+      "--x",
+      "0",
+      "--y",
+      "0"
+    ],
+    "startedUtc": "2026-10-19T00:47:54.3831958Z",
+    "finishedUtc": "2026-10-19T00:47:57.0436865Z",
+    "exitCode": 0,
+    "expectedExit": 0
+  },
+  {
+    "name": "fight",
+    "executable": "dotnet",
+    "arguments": [
+      "src/HollowWake.Tools/bin/Debug/net10.0/hollowwake.dll",
+      "fight",
+      "amalgam_horror",
+      "stone_golem"
+    ],
+    "startedUtc": "2026-10-19T00:47:57.0448243Z",
+    "finishedUtc": "2026-10-19T00:47:58.5665305Z",
+    "exitCode": 0,
+    "expectedExit": 0
+  },
+  {
+    "name": "replay-release",
+    "executable": "dotnet",
+    "arguments": [
+      "src/HollowWake.Tools/bin/Release/net10.0/hollowwake.dll",
+      "tournament",
+      "--standard",
+      "--check-hashes",
+      "experiments/combat-grammar/baselines/standard-duels.json",
+      "--out",
+      "experiments/golems/evidence/corrected-foundation/standard-actual.json"
+    ],
+    "startedUtc": "2026-10-19T00:47:58.5675215Z",
+    "finishedUtc": "2026-10-19T00:48:01.0810521Z",
+    "exitCode": 0,
+    "expectedExit": 0
+  },
+  {
+    "name": "proving",
+    "executable": "dotnet",
+    "arguments": [
+      "src/HollowWake.Tools/bin/Release/net10.0/hollowwake.dll",
+      "tournament",
+      "--seeds",
+      "10",
+      "--seconds",
+      "60",
+      "--bands",
+      "--out",
+      "experiments/golems/evidence/corrected-foundation/proving.json"
+    ],
+    "startedUtc": "2026-10-19T00:48:01.0820119Z",
+    "finishedUtc": "2026-10-19T00:48:03.2000337Z",
+    "exitCode": 1,
+    "expectedExit": 1
+  },
+  {
+    "name": "world-audit-build",
+    "executable": "dotnet",
+    "arguments": [
+      "build",
+      "experiments/golems/artifacts/LevelAudit/LevelAudit.csproj",
+      "--no-restore",
+      "-m:1",
+      "-nr:false",
+      "-p:UseSharedCompilation=false"
+    ],
+    "startedUtc": "2026-10-19T00:48:03.2010737Z",
+    "finishedUtc": "2026-10-19T00:48:06.4683064Z",
+    "exitCode": 0,
+    "expectedExit": 0
+  },
+  {
+    "name": "world-audit",
+    "executable": "dotnet",
+    "arguments": [
+      "experiments/golems/artifacts/LevelAudit/bin/Debug/net10.0/LevelAudit.dll",
+      "experiments/golems/evidence/corrected-foundation/world-after.json"
+    ],
+    "startedUtc": "2026-10-19T00:48:06.4692071Z",
+    "finishedUtc": "2026-10-19T00:48:08.6704282Z",
+    "exitCode": 0,
+    "expectedExit": 0
+  }
+]

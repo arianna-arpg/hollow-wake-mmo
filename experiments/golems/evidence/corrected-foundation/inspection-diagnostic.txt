@@ -1,0 +1,1 @@
+One read-only evidence inspection requested smoke-web.txt while the harness writes smoke-web.log. The missing-path diagnostic did not affect the running walkthrough or provenance files; inspection used the existing .log file next. No gate was rerun.

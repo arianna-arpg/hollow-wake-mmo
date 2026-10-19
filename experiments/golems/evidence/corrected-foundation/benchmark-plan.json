@@ -1,0 +1,20 @@
+{
+  "status": "NO-RUN",
+  "performanceMeasured": false,
+  "traceCaptured": false,
+  "testedRuntime": "b17ebccae418e5e63ca54e2b53f9365863816b7a",
+  "configuration": "Release",
+  "proposedCommands": [
+    "dotnet src/HollowWake.Tools/bin/Release/net10.0/hollowwake.dll bench --json",
+    "dotnet src/HollowWake.Tools/bin/Release/net10.0/hollowwake.dll bench --only hit-bodies --json"
+  ],
+  "defaults": "aureth; 300 monsters; 4 players; 600 ticks; 0 minions; no workload overrides",
+  "requirements": [
+    "Separate coordinator window and exact final head/binary verification",
+    "Preserve first stdout/stderr rows, provenance and failures; no automatic retry or trace"
+  ],
+  "historicalPlanningMs": 43.9282,
+  "planningBudgetMs": 40,
+  "historicalExpressionAllocationBytesPerEvaluation": 0.0168,
+  "finalHeadMetadata": "Prepared after the final evidence commit under experiments/golems/artifacts/corrected-foundation-no-run/ and included in the PR handoff."
+}

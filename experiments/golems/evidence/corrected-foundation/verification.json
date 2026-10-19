@@ -1,0 +1,32 @@
+{
+  "source": "b17ebccae418e5e63ca54e2b53f9365863816b7a",
+  "foundation": "1bbaa120730376e1297c4f4a7011291c1f69b542",
+  "dotnetTests": {
+    "failed": 0,
+    "core": 3271,
+    "skipped": 0,
+    "client": 139,
+    "server": 89
+  },
+  "webTests": 319,
+  "porterTests": 10,
+  "lifecycleTests": 10,
+  "buildWarnings": 0,
+  "buildErrors": 0,
+  "validationWarnings": 0,
+  "validationErrors": 0,
+  "census": 523,
+  "replay": "All seven Windows Release hashes match; entire standard report equals foundation",
+  "proving": "Unchanged complete report; three inherited ceiling failures",
+  "worldAudit": "Four sampled zones structurally unchanged",
+  "performanceMeasured": false,
+  "traceCaptured": false,
+  "privateClients": "run-I91tUM: browser 31/31 and native 36/36, cleanupErrors empty",
+  "probe": "six features granted; PROBE OK",
+  "nativeRenderedPixels": false,
+  "controllerInput": false,
+  "browserCapturesInspected": [
+    "cards.png",
+    "grayscale.png"
+  ]
+}

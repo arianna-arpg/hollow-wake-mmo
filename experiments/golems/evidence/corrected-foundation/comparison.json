@@ -1,0 +1,40 @@
+{
+  "source": "b17ebccae418e5e63ca54e2b53f9365863816b7a",
+  "incoming": "1bbaa120730376e1297c4f4a7011291c1f69b542",
+  "standardEqualsIncomingCompleteReport": true,
+  "standardChangedPairs": [
+    {
+      "pair": "loosed_skirmisher:hob",
+      "before": "0d9d4a3110181c7a",
+      "after": "465a4807b0fe94f2"
+    },
+    {
+      "pair": "loosed_skirmisher:boar",
+      "before": "1f6c4b594340b306",
+      "after": "fbf0ac20a5a74103"
+    }
+  ],
+  "remainingStandardPairsUnchanged": 5,
+  "provingEqualsPriorCompleteReport": true,
+  "provingEqualsIncomingCompleteReport": true,
+  "provingHash": "4730bef23767a558",
+  "provingPassed": false,
+  "breaches": [
+    "proving_bulwark wins 10 of 10, above the ceiling 0.8",
+    "proving_plaguer wins 10 of 10, above the ceiling 0.8",
+    "proving_pitfighter wins 10 of 10, above the ceiling 0.8"
+  ],
+  "fourZoneWorldAuditUnchanged": true,
+  "censusKeys": 523,
+  "censusExactlyEqualsFixture": true,
+  "contentChangedSincePrior": [
+    "content/core/combat/rules-hit-bodies.json"
+  ],
+  "coreDifferenceFromIncoming": [
+    "src/HollowWake.Core/Content/Kinds/AppearanceKinds.cs"
+  ],
+  "sharedProtocolServerToolsDifference": "",
+  "ownGenerationFixtureDifference": "",
+  "replayFixtureEditedLocally": false,
+  "causalEvidence": "Incoming complete-source counterfactuals retained under experiments/entity-review/evidence/34-final-union and experiments/entity-hitboxes/evidence/layered-ground. Current whole standard report equals incoming. Those counterfactuals were not rerun locally."
+}

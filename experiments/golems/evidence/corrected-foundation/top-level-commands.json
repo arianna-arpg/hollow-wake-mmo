@@ -1,0 +1,8 @@
+[
+  "dotnet build HollowWake.sln --no-restore -m:1 -nr:false -p:UseSharedCompilation=false",
+  "dotnet test HollowWake.sln --no-build -m:1 -nr:false",
+  "pwsh -NoProfile -File experiments/golems/artifacts/run-corrected-gates.ps1",
+  "node experiments/golems/artifacts/audit-corrected-foundation.mjs",
+  "node scripts/test-background.mjs --suite all --no-build --out experiments/golems/artifacts/corrected-foundation-smoke",
+  "node experiments/golems/artifacts/probe-corrected-foundation.mjs"
+]

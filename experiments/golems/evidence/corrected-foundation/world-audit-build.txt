@@ -1,0 +1,8 @@
+  HollowWake.Core -> C:\Users\John\.codex\worktrees\golem-construct-foundation\MMOARPG\src\HollowWake.Core\bin\Debug\net8.0\HollowWake.Core.dll
+  LevelAudit -> C:\Users\John\.codex\worktrees\golem-construct-foundation\MMOARPG\experiments\golems\artifacts\LevelAudit\bin\Debug\net10.0\LevelAudit.dll
+
+Build succeeded.
+    0 Warning(s)
+    0 Error(s)
+
+Time Elapsed 00:00:02.95
