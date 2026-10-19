@@ -1,0 +1,33 @@
+{
+  "Changes": [
+    {
+      "Pair": "loosed_skirmisher:hob",
+      "Before": "1cf76df19ceeb296",
+      "After": "465a4807b0fe94f2",
+      "OldWin": 1,
+      "NewWin": 1,
+      "OldTtk": 5.85,
+      "NewTtk": 5.85
+    },
+    {
+      "Pair": "loosed_skirmisher:boar",
+      "Before": "cf41fad065ff7e16",
+      "After": "7dd259e21c8ac0e8",
+      "OldWin": 1,
+      "NewWin": 1,
+      "OldTtk": 7.6,
+      "NewTtk": 7.6
+    }
+  ],
+  "ProvingBefore": "6673881dfab95df6",
+  "ProvingAfter": "4730bef23767a558",
+  "ProvingEqual": false,
+  "LintCount": 777,
+  "LintDifference": 0,
+  "LiteralCount": 503,
+  "LiteralDifference": 0,
+  "CounterfactualProvingEqualToPrior": true,
+  "CounterfactualProvingHash": "6673881dfab95df6",
+  "ProvingEqualExceptHashes": true,
+  "LiteralKeys": 499
+}

@@ -1,0 +1,90 @@
+[
+  {
+    "Path": "src/HollowWake.Core/bin/Debug/net8.0/HollowWake.Core.dll",
+    "SHA256": "54000C73B881DB0924D71E584D375B715523456717508E0215C1219CA1B10363"
+  },
+  {
+    "Path": "src/HollowWake.Server.Host/bin/Debug/net10.0/hollowwake-server.dll",
+    "SHA256": "5CBDEBA9FD169B3D7C743B4EFFD3B0357697A32BD763EBBEAA80BE5D87871CAD"
+  },
+  {
+    "Path": "src/HollowWake.Client/.godot/mono/temp/bin/Debug/HollowWake.Client.dll",
+    "SHA256": "3E81D7A07915003F92D8F879AB98D9DF5C87FC24C53953F73AE14132A5A757E6"
+  },
+  {
+    "Path": "src/HollowWake.Tools/bin/Release/net10.0/hollowwake.dll",
+    "SHA256": "95587EACDA87D977746782EF976332A65123980261699E9CCAEB464E55CE71DD"
+  },
+  {
+    "Path": "src/HollowWake.Tools/bin/Release/net10.0/HollowWake.Core.dll",
+    "SHA256": "36B6C3062C62F39DDE0DE7A0D15AA5B965A59506336979518BCC4B5D036B44C8"
+  },
+  {
+    "Path": "src/HollowWake.Tools/bin/Release/net10.0/HollowWake.Server.dll",
+    "SHA256": "83AE31E8409FF84A452560EB98DECEEB5355D120974685654B66718A26FCA9D1"
+  },
+  {
+    "Path": "experiments/entity-hitboxes/artifacts/layered-ground/counterfactual-return/bin-counterfactual/hollowwake.dll",
+    "SHA256": "6F0DADFEF3A3F21F08CB05E91C6890B81ED2FB831AB371886691541B312A082C"
+  },
+  {
+    "Path": "experiments/entity-hitboxes/artifacts/layered-ground/counterfactual-return/bin-counterfactual/HollowWake.Core.dll",
+    "SHA256": "97C33FC8C4E2E881193793FD0A041CE75195EE53096EC5F3F6896055E51EA388"
+  },
+  {
+    "Path": "src/HollowWake.Server.Host/bin/Debug/net10.0/HollowWake.Core.dll",
+    "SHA256": "54000C73B881DB0924D71E584D375B715523456717508E0215C1219CA1B10363"
+  },
+  {
+    "Path": "src/HollowWake.Server.Host/bin/Debug/net10.0/HollowWake.Server.dll",
+    "SHA256": "1BEC3B08F51EC2A034BF176050AA0ABCC48019DD3EB7F1160DDF0D5CFB06C341"
+  },
+  {
+    "Path": "src/HollowWake.Server.Host/bin/Debug/net10.0/HollowWake.Protocol.dll",
+    "SHA256": "690378584E2461AAD37CAAE43F2D06F861C42AF9D7239123D09ABE03249DC2BC"
+  },
+  {
+    "Path": "src/HollowWake.Client/.godot/mono/temp/bin/Debug/HollowWake.Core.dll",
+    "SHA256": "54000C73B881DB0924D71E584D375B715523456717508E0215C1219CA1B10363"
+  },
+  {
+    "Path": "src/HollowWake.Client/.godot/mono/temp/bin/Debug/HollowWake.Protocol.dll",
+    "SHA256": "690378584E2461AAD37CAAE43F2D06F861C42AF9D7239123D09ABE03249DC2BC"
+  },
+  {
+    "Path": "web/dist/config.json",
+    "SHA256": "766D60691584F5AE0CE429B0EA533A3774582ABDAB52F42CCF4BC8CC75EC77F4"
+  },
+  {
+    "Path": "web/dist/index.html",
+    "SHA256": "C386A7BE1EE826404EF0DBCE975ED174468C9608A651EE9188341E8DE4E1110F"
+  },
+  {
+    "Path": "web/dist/play-catalog.json",
+    "SHA256": "7187D1E8E2A4D61B1DC5DFEDB22D703A462DF21470E0C145365B20FB3ED467C3"
+  },
+  {
+    "Path": "web/dist/assets/ability-icons-mVDshZSq.js",
+    "SHA256": "9BD478D6FE016964F6E2F9CC65744013AA7301A949FD42B2834FC40C13B95AB5"
+  },
+  {
+    "Path": "web/dist/assets/app-BDAuRgyk.js",
+    "SHA256": "987C4364E2E66770280404D399BF112329EA9F7B7F1EC4CC2590DB67BF988DDE"
+  },
+  {
+    "Path": "web/dist/assets/app-Dcg-oVlt.css",
+    "SHA256": "F50BDF5B22863109A6CC9F7549CFB36A756E876491B0AF064EBFC880FD13157C"
+  },
+  {
+    "Path": "web/dist/assets/index--A3t2PVZ.css",
+    "SHA256": "DD5FC6A1690166C11861B05417A87B2656F90C0C27A7D35DCEF42FC7F59FB17B"
+  },
+  {
+    "Path": "web/dist/assets/index-Bx1-QWv5.js",
+    "SHA256": "364478FF4B5B8321D9B74FDAD3F7F97704C16F951D063C2D4F471D485FB2BB78"
+  },
+  {
+    "Path": "web/dist/assets/preload-helper-CbrIYQZu.js",
+    "SHA256": "749982D2CF15E3E9426D596453E9D3024A7BE0DBD95BA1E9DCD5ED01AFB6766C"
+  }
+]
