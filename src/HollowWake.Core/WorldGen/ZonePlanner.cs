@@ -22,13 +22,15 @@ public sealed class ZonePlanner
     private readonly WorldLayout _layout;
     private readonly GenParams _p;
     // One planning run only: adjacent quest slots reuse generated spawn facts, never another zone's quests.
-    private readonly Dictionary<ChunkCoord, SpawnPoint[]> _questPopulation = new();
+    private readonly CoordCache<SpawnPoint[]> _questPopulation = new();
+    private readonly Func<int, int, SpawnPoint[]> _spawnFacts;
 
     public ZonePlanner(WorldGenerator gen)
     {
         _gen = gen;
         _layout = gen.Layout;
         _p = gen.Params;
+        _spawnFacts = (x, y) => _gen.GenerateSpawnFacts(new ChunkCoord(x, y));
     }
 
     public IReadOnlyList<PoiInstance> PlacePois(ZoneCoord zc)
@@ -513,11 +515,11 @@ public sealed class ZonePlanner
         for (var i = 0; i < limit; i++)
         {
             var coord = chunks[i].Coord;
-            if (!_questPopulation.TryGetValue(coord, out var spawns))
+            if (!_questPopulation.TryGet(coord.X, coord.Y, out var spawns))
             {
                 // A rejected chunk is not cached: another slot may ask for different species.
                 if (!_gen.CouldContainPopulation(coord, patternIds)) continue;
-                _questPopulation[coord] = spawns = _gen.GenerateSpawnFacts(coord);
+                spawns = _questPopulation.GetOrAdd(coord.X, coord.Y, _spawnFacts);
             }
             foreach (var spawn in spawns)
             {

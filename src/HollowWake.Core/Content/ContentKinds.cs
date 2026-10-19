@@ -21,14 +21,14 @@ public sealed class ContentKind
     public Action<ValidationContext>? ValidateCollection { get; init; }
 
     /// <summary>Every validator of the kind, in the order they were added.</summary>
-    public IReadOnlyList<Action<IDefinition, ValidationContext>> Validators => _validators;
+    public IReadOnlyList<Action<IDefinition, ValidationContext>> Validators => Volatile.Read(ref _validators);
 
     /// <summary>All validators as one delegate, or null when the kind has none.</summary>
     public Action<IDefinition, ValidationContext>? Validate
     {
         get
         {
-            var validators = _validators;
+            var validators = Volatile.Read(ref _validators);
             if (validators.Length == 0)
             {
                 return null;
@@ -49,7 +49,7 @@ public sealed class ContentKind
         var next = new Action<IDefinition, ValidationContext>[_validators.Length + 1];
         Array.Copy(_validators, next, _validators.Length);
         next[^1] = validator;
-        _validators = next;
+        Volatile.Write(ref _validators, next);
     }
 }
 
@@ -61,8 +61,10 @@ public sealed class ContentKind
 /// </summary>
 public static class ContentKinds
 {
-    private static readonly Dictionary<string, ContentKind> Kinds = new(StringComparer.Ordinal);
-    private static readonly Dictionary<Type, ContentKind> ByType = new();
+    // Registration is rare; content lookup happens for every resource, hit and snapshot.
+    // Publish both indexes together, and never mutate dictionaries visible to readers.
+    private sealed record Index(Dictionary<string, ContentKind> Kinds, Dictionary<Type, ContentKind> ByType);
+    private static Index _index = new(new(StringComparer.Ordinal), new());
     private static readonly object Gate = new();
 
     static ContentKinds()
@@ -86,8 +88,10 @@ public static class ContentKinds
         }
         lock (Gate)
         {
-            Kinds[name] = kind;
-            ByType[typeof(T)] = kind;
+            var previous = _index;
+            var kinds = new Dictionary<string, ContentKind>(previous.Kinds, StringComparer.Ordinal) { [name] = kind };
+            var types = new Dictionary<Type, ContentKind>(previous.ByType) { [typeof(T)] = kind };
+            Volatile.Write(ref _index, new Index(kinds, types));
         }
     }
 
@@ -96,7 +100,7 @@ public static class ContentKinds
     {
         lock (Gate)
         {
-            if (!ByType.TryGetValue(typeof(T), out var kind))
+            if (!_index.ByType.TryGetValue(typeof(T), out var kind))
             {
                 throw new InvalidOperationException($"{typeof(T).Name} is not a registered content kind.");
             }
@@ -106,18 +110,12 @@ public static class ContentKinds
 
     public static bool TryGet(string name, out ContentKind? kind)
     {
-        lock (Gate)
-        {
-            return Kinds.TryGetValue(name, out kind);
-        }
+        return Volatile.Read(ref _index).Kinds.TryGetValue(name, out kind);
     }
 
     public static bool TryGet(Type type, out ContentKind? kind)
     {
-        lock (Gate)
-        {
-            return ByType.TryGetValue(type, out kind);
-        }
+        return Volatile.Read(ref _index).ByType.TryGetValue(type, out kind);
     }
 
     public static string NameOf<T>() where T : IDefinition
@@ -133,10 +131,7 @@ public static class ContentKinds
     {
         get
         {
-            lock (Gate)
-            {
-                return Kinds.Values.OrderBy(k => k.Name, StringComparer.Ordinal).ToList();
-            }
+            return Volatile.Read(ref _index).Kinds.Values.OrderBy(k => k.Name, StringComparer.Ordinal).ToList();
         }
     }
 }
