@@ -1,0 +1,89 @@
+Godot Engine v4.7.2.stable.mono.official.ed1daf0bf - https://godotengine.org
+
+content loaded from C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\content\core: 0 errors, 0 warnings
+server 127.0.0.1:65095 from the command line
+SMOKE ok   headless input isolation: 0 physical controllers visible
+SMOKE viewport (0, 0), (1600, 900), window (1600, 900)
+server granted features: projectile_slabs_v1, entry_flow, cast_cues, entity_delta, interface
+SMOKE ok   connect and log in: Logged in. Pick a character.
+SMOKE ok   Mu vessel scene: shared spatial selection is present
+SMOKE ok   legacy Mu fallback: an older server selects the terminal selection stage despite a local tutorial prefix
+SMOKE ok   Mu delayed reply isolation: cancel A, submit B, reply A preserves B's pending card without waking
+SMOKE ok   Mu matching reply: only B's successful reply wakes B
+SMOKE ok   Mu general refusal: non-creation errors remain visible in Mu
+SMOKE ok   Mu roster behind Options: refresh does not cover the options pane or steal its focus
+SMOKE ok   Mu card focus: Tab visits 3 controls and stays inside the card=True
+SMOKE ok   Mu directional focus: directional navigation visits 3 controls inside the card=True
+SMOKE ok   Mu card layout: card (600, 322.5), (400, 255) within (0, 0), (1600, 900)
+SMOKE ok   create character: Smoke the holdfast
+SMOKE ok   enter world: Smoke at 129.5, 111.0, 14.7
+SMOKE ok   terrain built: 49 chunks in 0.5s, 309 entities in view, 51 fps
+SMOKE ok   world input ready: loading=False, blocked=False, chat=False
+SMOKE SKIP appearance rendering: headless display; geometry/card performance and readability require graphical evidence
+SMOKE ok   day cycle: night at 0.04 of the day, evening at 0.77, the server's day at 0.35
+SMOKE ok   server day: the sky follows the day the server reported, at 0.35
+SMOKE ok   wasd move: moved 7.5 units
+SMOKE ok   jump: rose 0.97 units
+SMOKE ok   click to move: tried (5,0) 4.8
+SMOKE ok   quartermaster offers quests: reached=True at 1.2 units, F interacted with Quartermaster (quest_giver) at 1.2, panel shown=True
+SMOKE ok   camera toggle: Isometric -> switched -> Isometric
+SMOKE ok   camera rotate: Q turned yes, E turned back yes
+SMOKE ok   character sheet: opened=True closed=True
+SMOKE ok   core pane: open=True, bag 1 items on 12x5, 9 doll slots, wallet 3, interface=True
+SMOKE ok   ribbon pages: weaves=shown, passives=shown, reliquary=shown, stash=shown, character=shown
+SMOKE ok   escape closes the core pane last: core open=False
+SMOKE ok   talk to a villager: reached=True, Marcher: "Weft hold you, stranger." with 2 choices, chose "Any news?" (answered=True)
+SMOKE ok   trade with a vendor: Quartermaster's Stock: 8 on the shelf, nothing the hero can afford
+SMOKE ok   options open: open=True, page interface, 10 rows
+SMOKE ok   options switch the theme: theme runic_brass, cluster pixel not rendered -> not rendered
+SMOKE SKIP theme rendered pixels: headless display; theme state checked above
+SMOKE ok   options rebind a key: camera switch on B=True, B turned the camera=True
+SMOKE ok   options scale the interface: scale 1.25, cluster 908 -> 1135 px wide, panes above the cluster=True
+SMOKE ok   options reset a group: theme etched_stone, scale 1.00
+SMOKE ok   weaves on a hob: reached=True hovered=True slots 12 combat lines=1 (rejected: UseWeave: busy)
+SMOKE ok   return to Mu: server list replaces world presentation with remembered vessels
+SMOKE SUMMARY
+SMOKE PASS headless input isolation: 0 physical controllers visible
+SMOKE PASS connect and log in: Logged in. Pick a character.
+SMOKE PASS Mu vessel scene: shared spatial selection is present
+SMOKE PASS legacy Mu fallback: an older server selects the terminal selection stage despite a local tutorial prefix
+SMOKE PASS Mu delayed reply isolation: cancel A, submit B, reply A preserves B's pending card without waking
+SMOKE PASS Mu matching reply: only B's successful reply wakes B
+SMOKE PASS Mu general refusal: non-creation errors remain visible in Mu
+SMOKE PASS Mu roster behind Options: refresh does not cover the options pane or steal its focus
+SMOKE PASS Mu card focus: Tab visits 3 controls and stays inside the card=True
+SMOKE PASS Mu directional focus: directional navigation visits 3 controls inside the card=True
+SMOKE PASS Mu card layout: card (600, 322.5), (400, 255) within (0, 0), (1600, 900)
+SMOKE PASS create character: Smoke the holdfast
+SMOKE PASS enter world: Smoke at 129.5, 111.0, 14.7
+SMOKE PASS terrain built: 49 chunks in 0.5s, 309 entities in view, 51 fps
+SMOKE PASS world input ready: loading=False, blocked=False, chat=False
+SMOKE PASS day cycle: night at 0.04 of the day, evening at 0.77, the server's day at 0.35
+SMOKE PASS server day: the sky follows the day the server reported, at 0.35
+SMOKE PASS wasd move: moved 7.5 units
+SMOKE PASS jump: rose 0.97 units
+SMOKE PASS click to move: tried (5,0) 4.8
+SMOKE PASS quartermaster offers quests: reached=True at 1.2 units, F interacted with Quartermaster (quest_giver) at 1.2, panel shown=True
+SMOKE PASS camera toggle: Isometric -> switched -> Isometric
+SMOKE PASS camera rotate: Q turned yes, E turned back yes
+SMOKE PASS character sheet: opened=True closed=True
+SMOKE PASS core pane: open=True, bag 1 items on 12x5, 9 doll slots, wallet 3, interface=True
+SMOKE PASS ribbon pages: weaves=shown, passives=shown, reliquary=shown, stash=shown, character=shown
+SMOKE PASS escape closes the core pane last: core open=False
+SMOKE PASS talk to a villager: reached=True, Marcher: "Weft hold you, stranger." with 2 choices, chose "Any news?" (answered=True)
+SMOKE PASS trade with a vendor: Quartermaster's Stock: 8 on the shelf, nothing the hero can afford
+SMOKE PASS options open: open=True, page interface, 10 rows
+SMOKE PASS options switch the theme: theme runic_brass, cluster pixel not rendered -> not rendered
+SMOKE PASS options rebind a key: camera switch on B=True, B turned the camera=True
+SMOKE PASS options scale the interface: scale 1.25, cluster 908 -> 1135 px wide, panes above the cluster=True
+SMOKE PASS options reset a group: theme etched_stone, scale 1.00
+SMOKE PASS weaves on a hob: reached=True hovered=True slots 12 combat lines=1 (rejected: UseWeave: busy)
+SMOKE PASS return to Mu: server list replaces world presentation with remembered vessels
+SMOKE DONE 36/36 passed in 35.1s; 145 fps at the end with 63 chunks and 0 entities
+ERROR: 5 RID allocations of type 'PN13RendererDummy14TextureStorage12DummyTextureE' were leaked at exit.
+ERROR: 2 RID allocations of type 'PN18TextServerAdvanced22ShapedTextDataAdvancedE' were leaked at exit.
+ERROR: 1 RID allocations of type 'PN18TextServerAdvanced12FontAdvancedE' were leaked at exit.
+WARNING: 1 RID of type "CanvasItem" was leaked.
+   at: _free_rids (servers/rendering/renderer_canvas_cull.cpp:2733)
+WARNING: 26 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)

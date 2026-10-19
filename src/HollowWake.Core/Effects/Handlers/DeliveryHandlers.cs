@@ -405,7 +405,7 @@ internal sealed class ProjectileHandler : IEffectHandler
         {
             Type = Type,
             Spec = spec,
-            Aim = ProjectileAims.Get(ctx.StringOf(p["aim"]) ?? ctx.Content.Rules.Text("delivery.projectile_aim", "target")),
+            Aim = ProjectileAims.Policy(ctx.StringOf(p["aim"]) ?? ctx.Content.Rules.Text("delivery.projectile_aim", "target")),
             Count = ctx.ExprOf(p["count"]),
             Speed = ctx.ExprOf(p["speed"]),
             Range = ctx.ExprOf(p["range"]),
@@ -481,7 +481,7 @@ internal sealed class ProjectileHandler : IEffectHandler
     private sealed class Effect : CompiledEffect
     {
         public required ProjectileSpec Spec;
-        public required Func<EffectContext, Vector3?> Aim;
+        public required ProjectileAim Aim;
         public Expr? Count;
         public Expr? Speed;
         public Expr? Range;
@@ -687,7 +687,7 @@ internal sealed class ProjectileHandler : IEffectHandler
             {
                 velocity.Z = LobSpeed(sim, start, aimPoint, speed, f.Range);
             }
-            else if (Aim(ctx) is { } aim)
+            else if (Aim.Point(ctx) is { } aim)
             {
                 var distance = Vector2.Distance(new(start.X, start.Y), new(aim.X, aim.Y));
                 if (distance > 0.01f) velocity.Z = (aim.Z - start.Z) * speed / distance;
@@ -697,6 +697,9 @@ internal sealed class ProjectileHandler : IEffectHandler
                 Context = basis ?? ctx.Fork(deeper: 1),
                 Spec = Spec,
                 Velocity = velocity,
+                GroundFloor = Spec.Gravity ? null : Aim.GroundFloor?.Invoke(ctx) ??
+                    (Aim.ReturnGroundFloor && Spec.Return != ReturnMode.None && f.Orbit == 0 && ctx.LaunchLift is null ?
+                        (float)sim.Content.Rules.Number("delivery.projectile_ground_floor", 0) : null),
                 Speed = speed,
                 Heading = heading,
                 Carrier = start,

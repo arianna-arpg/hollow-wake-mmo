@@ -1,0 +1,49 @@
+{
+  "DebugBuild": {
+    "Warnings": 0,
+    "Errors": 0
+  },
+  "ReleaseBuild": {
+    "Warnings": 0,
+    "Errors": 0
+  },
+  "InitialFullDotNet": {
+    "CorePassed": 2840,
+    "CoreFailed": 1,
+    "ServerPassed": 89,
+    "NativePassed": 137
+  },
+  "Failure": "TheCommittedBaselineHoldsOnItsPlatform: two provisional references",
+  "Resolution": "Fresh actual-union floor/boar attribution; only two fixture hashes changed; sole failed test passes on rerun",
+  "BaselineRerunPassed": 1,
+  "DistinctDotNetCasesAccountedFor": 3067,
+  "FullSuiteRerun": false,
+  "WebTestsPassed": 304,
+  "PorterTestsPassed": 10,
+  "BackgroundRunnerTestsPassed": 10,
+  "Validate": {
+    "Errors": 0,
+    "Warnings": 0
+  },
+  "LoadTicks": 200,
+  "FightPassed": true,
+  "ProtocolCurrent": true,
+  "WindowsReplayPairsPassed": 7,
+  "BrowserSmokePassed": 31,
+  "NativeSmokePassed": 36,
+  "ProbeFeaturesPassed": 6,
+  "SmokeCleanupErrors": [],
+  "NativePixels": "Skipped in headless mode",
+  "BrowserInspected": [
+    "01_isometric.png",
+    "16_cards.png"
+  ],
+  "BrowserFinding": "Full world viewport, terrain, bodies and UI visible in geometry and card captures; known isolated36 blank viewport absent",
+  "ProvingExit": 1,
+  "InheritedProvingBreaches": 3,
+  "NativeShutdownDiagnostics": "5 dummy textures, 2 shaped texts, 1 font, 1 CanvasItem, 26 ObjectDB instances",
+  "WebBuildWarning": "Existing chunk-size warning",
+  "PerformanceAcceptance": false,
+  "MainMerged": false,
+  "SiblingPropagation": false
+}

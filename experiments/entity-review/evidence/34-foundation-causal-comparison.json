@@ -1,0 +1,21 @@
+{
+  "MergedSource": "346fc1fcba35079d8b3f6d2f715e895788100d45",
+  "Incoming36": "23f4a5eb242abe3f4fe889c7cbcb7a98f62de515",
+  "Main": "f7ef072cc322b93b628229916c5220024e74a89c",
+  "CompleteStandardReportsEqualAcrossFloors": true,
+  "MixedBaselineDifferences": {
+    "loosed_skirmisher:boar": {
+      "Expected": "cf41fad065ff7e16",
+      "Actual": "e661cfbccc766113"
+    }
+  },
+  "Original36BoarRestoresIncomingHash": "cf41fad065ff7e16",
+  "CombinedBoar": {
+    "Hash": "e661cfbccc766113",
+    "WinRateA": 1,
+    "WinRateB": 0,
+    "TtkMedian": 7.6
+  },
+  "RuntimeSourceEditedForCounterfactuals": false,
+  "Counterfactuals": "Read-only content overlays: floor0.342 alone, then exact original36boar definition with floor0.342."
+}

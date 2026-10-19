@@ -1,0 +1,9 @@
+{
+  "Source": "560adf01fe8c47667ad16ccc2b5c8aae668211b9",
+  "Checked": 402,
+  "Changed": [
+    "src/HollowWake.Core/Effects/Handlers/DeliveryHandlers.cs",
+    "src/HollowWake.Core/Systems/ProjectileSystem.cs"
+  ],
+  "Purpose": "Only returning launch-floor adoption and pierce leveling reverted; layered support, cursor/authority, admission bounds, observation and current main retained."
+}
