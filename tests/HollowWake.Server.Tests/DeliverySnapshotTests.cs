@@ -157,7 +157,7 @@ public class DeliverySnapshotTests
         Assert.Null(Snapshots.Delta(state, state with { Until = state.Until + 1 }, out _));
     }
     public static IEnumerable<object[]> FloorSnapshots() =>
-        new[] { "firebolt", "piercing_arrow" }.SelectMany(preset =>
+        new[] { "firebolt", "piercing_arrow", "stone_glaive" }.SelectMany(preset =>
             new[] { -.125f, 0, .125f }.SelectMany(slope =>
                 new[] { 0, 1 }.Select(afterContact => new object[] { preset, slope, afterContact })));
 
@@ -268,6 +268,36 @@ public class DeliverySnapshotTests
         count = sim.Terrain.LoadedChunkCount;
         Assert.False(sim.Terrain.TryHeightAt(-.25, -.25, out _));
         Assert.Equal(count, sim.Terrain.LoadedChunkCount);
+    }
+    [Theory]
+    [InlineData(1.2f, false)]
+    [InlineData(3f, false)]
+    [InlineData(1.2f, true)]
+    [InlineData(3f, true)]
+    public void LayeredFloorSnapshotsKeepSupportAndDoNotPullFlightsOntoOverheadDecks(float height, bool underneath)
+    {
+        var (sim, e, p) = FloorFlight("firebolt", 0);
+        var chunk = sim.Terrain.GetChunk(new ChunkCoord(0, 0));
+        for (var i = 0; i < chunk.Height.Length; i++)
+            chunk.AddLayer(i, new Surface(height, true, TagSet.Of("structure", "bridge")));
+        var t = sim.World.Get<Transform>(e)!;
+        if (!underneath) t.Position += new Vector3(0, 0, height);
+        p.Carrier = t.Position;
+        var raw = p.Velocity;
+        var carrier = p.Carrier;
+        var count = sim.Terrain.LoadedChunkCount;
+        var state = Snapshots.Capture(sim, e);
+        var hash = Snapshots.Fingerprint(sim, e);
+        Assert.Equal(hash, Snapshots.Fingerprint(sim, e));
+        _ = Snapshots.Delta(state, Snapshots.Capture(sim, e), out var unchanged);
+        Assert.True(unchanged);
+        Assert.Equal(raw, p.Velocity);
+        Assert.Equal(carrier, p.Carrier);
+        Assert.Equal(count, sim.Terrain.LoadedChunkCount);
+        Assert.Equal(0, state.VZ);
+        sim.Run(1);
+        Assert.Equal(carrier.Z, t.Position.Z, 4);
+        Assert.Equal(raw, p.Velocity);
     }
     private static (Simulation Sim, Entity Entity, Projectile Flight) FloorFlight(string preset, float slope)
     {

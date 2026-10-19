@@ -1,0 +1,23 @@
+pairing                                      fights  a wins  b wins  draws  ttk med    low   high  cov a  cov b  spr a  spr b
+wolf v hob                                       10    1.00    0.00   0.00     14.8   14.8   17.6   1.00   1.00   1.00   1.00
+    wolf: bite | attack bankless hit melee strikes | self 0
+    hob: bite | attack bankless hit melee strikes | self 0
+loosed_skirmisher v hob                          10    1.00    0.00   0.00      5.9    5.2    7.2   0.93   1.00   2.67   1.00
+    loosed_skirmisher: seeking_bolt splitting_bolt stone_glaive | affliction attack bankless chain flight hit homing projectile returning spell status strikes trajectory | self 0
+    hob: bite | attack bankless hit melee strikes | self 0
+loosed_skirmisher v boar                         10    1.00    0.00   0.00      7.6    5.8    9.2   0.90   1.00   2.53   1.00
+    loosed_skirmisher: seeking_bolt splitting_bolt stone_glaive | affliction attack bankless chain flight hit homing projectile returning spell status strikes trajectory | self 0
+    boar: gore | area attack bankless hit melee shape strikes | self 0
+loosed_kindler v boar                            10    1.00    0.00   0.00      6.7    6.4    7.4   0.50   1.00   1.00   1.00
+    loosed_kindler: cinder_spit | affliction bankless chain flight hit projectile spell status | self 0
+    boar: gore | area attack bankless hit melee shape strikes | self 0
+tide_channeler v spark_duelist                   10    1.00    0.00   0.00        8    7.9      8   1.00   1.00   1.00   2.76
+    tide_channeler: tide_torrent | affliction area bankless channel cooldown held hit ramps release shape spell status | self 0
+    spark_duelist: kindling_spark static_spark strike | affliction attack bankless chain flight hit melee projectile spell status strikes triggered | self 0
+proving_reaver v proving_bulwark                 10    0.00    1.00   0.00     36.5   32.4   43.7   1.00   1.00   1.00   1.00
+    proving_reaver: strike[stone]+rending | affliction affliction:bleeding attack bankless hit melee rupture strikes | self 0
+    proving_bulwark: bite | attack bankless hit melee strikes | self 0 poise_broken poise_rearming shield_delay
+loosed_skirmisher v tide_caller                  10    0.60    0.30   0.10      7.5    5.7    8.7   0.90   1.00   2.49   2.92
+    loosed_skirmisher: seeking_bolt splitting_bolt stone_glaive | affliction attack bankless chain flight hit homing projectile returning spell status strikes trajectory | self 0
+    tide_caller: storm_call tide_maelstrom tide_orb | affliction area bankless cooldown duration field fire flight hit projectile spell storm surface telegraph | self 0
+hashes: identical to experiments/combat-grammar/baselines/standard-duels.json

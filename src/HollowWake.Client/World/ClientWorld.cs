@@ -635,6 +635,14 @@ public partial class ClientWorld : Node3D
                 i++;
                 continue;
             }
+            // Register already-generated neighbours too: pure cursor sampling needs their border
+            // heights even before their meshes are built. Never request a missing/failed neighbour.
+            for (var dy = -1; dy <= 1; dy++)
+            for (var dx = -1; dx <= 1; dx++)
+            {
+                var neighbour = new ChunkCoord(c.X + dx, c.Y + dy);
+                if (_chunkData.ContainsKey(neighbour)) _terrain!.GetChunk(neighbour);
+            }
             var chunk = _terrain!.GetChunk(c);
             var node = TerrainMesh.Build(chunk, _terrain.Layout, Surfaces, Lookup);
             if (_appearance is not null && Foliage.Build(chunk, _terrain.Layout, _appearance.Catalog.World.Foliage.Tufts, _foliageDensity) is { } tufts)
@@ -736,53 +744,10 @@ public partial class ClientWorld : Node3D
     /// <summary>Ground height at a world position, or zero before the world exists.</summary>
     public float HeightAt(float x, float y) => _terrain?.HeightAt(x, y) ?? 0f;
 
-    /// <summary>
-    /// Marches a camera ray against the terrain height field and returns the ground point in simulation
-    /// space. Only built chunks count: nothing else is visible, and sampling elsewhere would generate
-    /// chunks on the main thread.
-    /// </summary>
-    public System.Numerics.Vector3? RayToGround(Vector3 origin, Vector3 direction, float maxDistance = 400f)
-    {
-        if (_terrain is null)
-        {
-            return null;
-        }
-        var terrain = _terrain;
-        bool Below(Vector3 point)
-        {
-            var core = Coords.ToCore(point);
-            return _chunkNodes.ContainsKey(terrain.Layout.ChunkOf(core.X, core.Y)) && core.Z <= terrain.HeightAt(core.X, core.Y);
-        }
-        var step = 0.5f;
-        var last = origin;
-        for (var d = 0f; d < maxDistance; d += step)
-        {
-            var p = origin + direction * d;
-            if (Below(p))
-            {
-                // Refine between last and p.
-                var lo = last;
-                var hi = p;
-                for (var i = 0; i < 6; i++)
-                {
-                    var mid = (lo + hi) * 0.5f;
-                    if (Below(mid))
-                    {
-                        hi = mid;
-                    }
-                    else
-                    {
-                        lo = mid;
-                    }
-                }
-                var hc = Coords.ToCore(hi);
-                return new System.Numerics.Vector3(hc.X, hc.Y, terrain.HeightAt(hc.X, hc.Y));
-            }
-            last = p;
-        }
-        return null;
-    }
-
+    /// <summary>First visible base or walkable layer hit, using loaded data without generation.</summary>
+    public System.Numerics.Vector3? RayToGround(Vector3 origin, Vector3 direction, float maxDistance = 400f) =>
+        _terrain is null ? null : Logic.GroundRay.Pick(_terrain, Coords.ToCore(origin), Coords.ToCore(direction),
+            coord => _chunkNodes.ContainsKey(coord), maxDistance);
     /// <summary>
     /// The entity whose drawn body a ray passes through, ignoring the player's own. Creatures and interactables win
     /// over plain props, so a canopy in front of a hob does not take the hover from it; among overlapping bodies the

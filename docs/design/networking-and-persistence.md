@@ -16,6 +16,8 @@ The optional `entry_flow` feature adds server-owned account stages, Calling avai
 
 ## Zones and interest
 
+Projectile floor observation uses the same supporting surface as the authoritative next step, including walkable decks below the previous flight height. It preserves the loaded-only guarantee and cannot attach a shot to an overhead deck. Cursor surface selection is described in [movement and z-levels](movement-and-z-levels.md).
+
 The optional `hit_bodies_v2` hello feature grants a reliable `hit_bodies` catalog immediately after welcome, before world entry. It contains simulation profile ids, aim indices and volume recipes normalized on all axes by body height. The earlier unmerged v1 radius-normalized catalog is not granted. Only diagnostic views receive the additive `hit_body` profile id. Height, position and yaw resolve anatomy; radius still draws clearance. Profile changes participate in snapshot fingerprints and deltas; a delta's empty string clears the profile. Clients request the catalog only when the developer option is enabled before connection, and clear it when reconnecting. Enabling the option during a session requires reconnecting. A missing catalog or unknown primitive cannot certify a damage outline and must show it as unavailable. The catalog is immutable for the connection's content; live content replacement requires reconnecting.
 
 The independent `projectile_slabs_v1` hello feature identifies projectile height as the full collision slab height centered on the flight position. Current clients request it for ordinary rendering, without requesting the anatomy catalog. Older servers that do not grant it retain legacy visual thickness. Movement radii keep their existing wire meaning.

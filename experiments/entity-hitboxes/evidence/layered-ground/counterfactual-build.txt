@@ -1,0 +1,15 @@
+  Determining projects to restore...
+  Restored C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\experiments\entity-hitboxes\artifacts\layered-ground\counterfactual-return\src\HollowWake.Core\HollowWake.Core.csproj (in 230 ms).
+  Restored C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\experiments\entity-hitboxes\artifacts\layered-ground\counterfactual-return\src\HollowWake.Protocol\HollowWake.Protocol.csproj (in 230 ms).
+  Restored C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\experiments\entity-hitboxes\artifacts\layered-ground\counterfactual-return\src\HollowWake.Server\HollowWake.Server.csproj (in 230 ms).
+  Restored C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\experiments\entity-hitboxes\artifacts\layered-ground\counterfactual-return\src\HollowWake.Tools\HollowWake.Tools.csproj (in 230 ms).
+  HollowWake.Core -> C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\experiments\entity-hitboxes\artifacts\layered-ground\counterfactual-return\bin-counterfactual\HollowWake.Core.dll
+  HollowWake.Protocol -> C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\experiments\entity-hitboxes\artifacts\layered-ground\counterfactual-return\bin-counterfactual\HollowWake.Protocol.dll
+  HollowWake.Server -> C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\experiments\entity-hitboxes\artifacts\layered-ground\counterfactual-return\bin-counterfactual\HollowWake.Server.dll
+  HollowWake.Tools -> C:\Users\John\.codex\worktrees\precise-entity-hitboxes\MMOARPG\experiments\entity-hitboxes\artifacts\layered-ground\counterfactual-return\bin-counterfactual\hollowwake.dll
+
+Build succeeded.
+    0 Warning(s)
+    0 Error(s)
+
+Time Elapsed 00:00:04.96

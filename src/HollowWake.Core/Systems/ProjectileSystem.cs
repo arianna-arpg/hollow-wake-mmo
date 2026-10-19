@@ -98,7 +98,7 @@ public sealed class ProjectileSystem : SimSystem
         if (p.GroundFloor is not { } floor || p.Spec.Gravity || p.Returning) return velocity;
         var dt = (float)sim.Clock.Dt;
         var next = at + velocity * dt;
-        if (!sim.Terrain.TryHeightAt(next.X, next.Y, out var ground)) return Vector3.Zero;
+        if (!sim.Terrain.TrySupportHeightAt(next.X, next.Y, at.Z, out var ground)) return Vector3.Zero;
         velocity.Z = (MathF.Max(next.Z, ground + floor) - at.Z) / dt;
         return velocity;
     }
@@ -208,7 +208,7 @@ public sealed class ProjectileSystem : SimSystem
         // Clamp before sweeping bodies, so damage follows the same path the client draws.
         if (p.GroundFloor is { } floor && !spec.Gravity && !p.Returning)
         {
-            at.Z = MathF.Max(at.Z, sim.Terrain.HeightAt(at.X, at.Y) + floor);
+            at.Z = MathF.Max(at.Z, sim.Terrain.SupportHeightAt(at.X, at.Y, t.Position.Z) + floor);
             p.Carrier.Z = at.Z;
         }
         p.SpinAngle += p.Spin * dt;
@@ -616,9 +616,9 @@ public sealed class ProjectileSystem : SimSystem
         p.HitsTaken++;
         if (p.HitsTaken <= p.Pierce)
         {
-            if (Returns(p))
+            if (Returns(p) && p.GroundFloor is null)
             {
-                // Survive the rest of the outward leg after piercing a low body.
+                // An ordinary targeted leg needs a floor after contact; existing floor flights keep their pitch.
                 p.Velocity.Z = MathF.Max(0, p.Velocity.Z);
                 p.GroundFloor = r.GroundFloor;
             }

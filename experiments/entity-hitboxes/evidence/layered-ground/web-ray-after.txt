@@ -1,0 +1,12 @@
+
+> hollow-wake-web@0.1.0 test
+> vitest run --run src/world/terrainRay.test.ts src/world/chunks.test.ts
+
+
+ RUN  v5.0.3 C:/Users/John/.codex/worktrees/precise-entity-hitboxes/MMOARPG/web
+
+
+ Test Files  2 passed (2)
+      Tests  12 passed (12)
+   Start at  18:55:55
+   Duration  1.11s (transform 75%, setup 18%, import 4%, worker 2%, tests 1%)
