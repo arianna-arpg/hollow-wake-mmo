@@ -1,0 +1,1 @@
+Fauna free-shot integration: 249 passed, 15 failed, 264 total.

@@ -1,0 +1,26 @@
+{
+  "RuntimeSource": "900928f9e3706a650f1255b098e05550bc137976",
+  "FaunaParent": "20ddf5a37fea115cdcb521bc06e24608934e2f4b",
+  "Incoming36": "0c610e4715c5d32002d051eec55d4fa7f7f4f526",
+  "ChangesFromFaunaFixture": {
+    "loosed_skirmisher:boar": {
+      "Before": "e661cfbccc766113",
+      "After": "fbf0ac20a5a74103"
+    },
+    "loosed_skirmisher:hob": {
+      "Before": "1cf76df19ceeb296",
+      "After": "465a4807b0fe94f2"
+    }
+  },
+  "CompleteStandardReportsEqualAcrossFloorsOnThisRuntime": true,
+  "LegacyBoarPairReportsEqualAcrossFloorsOnThisRuntime": true,
+  "LegacyBoarRestoresIncoming36Hash": "7dd259e21c8ac0e8",
+  "CombinedBoar": {
+    "Hash": "fbf0ac20a5a74103",
+    "WinRateA": 1,
+    "WinRateB": 0,
+    "TtkMedian": 7.6
+  },
+  "RuntimeEditsForControls": false,
+  "CausalScope": "New actual-union measurements; previous runtime floor comparisons are historical only. Incoming #36 retains its isolated two-hunk return-policy counterfactual. Current controls isolate the Fauna boar contribution and check both floor choices again."
+}

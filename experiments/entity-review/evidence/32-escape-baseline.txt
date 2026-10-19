@@ -1,0 +1,129 @@
+  HollowWake.Core -> C:\Users\John\.codex\worktrees\entity-main-audit\MMOARPG\src\HollowWake.Core\bin\Debug\net8.0\HollowWake.Core.dll
+  HollowWake.Protocol -> C:\Users\John\.codex\worktrees\entity-main-audit\MMOARPG\src\HollowWake.Protocol\bin\Debug\net8.0\HollowWake.Protocol.dll
+  HollowWake.Server -> C:\Users\John\.codex\worktrees\entity-main-audit\MMOARPG\src\HollowWake.Server\bin\Debug\net10.0\HollowWake.Server.dll
+  HollowWake.Tools -> C:\Users\John\.codex\worktrees\entity-main-audit\MMOARPG\src\HollowWake.Tools\bin\Debug\net10.0\hollowwake.dll
+  HollowWake.Core.Tests -> C:\Users\John\.codex\worktrees\entity-main-audit\MMOARPG\tests\HollowWake.Core.Tests\bin\Debug\net10.0\HollowWake.Core.Tests.dll
+Test run for C:\Users\John\.codex\worktrees\entity-main-audit\MMOARPG\tests\HollowWake.Core.Tests\bin\Debug\net10.0\HollowWake.Core.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+[xUnit.net 00:00:02.08]     HollowWake.Core.Tests.DisplacementEscapeTests.ResidentSpawnedInsideABlockerCanEscapeWithoutACollision(terrain: False, nudge: True, direction: 1) [FAIL]
+[xUnit.net 00:00:02.09]     HollowWake.Core.Tests.DisplacementEscapeTests.ResidentSpawnedInsideABlockerCanEscapeWithoutACollision(terrain: True, nudge: True, direction: 1) [FAIL]
+[xUnit.net 00:00:02.12]     HollowWake.Core.Tests.DisplacementEscapeTests.ResidentSpawnedInsideABlockerCanEscapeWithoutACollision(terrain: False, nudge: False, direction: -1) [FAIL]
+[xUnit.net 00:00:02.12]     HollowWake.Core.Tests.DisplacementEscapeTests.ResidentSpawnedInsideABlockerCanEscapeWithoutACollision(terrain: True, nudge: False, direction: -1) [FAIL]
+[xUnit.net 00:00:02.12]     HollowWake.Core.Tests.DisplacementEscapeTests.ResidentSpawnedInsideABlockerCanEscapeWithoutACollision(terrain: False, nudge: True, direction: -1) [FAIL]
+  Failed HollowWake.Core.Tests.DisplacementEscapeTests.ResidentSpawnedInsideABlockerCanEscapeWithoutACollision(terrain: False, nudge: True, direction: 1) [3 ms]
+  Error Message:
+   Assert.True() Failure
+Expected: True
+Actual:   False
+  Stack Trace:
+     at HollowWake.Core.Tests.DisplacementEscapeTests.ResidentSpawnedInsideABlockerCanEscapeWithoutACollision(Boolean terrain, Boolean nudge, Int32 direction) in C:\Users\John\.codex\worktrees\entity-main-audit\MMOARPG\tests\HollowWake.Core.Tests\DisplacementEscapeTests.cs:line 33
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeDirectByRefWithFewArgs(Object obj, Span`1 copyOfArgs, BindingFlags invokeAttr)
+  Failed HollowWake.Core.Tests.DisplacementEscapeTests.ResidentSpawnedInsideABlockerCanEscapeWithoutACollision(terrain: True, nudge: True, direction: 1) [1 ms]
+  Error Message:
+   Assert.True() Failure
+Expected: True
+Actual:   False
+  Stack Trace:
+     at HollowWake.Core.Tests.DisplacementEscapeTests.ResidentSpawnedInsideABlockerCanEscapeWithoutACollision(Boolean terrain, Boolean nudge, Int32 direction) in C:\Users\John\.codex\worktrees\entity-main-audit\MMOARPG\tests\HollowWake.Core.Tests\DisplacementEscapeTests.cs:line 33
+   at InvokeStub_DisplacementEscapeTests.ResidentSpawnedInsideABlockerCanEscapeWithoutACollision(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Failed HollowWake.Core.Tests.DisplacementEscapeTests.ResidentSpawnedInsideABlockerCanEscapeWithoutACollision(terrain: False, nudge: False, direction: -1) [34 ms]
+  Error Message:
+   Assert.InRange() Failure: Value not in range
+Range:  (1.89999998 - 3.00999999)
+Actual: -0
+  Stack Trace:
+     at HollowWake.Core.Tests.DisplacementEscapeTests.ResidentSpawnedInsideABlockerCanEscapeWithoutACollision(Boolean terrain, Boolean nudge, Int32 direction) in C:\Users\John\.codex\worktrees\entity-main-audit\MMOARPG\tests\HollowWake.Core.Tests\DisplacementEscapeTests.cs:line 42
+   at InvokeStub_DisplacementEscapeTests.ResidentSpawnedInsideABlockerCanEscapeWithoutACollision(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Failed HollowWake.Core.Tests.DisplacementEscapeTests.ResidentSpawnedInsideABlockerCanEscapeWithoutACollision(terrain: True, nudge: False, direction: -1) [2 ms]
+  Error Message:
+   Assert.InRange() Failure: Value not in range
+Range:  (1.89999998 - 3.00999999)
+Actual: -0
+  Stack Trace:
+     at HollowWake.Core.Tests.DisplacementEscapeTests.ResidentSpawnedInsideABlockerCanEscapeWithoutACollision(Boolean terrain, Boolean nudge, Int32 direction) in C:\Users\John\.codex\worktrees\entity-main-audit\MMOARPG\tests\HollowWake.Core.Tests\DisplacementEscapeTests.cs:line 42
+   at InvokeStub_DisplacementEscapeTests.ResidentSpawnedInsideABlockerCanEscapeWithoutACollision(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Failed HollowWake.Core.Tests.DisplacementEscapeTests.ResidentSpawnedInsideABlockerCanEscapeWithoutACollision(terrain: False, nudge: True, direction: -1) [< 1 ms]
+  Error Message:
+   Assert.True() Failure
+Expected: True
+Actual:   False
+  Stack Trace:
+     at HollowWake.Core.Tests.DisplacementEscapeTests.ResidentSpawnedInsideABlockerCanEscapeWithoutACollision(Boolean terrain, Boolean nudge, Int32 direction) in C:\Users\John\.codex\worktrees\entity-main-audit\MMOARPG\tests\HollowWake.Core.Tests\DisplacementEscapeTests.cs:line 33
+   at InvokeStub_DisplacementEscapeTests.ResidentSpawnedInsideABlockerCanEscapeWithoutACollision(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+[xUnit.net 00:00:02.13]     HollowWake.Core.Tests.DisplacementEscapeTests.ResidentSpawnedInsideABlockerCanEscapeWithoutACollision(terrain: True, nudge: True, direction: -1) [FAIL]
+[xUnit.net 00:00:02.13]     HollowWake.Core.Tests.DisplacementEscapeTests.ResidentSpawnedInsideABlockerCanEscapeWithoutACollision(terrain: False, nudge: False, direction: 1) [FAIL]
+[xUnit.net 00:00:02.13]     HollowWake.Core.Tests.DisplacementEscapeTests.ResidentSpawnedInsideABlockerCanEscapeWithoutACollision(terrain: True, nudge: False, direction: 1) [FAIL]
+[xUnit.net 00:00:02.13]     HollowWake.Core.Tests.DisplacementEscapeTests.EscapingResidentStillStopsBeforeTheNextBlockedCell(terrain: False, nudge: True) [FAIL]
+[xUnit.net 00:00:02.13]     HollowWake.Core.Tests.DisplacementEscapeTests.EscapingResidentStillStopsBeforeTheNextBlockedCell(terrain: True, nudge: True) [FAIL]
+[xUnit.net 00:00:02.13]     HollowWake.Core.Tests.DisplacementEscapeTests.EscapingResidentStillStopsBeforeTheNextBlockedCell(terrain: False, nudge: False) [FAIL]
+[xUnit.net 00:00:02.13]     HollowWake.Core.Tests.DisplacementEscapeTests.EscapingResidentStillStopsBeforeTheNextBlockedCell(terrain: True, nudge: False) [FAIL]
+  Failed HollowWake.Core.Tests.DisplacementEscapeTests.ResidentSpawnedInsideABlockerCanEscapeWithoutACollision(terrain: True, nudge: True, direction: -1) [< 1 ms]
+  Error Message:
+   Assert.True() Failure
+Expected: True
+Actual:   False
+  Stack Trace:
+     at HollowWake.Core.Tests.DisplacementEscapeTests.ResidentSpawnedInsideABlockerCanEscapeWithoutACollision(Boolean terrain, Boolean nudge, Int32 direction) in C:\Users\John\.codex\worktrees\entity-main-audit\MMOARPG\tests\HollowWake.Core.Tests\DisplacementEscapeTests.cs:line 33
+   at InvokeStub_DisplacementEscapeTests.ResidentSpawnedInsideABlockerCanEscapeWithoutACollision(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Failed HollowWake.Core.Tests.DisplacementEscapeTests.ResidentSpawnedInsideABlockerCanEscapeWithoutACollision(terrain: False, nudge: False, direction: 1) [1 ms]
+  Error Message:
+   Assert.InRange() Failure: Value not in range
+Range:  (1.89999998 - 3.00999999)
+Actual: 0
+  Stack Trace:
+     at HollowWake.Core.Tests.DisplacementEscapeTests.ResidentSpawnedInsideABlockerCanEscapeWithoutACollision(Boolean terrain, Boolean nudge, Int32 direction) in C:\Users\John\.codex\worktrees\entity-main-audit\MMOARPG\tests\HollowWake.Core.Tests\DisplacementEscapeTests.cs:line 42
+   at InvokeStub_DisplacementEscapeTests.ResidentSpawnedInsideABlockerCanEscapeWithoutACollision(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Failed HollowWake.Core.Tests.DisplacementEscapeTests.ResidentSpawnedInsideABlockerCanEscapeWithoutACollision(terrain: True, nudge: False, direction: 1) [1 ms]
+  Error Message:
+   Assert.InRange() Failure: Value not in range
+Range:  (1.89999998 - 3.00999999)
+Actual: 0
+  Stack Trace:
+     at HollowWake.Core.Tests.DisplacementEscapeTests.ResidentSpawnedInsideABlockerCanEscapeWithoutACollision(Boolean terrain, Boolean nudge, Int32 direction) in C:\Users\John\.codex\worktrees\entity-main-audit\MMOARPG\tests\HollowWake.Core.Tests\DisplacementEscapeTests.cs:line 42
+   at InvokeStub_DisplacementEscapeTests.ResidentSpawnedInsideABlockerCanEscapeWithoutACollision(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Failed HollowWake.Core.Tests.DisplacementEscapeTests.EscapingResidentStillStopsBeforeTheNextBlockedCell(terrain: False, nudge: True) [< 1 ms]
+  Error Message:
+   Assert.True() Failure
+Expected: True
+Actual:   False
+  Stack Trace:
+     at HollowWake.Core.Tests.DisplacementEscapeTests.EscapingResidentStillStopsBeforeTheNextBlockedCell(Boolean terrain, Boolean nudge) in C:\Users\John\.codex\worktrees\entity-main-audit\MMOARPG\tests\HollowWake.Core.Tests\DisplacementEscapeTests.cs:line 58
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeDirectByRefWithFewArgs(Object obj, Span`1 copyOfArgs, BindingFlags invokeAttr)
+  Failed HollowWake.Core.Tests.DisplacementEscapeTests.EscapingResidentStillStopsBeforeTheNextBlockedCell(terrain: True, nudge: True) [< 1 ms]
+  Error Message:
+   Assert.True() Failure
+Expected: True
+Actual:   False
+  Stack Trace:
+     at HollowWake.Core.Tests.DisplacementEscapeTests.EscapingResidentStillStopsBeforeTheNextBlockedCell(Boolean terrain, Boolean nudge) in C:\Users\John\.codex\worktrees\entity-main-audit\MMOARPG\tests\HollowWake.Core.Tests\DisplacementEscapeTests.cs:line 58
+   at InvokeStub_DisplacementEscapeTests.EscapingResidentStillStopsBeforeTheNextBlockedCell(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Failed HollowWake.Core.Tests.DisplacementEscapeTests.EscapingResidentStillStopsBeforeTheNextBlockedCell(terrain: False, nudge: False) [3 ms]
+  Error Message:
+   Assert.InRange() Failure: Value not in range
+Range:  (31.5 - 31.9999905)
+Actual: 30.5
+  Stack Trace:
+     at HollowWake.Core.Tests.DisplacementEscapeTests.EscapingResidentStillStopsBeforeTheNextBlockedCell(Boolean terrain, Boolean nudge) in C:\Users\John\.codex\worktrees\entity-main-audit\MMOARPG\tests\HollowWake.Core.Tests\DisplacementEscapeTests.cs:line 66
+   at InvokeStub_DisplacementEscapeTests.EscapingResidentStillStopsBeforeTheNextBlockedCell(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+  Failed HollowWake.Core.Tests.DisplacementEscapeTests.EscapingResidentStillStopsBeforeTheNextBlockedCell(terrain: True, nudge: False) [2 ms]
+  Error Message:
+   Assert.InRange() Failure: Value not in range
+Range:  (31.5 - 31.9999905)
+Actual: 30.5
+  Stack Trace:
+     at HollowWake.Core.Tests.DisplacementEscapeTests.EscapingResidentStillStopsBeforeTheNextBlockedCell(Boolean terrain, Boolean nudge) in C:\Users\John\.codex\worktrees\entity-main-audit\MMOARPG\tests\HollowWake.Core.Tests\DisplacementEscapeTests.cs:line 66
+   at InvokeStub_DisplacementEscapeTests.EscapingResidentStillStopsBeforeTheNextBlockedCell(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+
+Failed!  - Failed:    12, Passed:     4, Skipped:     0, Total:    16, Duration: 551 ms - HollowWake.Core.Tests.dll (net10.0)

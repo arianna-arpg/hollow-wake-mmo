@@ -1,0 +1,15 @@
+  Determining projects to restore...
+  Restored <pair-root>\mainfa7\src\HollowWake.Protocol\HollowWake.Protocol.csproj (in 242 ms).
+  Restored <pair-root>\mainfa7\src\HollowWake.Core\HollowWake.Core.csproj (in 242 ms).
+  Restored <pair-root>\mainfa7\src\HollowWake.Tools\HollowWake.Tools.csproj (in 242 ms).
+  Restored <pair-root>\mainfa7\src\HollowWake.Server\HollowWake.Server.csproj (in 242 ms).
+  HollowWake.Core -> <pair-root>\mainfa7\src\HollowWake.Core\bin\Release\net8.0\HollowWake.Core.dll
+  HollowWake.Protocol -> <pair-root>\mainfa7\src\HollowWake.Protocol\bin\Release\net8.0\HollowWake.Protocol.dll
+  HollowWake.Server -> <pair-root>\mainfa7\src\HollowWake.Server\bin\Release\net10.0\HollowWake.Server.dll
+  HollowWake.Tools -> <pair-root>\mainfa7\src\HollowWake.Tools\bin\Release\net10.0\hollowwake.dll
+
+Build succeeded.
+    0 Warning(s)
+    0 Error(s)
+
+Time Elapsed 00:00:11.97

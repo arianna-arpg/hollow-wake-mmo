@@ -95,13 +95,21 @@ public class ProjectileLaunchRegressionTests(ITestOutputHelper output)
             bodies.Add(body);
         }
         var flights = Capture(a);
+        var emissionPositions = new Dictionary<Projectile, Vector3>();
+        Projectile? emittingParent = null;
+        a.Sim.Events.Subscribe<EntitySpawned>(e =>
+        {
+            if (a.Sim.World.Get<Projectile>(e.Entity) is not { } p) return;
+            if (p.Spec.Emits) emittingParent = p;
+            else emissionPositions[p] = emittingParent!.Carrier;
+        });
         Press(a, preset, new Vector3(20, 10, 0));
         a.Tick(120);
         var parent = Assert.Single(flights, p => p.Spec.Emits);
         var children = flights.Where(p => !p.Spec.Emits).ToList();
         Assert.NotEmpty(children);
         output.WriteLine($"{preset}: parent height {parent.Origin.Z:F3}, {children.Count} children at {string.Join(",", children.Select(p => p.Origin.Z.ToString("F3")))}");
-        Assert.All(children, p => Assert.Equal(parent.Origin.Z, p.Origin.Z, 4));
+        Assert.All(children, p => Assert.Equal(emissionPositions[p], p.Origin));
         Assert.Contains(children, p => bodies.Any(b => p.Hits.Holds(b, a.Sim.Clock.Time, 0)));
         Assert.All(children, p => Assert.Equal(a.Caster, p.Context.Source));
         Assert.All(children, p => Assert.Equal(parent.Context.CastId, p.Context.CastId));
