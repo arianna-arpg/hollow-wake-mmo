@@ -318,7 +318,21 @@ public sealed class Terrain
     public Vector3 AimGroundAt(Vector3 point)
     {
         var chunk = ChunkAt((int)Math.Floor(point.X), (int)Math.Floor(point.Y), out int index);
-        var baseHeight = HeightAt(point.X, point.Y);
+        return AimGroundAt(chunk, index, HeightAt(point.X, point.Y), point);
+    }
+
+    /// <summary>The same aim selection using loaded data only, without changing the chunk memo.</summary>
+    public bool TryAimGroundAt(Vector3 point, out Vector3 resolved)
+    {
+        var cell = new CellCoord((int)Math.Floor(point.X), (int)Math.Floor(point.Y));
+        resolved = default;
+        if (!TryGetLoaded(Layout.ChunkOf(cell), out var chunk) || !TryHeightAt(point.X, point.Y, out var baseHeight)) return false;
+        resolved = AimGroundAt(chunk, Layout.LocalIndex(cell), baseHeight, point);
+        return true;
+    }
+
+    private static Vector3 AimGroundAt(ChunkData chunk, int index, float baseHeight, Vector3 point)
+    {
         var height = baseHeight;
         var distance = MathF.Abs(point.Z - height);
         if (chunk.Layers.TryGetValue(index, out var layers))

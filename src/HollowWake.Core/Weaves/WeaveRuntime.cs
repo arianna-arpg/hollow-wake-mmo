@@ -1490,10 +1490,15 @@ public sealed partial class WeaveRuntime
     /// <summary>A held cast that fires on release points where its caster aims at that moment, when it aims.</summary>
     private static void AimAtRelease(Simulation sim, Entity caster, WeaveBook book, CastState cast, CompiledWeave weave)
     {
-        (cast.Point, cast.Direction, cast.AimOffset) = ReleaseAim(sim, caster, book, cast, weave);
+        Vector3? ground = ReleaseGroundInput(book, cast, weave) is { } point ? sim.Terrain.AimGroundAt(point) : null;
+        (cast.Point, cast.Direction, cast.AimOffset) = ReleaseAim(sim, caster, book, cast, weave, ground);
     }
 
-    private static (Vector3 Point, Vector2 Direction, Vector3 AimOffset) ReleaseAim(Simulation sim, Entity caster, WeaveBook book, CastState cast, CompiledWeave weave)
+    private static Vector3? ReleaseGroundInput(WeaveBook book, CastState cast, CompiledWeave weave) =>
+        book.AimAt >= cast.StartedAt && weave.Targeting is Targeting.Ground or Targeting.Direction ? book.AimPoint : null;
+
+    // Ground access is resolved by the caller: authoritative release can load, observation cannot.
+    private static (Vector3 Point, Vector2 Direction, Vector3 AimOffset) ReleaseAim(Simulation sim, Entity caster, WeaveBook book, CastState cast, CompiledWeave weave, Vector3? ground)
     {
         var result = (Point: cast.Point, Direction: cast.Direction, AimOffset: cast.AimOffset);
         if (book.AimAt < cast.StartedAt)
@@ -1504,9 +1509,9 @@ public sealed partial class WeaveRuntime
         {
             result.Direction = Vector2.Normalize(dir);
         }
-        if (book.AimPoint is { } point && weave.Targeting is Targeting.Ground or Targeting.Direction)
+        if (ReleaseGroundInput(book, cast, weave) is { } point)
         {
-            result.Point = point;
+            result.Point = ground ?? point;
             result.AimOffset = Vector3.Zero;
             if (weave.Targeting == Targeting.Direction && (book.AimDirection is null) && sim.World.TryGet<Transform>(caster, out var t))
             {

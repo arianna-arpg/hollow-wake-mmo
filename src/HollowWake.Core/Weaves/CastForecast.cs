@@ -50,7 +50,14 @@ public sealed partial class WeaveRuntime
         var held = Math.Max(0, now - cast.StartedAt);
         var pulse = cast.Mode == CastMode.Channel && (weave.Channel?.Release?.Pulses ?? true);
         var releaseAim = cast.Mode is CastMode.Charge or CastMode.Overcharge or CastMode.Guard || cast.Mode == CastMode.Channel && !pulse;
-        var (point, direction, aimOffset) = releaseAim ? ReleaseAim(sim, caster, book, cast, weave) : (cast.Point, cast.Direction, cast.AimOffset);
+        Vector3? ground = null;
+        var surfaceAvailable = true;
+        if (releaseAim && ReleaseGroundInput(book, cast, weave) is { } input)
+        {
+            surfaceAvailable = sim.Terrain.TryAimGroundAt(input, out var resolved);
+            if (surfaceAvailable) ground = resolved;
+        }
+        var (point, direction, aimOffset) = releaseAim ? ReleaseAim(sim, caster, book, cast, weave, ground) : (cast.Point, cast.Direction, cast.AimOffset);
         var position = transform.Position;
         var target = cast.Target;
         if (!target.IsNone && (!sim.World.IsAlive(target) || sim.World.Has<Dead>(target))) target = Entity.None;
@@ -63,7 +70,7 @@ public sealed partial class WeaveRuntime
         // Run stamps these immediately before evaluating its graph. Do not describe a region using
         // the pre-release value of a condition that the application itself is about to change.
         if (weave.Tags.Has("movement")) (changingFlags ??= new(CastChangingFlags, StringComparer.Ordinal)).Add("recently_moved");
-        string? unavailable = null;
+        string? unavailable = surfaceAvailable ? null : "unloaded_release_surface";
         IReadOnlyList<CompiledEffect> effects = weave.Effects;
         switch (cast.Mode)
         {

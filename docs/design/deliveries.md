@@ -37,6 +37,8 @@ When an emission deadline is known, optional `NextEmissionStartedAt` records the
 
 Execution and observation share the charge, overcharge, ramp and use-modifier construction helpers and the ordinary attribute fold. Observation never compiles a weave, initializes a gameplay scope, spends resources, rolls RNG, emits events or schedules work. Geometry is unavailable when it depends on an opaque expression/curve or prospective state that cannot safely be represented: charge spending, pending resource payment, changing caster ramps/flags, or conditional brim scaling. Timing remains available independently. A new skill or glyph inherits observation through its compiled mechanism; a new wrapper needs an honest provider, never a skill-name exception or an invented circle.
 
+A held release with fresh streamed ground/direction aim resolves that stored height hint against the current walkable surfaces again, so a changed or removed deck is reflected at release. Runtime and forecast share the nearest-surface calculation and pure release-aim construction. Actual release may load terrain; observation uses only loaded cells and interpolation neighbours, without changing the terrain memo. If any required data is absent, timing remains available but spatial coverage is unavailable. Stale or absent streamed aim, ordinary committed casts, captured body samples and queued echoes retain their existing policies; this surface check does not re-aim them.
+
 | Parameter | Meaning |
 |---|---|
 | `shape` | a registered shape; default `circle` |
