@@ -109,6 +109,16 @@ Before calling work done:
 - **Docs are durable.** No counts, rosters or version strings that go stale. Each system has one contract in `docs/design/`; update it with the system.
 - Avoid em-dashes in prose. Files are UTF-8 with LF.
 
+## Disk hygiene
+
+Agent sessions once left so many files on this machine that Windows logon slowed to minutes. Keep the footprint small:
+
+- **Worktrees live under `.claude/worktrees/<name>` (ignored) or in a sibling folder next to the repository**, never in `%TEMP%` or a session scratchpad. Those folders get cleaned out, and the work goes with them.
+- **Reuse before you add.** Pick up your existing worktree, or an idle clean one from `git worktree list`, before creating another: one worktree per branch, not one per experiment or trial merge.
+- **Remove a worktree when its work is merged or abandoned**, and only when it is clean and every commit is on GitHub (main, a branch, a pull request or an `archive/` tag): `git worktree remove <folder>`, never `--force`, then `git worktree prune`. Report a worktree with uncommitted or unpushed work instead of removing it. This is "Delete it when it merges" in [docs/COLLABORATION.md](docs/COLLABORATION.md).
+- **Delete temp and test output when you are done with it**: `mkdtemp` folders, fixtures, smoke screenshots, scratch builds. Tests that create temp folders remove them in teardown, also when the test fails.
+- **At the end of a session, list the worktrees and large folders you created that still exist**, and say which are still needed.
+
 ## Decision records
 
 Stack and shape decisions live in `docs/adr/`. Read them before proposing a different engine, transport, format or topology.
